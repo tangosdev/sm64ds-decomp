@@ -1,51 +1,57 @@
 //cpp
 /**
- * Bob-omb Battlefield Chain Chomp (`wanwan`). Seven chain links,
- * a stump (STUMP, actor 0x1b) and a fence (CHAIN_CHOMP_FENCE, actor
- * 0x29) in ov014.
+ * daWanwan_c -- the Chain Chomp on Bob-omb Battlefield, plus the two objects
+ * it is anchored to.
  *
- * daWanwan_c_classInit is reconstructed (RTTI daWanwan_c, WANWAN
- * registry). Retail does not store that spelling.
+ * The chomp is seven chain links, a stump it is chained to (STUMP, actor
+ * 0x1b) and the fence behind it (CHAIN_CHOMP_FENCE, actor 0x29), all in
+ * ov014. daWanwan_c_classInit is a reconstructed name (RTTI daWanwan_c,
+ * WANWAN registry); retail does not store that spelling.
  *
- * deslop
- * Leftover: func_ov014_02111484..02112788 are written free here, and
- *   that is a reconstruction choice, not a deduction. The image preserves
- *   no original mangled symbol table, so the func_ov labels are
- *   address-derived repository names; the exact historical function
- *   spellings remain unknown, and an existing label is not a barrier to a
- *   member -- a migration renames source and config together. Ownership
- *   evidence is thinner here than a typed receiver would give: all 22 are
- *   defined in this file and each takes the object first, but spelled
- *   char*, void* or u8*, so the receiver type is assumed, not recovered.
- *   Migration scope: this file, the 02111fb8 declaration in daWanwan_c.h,
- *   the 02111ebc declaration in decl_common.h, and the ov014 symbols.txt
- *   rows. (02112ea8 is outside this range, is not defined here, and is
- *   shared with the wanwan-shutter TU.) Until then the original ownership
- *   and form stay uncertain.
- * Leftover: dCcAcPos_c::Init and DropShadowRadHeight stay mangled
- *   (Fix12-by-value, wall 6az).
- * Leftover: SharedFilePtr has no recovered layout. Init's
- *   `&data_ov014_02114978 + 4` is the BMD pointer LoadFile just
- *   filled; decl_common.h spells the four handles as char, so
- *   LoadFile/Release go through that view.
- * Leftover: ClosestPlayer()+0x6fb is a Player byte this TU reads;
- *   the name belongs on Player. Spawned stump uses Stump::mBusy;
- *   Stump.h does not disturb this TU's matrix copies.
- * Leftover: `(Vector3 *)&mPosX` / `&mScaleX` stay; Pos() is not on
- *   this branch's dActor_c.
- * Leftover: BMD/BCA handles still data_ov014_*; sinit file IDs
- *   belong with that sinit. Text-only TU, so g_profile_WANWAN is
- *   not defined here (S14).
- * Leftover: factory stays the hand-rolled C2 / vec_ctor walk.
- *   `return new` size-DIFF (Vector3[7] ctor is func_0203d384, not
- *   the implicit default).
- * Leftover: common.h must be included first. Matrix4x3 has two
- *   0x30-byte spellings; 02112788 copies twelve uniform words.
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
+ *
+ *   common.h must be included first. Matrix4x3 has two 0x30-byte spellings
+ *   and func_ov014_02112788 copies twelve uniform words; the wrong one wins
+ *   if a nested include gets there first.
+ *
+ *   The factory is the hand-rolled C2 / vec_ctor walk, not `return new`. The
+ *   Vector3[7] constructor the ROM calls is func_0203d384, not the implicit
+ *   default, so `return new` size-DIFFs.
+ *
+ *   `(Vector3 *)&mPosX` and `&mScaleX` stay as they are -- dActor_c on this
+ *   branch has no Pos().
+ *
+ *   dCcAcPos_c::Init and DropShadowRadHeight stay spelled as mangled symbols:
+ *   Fix12 passed by value, wall 6az.
+ *
+ * THE FREE FUNCTIONS ARE A CHOICE, NOT A DEDUCTION. func_ov014_02111484
+ * through 02112788 are written as free functions here. The image preserves no
+ * original mangled symbol table, so those labels are address-derived
+ * repository names; the historical spellings are unknown, and an existing
+ * label is no barrier to making one a member -- a migration renames source
+ * and config together. The ownership evidence is thinner here than a typed
+ * receiver would give: all 22 are defined in this file and each takes the
+ * object first, but spelled char*, void* or u8*, so the receiver type is
+ * assumed rather than recovered. Migrating them would touch this file, the
+ * 02111fb8 declaration in daWanwan_c.h, the 02111ebc declaration in
+ * decl_common.h, and the ov014 symbols.txt rows. func_ov014_02112ea8 is
+ * outside that range, is not defined here, and is shared with the
+ * wanwan-shutter TU.
+ *
+ * NOT OWNED BY THIS TU. SharedFilePtr has no recovered layout, so Init's
+ * `&data_ov014_02114978 + 4` is simply the BMD pointer LoadFile has just
+ * filled in, and since decl_common.h spells the four handles as char,
+ * LoadFile and Release go through that view. The BMD/BCA handles keep their
+ * data_ov014_* names and the sinit file IDs belong with that sinit. This is a
+ * text-only TU, so g_profile_WANWAN is not defined here (S14). The byte at
+ * ClosestPlayer()+0x6fb is a Player field this TU reads; naming it belongs on
+ * Player. The spawned stump is reached through daObjPile_c::mBusy -- daObjPile_c.h does
+ * not disturb this TU's matrix copies.
  */
 
 #include "common.h"
 #include "daWanwan_c.h"
-#include "Stump.h"
+#include "daObjPile_c.h"
 #include "decl_common.h"
 #include "SharedFilePtr.h"
 #include "Player.h"
@@ -172,7 +178,7 @@ int daWanwan_c::InitResources()
         kStumpActorId, 0x11, *(Vector3 *)&mPosX, 0, mAreaId, -1);
     mStumpUniqueID = spawned->uniqueID;
     int one = 1;
-    ((Stump *)spawned)->mBusy = (unsigned char)one;
+    ((daObjPile_c *)spawned)->mBusy = (unsigned char)one;
     mFenceUniqueID = 0;
 
     mPosX = mPosX + 0xc8000;
@@ -255,15 +261,9 @@ int daWanwan_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 23 -- func_ov014_02112788, 0x02112788, size 0x1c4 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_02112788
-/* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: shared common types */
-#include "common.h"
 typedef short s16;
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int a, int b, unsigned int g);
 
@@ -315,10 +315,8 @@ void func_ov014_02112788(char* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 22 -- func_ov014_0211250c, 0x0211250c, size 0x27c */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_0211250c
 typedef struct { int x, y, z; } Vec3;
 
@@ -444,10 +442,8 @@ void func_ov014_0211250c(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- func_ov014_0211236c, 0x0211236c, size 0x1a0 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_0211236c
 extern void Vec3_Sub(void* out, void* a, void* b);
 extern short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
@@ -532,10 +528,8 @@ void func_ov014_0211236c(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- func_ov014_021122dc, 0x021122dc, size 0x90 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_021122dc
 extern void Vec3_Sub(void *out, void *a, void *b);
 extern void Vec3_MulScalar(void *out, void *v, int s);
@@ -560,10 +554,8 @@ void func_ov014_021122dc(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 19 -- func_ov014_02112114, 0x02112114, size 0x1c8 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_02112114
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned id);
 extern void func_ov014_02111ebc(void *c, int i);
@@ -632,13 +624,9 @@ void func_ov014_02112114(void *cc)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- func_ov014_02111fe0, 0x02111fe0, size 0x134 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_02111fe0
-/* recovered: shared common types */
-#include "common.h"
 typedef int Fix12i;
 typedef long long s64;
 
@@ -671,10 +659,8 @@ void func_ov014_02111fe0(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- func_ov014_02111fb8, 0x02111fb8, size 0x28 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_02111fb8
 extern int func_0201267c(int,void*);
 extern void _ZN8dActor_c15HugeLandingDustEb(void*,int);
@@ -684,9 +670,7 @@ int func_ov014_02111fb8(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- func_ov014_02111f54, 0x02111f54, size 0x64 */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 // @symbol func_ov014_02111f54
 void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
@@ -694,14 +678,14 @@ char* _ZN8dActor_c13ClosestPlayerEv(char* a);
 int _ZN6Player17SetNoControlStateEhih(void* p, unsigned char a, int b, unsigned char c);
 void func_ov014_02111ebc(void* c, int i);
 int func_ov014_02111f54(void* c){
-  char* r4=(char*)c;
-  void* a=_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(r4+0x608));
+  char* self=(char*)c;
+  void* a=_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(self+0x608));
   if(*(unsigned char*)((char*)a+0x31e)!=0) goto fail;
   {
-    void* p=_ZN8dActor_c13ClosestPlayerEv(r4);
+    void* p=_ZN8dActor_c13ClosestPlayerEv(self);
     if(_ZN6Player17SetNoControlStateEhih(p,4,-1,0)==0) goto fail;
-    func_ov014_02111ebc(r4,3);
-    *(unsigned char*)(r4+0x605)=1;
+    func_ov014_02111ebc(self,3);
+    *(unsigned char*)(self+0x605)=1;
     return 1;
   }
 fail:
@@ -709,9 +693,7 @@ fail:
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- func_ov014_02111f08, 0x02111f08, size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov014_02111f08
 /* C IS COMPLETE BEFORE THE POINTER-TO-MEMBER TYPE, and that ordering is
    load-bearing on the host. CodeWarrior gives every pointer-to-member the same
@@ -732,9 +714,7 @@ extern "C" void func_ov014_02111f08(void *vc) {
   (c->*data_ov014_0211476c[j].pmf)();
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- func_ov014_02111ebc, 0x02111ebc, size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov014_02111ebc
 namespace ent0 {  /* this member reads the state table's +0 field; ordinal 15's view
                      reads +8 -- two honest views of one table, isolated by namespace */
@@ -748,9 +728,7 @@ extern "C" void func_ov014_02111ebc(void *vc, int i) {
   (c->*ent0::data_ov014_0211476c[j].pmf)();
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- func_ov014_02111e74, 0x02111e74, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov014_02111e74
 struct BCA_File;
 /* (ModelAnim: real header type in scope; call stays on the mangled spelling with
@@ -763,10 +741,8 @@ extern "C" void func_ov014_02111e74(char* c){
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)(c+0x150), *(BCA_File**)((char*)&data_ov014_02114980 + 4), 0, 0x1000, 0);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- func_ov014_02111e14, 0x02111e14, size 0x60 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_02111e14
 extern unsigned short DecIfAbove0_Short(unsigned short*);
 extern void func_ov014_02111ebc(void*, int);
@@ -781,9 +757,7 @@ void func_ov014_02111e14(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov014_02111dc4, 0x02111dc4, size 0x50 */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 // @symbol func_ov014_02111dc4
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*,void*,int,int,unsigned int);
@@ -795,9 +769,7 @@ void func_ov014_02111dc4(char *c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov014_02111ca8, 0x02111ca8, size 0x11c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov014_02111ca8
 typedef short s16;
 extern "C" {
@@ -836,10 +808,8 @@ void func_ov014_02111ca8(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov014_02111b70, 0x02111b70, size 0x138 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_02111b70
 namespace call3_267c { extern "C" int func_0201267c(int, void *, int); } /* this member byte-requires the three-argument call (r2 set); the TU's file-scope view is (int, void*) */
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int, unsigned int);
@@ -885,10 +855,8 @@ void func_ov014_02111b70(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov014_02111af0, 0x02111af0, size 0x80 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_02111af0
 extern int func_ov014_02111f54(void*);
 extern int Math_Function_0203b14c(void*,int,int,int,int);
@@ -906,9 +874,7 @@ adv:
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov014_02111a6c, 0x02111a6c, size 0x84 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov014_02111a6c
 struct BCA_File;
 /* (ModelAnim: real header type in scope; call stays on the mangled spelling with
@@ -926,13 +892,9 @@ extern "C" void func_ov014_02111a6c(char* c){
   *(int*)(c+0x60)=*(int*)(c+0x5f0)+0xc8000;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov014_021115ec, 0x021115ec, size 0x480 */
-/* -------------------------------------------------------------------------- */
 #include "types.h"
 // @symbol func_ov014_021115ec
-/* recovered: shared common types */
-#include "common.h"
 static inline void inc604(u8 *self) {
     u8 *p = (u8 *)(self + 0x604);
     *p = (u8)(*p + 1);
@@ -961,35 +923,35 @@ extern "C" void func_ov014_021115ec(u8 *self)
     int _ZN9Animation7AdvanceEv(void *self_);
     extern s16 data_02082214[];
     extern void *data_0209f318;
-    Vector3 sp4;
-    u8 *r4; s16 r7; s16 r6; u8 *r8;
+    Vector3 partnerPos;
+    u8 *partner; s16 angleToPlayer; s16 angleToAnchor; u8 *camera;
     _ZN5Sound15PlaySecretSoundEP8dActor_cPt(self, (u16 *)(self + 0x5fe));
-    r4 = (u8 *)_ZN8dActor_c10FindWithIDEj(*(unsigned *)(self + 0x60c));
+    partner = (u8 *)_ZN8dActor_c10FindWithIDEj(*(unsigned *)(self + 0x60c));
     {
-        s32 *src = (s32 *)(r4 + 0x5c);
+        s32 *src = (s32 *)(partner + 0x5c);
         s32 fifth = 0x80;
-        sp4.x = src[0];
+        partnerPos.x = src[0];
         void *ap = self + 0x8c;
-        sp4.y = src[1];
+        partnerPos.y = src[1];
         s32 z = 0;
-        sp4.z = src[2];
+        partnerPos.z = src[2];
         ApproachAngle(ap, z, 4, 0x200, fifth);
     }
-    r8 = *(u8 **)&data_0209f318;
-    r7 = _ZN8dActor_c18HorzAngleToCPlayerEv(self);
-    r6 = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x5ec));
+    camera = *(u8 **)&data_0209f318;
+    angleToPlayer = _ZN8dActor_c18HorzAngleToCPlayerEv(self);
+    angleToAnchor = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x5ec));
     switch (*(u8 *)(self + 0x604)) {
     case 0:
-        *(u8 **)(r8 + 0x118) = self;
-        if (_Z14ApproachLinearRsss(self + 0x8e, r7, 0x320) != 0 && DecIfAbove0_Short(self + 0x5fc) == 0)
+        *(u8 **)(camera + 0x118) = self;
+        if (_Z14ApproachLinearRsss(self + 0x8e, angleToPlayer, 0x320) != 0 && DecIfAbove0_Short(self + 0x5fc) == 0)
             inc604(self);
         *(s16 *)(self + 0x94) = *(s16 *)(self + 0x8e);
         break;
     case 1: case 2: case 3: case 4:
-        *(u8 **)(r8 + 0x118) = self;
+        *(u8 **)(camera + 0x118) = self;
         _Z14ApproachLinearRiii(self + 0x98, 0, 0x400);
         if (*(u8 *)(self + 0x61c) != 0) {
-            *(s16 *)(self + 0x94) = (s16)(r6 + 0x2000);
+            *(s16 *)(self + 0x94) = (s16)(angleToAnchor + 0x2000);
             *(s16 *)(self + 0x8e) = *(s16 *)(self + 0x94);
             *(s32 *)(self + 0xa8) = 0x32000;
             *(s32 *)(self + 0x98) = 0x1e000;
@@ -997,55 +959,55 @@ extern "C" void func_ov014_021115ec(u8 *self)
         }
         break;
     case 5:
-        *(u8 **)(r8 + 0x118) = self;
+        *(u8 **)(camera + 0x118) = self;
         _Z14ApproachLinearRiii(self + 0x98, 0, 0x400);
         if (*(u8 *)(self + 0x61c) != 0) {
-            *(s16 *)(self + 0x94) = r6;
+            *(s16 *)(self + 0x94) = angleToAnchor;
             *(s16 *)(self + 0x8e) = *(s16 *)(self + 0x94);
             *(s32 *)(self + 0xa8) = 0x32000;
             *(s32 *)(self + 0x98) = 0x1e000;
             inc604(self);
-            if (*(u8 *)(r4 + 0x31e) != 0) *(u8 *)(self + 0x604) = 7;
+            if (*(u8 *)(partner + 0x31e) != 0) *(u8 *)(self + 0x604) = 7;
         }
         break;
     case 6: {
-        *(u8 **)(r8 + 0x118) = self;
+        *(u8 **)(camera + 0x118) = self;
         _Z14ApproachLinearRiii(self + 0x618, 0x1000, 0x400);
         if (*(u8 *)(self + 0x61c) != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x150, ((void**)&data_ov014_02114970)[1], 0, 0x1000, 0);
-            *(s16 *)(self + 0x8e) = Vec3_HorzAngle((Vector3 *)(self + 0x5c), &sp4);
+            *(s16 *)(self + 0x8e) = Vec3_HorzAngle((Vector3 *)(self + 0x5c), &partnerPos);
             *(s16 *)(self + 0x94) = *(s16 *)(self + 0x8e);
             *(s32 *)(self + 0xa8) = 0x14000;
             *(s32 *)(self + 0x618) = 0x64000;
         }
         {
             Vector3 target;
-            s32 x = sp4.x;
+            s32 x = partnerPos.x;
             target.x = x;
-            s32 z = sp4.z;
+            s32 z = partnerPos.z;
             target.z = z;
-            s32 y = sp4.y;
+            s32 y = partnerPos.y;
             target.y = y;
             {
                 s16 *tbl = data_02082214;
-                u16 ang = *(u16 *)(r4 + 0x8e);
+                u16 ang = *(u16 *)(partner + 0x8e);
                 s32 s = tbl[(ang >> 4) << 1];
                 s32 add = (s32)(((((long long)s) * 0x96000) + 0x800) >> 12);
                 target.x = x + add;
             }
             {
                 s16 *tbl = data_02082214;
-                u16 ang = *(u16 *)(r4 + 0x8e);
+                u16 ang = *(u16 *)(partner + 0x8e);
                 s32 s = tbl[(((ang >> 4) << 1) + 1)];
                 s32 add = (s32)(((((long long)s) * 0x96000) + 0x800) >> 12);
                 target.z = z + add;
             }
             if (Vec3_ApproachHorz((Vector3 *)(self + 0x5c), &target, *(s32 *)(self + 0x618)) != 0) {
                 inc604(self);
-                *(s16 *)(self + 0x94) = (s16)(Vec3_HorzAngle((Vector3 *)(self + 0x5c), &sp4) + 0x8000);
+                *(s16 *)(self + 0x94) = (s16)(Vec3_HorzAngle((Vector3 *)(self + 0x5c), &partnerPos) + 0x8000);
                 *(s32 *)(self + 0x98) = 0x28000;
                 *(s32 *)(self + 0xa8) = 0xa000;
-                func_ov014_02112ea8(r4);
+                func_ov014_02112ea8(partner);
             }
         }
         break;
@@ -1053,22 +1015,22 @@ extern "C" void func_ov014_021115ec(u8 *self)
     case 7:
         if (*(u8 *)(self + 0x61c) != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x150, ((void**)&data_ov014_02114980)[1], 0, 0x1000, 0);
-            *(s16 *)(self + 0x94) = Vec3_HorzAngle((Vector3 *)(self + 0x5c), &sp4);
+            *(s16 *)(self + 0x94) = Vec3_HorzAngle((Vector3 *)(self + 0x5c), &partnerPos);
             *(u16 *)(self + 0x5fc) = 0x3c;
             *(s16 *)(self + 0x8e) = *(s16 *)(self + 0x94);
-            if (*(u8 *)(r4 + 0x31e) != 0) {
+            if (*(u8 *)(partner + 0x31e) != 0) {
                 *(s32 *)(self + 0x98) = 0x28000; *(s32 *)(self + 0xa8) = 0x5a000;
             } else {
                 *(s32 *)(self + 0x98) = 0x1e000; *(s32 *)(self + 0xa8) = 0x50000;
             }
-            _ZN6Camera9SetFlag_3Ev(r8);
+            _ZN6Camera9SetFlag_3Ev(camera);
             inc604(self);
         }
         break;
     case 8:
         if (DecIfAbove0_Short(self + 0x5fc) == 0) {
             {
-                unsigned *flag = (unsigned *)(r8 + 0x154);
+                unsigned *flag = (unsigned *)(camera + 0x154);
                 *flag &= ~8u;
             }
             if (_ZN6Player12Unk_020ca150Eh(_ZN8dActor_c13ClosestPlayerEv(self), 4) != 0) {
@@ -1076,7 +1038,7 @@ extern "C" void func_ov014_021115ec(u8 *self)
                 *(u16 *)(self + 0x5fc) = 0x3c;
             }
         } else {
-            _ZN6Camera9SetLookAtERK7Vector3(r8, (Vector3 *)(self + 0x5c));
+            _ZN6Camera9SetLookAtERK7Vector3(camera, (Vector3 *)(self + 0x5c));
         }
         break;
     case 9:
@@ -1087,24 +1049,20 @@ extern "C" void func_ov014_021115ec(u8 *self)
     _ZN9Animation7AdvanceEv(self + 0x1a0);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov014_021115c0, 0x021115c0, size 0x2c */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_021115c0
 extern int func_0201267c(int,void*);
 
-void func_ov014_021115c0(char *r4) {
-    func_0201267c(0x3a, r4 + 0x74);
-    *(int *)(r4 + 0xa8) = 0x12c000;
-    *(int *)(r4 + 0x9c) = 0;
+void func_ov014_021115c0(char *self) {
+    func_0201267c(0x3a, self + 0x74);
+    *(int *)(self + 0xa8) = 0x12c000;
+    *(int *)(self + 0x9c) = 0;
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov014_0211150c, 0x0211150c, size 0xb4 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_0211150c
 /* THE EARLY EXITS ARE SPELT AS NESTED IFS, NOT `return;`. mwccarm accepts a
    valueless `return` in a non-void function; C++ does not, and no host option
@@ -1134,10 +1092,8 @@ int func_ov014_0211150c(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- func_ov014_021114d8, 0x021114d8, size 0x34 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_021114d8
 void func_ov014_021114d8(char *c) {
     short v = *(short *)(c + 0x94);
@@ -1149,10 +1105,8 @@ void func_ov014_021114d8(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov014_02111484, 0x02111484, size 0x54 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_02111484
 extern unsigned short DecIfAbove0_Short(unsigned short*);
 extern void func_ov014_02111ebc(void*, int);
@@ -1166,9 +1120,7 @@ void func_ov014_02111484(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 1 -- _ZN10daWanwan_cD0Ev, 0x021113bc, size 0xc8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN10daWanwan_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
@@ -1177,14 +1129,11 @@ void func_ov014_02111484(char* c){
  * `data_020a0eac` for the actor heap, which collides with the `void *` dActor_c.h
  * supplies for that same symbol once the real header is in scope.
  */
-#include "daWanwan_c.h"
 
 /* (no separate definition: the single ~daWanwan_c() below emits the D0 and
  * D1 variants together.) */
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 0 -- _ZN10daWanwan_cD1Ev, 0x02111308, size 0xb4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN10daWanwan_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
@@ -1193,7 +1142,6 @@ void func_ov014_02111484(char* c){
  * at 0x1dc, ShadowModel[7] at 0x40c, and two Vector3[7] at 0x524 and 0x578 for
  * the per-link positions. Every element type was already named in the tree.
  */
-#include "daWanwan_c.h"
 
 /* (no out-of-line body: the destructor is defined inline in daWanwan_c.h, which
  * is what makes mwccarm emit D1 then D0 and no D2 -- the ROM's own order.) */

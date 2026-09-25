@@ -135,7 +135,7 @@ corresponding raw `c + 0xNNN` pokes in `Behavior`.
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x370 | `mState` | `src/_ZN9daShark_c8BehaviorEv.cpp` reads it as a `SharkBehaviorState *` and calls the pointer-to-member-function at `+8` through `this`; [func_ov090_021338b4](../src/func_ov090_021338b4.cpp)(this, [data_ov090_021345cc](../config/arm9/overlays/ov090/symbols.txt)) at the end of `InitResources` is the setter. |
+| 0x370 | `mState` | `daShark_c::Behavior` (now in [`src/actors/daShark_c.cpp`](../src/actors/daShark_c.cpp)) reads it as a `SharkBehaviorState *` and calls the pointer-to-member-function at `+8` through `this`; `func_ov090_021338b4`(this, [data_ov090_021345cc](../config/arm9/overlays/ov090/symbols.txt)) at the end of `InitResources` is the setter. |
 | 0x374 | `Vector3 mClsnOffset` | `InitResources` zeroes all three words and then passes `&mClsnOffset` as the `const Vector3 &` argument of `dCcAcPos_c::Init` — the collider's offset from the actor. |
 | 0x38c | `mPathNodeCount` | `InitResources`: `= PathPtr::NumNodes()`. `Behavior` wraps `mPathNodeIdx` to 0 when it reaches this value. |
 
@@ -178,7 +178,7 @@ stays as it is — the file already documents that the add must sit inside the i
 
 ---
 
-## `FirePiranhaPlantBig` (`include/FirePiranhaPlantBig.h`, [ov084](../config/arm9/overlays/ov084/symbols.txt))
+## `daFPkn_c` (`include/daFPkn_c.h`, [ov084](../config/arm9/overlays/ov084/symbols.txt))
 
 | offset | new name | evidence |
 | --- | --- | --- |
@@ -190,13 +190,13 @@ stays as it is — the file already documents that the add must sit inside the i
 
 Left `unk_`:
 
-- **0x1e8** — `mRespawnMode`. [func_ov084_0212e010](../src/func_ov084_0212e010.cpp) kills the plant outright unless this
+- **0x1e8** — `mRespawnMode`. [func_ov084_0212e010](../src/actors/daFPkn_c.cpp) kills the plant outright unless this
   is 1, in which case it calls `TrackInDeathTable` and sets `mState` to 4 instead.
 - **0x1f0** — `mGroupLeaderID`. Handed straight to `dActor_c::FindWithID`; the actor it
   returns carries the group's two tallies (0x21a/0x21b) that this plant's death updates.
 - **0x1f4, 0x224, 0x228** — zeroed in `InitResources`; still no reader, including in the
   [ov084](../config/arm9/overlays/ov084/symbols.txt) handlers.
-- **0x214** — `mScaleRate`. [func_ov084_0212e010](../src/func_ov084_0212e010.cpp) passes it as the step to
+- **0x214** — `mScaleRate`. [func_ov084_0212e010](../src/actors/daFPkn_c.cpp) passes it as the step to
   `ApproachLinear(&mScale, 0, rate)`, so the per-variant 0x52 / 0xa4 / 0x147 are how fast
   each size of plant shrinks away.
 - **0x21a** — `mGroupAliveCount`, and **0x21b** — `mGroupDefeatedCount`: a dying plant
@@ -205,7 +205,7 @@ Left `unk_`:
 - **0x21c, 0x21d** — still no reader.
 - **0x21e** — `mSuppressDeathReward`. Non-zero returns early from both death paths,
   before the group tally, the coin drop and the star.
-- **0x21f** — `mStarID`. [func_ov084_0212e010](../src/func_ov084_0212e010.cpp) passes it to `IsStarCollectedInCurLevel`
+- **0x21f** — `mStarID`. [func_ov084_0212e010](../src/actors/daFPkn_c.cpp) passes it to `IsStarCollectedInCurLevel`
   and ORs it with 0x40 as the spawn parameter of actor 0xb2, the star.
 
 Byte-neutral source cleanups: `(char *)&mdCcAc_c`, `(char *)&mdCcAcPos_c` and

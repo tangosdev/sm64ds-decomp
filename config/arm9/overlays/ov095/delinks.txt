@@ -4,45 +4,9 @@
     .ctor       start:0x021373b4 end:0x021373bc kind:rodata align:4
     .data       start:0x021373c0 end:0x02137780 kind:data align:32
     .bss        start:0x02137780 end:0x02137940 kind:bss align:32
-src/_ZN9SeesawBobD1Ev.cpp:
+src/actors/daObjSeesaw_c.cpp:
     complete
-    .text start:0x02135700 end:0x02135744
-
-src/_ZN9SeesawBobD0Ev.cpp:
-    complete
-    .text start:0x02135744 end:0x0213579c
-
-src/func_ov095_0213579c.c:
-    complete
-    .text start:0x0213579c end:0x021357d8
-
-src/_ZN9SeesawBob15OnGroundPoundedER8dActor_c.cpp:
-    complete
-    .text start:0x021357d8 end:0x021358cc
-
-src/func_ov095_021358cc.c:
-    complete
-    .text start:0x021358cc end:0x0213597c
-
-src/func_ov095_0213597c.c:
-    complete
-    .text start:0x0213597c end:0x021359c4
-
-src/_ZN9SeesawBob16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021359c4 end:0x02135a28
-
-src/_ZN9SeesawBob6RenderEv.cpp:
-    complete
-    .text start:0x02135a28 end:0x02135a50
-
-src/_ZN9SeesawBob8BehaviorEv.cpp:
-    complete
-    .text start:0x02135a50 end:0x02135b74
-
-src/_ZN9SeesawBob13InitResourcesEv.cpp:
-    complete
-    .text start:0x02135b74 end:0x02135cdc
+    .text start:0x02135700 end:0x02135cdc
 
 src/func_ov095_02135cdc.c:
     complete
@@ -80,49 +44,9 @@ src/d_a_obj_seesaw_seesaw.c:
     complete
     .text start:0x02135fc4 end:0x02135ff4
 
-src/_ZN13UpDownLiftBbhD1Ev.cpp:
+src/actors/daUdlift_c.cpp:
     complete
-    .text start:0x02135ff4 end:0x02136038
-
-src/_ZN13UpDownLiftBbhD0Ev.cpp:
-    complete
-    .text start:0x02136038 end:0x02136090
-
-src/func_ov095_02136090.cpp:
-    complete
-    .text start:0x02136090 end:0x02136104
-
-src/func_ov095_02136104.cpp:
-    complete
-    .text start:0x02136104 end:0x02136178
-
-src/func_ov095_02136178.c:
-    complete
-    .text start:0x02136178 end:0x02136298
-
-src/func_ov095_02136298.cpp:
-    complete
-    .text start:0x02136298 end:0x02136368
-
-src/func_ov095_02136368.c:
-    complete
-    .text start:0x02136368 end:0x0213645c
-
-src/_ZN13UpDownLiftBbh16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0213645c end:0x021364b0
-
-src/_ZN13UpDownLiftBbh6RenderEv.cpp:
-    complete
-    .text start:0x021364b0 end:0x021364d8
-
-src/_ZN13UpDownLiftBbh8BehaviorEv.cpp:
-    complete
-    .text start:0x021364d8 end:0x021365d8
-
-src/_ZN13UpDownLiftBbh13InitResourcesEv.cpp:
-    complete
-    .text start:0x021365d8 end:0x02136764
+    .text start:0x02135ff4 end:0x02136764
 
 src/func_ov095_02136764.cpp:
     complete

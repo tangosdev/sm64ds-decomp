@@ -65,7 +65,9 @@ Pinned compiler: `2004/b56`, wired-worktree canary passed.
 
 At original main `c1b266f36554734dc19851f88e08025cf3d43a25` plus this repair:
 
-- `python tools/prepush_linkcheck.py --files src/_ZN9daManta_c13InitResourcesEv.cpp src/_ZN9daManta_c8BehaviorEv.cpp --json build/manta-linkcheck.json`:
+- `python tools/prepush_linkcheck.py --files` on the one-function shards of
+  `_ZN9daManta_c13InitResourcesEv` and `_ZN9daManta_c8BehaviorEv` (both since
+  folded into `src/actors/daManta_c.cpp`), `--json build/manta-linkcheck.json`:
   exit 0, both VERIFIED, no differing bytes or blind relocations.
 - `python tools/rombuild.py -j 16 --no-rom --report-json build/manta-rombuild.json`:
   exit 0, 106/106 exact modules, 11,206 reproducing functions, zero mismatches.

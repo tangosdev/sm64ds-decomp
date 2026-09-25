@@ -1,43 +1,38 @@
 //cpp
-/**
- * Jolly Roger Bay's Bubba (`bakubaku`).
+/* daBakubaku_c -- Bubba, the big fish that patrols Jolly Roger Bay.
  *
- * daBakubaku_c_classInit is reconstructed (RTTI daBakubaku_c,
- * BAKUBAKU registry). Retail does not store that spelling.
+ * A state machine driven by a table of { enter, main } pointer-to-member
+ * pairs 0x10 apart (0xa7c / 0xa8c / 0xa9c / 0xaac / 0xabc); mState points at
+ * the live entry. data_0209f32c is the water height the actor swims under.
  *
- * deslop
- * Leftover: func_ov032_02111254..02112044 are written free here, and
- *   that is a reconstruction choice, not a deduction. The image preserves
- *   no original mangled symbol table, so the func_ov labels are
- *   address-derived repository names; the exact historical function
- *   spellings remain unknown, and an existing label is not a barrier to a
- *   member -- a migration renames source and config together. Ownership
- *   evidence: all 15 are defined in this file, 14 take daBakubaku_c *self
- *   as their first parameter, and no other TU or header names one. The
- *   exception is 02111ff4, whose (void *, void *) state-table shape does
- *   not by itself say which class owns it. Migration scope: this file plus
- *   the ov032 symbols.txt rows. Until then the original ownership and form
- *   stay uncertain.
- * Leftover: Klass is daBakubaku_c (no PMF ICE on 2004/b56).
- *   Tables are { PMF enter; PMF main }, 0x10 apart
- *   (a7c/a8c/a9c/aac/abc). mState is a pointer to one entry.
- * Leftover: ModelAnim::SetAnim, dCcAcPos_c::Init, DropShadowRadHeight
- *   and Player::Hurt stay mangled (Fix12-by-value, wall 6az).
- *   dBgCh_Actr::Init stays mangled: types.h makes Fix12i a plain s32, so
- *   a member-form call mangles that argument as int, while the arm9
- *   symbols.txt row spells it 5Fix12IiE. That link failure is NOT YET
- *   MEASURED: no full mwldarm link of the member form has been run.
- * Leftover: common.h must be first. Nested Matrix.h spelling
- *   scalarizes the 12-word mat4x3 / mShadowMat copies.
- * Leftover: decl_common.h is here because 02113a48 / 02113a50 /
- *   02113a8c are extern int there, so BMD/BCA handles are int[]
- *   punned to SharedFilePtr and 02113a8c takes an &.
- * Leftover: BMD/BCA SharedFilePtrs still data_ov032_*; sinit file IDs
- *   661 / 662 / 663. State-table symbols still data_ov032_*.
- * Leftover: data_0209f32c is water height; particle/sound helpers
- *   func_02022c80 / 02022d00 / 02012694 / func_ov002_020c5cd8.
- * Leftover: gotos, dead-store in[2] pairs, and register-named
- *   locals (r5, v1/v2) are load-bearing S8/S15.
+ * Things here that look like slop and are load-bearing: the gotos, the
+ * dead-store in[2] pairs, and a few register-named locals (r5, v1/v2). They
+ * are what reproduces the ROM; see the S8/S15 notes in the manifest.
+ * common.h must be included first -- reaching Matrix.h through a nested
+ * include instead scalarizes the twelve-word mat4x3 and mShadowMat copies.
+ * decl_common.h is here because 02113a48 / 02113a50 / 02113a8c are extern int
+ * there, so the BMD/BCA handles are int[] punned to SharedFilePtr and
+ * 02113a8c is taken by address.
+ *
+ * Reconstruction notes. RTTI and the BAKUBAKU registry name the class
+ * daBakubaku_c; `daBakubaku_c_classInit` is a source-style name retail does
+ * not store. func_ov032_02111254..02112044 are written as free functions,
+ * which is a choice and not a deduction: the image preserves no original
+ * mangled symbol table, so those labels are address-derived. Fifteen of them
+ * are defined here, fourteen take daBakubaku_c *self first, and no other TU
+ * or header names one, so ownership is clear -- the exception is 02111ff4,
+ * whose (void *, void *) state-table shape does not say which class owns it.
+ * Making them members is a migration of this file plus the ov032 symbols.txt
+ * rows; until then their original form stays unknown. ModelAnim::SetAnim,
+ * dCcAcPos_c::Init, DropShadowRadHeight and Player::Hurt stay mangled
+ * (Fix12-by-value, wall 6az). dBgCh_Actr::Init stays mangled for a different
+ * reason: types.h makes Fix12i a plain s32, so the member form would mangle
+ * that argument as int while the arm9 symbols.txt row spells it 5Fix12IiE.
+ * That link failure is reasoned, NOT MEASURED -- no full mwldarm link of the
+ * member form has been run. The BMD/BCA SharedFilePtrs and the state-table
+ * symbols keep their data_ov032_* spellings; sinit file IDs are 661/662/663.
+ * Particle and sound work goes through func_02022c80 / func_02022d00 /
+ * func_02012694 / func_ov002_020c5cd8.
  */
 
 #include "common.h"
@@ -48,7 +43,7 @@
 #include "Player.h"
 #include "SharedFilePtr.h"
 
-typedef daBakubaku_c Klass;
+typedef daBakubaku_c Klass;  /* real class: 2004/b56 does not ICE on this PMF */
 typedef void (Klass::*PMF)();
 /* Tables are 0x10 apart. SetState calls enter at +0; Behavior calls main at +8. */
 struct StateEntry { PMF enter; PMF main; };

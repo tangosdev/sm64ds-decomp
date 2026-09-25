@@ -1,0 +1,234 @@
+{
+  "id": "ov036/daObjRc_Tikuwa_c",
+  "module": "ov036",
+  "source": "src/actors/daObjRc_Tikuwa_c.cpp",
+  "promoted_source": "src/actors/daObjRc_Tikuwa_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x211193c..0x2111ca4, 7 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjRc_Tikuwa_c",
+    "module sinit corroboration: 7 sinit(s) / 7 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0211193c",
+      "end": "0x02111ca4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN16daObjRc_Tikuwa_cD1Ev",
+      "address": "0x0211193c",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN16daObjRc_Tikuwa_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16daObjRc_Tikuwa_cD0Ev",
+      "address": "0x02111988",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN16daObjRc_Tikuwa_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN16daObjRc_Tikuwa_c16CleanupResourcesEv",
+      "address": "0x021119e8",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN16daObjRc_Tikuwa_c16CleanupResourcesEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN16daObjRc_Tikuwa_c16OnPendingDestroyEv",
+      "address": "0x02111a2c",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN16daObjRc_Tikuwa_c16OnPendingDestroyEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN16daObjRc_Tikuwa_c6RenderEv",
+      "address": "0x02111a30",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN16daObjRc_Tikuwa_c6RenderEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN16daObjRc_Tikuwa_c8BehaviorEv",
+      "address": "0x02111a64",
+      "size": "0x00000154",
+      "legacy_source": "src/_ZN16daObjRc_Tikuwa_c8BehaviorEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN16daObjRc_Tikuwa_c13InitResourcesEv",
+      "address": "0x02111bb8",
+      "size": "0x000000ec",
+      "legacy_source": "src/_ZN16daObjRc_Tikuwa_c13InitResourcesEv.cpp",
+      "ordinal": 6
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Cartridge name daObjRc_Tikuwa_c from ov036 _ZTS at 0x02113cc0 and _ZTV at 0x02113cf8. The coined DonutBlock alias is deleted.",
+    "Text-only. The destructor is the out-of-line key function under defer_codegen off, so this object also emits D2 and the RTTI/vtable group. Those are compiler-only; the ROM keeps the copies outside this .text run. The classInit factory at 0x02111cd8 is the next TU and is not absorbed.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c21UpdateModelPosAndRotYEv' differs between the legacy file that used to hold _ZN10DonutBlock8BehaviorEv and the one that held _ZN10DonutBlock13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN10DonutBlock8BehaviorEv and the one that held _ZN10DonutBlock13InitResourcesEv; kept the first, the other is commented out for review"
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN16daObjRc_Tikuwa_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Compiler-generated base-object destructor. The cartridge has only the D1/D0 pair at 0x0211193c and 0x02111988; nothing references D2 once the licensed range is isolated."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage typeinfo. The cartridge copy is arm9:0x02086d70, outside this .text run."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type name. The cartridge copy is arm9:0x02086e60, outside this .text run."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage typeinfo. The cartridge copy is arm9:0x02086e78, outside this .text run."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type name. The cartridge copy is arm9:0x02086e54, outside this .text run."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage typeinfo. The cartridge copy is arm9:0x0208e390, outside this .text run."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type name. The cartridge copy is arm9:0x0208e384, outside this .text run."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Inherited vague-linkage typeinfo. The cartridge copy is ov002:0x021089ec, outside this .text run."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Inherited vague-linkage type name. The cartridge copy is ov002:0x02108a04, outside this .text run."
+    },
+    {
+      "symbol": "_ZTI16daObjRc_Tikuwa_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov036",
+      "canonical_address": "0x02113cb4",
+      "reason": "This class's typeinfo. The cartridge copy is ov036:0x02113cb4, outside this .text run. Its base pointer is _ZTI10dBgActor_c."
+    },
+    {
+      "symbol": "_ZTS16daObjRc_Tikuwa_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov036",
+      "canonical_address": "0x02113cc0",
+      "reason": "This class's type name. The cartridge bytes at ov036:0x02113cc0 spell 16daObjRc_Tikuwa_c."
+    },
+    {
+      "symbol": "_ZTV16daObjRc_Tikuwa_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov036",
+      "canonical_address": "0x02113cf8",
+      "reason": "This class's vtable. The cartridge address point is ov036:0x02113cf8, outside this .text run. Slots 0, 3, 6, 9, 12, 16 and 17 are this TU; the rest are dBgActor_c."
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov036-daObjRc_Tikuwa_c/daObjRc_Tikuwa_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 7,
+    "functions_declared": 7,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN16daObjRc_Tikuwa_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN16daObjRc_Tikuwa_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI16daObjRc_Tikuwa_c",
+        "_ZTS16daObjRc_Tikuwa_c",
+        "_ZTV16daObjRc_Tikuwa_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI16daObjRc_Tikuwa_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS16daObjRc_Tikuwa_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV16daObjRc_Tikuwa_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

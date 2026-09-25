@@ -100,77 +100,9 @@ src/d_a_red_bombhei.c:
     complete
     .text start:0x0212d200 end:0x0212d248
 
-src/_ZN19FirePiranhaPlantBigD1Ev.cpp:
+src/actors/daFPkn_c.cpp:
     complete
-    .text start:0x0212d248 end:0x0212d288
-
-src/_ZN19FirePiranhaPlantBigD0Ev.cpp:
-    complete
-    .text start:0x0212d288 end:0x0212d2dc
-
-src/func_ov084_0212d2dc.c:
-    complete
-    .text start:0x0212d2dc end:0x0212d42c
-
-src/func_ov084_0212d42c.c:
-    complete
-    .text start:0x0212d42c end:0x0212d560
-
-src/func_ov084_0212d560.c:
-    complete
-    .text start:0x0212d560 end:0x0212d564
-
-src/func_ov084_0212d564.cpp:
-    complete
-    .text start:0x0212d564 end:0x0212d86c
-
-src/func_ov084_0212d86c.c:
-    complete
-    .text start:0x0212d86c end:0x0212dc30
-
-src/func_ov084_0212dc30.c:
-    complete
-    .text start:0x0212dc30 end:0x0212ddbc
-
-src/func_ov084_0212ddbc.c:
-    complete
-    .text start:0x0212ddbc end:0x0212e010
-
-src/func_ov084_0212e010.cpp:
-    complete
-    .text start:0x0212e010 end:0x0212e4e0
-
-src/func_ov084_0212e4e0.c:
-    complete
-    .text start:0x0212e4e0 end:0x0212e554
-
-src/_ZN19FirePiranhaPlantBig16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0212e554 end:0x0212e5a8
-
-src/_ZN19FirePiranhaPlantBig6RenderEv.cpp:
-    complete
-    .text start:0x0212e5a8 end:0x0212e614
-
-src/_ZN19FirePiranhaPlantBig8BehaviorEv.cpp:
-    complete
-    .text start:0x0212e614 end:0x0212e774
-
-src/_ZN19FirePiranhaPlantBig13InitResourcesEv.cpp:
-    complete
-    .text start:0x0212e774 end:0x0212e998
-
-src/_ZN19FirePiranhaPlantBig16OnAimedAtWithEggEv.cpp:
-    complete
-    .text start:0x0212e998 end:0x0212e9d4
-
-src/_ZN19FirePiranhaPlantBig13OnTurnIntoEggER6Player.cpp:
-    complete
-    .text start:0x0212e9d4 end:0x0212e9f8
-
-src/_ZN19FirePiranhaPlantBig13OnYoshiTryEatEv.cpp:
-    complete
-    .text start:0x0212e9f8 end:0x0212ea18
+    .text start:0x0212d248 end:0x0212ea18
 
 src/d_a_f_pkn_pakun2.c:
     complete

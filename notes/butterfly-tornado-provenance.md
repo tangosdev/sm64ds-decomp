@@ -1,4 +1,4 @@
-# daBtfly_c, Tornado, StarMarker, ToxBox -- field-name provenance
+# daBtfly_c, daTor_c, StarMarker, daOnms_c -- field-name provenance
 
 Four standalone actors whose headers came out of `tools/gen_header.py` with
 observed offsets and placeholder names. The offsets and widths were already
@@ -12,7 +12,7 @@ cartridge under 2004/b56, checked per function with `build_pin`'s `verify`
 
 ## A rule these four share
 
-Tornado and StarMarker remain flat shadow structs that restate `dActor_c`'s
+daTor_c and StarMarker remain flat shadow structs that restate `dActor_c`'s
 bytes. daBtfly_c has since been promoted to genuine `daBtfly_c : dActor_c`
 class form; its inherited fields therefore come directly from
 `include/dActor_c.h` rather than being repeated locally.
@@ -64,20 +64,20 @@ named `daBtfly_c::State0` through `State7` from their exact PMF-table indices.
 before this pass; the writes above are what took them out of the padding.
 
 
-## Tornado (`include/Tornado.h`)
+## daTor_c (`include/daTor_c.h`)
 
-`Tornado::Behavior` switches on `mState` and calls one of three free
+`daTor_c::Behavior` switches on `mState` and calls one of three free
 functions, all inside this class's own address range:
 
-- 0 `src/_ZN7Tornado6State0Ev.cpp` -- dormant at home.
-- 1 `src/_ZN7Tornado6State1Ev.cpp` -- hunting.
-- 2 `src/_ZN7Tornado6State2Ev.cpp` -- winding down.
+- 0 `daTor_c::State0` in `src/actors/daTor_c.cpp` -- dormant at home.
+- 1 `daTor_c::State1` -- hunting.
+- 2 `daTor_c::State2` -- winding down.
 
 | offset | name | evidence |
 | --- | --- | --- |
-| 0x09c | `mVertAccel` | `dActor_c`'s offset; `src/_ZN7Tornado13InitResourcesEv.cpp` sets -0x1000. |
+| 0x09c | `mVertAccel` | `dActor_c`'s offset; `daTor_c::InitResources` sets -0x1000. |
 | 0x0a0 | `mTerminalVelocity` | `dActor_c`'s offset; InitResources sets -0x1e000. |
-| 0x33c | `mCaughtActor` | `src/_ZN7Tornado8BehaviorEv.cpp` resolves `mdCcAc_c.otherOwner` to an actor and stores it here once [func_ov002_020de33c](../src/func_ov002_020de33c.c) approves. State 1 re-tests it through [func_ov002_020de328](../src/func_ov002_020de328.c); state 2 clears it. |
+| 0x33c | `mCaughtActor` | `daTor_c::Behavior` resolves `mdCcAc_c.otherOwner` to an actor and stores it here once [func_ov002_020de33c](../src/func_ov002_020de33c.c) approves. State 1 re-tests it through [func_ov002_020de328](../src/func_ov002_020de328.c); state 2 clears it. |
 | 0x340/0x344/0x348 | `mHomePosX/Y/Z` | InitResources copies `mPos` here. State 0 snaps `mPos` back to it; states 1 and 2 measure every distance from it rather than from where the tornado is. |
 | 0x34c | `mChaseRange` | InitResources builds it from `mParam & 0xff`: `byte * 0x64000`, or 0x5dc000 when the byte is 0xff. State 1 chases only while the player is within it of `mHomePos`. |
 | 0x350 | `mStateTimer` | Behavior counts it up every frame and zeroes it when `mState` changed. State 0 spins up over its first 0x3c, state 2 shrinks over its own 0x3c and gives up at 0x168. |
@@ -111,20 +111,21 @@ The on-screen glint showing where an uncollected star will appear.
 | 0x1d6 | `mSpawnedDeathTableID` | The slot `DeathTable_ClearBit` is called on in OnPendingDestroy. InitResources sets -1, the same "no slot" value `dActor_c` uses for its own `mDeathTableID`. |
 
 
-## ToxBox (`include/ToxBox.h`)
+## daOnms_c (`include/daOnms_c.h`)
 
-The rolling crush box. `mParam & 3` picks how it moves.
+The rolling crush box. `mParam & 3` picks how it moves. Every function cited
+below is in [src/actors/daOnms_c.cpp](../src/actors/daOnms_c.cpp).
 
 | offset | name | evidence |
 | --- | --- | --- |
-| 0x320 | `mPlayerActor` | [func_ov092_021319b0.cpp](../src/func_ov092_021319b0.cpp) resolves the collision id at 0x50c to an actor, keeps it only if its actorID is 0xbf, and stores it here. [func_ov092_021311b0.cpp](../src/func_ov092_021311b0.cpp) uses its position as the epicentre of the landing earthquake and then clears this to 0. |
-| 0x528 | `mBaseMtx` | `src/_ZN6ToxBox13InitResourcesEv.cpp` copies `mModel`'s own matrix at 0xf0 into it as a whole `Matrix4x3`; [func_ov092_02131aec.cpp](../src/func_ov092_02131aec.cpp) copies it back out again. The untumbled base transform. |
-| 0x558/0x55c/0x560 | `mRestPosX/Y/Z` | InitResources copies `mPos` here after lifting `mPosY` by 0xfa000; [func_ov092_021311b0.cpp](../src/func_ov092_021311b0.cpp) refreshes `mRestPosY` from `mPosY` every time the box lands. |
-| 0x568 | `mMoveDir` | [func_ov092_021314d0.c](../src/func_ov092_021314d0.c) reads it out of `mMoveSeq`; [func_ov092_021313b0.cpp](../src/func_ov092_021313b0.cpp) derives it from the horizontal angle to the next path node (2/3/4/5 for the four quadrants, 1 when the node did not move); [func_ov092_021311b0.cpp](../src/func_ov092_021311b0.cpp) overrides it with 7 or 8 for the two special floor types, and [func_ov092_02131878.c](../src/func_ov092_02131878.c) with 6. |
-| 0x56c | `mMoveSeq` | InitResources sets it to `((int **)&data_ov092_02132294)[mMoveKind]`, and reads `*mMoveSeq` as the first direction. [func_ov092_021314d0.c](../src/func_ov092_021314d0.c) walks it and treats a 0 entry as the end, wrapping to the first. |
-| 0x570 | `mMoveSeqIndex` | The index [func_ov092_021314d0.c](../src/func_ov092_021314d0.c) advances into `mMoveSeq` and resets to 0 on the wrap. |
-| 0x574 | `mMoveKind` | `mParam & 3`. 0..2 pick a canned sequence, 3 makes InitResources load a `PathPtr` instead; both [func_ov092_021314d0.c](../src/func_ov092_021314d0.c) and [func_ov092_021316d8.c](../src/func_ov092_021316d8.c) branch on `== 3`. |
-| 0x575 | `mOrientBits` | Three 2-bit fields packed from the three rotation angles (X >> 0xe, Y >> 0xc, Z >> 0xa). InitResources builds it from the spawn rotation, [func_ov092_021314d0.c](../src/func_ov092_021314d0.c) rebuilds it after every roll, and [func_ov092_021316d8.c](../src/func_ov092_021316d8.c) and [func_ov092_02131878.c](../src/func_ov092_02131878.c) read it back. |
-| 0x578 | `mPathNodeCount` | `PathPtr::NumNodes` for `mPathPtr`, and the wrap bound in [func_ov092_021313b0.cpp](../src/func_ov092_021313b0.cpp). |
-| 0x57c | `mPathNodeIndex` | The node the box heads for; [func_ov092_021313b0.cpp](../src/func_ov092_021313b0.cpp) advances it and wraps at `mPathNodeCount`. |
-| 0x580/0x584/0x588 | `mPathNodeX/Y/Z` | The `Vector3` `PathPtr::GetNode` fills in for `mPathNodeIndex`. [func_ov092_021313b0.cpp](../src/func_ov092_021313b0.cpp) keeps the previous one on the stack and takes the horizontal angle between the two to pick `mMoveDir`. Came out of `pad_580`. |
+| 0x320 | `mPlayerActor` | `func_ov092_021319b0` resolves the collision id at 0x50c to an actor, keeps it only if its actorID is 0xbf, and stores it here. `func_ov092_021311b0` uses its position as the epicentre of the landing earthquake and then clears this to 0. |
+| 0x528 | `mBaseMtx` | `InitResources` copies `mModel`'s own matrix at 0xf0 into it as a whole `Matrix4x3`; `func_ov092_02131aec` copies it back out again. The untumbled base transform. |
+| 0x558/0x55c/0x560 | `mRestPosX/Y/Z` | InitResources copies `mPos` here after lifting `mPosY` by 0xfa000; `func_ov092_021311b0` refreshes `mRestPosY` from `mPosY` every time the box lands. |
+| 0x568 | `mMoveDir` | `func_ov092_021314d0` reads it out of `mMoveSeq`; `func_ov092_021313b0` derives it from the horizontal angle to the next path node (2/3/4/5 for the four quadrants, 1 when the node did not move); `func_ov092_021311b0` overrides it with 7 or 8 for the two special floor types, and `func_ov092_02131878` with 6. |
+| 0x56c | `mMoveSeq` | InitResources sets it to `((int **)&data_ov092_02132294)[mMoveKind]`, and reads `*mMoveSeq` as the first direction. `func_ov092_021314d0` walks it and treats a 0 entry as the end, wrapping to the first. |
+| 0x570 | `mMoveSeqIndex` | The index `func_ov092_021314d0` advances into `mMoveSeq` and resets to 0 on the wrap. |
+| 0x574 | `mMoveKind` | `mParam & 3`. 0..2 pick a canned sequence, 3 makes InitResources load a `PathPtr` instead; both `func_ov092_021314d0` and `func_ov092_021316d8` branch on `== 3`. |
+| 0x575 | `mOrientBits` | Three 2-bit fields packed from the three rotation angles (X >> 0xe, Y >> 0xc, Z >> 0xa). InitResources builds it from the spawn rotation, `func_ov092_021314d0` rebuilds it after every roll, and `func_ov092_021316d8` and `func_ov092_02131878` read it back. |
+| 0x578 | `mPathNodeCount` | `PathPtr::NumNodes` for `mPathPtr`, and the wrap bound in `func_ov092_021313b0`. |
+| 0x57c | `mPathNodeIndex` | The node the box heads for; `func_ov092_021313b0` advances it and wraps at `mPathNodeCount`. |
+| 0x580/0x584/0x588 | `mPathNodeX/Y/Z` | The `Vector3` `PathPtr::GetNode` fills in for `mPathNodeIndex`. `func_ov092_021313b0` keeps the previous one on the stack and takes the horizontal angle between the two to pick `mMoveDir`. Came out of `pad_580`. |

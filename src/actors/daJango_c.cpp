@@ -227,15 +227,12 @@ extern void *data_0209f394;
 
 // @symbol _ZN9daJango_c16OnAimedAtWithEggEv
 // recovered name: Klepto_OnAimedAtWithEgg
-/* recovered: renamed to Class_Method */
 /* daJango_c::OnAimedAtWithEgg - recovered from vtable slot identity */
 s32 daJango_c::OnAimedAtWithEgg() {
     return 458752;
 }
 
 // @symbol _ZN9daJango_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 /* SharedFilePtr stays incomplete: Model.h forward-declares it and its layout is
    deliberately not recovered (include/SharedFilePtr.h). Used only by address here. */
 int daJango_c::InitResources()
@@ -329,8 +326,6 @@ int daJango_c::InitResources()
 }
 
 // @symbol _ZN9daJango_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
 struct dCc_c;
@@ -429,7 +424,6 @@ skip_destroy:
 }
 
 // @symbol _ZN9daJango_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
 int daJango_c::Render()
 {
  Base *b = (Base *)&mBlendModelAnim; b->m(0); return 1;
@@ -466,7 +460,7 @@ int daJango_c::CleanupResources()
 }
 
 // @symbol func_ov062_0211c6a8
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov062_0211c6a8(char* c)
 {
     int v[3];
@@ -519,7 +513,7 @@ struct C658 { char pad[0x42c]; PMF658 *pp; };
 extern "C" int func_ov062_0211c658(void *c, void *p) { C658 *cc = (C658 *)c; PMF658 *qq = (PMF658 *)p; cc->pp = qq; PMF658 *q = cc->pp; if (*q == 0) return 1; return (cc->**q)(); }
 
 // @symbol func_ov062_0211c594
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov062_0211c594(char *c) {
     Vector3 in;
     Vector3 out;
@@ -545,8 +539,6 @@ int func_ov062_0211c594(char *c) {
 }
 
 // @symbol func_ov062_0211c2f4
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" int func_ov062_0211c2f4(char *self) {
     /* Real PathPtr object (as legacy had it via PathPtr.h): its implicit
        ctor call is genuine ROM bytes. Do NOT byte-buffer this one. */
@@ -624,7 +616,7 @@ ret1:
 }
 
 // @symbol func_ov062_0211c218
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov062_0211c218(char *c)
 {
     *(short *)(c + 0x44a) = *(short *)(c + 0x8e);
@@ -646,7 +638,7 @@ int func_ov062_0211c218(char *c)
 }
 
 // @symbol func_ov062_0211bd10
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 /* data_ov062_0211e104/114 are TU-wide SharedFilePtr scalars (legacy InitResources view); words beside them go through casts (same addresses, no second type). */
 extern char data_ov062_0211e18c[];
 
@@ -830,11 +822,11 @@ int func_ov062_0211ba84(char *c)
     Vector3 t;
     Vector3 hv;
     Vector3 vv;
-    s16 r4;
+    s16 pitch;
     char *ip;
     int tx, ty, tz;
 
-    r4 = 0;
+    pitch = 0;
     v.x = 0;
     v.y = 0;
     v.z = 0;
@@ -858,15 +850,15 @@ int func_ov062_0211ba84(char *c)
         hv.x = tx; hv.y = ty; hv.z = tz;
         *(s16 *)(c + 0x44a) = Vec3_HorzAngle((Vector3 *)(c + 0x5c), &hv);
         vv.x = tx; vv.y = ty; vv.z = tz;
-        r4 = Vec3_VertAngle((Vector3 *)(c + 0x5c), &vv);
+        pitch = Vec3_VertAngle((Vector3 *)(c + 0x5c), &vv);
 
     }
     if (data_0209f2f8 == 0x10) {
         _Z14ApproachLinearRsss((s16 *)(c + 0x94), *(s16 *)(c + 0x44a), (s16)*(int *)(c + 0x43c));
-        _Z14ApproachLinearRsss((s16 *)(c + 0x92), r4, (s16)*(int *)(c + 0x43c));
+        _Z14ApproachLinearRsss((s16 *)(c + 0x92), pitch, (s16)*(int *)(c + 0x43c));
     } else {
         _Z14ApproachLinearRsss((s16 *)(c + 0x94), *(s16 *)(c + 0x44a), (s16)(*(int *)(c + 0x43c) + 0x500));
-        _Z14ApproachLinearRsss((s16 *)(c + 0x92), r4, (s16)(*(int *)(c + 0x43c) + 0x500));
+        _Z14ApproachLinearRsss((s16 *)(c + 0x92), pitch, (s16)(*(int *)(c + 0x43c) + 0x500));
     }
     v.z = 0x1e000;
     Matrix4x3_FromRotationY(data_020a0e68, *(s16 *)(c + 0x8e));
@@ -882,7 +874,6 @@ int func_ov062_0211ba84(char *c)
 #pragma cplusplus on
 
 // @symbol func_ov062_0211b930
-/* recovered: shared common types */
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
@@ -948,7 +939,7 @@ extern "C" int func_ov062_0211b880(unsigned char* c) {
 }
 
 // @symbol func_ov062_0211b800
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov062_0211b800(char *c) {
     *(int*)(c + 0xa8) = 0x14000;
     _Z14ApproachLinearRsss((short*)(c + 0x92), 0, 0x300);
@@ -966,7 +957,7 @@ int func_ov062_0211b800(char *c) {
 }
 
 // @symbol func_ov062_0211b51c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov062_0211b51c(char *c)
 {
     void *pl;
@@ -1071,7 +1062,6 @@ int func_ov062_0211b51c(char *c)
 }
 
 // @symbol func_ov062_0211b3ac
-/* recovered: shared common types */
 extern "C" int func_ov062_0211b3ac(char* sl)
 {
     char* player;
@@ -1131,7 +1121,7 @@ extern "C" int func_ov062_0211b3ac(char* sl)
 }
 
 // @symbol func_ov062_0211b2fc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov062_0211b2fc(char* c){
   Vector3 v[2];
   v[0].z = 0;

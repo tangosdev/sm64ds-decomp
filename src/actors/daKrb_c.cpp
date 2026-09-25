@@ -281,8 +281,6 @@ void func_ov084_021290d4(char *c)
 
 // @symbol func_ov084_02129168
 #include "decl_dBgCh_Actr.h"
-#include "decl_common.h"
-#include "common.h"
 extern "C" {
 
 extern int _ZN4cstd4fdivEii(int a, int b);
@@ -435,32 +433,38 @@ extern "C" void func_ov084_021294d0(char* c)
         return;
     }
 
-    char* fr2 = _ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x1b4);
-    int r5;
+    /* Copy the floor result into obj's own surface record, then ask what kind of
+     * ground it is. The Goomba dies on some terrain types and acts on others. */
+    char* floorResult = _ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x1b4);
+    int surfaceType;
     {
-    char* d = obj + 4;
-    int a = *(int*)(fr2 + 4);
-    int b = *(int*)(fr2 + 8);
-    *(int*)(d) = b ? a : a;
-    *(int*)(d + 4) = b;
-    *(int*)(d + 8) = *(int*)(fr2 + 0xc);
-    *(int*)(d + 0xc) = *(int*)(fr2 + 0x10);
-    *(int*)(d + 0x10) = *(int*)(fr2 + 0x14);
+    char* surface = obj + 4;
+    int normalX = *(int*)(floorResult + 4);
+    int normalY = *(int*)(floorResult + 8);
+    /* `normalY ? normalX : normalX` is not a typo and not dead: both arms are the
+     * same value, and the ternary is what makes mwccarm materialize normalX after
+     * the load of normalY instead of before it. Collapsing it to a plain store
+     * reorders the pair and the function stops reproducing. */
+    *(int*)(surface) = normalY ? normalX : normalX;
+    *(int*)(surface + 4) = normalY;
+    *(int*)(surface + 8) = *(int*)(floorResult + 0xc);
+    *(int*)(surface + 0xc) = *(int*)(floorResult + 0x10);
+    *(int*)(surface + 0x10) = *(int*)(floorResult + 0x14);
     *(int*)(obj) = (int)data_02099368;
-    *(unsigned short*)(obj + 0x18) = *(unsigned short*)(fr2 + 0x18);
-    *(unsigned short*)(obj + 0x1a) = *(unsigned short*)(fr2 + 0x1a);
-    *(int*)(obj + 0x1c) = *(int*)(fr2 + 0x1c);
-    *(int*)(obj + 0x20) = *(int*)(fr2 + 0x20);
-    *(int*)(obj + 0x24) = *(int*)(fr2 + 0x24);
-    r5 = func_02037e38((unsigned int*)d);
+    *(unsigned short*)(obj + 0x18) = *(unsigned short*)(floorResult + 0x18);
+    *(unsigned short*)(obj + 0x1a) = *(unsigned short*)(floorResult + 0x1a);
+    *(int*)(obj + 0x1c) = *(int*)(floorResult + 0x1c);
+    *(int*)(obj + 0x20) = *(int*)(floorResult + 0x20);
+    *(int*)(obj + 0x24) = *(int*)(floorResult + 0x24);
+    surfaceType = func_02037e38((unsigned int*)surface);
     }
     if (func_02037e84((int*)(obj + 4)) == 8) {
-        if (r5 == 6 || r5 == 7 || r5 == 8 || r5 == 9)
+        if (surfaceType == 6 || surfaceType == 7 || surfaceType == 8 || surfaceType == 9)
             goto action;
     }
-    if (r5 == 0x13 || r5 == 1)
+    if (surfaceType == 0x13 || surfaceType == 1)
         goto action;
-    if ((unsigned)(r5 - 4) > 1)
+    if ((unsigned)(surfaceType - 4) > 1)
         goto dtor;
 action:
     _ZN12dEnemyBase_c9SpawnCoinEv(c);
@@ -554,7 +558,7 @@ void _ZN8dActor_c19UntrackInDeathTableEv(void* self);
 extern int data_ov084_02130218[];
 
 int func_ov084_021298d0(char* c){
-    int r4 = _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(c, c + 0x1b4);
+    int deathState = _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(c, c + 0x1b4);
     if ((unsigned int)(*(int*)(c + 0x10c) - 2) > 4) goto L_a4;
     *(int*)(c + 0x3cc) = 0x1000;
     _ZN9Animation7AdvanceEv(c + 0x3c0);
@@ -578,7 +582,7 @@ int func_ov084_021298d0(char* c){
     _ZN5dCc_c6UpdateEv(c + 0x180);
 
 L_a4:
-    if (r4 == 0) goto L_end;
+    if (deathState == 0) goto L_end;
     func_02012694(data_ov084_02130218[*(int*)(c + 0x460)], (const ::Vector3 *)(c + 0x74));
     func_ov084_021296cc(c);
     /* ROM: copy+respawn when (deathPhase < 6) OR (byte_464 == 2) */
@@ -592,17 +596,17 @@ L_a4:
         _ZN8dActor_c19UntrackInDeathTableEv(c);
     }
 L_end:
-    return r4;
+    return deathState;
 }
 }
 
 // @symbol func_ov084_02129a00
 extern "C" {
 int func_ov084_02129a00(char *self) {
-    int r4 = _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(self, self + 0x1b4);
-    if (r4 == 0)
+    int eatState = _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(self, self + 0x1b4);
+    if (eatState == 0)
         goto ret0;
-    if (r4 == 1) {
+    if (eatState == 1) {
         Vector3 v;
         char *actor = *(char **)(self + 0xd0);
         v.x = 0;
@@ -618,7 +622,7 @@ int func_ov084_02129a00(char *self) {
             _ZN5dCc_c5ClearEv(self + 0x180);
             return 0;
         }
-    } else if (r4 == 3) {
+    } else if (eatState == 3) {
         if (_ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x1b4))
             *(int *)(((int)self + 0x98)) >>= 1;
     }
@@ -656,7 +660,7 @@ int func_ov084_02129a00(char *self) {
 
     if (*(int *)(self + 0x460) != 3)
         goto ret1;
-    if (r4 < 3)
+    if (eatState < 3)
         goto ret1;
     if (*(int *)(self + 0x60) >= *(int *)(self + 0x420) - 0x3e8000)
         goto ret1;
@@ -739,52 +743,65 @@ void func_ov084_02129cf4(char *c, Fix12i distThresh)
 
 // @symbol func_ov084_02129ed4
 extern "C" {
+/* Collision reaction: something touched this Goomba, decide what it did.
+ *
+ * `flags` is the collision word at 0x1a0 and `other` the actor found through the
+ * hit id at 0x1a4. Type ids are the debug-table profile numbers this class is
+ * registered under -- 0xc8 KURIBO, 0xc9 KURIBO_S, 0xca KURIBO_L, and 0xbf for a
+ * Player -- so `myType` is which of the three Goomba sizes WE are, not what hit
+ * us. The outcome is either death (cap released, then KillByInvincibleChar with
+ * a knockback direction), a stomp (Player::Bounce), or hurting the player.
+ *
+ * `variantMatch` and `typeMatch` are scratch booleans, and materializing them
+ * instead of testing inline is deliberate: mwccarm emits the comparison into a
+ * register and then re-tests it, which is the shape the cartridge has. Folding
+ * either back into its `if` collapses the pair. See notes/matching-style.md 3. */
 void func_ov084_02129ed4(void* c)
 {
-    s16 aC[3];
-    s16 a12[3];
-    s16 a18[3];
-    volatile Vector3 v20;
-    volatile Vector3 v2c;
-    Vector3 v38;
-    Vector3 v44;
-    Vector3 v50;
-    Vector3 v5c;
-    Vector3 v68;
-    Vector3 v74;
-    void* r6;
+    s16 killDirNormal[3];
+    s16 killDirVariant[3];
+    s16 killDirPlayer[3];
+    volatile Vector3 playerPos;
+    volatile Vector3 playerPosJump;
+    Vector3 capReleaseOnHit;
+    Vector3 capReleaseOnKill;
+    Vector3 hurtOriginFirstHit;
+    Vector3 hurtOriginRepeat;
+    Vector3 hurtOriginJumped;
+    Vector3 capReleaseOnExit;
+    void* other;
     u32 flags;
-    s32 var_r5;
-    s32 var_r4;
-    u16 t2;
-    s32 var_r1;
-    s32 var_r0;
+    s32 turnAround;
+    s32 hurtKnockback;
+    u16 myType;
+    s32 variantMatch;
+    s32 typeMatch;
     u32 id;
 
     id = *(u32*)((char*)c + 0x1a4);
     if (id == 0) return;
-    r6 = _ZN8dActor_c10FindWithIDEj(id);
-    if (r6 == 0) return;
+    other = _ZN8dActor_c10FindWithIDEj(id);
+    if (other == 0) return;
 
     flags = I(c, 0x1a0);
-    var_r4 = 0xc000;
+    hurtKnockback = 0xc000;
     I(c, 0x46c) = flags;
-    t2 = U16f(c, 0xc);
-    var_r5 = 0;
-    if (I(c, 0x460) == 3) var_r4 = 0x5000;
-    var_r1 = (s32)(t2 == 0xc9);
+    myType = U16f(c, 0xc);
+    turnAround = 0;
+    if (I(c, 0x460) == 3) hurtKnockback = 0x5000;
+    variantMatch = (s32)(myType == 0xc9);
 
-    if (var_r1 == 0 && (flags & 0x10)) {
-        v38.x = 0; v38.y = 0x6c000; v38.z = 0;
-        _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(c, &v38);
-        var_r0 = (s32)(U16f(c, 0xc) == 0xc8);
-        if (var_r0 != 0) {
-            aC[0] = -0x2000; aC[1] = 0; aC[2] = 0;
-            _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, aC, r6, 0x41000);
+    if (variantMatch == 0 && (flags & 0x10)) {
+        capReleaseOnHit.x = 0; capReleaseOnHit.y = 0x6c000; capReleaseOnHit.z = 0;
+        _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(c, &capReleaseOnHit);
+        typeMatch = (s32)(U16f(c, 0xc) == 0xc8);
+        if (typeMatch != 0) {
+            killDirNormal[0] = -0x2000; killDirNormal[1] = 0; killDirNormal[2] = 0;
+            _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, killDirNormal, other, 0x41000);
             return;
         }
-        a12[0] = -0x1800; a12[1] = 0; a12[2] = 0;
-        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, a12, r6, 0x96000);
+        killDirVariant[0] = -0x1800; killDirVariant[1] = 0; killDirVariant[2] = 0;
+        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, killDirVariant, other, 0x96000);
         return;
     }
 
@@ -799,14 +816,14 @@ void func_ov084_02129ed4(void* c)
     }
 
     if (flags & 0x40000) {
-        var_r5 = 1;
+        turnAround = 1;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char*)c + 0x370, data_ov084_02130cd0[1], 0x40000000, 0x1000, 0);
         I(c, 0x10c) = 4;
         goto block_68;
     }
 
-    var_r1 = (s32)(t2 == 0xca);
-    if (var_r1 == 0) {
+    variantMatch = (s32)(myType == 0xca);
+    if (variantMatch == 0) {
         if (flags & 0x20000) {
             I(c, 0x10c) = 7;
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char*)c + 0x370, data_ov084_02130ce0[1], 0x40000000, 0x1000, 0);
@@ -824,7 +841,7 @@ void func_ov084_02129ed4(void* c)
             goto block_68;
         }
         if (flags & 0x380) {
-            var_r5 = 1;
+            turnAround = 1;
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char*)c + 0x370, data_ov084_02130cd0[1], 0x40000000, 0x1000, 0);
             I(c, 0x10c) = 3;
             goto block_68;
@@ -832,28 +849,28 @@ void func_ov084_02129ed4(void* c)
         if (flags & 0x40) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char*)c + 0x370, data_ov084_02130ce0[1], 0x40000000, 0x1000, 0);
             I(c, 0x10c) = 2;
-            var_r5 = 1;
+            turnAround = 1;
             goto block_68;
         }
         if (!(flags & 0x8000)) {
-            var_r0 = (s32)(U16f(r6, 0xc) == 0xbf);
-            if (var_r0 != 0) {
-                if (U8f(r6, 0x6f9) != 0) {
-                    v44.x = 0; v44.y = 0x6c000; v44.z = 0;
-                    _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(c, &v44);
-                    a18[0] = 0x2000; a18[1] = 0; a18[2] = 0;
-                    _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, a18, r6, 0x41000);
+            typeMatch = (s32)(U16f(other, 0xc) == 0xbf);
+            if (typeMatch != 0) {
+                if (U8f(other, 0x6f9) != 0) {
+                    capReleaseOnKill.x = 0; capReleaseOnKill.y = 0x6c000; capReleaseOnKill.z = 0;
+                    _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(c, &capReleaseOnKill);
+                    killDirPlayer[0] = 0x2000; killDirPlayer[1] = 0; killDirPlayer[2] = 0;
+                    _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, killDirPlayer, other, 0x41000);
                     return;
                 }
-                { Vector3* pp = (Vector3*)(((int)r6 + 0x5c) & 0xffffffffffffffffULL); v20.x = pp->x; v20.y = pp->y; v20.z = pp->z; }
-                if (_ZN6Player9IsOnShellEv(r6) != 0) {
+                { Vector3* pp = (Vector3*)(((int)other + 0x5c) & 0xffffffffffffffffULL); playerPos.x = pp->x; playerPos.y = pp->y; playerPos.z = pp->z; }
+                if (_ZN6Player9IsOnShellEv(other) != 0) {
                     I(c, 0x10c) = 5;
-                    var_r5 = 1;
+                    turnAround = 1;
                     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char*)c + 0x370, data_ov084_02130ce0[1], 0x40000000, 0x1000, 0);
                     goto block_68;
                 }
-                if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, (char*)c + 0x180, r6) != 0) {
-                    _ZN6Player6BounceE5Fix12IiE(r6, 0x28000);
+                if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, (char*)c + 0x180, other) != 0) {
+                    _ZN6Player6BounceE5Fix12IiE(other, 0x28000);
                     func_02012694(0xe0, (const ::Vector3 *)((char*)c + 0x74));
                     I(c, 0x10c) = 1;
                     I(c, 0x80) = 0x1000;
@@ -861,19 +878,19 @@ void func_ov084_02129ed4(void* c)
                     I(c, 0x88) = 0x1000;
                     goto block_68;
                 }
-                if (U8f(r6, 0x6fb) != 0) return;
+                if (U8f(other, 0x6fb) != 0) return;
                 if (I(c, 0x434) == 0) {
                     if (I(c, 0x460) == 0) {
                         _ZN8dActor_c13SmallPoofDustEv(c);
-                        v50.x = I(c, 0x5c); v50.y = I(c, 0x60); v50.z = I(c, 0x64);
-                        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(r6, &v50, 0, var_r4, 1, 0, 1);
+                        hurtOriginFirstHit.x = I(c, 0x5c); hurtOriginFirstHit.y = I(c, 0x60); hurtOriginFirstHit.z = I(c, 0x64);
+                        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(other, &hurtOriginFirstHit, 0, hurtKnockback, 1, 0, 1);
                         func_ov084_02129498((char*)c);
                         func_02012694(0x110, (const ::Vector3 *)((char*)c + 0x74));
                         return;
                     }
                     if ((I(c, 0x1a0) & 0x400000) == 0) return;
-                    v5c.x = I(c, 0x5c); v5c.y = I(c, 0x60); v5c.z = I(c, 0x64);
-                    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(r6, &v5c, data_ov084_02130204[I(c, 0x460)], var_r4, 1, 0, 1);
+                    hurtOriginRepeat.x = I(c, 0x5c); hurtOriginRepeat.y = I(c, 0x60); hurtOriginRepeat.z = I(c, 0x64);
+                    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(other, &hurtOriginRepeat, data_ov084_02130204[I(c, 0x460)], hurtKnockback, 1, 0, 1);
                     I(c, 0x434) = 1;
                     return;
                 }
@@ -884,11 +901,11 @@ void func_ov084_02129ed4(void* c)
         goto block_68;
     }
 
-    var_r0 = (s32)(U16f(r6, 0xc) == 0xbf);
-    if (var_r0 != 0) {
-        { Vector3* pp = (Vector3*)(((int)r6 + 0x5c) & 0xffffffffffffffffULL); v2c.x = pp->x; v2c.y = pp->y; v2c.z = pp->z; }
-        if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, (char*)c + 0x180, r6) != 0) {
-            _ZN6Player6BounceE5Fix12IiE(r6, 0x28000);
+    typeMatch = (s32)(U16f(other, 0xc) == 0xbf);
+    if (typeMatch != 0) {
+        { Vector3* pp = (Vector3*)(((int)other + 0x5c) & 0xffffffffffffffffULL); playerPosJump.x = pp->x; playerPosJump.y = pp->y; playerPosJump.z = pp->z; }
+        if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, (char*)c + 0x180, other) != 0) {
+            _ZN6Player6BounceE5Fix12IiE(other, 0x28000);
             func_02012694(0xe0, (const ::Vector3 *)((char*)c + 0x74));
             I(c, 0x10c) = 1;
             I(c, 0x80) = 0x1000;
@@ -896,12 +913,12 @@ void func_ov084_02129ed4(void* c)
             I(c, 0x88) = 0x1000;
             goto block_68;
         }
-        if (U8f(r6, 0x6fb) != 0) return;
+        if (U8f(other, 0x6fb) != 0) return;
         if (I(c, 0x434) == 0) {
             I(c, 0x434) = 1;
             if ((I(c, 0x1a0) & 0x400000) == 0) return;
-            v68.x = I(c, 0x5c); v68.y = I(c, 0x60); v68.z = I(c, 0x64);
-            _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(r6, &v68, data_ov084_02130204[I(c, 0x460)], var_r4, 1, 0, 1);
+            hurtOriginJumped.x = I(c, 0x5c); hurtOriginJumped.y = I(c, 0x60); hurtOriginJumped.z = I(c, 0x64);
+            _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(other, &hurtOriginJumped, data_ov084_02130204[I(c, 0x460)], hurtKnockback, 1, 0, 1);
             return;
         }
         goto block_68;
@@ -909,16 +926,16 @@ void func_ov084_02129ed4(void* c)
 
 block_68:
     if (I(c, 0x10c) != 0) {
-        v74.x = 0; v74.y = 0x6c000; v74.z = 0;
-        _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(c, &v74);
+        capReleaseOnExit.x = 0; capReleaseOnExit.y = 0x6c000; capReleaseOnExit.z = 0;
+        _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(c, &capReleaseOnExit);
     }
-    func_ov002_020aea30(c, r6, (char*)c + 0x1b4);
-    if (var_r5 != 0) {
+    func_ov002_020aea30(c, other, (char*)c + 0x1b4);
+    if (turnAround != 0) {
         S16f(c, 0x8e) = (s16)(S16f(c, 0x94) + 0x8000);
     }
     if (I(c, 0x460) != 3) return;
     if ((I(c, 0x46c) & 0x40) || (I(c, 0x46c) & 0x380)) {
-        *(s32*)(((int)c + 0x98) & 0xffffffffffffffffULL) += I(r6, 0x98);
+        *(s32*)(((int)c + 0x98) & 0xffffffffffffffffULL) += I(other, 0x98);
     }
     if (I(c, 0x46c) & 0x400) {
         *(s32*)(((int)c + 0x98) & 0xffffffffffffffffULL) += 0x20;
@@ -932,7 +949,7 @@ block_68:
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 extern "C" void func_ov084_0212a580(char* c){
-    Vector3_16_local s16;
+    Vector3_16_local rotation;
     Vector3 pos;
     Vector3 arg;
     Vector3_16_local arg16;
@@ -941,9 +958,9 @@ extern "C" void func_ov084_0212a580(char* c){
     *(int*)(c + 0x3b0) = *(int*)(c + 0x5c) >> 3;
     *(int*)(c + 0x3b4) = *(int*)(c + 0x60) >> 3;
     *(int*)(c + 0x3b8) = *(int*)(c + 0x64) >> 3;
-    s16.x = *(short*)(c + 0x8c);
-    s16.y = *(short*)(c + 0x8e);
-    s16.z = *(short*)(c + 0x90);
+    rotation.x = *(short*)(c + 0x8c);
+    rotation.y = *(short*)(c + 0x8e);
+    rotation.z = *(short*)(c + 0x90);
     if ((*(int*)(c + 0xb0) & 0x40000 ? 1 : 0) == 0) {
         if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1b4)) {
             _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x3d4, c + 0x38c, *(int*)(c + 0x80) * 0x50, 0x1e000, 0xf);
@@ -959,9 +976,9 @@ extern "C" void func_ov084_0212a580(char* c){
     arg.x = ((int*)&pos)[0];
     arg.y = ((int*)&pos)[1];
     arg.z = ((int*)&pos)[2];
-    arg16.x = ((unsigned short*)&s16)[0];
-    arg16.y = ((unsigned short*)&s16)[1];
-    arg16.z = ((unsigned short*)&s16)[2];
+    arg16.x = ((unsigned short*)&rotation)[0];
+    arg16.y = ((unsigned short*)&rotation)[1];
+    arg16.z = ((unsigned short*)&rotation)[2];
     /* equal-arm ternary forces arg16 setup (r2) before arg (r1) — matches ROM call-arg order */
     _ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16((dCapEnemy_c*)c, arg, c ? arg16 : arg16);
 }
@@ -1216,7 +1233,7 @@ void func_ov084_0212abd4(char *self)
 extern "C" {
 void func_ov084_0212af74(char *c)
 {
-    Vector3 sp4;
+    Vector3 targetPos;
     void *player;
     s32 dist;
     s32 flag;
@@ -1242,13 +1259,13 @@ void func_ov084_0212af74(char *c)
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x370, (void *)data_ov084_02130ce8[1], 0, 0x1000, 0);
     }
 
-    func_ov074_0212087c(&sp4, player, *(u8 *)(c + 0x474));
+    func_ov074_0212087c(&targetPos, player, *(u8 *)(c + 0x474));
 
     if (ApproachAngle((s16 *)(c + 0x94), *(s16 *)(c + 0x45a), 4, 0x1000, 0x400) == 0 &&
         _ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1b4) != 0)
     {
         Vec3_HorzDist(c + 0x5c, c + 0x41c);
-        dist = Vec3_HorzDist(c + 0x5c, &sp4);
+        dist = Vec3_HorzDist(c + 0x5c, &targetPos);
 
         if ((*(s32 *)((char *)player + 0x5cc) == 4 && *(s16 *)((char *)player + 0x5f6) == 0) ||
             DecIfAbove0_Byte(c + 0x475) != 0 ||
@@ -1287,12 +1304,12 @@ void func_ov084_0212af74(char *c)
                 _Z14ApproachLinearRiii((int *)(c + 0x98), *(s32 *)(c + 0x444), 0x500);
             }
         } else {
-            *(s16 *)(c + 0x45a) = Vec3_HorzAngle((Vector3 *)(c + 0x5c), &sp4);
-            if (Vec3_HorzDist(c + 0x5c, &sp4) < 0x32000) {
+            *(s16 *)(c + 0x45a) = Vec3_HorzAngle((Vector3 *)(c + 0x5c), &targetPos);
+            if (Vec3_HorzDist(c + 0x5c, &targetPos) < 0x32000) {
                 *(s32 *)(c + 0x444) = *(s32 *)((char *)player + 0x5e8) >> 2;
-            } else if (Vec3_HorzDist(c + 0x5c, &sp4) < 0x64000) {
+            } else if (Vec3_HorzDist(c + 0x5c, &targetPos) < 0x64000) {
                 *(s32 *)(c + 0x444) = *(s32 *)((char *)player + 0x5e8) >> 1;
-            } else if (Vec3_HorzDist(c + 0x5c, &sp4) < 0x96000) {
+            } else if (Vec3_HorzDist(c + 0x5c, &targetPos) < 0x96000) {
                 *(s32 *)(c + 0x444) = *(s32 *)((char *)player + 0x5e8);
             } else {
                 s32 idx = *(s32 *)(c + 0x460);

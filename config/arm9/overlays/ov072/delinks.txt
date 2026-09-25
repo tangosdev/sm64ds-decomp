@@ -9,81 +9,9 @@ src/actors/daBgSnmBdy_c.cpp:
     .text start:0x0211f000 end:0x0211ff34
     .data start:0x02122780 end:0x0212283c
 
-src/_ZN12daBgSnmHed_cD1Ev.cpp:
+src/actors/daBgSnmHed_c.cpp:
     complete
-    .text start:0x0211ff34 end:0x0211ff7c
-
-src/_ZN12daBgSnmHed_cD0Ev.cpp:
-    complete
-    .text start:0x0211ff7c end:0x0211ffd8
-
-src/_ZN12daBgSnmHed_c11UpdateModelEv.cpp:
-    complete
-    .text start:0x0211ffd8 end:0x0212001c
-
-src/_ZN12daBgSnmHed_c6State3Ev.cpp:
-    complete
-    .text start:0x0212001c end:0x02120180
-
-src/_ZN12daBgSnmHed_c10InitState3Ev.cpp:
-    complete
-    .text start:0x02120180 end:0x021201d4
-
-src/_ZN12daBgSnmHed_c6State2Ev.cpp:
-    complete
-    .text start:0x021201d4 end:0x02120308
-
-src/_ZN12daBgSnmHed_c10InitState2Ev.cpp:
-    complete
-    .text start:0x02120308 end:0x02120358
-
-src/_ZN12daBgSnmHed_c6State1Ev.cpp:
-    complete
-    .text start:0x02120358 end:0x02120430
-
-src/_ZN12daBgSnmHed_c10InitState1Ev.cpp:
-    complete
-    .text start:0x02120430 end:0x02120450
-
-src/_ZN12daBgSnmHed_c6State0Ev.cpp:
-    complete
-    .text start:0x02120450 end:0x02120514
-
-src/_ZN12daBgSnmHed_c10InitState0Ev.cpp:
-    complete
-    .text start:0x02120514 end:0x02120560
-
-src/_ZN12daBgSnmHed_c17CallStateBehaviorEv.cpp:
-    complete
-    .text start:0x02120560 end:0x0212059c
-
-src/_ZN12daBgSnmHed_c13CallStateInitEv.cpp:
-    complete
-    .text start:0x0212059c end:0x021205d4
-
-src/_ZN12daBgSnmHed_c8SetStateEi.cpp:
-    complete
-    .text start:0x021205d4 end:0x021205f0
-
-src/_ZN12daBgSnmHed_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021205f0 end:0x02120634
-
-src/_ZN12daBgSnmHed_c16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x02120634 end:0x02120638
-
-src/_ZN12daBgSnmHed_c6RenderEv.cpp:
-    complete
-    .text start:0x02120638 end:0x0212066c
-
-src/_ZN12daBgSnmHed_c8BehaviorEv.cpp:
-    complete
-    .text start:0x0212066c end:0x0212069c
-
-src/_ZN12daBgSnmHed_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x0212069c end:0x021207d4
+    .text start:0x0211ff34 end:0x021207d4
 
 src/d_a_bg_snm_hed.c:
     complete

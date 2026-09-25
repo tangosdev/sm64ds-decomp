@@ -1,14 +1,15 @@
 //cpp
-/* HAND-ASSEMBLED translation unit -- ov070/daPropeller_Heyho_c (27 function(s)).
- * tubuild create refused this TU (legacy bodies wrapped in extern "C" { }),
- * so this is a raw concatenation of the complete legacy files in REVERSE
- * ROM order (mwccarm emits one .text section per function in the reverse
- * of source order). Conflicting declarations were reconciled by hand; see
- * the manifest notes.
+/* daPropeller_Heyho_c -- the Fly Guy (PROPELLER_HEYHO), ov070, 27 functions.
  *
+ * Function order is the REVERSE of the ROM's: mwccarm 2004/b56 emits one
+ * .text section per function in reverse source order. Do not reorder.
  *
- * deslop
- * Leftover: dCcAc_c::Init / dBgCh_Actr::Init stay mangled (Fix12-by-value, 6az;
+ * This file was assembled by hand -- tubuild create refused the TU because
+ * the legacy bodies were wrapped in extern "C" { } -- by concatenating the
+ * complete legacy files and reconciling their conflicting declarations; the
+ * manifest notes record how each conflict was settled.
+ *
+ * Known limits: dCcAc_c::Init / dBgCh_Actr::Init stay mangled (Fix12-by-value, 6az;
  *   dBgCh Init header Fix12i mangles as int -- this TU's InitResources call).
  *   ModelAnim::SetAnim, DropShadowRadHeight, SpawnCoins, SpawnFireball,
  *   Particle::System::New / NewUnkCallback818, Player::SpinBounce / Hurt stay
@@ -66,7 +67,6 @@ struct V3w { int w[3]; };  /* array-wrapper: C++ scalarizes a plain struct copy;
 struct V3h { short h[3]; };
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol daPropeller_Heyho_c_classInit
 /* The registry factory behind the PROPELLER_HEYHO profile.
  * `return new daPropeller_Heyho_c()` MATCHES (size 0x50); the synthesized
@@ -77,15 +77,11 @@ extern "C" daPropeller_Heyho_c *daPropeller_Heyho_c_classInit(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c13OnYoshiTryEatEv
-#include "daPropeller_Heyho_c.h"
-/* recovered: renamed to Class_Method */
 s32 daPropeller_Heyho_c::OnYoshiTryEat() {
     return 5;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player
 // recovered name: FlyGuy_OnTurnIntoEgg
@@ -94,7 +90,6 @@ s32 daPropeller_Heyho_c::OnYoshiTryEat() {
  * placeholder's former address (former name func_ov070_021204ec).
  * Matched byte-for-byte with mwccarm 2004/b56 (ov070).
  */
-#include "daPropeller_Heyho_c.h"
 #include "Player.h"
 
 void daPropeller_Heyho_c::OnTurnIntoEgg(Player &player)
@@ -104,21 +99,15 @@ void daPropeller_Heyho_c::OnTurnIntoEgg(Player &player)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv
-#include "daPropeller_Heyho_c.h"
 // recovered name: FlyGuy_OnAimedAtWithEgg
-/* recovered: renamed to Class_Method */
 /* daPropeller_Heyho_c::OnAimedAtWithEgg - recovered from vtable slot identity */
 s32 daPropeller_Heyho_c::OnAimedAtWithEgg() {
     return 0x2b000; /* Fix12 egg-aim HEIGHT added to pos.y, per dEnemyBase_c.h slot-29 */
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method */
-#include "daPropeller_Heyho_c.h"
 #include "SharedFilePtr.h"
 extern SharedFilePtr data_ov070_02123530;
 extern SharedFilePtr data_ov070_02123520;
@@ -159,12 +148,8 @@ int daPropeller_Heyho_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method */
-#include "daPropeller_Heyho_c.h"
 
-#include "Player.h"
 extern daPropeller_Heyho_c::State data_ov070_021235cc;
 extern daPropeller_Heyho_c::State data_ov070_021235bc;
 extern "C" {
@@ -248,10 +233,7 @@ int daPropeller_Heyho_c::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
-#include "daPropeller_Heyho_c.h"
 
 int daPropeller_Heyho_c::Render()
 {
@@ -262,19 +244,16 @@ int daPropeller_Heyho_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c16OnPendingDestroyEv
 /* recovered: shared header, real C++ method
  *
  * fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`.
  */
-#include "daPropeller_Heyho_c.h"
 
 void daPropeller_Heyho_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c16CleanupResourcesEv
 /* recovered: shared header, real C++ method
@@ -284,11 +263,7 @@ void daPropeller_Heyho_c::OnPendingDestroy()
  * TOUCHES NO FIELD. The ROM body takes no `this`; as a method it now receives
  * one and ignores it, which measured byte-free.
  */
-#include "daPropeller_Heyho_c.h"
-#include "SharedFilePtr.h"
 
-extern "C" {
-}
 
 int daPropeller_Heyho_c::CleanupResources()
 {
@@ -303,9 +278,7 @@ int daPropeller_Heyho_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_02120070
-/* recovered: shared common types */
 #include "common.h"
 extern "C" {
 
@@ -332,7 +305,6 @@ void func_ov070_02120070(daPropeller_Heyho_c* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol FlyGuy_ChangeState
 extern "C" int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p)
 {
@@ -343,7 +315,6 @@ extern "C" int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::S
     return (c->*(q->mInit))();
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211ffa8
 extern "C" {
@@ -359,9 +330,8 @@ int func_ov070_0211ffa8(daPropeller_Heyho_c* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211fd98
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 typedef short s16;
 
 extern int Vec3_Dist(void *a, void *b);
@@ -436,9 +406,8 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211fd60
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
 /* (data_ov070_02123520: SharedFilePtr view declared earlier in this TU) */
 int func_ov070_0211fd60(daPropeller_Heyho_c *p) {
@@ -448,9 +417,8 @@ int func_ov070_0211fd60(daPropeller_Heyho_c *p) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211fae4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 
 extern Player *_ZN8dActor_c22ClosestNonVanishPlayerEv(daPropeller_Heyho_c *self);
 extern short Vec3_HorzAngle(void *v0, void *v1);
@@ -556,9 +524,8 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211fa80
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 extern int _ZN8dActor_c23HorzAngleToCPlayerOrAngEv(void *);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
 int func_ov070_0211fa80(daPropeller_Heyho_c *c) {
@@ -572,9 +539,8 @@ int func_ov070_0211fa80(daPropeller_Heyho_c *c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f6e0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 typedef int s32;
 typedef short s16;
 typedef unsigned int u32;
@@ -714,7 +680,6 @@ int func_ov070_0211f6e0(char* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f694
 extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
@@ -728,9 +693,8 @@ int func_ov070_0211f694(daPropeller_Heyho_c *c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f62c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 extern int _ZN9Animation8FinishedEv(void *p);
 extern signed char data_0209f2f8;
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
@@ -749,7 +713,6 @@ int func_ov070_0211f62c(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f5f0
 struct BCA_File;
@@ -771,11 +734,8 @@ extern "C" int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov070_0211f48c
-/* recovered: shared common types */
-#include "common.h"
 char* _ZN8dActor_c13ClosestPlayerEv(void* self);
 short Vec3_HorzAngle(void* a, void* b);
 /* (ApproachAngle: this file's own int-target view, declared inside the function body) */
@@ -834,9 +794,8 @@ hitframe:
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f450
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 short func_ov070_0211f450(daPropeller_Heyho_c *c) {
     c->unk_0a4 = 0;
     c->mVertSpeed = 0;
@@ -850,15 +809,13 @@ short func_ov070_0211f450(daPropeller_Heyho_c *c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f368
-/* recovered: shared common types */
-#include "common.h"
 extern "C" int func_ov070_0211f0a4(daPropeller_Heyho_c *c);
 typedef int Fix12i;
 
+struct Vector3_16f;
 extern "C" unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, Fix12i c, Fix12i d, Fix12i e, void* f, void* g);
-extern "C" unsigned _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(unsigned a, unsigned b, Fix12i c, Fix12i d, Fix12i e, void* f);
+extern "C" u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const Vector3_16f* f);
 extern "C" void ApproachAngle(short* v, short a, int b, int c, int d);
 extern "C" void _Z14ApproachLinearRsss(void* v, short a, short b);
 
@@ -885,7 +842,6 @@ extern "C" int func_ov070_0211f368(daPropeller_Heyho_c* c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f100
 typedef int s32;
@@ -916,56 +872,56 @@ extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, i
 
 extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
 {
-    Player* r5;
-    s32 r4;
+    Player* hitPlayer;
+    s32 hitFlags;
 
     if (c->mdCcAc_c.otherOwner == 0)
         return;
-    r5 = (Player *)_ZN8dActor_c10FindWithIDEj(c->mdCcAc_c.otherOwner);
-    if (!r5)
+    hitPlayer = (Player *)_ZN8dActor_c10FindWithIDEj(c->mdCcAc_c.otherOwner);
+    if (!hitPlayer)
         return;
 
-    r4 = (s32)c->mdCcAc_c.hitFlags;
-    if (r4 & 0x40000) {
+    hitFlags = (s32)c->mdCcAc_c.hitFlags;
+    if (hitFlags & 0x40000) {
         c->mStateStep = 1;
         FlyGuy_ChangeState(c, &data_ov070_021235bc);
         return;
     }
-    if (r4 & 0x20) {
+    if (hitFlags & 0x20) {
         c->mDeathState = 1;
-        func_ov002_020aea30(c, r5, 0);
+        func_ov002_020aea30(c, hitPlayer, 0);
         return;
     }
-    if (r4 & 0x67c0) {
+    if (hitFlags & 0x67c0) {
         c->mStateStep = 0;
         FlyGuy_ChangeState(c, &data_ov070_021235bc);
         return;
     }
 
     {
-        int isBf = (int)(r5->actorID == 0xbf);
+        int isBf = (int)(hitPlayer->actorID == 0xbf);
         if (!isBf)
             return;
     }
-    if (r5->mIsVanish != 0)
+    if (hitPlayer->mIsVanish != 0)
         return;
 
-    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, &c->mdCcAc_c, r5)) {
-        _ZN6Player10SpinBounceE5Fix12IiE(r5, 0x28000);
+    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, &c->mdCcAc_c, hitPlayer)) {
+        _ZN6Player10SpinBounceE5Fix12IiE(hitPlayer, 0x28000);
         c->mDeathState = 1;
-        func_ov002_020aea30(c, r5, 0);
+        func_ov002_020aea30(c, hitPlayer, 0);
         return;
     }
 
-    if (r4 & 0x10) {
-        _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc(c, r5, (char*)0);
-        r5->IncMegaKillCount();
+    if (hitFlags & 0x10) {
+        _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc(c, hitPlayer, (char*)0);
+        hitPlayer->IncMegaKillCount();
         func_02012694(0x1d, &c->mCamSpacePosX);
         FlyGuy_ChangeState(c, &data_ov070_021235bc);
         return;
     }
 
-    if (r5->mIsMetal == 1 || r5->IsOnShell() == 1) {
+    if (hitPlayer->mIsMetal == 1 || hitPlayer->IsOnShell() == 1) {
         c->mStateStep = 0;
         FlyGuy_ChangeState(c, &data_ov070_021235bc);
         return;
@@ -976,7 +932,7 @@ extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
         v.x = c->mPosX;
         v.y = c->mPosY;
         v.z = c->mPosZ;
-        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(r5, &v, 2, 0xc000, 1, 0, 1);
+        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(hitPlayer, &v, 2, 0xc000, 1, 0, 1);
     }
     if (c->mHitDuringAttack != 0)
         return;
@@ -989,10 +945,7 @@ extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f0a4
-/* recovered: shared common types */
-#include "common.h"
 
 
 /* (dActor_c: real header type in scope; SpawnCoins goes through the mangled extern below) */

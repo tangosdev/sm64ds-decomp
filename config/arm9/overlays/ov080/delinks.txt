@@ -108,85 +108,9 @@ src/d_a_choropu.c:
     complete
     .text start:0x021249e0 end:0x02124a20
 
-src/_ZN11CrazedCrateD1Ev.cpp:
+src/actors/daBttBk_c.cpp:
     complete
-    .text start:0x02124a20 end:0x02124a68
-
-src/_ZN11CrazedCrateD0Ev.cpp:
-    complete
-    .text start:0x02124a68 end:0x02124ac4
-
-src/_ZN11CrazedCrate13OnYoshiTryEatEv.cpp:
-    complete
-    .text start:0x02124ac4 end:0x02124acc
-
-src/func_ov080_02124acc.cpp:
-    complete
-    .text start:0x02124acc end:0x02124c3c
-
-src/func_ov080_02124c3c.cpp:
-    complete
-    .text start:0x02124c3c end:0x02124e60
-
-src/func_ov080_02124e60.c:
-    complete
-    .text start:0x02124e60 end:0x02124eb0
-
-src/func_ov080_02124eb0.c:
-    complete
-    .text start:0x02124eb0 end:0x02124edc
-
-src/func_ov080_02124edc.cpp:
-    complete
-    .text start:0x02124edc end:0x02124fec
-
-src/func_ov080_02124fec.c:
-    complete
-    .text start:0x02124fec end:0x0212500c
-
-src/func_ov080_0212500c.cpp:
-    complete
-    .text start:0x0212500c end:0x0212509c
-
-src/func_ov080_0212509c.c:
-    complete
-    .text start:0x0212509c end:0x021250c8
-
-src/func_ov080_021250c8.cpp:
-    complete
-    .text start:0x021250c8 end:0x02125104
-
-src/func_ov080_02125104.cpp:
-    complete
-    .text start:0x02125104 end:0x0212513c
-
-src/func_ov080_0212513c.c:
-    complete
-    .text start:0x0212513c end:0x02125158
-
-src/_ZN11CrazedCrate16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02125158 end:0x0212517c
-
-src/_ZN11CrazedCrate16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x0212517c end:0x02125180
-
-src/_ZN11CrazedCrate6RenderEv.cpp:
-    complete
-    .text start:0x02125180 end:0x021251cc
-
-src/_ZN11CrazedCrate8BehaviorEv.cpp:
-    complete
-    .text start:0x021251cc end:0x021251ec
-
-src/_ZN11CrazedCrate13InitResourcesEv.cpp:
-    complete
-    .text start:0x021251ec end:0x02125318
-
-src/_ZN11CrazedCrate13OnTurnIntoEggER6Player.cpp:
-    complete
-    .text start:0x02125318 end:0x021253b4
+    .text start:0x02124a20 end:0x021253b4
 
 src/d_a_btt_bk.c:
     complete

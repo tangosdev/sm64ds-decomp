@@ -7,7 +7,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x021111a0..0x0211155c, eight functions with no foreign symbol inside the span",
-    "single class label over the whole run (daObjHmBskt_c, ROM RTTI name _ZTS13daObjHmBskt_c at ov030:0x02115940); the neighbours on both sides carry different class labels (_ZN13RollingLogTtmD1Ev begins at 0x0211155c, and 0x021111a0 is the first function in the module's .text)",
+    "single class label over the whole run (daObjHmBskt_c, ROM RTTI name _ZTS13daObjHmBskt_c at ov030:0x02115940); the neighbours on both sides carry different class labels (_ZN15daObjHmMaruta_cD1Ev begins at 0x0211155c, and 0x021111a0 is the first function in the module's .text)",
     "build/tu_map.json puts the seven member functions in one run 0x021111a0..0x02111524 and daObjHmBskt_c_classInit alone in the next; the factory is joined to the class run because it is the class's own factory -- it allocates 0x4e0, calls dBgActor_c's constructor, stores _ZTV13daObjHmBskt_c and constructs the dBgCh_Actr at +0x320, and nothing else in the module references it. The same join is landed precedent for ov045/daObjKm2_Ami_Bou_c.",
     "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
   ],

@@ -1,0 +1,277 @@
+{
+  "id": "ov090/daManta_c",
+  "module": "ov090",
+  "source": "src/actors/daManta_c.cpp",
+  "promoted_source": "src/actors/daManta_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x0213269c..0x02132fe8, 12 function(s), all complete delinks with no hole. build/tu_map.json names the same run ov090/daManta_c+daMenbo_c because rtti_vtables.py reads the words at 0x021341e4 and 0x021341ec as extra daMenbo_c vtable slots. Those words are not slots: daMenbo_c's table is 31 slots and ends at 0x021341e4, and both words relocate to func_ov090_021327e4 and func_ov090_02132a58 in this run. No daMenbo_c function is in the span.",
+    "class label: daManta_c. Cartridge type name at ov090:0x021341f4 is the bytes 9daManta_c.",
+    "daManta_c_classInit at 0x02132fe8..0x02133034 abuts this run and is left in src/d_a_manta.c.",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, not narrowed to this TU)."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0213269c",
+      "end": "0x02132fe8"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN9daManta_cD1Ev",
+      "address": "0x0213269c",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN9daManta_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN9daManta_cD0Ev",
+      "address": "0x021326dc",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN9daManta_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov090_02132730",
+      "address": "0x02132730",
+      "size": "0x000000b4",
+      "legacy_source": "src/func_ov090_02132730.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov090_021327e4",
+      "address": "0x021327e4",
+      "size": "0x00000274",
+      "legacy_source": "src/func_ov090_021327e4.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov090_02132a58",
+      "address": "0x02132a58",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov090_02132a58.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov090_02132ac4",
+      "address": "0x02132ac4",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov090_02132ac4.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov090_02132b14",
+      "address": "0x02132b14",
+      "size": "0x00000108",
+      "legacy_source": "src/func_ov090_02132b14.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN9daManta_c16CleanupResourcesEv",
+      "address": "0x02132c1c",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN9daManta_c16CleanupResourcesEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN9daManta_c16OnPendingDestroyEv",
+      "address": "0x02132c64",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN9daManta_c16OnPendingDestroyEv.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN9daManta_c6RenderEv",
+      "address": "0x02132c68",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN9daManta_c6RenderEv.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN9daManta_c8BehaviorEv",
+      "address": "0x02132c94",
+      "size": "0x000001a4",
+      "legacy_source": "src/_ZN9daManta_c8BehaviorEv.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN9daManta_c13InitResourcesEv",
+      "address": "0x02132e38",
+      "size": "0x000001b0",
+      "legacy_source": "src/_ZN9daManta_c13InitResourcesEv.cpp",
+      "ordinal": 11
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Key function is the out-of-line destructor under #pragma defer_codegen off. Factory is outside the licensed range, so this TU does not instantiate daManta_c."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov090-daManta_c/daManta_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 12,
+    "functions_declared": 12,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN9daManta_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev",
+        "_ZN9daManta_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        13,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI9daManta_c",
+        "_ZTS9daManta_c",
+        "_ZTV9daManta_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI9daManta_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS9daManta_c",
+        "_ZTV9daManta_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN9daManta_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-generated base-object destructor. The cartridge has only the D1 and D0 pair, at 0x0213269c and 0x021326dc, and no symbols row spells _ZN9daManta_cD2Ev."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3's four-byte destructor, vague linkage from Vector3 locals. The cartridge owns the one copy at arm9:0x020072c0."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "inherited vague-linkage RTTI; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "inherited vague-linkage RTTI; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "inherited vague-linkage RTTI; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "direct base __si_class_type_info. The third word of _ZTI9daManta_c points here. The canonical copy stays in ov002."
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in ov002."
+    },
+    {
+      "symbol": "_ZTI9daManta_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov090",
+      "canonical_address": "0x0213420c",
+      "reason": "this class's __si_class_type_info, emitted because the out-of-line destructor is the key function. Homes at ov090:0x0213420c, outside the licensed .text."
+    },
+    {
+      "symbol": "_ZTS9daManta_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov090",
+      "canonical_address": "0x021341f4",
+      "reason": "type-name string. The overlay bytes at 0x021341f4 are 9daManta_c. Text-only; the ROM keeps the string."
+    },
+    {
+      "symbol": "_ZTV9daManta_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov090",
+      "canonical_address": "0x0213423c",
+      "reason": "compiler-emitted vtable anchored by the out-of-line destructor. Public address point ov090:0x0213423c. g_profile_MANTA sits between the typeinfo and the vtable, so this promotion stays text-only and the ROM keeps the table."
+    }
+  ]
+}

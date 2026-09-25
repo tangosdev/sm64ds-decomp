@@ -519,8 +519,8 @@ individually with `match.py` before the link confirmed them:
 | function | source named | ROM uses |
 |---|---|---|
 | `_ZN9daPeach_c6RenderEv` | `CommonModel::Render` | `Model::Render` |
-| `_ZN7Tornado6RenderEv`, `_ZN14daWater_Ring_c6RenderEv` | `TextureSequence::Update` | `TextureTransformer::Update` |
-| `_ZN11BillBlaster4KillEv` (then `func_ov079_02126e58`) | `Actor::DisappearPoofDustAt` | `Actor::PoofDustAt` |
+| `_ZN7daTor_c6RenderEv`, `_ZN14daWater_Ring_c6RenderEv` | `TextureSequence::Update` | `TextureTransformer::Update` |
+| `_ZN18daObjBkKillerdai_c4KillEv` (then `func_ov079_02126e58`) | `Actor::DisappearPoofDustAt` | `Actor::PoofDustAt` |
 | [func_ov085_0212e778](../src/game/actors/d_a_c_jugem.cpp) | `…ApplyInPlaceToRotationXYZExt` | `…ApplyInPlaceToRotationZXYExt` |
 | [func_ov006_0211a048](../src/actors/dScMgSound_c.cpp)(func 17 used to assemble TU), [func_ov006_0211a5ec](../src/actors/dScMgSound_c.cpp)(func 29 used to assemble TU) | wrong `data_ov006_*` base | the adjacent one |
 | [func_ov006_02120c08](../src//minigames/d_s_mg_trampoline.cpp)(func 13 used to assemble TU) | [func_ov006_020eed68](../src\minigames\d_s_mg_jump2.cpp)(func 3 used to assemble TU) | [func_ov006_02120a64](../src\minigames\d_s_mg_trampoline.cpp)(func 8 used to assemble TU) |
@@ -587,7 +587,7 @@ Why the rest are not source-built yet:
 | count | reason |
 |---:|---|
 | 1,972 | references a symbol name `config/**/symbols.txt` does not define — the BLIND matches. No address means nothing to link to, and gap objects import weakly, so it would silently resolve to 0. |
-| 711 | the object defines a different symbol than the file/config name (e.g. `src/func_ov091_02132a0c.c` defines [daDsn_c_OnAimedAtWithEgg](../src/_ZN6Thwomp16OnAimedAtWithEggEv.cpp)) — a src/config naming drift, likely recoverable by reconciling names. |
+| 711 | the object defines a different symbol than the file/config name (e.g. `src/func_ov091_02132a0c.c` defines [daDsn_c_OnAimedAtWithEgg](../src/actors/daDsn_c.cpp)) — a src/config naming drift, likely recoverable by reconciling names. |
 | 70 | compiled `st_size` ≠ the size `symbols.txt` declares |
 | 301 | lives in a `.init` range, where a `File.o(.init)` selector would match nothing in an object whose code is in `.text` |
 | 88 | emits `.data` or `.bss` whose ROM address we do not know |

@@ -1,49 +1,62 @@
 //cpp
-/* Production translation unit for ov002/daObjMarioCap_c -- lost Mario cap
- * (overlay_actors CAP(269); RTTI ov002:0x021095ac names 15daObjMarioCap_c;
- * profile g_profile_OBJ_MARIO_CAP). ov002 is mixed (yoshi egg, switches,
- * stars, push block, player, ...); this is the cap, not those.
+/* daObjMarioCap_c -- the lost Mario cap, ov002 (overlay_actors CAP(269);
+ * RTTI ov002:0x021095ac names 15daObjMarioCap_c; profile
+ * g_profile_OBJ_MARIO_CAP). ov002 is mixed (Yoshi egg, switches, stars, push
+ * block, player, ...); this is the cap, not those.
  *
- * deslop
+ * A dropped cap slides down slopes, blinks through the last half of its
+ * timer and is destroyed when the timer ends (unless flag 0x60000 is set).
  *
- * Twenty-nine of the run's thirty functions, written in reverse ROM order
- * because mwccarm 2004/b56 emits one .text section per function in the
- * reverse of source order. OnYoshiTryEat is the key function -- the first
- * out-of-line virtual daObjMarioCap_c declares after the inline destructor in
- * daObjMarioCap_c.h -- so the compiler owns retail's D1/D0 pair and the
- * complete RTTI/vtable group, and no D2 is retained.
+ * Twenty-nine of the run's thirty functions. OnYoshiTryEat is the key
+ * function -- the first out-of-line virtual daObjMarioCap_c declares after
+ * the inline destructor in daObjMarioCap_c.h -- so the compiler owns retail's
+ * D1/D0 pair and the complete RTTI/vtable group, and no D2 is retained.
  *
- * Leftover:
- * - classInit stays in src/d_a_obj_mario_cap.c: InitResources (0x020b86d0..
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
+ *
+ *   The functions are written in REVERSE ROM order, because mwccarm 2004/b56
+ *   emits one .text section per function in the reverse of source order.
+ *
+ *   common.h comes first so Matrix4x3 is the flat s32[12] spelling; math/
+ *   Matrix.h through ModelAnim.h would scalarize the copies in
+ *   func_ov002_020b7f7c.
+ *
+ *   The PMF stand-in (CapStateSelf / Holder / C). A PMF on the real
+ *   dEnemyBase_c makes mwccarm ICE rather than give a diagnostic.
+ *
+ *   The (long long)(int) 20.12 multiplies in func_ov002_020b781c and the
+ *   (unsigned long long)(c+0x12c) or-into-vulnFlags in func_ov002_020b7b70
+ *   are the matching forms; member addressing does not match.
+ *
+ *   func_ov002_020b6fcc's angle copy keeps `a = b ? a : a` through a V16.
+ *
+ *   func_ov002_020b7330 / 020b781c / 020b7b70 / 020b7e1c keep offset soup.
+ *   Named members and the real Spawn / ClosestPlayer / CopyNormalTo do not
+ *   match (s16 vs u16 copies; SetAnim `&mModelAnim` vs `this+0x300` changes
+ *   the size).
+ *
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
+ *   dActor_c::SetRanges is not on the header (notes/mwccarm-codegen.md 6az).
+ *   ModelAnim::SetAnim / DropShadowRadHeight / ReflectAngle take Fix12<int>
+ *   by value, which has no implicit int conversion (notes/mwccarm-codegen.md
+ *   6az). dBgCh_Actr::GetFloorResult / GetWallResult are not declared.
+ *
+ * Known limits:
+ *   classInit stays in src/d_a_obj_mario_cap.c. InitResources (0x020b86d0..
  *   0x020b8b98) sits between the licensed range and the factory and does not
  *   reproduce, so folding `return new daObjMarioCap_c()` would punch a hole
  *   in .text. Leaf operator new is on the class for when that join is legal.
- * - _ZN15daObjMarioCap_c13InitResourcesEv held out (cartridge 0x4c8 at
- *   0x020b86d0..0x020b8b98; pinned 2004/b56 emits 0x4d0, 8 bytes over;
- *   no `complete` marker).
- * - dActor_c::SetRanges stays mangled (header omits it; 6az).
- * - ModelAnim::SetAnim / DropShadowRadHeight / ReflectAngle stay mangled:
- *   Fix12<int> by value has no implicit int conversion (6az).
- * - dBgCh_Actr::GetFloorResult / GetWallResult stay mangled (not declared).
- * - PMF stand-in (CapStateSelf / Holder / C) -- a PMF on the real
- *   dEnemyBase_c makes mwccarm ICE rather than a diagnostic.
- * - data_ov002_0210de* / 0210df* handles -- symbols.txt has no recovered
- *   names, so they are not coined.
- * - SharedFilePtr header has no fields; CleanupResources still casts the
+ *   _ZN15daObjMarioCap_c13InitResourcesEv is held out: the cartridge body is
+ *   0x4c8 bytes at 0x020b86d0..0x020b8b98, the pinned 2004/b56 emits 0x4d0,
+ *   8 bytes over, and there is no `complete` marker.
+ *   The data_ov002_0210de* / 0210df* handles have no recovered names in
+ *   symbols.txt, so none are coined.
+ *   The SharedFilePtr header has no fields; CleanupResources still casts the
  *   AnimRec tables.
- * - dBgCh_Gnd stays a 0x50 stack blob: C1/D1 only run on the airborne path
- *   (func_ov002_020b7f7c).
- * - +0xc8 override-matrix pointer lives in dActor_c pad_0c5 (header this
- *   class does not own).
- * - (long long)(int) 20.12 muls in func_ov002_020b781c, and the
- *   (unsigned long long)(c+0x12c) or-into-vulnFlags in func_ov002_020b7b70,
- *   keep the MATCH form (member addressing DIFFs).
- * - func_ov002_020b6fcc angle copy keeps `a = b ? a : a` through a V16.
- * - func_ov002_020b7330 / 020b781c / 020b7b70 / 020b7e1c keep offset soup:
- *   named members and real Spawn/ClosestPlayer/CopyNormalTo DIFF (s16 vs
- *   u16 copies; SetAnim `&mModelAnim` vs `this+0x300` size-DIFF).
- * - common.h first so Matrix4x3 is the flat s32[12] spelling; math/Matrix.h
- *   through ModelAnim.h would scalarize the copies in func_ov002_020b7f7c.
+ *   dBgCh_Gnd stays a 0x50 stack blob: its C1/D1 only run on the airborne
+ *   path (func_ov002_020b7f7c).
+ *   The +0xc8 override-matrix pointer lives in dActor_c's pad_0c5, a header
+ *   this class does not own.
  */
 
 #include "common.h"
@@ -195,8 +208,6 @@ extern int            *data_ov002_020ff0c4[];
 
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjMarioCap_c8BehaviorEv
 int daObjMarioCap_c::Behavior()
 {
@@ -266,8 +277,6 @@ int daObjMarioCap_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjMarioCap_c6RenderEv
 int daObjMarioCap_c::Render()
 {
@@ -286,8 +295,6 @@ int daObjMarioCap_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjMarioCap_c16OnPendingDestroyEv
 void daObjMarioCap_c::OnPendingDestroy()
 {
@@ -296,8 +303,6 @@ void daObjMarioCap_c::OnPendingDestroy()
     mCapIcon.Unlink();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjMarioCap_c16CleanupResourcesEv
 int daObjMarioCap_c::CleanupResources()
 {
@@ -341,8 +346,6 @@ s32 daObjMarioCap_c::OnYoshiTryEat() {
   return 4;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjMarioCap_c13OnTurnIntoEggER6Player
 void daObjMarioCap_c::OnTurnIntoEgg(Player &player)
 {
@@ -367,7 +370,7 @@ void daObjMarioCap_c::OnTurnIntoEgg(Player &player)
 extern "C" void func_ov002_020b7f7c(char *c)
 {
     daObjMarioCap_c *self = (daObjMarioCap_c *)c;
-    int v2[3];
+    int probe[3];
     int v[3];
     char ray[0x50];
     int m = self->mType;
@@ -410,13 +413,13 @@ extern "C" void func_ov002_020b7f7c(char *c)
         int y = self->mPosY;
         int off;
         if (self->mWithMeshClsn.IsOnGround() == 0) {
-            v2[0] = self->mPosX;
-            v2[1] = self->mPosY;
-            v2[2] = self->mPosZ;
-            v2[1] = v2[1] + 0x28000;
+            probe[0] = self->mPosX;
+            probe[1] = self->mPosY;
+            probe[2] = self->mPosZ;
+            probe[1] = probe[1] + 0x28000;
             _ZN9dBgCh_GndC1Ev(ray);
-            _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(ray, v2, 0);
-            y = v2[1];
+            _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(ray, probe, 0);
+            y = probe[1];
             if (_ZN9dBgCh_Gnd10DetectClsnEv(ray) != 0)
                 y = *(int *)(ray + 0x44);
             _ZN9dBgCh_GndD1Ev(ray);
@@ -441,21 +444,15 @@ extern "C" void func_ov002_020b7f7c(char *c)
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b7f2c
 extern "C" int func_ov002_020b7f2c(C *c, PMF *p) { c->pp = p; PMF *q = c->pp; if (*q == 0) return 0; return (c->**q)(); }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b7f24
 extern "C" int func_ov002_020b7f24(void)
 {
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b7e1c
 extern "C" int func_ov002_020b7e1c(char* self) {
     /* Named dActor_c::Spawn / mStateTimer / SaveData:: DIFFs one word. */
@@ -483,8 +480,6 @@ extern "C" int func_ov002_020b7e1c(char* self) {
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b7e08
 extern "C" int func_ov002_020b7e08(char *p)
 {
@@ -492,8 +487,6 @@ extern "C" int func_ov002_020b7e08(char *p)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b7d9c
 extern "C" int func_ov002_020b7d9c(char* c)
 {
@@ -509,16 +502,12 @@ extern "C" int func_ov002_020b7d9c(char* c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b7d94
 extern "C" int func_ov002_020b7d94(void)
 {
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b7d6c
 extern "C" int func_ov002_020b7d6c(char* c) {
     if (*(int*)(c+0xc8) == 0)
@@ -526,8 +515,6 @@ extern "C" int func_ov002_020b7d6c(char* c) {
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b7d58
 extern "C" int func_ov002_020b7d58(char *p)
 {
@@ -535,8 +522,6 @@ extern "C" int func_ov002_020b7d58(char *p)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b7cec
 extern "C" int func_ov002_020b7cec(char* c)
 {
@@ -552,8 +537,6 @@ extern "C" int func_ov002_020b7cec(char* c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b7cdc
 extern "C" int func_ov002_020b7cdc(int *p)
 {
@@ -561,8 +544,6 @@ extern "C" int func_ov002_020b7cdc(int *p)
     p[39] = 0; return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b7c30
 extern "C" int func_ov002_020b7c30(void* c) {
   daObjMarioCap_c *self = (daObjMarioCap_c *)c;
@@ -583,8 +564,6 @@ extern "C" int func_ov002_020b7c30(void* c) {
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b7b70
 extern "C" int func_ov002_020b7b70(char* c)
 {
@@ -622,23 +601,21 @@ extern "C" int func_ov002_020b7b70(char* c)
     return ret;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b781c
 extern "C" int func_ov002_020b781c(char *c)
 {
     /* Named-field / CopyNormalTo method form DIFFs 3 words. Keep MATCH offsets. */
-    struct Vector3 v1;
-    struct Vector3 v2;
+    struct Vector3 ownVel;
+    struct Vector3 slopeVel;
     struct Vector3 out;
     int st;
     char *fr;
-    int r6;
-    int r4v;
+    int surface;
+    int slopePush;
     int spd;
     short ang;
-    short a1;
-    short a2;
+    short pitch;
+    short roll;
     int b;
     int j;
     int s;
@@ -674,26 +651,26 @@ extern "C" int func_ov002_020b781c(char *c)
     }
     fr = _ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x144);
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3(fr + 4, c + 0xd4);
-    r6 = func_02037e58(fr + 4);
+    surface = func_02037e58(fr + 4);
     *(short *)(c + 0x3fc) = _ZN4cstd5atan2E5Fix12IiES1_(*(int *)(c + 0xd4), *(int *)(c + 0xdc));
-    r4v = func_ov002_020f02c8(r6);
-    func_ov002_020f030c(r6);
+    slopePush = func_ov002_020f02c8(surface);
+    func_ov002_020f030c(surface);
     spd = *(int *)(c + 0x98);
     j = (*(u16 *)(c + 0x94) >> 4) * 2;
     s = data_02082214[j];
     co = data_02082214[j + 1];
     /* (long long)(int) is the MATCH form; a plain 32-bit mul DIFFs. */
-    v1.x = (int)(((long long)spd * s + 0x800) >> 12);
-    v1.y = 0;
-    v1.z = (int)(((long long)spd * co + 0x800) >> 12);
+    ownVel.x = (int)(((long long)spd * s + 0x800) >> 12);
+    ownVel.y = 0;
+    ownVel.z = (int)(((long long)spd * co + 0x800) >> 12);
     j = (*(u16 *)(c + 0x3fc) >> 4) * 2;
     s = data_02082214[j];
     co = data_02082214[j + 1];
-    v2.x = (int)(((long long)r4v * s + 0x800) >> 12);
-    v2.y = 0;
-    v2.z = (int)(((long long)r4v * co + 0x800) >> 12);
-    Vec3_MulScalarInPlace(&v2, Vec3_HorzLen(c + 0xd4));
-    Vec3_Add(&out, &v1, &v2);
+    slopeVel.x = (int)(((long long)slopePush * s + 0x800) >> 12);
+    slopeVel.y = 0;
+    slopeVel.z = (int)(((long long)slopePush * co + 0x800) >> 12);
+    Vec3_MulScalarInPlace(&slopeVel, Vec3_HorzLen(c + 0xd4));
+    Vec3_Add(&out, &ownVel, &slopeVel);
     ang = _ZN4cstd5atan2E5Fix12IiES1_(out.x, out.z);
     *(int *)(c + 0x98) = Vec3_HorzLen(&out);
     if (*(int *)(c + 0x98) > 0xf000)
@@ -703,15 +680,13 @@ extern "C" int func_ov002_020b781c(char *c)
         (int)(((long long)*(int *)(c + 0xd4) * *(int *)(c + 0xa4) + 0x800) >> 12)
       + (int)(((long long)*(int *)(c + 0xdc) * *(int *)(c + 0xac) + 0x800) >> 12),
         *(int *)(c + 0xd8)) + 0x8000);
-    a1 = func_02010844(c, c + 0xd4, *(short *)(c + 0x8e));
-    a2 = func_02010844(c, c + 0xd4, *(short *)(c + 0x8e) - 0x4000);
-    _Z11UpdateAngleRssis(c + 0x8c, a1, 4, 0x1000);
-    _Z11UpdateAngleRssis(c + 0x90, a2, 4, 0x1000);
+    pitch = func_02010844(c, c + 0xd4, *(short *)(c + 0x8e));
+    roll = func_02010844(c, c + 0xd4, *(short *)(c + 0x8e) - 0x4000);
+    _Z11UpdateAngleRssis(c + 0x8c, pitch, 4, 0x1000);
+    _Z11UpdateAngleRssis(c + 0x90, roll, 4, 0x1000);
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b76ec
 extern "C" int func_ov002_020b76ec(char *selfv)
 {
@@ -759,8 +734,6 @@ extern "C" int func_ov002_020b76ec(char *selfv)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b74d0
 extern "C" int func_ov002_020b74d0(char *c) {
     daObjMarioCap_c *self = (daObjMarioCap_c *)c;
@@ -834,8 +807,6 @@ extern "C" int func_ov002_020b74d0(char *c) {
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b7330
 extern "C" int func_ov002_020b7330(char* self)
 {
@@ -886,8 +857,6 @@ extern "C" int func_ov002_020b7330(char* self)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b7200
 extern "C" int func_ov002_020b7200(char* c)
 {
@@ -940,8 +909,6 @@ extern "C" int func_ov002_020b7200(char* c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b71f0
 extern "C" int func_ov002_020b71f0(int *p)
 {
@@ -949,16 +916,12 @@ extern "C" int func_ov002_020b71f0(int *p)
     p[251] = 0; return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b71e8
 extern "C" int func_ov002_020b71e8(void)
 {
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020b6fcc
 extern "C" void func_ov002_020b6fcc(void* selfv)
 {

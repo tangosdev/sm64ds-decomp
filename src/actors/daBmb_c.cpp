@@ -253,7 +253,7 @@ int daBmb_c::InitResources()
 int daBmb_c::Behavior()
 {
     int flag;
-    int r0;
+    int killResult;
     void *other;
 
     if (unk_3f6 != 0) {
@@ -267,9 +267,9 @@ int daBmb_c::Behavior()
         return 1;
     }
 
-    r0 = UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 0);
-    if (r0 != 0) {
-        if (r0 == 2) {
+    killResult = UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 0);
+    if (killResult != 0) {
+        if (killResult == 2) {
             func_ov102_0214ae1c(this);
         }
         return 1;
@@ -328,8 +328,8 @@ int daBmb_c::Behavior()
             }
         }
 
-        r0 = func_ov102_0214b248(this);
-        if (r0 == 0) {
+        killResult = func_ov102_0214b248(this);
+        if (killResult == 0) {
             return 0;
         }
 
@@ -558,24 +558,24 @@ void daBmb_c::State1() {
 extern "C" {
 
 // @symbol func_ov102_0214bd90
-void func_ov102_0214bd90(char* r4){
+void func_ov102_0214bd90(char* self){
   extern int _ZNK10dBgCh_Actr13JustHitGroundEv(char* c);
   extern void func_0200fc44(char* c, struct Vector3* v, int a, int z);
 
-  if (_ZNK10dBgCh_Actr13JustHitGroundEv(r4 + 0x144)) {
+  if (_ZNK10dBgCh_Actr13JustHitGroundEv(self + 0x144)) {
     struct Vector3 v;
-    v.x = *(int*)(r4 + 0x5c);
-    v.y = *(int*)(r4 + 0x60);
-    v.z = *(int*)(r4 + 0x64);
-    func_0200fc44(r4, &v, 1, v.z);
+    v.x = *(int*)(self + 0x5c);
+    v.y = *(int*)(self + 0x60);
+    v.z = *(int*)(self + 0x64);
+    func_0200fc44(self, &v, 1, v.z);
   }
-  if (_ZNK10dBgCh_Actr10IsOnGroundEv(r4 + 0x144)) {
-    if (*(int*)(r4 + 0x38c) == 0) {
-      *(int*)(r4 + 0x98) = 0x5000;
+  if (_ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x144)) {
+    if (*(int*)(self + 0x38c) == 0) {
+      *(int*)(self + 0x98) = 0x5000;
     }
-    func_ov102_0214beb4(r4);
+    func_ov102_0214beb4(self);
   } else {
-    ((daBmb_c *)r4)->State1();
+    ((daBmb_c *)self)->State1();
   }
 }
 
@@ -617,24 +617,31 @@ void func_ov102_0214bd20(char* c)
 // @symbol _ZN7daBmb_c6State3Ev
 void daBmb_c::State3()
 {
-  int r1 = mFlags;
-  int b = (int) ((r1 & 0x400) != 0);
-  if (b)
-  {
-    func_ov102_0214b3b8(this);
-  }
-  else
-  {
-    int b2 = (int) ((r1 & 0x100) != 0);
-    if (b2)
+    /* Nothing names these two mFlags bits yet, so they keep neutral names rather
+     * than a guessed meaning. Both booleans are materialized on purpose: the
+     * cartridge tests the flag word into a register and then re-tests that, and
+     * folding either into its `if` collapses the pair.
+     *
+     * The empty 0x100 arm is real -- on that bit this state does nothing at all,
+     * and the else-branch is what carries the work. */
+    int flags = mFlags;
+    int flag0x400 = (int) ((flags & 0x400) != 0);
+    if (flag0x400)
     {
+        func_ov102_0214b3b8(this);
     }
     else
     {
-      func_ov102_0214c0b8(this);
+        int flag0x100 = (int) ((flags & 0x100) != 0);
+        if (flag0x100)
+        {
+        }
+        else
+        {
+            func_ov102_0214c0b8(this);
+        }
     }
-  }
-  _ZN9Animation7AdvanceEv((char *)this + 0x350);
+    _ZN9Animation7AdvanceEv((char *)this + 0x350);
 }
 
 /* ==========================================================================
@@ -1210,10 +1217,10 @@ void func_ov102_0214b128(void *cv) {
     if (t < 0) return;
     if (t > 2) return;
     {
-        void* r5 = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x134));
-        if (!r5) return;
+        void* hitter = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x134));
+        if (!hitter) return;
         func_ov102_0214bc20(c);
-        *(short*)(c + 0x94) = *(short*)((char*)r5 + 0x8e);
+        *(short*)(c + 0x94) = *(short*)((char*)hitter + 0x8e);
         _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x110);
         _ZN10dBgCh_Actr15ClearGroundFlagEv(c + 0x144);
     }
@@ -1411,8 +1418,8 @@ int func_ov102_0214ab1c(void *selfv)
     u8 *self = (u8 *)selfv;
     void *player;
 
-    int r4 = _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(self, self + 0x144);
-    if (r4 == 0) {
+    int eatState = _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(self, self + 0x144);
+    if (eatState == 0) {
         goto ret0;
     }
 
@@ -1446,11 +1453,11 @@ after_cannon:
         *(unsigned int *)(((int)(self + 0x128))) &= ~2u;
     }
 
-    if (r4 == 2) {
+    if (eatState == 2) {
         func_ov102_0214b384(self, 0x50);
     }
 
-    if (r4 == 3) {
+    if (eatState == 3) {
         if (_ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x144) != 0) {
             self[0x3f4] = 3;
         }
@@ -1465,7 +1472,7 @@ after_cannon:
     if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(self, self + 0x110) != 0) {
         goto hit;
     }
-    if (r4 != 3 || _ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x144) == 0) {
+    if (eatState != 3 || _ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x144) == 0) {
         goto skip_hit;
     }
 

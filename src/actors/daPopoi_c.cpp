@@ -11,7 +11,7 @@
  * Leftover: unk_400 and friends are unrecovered header fields.
  */
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol daPopoi_c_classInit
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
@@ -33,8 +33,6 @@ int *daPopoi_c_classInit(void)
 }
 
 // @symbol _ZN9daPopoi_c13InitResourcesEv
-#include "decl_common.h"
-#include "daPopoi_c.h"
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
@@ -76,10 +74,13 @@ int daPopoi_c::InitResources()
 
 #include "types.h"
 // @symbol _ZN9daPopoi_c8BehaviorEv
-#include "decl_common.h"
-#include "daPopoi_c.h"
-struct Klass; typedef void (Klass::*PMF)();
-struct M { char pad[8]; PMF pmf; };
+/* The state machine, as this member sees it. unk_3fc points at a record whose
+ * third word is the handler. StateOwner is deliberately incomplete: mwccarm
+ * 2004/b56 picks the pointer-to-member representation from class completeness.
+ * Do not substitute daPopoi_c without a byte check. */
+struct StateOwner;
+typedef void (StateOwner::*StateFn)();
+struct StateRecord { char pad[8]; StateFn handler; };
 struct dCc_c;
 struct dBgCh_Actr;
 extern "C" {
@@ -101,11 +102,13 @@ extern int data_0209f32c;
 
 int daPopoi_c::Behavior()
 {
-    int b;
-    Vector3 v;
-    int r5;
-    M *m;
+    int goingOffCliff;
+    Vector3 floorNormal;
+    int slope;
+    StateRecord *state;
 
+    /* Below the water surface (data_0209f32c): snap back to the spawn position
+     * and skip the frame. */
     if (mPosY < data_0209f32c) {
         mPosX = unk_404;
         mPosY = unk_408;
@@ -116,24 +119,27 @@ int daPopoi_c::Behavior()
     DecIfAbove0_Short((unsigned short *)((char *)&mStateTimer));
     DecIfAbove0_Short((unsigned short *)((char *)&unk_426));
 
-    m = *(M **)((char *)&unk_3fc);
-    if (m->pmf != 0)
-        (((Klass *)((char *)this))->*(m->pmf))();
+    state = *(StateRecord **)((char *)&unk_3fc);
+    if (state->handler != 0)
+        (((StateOwner *)((char *)this))->*(state->handler))();
 
     _ZN8dActor_c9UpdatePosEP5dCc_c(((char *)this), (dCc_c *)((char *)&mdCcAcPos_c));
 
-    r5 = 0;
+    /* Slope under the feet, as an angle relative to the way we are facing. */
+    slope = 0;
     if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mWithMeshClsn)) {
-        void *fr = _ZNK10dBgCh_Actr14GetFloorResultEv((char *)&mWithMeshClsn);
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)fr + 4, &v);
-        r5 = func_02010844(((char *)this), &v, mAngleY);
+        void *floorResult = _ZNK10dBgCh_Actr14GetFloorResultEv((char *)&mWithMeshClsn);
+        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)floorResult + 4, &floorNormal);
+        slope = func_02010844(((char *)this), &floorNormal, mAngleY);
     }
 
-    b = _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(((char *)this), (dBgCh_Actr *)((char *)&mWithMeshClsn), 0x3c000, (s16)0x2888, 0, 1, (void *)0x32000);
-    if (b == 0) {
-        if (r5 < 0)
-            r5 = (s16)-r5;
-        if (r5 <= 0x100)
+    /* Roll back to last frame's position if this step would walk off a ledge,
+     * or onto ground tilted more than 0x100 either way. */
+    goingOffCliff = _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(((char *)this), (dBgCh_Actr *)((char *)&mWithMeshClsn), 0x3c000, (s16)0x2888, 0, 1, (void *)0x32000);
+    if (goingOffCliff == 0) {
+        if (slope < 0)
+            slope = (s16)-slope;
+        if (slope <= 0x100)
             goto writeback;
     }
     mPosX = unk_410;
@@ -161,23 +167,27 @@ writeback:
 }
 
 // @symbol _ZN9daPopoi_c6RenderEv
-#include "daPopoi_c.h"
 extern int data_0209f32c;
 
-struct Cls {
-    virtual void method0();
-    virtual void method1();
-    virtual void method2();
-    virtual void method3();
-    virtual void method4();
-    virtual void method5(int);  /* at vtable offset 0x14 */
+/* Just enough of ModelAnim's vtable to reach ModelAnim::Render at slot 5
+ * (offset 0x14). The five leading virtuals exist only to place that slot;
+ * declaring the real class here would drag in its bases, and ModelAnim is
+ * multiply derived. */
+struct ModelAnimDraw {
+    virtual void slot0();
+    virtual void slot1();
+    virtual void slot2();
+    virtual void slot3();
+    virtual void slot4();
+    virtual void Render(int);  /* vtable offset 0x14 */
 };
 
 int daPopoi_c::Render()
 {
+    /* Nothing below the water surface is drawn. */
     if (mPosY < data_0209f32c) return 1;
-    Cls *obj = (Cls*)((char*)&mModelAnim);
-    obj->method5(0);
+    ModelAnimDraw *model = (ModelAnimDraw *)((char *)&mModelAnim);
+    model->Render(0);
     return 1;
 }
 
@@ -186,7 +196,6 @@ int daPopoi_c::Render()
  *
  * fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`.
  */
-#include "daPopoi_c.h"
 
 void daPopoi_c::OnPendingDestroy()
 {
@@ -200,11 +209,8 @@ void daPopoi_c::OnPendingDestroy()
  * TOUCHES NO FIELD. The ROM body takes no `this`; as a method it now receives
  * one and ignores it, which measured byte-free.
  */
-#include "daPopoi_c.h"
 #include "SharedFilePtr.h"
 
-extern "C" {
-}
 
 int daPopoi_c::CleanupResources()
 {
@@ -216,7 +222,7 @@ int daPopoi_c::CleanupResources()
 }
 
 // @symbol func_ov077_02126dac
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 extern void Matrix4x3_FromRotationY(void *, int);
 void func_ov077_02126dac(char *t)
 {
@@ -228,9 +234,29 @@ void func_ov077_02126dac(char *t)
 }
 
 // @symbol func_ov077_02126d5c
-struct Cst; typedef int (Cst::*PMFst)();  /* renamed: another member's shadow PMF has a different signature */
-struct Cst { char pad[0x3fc]; PMFst *pp; };
-extern "C" int func_ov077_02126d5c(void *vc, void *vp) { Cst *c = (Cst *)vc; PMFst *p = (PMFst *)vp; c->pp = p; PMFst *q = c->pp; if (*q == 0) return 1; return (c->**q)(); }
+/* Install a state and run its entry action on the same frame.
+ *
+ * The handler is read back out of the field after the store rather than reused
+ * from the argument -- mwccarm emits the str and then an ldr of the same slot,
+ * and sourcing it from `p` instead collapses that pair.
+ *
+ * This member's shadow pointer-to-member returns int, where the one Behavior
+ * declares returns void; they are separate typedefs on purpose. */
+struct StateHost;
+typedef int (StateHost::*StateEntryFn)();
+struct StateHost { char pad[0x3fc]; StateEntryFn *state; };
+
+extern "C" int func_ov077_02126d5c(void *vc, void *vp)
+{
+    StateHost *self = (StateHost *)vc;
+    StateEntryFn *next = (StateEntryFn *)vp;
+
+    self->state = next;
+
+    StateEntryFn *installed = self->state;
+    if (*installed == 0) return 1;
+    return (self->**installed)();
+}
 
 // @symbol func_ov077_02126cd4
 extern "C" {
@@ -248,10 +274,9 @@ int func_ov077_02126cd4(char* c){
 }
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov077_02126ad0
 #include "decl_Player.h"
-#include "decl_common.h"
 #include "common.h"
 extern int Vec3_Dist(void* a, void* b);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int d);
@@ -321,7 +346,7 @@ int func_ov077_02126ad0(char* c)
 }
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int frame, int speed, unsigned int flags);
 int func_ov077_02126a84(char *c) {
     *(int*)(c + 0x98) = 0;
@@ -332,7 +357,7 @@ int func_ov077_02126a84(char *c) {
 }
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 extern int func_ov077_02126d5c(void*, void*);
 
 int func_ov077_02126a50(char *c) {
@@ -344,7 +369,7 @@ int func_ov077_02126a50(char *c) {
 }
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*, void*, int, int, unsigned int);
 
 int func_ov077_02126a04(char *c) {
@@ -386,10 +411,8 @@ int func_ov077_02126930(char* c){
 }
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov077_0212679c
-#include "decl_common.h"
-#include "common.h"
 extern int Vec3_Dist(void *a, void *b);
 extern int func_ov077_02126300(void *c);
 extern int func_ov077_02126d5c(void *c, void *p);
@@ -545,7 +568,7 @@ extern "C" void func_ov077_02126528(char *c)
     func_ov077_02126d5c(c, &data_ov077_02127cd8);
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 /* (Vector3: real header type in scope) */
 
 typedef struct dBgCh_LinPad {
@@ -564,6 +587,20 @@ extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 
+/* Probe ahead for a wall or a missing floor. Returns 1 if the way is blocked,
+ * and in that case also rolls the actor back to last frame's position and zeroes
+ * its horizontal speed (+0x98). Returns 0 when the path is clear.
+ *
+ * Two rays leave the actor's head height (+0x28000): a long level one 0xc8000
+ * ahead, and a short one 0x2c000 ahead pitched down 0x3000. Blocked means
+ * "the level ray hit something, OR the pitched ray found no ground".
+ *
+ * Guarded by data_0209f2f8 == 0x2a, so the probe only runs in one level.
+ *
+ * NOTE on the two `end.x = sx; end.x = sx + ox;` pairs below: the dead first
+ * store is deliberate. mwccarm writes the base and then the sum, and folding
+ * them into one assignment changes the store sequence this function's ROM bytes
+ * record. Leave them. */
 int func_ov077_02126300(void *vc)
 {
     char *c = (char *)vc;
@@ -669,7 +706,6 @@ int func_ov077_02126300(void *vc)
  * chain) then return the object to its heap via an inline operator delete.
  * Both variants are emitted from the single inline destructor in
  * daPopoi_c.h (class-form skill): D1 then D0 in ROM order, no leaf D2. */
-#include "daPopoi_c.h"
 
 /* (no separate definition: the single ~daPopoi_c() below emits the D0 and
  * D1 variants together; mwccarm orders the variant group itself.) */
@@ -679,5 +715,4 @@ int func_ov077_02126300(void *vc)
  * (class-form skill); this marker at D1's ROM ordinal keeps the
  * accounting naming it. Members are destroyed in reverse declaration
  * order, then dEnemyBase_c::~dEnemyBase_c. */
-#include "daPopoi_c.h"
 

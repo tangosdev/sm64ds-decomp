@@ -21,7 +21,7 @@ extern "C" {
    gained that include. Nothing caught it: a file that will not compile is never
    enrolled, so every byte gate skips it and the ROM keeps the original bytes for
    this range. Declare only what decl_common.h does not. */
-void func_0203cbc0(int p);
+void func_0203cbc0(void *p);
 void _ZN7Vector3D1Ev(void *self);
 void func_ov002_020bebd4(char *c);
 void UnloadSilverStarAndNumber(void);
@@ -72,13 +72,13 @@ int Player::CleanupResources()
         {
             int q = unk_27c[i];
             if (q != 0)
-                func_0203cbc0(q);
+                func_0203cbc0((void *)q);
             q = unk_28c[i];
             if (q != 0)
-                func_0203cbc0(q);
+                func_0203cbc0((void *)q);
             q = unk_28c[j];
             if (q != 0)
-                func_0203cbc0(q);
+                func_0203cbc0((void *)q);
         }
     }
     {
@@ -99,10 +99,10 @@ int Player::CleanupResources()
             func_02073244((void *)q, 0xc, 8, _ZN7Vector3D1Ev);
         q = unk_57c;
         if (q != 0)
-            func_0203cbc0(q);
+            func_0203cbc0((void *)q);
         q = mHeldObjQueue;
         if (q != 0)
-            func_0203cbc0(q);
+            func_0203cbc0((void *)q);
     }
     ((SharedFilePtr *)(data_ov002_020ff480[mCharFileBase + (param1 & 3)]))->Release();
     b = data_0209f2d8;

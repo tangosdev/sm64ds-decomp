@@ -80,11 +80,11 @@ src/d_a_water_tatumaki.c:
     complete
     .text start:0x021121bc end:0x021121fc
 
-src/_ZN12WaterSuctionD1Ev.cpp:
+src/_ZN17daWater_Suikomi_cD1Ev.cpp:
     complete
     .text start:0x021121fc end:0x02112234
 
-src/_ZN12WaterSuctionD0Ev.cpp:
+src/_ZN17daWater_Suikomi_cD0Ev.cpp:
     complete
     .text start:0x02112234 end:0x02112280
 
@@ -108,25 +108,9 @@ src/func_ov026_02112324.c:
     complete
     .text start:0x02112324 end:0x02112328
 
-src/_ZN12WaterSuction16CleanupResourcesEv.cpp:
+src/actors/daWater_Suikomi_c.cpp:
     complete
-    .text start:0x02112328 end:0x02112330
-
-src/_ZN12WaterSuction16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x02112330 end:0x02112334
-
-src/_ZN12WaterSuction6RenderEv.cpp:
-    complete
-    .text start:0x02112334 end:0x0211233c
-
-src/_ZN12WaterSuction8BehaviorEv.cpp:
-    complete
-    .text start:0x0211233c end:0x021123c8
-
-src/_ZN12WaterSuction13InitResourcesEv.cpp:
-    complete
-    .text start:0x021123c8 end:0x02112450
+    .text start:0x02112328 end:0x02112450
 
 src/d_a_water_suikomi.c:
     complete

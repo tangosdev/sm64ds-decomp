@@ -1,6 +1,6 @@
 
 extern void func_ov004_020adb1c(int self);
-extern void func_ov006_020e3b9c(char *p);
+extern void func_ov006_020e3b9c(void *p);
 void func_ov006_020e668c(char *c)
 {
   int i;

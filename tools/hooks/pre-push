@@ -107,6 +107,21 @@ else
   echo "          'python tools/check_src_tu_compiles.py' before trusting this push."
 fi
 
+# Does every NONMATCHING draft in src/ still COMPILE? enroll.py leaves a bannered
+# draft out of the ROM build, so nothing else compiles it: #3085's draft stopped
+# compiling when a header retyped a callee and stayed broken for nine days. Same
+# compiler-present test and NOT CHECKED message as the src_tu gate above.
+if [ -f tools/mwccarm/2004/b56/mwccarm.exe ]; then
+  if ! python tools/check_drafts_compile.py --quiet; then
+    echo "pre-push: REFUSING to push (see above). Override with --no-verify if you are certain." >&2
+    exit 1
+  fi
+else
+  echo "pre-push: NONMATCHING DRAFT COMPILE GATE NOT CHECKED -- no tools/mwccarm/2004/b56/mwccarm.exe"
+  echo "          in this worktree. This is not a pass. Wire the worktree up and re-run"
+  echo "          'python tools/check_drafts_compile.py' before trusting this push."
+fi
+
 # Reference resolvability needs tools/eligible.py, which compiles ~11,100 files and
 # takes minutes -- far too slow for a hook. So this checks only when a report for
 # THIS commit already exists, and otherwise says nothing was checked rather than

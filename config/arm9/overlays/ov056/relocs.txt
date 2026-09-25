@@ -54,7 +54,6 @@ from:0x021115c8 kind:load to:0x02113368 module:overlay(56)
 from:0x021115d4 kind:load to:0x02112be0 module:overlay(56)
 from:0x021115f0 kind:load to:0x02112bec module:overlay(56)
 from:0x0211160c kind:load to:0x02112c24 module:overlay(56)
-from:0x021116b0 kind:load to:0x0213020b module:overlays(84,85)
 from:0x02112b58 kind:arm_call to:0x02017acc module:main
 from:0x02112b68 kind:arm_call to:0x020731dc module:main
 from:0x02112b74 kind:arm_call to:0x02017b4c module:main

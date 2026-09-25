@@ -1,0 +1,500 @@
+{
+  "id": "ov034/daHanachan_c",
+  "module": "ov034",
+  "source": "src/actors/daHanachan_c.cpp",
+  "promoted_source": "src/actors/daHanachan_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x21111a0..0x21136a4, 34 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daHanachan_c",
+    "module sinit corroboration: 1 sinit(s) / 1 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021111a0",
+      "end": "0x021136a4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN12daHanachan_cD1Ev",
+      "address": "0x021111a0",
+      "size": "0x00000110",
+      "legacy_source": "src/_ZN12daHanachan_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN12daHanachan_cD0Ev",
+      "address": "0x021112b0",
+      "size": "0x00000124",
+      "legacy_source": "src/_ZN12daHanachan_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov034_021113d4",
+      "address": "0x021113d4",
+      "size": "0x0000014c",
+      "legacy_source": "src/func_ov034_021113d4.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov034_02111520",
+      "address": "0x02111520",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov034_02111520.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov034_02111588",
+      "address": "0x02111588",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov034_02111588.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov034_021115c0",
+      "address": "0x021115c0",
+      "size": "0x0000000c",
+      "legacy_source": "src/func_ov034_021115c0.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov034_021115cc",
+      "address": "0x021115cc",
+      "size": "0x00000154",
+      "legacy_source": "src/func_ov034_021115cc.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov034_02111720",
+      "address": "0x02111720",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov034_02111720.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov034_02111788",
+      "address": "0x02111788",
+      "size": "0x000001ec",
+      "legacy_source": "src/func_ov034_02111788.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov034_02111974",
+      "address": "0x02111974",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov034_02111974.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov034_021119ac",
+      "address": "0x021119ac",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov034_021119ac.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov034_02111a0c",
+      "address": "0x02111a0c",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov034_02111a0c.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov034_02111a64",
+      "address": "0x02111a64",
+      "size": "0x0000014c",
+      "legacy_source": "src/func_ov034_02111a64.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov034_02111bb0",
+      "address": "0x02111bb0",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov034_02111bb0.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov034_02111c48",
+      "address": "0x02111c48",
+      "size": "0x00000204",
+      "legacy_source": "src/func_ov034_02111c48.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov034_02111e4c",
+      "address": "0x02111e4c",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov034_02111e4c.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov034_02111e68",
+      "address": "0x02111e68",
+      "size": "0x000001b8",
+      "legacy_source": "src/func_ov034_02111e68.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov034_02112020",
+      "address": "0x02112020",
+      "size": "0x0000008c",
+      "legacy_source": "src/func_ov034_02112020.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov034_021120ac",
+      "address": "0x021120ac",
+      "size": "0x000001c4",
+      "legacy_source": "src/func_ov034_021120ac.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov034_02112270",
+      "address": "0x02112270",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov034_02112270.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov034_02112284",
+      "address": "0x02112284",
+      "size": "0x000000ac",
+      "legacy_source": "src/func_ov034_02112284.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov034_02112330",
+      "address": "0x02112330",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov034_02112330.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov034_02112348",
+      "address": "0x02112348",
+      "size": "0x0000013c",
+      "legacy_source": "src/func_ov034_02112348.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov034_02112484",
+      "address": "0x02112484",
+      "size": "0x00000134",
+      "legacy_source": "src/func_ov034_02112484.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov034_021125b8",
+      "address": "0x021125b8",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov034_021125b8.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov034_02112604",
+      "address": "0x02112604",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov034_02112604.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov034_02112650",
+      "address": "0x02112650",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov034_02112650.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov034_02112688",
+      "address": "0x02112688",
+      "size": "0x000001ec",
+      "legacy_source": "src/func_ov034_02112688.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov034_02112874",
+      "address": "0x02112874",
+      "size": "0x00000178",
+      "legacy_source": "src/func_ov034_02112874.c",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_ov034_021129ec",
+      "address": "0x021129ec",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov034_021129ec.c",
+      "ordinal": 29
+    },
+    {
+      "symbol": "_ZN12daHanachan_c16CleanupResourcesEv",
+      "address": "0x02112a5c",
+      "size": "0x00000098",
+      "legacy_source": "src/_ZN12daHanachan_c16CleanupResourcesEv.cpp",
+      "ordinal": 30
+    },
+    {
+      "symbol": "_ZN12daHanachan_c6RenderEv",
+      "address": "0x02112af4",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN12daHanachan_c6RenderEv.cpp",
+      "ordinal": 31
+    },
+    {
+      "symbol": "_ZN12daHanachan_c8BehaviorEv",
+      "address": "0x02112b5c",
+      "size": "0x000006e0",
+      "legacy_source": "src/_ZN12daHanachan_c8BehaviorEv.cpp",
+      "ordinal": 32
+    },
+    {
+      "symbol": "_ZN12daHanachan_c13InitResourcesEv",
+      "address": "0x0211323c",
+      "size": "0x00000468",
+      "legacy_source": "src/_ZN12daHanachan_c13InitResourcesEv.cpp",
+      "ordinal": 33
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov034_02111a0c.cpp (func_ov034_02111a0c) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov034_02112330.cpp (func_ov034_02112330) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov034_02111520 and the one that held func_ov034_021115cc; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov034_021125b8' differs between the legacy file that used to hold func_ov034_02111588 and the one that held func_ov034_021115cc; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'DecIfAbove0_Byte' differs between the legacy file that used to hold func_ov034_02111588 and the one that held func_ov034_02111788; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov034_021125b8' differs between the legacy file that used to hold func_ov034_02111588 and the one that held func_ov034_02111788; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov034_021115cc and the one that held func_ov034_021119ac; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov034_021125b8' differs between the legacy file that used to hold func_ov034_02111588 and the one that held func_ov034_021119ac; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov034_021115cc and the one that held func_ov034_02111a64; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov034_021115cc and the one that held func_ov034_02111a64; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov034_02111974 and the one that held func_ov034_02111a64; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov034_021125b8' differs between the legacy file that used to hold func_ov034_02111588 and the one that held func_ov034_02111a64; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'DecIfAbove0_Byte' differs between the legacy file that used to hold func_ov034_02111588 and the one that held func_ov034_02111c48; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold func_ov034_02111a64 and the one that held func_ov034_02111c48; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov034_02111a64 and the one that held func_ov034_02111c48; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov034_021115cc and the one that held func_ov034_02111c48; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov034_02111520 and the one that held func_ov034_02112020; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov034_021115cc and the one that held func_ov034_021120ac; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov034_02111520 and the one that held func_ov034_021120ac; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player12GetTalkStateEv' differs between the legacy file that used to hold func_ov034_021119ac and the one that held func_ov034_021120ac; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov034_021125b8' differs between the legacy file that used to hold func_ov034_02111588 and the one that held func_ov034_021120ac; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh' differs between the legacy file that used to hold func_ov034_02111a64 and the one that held func_ov034_02112284; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Camera9SetFlag_3Ev' differs between the legacy file that used to hold func_ov034_02111a64 and the one that held func_ov034_02112284; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov034_02111974 and the one that held func_ov034_02112284; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov034_021125b8' differs between the legacy file that used to hold func_ov034_02111588 and the one that held func_ov034_02112284; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Sub' differs between the legacy file that used to hold func_ov034_02111c48 and the one that held func_ov034_02112348; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'LenVec3' differs between the legacy file that used to hold func_ov034_02111c48 and the one that held func_ov034_02112348; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov034_02111c48 and the one that held func_ov034_02112348; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov034_021125b8' differs between the legacy file that used to hold func_ov034_02111588 and the one that held func_ov034_02112348; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'DecIfAbove0_Byte' differs between the legacy file that used to hold func_ov034_02111588 and the one that held func_ov034_02112348; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov034_02111c48 and the one that held func_ov034_02112348; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold func_ov034_02111a64 and the one that held func_ov034_02112348; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK10dBgCh_Actr8IsOnWallEv' differs between the legacy file that used to hold func_ov034_02111c48 and the one that held func_ov034_02112348; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov034_021115cc and the one that held func_ov034_02112348; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold func_ov034_02111a64 and the one that held func_ov034_02112484; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov034_02111974 and the one that held func_ov034_02112688; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov034_021125b8' differs between the legacy file that used to hold func_ov034_02111588 and the one that held func_ov034_02112688; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov034_02111a64 and the one that held func_ov034_02112874; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Add' differs between the legacy file that used to hold func_ov034_02112484 and the one that held func_ov034_02112874; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold func_ov034_02112484 and the one that held func_ov034_021129ec; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold func_ov034_02111a64 and the one that held _ZN12daHanachan_c8BehaviorEv; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov034_02111974 and the one that held _ZN12daHanachan_c8BehaviorEv; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'DecIfAbove0_Byte' differs between the legacy file that used to hold func_ov034_02111588 and the one that held _ZN12daHanachan_c8BehaviorEv; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov034_021115cc and the one that held _ZN12daHanachan_c8BehaviorEv; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold func_ov034_02112484 and the one that held _ZN12daHanachan_c8BehaviorEv; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MulVec3Mat4x3' differs between the legacy file that used to hold func_ov034_02112484 and the one that held _ZN12daHanachan_c8BehaviorEv; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Add' differs between the legacy file that used to hold func_ov034_02112484 and the one that held _ZN12daHanachan_c8BehaviorEv; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov034_02111520 and the one that held _ZN12daHanachan_c13InitResourcesEv; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold func_ov034_02112484 and the one that held _ZN12daHanachan_c13InitResourcesEv; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MulVec3Mat4x3' differs between the legacy file that used to hold func_ov034_02112484 and the one that held _ZN12daHanachan_c13InitResourcesEv; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Add' differs between the legacy file that used to hold func_ov034_02112484 and the one that held _ZN12daHanachan_c13InitResourcesEv; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov034_021125b8' differs between the legacy file that used to hold func_ov034_02111588 and the one that held _ZN12daHanachan_c13InitResourcesEv; kept the first, the other is commented out for review Resolved: the TU carries one declaration of the symbol for every call site, no commented-out duplicate remains, and all 34 members byte-verify (tubuild verify TEXT-VERIFIED)."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov034-daHanachan_c/daHanachan_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 34,
+    "functions_declared": 34,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN12daHanachan_cD2Ev",
+        "_ZN7Vector3D1Ev",
+        "_ZN8Vector3sD1Ev",
+        "_ZN5Vec3DD1Ev"
+      ],
+      "deadstripped": [
+        "_ZN12daHanachan_cD2Ev",
+        "_ZN5Vec3DD1Ev",
+        "_ZN7Vector3D1Ev",
+        "_ZN8Vector3sD1Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        11,
+        12,
+        26,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI12daHanachan_c",
+        "_ZTS12daHanachan_c",
+        "_ZTV12daHanachan_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI12daHanachan_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS12daHanachan_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV12daHanachan_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN12daHanachan_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-generated base-object destructor. The cartridge has only the D1 and D0 pair, at 0x021111a0 and 0x021112b0, and no symbols row spells _ZN12daHanachan_cD2Ev."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3's four-byte destructor, vague linkage from Vector3 locals and the five Vector3 members. The cartridge owns the one copy at arm9:0x020072c0."
+    },
+    {
+      "symbol": "_ZN8Vector3sD1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02011508",
+      "reason": "Vector3s's four-byte destructor. The class destroys Vector3s unk_444[5], so this TU re-emits the vague-linkage body. The cartridge owns it at arm9:0x02011508."
+    },
+    {
+      "symbol": "_ZN5Vec3DD1Ev",
+      "disposition": "deadstrip",
+      "reason": "empty destructor of the local Vec3D in func_ov034_02111788. Vague linkage, four bytes, and the cartridge has no _ZN5Vec3DD1Ev row."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "inherited vague-linkage RTTI; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "inherited vague-linkage RTTI; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "inherited vague-linkage RTTI; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "direct base __si_class_type_info. The third word of _ZTI12daHanachan_c points here. The canonical copy stays in ov002."
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in ov002."
+    },
+    {
+      "symbol": "_ZTI12daHanachan_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov034",
+      "canonical_address": "0x0211445c",
+      "reason": "this class's __si_class_type_info, emitted because the out-of-line destructor is the key function. Already named in ov034 symbols at 0x0211445c; no second copy."
+    },
+    {
+      "symbol": "_ZTS12daHanachan_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov034",
+      "canonical_address": "0x02114478",
+      "reason": "type-name string 12daHanachan_c. Already named in ov034 symbols at 0x02114478; no second copy."
+    },
+    {
+      "symbol": "_ZTV12daHanachan_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov034",
+      "canonical_address": "0x021144bc",
+      "reason": "vtable, anchored by the out-of-line destructor. The word at 0x021144b8 is _ZTI12daHanachan_c. Homes at ov034:0x021144bc."
+    }
+  ]
+}

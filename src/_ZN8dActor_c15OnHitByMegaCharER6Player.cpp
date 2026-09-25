@@ -5,9 +5,9 @@
  *
  * Declared `void` in include/dActor_c.h -- corrected from `int`, which was
  * unfalsifiable here (one instruction either way) but proven wrong by
- * Stump::OnHitByMegaChar (slot 27, ov091 0x021335d4): four early-return
+ * daObjPile_c::OnHitByMegaChar (slot 27, ov091 0x021335d4): four early-return
  * field checks, where `int` vs `void` changes mwcc's register allocation
- * even with r0 untouched. See include/Stump.h.
+ * even with r0 untouched. See include/daObjPile_c.h.
  */
 #include "dActor_c.h"
 

@@ -8,7 +8,7 @@
 #include "decl_TextureTransformer.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV16BowserShockwaves */
+/* resolved: VT0 = _ZTV9daFRing_c */
 /* Reconstructed source-style name: SM64DS proves daFRing_c through RTTI,
  * allocation size, vtable identity, and the FIRERING registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -18,7 +18,7 @@ int *daFRing_c_classInit(void)
     int *p = (int *)_ZN7fBase_cnwEj(536);
     if (p) {
         _ZN8dActor_cC2Ev(p);
-        p[0] = (int)_ZTV16BowserShockwaves;
+        p[0] = (int)_ZTV9daFRing_c;
         _ZN9ModelAnimC1Ev((char *)p + 0xd4);
         _ZN15TextureSequenceC1Ev((char *)p + 0x138);
         _ZN15MaterialChangerC1Ev((char *)p + 0x14c);

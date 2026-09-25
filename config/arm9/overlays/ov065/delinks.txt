@@ -8,89 +8,9 @@ src/actors/daYurei_Mucho_c.cpp:
     complete
     .text start:0x02115ee0 end:0x02116f98
 
-src/_ZN5SwoopD1Ev.cpp:
+src/actors/daBasabasa_c.cpp:
     complete
-    .text start:0x02116f98 end:0x02116fe8
-
-src/_ZN5SwoopD0Ev.cpp:
-    complete
-    .text start:0x02116fe8 end:0x0211704c
-
-src/func_ov065_0211704c.c:
-    complete
-    .text start:0x0211704c end:0x02117404
-
-src/func_ov065_02117404.cpp:
-    complete
-    .text start:0x02117404 end:0x021175b0
-
-src/func_ov065_021175b0.c:
-    complete
-    .text start:0x021175b0 end:0x02117624
-
-src/func_ov065_02117624.c:
-    complete
-    .text start:0x02117624 end:0x021176fc
-
-src/func_ov065_021176fc.cpp:
-    complete
-    .text start:0x021176fc end:0x02117780
-
-src/func_ov065_02117780.c:
-    complete
-    .text start:0x02117780 end:0x021177e4
-
-src/func_ov065_021177e4.cpp:
-    complete
-    .text start:0x021177e4 end:0x02117888
-
-src/func_ov065_02117888.c:
-    complete
-    .text start:0x02117888 end:0x021178fc
-
-src/func_ov065_021178fc.c:
-    complete
-    .text start:0x021178fc end:0x02117944
-
-src/func_ov065_02117944.cpp:
-    complete
-    .text start:0x02117944 end:0x02117994
-
-src/func_ov065_02117994.c:
-    complete
-    .text start:0x02117994 end:0x02117aa4
-
-src/_ZN5Swoop16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02117aa4 end:0x02117aec
-
-src/_ZN5Swoop16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x02117aec end:0x02117af0
-
-src/_ZN5Swoop6RenderEv.cpp:
-    complete
-    .text start:0x02117af0 end:0x02117b64
-
-src/_ZN5Swoop8BehaviorEv.cpp:
-    complete
-    .text start:0x02117b64 end:0x02117d80
-
-src/_ZN5Swoop13InitResourcesEv.cpp:
-    complete
-    .text start:0x02117d80 end:0x02117eac
-
-src/_ZN5Swoop16OnAimedAtWithEggEv.cpp:
-    complete
-    .text start:0x02117eac end:0x02117eb4
-
-src/_ZN5Swoop13OnTurnIntoEggER6Player.cpp:
-    complete
-    .text start:0x02117eb4 end:0x02117ee0
-
-src/_ZN5Swoop13OnYoshiTryEatEv.cpp:
-    complete
-    .text start:0x02117ee0 end:0x02117ee8
+    .text start:0x02116f98 end:0x02117ee8
 
 src/d_a_basabasa.c:
     complete
@@ -212,41 +132,9 @@ src/_ZN14DorriePlatformC1Ev.cpp:
     complete
     .text start:0x021196bc end:0x021196d8
 
-src/_ZN15TtcRotatingCubeD1Ev.cpp:
+src/actors/daObjCtRotateBlock_c.cpp:
     complete
-    .text start:0x021196d8 end:0x0211972c
-
-src/_ZN15TtcRotatingCubeD0Ev.cpp:
-    complete
-    .text start:0x0211972c end:0x02119794
-
-src/_ZN15TtcRotatingCube12UpdateShadowEv.cpp:
-    complete
-    .text start:0x02119794 end:0x021198a0
-
-src/_ZN15TtcRotatingCube10UpdateClsnEv.cpp:
-    complete
-    .text start:0x021198a0 end:0x0211990c
-
-src/_ZN15TtcRotatingCube11UpdateModelEv.cpp:
-    complete
-    .text start:0x0211990c end:0x02119984
-
-src/_ZN15TtcRotatingCube16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02119984 end:0x021199fc
-
-src/_ZN15TtcRotatingCube6RenderEv.cpp:
-    complete
-    .text start:0x021199fc end:0x02119a50
-
-src/_ZN15TtcRotatingCube8BehaviorEv.cpp:
-    complete
-    .text start:0x02119a50 end:0x02119c38
-
-src/_ZN15TtcRotatingCube13InitResourcesEv.cpp:
-    complete
-    .text start:0x02119c38 end:0x02119ebc
+    .text start:0x021196d8 end:0x02119ebc
 
 src/d_a_obj_ct_rotate_block_ct_mecha02.c:
     complete
@@ -272,28 +160,9 @@ src/actors/daObjCtKaitendai_c.cpp:
     complete
     .text start:0x0211b360 end:0x0211b7f0
 
-src/_ZN15TtcRotatingGearD1Ev.cpp:
+src/actors/daObjCtMecha08_c.cpp:
     complete
-    .text start:0x0211b7f0 end:0x0211b834
-
-src/_ZN15TtcRotatingGearD0Ev.cpp:
-    complete
-    .text start:0x0211b834 end:0x0211b88c
-
-src/_ZN15TtcRotatingGear16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211b88c end:0x0211b8d0
-
-src/_ZN15TtcRotatingGear6RenderEv.cpp:
-    complete
-    .text start:0x0211b8d0 end:0x0211b8f8
-
-src/_ZN15TtcRotatingGear8BehaviorEv.cpp:
-    complete
-    .text start:0x0211b8f8 end:0x0211ba88
-
-src/_ZN15TtcRotatingGear13InitResourcesEv.cpp:
-    .text start:0x0211ba88 end:0x0211bb7c
+    .text start:0x0211b7f0 end:0x0211bb7c
 
 src/d_a_obj_ct_mecha08_ct_mecha08b.c:
     complete

@@ -4,7 +4,7 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 /* recovered: globals resolved */
-/* resolved: VT = _ZTV8CccArena */
+/* resolved: VT = _ZTV13daObjEwbIce_c */
 /* Reconstructed source-style name: SM64DS proves daObjEwbIce_c through RTTI,
  * allocation size, vtable identity, and the EWB_ICE_A registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -12,6 +12,6 @@
 int *daObjEwbIce_c_classInit_EWB_ICE_A(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(828);
-    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV8CccArena; }
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV13daObjEwbIce_c; }
     return p;
 }

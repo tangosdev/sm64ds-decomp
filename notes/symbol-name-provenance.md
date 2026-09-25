@@ -66,7 +66,7 @@ signature, they are citing something that does not exist.
 *which vtable belongs to it*, and *which slot is which* — the slot order was validated
 against a byte-matched function on ov056.
 
-But `BigMovingIceBlock` is a drafted label, not a ROM string. `config/rom-name-glossary.json`
+But `BigMovingIceBlock` was a drafted label, not a ROM string; the cartridge RTTI name is `daObjEwmIceBlock_c`. `config/rom-name-glossary.json`
 is explicit about this and carries a per-entry confidence, noting: *"nothing in the binary
 says what 'Ukiyuka' means."* So: the *relationship* the name encodes is ROM-proven; the
 English word is a community reading. Renaming one costs nothing; relying on the wiring is

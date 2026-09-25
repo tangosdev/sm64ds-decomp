@@ -201,16 +201,16 @@ int daHolhei_c::Behavior()
     if (mState != (void*)data_ov062_0211dea0) {
         if (mState != (void*)data_ov062_0211dec0
             && mState != (void*)data_ov062_0211de70) {
-            int r2 = 0;
+            int atEdge = 0;
             signed char t = data_0209f2f8;
             if (t == 0x16) {
                 if (mPosX > (int)0xff95c000)
-                    r2 = 1;
+                    atEdge = 1;
             } else if (t == 0x15) {
                 if (mPosZ < (int)0xff2f4000)
-                    r2 = 1;
+                    atEdge = 1;
             }
-            if (r2 != 0
+            if (atEdge != 0
                 || (mHorzSpeed != 0
                     && IsGoingOffCliff(mMeshClsn, 0x3c000, (s16)0x2888, 0, 1, 0x32000))) {
                 mHorzSpeed = 0;
@@ -267,12 +267,12 @@ ret:
 // @symbol _ZN10daHolhei_c6RenderEv
 int daHolhei_c::Render()
 {
-    void *r1 = mHeld;
-    if (r1 != 0) {
-        int r0 = mFlags;
-        int flag = (r0 & 0x4000) ? 1 : 0;
+    void *held = mHeld;
+    if (held != 0) {
+        int flags = mFlags;
+        int flag = (flags & 0x4000) ? 1 : 0;
         if (flag != 0) {
-            if (*(int*)((char*)r1 + 0xc8) != 0) {
+            if (*(int*)((char*)held + 0xc8) != 0) {
                 func_ov062_02116edc(this);
             }
         }
@@ -299,11 +299,8 @@ int daHolhei_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 28 -- func_ov062_02116edc, 0x02116edc, size 0xe4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02116edc
-/* recovered: shared common types, declarations from a shared header */
 extern "C" {
 int Math_Function_0203b14c(void*, int, int, int, int);
 void* _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(void*, int, void*);
@@ -322,10 +319,8 @@ void func_ov062_02116edc(void* c_){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 27 -- func_ov062_02116e80, 0x02116e80, size 0x5c */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov062_02116e80
 void func_ov062_02116e80(void *c) {
     Matrix4x3_FromRotationY((struct Matrix4x3*)((char*)c + 0x31c), *(s16*)((char*)c + 0x8e));
@@ -339,11 +334,8 @@ void func_ov062_02116e80(void *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 26 -- func_ov062_02116dbc, 0x02116dbc, size 0xc4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02116dbc
-/* recovered: shared common types */
 extern "C" void func_ov062_02116dbc(char* thiz)
 {
     char* c = thiz;
@@ -361,11 +353,8 @@ extern "C" void func_ov062_02116dbc(char* thiz)
     }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 25 -- func_ov062_02116d28, 0x02116d28, size 0x94 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02116d28
-/* recovered: shared common types */
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
@@ -383,9 +372,7 @@ extern "C" void func_ov062_02116d28(char *c)
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j((dActor_c *)c, *(ShadowModel *)(c + 0x368), *(Matrix4x3 *)(c + 0x390), 0x12c000, 0x32000, 0xf);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 24 -- daHolhei_c_ChangeState, 0x02116cd8, size 0x50 */
-/* -------------------------------------------------------------------------- */
 namespace tu {  /* namespaced: the file-scope view above is (void*, void*) */
 // @symbol daHolhei_c_ChangeState
 /* Coined C name. ROM does not preserve the English spelling; the (C*, PMF*)
@@ -394,9 +381,7 @@ namespace tu {  /* namespaced: the file-scope view above is (void*, void*) */
 extern "C" int daHolhei_c_ChangeState(C *c, PMF *p) { c->pp = p; PMF *q = c->pp; if (*q == 0) return 1; return (c->**q)(); }
 }  /* namespace tu */
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 23 -- func_ov062_02116c78, 0x02116c78, size 0x60 */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 extern int data_ov062_0211ddf8[];
 // @symbol func_ov062_02116c78
@@ -411,10 +396,8 @@ int func_ov062_02116c78(char *c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 22 -- func_ov062_02116bf8, 0x02116bf8, size 0x80 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov062_02116bf8
 int func_ov062_02116bf8(char* c){
     daHolhei_c *self = (daHolhei_c *)c;
@@ -429,9 +412,7 @@ int func_ov062_02116bf8(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- func_ov062_02116b80, 0x02116b80, size 0x78 */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 extern unsigned int RandomIntInternal(void* s);
 extern int data_ov062_0211ddf8[];
@@ -446,10 +427,8 @@ int func_ov062_02116b80(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- func_ov062_02116a08, 0x02116a08, size 0x178 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov062_02116a08
     int func_ov062_02116a08(char* c)
     {
@@ -509,10 +488,8 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
     }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 19 -- func_ov062_02116980, 0x02116980, size 0x88 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov062_02116980
 int func_ov062_02116980(char *c) {
     daHolhei_c *self = (daHolhei_c *)c;
@@ -530,9 +507,7 @@ int func_ov062_02116980(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- func_ov062_02116894, 0x02116894, size 0xec */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 // @symbol func_ov062_02116894
 int func_ov062_02116894(char* c){
@@ -557,10 +532,8 @@ angle:
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- func_ov062_02116850, 0x02116850, size 0x44 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov062_02116850
 s16 func_ov062_02116850(void* c) {
     *(int*)((char*)c + 0xa8) = 0;
@@ -572,9 +545,7 @@ s16 func_ov062_02116850(void* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- func_ov062_021167c0, 0x021167c0, size 0x90 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_021167c0
 extern "C" int func_ov062_021167c0(char* c){
     daHolhei_c *self = (daHolhei_c *)c;
@@ -591,10 +562,8 @@ extern "C" int func_ov062_021167c0(char* c){
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- func_ov062_02116784, 0x02116784, size 0x3c */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov062_02116784
 int func_ov062_02116784(char *c) {
     *(int*)(c+0x3f0) = 0;
@@ -603,13 +572,9 @@ int func_ov062_02116784(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- func_ov062_021165e8, 0x021165e8, size 0x19c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_021165e8
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov062_021165e8(char* c)
 {
     daHolhei_c *self = (daHolhei_c *)c;
@@ -666,10 +631,8 @@ int func_ov062_021165e8(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- func_ov062_021165e0, 0x021165e0, size 0x8 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov062_021165e0
 int func_ov062_021165e0(void)
 {
@@ -677,9 +640,7 @@ int func_ov062_021165e0(void)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- func_ov062_021164e8, 0x021164e8, size 0xf8 */
-/* -------------------------------------------------------------------------- */
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
@@ -720,10 +681,8 @@ done:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov062_02116498, 0x02116498, size 0x50 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov062_02116498
 int func_ov062_02116498(char* c){
   *(int*)(c+0x9c)=-0x4000;
@@ -736,14 +695,12 @@ int func_ov062_02116498(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov062_021163b0, 0x021163b0, size 0xe8 */
-/* -------------------------------------------------------------------------- */
 /* func_ov062_021163b0 at 0x021163b0
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov062).
  */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov062_021163b0
 int func_ov062_021163b0(char* c)
 {
@@ -770,10 +727,8 @@ int func_ov062_021163b0(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov062_02116368, 0x02116368, size 0x48 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov062_02116368
 int func_ov062_02116368(void* c) {
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char*)c + 0x300, (void *)data_ov062_0211dde8[1], 0x40000000, 0x1000, 0);
@@ -782,9 +737,7 @@ int func_ov062_02116368(void* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov062_0211632c, 0x0211632c, size 0x3c */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 extern int data_ov062_0211de80[];
 // @symbol func_ov062_0211632c
@@ -794,9 +747,7 @@ int func_ov062_0211632c(void* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov062_021162b8, 0x021162b8, size 0x74 */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 extern unsigned int RandomIntInternal(void* s);
 extern int data_ov062_0211dde0[];
@@ -810,10 +761,8 @@ int func_ov062_021162b8(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov062_02116274, 0x02116274, size 0x44 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov062_02116274
 int func_ov062_02116274(unsigned char *c)
 {
@@ -830,10 +779,8 @@ int func_ov062_02116274(unsigned char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov062_02116238, 0x02116238, size 0x3c */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov062_02116238
 int func_ov062_02116238(char *c){
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char*)c+0x300, data_ov062_0211de08[1], 0x40000000, 0x1000, 0);
@@ -841,14 +788,12 @@ int func_ov062_02116238(char *c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov062_021161a8, 0x021161a8, size 0x90 */
-/* -------------------------------------------------------------------------- */
 /* func_ov062_021161a8 at 0x021161a8 (ov062), size 0x90
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov062_021161a8
 int func_ov062_021161a8(char *c)
 {
@@ -868,13 +813,9 @@ int func_ov062_021161a8(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- func_ov062_02116010, 0x02116010, size 0x198 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02116010
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 namespace tu {  /* namespaced: a (void*) view of this symbol is in scope */
 void func_ov062_02116010(char *c)
 {
@@ -930,24 +871,22 @@ void func_ov062_02116010(char *c)
 }
 }  /* namespace tu */
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov062_02115f84, 0x02115f84, size 0x8c */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 namespace tu {  /* namespaced: a (void*) view of this symbol is in scope */
 // @symbol func_ov062_02115f84
 int func_ov062_02115f84(char* c) {
     Vector3 v;
-    short r4 = 0;
+    short slope = 0;
     if (_ZNK10dBgCh_Actr10IsOnGroundEv(c+0x144)) {
-        char* fr = _ZNK10dBgCh_Actr14GetFloorResultEv(c+0x144);
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3(fr+4, &v);
-        r4 = func_02010844(c, &v, *(short*)(c+0x8e));
+        char* floorResult = _ZNK10dBgCh_Actr14GetFloorResultEv(c+0x144);
+        _ZNK11SurfaceInfo12CopyNormalToER7Vector3(floorResult+4, &v);
+        slope = func_02010844(c, &v, *(short*)(c+0x8e));
     }
     if (_ZNK10dBgCh_Actr8IsOnWallEv(c+0x144))
         return 1;
-    if (r4 < 0) r4 = -r4;
-    if (r4 > 0x1000) return 2;
+    if (slope < 0) slope = -slope;
+    if (slope > 0x1000) return 2;
     return 0;
 }
 }

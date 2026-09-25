@@ -1,46 +1,42 @@
 //cpp
-/* Genuine production translation unit for ov027/daIDonketu_c (7 function(s)),
- * enrolled as one `complete` delinks span.
+/* daIDonketu_c -- the Chill Bully, on the ice bridge in Snowman's Land.
  *
- * Chill Bully (CHILL_BULLY 217) -- ov027/daIDonketu_c. ov027 is mixed
- * (SLIDING_ICE_SPAWNER / SLIDING_ICE / CHILL_BULLY / BUBBA / SNOWMAN_BREATH).
- * RTTI names this class daIDonketu_c; the debug table names ICE_DONKETU;
- * overlay_actors.md's project name is CHILL_BULLY. This is the chill bully,
- * not Bubba / sliding ice / penguin.
+ * A thin child of daOts_c, the shared Bully base in ov064: this class brings
+ * its own resources, its own run and death states, and otherwise wraps the
+ * base's common workers. ov027 is a mixed overlay (sliding-ice spawner,
+ * sliding ice, Chill Bully, Bubba, Snowman's breath); this file is only the
+ * bully. The cartridge's RTTI names the class daIDonketu_c, the debug table
+ * names it ICE_DONKETU, and the project calls the actor CHILL_BULLY. The
+ * measurement that settles the name is at the top of include/daIDonketu_c.h;
+ * the tree used to call it `ChillBully`, which is coined.
  *
- * The file stem follows the snake_case scheme in
- * notes/tu-naming-and-swallowers.md sec 1 (tools/tu_names.py):
- * daIDonketu_c -> d_a_i_donketu.
+ * Two things here will look wrong and are not:
  *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function, in the REVERSE of source order, so the
- * highest-address ROM function is written FIRST here. Do not reorder; see
- * notes/tu-reconstruction-pilot-report.md sec 3 for the one documented exception
- * (a destructor's D0/D1/D2 group has compiler-chosen order).
+ *   Function order is the REVERSE of the ROM's -- the highest-address ROM
+ *   function is written first. mwccarm 2004/b56 emits one .text section per
+ *   function in reverse source order. Do not reorder. The one exception is a
+ *   destructor's D0/D1/D2 group, whose order the compiler picks
+ *   (notes/tu-reconstruction-pilot-report.md sec 3).
  *
- * order):
- *   [0] 0x021115c4  src/_ZN12daIDonketu_cD1Ev.cpp
- *   [1] 0x02111618  src/_ZN12daIDonketu_cD0Ev.cpp
- *   [2] 0x02111680  src/_ZN12daIDonketu_c14UpdateRunStateEv.cpp
- *   [3] 0x021116f0  src/_ZN12daIDonketu_c16UpdateDeathStateEv.cpp
- *   [4] 0x02111770  src/_ZN12daIDonketu_c8BehaviorEv.cpp
- *   [5] 0x0211181c  src/_ZN12daIDonketu_c13InitResourcesEv.cpp
- *   [6] 0x0211186c  src/daIDonketu_c_classInit.c
+ *   UpdateRunState reads its own timer as `*(u16 *)&mStateTimer`. The member
+ *   is s16 and the ROM compares unsigned (blo, not blt); the cast is what
+ *   reproduces it.
  *
- * THE CLASS NAME IS THE CARTRIDGE'S OWN. The decomp used to call this class
- * `ChillBully`, a coined name; the measurement that settles it is at the top of
- * include/daIDonketu_c.h.
+ * Reconstruction notes -- the file stem follows the snake_case scheme in
+ * notes/tu-naming-and-swallowers.md sec 1 (tools/tu_names.py). The TU is one
+ * `complete` delinks span covering seven functions and claims .text only, so
+ * the file-table handle data_ov027_021138f4 and g_profile_ICE_DONKETU stay
+ * outside it. Two ov064 helpers it calls, func_ov064_02116110 (run) and
+ * func_ov064_0211616c (death), are unmatched daOts_c workers with no name
+ * evidence yet. ROM order of the seven, for reference:
  *
- * deslop leftovers:
- * - daOts_c::InitResourcesCommon / daOts_c::BehaviorCommon: ov064 shared
- *   workers this child wraps from slot 0 / slot 6.
- * - func_ov064_0211616c (UpdateDeathState), func_ov064_02116110 (UpdateRunState):
- *   unmatched ov064 daOts_c helpers; name_evidence none.
- * - data_ov027_021138f4 file-table handle: this TU claims .text only.
- * - S14: g_profile_ICE_DONKETU stays outside the licensed .text.
- * - UpdateRunState keeps `*(u16 *)&mStateTimer`: named s16 vs u16* is a
- *   signedness/addressing wall (blo vs blt).
- * - no Player.h
+ *   [0] 0x021115c4  _ZN12daIDonketu_cD1Ev
+ *   [1] 0x02111618  _ZN12daIDonketu_cD0Ev
+ *   [2] 0x02111680  _ZN12daIDonketu_c14UpdateRunStateEv
+ *   [3] 0x021116f0  _ZN12daIDonketu_c16UpdateDeathStateEv
+ *   [4] 0x02111770  _ZN12daIDonketu_c8BehaviorEv
+ *   [5] 0x0211181c  _ZN12daIDonketu_c13InitResourcesEv
+ *   [6] 0x0211186c  daIDonketu_c_classInit
  */
 
 #include "daIDonketu_c.h"
@@ -51,7 +47,6 @@ int func_ov064_0211616c(void *self);
 extern int data_ov027_021138f4[];
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol daIDonketu_c_classInit
 /* Reconstructed source-style name: SM64DS proves daIDonketu_c through RTTI,
@@ -74,7 +69,6 @@ extern "C" daIDonketu_c *daIDonketu_c_classInit(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daIDonketu_c13InitResourcesEv
 /* daIDonketu_c::InitResources -- vtable slot 0, ov027 0x0211181c.
  *
@@ -90,7 +84,6 @@ int daIDonketu_c::InitResources()
     return r;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daIDonketu_c8BehaviorEv
 /* daIDonketu_c::Behavior -- vtable slot 6, ov027 0x02111770, and THE KEY FUNCTION
@@ -124,9 +117,7 @@ int daIDonketu_c::Behavior()
     return BehaviorCommon();
 }
 
-/* -------------------------------------------------------------------------- */
 /* size 0x80                                                                   */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daIDonketu_c16UpdateDeathStateEv
 /* daIDonketu_c::UpdateDeathState -- vtable slot 32, daOts_c's state-4 hook. The
  * same star drop as Behavior's kill path without the invincible-character test: by
@@ -145,7 +136,6 @@ void daIDonketu_c::UpdateDeathState()
     UntrackAndSpawnStar(mStarSlot, (mStarIdx | 0x40) & 0xff, pos, 4);
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daIDonketu_c14UpdateRunStateEv
 /* daIDonketu_c::UpdateRunState -- vtable slot 31, daOts_c's state-1 hook. The

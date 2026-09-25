@@ -12,65 +12,13 @@ src/actors/daDkk_c.cpp:
     complete
     .text start:0x021118c8 end:0x02111d40
 
-src/_ZN11PyramidStepD1Ev.cpp:
+src/actors/daObjDpBrock_c.cpp:
     complete
-    .text start:0x02111d40 end:0x02111d8c
+    .text start:0x02111d40 end:0x021120e4
 
-src/_ZN11PyramidStepD0Ev.cpp:
+src/actors/daDpLift_c.cpp:
     complete
-    .text start:0x02111d8c end:0x02111dec
-
-src/func_ov025_02111dec.cpp:
-    complete
-    .text start:0x02111dec end:0x02111e30
-
-src/func_ov025_02111e30.c:
-    complete
-    .text start:0x02111e30 end:0x02111e70
-
-src/_ZN11PyramidStep16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111e70 end:0x02111ea8
-
-src/_ZN11PyramidStep6RenderEv.cpp:
-    complete
-    .text start:0x02111ea8 end:0x02111ed4
-
-src/_ZN11PyramidStep8BehaviorEv.cpp:
-    complete
-    .text start:0x02111ed4 end:0x02111fa0
-
-src/_ZN11PyramidStep13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111fa0 end:0x021120ac
-
-src/d_a_obj_dp_brock.c:
-    complete
-    .text start:0x021120ac end:0x021120e4
-
-src/_ZN11PyramidLiftD1Ev.cpp:
-    complete
-    .text start:0x021120e4 end:0x02112148
-
-src/_ZN11PyramidLiftD0Ev.cpp:
-    complete
-    .text start:0x02112148 end:0x021121c0
-
-src/_ZN11PyramidLift16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021121c0 end:0x021121fc
-
-src/_ZN11PyramidLift6RenderEv.cpp:
-    complete
-    .text start:0x021121fc end:0x02112288
-
-src/_ZN11PyramidLift8BehaviorEv.cpp:
-    complete
-    .text start:0x02112288 end:0x02112498
-
-src/_ZN11PyramidLift13InitResourcesEv.cpp:
-    complete
-    .text start:0x02112498 end:0x021125bc
+    .text start:0x021120e4 end:0x021125bc
 
 src/func_ov025_021125bc.cpp:
     complete

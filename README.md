@@ -1,4 +1,4 @@
-# Super Mario 64 DS Decompilation (sm64ds-decomp)
+# Super Mario 64 DS Decompilation
 
 [![Discord Server][discord-badge]][discord]
 
@@ -41,7 +41,7 @@ here, and they move independently.
 ```
 MATCHED    ██████████████████████████████  99.8%   11,368 / 11,389 functions
            of which 122 are byte-exact assembly (hand-written in the original, not C)
-CONVERTED  ████████░░░░░░░░░░░░░░░░░░░░░░  26.5%   3,020 / 11,386 functions
+CONVERTED  ████████░░░░░░░░░░░░░░░░░░░░░░  27.6%   3,148 / 11,386 functions
 LINKED     ████████████████████████████░░  93.5%   10,595 / 11,328 matched TUs
 ```
 <!-- tiers:end -->

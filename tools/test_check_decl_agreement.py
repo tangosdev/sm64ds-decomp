@@ -2229,5 +2229,105 @@ class NativeDestructorTests(unittest.TestCase):
         self.assertEqual({r['kind'] for r in rows}, {'return', 'param', 'linkage'})
 
 
+class HeaderRedeclarationTests(unittest.TestCase):
+    """A branch that ADDS a local declaration of a symbol a header already declares.
+
+    #3091 found local externs of Particle::System::FromUniqueID in several spellings
+    while Particle__System.h declared it correctly. The gate is a ratchet: it needs
+    an added line AND a rise in the symbol's src/ redeclaration count, so moving
+    existing externs (a TU promotion) stays clean."""
+
+    HEADER = "extern void hdr_target(int n);\n"
+    USER = '#include "hdr_probe.h"\nvoid hdr_user_body(int n) { hdr_target(n); }\n'
+
+    def _base(self, repo):
+        repo.reset()
+        repo.write("include/hdr_probe.h", self.HEADER)
+        repo.write("src/hdr_user.c", self.USER)
+        repo.write("src/hdr_old.c", "extern void hdr_target(int n);\n"
+                                    "void hdr_old_body(int n) { hdr_target(n); }\n")
+        repo.git("add", "-A")
+        repo.git("commit", "-q", "-m", "hdr base")
+
+    def test_a_new_local_copy_of_a_header_declaration_fails(self):
+        repo = BigRepo.shared()
+        self._base(repo)
+        repo.write("src/hdr_new.c", "extern void hdr_target(int n);\n"
+                                    "void hdr_new_body(int n) { hdr_target(n); }\n")
+        rc, out = repo.run_main(["--changed", "HEAD"])
+        self.assertEqual(rc, 1, out)
+        self.assertIn("src/hdr_new.c:1  hdr_target", out)
+        self.assertIn("include/hdr_probe.h", out)
+
+    def test_the_marker_states_the_reason_and_ends_the_finding(self):
+        repo = BigRepo.shared()
+        self._base(repo)
+        repo.write("src/hdr_new.c", "/* local extern: probe */\n"
+                                    "extern void hdr_target(int n);\n"
+                                    "void hdr_new_body(int n) { hdr_target(n); }\n")
+        rc, out = repo.run_main(["--changed", "HEAD"])
+        self.assertEqual(rc, 0, out)
+        self.assertIn("no new local redeclarations", out)
+
+    def test_moving_an_existing_local_copy_is_not_new(self):
+        """The promotion shape: every moved line is ADDED, the count does not rise."""
+        repo = BigRepo.shared()
+        self._base(repo)
+        repo.git("mv", "src/hdr_old.c", "src/hdr_moved.c")
+        rc, out = repo.run_main(["--changed", "HEAD"])
+        self.assertEqual(rc, 0, out)
+
+    def test_a_c_file_is_not_sent_to_a_header_no_c_file_includes(self):
+        repo = BigRepo.shared()
+        self._base(repo)
+        repo.write("src/hdr_user.c", "void hdr_user_body(int n) { (void)n; }\n")
+        repo.write("src/hdr_new.c", "extern void hdr_target(int n);\n")
+        rc, out = repo.run_main(["--changed", "HEAD"])
+        self.assertIn("no new local redeclarations", out)
+
+    def test_a_mangled_copy_of_a_class_member_fails_in_a_cxx_file(self):
+        """The FromUniqueID shape: the header declares it inside the class body."""
+        repo = BigRepo.shared()
+        self._base(repo)
+        repo.write("include/hdr_probe.h", self.HEADER +
+                   "struct Probe {\n    static int Get(unsigned int id);\n};\n")
+        repo.git("add", "-A")
+        repo.git("commit", "-q", "-m", "member")
+        repo.write("src/hdr_member.cpp",
+                   '//cpp\nextern "C" int _ZN5Probe3GetEj(unsigned int id);\n'
+                   "int hdr_member_body() { return _ZN5Probe3GetEj(1); }\n")
+        rc, out = repo.run_main(["--changed", "HEAD"])
+        self.assertEqual(rc, 1, out)
+        self.assertIn("_ZN5Probe3GetEj", out)
+        self.assertIn("include/hdr_probe.h", out)
+
+    def test_a_member_behind_the_fix12_wall_is_exempt(self):
+        """Passing Fix12<int> by value costs the caller bytes (6az), so a local
+        scalar declaration is the only spelling that reproduces. Replayed on #3062's
+        MaterialChanger::SetFile, this was the one false positive in 25 merges."""
+        repo = BigRepo.shared()
+        self._base(repo)
+        repo.write("include/hdr_probe.h", self.HEADER +
+                   "struct Probe {\n    static int Set(Fix12<int> v);\n};\n")
+        repo.git("add", "-A")
+        repo.git("commit", "-q", "-m", "member")
+        repo.write("src/hdr_member.cpp",
+                   '//cpp\nextern "C" int _ZN5Probe3SetE5Fix12IiE(int v);\n')
+        rc, out = repo.run_main(["--changed", "HEAD"])
+        self.assertIn("no new local redeclarations", out)
+
+    def test_an_overload_with_another_arity_does_not_answer(self):
+        repo = BigRepo.shared()
+        self._base(repo)
+        repo.write("include/hdr_probe.h", self.HEADER +
+                   "struct Probe {\n    static int Get(unsigned int id, int n);\n};\n")
+        repo.git("add", "-A")
+        repo.git("commit", "-q", "-m", "member")
+        repo.write("src/hdr_member.cpp",
+                   '//cpp\nextern "C" int _ZN5Probe3GetEj(unsigned int id);\n')
+        rc, out = repo.run_main(["--changed", "HEAD"])
+        self.assertIn("no new local redeclarations", out)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

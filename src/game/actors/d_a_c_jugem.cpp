@@ -1,85 +1,22 @@
 //cpp
-/* Reconstructed translation unit.
- * ov085/daC_Jugem_c  (33 functions)
- *
- * Lakitu ("C_JUGEM" in the cartridge's own registry). The class identity is
- * the ROM's: ov085 0x02130310 holds the length-prefixed string
- * "11daC_Jugem_c", 0x02130304 is the __si_class_type_info record that names
- * it, and 0x02130344 is its vtable. No part of this name is coined.
- *
- * FUNCTION ORDER IS ROM-ASCENDING. This TU disables deferred code generation
- * so CodeWarrior emits each definition where it stands. That is also what
- * puts the destructor pair out in the cartridge's own order: ov085 has D1 at
- * 0x0212d528 BELOW D0 at 0x0212d578 and no D2 at all, and an out-of-line
- * destructor under DEFERRED codegen comes out D2, D0, D1. The sibling TU
- * src/actors/daMip_c.cpp, one class earlier in this same overlay, has the
- * identical destructor shape and is built the same way.
- *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0]  0x0212d528  _ZN11daC_Jugem_cD1Ev.cpp
- *   [1]  0x0212d578  _ZN11daC_Jugem_cD0Ev.cpp
- *   [2]  0x0212d5dc  func_ov085_0212d5dc.cpp
- *   [3]  0x0212d724  func_ov085_0212d724.c
- *   [4]  0x0212d73c  func_ov085_0212d73c.c
- *   [5]  0x0212d8ec  func_ov085_0212d8ec.c
- *   [6]  0x0212d9b8  func_ov085_0212d9b8.c
- *   [7]  0x0212db04  func_ov085_0212db04.cpp
- *   [8]  0x0212dbdc  func_ov085_0212dbdc.c
- *   [9]  0x0212dcfc  func_ov085_0212dcfc.c
- *   [10] 0x0212dd10  func_ov085_0212dd10.cpp
- *   [11] 0x0212ddc4  func_ov085_0212ddc4.cpp
- *   [12] 0x0212de5c  func_ov085_0212de5c.cpp
- *   [13] 0x0212df84  func_ov085_0212df84.cpp
- *   [14] 0x0212e078  func_ov085_0212e078.cpp
- *   [15] 0x0212e180  func_ov085_0212e180.c
- *   [16] 0x0212e19c  func_ov085_0212e19c.c
- *   [17] 0x0212e2ec  func_ov085_0212e2ec.c
- *   [18] 0x0212e310  func_ov085_0212e310.cpp
- *   [19] 0x0212e480  func_ov085_0212e480.c
- *   [20] 0x0212e4a4  func_ov085_0212e4a4.c
- *   [21] 0x0212e59c  func_ov085_0212e59c.c
- *   [22] 0x0212e5ac  func_ov085_0212e5ac.c
- *   [23] 0x0212e720  func_ov085_0212e720.c
- *   [24] 0x0212e728  func_ov085_0212e728.cpp
- *   [25] 0x0212e778  func_ov085_0212e778.cpp
- *   [26] 0x0212e858  func_ov085_0212e858.c
- *   [27] 0x0212ea90  _ZN11daC_Jugem_c16CleanupResourcesEv.cpp
- *   [28] 0x0212eacc  _ZN11daC_Jugem_c16OnPendingDestroyEv.cpp
- *   [29] 0x0212ead0  _ZN11daC_Jugem_c6RenderEv.cpp
- *   [30] 0x0212eb18  _ZN11daC_Jugem_c8BehaviorEv.cpp
- *   [31] 0x0212ebec  _ZN11daC_Jugem_c13InitResourcesEv.cpp
- *   [32] 0x0212ed54  d_a_c_jugem.c
- *
- * The last of those, d_a_c_jugem.c, is absent from build/tu_map.json's span:
- * tu_map segments on symbol NAME, and `daC_Jugem_c_classInit` is neither
- * `func_ov085_*` nor `_ZN11daC_Jugem_c*`, so nothing labels it. It is
- * contiguous -- 0x0212ed54 + 0x58 = 0x0212edac, the next class's destructor --
- * and it is this class's own factory: it allocates this class's size and
- * installs this class's vtable. The same thing was true of daMip_c's factory
- * one class earlier, and it belongs here for the same reason.
- *
- * SHADOW TYPES STAY INSIDE THE MEMBER THAT RECOVERED THEM. Each legacy file
- * recovered its own view of the state objects at 0x021307a0..0x02130840, and
- * the two views are complementary rather than contradictory: the state setter
- * at 0x0212e728 reads a pointer-to-member at offset 0 of the state object,
- * while Behavior calls a second one at offset 8. Both are reproduced under
- * their own names below rather than merged into a single invented struct.
- *
- * FUNCTIONS cannot carry per-member declarations the way types can -- a class
- * member function may not sit inside a linkage-specification region -- so
- * every external call this TU makes is declared once, below, with C linkage,
- * on one reconciled signature. Pointer parameters are spelled `void *` on
- * purpose: the ROM names already encode the real parameter types, and the
- * legacy files disagreed only about how to spell them locally. By-value
- * class parameters (Fix12<int>) and return types are NOT spelled loosely --
- * mwccarm passes the first differently at the call site, and the second is
- * load-bearing wherever a result is tested.
+/* Lakitu in the level. He turns to face Mario, takes his control, and
+ * talks through message 0x182 until Mario has finished listening.
+ * Class name is ROM RTTI: "11daC_Jugem_c" at ov085 0x02130310,
+ * __si_class_type_info 0x02130304, vtable 0x02130344.
+ * daC_Jugem_c_classInit (0x0212ed54) belongs in this TU; tu_map misses it
+ * because that symbol is neither func_ov085_* nor _ZN11daC_Jugem_c*.
  */
 #include "daC_Jugem_c.h"
 #include "common.h"
 #include "dActor_c.h"
+#include "Player.h"
+#include "Camera.h"
 #include "SharedFilePtr.h"
 
+/* Every external call is declared once, with C linkage, under its ROM name.
+   Pointer parameters are spelled void *: the mangled names already carry the
+   real types. By-value Fix12<int> parameters and return types are kept exact,
+   because mwccarm passes the first differently and callers test the second. */
 extern "C" {
 
 /* camera */
@@ -145,7 +82,7 @@ int   _ZN15TextureSequence6UpdateER15ModelComponents(void *thiz, void *mc);
 void  _ZN9Animation7AdvanceEv(void *thiz);
 
 /* other overlays / arm9 */
-void  func_ov002_020c3e8c(void);
+void  func_ov002_020c3e8c(void *player);
 int   func_ov002_020c3ea0(void *p);
 void  func_ov002_020c3f18(void *p);
 void  func_ov002_020c3f2c(void *p);
@@ -173,7 +110,8 @@ extern char           data_ov085_0213073c[];
 
 /* The state objects this class drives itself with. Each is a pair of
    pointers-to-member: the setter at 0x0212e728 calls the one at offset 0,
-   Behavior calls the one at offset 8. */
+   Behavior calls the one at offset 8. The two views stay separate (JugemHost
+   here, BehState in Behavior) rather than merged into one invented struct. */
 struct JugemHost;
 typedef int (JugemHost::*JugemInitPMF)();
 struct JugemHost { char pad[0x1ec]; JugemInitPMF *pp; };
@@ -193,14 +131,10 @@ extern JugemInitPMF data_ov085_02130820;
 extern JugemInitPMF data_ov085_02130830;
 }
 
-#define AT(p, off) ((void*)(int)((char*)(p) + (off)))
-
+/* Source order is ROM-ascending; do not reorder. Out-of-line ~daC_Jugem_c:
+   D1 then D0 (deferred codegen would emit D2, D0, D1). */
 #pragma defer_codegen off
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinals 0 and 1 -- _ZN11daC_Jugem_cD1Ev 0x0212d528 size 0x50,
-                          _ZN11daC_Jugem_cD0Ev 0x0212d578 size 0x64 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daC_Jugem_cD1Ev
 // @symbol _ZN11daC_Jugem_cD0Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body.
@@ -224,13 +158,10 @@ daC_Jugem_c::~daC_Jugem_c()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov085_0212d5dc, 0x0212d5dc, size 0x148 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212d5dc
 /* recovered: shared common types */
 struct Range { int a, b, c, d, e, f; };
-extern "C" int func_ov085_0212d5dc(char* c) {
+extern "C" int func_ov085_0212d5dc(daC_Jugem_c *c) {
   Range r;
   void* cam = *(void**)&data_0209f318;
   _ZN6Camera9SetFlag_3Ev(cam);
@@ -240,23 +171,24 @@ extern "C" int func_ov085_0212d5dc(char* c) {
   r.d = -0x4b0000;
   r.e = 0x250000;
   r.f = 0x1d4c000;
-  _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(c+0x2b0, &r, 0x70000);
-  _ZN6Camera9SetLookAtERK7Vector3(cam, c+0x2b0);
-  _ZN6Camera6SetPosERK7Vector3(cam, c+0x2bc);
-  Vec3_Dist(c+0x2b0, &r);
-  (*(int*)AT(c, 0x2c8))++;
-  if (*(int*)(c+0x2c8) > 0x64) {
+  _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(&c->mCamLookX, &r, 0x70000);
+  _ZN6Camera9SetLookAtERK7Vector3(cam, &c->mCamLookX);
+  _ZN6Camera6SetPosERK7Vector3(cam, &c->mCamPosX);
+  Vec3_Dist(&c->mCamLookX, &r);
+  c->mTimer++;
+  if (c->mTimer > 0x64) {
     if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x4b, 0x7f, 0, 0x7222, false) != 0) {
-      *(int*)AT(cam, 0x154) &= ~8;
-      *(int*)(c+0x98) = 0;
-      *(int*)(c+0x2c8) = 0;
-      *(int*)(c+0x2cc) = 0;
-      *(int*)(c+0xa4) = 0;
-      *(int*)(c+0xa8) = 0;
-      *(int*)(c+0xac) = 0;
-      *(short*)(c+0x8c) = 0;
-      if (_ZN8dActor_c13ClosestPlayerEv(c) != 0) {
-        func_ov002_020c3e8c();
+      *(int *)&((Camera *)cam)->mFlags &= ~8;
+      c->mHorzSpeed = 0;
+      c->mTimer = 0;
+      c->unk_2cc = 0;
+      c->unk_0a4 = 0;
+      c->mVertSpeed = 0;
+      c->unk_0ac = 0;
+      c->mAngleX = 0;
+      void *player = _ZN8dActor_c13ClosestPlayerEv(c);
+      if (player != 0) {
+        func_ov002_020c3e8c(player);
         data_0209caa0[2] |= 0x80;
       }
       func_ov085_0212e728((JugemHost *)c, &data_ov085_021307e0);
@@ -265,24 +197,18 @@ extern "C" int func_ov085_0212d5dc(char* c) {
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov085_0212d724, 0x0212d724, size 0x18 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212d724
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov085_0212d724(char* c){
-  *(char*)(c+0x2dc)=1;
-  *(int*)(c+0x2c8)=0;
+int func_ov085_0212d724(daC_Jugem_c *c){
+  c->unk_2dc = 1;
+  c->mTimer = 0;
   return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov085_0212d73c, 0x0212d73c, size 0x1b0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212d73c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov085_0212d73c(char *c)
+int func_ov085_0212d73c(daC_Jugem_c *c)
 {
     Vector3 v[3];
     void *cam;
@@ -291,27 +217,27 @@ int func_ov085_0212d73c(char *c)
 
     cam = data_0209f318;
     _ZN6Camera9SetFlag_3Ev(cam);
-    *(unsigned int *)(c + 0x2e4) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int *)(c + 0x2e4), 3, 0x182, (Vector3 *)(c + 0x74), 0);
-    _Z14ApproachLinearRsss((s16 *)(c + 0x8e), Vec3_HorzAngle((Vector3 *)(c + 0x5c), &data_ov085_0213084c), 0x200);
-    _Z14ApproachLinearRsss((s16 *)(c + 0x8c), Vec3_VertAngle((Vector3 *)(c + 0x5c), &data_ov085_0213084c), 0x200);
-    _Z14ApproachLinearRiii((int *)(c + 0x98), 0x28000, 0x2000);
-    _Z14ApproachLinearRsss((s16 *)(c + 0x94), Vec3_HorzAngle((Vector3 *)(c + 0x5c), &data_ov085_0213084c), (s16)*(int *)(c + 0x2cc));
-    *(s16 *)(c + 0x8e) = *(s16 *)(c + 0x94);
-    *(int *)(((int)c + 0x2cc)) += 5;
-    if (*(int *)(c + 0x2cc) > 0x800)
-        *(int *)(c + 0x2cc) = 0x800;
-    *(int *)(((int)c + 0x2c8)) += 1;
-    if (*(int *)(c + 0x2c8) < 0x19)
+    c->mSfxHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(c->mSfxHandle, 3, 0x182, &c->mCamSpacePosX, 0);
+    _Z14ApproachLinearRsss(&c->mAngleY, Vec3_HorzAngle(&c->mPosX, &data_ov085_0213084c), 0x200);
+    _Z14ApproachLinearRsss(&c->mAngleX, Vec3_VertAngle(&c->mPosX, &data_ov085_0213084c), 0x200);
+    _Z14ApproachLinearRiii(&c->mHorzSpeed, 0x28000, 0x2000);
+    _Z14ApproachLinearRsss(&c->mPrevAngleY, Vec3_HorzAngle(&c->mPosX, &data_ov085_0213084c), (s16)c->unk_2cc);
+    c->mAngleY = c->mPrevAngleY;
+    *(int *)(((int)&c->unk_2cc)) += 5;
+    if (c->unk_2cc > 0x800)
+        c->unk_2cc = 0x800;
+    *(int *)(((int)&c->mTimer)) += 1;
+    if (c->mTimer < 0x19)
         return 1;
     v[1].x = -0x50c000;
     v[1].y = 0x115000;
     v[1].z = 0x1d15000;
-    spd = *(int *)(c + 0x98) >> 1;
-    _Z14ApproachLinearR7Vector3RKS_5Fix12IiE((Vector3 *)(c + 0x2b0), (Vector3 *)(c + 0x5c), spd);
-    _Z14ApproachLinearR7Vector3RKS_5Fix12IiE((Vector3 *)(c + 0x2bc), &v[1], spd);
-    _ZN6Camera9SetLookAtERK7Vector3(cam, (Vector3 *)(c + 0x2b0));
-    _ZN6Camera6SetPosERK7Vector3(cam, (Vector3 *)(c + 0x2bc));
-    Vec3_Sub(&v[2], (Vector3 *)(c + 0x5c), &data_ov085_0213084c);
+    spd = c->mHorzSpeed >> 1;
+    _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(&c->mCamLookX, &c->mPosX, spd);
+    _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(&c->mCamPosX, &v[1], spd);
+    _ZN6Camera9SetLookAtERK7Vector3(cam, &c->mCamLookX);
+    _ZN6Camera6SetPosERK7Vector3(cam, &c->mCamPosX);
+    Vec3_Sub(&v[2], &c->mPosX, &data_ov085_0213084c);
     len = LenVec3(&v[2]);
     if (len == 0 || len < 0x7d0000)
         func_ov085_0212e728((JugemHost *)c, &data_ov085_021307a0);
@@ -319,100 +245,91 @@ int func_ov085_0212d73c(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov085_0212d8ec, 0x0212d8ec, size 0xcc */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212d8ec
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov085_0212d8ec(char* c) {
+int func_ov085_0212d8ec(daC_Jugem_c *c) {
   volatile Vector3 look, pos; (void)&look; (void)&pos;
   void* cam;
-  *(int*)(c + 0x98) = 0;
-  *(int*)(c + 0x2c8) = 0;
-  *(int*)(c + 0x2cc) = 0;
-  *(int*)(c + 0x2e0) = 0;
+  c->mHorzSpeed = 0;
+  c->mTimer = 0;
+  c->unk_2cc = 0;
+  c->unk_2e0 = 0;
   cam = data_0209f318;
   _ZN6Camera9SetFlag_3Ev(cam);
-  *(int*)(c+0x2b0)=0xffc67000;
-  *(int*)(c+0x2b4)=0x6ea000;
-  *(int*)(c+0x2b8)=0x1212000;
-  *(int*)(c+0x2bc)=0xffb65000;
-  *(int*)(c+0x2c0)=0x1d5000;
-  *(int*)(c+0x2c4)=0x17fc000;
-  _ZN6Camera9SetLookAtERK7Vector3(cam, (Vector3*)(c + 0x2b0));
-  _ZN6Camera6SetPosERK7Vector3(cam, (Vector3*)(c + 0x2bc));
-  *(int*)(c + 0x2cc) = 0xa0;
-  *(int*)(c + 0x5c) = data_ov085_02130840[0];
-  *(int*)(c + 0x60) = data_ov085_02130840[1];
-  *(int*)(c + 0x64) = data_ov085_02130840[2];
+  c->mCamLookX = 0xffc67000;
+  c->mCamLookY = 0x6ea000;
+  c->mCamLookZ = 0x1212000;
+  c->mCamPosX = 0xffb65000;
+  c->mCamPosY = 0x1d5000;
+  c->mCamPosZ = 0x17fc000;
+  _ZN6Camera9SetLookAtERK7Vector3(cam, &c->mCamLookX);
+  _ZN6Camera6SetPosERK7Vector3(cam, &c->mCamPosX);
+  c->unk_2cc = 0xa0;
+  c->mPosX = data_ov085_02130840[0];
+  c->mPosY = data_ov085_02130840[1];
+  c->mPosZ = data_ov085_02130840[2];
   return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov085_0212d9b8, 0x0212d9b8, size 0x14c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212d9b8
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov085_0212d9b8(char* c)
+int func_ov085_0212d9b8(daC_Jugem_c *c)
 {
     void* pl = _ZN8dActor_c13ClosestPlayerEv(c);
     if (pl == 0) return 1;
 
-    *(int*)(((int)c + 0x2c8)) += 1;
-    *(int*)(((int)c + 0x2cc)) += 0x500;
+    *(int *)(((int)&c->mTimer)) += 1;
+    *(int *)(((int)&c->unk_2cc)) += 0x500;
 
     {
-        int v = (short)*(int*)(c + 0x2cc);
+        int v = (short)c->unk_2cc;
         int idx = (int)((unsigned int)(v << 16) >> 16) >> 4;
         short e = data_02082214[idx * 2];
-        _Z14ApproachLinearRiii((int*)(c + 0x60),
-            (int)(((long long)e * 0x1a000 + 0x800) >> 12) + *(int*)(c + 0x2a8),
+        _Z14ApproachLinearRiii(&c->mPosY,
+            (int)(((long long)e * 0x1a000 + 0x800) >> 12) + c->mTargetY,
             0x10000000);
     }
 
-    if (*(int*)(c + 0x2c8) == 0x32) {
+    if (c->mTimer == 0x32) {
         func_ov002_020c3ea0(pl);
     }
-    *(short*)(c + 0x8e) = 0x6000;
-    *(short*)(c + 0x94) = *(short*)(c + 0x8e);
+    c->mAngleY = 0x6000;
+    c->mPrevAngleY = c->mAngleY;
     {
         int a1 = 0x4000;
-        if (*(int*)(c + 0x2c8) >= 0x4b) a1 = 0x8000;
-        _Z14ApproachLinearRiii((int*)(c + 0x98), a1, 0x1000);
+        if (c->mTimer >= 0x4b) a1 = 0x8000;
+        _Z14ApproachLinearRiii(&c->mHorzSpeed, a1, 0x1000);
     }
 
-    *(int*)(c + 0x2e4) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-        *(unsigned int*)(c + 0x2e4), 3, 0x182, (void*)(c + 0x74), 0);
+    c->mSfxHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
+        c->mSfxHandle, 3, 0x182, &c->mCamSpacePosX, 0);
 
-    if (*(int*)(c + 0x2c8) > 0x78) {
-        *(short*)(c + 0x8e) = 0x4000;
-        *(short*)(c + 0x94) = *(short*)(c + 0x8e);
+    if (c->mTimer > 0x78) {
+        c->mAngleY = 0x4000;
+        c->mPrevAngleY = c->mAngleY;
         func_ov085_0212e728((JugemHost *)c, &data_ov085_02130820);
     }
     return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov085_0212db04, 0x0212db04, size 0xd8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212db04
 // @symbol func_ov085_0212db04
 /* recovered: shared common types */
 
 extern "C" {
-int func_ov085_0212db04(char* c) {
+int func_ov085_0212db04(daC_Jugem_c *c) {
   Vector3 look, pos;
   void* cam;
-  *(int*)(c + 0x2c8) = 0;
-  *(int*)(c + 0x2cc) = 0;
-  *(int*)(c + 0x5c) = -0x5a0000;
-  *(int*)(c + 0x60) = 0x2c0000;
-  *(int*)(c + 0x64) = 0x1c6f000;
-  *(int*)(c + 0x2a4) = *(int*)(c + 0x5c);
-  *(int*)(c + 0x2a8) = *(int*)(c + 0x60);
-  *(int*)(c + 0x2ac) = *(int*)(c + 0x64);
+  c->mTimer = 0;
+  c->unk_2cc = 0;
+  c->mPosX = -0x5a0000;
+  c->mPosY = 0x2c0000;
+  c->mPosZ = 0x1c6f000;
+  c->mTargetX = c->mPosX;
+  c->mTargetY = c->mPosY;
+  c->mTargetZ = c->mPosZ;
   cam = data_0209f318;
   _ZN6Camera9SetFlag_3Ev(cam);
   look.x = -0x304000;
@@ -423,25 +340,22 @@ int func_ov085_0212db04(char* c) {
   pos.z = 0x19e4000;
   _ZN6Camera9SetLookAtERK7Vector3(cam, &look);
   _ZN6Camera6SetPosERK7Vector3(cam, &pos);
-  *(int*)(c + 0x98) = 0;
+  c->mHorzSpeed = 0;
   return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov085_0212dbdc, 0x0212dbdc, size 0x120 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212dbdc
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov085_0212dbdc(char* c)
+int func_ov085_0212dbdc(daC_Jugem_c *c)
 {
-    char* p = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
+    Player *p = (Player *)_ZN8dActor_c13ClosestPlayerEv(c);
     int* pp;
     if (p == 0)
         return 1;
-    pp = (int*)(((int)c + 0x2c8));
+    pp = &c->mTimer;
     *pp = *pp + 1;
-    switch (*(int*)(c + 0x2c8)) {
+    switch (c->mTimer) {
     case 1:
         func_0201f32c(2);
         break;
@@ -459,15 +373,15 @@ int func_ov085_0212dbdc(char* c)
         break;
     case 0xf0:
         {
-            s16 a = *(s16*)(c + 0x2d4);
+            s16 a = c->mSavedAngleY;
             s16 b;
-            *(s16*)(p + 0x8c) = 0;
-            *(s16*)(p + 0x8e) = a;
-            *(s16*)(p + 0x90) = 0;
-            b = *(s16*)(c + 0x2d4);
-            *(s16*)(p + 0x92) = 0;
-            *(s16*)(p + 0x94) = b;
-            *(s16*)(p + 0x96) = 0;
+            p->mAngleX = 0;
+            p->mAngleY = a;
+            p->mAngleZ = 0;
+            b = c->mSavedAngleY;
+            p->mPrevAngleX = 0;
+            p->mPrevAngleY = b;
+            p->mPrevAngleZ = 0;
             func_ov085_0212e728((JugemHost *)c, &data_ov085_021307f0);
         }
         break;
@@ -476,66 +390,57 @@ int func_ov085_0212dbdc(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- func_ov085_0212dcfc, 0x0212dcfc, size 0x14 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212dcfc
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov085_0212dcfc(char *p)
+int func_ov085_0212dcfc(daC_Jugem_c *p)
 {
-    *(int *)(p + 0x2a0) = 0;
-    *(int *)(p + 0x2c8) = 0;
+    p->mTalkPlayer = 0;
+    p->mTimer = 0;
     return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov085_0212dd10, 0x0212dd10, size 0xb4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212dd10
 extern "C" {
 
-int func_ov085_0212dd10(char* c)
+int func_ov085_0212dd10(daC_Jugem_c *c)
 {
-    char* p = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
+    Player *p = (Player *)_ZN8dActor_c13ClosestPlayerEv(c);
     if (!p) return 1;
     {
-        short v = *(short*)(c + 0x8e);
+        short v = c->mAngleY;
         short w = v + 0x8000;
-        int* t = (int*)(((int)c + 0x2c8));
-        *(short*)(p + 0x8c) = 0;
-        *(short*)(p + 0x8e) = w;
-        *(short*)(p + 0x90) = 0;
+        int* t = &c->mTimer;
+        p->mAngleX = 0;
+        p->mAngleY = w;
+        p->mAngleZ = 0;
         *t += 1;
     }
-    if (*(int*)(c + 0x2c8) == 0x5a) func_ov002_020c3f18(p);
+    if (c->mTimer == 0x5a) func_ov002_020c3f18(p);
     {
-        int s = *(int*)(c + 0x2c8);
+        int s = c->mTimer;
         if (s > 0x57 && s < 0x5b)
-            _Z14ApproachLinearRsss((s16*)(c + 0x8c), 0x2000, 0x400);
+            _Z14ApproachLinearRsss(&c->mAngleX, 0x2000, 0x400);
         else
-            _Z14ApproachLinearRsss((s16*)(c + 0x8c), 0x1000, 0x400);
+            _Z14ApproachLinearRsss(&c->mAngleX, 0x1000, 0x400);
     }
-    if (*(int*)(c + 0x2c8) > 0x78)
+    if (c->mTimer > 0x78)
         func_ov085_0212e728((JugemHost *)c, &data_ov085_021307c0);
     return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov085_0212ddc4, 0x0212ddc4, size 0x98 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212ddc4
 // @symbol func_ov085_0212ddc4
 /* recovered: shared common types */
 
 extern "C" {
-int func_ov085_0212ddc4(char* c) {
+int func_ov085_0212ddc4(daC_Jugem_c *c) {
   Vector3 look, pos;
   void* cam;
-  *(int*)(c + 0x2c8) = 0;
-  *(int*)(c + 0x2a0) = 0;
-  *(short*)(c + 0x90) = 0;
+  c->mTimer = 0;
+  c->mTalkPlayer = 0;
+  c->mAngleZ = 0;
   cam = data_0209f318;
   _ZN6Camera9SetFlag_3Ev(cam);
   look.x = 0xffadd000;
@@ -550,54 +455,37 @@ int func_ov085_0212ddc4(char* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov085_0212de5c, 0x0212de5c, size 0x128 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212de5c
-struct PlayerObj {
-    char pad8c[0x8c];
-    short v8c, v8e, v90;
-    char pad2c8[0x2c8 - 0x92];
-    int v2c8;
-    char pad2dc[0x2dc - 0x2cc];
-    unsigned char v2dc;
-};
-struct Other {
-    char pad8c[0x8c];
-    short v8c, v8e, v90;
-    char pad723[0x723 - 0x92];
-    unsigned char v723;
-};
-extern "C" int func_ov085_0212de5c(PlayerObj *c)
+extern "C" int func_ov085_0212de5c(daC_Jugem_c *c)
 {
-    Other *p = (Other *)((dActor_c *)c)->ClosestPlayer();
+    Player *p = ((dActor_c *)c)->ClosestPlayer();
     if (p == 0)
         return 1;
     {
-        short t = c->v8e + 0x8000;
-        p->v8c = 0;
-        p->v8e = t;
-        p->v90 = 0;
+        short t = c->mAngleY + 0x8000;
+        p->mAngleX = 0;
+        p->mAngleY = t;
+        p->mAngleZ = 0;
     }
-    c->v8e = ((dActor_c *)c)->HorzAngleToCPlayer();
-    c->v2dc = 0;
-    c->v8c = 0x1000;
-    c->v90 = 0x800;
+    c->mAngleY = ((dActor_c *)c)->HorzAngleToCPlayer();
+    c->unk_2dc = 0;
+    c->mAngleX = 0x1000;
+    c->mAngleZ = 0x800;
     {
-        int *pp = (int *)(((int)c + 0x2c8));
+        int *pp = (int *)(((int)&c->mTimer));
         int n = *pp + 1;
         *pp = n;
     }
     _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x4b, 0x14, 0x7f, 0x15666, false);
-    switch (c->v2c8) {
+    switch (c->mTimer) {
     case 1:
-        p->v723 = 1;
+        p->unk_723 = 1;
         break;
     case 0x78:
         func_0201f32c(1);
         break;
     case 0x82:
-        p->v723 = 0;
+        p->unk_723 = 0;
         break;
     case 0xb4:
         data_0209d66c = 1;
@@ -609,23 +497,20 @@ extern "C" int func_ov085_0212de5c(PlayerObj *c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_ov085_0212df84, 0x0212df84, size 0xf4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212df84
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
-extern "C" int func_ov085_0212df84(char* c)
+extern "C" int func_ov085_0212df84(daC_Jugem_c *c)
 {
     Vector3 look, pos;
     void* cam;
-    void* player;
-    *(int*)(c + 0x2a4) = -0x5a0000;
-    *(int*)(c + 0x2a8) = 0x1c0000;
-    *(int*)(c + 0x2ac) = 0x1a66000;
-    player = _ZN8dActor_c13ClosestPlayerEv(c);
+    Player* player;
+    c->mTargetX = -0x5a0000;
+    c->mTargetY = 0x1c0000;
+    c->mTargetZ = 0x1a66000;
+    player = (Player *)_ZN8dActor_c13ClosestPlayerEv(c);
     if (player) {
-        *(short*)(c + 0x2d4) = *(short*)((char*)player + 0x8e);
+        c->mSavedAngleY = player->mAngleY;
         func_ov002_020d228c(player);
     }
     cam = data_0209f318;
@@ -638,33 +523,30 @@ extern "C" int func_ov085_0212df84(char* c)
     pos.z = 0x1a89000;
     _ZN6Camera9SetLookAtERK7Vector3(cam, &look);
     _ZN6Camera6SetPosERK7Vector3(cam, &pos);
-    *(short*)(c + 0x100) = 0x79;
-    *(int*)(c + 0x5c) = *(int*)(c + 0x2a4);
-    *(int*)(c + 0x60) = *(int*)(c + 0x2a8);
-    *(int*)(c + 0x64) = *(int*)(c + 0x2ac);
-    *(int*)(c + 0x2a0) = 0;
+    c->mStateTimer = 0x79;
+    c->mPosX = c->mTargetX;
+    c->mPosY = c->mTargetY;
+    c->mPosZ = c->mTargetZ;
+    c->mTalkPlayer = 0;
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- func_ov085_0212e078, 0x0212e078, size 0x108 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212e078
 extern "C" {
 
-int func_ov085_0212e078(char* c)
+int func_ov085_0212e078(daC_Jugem_c *c)
 {
-    _Z14ApproachLinearRsss((short*)(c + 0x94), Vec3_HorzAngle(c + 0x5c, c + 0x2a4), 0x800);
-    _Z14ApproachLinearRsss((short*)(c + 0x8e), *(short*)(c + 0x94), 0x800);
-    *(unsigned int*)(c + 0x2e4) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-        *(unsigned int*)(c + 0x2e4), 3, 0x182, c + 0x74, 0);
-    if (AngleDiff(*(short*)(c + 0x94), Vec3_HorzAngle(c + 0x5c, c + 0x2a4)) < 0x2000) {
-        Vec3_ApproachHorz(c + 0x5c, c + 0x2a4, 0x1e000);
-        _Z14ApproachLinearRiii((int*)(c + 0x60), *(int*)(c + 0x2a8), 0x1e000);
+    _Z14ApproachLinearRsss(&c->mPrevAngleY, Vec3_HorzAngle(&c->mPosX, &c->mTargetX), 0x800);
+    _Z14ApproachLinearRsss(&c->mAngleY, c->mPrevAngleY, 0x800);
+    c->mSfxHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
+        c->mSfxHandle, 3, 0x182, &c->mCamSpacePosX, 0);
+    if (AngleDiff(c->mPrevAngleY, Vec3_HorzAngle(&c->mPosX, &c->mTargetX)) < 0x2000) {
+        Vec3_ApproachHorz(&c->mPosX, &c->mTargetX, 0x1e000);
+        _Z14ApproachLinearRiii(&c->mPosY, c->mTargetY, 0x1e000);
     }
-    if (*(unsigned short*)(c + 0x100) == 0) {
+    if (*(unsigned short *)&c->mStateTimer == 0) {
         if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x4a, 0x7f, 0, 0x7222, 0) != 0) {
-            if (_ZN6Player18HasFinishedTalkingEv(*(void**)(c + 0x2a0)) == 1) {
+            if (c->mTalkPlayer->HasFinishedTalking() == 1) {
                 _ZN7fBase_c18MarkForDestructionEv(c);
                 data_0209f284 = 0;
             }
@@ -674,55 +556,47 @@ int func_ov085_0212e078(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- func_ov085_0212e180, 0x0212e180, size 0x1c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212e180
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov085_0212e180(char *c) {
-    short r3 = *(short*)((char*)c + 0x8e);
-    *(short*)((char*)c + 0x94) = r3;
-    *(short*)((char*)c + 0x100) = 0x46;
+int func_ov085_0212e180(daC_Jugem_c *c) {
+    short r3 = c->mAngleY;
+    c->mPrevAngleY = r3;
+    c->mStateTimer = 0x46;
     return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- func_ov085_0212e19c, 0x0212e19c, size 0x150 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212e19c
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov085_0212e19c(char* c)
+int func_ov085_0212e19c(daC_Jugem_c *c)
 {
-    _Z14ApproachLinearRsss((s16*)(c + 0x8e), _ZN8dActor_c18HorzAngleToCPlayerEv(c), 0x800);
-    switch (*(int*)(c + 0x2d8)) {
+    _Z14ApproachLinearRsss(&c->mAngleY, ((dActor_c *)c)->HorzAngleToCPlayer(), 0x800);
+    switch (c->mTalkStep) {
     case 0:
         {
-            u16* m = (u16*)AT(*(char**)(c + 0x2a0), 0x6ce);
-            *m = *m | 0x400;
+            c->mTalkPlayer->mStateFlags |= 0x400;
         }
-        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
-                *(void**)(c + 0x2a0), c, 0x182, (struct Vector3*)(c + 0x5c), 1, 0) == 1) {
-            *(int*)AT(c, 0x2d8) += 1;
+        if (c->mTalkPlayer->ShowMessage(*(fBase_c *)c, 0x182, (Vector3 *)&c->mPosX, 1, 0) == 1) {
+            *(int *)(((int)&c->mTalkStep)) += 1;
         }
         break;
     case 1:
-        if (data_0209d6bc == 7) { *(int*)AT(c, 0x2d8) += 1; }
+        if (data_0209d6bc == 7) { *(int *)(((int)&c->mTalkStep)) += 1; }
         break;
     case 2:
         if (data_0209d6bc == 7)
             break;
         func_02012790(0x24);
         data_0209f284 = 1;
-        { *(int*)AT(c, 0x2d8) += 1; }
+        { *(int *)(((int)&c->mTalkStep)) += 1; }
         break;
     case 3:
-        if (data_0209d6bc == 9) { *(int*)AT(c, 0x2d8) += 1; }
+        if (data_0209d6bc == 9) { *(int *)(((int)&c->mTalkStep)) += 1; }
         break;
     case 4:
-        if (_ZN6Player12GetTalkStateEv(*(void**)(c + 0x2a0)) == 2)
+        if (c->mTalkPlayer->GetTalkState() == 2)
             func_ov085_0212e728((JugemHost *)c, &data_ov085_02130830);
         break;
     }
@@ -730,22 +604,16 @@ int func_ov085_0212e19c(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- func_ov085_0212e2ec, 0x0212e2ec, size 0x24 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212e2ec
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov085_0212e2ec(void *r0) {
+int func_ov085_0212e2ec(daC_Jugem_c *r0) {
     int *p = data_0209caa0;
     p[2] |= 0x20000;
-    *(int*)((char*)r0+0x2d8) = 0;
+    r0->mTalkStep = 0;
     return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- func_ov085_0212e310, 0x0212e310, size 0x170 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212e310
 // @symbol func_ov085_0212e310
 /* recovered: shared common types, declarations from a shared header */
@@ -755,26 +623,26 @@ extern "C" {
 
 
 
-int func_ov085_0212e310(char *c)
+int func_ov085_0212e310(daC_Jugem_c *c)
 {
     Vector3 in;
     Vector3 out;
-    char *p;
+    Player *p;
 
-    p = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
+    p = (Player *)_ZN8dActor_c13ClosestPlayerEv(c);
     if (p == 0) {
         return 1;
     }
 
-    *(int *)(p + 0x744) = *(int *)(c + 0x5c);
-    *(int *)(p + 0x748) = *(int *)(c + 0x60);
-    *(int *)(p + 0x74c) = *(int *)(c + 0x64);
+    p->unk_744 = c->mPosX;
+    p->unk_748 = c->mPosY;
+    p->unk_74c = c->mPosZ;
 
-    if (*(unsigned short *)(c + 0x100) == 0) {
+    if (*(unsigned short *)&c->mStateTimer == 0) {
         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x4a, 0x14, 0x7f, 0x15666, 0);
     }
 
-    *(unsigned int *)(c + 0x2e4) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int *)(c + 0x2e4), 3, 0x182, (Vector3 *)(c + 0x74), 0);
+    c->mSfxHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(c->mSfxHandle, 3, 0x182, (Vector3 *)&c->mCamSpacePosX, 0);
 
     in.x = 0;
     in.y = 0;
@@ -785,16 +653,16 @@ int func_ov085_0212e310(char *c)
     in.z = 0xc8000;
     Matrix4x3_FromRotationY(&data_020a0e68, 0);
     MulVec3Mat4x3(&in, &data_020a0e68, &out);
-    out.x += *(int *)(p + 0x5c);
-    out.y += *(int *)(p + 0x60) + 0x70000;
-    out.z += *(int *)(p + 0x64);
+    out.x += p->mPosX;
+    out.y += p->mPosY + 0x70000;
+    out.z += p->mPosZ;
 
-    _Z14ApproachLinearR7Vector3RKS_5Fix12IiE((Vector3 *)(c + 0x5c), &out, 0x14000);
-    _Z14ApproachLinearRsss((short *)(c + 0x94), Vec3_HorzAngle((Vector3 *)(c + 0x5c), &out), 0x800);
-    *(short *)(c + 0x8e) = *(short *)(c + 0x94);
+    _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(&c->mPosX, &out, 0x14000);
+    _Z14ApproachLinearRsss(&c->mPrevAngleY, Vec3_HorzAngle(&c->mPosX, &out), 0x800);
+    c->mAngleY = c->mPrevAngleY;
 
-    if (Vec3_Dist((Vector3 *)(c + 0x5c), &out) < 0x14000) {
-        *(void **)(c + 0x2a0) = p;
+    if (Vec3_Dist(&c->mPosX, &out) < 0x14000) {
+        c->mTalkPlayer = p;
         func_ov085_0212e728((JugemHost *)c, &data_ov085_02130810);
     }
 
@@ -802,26 +670,18 @@ int func_ov085_0212e310(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- func_ov085_0212e480, 0x0212e480, size 0x24 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212e480
-// recovered name: daObj_Mip_Key_c_Kill
-/* recovered: renamed to Class_Method */
-/* daObj_Mip_Key_c::Kill - recovered from vtable slot identity */
+/* A daC_Jugem_c state function: it writes this class's mTimer and mStateTimer. */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov085_0212e480(char *p)
+int func_ov085_0212e480(daC_Jugem_c *p)
 {
-    *(int *)(p + 0x64) = 2457600;
-    *(int *)(p + 0x2c8) = 0;
-    *(short *)(p + 0x100) = 40;
+    p->mPosZ = 2457600;
+    p->mTimer = 0;
+    p->mStateTimer = 40;
     return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- func_ov085_0212e4a4, 0x0212e4a4, size 0xf8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212e4a4
 typedef struct V3 { int x, y, z; } V3;
 /* This member's legacy file carried `#pragma opt_common_subs off`. That
@@ -832,26 +692,26 @@ typedef struct V3 { int x, y, z; } V3;
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 
 
-int func_ov085_0212e4a4(unsigned int self)
+int func_ov085_0212e4a4(daC_Jugem_c *self)
 {
-    char *p = (char *)_ZN8dActor_c13ClosestPlayerEv((void *)self);
+    Player *p = (Player *)_ZN8dActor_c13ClosestPlayerEv(self);
     if (p != 0) {
-        V3 v = *(V3 *)(p + 0x5c);
+        V3 v = *(V3 *)&p->mPosX;
         if ((data_0209caa0[2] & 0x10000) != 0 &&
             v.z > -0x28000 &&
-            _ZN6Player17SetNoControlStateEhih((int)p, 0x12, -1, 0) != 0) {
-            *(int *)(p + 0x744) = *(int *)(self + 0x5c);
-            *(int *)(p + 0x748) = *(int *)(self + 0x60);
-            *(int *)(p + 0x74c) = *(int *)(self + 0x64);
-            *(int *)(self + 0x5c) = v.x;
-            *(int *)(self + 0x60) = v.y;
-            *(int *)(self + 0x64) = v.z;
-            *(int *)(((long long)((int)(self + 0x5c)))) -= 0x3e8000;
-            *(int *)(self + 0x60) = *(int *)(p + 0x644) + 0x3e8000;
-            *(int *)(self + 0x2a4) = *(int *)(self + 0x5c);
-            *(int *)(self + 0x2a8) = *(int *)(self + 0x60);
-            *(int *)(self + 0x2ac) = *(int *)(self + 0x64);
-            *(signed char *)(self + 0x2dc) = 0;
+            p->SetNoControlState(0x12, -1, 0) != 0) {
+            p->unk_744 = self->mPosX;
+            p->unk_748 = self->mPosY;
+            p->unk_74c = self->mPosZ;
+            self->mPosX = v.x;
+            self->mPosY = v.y;
+            self->mPosZ = v.z;
+            *(int *)(((long long)(int)&self->mPosX)) -= 0x3e8000;
+            self->mPosY = p->mGroundY + 0x3e8000;
+            self->mTargetX = self->mPosX;
+            self->mTargetY = self->mPosY;
+            self->mTargetZ = self->mPosZ;
+            *(signed char *)&self->unk_2dc = 0;
             func_ov085_0212e728((JugemHost *)self, &data_ov085_02130800);
         }
     }
@@ -860,69 +720,62 @@ int func_ov085_0212e4a4(unsigned int self)
 }
 #pragma opt_common_subs on
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- func_ov085_0212e59c, 0x0212e59c, size 0x10 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212e59c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov085_0212e59c(char *p)
+int func_ov085_0212e59c(daC_Jugem_c *p)
 {
-    p[0x2dc] = 1; return 1;
+    p->unk_2dc = 1; return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- func_ov085_0212e5ac, 0x0212e5ac, size 0x174 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212e5ac
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov085_0212e5ac(char* self)
+int func_ov085_0212e5ac(daC_Jugem_c *self)
 {
     Vector3 in, out, plpos;
-    char* pl;
+    Camera *cam;
     Vector3* src;
-    void* p;
+    Player *p;
 
-    pl = (char*)data_0209f318;
+    cam = (Camera *)data_0209f318;
     in.x = 0; in.y = 0; in.z = 0;
     out.x = 0; out.y = 0; out.z = 0;
-    src = (Vector3*)(((int)pl + 0x8c));
+    src = (Vector3 *)(((int)&cam->pos));
     plpos.x = src->x;
     plpos.y = src->y;
     plpos.z = src->z;
     if (data_0209f2f8 == 0x2f) {
-        *(int*)(self + 0x5c) = 0;
+        self->mPosX = 0;
     } else {
-        *(int*)(self + 0x5c) = 0x1086000;
-        if (*(int*)(self + 0x2cc) == 0) {
-            p = _ZN8dActor_c13ClosestPlayerEv(self);
-            if (p != 0 && *(int*)((char*)p + 0x5c) > 0x1086000) {
+        self->mPosX = 0x1086000;
+        if (self->unk_2cc == 0) {
+            p = (Player *)_ZN8dActor_c13ClosestPlayerEv(self);
+            if (p != 0 && p->mPosX > 0x1086000) {
                 _ZN8dActor_c13SpawnSoundObjEj(self, 0);
-                *(int*)(self + 0x2cc) = 1;
+                self->unk_2cc = 1;
             }
         }
     }
-    *(int*)(self + 0x60) = plpos.y;
-    *(int*)(self + 0x64) = plpos.z;
-    in.z = Vec3_HorzDist(&plpos, (Vector3*)(self + 0x5c));
-    Matrix4x3_FromRotationY(&data_020a0e68, Vec3_HorzAngle(&plpos, (Vector3*)(self + 0x5c)));
+    self->mPosY = plpos.y;
+    self->mPosZ = plpos.z;
+    in.z = Vec3_HorzDist(&plpos, &self->mPosX);
+    Matrix4x3_FromRotationY(&data_020a0e68, Vec3_HorzAngle(&plpos, &self->mPosX));
     MulVec3Mat4x3(&in, &data_020a0e68, &out);
-    *(int*)(((int)self + 0x5c)) += out.x;
+    *(int *)(((int)&self->mPosX)) += out.x;
     if (data_0209f2f8 == 0x2f) {
-        if (*(int*)(self + 0x5c) > 0x79e000) {
-            *(int*)(self + 0x5c) = 0x79e000;
+        if (self->mPosX > 0x79e000) {
+            self->mPosX = 0x79e000;
         }
     }
-    *(int*)(((int)self + 0x64)) += out.z;
-    *(short*)(self + 0x94) = 0x8000 - *(short*)(pl + 0x17c);
-    *(short*)(self + 0x92) = -*(short*)(pl + 0x17e);
+    *(int *)(((int)&self->mPosZ)) += out.z;
+    self->mPrevAngleY = 0x8000 - cam->mAngleY;
+    /* The halfword after Camera::mAngleY at 0x17e (Camera.h has no member for
+       it). Possibly the pitch, but only this one negated use suggests so. */
+    self->mPrevAngleX = -*(short *)((char *)&cam->mAngleY + 2);
     return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- func_ov085_0212e720, 0x0212e720, size 0x8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212e720
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov085_0212e720(void)
@@ -931,39 +784,30 @@ int func_ov085_0212e720(void)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- func_ov085_0212e728, 0x0212e728, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212e728
 extern "C" int func_ov085_0212e728(JugemHost *c, JugemInitPMF *p)
 { c->pp = p; JugemInitPMF *q = c->pp; if (*q == 0) return 1; return (c->**q)(); }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- func_ov085_0212e778, 0x0212e778, size 0xe0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212e778
 extern "C" {
 struct Vec3 { int x, y, z; };
 
 typedef struct { int w[12]; } M48;
 
-void func_ov085_0212e778(char* c)
+void func_ov085_0212e778(daC_Jugem_c *c)
 {
     Vec3 v;
-    Vec3_Asr(&v, c + 0x5c, 3);
+    Vec3_Asr(&v, &c->mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, *(short*)(c + 0x8c), *(short*)(c + 0x8e), *(short*)(c + 0x90));
-    *(M48*)(c + 0x12c) = *(M48*)&data_020a0e68;
-    Matrix4x3_FromTranslation(&data_020a0e68, *(int*)(c + 0x5c) >> 3, (*(int*)(c + 0x60) - 0x38000) >> 3, *(int*)(c + 0x64) >> 3);
-    *(M48*)(c + 0x240) = *(M48*)&data_020a0e68;
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
+    *(M48 *)&c->mModelAnim1.mat4x3 = *(M48 *)&data_020a0e68;
+    Matrix4x3_FromTranslation(&data_020a0e68, c->mPosX >> 3, (c->mPosY - 0x38000) >> 3, c->mPosZ >> 3);
+    *(M48 *)&c->mShadowMat1 = *(M48 *)&data_020a0e68;
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-        c, c + 0x1f0, c + 0x240, 0x46000, 0x258000, 0xf);
+        c, &c->mShadowModel1, &c->mShadowMat1, 0x46000, 0x258000, 0xf);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- func_ov085_0212e858, 0x0212e858, size 0x238 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_0212e858
 /* recovered: shared common types */
 /* The matrix type below has to be local, and it is why this member was the
@@ -986,32 +830,33 @@ void func_ov085_0212e778(char* c)
    nothing; the whole 0x50 was the matrix. The shared spelling stands. */
 struct M48e858 { int w[12]; };
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov085_0212e858(char *c)
+void func_ov085_0212e858(daC_Jugem_c *c)
 {
     struct Vector3 p;
     struct Vector3 z1;
     struct Vector3 off;
     struct Vector3 pp;
     struct Vector3 t;
-    char *pl;
+    Player *pl;
     int p1, p2;
     signed char lvl;
     struct Vector3 *ps;
 
-    Vec3_Asr(&t, (struct Vector3*)(c + 0x5c), 3);
+    Vec3_Asr(&t, &c->mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, *(short*)(c + 0x8c), *(short*)(c + 0x8e), *(short*)(c + 0x90));
-    *(M48e858*)(c + 0x12c) = *(M48e858*)&data_020a0e68;
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
+    *(M48e858 *)&c->mModelAnim1.mat4x3 = *(M48e858 *)&data_020a0e68;
 
     Matrix4x3_FromTranslation(&data_020a0e68,
-        *(int*)(c + 0x5c) >> 3,
-        (*(int*)(c + 0x60) - 0x38000) >> 3,
-        *(int*)(c + 0x64) >> 3);
-    *(M48e858*)(c + 0x240) = *(M48e858*)&data_020a0e68;
+        c->mPosX >> 3,
+        (c->mPosY - 0x38000) >> 3,
+        c->mPosZ >> 3);
+    *(M48e858 *)&c->mShadowMat1 = *(M48e858 *)&data_020a0e68;
 
-    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x1f0, c + 0x240, 0x46000, 0x258000, 0xf);
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+        c, &c->mShadowModel1, &c->mShadowMat1, 0x46000, 0x258000, 0xf);
 
-    pl = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
+    pl = (Player *)_ZN8dActor_c13ClosestPlayerEv(c);
     if (pl == 0) return;
 
     /* early load of level, zero stacks, then player pos copy interleaved with cmp */
@@ -1025,7 +870,7 @@ void func_ov085_0212e858(char *c)
     off.x = 0;
     off.y = 0;
     off.z = 0;
-    ps = (struct Vector3*)(pl + 0x5c);
+    ps = (struct Vector3 *)&pl->mPosX;
     pp.x = ps->x;
     pp.y = ps->y;
     pp.z = ps->z;
@@ -1051,14 +896,12 @@ void func_ov085_0212e858(char *c)
 
     func_ov002_020e4374(pl, &p1, &p2);
 
-    *(M48e858*)(c + 0x270) = *(M48e858*)&data_020a0e68;
-    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x218, c + 0x270, p2, p1, 0xf);
+    *(M48e858 *)&c->mShadowMat2 = *(M48e858 *)&data_020a0e68;
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+        c, &c->mShadowModel2, &c->mShadowMat2, p2, p1, 0xf);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 27 -- _ZN11daC_Jugem_c16CleanupResourcesEv, 0x0212ea90, size 0x3c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daC_Jugem_c16CleanupResourcesEv
 /* recovered: shared header, real C++ method
  *
@@ -1073,9 +916,6 @@ int daC_Jugem_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 28 -- _ZN11daC_Jugem_c16OnPendingDestroyEv, 0x0212eacc, size 0x4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daC_Jugem_c16OnPendingDestroyEv
 /* recovered: shared header, real C++ method
  *
@@ -1086,9 +926,6 @@ void daC_Jugem_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 29 -- _ZN11daC_Jugem_c6RenderEv, 0x0212ead0, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daC_Jugem_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
 /* The model-component slot Render drives is reached through its own vtable;
@@ -1098,14 +935,11 @@ struct Sub { virtual int g0(); virtual int g1(); virtual int g2();
 int daC_Jugem_c::Render()
 {
   if (unk_2dc == 1) return 1;
-  _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this)+0x1d8, ((char*)this)+0x118);
+  _ZN15TextureSequence6UpdateER15ModelComponents(&mTextureSequence, &mModelAnim1.data);
   ((Sub*)((char*)&mModelAnim1))->g5(0);
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 30 -- _ZN11daC_Jugem_c8BehaviorEv, 0x0212eb18, size 0xd4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daC_Jugem_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
@@ -1116,27 +950,23 @@ typedef void (BehC::*BehPMF)();
 struct BehState { char pad[8]; BehPMF fn; };
 int daC_Jugem_c::Behavior()
 {
-  char* p=(char*)((BehC*)this);
-  DecIfAbove0_Short((unsigned short*)(p+0x100));
-  BehState* st=*(BehState**)(p+0x1ec);
+  DecIfAbove0_Short((unsigned short *)&mStateTimer);
+  BehState* st=(BehState *)mState;
   if(st->fn) (((BehC*)this)->*st->fn)();
-  _ZN8dActor_c9UpdatePosEP5dCc_c(((BehC*)this), 0);
-  _ZN9Animation7AdvanceEv(p+0x160);
-  _ZN9Animation7AdvanceEv(p+0x1d8);
-  if(*(BehState**)(p+0x1ec)==(BehState*)&data_ov085_021307d0){
-    *(short*)(p+0x8c)=*(short*)(p+0x92);
-    *(short*)(p+0x8e)=*(short*)(p+0x94);
-    *(short*)(p+0x90)=*(short*)(p+0x96);
+  _ZN8dActor_c9UpdatePosEP5dCc_c(this, 0);
+  _ZN9Animation7AdvanceEv(static_cast<Animation *>(&mModelAnim1));
+  _ZN9Animation7AdvanceEv(&mTextureSequence);
+  if((BehState *)mState==(BehState*)&data_ov085_021307d0){
+    mAngleX=mPrevAngleX;
+    mAngleY=mPrevAngleY;
+    mAngleZ=mPrevAngleZ;
   }
-  if(*(BehState**)(p+0x1ec)==(BehState*)&data_ov085_021307e0) return 1;
-  if(*(int*)(p+0x2d0)==0) func_ov085_0212e858((char*)this);
-  else func_ov085_0212e778((char*)this);
+  if((BehState *)mState==(BehState*)&data_ov085_021307e0) return 1;
+  if(unk_2d0==0) func_ov085_0212e858(this);
+  else func_ov085_0212e778(this);
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 31 -- _ZN11daC_Jugem_c13InitResourcesEv, 0x0212ebec, size 0x168 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daC_Jugem_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
@@ -1187,9 +1017,6 @@ int daC_Jugem_c::InitResources()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 32 -- daC_Jugem_c_classInit, 0x0212ed54, size 0x58 */
-/* -------------------------------------------------------------------------- */
 // @symbol daC_Jugem_c_classInit
 /* The registry factory behind the C_JUGEM profile. It allocates 0x2e8 -- this
  * class's own sizeof -- and installs this class's vtable, which is the second

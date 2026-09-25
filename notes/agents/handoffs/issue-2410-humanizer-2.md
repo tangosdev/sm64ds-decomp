@@ -22,11 +22,11 @@ This document describes this commit. The queue records its immutable output SHA.
 
 ## What changed and why
 
-The reserved class is ov030/daMky_c and its existing text TU is the half-open
+The reserved class is [ov030](../../../config/arm9/overlays/ov030/symbols.txt)/`daMky_c` and its existing text TU is the half-open
 range `[0x02111688,0x021145e0)`, 44 functions and 12,120 bytes. This continuation
 changes only the source, class-header comments, and this handoff.
 
-`daMky_c::EnterState0`, ov030:0x02114124, size 0x10, now writes `mState = 0`
+`daMky_c::EnterState0`, [ov030](../../../config/arm9/overlays/ov030/symbols.txt):0x02114124, size 0x10, now writes `mState = 0`
 instead of casting `this` to `int*` and writing `p[237]`. The existing header
 already declares `s32 mState` at 0x3b4. The new expression reproduces the exact
 retail bytes and relocations under the pinned 2004/b56 compiler.
@@ -39,9 +39,9 @@ finds the same 269 non-comment tokens before and after; no declaration, type, fi
 offset, signature, or layout changed.
 
 The evidence for these descriptions is already present in this TU and
-`notes/data/class-facts/daMky_c.json`: `func_ov030_02112094` copies the matrix,
-`func_ov030_02111734` reads the first triple and restores positions, and
-`func_ov030_02111dd0` updates the saved triple after a ground check. Original field
+`notes/data/class-facts/daMky_c.json`: [func_ov030_02112094](../../../src/actors/daMky_c.cpp)(ROM Ordinal 12) copies the matrix,
+[func_ov030_02111734](../../../src/actors/daMky_c.cpp)(ROM Ordinal 3) reads the first triple and restores positions, and
+[func_ov030_02111dd0](../../../src/actors/daMky_c.cpp)(ROM Ordinal 9) updates the saved triple after a ground check. Original field
 names remain unknown. `mState` and `EnterState` retain their existing disclosed
 reconstruction names; this continuation introduces no recovered-name claim.
 

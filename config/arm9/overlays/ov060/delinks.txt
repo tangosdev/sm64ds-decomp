@@ -555,28 +555,9 @@ src/d_a_kirai.c:
     complete
     .text start:0x02118cbc end:0x02118cfc
 
-src/_ZN16BowserShockwavesD1Ev.cpp:
+src/actors/daFRing_c.cpp:
     complete
-    .text start:0x02118cfc end:0x02118d64
-
-src/_ZN16BowserShockwavesD0Ev.cpp:
-    complete
-    .text start:0x02118d64 end:0x02118de0
-
-src/_ZN16BowserShockwaves16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02118de0 end:0x02118e1c
-
-src/_ZN16BowserShockwaves6RenderEv.cpp:
-    complete
-    .text start:0x02118e1c end:0x02118eb8
-
-src/_ZN16BowserShockwaves8BehaviorEv.cpp:
-    complete
-    .text start:0x02118eb8 end:0x02119004
-
-src/_ZN16BowserShockwaves13InitResourcesEv.cpp:
-    .text start:0x02119004 end:0x021191f4
+    .text start:0x02118cfc end:0x021191f4
 
 src/d_a_f_ring.c:
     complete

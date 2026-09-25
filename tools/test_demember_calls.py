@@ -95,8 +95,9 @@ def test_only_the_named_classs_calls_are_rewritten():
 
 
 def test_two_classes_of_the_same_name_go_to_two_different_symbols():
-    """src/_ZN9WaterBomb13InitResourcesEv.cpp: `Init` on MovingCylinderClsn and on
-    WithMeshClsn, interleaved. Sending all four to one symbol still byte-matches."""
+    """The old `WaterBomb::InitResources` shard (now `daWbm_c::InitResources` in the
+    promoted daWbm_c TU): `Init` on MovingCylinderClsn and on WithMeshClsn,
+    interleaved. Sending all four to one symbol still byte-matches."""
     src = """\
 struct MovingCylinderClsn { void Init(Actor *a, int r); };
 struct WithMeshClsn { void Init(Actor *a, int b); };

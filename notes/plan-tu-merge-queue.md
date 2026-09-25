@@ -63,7 +63,7 @@ it lose it. Both directions are live. Affected Tier 1:
 | Class |
 |---|
 |[ov029](../config/arm9/overlays/ov029/symbols.txt)/`daObjWc_Obj02_c(1/9)`  [ov029](../config/arm9/overlays/ov029/symbols.txt)/`daObjWc_Obj05_c(1/9)`  [ov029](../config/arm9/overlays/ov029/symbols.txt)/`daObjWc_Obj07_c(1/5)` |
-|[ov014](../config/arm9/overlays/ov014/symbols.txt)/`daObjBSwdoor_c(1/6)` [ov030](../config/arm9/overlays/ov030/symbols.txt)/`RollingLogTtm(3/6)` [ov063](../config/arm9/overlays/ov063/symbols.txt)/`daObjTh_Fall_Block_c(2/5)` |
+|[ov014](../config/arm9/overlays/ov014/symbols.txt)/`daObjBSwdoor_c(1/6)` [ov030](../config/arm9/overlays/ov030/symbols.txt)/`daObjHmMaruta_c(3/6)` [ov063](../config/arm9/overlays/ov063/symbols.txt)/`daObjTh_Fall_Block_c(2/5)` |
 |[ov015](../config/arm9/overlays/ov015/symbols.txt)/`daObjBk_Fall_Block_c(2/5)` [ov015](../config/arm9/overlays/ov015/symbols.txt)/`daObjBk_Ukisima_c(1/5)` [ov022](../config/arm9/overlays/ov022/symbols.txt)/`RotatingPlatformLll(1/5)` |
 |[ov036](../config/arm9/overlays/ov036/symbols.txt)/`RotatingPlatformRr(1/5)` [ov064](../config/arm9/overlays/ov064/symbols.txt)/`TiltingPlatformLll(2/5)` [ov016](../config/arm9/overlays/ov016/symbols.txt)/`FloatOnWaterPlatformJrb(1/4)` |
 
@@ -141,7 +141,7 @@ spent. **Run first; 10 minutes, and it de-risks every later "is it me or is it t
 |[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20b5734|  n=7|  L=164|  `daObjFire_c`|                uncorrob|
 |[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20b6e08|  n=5|  L=67|   `WaterfallMist`|            uncorrob|
 |[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20ec388|  n=8|  L=148|  `daWarpkun_c`|             uncorrob|
-|[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20f0dd0|  n=8|  L=176|  `OneUpLogo`|                uncorrob|
+|[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20f0dd0|  n=8|  L=176|  `daObj1UpLogo_c`|                uncorrob|
 |[ov006](../config/arm9/overlays/ov006/symbols.txt)| 0x20dbd54|  n=3|  L=36|   `MgPicturePoker`|           uncorrob|
 |[ov006](../config/arm9/overlays/ov006/symbols.txt)| 0x20fa6ac|  n=2|  L=30|   `MgPairAGoneAndOn`|         uncorrob|
 |[ov006](../config/arm9/overlays/ov006/symbols.txt)| 0x210a400|  n=2|  L=32|   `MgMushroomRoulette`|       uncorrob|
@@ -162,7 +162,7 @@ cheapest possible probe of post-regeneration [ov006](../config/arm9/overlays/ov0
 |[ov019](../config/arm9/overlays/ov019/symbols.txt)| 0x211261c|  n=5|  L=93|  `daSldMng_c`| |
 |[ov021](../config/arm9/overlays/ov021/symbols.txt)| 0x2112db4|  n=6|  L=105|  `daObjCvShutter_c`| |
 |[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x2111980|  n=8|  L=181|  `daObjFl_London_c`|               uncorrob|
-|[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x2111cac|  n=8|  L=170|  `LavaSeesaw`|               uncorrob|
+|[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x2111cac|  n=8|  L=170|  `daObjFl_Seesaw_c`|               uncorrob|
 
 
 **B3 — R0 · 10 TUs / 53 files / net −43 / 1,076 lines**
@@ -203,7 +203,7 @@ first module where a `config_tu/` conversion becomes conceivable.
 |----|---------|-------|-------------|--------|
 |[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20b09b0|  n=9|   `daChScene_c`|                   CONF1|
 |[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20b46a0|  n=8|   `MegaMushroomCreateTag`|  CONF1 pcov=5|
-|[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20bc5e0|  n=8|   `HealingHeart`|          CONF1 pcov=4|
+|[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20bc5e0|  n=8|   `daObjHeart_c`|          CONF1 pcov=4|
 |[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20f0894|  n=8|   `daObjNumber_c`|                 CONF1|
 |[ov002](../config/arm9/overlays/ov002/symbols.txt)| 0x20f11b0|  n=9|   `daObjBC_Switch_c`|         CONF2|
 |[ov006](../config/arm9/overlays/ov006/symbols.txt)| 0x212471c|  n=2|   `MgTrampolineTerror`|     CONF1|
@@ -224,10 +224,10 @@ first module where a `config_tu/` conversion becomes conceivable.
 **B7 — R1 · 8 TUs / 63 files / net −55 / 1,440 lines**
 | TU | Address | Files | Description | Status |
 |----|---------|-------|-------------|--------|
-|[ov016](../config/arm9/overlays/ov016/symbols.txt)| 0x2112ff8|  n=8|   `SlidingBox`|           CONF2 pcov=3|
+|[ov016](../config/arm9/overlays/ov016/symbols.txt)| 0x2112ff8|  n=8|   `daSlide_Box_c`|           CONF2 pcov=3|
 |[ov017](../config/arm9/overlays/ov017/symbols.txt)| 0x21111a0|  n=7|   `daObjKsWater_c`|            CONF2 WHOLEMOD pcov=2|
-|[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x21111a0|  n=9|   `VolcanoRing`|          CONF1|
-|[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x21116c4|  n=9|   `FloatOnLavaPlatform`|  CONF2|
+|[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x21111a0|  n=9|   `daObjFl_Ring_c`|          CONF1|
+|[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x21116c4|  n=9|   `daObjFl_Block_c`|  CONF2|
 |[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x2112130|  n=7|   `daObjFl_UkiKi_c`|            CONF2|
 |[ov025](../config/arm9/overlays/ov025/symbols.txt)| 0x2111d40|  n=9|   `PyramidStep`|          CONF1|
 |[ov032](../config/arm9/overlays/ov032/symbols.txt)| 0x2112698|  n=7|   `daObjTdWater_c`|            CONF2|
@@ -240,8 +240,8 @@ first module where a `config_tu/` conversion becomes conceivable.
 |[ov036](../config/arm9/overlays/ov036/symbols.txt)| 0x21111a0|  n=8|   `daObjRcBuranko_c`|   CONF1|
 |[ov043](../config/arm9/overlays/ov043/symbols.txt)| 0x21113fc|  n=5|   `RickshawBdw`|       CONF1|
 |[ov052](../config/arm9/overlays/ov052/symbols.txt)| 0x21111a0|  n=7|   `daObjEmmLog_c`|      CONF3 WHOLEMOD pcov=3 (1 distinct include)|
-|[ov052](../config/arm9/overlays/ov052/symbols.txt)| 0x2111440|  n=7|   `SquarePathLift`|     CONF2|
-|[ov056](../config/arm9/overlays/ov056/symbols.txt)| 0x21111a0|  n=7|   `BigMovingIceBlock`|  CONF2 WHOLEMOD pcov=2|
+|[ov052](../config/arm9/overlays/ov052/symbols.txt)| 0x2111440|  n=7|   `daObjEmmYuka_c`|     CONF2|
+|[ov056](../config/arm9/overlays/ov056/symbols.txt)| 0x21111a0|  n=7|   `daObjEwmIceBlock_c`|  CONF2 WHOLEMOD pcov=2|
 |[ov062](../config/arm9/overlays/ov062/symbols.txt)| 0x211af38|  n=8|   `daRFlag_c`|          CONF2 pcov=3|
 |[ov064](../config/arm9/overlays/ov064/symbols.txt)| 0x211a930|  n=8|   `daObjShell_c`|               CONF1|
 
@@ -251,8 +251,8 @@ first module where a `config_tu/` conversion becomes conceivable.
 |----|---------|-------|-------------|--------|
 |[ov065](../config/arm9/overlays/ov065/symbols.txt)| 0x211ab60|  n=8|   `daObjCtMecha05_c`|   CONF3|
 |[ov065](../config/arm9/overlays/ov065/symbols.txt)| 0x211b328|  n=8|   `daObjCtKaitendai_c`|      CONF2|
-|[ov079](../config/arm9/overlays/ov079/symbols.txt)| 0x2126dbc|  n=9|   `BillBlaster`|        CONF2|
-|[ov079](../config/arm9/overlays/ov079/symbols.txt)| 0x21271e4|  n=9|   `FortressWall`|       CONF1|
+|[ov079](../config/arm9/overlays/ov079/symbols.txt)| 0x2126dbc|  n=9|   `daObjBkKillerdai_c`|        CONF2|
+|[ov079](../config/arm9/overlays/ov079/symbols.txt)| 0x21271e4|  n=9|   `daObjBk_Kabe_c`|       CONF1|
 |[ov091](../config/arm9/overlays/ov091/symbols.txt)| 0x2132404|  n=7|   `daObjSimpleLift_c`|  CONF2|
 
 
@@ -275,7 +275,7 @@ first module where a `config_tu/` conversion becomes conceivable.
 |----|---------|-------|-------------|--------|
 |[ov033](../config/arm9/overlays/ov033/symbols.txt)| 0x21111a0|  n=8|   `daObjTtFuta_c`|        NORM1|
 |[ov043](../config/arm9/overlays/ov043/symbols.txt)| 0x21111a0|  n=7|   `daObjKm1_Ukishima_c`|      NORM1|
-|[ov045](../config/arm9/overlays/ov045/symbols.txt)| 0x21111a0|  n=9|   `FireSeaElevator`|  NORM1 CONF2|
+|[ov045](../config/arm9/overlays/ov045/symbols.txt)| 0x21111a0|  n=9|   `daObjKm2_Agaru_c`|  NORM1 CONF2|
 |[ov064](../config/arm9/overlays/ov064/symbols.txt)| 0x21174a0|  n=8|   `daBDonketu_c`|         NORM1 pcov=2|
 
 
@@ -290,7 +290,7 @@ first module where a `config_tu/` conversion becomes conceivable.
 |[ov029](../config/arm9/overlays/ov029/symbols.txt)| 0x211137c|  n=9|    `daObjWc_Obj02_c`|                1/9  CONF2|
 |[ov029](../config/arm9/overlays/ov029/symbols.txt)| 0x2111ac4|  n=9|    `daObjWc_Obj05_c`|                 1/9  NORM1|
 |[ov029](../config/arm9/overlays/ov029/symbols.txt)| 0x2112080|  n=5|    `daObjWc_Obj07_c`|          1/5  pcov=3|
-|[ov030](../config/arm9/overlays/ov030/symbols.txt)| 0x211155c|  n=6|    `RollingLogTtm`|            3/6  pcov=4|
+|[ov030](../config/arm9/overlays/ov030/symbols.txt)| 0x211155c|  n=6|    `daObjHmMaruta_c`|            3/6  pcov=4|
 |[ov036](../config/arm9/overlays/ov036/symbols.txt)| 0x2111444|  n=5|    `RotatingPlatformRr`|       1/5|
 
 
@@ -698,7 +698,7 @@ harder to review. 48 of 73 need the normalizer, whose only validation is Pilot 3
 have blockers the census concealed; the 13 TUs at 25+ members are exactly where "0 of 159
 compiled" was measured.
 
-**Exception — run exactly one Tier-2 TU as a cost probe, after B2:** [ov092](../config/arm9/overlays/ov092/symbols.txt)/`ToxBox`
+**Exception — run exactly one Tier-2 TU as a cost probe, after B2:** [ov092](../config/arm9/overlays/ov092/symbols.txt)/`daOnms_c`
 (`.text 0x2130f00`, 23 files, `module_tus=1`, module-edge both ends, `corroborated:true`,
 **all 12 `.c` members census-proven**, `pcov=12/12`). The only Tier-2 TU with a
 module-edge boundary on both sides *and* a settled language variable, so an admission
@@ -806,7 +806,7 @@ not need re-reading); 1 serial `rombuild.py` at merge.
 Tier 1 whole: **13 batches + 3 pilots ≈ 45–75 agent-hours, ≈12–18 h review, 15 serial ROM
 builds**, for −567 files (5.1% of `src/`).
 
-Tier 2 whole: unmeasurable until the ToxBox probe returns. Lower bound ~1,338 compiles for
+Tier 2 whole: unmeasurable until the daOnms_c probe returns. Lower bound ~1,338 compiles for
 one linear pass, ~2,700 with the retry, plus reconcile on 40,621 lines — **plausibly
 2.5–4× Tier 1's effort for 2.2× the files**, with partial results that cost more to
 review. [ov081](../config/arm9/overlays/ov081/symbols.txt)/`MrBlizzard` (35 members, 1,416 lines, 17 local-struct files, 9 normalizer

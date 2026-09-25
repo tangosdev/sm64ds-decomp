@@ -1,4 +1,4 @@
-extern void func_0204a5bc(int a, int b);
-void func_02049d60(int b, int a) {
-    func_0204a5bc(a, b + 0x14);
+extern void func_0204a5bc(void *self, void *list);
+void func_02049d60(void *manager, void *system) {
+    func_0204a5bc(system, (char *)manager + 0x14);
 }

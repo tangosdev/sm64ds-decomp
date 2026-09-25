@@ -1,0 +1,246 @@
+{
+  "id": "ov096/daTor_c",
+  "module": "ov096",
+  "source": "src/actors/daTor_c.cpp",
+  "promoted_source": "src/actors/daTor_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2136db0..0x21376bc, 10 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daTor_c",
+    "module sinit corroboration: 2 sinit(s) / 2 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02136db0",
+      "end": "0x021376bc"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN7daTor_cD1Ev",
+      "address": "0x02136db0",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN7daTor_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN7daTor_cD0Ev",
+      "address": "0x02136df8",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN7daTor_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN7daTor_c10UpdateSpinEi",
+      "address": "0x02136e54",
+      "size": "0x00000180",
+      "legacy_source": "src/_ZN7daTor_c10UpdateSpinEi.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN7daTor_c6State2Ev",
+      "address": "0x02136fd4",
+      "size": "0x000000b4",
+      "legacy_source": "src/_ZN7daTor_c6State2Ev.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN7daTor_c6State1Ev",
+      "address": "0x02137088",
+      "size": "0x00000238",
+      "legacy_source": "src/_ZN7daTor_c6State1Ev.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN7daTor_c6State0Ev",
+      "address": "0x021372c0",
+      "size": "0x00000124",
+      "legacy_source": "src/_ZN7daTor_c6State0Ev.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN7daTor_c16CleanupResourcesEv",
+      "address": "0x021373e4",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN7daTor_c16CleanupResourcesEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN7daTor_c6RenderEv",
+      "address": "0x02137414",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN7daTor_c6RenderEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN7daTor_c8BehaviorEv",
+      "address": "0x02137448",
+      "size": "0x0000011c",
+      "legacy_source": "src/_ZN7daTor_c8BehaviorEv.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN7daTor_c13InitResourcesEv",
+      "address": "0x02137564",
+      "size": "0x00000158",
+      "legacy_source": "src/_ZN7daTor_c13InitResourcesEv.cpp",
+      "ordinal": 9
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Cartridge RTTI name is daTor_c. The licensed run is the one .text span 0x02136db0..0x021376bc (10 functions). daTor_c_classInit at 0x021376bc is the next TU and is not part of this entry.",
+    "The destructor is declared in the header and defined once, out of line, first in the file. Under #pragma defer_codegen off that emits D1 then D0 in ROM order, plus a homeless D2.",
+    "InitResources keeps the mangled Fix12-by-value calls: the method form homes the arguments and the function grows from 0x158 to 0x18c. State1 copies the player position through a pointer at +0x5c; named mPos loads are one instruction short.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzDist' differs between the legacy file that used to hold _ZN7daTor_c6State2Ev and the one that held _ZN7daTor_c6State1Ev; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound8PlayLongEjjjRK7Vector3s' differs between the legacy file that used to hold _ZN7daTor_c6State1Ev and the one that held _ZN7daTor_c6State0Ev; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold _ZN7daTor_c6State1Ev and the one that held _ZN7daTor_c8BehaviorEv; kept the first, the other is commented out for review"
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7daTor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Out-of-line ~daTor_c under #pragma defer_codegen off emits D1, D0, then D2. The cartridge has D1 at 0x02136db0 and D0 at 0x02136df8 and no daTor_c D2 in symbols.txt or in _ZTV7daTor_c, so the extra is homeless."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "State1 keeps a Vector3 local, so this TU re-emits Vector3's vague-linkage D1. The cartridge copy is arm9:0x020072c0 and an enrolled source already owns it."
+    },
+    {
+      "symbol": "_ZTV7daTor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov096",
+      "canonical_address": "0x02137a90",
+      "reason": "Key function is the out-of-line destructor, so this TU emits the 0x84-byte vtable. symbols.txt names the address point 0x02137a90; ov096 delinks no .data, and the licensed span is only .text 0x02136db0..0x021376bc."
+    },
+    {
+      "symbol": "_ZTI7daTor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov096",
+      "canonical_address": "0x02137a60",
+      "reason": "This class's __si_class_type_info, emitted with the vtable. Canonical copy ov096:0x02137a60, outside the licensed .text span."
+    },
+    {
+      "symbol": "_ZTS7daTor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov096",
+      "canonical_address": "0x02137a54",
+      "reason": "Type name string. The cartridge holds '7daTor_c' plus NUL (9 bytes) at ov096:0x02137a54, which is the size this TU emits."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI for the immediate base. Canonical copy arm9:0x0208e390."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type name for dActor_c. Canonical copy arm9:0x0208e384."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI for dBase_c. Canonical copy arm9:0x02086e78."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type name for dBase_c. Canonical copy arm9:0x02086e54."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI for fBase_c. Canonical copy arm9:0x02086d70."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type name for fBase_c. Canonical copy arm9:0x02086e60."
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov096-daTor_c/daTor_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 10,
+    "functions_declared": 10,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7daTor_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev",
+        "_ZN7daTor_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        17,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "data": [
+        "_ZTV7daTor_c",
+        "_ZTI7daTor_c",
+        "_ZTS7daTor_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI7dBase_c",
+        "_ZTI7daTor_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS7dBase_c",
+        "_ZTS7daTor_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV7daTor_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

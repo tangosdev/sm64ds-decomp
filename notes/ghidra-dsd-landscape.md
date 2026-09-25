@@ -601,7 +601,7 @@ against `origin/chaos-data:langmode-baseline.json` reports
 change and re-running on the clean tree gives the **identical** numbers, so the ratchet
 is stuck on main. This is the `[[stale-baseline-gates]]` case; reproduce before owning.
 
-**G10.2 — CORRECTION to G8.2: [func_ov081_02123910](../src/func_ov081_02123910.cpp) is not a landed fakematch.** [high]
+**G10.2 — CORRECTION to G8.2: [func_ov081_02123910](../src/actors/daHuwa_c.cpp) is not a landed fakematch.** [high]
 It is `reason: "compile failed"` in the eligibility report —
 `func_ov081_02123910.cpp:31: illegal function overloading` under 2004/b56. 
 It is not eligible, not enrolled, and not in the build, so its reference to the [ov004](../config/arm9/overlays/ov004/symbols.txt) symbol has never affected a byte. It is a latent problem in an unbuildable file, which is exactly

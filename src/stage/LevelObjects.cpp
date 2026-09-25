@@ -86,7 +86,7 @@ void func_0202b060(void *entries, u32 count);
 void func_0202b090(void *entries, u32 count);
 void func_0202b0c4(void *entries, u32 count);
 void func_0202b0e0(LVL_Overlay::StandardEntry *e, int count);
-void StartEntranceFaderWipe(void);
+void StartEntranceFaderWipe(int index);
 
 /* Stage::LoadClsnAndObjects' own callees. LoadFile is not in decl_common.h. */
 struct KCL_File;
@@ -264,10 +264,11 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable& tbl, int p2, u32 p3)
 
     if (sl >= 0x13)
         sl = 0;
-    if (data_ov002_0210cb5c[sl] < 0)
+    int wipe = data_ov002_0210cb5c[sl];
+    if (wipe < 0)
         return;
 
-    StartEntranceFaderWipe();
+    StartEntranceFaderWipe(wipe);
 }
 
 /* CONFLICT 4 -- func_0203accc's arity, and this is the one consolidation could

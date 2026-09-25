@@ -21,7 +21,7 @@
 # alongside. Clearing these means deciding per symbol which file is real and deleting
 # the other, which is a separate PR with its own verification -- not a layout change.
 L2 _ZN18daObjBkBillboard_c8BehaviorEv
-L2 _ZN15TtcRotatingGear8BehaviorEv
+L2 _ZN16daObjCtMecha08_c8BehaviorEv
 L2 _ZN5Stage7PS_InitEv
 L2 func_ov065_02116364
 L2 func_ov084_021298d0

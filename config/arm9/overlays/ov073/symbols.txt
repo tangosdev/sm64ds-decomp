@@ -45,8 +45,8 @@ _ZN16daKing_Donketu_c8BehaviorEv kind:function(arm,size=0x42c) addr:0x021218a0
 _ZN16daKing_Donketu_c13InitResourcesEv kind:function(arm,size=0x1f4) addr:0x02121ccc
 _ZN16daKing_Donketu_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02121ec0
 daKing_Donketu_c_classInit kind:function(arm,size=0xc8) addr:0x02121ec8
-_ZN8CccArenaD1Ev kind:function(arm,size=0x44) addr:0x02121f90
-_ZN8CccArenaD0Ev kind:function(arm,size=0x58) addr:0x02121fd4
+_ZN13daObjEwbIce_cD1Ev kind:function(arm,size=0x44) addr:0x02121f90
+_ZN13daObjEwbIce_cD0Ev kind:function(arm,size=0x58) addr:0x02121fd4
 func_ov073_0212202c kind:function(arm,size=0x8) addr:0x0212202c
 func_ov073_02122034 kind:function(arm,size=0x8c) addr:0x02122034
 func_ov073_021220c0 kind:function(arm,size=0x120) addr:0x021220c0
@@ -56,11 +56,11 @@ func_ov073_021222c8 kind:function(arm,size=0x24) addr:0x021222c8
 func_ov073_021222ec kind:function(arm,size=0xb0) addr:0x021222ec
 func_ov073_0212239c kind:function(arm,size=0x8) addr:0x0212239c
 func_ov073_021223a4 kind:function(arm,size=0x50) addr:0x021223a4
-_ZN8CccArena4KillEv kind:function(arm,size=0x70) addr:0x021223f4
-_ZN8CccArena16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x02122464
-_ZN8CccArena6RenderEv kind:function(arm,size=0x28) addr:0x021224c8
-_ZN8CccArena8BehaviorEv kind:function(arm,size=0x88) addr:0x021224f0
-_ZN8CccArena13InitResourcesEv kind:function(arm,size=0x1b8) addr:0x02122578
+_ZN13daObjEwbIce_c4KillEv kind:function(arm,size=0x70) addr:0x021223f4
+_ZN13daObjEwbIce_c16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x02122464
+_ZN13daObjEwbIce_c6RenderEv kind:function(arm,size=0x28) addr:0x021224c8
+_ZN13daObjEwbIce_c8BehaviorEv kind:function(arm,size=0x88) addr:0x021224f0
+_ZN13daObjEwbIce_c13InitResourcesEv kind:function(arm,size=0x1b8) addr:0x02122578
 func_ov073_02122730 kind:function(arm,size=0xa0) addr:0x02122730
 func_ov073_021227d0 kind:function(arm,size=0x14) addr:0x021227d0
 daObjEwbIce_c_classInit_EWB_ICE_C kind:function(arm,size=0x30) addr:0x021227e4
@@ -123,7 +123,7 @@ g_profile_EWB_ICE_C kind:data(any) addr:0x021231a0 ambiguous
 data_ov073_021231bc kind:data(any) addr:0x021231bc
 data_ov073_021231c0 kind:data(any) addr:0x021231c0
 data_ov073_021231c4 kind:data(any) addr:0x021231c4
-_ZTV8CccArena kind:data(any) addr:0x021231e8
+_ZTV13daObjEwbIce_c kind:data(any) addr:0x021231e8
 data_ov073_02123254 kind:data(any) addr:0x02123254 ambiguous
 data_ov073_02123280 kind:bss addr:0x02123280
 data_ov073_02123288 kind:bss addr:0x02123288

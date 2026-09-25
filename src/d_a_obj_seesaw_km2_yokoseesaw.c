@@ -4,7 +4,7 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 /* recovered: globals resolved */
-/* resolved: VT = _ZTV9SeesawBob */
+/* resolved: VT = _ZTV13daObjSeesaw_c */
 /* Reconstructed source-style name: SM64DS proves daObjSeesaw_c through RTTI,
  * allocation size, vtable identity, and the KM2_YOKOSEESAW registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -12,6 +12,6 @@
 int *daObjSeesaw_c_classInit_KM2_YOKOSEESAW(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(808);
-    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV9SeesawBob; }
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV13daObjSeesaw_c; }
     return p;
 }

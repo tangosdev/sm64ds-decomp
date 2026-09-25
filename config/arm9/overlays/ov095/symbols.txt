@@ -1,13 +1,13 @@
-_ZN9SeesawBobD1Ev kind:function(arm,size=0x44) addr:0x02135700
-_ZN9SeesawBobD0Ev kind:function(arm,size=0x58) addr:0x02135744
+_ZN13daObjSeesaw_cD1Ev kind:function(arm,size=0x44) addr:0x02135700
+_ZN13daObjSeesaw_cD0Ev kind:function(arm,size=0x58) addr:0x02135744
 func_ov095_0213579c kind:function(arm,size=0x3c) addr:0x0213579c
-_ZN9SeesawBob15OnGroundPoundedER8dActor_c kind:function(arm,size=0xf4) addr:0x021357d8
+_ZN13daObjSeesaw_c15OnGroundPoundedER8dActor_c kind:function(arm,size=0xf4) addr:0x021357d8
 func_ov095_021358cc kind:function(arm,size=0xb0) addr:0x021358cc
 func_ov095_0213597c kind:function(arm,size=0x48) addr:0x0213597c
-_ZN9SeesawBob16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x021359c4
-_ZN9SeesawBob6RenderEv kind:function(arm,size=0x28) addr:0x02135a28
-_ZN9SeesawBob8BehaviorEv kind:function(arm,size=0x124) addr:0x02135a50
-_ZN9SeesawBob13InitResourcesEv kind:function(arm,size=0x168) addr:0x02135b74
+_ZN13daObjSeesaw_c16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x021359c4
+_ZN13daObjSeesaw_c6RenderEv kind:function(arm,size=0x28) addr:0x02135a28
+_ZN13daObjSeesaw_c8BehaviorEv kind:function(arm,size=0x124) addr:0x02135a50
+_ZN13daObjSeesaw_c13InitResourcesEv kind:function(arm,size=0x168) addr:0x02135b74
 func_ov095_02135cdc kind:function(arm,size=0x1b4) addr:0x02135cdc
 func_ov095_02135e90 kind:function(arm,size=0x14) addr:0x02135e90
 daObjSeesaw_c_classInit_RC_SEESAW kind:function(arm,size=0x30) addr:0x02135ea4
@@ -17,17 +17,17 @@ daObjSeesaw_c_classInit_KM2_YOKOSEESAW kind:function(arm,size=0x30) addr:0x02135
 daObjSeesaw_c_classInit_KM1_SEESAW kind:function(arm,size=0x30) addr:0x02135f64
 daObjSeesaw_c_classInit_BOMB_SEESAW kind:function(arm,size=0x30) addr:0x02135f94
 daObjSeesaw_c_classInit_SEESAW kind:function(arm,size=0x30) addr:0x02135fc4
-_ZN13UpDownLiftBbhD1Ev kind:function(arm,size=0x44) addr:0x02135ff4
-_ZN13UpDownLiftBbhD0Ev kind:function(arm,size=0x58) addr:0x02136038
-func_ov095_02136090 kind:function(arm,size=0x74) addr:0x02136090
-func_ov095_02136104 kind:function(arm,size=0x74) addr:0x02136104
-func_ov095_02136178 kind:function(arm,size=0x120) addr:0x02136178
-func_ov095_02136298 kind:function(arm,size=0xd0) addr:0x02136298
-func_ov095_02136368 kind:function(arm,size=0xf4) addr:0x02136368
-_ZN13UpDownLiftBbh16CleanupResourcesEv kind:function(arm,size=0x54) addr:0x0213645c
-_ZN13UpDownLiftBbh6RenderEv kind:function(arm,size=0x28) addr:0x021364b0
-_ZN13UpDownLiftBbh8BehaviorEv kind:function(arm,size=0x100) addr:0x021364d8
-_ZN13UpDownLiftBbh13InitResourcesEv kind:function(arm,size=0x18c) addr:0x021365d8
+_ZN10daUdlift_cD1Ev kind:function(arm,size=0x44) addr:0x02135ff4
+_ZN10daUdlift_cD0Ev kind:function(arm,size=0x58) addr:0x02136038
+_ZN10daUdlift_c9StateStopEv kind:function(arm,size=0x74) addr:0x02136090
+_ZN10daUdlift_c17StateStopAtBottomEv kind:function(arm,size=0x74) addr:0x02136104
+_ZN10daUdlift_c13StateMoveDownEv kind:function(arm,size=0x120) addr:0x02136178
+_ZN10daUdlift_c11StateMoveUpEv kind:function(arm,size=0xd0) addr:0x02136298
+_ZN10daUdlift_c9StateWaitEv kind:function(arm,size=0xf4) addr:0x02136368
+_ZN10daUdlift_c16CleanupResourcesEv kind:function(arm,size=0x54) addr:0x0213645c
+_ZN10daUdlift_c6RenderEv kind:function(arm,size=0x28) addr:0x021364b0
+_ZN10daUdlift_c8BehaviorEv kind:function(arm,size=0x100) addr:0x021364d8
+_ZN10daUdlift_c13InitResourcesEv kind:function(arm,size=0x18c) addr:0x021365d8
 func_ov095_02136764 kind:function(arm,size=0x24) addr:0x02136764
 func_ov095_02136788 kind:function(arm,size=0x14) addr:0x02136788
 daUdlift_c_classInit_RC_RIFT02 kind:function(arm,size=0x30) addr:0x0213679c
@@ -62,7 +62,7 @@ g_profile_BOMB_SEESAW kind:data(any) addr:0x02137484 ambiguous
 data_ov095_021374a0 kind:data(any) addr:0x021374a0
 data_ov095_021374a4 kind:data(any) addr:0x021374a4
 data_ov095_021374a8 kind:data(any) addr:0x021374a8
-_ZTV9SeesawBob kind:data(any) addr:0x021374fc
+_ZTV13daObjSeesaw_c kind:data(any) addr:0x021374fc
 data_ov095_0213757c kind:data(any) addr:0x0213757c
 data_ov095_02137584 kind:data(any) addr:0x02137584
 data_ov095_0213758c kind:data(any) addr:0x0213758c
@@ -74,7 +74,7 @@ _ZTS10daUdlift_c kind:data(any) addr:0x021375bc
 g_profile_UDLIFT_TERESA kind:data(any) addr:0x021375cc ambiguous
 g_profile_UDLIFT kind:data(any) addr:0x021375e8 ambiguous
 g_profile_RC_RIFT02 kind:data(any) addr:0x02137604 ambiguous
-_ZTV13UpDownLiftBbh kind:data(any) addr:0x02137628
+_ZTV10daUdlift_c kind:data(any) addr:0x02137628
 _ZTI19daObjFlamethrower_c kind:data(any) addr:0x021376a8
 _ZTS19daObjFlamethrower_c kind:data(any) addr:0x021376b4
 g_profile_OBJ_FLAMETHROWER kind:data(any) addr:0x021376cc ambiguous

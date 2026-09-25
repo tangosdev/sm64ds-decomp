@@ -70,7 +70,6 @@ s32 dScMgTeresa_c::InitResources()
         fb = 0;
         MultiStore16(fb, p, 0x800);
     }
-    f2 += 0;
     func_ov004_020af2f8(self, 0, 0, 0);
     {
         void *p = _ZN3G2S13GetBG0CharPtrEv();

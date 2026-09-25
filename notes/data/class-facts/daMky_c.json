@@ -500,7 +500,7 @@
     "vtable_target_count": 9,
     "non_virtual_count": 35,
     "boundary_confidence": "medium",
-    "boundary_evidence": "tools/tu_map.py --module ov030 segments the module as: 0x2111524-0x211155c 1 fn (unattributed) | 0x211155c-0x211164c 5 fn RollingLogTtm | 0x211164c-0x2111688 1 fn (unattributed) | 0x2111688-0x21145e0 44 fn Ukiki | 0x21145e0-0x2114690 2 fn (unattributed). It reports boundary confidence 'medium' for all 5 boundaries in this module.",
+    "boundary_evidence": "tools/tu_map.py --module ov030 segments the module as: 0x2111524-0x211155c 1 fn (unattributed) | 0x211155c-0x211164c 5 fn daObjHmMaruta_c | 0x211164c-0x2111688 1 fn (unattributed) | 0x2111688-0x21145e0 44 fn Ukiki | 0x21145e0-0x2114690 2 fn (unattributed). It reports boundary confidence 'medium' for all 5 boundaries in this module.",
     "left_edge": "0x02111688 (D1). The function immediately before, 0x0211164c..0x02111688, is unattributed by tu_map.",
     "right_edge": "0x021145e0, where the two classInit factories begin."
   },
@@ -815,7 +815,7 @@
       "record_count": 22,
       "record_size": 8,
       "record_layout": "{ void *ptr; s32 adj; } -- the ARM Itanium pointer-to-member-function representation. In all 22 records the second word is 0 (non-virtual, zero this-adjustment) and the first word is a relocated ov030 .text address.",
-      "alignment_proof": "The 22 relocations in relocs.txt sit at 0x02115ac8, 0x02115ad0, ... 0x02115b70 -- stride 8, starting exactly at 0x02115ac8. Reading this band 4 bytes off would pair each pointer with the wrong word and yield zero valid records; the relocation stride rules that out. The array ends exactly where _ZTS7daMky_c begins at 0x02115b78, and begins exactly where _ZTV13RollingLogTtm ends at 0x02115ac8.",
+      "alignment_proof": "The 22 relocations in relocs.txt sit at 0x02115ac8, 0x02115ad0, ... 0x02115b70 -- stride 8, starting exactly at 0x02115ac8. Reading this band 4 bytes off would pair each pointer with the wrong word and yield zero valid records; the relocation stride rules that out. The array ends exactly where _ZTS7daMky_c begins at 0x02115b78, and begins exactly where _ZTV15daObjHmMaruta_c ends at 0x02115ac8.",
       "abi_proof": "func_ov030_02114170 (0x02114170) executes the textbook ARM PMF call sequence on these records: ldr r3,[r0,#0x3a4]; ldr r1,[r3,#4]; add r0,r0,r1,asr #1; ands r1,r1,#1; ldrne r2,[r0]; ldrne r1,[r3]; ldrne r1,[r2,r1]; ldreq r1,[r3]; blx r1. The `adj&1` virtual bit and the `adj>>1` this-adjustment are unmistakable. func_ov030_02114134 does the same on the record at descriptor +8.",
       "targets_in_array_order": [
         "0x02112a14",
@@ -989,7 +989,7 @@
     "existing_manifest": "none -- config/tu_manifest.d/ holds 44 manifests at this base and none of them is this class",
     "existing_header": "include/Ukiki.h exists",
     "shards_present": "44 of 44",
-    "sibling_oracle": "none. The queue's `-` is correct and was re-derived here: ov030 has three queue rows (Ukiki 44 shards, daObjHmBskt_c 8, RollingLogTtm 5) and ALL THREE are unpromoted. src/actors/ holds 31 promoted classes at this base and not one of them is from ov030. The writer has no same-overlay example to copy."
+    "sibling_oracle": "none. The queue's `-` is correct and was re-derived here: ov030 has three queue rows (Ukiki 44 shards, daObjHmBskt_c 8, daObjHmMaruta_c 5) and ALL THREE are unpromoted. src/actors/ holds 31 promoted classes at this base and not one of them is from ov030. The writer has no same-overlay example to copy."
   },
   "blockers": [
     {

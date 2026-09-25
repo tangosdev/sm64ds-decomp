@@ -103,7 +103,7 @@
       "count": 14,
       "stride": "0x8 (ptr, adj)",
       "adj_all_zero": true,
-      "alignment_proof": "PMF ALIGNMENT TRAP CHECKED EXPLICITLY. Read at 0x021144a0 with stride 8: 14/14 records valid (ptr lands in ov015 .text, adj == 0). Read at 0x021144a4 -- the same band, 4 bytes off -- 0/14 valid (every 'ptr' reads as 0x00000000). Walking backwards from 0x021144a0 stops immediately at 0x02114498, which is KnockDownPlank's vtable slots 30/31, so 0x021144a0 is the true start. The band ends at 0x02114510, exactly where _ZTI19daObjBk_Dossunbar_c begins.",
+      "alignment_proof": "PMF ALIGNMENT TRAP CHECKED EXPLICITLY. Read at 0x021144a0 with stride 8: 14/14 records valid (ptr lands in ov015 .text, adj == 0). Read at 0x021144a4 -- the same band, 4 bytes off -- 0/14 valid (every 'ptr' reads as 0x00000000). Walking backwards from 0x021144a0 stops immediately at 0x02114498, which is daObjBk_Botaosi_c's vtable slots 30/31, so 0x021144a0 is the true start. The band ends at 0x02114510, exactly where _ZTI19daObjBk_Dossunbar_c begins.",
       "note": "These 14 records are the .data CONSTANTS. They are not the tables the code indexes."
     },
     "runtime_tables": [

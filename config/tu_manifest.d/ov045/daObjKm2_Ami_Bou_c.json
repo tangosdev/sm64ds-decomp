@@ -7,7 +7,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x0211150c..0x02111840, seven functions with no foreign symbol inside the span",
-    "single class label over the whole run (daObjKm2_Ami_Bou_c, RTTI name daObjKm2_Ami_Bou_c); the neighbours on both sides carry different class labels (FireSeaElevator_Spawn ends at 0x0211150c, _ZN17ExtendingPlatformD1Ev begins at 0x02111840)",
+    "single class label over the whole run (daObjKm2_Ami_Bou_c, RTTI name daObjKm2_Ami_Bou_c); the neighbours on both sides carry different class labels (FireSeaElevator_Spawn ends at 0x0211150c, _ZN17daObjKm2_Nobiru_cD1Ev begins at 0x02111840)",
     "sinit count corroboration: build/tu_map.json records ov045 as 41 functions in 6 candidate TUs with 6 static initialisers and 6 .ctor entries, sinit_vs_tu 'ok', corroborated true, all 5 internal boundaries high",
     "static-initialiser attribution: __sinit_ov045_02112214 is the only one of the six that touches this TU's two .bss SharedFilePtr statics (0x021131a8, 0x021131b0)",
     "build/tu_map.json unit record lists exactly these seven symbols for the span"
@@ -454,7 +454,7 @@
     "Pilot for notes/translation-unit-reconstruction-plan.md section 18, steps 2 through 5. Report: notes/tu-reconstruction-pilot-report.md.",
     "All seven functions reproduce their ROM bytes when compiled together. The legacy one-function sources under src/ are untouched and remain the enrolled owners of this range.",
     "One source-level change was forced by consolidation and one relocation-convention conflict was found by it: daObjKm2_Ami_Bou_c_classInit's vptr store (historical alias daObjKm2_Ami_Bou_c_Spawn) had to become (int)(_ZTV18daObjKm2_Ami_Bou_c + 2). See the report's 'What consolidation forced' section.",
-    "PoleLift_ClsnFile (0x021131d0) and PoleLift_ModelFile (0x021131d8) are coined names on ExtendingPlatform's KCL/BMD handles. This TU does not reference them. --with-derived was not applied to those two symbols.",
+    "PoleLift_ClsnFile (0x021131d0) and PoleLift_ModelFile (0x021131d8) are coined names on daObjKm2_Nobiru_c's KCL/BMD handles. This TU does not reference them. --with-derived was not applied to those two symbols.",
     "PROMOTED 2026-09-17. Class renamed PoleLift -> daObjKm2_Ami_Bou_c (ROM _ZTS at 0x02112d80). Dest src/game/actors/d_a_obj_km2_ami_bou.cpp. Text-only: _ZTV/_ZTI/_ZTS licensed deadstrip-data at unchanged symbols.txt addresses. Factory is return new.",
     "daObjKm2_Ami_Bou_c_classInit and g_profile_KM2_AMI_BOU are reconstructed source-style names: SM64DS proves the RTTI class, KM2_AMI_BOU registry ID, descriptor/factory relationship, allocation size, and vtable identity; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical aliases were PoleLift_Spawn and PoleLift_SpawnInfo. Coined C names: no param-type claim. Member mangles are Ev (no argument types)."
   ],

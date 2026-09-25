@@ -38,8 +38,9 @@ extern "C" void func_ov002_020baf80(char *t);
 extern "C" int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(void *self, short a, short b, short c, int fix);
 extern "C" int _ZN4dBgW9IsEnabledEv(void *self);
 extern "C" void _ZN4dBgW7DisableEv(void *self);
+struct Vector3_16f;
 extern "C" void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
-extern "C" void *_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int c, int d, int e, const void *v);
+extern "C" u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int c, int d, int e, const Vector3_16f *v);
 extern "C" void _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(void *self, const struct Vector3 *vec);
 extern "C" void func_ov002_020bae9c(char *c);
 extern "C" void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(void *self, void *sm, void *m, int a, int b, int c, u32 j);
@@ -113,7 +114,7 @@ int SignPost::Behavior()
         if (DecIfAbove0_Byte(&mBreakTimer) != 0) {
             *(void **)&mParticleHandle1 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
                 mParticleHandle1, 0x13a, v.x, v.y, v.z, 0, 0);
-            *(void **)&mParticleHandle2 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+            mParticleHandle2 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
                 mParticleHandle2, 0x13b, v.x, v.y, v.z, 0);
         } else {
             int x2, y2, z2;

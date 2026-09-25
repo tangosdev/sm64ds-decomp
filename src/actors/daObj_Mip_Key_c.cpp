@@ -89,20 +89,20 @@ extern "C" void func_ov085_0212cd0c(daObj_Mip_Key_c *c)
 extern "C" int func_ov085_0212cd80(daObj_Mip_Key_c *self)
 {
     Player* other = self->mPlayer;
-    unsigned char gb;
-    int* s;
+    unsigned char mode;
+    int* playerPos;
 
     if (other == 0) return 1;
 
-    s = (int*)(&other->mPosX);
+    playerPos = (int*)(&other->mPosX);
     Vector3 v;
-    v = *(Vector3*)s;
+    v = *(Vector3*)playerPos;
     v.y += 0xc8000;
     ApproachLinear(self->mPosY, v.y, 0xa000);
 
     self->mPosX = v.x;
     self->mPosZ = v.z;
-    gb = data_0209d684;
+    mode = data_0209d684;
 
     switch (self->mTalkState) {
     case 0:
@@ -111,15 +111,15 @@ extern "C" int func_ov085_0212cd80(daObj_Mip_Key_c *self)
         self->mTalkState = 1;
     case 1:
         if (data_0209d660 == 0) {
-            if (gb == 1) {
+            if (mode == 1) {
                 func_02012790(0x5e);
                 Message::DisplaySaving(0x295);
                 self->mTalkState = 2;
-            } else if (gb == 2) {
+            } else if (mode == 2) {
                 func_02012790(0x5e);
                 Message::DisplaySaving(0x295);
                 self->mTalkState = 3;
-            } else if (gb == 3) {
+            } else if (mode == 3) {
                 func_02012790(0x98);
                 if (self->mWaitForTalk) {
                     self->mTalkState = 0xa;
@@ -148,9 +148,9 @@ extern "C" int func_ov085_0212cd80(daObj_Mip_Key_c *self)
         break;
     case 4:
         {
-            int r;
-            r = self->mPlayer->ShowMessage(*self, 0x18b, 0, 1, 0);
-            if (r == 1) {
+            int shown;
+            shown = self->mPlayer->ShowMessage(*self, 0x18b, 0, 1, 0);
+            if (shown == 1) {
                 self->mWaitForTalk = 1;
                 self->mTalkState = 0;
             }
@@ -159,11 +159,11 @@ extern "C" int func_ov085_0212cd80(daObj_Mip_Key_c *self)
     case 6:
         if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x28, 0x12, 0x7f, 0x15ccc, 0)) {
             if (data_0209d660 == 0) {
-                if (gb == 1) {
+                if (mode == 1) {
                     func_02012790(0x5e);
                     Message::DisplaySaving(0x295);
                     self->mTalkState = 2;
-                } else if (gb == 2) {
+                } else if (mode == 2) {
                     func_02012790(0x98);
                     func_ov085_0212cd0c(self);
                 }
@@ -184,15 +184,15 @@ extern "C" int func_ov085_0212cd80(daObj_Mip_Key_c *self)
 
 extern "C" int func_ov085_0212d038(daObj_Mip_Key_c *c)
 {
-    int t;
+    int kind;
     c->unk_0a4 = 0;
     c->mVertSpeed = 0;
     c->unk_0ac = 0;
     c->mAngleX = 0;
-    t = c->unk_19c;
-    if (t != 0x4d) {
-        if (t != 7) {
-            func_02013868(t, c->mPlayer->param1);
+    kind = c->unk_19c;
+    if (kind != 0x4d) {
+        if (kind != 7) {
+            func_02013868(kind, c->mPlayer->param1);
             c->mPlayer->SetNoControlState(2, 0x189, 1);
             c->mTalkState = 0;
         } else {
@@ -332,13 +332,14 @@ int daObj_Mip_Key_c::Behavior()
     DecIfAbove0_Short((u16*)&mStateTimer);
     if (mState->execute)
         (this->*mState->execute)();
-    int s = mVertSpeed + mVertAccel;
-    int lim = mTerminalVelocity;
-    if (s >= lim)
-        lim = s;
-    int t = unk_0ac;
-    mVertSpeed = lim;
-    unk_0ac = t;
+    int nextSpeed = mVertSpeed + mVertAccel;
+    int capped = mTerminalVelocity;
+    if (nextSpeed >= capped)
+        capped = nextSpeed;
+    /* The read-back-and-store of unk_0ac is what the ROM does; it is not dead. */
+    int unk0acCopy = unk_0ac;
+    mVertSpeed = capped;
+    unk_0ac = unk0acCopy;
     UpdatePosWithOnlySpeed(0);
     return 1;
 }

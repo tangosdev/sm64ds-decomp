@@ -1,125 +1,46 @@
 //cpp
-/* dScMgSlot1_c -- ov006 slot-machine scene, methods plus shared helpers.
- * Intact TU (sub-range of the larger Slot1+Slot3 run; the manifest records
- * the boundary). Source runs REVERSE of ROM (highest address first).
- * Do not reorder.
+/* dScMgSlot1_c -- the slot machine minigame scene, its bet icon, and the
+ * small helpers the scene drives.
  *
- * Leftover: the C/Obj/T4fe4/T shadows and the vtable shim stay local;
- *   naming signatures for every helper is out of scope.
- * Leftover: the func_ov006 helpers and data homes keep linker names;
- *   naming belongs at their definitions.
+ * Functions run in REVERSE of ROM order (highest address first); do not
+ * reorder.
+ *
+ * Blocked: the helpers are unnamed in symbols.txt and take their objects as
+ * raw bytes. The three small embedded objects at 0x4684, 0x4690 and 0x469c
+ * are padding in dScMgSlot1_c.h, so their helpers below use offsets.
  */
 
 #include "dScMgSlot1_c.h"
 #include "dScMgSlot3_c.h"
 #include "Sound.h"
+#include "OAM.h"
 #include "dScMgBase_c.h"
 #include "decl_common.h"
 #include "private/ov006_slotgrid.h"
 #include "types.h"
 
 
-/* Local shadow declarations carried from the legacy files verbatim.
- * NOT reconciled against real project headers -- check include/*.h for
- * each of these before compiling; a real header should usually win. */
-/* shadow struct 'G2' */
-struct G2 { static void* GetBG1ScrPtr(); };
-
-/* shadow struct 'Obj' */
-struct Obj {
-    virtual void v00();
-    virtual void v01();
-    virtual void v02();
-    virtual void v03();
-    virtual void v04();
-    virtual void v05();
-    virtual void v06();
-    virtual void v07();
-    virtual void v08();
-    virtual void v09();
-    virtual void v10();
-    virtual void v11();
-    virtual void v12();
-    virtual void v13();
-    virtual void v14();
-    virtual void v15();
-    virtual void v16();
-    virtual void v17();
-    virtual void v18(int a);
-    virtual void v19();
-    /* Reconciled from two legacy spellings of this same shadow: the
-       virtual-only body (func_ov006_0210ac3c, dScMgSlot1_c::InitResources)
-       and the data-member body (dScMgSlot3_c::Behavior). Offsets are the
-       ROM's absolute ones, so the leading pad is one word short to leave
-       room for the vptr the virtuals put at offset 0. Only `idx` is reached
-       by name; every other field in the legacy data spelling was already a
-       raw offset on a char* cast, and stays one. */
-    char pad0[0x5000 - 4];
-    int idx;
-};
-
-/* shadow typedef 'T4fe4' */
-typedef struct T4fe4 {
-    char pad[0x4fe4];
-    int vals[3];
-} T4fe4;
-
-/* shadow typedef 'void' */
-typedef void (Obj::*ObjFn)();
-
-/* shadow struct 'T' */
-struct T {
+/* The reel state as func_ov006_0210c500 reads it. dScMgSlot1_c.h still has
+ * one 0x15-byte array plus padding there, so it is not typed on the class. */
+struct SlotReels {
     u8 pad[0x46c0];
-    u8 grid[3][0x15];
-    u8 idx[3];
+    u8 reels[3][0x15];  /* symbol strip per reel */
+    u8 stops[3];        /* where each reel stopped */
     u8 pad2[6];
-    u8 f708;
-    u8 f709;
+    u8 unk_4708;
+    u8 matchSymbol;
     u8 pad3;
-    u8 count;
+    u8 wilds;           /* count of symbol 5, which matches anything */
 };
 
 extern "C" {
-void SetBg1Offset(int a, int b);
 int GetGameLanguage(void);
-void* func_02054ea8(void);
-extern unsigned char data_0209d45c;
-extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-extern "C" void func_ov004_020b1ba0(void* c, int delta);
-extern "C" void func_ov004_020b1b78(void* c, int val);
-extern void func_ov004_020adb1c(int self);
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0deb[];
-extern int data_ov006_0213e948[];
-extern void func_ov006_0210ab08(char *c, int i);
-extern int Sound_PlayIfNotActive(int, int, int, int);
-extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
-void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9);
-void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-void func_ov004_020b1bc8(char *a0, int a1, int a2, int a3);
-extern ObjFn data_ov006_02142bdc[];
-extern int LoadFile(int handle);
-extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void *_ZN2G212GetBG2ScrPtrEv(void);
-extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 a, u32 b);
-extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern u8 data_0209d454;
-extern int data_0208ee44;
-extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN11dScMgBase_cC2Ev(void *);
-extern void _ZN8Particle10SysTrackerC1Ev(void *);
-extern int func_ov006_020c221c(char *t);
-extern int _ZTV12dScMgSlot3_c[];
 extern void RenderOamMainScreen(void*, int, int, int, int);
 extern void* data_ov006_0213e6a8;
 extern void func_ov004_020b1b08(void *c);
 extern void func_ov001_020ab3f0(void *c);
 extern void *data_ov004_020beb68;
-void _ZN3OAM9RenderSubEP7OamAttriiii(void* a, int b, int c, int d, int e);
 void func_ov004_020af948(void* a, int b, int c, void* m);
 extern void* data_ov006_0213e528[];
 extern void** data_ov006_0213e5ec[];
@@ -128,60 +49,41 @@ void func_ov006_0210c2d4(void *c);
 void func_ov004_020b1b40(int x);
 extern void func_ov001_020ab5b0(char* r0, int r1, short r2, short r3, short s4, short s5);
 extern int func_ov004_020ad8b8(void);
-extern int data_ov006_0213e63c[][2];
-extern void* data_ov006_0213e96c[];
-extern unsigned char data_ov006_0213e4d8[];
-extern void func_ov004_020b2444(int a1, int a2, int num, int a4, int a5, int sel, int idx);
-extern void func_ov004_020af868(void* a0, int a1, int a2, int a3, int a4, void* a5);
 extern void func_ov006_0210c234(unsigned char* o);
-extern int func_0202ec9c(void *fader, int a);
-extern void func_ov004_020ad79c(int a, int b);
-extern void func_ov004_020ae274(void *c);
 extern void func_ov006_0210c180(void *o);
 extern void func_ov006_0210c1a8(void *o);
 extern void func_ov006_0210c218(void *o, s16 x, s16 y);
 extern void func_ov006_0210c278(void *o);
 extern void func_ov006_0210c2c0(void *o, int v);
 extern int func_ov006_0210c500(void *self);
-extern int data_ov006_0213e600[];
-extern u8 data_ov006_0213e4d8[];
-extern s16 data_ov006_0213e654[][2];
-extern s16 data_ov006_0213e656[][2];
-extern s16 data_ov006_0213e4f8[][2];
-extern s16 data_ov006_0213e4fa[][2];
-extern struct FaderBrightness data_0209f61c;
 }
 
 // @symbol _ZN12dScMgSlot1_c13OnYoshiTryEatEi
-/* dScMgSlot1_c::OnYoshiTryEat - recovered from vtable slot identity. Slot 18
-   stays an unmigrated raw extern "C" helper (see include/dScMgSlot1_c.h),
-   so this reaches its own fields via raw offsets on a char* rather than
-   including the now-C++ class header -- 0x4706 is touched only here, not
-   by any migrated method, same precedent dScMgPachinko2_c.h documents for
-   its own offset 0xbc. */
+/* Slot 18. 0x4706 is padding in the header, so it is written by offset. */
 void dScMgSlot1_c::OnYoshiTryEat(int i)
 {
-    char *c = (char *)this;
+    char *raw = (char *)this;
 
-  if(i == 4){
-    *(unsigned char*)(c + 0x4706) = *(unsigned char*)(c + 0x4709);
-  } else if(i == 3){
-    func_ov006_0210c638(c);
-  }
-  func_ov006_0210c354(c+0x4660);
-  *(int*)(c + 0x46b4) = 0;
+    if (i == 4) {
+        *(u8 *)(raw + 0x4706) = unk_4709;
+    } else if (i == 3) {
+        func_ov006_0210c638(raw);
+    }
+    func_ov006_0210c354(&mBetIcon);
+    unk_46b4 = 0;
 }
 
 // @symbol func_ov006_0210c638
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210c638(void *thiz_)
+void func_ov006_0210c638(void *self)
 {
-    char *thiz = (char *)thiz_;
-    *(signed char *)(thiz + 0x4706) = -1;
-    *(unsigned char *)(thiz + 0x4707) = 1;
-    *(unsigned char *)(thiz + 0x4708) = 0;
-    *(int *)(thiz + 0xa8) = func_ov004_020ad8b8();
-    *(int *)(thiz + 0xac) = *(int *)(thiz + 0xa8);
+    char *raw = (char *)self;
+    *(s8 *)(raw + 0x4706) = -1;
+    *(u8 *)(raw + 0x4707) = 1;
+    *(u8 *)(raw + 0x4708) = 0;
+    dScMgSlot1_c *scene = (dScMgSlot1_c *)self;
+    scene->unk_0a8 = func_ov004_020ad8b8();
+    scene->unk_0ac = scene->unk_0a8;
 }
 }
 
@@ -189,71 +91,47 @@ void func_ov006_0210c638(void *thiz_)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov006_0210c500(void *self)
 {
-    struct T *p = (struct T *)self;
+    struct SlotReels *p = (struct SlotReels *)self;
     int ok;
-    int first;
+    int lead;
     int i;
 
-    p->count = 0;
+    p->wilds = 0;
     ok = 1;
     for (i = 0; i < 3; i++) {
-        if (p->grid[i][p->idx[i]] == 5) {
-            p->count++;
+        if (p->reels[i][p->stops[i]] == 5) {
+            p->wilds++;
         } else {
-            first = p->grid[i][p->idx[i]];
+            lead = p->reels[i][p->stops[i]];
             break;
         }
     }
-    if (p->count >= 3) {
-        first = 5;
+    if (p->wilds >= 3) {
+        lead = 5;
     } else if (i < 2) {
         for (i = i + 1; i < 3; i++) {
-            u8 c = p->grid[i][p->idx[i]];
-            if (c == 5) {
-                p->count++;
-            } else if (first != c) {
+            u8 sym = p->reels[i][p->stops[i]];
+            if (sym == 5) {
+                p->wilds++;
+            } else if (lead != sym) {
                 ok = 0;
             }
         }
     }
     if (ok) {
-        if (p->f708 < 2) {
-            u8 *q = (u8 *)(int)((u8 *)p + 0x4708);
-            *q = *q + 1;
+        if (p->unk_4708 < 2) {
+            u8 *q = (u8 *)p + 0x4708;
+            *q += 1;
         }
-        p->f709 = first;
+        p->matchSymbol = lead;
     }
     return ok;
 }
 }
 
 // @symbol _ZN12dScMgSlot1_c15OnHitByMegaCharEv
-/* dScMgSlot1_c::OnHitByMegaChar -- slot 27, and a REAL OVERRIDE as of this
-   commit: dScMgBase_c declares the slot now, so this stops being a new virtual
-   that merely happened to land on index 27 and becomes the override the
-   cartridge has.  include/dScMgSlot1_c.h's banner carries the arithmetic.
-
-   THE PARAMETER IS GONE, and that is a measurement rather than a tidy-up.  This
-   body opens `mov r4, r0` and then writes r0 and r1 with zero for
-   SetSubBg1Offset; no second argument register is live on entry, and
-   dScMgBase_c's own body reads none either.  The `Player &player` this file
-   used to carry was copied from include/dActor_c.h's slot 27, a parallel
-   hierarchy -- and dActor_c.h has now been wrong on every parameter list this
-   campaign has measured.  Keeping it would have been worse than cosmetic:
-   `(Player &)` and `()` are different functions, so this would have become a
-   NEW slot at 28, pushed OnHitFromUnderneath to 29 and put _ZTV12dScMgSlot1_c
-   back into DIFFERS -- with rombuild green the whole time.
-
-   The return type is unchanged and still `void`.  dScMgBase_c's body measures
-   it directly now (an early `popne {r4,lr}; bxne lr` with no r0 set), where
-   before this file could only cite Stump::OnHitByMegaChar from the other
-   branch.
-
-   The forwarding call is written qualified, `dScMgBase_c::OnHitByMegaChar()`,
-   which suppresses the virtual dispatch and emits the same direct `bl` the ROM
-   has.  It was previously spelled as an `extern "C"` call to the base body's
-   pre-rename name, which is the only spelling that was available while the
-   base had not declared the member. */
+/* Slot 27. Takes no argument: the ROM body never reads r1. The qualified
+ * base call is the ROM's direct branch. */
 void dScMgSlot1_c::OnHitByMegaChar()
 {
     SetSubBg1Offset(0, 0);
@@ -261,43 +139,8 @@ void dScMgSlot1_c::OnHitByMegaChar()
 }
 
 // @symbol _ZN12dScMgSlot1_c19OnHitFromUnderneathEv
-/* dScMgSlot1_c::OnHitFromUnderneath -- slot 28, and a REAL OVERRIDE as of this
-   commit: dScMgBase_c declares the slot now, so this stops being a new virtual
-   that merely happened to land on index 28 and becomes the override the
-   cartridge has.  It was the last virtual in this class that mwcc numbered for
-   itself; include/dScMgSlot1_c.h's banner carries the arithmetic that retires
-   with it.
-
-   THE PARAMETER IS GONE, and unlike slot 27's it comes off on the base's
-   evidence alone.  dScMgBase_c's body at ov004:0x020af04c writes r1
-   (`add r1, r4, #0x4000`) before it ever reads it and touches no other
-   argument register, so nothing in the family consumes a second argument.
-   This body cannot corroborate that the way the slot-27 override did: it calls
-   the base as its very first act, so a second argument would ride through r1
-   untouched and leave no trace.  The `dActor_c &other` this file used to carry
-   was copied from include/dActor_c.h's slot 28, a parallel hierarchy, and
-   dActor_c.h has been wrong on every parameter list this campaign has
-   measured.  What is NOT invisible is DISAGREEMENT: `(dActor_c &)` and `()`
-   are different functions, so keeping it would have made this a new slot at 29
-   and put _ZTV12dScMgSlot1_c back into DIFFERS -- with rombuild green the
-   whole time.
-
-   THE RETURN TYPE IS THE ONE THING HERE THAT IS NOT MEASURED, and slot 28 is
-   the first in this campaign where that is true.  Neither body sets r0
-   deliberately: the base falls out of a virtual call it has just compared
-   against zero, and this one returns whatever SetSubBg1Offset left behind.  No
-   caller loads vtable+0x70 anywhere in ov004 or ov006, so nothing consumes a
-   result either.  `int` is include/dActor_c.h's, kept because it is what this
-   file already carried and because dActor_c.h's RETURN types have held up
-   where its parameter lists have not -- a hint, not a measurement.  `void`
-   compiles to the same bytes.
-
-   The forwarding call is written qualified, dScMgBase_c::OnHitFromUnderneath(),
-   which suppresses the virtual dispatch and emits the same direct `bl` the ROM
-   has -- straight to ov004:0x020af04c, not through ov006's veneer.  It was
-   previously spelled as an extern "C" call to the base body's pre-rename name,
-   which is the only spelling that was available while the base had not
-   declared the member. */
+/* Slot 28. Nothing reads the return value, and neither body sets it on
+ * purpose, so `int` is a guess; `void` compiles the same. */
 int dScMgSlot1_c::OnHitFromUnderneath()
 {
     dScMgBase_c::OnHitFromUnderneath();
@@ -306,9 +149,9 @@ int dScMgSlot1_c::OnHitFromUnderneath()
 
 // @symbol func_ov006_0210c478
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210c478(char *c) {
-    func_ov001_020ab5b0(c, 1, 0x90, 0xb0, 0x10, 8);
-    *(int*)(c + 0x18) = 6;
+void func_ov006_0210c478(char *icon) {
+    func_ov001_020ab5b0(icon, 1, 0x90, 0xb0, 0x10, 8);
+    *(int *)(icon + 0x18) = 6;
 }
 }
 
@@ -332,25 +175,24 @@ void dScMgSlot1_c::betIcon_c::Behavior()
 // @symbol _ZN12dScMgSlot1_c9betIcon_c6RenderEv
 void dScMgSlot1_c::betIcon_c::Render()
 {
-    _ZN3OAM9RenderSubEP7OamAttriiii(
-        data_ov006_0213e528[unk_010], unk_004, unk_006, -1, 1);
+    OAM::RenderSub((OamAttr *)data_ov006_0213e528[unk_010], unk_004, unk_006, -1, 1);
     int i;
-    int sb = 0xb0;
-    int z = 0;
+    int y = 0xb0;
+    int zero = 0;
     for (i = 0; i < unk_01c; i++) {
-        func_ov004_020af948(data_ov006_0213e5ec[GetGameLanguage()][2], 0xb0 + i*0x10, sb, (void*)z);
+        func_ov004_020af948(data_ov006_0213e5ec[GetGameLanguage()][2], 0xb0 + i * 0x10, y, (void *)zero);
     }
 }
 
 // @symbol func_ov006_0210c354
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210c354(void *p_)
+void func_ov006_0210c354(void *raw)
 {
-    char *p = (char *)p_;
-    *(int *)(p + 0x1c) = 0;
-    *(int *)(p + 0x20) = 0;
-    if (*(int *)(p + 0x14) >= 1)
-        *(unsigned char *)(p + 0x11) = 1;
+    dThIcon_c *icon = (dThIcon_c *)raw;
+    icon->unk_01c = 0;
+    icon->unk_020 = 0;
+    if (icon->unk_014 >= 1)
+        icon->unk_011 = 1;
 }
 }
 
@@ -358,26 +200,25 @@ void func_ov006_0210c354(void *p_)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0210c2d4(void *c_)
 {
-    char *c = (char *)c_;
-    void *p;
-    int v;
+    dThIcon_c *icon = (dThIcon_c *)c_;
+    void *scene;
+    int count;
     unsigned int sid;
 
-    if (*(int *)(c + 0x1c) >= 3) {
+    if (icon->unk_01c >= 3) {
         return;
     }
-    if (*(unsigned char *)(c + 0x10) != 0) {
+    if (icon->unk_010 != 0) {
         return;
     }
-    p = data_ov004_020beb68;
-    v = (p != 0) ? *(int *)((char *)p + 0xa8) : 0;
-    if (v <= 0) {
+    scene = data_ov004_020beb68;
+    count = (scene != 0) ? *(int *)((char *)scene + 0xa8) : 0;
+    if (count <= 0) {
         return;
     }
-    *(int *)(((int)c + 0x1c)) =
-        *(int *)(((int)c + 0x1c)) + 1;
+    icon->unk_01c += 1;
     func_ov004_020b1b08((void *)1);
-    func_ov001_020ab3f0(c);
+    func_ov001_020ab3f0(icon);
     sid = 0x163;
     Sound::PlayBank2_2D(sid);
 }
@@ -385,18 +226,21 @@ void func_ov006_0210c2d4(void *c_)
 
 // @symbol func_ov006_0210c2c0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210c2c0(void *o, int v) {
-  int *p = (int *)o;
-  p[8] = (p[7] * v) << 2;
+void func_ov006_0210c2c0(void *raw, int value) {
+    int *words = (int *)raw;
+    words[8] = (words[7] * value) << 2;
 }
 }
 
 // @symbol func_ov006_0210c2b0
+/* 0x4684 and 0x4690 each hold a blinking sprite: s16 x and y, a timer at
+ * +4 and a visible flag at +8. This clears one, 0210c218 starts one, 0210c278
+ * ticks it and 0210c234 draws it. */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210c2b0(char *p)
+void func_ov006_0210c2b0(char *sprite)
 {
-    *(int *)(p + 0x4) = 0;
-    *(char *)(p + 0x8) = 0;
+    *(int *)(sprite + 0x4) = 0;
+    *(char *)(sprite + 0x8) = 0;
 }
 }
 
@@ -404,42 +248,44 @@ void func_ov006_0210c2b0(char *p)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0210c278(void *o_)
 {
-    unsigned char *o = (unsigned char *)o_;
-    if (*(int*)(o + 4) <= 0) return;
-    int *p = (int*)(((int)o + 4));
-    *p = *p - 1;
-    if ((*(int*)(o + 4) & 7) == 0) {
-        *((unsigned char*)(((int)o + 8))) ^= 1;
+    u8 *raw = (u8 *)o_;
+    if (*(int *)(raw + 4) <= 0) return;
+    int *timer = (int *)(raw + 4);
+    *timer -= 1;
+    if ((*(int *)(raw + 4) & 7) == 0) {
+        *(raw + 8) ^= 1;
     }
 }
 }
 
 // @symbol func_ov006_0210c234
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210c234(unsigned char* o){
-  if(*(unsigned char*)(o+8)==0) return;
-  RenderOamMainScreen(&data_ov006_0213e6a8, *(short*)o, *(short*)(o+2), -1, -1);
+void func_ov006_0210c234(unsigned char* raw){
+    if (*(u8 *)(raw + 8) == 0) return;
+    RenderOamMainScreen(&data_ov006_0213e6a8, *(short *)raw, *(short *)(raw + 2), -1, -1);
 }
 }
 
 // @symbol func_ov006_0210c218
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210c218(void *p_, s16 a, s16 b)
+void func_ov006_0210c218(void *raw, s16 x, s16 y)
 {
-    unsigned char *p = (unsigned char *)p_;
-    *(unsigned short *)(p + 0) = a;
-    *(unsigned short *)(p + 2) = b;
-    *(int *)(p + 4) = 0x48;
-    *(unsigned char *)(p + 8) = 1;
+    u8 *sprite = (u8 *)raw;
+    *(u16 *)(sprite + 0) = x;
+    *(u16 *)(sprite + 2) = y;
+    *(int *)(sprite + 4) = 0x48;
+    *(u8 *)(sprite + 8) = 1;
 }
 }
 
 // @symbol func_ov006_0210c208
+/* 0x469c blinks bit 1 of data_0209d454 the same way: a timer and an on
+ * flag. This clears it, 0210c180 starts it and 0210c1a8 ticks it. */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210c208(char *p)
+void func_ov006_0210c208(char *blink)
 {
-    *(int *)(p + 0x0) = 0;
-    *(char *)(p + 0x4) = 0;
+    *(int *)(blink + 0x0) = 0;
+    *(char *)(blink + 0x4) = 0;
 }
 }
 
@@ -447,14 +293,14 @@ void func_ov006_0210c208(char *p)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0210c1a8(void *o_)
 {
-    int *o = (int *)o_;
-    if (*o <= 0)
+    int *timer = (int *)o_;
+    if (*timer <= 0)
         return;
-    *o = *o - 1;
-    if ((*o & 7) != 0)
+    *timer -= 1;
+    if ((*timer & 7) != 0)
         return;
-    *((unsigned char *)(((int)o + 4))) ^= 1;
-    if (*((unsigned char *)o + 4) != 0)
+    *((u8 *)timer + 4) ^= 1;
+    if (*((u8 *)timer + 4) != 0)
         data_0209d454 |= 2;
     else
         data_0209d454 &= ~2;
@@ -463,11 +309,11 @@ void func_ov006_0210c1a8(void *o_)
 
 // @symbol func_ov006_0210c180
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210c180(void *c_){
-  char *c = (char *)c_;
-  *(int*)c = 0x48;
-  *(unsigned char*)(c+4) = 1;
-  data_0209d454 |= 2;
+void func_ov006_0210c180(void *raw){
+    char *blink = (char *)raw;
+    *(int *)blink = 0x48;
+    *(u8 *)(blink + 4) = 1;
+    data_0209d454 |= 2;
 }
 }
 

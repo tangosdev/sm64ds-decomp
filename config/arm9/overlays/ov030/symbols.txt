@@ -6,11 +6,11 @@ _ZN13daObjHmBskt_c6RenderEv kind:function(arm,size=0x34) addr:0x02111350
 _ZN13daObjHmBskt_c8BehaviorEv kind:function(arm,size=0x8c) addr:0x02111384
 _ZN13daObjHmBskt_c13InitResourcesEv kind:function(arm,size=0x114) addr:0x02111410
 daObjHmBskt_c_classInit kind:function(arm,size=0x38) addr:0x02111524
-_ZN13RollingLogTtmD1Ev kind:function(arm,size=0x50) addr:0x0211155c
-_ZN13RollingLogTtmD0Ev kind:function(arm,size=0x64) addr:0x021115ac
-_ZN13RollingLogTtm16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111610
-_ZN13RollingLogTtm8BehaviorEv kind:function(arm,size=0x14) addr:0x02111624
-_ZN13RollingLogTtm13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111638
+_ZN15daObjHmMaruta_cD1Ev kind:function(arm,size=0x50) addr:0x0211155c
+_ZN15daObjHmMaruta_cD0Ev kind:function(arm,size=0x64) addr:0x021115ac
+_ZN15daObjHmMaruta_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111610
+_ZN15daObjHmMaruta_c8BehaviorEv kind:function(arm,size=0x14) addr:0x02111624
+_ZN15daObjHmMaruta_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111638
 daObjHmMaruta_c_classInit kind:function(arm,size=0x3c) addr:0x0211164c
 _ZN7daMky_cD1Ev kind:function(arm,size=0x48) addr:0x02111688
 _ZN7daMky_cD0Ev kind:function(arm,size=0x5c) addr:0x021116d0
@@ -112,7 +112,7 @@ _ZTI15daObjHmMaruta_c kind:data(any) addr:0x021159f8
 data_ov030_02115a04 kind:data(any) addr:0x02115a04
 _ZTS15daObjHmMaruta_c kind:data(any) addr:0x02115a10
 g_profile_HM_MARUTA kind:data(any) addr:0x02115a24
-_ZTV13RollingLogTtm kind:data(any) addr:0x02115a48
+_ZTV15daObjHmMaruta_c kind:data(any) addr:0x02115a48
 data_ov030_02115ac8 kind:data(any) addr:0x02115ac8
 data_ov030_02115ad0 kind:data(any) addr:0x02115ad0
 data_ov030_02115ad8 kind:data(any) addr:0x02115ad8

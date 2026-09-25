@@ -1,23 +1,27 @@
 //cpp
 /**
- * Break room cupboard (PL_CLOSET): talk to it, pick a minigame.
+ * daObjCloset_c -- the break-room cupboard (PL_CLOSET): talk to it and
+ * pick a minigame.
  *
- * With no player nearby, Behavior offers each colliding Mario to
- * talk; with one talking, it runs the message/save/minigame-menu
- * script by talk state. InitResources lays the five colliders along
- * the facing in 100-unit steps and updates them every frame.
+ * With nobody talking, Behavior offers talk to a colliding Mario (actor
+ * 0xbf) standing within a quarter turn of its front. With a talker, it
+ * turns them (mAngleY) to face the cupboard, then runs message 0xb09
+ * through the save/menu script (data_0209d684 picks: finish talking, show
+ * saving, or open the minigame menu). InitResources places all five
+ * colliders at mPosX (radius 110.0, height 140.0); Behavior spreads them
+ * every frame, 100 units apart along the cupboard's width, centred on it.
  *
- * deslop
- * Leftover: _Z14ApproachLinearRsss / Vec3_HorzAngle / AngleDiff keep
- *   linker names (no header home; kaitendai precedent keeps
- *   ApproachLinear mangled too).
- * Leftover: data_02082214 is the shared arm9 sine table.
- * Leftover: data_0209d684 / data_0209d660 are save/menu state bytes;
- *   only this script reads them, so they stay address-named.
- * Leftover: target + 0x8e is a Player short with no named header
- *   field.
- * Leftover: the base C2 is called with no argument, as the ROM does.
- * Leftover: v1 is written never read; volatile keeps the stores.
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
+ *
+ *   selfPos, frontPos and playerPos are written and never read; volatile
+ *   keeps their stores, which the ROM has.
+ *
+ * Known limits:
+ *   _Z14ApproachLinearRsss / Vec3_HorzAngle / AngleDiff keep linker names:
+ *   no header declares them (kaitendai keeps ApproachLinear mangled too).
+ *   data_02082214 is the shared arm9 sine table.
+ *   data_0209d684 / data_0209d660 are save/menu state bytes; only this
+ *   script reads them, so they stay address-named.
  */
 
 #include "daObjCloset_c.h"
@@ -64,38 +68,33 @@ s32 daObjCloset_c::CleanupResources()
 }
 
 // @symbol _ZN13daObjCloset_c8BehaviorEv
-/* The scratch position triples below are deliberately NOT include/types.h's
-   Vector3: that one declares an (empty) destructor, because the ROM destroys
-   arrays of it, and the five locals here grow the frame by 0x10 bytes under a
-   non-POD type. A file-local POD triple is what the ROM's frame says was
-   here. */
 s32 daObjCloset_c::Behavior()
 {
-    volatile Vec3Raw v1, v2, v3;
-    Vec3Raw apos;
-    volatile Vec3Raw pos;
+    volatile Vec3Raw selfPos, frontPos, playerPos;
+    Vec3Raw actorPos;
+    volatile Vec3Raw colliderPos;
     Player* target = mTalkingPlayer;
 
     if (target) {
-        v1.x = *(volatile s32*)&mPosX;
-        v1.y = *(volatile s32*)&mPosY;
-        v1.z = *(volatile s32*)&mPosZ;
-        v2.x = mPosX;
-        v2.y = mPosY;
-        v2.z = mPosZ;
-        v2.x = mPosX + (int)(((s64)0x5a000 * data_02082214[(*(volatile u16*)&mAngleY >> 4) * 2] + 0x800) >> 12);
-        v2.z = mPosZ + (int)(((s64)0x5a000 * data_02082214[(*(volatile u16*)&mAngleY >> 4) * 2 + 1] + 0x800) >> 12);
+        selfPos.x = *(volatile s32*)&mPosX;
+        selfPos.y = *(volatile s32*)&mPosY;
+        selfPos.z = *(volatile s32*)&mPosZ;
+        frontPos.x = mPosX;
+        frontPos.y = mPosY;
+        frontPos.z = mPosZ;
+        frontPos.x = mPosX + (int)(((s64)0x5a000 * data_02082214[(*(volatile u16*)&mAngleY >> 4) * 2] + 0x800) >> 12);
+        frontPos.z = mPosZ + (int)(((s64)0x5a000 * data_02082214[(*(volatile u16*)&mAngleY >> 4) * 2 + 1] + 0x800) >> 12);
         {
             struct Vec3Raw* tp = (struct Vec3Raw*)&target->mPosX;
-            v3.x = tp->x;
-            v3.y = tp->y;
-            v3.z = tp->z;
+            playerPos.x = tp->x;
+            playerPos.y = tp->y;
+            playerPos.z = tp->z;
         }
 
         switch (target->GetTalkState()) {
         case 0: {
             short cur = (short)(mAngleY + 0x8000);
-            if (_Z14ApproachLinearRsss((short*)((char*)target + 0x8e), cur, 0x800) != 0) {
+            if (_Z14ApproachLinearRsss(&target->mAngleY, cur, 0x800) != 0) {
                 mMessageID = 0xb09;
                 Message::PrepareTalk();
                 target->ShowMessage2(*this, (s16)mMessageID, 0, 1, 0);
@@ -147,13 +146,13 @@ s32 daObjCloset_c::Behavior()
                     int isMatch = (actor->actorID == 0xbf);
                     if (isMatch != false) {
                         struct Vec3Raw* ap = (struct Vec3Raw*)&actor->mPosX;
-                        short ang;
+                        short angleToActor;
                         int diff;
-                        apos.x = ap->x;
-                        apos.y = ap->y;
-                        apos.z = ap->z;
-                        ang = Vec3_HorzAngle((struct Vec3Raw*)&mPosX, &apos);
-                        diff = AngleDiff(ang, mAngleY);
+                        actorPos.x = ap->x;
+                        actorPos.y = ap->y;
+                        actorPos.z = ap->z;
+                        angleToActor = Vec3_HorzAngle((struct Vec3Raw*)&mPosX, &actorPos);
+                        diff = AngleDiff(angleToActor, mAngleY);
                         if (diff < 0x4000) {
                             if (((Player*)actor)->StartTalk(*this, 0) != 0) {
                                 mTalkingPlayer = (Player*)actor;
@@ -170,23 +169,26 @@ s32 daObjCloset_c::Behavior()
         int j;
         dCcAcPos_c* cyl = mColliders;
         for (j = 0; j < 5; j++) {
-            pos.x = mPosX;
-            pos.y = mPosY;
-            pos.z = mPosZ;
+            colliderPos.x = mPosX;
+            colliderPos.y = mPosY;
+            colliderPos.z = mPosZ;
             {
                 int distFixed = ((2 - j) * 100) << 12;
+                /* sin and cos of the side direction, a quarter turn from
+                   mAngleY: sideSin is cos(mAngleY), sideCos is
+                   -sin(mAngleY). */
                 int idx = (unsigned short)(short)(mAngleY + 0x4000) >> 4;
-                s16 cosv = data_02082214[idx * 2];
-                s16 sinv = data_02082214[idx * 2 + 1];
-                int offX = (int)(((s64)distFixed * cosv + 0x800) >> 12);
-                int offZ = (int)(((s64)distFixed * sinv + 0x800) >> 12);
+                s16 sideSin = data_02082214[idx * 2];
+                s16 sideCos = data_02082214[idx * 2 + 1];
+                int offX = (int)(((s64)distFixed * sideSin + 0x800) >> 12);
+                int offZ = (int)(((s64)distFixed * sideCos + 0x800) >> 12);
                 int newX = mPosX + offX;
                 int newZ = mPosZ + offZ;
-                pos.x = newX;
-                pos.z = newZ;
+                colliderPos.x = newX;
+                colliderPos.z = newZ;
                 mColliders[j].pos.x = newX;
-                mColliders[j].pos.y = pos.y;
-                mColliders[j].pos.z = pos.z;
+                mColliders[j].pos.y = colliderPos.y;
+                mColliders[j].pos.z = colliderPos.z;
             }
             _ZN5dCc_c5ClearEv(cyl);
             _ZN5dCc_c6UpdateEv(cyl);

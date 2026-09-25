@@ -266,7 +266,6 @@ from:0x02112678 kind:load to:0x02112478 module:overlay(45)
 from:0x02112680 kind:load to:0x021126d0 module:overlay(45)
 from:0x02112688 kind:load to:0x02112468 module:overlay(45)
 from:0x02112690 kind:load to:0x0211249c module:overlay(45)
-from:0x0211271c kind:load to:0x02100000 module:overlays(2,7)
 from:0x02112cb0 kind:load to:0x0209a764 module:main
 from:0x02112cb4 kind:load to:0x02112cbc module:overlay(45)
 from:0x02112cb8 kind:load to:0x021089ec module:overlay(2)

@@ -222,16 +222,16 @@ mwcc allocates registers differently for `int` vs `void` even when r0 is neither
 read nor set -- measured by building both, not assumed.
 
 * slot 20 `Virtual50` -- still `int`; untested.
-* slot 21 `OnGroundPounded` -- `Stump::OnGroundPounded` ([ov091](../config/arm9/overlays/ov091/symbols.txt) `0x02133648`)
-  compares two class fields and returns early on either. See `include/Stump.h`.
+* slot 21 `OnGroundPounded` -- `daObjPile_c::OnGroundPounded` ([ov091](../config/arm9/overlays/ov091/symbols.txt) `0x02133648`)
+  compares two class fields and returns early on either. See `include/daObjPile_c.h`.
   `daObjBlockL_c`'s and `daObjHatenaBlock_c`'s overrides happened not to trigger the
   difference under `int` and were re-verified under `void`, so the correction is
   free there.
 * slot 24 `OnKicked` -- `daObjBlockL_c::OnKicked` ([ov002](../config/arm9/overlays/ov002/symbols.txt) `0x020b36dc`) has two
   locals and two early returns. See `include/daObjBlockL_c.h`.
-* slot 27 `OnHitByMegaChar` -- `Stump::OnHitByMegaChar` ([ov091](../config/arm9/overlays/ov091/symbols.txt) `0x021335d4`):
+* slot 27 `OnHitByMegaChar` -- `daObjPile_c::OnHitByMegaChar` ([ov091](../config/arm9/overlays/ov091/symbols.txt) `0x021335d4`):
   four early-return field checks, 6-word register mismatch under `int`, exact
-  match under `void`. See `include/Stump.h`. The two already-landed overrides,
+  match under `void`. See `include/daObjPile_c.h`. The two already-landed overrides,
   `dScMgSlot1_c`'s and `daObjMaruta_c`'s, have no locals or early returns, so the
   correction is a re-verified no-op for them.
 * slot 30 `OnAimedAtWithEggReturnVec` returns a `Vector3` BY VALUE, and the ROM

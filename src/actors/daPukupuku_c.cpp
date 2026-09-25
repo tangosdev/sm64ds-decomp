@@ -1,39 +1,38 @@
 //cpp
-/**
- * Cheep Cheep (PUKUPUKU).
+/* daPukupuku_c -- the Cheep Cheep.
  *
- * Swimming enemy. InitResources records home pos and sets the state;
- * Behavior handles Yoshi-eat, position update, state dispatch, and
- * contact damage; the four state handlers (ordinals 3-6) count timers
- * and steer toward home.
+ * A swimming enemy with a home point. InitResources records where it was
+ * placed and picks a starting state; Behavior runs the frame -- getting eaten
+ * by Yoshi, moving, dispatching the current state through a pointer-to-member
+ * at +0x370, and dealing contact damage. The four state handlers count a timer
+ * down and steer back toward home.
  *
- * daPukupuku_c_classInit / g_profile_PUKUPUKU are reconstructed (RTTI
- * daPukupuku_c at 0x021342f0, PUKUPUKU registry at 0x02134300). Retail
- * does not store those spellings. Historical alias CheepCheep_Spawn.
+ * Function order is the REVERSE of the ROM's (highest address first): mwccarm
+ * 2004/b56 emits one .text section per function in reverse source order. Do
+ * not reorder. D0/D1 order inside the destructor group is the compiler's to
+ * pick (verify reports PARTIAL [(0, 1)], pilot report sec 3).
  *
- * deslop
- * Leftover: function order is reverse ROM (highest address first) --
- *   mwccarm 2004/b56 emits one .text section per function in reverse
- *   source order. Do not reorder; D0/D1 order is compiler-chosen
- *   (verify reports PARTIAL [(0, 1)], pilot report sec 3).
- * Leftover: Behavior and the state handlers still address fields as
- *   char* + offsets (0x100 mStateTimer, 0x107 mEatenByYoshi, 0x110
- *   mdCcAcPos_c, 0x150 mWithMeshClsn, 0x370 state PMF). InitResources
- *   already proves 0x110/0x150/0x374 as real members, but the full
- *   Behavior conversion is unmeasured here; plain member form DIFFs
- *   on address rematerialization in this TU.
- * Leftover: func_ov090_* helpers keep ROM-unnamed spellings. No
- *   replacement is coined; the old daManta_c_Kill claim for 0x2133200
- *   is refuted in the manifest (its only referrer is this TU's own
- *   state table at 0x21342b8).
- * Leftover: data_ov090_* kept as this TU observes them -- 0x213455c
- *   AnimFilePtr (InitResources reads .file), 0x2134564 SharedFilePtr,
- *   0x21342d8 Vector3, 0x2134594 scalar int via decl_common.h.
- * Leftover: factory is `return (int *)new daPukupuku_c` -- real
- *   instantiation, which is what makes mwccarm emit the D1-then-D0 pair
- *   in ROM order plus the vtable homed here. The synthesized constructor
- *   reproduces the ROM init sequence byte-exact.
- * Leftover: S14 g_profile_PUKUPUKU stays outside the TU.
+ * The factory is `return (int *)new daPukupuku_c` -- a real instantiation,
+ * which is what makes mwccarm emit the D1/D0 pair in ROM order and home the
+ * vtable here. The synthesized constructor reproduces the ROM's init sequence
+ * byte-exact.
+ *
+ * Reconstruction notes. The class name comes from the cartridge (RTTI at
+ * 0x021342f0, PUKUPUKU registry at 0x02134300); `daPukupuku_c_classInit`,
+ * `g_profile_PUKUPUKU` and the historical alias CheepCheep_Spawn are
+ * source-style names retail does not store, and the profile stays outside
+ * this TU. Behavior and the state handlers still reach fields as char* plus
+ * an offset (0x100 mStateTimer, 0x107 mEatenByYoshi, 0x110 mdCcAcPos_c, 0x150
+ * mWithMeshClsn, 0x370 the state PMF); InitResources already proves
+ * 0x110/0x150/0x374 are real members, but plain member form DIFFs here on
+ * address rematerialization, so the conversion is unfinished rather than
+ * refused. The func_ov090_* helpers keep their address-derived spellings and
+ * no replacement is coined -- the old daManta_c_Kill claim for 0x2133200 is
+ * refuted in the manifest, its only referrer being this TU's own state table
+ * at 0x21342b8. The data_ov090_* symbols are kept as this TU observes them:
+ * 0x213455c an AnimFilePtr (InitResources reads .file), 0x2134564 a
+ * SharedFilePtr, 0x21342d8 a Vector3, 0x2134594 a scalar int via
+ * decl_common.h.
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -183,29 +182,22 @@ void *thisp, struct BCA_File *, int, int, unsigned int);
 /* TUBUILD CONFLICT -- alternate declaration of data_ov090_021342d8, from the legacy file for _ZN12daPukupuku_c13InitResourcesEv, NOT applied: extern struct Vector3 data_ov090_021342d8; */
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- daPukupuku_c_classInit, 0x02133634, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol daPukupuku_c_classInit
-/* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* resolved: VT0 = _ZTV12daPukupuku_c */
 /* Reconstructed source-style name: SM64DS proves daPukupuku_c through RTTI,
  * allocation size, vtable identity, and the PUKUPUKU registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: CheepCheep_Spawn. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int *daPukupuku_c_classInit(void)
 {
     return (int *)new daPukupuku_c;
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- _ZN12daPukupuku_c13InitResourcesEv, 0x02133530, size 0x104 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daPukupuku_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 int daPukupuku_c::InitResources()
 {
     struct BMD_File *bmd;
@@ -234,12 +226,8 @@ int daPukupuku_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- _ZN12daPukupuku_c8BehaviorEv, 0x02133430, size 0x100 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daPukupuku_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 int daPukupuku_c::Behavior()
 {
     char *c = (char *)((dEnemyBase_c *)this);
@@ -275,11 +263,8 @@ int daPukupuku_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- _ZN12daPukupuku_c6RenderEv, 0x021333e0, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daPukupuku_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
 int daPukupuku_c::Render()
 {
     int b = ((mFlags & 0x40000) != 0);
@@ -289,17 +274,13 @@ int daPukupuku_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- _ZN12daPukupuku_c16OnPendingDestroyEv, 0x021333dc, size 0x4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daPukupuku_c16OnPendingDestroyEv
 void daPukupuku_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- _ZN12daPukupuku_c16CleanupResourcesEv, 0x021333ac, size 0x30 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daPukupuku_c16CleanupResourcesEv
 int daPukupuku_c::CleanupResources()
 {
@@ -308,12 +289,9 @@ int daPukupuku_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov090_02133338, 0x02133338, size 0x74 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02133338
-/* recovered: shared common types */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov090_02133338(char *c) {
     int v[3];
     Vec3_Asr(v, c+0x5c, 3);
@@ -324,9 +302,7 @@ void func_ov090_02133338(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov090_021332e8, 0x021332e8, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_021332e8
 /* PukuStateC / PukuStatePMF are forward-declared in the preamble (renamed there
  * from this file's original 'C' / 'PMF' to clear a collision with Behavior's
@@ -334,11 +310,9 @@ void func_ov090_02133338(char *c) {
 struct PukuStateC { char pad[0x370]; PukuStatePMF *pp; };
 extern "C" int func_ov090_021332e8(PukuStateC *c, PukuStatePMF *p) { c->pp = p; PukuStatePMF *q = c->pp; if (*q == 0) return 1; return (c->**q)(); }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov090_02133290, 0x02133290, size 0x58 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02133290
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov090_02133290(char* c){
   unsigned int r = RandomIntInternal(data_0209e650);
   *(short*)(c+0x384) = ((r>>8)&0xf)<<0xc;
@@ -349,11 +323,8 @@ int func_ov090_02133290(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov090_02133200, 0x02133200, size 0x90 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02133200
-/* recovered: declarations from a shared header */
 /* The legacy shard that carried func_ov090_02133200 -- absorbed into this
  * file by promotion -- carried
  * `// recovered name: daManta_c_Kill` and `daManta_c::Kill - recovered from
@@ -367,7 +338,7 @@ int func_ov090_02133290(char* c){
  * mis-assignment. This is a daPukupuku_c state handler, reached through
  * func_ov090_021332e8. No replacement name is coined: the ROM names nothing
  * here. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov090_02133200(char* c)
 {
     if (Vec3_Dist(c + 0x5c, c + 0x374) > 0x3e8000) {
@@ -381,11 +352,9 @@ int func_ov090_02133200(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov090_021331c4, 0x021331c4, size 0x3c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_021331c4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov090_021331c4(char* c){
   unsigned int r = RandomIntInternal(data_0209e650);
   *(short*)(c+0x100) = ((r>>8)&0x3f)+0x32;
@@ -394,11 +363,9 @@ int func_ov090_021331c4(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- func_ov090_02133190, 0x02133190, size 0x34 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02133190
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov090_02133190(char *c) {
     unsigned short h = *(unsigned short*)(c + 0x100);
     if (h == 0) {
@@ -408,11 +375,8 @@ int func_ov090_02133190(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov090_021330c8, 0x021330c8, size 0xc8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_021330c8
-/* recovered: shared common types */
 extern "C" void func_ov090_021330c8(char* thiz)
 {
     char* c = thiz;
@@ -441,18 +405,14 @@ extern "C" void func_ov090_021330c8(char* thiz)
     }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 1 -- _ZN12daPukupuku_cD0Ev, 0x02133074, size 0x54 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daPukupuku_cD0Ev
 /* D0 is the DELETING destructor: destroy through this class (dEnemyBase_c
  * chain) then return the object to its heap via an inline operator delete.
  * Both variants are emitted from the single inline destructor in
  * daPukupuku_c.h (class-form skill): D1 then D0 in ROM order, no leaf D2. */
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 0 -- _ZN12daPukupuku_cD1Ev, 0x02133034, size 0x40 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daPukupuku_cD1Ev
 /* D1 is emitted from the inline destructor in daPukupuku_c.h alongside D0
  * (class-form skill); this marker at D1's ROM ordinal keeps the

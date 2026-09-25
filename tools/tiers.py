@@ -252,7 +252,8 @@ def _reader_name(path, text):
     in the body, because the text search was tried first and is wrong four ways:
     it finds a DEPENDENCY's stub or a bare forward declaration instead of the file's
     own function (src/_ZN5Stage13UpdateMessageEv.cpp reported `Message::UpdateWindow`;
-    src/_ZN6Coffin13InitResourcesEv.cpp matched a `MeshCollider::LoadFile` prototype),
+    the old Coffin::InitResources shard, now daObjCasket_c::InitResources in the
+    promoted daObjCasket_c TU, matched a `MeshCollider::LoadFile` prototype),
     it lets an unrelated call override a genuinely-unidentified `func_ov*` filename,
     it drops outer qualifiers (`Sound::Player::SetPlayableSeqCount` -> `Player::...`,
     colliding with the unrelated real `Player` class), and it cannot match a ctor or

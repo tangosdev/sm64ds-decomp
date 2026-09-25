@@ -27,25 +27,12 @@ typedef char dScMgAmida_c_Piece_size_must_be_0x18[sizeof(dScMgAmida_c_Piece) == 
    Field evidence and the full vtable census live in
    notes/minigame-provenance.md.
 
-   TWO CONSTRAINTS HERE ARE MEASURED, NOT STYLE:
+   Unk36 (slot 36) is called directly. That only lands on the right
+   slot because dScMgBase_c declares every virtual from 18 to 35; with a
+   gap there, mwcc gives Unk36 an earlier slot and Render grows by 0xc.
 
-   1. Unk36 (slot 36) is declared below as a real virtual, but its three
-      call sites in InitResources/Behavior/Render still use the
-      pre-migration vtable-shim dispatch, and THE REASON THEY HAD TO IS
-      GONE. Calling it as a plain `this->Unk36()` used to compile Render
-      0xc bytes larger (0x2ac vs 0x2a0) because mwcc landed its own slot
-      for Unk36 right after dScMgBase_c's compiler-visible virtuals --
-      dScMgBase_c left slots 18-35 undeclared -- rather than on true ROM
-      slot 36. That one delta cascaded into ~1400 unrelated-looking
-      mismatches; traced via final_link.o.xMAP. The base declares all
-      eighteen now and Unk36 sits on 36, so the shim may well be
-      removable. That is a MEASUREMENT nobody has taken, not a conclusion:
-      the shims are kept here because they match today, and replacing
-      them is its own commit with its own rombuild behind it. Do not
-      remove them on the strength of this paragraph.
-
-   2. AfterCleanupResources returns early when vfSuccess != 2, which skips
-      the base-class call as well. That is what the ROM does. Keep it.
+   AfterCleanupResources returns early when vfSuccess != 2, which skips
+   the base-class call as well. That is what the ROM does. Keep it.
 
    Slot 35 is declared and renamed now -- `Virtual8C`, this class's override
    at ov006:0x020d1170.  Nothing in THIS class calls it, which is why it was

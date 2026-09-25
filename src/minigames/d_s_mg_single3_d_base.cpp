@@ -1,22 +1,18 @@
 //cpp
-/* Shared scene for the single-camera 3D minigames.
- * Production TU ov006/dScMgSingle3DBase_c: nine functions in
- * [0x0210a4b0, 0x0210a8c0), including the compiler-owned destructor pair.
- * Keep this definition order: deferred codegen emits ordinary sections in
- * reverse source order under 2004/b56. The manifest records the inferred
- * original file boundary and remaining metadata ownership.
+/* Shared scene for the single-camera 3D minigames: nine functions in
+ * [0x0210a4b0, 0x0210a8c0), including the compiler-emitted destructor pair.
+ * Keep this definition order: the compiler emits functions in reverse
+ * source order.
  *
- * Leftover: Ov004_Deallocate (ov004-local, 0x020adc5c) and Deallocate
- *   (arm9-global, 0x02018144) are different functions, not two
- *   spellings of one free; each call site keeps its own.
+ * Ov004_Deallocate (ov004, 0x020adc5c) and Deallocate (arm9, 0x02018144)
+ * are different functions; each call site keeps the one the ROM calls.
  */
 
 #include "dScMgSingle3DBase_c.h"
 #include "types.h"
 #include "decl_common.h"
 
-/* Local declarations follow the existing SDK definitions. Address-valued
- * integer results are converted explicitly where the caller uses a pointer. */
+/* SDK calls this file makes. */
 namespace GX {
 void SetBankForBG(u16);
 void SetBankForOBJ(u16);
@@ -42,9 +38,8 @@ void Ov004_Deallocate(void *p);
 void func_ov004_020b290c(void);
 void func_ov004_020b2980(void);
 s32 GetGameLanguage(void);
-/* This trampoline's current definition omits LoadFile's argument and result.
- * Keep the caller's file ID, returned buffer and relocation destination until
- * that forwarding contract is reconstructed with its other consumers. */
+/* Forwards to LoadFile. Its own definition is still declared without the
+ * argument and result, so this file keeps a local declaration. */
 void *func_ov004_020adc68(int fileId);
 void func_ov004_020b0d30(void);
 void InitialiseVramGlobals(void);
@@ -61,9 +56,8 @@ extern void **data_0209d4a8;
 
 // @symbol _ZN19dScMgSingle3DBase_c9Virtual84Ev
 /* Slot 33 brings up both graphics engines, assigns VRAM banks and loads
- * their character data and OBJ palettes before publishing this scene.
- * All thirteen children inherit this override. The inherited declarations
- * now supply the complete 36-slot vtable, not the old 34-slot prefix. */
+ * their character data and OBJ palettes before publishing this scene, then
+ * sets lights 0 and 1 to white. All thirteen children inherit this override. */
 void dScMgSingle3DBase_c::Virtual84()
 {
     void *fileData;
@@ -111,9 +105,7 @@ void dScMgSingle3DBase_c::Virtual84()
 }
 
 // @symbol _ZN19dScMgSingle3DBase_c18AfterInitResourcesEj
-/* Slot 2 forwards the result directly to the base, then initializes particles.
- * The shared tracker view still declares an s32 result for Initialise/Update,
- * while their definitions return void; both results are ignored here. */
+/* Slot 2 runs the base, then initializes particles. */
 void dScMgSingle3DBase_c::AfterInitResources(u32 vfSuccess)
 {
     dScMgBase_c::AfterInitResources(vfSuccess);
@@ -142,8 +134,9 @@ int dScMgSingle3DBase_c::BeforeRender()
 }
 
 // @symbol _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj
-/* Slot 5 clears the 3D engine registers and common model data on teardown.
- * The volatile stores are hardware writes; retain their width and order. */
+/* Slot 5 resets the light vector and light color registers and frees the
+ * common model data on teardown. The volatile stores are hardware writes;
+ * keep their width and order. */
 void dScMgSingle3DBase_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess == 2) {
@@ -181,6 +174,6 @@ extern "C" void func_ov006_0210a534(void)
     *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & ~3) | 1;
 }
 
-/* The inline destructor and AfterInitResources key function emit D1/D0
- * in cartridge order. Children inline this base teardown; no standalone
- * Single3DBase D2 is added. Keep that lifecycle/header arrangement. */
+/* The inline destructor plus AfterInitResources as key function emit D1
+ * and D0 in cartridge order. Children inline this base teardown, so there
+ * is no standalone D2. */

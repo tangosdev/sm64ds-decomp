@@ -4,7 +4,7 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV14SquarePathLift */
+/* resolved: VT0 = _ZTV14daObjEmmYuka_c */
 extern void _ZN7PathPtrC1Ev(void *);
 /* Reconstructed source-style name: SM64DS proves daObjEmmYuka_c through RTTI,
  * allocation size, vtable identity, and the EMM_YUKA registry profile;
@@ -15,7 +15,7 @@ int *daObjEmmYuka_c_classInit(void)
     int *p = (int *)_ZN7fBase_cnwEj(816);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
-        p[0] = (int)_ZTV14SquarePathLift;
+        p[0] = (int)_ZTV14daObjEmmYuka_c;
         _ZN7PathPtrC1Ev((char *)p + 0x320);
     }
     return p;

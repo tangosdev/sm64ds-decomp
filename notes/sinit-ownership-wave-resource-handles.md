@@ -122,7 +122,7 @@ The initializer constructs asset 1416 with `func_02017acc` and registers
 
 This is initializer ordinal 0 of 7. [.p__sinit_ov015_02112f9c](../config/arm9/overlays/ov015/symbols.txt) at
 `0x02113410` points to it; the next word points to
-[__sinit_ov015_02112fdc](../src/__sinit_ov015_02112fdc.c), independently owned by KnockDownPlank. The parallel
+[__sinit_ov015_02112fdc](../src/__sinit_ov015_02112fdc.c), independently owned by daObjBk_Botaosi_c. The parallel
 TU config attributes daObjBkBillboard_c's `.init` (`0x02112f9c..0x02112fdc`),
 `.ctor` word, and exact BSS interval to its first text TU.
 

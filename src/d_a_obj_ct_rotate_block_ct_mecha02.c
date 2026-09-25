@@ -6,7 +6,7 @@
 #include "decl_ShadowModel.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV15TtcRotatingCube */
+/* resolved: VT0 = _ZTV20daObjCtRotateBlock_c */
 /* Reconstructed source-style name: SM64DS proves daObjCtRotateBlock_c through RTTI,
  * allocation size, vtable identity, and the CT_MECHA02 registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -16,7 +16,7 @@ int *daObjCtRotateBlock_c_classInit_CT_MECHA02(void)
     int *p = (int *)_ZN7fBase_cnwEj(984);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
-        p[0] = (int)_ZTV15TtcRotatingCube;
+        p[0] = (int)_ZTV20daObjCtRotateBlock_c;
         _ZN5ModelC1Ev((char *)p + 0x320);
         _ZN11ShadowModelC1Ev((char *)p + 0x380);
     }

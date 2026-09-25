@@ -1,0 +1,341 @@
+{
+  "id": "ov094/daOwl_c",
+  "module": "ov094",
+  "source": "src/actors/daOwl_c.cpp",
+  "promoted_source": "src/actors/daOwl_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2135700..0x2136798, 21 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daOwl_c",
+    "module sinit corroboration: 1 sinit(s) / 1 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02135700",
+      "end": "0x02136798"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN7daOwl_cD1Ev",
+      "address": "0x02135700",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN7daOwl_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN7daOwl_cD0Ev",
+      "address": "0x02135748",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN7daOwl_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov094_021357a4",
+      "address": "0x021357a4",
+      "size": "0x00000110",
+      "legacy_source": "src/func_ov094_021357a4.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov094_021358b4",
+      "address": "0x021358b4",
+      "size": "0x000000d8",
+      "legacy_source": "src/func_ov094_021358b4.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov094_0213598c",
+      "address": "0x0213598c",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov094_0213598c.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov094_021359d8",
+      "address": "0x021359d8",
+      "size": "0x000001fc",
+      "legacy_source": "src/func_ov094_021359d8.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov094_02135bd4",
+      "address": "0x02135bd4",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov094_02135bd4.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov094_02135c28",
+      "address": "0x02135c28",
+      "size": "0x0000023c",
+      "legacy_source": "src/func_ov094_02135c28.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov094_02135e64",
+      "address": "0x02135e64",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov094_02135e64.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov094_02135ee0",
+      "address": "0x02135ee0",
+      "size": "0x00000100",
+      "legacy_source": "src/func_ov094_02135ee0.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov094_02135fe0",
+      "address": "0x02135fe0",
+      "size": "0x00000044",
+      "legacy_source": "src/func_ov094_02135fe0.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov094_02136024",
+      "address": "0x02136024",
+      "size": "0x0000012c",
+      "legacy_source": "src/func_ov094_02136024.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov094_02136150",
+      "address": "0x02136150",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov094_02136150.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov094_02136188",
+      "address": "0x02136188",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov094_02136188.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov094_021361d8",
+      "address": "0x021361d8",
+      "size": "0x00000108",
+      "legacy_source": "src/func_ov094_021361d8.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov094_021362e0",
+      "address": "0x021362e0",
+      "size": "0x00000100",
+      "legacy_source": "src/func_ov094_021362e0.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN7daOwl_c16CleanupResourcesEv",
+      "address": "0x021363e0",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN7daOwl_c16CleanupResourcesEv.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN7daOwl_c16OnPendingDestroyEv",
+      "address": "0x02136428",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN7daOwl_c16OnPendingDestroyEv.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN7daOwl_c6RenderEv",
+      "address": "0x0213642c",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN7daOwl_c6RenderEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN7daOwl_c8BehaviorEv",
+      "address": "0x02136478",
+      "size": "0x000001bc",
+      "legacy_source": "src/_ZN7daOwl_c8BehaviorEv.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN7daOwl_c13InitResourcesEv",
+      "address": "0x02136634",
+      "size": "0x00000164",
+      "legacy_source": "src/_ZN7daOwl_c13InitResourcesEv.cpp",
+      "ordinal": 20
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Cartridge RTTI name is daOwl_c (_ZTS7daOwl_c at ov094 0x02136a10, _ZTI at 0x02136a28, vtable address point 0x02136a58). The licensed run is .text 0x02135700..0x02136798 (21 functions). daOwl_c_classInit at 0x02136798 is the next function and is not part of this TU.",
+    "The destructor is declared in the header and defined once, out of line, first in the file. Under #pragma defer_codegen off that emits D1 then D0 in ROM order, plus a homeless D2.",
+    "Previous tree name HootTheOwl was coined. class_rename kept HootTheOwl_Spawn / HootTheOwl_SpawnInfo chain rows (no --with-derived)."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov094-daOwl_c/daOwl_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 21,
+    "functions_declared": 21,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7daOwl_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev",
+        "_ZN7daOwl_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        27,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64
+      ],
+      "data": [
+        "_ZTV7daOwl_c",
+        "_ZTI7daOwl_c",
+        "_ZTS7daOwl_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7daOwl_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7daOwl_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV7daOwl_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7daOwl_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Out-of-line ~daOwl_c under #pragma defer_codegen off emits D1, D0, then D2. The cartridge has D1 at 0x02135700 and D0 at 0x02135748 and no daOwl_c D2."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "reason": "func_ov094_02135ee0 destroys local Vector3 values. The empty destructor is vague linkage; the cartridge copy is arm9 0x020072c0.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0"
+    },
+    {
+      "symbol": "_ZTV7daOwl_c",
+      "disposition": "deadstrip-data",
+      "reason": "Key function is the out-of-line destructor, so this TU emits the vtable. symbols.txt names the address point 0x02136a58; the licensed span is only .text.",
+      "canonical_module": "ov094",
+      "canonical_address": "0x02136a58"
+    },
+    {
+      "symbol": "_ZTI7daOwl_c",
+      "disposition": "deadstrip-data",
+      "reason": "This class's __si_class_type_info, emitted with the vtable. Canonical copy ov094:0x02136a28.",
+      "canonical_module": "ov094",
+      "canonical_address": "0x02136a28"
+    },
+    {
+      "symbol": "_ZTS7daOwl_c",
+      "disposition": "deadstrip-data",
+      "reason": "Type name string. The cartridge holds '7daOwl_c' at ov094:0x02136a10.",
+      "canonical_module": "ov094",
+      "canonical_address": "0x02136a10"
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Inherited vague-linkage RTTI for the immediate base. Canonical copy ov002:0x021081c0.",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0"
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Inherited vague-linkage type name for dEnemyBase_c. Canonical copy ov002:0x021081cc.",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc"
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "Inherited vague-linkage RTTI for dActor_c. Canonical copy arm9:0x0208e390.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390"
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "Inherited vague-linkage type name for dActor_c. Canonical copy arm9:0x0208e384.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Inherited vague-linkage RTTI for dBase_c. Canonical copy arm9:0x02086e78.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Inherited vague-linkage type name for dBase_c. Canonical copy arm9:0x02086e54.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Inherited vague-linkage RTTI for fBase_c. Canonical copy arm9:0x02086d70.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Inherited vague-linkage type name for fBase_c. Canonical copy arm9:0x02086e60.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    }
+  ]
+}

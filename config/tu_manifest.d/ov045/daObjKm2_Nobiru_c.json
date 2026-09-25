@@ -1,0 +1,235 @@
+{
+  "id": "ov045/daObjKm2_Nobiru_c",
+  "module": "ov045",
+  "source": "src/actors/daObjKm2_Nobiru_c.cpp",
+  "promoted_source": "src/actors/daObjKm2_Nobiru_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2111840..0x2111ad4, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjKm2_Nobiru_c",
+    "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02111840",
+      "end": "0x02111ad4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN17daObjKm2_Nobiru_cD1Ev",
+      "address": "0x02111840",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN17daObjKm2_Nobiru_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN17daObjKm2_Nobiru_cD0Ev",
+      "address": "0x02111878",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN17daObjKm2_Nobiru_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN17daObjKm2_Nobiru_c23UpdateColliderTransformEv",
+      "address": "0x021118c4",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN17daObjKm2_Nobiru_c23UpdateColliderTransformEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN17daObjKm2_Nobiru_c20UpdateModelTransformEv",
+      "address": "0x021118f8",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN17daObjKm2_Nobiru_c20UpdateModelTransformEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN17daObjKm2_Nobiru_c16CleanupResourcesEv",
+      "address": "0x02111938",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN17daObjKm2_Nobiru_c16CleanupResourcesEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN17daObjKm2_Nobiru_c16OnPendingDestroyEv",
+      "address": "0x02111970",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN17daObjKm2_Nobiru_c16OnPendingDestroyEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN17daObjKm2_Nobiru_c6RenderEv",
+      "address": "0x02111974",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN17daObjKm2_Nobiru_c6RenderEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN17daObjKm2_Nobiru_c8BehaviorEv",
+      "address": "0x021119c0",
+      "size": "0x00000070",
+      "legacy_source": "src/_ZN17daObjKm2_Nobiru_c8BehaviorEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN17daObjKm2_Nobiru_c13InitResourcesEv",
+      "address": "0x02111a30",
+      "size": "0x000000a4",
+      "legacy_source": "src/_ZN17daObjKm2_Nobiru_c13InitResourcesEv.cpp",
+      "ordinal": 8
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Stretching platform, ov045 .text 0x02111840..0x02111ad4, 9 functions. Factory daObjKm2_Nobiru_c_classInit starts at the end of the span and stays in src/d_a_obj_km2_nobiru.c.",
+    "Out-of-line destructor under defer_codegen off emits D1, D0, then a homeless D2. SetFile and SetScaleY stay the mangled Fix12<int> calls; the method spelling DIFFs. func_0203aad0 and func_020396c0 stay calls; the scaleY field and unk_48 store DIFF."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov045-daObjKm2_Nobiru_c/daObjKm2_Nobiru_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 9,
+    "functions_declared": 9,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN17daObjKm2_Nobiru_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN17daObjKm2_Nobiru_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        20,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38
+      ],
+      "data": [
+        "_ZTV17daObjKm2_Nobiru_c",
+        "_ZTI17daObjKm2_Nobiru_c",
+        "_ZTS17daObjKm2_Nobiru_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI17daObjKm2_Nobiru_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS17daObjKm2_Nobiru_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV17daObjKm2_Nobiru_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN17daObjKm2_Nobiru_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless base-object destructor. defer_codegen off emits it after D1 and D0; no ROM symbol and no relocation from the kept functions."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "The destructor destroys Vector3 members and re-emits Vector3's empty destructor. Cartridge copy at arm9:0x020072c0."
+    },
+    {
+      "symbol": "_ZTV17daObjKm2_Nobiru_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov045",
+      "canonical_address": "0x02112e80",
+      "reason": "Key function re-emits this class's vtable. Cartridge copy at ov045:0x02112e80, outside this entry's .text 0x02111840..0x02111ad4."
+    },
+    {
+      "symbol": "_ZTI17daObjKm2_Nobiru_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov045",
+      "canonical_address": "0x02112e3c",
+      "reason": "Key function re-emits this class's typeinfo. Cartridge copy at ov045:0x02112e3c, outside this entry's .text 0x02111840..0x02111ad4."
+    },
+    {
+      "symbol": "_ZTS17daObjKm2_Nobiru_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov045",
+      "canonical_address": "0x02112e48",
+      "reason": "Key function re-emits this class's type name. Cartridge copy at ov045:0x02112e48, outside this entry's .text 0x02111840..0x02111ad4."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Key function re-emits dActor_c typeinfo. Cartridge copy at arm9:0x0208e390, outside this entry's .text 0x02111840..0x02111ad4."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Key function re-emits dActor_c type name. Cartridge copy at arm9:0x0208e384, outside this entry's .text 0x02111840..0x02111ad4."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Key function re-emits dBase_c typeinfo. Cartridge copy at arm9:0x02086e78, outside this entry's .text 0x02111840..0x02111ad4."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Key function re-emits dBase_c type name. Cartridge copy at arm9:0x02086e54, outside this entry's .text 0x02111840..0x02111ad4."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Key function re-emits fBase_c typeinfo. Cartridge copy at arm9:0x02086d70, outside this entry's .text 0x02111840..0x02111ad4."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Key function re-emits fBase_c type name. Cartridge copy at arm9:0x02086e60, outside this entry's .text 0x02111840..0x02111ad4."
+    }
+  ]
+}

@@ -21,8 +21,8 @@ _ZN15daYurei_Mucho_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x0211
 _ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player kind:function(arm,size=0x2c) addr:0x02116f14
 _ZN15daYurei_Mucho_c13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02116f40
 daYurei_Mucho_c_classInit kind:function(arm,size=0x50) addr:0x02116f48
-_ZN5SwoopD1Ev kind:function(arm,size=0x50) addr:0x02116f98
-_ZN5SwoopD0Ev kind:function(arm,size=0x64) addr:0x02116fe8
+_ZN12daBasabasa_cD1Ev kind:function(arm,size=0x50) addr:0x02116f98
+_ZN12daBasabasa_cD0Ev kind:function(arm,size=0x64) addr:0x02116fe8
 func_ov065_0211704c kind:function(arm,size=0x3b8) addr:0x0211704c
 func_ov065_02117404 kind:function(arm,size=0x1ac) addr:0x02117404
 func_ov065_021175b0 kind:function(arm,size=0x74) addr:0x021175b0
@@ -34,14 +34,14 @@ func_ov065_02117888 kind:function(arm,size=0x74) addr:0x02117888
 func_ov065_021178fc kind:function(arm,size=0x48) addr:0x021178fc
 func_ov065_02117944 kind:function(arm,size=0x50) addr:0x02117944
 func_ov065_02117994 kind:function(arm,size=0x110) addr:0x02117994
-_ZN5Swoop16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x02117aa4
-_ZN5Swoop16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02117aec
-_ZN5Swoop6RenderEv kind:function(arm,size=0x74) addr:0x02117af0
-_ZN5Swoop8BehaviorEv kind:function(arm,size=0x21c) addr:0x02117b64
-_ZN5Swoop13InitResourcesEv kind:function(arm,size=0x12c) addr:0x02117d80
-_ZN5Swoop16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02117eac
-_ZN5Swoop13OnTurnIntoEggER6Player kind:function(arm,size=0x2c) addr:0x02117eb4
-_ZN5Swoop13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02117ee0
+_ZN12daBasabasa_c16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x02117aa4
+_ZN12daBasabasa_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02117aec
+_ZN12daBasabasa_c6RenderEv kind:function(arm,size=0x74) addr:0x02117af0
+_ZN12daBasabasa_c8BehaviorEv kind:function(arm,size=0x21c) addr:0x02117b64
+_ZN12daBasabasa_c13InitResourcesEv kind:function(arm,size=0x12c) addr:0x02117d80
+_ZN12daBasabasa_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02117eac
+_ZN12daBasabasa_c13OnTurnIntoEggER6Player kind:function(arm,size=0x2c) addr:0x02117eb4
+_ZN12daBasabasa_c13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02117ee0
 daBasabasa_c_classInit kind:function(arm,size=0x58) addr:0x02117ee8
 _ZN9daDossy_cD1Ev kind:function(arm,size=0x68) addr:0x02117f40
 _ZN9daDossy_cD0Ev kind:function(arm,size=0x7c) addr:0x02117fa8
@@ -72,15 +72,15 @@ _ZN12daDossyCap_c13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x021195e4
 daDossyCap_c_classInit kind:function(arm,size=0x48) addr:0x021195ec
 daDossy_c_classInit kind:function(arm,size=0x88) addr:0x02119634
 _ZN14DorriePlatformC1Ev kind:function(arm,size=0x1c) addr:0x021196bc
-_ZN15TtcRotatingCubeD1Ev kind:function(arm,size=0x54) addr:0x021196d8
-_ZN15TtcRotatingCubeD0Ev kind:function(arm,size=0x68) addr:0x0211972c
-_ZN15TtcRotatingCube12UpdateShadowEv kind:function(arm,size=0x10c) addr:0x02119794
-_ZN15TtcRotatingCube10UpdateClsnEv kind:function(arm,size=0x6c) addr:0x021198a0
-_ZN15TtcRotatingCube11UpdateModelEv kind:function(arm,size=0x78) addr:0x0211990c
-_ZN15TtcRotatingCube16CleanupResourcesEv kind:function(arm,size=0x78) addr:0x02119984
-_ZN15TtcRotatingCube6RenderEv kind:function(arm,size=0x54) addr:0x021199fc
-_ZN15TtcRotatingCube8BehaviorEv kind:function(arm,size=0x1e8) addr:0x02119a50
-_ZN15TtcRotatingCube13InitResourcesEv kind:function(arm,size=0x284) addr:0x02119c38
+_ZN20daObjCtRotateBlock_cD1Ev kind:function(arm,size=0x54) addr:0x021196d8
+_ZN20daObjCtRotateBlock_cD0Ev kind:function(arm,size=0x68) addr:0x0211972c
+_ZN20daObjCtRotateBlock_c12UpdateShadowEv kind:function(arm,size=0x10c) addr:0x02119794
+_ZN20daObjCtRotateBlock_c10UpdateClsnEv kind:function(arm,size=0x6c) addr:0x021198a0
+_ZN20daObjCtRotateBlock_c11UpdateModelEv kind:function(arm,size=0x78) addr:0x0211990c
+_ZN20daObjCtRotateBlock_c16CleanupResourcesEv kind:function(arm,size=0x78) addr:0x02119984
+_ZN20daObjCtRotateBlock_c6RenderEv kind:function(arm,size=0x54) addr:0x021199fc
+_ZN20daObjCtRotateBlock_c8BehaviorEv kind:function(arm,size=0x1e8) addr:0x02119a50
+_ZN20daObjCtRotateBlock_c13InitResourcesEv kind:function(arm,size=0x284) addr:0x02119c38
 daObjCtRotateBlock_c_classInit_CT_MECHA02 kind:function(arm,size=0x40) addr:0x02119ebc
 daObjCtRotateBlock_c_classInit_CT_MECHA01 kind:function(arm,size=0x40) addr:0x02119efc
 _ZN16daObjCtMecha03_cD1Ev kind:function(arm,size=0x4c) addr:0x02119f3c
@@ -121,12 +121,12 @@ _ZN18daObjCtKaitendai_c8BehaviorEv kind:function(arm,size=0x138) addr:0x0211b508
 _ZN18daObjCtKaitendai_c13InitResourcesEv kind:function(arm,size=0x140) addr:0x0211b640
 daObjCtKaitendai_c_classInit_CT_MECHA07 kind:function(arm,size=0x38) addr:0x0211b780
 daObjCtKaitendai_c_classInit_CT_MECHA06 kind:function(arm,size=0x38) addr:0x0211b7b8
-_ZN15TtcRotatingGearD1Ev kind:function(arm,size=0x44) addr:0x0211b7f0
-_ZN15TtcRotatingGearD0Ev kind:function(arm,size=0x58) addr:0x0211b834
-_ZN15TtcRotatingGear16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0211b88c
-_ZN15TtcRotatingGear6RenderEv kind:function(arm,size=0x28) addr:0x0211b8d0
-_ZN15TtcRotatingGear8BehaviorEv kind:function(arm,size=0x190) addr:0x0211b8f8
-_ZN15TtcRotatingGear13InitResourcesEv kind:function(arm,size=0xf4) addr:0x0211ba88
+_ZN16daObjCtMecha08_cD1Ev kind:function(arm,size=0x44) addr:0x0211b7f0
+_ZN16daObjCtMecha08_cD0Ev kind:function(arm,size=0x58) addr:0x0211b834
+_ZN16daObjCtMecha08_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0211b88c
+_ZN16daObjCtMecha08_c6RenderEv kind:function(arm,size=0x28) addr:0x0211b8d0
+_ZN16daObjCtMecha08_c8BehaviorEv kind:function(arm,size=0x190) addr:0x0211b8f8
+_ZN16daObjCtMecha08_c13InitResourcesEv kind:function(arm,size=0xf4) addr:0x0211ba88
 daObjCtMecha08_c_classInit_CT_MECHA08B kind:function(arm,size=0x30) addr:0x0211bb7c
 daObjCtMecha08_c_classInit_CT_MECHA08A kind:function(arm,size=0x30) addr:0x0211bbac
 _ZN14TTC_MovingBeamD1Ev kind:function(arm,size=0x4c) addr:0x0211bbdc
@@ -189,7 +189,6 @@ data_ov065_0211cc58 kind:data(any) addr:0x0211cc58
 _ZTI12daBasabasa_c kind:data(any) addr:0x0211cc60
 _ZTS12daBasabasa_c kind:data(any) addr:0x0211cc6c
 g_profile_BASABASA kind:data(any) addr:0x0211cc7c ambiguous
-_ZTV5Swoop kind:data(any) addr:0x0211cca0
 _ZTV12daBasabasa_c kind:data(any) addr:0x0211cca0
 data_ov065_0211cd1c kind:data(any) addr:0x0211cd1c
 data_ov065_0211cd24 kind:data(any) addr:0x0211cd24
@@ -219,7 +218,6 @@ data_ov065_0211cfd4 kind:data(any) addr:0x0211cfd4
 data_ov065_0211cfd8 kind:data(any) addr:0x0211cfd8
 g_profile_CT_MECHA01 kind:data(any) addr:0x0211cfe8 ambiguous
 g_profile_CT_MECHA02 kind:data(any) addr:0x0211d004 ambiguous
-_ZTV15TtcRotatingCube kind:data(any) addr:0x0211d028
 _ZTV20daObjCtRotateBlock_c kind:data(any) addr:0x0211d028
 _ZTI16daObjCtMecha03_c kind:data(any) addr:0x0211d0a8
 _ZTS16daObjCtMecha03_c kind:data(any) addr:0x0211d0b4
@@ -252,7 +250,7 @@ _ZTI16daObjCtMecha08_c kind:data(any) addr:0x0211d434
 _ZTS16daObjCtMecha08_c kind:data(any) addr:0x0211d440
 g_profile_CT_MECHA08A kind:data(any) addr:0x0211d454 ambiguous
 g_profile_CT_MECHA08B kind:data(any) addr:0x0211d470 ambiguous
-_ZTV15TtcRotatingGear kind:data(any) addr:0x0211d494
+_ZTV16daObjCtMecha08_c kind:data(any) addr:0x0211d494
 _ZTI16daObjCtMecha09_c kind:data(any) addr:0x0211d514
 data_ov065_0211d520 kind:data(any) addr:0x0211d520
 _ZTS16daObjCtMecha09_c kind:data(any) addr:0x0211d530
