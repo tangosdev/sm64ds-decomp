@@ -34,6 +34,7 @@
 #include "SharedFilePtr.h"
 #include "Player.h"
 #include "Sound.h"
+#include "Particle__System.h"
 
 #pragma defer_codegen off
 
@@ -60,7 +61,6 @@ void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *a, int r, int h
 void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *a, const Vector3 *v, int r, int h, unsigned int e, unsigned int g);
 u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void *f, void *g);
-void *_ZN8Particle6System12FromUniqueIDEj(u32 id);
 void _ZN6Player6BounceE5Fix12IiE(void *p, int fix);
 int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const void *pos, u32 a, int fix, u32 b, u32 c, u32 d);
 void _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(
@@ -110,16 +110,16 @@ daFPkn_c::~daFPkn_c()
 // @symbol _ZN8daFPkn_c15SpawnDeathSmokeEv
 void daFPkn_c::SpawnDeathSmoke()
 {
-    void* o;
+    Particle::System *o;
     if (mModelAnim.file != data_ov084_02130e24.file)
         return;
 
     mParticleHandle1 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
         mParticleHandle1, 0xfc, mPosX, mPosY + 0x1e000, mPosZ, 0, 0);
     if (mParticleHandle1 != 0) {
-        o = _ZN8Particle6System12FromUniqueIDEj(mParticleHandle1);
+        o = Particle::System::FromUniqueID(mParticleHandle1);
         if (o != 0) {
-            *(int*)((char*)o + 0x50) = (short)(Fix12i)(((long long)mMaxScale * 0x2800 + 0x800) >> 12);
+            o->callbackScale = (short)(Fix12i)(((long long)mMaxScale * 0x2800 + 0x800) >> 12);
         }
     }
 
@@ -127,10 +127,10 @@ void daFPkn_c::SpawnDeathSmoke()
         mParticleHandle2, 0xfd, mPosX, mPosY + 0x1e000, mPosZ, 0, 0);
     if (mParticleHandle2 == 0)
         return;
-    o = _ZN8Particle6System12FromUniqueIDEj(mParticleHandle2);
+    o = Particle::System::FromUniqueID(mParticleHandle2);
     if (o == 0)
         return;
-    *(int*)((char*)o + 0x50) = (short)(Fix12i)(((long long)mMaxScale * 0x2800 + 0x800) >> 12);
+    o->callbackScale = (short)(Fix12i)(((long long)mMaxScale * 0x2800 + 0x800) >> 12);
 }
 
 // @symbol _ZN8daFPkn_c15SpawnDeathBurstEv
