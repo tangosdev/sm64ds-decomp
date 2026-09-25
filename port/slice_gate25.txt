@@ -47,11 +47,15 @@ src/SetSubBg2Offset.c
 
 src/_ZN5Stage16CheckCameraInputEv.cpp
 
-# Not here, on purpose. Each is reachable only from a LoadGraphics2D branch
-# the port does not take, and each drags something the port has no seam for;
-# hal/sub_screen.cpp stubs them by name and says so if one is ever called.
+# Not here, on purpose. Each was reachable only from a LoadGraphics2D branch
+# the port did not take, or dragged something the port had no seam for, and
+# hal/sub_screen.cpp stubbed them by name. Every one has since become the
+# matched body on another slice (hal/sub_screen.cpp says which, per leaf):
 #
 #   LoadFont3D             -> Message::LoadTextVS, the message-box text engine
+#                             (slice_vs, run vs1)
 #   LoadControllerModeText -> func_0201d590, the top-screen text rasteriser
-#   func_ov004_020adc4c    -> ov004, an overlay the port does not mount
+#                             (slice_w31_s42d.txt, run linkfull lane S42D)
+#   func_ov004_020adc4c    -> ov004's one BSS word, hal/oam2d_ov004_bss.cpp
+#                             (run linkw lane cat-2d)
 

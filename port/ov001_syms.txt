@@ -197,3 +197,40 @@ data_ov001_020abb18 data_ov001_020abb34 data_ov001_020abb54
 data_ov001_020abb74 data_ov001_020abb94 data_ov001_020abbb4
 data_ov001_020abbf4 data_ov001_020abcb4 data_ov001_020abd78
 data_ov001_020abd80
+
+# ---------------------------------------------------------------------------
+# run linkfull, wave 31B, lane S42D: THE PAUSE SCREEN'S CONTROLLER-MODE TEXT
+# SPRITES -- the whole span 0x020abd98..0x020ad450 that Stage::PS_Render
+# (src/_ZN5Stage9PS_RenderEv.cpp) indexes by the controller mode
+# data_0209f2dc (0, 1, 2) through one pointer table per language:
+#
+#   data_ov001_020abd98            language 5   4 pointers (0x10)
+#   data_ov001_020ac218            language 4   3 pointers (0xc)
+#   data_ov001_020ac64c            language 3   3 pointers (0xc)
+#   data_ov001_020acb68            language 2   3 pointers (0xc)
+#   OAM::CONTROLLER_MODE_TEXTS     every other  3 pointers (0xc):
+#         [0] OAM::STANDARD_MODE_TEXT 0x020ad188, [1] OAM::TOUCH_MODE_TEXT
+#         0x020ad058, [2] OAM::DUAL_HAND_MODE_TEXT 0x020ad2d0
+#
+# and the sixteen OamAttr lists those tables point at (each list 0x30 to
+# 0x1e8 bytes, every one ending on its own a3 == 0xffff terminator exactly
+# where config's next symbol starts -- read out of
+# extracted/overlays/overlay_0001.bin, base 0x020aa420). config names all 21
+# (config/arm9/overlays/ov001/symbols.txt:112-132), their deltas sum to the
+# span (0x16b8 bytes, no hole), and relocs.txt has exactly sixteen kind:load
+# rows inside it, all module:overlay(1), all targets inside it: ovdata's own
+# pointer pass rebases every one, so the tables come up pointing at the
+# hosted lists. Until now this span was --pack's zero padding
+# (pk001_gap_020abd98), and Stage::PS_Render was a seam in hal/stage_frame.cpp
+# for want of it; port/slice_w31_s42d.txt compiles the body.
+#
+# `ambiguous` on five of them is the ov000/ov001 shared-base shape the header
+# of this file explains; an ov000 word (0x020bd834) and an ov075 word
+# (0x0211c9d0) point into the span too, and those stay the --cross pass's to
+# decide by residency, as before.
+data_ov001_020abd98 data_ov001_020abda8 data_ov001_020abdd8 data_ov001_020abf20
+data_ov001_020ac078 data_ov001_020ac218 data_ov001_020ac224 data_ov001_020ac35c
+data_ov001_020ac4ac data_ov001_020ac64c data_ov001_020ac658 data_ov001_020ac7e0
+data_ov001_020ac980 data_ov001_020acb68 data_ov001_020acb74 data_ov001_020accfc
+data_ov001_020ace84 _ZN3OAM21CONTROLLER_MODE_TEXTSE _ZN3OAM15TOUCH_MODE_TEXTE
+_ZN3OAM18STANDARD_MODE_TEXTE _ZN3OAM19DUAL_HAND_MODE_TEXTE

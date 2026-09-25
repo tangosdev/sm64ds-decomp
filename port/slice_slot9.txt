@@ -48,7 +48,11 @@
 # WHAT IS NOT IN THE SLICE, AND WHY -- THREE SEAMS, NAMED.  Stage::PS_Render,
 # Stage::LC_Render and Stage::RenderVsModeNewStar are the three of section 6's
 # twelve this lane does not enrol.  Their bodies are matched and ready; what
-# they want is SPRITE TEMPLATE DATA that is not mounted:
+# they want is SPRITE TEMPLATE DATA that is not mounted.  (Run linkfull, lane
+# S42D, later mounted PS_Render's and LC_Render's data -- the ov002 rows and
+# the whole ov001 span below -- and compiles those two bodies from
+# port/slice_w31_s42d.txt; only RenderVsModeNewStar is still the seam, and it
+# is VS, parked.  The list below is kept as this gate's own record.)
 #
 #   PS_Render              OAM::PAUSE, OAM::VS_PAUSE, OAM::MM_SMALL_STAR,
 #                          OAM::TINY_STAR, OAM::ARROW_POINTING_LEFT/RIGHT and

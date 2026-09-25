@@ -1,0 +1,40 @@
+# S42D (run linkfull, wave 31B): THE PAUSE SCREEN, THE LEVEL-CLEAR BANNER
+# AND THE CONTROLLER-MODE CAPTIONS -- four matched TUs that draw sprite and
+# text elements, each in place of a host stand-in the same commit retires.
+#
+# THE DATA CAME FIRST. port/ov002_syms.txt carries the eighteen OamAttr lists
+# Stage::PS_Render and Stage::LC_Render hand OAM::Render (eight and ten, no
+# relocations inside any of them), and port/ov001_syms.txt the whole
+# controller-mode text span 0x020abd98..0x020ad450 (five per-language pointer
+# tables and the sixteen lists they point at; ovdata's own pointer pass
+# rebases the sixteen interior pointers). Both mounts' headers carry the ROM
+# evidence: every list's a3 == 0xffff terminator lands exactly where config's
+# next symbol starts. Without that data the two Render bodies were seams in
+# hal/stage_frame.cpp (run link100, lane RENDER9), loud once and drawing
+# nothing.
+#
+# WHO CALLS WHAT. Stage::Render (_ZTV5Stage slot 9, src/_ZN5Stage6RenderEv.cpp,
+# gate slot9) calls PS_Render while the game is paused and LC_Render as its
+# last statement every frame. Stage::LoadGraphics2D (gate 25) calls
+# LoadControllerModeText(0x280) on every single-player level load, and that
+# body calls func_0201d590 three times, once per caption. So the two Render
+# TUs go where hal/stage_frame.cpp is (walk_window, walk_window_hires), and the
+# two caption TUs go where hal/sub_screen.cpp's retired stub was (those two
+# plus smoke_player): a line ending in the word `alltargets` is one of the
+# latter.
+#
+# The one spelling PS_Render needs that the link did not have, the flat
+# _ZN5Stage12RenderNumberEhiibi for the decorated static member, is an
+# /alternatename beside the retired seams in hal/stage_frame.cpp.
+#
+# NOT HERE: Stage::RenderVsModeNewStar (VS, parked; its five ov002 rows stay
+# unmounted and its seam stays in hal/stage_frame.cpp).
+
+# Slot 9's two renderers, the two window targets.
+src/_ZN5Stage9PS_RenderEv.cpp
+src/_ZN5Stage9LC_RenderEv.cpp
+
+# The controller-mode captions (the BG2 text layer of the top screen), every
+# target that compiles hal/sub_screen.cpp.
+src/LoadControllerModeText.c alltargets
+src/func_0201d590.cpp alltargets

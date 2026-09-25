@@ -23623,3 +23623,38 @@ endif()
 foreach(_trs5a walk_window walk_window_hires smoke_player)
     target_sources(${_trs5a} PRIVATE ${SLICE_W31_RS5A_SOURCES})
 endforeach()
+
+# ===========================================================================
+# S42D (run linkfull, wave 31B): THE PAUSE SCREEN, THE LEVEL-CLEAR BANNER AND
+# THE CONTROLLER-MODE CAPTIONS
+# ===========================================================================
+#
+# port/slice_w31_s42d.txt carries the four matched TUs this lane arms, each in
+# place of a host stand-in the same commit retires (the slice file names
+# which). Stage::PS_Render and Stage::LC_Render go to the two targets that
+# compile hal/stage_frame.cpp, whose seams they replace; a line ending in the
+# word `alltargets` (LoadControllerModeText and func_0201d590, replacing the
+# stub in hal/sub_screen.cpp) goes to all three hosting targets, because that
+# file is on all three. The sprite template data both renderers read is in
+# port/ov002_syms.txt and port/ov001_syms.txt, consumed by the mounts above;
+# nothing here is hostgen'd (no raw MMIO in any of the four).
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_s42d.txt" SLICE_W31_S42D_LINES)
+set(SLICE_W31_S42D_SOURCES "")
+set(SLICE_W31_S42D_ALL_SOURCES "")
+foreach(line IN LISTS SLICE_W31_S42D_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    if(line MATCHES "^(src/[^ ]+)[ ]+alltargets$")
+        list(APPEND SLICE_W31_S42D_ALL_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${CMAKE_MATCH_1}")
+    else()
+        list(APPEND SLICE_W31_S42D_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+    endif()
+endforeach()
+foreach(_tw31s42d walk_window walk_window_hires)
+    target_sources(${_tw31s42d} PRIVATE ${SLICE_W31_S42D_SOURCES})
+endforeach()
+foreach(_tw31s42d walk_window walk_window_hires smoke_player)
+    target_sources(${_tw31s42d} PRIVATE ${SLICE_W31_S42D_ALL_SOURCES})
+endforeach()
