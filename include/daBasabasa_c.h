@@ -1,9 +1,9 @@
-#ifndef SWOOP_H
-#define SWOOP_H
+#ifndef DABASABASA_C_H
+#define DABASABASA_C_H
 
 #include "types.h"
 
-/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN5SwoopD1Ev`
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN12daBasabasa_cD1Ev`
  * stores this vtable, destroys five members, then calls `dEnemyBase_c::~dEnemyBase_c`.
  * Everything this header used to restate below 0x110 belongs to that chain and
  * is inherited now.
@@ -38,13 +38,13 @@
 #include "ShadowModel.h"
 #include "dBgCh_Actr.h"
 
-struct Swoop : dEnemyBase_c {
+struct daBasabasa_c : dEnemyBase_c {
     /* What mCurrentState points at. Behavior compares it against objects in
        ov065's data and calls the handler at +0x08 through it. Only that
        handler is evidenced. */
     struct State {
         u8  pad_00[0x8];
-        void (Swoop::*mMain)();       /* 0x08 */
+        void (daBasabasa_c::*mMain)();       /* 0x08 */
     };
 
     dCcAc_c mdCcAc_c; /* 0x110 */
@@ -64,7 +64,7 @@ struct Swoop : dEnemyBase_c {
     u8  unk_43c;                      /* 0x43c */
 
     /* --- vtable --- */
-    virtual ~Swoop();
+    virtual ~daBasabasa_c();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
     virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
@@ -79,7 +79,7 @@ struct Swoop : dEnemyBase_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char Swoop_size_must_be_0x440[sizeof(Swoop) == 0x440 ? 1 : -1];
+typedef char daBasabasa_c_size_must_be_0x440[sizeof(daBasabasa_c) == 0x440 ? 1 : -1];
 #endif
 
-#endif /* SWOOP_H */
+#endif /* DABASABASA_C_H */
