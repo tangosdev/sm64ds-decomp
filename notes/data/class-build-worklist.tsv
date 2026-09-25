@@ -300,7 +300,7 @@ daObjWc_Obj05_c	DONE	include\daObjWc_Obj05_c.h	dBgActor_c	0	ov029	6
 daObjWlKoopaShutter_c	DONE	include\daObjWlKoopaShutter_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov026	6
 daObjWlSubmarine_c	DONE	include\daObjWlSubmarine_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov026	5
 daObjYajirusi_c	DONE	include\daObjYajirusi_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov098	9
-daOnms_c	DONE	include\ToxBox.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov092	6
+daOnms_c	DONE	include\daOnms_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov092	6
 daPgDfdr_c	DONE	include\daPgDfdr_c.h	dBgActor_c	0	ov027	7
 daPiano_c	DONE	include\daPiano_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov063	6
 daSlide_Box_c	DONE	include\daSlide_Box_c.h	dBgActor_c	0	ov016	7
@@ -309,7 +309,7 @@ daOts_c	DONE	include\daOts_c.h	dEnemyBase_c	3	ov064	11
 dCapEnemy_c	DONE	include\dCapEnemy_c.h	dEnemyBase_c	2	arm9;ov002	14
 da1up_c	DONE	include\da1up_c.h	dEnemyBase_c	0	ov002	9
 daBakubaku_c	DONE	include\daBakubaku_c.h	dEnemyBase_c	0	ov032	8
-daBasabasa_c	DONE	include\Swoop.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov065	10
+daBasabasa_c	DONE	include\daBasabasa_c.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov065	10
 daBbl_c	DONE	include\daBbl_c.h	dEnemyBase_c	0	ov064	8
 daBmb_c	DONE	include\daBmb_c.h	dEnemyBase_c	0	ov102	9
 daBombking_c	DONE	include\daBombking_c.h	dEnemyBase_c	0	ov078	8

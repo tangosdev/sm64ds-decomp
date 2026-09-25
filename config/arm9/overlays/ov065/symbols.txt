@@ -21,8 +21,8 @@ _ZN15daYurei_Mucho_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x0211
 _ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player kind:function(arm,size=0x2c) addr:0x02116f14
 _ZN15daYurei_Mucho_c13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02116f40
 daYurei_Mucho_c_classInit kind:function(arm,size=0x50) addr:0x02116f48
-_ZN5SwoopD1Ev kind:function(arm,size=0x50) addr:0x02116f98
-_ZN5SwoopD0Ev kind:function(arm,size=0x64) addr:0x02116fe8
+_ZN12daBasabasa_cD1Ev kind:function(arm,size=0x50) addr:0x02116f98
+_ZN12daBasabasa_cD0Ev kind:function(arm,size=0x64) addr:0x02116fe8
 func_ov065_0211704c kind:function(arm,size=0x3b8) addr:0x0211704c
 func_ov065_02117404 kind:function(arm,size=0x1ac) addr:0x02117404
 func_ov065_021175b0 kind:function(arm,size=0x74) addr:0x021175b0
@@ -34,14 +34,14 @@ func_ov065_02117888 kind:function(arm,size=0x74) addr:0x02117888
 func_ov065_021178fc kind:function(arm,size=0x48) addr:0x021178fc
 func_ov065_02117944 kind:function(arm,size=0x50) addr:0x02117944
 func_ov065_02117994 kind:function(arm,size=0x110) addr:0x02117994
-_ZN5Swoop16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x02117aa4
-_ZN5Swoop16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02117aec
-_ZN5Swoop6RenderEv kind:function(arm,size=0x74) addr:0x02117af0
-_ZN5Swoop8BehaviorEv kind:function(arm,size=0x21c) addr:0x02117b64
-_ZN5Swoop13InitResourcesEv kind:function(arm,size=0x12c) addr:0x02117d80
-_ZN5Swoop16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02117eac
-_ZN5Swoop13OnTurnIntoEggER6Player kind:function(arm,size=0x2c) addr:0x02117eb4
-_ZN5Swoop13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02117ee0
+_ZN12daBasabasa_c16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x02117aa4
+_ZN12daBasabasa_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02117aec
+_ZN12daBasabasa_c6RenderEv kind:function(arm,size=0x74) addr:0x02117af0
+_ZN12daBasabasa_c8BehaviorEv kind:function(arm,size=0x21c) addr:0x02117b64
+_ZN12daBasabasa_c13InitResourcesEv kind:function(arm,size=0x12c) addr:0x02117d80
+_ZN12daBasabasa_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02117eac
+_ZN12daBasabasa_c13OnTurnIntoEggER6Player kind:function(arm,size=0x2c) addr:0x02117eb4
+_ZN12daBasabasa_c13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02117ee0
 daBasabasa_c_classInit kind:function(arm,size=0x58) addr:0x02117ee8
 _ZN9daDossy_cD1Ev kind:function(arm,size=0x68) addr:0x02117f40
 _ZN9daDossy_cD0Ev kind:function(arm,size=0x7c) addr:0x02117fa8
@@ -189,7 +189,6 @@ data_ov065_0211cc58 kind:data(any) addr:0x0211cc58
 _ZTI12daBasabasa_c kind:data(any) addr:0x0211cc60
 _ZTS12daBasabasa_c kind:data(any) addr:0x0211cc6c
 g_profile_BASABASA kind:data(any) addr:0x0211cc7c ambiguous
-_ZTV5Swoop kind:data(any) addr:0x0211cca0
 _ZTV12daBasabasa_c kind:data(any) addr:0x0211cca0
 data_ov065_0211cd1c kind:data(any) addr:0x0211cd1c
 data_ov065_0211cd24 kind:data(any) addr:0x0211cd24
