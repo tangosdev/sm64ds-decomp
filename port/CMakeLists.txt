@@ -23301,3 +23301,29 @@ endif()
 foreach(_tw28dpad1 walk_window walk_window_hires smoke_player)
     target_sources(${_tw28dpad1} PRIVATE ${SLICE_W28_DPAD1_SOURCES})
 endforeach()
+
+# ===========================================================================
+# W31 SMALLS2 (run linkfull wave 31, lane SMALLS2)
+# ===========================================================================
+# Matched TUs the linkage census listed as MSVC front-end refusals. Each
+# refusal is gone from the synced src and each TU compiles clean here; what
+# held it out was a FORWARD row in port/faces_sync.txt, which defined the
+# member the TU defines. The rows are flipped to REVERSE and the host copies
+# retired, so the matched bodies run as the game's own code (the FACEFLIP1
+# shape above). port/slice_w31_smalls2.txt carries the rows and the evidence.
+# All three targets take them, because the reverse faces are in
+# ${PORT_FACES_SYNC_GEN}, which all three link, and the ROM-shaped callers
+# (the ov063 / ov085 slot thunks, Peach's InitState0 / InitState4) are in all
+# three. The slice names no PORT_HOSTGEN_TU row.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_smalls2.txt" SLICE_W31_SMALLS2_LINES)
+set(SLICE_W31_SMALLS2_SOURCES "")
+foreach(line IN LISTS SLICE_W31_SMALLS2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W31_SMALLS2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_w31s2_t walk_window walk_window_hires smoke_player)
+    target_sources(${_w31s2_t} PRIVATE ${SLICE_W31_SMALLS2_SOURCES})
+endforeach()

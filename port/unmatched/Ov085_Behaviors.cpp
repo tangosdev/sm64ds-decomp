@@ -1,5 +1,10 @@
 /* HOST REIMPLEMENTATIONS of ov085 slot 6 for WALL_SIGN (183) and TOAD (185).
  *
+ * WALL_SIGN'S HALF IS RETIRED (run linkfull lane SMALLS2): its matched TU,
+ * src/_ZN8WallSign8BehaviorEv.cpp, runs in its place; see the note where its
+ * body stood. Only TOAD's body below is still compiled. The rest of this
+ * header is the record written when both were here.
+ *
  * These two are not host COPIES of a matched source the way the rest of
  * port/unmatched is. Neither body is decompiled at all: src/ has no
  * _ZN8WallSign8BehaviorEv and no _ZN4Toad8BehaviorEv, and neither address
@@ -148,121 +153,17 @@ int ApproachLinear2(int &ref, int target, int step);
 
 extern "C" {
 
-/* ==========================================================================
- * WALL_SIGN (actor 183), ov085 0x0212eea4, 0x30c bytes
- * ==========================================================================
- *
- * The readable wall sign in the castle. Its whole body is one talk sequence
- * with a three-step approach:
- *
- *   NOT TALKING   look for a Player standing in front. The touch record the
- *                 MovingCylinderClsnWithPos at +0x320 leaves is +0x340 bit
- *                 0x8000000 (who) and +0x344 (that actor's id); the toucher
- *                 has to really be a Player (actor id 0xbf) and has to be
- *                 within 0x4000 of the sign's own facing before StartTalk.
- *   TALKING       a three-state machine at +0x364 that walks the player onto
- *                 the reading spot 0x5a000 in front of the sign, turns him to
- *                 face it, and then opens the message.
- *
- * The message id is the actor's own spawn parameter (+0x8, 0xffff meaning
- * "none") stashed at +0x366 before the call.
- */
-/* PORT_HOST_ABI: none of its own. Every call below is a plain cdecl C name or
- * an already-hosted face; the body has no vtable dispatch at all. */
-int _ZN8WallSign8BehaviorEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    char *pl = *(char **)(c + 0x360);      /* the Player being talked to */
-
-    if (pl != 0) {
-        PortVec3 selfPos, front, playerPos;
-        unsigned a = (unsigned)*(unsigned short *)(c + 0x8e) >> 4;
-
-        /* the sign's own position, which is also the message's anchor */
-        selfPos.x = *(int *)(c + 0x5c);
-        selfPos.y = *(int *)(c + 0x60);
-        selfPos.z = *(int *)(c + 0x64);
-
-        /* and the reading spot: 0x5a000 along the sign's facing. The ROM
-           does the fixed-point multiply as a signed 64-bit product with a
-           0x800 round and a >>12, which is what this spells. */
-        front.x = *(int *)(c + 0x5c)
-                + (int)(((long long)data_02082214[a * 2] * 0x5a000 + 0x800) >> 12);
-        front.y = *(int *)(c + 0x60);
-        front.z = *(int *)(c + 0x64)
-                + (int)(((long long)data_02082214[a * 2 + 1] * 0x5a000 + 0x800) >> 12);
-
-        playerPos.x = *(int *)(pl + 0x5c);
-        playerPos.y = *(int *)(pl + 0x60);
-        playerPos.z = *(int *)(pl + 0x64);
-
-        switch (_ZN6Player12GetTalkStateEv(pl)) {
-        case 0:
-            switch (*(unsigned char *)(c + 0x364)) {
-            case 0:
-                /* close enough already: skip the walk */
-                if (Vec3_HorzDist(&playerPos, &front) < 0x32000) {
-                    *(unsigned char *)(c + 0x364) += 1;
-                    break;
-                }
-                /* otherwise turn the PLAYER toward the reading spot first,
-                   and start his walk animation once he is facing it */
-                if (_Z14ApproachLinearRsss((short *)(pl + 0x8e),
-                                           Vec3_HorzAngle(&playerPos, &front),
-                                           0x800)) {
-                    *(unsigned char *)(c + 0x364) += 1;
-                    func_ov002_020bec9c(pl, 1, 0, 0x1000, 0);
-                }
-                break;
-            case 1:
-                /* walk him onto the spot, then back to the idle animation */
-                if (Vec3_ApproachHorz(pl + 0x5c, &front, 0xa000)) {
-                    func_ov002_020bec9c(pl, 0, 0, 0x1000, 0);
-                    *(unsigned char *)(c + 0x364) += 1;
-                }
-                break;
-            case 2:
-                /* turn him to face the sign (its facing + 0x8000) and open
-                   the box */
-                if (_Z14ApproachLinearRsss(
-                        (short *)(pl + 0x8e),
-                        (short)(*(short *)(c + 0x8e) + 0x8000), 0x800)) {
-                    unsigned param = *(unsigned *)(c + 8);
-                    *(unsigned short *)(c + 0x366) = 0;
-                    if (param != 0xffff)
-                        *(unsigned short *)(c + 0x366) = (unsigned short)param;
-                    _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(
-                        pl, c, (unsigned)*(short *)(c + 0x366), &selfPos, 0, 1);
-                    *(unsigned char *)(c + 0x364) = 0;
-                }
-                break;
-            }
-            break;
-        case 1:
-            break;
-        default:
-            /* he walked away or the box closed: drop the reference */
-            *(void **)(c + 0x360) = 0;
-            break;
-        }
-    } else if ((*(unsigned *)(c + 0x340) & 0x8000000) != 0) {
-        char *o = (char *)_ZN8dActor_c10FindWithIDEj(*(unsigned *)(c + 0x344));
-        if (o != 0 && *(unsigned short *)(o + 0xc) == 0xbf) {
-            PortVec3 pv;
-            pv.x = *(int *)(o + 0x5c);
-            pv.y = *(int *)(o + 0x60);
-            pv.z = *(int *)(o + 0x64);
-            if (AngleDiff(Vec3_HorzAngle(c + 0x5c, &pv),
-                          *(short *)(c + 0x8e)) < 0x4000
-                && _ZN6Player9StartTalkER7fBase_cb(o, c, 0))
-                *(void **)(c + 0x360) = o;
-        }
-    }
-
-    _ZN5dCc_c5ClearEv(c + 0x320);
-    _ZN5dCc_c6UpdateEv(c + 0x320);
-    return 1;
-}
+/* WALL_SIGN (actor 183), ov085 0x0212eea4, 0x30c bytes: RETIRED HERE.
+ * The body this file carried was written from the ROM before the function
+ * was decompiled. src/_ZN8WallSign8BehaviorEv.cpp is matched now (MATCHING
+ * 2004/b56, --strict-relocs, at ov085 0x0212eea4) and compiles clean under
+ * the port's own compile line, so run linkfull lane SMALLS2 flipped its
+ * port/faces_sync.txt row to REVERSE and put the TU on
+ * port/slice_w31_smalls2.txt: slot 6's flat name __ZN8WallSign8BehaviorEv is
+ * the generated face into WallSign::Behavior, which is the ROM's own code.
+ * The matched body makes the same fifteen calls in the same order as the
+ * one that stood here, including hazard (2): the player, not the sign, is
+ * the receiver of the approach calls. */
 
 /* ==========================================================================
  * TOAD (actor 185), ov085 0x02129878, 0x204 bytes
