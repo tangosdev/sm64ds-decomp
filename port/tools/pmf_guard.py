@@ -288,6 +288,12 @@ LEDGER = [
      "are the matched walks src/func_02043fdc.cpp and src/func_020441cc.cpp, "
      "which call `(node->obj->*thiz->callback)()` with ecx = obj + delta and "
      "nothing pushed"),
+    ("ECX", r"^_data_02099e(74|7c|84|8c|94|9c|a4|ac|b4|bc|c4|cc)$",
+     "the twelve virtual member-pointer records the four ActorBase::Process "
+     "wrappers pass by value into src/_ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_"
+     "FvjE.cpp, which calls each `(self->*pmf)()` / `(self->*pmf)(code)` with "
+     "ecx = self + delta, the code pushed and callee-popped; hal/pmf3_cells.cpp"
+     " hosts each as {face, 0}"),
 ]
 
 
