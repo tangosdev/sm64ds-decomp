@@ -28905,6 +28905,9 @@
     "data_ov065_0211d6e0": {
       "src/__sinit_ov065_0211c2a8.c": [
         "return:S8 []"
+      ],
+      "src/actors/daBasabasa_c.cpp": [
+        "return:daBasabasa_c::State"
       ]
     },
     "data_ov065_0211d6f0": {
