@@ -5179,12 +5179,11 @@ void hal_touch_client_probe(void)
     std::fflush(stderr);
 }
 
-// ---- the three leaves LoadGraphics2D names but never reaches ---------------
+// ---- the three leaves LoadGraphics2D names, and what became of each --------
 //
-// Each of these sits on a branch the port does not take, and each drags a
-// subsystem with no host seam behind it. They are stubbed by name rather than
-// sliced in, and each says so if it is ever actually called -- which would
-// mean the branch analysis is wrong, not that the stub is.
+// Each once sat on a branch the port did not take, or dragged a subsystem with
+// no host seam behind it, and was stubbed here by name. None is stubbed here
+// any more; the three blocks below say where each body came from.
 
 /* LoadFont3D is NOT faced here any more (VS wiring lane, run vs1). The
    "only from LoadGraphics2D(b != 0)" premise stopped holding when scene 6
@@ -5198,18 +5197,25 @@ void hal_touch_client_probe(void)
    src/LoadFont3D.c is the body, compiled by slice_vs. Leaving the stub here
    would be a duplicate definition -- the wave-C precedent above. */
 
-/* Top-screen furniture: it rasterises the controller-mode caption into
-   G2::GetBG2CharPtr through func_0201d590, the main engine's text path. The
-   bottom screen never reads any of it.
-   PORT_HOST_ABI: src writes the top-screen BG2 text layer, a subsystem the port
-   does not host. */
-void LoadControllerModeText(int a)
-{
-    static int said;
-    if (!said++)
-        std::printf("  [sub] LoadControllerModeText(%d): top-screen text is "
-                    "not hosted\n", a);
-}
+/* LoadControllerModeText is NOT stubbed here any more (run linkfull, wave 31B,
+   lane S42D). The stub that stood here said the top-screen BG2 text layer was
+   "a subsystem the port does not host", and that stopped being true when
+   hal/message_compositor.cpp started scanning engine A's text BGs over the 3D
+   frame: the caption path is the same one the dialogue box already takes.
+   Stage::LoadGraphics2D calls LoadControllerModeText(0x280) on every single-
+   player level load; the matched src/LoadControllerModeText.c rasterises the
+   three mode captions (message 0x280, 0x281, 0x282) through func_0201d590
+   (src/func_0201d590.cpp: the font blit into G2::GetBG2CharPtr, tiles 0x280
+   and up) and writes their tile rows into G2::GetBG2ScrPtr at +0x40, +0x840
+   and +0x1040 -- row 1 of three consecutive 2 KB screen blocks. Stage::
+   PS_Update's controller-mode page (case 7) then points BG2CNT's screen base
+   at block 0xd + the chosen mode, which is how ONE of the three captions
+   shows on the top screen while that page is up and none of them otherwise.
+   Every callee and every global of both bodies was already in the link
+   (func_0201eaac, func_0201b6f8, func_0201b100, MultiStore_Int, the G2
+   getters); port/slice_w31_s42d.txt compiles the two TUs on all three
+   targets this file is on. Leaving the stub here would be a duplicate
+   definition -- the LoadFont3D precedent above. */
 
 /* The third leaf, func_ov004_020adc4c, is NOT stubbed here any more (run linkw
    wave C, lane cat-2d). It was tagged `src reads data_ov004_020beb60, and

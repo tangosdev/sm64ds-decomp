@@ -51,6 +51,14 @@ extern void *data_ov002_0210c230[];
 extern void *_ZN3OAM17VS_YELLOW_NUMBERSE[];
 /* ov001's digit table, which HUD::RenderCoinCount and its siblings index. */
 extern void *_ZN3OAM7NUMBERSE[];
+/* The pause screen's controller-mode title sprites, from Stage::PS_Render
+   (run linkfull lane S42D): one table per language, indexed by the controller
+   mode data_0209f2dc. ov001 0x020abd98..0x020ad450, port/ov001_syms.txt. */
+extern void *data_ov001_020abd98[];
+extern void *data_ov001_020ac218[];
+extern void *data_ov001_020ac64c[];
+extern void *data_ov001_020acb68[];
+extern void *_ZN3OAM21CONTROLLER_MODE_TEXTSE[];
 
 /* the WALKING overload, which is the one every sprite-list caller reaches:
    OAM::RenderSub forwards straight to it. */
@@ -87,7 +95,11 @@ struct Table {
      MM_STAR_KEYS      sel is 0 or 1.
      0210c748/0210cac8 12 bytes = 3, indexed by data_0209f370[i].
      0210c230          36 bytes = 9, HUD::RenderHealthMeter's segments.
-     NUMBERS           80 bytes in ov001; ten digit pointers plus padding. */
+     NUMBERS           80 bytes in ov001; ten digit pointers plus padding.
+     controller texts  the mode data_0209f2dc is 0, 1 or 2 (PS_Update case 7
+                       loads it from the save slot; cases 8 store those three),
+                       so 3 is the reach; the language-5 table holds a fourth
+                       pointer no caller indexes. */
 const Table kTables[] = {
     {"OAM::MM_PLAYER_ICONS",       _ZN3OAM15MM_PLAYER_ICONSE,     16},
     {"OAM::MM_VS_PLAYER_ICONS",    _ZN3OAM18MM_VS_PLAYER_ICONSE,  16},
@@ -99,6 +111,11 @@ const Table kTables[] = {
     {"data_ov002_0210c230",        data_ov002_0210c230,            9},
     {"OAM::VS_YELLOW_NUMBERS",     _ZN3OAM17VS_YELLOW_NUMBERSE,   10},
     {"OAM::NUMBERS",               _ZN3OAM7NUMBERSE,              10},
+    {"data_ov001_020abd98",        data_ov001_020abd98,            3},
+    {"data_ov001_020ac218",        data_ov001_020ac218,            3},
+    {"data_ov001_020ac64c",        data_ov001_020ac64c,            3},
+    {"data_ov001_020acb68",        data_ov001_020acb68,            3},
+    {"OAM::CONTROLLER_MODE_TEXTS", _ZN3OAM21CONTROLLER_MODE_TEXTSE, 3},
 };
 
 /* An OamAttr is eight bytes and the fourth halfword is the one the walk tests.

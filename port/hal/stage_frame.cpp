@@ -282,32 +282,50 @@ int OAM::Render(bool draw, OamAttr *obj, int px, int py, int pal, int prio,
     return 0;
 }
 
-/* ---- SLOT 9's THREE SEAMS (run link100, lane RENDER9) ---------------------
+/* ---- SLOT 9's SEAMS (run link100, lane RENDER9; two of the three retired by
+ * run linkfull, lane S42D) ---------------------------------------------------
  *
- * Stage::PS_Render, Stage::LC_Render and Stage::RenderVsModeNewStar are three
- * of section 6's twelve pieces, and they are the three this lane does not
- * enrol. Every one of them is a MATCHED body sitting in src/ ready to link;
- * what none of them has is its SPRITE TEMPLATE DATA. The templates are ov002
- * records at 0x0210c548..0x0210d188 and five ov001 records past the
- * 0x020ab800..0x020abb00 span port/ov001_syms.txt mounts -- fourteen rows in
- * port/ov002_syms.txt and a span extension in port/ov001_syms.txt, which are
- * the mount lane's files. port/stage_lifecycle_map.txt section 6 called this
- * exactly ("a row in port/ov002_syms.txt -- the mount lane's file, not this
- * one's") and section 13c kept it on the blocked list for the same reason.
- * port/slice_slot9.txt lists every symbol each one wants.
+ * Stage::PS_Render, Stage::LC_Render and Stage::RenderVsModeNewStar were three
+ * of section 6's twelve pieces, and the three RENDER9 did not enrol. Every one
+ * was a MATCHED body sitting in src/ ready to link; what none of them had was
+ * its SPRITE TEMPLATE DATA -- ov002 OamAttr records at 0x0210c548..0x0210d188
+ * and the ov001 span 0x020abd98..0x020ad450 past the 0x020ab800..0x020abb00
+ * run port/ov001_syms.txt mounted. port/stage_lifecycle_map.txt section 6
+ * called this exactly ("a row in port/ov002_syms.txt -- the mount lane's
+ * file, not this one's") and section 13c kept it on the blocked list for the
+ * same reason. port/slice_slot9.txt lists every symbol each one wants.
  *
- * THEY ARE BEHAVIOUR-NEUTRAL AGAINST WHAT THEY REPLACE, which is the half that
- * makes seaming them honest rather than convenient. Nothing in the port drew
- * the pause screen, the level-clear banner or the VS new-star popup before
- * this commit either: Stage::Render never ran, so none of the three had a
- * caller. The seat does not take a drawn thing away; it declines to add one.
+ * TWO OF THE THREE ARE THE ROM'S OWN BODIES NOW. port/ov002_syms.txt carries
+ * the eight OamAttr rows PS_Render reads (OAM::PAUSE, VS_PAUSE, MM_SMALL_STAR,
+ * TINY_STAR, the two arrows and the two small arrows) and the ten LC_Render
+ * reads (0x0210caf4..0x0210cfa0, the level-clear banner's text sprites, five
+ * languages by two texts); port/ov001_syms.txt carries the whole controller-
+ * mode text span (21 symbols: five per-language pointer tables, incl.
+ * OAM::CONTROLLER_MODE_TEXTS, and the sixteen lists they point at, the
+ * sixteen interior pointers rebased by ovdata's own pass). With the data
+ * hosted, src/_ZN5Stage9PS_RenderEv.cpp and src/_ZN5Stage9LC_RenderEv.cpp
+ * compile in place of the two seams that stood here (port/slice_w31_s42d.txt,
+ * the two window targets, the same two this file is on). What they draw:
+ *   PS_Render  while paused (Stage::PS_Update's states): on the TOP screen the
+ *              course's star row (MM_SMALL_STAR / SMALL_STAR_EMPTY), the coin
+ *              record (COIN, TIMES, RenderNumber), and on the controller-mode
+ *              page the mode's title sprite (CONTROLLER_MODE_TEXTS[mode], one
+ *              table per language); on the TOUCH screen the PAUSE sprite, the
+ *              course arrows, and the TINY_STAR cursor beside the chosen row.
+ *   LC_Render  while the level-clear (star-get) save menu is up: the banner's
+ *              text sprites on the TOP screen -- the second text on a NEW
+ *              COIN RECORD (LC_Update sets data_0209f2b0), the first on the
+ *              courses 15..20 -- and, every frame the menu is up, the ROM's
+ *              own palette cycle (LoadFile 0x25a -> GX::LoadOBJPltt slot
+ *              0x1c0) that animates them. On an ordinary star with no new
+ *              record it draws nothing, exactly as the cartridge does.
  *
- * LOUD ONCE EACH, and named, for the reason func_020199a4's seam above gives:
- * a silent empty body lets a run walk past the thing the port cannot do. None
- * aborts -- Stage::Render's next statement is correct either way, and LC_Render
- * in particular is the LAST statement of every frame's Render, so an abort
- * there would take out every level in the battery for a banner the port has
- * never drawn. */
+ * RenderVsModeNewStar STAYS A SEAM: its five ov002 rows (0x0210cfd0..0x0210d188,
+ * OAM::VS_NEW_STAR_APPEARED and four more) are not mounted, and the body is VS
+ * (parked by ruling). It keeps RENDER9's shape and reason: LOUD ONCE, named,
+ * never aborting -- Stage::Render's next statement is correct either way. It
+ * was behaviour-neutral against what it replaced (Stage::Render never ran
+ * before RENDER9, so nothing drew the VS popup), and still is. */
 
 static void slot9_seam(const char *what, const char *why)
 {
@@ -317,28 +335,18 @@ static void slot9_seam(const char *what, const char *why)
                  "port/stage_lifecycle_map.txt section 18.\n", what, why);
 }
 
-void Stage::PS_Render()
-{
-    static int said;
-    if (!said) {
-        said = 1;
-        slot9_seam("Stage::PS_Render, the pause screen's draw",
-                   "its eight OAM sprite templates are unmounted ov002 rows "
-                   "at 0x0210c548..0x0210cb4c and five unmounted ov001 records "
-                   "past 0x020abb00");
-    }
-}
-
-void Stage::LC_Render()
-{
-    static int said;
-    if (!said) {
-        said = 1;
-        slot9_seam("Stage::LC_Render, the level-clear banner's draw",
-                   "its ten sprite templates are unmounted ov002 rows at "
-                   "0x0210caf4..0x0210cfa0");
-    }
-}
+/* THE ONE SPELLING PS_Render NEEDS. Its matched source calls the timer-digit
+ * renderer by the flat name _ZN5Stage12RenderNumberEhiibi (extern "C"), and
+ * this link holds only the decorated static member
+ * ?RenderNumber@Stage@@SAXEHH_NH@Z, from src/_ZN5Stage12RenderNumberEhiibi.cpp
+ * on port/slice_slot9.txt (Stage::Render's own OAM block reaches it that
+ * way). Same body, same shape: a static member takes no receiver, so both
+ * spellings are __cdecl with the five arguments on the stack, and the bool
+ * fourth argument is pushed as a full word from either side. The
+ * RenderBouncingArrows row in hal/cxx_aliases.cpp is the precedent; this one
+ * lives beside the retired seam rather than in that file because it exists
+ * for slot 9 alone. */
+#pragma comment(linker, "/alternatename:__ZN5Stage12RenderNumberEhiibi=?RenderNumber@Stage@@SAXEHH_NH@Z")
 
 void Stage::RenderVsModeNewStar()
 {

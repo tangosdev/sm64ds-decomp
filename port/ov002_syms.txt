@@ -563,3 +563,40 @@ g_profile_PUSHBLOCK:0x1c
 #   g_profile_KINOKO_CREATE_TAG                now defined by d_a_obj_kinoko_tag.cpp.obj
 #   g_profile_OBJ_ABUKU                        now defined by d_a_obj_abuku.cpp.obj
 #   g_profile_HATENA_SWITCH                    now defined by d_a_obj_hatena_switch.cpp.obj
+
+# ---------------------------------------------------------------------------
+# run linkfull, wave 31B, lane S42D: THE PAUSE SCREEN'S AND THE LEVEL-CLEAR
+# BANNER'S SPRITE TEMPLATES -- the eighteen OamAttr lists Stage::PS_Render
+# (src/_ZN5Stage9PS_RenderEv.cpp) and Stage::LC_Render
+# (src/_ZN5Stage9LC_RenderEv.cpp) hand OAM::Render and OAM::RenderSub. Both
+# matched bodies sat behind seams in hal/stage_frame.cpp for want of exactly
+# these rows (port/slice_slot9.txt named every one); the same commit retires
+# the seams and compiles the bodies (port/slice_w31_s42d.txt).
+#
+# Each row is sized by its next-symbol delta, and the ROM agrees with config
+# about every extent: read out of extracted/overlays/overlay_0002.bin (base
+# 0x020ad660), every list's a3 == 0xffff terminator sits in its LAST entry, so
+# the delta and OAM::Render's own stop land on the same byte.
+#   PS_Render   MM_SMALL_STAR 0x0210c548 (8 bytes, 1 entry); PAUSE 0x0210c6e0,
+#               ARROW_POINTING_LEFT 0x0210c6f0, ARROW_POINTING_RIGHT 0x0210c700
+#               (0x10, 2 entries each); TINY_STAR 0x0210c718,
+#               SMALL_ARROW_POINTING_RIGHT 0x0210c720, SMALL_ARROW_POINTING_LEFT
+#               0x0210c728 (8, 1 each); VS_PAUSE 0x0210cb4c (0x10, 2). Its
+#               five per-language pointer tables are ov001's
+#               (port/ov001_syms.txt, the same lane).
+#   LC_Render   0x0210caf4 0x20 (4 entries), 0x0210cb14 0x38 (7), 0x0210ce90
+#               0x18 (3), 0x0210cea8 0x28 (5), 0x0210ced0 0x18 (3), 0x0210cee8
+#               0x20 (4), 0x0210cf08 0x20 (4), 0x0210cf28 0x50 (10), 0x0210cf78
+#               0x28 (5), 0x0210cfa0 0x30 (6): the level-clear banner's text
+#               sprites, five languages by two texts.
+# relocs.txt lists no relocation inside any of the eighteen: plain data,
+# nothing to rebase. The eight PS rows were bytes of the synthetic gap block
+# port_ov002_gap_0210c548 until now (reached only through the minimap's
+# patched pointers); named, they are the storage both the name and those
+# pointers land on (ovdata's make_covering rule 1). The five VS rows next to
+# LC's (0x0210cfd0..0x0210d188, RenderVsModeNewStar) are NOT here: VS, parked
+# by ruling.
+_ZN3OAM13MM_SMALL_STARE _ZN3OAM5PAUSEE _ZN3OAM19ARROW_POINTING_LEFTE _ZN3OAM20ARROW_POINTING_RIGHTE
+_ZN3OAM9TINY_STARE _ZN3OAM26SMALL_ARROW_POINTING_RIGHTE _ZN3OAM25SMALL_ARROW_POINTING_LEFTE _ZN3OAM8VS_PAUSEE
+data_ov002_0210caf4 data_ov002_0210cb14 data_ov002_0210ce90 data_ov002_0210cea8 data_ov002_0210ced0
+data_ov002_0210cee8 data_ov002_0210cf08 data_ov002_0210cf28 data_ov002_0210cf78 data_ov002_0210cfa0
