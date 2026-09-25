@@ -6574,6 +6574,21 @@ void *_ZN5ModelC1Ev(void *self);
 void _ZN6Memory10DeallocateEPv(void *p);
 }
 
+/* The ROM teardown bodies the reseat below runs in place of the DS's per-level
+   Stage destruction (run linkfull, lane ROOTLEAK1). Slot 1 of every area
+   transformer is the ROM's deleting destructor (src/_ZN18TextureTransformerD0Ev
+   .cpp, whose _MSC_VER arm is D1 plus the class's operator delete), the
+   minimap-change nodes go back through Memory::operator_delete2 exactly as
+   Stage::CleanupResources frees them, and the particle tracker's pair is the
+   ROM's own ~SysTracker / SysTracker() (port/faces_sync.txt rows 0x02023194 and
+   0x02023204). */
+extern "C" {
+void *_ZN18TextureTransformerD0Ev(void *self);
+void _ZN6Memory16operator_delete2EPv(void *p);
+void _ZN8Particle10SysTrackerD1Ev(void *self);
+void _ZN8Particle10SysTrackerC1Ev(void *self);
+}
+
 extern "C" void port_level_stage_reseat(void *stagev)
 {
     char *stage = (char *)stagev;
@@ -6640,13 +6655,77 @@ extern "C" void port_level_stage_reseat(void *stagev)
        line 388) into a Stage that was just constructed. Zero it all and reload
        it all is the ROM's own shape, and it also closes the self-warp
        aliasing that predates this commit -- the case the level-id guard was
-       never able to see. */
+       never able to see.
+
+       WHAT THE MEMSET DROPPED, AND WHO FREES IT NOW (run linkfull, lane
+       ROOTLEAK1). Zeroing the table forgot the objects the table owns: the
+       0x14-byte TextureTransformer that Stage::LoadTextureTransformers news for
+       every animating area and every minimap-change node LoadMinimapChangeObject
+       news onto an area's +8 list. Both come off the ROOT heap (the default heap
+       their _Znwj resolves to), and nothing else ever freed them, so each entry
+       of an animating level left one transformer behind for the session (the
+       root-heap walk of 20 changes on 6,1,29,1 counted two per four changes,
+       both ??_7TextureTransformer@@6B@ blocks). The cartridge frees them in
+       Stage::CleanupResources (src/_ZN5Stage16CleanupResourcesEv.cpp, the area
+       loop after the skybox): for each of data_0209f340->count entries,
+       DestroyVirt(transformer) -- vtable slot 1, the deleting destructor -- and
+       the node list walked through +0xc into Memory::operator_delete2. This is
+       that loop, run with the level being LEFT still current: data_0209f340 is
+       the outgoing level's LVL_Overlay until port_stage_boot_body repoints it,
+       so the bound is the same count LoadTextureTransformers filled the table
+       by. The slot-1 dispatch is the D0 by name because MSVC folds this
+       class's two ROM destructor slots into one: the live objects carry
+       ??_7TextureTransformer@@6B@, which the map shows is ONE word long (the
+       word after it is the next class's RTTI locator, RabbitKey's vtable
+       starting a word later), so there is no slot 1 to read. Every object in
+       this table is a TextureTransformer, the only class
+       LoadTextureTransformers news, so naming its D0 is the same call. */
+    {
+        const unsigned char *info = data_0209f340;
+        const unsigned n = info ? info[0x14] : 0u;
+        for (unsigned j = 0; j < n; ++j) {
+            char *e = stage + 0x8bc + j * 0xc;
+            void *xfm = *(void **)e;
+            if (xfm)
+                _ZN18TextureTransformerD0Ev(xfm);
+            char *p = *(char **)(e + 8);
+            while (p) {
+                char *next = *(char **)(p + 0xc);
+                _ZN6Memory16operator_delete2EPv(p);
+                p = next;
+            }
+        }
+    }
     std::memset(stage + 0x8bc, 0, 0x60);
     port_stage_anims_rearm();
 
     /* the level model, in place */
     _ZN5ModelD2Ev(stage + 0x86c);
     _ZN5ModelC1Ev(stage + 0x86c);
+
+    /* THE PARTICLE TRACKER, in place, the same way (run linkfull, lane
+       ROOTLEAK1). Stage+0x50 is the Particle::SysTracker, and
+       Particle::SysTracker::Initialise -- port_particle_boot runs it at the end
+       of every boot, InitResources' own position -- allocates a fresh particle
+       work area off the ROOT heap every time it runs: 0x8c00 bytes, 0xa800 on
+       levels 36/38/40 (src/_ZN8Particle10SysTracker10InitialiseEv.cpp,
+       operator_new2 into data_0209ee78/7c/80, the manager carved out of its
+       head). The only thing that ever gives that block back is ~SysTracker
+       (src/_ZN8Particle10SysTrackerD1Ev.cpp: Contents::Clear, then
+       func_0203cbc0(data_0209ee80), then the resource file if Initialise had
+       to decompress it), and on the cartridge it runs because the Stage dies
+       with the level: Stage::~Stage calls it at 0x020236b4 and the deleting
+       destructor at 0x0202371c, right after the level Model's own destructor
+       above, and dScStage_c_classInit constructs the next Stage's tracker at
+       0x0202e0d8 (config/arm9/relocs.txt). The port's Stage lives on, so the
+       pair never ran and every level change stranded one work area: 35840
+       bytes a change, 716800 of the 717012 bytes the root heap lost over 20
+       changes. Destroying and re-constructing the member here is those two
+       ROM statements at the one point in the port's change where the old
+       level's actors (whose callbacks the tracker's contents name) are gone
+       and the next boot's Initialise has not run. */
+    _ZN8Particle10SysTrackerD1Ev(stage + 0x50);
+    _ZN8Particle10SysTrackerC1Ev(stage + 0x50);
 
     /* the skybox, which is a pointer rather than a member */
     void **sky = (void **)(stage + 0x9bc);

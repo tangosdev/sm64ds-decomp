@@ -580,6 +580,7 @@ extern unsigned short data_020a4b54;
 extern void **data_020a4bb8;
 extern void *data_020a0eac_c;
 extern void *data_020a0ea0;
+extern void *data_020a0e9c;   /* Heap::rootHeap, read for the [heap] root lines only */
 void hal_fill_model_vtable(void);
 void hal_fill_shadow_vtable(void);
 void hal_fill_mmc_vtable(void);
@@ -10217,6 +10218,19 @@ int main(void)
             data_020a0eac_c, 0x3b000u,
             _ZN22ExpandingHeapAllocator10MemoryLeftEv(
                 *(void **)((char *)data_020a0eac_c + 0x14)));
+    /* AND THE ROOT HEAP, the parent the game heap was just carved out of and
+       the heap everything else lands in: Memory::defaultHeapPtr is the root,
+       so every level file, model, particle work area and _Znwj object the
+       game news goes here (run linkfull, lane ROOTLEAK1). No gate read it and
+       a level change leaked 35840 bytes of it every time for waves; the
+       per-change reading is the [lvl] root line in hal/level_change.cpp and
+       the closing one is beside the end-of-run [heap] line. Heap+0x14 is the
+       ExpandingHeap's allocator, the same word the game-heap line reads. */
+    if (data_020a0e9c)
+        fprintf(stderr, "[heap] root heap %p, %u free after boot\n",
+                data_020a0e9c,
+                _ZN22ExpandingHeapAllocator10MemoryLeftEv(
+                    *(void **)((char *)data_020a0e9c + 0x14)));
 
     /* and the tail of func_0201a054, after its own InitializeGameHeap line:
        the fade word pair and the fatal-vector pair that ends the function. */
@@ -16889,6 +16903,16 @@ int main(void)
                         _ZN22ExpandingHeapAllocator10MemoryLeftEv(
                             *(void **)((char *)data_020a0eac_c + 0x14)),
                         port_rom_frame_checked(frame, "heap-line"));
+            /* the root heap's closing number, beside the boot's (run
+               linkfull, lane ROOTLEAK1). The paragraph above holds for it
+               too: a free-list sum, so falling across a run with level
+               changes is the leak to look for. No frame read here, so the
+               cross-check's reader count is the same as before. */
+            if (data_020a0e9c)
+                fprintf(stderr, "[heap] root heap %u free at the end of the "
+                        "run\n",
+                        _ZN22ExpandingHeapAllocator10MemoryLeftEv(
+                            *(void **)((char *)data_020a0e9c + 0x14)));
             printf("selftest: %d frames, pos=(%d, %d, %d)\n",
                    port_rom_frame_checked(frame, "selftest-summary"),
                    *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
