@@ -321,10 +321,6 @@
       "src/func_ov002_020f6f48.c": [
         "return:void"
       ],
-      "src/func_ov065_02117404.cpp": [
-        "param:#2 int",
-        "return:void"
-      ],
       "src/func_ov066_02116db0.c": [
         "param:#2 int"
       ],
@@ -369,6 +365,10 @@
       ],
       "src/actors/daMenbo_c.cpp": [
         "param:#2 int"
+      ],
+      "src/actors/daBasabasa_c.cpp": [
+        "param:#2 int",
+        "return:void"
       ],
       "src/actors/daOwl_c.cpp": [
         "param:#2 int"
@@ -1995,9 +1995,6 @@
       "src/actors/daWater_Hakidasi_c.cpp": [
         "param:#2 short"
       ],
-      "src/func_ov065_02117624.c": [
-        "param:#2 short"
-      ],
       "src/func_ov066_02116db0.c": [
         "param:#2 short"
       ],
@@ -2349,10 +2346,6 @@
         "param:#1 Vec3 *",
         "param:#3 Vec3 *"
       ],
-      "src/func_ov065_02117404.cpp": [
-        "param:#1 const Vector3 *",
-        "param:#2 const void *"
-      ],
       "src/func_ov075_02114300.cpp": [
         "param:#1 Matrix4x3 *",
         "param:#2 Vector3 *"
@@ -2397,6 +2390,10 @@
       "src/actors/daObjFl_KomaU_c.cpp": [
         "param:#1 const Vector3 *",
         "param:#2 const Matrix4x3 *"
+      ],
+      "src/actors/daBasabasa_c.cpp": [
+        "param:#1 const void *",
+        "param:#2 const void *"
       ]
     },
     "MultiCopyHalf": {
@@ -3063,9 +3060,6 @@
       "src/func_ov002_020f6c60.c": [
         "return:unsigned int"
       ],
-      "src/func_ov065_021176fc.cpp": [
-        "return:unsigned int"
-      ],
       "src/func_ov094_02135e64.cpp": [
         "return:unsigned int"
       ],
@@ -3083,6 +3077,9 @@
       ],
       "src/actors/daObjCtMecha11_c.cpp": [
         "param:#1 char *"
+      ],
+      "src/actors/daBasabasa_c.cpp": [
+        "return:unsigned int"
       ]
     },
     "ReadUnalignedShort": {
@@ -4645,10 +4642,6 @@
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
       ],
-      "src/func_ov065_02117994.c": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
-      ],
       "src/func_ov072_02120d04.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
@@ -4696,6 +4689,10 @@
         "param:#2 Vector3 *"
       ],
       "src/actors/daObjSm_Lift_c.cpp": [
+        "param:#1 Vector3 *",
+        "param:#2 Vector3 *"
+      ],
+      "src/actors/daBasabasa_c.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
       ],
@@ -4856,6 +4853,10 @@
       "src/unnamed/ov063/func_ov063_0211c89c.c": [
         "param:#1 const Vec3 *",
         "param:#2 const Vec3 *"
+      ],
+      "src/actors/daBasabasa_c.cpp": [
+        "param:#1 const void *",
+        "param:#2 const void *"
       ],
       "src/actors/daOwl_c.cpp": [
         "param:#1 const void *",
@@ -6864,11 +6865,6 @@
         "param:#2 char *",
         "param:#5 void *"
       ],
-      "src/_ZN5Swoop13InitResourcesEv.cpp": [
-        "param:#2 dActor_c *",
-        "param:#5 Vector3_16 *",
-        "param:#6 Vector3_16 *"
-      ],
       "src/_ZN5Whomp13InitResourcesEv.cpp": [
         "param:#2 void *",
         "param:#5 void *",
@@ -6892,10 +6888,6 @@
         "param:#2 void *",
         "param:#5 void *",
         "param:#6 void *"
-      ],
-      "src/_ZN6ToxBox13InitResourcesEv.cpp": [
-        "param:#2 dActor_c *",
-        "param:#5 void *"
       ],
       "src/_ZN8Fireball13InitResourcesEv.cpp": [
         "param:#2 void *",
@@ -7122,6 +7114,11 @@
         "param:#2 void *",
         "param:#5 void *"
       ],
+      "src/actors/daBasabasa_c.cpp": [
+        "param:#2 dActor_c *",
+        "param:#5 Vector3_16 *",
+        "param:#6 Vector3_16 *"
+      ],
       "src/actors/daHuwa_c.cpp": [
         "param:#2 dActor_c *",
         "param:#5 void *",
@@ -7319,10 +7316,6 @@
       ],
       "src/func_ov064_02118fa4.cpp": [
         "param:#2 const Matrix4x3 &"
-      ],
-      "src/func_ov092_02131a88.cpp": [
-        "param:#2 Matrix4x3 &",
-        "return:int"
       ],
       "src/func_ov098_021397c8.cpp": [
         "param:#2 Matrix4x3 &",
@@ -7779,9 +7772,6 @@
       "src/_ZN3Key8BehaviorEv.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN5Swoop8BehaviorEv.cpp": [
-        "param:#2 dBgCh_Actr *"
-      ],
       "src/_ZN6Fwoosh8BehaviorEv.cpp": [
         "param:#2 dBgCh_Actr *"
       ],
@@ -7799,6 +7789,9 @@
       ],
       "src/actors/daMenbo_c.cpp": [
         "param:#2 void *"
+      ],
+      "src/actors/daBasabasa_c.cpp": [
+        "param:#2 dBgCh_Actr *"
       ],
       "src/actors/daHuwa_c.cpp": [
         "param:#2 void *"
@@ -7856,9 +7849,6 @@
         "param:#3 void *",
         "param:#4 int"
       ],
-      "src/func_ov065_0211704c.c": [
-        "arity:3"
-      ],
       "src/func_ov081_021243cc.cpp": [
         "arity:3"
       ],
@@ -7886,6 +7876,9 @@
         "param:#2 void *",
         "param:#3 void *",
         "param:#4 int"
+      ],
+      "src/actors/daBasabasa_c.cpp": [
+        "arity:3"
       ]
     },
     "_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs": {
@@ -10880,9 +10873,6 @@
       "src/_ZN6Eyerok13InitResourcesEv.cpp": [
         "kind:data"
       ],
-      "src/_ZN6ToxBox13InitResourcesEv.cpp": [
-        "kind:data"
-      ],
       "src/func_ov066_02116db0.c": [
         "kind:data"
       ],
@@ -12355,9 +12345,6 @@
       "src/func_ov089_021311c0.c": [
         "param:#2 void *"
       ],
-      "src/func_ov092_021311b0.cpp": [
-        "param:#2 void *"
-      ],
       "src/func_ov098_02138344.cpp": [
         "param:#2 const Vector3 *"
       ],
@@ -13391,13 +13378,6 @@
         "param:#7 unsigned int",
         "return:void"
       ],
-      "src/func_ov065_0211704c.c": [
-        "param:#1 char *",
-        "param:#5 unsigned int",
-        "param:#6 unsigned int",
-        "param:#7 unsigned int",
-        "return:void"
-      ],
       "src/func_ov080_02124208.c": [
         "param:#5 unsigned int",
         "param:#6 unsigned int",
@@ -13502,6 +13482,13 @@
         "param:#6 int",
         "param:#7 int"
       ],
+      "src/actors/daBasabasa_c.cpp": [
+        "param:#1 char *",
+        "param:#5 unsigned int",
+        "param:#6 unsigned int",
+        "param:#7 unsigned int",
+        "return:void"
+      ],
       "src/actors/daHuwa_c.cpp": [
         "param:#5 unsigned int",
         "param:#6 unsigned int",
@@ -13516,10 +13503,10 @@
       ]
     },
     "_ZN6Player6BounceE5Fix12IiE": {
-      "src/func_ov065_0211704c.c": [
+      "src/func_ov084_0212d86c.c": [
         "param:#1 char *"
       ],
-      "src/func_ov084_0212d86c.c": [
+      "src/actors/daBasabasa_c.cpp": [
         "param:#1 char *"
       ]
     },
@@ -15170,9 +15157,6 @@
       "src/func_ov081_021260fc.cpp": [
         "return:void"
       ],
-      "src/func_ov092_021311b0.cpp": [
-        "return:void"
-      ],
       "src/func_ov100_02141fb0.cpp": [
         "return:void"
       ],
@@ -15386,15 +15370,6 @@
         "arity:3"
       ],
       "src/func_ov079_02125504.c": [
-        "arity:3"
-      ],
-      "src/func_ov092_02131010.cpp": [
-        "arity:3"
-      ],
-      "src/func_ov092_021311b0.cpp": [
-        "arity:3"
-      ],
-      "src/func_ov092_021315ac.c": [
         "arity:3"
       ],
       "src/func_ov098_0213aa28.c": [
@@ -15666,9 +15641,6 @@
       "src/func_ov064_02119afc.cpp": [
         "return:void *"
       ],
-      "src/func_ov065_0211704c.c": [
-        "return:char *"
-      ],
       "src/func_ov066_0211603c.c": [
         "return:void *"
       ],
@@ -15741,9 +15713,6 @@
       "src/func_ov091_021339fc.c": [
         "return:void *"
       ],
-      "src/func_ov092_021319b0.cpp": [
-        "return:void *"
-      ],
       "src/func_ov094_021357a4.c": [
         "return:int"
       ],
@@ -15813,6 +15782,9 @@
       "src/actors/daMenbo_c.cpp": [
         "return:void *"
       ],
+      "src/actors/daBasabasa_c.cpp": [
+        "return:char *"
+      ],
       "src/actors/daHuwa_c.cpp": [
         "return:void *"
       ],
@@ -15874,11 +15846,6 @@
         "param:#1 char *",
         "param:#3 unsigned int"
       ],
-      "src/func_ov065_0211704c.c": [
-        "param:#1 char *",
-        "param:#2 Vector3 *",
-        "param:#3 unsigned int"
-      ],
       "src/func_ov079_02123804.c": [
         "param:#1 char *",
         "param:#3 unsigned int"
@@ -15929,6 +15896,11 @@
       ],
       "src/actors/daMenbo_c.cpp": [
         "param:#2 const void *",
+        "param:#3 unsigned int"
+      ],
+      "src/actors/daBasabasa_c.cpp": [
+        "param:#1 char *",
+        "param:#2 Vector3 *",
         "param:#3 unsigned int"
       ],
       "src/actors/daHuwa_c.cpp": [
@@ -16085,9 +16057,6 @@
       "src/actors/daWater_Hakidasi_c.cpp": [
         "return:char *"
       ],
-      "src/func_ov065_02117780.c": [
-        "return:char *"
-      ],
       "src/func_ov066_02116a68.c": [
         "return:dActor_c *"
       ],
@@ -16125,6 +16094,9 @@
         "return:char *"
       ],
       "src/unnamed/ov063/func_ov063_0211c89c.c": [
+        "return:char *"
+      ],
+      "src/actors/daBasabasa_c.cpp": [
         "return:char *"
       ]
     },
@@ -16386,9 +16358,6 @@
       "src/func_ov064_02119ea0.c": [
         "return:int"
       ],
-      "src/func_ov065_02117624.c": [
-        "return:int"
-      ],
       "src/func_ov066_0211603c.c": [
         "return:int"
       ],
@@ -16399,6 +16368,9 @@
         "return:int"
       ],
       "src/actors/daMenbo_c.cpp": [
+        "return:int"
+      ],
+      "src/actors/daBasabasa_c.cpp": [
         "return:int"
       ]
     },
@@ -16494,9 +16466,6 @@
       "src/func_ov060_02117624.cpp": [
         "param:#6 unsigned int"
       ],
-      "src/func_ov065_02117994.c": [
-        "param:#6 unsigned int"
-      ],
       "src/func_ov072_021210c4.cpp": [
         "param:#6 unsigned int"
       ],
@@ -16589,6 +16558,9 @@
       "src/unnamed/ov063/func_ov063_021169c4.cpp": [
         "param:#6 unsigned int"
       ],
+      "src/actors/daBasabasa_c.cpp": [
+        "param:#6 unsigned int"
+      ],
       "src/actors/daHuwa_c.cpp": [
         "param:#2 ShadowModel &",
         "param:#3 Matrix4x3 &",
@@ -16658,15 +16630,15 @@
       "src/actors/daSanbo_c.cpp": [
         "return:int"
       ],
-      "src/func_ov065_02117888.c": [
-        "return:char *"
-      ],
       "src/func_ov081_0212423c.c": [
         "param:#1 char *",
         "return:char *"
       ],
       "src/actors/daMenbo_c.cpp": [
         "return:void *"
+      ],
+      "src/actors/daBasabasa_c.cpp": [
+        "return:char *"
       ],
       "src/actors/daEykn_c.cpp": [
         "return:char *"
@@ -17857,21 +17829,6 @@
       "src/func_ov060_02111cc0.cpp": [
         "param:#5 unsigned int"
       ],
-      "src/func_ov065_0211704c.c": [
-        "param:#1 char *",
-        "param:#5 unsigned int"
-      ],
-      "src/func_ov065_021176fc.cpp": [
-        "param:#5 unsigned int"
-      ],
-      "src/func_ov065_021177e4.cpp": [
-        "param:#2 int",
-        "param:#5 unsigned int",
-        "return:int"
-      ],
-      "src/func_ov065_021178fc.c": [
-        "return:int"
-      ],
       "src/func_ov065_021182e4.cpp": [
         "param:#2 int",
         "param:#5 unsigned int",
@@ -18110,6 +18067,10 @@
       ],
       "src/actors/daMenbo_c.cpp": [
         "return:int",
+        "param:#5 unsigned int"
+      ],
+      "src/actors/daBasabasa_c.cpp": [
+        "param:#1 char *",
         "param:#5 unsigned int"
       ],
       "src/actors/daHuwa_c.cpp": [
@@ -19711,12 +19672,6 @@
       "src/func_ov089_02131b18.c": [
         "arity:1"
       ],
-      "src/func_ov092_02131010.cpp": [
-        "arity:1"
-      ],
-      "src/func_ov092_021311b0.cpp": [
-        "arity:1"
-      ],
       "src/func_ov098_02138344.cpp": [
         "arity:1"
       ],
@@ -21135,9 +21090,6 @@
         "return:int []"
       ],
       "src/func_ov060_021171e8.c": [
-        "return:int []"
-      ],
-      "src/func_ov065_021176fc.cpp": [
         "return:int []"
       ],
       "src/func_ov075_021143e4.cpp": [
@@ -22779,9 +22731,6 @@
       "src/_ZN6Player6RenderEv.cpp": [
         "return:int"
       ],
-      "src/_ZN6ToxBox13InitResourcesEv.cpp": [
-        "return:Mtx43"
-      ],
       "src/_ZN8YoshiEgg8BehaviorEv.cpp": [
         "return:int"
       ],
@@ -22853,12 +22802,6 @@
       ],
       "src/actors/daWater_Hakidasi_c.cpp": [
         "return:int"
-      ],
-      "src/func_ov065_02117404.cpp": [
-        "return:int"
-      ],
-      "src/func_ov065_02117624.c": [
-        "return:int []"
       ],
       "src/func_ov066_02116db0.c": [
         "return:int []"
@@ -28989,69 +28932,36 @@
       ]
     },
     "data_ov065_0211d690": {
-      "src/_ZN5Swoop13InitResourcesEv.cpp": [
-        "return:SharedFilePtr"
-      ],
       "src/__sinit_ov065_0211c2a8.c": [
         "return:S8"
-      ],
-      "src/func_ov065_0211704c.c": [
-        "return:void * []"
       ]
     },
     "data_ov065_0211d698": {
-      "src/_ZN5Swoop13InitResourcesEv.cpp": [
-        "return:SharedFilePtr"
-      ],
-      "src/_ZN5Swoop16CleanupResourcesEv.cpp": [
-        "return:int []"
+      "src/__sinit_ov065_0211c2a8.c": [
+        "return:S8"
       ]
     },
     "data_ov065_0211d6a0": {
-      "src/_ZN5Swoop13InitResourcesEv.cpp": [
-        "return:SharedFilePtr"
-      ],
-      "src/_ZN5Swoop16CleanupResourcesEv.cpp": [
-        "return:int []"
-      ],
       "src/__sinit_ov065_0211c2a8.c": [
         "return:S8"
-      ],
-      "src/func_ov065_021177e4.cpp": [
-        "return:P2"
       ]
     },
     "data_ov065_0211d6a8": {
-      "src/_ZN5Swoop13InitResourcesEv.cpp": [
-        "return:SharedFilePtr"
-      ],
-      "src/_ZN5Swoop16CleanupResourcesEv.cpp": [
-        "return:int []"
+      "src/__sinit_ov065_0211c2a8.c": [
+        "return:S8"
       ]
     },
     "data_ov065_0211d6e0": {
       "src/__sinit_ov065_0211c2a8.c": [
         "return:S8 []"
-      ],
-      "src/func_ov065_02117780.c": [
-        "return:int"
       ]
     },
     "data_ov065_0211d6f0": {
       "src/__sinit_ov065_0211c2a8.c": [
         "return:S8 []"
-      ],
-      "src/func_ov065_02117404.cpp": [
-        "return:int"
-      ],
-      "src/func_ov065_02117624.c": [
-        "return:int []"
       ]
     },
     "data_ov065_0211d700": {
-      "src/_ZN5Swoop13InitResourcesEv.cpp": [
-        "return:PMF"
-      ],
       "src/__sinit_ov065_0211c2a8.c": [
         "return:S8 []"
       ]
@@ -32208,9 +32118,6 @@
       "src/_ZN25RotatingUpDownPlatformUtm15OnHitByMegaCharER6Player.cpp": [
         "param:#1 int"
       ],
-      "src/_ZN5Swoop8BehaviorEv.cpp": [
-        "param:#1 int"
-      ],
       "src/_ZN5Whomp15OnHitByMegaCharER6Player.cpp": [
         "param:#1 int"
       ],
@@ -32338,17 +32245,6 @@
       "src/func_ov060_02118970.c": [
         "param:#1 int"
       ],
-      "src/func_ov065_0211704c.c": [
-        "param:#1 int",
-        "param:#2 char *"
-      ],
-      "src/func_ov065_021175b0.c": [
-        "arity:4",
-        "return:int"
-      ],
-      "src/func_ov065_021177e4.cpp": [
-        "param:#1 int"
-      ],
       "src/func_ov066_0211603c.c": [
         "param:#1 int"
       ],
@@ -32432,19 +32328,6 @@
       "src/func_ov091_021339fc.c": [
         "param:#1 int"
       ],
-      "src/func_ov092_02131010.cpp": [
-        "param:#1 int",
-        "param:#2 int *"
-      ],
-      "src/func_ov092_021311b0.cpp": [
-        "param:#1 int"
-      ],
-      "src/func_ov092_021315ac.c": [
-        "param:#1 int"
-      ],
-      "src/func_ov092_02131878.c": [
-        "param:#1 int"
-      ],
       "src/func_ov094_021359d8.cpp": [
         "param:#1 int",
         "return:int"
@@ -32520,6 +32403,9 @@
         "return:int"
       ],
       "src/actors/daMenbo_c.cpp": [
+        "param:#1 int"
+      ],
+      "src/actors/daBasabasa_c.cpp": [
         "param:#1 int"
       ],
       "src/actors/daOwl_c.cpp": [
@@ -36229,9 +36115,6 @@
         "param:#2 void *"
       ],
       "src/_ZN6Eyerok13InitResourcesEv.cpp": [
-        "param:#2 void *"
-      ],
-      "src/_ZN6ToxBox13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
       "src/_ZN9daDossy_c13InitResourcesEv.cpp": [
@@ -41490,11 +41373,6 @@
         "return:int"
       ]
     },
-    "func_ov002_020de328": {
-      "src/func_ov092_02131010.cpp": [
-        "arity:0"
-      ]
-    },
     "func_ov002_020de3d0": {
       "include/decl_common.h": [
         "param:#1 void *"
@@ -45864,26 +45742,6 @@
         "return:void"
       ]
     },
-    "func_ov065_02117944": {
-      "src/func_ov065_0211704c.c": [
-        "param:#1 char *",
-        "return:void"
-      ],
-      "src/func_ov065_02117404.cpp": [
-        "param:#1 unsigned char *",
-        "return:void"
-      ],
-      "src/func_ov065_02117624.c": [
-        "return:void"
-      ],
-      "src/func_ov065_02117780.c": [
-        "param:#1 char *",
-        "return:void"
-      ],
-      "src/func_ov065_02117888.c": [
-        "return:void"
-      ]
-    },
     "func_ov065_02118248": {
       "src/_ZN9daDossy_c8BehaviorEv.cpp": [
         "return:void"
@@ -46434,40 +46292,6 @@
     "func_ov091_02132380": {
       "include/decl_common.h": [
         "kind:data"
-      ]
-    },
-    "func_ov092_021314d0": {
-      "src/func_ov092_02131578.c": [
-        "return:int"
-      ]
-    },
-    "func_ov092_021316d8": {
-      "src/func_ov092_02131620.c": [
-        "param:#5 int"
-      ],
-      "src/func_ov092_02131650.c": [
-        "param:#5 int"
-      ],
-      "src/func_ov092_02131680.c": [
-        "param:#5 int"
-      ],
-      "src/func_ov092_021316b0.c": [
-        "param:#5 int"
-      ]
-    },
-    "func_ov092_02131878": {
-      "src/func_ov092_021319b0.cpp": [
-        "param:#3 int"
-      ]
-    },
-    "func_ov092_021319b0": {
-      "src/func_ov092_02131578.c": [
-        "return:int"
-      ]
-    },
-    "func_ov092_02131a88": {
-      "src/_ZN6ToxBox8BehaviorEv.cpp": [
-        "param:#1 ToxBox *"
       ]
     },
     "func_ov094_02136188": {

@@ -648,7 +648,6 @@ extern int _ZTV4Fish[];
 extern int _ZTV5Koopa[];
 extern int _ZTV9daSanbo_c[];
 extern int _ZTV6Fwoosh[];
-extern int _ZTV5Swoop[];
 extern int _ZTV5Unagi[];
 extern int _ZTV5Whomp[];
 extern int _ZTV7daBmb_c[];
