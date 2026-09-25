@@ -126,6 +126,9 @@
 #include "decl_common.h"
 #include "decl_Animation.h"
 #include "decl_Message.h"
+#include "Player.h"
+#include "Camera.h"
+#include "Message.h"
 
 /* Remaining reconstruction views. Reconciled by hand against include/: every type
  * the real headers already define (Vector3, Matrix4x3, Fix12<int>, u8/u16/s16,
@@ -194,52 +197,33 @@ extern "C" {
     extern int data_ov078_021270dc[];
     extern int data_ov078_021270fc[];
     extern int data_ov078_0212710c[];
-extern int _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int data_ov078_02126ffc[];
-extern int _ZN6Player12GetTalkStateEv(void *p);
 extern void _ZN6Camera9SetFlag_3Ev(void *cam);
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
 extern void func_02012694(int a, void *p);
-extern void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(void *c, signed char *s, unsigned int n, struct Vec3 *pos, unsigned int u);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-extern void _ZN8dActor_c16TriplePoofDustAtERK7Vector3(void *c, struct Vec3 *pos);
 extern void _ZN5Sound22StopLoadedMusic_Layer3Ev(void);
 extern void func_02011cfc(void);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
-extern void _ZN7fBase_c18MarkForDestructionEv(void *c);
 extern short Vec3_HorzAngle(const void* a, const void* b);
-extern char* _ZN8dActor_c13ClosestPlayerEv(void* c);
 extern int Vec3_Dist(const void* a, const void* b);
 extern void ApproachAngle(void *p, int target, int a, int b, int c);
+/* local extern: the matched call sets up no Player in r0 (it reuses whatever the
+   previous call left), so there is no object to call Player::GetHealth() on */
 extern "C" int _ZN6Player9GetHealthEv(void);
-extern "C" int _ZN9Animation8FinishedEv(void* anim);
-extern s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void*);   /* dActor_c.h:177 -- s16, not int */
-extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* c);
-extern int _ZN6Player9StartTalkER7fBase_cb(void* pl, char* c, int b);
-extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* pl, char* c, int m, void* v, int a, int b);
-extern void _ZN8dActor_c15HugeLandingDustEb(char* c, int b);
 extern int RandomIntInternal(int* seed);
-extern void _ZN6Player12Unk_020c6a10Ej(void* p, unsigned int a);
 extern int data_0209e650;
-extern int _ZNK9Animation12WillHitFrameEi(void *anim, int frame);
-extern void _ZN8dActor_c17HugeLandingDustAtER7Vector3b(void *actor, Vector3 *v, int b);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *out);
-extern void _ZN6Camera9SetLookAtERK7Vector3(void *cam, Vector3 *v);
-extern void _ZN6Camera6SetPosERK7Vector3(void *cam, Vector3 *v);
 extern void _Z14ApproachLinearRsss(s16 *cur, s16 tgt, s16 step);
 extern short Vec3_VertAngle(const void *a, const void *b);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
 extern void func_0200fa8c(void *c, int a);
-extern void _ZN10dBgCh_Actr15ClearGroundFlagEv(void *thiz);
 extern void func_ov102_0214b384(void* a, int b);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern int Vec3_HorzLen(void* v);
-extern int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as( unsigned int a, unsigned int b, void* pos, int rot, int e, int f);
-extern int _ZN6Player7TryGrabER8dActor_c(void* p, void* a);
 extern int func_ov002_020db5f4(char* c, char* arg);
-extern int _ZN8dActor_c13DistToCPlayerEv(void* c);
 extern void func_0200d8c8(void* cam, void* v, int strength);
 void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int fix, int t, unsigned int j);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
@@ -297,7 +281,7 @@ extern "C" {
 int func_ov078_02123804(char *c){
     unsigned int v=*(unsigned int*)(c+0x3a0);
     if(v==0) return 0;
-    if(_ZN8dActor_c10FindWithIDEj(v)==0) return 0;
+    if(dActor_c::FindWithID(v)==0) return 0;
     if((*(int*)(c+0x39c) & 0x4000)==0) return 0;
     KingBobOmb_SetState(c, data_ov078_02126ffc);
     return 1;
@@ -310,7 +294,7 @@ extern "C" {
 void func_ov078_02123864(char* self) {
   int i = 0;
   do {
-    daBmb_c *bmb = (daBmb_c *)_ZN8dActor_c10FindWithIDEj(((unsigned int*)(self + 0x424))[i]);
+    daBmb_c *bmb = (daBmb_c *)dActor_c::FindWithID(((unsigned int*)(self + 0x424))[i]);
     if (bmb) {
       bmb->unk_3e0 = 0;
       bmb->unk_3f6 = 1;
@@ -330,7 +314,7 @@ int func_ov078_021238ac(char *c)
     struct Vec3 t;
     struct Vec3 u;
 
-    if (_ZN6Player12GetTalkStateEv(*(void **)(c + 0x430)) != -1) {
+    if (((Player *)(*(void **)(c + 0x430)))->GetTalkState() != -1) {
         _ZN6Camera9SetFlag_3Ev(cam);
         return 1;
     }
@@ -354,13 +338,12 @@ int func_ov078_021238ac(char *c)
     v.z = t.z;
     func_02012694(0x130, c + 0x74);
 
-    _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(
-        c, (signed char *)(c + 0x507), *(u8 *)(c + 0x509), &v, 4);
+    ((dActor_c *)c)->UntrackAndSpawnStar(*(s8 *)((signed char *)(c + 0x507)), *(u8 *)(c + 0x509), *(Vector3 *)&v, 4);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x1a, v.x, v.y, v.z);
     u.x = v.x;
     u.y = v.y;
     u.z = v.z;
-    _ZN8dActor_c16TriplePoofDustAtERK7Vector3(c, &u);
+    ((dActor_c *)c)->TriplePoofDustAt(*(Vector3 *)&u);
 
     if (*(u8 *)(c + 0x506) == 1) {
         *(u8 *)(c + 0x506) = 0;
@@ -368,7 +351,7 @@ int func_ov078_021238ac(char *c)
         func_02011cfc();
         _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0x15666);
     }
-    _ZN7fBase_c18MarkForDestructionEv(c);
+    ((fBase_c *)c)->fBase_c::MarkForDestruction();
     return 1;
 }
 }
@@ -392,7 +375,7 @@ extern "C" {
 int func_ov078_02123aa0(char* c){
     short ang = Vec3_HorzAngle(c+0x5c, c+0x4e0);
     if(func_ov078_02123804(c) == 1) return 1;
-    char* p = _ZN8dActor_c13ClosestPlayerEv(c);
+    char* p = (char *)((dActor_c *)c)->ClosestPlayer();
     if(p != 0){
         struct Vector3 v = *(struct Vector3*)(p+0x5c);
         if(Vec3_Dist(c+0x4d4, &v) < 0x640000){
@@ -431,8 +414,6 @@ extern "C" int func_ov078_02123bc4(char* c){
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123c20
 extern "C" {
-extern int _ZNK9Animation12WillHitFrameEi(void* self, int f);
-extern int _ZN9Animation8FinishedEv(void* self);
 
 int func_ov078_02123c20(char* c){
     if(func_ov078_02123804(c) == 1){
@@ -445,7 +426,7 @@ int func_ov078_02123c20(char* c){
         }
         return 1;
     }
-    if(_ZNK9Animation12WillHitFrameEi(c+0x31c, 0x14)){
+    if(((Animation *)(c+0x31c))->WillHitFrame(0x14)){
         int v = *(int*)(c+0x494);
         if(v != 0){
             func_ov002_020db54c((char*)v, 0x28000, 0x50000, *(short*)(c+0x8e));
@@ -454,7 +435,7 @@ int func_ov078_02123c20(char* c){
             func_02012694(0x131, c+0x74);   /* ROM: the 3rd arg the shard declared is inert -- measured both ways, identical bytes */
         }
     }
-    if(_ZN9Animation8FinishedEv(c+0x31c)){
+    if(((Animation *)(c+0x31c))->Finished()){
         KingBobOmb_SetState(c, data_ov078_021270fc);
     }
     return 1;
@@ -551,7 +532,7 @@ extern "C" int func_ov078_02123f1c(CView* c)
     }
     return 1;
 L6c:
-    if (_ZN9Animation8FinishedEv(&c->anim_31c)) {
+    if (((Animation *)(&c->anim_31c))->Finished()) {
         KingBobOmb_SetState(c, data_ov078_0212709c);
     }
     return 1;
@@ -571,10 +552,10 @@ int func_ov078_02123fb4(char *c){
 // @symbol func_ov078_02124000
 extern "C" {
 int func_ov078_02124000(char* c){
-  int ang = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
+  int ang = ((dActor_c *)c)->HorzAngleToCPlayer();
   ApproachAngle((char*)c+0x94, ang, 1, 0x500, 0x500);
   *(short*)(c+0x8e)=*(short*)(c+0x94);
-  if(_ZN9Animation8FinishedEv((char*)c+0x31c)){
+  if(((Animation *)((char*)c+0x31c))->Finished()){
     KingBobOmb_SetState(c, data_ov078_0212703c);
   }
   return 1;
@@ -601,7 +582,7 @@ int func_ov078_021240a0(char* c)
     short msg;
     int lim;
 
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x110) != 0) {
+    if (((dBgCh_Actr *)(c + 0x110))->IsOnGround() != 0) {
         if (*(int*)(c + 0x500) <= 0) {
             if (*(int*)(c + 0x98) != 0) {
                 *(int*)(c + 0x98) = 0;
@@ -610,11 +591,11 @@ int func_ov078_021240a0(char* c)
             if ((unsigned short)(*(unsigned short*)((char*)*(int*)(c + 0x430) + 0x6ce) & 0x800) != 0)
                 return 1;
 
-            ApproachAngle(c + 0x94, _ZN8dActor_c18HorzAngleToCPlayerEv(c), 5, 0x1000, 0x200);
+            ApproachAngle(c + 0x94, ((dActor_c *)c)->HorzAngleToCPlayer(), 5, 0x1000, 0x200);
             *(short*)(c + 0x8e) = *(short*)(c + 0x94);
-            if (AngleDiff(_ZN8dActor_c18HorzAngleToCPlayerEv(c), *(short*)(c + 0x8e)) < 0x1000) {
+            if (AngleDiff(((dActor_c *)c)->HorzAngleToCPlayer(), *(short*)(c + 0x8e)) < 0x1000) {
                 char* pl = (char*)(long)*(int*)(c + 0x430);
-                if (_ZN6Player9StartTalkER7fBase_cb(pl, c, 1) != 0) {
+                if (((Player *)pl)->StartTalk(*(fBase_c *)c, 1) != 0) {
                     msg = 0;
                     if (data_0209f220[0] == 1) {
                         msg += (short)(*(int*)(pl + 8) + 0x9a);
@@ -622,7 +603,7 @@ int func_ov078_021240a0(char* c)
                         msg = 0x95;
                     }
                     _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x14, 0x15666);
-                    if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(pl, c, (int)msg, c + 0x5c, 0, 0) != 0) {
+                    if (((Player *)pl)->ShowMessage(*(fBase_c *)c, (int)msg, (Vector3 *)(c + 0x5c), 0, 0) != 0) {
                         func_02012694(0x12a, c + 0x74);
                         KingBobOmb_SetState(c, &data_ov078_0212705c);
                     }
@@ -634,7 +615,7 @@ int func_ov078_021240a0(char* c)
         if (*(unsigned char*)(c + 0x499) == 0) {
             func_02012694(0x128, c + 0x74);
             func_ov078_02125c24(c, 0x7d0000);
-            _ZN8dActor_c15HugeLandingDustEb(c, 1);
+            ((dActor_c *)c)->HugeLandingDust(1);
             *(unsigned char*)(c + 0x499) = 1;
         }
         if (*(unsigned short*)(c + 0x100) == 0) {
@@ -668,13 +649,13 @@ int func_ov078_021240a0(char* c)
         if (*(int*)(c + 0xa8) < 0) {
             unsigned int id = *(unsigned int*)(c + 0x360);
             if (id != 0) {
-                char* a = (char*)_ZN8dActor_c10FindWithIDEj(id);
+                char* a = (char*)dActor_c::FindWithID(id);
                 if (a != 0) {
                     int b = (int)(*(unsigned short*)(a + 0xc) == 0xbf);
                     if (b != 0) {
                         *(struct M3*)&v = *(struct M3*)(a + 0x5c);
                         if (*(int*)(c + 0x60) > v.y)
-                            _ZN6Player12Unk_020c6a10Ej(a, 1);
+                            ((Player *)a)->Unk_020c6a10(1);
                     }
                 }
             }
@@ -712,7 +693,7 @@ int func_ov078_021243c0(char* c){
 extern "C" {
 int func_ov078_02124470(char* c)
 {
-    s16 ang = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
+    s16 ang = ((dActor_c *)c)->HorzAngleToCPlayer();
     ApproachAngle(c + 0x94, ang, 1, 0x500, 0x500);
     *(s16*)(c + 0x8e) = *(s16*)(c + 0x94);
     if (*(u16*)(c + 0x100) == 0)
@@ -751,7 +732,7 @@ int func_ov078_02124520(char *c)
     s16 ang;
 
     cam = data_0209f318;
-    if (_ZNK9Animation12WillHitFrameEi(c + 0x31c, 0x46)) {
+    if (((Animation *)(c + 0x31c))->WillHitFrame(0x46)) {
         func_ov078_02125c24(c, 0x7d0000);
         func_02012694(0x12c, c + 0x74);
         a.x = 0;
@@ -769,10 +750,10 @@ int func_ov078_02124520(char *c)
         dust.y = tmp.y;
         a.z = tmp.z;
         dust.z = tmp.z;
-        _ZN8dActor_c17HugeLandingDustAtER7Vector3b(c, &dust, 1);
+        ((dActor_c *)c)->HugeLandingDustAt(dust, 1);
     }
     player = *(char **)(c + 0x430);
-    if (_ZN6Player12GetTalkStateEv(player) != -1) {
+    if (((Player *)player)->GetTalkState() != -1) {
         pp = (int *)(((int)player + 0x5c));
         in.x = 0;
         in.y = 0;
@@ -797,14 +778,14 @@ int func_ov078_02124520(char *c)
         pos.y += 0x100000;
         pos.x += out.x;
         pos.z += out.z;
-        _ZN6Camera9SetLookAtERK7Vector3(cam, &look);
-        _ZN6Camera6SetPosERK7Vector3(cam, &pos);
+        ((Camera *)cam)->SetLookAt(look);
+        ((Camera *)cam)->SetPos(pos);
         _Z14ApproachLinearRsss((s16 *)(c + 0x8e), ang, 0x800);
         *(s16 *)(c + 0x94) = *(s16 *)(c + 0x8e);
         return 1;
     }
     *(unsigned int *)(((int)cam + 0x154)) &= ~8;
-    if (_ZN9Animation8FinishedEv(c + 0x31c)) {
+    if (((Animation *)(c + 0x31c))->Finished()) {
         KingBobOmb_SetState(c, &data_ov078_0212703c);
     }
     return 1;
@@ -844,7 +825,7 @@ int func_ov078_021247bc(void *thiz)
         ApproachAngle(c + 0x92, vert, 5, 0x1000, 0x300);
         ApproachAngle(c + 0x94, horz, 5, 0x1000, 0x300);
         *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-        if (_ZN9Animation8FinishedEv(c + 0x31c) == 0)
+        if (((Animation *)(c + 0x31c))->Finished() == 0)
             return 1;
         vB.x = 0;
         vB.y = 0x3c000;
@@ -874,8 +855,8 @@ int func_ov078_021247bc(void *thiz)
         *(unsigned char *)(c + 0x499) = 1;
     }
 
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x110) != 0) {
-        void *pl = _ZN8dActor_c13ClosestPlayerEv(c);
+    if (((dBgCh_Actr *)(c + 0x110))->IsOnGround() != 0) {
+        void *pl = ((dActor_c *)c)->ClosestPlayer();
         if (pl != 0) {
             *(struct M3*)&D = *(struct M3*)((char *)pl + 0x5c);
             if (Vec3_Dist(c + 0x4d4, &D) > 0x640000 ||
@@ -902,7 +883,7 @@ int func_ov078_021247bc(void *thiz)
             return 1;
         }
 
-        if (_ZN9Animation8FinishedEv(c + 0x31c) != 0) {
+        if (((Animation *)(c + 0x31c))->Finished() != 0) {
             char *pl2 = *(char **)(c + 0x430);
             unsigned short m;
             E.x = *(int *)(c + 0x5c);
@@ -911,7 +892,7 @@ int func_ov078_021247bc(void *thiz)
             E.y += 0xc8000;
             m = *(unsigned short *)(pl2 + 0x6ce) & 0x800;
             if (m == 0) {
-                if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(pl2, c, 0x94, &E, 0, 0) != 0) {
+                if (((Player *)pl2)->ShowMessage(*(fBase_c *)c, 0x94, (Vector3 *)(&E), 0, 0) != 0) {
                     _ZN6Camera9SetFlag_3Ev(*(void **)&data_0209f318);
                     func_02012694(0x12a, c + 0x74);
                     KingBobOmb_SetState(c, &data_ov078_021270dc);
@@ -931,7 +912,7 @@ int func_ov078_02124b40(char *c)
 {
     _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt((void*)(c + 0x2cc), (void*)((void *)data_ov078_02126f10[1]), 0, 0x40000000, 0x1000, 0);
     func_02012694(0x129, c + 0x74);
-    _ZN10dBgCh_Actr15ClearGroundFlagEv(c + 0x110);
+    ((dBgCh_Actr *)(c + 0x110))->ClearGroundFlag();
     *(short *)(c + 0x92) = 0;
     *(int *)(c + 0x98) = 0;
     *(int *)(c + 0xa4) = 0;
@@ -946,7 +927,6 @@ int func_ov078_02124b40(char *c)
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124bc4
 extern "C" {
-extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* thiz);
 extern void func_0200fa8c(void* t, int a);
 extern void func_02012694(int a, void* v);
 extern int data_02092138;
@@ -958,7 +938,7 @@ int func_ov078_02124bc4(char* c)
         KingBobOmb_SetState(c, data_ov078_021270bc);
         return 1;
     }
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x110) != 0) {
+    if (((dBgCh_Actr *)(c + 0x110))->IsOnGround() != 0) {
         if (*(unsigned char*)(c + 0x499) == 0) {
             func_ov078_02125c24(c, 0x7d0000);
             func_0200fa8c(c, 1);
@@ -995,7 +975,7 @@ int func_ov078_02124c94(char *p) {
 // @symbol func_ov078_02124cf4
 extern "C" int func_ov078_02124cf4(unsigned char* thiz)
 {
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(thiz + 0x110) == 0) goto done;
+    if (((dBgCh_Actr *)(thiz + 0x110))->IsOnGround() == 0) goto done;
     *(int*)(thiz + 0x98) = 0;
     if ((int)(*(int*)(thiz + 0x4d8) - 0x28000) > *(int*)(thiz + 0x60)) {
         func_02012694(0x128, (int*)(thiz + 0x74));
@@ -1017,7 +997,7 @@ extern "C" int func_ov078_02124cf4(unsigned char* thiz)
     unsigned char* other = *(unsigned char**)(thiz + 0x430);
     if (other == 0) goto done;
     if ((unsigned short)(*(unsigned short*)(other + 0x6ce) & 0x800) != 0) goto done;
-    if (_ZN6Player9StartTalkER7fBase_cb(other, (char*)thiz, 1) == 0) goto done;
+    if (((Player *)other)->StartTalk(*(fBase_c *)thiz, 1) == 0) goto done;
 
     short msg = 0;
     _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x14, 0x15666);
@@ -1027,7 +1007,7 @@ extern "C" int func_ov078_02124cf4(unsigned char* thiz)
         msg = 0x95;
     }
 
-    if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(other, (char*)thiz, (unsigned)(int)msg, (Vector3*)(thiz + 0x5c), 0, 0) == 0) goto done;
+    if (((Player *)other)->ShowMessage(*(fBase_c *)thiz, (unsigned)(int)msg, (Vector3*)(thiz + 0x5c), 0, 0) == 0) goto done;
     func_02012694(0x12a, (int*)(thiz + 0x74));
     KingBobOmb_SetState(thiz, &data_ov078_0212705c);
 done:
@@ -1042,7 +1022,7 @@ int func_ov078_02124e9c(char *c)
     _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt((void*)(c + 0x2cc), (void*)((void *)data_ov078_02126f20[1]), 0, 0, 0x1000, 0);
     if (*(int *)(c + 0x500) <= 0)
         *(int *)(c + 0xb0) = 0x10000000;
-    _ZN10dBgCh_Actr15ClearGroundFlagEv(c + 0x110);
+    ((dBgCh_Actr *)(c + 0x110))->ClearGroundFlag();
     *(unsigned char *)(c + 0x499) = 0;
     *(int *)(c + 0x9c) = -0x2000;
     *(int *)(c + 0xa8) = 0x28000;
@@ -1056,7 +1036,6 @@ int func_ov078_02124e9c(char *c)
 // @symbol func_ov078_02124f28
 extern "C" {
 extern int Vec3_Dist(const void* a, const void* b);
-extern void _ZN6Player9DropActorEv(void* self);
 
 
 
@@ -1086,7 +1065,7 @@ int func_ov078_02124f28(unsigned char* c)
     }
 
 drop:
-    _ZN6Player9DropActorEv(*(void**)(c + 0x494));
+    ((Player *)(*(void**)(c + 0x494)))->DropActor();
     *(int*)(c + 0x494) = 0;
     KingBobOmb_SetState(c, &data_ov078_0212708c);
     return 1;
@@ -1159,7 +1138,7 @@ int func_ov078_021250f8(char* c) {
     }
 
     if (*(unsigned char*)(c + *(int*)(c + 0x49c) + 0x42c) == 0) {
-        target = (char*)_ZN8dActor_c10FindWithIDEj(*(int*)(c + (*(int*)(c + 0x49c) << 2) + 0x424));
+        target = (char*)dActor_c::FindWithID(*(int*)(c + (*(int*)(c + 0x49c) << 2) + 0x424));
         if (target != 0) {
             *(int*)((char*)target + 0x5c) = *(int*)(c + 0x4ec);
             *(int*)((char*)target + 0x60) = *(int*)(c + 0x4f0);
@@ -1171,12 +1150,12 @@ int func_ov078_021250f8(char* c) {
             *(short*)((char*)target + 0x8e) = *(short*)(c + 0x8e);
             *(short*)((char*)target + 0x90) = *(short*)(c + 0x90);
             func_ov102_0214b384(target, 0x78);
-            if (_ZNK9Animation12WillHitFrameEi(c + 0x31c, 0x13) != 0
+            if (((Animation *)(c + 0x31c))->WillHitFrame(0x13) != 0
                 || func_ov078_02123804(c) == 1) {
                 in.x = 0; in.y = 0; in.z = 0x28000;
                 out.x = 0; out.y = 0; out.z = 0;
                 v[0].x = 0; v[0].y = 0; v[0].z = 0;
-                player = _ZN8dActor_c13ClosestPlayerEv(c);
+                player = ((dActor_c *)c)->ClosestPlayer();
                 if (player != 0) {
                     int* q = (int*)(((int)player + 0x5c));
                     v[1].x = q[0];
@@ -1208,8 +1187,8 @@ int func_ov078_021250f8(char* c) {
         }
     }
 
-    if (_ZN9Animation8FinishedEv(c + 0x31c) != 0) {
-        player = _ZN8dActor_c13ClosestPlayerEv(c);
+    if (((Animation *)(c + 0x31c))->Finished() != 0) {
+        player = ((dActor_c *)c)->ClosestPlayer();
         if (player != 0) {
             if (*(int*)((char*)player + 8) != 3) {
                 *(unsigned char*)(c + 0x504) = 0x64;
@@ -1238,8 +1217,7 @@ int func_ov078_02125350(int sl)
 
     for (i = 0; i < self->mPhase; i++) {
         if (self->mSpawnedId[i] == 0) {
-            r = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0xce, 2, (Vector3 *)&self->mThrowPosX, 0, self->mAreaId, -1);
+            r = (int)dActor_c::Spawn(0xce, 2, *(Vector3 *)(&self->mThrowPosX), 0, self->mAreaId, -1);
             if (r != 0) {
                 self->mSpawnedId[i] = *(int*)(r + 4);
                 self->mSpawnSlot = i;
@@ -1281,7 +1259,7 @@ int func_ov078_02125448(char* c)
         return 1;
     }
 
-    p = _ZN8dActor_c13ClosestPlayerEv(c);
+    p = (char *)((dActor_c *)c)->ClosestPlayer();
     if (p != 0) {
         *(struct M3*)&v = *(struct M3*)(p + 0x5c);
         if (Vec3_Dist(c + 0x4d4, &v) > 0x640000
@@ -1291,7 +1269,7 @@ int func_ov078_02125448(char* c)
             return 1;
         }
 
-        ApproachAngle(c + 0x94, _ZN8dActor_c18HorzAngleToCPlayerEv(c), 0xa, 0x200, 0x100);
+        ApproachAngle(c + 0x94, ((dActor_c *)c)->HorzAngleToCPlayer(), 0xa, 0x200, 0x100);
         {
             s16 ang = *(s16*)(c + 0x94);
             int* pf = (int*)(c + 0xb0);
@@ -1301,17 +1279,17 @@ int func_ov078_02125448(char* c)
 
         id = *(unsigned int*)(c + 0x3a0);
         if (id != 0) {
-            a = (char*)_ZN8dActor_c10FindWithIDEj(id);
+            a = (char*)dActor_c::FindWithID(id);
             if (a != 0) {
                 isType = (int)(*(unsigned short*)(a + 0xc) == 0xbf);
                 if (isType != 0) {
-                    if (AngleDiff(_ZN8dActor_c18HorzAngleToCPlayerEv(c), *(short*)(c + 0x8e)) > 0x2800) {
+                    if (AngleDiff(((dActor_c *)c)->HorzAngleToCPlayer(), *(short*)(c + 0x8e)) > 0x2800) {
                         if ((*(int*)(c + 0x39c) & 0x1000) != 0) {
                             {
                                 int* pf = (int*)(c + 0xb0);
                                 *pf = *pf | 0x80;
                             }
-                            if (_ZN6Player7TryGrabER8dActor_c(a, c) != 0) {
+                            if (((Player *)a)->TryGrab(*(dActor_c *)c) != 0) {
                                 *(int*)(c + 0x494) = (int)a;
                                 *(int*)(c + 0x98) = 0;
                                 KingBobOmb_SetState(c, data_ov078_0212707c);
@@ -1329,15 +1307,15 @@ int func_ov078_02125448(char* c)
 
         if (*(unsigned char*)(c + 0x504) == 0) {
             if (data_0209f220[0] == 1) {
-                if (_ZN8dActor_c13DistToCPlayerEv(c) < 0x3e8000) {
-                    if (AngleDiff(_ZN8dActor_c18HorzAngleToCPlayerEv(c), *(short*)(c + 0x8e)) < 0x2800) {
+                if (((dActor_c *)c)->DistToCPlayer() < 0x3e8000) {
+                    if (AngleDiff(((dActor_c *)c)->HorzAngleToCPlayer(), *(short*)(c + 0x8e)) < 0x2800) {
                         index = 0;
                         empty = index;
                         z = index;
                         for (; index < 2; index++) {
                             slot = *(int*)(c + 0x424 + index * 4);
                             if (slot != 0) {
-                                if (_ZN8dActor_c10FindWithIDEj((unsigned int)slot) == 0) {
+                                if (dActor_c::FindWithID((unsigned int)slot) == 0) {
                                     *(int*)(c + 0x424 + index * 4) = z;
                                     *(unsigned char*)(c + 0x42c + index) = (unsigned char)z;
                                 }
@@ -1385,9 +1363,9 @@ extern "C" int func_ov078_02125790(char* self)
   Vector3 d;
   Vector3 v;
   if (func_ov078_02123804(self) == 1) return 1;
-  ApproachAngle((short*)(self + 0x94), _ZN8dActor_c18HorzAngleToCPlayerEv(self), 1, 0x500, 0x500);
+  ApproachAngle((short*)(self + 0x94), ((dActor_c *)self)->HorzAngleToCPlayer(), 1, 0x500, 0x500);
   *(short*)(self + 0x8e) = *(short*)(self + 0x94);
-  if (_ZNK9Animation12WillHitFrameEi(self + 0x31c, 0x46)) {
+  if (((Animation *)(self + 0x31c))->WillHitFrame(0x46)) {
     func_ov078_02125c24(self, 0x7d0000);
     func_02012694(0x12c, self + 0x74);
     s.x = 0;
@@ -1405,9 +1383,9 @@ extern "C" int func_ov078_02125790(char* self)
     v.y = d.y;
     s.z = d.z;
     v.z = d.z;
-    _ZN8dActor_c17HugeLandingDustAtER7Vector3b(self, &v, 1);
+    ((dActor_c *)self)->HugeLandingDustAt(v, 1);
   }
-  if (_ZN9Animation8FinishedEv(self + 0x31c)) {
+  if (((Animation *)(self + 0x31c))->Finished()) {
     KingBobOmb_SetState(self, &data_ov078_0212703c);
   }
   return 1;
@@ -1431,7 +1409,6 @@ int func_ov078_021258e4(int *t)
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125950
 void ApproachLinear(short &v, short t, short step);
-extern "C" void _ZN7Message7EndTalkEv();
 
 extern "C" int func_ov078_02125950(char *c)
 {
@@ -1446,8 +1423,8 @@ extern "C" int func_ov078_02125950(char *c)
     short ang = Vec3_HorzAngle(arg0, &v);
     ApproachLinear(*(short *)(c + 0x8e), ang, 0x800);
     *(short *)(c + 0x94) = *(short *)(c + 0x8e);
-    if (_ZN6Player12GetTalkStateEv(target) == -1) {
-        _ZN7Message7EndTalkEv();
+    if (((Player *)target)->GetTalkState() == -1) {
+        Message::EndTalk();
         func_02011d44();
         _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);
         KingBobOmb_SetState(c, &data_ov078_0212701c);
@@ -1496,7 +1473,7 @@ int func_ov078_021259ec(char* c)
         return 1;
     }
 
-    player = _ZN8dActor_c13ClosestPlayerEv(c);
+    player = ((dActor_c *)c)->ClosestPlayer();
     if (player != 0) {
         *(struct M3*)&ppos = *(struct M3*)((char*)player + 0x5c);
 
@@ -1509,10 +1486,10 @@ int func_ov078_021259ec(char* c)
                 v.z = *(int*)(c + 0x64);
                 v.y = v.y + 0xc8000;
 
-                if (_ZN6Player9StartTalkER7fBase_cb(*(void**)(c + 0x430), c, 1)) {
+                if (((Player *)(*(void**)(c + 0x430)))->StartTalk(*(fBase_c *)c, 1)) {
                     _ZN7Message11PrepareTalkEv();
                     b = (data_0209f220[0] != 1) ? 0x93 : (unsigned int)(short)(*(int*)((char*)player + 8) + 0x96);
-                    if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(player, c, b, &v, 0, 0)) {
+                    if (((Player *)player)->ShowMessage(*(fBase_c *)c, b, (Vector3 *)(&v), 0, 0)) {
                         func_02012694(0x12a, c + 0x74);
                         *(unsigned char*)(c + 0x508) = 1;
                         KingBobOmb_SetState(c, &data_ov078_0212700c);
@@ -1572,7 +1549,7 @@ extern "C" int KingBobOmb_SetState(void *cv, void *pv) {
 extern "C" void func_ov078_02125c98(void* cv) {
   char* c = (char*)cv;
   int h = *(int*)(c+0x60);
-  if (_ZNK10dBgCh_Actr10IsOnGroundEv(c+0x110) == 0) {
+  if (((dBgCh_Actr *)(c+0x110))->IsOnGround() == 0) {
     dBgCh_Gnd rg;
     rg.SetObjAndPos(*(const Vector3*)(c+0x5c), 0);
     if (rg.DetectClsn() != 0)
@@ -1633,7 +1610,7 @@ void func_ov078_02125de0(char *c)
         id = ((unsigned int*)(c + 0x424))[i];
         if (id == 0)
             continue;
-        actor = (void*)_ZN8dActor_c10FindWithIDEj(id);
+        actor = (void*)dActor_c::FindWithID(id);
         if (actor == 0)
             continue;
 
@@ -1651,14 +1628,13 @@ void func_ov078_02125de0(char *c)
 
 
 extern "C" {
-extern struct Matrix4x3* _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(void* self, void* player, struct Vector3* pos);
 void func_ov078_02125f8c(void* c_){
     char* c = (char*)c_;
     void* player = *(void**)(c+0x494);
     int idx = 0;
     if(player == 0) return;
     if(*(int*)((char*)player+8) == 2) idx = 1;
-    struct Matrix4x3* res = _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(c, player, &data_ov078_0212711c[idx]);
+    struct Matrix4x3* res = ((dActor_c *)c)->UpdateCarry(*(Player *)player, *(Vector3 *)&data_ov078_0212711c[idx]);
     *(struct M12*)(c+0x2e8) = *(struct M12*)res;   /* flat: see include-union note */
 }
 }

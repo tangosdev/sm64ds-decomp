@@ -41969,39 +41969,39 @@ matched: yes</title></rect><rect x="1219.11" y="979.31" width="10.49" height="7.
 module: ov084
 addr: 0x0212f204
 size: 148 bytes
-matched: yes</title></rect><rect x="1219.11" y="986.75" width="10.49" height="3.42" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212f298
+matched: yes</title></rect><rect x="1219.11" y="986.75" width="10.49" height="3.42" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPkn_c11StateRegrowEv
 module: ov084
 addr: 0x0212f298
 size: 68 bytes
-matched: yes</title></rect><rect x="1219.11" y="990.17" width="10.49" height="4.83" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212f2dc
+matched: yes</title></rect><rect x="1219.11" y="990.17" width="10.49" height="4.83" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPkn_c9StateGoneEv
 module: ov084
 addr: 0x0212f2dc
 size: 96 bytes
-matched: yes</title></rect><rect x="1229.60" y="940.48" width="15.05" height="10.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212f33c
+matched: yes</title></rect><rect x="1229.60" y="940.48" width="15.05" height="10.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPkn_c11StateShrinkEv
 module: ov084
 addr: 0x0212f33c
 size: 292 bytes
-matched: yes</title></rect><rect x="1244.65" y="940.48" width="15.26" height="10.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212f460
+matched: yes</title></rect><rect x="1244.65" y="940.48" width="15.26" height="10.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPkn_c8StateDieEv
 module: ov084
 addr: 0x0212f460
 size: 296 bytes
-matched: yes</title></rect><rect x="1259.92" y="940.48" width="8.66" height="10.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212f588
+matched: yes</title></rect><rect x="1259.92" y="940.48" width="8.66" height="10.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPkn_c9StateDozeEv
 module: ov084
 addr: 0x0212f588
 size: 168 bytes
-matched: yes</title></rect><rect x="1268.58" y="940.48" width="8.66" height="10.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212f630
+matched: yes</title></rect><rect x="1268.58" y="940.48" width="8.66" height="10.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPkn_c9StateWakeEv
 module: ov084
 addr: 0x0212f630
 size: 168 bytes
-matched: yes</title></rect><rect x="1229.60" y="950.71" width="15.91" height="30.89" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212f6d8
+matched: yes</title></rect><rect x="1229.60" y="950.71" width="15.91" height="30.89" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPkn_c9StateBiteEv
 module: ov084
 addr: 0x0212f6d8
 size: 932 bytes
-matched: yes</title></rect><rect x="1229.60" y="981.61" width="15.91" height="13.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212fa7c
+matched: yes</title></rect><rect x="1229.60" y="981.61" width="15.91" height="13.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPkn_c10StateSleepEv
 module: ov084
 addr: 0x0212fa7c
 size: 404 bytes
-matched: yes</title></rect><rect x="1245.51" y="950.71" width="18.04" height="3.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212fc10
+matched: yes</title></rect><rect x="1245.51" y="950.71" width="18.04" height="3.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPkn_c9StateWaitEv
 module: ov084
 addr: 0x0212fc10
 size: 116 bytes
