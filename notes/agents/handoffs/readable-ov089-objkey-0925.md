@@ -7,10 +7,11 @@ This document describes this commit. The queue records its immutable output SHA.
 - Issue URL, task ID, stage, session and harness: https://github.com/tangosdev/sm64ds-decomp/issues/3154, task `readable-ov089-objkey-0925`, stage `revise`, role producer, session `claude-prod-readable-ov089-objkey-0925`, Claude Code.
 - Round 2: stage `revise`, role producer, session `claude-prod-readable-ov089-objkey-0925-r2`, Claude Code, input `be3560b7134e0d0848116f20be7820b41d509185` (the round-1 output). Comment-only rework of verifier findings V1 and V2; see Round 2 below.
 - Round 3: stage `revise`, role producer, session `claude-prod-readable-ov089-objkey-0925-r3`, Claude Code, input `ccd7f8295b463f2540761b1191a88dc7a84eea3e` (the round-2 output). Rework of verifier finding V4, plus V2a and V5; see Round 3 below.
+- Round 4: task `readable-ov089-objkey-0925-fix`, stage `revise`, role producer, session `claude-prod-readable-ov089-objkey-0925-fix`, Claude Code, input `3a56f41023f1c99e2bb1ff9f8e4eb91e471621a4` (the round-3 output merged with main `eb3bbdec336bec43a54e44cde5390017757c2b18`, which is the base for this round). Composition findings C1 (with R8 reopened) and C2; see Round 4 below.
 - Source branch and previous accepted input SHA: `readable/readable-ov089-objkey-0925`, input `c31f43bacfde4eb8e184b75077f85f4ba45a72a9` (origin/main at enqueue), which stays the tested base.
 - Original source base SHA and installed workflow/tool SHA: both `c31f43bacfde4eb8e184b75077f85f4ba45a72a9`.
 - Separate evidence commits and required artifacts in this commit: none. The compiler experiments below are prose records (the source change tried and the measured result); no experiment artifact is committed.
-- Next action, responsible role and blockers: independent verification (round 3) of this commit: comment accuracy (V4) and the V2a manifest wording. No blockers.
+- Next action, responsible role and blockers: independent verification of this commit against main `eb3bbdec33`, which doubles as the composition review: C1 and R8, the real `Player::SetNoControlState` call. No blockers.
 - Status: verified candidate, on the local evidence below.
 - Remaining uncommitted/local-only material and where it is preserved: none.
 
@@ -31,7 +32,7 @@ This document describes this commit. The queue records its immutable output SHA.
 | E4 | StateDrop | `mVertSpeed = -mVertSpeed >> 1; func_02012694(0x36, pos)`, two arguments as `src/func_02012694.cpp` defines it | 10/10. Adopted. |
 | E5 | StateDrop | `data_0209f318` declared `Camera *` | bytes 10/10; decl gate FAIL (plurality `void *`). Declared `void *` with one cast. |
 | E6 | 02131dcc, 02131df4 | Definitions retyped `(daObjKey_c *, Player *)` | bytes 10/10; decl gate FAIL against the `(char *, char *)` declarations in the two shards. Kept `(char *, char *)` with typed locals. |
-| E7 | 02131df4 | `player->SetNoControlState(3, -1, 0)` and the local bridge declaration removed | bytes 10/10; decl gate FAIL: the removal flips the plurality for `_ZN6Player17SetNoControlStateEhih` and reds `src/game/actors/d_a_wanwan.cpp:678`. Bridge kept. |
+| E7 | 02131df4 | `player->SetNoControlState(3, -1, 0)` and the local bridge declaration removed | Round 1, on base `c31f43bacf`: bytes 10/10, but the decl gate failed, because `src/game/actors/d_a_wanwan.cpp` then carried its own local declaration and the removal flipped the plurality against it. Bridge kept. Main commit `0d3cb68a49` (#3145) later removed that wanwan declaration. Round 4, on `3a56f41023`: bytes 10/10, TU object identical, decl gate clean. Adopted (C1, R8). |
 | E8 | 02131df4 | Named fields; `ev`, `x` and the flags pointer temporaries dropped | 10/10. Adopted. |
 | E9 | 02131df4 | Position copied as `key->mPlayer->mPosX` member by member | DIFF. The pointer copy stays with one comment. |
 | E10 | UpdateModelTransform | Member rename; `mModelAnim.mat4x3`, `mModel.mat4x3`, `mShadowMatrix` | 10/10. Adopted. |
@@ -55,7 +56,7 @@ Verifier findings on `be3560b713`. Only comment lines in `src/actors/daObjKey_c.
 
 | ID | Finding | Outcome | Evidence |
 |---|---|---|---|
-| V1 | The bridge comment above the `extern "C"` block said every mangled name is a call the headers cannot spell; false for `Player::SetNoControlState` | Fixed | The comment now gives one reason per bridge, each checked against the header: `include/Camera.h` has no SetFlag_3 and `include/Particle__System.h` has no New (missing declaration); DropShadowRadHeight, dCcAcPos_c::Init and ModelAnim::SetAnim take Fix12<int> by value and the real calls do not match (E11, E21, E24; round 3 corrected the SetAnim clause, which round 2 wrote as untried); `include/dBgCh_Actr.h:113` declares Init with Fix12i, a typedef of s32 that mangles as `i`, not `5Fix12IiE`; `include/Player.h:512` declares SetNoControlState and the real call matches, and the local declaration stays for the plurality `src/game/actors/d_a_wanwan.cpp:678` needs (E7, R8). |
+| V1 | The bridge comment above the `extern "C"` block said every mangled name is a call the headers cannot spell; false for `Player::SetNoControlState` | Fixed | The comment now gives one reason per bridge, each checked against the header: `include/Camera.h` has no SetFlag_3 and `include/Particle__System.h` has no New (missing declaration); DropShadowRadHeight, dCcAcPos_c::Init and ModelAnim::SetAnim take Fix12<int> by value and the real calls do not match (E11, E21, E24; round 3 corrected the SetAnim clause, which round 2 wrote as untried); `include/dBgCh_Actr.h:113` declares Init with Fix12i, a typedef of s32 that mangles as `i`, not `5Fix12IiE`; `include/Player.h:512` declares SetNoControlState and the real call matches (E7); the round-2 comment also said the local declaration stays for the plurality `src/game/actors/d_a_wanwan.cpp` needs. Round 4 found that clause stale (C1), removed the declaration and the bullet, and now calls the member (R8). |
 | V2 | The banner called `func_ov089_0213162c` unmatched | Fixed | Banner now says it byte-matches but is enrolled without a `complete` marker (ov089 `delinks.txt:35-36`), so the build keeps the cartridge's bytes there. `python tools/match.py --c src/func_ov089_0213162c.c --func func_ov089_0213162c --addr 0x0213162c --size 0x4ec --version 2004/b56 --module ov089 --strict-relocs` reports MATCHING VERSIONS: 2004/b56. The banner's other claims were rechecked against ov089 `delinks.txt`: the run 0x02131b18..0x021327d0 (lines 38-40), D1 0x02130f00 and D0 0x02130f50 (lines 7-13), and the `func_ov089_02130fb4`, `UnloadKeyModels`, `LoadKeyModels`, `func_ov089_0213115c` and `func_ov089_021311c0` shards (lines 15-33), all with `complete` markers. |
 | V2a | `config/tu_manifest.d/ov089/daObjKey_c.json` `boundary_evidence[0]` repeats "the unmatched func_ov089_0213162c" and "the unmatched hole" | Fixed in round 3 | See Round 3 below. |
 | V3 | `mState` is really the key kind | Still deferred | Left as instructed. |
@@ -90,6 +91,29 @@ Round 3 proof, run in `C:/tmp/claude-rd-ov089` on this commit's source:
 | `python tools/check_dead_references.py` | 0 | no new dead references, no broken markdown links |
 | `python tools/check_decl_agreement.py --changed c31f43bacf` | 0 | no new local redeclarations, no new declaration disagreements |
 
+## Round 4
+
+Composition findings on `3a56f41023` against main `eb3bbdec33`. Changed: `src/actors/daObjKey_c.cpp` and this handoff; `git diff --name-only 3a56f41023..HEAD` lists exactly those two paths, and `include/daObjKey_c.h` needed no change.
+
+| ID | Finding | Outcome | Evidence |
+|---|---|---|---|
+| C1 | The bridge comment said the local `_ZN6Player17SetNoControlStateEhih` declaration holds the plurality `src/game/actors/d_a_wanwan.cpp` needs; main commit `0d3cb68a49` (#3145) removed wanwan's local declaration | Fixed | The bullet and the local declaration are gone; both sites call `player->SetNoControlState(3, -1, 0)` (E7, R8). |
+| R8 | Reopened by C1 | Fixed | See the R8 row in Findings. |
+| C2 | Two comments read `moveq/movne` | Fixed | Both now read "moveq and movne". |
+
+Round 4 proof, run in `C:/tmp/claude-rd-ov089` on this commit's source:
+
+| Command | Exit | Result |
+|---|---|---|
+| `python tools/tubuild.py verify ov089/daObjKey_c` | 0 | 10/10 MATCH, objisolate clean, reloc-destinations clean, at `3a56f41023` and at this commit; manifest not rewritten |
+| Object comparison with pyelftools, the object `tubuild verify` builds at `3a56f41023` against the one it builds at this commit | 0 | the two object files are byte-identical (`cmp`); 12 of 12 content sections identical (3260 .text bytes); 9 of 9 relocation sections and 103 of 103 relocations identical by offset, type and symbol; defined symbol set (13) and undefined symbol set (60) identical |
+| `python tools/rombuild.py -j16` (full, with ROM) | 0 | 7100 enrolled, 0 reused and 7100 compiled (`build/src/actors/daObjKey_c.o` rebuilt in this run); 11,214 of 11,214 source-built functions reproducing, 0 mismatching; module fidelity 106/106 exact; intact TU gates PASS with zero new symbol errors; `intactTuRom.identical` true. Its baseline control reports the pre-existing `dsd check symbols` failure on 9 arm9 and ITCM symbols. |
+| `python tools/prepush_linkcheck.py --range eb3bbdec33..HEAD` | 0 | 12 checked, 12 verified, 0 warnings, 0 blocking |
+| `python tools/check_decl_agreement.py --changed eb3bbdec33` | 0 | 15310 disagreements tree-wide; no new local redeclarations, no new declaration disagreements |
+| `python tools/check_dead_references.py` | 0 | no new dead references, no broken markdown links (run with this handoff in place) |
+| `python tools/check_src_tu_compiles.py` | 0 | 299/299 translation units compile |
+| `python tools/port_refcheck.py` | 0 | 408 references, all resolve |
+
 ## Findings
 
 Self-audit of the base, R1 to R24. Deferred rows name the owner as the next producer the coordinator assigns on #3154 (https://github.com/tangosdev/sm64ds-decomp/issues/3154).
@@ -103,7 +127,7 @@ Self-audit of the base, R1 to R24. Deferred rows name the owner as the next prod
 | R5 | mangled bridges | `ModelAnim::SetAnim`, `dCcAcPos_c::Init`, `dActor_c::DropShadowRadHeight`, `Particle::System::New` | Deferred: measured, no committed artifact | Fix12<int> by value: E11, E21. SetAnim as a real call: DIFF (E24). Particle::System::New is not declared by any header this TU may edit. Owner: next producer on #3154. |
 | R6 | mangled bridges | `dBgCh_Actr::Init` | Still deferred | `include/dBgCh_Actr.h` declares Init with `Fix12i`, which mangles to a different symbol; shared header outside this reservation. |
 | R7 | mangled bridges | `Camera::SetFlag_3`, `Sound::LoadAndSetMusic_Layer3` | Still deferred | `include/Camera.h` does not declare SetFlag_3 and `include/Sound.h` does not declare LoadAndSetMusic_Layer3; both shared headers are outside this reservation. |
-| R8 | mangled bridges | `Player::SetNoControlState` | Deferred: measured, no committed artifact | E7: the real call matches, but dropping the local bridge declaration flips the decl-gate plurality and reds an untouched file. |
+| R8 | mangled bridges | `Player::SetNoControlState` | Fixed in round 4 | Both sites call `player->SetNoControlState(3, -1, 0)` as `include/Player.h:512` declares it, and the local bridge declaration is gone. The round-1 blocker (a local declaration in `src/game/actors/d_a_wanwan.cpp`) left main in `0d3cb68a49`. E7, C1. |
 | R9 | unk_ fields | `unk_110`, `unk_41c`, `unk_420`, `unk_424`, `unk_442`, `unk_443`, `unk_448`, `unk_464`, `unk_468`, `unk_46c` | Fixed | Coined names from their uses (see Lineage); 0x110 typed `Player *`, 0x41c a Vector3. |
 | R10 | raw offsets | Whole free-function bodies (`func_ov089_02131b18`, `02131dcc`, `02131df4`, `02131f54`) written in raw `c + 0x...` offsets | Fixed | E1, E2, E8, E10. No raw `this` offset remains in the TU. |
 | R11 | raw offsets | `pad_1f0` and `pad_44c` hid a matrix and two camera vectors | Fixed | `mShadowMatrix`, `mSavedCamLookAt`, `mSavedCamPos`; 0x434 named `mCamLookAt`. D1 and D0 still match (see Proof). |
@@ -124,11 +148,11 @@ Self-audit of the base, R1 to R24. Deferred rows name the owner as the next prod
 ## Reconstruction dimensions
 
 - Exact function/byte and relocation coverage: 10/10 functions, objisolate clean, relocation destinations clean, ROM order.
-- Genuine methods; remaining free-function/ABI bridges: 8 members (OnTurnIntoEgg, OnYoshiTryEat, CleanupResources, Render, Behavior, InitResources, StateDrop, UpdateModelTransform) and 2 C-linkage helpers (R3). Mangled callee bridges remain for 9 symbols (R5 to R8): ModelAnim::SetAnim, dCcAcPos_c::Init, dBgCh_Actr::Init, dActor_c::DropShadowRadHeight, Particle::System::New, Camera::SetFlag_3, Player::SetNoControlState, Sound::LoadAndSetMusic_Layer3 (through `include/decl_common.h`), plus the linker veneer `dBgCh_Actr_UpdateContinuous_Veneer`, which is itself a ROM symbol.
+- Genuine methods; remaining free-function/ABI bridges: 8 members (OnTurnIntoEgg, OnYoshiTryEat, CleanupResources, Render, Behavior, InitResources, StateDrop, UpdateModelTransform) and 2 C-linkage helpers (R3). Mangled callee bridges remain for 8 symbols (R5 to R7): ModelAnim::SetAnim, dCcAcPos_c::Init, dBgCh_Actr::Init, dActor_c::DropShadowRadHeight, Particle::System::New, Camera::SetFlag_3, Sound::LoadAndSetMusic_Layer3 (through `include/decl_common.h`), plus the linker veneer `dBgCh_Actr_UpdateContinuous_Veneer`, which is itself a ROM symbol.
 - Recovered layout/fields; remaining shadow structs/raw offsets: every daObjKey_c field is named except `pad_428`; no raw `this` offset remains. R12 to R14 remain.
 - Lifecycle, vtable/RTTI, initializer and data ownership: unchanged. The two new members are non-virtual. D1 and D0 stay shards and still match against the new header.
 - Attribution preserved through each move/rename: the two `attribution.json` keys follow the renamed symbols with the same authors (`lunavyqo` keeps StateDrop, `tangosdev` keeps UpdateModelTransform).
-- Remaining agreed issue scope: R3, R5 to R8, R12 to R14, R17, R19 to R21, R24.
+- Remaining agreed issue scope: R3, R5 to R7, R12 to R14, R17, R19 to R21, R24.
 
 Residue. The `lines` column is `wc -l` of `git show <rev>:<path>` (newline count; every revision listed ends in a newline). Each token column is the number of lines containing the token, `grep -c -F`, with `MSYS_NO_PATHCONV=1`. Occurrence counts differ only at base for the source (21 `unk_` and 31 `func_` occurrences) and at this commit for `func_` (21 occurrences on 20 lines).
 
@@ -136,11 +160,13 @@ Residue. The `lines` column is `wc -l` of `git show <rev>:<path>` (newline count
 |---|---|---|---|---|---|---|
 | `src/actors/daObjKey_c.cpp` | base `c31f43bacf` | 520 | 17 | 30 | 5 | 83 |
 | `src/actors/daObjKey_c.cpp` | round 1 `be3560b713` | 456 | 0 | 20 | 3 | 38 |
-| `src/actors/daObjKey_c.cpp` | this commit | 467 | 0 | 20 | 3 | 38 |
+| `src/actors/daObjKey_c.cpp` | round 2 `ccd7f8295b` | 467 | 0 | 20 | 3 | 38 |
+| `src/actors/daObjKey_c.cpp` | round 3 `767919adc8`, and `3a56f41023` | 466 | 0 | 20 | 3 | 38 |
+| `src/actors/daObjKey_c.cpp` | this commit | 462 | 0 | 20 | 3 | 35 |
 | `include/daObjKey_c.h` | base `c31f43bacf` | 92 | 13 | 0 | 0 | 1 |
 | `include/daObjKey_c.h` | this commit | 75 | 0 | 0 | 0 | 1 |
 
-Of the 38 `_ZN` lines, 8 are symbol-marker comments and 8 are the banner comments above them. The header's one `_ZN` line is the destructor symbol in the class comment.
+Of the 35 `_ZN` lines at this commit, 8 are symbol-marker comments and 8 are the banner comments above them. The header's one `_ZN` line is the destructor symbol in the class comment.
 
 ## Changed paths
 
