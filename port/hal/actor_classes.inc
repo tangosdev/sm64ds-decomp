@@ -1825,13 +1825,13 @@ void hal_fill_bubba_vtable(void);                    /* _ZTV12daBakubaku_c, 31 *
    DEMOWAIT. Derivation in port/ov034_syms.txt, fill in
    hal/actor_classes_ov034.cpp, slice in port/slice_sweep2_ov034.txt. */
 extern unsigned char g_profile_HANACHAN[];            /* ov034 0x02114498, +4 = 248 */
-void *port_factory_wiggler(void);                    /* ov034 0x021136a4, 380 B */
+void *daHanachan_c_classInit(void);                  /* ov034 0x021136a4, 380 B */
 void hal_fill_wiggler_vtable(void);                  /* _ZTV7Wiggler, 31 */
-/* src/d_a_hanachan.c is HELD OUT of the slice and the factory is spelled by
-   hand: the ROM leaves the object operator new returned in r0 when Enemy::C2 is
-   entered, so the matched TU calls it with NO argument -- the ChiefChilly r0
-   ride-through (port/slice_w12.txt) -- and the name it spells, func_020aed98,
-   is an arm9-style spelling of ov002's _ZN12dEnemyBase_cC2Ev. */
+/* The factory is the matched src/d_a_hanachan.c (run linkfull lane SMALLS2),
+   the word the ROM's own profile holds (ov034 relocs.txt from:0x02114498).
+   The ChiefChilly r0 ride-through that held it out is gone from the synced
+   src, which passes the receiver to _ZN12dEnemyBase_cC2Ev; the hand-spelled
+   port_factory_wiggler that stood in for it is retired. */
 /* run rel0215 wave 2 (lane cast-sweep2): OV047'S OWN CAST, Bowser in the Sky --
    seven of level 39's nine skipped instances. THE CAMPAIGN PLAN LISTS THREE
    CLASSES HERE AND THE ROM HAS FOUR: id 156 (RTTI 20daObjKm3_Kaitendai_c, the
@@ -3014,7 +3014,7 @@ void hal_fill_cloud_vtable(void);               /* _ZTV5Cloud 0x02111858, 31 */
      hal_fill_bubba_vtable}, \
     /* ---- run rel0215 wave 2 (lane cast-sweep2): ov034, Tiny-Huge Island's \
        CAVE. Level 26's whole skip list in one row. ---- */ \
-    {248, "WIGGLER", g_profile_HANACHAN, port_factory_wiggler, \
+    {248, "WIGGLER", g_profile_HANACHAN, daHanachan_c_classInit, \
      hal_fill_wiggler_vtable}, \
     /* ---- run rel0215 wave 2 (lane cast-sweep2): ov047, Bowser in the Sky. \
        dsd's two vtable names are each attached ONE TABLE LATE, so the rows go \
