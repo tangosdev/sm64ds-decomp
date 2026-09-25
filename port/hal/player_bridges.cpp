@@ -2465,7 +2465,10 @@ int data_020a4b58[4], data_020a4b68[4], data_020a60f4[4];
    models timer interrupts, so the span has to be real before either.
    See port/irq2_map.txt section 8. */
 __declspec(align(8)) unsigned char data_023c0000[0x4000];
-int data_02099e94[4], data_02099ebc[4], data_02099ec4[4], data_02099fcc[4];
+/* data_02099e94 / ebc / ec4 are NOT here any more: they are three of the
+   twelve virtual member-pointer records fBase_c::Process is handed, hosted
+   as the ROM's {face, 0} pairs in hal/pmf3_cells.cpp (run linkfull, PMF3). */
+int data_02099fcc[4];
 /* data_020a6088 is NOT here any more. It is the head of the GX bank-state
    block, whose members the SetBankFor* family reaches by STRUCT OFFSET out to
    +0x18 and which func_02053d9c clears 26 bytes at a time, and the `int[2]`
