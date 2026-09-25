@@ -58,8 +58,13 @@ TIMEOUT = 600
 # the ROM's now and writes its heap-info block at the arena base, so the root
 # heap and everything carved from its head start 0x60 in (the level-1 log
 # prints both: "camera at 30039DE0", "tree: PLAYER 30039F98").
-CAMERA = 0x30039DE0
-PLAYER = 0x30039F98
+# And 0x1024 higher again since run linkfull wave 31 (lane S4OV0): ov000's
+# entry builds the ov0 handle table at boot, a permanent 0x80a * 2 = 4116-byte
+# block (plus its 16-byte header) off the root heap's head, before the game heap
+# is carved from it (the level-1 log: "camera at 3003AE04", "tree: PLAYER
+# 3003AFBC").
+CAMERA = 0x3003AE04
+PLAYER = 0x3003AFBC
 ARENA_BASE = 0x30000000
 
 
