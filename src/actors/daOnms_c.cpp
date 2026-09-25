@@ -38,18 +38,11 @@ extern SharedFilePtr data_ov092_02132540;
 extern SharedFilePtr data_ov092_02132548;
 
 extern "C" {
-void _ZN7fBase_c18MarkForDestructionEv(void *);
-void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 int func_ov002_020de328(void *player);
-void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *c);
 void dBgCh_Actr_UpdateContinuous_Veneer(void);
-int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
-int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
 void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *v, int f);
 void func_02012694(unsigned int id, const Vector3 *v);
-void _ZN8dActor_c13LandingDustAtER7Vector3b(void *self, Vector3 *v, int b);
-void _ZN8dActor_c14TriplePoofDustEv(void *self);
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3 &pos);
 int func_02037e38(void *p);
 int func_02037e84(void *p);
@@ -61,12 +54,9 @@ s16 data_02082214[];
 s8 data_ov092_0213208c[];
 int data_ov092_02132074[];
 int data_ov092_02132080[];
-dActor_c *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-int _ZN8dActor_c24BumpedUnderneathByPlayerER6Player(void *thiz, void *p);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int range, int offset);
 void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     dBgCh_Actr *self, int a1, int a2, int a3, int sp0, int sp1);
-void _ZN7PathPtr6FromIDEj(PathPtr *path, unsigned int id);
 void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angX);
@@ -82,9 +72,6 @@ void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
 extern char data_ov092_02132220;
 extern char data_ov092_02132294;
 extern struct Matrix4x3 data_020a0e68;
-void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_(
-    dBgW &clsn, dActor_c *clsnActor, dBgPi &res, Vector3 &pos,
-    Vector3_16 *motionAng, Vector3_16 *ang);
 
 void func_ov092_021316d8(char *c, int a1, int a2, int a3, s16 a4);
 void func_ov092_021319b0(char *c);
@@ -115,7 +102,7 @@ void func_ov092_02130fcc(char *c)
     cur = *(int *)(c + 0x60);
     if (cur >= limit)
         return;
-    _ZN7fBase_c18MarkForDestructionEv(c);
+    ((fBase_c *)c)->MarkForDestruction();
 }
 }
 
@@ -129,7 +116,7 @@ extern "C" int func_ov092_02131010(unsigned char *thiz)
 {
     struct Frame { Vector3 tmp; Vector3 eq; Vector3 dust; } f;
 
-    if (_ZN8dActor_c13ClosestPlayerEv(thiz) != 0) {
+    if (((dActor_c *)thiz)->ClosestPlayer() != 0) {
         if (((int (*)(void))func_ov002_020de328)() != 0) {
             int *p504 = (int *)LA(thiz + 0x504);
             int *p500 = (int *)LA(thiz + 0x500);
@@ -157,10 +144,10 @@ extern "C" int func_ov092_02131010(unsigned char *thiz)
         if (v == 0) return v;
     }
 
-    _ZN8dActor_c9UpdatePosEP5dCc_c(thiz, 0);
+    ((dActor_c *)thiz)->UpdatePos(0);
     ((void (*)(void *))dBgCh_Actr_UpdateContinuous_Veneer)(thiz + 0x324);
     {
-        int g = _ZNK10dBgCh_Actr10IsOnGroundEv(thiz + 0x324);
+        int g = ((dBgCh_Actr *)(thiz + 0x324))->IsOnGround();
         if (g == 0) return g;
     }
 
@@ -194,7 +181,7 @@ extern "C" int func_ov092_02131010(unsigned char *thiz)
         f.dust.y = y;
         f.dust.z = z;
     }
-    _ZN8dActor_c13LandingDustAtER7Vector3b(thiz, &f.dust, 1);
+    ((dActor_c *)thiz)->LandingDustAt(f.dust, 1);
 
     *(int *)(thiz + 0x9c) = 0;
     return 0;
@@ -219,21 +206,21 @@ extern "C" void func_ov092_021311b0(void *thiz)
         *p90 += ((s16 *)(c + 0x400))[0xe4 / 2];
     }
 
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
+    ((dActor_c *)c)->UpdatePos(0);
 
     saved[0] = *(int *)(c + 0x5c);
     saved[1] = *(int *)(c + 0x60);
     saved[2] = *(int *)(c + 0x64);
     ((void (*)(void *))dBgCh_Actr_UpdateContinuous_Veneer)(c + 0x324);
 
-    if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x324) != 0) {
-        _ZN8dActor_c14TriplePoofDustEv(c);
-        _ZN7fBase_c18MarkForDestructionEv(c);
+    if (((dBgCh_Actr *)(c + 0x324))->IsOnWall() != 0) {
+        ((dActor_c *)c)->TriplePoofDust();
+        ((fBase_c *)c)->MarkForDestruction();
         _ZN5Sound9PlayBank3EjRK7Vector3(0x41, *(const Vector3 *)(c + 0x74));
         return;
     }
 
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x324) == 0)
+    if (((dBgCh_Actr *)(c + 0x324))->IsOnGround() == 0)
         return;
 
     *(int *)(c + 0x55c) = *(int *)(c + 0x60);
@@ -265,9 +252,9 @@ extern "C" void func_ov092_021311b0(void *thiz)
     } else {
         char *o;
         int *p;
-        _ZN8dActor_c14TriplePoofDustEv(c);
+        ((dActor_c *)c)->TriplePoofDust();
         _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xfa, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
-        _ZN7fBase_c18MarkForDestructionEv(c);
+        ((fBase_c *)c)->MarkForDestruction();
         o = *(char **)(c + 0x320);
         p = (int *)LA(o + 0x5c);
         v2.x = p[0];
@@ -497,7 +484,7 @@ void func_ov092_021319b0(char* c)
 {
     unsigned int id = *(unsigned int*)(c + 0x50c);
     if (id == 0) return;
-    char* o = (char*)_ZN8dActor_c10FindWithIDEj(id);
+    char* o = (char*)dActor_c::FindWithID(id);
     if (o == 0) return;
     int b = (*(unsigned short*)(o + 0xc) == 0xbf);
     if (b == 0) return;
@@ -506,7 +493,7 @@ void func_ov092_021319b0(char* c)
         func_ov092_02131878(c, o, 0);
     } else if (f & 0x380) {
         func_ov092_02131878(c, o, 1);
-    } else if (_ZN8dActor_c24BumpedUnderneathByPlayerER6Player(c, o) != 0) {
+    } else if (((dActor_c *)c)->BumpedUnderneathByPlayer(*(Player *)o) != 0) {
         if (*(int*)(o + 0x60) > *(int*)(c + 0x60) - 0x64000)
             func_ov092_02131878(c, o, 2);
     }
@@ -520,14 +507,13 @@ extern "C" {
 
 struct MMC { char p[0x124]; };
 struct Obj { char p[0x2ec]; Matrix4x3 m; };
-void _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(void *, void *, short);
 void func_ov092_02131a88(char* self){
     Obj* o = (Obj*)self;
     o->m = *(Matrix4x3*)(self + 0xf0);
     *(int*)(self+0x310) = *(int*)(self+0x5c);
     *(int*)(self+0x314) = *(int*)(self+0x60);
     *(int*)(self+0x318) = *(int*)(self+0x64);
-    _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s((void *)(self + 0x124), (void *)&o->m, *(short *)(self + 0x8e));
+    ((dBgW_KcMbg *)(self + 0x124))->Transform(o->m, *(short *)(self + 0x8e));
 }
 }
 
@@ -633,7 +619,7 @@ int daOnms_c::InitResources()
         mMoveSeqIndex = 0;
         mMoveDir = *mMoveSeq;
     } else {
-        _ZN7PathPtr6FromIDEj(&mPathPtr, (param1 >> 8) & 0xf);
+        mPathPtr.FromID((param1 >> 8) & 0xf);
         mPathNodeCount = mPathPtr.NumNodes();
         mPathNodeIndex = 0;
         mPathPtr.GetNode(mPathNode, mPathNodeIndex);
@@ -659,7 +645,7 @@ int daOnms_c::InitResources()
         &mMeshCollider, (KCL_File *)f, &mClsnMat,
         0x1000, mAngleY, &data_ov092_02132220);
     func_020393d4((int *)&mMeshCollider,
-        (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+        (int)&dBgW::UpdatePosWithTransform);
 
     mOrientBits = (unsigned char)((mAngleX >> 0xe) & 3);
     {

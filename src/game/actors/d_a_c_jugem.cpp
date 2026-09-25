@@ -21,8 +21,6 @@ extern "C" {
 
 /* camera */
 void  _ZN6Camera9SetFlag_3Ev(void *cam);
-void  _ZN6Camera9SetLookAtERK7Vector3(void *cam, const void *v);
-void  _ZN6Camera6SetPosERK7Vector3(void *cam, const void *v);
 
 /* math / vector helpers */
 void  _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(void *cur, const void *tgt, int step);
@@ -48,22 +46,11 @@ void  MulVec3Mat4x3(const void *v, const void *m, void *out);
    The mangled spellings are kept wherever the real declaration takes a
    Fix12<int> or an s8/s16 BY VALUE, because mwccarm passes those differently
    at the call site than the loose spelling would. */
-void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
-s16   _ZN8dActor_c18HorzAngleToCPlayerEv(void *thiz);
-void  _ZN8dActor_c13SpawnSoundObjEj(void *thiz, u32 id);
-void  _ZN8dActor_c9UpdatePosEP5dCc_c(void *thiz, void *cc);
 int   _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
           void *thiz, void *sm, void *mtx, int rad, int height, u32 flags);
-void  _ZN7fBase_c18MarkForDestructionEv(void *thiz);
-void *_ZN7fBase_cnwEj(u32 size);
 void  _ZN12dEnemyBase_cC2Ev(void *thiz);
 
 /* Player / Message */
-int   _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
-          void *thiz, void *actor, u32 id, const void *pos, u32 a, u32 b);
-int   _ZN6Player12GetTalkStateEv(void *thiz);
-int   _ZN6Player18HasFinishedTalkingEv(void *thiz);
-int   _ZN6Player17SetNoControlStateEhih(int thiz, u8 a, int b, u8 c);
 
 /* Sound. The return type is load-bearing: two members test PlaySub's result
    in an `if`, so the `void` spelling one legacy file used cannot be the one.
@@ -78,8 +65,6 @@ void  _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *thiz, BTP_File &f
 void  _ZN9ModelAnimC1Ev(void *thiz);
 void  _ZN15TextureSequenceC1Ev(void *thiz);
 void  _ZN11ShadowModelC1Ev(void *thiz);
-int   _ZN15TextureSequence6UpdateER15ModelComponents(void *thiz, void *mc);
-void  _ZN9Animation7AdvanceEv(void *thiz);
 
 /* other overlays / arm9 */
 void  func_ov002_020c3e8c(void *player);
@@ -172,8 +157,8 @@ extern "C" int func_ov085_0212d5dc(daC_Jugem_c *c) {
   r.e = 0x250000;
   r.f = 0x1d4c000;
   _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(&c->mCamLookX, &r, 0x70000);
-  _ZN6Camera9SetLookAtERK7Vector3(cam, &c->mCamLookX);
-  _ZN6Camera6SetPosERK7Vector3(cam, &c->mCamPosX);
+  ((Camera *)cam)->SetLookAt(*(Vector3 *)&c->mCamLookX);
+  ((Camera *)cam)->SetPos(*(Vector3 *)&c->mCamPosX);
   Vec3_Dist(&c->mCamLookX, &r);
   c->mTimer++;
   if (c->mTimer > 0x64) {
@@ -186,7 +171,7 @@ extern "C" int func_ov085_0212d5dc(daC_Jugem_c *c) {
       c->mVertSpeed = 0;
       c->unk_0ac = 0;
       c->mAngleX = 0;
-      void *player = _ZN8dActor_c13ClosestPlayerEv(c);
+      void *player = c->ClosestPlayer();
       if (player != 0) {
         func_ov002_020c3e8c(player);
         data_0209caa0[2] |= 0x80;
@@ -235,8 +220,8 @@ int func_ov085_0212d73c(daC_Jugem_c *c)
     spd = c->mHorzSpeed >> 1;
     _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(&c->mCamLookX, &c->mPosX, spd);
     _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(&c->mCamPosX, &v[1], spd);
-    _ZN6Camera9SetLookAtERK7Vector3(cam, &c->mCamLookX);
-    _ZN6Camera6SetPosERK7Vector3(cam, &c->mCamPosX);
+    ((Camera *)cam)->SetLookAt(*(Vector3 *)&c->mCamLookX);
+    ((Camera *)cam)->SetPos(*(Vector3 *)&c->mCamPosX);
     Vec3_Sub(&v[2], &c->mPosX, &data_ov085_0213084c);
     len = LenVec3(&v[2]);
     if (len == 0 || len < 0x7d0000)
@@ -262,8 +247,8 @@ int func_ov085_0212d8ec(daC_Jugem_c *c) {
   c->mCamPosX = 0xffb65000;
   c->mCamPosY = 0x1d5000;
   c->mCamPosZ = 0x17fc000;
-  _ZN6Camera9SetLookAtERK7Vector3(cam, &c->mCamLookX);
-  _ZN6Camera6SetPosERK7Vector3(cam, &c->mCamPosX);
+  ((Camera *)cam)->SetLookAt(*(Vector3 *)&c->mCamLookX);
+  ((Camera *)cam)->SetPos(*(Vector3 *)&c->mCamPosX);
   c->unk_2cc = 0xa0;
   c->mPosX = data_ov085_02130840[0];
   c->mPosY = data_ov085_02130840[1];
@@ -276,7 +261,7 @@ int func_ov085_0212d8ec(daC_Jugem_c *c) {
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov085_0212d9b8(daC_Jugem_c *c)
 {
-    void* pl = _ZN8dActor_c13ClosestPlayerEv(c);
+    void* pl = c->ClosestPlayer();
     if (pl == 0) return 1;
 
     *(int *)(((int)&c->mTimer)) += 1;
@@ -338,8 +323,8 @@ int func_ov085_0212db04(daC_Jugem_c *c) {
   pos.x = -0x540000;
   pos.y = 0xe1000;
   pos.z = 0x19e4000;
-  _ZN6Camera9SetLookAtERK7Vector3(cam, &look);
-  _ZN6Camera6SetPosERK7Vector3(cam, &pos);
+  ((Camera *)cam)->SetLookAt(*(Vector3 *)&look);
+  ((Camera *)cam)->SetPos(*(Vector3 *)&pos);
   c->mHorzSpeed = 0;
   return 1;
 }
@@ -349,7 +334,7 @@ int func_ov085_0212db04(daC_Jugem_c *c) {
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov085_0212dbdc(daC_Jugem_c *c)
 {
-    Player *p = (Player *)_ZN8dActor_c13ClosestPlayerEv(c);
+    Player *p = c->ClosestPlayer();
     int* pp;
     if (p == 0)
         return 1;
@@ -405,7 +390,7 @@ extern "C" {
 
 int func_ov085_0212dd10(daC_Jugem_c *c)
 {
-    Player *p = (Player *)_ZN8dActor_c13ClosestPlayerEv(c);
+    Player *p = c->ClosestPlayer();
     if (!p) return 1;
     {
         short v = c->mAngleY;
@@ -449,8 +434,8 @@ int func_ov085_0212ddc4(daC_Jugem_c *c) {
   pos.x = 0xffa54000;
   pos.y = 0x1f4000;
   pos.z = 0x1ccf000;
-  _ZN6Camera9SetLookAtERK7Vector3(cam, &look);
-  _ZN6Camera6SetPosERK7Vector3(cam, &pos);
+  ((Camera *)cam)->SetLookAt(*(Vector3 *)&look);
+  ((Camera *)cam)->SetPos(*(Vector3 *)&pos);
   return 1;
 }
 }
@@ -508,7 +493,7 @@ extern "C" int func_ov085_0212df84(daC_Jugem_c *c)
     c->mTargetX = -0x5a0000;
     c->mTargetY = 0x1c0000;
     c->mTargetZ = 0x1a66000;
-    player = (Player *)_ZN8dActor_c13ClosestPlayerEv(c);
+    player = c->ClosestPlayer();
     if (player) {
         c->mSavedAngleY = player->mAngleY;
         func_ov002_020d228c(player);
@@ -521,8 +506,8 @@ extern "C" int func_ov085_0212df84(daC_Jugem_c *c)
     pos.x = 0xffb18000;
     pos.y = 0x18c000;
     pos.z = 0x1a89000;
-    _ZN6Camera9SetLookAtERK7Vector3(cam, &look);
-    _ZN6Camera6SetPosERK7Vector3(cam, &pos);
+    ((Camera *)cam)->SetLookAt(*(Vector3 *)&look);
+    ((Camera *)cam)->SetPos(*(Vector3 *)&pos);
     c->mStateTimer = 0x79;
     c->mPosX = c->mTargetX;
     c->mPosY = c->mTargetY;
@@ -547,7 +532,7 @@ int func_ov085_0212e078(daC_Jugem_c *c)
     if (*(unsigned short *)&c->mStateTimer == 0) {
         if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x4a, 0x7f, 0, 0x7222, 0) != 0) {
             if (c->mTalkPlayer->HasFinishedTalking() == 1) {
-                _ZN7fBase_c18MarkForDestructionEv(c);
+                c->MarkForDestruction();
                 data_0209f284 = 0;
             }
         }
@@ -629,7 +614,7 @@ int func_ov085_0212e310(daC_Jugem_c *c)
     Vector3 out;
     Player *p;
 
-    p = (Player *)_ZN8dActor_c13ClosestPlayerEv(c);
+    p = c->ClosestPlayer();
     if (p == 0) {
         return 1;
     }
@@ -694,7 +679,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 
 int func_ov085_0212e4a4(daC_Jugem_c *self)
 {
-    Player *p = (Player *)_ZN8dActor_c13ClosestPlayerEv(self);
+    Player *p = self->ClosestPlayer();
     if (p != 0) {
         V3 v = *(V3 *)&p->mPosX;
         if ((data_0209caa0[2] & 0x10000) != 0 &&
@@ -749,9 +734,9 @@ int func_ov085_0212e5ac(daC_Jugem_c *self)
     } else {
         self->mPosX = 0x1086000;
         if (self->unk_2cc == 0) {
-            p = (Player *)_ZN8dActor_c13ClosestPlayerEv(self);
+            p = self->ClosestPlayer();
             if (p != 0 && p->mPosX > 0x1086000) {
-                _ZN8dActor_c13SpawnSoundObjEj(self, 0);
+                self->SpawnSoundObj(0);
                 self->unk_2cc = 1;
             }
         }
@@ -856,7 +841,7 @@ void func_ov085_0212e858(daC_Jugem_c *c)
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, &c->mShadowModel1, &c->mShadowMat1, 0x46000, 0x258000, 0xf);
 
-    pl = (Player *)_ZN8dActor_c13ClosestPlayerEv(c);
+    pl = c->ClosestPlayer();
     if (pl == 0) return;
 
     /* early load of level, zero stacks, then player pos copy interleaved with cmp */
@@ -935,7 +920,7 @@ struct Sub { virtual int g0(); virtual int g1(); virtual int g2();
 int daC_Jugem_c::Render()
 {
   if (unk_2dc == 1) return 1;
-  _ZN15TextureSequence6UpdateER15ModelComponents(&mTextureSequence, &mModelAnim1.data);
+  mTextureSequence.Update(mModelAnim1.data);
   ((Sub*)((char*)&mModelAnim1))->g5(0);
   return 1;
 }
@@ -953,9 +938,9 @@ int daC_Jugem_c::Behavior()
   DecIfAbove0_Short((unsigned short *)&mStateTimer);
   BehState* st=(BehState *)mState;
   if(st->fn) (((BehC*)this)->*st->fn)();
-  _ZN8dActor_c9UpdatePosEP5dCc_c(this, 0);
-  _ZN9Animation7AdvanceEv(static_cast<Animation *>(&mModelAnim1));
-  _ZN9Animation7AdvanceEv(&mTextureSequence);
+  UpdatePos(0);
+  static_cast<Animation *>(&mModelAnim1)->Advance();
+  mTextureSequence.Advance();
   if((BehState *)mState==(BehState*)&data_ov085_021307d0){
     mAngleX=mPrevAngleX;
     mAngleY=mPrevAngleY;

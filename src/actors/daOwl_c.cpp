@@ -20,6 +20,7 @@
 #include "decl_common.h"
 #include "daOwl_c.h"
 #include "SharedFilePtr.h"
+#include "Player.h"
 
 /* decl_common.h includes common.h, so Matrix4x3 is the flat s32 m[12]
  * spelling. math/Matrix.h (via daOwl_c.h -> ModelAnim.h) stands down. */
@@ -42,12 +43,6 @@ struct C {
     PMF *pp;
 };
 
-/* Local Player, not include/Player.h. GetTalkState is a direct call; the
- * real class is only forward-declared by the actor headers. */
-struct Player {
-    int GetTalkState();
-};
-
 extern "C" {
 extern char data_ov094_02136b40[];
 extern char data_ov094_02136b60[];
@@ -62,23 +57,18 @@ void func_ov094_021357a4(char *c);
 
 /* Leftover: ModelAnim::SetAnim, dCcAcPos_c::Init, dBgCh_Actr::Init and
  * dActor_c::DropShadowRadHeight take Fix12<int> by value, so they stay mangled;
- * the other mangled externs have no member declaration in a shared header yet.
+ * the other mangled externs (Sound::PlayLong, dBgCh_Actr::Unk_0203589c) have no
+ * member declaration in a shared header yet.
  * RandomIntInternal stays unsigned so func_ov094_02135e64 keeps its logical shift. */
-void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *self, void *v);
-int _ZN8dActor_c10FindWithIDEj(unsigned id);
 int func_ov002_020df840(void *a, void *b, void *d);
 void _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(Vector3 *a, const Vector3 *b, Fix12i f);
 int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix, unsigned int b);
 int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void *pos, unsigned int d);
 int func_ov002_020df7f4(void *c);
-int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
 int func_ov002_020df7ac(void *thiz);
 void _ZN10dBgCh_Actr12Unk_0203589cEv(void *self);
 int func_02012694(int a, void *pos);
 int ApproachAngle(short *p, int target, int a, int b, int c);
-void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
-int _ZN6Player9StartTalkER7fBase_cb(void *thiz, void *ab, int b);
-int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *thiz, void *ab, unsigned int a, const void *v, unsigned int c, unsigned int d);
 int Vec3_Dist(const void *a, const void *b);
 short Vec3_HorzAngle(const void *a, const void *b);
 short Vec3_VertAngle(const void *a, const void *b);
@@ -92,7 +82,6 @@ void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Matrix4x3_FromTranslation(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
 void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
-void _ZN9ModelBase12ApplyOpacityEjj(void *self, unsigned int opacity, unsigned int unused);
 void MulMat4x3Mat4x3(const int *a, const int *b, int *dst);
 void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, void *sm, Matrix4x3 *m, Fix12i fx, int t, unsigned int u);
@@ -123,10 +112,10 @@ extern "C" void func_ov094_021357a4(char *c)
     tmp.x = data_ov094_02136a1c[0];
     tmp.y = data_ov094_02136a1c[1];
     tmp.z = data_ov094_02136a1c[2];
-    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x110, &tmp);
+    ((dCcAcPos_c *)(c + 0x110))->SetPosRelativeToActor(*(Vector3 *)&tmp);
     if (*(int *)(c + 0x134) == 0)
         return;
-    int a = _ZN8dActor_c10FindWithIDEj(*(int *)(c + 0x134));
+    int a = (int)dActor_c::FindWithID(*(int *)(c + 0x134));
     if (a == 0)
         return;
     int t = *(unsigned short *)(a + 0xc);
@@ -228,7 +217,7 @@ extern "C" int func_ov094_021359d8(void *thiz)
 
     ApproachAngle((short *)(c + 0x92), 0, 0xa, 0x200, 0x100);
 
-    if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x150) != 0 || func_02035638(c + 0x150) != 0) {
+    if (((dBgCh_Actr *)(c + 0x150))->IsOnWall() != 0 || func_02035638(c + 0x150) != 0) {
         rider = *(void **)(c + 0x3cc);
         if (rider != 0 && func_ov002_020df7ac(rider) != 0) {
             _ZN10dBgCh_Actr12Unk_0203589cEv(c + 0x150);
@@ -280,12 +269,12 @@ extern "C" int func_ov094_02135c28(void *thiz)
     V6 buf;
 
     if (*(u8 *)(c + 0x3d4) == 0) {
-        if (_ZN8dActor_c13ClosestPlayerEv(c) != 0) {
+        if (((dActor_c *)c)->ClosestPlayer() != 0) {
             void *player = *(void **)(c + 0x3d0);
             if (player != 0) {
                 if ((u16)(*(u16 *)((char *)player + 0x6ce) & 0x800) == 0) {
-                    if (_ZN6Player9StartTalkER7fBase_cb(player, c, 1) != 0) {
-                        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void **)(c + 0x3d0), c, 0xa2, (const void *)(c + 0x5c), 0, 0) == 1) {
+                    if (((Player *)player)->StartTalk(*(fBase_c *)c, 1) != 0) {
+                        if ((*(Player **)(c + 0x3d0))->ShowMessage(*(fBase_c *)c, 0xa2, (const Vector3 *)(c + 0x5c), 0, 0) == 1) {
                             func_02012694(0x176, (void *)(c + 0x74));
                             *(u8 *)(c + 0x3d4) = 1;
                             func_ov094_02136188((C *)c, (PMF *)data_ov094_02136b50);
@@ -379,7 +368,7 @@ extern "C" int func_ov094_02135fe0(char *c)
 extern "C" int func_ov094_02136024(char *c)
 {
 #define LA(p) ((char *)(unsigned)((unsigned)(p)))
-    char *p = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
+    char *p = (char *)((dActor_c *)c)->ClosestPlayer();
     if (p != 0 && *(int *)(p + 0x37c) != 0) {
         char *ip = LA(p + 0x5c);
         OwlVec pp;
@@ -444,7 +433,7 @@ extern "C" void func_ov094_021361d8(void *raw)
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
         *(s16 *)(self + 0x8c), *(s16 *)(self + 0x8e), *(s16 *)(self + 0x90));
-    _ZN9ModelBase12ApplyOpacityEjj(self + 0x30c, *(unsigned char *)(self + 0x3e4), 1);
+    ((ModelBase *)(self + 0x30c))->ApplyOpacity(*(unsigned char *)(self + 0x3e4), 1);
     *(Matrix4x3 *)(self + 0x328) = data_020a0e68;
     MulMat4x3Mat4x3((const int *)(*(char **)(self + 0x320) + 0x30),
         (const int *)(self + 0x328), out.m);
