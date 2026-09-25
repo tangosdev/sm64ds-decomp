@@ -1,0 +1,262 @@
+{
+  "id": "ov081/daObjIceBlock_c",
+  "module": "ov081",
+  "source": "src/game/actors/d_a_obj_ice_block.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_ice_block.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2127b34..0x21280d8, 10 function(s): the nine class members (including the func_ov081_02127be0 cargo-release helper) from build/tu_map.json (tools/tu_map.py), extended over the zero-gap daObjIceBlock_c_classInit factory tu_map cannot label because it cuts on symbol name. LEFT bound: daGmch_c_classInit ends exactly at 0x02127b34. RIGHT bound: 0x021280d8 is the end of ov081 .text; the .rodata that follows (data_ov081_021280d8) is referenced only from daGmch_c (0x021277d8, 0x02127a70) and is not claimed here.",
+    "class label(s): daObjIceBlock_c",
+    "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02127b34",
+      "end": "0x021280d8"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN15daObjIceBlock_cD1Ev",
+      "address": "0x02127b34",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN15daObjIceBlock_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN15daObjIceBlock_cD0Ev",
+      "address": "0x02127b80",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN15daObjIceBlock_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov081_02127be0",
+      "address": "0x02127be0",
+      "size": "0x000000ec",
+      "legacy_source": "src/func_ov081_02127be0.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN15daObjIceBlock_c15OnHitByMegaCharER6Player",
+      "address": "0x02127ccc",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN15daObjIceBlock_c15OnHitByMegaCharER6Player.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN15daObjIceBlock_c4KillEv",
+      "address": "0x02127cf4",
+      "size": "0x000000a4",
+      "legacy_source": "src/_ZN15daObjIceBlock_c4KillEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN15daObjIceBlock_c16CleanupResourcesEv",
+      "address": "0x02127d98",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN15daObjIceBlock_c16CleanupResourcesEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN15daObjIceBlock_c6RenderEv",
+      "address": "0x02127ddc",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN15daObjIceBlock_c6RenderEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN15daObjIceBlock_c8BehaviorEv",
+      "address": "0x02127e1c",
+      "size": "0x000001d4",
+      "legacy_source": "src/_ZN15daObjIceBlock_c8BehaviorEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN15daObjIceBlock_c13InitResourcesEv",
+      "address": "0x02127ff0",
+      "size": "0x000000b0",
+      "legacy_source": "src/_ZN15daObjIceBlock_c13InitResourcesEv.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "daObjIceBlock_c_classInit",
+      "address": "0x021280a0",
+      "size": "0x00000038",
+      "legacy_source": "src/d_a_obj_ice_block.c",
+      "ordinal": 9
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-assembled: tubuild create generated the nine class members; the classInit factory was folded in by hand, following the ov045 promotion d_a_obj_km2_agaru.cpp."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov081-daObjIceBlock_c/d_a_obj_ice_block.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 10,
+    "functions_declared": 10,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        28,
+        42,
+        43
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI15daObjIceBlock_c",
+        "_ZTS15daObjIceBlock_c",
+        "_ZTV15daObjIceBlock_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI15daObjIceBlock_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS15daObjIceBlock_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV15daObjIceBlock_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 temporary re-emits it with vague linkage; Behavior, Render, Kill and func_ov081_02127be0 all build Vector3 locals. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp is its enrolled `complete` owner of that 0x020072c0..0x020072c4 range. This object's copy is the identical 4-byte `bx lr` body (1e ff 2f e1) with no relocations, and no surviving section in this TU references it; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086d70, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Vague-linkage type-name string for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e60, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e78, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Vague-linkage type-name string for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e54, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Vague-linkage typeinfo record for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e390, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Vague-linkage type-name string for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e384, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x021089ec, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Vague-linkage type-name string for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x02108a04, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI15daObjIceBlock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov081",
+      "canonical_address": "0x02128c80",
+      "reason": "This class's own typeinfo record, vague-linkage and re-emitted by every TU that names its RTTI. The cartridge's own copy lives at ov081:0x02128c80 -- inside this module's .data but OUTSIDE the 0x02127b34..0x021280d8 .text run this entry claims -- so dsd delinks it from the image whatever this object does. MEASURED in extracted/overlays/overlay_0081.bin (base 0x02123740): the three words there are 0x0209a764 (__si_class_type_info's vtable+8), 0x02128c8c (its _ZTS) and 0x021089ec (_ZTI10dBgActor_c), so the cartridge itself states the direct base is dBgActor_c, exactly as the header declares."
+    },
+    {
+      "symbol": "_ZTS15daObjIceBlock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov081",
+      "canonical_address": "0x02128c8c",
+      "reason": "This class's own type-name string. The cartridge's own copy lives at ov081:0x02128c8c, outside the .text run this entry claims. MEASURED: the bytes there are the NUL-terminated '15daObjIceBlock_c' -- the ROM's own spelling of this class's name. This is where the promotion's class name comes from; the tree's IceBlock was coined and has no cartridge attestation."
+    },
+    {
+      "symbol": "_ZTV15daObjIceBlock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov081",
+      "canonical_address": "0x02128cc4",
+      "reason": "This class's own vtable, emitted here because InitResources -- the first non-inline virtual declared in the class body, the destructor above it being inline -- makes this TU the class's key-function TU. The cartridge's own copy lives outside the .text run this entry claims. MEASURED in extracted/overlays/overlay_0081.bin: 0x02128cc4 IS the address point -- 0x02128cbc is the offset-to-top word 0 and 0x02128cc0 is 0x02128c80 (&_ZTI15daObjIceBlock_c). Slots 0, 3, 6 and 9 hold 0x02127ff0, 0x02127d98, 0x02127e1c and 0x02127ddc (InitResources, CleanupResources, Behavior, Render); slots 16 and 17 hold 0x02127b34 / 0x02127b80 (D1 then D0); slot 27 holds 0x02127ccc (OnHitByMegaChar) and slot 31 0x02127cf4 (Kill); every other slot is dBgActor_c's inherited word, and the table ends after 32 slots at 0x02128d44, followed only by zero padding to the end of .data at 0x02128d60."
+    }
+  ]
+}

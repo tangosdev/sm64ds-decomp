@@ -7573,20 +7573,20 @@
    "start": "0x2127b34",
    "end": "0x21280d8",
    "classes": [
-    "IceBlock"
+    "daObjIceBlock_c"
    ],
    "n_functions_map": 10,
    "n_files": 10,
    "files": [
-    "src/_ZN8IceBlockD1Ev.cpp",
-    "src/_ZN8IceBlockD0Ev.cpp",
+    "src/_ZN15daObjIceBlock_cD1Ev.cpp",
+    "src/_ZN15daObjIceBlock_cD0Ev.cpp",
     "src/func_ov081_02127be0.cpp",
-    "src/_ZN8IceBlock15OnHitByMegaCharER6Player.cpp",
-    "src/_ZN8IceBlock4KillEv.cpp",
-    "src/_ZN8IceBlock16CleanupResourcesEv.cpp",
-    "src/_ZN8IceBlock6RenderEv.cpp",
-    "src/_ZN8IceBlock8BehaviorEv.cpp",
-    "src/_ZN8IceBlock13InitResourcesEv.cpp",
+    "src/_ZN15daObjIceBlock_c15OnHitByMegaCharER6Player.cpp",
+    "src/_ZN15daObjIceBlock_c4KillEv.cpp",
+    "src/_ZN15daObjIceBlock_c16CleanupResourcesEv.cpp",
+    "src/_ZN15daObjIceBlock_c6RenderEv.cpp",
+    "src/_ZN15daObjIceBlock_c8BehaviorEv.cpp",
+    "src/_ZN15daObjIceBlock_c13InitResourcesEv.cpp",
     "src/d_a_obj_ice_block.c"
    ],
    "ext_mix": {

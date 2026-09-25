@@ -598,7 +598,7 @@ is three named member stores now.
 
 ---
 
-## IceBlock (`include/IceBlock.h`, [ov081](../config/arm9/overlays/ov081/symbols.txt), size 0x368)
+## daObjIceBlock_c (`include/daObjIceBlock_c.h`, [ov081](../config/arm9/overlays/ov081/symbols.txt), size 0x368)
 
 | Offset | Name | Evidence |
 | --- | --- | --- |

@@ -14587,8 +14587,8 @@
       "src/_ZN6Player19St_Electrocute_MainEv.cpp": [
         "return:unsigned int"
       ],
-      "src/_ZN8IceBlock8BehaviorEv.cpp": [
-        "return:unsigned int"
+      "src/game/actors/d_a_obj_ice_block.cpp": [
+        "param:#6 const Vector3_16f *"
       ],
       "src/_ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_.c": [
         "param:#6 const void *",
@@ -23848,6 +23848,11 @@
         "return:CLPS_Block"
       ]
     },
+    "data_ov002_0210d8d4": {
+      "src/game/actors/d_a_obj_ice_block.cpp": [
+        "return:CLPS_Block"
+      ]
+    },
     "data_ov002_0210d9a0": {
       "src/_ZN6Fwoosh13InitResourcesEv.cpp": [
         "return:char []"
@@ -30412,6 +30417,16 @@
     "data_ov081_02128ef8": {
       "src/__sinit_ov081_021284f0.c": [
         "return:S12"
+      ]
+    },
+    "data_ov081_02128fd0": {
+      "src/game/actors/d_a_obj_ice_block.cpp": [
+        "return:SharedFilePtr"
+      ]
+    },
+    "data_ov081_02128fd8": {
+      "src/game/actors/d_a_obj_ice_block.cpp": [
+        "return:SharedFilePtr"
       ]
     },
     "data_ov084_0213089c": {

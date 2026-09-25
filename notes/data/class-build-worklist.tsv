@@ -264,7 +264,7 @@ daObjFm_Battan_c	DONE	include\daObjFm_Battan_c.h	dBgActor_c	0	ov023	8
 daObjHatenaBlock_c	DONE	include\daObjHatenaBlock_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov102	11
 daObjHatenaSwitch_c	DONE	include\daObjHatenaSwitch_c.h	dBgActor_c	0	ov002	12
 daObjHmBskt_c	DONE	include\daObjHmBskt_c.h	dBgActor_c	0	ov030	6
-daObjIceBlock_c	DONE	include\IceBlock.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov081	8
+daObjIceBlock_c	DONE	include\daObjIceBlock_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov081	8
 daObjIceBoard_c	DONE	include\daObjIceBoard_c.h	dBgActor_c	0	ov018	9
 daObjKanban_c	DONE	include\daObjKanban_c.h	dBgActor_c	0	ov085	6
 daObjKi_Fune_c	DONE	include\daObjKi_Fune_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov016	6
