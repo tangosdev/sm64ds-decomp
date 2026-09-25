@@ -15772,6 +15772,9 @@
       ],
       "src/func_ov080_02124088.cpp": [
         "param:#2 const Vector3 &"
+      ],
+      "src/unnamed/ov063/func_ov063_0211a3d0.cpp": [
+        "param:#2 const Vector3 *"
       ]
     },
     "_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs": {
@@ -16299,14 +16302,32 @@
       "src/_ZN16daKing_Donketu_c13InitResourcesEv.cpp": [
         "return:short"
       ],
+      "src/actors/daMenbo_c.cpp": [
+        "return:int"
+      ],
       "src/actors/daWater_Hakidasi_c.cpp": [
         "return:short"
+      ],
+      "src/func_ov002_020b1bfc.cpp": [
+        "return:int"
       ],
       "src/func_ov016_021119ec.c": [
         "return:short"
       ],
+      "src/func_ov026_02111b24.c": [
+        "return:int"
+      ],
       "src/func_ov064_02119afc.cpp": [
         "return:short"
+      ],
+      "src/func_ov064_02119ea0.c": [
+        "return:int"
+      ],
+      "src/func_ov066_0211603c.c": [
+        "return:int"
+      ],
+      "src/func_ov079_0212682c.c": [
+        "return:int"
       ],
       "src/func_ov081_021243cc.cpp": [
         "return:short"
