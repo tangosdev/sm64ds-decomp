@@ -41,9 +41,8 @@
  *   mSoundHandle). The named spelling is not yet proved byte-identical.
  *   MulVec3Mat4x3 and Vec3_Add keep the `int *` spelling; InitResources
  *   casts at its three call sites (type-only, codegen-neutral).
- *   Sound::PlayLong, dCc_c::Clear/Update, dActor_c::FindWithID,
- *   Player::Burn and dCcPos_c::Init stay mangled: no shared header declares
- *   them in a form that keeps these call shapes.
+ *   Sound::PlayLong and dCcPos_c::Init stay mangled: no shared header
+ *   declares them in a form that keeps these call shapes.
  */
 
 #include "daObjFlamethrower_c.h"
