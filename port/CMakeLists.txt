@@ -23760,3 +23760,107 @@ endif()
 foreach(_trs5a walk_window walk_window_hires smoke_player)
     target_sources(${_trs5a} PRIVATE ${SLICE_W31_RS5A_SOURCES})
 endforeach()
+
+# ===========================================================================
+# RS5B (run linkfull wave 31B, lane RS5B): OPERATOR NEW, STAGE::UPDATEMESSAGE
+# AND THE SPHERE PASS RUN AS THE ROM'S OWN BODIES
+# ===========================================================================
+#
+# R3. port/slice_w31_rs5b.txt: src/_Znwj.cpp, the DS global operator new with
+# its real signature (main #1394). hal/cxxname_bridge.cpp's host body of the
+# same C symbol is retired in the same change, so the six targets that compile
+# that file take the src TU instead (smoke_actor / smoke_savestate /
+# smoke_persist stay EXCLUDE_FROM_ALL; they get it so their link line keeps the
+# symbol).
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_rs5b.txt" SLICE_W31_RS5B_LINES)
+set(SLICE_W31_RS5B_SOURCES "")
+foreach(line IN LISTS SLICE_W31_RS5B_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W31_RS5B_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_trs5b walk_window walk_window_hires smoke_player smoke_actor
+                smoke_savestate smoke_persist)
+    target_sources(${_trs5b} PRIVATE ${SLICE_W31_RS5B_SOURCES})
+endforeach()
+
+# R7. port/slice_w31_rs5b_stage.txt: src/_ZN5Stage13UpdateMessageEv.cpp, main's
+# blob, on the two targets that compile Stage::Behavior and hal/message_pump.cpp.
+# hal/stage_frame.cpp (another lane's file this wave) still defines
+# ?UpdateMessage@Stage@@SAXXZ as a face onto port_message_pump, so this TU is
+# compiled under a per-source rename and hal/message_pump.cpp's pump is one call
+# into it; the two decorated data names it asks for that nothing bridged are
+# aliased in that file. When the stage_frame.cpp face is deleted, delete this
+# define with it. src/ is untouched; the ARM object is main's.
+set(RS5B_R7_SRC
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN5Stage13UpdateMessageEv.cpp")
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_rs5b_stage.txt" SLICE_W31_RS5B_STAGE_LINES)
+set(SLICE_W31_RS5B_STAGE_SOURCES "")
+foreach(line IN LISTS SLICE_W31_RS5B_STAGE_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W31_RS5B_STAGE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+set_property(SOURCE "${RS5B_R7_SRC}" APPEND PROPERTY COMPILE_DEFINITIONS
+    "UpdateMessage=UpdateMessage_rom")
+foreach(_trs5bs walk_window walk_window_hires)
+    target_sources(${_trs5bs} PRIVATE ${SLICE_W31_RS5B_STAGE_SOURCES})
+endforeach()
+
+# R10. port/slice_w31_rs5b_hostgen.txt: dBgW_Kc::DetectClsn(dBgCh_SphCrr &),
+# the matched sphere pass, from its tools/hostgen.py copy (the DATA / MMIO
+# custom-command shape of the SMALLS2 block above): its DS square-root unit
+# stores reach port/ntr/io.cpp that way. It replaces the host transcription
+# port/unmatched/MeshCollider_DetectClsn_Sphere.cpp, retired off
+# port/slice_gate8.txt, on exactly the seven targets that slice fed.
+set(RS5B_HOSTGEN_TU
+    src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_rs5b_hostgen.txt" SLICE_W31_RS5B_HG_LINES)
+set(SLICE_W31_RS5B_HG_SOURCES "")
+foreach(line IN LISTS SLICE_W31_RS5B_HG_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    if(NOT line IN_LIST RS5B_HOSTGEN_TU)
+        message(FATAL_ERROR "port/slice_w31_rs5b_hostgen.txt row ${line} is "
+                "not on RS5B_HOSTGEN_TU: every row there exists to build from "
+                "its hostgen copy")
+    endif()
+    string(REGEX REPLACE "[.](c|cpp)$" ".cpp" _rs5b_rel "${line}")
+    set(_rs5b_out "${CMAKE_BINARY_DIR}/host-src/${_rs5b_rel}")
+    add_custom_command(OUTPUT "${_rs5b_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${line}
+        DEPENDS "${PORT_REPO_ROOT_ABS}/${line}"
+                "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${line}")
+    # The body makes a REAL virtual call, GetSurfaceInfo(triID, data_020a0cec),
+    # and every live collider carries the THIRTEEN-slot table the dBgW ctor TUs
+    # emit under unmatched/dBgW_HostAbi.h (the PORT_DBGW_HOSTABI_SOURCES block).
+    # Compiled against the twelve-slot include/dBgW.h the call is [eax+8], the
+    # empty HostRomD0SlotPad: the SurfaceInfo is never filled and the eight
+    # argument bytes are never popped, so the epilogue restores the caller's
+    # registers from the wrong slots (measured: level 1 faults on frame 1). The
+    # same /FI gives it slot 3, the cartridge's.
+    if(MSVC)
+        set_property(SOURCE "${_rs5b_out}" APPEND PROPERTY COMPILE_OPTIONS
+            "/FI${CMAKE_CURRENT_SOURCE_DIR}/unmatched/dBgW_HostAbi.h")
+    endif()
+    list(APPEND SLICE_W31_RS5B_HG_SOURCES "${_rs5b_out}")
+endforeach()
+list(LENGTH SLICE_W31_RS5B_HG_SOURCES _rs5b_n)
+list(LENGTH RS5B_HOSTGEN_TU _rs5b_want)
+if(NOT _rs5b_n EQUAL _rs5b_want)
+    message(FATAL_ERROR "port/slice_w31_rs5b_hostgen.txt lists ${_rs5b_n} of "
+            "the ${_rs5b_want} RS5B hostgen rows; a missing row is an "
+            "undefined sphere pass on every collision target")
+endif()
+foreach(_trs5bhg smoke_clsn smoke_actor smoke_savestate smoke_persist
+                 smoke_player walk_window walk_window_hires)
+    target_sources(${_trs5bhg} PRIVATE ${SLICE_W31_RS5B_HG_SOURCES})
+endforeach()

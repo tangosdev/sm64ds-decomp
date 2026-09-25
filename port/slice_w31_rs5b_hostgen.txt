@@ -1,0 +1,18 @@
+# slice_w31_rs5b_hostgen.txt -- run linkfull wave 31B, lane RS5B, row R10: the
+# sphere pass, built from its tools/hostgen.py copy (build/host-src) by the RS5B
+# block at the end of port/CMakeLists.txt, never raw. Every row here must also be
+# on that block's RS5B_HOSTGEN_TU list, and on no raw slice.
+#
+#   _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr  ITCM 0x01ffb830, 0x1bc8 bytes,
+#       MATCHING 2004/b56 (main 5ef36d34c3 #1655; the same blob 863c87a5 on
+#       main and here): dBgW_Kc::DetectClsn(dBgCh_SphCrr &), vtable slot 8, the
+#       sphere-versus-KCL query that holds every standing actor up. It inlines
+#       the DS square-root unit at four sites (SQRTCNT 0x40002b0 and SQRT_PARAM
+#       0x40002b8 stores, the busy bit and SQRT_RESULT 0x40002b4), so it is
+#       built from hostgen's copy: the seven MMIO rewrites route those through
+#       ntr::io_read / io_write, where port/ntr/io.cpp runs the unit on the
+#       parameter write (the IME save / restore stays a latch, as it was).
+#       It replaces the host transcription
+#       port/unmatched/MeshCollider_DetectClsn_Sphere.cpp (retired, off
+#       port/slice_gate8.txt), on the seven targets that slice fed.
+src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp

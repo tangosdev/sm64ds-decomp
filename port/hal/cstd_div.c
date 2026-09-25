@@ -44,6 +44,12 @@ s32 _ZN4cstd4fdivEii(s32 a, s32 b)
         q = n / b;
     return (s32)((q + 0x80000) >> 20);    /* fdiv_result */
 }
+/* The C++ spelling, for the narrow harnesses only (run linkfull, lane RS5B):
+   the matched sphere pass (src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp)
+   calls cstd::fdiv as a namespace function, ?fdiv@cstd@@YAHHH@Z. On the
+   seated targets src/_ZN4cstd4fdivEii.cpp defines that name and this block
+   is compiled out, so the alias never stands beside the ROM body. */
+#pragma comment(linker, "/alternatename:?fdiv@cstd@@YAHHH@Z=__ZN4cstd4fdivEii")
 #endif
 
 /* ---- DS INTEGER DIVISION SEMANTICS ----------------------------------------
