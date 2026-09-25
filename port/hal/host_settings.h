@@ -69,6 +69,10 @@ int host_setting_save_camera_mode(int mode);
      KeySelect    0x08 backspace (scene path only, keyboard only on the DS
                                  side too -- every free pad button is spoken
                                  for, see the scene loop)
+     KeyLook      0x5a Z        (the DS X button: the close-up camera, then
+                                 first-person look, Player::St_CameraZoom;
+                                 Z sits beside the attack key and nothing
+                                 else reads it)
 
    The four *Alt keys exist so the shipped "WASD and the arrows both walk"
    default is a fact the launcher can show and change rather than a rule
@@ -94,6 +98,19 @@ int host_setting_save_camera_mode(int mode);
      PadSelect    0      -- BACK opens the debug menu, so Select has no pad
                             default; bind it here if the menu is not wanted
                             on BACK.
+     PadLook      0x8000 Y -- the DS X button. The face buttons follow the
+                            DS by POSITION: A (bottom) is DS B, B (right) is
+                            DS A, X (left) is DS Y, so the top one, Y, is
+                            DS X.
+
+   KeyLook AND PadLook CAME AFTER 0.4.2. A settings.json written before them
+   names neither, so it reads both defaults like any other missing key, which
+   is how an updating player gets the button. One exception, for exactly
+   those files: when the file already puts another action on the default's
+   key (or pad button), the default would quietly add a camera toggle to a
+   choice the player made, so that half of Look starts unbound instead and
+   the [settings] line says so. A file that names KeyLook / PadLook is obeyed
+   as written, 0 included.
 
    The left stick and the d-pad walk, and the right stick, the bumpers and
    the right-stick click drive the camera. Those are not bindings in this
@@ -120,12 +137,12 @@ enum {
     HOST_KEY_UP = 0, HOST_KEY_DOWN, HOST_KEY_LEFT, HOST_KEY_RIGHT,
     HOST_KEY_UP_ALT, HOST_KEY_DOWN_ALT, HOST_KEY_LEFT_ALT, HOST_KEY_RIGHT_ALT,
     HOST_KEY_JUMP, HOST_KEY_ATTACK, HOST_KEY_CROUCH, HOST_KEY_RUN,
-    HOST_KEY_START, HOST_KEY_SELECT,
+    HOST_KEY_START, HOST_KEY_SELECT, HOST_KEY_LOOK,
     HOST_KEY_COUNT
 };
 enum {
     HOST_PAD_JUMP = 0, HOST_PAD_ATTACK, HOST_PAD_CROUCH, HOST_PAD_RUN,
-    HOST_PAD_START, HOST_PAD_SELECT,
+    HOST_PAD_START, HOST_PAD_SELECT, HOST_PAD_LOOK,
     HOST_PAD_COUNT
 };
 /* The two trigger pseudo-buttons a pad binding may name (see the PAD block

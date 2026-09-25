@@ -23301,3 +23301,120 @@ endif()
 foreach(_tw28dpad1 walk_window walk_window_hires smoke_player)
     target_sources(${_tw28dpad1} PRIVATE ${SLICE_W28_DPAD1_SOURCES})
 endforeach()
+
+# ===========================================================================
+# BOOBRICK1 (run linkfull, lane BOOBRICK1), R3: KING BOO'S GATE READS THE
+# ov055 WORD MIRROR LUIGI WRITES
+# ===========================================================================
+#
+# src/unnamed/ov063/func_ov063_02117cdc.c is King Boo's cutscene (ov063
+# 0x02117cdc). Its step 5 waits for (&data_ov008_02111b6c)[0] == 0x1f000
+# (line 160), and the name it spells picks ov008, the test map's level
+# overlay, out of the thirteen overlays that claim 0x02111b6c
+# (config/arm9/overlays/ov063/relocs.txt line 199, the literal at 0x02118434).
+# The same function's call at 0x02118004 lists overlays 27 and 55 (line 184),
+# and the R-L15B3 block above settled that one as ov055 by disassembly. The
+# two lists meet only at ov055: level 47's own level overlay, .bss
+# 0x02111b60..0x02111b80, and level 47 is the one level that places the
+# type-15 King Boo (actor 210, param 0xff03; port/tools/ov_places.py --id 210
+# gives level 12 x2 and level 47 x1, and level 12's two are Big Boo types).
+# So on the cartridge this read is always ov055's word: Mirror Luigi's fade,
+# data_ov055_02111b6c, which src/_ZN11MirrorLuigi8BehaviorEv.cpp moves toward
+# 0x1ffff by 0x400 a frame, landing on 0x1f000 at tick 124, the frame the
+# gate accepts.
+#
+# The port bound the ov008 name to a frozen host copy (port/hal/link21_rows.cpp
+# row 8, retired in the same change as this block), so the gate never opened:
+# the player stayed in the talk state after Luigi appeared and King Boo never
+# came. A per-source rename, not an /alternatename, for R-L15B3's reason: both
+# names are real ROM addresses of different overlays, and only this one TU's
+# read belongs to ov055. APPEND, so R-L15B3's define on the same source stays.
+# src/ is untouched; the object's only change is the symbol it references.
+set_property(SOURCE
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/unnamed/ov063/func_ov063_02117cdc.c"
+    APPEND PROPERTY COMPILE_DEFINITIONS
+    "data_ov008_02111b6c=data_ov055_02111b6c")
+
+# ===========================================================================
+# BOOBRICK1 (run linkfull, lane BOOBRICK1), R7: THE BRICK'S OWN SLOT 22
+# ===========================================================================
+#
+# _ZTV13daObjBlockL_c (ov002 0x02108adc) is the table BRICK_BLOCK (15),
+# BIG_BRICK_BLOCK (16), BLACK_BRICK_BLOCK (17), BRICK_BLOCK_SWITCH_ACTIVATED
+# (19) and FORTRESS_TOWER_WALL (46) all install, and it holds 0x020b37ec at
+# slot 22 (0x02108b34, config/arm9/overlays/ov002/relocs.txt line 13722):
+# BigBrickBlock::OnAttacked1, src/_ZN13BigBrickBlock11OnAttacked1ER8dActor_c.cpp.
+# The port trapped that slot. A Bob-omb's blast or a thrown crate against a
+# brick dispatches it (func_ov002_020ef228 calls slot 22 on the owner of the
+# wall the attacker touches), so the trap froze the brick in the quarantine
+# (gone from view, still solid) and unwound the Bob-omb before its blast
+# ended, and the Bob-omb blew up again every four frames (0.4.2 forum report
+# R7). hal/actor_classes.cpp now seats slot 22 on the ROM body, which calls
+# the brick's own Kill (slot 31) unless it is id 0x11.
+#
+# The TU was refused at port/slice_ov2t.txt for MSVC C2561, a bare `return;`
+# in an int body. Its _MSC_VER arm spells that early exit as the absence of
+# the call, the shape SignPost::OnAttacked1 and QuestionBlock::OnAttacked1 are
+# seated in, so it falls off the end like them and takes /wd4716, per source,
+# for the reason the PORT_FALLS_OFF_END_SOURCES block gives: the ROM sets no
+# return value on either path and nothing reads one. mwccarm builds the
+# unchanged #else arm, byte-identical.
+#
+# It also takes the tail-pad force-include every other BigBrickBlock TU gets
+# from the PORT_TAILPAD_DBGACTOR_SOURCES block, so all of the class's TUs in
+# the link see one class layout. APPEND, never SET, for that block's reason.
+#
+# The three targets that compile hal/actor_classes.cpp, whose slot-22 seat
+# references this body.
+set(BOOBRICK1_R7_SRC
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN13BigBrickBlock11OnAttacked1ER8dActor_c.cpp")
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_boobrick1.txt" SLICE_BOOBRICK1_LINES)
+set(SLICE_BOOBRICK1_SOURCES "")
+foreach(line IN LISTS SLICE_BOOBRICK1_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_BOOBRICK1_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+if(MSVC)
+    set_property(SOURCE "${BOOBRICK1_R7_SRC}" APPEND PROPERTY COMPILE_OPTIONS
+        /wd4716
+        "/FI${CMAKE_CURRENT_SOURCE_DIR}/unmatched/dBgActor_c_TailPad_HostAbi.h")
+endif()
+foreach(_tboobrick1 walk_window walk_window_hires smoke_player)
+    target_sources(${_tboobrick1} PRIVATE ${SLICE_BOOBRICK1_SOURCES})
+endforeach()
+
+# XREL1 (run linkfull): EVERY OVERLAY MOUNT DEPENDS ON THE CONFIG IT READS.
+#
+# tools/ovdata.py builds each mount out of its overlay's config/arm9/overlays/
+# <ov>/relocs.txt (which words are addresses), delinks.txt (the base and the
+# section ends) and symbols.txt (the per-symbol ranges), and the cross pass
+# builds on the mounts' sidecar maps. None of the add_custom_command calls
+# above names those three files, so a config edit -- a relocation row removed
+# because the word is not a pointer, a symbol moved -- left host-src/<ov>_data.c,
+# <ov>_syms.c and ov_cross.c holding the OLD patch lists in every incremental
+# build, and only a clean build saw the change. That is how a removed false
+# relocation can look fixed in one tree and still ship from another.
+#
+# So append the three files of each mount's OWN overlay to that mount's
+# command. The cross pass already depends on every sidecar map, so it re-runs
+# whenever a mount does. A mount whose name does not start ovNNN_ is refused
+# here rather than skipped: it would be the one that goes stale.
+set(_xrel1_mounts 0)
+foreach(_xrel1_map IN LISTS OV_DATA_MAPS)
+    string(REGEX REPLACE "[.]map$" "" _xrel1_out "${_xrel1_map}")
+    get_filename_component(_xrel1_name "${_xrel1_out}" NAME)
+    if(NOT _xrel1_name MATCHES "^(ov[0-9][0-9][0-9])_")
+        message(FATAL_ERROR "ovdata mount ${_xrel1_name} does not name its "
+                "overlay (ovNNN_...), so the XREL1 block cannot tie it to "
+                "its config/arm9/overlays/<ov>/ files")
+    endif()
+    set(_xrel1_cfg "${PORT_REPO_ROOT_ABS}/config/arm9/overlays/${CMAKE_MATCH_1}")
+    add_custom_command(OUTPUT "${_xrel1_out}" APPEND
+        DEPENDS "${_xrel1_cfg}/relocs.txt" "${_xrel1_cfg}/delinks.txt"
+                "${_xrel1_cfg}/symbols.txt")
+    math(EXPR _xrel1_mounts "${_xrel1_mounts} + 1")
+endforeach()
+message(STATUS "XREL1: ${_xrel1_mounts} ovdata mount(s) rebuild when their overlay's config changes")

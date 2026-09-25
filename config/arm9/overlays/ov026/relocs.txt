@@ -303,7 +303,6 @@ from:0x02113040 kind:load to:0x02112ea0 module:overlay(26)
 from:0x02113048 kind:load to:0x02112df4 module:overlay(26)
 from:0x02113050 kind:load to:0x02112dc4 module:overlay(26)
 from:0x02113058 kind:load to:0x02112e00 module:overlay(26)
-from:0x021135b4 kind:load to:0x0207fbf4 module:main
 from:0x02113a90 kind:load to:0x0209a764 module:main
 from:0x02113a94 kind:load to:0x02113aa8 module:overlay(26)
 from:0x02113a98 kind:load to:0x0208e390 module:main

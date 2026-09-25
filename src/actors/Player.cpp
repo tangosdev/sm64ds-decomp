@@ -233,14 +233,36 @@ int func_ov002_020bd8ac(unsigned char *p)
 // @symbol func_ov002_020bd8c0
 extern "C" {
 void func_ov002_020bd8c0(char* c, unsigned int r1){
+#ifdef _MSC_VER
+    /* SOUND::ENDMUSIC TAKES TWO ARGUMENTS, and on the cartridge the second one
+       rides in r1. src/_ZN5Sound8EndMusicEjj.cpp defines EndMusic(unsigned,
+       unsigned), and none of these four music-layer bodies writes r1 before
+       it calls EndMusic (0x020bd8d8 and 0x020bd900 here, 0x020bd960,
+       0x020bd99c and 0x020bd9c4, 0x020bda24 below), so each passes its own
+       second argument. The one-argument spelling in the #else arms is what
+       mwccarm compiles to those bytes. Under MSVC's cdecl it pushes one word,
+       and EndMusic spills into its second-argument slot, which is then the
+       caller's saved esi: the caller comes back with esi clobbered. These
+       arms pass what the cartridge passes. */
+    extern void _ZN5Sound8EndMusicEjj(unsigned int, unsigned int);
+#else
     extern int _ZN5Sound8EndMusicEjj(unsigned char);
+#endif
     extern int _ZN5Sound8SetMusicEjj(unsigned char, unsigned int);
   unsigned int r2=*(unsigned int*)(c+0x678);
   if(r2==0){
+#ifdef _MSC_VER
+    _ZN5Sound8EndMusicEjj(*(unsigned char*)(c+0x6d8), r1);
+#else
     _ZN5Sound8EndMusicEjj(*(unsigned char*)(c+0x6d8));
+#endif
     *(unsigned int*)(c+0x680)=0;
   } else if(*(unsigned int*)(c+0x680)==r1 && r2!=r1){
+#ifdef _MSC_VER
+    _ZN5Sound8EndMusicEjj(*(unsigned char*)(c+0x6d8), r1);
+#else
     _ZN5Sound8EndMusicEjj(*(unsigned char*)(c+0x6d8));
+#endif
     _ZN5Sound8SetMusicEjj(*(unsigned char*)(c+0x6d8), *(unsigned int*)(c+0x678));
     *(unsigned int*)(c+0x680)=*(unsigned int*)(c+0x678);
   }
@@ -254,12 +276,20 @@ void func_ov002_020bd8c0(char* c, unsigned int r1){
 // @symbol func_ov002_020bd928
 extern "C" {
 void func_ov002_020bd928(char* c, unsigned int r4){
+#ifdef _MSC_VER
+    extern void _ZN5Sound8EndMusicEjj(unsigned int, unsigned int);
+#else
     extern int _ZN5Sound8EndMusicEjj(unsigned char);
+#endif
     extern int _ZN5Sound8SetMusicEjj(unsigned char, unsigned int);
   unsigned int r2=*(unsigned int*)(c+0x678);
   if(r2==r4){ *(unsigned int*)(c+0x67c)=r4; return; }
   if((r2|*(unsigned int*)(c+0x67c))!=0){
+#ifdef _MSC_VER
+    _ZN5Sound8EndMusicEjj(*(unsigned char*)(c+0x6d8), r4);
+#else
     _ZN5Sound8EndMusicEjj(*(unsigned char*)(c+0x6d8));
+#endif
   }
   *(unsigned int*)(c+0x67c)=r4;
   *(unsigned int*)(c+0x680)=r4;
@@ -273,14 +303,26 @@ void func_ov002_020bd928(char* c, unsigned int r4){
 // @symbol func_ov002_020bd984
 extern "C" {
 void func_ov002_020bd984(char* c, unsigned int r1){
+#ifdef _MSC_VER
+    extern void _ZN5Sound8EndMusicEjj(unsigned int, unsigned int);
+#else
     extern int _ZN5Sound8EndMusicEjj(unsigned char);
+#endif
     extern int _ZN5Sound8SetMusicEjj(unsigned char, unsigned int);
   unsigned int r2=*(unsigned int*)(c+0x67c);
   if(r2==0){
+#ifdef _MSC_VER
+    _ZN5Sound8EndMusicEjj(*(unsigned char*)(c+0x6d8), r1);
+#else
     _ZN5Sound8EndMusicEjj(*(unsigned char*)(c+0x6d8));
+#endif
     *(unsigned int*)(c+0x680)=0;
   } else if(*(unsigned int*)(c+0x680)==r1 && r2!=r1){
+#ifdef _MSC_VER
+    _ZN5Sound8EndMusicEjj(*(unsigned char*)(c+0x6d8), r1);
+#else
     _ZN5Sound8EndMusicEjj(*(unsigned char*)(c+0x6d8));
+#endif
     _ZN5Sound8SetMusicEjj(*(unsigned char*)(c+0x6d8), *(unsigned int*)(c+0x67c));
     *(unsigned int*)(c+0x680)=*(unsigned int*)(c+0x67c);
   }
@@ -294,12 +336,20 @@ void func_ov002_020bd984(char* c, unsigned int r1){
 // @symbol func_ov002_020bd9ec
 extern "C" {
 void func_ov002_020bd9ec(char* c, unsigned int r4){
+#ifdef _MSC_VER
+    extern void _ZN5Sound8EndMusicEjj(unsigned int, unsigned int);
+#else
     extern int _ZN5Sound8EndMusicEjj(unsigned char);
+#endif
     extern int _ZN5Sound8SetMusicEjj(unsigned char, unsigned int);
   unsigned int r2=*(unsigned int*)(c+0x67c);
   if(r2==r4){ *(unsigned int*)(c+0x678)=r4; return; }
   if((*(unsigned int*)(c+0x678)|r2)!=0){
+#ifdef _MSC_VER
+    _ZN5Sound8EndMusicEjj(*(unsigned char*)(c+0x6d8), r4);
+#else
     _ZN5Sound8EndMusicEjj(*(unsigned char*)(c+0x6d8));
+#endif
   }
   *(unsigned int*)(c+0x678)=r4;
   *(unsigned int*)(c+0x680)=r4;

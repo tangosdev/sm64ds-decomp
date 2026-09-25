@@ -470,7 +470,9 @@ static unsigned short g_pad_mirror_prev;
    src/func_0203df40.c publishes it and src/_ZN5Stage10CheckInputEv.cpp reads
    it back through the mode-0 remap map at data_02075650 (ROM bytes: A->1,
    B->2, R->0x400, Y->0x800, L->0x4000, X->0x8000). So the translation below
-   is that map's exact inverse, row by row, and nothing else crosses:
+   is that map's exact inverse, row by row, and nothing else crosses (X's row
+   is the look binding, settings.json KeyLook / PadLook, the first person
+   the cartridge enters on DS X):
    the Ctrl-only camera-rotate bits 0x100/0x200 have NO raw source in mode 0
    (on the DS they are the touch screen's arrows, Stage::CheckCameraInput),
    and passing them through as raw bits would land on R and L -- a phantom
@@ -486,6 +488,7 @@ static unsigned short host_btn_to_raw_keys(unsigned short btn)
     if (btn & 0x0400) raw |= 0x0100;   /* crouch: Ctrl 0x0400 <- raw R */
     if (btn & 0x0800) raw |= 0x0800;   /* run   : Ctrl 0x0800 <- raw Y */
     if (btn & 0x4000) raw |= 0x0200;   /* snap  : Ctrl 0x4000 <- raw L */
+    if (btn & 0x8000) raw |= 0x0400;   /* look  : Ctrl 0x8000 <- raw X */
     return raw;
 }
 
@@ -6692,7 +6695,8 @@ static void click_test_finish(void)
 /* ---- THE DS KEYPAD BITS BOTH PATHS AGREE ON (port mod, run link60 SW1) ----
    Buttons -> the Ctrl held/pressed fields directly (CheckInput's remap tables
    are ROM pointers with no host image). DS bits: 1 = A (punch), 2 = B (jump),
-   0x400 = X (crouch), 0x800 = Y (the dash button the walk core reads).
+   0x400 = crouch (DS R), 0x800 = Y (the dash button the walk core reads),
+   0x8000 = X (look: the close-up camera, then first person).
 
    Xbox layout per Tango: A jump, X run, B punch, bumpers rotate the camera. RT
    is meant to be crouch, but the old "crouch = 0x100" binding was a GUESS and
@@ -6720,6 +6724,8 @@ static unsigned short host_ds_buttons(int pad_live, const XPad *pad)
     if (g_run_key && key_live(g_run_key)) btn |= 0x800;
     if (key_act(HOST_KEY_CROUCH)) btn |= 0x400;
     if (key_act(HOST_KEY_ATTACK)) btn |= 1;
+    /* DS X, settings.json KeyLook: Z by default, beside the attack key */
+    if (key_act(HOST_KEY_LOOK)) btn |= 0x8000;
     if (pad_live) {
         if (pad_act(pad, HOST_PAD_JUMP)) btn |= 2;       /* A by default  */
         /* X by default; the rebind row moves it (0 = unbound) */
@@ -6731,6 +6737,9 @@ static unsigned short host_ds_buttons(int pad_live, const XPad *pad)
            trigger too, so nobody's crouch vanishes on update. */
         if (pad_act(pad, HOST_PAD_CROUCH)) btn |= 0x400;
         if (!host_setting_pad(HOST_PAD_CROUCH) && pad->rt > 100) btn |= 0x400;
+        /* DS X, PadLook: Y by default, the top face button, where X sits on
+           the DS (the face buttons map by position: A is DS B, B is DS A) */
+        if (pad_act(pad, HOST_PAD_LOOK)) btn |= 0x8000;
         /* the bumpers are camera-rotate and go in with the rest of the rotate
            input at the level loop's own call site, where the freecam gate is */
     }
@@ -8894,7 +8903,7 @@ static int scene_host_input_frame(HWND hwnd, int frame, XPad *pad,
            uses -- so the title's key word comes from the keyboard and the
            pad, never from a record something else may be filling. This
            word is MIXED convention by construction: host_ds_buttons'
-           four bits are Ctrl-convention and go through the translator;
+           five bits are Ctrl-convention and go through the translator;
            the d-pad, Start and Select added above are already raw DS bits
            (0xf0, 0x08, 0x04) and pass straight through. Named (run
            link100, lane INPUTRAW) because the pad-mirror store below
@@ -10974,7 +10983,7 @@ int main(void)
     {
         char b[HOST_KEY_COUNT][20];
         fprintf(stderr, "[keys] walk %s %s %s %s (alt %s %s %s %s) jump %s attack %s "
-                        "crouch %s start %s select %s\n",
+                        "crouch %s start %s select %s look %s\n",
                 run_key_name(g_key[HOST_KEY_UP], b[0], sizeof b[0]),
                 run_key_name(g_key[HOST_KEY_LEFT], b[1], sizeof b[0]),
                 run_key_name(g_key[HOST_KEY_DOWN], b[2], sizeof b[0]),
@@ -10987,15 +10996,17 @@ int main(void)
                 run_key_name(g_key[HOST_KEY_ATTACK], b[9], sizeof b[0]),
                 run_key_name(g_key[HOST_KEY_CROUCH], b[10], sizeof b[0]),
                 run_key_name(g_key[HOST_KEY_START], b[11], sizeof b[0]),
-                run_key_name(g_key[HOST_KEY_SELECT], b[12], sizeof b[0]));
+                run_key_name(g_key[HOST_KEY_SELECT], b[12], sizeof b[0]),
+                run_key_name(g_key[HOST_KEY_LOOK], b[13], sizeof b[0]));
         char pb[HOST_PAD_COUNT][20];
         fprintf(stderr, "[keys] pad jump %s attack %s crouch %s (and the right "
-                        "trigger) start %s select %s\n",
+                        "trigger) start %s select %s look %s\n",
                 run_pad_name(g_pad[HOST_PAD_JUMP], pb[0], sizeof pb[0]),
                 run_pad_name(g_pad[HOST_PAD_ATTACK], pb[1], sizeof pb[0]),
                 run_pad_name(g_pad[HOST_PAD_CROUCH], pb[2], sizeof pb[0]),
                 run_pad_name(g_pad[HOST_PAD_START], pb[3], sizeof pb[0]),
-                run_pad_name(g_pad[HOST_PAD_SELECT], pb[4], sizeof pb[0]));
+                run_pad_name(g_pad[HOST_PAD_SELECT], pb[4], sizeof pb[0]),
+                run_pad_name(g_pad[HOST_PAD_LOOK], pb[5], sizeof pb[0]));
     }
     /* SM64DS_DECEL_PROBE=1 (under a selftest): hold the stick and the dash
        button until DECEL_RELEASE, then let go of both and log the horizontal
@@ -12089,10 +12100,10 @@ int main(void)
         }
 
         /* Buttons -> the Ctrl held/pressed fields directly (CheckInput's
-           remap tables are ROM pointers with no host image). The four bits
+           remap tables are ROM pointers with no host image). The five bits
            this path and the windowed scene path must not disagree about are
-           host_ds_buttons' (jump, punch, crouch and the run button the player
-           bound, off the keyboard and off the pad); everything below is this
+           host_ds_buttons' (jump, punch, crouch, look and the bound run
+           button, off the keyboard and off the pad); everything below is this
            path's own tail -- the camera-rotate bits behind func_02009e70's own
            reader, run-mode AUTO, and the selftest probes -- and it is
            deliberately not shared, because every level selftest frame in the
