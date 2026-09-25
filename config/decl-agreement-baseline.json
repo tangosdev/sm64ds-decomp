@@ -13101,27 +13101,26 @@
       ]
     },
     "_ZN6Player17SetNoControlStateEhih": {
-      "src/_ZN6Player12St_Walk_InitEv.cpp": [
-        "return:void"
-      ],
-      "src/actors/Eyerok.cpp": [
-        "return:void"
+      "src/actors/daObjKey_c.cpp": [
+        "return:int"
       ],
       "src/func_ov002_020e8ef0.cpp": [
         "param:#2 int",
-        "param:#4 int"
+        "param:#4 int",
+        "return:int"
       ],
       "src/func_ov065_021183c8.c": [
         "param:#2 int",
-        "param:#4 int"
+        "param:#4 int",
+        "return:int"
       ],
       "src/game/actors/d_a_c_jugem.cpp": [
-        "param:#1 int"
+        "param:#1 int",
+        "return:int"
       ],
       "src/game/actors/d_a_ch_scene.cpp": [
         "param:#2 int",
-        "param:#4 int",
-        "return:void"
+        "param:#4 int"
       ]
     },
     "_ZN6Player17St_PunchKick_InitEv": {
@@ -17169,11 +17168,11 @@
       ]
     },
     "_ZN8dActor_c7FindEggER5dCc_c": {
-      "include/decl_Actor.h": [
-        "return:int"
+      "src/actors/Scuttlebug.cpp": [
+        "return:void *"
       ],
-      "src/actors/daTgz_c.cpp": [
-        "return:int"
+      "src/actors/daEykn_c.cpp": [
+        "return:void *"
       ]
     },
     "_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_": {

@@ -191,11 +191,11 @@
     "compilerOnlyOutput": {
       "requested": [
         "_ZN8daOnms_cD2Ev",
-        "_ZN21Frame$515daOnms_c_cppD1Ev",
+        "_ZN21Frame$518daOnms_c_cppD1Ev",
         "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
-        "_ZN21Frame$515daOnms_c_cppD1Ev",
+        "_ZN21Frame$518daOnms_c_cppD1Ev",
         "_ZN7Vector3D1Ev",
         "_ZN8daOnms_cD2Ev"
       ],
@@ -264,7 +264,7 @@
       "reason": "compiler-generated base-object destructor. The cartridge has only the D1 and D0 pair, at 0x02130f00 and 0x02130f5c, and no symbols row spells _ZN8daOnms_cD2Ev."
     },
     {
-      "symbol": "_ZN21Frame$515daOnms_c_cppD1Ev",
+      "symbol": "_ZN21Frame$518daOnms_c_cppD1Ev",
       "disposition": "deadstrip",
       "reason": "compiler-generated destructor of the local Frame in func_ov092_02131010. No symbols.txt row names it; the four-byte body is vague linkage from its Vector3 members and is not in the ROM."
     },
