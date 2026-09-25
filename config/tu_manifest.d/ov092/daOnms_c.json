@@ -1,0 +1,356 @@
+{
+  "id": "ov092/daOnms_c",
+  "module": "ov092",
+  "source": "src/actors/daOnms_c.cpp",
+  "promoted_source": "src/actors/daOnms_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x02130f00..0x02132018, 22 function(s), all complete delinks with no hole. build/tu_map.json names the run ov092/daOnms_c and no other class.",
+    "class label: daOnms_c. Cartridge type name at ov092:0x02132288 is the bytes 8daOnms_c. _ZTI8daOnms_c at 0x021322a0 points at _ZTI10dBgActor_c. _ZTV8daOnms_c is at 0x021322d0.",
+    "daOnms_c_classInit at 0x02132018..0x02132074 abuts this run and stays in src/d_a_onms.cpp.",
+    "module sinit corroboration: 1 sinit / 1 .ctor entry, sinit_vs_tu=ok, corroborated=False (module-wide, not narrowed to this TU)."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02130f00",
+      "end": "0x02132018"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN8daOnms_cD1Ev",
+      "address": "0x02130f00",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN8daOnms_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN8daOnms_cD0Ev",
+      "address": "0x02130f5c",
+      "size": "0x00000070",
+      "legacy_source": "src/_ZN8daOnms_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov092_02130fcc",
+      "address": "0x02130fcc",
+      "size": "0x00000044",
+      "legacy_source": "src/func_ov092_02130fcc.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov092_02131010",
+      "address": "0x02131010",
+      "size": "0x000001a0",
+      "legacy_source": "src/func_ov092_02131010.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov092_021311b0",
+      "address": "0x021311b0",
+      "size": "0x00000200",
+      "legacy_source": "src/func_ov092_021311b0.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov092_021313b0",
+      "address": "0x021313b0",
+      "size": "0x00000120",
+      "legacy_source": "src/func_ov092_021313b0.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov092_021314d0",
+      "address": "0x021314d0",
+      "size": "0x000000a8",
+      "legacy_source": "src/func_ov092_021314d0.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov092_02131578",
+      "address": "0x02131578",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov092_02131578.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov092_021315ac",
+      "address": "0x021315ac",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov092_021315ac.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov092_02131620",
+      "address": "0x02131620",
+      "size": "0x00000030",
+      "legacy_source": "src/func_ov092_02131620.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov092_02131650",
+      "address": "0x02131650",
+      "size": "0x00000030",
+      "legacy_source": "src/func_ov092_02131650.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov092_02131680",
+      "address": "0x02131680",
+      "size": "0x00000030",
+      "legacy_source": "src/func_ov092_02131680.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov092_021316b0",
+      "address": "0x021316b0",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov092_021316b0.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov092_021316d8",
+      "address": "0x021316d8",
+      "size": "0x000001a0",
+      "legacy_source": "src/func_ov092_021316d8.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov092_02131878",
+      "address": "0x02131878",
+      "size": "0x00000138",
+      "legacy_source": "src/func_ov092_02131878.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov092_021319b0",
+      "address": "0x021319b0",
+      "size": "0x000000d8",
+      "legacy_source": "src/func_ov092_021319b0.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov092_02131a88",
+      "address": "0x02131a88",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov092_02131a88.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov092_02131aec",
+      "address": "0x02131aec",
+      "size": "0x000000ec",
+      "legacy_source": "src/func_ov092_02131aec.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN8daOnms_c16CleanupResourcesEv",
+      "address": "0x02131bd8",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN8daOnms_c16CleanupResourcesEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN8daOnms_c6RenderEv",
+      "address": "0x02131c1c",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN8daOnms_c6RenderEv.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN8daOnms_c8BehaviorEv",
+      "address": "0x02131c44",
+      "size": "0x0000015c",
+      "legacy_source": "src/_ZN8daOnms_c8BehaviorEv.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN8daOnms_c13InitResourcesEv",
+      "address": "0x02131da0",
+      "size": "0x00000278",
+      "legacy_source": "src/_ZN8daOnms_c13InitResourcesEv.cpp",
+      "ordinal": 21
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Text-only. One out-of-line destructor under #pragma defer_codegen off emits D1 then D0 and anchors the vtable; D2 is compiler-only. The factory is the next function and is not in this TU.",
+    "daOnms_c.h is included first so the flat Matrix4x3 stands. No body reads Matrix4x3::t."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov092-daOnms_c/daOnms_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 22,
+    "functions_declared": 22,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN8daOnms_cD2Ev",
+        "_ZN21Frame$515daOnms_c_cppD1Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN21Frame$515daOnms_c_cppD1Ev",
+        "_ZN7Vector3D1Ev",
+        "_ZN8daOnms_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        15,
+        18,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8daOnms_c",
+        "_ZTS8daOnms_c",
+        "_ZTV8daOnms_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI8daOnms_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS8daOnms_c",
+        "_ZTV8daOnms_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN8daOnms_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-generated base-object destructor. The cartridge has only the D1 and D0 pair, at 0x02130f00 and 0x02130f5c, and no symbols row spells _ZN8daOnms_cD2Ev."
+    },
+    {
+      "symbol": "_ZN21Frame$515daOnms_c_cppD1Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-generated destructor of the local Frame in func_ov092_02131010. No symbols.txt row names it; the four-byte body is vague linkage from its Vector3 members and is not in the ROM."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3's four-byte destructor, vague linkage from Vector3 locals in func_ov092_02131010 and func_ov092_021311b0. The cartridge owns the one copy at arm9:0x020072c0."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "inherited vague-linkage RTTI; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "inherited vague-linkage RTTI; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "inherited vague-linkage RTTI; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "direct base __si_class_type_info. The third word of _ZTI8daOnms_c points here. The canonical copy stays in ov002."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in ov002."
+    },
+    {
+      "symbol": "_ZTI8daOnms_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov092",
+      "canonical_address": "0x021322a0",
+      "reason": "this class's __si_class_type_info, emitted because the out-of-line destructor is the key function. Homes at ov092:0x021322a0, outside the licensed .text."
+    },
+    {
+      "symbol": "_ZTS8daOnms_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov092",
+      "canonical_address": "0x02132288",
+      "reason": "type-name string. The overlay bytes at 0x02132288 are 8daOnms_c. Text-only; the ROM keeps the string."
+    },
+    {
+      "symbol": "_ZTV8daOnms_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov092",
+      "canonical_address": "0x021322d0",
+      "reason": "compiler-emitted vtable anchored by the out-of-line destructor. Public address point ov092:0x021322d0. g_profile_ONIMASU sits between the typeinfo and the vtable, so this promotion stays text-only and the ROM keeps the table."
+    }
+  ]
+}

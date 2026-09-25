@@ -17,21 +17,21 @@ func_ov025_02111a84 kind:function(arm,size=0xe0) addr:0x02111a84
 _ZN7daDkk_c8BehaviorEv kind:function(arm,size=0xc0) addr:0x02111b64
 _ZN7daDkk_c13InitResourcesEv kind:function(arm,size=0xd0) addr:0x02111c24
 daDkk_c_classInit kind:function(arm,size=0x4c) addr:0x02111cf4
-_ZN11PyramidStepD1Ev kind:function(arm,size=0x4c) addr:0x02111d40
-_ZN11PyramidStepD0Ev kind:function(arm,size=0x60) addr:0x02111d8c
-func_ov025_02111dec kind:function(arm,size=0x44) addr:0x02111dec
-func_ov025_02111e30 kind:function(arm,size=0x40) addr:0x02111e30
-_ZN11PyramidStep16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x02111e70
-_ZN11PyramidStep6RenderEv kind:function(arm,size=0x2c) addr:0x02111ea8
-_ZN11PyramidStep8BehaviorEv kind:function(arm,size=0xcc) addr:0x02111ed4
-_ZN11PyramidStep13InitResourcesEv kind:function(arm,size=0x10c) addr:0x02111fa0
+_ZN14daObjDpBrock_cD1Ev kind:function(arm,size=0x4c) addr:0x02111d40
+_ZN14daObjDpBrock_cD0Ev kind:function(arm,size=0x60) addr:0x02111d8c
+_ZN14daObjDpBrock_c23UpdateStepClsnPosAndRotEv kind:function(arm,size=0x44) addr:0x02111dec
+_ZN14daObjDpBrock_c25UpdateStepModelPosAndRotYEv kind:function(arm,size=0x40) addr:0x02111e30
+_ZN14daObjDpBrock_c16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x02111e70
+_ZN14daObjDpBrock_c6RenderEv kind:function(arm,size=0x2c) addr:0x02111ea8
+_ZN14daObjDpBrock_c8BehaviorEv kind:function(arm,size=0xcc) addr:0x02111ed4
+_ZN14daObjDpBrock_c13InitResourcesEv kind:function(arm,size=0x10c) addr:0x02111fa0
 daObjDpBrock_c_classInit kind:function(arm,size=0x38) addr:0x021120ac
-_ZN11PyramidLiftD1Ev kind:function(arm,size=0x64) addr:0x021120e4
-_ZN11PyramidLiftD0Ev kind:function(arm,size=0x78) addr:0x02112148
-_ZN11PyramidLift16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x021121c0
-_ZN11PyramidLift6RenderEv kind:function(arm,size=0x8c) addr:0x021121fc
-_ZN11PyramidLift8BehaviorEv kind:function(arm,size=0x210) addr:0x02112288
-_ZN11PyramidLift13InitResourcesEv kind:function(arm,size=0x124) addr:0x02112498
+_ZN10daDpLift_cD1Ev kind:function(arm,size=0x64) addr:0x021120e4
+_ZN10daDpLift_cD0Ev kind:function(arm,size=0x78) addr:0x02112148
+_ZN10daDpLift_c16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x021121c0
+_ZN10daDpLift_c6RenderEv kind:function(arm,size=0x8c) addr:0x021121fc
+_ZN10daDpLift_c8BehaviorEv kind:function(arm,size=0x210) addr:0x02112288
+_ZN10daDpLift_c13InitResourcesEv kind:function(arm,size=0x124) addr:0x02112498
 func_ov025_021125bc kind:function(arm,size=0x20) addr:0x021125bc
 func_ov025_021125dc kind:function(arm,size=0x14) addr:0x021125dc
 daDpLift_c_classInit kind:function(arm,size=0x64) addr:0x021125f0
@@ -133,7 +133,6 @@ data_ov025_021138d8 kind:data(any) addr:0x021138d8 ambiguous
 _ZTS14daObjDpBrock_c kind:data(any) addr:0x021138dc
 g_profile_DP_BROCK kind:data(any) addr:0x021138f0 ambiguous
 data_ov025_021138fc kind:data(any) addr:0x021138fc ambiguous
-_ZTV11PyramidStep kind:data(any) addr:0x02113914
 _ZTV14daObjDpBrock_c kind:data(any) addr:0x02113914
 data_ov025_02113934 kind:data(any) addr:0x02113934 ambiguous
 data_ov025_02113980 kind:data(any) addr:0x02113980 ambiguous
@@ -141,7 +140,7 @@ _ZTI10daDpLift_c kind:data(any) addr:0x02113994
 data_ov025_02113998 kind:data(any) addr:0x02113998 ambiguous
 _ZTS10daDpLift_c kind:data(any) addr:0x021139a0
 g_profile_DP_LIFT kind:data(any) addr:0x021139b0 ambiguous
-_ZTV11PyramidLift kind:data(any) addr:0x021139d4
+_ZTV10daDpLift_c kind:data(any) addr:0x021139d4
 data_ov025_021139f4 kind:data(any) addr:0x021139f4 ambiguous
 data_ov025_02113a00 kind:data(any) addr:0x02113a00 ambiguous
 data_ov025_02113a50 kind:data(any) addr:0x02113a50 ambiguous

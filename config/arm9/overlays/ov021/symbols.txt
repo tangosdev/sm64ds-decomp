@@ -1,34 +1,34 @@
-_ZN12WorkElevatorD1Ev kind:function(arm,size=0x74) addr:0x021111a0
-_ZN12WorkElevatorD0Ev kind:function(arm,size=0x88) addr:0x02111214
-func_ov021_0211129c kind:function(arm,size=0x198) addr:0x0211129c
-func_ov021_02111434 kind:function(arm,size=0x1a8) addr:0x02111434
-_ZN12WorkElevator16CleanupResourcesEv kind:function(arm,size=0x74) addr:0x021115dc
-_ZN12WorkElevator6RenderEv kind:function(arm,size=0x78) addr:0x02111650
-_ZN12WorkElevator8BehaviorEv kind:function(arm,size=0x5a4) addr:0x021116c8
-_ZN12WorkElevator13InitResourcesEv kind:function(arm,size=0x258) addr:0x02111c6c
-func_ov021_02111ec4 kind:function(arm,size=0x18) addr:0x02111ec4
-func_ov021_02111edc kind:function(arm,size=0x40) addr:0x02111edc
-func_ov021_02111f1c kind:function(arm,size=0x18) addr:0x02111f1c
-func_ov021_02111f34 kind:function(arm,size=0x40) addr:0x02111f34
-func_ov021_02111f74 kind:function(arm,size=0x18) addr:0x02111f74
-func_ov021_02111f8c kind:function(arm,size=0x40) addr:0x02111f8c
-func_ov021_02111fcc kind:function(arm,size=0x18) addr:0x02111fcc
-func_ov021_02111fe4 kind:function(arm,size=0x40) addr:0x02111fe4
-func_ov021_02112024 kind:function(arm,size=0x104) addr:0x02112024
-func_ov021_02112128 kind:function(arm,size=0x40) addr:0x02112128
+_ZN17daObjCvNewsLift_cD1Ev kind:function(arm,size=0x74) addr:0x021111a0
+_ZN17daObjCvNewsLift_cD0Ev kind:function(arm,size=0x88) addr:0x02111214
+_ZN17daObjCvNewsLift_c20UpdateClsnTransformsEv kind:function(arm,size=0x198) addr:0x0211129c
+_ZN17daObjCvNewsLift_c21UpdateModelTransformsEv kind:function(arm,size=0x1a8) addr:0x02111434
+_ZN17daObjCvNewsLift_c16CleanupResourcesEv kind:function(arm,size=0x74) addr:0x021115dc
+_ZN17daObjCvNewsLift_c6RenderEv kind:function(arm,size=0x78) addr:0x02111650
+_ZN17daObjCvNewsLift_c8BehaviorEv kind:function(arm,size=0x5a4) addr:0x021116c8
+_ZN17daObjCvNewsLift_c13InitResourcesEv kind:function(arm,size=0x258) addr:0x02111c6c
+_ZN17daObjCvNewsLift_c15OnPlatform3RideEP8dActor_c kind:function(arm,size=0x18) addr:0x02111ec4
+_ZN17daObjCvNewsLift_c17Platform3CallbackEP4dBgWPS_P8dActor_c kind:function(arm,size=0x40) addr:0x02111edc
+_ZN17daObjCvNewsLift_c15OnPlatform2RideEP8dActor_c kind:function(arm,size=0x18) addr:0x02111f1c
+_ZN17daObjCvNewsLift_c17Platform2CallbackEP4dBgWPS_P8dActor_c kind:function(arm,size=0x40) addr:0x02111f34
+_ZN17daObjCvNewsLift_c15OnPlatform1RideEP8dActor_c kind:function(arm,size=0x18) addr:0x02111f74
+_ZN17daObjCvNewsLift_c17Platform1CallbackEP4dBgWPS_P8dActor_c kind:function(arm,size=0x40) addr:0x02111f8c
+_ZN17daObjCvNewsLift_c15OnPlatform0RideEP8dActor_c kind:function(arm,size=0x18) addr:0x02111fcc
+_ZN17daObjCvNewsLift_c17Platform0CallbackEP4dBgWPS_P8dActor_c kind:function(arm,size=0x40) addr:0x02111fe4
+_ZN17daObjCvNewsLift_c14OnMainMeshRideEP8dActor_c kind:function(arm,size=0x104) addr:0x02112024
+_ZN17daObjCvNewsLift_c16MainMeshCallbackEP4dBgWPS_P8dActor_c kind:function(arm,size=0x40) addr:0x02112128
 daObjCvNewsLift_c_classInit kind:function(arm,size=0x80) addr:0x02112168
-_ZN11RollingRockD1Ev kind:function(arm,size=0x48) addr:0x021121e8
-_ZN11RollingRockD0Ev kind:function(arm,size=0x5c) addr:0x02112230
-_ZN11RollingRock16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x0211228c
+_ZN9daGrock_cD1Ev kind:function(arm,size=0x48) addr:0x021121e8
+_ZN9daGrock_cD0Ev kind:function(arm,size=0x5c) addr:0x02112230
+_ZN9daGrock_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x0211228c
 func_ov021_02112294 kind:function(arm,size=0x68) addr:0x02112294
 func_ov021_021122fc kind:function(arm,size=0xb4) addr:0x021122fc
 func_ov021_021123b0 kind:function(arm,size=0x194) addr:0x021123b0
 func_ov021_02112544 kind:function(arm,size=0x270) addr:0x02112544
 func_ov021_021127b4 kind:function(arm,size=0x44) addr:0x021127b4
-_ZN11RollingRock16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x021127f8
-_ZN11RollingRock6RenderEv kind:function(arm,size=0x38) addr:0x0211281c
-_ZN11RollingRock8BehaviorEv kind:function(arm,size=0x2d8) addr:0x02112854
-_ZN11RollingRock13InitResourcesEv kind:function(arm,size=0x238) addr:0x02112b2c
+_ZN9daGrock_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x021127f8
+_ZN9daGrock_c6RenderEv kind:function(arm,size=0x38) addr:0x0211281c
+_ZN9daGrock_c8BehaviorEv kind:function(arm,size=0x2d8) addr:0x02112854
+_ZN9daGrock_c13InitResourcesEv kind:function(arm,size=0x238) addr:0x02112b2c
 daGrock_c_classInit kind:function(arm,size=0x50) addr:0x02112d64
 _ZN16daObjCvShutter_cD1Ev kind:function(arm,size=0x50) addr:0x02112db4
 _ZN16daObjCvShutter_cD0Ev kind:function(arm,size=0x64) addr:0x02112e04
@@ -194,12 +194,11 @@ _ZTI17daObjCvNewsLift_c kind:data(any) addr:0x02114748
 data_ov021_02114750 kind:data(any) addr:0x02114750 ambiguous
 _ZTS17daObjCvNewsLift_c kind:data(any) addr:0x02114754
 g_profile_CV_NEWS_LIFT kind:data(any) addr:0x02114768 ambiguous
-_ZTV12WorkElevator kind:data(any) addr:0x0211478c
+_ZTV17daObjCvNewsLift_c kind:data(any) addr:0x0211478c
 data_ov021_021147c4 kind:data(any) addr:0x021147c4 ambiguous
 _ZTS9daGrock_c kind:data(any) addr:0x0211480c
 _ZTI9daGrock_c kind:data(any) addr:0x02114818
 g_profile_GORO_ROCK kind:data(any) addr:0x02114824 ambiguous
-_ZTV11RollingRock kind:data(any) addr:0x02114848
 _ZTV9daGrock_c kind:data(any) addr:0x02114848
 data_ov021_02114860 kind:data(any) addr:0x02114860 ambiguous
 data_ov021_02114874 kind:data(any) addr:0x02114874 ambiguous

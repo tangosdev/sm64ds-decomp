@@ -1,10 +1,13 @@
 //cpp
-/* ov016 / daObjKi_Fune_c -- the Jolly Roger Bay sunken ship.
+/* daObjKi_Fune_c -- the Jolly Roger Bay ship (KI_FUNE / KI_FUNE_UP), ov016.
  *
- * One class drives both halves of the pair: actor 0x39 takes model index 0, the
- * bobbing wreck that rides a sine table and loops a long sound while the player
- * is near; anything else takes index 1, the still hull, whose Behavior only
- * keeps its collider live.
+ * One class drives both halves of the pair: actor 0x39 takes model index 0,
+ * the ship that rocks on a sine of mBobAngle and loops a long sound while
+ * the player is within 3000.0; anything else takes index 1, the still hull,
+ * whose Behavior only keeps its collider live. InitResources succeeds for
+ * index 0 only once star 1 of SublevelToLevel(8) is collected (with
+ * data_0209f220 > 1), and for index 1 only until then, so the two never
+ * coexist.
  *
  * Every member of this class is defined here. This TU owns the whole seven
  * function linker run 0x0211260c..0x021129a0 as one `complete` span.
@@ -46,18 +49,18 @@
  * sibling that did join its factory (src/game/actors/d_a_obj_ki_ita.cpp) had
  * one, not two, to argue for.
  *
- * deslop
- * Leftover: Render still reaches dBgActor_c::mModel through a local `Base`
+ * Known limits:
+ *   Render still reaches dBgActor_c::mModel through a local `Base`
  *   shape instead of Model's own declaration, so slot 5 of that vtable is still
  *   unnamed. Both spellings reproduce the bytes; naming the slot is a Model.h
  *   question and not this TU's to answer.
- * Leftover: func_020393a4 / func_020393d4 are still the linker names of two
+ *   func_020393a4 / func_020393d4 are still the linker names of two
  *   arm9 dBgW helpers, and data_02082214 of the arm9 sine table Behavior indexes
  *   with mBobAngle. Naming those belongs in arm9.
- * Leftover: data_ov016_021136dc, data_ov016_021136e4 and data_ov016_021149d4 are
+ *   data_ov016_021136dc, data_ov016_021136e4 and data_ov016_021149d4 are
  *   still the linker names of this overlay's per-model file and CLPS tables.
  *   They are indexed by mModelIndex and this TU does not own them.
- * Leftover: func_ov016_021126a8 keeps its address-derived linker name and its
+ *   func_ov016_021126a8 keeps its address-derived linker name and its
  *   `char *` parameter. The ROM spells neither, so nothing is coined for it
  *   here and include/decl_common.h's declaration of it is deliberately kept.
  */
@@ -72,7 +75,7 @@
 #include "dBgW.h"
 
 /* Render's local view of the object at +0xd4 -- dBgActor_c::mModel -- reaching
- * its slot 5. See the Leftover note in the file banner. */
+ * its slot 5. See Known limits in the file banner. */
 struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
 
 struct Derived { char pad[0xd4]; Base base; };
@@ -93,30 +96,26 @@ extern void* _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Ve
 extern unsigned char data_0209f220;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN14daObjKi_Fune_c13InitResourcesEv, 0x0211283c, size 0x164 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjKi_Fune_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
 int daObjKi_Fune_c::InitResources()
 {
-    void* sp8[2];
+    void* clpsBlocks[2];
     unsigned int idx;
-    void* f;
-    int b;
-    sp8[0] = data_ov016_021149d4[0];
-    sp8[1] = data_ov016_021149d4[1];
-    b = (int)(actorID == 0x39);
-    if (b != 0) mModelIndex = 0;
+    void* file;
+    int isModel0;
+    clpsBlocks[0] = data_ov016_021149d4[0];
+    clpsBlocks[1] = data_ov016_021149d4[1];
+    isModel0 = (int)(actorID == 0x39);
+    if (isModel0 != 0) mModelIndex = 0;
     else mModelIndex = 1;
     idx = mModelIndex;
-    f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov016_021136e4[idx]);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, f, 1, -1);
+    file = _ZN5Model8LoadFileER13SharedFilePtr(data_ov016_021136e4[idx]);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, file, 1, -1);
     func_ov016_021126a8(((char*)this));
     UpdateClsnPosAndRot();
     idx = mModelIndex;
-    f = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov016_021136dc[idx]);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, f, ((char*)this)+0x2ec, 0x1000, mAngleY, sp8[idx]);
+    file = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov016_021136dc[idx]);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, file, ((char*)this)+0x2ec, 0x1000, mAngleY, clpsBlocks[idx]);
     if (mModelIndex == 0) {
         func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     }
@@ -134,11 +133,7 @@ ret1:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN14daObjKi_Fune_c8BehaviorEv, 0x0211276c, size 0xd0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjKi_Fune_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
 int daObjKi_Fune_c::Behavior()
 {
   if(((dBgW *)((char*)&mMeshCollider))->IsEnabled() == 0){
@@ -146,6 +141,7 @@ int daObjKi_Fune_c::Behavior()
   }
   func_020393a4((int*)((char*)&mMeshCollider), 0x2000000);
   if(mModelIndex == 0){
+    /* mBobAngle, through a short: the u16 member spelling fails ov016. */
     *(short*)(((int)((char*)this) + 0x320)) += 0xda;
     mAngleX = (short)((*(short*)((char*)data_02082214 + ((mBobAngle>>4)<<2)) << 0xa) >> 0xc);
     if(_ZN8dActor_c13DistToCPlayerEv(((char*)this)) < 0xbb8000){
@@ -157,21 +153,13 @@ int daObjKi_Fune_c::Behavior()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN14daObjKi_Fune_c6RenderEv, 0x02112744, size 0x28 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjKi_Fune_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
 int daObjKi_Fune_c::Render()
 {
- Base *b = &((Derived *)this)->base; b->m(0); return 1;
+ Base *model = &((Derived *)this)->base; model->m(0); return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN14daObjKi_Fune_c16CleanupResourcesEv, 0x021126f0, size 0x54 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjKi_Fune_c16CleanupResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
 int daObjKi_Fune_c::CleanupResources()
 {
   if(((dBgW *)((char*)&mMeshCollider))->IsEnabled())
@@ -181,11 +169,8 @@ int daObjKi_Fune_c::CleanupResources()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov016_021126a8, 0x021126a8, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov016_021126a8
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov016_021126a8(char *t)
 {
     Matrix4x3_FromRotationXYZExt(t + 0xf0, *(short *)(t + 0x8c), *(short *)(t + 0x8e), *(short *)(t + 0x90));

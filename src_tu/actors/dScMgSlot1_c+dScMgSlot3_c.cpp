@@ -2198,7 +2198,7 @@ int dScMgSlot1_c::OnHitFromUnderneath()
 
    The return type is unchanged and still `void`.  dScMgBase_c's body measures
    it directly now (an early `popne {r4,lr}; bxne lr` with no r0 set), where
-   before this file could only cite Stump::OnHitByMegaChar from the other
+   before this file could only cite daObjPile_c::OnHitByMegaChar from the other
    branch.
 
    The forwarding call is written qualified, `dScMgBase_c::OnHitByMegaChar()`,

@@ -81,7 +81,7 @@ extern int data_ov062_0211e004[];
 }
 
 // @symbol daRNk_c_classInit
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int *daRNk_c_classInit(void)
 {
     return (int *)new daRNk_c;
@@ -189,20 +189,20 @@ int daRNk_c::Render()
 }
 
 // @symbol func_ov062_0211aac0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov062_0211aac0(char* r6){
+extern "C" {
+void func_ov062_0211aac0(char* self){
   struct Vector3 v;
-  Vec3_Asr(&v, (struct Vector3*)(r6 + 0x5c), 3);
+  Vec3_Asr(&v, (struct Vector3*)(self + 0x5c), 3);
   Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-  Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(short*)(r6 + 0x8e));
+  Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(short*)(self + 0x8e));
   { struct M43w { int w[12]; };  /* array-wrapper copy: keeps C's block copy under -lang c++ */
-    *(M43w*)(r6 + 0x31c) = *(M43w*)&data_020a0e68; }
-  _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(r6, r6 + 0x364, r6 + 0x31c, 0xa0000, 0xa0000, 0xf);
+    *(M43w*)(self + 0x31c) = *(M43w*)&data_020a0e68; }
+  _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(self, self + 0x364, self + 0x31c, 0xa0000, 0xa0000, 0xf);
 }
 }
 
 // @symbol func_ov062_0211a9c4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 
 void func_ov062_0211a9c4(char *c)
 {
@@ -323,13 +323,13 @@ extern "C" void func_ov062_0211a740(char* c)
 }
 
 // @symbol func_ov062_0211a1f4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov062_0211a1f4(char *a)
 {
-        int r6;
-    int r5;
-    int r4;
-    int r7;
+        int progress;
+    int speedMul;
+    int status;
+    int speedScale;
     volatile int tmp[3];
 
     switch (*(u8 *)(a + 0x390)) {
@@ -352,10 +352,10 @@ void func_ov062_0211a1f4(char *a)
         func_0201267c(0x4d, a + 0x74);
         return;
     case 2:
-        r6 = func_ov062_02119af0(a);
+        progress = func_ov062_02119af0(a);
         if (*(int *)(a + 0x360) == data_ov062_0211e024[1])
             func_ov062_02119800(a);
-        if (r6 == -1) {
+        if (progress == -1) {
             char *o;
             if (*(int *)(a + 0x394) == 0)
                 return;
@@ -369,30 +369,30 @@ void func_ov062_0211a1f4(char *a)
             *(u8 *)(o + 0x16e) = 1;
             return;
         }
-        r4 = func_ov062_021199ac(a);
+        status = func_ov062_021199ac(a);
         if (((dActor_c *)a)->GetSubtraction(*(s16 *)(a + 0x94),
                 _ZN4cstd5atan2E5Fix12IiES1_(*(int *)(a + 0xd4), *(int *)(a + 0xdc))) >= 0x6000)
-            r7 = *(int *)(a + 0xd8) * 7 - 0x6000;
+            speedScale = *(int *)(a + 0xd8) * 7 - 0x6000;
         else
-            r7 = 0x1000;
+            speedScale = 0x1000;
         if (*(u8 *)(a + 0x3ac) == 0)
             *(u8 *)(a + 0x3ac) = ((daRNk_c *)a)->mPlayer->IsBeingShotOutOfCannon();
-        r5 = 4;
+        speedMul = 4;
         if (*(int *)(a + 0x394) != 0) {
             char *o = (char *)dActor_c::FindWithID(*(int *)(a + 0x394));
             if (o != 0) {
                 if (*(u8 *)(o + 0x16e) != 0 &&
                     Vec3_Dist((const Vector3 *)(a + 0x5c),
                               (const Vector3 *)&((daRNk_c *)a)->mPlayer->mPosX) > 0x7d0000)
-                    r5 = 8;
+                    speedMul = 8;
                 else if (data_0209f2f8 == 0x18)
-                    r5 = 6;
+                    speedMul = 6;
             }
         }
         {
-            int acc = r5 * 0x6000;
+            int acc = speedMul * 0x6000;
             ApproachLinear(*(int *)(a + 0x98),
-                (int)(((long long)acc * r7 + 0x800) >> 12), r5 * 0x19a);
+                (int)(((long long)acc * speedScale + 0x800) >> 12), speedMul * 0x19a);
         }
         ApproachLinear(*(s16 *)(a + 0x94), *(s16 *)(a + 0x3a8), 0x800);
         if (*(int *)(a + 0x360) == data_ov062_0211e024[1]) {
@@ -403,14 +403,14 @@ void func_ov062_0211a1f4(char *a)
                 (*(int *)(a + 0x360) == data_ov062_0211e014[1] || *(int *)(a + 0x360) == data_ov062_0211e004[1]))
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, (void *)data_ov062_0211e024[1], 0, 0x1000, 0);
         }
-        if (r6 == 1 && (*(int *)(a + 0x3bc) == *(u8 *)(a + 0x3ad) || *(int *)(a + 0x3bc) == *(u8 *)(a + 0x3ae))) {
+        if (progress == 1 && (*(int *)(a + 0x3bc) == *(u8 *)(a + 0x3ad) || *(int *)(a + 0x3bc) == *(u8 *)(a + 0x3ae))) {
             func_ov062_02119954(a);
             return;
         }
-        if (r4 != 0) {
-            if (r4 < 0)
+        if (status != 0) {
+            if (status < 0)
                 *(int *)(a + 0x98) = 0;
-            if (r4 == 0)
+            if (status == 0)
                 return;
             func_ov062_02119954(a);
             return;
@@ -455,20 +455,20 @@ void func_ov062_0211a1f4(char *a)
 }
 
 // @symbol func_ov062_0211a168
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov062_0211a168(char* r4){
-  ApproachLinear(*(int*)(r4 + 0x98), 0x3000, 0x1000);
-  if (((Animation *)(r4 + 0x350))->WillHitFrame(
-        (unsigned short)(((Animation *)(r4 + 0x350))->GetFrameCount() - 1)) == 0) return;
-  *(int*)(r4 + 0x38c) = 4;
-  *(int*)(r4 + 0x98) = 0x3000;
-  *(unsigned char*)(r4 + 0x390) = 0;
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char*)(r4 + 0x300), *(void**)(data_ov062_0211e01c + 4), 0x40000000, 0x1000, 0);
+extern "C" {
+void func_ov062_0211a168(char* self){
+  ApproachLinear(*(int*)(self + 0x98), 0x3000, 0x1000);
+  if (((Animation *)(self + 0x350))->WillHitFrame(
+        (unsigned short)(((Animation *)(self + 0x350))->GetFrameCount() - 1)) == 0) return;
+  *(int*)(self + 0x38c) = 4;
+  *(int*)(self + 0x98) = 0x3000;
+  *(unsigned char*)(self + 0x390) = 0;
+  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char*)(self + 0x300), *(void**)(data_ov062_0211e01c + 4), 0x40000000, 0x1000, 0);
 }
 }
 
 // @symbol func_ov062_0211a0f0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov062_0211a0f0(char* c)
 {
     ApproachLinear(*(int*)(c + 0x98), 0, 0x4000);
@@ -481,7 +481,7 @@ void func_ov062_0211a0f0(char* c)
 }
 
 // @symbol func_ov062_02119be0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov062_02119be0(char* self)
 {
     Vector3 playerPos;
@@ -677,7 +677,7 @@ extern "C" int func_ov062_02119af0(char *p) {
 }
 
 // @symbol func_ov062_021199ac
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov062_021199ac(char *self)
 {
     char *other;
@@ -732,7 +732,7 @@ ret0:
 }
 
 // @symbol func_ov062_02119954
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov062_02119954(void *c)
 {
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char*)c + 0x300, (void*)data_ov062_0211e02c[1], 0x40000000, 0x1000, 0);

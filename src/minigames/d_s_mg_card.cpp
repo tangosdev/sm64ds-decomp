@@ -1,10 +1,15 @@
 //cpp
-/* Picture Poker: the scene, player cards and dealer cards.
- * Production TU ov006/dScMgCard_c; the manifest owns all 37 functions.
+/* Picture Poker: the scene, the player's cards and the dealer's cards
+ * (ov006/dScMgCard_c, 37 functions).
  *
- * Keep definition order: the pinned compiler reverses ordinary function
- * sections. The inline scene destructor and four card lifecycle callbacks
- * preserve the cartridge's D1/D0 section order; see dScMgCard_c.h.
+ * Keep definition order: the compiler emits functions in reverse. The scene
+ * destructor is inline in dScMgCard_c.h, which with the four card
+ * constructor and destructor callbacks keeps D1 ahead of D0 as in the
+ * cartridge.
+ *
+ * Blocked: the ROM has no dScMgCard_c constructor, so the factory builds the
+ * scene by hand and its base constructor, operator new and vtable stores stay
+ * mangled; and the ov004 and ov006 helpers are unnamed in symbols.txt.
  */
 
 #include "dScMgCard_c.h"
@@ -74,18 +79,13 @@ extern int data_ov004_020bfa18;
 extern int data_ov006_0213bd48[];
 extern void FreeGfxSlotsById(int arg);
 extern void func_ov004_020b56c8(int a);
-/* already the mangled Itanium name in the ROM's own symbols.txt --
-extern "C" here means "use literally", not "C linkage" (see
-double-mangling-defect memory note: a C++ TU re-mangles a bare
-`extern` unless told not to, and this name is already the target). */
 extern s16 data_ov004_020bf9e4;
+/* The active scene, as a dScMgBase_c. */
 extern void* data_ov004_020beb68;
 extern "C" void func_ov006_020c1604(char *c, int unused, short a2, int a3);
 extern "C" void func_ov004_020b66d4(void);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
-/* data_ov004_020beb68 comes from dScMgBase_c.h (void*) -- not redeclared here,
-see its own use below. */
 extern void func_ov006_0210a534(char *);
 extern void *LoadFile(int);
 extern int GetGameLanguage(void);
@@ -115,14 +115,12 @@ void _ZN17dMgDilarCardObj_cC1Ev(void*);
 /* TUBUILD CONFLICT -- alternate declaration of func_ov006_020c0aa8, from the legacy file for _ZN11dScMgCard_c13InitResourcesEv, NOT applied: extern void func_ov006_020c0aa8(char *); */
 }
 
-/* ROM ordinal 37 -- dMgCardObj_c constructor ABI callback, 0x020dbe30. */
 // @symbol _ZN12dMgCardObj_cC1Ev
 extern "C" void _ZN12dMgCardObj_cC1Ev(void* elem)
 {
     *(int*)elem = (int)&_ZTV12dMgCardObj_c[2];
 }
 
-/* ROM ordinal 36 -- dMgDilarCardObj_c constructor ABI callback, 0x020dbe14. */
 // @symbol _ZN17dMgDilarCardObj_cC1Ev
 extern "C" void _ZN17dMgDilarCardObj_cC1Ev(void* elem)
 {
@@ -130,7 +128,6 @@ extern "C" void _ZN17dMgDilarCardObj_cC1Ev(void* elem)
     *(int*)elem = (int)&_ZTV17dMgDilarCardObj_c[2];
 }
 
-/* ROM ordinal 35 -- the unique MG_CARD profile factory, 0x020dbd54. */
 // @symbol dScMgCard_c_classInit
 extern "C" void* dScMgCard_c_classInit()
 {
@@ -151,24 +148,9 @@ extern "C" void* dScMgCard_c_classInit()
     return p;
 }
 
-/* --- the engine helpers, by their true names -------------------------------
-   These six calls used to be spelled by their mangled ROM names, declared
-   in the extern "C" block above. They are the real C++ names now -- plain
-   file-scope declarations, never extern "C", the idiom dScMgBSC_c's
-   conversion established -- and each one's mwcc mangling IS that same ROM
-   symbol, so every call below compiles to the same bl target as before:
-     Sound::PlayBank2_2D        _ZN5Sound12PlayBank2_2DEj
-     GX::LoadOBJPltt            _ZN2GX11LoadOBJPlttEPKvjj
-     GXS::LoadOBJPltt           _ZN3GXS11LoadOBJPlttEPKvjj
-     G2x::SetBlendAlpha         _ZN3G2x13SetBlendAlphaEPVttttj
-     ApproachLinear             _Z14ApproachLinearRiii
-     ApproachLinear2            _Z15ApproachLinear2Rsss
-   The parameter types are read off the mangled names, not chosen (see
-   include/G2x.h's own banner for why that matters): `j` unsigned int,
-   `t` unsigned short, `s` short, `Riii` int&, `Rsss` short&. Sound is a
-   namespace per include/Sound.h; GX/GXS are spelled as namespaces the same
-   way, since a namespace and a class-only-statics mangle identically and
-   the calls here are static either way. */
+/* Engine calls by their C++ names. The parameter types are read off the
+   ROM's mangled names: `j` unsigned int, `t` unsigned short, `s` short,
+   `Riii` int reference, `Rsss` short reference. */
 namespace GX { void LoadOBJPltt(const void *plt, u32 base, u32 size); }
 namespace GXS { void LoadOBJPltt(const void *plt, u32 base, u32 size); }
 namespace G2x { void SetBlendAlpha(volatile u16 *reg, u16 a, u16 b, u16 c, u32 d); }
@@ -176,19 +158,10 @@ int  ApproachLinear(int &value, int target, int step);
 int  ApproachLinear2(s16 &value, s16 target, s16 step);
 
 // @symbol _ZN11dScMgCard_c13InitResourcesEv
-/* dScMgCard_c::InitResources -- vtable slot 0.
- *
- * Attributed by tools/rtti_vtables.py --own dScMgCard_c, this class's own slot 0
- * (fBase_c::InitResources). The old file's `recovered name:
- * dScMgCard_c_InitResources` agreed.
- *
- * Minigame graphics init: loads/decompresses the OBJ tiles+palettes for both
- * engines, sets blending, patches the OAM attr template list, spawns the two
- * rows of 5 slot sprites, and resets the shared counters.
- *
- * The final `OnYoshiTryEat(-1)` is a self-dispatch through this class's own
- * vtable slot 18 -- the adjudicated eat handler whose body sits below; the
- * reload needs the whole round reset it does. */
+/* Slot 0. Loads and decompresses the OBJ tiles and palettes for both
+ * engines, sets blending, patches the OAM template list, spawns the two rows
+ * of five card sprites and resets the shared counters. It ends with a
+ * virtual call to OnYoshiTryEat(-1), which resets the round. */
 /* One OAM attribute-template entry: the list is a u32 attr word, then the two
  * 16-bit attrs, then an 8-byte stride. Spelled as a struct rather than as casts
  * off a u32* because the ROM addresses all three off ONE base register at
@@ -198,43 +171,42 @@ s32 dScMgCard_c::InitResources()
 {
     dScMgCard_c *self = this;
     char *c = (char *)this;
-    void *f7, *f6, *f5, *f4;
-    int v[2];
+    void *mainTiles, *mainPalette, *subTiles, *subPalette;
+    int pos[2];
 
     func_ov004_020b04d0(0x20);
     func_ov006_0210a534(c);
     data_0209d45c = 0x11;
     data_0209d454 = 0x18;
-    f7 = LoadFile(0xbd);
-    f6 = LoadFile(0xbe);
-    f5 = LoadFile(data_ov006_0213bcb0[GetGameLanguage()]);
-    f4 = LoadFile(0xbb);
-    DecompressLZ16(f7, (void *)0x6400000);
-    GX::LoadOBJPltt(f6, 0, 0x20);
-    DecompressLZ16(f5, (void *)0x6600000);
-    GXS::LoadOBJPltt(f4, 0, 0x100);
-    Deallocate(f7);
-    Deallocate(f6);
-    Deallocate(f5);
-    Deallocate(f4);
+    mainTiles = LoadFile(0xbd);
+    mainPalette = LoadFile(0xbe);
+    subTiles = LoadFile(data_ov006_0213bcb0[GetGameLanguage()]);
+    subPalette = LoadFile(0xbb);
+    DecompressLZ16(mainTiles, (void *)0x6400000);
+    GX::LoadOBJPltt(mainPalette, 0, 0x20);
+    DecompressLZ16(subTiles, (void *)0x6600000);
+    GXS::LoadOBJPltt(subPalette, 0, 0x100);
+    Deallocate(mainTiles);
+    Deallocate(mainPalette);
+    Deallocate(subTiles);
+    Deallocate(subPalette);
     G2x::SetBlendAlpha((volatile u16 *)0x04000050, 0, 1, 0x10, 8);
     *(volatile u16 *)0x04001050 = 0;
 
     {
-        OamAttrTmpl *e = (OamAttrTmpl *)data_ov006_02134028;
+        OamAttrTmpl *entry = (OamAttrTmpl *)data_ov006_02134028;
         u16 last;
         do {
-            e->attr0 = (e->attr0 & ~0xc00) | 0x400;
-            /* NOT `e->attr2 &= ~0xf000;`. Compound assignment makes b56 CSE the
+            entry->attr0 = (entry->attr0 & ~0xc00) | 0x400;
+            /* NOT `entry->attr2 &= ~0xf000;`. Compound assignment makes b56 CSE the
              * field's address and materialise it (`add r2, r3, #4`), then reach
              * attr3 at +2 off that; the ROM keeps ONE base and uses +4 / +6.
              * The extra instruction moves the literal pool and shifts every
-             * pc-relative load in the function -- it is the whole 4-byte size
-             * difference that kept this file pinned to 1.2/base. */
-            u16 a2 = e->attr2;
-            e->attr2 = (u16)(a2 & ~0xf000);
-            last = e->attr3;
-            e++;
+             * pc-relative load in the function. */
+            u16 bits = entry->attr2;
+            entry->attr2 = (u16)(bits & ~0xf000);
+            last = entry->attr3;
+            entry++;
         } while (last != 0xffff);
     }
 
@@ -248,11 +220,11 @@ s32 dScMgCard_c::InitResources()
         int y = 0x2c;
         int i;
         for (i = 0; i < 5; i++) {
-            v[0] = y << 12;
-            v[1] = 0x80000;
-            mArray1[i].DealIn(v);
-            v[1] = 0x10000;
-            mArray2[i].DealIn(v);
+            pos[0] = y << 12;
+            pos[1] = 0x80000;
+            mArray1[i].DealIn(pos);
+            pos[1] = 0x10000;
+            mArray2[i].DealIn(pos);
             y += 0x28;
         }
     }
@@ -731,16 +703,8 @@ void dScMgCard_c::UpdateState()
 }
 
 // @symbol _ZN11dScMgCard_c8BehaviorEv
-/* dScMgCard_c::Behavior -- vtable slot 6, ov006 0x020dabec.
- *
- * Named from the table: 0x020dabec is the word slot 6 of _ZTV11dScMgCard_c
- * holds where its base's table holds something else, so it is this class's
- * own override of the virtual fBase_c declares.
- *
- * mFrameCounter is the frame counter the header's "own tail" note lists among the
- * nine fields five of this class's methods already touch; mShared is the
- * 0x270-byte table six classes in this family share, which
- * func_ov006_020c19d0 steps. */
+/* Slot 6. mShared is the 0x270-byte table this family of scenes shares;
+ * func_ov006_020c19d0 steps it. */
 s32 dScMgCard_c::Behavior()
 {
     mFrameCounter += 1;
@@ -754,7 +718,7 @@ s32 dScMgCard_c::Behavior()
 /* dScMgCard_c::Render -- vtable slot 9.
  *
  * Attributed by tools/rtti_vtables.py --own dScMgCard_c, this class's own slot 9
- * (dScMgBase_c::Render). The old file's `recovered name: dScMgCard_c_Render` agreed. */
+ * (dScMgBase_c::Render). */
 s32 dScMgCard_c::Render()
 {
     char *c = (char *)this;
@@ -846,15 +810,7 @@ s32 dScMgCard_c::Render()
 }
 
 // @symbol _ZN11dScMgCard_c16CleanupResourcesEv
-/* dScMgCard_c::CleanupResources -- vtable slot 3, ov006 0x020da994.
- *
- * Named from the table: 0x020da994 is the word slot 3 of _ZTV11dScMgCard_c
- * holds where its base's table holds something else, so it is this class's
- * own override of the virtual fBase_c declares.
- *
- * The body never touches the instance -- it only clears three ov006 globals
- * -- which is why the pre-migration stub could take `void` and still match:
- * `this` arrives in r0 and is simply not read. */
+/* Slot 3. Only clears three ov006 globals; `this` is never read. */
 s32 dScMgCard_c::CleanupResources()
 {
     data_ov006_0214176c = 0;
@@ -1584,7 +1540,7 @@ s32 dMgCardObj_c::GetOffscreenY()
 }
 
 // @symbol _ZN11dScMgCard_c9RenderHudEv
-/* dScMgCard_c::RenderHud -- the dMeter_c column and the hold prompt. States 4
+/* dScMgCard_c::RenderHud -- the hand-rank table and the hold prompt. States 4
  * through 0x10 stack six face sprites at x=0x14 from y=0xb0 down; the two
  * hands' highlight pairs (unk_538e/unk_5390 for the player's hand,
  * unk_5392/unk_5394 for the dealer's) name the rows drawn in a highlight
@@ -1749,7 +1705,6 @@ void dMgDilarCardObj_c::Render()
     -1,-1);
 }
 
-/* ROM ordinal 4 -- _ZN17dMgDilarCardObj_cD1Ev, 0x020d96f0, size 0x1c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN17dMgDilarCardObj_cD1Ev
 /* Genuine C++ produces these two stores only when the base destructor is

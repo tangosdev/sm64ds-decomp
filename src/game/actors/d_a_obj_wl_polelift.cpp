@@ -1,8 +1,11 @@
 //cpp
 /**
- * Pole-mounted lift platform in ov026 (Wet-Dry World). Rides a path of nodes,
- * oscillating back and forth (or looping) at a fixed speed, and drops a shadow
- * onto whatever ground a raycast finds beneath it.
+ * daObjWlPolelift_c -- the Wet-Dry World pole lift (WL_POLELIFT), ov026.
+ *
+ * It rides path param1 & 0xff at 10.0 a frame, node to node. On a looping
+ * path it wraps; otherwise it pauses 60 frames at each end and reverses. It
+ * drops a shadow onto the ground a ray finds below it. InitResources fails
+ * unless the stage-state word data_0209caa0[1] has a bit of 0x204 set.
  *
  * One translation unit for the whole 0x021111a0..0x021116c8 linker run: the
  * destructor pair, the two file-local helpers the cartridge kept unnamed, the
@@ -14,23 +17,25 @@
  * spelling for the factory itself. Historical placeholder:
  * func_ov026_02111678. Coined C name; no param-type claim.
  *
- * deslop
- * Leftover: func_ov026_02111234 and func_ov026_021112a4 keep their placeholder
- *   names and their char-cursor bodies. Both are file-local helpers over
- *   fields this class still models as padding (0x0f0 model matrix, 0x114,
- *   0x1d8); naming them belongs with the member pass that names those fields.
- * Leftover: dCcAcPos_c::Init stays mangled -- it takes Fix12<int> by value and
- *   is not declared on dCcAcPos_c.h; a by-value Fix12 homes the argument and
- *   size-DIFFs InitResources.
- * Leftover: dActor_c::DropShadowScaleXYZ stays mangled for the same reason --
- *   three Fix12<int> parameters by value.
- * Leftover: data_ov026_02113ea0 is this overlay's BMD handle (InitResources
- *   LoadFile / CleanupResources Release); data_ov026_02113a9c is the collision
- *   offset vector, in overlay .data this TU does not own.
- * Leftover: data_0209caa0 is the arm9 stage-state block InitResources gates
- *   on. Naming belongs with that block.
- * Leftover: g_profile_WL_POLELIFT lives outside this TU.
- * Leftover: inline destructor (out of line emits D0 before D1, plus a D2).
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
+ *   common.h first (see the note on the includes).
+ *   The destructor is inline: out of line it emits D0 before D1, plus a D2.
+ *
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, see
+ * notes/mwccarm-codegen.md 6az):
+ *   dCcAcPos_c::Init is not declared on dCcAcPos_c.h, and a by-value Fix12
+ *   homes the argument and changes the size of InitResources.
+ *   dActor_c::DropShadowScaleXYZ takes three Fix12<int> by value.
+ *
+ * Known limits:
+ *   func_ov026_02111234 and func_ov026_021112a4 keep their placeholder names
+ *   and char-cursor bodies. Both are file-local helpers over fields this
+ *   class still models as padding (0x0f0 model matrix, 0x114, 0x1d8); naming
+ *   them belongs with the member pass that names those fields.
+ *   data_ov026_02113ea0 is this overlay's BMD handle and data_ov026_02113a9c
+ *   the collision offset vector, in overlay .data this TU does not own.
+ *   data_0209caa0 is the arm9 stage-state block; naming belongs with it.
+ *   g_profile_WL_POLELIFT lives outside this TU.
  */
 
 /* common.h FIRST: func_ov026_02111234 whole-struct-assigns the model matrix

@@ -75,7 +75,7 @@ producer commit `9f6508003f92787fb5a530c38e62aa0d92eb829f`:
   explicit size reason. The actual PR checker, run with only the immutable source
   producer's include path overlaid on compilation, reports `DRAFT` and exits **0**.
 - Jump's `counts_as_matched` stays false and no complete production entry covers
-  `ov006:0x020ee994`. No matching or relocation-success claim is made for it.
+  [ov006](../../../config/arm9/overlays/ov006/symbols.txt):`0x020ee994`. No matching or relocation-success claim is made for it.
 
 Local evidence is under the primary checkout's `build/reviewer-0918/`:
 `draft-verdict-private-validation.json`, `draft-verdict-final-tests.log`,

@@ -4,29 +4,9 @@
     .ctor       start:0x021130f8 end:0x02113120 kind:rodata align:4
     .data       start:0x02113140 end:0x02114500 kind:data align:32
     .bss        start:0x02114500 end:0x021146a0 kind:bss align:32
-src/_ZN11VolcanoRingD1Ev.cpp:
+src/actors/daObjFl_Ring_c.cpp:
     complete
-    .text start:0x021111a0 end:0x021111e4
-
-src/_ZN11VolcanoRingD0Ev.cpp:
-    complete
-    .text start:0x021111e4 end:0x0211123c
-
-src/_ZN11VolcanoRing16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211123c end:0x02111284
-
-src/_ZN11VolcanoRing6RenderEv.cpp:
-    complete
-    .text start:0x02111284 end:0x021112ac
-
-src/_ZN11VolcanoRing8BehaviorEv.cpp:
-    complete
-    .text start:0x021112ac end:0x0211149c
-
-src/_ZN11VolcanoRing13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211149c end:0x02111558
+    .text start:0x021111a0 end:0x02111558
 
 src/func_ov022_02111558.c:
     complete
@@ -60,29 +40,9 @@ src/d_a_obj_fl_koma_d.c:
     complete
     .text start:0x02111688 end:0x021116c4
 
-src/_ZN19FloatOnLavaPlatformD1Ev.cpp:
+src/actors/daObjFl_Block_c.cpp:
     complete
-    .text start:0x021116c4 end:0x02111708
-
-src/_ZN19FloatOnLavaPlatformD0Ev.cpp:
-    complete
-    .text start:0x02111708 end:0x02111760
-
-src/_ZN19FloatOnLavaPlatform16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111760 end:0x021117a4
-
-src/_ZN19FloatOnLavaPlatform6RenderEv.cpp:
-    complete
-    .text start:0x021117a4 end:0x021117cc
-
-src/_ZN19FloatOnLavaPlatform8BehaviorEv.cpp:
-    complete
-    .text start:0x021117cc end:0x02111870
-
-src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111870 end:0x0211191c
+    .text start:0x021116c4 end:0x0211191c
 
 src/func_ov022_0211191c.cpp:
     complete
@@ -101,33 +61,9 @@ src/actors/daObjFl_London_c.cpp:
     .text start:0x02111980 end:0x02111cac
     .data start:0x02113f2c end:0x02113ff0
 
-src/_ZN10LavaSeesawD1Ev.cpp:
+src/actors/daObjFl_Seesaw_c.cpp:
     complete
-    .text start:0x02111cac end:0x02111cf0
-
-src/_ZN10LavaSeesawD0Ev.cpp:
-    complete
-    .text start:0x02111cf0 end:0x02111d48
-
-src/func_ov022_02111d48.c:
-    complete
-    .text start:0x02111d48 end:0x02111d90
-
-src/_ZN10LavaSeesaw16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111d90 end:0x02111dd4
-
-src/_ZN10LavaSeesaw6RenderEv.cpp:
-    complete
-    .text start:0x02111dd4 end:0x02111dfc
-
-src/_ZN10LavaSeesaw8BehaviorEv.cpp:
-    complete
-    .text start:0x02111dfc end:0x02111ea0
-
-src/_ZN10LavaSeesaw13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111ea0 end:0x02111f3c
+    .text start:0x02111cac end:0x02111f3c
 
 src/d_a_obj_fl_seesaw.c:
     complete

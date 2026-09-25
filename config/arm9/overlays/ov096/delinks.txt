@@ -7,44 +7,9 @@ src/actors/daSanbo_c.cpp:
     complete
     .text start:0x02135700 end:0x02136db0
 
-src/_ZN7TornadoD1Ev.cpp:
+src/actors/daTor_c.cpp:
     complete
-    .text start:0x02136db0 end:0x02136df8
-
-src/_ZN7TornadoD0Ev.cpp:
-    complete
-    .text start:0x02136df8 end:0x02136e54
-
-src/_ZN7Tornado10UpdateSpinEi.cpp:
-    complete
-    .text start:0x02136e54 end:0x02136fd4
-
-src/_ZN7Tornado6State2Ev.cpp:
-    complete
-    .text start:0x02136fd4 end:0x02137088
-
-src/_ZN7Tornado6State1Ev.cpp:
-    complete
-    .text start:0x02137088 end:0x021372c0
-
-src/_ZN7Tornado6State0Ev.cpp:
-    complete
-    .text start:0x021372c0 end:0x021373e4
-
-src/_ZN7Tornado16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021373e4 end:0x02137414
-
-src/_ZN7Tornado6RenderEv.cpp:
-    complete
-    .text start:0x02137414 end:0x02137448
-
-src/_ZN7Tornado8BehaviorEv.cpp:
-    complete
-    .text start:0x02137448 end:0x02137564
-
-src/_ZN7Tornado13InitResourcesEv.cpp:
-    .text start:0x02137564 end:0x021376bc
+    .text start:0x02136db0 end:0x021376bc
 
 src/d_a_tor.c:
     complete

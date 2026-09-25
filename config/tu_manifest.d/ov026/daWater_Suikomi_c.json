@@ -1,0 +1,84 @@
+{
+  "id": "ov026/daWater_Suikomi_c",
+  "module": "ov026",
+  "source": "src/actors/daWater_Suikomi_c.cpp",
+  "promoted_source": "src/actors/daWater_Suikomi_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run of the five _ZN17daWater_Suikomi_c* methods 0x02112328..0x02112450 (CleanupResources, OnPendingDestroy, Render, Behavior, InitResources). Every delink inside the run is complete and they abut. The next function, daWater_Suikomi_c_classInit at 0x02112450, is not absorbed.",
+    "D1/D0 at 0x021121fc/0x02112234 (vtable slots 16/17) are the same class but are not in this run: five unconverted one-function sources, func_ov026_02112280 through func_ov026_02112324, sit between D0 and CleanupResources. They are this class's state-machine helpers, not vtable slots: 0x021122cc and 0x021122b0 are the member-function pointers ov026's __sinit at 0x02112d68 copies from 0x02113dd8/0x02113dd0 into the state record at 0x02113f58, which InitResources installs through func_ov026_021122d4 (+0x30c). Whirlpool / daWater_Tatumaki_c is a different class and is not part of this TU.",
+    "ROM RTTI: ov026 _ZTI at 0x02113de0 reads [__si_class_type_info, _ZTS17daWater_Suikomi_c at 0x02113dec, _ZTI12dEnemyBase_c at ov002 0x021081c0]; the vtable address point 0x02113e24 (slot 0) has its typeinfo pointer at 0x02113e20."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02112328",
+      "end": "0x02112450"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN17daWater_Suikomi_c16CleanupResourcesEv",
+      "address": "0x02112328",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN17daWater_Suikomi_c16CleanupResourcesEv.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN17daWater_Suikomi_c16OnPendingDestroyEv",
+      "address": "0x02112330",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN17daWater_Suikomi_c16OnPendingDestroyEv.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN17daWater_Suikomi_c6RenderEv",
+      "address": "0x02112334",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN17daWater_Suikomi_c6RenderEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN17daWater_Suikomi_c8BehaviorEv",
+      "address": "0x0211233c",
+      "size": "0x0000008c",
+      "legacy_source": "src/_ZN17daWater_Suikomi_c8BehaviorEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN17daWater_Suikomi_c13InitResourcesEv",
+      "address": "0x021123c8",
+      "size": "0x00000088",
+      "legacy_source": "src/_ZN17daWater_Suikomi_c13InitResourcesEv.cpp",
+      "ordinal": 4
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Five-function gap-free run of daWater_Suikomi_c virtuals. The tu_map unit ov026/daWater_Suikomi_c+daWater_Tatumaki_c is wider (D1/D0 plus the five state-machine helpers between D0 and CleanupResources); those functions stay in their legacy files."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov026-daWater_Suikomi_c/daWater_Suikomi_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 5,
+    "functions_declared": 5,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

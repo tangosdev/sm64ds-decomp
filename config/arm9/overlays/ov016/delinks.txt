@@ -100,33 +100,9 @@ src/d_a_obj_ki_fune_ki_fune.c:
     complete
     .text start:0x021129d0 end:0x02112a00
 
-src/_ZN10RockPillarD1Ev.cpp:
+src/actors/daObjKi_Hasira_c.cpp:
     complete
-    .text start:0x02112a00 end:0x02112a44
-
-src/_ZN10RockPillarD0Ev.cpp:
-    complete
-    .text start:0x02112a44 end:0x02112a9c
-
-src/func_ov016_02112a9c.c:
-    complete
-    .text start:0x02112a9c end:0x02112ae4
-
-src/_ZN10RockPillar16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02112ae4 end:0x02112b28
-
-src/_ZN10RockPillar6RenderEv.cpp:
-    complete
-    .text start:0x02112b28 end:0x02112b50
-
-src/_ZN10RockPillar8BehaviorEv.cpp:
-    complete
-    .text start:0x02112b50 end:0x02112e1c
-
-src/_ZN10RockPillar13InitResourcesEv.cpp:
-    complete
-    .text start:0x02112e1c end:0x02112ec4
+    .text start:0x02112a00 end:0x02112ec4
 
 src/d_a_obj_ki_hasira.c:
     complete
@@ -136,33 +112,9 @@ src/game/actors/d_a_obj_ki_ita.cpp:
     complete
     .text start:0x02112ef4 end:0x02112ff8
 
-src/_ZN10SlidingBoxD1Ev.cpp:
+src/actors/daSlide_Box_c.cpp:
     complete
-    .text start:0x02112ff8 end:0x02113044
-
-src/_ZN10SlidingBoxD0Ev.cpp:
-    complete
-    .text start:0x02113044 end:0x021130a4
-
-src/_ZN10SlidingBox11UpdateModelEv.cpp:
-    complete
-    .text start:0x021130a4 end:0x021130ec
-
-src/_ZN10SlidingBox16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021130ec end:0x02113130
-
-src/_ZN10SlidingBox6RenderEv.cpp:
-    complete
-    .text start:0x02113130 end:0x02113158
-
-src/_ZN10SlidingBox8BehaviorEv.cpp:
-    complete
-    .text start:0x02113158 end:0x02113434
-
-src/_ZN10SlidingBox13InitResourcesEv.cpp:
-    complete
-    .text start:0x02113434 end:0x02113510
+    .text start:0x02112ff8 end:0x02113510
 
 src/d_a_slide_box.c:
     complete

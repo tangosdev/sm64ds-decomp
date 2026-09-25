@@ -56,65 +56,9 @@ src/d_a_obj_rotate_updown_lift_updown_lift.c:
     complete
     .text start:0x02131bdc end:0x02131c14
 
-src/_ZN22RotatingUpDownPlatformD1Ev.cpp:
+src/game/actors/d_a_linelift2.cpp:
     complete
-    .text start:0x02131c14 end:0x02131c58
-
-src/_ZN22RotatingUpDownPlatformD0Ev.cpp:
-    complete
-    .text start:0x02131c58 end:0x02131cb0
-
-src/func_ov091_02131cb0.c:
-    complete
-    .text start:0x02131cb0 end:0x02131db8
-
-src/func_ov091_02131db8.c:
-    complete
-    .text start:0x02131db8 end:0x02131ef0
-
-src/func_ov091_02131ef0.c:
-    complete
-    .text start:0x02131ef0 end:0x02131f9c
-
-src/func_ov091_02131f9c.c:
-    complete
-    .text start:0x02131f9c end:0x02132000
-
-src/func_ov091_02132000.c:
-    complete
-    .text start:0x02132000 end:0x0213209c
-
-src/_ZN22RotatingUpDownPlatform16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0213209c end:0x021320e0
-
-src/_ZN22RotatingUpDownPlatform6RenderEv.cpp:
-    complete
-    .text start:0x021320e0 end:0x02132108
-
-src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp:
-    complete
-    .text start:0x02132108 end:0x0213220c
-
-src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp:
-    complete
-    .text start:0x0213220c end:0x02132360
-
-src/func_ov091_02132360.cpp:
-    complete
-    .text start:0x02132360 end:0x02132380
-
-src/func_ov091_02132380.c:
-    complete
-    .text start:0x02132380 end:0x02132394
-
-src/d_a_linelift2_km2_susumu.c:
-    complete
-    .text start:0x02132394 end:0x021323cc
-
-src/d_a_linelift2_km3_lift.c:
-    complete
-    .text start:0x021323cc end:0x02132404
+    .text start:0x02131c14 end:0x02132404
 
 src/actors/daObjSimpleLift_c.cpp:
     complete
@@ -148,29 +92,9 @@ src/d_a_obj_simple_lift_km1_deru.c:
     complete
     .text start:0x02132908 end:0x02132938
 
-src/_ZN6ThwompD1Ev.cpp:
+src/actors/daDsn_c.cpp:
     complete
-    .text start:0x02132938 end:0x02132998
-
-src/_ZN6ThwompD0Ev.cpp:
-    complete
-    .text start:0x02132998 end:0x02132a0c
-
-src/_ZN6Thwomp16OnAimedAtWithEggEv.cpp:
-    complete
-    .text start:0x02132a0c end:0x02132a14
-
-src/_ZN6Thwomp15OnHitByMegaCharER6Player.cpp:
-    complete
-    .text start:0x02132a14 end:0x02132ab0
-
-src/_ZN6Thwomp8BehaviorEv.cpp:
-    complete
-    .text start:0x02132ab0 end:0x02132c84
-
-src/_ZN6Thwomp13InitResourcesEv.cpp:
-    complete
-    .text start:0x02132c84 end:0x02132cb8
+    .text start:0x02132938 end:0x02132cb8
 
 src/d_a_dsn.c:
     complete
@@ -188,45 +112,9 @@ src/actors/daDsnBase_c.cpp:
     complete
     .text start:0x02132dc0 end:0x021333fc
 
-src/_ZN5StumpD1Ev.cpp:
+src/actors/daObjPile_c.cpp:
     complete
-    .text start:0x021333fc end:0x02133440
-
-src/_ZN5StumpD0Ev.cpp:
-    complete
-    .text start:0x02133440 end:0x02133498
-
-src/func_ov091_02133498.c:
-    complete
-    .text start:0x02133498 end:0x021334b8
-
-src/func_ov091_021334b8.cpp:
-    complete
-    .text start:0x021334b8 end:0x021335d4
-
-src/_ZN5Stump15OnHitByMegaCharER6Player.cpp:
-    complete
-    .text start:0x021335d4 end:0x02133648
-
-src/_ZN5Stump15OnGroundPoundedER8dActor_c.cpp:
-    complete
-    .text start:0x02133648 end:0x021336cc
-
-src/_ZN5Stump16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021336cc end:0x02133710
-
-src/_ZN5Stump6RenderEv.cpp:
-    complete
-    .text start:0x02133710 end:0x02133738
-
-src/_ZN5Stump8BehaviorEv.cpp:
-    complete
-    .text start:0x02133738 end:0x021338ac
-
-src/_ZN5Stump13InitResourcesEv.cpp:
-    complete
-    .text start:0x021338ac end:0x02133938
+    .text start:0x021333fc end:0x02133938
 
 src/d_a_obj_pile.c:
     complete

@@ -1,6 +1,7 @@
 #include "types.h"
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
-extern int _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 id, u32 a, int fix, int t1, int t2, void *vec);
+struct Vector3_16f;
+extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 id, u32 a, int fix, int t1, int t2, const struct Vector3_16f *vec);
 extern void func_ov060_0211712c(void *self);
 extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
 extern int RandomIntInternal(int *seed);

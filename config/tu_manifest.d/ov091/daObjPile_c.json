@@ -1,0 +1,262 @@
+{
+  "id": "ov091/daObjPile_c",
+  "module": "ov091",
+  "source": "src/actors/daObjPile_c.cpp",
+  "promoted_source": "src/actors/daObjPile_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x21333fc..0x2133938, 10 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjPile_c",
+    "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021333fc",
+      "end": "0x02133938"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN11daObjPile_cD1Ev",
+      "address": "0x021333fc",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN11daObjPile_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN11daObjPile_cD0Ev",
+      "address": "0x02133440",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN11daObjPile_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov091_02133498",
+      "address": "0x02133498",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov091_02133498.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov091_021334b8",
+      "address": "0x021334b8",
+      "size": "0x0000011c",
+      "legacy_source": "src/func_ov091_021334b8.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN11daObjPile_c15OnHitByMegaCharER6Player",
+      "address": "0x021335d4",
+      "size": "0x00000074",
+      "legacy_source": "src/_ZN11daObjPile_c15OnHitByMegaCharER6Player.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN11daObjPile_c15OnGroundPoundedER8dActor_c",
+      "address": "0x02133648",
+      "size": "0x00000084",
+      "legacy_source": "src/_ZN11daObjPile_c15OnGroundPoundedER8dActor_c.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN11daObjPile_c16CleanupResourcesEv",
+      "address": "0x021336cc",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN11daObjPile_c16CleanupResourcesEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN11daObjPile_c6RenderEv",
+      "address": "0x02133710",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN11daObjPile_c6RenderEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN11daObjPile_c8BehaviorEv",
+      "address": "0x02133738",
+      "size": "0x00000174",
+      "legacy_source": "src/_ZN11daObjPile_c8BehaviorEv.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN11daObjPile_c13InitResourcesEv",
+      "address": "0x021338ac",
+      "size": "0x0000008c",
+      "legacy_source": "src/_ZN11daObjPile_c13InitResourcesEv.cpp",
+      "ordinal": 9
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI11daObjPile_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov091",
+      "canonical_address": "0x0213527c",
+      "reason": "Text-only TU: externalize to canonical public address 0x0213527c."
+    },
+    {
+      "symbol": "_ZTS11daObjPile_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov091",
+      "canonical_address": "0x02135288",
+      "reason": "Text-only TU: externalize to canonical public address 0x02135288."
+    },
+    {
+      "symbol": "_ZTV11daObjPile_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov091",
+      "canonical_address": "0x021352bc",
+      "reason": "Text-only TU: externalize to canonical public address 0x021352bc."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Text-only TU: externalize to canonical public address 0x021089ec."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Text-only TU: externalize to canonical public address 0x02108a04."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Text-only TU: externalize to canonical public address 0x0208e390."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Text-only TU: externalize to canonical public address 0x0208e384."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Text-only TU: externalize to canonical public address 0x02086e78."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Text-only TU: externalize to canonical public address 0x02086e54."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Text-only TU: externalize to canonical public address 0x02086d70."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Text-only TU: externalize to canonical public address 0x02086e60."
+    },
+    {
+      "symbol": "_ZN11daObjPile_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
+      "symbol": "_ZN2V3D1Ev",
+      "disposition": "deadstrip",
+      "reason": "Behavior's by-value SpawnCoins argument is a local non-trivial copy; its empty destructor is not in the ROM"
+    }
+  ],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov091_021334b8' differs between the legacy file that used to hold _ZN11daObjPile_c15OnHitByMegaCharER6Player and the one that held _ZN11daObjPile_c15OnGroundPoundedER8dActor_c; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs' differs between the legacy file that used to hold func_ov091_021334b8 and the one that held _ZN11daObjPile_c8BehaviorEv; kept the first, the other is commented out for review"
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov091-daObjPile_c/daObjPile_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 10,
+    "functions_declared": 10,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN11daObjPile_cD2Ev",
+        "_ZN2V3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN11daObjPile_cD2Ev",
+        "_ZN2V3D1Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        23,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42
+      ],
+      "data": [
+        "_ZTI11daObjPile_c",
+        "_ZTS11daObjPile_c",
+        "_ZTV11daObjPile_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI11daObjPile_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS11daObjPile_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV11daObjPile_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

@@ -1,0 +1,258 @@
+{
+  "id": "ov065/daObjCtRotateBlock_c",
+  "module": "ov065",
+  "source": "src/actors/daObjCtRotateBlock_c.cpp",
+  "promoted_source": "src/actors/daObjCtRotateBlock_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x21196d8..0x2119ebc, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjCtRotateBlock_c",
+    "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021196d8",
+      "end": "0x02119ebc"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN20daObjCtRotateBlock_cD1Ev",
+      "address": "0x021196d8",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN20daObjCtRotateBlock_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN20daObjCtRotateBlock_cD0Ev",
+      "address": "0x0211972c",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN20daObjCtRotateBlock_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN20daObjCtRotateBlock_c12UpdateShadowEv",
+      "address": "0x02119794",
+      "size": "0x0000010c",
+      "legacy_source": "src/_ZN20daObjCtRotateBlock_c12UpdateShadowEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN20daObjCtRotateBlock_c10UpdateClsnEv",
+      "address": "0x021198a0",
+      "size": "0x0000006c",
+      "legacy_source": "src/_ZN20daObjCtRotateBlock_c10UpdateClsnEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN20daObjCtRotateBlock_c11UpdateModelEv",
+      "address": "0x0211990c",
+      "size": "0x00000078",
+      "legacy_source": "src/_ZN20daObjCtRotateBlock_c11UpdateModelEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN20daObjCtRotateBlock_c16CleanupResourcesEv",
+      "address": "0x02119984",
+      "size": "0x00000078",
+      "legacy_source": "src/_ZN20daObjCtRotateBlock_c16CleanupResourcesEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN20daObjCtRotateBlock_c6RenderEv",
+      "address": "0x021199fc",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN20daObjCtRotateBlock_c6RenderEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN20daObjCtRotateBlock_c8BehaviorEv",
+      "address": "0x02119a50",
+      "size": "0x000001e8",
+      "legacy_source": "src/_ZN20daObjCtRotateBlock_c8BehaviorEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN20daObjCtRotateBlock_c13InitResourcesEv",
+      "address": "0x02119c38",
+      "size": "0x00000284",
+      "legacy_source": "src/_ZN20daObjCtRotateBlock_c13InitResourcesEv.cpp",
+      "ordinal": 8
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN20daObjCtRotateBlock_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Out-of-line destructor under defer_codegen off emits D1, D0, then this base-object D2. The cartridge has no D2 symbol and nothing references it once D1 and D0 are kept."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3 locals in InitResources odr-use its empty destructor. The cartridge keeps the canonical four-byte copy at arm9:0x020072c0."
+    },
+    {
+      "symbol": "_ZTV20daObjCtRotateBlock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211d028",
+      "reason": "The out-of-line destructor is the key function, so mwcc emits the vtable. Text-only production keeps the cartridge copy at ov065:0x0211d028."
+    },
+    {
+      "symbol": "_ZTI20daObjCtRotateBlock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211cfac",
+      "reason": "Key-function typeinfo. Canonical home ov065:0x0211cfac."
+    },
+    {
+      "symbol": "_ZTS20daObjCtRotateBlock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211cfb8",
+      "reason": "Key-function type name. Canonical home ov065:0x0211cfb8."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Inherited typeinfo emitted with the key function. Canonical home ov002:0x021089ec."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Inherited type name emitted with the key function. Canonical home ov002:0x02108a04."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited typeinfo emitted with the key function. Canonical home arm9:0x0208e390."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited type name emitted with the key function. Canonical home arm9:0x0208e384."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited typeinfo emitted with the key function. Canonical home arm9:0x02086e78."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited type name emitted with the key function. Canonical home arm9:0x02086e54."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited typeinfo emitted with the key function. Canonical home arm9:0x02086d70."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited type name emitted with the key function. Canonical home arm9:0x02086e60."
+    }
+  ],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold _ZN20daObjCtRotateBlock_c12UpdateShadowEv and the one that held _ZN20daObjCtRotateBlock_c11UpdateModelEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold _ZN20daObjCtRotateBlock_c12UpdateShadowEv and the one that held _ZN20daObjCtRotateBlock_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "fold branch tu/fold-highov-0921: 9/9 MATCH. The out-of-line destructor is the key function: D2 is homeless deadstrip, Vector3D1 is the arm9 duplicate, and the _ZTV/_ZTI/_ZTS chain is deadstrip-data. Matrix4x3_FromRotationY keeps the short angle from UpdateShadow."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov065-daObjCtRotateBlock_c/daObjCtRotateBlock_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 9,
+    "functions_declared": 9,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN20daObjCtRotateBlock_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN20daObjCtRotateBlock_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "data": [
+        "_ZTV20daObjCtRotateBlock_c",
+        "_ZTI20daObjCtRotateBlock_c",
+        "_ZTS20daObjCtRotateBlock_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI20daObjCtRotateBlock_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS20daObjCtRotateBlock_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV20daObjCtRotateBlock_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

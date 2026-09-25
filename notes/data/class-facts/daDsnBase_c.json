@@ -38,7 +38,7 @@
       "address": "0x021331b8",
       "name": "CleanupResources",
       "size": "0x58",
-      "note": "THE KEY FUNCTION -- the first declared virtual that is neither inline nor pure, so the TU that defines it emits _ZTV11daDsnBase_c and both destructor variants. The ROM spelled this symbol _ZN6Thwomp16CleanupResourcesEv, but slot 3 of THIS class's vtable holds it and Thwomp's table merely inherits the word, so it belongs to daDsnBase_c."
+      "note": "THE KEY FUNCTION -- the first declared virtual that is neither inline nor pure, so the TU that defines it emits _ZTV11daDsnBase_c and both destructor variants. The ROM spelled this symbol _ZN6Thwomp16CleanupResourcesEv, but slot 3 of THIS class's vtable holds it and daDsn_c's table merely inherits the word, so it belongs to daDsnBase_c."
     },
     {
       "slot": 6,
@@ -51,7 +51,7 @@
       "address": "0x02133210",
       "name": "Render",
       "size": "0x44",
-      "note": "Same crossed-name story as slot 3: the ROM spelled it _ZN6Thwomp6RenderEv, but it is this class's slot word and Thwomp inherits it."
+      "note": "Same crossed-name story as slot 3: the ROM spelled it _ZN6Thwomp6RenderEv, but it is this class's slot word and daDsn_c inherits it."
     },
     {
       "slot": 16,

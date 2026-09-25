@@ -5,9 +5,9 @@
  *
  * Declared `void` in include/dActor_c.h -- corrected from `int`, which was
  * unfalsifiable here (one instruction either way) but proven wrong by
- * Stump::OnGroundPounded (slot 21, ov091 0x02133648): that override compares
+ * daObjPile_c::OnGroundPounded (slot 21, ov091 0x02133648): that override compares
  * two fields and returns early, where `int` vs `void` changes mwcc's
- * register allocation even with r0 untouched. See include/Stump.h.
+ * register allocation even with r0 untouched. See include/daObjPile_c.h.
  */
 #include "dActor_c.h"
 

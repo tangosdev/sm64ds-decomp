@@ -61,15 +61,23 @@ struct Eyerok : dBgActor_c {
     Model mModel2;                                         /* 0x3d0 */
     ShadowModel mShadowModel;                               /* 0x420 */
     TextureSequence mTextureSequence;                       /* 0x448 */
-    u8  unk_45c[0x30];
+    /* Drop-shadow matrix, flat words. A Matrix4x3 member would run another
+       ~Vector3 from ~Eyerok. */
+    s32 mShadowMtx[12];                                     /* 0x45c */
     /* Behavior loads this word and calls through the pointer-to-member at
        +8 of what it points at, and compares it against &data_ov066_0211b07c --
        so it is a pointer to the current state descriptor, not a byte.
        func_ov066_02119454 is what installs one. */
     void *mState;                                           /* 0x48c */
-    u8  pad_490[0xc];
+    /* Player locked for the defeat dialogue. */
+    Player *mTalkPlayer;                                    /* 0x490 */
+    /* Per-state scratch, cleared by every state entry. 02118cdc toggles
+       which hand attacks; 0211903c latches ShowMessage acceptance. */
+    s32 mStateWork0;                                        /* 0x494 */
+    s32 mStateWork1;                                        /* 0x498 */
     s32 mPartIdx;                                           /* 0x49c */
-    u8  pad_4a0[0x4];
+    /* Step within the current state. The entries reset it to 0. */
+    s32 mSubState;                                          /* 0x4a0 */
     /* The part's rest position: InitResources seeds it from the actor position
        and then offsets it (a hand goes -+0x31f000 in X, -0x32000 in Z), and
        Behavior re-derives its Y from mSpawnPosY every frame. */
@@ -88,7 +96,9 @@ struct Eyerok : dBgActor_c {
     u16 mDustCounter;                                       /* 0x4d4 */
     u8  pad_4d6[0x2];
     s8  unk_4d8;                                            /* 0x4d8 */
-    u8  pad_4d9[0x3];
+    /* How many hands have been picked this pattern. */
+    u8  mPickCount;                                         /* 0x4d9 */
+    u8  pad_4da[0x2];
     /* The ROM destroys this with __cxa_vec_cleanup(this + 0x4dc, 0x14, 0xc,
        _ZN7Vector3D1Ev) -- 0x14 elements, 0xc == sizeof(Vector3), same
        evidence shape as include/Unagi.h's mStarUniqueID. Only raw
@@ -167,11 +177,14 @@ struct Eyerok {
     u8  mShadowModel;            /* 0x420 */
     u8  pad_421[0x27];
     u8  mTextureSequence;            /* 0x448 */
-    u8  pad_449[0x43];
+    u8  pad_449[0x13];
+    s32 mShadowMtx[12];              /* 0x45c */
     void *mState;            /* 0x48c */
-    u8  pad_490[0xc];
+    void *mTalkPlayer;       /* 0x490 */
+    s32 mStateWork0;         /* 0x494 */
+    s32 mStateWork1;         /* 0x498 */
     s32 mPartIdx;            /* 0x49c */
-    u8  pad_4a0[0x4];
+    s32 mSubState;           /* 0x4a0 */
     s32 mRestPosX;            /* 0x4a4 */
     s32 mRestPosY;            /* 0x4a8 */
     s32 mRestPosZ;            /* 0x4ac */
@@ -184,7 +197,8 @@ struct Eyerok {
     u16 mDustCounter;            /* 0x4d4 */
     u8  pad_4d6[0x2];
     s8  unk_4d8;            /* 0x4d8 */
-    u8  pad_4d9[0x3];
+    u8  mPickCount;         /* 0x4d9 */
+    u8  pad_4da[0x2];
     struct Vector3 mDustPos[0x14];    /* 0x4dc */
     u32 mDustParticle1[0x14];        /* 0x5cc */
     u32 mDustParticle2[0x14];        /* 0x61c */

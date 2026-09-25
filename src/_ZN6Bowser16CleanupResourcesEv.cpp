@@ -11,7 +11,7 @@
  * POINTERS to handles, unlike the singles which are handles themselves.
  *
  * That is why his siblings release almost nothing -- BowserFire and BowserTail
- * hold no reference at all, and BowserShockwaves shares 0211b208 with him.
+ * hold no reference at all, and daFRing_c shares 0211b208 with him.
  */
 #include "Bowser.h"
 #include "SharedFilePtr.h"

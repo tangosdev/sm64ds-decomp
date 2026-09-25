@@ -8,11 +8,11 @@ src/actors/daObjYajirusi_c.cpp:
     complete
     .text start:0x02137be0 end:0x02138040
 
-src/_ZN5CrateD1Ev.cpp:
+src/_ZN13daObjBlockS_cD1Ev.cpp:
     complete
     .text start:0x02138040 end:0x021380bc
 
-src/_ZN5CrateD0Ev.cpp:
+src/_ZN13daObjBlockS_cD0Ev.cpp:
     complete
     .text start:0x021380bc end:0x0213814c
 
@@ -100,7 +100,7 @@ src/func_ov098_02138e6c.cpp:
     complete
     .text start:0x02138e6c end:0x02139070
 
-src/_ZN5Crate4KillEv.cpp:
+src/_ZN13daObjBlockS_c4KillEv.cpp:
     complete
     .text start:0x02139070 end:0x021390ec
 
@@ -124,33 +124,9 @@ src/func_ov098_02139850.c:
     complete
     .text start:0x02139850 end:0x02139a50
 
-src/_ZN5Crate16CleanupResourcesEv.cpp:
+src/actors/daObjBlockS_c.cpp:
     complete
-    .text start:0x02139a50 end:0x02139aa8
-
-src/_ZN5Crate6RenderEv.cpp:
-    complete
-    .text start:0x02139aa8 end:0x02139b0c
-
-src/_ZN5Crate8BehaviorEv.cpp:
-    complete
-    .text start:0x02139b0c end:0x02139d14
-
-src/_ZN5Crate13InitResourcesEv.cpp:
-    complete
-    .text start:0x02139d14 end:0x02139e44
-
-src/_ZN5Crate15OnGroundPoundedER8dActor_c.cpp:
-    complete
-    .text start:0x02139e44 end:0x02139e64
-
-src/_ZN5Crate13OnYoshiTryEatEv.cpp:
-    complete
-    .text start:0x02139e64 end:0x02139e78
-
-src/_ZN5Crate13OnTurnIntoEggER6Player.cpp:
-    complete
-    .text start:0x02139e78 end:0x02139f04
+    .text start:0x02139a50 end:0x02139f04
 
 src/d_a_obj_block_s.cpp:
     complete
@@ -220,61 +196,9 @@ src/d_a_cnn.cpp:
     complete
     .text start:0x0213b43c end:0x0213b47c
 
-src/_ZN9WaterBombD1Ev.cpp:
+src/actors/daWbm_c.cpp:
     complete
-    .text start:0x0213b47c end:0x0213b4c4
-
-src/_ZN9WaterBombD0Ev.cpp:
-    complete
-    .text start:0x0213b4c4 end:0x0213b520
-
-src/func_ov098_0213b520.c:
-    complete
-    .text start:0x0213b520 end:0x0213b584
-
-src/func_ov098_0213b584.c:
-    complete
-    .text start:0x0213b584 end:0x0213b63c
-
-src/func_ov098_0213b63c.cpp:
-    complete
-    .text start:0x0213b63c end:0x0213b6e0
-
-src/func_ov098_0213b6e0.cpp:
-    complete
-    .text start:0x0213b6e0 end:0x0213b7e8
-
-src/func_ov098_0213b7e8.c:
-    complete
-    .text start:0x0213b7e8 end:0x0213b9d8
-
-src/func_ov098_0213b9d8.cpp:
-    complete
-    .text start:0x0213b9d8 end:0x0213bb1c
-
-src/func_ov098_0213bb1c.cpp:
-    complete
-    .text start:0x0213bb1c end:0x0213bb9c
-
-src/_ZN9WaterBomb16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0213bb9c end:0x0213bbe4
-
-src/_ZN9WaterBomb6RenderEv.cpp:
-    complete
-    .text start:0x0213bbe4 end:0x0213bc20
-
-src/_ZN9WaterBomb8BehaviorEv.cpp:
-    complete
-    .text start:0x0213bc20 end:0x0213bd14
-
-src/_ZN9WaterBomb13InitResourcesEv.cpp:
-    complete
-    .text start:0x0213bd14 end:0x0213bf10
-
-src/d_a_wbm.c:
-    complete
-    .text start:0x0213bf10 end:0x0213bf60
+    .text start:0x0213b47c end:0x0213bf60
 
 src/__sinit_ov098_0213bf9c.c:
     complete

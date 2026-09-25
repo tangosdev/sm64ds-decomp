@@ -7,7 +7,7 @@
 extern "C" {
 extern int func_0203d974(void);
 extern int func_020134d8(int a, int b);
-extern void func_0203d7d4(void);
+extern int func_0203d7d4(int arg);
 extern int func_0205117c(int self);
 extern void func_020510a4(int a, int b);
 extern int data_0209b498;
@@ -24,8 +24,7 @@ void LoadGroupAndSetBank(int a, int b)
 {
     if (func_0203d974() != 0) {
         if (a != 0x2f) return;
-        func_020134d8(a, data_0209b498);
-        func_0203d7d4();
+        func_0203d7d4(func_020134d8(a, data_0209b498));
         data_0208e428 = b;
         data_0209b47c = a;
         return;

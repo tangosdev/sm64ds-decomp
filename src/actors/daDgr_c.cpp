@@ -1,25 +1,33 @@
 //cpp
-/* daDgr_c -- Spindel (actor 163 DONGURU).
- * deslop
+/* daDgr_c -- Spindel (DONGURU 163), ov025.
  *
- * Leftover:
- * - dBgW_KcMbg::SetFile 6az (Fix12<int> by value) -- InitResources
- * - dBgActor_c::IsClsnInRange 6az -- Behavior
- * - dActor_c::Earthquake 6az -- Behavior
- * - Particle::System::New 6az -- Behavior
- * - func_020393d4 stores dBgW::UpdatePosAndAngs (no setter)
- * - func_02012694 grind sound 0x65 at mCamSpacePosX
- * - data_ov025_02113a68 / 02113a60 SharedFilePtr handles (sinit BSS)
- * - data_ov025_02112c28 CLPS block
- * - common.h first (func_ov025_021112e0 twelve-word Matrix4x3 copy)
- * - func_ov025_* keep ROM labels (no identifiers)
- * - g_profile_DONGURU lives outside this TU (S14)
+ * A roller that rolls along Z, turning about X, for 20 stages whose speed
+ * eases in and out (Behavior), bobbing on a sine and trailing two dust
+ * clouds; the last rolling frame of each stage shakes the ground. Then it
+ * holds 32 frames and rolls back the other way. Its mesh collider also
+ * wakes when a Yoshi egg comes near (func_ov025_0211123c).
  *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function, in the REVERSE of source order, so
- * the highest-address ROM function is written FIRST here. Do not reorder.
- * The factory leads; the inline destructor in include/daDgr_c.h emits the
- * retail D1/D0 pair (0x021111a0 then 0x021111e4) with no D2.
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
+ *   common.h first (func_ov025_021112e0's twelve-word Matrix4x3 copy; see
+ *   the note on the includes).
+ *   Source is reverse ROM order -- mwccarm 2004/b56 emits one .text section
+ *   per function, in the REVERSE of source order, so the highest-address ROM
+ *   function is written FIRST. The factory leads; the inline destructor in
+ *   include/daDgr_c.h emits the retail D1/D0 pair (0x021111a0 then
+ *   0x021111e4) with no D2.
+ *
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, see
+ * notes/mwccarm-codegen.md 6az): dBgW_KcMbg::SetFile (InitResources),
+ * dBgActor_c::IsClsnInRange, dActor_c::Earthquake and Particle::System::New
+ * (Behavior).
+ *
+ * Known limits:
+ *   func_020393d4 stores dBgW::UpdatePosAndAngs (there is no setter).
+ *   func_02012694 plays the grind sound 0x65 at mCamSpacePosX.
+ *   data_ov025_02113a68 / 02113a60 are SharedFilePtr handles (sinit BSS);
+ *   data_ov025_02112c28 is the CLPS block.
+ *   func_ov025_* keep ROM labels: the ROM has no identifiers for them.
+ *   g_profile_DONGURU lives outside this TU.
  */
 
 /* common.h MUST COME FIRST. It and math/Matrix.h both define Matrix4x3;
@@ -34,19 +42,14 @@
  * These have been checked against include/decl_common.h and the decl_*.h family
  * -- where a real header declares one of these, the header wins and the local
  * spelling is gone. What remains is what no header declares. */
-/* shadow typedef 'Vec3' */
 typedef struct { s32 x, y, z; } Vec3;
 
-/* shadow typedef 'Fix12i' */
 typedef int Fix12i;
 
-/* shadow struct 'BMD_File' */
 struct BMD_File;
 
-/* shadow struct 'KCL_File' */
 struct KCL_File;
 
-/* shadow struct 'CLPS_Block' */
 struct CLPS_Block;
 
 extern "C" {
@@ -65,25 +68,20 @@ void func_02012694(s32 a, void *b);
 void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(daDgr_c *self, Vec3 *pos, s32 fix);
 u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
 u32 slot, u32 effect, s32 x, s32 y, s32 z, const void *rot, void *cb);
-/* SetFile takes Fix12<int> by value (wall 6az); a real method call DIFFs. */
+/* SetFile takes Fix12<int> by value (notes/mwccarm-codegen.md 6az); a real
+   method call does not match. */
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block( dBgW_KcMbg*, KCL_File*, const Matrix4x3&, Fix12i, short, CLPS_Block&);
 void func_020393d4(int* p, int v);
 extern CLPS_Block data_ov025_02112c28;
 extern int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 }
 
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
 // @symbol daDgr_c_classInit
 extern "C" daDgr_c *daDgr_c_classInit()
 {
     return new daDgr_c();
 }
 
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daDgr_c13InitResourcesEv
 /* daDgr_c::InitResources -- vtable slot 0. Loads Spindel's model and KCL,
  * points the mesh collider's update hook at dBgW::UpdatePosAndAngs, zeroes
@@ -117,9 +115,6 @@ s32 daDgr_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daDgr_c8BehaviorEv
 /* daDgr_c::Behavior -- vtable slot 6, ov025 0x021113f0.
  *
@@ -132,8 +127,8 @@ s32 daDgr_c::InitResources()
  * trail either end, and the last frame of each roll shakes the ground.
  *
  * IsClsnInRange, Earthquake and Particle::System::New all carry Fix12<int> by
- * value in their mangled names (wall 6az), so all three stay extern-C free
- * functions.
+ * value in their mangled names (notes/mwccarm-codegen.md 6az), so all three
+ * stay extern-C free functions.
  *
  * Swept greedily against build_pin.verify -- 33 substitutions, 33 kept once the
  * three real obstacles were fixed: `mAngleY' is read UNSIGNED at the table-index
@@ -145,8 +140,8 @@ s32 daDgr_c::InitResources()
 s32 daDgr_c::Behavior()
 {
     s32 loc[6];
-    s32 n;
-    s32 m;
+    s32 speedDivisor;
+    s32 rollFrames;
 
     if (mRollStage == -1) {
         if (mPhaseTimer == 0x20) {
@@ -165,16 +160,16 @@ s32 daDgr_c::Behavior()
         }
     }
 
-    n = 10 - mRollStage;
-    if (n < 0) {
+    speedDivisor = 10 - mRollStage;
+    if (speedDivisor < 0) {
         s32 neg = -1;
-        n = n * neg;
+        speedDivisor = speedDivisor * neg;
     }
-    n = n - 6;
-    if (n < 0)
-        n = 0;
+    speedDivisor = speedDivisor - 6;
+    if (speedDivisor < 0)
+        speedDivisor = 0;
 
-    if (mPhaseTimer == n + 8) {
+    if (mPhaseTimer == speedDivisor + 8) {
         s8 *p;
         mPhaseTimer = 0;
         p = (s8 *)(&mRollStage);
@@ -186,23 +181,23 @@ s32 daDgr_c::Behavior()
         }
     }
 
-    if ((u32)(n - 3) <= 1u) {
-        n = 4;
-    } else if ((u32)(n - 1) <= 1u) {
-        n = 2;
-    } else if (n == 0) {
-        n = 1;
+    if ((u32)(speedDivisor - 3) <= 1u) {
+        speedDivisor = 4;
+    } else if ((u32)(speedDivisor - 1) <= 1u) {
+        speedDivisor = 2;
+    } else if (speedDivisor == 0) {
+        speedDivisor = 1;
     }
 
-    m = n << 3;
+    rollFrames = speedDivisor << 3;
 
-    if (mPhaseTimer < m) {
+    if (mPhaseTimer < rollFrames) {
         if (mRollDir == 0) {
-            unk_0ac = 0x14000 / n;
-            mAngleXSpeed = (s16)(0x400 / n);
+            unk_0ac = 0x14000 / speedDivisor;
+            mAngleXSpeed = (s16)(0x400 / speedDivisor);
         } else {
-            unk_0ac = (-0x14000) / n;
-            mAngleXSpeed = (s16)((-0x400) / n);
+            unk_0ac = (-0x14000) / speedDivisor;
+            mAngleXSpeed = (s16)((-0x400) / speedDivisor);
         }
 
         {
@@ -217,17 +212,17 @@ s32 daDgr_c::Behavior()
         }
 
         {
-            s16 t = mAngleX;
-            s32 idx = ((u16)(s16)(t << 2) >> 4) * 2;
-            s32 prod = (s32)data_02082214[idx] * 23;
-            if (prod < 0) {
+            s16 angleX = mAngleX;
+            s32 idx = ((u16)(s16)(angleX << 2) >> 4) * 2;
+            s32 bob = (s32)data_02082214[idx] * 23;
+            if (bob < 0) {
                 s32 neg = -1;
-                prod = prod * neg;
+                bob = bob * neg;
             }
-            mPosY = mBasePosY + prod;
+            mPosY = mBasePosY + bob;
         }
 
-        if (mPhaseTimer == m - 1) {
+        if (mPhaseTimer == rollFrames - 1) {
             loc[3] = mPosX;
             loc[4] = mPosY;
             loc[5] = mPosZ;
@@ -274,18 +269,12 @@ s32 daDgr_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daDgr_c6RenderEv
 /* daDgr_c::Render -- vtable slot 9. Real C++ method over the shared header;
    the Model sub-object at +0xd4 is rendered through its own vtable (mwccarm
    does not devirtualise an embedded member's virtual call). */
 s32 daDgr_c::Render() { mModel.Render(0); return 1; }
 
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daDgr_c16CleanupResourcesEv
 /* daDgr_c::CleanupResources -- vtable slot 3. Real C++ method over the shared
    header. */
@@ -297,15 +286,12 @@ s32 daDgr_c::CleanupResources() {
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov025_02111344
 /* Added by hand: `tubuild create` writes @symbol markers only for mangled or
  * already-named members and skips auto-named func_ovNN_ADDR shards silently, so
  * without this line tiers scoring would miss this member. The other two
  * auto-named shards got theirs because they were carried in RAW. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov025_02111344(char *t)
 {
     daDgr_c *self = (daDgr_c *)t;
@@ -316,9 +302,6 @@ void func_ov025_02111344(char *t)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov025_021112e0
 extern "C" {
 
@@ -335,23 +318,20 @@ void func_ov025_021112e0(char* self){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov025_0211123c
 extern "C" {
 extern int Vec3_Dist(void*, void*);
 
 int func_ov025_0211123c(char* c) {
     daDgr_c *self = (daDgr_c *)c;
-    dActor_c *p = self->ClosestWithActorID(9);
-    if (p != 0) {
-        volatile struct Vector3 v;
-        v.x = self->mPosX;
-        v.y = self->mPosY;
-        v.z = self->mPosZ;
-        v.y = v.y + self->OnAimedAtWithEgg();
-        if (Vec3_Dist(&self->mPosX, &p->mPosX) < (self->mClipRadius << 3)) {
+    dActor_c *egg = self->ClosestWithActorID(9);
+    if (egg != 0) {
+        volatile struct Vector3 aimPos;
+        aimPos.x = self->mPosX;
+        aimPos.y = self->mPosY;
+        aimPos.z = self->mPosZ;
+        aimPos.y = aimPos.y + self->OnAimedAtWithEgg();
+        if (Vec3_Dist(&self->mPosX, &egg->mPosX) < (self->mClipRadius << 3)) {
             if (!self->mMeshCollider.IsEnabled()) {
                 self->mMeshCollider.Enable(self);
                 return 1;
@@ -362,10 +342,6 @@ int func_ov025_0211123c(char* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/*
- *                         _ZN7daDgr_cD1Ev (0x021111a0, size 0x44)             */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daDgr_cD1Ev
 // @symbol _ZN7daDgr_cD0Ev
 /* NO DEFINITION APPEARS HERE, AND THAT IS THE POINT.

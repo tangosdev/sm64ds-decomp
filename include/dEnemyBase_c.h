@@ -65,7 +65,13 @@ struct dEnemyBase_c : dActor_c {
     s16 mStateTimer;              /* 0x100 */
     u16 mDeathTimer;              /* 0x102 */
     u16 unk_104;                  /* 0x104 -- 5 subclasses */
-    u8 unk_106;                   /* 0x106 */
+    /* Written by IsGoingOffCliff. 0: on the ground and the downward probe
+       found an acceptable floor (also 0 when not on the ground; no probe
+       runs). 1: no floor within the probe, the hit is at least fix2 below
+       the actor, or (when a5 is false) the floor belongs to a collision
+       object. 2: the floor is steeper than angle a3 (normal.y < cos a3).
+       AngleAwayFromWallOrCliff treats any non-zero value as a cliff edge. */
+    u8 mCliffState;               /* 0x106 */
     /* 0x107 -- set while Yoshi has this enemy in his mouth. Both matched
        OnYoshiTryEat overrides refuse the bite while it is non-zero (BobOmb
        returns mEatenByYoshi == 0; Rabbit returns 0 when it is set), Rabbit's

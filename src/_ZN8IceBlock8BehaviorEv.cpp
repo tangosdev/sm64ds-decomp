@@ -2,6 +2,7 @@
 // @symbol _ZN8IceBlock8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
+#include "Particle__System.h"
 /* recovered: named members + shared header, real C++ method */
 #include "IceBlock.h"
 
@@ -24,7 +25,6 @@ extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void _ZN7fBase_c18MarkForDestructionEv(void* c);
 extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int a, unsigned int b, int x, int y, int z, void* v, void* cb);
-extern void* _ZN8Particle6System12FromUniqueIDEj(unsigned int id);
 extern void func_02012694(int a, void* p);
 extern void _ZN5dCc_c5ClearEv(void* p);
 extern void _ZN5dCc_c6UpdateEv(void* p);
@@ -64,13 +64,13 @@ int IceBlock::Behavior()
 
             id = mParticleHandle1;
             if (id != 0) {
-                s = _ZN8Particle6System12FromUniqueIDEj(id);
+                s = Particle::System::FromUniqueID(id);
                 if (s != 0)
                     *(int*)((char*)s + 0x44) = mScale * 0xf;
             }
             id = mParticleHandle2;
             if (id != 0) {
-                s = _ZN8Particle6System12FromUniqueIDEj(id);
+                s = Particle::System::FromUniqueID(id);
                 if (s != 0)
                     *(int*)((char*)s + 0x44) = mScale * 0xf;
             }

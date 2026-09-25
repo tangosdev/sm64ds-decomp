@@ -10,8 +10,8 @@ _ZN15daObjYajirusi_c8BehaviorEv kind:function(arm,size=0xa4) addr:0x02137e48
 _ZN15daObjYajirusi_c13InitResourcesEv kind:function(arm,size=0xe4) addr:0x02137eec
 daObjYajirusi_c_classInit_YAJIRUSI_R kind:function(arm,size=0x38) addr:0x02137fd0
 daObjYajirusi_c_classInit_YAJIRUSI_L kind:function(arm,size=0x38) addr:0x02138008
-_ZN5CrateD1Ev kind:function(arm,size=0x7c) addr:0x02138040
-_ZN5CrateD0Ev kind:function(arm,size=0x90) addr:0x021380bc
+_ZN13daObjBlockS_cD1Ev kind:function(arm,size=0x7c) addr:0x02138040
+_ZN13daObjBlockS_cD0Ev kind:function(arm,size=0x90) addr:0x021380bc
 func_ov098_0213814c kind:function(arm,size=0x9c) addr:0x0213814c
 func_ov098_021381e8 kind:function(arm,size=0x50) addr:0x021381e8
 func_ov098_02138238 kind:function(arm,size=0xe0) addr:0x02138238
@@ -33,19 +33,19 @@ func_ov098_02138bfc kind:function(arm,size=0xe4) addr:0x02138bfc
 func_ov098_02138ce0 kind:function(arm,size=0x128) addr:0x02138ce0
 func_ov098_02138e08 kind:function(arm,size=0x64) addr:0x02138e08
 func_ov098_02138e6c kind:function(arm,size=0x204) addr:0x02138e6c
-_ZN5Crate4KillEv kind:function(arm,size=0x7c) addr:0x02139070
+_ZN13daObjBlockS_c4KillEv kind:function(arm,size=0x7c) addr:0x02139070
 func_ov098_021390ec kind:function(arm,size=0x13c) addr:0x021390ec
 func_ov098_02139228 kind:function(arm,size=0x47c) addr:0x02139228
 func_ov098_021396a4 kind:function(arm,size=0x124) addr:0x021396a4
 func_ov098_021397c8 kind:function(arm,size=0x88) addr:0x021397c8
 func_ov098_02139850 kind:function(arm,size=0x200) addr:0x02139850
-_ZN5Crate16CleanupResourcesEv kind:function(arm,size=0x58) addr:0x02139a50
-_ZN5Crate6RenderEv kind:function(arm,size=0x64) addr:0x02139aa8
-_ZN5Crate8BehaviorEv kind:function(arm,size=0x208) addr:0x02139b0c
-_ZN5Crate13InitResourcesEv kind:function(arm,size=0x130) addr:0x02139d14
-_ZN5Crate15OnGroundPoundedER8dActor_c kind:function(arm,size=0x20) addr:0x02139e44
-_ZN5Crate13OnYoshiTryEatEv kind:function(arm,size=0x14) addr:0x02139e64
-_ZN5Crate13OnTurnIntoEggER6Player kind:function(arm,size=0x8c) addr:0x02139e78
+_ZN13daObjBlockS_c16CleanupResourcesEv kind:function(arm,size=0x58) addr:0x02139a50
+_ZN13daObjBlockS_c6RenderEv kind:function(arm,size=0x64) addr:0x02139aa8
+_ZN13daObjBlockS_c8BehaviorEv kind:function(arm,size=0x208) addr:0x02139b0c
+_ZN13daObjBlockS_c13InitResourcesEv kind:function(arm,size=0x130) addr:0x02139d14
+_ZN13daObjBlockS_c15OnGroundPoundedER8dActor_c kind:function(arm,size=0x20) addr:0x02139e44
+_ZN13daObjBlockS_c13OnYoshiTryEatEv kind:function(arm,size=0x14) addr:0x02139e64
+_ZN13daObjBlockS_c13OnTurnIntoEggER6Player kind:function(arm,size=0x8c) addr:0x02139e78
 daObjBlockS_c_classInit kind:function(arm,size=0x6c) addr:0x02139f04
 _ZN16daObjFallBlock_cD0Ev kind:function(arm,size=0x58) addr:0x02139f70
 _ZN16daObjFallBlock_cD1Ev kind:function(arm,size=0x44) addr:0x02139fc8
@@ -75,19 +75,19 @@ _ZN6Cannon6RenderEv kind:function(arm,size=0x58) addr:0x0213b214
 _ZN6Cannon8BehaviorEv kind:function(arm,size=0x68) addr:0x0213b26c
 _ZN6Cannon13InitResourcesEv kind:function(arm,size=0x168) addr:0x0213b2d4
 daCnn_c_classInit kind:function(arm,size=0x40) addr:0x0213b43c
-_ZN9WaterBombD1Ev kind:function(arm,size=0x48) addr:0x0213b47c
-_ZN9WaterBombD0Ev kind:function(arm,size=0x5c) addr:0x0213b4c4
-func_ov098_0213b520 kind:function(arm,size=0x64) addr:0x0213b520
+_ZN7daWbm_cD1Ev kind:function(arm,size=0x48) addr:0x0213b47c
+_ZN7daWbm_cD0Ev kind:function(arm,size=0x5c) addr:0x0213b4c4
+_ZN7daWbm_c4LandEv kind:function(arm,size=0x64) addr:0x0213b520
 func_ov098_0213b584 kind:function(arm,size=0xb8) addr:0x0213b584
-func_ov098_0213b63c kind:function(arm,size=0xa4) addr:0x0213b63c
+_ZN7daWbm_c5BurstEv kind:function(arm,size=0xa4) addr:0x0213b63c
 func_ov098_0213b6e0 kind:function(arm,size=0x108) addr:0x0213b6e0
-func_ov098_0213b7e8 kind:function(arm,size=0x1f0) addr:0x0213b7e8
-func_ov098_0213b9d8 kind:function(arm,size=0x144) addr:0x0213b9d8
-func_ov098_0213bb1c kind:function(arm,size=0x80) addr:0x0213bb1c
-_ZN9WaterBomb16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x0213bb9c
-_ZN9WaterBomb6RenderEv kind:function(arm,size=0x3c) addr:0x0213bbe4
-_ZN9WaterBomb8BehaviorEv kind:function(arm,size=0xf4) addr:0x0213bc20
-_ZN9WaterBomb13InitResourcesEv kind:function(arm,size=0x1fc) addr:0x0213bd14
+_ZN7daWbm_c11StateBounceEv kind:function(arm,size=0x1f0) addr:0x0213b7e8
+_ZN7daWbm_c9StateDropEv kind:function(arm,size=0x144) addr:0x0213b9d8
+_ZN7daWbm_c9StateFallEv kind:function(arm,size=0x80) addr:0x0213bb1c
+_ZN7daWbm_c16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x0213bb9c
+_ZN7daWbm_c6RenderEv kind:function(arm,size=0x3c) addr:0x0213bbe4
+_ZN7daWbm_c8BehaviorEv kind:function(arm,size=0xf4) addr:0x0213bc20
+_ZN7daWbm_c13InitResourcesEv kind:function(arm,size=0x1fc) addr:0x0213bd14
 daWbm_c_classInit kind:function(arm,size=0x50) addr:0x0213bf10
 data_ov098_0213bf60 kind:data(any) addr:0x0213bf60
 data_ov098_0213bf64 kind:data(any) addr:0x0213bf64
@@ -130,7 +130,7 @@ data_ov098_0213c4e0 kind:data(any) addr:0x0213c4e0
 data_ov098_0213c4f0 kind:data(any) addr:0x0213c4f0
 _ZTS13daObjBlockS_c kind:data(any) addr:0x0213c500
 g_profile_BLOCK_S kind:data(any) addr:0x0213c510 ambiguous
-_ZTV5Crate kind:data(any) addr:0x0213c534
+_ZTV13daObjBlockS_c kind:data(any) addr:0x0213c534
 _ZTV16daObjFallBlock_c kind:data(any) addr:0x0213c5bc
 data_ov098_0213c63c kind:data(any) addr:0x0213c63c
 data_ov098_0213c644 kind:data(any) addr:0x0213c644
@@ -148,7 +148,6 @@ data_ov098_0213c72c kind:data(any) addr:0x0213c72c
 _ZTS7daWbm_c kind:data(any) addr:0x0213c734
 _ZTI7daWbm_c kind:data(any) addr:0x0213c740
 g_profile_WATERBOMB kind:data(any) addr:0x0213c74c ambiguous
-_ZTV9WaterBomb kind:data(any) addr:0x0213c770
 _ZTV7daWbm_c kind:data(any) addr:0x0213c770
 data_ov098_0213c78c kind:data(any) addr:0x0213c78c ambiguous
 data_ov098_0213c800 kind:bss addr:0x0213c800

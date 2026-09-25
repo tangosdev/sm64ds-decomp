@@ -1,0 +1,272 @@
+{
+  "id": "ov002/daObjHeart_c",
+  "module": "ov002",
+  "source": "src/actors/daObjHeart_c.cpp",
+  "promoted_source": "src/actors/daObjHeart_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20bc5e0..0x20bc8f4, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjHeart_c",
+    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020bc5e0",
+      "end": "0x020bc8f4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN12daObjHeart_cD1Ev",
+      "address": "0x020bc5e0",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN12daObjHeart_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN12daObjHeart_cD0Ev",
+      "address": "0x020bc618",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN12daObjHeart_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov002_020bc664",
+      "address": "0x020bc664",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov002_020bc664.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN12daObjHeart_c16CleanupResourcesEv",
+      "address": "0x020bc6a4",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN12daObjHeart_c16CleanupResourcesEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN12daObjHeart_c6RenderEv",
+      "address": "0x020bc6d4",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN12daObjHeart_c6RenderEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN12daObjHeart_c8BehaviorEv",
+      "address": "0x020bc6fc",
+      "size": "0x00000120",
+      "legacy_source": "src/_ZN12daObjHeart_c8BehaviorEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN12daObjHeart_c13InitResourcesEv",
+      "address": "0x020bc81c",
+      "size": "0x00000098",
+      "legacy_source": "src/_ZN12daObjHeart_c13InitResourcesEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "daObjHeart_c_classInit",
+      "address": "0x020bc8b4",
+      "size": "0x00000040",
+      "legacy_source": "src/d_a_obj_heart.c",
+      "ordinal": 7
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Cartridge RTTI name is daObjHeart_c (_ZTS12daObjHeart_c). The licensed run is the one .text span 0x020bc5e0..0x020bc8f4 (8 functions).",
+    "The destructor is declared in the header and defined once, out of line, first in the file. Under #pragma defer_codegen off that emits D1 then D0 in ROM order, plus a homeless D2.",
+    "InitResources keeps the mangled Fix12-by-value calls for ModelAnim::SetAnim and dCcAc_c::Init; the method form size-DIFFs that function."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-daObjHeart_c/daObjHeart_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 8,
+    "functions_declared": 8,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN12daObjHeart_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN12daObjHeart_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
+      ],
+      "data": [
+        "_ZTV12daObjHeart_c",
+        "_ZTI12daObjHeart_c",
+        "_ZTS12daObjHeart_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12daObjHeart_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12daObjHeart_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV12daObjHeart_c"
+      ]
+    }
+  },
+  "partial_isolation": {
+    "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+    "delinksChanged": false,
+    "derivedObjects": 8,
+    "contributionEquivalent": "7/8",
+    "comparedFields": [
+      "keptSection",
+      "keptBytes",
+      "relocs",
+      "defined",
+      "mapping",
+      "live",
+      "undefReferenced"
+    ],
+    "substitutedObjectPaths": [
+      "src/_ZN12daObjHeart_cD1Ev.cpp",
+      "src/_ZN12daObjHeart_cD0Ev.cpp",
+      "src/func_ov002_020bc664.c",
+      "src/_ZN12daObjHeart_c16CleanupResourcesEv.cpp",
+      "src/_ZN12daObjHeart_c6RenderEv.cpp",
+      "src/_ZN12daObjHeart_c8BehaviorEv.cpp",
+      "src/_ZN12daObjHeart_c13InitResourcesEv.cpp",
+      "src/d_a_obj_heart.c"
+    ],
+    "extraInertImports": 71,
+    "extraImportsWithNoHome": [],
+    "result": "failed",
+    "phases": {
+      "delink": true,
+      "lcf": true,
+      "compile": true,
+      "link": true,
+      "checkModules": true,
+      "checkSymbols": false,
+      "rom": true
+    },
+    "tuRange": {
+      "start": "0x020bc5e0",
+      "end": "0x020bc8f4",
+      "differingBytes": 0,
+      "firstDiff": null
+    },
+    "moduleFidelityPassed": true,
+    "symbolCheckNewVsBaseline": [],
+    "rom": {
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+    },
+    "scratch": "build/tu/ov002-daObjHeart_c/link-partial (gitignored)",
+    "state": "derived",
+    "stateMeaning": "N per-function objects were extracted from one compiled TU object; their equivalence to the production objects was not established",
+    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN12daObjHeart_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Out-of-line ~daObjHeart_c under #pragma defer_codegen off emits D1, D0, then D2. The cartridge has D1 at 0x020bc5e0 and D0 at 0x020bc618 and no daObjHeart_c D2, so the extra is homeless."
+    },
+    {
+      "symbol": "_ZTV12daObjHeart_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02109c74",
+      "reason": "Key function is the out-of-line destructor, so this TU emits the 0x84-byte vtable. symbols.txt names the address point 0x02109c74; the licensed span is only .text 0x020bc5e0..0x020bc8f4."
+    },
+    {
+      "symbol": "_ZTI12daObjHeart_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02109c34",
+      "reason": "This class's __si_class_type_info, emitted with the vtable. Canonical copy ov002:0x02109c34, outside the licensed .text span."
+    },
+    {
+      "symbol": "_ZTS12daObjHeart_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02109c40",
+      "reason": "Type name string. The cartridge holds '12daObjHeart_c' plus NUL (15 bytes) at ov002:0x02109c40, which is the size this TU emits."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI for the immediate base. Canonical copy arm9:0x0208e390."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type name for dActor_c. Canonical copy arm9:0x0208e384."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI for dBase_c. Canonical copy arm9:0x02086e78."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type name for dBase_c. Canonical copy arm9:0x02086e54."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI for fBase_c. Canonical copy arm9:0x02086d70."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type name for fBase_c. Canonical copy arm9:0x02086e60."
+    }
+  ]
+}

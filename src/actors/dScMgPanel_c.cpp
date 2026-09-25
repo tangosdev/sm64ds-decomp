@@ -1,137 +1,69 @@
 //cpp
-/* dScMgPanel_c -- the Puzzle Panic panel-flipping minigame scene, ov006.
+/* Puzzle Panic, the whole run 0x0210428c..0x02107858, 71 functions. The
+ * factory and the static initializer live in their own files. Touch a panel
+ * to flip it and its neighbours until every mFace matches mGoal.
  *
- * Reconstructed translation unit: the WHOLE contiguous linker run
- * 0x0210428c..0x02107858, ROM ordinals 0..70, 71 functions, assembled from
- * the 71 one-function legacy sources the promotion deletes and then
- * reconciled by hand.  config/tu_manifest.d/ov006/dScMgPanel_c.json names
- * every one of them.
+ * Functions run in ROM order under `#pragma defer_codegen off`; do not
+ * reorder or drop the pragma. It also makes the bracketed optimizer pragmas
+ * bind to their own functions.
  *
- * THE RUN IS CLAIMABLE WHOLE, WHICH IS THE DIFFERENCE FROM dScMgTeresa_c.
- * Every one of the 71 addresses has a legacy source AND a
- * config/arm9/overlays/ov006/delinks.txt entry marked `complete`; there is
- * no sourceless hole to cut the claim in two.  The factory
- * dScMgPanel_c_classInit (0x02107858, src/d_s_mg_panel.c) and the static
- * initializer __sinit_ov006_02131fa4 stay their own shards, as they do for
- * every promoted ov006 sibling.
+ * The destructor is out of line and written first, so this file owns the
+ * key function and emits the vtable and typeinfo; the compiler emits D1 and
+ * D0 from the one body in cartridge order.
  *
- * SOURCE ORDER IS ROM-ASCENDING AND `#pragma defer_codegen off` IS
- * LOAD-BEARING; they are ONE decision.  With codegen deferred (the default)
- * mwccarm 2004/b56 emits one .text section per function in the REVERSE of
- * source order and a bracketed optimisation pragma binds to nothing, because
- * the state that binds is the state at end of file.  Generating at parse time
- * emits in source order AND makes the brackets bind positionally.  Flipping
- * either one alone fails linkcheck [4b/8]'s ROM-ascending emission-order
- * audit.  Do not reorder the members and do not delete that pragma.
+ * Each helper keeps its own extern "C" declarations: decl_common.h
+ * disagrees with seven of them. The class methods are not extern "C",
+ * so their callees are declared once above the methods. The `_ac4`-style
+ * suffixes on the local struct tags only keep each helper's view apart.
  *
- * EIGHT MEMBERS CARRY BRACKETED OPTIMISATION PRAGMAS, across three families:
- * `opt_common_subs off` on ordinals 3, 4, 6, 50 and 57; `opt_strength_reduction
- * off` on ordinals 51 and 53; `opt_propagation off` on ordinal 60.  Each keeps
- * its own `#pragma push` / `#pragma pop` bracket, exactly as the landed
- * ov006 siblings dScMgBomroom_c, dScMgHanachan_c, dScMgMemory2_c and
- * dScMgTeresa_c do.  (notes/data/tu-promotion-queue.tsv says `pragma:7`; both
- * `tubuild.py inspect` and a direct grep of the 71 shards say 8.)
- *
- * THE DESTRUCTOR IS OUT OF LINE AND IS DECLARED FIRST, SO THIS TU OWNS THE
- * CLASS'S KEY FUNCTION.  The cartridge orders D1 (0x0210428c, 0x24) BELOW D0
- * (0x021042b0, 0x38) and carries no D2 at all; D1-below-D0 is the reproducible
- * direction.  Out-of-line + deferred codegen emits D2, D0, D1 and is wrong;
- * out-of-line + `defer_codegen off` emits D1, D0, D2, which is the cartridge's
- * order with a homeless D2 trailing where it is deadstripped (measured on
- * dScMgTeresa_c, the identical five-level chain).  The inline form is not
- * wanted here for a second reason: it would move the key function to
- * InitResources.  include/dScMgPanel_c.h therefore needs NO edit -- ordinals 0
- * and 1 are two shards of ONE C++ definition, so only one destructor body is
- * written below and the compiler emits both variants from it.
- *
- * Because this TU owns the key function it also emits the whole chain's vtable
- * and typeinfo as vague-linkage passengers -- see the manifest's
- * compiler_only_output block.
- *
- * THIS TU CANNOT OWN ITS VTABLE OR ANY OF ITS STATICS.  ov006's entire .data
- * segment is one section owned by no file, so _ZTV/_ZTI/_ZTS are licensed as
- * compiler-only output and every static is declared `extern`, the way
- * dScMgRoulette_c and dScMgTeresa_c do.  The 27 eight-byte {function pointer,
- * 0} objects that hold this class's callback addresses are 27 SEPARATE
- * objects, not one descriptor table -- they only cluster because mwld lays
- * .data out by ascending object size -- so no array is reconstructed here.
- *
- * EACH `extern "C"` MEMBER KEEPS ITS OWN DECLARATIONS, INSIDE ITS OWN BODY.
- * mwccarm 2004/b56 gives a block-scope declaration in an `extern "C"` region C
- * linkage (measured on ov002/Player, 301 members), so 67 independently
- * recovered views of one ROM symbol coexist without one having to be chosen
- * over the others and without a single call site being rewritten.  THE FOUR
- * C++-NAMED MEMBERS (ordinals 67-70) ARE THE EXCEPTION, and they have to be: a
- * class member function cannot sit inside an `extern "C"` region, so the same
- * block-scope declaration there gets C++ LINKAGE and the reference mangles.
- * That is not a style question -- it made this TU compile, byte-match 71/71 and
- * then fail to link with 41 `_Z...` undefined symbols.  mwccarm rejects a
- * block-scope `extern "C"` (`declarator expected`), so those four members'
- * external declarations live in one file-scope `extern "C"` region placed after
- * ordinal 66, where none of the 67 members above can see it; see the comment
- * there.  Nothing else
- * was canonicalised: `func_ov004_020afdd0` is `(int,int,int,int,int)` in
- * ordinal 2 and `(void *,int,int,int,int)` in ordinal 23, `func_ov006_021050bc`
- * has four different parameter types across ordinals 60-65, and
- * `data_0209d454` is a scalar in ordinal 10 and an array in ordinal 9.  All of
- * those stand as recovered.  Only what a body cannot hold is left at file
- * scope, and those tags are made unique per member: two shards' `struct C` are
- * different objects with different pointer-to-member representations, and the
- * measured dScMgSound_c hazard is that merging them changes codegen.  The
- * `_ac4`, `_c60`, `_0bc`, `_7f0`, `_ab4`, `_de4`, `_ca4`, `_eb8`, `_f44` and
- * `_09c` suffixes on those tags are the low three digits of the defining
- * member's address.  They are disambiguators, not names: the original file had
- * one class here, and eight views of it exist only because the merge kept
- * eight independently recovered spellings rather than picking a winner.
- *
- * `decl_common.h` IS DELIBERATELY NOT INCLUDED.  It declares ten of these 71
- * symbols, and seven of the ten disagree with the shard that defines them --
- * `func_ov006_02104354` and `func_ov006_02104ac4` on the RETURN TYPE (`int`
- * against the shards' `void`), five more on the parameter type.  Pulling it in
- * makes every one of those an `illegal function overloading` error against a
- * byte-matched body.  ov002/Player, the largest promoted TU in the tree,
- * excludes it for the same reason; the four class-method members that used to
- * lean on it now call their helpers directly, which ROM-ascending order makes
- * possible because every helper is defined above its caller.
- *
- * Six of the 71 are this class's own vtable slots -- ordinal 0/1 the
- * destructor pair (slots 16/17), 67 OnYoshiTryEat (slot 18), 68 Render
- * (slot 9), 69 Behavior (slot 6) and 70 InitResources (slot 0).  The other 65
- * are the file-local helpers that shared the translation unit with them: the
- * board setup and pick loops, the cursor, the dMeter_c strip, the two background
- * scrollers and the particle layer.  The ROM gives none of the 65 a mangled
- * name, so none had external linkage; each keeps its address-derived spelling
- * until something better than a guess is available.  Every member's ROM
- * ordinal, address and size is on the banner above its definition.
+ * Leftover, each measured against the matching build:
+ * - func_ov006_021042e8, func_ov006_02104354, func_ov006_0210446c,
+ *   func_ov006_02104558: `PanelPart *p = (PanelPart *)(scene + 0x46a8)`
+ *   with p->x / p->show / p++ DIFFs. The 0x18 byte step stays.
+ * - func_ov006_02104580, func_ov006_02104870: `PanelScroll *` at 0x4694
+ *   DIFFs. func_ov006_021048b0's one `on` store matches.
+ * - func_ov006_021051dc, func_ov006_02105854: mWidth and mDelay stay raw;
+ *   `(u16 *)(int)&mDelay` then an s16 compare DIFFs by 25 words.
+ * - func_ov006_021053a8, func_ov006_02105670, func_ov006_02106bc0,
+ *   func_ov006_02106eb8, func_ov006_02106f44, func_ov006_0210709c: mKind
+ *   and mCount (and mFace, mDelay where used) DIFF as members.
+ * - func_ov006_02105d20: the mFace / mGoal compare DIFFs as members.
+ * - func_ov006_02105de4, func_ov006_02106080, func_ov006_021068d8: mWidth
+ *   DIFFs as a member; so does mKind in func_ov006_021068d8.
+ * - func_ov006_02105ab4, func_ov006_02105de4 keep their own local struct
+ *   views; func_ov006_02106ca4 and func_ov006_02106080's mFace flip go
+ *   through a computed byte pointer. Not tried.
  */
 
-#pragma defer_codegen off
-
-/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
- *  81 func_ov006_* + 32 data_*   unnamed in config symbols.txt; each needs a
- *                                coined, behaviour-justified name.
- *  1 _ZN..E call(s)              class header exists, member not yet
- *                                declared in it.
- *  7 _ZN..E call(s)              no include/<class>.h yet, so there is
- *                                no member to call.
- *  4 `(void *)this` launder(s)   bisect before removing -- some are free,
- *                                some hold the register allocation.
- *  ~346 *(T *)(p + 0x..)         class layout does not name these offsets.
- *  1 VirtualNN, 15 unk_NN        slot/field name not evidenced.
- */
+#pragma defer_codegen off /* per-function opt pragmas, and .text in source order */
 
 #include "types.h"
 #include "dScMgPanel_c.h"
 #include "private/ov006_m8c.h"
 
-/* From ordinal 11: a namespace cannot live inside a function body, and the
- * name inside is already the cartridge's mangled spelling, so it needs C
- * linkage or mwcc would mangle it a second time. */
-extern "C" { namespace Sound { void _ZN5Sound12PlayBank2_2DEj(u32); } }
+#include "Sound.h"
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN12dScMgPanel_cD1Ev, 0x0210428c, size 0x0024 */
-/* -------------------------------------------------------------------------- */
+/* BG2 offset on both screens. func_ov006_02104580 runs it: phase 0 shakes
+   x by +-2.0 for 0x3c frames and drops particles (func_ov006_0210446c) at
+   both side edges, then y accelerates up to 512.0. func_ov006_02104870 arms
+   it; func_ov006_021048b0 clears `on` and the offsets. */
+struct PanelScroll {
+    int x;       /* 0x4694 */
+    int y;       /* 0x4698 */
+    int z;       /* 0x469c */
+    int vel;     /* 0x46a0 */
+    u8 on;       /* 0x46a4 */
+    u8 phase;    /* 0x46a5 */
+    u8 timer;    /* 0x46a6 */
+    u8 gap;      /* 0x46a7 */
+};
+typedef char PanelScroll_size_must_be_0x14[sizeof(PanelScroll) == 0x14 ? 1 : -1];
+
+namespace G2   { char *GetBG2ScrPtr(); }
+namespace G2S  { char *GetBG2ScrPtr(); char *GetBG3CharPtr(); }
+namespace GX   { void LoadBGPltt(const void *src, u32 offset, u32 size); void LoadOBJPltt(const void *src, u32 offset, u32 size); }
+namespace GXS  { void LoadBGPltt(const void *src, u32 offset, u32 size); void LoadOBJPltt(const void *src, u32 offset, u32 size); }
+
 // @symbol _ZN12dScMgPanel_cD1Ev
 /* The complete-object destructor (D1).  Nothing this class owns needs
    destroying, so the whole 0x24 bytes are the compiler's own-vtable write and
@@ -140,9 +72,6 @@ dScMgPanel_c::~dScMgPanel_c()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN12dScMgPanel_cD0Ev, 0x021042b0, size 0x0038 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dScMgPanel_cD0Ev
 /* dScMgPanel_c::~dScMgPanel_c (D0, deleting destructor).  There is no second
    definition to write: mwcc emits D0 from the ONE definition above, and
@@ -150,60 +79,54 @@ dScMgPanel_c::~dScMgPanel_c()
    `#pragma defer_codegen off` the variants come out D1, D0, D2, which is the
    cartridge order; the trailing D2 is homeless and is deadstripped. */
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov006_021042e8, 0x021042e8, size 0x006c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_021042e8
 extern "C" {
 /* Draw the live particles: 64 slots of 0x18 bytes, sprite chosen by the
    slot's kind byte and positioned from its Fix12 x/y. */
-void func_ov006_021042e8(char *c)
+void func_ov006_021042e8(char *scene)
 {
-    extern void func_ov004_020afdd0(int a, int b, int c, int d, int e);
+    extern void func_ov004_020afdd0(int a, int b, int scene, int d, int e);
     extern int data_ov006_0213def0[];
     int i;
     for (i = 0; i < 0x40; i++) {
-        if (*(u8 *)(c + 0x4000 + 0x6bd) != 0) {
+        if (*(u8 *)(scene + 0x4000 + 0x6bd) != 0) {
             func_ov004_020afdd0(
-                data_ov006_0213def0[*(u8 *)(c + 0x4000 + 0x6ba)],
-                *(int *)(c + 0x4000 + 0x6a8) >> 12,
-                *(int *)(c + 0x4000 + 0x6ac) >> 12,
+                data_ov006_0213def0[*(u8 *)(scene + 0x4000 + 0x6ba)],
+                *(int *)(scene + 0x4000 + 0x6a8) >> 12,
+                *(int *)(scene + 0x4000 + 0x6ac) >> 12,
                 -1, -1);
         }
-        c += 0x18;
+        scene += 0x18;
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov006_02104354, 0x02104354, size 0x0118 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104354
 /* Advance the 64 particles one frame: gravity on the free ones, a spin/fade
    counter on all of them, and retire a slot once its counter runs out. */
 #pragma push
 #pragma opt_common_subs off
 extern "C" {
-void func_ov006_02104354(char *c)
+void func_ov006_02104354(char *scene)
 {
     int i;
-    for (i = 0; i < 0x40; i++, c += 0x18) {
-        if (*(u8 *)(c + 0x46b8) != 0) {
-            if (*(u8 *)(c + 0x46b9) == 0) {
-                *(int *)(c + 0x46a8) += *(int *)(c + 0x46b0);
-                *(int *)(c + 0x46ac) += *(int *)(c + 0x46b4);
-                *(int *)(c + 0x46b4) -= 0x300;
-                if (*(int *)(c + 0x46b0) > 0)
-                    *(int *)(c + 0x46b0) += 0xc00;
+    for (i = 0; i < 0x40; i++, scene += 0x18) {
+        if (*(u8 *)(scene + 0x46b8) != 0) {
+            if (*(u8 *)(scene + 0x46b9) == 0) {
+                *(int *)(scene + 0x46a8) += *(int *)(scene + 0x46b0);
+                *(int *)(scene + 0x46ac) += *(int *)(scene + 0x46b4);
+                *(int *)(scene + 0x46b4) -= 0x300;
+                if (*(int *)(scene + 0x46b0) > 0)
+                    *(int *)(scene + 0x46b0) += 0xc00;
                 else
-                    *(int *)(c + 0x46b0) -= 0xc00;
+                    *(int *)(scene + 0x46b0) -= 0xc00;
             }
-            *(u8 *)(c + 0x46bc) += 1;
-            if (*(u8 *)(c + 0x46bc) >= 4) {
-                *(u8 *)(c + 0x46bb) += 1;
-                if (*(u8 *)(c + 0x46bb) >= 5) {
-                    *(u8 *)(c + 0x46b8) = 0;
-                    *(u8 *)(c + 0x46bd) = 0;
+            *(u8 *)(scene + 0x46bc) += 1;
+            if (*(u8 *)(scene + 0x46bc) >= 4) {
+                *(u8 *)(scene + 0x46bb) += 1;
+                if (*(u8 *)(scene + 0x46bb) >= 5) {
+                    *(u8 *)(scene + 0x46b8) = 0;
+                    *(u8 *)(scene + 0x46bd) = 0;
                 }
             }
         }
@@ -212,45 +135,42 @@ void func_ov006_02104354(char *c)
 }
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov006_0210446c, 0x0210446c, size 0x00ec */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210446c
 /* Spawn one particle in the first free slot, at (x, y).  `mode` picks the
    fixed-drift variant over the random one. */
 #pragma push
 #pragma opt_common_subs off
 extern "C" {
-void func_ov006_0210446c(char *c, int x, int y, int mode)
+void func_ov006_0210446c(char *scene, int x, int y, int mode)
 {
     extern int RandomIntInternal(int *seed);
     extern int data_0209d4b8;
     int i;
-    char *q = c;
+    char *q = scene;
     for (i = 0; i < 0x40; i++, q += 0x18) {
         if (*(u8 *)(q + 0x46b8) == 0) {
             int off = i * 0x18;
             int *w;
-            *(u8 *)(c + off + 0x46b8) = 1;
-            *(u8 *)(c + off + 0x46bd) = 1;
-            *(u8 *)(c + off + 0x46bc) = 0;
-            *(u8 *)(c + off + 0x46ba) = 0;
-            *(u8 *)(c + off + 0x46bb) = 0;
-            *(u8 *)(c + off + 0x46b9) = mode;
+            *(u8 *)(scene + off + 0x46b8) = 1;
+            *(u8 *)(scene + off + 0x46bd) = 1;
+            *(u8 *)(scene + off + 0x46bc) = 0;
+            *(u8 *)(scene + off + 0x46ba) = 0;
+            *(u8 *)(scene + off + 0x46bb) = 0;
+            *(u8 *)(scene + off + 0x46b9) = mode;
             /* The `(int)` launder keeps mwcc from common-subexpressioning this
                field address with the one taken three lines down; without it 16
                words of this function move. */
-            *(int *)((char *)(((int)c + 0x46b0)) + off) = 0;
-            *(int *)(c + off + 0x46b4) = 0;
-            *(int *)(c + off + 0x46a8) = x;
-            *(int *)(c + off + 0x46ac) = y;
-            w = (int *)((char *)(((int)c + 0x46b0)) + off);
+            *(int *)((char *)(((int)scene + 0x46b0)) + off) = 0;
+            *(int *)(scene + off + 0x46b4) = 0;
+            *(int *)(scene + off + 0x46a8) = x;
+            *(int *)(scene + off + 0x46ac) = y;
+            w = (int *)((char *)(((int)scene + 0x46b0)) + off);
             if (mode != 0) {
-                *(u8 *)(c + off + 0x46be) = 0;
+                *(u8 *)(scene + off + 0x46be) = 0;
             } else {
                 int rnd = (int)((((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff);
                 rnd = (int)((((u32)rnd) << 1) >> 15);
-                *(u8 *)(c + off + 0x46be) = rnd;
+                *(u8 *)(scene + off + 0x46be) = rnd;
             }
             if (x >= 0x80000)
                 *w = -0x100;
@@ -263,35 +183,29 @@ void func_ov006_0210446c(char *c, int x, int y, int mode)
 }
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov006_02104558, 0x02104558, size 0x0028 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104558
 extern "C" {
 /* Retire every particle in the 64-slot pool. */
-void func_ov006_02104558(char *c)
+void func_ov006_02104558(char *scene)
 {
     int i;
     for (i = 0; i < 0x40; i++) {
-        *(u8 *)(c + 0x46b8) = 0;
-        *(u8 *)(c + 0x46bd) = 0;
-        c += 0x18;
+        *(u8 *)(scene + 0x46b8) = 0;
+        *(u8 *)(scene + 0x46bd) = 0;
+        scene += 0x18;
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov006_02104580, 0x02104580, size 0x02f0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104580
 #pragma push
 #pragma opt_common_subs off
 extern "C" {
-void func_ov006_02104580(char *c)
+void func_ov006_02104580(char *scene)
 {
     extern int RandomIntInternal(int *seed);
     extern int data_0209d4b8;
-    extern void func_ov006_0210446c(char *c, int x, int y, int mode);
+    extern void func_ov006_0210446c(char *scene, int x, int y, int mode);
     extern void SetBg2Offset(int x, int y);
     extern void SetSubBg2Offset(int x, int y);
     int x;
@@ -299,62 +213,62 @@ void func_ov006_02104580(char *c)
     u32 r;
     u32 r2;
 
-    if (*(u8 *)(c + 0x46a5) == 0) {
-        *(u8 *)(c + 0x46a6) += 1;
-        if (((*(u8 *)(c + 0x46a6) >> 1) & 1) != 0)
-            *(int *)(c + 0x4694) = 0x2000;
+    if (*(u8 *)(scene + 0x46a5) == 0) {
+        *(u8 *)(scene + 0x46a6) += 1;
+        if (((*(u8 *)(scene + 0x46a6) >> 1) & 1) != 0)
+            *(int *)(scene + 0x4694) = 0x2000;
         else
-            *(int *)(c + 0x4694) = -0x2000;
+            *(int *)(scene + 0x4694) = -0x2000;
 
-        if (*(u8 *)(c + 0x46a7) != 0) {
-            *(u8 *)(c + 0x46a7) -= 1;
+        if (*(u8 *)(scene + 0x46a7) != 0) {
+            *(u8 *)(scene + 0x46a7) -= 1;
         } else {
             r = ((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
             x = ((r * 7) >> 15) * 5;
             r = ((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
             y = ((r << 4) >> 15) + 0xb0;
-            func_ov006_0210446c(c, x << 12, y << 12, 0);
+            func_ov006_0210446c(scene, x << 12, y << 12, 0);
 
             r = (u32)RandomIntInternal(&data_0209d4b8);
             r2 = (u32)RandomIntInternal(&data_0209d4b8);
             x = (((r >> 16 & 0x7fff) * 7) >> 15) * 5;
             y = ((((r2 >> 16) & 0x7fff) << 4) >> 15) + 0xb0;
-            func_ov006_0210446c(c, (0x100 - x) << 12, y << 12, 0);
-            *(u8 *)(c + 0x46a7) = 3;
+            func_ov006_0210446c(scene, (0x100 - x) << 12, y << 12, 0);
+            *(u8 *)(scene + 0x46a7) = 3;
         }
 
-        if (*(u8 *)(c + 0x46a6) >= 0x3c) {
-            *(u8 *)(c + 0x46a5) += 1;
-            *(u8 *)(c + 0x46a6) = 0;
-            *(u8 *)(c + 0x46a7) = 0;
-            *(int *)(c + 0x4694) = 0;
-            *(int *)(c + 0x46a0) = 0x1000;
+        if (*(u8 *)(scene + 0x46a6) >= 0x3c) {
+            *(u8 *)(scene + 0x46a5) += 1;
+            *(u8 *)(scene + 0x46a6) = 0;
+            *(u8 *)(scene + 0x46a7) = 0;
+            *(int *)(scene + 0x4694) = 0;
+            *(int *)(scene + 0x46a0) = 0x1000;
         }
-    } else if (*(int *)(c + 0x4698) < 0x200000) {
-        *(int *)(c + 0x4698) += *(int *)(c + 0x46a0);
-        *(int *)(c + 0x46a0) += 0x200;
-        if (*(int *)(c + 0x4698) >= 0x200000)
-            *(int *)(c + 0x4698) = 0x200000;
+    } else if (*(int *)(scene + 0x4698) < 0x200000) {
+        *(int *)(scene + 0x4698) += *(int *)(scene + 0x46a0);
+        *(int *)(scene + 0x46a0) += 0x200;
+        if (*(int *)(scene + 0x4698) >= 0x200000)
+            *(int *)(scene + 0x4698) = 0x200000;
 
-        if (*(u8 *)(c + 0x46a7) != 0) {
-            *(u8 *)(c + 0x46a7) -= 1;
+        if (*(u8 *)(scene + 0x46a7) != 0) {
+            *(u8 *)(scene + 0x46a7) -= 1;
         } else {
-            y = *(int *)(c + 0x4698) >> 12;
+            y = *(int *)(scene + 0x4698) >> 12;
             if (y >= 0 && y <= 0xc0)
                 y = (0xc0 - y) << 12;
             else if (y >= 0x100)
                 y = (-0x20 - (y - 0x100)) << 12;
 
             x = (((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 7) >> 15) * 5;
-            func_ov006_0210446c(c, x << 12, y, 1);
+            func_ov006_0210446c(scene, x << 12, y, 1);
             x = (((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 7) >> 15) * 5;
-            func_ov006_0210446c(c, (0x100 - x) << 12, y, 1);
-            *(u8 *)(c + 0x46a7) = 2;
+            func_ov006_0210446c(scene, (0x100 - x) << 12, y, 1);
+            *(u8 *)(scene + 0x46a7) = 2;
         }
     }
 
-    x = *(int *)(c + 0x4694) >> 12;
-    y = *(int *)(c + 0x4698) >> 12;
+    x = *(int *)(scene + 0x4694) >> 12;
+    y = *(int *)(scene + 0x4698) >> 12;
     SetBg2Offset(x, y);
     if (y >= 0x100)
         y = 0x100;
@@ -363,130 +277,110 @@ void func_ov006_02104580(char *c)
 }
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov006_02104870, 0x02104870, size 0x0040 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104870
 extern "C" {
-void func_ov006_02104870(char *c)
+void func_ov006_02104870(char *scene)
 {
-    extern void _ZN5Sound12PlayBank2_2DEj(u32 n);
-    *(u8 *)(c + 0x46a4) = 1;
-    *(int *)(c + 0x4694) = 0;
-    *(int *)(c + 0x4698) = 0;
-    *(int *)(c + 0x469c) = 0;
-    *(int *)(c + 0x46a0) = 0;
-    *(u8 *)(c + 0x46a6) = 0;
-    *(u8 *)(c + 0x46a7) = 0;
-    *(u8 *)(c + 0x46a5) = 0;
-    _ZN5Sound12PlayBank2_2DEj(0x1fd);
+    *(u8 *)(scene + 0x46a4) = 1;
+    *(int *)(scene + 0x4694) = 0;
+    *(int *)(scene + 0x4698) = 0;
+    *(int *)(scene + 0x469c) = 0;
+    *(int *)(scene + 0x46a0) = 0;
+    *(u8 *)(scene + 0x46a6) = 0;
+    *(u8 *)(scene + 0x46a7) = 0;
+    *(u8 *)(scene + 0x46a5) = 0;
+    Sound::PlayBank2_2D(0x1fd);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov006_021048b0, 0x021048b0, size 0x0034 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_021048b0
 extern "C" {
-void func_ov006_021048b0(char *c)
+void func_ov006_021048b0(char *scene)
 {
     extern void SetBg2Offset(int a, int b);
     extern void SetSubBg2Offset(int a, int b);
-    *(u8 *)(c + 0x46a4) = 0;
+    ((PanelScroll *)(scene + 0x4694))->on = 0;
     SetBg2Offset(0, 0);
     SetSubBg2Offset(0, 0);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- func_ov006_021048e4, 0x021048e4, size 0x003c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_021048e4
 extern "C" {
-void func_ov006_021048e4(u8 *c)
+void func_ov006_021048e4(u8 *scene)
 {
     extern u8 data_0209d454[];
-    if (c[0x4693] != 0) return;
-    c[0x4693] = 1;
-    *(u16 *)(c + 0x4600 + 0x90) = 0;
+    if (scene[0x4693] != 0) return;
+    scene[0x4693] = 1;
+    *(u16 *)(scene + 0x4600 + 0x90) = 0;
     data_0209d454[0] |= 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov006_02104920, 0x02104920, size 0x00f0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104920
 extern "C" {
-void func_ov006_02104920(char *c, int idx)
+void func_ov006_02104920(char *scene, int index)
 {
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
     extern void SetSubBg0Offset(int a, int b);
     extern void func_02012790(int a);
-    extern void _ZN5Sound12PlayBank2_2DEj(u32 a);
     extern u8 data_0209d454;
     extern int data_ov006_0212ed00[];
-    int n = idx * 0xc;
-    char *base = c + 0x4690;
+    int n = index * 0xc;
+    char *base = scene + 0x4690;
     int cnt;
     *(u16 *)(base + n) = *(u16 *)(base + n) + 1;
     cnt = *(u16 *)(base + n);
     if ((u32)cnt >= 0x20) {
         *(u16 *)(base + n) = 0;
-        *(u8 *)(c + n + 0x4000 + 0x693) = 0;
+        *(u8 *)(scene + n + 0x4000 + 0x693) = 0;
         SetSubBg0Offset(0, 0);
         data_0209d454 &= ~1;
         func_02012790(0x12f);
-        *(u8 *)(c + 0x4fe2) -= 1;
+        s->mLives -= 1;
         return;
     }
-    *(int *)(c + 0x468c + n) = data_ov006_0212ed00[cnt >> 3];
+    *(int *)(scene + 0x468c + n) = data_ov006_0212ed00[cnt >> 3];
     {
-        char *q = c + n + 0x4600;
+        char *q = scene + n + 0x4600;
         u16 t = *(u16 *)(q + 0x90);
         if (t == 1 || t == 0x11)
-            _ZN5Sound12PlayBank2_2DEj(0x1fc);
+            Sound::PlayBank2_2D(0x1fc);
     }
-    SetSubBg0Offset(0, *(int *)(c + 0x468c + n));
+    SetSubBg0Offset(0, *(int *)(scene + 0x468c + n));
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov006_02104a10, 0x02104a10, size 0x00b0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104a10
 extern "C" {
-namespace Sound { void _ZN5Sound12PlayBank2_2DEj(u32); }
 void SetSubBg0Offset(int a, int b);
 
-void func_ov006_02104a10(char *c, int idx)
+void func_ov006_02104a10(char *scene, int index)
 {
     extern int data_ov006_0212ecec[];
-    int m = idx * 0xc;
-    char *b = c + 0x4690;
+    int m = index * 0xc;
+    char *b = scene + 0x4690;
     u16 h = *(u16 *)(b + m);
     h = h + 1;
     *(u16 *)(b + m) = h;
     h = *(u16 *)(b + m);
     if (h >= 0x20) {
         *(s16 *)(b + m) = 0;
-        *(u8 *)(c + m + 0x4000 + 0x693) = 2;
+        *(u8 *)(scene + m + 0x4000 + 0x693) = 2;
         return;
     }
     {
         int t = data_ov006_0212ecec[h >> 3];
-        int *dst = (int *)(c + 0x468c + m);
+        int *dst = (int *)(scene + 0x468c + m);
         u16 st;
         *dst = t;
-        st = *(u16 *)(c + m + 0x4600 + 0x90);
-        if (st == 1 || st == 0x11) Sound::_ZN5Sound12PlayBank2_2DEj(0x1fc);
+        st = *(u16 *)(scene + m + 0x4600 + 0x90);
+        if (st == 1 || st == 0x11) Sound::PlayBank2_2D(0x1fc);
         SetSubBg0Offset(0, *dst);
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov006_02104ac0, 0x02104ac0, size 0x0004 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104ac0
 extern "C" {
 void func_ov006_02104ac0(void)
@@ -494,9 +388,6 @@ void func_ov006_02104ac0(void)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_ov006_02104ac4, 0x02104ac4, size 0x0060 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104ac4
 extern "C" {
 struct PanelC_ac4;
@@ -516,51 +407,39 @@ void func_ov006_02104ac4(PanelC_ac4 *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- func_ov006_02104b24, 0x02104b24, size 0x0028 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104b24
 extern "C" {
-void func_ov006_02104b24(char *c)
+void func_ov006_02104b24(char *scene)
 {
-    *(char *)(c + 0x4692) = 1;
-    *(int *)(c + 0x4688) = 0;
-    *(int *)(c + 0x468c) = 0;
-    *(s16 *)(c + 0x4690) = 0;
-    *(char *)(c + 0x4693) = 0;
+    *(char *)(scene + 0x4692) = 1;
+    *(int *)(scene + 0x4688) = 0;
+    *(int *)(scene + 0x468c) = 0;
+    *(s16 *)(scene + 0x4690) = 0;
+    *(char *)(scene + 0x4693) = 0;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- func_ov006_02104b4c, 0x02104b4c, size 0x0010 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104b4c
 extern "C" {
-void func_ov006_02104b4c(char *c)
+void func_ov006_02104b4c(char *scene)
 {
-    *(char *)(c + 0x4692) = 0;
+    *(char *)(scene + 0x4692) = 0;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- func_ov006_02104b5c, 0x02104b5c, size 0x0050 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104b5c
 extern "C" {
-void func_ov006_02104b5c(char *c)
+void func_ov006_02104b5c(char *scene)
 {
-    void func_ov004_020af948(void *a, int b, int c, int d);
+    void func_ov004_020af948(void *a, int b, int scene, int d);
     extern void *data_ov006_02136e2c[];
-    if (*(u8 *)(c + 0x4685) == 0) return;
+    if (*(u8 *)(scene + 0x4685) == 0) return;
     func_ov004_020af948(data_ov006_02136e2c[0],
-                        *(int *)(c + 0x4678) >> 12,
-                        *(int *)(c + 0x467c) >> 12, 0);
+                        *(int *)(scene + 0x4678) >> 12,
+                        *(int *)(scene + 0x467c) >> 12, 0);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- func_ov006_02104bac, 0x02104bac, size 0x0004 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104bac
 extern "C" {
 void func_ov006_02104bac(void)
@@ -568,188 +447,159 @@ void func_ov006_02104bac(void)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- func_ov006_02104bb0, 0x02104bb0, size 0x0058 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104bb0
 extern "C" {
-void func_ov006_02104bb0(char *c)
+void func_ov006_02104bb0(char *scene)
 {
-    u16 *p = (u16 *)(c + 0x4682);
+    u16 *p = (u16 *)(scene + 0x4682);
     *p = *p + 1;
-    if (*(u16 *)(c + 0x4600 + 0x82) < 8) return;
-    *(u16 *)(c + 0x4600 + 0x82) = 0;
+    if (*(u16 *)(scene + 0x4600 + 0x82) < 8) return;
+    *(u16 *)(scene + 0x4600 + 0x82) = 0;
     {
-        int *q = (int *)(c + 0x467c);
+        int *q = (int *)(scene + 0x467c);
         *q = *q + 0x4000;
     }
-    *(u8 *)(c + 0x4686) = 2;
+    *(u8 *)(scene + 0x4686) = 2;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- func_ov006_02104c08, 0x02104c08, size 0x0058 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104c08
 extern "C" {
-void func_ov006_02104c08(char *c)
+void func_ov006_02104c08(char *scene)
 {
-    u16 *h = (u16 *)(c + 0x4682);
+    u16 *h = (u16 *)(scene + 0x4682);
     *h = *h + 1;
-    if (*(u16 *)(c + 0x4600 + 0x82) < 4) return;
-    *(u16 *)(c + 0x4600 + 0x82) = 0;
+    if (*(u16 *)(scene + 0x4600 + 0x82) < 4) return;
+    *(u16 *)(scene + 0x4600 + 0x82) = 0;
     {
-        int *w = (int *)(c + 0x467c);
+        int *w = (int *)(scene + 0x467c);
         *w = *w - 0x4000;
     }
-    *(u8 *)(c + 0x4000 + 0x686) = 1;
+    *(u8 *)(scene + 0x4000 + 0x686) = 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- func_ov006_02104c60, 0x02104c60, size 0x009c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104c60
 extern "C" {
 struct PanelC_c60;
 typedef void (PanelC_c60::*PanelPmf_c60)();
-void func_ov006_02104c60(char *c)
+void func_ov006_02104c60(char *scene)
 {
-    void func_ov006_02104c60(char *c);
+    void func_ov006_02104c60(char *scene);
     extern PanelPmf_c60 data_ov006_021427ec[];
     u16 *ip;
-    if (*(u8 *)(c + 0x4000 + 0x684) == 0) return;
-    ip = (u16 *)(c + 0x4680);
+    if (*(u8 *)(scene + 0x4000 + 0x684) == 0) return;
+    ip = (u16 *)(scene + 0x4680);
     *ip = *ip - 1;
-    if (*(s16 *)(c + 0x4600 + 0x80) <= 0) {
-        *(s16 *)(c + 0x4600 + 0x80) = 0;
-        *(u8 *)(c + 0x4000 + 0x684) = 0;
-        *(u8 *)(c + 0x4000 + 0x685) = 0;
+    if (*(s16 *)(scene + 0x4600 + 0x80) <= 0) {
+        *(s16 *)(scene + 0x4600 + 0x80) = 0;
+        *(u8 *)(scene + 0x4000 + 0x684) = 0;
+        *(u8 *)(scene + 0x4000 + 0x685) = 0;
         return;
     }
     {
-        PanelC_c60 *cc = (PanelC_c60 *)c;
-        (cc->*data_ov006_021427ec[*(u8 *)(c + 0x4000 + 0x686)])();
+        PanelC_c60 *cc = (PanelC_c60 *)scene;
+        (cc->*data_ov006_021427ec[*(u8 *)(scene + 0x4000 + 0x686)])();
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- func_ov006_02104cfc, 0x02104cfc, size 0x0048 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104cfc
 extern "C" {
-void func_ov006_02104cfc(char *c, int i)
+void func_ov006_02104cfc(char *scene, int i)
 {
-    char *e = c + (i << 2);
-    *(u8 *)(c + 0x4684) = 1;
-    *(u8 *)(c + 0x4685) = 1;
-    *(int *)(c + 0x4678) = *(int *)(e + 0x4cc4);
-    *(int *)(c + 0x467c) = *(int *)(e + 0x4d54) + 0x8000;
-    *(s16 *)(c + 0x4680) = 0x30;
-    *(s16 *)(c + 0x4682) = 0;
-    *(u8 *)(c + 0x4686) = 0;
+    char *e = scene + (i << 2);
+    *(u8 *)(scene + 0x4684) = 1;
+    *(u8 *)(scene + 0x4685) = 1;
+    *(int *)(scene + 0x4678) = *(int *)(e + 0x4cc4);
+    *(int *)(scene + 0x467c) = *(int *)(e + 0x4d54) + 0x8000;
+    *(s16 *)(scene + 0x4680) = 0x30;
+    *(s16 *)(scene + 0x4682) = 0;
+    *(u8 *)(scene + 0x4686) = 0;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- func_ov006_02104d44, 0x02104d44, size 0x0050 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104d44
 extern "C" {
-void func_ov006_02104d44(char *c)
+void func_ov006_02104d44(char *scene)
 {
-    void Hud_RenderSprite(void *a, int b, int c, int d, int e);
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
+    void Hud_RenderSprite(void *a, int b, int scene, int d, int e);
     extern void *data_ov006_02136d40[];
-    if (*(u8 *)(c + 0x4fe3) == 0) return;
-    Hud_RenderSprite(data_ov006_02136d40[*(u8 *)(c + 0x4fe2)],
+    if (*(u8 *)(scene + 0x4fe3) == 0) return;
+    Hud_RenderSprite(data_ov006_02136d40[s->mLives],
                         0xf0, 0x24, -1, -1);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- func_ov006_02104d94, 0x02104d94, size 0x00dc */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104d94
 extern "C" {
-void func_ov006_02104d94(char *c)
+void func_ov006_02104d94(char *scene)
 {
     extern void func_ov004_020b2444(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
     extern void func_ov004_020afdd0(void *a0, int a1, int a2, int a3, int a4);
     extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
     extern void *data_ov006_02135054[];
     extern void *data_ov006_02136de8[];
-    if (*(u8 *)(c + 0x4000 + 0x676) == 0) return;
-    if (*(u8 *)(c + 0x4000 + 0x675) != 4) {
-        int a = *(int *)(c + 0x4000 + 0x660) >> 12;
-        int b = *(int *)(c + 0x4000 + 0x664) >> 12;
-        int idx;
-        func_ov004_020b2444(a, b, *(u8 *)(c + 0x4000 + 0xfde), -1, -1, 0, 0);
-        idx = 1;
-        if (*(u8 *)(c + 0x4000 + 0xfde) >= 2) idx = 0;
-        func_ov004_020afdd0(data_ov006_02135054[idx], a + 0x2c, b, -1, -1);
+    if (*(u8 *)(scene + 0x4000 + 0x676) == 0) return;
+    if (*(u8 *)(scene + 0x4000 + 0x675) != 4) {
+        int a = *(int *)(scene + 0x4000 + 0x660) >> 12;
+        int b = *(int *)(scene + 0x4000 + 0x664) >> 12;
+        int index;
+        func_ov004_020b2444(a, b, *(u8 *)(scene + 0x4000 + 0xfde), -1, -1, 0, 0);
+        index = 1;
+        if (*(u8 *)(scene + 0x4000 + 0xfde) >= 2) index = 0;
+        func_ov004_020afdd0(data_ov006_02135054[index], a + 0x2c, b, -1, -1);
     } else {
-        int x = *(u8 *)(c + 0x4000 + 0x677);
+        int x = *(u8 *)(scene + 0x4000 + 0x677);
         Hud_RenderSprite(data_ov006_02136de8[x],
-                            *(int *)(c + 0x4000 + 0x660) >> 12,
-                            *(int *)(c + 0x4000 + 0x664) >> 12,
+                            *(int *)(scene + 0x4000 + 0x660) >> 12,
+                            *(int *)(scene + 0x4000 + 0x664) >> 12,
                             -1, -1);
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- func_ov006_02104e70, 0x02104e70, size 0x0010 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104e70
 extern "C" {
-void func_ov006_02104e70(u8 *c)
+void func_ov006_02104e70(u8 *scene)
 {
-    c += 0x4000;
-    c[0x677] = c[0xfde];
+    scene += 0x4000;
+    scene[0x677] = scene[0xfde];
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- func_ov006_02104e80, 0x02104e80, size 0x0028 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104e80
 extern "C" {
 // If the byte flag at self+0x4677 is set, decrement it. The read folds to add+ldrb
 // (offset > 0xfff), while the laundered RMW pool-loads the offset, matching the ROM's
 // predicated ldrbne/subne/strbne tail.
-void func_ov006_02104e80(char *c)
+void func_ov006_02104e80(char *scene)
 {
-    if (*(u8 *)(c + 0x4677))
-        *(u8 *)(c + 0x4677) -= 1;
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
+    if (s->mSlideLeft)
+        s->mSlideLeft -= 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- func_ov006_02104ea8, 0x02104ea8, size 0x0010 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104ea8
 extern "C" {
-void func_ov006_02104ea8(char *c)
+void func_ov006_02104ea8(char *scene)
 {
-    *(char *)(c + 0x4676) = 0;
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
+    s->mSlideFlag = 0;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 27 -- func_ov006_02104eb8, 0x02104eb8, size 0x0010 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104eb8
 extern "C" {
-void func_ov006_02104eb8(char *c)
+void func_ov006_02104eb8(char *scene)
 {
-    *(char *)(c + 0x4676) = 1;
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
+    s->mSlideFlag = 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 28 -- func_ov006_02104ec8, 0x02104ec8, size 0x0004 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104ec8
 extern "C" {
 void func_ov006_02104ec8(void)
@@ -757,93 +607,77 @@ void func_ov006_02104ec8(void)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 29 -- func_ov006_02104ecc, 0x02104ecc, size 0x00e8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104ecc
 extern "C" {
-void func_ov006_02104ecc(char *c)
+void func_ov006_02104ecc(char *scene)
 {
     extern void FreeGfxSlotsById(int arg);
-    extern void func_ov006_02106048(char *c);
-    extern void _ZN5Sound12PlayBank2_2DEj(u32);
-    int *a = (int *)(c + 0x4660);
-    *a += *(int *)(c + 0x4668);
-    int *b = (int *)(c + 0x4668);
-    *b -= 0x400;
-    if ((*(int *)(c + 0x4660) >> 12) > -0x40) return;
-    int *e = (int *)(c + 0x4cac);
-    (*e)++;
-    *(u8 *)(c + 0x4675) = 4;
-    *(int *)(c + 0x4660) = 0x10000;
-    *(int *)(c + 0x4664) = 0x24000;
+    extern void func_ov006_02106048(char *scene);
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
+    s->mSlide += s->mSlideVel;
+    s->mSlideVel -= 0x400;
+    if ((s->mSlide >> 12) > -0x40) return;
+    s->mIntro++;
+    s->mSlideStep = 4;
+    s->mSlide = 0x10000;
+    s->mSlideY = 0x24000;
     FreeGfxSlotsById(0x1d);
-    if (*(u8 *)(c + 0xc4) == 0) {
-        *(u8 *)(c + 0xc3) = 1;
-        *(u8 *)(c + 0xc4) = 1;
-        *(u16 *)(c + 0xc0) = 0;
+    if (s->mPromptBlinkCount == 0) {
+        s->mPromptEnabled = 1;
+        s->mPromptBlinkCount = 1;
+        s->mPromptBlinkTimer = 0;
     }
-    *(u8 *)(c + 0x4fe3) = 1;
-    *(u8 *)(c + 0x4677) = *(u8 *)(c + 0x4fde);
-    *(u16 *)(c + 0x4670) = 0;
-    func_ov006_02106048(c);
-    _ZN5Sound12PlayBank2_2DEj(0x1fb);
+    *(u8 *)(scene + 0x4fe3) = 1;
+    s->mSlideLeft = s->mFlipCount;
+    s->mHold = 0;
+    func_ov006_02106048(scene);
+    Sound::PlayBank2_2D(0x1fb);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 30 -- func_ov006_02104fb4, 0x02104fb4, size 0x0058 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02104fb4
 extern "C" {
-void func_ov006_02104fb4(u8 *c)
+void func_ov006_02104fb4(u8 *scene)
 {
-    u8 *slot = c + 0x4600;
-    if (*(u16 *)(slot + 0x70) != 0) {
-        u16 *p = (u16 *)(c + 0x4670);
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
+    if (s->mHold != 0) {
+        u16 *p = &s->mHold;
         *p = *p - 1;
-        if (*(s16 *)(slot + 0x70) < 0) *(u16 *)(slot + 0x70) = 0;
+        if (*(s16 *)&s->mHold < 0) s->mHold = 0;
     } else {
-        *(int *)(c + 0x4668) = -0x3000;
-        *(u8 *)(c + 0x4675) = 3;
+        s->mSlideVel = -0x3000;
+        s->mSlideStep = 3;
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 31 -- func_ov006_0210500c, 0x0210500c, size 0x0080 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210500c
 extern "C" {
-void func_ov006_0210500c(char *c)
+void func_ov006_0210500c(char *scene)
 {
-    *(int *)(c + 0x4660) += *(int *)(c + 0x4668);
-    *(int *)(c + 0x4668) -= 0x400;
-    if (*(int *)(c + 0x4660) >> 12 > 0x58) return;
-    *(int *)(c + 0x4660) = 0x58000;
-    *(u8 *)(c + 0x4675) = 2;
-    *(u16 *)(c + 0x4670) = 0x80;
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
+    s->mSlide += s->mSlideVel;
+    s->mSlideVel -= 0x400;
+    if (s->mSlide >> 12 > 0x58) return;
+    s->mSlide = 0x58000;
+    s->mSlideStep = 2;
+    s->mHold = 0x80;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 32 -- func_ov006_0210508c, 0x0210508c, size 0x0030 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210508c
 extern "C" {
-void func_ov006_0210508c(char *c)
+void func_ov006_0210508c(char *scene)
 {
-    *(int *)(c + 0x4660) = 0x110000;
-    *(int *)(c + 0x4664) = 0x60000;
-    *(int *)(c + 0x4668) = -0x3000;
-    *(u8 *)(c + 0x4676) = 1;
-    *(u8 *)(c + 0x4675) = 1;
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
+    s->mSlide = 0x110000;
+    s->mSlideY = 0x60000;
+    s->mSlideVel = -0x3000;
+    s->mSlideFlag = 1;
+    s->mSlideStep = 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 33 -- func_ov006_021050bc, 0x021050bc, size 0x005c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_021050bc
 extern "C" {
 struct PanelC_0bc;
@@ -858,57 +692,50 @@ void func_ov006_021050bc(PanelC_0bc *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 34 -- func_ov006_02105118, 0x02105118, size 0x001c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02105118
 extern "C" {
-void func_ov006_02105118(char *c)
+void func_ov006_02105118(char *scene)
 {
-    *(char *)(c + 0x4674) = 1;
-    *(char *)(c + 0x4675) = 0;
-    *(char *)(c + 0x4677) = 0;
+    *(char *)(scene + 0x4674) = 1;
+    *(char *)(scene + 0x4675) = 0;
+    *(char *)(scene + 0x4677) = 0;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 35 -- func_ov006_02105134, 0x02105134, size 0x00a8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02105134
 extern "C" {
-void func_ov006_02105134(char *c)
+void func_ov006_02105134(char *scene)
 {
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
     void func_02012790(int a);
     void func_ov006_021048e4(u8 *r0);
-    void func_ov006_02105c1c(char *c);
-    if (*(u8 *)(c + 0x4fe9) != 0) return;
-    if (*(int *)(c + 0x4ca8) == 6) return;
-    if (*(u8 *)(c + 0x4fe1) < *(u8 *)(c + 0x4fde)) return;
+    void func_ov006_02105c1c(char *scene);
+    if (*(u8 *)(scene + 0x4fe9) != 0) return;
+    if (*(int *)(scene + 0x4ca8) == 6) return;
+    if (*(u8 *)(scene + 0x4fe1) < *(u8 *)(scene + 0x4fde)) return;
 
     func_02012790(0xe);
-    func_ov006_021048e4((u8 *)c);
+    func_ov006_021048e4((u8 *)scene);
 
-    if (*(u8 *)(c + 0x4fe2) > 1) {
-        *(int *)(c + 0x4ca8) = 3;
-        func_ov006_02105c1c(c);
+    if (s->mLives > 1) {
+        *(int *)(scene + 0x4ca8) = 3;
+        func_ov006_02105c1c(scene);
     } else {
-        *(u8 *)(c + 0x4fe6) = 0;
-        func_ov006_02105c1c(c);
-        *(int *)(c + 0x4ca8) = 6;
-        *(s16 *)(c + 0x4ec0) = 0x50;
+        *(u8 *)(scene + 0x4fe6) = 0;
+        func_ov006_02105c1c(scene);
+        *(int *)(scene + 0x4ca8) = 6;
+        *(s16 *)(scene + 0x4ec0) = 0x50;
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 36 -- func_ov006_021051dc, 0x021051dc, size 0x01cc */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_021051dc
 extern "C" {
-void func_ov006_021051dc(char *c)
+void func_ov006_021051dc(char *scene)
 {
-    extern void func_ov006_02104cfc(char *c, int i);
-    int idx;
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
+    extern void func_ov006_02104cfc(char *scene, int i);
+    int index;
     int w;
     int col;
     int row;
@@ -917,27 +744,27 @@ void func_ov006_021051dc(char *c)
     int y;
     int x;
 
-    if (*(u16 *)(c + 0x4ec4) != 0) {
-        (*(u16 *)(int)(c + 0x4ec4))--;
-        if (*(s16 *)(c + 0x4ec4) < 0)
-            *(u16 *)(c + 0x4ec4) = 0;
+    if (*(u16 *)(scene + 0x4ec4) != 0) {
+        (*(u16 *)(int)(scene + 0x4ec4))--;
+        if (*(s16 *)(scene + 0x4ec4) < 0)
+            *(u16 *)(scene + 0x4ec4) = 0;
         return;
     }
 
-    if (*(u8 *)(c + 0x4fe5) >= *(u8 *)(c + 0x4fde)) {
-        *(u16 *)(c + 0x4ec0) = 0x50;
-        *(int *)(c + 0x4ca8) = 6;
-        *(u8 *)(c + 0x4fe6) = 0;
+    if (*(u8 *)(scene + 0x4fe5) >= *(u8 *)(scene + 0x4fde)) {
+        *(u16 *)(scene + 0x4ec0) = 0x50;
+        *(int *)(scene + 0x4ca8) = 6;
+        *(u8 *)(scene + 0x4fe6) = 0;
         return;
     }
 
-    idx = *(u8 *)(c + *(u8 *)(c + 0x4fe5) + 0x4fae);
-    w = *(int *)(c + 0x4cbc);
+    index = *(u8 *)(scene + *(u8 *)(scene + 0x4fe5) + 0x4fae);
+    w = *(int *)(scene + 0x4cbc);
     hq = 3;
     wq = hq;
 
-    col = idx % w;
-    row = idx / w;
+    col = index % w;
+    row = index / w;
 
     if (col == 0 || col == w - 1)
         wq = 2;
@@ -951,24 +778,21 @@ void func_ov006_021051dc(char *c)
 
     for (y = 0; y < hq; y++) {
         for (x = 0; x < wq; x++) {
-            int cell = *(int *)(c + 0x4cbc) * (row + y) + (col + x);
+            int cell = *(int *)(scene + 0x4cbc) * (row + y) + (col + x);
 
-            *(u8 *)(c + cell + 0x4efa) = 1;
-            (*(u8 *)(int)(c + cell + 0x4f1e)) ^= 1;
-            *(u16 *)(c + cell * 2 + 0x4e78) = 8;
+            s->mKind[cell] = 1;
+            s->mFace[cell] ^= 1;
+            *(u16 *)(scene + cell * 2 + 0x4e78) = 8;
         }
     }
 
-    func_ov006_02104cfc(c, idx);
-    *(u16 *)(c + idx * 2 + 0x4e78) = 0;
-    *(u16 *)(c + 0x4ec4) = 0x30;
-    (*(u8 *)(int)(c + 0x4fe5))++;
+    func_ov006_02104cfc(scene, index);
+    *(u16 *)(scene + index * 2 + 0x4e78) = 0;
+    *(u16 *)(scene + 0x4ec4) = 0x30;
+    (*(u8 *)(int)(scene + 0x4fe5))++;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 37 -- func_ov006_021053a8, 0x021053a8, size 0x02c8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_021053a8
 extern "C" {
 void func_ov006_021053a8(Ov006M8c *scene)
@@ -1095,35 +919,29 @@ void func_ov006_021053a8(Ov006M8c *scene)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 38 -- func_ov006_02105670, 0x02105670, size 0x00c0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02105670
 extern "C" {
-void func_ov006_02105670(char *c)
+void func_ov006_02105670(char *scene)
 {
-    if (((u16 *)(c + 0x4e00))[0x62] != 0) {
-        (*(u16 *)(c + 0x4ec4))--;
-        if (((s16 *)(c + 0x4e00))[0x62] < 0) {
-            ((s16 *)(c + 0x4e00))[0x62] = 0;
+    if (((u16 *)(scene + 0x4e00))[0x62] != 0) {
+        (*(u16 *)(scene + 0x4ec4))--;
+        if (((s16 *)(scene + 0x4e00))[0x62] < 0) {
+            ((s16 *)(scene + 0x4e00))[0x62] = 0;
         }
         return;
     } else {
         int k;
-        for (k = 0; k < *(int *)(c + 0x4cb8); k++) {
-            *(u8 *)(c + k + 0x4efa) = 1;
-            *(u8 *)(c + k + 0x4f1e) ^= 1;
-            *(u8 *)(c + k + 0x4f8a) = 1;
+        for (k = 0; k < *(int *)(scene + 0x4cb8); k++) {
+            *(u8 *)(scene + k + 0x4efa) = 1;
+            *(u8 *)(scene + k + 0x4f1e) ^= 1;
+            *(u8 *)(scene + k + 0x4f8a) = 1;
         }
-        *(u8 *)(c + 0x4fe0) = 2;
-        ((u16 *)(c + 0x4e00))[0x62] = 0x20;
+        *(u8 *)(scene + 0x4fe0) = 2;
+        ((u16 *)(scene + 0x4e00))[0x62] = 0x20;
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 39 -- func_ov006_02105730, 0x02105730, size 0x00c0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02105730
 extern "C" {
 typedef struct WarpEntry_730 {
@@ -1135,6 +953,7 @@ typedef struct WarpEntry_730 {
 
 void func_ov006_02105730(char *c)
 {
+    dScMgPanel_c *s = (dScMgPanel_c *)c;
     extern u8 data_020a0e40;
     extern WarpEntry_730 data_020a0de8[];
     u8 idx;
@@ -1169,13 +988,10 @@ void func_ov006_02105730(char *c)
     }
     *(u8 *)(c + 0x4fe0) = 1;
     *(u32 *)(c + 0x4ca8) = 5;
-    *(u16 *)(c + 0x4ec4) = 0x20;
+    s->mDelay = 0x20;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 40 -- func_ov006_021057f0, 0x021057f0, size 0x0064 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_021057f0
 extern "C" {
 struct PanelC_7f0;
@@ -1203,29 +1019,26 @@ void func_ov006_021057f0(PanelC_7f0 *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 41 -- func_ov006_02105854, 0x02105854, size 0x0260 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02105854
 extern "C" {
-void func_ov006_02105854(char *c)
+void func_ov006_02105854(char *scene)
 {
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
     extern void func_ov006_02104eb8(char *p);
     extern void func_ov006_02104e70(u8 *p);
-    extern void _ZN5Sound12PlayBank2_2DEj(u32);
-    if (*(u16 *)(c + 0x4ec4) != 0) {
-        (*(u16 *)(int)(c + 0x4ec4))--;
-        if (*(s16 *)(c + 0x4ec4) < 0)
-            *(u16 *)(c + 0x4ec4) = 0;
+    if (*(u16 *)(scene + 0x4ec4) != 0) {
+        (*(u16 *)(int)(scene + 0x4ec4))--;
+        if (*(s16 *)(scene + 0x4ec4) < 0)
+            *(u16 *)(scene + 0x4ec4) = 0;
         return;
     }
 
     {
         int found = 0;
         int i;
-        int n = *(int *)(c + 0x4cb8);
+        int n = s->mCount;
         for (i = 0; i < n; i++) {
-            if (*(u8 *)(c + i + 0x4efa) != 0) {
+            if (*(u8 *)(scene + i + 0x4efa) != 0) {
                 found++;
                 break;
             }
@@ -1234,33 +1047,33 @@ void func_ov006_02105854(char *c)
             return;
     }
 
-    if (*(u8 *)(c + 0x4fe4) == 0xff) {
-        *(u8 *)(c + 0x4fe4) = 0;
-        *(int *)(c + 0x4ca8) = 2;
-        func_ov006_02104eb8(c);
-        func_ov006_02104e70((u8 *)c);
+    if (*(u8 *)(scene + 0x4fe4) == 0xff) {
+        *(u8 *)(scene + 0x4fe4) = 0;
+        *(int *)(scene + 0x4ca8) = 2;
+        func_ov006_02104eb8(scene);
+        func_ov006_02104e70((u8 *)scene);
         return;
     }
 
-    (*(u8 *)(int)(c + 0x4fe4))--;
+    (*(u8 *)(int)(scene + 0x4fe4))--;
 
-    if (*(u8 *)(c + 0x4fe4) == 0xff) {
-        *(u8 *)(c + 0x4fe4) = 0;
-        *(int *)(c + 0x4ca8) = 2;
-        *(u8 *)(c + 0x4fe1) = 0;
-        func_ov006_02104eb8(c);
-        func_ov006_02104e70((u8 *)c);
+    if (*(u8 *)(scene + 0x4fe4) == 0xff) {
+        *(u8 *)(scene + 0x4fe4) = 0;
+        *(int *)(scene + 0x4ca8) = 2;
+        *(u8 *)(scene + 0x4fe1) = 0;
+        func_ov006_02104eb8(scene);
+        func_ov006_02104e70((u8 *)scene);
         return;
     }
 
     {
-        u8 slot = *(u8 *)(c + 0x4fe4);
+        u8 slot = *(u8 *)(scene + 0x4fe4);
         int hq = 3;
-        int idx = *(u8 *)(c + slot + 0x4fce);
-        int w = *(int *)(c + 0x4cbc);
+        int index = *(u8 *)(scene + slot + 0x4fce);
+        int w = *(int *)(scene + 0x4cbc);
         int wq = 3;
-        int col = idx % w;
-        int row = idx / w;
+        int col = index % w;
+        int row = index / w;
         int x, y;
 
         if (col == 0 || col == w - 1)
@@ -1274,22 +1087,19 @@ void func_ov006_02105854(char *c)
 
         for (y = 0; y < hq; y++) {
             for (x = 0; x < wq; x++) {
-                int cell = *(int *)(c + 0x4cbc) * (row + y) + (col + x);
-                *(u8 *)(c + cell + 0x4efa) = 1;
-                (*(u8 *)(int)(c + cell + 0x4f1e)) ^= 1;
-                *(u16 *)(c + cell * 2 + 0x4e78) = 8;
-                *(u8 *)(c + cell + 0x4f8a) = 1;
+                int cell = *(int *)(scene + 0x4cbc) * (row + y) + (col + x);
+                *(u8 *)(scene + cell + 0x4efa) = 1;
+                s->mFace[cell] ^= 1;
+                *(u16 *)(scene + cell * 2 + 0x4e78) = 8;
+                *(u8 *)(scene + cell + 0x4f8a) = 1;
             }
         }
-        *(u16 *)(c + idx * 2 + 0x4e78) = 0;
-        _ZN5Sound12PlayBank2_2DEj(0x1fb);
+        *(u16 *)(scene + index * 2 + 0x4e78) = 0;
+        Sound::PlayBank2_2D(0x1fb);
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 42 -- func_ov006_02105ab4, 0x02105ab4, size 0x0168 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02105ab4
 extern "C" {
 typedef struct PanelObj_ab4
@@ -1309,7 +1119,7 @@ typedef struct PanelObj_ab4
     u8 q;                           /* 0x4fe8 */
 } PanelObj_ab4;
 
-void func_ov006_02105ab4(PanelObj_ab4 *c)
+void func_ov006_02105ab4(PanelObj_ab4 *scene)
 {
     extern void func_ov004_020af868(void *a0, int a1, int a2, int a3, int a4, void *a5);
     extern void DrawOamSprite(void *a0, int a1, int a2, int a3);
@@ -1320,36 +1130,36 @@ void func_ov006_02105ab4(PanelObj_ab4 *c)
     int v;
     int t;
     int k;
-    int idx;
+    int index;
     int i;
 
-    for (i = 0; i < c->count; i++) {
-        if (c->flagarr[i] != 0) {
+    for (i = 0; i < scene->count; i++) {
+        if (scene->flagarr[i] != 0) {
             v = 0;
 
-            if (c->mode == 6) {
+            if (scene->mode == 6) {
                 v = 1;
             }
 
-            t = c->tarr[i];
-            k = c->karr[i];
-            x = c->xarr[i] >> 12;
-            y = c->yarr[i] >> 12;
+            t = scene->tarr[i];
+            k = scene->karr[i];
+            x = scene->xarr[i] >> 12;
+            y = scene->yarr[i] >> 12;
 
-            idx = k * 3;
+            index = k * 3;
             if (t == 1) {
-                int h = c->harr[i];
-                idx = data_ov006_0213dd34[k * 5 + h];
+                int h = scene->harr[i];
+                index = data_ov006_0213dd34[k * 5 + h];
             }
 
-            func_ov004_020af868(data_ov006_021427d4[idx], x, y, -1, v, 0);
+            func_ov004_020af868(data_ov006_021427d4[index], x, y, -1, v, 0);
 
-            if (c->mode == 1) {
-                int p = c->parr[i];
-                int q = c->q;
+            if (scene->mode == 1) {
+                int p = scene->parr[i];
+                int q = scene->q;
                 DrawOamSprite(data_ov006_021427d4[p * 3 + q], x, y, 0);
             } else {
-                int p = c->parr[i];
+                int p = scene->parr[i];
                 DrawOamSprite(data_ov006_021427d4[p * 3], x, y, 0);
             }
         }
@@ -1357,96 +1167,84 @@ void func_ov006_02105ab4(PanelObj_ab4 *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 43 -- func_ov006_02105c1c, 0x02105c1c, size 0x006c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02105c1c
 extern "C" {
-void func_ov006_02105c1c(char *c)
+void func_ov006_02105c1c(char *scene)
 {
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
     int i = 0;
 
-    if (*(int *)(c + 0x4cb8) <= 0) return;
+    if (s->mCount <= 0) return;
     do {
-        if (*(u8 *)(c + i + 0x4f1e) != *(u8 *)(c + i + 0x4f42)) {
-            *(u8 *)(c + i + 0x4efa) = 2;
-            *(u16 *)(c + (int)(((long long)i)) * 2 + 0x4e30) = 0;
+        if (s->mFace[i] != s->mGoal[i]) {
+            s->mKind[i] = 2;
+            *(u16 *)(scene + (int)(((long long)i)) * 2 + 0x4e30) = 0;
         }
         i++;
-    } while (i < *(int *)(c + 0x4cb8));
+    } while (i < s->mCount);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 44 -- func_ov006_02105c88, 0x02105c88, size 0x0098 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02105c88
 extern "C" {
-void func_ov006_02105c88(char *c)
+void func_ov006_02105c88(char *scene)
 {
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
     int cnt;
     int i;
     cnt = 0;
-    if (*(u8 *)(c + 0x4fe9) != 0) return;
+    if (s->mBusy != 0) return;
 
-    for (i = 0; i < *(int *)(c + 0x4cb8); i++) {
-        if (*(u8 *)(c + i + 0x4f1e) != *(u8 *)(c + i + 0x4f42)) {
+    for (i = 0; i < s->mCount; i++) {
+        if (s->mFace[i] != s->mGoal[i]) {
             cnt++;
             break;
         }
     }
     if (cnt != 0) return;
 
-    *(int *)(c + 0x4ca8) = 6;
-    *(u8 *)(c + 0x4fe6) = 1;
-    *(s16 *)(c + 0x4ec0) = 0x40;
+    s->mState = 6;
+    *(u8 *)(scene + 0x4fe6) = 1;
+    *(s16 *)(scene + 0x4ec0) = 0x40;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 45 -- func_ov006_02105d20, 0x02105d20, size 0x00c4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02105d20
 extern "C" {
-void func_ov006_02105d20(char *c)
+void func_ov006_02105d20(char *scene)
 {
-    extern void _ZN5Sound12PlayBank2_2DEj(u32);
     int found;
     int i;
     int n;
     int tmp;
-    if (*(u8 *)(c + 0x4fe9) == 0) return;
-    if (*(u8 *)(c + 0x4feb) == 0) return;
+    if (*(u8 *)(scene + 0x4fe9) == 0) return;
+    if (*(u8 *)(scene + 0x4feb) == 0) return;
     /* Laundered volatile round trip: the `(int)` cast and the volatile are both
        load-bearing -- they are what turns this decrement into the ROM's
        ldrb/sub/strb instead of a folded one. */
-    tmp = *(volatile u8 *)(int *)(((int)c + 0x4feb));
+    tmp = *(volatile u8 *)(int *)(((int)scene + 0x4feb));
     --tmp;
-    *(volatile u8 *)(int *)(((int)c + 0x4feb)) = tmp;
-    if (*(u8 *)(c + 0x4feb) != 0) return;
+    *(volatile u8 *)(int *)(((int)scene + 0x4feb)) = tmp;
+    if (*(u8 *)(scene + 0x4feb) != 0) return;
     found = 0;
     i = 0;
-    n = *(int *)(c + 0x4cb8);
+    n = ((dScMgPanel_c *)scene)->mCount;
     while (i < n) {
-        if (*(u8 *)(c + i + 0x4f1e) != *(u8 *)(c + i + 0x4f42)) {
+        if (*(u8 *)(scene + i + 0x4f1e) != *(u8 *)(scene + i + 0x4f42)) {
             found++;
             break;
         }
         i++;
     }
     if (found != 0) return;
-    _ZN5Sound12PlayBank2_2DEj(0x1cd);
+    Sound::PlayBank2_2D(0x1cd);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 46 -- func_ov006_02105de4, 0x02105de4, size 0x0264 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02105de4
 extern "C" {
-/* func_ov006_02105de4 @ 0x02105de4 (ov006, size 0x264)
- * Touch-grid minigame: find the cursor slot whose fixed-point position is
- * within 16px of the level's target cell, mark it captured, flip a 2x2/3x3
+/* Find the cursor slot whose fixed-point position is
+ * within 16px of the level's target cell, mark it captured, flip a 2x2 or 3x3
  * quad of grid cells around it and start their flash timers.
  */
 typedef struct PanelObj_de4 {
@@ -1458,19 +1256,18 @@ typedef struct PanelObj_de4 {
     int yarr[(0x4de8 - 0x4d54) / 4]; /* 0x4d54 */
 } PanelObj_de4;
 
-void func_ov006_02105de4(char *c)
+void func_ov006_02105de4(char *scene)
 {
     extern u8 data_020a0e40;
     extern u8 data_020a0de8[];
     extern u8 data_020a0de9[];
-    extern void _ZN5Sound12PlayBank2_2DEj(u32);
     extern void func_ov006_02104e80(char *);
     u8 lvl;
     int n;
     int i;
     int tx, ty;
 
-    if (*(u8 *)(c + 0x4fe9) != 0)
+    if (*(u8 *)(scene + 0x4fe9) != 0)
         return;
 
     lvl = data_020a0e40;
@@ -1481,7 +1278,7 @@ void func_ov006_02105de4(char *c)
         return;
 
     i = 0;
-    n = ((PanelObj_de4 *)c)->count;
+    n = ((PanelObj_de4 *)scene)->count;
     if (n <= 0)
         return;
 
@@ -1492,16 +1289,16 @@ void func_ov006_02105de4(char *c)
     }
 
     do {
-        int dx = tx - (((PanelObj_de4 *)c)->xarr[i] >> 12);
-        int dy = ty - (((PanelObj_de4 *)c)->yarr[i] >> 12);
+        int dx = tx - (((PanelObj_de4 *)scene)->xarr[i] >> 12);
+        int dy = ty - (((PanelObj_de4 *)scene)->yarr[i] >> 12);
         if (dx >= -0x10 && dx <= 0x10 && dy >= -0x10 && dy <= 0x10) {
             int wq = 3;
             int hq = 3;
             int w, col, row;
 
-            *(u8 *)(c + *(u8 *)(c + 0x4fe4) + 0x4fce) = i;
-            (*(u8 *)(int)(c + 0x4fe4))++;
-            w = *(int *)(c + 0x4cbc);
+            *(u8 *)(scene + *(u8 *)(scene + 0x4fe4) + 0x4fce) = i;
+            (*(u8 *)(int)(scene + 0x4fe4))++;
+            w = *(int *)(scene + 0x4cbc);
             col = i % w;
             row = i / w;
 
@@ -1520,56 +1317,52 @@ void func_ov006_02105de4(char *c)
                 for (y = 0; y < hq; y++) {
                     int x;
                     for (x = 0; x < wq; x++) {
-                        int idx = *(int *)(c + 0x4cbc) * (row + y) + (col + x);
-                        *(u8 *)(c + idx + 0x4efa) = 1;
-                        (*(u8 *)(int)(c + idx + 0x4f1e)) ^= 1;
-                        *(u16 *)(c + idx * 2 + 0x4e78) = 8;
+                        int index = *(int *)(scene + 0x4cbc) * (row + y) + (col + x);
+                        ((dScMgPanel_c *)scene)->mKind[index] = 1;
+                        ((dScMgPanel_c *)scene)->mFace[index] ^= 1;
+                        *(u16 *)(scene + index * 2 + 0x4e78) = 8;
                     }
                 }
             }
 
-            *(u16 *)(c + i * 2 + 0x4e78) = 0;
-            *(u8 *)(c + 0x4feb) = 0x28;
-            (*(u8 *)(int)(c + 0x4fe1))++;
-            _ZN5Sound12PlayBank2_2DEj(0x1fa);
-            func_ov006_02104e80(c);
+            *(u16 *)(scene + i * 2 + 0x4e78) = 0;
+            *(u8 *)(scene + 0x4feb) = 0x28;
+            (*(u8 *)(int)(scene + 0x4fe1))++;
+            Sound::PlayBank2_2D(0x1fa);
+            func_ov006_02104e80(scene);
             return;
         }
     } while (++i < n);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 47 -- func_ov006_02106048, 0x02106048, size 0x0038 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02106048
 extern "C" {
-/* Mark all live panels as settled. */
-void func_ov006_02106048(char *c)
+/* Show every panel (intro end). */
+void func_ov006_02106048(char *scene)
 {
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
     int i;
-    for (i = 0; i < *(int *)(c + 0x4cb8); i++) {
-        *(u8 *)(c + i + 0x4f66) = 1;
+    for (i = 0; i < s->mCount; i++) {
+        s->mVisible[i] = 1;
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 48 -- func_ov006_02106080, 0x02106080, size 0x00e8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02106080
 extern "C" {
 /* Flip the faces in the 3x3 neighbourhood centred on panel `idx`, clipped at
-   the board edges.  The same walk appears in ordinals 36, 41 and 46; only this
-   one touches the face table alone. */
-void func_ov006_02106080(char *c, int idx)
+   the board edges.  The same walk appears in func_ov006_021051dc,
+   func_ov006_02105854 and func_ov006_02105de4; only this one touches the face
+   table alone. */
+void func_ov006_02106080(char *scene, int index)
 {
     extern int __aeabi_idiv(int a, int b);
-    int w = *(int *)(c + 0x4cbc);
+    int w = *(int *)(scene + 0x4cbc);
     int wq = 3;
     int hq = 3;
-    int col = idx % w;
-    int row = idx / w;
+    int col = index % w;
+    int row = index / w;
     if (col == 0 || col == w - 1) wq = 2;
     if (row == 0 || row == w - 1) hq = 2;
     col = col - 1;
@@ -1579,20 +1372,17 @@ void func_ov006_02106080(char *c, int idx)
     int y, x;
     for (y = 0; y < hq; y++) {
         for (x = 0; x < wq; x++) {
-            u8 *p = (u8 *)((((int)c + ((*(int *)(c + 0x4cbc)) * (row + y) + (col + x))) + 0x4f1e));
+            u8 *p = (u8 *)((((int)scene + ((*(int *)(scene + 0x4cbc)) * (row + y) + (col + x))) + 0x4f1e));
             *p ^= 1;
         }
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 49 -- func_ov006_02106168, 0x02106168, size 0x0238 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02106168
 extern "C" {
-/* dScMgPanel_c layout pass: reads the panel layout (x/y from the layout tables,
-   face from the face table picked by Virtual8C), draws unk_4cc0 random picks
+/* Layout pass: reads the panel layout (x and y from the layout tables,
+   face from the face table picked by Virtual8C), draws mFlips random picks
    through func_ov006_02106080, and retries the whole thing until
    func_ov006_02106664 accepts it, at least one panel face differs from its
    copy, and no two picks are the same panel.
@@ -1605,12 +1395,12 @@ extern "C" {
    rotates loop 2 or loop 1. The pd/pe pointer locals keep the byte tables
    hoisted above the do-loop and the [idx4] reload inside it. */
 
-void func_ov006_02106168(dScMgPanel_c *c)
+void func_ov006_02106168(dScMgPanel_c *scene)
 {
     int RandomIntInternal(int *seed);
     extern int data_0209d4b8;
-    void func_ov006_02106080(dScMgPanel_c *c, int x);
-    int func_ov006_02106664(dScMgPanel_c *c);
+    void func_ov006_02106080(dScMgPanel_c *scene, int x);
+    int func_ov006_02106664(dScMgPanel_c *scene);
     extern u16 *data_ov006_0213dd4c[];
     extern u16 *data_ov006_0213dd58[];
     extern u8 *data_ov006_0213ded0[];
@@ -1624,34 +1414,34 @@ void func_ov006_02106168(dScMgPanel_c *c)
     u8 **pe;
     int mismatch, dup, a, b, k;
     do {
-        c->unk_4fde = 0;
-        for (i = 0; i < (cnt1 = c->unk_4cb8); i++) {
-            int m = c->unk_4cbc - 4;
-            int idx4 = c->unk_4cb4;
-            c->unk_4cc4[i] = data_ov006_0213dd4c[m][i] << 12;
-            c->unk_4d54[i] = data_ov006_0213dd58[m][i] << 12;
+        scene->mFlipCount = 0;
+        for (i = 0; i < (cnt1 = scene->mCount); i++) {
+            int m = scene->mWidth - 4;
+            int idx4 = scene->mFaceSet;
+            scene->mX[i] = data_ov006_0213dd4c[m][i] << 12;
+            scene->mY[i] = data_ov006_0213dd58[m][i] << 12;
             pe = data_ov006_0213e070;
             pd = data_ov006_0213ded0;
-            if (c->Virtual8C()) {
-                c->unk_4f1e[i] = pd[idx4][i];
-                c->unk_4f42[i] = pd[idx4][i];
+            if (scene->Virtual8C()) {
+                scene->mFace[i] = pd[idx4][i];
+                scene->mGoal[i] = pd[idx4][i];
             } else {
-                c->unk_4f1e[i] = pe[idx4][i];
-                c->unk_4f42[i] = pe[idx4][i];
+                scene->mFace[i] = pe[idx4][i];
+                scene->mGoal[i] = pe[idx4][i];
             }
         }
-        cnt2 = c->unk_4cc0;
+        cnt2 = scene->mFlips;
         for (j = 0; j < cnt2; j++) {
             u32 rnd = (u32)RandomIntInternal(&data_0209d4b8);
             u32 s = (rnd >> 16) & 0x7fff;
             v = (cnt1 * s) >> 15;
-            func_ov006_02106080(c, v);
-            c->unk_4fae[c->unk_4fde] = v;
-            c->unk_4fde++;
+            func_ov006_02106080(scene, v);
+            scene->mFlipAt[scene->mFlipCount] = v;
+            scene->mFlipCount++;
         }
         mismatch = 0;
-        for (k = 0; k < c->unk_4cb8; k++) {
-            if (c->unk_4f1e[k] != c->unk_4f42[k]) {
+        for (k = 0; k < scene->mCount; k++) {
+            if (scene->mFace[k] != scene->mGoal[k]) {
                 mismatch++;
                 break;
             }
@@ -1659,27 +1449,24 @@ void func_ov006_02106168(dScMgPanel_c *c)
         dup = 0;
         for (a = 0; a < cnt2; a++) {
             for (b = a + 1; b < cnt2; b++) {
-                if (c->unk_4fae[a] == c->unk_4fae[b]) {
+                if (scene->mFlipAt[a] == scene->mFlipAt[b]) {
                     dup++;
                     break;
                 }
             }
         }
         if (dup != 0) mismatch = 0;
-    } while (func_ov006_02106664(c) == 0 || mismatch == 0);
+    } while (func_ov006_02106664(scene) == 0 || mismatch == 0);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 50 -- func_ov006_021063a0, 0x021063a0, size 0x02c4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_021063a0
 #pragma push
 #pragma opt_common_subs off
 extern "C" {
 /* Address launder and the 15-bit random draw, both used a dozen times below.
    The launder is what stops mwcc folding the field address into the
-   surrounding expression; see ordinal 4 for the same lever spelled out. */
+   surrounding expression; func_ov006_0210446c spells out the same lever. */
 #define PANEL_AT(p, off) ((void *)(int)((char *)(p) + (off)))
 #define PANEL_RAND ((((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff)
 
@@ -1697,7 +1484,7 @@ struct PanelO_3a0
     virtual int m8c();
 };
 
-void func_ov006_021063a0(char *c)
+void func_ov006_021063a0(char *scene)
 {
     extern int RandomIntInternal(int *seed);
     extern int data_0209d4b8;
@@ -1707,42 +1494,42 @@ void func_ov006_021063a0(char *c)
     extern u8 data_ov006_0213de28[];
     extern u8 data_ov006_0213de44[];
     extern u8 data_ov006_0213de60[];
-    int t = *(int *)(c + 0xbc);
-    if (((PanelO_3a0 *)c)->m8c() != 0) {
+    int t = *(int *)(scene + 0xbc);
+    if (((PanelO_3a0 *)scene)->m8c() != 0) {
         int nv;
         if (t >= 0xf) {
             t = (PANEL_RAND * 0xf) >> 15;
-            if (t == *(int *)(c + 0x4de4)) {
+            if (t == *(int *)(scene + 0x4de4)) {
                 t += ((PANEL_RAND * 0xe) >> 15) + 1;
                 if (t >= 0xf) t -= 0xf;
             }
         }
-        if (data_ov006_0213dd64[t] != 0 || *(int *)(c + 0x4cb0) == 0) {
-            if (*(int *)(c + 0x4cb0) == 0) *(int *)PANEL_AT(c, 0x4cb0) += 1;
+        if (data_ov006_0213dd64[t] != 0 || *(int *)(scene + 0x4cb0) == 0) {
+            if (*(int *)(scene + 0x4cb0) == 0) *(int *)PANEL_AT(scene, 0x4cb0) += 1;
             nv = (PANEL_RAND * 8) >> 15;
-            if (nv == *(int *)(c + 0x4cb4)) {
+            if (nv == *(int *)(scene + 0x4cb4)) {
                 nv = (nv + (((PANEL_RAND * 7) >> 15) + 1)) & 7;
             }
-            *(int *)(c + 0x4cb4) = nv;
+            *(int *)(scene + 0x4cb4) = nv;
         }
-        *(int *)(c + 0x4cbc) = data_ov006_0213dd94[t];
-        { int q = *(int *)(c + 0x4cbc); *(int *)(c + 0x4cb8) = q * q; }
-        *(int *)(c + 0x4cc0) = data_ov006_0213dd74[t];
-        *(int *)(c + 0x4de4) = t;
+        ((dScMgPanel_c *)scene)->mWidth = data_ov006_0213dd94[t];
+        { int q = ((dScMgPanel_c *)scene)->mWidth; ((dScMgPanel_c *)scene)->mCount = q * q; }
+        *(int *)(scene + 0x4cc0) = data_ov006_0213dd74[t];
+        *(int *)(scene + 0x4de4) = t;
     } else {
         int nv;
         int k;
         u8 *p;
         while (t >= 0x19) t -= 0x19;
-        if (data_ov006_0213de28[t] != 0 || *(int *)(c + 0x4cb0) == 0) {
-            if (*(int *)(c + 0x4cb0) == 0) *(int *)PANEL_AT(c, 0x4cb0) += 1;
+        if (data_ov006_0213de28[t] != 0 || *(int *)(scene + 0x4cb0) == 0) {
+            if (*(int *)(scene + 0x4cb0) == 0) *(int *)PANEL_AT(scene, 0x4cb0) += 1;
             nv = (PANEL_RAND * 4) >> 15;
             k = data_ov006_0213de60[t];
             p = &data_ov006_0213de60[t];
             if (k == 5) {
                 nv = ((PANEL_RAND * 5) >> 15) + 4;
             }
-            if (nv == *(int *)(c + 0x4cb4)) {
+            if (nv == *(int *)(scene + 0x4cb4)) {
                 if (*p == 4) {
                     nv = (nv + (((PANEL_RAND * 3) >> 15) + 1)) & 3;
                 } else {
@@ -1750,11 +1537,11 @@ void func_ov006_021063a0(char *c)
                     if (nv >= 9) nv -= 5;
                 }
             }
-            *(int *)(c + 0x4cb4) = nv;
+            *(int *)(scene + 0x4cb4) = nv;
         }
-        *(int *)(c + 0x4cbc) = data_ov006_0213de60[t];
-        { int q = *(int *)(c + 0x4cbc); *(int *)(c + 0x4cb8) = q * q; }
-        *(int *)(c + 0x4cc0) = data_ov006_0213de44[t];
+        ((dScMgPanel_c *)scene)->mWidth = data_ov006_0213de60[t];
+        { int q = ((dScMgPanel_c *)scene)->mWidth; ((dScMgPanel_c *)scene)->mCount = q * q; }
+        *(int *)(scene + 0x4cc0) = data_ov006_0213de44[t];
     }
 }
 #undef PANEL_AT
@@ -1762,23 +1549,20 @@ void func_ov006_021063a0(char *c)
 }
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 51 -- func_ov006_02106664, 0x02106664, size 0x00f4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02106664
 #pragma push
 #pragma opt_strength_reduction off
 extern "C" {
-int func_ov006_02106664(char *c)
+int func_ov006_02106664(char *scene)
 {
     int i, bad, j;
-    char *row = c;
+    char *row = scene;
 
     /* Refuse a pick set that repeats any of the last five. */
     for (i = 0; i < 5; i++) {
         bad = 0;
         for (j = 0; j < 0xa; j++) {
-            if (*(u8 *)(c + 0x4fae + j) != *(u8 *)(row + 0x4ec8 + j)) {
+            if (*(u8 *)(scene + 0x4fae + j) != *(u8 *)(row + 0x4ec8 + j)) {
                 bad = 1;
                 break;
             }
@@ -1790,9 +1574,9 @@ int func_ov006_02106664(char *c)
     {
         int r, k;
         char *dst;
-        char *src = c;
+        char *src = scene;
         for (r = 0; r < 4; r++) {
-            dst = c + (r + 1) * 0xa;
+            dst = scene + (r + 1) * 0xa;
             for (k = 0; k < 0xa; k++) {
                 *(u8 *)(dst + 0x4ec8) = *(u8 *)(src + 0x4ec8 + k);
                 dst++;
@@ -1801,33 +1585,27 @@ int func_ov006_02106664(char *c)
         }
     }
     for (i = 0; i < 0xa; i++) {
-        *(u8 *)(c + 0x4ec8 + i) = *(u8 *)(c + 0x4fae + i);
+        *(u8 *)(scene + 0x4ec8 + i) = *(u8 *)(scene + 0x4fae + i);
     }
     return 1;
 }
 }
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 52 -- func_ov006_02106758, 0x02106758, size 0x004c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02106758
 extern "C" {
-void func_ov006_02106758(char *c)
+void func_ov006_02106758(char *scene)
 {
     int i, j;
     for (i = 0; i < 5; i++) {
         for (j = 0; j < 0xa; j++) {
-            *(u8 *)(c + j + 0x4ec8) = 0xff;
+            *(u8 *)(scene + j + 0x4ec8) = 0xff;
         }
-        c += 0xa;
+        scene += 0xa;
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 53 -- func_ov006_021067a4, 0x021067a4, size 0x0134 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_021067a4
 /* Clear the whole board back to its start-of-round state: the 36 parallel
    panel arrays, the state word, the pick list (0xff = no pick) and the
@@ -1835,88 +1613,84 @@ void func_ov006_02106758(char *c)
 #pragma push
 #pragma opt_strength_reduction off
 extern "C" {
-void func_ov006_021067a4(char *c)
+void func_ov006_021067a4(char *scene)
 {
     extern void func_ov006_02104b4c(char *p);
     extern void func_ov006_021048b0(char *o);
     extern void func_ov006_02104558(char *p);
     int i;
     for (i = 0; i < 0x24; i++) {
-        *(int *)(c + i * 4 + 0x4cc4) = 0;
-        *(int *)(c + i * 4 + 0x4d54) = 0;
-        *(s16 *)(c + i * 2 + 0x4de8) = 0;
-        *(s16 *)(c + i * 2 + 0x4e30) = 0;
-        *(s16 *)(c + i * 2 + 0x4e78) = 0;
-        *(char *)(c + i + 0x4f1e) = 0;
-        *(char *)(c + i + 0x4efa) = 0;
-        *(char *)(c + i + 0x4f42) = 0;
-        *(char *)(c + i + 0x4f66) = 0;
-        *(char *)(c + i + 0x4f8a) = 0;
+        *(int *)(scene + i * 4 + 0x4cc4) = 0;
+        *(int *)(scene + i * 4 + 0x4d54) = 0;
+        *(s16 *)(scene + i * 2 + 0x4de8) = 0;
+        *(s16 *)(scene + i * 2 + 0x4e30) = 0;
+        *(s16 *)(scene + i * 2 + 0x4e78) = 0;
+        ((dScMgPanel_c *)scene)->mFace[i] = 0;
+        ((dScMgPanel_c *)scene)->mKind[i] = 0;
+        ((dScMgPanel_c *)scene)->mGoal[i] = 0;
+        ((dScMgPanel_c *)scene)->mVisible[i] = 0;
+        *(char *)(scene + i + 0x4f8a) = 0;
     }
-    *(int *)(c + 0x4ca8) = 0;
-    *(char *)(c + 0x4fe9) = 0;
-    *(s16 *)(c + 0x4ec0) = 0;
-    *(s16 *)(c + 0x4ec2) = 0;
-    *(char *)(c + 0x4fde) = 0;
-    *(char *)(c + 0x4fe1) = 0;
-    *(char *)(c + 0x4fe2) = 0;
+    *(int *)(scene + 0x4ca8) = 0;
+    *(char *)(scene + 0x4fe9) = 0;
+    *(s16 *)(scene + 0x4ec0) = 0;
+    *(s16 *)(scene + 0x4ec2) = 0;
+    *(char *)(scene + 0x4fde) = 0;
+    *(char *)(scene + 0x4fe1) = 0;
+    ((dScMgPanel_c *)scene)->mLives = 0;
     for (i = 0; i < 0x20; i++) {
-        *(u8 *)(c + i + 0x4fae) = 0xff;
+        *(u8 *)(scene + i + 0x4fae) = 0xff;
     }
     for (i = 0; i < 0x10; i++) {
-        *(char *)(c + i + 0x4fce) = 0;
+        *(char *)(scene + i + 0x4fce) = 0;
     }
-    *(char *)(c + 0x4fe4) = 0;
-    *(char *)(c + 0x4fe0) = 0;
-    *(int *)(c + 0x4660) = 0;
-    *(int *)(c + 0x4664) = 0;
-    *(int *)(c + 0x4668) = 0;
-    *(int *)(c + 0x466c) = 0;
-    *(s16 *)(c + 0x4670) = 0;
-    *(char *)(c + 0x4675) = 0;
-    *(char *)(c + 0x4676) = 0;
-    *(char *)(c + 0x4674) = 0;
-    *(int *)(c + 0x4678) = 0;
-    *(int *)(c + 0x467c) = 0;
-    *(s16 *)(c + 0x4680) = 0;
-    *(char *)(c + 0x4684) = 0;
-    *(char *)(c + 0x4685) = 0;
-    *(char *)(c + 0x4686) = 0;
-    *(char *)(c + 0x4fe6) = 0;
-    *(s16 *)(c + 0x4ec6) = 0;
-    func_ov006_02104b4c(c);
-    func_ov006_021048b0(c);
-    func_ov006_02104558(c);
+    *(char *)(scene + 0x4fe4) = 0;
+    *(char *)(scene + 0x4fe0) = 0;
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
+    s->mSlide = 0;
+    s->mSlideY = 0;
+    s->mSlideVel = 0;
+    *(int *)(scene + 0x466c) = 0;
+    s->mHold = 0;
+    s->mSlideStep = 0;
+    s->mSlideFlag = 0;
+    s->mSlideOn = 0;
+    *(int *)(scene + 0x4678) = 0;
+    *(int *)(scene + 0x467c) = 0;
+    *(s16 *)(scene + 0x4680) = 0;
+    *(char *)(scene + 0x4684) = 0;
+    *(char *)(scene + 0x4685) = 0;
+    *(char *)(scene + 0x4686) = 0;
+    *(char *)(scene + 0x4fe6) = 0;
+    *(s16 *)(scene + 0x4ec6) = 0;
+    func_ov006_02104b4c(scene);
+    func_ov006_021048b0(scene);
+    func_ov006_02104558(scene);
 }
 }
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 54 -- func_ov006_021068d8, 0x021068d8, size 0x0038 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_021068d8
 extern "C" {
-void func_ov006_021068d8(char *c)
+void func_ov006_021068d8(char *scene)
 {
     int i;
-    for (i = 0; i < *(int *)(c + 0x4cbc); i++) {
-        *(u8 *)(c + i + 0x4efa) = 3;
+    for (i = 0; i < *(int *)(scene + 0x4cbc); i++) {
+        *(u8 *)(scene + i + 0x4efa) = 3;
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 55 -- func_ov006_02106910, 0x02106910, size 0x00f8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02106910
 extern "C" {
-void func_ov006_02106910(char *c, int idx)
+void func_ov006_02106910(char *scene, int index)
 {
-    int old = ((int *)(c + 0x4d54))[idx];
-    ((int *)(c + 0x4d54))[idx] = old + 0x10000;
-    if ((*(int *)(c + idx * 4 + 0x4d54) >> 12) >= 0xd0) {
-        *(u8 *)(c + idx + 0x4efa) = 0;
-        *(u8 *)(c + idx + 0x4f66) = 0;
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
+    int old = ((int *)(scene + 0x4d54))[index];
+    ((int *)(scene + 0x4d54))[index] = old + 0x10000;
+    if ((*(int *)(scene + index * 4 + 0x4d54) >> 12) >= 0xd0) {
+        s->mKind[index] = 0;
+        s->mVisible[index] = 0;
     }
 
     /* Hand the fall on to the panel directly below, unless this one is already
@@ -1924,13 +1698,13 @@ void func_ov006_02106910(char *c, int idx)
        The row/column split is a subtract loop, not a divide, and the nested
        blocks are what keep it that way -- flattening them costs 18 words. */
     {
-        u8 *flag = (u8 *)(c + 0x4f8a + idx);
+        u8 *flag = (u8 *)(scene + 0x4f8a + index);
         if (*flag != 0) return;
         {
-            int col = idx;
+            int col = index;
             int row = 0;
-            int div = *(int *)(c + 0x4cbc);
-            if (idx >= div) {
+            int div = s->mWidth;
+            if (index >= div) {
                 do {
                     col -= div;
                     row++;
@@ -1942,30 +1716,28 @@ void func_ov006_02106910(char *c, int idx)
             }
             {
                 int nxt = (row + 1) * div + col;
-                if (((*(int *)(c + nxt * 4 + 0x4d54) - *(int *)(c + (u32)idx * 4 + 0x4d54)) >> 12) > 0) return;
+                if (((*(int *)(scene + nxt * 4 + 0x4d54) - *(int *)(scene + (u32)index * 4 + 0x4d54)) >> 12) > 0) return;
                 *flag = 1;
-                *(u8 *)(c + nxt + 0x4efa) = 3;
+                s->mKind[nxt] = 3;
             }
         }
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 56 -- func_ov006_02106a08, 0x02106a08, size 0x00a0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02106a08
 extern "C" {
 void func_ov006_02106a08(char *c, int idx)
 {
+    dScMgPanel_c *s = (dScMgPanel_c *)c;
     u16 *timers = (u16 *)(int)(c + 0x4e30);
     u8 *q;
     timers[idx] = timers[idx] + 1;
     if ((((int)*(u16 *)(c + idx * 2 + 0x4e30) >> 3) & 1) != 0) {
-        q = (u8 *)(int)(c + 0x4f66);
+        q = s->mVisible;
         q[idx] = 1;
     } else {
-        q = (u8 *)(int)(c + 0x4f66);
+        q = s->mVisible;
         q[idx] = 0;
     }
     {
@@ -1976,21 +1748,18 @@ void func_ov006_02106a08(char *c, int idx)
         if (((u16 *)b)[0x18] < 0x40)
             return;
         ((u16 *)b)[0x18] = 0;
-        *(u8 *)(c + idx + 0x4efa) = 0;
+        s->mKind[idx] = 0;
         q[idx] = 1;
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 57 -- func_ov006_02106aa8, 0x02106aa8, size 0x0104 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02106aa8
 #pragma push
 #pragma opt_common_subs off
 extern "C" {
 /*
- * ov006 minigame: per-slot tick for one of the tracked entries (idx).
+ * Per-slot tick for one of the tracked entries (idx).
  * Bumps the global tick byte at +0x4fe9.  If the slot's hold counter
  * (+0x4e78[idx]) is running, count it down and clamp at zero; otherwise
  * advance the slot's frame counter (+0x4e30[idx]) and, once it reaches
@@ -2006,73 +1775,67 @@ extern "C" {
  * byte is read, and the limit compare is unsigned.
  */
 
-void func_ov006_02106aa8(char *c, int idx)
+void func_ov006_02106aa8(char *scene, int index)
 {
-    u8 *cnt = (u8 *)(c + 0x4fe9);
+    u8 *cnt = (u8 *)(scene + 0x4fe9);
 
     *cnt = *cnt + 1;
 
-    if (*(u16 *)(c + idx * 2 + 0x4e78) != 0) {
-        u16 *q = (u16 *)(c + 0x4e78 + idx * 2);
+    if (*(u16 *)(scene + index * 2 + 0x4e78) != 0) {
+        u16 *q = (u16 *)(scene + 0x4e78 + index * 2);
         *q = *q - 1;
-        if (*(s16 *)(c + idx * 2 + 0x4e78) < 0) {
-            *(u16 *)(c + idx * 2 + 0x4e78) = 0;
+        if (*(s16 *)(scene + index * 2 + 0x4e78) < 0) {
+            *(u16 *)(scene + index * 2 + 0x4e78) = 0;
         }
     } else {
-        u16 *r = (u16 *)(c + 0x4e30 + idx * 2);
+        u16 *r = (u16 *)(scene + 0x4e30 + index * 2);
         u8 flag;
         u32 lim;
         *r = *r + 1;
-        flag = *(u8 *)(c + idx + 0x4000 + 0xf8a);
+        flag = *(u8 *)(scene + index + 0x4000 + 0xf8a);
         lim = (flag != 0) ? 4 : 8;
-        if (*(u16 *)(c + idx * 2 + 0x4e30) < lim) {
+        if (*(u16 *)(scene + index * 2 + 0x4e30) < lim) {
             return;
         }
-        *(u16 *)(c + idx * 2 + 0x4e30) = 0;
+        *(u16 *)(scene + index * 2 + 0x4e30) = 0;
         {
-            u16 *s = (u16 *)(c + 0x4de8 + idx * 2);
+            u16 *s = (u16 *)(scene + 0x4de8 + index * 2);
             *s = *s + 1;
         }
-        if (*(u16 *)(c + idx * 2 + 0x4d00 + 0xe8) >= 5) {
-            *(u16 *)(c + idx * 2 + 0x4d00 + 0xe8) = 0;
-            *(u8 *)(c + idx + 0x4000 + 0xefa) = 0;
+        if (*(u16 *)(scene + index * 2 + 0x4d00 + 0xe8) >= 5) {
+            *(u16 *)(scene + index * 2 + 0x4d00 + 0xe8) = 0;
+            *(u8 *)(scene + index + 0x4000 + 0xefa) = 0;
         }
     }
 }
 }
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 58 -- func_ov006_02106bac, 0x02106bac, size 0x0014 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02106bac
 extern "C" {
-void func_ov006_02106bac(char *c, int idx)
+void func_ov006_02106bac(char *scene, int index)
 {
-    char *base = c + idx + 0x4000;
+    char *base = scene + index + 0x4000;
     base[0xf8a] = 0;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 59 -- func_ov006_02106bc0, 0x02106bc0, size 0x00e4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02106bc0
 extern "C" {
 struct PanelPmfRec_bc0 { int off; int adj; };
 typedef void (*PanelPmfFn_bc0)(void *, int);
 
-void func_ov006_02106bc0(char *c)
+void func_ov006_02106bc0(char *scene)
 {
     extern struct PanelPmfRec_bc0 data_ov006_02142840[];
     extern void func_ov004_020b0a54(int arg);
-    extern void func_ov006_02104ea8(char *c);
+    extern void func_ov006_02104ea8(char *scene);
     int i;
-    for (i = 0; i < *(int *)(c + 0x4cb8); i++) {
-        u8 idx = *(u8 *)(c + i + 0x4efa);
-        struct PanelPmfRec_bc0 *e = &data_ov006_02142840[idx];
+    for (i = 0; i < *(int *)(scene + 0x4cb8); i++) {
+        u8 index = *(u8 *)(scene + i + 0x4efa);
+        struct PanelPmfRec_bc0 *e = &data_ov006_02142840[index];
         int adj = e->adj;
-        char *thisp = c + (adj >> 1);
+        char *thisp = scene + (adj >> 1);
         PanelPmfFn_bc0 fn;
         if (adj & 1) {
             fn = *(PanelPmfFn_bc0 *)(*(char **)thisp + e->off);
@@ -2081,94 +1844,91 @@ void func_ov006_02106bc0(char *c)
         }
         fn(thisp, i);
     }
-    if (*(u16 *)(c + 0x4ec0) == 0) return;
-    *(u16 *)(c + 0x4ec0) -= 1;
-    if (*(s16 *)(c + 0x4ec0) > 0) return;
-    *(u16 *)(c + 0x4ec0) = 0;
+    if (*(u16 *)(scene + 0x4ec0) == 0) return;
+    *(u16 *)(scene + 0x4ec0) -= 1;
+    if (*(s16 *)(scene + 0x4ec0) > 0) return;
+    *(u16 *)(scene + 0x4ec0) = 0;
     func_ov004_020b0a54(0x12);
-    *(u8 *)(c + 0xc3) = 0;
-    *(u8 *)(c + 0x4fe3) = 0;
-    func_ov006_02104ea8(c);
+    *(u8 *)(scene + 0xc3) = 0;
+    *(u8 *)(scene + 0x4fe3) = 0;
+    func_ov006_02104ea8(scene);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 60 -- func_ov006_02106ca4, 0x02106ca4, size 0x0214 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02106ca4
 #pragma push
 #pragma opt_propagation off
 extern "C" {
-/* the shard recovered data_ov004_020beb68 as char *; dScMgBase_c.h declares
-   the same ROM object void *.  Reinterpret rather than redeclare. */
+/* This function reads data_ov004_020beb68 as a char *; dScMgBase_c.h
+   declares it void *.  Reinterpret rather than redeclare. */
 #define PANEL_BEB68 (*(char **)&data_ov004_020beb68)
 struct PanelC_ca4;
 typedef void (PanelC_ca4::*PanelPmf_ca4)(int);
 
-void func_ov006_02106ca4(char *c)
+void func_ov006_02106ca4(char *scene)
 {
     extern PanelPmf_ca4 data_ov006_02142840[];
     extern u8 data_020a0e40;
     extern u8 data_020a0de8[];
     extern u8 data_020a0de9[];
-    void func_ov006_021050bc(void *c);
-    void func_ov006_02104580(void *c);
-    void func_ov006_02104870(void *c);
-    void func_ov006_02104ea8(void *c);
-    void func_ov006_021068d8(void *c);
+    void func_ov006_021050bc(void *scene);
+    void func_ov006_02104580(void *scene);
+    void func_ov006_02104870(void *scene);
+    void func_ov006_02104ea8(void *scene);
+    void func_ov006_021068d8(void *scene);
     void func_ov004_020b0a54(int a);
     void func_ov004_020adb1c(int a);
     int found;
     int i;
     int n;
 
-    func_ov006_021050bc(c);
+    func_ov006_021050bc(scene);
     found = 0;
     i = found;
-    n = *(int *)(c + 0x4000 + 0xcb8);
+    n = *(int *)(scene + 0x4000 + 0xcb8);
     if (n > 0) {
         do {
-            u8 *p = (u8 *)(c + i + 0x4efa);
-            (((PanelC_ca4 *)c)->*data_ov006_02142840[*p])(i);
+            u8 *p = (u8 *)(scene + i + 0x4efa);
+            (((PanelC_ca4 *)scene)->*data_ov006_02142840[*p])(i);
             i++;
             if (*p != 0)
                 found++;
-            n = *(int *)(c + 0x4000 + 0xcb8);
+            n = *(int *)(scene + 0x4000 + 0xcb8);
         } while (i < n);
     }
     if (found != 0)
         return;
 
-    if (*(u16 *)(c + 0x4e00 + 0xc0) != 0) {
+    if (*(u16 *)(scene + 0x4e00 + 0xc0) != 0) {
         int off;
         u16 *tp;
         u8 *flags;
         off = 0x4ec0;
-        tp = (u16 *)(int)((long long)(int)(c + off) & 0xFFFFFFFFFFFFFFFFLL);
-        flags = (u8 *)(c + 0x4000);
+        tp = (u16 *)(int)((long long)(int)(scene + off) & 0xFFFFFFFFFFFFFFFFLL);
+        flags = (u8 *)(scene + 0x4000);
         *tp = *tp - 1;
         if (flags[0xfe6] == 0) {
             int hit;
-            u8 idx;
+            u8 index;
             hit = 0;
-            idx = data_020a0e40;
-            if (data_020a0de8[idx * 4] != 0) {
-                if (data_020a0de9[idx * 4] != 0)
+            index = data_020a0e40;
+            if (data_020a0de8[index * 4] != 0) {
+                if (data_020a0de9[index * 4] != 0)
                     hit = 1;
             }
             if (hit)
-                *(u16 *)(c + 0x4e00 + 0xc0) = 0;
+                *(u16 *)(scene + 0x4e00 + 0xc0) = 0;
         }
-        if (*(s16 *)(c + 0x4e00 + 0xc0) > 0)
+        if (*(s16 *)(scene + 0x4e00 + 0xc0) > 0)
             return;
-        *(u16 *)(c + 0x4e00 + 0xc0) = 0;
-        if (*(u8 *)(c + 0x4000 + 0xfe6) != 0) {
+        *(u16 *)(scene + 0x4e00 + 0xc0) = 0;
+        if (*(u8 *)(scene + 0x4000 + 0xfe6) != 0) {
             char *g;
-            func_ov006_02104870(c);
+            func_ov006_02104870(scene);
             func_ov004_020b0a54(0);
-            func_ov006_02104ea8(c);
-            *(u8 *)(c + 0x4000 + 0xfe3) = 0;
-            *(u8 *)(c + 0xc3) = 0;
+            func_ov006_02104ea8(scene);
+            *(u8 *)(scene + 0x4000 + 0xfe3) = 0;
+            *(u8 *)(scene + 0xc3) = 0;
             g = PANEL_BEB68;
             if (g != 0) {
                 if (*(int *)(g + 0xb4) < 9999)
@@ -2179,17 +1939,17 @@ void func_ov006_02106ca4(char *c)
             func_ov004_020adb1c(PANEL_BEB68 != 0 ? *(int *)(PANEL_BEB68 + 0xb4) : 0);
             return;
         }
-        *(u16 *)(c + 0x4e00 + 0xc0) = 0x10;
-        *(int *)(c + 0x4000 + 0xca8) = 7;
-        func_ov006_021068d8(c);
+        *(u16 *)(scene + 0x4e00 + 0xc0) = 0x10;
+        *(int *)(scene + 0x4000 + 0xca8) = 7;
+        func_ov006_021068d8(scene);
         return;
     }
-    func_ov006_02104580(c);
+    func_ov006_02104580(scene);
     {
         int inc;
         u16 *ip;
         inc = 0x4ec6;
-        ip = (u16 *)(int)((long long)(unsigned)(c + inc) & 0xFFFFFFFFFFFFFFFFLL);
+        ip = (u16 *)(int)((long long)(unsigned)(scene + inc) & 0xFFFFFFFFFFFFFFFFLL);
         *ip = *ip + 1;
     }
 }
@@ -2197,170 +1957,139 @@ void func_ov006_02106ca4(char *c)
 }
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 61 -- func_ov006_02106eb8, 0x02106eb8, size 0x008c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02106eb8
 extern "C" {
 struct PanelC_eb8;
 typedef void (PanelC_eb8::*PanelPmf_eb8)(int);
-void func_ov006_02106eb8(char *c)
+void func_ov006_02106eb8(char *scene)
 {
     extern PanelPmf_eb8 data_ov006_02142840[];
-    extern void func_ov006_021050bc(void *c);
-    extern void func_ov006_021057f0(void *c);
+    extern void func_ov006_021050bc(void *scene);
+    extern void func_ov006_021057f0(void *scene);
     int i;
-    func_ov006_021050bc(c);
-    func_ov006_021057f0(c);
-    for (i = 0; i < *(int *)(c + 0x4cb8); i++) {
-        u8 idx = *(u8 *)(c + i + 0x4efa);
-        (((PanelC_eb8 *)c)->*data_ov006_02142840[idx])(i);
+    func_ov006_021050bc(scene);
+    func_ov006_021057f0(scene);
+    for (i = 0; i < *(int *)(scene + 0x4cb8); i++) {
+        u8 index = *(u8 *)(scene + i + 0x4efa);
+        (((PanelC_eb8 *)scene)->*data_ov006_02142840[index])(i);
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 62 -- func_ov006_02106f44, 0x02106f44, size 0x0098 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02106f44
 extern "C" {
 struct PanelC_f44;
 typedef void (PanelC_f44::*PanelPmf_f44)(int);
 struct PanelC_f44 { char pad[0x8000]; };
-void func_ov006_02106f44(char *c)
+void func_ov006_02106f44(char *scene)
 {
     extern PanelPmf_f44 data_ov006_02142840[];
-    extern void func_ov006_021050bc(void *c);
-    extern void func_ov006_02105854(void *c);
+    extern void func_ov006_021050bc(void *scene);
+    extern void func_ov006_02105854(void *scene);
     int i;
-    func_ov006_021050bc(c);
-    *(u8 *)(c + 0x4fe9) = 1;
-    func_ov006_02105854(c);
-    for (i = 0; i < *(int *)(c + 0x4cb8); i++) {
-        u8 idx = *(u8 *)(c + i + 0x4efa);
-        (((PanelC_f44 *)c)->*data_ov006_02142840[idx])(i);
+    func_ov006_021050bc(scene);
+    *(u8 *)(scene + 0x4fe9) = 1;
+    func_ov006_02105854(scene);
+    for (i = 0; i < *(int *)(scene + 0x4cb8); i++) {
+        u8 index = *(u8 *)(scene + i + 0x4efa);
+        (((PanelC_f44 *)scene)->*data_ov006_02142840[index])(i);
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 63 -- func_ov006_02106fdc, 0x02106fdc, size 0x00c0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02106fdc
 extern "C" {
 typedef void (dScMgPanel_c::*PanelPmf_fdc)(int);
 
-void func_ov006_02106fdc(dScMgPanel_c *c)
+void func_ov006_02106fdc(dScMgPanel_c *scene)
 {
     extern PanelPmf_fdc data_ov006_02142840[];
-    extern void func_ov006_021050bc(dScMgPanel_c *c);
-    u8 idx;
+    extern void func_ov006_021050bc(dScMgPanel_c *scene);
+    u8 index;
     int found;
     int i;
-    func_ov006_021050bc(c);
+    func_ov006_021050bc(scene);
     found = 0;
-    c->unk_4fe9 = 1;
-    for (i = 0; i < c->unk_4cb8; i++) {
-        idx = c->unk_4efa[i];
-        (c->*data_ov006_02142840[idx])(i);
-        if (idx != 0)
+    scene->mBusy = 1;
+    for (i = 0; i < scene->mCount; i++) {
+        index = scene->mKind[i];
+        (scene->*data_ov006_02142840[index])(i);
+        if (index != 0)
             found++;
     }
     if (found == 0) {
-        c->unk_4ca8 = 4;
-        c->unk_4fdf = 1;
-        c->unk_4ec4 = 0x40;
+        scene->mState = 4;
+        scene->mClear = 1;
+        scene->mDelay = 0x40;
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 64 -- func_ov006_0210709c, 0x0210709c, size 0x00a0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210709c
 extern "C" {
 struct PanelC_09c;
 typedef void (PanelC_09c::*PanelPmf_09c)(int);
 
-void func_ov006_0210709c(PanelC_09c *c)
+void func_ov006_0210709c(PanelC_09c *scene)
 {
     extern PanelPmf_09c data_ov006_02142840[];
-    void func_ov006_02105de4(PanelC_09c *c);
-    void func_ov006_021050bc(PanelC_09c *c);
-    void func_ov006_02105d20(PanelC_09c *c);
-    void func_ov006_02105c88(PanelC_09c *c);
-    void func_ov006_02105134(PanelC_09c *c);
+    void func_ov006_02105de4(PanelC_09c *scene);
+    void func_ov006_021050bc(PanelC_09c *scene);
+    void func_ov006_02105d20(PanelC_09c *scene);
+    void func_ov006_02105c88(PanelC_09c *scene);
+    void func_ov006_02105134(PanelC_09c *scene);
     int i;
-    char *b = (char *)c;
-    func_ov006_02105de4(c);
-    func_ov006_021050bc(c);
+    char *b = (char *)scene;
+    func_ov006_02105de4(scene);
+    func_ov006_021050bc(scene);
     *(u8 *)(b + 0x4fe9) = 0;
     for (i = 0; i < *(int *)(b + 0x4cb8); i++) {
-        u8 idx = *(u8 *)(b + i + 0x4efa);
-        (c->*data_ov006_02142840[idx])(i);
+        u8 index = *(u8 *)(b + i + 0x4efa);
+        (scene->*data_ov006_02142840[index])(i);
     }
-    func_ov006_02105d20(c);
-    func_ov006_02105c88(c);
-    func_ov006_02105134(c);
+    func_ov006_02105d20(scene);
+    func_ov006_02105c88(scene);
+    func_ov006_02105134(scene);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 65 -- func_ov006_0210713c, 0x0210713c, size 0x0098 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210713c
 extern "C" {
-void func_ov006_0210713c(char *c)
+void func_ov006_0210713c(char *scene)
 {
-    extern void func_ov006_021050bc(void *c);
-    if (*(int *)(c + 0x4cac) == 0) {
-        func_ov006_021050bc(c);
-        *(u8 *)(c + 0x4fe7) = 0;
-        *(u8 *)(c + 0x4fe8) = 2;
+    extern void func_ov006_021050bc(void *scene);
+    if (*(int *)(scene + 0x4cac) == 0) {
+        func_ov006_021050bc(scene);
+        *(u8 *)(scene + 0x4fe7) = 0;
+        *(u8 *)(scene + 0x4fe8) = 2;
         return;
     }
-    *(u8 *)(c + 0x4fe7) += 1;
-    if (*(u8 *)(c + 0x4fe7) >= 8) {
-        *(u8 *)(c + 0x4fe7) = 0;
-        *(u8 *)(c + 0x4fe8) -= 1;
+    *(u8 *)(scene + 0x4fe7) += 1;
+    if (*(u8 *)(scene + 0x4fe7) >= 8) {
+        *(u8 *)(scene + 0x4fe7) = 0;
+        *(u8 *)(scene + 0x4fe8) -= 1;
     }
-    if (*(u8 *)(c + 0x4fe8) == 0)
-    *(int *)(c + 0x4ca8) = 2;
+    if (*(u8 *)(scene + 0x4fe8) == 0)
+    *(int *)(scene + 0x4ca8) = 2;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 66 -- func_ov006_021071d4, 0x021071d4, size 0x0028 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_021071d4
 extern "C" {
-void func_ov006_021071d4(char *c)
+void func_ov006_021071d4(char *scene)
 {
     extern void func_ov006_02105118(char *p);
-    func_ov006_02105118(c);
-    *(int *)(c + 0x4ca8) = 1;
-    *(int *)(c + 0x4cac) = 0;
+    func_ov006_02105118(scene);
+    *(int *)(scene + 0x4ca8) = 1;
+    *(int *)(scene + 0x4cac) = 0;
 }
 }
 
-/* ---------------------------------------------------------------------------
- * The four members below are the C++-NAMED ones, and they are the one place in
- * this file where a member's declarations cannot live inside its own body.
- * Every `func_ov006_*` member above sits inside its own `extern "C" { }`
- * region, so a block-scope `extern` inside it gets C linkage and names the ROM
- * symbol.  A class member function cannot be inside such a region, so the same
- * block-scope declaration there gets C++ linkage and mwld goes looking for
- * `_Z8LoadFilei`, which does not exist.  mwccarm 2004/b56 rejects a block-scope
- * `extern "C"` outright (`declarator expected`), so the ROM symbols these four
- * call are declared here, at file scope, in one region -- the same shape
- * dScMgTeresa_c and dScMgRoulette_c use.  It sits after ordinal 66 so that none
- * of the 67 members above can see it, and their independently recovered
- * spellings stand exactly as they were.
- *
- * Data symbols are NOT affected: mwccarm leaves a file-scope variable's name
- * unmangled in C++, so the `data_*` declarations those four members carry stay
- * in their own bodies.
- * ------------------------------------------------------------------------- */
+/* The four class methods can't sit in an `extern "C"` region, so a
+ * declaration inside them would get C++ linkage and name a symbol the ROM
+ * doesn't have. Their callees are declared here instead, below every helper,
+ * so the helpers' own declarations are untouched. Data declarations are not
+ * mangled, so those stay in the bodies. */
 extern "C" {
 
 extern void  Deallocate(void *);
@@ -2380,19 +2109,9 @@ extern void  func_ov004_020adb1c(int);
 extern void  func_ov004_020b04d0(int);
 extern void  func_ov004_020b0cac(int, int, int, int, int, s16);
 extern void  func_ov004_020b1e34(void *a, int b, int c, int d);
-extern char *_ZN2G212GetBG2ScrPtrEv(void);
-extern char *_ZN3G2S12GetBG2ScrPtrEv(void);
-extern char *_ZN3G2S13GetBG3CharPtrEv(void);
-extern void  _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void  _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void  _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void  _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 
 }  /* extern "C" */
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 67 -- _ZN12dScMgPanel_c13OnYoshiTryEatEi, 0x021071fc, size 0x0110 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dScMgPanel_c13OnYoshiTryEatEi
 /* Vtable slot 18, an override of dScMgBase_c::OnYoshiTryEat(int).  The
    signature has to repeat the base declaration exactly or mwcc appends a new
@@ -2429,17 +2148,14 @@ void dScMgPanel_c::OnYoshiTryEat(int flag)
     func_ov006_02106168(this);
     func_ov006_02104b24(self);
 
-    unk_4fe2 = 3;
-    unk_4ca8 = 0;
+    mLives = 3;
+    mState = 0;
     func_ov004_020b0cac(0xd, 0x80, 0x40, 0, -1, 0xd);
     SetSubBg0Offset(0, 0);
 
     data_0209d454 &= ~1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 68 -- _ZN12dScMgPanel_c6RenderEv, 0x0210730c, size 0x004c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dScMgPanel_c6RenderEv
 /* Vtable slot 9. */
 s32 dScMgPanel_c::Render()
@@ -2454,9 +2170,6 @@ s32 dScMgPanel_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 69 -- _ZN12dScMgPanel_c8BehaviorEv, 0x02107358, size 0x0058 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dScMgPanel_c8BehaviorEv
 /* Vtable slot 6.  One frame of the current state, dispatched through the
    descriptor pair at data_ov006_02142888. */
@@ -2467,7 +2180,7 @@ s32 dScMgPanel_c::Behavior()
 {
     extern Ent_358 data_ov006_02142888[];
     char *c = (char *)this;
-    int idx = unk_4ca8;
+    int idx = mState;
     Ent_358 *e = &data_ov006_02142888[idx];
     int adj = e->b;
     char *obj = c + (adj >> 1);
@@ -2483,9 +2196,6 @@ s32 dScMgPanel_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 70 -- _ZN12dScMgPanel_c13InitResourcesEv, 0x021073b0, size 0x04a8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dScMgPanel_c13InitResourcesEv
 /* Vtable slot 0.  Brings up both screens' backgrounds, loads the panel and
    message graphics for the owner's language, then resets the board. */
@@ -2513,7 +2223,7 @@ s32 dScMgPanel_c::InitResources()
     Deallocate((void *)file);
 
     file = LoadFile(0x6b);
-    _ZN2GX10LoadBGPlttEPKvjj((const void *)file, 0x1a0, 0x60);
+    GX::LoadBGPltt((const void *)file, 0x1a0, 0x60);
     Deallocate((void *)file);
 
     file = LoadFile(0x6c);
@@ -2526,7 +2236,7 @@ s32 dScMgPanel_c::InitResources()
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x9410;
 
-    b = _ZN2G212GetBG2ScrPtrEv();
+    b = G2::GetBG2ScrPtr();
     mainFill = 0xf361;
     MultiStore16(mainFill, b, 0x1000);
 
@@ -2547,7 +2257,7 @@ s32 dScMgPanel_c::InitResources()
 
     file = LoadFile(0xe6);
     DecompressLZ16(msgFile, (void *)0x6400000);
-    _ZN2GX11LoadOBJPlttEPKvjj((const void *)file, 0, 0x100);
+    GX::LoadOBJPltt((const void *)file, 0, 0x100);
 
     data_0209d454 |= 8;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 1;
@@ -2558,11 +2268,11 @@ s32 dScMgPanel_c::InitResources()
 
     {
         int subFile = LoadFile(0x6a);
-        DecompressLZ16(subFile, (void *)(_ZN3G2S13GetBG3CharPtrEv() + 0x4000));
+        DecompressLZ16(subFile, (void *)(G2S::GetBG3CharPtr() + 0x4000));
         Deallocate((void *)subFile);
 
         subFile = LoadFile(0x6b);
-        _ZN3GXS10LoadBGPlttEPKvjj((const void *)subFile, 0x1a0, 0x60);
+        GXS::LoadBGPltt((const void *)subFile, 0x1a0, 0x60);
         Deallocate((void *)subFile);
 
         subFile = LoadFile(0x69);
@@ -2575,7 +2285,7 @@ s32 dScMgPanel_c::InitResources()
         *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
         *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x8410;
 
-        b = _ZN3G2S12GetBG2ScrPtrEv();
+        b = G2S::GetBG2ScrPtr();
         subFill = 0xf361;
         MultiStore16(subFill, b, 0x1000);
 
@@ -2592,7 +2302,7 @@ s32 dScMgPanel_c::InitResources()
     }
 
     DecompressLZ16(msgFile, (void *)0x6600000);
-    _ZN3GXS11LoadOBJPlttEPKvjj((const void *)file, 0, 0x100);
+    GXS::LoadOBJPltt((const void *)file, 0, 0x100);
     Deallocate((void *)msgFile);
     Deallocate((void *)file);
 
@@ -2600,18 +2310,18 @@ s32 dScMgPanel_c::InitResources()
     func_ov006_021067a4(c);
     func_ov006_02106758(c);
 
-    unk_4cb0 = 0;
+    mDealt = 0;
     unk_4fea = 0;
-    unk_4cb4 = 0xff;
+    mFaceSet = 0xff;
 
     func_ov006_021063a0(c);
     func_ov006_02106168(this);
     func_ov006_02105118(c);
     func_ov006_02104b24(c);
 
-    unk_4ca8 = 1;
-    unk_4cac = 0;
-    unk_4fe2 = 3;
+    mState = 1;
+    mIntro = 0;
+    mLives = 3;
 
     func_ov004_020b04d0(0x20);
     func_ov004_020b0cac(0xd, 0x80, 0x40, 0, -1, 0xd);

@@ -138,7 +138,7 @@ So the resident set for level L is
 and a module in the level system can only reference overlays reachable from some
 level that loads it.
 
-Worked example: `src/_ZN15TtcRotatingGear13InitResourcesEv.cpp` is in [ov065](../config/arm9/overlays/ov065/symbols.txt), which
+Worked example: `daObjCtMecha08_c::InitResources` ([src/actors/daObjCtMecha08_c.cpp](../src/actors/daObjCtMecha08_c.cpp)) is in [ov065](../config/arm9/overlays/ov065/symbols.txt), which
 is `group[0][4]`, loaded by levels 13, 27 and 33 -- level overlays [ov021](../config/arm9/overlays/ov021/symbols.txt), [ov035](../config/arm9/overlays/ov035/symbols.txt),
 [ov041](../config/arm9/overlays/ov041/symbols.txt). Its ambiguous target `0x021121b8` listed eleven candidate level overlays;
 exactly one, **[ov035](../config/arm9/overlays/ov035/symbols.txt)**, is in that set.
@@ -197,7 +197,7 @@ ambiguity -- and it is now the biggest single block of work left.
 |---|---|---|
 | `src/func_ov002_020ec670.c` | [ov002](../config/arm9/overlays/ov002/symbols.txt) | `0x02123804` -- all four of [ov077](../config/arm9/overlays/ov077/symbols.txt)/[ov078](../config/arm9/overlays/ov078/symbols.txt)/[ov079](../config/arm9/overlays/ov079/symbols.txt)/[ov080](../config/arm9/overlays/ov080/symbols.txt) hold a real, differently-sized function there. Engine code reaching into a slot; the callee genuinely depends on the level. |
 | `src/_ZN14CutsceneObject13InitResourcesEv.cpp` | [ov002](../config/arm9/overlays/ov002/symbols.txt) | `0x02113c20` in the level slot; [ov002](../config/arm9/overlays/ov002/symbols.txt) is resident for every level. |
-| `src/_ZN16BowserShockwaves13InitResourcesEv.cpp` | [ov060](../config/arm9/overlays/ov060/symbols.txt) | narrowed to the three Bowser levels ([ov044](../config/arm9/overlays/ov044/symbols.txt)/[ov046](../config/arm9/overlays/ov046/symbols.txt)/[ov048](../config/arm9/overlays/ov048/symbols.txt)); all 19 candidate symbols are dsd placeholders. |
+| `src/actors/daFRing_c.cpp` | [ov060](../config/arm9/overlays/ov060/symbols.txt) | narrowed to the three Bowser levels ([ov044](../config/arm9/overlays/ov044/symbols.txt)/[ov046](../config/arm9/overlays/ov046/symbols.txt)/[ov048](../config/arm9/overlays/ov048/symbols.txt)); all 19 candidate symbols are dsd placeholders. **Since settled by the data, not by residency:** only [ov048](../config/arm9/overlays/ov048/symbols.txt) holds an animation record at `0x021115e4` and `0x021115f4` (a 0x64 frame count, then pointers ov048's own relocations resolve into its data); ov044's words there lie inside `g_profile_KB1_BILLBOARD` and ov046's carry no relocations. The source names `data_ov048_021115e4` / `data_ov048_021115f4`. |
 | `src/func_ov089_0213162c.c` | [ov089](../config/arm9/overlays/ov089/symbols.txt) | [ov089](../config/arm9/overlays/ov089/symbols.txt) is loaded by many levels. |
 | `src/_ZN6Bullet13InitResourcesEv.cpp` | [ov002](../config/arm9/overlays/ov002/symbols.txt) | [ov065](../config/arm9/overlays/ov065/symbols.txt) vs [ov075](../config/arm9/overlays/ov075/symbols.txt) (see below). |
 | `src/_ZN8CapEnemy6AddCapEj.c` | [arm9](../config/arm9/symbols.txt) | [ov002](../config/arm9/overlays/ov002/symbols.txt) vs [ov007](../config/arm9/overlays/ov007/symbols.txt); arm9 spans both. |

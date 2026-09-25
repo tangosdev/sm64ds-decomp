@@ -1,11 +1,11 @@
-_ZN7SkiLiftD1Ev kind:function(arm,size=0x44) addr:0x021111a0
-_ZN7SkiLiftD0Ev kind:function(arm,size=0x58) addr:0x021111e4
-_ZN7SkiLift15OnHitByMegaCharER6Player kind:function(arm,size=0x3c) addr:0x0211123c
+_ZN14daObjSm_Lift_cD1Ev kind:function(arm,size=0x44) addr:0x021111a0
+_ZN14daObjSm_Lift_cD0Ev kind:function(arm,size=0x58) addr:0x021111e4
+_ZN14daObjSm_Lift_c15OnHitByMegaCharER6Player kind:function(arm,size=0x3c) addr:0x0211123c
 func_ov018_02111278 kind:function(arm,size=0x84) addr:0x02111278
-_ZN7SkiLift16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021112fc
-_ZN7SkiLift6RenderEv kind:function(arm,size=0x28) addr:0x02111340
-_ZN7SkiLift8BehaviorEv kind:function(arm,size=0x34c) addr:0x02111368
-_ZN7SkiLift13InitResourcesEv kind:function(arm,size=0x134) addr:0x021116b4
+_ZN14daObjSm_Lift_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021112fc
+_ZN14daObjSm_Lift_c6RenderEv kind:function(arm,size=0x28) addr:0x02111340
+_ZN14daObjSm_Lift_c8BehaviorEv kind:function(arm,size=0x34c) addr:0x02111368
+_ZN14daObjSm_Lift_c13InitResourcesEv kind:function(arm,size=0x134) addr:0x021116b4
 func_ov018_021117e8 kind:function(arm,size=0x1c) addr:0x021117e8
 func_ov018_02111804 kind:function(arm,size=0x14) addr:0x02111804
 daObjSm_Lift_c_classInit kind:function(arm,size=0x30) addr:0x02111818
@@ -128,7 +128,7 @@ _ZTS14daObjSm_Lift_c kind:data(any) addr:0x02113894
 g_profile_SM_LIFT kind:data(any) addr:0x021138a8 ambiguous
 data_ov018_021138bc kind:data(any) addr:0x021138bc ambiguous
 data_ov018_021138c4 kind:data(any) addr:0x021138c4 ambiguous
-_ZTV7SkiLift kind:data(any) addr:0x021138cc
+_ZTV14daObjSm_Lift_c kind:data(any) addr:0x021138cc
 data_ov018_021138d8 kind:data(any) addr:0x021138d8 ambiguous
 data_ov018_021138f0 kind:data(any) addr:0x021138f0 ambiguous
 data_ov018_021138fc kind:data(any) addr:0x021138fc ambiguous

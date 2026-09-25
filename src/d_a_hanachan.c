@@ -1,4 +1,4 @@
-#include "Wiggler.h"
+#include "daHanachan_c.h"
 extern void* _ZN7fBase_cnwEj(unsigned int sz);
 extern void _ZN12dEnemyBase_cC2Ev(void *p);
 extern int __cxa_vec_ctor(void *p, int a, int b, void *ctor, void *dtor);
@@ -15,17 +15,17 @@ extern int _ZN15MaterialChangerC1Ev(void *p);
 extern int _ZN15MaterialChangerD1Ev(void *p);
 extern int _ZN9ModelAnimC1Ev(void *p);
 extern int _ZN9ModelAnimD1Ev(void *p);
-extern int _ZTV7Wiggler[];
+extern int _ZTV12daHanachan_c[];
 
 /* Reconstructed source-style name: SM64DS proves daHanachan_c through RTTI,
  * allocation size, vtable identity, and the HANACHAN registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Wiggler_Spawn. */
 void *daHanachan_c_classInit(void){
-  char *c = (char *)_ZN7fBase_cnwEj(sizeof(struct Wiggler));
+  char *c = (char *)_ZN7fBase_cnwEj(sizeof(struct daHanachan_c));
   if(c){
     _ZN12dEnemyBase_cC2Ev(c);
-    *(int**)(c) = _ZTV7Wiggler;
+    *(int**)(c) = _ZTV12daHanachan_c;
     __cxa_vec_ctor(c+0x110, 5, 0x64, _ZN9ModelAnimC1Ev, _ZN9ModelAnimD1Ev);
     __cxa_vec_ctor(c+0x304, 5, 0x14, _ZN15MaterialChangerC1Ev, _ZN15MaterialChangerD1Ev);
     __cxa_vec_ctor(c+0x368, 5, 0x14, _ZN15TextureSequenceC1Ev, _ZN15TextureSequenceD1Ev);

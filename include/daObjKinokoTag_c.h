@@ -25,7 +25,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  * InitResources (0), CleanupResources (3), Behavior (6), and the D1/D0
  * pair (16/17). Behavior establishes the five bytes after the collider.
  * The backlink consumer at ov091 0x02133498 is the independent witness
- * for mLinkedPileGone: PILE (Stump, actor 0x1b) writes that byte when its
+ * for mLinkedPileGone: PILE (daObjPile_c, actor 0x1b) writes that byte when its
  * linked actor is KINOKO_TAG (0x140), before the tag respawns the mushroom.
  *
  * Both factories belong to this TU. A single daObjKinokoTag_c_classInit

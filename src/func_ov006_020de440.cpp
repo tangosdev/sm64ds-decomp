@@ -8,7 +8,7 @@ extern void* data_ov004_020beb68;
 
 extern "C" void func_ov006_020dde28(char* c, int i);
 extern "C" void func_ov006_020dd2cc(char* c);
-extern "C" void func_ov006_020dca04(char* c);
+extern "C" void func_ov006_020dca04(void* c);
 
 struct C {};
 

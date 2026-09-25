@@ -10,7 +10,7 @@ extern void _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* ptr); /* 0x02017a
  * invisible in this function's own bytes (it compiles identically either way). The
  * evidence is the call sites: all ten in the cartridge set r0 immediately before the
  * bl, nine of them as `mov r0, r4`. Spelling it `(void)` here is harmless for this
- * file but wrong, and it cost MrI::InitResources a match for two campaigns, because a
+ * file but wrong, and it cost daEykn_c::InitResources a match for two campaigns, because a
  * caller that declares it `(void)` lets its own incoming r0 die early and reorders the
  * caller's entry block. */
 void LoadBlueCoinModel(void *actor)

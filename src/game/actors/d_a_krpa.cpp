@@ -1,4 +1,39 @@
 //cpp
+/* daKrpa_c -- the flame spitter (KERONPA), ov070; it spits KERONPA_FIRE.
+ *
+ * It turns toward the closest visible player within 700.0 (0x800 a frame)
+ * and pulses in size from a frame table. With a player tracked, and while
+ * it stands above data_0209f32c, it counts 115 frames and then spits: on
+ * frame 30 of that animation it spawns KERONPA_FIRE (actor 0x10f, see
+ * d_a_kp_fr.cpp) 80.0 in front of itself and plays sound 0x105. A collider
+ * hit with flag 0x10 knocks it away tumbling (a mega kill, state 3). A
+ * touch while it is being eaten (flag 0x20000) sends it to state 2, which
+ * poofs it once neither 0x20000 nor 0x40000 is set.
+ *
+ * One TU, 25 functions. It began as the old one-function files
+ * concatenated in reverse ROM order: their bodies were wrapped in
+ * extern "C" { }, which the merge tool could not take apart.
+ *
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
+ *   mwcc emits one .text section per ordinary definition in reverse source
+ *   order; the inline destructor group comes out retail D1 then D0, no D2.
+ *   M48, the array wrapper for InitResources' IDENTITY_MATRIX4X3 copy. This
+ *   TU uses the nested Matrix4x3 (.t) that math/Matrix.h brings in via
+ *   ModelAnim.h; putting common.h first would drop .t.
+ *   func_ov070_021213cc calls dBgCh_Actr_UpdateDiscreteNoLava_veneer: the
+ *   veneer is the retail call destination.
+ *
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, see
+ * notes/mwccarm-codegen.md 6az):
+ *   dCcAcPos_c::Init, dBgCh_Actr::Init (its header Fix12i also mangles as
+ *   int), ModelAnim::SetAnim, DropShadowRadHeight and
+ *   Particle::System::NewSimple.
+ *
+ * Known limits:
+ *   The data_ov070_* SharedFilePtr / BCA / frame tables / state records are
+ *   overlay .data, not this TU's data claim.
+ *   func_0201267c is the sound call behind the spit (0x105).
+ */
 #include "daKrpa_c.h"
 #include "dBgCh_Gnd.h"
 #include "Player.h"
@@ -21,32 +56,6 @@ struct daKrpaSpawnInfo {
 typedef char daKrpaSpawnInfo_size_must_be_0x1c[
     sizeof(daKrpaSpawnInfo) == 0x1c ? 1 : -1];
 
-/* Manually curated translation unit -- ov070/daKrpa_c (25 function(s)).
- * tubuild create refused this TU (legacy bodies wrapped in extern "C" { }),
- * so it began as a reverse-ROM-order concatenation. It now uses the real
- * class, typed members, Player/collision headers, `return new daKrpa_c()`,
- * and compiler-owned inline lifecycle. mwcc emits one .text section per
- * ordinary definition in reverse source order; the destructor variant group
- * is emitted first as retail D1 then D0, with no D2.
- *
- *
- * deslop
- * Leftover:
- * - dCcAcPos_c::Init / dBgCh_Actr::Init stay mangled (Fix12-by-value, 6az;
- *   dBgCh Init header Fix12i mangles as i -- this TU's InitResources call).
- * - ModelAnim::SetAnim, DropShadowRadHeight, Particle::System::NewSimple stay
- *   mangled (Fix12-by-value, 6az -- this TU).
- * - M48 wrapper for IDENTITY_MATRIX4X3 copy (this TU InitResources); nested
- *   Matrix4x3.t from math/Matrix.h via ModelAnim.h (common.h-first drops .t).
- * - data_ov070_* SharedFilePtr / BCA / frame tables / state records are
- *   overlay .data, not this TU's data claim.
- * - dBgCh_Actr_UpdateDiscreteNoLava_veneer is the retail call destination
- *   (func_ov070_021213cc).
- * - func_0201267c spawn SFX 0x105 at mCamSpacePosX (func_ov070_0212156c).
- */
-
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol daKrpa_c_classInit
 /* `return new daKrpa_c()` MATCHES (size 0x50); the leaf unsigned-long
  * operator new forwards `_ZN7fBase_cnwEj`. Historical aliases: daKrpa_c_Spawn
@@ -72,8 +81,6 @@ extern "C" daKrpaSpawnInfo g_profile_KERONPA = {
     0x00ed8000
 };
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" void func_ov070_02121ae0(
     daKrpaFrameController *controller, u32 *frames, u32 count, u32 mode)
 {
@@ -83,8 +90,6 @@ extern "C" void func_ov070_02121ae0(
     controller->cursor = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" u32 func_ov070_02121a64(daKrpaFrameController *controller)
 {
     switch (controller->mode) {
@@ -100,8 +105,6 @@ extern "C" u32 func_ov070_02121a64(daKrpaFrameController *controller)
     return controller->frames[controller->cursor];
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daKrpa_c13InitResourcesEv
 /* The Fix12-by-value Init methods are typed ABI seams: ordinary method calls
  * home their class-typed values and do not reproduce the retail callers. */
@@ -156,8 +159,6 @@ int daKrpa_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daKrpa_c8BehaviorEv
 extern "C" {
 extern void func_ov070_02121310(daKrpa_c *self);
@@ -171,8 +172,6 @@ int daKrpa_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daKrpa_c6RenderEv
 int daKrpa_c::Render()
 {
@@ -180,16 +179,12 @@ int daKrpa_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daKrpa_c16OnPendingDestroyEv
 
 void daKrpa_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daKrpa_c16CleanupResourcesEv
 
 int daKrpa_c::CleanupResources()
@@ -198,8 +193,6 @@ int daKrpa_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* Unresolved func_ names retain their current C ABI spelling. */
 extern daKrpaState data_ov070_021236ac[];
 extern void func_ov070_02121848(daKrpa_c *self);
@@ -209,24 +202,18 @@ void func_ov070_02121880(daKrpa_c *self, int state) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" void func_ov070_02121848(daKrpa_c *self)
 {
     daKrpaStateMethod *method = &self->mStateMethods->init;
     (self->**method)();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" void func_ov070_0212180c(daKrpa_c *self)
 {
     daKrpaStateMethod *method = &self->mStateMethods->behavior;
     (self->**method)();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* SetAnim is another proven Fix12-by-value caller seam. */
 extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
@@ -247,8 +234,6 @@ int func_ov070_021217ac(daKrpa_c *self) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 extern u8 DecIfAbove0_Byte(u8 *value);
 extern void func_ov070_02121298(daKrpa_c *self);
@@ -276,8 +261,6 @@ int func_ov070_02121710(daKrpa_c *self) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 int func_ov070_021216b8(daKrpa_c *self) {
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
@@ -290,27 +273,25 @@ int func_ov070_021216b8(daKrpa_c *self) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 extern short data_02082214[];
 void func_0201267c(u32 soundID, const Vector3 *pos);
 
 int func_ov070_0212156c(daKrpa_c *self) {
     if (self->mFrameController.cursor == 0x1e) {
-        Vector3 pos;
+        Vector3 firePos;
         int idx = (int)(u16)self->mAngleY >> 4;
-        int s = data_02082214[idx * 2 + 1];
-        int cn = data_02082214[idx * 2];
-        int offZ = (int)(((s64)s * 0x50000 + 0x800) >> 12);
-        int offX = (int)(((s64)cn * 0x50000 + 0x800) >> 12);
+        int cosv = data_02082214[idx * 2 + 1];
+        int sinv = data_02082214[idx * 2];
+        int offZ = (int)(((s64)cosv * 0x50000 + 0x800) >> 12);
+        int offX = (int)(((s64)sinv * 0x50000 + 0x800) >> 12);
         int x = self->mPosX + offX;
         int z = self->mPosZ + offZ;
         int y = self->mPosY - 0x29000;
-        pos.x = x;
-        pos.z = z;
-        pos.y = y;
-        dActor_c::Spawn(0x10f, 0, pos,
+        firePos.x = x;
+        firePos.z = z;
+        firePos.y = y;
+        dActor_c::Spawn(0x10f, 0, firePos,
             (Vector3_16 *)&self->mAngleX, self->mAreaId, -1);
         func_0201267c(0x105, (Vector3 *)&self->mCamSpacePosX);
     }
@@ -329,8 +310,6 @@ int func_ov070_0212156c(daKrpa_c *self) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" int func_ov070_02121548(daKrpa_c *self)
 {
     self->mdCcAcPos_c.Clear();
@@ -338,8 +317,6 @@ extern "C" int func_ov070_02121548(daKrpa_c *self)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" int func_ov070_021214f8(daKrpa_c *self)
 {
     int flags = self->mFlags;
@@ -354,8 +331,6 @@ extern "C" int func_ov070_021214f8(daKrpa_c *self)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* Particle::System::NewSimple is not yet declared by its shared header; retain
  * this typed ABI import without guessing the unresolved state's source name. */
 namespace Sound { void PlayBank0(u32 soundID, const Vector3 &pos); }
@@ -384,8 +359,6 @@ extern "C" int func_ov070_02121438(daKrpa_c *self)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* The collision update veneer is retained because it is the retail call
  * destination; the rest are ordinary real class calls. */
 extern "C" {
@@ -406,8 +379,6 @@ end:
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* DropShadowRadHeight is a Fix12-by-value caller seam for the same codegen
  * reason as the two Init imports above. */
 extern "C" void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
@@ -435,8 +406,6 @@ extern "C" void func_ov070_02121310(daKrpa_c *self)
         self->mScaleX * 0x46, self->mGroundDistance, 0xf);
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 int ApproachLinear(short &value, short target, short step);
 extern "C" {
 extern int Vec3_Dist(void* a, void* b);
@@ -458,8 +427,6 @@ extern "C" void func_ov070_02121298(daKrpa_c *self) {
         Vec3_HorzAngle(&self->mPosX, &player->mPosX), 0x800);
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" void func_ov070_021211c4(daKrpa_c *self)
 {
     u32 id = self->mdCcAcPos_c.otherOwner;
@@ -481,8 +448,6 @@ extern "C" void func_ov070_021211c4(daKrpa_c *self)
     func_ov070_02121880(self, 3);
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daKrpa_c13OnYoshiTryEatEv
 
 int daKrpa_c::OnYoshiTryEat()
@@ -490,15 +455,11 @@ int daKrpa_c::OnYoshiTryEat()
     return 5;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daKrpa_cD0Ev
 
 /* No separate body: the inline class destructor plus vtable instantiation
  * makes mwcc emit the retail deleting variant after D1. */
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daKrpa_cD1Ev
 
 /* No separate body: the inline class destructor emits this complete variant

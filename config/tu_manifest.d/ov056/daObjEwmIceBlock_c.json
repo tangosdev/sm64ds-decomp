@@ -1,0 +1,237 @@
+{
+  "id": "ov056/daObjEwmIceBlock_c",
+  "module": "ov056",
+  "source": "src/actors/daObjEwmIceBlock_c.cpp",
+  "promoted_source": "src/actors/daObjEwmIceBlock_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x21111a0..0x2111594, 6 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjEwmIceBlock_c",
+    "module sinit corroboration: 1 sinit(s) / 1 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021111a0",
+      "end": "0x02111594"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN18daObjEwmIceBlock_cD1Ev",
+      "address": "0x021111a0",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN18daObjEwmIceBlock_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN18daObjEwmIceBlock_cD0Ev",
+      "address": "0x021111e4",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN18daObjEwmIceBlock_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN18daObjEwmIceBlock_c16CleanupResourcesEv",
+      "address": "0x0211123c",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN18daObjEwmIceBlock_c16CleanupResourcesEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN18daObjEwmIceBlock_c6RenderEv",
+      "address": "0x02111284",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN18daObjEwmIceBlock_c6RenderEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN18daObjEwmIceBlock_c8BehaviorEv",
+      "address": "0x021112ac",
+      "size": "0x00000234",
+      "legacy_source": "src/_ZN18daObjEwmIceBlock_c8BehaviorEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN18daObjEwmIceBlock_c13InitResourcesEv",
+      "address": "0x021114e0",
+      "size": "0x000000b4",
+      "legacy_source": "src/_ZN18daObjEwmIceBlock_c13InitResourcesEv.cpp",
+      "ordinal": 5
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN18daObjEwmIceBlock_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless D2 from the out-of-line destructor. No configured ROM symbol, and nothing references it once D1 and D0 are kept."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Behavior's Vector3 locals make mwccarm emit Vector3's empty inline destructor as vague linkage. The canonical body is the four-byte bx lr at arm9 0x020072c0."
+    },
+    {
+      "symbol": "_ZTV18daObjEwmIceBlock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov056",
+      "canonical_address": "0x02113368",
+      "reason": "Key function emits the vtable; text-only promotion externalizes it to the cartridge symbol."
+    },
+    {
+      "symbol": "_ZTI18daObjEwmIceBlock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov056",
+      "canonical_address": "0x02113320",
+      "reason": "Key function emits this class's typeinfo; text-only promotion externalizes it to the cartridge symbol."
+    },
+    {
+      "symbol": "_ZTS18daObjEwmIceBlock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov056",
+      "canonical_address": "0x0211332c",
+      "reason": "Key function emits this class's type name; text-only promotion externalizes it to the cartridge symbol."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Inherited dBgActor_c typeinfo, externalized to its ov002 home."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Inherited dBgActor_c type name, externalized to its ov002 home."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited dActor_c typeinfo, externalized to its arm9 home."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited dActor_c type name, externalized to its arm9 home."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited dBase_c typeinfo, externalized to its arm9 home."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited dBase_c type name, externalized to its arm9 home."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited fBase_c typeinfo, externalized to its arm9 home."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited fBase_c type name, externalized to its arm9 home."
+    }
+  ],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c21UpdateModelPosAndRotYEv' differs between the legacy file that used to hold _ZN18daObjEwmIceBlock_c8BehaviorEv and the one that held _ZN18daObjEwmIceBlock_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN18daObjEwmIceBlock_c8BehaviorEv and the one that held _ZN18daObjEwmIceBlock_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "fold branch tu/fold-highov-0921: 6/6 MATCH, objisolate clean, reloc-destinations clean -> text-verified. 12 UNLICENSED OUTPUT symbols (1 .text: _ZN18daObjEwmIceBlock_cD2Ev; 11 .data: the _ZTV/_ZTI/_ZTS group for daObjEwmIceBlock_c and its ancestor chain). Key-function TU, .data RTTI emission expected; .data licensing NOT attempted here. Hand fixes over tubuild create: (1) removed the duplicate D0 destructor body; (2) data_ov056_02113314 had two spellings of one object - 'SharedFilePtr *[]' (first, used as [0]->Release()) and a local 'struct SFP { void*a,b,c; }' (used as .a/.b/.c). Kept the first, more complete spelling (it names SharedFilePtr) and rewrote .a/.b/.c as [0]/[1]/[2], which is the identical address math. The two create-time conflicts on _ZN10dBgActor_c21UpdateModelPosAndRotYEv / _ZN10dBgActor_c19UpdateClsnPosAndRotEv were a void-vs-int return type only, immaterial at these call sites (return value unused). Byte-neutral."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov056-daObjEwmIceBlock_c/daObjEwmIceBlock_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 6,
+    "functions_declared": 6,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN18daObjEwmIceBlock_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN18daObjEwmIceBlock_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        16,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
+      ],
+      "data": [
+        "_ZTV18daObjEwmIceBlock_c",
+        "_ZTI18daObjEwmIceBlock_c",
+        "_ZTS18daObjEwmIceBlock_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI18daObjEwmIceBlock_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS18daObjEwmIceBlock_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV18daObjEwmIceBlock_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

@@ -17,7 +17,7 @@ US-region address and reads as zeros here). `SpawnInfo` layout (credit:
 - **actor ID** -> name: **DynamicAllocationDecomp** `include/List/ActorList.h` (**391** ids)
 - *spawn func*: allocates the instance (`mov r0,#size before the first bl`) and
   stores the *class vtable* (last pool literal stored to [r4])
-- **vtable slot order** = `ActorBase` virtual order, validated empirically on [ov056](../config/arm9/overlays/ov056/symbols.txt)   *BigMovingIceBlock* (slot `6 Behavior` == the byte-matched path follower at
+- **vtable slot order** = `ActorBase` virtual order, validated empirically on [ov056](../config/arm9/overlays/ov056/symbols.txt)   *daObjEwmIceBlock_c* (slot `6 Behavior` == the byte-matched path follower at
   **0x021112ac**; slots `16/17` are the` D1/D0` **destructor** pair):
 ```c
     0 InitResources  1 BeforeInitResources  2 AfterInitResources(u32)
@@ -40,7 +40,7 @@ run `python tools/actor_names.py --apply` (idempotent) or re-derive them.
 ## Overlay = actor group
 
 Every small overlay is an *actor bundle* ([ov022](../config/arm9/overlays/ov022/symbols.txt) = the **Lethal Lava Land**
-platforms, [ov056](../config/arm9/overlays/ov056/symbols.txt) = *BigMovingIceBlock* + *ice slide*, ...). Before drafting in an
+platforms, [ov056](../config/arm9/overlays/ov056/symbols.txt) = *daObjEwmIceBlock_c* + *ice slide*, ...). Before drafting in an
 overlay, read [symbols/overlay_actors.md](../symbols/overlay_actors.md) to know what the code IS, and check
 `reference/DynamicAllocationDecomp/include/Actors/<Class>.h` for the struct
 layout with field offsets - the alloc size in `<Class>_Spawn` should match the

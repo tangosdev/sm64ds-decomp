@@ -1,0 +1,114 @@
+{
+  "id": "ov098/daObjBlockS_c",
+  "module": "ov098",
+  "source": "src/actors/daObjBlockS_c.cpp",
+  "promoted_source": "src/actors/daObjBlockS_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run of the seven _ZN13daObjBlockS_c* methods 0x02139a50..0x02139f04. tubuild inspect ov098/daObjBlockS_c clusters a wider 36-function span 0x02138040..0x02139f04 because D1/D0/Kill overlap the unlabelled helpers; those helpers are not part of this _ZN13daObjBlockS_c* run. The next function, daObjBlockS_c_classInit at 0x02139f04, is not absorbed.",
+    "class label: daObjBlockS_c, renamed to the vtable typeinfo daObjBlockS_c (_ZTI13daObjBlockS_c at 0x0213c4d4, name string 13daObjBlockS_c at 0x0213c500, pointed at from the word before _ZTV13daObjBlockS_c 0x0213c534).",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02139a50",
+      "end": "0x02139f04"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN13daObjBlockS_c16CleanupResourcesEv",
+      "address": "0x02139a50",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN13daObjBlockS_c16CleanupResourcesEv.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN13daObjBlockS_c6RenderEv",
+      "address": "0x02139aa8",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN13daObjBlockS_c6RenderEv.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN13daObjBlockS_c8BehaviorEv",
+      "address": "0x02139b0c",
+      "size": "0x00000208",
+      "legacy_source": "src/_ZN13daObjBlockS_c8BehaviorEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN13daObjBlockS_c13InitResourcesEv",
+      "address": "0x02139d14",
+      "size": "0x00000130",
+      "legacy_source": "src/_ZN13daObjBlockS_c13InitResourcesEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN13daObjBlockS_c15OnGroundPoundedER8dActor_c",
+      "address": "0x02139e44",
+      "size": "0x00000020",
+      "legacy_source": "src/_ZN13daObjBlockS_c15OnGroundPoundedER8dActor_c.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN13daObjBlockS_c13OnYoshiTryEatEv",
+      "address": "0x02139e64",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN13daObjBlockS_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN13daObjBlockS_c13OnTurnIntoEggER6Player",
+      "address": "0x02139e78",
+      "size": "0x0000008c",
+      "legacy_source": "src/_ZN13daObjBlockS_c13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 6
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "include/types.h declares Vector3's destructor and leaves it empty, so Behavior's Vector3 automatics re-emit it as vague linkage (STB_LOPROC, 4 bytes). The cartridge keeps one copy at arm9 0x020072c0, already owned by another source. deadstrip-duplicate, same disposition as ov098/daObjYajirusi_c."
+    }
+  ],
+  "notes": [
+    "Seven consecutive complete _ZN13daObjBlockS_c* delinks, 0x02139a50..0x02139f04. D1, D0 and Kill are outside this run. The next function, daObjBlockS_c_classInit, is not absorbed."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov098-daObjBlockS_c/daObjBlockS_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 7,
+    "functions_declared": 7,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        10
+      ],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "ov081/daSnowball_c",
+  "module": "ov081",
+  "source": "src/actors/daSnowball_c.cpp",
+  "promoted_source": "src/actors/daSnowball_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous _ZN12daSnowball_c* run 0x02126298..0x021264b4, 5 functions, each delink complete and abutting",
+    "ROM RTTI for vtable 0x02128abc is daSnowball_c: _ZTI12daSnowball_c at 0x02128a7c, string 12daSnowball_c at 0x02128a88",
+    "D1/D0 (0x02125f14..0x02125fb8) are a separate run before a gap of non-daSnowball_c functions and are not part of this span. The next function, daSnowball_c_classInit at 0x021264b4, is not absorbed."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02126298",
+      "end": "0x021264b4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN12daSnowball_c16CleanupResourcesEv",
+      "address": "0x02126298",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN12daSnowball_c16CleanupResourcesEv.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN12daSnowball_c16OnPendingDestroyEv",
+      "address": "0x021262bc",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN12daSnowball_c16OnPendingDestroyEv.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN12daSnowball_c6RenderEv",
+      "address": "0x021262c0",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN12daSnowball_c6RenderEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN12daSnowball_c8BehaviorEv",
+      "address": "0x021262ec",
+      "size": "0x000000cc",
+      "legacy_source": "src/_ZN12daSnowball_c8BehaviorEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN12daSnowball_c13InitResourcesEv",
+      "address": "0x021263b8",
+      "size": "0x000000fc",
+      "legacy_source": "src/_ZN12daSnowball_c13InitResourcesEv.cpp",
+      "ordinal": 4
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Licensed span is only the five contiguous daSnowball_c methods. Destructor pair and factory stay in their own delinks."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov081-daSnowball_c/daSnowball_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 5,
+    "functions_declared": 5,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

@@ -1,9 +1,9 @@
 {
   "id": "ov072/daBgSnmHed_c",
   "module": "ov072",
-  "source": "src_tu/actors/daBgSnmHed_c.cpp",
+  "source": "src/actors/daBgSnmHed_c.cpp",
   "promoted_source": "src/actors/daBgSnmHed_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x211ff34..0x21207d4, 19 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -160,8 +160,8 @@
     "ROM homes, from config/arm9/overlays/ov072/symbols.txt: _ZTV12daBgSnmHed_c at 0x021228bc, aliased at the same address by _ZTV12daBgSnmHed_c; the class's ROM RTTI name is daBgSnmHed_c (_ZTI at 0x0212287c, _ZTS at 0x02122888). All sit in the ov072 .data range 0x02122720..0x02122b20, outside this TU's .text span. g_profile_BIG_SNOWMAN_HEAD at 0x02122898 is interleaved between the RTTI records and the vtable, so a .data license here is not one contiguous interval.",
     "Vtable length discrepancy, unresolved: the compiled object emits _ZTV12daBgSnmHed_c at 0x84 bytes (33 words), but in ROM the gap from 0x021228bc to the next named symbol (_ZTI11daBgSnwmn_c at 0x02122938) is 0x7c -- 8 bytes / 2 slots shorter. Measured only by symbol adjacency in symbols.txt, not by disassembly. It does not affect text verification (19/19 MATCH) but should be settled before anyone licenses a .data range for this TU.",
     "Class naming: the ROM's own RTTI spells this class daBgSnmHed_c; the tree's class is daBgSnmHed_c. Left as found -- renaming is out of scope for this fold.",
-    "Declarations reconciled by hand: (1) decl_common.h was dropped from this TU -- it declares data_ov072_02122bc4 and data_ov072_02121ffc as plain void*, contradicting the evidenced SharedFilePtr and SharedFilePtr*[] spellings the CleanupResources source carries. InitResources was written against the void* view, so its subscript was rewritten from (and-ref arr)[i] to arr[i], which is the same address arithmetic under the stronger type. (2) ApproachLinear(short&, short, short) was declared three times, twice returning void and once int; kept one int-returning declaration at its first occurrence, since State1 uses the return value. (3) The shadow struct SnowmanHeadVec3 was defined three times; kept the first.",
-    "Pragmas: none in the legacy sources; nothing to carry or re-add."
+    "decl_common.h is included before the class header so Matrix4x3 stays the flat spelling. data_ov072_02122bc4 and data_ov072_02121ffc keep decl_common.h's void* declarations; CleanupResources and InitResources take their addresses.",
+    "#pragma defer_codegen off is file-global and precedes the includes, so the out-of-line destructor emits D1, D0, D2 and the other functions follow ROM order."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -172,19 +172,139 @@
     "functions_matched": 19,
     "functions_declared": 19,
     "compilerOnlyOutput": {
-      "requested": [],
-      "unhandled": [
+      "requested": [
         "_ZN12daBgSnmHed_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
-      "data": []
+      "deadstripped": [
+        "_ZN12daBgSnmHed_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTS12daBgSnmHed_c",
+        "_ZTI12daBgSnmHed_c",
+        "_ZTV12daBgSnmHed_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12daBgSnmHed_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12daBgSnmHed_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV12daBgSnmHed_c"
+      ]
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 11 unlicensed section/symbol(s), 2 compiler-only policy error(s)",
-      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     }
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN12daBgSnmHed_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. The out-of-line destructor under #pragma defer_codegen off emits D1, D0, then D2, and the cartridge has only D1 at ov072:0x0211ff34 and D0 at ov072:0x0211ff7c. No module symbols.txt names a D2."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "InitResources' Vector3 automatic re-emits Vector3's empty destructor. The cartridge keeps one copy at arm9:0x020072c0, owned by src/_ZN7Vector3D1Ev.cpp."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "~daBgSnmHed_c is the key function, so this TU re-emits fBase_c typeinfo as vague linkage. The cartridge copy at arm9:0x02086d70 stays; this copy is outside the claimed .text span 0x0211ff34..0x021207d4."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "~daBgSnmHed_c is the key function, so this TU re-emits the fBase_c type name as vague linkage. The cartridge copy at arm9:0x02086e60 stays; this copy is outside the claimed .text span 0x0211ff34..0x021207d4."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "~daBgSnmHed_c is the key function, so this TU re-emits dBase_c typeinfo as vague linkage. The cartridge copy at arm9:0x02086e78 stays; this copy is outside the claimed .text span 0x0211ff34..0x021207d4."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "~daBgSnmHed_c is the key function, so this TU re-emits the dBase_c type name as vague linkage. The cartridge copy at arm9:0x02086e54 stays; this copy is outside the claimed .text span 0x0211ff34..0x021207d4."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "~daBgSnmHed_c is the key function, so this TU re-emits dActor_c typeinfo as vague linkage. The cartridge copy at arm9:0x0208e390 stays; this copy is outside the claimed .text span 0x0211ff34..0x021207d4."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "~daBgSnmHed_c is the key function, so this TU re-emits the dActor_c type name as vague linkage. The cartridge copy at arm9:0x0208e384 stays; this copy is outside the claimed .text span 0x0211ff34..0x021207d4."
+    },
+    {
+      "symbol": "_ZTS12daBgSnmHed_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov072",
+      "canonical_address": "0x02122888",
+      "reason": "Key-function type name. The cartridge record is ov072:0x02122888, outside this .text span. g_profile_BIG_SNOWMAN_HEAD sits between it and the vtable and is not emitted here; the factory that would emit it is the next run."
+    },
+    {
+      "symbol": "_ZTI12daBgSnmHed_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov072",
+      "canonical_address": "0x0212287c",
+      "reason": "Key-function RTTI record. Canonical ov072:0x0212287c is outside this .text span; this copy is discarded with the vtable."
+    },
+    {
+      "symbol": "_ZTV12daBgSnmHed_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov072",
+      "canonical_address": "0x021228bc",
+      "reason": "Key-function vtable. Compiler storage is 0x84 (slots plus the 8-byte preamble); the configured address point is ov072:0x021228bc. Not licensed as .data: g_profile_BIG_SNOWMAN_HEAD at 0x02122898 sits between _ZTI and the vtable storage, and daBgSnmHed_c_classInit is outside this 19-function run."
+    }
+  ]
 }

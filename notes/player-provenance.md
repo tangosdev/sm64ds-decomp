@@ -334,7 +334,7 @@ Three more, all found while chasing the arrays.
 | offset | name | evidence |
 | --- | --- | --- |
 | 0x560/0x564/0x568 | `mWallNormalX/Y/Z` | The exact counterpart of `mFloorNormal*` three words earlier, and written the same way: [func_ov002_020c25a8](../src/actors/Player.cpp) (func 80 used to assemble TU) calls `SurfaceInfo::CopyNormalTo(dBgCh_Actr::GetWallResult(&mMeshClsn) + 4, &wn)` and stores `wn.x/y/z` into the three slots, then pushes the actor back out along it (`mPosX -= mWallNormalX * 2`, `mPosZ -= mWallNormalZ * 2`). Seven bodies read the X/Z pair back as `cstd::atan2(mWallNormalX, mWallNormalZ)` to recover the wall's facing -- `St_Shell_Main`, `St_OnWall_Main` (twice), `St_Balloon_Main`, `St_CrazedCrate_Main`, [func_ov002_020c2138](../src/actors/Player.cpp)(func 77 used to assemble the TU), [func_ov002_020dd2f4](../src/func_ov002_020dd2f4.c), [func_ov002_020e28d4](../src/func_ov002_020e28d4.c)(relation to `Player::UpdateAirMovement` on N64 decomp,[n64-decomp-cross-reference](../notes/archive/n64-decomp-cross-reference.md)). 0x564 was declared padding until that middle store was disassembled, which is exactly how 0x554 and 0x55c got here. |
-| 0x719 | `mKeyModelId` | `CleanupResources` passes it to `UnloadKeyModels(i)` under `mLoadedResourceFlags & 0x10`, and that function (`src/UnloadKeyModels.cpp`) indexes two eight-entry `SharedFilePtr` tables with it and releases both. `St_LevelEnter_Init` seeds it with -1, which `UnloadKeyModels`'s `if (i >= 8) return` treats as "nothing loaded". The same argument slot is `mState` in `Key::CleanupResources` and `v - 7` in `Door::CleanupResources`, so it selects WHICH key model, not how many. |
+| 0x719 | `mKeyModelId` | `CleanupResources` passes it to `UnloadKeyModels(i)` under `mLoadedResourceFlags & 0x10`, and that function (`src/UnloadKeyModels.cpp`) indexes two eight-entry `SharedFilePtr` tables with it and releases both. `St_LevelEnter_Init` seeds it with -1, which `UnloadKeyModels`'s `if (i >= 8) return` treats as "nothing loaded". The same argument slot is `mState` in `daObjKey_c::CleanupResources` and `v - 7` in `Door::CleanupResources`, so it selects WHICH key model, not how many. |
 | 0x6f7 | `mSwimMusicPushed` | A latch on a music push. `St_Swim_Main` sets it to 1 immediately after [func_ov002_020bd928](../src/actors/Player.cpp)`(this, 0x33)`, (func 3 used to assemble the TU) and clears it immediately after [func_ov002_020bd8c0](../src/actors/Player.cpp)`(this, 0x33)`, (func 2 used to assemble the TU); `St_Swim_Cleanup` does nothing unless it is set, and then clears it and calls [func_ov002_020bd8c0](../src/actors/Player.cpp)`(this, 0x33)`. The two helpers are `Sound::SetMusic` / `Sound::EndMusic` wrappers around the track words at 0x678/0x67c/0x680, so what is latched is "this state has a temporary track pushed and still owes the pop". Only the Swim states touch it. |
 
 ## daSldMng_c
@@ -370,7 +370,7 @@ non-inline virtual, so this class's key function -- it emits the whole
 `_ZTV10daSldMng_c` ([ov019](../config/arm9/overlays/ov019/symbols.txt) `0x021133cc`, 124 bytes) against the cartridge:
 VERIFIED. Under the coined name that comparison was impossible.
 
-## UpDownLiftBbh
+## daUdlift_c
 
 The same shape: `0x000..0x0d4` is the flat `fBase_c -> dBase_c -> dActor_c`
 layout, so `pauseFlags` came from `include/fBase_c.h` and `mPrevPosX/Y/Z`,

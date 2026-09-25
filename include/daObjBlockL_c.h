@@ -109,8 +109,8 @@ struct daObjBlockL_c : dBgActor_c {
        two early returns, and mwcc allocates registers differently for `int`
        vs `void` even though r0 is never touched) -- measured with
        tools/mangle.py, not assumed. OnGroundPounded and OnHitByMegaChar are
-       also `void`, matching the slot 21/27 corrections Stump forced
-       (include/Stump.h) -- both happened to byte-match under the old `int`
+       also `void`, matching the slot 21/27 corrections daObjPile_c forced
+       (include/daObjPile_c.h) -- both happened to byte-match under the old `int`
        here too, so the correction is a no-op for this class, re-verified
        rather than assumed. */
     void OnGroundPounded(dActor_c &other);  /* slot 21 */

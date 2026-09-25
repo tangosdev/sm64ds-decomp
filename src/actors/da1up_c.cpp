@@ -1,19 +1,22 @@
 //cpp
-/* da1up_c -- the 1-Up / Mega Mushroom actor, ov002.
+/* da1up_c -- the mushroom, in all fourteen of the ways it can behave.
  *
- * Reconstructed translation unit: the contiguous linker run
- * 0x020aee40..0x020b0530, ROM ordinals 0..35, 36 functions, assembled from the
- * 36 one-function legacy sources the promotion deletes and then reconciled by
- * hand. config/tu_manifest.d/ov002/da1up_c.json names every one of them.
+ * One class covers the 1-Up and the Mega Mushroom and every way either of them
+ * enters play: sitting in the open, hidden until a condition is met, running
+ * away, circling, dropping out of something. mMushroomType picks one of the 14
+ * behaviours out of a dispatch array and Behavior calls it every frame; the
+ * class also answers to Yoshi (OnYoshiTryEat) and to being turned into an egg
+ * (OnTurnIntoEgg).
+ *
+ * The TU is the contiguous linker run 0x020aee40..0x020b0530, ROM ordinals
+ * 0..35, 36 functions; config/tu_manifest.d/ov002/da1up_c.json names each one.
  *
  * IDENTITY IS THE CARTRIDGE'S, NOT THE TREE'S. ov002 file offset 0x5ad10 ==
  * address 0x02108370 holds `7da1up_c\0`, the length-prefixed Itanium type-name
  * string, and _ZTI7da1up_c at 0x0210837c is the matching __si_class_type_info
- * whose +8 word reaches _ZTI12dEnemyBase_c at 0x021081c0. The project's former
- * spelling `OneUpMushroom` is absent from every image in every encoding tested,
- * so the class, its header and its nine mangled members move to the ROM name in
- * this change. The scout's fact file is still at its pre-rename path,
- * notes/data/class-facts/OneUpMushroom.json, and records `class: da1up_c`.
+ * whose +8 word reaches _ZTI12dEnemyBase_c at 0x021081c0. The tree's former
+ * spelling `OneUpMushroom` is in no image in any encoding tested; the fact
+ * file kept at notes/data/class-facts/OneUpMushroom.json records the result.
  *
  * SOURCE ORDER IS ROM-ASCENDING AND `#pragma defer_codegen off` IS
  * LOAD-BEARING; they are ONE decision, exactly as on ov006/dScMgPanel_c. With
@@ -87,8 +90,7 @@
  * Leftover fold adds the two classInit factories at 0x020b0530/0x020b0580,
  * so the licensed run is 38 functions through 0x020b05d0.
  *
- * deslop
- * Leftover (cited MATCH walls):
+ * Known walls -- these do NOT byte-match if you convert them:
  * - dBgCh_Actr::Init / dCcAc_c::Init / DropShadowRadHeight / ReflectAngle 6az
  *   (Fix12i mangles as i; ROM is Fix12<int> -- method form Undefined)
  * - Particle::System::New / NewSimple: no method declaration in include/
@@ -121,9 +123,7 @@ void func_ov002_020afa6c(char *c);
 void func_ov002_020af924(char *c);
 }
 
-/* -------------------------------------------------------------------------- */
 /*                         _ZN7da1up_cD0Ev, 0x020aee88, size 0x5c              */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7da1up_cD1Ev
 // @symbol _ZN7da1up_cD0Ev
 /* ONE definition, both variants. The complete-object destructor (D1) tears the
@@ -140,7 +140,6 @@ da1up_c::~da1up_c()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020aeee4
 extern "C" {
@@ -172,7 +171,6 @@ void func_ov002_020aeee4(char* c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020aefa4
 /* MEASURED: this definition must stay `void`. Declaring it `int` -- so that
    ordinal 7's `return func_ov002_020aefa4(c);` would type-check against a
@@ -186,7 +184,6 @@ void func_ov002_020aefa4(char *self)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020aefb8
 /* The shard carried shadow `dActor_c`/`dEnemyBase_c` tags to name three
@@ -228,7 +225,6 @@ void func_ov002_020aefb8(char* self) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020af0c0
 extern "C" {
 void func_ov002_020af0c0(char* c){
@@ -269,7 +265,6 @@ void func_ov002_020af0c0(char* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020af1dc
 extern "C" {
 int func_ov002_020af1dc(char* c){
@@ -282,7 +277,6 @@ int func_ov002_020af1dc(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020af218
 /* The second parameter is FORWARDED, not merely declared. The five callers
@@ -305,7 +299,6 @@ int func_ov002_020af218(char* c, int range){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020af248
 extern "C" {
@@ -337,7 +330,6 @@ void func_ov002_020bdf8c(Player* player);
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7da1up_c13OnTurnIntoEggER6Player
 /* Vtable slot 19, verified against config/arm9/overlays/ov002/relocs.txt:
    _ZTV7da1up_c (0x021083c8) + 0x4c relocates to 0x020af2b0, this address. */
@@ -367,7 +359,6 @@ void da1up_c::OnTurnIntoEgg(Player &player)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7da1up_c13OnYoshiTryEatEv
 /* Vtable slot 18. Two instructions: mov r0,#4; bx lr. */
 s32 da1up_c::OnYoshiTryEat()
@@ -375,7 +366,6 @@ s32 da1up_c::OnYoshiTryEat()
     return 4;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020af3a8
 extern "C" {
@@ -413,7 +403,6 @@ void func_ov002_020af3a8(char* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020af474
 extern "C" {
 void func_ov002_020af474(char* o)
@@ -439,7 +428,6 @@ void func_ov002_020af474(char* o)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020af4ec
 extern "C" {
@@ -502,7 +490,6 @@ void func_ov002_020af4ec(void* self)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020af684
 /* Shared with the egg-turn hook and dispatch indices 8 and 6. This helper
    finishes by killing the actor and returns no value. Its callers use the same
@@ -546,7 +533,6 @@ void func_ov002_020af684(char* self, int target, char* player){
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020af724
 /* Dispatch-table index 13. */
 extern "C" {
@@ -581,7 +567,6 @@ void func_ov002_020af724(unsigned char *self)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020af7cc
 /* Dispatch-table index 10. */
 extern "C" {
@@ -599,7 +584,6 @@ void func_ov002_020af7cc(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020af838
 /* Dispatch-table index 9. */
@@ -632,7 +616,6 @@ void func_ov002_020af838(char* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020af908
 /* Dispatch-table index 12. */
 extern "C" {
@@ -642,7 +625,6 @@ void func_ov002_020af908(char *self) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020af924
 /* Dispatch-table index 8. */
@@ -655,7 +637,6 @@ void func_ov002_020af924(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020af950
 /* Dispatch-table index 7. */
@@ -707,7 +688,6 @@ void func_ov002_020af950(char *self)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020afa50
 /* Dispatch-table index 11. */
 extern "C" {
@@ -717,7 +697,6 @@ void func_ov002_020afa50(char *self) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020afa6c
 /* Dispatch-table index 6. */
@@ -730,7 +709,6 @@ void func_ov002_020afa6c(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020afa98
 /* Dispatch-table index 5. */
@@ -785,7 +763,6 @@ void func_ov002_020afa98(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020afbb4
 /* Dispatch-table index 4. The two `func_ov002_020aefb8()` calls really do pass
    no argument -- r0 already carries the object -- so this member keeps its own
@@ -824,7 +801,6 @@ void func_ov002_020afbb4(char* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020afc44
 /* Dispatch-table index 3. */
 extern "C" {
@@ -836,7 +812,6 @@ int func_ov002_020afc44(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020afc68
 extern "C" {
@@ -863,7 +838,6 @@ void func_ov002_020afc68(unsigned char *self)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020afd10
 /* Dispatch-table index 2. */
@@ -911,7 +885,6 @@ void func_ov002_020afd10(char* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020afde4
 extern "C" {
 void func_ov002_020afde4(char* c){
@@ -930,7 +903,6 @@ void func_ov002_020afde4(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020afe4c
 /* Dispatch-table index 1. */
@@ -971,7 +943,6 @@ void func_ov002_020afe4c(char* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020aff10
 /* Dispatch-table index 0 -- the state the actor starts in. */
@@ -1036,7 +1007,6 @@ struct C {
 struct ModelCache { int pad0; BMD_File* file; };
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7da1up_c16CleanupResourcesEv
 /* Vtable slot 3. */
 int da1up_c::CleanupResources()
@@ -1056,14 +1026,12 @@ int da1up_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7da1up_c16OnPendingDestroyEv
 /* Vtable slot 12. One instruction: bx lr. */
 void da1up_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7da1up_c6RenderEv
 /* Vtable slot 9. */
@@ -1080,7 +1048,6 @@ int da1up_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7da1up_c8BehaviorEv
 /* Vtable slot 6, and the ONLY reader of the 14-element dispatch array at
@@ -1117,7 +1084,6 @@ int da1up_c::Behavior()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7da1up_c13InitResourcesEv
 /* Vtable slot 0, the largest member in the TU, and -- because the destructor is
@@ -1208,7 +1174,6 @@ int da1up_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* MEGA_MUSHROOM (277 / SCALEUP_KINOKO). Leaf operator new routes to
    fBase_c::operator new; the implicit constructor inlines the dEnemyBase_c
    base step, vptr store, and the four member constructors. */
@@ -1218,7 +1183,6 @@ extern "C" da1up_c *da1up_c_classInit_SCALEUP_KINOKO()
     return new da1up_c();
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 /* ONE_UP_MUSHROOM (276 / ONEUPKINOKO). Same class, second profile. */
 // @symbol da1up_c_classInit_ONEUPKINOKO

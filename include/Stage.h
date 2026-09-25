@@ -9,88 +9,10 @@
 struct SceneRelated;
 struct LVL_Overlay;
 
-/* Particle::SysTracker, embedded at Stage+0x50. Declared locally rather than
- * pulled from include/Particle.h / include/Particle__SysTracker.h, which are
- * two separate generated shadows of this same class; merging them is its own
- * change with its own blast radius. See notes/scene-provenance.md, and
- * notes/system-provenance.md for what each field below is and how it is known.
- * There are FOUR shadows, not three: this copy, include/Particle.h,
- * include/Particle__SysTracker.h and the one in include/dScMgSingle3DBase_c.h.
- * All four now carry the same names and types for the fields they share.
- *
- * The destructor is declared, never defined -- src/_ZN8Particle10SysTrackerD1Ev.cpp
- * supplies it as an extern "C" free function, and this declaration only lets
- * Stage's implicit destructor find it by name. NOT virtual: the class has no
- * RTTI record and no _ZTV in the ROM, so it must not gain a vtable pointer. */
-namespace Particle {
-struct SysTracker {
-    void *mResourceFile;    /* 0x000 */
-    void *mManager;         /* 0x004 */
-    u8  mContents;          /* 0x008 */
-    u8  pad_009[0x747];
-    s32 mRunningSlidingDustSystemID;  /* 0x750 */
-    u8  mRunningSlidingDustCallback;  /* 0x754 */
-    u8  pad_755[0x7];
-    s32 mSystemID_75c;      /* 0x75c */
-    u8  mCallback_760;      /* 0x760 */
-    u8  pad_761[0x7];
-    s32 mBigSplashSystemID; /* 0x768 */
-    u8  mBigSplashCallback; /* 0x76c */
-    u8  pad_76d[0x7];
-    s32 mSystemID_774;      /* 0x774 */
-    u8  mCallback_778;      /* 0x778 */
-    u8  pad_779[0x7];
-    s32 mSystemID_780;      /* 0x780 */
-    u8  mCallback_784;      /* 0x784 */
-    u8  pad_785[0x7];
-    s32 mRippleSystemID;    /* 0x78c */
-    u8  mRippleCallback;    /* 0x790 */
-    u8  pad_791[0x7];
-    s32 mSystemID_798;      /* 0x798 */
-    u8  mCallback_79c;      /* 0x79c */
-    u8  pad_79d[0x7];
-    s32 mSystemID_7a4;      /* 0x7a4 */
-    u8  mCallback_7a8;      /* 0x7a8 */
-    u8  pad_7a9[0x7];
-    s32 mSystemID_7b0;      /* 0x7b0 */
-    u8  mCallback_7b4;      /* 0x7b4 */
-    u8  pad_7b5[0xb];
-    s32 mSystemID_7c0;      /* 0x7c0 */
-    u8  mCallback_7c4;      /* 0x7c4 */
-    u8  pad_7c5[0xf];
-    u8  mCallback_7d4;      /* 0x7d4 */
-    u8  pad_7d5[0xf];
-    u8  mCallback_7e4;      /* 0x7e4 */
-    u8  pad_7e5[0xb];
-    u8  mCallback_7f0;      /* 0x7f0 */
-    u8  pad_7f1[0x3];
-    u8  mCallback_7f4;      /* 0x7f4 */
-    u8  pad_7f5[0x3];
-    u8  mCallback_7f8;      /* 0x7f8 */
-    u8  pad_7f9[0x3];
-    s32 mCallbackParam_7fc; /* 0x7fc */
-    u8  mCallback_800;      /* 0x800 */
-    u8  pad_801[0x3];
-    s32 mCallbackParam_804; /* 0x804 */
-    u8  mCallback_808;      /* 0x808 */
-    u8  pad_809[0x7];
-    u8  mWeatherCallback;   /* 0x810 */
-    u8  pad_811[0x3];
-    u8  mWeatherCallbackCount; /* 0x814 */
-    u8  pad_815[0x3];
-    u8  mCallback_818;      /* 0x818 */
-    u8  pad_819[0x3];       /* rounds 0x819 up to the 0x81c alignment boundary */
-
-    ~SysTracker();
-};
-
-/* Deterministic from the field list above (0x819 + the explicit 3-byte pad),
-   and it is also exactly the gap Stage's own D1/D0 give this member. */
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1];
-#endif
-}
+/* Particle::SysTracker, embedded at Stage+0x50. The one definition lives in
+ * include/Particle__SysTracker.h; see notes/scene-provenance.md and
+ * notes/system-provenance.md for the field evidence. */
+#include "Particle__SysTracker.h"
 
 /* One per level texture animation, eight slots' worth at Stage+0x8bc.
  * Stage::LoadTextureTransformers fills them: for each entry of the level's

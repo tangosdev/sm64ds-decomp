@@ -1,0 +1,277 @@
+{
+  "id": "ov081/daHuwa_c",
+  "module": "ov081",
+  "source": "src/actors/daHuwa_c.cpp",
+  "promoted_source": "src/actors/daHuwa_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2123740..0x2124040, 12 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daHuwa_c",
+    "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02123740",
+      "end": "0x02124040"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN8daHuwa_cD1Ev",
+      "address": "0x02123740",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN8daHuwa_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN8daHuwa_cD0Ev",
+      "address": "0x02123788",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN8daHuwa_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN8daHuwa_c16OnAimedAtWithEggEv",
+      "address": "0x021237e4",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN8daHuwa_c16OnAimedAtWithEggEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov081_021237ec",
+      "address": "0x021237ec",
+      "size": "0x00000124",
+      "legacy_source": "src/func_ov081_021237ec.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov081_02123910",
+      "address": "0x02123910",
+      "size": "0x00000210",
+      "legacy_source": "src/func_ov081_02123910.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov081_02123b20",
+      "address": "0x02123b20",
+      "size": "0x000000cc",
+      "legacy_source": "src/func_ov081_02123b20.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN8daHuwa_c16CleanupResourcesEv",
+      "address": "0x02123bec",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN8daHuwa_c16CleanupResourcesEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN8daHuwa_c6RenderEv",
+      "address": "0x02123c1c",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN8daHuwa_c6RenderEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN8daHuwa_c8BehaviorEv",
+      "address": "0x02123c6c",
+      "size": "0x00000264",
+      "legacy_source": "src/_ZN8daHuwa_c8BehaviorEv.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN8daHuwa_c13InitResourcesEv",
+      "address": "0x02123ed0",
+      "size": "0x00000108",
+      "legacy_source": "src/_ZN8daHuwa_c13InitResourcesEv.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN8daHuwa_c13OnTurnIntoEggER6Player",
+      "address": "0x02123fd8",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN8daHuwa_c13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN8daHuwa_c13OnYoshiTryEatEv",
+      "address": "0x02124038",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN8daHuwa_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 11
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Whole class, text only. daHuwa_c_classInit at 0x02124040 is the next function and is not part of this TU.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov081_02123910 and the one that held _ZN8daHuwa_c8BehaviorEv; kept the first, the other is commented out for review"
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov081-daHuwa_c/daHuwa_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 12,
+    "functions_declared": 12,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN8daHuwa_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev",
+        "_ZN8daHuwa_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        14,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI8daHuwa_c",
+        "_ZTS8daHuwa_c",
+        "_ZTV8daHuwa_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI8daHuwa_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS8daHuwa_c",
+        "_ZTV8daHuwa_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN8daHuwa_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-generated base-object destructor. The cartridge has only the D1 and D0 pair, at 0x02123740 and 0x02123788, and no symbols row spells _ZN8daHuwa_cD2Ev."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3's four-byte destructor, vague linkage from Vector3 locals in func_ov081_021237ec and func_ov081_02123910. The cartridge owns the one copy at arm9:0x020072c0."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "inherited vague-linkage RTTI; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "inherited vague-linkage RTTI; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "inherited vague-linkage RTTI; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "direct base __si_class_type_info. The third word of _ZTI8daHuwa_c points here. The canonical copy stays in ov002."
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in ov002."
+    },
+    {
+      "symbol": "_ZTI8daHuwa_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov081",
+      "canonical_address": "0x0212884c",
+      "reason": "this class's __si_class_type_info, emitted because the out-of-line destructor is the key function. Homes at ov081:0x0212884c, outside the licensed .text."
+    },
+    {
+      "symbol": "_ZTS8daHuwa_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov081",
+      "canonical_address": "0x02128840",
+      "reason": "type-name string. The overlay bytes at 0x02128840 are 8daHuwa_c. Text-only; the ROM keeps the string."
+    },
+    {
+      "symbol": "_ZTV8daHuwa_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov081",
+      "canonical_address": "0x0212887c",
+      "reason": "compiler-emitted vtable anchored by the out-of-line destructor. Public address point ov081:0x0212887c. The profile record sits between the typeinfo and the vtable, so this promotion stays text-only and the ROM keeps the table."
+    }
+  ]
+}

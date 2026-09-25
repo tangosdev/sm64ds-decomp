@@ -1,0 +1,292 @@
+{
+  "id": "ov065/daObjCtMecha08_c",
+  "module": "ov065",
+  "source": "src/actors/daObjCtMecha08_c.cpp",
+  "promoted_source": "src/actors/daObjCtMecha08_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x211b7f0..0x211bb7c, 6 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjCtMecha08_c",
+    "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0211b7f0",
+      "end": "0x0211bb7c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN16daObjCtMecha08_cD1Ev",
+      "address": "0x0211b7f0",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN16daObjCtMecha08_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha08_cD0Ev",
+      "address": "0x0211b834",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN16daObjCtMecha08_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha08_c16CleanupResourcesEv",
+      "address": "0x0211b88c",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN16daObjCtMecha08_c16CleanupResourcesEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha08_c6RenderEv",
+      "address": "0x0211b8d0",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN16daObjCtMecha08_c6RenderEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha08_c8BehaviorEv",
+      "address": "0x0211b8f8",
+      "size": "0x00000190",
+      "legacy_source": "src/_ZN16daObjCtMecha08_c8BehaviorEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha08_c13InitResourcesEv",
+      "address": "0x0211ba88",
+      "size": "0x000000f4",
+      "legacy_source": "src/_ZN16daObjCtMecha08_c13InitResourcesEv.cpp",
+      "ordinal": 5
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Reconstructed from the six per-function legacy sources listed in functions[].legacy_source, which this promotion retires. tubuild create produced the first draft; the shipped TU is a hand-written rewrite of it -- real member access through include/daObjCtMecha08_c.h, real Model / dBgW / dBgW_Kc / SharedFilePtr method calls, the two per-setting tables typed as [setting][direction] arrays instead of hand-computed byte offsets, and the two shadow structs the draft carried for Render (Base/Derived) deleted.",
+    "Class name: the tree carried this class as the coined TtcRotatingGear until the rename that precedes this promotion. The cartridge names it -- ov065's vtable storage at 0x0211d48c has typeinfo word 0x0211d434, whose name word points at 0x0211d440 where overlay_0065.bin reads the length-prefixed string \"16daObjCtMecha08_c\", and whose base word is _ZTI10dBgActor_c at ov002:0x021089ec. That reading is what gives _ZTI/_ZTS a ROM home and lets the eleven compiler_only_output rows below resolve as deadstrip-data.",
+    "Destructor form: ~daObjCtMecha08_c is inline and empty in include/daObjCtMecha08_c.h, the daObjCtMecha10_c / daObjBk_Lift_c form for the same dBgActor_c shape. Written out of line (the draft), the fold round recorded an unlicensed homeless D2 and emission order PARTIAL with ordinal pair (0, 1) out of ROM order; inline, all six functions emit ROM-ascending and no D2 is emitted.",
+    "InitResources was enrolled without `complete` before this promotion: its CLPS-block load (from:0x0211bb68) is an ambiguous relocation, `module:overlays(12,13,24,33,35,43,47,52,53,56)`, and the legacy source spelled it with the invented name func_021121b8, which no symbols.txt defines (config/unresolved-baseline.json). tools/overlay_residency.py settle() narrows the ten candidates to ov035 -- the Tick Tock Clock level overlay, whose own daObjCtMecha10_c uses the neighbouring CLPS block data_ov035_021121d8 -- so the TU names data_ov035_021121b8. The promoted entry is `complete`.",
+    "Codegen levers carried from the legacy Behavior and re-measured in TU context: the clamp keeps the ROM's goto shape, and the mMoveDir toggle goes through a laundered integer address (the member spelling changes the function's size).",
+    "Deliberately left mangled: dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange each take Fix12<int> by value, and a real method call homes the argument and size-DIFFs the caller (the wall 6az that include/dBgW_KcMbg.h and src/actors/daObjCtMecha10_c.cpp both record). DecIfAbove0_Short and RandomIntInternal have no header home and keep their linker names.",
+    "This entry licenses .text only. ov065's .data is not claimed here, so the class vtable and the whole __si_class_type_info chain the compiler drags in with it are compiler-only output, each row naming the cartridge copy it duplicates."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov065-daObjCtMecha08_c/daObjCtMecha08_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 6,
+    "functions_declared": 6,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "data": [
+        "_ZTV16daObjCtMecha08_c",
+        "_ZTI16daObjCtMecha08_c",
+        "_ZTS16daObjCtMecha08_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI16daObjCtMecha08_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS16daObjCtMecha08_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV16daObjCtMecha08_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov065-daObjCtMecha08_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0211b7f0",
+        "end": "0x0211bb7c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0211b7f0",
+          "end": "0x0211bb7c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 6
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTV16daObjCtMecha08_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211d494",
+      "reason": "This TU owns daObjCtMecha08_c's key function -- the destructor is inline, so the first non-inline virtual the class declares, InitResources, is defined here -- so mwcc emits the complete 0x88-byte class vtable storage with its two-word ABI preamble. The cartridge's public address point is ov065:0x0211d494, eight bytes above the start of storage at 0x0211d48c, where the offset-to-top word reads 0 and the typeinfo word reads 0x0211d434. The address point is outside this text-only entry's licensed 0x0211b7f0..0x0211bb7c range, so dsd supplies that ROM data independently. The cartridge's 32 slots place all six of this TU's functions: slot 0 InitResources (0x0211ba88), slot 3 CleanupResources (0x0211b88c), slot 6 Behavior (0x0211b8f8), slot 9 Render (0x0211b8d0), slot 16 D1 (0x0211b7f0) and slot 17 D0 (0x0211b834). 32 slots is the dBgActor_c vtable length, which is the second witness for the base the typeinfo record names."
+    },
+    {
+      "symbol": "_ZTI16daObjCtMecha08_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211d434",
+      "reason": "This class's own RTTI record, dragged in by the vtable this TU emits: the vtable's typeinfo word at 0x0211d490 points straight at it. The canonical cartridge copy at ov065:0x0211d434 lies in this overlay's .data and outside this text-only entry's licensed range, so it stays ROM-gap owned. Its three words read 0x0209a764 (the __si_class_type_info vtable), 0x0211d440 (the name string) and 0x021089ec (_ZTI10dBgActor_c), which is the second independent witness that dBgActor_c is the base."
+    },
+    {
+      "symbol": "_ZTS16daObjCtMecha08_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211d440",
+      "reason": "This class's RTTI name string, emitted with the record above. The canonical cartridge copy is ov065:0x0211d440, nineteen bytes reading 31 36 64 61 4f 62 6a 43 74 4d 65 63 68 61 30 38 5f 63 00 -- the length-prefixed mangled string \"16daObjCtMecha08_c\". That is why the class is spelled daObjCtMecha08_c and why no part of this name is coined; the row resolves as deadstrip-data rather than the never-compared plain deadstrip precisely because the spelling reaches symbols.txt."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Ancestor RTTI passenger of the _ZTI16daObjCtMecha08_c record this TU emits: the immediate base's RTTI record. The cartridge's __si_class_type_info chain is daObjCtMecha08_c (ov065:0x0211d434) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at ov002:0x021089ec is owned independently and lies outside this text-only entry's licensed 0x0211b7f0..0x0211bb7c range, so discarding this TU's duplicate cannot cost the image a byte."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Ancestor RTTI passenger of the _ZTI16daObjCtMecha08_c record this TU emits: the immediate base's RTTI name string (\"10dBgActor_c\"). The cartridge's __si_class_type_info chain is daObjCtMecha08_c (ov065:0x0211d434) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at ov002:0x02108a04 is owned independently and lies outside this text-only entry's licensed 0x0211b7f0..0x0211bb7c range, so discarding this TU's duplicate cannot cost the image a byte."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Ancestor RTTI passenger of the _ZTI16daObjCtMecha08_c record this TU emits: the grandparent's RTTI record. The cartridge's __si_class_type_info chain is daObjCtMecha08_c (ov065:0x0211d434) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at arm9:0x0208e390 is owned independently and lies outside this text-only entry's licensed 0x0211b7f0..0x0211bb7c range, so discarding this TU's duplicate cannot cost the image a byte."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Ancestor RTTI passenger of the _ZTI16daObjCtMecha08_c record this TU emits: the grandparent's RTTI name string (\"8dActor_c\"). The cartridge's __si_class_type_info chain is daObjCtMecha08_c (ov065:0x0211d434) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at arm9:0x0208e384 is owned independently and lies outside this text-only entry's licensed 0x0211b7f0..0x0211bb7c range, so discarding this TU's duplicate cannot cost the image a byte."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Ancestor RTTI passenger of the _ZTI16daObjCtMecha08_c record this TU emits: the great-grandparent's RTTI record. The cartridge's __si_class_type_info chain is daObjCtMecha08_c (ov065:0x0211d434) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at arm9:0x02086e78 is owned independently and lies outside this text-only entry's licensed 0x0211b7f0..0x0211bb7c range, so discarding this TU's duplicate cannot cost the image a byte."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Ancestor RTTI passenger of the _ZTI16daObjCtMecha08_c record this TU emits: the great-grandparent's RTTI name string (\"7dBase_c\"). The cartridge's __si_class_type_info chain is daObjCtMecha08_c (ov065:0x0211d434) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at arm9:0x02086e54 is owned independently and lies outside this text-only entry's licensed 0x0211b7f0..0x0211bb7c range, so discarding this TU's duplicate cannot cost the image a byte."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Ancestor RTTI passenger of the _ZTI16daObjCtMecha08_c record this TU emits: the root's RTTI record, a two-word __class_type_info rather than __si_class_type_info because fBase_c derives from nothing. The cartridge's __si_class_type_info chain is daObjCtMecha08_c (ov065:0x0211d434) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at arm9:0x02086d70 is owned independently and lies outside this text-only entry's licensed 0x0211b7f0..0x0211bb7c range, so discarding this TU's duplicate cannot cost the image a byte."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Ancestor RTTI passenger of the _ZTI16daObjCtMecha08_c record this TU emits: the root's RTTI name string (\"7fBase_c\"). The cartridge's __si_class_type_info chain is daObjCtMecha08_c (ov065:0x0211d434) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at arm9:0x02086e60 is owned independently and lies outside this text-only entry's licensed 0x0211b7f0..0x0211bb7c range, so discarding this TU's duplicate cannot cost the image a byte."
+    }
+  ]
+}

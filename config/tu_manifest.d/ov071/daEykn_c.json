@@ -1,0 +1,328 @@
+{
+  "id": "ov071/daEykn_c",
+  "module": "ov071",
+  "source": "src/actors/daEykn_c.cpp",
+  "promoted_source": "src/actors/daEykn_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "tu_map cut (build/tu_map.json): 0x02120668..0x021219cc, 23 functions, class daEykn_c. That cut includes _ZN8daEykn_c13InitResourcesEv, whose delink is not complete.",
+    "shipped span: .text 0x02120668..0x02121734, 22 function(s). InitResources (0x02121734..0x021219cc) stays a shard: it byte-matches but has no delinks.txt entry, so it is not part of the linked build. daEykn_c_classInit_EYEKUN_BOSS and daEykn_c_classInit_EYEKUN are the next unattributed unit and are not absorbed.",
+    "class label(s): daEykn_c",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02120668",
+      "end": "0x02121734"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN8daEykn_cD1Ev",
+      "address": "0x02120668",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN8daEykn_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN8daEykn_cD0Ev",
+      "address": "0x021206b0",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN8daEykn_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov071_0212070c",
+      "address": "0x0212070c",
+      "size": "0x00000154",
+      "legacy_source": "src/func_ov071_0212070c.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov071_02120860",
+      "address": "0x02120860",
+      "size": "0x00000168",
+      "legacy_source": "src/func_ov071_02120860.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov071_021209c8",
+      "address": "0x021209c8",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov071_021209c8.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov071_02120a20",
+      "address": "0x02120a20",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov071_02120a20.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov071_02120a48",
+      "address": "0x02120a48",
+      "size": "0x000000cc",
+      "legacy_source": "src/func_ov071_02120a48.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov071_02120b14",
+      "address": "0x02120b14",
+      "size": "0x0000017c",
+      "legacy_source": "src/func_ov071_02120b14.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov071_02120c90",
+      "address": "0x02120c90",
+      "size": "0x000000a0",
+      "legacy_source": "src/func_ov071_02120c90.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov071_02120d30",
+      "address": "0x02120d30",
+      "size": "0x000003dc",
+      "legacy_source": "src/func_ov071_02120d30.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov071_0212110c",
+      "address": "0x0212110c",
+      "size": "0x000000d4",
+      "legacy_source": "src/func_ov071_0212110c.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov071_021211e0",
+      "address": "0x021211e0",
+      "size": "0x00000314",
+      "legacy_source": "src/func_ov071_021211e0.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov071_021214f4",
+      "address": "0x021214f4",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov071_021214f4.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov071_0212152c",
+      "address": "0x0212152c",
+      "size": "0x00000044",
+      "legacy_source": "src/func_ov071_0212152c.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov071_02121570",
+      "address": "0x02121570",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov071_02121570.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov071_021215c0",
+      "address": "0x021215c0",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov071_021215c0.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov071_021215fc",
+      "address": "0x021215fc",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov071_021215fc.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov071_02121634",
+      "address": "0x02121634",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov071_02121634.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN8daEykn_c16CleanupResourcesEv",
+      "address": "0x02121650",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN8daEykn_c16CleanupResourcesEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN8daEykn_c16OnPendingDestroyEv",
+      "address": "0x021216b4",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN8daEykn_c16OnPendingDestroyEv.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN8daEykn_c6RenderEv",
+      "address": "0x021216b8",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN8daEykn_c6RenderEv.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN8daEykn_c8BehaviorEv",
+      "address": "0x021216ec",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN8daEykn_c8BehaviorEv.cpp",
+      "ordinal": 21
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "InitResources at 0x02121734 stays in src/_ZN8daEykn_c13InitResourcesEv.cpp because its delink is not complete.",
+    "The destructor is defined once, out of line, first in the file. Under #pragma defer_codegen off that emits D1 then D0 in ROM order, plus a homeless D2.",
+    "Previous tree name MrI was coined. class_rename kept MrI_Spawn / MrI_Projectile rows (no --with-derived). The duplicate _ZTV3MrI alias of _ZTV8daEykn_c was deleted."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov071-daEykn_c/daEykn_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 22,
+    "functions_declared": 22,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN8daEykn_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev",
+        "_ZN8daEykn_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        20,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
+      ],
+      "data": [
+        "_ZTV8daEykn_c",
+        "_ZTI8daEykn_c",
+        "_ZTS8daEykn_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI8daEykn_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS8daEykn_c",
+        "_ZTV8daEykn_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN8daEykn_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3 declares an inline destructor in include/types.h, so this TU's Vector3 locals emit a vague-linkage 4-byte copy. The real home is arm9:0x020072c0, owned by src/_ZN7Vector3D1Ev.cpp."
+    },
+    {
+      "symbol": "_ZTV8daEykn_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov071",
+      "canonical_address": "0x02122d30",
+      "reason": "Text-only TU: externalize to canonical public address 0x02122d30."
+    },
+    {
+      "symbol": "_ZTI8daEykn_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov071",
+      "canonical_address": "0x02122ce4",
+      "reason": "Text-only TU: externalize to canonical public address 0x02122ce4."
+    },
+    {
+      "symbol": "_ZTS8daEykn_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov071",
+      "canonical_address": "0x02122cd8",
+      "reason": "Text-only TU: externalize to canonical public address 0x02122cd8."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Text-only TU: externalize to canonical public address 0x0208e390."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Text-only TU: externalize to canonical public address 0x0208e384."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Text-only TU: externalize to canonical public address 0x02086e78."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Text-only TU: externalize to canonical public address 0x02086e54."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Text-only TU: externalize to canonical public address 0x02086d70."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Text-only TU: externalize to canonical public address 0x02086e60."
+    }
+  ]
+}

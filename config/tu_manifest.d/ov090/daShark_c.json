@@ -1,0 +1,277 @@
+{
+  "id": "ov090/daShark_c",
+  "module": "ov090",
+  "source": "src/actors/daShark_c.cpp",
+  "promoted_source": "src/actors/daShark_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x0213367c..0x02133ca0, 12 function(s), all complete delinks with no hole. build/tu_map.json names the same run ov090/daPukupuku_c+daShark_c because rtti_vtables.py reads the state-table words at 0x021343a0 and 0x021343a8 as extra daPukupuku_c vtable slots. Those words are not slots: daPukupuku_c's table ends at slot 30 (0x0213439c), and __sinit_ov090_02134020 copies them into data_ov090_021345cc for this class. No daPukupuku_c, daMenbo_c or daManta_c function is in the run.",
+    "class label: daShark_c. Cartridge type name at ov090:0x021343b0 is the bytes 9daShark_c.",
+    "daShark_c_classInit at 0x02133ca0..0x02133ce8 abuts this run and is left in src/d_a_shark.c. Same cut daMenbo_c uses for its factory.",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, not narrowed to this TU)."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0213367c",
+      "end": "0x02133ca0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN9daShark_cD1Ev",
+      "address": "0x0213367c",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN9daShark_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN9daShark_cD0Ev",
+      "address": "0x021336bc",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN9daShark_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov090_02133710",
+      "address": "0x02133710",
+      "size": "0x00000120",
+      "legacy_source": "src/func_ov090_02133710.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov090_02133830",
+      "address": "0x02133830",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov090_02133830.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov090_0213387c",
+      "address": "0x0213387c",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov090_0213387c.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov090_021338b4",
+      "address": "0x021338b4",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov090_021338b4.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov090_02133904",
+      "address": "0x02133904",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov090_02133904.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN9daShark_c16CleanupResourcesEv",
+      "address": "0x02133978",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN9daShark_c16CleanupResourcesEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN9daShark_c16OnPendingDestroyEv",
+      "address": "0x021339a8",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN9daShark_c16OnPendingDestroyEv.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN9daShark_c6RenderEv",
+      "address": "0x021339ac",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN9daShark_c6RenderEv.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN9daShark_c8BehaviorEv",
+      "address": "0x021339d8",
+      "size": "0x000001c0",
+      "legacy_source": "src/_ZN9daShark_c8BehaviorEv.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN9daShark_c13InitResourcesEv",
+      "address": "0x02133b98",
+      "size": "0x00000108",
+      "legacy_source": "src/_ZN9daShark_c13InitResourcesEv.cpp",
+      "ordinal": 11
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Key function is the out-of-line destructor under #pragma defer_codegen off. Factory is outside the licensed range, so this TU does not instantiate daShark_c."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov090-daShark_c/daShark_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 12,
+    "functions_declared": 12,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN9daShark_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev",
+        "_ZN9daShark_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        13,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI9daShark_c",
+        "_ZTS9daShark_c",
+        "_ZTV9daShark_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI9daShark_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS9daShark_c",
+        "_ZTV9daShark_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN9daShark_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-generated base-object destructor. The cartridge has only the D1 and D0 pair, at 0x0213367c and 0x021336bc, and no symbols row spells _ZN9daShark_cD2Ev."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3's four-byte destructor, vague linkage from Vector3 locals in Behavior and func_ov090_02133710. The cartridge owns the one copy at arm9:0x020072c0."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "inherited vague-linkage RTTI; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "inherited vague-linkage RTTI; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "inherited vague-linkage RTTI; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in arm9."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "direct base __si_class_type_info. The third word of _ZTI9daShark_c points here. The canonical copy stays in ov002."
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "inherited vague-linkage RTTI name; the canonical copy stays in ov002."
+    },
+    {
+      "symbol": "_ZTI9daShark_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov090",
+      "canonical_address": "0x021343bc",
+      "reason": "this class's __si_class_type_info, emitted because the out-of-line destructor is the key function. Homes at ov090:0x021343bc, outside the licensed .text."
+    },
+    {
+      "symbol": "_ZTS9daShark_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov090",
+      "canonical_address": "0x021343b0",
+      "reason": "type-name string. The overlay bytes at 0x021343b0 are 9daShark_c, eleven bytes with the NUL. Text-only; the ROM keeps the string."
+    },
+    {
+      "symbol": "_ZTV9daShark_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov090",
+      "canonical_address": "0x021343ec",
+      "reason": "compiler-emitted vtable anchored by the out-of-line destructor. Public address point ov090:0x021343ec. g_profile_SHARK sits between the typeinfo and the vtable, so this promotion stays text-only and the ROM keeps the table."
+    }
+  ]
+}

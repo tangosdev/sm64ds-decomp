@@ -14,7 +14,7 @@ and terminal private validation remain required.
 
 The class keeps its 23 licensed functions: ten native method symbols, twelve
 address-named helpers and one manual factory. The small neighboring
-[func_ov065_021177e4](../../../src/func_ov065_021177e4.cpp) provenance correction remains unchanged from accepted source.
+`func_ov065_021177e4` (now in [src/actors/daBasabasa_c.cpp](../../../src/actors/daBasabasa_c.cpp)) provenance correction remains unchanged from accepted source.
 
 YUR-09 corrects the BSS explanation. [__sinit_ov065_0211c110](../../../src/__sinit_ov065_0211c110.c) initializes four
 shared-file handles and copies eight 8-byte PMF constants into four 16-byte State

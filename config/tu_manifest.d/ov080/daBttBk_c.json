@@ -1,0 +1,313 @@
+{
+  "id": "ov080/daBttBk_c",
+  "module": "ov080",
+  "source": "src/actors/daBttBk_c.cpp",
+  "promoted_source": "src/actors/daBttBk_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2124a20..0x21253b4, 20 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daBttBk_c",
+    "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02124a20",
+      "end": "0x021253b4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN9daBttBk_cD1Ev",
+      "address": "0x02124a20",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN9daBttBk_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN9daBttBk_cD0Ev",
+      "address": "0x02124a68",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN9daBttBk_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN9daBttBk_c13OnYoshiTryEatEv",
+      "address": "0x02124ac4",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN9daBttBk_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov080_02124acc",
+      "address": "0x02124acc",
+      "size": "0x00000170",
+      "legacy_source": "src/func_ov080_02124acc.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov080_02124c3c",
+      "address": "0x02124c3c",
+      "size": "0x00000224",
+      "legacy_source": "src/func_ov080_02124c3c.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov080_02124e60",
+      "address": "0x02124e60",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov080_02124e60.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov080_02124eb0",
+      "address": "0x02124eb0",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov080_02124eb0.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov080_02124edc",
+      "address": "0x02124edc",
+      "size": "0x00000110",
+      "legacy_source": "src/func_ov080_02124edc.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov080_02124fec",
+      "address": "0x02124fec",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov080_02124fec.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov080_0212500c",
+      "address": "0x0212500c",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov080_0212500c.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov080_0212509c",
+      "address": "0x0212509c",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov080_0212509c.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov080_021250c8",
+      "address": "0x021250c8",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov080_021250c8.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov080_02125104",
+      "address": "0x02125104",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov080_02125104.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov080_0212513c",
+      "address": "0x0212513c",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov080_0212513c.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN9daBttBk_c16CleanupResourcesEv",
+      "address": "0x02125158",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN9daBttBk_c16CleanupResourcesEv.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN9daBttBk_c16OnPendingDestroyEv",
+      "address": "0x0212517c",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN9daBttBk_c16OnPendingDestroyEv.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN9daBttBk_c6RenderEv",
+      "address": "0x02125180",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN9daBttBk_c6RenderEv.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN9daBttBk_c8BehaviorEv",
+      "address": "0x021251cc",
+      "size": "0x00000020",
+      "legacy_source": "src/_ZN9daBttBk_c8BehaviorEv.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN9daBttBk_c13InitResourcesEv",
+      "address": "0x021251ec",
+      "size": "0x0000012c",
+      "legacy_source": "src/_ZN9daBttBk_c13InitResourcesEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN9daBttBk_c13OnTurnIntoEggER6Player",
+      "address": "0x02125318",
+      "size": "0x0000009c",
+      "legacy_source": "src/_ZN9daBttBk_c13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 19
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Promoted from the gap-free ov080 run 0x02124a20..0x021253b4 (20 complete delinks). daBttBk_c_classInit at 0x021253b4 is the next function and stays its own TU. RTTI: _ZTS9daBttBk_c at 0x0212815c, _ZTI at 0x02128168 points at _ZTI8dActor_c, vtable preamble word at 0x02128194 is that _ZTI.",
+    "The destructor is one out-of-line definition under #pragma defer_codegen off. mwccarm emits D1 then D0 in ROM order and also a D2 with no cartridge home. Vector3's inline destructor is the vague arm9 copy.",
+    "func_ov080_0212513c takes (actor, state). InitResources and func_ov080_02124e60 call it through a one-argument cast: each has just stored 0, and r1 still holds that 0. A written second argument re-emits the mov and DIFFs."
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN9daBttBk_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Compiler-generated base destructor. The cartridge has D1 at 0x02124a20 and D0 at 0x02124a68 and no D2."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3's four-byte inline destructor, vague linkage from a Vector3 local. The cartridge's copy is arm9:0x020072c0."
+    },
+    {
+      "symbol": "_ZTV9daBttBk_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov080",
+      "canonical_address": "0x02128198",
+      "reason": "Vtable emitted because this TU defines the key function (the out-of-line destructor). Section size 0x84 is the 8-byte preamble plus 31 slots. The symbols.txt address is the slot array; dsd supplies the cartridge copy outside this .text range."
+    },
+    {
+      "symbol": "_ZTI9daBttBk_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov080",
+      "canonical_address": "0x02128168",
+      "reason": "Typeinfo emitted with the key function. The cartridge record is ov080:0x02128168 and points at _ZTS9daBttBk_c and _ZTI8dActor_c."
+    },
+    {
+      "symbol": "_ZTS9daBttBk_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov080",
+      "canonical_address": "0x0212815c",
+      "reason": "Type name emitted with the key function. The cartridge string at ov080:0x0212815c is 9daBttBk_c."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited RTTI, vague linkage from the key function. Canonical copy is arm9:0x0208e390."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited type name, vague linkage. Canonical copy is arm9:0x0208e384."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited RTTI, vague linkage. Canonical copy is arm9:0x02086e78."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited type name, vague linkage. Canonical copy is arm9:0x02086e54."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited RTTI, vague linkage. Canonical copy is arm9:0x02086d70."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited type name, vague linkage. Canonical copy is arm9:0x02086e60."
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov080-daBttBk_c/daBttBk_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 20,
+    "functions_declared": 20,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN9daBttBk_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev",
+        "_ZN9daBttBk_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        14,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ],
+      "data": [
+        "_ZTV9daBttBk_c",
+        "_ZTI9daBttBk_c",
+        "_ZTS9daBttBk_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI9daBttBk_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS9daBttBk_c",
+        "_ZTV9daBttBk_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

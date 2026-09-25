@@ -1,17 +1,16 @@
 //cpp
-/* dScMgSnowball_c -- the MG_SNOWBALL minigame scene class, ov006.
- * 23 functions (.text 0x0212568c..0x021295ac): the destructor plus
- * eight virtual overrides plus the thirteen unnamed helpers they call.
+/* dScMgSnowball_c -- the snowball-rolling minigame scene: 23 functions
+ * (.text 0x0212568c..0x021295ac), the destructor, eight virtual overrides and
+ * the thirteen helpers they call.
  *
- * Source runs ROM-ASCENDING under `#pragma defer_codegen off` -- the
- * opposite of the usual rule, and load-bearing (removing it costs
- * five members and scrambles section order). Six bracketed optimiser
- * pragmas are load-bearing, each with a removal control; include
- * order is load-bearing (nested Matrix4x3 wins, so the one block
- * move goes through M4x3Flat). Details above each site.
+ * Functions run in ROM order under `#pragma defer_codegen off`; removing it
+ * breaks five functions and the section order. The six bracketed optimizer
+ * pragmas are needed too, and so is the include order (see below).
  *
- * Leftover: the func_ov006 helpers keep linker names; naming belongs
- *   at their definitions.
+ * Blocked: the helpers are unnamed in symbols.txt. Some calls stay mangled:
+ * cstd::atan2, ApproachLinear and Particle::System take Fix12 or reference
+ * arguments, Model and ModelBase take BMD_File, and decl_common.h declares a
+ * global named G2, so no `namespace G2` can be opened here.
  */
 #pragma defer_codegen off
 
@@ -27,15 +26,14 @@
 #include "common.h"
 #include "Sound.h"
 #include "dScMgBase_c.h"
+#include "Particle__System.h"
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
-/* recovered typedef 'Vec3' */
 typedef struct Vec3 {
     int x, y, z;
 } Vec3;
 
-/* recovered struct 'V3' */
 struct V3 { int x, y; volatile int z; };
 
 /* The FLAT 12-word view of Matrix4x3. include/common.h and include/math/Matrix.h
@@ -47,13 +45,11 @@ struct V3 { int x, y; volatile int z; };
    Copying through this view restores the cartridge's block copy. */
 struct M4x3Flat { s32 m[12]; };
 
-/* recovered typedef 'Pair' */
 typedef struct Pair {
     s32 x;
     s32 y;
 } Pair;
 
-/* recovered struct 'InitObject' */
 struct InitObject {
     virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
     virtual void v04(); virtual void v05(); virtual void v06(); virtual void v07();
@@ -67,7 +63,6 @@ struct InitObject {
     virtual int query();
 };
 
-/* recovered struct 'SPS' */
 struct SPS {
     int a[2];
     int b[2];
@@ -95,11 +90,17 @@ struct SPS {
 #define HA(o) (*(short*)AT(c,(o)))
 #define atan2 _ZN4cstd5atan2E5Fix12IiES1_
 #define pnew _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE
-#define pfromid _ZN8Particle6System12FromUniqueIDEj
+#define pfromid(id) ((int *)Particle::System::FromUniqueID(id))
 #define ApproachLinear _Z14ApproachLinearRsss
-/* The legacy files spelled these four offset macros two ways. AT/I/B are the
- * same type either way; H is not -- the Behavior file used `short` where the
- * helpers used `unsigned short`, and the ROM settles it per site (see HS). */
+/* H is `short` in Behavior and `unsigned short` in the helpers; HS is the
+ * signed read where a site needs it. */
+
+namespace cstd { int fdiv(int numerator, int denominator); }
+namespace G2S  { char *GetBG2ScrPtr(); unsigned GetBG2CharPtr(); void *GetBG3ScrPtr(); }
+namespace GX   { void LoadBGPltt(const void *src, u32 offset, u32 size); void LoadOBJPltt(const void *src, u32 offset, u32 size); }
+namespace GXS  { void LoadBGPltt(const void *src, u32 offset, u32 size); void LoadOBJPltt(const void *src, u32 offset, u32 size); }
+namespace CP15 { void FlushAndInvalidateDataCache(u32 address, u32 length); }
+namespace G3X  { void SetFog(bool enable, int blend, int slope, int offset); }
 
 extern "C" {
 extern void RenderOamBothScreens(int a, int b, int c, int d, int e, int f);
@@ -114,11 +115,9 @@ extern int Vec2_Len(int *p);
 extern void func_0203d630(int *p, int m);
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
 u32 uniqueID, u32 effectID, int x, int y, int z, const void *dir, void *callback);
-extern int *_ZN8Particle6System12FromUniqueIDEj(u32 uniqueID);
 extern void func_02012718(int a, int b);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 extern s16 data_02082214[];
-extern int _ZN4cstd4fdivEii(int a, int b);
 extern void Camera_UpdateMatrices(void *self);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
@@ -127,7 +126,6 @@ extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
 extern struct Matrix4x3 data_020a0e68;
 extern void func_ov006_02126b4c(char *c, int a, int b);
 extern char *_ZN2G212GetBG2ScrPtrEv(void);
-extern char *_ZN3G2S12GetBG2ScrPtrEv(void);
 extern void MultiStore16(int val, char *dst, int n);
 extern u16 data_ov006_0212f3bc[];
 extern int RandomIntInternal(int *seed);
@@ -163,38 +161,24 @@ extern unsigned char data_020a0dea[];
 extern unsigned char data_020a0deb[];
 extern "C" void Ov004_Deallocate(void *p);
 void *_ZN2G213GetBG2CharPtrEv(void);
-unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 void *_ZN2G212GetBG3ScrPtrEv(void);
-void *_ZN3G2S12GetBG3ScrPtrEv(void);
 u32 LoadCompressedFileAt(u16 fileID, void *target);
 void *func_ov004_020adc74(void *p);
-void _ZN4CP1527FlushAndInvalidateDataCacheEjj(void *p, u32 sz);
-void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 void DecompressLZ16(void *src, void *dst);
-void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 void _ZN5Model17UpdateFileOffsetsER8BMD_File(void *file);
 int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thisPtr, void *file, int a, int b);
 extern int data_0208ee44;
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
- /* Where two legacy files declared the same symbol differently the more
-  * complete observation is kept above: a typed pointer over char*, an
-  * explicit parameter list over an implicit int(). */
+ /* Where two recovered declarations disagreed, the more precise one is
+  * kept. */
 }
 
 // @symbol _ZN15dScMgSnowball_cD1Ev
-/* recovered: real C++ destructor. The three explicit calls reproduce the
-   ROM's own recovered body (func_ov006_0212568c, pre-migration): destroy
-   mArray3, mArray2, mArray1 -- reverse of the constructor's order. The
-   FOURTH call the ROM makes, `_ZN5ModelD1Ev(c + 0xaba4)`, is deliberately
-   NOT written here: mModel is a real typed member declared ahead of the
-   three arrays, so the compiler emits its destruction last, which is
-   exactly where the ROM has it. Everything after -- own vtable store,
-   mSysTracker destruction, chain to ~dScMgBase_c() -- is the compiler's
-   own inlining of dScMgSingle3DBase_c's now-inline destructor (see
-   include/dScMgSingle3DBase_c.h's own note). */
+/* Destroys mArray3, mArray2 and mArray1, in reverse of construction. The
+   ROM's fourth call, ~Model on mModel, is not written: mModel is declared
+   before the arrays, so the compiler destroys it last, where the ROM has it.
+   The rest is the inlined dScMgSingle3DBase_c destructor. */
 dScMgSnowball_c::~dScMgSnowball_c()
 {
     __cxa_vec_cleanup(mArray3, 0x20, 0x24, (void *)func_ov006_02125800);
@@ -203,11 +187,8 @@ dScMgSnowball_c::~dScMgSnowball_c()
 }
 
 // @symbol _ZN15dScMgSnowball_cD0Ev
-/* _ZN15dScMgSnowball_cD0Ev has no source of its own. mwccarm 2004/b56 emits
-   both the complete-object (D1) and the deleting (D0) variant from the single
-   out-of-line definition above; a second textual definition is an error. The
-   marker is here, at the deleting variant's own ROM ordinal, so the ratchet
-   scores D1 against the body it names and D0 against this note. */
+/* The deleting destructor (D0) has no source of its own: the compiler emits
+   it from the definition above. */
 
 // @symbol func_ov006_02125800
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -218,11 +199,11 @@ void func_ov006_02125800(void)
 
 // @symbol func_ov006_02125804
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02125804(char *c)
+void func_ov006_02125804(char *scene)
 {
-    dScMgSnowball_c *self = (dScMgSnowball_c *)c;
+    dScMgSnowball_c *self = (dScMgSnowball_c *)scene;
     int i;
-    char *p = c;
+    char *p = scene;
     for (i = 0; i < 0x20; i++) {
         if (*(unsigned char *)(p + 0xba34) != 0) {
             RenderOamBothScreens(
@@ -238,25 +219,25 @@ void func_ov006_02125804(char *c)
 
 // @symbol func_ov006_02125890
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02125890(char *o)
+void func_ov006_02125890(char *scene)
 {
     int i;
-    char *w = o;
-    char *pw = o + 0xba14;
-    char *vw = o + 0xba20;
-    for (i = 0; i < 0x20; i++, w += 0x24, pw += 0x24, vw += 0x24) {
-        if (*(u8 *)(w + 0xba34)) {
-            if (*(int *)(w + 0xba2c) > 0) {
-                *(int *)(((int)w + 0xba2c)) -= 1;
-                if (*(int *)(w + 0xba2c) <= 0) {
-                    *(u8 *)(o + i * 0x24 + 0xba34) = 0;
+    char *rec = scene;
+    char *pos = scene + 0xba14;
+    char *vel = scene + 0xba20;
+    for (i = 0; i < 0x20; i++, rec += 0x24, pos += 0x24, vel += 0x24) {
+        if (*(u8 *)(rec + 0xba34)) {
+            if (*(int *)(rec + 0xba2c) > 0) {
+                *(int *)(((int)rec + 0xba2c)) -= 1;
+                if (*(int *)(rec + 0xba2c) <= 0) {
+                    *(u8 *)(scene + i * 0x24 + 0xba34) = 0;
                     return;
                 }
             }
-            *(int *)(((int)w + 0xba28)) -= 0x200;
-            AddVec3((Vec3 *)pw, (Vec3 *)vw, (Vec3 *)pw);
-            if (*(int *)(w + 0xba28) < 0 && *(int *)(w + 0xba1c) < 0) {
-                *(u8 *)(o + i * 0x24 + 0xba34) = 0;
+            *(int *)(((int)rec + 0xba28)) -= 0x200;
+            AddVec3((Vec3 *)pos, (Vec3 *)vel, (Vec3 *)pos);
+            if (*(int *)(rec + 0xba28) < 0 && *(int *)(rec + 0xba1c) < 0) {
+                *(u8 *)(scene + i * 0x24 + 0xba34) = 0;
                 return;
             }
         }
@@ -266,28 +247,28 @@ void func_ov006_02125890(char *o)
 
 // @symbol func_ov006_02125994
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02125994(char *c) {
+void func_ov006_02125994(char *rec) {
     int i;
     for (i = 0; i < 0x20; i++) {
-        *(int*)(c + 0xba14) = 0;
-        *(int*)(c + 0xba18) = 0;
-        *(int*)(c + 0xba1c) = 0;
-        *(int*)(c + 0xba20) = 0;
-        *(int*)(c + 0xba24) = 0;
-        *(int*)(c + 0xba28) = 0;
-        *(int*)(c + 0xba2c) = 0;
-        *(unsigned char*)(c + 0xba34) = 0;
-        *(int*)(c + 0xba30) = 0;
-        c += 0x24;
+        *(int*)(rec + 0xba14) = 0;
+        *(int*)(rec + 0xba18) = 0;
+        *(int*)(rec + 0xba1c) = 0;
+        *(int*)(rec + 0xba20) = 0;
+        *(int*)(rec + 0xba24) = 0;
+        *(int*)(rec + 0xba28) = 0;
+        *(int*)(rec + 0xba2c) = 0;
+        *(unsigned char*)(rec + 0xba34) = 0;
+        *(int*)(rec + 0xba30) = 0;
+        rec += 0x24;
     }
 }
 }
 
 // @symbol func_ov006_021259d8
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_021259d8(char *p0, int *p1) {
-    int a = p1[0];
-    int b;
+int func_ov006_021259d8(char *scene, int *point) {
+    int x = point[0];
+    int y;
     int fa;
     int fb;
     int row;
@@ -296,29 +277,29 @@ int func_ov006_021259d8(char *p0, int *p1) {
     int sum;
     int diff;
 
-    if (a < 0) {
+    if (x < 0) {
         return 1;
     }
-    if (a >= 0x100000) {
+    if (x >= 0x100000) {
         return 1;
     }
 
-    b = p1[1];
-    if (b < 0) {
+    y = point[1];
+    if (y < 0) {
         return 0;
     }
-    if (b >= (*(int *)(p0 + 0xba08) << 16)) {
+    if (y >= (*(int *)(scene + 0xba08) << 16)) {
         return 0;
     }
-    if (b >= (*(int *)(p0 + 0xab6c) + 0x1d0000)) {
+    if (y >= (*(int *)(scene + 0xab6c) + 0x1d0000)) {
         return 0;
     }
 
-    fa = a >> 12;
-    fb = b >> 12;
+    fa = x >> 12;
+    fb = y >> 12;
     row = fa / 16;
     col = fb / 16;
-    v = *(unsigned short *)(p0 + row * 0x5c0 + col * 2 + 0x4f38);
+    v = *(unsigned short *)(scene + row * 0x5c0 + col * 2 + 0x4f38);
     sum = (fa & 0xf) + (fb & 0xf);
     diff = (fa & 0xf) - (fb & 0xf);
 
@@ -374,30 +355,30 @@ int func_ov006_021259d8(char *p0, int *p1) {
 #pragma opt_strength_reduction off
 // @symbol func_ov006_02125bbc
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_02125bbc(char *o, int *p)
+int func_ov006_02125bbc(char *scene, int *point)
 {
     int i;
     for (i = 0; i < 0x80; i++) {
-        if (*(u8 *)(o + i + 0xac58) == 1) {
-            char *e = o + i * 8;
+        if (*(u8 *)(scene + i + 0xac58) == 1) {
+            char *prop = scene + i * 8;
             int dx, dy;
-            if (p[0] >= *(int *)(e + 0xacd8) + 0x10000)
+            if (point[0] >= *(int *)(prop + 0xacd8) + 0x10000)
                 continue;
-            if (p[0] < *(int *)(e + 0xacd8) - 0x10000)
+            if (point[0] < *(int *)(prop + 0xacd8) - 0x10000)
                 continue;
-            if (p[1] >= *(int *)(e + 0xacdc) + 0x8000)
+            if (point[1] >= *(int *)(prop + 0xacdc) + 0x8000)
                 continue;
-            if (p[1] < *(int *)(e + 0xacdc) - 0x8000)
+            if (point[1] < *(int *)(prop + 0xacdc) - 0x8000)
                 continue;
-            dy = *(int *)(e + 0xacdc) - p[1];
-            dx = *(int *)(e + 0xacd8) - p[0];
+            dy = *(int *)(prop + 0xacdc) - point[1];
+            dx = *(int *)(prop + 0xacd8) - point[0];
             if ((int)(((s64)dx * dx + 0x800) >> 12) + (int)(((s64)dy * dy + 0x800) >> 12) / 4 > 0x100000)
                 continue;
-            *(u8 *)(o + i + 0xb2d8) = 1;
-            if (*(int *)(o + i * 4 + 0xb0d8) == 1) {
-                *(u8 *)(o + 0xb9e6) = 1;
-                *(int *)(o + 0xb9e8) = *(int *)(e + 0xacd8);
-                *(int *)(o + 0xb9ec) = *(int *)(e + 0xacdc);
+            *(u8 *)(scene + i + 0xb2d8) = 1;
+            if (*(int *)(scene + i * 4 + 0xb0d8) == 1) {
+                *(u8 *)(scene + 0xb9e6) = 1;
+                *(int *)(scene + 0xb9e8) = *(int *)(prop + 0xacd8);
+                *(int *)(scene + 0xb9ec) = *(int *)(prop + 0xacdc);
             }
             return 1;
         }
@@ -410,32 +391,32 @@ int func_ov006_02125bbc(char *o, int *p)
 #pragma opt_common_subs off
 // @symbol func_ov006_02125cdc
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_02125cdc(int c, int *p)
+int func_ov006_02125cdc(int raw, int *point)
 {
-    char *b = (char *)c;
-    int z = p[1];
+    char *scene = (char *)raw;
+    int z = point[1];
     int x;
     unsigned short t;
     int sum, diff, xf, zf;
 
     if (z < -0x20000)
         return 1;
-    if (z >= *(int *)(b + 0xba08) << 16)
+    if (z >= *(int *)(scene + 0xba08) << 16)
         return 1;
-    if (z >= *(int *)(b + 0xab6c) + 0x1d0000)
+    if (z >= *(int *)(scene + 0xab6c) + 0x1d0000)
         return 1;
-    x = p[0];
+    x = point[0];
     if (x < 0)
         return 1;
     if (x >= 0x100000)
         return 1;
     if (z < 0)
-        t = *(unsigned short *)(b + ((x >> 12) / 16) * 0x5c0 + 0x4f38);
+        t = *(unsigned short *)(scene + ((x >> 12) / 16) * 0x5c0 + 0x4f38);
     else
     {
         int xq = (x >> 12) / 16;
         xq = xq ? xq : xq;
-        t = *(unsigned short *)((char *)(c + xq * 0x5c0 + ((z >> 12) / 16) * 2) + 0x4f38);
+        t = *(unsigned short *)((char *)(raw + xq * 0x5c0 + ((z >> 12) / 16) * 2) + 0x4f38);
     }
     zf = (z >> 12) & 0xf;
     xf = (x >> 12) & 0xf;
@@ -462,7 +443,7 @@ int func_ov006_02125cdc(int c, int *p)
 #pragma opt_common_subs on
 
 // @symbol func_ov006_02125f68
-/* recovered: dScMgSnowball_c collision ring, ov006 0x02125f68 (2528 bytes).
+/* The collision ring.
  * Once a tick the snowball fires 32 probes around itself, one every 0x800 of
  * angle at the current ball radius. Each probe records three flags -- solid,
  * push-out, in-water -- and the whole ring is re-fired (up to 0x21 times)
@@ -659,14 +640,14 @@ extern "C" void func_ov006_02125f68(char *p_)
                 0, 0xf1, part.x * 8, part.y * 8, part.z * 8, 0, 0);
             id2 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
                 0, 0xf2, part.x * 8, part.y * 8, part.z * 8, 0, 0);
-            sys = _ZN8Particle6System12FromUniqueIDEj(id1);
+            sys = (int *)Particle::System::FromUniqueID(id1);
             if (sys != 0) {
                 sys[0x44 / 4] = (s16)((self->mBallSize - 0x4000) * 11 / 60 + 0x3000);
                 sys[0x48 / 4] = (s16)((self->mBallSize - 0x4000) * 36 / 10 / 60 + 0x1333);
                 sys[0x4c / 4] = (s16)((self->mBallSize - 0x4000) * 26 / 10 / 60 + 0x1666);
                 sys[0x50 / 4] = (s16)((self->mBallSize - 0x4000) * 8 / 10 / 60 + 0x666);
             }
-            sys = _ZN8Particle6System12FromUniqueIDEj(id2);
+            sys = (int *)Particle::System::FromUniqueID(id2);
             if (sys != 0) {
                 sys[0x48 / 4] = (s16)((self->mBallSize - 0x4000) * 62 / 10 / 60 + 0x1ccc);
                 sys[0x50 / 4] = (s16)((self->mBallSize - 0x4000) * 45 / 10 / 60 + 0x1800);
@@ -723,29 +704,29 @@ extern "C" void func_ov006_02125f68(char *p_)
 #pragma opt_lifetimes off
 // @symbol func_ov006_02126948
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02126948(char *c) {
-    dScMgSnowball_c *self = (dScMgSnowball_c *)c;
-    int t = _ZN4cstd4fdivEii(0xc0000, data_02082314);
+void func_ov006_02126948(char *scene) {
+    dScMgSnowball_c *self = (dScMgSnowball_c *)scene;
+    int t = cstd::fdiv(0xc0000, data_02082314);
     struct V3 v;
     int x, y;
     if (self->mScreensSwapped == 0) {
-        *(int *)(c + 0x4700) = 0;
-        *(int *)(c + 0x4704) = 0xd0000;
-        *(int *)(c + 0x4708) = 0;
-        *(int *)(c + 0x470c) = 0;
-        *(int *)(c + 0x4710) = 0;
-        *(int *)(c + 0x4714) = t;
-        *(short *)(c + 0x4718) = 0x200;
-        Camera_UpdateMatrices(c + 0x4660);
+        *(int *)(scene + 0x4700) = 0;
+        *(int *)(scene + 0x4704) = 0xd0000;
+        *(int *)(scene + 0x4708) = 0;
+        *(int *)(scene + 0x470c) = 0;
+        *(int *)(scene + 0x4710) = 0;
+        *(int *)(scene + 0x4714) = t;
+        *(short *)(scene + 0x4718) = 0x200;
+        Camera_UpdateMatrices(scene + 0x4660);
     } else {
-        *(int *)(c + 0x4700) = 0;
-        *(int *)(c + 0x4704) = -0x60000;
-        *(int *)(c + 0x4708) = 0;
-        *(int *)(c + 0x470c) = 0;
-        *(int *)(c + 0x4710) = 0;
-        *(int *)(c + 0x4714) = t;
-        *(short *)(c + 0x4718) = 0x200;
-        Camera_UpdateMatrices(c + 0x4660);
+        *(int *)(scene + 0x4700) = 0;
+        *(int *)(scene + 0x4704) = -0x60000;
+        *(int *)(scene + 0x4708) = 0;
+        *(int *)(scene + 0x470c) = 0;
+        *(int *)(scene + 0x4710) = 0;
+        *(int *)(scene + 0x4714) = t;
+        *(short *)(scene + 0x4718) = 0x200;
+        Camera_UpdateMatrices(scene + 0x4660);
     }
     y = self->mScrollY - self->mPosY + 0x110000;
     x = self->mPosX - 0x80000;
@@ -754,22 +735,22 @@ void func_ov006_02126948(char *c) {
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, self->mHeadingAngle);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, self->mRollAngle);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->unk_ab7a);
-    *(struct M4x3Flat *)(c + 0xabc0) = *(struct M4x3Flat *)&data_020a0e68;
+    *(struct M4x3Flat *)(scene + 0xabc0) = *(struct M4x3Flat *)&data_020a0e68;
 }
 }
 #pragma opt_lifetimes on
 
 // @symbol func_ov006_02126a98
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02126a98(char *c)
+void func_ov006_02126a98(char *scene)
 {
-    dScMgSnowball_c *self = (dScMgSnowball_c *)c;
+    dScMgSnowball_c *self = (dScMgSnowball_c *)scene;
     int flag = 1;
     int val = (self->mScrollY >> 12) / 16 - 2;
     int i;
     if (val < 0) val = 0;
     for (i = 0; i < 0x10; i++) {
-        func_ov006_02126b4c(c, val, flag);
+        func_ov006_02126b4c(scene, val, flag);
         val++;
     }
     {
@@ -778,7 +759,7 @@ void func_ov006_02126a98(char *c)
         int r8 = ((self->mScrollY >> 12) + 0x110) / 16 - 2;
         for (; flag2 < 0x10; flag2++) {
             if (r8 >= self->mScrollLimit) return;
-            func_ov006_02126b4c(c, r8, k);
+            func_ov006_02126b4c(scene, r8, k);
             r8++;
         }
     }
@@ -787,7 +768,7 @@ void func_ov006_02126a98(char *c)
 
 #pragma opt_strength_reduction off
 // @symbol func_ov006_02126b4c
-/* recovered: minigame BG2 tile-column writer.
+/* BG2 tile-column writer.
  *
  * Copies one 16-row column of 2x2 BG tiles into the BG2 screen of both the
  * main and the sub engine. Each cell index comes from the u16 grid at
@@ -805,7 +786,7 @@ void func_ov006_02126a98(char *c)
  * and reloaded around the screen-pointer call).
  */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02126b4c(char *c, int col, int flag)
+void func_ov006_02126b4c(char *scene, int col, int flag)
 {
     volatile u16 v0, v1, v2, v3, v4, v5, v6, v7;
     volatile u16 w0, w1, w2, w3, w4, w5, w6, w7;
@@ -823,10 +804,10 @@ void func_ov006_02126b4c(char *c, int col, int flag)
     if (flag == 1) {
         masked = col & 0xf;
         tile = *(u16 *)((char *)data_ov006_0212f3bc + 6);
-        row = c;
+        row = scene;
         i = 0;
         j = i;
-        row = c + (col << 1);
+        row = scene + (col << 1);
         off = masked << 7;
         n = 2;
         do {
@@ -852,22 +833,22 @@ void func_ov006_02126b4c(char *c, int col, int flag)
 
             idx = *(u16 *)(row + 0x4f38);
             tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3));
-            scr = (volatile u16 *)(_ZN3G2S12GetBG2ScrPtrEv() + off);
+            scr = (volatile u16 *)(G2S::GetBG2ScrPtr() + off);
             MultiStore16(v4 = tile, (char *)(scr + j), n);
 
             idx = *(u16 *)(row + 0x4f38);
             tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 2);
-            scr = (volatile u16 *)(_ZN3G2S12GetBG2ScrPtrEv() + off);
+            scr = (volatile u16 *)(G2S::GetBG2ScrPtr() + off);
             MultiStore16(v5 = tile, (char *)(scr + j + 1), n);
 
             idx = *(u16 *)(row + 0x4f38);
             tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 4);
-            scr = (volatile u16 *)(_ZN3G2S12GetBG2ScrPtrEv() + off);
+            scr = (volatile u16 *)(G2S::GetBG2ScrPtr() + off);
             MultiStore16(v6 = tile, (char *)(scr + j + 0x20), n);
 
             idx = *(u16 *)(row + 0x4f38);
             tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 6);
-            scr = (volatile u16 *)(_ZN3G2S12GetBG2ScrPtrEv() + off);
+            scr = (volatile u16 *)(G2S::GetBG2ScrPtr() + off);
             MultiStore16(v7 = tile, (char *)(scr + j + 0x21), n);
 
             row += 0x5c0;
@@ -880,7 +861,7 @@ void func_ov006_02126b4c(char *c, int col, int flag)
     masked = col & 0xf;
     i = 0;
     j = i;
-    row = c + (col << 1);
+    row = scene + (col << 1);
     off = masked << 7;
     n = 2;
     k842 = 0x842;
@@ -907,22 +888,22 @@ void func_ov006_02126b4c(char *c, int col, int flag)
 
         idx = *(u16 *)(row + 0x4f38);
         tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3));
-        scr = (volatile u16 *)(_ZN3G2S12GetBG2ScrPtrEv() + 0x800 + off);
+        scr = (volatile u16 *)(G2S::GetBG2ScrPtr() + 0x800 + off);
         MultiStore16(w4 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + 0x4f38);
         tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 2);
-        scr = (volatile u16 *)(_ZN3G2S12GetBG2ScrPtrEv() + 0x802 + off);
+        scr = (volatile u16 *)(G2S::GetBG2ScrPtr() + 0x802 + off);
         MultiStore16(w5 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + 0x4f38);
         tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 4);
-        scr = (volatile u16 *)(_ZN3G2S12GetBG2ScrPtrEv() + 0x840 + off);
+        scr = (volatile u16 *)(G2S::GetBG2ScrPtr() + 0x840 + off);
         MultiStore16(w6 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + 0x4f38);
         tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 6);
-        scr = (volatile u16 *)(_ZN3G2S12GetBG2ScrPtrEv() + k842 + off);
+        scr = (volatile u16 *)(G2S::GetBG2ScrPtr() + k842 + off);
         MultiStore16(w7 = tile, (char *)(scr + j), n);
 
         row += 0x5c0;
@@ -934,7 +915,7 @@ void func_ov006_02126b4c(char *c, int col, int flag)
 #pragma opt_strength_reduction on
 
 // @symbol func_ov006_02126ee4
-/* recovered: dScMgSnowball_c course generator, ov006 0x02126ee4 (2764 bytes).
+/* The course generator.
  * Paints mTileMap row by row from the bottom of the course upwards, carving a
  * corridor between a left and a right edge cursor that random-walk one lane at
  * a time. Each row draws two kinds (0 hold, 1 pull in, 2 push out), clamps
@@ -1381,22 +1362,9 @@ extern "C" void func_ov006_021279b0(void *p_)
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 // @symbol _ZN15dScMgSnowball_c6RenderEv
-/* dScMgSnowball_c::Render -- vtable slot 9, ov006 0x02127d10.
- *
- * Named from the table: 0x02127d10 is the word slot 9 of
- * _ZTV15dScMgSnowball_c holds where its base's table holds something else, so
- * it is this class's own override of the virtual fBase_c declares. The
- * pre-migration file had already retyped the receiver as dScMgSnowball_c and
- * named its fields; only the symbol was still a func_ov006_ one.
- *
- * `c` is kept alongside `self` for the same reason it was there before: the
- * two 0x80-entry parallel arrays at 0xacd8 and 0xb5d8 are indexed with a
- * per-element stride the header holds as raw bytes (mArray1/mArray2, element
- * type unevidenced -- their ROM element destructor is NullDestructor_0203d47c),
- * so those reads stay byte offsets rather than becoming a layout claim.
- *
- * BOTH #pragmas ARE LOAD-BEARING and are inherited verbatim from the
- * pre-migration file; they are the reason this body reproduces at all. */
+/* Slot 9. `c` stays next to `self` because the two 0x80-entry arrays at
+ * 0xacd8 and 0xb5d8 are raw bytes in the header (mArray1 and mArray2), so
+ * those reads stay byte offsets. Both pragmas are needed. */
 s32 dScMgSnowball_c::Render()
 {
     char *c = (char *)this;
@@ -1551,30 +1519,12 @@ s32 dScMgSnowball_c::Render()
 #pragma opt_strength_reduction on
 
 // @symbol _ZN15dScMgSnowball_c8BehaviorEv
-/* dScMgSnowball_c::Behavior -- vtable slot 6, ov006 0x021283a4.
+/* Slot 6. The five-state snowball roll: 0 counts in, 1 steers with the
+ * touch screen and grows the ball, 2 and 3 are the crash, 4 is the melt and
+ * 5 is over.
  *
- * Named from the table: 0x021283a4 is the word slot 6 of
- * _ZTV15dScMgSnowball_c holds where its base's table holds something else, so
- * it is this class's own override of the virtual fBase_c declares.
- *
- * The five-state snowball roll: 0 counts in, 1 steers with the touch screen
- * and grows the ball, 2/3 are the crash, 4 is the melt, 5 is over. The
- * `if (B(0xc4) == 0) { ... }` prologue is the same idiom roughly 25 ov006
- * files carry -- include/dScMgBase_c.h names those bytes (mPromptEnabled, mPromptBlinkCount,
- * mPromptBlinkTimer) and this file predates that naming.
- *
- * THE ADDRESS MACROS AND THE `AT`/`LNDR` LAUNDERS ARE LOAD-BEARING and are
- * inherited verbatim from the pre-migration file: they are what stops mwcc
- * common-subexpressioning the field addresses across calls, which the ROM does
- * not do. Only the receiver changes -- `c` is now `this` cast to the same
- * `char *` the macros already assume, so every offset below reads exactly the
- * bytes it read before.
- *
- * `#define atan2` and `#define ApproachLinear` alias two mangled ROM symbols
- * that stay reached through `extern "C"` rather than through real member/free
- * declarations: cstd::atan2 and ApproachLinear(short&, short, short) are
- * declared below with the ROM's own spelling, which the C++ front end must not
- * mangle a second time (see the note at the top of include/SharedFilePtr.h). */
+ * The address macros and the `AT` and `LNDR` launders stop mwcc from sharing
+ * field addresses across calls, which the ROM does not do; keep them. */
 s32 dScMgSnowball_c::Behavior()
 {
     char *c = (char *)this;
@@ -1587,10 +1537,10 @@ s32 dScMgSnowball_c::Behavior()
     int id2, id1;
     int *p;
 
-    if (B(0xc4) == 0) {
-        B(0xc3) = 1;
-        B(0xc4) = 1;
-        H(0xc0) = 0;
+    if (mPromptBlinkCount == 0) {
+        mPromptEnabled = 1;
+        mPromptBlinkCount = 1;
+        mPromptBlinkTimer = 0;
     }
 
     H(0xab7e) = HS(0xab78);
@@ -1868,16 +1818,11 @@ s32 dScMgSnowball_c::Behavior()
 }
 
 // @symbol _ZN15dScMgSnowball_c8OnKickedEv
-/* This member's legacy file wrapped its body in `extern "C" { }`, which the TU
-   splitter refuses to parse, so the block below is carried over verbatim --
-   including the `extern "C"` wrapper and the single-letter `V` scroll macro,
-   which is #undef'd at the end of the block so it cannot reach ordinals 18-22.
-   The four #include lines the legacy file repeated at this point are dropped:
-   all four are already in the preamble above, and the include guards made the
-   repeats no-ops. */
+/* OnKicked keeps its own `extern "C"` block and the one-letter `V` scroll
+   macro, which is #undef'd at the end of the block. */
 
 extern "C" {
-/* dScMgSnowball_c::OnKicked - recovered from vtable slot identity */
+/* dScMgSnowball_c::OnKicked, from its vtable slot. */
 
 #define V (self->mScrollY >> 12)
 
@@ -1915,31 +1860,22 @@ int dScMgSnowball_c::OnKicked()
 #undef V
 
 // @symbol _ZN15dScMgSnowball_c8OnPushedEv
-/* dScMgSnowball_c::OnPushed - recovered from vtable slot identity */
+/* dScMgSnowball_c::OnPushed, from its vtable slot. */
 int dScMgSnowball_c::OnPushed()
 {
     void *t = (void *)this;
  return ((dScMgBase_c *)t)->dScMgBase_c::OnPushed() != 0; }
 
 // @symbol _ZN15dScMgSnowball_c11OnAttacked2Ev
-/* dScMgSnowball_c::OnAttacked2 - recovered from vtable slot identity */
+/* dScMgSnowball_c::OnAttacked2, from its vtable slot. */
 int dScMgSnowball_c::OnAttacked2()
 {
     void *t = (void *)this;
  return ((dScMgBase_c *)t)->dScMgBase_c::OnAttacked2() != 0; }
 
 // @symbol _ZN15dScMgSnowball_c16CleanupResourcesEv
-/* dScMgSnowball_c::CleanupResources -- vtable slot 3, ov006 0x021291f8.
- *
- * Named from the table: 0x021291f8 is the word slot 3 of
- * _ZTV15dScMgSnowball_c holds where its base's table holds something else, so
- * it is this class's own override of the virtual fBase_c declares.
- *
- * It frees the BMD this class's own InitResources (slot 0, 0x02129268) parked
- * in unk_abf4 -- the header's note that 0xabf4 is "the constructor's own `= 0`
- * write" and this teardown are the two ends of that field's lifetime. It is a
- * file pointer, so it is read back through a cast rather than retyped here:
- * retyping the field is the model slice's job, not this rename's. */
+/* Slot 3. Frees the BMD that InitResources parked in unk_abf4. The field is
+ * a file pointer but untyped in the header, so it is read through a cast. */
 s32 dScMgSnowball_c::CleanupResources()
 {
     Ov004_Deallocate(*(void **)&unk_abf4);
@@ -1947,8 +1883,7 @@ s32 dScMgSnowball_c::CleanupResources()
 }
 
 // @symbol _ZN15dScMgSnowball_c13OnYoshiTryEatEi
-/* recovered: renamed to Class_Method, vtable slot 18 -- an override of
-   dScMgBase_c::OnYoshiTryEat(int). The signature must repeat the base
+/* Slot 18, an override of dScMgBase_c::OnYoshiTryEat(int). The signature must repeat the base
    declaration exactly, or mwcc appends a slot instead of overriding. */
 void dScMgSnowball_c::OnYoshiTryEat(int i)
 {
@@ -1962,28 +1897,12 @@ void dScMgSnowball_c::OnYoshiTryEat(int i)
 }
 
 // @symbol _ZN15dScMgSnowball_c13InitResourcesEv
-/* dScMgSnowball_c::InitResources -- vtable slot 0, ov006 0x02129268.
- *
- * Named from the table: 0x02129268 is the word slot 0 of
- * _ZTV15dScMgSnowball_c holds where its base's table holds something else, so
- * it is this class's own override of the virtual fBase_c declares.
- *
- * Sets up both screens' BG2/BG3 layers, loads the minigame's palettes and
- * tiles, then loads the snowball BMD into unk_abf4 and hands it to mModel --
- * which is the pointer this class's own CleanupResources (slot 3, 0x021291f8)
- * frees again. Returning 0 when ModelBase::SetFile fails is what makes the
- * scene abort.
- *
- * EVERY MANGLED CALLEE IS NOW `extern "C"`, not a bare `extern`. In a C
- * translation unit -- which this file was -- the identifier is emitted
- * verbatim; compiled as C++ a bare `extern` mangles it a SECOND time and the
- * reference resolves to nothing (see the note at the top of
- * include/SharedFilePtr.h). The names themselves are unchanged.
- *
- * The receiver stays a `void *`/`u8 *` pair the way the pre-migration file
- * spelled it: 0xb9f8 and 0xabf4 are named fields, but the three ov006 helpers
- * at the end take the scene as an opaque pointer, and only unk_abf4 is
- * reached as a member below. */
+/* Slot 0. Sets up both screens' BG2 and BG3 layers, loads the palettes and
+ * tiles, then loads the snowball BMD into unk_abf4 and hands it to mModel.
+ * Returning 0 when ModelBase::SetFile fails aborts the scene. The helpers at
+ * the end take the scene as an opaque pointer, so the receiver stays raw.
+ * The mangled callees are declared `extern "C"` so they are not mangled a
+ * second time. */
 s32 dScMgSnowball_c::InitResources()
 {
     void *arg0 = this;
@@ -2015,17 +1934,17 @@ s32 dScMgSnowball_c::InitResources()
     *(vu16 *)0x400100e = (*(vu16 *)0x400100e & ~3) | 3;
 
     LoadCompressedFileAt(0xad, (u8 *)_ZN2G213GetBG2CharPtrEv() + 0x4000);
-    LoadCompressedFileAt(0xad, (void *)(_ZN3G2S13GetBG2CharPtrEv() + 0x4000));
+    LoadCompressedFileAt(0xad, (void *)(G2S::GetBG2CharPtr() + 0x4000));
     LoadCompressedFileAt(0xac, _ZN2G212GetBG3ScrPtrEv());
-    LoadCompressedFileAt(0xac, _ZN3G2S12GetBG3ScrPtrEv());
+    LoadCompressedFileAt(0xac, G2S::GetBG3ScrPtr());
 
     data_0209d45c |= 0xc;
     data_0209d454 |= 0xc;
 
     buf = func_ov004_020adc74(&data_ov006_0214009c);
-    _ZN4CP1527FlushAndInvalidateDataCacheEjj(buf, 0x100);
-    _ZN2GX10LoadBGPlttEPKvjj(buf, 0x100, 0x100);
-    _ZN3GXS10LoadBGPlttEPKvjj(buf, 0x100, 0x100);
+    CP15::FlushAndInvalidateDataCache((u32)buf, 0x100);
+    GX::LoadBGPltt(buf, 0x100, 0x100);
+    GXS::LoadBGPltt(buf, 0x100, 0x100);
     Ov004_Deallocate(buf);
 
     buf = func_ov004_020adc74(&data_ov006_021400bc);
@@ -2034,13 +1953,13 @@ s32 dScMgSnowball_c::InitResources()
     Ov004_Deallocate(buf);
 
     buf = func_ov004_020adc74(&data_ov006_021400dc);
-    _ZN4CP1527FlushAndInvalidateDataCacheEjj(buf, 0x100);
-    _ZN2GX11LoadOBJPlttEPKvjj(buf, 0, 0x100);
-    _ZN3GXS11LoadOBJPlttEPKvjj(buf, 0, 0x100);
+    CP15::FlushAndInvalidateDataCache((u32)buf, 0x100);
+    GX::LoadOBJPltt(buf, 0, 0x100);
+    GXS::LoadOBJPltt(buf, 0, 0x100);
     Ov004_Deallocate(buf);
 
     *(vu16 *)0x4000008 = (*(vu16 *)0x4000008 & ~3) | 1;
-    _ZN3G3X6SetFogEbiii(0, 0, 2, 0x1000);
+    G3X::SetFog(false, 0, 2, 0x1000);
     *(vu16 *)0x4000060 = (*(vu16 *)0x4000060 & ~0x3000) | 8;
     InitialiseVramGlobals();
 

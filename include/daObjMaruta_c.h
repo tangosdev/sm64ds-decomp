@@ -30,7 +30,7 @@
  * func_ov080_021274ac / 0212714c / 021270dc.
  *
  * TWO DESCENDANTS: daObjFlMaruta_c (daObjFlMaruta_c, ov022) and daObjHmMaruta_c
- * (RollingLogTtm, ov030). Each one's destructor stores this class's vtable between
+ * (daObjHmMaruta_c, ov030). Each one's destructor stores this class's vtable between
  * its own and _ZTV10dBgActor_c. Both factories pass 836 = 0x344.
  *
  * THE 0x24 SPAN ABOVE dBgActor_c IS THIS CLASS'S. The shared ov080 helpers
@@ -76,7 +76,7 @@ struct daObjMaruta_c : dBgActor_c {
        the implicit destructor bodies. The cartridge orders D0 below D1, which
        no admissible source form reproduces, so those two bodies stay in their
        enrolled shards and this TU's copies are licensed deadstrip-duplicate. */
-    void OnHitByMegaChar(Player &player);  /* void, see include/Stump.h */
+    void OnHitByMegaChar(Player &player);  /* void, see include/daObjPile_c.h */
 
     /* Slot 9, this class's own override. Not `virtual` -- fBase_c already
        declares it virtual, and re-adding the keyword here is a style

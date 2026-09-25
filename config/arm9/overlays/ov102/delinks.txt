@@ -4,29 +4,9 @@
     .ctor       start:0x0214e0a0 end:0x0214e0b0 kind:rodata align:4
     .data       start:0x0214e0c0 end:0x0214e6e0 kind:data align:32
     .bss        start:0x0214e6e0 end:0x0214eaa0 kind:bss align:32
-src/_ZN13FortressTowerD1Ev.cpp:
+src/actors/daObjSimpleBg_c.cpp:
     complete
-    .text start:0x02148a80 end:0x02148ac4
-
-src/_ZN13FortressTowerD0Ev.cpp:
-    complete
-    .text start:0x02148ac4 end:0x02148b1c
-
-src/_ZN13FortressTower16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02148b1c end:0x02148b80
-
-src/_ZN13FortressTower6RenderEv.cpp:
-    complete
-    .text start:0x02148b80 end:0x02148ba8
-
-src/_ZN13FortressTower8BehaviorEv.cpp:
-    complete
-    .text start:0x02148ba8 end:0x02148c94
-
-src/_ZN13FortressTower13InitResourcesEv.cpp:
-    complete
-    .text start:0x02148c94 end:0x02148e9c
+    .text start:0x02148a80 end:0x02148e9c
 
 src/d_a_obj_simple_bg_mc_hazad.c:
     complete

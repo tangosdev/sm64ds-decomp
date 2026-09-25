@@ -4,7 +4,7 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 /* recovered: globals resolved */
-/* resolved: VT = _ZTV12FortressWall */
+/* resolved: VT = _ZTV14daObjBk_Kabe_c */
 /* Reconstructed source-style name: SM64DS proves daObjBk_Kabe_c through RTTI,
  * allocation size, vtable identity, and the BK_KABE01 registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -12,6 +12,6 @@
 int *daObjBk_Kabe_c_classInit_BK_KABE01(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(804);
-    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV12FortressWall; }
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV14daObjBk_Kabe_c; }
     return p;
 }

@@ -8,7 +8,7 @@
  * 0x02010130 (different, real override).
  *
  * SIGNATURE FROM include/dActor_c.h's OWN SLOT 27, `virtual void
- * OnHitByMegaChar(Player &player)` -- `int` until Stump::OnHitByMegaChar
+ * OnHitByMegaChar(Player &player)` -- `int` until daObjPile_c::OnHitByMegaChar
  * proved it wrong tree-wide (36bc6d1df). Same body shape
  * src/game/actors/d_a_obj_maruta.cpp records for its own
  * slot 27: dBgActor_c::KillByMegaChar is non-virtual, so the unqualified

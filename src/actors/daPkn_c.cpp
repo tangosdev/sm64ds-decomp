@@ -1,6 +1,5 @@
 //cpp
 /* daPkn_c (PAKUN / PIRANHA_PLANT 250), ov084 0x0212eaf0..0x02130174.
- * deslop
  *
  * RTTI names daPkn_c. Typeinfo at 0x02130bf8 points to the string at
  * 0x02130bec; the vtable header at 0x02130c24 points to that typeinfo.
@@ -12,7 +11,7 @@
  * mwccarm 2004/b56. The inline destructor in the header emits the required
  * D1/D0 pair; `new` odr-uses the class so that pair is emitted here.
  *
- * Leftover:
+ * Known limits:
  * - ModelAnim::SetAnim / dCcAc_c::Init / dCcAcPos_c::Init stay mangled
  *   (Fix12<int> by value, wall 6az -- InitResources and the state helpers)
  * - dBgCh_Actr::Init stays mangled: header Fix12i mangles as i; ROM is
@@ -75,7 +74,7 @@ void  func_ov084_0212ebb4(daPkn_c *c);
 void  func_ov084_0212ec60(daPkn_c *c);
 int   func_ov084_0212ef00(daPkn_c *self);
 int   func_ov084_0212f1d0(daPkn_c *c);
-void  func_ov084_0212f204(char *r4);
+void  func_ov084_0212f204(char *self);
 void  func_ov084_0212f33c(daPkn_c *self);
 void  func_ov084_0212f460(void *self);
 
@@ -150,14 +149,13 @@ extern "C" daPkn_c *daPkn_c_classInit()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c13InitResourcesEv
 /*
  * This was still `extern "C" int _ZN7daPkn_c13InitResourcesEv(char* c)`
  * working raw offsets -- a file renamed .cpp without ever being migrated. It is
  * a real method now, with the remaining copy seam measured below.
  *
- * Unlike FirePiranhaPlantBig's, this one DOES check its loads: a failed SetFile
+ * Unlike daFPkn_c's, this one DOES check its loads: a failed SetFile
  * on either model returns 0 rather than carrying on.
  *
  * The tail seeds the sleep-bubble position: 0xe0 along the facing angle out
@@ -231,7 +229,6 @@ int daPkn_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c8BehaviorEv
 int daPkn_c::Behavior()
 {
@@ -287,7 +284,6 @@ int daPkn_c::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c6RenderEv
 /*
  * The six-slot `struct Obj` this file used to cast both models to was their own
@@ -309,7 +305,6 @@ int daPkn_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c16OnPendingDestroyEv
 /*
  * fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`.
@@ -318,7 +313,6 @@ void daPkn_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c16CleanupResourcesEv
 int daPkn_c::CleanupResources()
@@ -333,7 +327,6 @@ int daPkn_c::CleanupResources()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212fc10
 extern "C" {  /* Retained C-linkage helper. */
@@ -351,7 +344,6 @@ void func_ov084_0212fc10(daPkn_c *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212fa7c
 /* daPkn state 1: the PMF record at ov084:0x02130ba4 targets this body.
@@ -386,7 +378,6 @@ void func_ov084_0212fa7c(daPkn_c *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f6d8
 extern "C" {  /* Retained C-linkage helper. */
@@ -524,7 +515,6 @@ void func_ov084_0212f6d8(daPkn_c *self)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f630
 extern "C" void func_ov084_0212f630(daPkn_c *c)
 {
@@ -537,7 +527,6 @@ extern "C" void func_ov084_0212f630(daPkn_c *c)
     c->mState = 2;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f588
 extern "C" void func_ov084_0212f588(daPkn_c *c)
@@ -557,7 +546,6 @@ extern "C" void func_ov084_0212f588(daPkn_c *c)
     }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f460
 /* Named mStateTimer / mPos* / mAngleY / mParticleHandle size-DIFF this body. */
@@ -609,18 +597,17 @@ void func_ov084_0212f460(void *self)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f33c
 void func_ov084_0212f33c(daPkn_c *c)
 {
-    int r4;
+    int scale;
     struct Vector3 v;
 
     c->mClsnEnabled = 0;
-    r4 = c->mScaleX;
+    scale = c->mScaleX;
     if ((unsigned short)c->mStateTimer == 0) {
         func_02012694(0x11f, &c->mCamSpacePosX);
-        r4 = 0x1000;
+        scale = 0x1000;
     }
 
     c->mParticleHandle = (s32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
@@ -630,26 +617,25 @@ void func_ov084_0212f33c(daPkn_c *c)
         (unsigned int)c->unk_474, 0xfd, c->mPosX,
         c->mPosY + 0x1e000, c->mPosZ, 0, 0);
 
-    if (r4 > 0) {
-        r4 = r4 - 0xa3;
+    if (scale > 0) {
+        scale = scale - 0xa3;
     } else {
-        r4 = 0;
+        scale = 0;
         if (c->unk_108 != 0) {
             int y = c->mPosY;
             int z = c->mPosZ;
             v = (struct Vector3){c->mPosX, y + 0x78000, z};
             _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0x122, r4, &v, (void*)r4, c->mAreaId, -1);
-            c->unk_108 = r4;
+                0x122, scale, &v, (void*)scale, c->mAreaId, -1);
+            c->unk_108 = scale;
         }
         c->mState = 7;
     }
-    c->mScaleX = r4;
-    c->mScaleY = r4;
-    c->mScaleZ = r4;
+    c->mScaleX = scale;
+    c->mScaleY = scale;
+    c->mScaleZ = scale;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f2dc
 extern "C" {  /* Retained C-linkage helper. */
@@ -663,7 +649,6 @@ void func_ov084_0212f2dc(daPkn_c *c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f298
 /* State 8 is reached through the void PMF table and has no result consumer.
@@ -692,32 +677,30 @@ void func_ov084_0212f298(daPkn_c *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f204
 extern "C" {  /* Retained C-linkage helper. */
 /* Named unk_460 / mPosX / mTargetAngleY / mAngleY size-DIFF this body. */
-void func_ov084_0212f204(char* r4){
+void func_ov084_0212f204(char* self){
   struct Vector3 v;
-  *(char**)(r4 + 0x460) = _ZN8dActor_c13ClosestPlayerEv(r4);
+  *(char**)(self + 0x460) = _ZN8dActor_c13ClosestPlayerEv(self);
   {
-    char* p = *(char**)(r4 + 0x460);
+    char* p = *(char**)(self + 0x460);
     if (p != 0) {
       struct Vector3* pp = (struct Vector3*)(((int)p + 0x5c));
       v.x = pp->x;
       v.y = pp->y;
       v.z = pp->z;
-      *(int*)(r4 + 0x464) = Vec3_Dist((struct Vector3*)(r4 + 0x5c), &v);
-      *(short*)(r4 + 0x468) = Vec3_HorzAngle((struct Vector3*)(r4 + 0x5c), &v);
-      *(int*)(r4 + 0x46c) = *(unsigned char*)(*(char**)(r4 + 0x460) + 0x6de);
+      *(int*)(self + 0x464) = Vec3_Dist((struct Vector3*)(self + 0x5c), &v);
+      *(short*)(self + 0x468) = Vec3_HorzAngle((struct Vector3*)(self + 0x5c), &v);
+      *(int*)(self + 0x46c) = *(unsigned char*)(*(char**)(self + 0x460) + 0x6de);
     } else {
-      *(int*)(r4 + 0x464) = 0x7fffffff;
-      *(short*)(r4 + 0x468) = *(short*)(r4 + 0x8e);
+      *(int*)(self + 0x464) = 0x7fffffff;
+      *(short*)(self + 0x468) = *(short*)(self + 0x8e);
     }
   }
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f1d0
 extern "C" {  /* Retained C-linkage helper. */
@@ -730,7 +713,6 @@ int func_ov084_0212f1d0(daPkn_c *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212ef00
 extern "C" {  /* Retained C-linkage helper. */
@@ -859,7 +841,6 @@ fail:
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212ec60
 extern "C" {  /* Retained C-linkage helper. */
 void func_ov084_0212ec60(daPkn_c *self)
@@ -868,7 +849,7 @@ void func_ov084_0212ec60(daPkn_c *self)
     volatile s16 ang[3];
     struct { PknMtx43 saved; PknVec3 tv; PknVec3 v; } L;
     int lr;
-    int r3;
+    int scale;
 
     Vec3_Asr(&L.v, (PknVec3*)(c + 0x5c), 3);
     Matrix4x3_FromTranslation(&data_020a0e68, L.v.x, L.v.y, L.v.z);
@@ -906,18 +887,18 @@ void func_ov084_0212ec60(daPkn_c *self)
         int d = rr - 0x28;
         if (d < 0)
             d = -d;
-        r3 = ((d << 12) / 10) + 0x400;
-        if (r3 < 0x800)
-            r3 = 0x800;
-        *(s32*)(c + 0x428) = r3;
-        *(s32*)(c + 0x42c) = r3;
-        *(s32*)(c + 0x430) = r3;
+        scale = ((d << 12) / 10) + 0x400;
+        if (scale < 0x800)
+            scale = 0x800;
+        *(s32*)(c + 0x428) = scale;
+        *(s32*)(c + 0x42c) = scale;
+        *(s32*)(c + 0x430) = scale;
     }
 
     L.tv.x = data_02082214[(*(u16*)(c + 0x8e) >> 4) << 1] * (s16)0xe0 + L.tv.x;
-    r3 = r3 - 0xc00;
+    scale = scale - 0xc00;
     L.tv.z = data_02082214[((*(u16*)(c + 0x8e) >> 4) << 1) + 1] * (s16)0xe0 + L.tv.z;
-    L.tv.y = L.tv.y + (r3 * 0x18 + 0x38000);
+    L.tv.y = L.tv.y + (scale * 0x18 + 0x38000);
 
     *(s32*)(c + 0x434) = L.tv.x;
     *(s32*)(c + 0x438) = L.tv.y;
@@ -928,14 +909,12 @@ void func_ov084_0212ec60(daPkn_c *self)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c16OnAimedAtWithEggEv
 /* daPkn_c::OnAimedAtWithEgg - recovered from vtable slot identity */
 s32 daPkn_c::OnAimedAtWithEgg() {
     return 0x46000;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212ec04
 extern "C" {  /* Retained C-linkage helper. */
@@ -948,7 +927,6 @@ void func_ov084_0212ec04(daPkn_c *c, int arg) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212ebb4
 extern "C" {  /* Retained C-linkage helper. */

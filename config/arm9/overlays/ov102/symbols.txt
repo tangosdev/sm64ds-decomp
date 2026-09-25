@@ -1,9 +1,9 @@
-_ZN13FortressTowerD1Ev kind:function(arm,size=0x44) addr:0x02148a80
-_ZN13FortressTowerD0Ev kind:function(arm,size=0x58) addr:0x02148ac4
-_ZN13FortressTower16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x02148b1c
-_ZN13FortressTower6RenderEv kind:function(arm,size=0x28) addr:0x02148b80
-_ZN13FortressTower8BehaviorEv kind:function(arm,size=0xec) addr:0x02148ba8
-_ZN13FortressTower13InitResourcesEv kind:function(arm,size=0x208) addr:0x02148c94
+_ZN15daObjSimpleBg_cD1Ev kind:function(arm,size=0x44) addr:0x02148a80
+_ZN15daObjSimpleBg_cD0Ev kind:function(arm,size=0x58) addr:0x02148ac4
+_ZN15daObjSimpleBg_c16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x02148b1c
+_ZN15daObjSimpleBg_c6RenderEv kind:function(arm,size=0x28) addr:0x02148b80
+_ZN15daObjSimpleBg_c8BehaviorEv kind:function(arm,size=0xec) addr:0x02148ba8
+_ZN15daObjSimpleBg_c13InitResourcesEv kind:function(arm,size=0x208) addr:0x02148c94
 daObjSimpleBg_c_classInit_MC_HAZAD kind:function(arm,size=0x30) addr:0x02148e9c
 daObjSimpleBg_c_classInit_MC_DODAI kind:function(arm,size=0x30) addr:0x02148ecc
 daObjSimpleBg_c_classInit_DOKAN kind:function(arm,size=0x30) addr:0x02148efc
@@ -130,7 +130,7 @@ g_profile_MC_HAZAD kind:data(any) addr:0x0214e16c
 data_ov102_0214e188 kind:data(any) addr:0x0214e188
 data_ov102_0214e18c kind:data(any) addr:0x0214e18c
 data_ov102_0214e190 kind:data(any) addr:0x0214e190
-_ZTV13FortressTower kind:data(any) addr:0x0214e1d8
+_ZTV15daObjSimpleBg_c kind:data(any) addr:0x0214e1d8
 data_ov102_0214e258 kind:data(any) addr:0x0214e258
 data_ov102_0214e260 kind:data(any) addr:0x0214e260
 data_ov102_0214e268 kind:data(any) addr:0x0214e268

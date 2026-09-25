@@ -150,7 +150,7 @@ back over the cartridge's own. `cpp/daeybm-genuine-tu`,
 `cpp/ov063-rtti-names`, `cpp/kpa2bg`, `cpp/obj-ks-water`,
 `cpp/dabrq-sinit-resource-tu`, `cpp/dascre-restack-2143`,
 `cpp/profile-campaign-tail` and waves 6, 8, 9, 10 and 30 each carry at least one.
-The worst is `cpp/rtti-snake-tu-2`: at **18 ov002 addresses** `main` now holds the
+The worst is `cpp/rtti-snake-tu-2`: at **18 [ov002](../../config/arm9/overlays/ov002/symbols.txt)** addresses `main` now holds the
 cartridge's own `daChScene_c` and `daChRoom_c`, and the branch holds the coined
 `Exit` and `VirtualDoor`.
 
@@ -221,7 +221,7 @@ verify, then delete — in that order, and never the last two together.
   **re-derived on `main`'s `_classInit`/`g_profile_*` names, never restacked as
   it stands.** A rescue is under way, re-measuring first.
 - **`cpp/kpa3bg`** @ `1064a7730`, no PR was ever opened. This is a **naming pass,
-  not new coverage.** `main` already names every ov060 address the branch touches,
+  not new coverage.** `main` already names every [ov060](../../config/arm9/overlays/ov060/symbols.txt) address the branch touches,
   already has `daKpa3Bg_c_classInit` and `g_profile_KOOPA3BG`, and already carries
   an auto-generated `daKpa3Bg_c` header. The branch is also *behind*: it would
   rename six method addresses to `daKpa3Bg_c::*` that `main` has since settled as
@@ -243,7 +243,7 @@ the `profile-lifecycle-crosswalk` docs branch (1). The fourth, `constitution-lan
 would have destroyed them. Its local tip went to
 `rescue/constitution-lane-local-9b129018` instead.
 
-One match had landed without its credit. `func_ov006_0212a764` is on `main` and the
+One match had landed without its credit. [func_ov006_0212a764](../../src/actors/dScMgFlower_c.cpp)(ROM Ordinal 4 used for `dScMgFlower_c.cpp`, see [dScMgFlower_c.json](../../config/tu_manifest.d/ov006/dScMgFlower_c.json)) is on `main` and the
 delinks route to it, but the winning attempt and its provenance row were sitting
 uncommitted in a working tree. Recovered in #2408, which was then closed as a
 duplicate of #2399 — the credit is banked either way.
@@ -300,7 +300,7 @@ still open on its own merits.
 Everything the approved train carried is on `main`, in this order: #2392
 (`fbd2b64e2`), #2425 (`abda09fdd`), #2372 (`81dd44ac8`), #2399 (`2c321f3e1`), #2373
 (`13853dedb`) and #2380 (`c48a1c027`, which is `main`'s tip as this was written).
-#2408 was closed as a duplicate of #2399 — the `func_ov006_0212a764` attribution it
+#2408 was closed as a duplicate of #2399 — the [func_ov006_0212a764](../../src/actors/dScMgFlower_c.cpp) attribution it
 carried is banked either way. Treat any sentence above about these PRs as history,
 not as a plan.
 

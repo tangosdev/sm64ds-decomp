@@ -202,16 +202,10 @@
    ]
   },
   "ov060:0x02119004": {
-   "name": "_ZN16BowserShockwaves13InitResourcesEv",
+   "name": "_ZN9daFRing_c13InitResourcesEv",
    "missing": [
     "func_021115e4",
     "func_021115f4"
-   ]
-  },
-  "ov065:0x0211ba88": {
-   "name": "_ZN15TtcRotatingGear13InitResourcesEv",
-   "missing": [
-    "func_021121b8"
    ]
   },
   "ov065:0x0211bf04": {
@@ -297,7 +291,7 @@
    ]
   },
   "ov096:0x02137564": {
-   "name": "_ZN7Tornado13InitResourcesEv",
+   "name": "_ZN7daTor_c13InitResourcesEv",
    "missing": [
     "func_02112968"
    ]

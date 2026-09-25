@@ -1,81 +1,88 @@
 //cpp
 /**
- * Chief Chilly (KING_DONKETU 218) -- ov073/daKing_Donketu_c.
+ * daKing_Donketu_c -- Chief Chilly (KING_DONKETU 218), ov073.
  *
- * Snowman's Land's ice-bully boss. Twelve file-scope state records;
- * ChiefChilly_ChangeState stores the pointer and dispatches. Three
- * knock-downs, two waypoint sets, a ground-ray arena guard.
+ * Snowman's Land's ice-bully boss. Twelve file-scope state records drive it;
+ * ChiefChilly_ChangeState stores the pointer and dispatches. Three knock-downs
+ * to beat him, two waypoint sets, and a ground-ray guard that keeps him on the
+ * arena.
  *
- * daKing_Donketu_c_classInit is reconstructed (RTTI daKing_Donketu_c,
- * KING_DONKETU registry). Retail does not store that spelling.
- * Historical alias: ChiefChilly_Spawn.
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
  *
- * This TU is 43 of 47. Behavior / InitResources / OnAimedAtWithEgg /
- * classInit stay in their own shards -- file-global opt_propagation off
- * on Behavior recompiles eight other members (this TU).
+ *   `#pragma defer_codegen off` (file-global). Out-of-line D1, then D0, then a
+ *   homeless D2 is the cartridge's order; with codegen deferred mwccarm emits
+ *   D2, D0, D1 instead.
  *
- * deslop
- * Leftover: BlendModelAnim::SetAnim / Particle::System::New /
- *   Particle::System::NewSimple / Particle::RunningSlidingDustAt /
- *   Player::Hurt / Sound::ChangeMusicVolume / DropShadowRadHeight
- *   stay mangled in this TU -- Fix12<int> by value (wall 6az); a
- *   method call homes the argument. Particle.h has no System::NewSimple.
- *   Particle::System::FromUniqueID is on Particle__System.h but this
- *   TU pokes sys+0x44 after the call. Callers: func_ov073_0211f144 /
- *   0211f2c0 / 0211f494 / 0211f61c / 0211fa74 / 0211fe8c / 0212000c /
- *   021200e0 / 021203ac / 02120610 / 02120ad8 / 02120c08 / 02120c7c /
- *   02120ed0 / 0212122c / 02121538 / 021215cc.
- * Leftover: dActor_c::FindWithID / ClosestPlayer / HorzAngleToCPlayer /
- *   DistToCPlayer / Spawn / PoofDustAt / HugeLandingDustAt /
- *   JumpedOnByPlayer / FindWithActorID stay mangled -- helpers are
- *   C-linkage offset soup (`char *this`). Named members already call
- *   CleanupResources / Render / OnPendingDestroy.
- * Leftover: Camera::SetLookAt / SetPos stay mangled (void *cam, offset
- *   soup). Camera::SetFlag_3 is a real method but is not on Camera.h;
- *   this TU's talk/cutscene helpers.
- * Leftover: fBase_c::MarkForDestruction / Animation::Finished /
- *   Animation::WillHitFrame / dBgCh_Actr::IsOnGround stay mangled
- *   (this+0x35c / this+0x150). Player::StartTalk / ShowMessage /
- *   GetTalkState / GetHurtState / Unk_020c6a10 stay mangled. Sound::PlayLong
- *   is on Sound.h but Layer3 Load/Stop is not. Message::EndTalk /
- *   PrepareTalk stay mangled. SaveData::IsCharacterUnlocked stays mangled.
- *   cstd::atan2 stays mangled (Fix12-by-value). func_ov073_0211f494.
- * Leftover: func_ov073_* helpers stay linker names (offset soup, PMF
- *   dispatch through data_ov073_021233*). Not coined except
- *   ChiefChilly_ChangeState, the English gloss for this class's
- *   dispatcher. struct C is complete here: mwccarm 2004/b56 picks
- *   pointer-to-member from completeness (this TU).
- * Leftover: data_ov073_02123280..b8 stay BCA_File*[2] so [1] is the
- *   BCA SetAnim reads; CleanupResources puns each to SharedFilePtr
- *   for Release. ov073 sinit constructs them; this TU does not own
- *   .bss. data_ov002_0210da30 is ov002; Cleanup Release. Naming
- *   belongs in ov002.
- * Leftover: data_ov073_02123330 / 350 / 360 / 370 / 3b0 / 3c0 / 3f0
- *   and decl_common's 021233e0 / 02123410 are sinit-owned state
- *   records this TU does not own.
- * Leftover: data_02082214 is the NitroSDK FX_SinCosTable_;
- *   func_ov073_0211f494 indexes it. Naming belongs with the SDK table.
- * Leftover: data_0209f318 camera / data_020a0e68 scratch matrix /
- *   data_0209e650 RNG seed are arm9 globals. func_02012694 (sound) /
- *   func_0200d8c8 (camera shake) / func_0200fa8c / func_02011cfc.
- * Leftover: Vec3_HorzAngle / VertAngle / HorzLen / Sub / Lsl / Asr /
- *   Matrix4x3_FromRotationY / FromTranslation /
- *   ApplyInPlaceToRotationX / ApplyInPlaceToRotationXYZExt /
- *   MulVec3Mat4x3 / MulMat4x3Mat4x3 / ApproachLinear: no shared
- *   header this TU can take without a campaign.
- * Leftover: g_profile_KING_DONKETU lives outside this TU (S14).
- * Leftover: no return new -- classInit stays in src/d_a_king_donketu.cpp
- *   (one of the four unabsorbed members).
- * Leftover: reverse order is not used. `#pragma defer_codegen off` is
- *   load-bearing: out-of-line D1 then D0 then homeless D2 matches the
- *   cartridge (deferred codegen emits D2, D0, D1).
- * Leftover: sizeof wrap in the header (0x504).
- * Leftover: `#pragma opt_loop_invariants off` is file-global and
- *   load-bearing for func_ov073_0211f61c (this TU).
- * Leftover: struct C / CB / V3 / Vec3 / Mtx43 / Mat4x3 / Base / Bool
- *   shadows are load-bearing (PMF dispatch, Render vcall, POD triples).
- * Leftover: common.h first -- BlendModelAnim.h's nested Matrix4x3
- *   would win and size-DIFF the 12-word copies (this TU).
+ *   `#pragma opt_loop_invariants off` (file-global), for func_ov073_0211f61c.
+ *
+ *   common.h must be included first. Otherwise BlendModelAnim.h's nested
+ *   Matrix4x3 wins and the twelve-word copies size-DIFF.
+ *
+ *   The struct C / CB / V3 / Vec3 / Mtx43 / Mat4x3 / Base / Bool shadows, for
+ *   PMF dispatch, the Render vcall and the POD triples. `struct C` is complete
+ *   here on purpose: mwccarm 2004/b56 picks its pointer-to-member
+ *   representation from completeness.
+ *
+ *   The sizeof wrap in the header (0x504).
+ *
+ * WHY SO MANY CALLS ARE SPELLED AS MANGLED SYMBOLS. Three reasons, and between
+ * them they cover every one below:
+ *
+ *   (a) Fix12<int> passed by value -- wall 6az. A method call homes the
+ *       argument and the bytes move. This is BlendModelAnim::SetAnim,
+ *       Particle::System::New, Particle::System::NewSimple,
+ *       Particle::RunningSlidingDustAt, Player::Hurt,
+ *       Sound::ChangeMusicVolume, DropShadowRadHeight and cstd::atan2.
+ *       Their callers are func_ov073_0211f144 / 0211f2c0 / 0211f494 /
+ *       0211f61c / 0211fa74 / 0211fe8c / 0212000c / 021200e0 / 021203ac /
+ *       02120610 / 02120ad8 / 02120c08 / 02120c7c / 02120ed0 / 0212122c /
+ *       02121538 / 021215cc.
+ *
+ *   (b) The callee is reached through C-linkage offset soup (`char *this`):
+ *       dActor_c::FindWithID / ClosestPlayer / HorzAngleToCPlayer /
+ *       DistToCPlayer / Spawn / PoofDustAt / HugeLandingDustAt /
+ *       JumpedOnByPlayer / FindWithActorID; Camera::SetLookAt / SetPos;
+ *       fBase_c::MarkForDestruction; Animation::Finished / WillHitFrame
+ *       (this+0x35c); dBgCh_Actr::IsOnGround (this+0x150); Player::StartTalk /
+ *       ShowMessage / GetTalkState / GetHurtState / Unk_020c6a10;
+ *       Message::EndTalk / PrepareTalk; SaveData::IsCharacterUnlocked.
+ *       The members that ARE named already call CleanupResources / Render /
+ *       OnPendingDestroy directly.
+ *
+ *   (c) No declaration exists to call: Particle.h has no System::NewSimple;
+ *       Camera::SetFlag_3 is a real method but is not on Camera.h; Sound.h has
+ *       PlayLong but not Layer3 Load/Stop. Particle::System::FromUniqueID is
+ *       on Particle__System.h, but this TU pokes sys+0x44 after the call.
+ *       The Vec3_* / Matrix4x3_* / ApproachLinear family (HorzAngle,
+ *       VertAngle, HorzLen, Sub, Lsl, Asr, FromRotationY, FromTranslation,
+ *       ApplyInPlaceToRotationX, ApplyInPlaceToRotationXYZExt, MulVec3Mat4x3,
+ *       MulMat4x3Mat4x3) has no shared header this TU can take without a
+ *       campaign across its other consumers.
+ *
+ * NOT OWNED BY THIS TU. The func_ov073_* helpers keep linker names -- offset
+ * soup, dispatched as PMFs through data_ov073_021233*. Nothing is coined
+ * except ChiefChilly_ChangeState, an English gloss for the dispatcher.
+ * data_ov073_02123280..b8 stay BCA_File*[2] so that [1] is the BCA SetAnim
+ * reads, and CleanupResources puns each to SharedFilePtr for Release; ov073's
+ * sinit constructs them and this TU owns no .bss. data_ov073_02123330 / 350 /
+ * 360 / 370 / 3b0 / 3c0 / 3f0, plus decl_common's 021233e0 / 02123410, are
+ * sinit-owned state records. data_02082214 is the NitroSDK FX_SinCosTable_
+ * (func_ov073_0211f494 indexes it) and naming it belongs with the SDK table;
+ * data_0209f318 (camera), data_020a0e68 (scratch matrix) and data_0209e650
+ * (RNG seed) are arm9 globals, as are func_02012694 (sound), func_0200d8c8
+ * (camera shake), func_0200fa8c and func_02011cfc. data_ov002_0210da30 is
+ * ov002's and Cleanup only Releases it; naming belongs in ov002.
+ * g_profile_KING_DONKETU lives outside this TU (S14).
+ *
+ * SCOPE. 43 of the class's 47 functions. Behavior, InitResources,
+ * OnAimedAtWithEgg and classInit stay in their own shards: a file-global
+ * `opt_propagation off` on Behavior recompiles eight other members. There is
+ * no `return new` here for the same reason -- classInit is still in
+ * src/d_a_king_donketu.cpp. daKing_Donketu_c_classInit is a reconstructed
+ * name (RTTI daKing_Donketu_c, KING_DONKETU registry); retail does not store
+ * that spelling, and the historical alias was ChiefChilly_Spawn.
+ *
+ * Function order is ROM-ascending, not reversed.
  */
 
 #pragma defer_codegen off
@@ -87,6 +94,7 @@
 #include "decl_Message.h"
 #include "types.h"
 #include "SharedFilePtr.h"
+#include "Particle__System.h"
 
 struct C;
 typedef int (C::*PMF)();
@@ -144,7 +152,6 @@ extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void MulVec3Mat4x3(const void* in, void* m, void* out);
 extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int, unsigned int, Fix12i, Fix12i, Fix12i, const void*, void*);
-extern void* _ZN8Particle6System12FromUniqueIDEj(unsigned int id);
 extern void func_0200d8c8(void *cam, void *v, int strength);
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
@@ -231,12 +238,12 @@ void func_ov073_0211f144(void* self) {
     *(unsigned int*)(c + 0x4f8) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(unsigned int*)(c + 0x4f8), 0x77, pos.x, pos.y, pos.z, 0, 0);
     *(unsigned int*)(c + 0x4fc) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(unsigned int*)(c + 0x4fc), 0x78, pos.x, pos.y, pos.z, 0, 0);
     if (*(unsigned int*)(c + 0x4f8) != 0) {
-        void* sys = _ZN8Particle6System12FromUniqueIDEj(*(unsigned int*)(c + 0x4f8));
+        void* sys = Particle::System::FromUniqueID(*(unsigned int*)(c + 0x4f8));
         if (sys != 0) *(int*)((char*)sys + 0x44) = *(int*)(c + 0x80) * 0x14;
     }
     if (*(unsigned int*)(c + 0x4fc) == 0) return;
     {
-        void* sys = _ZN8Particle6System12FromUniqueIDEj(*(unsigned int*)(c + 0x4fc));
+        void* sys = Particle::System::FromUniqueID(*(unsigned int*)(c + 0x4fc));
         if (sys != 0) *(int*)((char*)sys + 0x44) = *(int*)(c + 0x80) * 0x14;
     }
 }
@@ -389,8 +396,8 @@ void func_ov073_0211f494(void *pa, void *pb)
 extern "C" s32 func_ov073_0211f61c(void* self)
 {
     char* c = (char*)self;
-    void* r5;
-    s32 r4;
+    void* target;
+    s32 hit;
     u32 id;
 
     if (DecIfAbove0_Short(c + 0x4cc) != 0)
@@ -398,55 +405,55 @@ extern "C" s32 func_ov073_0211f61c(void* self)
     id = *(u32*)(c + 0x134);
     if (id == 0)
         return 0;
-    r5 = _ZN8dActor_c10FindWithIDEj(id);
-    if (!r5)
+    target = _ZN8dActor_c10FindWithIDEj(id);
+    if (!target)
         return 0;
 
-    r4 = 0;
+    hit = 0;
     if (*(s32*)(c + 0x130) & 0x6000) {
         func_ov073_0211f494(c, c);
         *(s32*)(c + 0x98) = 0x20000;
-        r4 = 1;
+        hit = 1;
     }
 
     {
-        int isBf = (int)(*(u16*)((char*)r5 + 0xc) == 0xbf);
+        int isBf = (int)(*(u16*)((char*)target + 0xc) == 0xbf);
         if (isBf == 1) {
-            if (*(u8*)((char*)r5 + 0x703) != 0) {
+            if (*(u8*)((char*)target + 0x703) != 0) {
                 s32 flags = *(s32*)(c + 0x130) & 0x107e0;
                 if (flags) {
                     *(s32*)(c + 0x98) = 0x41000;
-                    r4 = 1;
+                    hit = 1;
                 }
             }
-            if (r4 == 0) {
+            if (hit == 0) {
                 s32 flags = *(s32*)(c + 0x130) & 0x50380;
                 if (flags) {
                     func_ov073_0211f494(c, c);
                     *(s32*)(c + 0x98) = 0x2d000;
-                    r4 = 1;
+                    hit = 1;
                 }
             }
-            if (r4 == 0) {
-                if ((*(s32*)(c + 0x130) & 0x70) || (*(u8*)((char*)r5 + 0x6f9) != 0)
-                    || (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x110, r5) != 0)) {
+            if (hit == 0) {
+                if ((*(s32*)(c + 0x130) & 0x70) || (*(u8*)((char*)target + 0x6f9) != 0)
+                    || (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x110, target) != 0)) {
                     func_ov073_0211f494(c, c);
                     *(s32*)(c + 0x98) = 0x20000;
-                    r4 = 1;
+                    hit = 1;
                 }
             }
         }
     }
 
-    if (r4 == 0) {
+    if (hit == 0) {
         if (*(s32*)(c + 0x130) & 0x400) {
             func_ov073_0211f494(c, c);
             *(s32*)(c + 0x98) = 0x3d000;
-            r4 = 1;
+            hit = 1;
         }
     }
 
-    if (r4 != 0) {
+    if (hit != 0) {
         s32 count;
         s32 i;
         s32 shortY;
@@ -507,11 +514,11 @@ extern "C" s32 func_ov073_0211f61c(void* self)
         v2.x = *(s32*)(c + 0x5c);
         v2.y = *(s32*)(c + 0x60);
         v2.z = *(s32*)(c + 0x64);
-        if (_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(r5, &v2, 0, 0x14000, 1, 0, 1) == 0)
+        if (_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(target, &v2, 0, 0x14000, 1, 0, 1) == 0)
             goto done0;
     }
     {
-        s32* pv = (s32*)((u32)r5 + 0x5c);
+        s32* pv = (s32*)((u32)target + 0x5c);
         _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x8a, pv[0], pv[1], pv[2]);
     }
     if (*(void**)(c + 0x37c) == &data_ov073_021233d0) {
@@ -1053,11 +1060,11 @@ int func_ov073_02120844(int *t)
 
 // @symbol func_ov073_021208e4
 extern "C" {
-int func_ov073_021208e4(char *r0) {
-    *(int *)(r0 + 0x98) = 0x14000;
-    *(int *)(r0 + 0xa8) = 0x1e000;
-    *(int *)(r0 + 0x9c) = -0x3000;
-    *(int *)(r0 + 0x500) = 0;
+int func_ov073_021208e4(char *self) {
+    *(int *)(self + 0x98) = 0x14000;
+    *(int *)(self + 0xa8) = 0x1e000;
+    *(int *)(self + 0x9c) = -0x3000;
+    *(int *)(self + 0x500) = 0;
     return 1;
 }
 }
@@ -1305,18 +1312,18 @@ int func_ov073_02120ed0(void *self)
     {
         int d;
         int i;
-        u8 *r5;
+        u8 *dustPos;
         *(int *)(c + 0x4b4) = 0;
         d = *(int *)(c + 0x98);
         if (d < 0) d = -d;
         if (d > 0xa) {
-            r5 = c;
+            dustPos = c;
             i = 0;
             do {
                 _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(
-                    *(int *)(r5 + 0x4d4), *(int *)(r5 + 0x4d8), *(int *)(r5 + 0x4dc));
+                    *(int *)(dustPos + 0x4d4), *(int *)(dustPos + 0x4d8), *(int *)(dustPos + 0x4dc));
                 i++;
-                r5 += 0xc;
+                dustPos += 0xc;
             } while (i < 2);
         }
         _Z14ApproachLinearRiii((int *)(c + 0x98), 0, *(int *)(c + 0x4d0));

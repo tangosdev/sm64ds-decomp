@@ -125,7 +125,6 @@ from:0x02112af8 kind:load to:0x02112898 module:overlay(24)
 from:0x02112b00 kind:load to:0x02112928 module:overlay(24)
 from:0x02112b08 kind:load to:0x02112938 module:overlay(24)
 from:0x02112b10 kind:load to:0x021129d0 module:overlay(24)
-from:0x02112e1c kind:load to:0x020cff5d module:overlay(7)
 from:0x021137c0 kind:load to:0x0209a764 module:main
 from:0x021137c4 kind:load to:0x021137ec module:overlay(24)
 from:0x021137c8 kind:load to:0x0208e390 module:main

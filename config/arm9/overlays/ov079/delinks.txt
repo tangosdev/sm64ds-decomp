@@ -191,73 +191,17 @@ src/d_a_klr.c:
     complete
     .text start:0x02126d64 end:0x02126dbc
 
-src/_ZN11BillBlasterD1Ev.cpp:
+src/actors/daObjBkKillerdai_c.cpp:
     complete
-    .text start:0x02126dbc end:0x02126e00
-
-src/_ZN11BillBlasterD0Ev.cpp:
-    complete
-    .text start:0x02126e00 end:0x02126e58
-
-src/_ZN11BillBlaster4KillEv.cpp:
-    complete
-    .text start:0x02126e58 end:0x02126ecc
-
-src/_ZN11BillBlaster15OnHitByMegaCharER6Player.cpp:
-    complete
-    .text start:0x02126ecc end:0x02126f04
-
-src/_ZN11BillBlaster16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02126f04 end:0x02126f64
-
-src/_ZN11BillBlaster6RenderEv.cpp:
-    complete
-    .text start:0x02126f64 end:0x02126f8c
-
-src/_ZN11BillBlaster8BehaviorEv.cpp:
-    complete
-    .text start:0x02126f8c end:0x02127090
-
-src/_ZN11BillBlaster13InitResourcesEv.cpp:
-    complete
-    .text start:0x02127090 end:0x021271b4
+    .text start:0x02126dbc end:0x021271b4
 
 src/d_a_obj_bk_killerdai.c:
     complete
     .text start:0x021271b4 end:0x021271e4
 
-src/_ZN12FortressWallD1Ev.cpp:
+src/actors/daObjBk_Kabe_c.cpp:
     complete
-    .text start:0x021271e4 end:0x02127228
-
-src/_ZN12FortressWallD0Ev.cpp:
-    complete
-    .text start:0x02127228 end:0x02127280
-
-src/_ZN12FortressWall4KillEv.cpp:
-    complete
-    .text start:0x02127280 end:0x021272e0
-
-src/_ZN12FortressWall24OnHitByCannonBlastedCharER8dActor_c.cpp:
-    complete
-    .text start:0x021272e0 end:0x02127300
-
-src/_ZN12FortressWall16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02127300 end:0x02127364
-
-src/_ZN12FortressWall6RenderEv.cpp:
-    complete
-    .text start:0x02127364 end:0x021273a4
-
-src/_ZN12FortressWall8BehaviorEv.cpp:
-    complete
-    .text start:0x021273a4 end:0x02127494
-
-src/_ZN12FortressWall13InitResourcesEv.cpp:
-    complete
-    .text start:0x02127494 end:0x0212757c
+    .text start:0x021271e4 end:0x0212757c
 
 src/d_a_obj_bk_kabe_bk_kabe01.c:
     complete

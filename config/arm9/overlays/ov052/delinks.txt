@@ -8,29 +8,9 @@ src/game/actors/d_a_obj_emm_log.cpp:
     complete
     .text start:0x021111a0 end:0x02111440
 
-src/_ZN14SquarePathLiftD1Ev.cpp:
+src/actors/daObjEmmYuka_c.cpp:
     complete
-    .text start:0x02111440 end:0x02111484
-
-src/_ZN14SquarePathLiftD0Ev.cpp:
-    complete
-    .text start:0x02111484 end:0x021114dc
-
-src/_ZN14SquarePathLift16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021114dc end:0x02111524
-
-src/_ZN14SquarePathLift6RenderEv.cpp:
-    complete
-    .text start:0x02111524 end:0x0211154c
-
-src/_ZN14SquarePathLift8BehaviorEv.cpp:
-    complete
-    .text start:0x0211154c end:0x0211177c
-
-src/_ZN14SquarePathLift13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211177c end:0x02111830
+    .text start:0x02111440 end:0x02111830
 
 src/d_a_obj_emm_yuka.c:
     complete

@@ -309,9 +309,9 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 | `bhvChainChomp` | → | `daWanwan_c` (+`daObjWanwanShutter_c`) | [ov014](../../config/arm9/overlays/ov014/symbols.txt) |
 | `bhvSmallBully` / `bhvBigBully` | → | `daDonketu_c` / `daBDonketu_c` | [ov064](../../config/arm9/overlays/ov064/symbols.txt) |
 | `bhvSmallWhomp` (+King) | → | `Whomp` (`mIsKing` flag) | [ov079](../../config/arm9/overlays/ov079/symbols.txt) |
-| `bhvThwomp` | → | `Thwomp` | [ov091](../../config/arm9/overlays/ov091/symbols.txt) |
+| `bhvThwomp` | → | `daDsn_c` | [ov091](../../config/arm9/overlays/ov091/symbols.txt) |
 | `bhvBoo` | → | `Boo` / `BigBoo` | [ov063](../../config/arm9/overlays/ov063/symbols.txt) |
-| `bhvMrI` | → | `MrI` (+`MrI_Projectile`) | [ov071](../../config/arm9/overlays/ov071/symbols.txt) |
+| `bhvMrI` | → | `daEykn_c` (+`MrI_Projectile`) | [ov071](../../config/arm9/overlays/ov071/symbols.txt) |
 | **`bhvFlyingBookend`** | → | **`BookShot`** — *not* "Bookend" | [ov020](../../config/arm9/overlays/ov020/symbols.txt) |
 | `bhvHomingAmp` / `bhvCirclingAmp` | → | `Amp` | [ov070](../../config/arm9/overlays/ov070/symbols.txt) |
 | `bhvKoopa` | → | `Koopa` (+`daRNk_c`, `daRFlag_c`, `KoopaShell`) | [ov062](../../config/arm9/overlays/ov062/symbols.txt) |
@@ -320,8 +320,8 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 | `bhvFlyGuy` | → | `FlyGuy` | [ov070](../../config/arm9/overlays/ov070/symbols.txt) |
 | `bhvSnufit` / `bhvSwoop` | → | `Snufit` / `Swoop` | [ov065](../../config/arm9/overlays/ov065/symbols.txt) |
 | `bhvScuttlebug` | → | `Scuttlebug` | [ov071](../../config/arm9/overlays/ov071/symbols.txt) |
-| `bhvSpindrift` | → | `Spindrift` | [ov081](../../config/arm9/overlays/ov081/symbols.txt) |
-| `bhvWigglerHead`/`Body` | → | `Wiggler` | [ov034](../../config/arm9/overlays/ov034/symbols.txt) |
+| `bhvSpindrift` | → | `daHuwa_c` | [ov081](../../config/arm9/overlays/ov081/symbols.txt) |
+| `bhvWigglerHead`/`Body` | → | `daHanachan_c` | [ov034](../../config/arm9/overlays/ov034/symbols.txt) |
 | `bhvPiranhaPlant` | → | `PiranhaPlant` (+`FirePiranhaPlantBig/Small`) | [ov084](../../config/arm9/overlays/ov084/symbols.txt) |
 | `bhvEnemyLakitu` / camera Lakitu | → | `daJgm_c` / `daC_Jugem_c` | [ov077](../../config/arm9/overlays/ov077/symbols.txt) / [ov085](../../config/arm9/overlays/ov085/symbols.txt) |
 | `bhvBowser` | → | `Bowser` (+`BowserTail`, `BowserFire`) | [ov060](../../config/arm9/overlays/ov060/symbols.txt) |

@@ -26,6 +26,50 @@ struct dScMgCurling2_stone {
 typedef char dScMgCurling2_stone_size_must_be_0x30[sizeof(struct dScMgCurling2_stone) == 0x30 ? 1 : -1];
 #endif
 
+/* Falling piece, 0x24 bytes, 0x32 of them at 0x48c0. Seeded across the top
+ * of the screen and recycled once y passes 0xc8. */
+struct dScMgCurling2_piece {
+    s32 x;              /* 0x00, 20.12 */
+    s32 y;              /* 0x04, 20.12 */
+    s32 xInc;           /* 0x08 */
+    s32 yInc;           /* 0x0c */
+    s32 yTarget;        /* 0x10, the value yInc ramps toward */
+    u16 countdown;      /* 0x14 */
+    u16 countdown2;     /* 0x16 */
+    u16 countdown3;     /* 0x18 */
+    u8  pad1a[2];       /* 0x1a */
+    u8  updateEnable;   /* 0x1c */
+    u8  modeIndex;      /* 0x1d, into data_ov006_02141988 */
+    u8  xIndex;         /* 0x1e, into data_ov006_021419f8 or _021419b8 */
+    u8  yIndex;         /* 0x1f, into data_ov006_021419a0 */
+    u8  drawEnable;     /* 0x20 */
+    u8  sprite0;        /* 0x21, into data_ov006_0213a5e0 */
+    u8  sprite1;        /* 0x22 */
+    u8  pad23;          /* 0x23 */
+};
+
+#ifndef SM64DS_PLATFORM_PC
+typedef char dScMgCurling2_piece_size_must_be_0x24[sizeof(struct dScMgCurling2_piece) == 0x24 ? 1 : -1];
+#endif
+
+/* Number spawned between two stones when they collide, 0x18 bytes,
+ * 0x3c of them at 0x4fe0. */
+struct dScMgCurling2_value {
+    s32 x;              /* 0x00, 20.12 */
+    s32 y;              /* 0x04, 20.12 */
+    s32 xInc;           /* 0x08, zeroed at spawn and never read */
+    s32 yInc;           /* 0x0c, decays by 0x40 a frame */
+    u16 lifetime;       /* 0x10 */
+    u16 value;          /* 0x12, drawn as the sprite's number */
+    u8  live;           /* 0x14 */
+    u8  mode;           /* 0x15, 1 or 2 */
+    u8  pad16[2];       /* 0x16 */
+};
+
+#ifndef SM64DS_PLATFORM_PC
+typedef char dScMgCurling2_value_size_must_be_0x18[sizeof(struct dScMgCurling2_value) == 0x18 ? 1 : -1];
+#endif
+
 struct dScMgCurling2_c : dScMgBase_c {
     virtual ~dScMgCurling2_c();
 
@@ -63,12 +107,11 @@ struct dScMgCurling2_c : dScMgBase_c {
      * -- the two pushers hand to 3, the settler hands to 0, the Y chain runs
      * 0 -> 1 -> 2 -> 0 -- and data_ov006_0212e4f4/_0212e4f8/_0212e4fc, the ROM
      * tables the two pickers and PickStepMode read from, hold exactly {1, 2}.
-     * What the 0x48c0 records MEAN in the minigame is still unproven and no
-     * name here claims it; see src/actors/dScMgCurling2_c.cpp's own banner.
+     * Those handlers step one dScMgCurling2_piece (the 0x48c0 array). The
+     * method names are still coined; the ROM does not carry them.
      *
-     * Members whose C name a still-shard caller spells stay func_ov006_*: the
-     * twelve listed in that banner cannot be renamed without editing segment B
-     * or include/decl_common.h. */
+     * Members a still-shard caller spells as func_ov006_* stay that way.
+     * Renaming them means editing those callers or include/decl_common.h. */
     void PickStepMode(int entry);
     void StepXOnly(int entry);
     void StepXAndY(int entry);
@@ -93,7 +136,10 @@ struct dScMgCurling2_c : dScMgBase_c {
     void SpawnValue(int stone, int other);
 
     dScMgCurling2_stone mStone[11]; /* 0x4660, stride 0x30 */
-    u8  pad_4870[0xd10];
+    u8  pad_4870[0x50];                 /* 0x4870, five 0x10-byte records */
+    dScMgCurling2_piece mPiece[0x32];   /* 0x48c0 */
+    u8  pad_4fc8[0x18];                 /* 0x4fc8 */
+    dScMgCurling2_value mValue[0x3c];   /* 0x4fe0 */
     s32 unk_5580;            /* 0x5580 */
     s32 unk_5584;            /* 0x5584, drag x (fx32) */
     s32 unk_5588;            /* 0x5588, drag y */

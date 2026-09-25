@@ -1,35 +1,47 @@
 //cpp
-/* Genuine production translation unit for ov070/daBrq_c (Amp, BIRIKYU 266).
+/* daBrq_c -- the Amp (BIRIKYU 266), ov070.
+ *
+ * It circles its spawn point -- radius 180.0 when param1 bit 1 is set,
+ * otherwise 360.0, its direction set by param1 bit 0 -- bobbing and pulsing
+ * in size, with its loop sound playing. Once its 15-frame start timer runs
+ * out, a Mario who touches it is shocked (Player::Shock) and it rests for 60
+ * frames (state 0) before circling again. A hit with collider flag 0x10
+ * defeats it instead: it counts a mega kill, flies off tumbling and poofs on
+ * landing or after 45 frames (state 2).
  *
  * daBrq_c_classInit and g_profile_BIRIKYU are reconstructed source-style
- * names. SM64DS proves the daBrq_c RTTI identity, BIRIKYU registry ID,
- * descriptor/factory relationship, and object shape; later EAD lineage
- * supplies the spelling prior. Exact original SM64DS symbols are not
- * preserved. Historical project aliases: Amp_Spawn and Amp_SpawnInfo. The
+ * names: SM64DS proves the RTTI identity, registry ID, descriptor/factory
+ * relationship and object shape, and later EAD lineage supplies the
+ * spelling. Historical project aliases: Amp_Spawn and Amp_SpawnInfo. The
  * private state-machine spellings are inferred; their class ownership,
- * bodies, calls, PMF layout, and ordering are proven.
+ * bodies, calls, PMF layout and ordering are proven.
  *
- * mwccarm emits ordinary function sections in reverse source order. Keep the
- * ROM-high factory first and the destructor group last. InitResources is the
- * key function; together with the inline destructor in the real header it
- * naturally emits retail D1 then D0 and the complete class data group.
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
+ *   Source is reverse ROM order: keep the ROM-high factory first and the
+ *   destructor group last. InitResources is the key function; with the
+ *   inline destructor in the real header it emits retail D1 then D0 and the
+ *   complete class data group.
+ *   common.h first: BrqMatrixWords is the ROM's twelve-word copy of the
+ *   identity Matrix4x3.
+ *   Vector3 overlays on mCamSpacePosX / mScaleX / mPosX: there is no
+ *   Vector3 member at those addresses.
  *
- * deslop
- * Leftover:
- * - SetRanges / dCcAcPos_c::Init / dBgCh_Actr::Init / ModelAnim::SetAnim /
- *   TextureSequence::SetFile / TextureTransformer::SetFile /
- *   DropShadowRadHeight / Particle::System::NewSimple stay mangled: Fix12<int>
- *   by value is wall 6az. dBgCh_Actr::Init header Fix12i mangles as i.
- * - UpdateDefeatedState calls dBgCh_Actr_UpdateDiscreteNoLava_veneer
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
+ *   SetRanges, dCcAcPos_c::Init, dBgCh_Actr::Init, ModelAnim::SetAnim,
+ *   TextureSequence::SetFile, TextureTransformer::SetFile,
+ *   DropShadowRadHeight and Particle::System::NewSimple pass Fix12<int> by
+ *   value (notes/mwccarm-codegen.md 6az). dBgCh_Actr::Init's header Fix12i
+ *   also mangles as int. UpdateDefeatedState calls
+ *   dBgCh_Actr_UpdateDiscreteNoLava_veneer
  *   (0x02038420), not the method body at 0x02037024.
- * - SharedFilePtr +4 BMD/BTP (Prepare/SetFile; header has no fields).
- * - data_ov070_* resource handles and PMF state table. The deferred
- *   initializer at 0x02122d80 stays separately enrolled.
- * - common.h first (BrqMatrixWords twelve-word Matrix4x3 identity copy).
- * - Vector3 overlays on mCamSpacePosX / mScaleX / mPosX (no Vector3 member
- *   at those addresses).
- * - factory `new` odr-uses inline ~Vector3; vague D1 is deadstrip-duplicate
- *   to arm9:0x020072c0.
+ *
+ * Known limits:
+ *   SharedFilePtr +4 is read as the BMD/BTP pointer (Prepare/SetFile); the
+ *   header has no field for it.
+ *   The data_ov070_* resource handles and the PMF state table keep linker
+ *   names; the deferred initializer at 0x02122d80 is enrolled separately.
+ *   The factory's `new` odr-uses inline ~Vector3; its vague D1 is a
+ *   deadstrip duplicate of arm9:0x020072c0.
  */
 
 #include "common.h"
@@ -49,8 +61,6 @@ struct BrqSpawnInfo {
 typedef char BrqSpawnInfo_size_must_be_0x1c[
     sizeof(BrqSpawnInfo) == 0x1c ? 1 : -1];
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol daBrq_c_classInit
 extern "C" daBrq_c *daBrq_c_classInit()
 {
@@ -68,11 +78,8 @@ extern "C" BrqSpawnInfo g_profile_BIRIKYU = {
     0x00a28000
 };
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-/* recovered: named members + shared header, real C++ method.
- * SetRanges / dCcAcPos_c::Init / dBgCh_Actr::Init stay mangled (Fix12 by
- * value, wall 6az). */
+/* SetRanges / dCcAcPos_c::Init / dBgCh_Actr::Init stay mangled (Fix12 by
+ * value, notes/mwccarm-codegen.md 6az). */
 #include "TextureSequence.h"
 struct SharedFilePtr;
 struct BMD_File;
@@ -139,8 +146,6 @@ int daBrq_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daBrq_c8BehaviorEv
 int daBrq_c::Behavior()
 {
@@ -153,9 +158,6 @@ int daBrq_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-/* recovered: named members + shared header, real C++ method */
 // @symbol _ZN7daBrq_c6RenderEv
 int daBrq_c::Render()
 {
@@ -170,15 +172,11 @@ int daBrq_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daBrq_c16OnPendingDestroyEv
 void daBrq_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 #include "SharedFilePtr.h"
 
 extern SharedFilePtr data_ov070_021235fc;
@@ -202,8 +200,6 @@ int daBrq_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern BrqStateHandlers data_ov070_02123668[];
 // @symbol _ZN7daBrq_c8SetStateEi
 void daBrq_c::SetState(s32 state)
@@ -212,8 +208,6 @@ void daBrq_c::SetState(s32 state)
     EnterState();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daBrq_c10EnterStateEv
 void daBrq_c::EnterState()
 {
@@ -221,8 +215,6 @@ void daBrq_c::EnterState()
     (this->**handler)();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daBrq_c11UpdateStateEv
 void daBrq_c::UpdateState()
 {
@@ -230,8 +222,6 @@ void daBrq_c::UpdateState()
     (this->**handler)();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
     ModelAnim *model, BCA_File *file, int flags, int speed, u32 startFrame);
 extern int data_ov070_0212360c[];
@@ -246,8 +236,6 @@ s32 daBrq_c::EnterCooldownState()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* (Animation: real header type in scope) */
 
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
@@ -256,15 +244,13 @@ extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
 s32 daBrq_c::UpdateCooldownState()
 {
     mModelAnim.Advance();
-    unsigned char r = DecIfAbove0_Byte(&mStateTimer);
-    if (r == 0) {
+    unsigned char timeLeft = DecIfAbove0_Byte(&mStateTimer);
+    if (timeLeft == 0) {
         SetState(1);
     }
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 typedef int Fix12i;
 struct BCA_File; struct BTP_File; struct BTA_File;
 /* (ModelAnim/TextureSequence/TextureTransformer: real header types in scope) */
@@ -303,9 +289,6 @@ s32 daBrq_c::EnterActiveState()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-/* recovered: real class fields and member state handler */
 void ApproachLinear(s32 &value, s32 target, s32 step);
 extern "C" void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 namespace Sound {
@@ -330,7 +313,7 @@ s32 daBrq_c::UpdateActiveState()
     mOrbitAngle = (short)(mOrbitAngle + 0xa00);
 
     unsigned char bit1 = (unsigned char)((param1 >> 1) & 1);
-    int ip = bit1 ? 0xb4000 : 0x168000;
+    int orbitRadius = bit1 ? 0xb4000 : 0x168000;
 
     mOrbitCenter.x = mPosX;
     mOrbitCenter.y = mPosY;
@@ -338,8 +321,8 @@ s32 daBrq_c::UpdateActiveState()
 
     {
         int idx = ((unsigned short)mPrevAngleY) >> 4;
-        int cosv = data_02082214[idx * 2];
-        mCylinderOffset.x = (int)(((s64)ip * cosv + 0x800) >> 0xc);
+        int sinv = data_02082214[idx * 2];
+        mCylinderOffset.x = (int)(((s64)orbitRadius * sinv + 0x800) >> 0xc);
     }
     {
         int idx = ((unsigned short)mOrbitAngle) >> 4;
@@ -348,8 +331,8 @@ s32 daBrq_c::UpdateActiveState()
     }
     {
         int idx = ((unsigned short)mPrevAngleY) >> 4;
-        int sinv = data_02082214[idx * 2 + 1];
-        mCylinderOffset.z = (int)(((s64)ip * sinv + 0x800) >> 0xc);
+        int cosv = data_02082214[idx * 2 + 1];
+        mCylinderOffset.z = (int)(((s64)orbitRadius * cosv + 0x800) >> 0xc);
     }
 
     AddVec3(&mOrbitCenter, &mCylinderOffset, &mOrbitCenter);
@@ -358,8 +341,8 @@ s32 daBrq_c::UpdateActiveState()
 
     {
         int idx = ((unsigned short)mSpinAngle) >> 4;
-        int cosv = data_02082214[idx * 2];
-        int scale = (int)(((s64)0x555 * cosv + 0x800) >> 0xc) + 0x800;
+        int sinv = data_02082214[idx * 2];
+        int scale = (int)(((s64)0x555 * sinv + 0x800) >> 0xc) + 0x800;
         mScaleX = scale;
         mScaleY = scale;
         mScaleZ = scale;
@@ -378,9 +361,6 @@ s32 daBrq_c::UpdateActiveState()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-/* recovered: real class fields and member state handler */
 namespace Sound {
 void PlayBank0(u32 soundId, const Vector3 &pos);
 }
@@ -411,8 +391,6 @@ s32 daBrq_c::EnterDefeatedState()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* The ROM calls the interworking veneer at 0x02038420, not the direct
  * dBgCh_Actr::UpdateDiscreteNoLava body at 0x02037024. */
 extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *collision);
@@ -436,8 +414,6 @@ done:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 #include "dBgCh_Gnd.h"
 extern "C" void Matrix4x3_FromRotationXYZExt(
     Matrix4x3 *matrix, s16 x, s16 y, s16 z);
@@ -451,7 +427,7 @@ struct BrqVector3Words { int x, y, z; };
 // @symbol _ZN7daBrq_c20UpdateModelTransformEv
 void daBrq_c::UpdateModelTransform()
 {
-    int g;
+    int shadowDepth;
 
     if (mState == 2) {
         Matrix4x3_FromRotationXYZExt(
@@ -472,7 +448,7 @@ void daBrq_c::UpdateModelTransform()
         mMat4x3.m[11] = mOrbitCenter.z >> 3;
     }
 
-    g = 0x1f4000;
+    shadowDepth = 0x1f4000;
     if (data_0209f2f8[0] == 0x11) {
         BrqVector3Words pos;
         int y;
@@ -484,16 +460,14 @@ void daBrq_c::UpdateModelTransform()
         dBgCh_Gnd ground;
         ground.SetObjAndPos(*(Vector3 *)&pos, 0);
         if (ground.DetectClsn() != 0) {
-            g = (mPosY - ground.clsnY) + 0x28000;
+            shadowDepth = (mPosY - ground.clsnY) + 0x28000;
         }
     }
 
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-        this, &mShadowModel, &mMat4x3, 0x5a000, g, 0xf);
+        this, &mShadowModel, &mMat4x3, 0x5a000, shadowDepth, 0xf);
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 #include "Player.h"
 extern "C" short Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
 
@@ -535,10 +509,6 @@ foundPlayer:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* The inline destructor and InitResources key function emit the retail D1/D0
  * group without a retained D2 or forcing helper. */
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */

@@ -146,7 +146,7 @@ For a class whose destructor stores its own vptr and then `dBgActor_c`'s
 (inlined), and destroys the `dBgW_KcMbg` at 0x124 and the `Model` at 0xd4 before
 chaining to `dActor_c`: all three of those are `dBgActor_c`'s own. Everything such
 a header used to restate below 0x31e was `dActor_c`'s and `dBgActor_c`'s, and is
-inherited. This applies to `daObjSimpleLift_c`, `FloatOnLavaPlatform`,
+inherited. This applies to `daObjSimpleLift_c`, `daObjFl_Block_c`,
 `daObjRc_Guruguru_c`, `RotatingUpDownPlatformUtm` and their siblings.
 
 Where a size assertion is only the observed field span rounded up, it guards the
@@ -174,27 +174,27 @@ Field roles, from `InitResources` [ov091](../config/arm9/overlays/ov091/symbols.
 | 0x320 | `mMoveTimer`  | `DecIfAbove0_Short`; reloaded from [data_ov091_02134504](../config/arm9/overlays/ov091/symbols.txt)`[mVariant]` and the yaw flips by 0x8000 when it expires |
 | 0x322 | `mVariant`    | set 0..6 by a switch on `actorID`; indexes the model, collider and CLPS tables (stride 0xc) and the two [data_ov091_021345xx](../config/arm9/overlays/ov091/symbols.txt) tables |
 
-## `include/RotatingUpDownPlatform.h`
+## `include/daLinelift2_c.h`
 
 Still a flat generated struct. Own fields start at 0x320.
 
 | offset | name | evidence |
 |---|---|---|
-| 0x320 | `mState` | `Behavior` dispatches [data_ov091_021354e0](../config/arm9/overlays/ov091/symbols.txt)`[mState]` as a pointer-to-member; [func_ov091_02132000](../src/func_ov091_02132000.c) sets it to 1 |
+| 0x320 | `mState` | `Behavior` dispatches [data_ov091_021354e0](../config/arm9/overlays/ov091/symbols.txt)`[mState]` as a pointer-to-member; [func_ov091_02132000](../src/game/actors/d_a_linelift2.cpp) sets it to 1 |
 | 0x324 | `mNodeCount` | `= PathPtr::NumNodes()` |
 | 0x328 | `mNodeIndex` | `= 0`, passed to `PathPtr::GetNode(…, idx)`, incremented when the first node equals the start position |
 | 0x32c | `mBasePosX` | `= mPosX` in `InitResources`; `Vec3_Equal(this+0x338, this+0x32c)` reads 0x32c as a `Vector3` |
 | 0x330 | `mBasePosY` | `= mPosY` |
 | 0x334 | `mBasePosZ` | `= mPosZ` |
-| 0x338 | `mTargetPosX` | `PathPtr::GetNode` writes a `Vector3` over 0x338/0x33c/0x340; [func_ov091_02132000](../src/func_ov091_02132000.c) reads all three back as one |
+| 0x338 | `mTargetPosX` | `PathPtr::GetNode` writes a `Vector3` over 0x338/0x33c/0x340; [func_ov091_02132000](../src/game/actors/d_a_linelift2.cpp) reads all three back as one |
 | 0x33c | `mTargetPosY` | as above |
 | 0x340 | `mTargetPosZ` | as above |
 | 0x344 | `mPathPtr` | `PathPtr::FromID(this+0x344, param & 0xf)` |
 | 0x34c | `mSinkOffsetY` | `ApproachLinear(&this[0x34c], mIsPressed ? 0x1e000 : 0, 0x5000)`, then subtracted from `mPosY` |
 | 0x350 | `mBaseAngleY` | `= mAngleY` in `InitResources` |
 | 0x352 | `mVariant` | `= (param1 >> 8) & 0xff`; indexes the model / collider / CLPS tables |
-| 0x354 | `mStateTimer` | incremented every `Behavior`, zeroed on a state change; [func_ov091_02132000](../src/func_ov091_02132000.c) gates on `<= 0x14` |
-| 0x356 | `mIsPressed` | cleared at the end of every `Behavior`; [func_ov091_02132360](../src/func_ov091_02132360.cpp) sets it from a collision callback when the toucher's actorID is 0xbf; when set, `mSinkOffsetY` approaches 0x1e000 and [func_ov091_02132000](../src/func_ov091_02132000.c) advances the state |
+| 0x354 | `mStateTimer` | incremented every `Behavior`, zeroed on a state change; [func_ov091_02132000](../src/game/actors/d_a_linelift2.cpp) gates on `<= 0x14` |
+| 0x356 | `mIsPressed` | cleared at the end of every `Behavior`; [func_ov091_02132360](../src/game/actors/d_a_linelift2.cpp) sets it from a collision callback when the toucher's actorID is 0xbf; when set, `mSinkOffsetY` approaches 0x1e000 and [func_ov091_02132000](../src/game/actors/d_a_linelift2.cpp) advances the state |
 
 `mIsPressed` names the *observed role* (something is bearing on the platform), not
 the identity of actor 0xbf, which is not settled here.
@@ -265,9 +265,9 @@ In `Kill`, `Particle::System::NewSimple`'s signature is deliberately the local
 (`Fix12<int>`) which mwccarm passes differently at the call site, so declaring the
 true types breaks the byte match. See `notes/mwccarm-codegen.md` 6az.
 
-## `include/UpDownLiftBbh.h`
+## `include/daUdlift_c.h`
 
-Still a flat generated struct ([ov095](../config/arm9/overlays/ov095/symbols.txt)). Own fields start at 0x320.
+A real `dBgActor_c` subclass ([ov095](../config/arm9/overlays/ov095/symbols.txt)), promoted as [src/actors/daUdlift_c.cpp](../src/actors/daUdlift_c.cpp). Own fields start at 0x320.
 
 | offset | name | evidence |
 |---|---|---|
@@ -281,16 +281,14 @@ Still a flat generated struct ([ov095](../config/arm9/overlays/ov095/symbols.txt
 | 0x33c | `mMiddleY` | `= (mTopY + mBottomY) / 2` |
 | 0x340 | `mSoundHandle` | `= Sound::PlayLong(mSoundHandle, 3, 0x82, …)` in the state functions |
 | 0x344 | `mStateTimer` | incremented every `Behavior`, zeroed on a state change |
-| 0x347 | `mIsArmed` | 1 at init; [func_ov095_02136368](../src/func_ov095_02136368.c) only starts the lift while it is 1 and clears it on trigger; `Behavior` re-arms it when the rider leaves |
+| 0x346 | `mIsAtBottom` | set when the descent ([func_ov095_02136178](../src/actors/daUdlift_c.cpp)) reaches `mBottomY`, cleared when the climb ([func_ov095_02136298](../src/actors/daUdlift_c.cpp)) reaches `mTopY`; the waiting state [func_ov095_02136368](../src/actors/daUdlift_c.cpp) branches on it |
+| 0x347 | `mIsArmed` | 1 at init; [func_ov095_02136368](../src/actors/daUdlift_c.cpp) only starts the lift while it is 1 and clears it on trigger; `Behavior` re-arms it when the rider leaves |
 | 0x348 | `mIsRidden` | set by the collider callback [func_ov095_02136764](../src/func_ov095_02136764.cpp), read once and cleared at the end of every `Behavior` |
 
 Left as `unk_`, honestly:
 
-- `unk_346` — a flag the state functions set and clear ([func_ov095_02136178](../src/func_ov095_02136178.c)
-  sets it, [func_ov095_02136298](../src/func_ov095_02136298.cpp) clears it, [func_ov095_02136368](../src/func_ov095_02136368.c) does both). No body in the tree
-  shows what it means.
 - `unk_349` — set to 0, and to 1 for the `actorID == 0x83` variant. Both
-  `InitResources` and [func_ov095_02136298](../src/func_ov095_02136298.cpp) then compare it against 2 and 0, and
+  `InitResources` and [func_ov095_02136298](../src/actors/daUdlift_c.cpp) then compare it against 2 and 0, and
   the `== 2` arm is unreachable from what the tree can see. It is a byte load in
   the ROM, not the `s32 mVariant` at 0x328 (those are different instructions), so
   it is genuinely its own field and its role is not settled. Do not "fix" the
@@ -307,11 +305,11 @@ below 0x320 is `fBase_c`'s and `dActor_c`'s, restated by `gen_header.py`.
 bytes of padding by the generated header; every access in the ROM is 32-bit, so
 they are `s32` / `u32` now. Same offsets, same size, byte-verified.
 
-## `include/daObjSm_Lift_c.h` (SkiLift)
+## `include/daObjSm_Lift_c.h` (daObjSm_Lift_c)
 
 An RTTI-derived flat placeholder credited to a `deepen_rtti.py` that has
 never existed in this repo (see notes/minigame-provenance.md), shared by
-`SkiLift::InitResources` and [func_ov018_021122ec](../src/game/actors/d_a_pg_mthr.cpp) ([ov018](../config/arm9/overlays/ov018/symbols.txt)).
+`daObjSm_Lift_c::InitResources` and [func_ov018_021122ec](../src/game/actors/d_a_pg_mthr.cpp) ([ov018](../config/arm9/overlays/ov018/symbols.txt)).
 
 | offset | name | evidence |
 |---|---|---|
@@ -392,7 +390,7 @@ symbol names.
 No fields of its own: `StairsBs_Spawn` passes 0xdcc, which `daObjDorifu_c` fills.
 It overrides slots 0 and 3, which the base leaves null.
 
-## `include/SpinningPlatform.h`
+## `include/daObjCtMecha11_c.h`
 
 `mClsnMat` at 0x2ec: `InitResources` hands `this+0x2ec` to `dBgW_KcMbg::SetFile`
 as its `const Matrix4x3 &`. Was a `u8` marker plus its pad.
@@ -402,7 +400,7 @@ as its `const Matrix4x3 &`. Was a `u8` marker plus its pad.
 which lands exactly on the next member), and 0x350 + 0x30 closes on the 0x380
 `SpinningPlatform_Spawn` allocates.
 
-## `include/ExtendingPlatform.h`
+## `include/daObjKm2_Nobiru_c.h`
 
 The `Model` marker's pad ran 0x30 bytes past the end of the object; that space is
 not evidenced and stays explicit padding rather than being folded into the
@@ -429,12 +427,12 @@ still builds 106/106.
 | function | module / range | what changed |
 |---|---|---|
 | `daObjSimpleLift_c::InitResources` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x021325d4 +0x214 | `*(u8 *)(c+0x322)` → `mVariant` throughout, `c+0x320` → `mMoveTimer`, `c+0x324..0x32c` → `mBasePos{X,Y,Z}` |
-| `RotatingUpDownPlatform::Behavior` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x02132108 +0x104 | `s+0x320` → `mState`, `s+0x354` → `mStateTimer`, `s+0x352` → `mVariant`, `s+0x356` → `mIsPressed`, `s+0x34c` → `mSinkOffsetY`; the two sink magic numbers become `cSinkDepth` / `cSinkRate` |
-| `RotatingUpDownPlatform::InitResources` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x0213220c +0x154 | `this+0x344` → `&mPathPtr`, `this+0x338` → `&mTargetPosX`, `this+0x32c` → `&mBasePosX` |
-| `UpDownLiftBbh::InitResources` and `::Behavior` | [ov095](../config/arm9/overlays/ov095/symbols.txt) 0x021365d8 +0x18c, 0x021364d8 +0x100 | the `*((int *)((char *)&mTopY))` cast wrappers drop away now that the fields are `s32`; `this+0x344` and `(&unk_300)+0x44` both become `mStateTimer` |
+| `daLinelift2_c::Behavior` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x02132108 +0x104 | `s+0x320` → `mState`, `s+0x354` → `mStateTimer`, `s+0x352` → `mVariant`, `s+0x356` → `mIsPressed`, `s+0x34c` → `mSinkOffsetY`; the two sink magic numbers become `cSinkDepth` / `cSinkRate` |
+| `daLinelift2_c::InitResources` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x0213220c +0x154 | `this+0x344` → `&mPathPtr`, `this+0x338` → `&mTargetPosX`, `this+0x32c` → `&mBasePosX` |
+| `daUdlift_c::InitResources` and `::Behavior` | [ov095](../config/arm9/overlays/ov095/symbols.txt) 0x021365d8 +0x18c, 0x021364d8 +0x100 | the `*((int *)((char *)&mTopY))` cast wrappers drop away now that the fields are `s32`; `this+0x344` and `(&unk_300)+0x44` both become `mStateTimer` |
 
 One thing that did NOT hold: `*(int *)(s + 0x60) -= mSinkOffsetY;` in
-`RotatingUpDownPlatform::Behavior` is followed by `mPosY = saved;`, so the
+`daLinelift2_c::Behavior` is followed by `mPosY = saved;`, so the
 subtraction is dead as the tree spells it. That is what reproduces, and it was
 left exactly as it is — do not "fix" it into something that reads better.
 

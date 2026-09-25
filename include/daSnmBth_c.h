@@ -58,7 +58,12 @@ typedef char SnowmanBreathParticle_size_must_be_0x60[
 struct daSnmBth_c : dActor_c {
     u8 mPad0d0[0x4];                       /* 0x0d0 */
     SnowmanBreathParticle mParticles[50];  /* 0x0d4 */
-    Matrix4x3 mInvModelMat;                /* 0x1394 */
+    /* Inverse model matrix, flat words. A Matrix4x3 member (math/Matrix.h's
+       spelling, whose Vector3 `t` has an inline destructor) makes the
+       out-of-line ~daSnmBth_c emit D2, D0, D1 even under
+       `defer_codegen off`; the cartridge has D1 then D0. Same as
+       Scuttlebug's and Eyerok's shadow matrices. */
+    s32 mInvModelMat[12];                  /* 0x1394 */
     Player *mTalkPlayer;                   /* 0x13c4 */
     s32 mTalkTimer;                        /* 0x13c8 */
     u32 mSoundHandle;                      /* 0x13cc */

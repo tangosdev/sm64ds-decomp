@@ -1,51 +1,55 @@
 //cpp
-/* Reconstructed ov072/daBgSnmBdy_c translation unit -- the big rolling
- * snowman's body actor, under the name the cartridge's own RTTI gives it.
+/* daBgSnmBdy_c -- the rolling snowman's body (BIG_SNOWMAN_BODY 274), ov072.
  *
- * ov072 is BABY_PENGUIN / BIG_SNOWMAN / SNOWMAN_HEAD / SNOWMAN_BODY.
- * RTTI ov072:0x0212278c names this class daBgSnmBdy_c; the debug table names
- * profile BIG_SNOWMAN_BODY (274). This is the body, not the head or the penguin.
+ * A snowball that talks, then rolls. State0 waits for the closest player
+ * within 270.0 and starts a talk; State1 shows message 0xb0 and pauses 21
+ * frames. State2 rolls along path param1 & 0xff at up to 40.0, growing to
+ * scale 1.5, kicking up dust and hurting a Mario it touches while moving.
+ * At the path's end it takes State3 if the talker kept up (reached course
+ * point data_ov072_02122b40, IsPlayerNearCenter); otherwise State4 rolls on
+ * until it falls below Y 0xfe363c80. State3 turns toward
+ * data_ov072_02122b58, and within 380.0 flags BIG_SNOWMAN_HEAD (0x111,
+ * unk_336 = 1), jumps, and on landing sets off an Earthquake and snaps onto
+ * that point. State5 waits until its home is well away from the camera,
+ * then respawns there in State0.
  *
- * The RTTI-backed class run is 0x0211f000..0x0211fedc (28 functions). The
- * registry-backed factory at 0x0211fedc allocates exactly
- * sizeof(daBgSnmBdy_c), installs this class's vtable, constructs its five
- * typed subobjects, and ends exactly at the next class's D1 at 0x0211ff34.
+ * ov072 is BABY_PENGUIN / BIG_SNOWMAN / SNOWMAN_HEAD / SNOWMAN_BODY. RTTI
+ * ov072:0x0212278c names this class; the class run is 0x0211f000..0x0211fedc
+ * (28 functions), and the factory at 0x0211fedc allocates exactly
+ * sizeof(daBgSnmBdy_c) and ends at the next class's D1 at 0x0211ff34.
  *
- * mwccarm emits ordinary function sections in reverse source order, so this
- * file is written highest-ROM-address first: the factory leads and the
- * destructor -- inline and declared last in daBgSnmBdy_c -- emits the retail
- * D1/D0 pair at the bottom of the run with no D2 body.
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
+ *   Source is highest-ROM-address first (mwccarm emits ordinary sections in
+ *   reverse): the factory leads, and the inline destructor, declared last in
+ *   the class, emits the retail D1/D0 pair at the bottom with no D2.
+ *   The class-local operator new routes `new daBgSnmBdy_c()` to fBase_c's
+ *   allocator, so the compiler owns the vptr store; no _ZTV is spelled here.
+ *   common.h FIRST: InitResources assigns IDENTITY_MATRIX4X3 into mShadowMat,
+ *   and only common.h's flat s32 m[12] gives the ROM's twelve-word copy.
+ *   State1 / State3 bump mSubstate through (int)this + 0x3a2; the named
+ *   `mSubstate = mSubstate + 1` changes the code size.
+ *   AdvancePath: PathPtr::GetNode / NumNodes as methods change the code
+ *   size (14 words); named &mPath / &mPosX / mRadius / mAngleY change it
+ *   too (29 words);
+ *   mPathNode is incremented and compared signed through (int)this + 0x388.
+ *   UpdateRollAngle / InitState0 keep (long long)(int) on mRadius / mScaleX.
  *
- * The class-local operator new routes an ordinary `new daBgSnmBdy_c()` to the
- * retail fBase_c allocator, so the compiler emits and owns the vptr store; no
- * `_ZTV` address is spelled by hand anywhere in this file.
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
+ *   dCcAc_c::Init, dBgCh_Actr::Init, dActor_c::SetRanges /
+ *   DropShadowRadHeight / Earthquake, Particle::RunningSlidingDustAt,
+ *   Clipper::Func_02015560 and Player::Hurt pass Fix12<int> by value (see
+ *   notes/mwccarm-codegen.md 6az); the header method forms change the code
+ *   size. dBgCh_Actr::Init's header Fix12i also mangles as int where the ROM
+ *   has Fix12<int>.
+ *   dBgCh_Actr_UpdateContinuous_Veneer: the ROM calls the veneer, not
+ *   UpdateContinuous (a direct call is WRONG-DEST).
+ *   dBgCh_Actr::GetFloorResult and Sound::PlayLong: no header declares them.
  *
- * common.h FIRST: InitResources assigns IDENTITY_MATRIX4X3 into mShadowMat.
- * common.h's flat s32 m[12] is the ROM's twelve-word copy; math/Matrix.h's
- * nested {Matrix3x3 r; Vector3 t;} scalarizes it (Vector3 is non-POD).
- *
- * deslop leftovers:
- * - dCcAc_c::Init / dBgCh_Actr::Init / dActor_c::SetRanges /
- *   dActor_c::DropShadowRadHeight / dActor_c::Earthquake /
- *   Particle::RunningSlidingDustAt / Clipper::Func_02015560 6az: this TU
- *   passes Fix12<int> by value; the header method form size-DIFFs.
- *   dBgCh_Actr::Init's header Fix12i mangles as i; ROM is Fix12<int>.
- * - Player::Hurt 6az (HurtPlayer).
- * - dBgCh_Actr_UpdateContinuous_Veneer: ROM calls the veneer, not
- *   UpdateContinuous (WRONG-DEST).
- * - _ZNK10dBgCh_Actr14GetFloorResultEv: not in dBgCh_Actr.h.
- * - func_0203568c / func_02035684: dBgCh_Actr radius/height stores; no setter.
- * - func_0201267c: State3 plays 0x114 at mCamSpacePosX.
- * - Sound::PlayLong: not in Sound.h; mSoundID is the recycled handle.
- * - data_ov072_02122b20 / 02122b40 / 02122b58 / 02122b64: BMD handle, two
- *   course points, and the twelve-PMF state table; overlay .data owns them.
- * - State1 / State3 keep (int)this+0x3a2 for mSubstate++; named
- *   mSubstate = mSubstate + 1 size-DIFFs.
- * - AdvancePath: PathPtr::GetNode / NumNodes as methods size-DIFF (14 words);
- *   named &mPath / &mPosX / mRadius / mAngleY also size-DIFF (29 words).
- *   Signed (int)this+0x388 increment/compare of mPathNode stays (u32 ++
- *   would be unsigned).
- * - UpdateRollAngle / InitState0 keep (long long)(int) on mRadius / mScaleX.
+ * Known limits:
+ *   func_0203568c / func_02035684 store the dBgCh_Actr radius and height;
+ *   there is no setter. func_0201267c plays sound 0x114 in State3.
+ *   data_ov072_02122b20 / 02122b40 / 02122b58 / 02122b64 (BMD handle, two
+ *   course points, the twelve-PMF state table) are owned by overlay .data.
  */
 
 #include "common.h"
@@ -165,12 +169,12 @@ int daBgSnmBdy_c::InitResources()
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         &mWithMeshClsn, this, 0x82000, 0x82000, 0, 0);
     {
-        int p60;
+        int posY;
         pos.x = mPosX;
-        p60 = mPosY;
-        pos.y = p60;
+        posY = mPosY;
+        pos.y = posY;
         pos.z = mPosZ;
-        pos.y = p60 + 0x14000;
+        pos.y = posY + 0x14000;
     }
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);
@@ -298,16 +302,16 @@ int daBgSnmBdy_c::InitState1()
 // @symbol _ZN12daBgSnmBdy_c6State1Ev
 int daBgSnmBdy_c::State1()
 {
-    int v[3];
+    int messagePos[3];
     unsigned char *state;
-    v[0] = mPosX;
+    messagePos[0] = mPosX;
     int y = mPosY;
-    v[1] = y;
-    v[2] = mPosZ;
-    v[1] = y + 0x96000;
+    messagePos[1] = y;
+    messagePos[2] = mPosZ;
+    messagePos[1] = y + 0x96000;
     switch (mSubstate) {
     case 0:
-        if (mTalkPlayer->ShowMessage(*this, 0xb0, (const Vector3 *)v, 0, 0) == 0)
+        if (mTalkPlayer->ShowMessage(*this, 0xb0, (const Vector3 *)messagePos, 0, 0) == 0)
             break;
         /* MATCH: (int)this+0x3a2; named mSubstate = mSubstate + 1 size-DIFFs. */
         state = (unsigned char *)((int)this + 0x3a2);
@@ -342,18 +346,18 @@ int daBgSnmBdy_c::InitState2()
 // @symbol _ZN12daBgSnmBdy_c6State2Ev
 int daBgSnmBdy_c::State2()
 {
-    int t;
-    int v;
+    int growScale;
+    int newScale;
     _Z14ApproachLinearRiii(&mHorzSpeed, 0x28000, 0x400);
     if (DecIfAbove0_Short(&mStateTimer) == 0) {
-        t = mScaleX;
-        _Z14ApproachLinearRiii(&t, 0x1800, 0x11);
-        v = t;
-        mScaleX = v;
-        mScaleY = v;
-        mScaleZ = v;
-        /* MATCH: (long long)t is already int; keep the 0x82000 scale of mRadius. */
-        mRadius = (int)(((long long)t * 0x82000 + 0x800) >> 12);
+        growScale = mScaleX;
+        _Z14ApproachLinearRiii(&growScale, 0x1800, 0x11);
+        newScale = growScale;
+        mScaleX = newScale;
+        mScaleY = newScale;
+        mScaleZ = newScale;
+        /* MATCH: (long long)growScale is already int; keep the 0x82000 scale of mRadius. */
+        mRadius = (int)(((long long)growScale * 0x82000 + 0x800) >> 12);
         mCylinder.radius = mRadius;
         mCylinder.height = mRadius << 1;
         func_0203568c((int *)&mWithMeshClsn, mRadius);
@@ -396,7 +400,7 @@ int daBgSnmBdy_c::State3()
     switch (mSubstate) {
     case 0:
         {
-            int d = Vec3_HorzDist(&data_ov072_02122b58, &mPosX);
+            int distToLanding = Vec3_HorzDist(&data_ov072_02122b58, &mPosX);
             _Z11UpdateAngleRssis(&mAngleY,
                 Vec3_HorzAngle(&mPosX, &data_ov072_02122b58),
                 2, 0x600);
@@ -406,7 +410,7 @@ int daBgSnmBdy_c::State3()
             mSoundID = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                 mSoundID, 3, 0x8a,
                 (const Vector3 *)&mCamSpacePosX, 0);
-            if (d < 0x17c000) {
+            if (distToLanding < 0x17c000) {
                 dActor_c *head = dActor_c::FindWithActorID(0x111, 0); /* BIG_SNOWMAN_HEAD */
                 ((daBgSnmHed_c *)head)->unk_336 = 1;
                 func_0201267c(0x114, &mCamSpacePosX);
@@ -420,11 +424,11 @@ int daBgSnmBdy_c::State3()
         break;
     case 1:
         if (mWithMeshClsn.JustHitGround() != 0) {
-            Vector3 v;
-            v.x = mPosX;
-            v.y = mPosY;
-            v.z = mPosZ;
-            _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(this, &v, 0x5dc000);
+            Vector3 landPos;
+            landPos.x = mPosX;
+            landPos.y = mPosY;
+            landPos.z = mPosZ;
+            _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(this, &landPos, 0x5dc000);
             mPosX = data_ov072_02122b58.x;
             mPosY = data_ov072_02122b58.y;
             mPosZ = data_ov072_02122b58.z;
@@ -484,11 +488,11 @@ int daBgSnmBdy_c::State5()
 {
     int b = (int)((mFlags & 8) != 0);
     if (b == 0) return 1;
-    int sp4[3];
-    int v[3];
-    Vec3_Asr(v, &mHomePosX, 3);
+    int clipResult[3];
+    int homePos[3];
+    Vec3_Asr(homePos, &mHomePosX, 3);
     if (_ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(
-            data_0209f43c, data_0209b3ec, v, 0x1f400, sp4) < 0x1194000)
+            data_0209f43c, data_0209b3ec, homePos, 0x1f400, clipResult) < 0x1194000)
         return 1;
     mPosX = mHomePosX;
     mPosY = mHomePosY;
@@ -524,17 +528,17 @@ void daBgSnmBdy_c::UpdateModel()
 // matched equally well -- so the parameter type is a disclosed guess.
 void daBgSnmBdy_c::UpdateGroundCollision(dBgCh_Actr *mc)
 {
-    Vector3 n;
-    char *fr;
+    Vector3 normal;
+    char *floorResult;
     dBgCh_Actr_UpdateContinuous_Veneer(mc);
     if (mc->IsOnGround() == 0) return;
-    fr = _ZNK10dBgCh_Actr14GetFloorResultEv(mc);
-    ((SurfaceInfo *)(fr + 4))->CopyNormalTo(n);
-    if (n.y == 0) return;
+    floorResult = _ZNK10dBgCh_Actr14GetFloorResultEv(mc);
+    ((SurfaceInfo *)(floorResult + 4))->CopyNormalTo(normal);
+    if (normal.y == 0) return;
     {
-        int a = (int)(((long long)n.x * unk_0a4 + 0x800) >> 12);
-        int b = (int)(((long long)n.z * unk_0ac + 0x800) >> 12);
-        mVertSpeed = -(_ZN4cstd4fdivEii(a + b, n.y) + 0x8000);
+        int a = (int)(((long long)normal.x * unk_0a4 + 0x800) >> 12);
+        int b = (int)(((long long)normal.z * unk_0ac + 0x800) >> 12);
+        mVertSpeed = -(_ZN4cstd4fdivEii(a + b, normal.y) + 0x8000);
     }
 }
 
@@ -543,15 +547,15 @@ int daBgSnmBdy_c::HurtPlayer()
 {
     dActor_c *actor;
     u32 id;
-    int t;
+    int isPlayer;
     Vector3 pos;
 
     id = mCylinder.otherOwner;
     if (id == 0) return 0;
     actor = dActor_c::FindWithID(id);
     if (actor == 0) goto fail;
-    t = (int)(actor->actorID == 0xbf);
-    if (t != 0) goto body;
+    isPlayer = (int)(actor->actorID == 0xbf);
+    if (isPlayer != 0) goto body;
 fail:
     return 0;
 body:
@@ -569,22 +573,22 @@ body:
 int daBgSnmBdy_c::AdvancePath()
 {
     char *c = (char *)this;
-    int v[3];
+    int node[3];
     int *idx;
-    int n;
+    int numNodes;
     /* MATCH: PathPtr::GetNode/NumNodes as methods size-DIFF (14 words);
        named &mPath / &mPosX / mRadius / mAngleY also size-DIFF (29 words). */
-    _ZNK7PathPtr7GetNodeER7Vector3j(c + 0x380, v, *(int *)(c + 0x388));
-    int d = Vec3_HorzDist(c + 0x5c, v);
+    _ZNK7PathPtr7GetNodeER7Vector3j(c + 0x380, node, *(int *)(c + 0x388));
+    int dist = Vec3_HorzDist(c + 0x5c, node);
     _Z11UpdateAngleRssis((short *)(c + 0x8e),
-                        Vec3_HorzAngle(c + 0x5c, v), 2, 0x600);
+                        Vec3_HorzAngle(c + 0x5c, node), 2, 0x600);
     *(short *)(c + 0x94) = *(short *)(c + 0x8e);
-    if (d < *(int *)(c + 0x398)) {
-        n = _ZNK7PathPtr8NumNodesEv(c + 0x380);
+    if (dist < *(int *)(c + 0x398)) {
+        numNodes = _ZNK7PathPtr8NumNodesEv(c + 0x380);
         /* MATCH: signed increment/compare of mPathNode; u32 ++ size-DIFFs. */
         idx = (int *)(((int)c + 0x388));
         *idx = *idx + 1;
-        if (*(int *)(c + 0x388) >= n - 1) return 1;
+        if (*(int *)(c + 0x388) >= numNodes - 1) return 1;
     }
     return 0;
 }
@@ -593,22 +597,22 @@ int daBgSnmBdy_c::AdvancePath()
 void daBgSnmBdy_c::UpdateRollAngle()
 {
     /* MATCH: (long long)(int)(mRadius << 1) keeps the ROM's widen-from-int shape. */
-    int d = (int)(((long long)((int)mRadius << 1) *
+    int circumference = (int)(((long long)((int)mRadius << 1) *
                        0x3243F6A89LL + 0x80000000LL) >> 32);
-    Fix12i q = _ZN4cstd4fdivEii(mHorzSpeed, d);
+    Fix12i turns = _ZN4cstd4fdivEii(mHorzSpeed, circumference);
     mAngleX = (short)(mAngleX +
-        (int)(((long long)q * 0xffff + 0x800) >> 12));
+        (int)(((long long)turns * 0xffff + 0x800) >> 12));
 }
 
 // @symbol _ZN12daBgSnmBdy_c18IsPlayerNearCenterEv
 int daBgSnmBdy_c::IsPlayerNearCenter()
 {
-    int d0 = Vec3_Dist(&data_ov072_02122b58, &mPosX);
-    int d1 = Vec3_Dist(&data_ov072_02122b58, &mTalkPlayer->mPosX);
-    int a0 = Vec3_HorzAngle(&data_ov072_02122b58, &mPosX);
-    int a1 = Vec3_HorzAngle(&data_ov072_02122b58, &mTalkPlayer->mPosX);
-    int sub = a0 - a1;
-    if (d1 < d0) {
+    int bodyDist = Vec3_Dist(&data_ov072_02122b58, &mPosX);
+    int playerDist = Vec3_Dist(&data_ov072_02122b58, &mTalkPlayer->mPosX);
+    int bodyAngle = Vec3_HorzAngle(&data_ov072_02122b58, &mPosX);
+    int playerAngle = Vec3_HorzAngle(&data_ov072_02122b58, &mTalkPlayer->mPosX);
+    int sub = bodyAngle - playerAngle;
+    if (playerDist < bodyDist) {
         short diff = (short)sub;
         if (diff < 0) diff = -diff;
         if (diff < 0x700) goto ret1;

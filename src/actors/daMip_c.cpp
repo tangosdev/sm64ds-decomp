@@ -1,8 +1,7 @@
 //cpp
-/* Reconstructed translation unit.
- * ov085/daMip_c  (32 functions)
+/* daMip_c -- MIP the rabbit (ov085, 32 functions).
  *
- * MIP the rabbit. The class identity is the cartridge's own: ov085 0x021300bc
+ * The class identity is the cartridge's own: ov085 0x021300bc
  * holds the length-prefixed string "7daMip_c", 0x021300c8 is the
  * __si_class_type_info record that names it, and 0x021300f8 is its 31-slot
  * vtable. The tree called this class `Rabbit`; that name is coined, appears
@@ -71,8 +70,7 @@
  * inside a linkage-specification region -- so every external call this TU makes
  * is declared once, below, with C linkage, on one reconciled signature.
  *
- * deslop
- * Leftover: SetAnim / dCcAc_c::Init / dBgCh_Actr::Init / DropShadowRadHeight
+ * Known limits: SetAnim / dCcAc_c::Init / dBgCh_Actr::Init / DropShadowRadHeight
  *   stay mangled (Fix12-by-value, 6az; dBgCh Init header Fix12i mangles as
  *   int). Player+8 param1 / +0x6d9 / +0x6ce belong on Player. data_ov085_*
  *   handles. S14 no g_profile_MIP. Shadow copy uses local Mtx43,
@@ -225,9 +223,7 @@ daMip_c::~daMip_c()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- daMip_c::TestWaterBelow, 0x0212a788, size 0xa0             */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c14TestWaterBelowEv
 /* Probes the ground 0xc8000 above the rabbit with a water-detecting dBgCh_Gnd,
    caches the surface height at +0x464 and answers whether the surface carries
@@ -266,9 +262,7 @@ int daMip_c::TestWaterBelow()
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- daMip_c::UpdateGrab, 0x0212a828, size 0xdc                 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c10UpdateGrabEv
 /* The pick-up handshake. +0x134 is the id of the actor currently touching this
    one; if it resolves to a Player (actor type 0xbf), the touch carries the grab
@@ -298,9 +292,7 @@ void daMip_c::UpdateGrab()
     }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- daMip_c::StateSaveTalkMain, 0x0212a904, size 0x1a0         */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c17StateSaveTalkMainEv
 /* The eighth-rabbit epilogue, reached only from StateCaughtMain's flag path
    once SaveData says all eight glowing rabbits are found. The rabbit turns to
@@ -321,12 +313,12 @@ int daMip_c::StateSaveTalkMain()
     extern char data_ov085_021306bc[];
     char *self = (char *)this;
 
-    char *r4 = *(char **)(self + 0x460);
+    char *player = *(char **)(self + 0x460);
     struct V3 vec;
     unsigned char gb;
     int state;
 
-    mTargetAngY = Vec3_HorzAngle((struct V3 *)(self + 0x5c), (struct V3 *)(r4 + 0x5c));
+    mTargetAngY = Vec3_HorzAngle((struct V3 *)(self + 0x5c), (struct V3 *)(player + 0x5c));
     ApproachAngle(self + 0x94, mTargetAngY, 1, 0x500, 0x500);
 
     gb = data_0209d684;
@@ -338,7 +330,7 @@ int daMip_c::StateSaveTalkMain()
     state = mActionStep;
     switch (state) {
     case 0:
-        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(r4, self, 0x148, &vec, 0, 0)) {
+        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(player, self, 0x148, &vec, 0, 0)) {
             func_02012790(0xa);
             {
                 int *p = (int *)(((int)self + 0x41c));
@@ -358,7 +350,7 @@ int daMip_c::StateSaveTalkMain()
             } else if (gb == 2) {
                 func_02012790(0x98);
                 {
-                    unsigned short *hp = (unsigned short *)(((int)r4 + 0x6ce));
+                    unsigned short *hp = (unsigned short *)(((int)player + 0x6ce));
                     *hp &= ~0x800;
                 }
                 _ZN7Message7EndTalkEv();
@@ -368,7 +360,7 @@ int daMip_c::StateSaveTalkMain()
         break;
     case 2:
         if (data_0209d660 == 0) {
-            unsigned short *hp = (unsigned short *)(((int)r4 + 0x6ce));
+            unsigned short *hp = (unsigned short *)(((int)player + 0x6ce));
             *hp &= ~0x800;
             _ZN7Message7EndTalkEv();
             SetState(data_ov085_021306bc);
@@ -378,9 +370,7 @@ int daMip_c::StateSaveTalkMain()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- daMip_c::StateSaveTalkInit, 0x0212aaa4, size 0x48          */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c17StateSaveTalkInitEv
 int daMip_c::StateSaveTalkInit()
 {
@@ -393,9 +383,7 @@ int daMip_c::StateSaveTalkInit()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- daMip_c::StateTalkMain, 0x0212aaec, size 0x150             */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13StateTalkMainEv
 /* The ordinary conversation, entered from StateReleasedMain once
    Player::StartTalk agrees. Faces the player, picks the line from mRabbitId,
@@ -453,9 +441,7 @@ int daMip_c::StateTalkMain()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- daMip_c::StateTalkInit, 0x0212ac3c, size 0x10              */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13StateTalkInitEv
 int daMip_c::StateTalkInit()
 {
@@ -463,9 +449,7 @@ int daMip_c::StateTalkInit()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- daMip_c::StateReleasedMain, 0x0212ac4c, size 0x140         */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c17StateReleasedMainEv
 /* Standing free again. Lets go of the carrier at +0x45c once the carry flags
    clear, refuses to act while the closest player is mid-message, and re-opens
@@ -541,9 +525,7 @@ int daMip_c::StateReleasedMain()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- daMip_c::StateReleasedInit, 0x0212ad8c, size 0x7c          */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c17StateReleasedInitEv
 int daMip_c::StateReleasedInit()
 {
@@ -563,9 +545,7 @@ int daMip_c::StateReleasedInit()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- daMip_c::StateCaughtMain, 0x0212ae08, size 0x5f4          */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c15StateCaughtMainEv
 /* Held in the player's hands: the whole caught conversation, the star spawn
    (actor 0xe5) and the branch that ends with all eight glowing rabbits found. */
@@ -591,7 +571,7 @@ int daMip_c::StateCaughtMain()
     Vector3 pos;   /* ShowMessage */
     Vector3 pos7;  /* 43c==7 star spawn */
     Vector3 posR;  /* rabbit star spawn */
-    int r4;
+    int soundId;
     int msg;
 
     pl = *(char **)(c + 0x45c);
@@ -624,7 +604,7 @@ int daMip_c::StateCaughtMain()
             {
                 if (_ZN6Player9StartTalkER7fBase_cb(pl, c, 1) != 0) {
                     pos.x = *(s32 *)(c + 0x5c);
-                    r4 = 0;
+                    soundId = 0;
                     pos.y = *(s32 *)(c + 0x60);
                     pos.z = *(s32 *)(c + 0x64);
 
@@ -634,17 +614,17 @@ int daMip_c::StateCaughtMain()
                         if (*(s32 *)(pl + 8) != 3) {
                             _ZN7Message11PrepareTalkEv();
                             {
-                                int z = r4;
+                                int z = soundId;
                                 _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x27, 0x12, 0x7f, 0x15ccc, z);
                             }
                             if (mRabbitId == 6)
                                 goto msg_123a;
                             msg = (s16)(*(s32 *)(pl + 8) + 0x11b);
-                            r4 = 0x163;
+                            soundId = 0x163;
                             goto have_msg;
                         msg_123a:
                             msg = (s16)(*(s32 *)(pl + 8) + 0x123);
-                            r4 = 0x161;
+                            soundId = 0x161;
                             goto have_msg;
                         }
                         /* simple msgs for character id 3 */
@@ -658,24 +638,24 @@ int daMip_c::StateCaughtMain()
                             _ZN7Message11PrepareTalkEv();
                             if (mIsGlowing == 0) {
                                 {
-                                    int z = r4;
+                                    int z = soundId;
                                     _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x26, 0x12, 0x7f, 0x15ccc, z);
                                 }
                                 if (mRabbitId == 6)
                                     goto msg_127a;
                                 msg = (s16)(*(s32 *)(pl + 8) + 0x11f);
-                                r4 = 0x163;
+                                soundId = 0x163;
                                 goto have_msg;
                             msg_127a:
                                 msg = (s16)(*(s32 *)(pl + 8) + 0x127);
-                                r4 = 0x161;
+                                soundId = 0x161;
                             } else {
-                                _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x27, 0x12, 0x7f, 0x15ccc, r4);
+                                _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x27, 0x12, 0x7f, 0x15ccc, soundId);
                                 if (_ZN8SaveData22NumGlowingRabbitsFoundEv() == 7) {
                                     msg = 0x143;
-                                    r4 = 0x160;
+                                    soundId = 0x160;
                                 } else {
-                                    r4 = 0x162;
+                                    soundId = 0x162;
                                     msg = 0x142;
                                 }
                             }
@@ -705,8 +685,8 @@ int daMip_c::StateCaughtMain()
                         pos.y = y;
                         if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(pl, c, (u32)msg, &pos, zero, zero) == 1) {
                             mActionStep = 1;
-                            if (r4 != 0)
-                                func_02012694(r4, (const ::Vector3 *)(c + 0x74));
+                            if (soundId != 0)
+                                func_02012694(soundId, (const ::Vector3 *)(c + 0x74));
                         }
                     }
                     return 1;
@@ -834,9 +814,7 @@ final_return:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- daMip_c::StateCaughtInit, 0x0212b3fc, size 0x48           */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c15StateCaughtInitEv
 int daMip_c::StateCaughtInit()
 {
@@ -850,9 +828,7 @@ int daMip_c::StateCaughtInit()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- daMip_c::StateRestMain, 0x0212b444, size 0x34             */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13StateRestMainEv
 int daMip_c::StateRestMain()
 {
@@ -865,9 +841,7 @@ int daMip_c::StateRestMain()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- daMip_c::StateRestInit, 0x0212b478, size 0x3c             */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13StateRestInitEv
 int daMip_c::StateRestInit()
 {
@@ -878,9 +852,7 @@ int daMip_c::StateRestInit()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- daMip_c::StateFleeMain, 0x0212b4b4, size 0x2a8            */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13StateFleeMainEv
 /* Running the level's path away from the player: dust or splash at every node,
    PathPtr node stepping in the direction StateFleeInit chose, and a fall back to
@@ -1027,9 +999,7 @@ int daMip_c::StateFleeMain()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- daMip_c::StateFleeInit, 0x0212b75c, size 0x110            */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13StateFleeInitEv
 /* Picks which way round the path to run: whichever of the two neighbouring
    nodes is further from the closest player becomes the step direction at
@@ -1078,9 +1048,7 @@ int daMip_c::StateFleeInit()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- daMip_c::StateStartleMain, 0x0212b86c, size 0x34          */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c16StateStartleMainEv
 int daMip_c::StateStartleMain()
 {
@@ -1092,9 +1060,7 @@ int daMip_c::StateStartleMain()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- daMip_c::StateStartleInit, 0x0212b8a0, size 0x3c          */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c16StateStartleInitEv
 int daMip_c::StateStartleInit()
 {
@@ -1105,9 +1071,7 @@ int daMip_c::StateStartleInit()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- daMip_c::StateIdleMain, 0x0212b8dc, size 0x338            */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13StateIdleMainEv
 /* The resting rabbit's own machine: startle and flee when the closest player
    comes inside 0x3e8000 from below, otherwise cycle the three-step idle
@@ -1208,9 +1172,7 @@ int daMip_c::StateIdleMain()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 19 -- daMip_c::StateIdleInit, 0x0212bc14, size 0x64             */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13StateIdleInitEv
 int daMip_c::StateIdleInit()
 {
@@ -1226,9 +1188,7 @@ int daMip_c::StateIdleInit()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- daMip_c::SetState, 0x0212bc78, size 0x50                  */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c8SetStateEPv
 /* Stores the 16-byte state record at mState and immediately runs its first
    pointer-to-member -- the state's Init. The record's second is what Behavior
@@ -1240,9 +1200,7 @@ int daMip_c::SetState(void *record)
     c->pp = p; daMip_cStateFn *q = c->pp; if (*q == 0) return 1; return (c->**q)();
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- daMip_c::UpdateMatrixAndShadow, 0x0212bcc8, size 0xf4     */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c21UpdateMatrixAndShadowEv
 /* Name coined; member-ness not proven. The flat Matrix4x3 shadow is
    deliberate -- see the file header. */
@@ -1270,9 +1228,7 @@ void daMip_c::UpdateMatrixAndShadow()
         c, (void*)(c + 0x368), (void*)(c + 0x390), 0x46000, 0x258000, 0xf);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 22 -- daMip_c::UpdateCarriedMatrix, 0x0212bdbc, size 0x120      */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c19UpdateCarriedMatrixEv
 /* While a player is carrying the rabbit its matrix comes from
    dActor_c::UpdateCarry, offset by one of four hold positions in ov085 .bss at
@@ -1304,9 +1260,7 @@ void daMip_c::UpdateCarriedMatrix()
         c, c + 0x368, c + 0x390, 0x46000, 0x258000, 0xf);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 23 -- daMip_c::UpdateMirrorShadow, 0x0212bedc, size 0x128       */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c18UpdateMirrorShadowEv
 /* The second shadow, for the mirrored copy RenderMirrorImage draws. Both are
    gated on the same pair of globals, and this one places the shadow on the far
@@ -1356,9 +1310,7 @@ void daMip_c::UpdateMirrorShadow()
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, &c->shadowmodel, &c->mtx, 0x46000, 0x258000, 0xf);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 24 -- daMip_c::CleanupResources, 0x0212c004, size 0x6c          */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c16CleanupResourcesEv
 /* Seven releases, straight-line, no loop -- the ROM writes them out one after
  * another and so does this. They are not in address order, which is why the
@@ -1385,9 +1337,7 @@ int daMip_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 25 -- daMip_c::OnPendingDestroy, 0x0212c070, size 0x4           */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c16OnPendingDestroyEv
 /* Empty -- the ROM body is a single `bx lr`. The override exists to suppress
  * whatever the base does on pending destroy, not to do anything itself. */
@@ -1395,9 +1345,7 @@ void daMip_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 26 -- daMip_c::Render, 0x0212c074, size 0xdc                    */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c6RenderEv
 int daMip_c::Render()
 {
@@ -1417,11 +1365,11 @@ int daMip_c::Render()
 
     {
         int** base = (int**)&mModelAnim.data;
-        int* r3 = base[0];
-        char* r1 = (char*)base[1];
-        for (unsigned int i = 0; i < *(unsigned int*)((char*)r3 + 0x24); i++) {
-            *(int*)(r1 + 0x20) = mMaterialColor;
-            r1 += 0x30;
+        int* modelData = base[0];
+        char* mat = (char*)base[1];
+        for (unsigned int i = 0; i < *(unsigned int*)((char*)modelData + 0x24); i++) {
+            *(int*)(mat + 0x20) = mMaterialColor;
+            mat += 0x30;
         }
     }
 
@@ -1433,9 +1381,7 @@ int daMip_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 27 -- daMip_c::RenderMirrorImage, 0x0212c150, size 0xe0         */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c17RenderMirrorImageEv
 /* The mirrored second copy: negate the model matrix's X scale, render the model
    again at half opacity, then put the matrix back. Only ever reached with the
@@ -1461,9 +1407,7 @@ void daMip_c::RenderMirrorImage()
     *(struct Mtx43 *)(c + 0x31c) = tmp;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 28 -- daMip_c::Behavior, 0x0212c230, size 0x5cc                 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c8BehaviorEv
 /* The glowing-rabbit chase, and it is mostly a conversation.
  *
@@ -1683,9 +1627,7 @@ int daMip_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 29 -- daMip_c::InitResources, 0x0212c7fc, size 0x41c            */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13InitResourcesEv
 int daMip_c::InitResources()
 {
@@ -1702,9 +1644,9 @@ int daMip_c::InitResources()
     extern s8 data_0209f2f8;
     extern int data_0209e650;
 
-    void* r0;
-    void* r6;
-    int r1;
+    void* player;
+    void* closest;
+    int rabbitId;
 
     Animation::LoadFile(*(SharedFilePtr *)&data_ov085_021305b8);
     Animation::LoadFile(*(SharedFilePtr *)&data_ov085_021305d0);
@@ -1732,17 +1674,17 @@ int daMip_c::InitResources()
     if (mCharacterId == 0xf)
         mCharacterId = 0;
 
-    r1 = mRabbitId;
-    if (r1 != 7) {
+    rabbitId = mRabbitId;
+    if (rabbitId != 7) {
         if (!(data_0209caa0[1] & 0x40000000))
             return 0;
     }
 
-    if (r1 == 5 && mCharacterId == 0)
+    if (rabbitId == 5 && mCharacterId == 0)
         goto check18;
-    if (r1 == 1 && mCharacterId == 1)
+    if (rabbitId == 1 && mCharacterId == 1)
         goto check18;
-    if (r1 != 6)
+    if (rabbitId != 6)
         goto skip17;
     if (mCharacterId != 3)
         goto skip17;
@@ -1778,11 +1720,11 @@ skip17:
         goto block_26;
     }
 
-    r0 = ClosestPlayer();
-    if (r0 == 0)
+    player = ClosestPlayer();
+    if (player == 0)
         return 0;
     if (data_0209f2f8 != 0x32) {
-        if (mCharacterId != *(u8*)((char*)r0 + 0x6d9))
+        if (mCharacterId != *(u8*)((char*)player + 0x6d9))
             return 0;
     }
 
@@ -1796,19 +1738,19 @@ block_26:
         goto block_out;
     }
 
-    r6 = ClosestPlayer();
-    if (r6 == 0)
+    closest = ClosestPlayer();
+    if (closest == 0)
         goto block_out;
 
     {
         int v;
-        v = *(s32*)((char*)r6 + 8);
+        v = *(s32*)((char*)closest + 8);
         if (data_0209f2f8 == 0x32)
             v = 1;
         if (func_02013890(mRabbitId, v) != 0 && data_ov085_021305ac < 8) {
             u32 rnd = RandomIntInternal(&data_0209e650) >> 8;
             if (NumStars() >= 0x51) {
-                if (*(s32*)((char*)r6 + 8) == 3) {
+                if (*(s32*)((char*)closest + 8) == 3) {
                     if ((rnd & 0xf) == 0)
                         mColorVariant = 5;
                 } else {
@@ -1816,7 +1758,7 @@ block_26:
                         mColorVariant = 5;
                 }
             } else if (NumStars() >= 0x28) {
-                if (*(s32*)((char*)r6 + 8) == 3) {
+                if (*(s32*)((char*)closest + 8) == 3) {
                     if ((rnd & 0x1f) == 0)
                         mColorVariant = 5;
                 } else {
@@ -1841,9 +1783,7 @@ block_out:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 30 -- daMip_c::OnYoshiTryEat, 0x0212cc18, size 0x14             */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13OnYoshiTryEatEv
 s32 daMip_c::OnYoshiTryEat() {
   unsigned char v = mEatenByYoshi;
@@ -1851,9 +1791,7 @@ s32 daMip_c::OnYoshiTryEat() {
   return 7;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 31 -- daMip_c_classInit, 0x0212cc2c, size 0x5c                  */
-/* -------------------------------------------------------------------------- */
 // @symbol daMip_c_classInit
 /* The registry factory behind the MIP profile. `return new daMip_c()` MATCHES
  * (size 0x5c); the synthesized ctor stores `_ZTV7daMip_c + 2`.

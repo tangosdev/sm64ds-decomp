@@ -843,6 +843,11 @@ def main(argv, repo=None):
             # `dMgPsOpt_c_size_must_be_0x128` says -- an independent check that the
             # size read here is the right one.
             qsize = _qualified_size(expected, typ) if (m and not m.group(2)) else None
+            # A member spelled with its namespace, `Particle::SysTracker mSysTracker;`,
+            # names its class outright; the sizeof() operand of a qualified assertion
+            # is keyed the same way.
+            if qsize is None and m and not m.group(2) and "::" in m.group(1):
+                qsize = CLASS_SIZES_QUALIFIED.get(m.group(1))
             if qsize is not None:
                 w = qsize
             elif m and not m.group(2) and _shadowed_by_nested(typ, nested_names, fp):

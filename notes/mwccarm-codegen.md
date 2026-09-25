@@ -20,7 +20,7 @@ one, add it here AND, if it recurs, as a rule in `swarm.py` so the free tier can
 The known divergence is that `v = *(T *)p` is a blind byte move in C and scalarises
 to the members' own types in C++. The documented fix -- copy through a struct whose
 only member is an array -- is usually described as restoring the `ldm`/`stm` pair.
-It does more than that, and `RollingRock::Behavior` (ov021 0x02112854, 0x2d8) is the
+It does more than that, and `daGrock_c::Behavior` (ov021 0x02112854, 0x2d8) is the
 case that shows it.
 
 Copying a `Vector3_16` out of an actor at +0x92 as a method scalarised to three
@@ -106,6 +106,34 @@ anchored -- a shared-library entry point whose type is established elsewhere --
 keep the extern-C definition with scalar args and declare the true signature in
 the class header for callers; a call emits the same substituted symbol either way,
 which the byte gate confirms.
+
+### CORRECTED 2026-09-23: the CALLER pays too
+
+The last sentence above holds for the symbol, not for the bytes. Handing mwccarm a
+`Fix12<int>` BY VALUE costs at the call site as well, independent of what the
+callee does with it -- so "declare the true signature in the class header for
+callers" does not reproduce while the parameter is the class.
+
+First measured on `daObjBC_Switch_c` (#2176): retail passes a constant in a
+register (`mov r3,#0x1000`); every class-typed spelling homes it to the literal
+pool and reloads it (`ldr r3,[pc,#..]` then `ldm r3,{r3}`), 0x68 against 0x60.
+Refuted there: a brace-init local, a `const` local, an inline helper returning the
+wrapper, a gccext compound literal, and a raw-bits constructor on `Fix12`.
+
+Re-measured with a field argument: `daEyBm_c::Render` (ov071 0x02121d14, target
+0x6c) calling `Particle::System::NewUnkCallback818` through a header declaration.
+A pointer cast `*(Fix12<int> *)&mPosX` gives 0x7c -- the field's address is formed
+and read back with `ldmia` instead of the retail `ldr r2,[r4,#0x5c]`. Brace-init
+locals give 0xa4, as does a converting constructor; both copy through stack
+temporaries.
+
+**How to apply.** A `5Fix12IiE` callee cannot be reached through a class-typed
+header declaration. Callers keep a C-linkage extern with a scalar `Fix12i`
+parameter, as `src/game/actors/d_a_obj_bc_switch.cpp` does for
+`Sound::ChangeMusicVolume` -- or, following `IsGoingOffCliff` above, the symbol
+is renamed to its scalar mangling so a real declaration works on both sides.
+The 2026-08-27 result is untouched: inside the callee, an unread class parameter
+still costs nothing.
 
 ## 1. Ground rules of the build
 
@@ -5090,7 +5118,7 @@ the size-gap tie-break inside `closeness`; the candidate sizes are exact and equ
 rows. It is the metric.
 
 The same split explains a row that read as wrong and is not.
-`_ZN3MrI13InitResourcesEv` (ov071, 0x02121734, 0x298) stores `divergences: 2`, and both its
+`_ZN8daEykn_c13InitResourcesEv` (ov071, 0x02121734, 0x298) stores `divergences: 2`, and both its
 committed file banner and `fdiff.py` say 3/166. Both are right.
 `nearmiss_db.py reeval --dry-run` over all 59 rows reports `50 unchanged, 0 drifted, 9
 unscorable`, so the stored 2 reproduces exactly under the live evaluator; the 3 is the
@@ -6179,7 +6207,7 @@ the thing that holds it back is outside those knobs.
 
 ## 6cj. `opt_propagation off` is a BLUNT instrument: it buys one folded statement and pays for it with the whole function's colouring. `opt_foldconstants off` buys the same statement and charges nothing (func_ov015_021114f0, div 8 -> 0, 2026-09-13, run link100 lane CRK-O)
 
-`func_ov015_021114f0` (ov015, 0x17c) is KnockDownPlank's drop-shadow scale. It sat at 8
+`func_ov015_021114f0` (ov015, 0x17c) is daObjBk_Botaosi_c's drop-shadow scale. It sat at 8
 through three lanes, and its banner blamed the residue on the ROM's compiler refusing to
 reuse a just-dead register (6bs). That was wrong. Every one of the 8 words was bought by
 the file's own first line, `#pragma opt_propagation off`.
@@ -6697,7 +6725,7 @@ same way. Eighteen are already byte-exact and always were -- the HAND-ASM PRIMIT
 which carry the banner as a policy marker under the 09-09 ruling -- and the remaining eleven
 keep their residue exactly (func_02009e70 96, `dScStarSel_c::Behavior` 11,
 func_ov015_021114f0 8, func_ov007_020bfd70 7, `Model::LoadCompressedTextureToVram` 5,
-`Stage::InitResources` 4, func_ov075_0211afb0 4, `MrI::InitResources` 3, `OAM::Render` 2,
+`Stage::InitResources` 4, func_ov075_0211afb0 4, `daEykn_c::InitResources` 3, `OAM::Render` 2,
 func_0202ffec 2). Do not go looking for a second free match here; there is one, and this
 was it.
 
@@ -6720,7 +6748,7 @@ link time.
 
 **Addendum (2026-09-13, run link100 wave 12).** Two rows in the list above have since matched,
 neither by a flag: `Stage::InitResources` (a callee's definition takes a second argument, 6cy)
-and `MrI::InitResources` (a callee takes the actor, 6cx addendum). Both were declaration defects
+and `daEykn_c::InitResources` (a callee takes the actor, 6cx addendum). Both were declaration defects
 of the 6cx class; the flag reading of the remaining rows stands.
 
 ## 6cp. Running the permuter on a C++ near-miss: set the LANGUAGE in cc.txt, keep the UNMANGLED name, regenerate the relocs, and check the C port's FRAME first (run link100 crack wave 9, lanes CRK-E, CRK-B, CRK-G, CRK-P, 2026-09-13)
@@ -7471,8 +7499,8 @@ the first ten words: 69. The ROM puts the selector in r0 in 30 of them and in r1
 r0 untouched in 36, and 2004/b56 reproduces BOTH groups on the matched members (20 of the
 r1/r2 group have matched source, five of them ov063 siblings), so the skip is
 source-reachable and the question was what separates the groups. Not the count of
-`mov r0,<home>` copies in the body (`PyramidLift::Behavior` has three and a selector in r0;
-`KnockDownPlank::Behavior` has the identical `switch (mState)` spelling and a selector in
+`mov r0,<home>` copies in the body (`daDpLift_c::Behavior` has three and a selector in r0;
+`daObjBk_Botaosi_c::Behavior` has the identical `switch (mState)` spelling and a selector in
 r1), so the property lives in the case bodies, not the switch. What separates them is a case
 that consumes r0 STRAIGHT FROM THE ENTRY without a copy: `func_ov063_021172a8`, the
 dispatcher that calls this very function, is matched with its selector in r1 and its cases
@@ -7508,11 +7536,11 @@ passes, or a `void` declaration for a callee whose value the ROM keeps (PR #2528
 missing-return-value lever is the same class seen from the other side). A callee's
 declaration is part of the register-allocation input of every function that calls it.
 
-**Addendum (2026-09-13, run link100 wave 12 lane W12-9): second instance, `MrI::InitResources`
+**Addendum (2026-09-13, run link100 wave 12 lane W12-9): second instance, `daEykn_c::InitResources`
 MATCHED (3 -> 0); the two-regime coupling on func_ov006_020fdaf0 (7 -> 6); two ASAP/ALAP
 scheduling floors named.**
 
-`_ZN3MrI13InitResourcesEv` (ov071 0x02121734, 0x298) sat at three words for a month: the slot
+`_ZN8daEykn_c13InitResourcesEv` (ov071 0x02121734, 0x298) sat at three words for a month: the slot
 of `mov r2,#1` in the ModelBase::SetFile argument setup at +0x20 (ROM `mov r2,#1 / mov r1,r0 /
 add r0,r4,#0xd4 / mov r3,r2`, every draft `mov r1,r0 / add r0,r4,#0xd4 / mov r2,#1 / mov r3,r2`).
 CRK-O's micro-lab had reduced it to "a third call ahead of the site in the block loses the
@@ -7598,7 +7626,7 @@ because a callee the draft declared too narrowly was still going to read it. Bef
 the callee's definition in src/ for a parameter that register would carry. Here the tell was
 that r1 stayed untouched for 22 instructions and through an if-chain that only used r0 and r7.
 6cx's func_ov063_02117cdc is the same class from the other side (a `(void)` declaration freed
-r0 the ROM kept for `this`), and 6cx's addendum (MrI::InitResources) a third instance.
+r0 the ROM kept for `this`), and 6cx's addendum (daEykn_c::InitResources) a third instance.
 
 Two smaller things from the same landing:
 * At div 0 match.py reported four WRONG reloc destinations that no earlier lane could see (the

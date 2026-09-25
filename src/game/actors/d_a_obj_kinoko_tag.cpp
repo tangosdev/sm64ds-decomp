@@ -23,7 +23,7 @@
  *   dActor_c campaign, not this leaf).
  * - data_ov002_0210da30 is the ov002 SharedFilePtr handle; symbols.txt has
  *   no recovered name, so it is not coined. SharedFilePtr.h has no fields.
- * - PILE / Stump.h +0x32c backlink (actor ID 0x1b).
+ * - PILE / daObjPile_c.h +0x32c backlink (actor ID 0x1b).
  * - Vec3_Dist: no shared header this TU can take without a campaign.
  * - no Player.h / Camera.h.
  * - leaf operator new until #2570.
@@ -130,7 +130,7 @@ s32 daObjKinokoTag_c::Behavior()
                 if (Vec3_Dist((Vector3 *)&mPosX,
                               (Vector3 *)&other->mPosX) < 0x96000) {
                     mHasLinkedPile = 1;
-                    /* PILE / Stump.h +0x32c */
+                    /* PILE / daObjPile_c.h +0x32c */
                     *(dActor_c **)((u8 *)other + 0x32c) = this;
                     mSearchedForPile = 1;
                     return 1;

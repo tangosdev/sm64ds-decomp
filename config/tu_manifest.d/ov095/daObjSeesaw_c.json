@@ -1,0 +1,254 @@
+{
+  "id": "ov095/daObjSeesaw_c",
+  "module": "ov095",
+  "source": "src/actors/daObjSeesaw_c.cpp",
+  "promoted_source": "src/actors/daObjSeesaw_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2135700..0x2135cdc, 10 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjSeesaw_c",
+    "module sinit corroboration: 2 sinit(s) / 2 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02135700",
+      "end": "0x02135cdc"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN13daObjSeesaw_cD1Ev",
+      "address": "0x02135700",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN13daObjSeesaw_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN13daObjSeesaw_cD0Ev",
+      "address": "0x02135744",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN13daObjSeesaw_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov095_0213579c",
+      "address": "0x0213579c",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov095_0213579c.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN13daObjSeesaw_c15OnGroundPoundedER8dActor_c",
+      "address": "0x021357d8",
+      "size": "0x000000f4",
+      "legacy_source": "src/_ZN13daObjSeesaw_c15OnGroundPoundedER8dActor_c.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov095_021358cc",
+      "address": "0x021358cc",
+      "size": "0x000000b0",
+      "legacy_source": "src/func_ov095_021358cc.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov095_0213597c",
+      "address": "0x0213597c",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov095_0213597c.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN13daObjSeesaw_c16CleanupResourcesEv",
+      "address": "0x021359c4",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN13daObjSeesaw_c16CleanupResourcesEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN13daObjSeesaw_c6RenderEv",
+      "address": "0x02135a28",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN13daObjSeesaw_c6RenderEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN13daObjSeesaw_c8BehaviorEv",
+      "address": "0x02135a50",
+      "size": "0x00000124",
+      "legacy_source": "src/_ZN13daObjSeesaw_c8BehaviorEv.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN13daObjSeesaw_c13InitResourcesEv",
+      "address": "0x02135b74",
+      "size": "0x00000168",
+      "legacy_source": "src/_ZN13daObjSeesaw_c13InitResourcesEv.cpp",
+      "ordinal": 9
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Cartridge RTTI name is daObjSeesaw_c (_ZTS13daObjSeesaw_c at ov095 0x021373cc, _ZTI at 0x021373c0, vtable address point 0x021374fc). The licensed run is .text 0x02135700..0x02135cdc (10 functions). func_ov095_02135cdc is the next function and is not part of this TU. The classInit factories start at 0x02135ea4 and stay out.",
+    "The destructor is declared in the header and defined once, out of line, first in the file. Under #pragma defer_codegen off that emits D1 then D0 in ROM order, plus a homeless D2.",
+    "Previous tree name SeesawBob was coined. class_rename kept SeesawBob_Spawn / SeesawBob_SpawnInfo chain rows (no --with-derived). RTTI stays at the addresses already in symbols.txt."
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN13daObjSeesaw_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Out-of-line ~daObjSeesaw_c under #pragma defer_codegen off emits D1, D0, then D2. The cartridge has D1 at 0x02135700 and D0 at 0x02135744 and no daObjSeesaw_c D2."
+    },
+    {
+      "symbol": "_ZTV13daObjSeesaw_c",
+      "disposition": "deadstrip-data",
+      "reason": "Key function is the out-of-line destructor, so this TU emits the vtable. symbols.txt names the address point 0x021374fc; the licensed span is only .text.",
+      "canonical_module": "ov095",
+      "canonical_address": "0x021374fc"
+    },
+    {
+      "symbol": "_ZTI13daObjSeesaw_c",
+      "disposition": "deadstrip-data",
+      "reason": "This class's __si_class_type_info, emitted with the vtable. Canonical copy ov095:0x021373c0.",
+      "canonical_module": "ov095",
+      "canonical_address": "0x021373c0"
+    },
+    {
+      "symbol": "_ZTS13daObjSeesaw_c",
+      "disposition": "deadstrip-data",
+      "reason": "Type name string. The cartridge holds '13daObjSeesaw_c' at ov095:0x021373cc.",
+      "canonical_module": "ov095",
+      "canonical_address": "0x021373cc"
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "Inherited vague-linkage RTTI for the immediate base. Canonical copy ov002:0x021089ec.",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec"
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "Inherited vague-linkage type name for dBgActor_c. Canonical copy ov002:0x02108a04.",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04"
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "Inherited vague-linkage RTTI for dActor_c. Canonical copy arm9:0x0208e390.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390"
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "Inherited vague-linkage type name for dActor_c. Canonical copy arm9:0x0208e384.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Inherited vague-linkage RTTI for dBase_c. Canonical copy arm9:0x02086e78.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Inherited vague-linkage type name for dBase_c. Canonical copy arm9:0x02086e54.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Inherited vague-linkage RTTI for fBase_c. Canonical copy arm9:0x02086d70.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Inherited vague-linkage type name for fBase_c. Canonical copy arm9:0x02086e60.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov095-daObjSeesaw_c/daObjSeesaw_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 10,
+    "functions_declared": 10,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN13daObjSeesaw_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN13daObjSeesaw_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "data": [
+        "_ZTV13daObjSeesaw_c",
+        "_ZTI13daObjSeesaw_c",
+        "_ZTS13daObjSeesaw_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI13daObjSeesaw_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS13daObjSeesaw_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV13daObjSeesaw_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

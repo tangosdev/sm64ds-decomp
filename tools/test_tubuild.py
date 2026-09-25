@@ -71,8 +71,8 @@ def test_list_finds_polelift_and_its_module_neighbours():
     code, out = _run("list", "--module", "ov045", "--verify-sample", "0")
     assert code == 0, out
     assert "ov045/daObjKm2_Ami_Bou_c" in out
-    assert "ov045/FireSeaElevator" in out          # its lower-address neighbour
-    assert "ov045/ExtendingPlatform" in out         # its higher-address neighbour
+    assert "ov045/daObjKm2_Agaru_c" in out         # its lower-address neighbour
+    assert "ov045/daObjKm2_Nobiru_c" in out         # its higher-address neighbour
     # The class run is six functions, all `complete`. Its reconstructed classInit
     # uses the ROM RTTI class name and now appears as the adjacent anonymous run.
     assert "6     6/6 medium" in out

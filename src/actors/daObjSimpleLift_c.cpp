@@ -77,7 +77,7 @@ int daObjSimpleLift_c::CleanupResources()
 // @symbol _ZN17daObjSimpleLift_c6RenderEv
 int daObjSimpleLift_c::Render()
 {
- Base *b = &((Derived *)this)->base; b->m(0); return 1;
+ Base *model = &((Derived *)this)->base; model->m(0); return 1;
 }
 
 // @symbol _ZN17daObjSimpleLift_c8BehaviorEv
@@ -87,10 +87,10 @@ int daObjSimpleLift_c::Behavior()
 {
   if (DecIfAbove0_Byte((unsigned char*)((char*)&mPauseTimer)) == 0) {
     if (DecIfAbove0_Short((unsigned short*)((char*)&mMoveTimer)) == 0) {
-      s16* a = (s16*)(((int)((char*)this) + 0x94));
-      s16 v = data_ov091_02134504[mVariant];
-      mMoveTimer = v;
-      *a += 0x8000;
+      s16* heading = (s16*)(((int)((char*)this) + 0x94));
+      s16 travelTime = data_ov091_02134504[mVariant];
+      mMoveTimer = travelTime;
+      *heading += 0x8000;
       mPauseTimer = 0xf;
     } else {
       _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), 0);
@@ -104,13 +104,13 @@ int daObjSimpleLift_c::Behavior()
 }
 
 // @symbol _ZN17daObjSimpleLift_c13InitResourcesEv
-/* Which slab this is comes from the spawn ID; everything else follows from
+/* Which slab this is comes from the actor ID; everything else follows from
    the variant index. */
 int daObjSimpleLift_c::InitResources()
 {
     u8* c = (u8*)((void*)this);
-    u16 t = *(u16*)(c+0xc);
-    switch (t) {
+    u16 actorID = *(u16*)(c+0xc);
+    switch (actorID) {
         case 0x37: mVariant = 6; break;
         case 0x7c: mVariant = 3; break;
         case 0x93: mVariant = 4; break;
@@ -125,31 +125,31 @@ int daObjSimpleLift_c::InitResources()
 
     /* Heading to slide along: the spawn angle plus this slab's own offset,
        unless the spawn supplies one of its own. */
-    *(u16*)(c+0x94) = (u16)(*(s16*)(c+0x8e) + data_ov091_02134514[mVariant]);
+    mPrevAngleY = (u16)(mAngleY + data_ov091_02134514[mVariant]);
 
-    if (*(s16*)(c+0x8c) != 0) {
-        *(u16*)(c+0x94) = (u16)(*(s16*)(c+0x8e) + *(s16*)(c+0x8c));
+    if (mAngleX != 0) {
+        mPrevAngleY = (u16)(mAngleY + mAngleX);
     }
 
     mMoveTimer = data_ov091_02134504[mVariant];
-    *(s32*)(c+0x98) = 0xa000;
-    mBasePosX = *(s32*)(c+0x5c);
-    mBasePosY = *(s32*)(c+0x60);
-    mBasePosZ = *(s32*)(c+0x64);
+    mHorzSpeed = 0xa000;
+    mBasePosX = mPosX;
+    mBasePosY = mPosY;
+    mBasePosZ = mPosZ;
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
 
     /* Slab 6 gets the full-size collider; the rest are scaled to 0x199. */
     if (mVariant == 6) {
-        int oi = mVariant * 0xc;
-        void* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(void**)(data_ov091_02135028+oi));
+        int tableOffset = mVariant * 0xc;
+        void* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(void**)(data_ov091_02135028+tableOffset));
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            (void*)(c+0x124), kcl, (void*)(c+0x2ec), 0x1000, *(s16*)(c+0x8e), *(void**)(data_ov091_0213502c+oi));
+            (void*)(c+0x124), kcl, (void*)(c+0x2ec), 0x1000, *(s16*)(c+0x8e), *(void**)(data_ov091_0213502c+tableOffset));
     } else {
-        int oi = mVariant * 0xc;
-        void* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(void**)(data_ov091_02135028+oi));
+        int tableOffset = mVariant * 0xc;
+        void* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(void**)(data_ov091_02135028+tableOffset));
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            (void*)(c+0x124), kcl, (void*)(c+0x2ec), 0x199, *(s16*)(c+0x8e), *(void**)(data_ov091_0213502c+oi));
+            (void*)(c+0x124), kcl, (void*)(c+0x2ec), 0x199, *(s16*)(c+0x8e), *(void**)(data_ov091_0213502c+tableOffset));
     }
     func_020393d4((void*)(c+0x124), (void*)_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     return 1;

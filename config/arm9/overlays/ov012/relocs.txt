@@ -140,7 +140,6 @@ from:0x02111d58 kind:load to:0x02111e78 module:overlay(12)
 from:0x02111d60 kind:load to:0x02111bd0 module:overlay(12)
 from:0x02111d68 kind:load to:0x02111b80 module:overlay(12)
 from:0x02111d70 kind:load to:0x02111ed8 module:overlay(12)
-from:0x02111fd4 kind:load to:0x02090000 module:main
 from:0x02112300 kind:load to:0x0209a764 module:main
 from:0x02112304 kind:load to:0x0211230c module:overlay(12)
 from:0x02112308 kind:load to:0x021089ec module:overlay(2)

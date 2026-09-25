@@ -1,5 +1,5 @@
 // @symbol func_ov015_021114f0
-/* recovered: KnockDownPlank drop-shadow scale and rotation.
+/* recovered: daObjBk_Botaosi_c drop-shadow scale and rotation.
  *
  * `opt_foldconstants off` is load-bearing twice over. It keeps the Q12 product in the
  * prologue as the generic 64x64 umull/mla/mla sequence, and it stops the angle update

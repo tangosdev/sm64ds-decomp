@@ -1,66 +1,19 @@
-/* class dScMgRoulette_c, real ROM name confirmed by tools/rtti_extract.py:
- * dScMgRoulette_c : dScMgSingle3DBase_c, single edge, offset 0
- * (build/rtti.json). The coined English Spawn-function name was
- * MgMushroomRoulette_Spawn; the factory now carries the reconstructed
- * dScMgRoulette_c_classInit spelling, and the class itself takes its
- * real ROM identity, matching this tree's current convention.
+/* dScMgRoulette_c -- Mushroom Roulette. Racers are dealt onto a spinning
+ * board and paid by the tile they stop on. Child of dScMgSingle3DBase_c,
+ * size 0x5400.
  *
- * SIZE 0x5400, from MgMushroomRoulette_Spawn.cpp's own
- * `_ZN7fBase_cnwEj(0x5400)`.
+ * RTTI: dScMgRoulette_c : dScMgSingle3DBase_c (tools/rtti_extract.py).
+ * Factory dScMgRoulette_c_classInit; historical alias MgMushroomRoulette_Spawn.
+ * ROM: D1 0x0210788c below D0 0x02107920, no D2; out of line would emit
+ * D2, D0, D1. InitResources is then the first declared non-inline virtual,
+ * so it is the key function; this TU licenses _ZTV/_ZTI/_ZTS in
+ * compiler_only_output.
  *
- * SHARED TABLE at 0x4f38, size 0x270 (func_ov006_020c1d80/020c1c64), same
- * as five siblings -- see include/dScMgMemory_c.h's own note.
- *
- * ONE ARRAY at 0x51a8, 5 elements of 0x34 bytes each -- destructor calls
- * `__cxa_vec_cleanup(p+0x51a8, 5, 0x34, func_ov006_021079c8)`, matching the
- * factory's own construction. Element type not evidenced -- raw bytes.
- *
- * 0x52ac..0x531c (0x70 bytes): touched only via raw offset calls
- * (func_ov006_02107b70(c+0x52ac), func_ov006_02108524(this+0x530c),
- * func_ov006_02107d80/021085c0(c+0x530c)), never through a named field --
- * left as pad, same reasoning as dScMgBase_c.h's own touchIcon note.
- *
- * TWO MODELS immediately after, 0x50 bytes each (include/Model.h): the
- * destructor (func_ov006_0210788c, pre-migration) destroys 0x536c THEN
- * 0x531c, THEN the array, THEN the table -- Itanium auto-destruction
- * would run typed members in reverse DECLARATION order strictly AFTER
- * the user body, which can't reproduce this interleaving (array/table
- * destruction sandwiched functionally between the two models' declared
- * order). Left as raw bytes with explicit destructor calls in the
- * measured order instead: a typed member here would cost an auto-generated
- * call the body's own explicit ordering contradicts. (This note used to
- * cite include/MgBounceAndPounce.h's own mModel field for the same
- * reasoning. That field turned out to belong to dScMgJump_c rather than to
- * the base, and left with it when the base was renamed dScMgD3DBase_c; the
- * reasoning stands on its own.)
- *
- * OWN TAIL, 0x53bc..0x5400: sixteen fields are real matched access
- * (src files 021095cc.c, 02109834.c, 0210a194.cpp -- dScMgRoulette_c's
- * own vtable methods).
- *
- * THE DESTRUCTOR IS DEFINED INLINE, AND THE CARTRIDGE'S OWN ADDRESSES ARE
- * WHY. ov006 puts D1 at 0x0210788c BELOW D0 at 0x02107920 and carries no D2
- * anywhere. In mwccarm 2004/b56 that order is reachable from exactly one
- * source form: an inline, in-class destructor declared as the first member,
- * which emits D1 then D0. An out-of-line definition emits D2, D0, D1 -- the
- * wrong order, plus a D2 the ROM does not have -- and no scaffold
- * (`p->~X()`, `delete p`, moving the declaration below the overrides)
- * changes that. It was previously declared out of line, with the body
- * duplicated across src/_ZN15dScMgRoulette_cD1Ev.cpp and D0Ev.cpp; both are
- * absorbed into src/actors/dScMgRoulette_c.cpp and the body moved here,
- * where the compiler emits both variants itself in the cartridge's order.
- *
- * Declaring it inline also moves the key function to InitResources, the
- * first DECLARED non-inline virtual, so the TU that defines InitResources is
- * the one that emits _ZTV/_ZTI/_ZTS. That is src/actors/dScMgRoulette_c.cpp,
- * which licenses them in its manifest's compiler_only_output block.
- *
- * No separate operator delete is needed -- dScMgBase_c, two levels up,
- * already provides one.
- *
- * SM64DS RTTI names the implementation dScMgRoulette_c. The reconstructed factory
- * dScMgRoulette_c_classInit (historical alias MgMushroomRoulette_Spawn) installs this class's
- * cartridge vtable for the MG_ROULETTE registry profile.
+ * The destructor is inline and declared first, so D1 comes out before D0
+ * and no D2 is emitted. Its four calls follow the ROM: second model, first
+ * model, racer array, table. Typed members would destroy in a different
+ * order. InitResources stays the key function. dScMgBase_c supplies
+ * operator delete.
  */
 #ifndef DSCMGROULETTE_C_H
 #define DSCMGROULETTE_C_H
@@ -93,20 +46,21 @@ struct dScMgRoulette_c : dScMgSingle3DBase_c {
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
 
-    u8    mTable[0x270];  /* 0x4f38 -- ctor func_ov006_020c1d80, dtor func_ov006_020c1c64 */
-    u8    mArray[0x104];   /* 0x51a8 -- 5 * 0x34, dtor func_ov006_021079c8 */
-    u8    pad_52ac[0x70];  /* 0x52ac -- no named field access, see file banner */
-    u8    mModel1[0x50];    /* 0x531c -- Model, raw bytes, see file banner */
-    u8    mModel2[0x50];    /* 0x536c -- Model, raw bytes, see file banner */
-    u8    pad_53bc[0x8];     /* 0x53bc */
-    s32   unk_53c4;          /* 0x53c4 -- while it is 0 the board is idle:
-                                Render draws the tile cursor and phase 3 runs */
-    u8    pad_53c8[0xe];
-    s16   mSelectedTile;     /* 0x53d6 -- Render draws the cursor at that tile's
-                                coordinates in data_ov006_02142ab4/ab8; Behavior
-                                scores every racer against it */
-    u8    pad_53d8[0x8];
-    s32   unk_53e0;          /* 0x53e0 */
+    u8    mTable[0x270];   /* 0x4f38 -- the spinning board */
+    u8    mArray[0x104];   /* 0x51a8 -- 5 racers, 0x34 each */
+    u8    mMeter[4][0x18]; /* 0x52ac -- strips for payouts 12, 6, 3, 2 */
+    u8    mSlider[0x10];   /* 0x530c -- PMF state and the two model files */
+    u8    mModel1[0x50];   /* 0x531c -- raw Model; the destructor calls it explicitly */
+    u8    mModel2[0x50];   /* 0x536c */
+    u8    pad_53bc[0x8];   /* 0x53bc */
+    s32   mBoardBusy;      /* 0x53c4 -- while 0 the board is idle: Render draws
+                              the cursor and phase 3 pays out */
+    u8    pad_53c8[0xe];   /* 0x53c8 */
+    s16   mSelectedTile;   /* 0x53d6 -- cursor tile; phase 3 scores against it */
+    s16   mTableReady;     /* 0x53d8 -- set once the table first reports ready */
+    s16   pad_53da;        /* 0x53da */
+    s32   mTilesScored;    /* 0x53dc -- set to 1 when phase 2 records the tiles */
+    s32   unk_53e0;        /* 0x53e0 -- reset to 0x100; not read in this TU */
     s16   mCameraPreset;     /* 0x53e4 -- Render copies row n of the camera
                                 tables (data_ov006_0213e34c / _0213e370 at stride
                                 0xc, and _0213e2e0 for the angle) into
@@ -126,7 +80,7 @@ struct dScMgRoulette_c : dScMgSingle3DBase_c {
     u8    pad_53f1[0x1];
     s16   mScore;            /* 0x53f2 -- the payout summed over the racers;
                                 phase 4 compares it against mTargetScore */
-    u8    pad_53f4[0x2];
+    s16   unk_53f4;          /* 0x53f4 -- cleared when the payout is posted */
     s16   mTargetScore;      /* 0x53f6 -- one per racer that missed the winning
                                 tile; the bar mScore has to beat */
     s32   mDealIndex;        /* 0x53f8 -- how many racers have been dealt out;

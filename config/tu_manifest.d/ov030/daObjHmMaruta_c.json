@@ -1,0 +1,304 @@
+{
+  "id": "ov030/daObjHmMaruta_c",
+  "module": "ov030",
+  "source": "src/actors/daObjHmMaruta_c.cpp",
+  "promoted_source": "src/actors/daObjHmMaruta_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x211155c..0x211164c, 5 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjHmMaruta_c",
+    "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0211155c",
+      "end": "0x0211164c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN15daObjHmMaruta_cD1Ev",
+      "address": "0x0211155c",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN15daObjHmMaruta_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN15daObjHmMaruta_cD0Ev",
+      "address": "0x021115ac",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN15daObjHmMaruta_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN15daObjHmMaruta_c16CleanupResourcesEv",
+      "address": "0x02111610",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN15daObjHmMaruta_c16CleanupResourcesEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN15daObjHmMaruta_c8BehaviorEv",
+      "address": "0x02111624",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN15daObjHmMaruta_c8BehaviorEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN15daObjHmMaruta_c13InitResourcesEv",
+      "address": "0x02111638",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN15daObjHmMaruta_c13InitResourcesEv.cpp",
+      "ordinal": 4
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-written from the 5 legacy one-function C++ sources (the tubuild create shadow was the starting point). The three members are ordinary virtual overrides of daObjMaruta_c's pure slots 0/3/6, each forwarding to its ov080 helper.",
+    "LEVER: an empty inline destructor in include/daObjHmMaruta_c.h. The fold round's out-of-line destructor emitted D0 ahead of D1 (ordinal pair (0, 1) out of ROM order) plus a homeless _ZN15daObjHmMaruta_cD2Ev. Inline, the key function moves to Behavior, the vtable emits D1 then D0 in cartridge order (0x0211155c, 0x021115ac) and no D2. DELIBERATE DIVERGENCE from the same-family sibling ov022 daObjFlMaruta_c (src/game/actors/d_a_obj_fl_maruta.cpp), which keeps an out-of-line destructor under #pragma defer_codegen off and deadstrips its D2: that TU also carries daObj_volcanoCannon_c and its factory, whereas this one is the class alone, and the inline form needs neither the pragma nor a deadstrip row. Same form as ov022 daObjFl_Ring_c and ov065 daObjCtMecha08_c.",
+    "The three ov080 helpers are declared with the parameter types their definitions in src/game/actors/d_a_obj_maruta.cpp use (daObjMaruta_c *, ResourceDescriptor * / int *), inside a long_calls on/off bracket: the pooled cross-overlay tail call binds at the declaration.",
+    "SCOPE: daObjHmMaruta_c_classInit (0x0211164c, src/d_a_obj_hm_maruta.c) sits just past this run's right edge and tools/tu_map.py cuts it as its own candidate, so it stays a one-function C source. The run is bounded below by daObjHmBskt_c's promoted TU (ends 0x0211155c); no other class is interleaved.",
+    "LICENSING: 13 deadstrip-data rows, every one citing a configured ROM home -- this class's _ZTV/_ZTI/_ZTS (ov030) plus the daObjMaruta_c (ov022), dBgActor_c (ov002), dActor_c/dBase_c/fBase_c (arm9) chain. Possible only after the coined RollingLogTtm spelling was renamed to the cartridge RTTI name."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov030-daObjHmMaruta_c/daObjHmMaruta_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 5,
+    "functions_declared": 5,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "data": [
+        "_ZTV15daObjHmMaruta_c",
+        "_ZTI15daObjHmMaruta_c",
+        "_ZTS15daObjHmMaruta_c",
+        "_ZTI13daObjMaruta_c",
+        "_ZTS13daObjMaruta_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI13daObjMaruta_c",
+        "_ZTI15daObjHmMaruta_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS13daObjMaruta_c",
+        "_ZTS15daObjHmMaruta_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV15daObjHmMaruta_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov030-daObjHmMaruta_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0211155c",
+        "end": "0x0211164c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0211155c",
+          "end": "0x0211164c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 5
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTV15daObjHmMaruta_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov030",
+      "canonical_address": "0x02115a48",
+      "reason": "This class's own vtable, emitted as vague linkage because this TU defines the class key function (daObjHmMaruta_c::Behavior -- the destructor is inline, so the first declared non-inline virtual takes the role). The compiled object is 0x88 bytes because it includes the two-word [offset-to-top][typeinfo] header; the cartridge's _ZTV symbol at ov030:0x02115a48 points past that header, at the first virtual slot, so the ROM interval is 0x02115a40..0x02115ac8 (32 slots, dBgActor_c's count). It is this module's .data, outside the single .text range this entry claims, so it is discarded rather than claimed."
+    },
+    {
+      "symbol": "_ZTI15daObjHmMaruta_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov030",
+      "canonical_address": "0x021159f8",
+      "reason": "This class's own typeinfo record, emitted as vague linkage because this TU defines the class key function (daObjHmMaruta_c::Behavior -- the destructor is inline, so the first declared non-inline virtual takes the role). The cartridge copy at ov030:0x021159f8 reads [__si_class_type_info+8 (0x0209a764), _ZTS15daObjHmMaruta_c (0x02115a10), _ZTI13daObjMaruta_c (ov022 0x02114350)]; outside this entry's .text range, so discarded."
+    },
+    {
+      "symbol": "_ZTS15daObjHmMaruta_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov030",
+      "canonical_address": "0x02115a10",
+      "reason": "This class's own type-name string \"15daObjHmMaruta_c\", emitted as vague linkage because this TU defines the class key function (daObjHmMaruta_c::Behavior -- the destructor is inline, so the first declared non-inline virtual takes the role). Canonical copy at ov030:0x02115a10, outside this entry's .text range, so discarded."
+    },
+    {
+      "symbol": "_ZTI13daObjMaruta_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x02114350",
+      "reason": "Inherited vague-linkage RTTI that the one _ZTI15daObjHmMaruta_c record drags along; the canonical copy lives at ov022:0x02114350, outside this entry's .text range, so dsd supplies it and the object copy is discarded."
+    },
+    {
+      "symbol": "_ZTS13daObjMaruta_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x0211435c",
+      "reason": "Inherited vague-linkage RTTI that the one _ZTI15daObjHmMaruta_c record drags along; the canonical copy lives at ov022:0x0211435c, outside this entry's .text range, so dsd supplies it and the object copy is discarded."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Inherited vague-linkage RTTI that the one _ZTI15daObjHmMaruta_c record drags along; the canonical copy lives at ov002:0x021089ec, outside this entry's .text range, so dsd supplies it and the object copy is discarded."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Inherited vague-linkage RTTI that the one _ZTI15daObjHmMaruta_c record drags along; the canonical copy lives at ov002:0x02108a04, outside this entry's .text range, so dsd supplies it and the object copy is discarded."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI that the one _ZTI15daObjHmMaruta_c record drags along; the canonical copy lives at arm9:0x0208e390, outside this entry's .text range, so dsd supplies it and the object copy is discarded."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage RTTI that the one _ZTI15daObjHmMaruta_c record drags along; the canonical copy lives at arm9:0x0208e384, outside this entry's .text range, so dsd supplies it and the object copy is discarded."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI that the one _ZTI15daObjHmMaruta_c record drags along; the canonical copy lives at arm9:0x02086e78, outside this entry's .text range, so dsd supplies it and the object copy is discarded."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage RTTI that the one _ZTI15daObjHmMaruta_c record drags along; the canonical copy lives at arm9:0x02086e54, outside this entry's .text range, so dsd supplies it and the object copy is discarded."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI that the one _ZTI15daObjHmMaruta_c record drags along; the canonical copy lives at arm9:0x02086d70, outside this entry's .text range, so dsd supplies it and the object copy is discarded."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage RTTI that the one _ZTI15daObjHmMaruta_c record drags along; the canonical copy lives at arm9:0x02086e60, outside this entry's .text range, so dsd supplies it and the object copy is discarded."
+    }
+  ]
+}

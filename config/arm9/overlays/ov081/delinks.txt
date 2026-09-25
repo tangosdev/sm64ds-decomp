@@ -4,53 +4,9 @@
     .ctor       start:0x02128824 end:0x02128838 kind:rodata align:4
     .data       start:0x02128840 end:0x02128d60 kind:data align:32
     .bss        start:0x02128d60 end:0x02129000 kind:bss align:32
-src/_ZN9SpindriftD1Ev.cpp:
+src/actors/daHuwa_c.cpp:
     complete
-    .text start:0x02123740 end:0x02123788
-
-src/_ZN9SpindriftD0Ev.cpp:
-    complete
-    .text start:0x02123788 end:0x021237e4
-
-src/_ZN9Spindrift16OnAimedAtWithEggEv.cpp:
-    complete
-    .text start:0x021237e4 end:0x021237ec
-
-src/func_ov081_021237ec.cpp:
-    complete
-    .text start:0x021237ec end:0x02123910
-
-src/func_ov081_02123910.cpp:
-    complete
-    .text start:0x02123910 end:0x02123b20
-
-src/func_ov081_02123b20.cpp:
-    complete
-    .text start:0x02123b20 end:0x02123bec
-
-src/_ZN9Spindrift16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02123bec end:0x02123c1c
-
-src/_ZN9Spindrift6RenderEv.cpp:
-    complete
-    .text start:0x02123c1c end:0x02123c6c
-
-src/_ZN9Spindrift8BehaviorEv.cpp:
-    complete
-    .text start:0x02123c6c end:0x02123ed0
-
-src/_ZN9Spindrift13InitResourcesEv.cpp:
-    complete
-    .text start:0x02123ed0 end:0x02123fd8
-
-src/_ZN9Spindrift13OnTurnIntoEggER6Player.cpp:
-    complete
-    .text start:0x02123fd8 end:0x02124038
-
-src/_ZN9Spindrift13OnYoshiTryEatEv.cpp:
-    complete
-    .text start:0x02124038 end:0x02124040
+    .text start:0x02123740 end:0x02124040
 
 src/d_a_huwa.c:
     complete
@@ -196,11 +152,11 @@ src/d_a_snowman.c:
     complete
     .text start:0x02125ec0 end:0x02125f14
 
-src/_ZN8SnowballD1Ev.cpp:
+src/_ZN12daSnowball_cD1Ev.cpp:
     complete
     .text start:0x02125f14 end:0x02125f5c
 
-src/_ZN8SnowballD0Ev.cpp:
+src/_ZN12daSnowball_cD0Ev.cpp:
     complete
     .text start:0x02125f5c end:0x02125fb8
 
@@ -224,25 +180,9 @@ src/func_ov081_02126224.c:
     complete
     .text start:0x02126224 end:0x02126298
 
-src/_ZN8Snowball16CleanupResourcesEv.cpp:
+src/actors/daSnowball_c.cpp:
     complete
-    .text start:0x02126298 end:0x021262bc
-
-src/_ZN8Snowball16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x021262bc end:0x021262c0
-
-src/_ZN8Snowball6RenderEv.cpp:
-    complete
-    .text start:0x021262c0 end:0x021262ec
-
-src/_ZN8Snowball8BehaviorEv.cpp:
-    complete
-    .text start:0x021262ec end:0x021263b8
-
-src/_ZN8Snowball13InitResourcesEv.cpp:
-    complete
-    .text start:0x021263b8 end:0x021264b4
+    .text start:0x02126298 end:0x021264b4
 
 src/d_a_snowball.c:
     complete

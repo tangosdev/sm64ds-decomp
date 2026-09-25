@@ -10,13 +10,13 @@
  * 0x02010148 (different, real override).
  *
  * include/dActor_c.h's own slot 21 supplies the signature -- `void`, the
- * tree-wide fix from Stump::OnGroundPounded (36bc6d1df).
+ * tree-wide fix from daObjPile_c::OnGroundPounded (36bc6d1df).
  *
  * mPoundsLeft/mPoundCooldown/mRespawnDelay are this class's own fields (include/SignPost.h);
  * mPoundCooldown and mRespawnDelay were undescribed padding until this method's body
  * proved they are read/written. `&other + 0x703` reads past dActor_c's own
- * span -- same raw-offset reading src/_ZN5Stump15OnGroundPoundedER8dActor_c.cpp
- * records for its own slot 21. */
+ * span -- same raw-offset reading daObjPile_c::OnGroundPounded records
+ * for its own slot 21. */
 
 void SignPost::OnGroundPounded(dActor_c &other)
 {
