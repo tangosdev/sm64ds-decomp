@@ -1,0 +1,43 @@
+# slice_w31_s4ov0.txt -- run linkfull wave 31, lane S4OV0: THE OV0 HANDLE TABLE.
+#
+# The game asks for most files by an "ov0 handle", not by a FAT file id. On the
+# cartridge the table that turns one into the other is BUILT AT BOOT by overlay
+# 0's own entry, and these five TUs are that build and its one reader:
+#
+#   src/func_ov000_020aa420.c  ov000's entry (0x020aa420, 0xa8). It allocates the
+#                              table, then for each of the 0x80a = 2058 path
+#                              strings in data_ov000_020bd4b8 asks the file
+#                              system for the path's file id and stores it.
+#   src/func_02018a58.cpp      the allocation: Memory::Allocate(n * 2) off the
+#                              default heap, zeroed, into data_0209d3b8, with the
+#                              count in data_0209d3b0. 0x80a * 2 = 4116 bytes.
+#   src/func_020189f0.c        one path to one file id, through func_02018e3c
+#                              (FS_ConvertPathToFileID, already linked); it also
+#                              leaves the path's archive in data_0209d3b4.
+#   src/func_02018a40.c        table[i] = id.
+#   src/func_02018a24.c        THE READER: a handle below 0x8000 reads the table,
+#                              one at or above it is already a file id. Every
+#                              SharedFilePtr constructed by handle goes through
+#                              it (src/func_02017e0c.c).
+#
+# Before this lane the reader was a host face (hal/fs.cpp) that answered out of
+# build/assets/handles.tsv, a catalog generated from the same overlay, and the
+# build never ran. The ROM's own call site is func_0201a2f8, the boot worker
+# the boot scene starts; the port reaches the entry directly from
+# hal/boot_os.cpp's port_boot_rom_worker(), called from main's loop seam
+# (hal/rom_main.cpp), because func_0201a2f8.c spells the call to the entry as
+# func_ov001_020aa420 (ov000 and ov001 share the base) and its other work --
+# the FS table cache, the ov001 load, the sound group and font -- is either the
+# port's own already or a DS-only speed-up.
+#
+# The table and its strings are overlay 0's data: port/ov000_syms.txt mounts
+# them through tools/ovdata.py (the per-symbol, packed shape). The two words
+# the build writes are hosted in hal/s4ov0_ov0table.cpp.
+#
+# All five are MATCHING at 2004/b56 with --strict-relocs (tools/match.py by ROM
+# address); none has an #ifdef _MSC_VER arm, and none needed one.
+src/func_02018a24.c
+src/func_ov000_020aa420.c
+src/func_02018a58.cpp
+src/func_020189f0.c
+src/func_02018a40.c
