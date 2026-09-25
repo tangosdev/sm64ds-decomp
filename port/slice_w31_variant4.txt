@@ -24,3 +24,9 @@
 # No new reference and no keep-alive.
 src/_ZN10MrBlizzardD0Ev.cpp
 src/_ZN7MinimapD0Ev.cpp
+# Batch 4, a different arm: src/_ZN16dScMgPachinko2_cD0Ev.cpp spells the ROM's
+# own three steps (the store of its own vtable, the flat base destructor
+# _ZN11dScMgBase_cD2Ev, Memory::Deallocate), which are the host copy's calls in
+# port/unmatched/MgPachinko2_Dtor.cpp, now a forwarder. The qualified shape
+# would drop the port's one caller of that flat base destructor.
+src/_ZN16dScMgPachinko2_cD0Ev.cpp
