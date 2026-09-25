@@ -171,6 +171,11 @@
         "param:#2 const Vec3 *",
         "param:#3 const Vec3 *"
       ],
+      "src/game/actors/d_a_linelift2.cpp": [
+        "param:#1 Vector3 *",
+        "param:#2 const Vector3 *",
+        "param:#3 const Vector3 *"
+      ],
       "src/game/actors/d_a_obj_cannon_shutter.cpp": [
         "param:#1 const Vector3 *",
         "param:#2 const Vector3 *",
@@ -5855,6 +5860,11 @@
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
       ],
+      "src/game/actors/d_a_linelift2.cpp": [
+        "param:#1 Vector3 *",
+        "param:#2 const Vector3 *",
+        "param:#3 const Vector3 *"
+      ],
       "src/game/actors/d_a_obj_wl_polelift.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
@@ -10809,10 +10819,10 @@
       ]
     },
     "_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_": {
-      "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c13InitResourcesEv.cpp": [
         "kind:data"
       ],
-      "src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp": [
+      "src/_ZN13daLinelift2_c8BehaviorEv.cpp": [
         "arity:0",
         "mangled:0 parameter(s)"
       ],
@@ -11131,7 +11141,7 @@
         "param:#1 void *",
         "return:int"
       ],
-      "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
       "src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp": [
@@ -14355,7 +14365,7 @@
         "param:#1 void *",
         "return:void *"
       ],
-      "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:void *"
       ],
@@ -18096,7 +18106,7 @@
         "param:#2 int",
         "return:void"
       ],
-      "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c13InitResourcesEv.cpp": [
         "return:void"
       ],
       "src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp": [
@@ -18804,7 +18814,7 @@
       "src/_ZN15RollingIronBall13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
       "src/_ZN5Unagi13InitResourcesEv.cpp": [
@@ -30877,13 +30887,18 @@
       ]
     },
     "data_ov091_021344f4": {
-      "src/_ZN22RotatingUpDownPlatform16CleanupResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c16CleanupResourcesEv.cpp": [
         "return:void * []"
       ]
     },
     "data_ov091_021344fc": {
-      "src/_ZN22RotatingUpDownPlatform16CleanupResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c16CleanupResourcesEv.cpp": [
         "return:void * []"
+      ]
+    },
+    "data_ov091_02134e5c": {
+      "src/game/actors/d_a_linelift2.cpp": [
+        "return:CLPS_Block * []"
       ]
     },
     "data_ov091_02135024": {
@@ -30892,8 +30907,11 @@
       ]
     },
     "data_ov091_021354e0": {
-      "src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp": [
+      "src/_ZN13daLinelift2_c8BehaviorEv.cpp": [
         "return:PmfRow []"
+      ],
+      "src/game/actors/d_a_linelift2.cpp": [
+        "return:StateFunc []"
       ]
     },
     "data_ov091_02135674": {
@@ -35908,7 +35926,7 @@
       "src/actors/daObjFl_Block_c.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
       "src/_ZN6Eyerok13InitResourcesEv.cpp": [
@@ -36004,10 +36022,10 @@
       "src/actors/daObjFl_Block_c.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp": [
+      "src/_ZN13daLinelift2_c8BehaviorEv.cpp": [
         "param:#2 void *"
       ],
       "src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp": [

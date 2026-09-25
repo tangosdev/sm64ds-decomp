@@ -5214,6 +5214,21 @@
     "src/game/actors/d_a_obj_km2_agaru.cpp#_ZN16daObjKm2_Agaru_c13InitResourcesEv": "tangosdev",
     "src/game/actors/d_a_obj_km2_agaru.cpp#func_ov045_021114a8": "tangosdev",
     "src/game/actors/d_a_obj_km2_agaru.cpp#func_ov045_021114c8": "lunavyqo",
-    "src/game/actors/d_a_obj_km2_agaru.cpp#daObjKm2_Agaru_c_classInit": "tangosdev"
+    "src/game/actors/d_a_obj_km2_agaru.cpp#daObjKm2_Agaru_c_classInit": "tangosdev",
+    "src/game/actors/d_a_linelift2.cpp#_ZN13daLinelift2_cD1Ev": "tangosdev",
+    "src/game/actors/d_a_linelift2.cpp#_ZN13daLinelift2_cD0Ev": "tangosdev",
+    "src/game/actors/d_a_linelift2.cpp#func_ov091_02131cb0": "tangosdev",
+    "src/game/actors/d_a_linelift2.cpp#func_ov091_02131db8": "lunavyqo",
+    "src/game/actors/d_a_linelift2.cpp#func_ov091_02131ef0": "tangosdev",
+    "src/game/actors/d_a_linelift2.cpp#func_ov091_02131f9c": "tangosdev",
+    "src/game/actors/d_a_linelift2.cpp#func_ov091_02132000": "tangosdev",
+    "src/game/actors/d_a_linelift2.cpp#_ZN13daLinelift2_c16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/d_a_linelift2.cpp#_ZN13daLinelift2_c6RenderEv": "tangosdev",
+    "src/game/actors/d_a_linelift2.cpp#_ZN13daLinelift2_c8BehaviorEv": "andrewboudreau",
+    "src/game/actors/d_a_linelift2.cpp#_ZN13daLinelift2_c13InitResourcesEv": "lunavyqo",
+    "src/game/actors/d_a_linelift2.cpp#func_ov091_02132360": "tangosdev",
+    "src/game/actors/d_a_linelift2.cpp#func_ov091_02132380": "tangosdev",
+    "src/game/actors/d_a_linelift2.cpp#daLinelift2_c_classInit_KM2_SUSUMU": "tangosdev",
+    "src/game/actors/d_a_linelift2.cpp#daLinelift2_c_classInit_KM3_LIFT": "tangosdev"
   }
 }

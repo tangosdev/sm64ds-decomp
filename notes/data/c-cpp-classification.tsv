@@ -848,8 +848,8 @@ src/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.c	P1-vtable+mangled	ov047	daO
 src/_ZN21daObjKm3_Kurumajiku_cD0Ev.c	DTOR-ONLY	ov047	daObjKm3_Kurumajiku_c	daObjKm3_Kurumajiku_c	_ZN21daObjKm3_Kurumajiku_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV17daObjKurumajiku_c/_ZTV21daObjKm3_Kurumajiku_c	-
 src/_ZN12daObjClock_cD0Ev.cpp	DTOR-ONLY	ov013	daObjClock_c	daObjClock_c/daObjClock_c	_ZN12daObjClock_cD0Ev	1		True		-
 src/_ZN22ExpandingHeapAllocatorC1EPvj.c	P3-mangled-method-only	arm9		ExpandingHeapAllocator	_ZN22ExpandingHeapAllocatorC1EPvj	1		True		-
-src/_ZN22RotatingUpDownPlatformD0Ev.c	DTOR-ONLY	ov091	daLinelift2_c	RotatingUpDownPlatform/daLinelift2_c	_ZN22RotatingUpDownPlatformD0Ev	1		True	_ZTV10dBgActor_c	-
-src/_ZN22RotatingUpDownPlatformD1Ev.c	DTOR-ONLY	ov091	daLinelift2_c	RotatingUpDownPlatform/daLinelift2_c	_ZN22RotatingUpDownPlatformD1Ev	1		True	_ZTV10dBgActor_c	-
+src/_ZN13daLinelift2_cD0Ev.c	DTOR-ONLY	ov091	daLinelift2_c	daLinelift2_c/daLinelift2_c	_ZN13daLinelift2_cD0Ev	1		True	_ZTV10dBgActor_c	-
+src/_ZN13daLinelift2_cD1Ev.c	DTOR-ONLY	ov091	daLinelift2_c	daLinelift2_c/daLinelift2_c	_ZN13daLinelift2_cD1Ev	1		True	_ZTV10dBgActor_c	-
 src/_ZN23FloatOnWaterPlatformJrbD0Ev.c	DTOR-ONLY	ov016	daObjKi_Ita_c	FloatOnWaterPlatformJrb/daObjKi_Ita_c	_ZN23FloatOnWaterPlatformJrbD0Ev	1		True	_ZTV10dBgActor_c/_ZTV17daObjFloatBoard_c/_ZTV23FloatOnWaterPlatformJrb	-
 src/_ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3.c	P3-mangled-method-only	arm9		MovingCylinderClsnWithPos	_ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3	1		True		-
 src/_ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj.c	P3-mangled-method-only	arm9		MovingCylinderClsnWithPos	_ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj	1		True		by-value-class-param

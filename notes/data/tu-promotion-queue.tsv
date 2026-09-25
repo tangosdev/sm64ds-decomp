@@ -133,7 +133,7 @@ StarCamera	1	10	ov002	no	no	compiler-only:unknown(no chain for StarCamera: no RT
 daDonketu_c	10	234	ov064	yes	yes	compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+1)	daObjFl_Gura_c	text-only
 daLuigi_c	11	276	ov055	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	-	text-only
 RotatingUpDownPlatformUtm	11	549	ov091	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
-RotatingUpDownPlatform	11	316	ov091	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
+daLinelift2_c	11	316	ov091	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 daUdlift_c	11	347	ov095	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 daObj_volcanoCannon_c+daObjFlMaruta_c	11	203	ov022	partial	yes	multi-class-tu:2;classif:no-header:daObjFlMaruta_c;compiler-only:>=16(derived from own chain: 7 classes incl. self via build/rtti.json; floor 2x7+2)	daObjFl_Fall_Block_c	text-only
 daObjKm2_Agaru_c	6	168	ov045	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daObjKm2_Ami_Bou_c	text-only

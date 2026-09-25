@@ -56,65 +56,9 @@ src/d_a_obj_rotate_updown_lift_updown_lift.c:
     complete
     .text start:0x02131bdc end:0x02131c14
 
-src/_ZN22RotatingUpDownPlatformD1Ev.cpp:
+src/game/actors/d_a_linelift2.cpp:
     complete
-    .text start:0x02131c14 end:0x02131c58
-
-src/_ZN22RotatingUpDownPlatformD0Ev.cpp:
-    complete
-    .text start:0x02131c58 end:0x02131cb0
-
-src/func_ov091_02131cb0.c:
-    complete
-    .text start:0x02131cb0 end:0x02131db8
-
-src/func_ov091_02131db8.c:
-    complete
-    .text start:0x02131db8 end:0x02131ef0
-
-src/func_ov091_02131ef0.c:
-    complete
-    .text start:0x02131ef0 end:0x02131f9c
-
-src/func_ov091_02131f9c.c:
-    complete
-    .text start:0x02131f9c end:0x02132000
-
-src/func_ov091_02132000.c:
-    complete
-    .text start:0x02132000 end:0x0213209c
-
-src/_ZN22RotatingUpDownPlatform16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0213209c end:0x021320e0
-
-src/_ZN22RotatingUpDownPlatform6RenderEv.cpp:
-    complete
-    .text start:0x021320e0 end:0x02132108
-
-src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp:
-    complete
-    .text start:0x02132108 end:0x0213220c
-
-src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp:
-    complete
-    .text start:0x0213220c end:0x02132360
-
-src/func_ov091_02132360.cpp:
-    complete
-    .text start:0x02132360 end:0x02132380
-
-src/func_ov091_02132380.c:
-    complete
-    .text start:0x02132380 end:0x02132394
-
-src/d_a_linelift2_km2_susumu.c:
-    complete
-    .text start:0x02132394 end:0x021323cc
-
-src/d_a_linelift2_km3_lift.c:
-    complete
-    .text start:0x021323cc end:0x02132404
+    .text start:0x02131c14 end:0x02132404
 
 src/actors/daObjSimpleLift_c.cpp:
     complete

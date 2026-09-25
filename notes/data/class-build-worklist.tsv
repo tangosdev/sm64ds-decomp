@@ -221,7 +221,7 @@ daDpLift_c	DONE	include\daDpLift_c.h  [alias: header uses pre-rename name]	dBgAc
 daIwante_c	DONE	include\Eyerok.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov066	8
 daKpa2Bg_c	DONE	include\daKpa2Bg_c.h	dBgActor_c	0	ov060	6
 daKpa3Bg_c	PARTIAL	include\daKpa3Bg_c.h	dBgActor_c	0	ov060	6
-daLinelift2_c	DONE	include\RotatingUpDownPlatform.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov091	6
+daLinelift2_c	DONE	include\daLinelift2_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov091	6
 daObjBC_Switch_c	DONE	include\daObjBC_Switch_c.h	dBgActor_c	0	ov002	6
 daObjBkKillerdai_c	PARTIAL	include\daObjBkKillerdai_c.h	dBgActor_c	0	ov079	8
 daObjBk_Botaosi_c	DONE	include\daObjBk_Botaosi_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov015	9
