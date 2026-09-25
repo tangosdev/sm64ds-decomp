@@ -817,6 +817,24 @@ void func_0203e0ac(void);
    port/slice_mp3.txt. It owns the switch that used to be hosted at the call
    site below, and the only call site of the seam's close() face. */
 void func_0203df40(void);
+/* run linkfull lane B5INPUT: the game loop's own pad read, phase 0x15
+   (src/func_0201ffcc.c, which calls func_0203df40 above), called from the
+   level loop's input phase point (see THE GAME LOOP'S OWN INPUT STEPS there).
+   The phase id is hal/rom_frame.cpp's. */
+extern "C" void func_0201ffcc(void);
+extern "C" int data_0209d50c;
+/* and phase 0x17: func_0203bc7c turns the four records into PadData (the
+   symbol is hal/comms_fanout_wide.cpp's, which runs the ROM's own body first;
+   func_0203bb60 beside it is phase 0x16, TouchInfo), and the ring words
+   hal/b5input_globals.cpp hosts. */
+extern "C" void func_0203bb60(void);
+extern "C" void func_0203bc7c(void);
+extern "C" unsigned char data_0209d4e8[];
+extern "C" int data_0209d51c;
+extern "C" unsigned short data_0209d534[];
+extern "C" unsigned char data_0209e64c;    /* hal/boot_arms.cpp: the gate */
+extern "C" int data_0209d574[];            /* hal/actor_vtables.cpp: the
+                                              watchdog alarm, ROM span 68 */
 /* the ROM's own camera math, which the freecam rig builds its view with:
    the same eye construction func_02009e70 uses and the same two G3i entry
    points plus CopyToViewMat that Camera::Render ends in */
@@ -12053,9 +12071,17 @@ int main(void)
                Under the real camera this is NOT written by hand: the
                camera publishes its own heading through func_0203dafc ->
                data_020a1040 -> func_0203e0ac -> data_020a1154, and
-               GetAngleToCamera reads the far end of that chain. */
+               GetAngleToCamera reads the far end of that chain.
+
+               The old dev rig (SM64DS_OLD_CAMERA) writes the LOCAL record's
+               heading, the head of that chain, since run linkfull lane
+               B5INPUT: the ROM's own pad read (phase 0x15, a little further
+               down this frame) now runs on every frame, and its echo copies
+               the local record's heading into all four per-player records, so
+               a store straight into record 0 would be overwritten before the
+               tick read it. */
             if (!real_camera)
-                *(short *)((char *)data_020a1164 + 0) =
+                *(short *)data_020a1050 =
                     (short)((int)(cam_yaw * (32768.0f / 3.14159265f)) + 0x8000);
             /* TEMPORARY headless input: OR any SM64DS_PROBE_INPUT press for this
                frame into the raw pad mirror BEFORE CheckInput, so the remap and
@@ -12419,7 +12445,117 @@ int main(void)
                still reaches raw_all this frame. */
             const unsigned short raw_all =
                 (unsigned short)(port_raw_dir_bits() | port_raw_bt_bits_for_mirror);
-            if (!(port::comms_transport() && comms_fanout_on())) {
+            /* ---- THE GAME LOOP'S OWN INPUT STEPS (run linkfull, lane
+               B5INPUT) ------------------------------------------------------
+               src/func_020197b8.c reads the pad at phase 0x15, after phase 7's
+               wait, and the next frame consumes it at phases 0x16 / 0x17,
+               before phase 3 spawns and phase 4 ticks:
+
+                   data_0209d50c = 7;    func_0201a4bc();   the VBlank sleep
+                   data_0209d50c = 0x15; func_0201ffcc();   the pad read
+                   ... phase 9, then the next frame's 0xb and 2 ...
+                   data_0209d50c = 0x16; func_0203bb60();   TouchInfo
+                   data_0209d50c = 0x17; func_0203bc7c();   PadData
+
+               The host's between-frame duties -- the message pump and the
+               live keypad poll above, which is what the DS's KEYINPUT simply
+               IS at the instant the ROM reads it -- belong to phase 7's halt,
+               so THIS is the ROM's point on this loop: the frame's key word is
+               final and nothing of phase 3 or 4 has run. Phases 9, 0xb and 2
+               read no input word, so the order the ROM gives every word the
+               read touches is kept. (At the loop's foot instead, the read
+               would hand the tick the PREVIOUS frame's poll: a frame of input
+               lag the cartridge does not have.)
+
+               func_0201ffcc is the ROM's own wrapper round func_0203df40: it
+               holds the data_0209d574 watchdog alarm off across the read,
+               stamps its tick and republishes func_0203daac's count into
+               data_0208f274. It returns at once unless data_0209e64c is up,
+               and src/func_0201fec8.c:44 raises that on every boot (the a054
+               seam's R2b arm runs it).
+
+               IT RETIRES the camera block's direct func_0203df40() call further
+               down this frame (run mg16 lane MP3): a second call would read the
+               pad twice. The KEYINPUT publish moves up with it, because it
+               must land before the read (hal/comms_conductor.cpp, THE STUCK
+               CONTROLLER); the value is the word that block published, the
+               direction stash OR the button stash, which is raw_all. The one
+               thing the move shifts is WHERE the local record's heading
+               (Camera::Behavior's, or the rig's in analog mode) is echoed into
+               the four per-player records: here, at the top of the next frame,
+               rather than straight after the camera. Its first reader is still
+               the next frame's tick (GetAngleToCamera), so Mario steers by the
+               same heading on the same frame. */
+            port::comms_publish_pad(port_raw_pad_bits() | port_raw_btn_bits());
+            {
+                /* One line, once: the two words that decide what the ROM's
+                   wrapper does -- data_0209e64c (0 = it returns at once and
+                   the records go stale) and the watchdog's armed flag at
+                   data_0209d574+0x40 (1 = the wrapper's set/restore pair is a
+                   no-op and no alarm is ever armed). */
+                static int b5in_said;
+                if (!b5in_said) {
+                    b5in_said = 1;
+                    fprintf(stderr, "[b5input] phase 0x15 func_0201ffcc: "
+                            "data_0209e64c=%u watchdog+0x40=%u key=%04x\n",
+                            (unsigned)data_0209e64c,
+                            (unsigned)((const unsigned char *)data_0209d574)[0x40],
+                            (unsigned)(port_raw_pad_bits() | port_raw_btn_bits()));
+                }
+                const double t_rb = rb_replaying() ? ovl_now_ms() : 0;
+                data_0209d50c = 0x15;
+                func_0201ffcc();
+                if (rb_replaying()) rb_replay_phase(6, ovl_now_ms() - t_rb);
+            }
+            /* PHASES 0x16 AND 0x17, the second half of the same block: the
+               ROM's own PadData builder, then func_020197b8.c:43-46 -- the
+               input ring -- in the ROM's order, right after the read that
+               filled the four records.
+
+               SINGLE PLAYER (no transport): func_0203bc7c turns the four
+               records into PadData[4] -- held, the press edge against its own
+               previous-keys array (data_020a0e50), the release edge, the
+               opposing-direction mask, and data_020a0e44 when the word is
+               L+R+START+SELECT (0x30c; its one reader, func_02023498, is not
+               called yet: see the ring below) -- which RETIRES the host's direct
+               PadData store: the key word reaches Stage::CheckInput through
+               KEYINPUT, func_0203df40's record and func_0203bc7c, the way the
+               cartridge carries it. Phase 0x16 (func_0203bb60, TouchInfo) is
+               NOT run here, on purpose: hal/sub_screen.cpp's poll_touch writes
+               TouchInfo straight from the stylus, and the only other source is
+               func_0203b9bc's three-of-four debounce over hal/tsc_arm7.cpp's
+               ring, which that file feeds ONE sample a frame where the ROM asks
+               the ARM7 for four (src/func_0203bbc0.c:21, func_0205eeac(0, 4,
+               &data_020a0df8, 9)), so it would lag every tap by two frames.
+
+               THE SPLIT SYMBOL: data_020a0e5a IS PadData[i].pressed on the DS
+               and separate storage here (hal/auto_bss.cpp), so the four pressed
+               halfwords the ROM just wrote are copied into it at the same
+               instant -- the aliasing, restored after the ROM's writer, exactly
+               as the direct store below restored it for its one slot.
+
+               A SESSION WITH THE FAN-OUT ON: both of the ROM's steps, moved here
+               from the camera block further down this frame (run mg15 lane
+               MP1), because they must follow the read that filled the records
+               and the read runs here now. ADVENTURE (a transport up with the
+               fan-out off, hal/comms_conductor.cpp) keeps the direct store
+               below, into its own slot, unchanged. */
+            const int b5_transport = port::comms_transport() != 0;
+            const int b5_fan = comms_fanout_on() ? 1 : 0;
+            if (b5_fan) {
+                data_0209d50c = 0x16;
+                func_0203bb60();
+                data_0209d50c = 0x17;
+                func_0203bc7c();
+            } else if (!b5_transport) {
+                data_0209d50c = 0x17;
+                func_0203bc7c();
+            }
+            if (!b5_transport)
+                for (int b5_i = 0; b5_i < 4; ++b5_i)
+                    *(unsigned short *)((char *)data_020a0e5a + b5_i * 4) =
+                        *(unsigned short *)((char *)data_020a0e58 + b5_i * 4 + 2);
+            if (b5_transport && !b5_fan) {
                 /* THE LOCAL SLOT, not always slot 0. PadData strides 4 bytes per
                    player ({u16 held, u16 pressed}); on the child data_0209f250 is
                    1, so the local pad must land in PadData[1] or it drives the
@@ -12464,6 +12600,36 @@ int main(void)
                    hal/message_pump.cpp's own publish is unchanged and still
                    runs later in the frame. */
                 *(unsigned short *)((char *)data_020a0e5a + lo) = edge;
+            }
+            /* func_020197b8.c:43-46: the local player's held word into the
+               32-deep ring. The ring has no reader in src/ but the loop itself;
+               these are the cartridge's own words, hosted in
+               hal/b5input_globals.cpp.
+
+               func_020197b8.c:47, func_02023498(), IS NOT CALLED YET, and that
+               is measured rather than assumed (run linkfull, lane B5INPUT). It
+               is the cartridge's soft reset: func_0203bc7c above raises
+               data_020a0e44 when the key word is L+R+START+SELECT, and
+               func_02023498 turns that into data_0209f1e0, then zeroes PadData,
+               TouchInfo and the Ctrl records on every frame the latch is up
+               while dScene_c::BeforeBehavior fades the scene out and ends it,
+               for the title to take over. On this port the latch rose (f400)
+               and the Stage's BeforeBehavior started the brightness fade on
+               data_0209f5d0 (f401) -- and nothing ever stepped that fade, so it
+               never reached its end, the latch never came down, and every
+               button was zeroed for the rest of the run: a softlock where the
+               cartridge goes back to the title. Past the fade the ROM marks the
+               Stage for destruction, and the Stage's CleanupResources slot is
+               not hosted (hal/level_change.cpp, the MFD_STAGE row). The call
+               belongs here, after the ring, once the frame's fader step (phase
+               2) and that teardown exist. */
+            {
+                data_0209d50c = 0x17;
+                const unsigned short b5_v = *(unsigned short *)(
+                    (char *)data_020a0e58 + ((unsigned)data_020a0e40[0] << 2));
+                data_0209d534[data_0209d4e8[0]] = b5_v;
+                data_0209d51c = b5_v;
+                data_0209d4e8[0] = (unsigned char)((data_0209d4e8[0] + 1) & 0x1f);
             }
             g_pad_mirror_prev = raw_all;
             /* ---- THE THIRD BUTTON WRITER, AND THE ONE HIS HANDS FOUND ------
@@ -14739,11 +14905,14 @@ int main(void)
                BOTH HALVES of the host pad go in: the d-pad stash and the
                button stash (run mg16 lane MPBTN). Publishing only the first
                is what made every session's key word a d-pad nibble and every
-               button dead once the direct Ctrl stores were gated. */
-            port::comms_publish_pad(port_raw_pad_bits() | port_raw_btn_bits());
-            { const double t_rb = rb_replaying() ? ovl_now_ms() : 0;
-            func_0203df40();
-            if (rb_replaying()) rb_replay_phase(6, ovl_now_ms() - t_rb); }
+               button dead once the direct Ctrl stores were gated.
+
+               MOVED (run linkfull, lane B5INPUT): the publish and the read now
+               run at the ROM's own phase 0x15 point, THE GAME LOOP'S OWN INPUT
+               STEPS above the tick, through the ROM's wrapper func_0201ffcc.
+               Everything this paragraph says still holds there, in the same
+               order; the heading written just above reaches the four records
+               at that point, before the next frame's tick reads it. */
             /* run mg16 lane MP4: one frame of the state-sync layer, AFTER the
                conductor. Call position is the contract's ordering rule made
                structural: func_0203df40 above has already put this frame's
@@ -14795,8 +14964,11 @@ int main(void)
                actually call the body for it to count as linked. */
             {
                 const int fan_now = comms_fanout_on();
-                if (fan_now)
-                    port::comms_fanout();
+                /* MOVED (run linkfull, lane B5INPUT): port::comms_fanout()'s
+                   two steps now run at THE GAME LOOP'S OWN INPUT STEPS above
+                   the tick, straight after the read that fills the records,
+                   which is where they have to follow it. fan_now stays for the
+                   report below. */
                 /* THE REPORT IS NOT INSIDE THE FAN-OUT GATE, deliberately. It
                    used to be, which meant the one configuration where the
                    input exchange is broken -- fanout forced off with a
