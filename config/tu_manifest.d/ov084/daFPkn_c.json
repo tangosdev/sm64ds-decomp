@@ -6,8 +6,8 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "Contiguous daFPkn_c run 0x0212d248..0x0212ea18, 18 functions, every delinks entry complete and the ranges abut: D1 and D0, the nine func_ov084_0212d2dc..0212e4e0 state helpers, then the seven vtable methods.",
-    "The helpers belong to this class: Behavior dispatches mState 0..3 to func_ov084_0212e4e0 / 0212e010 / 0212ddbc / 0212dc30 and then calls 0212d86c and 0212d564; 0212e010 calls 0212d2dc, 0212d42c and 0212d560. ov084 relocs.txt has no caller outside this run.",
+    "Contiguous daFPkn_c run 0x0212d248..0x0212ea18, 18 functions, every delinks entry complete and the ranges abut: D1 and D0, the nine helpers and states at 0x0212d2dc..0x0212e554, then the seven vtable methods.",
+    "The helpers belong to this class: Behavior dispatches mState 0..3 to StateInit (0x0212e4e0), StateWait (0x0212e010), StateSpit (0x0212ddbc) and StateGrow (0x0212dc30), then calls CheckClsnHits (0x0212d86c) and UpdateClsnOffset (0x0212d564); StateWait calls SpawnDeathSmoke (0x0212d2dc), SpawnDeathBurst (0x0212d42c) and OnGroupMemberDefeated (0x0212d560). ov084 relocs.txt has no caller outside this run.",
     "The preceding function is daRedBombhei_c_classInit (0x0212d200..0x0212d248), another class's factory. The next function, daFPkn_c_classInit_PAKUN2 at 0x0212ea18, starts the three classInit factories; they stay one-function C sources, as in the other promotions.",
     "Vtable address point 0x02130b28; the word before it relocates to _ZTI8daFPkn_c at 0x02130ac0, whose name string at 0x02130ab4 is 8daFPkn_c and whose base is _ZTI12dEnemyBase_c (ov002 0x021081c0)."
   ],
@@ -34,63 +34,63 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov084_0212d2dc",
+      "symbol": "_ZN8daFPkn_c15SpawnDeathSmokeEv",
       "address": "0x0212d2dc",
       "size": "0x00000150",
       "legacy_source": "src/func_ov084_0212d2dc.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov084_0212d42c",
+      "symbol": "_ZN8daFPkn_c15SpawnDeathBurstEv",
       "address": "0x0212d42c",
       "size": "0x00000134",
       "legacy_source": "src/func_ov084_0212d42c.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov084_0212d560",
+      "symbol": "_ZN8daFPkn_c21OnGroupMemberDefeatedEv",
       "address": "0x0212d560",
       "size": "0x00000004",
       "legacy_source": "src/func_ov084_0212d560.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov084_0212d564",
+      "symbol": "_ZN8daFPkn_c16UpdateClsnOffsetEv",
       "address": "0x0212d564",
       "size": "0x00000308",
       "legacy_source": "src/func_ov084_0212d564.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov084_0212d86c",
+      "symbol": "_ZN8daFPkn_c13CheckClsnHitsEv",
       "address": "0x0212d86c",
       "size": "0x000003c4",
       "legacy_source": "src/func_ov084_0212d86c.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov084_0212dc30",
+      "symbol": "_ZN8daFPkn_c9StateGrowEv",
       "address": "0x0212dc30",
       "size": "0x0000018c",
       "legacy_source": "src/func_ov084_0212dc30.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov084_0212ddbc",
+      "symbol": "_ZN8daFPkn_c9StateSpitEv",
       "address": "0x0212ddbc",
       "size": "0x00000254",
       "legacy_source": "src/func_ov084_0212ddbc.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov084_0212e010",
+      "symbol": "_ZN8daFPkn_c9StateWaitEv",
       "address": "0x0212e010",
       "size": "0x000004d0",
       "legacy_source": "src/func_ov084_0212e010.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov084_0212e4e0",
+      "symbol": "_ZN8daFPkn_c9StateInitEv",
       "address": "0x0212e4e0",
       "size": "0x00000074",
       "legacy_source": "src/func_ov084_0212e4e0.c",
@@ -150,8 +150,8 @@
   "bss": [],
   "notes": [
     "Key function is the out-of-line destructor, defined first under #pragma defer_codegen off, so the object emits D1 then D0 in the cartridge's order, then the helpers and methods in ROM order.",
-    "The nine helpers were one-function shards (seven C, two C++). They now share one extern \"C\" declaration set; the C bodies compile unchanged under C++ apart from explicit casts on the void * returns of dActor_c::FindWithID and dActor_c::ClosestPlayer.",
-    "func_ov084_0212d560 is an empty function. func_ov084_0212e010 calls it with this in r0, so it takes an unused void * parameter; its body is still one bx lr."
+    "The nine helpers were one-function shards (seven C, two C++) under address names. They are daFPkn_c members now, under coined names, and their ov084 symbols.txt rows were renamed in place: func_ov084_0212d2dc SpawnDeathSmoke, 0212d42c SpawnDeathBurst, 0212d560 OnGroupMemberDefeated, 0212d564 UpdateClsnOffset, 0212d86c CheckClsnHits, 0212dc30 StateGrow, 0212ddbc StateSpit, 0212e010 StateWait, 0212e4e0 StateInit. include/decl_common.h still declares six of the old names; nothing calls them.",
+    "OnGroupMemberDefeated (0x0212d560) is an empty member. StateWait calls it with this in r0; its body is one bx lr."
   ],
   "compiler_only_output": [
     {
@@ -164,7 +164,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "InitResources holds a local Vector3. include/types.h defines ~Vector3() inline, so the TU re-emits that 4-byte vague-linkage body. The cartridge owns it at arm9:0x020072c0 (src/_ZN7Vector3D1Ev.cpp); deadstrip-duplicate discards this copy only after the body is proved identical."
+      "reason": "Render, InitResources and five of the helpers (SpawnDeathBurst, CheckClsnHits, StateGrow, StateSpit, StateWait) hold local Vector3s. include/types.h defines ~Vector3() inline, so the TU re-emits that 4-byte vague-linkage body. The cartridge owns it at arm9:0x020072c0 (src/_ZN7Vector3D1Ev.cpp); deadstrip-duplicate discards this copy only after the body is proved identical."
     },
     {
       "symbol": "_ZTI7fBase_c",
@@ -264,7 +264,7 @@
       "droppedSections": [
         9,
         10,
-        22,
+        15,
         40,
         41,
         42,
