@@ -328,7 +328,7 @@ All commands run in `C:/tmp/sm64ds-sm64ds-yurei` at this tree, on the pinned
   `extern int Snufit_Kill(int*);` was a dead declaration in
   `include/decl_common.h` -- no definition, no caller, and no such symbol in
   [config/arm9/overlays/ov065/symbols.txt](../../../config/arm9/overlays/ov065/symbols.txt), which spells the function
-  [func_ov065_021177e4](../../../src/func_ov065_021177e4.cpp). It is deleted. It was NOT renamed to
+  `func_ov065_021177e4` (now in [src/actors/daBasabasa_c.cpp](../../../src/actors/daBasabasa_c.cpp)). It is deleted. It was NOT renamed to
   `daYurei_Mucho_c_Kill`, because the shard's own attribution turned out to be
   wrong on both halves, refuted by three ROM reads recorded in the shard's
   header comment: 0x021177e4 is in no vtable in [ov065](../../../config/arm9/overlays/ov065/symbols.txt) (neither
@@ -410,7 +410,7 @@ These are class-local experiment results, not final current-main acceptance.
 The 12 address-named free helpers, manual factory, remaining raw storage and
 copy views continue under #2478. `SharedFilePtr` still has no recovered fields in
 its header: retain the measured direct +4 file-pointer load rather than calling
-`LoadFile` or inventing a field. The neighboring [func_ov065_021177e4](../../../src/func_ov065_021177e4.cpp) belongs to
+`LoadFile` or inventing a field. The neighboring `func_ov065_021177e4` (now in [src/actors/daBasabasa_c.cpp](../../../src/actors/daBasabasa_c.cpp)) belongs to
 `daBasabasa_c`; its previously accepted provenance-only correction is preserved.
 
 ### Current-main composition
@@ -425,7 +425,7 @@ shared Actor header is byte-for-byte main's version.
 The rename-ledger conflict was resolved as the exact three-way row multiset
 (3,573 rows), and attribution equals the recursive three-way merge. Both parent
 histories and their contributor records are preserved. The neighboring
-[func_ov065_021177e4](../../../src/func_ov065_021177e4.cpp) retains the accepted input's provenance-only correction.
+`func_ov065_021177e4` (now in [src/actors/daBasabasa_c.cpp](../../../src/actors/daBasabasa_c.cpp)) retains the accepted input's provenance-only correction.
 
 Fresh **2004/b56** compilation on this composition verifies all 23 functions and
 4,280 text bytes, with zero blind words or differences. All 156 symbol references

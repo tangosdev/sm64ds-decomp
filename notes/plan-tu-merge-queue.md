@@ -698,7 +698,7 @@ harder to review. 48 of 73 need the normalizer, whose only validation is Pilot 3
 have blockers the census concealed; the 13 TUs at 25+ members are exactly where "0 of 159
 compiled" was measured.
 
-**Exception — run exactly one Tier-2 TU as a cost probe, after B2:** [ov092](../config/arm9/overlays/ov092/symbols.txt)/`ToxBox`
+**Exception — run exactly one Tier-2 TU as a cost probe, after B2:** [ov092](../config/arm9/overlays/ov092/symbols.txt)/`daOnms_c`
 (`.text 0x2130f00`, 23 files, `module_tus=1`, module-edge both ends, `corroborated:true`,
 **all 12 `.c` members census-proven**, `pcov=12/12`). The only Tier-2 TU with a
 module-edge boundary on both sides *and* a settled language variable, so an admission
@@ -806,7 +806,7 @@ not need re-reading); 1 serial `rombuild.py` at merge.
 Tier 1 whole: **13 batches + 3 pilots ≈ 45–75 agent-hours, ≈12–18 h review, 15 serial ROM
 builds**, for −567 files (5.1% of `src/`).
 
-Tier 2 whole: unmeasurable until the ToxBox probe returns. Lower bound ~1,338 compiles for
+Tier 2 whole: unmeasurable until the daOnms_c probe returns. Lower bound ~1,338 compiles for
 one linear pass, ~2,700 with the retry, plus reconcile on 40,621 lines — **plausibly
 2.5–4× Tier 1's effort for 2.2× the files**, with partial results that cost more to
 review. [ov081](../config/arm9/overlays/ov081/symbols.txt)/`MrBlizzard` (35 members, 1,416 lines, 17 local-struct files, 9 normalizer

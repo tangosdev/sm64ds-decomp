@@ -1,0 +1,349 @@
+{
+  "id": "ov065/daBasabasa_c",
+  "module": "ov065",
+  "source": "src/actors/daBasabasa_c.cpp",
+  "promoted_source": "src/actors/daBasabasa_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2116f98..0x2117ee8, 21 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daBasabasa_c",
+    "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02116f98",
+      "end": "0x02117ee8"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN12daBasabasa_cD1Ev",
+      "address": "0x02116f98",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN12daBasabasa_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN12daBasabasa_cD0Ev",
+      "address": "0x02116fe8",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN12daBasabasa_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov065_0211704c",
+      "address": "0x0211704c",
+      "size": "0x000003b8",
+      "legacy_source": "src/func_ov065_0211704c.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov065_02117404",
+      "address": "0x02117404",
+      "size": "0x000001ac",
+      "legacy_source": "src/func_ov065_02117404.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov065_021175b0",
+      "address": "0x021175b0",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov065_021175b0.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov065_02117624",
+      "address": "0x02117624",
+      "size": "0x000000d8",
+      "legacy_source": "src/func_ov065_02117624.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov065_021176fc",
+      "address": "0x021176fc",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov065_021176fc.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov065_02117780",
+      "address": "0x02117780",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov065_02117780.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov065_021177e4",
+      "address": "0x021177e4",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov065_021177e4.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov065_02117888",
+      "address": "0x02117888",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov065_02117888.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov065_021178fc",
+      "address": "0x021178fc",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov065_021178fc.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov065_02117944",
+      "address": "0x02117944",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov065_02117944.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov065_02117994",
+      "address": "0x02117994",
+      "size": "0x00000110",
+      "legacy_source": "src/func_ov065_02117994.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN12daBasabasa_c16CleanupResourcesEv",
+      "address": "0x02117aa4",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN12daBasabasa_c16CleanupResourcesEv.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN12daBasabasa_c16OnPendingDestroyEv",
+      "address": "0x02117aec",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN12daBasabasa_c16OnPendingDestroyEv.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN12daBasabasa_c6RenderEv",
+      "address": "0x02117af0",
+      "size": "0x00000074",
+      "legacy_source": "src/_ZN12daBasabasa_c6RenderEv.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN12daBasabasa_c8BehaviorEv",
+      "address": "0x02117b64",
+      "size": "0x0000021c",
+      "legacy_source": "src/_ZN12daBasabasa_c8BehaviorEv.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN12daBasabasa_c13InitResourcesEv",
+      "address": "0x02117d80",
+      "size": "0x0000012c",
+      "legacy_source": "src/_ZN12daBasabasa_c13InitResourcesEv.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN12daBasabasa_c16OnAimedAtWithEggEv",
+      "address": "0x02117eac",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN12daBasabasa_c16OnAimedAtWithEggEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN12daBasabasa_c13OnTurnIntoEggER6Player",
+      "address": "0x02117eb4",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN12daBasabasa_c13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN12daBasabasa_c13OnYoshiTryEatEv",
+      "address": "0x02117ee0",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN12daBasabasa_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 20
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Text span 0x02116f98..0x02117ee8, 21 functions, class daBasabasa_c only. daBasabasa_c_classInit at 0x02117ee8 is the next function and is not absorbed.",
+    "Cartridge type string is 12daBasabasa_c: vtable 0x0211cca0 word at -4 is _ZTI12daBasabasa_c (0x0211cc60), typeinfo+4 is the string at 0x0211cc6c. The coined _ZTV5Swoop alias was deleted.",
+    "One out-of-line destructor under #pragma defer_codegen off. D2 is homeless deadstrip. Vector3 D1 is the vague duplicate of arm9:0x020072c0. Vtable and the ancestor RTTI chain are deadstrip-data at their existing addresses."
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN12daBasabasa_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. One out-of-line destructor under #pragma defer_codegen off emits D1, D0, then D2. The cartridge has D1 at ov065:0x02116f98 and D0 at 0x02116fe8 and no D2. Production isolation discards it. It is emitted after D0, and the licensed functions stay ROM-ascending."
+    },
+    {
+      "symbol": "_ZN7PoofPosD1Ev",
+      "disposition": "deadstrip",
+      "reason": "func_ov065_021177e4 builds an unused three-int temporary with a constructor; that spelling is what reproduces the stack stores, and a Vector3 field assignment does not. The empty destructor is emitted as vague linkage, has no symbols.txt home, and nothing relocates to it. File-scope so the name does not pick up a line-number tag."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "A Vector3 temporary makes mwccarm emit Vector3's empty inline destructor as vague linkage. The cartridge owns that four-byte bx lr at arm9:0x020072c0. This copy is not referenced once the duplicate is discarded."
+    },
+    {
+      "symbol": "_ZTV12daBasabasa_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211cca0",
+      "reason": "The out-of-line destructor is the key function, so this TU emits the vtable. Public address point ov065:0x0211cca0 is outside the licensed text span. Text-only production isolation discards it after the address-point bias is checked."
+    },
+    {
+      "symbol": "_ZTI12daBasabasa_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211cc60",
+      "reason": "This class's __si_class_type_info, dragged in with the vtable. Cartridge copy ov065:0x0211cc60. Its base word is _ZTI12dEnemyBase_c."
+    },
+    {
+      "symbol": "_ZTS12daBasabasa_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211cc6c",
+      "reason": "Type-name string 12daBasabasa_c at ov065:0x0211cc6c. That spelling is why the class is not the old Swoop alias."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "Ancestor RTTI passenger. Chain is daBasabasa_c -> dEnemyBase_c (ov002:0x021081c0) -> dActor_c -> dBase_c -> fBase_c."
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "Ancestor type-name string 12dEnemyBase_c. Cartridge copy ov002:0x021081cc."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Ancestor RTTI passenger. Cartridge copy arm9:0x0208e390."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Ancestor type-name string 8dActor_c. Cartridge copy arm9:0x0208e384."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Ancestor RTTI passenger. Cartridge copy arm9:0x02086e78."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Ancestor type-name string 7dBase_c. Cartridge copy arm9:0x02086e54."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Root __class_type_info passenger. Cartridge copy arm9:0x02086d70."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Root type-name string 7fBase_c. Cartridge copy arm9:0x02086e60."
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov065-daBasabasa_c/daBasabasa_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 21,
+    "functions_declared": 21,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN12daBasabasa_cD2Ev",
+        "_ZN7PoofPosD1Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN12daBasabasa_cD2Ev",
+        "_ZN7PoofPosD1Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        15,
+        26,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62
+      ],
+      "data": [
+        "_ZTV12daBasabasa_c",
+        "_ZTI12daBasabasa_c",
+        "_ZTS12daBasabasa_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI12daBasabasa_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS12daBasabasa_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV12daBasabasa_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}
