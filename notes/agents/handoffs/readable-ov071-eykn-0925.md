@@ -9,14 +9,18 @@ This document describes this commit. The queue records its immutable output SHA.
   Claude Code (Opus 5.5).
 - Round 2: stage `revise`, session `claude-prod-readable-ov071-eykn-0925-r2`, Claude Code (Opus 5.5),
   input `6a18279e12f052c02352883914e2d1145fa975d0`. It changes comments only (V1 and V2 below).
+- Continuation `readable-ov071-eykn-0925-fix`: stage `revise`, session
+  `claude-prod-readable-ov071-eykn-0925-fix`, Claude Code (Opus 5.5), input
+  `7b303d2c52058cd310ed78ddb94f8d79caf0366f`, base main `1f7a34dd6811466e6812fab6a52d9dbdbb39fca3`.
+  It changes comments and this handoff only (V4 and V5 below).
 - Source branch and previous accepted input SHA: `readable/readable-ov071-eykn-0925`, input
   `ace15a6c626d8fd133dd8accc41dd313be567d96`.
 - Original source base SHA and installed workflow/tool SHA: both `ace15a6c626d8fd133dd8accc41dd313be567d96`.
 - Separate evidence commits and required artifacts in this commit: none. Every measurement below was
   applied to the working tree, compiled with the pinned compiler and reverted. None has a committed
   artifact.
-- Next action, responsible role and blockers: independent verification, round 2 (verifier), of this
-  commit: comment accuracy (V1). No blockers.
+- Next action, responsible role and blockers: independent verification (verifier) of this commit
+  against main `1f7a34dd68`: comment accuracy (V4) and the handoff numbers (V5). No blockers.
 - Status: verified candidate. Every local gate listed below exits 0.
 - Remaining uncommitted or local-only material and where it is preserved: none.
 
@@ -85,6 +89,13 @@ This document describes this commit. The queue records its immutable output SHA.
 | V1 | The `daEykn_c::UpdateEyeAnim` comment said "close (steps 1-3), open (4-6), done (7)". Cases 1 and 4, 2 and 5, and 3 and 6 share bodies, so each range plays the same two sequences. | fixed | The comment now says the function steps through two identical blinks: steps 1-3 and steps 4-6 each play the `data_ov071_02123038` sequence, then the `data_ov071_02123040` sequence, and step 7 resets to 0 and returns 1, one call after the second blink finishes. |
 | V2 | The Fix12 bridge comment gave the DropShadowRadHeight measurement as the reason for all eight bridges. | fixed | The comment now says only DropShadowRadHeight was measured as a member call. Nothing else changed. |
 
+## Verifier findings, composition review
+
+| ID | Finding | Outcome | Change |
+|---|---|---|---|
+| V4 | The St_Die_Main comment said the eye would "swell, then vanish", and the `mScale` comment in `include/daEykn_c.h` said "death swell". The eye shrinks: `mScale` starts at 0x1000 (small) or 0x2000 (big), and `ApproachLinear(mScale, 0xa4, 0xa4)` negates the step when the value is above the target, so it steps down to 0xa4. | fixed | St_Die_Main now reads "spin with a wobble, play the death animation, shrink to scale 0xa4, then despawn". This matches sub-states 0 (wobble), 1 (animation), 2 (shrink) and 3 (spawn, then KillAndTrackInDeathTable or MarkForDestruction). The `mScale` comment now reads "shrinks while dying". No other swell or grow wording remains in the TU, the header or this handoff. |
+| V5 | The residue table gave `src/actors/daEykn_c.cpp` as 753 to 786 lines. It was 788 at `90c5b2ce`. | fixed | Every number in the residue table was recomputed from this commit (see Proof). The file is 789 lines now, because the St_Die_Main comment grew by one line. The other counts did not change. |
+
 ## Reconstruction dimensions
 
 - Exact function, byte and relocation coverage: 23 of 23 functions, the whole tu_map cut
@@ -105,7 +116,7 @@ This document describes this commit. The queue records its immutable output SHA.
 
   | Path at base to this commit | lines | `unk_` | `func_` | `extern "C"` | `_ZN` |
   |---|---|---|---|---|---|
-  | `src/actors/daEykn_c.cpp` | 753 to 786 | 0 to 3 | 68 to 7 | 21 to 1 | 72 to 50 |
+  | `src/actors/daEykn_c.cpp` | 753 to 789 | 0 to 3 | 68 to 7 | 21 to 1 | 72 to 50 |
   | retired `_ZN8daEykn_c13InitResourcesEv` source | 153 to deleted | 2 to - | 4 to - | 22 to - | 27 to - |
   | `include/daEykn_c.h` | 68 to 105 | 4 to 1 | 0 to 0 | 0 to 0 | 4 to 4 |
 
@@ -118,6 +129,20 @@ This document describes this commit. The queue records its immutable output SHA.
   is `partial`.
 
 ## Proof
+
+Composition fix (this commit against `7b303d2c52`; `git diff 7b303d2c52..HEAD` shows only comment
+lines in `src/actors/daEykn_c.cpp` and `include/daEykn_c.h`, plus this handoff):
+
+- `python tools/tubuild.py verify ov071/daEykn_c`: exit 0. 23/23 MATCH, objisolate clean,
+  reloc-destinations clean, all 23 in ROM order, TEXT-VERIFIED. The manifest was not rewritten.
+- `python tools/check_dead_references.py`: exit 0. No new dead references and no broken markdown links.
+- `python tools/check_decl_agreement.py --changed 1f7a34dd68`: exit 0. No new local
+  redeclarations and no new disagreements.
+- `python tools/check_src_tu_compiles.py`: exit 0. 299/299.
+- Residue: `MSYS_NO_PATHCONV=1 git show HEAD:<path> | wc -l` and `grep -c -F <token>` on this
+  commit, and the same on `ace15a6c62` for the before column, give the table above: 789, 3, 7, 1
+  and 50 for the TU, and 105, 1, 0, 0 and 4 for the header. 23 of the 50 `_ZN` lines match
+  `// @symbol _ZN`, against 6 at base.
 
 Round 2 (this commit against `6a18279e12`; `git diff 6a18279e12..HEAD` shows only comment lines in
 `src/actors/daEykn_c.cpp` and this handoff):

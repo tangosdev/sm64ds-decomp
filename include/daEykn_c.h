@@ -43,7 +43,7 @@ struct daEykn_c : dActor_c {
     const State *mState;       /* 0x1e4 -- current row of the state table */
     s32 mStateID;              /* 0x1e8 -- 0 wait, 1 attack, 2 die; set by each init */
     Player *mTarget;           /* 0x1ec -- the player being watched, or null */
-    s32 mScale;                /* 0x1f0 -- body scale; shadow radius and death swell */
+    s32 mScale;                /* 0x1f0 -- body scale; shadow radius, shrinks while dying */
     s32 mCircleAngle;          /* 0x1f4 -- yaw turned while following one direction */
     s32 mDeathSpinAngle;       /* 0x1f8 -- yaw turned while dying, per sound cue */
     s32 mWobbleAmp;            /* 0x1fc -- pitch wobble amplitude while dying */

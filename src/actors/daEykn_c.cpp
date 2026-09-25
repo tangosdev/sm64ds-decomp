@@ -319,8 +319,9 @@ void daEykn_c::UpdateModelTransform()
 
 
 // @symbol _ZN8daEykn_c11St_Die_MainEv
-/* State 2 exec: spin with a wobble, swell, then vanish, spawning actor 0x122
- * (small one) or releasing the star (big one). */
+/* State 2 exec: spin with a wobble, play the death animation, shrink to scale
+ * 0xa4, then despawn, spawning actor 0x122 (small one) or releasing the star
+ * (big one). */
 int daEykn_c::St_Die_Main()
 {
     u32 id0;
