@@ -4696,6 +4696,19 @@ list(APPEND PORT_ACTOR_OVERLAYS ov029)
 # hal/actor_classes_ov_link100.cpp fills. Derivation in
 # port/ov039_syms.txt, slice in port/slice_gate217.txt.
 list(APPEND PORT_ACTOR_OVERLAYS ov039)
+# ---- linkfull S4OV0 ----
+# ov000 is no actor overlay: it is loaded once, by the boot worker, for its
+# entry, which builds the game's ov0 handle table out of 2058 path strings in
+# its own data (port/ov000_syms.txt; the entry and the reader are on
+# port/slice_w31_s4ov0.txt, enrolled at the end of this file). But its data is
+# the same per-symbol packed mount, and THIS LIST is how every consumer of a
+# mount finds it: this loop (the three game targets' ACTOR_OV_SYMS and the
+# ROM-CLEAN part list, both read before the end of this file), and the two
+# tools that re-run the emitters against a cartridge, port/tools/romblob_verify.py
+# (the kit build's self-check) and port/tools/romextract.py (a player's
+# romdata.bin), both of which read this list out of this file. Its one
+# exception, the cross pass, is taken just below the loop.
+list(APPEND PORT_ACTOR_OVERLAYS ov000)
 set(ACTOR_OV_SYMS "")
 foreach(ovn IN LISTS PORT_ACTOR_OVERLAYS)
     set(ovn_out "${CMAKE_BINARY_DIR}/host-src/${ovn}_syms.c")
@@ -4716,42 +4729,19 @@ foreach(ovn IN LISTS PORT_ACTOR_OVERLAYS)
     endif()
 endforeach()
 
-# ---- linkfull S4OV0: ov000's handle table, the one mount outside the loop ----
-# ov000's entry builds the game's ov0 handle table at boot from 2058 path
-# strings in its own data (port/ov000_syms.txt; the entry and its reader are on
-# port/slice_w31_s4ov0.txt, enrolled at the end of this file). The mount is the
-# per-symbol packed shape, but it is not a PORT_ACTOR_OVERLAYS row, for one
-# reason: that loop also feeds OV_DATA_MAPS, and ov000 must stay out of the
-# cross pass below. It has nothing to offer it (0 cross-mount candidates: all
-# 2058 of its relocations land in its own .data) and nothing resident points
-# into it (ov001 replaces it at the same base before any scene), while the
-# residency model calls every pair that does not overlap co-resident, so its
-# window would become a second candidate for every level overlay's pointer into
-# ov001's HUD tables. It is HERE, mid-file, and not in that lane's end-of-file
-# block, because the two lists it must join are read at their own definitions:
-# ROMCLEAN_PARTS by the romblob consolidation just below (without it a
-# ROM-CLEAN kit's table is all zeros and the kit dies at boot) and
-# ACTOR_OV_SYMS by the three game targets' add_executable further down. Its
-# three config files are named directly, since the XREL1 block walks
-# OV_DATA_MAPS only.
-set(OV000SYMS_C "${CMAKE_BINARY_DIR}/host-src/ov000_syms.c")
+# ---- linkfull S4OV0: ov000 stays OUT of the cross pass ----
+# It has nothing to offer it (0 cross-mount candidates: all 2058 of its
+# relocations land in its own .data) and nothing resident points into it (ov001
+# replaces it at the same base before any scene), while the residency model
+# calls every pair that does not overlap co-resident, so its window would become
+# a second candidate for every level overlay's pointer into ov001's HUD tables.
+# Leaving OV_DATA_MAPS also hides it from the XREL1 block at the end of this
+# file, so its three config files are named here the way that block names them.
+list(REMOVE_ITEM OV_DATA_MAPS "${CMAKE_BINARY_DIR}/host-src/ov000_syms.c.map")
 set(_s4ov0_cfg "${PORT_REPO_ROOT_ABS}/config/arm9/overlays/ov000")
-add_custom_command(OUTPUT "${OV000SYMS_C}" "${OV000SYMS_C}.map"
-    COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/ovdata.py" ov000
-            "${OV000SYMS_C}" --from-list
-            "${CMAKE_CURRENT_SOURCE_DIR}/ov000_syms.txt" --pack ${ROMCLEAN_FLAG}
-            ${LINKONLY_FLAG}
-    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/ovdata.py"
-            "${CMAKE_CURRENT_SOURCE_DIR}/tools/romblob_common.py"
-            "${CMAKE_CURRENT_SOURCE_DIR}/tools/link_only.py"
-            "${CMAKE_CURRENT_SOURCE_DIR}/ov000_syms.txt"
-            "${_s4ov0_cfg}/relocs.txt" "${_s4ov0_cfg}/delinks.txt"
-            "${_s4ov0_cfg}/symbols.txt"
-    COMMENT "ovdata ov000 (per symbol, packed; the ov0 handle table)")
-list(APPEND ACTOR_OV_SYMS "${OV000SYMS_C}")
-if(PORT_ROM_CLEAN)
-    list(APPEND ROMCLEAN_PARTS "${OV000SYMS_C}.blobmap")
-endif()
+add_custom_command(OUTPUT "${CMAKE_BINARY_DIR}/host-src/ov000_syms.c" APPEND
+    DEPENDS "${_s4ov0_cfg}/relocs.txt" "${_s4ov0_cfg}/delinks.txt"
+            "${_s4ov0_cfg}/symbols.txt")
 
 # THE CROSS-MOUNT POINTER PASS, last because it needs every map.
 #
@@ -23536,8 +23526,9 @@ endforeach()
 # The cartridge builds its handle -> file id table at boot with ov000's own
 # entry. port/slice_w31_s4ov0.txt carries the entry, its three helpers and the
 # reader src/func_02018a24.c; hal/s4ov0_ov0table.cpp hosts the two words the
-# build writes (data_0209d3b8, data_0209d3b0, in .dsstate). The mount of the
-# entry's data is mid-file (OV000SYMS_C) for the reason given there. The entry
+# build writes (data_0209d3b8, data_0209d3b0, in .dsstate). The entry's data
+# is mounted mid-file (ov000 on PORT_ACTOR_OVERLAYS, kept out of the cross
+# pass) for the reasons given there. The entry
 # runs from hal/boot_os.cpp's port_boot_rom_worker, which hal/rom_main.cpp's
 # loop seam calls; both files are on the two game targets only, so those two
 # take the whole slice.
