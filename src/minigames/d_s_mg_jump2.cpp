@@ -680,7 +680,21 @@ s32 dScMgJump2_c::Render()
     *(int *)((char *)p + 0x18) = unk_5a64;
     {
         void **vobj = (void **)(self + 0x5a14);
+#ifdef _MSC_VER
+        /* THE HOST MODEL'S RENDER IS A MEMBER FUNCTION. Word 5 of the
+           Model's table is Model::Render(const Vector3 *) on both sides
+           (include/Model.h numbers the host table the ROM's way), and on
+           the host it takes the model in ECX and pops its one stack
+           argument itself. The #else spelling is the plain call mwccarm
+           compiles to the ROM's bytes (r0 = the model, r1 = &local). Under
+           MSVC that spelling pushes both words, so Render read the model
+           as its scale and left the frame four bytes high. This is the
+           same call with the model as the receiver and &local, the
+           ROM's three scale words, as the argument. */
+        ((Model *)vobj)->Render((const Vector3 *)&local);
+#else
         (*(void (**)(void *, void *))((char *)*vobj + 0x14))((void *)vobj, &local);
+#endif
     }
 
     func_ov006_020c70d0();

@@ -802,7 +802,12 @@ def build(root, sinit, overlay_num=None, arity_override=None):
     mountlist = root / ("port/ov%03d_syms.txt" % ovn)
     mounted = set()
     if mountlist.is_file():
-        mounted = set(mountlist.read_text(errors="replace").split())
+        # A row may pin its size (name:0x18) or its address (name@0xADDR):
+        # ovdata.py's --from-list reads both as the NAME with a pin, so the
+        # name is what is mounted. data_ov002_021100f4:0x18 is a Player
+        # State pinned to its real 0x18 because a false label had cut it.
+        mounted = {w.split(":", 1)[0].split("@", 1)[0]
+                   for w in mountlist.read_text(errors="replace").split()}
 
     refusals = []
     rows = []
@@ -1680,6 +1685,14 @@ def selftest():
         nomount.write_text("data_ov009_00003020\n")
         caught(lambda: build(tdp, "src/__sinit_ov009_00001000.c"),
                "NOT MOUNTED", "unmounted destination table")
+        nomount.write_text("data_ov009_00003000 data_ov009_00003020\n")
+        # a size- or address-pinned row IS mounted (ovdata.py reads
+        # name:0xNN and name@0xADDR as the name with a pin)
+        nomount.write_text("data_ov009_00003000:0x18 "
+                           "data_ov009_00003020@0x3020\n")
+        mp = build(tdp, "src/__sinit_ov009_00001000.c")
+        expect(len(mp["tables"]) == 2, "a pinned mount row counts as mounted",
+               len(mp["tables"]))
         nomount.write_text("data_ov009_00003000 data_ov009_00003020\n")
 
         adj = tdp / "src/__sinit_ov009_00001001.c"
