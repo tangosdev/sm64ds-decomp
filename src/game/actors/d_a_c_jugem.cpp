@@ -13,7 +13,8 @@
 #include "Camera.h"
 #include "SharedFilePtr.h"
 
-/* Every external call is declared once, with C linkage, under its ROM name.
+/* Calls with no usable header declaration are declared once, with C linkage,
+   under their ROM names; the rest are real method calls.
    Pointer parameters are spelled void *: the mangled names already carry the
    real types. By-value Fix12<int> parameters and return types are kept exact,
    because mwccarm passes the first differently and callers test the second. */

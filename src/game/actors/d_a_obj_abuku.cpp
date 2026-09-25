@@ -26,8 +26,6 @@
  *   by-value homes on the stack, 6az).
  * - Particle::System::New / NewSimple stay TU-local mangled:
  *   Particle__System.h declares neither.
- * - Player::Heal stays TU-local mangled so this TU need not include
- *   Player.h.
  * - data_02082214 is the link name (arm9 symbols.txt kind:data(any));
  *   no named alias exists. Sway lookup off (mSwayAngle >> 4).
  * - AbukuVector3 POD + reinterpret_cast: a real Vector3 local emits
