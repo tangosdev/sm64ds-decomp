@@ -10,3 +10,9 @@
 # and unmatched/func_02043fdc_hostcopy.cpp no longer defines either walk.
 src/func_02043fdc.cpp
 src/func_020441cc.cpp
+#
+# SignPost's read state (ov002 state 1 Main, the read loop). The sign's seat
+# (unmatched/SignPost_StateDispatch.cpp) installs this body in its table cell
+# where a logic-verified near-miss host copy stood; the other nine cells and
+# both dispatchers are unchanged.
+src/func_ov002_020bb614.c

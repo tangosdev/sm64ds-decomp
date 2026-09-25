@@ -25,15 +25,12 @@
  * body was compiled from, so a mount pointing at the wrong bytes says so
  * instead of calling into the overlay image.
  *
- * STATE 1'S MAIN IS A LOGIC-VERIFIED NEAR-MISS HOST COPY (gate 181). ov002
- * 0x020bb614 (the read loop, 0x3dc) sat unmatched; a div=7 attempt proved a
- * hard ordering floor -- the entire body 0x44..0x3dc is byte-identical to the
- * ROM and all seven divergences are one prologue regalloc/schedule
- * permutation (nearmiss/db.jsonl carries the floor evidence: the
- * conditional-cast shift-pair split vs load-hoist collision). Semantics are
- * exact, so the body below is the near-miss C, the cannon-lid precedent.
- * It walks the player to the sign, turns both, then hands off to
- * Player::ShowMessage2. Replace with matched src the day the floor breaks.
+ * STATE 1'S MAIN IS THE MATCHED BODY NOW (run linkfull, lane PMF3). ov002
+ * 0x020bb614 (the read loop, 0x3dc) sat behind a logic-verified near-miss host
+ * copy here from gate 181 until the floor broke: src/func_ov002_020bb614.c
+ * matches the ROM (tools/match.py 2004/b56) and rides port/slice_w31_pmf3.txt,
+ * and the seat below installs it like the other nine bodies. It walks the
+ * player to the sign, turns both, then hands off to Player::ShowMessage2.
  *
  * THE OLD NOTE HERE SAID ShowMessage2 IS DECLINED AND THAT A SIGN READ
  * "APPROACHES AND IDLES". THAT HAS BEEN FALSE SINCE 2026-08-08: the decline
@@ -93,6 +90,7 @@ extern "C" {
 void func_ov002_020bba24(void *);   /* 0 Init  */
 void func_ov002_020bb9fc(void *);   /* 0 Main  */
 void func_ov002_020bb9f0(void *);   /* 1 Init  */
+void func_ov002_020bb614(void *);   /* 1 Main  (src/func_ov002_020bb614.c) */
 void func_ov002_020bbd50(void *);   /* 2 Init  */
 void func_ov002_020bbcb8(void *);   /* 2 Main  */
 void func_ov002_020bbc78(void *);   /* 3 Init  */
@@ -108,131 +106,9 @@ extern PortSignPostState data_ov002_0210e084[];
 
 enum { PORT_SIGNPOST_STATES = 5 };
 
-/* ---- what the read-state main closes over (all linked; the two 020bec
-   helpers join slice_gate16) ---- */
-extern "C" {
-extern short data_02082214[];
-extern unsigned char data_0209d660, data_0209d6bc, data_0209f284;
-int _ZN6Player12GetTalkStateEv(void *player);
-int Vec3_HorzDist(void *a, void *b);
-short Vec3_HorzAngle(void *a, void *b);
-int _Z14ApproachLinearRsss(short *val, short target, short step);
-int Vec3_ApproachHorz(void *pos, void *target, int step);
-int func_ov002_020bec84(void *player, unsigned int i);
-int func_ov002_020bec9c(void *player, unsigned int a, int b, int d, unsigned short e);
-int _ZN6Player12FinishedAnimEv(void *player);
-void _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(
-    void *player, void *actor, unsigned int msg, void *pos, unsigned int a,
-    unsigned int b);
-void func_02012790(int id);
-void func_ov002_020bbd5c(void *selfv, int i);   /* defined below */
-}
-
-/* LOGIC-VERIFIED NEAR-MISS host copy of ov002 0x020bb614 (SignPost state 1
-   Main, the read loop), div=7, prologue-only regalloc residue, body
-   byte-identical; floor evidence in nearmiss/db.jsonl. */
-// PORT_HOST_ABI: near-miss host copy; the matched-src replacement waits on the floor.
-static void port_signpost_read_main(void *selfv)
-{
-    char *c = (char *)selfv;
-    int msgPos[3], tgt[3], plPos[3];
-    char *player;
-    unsigned short msgId;
-    int scale, talk, ang, param;
-    short sinV, cosV;
-    unsigned char st;
-
-    msgId = 0;
-    param = *(int *)(c + 8);
-    if (param != 0xffff)
-        msgId = (unsigned short)param;
-
-    player = *(char **)(c + 0x598);
-    msgPos[0] = *(int *)(c + 0x5c);
-    msgPos[1] = *(int *)(c + 0x60) + 0x50000;
-    msgPos[2] = *(int *)(c + 0x64);
-
-    scale = 0x5a000;
-    if (*(unsigned char *)(c + 0x58e) == 1)
-        scale = 0x78000;
-    tgt[0] = *(int *)(c + 0x5c);
-    tgt[1] = *(int *)(c + 0x60);
-    tgt[2] = *(int *)(c + 0x64);
-    ang = (int)*(unsigned short *)(c + 0x8e);
-    sinV = data_02082214[(ang >> 4) * 2];
-    tgt[0] += (int)(((long long)scale * sinV + 0x800) >> 12);
-    cosV = data_02082214[(ang >> 4) * 2 + 1];
-    tgt[2] += (int)(((long long)scale * cosV + 0x800) >> 12);
-
-    plPos[0] = *(int *)(player + 0x5c);
-    plPos[1] = *(int *)(player + 0x60);
-    plPos[2] = *(int *)(player + 0x64);
-
-    talk = _ZN6Player12GetTalkStateEv(player);
-    switch (talk) {
-    case 0:
-        st = *(unsigned char *)(c + 0x58d);
-        switch (st) {
-        case 0:
-            if (Vec3_HorzDist(plPos, tgt) < 0x32000) {
-                *(unsigned char *)(c + 0x58d) += 1;
-            } else if (_Z14ApproachLinearRsss(
-                           (short *)(player + 0x8e),
-                           Vec3_HorzAngle(plPos, tgt), 0x800) != 0) {
-                *(unsigned char *)(c + 0x58d) += 1;
-                func_ov002_020bec9c(player, 1, 0, 0x1000, 0);
-            }
-            break;
-        case 1:
-            if (Vec3_ApproachHorz(player + 0x5c, tgt, 0xa000) != 0)
-                *(unsigned char *)(c + 0x58d) += 1;
-            break;
-        case 2:
-            if (_Z14ApproachLinearRsss(
-                    (short *)(player + 0x8e),
-                    (short)(*(short *)(c + 0x8e) + 0x8000), 0x800) != 0) {
-                if (*(unsigned char *)(c + 0x58e) == 1) {
-                    if (func_ov002_020bec84(player, 1) != 0
-                        || func_ov002_020bec84(player, 0) != 0) {
-                        func_ov002_020bec9c(player, 2, 0x40000000, 0x1000, 0);
-                    } else if (func_ov002_020bec84(player, 2) != 0
-                               && _ZN6Player12FinishedAnimEv(player) != 0) {
-                        func_ov002_020bec9c(player, 3, 0x40000000, 0x1000, 0);
-                    } else if (func_ov002_020bec84(player, 3) != 0
-                               && _ZN6Player12FinishedAnimEv(player) != 0) {
-                        _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(
-                            player, c, (short)msgId, msgPos, 0, 1);
-                    }
-                } else {
-                    func_ov002_020bec9c(player, 0, 0, 0x1000, 0);
-                    _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(
-                        player, c, (short)msgId, msgPos, 0, 1);
-                }
-            }
-            break;
-        }
-        break;
-    case 1:
-        break;
-    default:
-        func_ov002_020bbd5c(c, 0);
-        break;
-    }
-
-    if (data_0209d660 != 0 && msgId == 0x74a) {
-        switch (data_0209d6bc) {
-        case 3: data_0209f284 = 1; break;
-        case 9: data_0209f284 = 0; break;
-        }
-    }
-    if (*(unsigned char *)(c + 0x594) != data_0209f284 && data_0209f284 != 0)
-        func_02012790(0x24);
-    *(unsigned char *)(c + 0x594) = data_0209f284;
-}
-
 static const struct { unsigned rom; void (*host)(void *); } g_states[10] = {
     {0x020bba24, func_ov002_020bba24}, {0x020bb9fc, func_ov002_020bb9fc},
-    {0x020bb9f0, func_ov002_020bb9f0}, {0x020bb614, port_signpost_read_main},
+    {0x020bb9f0, func_ov002_020bb9f0}, {0x020bb614, func_ov002_020bb614},
     {0x020bbd50, func_ov002_020bbd50}, {0x020bbcb8, func_ov002_020bbcb8},
     {0x020bbc78, func_ov002_020bbc78}, {0x020bbb14, func_ov002_020bbb14},
     {0x020bbac8, func_ov002_020bbac8}, {0x020bba28, func_ov002_020bba28},
