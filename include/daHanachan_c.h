@@ -35,34 +35,45 @@
 #include "dCcAcPos_c.h"
 
 struct daHanachan_c : dEnemyBase_c {
+    /* One state table row: Init runs on entry, Main every frame. */
+    struct State {
+        void (daHanachan_c::*mInit)();   /* 0x00 */
+        void (daHanachan_c::*mMain)();   /* 0x08 */
+        const char *mName;               /* 0x10 -- "DEMOWAIT", "MOVE", ... */
+    };
+
     ModelAnim mModelAnims[5];                        /* 0x110 */
     MaterialChanger mMaterialChangers[5];            /* 0x304 */
     TextureSequence mTextureSequences[5];            /* 0x368 */
-    Vector3 unk_3cc[5];                              /* 0x3cc */
-    Vector3 unk_408[5];                              /* 0x408 */
-    Vector3s unk_444[5];                             /* 0x444 */
-    u8  pad_462[0x16];
+    /* One entry per body segment, head first; these segment names are coined. */
+    Vector3 mSegmentPos[5];                          /* 0x3cc -- [0] follows mPos */
+    Vector3 mSegmentScale[5];                        /* 0x408 -- Render's per-segment scale */
+    Vector3s mSegmentRot[5];                         /* 0x444 */
+    u8  pad_462[0x2];
+    s32 mSegmentSpacing[5];                          /* 0x464 -- distance to the segment ahead */
     dCcAcPos_c mdCc_cs1[5];    /* 0x478 */
     dCcAcPos_c mdCc_cs2[5];    /* 0x5b8 */
-    s16 unk_6f8[5];                                  /* 0x6f8 -- per-segment, Behavior adds 0x1200 */
-    u8  unk_702[5];                                  /* 0x702 -- per-segment countdown (DecIfAbove0_Byte) */
+    s16 mSegmentBouncePhase[5];                      /* 0x6f8 -- Behavior adds 0x1200 */
+    u8  mSegmentBounceTimer[5];                      /* 0x702 -- set to 0x1e when that segment is stomped */
     u8  pad_707[0x1];
     dBgCh_Actr mWithMeshClsn;                      /* 0x708 */
-    /* trailing extent the ROM's `new daHanachan_c` literal proves; see tools/opnew_sizes.py */
-    u8  pad_8c4[0xc];
-    s32 unk_8d0;                                     /* 0x8d0 -- Behavior: destroyed when unk_8d0 + mPosY < -0x1f4000 */
-    u8  pad_8d4[0x4];
-    s16 unk_8d8;                                     /* 0x8d8 -- target angle for unk_444[0].y */
-    u8  pad_8da[0x1];
-    u8  unk_8db;                                     /* 0x8db -- 4 - this selects the face texture frame */
-    u8  pad_8dc[0x2];
-    u8  unk_8de;                                     /* 0x8de */
-    u8  unk_8df;                                     /* 0x8df -- nonzero: falling out of the level */
-    u8  unk_8e0;                                     /* 0x8e0 */
-    u8  unk_8e1;                                     /* 0x8e1 -- nonzero: drive the camera */
-    u8  unk_8e2;                                     /* 0x8e2 -- InitResources: star id */
-    u8  unk_8e3;                                     /* 0x8e3 -- InitResources: TrackStar result */
-    void *unk_8e4;                                   /* 0x8e4 -- Particle::System handle */
+    /* The fields below close on the ROM's `new daHanachan_c` size; see tools/opnew_sizes.py.
+       Every name here is coined from how the state functions use the field. */
+    s32 mState;                                      /* 0x8c4 -- index into the state table */
+    Player *mPlayer;                                 /* 0x8c8 -- the player being talked to or hit */
+    Vector3 mHomePos;                                /* 0x8cc -- spawn position */
+    s16 mTargetAngleY;                               /* 0x8d8 -- mSegmentRot[0].y turns towards it */
+    u8  mStateTimer;                                 /* 0x8da */
+    u8  mHealth;                                     /* 0x8db -- 4 at spawn; 4 - mHealth picks the face frame */
+    u8  mDeathDelay;                                 /* 0x8dc -- DEAD waits five frames after the last segment */
+    u8  mDeathSegment;                               /* 0x8dd -- next segment DEAD poofs */
+    u8  mIntroDone;                                  /* 0x8de -- set on entering MOVE_STOP */
+    u8  mFalling;                                    /* 0x8df -- nonzero: falling out of the level */
+    u8  mDefeated;                                   /* 0x8e0 -- set on entering DEAD */
+    u8  mDriveCamera;                                /* 0x8e1 */
+    u8  mStarID;                                     /* 0x8e2 -- low byte of the spawn parameter */
+    u8  mStarTrackID;                                /* 0x8e3 -- TrackStar result */
+    void *mParticle;                                 /* 0x8e4 -- Particle::System handle */
 
     virtual ~daHanachan_c();
 
@@ -78,6 +89,39 @@ struct daHanachan_c : dEnemyBase_c {
     int CleanupResources();
     int InitResources();
     int Render();
+
+    /* The state machine. Each state is an Init and Main pair reached through the
+       table at data_ov034_02114538, whose entries also carry the ROM's state name
+       strings; the state ids are the table order. The method names are coined from
+       those strings, and the four helpers below them are coined from their bodies. */
+    void StateDamageStartMain();   /* 10 DAMAGE_START */
+    void StateDamageStartInit();
+    void StateDamageWaitMain();    /*  9 DAMAGE_WAIT */
+    void StateDamageWaitInit();
+    void StateDamageStopMain();    /*  8 DAMAGE_STOP */
+    void StateDamageStopInit();
+    void StateDeadMain();          /*  7 DEAD */
+    void StateDeadInit();
+    void StateDamageTalkMain();    /*  6 DAMAGETALK */
+    void StateDamageTalkInit();
+    void StateDamageMain();        /*  5 DAMAGE */
+    void StateDamageInit();
+    void StateMoveMain();          /*  4 MOVE */
+    void StateMoveInit();
+    void StateMoveStartMain();     /*  3 MOVE_START */
+    void StateMoveStartInit();
+    void StateMoveStopMain();      /*  2 MOVE_STOP */
+    void StateMoveStopInit();
+    void StateDemoCallMain();      /*  1 DEMOCALL */
+    void StateDemoCallInit();
+    void StateDemoWaitMain();      /*  0 DEMOWAIT */
+    void StateDemoWaitInit();
+    void SetState(int state);
+    void ExecState();
+    int  IsStompedBy(dCcAcPos_c *cyl, dActor_c *actor);   /* coined */
+    void HandlePlayerHits();                               /* coined */
+    void UpdateSegments();                                 /* coined */
+    void UpdateSegmentModels();                            /* coined */
 };
 
 #ifndef SM64DS_PLATFORM_PC
