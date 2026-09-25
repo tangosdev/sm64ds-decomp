@@ -180,21 +180,21 @@ Still a flat generated struct. Own fields start at 0x320.
 
 | offset | name | evidence |
 |---|---|---|
-| 0x320 | `mState` | `Behavior` dispatches [data_ov091_021354e0](../config/arm9/overlays/ov091/symbols.txt)`[mState]` as a pointer-to-member; [func_ov091_02132000](../src/func_ov091_02132000.c) sets it to 1 |
+| 0x320 | `mState` | `Behavior` dispatches [data_ov091_021354e0](../config/arm9/overlays/ov091/symbols.txt)`[mState]` as a pointer-to-member; [func_ov091_02132000](../src/game/actors/d_a_linelift2.cpp) sets it to 1 |
 | 0x324 | `mNodeCount` | `= PathPtr::NumNodes()` |
 | 0x328 | `mNodeIndex` | `= 0`, passed to `PathPtr::GetNode(…, idx)`, incremented when the first node equals the start position |
 | 0x32c | `mBasePosX` | `= mPosX` in `InitResources`; `Vec3_Equal(this+0x338, this+0x32c)` reads 0x32c as a `Vector3` |
 | 0x330 | `mBasePosY` | `= mPosY` |
 | 0x334 | `mBasePosZ` | `= mPosZ` |
-| 0x338 | `mTargetPosX` | `PathPtr::GetNode` writes a `Vector3` over 0x338/0x33c/0x340; [func_ov091_02132000](../src/func_ov091_02132000.c) reads all three back as one |
+| 0x338 | `mTargetPosX` | `PathPtr::GetNode` writes a `Vector3` over 0x338/0x33c/0x340; [func_ov091_02132000](../src/game/actors/d_a_linelift2.cpp) reads all three back as one |
 | 0x33c | `mTargetPosY` | as above |
 | 0x340 | `mTargetPosZ` | as above |
 | 0x344 | `mPathPtr` | `PathPtr::FromID(this+0x344, param & 0xf)` |
 | 0x34c | `mSinkOffsetY` | `ApproachLinear(&this[0x34c], mIsPressed ? 0x1e000 : 0, 0x5000)`, then subtracted from `mPosY` |
 | 0x350 | `mBaseAngleY` | `= mAngleY` in `InitResources` |
 | 0x352 | `mVariant` | `= (param1 >> 8) & 0xff`; indexes the model / collider / CLPS tables |
-| 0x354 | `mStateTimer` | incremented every `Behavior`, zeroed on a state change; [func_ov091_02132000](../src/func_ov091_02132000.c) gates on `<= 0x14` |
-| 0x356 | `mIsPressed` | cleared at the end of every `Behavior`; [func_ov091_02132360](../src/func_ov091_02132360.cpp) sets it from a collision callback when the toucher's actorID is 0xbf; when set, `mSinkOffsetY` approaches 0x1e000 and [func_ov091_02132000](../src/func_ov091_02132000.c) advances the state |
+| 0x354 | `mStateTimer` | incremented every `Behavior`, zeroed on a state change; [func_ov091_02132000](../src/game/actors/d_a_linelift2.cpp) gates on `<= 0x14` |
+| 0x356 | `mIsPressed` | cleared at the end of every `Behavior`; [func_ov091_02132360](../src/game/actors/d_a_linelift2.cpp) sets it from a collision callback when the toucher's actorID is 0xbf; when set, `mSinkOffsetY` approaches 0x1e000 and [func_ov091_02132000](../src/game/actors/d_a_linelift2.cpp) advances the state |
 
 `mIsPressed` names the *observed role* (something is bearing on the platform), not
 the identity of actor 0xbf, which is not settled here.
