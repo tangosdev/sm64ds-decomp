@@ -61,9 +61,7 @@ int daObjEwmIceBlock_c::Render()
 }
 
 // @symbol _ZN18daObjEwmIceBlock_c8BehaviorEv
-/* Leftover: PathPtr::NumNodes stays mangled because the member call is
- * scheduled ahead of the delta < 0 test and three words move.
- * dBgActor_c::IsClsnInRange takes Fix12<int> by value, so it stays mangled. */
+/* Leftover: dBgActor_c::IsClsnInRange takes Fix12<int> by value, so it stays mangled. */
 int daObjEwmIceBlock_c::Behavior()
 {
     Vector3 prev;

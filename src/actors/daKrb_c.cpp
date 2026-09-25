@@ -17,8 +17,7 @@
  *   the header method form size-DIFFs. dBgCh Init header Fix12i
  *   mangles as i; ROM is Fix12<int>. Callers: InitResources,
  *   func_ov084_02129ed4 / 0212a774 / 0212abd4 / 0212af74 / Render.
- * - dCapEnemy_c::ReleaseCap / RespawnIfHasCap / GetCapEatenOffIt /
- *   UnloadCapModel / UpdateCapPos stay mangled in the helpers
+ * - dCapEnemy_c::UpdateCapPos stays mangled in the helpers
  *   (C-linkage offset soup). Named members already call AddCap /
  *   DestroyIfCapNotNeeded / GetCapState / RenderCapModel.
  * - Animation::Advance stays this+0x160 (named mModelAnim.Advance

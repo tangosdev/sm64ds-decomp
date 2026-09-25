@@ -33,8 +33,6 @@
  *   and icon_c::Render.
  * Leftover: OAM::Render Fix12-by-value stays mangled (OAM.h, wall 6az).
  *   This TU's icon_c::Render.
- * Leftover: OAM::RenderSub stays mangled. OAM.h has the method; this
- *   TU's icon_c::Render still uses the linker name.
  * Leftover: data_ov075_0211cb64 / 0211c720 / 0211c730 / 0211c954 are
  *   OAM. 0211d72c / 0211d72e / 0211d740 / 0211d742 / 0211d754 /
  *   0211d756 / 0211d948 / 0211d94a are language- or type-indexed
