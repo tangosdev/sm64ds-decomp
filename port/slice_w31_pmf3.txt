@@ -17,9 +17,12 @@ src/func_020441cc.cpp
 # both dispatchers are unchanged.
 src/func_ov002_020bb614.c
 #
-# Mario's own state machine (ov002): Player::ChangeState calls the old state's
-# Cleanup and the new state's Init through real member pointers into the 78
-# Player::State objects, whose 185 filled cells port_player_states_seat
-# (hal/pmf3_player_states.cpp) seats with __fastcall faces;
-# unmatched/Player_ChangeState.cpp defines nothing now.
+# Mario's own state machine (ov002): Player::ChangeState (the old state's
+# Cleanup, the new state's Init) and Player::Behavior (the state's Main, every
+# frame), each calling a Player::State cell through a real member pointer. The
+# 78 State objects' 185 cells are seated with __fastcall faces by
+# port_player_states_seat (hal/pmf3_player_states.cpp); the host copies in
+# unmatched/Player_ChangeState.cpp and unmatched/Player_Behavior.cpp define
+# nothing now.
 src/_ZN6Player11ChangeStateERNS_5StateE.cpp
+src/_ZN6Player8BehaviorEv.cpp
