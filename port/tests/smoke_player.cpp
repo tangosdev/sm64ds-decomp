@@ -84,6 +84,7 @@ void __sinit_ov002_02107298(void);
 void __sinit_ov002_02107304(void);
 void __sinit_ov002_02107370(void);
 void port_cutscene_states_seat(void);  /* link100 PMFB6: the ten state tables */
+void port_player_states_seat(void);   /* hal/pmf3_player_states.cpp */
 void port_kuppa_cmd_seat(void);        /* link100 SMALLS: the fourteen kuppa command records */
 void __sinit_ov002_02107f88(void);
 void __sinit_ov002_0210804c(void);
@@ -208,6 +209,10 @@ int main(void)
     __sinit_ov002_02101900();
     __sinit_ov002_02101968();
     __sinit_ov002_021019d0();
+    /* run linkfull lane PMF3: the Player::State cells hold the sinit's DS code
+       addresses; the matched Behavior / ChangeState call them as member
+       pointers, so the faces go in before the Player is built */
+    port_player_states_seat();
     __sinit_ov002_02106e40();
     __sinit_ov002_02107118();
     __sinit_ov002_021071f4();

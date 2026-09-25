@@ -23543,3 +23543,42 @@ endforeach()
 foreach(_tb5input walk_window walk_window_hires)
     target_sources(${_tb5input} PRIVATE ${SLICE_B5INPUT_SOURCES})
 endforeach()
+
+# ===========================================================================
+# PMF3 (run linkfull, lane PMF3): THE LAST MEMBER-POINTER ROWS
+# ===========================================================================
+#
+# port/slice_w31_pmf3.txt carries the matched TUs this lane arms, each in place
+# of a host stand-in the same commit retires (the slice file names which). A
+# line whose path is followed by the word `hostgen` compiles its
+# build/host-src copy made by port/tools/hostgen.py (the PMF2 block's shape);
+# every other line compiles as it stands. All three hosting targets take the
+# slice, because each retired stand-in is linked by all three.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_pmf3.txt" SLICE_W31_PMF3_LINES)
+set(SLICE_W31_PMF3_SOURCES "")
+foreach(line IN LISTS SLICE_W31_PMF3_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    if(line MATCHES "^(src/[^ ]+)[ ]+hostgen$")
+        set(_w31pmf3_src "${CMAKE_MATCH_1}")
+        string(REGEX REPLACE "[.]c$" ".cpp" _w31pmf3_rel "${_w31pmf3_src}")
+        set(_w31pmf3_out "${CMAKE_BINARY_DIR}/host-src/${_w31pmf3_rel}")
+        add_custom_command(OUTPUT "${_w31pmf3_out}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" ${_w31pmf3_src}
+            DEPENDS "${PORT_REPO_ROOT_ABS}/${_w31pmf3_src}"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen ${_w31pmf3_src}")
+        list(APPEND SLICE_W31_PMF3_SOURCES "${_w31pmf3_out}")
+    else()
+        list(APPEND SLICE_W31_PMF3_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+    endif()
+endforeach()
+# hal/pmf3_player_states.cpp seats the Player::State cells the matched
+# ChangeState and Behavior dispatch through.
+list(APPEND SLICE_W31_PMF3_SOURCES hal/pmf3_player_states.cpp)
+foreach(_tw31pmf3 walk_window walk_window_hires smoke_player)
+    target_sources(${_tw31pmf3} PRIVATE ${SLICE_W31_PMF3_SOURCES})
+endforeach()

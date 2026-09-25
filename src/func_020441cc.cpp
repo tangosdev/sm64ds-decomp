@@ -9,10 +9,20 @@ struct Node {
     Obj *obj;     // 0x10
 };
 
+#ifdef _MSC_VER
+/* The host's member pointer is the ROM's eight bytes (/vmg /vmm), but MSVC
+ * aligns it to eight, which would put `callback` at +8 where the scene tree's
+ * head keeps it at +4 ({head, callback}, the seat in hal/actor_registry.cpp).
+ * Packing to four keeps the ROM's layout; mwccarm never sees this arm. */
+#pragma pack(push, 4)
+#endif
 struct Thing {
     Node *head;   // 0
     PMF callback; // 4
 };
+#ifdef _MSC_VER
+#pragma pack(pop)
+#endif
 
 extern "C" void *func_0203b394(Node *n);
 

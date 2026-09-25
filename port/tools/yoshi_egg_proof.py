@@ -137,6 +137,36 @@ ENV = {
 # The player's per-frame line: [f317] pos=(-3695.0,0.0,4030.1) ... st=020d666c ...
 FRAME = re.compile(r"^\[f(\d+)\] pos=\(([-\d.]+),([-\d.]+),([-\d.]+)\).*?st=([0-9a-f]{8})")
 
+# st= prints the first code word of the Player's current State object. Since
+# run linkfull lane PMF3 (hal/pmf3_player_states.cpp) that word is the
+# __fastcall face seated for the ROM function, no longer the ROM address, and
+# the face's own name carries the address as its template argument:
+# ??$pl_state_face@$0CANGGGM@@... is 0x020d666c (MSVC spells the number in
+# hex with the digits A..P). FACE_ROM maps each face back through the map
+# beside the exe, so every check below still reads a ROM address; a build
+# without the seat has no such symbols and the words pass through unchanged.
+FACE = re.compile(r"^\s*[0-9a-fA-F]{4}:[0-9a-fA-F]{8}\s+\?\?\$pl_state_face@\$0([A-P]+)@@\S*"
+                  r"\s+([0-9a-fA-F]{8})\s")
+
+
+def load_face_rom(exe):
+    faces = {}
+    try:
+        with open(os.path.splitext(exe)[0] + ".map", errors="replace") as f:
+            for line in f:
+                m = FACE.match(line)
+                if m:
+                    rom = 0
+                    for ch in m.group(1):
+                        rom = rom * 16 + (ord(ch) - ord("A"))
+                    faces["%08x" % int(m.group(2), 16)] = "%08x" % rom
+    except OSError:
+        pass
+    return faces
+
+
+FACE_ROM = load_face_rom(EXE)
+
 # The egg's RENDER face, not its Behavior face: [actor] YOSHI_EGG model 3002432C
 # file 301774CC transforms 3017749C mat.t (-509,3,545) scene
 DRAWN = re.compile(r"^\[actor\] YOSHI_EGG\s+model (\S+) file (\S+) transforms (\S+)")
@@ -193,7 +223,7 @@ def check(text, rc, bmp_path):
         if m:
             frames.append((int(m.group(1)),
                            (float(m.group(2)), float(m.group(3)), float(m.group(4))),
-                           m.group(5)))
+                           FACE_ROM.get(m.group(5), m.group(5))))
 
     # 1. reached the swallow
     sw = [f for f in frames if f[2] in ST_SWALLOW]

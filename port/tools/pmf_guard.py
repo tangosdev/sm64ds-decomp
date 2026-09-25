@@ -280,6 +280,21 @@ LEDGER = [
      "pushed; _func_ov081_02125488 tail jumps into the enter half with `mov "
      "ecx,[ecx+4]; add ecx,eax; pop ebp; jmp edx`. Every other reader "
      "compares the cell pointer by address"),
+
+    # ---- run linkfull lane PMF3: the last member-pointer rows --------------
+    ("ECX", r"^_g_pmf3_list_cells$",
+     "the five actor list heads (data_020a4b6c/78/88/98/a8): port_actor_lists_"
+     "seat writes these words into the callback pairs, and their only readers "
+     "are the matched walks src/func_02043fdc.cpp and src/func_020441cc.cpp, "
+     "which call `(node->obj->*thiz->callback)()` with ecx = obj + delta and "
+     "nothing pushed"),
+    ("ECX", r"^_g_pmf3_player_state_faces$",
+     "the 78 Player::State objects (ov002 0x0210ffec..0x02110724): "
+     "port_player_states_seat writes these faces into their 185 cells, and "
+     "the readers are src/_ZN6Player8BehaviorEv.cpp (`(this->*(st->mMain))()`)"
+     " and src/_ZN6Player11ChangeStateERNS_5StateE.cpp (Cleanup and Init), "
+     "both ecx = this + delta with nothing pushed; every other reader compares "
+     "the State pointer by address"),
 ]
 
 

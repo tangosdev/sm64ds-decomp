@@ -1,0 +1,28 @@
+# Run linkfull, lane PMF3 (wave 31): the last member-pointer rows.
+# One matched TU per line. A line whose path is followed by the word
+# `hostgen` compiles its build/host-src copy made by port/tools/hostgen.py
+# and never the raw file (the PMF3 block at the end of port/CMakeLists.txt).
+#
+# The two actor list walks (arm9). Each calls its list head's callback pair
+# through a real pointer-to-member, which /vmg /vmm makes the ROM's eight-byte
+# {code, adjust} record; port_actor_lists_seat (hal/actor_registry.cpp) writes
+# the five pairs with __fastcall faces that carry the per-actor quarantine,
+# and unmatched/func_02043fdc_hostcopy.cpp no longer defines either walk.
+src/func_02043fdc.cpp
+src/func_020441cc.cpp
+#
+# SignPost's read state (ov002 state 1 Main, the read loop). The sign's seat
+# (unmatched/SignPost_StateDispatch.cpp) installs this body in its table cell
+# where a logic-verified near-miss host copy stood; the other nine cells and
+# both dispatchers are unchanged.
+src/func_ov002_020bb614.c
+#
+# Mario's own state machine (ov002): Player::ChangeState (the old state's
+# Cleanup, the new state's Init) and Player::Behavior (the state's Main, every
+# frame), each calling a Player::State cell through a real member pointer. The
+# 78 State objects' 185 cells are seated with __fastcall faces by
+# port_player_states_seat (hal/pmf3_player_states.cpp); the host copies in
+# unmatched/Player_ChangeState.cpp and unmatched/Player_Behavior.cpp define
+# nothing now.
+src/_ZN6Player11ChangeStateERNS_5StateE.cpp
+src/_ZN6Player8BehaviorEv.cpp
