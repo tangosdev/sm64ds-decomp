@@ -15,7 +15,17 @@ void func_ov002_020e81e0(char* a0);
 void func_ov002_020e7e24(char* a0);
 void func_ov002_020e7d08(char* a0);
 }
+#ifdef _MSC_VER
+/* mwccarm passes the by-value Vector3, a class with a user copy constructor,
+ * as a pointer to a caller-built copy (the ROM: add r1, sp, #0xc before the
+ * call), which is the int * src/func_ov002_020e947c.c takes. MSVC x86 copies
+ * the 12 bytes onto the stack instead, so the callee took the target marker's
+ * X position as the pointer and the Power Star faulted on its way to the
+ * marker. The host arm passes the pointer the cartridge passes. */
+extern "C" void func_ov002_020e947c(char* a0, const Vector3* v, int a2);
+#else
 extern "C" void func_ov002_020e947c(char* a0, Vector3 v, int a2);
+#endif
 
 extern "C" void func_ov002_020ea90c(char* self)
 {
@@ -33,7 +43,11 @@ extern "C" void func_ov002_020ea90c(char* self)
             *(volatile s32*)&v.y = yv;
             v.z = pp->z;
             v.y = yv + 0xc8000;
+#ifdef _MSC_VER
+            func_ov002_020e947c(self, &v, 0x190000);
+#else
             func_ov002_020e947c(self, v, 0x190000);
+#endif
             *(s32*)(self + 0x440) = 2;
         }
     }
