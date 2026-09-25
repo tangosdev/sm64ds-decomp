@@ -48,10 +48,6 @@ void func_ov091_02132e98(char *c);
 void func_ov091_02132e64(char *c);
 void func_ov091_02133098(char *c);
 int func_ov091_02132dc0(char *c);
-void _ZN9Animation7AdvanceEv(void *self);
-int _ZN9Animation8FinishedEv(void *self);
-void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *c);
-void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
 }
 
@@ -115,8 +111,8 @@ int daDsn_c::Behavior()
             (*(s32 *)&mTextureSequence.currFrame) = 0;
             func_ov091_02132f04((char *)this);
         } else {
-            _ZN9Animation7AdvanceEv((char *)&mTextureSequence);
-            if (_ZN9Animation8FinishedEv((char *)&mTextureSequence) != 0) {
+            ((Animation *)&mTextureSequence)->Advance();
+            if (((Animation *)&mTextureSequence)->Finished() != 0) {
                 if (mHoldTimer != 0) {
                     mHoldTimer--;
                 } else {
@@ -144,13 +140,13 @@ int daDsn_c::Behavior()
         func_ov091_02132e64((char *)this);
         break;
     }
-    _ZN10dBgActor_c21UpdateModelPosAndRotYEv((char *)this);
+    UpdateModelPosAndRotY();
     func_ov091_02133098((char *)this);
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_((char *)this, 0, 0) == 0) {
         if (func_ov091_02132dc0((char *)this) == 0)
             goto done;
     }
-    _ZN10dBgActor_c19UpdateClsnPosAndRotEv((char *)this);
+    UpdateClsnPosAndRot();
 done:
     return 1;
 }

@@ -46,9 +46,6 @@
 extern "C" {
 extern int func_ov064_0211616c(void *self);
 extern int _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void* a, u16* p);
-extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void* c, void* clsn, unsigned f);
-extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* c);
-extern int _ZN8dActor_c9TrackStarEjj(dActor_c* self, unsigned int a, unsigned int b);
 extern s16 data_02082214[];
 }
 
@@ -65,7 +62,7 @@ int daBDonketu_c::InitResources()
     *(void**)((char*)&mFileTable) = &data_ov064_0211b93c;
     saved = InitResourcesCommon();
     mStarID = param1 & 0xf;
-    unk_3fd = (u8)_ZN8dActor_c9TrackStarEjj((dActor_c*)((char*)this), mStarID, 2);
+    unk_3fd = (u8)TrackStar(mStarID, 2);
     mSecretSoundCounter = 0;
 
     if ((param1 & 0xff00) == 0x100) {
@@ -147,8 +144,8 @@ int daBDonketu_c::Behavior()
         mVertSpeed = m;
         p = (int*)(((int)((char*)this) + 0x60));
         *p = *p + mVertSpeed;
-        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char*)this), ((char*)this) + 0x174, 0);
-        if (_ZNK10dBgCh_Actr10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
+        UpdateWMClsn(mWithMeshClsn, 0);
+        if (mWithMeshClsn.IsOnGround() != 0) {
             u8* q;
             func_0200fa8c(((char*)this), 0);
             q = (u8*)(((int)((char*)this) + 0x3fe));
