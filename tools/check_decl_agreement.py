@@ -2109,6 +2109,196 @@ def print_finding(f, indent="  "):
 
 # ------------------------------------------------------------------------- cli
 
+# ------------------------------------------------------- header redeclarations
+
+# A local declaration can carry this marker, on its own line or the line above, to
+# say why it cannot use the header's spelling (the Fix12 wall, a header that clashes
+# with a shadow type, ...). It ends the finding; the reason is for the reviewer.
+LOCAL_EXTERN_MARK = re.compile(r"local extern:\s*\S")
+HUNK = re.compile(r"^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@")
+
+
+def added_lines(base, rels, root=REPO):
+    """{rel: set of line numbers} each file ADDS against `base`, renames followed."""
+    out = {}
+    for rel in rels:
+        proc = subprocess.run(["git", "diff", "-U0", "-M", "--no-color", base, "--",
+                               rel], cwd=str(root), capture_output=True, text=True)
+        lines = set()
+        for row in proc.stdout.splitlines():
+            m = HUNK.match(row)
+            if m:
+                start, count = int(m.group(1)), int(m.group(2) or 1)
+                lines.update(range(start, start + count))
+        if not lines and blob_text(rel, base, root) is None:
+            # Untracked: `git diff` says nothing about a file git has never seen,
+            # and every line of it is new.
+            text = (pathlib.Path(root) / rel).read_text(encoding="utf-8",
+                                                       errors="replace")
+            lines = set(range(1, len(text.splitlines()) + 1))
+        out[rel] = lines
+    return out
+
+
+def _generated_catch_all(rel):
+    """The decl_*.h headers: AUTO-GENERATED extern catch-alls, not a class's interface.
+
+    A local copy of one of their declarations is not drift from a header, it is the
+    tree's convention: notes/tu-promotion-conventions.md section 2 puts `_ZTV<C>` in
+    the promoted TU source even though decl_common.h declares it, and warns that
+    including decl_common.h costs a TU its typing freedom."""
+    return pathlib.PurePosixPath(rel).name.startswith("decl_")
+
+
+def header_declarations(decls, root=REPO):
+    """({symbol: headers declaring it at file scope}, {(class, method, nargs): headers}).
+
+    The second map is read out of class bodies, which `collect()` does not record:
+    `static System *FromUniqueID(u32);` inside Particle__System.h is how a header
+    declares `_ZN8Particle6System12FromUniqueIDEj`. Arity is part of the key so an
+    overload with a different argument count does not answer for this one."""
+    flat = {}
+    for d in decls:
+        if d.file.startswith("include/") and not _generated_catch_all(d.file):
+            flat.setdefault(d.symbol, set()).add(d.file)
+    members = {}
+    for rel in scan_targets(root):
+        if not rel.startswith("include/") or not rel.endswith(HEADER_SUFFIXES):
+            continue
+        if _generated_catch_all(rel):
+            continue
+        code, _marks = scrub((pathlib.Path(root) / rel).read_text(
+            encoding="utf-8", errors="replace"))
+        for cls, stmt in class_body_statements(code):
+            body = " ".join(stmt.split())
+            while True:
+                shorter = ACCESS_LABEL.sub("", body)
+                if shorter == body:
+                    break
+                body = shorter
+            if not body or re.match(r"^(typedef|using|template|friend)\b", body):
+                continue
+            rest, _extern, _static, _override = _strip_specifiers(body)
+            parsed = parse_declarator(rest, {}, True) if rest else None
+            if parsed is None:
+                continue
+            name, _ret, params, is_fn, member, _owner = parsed
+            if not is_fn or member or params is UNSPECIFIED:
+                continue
+            members.setdefault((cls, name, len(params)), set()).add(rel)
+    return flat, members
+
+
+def c_includable_headers(root=REPO):
+    """Headers some C (not //cpp) source in src/ already includes: proven C-safe."""
+    ok = set()
+    for rel in scan_targets(root):
+        if not rel.startswith("src/"):
+            continue
+        text = (pathlib.Path(root) / rel).read_text(encoding="utf-8", errors="replace")
+        if text.startswith("//cpp"):
+            continue
+        for m in re.finditer(r'^\s*#\s*include\s+"([^"]+)"', text, re.M):
+            ok.add("include/" + m.group(1))
+    return ok
+
+
+def _local_count(symbol, decls):
+    return sum(1 for d in decls if d.symbol == symbol and d.file.startswith("src/"))
+
+
+def _base_local_count(symbol, base, root=REPO):
+    proc = subprocess.run(["git", "grep", "-l", "-F", symbol, base, "--", "src"],
+                          cwd=str(root), capture_output=True, text=True)
+    aliases = scalar_typedefs(root)
+    n = 0
+    for row in proc.stdout.splitlines():
+        rel = row.split(":", 1)[1] if ":" in row else row
+        text = blob_text(rel, base, root)
+        if text is None:
+            continue
+        d, _f, _u = parse_file(rel, text, aliases)
+        n += sum(1 for r in d if r.symbol == symbol)
+    return n
+
+
+def _demangled(symbol, root=REPO):
+    try:
+        sys.path.insert(0, str(pathlib.Path(root) / "tools"))
+        import demangle as _demangle
+        return _demangle.demangle(symbol) or {}
+    except Exception:
+        return {}
+
+
+def _demangled_member(symbol, root=REPO):
+    """(class, method, nargs) the Itanium name states, or None."""
+    info = _demangled(symbol, root)
+    key = (info.get("class"), info.get("method"), info.get("nargs"))
+    return key if all(k is not None for k in key) else None
+
+
+def _takes_fix12_by_value(symbol, root=REPO):
+    """The Fix12 wall (notes/mwccarm-codegen.md 6az): passing Fix12<int> by value
+    costs the CALLER bytes, so a call site cannot use the header's spelling and
+    keeps a local declaration with a scalar parameter. Not drift; exempt."""
+    return symbol.startswith("_Z") and "Fix12<int>" in (
+        _demangled(symbol, root).get("args") or [])
+
+
+def new_header_redeclarations(base, touched, decls, root=REPO):
+    """Local declarations this branch ADDS for symbols a header already declares.
+
+    The tree carries thousands of these already (a file writes its own `extern`
+    instead of including the header), and they drift: #3091 found local externs of
+    Particle::System::FromUniqueID in several spellings while Particle__System.h
+    declared it correctly all along. This is a ratchet: a finding needs a declaration
+    on a line the branch adds AND a rise in that symbol's count of src/
+    redeclarations, so a promotion that only MOVES externs is clean."""
+    root = pathlib.Path(root)
+    srcs = [r for r in touched if r.startswith("src/") and (root / r).exists()]
+    if not srcs:
+        return []
+    added = added_lines(base, srcs, root)
+    flat, members = header_declarations(decls, root)
+    c_ok = None
+    texts = {}
+    candidates = []
+    for d in decls:
+        if d.file not in added or d.line not in added[d.file]:
+            continue
+        if d.file not in texts:
+            texts[d.file] = (root / d.file).read_text(
+                encoding="utf-8", errors="replace").splitlines()
+        text_lines = texts[d.file]
+        cxx = bool(text_lines) and text_lines[0].startswith("//cpp")
+        around = " ".join(text_lines[max(d.line - 2, 0):d.line])
+        if LOCAL_EXTERN_MARK.search(around) or _takes_fix12_by_value(d.symbol, root):
+            continue
+        headers = set(flat.get(d.symbol, ()))
+        if not cxx and headers:
+            if c_ok is None:
+                c_ok = c_includable_headers(root)
+            headers &= c_ok
+        if cxx and d.symbol.startswith("_Z"):
+            key = _demangled_member(d.symbol, root)
+            if key is not None:
+                headers |= members.get(key, set())
+        if headers:
+            candidates.append((d, sorted(headers)))
+    out = []
+    counts = {}
+    for d, headers in candidates:
+        if d.symbol not in counts:
+            counts[d.symbol] = (_base_local_count(d.symbol, base, root),
+                                _local_count(d.symbol, decls))
+        was, now = counts[d.symbol]
+        if now > was:
+            out.append({"symbol": d.symbol, "file": d.file, "line": d.line,
+                        "headers": headers, "was": was, "now": now})
+    return out
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--check", action="store_true",
@@ -2239,6 +2429,24 @@ def main(argv=None):
         for f in sorted(findings, key=lambda x: (x["symbol"], x["file"], x["line"])):
             print_finding(f)
 
+    redeclared = []
+    if touched is not None:
+        redeclared = new_header_redeclarations(args.changed, touched, decls, REPO)
+        if redeclared:
+            print("\nFAIL: %d new local declaration(s) of a symbol a header already "
+                  "declares:\n" % len(redeclared))
+            for r in redeclared:
+                print("  %s:%d  %s" % (r["file"], r["line"], r["symbol"]))
+                print("      declared in %s; src/ redeclarations %d -> %d"
+                      % (", ".join(r["headers"]), r["was"], r["now"]))
+            print("\nInclude the header and use its spelling instead of a local copy:")
+            print("local copies drift from the header and from each other. REBUILD after")
+            print("the edit. If the header's spelling cannot be used (the Fix12 wall, a")
+            print("header that clashes with a shadow type), keep the local declaration")
+            print("and put `local extern: <reason>` in a comment on it or the line above.")
+        else:
+            print("  no new local redeclarations of header-declared symbols")
+
     known = load_baseline(BASELINE)
     new = [f for f in findings if key_of(f) not in known]
     if touched is None:
@@ -2249,7 +2457,7 @@ def main(argv=None):
 
     if not new:
         print("  no new declaration disagreements")
-        return 0
+        return 1 if redeclared else 0
 
     print("\nFAIL: %d declaration(s) contradict the symbol's definition:\n" % len(new))
     for f in sorted(new, key=lambda x: (x["symbol"], x["file"], x["line"])):

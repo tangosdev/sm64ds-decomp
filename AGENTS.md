@@ -151,6 +151,14 @@ instruction selection at the call site, so fixing one is matching work that need
 rebuild and byte proof (`tools/match.py`), and the `declaration agreement` CI job will
 never ask you for it. No compiler, no ROM, about twelve seconds.
 
+**Include the header; don't copy its declaration.** Before writing a local `extern`,
+check whether a header in `include/` already declares the symbol, as a free function or
+inside a class body. `--changed` fails a branch that adds a new local copy of one. The
+generated `decl_*.h` catch-all headers don't count, and neither does a symbol that
+takes `Fix12<int>` by value (the Fix12 wall). Where the header's spelling really can't
+be used, keep the local declaration and write `local extern: <reason>` in a comment on
+it or on the line above.
+
 ## PR format
 
 - **Title:** describe what changed — the class(es) converted, or the function(s)
