@@ -16443,14 +16443,10 @@ endforeach()
 list(APPEND SLICE16_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Actor_ClosestPlayerWrappers.cpp")
 
-# BigBrickBlock::OnAttacked2 (slot 23, the bro PUNCH). The byte-locked src
-# src/_ZN13BigBrickBlock11OnAttacked2ER8dActor_c.cpp reaches its own Kill (slot 31) through a cdecl
-# `(*(Vt**)c)->fn(c)` call; slot 31 is seated thiscall, so the raw src would
-# read `this` from the vtable register and fault. This host copy is that src
-# line for line with the slot-31 call converted to a C++ virtual (thiscall),
-# the Actor_OnAttacked2Dispatch.cpp pattern. Src line stays out of the slice.
-list(APPEND SLICE16_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/BigBrickBlock_OnAttacked2.cpp")
+# BigBrickBlock::OnAttacked2 (slot 23, the bro PUNCH) USED TO BE A HOST COPY
+# appended here. Its src reaches Kill (slot 31) through a C++ virtual now, so
+# the copy is retired and the src itself links from the RS5A block at the end
+# of this file (run linkfull, lane RS5A).
 
 # run linkw wave C, lane cat-2d, slice 2d1. One TU: src/func_ov004_020adc4c.c,
 # the only ov004 body a LINKED arm9 caller reaches (src/LoadFont.cpp's
@@ -23418,3 +23414,46 @@ foreach(_xrel1_map IN LISTS OV_DATA_MAPS)
     math(EXPR _xrel1_mounts "${_xrel1_mounts} + 1")
 endforeach()
 message(STATUS "XREL1: ${_xrel1_mounts} ovdata mount(s) rebuild when their overlay's config changes")
+
+# ===========================================================================
+# RS5A (run linkfull, lane RS5A), R9: THE BRICK'S OWN SLOT 23
+# ===========================================================================
+#
+# _ZTV13daObjBlockL_c (ov002 0x02108adc), the table the brick-block family
+# installs, holds 0x020b3788 at slot 23 (0x02108b38,
+# config/arm9/overlays/ov002/relocs.txt line 13723): BigBrickBlock::OnAttacked2,
+# src/_ZN13BigBrickBlock11OnAttacked2ER8dActor_c.cpp, the handler a bro's punch
+# dispatches (func_ov002_020ef070). It rode a thiscall host copy,
+# unmatched/BigBrickBlock_OnAttacked2.cpp, appended to SLICE16_SOURCES, while its
+# src reached Kill through a cdecl `fn(c)`. The src makes a C++ virtual call now,
+# so the copy is retired and hal/actor_classes.cpp seats slot 23 on the ROM body
+# (bbb_atk2), the way BOOBRICK1's block above seats slot 22.
+#
+# The TU needs what OnAttacked1's does, for the same reasons: its _MSC_VER arm
+# answers C2561 (valueless returns in an int body) by falling off the end, so it
+# takes /wd4716 per source (the PORT_FALLS_OFF_END_SOURCES ruling: the ROM sets
+# no return value and nothing reads one), and the tail-pad force-include every
+# other BigBrickBlock TU gets from PORT_TAILPAD_DBGACTOR_SOURCES, so all of the
+# class's TUs in the link see one class layout. APPEND, never SET.
+#
+# The three targets that compile hal/actor_classes.cpp, whose slot-23 seat
+# references this body.
+set(RS5A_R9_SRC
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN13BigBrickBlock11OnAttacked2ER8dActor_c.cpp")
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_rs5a.txt" SLICE_W31_RS5A_LINES)
+set(SLICE_W31_RS5A_SOURCES "")
+foreach(line IN LISTS SLICE_W31_RS5A_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W31_RS5A_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+if(MSVC)
+    set_property(SOURCE "${RS5A_R9_SRC}" APPEND PROPERTY COMPILE_OPTIONS
+        /wd4716
+        "/FI${CMAKE_CURRENT_SOURCE_DIR}/unmatched/dBgActor_c_TailPad_HostAbi.h")
+endif()
+foreach(_trs5a walk_window walk_window_hires smoke_player)
+    target_sources(${_trs5a} PRIVATE ${SLICE_W31_RS5A_SOURCES})
+endforeach()

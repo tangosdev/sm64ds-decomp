@@ -17,10 +17,28 @@
 int BigBrickBlock::OnAttacked2(dActor_c &other)
 {
     int b = (actorID == 0x11);
+#ifdef _MSC_VER
+    /* THE HOST SPELLS THE EARLY EXITS AS THE ABSENCE OF THE CALL. mwccarm
+     * accepts a valueless `return` in an int function; MSVC refuses it
+     * (C2561) and no option reaches it. The ROM sets no return value on any
+     * path, so the faithful host shape is a body that reaches its closing
+     * brace with nothing to return, the shape OnAttacked1 (slot 22) is seated
+     * in; port/CMakeLists.txt puts /wd4716 on this source for it. Both Kill
+     * calls stay where the ROM has them. Nothing here reaches mwccarm: it
+     * builds the #else arm, byte-identical. */
+    if (b) {
+        if (other.param1 == 2) {
+            Kill();
+        }
+    } else {
+        Kill();
+    }
+#else
     if (b) {
         if (other.param1 != 2) return;
         Kill();
         return;
     }
     Kill();
+#endif
 }

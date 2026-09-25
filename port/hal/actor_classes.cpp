@@ -769,18 +769,21 @@ static int __fastcall bbb_atk1(void *s, void *, void *o)
 { ((BigBrickBlock *)s)->BigBrickBlock::OnAttacked1(*(dActor_c *)o); return 0; }
 /* Slot 23, OnAttacked2(Actor &attacker): a bro's PUNCH (St_PunchKick steps 0/1
    -> func_ov002_020d8a50 which==0/1 -> func_ov002_020ef070 dispatches slot 23).
-   The matched body (host copy unmatched/BigBrickBlock_OnAttacked2.cpp) reads the
-   attacker at +8 and breaks the block through Kill (slot 31). It was trapped, so
-   a punch on a brick declined slot 23 -- an AV that, raised in the Player's own
-   punch callback, soft-locked the bro exactly the way the Yoshi eat-cap face did
-   (before the quarantine-attribution fix froze the brick instead of the Player,
-   the block still never broke). The body reaches Kill through a cdecl call the
-   host copy converts to a thiscall virtual, so it lands on bbb_kill. Forward the
-   receiver and the attacker; the seated shape is __fastcall three-parameter,
-   matching the thiscall dispatcher (Actor_OnAttacked2Dispatch.cpp). */
-extern "C" void _ZN13BigBrickBlock11OnAttacked2ER8dActor_c(void *self, void *attacker);
+   The ROM word at 0x02108adc + 23*4 = 0x02108b38 relocates to 0x020b3788
+   (config/arm9/overlays/ov002/relocs.txt), BigBrickBlock::OnAttacked2: it reads
+   the attacker at +8 and breaks the block through Kill (slot 31). It was
+   trapped once, so a punch on a brick declined slot 23 -- an AV that, raised in
+   the Player's own punch callback, soft-locked the bro exactly the way the Yoshi
+   eat-cap face did (before the quarantine-attribution fix froze the brick
+   instead of the Player, the block still never broke). Its src reached Kill
+   through a cdecl `fn(c)` then, so a host copy carried it; the src is a real
+   method whose Kill() is a C++ virtual now (thiscall, so it lands on
+   bbb_kill), and the ROM body itself is the seat, linked through
+   port/slice_w31_rs5a.txt. Its _MSC_VER arm only respells the valueless early
+   exits MSVC refuses. Three parameters, matching the thiscall dispatcher
+   (Actor_OnAttacked2Dispatch.cpp), like bbb_atk1 above. */
 static int __fastcall bbb_atk2(void *s, void *, void *o)
-{ _ZN13BigBrickBlock11OnAttacked2ER8dActor_c(s, o); return 0; }
+{ ((BigBrickBlock *)s)->BigBrickBlock::OnAttacked2(*(dActor_c *)o); return 0; }
 /* Slot 24, OnKicked(Actor &attacker): a bro's KICK (St_PunchKick step 2 and
    SweepKick -> func_ov002_020d8a50 which==2/3 -> func_ov002_020eeeb8 dispatches
    slot 24). The matched body _ZN13BigBrickBlock8OnKickedER8dActor_c reaches Kill through a C++
@@ -857,6 +860,9 @@ extern "C" void hal_fill_black_brick_block_vtable(void)
        the brick and left the Bob-omb exploding every four frames (the 0.4.2
        report). Its src has since become a real method whose Kill() is a C++
        virtual, so the ROM body itself is the seat; see bbb_atk1 above.
+       SLOT 23'S HOST COPY IS RETIRED (run linkfull, lane RS5A). Its src is the
+       same kind of real method now, so slot 23 seats the ROM body too; see
+       bbb_atk2 above.
        SLOT 27 IS SEATED NOW (gate 227). It was the other half of that reading:
        convention-clean, reaching slot 31 through a C++ virtual, and held out
        only by the inferred-stub marker that lane STUBADJ has since ruled. See
