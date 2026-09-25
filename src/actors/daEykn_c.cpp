@@ -27,6 +27,7 @@
 #include "common.h"
 #include "types.h"
 #include "SharedFilePtr.h"
+#include "Particle__System.h"
 
 /* shadow struct 'Vector3_16f' */
 struct Vector3_16f;
@@ -56,34 +57,20 @@ struct C { char pad[0x1e4]; PMF *pp; };
 extern "C" {
 extern int AngleDiff(int, int);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-extern "C" char *_ZN8dActor_c22ClosestNonVanishPlayerEv(void *self);
 extern "C" int Vec3_Dist(const void *a, const void *b);
 extern "C" short Vec3_HorzAngle(const void *a, const void *b);
-extern "C" int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void *self, Vector3 *a, Vector3 *b, bool c);
-void* _ZN8dActor_c7FindEggER5dCc_c(void* self, void* c);
-void* _ZN8dActor_c18FindExplosionActorER5dCc_c(void* self, void* c);
 void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, const void* v);
 void func_ov071_02121634(char *self, int a);
-void* _ZN8dActor_c10FindWithIDEj(u32 id);
 void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int c, int d, int e, const void* v, void* cb);
 u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int c, int d, int e, const Vector3_16f* v);
 void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const void* v, u32 a, int b, u32 c, u32 d, u32 e);
 extern int _Z14ApproachLinearRiii(int *ref, int target, int step);
 extern void func_0201267c(unsigned int id, void *p);
-extern void *_ZN8Particle6System12FromUniqueIDEj(unsigned int id);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-extern void _ZN9Animation7AdvanceEv(void *self);
-extern int _ZN9Animation8FinishedEv(void *self);
-extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as( unsigned int actorID, unsigned int param, Vector3 *pos, void *rot, s8 areaID, s16 deathTableID);
-extern void _ZN8dActor_c8PoofDustEv(void *self);
-extern void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h( void *self, signed char *starFlag, unsigned int starID, Vector3 *pos, unsigned int how);
-extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
-extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern s16 data_02082214[];
 extern s8 data_0209f2f8;
 extern AnimData data_ov071_02123048;
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int a, int speed, unsigned int d);
-extern void _ZN9Animation8SetFlagsEi(void *self, int flags);
 extern s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void _Z11UpdateAngleRssis(s16 *p, s16 tgt, int div, s16 maxStep);
 extern int func_ov071_02120a20(char *c);
@@ -100,7 +87,6 @@ extern SharedFilePtr data_ov002_0210da38;
 extern SharedFilePtr data_ov071_02123050;
 extern SharedFilePtr *data_ov071_021226a4[2];
 extern SharedFilePtr *data_ov071_021226a0;
-extern int _ZN15TextureSequence6UpdateER15ModelComponents(void*, void*);
 void func_ov071_021215c0(void *c);
 void func_0200f760(void *c, void *p);
 void func_ov071_02120c90(char *c);
@@ -178,9 +164,6 @@ struct E { int w[2]; };
 extern E data_ov071_02123038;
 extern E data_ov071_02123040;
 void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void* ts, void* file, int a, int d, unsigned e);
-void _ZN9Animation8SetFlagsEi(void* anim, int flags);
-int _ZN9Animation8FinishedEv(void* anim);
-void _ZN9Animation7AdvanceEv(void* anim);
 
 int func_ov071_02120860(char* c)
 {
@@ -191,7 +174,7 @@ int func_ov071_02120860(char* c)
     case 1:
     case 4:
         _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c + 0x138, (void*)data_ov071_02123038.w[1], 0, 0x1000, 0);
-        _ZN9Animation8SetFlagsEi(c + 0x138, 0x40000000);
+        ((Animation *)(c + 0x138))->SetFlags(0x40000000);
         *(int*)(c + 0x144) = 0x1000;
         *(int*)(c + 0x140) = 0;
         st = (unsigned char*)(((int)c + 0x214));
@@ -199,23 +182,23 @@ int func_ov071_02120860(char* c)
         /* fall through */
     case 2:
     case 5:
-        if (_ZN9Animation8FinishedEv(c + 0x138) != 0) {
+        if (((Animation *)(c + 0x138))->Finished() != 0) {
             _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c + 0x138, (void*)data_ov071_02123040.w[1], 0, 0x1000, 0);
-            _ZN9Animation8SetFlagsEi(c + 0x138, 0x40000000);
+            ((Animation *)(c + 0x138))->SetFlags(0x40000000);
             *(int*)(c + 0x144) = 0x1000;
             *(int*)(c + 0x140) = 0;
             st = (unsigned char*)(((int)c + 0x214));
             *st = *st + 1;
         }
-        _ZN9Animation7AdvanceEv(c + 0x138);
+        ((Animation *)(c + 0x138))->Advance();
         return 0;
     case 3:
     case 6:
-        if (_ZN9Animation8FinishedEv(c + 0x138) != 0) {
+        if (((Animation *)(c + 0x138))->Finished() != 0) {
             st = (unsigned char*)(((int)c + 0x214));
             *st = *st + 1;
         }
-        _ZN9Animation7AdvanceEv(c + 0x138);
+        ((Animation *)(c + 0x138))->Advance();
         return 0;
     case 7:
         *(unsigned char*)(c + 0x214) = 0;
@@ -231,7 +214,7 @@ int func_ov071_02120860(char* c)
 extern "C" {
 void func_ov071_021209c8(char* c){
   _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c+0x138, (void*)data_ov071_02123038.w[1], 0, 0x1000, 0);
-  _ZN9Animation8SetFlagsEi(c+0x138, 0x40000000);
+  ((Animation *)(c+0x138))->SetFlags(0x40000000);
   *(int*)(c+0x144)=0x1000;
   *(int*)(c+0x140)=0;
   *(char*)(c+0x214)=0;
@@ -258,7 +241,7 @@ int func_ov071_02120a20(char *c)
 /* recovered: shared common types */
 extern "C" void func_ov071_02120a48(char *c)
 {
-    char *p = _ZN8dActor_c22ClosestNonVanishPlayerEv(c);
+    char *p = (char *)((dActor_c *)c)->ClosestNonVanishPlayer();
     if (p == 0)
         return;
     if (Vec3_Dist(c + 0x5c, p + 0x5c) > 0x5dc000)
@@ -272,7 +255,7 @@ extern "C" void func_ov071_02120a48(char *c)
     v.x = px;
     v.y = py;
     v.z = pz;
-    if (_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(c, &v, (Vector3 *)(c + 0x5c), false) != 0)
+    if (((dActor_c *)c)->DetectRaycastClsn(v, *(Vector3 *)(c + 0x5c), false) != 0)
         return;
     *(char **)(c + 0x1ec) = p;
     *(unsigned char *)(c + 0x216) = 0x2e;
@@ -286,13 +269,13 @@ extern "C" void func_ov071_02120b14(void* self)
 {
     u8* c = (u8*)self;
 
-    void* egg = _ZN8dActor_c7FindEggER5dCc_c(self, (void*)(c+0x174));
+    void* egg = ((dActor_c *)self)->FindEgg(*(dCc_c *)(c+0x174));
     if (egg != 0) {
         int isEgg9 = (int)(*(u16*)((u8*)egg+0xc) == 9);
         if (isEgg9) goto playSound;
     }
 
-    if (_ZN8dActor_c18FindExplosionActorER5dCc_c(self, (void*)(c+0x174)) == 0) goto idCheck;
+    if (((dActor_c *)self)->FindExplosionActor(*(dCc_c *)(c+0x174)) == 0) goto idCheck;
 
 playSound:
     _ZN5Sound9PlayBank0EjRK7Vector3(9, (void*)(c+0x74));
@@ -303,7 +286,7 @@ idCheck:
 
     if (*(u32*)(c+0x198) == 0) return;
 
-    u8* f = (u8*)_ZN8dActor_c10FindWithIDEj(*(u32*)(c+0x198));
+    u8* f = (u8*)dActor_c::FindWithID(*(u32*)(c+0x198));
     if (f == 0) return;
 
     int isbf = (int)(*(u16*)(f+0xc) == 0xbf);
@@ -373,8 +356,8 @@ int func_ov071_02120d30(char *c)
         *(unsigned int *)(c + 0x208) =
             _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
                 *(unsigned int *)(c + 0x208), 0x13b, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64), 0);
-        p1 = _ZN8Particle6System12FromUniqueIDEj(*(unsigned int *)(c + 0x204));
-        p2 = _ZN8Particle6System12FromUniqueIDEj(*(unsigned int *)(c + 0x208));
+        p1 = Particle::System::FromUniqueID(*(unsigned int *)(c + 0x204));
+        p2 = Particle::System::FromUniqueID(*(unsigned int *)(c + 0x208));
         if (p1 != 0) {
             *(int *)((char *)p1 + 0x50) = 0x7fff;
         }
@@ -396,8 +379,8 @@ int func_ov071_02120d30(char *c)
         break;
     }
     case 1:
-        _ZN9Animation7AdvanceEv(c + 0x124);
-        if (_ZN9Animation8FinishedEv(c + 0x124) != 0) {
+        ((Animation *)(c + 0x124))->Advance();
+        if (((Animation *)(c + 0x124))->Finished() != 0) {
             unsigned char *st = (unsigned char *)c + 0x214;
             *st = (unsigned char)(*st + 1);
         }
@@ -441,15 +424,14 @@ int func_ov071_02120d30(char *c)
             pos.x = x;
             pos.z = zcopy;
             pos.y = yadj;
-            _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0x122, 2, &pos, 0, *(signed char *)(c + 0xcc), -1);
-            _ZN8dActor_c8PoofDustEv(c);
+            dActor_c::Spawn(
+                0x122, 2, pos, 0, *(signed char *)(c + 0xcc), -1);
+            ((dActor_c *)c)->PoofDust();
         } else {
             int isSmall = (int)(kind == 0x107);
             if (isSmall != 0) {
                 unsigned char star = (unsigned char)(*(unsigned int *)(c + 8) & 0xf);
-                _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(
-                    c, (signed char *)(c + 0x217), star, (Vector3 *)(c + 0x5c), 4);
+                ((dActor_c *)c)->UntrackAndSpawnStar(*(s8 *)(c + 0x217), star, *(Vector3 *)(c + 0x5c), 4);
                 _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
                     0x124, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
                 _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
@@ -460,9 +442,9 @@ int func_ov071_02120d30(char *c)
         }
         func_0201267c(0xc4, c + 0x74);
         if (data_0209f2f8 == 0x2e) {
-            _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
+            ((dActor_c *)c)->KillAndTrackInDeathTable();
         } else {
-            _ZN7fBase_c18MarkForDestructionEv(c);
+            ((fBase_c *)c)->MarkForDestruction();
         }
         break;
     }
@@ -483,7 +465,7 @@ int func_ov071_0212110c(char *self)
     else
         *(short*)(self + 0x20e) = -0x2500;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0xd4, data_ov071_02123048.f4, 0, 0x1000, 0);
-    _ZN9Animation8SetFlagsEi(self + 0x124, 0x40000000);
+    ((Animation *)(self + 0x124))->SetFlags(0x40000000);
     *(int*)(self + 0x130) = 0x2800;
     *(int*)(self + 0x12c) = 0;
     *(unsigned char*)(self + 0x214) = 0;
@@ -598,8 +580,8 @@ int func_ov071_021211e0(char *c)
                 param = 1;
             else
                 param = 0;
-            _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0x108, param, &pos, &rot, *(s8 *)(c + 0xcc), -1);
+            dActor_c::Spawn(
+                0x108, param, pos, &rot, *(s8 *)(c + 0xcc), -1);
             func_0201267c(0x165, c + 0x74);
             *(u8 *)(c + 0x216) = 0x2e;
             *(u8 *)(c + 0x212) = 0xf0;
@@ -632,7 +614,7 @@ int func_ov071_021211e0(char *c)
         func_ov071_02121634(c, 0);
     } else if (*(u8 *)(*(char **)(c + 0x1ec) + 0x6fb) != 0) {
         func_ov071_02121634(c, 0);
-    } else if (_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(c, &target3, (Vector3 *)(c + 0x5c), 0) != 0) {
+    } else if (((dActor_c *)c)->DetectRaycastClsn(target3, *(Vector3 *)(c + 0x5c), 0) != 0) {
         func_ov071_02121634(c, 0);
     }
 
@@ -729,7 +711,7 @@ void daEykn_c::OnPendingDestroy()
 /* recovered: named members + shared header, real C++ method */
 int daEykn_c::Render()
 {
-  _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this)+0x138, ((char*)this)+0xdc);
+  ((TextureSequence *)(((char*)this)+0x138))->Update(*(ModelComponents *)(((char*)this)+0xdc));
   ((Sub*)((char*)&mModelAnim))->g5((char*)&mScaleX);
   return 1;
 }
