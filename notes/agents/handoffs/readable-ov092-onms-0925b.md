@@ -5,10 +5,11 @@ This document describes this commit. The queue records its immutable output SHA.
 ## Identity and resumption
 
 - Issue URL, task ID, stage, session and harness: https://github.com/tangosdev/sm64ds-decomp/issues/3161, task `readable-ov092-onms-0925b`, stage `revise`, role producer, session `claude-prod-readable-ov092-onms-0925b`, Claude Code.
+- Round 2 identity: stage `revise`, role producer, session `claude-prod-readable-ov092-onms-0925b-r2`, Claude Code, input `c0899166dafb81ba44de93b6dffad3ea0efa7573` (the round-1 output). Round 2 changes comments only, in `include/daOnms_c.h` and `src/actors/daOnms_c.cpp`, and this handoff; see Round 2 below.
 - Source branch and previous accepted input SHA: `readable/readable-ov092-onms-0925b`, input `3fa23a549903672f45d2d37433b289ec3126a720` (origin/main at enqueue).
 - Original source base SHA and installed workflow/tool SHA: both `3fa23a549903672f45d2d37433b289ec3126a720`.
 - Separate evidence commits and required artifacts in this commit: none. The compiler experiments below are prose records of the source change tried and the measured result; no experiment artifact is committed.
-- Next action, responsible role and blockers: independent verification of this commit (byte, relocation, whole-object and source review). No blockers.
+- Next action, responsible role and blockers: independent verification (round 2) of this commit: coined-name marking (V1) and handoff accuracy. No blockers.
 - Status: verified candidate, on the local evidence below.
 - Remaining uncommitted/local-only material and where it is preserved: none.
 
@@ -23,7 +24,7 @@ This document describes this commit. The queue records its immutable output SHA.
   - The state bodies take the object in r0 and are reached only through the member-pointer table, so they are written as members. The helpers `NextMove`, `Roll`, `Launch`, `CheckPlayerHit` and `UpdateModelMtx` are called only from this TU with the object in r0.
   - Field meanings come from their uses. 0x576 is set to 1 at the top of Behavior and to 0 by the wait state; UpdateModelMtx rotates the model matrix only while it is set (`mTumbling`). 0x577 is set to 0 in Behavior and to 1 by Roll on the last frame of a roll; Behavior then bakes the rotation into mBaseMtx (`mRollDone`). The three s16 at 0x4e0 are added to mAngleX, mAngleY and mAngleZ each frame of the knocked and bounce states, and Launch sets them from the sine table (`mTumbleVelX`, `mTumbleVelY`, `mTumbleVelZ`).
   - The state order follows mMoveDir's values: func_ov092_021313b0 picks 2, 3, 4 or 5 by path heading, and Roll steps Z by +0x3e800 in state 2, Z by -0x3e800 in state 3, X by -0x3e800 in state 4 and X by +0x3e800 in state 5.
-- Hypothesized names/filenames, explicitly not recovered facts: every new member name is coined, and `include/daOnms_c.h` marks each one "coined" next to its declaration. The members are `StateLand` (0x021315ac), `StateRollPosZ` (0x021316b0), `StateRollNegZ` (0x02131680), `StateRollNegX` (0x02131650), `StateRollPosX` (0x02131620), `StateKnocked` (0x021311b0), `StateBounce` (0x02131010), `StateSink` (0x02130fcc), `NextMove` (0x021314d0), `Roll` (0x021316d8), `Launch` (0x02131878), `CheckPlayerHit` (0x021319b0) and `UpdateModelMtx` (0x02131aec). The static members are `sLaunchVertSpeed`, `sLaunchHorzSpeed` and `sBankAxis`, and the fields are `mTumbling`, `mRollDone` and `mTumbleVelX`, `mTumbleVelY` and `mTumbleVelZ`.
+- Hypothesized names/filenames, explicitly not recovered facts: every new name is coined. In `include/daOnms_c.h` each of the 13 member functions and each of the five fields carries a trailing `coined` comment on its declaration line, the three static members are covered by the "Coined names." sentence in the comment directly above them, and the header banner says every field name is coined, since the cartridge keeps none. The members are `StateLand` (0x021315ac), `StateRollPosZ` (0x021316b0), `StateRollNegZ` (0x02131680), `StateRollNegX` (0x02131650), `StateRollPosX` (0x02131620), `StateKnocked` (0x021311b0), `StateBounce` (0x02131010), `StateSink` (0x02130fcc), `NextMove` (0x021314d0), `Roll` (0x021316d8), `Launch` (0x02131878), `CheckPlayerHit` (0x021319b0) and `UpdateModelMtx` (0x02131aec). The static members are `sLaunchVertSpeed`, `sLaunchHorzSpeed` and `sBankAxis`, and the fields are `mTumbling`, `mRollDone` and `mTumbleVelX`, `mTumbleVelY` and `mTumbleVelZ`.
 - Compiler experiments and measured barriers: see the table below. Each was run with `python tools/tubuild.py verify ov092/daOnms_c` on this task's working tree. Adopted changes were also checked with a pyelftools comparison of the TU object against the base object (see Proof). Each experiment was then kept or reverted as the Result column says.
 
 | ID | Where | Change tried | Result |
@@ -78,6 +79,27 @@ Self-audit of the base, numbered R1 to R24. The issue lists no numbered findings
 | R22 | unmeasured codegen notes | The `func_ov092_02131010` note ("escaped stack struct", `mwccarm 1.2/sp2p3`), the "recovered: shared common types" banners, the file-header claim about twelve-word matrix copies | Fixed | E10 shows the struct is not needed; the notes are gone and each kept form carries one measured comment. |
 | R23 | stale manifest notes | The `Frame` compiler-only entry named by source line number; the `_ZN7Vector3D1Ev` reason citing old function names; no note mapping the renames | Fixed | See Changed paths. |
 | R24 | stale notes and ledgers | `notes/butterfly-tornado-provenance.md` rows cite the old function names and the removed C field names (`mRestPosX`, `mPathNodeX`); `notes/mwccarm-codegen.md` cites `func_ov092_02131010`, `021311b0`, `021316d8`; `config/match_attempts.jsonl` and `CLAIMS.md` carry ov092 rows | Still deferred | Not in this task's reservation; the ledgers are append logs keyed by address. Owner: next producer on #3161. |
+
+## Round 2
+
+Verifier findings from the round-1 review on #3161, and what round 2 did with each.
+
+| ID | Finding | Outcome | Evidence |
+|---|---|---|---|
+| V1 | The five new fields were not marked coined, and the header banner said field names were "recovered from the bodies" | Fixed | `/* coined */` appended to the declaration lines of `mTumbleVelX`, `mTumbleVelY`, `mTumbleVelZ`, `mTumbling` and `mRollDone` (lines 34-36 and 49-50, unmoved). The banner now says the cartridge keeps no field names, so all are coined, and the marked ones were named from their uses. The coined-name sentence under Lineage was rechecked against the header: all 13 member functions, the 3 static tables and the 5 fields. |
+| V2 | ToxBox history narration | Still deferred | Not in round 2's scope. Owner: next producer on #3161. |
+| V3 | Leftover `recovered:` banner and a prose slash on the destructor comment | Fixed | The destructor comment now opens "Complete destructor:" and reads "dCcAcPos_c and dBgCh_Actr teardown". Same line count. |
+| V4 to V7 | Floor-result offset, StateBounce return type, punch and kick reading, floor type wording | Still deferred | Not in round 2's scope. Owner: next producer on #3161. |
+
+`git diff c0899166da..HEAD -- include/daOnms_c.h src/actors/daOnms_c.cpp` touches 10 lines, all inside comments; the code text before each changed comment is identical, so neither header consumer (`src/actors/daOnms_c.cpp`, `src/d_a_onms.cpp`) sees a code change. Neither file changes its line count.
+
+| Command (round 2) | Exit | Result |
+|---|---|---|
+| `python tools/tubuild.py verify ov092/daOnms_c` | 0 | 22/22 MATCH; objisolate clean; relocation destinations clean; ROM-ascending order. The manifest was not rewritten. |
+| `python tools/check_dead_references.py` | 0 | no new dead references, no broken markdown links |
+| `python tools/check_decl_agreement.py --changed 3fa23a5499` | 0 | no new disagreements, no new local redeclarations |
+
+The residue counts, Changed paths and Proof sections below are round 1's and were not rerun; round 2 changes no token they count.
 
 ## Reconstruction dimensions
 

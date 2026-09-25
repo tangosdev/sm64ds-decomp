@@ -1,6 +1,6 @@
-/* daOnms_c, the rolling crush box (profile ONIMASU). Field names are
- * recovered from the bodies in src/actors/daOnms_c.cpp; offsets and widths
- * are observed.
+/* daOnms_c, the rolling crush box (profile ONIMASU). The cartridge keeps no
+ * field names, so all are coined; the ones marked coined were named here
+ * from their uses in src/actors/daOnms_c.cpp. Offsets and widths are observed.
  *
  * param1's low two bits pick how it moves: 0..2 index data_ov092_02132294
  * for a canned sequence of moves, 3 makes it follow the path whose id is in
@@ -31,9 +31,9 @@
 struct daOnms_c : dBgActor_c {
     dActor_c *mPlayerActor;         /* 0x320 - player that knocked the box away */
     dBgCh_Actr mWithMeshClsn;       /* 0x324 */
-    s16 mTumbleVelX;                /* 0x4e0 - added to mAngleX each frame */
-    s16 mTumbleVelY;                /* 0x4e2 */
-    s16 mTumbleVelZ;                /* 0x4e4 */
+    s16 mTumbleVelX;                /* 0x4e0 - added to mAngleX each frame */ /* coined */
+    s16 mTumbleVelY;                /* 0x4e2 */ /* coined */
+    s16 mTumbleVelZ;                /* 0x4e4 */ /* coined */
     u8 pad_4e6[0x2];
     dCcAcPos_c mdCcAcPos_c;         /* 0x4e8 */
     Matrix4x3 mBaseMtx;             /* 0x528 - untumbled model transform */
@@ -46,8 +46,8 @@ struct daOnms_c : dBgActor_c {
     s32 mMoveSeqIndex;              /* 0x570 */
     u8 mMoveKind;                   /* 0x574 - canned sequence or path */
     u8 mOrientBits;                 /* 0x575 - angles X, Y, Z >> 14, 2 bits each */
-    u8 mTumbling;                   /* 0x576 - rotate the model this frame */
-    u8 mRollDone;                   /* 0x577 - a roll finished this frame */
+    u8 mTumbling;                   /* 0x576 - rotate the model this frame */ /* coined */
+    u8 mRollDone;                   /* 0x577 - a roll finished this frame */ /* coined */
     s32 mPathNodeCount;             /* 0x578 */
     s32 mPathNodeIndex;             /* 0x57c */
     Vector3 mPathNode;              /* 0x580 */

@@ -71,8 +71,8 @@ extern struct Matrix4x3 data_020a0e68;
 
 // @symbol _ZN8daOnms_cD1Ev
 // @symbol _ZN8daOnms_cD0Ev
-/* recovered: native complete destructor -- the compiler emits the typed
- * dCcAcPos_c/dBgCh_Actr teardown and the inline dBgActor_c base teardown.
+/* Complete destructor: the compiler emits the typed dCcAcPos_c and
+ * dBgCh_Actr teardown and the inline dBgActor_c base teardown.
  * D0, the deleting destructor, is the same typed teardown followed by the
  * inherited actor-heap deallocation. */
 daOnms_c::~daOnms_c()
