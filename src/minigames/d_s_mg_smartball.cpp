@@ -11,14 +11,11 @@
 #include "dScMgSmartball_c.h"
 
 extern "C" {
-extern void *_ZN7fBase_cnwEj(unsigned int sz);
 extern int _ZN11dScMgBase_cC2Ev(void *p);
 extern void __cxa_vec_ctor(void *obj, int a, int b, void *cb1, void *cb2);
 extern int _ZTV16dScMgSmartball_c[];
 extern void func_0203d738(void);
-extern void NullDestructor_0203d47c(void);
 extern void func_ov006_02119900(void);
-extern void func_ov006_0210d894(void);
 void *dScMgSmartball_c_classInit(void);
 }
 

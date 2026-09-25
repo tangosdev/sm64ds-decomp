@@ -41,13 +41,9 @@ extern int AngleDiff(int a, int b);
 extern s16 data_02082214[];
 
 /* actor / collision plumbing */
-extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(char *self);
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char *self, char *actor, const struct Vector3 *pos, int a, unsigned int b, unsigned int c, unsigned int d);
 
 /* model loading */
-extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(char *self, void *file, int a, int b);
 
 /* the player side of the conversation */
 extern int func_ov002_020bec9c(void *c, unsigned int a, int b, int d, unsigned short e);
@@ -149,7 +145,7 @@ int daObjKanban_c::Behavior()
         int *pO;
 
         if ((mdCcAcPos_c.hitFlags & 0x8000000) != 0) {
-            other = _ZN8dActor_c10FindWithIDEj(mdCcAcPos_c.otherOwner);
+            other = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
             if (other != 0) {
                 isPlayer = (((dActor_c *)other)->actorID == 0xbf);
                 if (isPlayer != 0) {
@@ -174,9 +170,9 @@ int daObjKanban_c::Behavior()
 int daObjKanban_c::InitResources()
 {
   struct Vector3 v;
-  void* file = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_02130858);
-  _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, file, 1, -1);
-  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
+  void* file = Model::LoadFile(data_ov085_02130858);
+  mModel.SetFile((BMD_File *)file, 1, -1);
+  UpdateModelPosAndRotY();
   v.x = data_ov085_0212f29c.x;
   v.y = data_ov085_0212f29c.y;
   v.z = data_ov085_0212f29c.z;

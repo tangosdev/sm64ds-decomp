@@ -18,6 +18,7 @@
 #include "common.h"
 #include "types.h"
 #include "dScMgRoulette_c.h"
+#include "Model.h"
 #include "decl_common.h"
 
 /* Local views of the records the helpers walk. */
@@ -162,8 +163,6 @@ int ApproachLinear(int &value, int target, int step);
 
 extern "C" {
 
-void _ZN5Model17UpdateFileOffsetsER8BMD_File(void *f);
-int  _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *file, int a, int b);
 
 int  GetGameLanguage(void);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
@@ -177,6 +176,8 @@ void *LoadFile(int id);
 void DecompressLZ16(void *src, int dst);
 void Ov004_Deallocate(void *p);
 void FreeGfxSlotsById(int a);
+/* local extern: declared only in the sibling scene headers (dScMgAmida_c.h,
+   dScMgSmartball_c.h, ...), none of which this TU includes. */
 void NullDestructor_0203d47c(void);
 void Camera_UpdateMatrices(char *cam);
 
@@ -237,7 +238,6 @@ extern u8    data_0209d454;
 
 /* This file's helpers. The file runs from the highest address down, so
    most calls between them are forward references. */
-void func_ov006_021079c8(void);
 void func_ov006_021079cc(void);
 void func_ov006_02107d20(int *p, int val);
 void func_ov006_02107d58(int *p);
@@ -1226,11 +1226,11 @@ extern "C" {
 int func_ov006_021085c0(char *slider){
     *(void**)(slider + 8) = func_ov004_020adc68(0x21d);
     *(void**)(slider + 0xc) = func_ov004_020adc68(0x21e);
-    _ZN5Model17UpdateFileOffsetsER8BMD_File(*(void**)(slider + 8));
-    _ZN5Model17UpdateFileOffsetsER8BMD_File(*(void**)(slider + 0xc));
-    if(_ZN9ModelBase7SetFileEP8BMD_Fileii(slider + 0x10, *(void**)(slider + 8), 1, -1) == 0)
+    Model::UpdateFileOffsets(**(BMD_File **)(slider + 8));
+    Model::UpdateFileOffsets(**(BMD_File **)(slider + 0xc));
+    if(((ModelBase *)(slider + 0x10))->SetFile(*(BMD_File **)(slider + 8), 1, -1) == 0)
         return 0;
-    if(_ZN9ModelBase7SetFileEP8BMD_Fileii(slider + 0x60, *(void**)(slider + 0xc), 1, -1) == 0)
+    if(((ModelBase *)(slider + 0x60))->SetFile(*(BMD_File **)(slider + 0xc), 1, -1) == 0)
         return 0;
     *(short*)(slider + 0xcc) = 0;
     *(int*)(slider + 0xbc) = 0;
