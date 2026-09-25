@@ -65,7 +65,7 @@ struct MantaStateHolder {
 extern "C" {
 extern SharedFilePtr data_ov090_02134524;
 extern SharedFilePtr data_ov002_0210da10;
-extern char data_ov002_0210d9a8;
+extern SharedFilePtr data_ov002_0210d9a8;
 extern SharedFilePtr data_ov090_0213452c;
 extern unsigned char data_0209f2d8;
 extern Matrix4x3 data_020a0e68;
@@ -296,7 +296,7 @@ int daManta_c::CleanupResources()
 {
     data_ov090_02134524.Release();
     data_ov002_0210da10.Release();
-    ((SharedFilePtr *)&data_ov002_0210d9a8)->Release();
+    data_ov002_0210d9a8.Release();
     data_ov090_0213452c.Release();
     return 1;
 }
@@ -373,7 +373,7 @@ int daManta_c::InitResources()
     unsigned char *thiz = (unsigned char *)this;
     mModelAnim.SetFile((BMD_File *)Model::LoadFile(data_ov090_02134524), 1, -1);
     Model::LoadFile(data_ov002_0210da10);
-    Model::LoadFile(*(SharedFilePtr *)&data_ov002_0210d9a8);
+    Model::LoadFile(data_ov002_0210d9a8);
     Animation::LoadFile(data_ov090_0213452c);
 
     unk_37c = param1 & 0xff;

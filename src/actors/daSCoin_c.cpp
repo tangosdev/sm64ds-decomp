@@ -40,7 +40,7 @@ void func_ov002_020f0438(void *self);
 void func_ov002_020f051c(void *self);
 void func_ov002_020f05f4(void *self);
 
-extern char data_ov002_0210d9a8;
+extern SharedFilePtr data_ov002_0210d9a8;
 }
 
 /* The typed 0x1c actor profile: fBase_c reads the halfwords at +4/+6 as
@@ -86,7 +86,7 @@ s32 daSCoin_c::InitResources()
     mLeaderUniqueID = 0;
     mCollectedCount = 0;
     mDeathTimer = 0;
-    Model::LoadFile(*(SharedFilePtr *)&data_ov002_0210d9a8);
+    Model::LoadFile(data_ov002_0210d9a8);
     return 1;
 }
 
@@ -140,7 +140,7 @@ s32 daSCoin_c::Behavior()
 // @symbol _ZN9daSCoin_c16CleanupResourcesEv
 s32 daSCoin_c::CleanupResources()
 {
-    (*(SharedFilePtr *)&data_ov002_0210d9a8).Release();
+    data_ov002_0210d9a8.Release();
     return 1;
 }
 

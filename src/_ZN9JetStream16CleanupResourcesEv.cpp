@@ -13,11 +13,11 @@
 #include "SharedFilePtr.h"
 
 extern char data_ov002_0210da10;
-extern char data_ov002_0210d9a8;
+extern SharedFilePtr data_ov002_0210d9a8;
 
 s32 JetStream::CleanupResources()
 {
     ((SharedFilePtr *)(&data_ov002_0210da10))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210d9a8))->Release();
+    data_ov002_0210d9a8.Release();
     return 1;
 }
