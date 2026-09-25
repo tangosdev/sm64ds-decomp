@@ -1,0 +1,30 @@
+# ov000 per-symbol mount: THE OV0 HANDLE TABLE'S SOURCE (run linkfull, lane S4OV0).
+#
+# Overlay 0 is loaded once, by the boot worker (src/func_0201a2f8.c), for one
+# call: its entry func_ov000_020aa420 walks data_ov000_020bd4b8 and builds the
+# game's handle -> file id table on the heap. The overlay is then unloaded and
+# ov001 is loaded at the same base, so nothing in the running game ever reads
+# ov000 again; what it leaves behind is the heap table (data_0209d3b8).
+#
+# THE TABLE IS ONE OBJECT OF 0x80a POINTERS. 0x80a * 4 = 0x2028 bytes, from
+# 0x020bd4b8 to 0x020bf4e0, which is exactly the end of ov000's .data
+# (config/arm9/overlays/ov000/delinks.txt). dsd names seven more addresses
+# inside it (data_ov000_020bd698 .. data_ov000_020beb74, every one marked
+# ambiguous: they are other modules' references into the shared 0x020aa420
+# window, ov001's HUD data), so the next-symbol rule would size the table at
+# 0x1e0 -- 120 entries of 2058. The loop in src/func_ov000_020aa420.c runs
+# i < 0x80a, so the size is pinned.
+#
+# THE STRINGS COME WITH IT. Each of the 2058 words carries a relocation into
+# ov000's own .data (config/arm9/overlays/ov000/relocs.txt, 2058 `load` rows,
+# every one module:overlay(0)), and every target is a path string between
+# 0x020aa4e0 and the table. ovdata.py's --pack pointer pass hosts that whole
+# run as its synthetic block (port_ov000_gap_020aa4e0, the overlay's own
+# bytes) and rebases all 2058 words onto it: "1 symbols, 2058 pointer patches,
+# 0 cross-mount candidates". port_ov000_syms_patch() applies that at boot,
+# right before the entry runs (hal/boot_os.cpp, port_boot_rom_worker).
+#
+# NOT IN THE CROSS PASS, on purpose (port/CMakeLists.txt says why, beside the
+# mount): no word of ov000 points outside ov000, and nothing resident points
+# into it.
+data_ov000_020bd4b8:0x2028

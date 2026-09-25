@@ -139,12 +139,25 @@ void port_rom_a054_seam(void)
     port_rom_a054_arms();
 }
 
+/* hal/boot_os.cpp: the boot worker's ov000 step (run linkfull, lane S4OV0). */
+void port_boot_rom_worker(void);
+
 /* main's last call, src/func_020197b8.c: the ROM's own game loop, a
    do { ... } while (1) that never returns. Returning here is the staged
    path's hand-back -- main runs to its loop and the host frame loop takes the
-   frame from there. Rung R3d of the staged plan is where this seam goes. */
+   frame from there. Rung R3d of the staged plan is where this seam goes.
+
+   THE BOOT WORKER'S OV000 STEP RUNS HERE FIRST, because this is its point in
+   the ROM's order: the loop's first frame spawns the boot scene, whose
+   InitResources starts src/func_0201a2f8.c, and that worker's ov000 entry
+   builds the ov0 handle table every file lookup by handle reads. It is here
+   and not in a transcribed span because this seam is on every run shape, and
+   the table has to exist before tests/walk_window.cpp's ov002 static
+   initialisers look their first handles up. hal/boot_os.cpp carries the
+   derivation. */
 void port_rom_loop_seam(void)
 {
+    port_boot_rom_worker();
     ++g_loop_hits;
     std::fprintf(stderr, "[rom-main] reached main's func_020197b8 call "
                          "(the ROM's game loop); handing the frame back to the "

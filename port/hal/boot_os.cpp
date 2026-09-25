@@ -18,6 +18,8 @@
 //   port_boot_rom_main_head()       src/main.c, its first three calls
 //   port_boot_rom_game_init_head()  src/func_0201a054.c, before the game heap
 //   port_boot_rom_game_init_tail()  src/func_0201a054.c, after the game heap
+//   port_boot_rom_worker()          src/func_0201a2f8.c, the boot worker's
+//                                   ov000 step, at main's loop seam
 //
 // THE RULE THIS FILE OBEYS. Nothing here calls a ROM function anywhere except
 // where the ROM calls it. Where a ROM step cannot run on the host the step is
@@ -407,6 +409,12 @@ void func_020233f0(void);
 void func_020196cc(void);                     // the channel-8 firmware read,
                                               // the RNG boot seed, SetSoundMode
 void func_0201a5cc(void);                     // the fatal-vector pair
+// --- src/func_0201a2f8.c, the boot worker's ov000 step ----------------------
+void func_ov000_020aa420(void);               // ov000's entry: the handle table
+void port_ov000_pack_check(void);             // host-src/ov000_syms.c, the mount
+void port_ov000_syms_patch(void);             //   of port/ov000_syms.txt
+double port_ov0_table_clock_ms(void);         // hal/s4ov0_ov0table.cpp
+void port_ov0_table_report(double ms);
 
 
 // Which arms actually ran, printed once so a boot log says what the ROM did
@@ -873,6 +881,70 @@ void port_boot_rom_game_init_tail(void)
     func_020196cc();
     func_0201a5cc();
     say("game init tail (func_0201a054)");
+}
+
+// ---------------------------------------------------------------------------
+// src/func_0201a2f8.c, THE BOOT WORKER, its ov000 step (run linkfull, lane
+// S4OV0). The ROM's order on a cartridge boot (0x027ffc40 is not 2, which
+// ntr/io.cpp's io_init makes true here as well):
+//
+//     size = func_0205d94c(0, 0); ptr = Memory::Allocate(size);
+//     func_0205d94c(ptr, size);          the file-name tables, cached in RAM
+//     LoadOverlay(&overlay_0);
+//     func_ov001_020aa420();             ov000's entry          <-- THIS CALL
+//     UnloadOverlay(&overlay_0);
+//     func_0205c91c(func_0205d23c("rom", 3)); Memory::Deallocate(ptr);
+//     LoadOverlay(&overlay_1);
+//     Sound::LoadInitialGroup(0); LoadFont(0);
+//
+// WHAT THE ENTRY DOES. It allocates the game's ov0 handle table (0x80a u16s,
+// 4116 bytes, off the default heap) and fills it with the file id of each of
+// ov000's 2058 path strings, through the ROM's own FS_ConvertPathToFileID.
+// src/func_02018a24.c reads that table for every file the game asks for by
+// handle. Until this lane the port answered those lookups from
+// build/assets/handles.tsv in a host face (hal/fs.cpp) and never built the
+// table at all; the face is retired on the game targets.
+//
+// WHERE IT RUNS. On the cartridge the boot scene's InitResources starts this
+// worker (func_0201a244, a DS thread) in the first frame of main's loop, so
+// the worker's point is main's last call, after the whole of func_0201a054.
+// hal/rom_main.cpp's port_rom_loop_seam IS that call on the port, and it is on
+// every run shape, scene and level alike: after the a054 seam has brought the
+// card thread up (the lookups read the file-name table off the card) and
+// before tests/walk_window.cpp's ov002 static initialisers, which construct
+// SharedFilePtrs by handle and so already need the table. The two transcribed
+// func_0201a054 spans above run later than this in wall time, on the level
+// path only; the entry reads nothing they set up.
+//
+// WHAT IS CALLED, AND WHAT IS NOT:
+//   the entry        CALLED, by its ov000 name. src/func_0201a2f8.c spells the
+//                    call func_ov001_020aa420 (ov000 and ov001 share the base
+//                    0x020aa420 and config/arm9/relocs.txt:2834 cannot tell
+//                    them apart), and that spelling names ov001's bytes. What
+//                    the worker runs at that address is ov000's entry, loaded
+//                    by the line before it.
+//   LoadOverlay(0)   what it makes true is made true here without the loader:
+//                    ov000's code is compiled in (port/slice_w31_s4ov0.txt)
+//                    and its data is the per-symbol mount port/ov000_syms.txt,
+//                    whose patch below puts the table's 2058 pointers onto the
+//                    hosted path strings. The patch writes absolute values, so
+//                    running it on every boot is safe.
+//   the RAM tables   NOT CALLED. func_0205d94c / func_0205c91c only change
+//                    WHERE the 2058 lookups read the file-name table from (RAM
+//                    instead of the card); the ids are the same. The line the
+//                    report prints says what the card route costs here.
+//   the rest         UnloadOverlay(0), LoadOverlay(1), the sound group and the
+//                    font are not this step and nothing about them changes.
+// ---------------------------------------------------------------------------
+void port_boot_rom_worker(void)
+{
+    port_ov000_pack_check();
+    port_ov000_syms_patch();
+    const double t0 = port_ov0_table_clock_ms();
+    func_ov000_020aa420();
+    port_ov0_table_report(port_ov0_table_clock_ms() - t0);
+    say("boot worker: ov000's entry built the ov0 handle table "
+        "(func_0201a2f8's ov000 step)");
 }
 
 }  // extern "C"

@@ -4696,6 +4696,19 @@ list(APPEND PORT_ACTOR_OVERLAYS ov029)
 # hal/actor_classes_ov_link100.cpp fills. Derivation in
 # port/ov039_syms.txt, slice in port/slice_gate217.txt.
 list(APPEND PORT_ACTOR_OVERLAYS ov039)
+# ---- linkfull S4OV0 ----
+# ov000 is no actor overlay: it is loaded once, by the boot worker, for its
+# entry, which builds the game's ov0 handle table out of 2058 path strings in
+# its own data (port/ov000_syms.txt; the entry and the reader are on
+# port/slice_w31_s4ov0.txt, enrolled at the end of this file). But its data is
+# the same per-symbol packed mount, and THIS LIST is how every consumer of a
+# mount finds it: this loop (the three game targets' ACTOR_OV_SYMS and the
+# ROM-CLEAN part list, both read before the end of this file), and the two
+# tools that re-run the emitters against a cartridge, port/tools/romblob_verify.py
+# (the kit build's self-check) and port/tools/romextract.py (a player's
+# romdata.bin), both of which read this list out of this file. Its one
+# exception, the cross pass, is taken just below the loop.
+list(APPEND PORT_ACTOR_OVERLAYS ov000)
 set(ACTOR_OV_SYMS "")
 foreach(ovn IN LISTS PORT_ACTOR_OVERLAYS)
     set(ovn_out "${CMAKE_BINARY_DIR}/host-src/${ovn}_syms.c")
@@ -4715,6 +4728,20 @@ foreach(ovn IN LISTS PORT_ACTOR_OVERLAYS)
         list(APPEND ROMCLEAN_PARTS "${ovn_out}.blobmap")
     endif()
 endforeach()
+
+# ---- linkfull S4OV0: ov000 stays OUT of the cross pass ----
+# It has nothing to offer it (0 cross-mount candidates: all 2058 of its
+# relocations land in its own .data) and nothing resident points into it (ov001
+# replaces it at the same base before any scene), while the residency model
+# calls every pair that does not overlap co-resident, so its window would become
+# a second candidate for every level overlay's pointer into ov001's HUD tables.
+# Leaving OV_DATA_MAPS also hides it from the XREL1 block at the end of this
+# file, so its three config files are named here the way that block names them.
+list(REMOVE_ITEM OV_DATA_MAPS "${CMAKE_BINARY_DIR}/host-src/ov000_syms.c.map")
+set(_s4ov0_cfg "${PORT_REPO_ROOT_ABS}/config/arm9/overlays/ov000")
+add_custom_command(OUTPUT "${CMAKE_BINARY_DIR}/host-src/ov000_syms.c" APPEND
+    DEPENDS "${_s4ov0_cfg}/relocs.txt" "${_s4ov0_cfg}/delinks.txt"
+            "${_s4ov0_cfg}/symbols.txt")
 
 # THE CROSS-MOUNT POINTER PASS, last because it needs every map.
 #
@@ -23487,6 +23514,77 @@ endif()
 foreach(_w31s2hg_t walk_window walk_window_hires smoke_player)
     target_sources(${_w31s2hg_t} PRIVATE ${SLICE_W31_SMALLS2_HG_SOURCES})
 endforeach()
+
+# ===========================================================================
+# W31 S4OV0 (run linkfull wave 31, lane S4OV0): THE OV0 HANDLE TABLE
+# ===========================================================================
+# The cartridge builds its handle -> file id table at boot with ov000's own
+# entry. port/slice_w31_s4ov0.txt carries the entry, its three helpers and the
+# reader src/func_02018a24.c; hal/s4ov0_ov0table.cpp hosts the two words the
+# build writes (data_0209d3b8, data_0209d3b0, in .dsstate). The entry's data
+# is mounted mid-file (ov000 on PORT_ACTOR_OVERLAYS, kept out of the cross
+# pass) for the reasons given there. The entry
+# runs from hal/boot_os.cpp's port_boot_rom_worker, which hal/rom_main.cpp's
+# loop seam calls; both files are on the two game targets only, so those two
+# take the whole slice.
+#
+# hal/fs.cpp is compiled ONCE for all three hosting targets (port_slice_shared),
+# so its catalog face for func_02018a24 retires behind SM64DS_OV0_TABLE_ROM on
+# that whole name list, the SM64DS_SFP_CONSTRUCT_ROM shape above; the smoke_*
+# harnesses keep it. smoke_player therefore takes the reader and the data file
+# and nothing else: it runs no boot and carries none of the builder's callees
+# (it is EXCLUDE_FROM_ALL and does not link today, SMOKELINK6), so it gains no
+# new unresolved name and builds no table.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_s4ov0.txt" SLICE_W31_S4OV0_LINES)
+set(SLICE_W31_S4OV0_SOURCES "")
+foreach(line IN LISTS SLICE_W31_S4OV0_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W31_S4OV0_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+set(S4OV0_READER_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_02018a24.c")
+if(NOT S4OV0_READER_SRC IN_LIST SLICE_W31_S4OV0_SOURCES)
+    message(FATAL_ERROR "port/slice_w31_s4ov0.txt does not list "
+            "src/func_02018a24.c, the reader hal/fs.cpp's face retires for")
+endif()
+foreach(_ts4ov0 walk_window walk_window_hires)
+    target_sources(${_ts4ov0} PRIVATE ${SLICE_W31_S4OV0_SOURCES}
+        "${CMAKE_CURRENT_SOURCE_DIR}/hal/s4ov0_ov0table.cpp")
+endforeach()
+target_sources(smoke_player PRIVATE "${S4OV0_READER_SRC}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal/s4ov0_ov0table.cpp")
+set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/fs.cpp" APPEND PROPERTY
+    COMPILE_DEFINITIONS
+    "$<$<IN_LIST:$<TARGET_PROPERTY:NAME>,port_slice_shared;walk_window;walk_window_hires;smoke_player>:SM64DS_OV0_TABLE_ROM=1>")
+#
+# THE FOUR FILE POINTERS THE CRT BUILT BEFORE MAIN. Three matched C++ TUs define
+# overlay SharedFilePtrs with constructors (ov023's two, ov044's, ov100's), and
+# MSVC hands those constructors to the CRT, which runs them before main -- so
+# each looked its handle up before any table could exist (the only four
+# lookups before the loop seam, measured under cdb on the INT55 build). On the
+# cartridge they run in each overlay's __sinit at its load, and the port runs
+# those bodies at each overlay's bring-up already. hal/s4ov0_overlay_sinit.h
+# moves the three TUs' initialisers into a section the CRT does not walk; its
+# banner has the derivation. BOTH PATHS for each row, the DSSTATE block's rule
+# (d_a_star_gate.cpp compiles from its hostgen twin today), and APPEND, never
+# SET: all three already carry hal/dsstate_all.h and two carry more.
+if(MSVC)
+    foreach(_s4ov0_rel IN ITEMS
+            src/game/actors/d_a_obj_fm_battan.cpp
+            src/game/actors/d_a_obj_kb1_billboard.cpp
+            src/game/actors/d_a_star_gate.cpp)
+        if(NOT EXISTS "${PORT_REPO_ROOT_ABS}/${_s4ov0_rel}")
+            message(FATAL_ERROR "S4OV0: ${_s4ov0_rel} does not exist")
+        endif()
+        foreach(_s4ov0_one IN ITEMS "${PORT_REPO_ROOT_ABS}/${_s4ov0_rel}"
+                                    "${CMAKE_BINARY_DIR}/host-src/${_s4ov0_rel}")
+            set_property(SOURCE "${_s4ov0_one}" APPEND PROPERTY COMPILE_OPTIONS
+                "/FI${CMAKE_CURRENT_SOURCE_DIR}/hal/s4ov0_overlay_sinit.h")
+        endforeach()
+    endforeach()
+endif()
 
 # XREL1 (run linkfull): EVERY OVERLAY MOUNT DEPENDS ON THE CONFIG IT READS.
 #
