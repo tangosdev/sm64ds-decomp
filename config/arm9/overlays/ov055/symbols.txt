@@ -1,9 +1,9 @@
 _ZN9daLuigi_cD1Ev kind:function(arm,size=0x58) addr:0x021111a0
 _ZN9daLuigi_cD0Ev kind:function(arm,size=0x6c) addr:0x021111f8
 func_ov055_02111264 kind:function(arm,size=0x24) addr:0x02111264
-func_ov055_02111288 kind:function(arm,size=0x34) addr:0x02111288
-func_ov055_021112bc kind:function(arm,size=0x8) addr:0x021112bc
-func_ov055_021112c4 kind:function(arm,size=0x54) addr:0x021112c4
+_ZN9daLuigi_c13ExecuteMirrorEP6Player kind:function(arm,size=0x34) addr:0x02111288
+_ZN9daLuigi_c11EnterMirrorEP6Player kind:function(arm,size=0x8) addr:0x021112bc
+_ZN9daLuigi_c8SetStateEP12daLuigiStateP6Player kind:function(arm,size=0x54) addr:0x021112c4
 _ZN9daLuigi_c16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x02111318
 _ZN9daLuigi_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111354
 _ZN9daLuigi_c6RenderEv kind:function(arm,size=0x1b0) addr:0x02111358

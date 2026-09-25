@@ -32,18 +32,8 @@
 #include "TextureSequence.h"
 #include "math/Matrix.h"
 
-/* One reflection state: two callbacks called as members with the player,
- * `enter` once when the state is set and `execute` every frame from Behavior.
- * The one table in the ROM (ov055 0x02111a94, copied to 0x02111b70 by the
- * static initializer) pairs 0x021112bc (enter, returns 1) with 0x02111288
- * (execute, mirrors the player's position and facing). The callbacks' class is
- * not recovered; a class without virtuals is what reproduces their calls. */
-struct daLuigiStateHost;
-typedef int (daLuigiStateHost::*daLuigiStateFn)(char *player);
-struct daLuigiState {
-    daLuigiStateFn enter;
-    daLuigiStateFn execute;
-};
+struct Player;
+struct daLuigiState;
 
 struct daLuigi_c : dActor_c {
     u8 pad_0d0[0x4];
@@ -63,6 +53,13 @@ struct daLuigi_c : dActor_c {
     virtual s32 Behavior();                   /* slot  6 */
     virtual s32 Render();                     /* slot  9 */
     virtual void OnPendingDestroy();          /* slot 12 */
+
+    /* Coined names. SetState (0x021112c4) enters a state; EnterMirror
+       (0x021112bc) and ExecuteMirror (0x02111288) are the one state, which
+       mirrors the player's position and facing. */
+    int SetState(daLuigiState *state, Player *player);
+    int EnterMirror(Player *player);
+    int ExecuteMirror(Player *player);
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -70,5 +67,16 @@ struct daLuigi_c : dActor_c {
 typedef char daLuigi_c_size_must_be_0x20c[
     sizeof(daLuigi_c) == 0x20c ? 1 : -1];
 #endif
+
+/* One state: two members called with the player, `enter` once by SetState
+ * and `execute` every frame by Behavior. The one table in the ROM (ov055
+ * 0x02111a94, copied to 0x02111b70 by the static initializer) pairs
+ * EnterMirror with ExecuteMirror. daLuigiState and daLuigiStateFn are
+ * coined names. */
+typedef int (daLuigi_c::*daLuigiStateFn)(Player *player);
+struct daLuigiState {
+    daLuigiStateFn enter;
+    daLuigiStateFn execute;
+};
 
 #endif /* DALUIGI_C_H */

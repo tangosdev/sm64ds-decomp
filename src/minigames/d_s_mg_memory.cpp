@@ -87,9 +87,10 @@ void func_ov004_020b04d0(int v);
 void func_ov004_020b682c(void);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
-void *_ZN7fBase_cnwEj(unsigned int size);
 void _ZN11dScMgBase_cC2Ev(void *scene);
 void _ZN8Particle10SysTrackerC1Ev(void *tracker);
+/* local extern: only sibling scene headers (dScMgCard_c.h, dScMgMemory2_c.h)
+   declare it; this TU includes neither */
 void func_ov006_020c1d80(void *sharedState);
 extern void *_ZTV19dScMgSingle3DBase_c[];
 }
@@ -1107,7 +1108,7 @@ s32 dScMgMemory_c::InitResources()
  * mShared) because the class has no constructor declared yet. */
 extern "C" void *dScMgMemory_c_classInit()
 {
-    char *scene = (char *)_ZN7fBase_cnwEj(sizeof(dScMgMemory_c));
+    char *scene = (char *)fBase_c::operator new(sizeof(dScMgMemory_c));
     if (scene) {
         _ZN11dScMgBase_cC2Ev(scene);
         *(void **)scene = _ZTV19dScMgSingle3DBase_c;

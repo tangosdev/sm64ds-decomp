@@ -221,7 +221,7 @@ daDpLift_c	DONE	include\daDpLift_c.h  [alias: header uses pre-rename name]	dBgAc
 daIwante_c	DONE	include\Eyerok.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov066	8
 daKpa2Bg_c	DONE	include\daKpa2Bg_c.h	dBgActor_c	0	ov060	6
 daKpa3Bg_c	PARTIAL	include\daKpa3Bg_c.h	dBgActor_c	0	ov060	6
-daLinelift2_c	DONE	include\RotatingUpDownPlatform.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov091	6
+daLinelift2_c	DONE	include\daLinelift2_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov091	6
 daObjBC_Switch_c	DONE	include\daObjBC_Switch_c.h	dBgActor_c	0	ov002	6
 daObjBkKillerdai_c	PARTIAL	include\daObjBkKillerdai_c.h	dBgActor_c	0	ov079	8
 daObjBk_Botaosi_c	DONE	include\daObjBk_Botaosi_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov015	9
@@ -335,7 +335,7 @@ daMenbo_c	DONE	include\daMenbo_c.h  [alias: header uses pre-rename name]	dEnemyB
 daMip_c	DONE	include\daMip_c.h	dEnemyBase_c	0	ov085	8
 daMoray_c	DONE	include\Unagi.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov016	7
 daNknk_c	DONE	include\Koopa.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov062	10
-daObjKey_c	DONE	include\Key.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov089	8
+daObjKey_c	DONE	include\daObjKey_c.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov089	8
 daObjMarioCap_c	DONE	include\daObjMarioCap_c.h	dEnemyBase_c	0	ov002	9
 daObj_Mip_Key_c	DONE	include\daObj_Mip_Key_c.h	dEnemyBase_c	0	ov085	7
 daOwl_c	DONE	include\daOwl_c.h	dEnemyBase_c	0	ov094	7

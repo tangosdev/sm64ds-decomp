@@ -127,11 +127,6 @@ extern Fix12i Vec3_Dist(const void *a, const void *b);
 extern s16    Vec3_HorzAngle(const void *a, const void *b);
 extern unsigned int RandomIntInternal(int *seed);
 extern void   _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, Vector3 const &pos, unsigned int n, int fix, short s);
-extern void   _ZN8dActor_c8PoofDustEv(void *self);
-extern void   _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
-extern void  *_ZN8dActor_c7FindEggER5dCc_c(void *self, void *clsn);
-extern void  *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern int    _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void *self, void *clsn, void *player);
 extern void   _ZN6Player6BounceE5Fix12IiE(void *p, int fix);
 extern void   _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *p, void *pos, unsigned int a, int fix, unsigned int b, unsigned int cc, unsigned int d);
 extern int    func_02038414(void *clsn);
@@ -146,12 +141,10 @@ extern void   _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12I
 extern int    DecIfAbove0_Byte(void *p);
 extern void   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix, unsigned int j);
 extern void   _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
-extern int    _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void *self, Vec3_26e28 *a, Vec3_26e28 *b, int cc);
 extern void   _Z14ApproachLinearRsss(short *p, short target, short step);
 extern int    _Z15ApproachLinear2Riii(int *p, int target, int step);
 extern void   func_0201267c(int id, void *pos);
 extern void   _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int a, int b, unsigned int c, unsigned int d);
-extern void   _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(char *self, char *clsn);
 extern int    _ZNK10dBgCh_Actr12TouchesWaterEv(char *clsn);
 extern void   _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v, int c);
 }
@@ -232,8 +225,8 @@ void daGmch_c::SpawnCoinsAndDie()
     t.y = mPosY;
     t.z = mPosZ;
     _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(this, t, 5, 0xf000, 0);
-    _ZN8dActor_c8PoofDustEv(this);
-    _ZN8dActor_c24KillAndTrackInDeathTableEv(this);
+    PoofDust();
+    KillAndTrackInDeathTable();
 }
 
 // @symbol _ZN8daGmch_c18CheckPlayerContactEv
@@ -245,7 +238,7 @@ void daGmch_c::CheckPlayerContact()
     Player *player;
     int b;
 
-    if (_ZN8dActor_c7FindEggER5dCc_c(this, &mdCcAc_c) != 0) {
+    if (FindEgg(mdCcAc_c) != 0) {
         Sound::PlayBank0(9, *(Vector3 *)&mCamSpacePosX);
         SpawnCoinsAndDie();
         return;
@@ -255,7 +248,7 @@ void daGmch_c::CheckPlayerContact()
         unsigned int id = mdCcAc_c.otherOwner;
         if (id == 0)
             return;
-        player = (Player *)_ZN8dActor_c10FindWithIDEj(id);
+        player = (Player *)dActor_c::FindWithID(id);
     }
     if (player == 0)
         return;
@@ -286,7 +279,7 @@ void daGmch_c::CheckPlayerContact()
         return;
     }
 
-    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(this, &mdCcAc_c, player) != 0) {
+    if (JumpedOnByPlayer(mdCcAc_c, *player) != 0) {
         if (mStateIndex == 0)
             return;
         _ZN6Player6BounceE5Fix12IiE(player, 0x28000);
@@ -491,7 +484,7 @@ int daGmch_c::EnterState7()
         ((int *)&v)[2] = z;
     }
 
-    _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(this, &v, (Vec3_26e28 *)&mPosX, 1);
+    DetectRaycastClsn(*(Vector3 *)&v, *(Vector3 *)&mPosX, 1);
     mHolder = (dActor_c *)zero;
     mWithMeshClsn.SetLimMovFlag();
     mStateIndex = 7;
@@ -836,7 +829,7 @@ int daGmch_c::Render()
 int daGmch_c::Behavior()
 {
     CallStateUpdate();
-    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c((char *)this, (char *)&mdCcAc_c);
+    MakeVanishLuigiWork(mdCcAc_c);
     if (mWithMeshClsn.GetResultFlag1() != 0) {
         if (_ZNK10dBgCh_Actr12TouchesWaterEv((char *)&mWithMeshClsn) != 0) {
             SpawnCoinsAndDie();

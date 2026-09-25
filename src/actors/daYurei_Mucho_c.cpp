@@ -70,17 +70,12 @@ extern "C" {
    group size-DIFF; see the deslop leftover list. */
 extern int _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, const Vector3 *pos,
                                                           unsigned int n, int f, short s);
-extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int profile,
-                                                             unsigned int param,
-                                                             const void *pos, const void *rot,
-                                                             int area, short id);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, void *shadow, void *mtx, int rad, int height, unsigned int flags);
 extern void _ZN6Player6BounceE5Fix12IiE(void *p, int f);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *p, const void *v, unsigned int a,
                                                     int b, unsigned int d, unsigned int e,
                                                     unsigned int f);
-extern int _ZN9Animation8FinishedEv(void *anim);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix,
                                                         unsigned int j);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *a, int r, int h,
@@ -546,8 +541,7 @@ int func_ov065_02116364(daYurei_Mucho_c *c)
         if (((*(u32 *)((char *)c + 0x358) << 4) >> 16) >= 0xf
             && *(u16 *)((char *)c + 0x100) == 0
             && c->mShotCount < 3) {
-            void *spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0xe9, 1, &c->mShotPosX, 0, c->mAreaId, -1);
+            void *spawned = dActor_c::Spawn(0xe9, 1, *(Vector3 *)&c->mShotPosX, 0, c->mAreaId, -1);
             if (spawned != 0) {
                 u8 *shot = (u8 *)spawned;
                 func_02012694(0xfb, &c->mCamSpacePosX);
@@ -569,7 +563,7 @@ int func_ov065_02116364(daYurei_Mucho_c *c)
         }
     }
 
-    if (_ZN9Animation8FinishedEv((void *)((char *)c + 0x350)) != 0) {
+    if (((Animation *)((void *)((char *)c + 0x350)))->Finished() != 0) {
         if (pl != 0) {
             s32 *dsrc = (s32 *)(int)(&pl->mPosX);
             L.d.x = dsrc[0];
