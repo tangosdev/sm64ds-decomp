@@ -4,11 +4,11 @@ This document describes this commit. The queue records its immutable output SHA.
 
 ## Identity and resumption
 
-- Issue URL, task ID, stage, session and harness: https://github.com/tangosdev/sm64ds-decomp/issues/2473, task `readable-ov084-pkn-0925`, stage `revise`, role producer, session `claude-prod-readable-ov084-pkn-0925`, Claude Code.
-- Source branch and previous accepted input SHA: `readable/readable-ov084-pkn-0925`, input `ace15a6c626d8fd133dd8accc41dd313be567d96` (origin/main at enqueue).
+- Issue URL, task ID, stage, session and harness: https://github.com/tangosdev/sm64ds-decomp/issues/2473, task `readable-ov084-pkn-0925`, stage `revise`, role producer, session `claude-prod-readable-ov084-pkn-0925` (round 1) and `claude-prod-readable-ov084-pkn-0925-r2` (round 2, handoff-only corrections V1 and V2 and the new V3 row), Claude Code.
+- Source branch and previous accepted input SHA: `readable/readable-ov084-pkn-0925`, round 1 input `ace15a6c626d8fd133dd8accc41dd313be567d96` (origin/main at enqueue), round 2 input `6aaaf287e337f04c5e5ef336ae5796debe35b207`. Round 2 changes only this handoff.
 - Original source base SHA and installed workflow/tool SHA: both `ace15a6c626d8fd133dd8accc41dd313be567d96`.
 - Separate evidence commits and required artifacts in this commit: none. The compiler experiments below are prose records (the source change tried and the measured result); no experiment artifact is committed.
-- Next action, responsible role and blockers: independent verification (byte, relocation, whole-object and source review) of this commit. No blockers.
+- Next action, responsible role and blockers: independent verification (round 2) of this commit, handoff accuracy (V1, V2). No blockers.
 - Status: verified candidate, on the local evidence below.
 - Remaining uncommitted/local-only material and where it is preserved: none.
 
@@ -87,6 +87,7 @@ Self-audit of the base, numbered R1 to R33, with the four #2473 items folded in 
 | R31 | stale manifest notes | 25 notes say "the declaration policy the file header states"; the `_ZN7Vector3D1Ev` reason lists the Vector3 users by their old names; no note maps the renamed states | Fixed | See Changed paths. |
 | R32 | stale notes | `notes/data/class-facts/daPkn_c.json` still names the fields `unk_45d` to `unk_478` and the class PiranhaPlant | Still deferred | Not in this task's reservation. |
 | R33 | stale ledgers | `config/match_attempts.jsonl` and `config/match_provenance.jsonl` rows keep the nine old names | Still deferred | Append logs keyed by address, left to their owners. |
+| V3 | GNU extensions | StateShrink builds its spawn position with a GNU compound literal, `v = (Vector3){mPosX, y + 0x78000, z}`, already present at base as `(struct Vector3){c->mPosX, y + 0x78000, z}` in `func_ov084_0212f33c` | Deferred | New in verification; not attempted in this handoff-only revision. Owner: next producer on #2473 (https://github.com/tangosdev/sm64ds-decomp/issues/2473). |
 
 ## Reconstruction dimensions
 
@@ -95,7 +96,7 @@ Self-audit of the base, numbered R1 to R33, with the four #2473 items folded in 
 - Recovered layout/fields; remaining shadow structs/raw offsets: every daPkn_c field is named. No raw `this` offset remains. `PknVec3`, `PknMtx43` and `PknSharedFile` views remain (R13, R18), and so do the Vector3 casts over dActor_c scalars (R17).
 - Lifecycle, vtable/RTTI, initializer and data ownership: unchanged. The nine new members are non-virtual, so layout and vtable are unchanged.
 - Attribution preserved through each move/rename: the nine `attribution.json` keys follow the renamed symbols with the same authors (`ruspecial` keeps StateWait, `lunavyqo` keeps StateBite, StateDie and StateShrink, `tangosdev` the other five).
-- Remaining agreed issue scope: R2, R4, R5, R8, R13, R17, R18, R20 to R23, R25 to R27, R32, R33.
+- Remaining agreed issue scope: R2, R4, R5, R8, R13, R17, R18, R20 to R23, R25 to R27, R32, R33, V3.
 
 Residue. The `lines` column is `wc -l` of `git show <rev>:<path>` (newline count; both revisions end in a newline). Each token column is the number of lines containing the token, `grep -c -F`, with `MSYS_NO_PATHCONV=1`. At base `src/actors/daPkn_c.cpp` has 30 `unk_` and 78 `_ZN` occurrences on 29 and 77 lines; at this commit lines and occurrences agree for every token.
 
@@ -121,16 +122,16 @@ The four `unk_` lines left are `unk_108` (R8). Nine of the 52 `_ZN` lines are th
 | `notes/agents/handoffs/readable-ov084-pkn-0925.md` | this handoff |
 | `src/actors/daPkn_c.cpp` | the source changes above |
 
-Changed keys in `config/tu_manifest.d/ov084/daPkn_c.json`, from a python parse of both revisions: `functions[9..17].symbol` (the nine renames), `notes[1]` to `notes[25]` ("states" to "then stated"), `notes[27]` added (the rename map and what this pass changed), and `compiler_only_output[0].reason` (the Vector3 users by their current names). `verification.compilerOnlyOutput.droppedSections[17]` went from 38 to 35: `tools/tubuild.py verify` rewrites that list from the object it compiles, and the object has three fewer sections now that the removed bridges and declarations are gone. `notes[0]`, `notes[26]`, `boundary_evidence`, `sections`, `verification` and the other `compiler_only_output` entries are unchanged; each was reread against this commit.
+Changed keys in `config/tu_manifest.d/ov084/daPkn_c.json`, from a python parse of both revisions: `functions[9..17].symbol` (the nine renames), `notes[1]` to `notes[25]` ("states" to "then stated"), `notes[27]` added (the rename map and what this pass changed), and `compiler_only_output[0].reason` (the Vector3 users by their current names). `verification.compilerOnlyOutput.droppedSections[17]` went from 38 to 35: `tools/tubuild.py verify` rewrites that list from the object it compiles, and the value is the section index (`st_shndx`) of the dropped `_ZN7Vector3D1Ev` .text, which moved from 38 at base to 35 at this commit because the emission order changed. Both objects have 67 sections. `notes[0]`, `notes[26]`, `boundary_evidence`, `sections`, `verification` and the other `compiler_only_output` entries are unchanged; each was reread against this commit.
 
 ## Proof
 
-All commands ran in `C:/tmp/claude-rd-ov084` on this commit's source (the handoff is the only later change).
+All commands were rerun in round 2 in `C:/tmp/claude-rd-ov084` on the source of input `6aaaf287e3`, which this commit does not change; every result matches round 1.
 
 | Command | Exit | Result |
 |---|---|---|
 | `python tools/tubuild.py verify ov084/daPkn_c` | 0 | 24/24 MATCH; objisolate clean; relocation destinations clean |
-| Object comparison, `build/base-daPkn_c.o` (from the input commit) against this commit's object, under the nine-row rename map | 0 | 27/27 function bodies identical; 26/26 relocation sections identical; undefined-symbol set identical (95 symbols); defined set differs only by the nine state renames |
+| Object comparison with pyelftools, the object `tubuild verify` builds from base `ace15a6c62` against the one it builds from this commit, under the nine-row rename map | 0 | 67 sections in each object; 25/25 function bodies identical (25 functions in 25 .text sections each: the 24 ROM functions plus `_ZN7Vector3D1Ev`); 26/26 relocation sections identical (20 on .text, 6 on .data); undefined-symbol set identical (95 symbols); defined global set (36 symbols) differs only by the nine state renames |
 | `python tools/rombuild.py -j16` (full, with ROM) | 0 | 7122 enrolled sources, 0 reused and 7122 compiled (`build/src/actors/daPkn_c.o` rebuilt in this run); 11,213 of 11,213 source-built functions reproducing, 0 mismatching; module fidelity 106/106 exact; intact TU gates PASS with zero new symbol errors; `intactTuRom.identical` true |
 | `python tools/prepush_linkcheck.py --range ace15a6c62..HEAD` | 0 | 24 checked, 24 verified, 0 warnings, 0 blocking (all nine renamed states VERIFIED) |
 | `python tools/check_src_tu_compiles.py` | 0 | 297/297 translation units compile |
@@ -140,7 +141,7 @@ All commands ran in `C:/tmp/claude-rd-ov084` on this commit's source (the handof
 | `python tools/check_tubuild_conflicts.py` | 0 | 297 entries OK |
 | `python tools/queue_audit.py --check-promoted` | 0 | OK |
 | `python tools/port_refcheck.py` | 0 | 408 references, all resolve |
-| `python tools/prepush_attribution.py` | 0 | 0 changed, 0 lost |
+| `python tools/prepush_attribution.py --base ace15a6c62 --head HEAD` | 0 | 7295 tracked, 0 changed, 0 lost |
 | `python tools/affected_src.py include/daPkn_c.h` | 0 | `src/actors/daPkn_c.cpp` only |
 | `git diff ace15a6c62 -- include/decl_common.h config/dead-reference-baseline.json config/decl-agreement-baseline.json` | 0 | empty |
 
