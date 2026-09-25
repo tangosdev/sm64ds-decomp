@@ -36,15 +36,13 @@
 #include "SharedFilePtr.h"
 #include "types.h"
 #include "Model.h"
+#include "Player.h"
+#include "SaveData.h"
 
 extern "C" {
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32, s32, s32, s32);
 u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32, u32, s32, s32, s32, const void *, void *);
-int _ZN6Player15IsCollectingCapEv(void *);
-void _ZN6Player18SetNewHatCharacterEjjb(void *, u32, u32, int);
-int _ZN8SaveData16HasPlayerLostCapEv();
-void _ZN8SaveData13PlayerLoseCapEv();
 s16 Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 s32 Vec3_Dist(const Vector3 *, const Vector3 *);
 void Matrix4x3_FromRotationY(Matrix4x3 *, s16);
@@ -63,18 +61,11 @@ void Vec3_LslInPlace(Vector3 *, int);
 void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
 void InvMat4x3(Matrix4x3 *dst, const Matrix4x3 *src);
-/* The Player/Sound calls below stay mangled names inside this block: they
- * take Player as void*, and a bare `extern` on a mangled name in a C++ file
+/* The Sound call below stays a mangled name inside this block: it takes
+ * its position as void*, and a bare `extern` on a mangled name in a C++ file
  * is mangled a second time (ShowMessage once reached the linker as
  * _Z48_ZN6Player11ShowMessage...). Byte gates cannot see that, because
  * relocations compare as wildcards; only the link does. */
-int _ZN6Player9StartTalkER7fBase_cb(void *self, void *actor, int b);
-int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *self, void *actor,
-                                                    unsigned int msg,
-                                                    const Vector3 *pos,
-                                                    unsigned int a,
-                                                    unsigned int b);
-int _ZN6Player12GetTalkStateEv(void *self);
 int _ZN5Sound8PlayLongEjjjRK7Vector3s(int handle, unsigned int a,
                                      unsigned int b, void *pos,
                                      unsigned int c);
@@ -134,7 +125,7 @@ void SnowmanBreathParticle::HitPlayer()
     if (*(u8 *)(player + 0x6fd))
         return;
     _ZN6Player8BlowAwayEs(player, mAngleY);
-    if (_ZN6Player15IsCollectingCapEv(player))
+    if (((Player *)player)->IsCollectingCap())
         return;
     if (*(u8 *)(player + 0x6ff))
         return;
@@ -148,12 +139,12 @@ void SnowmanBreathParticle::HitPlayer()
     rotation.y = (s16)angle;
     rotation.z = 0;
     if (*(u8 *)(player + 0x6d9) != actor->param1) {
-        _ZN6Player18SetNewHatCharacterEjjb(
-            player, *(u8 *)(player + 0x6d9), 0, 0);
+        ((Player *)player)->SetNewHatCharacter(
+            *(u8 *)(player + 0x6d9), 0, 0);
     } else {
-        if (_ZN8SaveData16HasPlayerLostCapEv())
+        if (SaveData::HasPlayerLostCap())
             return;
-        _ZN8SaveData13PlayerLoseCapEv();
+        SaveData::PlayerLoseCap();
     }
 
     Vector3 spawnPos;
@@ -373,7 +364,7 @@ int daSnmBth_c::Behavior()
             if (IsPlayerInRange() == 0) {
                 break;
             }
-            if (_ZN6Player9StartTalkER7fBase_cb(mTalkPlayer, this, 1) == 0) {
+            if (mTalkPlayer->StartTalk(*this, 1) == 0) {
                 break;
             }
             mTalkState++;
@@ -384,14 +375,14 @@ int daSnmBth_c::Behavior()
             pos.y = mPosY;
             pos.z = mPosZ;
             pos.y = pos.y + 0x12c000;
-            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
-                    mTalkPlayer, this, 0xbb, &pos, zero, zero) == 0) {
+            if (mTalkPlayer->ShowMessage(
+                    *this, 0xbb, &pos, zero, zero) == 0) {
                 break;
             }
             mTalkState++;
             break;
         case 2:
-            if (_ZN6Player12GetTalkStateEv(mTalkPlayer) == -1) {
+            if (mTalkPlayer->GetTalkState() == -1) {
                 _ZN6Player18HasFinishedTalkingEv(mTalkPlayer);
                 mTalkDone = 1;
             }

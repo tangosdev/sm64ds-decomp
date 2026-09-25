@@ -74,24 +74,15 @@ typedef char C_size_must_be_0x370[sizeof(C) == 0x370 ? 1 : -1];
 
 extern "C" {
 void *func_02010304(void *a, void *b);
-void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-void _ZN6Player16IncMegaKillCountEv(void *p);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-void _ZN8dActor_c10PoofDustAtERK7Vector3(void *self, const Vector3 &vec);
 void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, const Vector3 &v, unsigned int n, int vel, short unk);
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3 &pos);
-void _ZN7fBase_c18MarkForDestructionEv(void *self);
-void _ZN5dCc_c5ClearEv(void *);
 void Matrix4x3_ApplyInPlaceToTranslation(Mtx43 *m, int x, int y, int z);
 void Vec3_LslInPlace(Vector3 *v, int sh);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     void *self, void *sm, void *mtx, int r, int t5, int t6, unsigned int u);
 void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *w);
-void _ZN10dBgCh_Actr13SetLimMovFlagEv(void *);
-void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
-void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *file, int a, int b);
-void _ZN11ShadowModel10InitCuboidEv(void *self);
 void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int a, int b, unsigned int c, unsigned int d);
 void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v, int c);
 extern void func_ov080_02124c3c(char *c);
@@ -131,14 +122,14 @@ extern "C" void func_ov080_02124acc(char *c)
     if (*(int *)(c + 0x170) == 0) return;
     void *p = func_02010304(c, c + 0x14c);
     if (p != 0) { *(void **)(c + 0x374) = p; func_ov080_0212513c(c, 1); return; }
-    void *a = _ZN8dActor_c10FindWithIDEj(*(unsigned int *)(c + 0x170));
+    void *a = dActor_c::FindWithID(*(unsigned int *)(c + 0x170));
     if (a == 0) return;
     int b1 = (int)(*(unsigned short *)((char *)a + 0xc) == 0xbf);
     if (b1 == 0) return;
     int b2 = (int)((*(unsigned int *)(c + 0xb0) & 0x20000) != 0);
     if (b2) { func_ov080_0212513c(c, 2); return; }
     if ((*(unsigned int *)(c + 0x16c) & 0x10) == 0) return;
-    _ZN6Player16IncMegaKillCountEv(a);
+    ((Player *)a)->IncMegaKillCount();
     Vector3 v; Vector3 v2; Vector3 v3;
     int y0 = *(int *)(c + 0x60);
     int z = *(int *)(c + 0x64);
@@ -149,7 +140,7 @@ extern "C" void func_ov080_02124acc(char *c)
     ((int *)&v2)[0] = ((int *)&v)[0];
     ((int *)&v2)[1] = ((int *)&v)[1];
     ((int *)&v2)[2] = ((int *)&v)[2];
-    _ZN8dActor_c10PoofDustAtERK7Vector3(c, v2);
+    ((dActor_c *)c)->PoofDustAt(v2);
     int t = *(int *)(c + 0x60) + 0x64000;
     v3.x = v.x;
     v.y = t;
@@ -157,7 +148,7 @@ extern "C" void func_ov080_02124acc(char *c)
     v3.z = v.z;
     _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, v3, 5, 0xf000, 0);
     _ZN5Sound9PlayBank3EjRK7Vector3(0x41, *(Vector3 *)(c + 0x74));
-    _ZN7fBase_c18MarkForDestructionEv(c);
+    ((fBase_c *)c)->MarkForDestruction();
 }
 
 /* Model and shadow matrices: follows the carrier's matrix while carried,
@@ -238,7 +229,7 @@ done:
 extern "C" int func_ov080_02124eb0(char *c)
 {
     *(int *)(c + 0x98) = 0;
-    _ZN5dCc_c5ClearEv((char *)c + 0x14c);
+    ((dCc_c *)((char *)c + 0x14c))->Clear();
     *(int *)(c + 0x370) = 2;
     return 1;
 }
@@ -271,7 +262,7 @@ extern "C" int func_ov080_02124edc(char *c)
             ((int *)&vec2)[0] = ((int *)&vec)[0];
             ((int *)&vec2)[1] = ((int *)&vec)[1];
             ((int *)&vec2)[2] = ((int *)&vec)[2];
-            _ZN8dActor_c10PoofDustAtERK7Vector3(c, vec2);
+            ((dActor_c *)c)->PoofDustAt(vec2);
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(6, vec.x, vec.y, vec.z);
 
             {
@@ -288,11 +279,11 @@ extern "C" int func_ov080_02124edc(char *c)
             }
 
             _ZN5Sound9PlayBank3EjRK7Vector3(0x41, *(Vector3 *)(c + 0x74));
-            _ZN7fBase_c18MarkForDestructionEv(c);
+            ((fBase_c *)c)->MarkForDestruction();
         }
     }
 clear:
-    _ZN5dCc_c5ClearEv(c + 0x14c);
+    ((dCc_c *)(c + 0x14c))->Clear();
     return 1;
 }
 
@@ -330,7 +321,7 @@ extern "C" int func_ov080_0212500c(char *c)
 extern "C" int func_ov080_0212509c(char *c)
 {
     *(int *)(c + 0xa8) = 49152;
-    _ZN10dBgCh_Actr13SetLimMovFlagEv((char *)c + 0x180);
+    ((dBgCh_Actr *)((char *)c + 0x180))->SetLimMovFlag();
     *(int *)(c + 0x370) = 0;
     return 1;
 }
@@ -397,9 +388,9 @@ int daBttBk_c::Behavior()
 int daBttBk_c::InitResources()
 {
     Vector3 pos;
-    void *file = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov080_02128468);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, file, 1, 1);
-    _ZN11ShadowModel10InitCuboidEv((char *)&mShadowModel);
+    void *file = Model::LoadFile(*(SharedFilePtr *)&data_ov080_02128468);
+    mModel.SetFile((BMD_File *)file, 1, 1);
+    mShadowModel.InitCuboid();
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x14c, ((char *)this), 0x64000, 0x78000, 0x800004, 0x9010);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
