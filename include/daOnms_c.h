@@ -81,11 +81,12 @@ struct daOnms_c : dBgActor_c {
     void CheckPlayerHit();                              /* coined */
     void UpdateModelMtx();                              /* coined */
 
-    /* Read-only tables in ov092 .data, indexed by Launch's `how`
-       (punch, kick, bump) and by mOrientBits. Coined names. */
-    static s32 sLaunchVertSpeed[3];     /* 0x02132074 */
-    static s32 sLaunchHorzSpeed[3];     /* 0x02132080 */
-    static s8  sBankAxis[64];           /* 0x0213208c */
+    /* ov092 .rodata. Launch indexes the speeds by `how` (punch, kick,
+       bump); Roll indexes sBankAxis by mOrientBits for the angle a sideways
+       roll turns. Coined names. */
+    static const s32 sLaunchVertSpeed[3];   /* 0x02132074 */
+    static const s32 sLaunchHorzSpeed[3];   /* 0x02132080 */
+    static const s8  sBankAxis[64];         /* 0x0213208c */
 };
 
 #ifndef SM64DS_PLATFORM_PC
