@@ -23301,3 +23301,31 @@ endif()
 foreach(_tw28dpad1 walk_window walk_window_hires smoke_player)
     target_sources(${_tw28dpad1} PRIVATE ${SLICE_W28_DPAD1_SOURCES})
 endforeach()
+
+# ===========================================================================
+# VARIANT4 (run linkfull, lane VARIANT4): THE LAST D0 ROWS THE CAMPAIGN HELD
+# ===========================================================================
+#
+# port/slice_w31_variant4.txt carries per-function src D0 TUs in the D0-arm
+# campaign's shape: each file's `#ifdef _MSC_VER` arm defines the flat ROM D0
+# name itself (the qualified call to the class's one host destructor body, then
+# the class's own operator delete), and the generated face in
+# port/faces_sync.txt that used to define it is retired in the same commit, so
+# each flat name has exactly one definition.
+#
+# ALL THREE HOSTING TARGETS: the generated faces (port_slice_shared) and the
+# hal tables and thunks that call these names are on walk_window's,
+# walk_window_hires' and smoke_player's link lines alike (build.ninja), so the
+# retired faces must be answered on all three.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_variant4.txt" SLICE_W31_VARIANT4_LINES)
+set(SLICE_W31_VARIANT4_SOURCES "")
+foreach(line IN LISTS SLICE_W31_VARIANT4_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W31_VARIANT4_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tw31v4 walk_window walk_window_hires smoke_player)
+    target_sources(${_tw31v4} PRIVATE ${SLICE_W31_VARIANT4_SOURCES})
+endforeach()

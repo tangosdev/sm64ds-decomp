@@ -2771,7 +2771,12 @@ __ZN7fBase_c9SceneNodeC1Ev                                               ??0Scen
 
 __ZN12MetalNetLiftD0Ev                                                   ??1MetalNetLift@@UAE@XZ                                          0x021179bc D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN7MinimapD0Ev                                                         _ZN7MinimapD1Ev                                                  0x020f978c D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at VARIANT4 2026-09-25 (run linkfull, batch 1): src/_ZN7MinimapD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w31_variant4.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1Minimap@@QAE@XZ), then Minimap::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN7MinimapD0Ev                                                         _ZN7MinimapD1Ev                                                  0x020f978c D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN11MirrorLuigiD0Ev                                                    ??1MirrorLuigi@@UAE@XZ                                           0x021111f8 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
@@ -2789,7 +2794,12 @@ __ZN11MirrorLuigiD0Ev                                                    ??1Mirr
 # which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
 #__ZN13MontyMoleRockD0Ev                                                  _ZN13MontyMoleRockD1Ev                                           0x02123804 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN10MrBlizzardD0Ev                                                     _ZN10MrBlizzardD1Ev                                              0x021240d8 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at VARIANT4 2026-09-25 (run linkfull, batch 1): src/_ZN10MrBlizzardD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w31_variant4.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1MrBlizzard@@QAE@XZ), then MrBlizzard::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN10MrBlizzardD0Ev                                                     _ZN10MrBlizzardD1Ev                                              0x021240d8 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 # RETIRED at CAMP3 2026-09-23 (run linkfull, batch D0ARM-07): src/_ZN3MrID0Ev.cpp
 # defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
