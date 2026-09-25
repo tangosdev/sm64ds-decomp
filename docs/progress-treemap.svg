@@ -41857,39 +41857,39 @@ matched: yes</title></rect><rect x="1189.10" y="949.66" width="8.47" height="5.2
 module: ov084
 addr: 0x0212d288
 size: 84 bytes
-matched: yes</title></rect><rect x="1189.10" y="954.89" width="8.47" height="20.92" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212d2dc
+matched: yes</title></rect><rect x="1189.10" y="954.89" width="8.47" height="20.92" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daFPkn_c15SpawnDeathSmokeEv
 module: ov084
 addr: 0x0212d2dc
 size: 336 bytes
-matched: yes</title></rect><rect x="1189.10" y="975.82" width="8.47" height="19.18" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212d42c
+matched: yes</title></rect><rect x="1189.10" y="975.82" width="8.47" height="19.18" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daFPkn_c15SpawnDeathBurstEv
 module: ov084
 addr: 0x0212d42c
 size: 308 bytes
-matched: yes</title></rect><rect x="1197.57" y="911.80" width="0.41" height="5.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212d560
+matched: yes</title></rect><rect x="1197.57" y="911.80" width="0.41" height="5.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daFPkn_c21OnGroupMemberDefeatedEv
 module: ov084
 addr: 0x0212d560
 size: 4 bytes
-matched: yes</title></rect><rect x="1197.98" y="911.80" width="79.26" height="5.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212d564
+matched: yes</title></rect><rect x="1197.98" y="911.80" width="79.26" height="5.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daFPkn_c16UpdateClsnOffsetEv
 module: ov084
 addr: 0x0212d564
 size: 776 bytes
-matched: yes</title></rect><rect x="1197.57" y="916.96" width="21.55" height="23.60" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212d86c
+matched: yes</title></rect><rect x="1197.57" y="916.96" width="21.55" height="23.60" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daFPkn_c13CheckClsnHitsEv
 module: ov084
 addr: 0x0212d86c
 size: 964 bytes
-matched: yes</title></rect><rect x="1197.57" y="940.56" width="21.55" height="9.69" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212dc30
+matched: yes</title></rect><rect x="1197.57" y="940.56" width="21.55" height="9.69" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daFPkn_c9StateGrowEv
 module: ov084
 addr: 0x0212dc30
 size: 396 bytes
-matched: yes</title></rect><rect x="1197.57" y="950.25" width="21.55" height="14.59" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212ddbc
+matched: yes</title></rect><rect x="1197.57" y="950.25" width="21.55" height="14.59" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daFPkn_c9StateSpitEv
 module: ov084
 addr: 0x0212ddbc
 size: 596 bytes
-matched: yes</title></rect><rect x="1197.57" y="964.84" width="21.55" height="30.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212e010
+matched: yes</title></rect><rect x="1197.57" y="964.84" width="21.55" height="30.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daFPkn_c9StateWaitEv
 module: ov084
 addr: 0x0212e010
 size: 1232 bytes
-matched: yes</title></rect><rect x="1219.11" y="916.96" width="5.58" height="10.96" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov084_0212e4e0
+matched: yes</title></rect><rect x="1219.11" y="916.96" width="5.58" height="10.96" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daFPkn_c9StateInitEv
 module: ov084
 addr: 0x0212e4e0
 size: 116 bytes
@@ -44121,11 +44121,11 @@ matched: yes</title></rect><rect x="1536.67" y="797.65" width="2.86" height="3.1
 module: ov098
 addr: 0x0213a8ec
 size: 20 bytes
-matched: yes</title></rect><rect x="1536.67" y="800.78" width="2.86" height="8.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6CannonD1Ev
+matched: yes</title></rect><rect x="1536.67" y="800.78" width="2.86" height="8.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daCnn_cD1Ev
 module: ov098
 addr: 0x0213a900
 size: 56 bytes
-matched: yes</title></rect><rect x="1536.67" y="809.55" width="2.86" height="11.89" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6CannonD0Ev
+matched: yes</title></rect><rect x="1536.67" y="809.55" width="2.86" height="11.89" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daCnn_cD0Ev
 module: ov098
 addr: 0x0213a938
 size: 76 bytes
@@ -44153,19 +44153,19 @@ matched: yes</title></rect><rect x="1567.48" y="795.77" width="9.08" height="6.1
 module: ov098
 addr: 0x0213b15c
 size: 124 bytes
-matched: yes</title></rect><rect x="1576.55" y="795.77" width="4.39" height="6.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Cannon16CleanupResourcesEv
+matched: yes</title></rect><rect x="1576.55" y="795.77" width="4.39" height="6.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daCnn_c16CleanupResourcesEv
 module: ov098
 addr: 0x0213b1d8
 size: 60 bytes
-matched: yes</title></rect><rect x="1580.95" y="795.77" width="6.44" height="6.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Cannon6RenderEv
+matched: yes</title></rect><rect x="1580.95" y="795.77" width="6.44" height="6.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daCnn_c6RenderEv
 module: ov098
 addr: 0x0213b214
 size: 88 bytes
-matched: yes</title></rect><rect x="1587.39" y="795.77" width="7.61" height="6.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Cannon8BehaviorEv
+matched: yes</title></rect><rect x="1587.39" y="795.77" width="7.61" height="6.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daCnn_c8BehaviorEv
 module: ov098
 addr: 0x0213b26c
 size: 104 bytes
-matched: yes</title></rect><rect x="1554.01" y="801.89" width="21.45" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Cannon13InitResourcesEv
+matched: yes</title></rect><rect x="1554.01" y="801.89" width="21.45" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daCnn_c13InitResourcesEv
 module: ov098
 addr: 0x0213b2d4
 size: 360 bytes
