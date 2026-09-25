@@ -155,7 +155,7 @@ extern "C" daPkn_c *daPkn_c_classInit()
  * working raw offsets -- a file renamed .cpp without ever being migrated. It is
  * a real method now, with the remaining copy seam measured below.
  *
- * Unlike FirePiranhaPlantBig's, this one DOES check its loads: a failed SetFile
+ * Unlike daFPkn_c's, this one DOES check its loads: a failed SetFile
  * on either model returns 0 rather than carrying on.
  *
  * The tail seeds the sleep-bubble position: 0xe0 along the facing angle out

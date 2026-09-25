@@ -8,7 +8,7 @@
   "boundary_evidence": [
     "contiguous linker run: 0x2135ff4..0x2136764, 11 function(s), from build/tu_map.json (tools/tu_map.py); this entry licenses the whole run as one file.",
     "class label(s): daUdlift_c -- the cartridge's own RTTI spelling. Read out of extracted/overlays/overlay_0095.bin (ov095 loads at 0x02135700): _ZTS at 0x021375bc is the string \"10daUdlift_c\" plus its NUL; _ZTI at 0x021375b0 reads [__si_class_type_info+8 (0x0209a764), that string, _ZTI10dBgActor_c (ov002 0x021089ec)]; and the typeinfo word of the two-word header before the _ZTV address point 0x02137628 reads 0x021375b0. The class carried the coined name UpDownLiftBbh until the commit before this one.",
-    "MEASURED: the five func_ov095_* bodies are this class's states. __sinit_ov095_0213722c copies five pointer-to-member constants into the state table data_ov095_02137910 (.bss) that Behavior indexes by mState, and ov095 relocs.txt resolves them as state 0 -> 0x02136368, 1 -> 0x02136298, 2 -> 0x02136178, 3 -> 0x02136090, 4 -> 0x02136104. Written in state order in the source, they come out in exactly the reverse ROM order.",
+    "MEASURED: the five State* members are this class's states. __sinit_ov095_0213722c copies five pointer-to-member constants into the state table data_ov095_02137910 (.bss) that Behavior indexes by mState, and ov095 relocs.txt resolves them as state 0 -> 0x02136368 (StateWait), 1 -> 0x02136298 (StateMoveUp), 2 -> 0x02136178 (StateMoveDown), 3 -> 0x02136090 (StateStop), 4 -> 0x02136104 (StateStopAtBottom). Written in state order in the source, they come out in exactly the reverse ROM order. The State* names are reconstructed; the relocations resolve by address, so renaming the rows changes no linked byte.",
     "MEASURED: the empty inline destructor in the class header emits D1 ahead of D0, the cartridge's order (0x02135ff4 then 0x02136038), and no D2. Same lever as the promoted neighbour config/tu_manifest.d/ov095/daObjFlamethrower_c.json (include/daObjFlamethrower_c.h) and the ov022 dBgActor_c leaves daObjFl_Ring_c and daObjFl_UkiKi_c.",
     "SCOPE: func_ov095_02136764 and func_ov095_02136788 (the rider-collision callback InitResources installs) and the three factories daUdlift_c_classInit_RC_RIFT02 / _UDLIFT / _UDLIFT_TERESA sit immediately right of this run. tools/tu_map.py ends this candidate at 0x02136764 and gives them their own run, so they are deliberately not claimed here and remain one-function sources.",
     "module sinit corroboration: 2 sinit(s) / 2 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
@@ -36,35 +36,35 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov095_02136090",
+      "symbol": "_ZN10daUdlift_c9StateStopEv",
       "address": "0x02136090",
       "size": "0x00000074",
       "legacy_source": "src/func_ov095_02136090.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov095_02136104",
+      "symbol": "_ZN10daUdlift_c17StateStopAtBottomEv",
       "address": "0x02136104",
       "size": "0x00000074",
       "legacy_source": "src/func_ov095_02136104.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov095_02136178",
+      "symbol": "_ZN10daUdlift_c13StateMoveDownEv",
       "address": "0x02136178",
       "size": "0x00000120",
       "legacy_source": "src/func_ov095_02136178.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov095_02136298",
+      "symbol": "_ZN10daUdlift_c11StateMoveUpEv",
       "address": "0x02136298",
       "size": "0x000000d0",
       "legacy_source": "src/func_ov095_02136298.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov095_02136368",
+      "symbol": "_ZN10daUdlift_c9StateWaitEv",
       "address": "0x02136368",
       "size": "0x000000f4",
       "legacy_source": "src/func_ov095_02136368.c",
@@ -104,9 +104,9 @@
   "notes": [
     "Hand-curated from the 11 legacy one-function sources (six C++ members, three C++ helpers and two C helpers); see the file's own header comment for the reconciliation.",
     "tubuild create RAW items (RESOLVED): func_ov095_02136090, func_ov095_02136104 and func_ov095_02136298 had their definitions inside an extern \"C\" block and were carried verbatim; each is now a single extern \"C\" definition over a daUdlift_c pointer, reading the header's field names instead of raw offsets, with no byte change. Their local Vector3 and reference-typed Sound declarations were dropped for include/types.h and include/Sound.h.",
-    "The five state bodies keep their func_ov095_* linker names as C-linkage helpers over daUdlift_c *. They are called through the state table as members of this class, so each is really a daUdlift_c method, but a member spelling would coin five mangled names; that rename is left to a separate change.",
-    "MEASURED: func_ov095_02136368 and func_ov095_02136178 test actorID through an int flag before branching; spelled as a plain `if (lift->actorID == ...)` each one DIFFs (10/11). The legacy int-cast position update, (int)lift + 0x60, is now `lift->mPosY += lift->mVertSpeed` in both movement states with no byte change.",
-    "dBgW_KcMbg::SetFile, dBgActor_c::IsClsnInRange and dActor_c::Earthquake stay mangled: each takes Fix12<int> by value (wall 6az).",
+    "The five state bodies are non-virtual daUdlift_c members (StateWait, StateMoveUp, StateMoveDown, StateStop, StateStopAtBottom), formerly the C-linkage helpers func_ov095_02136368, func_ov095_02136298, func_ov095_02136178, func_ov095_02136090 and func_ov095_02136104; the member form emits the same bytes and relocations.",
+    "MEASURED: InitResources, StateWait and StateMoveDown test actorID as `(int)(actorID == N) != 0`; spelled as a plain `actorID == N` each one DIFFs (10/11). InitResources' former goto chain and new_var temporary are gone with no byte change.",
+    "dBgW_KcMbg::SetFile, dBgActor_c::IsClsnInRange and dActor_c::Earthquake stay mangled: each takes Fix12<int> by value (wall 6az). MEASURED for SetFile: mMeshCollider.SetFile(file, mClsnMat, scale, mAngleY, *clps) with a Fix12<int> local DIFFs InitResources (10/11, size changes). IsClsnInRange and Earthquake have no member declaration in include/dBgActor_c.h or include/dActor_c.h to call.",
     "STYLE ORACLE: src/actors/daObjFlamethrower_c.cpp (same overlay) and the ov016 daObjKi_Hasira_c promotion -- dBgActor_c leaves with the same inline-empty-destructor shape and the same deadstrip-data RTTI licensing."
   ],
   "verification": {
@@ -258,7 +258,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 local re-emits it with vague linkage; the Vector3 locals in func_ov095_02136090 and func_ov095_02136104 do so here, as their legacy one-function objects already did. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp is its enrolled `complete` owner of that 0x020072c0..0x020072c4 range. This object's copy is the identical 4-byte `bx lr` body with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 local re-emits it with vague linkage; the Vector3 locals in StateStop and StateStopAtBottom do so here, as their legacy one-function objects already did. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp is its enrolled `complete` owner of that 0x020072c0..0x020072c4 range. This object's copy is the identical 4-byte `bx lr` body with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
     },
     {
       "symbol": "_ZTI7fBase_c",
