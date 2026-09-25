@@ -823,6 +823,15 @@ void func_0203df40(void);
    The phase id is hal/rom_frame.cpp's. */
 extern "C" void func_0201ffcc(void);
 extern "C" int data_0209d50c;
+/* and phase 0x17: func_0203bc7c turns the four records into PadData (the
+   symbol is hal/comms_fanout_wide.cpp's, which runs the ROM's own body first;
+   func_0203bb60 beside it is phase 0x16, TouchInfo), and the ring words
+   hal/b5input_globals.cpp hosts. */
+extern "C" void func_0203bb60(void);
+extern "C" void func_0203bc7c(void);
+extern "C" unsigned char data_0209d4e8[];
+extern "C" int data_0209d51c;
+extern "C" unsigned short data_0209d534[];
 extern "C" unsigned char data_0209e64c;    /* hal/boot_arms.cpp: the gate */
 extern "C" int data_0209d574[];            /* hal/actor_vtables.cpp: the
                                               watchdog alarm, ROM span 68 */
@@ -12498,7 +12507,55 @@ int main(void)
                 func_0201ffcc();
                 if (rb_replaying()) rb_replay_phase(6, ovl_now_ms() - t_rb);
             }
-            if (!(port::comms_transport() && comms_fanout_on())) {
+            /* PHASES 0x16 AND 0x17, the second half of the same block: the
+               ROM's own PadData builder, then func_020197b8.c:43-46 -- the
+               input ring -- in the ROM's order, right after the read that
+               filled the four records.
+
+               SINGLE PLAYER (no transport): func_0203bc7c turns the four
+               records into PadData[4] -- held, the press edge against its own
+               previous-keys array (data_020a0e50), the release edge, the
+               opposing-direction mask, and data_020a0e44 when the word is
+               L+R+START+SELECT (0x30c; its one reader, func_02023498, is not
+               called yet: see the ring below) -- which RETIRES the host's direct
+               PadData store: the key word reaches Stage::CheckInput through
+               KEYINPUT, func_0203df40's record and func_0203bc7c, the way the
+               cartridge carries it. Phase 0x16 (func_0203bb60, TouchInfo) is
+               NOT run here, on purpose: hal/sub_screen.cpp's poll_touch writes
+               TouchInfo straight from the stylus, and the only other source is
+               func_0203b9bc's three-of-four debounce over hal/tsc_arm7.cpp's
+               ring, which that file feeds ONE sample a frame where the ROM asks
+               the ARM7 for four (src/func_0203bbc0.c:21, func_0205eeac(0, 4,
+               &data_020a0df8, 9)), so it would lag every tap by two frames.
+
+               THE SPLIT SYMBOL: data_020a0e5a IS PadData[i].pressed on the DS
+               and separate storage here (hal/auto_bss.cpp), so the four pressed
+               halfwords the ROM just wrote are copied into it at the same
+               instant -- the aliasing, restored after the ROM's writer, exactly
+               as the direct store below restored it for its one slot.
+
+               A SESSION WITH THE FAN-OUT ON: both of the ROM's steps, moved here
+               from the camera block further down this frame (run mg15 lane
+               MP1), because they must follow the read that filled the records
+               and the read runs here now. ADVENTURE (a transport up with the
+               fan-out off, hal/comms_conductor.cpp) keeps the direct store
+               below, into its own slot, unchanged. */
+            const int b5_transport = port::comms_transport() != 0;
+            const int b5_fan = comms_fanout_on() ? 1 : 0;
+            if (b5_fan) {
+                data_0209d50c = 0x16;
+                func_0203bb60();
+                data_0209d50c = 0x17;
+                func_0203bc7c();
+            } else if (!b5_transport) {
+                data_0209d50c = 0x17;
+                func_0203bc7c();
+            }
+            if (!b5_transport)
+                for (int b5_i = 0; b5_i < 4; ++b5_i)
+                    *(unsigned short *)((char *)data_020a0e5a + b5_i * 4) =
+                        *(unsigned short *)((char *)data_020a0e58 + b5_i * 4 + 2);
+            if (b5_transport && !b5_fan) {
                 /* THE LOCAL SLOT, not always slot 0. PadData strides 4 bytes per
                    player ({u16 held, u16 pressed}); on the child data_0209f250 is
                    1, so the local pad must land in PadData[1] or it drives the
@@ -12543,6 +12600,36 @@ int main(void)
                    hal/message_pump.cpp's own publish is unchanged and still
                    runs later in the frame. */
                 *(unsigned short *)((char *)data_020a0e5a + lo) = edge;
+            }
+            /* func_020197b8.c:43-46: the local player's held word into the
+               32-deep ring. The ring has no reader in src/ but the loop itself;
+               these are the cartridge's own words, hosted in
+               hal/b5input_globals.cpp.
+
+               func_020197b8.c:47, func_02023498(), IS NOT CALLED YET, and that
+               is measured rather than assumed (run linkfull, lane B5INPUT). It
+               is the cartridge's soft reset: func_0203bc7c above raises
+               data_020a0e44 when the key word is L+R+START+SELECT, and
+               func_02023498 turns that into data_0209f1e0, then zeroes PadData,
+               TouchInfo and the Ctrl records on every frame the latch is up
+               while dScene_c::BeforeBehavior fades the scene out and ends it,
+               for the title to take over. On this port the latch rose (f400)
+               and the Stage's BeforeBehavior started the brightness fade on
+               data_0209f5d0 (f401) -- and nothing ever stepped that fade, so it
+               never reached its end, the latch never came down, and every
+               button was zeroed for the rest of the run: a softlock where the
+               cartridge goes back to the title. Past the fade the ROM marks the
+               Stage for destruction, and the Stage's CleanupResources slot is
+               not hosted (hal/level_change.cpp, the MFD_STAGE row). The call
+               belongs here, after the ring, once the frame's fader step (phase
+               2) and that teardown exist. */
+            {
+                data_0209d50c = 0x17;
+                const unsigned short b5_v = *(unsigned short *)(
+                    (char *)data_020a0e58 + ((unsigned)data_020a0e40[0] << 2));
+                data_0209d534[data_0209d4e8[0]] = b5_v;
+                data_0209d51c = b5_v;
+                data_0209d4e8[0] = (unsigned char)((data_0209d4e8[0] + 1) & 0x1f);
             }
             g_pad_mirror_prev = raw_all;
             /* ---- THE THIRD BUTTON WRITER, AND THE ONE HIS HANDS FOUND ------
@@ -14877,8 +14964,11 @@ int main(void)
                actually call the body for it to count as linked. */
             {
                 const int fan_now = comms_fanout_on();
-                if (fan_now)
-                    port::comms_fanout();
+                /* MOVED (run linkfull, lane B5INPUT): port::comms_fanout()'s
+                   two steps now run at THE GAME LOOP'S OWN INPUT STEPS above
+                   the tick, straight after the read that fills the records,
+                   which is where they have to follow it. fan_now stays for the
+                   report below. */
                 /* THE REPORT IS NOT INSIDE THE FAN-OUT GATE, deliberately. It
                    used to be, which meant the one configuration where the
                    input exchange is broken -- fanout forced off with a
