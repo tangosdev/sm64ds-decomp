@@ -13135,6 +13135,9 @@
       ]
     },
     "_ZN6Player18SetNewHatCharacterEjjb": {
+      "src/func_ov002_020d6c60.cpp": [
+        "param:#4 int"
+      ],
       "src/func_ov002_020d93ac.cpp": [
         "param:#4 bool"
       ],
