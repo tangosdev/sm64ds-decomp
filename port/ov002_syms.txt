@@ -208,16 +208,28 @@ data_ov002_0210d754:0x20
 # (gate 10 linked __sinit_ov002_02107f88 against them).
 g_profile_SOUND_OBJ:0x1c
 # The InitResources tuning table: four column views into one 0xc-stride run at
-# 0x0210c080 (rows indexed by the actor's param, 0..7 accepted). Natural
-# next-symbol deltas: c080[4] c084[4] c088[2], then c08a runs 0x52 to the
-# vtable at 0x0210c0dc -- that run INCLUDES the RTTI pointer word at 0x0210c0d8
-# (a relocated DS address). Dereference check, the romdata-pointer-table rule:
-# it is NEVER dereferenced -- only row 7's column-b read lands on it, and that
-# value is stored to +0xd8 and COMPARED against data_0209b490, not followed;
-# level 10's only user is Actor::SpawnSoundObj(6), row 6, wholly inside the
-# real table. Row 7 also has no dispatch cell (the bss table is 7 entries), a
-# latent off-table read on the DS itself; the host Behavior copy traps it.
-data_ov002_0210c080 data_ov002_0210c084 data_ov002_0210c088 data_ov002_0210c08a
+# 0x0210c080, {sequence id s32, volume s32, count u16, flag u8} per row,
+# indexed by the actor's param. Its seven rows are the jingles
+# SpawnSoundObj asks for: NCS_BGM_NAZO, HAPPY, STAR, DROPSTAR, CLEAR (the
+# star-collect fanfare; its caller then overwrites id and volume), FIRSTCAP,
+# STAR. The config labels each column, and the next-symbol deltas (4 / 4 / 2 /
+# 0x52, the mount's four-byte floor lifting the 2) hosted them as 4 / 4 / 4 /
+# 0x52 bytes, so every param but 0 read its id, volume and count out of the
+# neighbouring host arrays: the star fanfare and the star-appears and
+# first-cap jingles never started, and HAPPY was cut the frame it began.
+# Pinned the BLOCK_LL / SIGN_POST column way (above): each view is mounted
+# from its own address and runs to 0x0210c0d4, the end of the seventh row.
+# The table is read-only (the only relocations naming it are InitResources'
+# literal pool at 0x020f9720), so the four copies cannot diverge.
+# InitResources' own bound accepts param 7 too, and row 7 is not a table row:
+# it is the vtable header and slot 0 (0, the RTTI pointer 0x0210c048,
+# 0x020f95e0), a latent off-table read on the DS itself with no dispatch cell
+# behind it (the bss table is 7 entries). No spawner passes 7 and the host
+# Behavior face refuses it, so it stays off the mount: hosting it would pull
+# the relocated RTTI word in, and the pointer pass would rebase that onto a
+# 268-byte wider gap copy of 0x0210be2c for a value that is only ever
+# compared against data_0209b490.
+data_ov002_0210c080:0x54 data_ov002_0210c084:0x50 data_ov002_0210c088:0x4c data_ov002_0210c08a:0x4a
 # gate 192: the CLPS_Block IceBlock::InitResources (ov081) passes to
 # MovingMeshCollider::SetFile. Next-symbol delta: 0x0210d8d4 -> 0x0210d8f4 =
 # 0x20 bytes.
