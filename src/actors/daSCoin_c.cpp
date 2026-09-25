@@ -12,8 +12,6 @@
  * deslop leftovers:
  * - dCcAc_c::Init 6az: InitResources passes Fix12<int> by value; the header
  *   method form size-DIFFs (notes/mwccarm-codegen.md 6az).
- * - dActor_c::Spawn as a real method size-DIFFs in 020f05f4 (s8/s16
- *   areaID/deathTableID vs the scalar ABI the ROM calls with).
  * - Named mPosX/Y/Z on the STAR_MARKER in 020f05f4 size-DIFFs; keep the
  *   int* +0x5c copy.
  * - data_ov002_0210d9a8 is the ov002 SharedFilePtr handle; symbols.txt has
@@ -24,14 +22,12 @@
 #include "daSCoin_c.h"
 #include "SharedFilePtr.h"
 #include "Model.h"
+#include "PowerStar.h"
 
 extern "C" {
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 void func_02012790(int);
-void _ZN9PowerStar13AddStarMarkerEv(void *thiz);
-char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a,
-        unsigned int b, void *v, void *w, int e, int f);
 void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor,
                                               int radius, int height,
                                               unsigned int flags,
@@ -165,10 +161,10 @@ extern "C" void func_ov002_020f05f4(void *self)
             pos.z = base[2];
             pos.y += 0x12c000;
             {
-                char *p = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                    0xb2, c->unk_10d | 0x40, &pos, 0, c->mAreaId, -1);
+                char *p = (char *)dActor_c::Spawn(
+                    0xb2, c->unk_10d | 0x40, pos, 0, c->mAreaId, -1);
                 if (p != 0) {
-                    _ZN9PowerStar13AddStarMarkerEv(p);
+                    ((PowerStar *)p)->AddStarMarker();
                 }
             }
             return;

@@ -64,7 +64,7 @@
  * Known limits: dCcAc_c::Init / dBgCh_Actr::Init / DropShadowRadHeight /
  *   IsTooFarAwayFromPlayer stay mangled (Fix12-by-value, 6az; dBgCh Init
  *   header Fix12i mangles as int -- this TU's InitResources call).
- *   dActor_c::Spawn s8/s16 by-value at some sites. func_02038414 is the
+ *   func_02038414 is the
  *   veneer to dBgCh_Actr::UpdateDiscreteNoLava_2. Player+8 param1 belongs
  *   on Player. data_ov096_* SharedFilePtr handles (Init LoadFile / Cleanup
  *   Release) and state records (func_ov096_02136928). S14 no
@@ -103,7 +103,6 @@ namespace cstd { int fdiv(int,int); }
 enum Bool { FALSE, TRUE };
 
 extern "C" {
-extern void *_ZN7fBase_cnwEj(unsigned size);
 extern void _ZN8dActor_cC2Ev(void *self);
 extern void _ZN5ModelC1Ev(void *self);
 extern void _ZN11ShadowModelC1Ev(void *self);
@@ -116,7 +115,6 @@ extern "C" void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, in
 extern "C" void Matrix4x3_FromRotationY(void* m, int angle);
 extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j( void* self, void* sm, void* mtx, Fix12i fx, int t, u32 u);
 extern struct Matrix4x3 data_020a0e68;
-extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, const void*, const void*, int, int);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int, void*);
 extern void func_ov096_02135800(char* c);
 extern short Vec3_HorzAngle(const void* a, const void* b);
@@ -125,8 +123,6 @@ extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, in
 extern int data_0209e650[];
 extern s16 data_02082214[];
 extern void func_ov096_02135948(char* c);
-extern void _ZN5dCc_c5ClearEv(char* p);
-extern void _ZN5dCc_c6UpdateEv(char* p);
 extern void func_ov096_0213585c(void *t);
 extern char *func_ov096_021357b4(char *c);
 extern char data_ov096_02137b48;
@@ -134,9 +130,6 @@ extern void func_ov096_021368f0(char *c);
 extern int Vec3_HorzDist(const void* a, const void* b);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void func_02038414(void *p);
-extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *p);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *clsn);
-extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *p);
 void UnloadBlueCoinModel(void *);
 extern int data_ov096_02137b20[];
 extern int data_ov096_02137b28[];
@@ -144,7 +137,6 @@ extern int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void *c, int d);
 void LoadBlueCoinModel(void* actor);
 void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, int r, int h, unsigned int d, unsigned int e);
 void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* actor, int b, int c, void* v, int e);
-void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
 
@@ -414,8 +406,8 @@ int func_ov096_02136754(char* self)
 
     }
     func_ov096_02135948(self);
-    _ZN5dCc_c5ClearEv(self + 0x14c);
-    _ZN5dCc_c6UpdateEv(self + 0x14c);
+    ((dCc_c *)(self + 0x14c))->Clear();
+    ((dCc_c *)(self + 0x14c))->dCc_c::Update();
     return 1;
 }
 }
@@ -463,9 +455,7 @@ int func_ov096_021365d4(char* c) {
     func_ov096_021358c8(c);
     if (func_ov096_02135838(c) < 4) {
         if (DecIfAbove0_Byte((unsigned char*)(c + 0x3ac)) == 0) {
-            void* sp = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                SANBO_BODY, *(unsigned int*)(c + 4), (struct Vector3*)(c + 0x5c), c + 0x8c,
-                *(signed char*)(c + 0xcc), -1);
+            void* sp = dActor_c::Spawn(SANBO_BODY, *(unsigned int*)(c + 4), *(Vector3*)(c + 0x5c), (Vector3_16*)(c + 0x8c), *(signed char*)(c + 0xcc), -1);
             if (sp != 0) {
                 *(void**)(c + 0x394) = sp;
                 func_ov096_02136928(c, 4);
@@ -475,12 +465,12 @@ int func_ov096_021365d4(char* c) {
             }
         }
     }
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x14c);
+    ((dActor_c *)c)->UpdatePos((dCc_c *)(c + 0x14c));
     func_ov096_02135e2c((int*)c, c + 0x180);
     func_ov096_02135948(c);
-    _ZN5dCc_c5ClearEv(c + 0x14c);
-    _ZN5dCc_c6UpdateEv(c + 0x14c);
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x180) != 0) {
+    ((dCc_c *)(c + 0x14c))->Clear();
+    ((dCc_c *)(c + 0x14c))->dCc_c::Update();
+    if (((dBgCh_Actr *)(c + 0x180))->IsOnGround() != 0) {
         _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(*(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
     }
     return 1;
@@ -520,7 +510,7 @@ int func_ov096_02136434(void *c)
     struct Vector3 pos;
     void *p0, *p1;
     int x, y, z;
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, s+0x14c);
+    ((dActor_c *)c)->UpdatePos((dCc_c *)(s+0x14c));
     if (*(unsigned*)(s+0x3a0) != 0 && *(unsigned*)(s+0x3a4) != 0) {
         x = *(int*)(s+0x5c);
         z = *(int*)(s+0x64);
@@ -538,7 +528,7 @@ int func_ov096_02136434(void *c)
         if (p1) *(int*)((char*)p1+0x50) = 0x7fff;
     }
     func_02038414(s+0x180);
-    if (_ZNK10dBgCh_Actr13JustHitGroundEv(s+0x180) != 0)
+    if (((dBgCh_Actr *)(s+0x180))->JustHitGround() != 0)
         func_ov096_0213585c(c);
     return 1;
 }
@@ -627,8 +617,8 @@ int func_ov096_02136264(char* self)
             func_ov096_02136928(self, 0);
     }
     func_ov096_02135948(self);
-    _ZN5dCc_c5ClearEv(self + 0x14c);
-    _ZN5dCc_c6UpdateEv(self + 0x14c);
+    ((dCc_c *)(self + 0x14c))->Clear();
+    ((dCc_c *)(self + 0x14c))->dCc_c::Update();
     return 1;
 }
 }
@@ -638,7 +628,7 @@ int func_ov096_02136264(char* self)
 extern "C" int func_ov096_02136134(char* c){
   int cond = (*(unsigned short*)(c+0xc) == SANBO_HEAD);
   if(cond){
-    _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x122, 2, (struct Vector3*)(c+0x5c), 0, *(signed char*)(c+0xcc), -1);
+    dActor_c::Spawn(0x122, 2, *(Vector3*)(c+0x5c), 0, *(signed char*)(c+0xcc), -1);
   }
   {
     _ZN5Sound9PlayBank0EjRK7Vector3(9, c+0x74);
@@ -666,9 +656,9 @@ int func_ov096_021360c4(char *c) {
     if (eq != 0) {
         *(short*)(c+0x8c) = *(short*)(c+0x8c) - 0x1000;
     }
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c+0x14c);
+    ((dActor_c *)c)->UpdatePos((dCc_c *)(c+0x14c));
     func_02038414(c+0x180);
-    if (_ZNK10dBgCh_Actr13JustHitGroundEv(c+0x180) || !DecIfAbove0_Byte((unsigned char*)(c+0x3ac))) {
+    if (((dBgCh_Actr *)(c+0x180))->JustHitGround() || !DecIfAbove0_Byte((unsigned char*)(c+0x3ac))) {
         func_ov096_0213585c(c);
     }
     return 1;
@@ -728,9 +718,7 @@ extern "C" void func_ov096_02135efc(void* cv)
 // @symbol func_ov096_02135e2c
 extern "C" {
 void* _ZNK10dBgCh_Actr14GetFloorResultEv(void* c);
-void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* s, int* out);
 int _ZN4cstd4fdivEii(int a, int b);
-int _ZNK10dBgCh_Actr8IsOnWallEv(void* c);
 void* _ZNK10dBgCh_Actr13GetWallResultEv(void* c);
 
 void func_ov096_02135e2c(int* self, void* clsn)
@@ -738,8 +726,8 @@ void func_ov096_02135e2c(int* self, void* clsn)
     int n0[3];
     int n1[3];
     func_02038414(clsn);
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(clsn)) {
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn)+4, n0);
+    if (((dBgCh_Actr *)clsn)->IsOnGround()) {
+        ((SurfaceInfo *)((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn)+4))->CopyNormalTo(*(Vector3 *)n0);
         if (n0[1] != 0) {
             long long a = (long long)n0[0] * (long long)self[0xa4/4];
             long long b = (long long)n0[2] * (long long)self[0xac/4];
@@ -748,8 +736,8 @@ void func_ov096_02135e2c(int* self, void* clsn)
             self[0xa8/4] = -(_ZN4cstd4fdivEii(x + y, n0[1]) + 0x8000);
         }
     }
-    if (_ZNK10dBgCh_Actr8IsOnWallEv(clsn)) {
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK10dBgCh_Actr13GetWallResultEv(clsn)+4, n1);
+    if (((dBgCh_Actr *)clsn)->IsOnWall()) {
+        ((SurfaceInfo *)((char*)_ZNK10dBgCh_Actr13GetWallResultEv(clsn)+4))->CopyNormalTo(*(Vector3 *)n1);
     }
 }
 }
@@ -764,11 +752,9 @@ typedef long long s64;
 
 extern "C" {
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, void* pos);
-extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern s16 data_02082214[];
 extern unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, int f, int t1, int t2, const void* v, void* cb);
 extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int f, int t1, int t2, const Vector3_16f* v);
-extern void _ZN6Player16IncMegaKillCountEv(void* p);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, void* v, unsigned int a, int fix, unsigned int b, unsigned int d, unsigned int e);
 
 void func_ov096_02135948(char* c)
@@ -801,8 +787,7 @@ void func_ov096_02135948(char* c)
         {
             int b = (*(unsigned short*)(c + 0xc) == SANBO_HEAD);
             if (b) {
-                _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                    0x122, 2, c + 0x5c, 0, *(signed char*)(c + 0xcc), -1);
+                dActor_c::Spawn(0x122, 2, *(Vector3 *)(c + 0x5c), 0, *(signed char*)(c + 0xcc), -1);
             }
         }
         func_ov096_0213585c(c);
@@ -813,7 +798,7 @@ void func_ov096_02135948(char* c)
     if (id170 == 0)
         return;
 
-    p = (char*)_ZN8dActor_c10FindWithIDEj(id170);
+    p = (char*)dActor_c::FindWithID(id170);
     if (p == 0)
         return;
 
@@ -863,7 +848,7 @@ void func_ov096_02135948(char* c)
             func_ov096_02136928(c, 2);
         } else if (*(unsigned int*)(c + 0x16c) & 0x10) {
             *(void**)(c + 0x388) = p;
-            _ZN6Player16IncMegaKillCountEv(p);
+            ((Player *)p)->IncMegaKillCount();
             func_ov096_02136928(c, 5);
         } else {
             st38c = ((daSanbo_c *)c)->mState;
@@ -884,13 +869,13 @@ void func_ov096_02135948(char* c)
                 }
             } else if (st38c == 1) {
                 if (*(void**)(c + 0x390) == 0) {
-                    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x180) != 0) {
+                    if (((dBgCh_Actr *)(c + 0x180))->IsOnGround() != 0) {
                         vv3[0] = *(int*)(c + 0x5c);
                         vv3[1] = *(int*)(c + 0x60);
                         vv3[2] = *(int*)(c + 0x64);
                         _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(p, vv3, 2, 0xc000, 1, 0, 1);
                     }
-                } else if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x180) != 0 &&
+                } else if (((dBgCh_Actr *)(c + 0x180))->IsOnGround() != 0 &&
                            *(int*)(*(char**)(c + 0x390) + 0xa8) == 0) {
                     vv4[0] = *(int*)(c + 0x5c);
                     vv4[1] = *(int*)(c + 0x60);
@@ -918,11 +903,10 @@ void func_ov096_02135948(char* c)
 /* ROM ordinal 9 -- func_ov096_021358c8, 0x021358c8, size 0x80 */
 // @symbol func_ov096_021358c8
 extern "C" {
-int _ZN8dActor_c22ClosestNonVanishPlayerEv(void*);
 void _Z14ApproachLinearRsss(short*, short, short);
 int func_ov096_02135878(void*, int);
 void func_ov096_021358c8(char* c){
-  char* p = (char*)_ZN8dActor_c22ClosestNonVanishPlayerEv(c);
+  char* p = (char*)((dActor_c *)c)->ClosestNonVanishPlayer();
   char* tgt;
   if(p){
     int d = Vec3_HorzDist(c+0x36c, p+0x5c);

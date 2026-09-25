@@ -67,6 +67,7 @@
 #include "SaveData.h"
 #include "Sound.h"
 #include "SurfaceInfo.h"
+#include "dBgCh_Gnd.h"
 
 /* --------------------------------------------------------------------------
  * Local shapes the merged members need.
@@ -156,22 +157,11 @@ short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 int   _ZN4cstd4fdivEii(int a, int b);
 
 
-int   _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
 void *_ZNK10dBgCh_Actr13GetWallResultEv(void *self);
 char *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
-void  _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *si, void *out);
 
-void  _ZN7fBase_c18MarkForDestructionEv(void *self);
-void *_ZN8dActor_c13ClosestPlayerEv(void *self);
-void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-          u32 actorID, u32 param1, const struct Vector3 *pos,
-          const struct Vector3_16 *rot, int areaID, int deathTableID);
-int   _ZN8SaveData16HasPlayerLostCapEv(void);
-void  _ZN8SaveData13PlayerLoseCapEv(void);
 
 void  _ZN9dBgCh_GndC1Ev(char *ray);
-void  _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(char *ray, int *pos, int actor);
-int   _ZN9dBgCh_Gnd10DetectClsnEv(char *ray);
 void  _ZN9dBgCh_GndD1Ev(char *ray);
 
 /* SetRanges carries Fix12<int> by value; dActor_c.h deliberately omits it
@@ -418,9 +408,9 @@ extern "C" void func_ov002_020b7f7c(char *c)
             probe[2] = self->mPosZ;
             probe[1] = probe[1] + 0x28000;
             _ZN9dBgCh_GndC1Ev(ray);
-            _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(ray, probe, 0);
+            ((dBgCh_Gnd *)ray)->SetObjAndPos(*(Vector3 *)probe, 0);
             y = probe[1];
-            if (_ZN9dBgCh_Gnd10DetectClsnEv(ray) != 0)
+            if (((dBgCh_Gnd *)ray)->DetectClsn() != 0)
                 y = *(int *)(ray + 0x44);
             _ZN9dBgCh_GndD1Ev(ray);
         }
@@ -456,16 +446,14 @@ extern "C" int func_ov002_020b7f24(void)
 // @symbol func_ov002_020b7e1c
 extern "C" int func_ov002_020b7e1c(char* self) {
     /* Named dActor_c::Spawn / mStateTimer / SaveData:: DIFFs one word. */
-    if (*(int*)(self + 0xc8) == 0 && !_ZN8SaveData16HasPlayerLostCapEv()) {
-        if (*(unsigned short*)(self + 0x100) == 0 && _ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x144)) {
-            if (_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                    0x10d, *(int*)(self + 8) | 0x12, (const struct Vector3 *)(self + 0x5c),
-                    (const struct Vector3_16 *)0, *(signed char*)(self + 0xcc), -1)) {
+    if (*(int*)(self + 0xc8) == 0 && !SaveData::HasPlayerLostCap()) {
+        if (*(unsigned short*)(self + 0x100) == 0 && ((dBgCh_Actr *)(self + 0x144))->IsOnGround()) {
+            if (dActor_c::Spawn(0x10d, *(int*)(self + 8) | 0x12, *(const Vector3 *)(self + 0x5c), (const Vector3_16 *)0, *(signed char*)(self + 0xcc), -1)) {
                 *(unsigned short*)(self + 0x100) = 3;
             }
         }
         if (DecIfAbove0_Short((unsigned short*)(self + 0x100)) == 1) {
-            _ZN7fBase_c18MarkForDestructionEv(self);
+            ((fBase_c *)self)->MarkForDestruction();
         }
         return 1;
     }
@@ -474,8 +462,8 @@ extern "C" int func_ov002_020b7e1c(char* self) {
     }
     func_ov002_020b6fcc(self);
     if (data_02092138 > *(int*)(self + 0x60)) {
-        _ZN8SaveData13PlayerLoseCapEv();
-        _ZN7fBase_c18MarkForDestructionEv(self);
+        SaveData::PlayerLoseCap();
+        ((fBase_c *)self)->MarkForDestruction();
     }
     return 1;
 }
@@ -631,11 +619,11 @@ extern "C" int func_ov002_020b781c(char *c)
     if (*(u16 *)(c + 0x100) == 1) {
         b = (int)((*(int *)(c + 0xb0) & 0x60000) != 0);
         if (b == 0) {
-            _ZN7fBase_c18MarkForDestructionEv(c);
+            ((fBase_c *)c)->MarkForDestruction();
             return 1;
         }
     }
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x144) == 0) {
+    if (((dBgCh_Actr *)(c + 0x144))->IsOnGround() == 0) {
         *(int *)(c + 0x408) = *(int *)(c + 0x98);
         return 1;
     }
@@ -650,7 +638,7 @@ extern "C" int func_ov002_020b781c(char *c)
         return 1;
     }
     fr = _ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x144);
-    _ZNK11SurfaceInfo12CopyNormalToER7Vector3(fr + 4, c + 0xd4);
+    ((SurfaceInfo *)(fr + 4))->CopyNormalTo(*(Vector3 *)(c + 0xd4));
     surface = func_02037e58(fr + 4);
     *(short *)(c + 0x3fc) = _ZN4cstd5atan2E5Fix12IiES1_(*(int *)(c + 0xd4), *(int *)(c + 0xdc));
     slopePush = func_ov002_020f02c8(surface);
@@ -818,7 +806,7 @@ extern "C" int func_ov002_020b7330(char* self)
 
     state = *(int*)(self + 0x3f0);
     if (state == 0xa || state == 0xf) {
-        char* closest = (char*)_ZN8dActor_c13ClosestPlayerEv(self);
+        char* closest = (char*)((dActor_c *)self)->ClosestPlayer();
         if (closest != 0) {
             s16* src = (s16*)(closest + 0x8c);
             *(s16*)(self + 0x92) = src[0];

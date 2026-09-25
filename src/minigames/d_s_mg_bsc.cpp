@@ -14,6 +14,7 @@
 #pragma opt_strength_reduction off
 
 #include "dScMgBSC_c.h"
+#include "dScMgCard_c.h"
 #include "types.h"
 #include "decl_common.h"
 
@@ -61,10 +62,8 @@ extern s32 GetGameLanguage(void);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern int LoadFile(int handle);
 extern int func_ov006_020c1a88(char *c);
-void* _ZN7fBase_cnwEj(unsigned int);
 void _ZN11dScMgBase_cC2Ev(void*);
 void _ZN8Particle10SysTrackerC1Ev(void*);
-void func_ov006_020c1d80(void*);
 void __cxa_vec_ctor(void*, int, int, void*, void*);
 void func_0203d738(void);
 extern int _ZTV19dScMgSingle3DBase_c;

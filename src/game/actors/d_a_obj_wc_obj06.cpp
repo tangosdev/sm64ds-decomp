@@ -38,6 +38,8 @@ typedef char ResourceDescriptor_size_must_be_0x0c[
 
 extern "C" int func_ov002_020b5e58(void *self, ResourceDescriptor *data);
 extern "C" ResourceDescriptor data_ov029_02113f00;
+/* Vector3-by-value return emits a stray _ZN7Vector3D1Ev (measured). */
+/* local extern: header GetClsnPos() form fails isolate */
 extern "C" void _ZN9dBgCh_Lin10GetClsnPosEv(Vector3 *out, dBgCh_Lin *self);
 
 enum {

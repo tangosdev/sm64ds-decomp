@@ -36,9 +36,6 @@
  * Leftover: Sound_PlayIfNotActive's handle is kept in unk_56c, spelled s32
  *   in the header and passed as the int the function's own definition takes;
  *   the field's real type is not recovered.
- * Leftover: _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s stays mangled. dBgW_KcMbg.h
- *   declares ::Transform, but the definition is still a free extern-C one, so a
- *   member call would not resolve to it.
  * Leftover: g_profile_KOOPA2BG lives outside this TU.
  */
 
@@ -70,10 +67,6 @@ void Vec3_Asr(void *dst, void *src, int shift);
 void func_ov060_02117a3c(char *self);
 void func_ov060_02117a64(char *self);
 void func_ov060_02117ae0(char *self);
-
-/* dBgW_KcMbg::Transform -- see the leftovers above. */
-void _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(
-    dBgW_KcMbg *self, const Matrix4x3 *mat, s16 angY);
 
 }
 
@@ -175,9 +168,8 @@ void func_ov060_02117a64(char *self)
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16 *)(self + 0x8c));
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, *(s16 *)(self + 0x90));
     *(Matrix4x3 *)(self + 0x2ec) = data_020a0e68;
-    _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(
-        (dBgW_KcMbg *)(self + 0x374), (Matrix4x3 *)(self + 0x2ec),
-        *(s16 *)(self + 0x8e));
+    ((dBgW_KcMbg *)(self + 0x374))->Transform(
+        *(Matrix4x3 *)(self + 0x2ec), *(s16 *)(self + 0x8e));
 }
 
 /* Keeps one looping sound handle alive in unk_56c. */

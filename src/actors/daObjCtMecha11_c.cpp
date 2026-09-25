@@ -52,7 +52,6 @@ extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(char *c, int a, int b);
 extern unsigned char data_0209f2c0[];
 extern int data_0209e650[];
 extern short data_ov035_02112b80[];
-extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, KCL_File *f, const Matrix4x3 &m, int fix, short sh, CLPS_Block &b);
 extern void func_020393d4(void *p, void *v);
@@ -169,7 +168,7 @@ int daObjCtMecha11_c::InitResources()
         &mMeshCollider, kf,
         mClsnMat, 0x1000, mAngleY, data_ov035_02112238);
     func_020393d4(&mMeshCollider,
-                  (void *)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+                  (void *)&dBgW::UpdatePosWithTransform);
     func_020396c0(&mMeshCollider, 0);
     V3 v;
     v.x = mPosX;

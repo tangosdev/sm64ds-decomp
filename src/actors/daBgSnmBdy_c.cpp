@@ -73,8 +73,6 @@ int   _Z11UpdateAngleRssis(short *angle, short target, int shift, short maxStep)
 void  _Z14ApproachLinearRiii(int *value, int target, int step);
 unsigned short DecIfAbove0_Short(unsigned short *timer);
 int   _ZN4cstd4fdivEii(int a, int b);
-int   _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *out, u32 node);
-int   _ZNK7PathPtr8NumNodesEv(void *self);
 void  Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 void  func_0201267c(int id, void *pos);
 void  func_0203568c(int *p, int v);
@@ -576,15 +574,14 @@ int daBgSnmBdy_c::AdvancePath()
     int node[3];
     int *idx;
     int numNodes;
-    /* MATCH: PathPtr::GetNode/NumNodes as methods size-DIFF (14 words);
-       named &mPath / &mPosX / mRadius / mAngleY also size-DIFF (29 words). */
-    _ZNK7PathPtr7GetNodeER7Vector3j(c + 0x380, node, *(int *)(c + 0x388));
+    /* MATCH: named &mPath / &mPosX / mRadius / mAngleY size-DIFF (29 words). */
+    ((PathPtr *)(c + 0x380))->GetNode(*(Vector3 *)node, *(int *)(c + 0x388));
     int dist = Vec3_HorzDist(c + 0x5c, node);
     _Z11UpdateAngleRssis((short *)(c + 0x8e),
                         Vec3_HorzAngle(c + 0x5c, node), 2, 0x600);
     *(short *)(c + 0x94) = *(short *)(c + 0x8e);
     if (dist < *(int *)(c + 0x398)) {
-        numNodes = _ZNK7PathPtr8NumNodesEv(c + 0x380);
+        numNodes = ((PathPtr *)(c + 0x380))->NumNodes();
         /* MATCH: signed increment/compare of mPathNode; u32 ++ size-DIFFs. */
         idx = (int *)(((int)c + 0x388));
         *idx = *idx + 1;

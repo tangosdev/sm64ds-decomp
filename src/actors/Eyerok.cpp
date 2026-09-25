@@ -31,6 +31,7 @@
 #include "SharedFilePtr.h"
 #include "TextureSequence.h"
 #include "Player.h"
+#include "Message.h"
 
 /* EVec3 is three plain words. Vector3's destructor must not land in this TU. */
 struct EVec3 { int x, y, z; };
@@ -106,34 +107,14 @@ extern void func_02011d2c(void);
 extern void func_02012694(int a, void *p);
 
 /* ---- arm9 / ov002 methods, mangled ROM spelling ---- */
-extern void _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(void *self, void *m, short s);
-extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *self, const void *v);
-extern void _ZN14BlendModelAnim7AdvanceEv(void *self);
 extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *self, void *bca, int a, int b, int fix, unsigned short t);
-extern void _ZN15TextureSequence6UpdateER15ModelComponents(void *self, void *mc);
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *btp, int a, int fix, unsigned int b);
-extern void _ZN4dBgW6EnableEP8dActor_c(void *self, void *actor);
-extern void _ZN4dBgW7DisableEv(void *self);
-extern int _ZN4dBgW9IsEnabledEv(void *self);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
 extern void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned int a);
 extern void _ZN5Sound22StopLoadedMusic_Layer3Ev(void);
-extern void _ZN5dCc_c5ClearEv(void *self);
-extern void _ZN5dCc_c6UpdateEv(void *self);
 extern void _ZN6Camera9SetFlag_3Ev(void *cam);
-extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *self, void *actor, unsigned int msg, const void *v, unsigned int d, unsigned int e);
-extern int _ZN6Player12GetTalkStateEv(void *self);
-extern void _ZN6Player17SetNoControlStateEhih(void *self, unsigned char a, int b, unsigned char c);
-extern void _ZN7Message11PrepareTalkEv(void);
-extern void _ZN7Message7EndTalkEv(void);
-extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int x, int y, int z, const void *v, void *cb);
-extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *self, void *sm, void *m, int rad, int h, unsigned int u);
-extern void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(void *self, signed char *a, unsigned int b, const void *v, unsigned int d);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
-extern void _ZN9Animation7AdvanceEv(void *self);
-extern int _ZN9Animation8FinishedEv(void *self);
 
 /* ---- siblings of this TU that stayed in their own src/ files ---- */
 extern void func_ov066_021162e8(void *c);
@@ -279,7 +260,7 @@ int func_ov066_02118678(char* c)
     if (self->mVertAccel == 0
         && Vec3_HorzDist(&self->mPosX, &self->mRestPosX) <= 0x14000
         && self->mBlendModelAnim.Finished()) {
-        _ZN4dBgW6EnableEP8dActor_c(&self->mMeshCollider2, c);
+        ((dBgW *)(&self->mMeshCollider2))->Enable((dActor_c *)c);
         data_ov066_0211ae0c |= self->mPartIdx;
         func_ov066_02119454(c, &data_ov066_0211b06c);
     }
@@ -547,7 +528,7 @@ extern "C" {
 int func_ov066_02118e04(void* self)
 {
     u8* c = (u8*)self;
-    void* p = _ZN8dActor_c13ClosestPlayerEv(self);
+    void* p = ((dActor_c *)self)->ClosestPlayer();
     int coinFlip;
     int v;
 
@@ -629,9 +610,9 @@ int func_ov066_0211903c(char* self) {
     cam = data_0209f318;
     if (((Eyerok *)self)->mSubState == 0) {
         _ZN6Camera9SetFlag_3Ev(cam);
-        ((Eyerok *)self)->mTalkPlayer = (Player *)_ZN8dActor_c13ClosestPlayerEv(self);
+        ((Eyerok *)self)->mTalkPlayer = (Player *)((dActor_c *)self)->ClosestPlayer();
         if (((Eyerok *)self)->mTalkPlayer != 0)
-            _ZN6Player17SetNoControlStateEhih(((Eyerok *)self)->mTalkPlayer, 5, -1, 0);
+            ((Player *)(((Eyerok *)self)->mTalkPlayer))->SetNoControlState(5, -1, 0);
         ((Eyerok *)self)->mSubState = 1;
     } else {
         v1.x = ((Eyerok *)self)->mPosX;
@@ -673,17 +654,17 @@ int func_ov066_0211903c(char* self) {
             }
 
             ((Eyerok *)self)->mTalkPlayer->mStateFlags |= 0x400;
-            _ZN7Message11PrepareTalkEv();
-            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(((Eyerok *)self)->mTalkPlayer, self, msgid, &out, 0, 0) == 1) {
+            Message::PrepareTalk();
+            if (((Player *)(((Eyerok *)self)->mTalkPlayer))->ShowMessage(*(fBase_c *)self, msgid, &out, 0, 0) == 1) {
                 ((Eyerok *)self)->mStateWork1 = 1;
                 func_02012694(0x145, &((Eyerok *)self)->mCamSpacePosX);
             }
         }
     } else {
         if (((Eyerok *)self)->mTalkPlayer != 0) {
-            if (_ZN6Player12GetTalkStateEv(((Eyerok *)self)->mTalkPlayer) < 0) {
+            if (((Player *)(((Eyerok *)self)->mTalkPlayer))->GetTalkState() < 0) {
                 *(int*)(((int)cam + 0x154)) &= ~8;
-                _ZN7Message7EndTalkEv();
+                Message::EndTalk();
                 if (data_ov066_0211abe0 == 3) {
                     _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);
                     func_02011d2c();
@@ -695,8 +676,8 @@ int func_ov066_0211903c(char* self) {
                     star.x = 0;
                     star.y = (int)0xffa24000;
                     star.z = (int)0xff1b4000;
-                    _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(self, (signed char*)(&((Eyerok *)self)->mStarTracked), obj->mStarId, &star, 4);
-                    _ZN7fBase_c18MarkForDestructionEv(self);
+                    ((dActor_c *)self)->UntrackAndSpawnStar(*(signed char*)(&((Eyerok *)self)->mStarTracked), obj->mStarId, star, 4);
+                    ((fBase_c *)self)->MarkForDestruction();
                 }
             }
         }
@@ -709,8 +690,8 @@ int func_ov066_0211903c(char* self) {
 extern "C" {
 int func_ov066_02119348(void *c)
 {
-    if (_ZN4dBgW9IsEnabledEv((char *)&((Eyerok *)c)->mMeshCollider2) != 0) {
-        _ZN4dBgW7DisableEv((char *)&((Eyerok *)c)->mMeshCollider2);
+    if (((dBgW *)((char *)&((Eyerok *)c)->mMeshCollider2))->IsEnabled() != 0) {
+        ((dBgW *)((char *)&((Eyerok *)c)->mMeshCollider2))->Disable();
     }
     ((Eyerok *)c)->mStateWork0 = 0;
     ((Eyerok *)c)->mStateWork1 = 0;
@@ -729,7 +710,7 @@ int func_ov066_02119398(char* c)
     Vec4 sp;
     /* Member loads of the player's position come out a different size.
        The base pointer is what matches. */
-    char* p = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
+    char* p = (char *)((dActor_c *)c)->ClosestPlayer();
     if (p != 0) {
         char* playerPos = p + 0x5c;
         int v1 = *(int*)(playerPos + 4);
@@ -770,7 +751,7 @@ extern "C" void func_ov066_021194a4(char *c) {
   ((Eyerok *)c)->mClsnMat2.t.x = ((Eyerok *)c)->mPosX;
   ((Eyerok *)c)->mClsnMat2.t.y = ((Eyerok *)c)->mPosY;
   ((Eyerok *)c)->mClsnMat2.t.z = ((Eyerok *)c)->mPosZ;
-  _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(&((Eyerok *)c)->mMeshCollider2, &((Eyerok *)c)->mClsnMat2, ((Eyerok *)c)->mAngleY);
+  ((dBgW_KcMbg *)(&((Eyerok *)c)->mMeshCollider2))->Transform(((Eyerok *)c)->mClsnMat2, ((Eyerok *)c)->mAngleY);
 }
 
 // @symbol func_ov066_021194fc
@@ -858,7 +839,7 @@ int Eyerok::Render()
     return 1;
   }
   if (data_ov066_0211ae04 == 1) return 1;
-  _ZN15TextureSequence6UpdateER15ModelComponents(&mTextureSequence, &mBlendModelAnim.data);
+  ((TextureSequence *)&mTextureSequence)->TextureSequence::Update(mBlendModelAnim.data);
   mBlendModelAnim.Render(0);
   return 1;
 }
@@ -1003,7 +984,7 @@ int Eyerok::Behavior()
 
     if (mPartIdx == 0) {
         func_ov066_021194fc(c);
-        if (_ZN4dBgW9IsEnabledEv((char *)&mMeshCollider2) != 0)
+        if (((dBgW *)&mMeshCollider2)->IsEnabled() != 0)
             func_ov066_021194a4(c);
         return 1;
     }
@@ -1011,21 +992,21 @@ int Eyerok::Behavior()
     {
         EVec3 vrel;
         mRestPosY = mSpawnPosY + 0x8000;
-        _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
+        ((dActor_c *)c)->UpdatePos(0);
         mdCcAcPos_c.pos.x = mPosX;
         mdCcAcPos_c.pos.y = mPosY;
         mdCcAcPos_c.pos.z = mPosZ;
         vrel.x = data_ov066_0211ad18[0];
         vrel.y = data_ov066_0211ad18[1];
         vrel.z = data_ov066_0211ad18[2];
-        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3((char *)&mdCcAcPos_c, &vrel);
+        ((dCcAcPos_c *)&mdCcAcPos_c)->SetPosRelativeToActor(*(Vector3 *)&vrel);
         func_ov066_021194fc(c);
-        if (_ZN4dBgW9IsEnabledEv((char *)&mMeshCollider2) != 0)
+        if (((dBgW *)&mMeshCollider2)->IsEnabled() != 0)
             func_ov066_021194a4(c);
-        _ZN5dCc_c5ClearEv((char *)&mdCcAcPos_c);
-        _ZN5dCc_c6UpdateEv((char *)&mdCcAcPos_c);
-        _ZN14BlendModelAnim7AdvanceEv((char *)&mBlendModelAnim);
-        _ZN9Animation7AdvanceEv((char *)&mTextureSequence);
+        ((dCc_c *)&mdCcAcPos_c)->Clear();
+        ((dCc_c *)&mdCcAcPos_c)->dCc_c::Update();
+        ((BlendModelAnim *)&mBlendModelAnim)->Advance();
+        ((Animation *)&mTextureSequence)->Advance();
     }
     return 1;
 }

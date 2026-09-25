@@ -161,18 +161,6 @@ extern void MulMat4x3Mat4x3(void *a, void *b, void *out);
 extern void Vec3_LslInPlace(void *v, int sh);
 extern void Vec3_Asr(void *d, void *s, int sh);
 
-extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
-extern void *_ZN9Animation8LoadFileER13SharedFilePtr(void *f);
-extern void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *f);
-extern int _ZN11ShadowModel12InitCylinderEv(void *self);
-extern int _ZN9Animation8FinishedEv(void *self);
-extern void _ZN9Animation7AdvanceEv(void *self);
-extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *self, Vector3 *v);
-extern void _ZN5dCc_c5ClearEv(void *self);
-extern void _ZN5dCc_c6UpdateEv(void *self);
-extern int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-    unsigned int, unsigned int, Vector3 *, void *, int, int);
 extern int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(dActor_c *, int);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
     ModelAnim *model, void *file, int flags, int speed, unsigned int startFrame);
@@ -236,23 +224,21 @@ void daJgm_c::OnTurnIntoEgg(Player &player)
 s32 daJgm_c::InitResources()
 {
     char *c = (char *)this;
-    _ZN5Model8LoadFileER13SharedFilePtr((void *)&data_ov077_02127b38);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(
-        c + 0xd4,
-        _ZN5Model8LoadFileER13SharedFilePtr((void *)&data_ov077_02127b50), 1, 1);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(
-        c + 0x138,
-        _ZN5Model8LoadFileER13SharedFilePtr((void *)&data_ov077_02127b48), 1, 1);
+    Model::LoadFile(data_ov077_02127b38);
+    ((ModelBase *)(c + 0xd4))->SetFile(
+        (BMD_File *)Model::LoadFile(data_ov077_02127b50), 1, 1);
+    ((ModelBase *)(c + 0x138))->SetFile(
+        (BMD_File *)Model::LoadFile(data_ov077_02127b48), 1, 1);
     for (int i = 0; i < 2; i++)
-        _ZN9Animation8LoadFileER13SharedFilePtr((void *)data_ov077_02127238[i]);
+        Animation::LoadFile(*data_ov077_02127238[i]);
     for (int i = 0; i < 2; i++) {
         void *t = (void *)data_ov077_02127230[i];
-        _ZN15TextureSequence8LoadFileER13SharedFilePtr(t);
+        TextureSequence::LoadFile(*(SharedFilePtr *)t);
         TextureSequence::Prepare(
             *(BMD_File *)((int *)&data_ov077_02127b50)[1],
             *(BTP_File *)((int *)t)[1]);
     }
-    if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0)
+    if (mShadowModel.InitCylinder() == 0)
         return 0;
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         (dCcAcPos_c *)(c + 0x1c4), (dActor_c *)c, (Vector3 *)&data_ov077_02127b88,
@@ -432,17 +418,17 @@ s32 daJgm_c::UpdateThrowState()
 {
     char *c = (char *)this;
     if ((((unsigned int)*(int *)(c + 0x12c) << 4) >> 16) == 0x3a) {
-        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-            0x104, 0, (Vector3 *)(c + 0x404), (void *)(c + 0x8c),
+        dActor_c::Spawn(
+            0x104, 0, *(Vector3 *)(c + 0x404), (Vector3_16 *)(c + 0x8c),
             *(signed char *)(c + 0xcc), -1);
         func_0201267c(0xd2, c + 0x74);
     }
-    if (_ZN9Animation8FinishedEv(c + 0x124))
+    if (((Animation *)(c + 0x124))->Finished())
         SetState(0);
     UpdateFlight();
     UpdateHoverBob();
-    _ZN9Animation7AdvanceEv(c + 0x124);
-    _ZN9Animation7AdvanceEv(c + 0x1b0);
+    ((Animation *)(c + 0x124))->Advance();
+    ((Animation *)(c + 0x1b0))->Advance();
     HandlePlayerCollision();
     {
         DaJgmVector3Words pos;

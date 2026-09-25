@@ -9,8 +9,8 @@
  *
  * Blocked: the helpers are unnamed in symbols.txt. Some calls stay mangled:
  * cstd::atan2, ApproachLinear and Particle::System take Fix12 or reference
- * arguments, Model and ModelBase take BMD_File, and decl_common.h declares a
- * global named G2, so no `namespace G2` can be opened here.
+ * arguments, and decl_common.h declares a global named G2, so no
+ * `namespace G2` can be opened here.
  */
 #pragma defer_codegen off
 
@@ -165,8 +165,6 @@ void *_ZN2G212GetBG3ScrPtrEv(void);
 u32 LoadCompressedFileAt(u16 fileID, void *target);
 void *func_ov004_020adc74(void *p);
 void DecompressLZ16(void *src, void *dst);
-void _ZN5Model17UpdateFileOffsetsER8BMD_File(void *file);
-int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thisPtr, void *file, int a, int b);
 extern int data_0208ee44;
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
@@ -1900,9 +1898,7 @@ void dScMgSnowball_c::OnYoshiTryEat(int i)
 /* Slot 0. Sets up both screens' BG2 and BG3 layers, loads the palettes and
  * tiles, then loads the snowball BMD into unk_abf4 and hands it to mModel.
  * Returning 0 when ModelBase::SetFile fails aborts the scene. The helpers at
- * the end take the scene as an opaque pointer, so the receiver stays raw.
- * The mangled callees are declared `extern "C"` so they are not mangled a
- * second time. */
+ * the end take the scene as an opaque pointer, so the receiver stays raw. */
 s32 dScMgSnowball_c::InitResources()
 {
     void *arg0 = this;
@@ -1964,9 +1960,9 @@ s32 dScMgSnowball_c::InitResources()
     InitialiseVramGlobals();
 
     *(void **)(r4 + 0xabf4) = func_ov004_020adc74(&data_ov006_021400fc);
-    _ZN5Model17UpdateFileOffsetsER8BMD_File(*(void **)(r4 + 0xabf4));
+    Model::UpdateFileOffsets(**(BMD_File **)(r4 + 0xabf4));
 
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(r4 + 0xaba4, *(void **)(r4 + 0xabf4), 1, -1) == 0)
+    if (((ModelBase *)(r4 + 0xaba4))->SetFile(*(BMD_File **)(r4 + 0xabf4), 1, -1) == 0)
         return 0;
 
     *(vu16 *)0x4000008 = (*(vu16 *)0x4000008 & ~3) | 1;

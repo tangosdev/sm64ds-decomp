@@ -26,8 +26,6 @@
  *   by-value homes on the stack, 6az).
  * - Particle::System::New / NewSimple stay TU-local mangled:
  *   Particle__System.h declares neither.
- * - Player::Heal stays TU-local mangled so this TU need not include
- *   Player.h.
  * - data_02082214 is the link name (arm9 symbols.txt kind:data(any));
  *   no named alias exists. Sway lookup off (mSwayAngle >> 4).
  * - AbukuVector3 POD + reinterpret_cast: a real Vector3 local emits
@@ -41,6 +39,7 @@
 
 #include "daObjAbuku_c.h"
 #include "dBgCh_Gnd.h"
+#include "Player.h"
 #include "Sound.h"
 
 /* POD stand-in: a real Vector3 local emits vague-linkage ~Vector3 into this
@@ -74,7 +73,6 @@ unsigned short DecIfAbove0_Short(unsigned short *p);
 unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int, unsigned int, Fix12i, Fix12i, Fix12i, const Vector3_16 *, void *);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned, int, int, int);
-void _ZN6Player4HealEi(dActor_c *player, int amount);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -124,7 +122,7 @@ int daObjAbuku_c::Behavior()
         if (found) {
             int b = (found->actorID == 0xbf);
             if (b) {
-                _ZN6Player4HealEi(found, 0x300);
+                ((Player *)found)->Heal(0x300);
                 func_ov002_020b330c(this);
             }
         }

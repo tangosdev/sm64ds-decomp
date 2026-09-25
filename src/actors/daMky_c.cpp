@@ -92,6 +92,7 @@
 #include "decl_SaveData.h"
 #include "dBgCh_Gnd.h"
 #include "dBgCh_Actr.h"
+#include "SaveData.h"
 
 /* ==========================================================================
  * The eleven state-entry members.
@@ -145,7 +146,7 @@
  *
  * That makes these visible to every wrapped func_ov030_* member below, several
  * of which recovered the same symbol with a different spelling at block scope
- * (Vec3_Dist as (void *, void *), _ZN5dCc_c5ClearEv returning void, SetAnim
+ * (Vec3_Dist as (void *, void *), SetAnim
  * with an int second parameter).  mwccarm accepts the disagreement: a
  * block-scope redeclaration inherits the C linkage of the visible file-scope
  * one, and with -gccext,on the differing spellings do not collide.  This is
@@ -174,16 +175,8 @@
 extern "C" {
 
 void  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int idx, int speed, unsigned int flags);
-char *_ZN8dActor_c13ClosestPlayerEv(void *self);
-int   _ZN8SaveData16HasPlayerLostCapEv(void);
 short Vec3_HorzAngle(const void *a, const void *b);
 int   Vec3_Dist(const void *a, const void *b);
-void  _ZN10dBgCh_Actr13SetLimMovFlagEv(void *self);
-void  _ZN10dBgCh_Actr15ClearGroundFlagEv(void *self);
-void  _ZN8dActor_c13SpawnSoundObjEj(void *self, unsigned int id);
-void  _ZN5dCc_c5ClearEv(void *self);
-void  _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
-int   _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void *self, void *a, void *out, int flag);
 void func_0201267c(unsigned int id, const Vector3 *pos);
 
 }
@@ -399,7 +392,6 @@ extern "C" {
 int func_ov030_02111bc4(void *thiz)
 {
     extern int func_ov030_021141a8(void *a, int b);
-    extern void *_ZN8dActor_c13ClosestPlayerEv(void *a);
     extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
     extern int _ZN6Player7TryGrabER8dActor_c(void *p, void *a);
     unsigned char *c = (unsigned char *)thiz;
@@ -424,7 +416,7 @@ int func_ov030_02111bc4(void *thiz)
         return 0;
 
     if ((*(int *)(c + 0x180) & 0x40000) && *(int *)(c + 0x3b4) != 2) {
-        *(void **)(c + 0x3a8) = _ZN8dActor_c13ClosestPlayerEv(c);
+        *(void **)(c + 0x3a8) = ((dActor_c *)c)->ClosestPlayer();
         *(int *)(c + 0x3b8) = *(int *)(c + 0x3b4);
         func_ov030_021141a8(c, 2);
         return 1;
@@ -783,7 +775,6 @@ extern "C" {
 int func_ov030_02112578(void *arg0)
 {
     void *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void *p);
-    void *_ZN8dActor_c13ClosestPlayerEv(void *self);
     int func_ov030_02111b20(void *self);
     void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thiz, void *bca, int a, int fx, unsigned int f);
     void func_ov030_02111890(void *c);
@@ -805,7 +796,6 @@ int func_ov030_02112578(void *arg0)
     void _ZN9Animation7AdvanceEv(void *thiz);
     void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
     void func_ov030_02111f6c(void *c, void *w);
-    void _ZN5dCc_c5ClearEv(void *thiz);
 
     extern void *data_ov030_02115cd0[];
     extern void *data_ov030_02115cf8[];
@@ -814,7 +804,7 @@ int func_ov030_02112578(void *arg0)
     extern void *data_ov030_02115d18[];
     u8 *c = (u8 *)arg0;
     void *cage = _ZN8dActor_c15FindWithActorIDEjPS_(0x67, 0);
-    void *player = _ZN8dActor_c13ClosestPlayerEv(arg0);
+    void *player = ((dActor_c *)arg0)->ClosestPlayer();
     s32 v[3];
     *(s32 *)((u8 *)v + 0) = 0x981;
     *(s32 *)((u8 *)v + 4) = 0x77a;
@@ -919,7 +909,7 @@ int func_ov030_02112578(void *arg0)
     _ZN9Animation7AdvanceEv(c + 0x124);
     _ZN8dActor_c9UpdatePosEP5dCc_c(arg0, c + 0x160);
     func_ov030_02111f6c(arg0, c + 0x194);
-    _ZN5dCc_c5ClearEv(c + 0x160);
+    ((dCc_c *)(c + 0x160))->Clear();
     return 1;
 }
 }
@@ -943,7 +933,7 @@ int daMky_c::EnterState8() {
     extern struct G data_ov030_02115d18;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c+0xd4, data_ov030_02115d18.b, 0, 0x1000, 0);
     *(int *)(c + 0x130) = 0x1000;
-    _ZN7PathPtr6FromIDEj(c+0x398, *(int*)(c+8) & 0xff);
+    ((PathPtr *)(c+0x398))->FromID(*(int*)(c+8) & 0xff);
     mPathNode = 1;
     unk_3c7 = 0;
     *(int *)(c + 0x98) = 0x6000;
@@ -975,7 +965,6 @@ int func_ov030_02112a84(char *a)
     extern void _ZN9Animation7AdvanceEv(void *p);
     extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *a, void *c);
     extern void func_ov030_02111bc4(void *a);
-    extern void _ZN5dCc_c5ClearEv(void *p);
     extern void *data_02099368[];
     dBgPi res;
 
@@ -1023,7 +1012,7 @@ int func_ov030_02112a84(char *a)
     _ZN9Animation7AdvanceEv(a + 0x124);
     _ZN8dActor_c9UpdatePosEP5dCc_c(a, a + 0x160);
     func_ov030_02111bc4(a);
-    _ZN5dCc_c5ClearEv(a + 0x160);
+    ((dCc_c *)(a + 0x160))->Clear();
     return 1;
 }
 }
@@ -1095,7 +1084,7 @@ int daMky_c::EnterState7()
     v.y = mul;
     v.z = oz;
   }
-  _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(c, &v, (struct Vector3 *) pos, 1);
+  ((dActor_c *)c)->DetectRaycastClsn(*(::Vector3 *)&v, *(::Vector3 *)pos, 1);
   *((int *) (c + 0xd0)) = 0;
   *((int *) (c + 0x3a8)) = 0;
   *((int *) (c + 0x3b4)) = 7;
@@ -1203,13 +1192,13 @@ int daMky_c::EnterState6()
     if (Vec3_Dist(c + 0x380, c + 0x5c) < 0x514000 &&
         mPosY > mPerchPosY - 0x12c000) {
         unk_3c7 = 0;
-        _ZN8dActor_c13SpawnSoundObjEj(c, 1);
+        ((dActor_c *)c)->SpawnSoundObj(1);
     } else {
         unk_3c7 = 3;
     }
     mHorzSpeed = 0;
     mActionTimer = 0x3c;
-    _ZN5dCc_c5ClearEv(c + 0x160);
+    ((dCc_c *)(c + 0x160))->Clear();
     mPrevState = mState;
     mState = 6;
     return 1;
@@ -1313,8 +1302,8 @@ int daMky_c::EnterState5() {
     unk_3c7 = 0;
     void* clsn = (void*)(c + 0x160);
     *(int*)(c + 0x98) = 0;
-    _ZN5dCc_c5ClearEv(clsn);
-    _ZN10dBgCh_Actr15ClearGroundFlagEv((void*)(c + 0x194));
+    ((dCc_c *)clsn)->Clear();
+    ((dBgCh_Actr *)((void*)(c + 0x194)))->ClearGroundFlag();
     mPrevState = mState;
     mState = 5;
     return 1;
@@ -1324,7 +1313,6 @@ int daMky_c::EnterState5() {
 extern "C" {
 int func_ov030_02113324(void* thiz)
 {
-    extern int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void* self, Vector3* a, Vector3* out, int doStore);
     extern int Vec3_Dist(const Vector3* a, const Vector3* b);
     extern void func_ov030_021141a8(char* c, int v);
     extern int _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);
@@ -1337,7 +1325,6 @@ int func_ov030_02113324(void* thiz)
     extern int _ZN6Player12GetTalkStateEv(void* self);
     extern int _ZN6Player9DropActorEv(void* self);
     extern void _ZN9Animation7AdvanceEv(void* self);
-    extern void _ZN5dCc_c5ClearEv(void* self);
     extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 
     extern void* data_0209f318;
@@ -1370,7 +1357,7 @@ do_raycast:
         v.x = *(int*)(other + 0x5c);
         v.y = vy;
         v.z = oz;
-        _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(c, &v, (Vector3*)(c + 0x5c), 1);
+        ((dActor_c *)c)->DetectRaycastClsn(v, *(Vector3*)(c + 0x5c), 1);
 
         if (Vec3_Dist((Vector3*)(c + 0x380), (Vector3*)(c + 0x5c)) < 0x514000 &&
             *(int*)(c + 0x60) > *(int*)(c + 0x384) - 0x12c000) {
@@ -1438,7 +1425,7 @@ skip_raycast:
     }
 
     _ZN9Animation7AdvanceEv(c + 0x124);
-    _ZN5dCc_c5ClearEv(c + 0x160);
+    ((dCc_c *)(c + 0x160))->Clear();
     return 1;
 }
 }
@@ -1454,7 +1441,7 @@ int daMky_c::EnterState4(){
     if (Vec3_Dist(c+0x380, c+0x5c) < 0x514000
         && *(int*)(c+0x60) > mPerchPosY - 0x12c000) {
         unk_3c7 = 0;
-        _ZN8dActor_c13SpawnSoundObjEj(c, 1);
+        ((dActor_c *)c)->SpawnSoundObj(1);
     } else {
         unk_3c7 = 2;
     }
@@ -1494,7 +1481,6 @@ int func_ov030_021136b0(char *c)
     extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
     extern void func_ov030_021141a8(char *c, int v);
     extern void _ZN9Animation7AdvanceEv(void *self);
-    extern void _ZN5dCc_c5ClearEv(void *self);
 
     extern void *data_0209f318;
     extern Matrix4x3 data_020a0e68;
@@ -1661,7 +1647,7 @@ int func_ov030_021136b0(char *c)
     }
 
     _ZN9Animation7AdvanceEv(c + 0x124);
-    _ZN5dCc_c5ClearEv(c + 0x160);
+    ((dCc_c *)(c + 0x160))->Clear();
     return 1;
 }
 }
@@ -1684,7 +1670,7 @@ int daMky_c::EnterState3()
     extern char data_ov030_02115ce0[];
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, *(void **)(data_ov030_02115ce0 + 4), 0, 0x1000, 0);
     *(int*)(c + 0x130) = 0x1000;
-    if (mHasSpawnedCap == 0 && _ZN8SaveData16HasPlayerLostCapEv()) {
+    if (mHasSpawnedCap == 0 && SaveData::HasPlayerLostCap()) {
         unk_3c7 = 5;
     } else {
         char* p = *(char**)(c + 0x3a8);
@@ -1713,7 +1699,6 @@ int func_ov030_02113b38(char* c){
     extern void _ZN10dBgCh_Actr15ClearLimMovFlagEv(char* w);
     extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char* ma, void* f, int b, Fix12i c, unsigned int d);
     extern void func_ov030_021141a8(char* c, int v);
-    extern void _ZN5dCc_c5ClearEv(char* cl);
     extern void func_ov030_02111bc4(char* c);
     extern int data_ov030_02115d18[];
   _ZN9Animation7AdvanceEv(c+0x124);
@@ -1728,7 +1713,7 @@ int func_ov030_02113b38(char* c){
     *(int*)(c+0x394) = *(int*)(c+0x64);
     func_ov030_021141a8(c, *(int*)(c+0x3b8));
   }
-  _ZN5dCc_c5ClearEv(c+0x160);
+  ((dCc_c *)(c+0x160))->Clear();
   func_ov030_02111bc4(c);
   return 1;
 }
@@ -1748,7 +1733,7 @@ int daMky_c::EnterState2() {
 
     p = *(void **)((char *)c + 0x3a8);
     if (p == 0)
-        p = _ZN8dActor_c13ClosestPlayerEv(c);
+        p = ((dActor_c *)c)->ClosestPlayer();
 
     b = (int)(*(unsigned short *)((char *)c + 0xc) == 0x10b);
     if (b != 0) {
@@ -1765,7 +1750,7 @@ int daMky_c::EnterState2() {
     b = (int)(*(unsigned short *)((char *)c + 0xc) == 0x10b);
     *(int *)((char *)c + 0xa8) = b ? 0x23000 : 0x1e000;
 
-    _ZN10dBgCh_Actr13SetLimMovFlagEv((char *)c + 0x194);
+    ((dBgCh_Actr *)((char *)c + 0x194))->SetLimMovFlag();
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)c + 0xd4,
         ((void **)&data_ov030_02115d08)[1], 0x40000000, 0x1000, 0);
     func_0201267c(0xd1, (const ::Vector3 *)((char *)c + 0x74));
@@ -1780,7 +1765,6 @@ int func_ov030_02113d20(void *c) {
     typedef int Fix12i;
     typedef short s16;
 
-    extern void *_ZN8dActor_c13ClosestPlayerEv(void *c);
     extern Fix12i Vec3_Dist(const void *a, const void *b);
     extern s16 Vec3_HorzAngle(const void *v0, const void *v1);
     extern void _Z14ApproachLinearRsss(s16 *dst, s16 target, s16 step);
@@ -1795,7 +1779,6 @@ int func_ov030_02113d20(void *c) {
     extern int func_ov030_02111ea4(void *c);
     extern int _ZN6Player7IsInAirEv(void *p);
     extern void func_ov030_021141a8(void *c, int mode);
-    extern void _ZN5dCc_c5ClearEv(void *c);
     extern void _ZN5dCc_c6UpdateEv(void *c);
     extern void func_ov030_02111890(void *c);
     extern void *data_ov030_02115d18;
@@ -1807,7 +1790,7 @@ int func_ov030_02113d20(void *c) {
 
     p = *(void **)((char *)c + 0x3a8);
     if (p == 0)
-        p = _ZN8dActor_c13ClosestPlayerEv(c);
+        p = ((dActor_c *)c)->ClosestPlayer();
 
     dist = Vec3_Dist((char *)c + 0x5c, (char *)p + 0x5c);
 
@@ -1872,7 +1855,7 @@ int func_ov030_02113d20(void *c) {
         }
     }
 
-    _ZN5dCc_c5ClearEv((char *)c + 0x160);
+    ((dCc_c *)((char *)c + 0x160))->Clear();
     if (*(int *)((char *)c + 0x3b4) == 1)
         _ZN5dCc_c6UpdateEv((char *)c + 0x160);
     func_ov030_02111890(c);
@@ -1905,7 +1888,6 @@ int func_ov030_02113ff0(char* c){
     extern void func_ov030_02111f6c(char* c, char* w);
     extern void func_ov030_02111bc4(char* c);
     extern void func_ov030_02111ea4(char* c);
-    extern void _ZN5dCc_c5ClearEv(char* cl);
     extern void _ZN5dCc_c6UpdateEv(char* cl);
     extern void func_ov030_02111890(char* c);
     extern int data_ov030_02115d18[];
@@ -1934,7 +1916,7 @@ int func_ov030_02113ff0(char* c){
     func_ov030_02111bc4(c);
     func_ov030_02111ea4(c);
   }
-  _ZN5dCc_c5ClearEv(c+0x160);
+  ((dCc_c *)(c+0x160))->Clear();
   _ZN5dCc_c6UpdateEv(c+0x160);
   func_ov030_02111890(c);
   return 1;
@@ -2014,7 +1996,6 @@ void  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int id
 void  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int a, int b, u32 c, u32 d);
 void  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v0, void *v1);
 int   _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void *self, int d);
-int   _ZN8SaveData16HasPlayerLostCapEv(void);
 
 extern SharedFilePtr  data_ov002_0210da40;
 extern SharedFilePtr  data_ov002_0210d9a0;
@@ -2075,7 +2056,7 @@ s32 daMky_c::Behavior()
     if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(this, 0x5dc000) != 0 &&
         mState != 8) {
         int b = (actorID == 0x10b);
-        if (b != 0 && mHasSpawnedCap == 0 && _ZN8SaveData16HasPlayerLostCapEv() != 0) {
+        if (b != 0 && mHasSpawnedCap == 0 && SaveData::HasPlayerLostCap() != 0) {
             Player *pl = ClosestPlayer();
             unsigned cp = *(unsigned *)((char *)pl + 8);
             if (cp < 3) {
@@ -2143,7 +2124,7 @@ s32 daMky_c::InitResources()
     if (h == 0x10b)
         b = 1;
     if (b != 0) {
-        if (_ZN8SaveData16HasPlayerLostCapEv() != 0) {
+        if (SaveData::HasPlayerLostCap() != 0) {
             Player *player = ClosestPlayer();
             if (*(u32 *)((char *)player + 8) >= 3)
                 goto ov030_no_spawn;

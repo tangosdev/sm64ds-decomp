@@ -81,7 +81,6 @@ typedef char SharkStateHolder_size_must_be_0x374[
  * work. */
 extern "C" {
 extern int func_02012694(int, void *);
-extern void _ZN9Animation7AdvanceEv(void *);
 extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
     char *anim, void *file, int a, int b, unsigned int u);
 extern char data_ov090_021345ac[];
@@ -98,19 +97,10 @@ extern s16 Vec3_VertAngle(Vector3 *a, Vector3 *b);
 extern void Matrix4x3_FromRotationY(void *matrix, s32 angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *matrix, s16 angle);
 extern void MulVec3Mat4x3(void *a, void *matrix, void *b);
-extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(
-    void *thiz, void *file, int a, int b);
-extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN7PathPtrC1Ev(void *thiz);
-extern void _ZN7PathPtr6FromIDEj(void *thiz, unsigned int id);
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     void *thiz, void *actor, void *pos, int f, int g,
     unsigned int h, unsigned int i);
-extern void _ZNK7PathPtr7GetNodeER7Vector3j(
-    void *thiz, void *out, unsigned int j);
-extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *, void *);
-extern void *_ZN8dActor_c10FindWithIDEj(unsigned int);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
     void *, void *, unsigned int, int, unsigned int, unsigned int, unsigned int);
 
@@ -147,10 +137,10 @@ extern "C" void func_ov090_02133710(char *c)
     }
     Matrix4x3_FromRotationY(data_020a0e68, 0);
     MulVec3Mat4x3(&v, data_020a0e68, c + 0x374);
-    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x110, c + 0x374);
+    ((dCcAcPos_c *)(c + 0x110))->SetPosRelativeToActor(*(Vector3 *)(c + 0x374));
     if (*(unsigned int *)(c + 0x134) == 0)
         return;
-    a = _ZN8dActor_c10FindWithIDEj(*(unsigned int *)(c + 0x134));
+    a = dActor_c::FindWithID(*(unsigned int *)(c + 0x134));
     {
         int b = (*(unsigned short *)((char *)a + 0xc) == 0xbf);
         if (b == 0)
@@ -174,7 +164,7 @@ extern "C" int func_ov090_02133830(char *c)
         func_02012694(9, c + 0x74);
     }
     *(int *)(c + 0x368) = 0x1000;
-    _ZN9Animation7AdvanceEv(c + 0x35c);
+    ((Animation *)(c + 0x35c))->Advance();
     func_ov090_02133710(c);
     return 1;
 }
@@ -299,14 +289,13 @@ int daShark_c::InitResources()
      * p2 after it. */
     u32 p1_storage[sizeof(PathPtr) / sizeof(u32)];
     u32 p2_storage[sizeof(PathPtr) / sizeof(u32)];
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x30c,
-        _ZN5Model8LoadFileER13SharedFilePtr(data_ov090_021345a4), 1, -1);
-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov090_021345ac);
+    ((ModelBase *)(((char *)this) + 0x30c))->SetFile((BMD_File *)Model::LoadFile(*(SharedFilePtr *)data_ov090_021345a4), 1, -1);
+    Animation::LoadFile(*(SharedFilePtr *)data_ov090_021345ac);
     mPathID = (*(s32 *)&param1) & 0xff;
     if (mPathID < 0)
         mPathID = 0;
     _ZN7PathPtrC1Ev(p1_storage);
-    _ZN7PathPtr6FromIDEj(p1_storage, mPathID);
+    ((PathPtr *)p1_storage)->FromID(mPathID);
     mPathNodeCount = _ZNK7PathPtr8NumNodesEv(p1_storage);
     mTerminalVelocity = -0x3c000;
     mClsnOffset.x = 0;
@@ -316,9 +305,9 @@ int daShark_c::InitResources()
         ((char *)this) + 0x110, ((char *)this), &mClsnOffset,
         0x42000, 0x6e000, 0x200004, 0);
     _ZN7PathPtrC1Ev(p2_storage);
-    _ZN7PathPtr6FromIDEj(p2_storage, mPathID);
+    ((PathPtr *)p2_storage)->FromID(mPathID);
     mPathNodeIdx = 1;
-    _ZNK7PathPtr7GetNodeER7Vector3j(p2_storage, ((char *)this) + 0x5c, mPathNodeIdx);
+    ((PathPtr *)p2_storage)->GetNode(*(Vector3 *)((char *)this + 0x5c), mPathNodeIdx);
     func_ov090_021338b4(((char *)this), data_ov090_021345cc);
     return 1;
 }

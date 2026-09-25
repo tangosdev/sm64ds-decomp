@@ -87,7 +87,6 @@ extern void func_0200fa04(dActor_c *, BattanVector3 *, int);
 extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     dBgW_KcMbg *, KCL_File *, Matrix4x3 *, Fix12i, s16, void *);
 extern void func_020393d4(int *, int);
-extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_(void);
 }
 
 /* The retail static initializer constructs these two 8-byte resource handles
@@ -158,7 +157,7 @@ int daObjFm_Battan_c::InitResources()
        no setter, so this stays the 8-byte store helper. */
     func_020393d4(
         (int *)&mMeshCollider,
-        (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+        (int)&dBgW::UpdatePosWithTransform);
     mMeshCollider.Enable(this);
 
     mAngVelX = 0;

@@ -72,10 +72,6 @@ void  Camera_UpdateMatrices(Camera *camera);
 void  _ZN2GX15SetBankForSubBGEt(unsigned int x);
 void  _ZN2GX16SetBankForSubOBJEt(unsigned int x);
 
-/* Particle::SysTracker::Update, still called by its mangled name here;
- * include/Particle__SysTracker.h now declares the real member. */
-void _ZN8Particle10SysTracker6UpdateEv(void *self);
-
 /* Defined below. */
 void func_ov006_020e73c4(void);
 void func_ov006_020e740c(void);
@@ -298,7 +294,7 @@ int dScMgD3DBase_c::BeforeBehavior()
 {
     if (dScMgBase_c::BeforeBehavior() == 0) return 0;
     if (data_020a0db0 & 1)
-        _ZN8Particle10SysTracker6UpdateEv(&mSysTracker);
+        mSysTracker.Update();
     return 1;
 }
 
