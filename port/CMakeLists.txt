@@ -23314,7 +23314,11 @@ endforeach()
 # All three targets take them, because the reverse faces are in
 # ${PORT_FACES_SYNC_GEN}, which all three link, and the ROM-shaped callers
 # (the ov063 / ov085 slot thunks, Peach's InitState0 / InitState4) are in all
-# three. The slice names no PORT_HOSTGEN_TU row.
+# three. The slice also carries ModelBase's D2 (LINK15 W23-1's stretch row),
+# whose _MSC_VER arm replaces the body in
+# port/unmatched/ModelFamily_Dtors_HostCopy.c; that file is on the same three
+# targets and its D1 bodies call the D2 by its flat name. The slice names no
+# PORT_HOSTGEN_TU row.
 port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_smalls2.txt" SLICE_W31_SMALLS2_LINES)
 set(SLICE_W31_SMALLS2_SOURCES "")
 foreach(line IN LISTS SLICE_W31_SMALLS2_LINES)

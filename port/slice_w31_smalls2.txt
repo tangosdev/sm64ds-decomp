@@ -37,6 +37,18 @@
 #       port/unmatched/Boo_InitResources.c (its K&R ClosestPlayer declaration
 #       tripped closestplayer_guard; the synced src passes the receiver). The
 #       flat name's caller is hal/actor_classes_ov063.cpp's slot-0 thunk.
+#
+# AND ONE BASE-OBJECT DESTRUCTOR (run linkfull wave 31, batch 2, LINK15 W23-1's
+# stretch row):
+#
+#   _ZN9ModelBaseD2Ev  arm9 0x020170b8 size 0x30. Its #else arm is the ROM body
+#       (MATCHING 2004/b56, --strict-relocs); its _MSC_VER arm is
+#       `thiz->~ModelBase(); return thiz;`, the shape W23-1 enrolled for
+#       Model's D2 (port/slice_w23_modeldtor.txt). Host copy was the body in
+#       port/unmatched/ModelFamily_Dtors_HostCopy.c, whose remaining Model,
+#       CommonModel and ShadowModel D1 bodies call it by its flat name the way
+#       the ROM's own D1s call 0x020170b8.
 src/_ZN13PrincessPeach21UpdateGroundCollisionEP10dBgCh_Actr.cpp
 src/_ZN8WallSign8BehaviorEv.cpp
 src/game/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp
+src/_ZN9ModelBaseD2Ev.cpp

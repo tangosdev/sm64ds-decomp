@@ -70,6 +70,9 @@
  * neighbours' fields and calls ModelBase D2 with nothing dispatched between,
  * and tools/dtor_store_guard.py's SRC_ARMS re-proves that on every build.
  * Seven bodies remain.
+ *
+ * AND MODELBASE'S D2 (run linkfull wave 31, lane SMALLS2): retired below to
+ * a declaration; six bodies remain.
  */
 
 struct MdlBase {
@@ -127,14 +130,17 @@ extern void _ZN9ModelAnimD2Ev(void *thiz);              /* 0x0201689c */
 
 /* ---- ModelBase, 0x020170b8 (D2), 0x02017120 (D1), 0x020170e8 (D0) -------- */
 
-struct MdlBase *_ZN9ModelBaseD2Ev(struct MdlBase *thiz)
-{
-    thiz->vtable = (void *)data_0208e87c;
-    if (thiz->res != 0) {
-        Deallocate(thiz->res);
-    }
-    return thiz;
-}
+/* _ZN9ModelBaseD2Ev RETIRED (run linkfull wave 31, lane SMALLS2):
+   src/_ZN9ModelBaseD2Ev.cpp's _MSC_VER arm provides it now, and
+   port/slice_w31_smalls2.txt enrols it. The three D1 bodies below still
+   call it by its flat name, as the ROM's own Model, CommonModel and
+   ShadowModel D1s do (bl 0x020170b8 from 0x02016d44, 0x020161f0 and
+   0x02016050). The ROM body stores ModelBase's table, frees +4 through
+   Deallocate when it is set and returns this; the arm's ~ModelBase does the
+   same with MSVC's own ModelBase table in the transient vtable word, where
+   this copy stored data_0208e87c -- the difference V3B's note above names
+   for ShadowModel's D0. */
+struct MdlBase *_ZN9ModelBaseD2Ev(struct MdlBase *thiz);
 
 struct MdlBase *_ZN9ModelBaseD1Ev(struct MdlBase *thiz)
 {
