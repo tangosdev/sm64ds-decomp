@@ -3,44 +3,23 @@
 
 #include "types.h"
 
-/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
- * the class's own destructor `_ZN10daObjKey_cD1Ev` destroys each member, and
- * `Key_Spawn` constructs the same types at the same offsets before
- * storing `_ZTV10daObjKey_c`. Everything this header used to restate below
- * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
+/* daObjKey_c derives from dEnemyBase_c: _ZTI10daObjKey_c at 0x02132b4c is an
+ * __si_class_type_info naming _ZTI12dEnemyBase_c. The destructor
+ * _ZN10daObjKey_cD1Ev destroys each typed member below, and
+ * daObjKey_c_classInit_OBJ_KEY (0x02132828, historical alias Key_Spawn)
+ * constructs the same types at the same offsets:
  *
- * The members close on each other, which is what makes the layout a
- * reading rather than a guess:
+ *     0x114 ModelAnim     0x64    -> 0x178
+ *     0x178 Model         0x50    -> 0x1c8
+ *     0x1c8 ShadowModel   0x28    -> 0x1f0
+ *     0x220 dCcAcPos_c    0x40    -> 0x260
+ *     0x260 dBgCh_Actr    0x1bc   -> 0x41c
  *
- *     0x114 ModelAnim                  0x64    -> 0x178
- *     0x178 Model                      0x50    -> 0x1c8
- *     0x1c8 ShadowModel                0x28    -> 0x1f0
- *     0x220 dCcAcPos_c  0x40    -> 0x260
- *     0x260 dBgCh_Actr               0x1bc   -> 0x41c
- *
- * Typing them absorbed markers that were their insides:
- *   - unk_124 = ModelAnim.data.bones
- *   - unk_128 = ModelAnim.data.transforms
- *   - mAnimation = the Animation base subobject
- *   - unk_174 = ModelAnim.file
- *
- * THE FIRST MEMBER IS AT 0x114, NOT 0x110: daObjKey_c keeps four bytes of its own
- * between dEnemyBase_c's end and the ModelAnim. Every other class in this batch
- * starts its members flush against dEnemyBase_c.
- *
- * SIZE IS THE ROM'S OWN: `Key_Spawn` calls
- * `fBase_c::operator new(1136)` -- 0x470 -- and stores this class's
- * vtable, so that literal IS this class's sizeof.
- *
- * SM64DS proves this class as daObjKey_c through RTTI, allocation size and
- * vtable identity. The factory and profile spellings below are reconstructed
- * source-style names -- evidence-bounded proposals, not recovered SM64DS
- * symbols.
- *
- * daObjKey_c_classInit_OBJ_KEY at 0x02132828 (historical alias Key_Spawn)
- * allocates 0x470 and installs this class's cartridge vtable. It backs the
- * OBJ_KEY registry profile, whose descriptor at 0x02132b68 is reconstructed
- * as g_profile_OBJ_KEY.
+ * The first own field is at 0x110, a pointer to the Player collecting the key.
+ * The factory calls fBase_c::operator new(0x470), so sizeof is 0x470. It backs
+ * the OBJ_KEY registry profile, whose descriptor at 0x02132b68 is
+ * reconstructed as g_profile_OBJ_KEY; the factory and profile spellings are
+ * reconstructed names, not recovered symbols.
  */
 
 #include "dEnemyBase_c.h"
@@ -51,26 +30,26 @@
 #include "dBgCh_Actr.h"
 
 struct daObjKey_c : dEnemyBase_c {
-    s32                          unk_110;               /* 0x110 */
-    ModelAnim                    mModelAnim;            /* 0x114 */
-    Model                        mModel;                /* 0x178 */
-    ShadowModel                  mShadowModel;          /* 0x1c8 */
-    u8  pad_1f0[0x30];
-    dCcAcPos_c    mdCcAcPos_c; /* 0x220 */
-    dBgCh_Actr                 mWithMeshClsn;         /* 0x260 */
-    s32                          unk_41c;               /* 0x41c */
-    s32                          unk_420;               /* 0x420 */
-    s32                          unk_424;               /* 0x424 */
-    u8  pad_428[0x18];
-    s16                          mSpinSpeed;            /* 0x440 */
-    u8                           unk_442;               /* 0x442 */
-    u8                           unk_443;               /* 0x443 */
-    s32                          mState;                /* 0x444 */
-    s32                          unk_448;               /* 0x448 */
-    u8  pad_44c[0x18];
-    s32                          unk_464;               /* 0x464 */
-    s32                          unk_468;               /* 0x468 */
-    s32                          unk_46c;               /* 0x46c */
+    /* No member name here is a recovered symbol; "coined" marks names given
+       from the field's uses in this class's code. */
+    Player      *mPlayer;           /* 0x110 coined: the Player collecting the key */
+    ModelAnim   mModelAnim;         /* 0x114 */
+    Model       mModel;             /* 0x178 */
+    ShadowModel mShadowModel;       /* 0x1c8 */
+    Matrix4x3   mShadowMatrix;      /* 0x1f0 coined: DropShadowRadHeight matrix */
+    dCcAcPos_c  mdCcAcPos_c;        /* 0x220 */
+    dBgCh_Actr  mWithMeshClsn;      /* 0x260 */
+    Vector3     mHomePos;           /* 0x41c coined: mPos at InitResources */
+    u8          pad_428[0xc];
+    Vector3     mCamLookAt;         /* 0x434 coined: eased camera target */
+    s16         mSpinSpeed;         /* 0x440 */
+    u8          mStep;              /* 0x442 coined: step within the state */
+    u8          mBounceCount;       /* 0x443 coined */
+    s32         mState;             /* 0x444 key kind, param1 & 7; indexes the state table */
+    s32         mAnimID;            /* 0x448 coined: collect animation, 0 = none */
+    Vector3     mSavedCamLookAt;    /* 0x44c coined: camera restored on landing */
+    Vector3     mSavedCamPos;       /* 0x458 coined */
+    u32         mParticleID[3];     /* 0x464 coined: Particle::System::New handles */
 
     /* --- vtable --- */
     virtual ~daObjKey_c();
@@ -82,6 +61,10 @@ struct daObjKey_c : dEnemyBase_c {
     int CleanupResources();
     int InitResources();
     int Render();
+
+    /* Coined names. StateDrop is reached only through the state table. */
+    void StateDrop();                   /* 0x02131b18 */
+    void UpdateModelTransform();        /* 0x02131f54 */
 };
 
 #ifndef SM64DS_PLATFORM_PC
