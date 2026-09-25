@@ -64,21 +64,21 @@
       "ordinal": 5
     },
     {
-      "symbol": "func_ov098_0213b7e8",
+      "symbol": "_ZN7daWbm_c11StateBounceEv",
       "address": "0x0213b7e8",
       "size": "0x000001f0",
       "legacy_source": "src/func_ov098_0213b7e8.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov098_0213b9d8",
+      "symbol": "_ZN7daWbm_c9StateDropEv",
       "address": "0x0213b9d8",
       "size": "0x00000144",
       "legacy_source": "src/func_ov098_0213b9d8.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov098_0213bb1c",
+      "symbol": "_ZN7daWbm_c9StateFallEv",
       "address": "0x0213bb1c",
       "size": "0x00000080",
       "legacy_source": "src/func_ov098_0213bb1c.cpp",
@@ -125,7 +125,7 @@
   "notes": [
     "Hand-curated from the 14 legacy one-function sources (six C++ members, the C factory src/d_a_wbm.c, four C++ helpers and three C helpers); see the file's own header comment for the reconciliation. tubuild create's mechanical output was replaced.",
     "The three state bodies and four helpers keep their func_ov098_* linker names as C-linkage helpers over daWbm_c *. The states are called through the table as members of this class, but a member spelling would coin seven mangled names; that rename is left to a separate change.",
-    "MEASURED: func_ov098_0213b6e0 tests actorID through an int flag before branching; spelled as a plain `if (actorID == 0xbf) ... else if (actorID == 0xce)` it DIFFs (13/14). func_ov098_0213b9d8 keeps its arithmetic one step per statement; folding the lead computation into one expression DIFFs by 7 words (13/14).",
+    "MEASURED: func_ov098_0213b6e0 tests actorID through an int flag before branching; spelled as a plain `if (actorID == 0xbf) ... else if (actorID == 0xce)` it DIFFs (13/14). _ZN7daWbm_c9StateDropEv keeps its arithmetic one step per statement; folding the lead computation into one expression DIFFs by 7 words (13/14).",
     "MEASURED: the TU includes common.h before the class header so the flat Matrix4x3 spelling wins; with math/Matrix.h's {Matrix3x3, Vector3} spelling the two matrix copies in func_ov098_0213b584 become memberwise and the function grows from 0xb8 to 0xec bytes.",
     "dCcAc_c::Init, dBgCh_Actr::Init, dActor_c::DropShadowRadHeight, Player::Hurt and Particle::System::NewSimple stay mangled: each takes Fix12<int> by value (wall 6az). ModelBase::SetFile stays mangled because include/ModelBase.h declares it void and InitResources reads its int result.",
     "Header fields named in this change (mShadowMat, mSpawnPosX/Y/Z, mBounceCount, mSquashSpeed, mSquashScale, mBouncePhase, mState, mVariant) are inferred from the bodies; the offsets and types are proven by the bytes, the English names are not.",
@@ -280,7 +280,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 local re-emits it with vague linkage; the Vector3 locals in func_ov098_0213b584, func_ov098_0213b6e0 and func_ov098_0213b9d8 do so here, as their legacy one-function objects already did. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp is its enrolled `complete` owner of that 0x020072c0..0x020072c4 range. This object's copy is the identical 4-byte `bx lr` body with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 local re-emits it with vague linkage; the Vector3 locals in func_ov098_0213b584, func_ov098_0213b6e0 and _ZN7daWbm_c9StateDropEv do so here, as their legacy one-function objects already did. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp is its enrolled `complete` owner of that 0x020072c0..0x020072c4 range. This object's copy is the identical 4-byte `bx lr` body with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
     },
     {
       "symbol": "_ZTI7fBase_c",

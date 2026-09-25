@@ -81,6 +81,10 @@ struct daWbm_c : dEnemyBase_c {
 
     void Land();
     void Burst();
+
+    void StateDrop();
+    void StateFall();
+    void StateBounce();
 };
 
 #ifndef SM64DS_PLATFORM_PC
