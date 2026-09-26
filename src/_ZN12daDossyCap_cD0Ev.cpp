@@ -5,18 +5,13 @@
 #include "daDossyCap_c.h"
 
 #ifdef _MSC_VER
-/* THE HOST NEEDS THE ROM'S FLAT D0 NAME, AND MSVC NEVER EMITS IT. ~daDossyCap_c()
- * is defined in the class body, so a qualified call from here would inline
- * a second copy of the whole destructor chain into this arm. The port's D1
- * for this class is its flat ROM name, the name the class's vtable slot 16
- * holds, so this arm makes the D0's two calls: the D1 body through that
- * flat name, then the class-specific operator delete. Nothing here reaches
- * mwccarm: it builds the `#else` arm and emits the ROM bytes it always
- * emitted, and the object is byte-identical either way. */
-extern "C" void _ZN12daDossyCap_cD1Ev(void *self);
+/* MSVC needs this flat D0 entry. Call the actual class-body destructor
+ * qualified so dispatch is direct, then use the class-specific deallocator.
+ * The inline body includes member/base teardown; no separate flat D1 provider
+ * is supplied by this branch. The mwccarm definition below is unchanged. */
 extern "C" daDossyCap_c *_ZN12daDossyCap_cD0Ev(daDossyCap_c *thiz)
 {
-    _ZN12daDossyCap_cD1Ev(thiz);          /* the D1 body, through its flat ROM name */
+    thiz->daDossyCap_c::~daDossyCap_c();          /* direct member/base teardown */
     daDossyCap_c::operator delete(thiz);  /* the class-specific delete D0 ends with */
     return thiz;
 }
