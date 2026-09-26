@@ -1102,16 +1102,11 @@ def main():
                     help="object cache location (default build/objcache)")
     ap.add_argument("--cache-max-mb", type=int, default=1024,
                     help="prune the object cache back under this size after a build")
-    ap.add_argument("--tu-module", action="append", default=[], metavar="MODULE",
-                    help="build this module from its config_tu/ merged TUs instead of "
-                         "the per-function src/ files (repeatable; e.g. --tu-module ov010)")
     ap.add_argument("--partitioned-tu", action="append", default=[], metavar="TU_ID",
                     help="production-build one partitioned-link-verified manifest TU: "
                          "compile it once, substitute its exact derived text objects, "
                          "and link its licensed reduced non-text object (repeatable)")
     args = ap.parse_args()
-    if args.tu_module and args.partitioned_tu:
-        ap.error("--tu-module and --partitioned-tu are mutually exclusive")
     if args.partitioned_tu and args.profile != "stock":
         ap.error("--partitioned-tu currently supports only the stock profile")
     if args.partitioned_tu and args.no_check:
@@ -1156,7 +1151,7 @@ def main():
                                  "waiver to config/layout-known-issues.txt only if the "
                                  "violation is genuinely pre-existing.")
 
-        profile = RP.prepare_profile(args.profile, tu_modules=args.tu_module)
+        profile = RP.prepare_profile(args.profile)
         config_root = profile["configRoot"]
         config_yaml = profile["configYaml"]
         tu_prepared = None
@@ -1175,8 +1170,6 @@ def main():
             }
             report["partitionedTus"] = TP.report_view(tu_prepared)
         report["profileConfig"] = str(config_root.relative_to(REPO))
-        if profile.get("tuModules"):
-            report["tuModules"] = profile["tuModules"]
         report["modReplacements"] = profile["modReplacements"]
         report["modGapFallbacks"] = profile["modGapFallbacks"]
 
@@ -1192,9 +1185,9 @@ def main():
         run([str(DSD), "lcf", "-c", str(config_yaml)], "dsd lcf")
         report["phases"].append("dsd lcf")
 
-        # A TU-built module's delinks name src_tu/ merged files; widen the allowed
-        # source roots so those enroll like any other complete entry.
-        extra_roots = ("src_tu",) if profile.get("tuModules") or tu_prepared else ()
+        # A partitioned TU's delinks name its src_tu/ merged file; widen the allowed
+        # source roots so it enrolls like any other complete entry.
+        extra_roots = ("src_tu",) if tu_prepared else ()
         srcs = enrolled(config_root, extra_roots=extra_roots)
         vers = versions()
         # Before the first compile: a pin that no longer names a real file has quietly
