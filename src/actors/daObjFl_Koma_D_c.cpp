@@ -3,8 +3,8 @@
 /**
  * daObjFl_Koma_D_c -- a rotating lava-flow platform (ROM profile FL_KOMA_D).
  *
- * Four functions consolidated into the translation unit the cartridge built
- * them from; ov022 0x021115a8..0x02111688. The class data group at 0x02113d98
+ * Four functions form this production text slice at ov022
+ * 0x021115a8..0x02111688. The class data group at 0x02113d98
  * (RTTI, type name, profile, vtable) is what names this class: the tree called
  * it RotatingPlatformLll until the rename in this branch.
  *
@@ -19,39 +19,19 @@
  * `ldr ip,[pc]; bx ip` indirect form the ROM uses instead of a near branch.
  */
 
-/* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources
- * of this TU. `#pragma long_calls` is POSITIONAL in mwccarm 2004/b56 and is
- * carried verbatim before its own member below, bracketed with `off` so it
- * cannot leak into later members (dropping it silently costs the pooled
- * cross-overlay tail-call -- a byte diff; see ShutterBob in ov014).
- * Any OTHER pragma is FILE-GLOBAL last-wins (opt_propagation,
- * optimize_for_size) and is still left out: carried into a merged TU it
- * would silently recompile every other member. Decide those by hand:
- *   _ZN16daObjFl_Koma_D_c16CleanupResourcesEv: #pragma long_calls on   [carried below]
- */
-
-/* Includes: union of the legacy files', first-seen in ROM-ascending
- * processing order. NOT verified for header ordering constraints (e.g. a
- * common.h-before-X rule) -- watch for new compile errors after this. */
 #include "daObjFl_Koma_D_c.h"
 
-/* Local shadow declarations carried from the legacy files verbatim.
- * NOT reconciled against real project headers -- check include/*.h for
- * each of these before compiling; a real header should usually win. */
-/* shadow struct 'SharedFilePtr' */
+/* This descriptor matches the shared helpers in daObjKaitendai_c.cpp. */
 struct SharedFilePtr;
 
-/* shadow struct 'CLPS_Block' */
 struct CLPS_Block;
 
-/* shadow struct 'ResourceDescriptor' */
 struct ResourceDescriptor {
     SharedFilePtr *model;
     SharedFilePtr *collision;
     CLPS_Block *clps;
 };
 
-/* shadow typedef 'char' */
 typedef char ResourceDescriptor_size_must_be_0x0c[
     sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
@@ -66,21 +46,12 @@ extern ResourceDescriptor data_ov022_02113da4;
 /* ROM ordinal 1 -- _ZN16daObjFl_Koma_D_cD0Ev, 0x021115f8, size 0x64 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjFl_Koma_D_cD0Ev
-/* recovered: real C++ deleting destructor -- the compiler emits the whole body
- *
- * D0 is the DELETING destructor: destroy through this class and its bases --
- * which is why more than one vptr store appears -- then return the object to
- * its heap. Nobody writes that; declaring `~daObjFl_Koma_D_c()` is enough, because mwcc
- * emits D2, D0 and D1 together and objisolate keeps the one this file is bound
- * to.
- *
- * The deallocation is an inline operator delete, which is why nothing below
- * mentions a heap.
- */
-/*
- * Also emits _ZN16daObjFl_Koma_D_cD1Ev (0x021115a8, size 0x50): one `~daObjFl_Koma_D_c()` declaration
- * makes mwcc emit the D2/D0/D1 variant group together.
- */
+/* One native destructor definition emits D1 (0x021115a8, size 0x50) and
+ * D0 (0x021115f8, size 0x64), both owned by this four-function text slice.
+ * D0 adds the inherited actor-heap operator delete after destruction.
+ * The compiler-only D2 has no standalone ROM home and retains its explicit
+ * manifest deadstrip policy. The single marker identifies the shared native
+ * body for both ROM destructor variants in the lifecycle coverage audit. */
 daObjFl_Koma_D_c::~daObjFl_Koma_D_c()
 {
 }
