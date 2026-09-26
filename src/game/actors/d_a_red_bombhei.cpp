@@ -325,7 +325,7 @@ extern "C" int func_ov084_0212ccb4(daRedBombhei_c *self)
 
 // @symbol func_ov084_0212cae0
 /* Cutscene step 1: pan the camera over to the cannon shutter -- looking at a
-   point 8.0 up and 10.0 behind it from 32.0 up and 200.0 in front. Returns 1
+   point 128.0 up and 10.0 behind it from 512.0 up and 200.0 in front. Returns 1
    once both points have arrived. */
 extern "C" int func_ov084_0212cae0(daRedBombhei_c *self)
 {
