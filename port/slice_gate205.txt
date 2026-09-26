@@ -100,8 +100,13 @@ src/_ZN4Toad6RenderEv.cpp
 src/_ZN4ToadD0Ev.cpp
 # _ZN4ToadD1Ev is NOT here: shadow-class MSVC destructor, spelled inline in
 # hal/actor_classes_ov085.cpp. See this file's header.
-# _ZN4Toad8BehaviorEv is NOT decompiled: HOST REIMPLEMENTATION at
-# port/unmatched/Ov085_Behaviors.cpp.
+# Toad::Behavior (ov085 0x02129878, 0x204 bytes) IS matched now, which this
+# file's header predates: run linkfull lane SEATS3 retired the host
+# reimplementation in port/unmatched/Ov085_Behaviors.cpp for the ROM's own
+# body. Slot 6 (hal/actor_classes_ov085.cpp) calls the member, and
+# port/faces_sync.txt's row for the flat name is REVERSE, so nothing else
+# defines ?Behavior@Toad@@UAEHXZ.
+src/_ZN4Toad8BehaviorEv.cpp
 
 # ---- TOAD: the two states and the ring they close over --------------------
 # __sinit_ov085_0212f2a8 (already in slice_gate18.txt) copies four eight-byte

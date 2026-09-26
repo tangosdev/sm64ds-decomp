@@ -76,11 +76,14 @@ src/func_ov060_02112350.c
 src/func_ov060_021123a0.c
 src/func_ov060_021123c8.c
 src/func_ov060_021123dc.c
-# src/func_ov060_02112434.cpp -- HELD OUT by lane w6-A: BOWSER's flag pass dispatches its state
-#   table through an MSVC pointer-to-member whose stride is not the ROM's 8
-#   (measured 16 -- re-measured at the wave-6 close; the lane banked 4).
-#   Host copy in port/unmatched/Ov060_StateDispatch.cpp.
-# src/func_ov060_02112434.cpp
+# src/func_ov060_02112434.cpp, BOWSER's flag pass, was HELD OUT by lane w6-A:
+#   it dispatches its state table through an MSVC pointer-to-member whose
+#   stride was not the ROM's 8 then (measured 16). The global /vmg /vmm pair in
+#   port/CMakeLists.txt has made every pointer-to-member the ROM's eight-byte
+#   {code, adjust} since, so run linkfull lane SEATS3 armed the row: HOST COPY 1
+#   in port/unmatched/Ov060_StateDispatch.cpp is retired and the table's four
+#   cells (data_ov060_0211aeb4) hold __fastcall faces, receiver in ECX.
+src/func_ov060_02112434.cpp
 src/func_ov060_021125f0.c
 src/func_ov060_02112724.c
 src/func_ov060_021128c0.cpp

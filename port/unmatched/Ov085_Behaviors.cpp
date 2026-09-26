@@ -1,261 +1,45 @@
-/* HOST REIMPLEMENTATIONS of ov085 slot 6 for WALL_SIGN (183) and TOAD (185).
+/* HOST REIMPLEMENTATIONS of ov085 slot 6 for WALL_SIGN (183) and TOAD (185):
+ * BOTH RETIRED. Nothing in this file is compiled any more; it stays, as a
+ * note, because three target source lists in port/CMakeLists.txt still name
+ * it (the shape lane SMALLS2 left its own emptied host files in).
  *
- * WALL_SIGN'S HALF IS RETIRED (run linkfull lane SMALLS2): its matched TU,
- * src/_ZN8WallSign8BehaviorEv.cpp, runs in its place; see the note where its
- * body stood. Only TOAD's body below is still compiled. The rest of this
- * header is the record written when both were here.
+ * Neither body was a host COPY of a matched source when it was written: both
+ * were transcribed from the ROM (extracted/overlays/overlay_0085.bin at load
+ * base 0x02129020, every call target out of
+ * config/arm9/overlays/ov085/relocs.txt, never out of the stale dsd export)
+ * because src/ had neither function. main has matched both since.
  *
- * These two are not host COPIES of a matched source the way the rest of
- * port/unmatched is. Neither body is decompiled at all: src/ has no
- * _ZN8WallSign8BehaviorEv and no _ZN4Toad8BehaviorEv, and neither address
- * appears in config/arm9/overlays/ov085/delinks.txt as the start of a TU. Both
- * are queued as decomp crack targets (run link60's worklist names them:
- * ov085 0x0212eea4, 0x30c bytes, and ov085 0x02129878, 0x204 bytes), and when
- * the matched bodies land these two functions come straight out and the slice
- * takes the src TUs instead. Nothing else in the seat has to change: the
- * registry rows, the vtable arrays and the fills already spell slot 6 by the
- * ROM's own name.
+ * WALL_SIGN (ov085 0x0212eea4, 0x30c bytes), retired by run linkfull lane
+ * SMALLS2: src/_ZN8WallSign8BehaviorEv.cpp (MATCHING 2004/b56) runs in its
+ * place, reached through the generated reverse face for its flat name
+ * (port/faces_sync.txt, port/slice_w31_smalls2.txt).
  *
- * ============================================================================
- * WHERE THE BYTES CAME FROM, and why not from the dsd export
- * ============================================================================
+ * TOAD (ov085 0x02129878, 0x204 bytes), retired by run linkfull lane SEATS3:
+ * src/_ZN4Toad8BehaviorEv.cpp (MATCHING 2004/b56) is on port/slice_gate205.txt
+ * and hal/actor_classes_ov085.cpp's slot 6 calls the member. Its faces_sync
+ * row flipped from FORWARD to REVERSE, since the forward face was the thing
+ * that defined ?Behavior@Toad@@UAEHXZ over the body that stood here. The
+ * matched body makes the calls this one made, in the same order: RunState,
+ * the ModelAnim's UpdateVerts, ClosestPlayer, the three Vec3 reads, AngleDiff,
+ * the rec-room body turn, FindWithID on the held cap, the three approaches,
+ * Animation::Advance, UpdateModelPose, ApplyOpacity, dCc_c Clear and Update.
  *
- * Every instruction below was read out of extracted/overlays/overlay_0085.bin
- * at load base 0x02129020, and every call target out of
- * config/arm9/overlays/ov085/relocs.txt. NOT out of
- * extracted/dsd/arm9_overlays/ov085.bin: that export is STALE against the
- * config's re-addressing, exactly as port/tools/vtspan.py's header warns, and
- * it is stale in the one way that would quietly produce a wrong body here.
+ * THE TWO CONVENTION HAZARDS this header used to carry, and where each went:
  *
- * THE STALENESS IS NOT CONFINED TO BRANCHES, and reading it that way is the
- * dangerous half-truth. Measured word by word over the two images: 1314 words
- * differ, of which only 636 are B/BL encodings. The other 678 are relocated
- * DATA literals, and 291 of the 1314 differ by more than their low halfword.
- * 0x0212905c is one of them, and it is Toad's own vtable pointer. So the
- * export is unsafe for a data read exactly as much as for a code read.
- *
- * relocs.txt covers 1255 of the 1314 differing words (636 arm_call, 619 load).
- * THE RAW OVERLAY AGREES WITH IT ON 1255 OF 1255. THE EXPORT AGREES ON 0.
- * Three worked examples, dsd export first, raw ROM second, relocs.txt third:
- *
- *   0x0212ef94   -> 0x020c6490    -> 0x020c524c    to:0x020c524c  (GetTalkState)
- *   0x0212efd4   -> 0x02044c10    -> 0x0203cf40    to:0x0203cf40  (Vec3_HorzDist)
- *   0x0212f008   -> 0x02042ac0    -> 0x0203adec    to:0x0203adec  (ApproachLinear)
- *
- * WallSign::Behavior carries 15 arm_calls (16 relocs with its literal load)
- * and Toad::Behavior 16 (17 with its own), and the raw image agrees with
- * relocs.txt on every one. A body written from the export would have called
- * SaveData::ReadDataFromCart where the ROM calls ApproachLinear.
- *
- * The two literal pools resolve to one datum each and both are hosted:
- *   0x0212f1a8 = 0x02082214  the {sin, cos} pair table (romdata.c), indexed
- *                            angle>>4, the src/Matrix4x3_FromRotationY idiom
- *   0x0212f1ac = 0x0000ffff  a plain constant, no reloc
- *   0x02129a74 = 0x0209f2f8  the level id
- *   0x02129a78 = 0x0000020d  a member offset the ROM materialised
- *
- * ============================================================================
- * THE TWO CONVENTION HAZARDS, and what each one costs if it is got wrong
- * ============================================================================
- *
- * (1) Toad::Behavior opens with a VIRTUAL dispatch of ROM slot 3 on the
- *     ModelAnim at +0x108:
- *         add r0, r8, #0x108 / ldr r1, [r0] / ldr r1, [r1, #0xc] / blx r1
- *     ROM slot 3 of _ZTV9ModelAnim is ModelAnim::UpdateVerts (0x0201686c,
- *     confirmed with port/tools/vtspan.py). The HOST _ZTV9ModelAnim numbers
- *     slot 3 as Virtual10, because MSVC spends one slot on the destructor
- *     where Itanium spends two -- the w19 collision
- *     (port/unmatched/W19_Slot5_Renders.cpp). Dispatching through the host
- *     vptr here would call Virtual10(Matrix4x3 &) with no argument. The call
- *     below is the qualified ModelAnim::UpdateVerts the ROM means.
+ * (1) Toad::Behavior opens with a VIRTUAL call of ROM slot 3 on the ModelAnim
+ *     at +0x108 (ModelAnim::UpdateVerts, arm9 0x0201686c). The old note said
+ *     the host table numbers that slot Virtual10, so this body spelled the
+ *     call qualified. That stopped being true when include/ModelBase.h spelled
+ *     the destructor pair as two plain virtuals on the host: MSVC's own
+ *     ModelAnim vftable is ROM-numbered now, and it is the one Toad's
+ *     ModelAnim carries (d_a_kinopio.c constructs it through
+ *     ??0ModelAnim@@QAE@XZ, whose table's word 3 is
+ *     ?UpdateVerts@ModelAnim@@UAEXXZ; hal/cxxname_bridge.cpp's host-filled
+ *     _ZTV9ModelAnim has UpdateVerts at 3 as well). So the matched TU's
+ *     `mModelAnim.UpdateVerts()` reaches the ROM's target as it stands, and
+ *     it needs no hostgen row.
  *
  * (2) WallSign::Behavior turns the PLAYER, not itself: three of its four
- *     ApproachLinear/Vec3_ApproachHorz calls take r4, the Player at
- *     this+0x360, as their receiver. That is the ROM's shape (the sign walks
- *     the player into reading position before the message box opens) and it
- *     is easy to "fix" into a self-turn on a casual read.
- *
- * Both bodies end the same way the ROM does: CylinderClsn::Clear then
- * CylinderClsn::Update on the collider, then return 1.
- *
- * ============================================================================
- * WHAT THE AUTOMATED PROOF DOES NOT REACH, and why that is not reassurance
- * ============================================================================
- *
- * A 300-frame FAULTS_FATAL boot on levels 2, 4, 5 and 50 runs both of these
- * bodies once per frame per instance, and every one of those frames takes the
- * SAME branch: nobody talks to a sign or a Toad, because the selftest does not
- * walk into one. So the covered half is the idle half --
- *
- *   WallSign  this+0x360 is null every frame, so only the toucher test runs
- *             (the +0x340 bit, Actor::FindWithID, the id-0xbf check and the
- *             facing test), and it never reaches Player::StartTalk.
- *   Toad      the seated state stays 0, so _ZN4Toad8RunStateEv dispatches the
- *             WAIT main every frame and the head tracking runs.
- *
- * -- and the TALK half is LINKED AND SEATED AND NEVER EXECUTED. Nothing
- * automated has ever run _ZN4Toad12St_Talk_InitEv (TALK enter) or
- * _ZN4Toad12St_Talk_MainEv (TALK main), which means the message id picker
- * (_ZN4Toad12GetMessageIDEv), the star spawn, the cap hand-back through
- * Actor::Spawn(0x10d) and Message::EndTalk are all unproven; and on the sign,
- * the three-step approach at this+0x364 and the Player::ShowMessage2 call are
- * unproven for the same reason. Both classes' talk paths end in the dialogue
- * box the port stops at for SIGN_POST anyway (hal/actor_vtables.cpp), so
- * reaching them needs a real player rather than a longer selftest.
- *
- * This is exactly the shape of the w19 bug: four Renders that were linked,
- * latent and faulting, hidden behind a green battery that never brought the
- * camera near one. Treat the numbers above as "these two classes boot and
- * tick", not as "these two classes work".
+ *     approach calls take the Player at this+0x360 as their receiver. Its
+ *     matched TU carries that shape.
  */
-#include "ModelAnim.h"
-
-extern "C" {
-
-/* ---- the shared ring, all already linked -------------------------------- */
-struct PortVec3 { int x, y, z; };
-
-int Vec3_HorzDist(const void *a, const void *b);
-short Vec3_HorzAngle(const void *v0, const void *v1);
-short Vec3_VertAngle(const void *v1, const void *v0);
-int Vec3_ApproachHorz(void *out, const void *target, int maxStep);
-int AngleDiff(int a, int b);
-int _Z14ApproachLinearRsss(short *cur, short target, short step);
-void *_ZN8dActor_c10FindWithIDEj(unsigned id);
-void *_ZN8dActor_c13ClosestPlayerEv(void *self);
-int _ZN6Player12GetTalkStateEv(void *self);          /* face: method_faces */
-int _ZN6Player9StartTalkER7fBase_cb(void *self, void *actor, int b);
-void _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(
-        void *self, void *actor, unsigned msg, const void *pos,
-        unsigned d, unsigned e);
-int func_ov002_020bec9c(void *player, unsigned a, int b, int d,
-                        unsigned short e);
-void _ZN5dCc_c5ClearEv(void *self);
-void _ZN5dCc_c6UpdateEv(void *self);
-void _ZN9Animation7AdvanceEv(void *self);
-void _ZN9ModelBase12ApplyOpacityEj(void *self, unsigned opacity);
-
-/* ov085's own, all matched and in port/slice_gate205.txt */
-void _ZN4Toad8RunStateEv(void *self);    /* the state machine's Main half */
-void _ZN4Toad15UpdateModelPoseEv(void *self);    /* the matrices and the shadow  */
-
-extern short data_02082214[];            /* {sin, cos} pairs, angle>>4 */
-extern signed char data_0209f2f8;        /* the level id */
-
-}  /* extern "C" */
-
-/* ApproachLinear2 is reached by its C++ name on purpose: the matched TU
-   src/_Z15ApproachLinear2Riii.cpp defines `int ApproachLinear2(int &, int,
-   int)` with no extern "C", so MSVC decorates it, and there is no C-name face
-   for the int overload the way there is for the short one. Declaring the
-   signature is what links the body. */
-int ApproachLinear2(int &ref, int target, int step);
-
-extern "C" {
-
-/* WALL_SIGN (actor 183), ov085 0x0212eea4, 0x30c bytes: RETIRED HERE.
- * The body this file carried was written from the ROM before the function
- * was decompiled. src/_ZN8WallSign8BehaviorEv.cpp is matched now (MATCHING
- * 2004/b56, --strict-relocs, at ov085 0x0212eea4) and compiles clean under
- * the port's own compile line, so run linkfull lane SMALLS2 flipped its
- * port/faces_sync.txt row to REVERSE and put the TU on
- * port/slice_w31_smalls2.txt: slot 6's flat name __ZN8WallSign8BehaviorEv is
- * the generated face into WallSign::Behavior, which is the ROM's own code.
- * The matched body makes the same fifteen calls in the same order as the
- * one that stood here, including hazard (2): the player, not the sign, is
- * the receiver of the approach calls. */
-
-/* ==========================================================================
- * TOAD (actor 185), ov085 0x02129878, 0x204 bytes
- * ==========================================================================
- *
- * The Toads standing around the castle. Behavior is the per-frame half of a
- * two-state machine (WAIT and TALK, the names are in the ROM at
- * data_ov085_0212fe20 and _0212fe28) plus the head tracking that makes a Toad
- * look at whoever walks past:
- *
- *   +0x202  the head's horizontal offset from the body's own facing
- *   +0x206  the head's vertical angle
- *   +0x200  the horizontal angle actually applied, approached at 0x250/frame
- *   +0x204  the vertical one, at 0x100/frame
- *   +0x20d  the model's fade level, approached toward +0x20e at 6/frame
- *   +0x20e  the fade target: 0xff visible, 0x3c faded
- *
- * The tracking range is 0xfa000 normally and 0x1f4000 on level 0x32, the rec
- * room, where the Toads are the whole point of the room. Level 0x32 is also
- * the only place a Toad turns its BODY to follow: everywhere else an
- * out-of-range Toad just zeroes its head offsets.
- */
-/* PORT_HOST_ABI: ROM-order ModelAnim slot-3 dispatch. See hazard (1) in this
- * file's header -- the host table numbers that slot as Virtual10. */
-int _ZN4Toad8BehaviorEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    char *p;
-    int dist, range;
-    short horz = 0, vert = 0;
-
-    _ZN4Toad8RunStateEv(c);
-    /* ((Sub *)&mModelAnim)->g3(): ModelAnim at +0x108, ROM slot 3. */
-    ((ModelAnim *)(c + 0x108))->ModelAnim::UpdateVerts();
-
-    p = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
-    if (p == 0) {
-        *(unsigned char *)(c + 0x20e) = 0x3c;
-    } else {
-        PortVec3 playerPos, aim;
-
-        playerPos.x = *(int *)(p + 0x5c);
-        playerPos.y = *(int *)(p + 0x60);
-        playerPos.z = *(int *)(p + 0x64);
-
-        range = (data_0209f2f8 == 0x32) ? 0x1f4000 : 0xfa000;
-        dist = Vec3_HorzDist(c + 0x5c, &playerPos);
-
-        /* the eye line, not the feet */
-        aim.x = playerPos.x;
-        aim.y = playerPos.y + 0x1e000;
-        aim.z = playerPos.z;
-
-        horz = Vec3_HorzAngle(c + 0x5c, &aim);
-        vert = Vec3_VertAngle(c + 0x5c, &aim);
-
-        *(unsigned char *)(c + 0x20e) = (dist < 0x190000) ? 0xff : 0x3c;
-
-        if (dist < range
-            && AngleDiff(horz, *(short *)(c + 0x8e)) < 0x3000) {
-            *(short *)(c + 0x202) = (short)(horz - *(short *)(c + 0x8e));
-            *(short *)(c + 0x206) = vert;
-        } else {
-            /* out of range, or behind: on the rec room the body turns to
-               follow, everywhere else the head just recentres */
-            if (data_0209f2f8 == 0x32)
-                _Z14ApproachLinearRsss((short *)(c + 0x8e), horz, 0x100);
-            *(short *)(c + 0x202) = 0;
-            *(short *)(c + 0x206) = 0;
-        }
-    }
-
-    /* the cap this Toad is holding, if it still exists, keeps him visible */
-    if (*(unsigned *)(c + 0x1f4) != 0
-        && _ZN8dActor_c10FindWithIDEj(*(unsigned *)(c + 0x1f4)) != 0)
-        *(unsigned char *)(c + 0x20e) = 0xff;
-    if (data_0209f2f8 == 0x32)
-        *(unsigned char *)(c + 0x20e) = 0xff;
-
-    _Z14ApproachLinearRsss((short *)(c + 0x200), *(short *)(c + 0x202), 0x250);
-    _Z14ApproachLinearRsss((short *)(c + 0x204), *(short *)(c + 0x206), 0x100);
-    ApproachLinear2(*(int *)(c + 0x20d), *(unsigned char *)(c + 0x20e), 6);
-
-    _ZN9Animation7AdvanceEv(c + 0x158);
-    _ZN4Toad15UpdateModelPoseEv(c);
-    *(int *)(c + 0x164) = 0x1000;
-    _ZN9ModelBase12ApplyOpacityEj(c + 0x108,
-                                  (unsigned)((*(unsigned char *)(c + 0x20d) >> 3) & 0xff));
-
-    _ZN5dCc_c5ClearEv(c + 0xd4);
-    _ZN5dCc_c6UpdateEv(c + 0xd4);
-    return 1;
-}
-
-}  /* extern "C" */
