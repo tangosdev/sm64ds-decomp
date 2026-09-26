@@ -23603,6 +23603,17 @@ foreach(_tasmc1 walk_window walk_window_hires smoke_player)
     target_sources(${_tasmc1} PRIVATE "${ASMCPORT_A1_SRC}")
 endforeach()
 
+# A2. src/_ZN6Memory13operator_new2Ej.cpp (its real signature since main #1243)
+# on every target that compiles hal/model_host.cpp, whose host copy of the flat
+# name is retired for an /alternatename onto this body. All fourteen already
+# carry src/func_0203cc0c.c, the veneer's one callee.
+foreach(_tasmc2 walk_window walk_window_hires smoke_player smoke_actor
+                smoke_anim smoke_clsn smoke_frames smoke_model smoke_modelanim
+                smoke_oam smoke_persist smoke_savestate smoke_soak smoke_soak_anim)
+    target_sources(${_tasmc2} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN6Memory13operator_new2Ej.cpp")
+endforeach()
+
 # XREL1 (run linkfull): EVERY OVERLAY MOUNT DEPENDS ON THE CONFIG IT READS.
 #
 # tools/ovdata.py builds each mount out of its overlay's config/arm9/overlays/
