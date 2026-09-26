@@ -51,15 +51,21 @@ def failures_of(report, kind):
 
 class TreeTests(unittest.TestCase):
     def test_the_committed_tree_passes(self):
-        """If this is red, src_tu is stranded -- fix the tree, not the test."""
+        """The gate must pass and cover the complete tracked source inventory."""
         report = C.check(REPO / "src_tu")
         self.assertTrue(report["ok"], report["failures"][:10])
-        # A smoke floor, not a target: src_tu only ever SHRINKS, because every TU
-        # promotion consolidates its shadow source into src/. The number here says
-        # "the check walked a real tree", so it has to stay below the live count --
-        # it was 30 when this promotion took the count to exactly 30.
-        self.assertGreater(report["checked"]["sources"], 10)
-        self.assertGreater(report["checked"]["references"], 100)
+        # Promotions shrink src_tu. Compare against Git's independent inventory
+        # so a valid smaller tree passes while an incomplete walk still fails.
+        tracked = subprocess.check_output(
+            ["git", "ls-files", "-z", "--", "src_tu/"], cwd=REPO, text=True)
+        sources = {path for path in tracked.split("\0")
+                   if pathlib.PurePosixPath(path).suffix in (".c", ".cpp")}
+        self.assertTrue(sources, "Git-tracked src_tu source inventory is empty")
+        self.assertTrue(all((REPO / path).is_file() for path in sources),
+                        "A Git-tracked src_tu source is missing")
+        self.assertEqual(report["checked"]["sources"], len(sources),
+                         "The checker did not cover the Git-tracked source inventory")
+        self.assertGreater(report["checked"]["references"], 0)
 
     def test_cli_exits_zero_on_the_committed_tree(self):
         r = subprocess.run([sys.executable, str(TOOLS / "check_src_tu.py")],
