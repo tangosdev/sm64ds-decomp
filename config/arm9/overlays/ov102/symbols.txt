@@ -86,8 +86,8 @@ _ZN7daBmb_c8BehaviorEv kind:function(arm,size=0x354) addr:0x0214c1bc
 _ZN7daBmb_c13InitResourcesEv kind:function(arm,size=0x1d4) addr:0x0214c510
 _ZN7daBmb_c13OnYoshiTryEatEv kind:function(arm,size=0x14) addr:0x0214c6e4
 daBmb_c_classInit kind:function(arm,size=0x50) addr:0x0214c6f8
-_ZN10KoopaShellD1Ev kind:function(arm,size=0x50) addr:0x0214c748
-_ZN10KoopaShellD0Ev kind:function(arm,size=0x64) addr:0x0214c798
+_ZN7daShl_cD1Ev kind:function(arm,size=0x50) addr:0x0214c748
+_ZN7daShl_cD0Ev kind:function(arm,size=0x64) addr:0x0214c798
 func_ov102_0214c7fc kind:function(arm,size=0x50) addr:0x0214c7fc
 func_ov102_0214c84c kind:function(arm,size=0x3a0) addr:0x0214c84c
 func_ov102_0214cbec kind:function(arm,size=0x274) addr:0x0214cbec
@@ -103,12 +103,12 @@ func_ov102_0214d148 kind:function(arm,size=0x68) addr:0x0214d148
 func_ov102_0214d1b0 kind:function(arm,size=0x8) addr:0x0214d1b0
 func_ov102_0214d1b8 kind:function(arm,size=0x40) addr:0x0214d1b8
 func_ov102_0214d1f8 kind:function(arm,size=0x50) addr:0x0214d1f8
-_ZN10KoopaShell16CleanupResourcesEv kind:function(arm,size=0x2c) addr:0x0214d248
-_ZN10KoopaShell16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0214d274
-_ZN10KoopaShell6RenderEv kind:function(arm,size=0x70) addr:0x0214d278
-_ZN10KoopaShell8BehaviorEv kind:function(arm,size=0x264) addr:0x0214d2e8
-_ZN10KoopaShell13InitResourcesEv kind:function(arm,size=0x154) addr:0x0214d54c
-_ZN10KoopaShell13OnYoshiTryEatEv kind:function(arm,size=0x14) addr:0x0214d6a0
+_ZN7daShl_c16CleanupResourcesEv kind:function(arm,size=0x2c) addr:0x0214d248
+_ZN7daShl_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0214d274
+_ZN7daShl_c6RenderEv kind:function(arm,size=0x70) addr:0x0214d278
+_ZN7daShl_c8BehaviorEv kind:function(arm,size=0x264) addr:0x0214d2e8
+_ZN7daShl_c13InitResourcesEv kind:function(arm,size=0x154) addr:0x0214d54c
+_ZN7daShl_c13OnYoshiTryEatEv kind:function(arm,size=0x14) addr:0x0214d6a0
 daShl_c_classInit kind:function(arm,size=0x58) addr:0x0214d6b4
 data_ov102_0214d70c kind:data(any) addr:0x0214d70c
 __sinit_ov102_0214d714 kind:function(arm,size=0x1f4) addr:0x0214d714
@@ -199,7 +199,6 @@ data_ov102_0214e60c kind:data(any) addr:0x0214e60c
 _ZTS7daShl_c kind:data(any) addr:0x0214e614
 _ZTI7daShl_c kind:data(any) addr:0x0214e620
 g_profile_SHELL kind:data(any) addr:0x0214e62c
-_ZTV10KoopaShell kind:data(any) addr:0x0214e650
 _ZTV7daShl_c kind:data(any) addr:0x0214e650
 data_ov102_0214e6e0 kind:bss addr:0x0214e6e0
 data_ov102_0214e6e8 kind:bss addr:0x0214e6e8
