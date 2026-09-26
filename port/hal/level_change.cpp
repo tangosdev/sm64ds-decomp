@@ -1037,6 +1037,24 @@ static unsigned port_level_heap_free(void)
 extern "C" unsigned port_level_heap_free_bytes(void)
 { return port_level_heap_free(); }
 
+/* THE ROOT HEAP'S FREE BYTES, for the one [lvl] root line a change prints (run
+   linkfull, lane ROOTLEAK1). The game-heap figure above is the actor heap
+   only; the root heap is the default heap, so the level's own files and every
+   _Znwj object land there, and a change that strands one of those shows here
+   and nowhere else (the particle work area did, 35840 bytes a change). A read
+   of the free list, nothing more. Heap+0x14 is the ExpandingHeap's allocator,
+   the word tests/walk_window.cpp's [heap] lines read. */
+extern "C" void *data_020a0e9c;          /* Heap::rootHeap */
+static unsigned port_level_root_heap_free(void)
+{
+    if (!data_020a0e9c)
+        return 0;
+    void *alloc = *(void **)((char *)data_020a0e9c + 0x14);
+    if (!alloc)
+        return 0;
+    return _ZN22ExpandingHeapAllocator10MemoryLeftEv(alloc);
+}
+
 /* ---- Stage::InitResources:177-218: THE SUBLEVEL CLEAR ---------------------
 
    THE ROM CLEARS FOUR THINGS WHEN A LEVEL CHANGE LEAVES THE COURSE IT WAS IN,
@@ -1990,6 +2008,11 @@ extern "C" int port_level_change_apply(void)
     std::fprintf(stderr, "[lvl] level %d up. heap free: %u before, %u torn down, %u "
                 "after (net %+d)\n", (int)data_0209f2f8, free_before,
                 free_torn, free_after, (int)free_after - (int)free_before);
+    /* the root heap at the same instant: flat across repeated entries of one
+       level is the no-leak shape (compare an entry with the next entry of the
+       SAME level; different levels hold different amounts) */
+    std::fprintf(stderr, "[lvl] root heap free: %u, level %d up\n",
+                 port_level_root_heap_free(), (int)data_0209f2f8);
     port_lvlperf_emit();
     return 1;
 }
