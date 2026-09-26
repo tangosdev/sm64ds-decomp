@@ -907,6 +907,7 @@ __ZN14SquarePathLiftD1Ev                                                 ??1Squa
 __ZN5Stage10LoadSkyboxEv                                                 ?LoadSkybox@Stage@@QAEXXZ                                        0x0202b0fc R
 __ZN5Stage11GetSkyboxIDEv                                                ?GetSkyboxID@Stage@@QAEHXZ                                       0x0202a93c R
 __ZN5Stage14GraphCallback1Ev                                             ?GraphCallback1@Stage@@QAEHXZ                                    0x02029838 R
+__ZN5Stage14GraphCallback2Ev                                             ?GraphCallback2@Stage@@QAEHXZ                                    0x020297f4 R
 __ZN5Stage19BeforeInitResourcesEv                                        ?BeforeInitResources@Stage@@UAE_NXZ                              0x0202ddc8 R
 __ZN5Stage9LoadModelEv                                                   ?LoadModel@Stage@@QAEXXZ                                         0x0202b5ec R
 __ZN5StageD1Ev                                                           ??1Stage@@UAE@XZ                                                 0x02023688 R

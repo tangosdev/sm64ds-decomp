@@ -155,10 +155,6 @@ int port_gxbank_layout_check(void);
    the Minimap hand OAM::Render, checked for a missed pointer rebase */
 int hal_oam_templates_check(void);
 int hal_oam_walk_probe(void);
-/* the minimap's per-frame affine callback (port/unmatched/Minimap_Affine.cpp),
-   the STAGE's own func_02019144 first beat, which the port cannot dispatch
-   through the block because the Stage's table is hosted by nobody */
-void port_minimap_affine_update(void);
 /* what hal/scene_boot.cpp's beat answered this frame: 1 = run func_02019144's
    tail, 0 = the current graphics block already did the display sync itself */
 int port_graph_block_verdict(void);
@@ -4039,16 +4035,15 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
         *(volatile unsigned *)0x04001000 =
             (*(volatile unsigned *)0x04001000 & ~0x1f00u) | (mask << 8);
     }
-    /* func_02019144's FIRST beat, for the one block the port cannot dispatch:
-       the Stage's. Its table (data_02092188) is hosted by nobody, so
-       hal/scene_boot.cpp's beat refuses it and answers 1, and this hand copy
-       of Stage::GraphCallback2 is what stands in. It runs exactly when the
-       beat did NOT dispatch a real block, which is every level frame and
-       leaves the 46-level net where it was. port/unmatched/Minimap_Affine.cpp
-       carries the callback; the rest of func_02019144 is the layer-mask
-       publish above and the OAM upload below. */
+    /* func_02019144's FIRST beat, the current block's slot 2, is
+       hal/scene_boot.cpp's port_graph_block_beat for every block now, the
+       Stage's included: its table is seated and registered
+       (hal/arm9_tables_link100.cpp, run linkfull lane SEATS3), so
+       Stage::GraphCallback2 -- the minimap's BG3 affine -- runs there, once a
+       frame, and the hand copy of it this branch used to call is retired. The
+       rest of func_02019144 is the layer-mask publish above and the OAM upload
+       below. */
     if (run_tail) {
-        port_minimap_affine_update();
         /* IMMEDIATELY BEFORE THE UPLOAD, and that placement is the whole point.
            port_message_composite_engine_a ran a few lines earlier in both frame
            loops and rasterised engine A's sprites out of 0x07000000 as it

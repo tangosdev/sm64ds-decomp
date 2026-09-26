@@ -8,8 +8,9 @@
  * port never mounted is the honest place to put the reference edge, because
  * the ROM's own words say what belongs in it.
  *
- * ALL FIVE ARE DEAD STORAGE IN THIS PORT, and that is measured rather than
- * assumed -- every ROM reader of every one of them is itself outside the link:
+ * ALL FIVE WERE DEAD STORAGE IN THIS PORT when they were seated, and that was
+ * measured rather than assumed -- every ROM reader of every one of them was
+ * itself outside the link. Four still are; data_02092188 is not:
  *
  *   data_02099fe4  read by _ZN3IRQ13GetIRQHandlerEj (0x02056ee4, the load at
  *                  0x02056f68) and _ZN3IRQ13SetIRQHandlerEjPFvvE (0x02056f70,
@@ -23,12 +24,15 @@
  *                  _ZN7dScMB_c13InitResourcesEv+0x230 (dScMB_c_InitResources). Both unlinked;
  *                  _ZN7dScMB_c13InitResourcesEv is the 531-TU scene-boot root
  *                  port/arm9_frontier.txt ranks second.
- *   data_02092188  ONE reader, from:0x02074ecc = __sinit_02074e84+0x48, a
- *                  static initialiser that is not in the link. Independently,
- *                  hal/scene_boot.cpp's graphics-block header already says
- *                  "the Stage's own table, data_02092188, is hosted by nobody"
- *                  and that nothing seats data_0209d4a8, so the ROM's "is the
- *                  Stage's block current" test has nothing to read.
+ *   data_02092188  NOT DEAD ANY MORE, and the one exception to this list (run
+ *                  linkfull lane SEATS3; section 3 has the whole of it). Its
+ *                  one reader, from:0x02074ecc = __sinit_02074e84+0x48, is in
+ *                  the link now (hal/ctor_runner.cpp rung C1d), so the Stage's
+ *                  graphics block data_0209f3c4 carries this table as its
+ *                  vptr, and the linked Stage::InitResources makes that block
+ *                  current (data_0209d4a8) on every level. The frame beat
+ *                  dispatches it: slot 2 is Stage::GraphCallback2, the
+ *                  bottom-screen minimap's affine.
  *   data_0209a424  ONE reader and it is not code at all: from:0x0209a440, a
  *                  word inside data_0209a438, i.e. a parent descriptor points
  *                  at this table. That parent is hosted nowhere either.
@@ -38,9 +42,9 @@
  *                  is also how this symbol is known to be unhosted, since a
  *                  linked reader would have made it an unresolved external.
  *
- * So every seat here is STORAGE, not dispatch: nothing in this build reads a
- * word back out of any of them, and the fill below therefore changes no
- * behaviour.
+ * So every seat here but data_02092188's is STORAGE, not dispatch: nothing in
+ * this build reads a word back out of the other four, and their fills change
+ * no behaviour.
  * That is stated as a limit, not as a virtue -- the linkage is the whole
  * effect, and the honesty of it rests on the words being the ROM's own.
  *
@@ -159,17 +163,36 @@
  *   idx  word        symbol                        disposition
  *    0   0x02018eb8  _ZN8dGraph_c10callback_c14GraphCallback0Ev   already linked
  *    1   0x02029838  _ZN5Stage14GraphCallback1Ev   SEATED, was unlinked
- *    2   0x020297f4  _ZN5Stage14GraphCallback2Ev   TRAPS
+ *    2   0x020297f4  _ZN5Stage14GraphCallback2Ev   SEATED (run linkfull, SEATS3)
  *    3   0x02018ea0  _ZN8dGraph_c10callback_c14GraphCallback3Ev   already linked
  *
- * SLOT 2 IS THE ONE ROW THIS TABLE COULD NOT BUY, and the reason is an
- * EXISTING RULING rather than this gate's caution. port/slice_w8a.txt: "NOT
- * HOSTABLE AT ALL. Stage::GraphCallback2's whole body takes the address of
- * reg_G2S_DB_BG3PA and MSVC cannot put a global at 0x04001030."
- * hal/sub_actors.cpp's port_minimap_affine_update is the stand-in and passes
- * the literal 0x04001030 instead. port/tools/closure.py confirmed it
- * independently before the slice line was written: _reg_G2S_DB_BG3PA came back
- * as the one unresolved external of that TU. So the slot traps.
+ * SLOT 2 USED TO TRAP, on port/slice_w8a.txt's ruling: "NOT HOSTABLE AT ALL.
+ * Stage::GraphCallback2's whole body takes the address of reg_G2S_DB_BG3PA
+ * and MSVC cannot put a global at 0x04001030" (closure.py found
+ * _reg_G2S_DB_BG3PA as the TU's one unresolved external). The ruling was right
+ * about that source and main has since respelled it: the TU passes
+ * REG_DB_BG3PA, which include/nitro/hw/registers.h defines as the literal
+ * pointer ((volatile u16 *)0x04001030), so there is no global left to place,
+ * and the host has real memory at that address (ntr/io.cpp maps the DS I/O
+ * page at its own base), which is exactly where
+ * hal/sub_actors.cpp's retired stand-in, port_minimap_affine_update, wrote the
+ * same six-argument G2x::SetBGyAffine call. So the matched TU compiles as it
+ * stands and the slot holds its face: port/faces_sync.txt's REVERSE row for
+ * _ZN5Stage14GraphCallback2Ev, `int f(void *self)`, the one-argument cdecl word
+ * func_02019144 and the port's own beat both call (GraphCallback1's shape).
+ *
+ * AND THE TABLE IS REGISTERED WITH THE FRAME BEAT below, which is what makes
+ * the slot run. hal/scene_boot.cpp's graph_block_word dispatches the current
+ * block (data_0209d4a8) only when its vptr is a table somebody registered,
+ * because an unseated table holds raw DS addresses. This one is seated in full,
+ * so the Stage's block now goes the way the title's, the minigames' and the VS
+ * menu's already do: port_graph_block_beat (func_02019144's head) calls slot 2
+ * once a frame on every level, which is the ROM's own point for the minimap
+ * affine, and the stand-in call hal/sub_screen.cpp made in its place is gone.
+ * The port dispatches words 0 and 2 only. Word 0 is GraphCallback0, a bare
+ * `return 1` both of its callers discard; word 1, Stage::GraphCallback1
+ * (Particle::RenderAll), is func_02019404's, which the port does not run, so
+ * no particle pass is added.
  *
  * THE THREE `return 1` BODIES ARE ONE BODY IN THIS IMAGE. GraphCallback0, 1
  * and 3 are all `return 1` and /OPT:ICF folds them: the baseline map has
@@ -359,10 +382,14 @@ int _ZN7dScMB_c15graphCallback_c14GraphCallback2Ev(void);
 int _ZN7dScMB_c15graphCallback_c14GraphCallback3Ev(char *self);
 
 /* ---- 3. the Stage's graph callbacks. 0 and 3 are already in the link (and
-   /OPT:ICF-folded onto each other); 1 comes in on port/slice_gate225.txt. ---- */
+   /OPT:ICF-folded onto each other); 1 and 2 come in on port/slice_gate225.txt,
+   2 through the reverse face that takes the block as its one argument. ---- */
 int _ZN8dGraph_c10callback_c14GraphCallback0Ev(void);
 int _ZN5Stage14GraphCallback1Ev(void);
+int _ZN5Stage14GraphCallback2Ev(void *self);
 int _ZN8dGraph_c10callback_c14GraphCallback3Ev(void);
+/* hal/scene_boot.cpp: the frame beat dispatches only a registered table */
+void port_graph_block_register(void *vt);
 
 /* ---- 4 and 5 ---- */
 int  func_0206e254(unsigned short *dst, unsigned char *src, int flag);
@@ -370,23 +397,19 @@ int  func_0206e240(unsigned char *p, unsigned char v);
 void _ZNSt9type_infoD1Ev(int *p);
 }
 
-/* The two slots whose ROM word names a body this gate does not seat. Both are
+/* The one slot whose ROM word names a body this gate does not seat. It is
    named rather than shared with a generic trap, because WHICH slot fired is
    the whole content of the report -- the shape hal/scene_boot.cpp's l2_trap
-   and hal/actor_base_tables_ov002.cpp's ob2_trap_report both take. Neither can
-   fire in this build: nothing dispatches either table (see the header). */
+   and hal/actor_base_tables_ov002.cpp's ob2_trap_report both take. It cannot
+   fire in this build: nothing dispatches that table (see the header). The
+   Stage table's slot 2 had the other trap here until run linkfull lane SEATS3
+   seated Stage::GraphCallback2 in it. */
 static void a9t_trap(const char *what)
 {
     std::fprintf(stderr, "  UNHOSTED: %s\n", what);
     std::fflush(stderr);
     if (std::getenv("SM64DS_FAULTS_FATAL"))
         std::exit(3);
-}
-static int a9t_trap_2188_s2(void)
-{
-    a9t_trap("data_02092188 slot 2, Stage::GraphCallback2 -- not hostable, it "
-             "takes the address of reg_G2S_DB_BG3PA at 0x04001030");
-    return 1;
 }
 static void a9t_trap_a744_s1(void)
 {
@@ -439,11 +462,13 @@ extern "C" void hal_seat_arm9_link100_tables(void)
     data_02094390[2] = (void *)_ZN7dScMB_c15graphCallback_c14GraphCallback2Ev;
     data_02094390[3] = (void *)_ZN7dScMB_c15graphCallback_c14GraphCallback3Ev;
 
-    /* 3. data_02092188 -- the Stage's. Slot 2 is not hostable and traps. */
+    /* 3. data_02092188 -- the Stage's, all four slots seated, and registered
+       so the frame beat dispatches it (section 3 of the header). */
     data_02092188[0] = (void *)_ZN8dGraph_c10callback_c14GraphCallback0Ev;
     data_02092188[1] = (void *)_ZN5Stage14GraphCallback1Ev;
-    data_02092188[2] = (void *)a9t_trap_2188_s2;
+    data_02092188[2] = (void *)_ZN5Stage14GraphCallback2Ev;
     data_02092188[3] = (void *)_ZN8dGraph_c10callback_c14GraphCallback3Ev;
+    port_graph_block_register(data_02092188);
 
     /* 4. data_0209a424 -- the callback pair. */
     data_0209a424[0] = (void *)func_0206e254;

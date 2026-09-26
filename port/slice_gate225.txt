@@ -20,11 +20,14 @@
 #                  names func_02034d34, so that one rides in behind it.
 #   data_02092188  the Stage's graph callback table, 4 words (delta to
 #                  _ZTSN10dScStage_c15graphCallback_cE is 0x10). ONE body: slot 1. Slots 0 and 3 are
-#                  already linked, and slot 2, Stage::GraphCallback2, TRAPS on
-#                  port/slice_w8a.txt's standing ruling -- it takes the address
+#                  already linked, and slot 2, Stage::GraphCallback2, TRAPPED on
+#                  port/slice_w8a.txt's ruling -- the old src took the address
 #                  of reg_G2S_DB_BG3PA and MSVC cannot put a global at
 #                  0x04001030; closure.py named _reg_G2S_DB_BG3PA as its one
-#                  unresolved external before the line was written.
+#                  unresolved external. Run linkfull lane SEATS3 armed it: the
+#                  synced src passes REG_DB_BG3PA, a literal pointer, and the
+#                  table is registered with the frame beat, which runs slot 2
+#                  (the minimap affine) on every level.
 #   data_0209a424  a callback pair, 2 words (delta to data_0209a42c is 0x8).
 #                  Two leaf predicates with no callees at all.
 #   _ZTVSt9type_info  a two-slot vtable hosted 4 words wide (the symbol span; the
@@ -72,8 +75,10 @@
 #                              func_0204322c_hostcopy.cpp.obj before any link
 #                              ran. The tables stay unhosted; a seat would buy
 #                              nothing and break the build.
-#   src/_ZN5Stage14GraphCallback2Ev.cpp
-#                              data_02092188 slot 2, and the reason is above.
+#   (src/_ZN5Stage14GraphCallback2Ev.cpp was listed here, data_02092188 slot 2,
+#    until run linkfull lane SEATS3 armed it below GraphCallback1: main now
+#    spells its register as the literal pointer REG_DB_BG3PA, so the reason
+#    above no longer holds.)
 #   src/__sinit_02074fb8.c     it WRITES data_020a0c68 before main. Slicing it
 #                              would buy one TU and change what the port does
 #                              at startup; data_02094390 is seated without it.
@@ -121,6 +126,7 @@ src/engine/fader/_ZN5FaderD1Ev.cpp
 # RETIRED at SLICE1: body now in src/engine/fader/_ZN10FaderColorD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
 #src/engine/fader/_ZN10FaderColorD0Ev.cpp
 src/_ZN5Stage14GraphCallback1Ev.cpp
+src/_ZN5Stage14GraphCallback2Ev.cpp
 src/func_0206e254.c
 src/func_0206e240.c
 src/_ZNSt9type_infoD1Ev.cpp
