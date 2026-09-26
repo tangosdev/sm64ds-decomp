@@ -35,7 +35,7 @@ A pass must not change a single emitted byte or relocation target.
 4. **Hand-built factories** (`fBase_c::operator new`, the base `C2`, then vptr stores).
    - Readable form: `return new dScMgX_c;`.
    - Proven: `dScMgMemory2_c`'s factory.
-   - Not possible for `dScMgSlot1_c`: the ROM has no C1 for it to link.
+   - Unresolved for `dScMgSlot1_c`: its [class header](../../include/dScMgSlot1_c.h) records allocation/code-generation constraints. The absence of a standalone C1 alone does not rule out an inlined constructor.
 5. **Pointer-to-member state tables.**
    - Readable form: a typedef over named state members.
    - Proven with the complete class in `dScMgCoin_c` and `dScMgMemory_c`.
