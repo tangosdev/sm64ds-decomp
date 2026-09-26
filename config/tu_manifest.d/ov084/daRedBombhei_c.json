@@ -1,0 +1,351 @@
+{
+  "id": "ov084/daRedBombhei_c",
+  "module": "ov084",
+  "source": "src/game/actors/d_a_red_bombhei.cpp",
+  "promoted_source": "src/game/actors/d_a_red_bombhei.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x0212c10c..0x0212d248, 23 function(s) -- the tu_map cut 0x212c10c..0x212d200 (22 functions, build/tu_map.json) plus the abutting registry factory daRedBombhei_c_classInit (0x0212d200..0x0212d248), which tu_map cut off by name. config/arm9/overlays/ov084/delinks.txt claims the span with 23 files, no gap, no overlap. Left neighbour ov084/daKrb_c ends at 0x0212c10c (its KURIBO factories absorbed); right neighbour ov084/daFPkn_c starts at 0x0212d248. Relocation census: every reference into the span from outside it comes from ov084 .data (the state-table PMF records 0x021309c4..0x021309ec, the RED_BOMBHEI profile 0x02130a14 and the vtable 0x02130a38); no code outside the span calls into it.",
+    "class label(s): daRedBombhei_c",
+    "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0212c10c",
+      "end": "0x0212d248"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN14daRedBombhei_cD1Ev",
+      "address": "0x0212c10c",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN14daRedBombhei_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN14daRedBombhei_cD0Ev",
+      "address": "0x0212c14c",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN14daRedBombhei_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov084_0212c1a0",
+      "address": "0x0212c1a0",
+      "size": "0x00000300",
+      "legacy_source": "src/func_ov084_0212c1a0.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov084_0212c4a0",
+      "address": "0x0212c4a0",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov084_0212c4a0.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov084_0212c508",
+      "address": "0x0212c508",
+      "size": "0x00000394",
+      "legacy_source": "src/func_ov084_0212c508.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov084_0212c89c",
+      "address": "0x0212c89c",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov084_0212c89c.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov084_0212c8b0",
+      "address": "0x0212c8b0",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov084_0212c8b0.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov084_0212c92c",
+      "address": "0x0212c92c",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov084_0212c92c.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov084_0212c960",
+      "address": "0x0212c960",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov084_0212c960.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov084_0212c9a8",
+      "address": "0x0212c9a8",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov084_0212c9a8.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov084_0212c9f0",
+      "address": "0x0212c9f0",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov084_0212c9f0.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov084_0212ca60",
+      "address": "0x0212ca60",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov084_0212ca60.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov084_0212caa8",
+      "address": "0x0212caa8",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov084_0212caa8.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov084_0212cac0",
+      "address": "0x0212cac0",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov084_0212cac0.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov084_0212cae0",
+      "address": "0x0212cae0",
+      "size": "0x000001d4",
+      "legacy_source": "src/func_ov084_0212cae0.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov084_0212ccb4",
+      "address": "0x0212ccb4",
+      "size": "0x000000ec",
+      "legacy_source": "src/func_ov084_0212ccb4.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov084_0212cda0",
+      "address": "0x0212cda0",
+      "size": "0x000000b0",
+      "legacy_source": "src/func_ov084_0212cda0.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov084_0212ce50",
+      "address": "0x0212ce50",
+      "size": "0x000000c0",
+      "legacy_source": "src/func_ov084_0212ce50.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN14daRedBombhei_c16CleanupResourcesEv",
+      "address": "0x0212cf10",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN14daRedBombhei_c16CleanupResourcesEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN14daRedBombhei_c6RenderEv",
+      "address": "0x0212cf40",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN14daRedBombhei_c6RenderEv.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN14daRedBombhei_c8BehaviorEv",
+      "address": "0x0212cf6c",
+      "size": "0x000000bc",
+      "legacy_source": "src/_ZN14daRedBombhei_c8BehaviorEv.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN14daRedBombhei_c13InitResourcesEv",
+      "address": "0x0212d028",
+      "size": "0x000001d8",
+      "legacy_source": "src/_ZN14daRedBombhei_c13InitResourcesEv.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "daRedBombhei_c_classInit",
+      "address": "0x0212d200",
+      "size": "0x00000048",
+      "legacy_source": "src/d_a_red_bombhei.c",
+      "ordinal": 22
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov084_0212ce50.cpp (func_ov084_0212ce50) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212c508; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov084_0212c960' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212c508; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN6Player12GetTalkStateEv' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212c508; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212c508; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_0209f2f8' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212c508; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212c8b0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov084_0212c960' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212c8b0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_0209f318' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212cae0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212cae0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov084_0212cda0' differs between the legacy file that used to hold func_ov084_0212cae0 and the one that held func_ov084_0212ccb4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_0209f318' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212ccb4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov084_02130d9c' differs between the legacy file that used to hold func_ov084_0212c92c and the one that held _ZN14daRedBombhei_c16CleanupResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held _ZN14daRedBombhei_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held _ZN14daRedBombhei_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov084_0212c9f0 and the one that held _ZN14daRedBombhei_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov084_0212c960' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held _ZN14daRedBombhei_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov084_0212ca60' differs between the legacy file that used to hold func_ov084_0212c508 and the one that held _ZN14daRedBombhei_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold _ZN14daRedBombhei_c8BehaviorEv and the one that held _ZN14daRedBombhei_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov084_02130d9c' differs between the legacy file that used to hold func_ov084_0212c92c and the one that held _ZN14daRedBombhei_c13InitResourcesEv; kept the first, the other is commented out for review"
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov084-daRedBombhei_c/d_a_red_bombhei.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 23,
+    "functions_declared": 23,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev",
+        "_ZN9Matrix4x3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev",
+        "_ZN9Matrix4x3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        25,
+        61
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS14daRedBombhei_c",
+        "_ZTI14daRedBombhei_c",
+        "_ZTV14daRedBombhei_c"
+      ],
+      "dataExternalized": [
+        "_ZTI14daRedBombhei_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS14daRedBombhei_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV14daRedBombhei_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "The key-function TU emits the inherited fBase_c typeinfo as vague linkage; romdata_check proves this exact copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "The key-function TU emits the inherited fBase_c type-name string as vague linkage; romdata_check proves its exact emitted bytes at the canonical arm9 home before isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "The key-function TU emits the inherited dBase_c type-name string as vague linkage; romdata_check proves its exact emitted bytes at the canonical arm9 home before isolation discards it."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "The key-function TU emits the inherited dActor_c type-name string as vague linkage; romdata_check proves its exact emitted bytes at the canonical arm9 home before isolation discards it."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "The key-function TU emits the inherited dActor_c typeinfo as vague linkage; romdata_check proves this copy at its canonical arm9 home before isolation discards it."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "The key-function TU emits the inherited dBase_c typeinfo as vague linkage; romdata_check proves this copy at its canonical arm9 home before isolation discards it."
+    },
+    {
+      "symbol": "_ZTS14daRedBombhei_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov084",
+      "canonical_address": "0x02130a00",
+      "reason": "The key-function TU emits daRedBombhei_c's ROM-named type string. Measured in extracted/overlays/overlay_0084.bin (base 0x02129020): the 0x11 bytes at 0x02130a00 are \"14daRedBombhei_c\\0\", padded to g_profile_RED_BOMBHEI at 0x02130a14. ov084 delinks no .data, so the canonical copy stays gap-owned and text-only isolation discards this one."
+    },
+    {
+      "symbol": "_ZTI14daRedBombhei_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov084",
+      "canonical_address": "0x021309f4",
+      "reason": "The key-function TU emits daRedBombhei_c's single-inheritance typeinfo. Measured in overlay_0084.bin: the three words at 0x021309f4 are 0x0209a764 (_ZTVN3abi20__si_class_type_infoE), 0x02130a00 (_ZTS14daRedBombhei_c) and 0x0208e390 (_ZTI8dActor_c). ov084 delinks no .data, so the ROM copy stays ROM-supplied and this one is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZTV14daRedBombhei_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov084",
+      "canonical_address": "0x02130a38",
+      "reason": "This class's OWN vtable, emitted here because the inline destructor makes this the only TU that odr-uses it. The compiler's symbol addresses the vtable OBJECT and so spans 0x84; config/arm9/overlays/ov084/symbols.txt binds the name to the public ADDRESS POINT two words higher. Measured in overlay_0084.bin: the header at 0x02130a30 is {0, 0x021309f4 (_ZTI14daRedBombhei_c)} and the 31 slots run 0x02130a38..0x02130ab4, ending exactly at _ZTS8daFPkn_c; slots 0/3/6/9/16/17 are 0x0212d028 InitResources, 0x0212cf10 CleanupResources, 0x0212cf6c Behavior, 0x0212cf40 Render, 0x0212c10c D1 and 0x0212c14c D0. ov084 delinks no .data, so the ROM copy stays ROM-supplied and this one is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "This TU copies Vector3 by value (Behavior's player-position copy and the camera points), so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+    },
+    {
+      "symbol": "_ZN9Matrix4x3D1Ev",
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits Matrix4x3's vague-linkage D1 while lowering the synthesized ctor from `return new daRedBombhei_c()` over the Matrix4x3 member mShadowMat at 0x19c; no configured ROM symbol of that name exists in any module and no surviving reference reaches it"
+    }
+  ]
+}

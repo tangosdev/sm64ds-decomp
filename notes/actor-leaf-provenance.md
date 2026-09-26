@@ -336,7 +336,7 @@ Source: `src/_ZN10BowserTail8BehaviorEv.cpp`.
 
 ## More leaves searched, nothing named
 
-- `BobOmbBuddy` 0x198: zeroed in `src/_ZN11BobOmbBuddy13InitResourcesEv.cpp`,
+- `daRedBombhei_c` 0x198: zeroed in `src/_ZN14daRedBombhei_c13InitResourcesEv.cpp`,
   never read.
 - `daCamTag_c` 0x0d0 and `daBgSnwmn_c` 0x0d0: four opaque bytes each, touched by
   no enrolled body. `daBgSnwmn_c` already carries a note saying its 0x0cc read
