@@ -1,12 +1,12 @@
 # PR3199 partial production repair
 
-Task: pr3199-subset-repair-0926. Producer: codex-pr3199-repair-0926. Original input: c0a667017b3b79111fab12a08d433b0ff72e7b3a by andrewboudreau/Claude Opus5. Composed base: a076d05a796af4c2da7d90336acb6e105d995e58. Independent verifier: codex-vfy-pr3199-0926; integrator: codex-integrate-open-0926.
+Task: pr3199-subset-final-0926; documented continuation of pr3199-subset-repair-0926, preserving checkpoint 0a46e458 and its authors, findings and historical evidence. Producer: codex-pr3199-repair-0926. Original input: c0a667017b3b79111fab12a08d433b0ff72e7b3a by andrewboudreau/Claude Opus5. Composed base: 6fad356b2108935547108f92c5a001abac6683b4. Independent verifier: codex-vfy-pr3199-0926; integrator: codex-integrate-open-0926.
 
 User explicitly authorized this prepared20-function subset repair and a narrow exception for attribution.json, converted/declaration baselines, include/decl_common.h and ov002/delinks.txt. Existing leases remain unchanged. The producer owns all other listed source/class/manifest/provenance resources.
 
 The production slice contains19 dPathLiftActor_c methods and the existing func_ov002_020eff90 C bridge at ov002:0x020ef3ec..0x020effb8. Both legacy destructor owners remain at0x020ef320 and0x020ef390; current compiler inline emission is D1 beforeD0, different from retail order. State data_ov002_0210af2c, scale data_ov002_0210af00 and src/__sinit_ov002_021071f4.c retain their existing owners. Eleven genuine class metadata outputs are measured at configured ROM homes; byte-checked vague D0/D1/Vector3 duplicates are discarded. This is partial packaging, not recovery of the complete original TU/class.
 
-EnemySpawner/EnemySwitchTag and dCap promotions are restored to exact current-main owners, including both Enemy _MSC_VER destructor arms from PR3095. Their measured production blockers were unlicensed coined-class metadata and strong dCap D1 duplication respectively. No claim that these promotions were completed.
+EnemySpawner/EnemySwitchTag and dCap promotions are restored to exact current-main owners, including both Enemy _MSC_VER destructor arms from PR3095 and dCap/PathLift _MSC_VER destructor fixes from PR3099. Their measured production blockers were unlicensed coined-class metadata and strong dCap D1 duplication respectively. No claim that these promotions were completed.
 
 Seventeen helper config identities become the existing C++ method spellings; four calls in two subclass TUs become genuine inherited method calls. Eight obsolete unused free-function declarations are removed; PathLift.h changes comments only. Inferred helper names, six const queries and SetState(int) spelling are disclosed on declarations, manifest and rename ledger. Twenty original symbol credits are preserved beside the existing daObjPathLift_c group. Converted identities retain positions; declaration baseline changes migrate/remove retired identities without new categories.
 
