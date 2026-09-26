@@ -86,6 +86,10 @@
    "ref": "src/d_s_mg_pachinko2.c"
   },
   {
+   "file": "notes/agents/handoffs/mg-tool-ztv-single-0925.md",
+   "ref": "src/d_s_mg_pachinko2.c"
+  },
+  {
    "file": "notes/agents/handoffs/pr2231-rescue-ov022-ov013-batch2.md",
    "ref": "src_tu/actors/daObj_volcanoCannon_c.cpp"
   },
