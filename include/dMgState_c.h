@@ -3,10 +3,12 @@
 
 #include "types.h"
 
-/* Non-polymorphic state controller embedded in dScMgBase_c. The class spelling
- * is inferred from the minigame subsystem's dMg* naming; the 0x28-byte layout,
- * construction order, three CodeWarrior member-function callbacks, 20-state
- * table, and per-frame behavior/render roles are all ROM-proven. */
+/* The shared minigame state machine, embedded in dScMgBase_c at 0xcc. It
+ * has no vtable and the ROM has no RTTI for it, so the class name and its
+ * member names are coined. The matched methods fix the layout: SetState
+ * takes mEnter from a 20-entry table and calls it, Behavior counts mTimer
+ * toward 0 and calls mBehavior, Render calls mRender, and mState -1 (the
+ * constructor's value) makes Behavior and Render do nothing. */
 struct dMgState_c {
     typedef void (dMgState_c::*Callback)();
 
@@ -16,7 +18,7 @@ struct dMgState_c {
     s32 mState;
     s32 mTimer;
     s32 unk_020;
-    s32 unk_024;
+    s32 unk_024; /* dScMgBase_c steps and draws the machine only while this is 0 */
 
     dMgState_c();
     void Render();
