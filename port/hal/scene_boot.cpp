@@ -2898,16 +2898,18 @@ L2_UNMATCHED(func_02140d80)
 //     0x020c3d1c is an ov007 function and the community label on it is a
 //     Player state name; ov007 is the title scene and has no Player. The
 //     matched TU is src/func_ov007_020c3d1c.cpp, it is in this
-//     slice, and it defines the flat Itanium name. Its callers spell the same
-//     body FOUR ways between them -- once by address and three times as a
-//     C++ method, with three different MSVC manglings because the three
-//     declaring TUs disagree on the return type and on staticness.
+//     slice, and it defines the flat Itanium name. Its callers USED TO spell
+//     the same body FOUR ways between them -- once by address and three times
+//     as a C++ method, with three different MSVC manglings because the three
+//     declaring TUs disagreed on the return type and on staticness.
 //
 //     THREE OF THOSE FOUR DIRECTIVES WERE RECEIVER DEFECTS AND ARE GONE. They
-//     are defects 4, 5 and 6 of port/abi_checks.txt section 6; the faces that
-//     replace them are further down this file and carry the evidence,
-//     including what the ROM actually dispatches through
-//     data_ov007_02103254. Only the by-address spelling stays an alias: both
+//     are defects 4, 5 and 6 of port/abi_checks.txt section 6. The two faces
+//     that replaced them are gone as well (run linkfull, lane ENDFLY1): main's
+//     ov007 sources now call func_ov007_020c3d1c by its flat name, so no ov007
+//     site spells the body as a Player method any more (the retirement note
+//     further down says what the last referrer was and why it was wrong).
+//     Only the by-address spelling stays an alias: both
 //     sides are flat __cdecl names, so it is a NAME bridge and nothing else,
 //     which is the only thing an /alternatename may ever be.
 //
@@ -2938,24 +2940,10 @@ L2_UNMATCHED(func_02140d80)
 //     overlay image, so the safety of the status quo does not rest on this
 //     comment being complete.
 #pragma comment(linker, "/alternatename:_func_020c3d1c=_func_ov007_020c3d1c")
-//     The int-returning spelling now rides the void one. Both sides are
-//     public __thiscall taking no arguments, so the receiver AGREES and the
-//     pop agrees; only the return type differs, and EAX is exactly as
-//     indeterminate here as r0 is in the ROM (0x020c3d1c returns whatever the
-//     pointer it dispatched left behind, and all seven int-form call sites in
-//     src/func_ov007_020cbb04.cpp discard it). This is the void/int return
-//     bridge hal/lk4_solidheap_seat.cpp takes for Heap::Rescue, and it exists
-//     because two decorations that differ only in return type cannot both be
-//     declared on one class in one TU.
-#pragma comment(linker, "/alternatename:?St_EndingFly_Main@Player@@QAEHXZ=?St_EndingFly_Main@Player@@QAEXXZ")
-//     The free-function spelling: src/func_ov007_020b7764.cpp is its only
-//     referrer and the receiver it must pass is a GLOBAL, so the face below
-//     can supply it exactly. Alias rather than a second face declaration for
-//     the reason the Sound::Func_02048ec4 row in hal/actor_classes_ov073.cpp
-//     gives: a `namespace Player` in this TU would collide with the `struct
-//     Player` the QAEX face needs. Both sides are __cdecl with no receiver,
-//     so this is not a crossing.
-#pragma comment(linker, "/alternatename:?St_EndingFly_Main@Player@@YAXXZ=_port_ov007_b7764_endingfly")
+//     The two Player::St_EndingFly_Main rows that followed here (the int
+//     spelling riding the void one, and the free-function spelling onto
+//     port_ov007_b7764_endingfly) are retired with their faces; see the
+//     retirement note further down.
 //
 // (d) SIX C++-DECLARED CALLS ONTO FLAT DEFINITIONS. The cxxname_bridge defect
 //     in its usual direction: an ov007 TU declares the callee inside a struct
@@ -3194,95 +3182,31 @@ struct ActorBase {
     int Virtual38(unsigned a, unsigned b);           /* slot 14 body */
 };
 
-/* ==== THE TWO RECEIVER-BRIDGING FACES FOR "Player::St_EndingFly_Main" =====
+/* ==== RETIRED: THE TWO RECEIVER-BRIDGING FACES FOR "Player::St_EndingFly_Main"
 
-   port/abi_checks.txt section 6, defects 4/5 (the two __thiscall spellings)
-   and 6 (the free-function spelling aritycheck had to learn a new declaration
-   shape to see at all). The three deleted directives were
+   Run linkfull, lane ENDFLY1. This block held a void __thiscall
+   Player::St_EndingFly_Main() whose body was func_ov007_020c3d1c(this), and
+   port_ov007_b7764_endingfly(), the same call with the receiver read out of
+   data_ov007_02103448; block (c) above bound the int and the free-function
+   spellings onto them. They were the fix for port/abi_checks.txt section 6,
+   defects 4 to 6: ov007 TUs that declared ov007's 0x020c3d1c under a
+   community Player name. That body is ov007's free() trampoline (it loads
+   data_ov007_02103254 = 0x020c3e4c and tail-calls func_020590fc, free, on
+   its one argument); ov002 has a different function at the same address.
 
-     ?St_EndingFly_Main@Player@@QAEHXZ = _func_ov007_020c3d1c
-     ?St_EndingFly_Main@Player@@QAEXXZ = _func_ov007_020c3d1c
-     ?St_EndingFly_Main@Player@@YAXXZ  = _func_ov007_020c3d1c
-
-   WHAT THE BODY ACTUALLY IS, derived from the ROM rather than from the name,
-   because the name is wrong and the fix depends on the answer. 0x020c3d1c is
-
-     stmdb sp!,{lr} / sub sp,#4
-     ldr r1,[pc,#0x10] / ldr r1,[r1]    <- r1 = *data_ov007_02103254
-     blx r1                             <- r0 UNTOUCHED, rides into the callee
-     add sp,#4 / ldm sp!,{lr} / bx lr
-
-   and config/arm9/overlays/ov007/relocs.txt:3264 says what that word holds:
-
-     from:0x02103254 kind:load to:0x020c3e4c module:overlay(7)
-
-   0x020c3e4c is six instructions and four of them are the argument setup, so
-   all six are worth carrying:
-
-     020c3e4c  ldr ip,[pc,#0xc]     ip = 0x020590fc
-     020c3e50  mov r2,r0            arg 3 = the object
-     020c3e54  mov r0,#0            arg 1 = 0, the table index
-     020c3e58  mvn r1,#0            arg 2 = -1, "the current handle"
-     020c3e5c  bx  ip
-     020c3e60  .word 0x020590fc
-
-   func_020590fc is free(). Under an interrupt lock it indexes a 12-byte
-   record by the current handle and calls two list functions on the node at
-   (obj - 0x20): func_02059364 UNLINKS it from the allocated list at rec+8,
-   and func_0205929c INSERTS it into the address-sorted FREE list at rec+4,
-   reading node[+8] as a size to coalesce with the neighbour above. So the
-   body is a TEARDOWN TRAMPOLINE whose one argument is the object being freed,
-   and the Player name on it is a mislabel -- the 2d map's section 1 says so
-   and this is the disassembly behind that warning. The callers agree:
-   src/func_ov007_020cbb04.cpp calls it on five sub-objects and then on the
-   parent, and src/func_ov007_020b9770.cpp calls it on two globals and nulls
-   each one immediately after.
-
-   THE TRUE BODY IS SEATED AND MATCHED, so these are BRIDGES and not traps.
-   src/func_ov007_020c3d1c.cpp is in this slice and defines the
-   flat name as `void f(void *self)`. Nothing here is unseated, so a loud trap
-   would be refusing to run a path the port already has the code for.
-
-   WHAT THE DIRECTIVES DID. QAE is __thiscall: the nine call sites put the
-   object in ECX and push NOTHING, and the flat cdecl body then read its first
-   stack slot -- the RETURN ADDRESS -- and handed that to free(). YA is a
-   free function: src/func_ov007_020b7764.cpp:9 spells
-   `Player::St_EndingFly_Main()` with no arguments at all, so that site read
-   the same return address. Either way the caller's own return address is
-   INSERTED INTO THE FREE LIST as a block header at (return address - 0x20),
-   with its size field read out of whatever instruction sits eight bytes into
-   that header, and the coalescing test then compares that against the next
-   free block. It has never fired because ov007's ending path is not drivable,
-   which is why these two faces are proved by the checker and the disassembly
-   and claim no drive.
-
-   NEITHER FACE IS A SHADOW: all three directives are DELETED. */
-struct Player {
-    /* the void spelling, which is what src/func_ov007_020b9770.cpp declares
-       and what the flat body's own return type says. The int spelling is
-       bridged onto this one by the alias in block (c) above. */
-    void St_EndingFly_Main();
-};
-
-extern "C" {
-/* the matched flat body, and the ov007 global whose VALUE is the object
-   src/func_ov007_020b7764.cpp's call site is torn down. The ov007 mount
-   defines it as `u8 data_ov007_02103448[4]`; the matched TU reads it as an
-   int, and so does this, because extern "C" data carries no type in the
-   symbol and the int reading is the one the ROM's `ldr r0,[r0]` performs. */
-void func_ov007_020c3d1c(void *self);
-extern int data_ov007_02103448;
-
-/* the RHS of the YA alias in block (c). A free __cdecl function taking
-   nothing, exactly like the declaration it stands behind -- the receiver is
-   not passed to it and never was, so the face reads it from the same global
-   the ROM reads it from. */
-void port_ov007_b7764_endingfly(void)
-{ func_ov007_020c3d1c((void *)(size_t)data_ov007_02103448); }
-}
-
-void Player::St_EndingFly_Main()
-{ func_ov007_020c3d1c(this); }
+   WHY THEY WENT. Main has since respelled every ov007 caller to call
+   func_ov007_020c3d1c by its flat name (src/func_ov007_020b7764.cpp,
+   _020b9770.cpp, _020cbb04.cpp and the rest), so no ov007 site reached
+   either face any more. The void member kept ONE referrer, and it was the
+   wrong one: the port/faces_sync.txt row for __ZN6Player17St_EndingFly_MainEv,
+   ov002's EndingFly state main (the state object 0x0211058c pairs it with
+   St_EndingFly_Init; hal/player_bridges.cpp dispatches case 0x020c3d1c to
+   it). So at the game's ending the Player's state ran the ov007 trampoline on
+   the Player and returned junk, and the real ending flight, the int member
+   src/actors/Player.cpp defines (phase 0 func_ov002_020c3bdc, phase 1
+   func_ov002_020c3a48, phase 2 func_ov002_020c38a0), was never linked. The
+   ledger row now binds that int member, and nothing is left for a face here
+   to bridge. */
 
 // ---- the shared eleven -----------------------------------------------------
 static int  __fastcall sc_binit(void *s, void *)

@@ -185,15 +185,18 @@ import tailjump_guard as tj  # noqa: E402
 #              decoration to that flat name. `namespace Player { void
 #              St_EndingFly_Main(); }` emits a ?St_EndingFly_Main@Player@@YA...
 #              decoration and nothing else. With no directive pointing that at
-#              _func_ov007_020c3d1c, the callee is whatever defines
+#              __ZN6Player17St_EndingFly_MainEv, the callee is whatever defines
 #              the MSVC name, and comparing arities against the flat body
 #              compares two unrelated functions. Without this the checker
 #              cannot tell a FIXED site from a broken one, because the
 #              declaration text is identical either way -- which is precisely
 #              the state lane RF1 left src/func_ov007_020b7764.cpp in: the
-#              byte-locked declaration stays, the alias is gone, and the site
-#              now reaches a face in hal/scene_boot.cpp that supplies the
-#              receiver from the global the ROM reads it from.
+#              byte-locked declaration stayed, the alias was gone, and the site
+#              reached a face in hal/scene_boot.cpp that supplied the receiver
+#              from the global the ROM reads it from. (Main has since respelled
+#              that site to call func_ov007_020c3d1c by its flat name, and run
+#              linkfull lane ENDFLY1 retired the face, so no real site of this
+#              shape is left; the selftest below keeps the shape proved.)
 #              IT IS COARSER THAN THE DECORATION IT READS, said out loud
 #              because the test looks more precise than it is: it asks for `?`
 #              and `@@YA` on one side and `__ZN` on the other, and does NOT
@@ -270,8 +273,8 @@ PLAIN = re.compile(r'^func_(?:ov\d+_)?[0-9a-f]{8}$')
 #
 #     namespace Player { void St_EndingFly_Main(); }
 #
-# emits the symbol func_ov007_020c3d1c, exactly like the flat
-# spelling four sibling TUs use -- but nothing above matches it, so the site
+# emits the symbol _ZN6Player17St_EndingFly_MainEv, exactly like the flat
+# spelling four sibling TUs used -- but nothing above matches it, so the site
 # is invisible to this checker. That is not hypothetical: it is the SIXTH live
 # receiver defect on cons (src/func_ov007_020b7764.cpp:9 calls
 # Player::St_EndingFly_Main() while the definition takes a receiver), and lane
@@ -568,10 +571,10 @@ def selftest():
     print('\n  NAMESPACED C++ DECLARATION (the sixth-defect blind spot)')
     ns_cases = [
         ('namespace Player { void St_EndingFly_Main(); }',
-         ['func_ov007_020c3d1c'],
-         'the real shape, src/func_ov007_020b7764.cpp:2'),
+         ['_ZN6Player17St_EndingFly_MainEv'],
+         'the shape src/func_ov007_020b7764.cpp:2 had'),
         ('namespace Player { void St_EndingFly_Main(void); }',
-         ['func_ov007_020c3d1c'],
+         ['_ZN6Player17St_EndingFly_MainEv'],
          'explicit void is the same symbol'),
         ('namespace A { int f(); }', ['_ZN1A1fEv'], 'short names'),
         # Everything below is OUT OF SCOPE ON PURPOSE. A half-written Itanium
@@ -599,8 +602,8 @@ def selftest():
     import tempfile
     PRAGMA = ('#pragma comment(linker, "/alternatename:'
               '?St_EndingFly_Main@Player@@YAXXZ='
-              '_func_ov007_020c3d1c")\n')
-    SYM = 'func_ov007_020c3d1c'
+              '__ZN6Player17St_EndingFly_MainEv")\n')
+    SYM = '_ZN6Player17St_EndingFly_MainEv'
     ns_bind_cases = [
         ('port/hal/f.cpp', PRAGMA, True,
          'a real pragma in port/hal BINDS the spelling'),
@@ -612,7 +615,7 @@ def selftest():
         ('port/hal/f.cpp',
          '// (DELETED by lane RF1) /alternatename:'
          '?St_EndingFly_Main@Player@@YAXXZ='
-         '_func_ov007_020c3d1c\n', False,
+         '__ZN6Player17St_EndingFly_MainEv\n', False,
          'the directive QUOTED in a comment, no pragma, binds nothing'),
         ('port/notes.txt', PRAGMA, False,
          'and quoted in a .txt binds nothing either'),

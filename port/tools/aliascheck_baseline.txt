@@ -55,7 +55,13 @@
 #   ?St_EndingFly_Main@Player@@QAEHXZ = _func_ov007_020c3d1c
 #   ?St_EndingFly_Main@Player@@QAEXXZ = _func_ov007_020c3d1c
 #                                     hal/scene_boot.cpp, one thiscall face
-#                                     and a return-only bridge onto it
+#                                     and a return-only bridge onto it;
+#                                     both RETIRED since (run linkfull lane
+#                                     ENDFLY1): main respelled every ov007
+#                                     caller to the flat name, and the face's
+#                                     last referrer was ov002's EndingFly
+#                                     state, which now binds the real member
+#                                     (port/faces_sync.txt)
 #
 # THE SECTION HEADING STAYS EVEN THOUGH THE SECTION IS EMPTY, because the
 # checker still reports OPEN separately from NEW and the next person to
