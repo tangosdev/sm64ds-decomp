@@ -1,7 +1,7 @@
 typedef struct Vector3 { int x, y, z; } Vector3;
 typedef struct dBgCh_Gnd { char filler[0x44]; int clsnY; char rest[0x8]; } dBgCh_Gnd;
 
-extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd*);
+extern void *_ZN9dBgCh_GndC1Ev(dBgCh_Gnd*);
 extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd*, Vector3*, void*);
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd*);
 extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd*);

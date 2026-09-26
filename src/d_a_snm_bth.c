@@ -4,10 +4,11 @@
  * cartridge calls fBase_c::operator new. Placement/class-specific new are
  * rejected by mwccarm 2004/b56, so this remains the measured C allocator wall. */
 extern void* _ZN7fBase_cnwEj(unsigned int);
-extern void _ZN8dActor_cC2Ev(void*);
+extern void *_ZN8dActor_cC2Ev(void*);
+/* The array runtime discards the constructor's receiver result. */
 extern void __cxa_vec_ctor(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
 extern void _ZN21SnowmanBreathParticleD1Ev(void*);
-extern void _ZN21SnowmanBreathParticleC1Ev(void*);
+extern void *_ZN21SnowmanBreathParticleC1Ev(void*);
 extern void* _ZTV10daSnmBth_c[];
 /* Reconstructed source-style name: SM64DS proves daSnmBth_c through RTTI,
  * allocation size, vtable identity, and the SNOWMAN_BREATH registry profile;
@@ -19,7 +20,7 @@ int* daSnmBth_c_classInit(void){
     _ZN8dActor_cC2Ev(p);
     *(void***)p = (void**)_ZTV10daSnmBth_c;
     __cxa_vec_ctor((char*)p+0xd4, 0x32, 0x60,
-                 _ZN21SnowmanBreathParticleC1Ev,
+                 (void (*)(void *))_ZN21SnowmanBreathParticleC1Ev,
                  _ZN21SnowmanBreathParticleD1Ev);
   }
   return p;

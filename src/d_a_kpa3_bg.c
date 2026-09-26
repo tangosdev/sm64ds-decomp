@@ -1,5 +1,5 @@
 extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN10dBgActor_cC2Ev(void *);
+extern void *_ZN10dBgActor_cC2Ev(void *);
 extern int _ZTV17BowserSkyPlatform[];
 /* Reconstructed source-style name: SM64DS proves daKpa3Bg_c through RTTI,
  * allocation size, vtable identity, and the KOOPA3BG registry profile;

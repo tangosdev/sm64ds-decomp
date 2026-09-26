@@ -128,7 +128,7 @@ u32 func_0203dad4(void);
 void func_0203b9b4(int *p, int v);
 void *func_02073470(int a, int b, int c, void *ctor, void *dtor);
 void func_ov001_020ab2e4(void);
-void _ZN9FaderWipeC1Ev(void *thiz);
+void *_ZN9FaderWipeC1Ev(void *thiz);
 void _ZN9FaderWipeD1Ev(void *thiz);
 
 void _ZN5Sound6Player19SetPlayableSeqCountEii(int a, int b);

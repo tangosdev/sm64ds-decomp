@@ -1,9 +1,9 @@
 #include "Unagi.h"
 extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN12dEnemyBase_cC2Ev(void *);
-extern void _ZN10dCcAcPos_cC1Ev(void *);
-extern void _ZN10dBgCh_ActrC1Ev(void *);
-extern void _ZN14BlendModelAnimC1Ev(void *);
+extern void *_ZN12dEnemyBase_cC2Ev(void *);
+extern void *_ZN10dCcAcPos_cC1Ev(void *);
+extern void *_ZN10dBgCh_ActrC1Ev(void *);
+extern void *_ZN14BlendModelAnimC1Ev(void *);
 extern void __cxa_vec_ctor(void*, int, int, void*, void*);
 extern int _ZTV5Unagi[];
 extern int _ZN7Vector3D1Ev[];

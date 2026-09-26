@@ -11,7 +11,7 @@
 #include "dScMgSmartball_c.h"
 
 extern "C" {
-extern int _ZN11dScMgBase_cC2Ev(void *p);
+extern void *_ZN11dScMgBase_cC2Ev(void *p);
 extern void __cxa_vec_ctor(void *obj, int a, int b, void *cb1, void *cb2);
 extern int _ZTV16dScMgSmartball_c[];
 extern void func_0203d738(void);

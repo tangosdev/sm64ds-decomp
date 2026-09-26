@@ -7,7 +7,7 @@
 #include "decl_ShadowModel.h"
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
-extern void _ZN10dCapIcon_cC1Ev(void *);
+extern void *_ZN10dCapIcon_cC1Ev(void *);
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV15daObjMarioCap_c */
 /* Reconstructed source-style name: SM64DS proves daObjMarioCap_c through RTTI,

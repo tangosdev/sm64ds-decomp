@@ -24,8 +24,8 @@ extern int _ZN5Model13LoadTexAndPalER8BMD_File(void*);
 extern u32 _ZN5Model13GetVramOffsetEj(u32);
 extern void _ZN5Model12HideMaterialEii(void*, int, int);
 extern void _ZN5Model12ShowMaterialEii(void*, int, int);
-extern void _ZN5ModelC1Ev(void*);
-extern void _ZN5ModelC2Ev(void*);
+extern void *_ZN5ModelC1Ev(void*);
+extern void *_ZN5ModelC2Ev(void*);
 extern void _ZN5ModelD1Ev(void*);
 
 

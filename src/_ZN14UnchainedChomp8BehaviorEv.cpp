@@ -27,7 +27,7 @@ extern void func_02012694(int, void *);
 extern void _ZN8dActor_c15HugeLandingDustEb(dActor_c *thiz, bool b);
 extern dActor_c *_ZN8dActor_c13ClosestPlayerEv(dActor_c *thiz);
 extern dActor_c *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, const Vector3 &pos, const Vector3_16 *rot, int e, int f);
-extern void _ZN7PathPtrC1Ev(void *thiz);
+extern void *_ZN7PathPtrC1Ev(void *thiz);
 extern void _ZN7PathPtr6FromIDEj(void *thiz, unsigned int id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *thiz, Vector3 &out, unsigned int idx);
 extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);

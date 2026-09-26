@@ -1,6 +1,6 @@
 // @symbol daObjPile_c_classInit
 extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN10dBgActor_cC2Ev(void *);
+extern void *_ZN10dBgActor_cC2Ev(void *);
 extern int _ZTV11daObjPile_c[];
 /* Reconstructed source-style name: SM64DS proves daObjPile_c through RTTI,
  * allocation size, vtable identity, and the PILE registry profile; later EAD

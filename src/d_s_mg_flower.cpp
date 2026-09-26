@@ -8,7 +8,7 @@
  */
 
 extern "C" void* _ZN7fBase_cnwEj(unsigned int);
-extern "C" void _ZN11dScMgBase_cC2Ev(void*);
+extern "C" void *_ZN11dScMgBase_cC2Ev(void*);
 extern "C" void _ZN8Particle10SysTrackerC1Ev(void*);
 extern "C" void __cxa_vec_ctor(void*, int, int, void*, void*);
 extern "C" void func_ov006_020c3f54(void*);

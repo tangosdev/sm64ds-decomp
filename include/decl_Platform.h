@@ -22,7 +22,7 @@ extern "C" {
 
 extern int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(void*, s16, s16, s16, int);
 extern void _ZN10dBgActor_c14KillByMegaCharER6Player(void*, void*);
-extern void _ZN10dBgActor_cC2Ev(void*);
+extern void *_ZN10dBgActor_cC2Ev(void*);
 
 
 #ifdef __cplusplus

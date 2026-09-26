@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 extern int _ZN12dBgCh_SphCrr10DetectClsnEv(void*);
-extern void _ZN12dBgCh_SphCrrC1Ev(void*);
+extern void *_ZN12dBgCh_SphCrrC1Ev(void*);
 extern void _ZN12dBgCh_SphCrrD1Ev(void*);
 
 

@@ -7,7 +7,7 @@ typedef struct dBgCh_Gnd {
     char post[0x8];
 } dBgCh_Gnd;
 
-extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *self);
+extern void *_ZN9dBgCh_GndC1Ev(dBgCh_Gnd *self);
 extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd *self, Vec3 *pos, void *actor);
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *self);
 extern int _ZNK5dBgPi9GetClsnIDEv(void *self);

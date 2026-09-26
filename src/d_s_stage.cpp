@@ -4,10 +4,10 @@
 
 extern "C" {
 void *_ZN7fBase_cnwEj(unsigned int size);
-void _ZN7fBase_cC2Ev(fBase_c *base);
+void *_ZN7fBase_cC2Ev(fBase_c *base);
 void _ZN8Particle10SysTrackerC1Ev(Particle::SysTracker *tracker);
-void _ZN5ModelC1Ev(Model *model);
-void _ZN7dBgW_KcC1Ev(dBgW_Kc *meshCollider);
+void *_ZN5ModelC1Ev(Model *model);
+void *_ZN7dBgW_KcC1Ev(dBgW_Kc *meshCollider);
 extern void *_ZTV7dBase_c[];
 extern void *_ZTV8dScene_c[];
 extern void *_ZTV5Stage[];

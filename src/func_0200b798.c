@@ -4,7 +4,7 @@ typedef struct Vector3 { int x, y, z; } Vector3;
 typedef struct dBgCh_Gnd { int _[0x15]; } dBgCh_Gnd;
 typedef struct Entry3 { int a, b, c; } Entry3;
 
-extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *t);
+extern void *_ZN9dBgCh_GndC1Ev(dBgCh_Gnd *t);
 extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd *t, const Vector3 *pos, void *actor);
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *t);
 extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *t);

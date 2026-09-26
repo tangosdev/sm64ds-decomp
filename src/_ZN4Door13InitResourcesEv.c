@@ -53,7 +53,7 @@ struct Entry {
 
 extern int data_ov100_02148710;
 extern Vec3 data_ov100_021487c0;
-extern void _ZN7Vector3D1Ev(void);
+extern void *_ZN7Vector3D1Ev(void *object);
 extern void *data_ov100_021487b4;
 extern void func_020731dc(void *a, void *b, void **node);
 extern void Vec3_RotateYAndTranslate(void *d, void *s, short ang, void *t);

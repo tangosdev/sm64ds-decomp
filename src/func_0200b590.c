@@ -6,7 +6,7 @@ extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern void func_0200897c(void *self, void *arg);
 extern int func_020092c4(int arg0, Vector3 *out, Vector3 *target);
 
-extern void _ZN9dBgCh_GndC1Ev(void *self);
+extern void *_ZN9dBgCh_GndC1Ev(void *self);
 extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, const Vector3 *pos, void *actor);
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
 extern void _ZN9dBgCh_GndD1Ev(void *self);

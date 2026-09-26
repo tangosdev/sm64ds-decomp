@@ -3,11 +3,11 @@
 #include "daObjPathLift_c.h"
 
 extern "C" {
-extern void _ZN10dBgActor_cC2Ev(dBgActor_c *actor);
-extern void _ZN5ModelC1Ev(Model *model);
+extern void *_ZN10dBgActor_cC2Ev(dBgActor_c *actor);
+extern void *_ZN5ModelC1Ev(Model *model);
 extern void _ZN5ModelD1Ev(Model *model);
-extern void _ZN7PathPtrC1Ev(PathPtr *path);
-extern void _ZN11ShadowModelC1Ev(ShadowModel *model);
+extern void *_ZN7PathPtrC1Ev(PathPtr *path);
+extern void *_ZN11ShadowModelC1Ev(ShadowModel *model);
 extern void __cxa_vec_ctor(
     Model *models, int count, int size, void *ctor, void *dtor);
 }

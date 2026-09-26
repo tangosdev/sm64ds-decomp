@@ -1,7 +1,7 @@
 #include "types.h"
 extern int data_ov102_0214ea48[];
 
-extern void _ZN9dBgCh_GndC1Ev(void *self);
+extern void *_ZN9dBgCh_GndC1Ev(void *self);
 extern void _ZN5dBgCh19StartDetectingWaterEv(void *self);
 extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);

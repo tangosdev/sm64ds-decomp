@@ -46,7 +46,7 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *th, void *kf, void *mtx, int fx, short s, void *clps);
 void func_020393d4(int *p, int v);
 void func_020393c4(int *p, int v);
-void _ZN7PathPtrC1Ev(void *self);
+void *_ZN7PathPtrC1Ev(void *self);
 
 u8 DecIfAbove0_Byte(u8 *p);
 int Vec3_HorzDist(const void *a, const void *b);

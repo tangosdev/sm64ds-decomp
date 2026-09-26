@@ -1,9 +1,10 @@
 //cpp
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned int);
-extern void _ZN8dActor_cC2Ev(void*);
+extern void *_ZN8dActor_cC2Ev(void*);
 extern void _ZN10dCcAcPos_cD1Ev(void*);
-extern void _ZN10dCcAcPos_cC1Ev(void*);
+extern void *_ZN10dCcAcPos_cC1Ev(void*);
+/* The array runtime discards the constructor's receiver result. */
 extern void __cxa_vec_ctor(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
 extern void* _ZTV13daObjCloset_c[];
 /* Reconstructed source-style name: SM64DS proves daObjCloset_c through RTTI,
@@ -15,7 +16,7 @@ int* daObjCloset_c_classInit(void){
   if(p){
     _ZN8dActor_cC2Ev(p);
     *(void***)p = (void**)_ZTV13daObjCloset_c;
-    __cxa_vec_ctor((char*)p+0xd4, 5, 0x40, _ZN10dCcAcPos_cC1Ev, _ZN10dCcAcPos_cD1Ev);
+    __cxa_vec_ctor((char*)p+0xd4, 5, 0x40, (void (*)(void *))_ZN10dCcAcPos_cC1Ev, _ZN10dCcAcPos_cD1Ev);
   }
   return p;
 }

@@ -2761,7 +2761,7 @@ ov091	0x02134e80	data_ov091_02134e80	ArrowPathLift_SpawnInfo	spawninfo
 ov091	0x02134e80	ArrowPathLift_SpawnInfo	g_profile_KM3_LIFT	reconstructed profile global; literal ROM ID KM3_LIFT+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov091	0x02134e9c	data_ov091_02134e9c	SquareMetalNetLift_SpawnInfo	spawninfo
 ov091	0x02134e9c	SquareMetalNetLift_SpawnInfo	g_profile_KM2_SUSUMU	reconstructed profile global; literal ROM ID KM2_SUSUMU+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov091	0x02134ec0	data_ov091_02134ec0	_ZTV13daLinelift2_c	vtable alloc=0x3a8
+ov091	0x02134ec0	data_ov091_02134ec0	_ZTV13daLinelift2_c	vtable alloc=0x358
 ov091	0x02134f60	data_ov091_02134f60	SlidingPlatformBdw_SpawnInfo	spawninfo
 ov091	0x02134f60	SlidingPlatformBdw_SpawnInfo	g_profile_KM1_DERU	reconstructed profile global; literal ROM ID KM1_DERU+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov091	0x02134f7c	data_ov091_02134f7c	SlidingPlatformBsWide_SpawnInfo	spawninfo

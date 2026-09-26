@@ -106,11 +106,11 @@ int   _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *player, void *pos,
                                               unsigned int b, unsigned int c,
                                               unsigned int d);
 
-void  _ZN8dActor_cC2Ev(void *actor);
-void  _ZN9ModelAnimC1Ev(void *p);
-void  _ZN11ShadowModelC1Ev(void *p);
-void  _ZN7dCcAc_cC1Ev(void *p);
-void  _ZN10dBgCh_ActrC1Ev(void *p);
+void *_ZN8dActor_cC2Ev(void *actor);
+void *_ZN9ModelAnimC1Ev(void *p);
+void *_ZN11ShadowModelC1Ev(void *p);
+void *_ZN7dCcAc_cC1Ev(void *p);
+void *_ZN10dBgCh_ActrC1Ev(void *p);
 
 
 /* Declared by final name rather than as members: both take Fix12<int> where

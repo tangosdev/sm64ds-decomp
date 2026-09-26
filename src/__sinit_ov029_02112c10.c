@@ -1,5 +1,5 @@
 extern int func_02017acc();
-extern int func_020731dc();
+extern void func_020731dc();
 extern int data_ov029_02114270[];
 extern int func_02017ab4();
 extern int data_ov029_02114278;

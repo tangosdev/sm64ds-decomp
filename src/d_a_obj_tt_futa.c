@@ -1,6 +1,6 @@
 // @symbol daObjTtFuta_c_classInit
 extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN10dBgActor_cC2Ev(void *);
+extern void *_ZN10dBgActor_cC2Ev(void *);
 extern int _ZTV13daObjTtFuta_c[];
 /* Reconstructed source-style name: SM64DS proves daObjTtFuta_c through its
  * RTTI string, allocation size, vtable identity, and the TT_FUTA registry

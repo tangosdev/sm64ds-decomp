@@ -17,7 +17,7 @@ typedef struct dBgPiLoc { char pad[0x28]; } dBgPiLoc;
    symbols that exist nowhere. The file would still byte-match -- relocations
    compare as wildcards -- so only check_references would ever see it. */
 extern "C" {
-extern void _ZN5dBgPiC1Ev(dBgPiLoc* r);
+extern void *_ZN5dBgPiC1Ev(dBgPiLoc* r);
 extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, Vec3* a, Vec3* b, void* actor);
 extern void _ZN9dBgCh_Lin10GetClsnPosEv(Vec3* out, void* self);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vec3* out);
