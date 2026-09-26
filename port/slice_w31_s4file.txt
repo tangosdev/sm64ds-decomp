@@ -1,0 +1,36 @@
+# slice_w31_s4file.txt -- run linkfull wave 31, lane S4FILE: THE FILE LOADER.
+#
+# The game's own LoadFile and the reader behind it, in place of the host face
+# hal/level_boot.cpp carried (a SharedFilePtr load plus a per-handle table) and
+# hal/fs.cpp's host func_0201817c. Five TUs, one reference chain:
+#
+#   src/LoadFile.c        func_0201818c(handle, 1): the file, decompressed when
+#                         it carries the LZ77 magic, on a fresh game-heap block;
+#                         the caller keeps or frees it.
+#   src/func_0201817c.c   func_0201818c(handle, 0), what LoadCompressedFileAt
+#                         calls (the same file, no cache flush).
+#   src/func_0201818c.c   the reader: an archive member (handle >= 0x8000) is
+#                         copied or LZ77-decoded out of the mounted NARC; a
+#                         loose file opens through func_020185c0 on the FAT id
+#                         func_02018a24 names and reads through func_0201834c
+#                         (FS off the card, hal/fs_names.cpp's image).
+#   src/func_020186c0.c   the member's address: the mount table entry whose
+#                         range holds the id, mounting the archive first (and
+#                         noting it in data_0208eb54 so func_02018770 unmounts
+#                         it after the read) when it is not resident.
+#   src/func_0204ede8.c   the member's bytes inside a mounted archive: the
+#                         archive's data base plus the member's BTAF offset.
+#
+# Everything else they call is already compiled for these targets: the open
+# and unmount (port/slice_w31_s4arc.txt), func_0201834c, func_02018568,
+# func_02018ac4, FS_CloseFile, func_02018770, func_02018a24 (lane S4OV0), and
+# the host CpuCopy8 / DecompressLZ16 / Memory / CP15 stand-ins.
+#
+# All five are MATCHING at 2004/b56 with --strict-relocs (tools/match.py by ROM
+# address) and VERIFIED by tools/prepush_linkcheck.py; none has an
+# #ifdef _MSC_VER arm, and none needed one.
+src/LoadFile.c
+src/func_0201817c.c
+src/func_0201818c.c
+src/func_020186c0.c
+src/func_0204ede8.c

@@ -49,15 +49,12 @@
 
 extern "C" {
 
-/* The port's file loader (hal/level_boot.cpp): LoadFile(handle) -> decompressed
-   bytes on a freshly allocated block, which is the ROM's contract; the table
-   there records the last block per handle, it does not serve one twice. This
-   is the same entry the matched LoadMessageBankForLanguage calls, and the bank
-   is loaded exactly once (port_message_archive_seat gates on
-   data_0209d70c[0]). */
+/* The ROM's own LoadFile (src/LoadFile.c, func_0201818c(handle, 1); run
+   linkfull lane S4FILE): decompressed bytes on a freshly allocated block, the
+   caller keeps or frees it. This is the same entry the matched
+   LoadMessageBankForLanguage calls, and the bank is loaded exactly once
+   (port_message_archive_seat gates on data_0209d70c[0]). */
 void *LoadFile(int handle);
-/* hal/level_boot.cpp: keep this handle's image across level teardowns */
-void port_loadfile_pin_persistent(int handle);
 int GetOwnerLanguage(void);
 
 /* The bank globals. All five are hal/auto_bss int[8] except the two the parser
@@ -104,11 +101,11 @@ extern "C" int port_message_bank_load(void)
         return 0;
     }
     /* The bank is a global, not a level's file: it is loaded once here and its
-       section pointers stay pinned in the globals below for the whole run. Pin
-       its LoadFile slot so the per-level teardown (port_level_release_files)
-       does not free it on the first level change and leave the message system
-       on a freed block. */
-    port_loadfile_pin_persistent(asset);
+       section pointers stay pinned in the globals below for the whole run.
+       Nothing frees it: the port's per-level teardown frees only the level
+       collider's KCL (hal/level_boot.cpp), and the host LoadFile table this
+       used to pin a row in is gone with the host LoadFile. The DS keeps the
+       bank the same way. */
 
     /* Parse: the exact arithmetic ParseMessageBankSections does. */
     char *info = base + 0x20;
