@@ -176,33 +176,86 @@ MMBLK(".dsstate$mmblk0003", data_0209f3e8, 0x24);   /* 9 Obj* -- the star marker
 
 #undef MMBLK
 
-// ---- THE MINIMAP'S AFFINE, per frame: THE ROM'S OWN BODY NOW ----------------
+// ---- THE MINIMAP'S AFFINE, per frame ----------------------------------------
 //
 // BG3-sub in BG mode 3 is an EXTENDED AFFINE layer and the minimap is drawn on
 // it, so every one of its pixels goes through BG3PA..BG3PD and the BG3X/BG3Y
-// reference point. Minimap::Behavior ends in UpdateMinimap(&self->f50, ...),
-// which copies the 2x2 matrix to data_0209f3c8 and the four scalars to
-// data_0209f3c4 + 0x14..0x20 (inside data_0209f3c8's bytes, which is why the
-// run above is contiguous): +0x00 the matrix, four 20.12 words; +0x10 x, y,
-// the map-space point to put under the reference; +0x18 cx, cy, that point
-// less (128, 96).
+// reference point before it picks a map entry. The port seeded those to the
+// identity once at boot (hal/sub_screen.cpp) because nothing was writing them
+// per frame, and the minimap drew at exactly 1:1 instead of the level's own
+// scale. That is the unscaled minimap.
 //
-// THE BEAT THAT SPENDS THEM IS THE ROM'S. Stage::InitResources makes
-// &data_0209f3c4 the current graphics block (data_0209d4a8), whose vptr is
-// data_02092188 (__sinit_02074e84), and func_02019144's head calls that
-// block's slot 2: Stage::GraphCallback2, G2x::SetBGyAffine(REG_DB_BG3PA,
-// self + 4, the four scalars). The port stood a hand copy of that body in
-// here, port_minimap_affine_update, called from hal/sub_screen.cpp, because
-// the old src took the address of an extern register MSVC could not place at
-// 0x04001030. RETIRED (run linkfull lane SEATS3): main spells the register as
-// the literal pointer now, so the matched TU runs from the Stage table's slot
-// 2 (hal/arm9_tables_link100.cpp) through the port's frame beat, and the hand
-// copy, its call and its SM64DS_MINIMAP_TRACE instrument went together.
+// The numbers were never missing. Minimap::Behavior ends in
 //
-// ONE THING THE HAND COPY DID THAT THE ROM DOES NOT: it skipped the write while
-// the matrix was still all zero, before the minimap's first UpdateMinimap, to
-// keep hal/sub_screen.cpp's identity seed on screen. The ROM's body writes
-// whatever the block holds, and so does the port now.
+//     UpdateMinimap(&self->f50, self->f60, self->f64,
+//                   self->f60 - 0x80, self->f64 - 0x60)
+//
+// and UpdateMinimap (matched) copies that sixteen-byte descriptor to
+// data_0209f3c8 and the four scalars to data_0209f3c4 + 0x14..0x20, which land
+// inside data_0209f3c8's own bytes because the run above is contiguous:
+//
+//     +0x00  the 2x2 matrix, four 20.12 words
+//     +0x10  x, y     the map-space point to put under the reference
+//     +0x18  cx, cy   that point less (128, 96), the bottom screen's centre
+//
+// WHAT WAS MISSING IS THE BEAT. Stage::InitResources stores &data_0209f3c4 into
+// data_0209d4a8 -- the current scene's graphics block -- and func_02019144, the
+// per-frame graphics beat, opens by calling that block's vtable slot 2. For the
+// Stage that slot is Stage::GraphCallback2, whose entire body is
+//
+//     G2x::SetBGyAffine(&reg_G2S_DB_BG3PA, self + 4,
+//                       self->unk14, self->unk18, self->unk1c, self->unk20);
+//     return 1;
+//
+// Both of those are MATCHED and in src/. G2x::SetBGyAffine -- which is where
+// all the arithmetic is, the 8.8 narrowing and the reference point that solves
+// (x, y) onto the screen centre -- is already linked (slice gate 10) and is
+// what this calls. Stage::GraphCallback2 itself is NOT linked, and cannot be:
+// it takes the address of reg_G2S_DB_BG3PA, and a host build has no way to put
+// a global at the absolute address 0x04001030 where the sub engine's BG3PA is
+// mapped. So the six-argument forward is what the seam below stands in for,
+// and the forward is all Stage::GraphCallback2 is.
+//
+// Neither is the dispatch hosted: the port does not run func_02019144 (its tail
+// is the layer-mask publish and the OAM upload, which hal/sub_screen.cpp does
+// its own way) and nothing seats data_0209d4a8, so the ROM's "is the Stage's
+// block current" test has nothing to read. The block answers the same question
+// itself. It is zeroed storage until Minimap::Behavior calls UpdateMinimap, and
+// an all-zero matrix is degenerate anyway -- every screen pixel would map to
+// map pixel (0,0) and the layer would sample one tile -- so until the minimap
+// has spoken, leave the identity boot seeded.
+extern "C" {
+struct PortMtx2x2 { int m[4]; };
+void _ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii(volatile unsigned short *reg,
+                                              PortMtx2x2 *m,
+                                              int a, int b, int c, int d);
+}
+
+extern "C" void port_minimap_affine_update(void)
+{
+    PortMtx2x2 *const m = (PortMtx2x2 *)data_0209f3c8;
+    const int *const s = (const int *)(data_0209f3c8 + 0x10);
+
+    if ((m->m[0] | m->m[1] | m->m[2] | m->m[3]) == 0)
+        return;
+
+    /* BG3PA of engine B. Stage::GraphCallback2 spells it &reg_G2S_DB_BG3PA. */
+    _ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii(
+        (volatile unsigned short *)0x04001030, m, s[0], s[1], s[2], s[3]);
+
+    /* SM64DS_MINIMAP_TRACE=1: the matrix and the reference point it solved,
+       once a second, for checking the scale is the level's rather than 1:1. */
+    static int trace = -1, frame;
+    if (trace < 0) trace = std::getenv("SM64DS_MINIMAP_TRACE") != 0;
+    if (trace && (frame++ % 30) == 0)
+        std::fprintf(stderr, "[mmaf] m=(%d,%d,%d,%d) at=(%d,%d) centre=(%d,%d) "
+                     "PA|PB=%08x PC|PD=%08x X=%d Y=%d\n",
+                     m->m[0], m->m[1], m->m[2], m->m[3], s[0], s[1], s[2], s[3],
+                     *(volatile unsigned *)0x04001030,
+                     *(volatile unsigned *)0x04001034,
+                     *(volatile int *)0x04001038,
+                     *(volatile int *)0x0400103c);
+}
 
 extern "C" {
 DSSTATE_BEGIN
