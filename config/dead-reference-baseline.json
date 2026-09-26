@@ -58,6 +58,38 @@
    "ref": "src_tu/actors/Koopa"
   },
   {
+   "file": "notes/agents/handoffs/mg-p1-tamaire-0925.md",
+   "ref": "src/_ZN16dScMgPachinko2_c13InitResourcesEv.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-tamaire-0925.md",
+   "ref": "src/_ZN16dScMgPachinko2_c13OnYoshiTryEatEi.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-tamaire-0925.md",
+   "ref": "src/_ZN16dScMgPachinko2_c6RenderEv.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-tamaire-0925.md",
+   "ref": "src/_ZN16dScMgPachinko2_c8BehaviorEv.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-tamaire-0925.md",
+   "ref": "src/_ZN16dScMgPachinko2_cD0Ev.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-tamaire-0925.md",
+   "ref": "src/_ZN16dScMgPachinko2_cD1Ev.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-tamaire-0925.md",
+   "ref": "src/d_s_mg_pachinko2.c"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-tool-ztv-single-0925.md",
+   "ref": "src/d_s_mg_pachinko2.c"
+  },
+  {
    "file": "notes/agents/handoffs/pr2231-rescue-ov022-ov013-batch2.md",
    "ref": "src_tu/actors/daObj_volcanoCannon_c.cpp"
   },

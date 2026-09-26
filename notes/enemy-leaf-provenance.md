@@ -6,7 +6,7 @@ back, the field stays `unk_NNN` and the reason is recorded — a name nobody can
 check is a claim the next reader would trust for nothing.
 
 Classes covered here: daWater_Hakidasi_c, Goomboss, daWanwan_c, BobOmb, daBtn_c,
-RollingIronBall, KoopaShell, Klepto, daMip_c, daKing_Donketu_c.
+RollingIronBall, daShl_c, Klepto, daMip_c, daKing_Donketu_c.
 
 A recurring source of `unk_` in these headers is the `#else` C twin, which
 restates the whole `fBase_c -> dBase_c -> dActor_c -> dEnemyBase_c` chain flat.
@@ -282,7 +282,7 @@ whole-ROM build is the authority here and it is green.
 
 ---
 
-## KoopaShell (`include/KoopaShell.h`, ov102)
+## daShl_c (`include/daShl_c.h`, ov102)
 
 This header was already largely named. One correction and one collapse:
 

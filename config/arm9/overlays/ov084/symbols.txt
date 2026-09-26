@@ -33,8 +33,8 @@ _ZN7daKrb_c13OnYoshiTryEatEv kind:function(arm,size=0x38) addr:0x0212bfc0
 daKrb_c_classInit_KURIBO_L kind:function(arm,size=0x5c) addr:0x0212bff8
 daKrb_c_classInit_KURIBO_S kind:function(arm,size=0x5c) addr:0x0212c054
 daKrb_c_classInit_KURIBO kind:function(arm,size=0x5c) addr:0x0212c0b0
-_ZN11BobOmbBuddyD1Ev kind:function(arm,size=0x40) addr:0x0212c10c
-_ZN11BobOmbBuddyD0Ev kind:function(arm,size=0x54) addr:0x0212c14c
+_ZN14daRedBombhei_cD1Ev kind:function(arm,size=0x40) addr:0x0212c10c
+_ZN14daRedBombhei_cD0Ev kind:function(arm,size=0x54) addr:0x0212c14c
 func_ov084_0212c1a0 kind:function(arm,size=0x300) addr:0x0212c1a0
 func_ov084_0212c4a0 kind:function(arm,size=0x68) addr:0x0212c4a0
 func_ov084_0212c508 kind:function(arm,size=0x394) addr:0x0212c508
@@ -51,10 +51,10 @@ func_ov084_0212cae0 kind:function(arm,size=0x1d4) addr:0x0212cae0
 func_ov084_0212ccb4 kind:function(arm,size=0xec) addr:0x0212ccb4
 func_ov084_0212cda0 kind:function(arm,size=0xb0) addr:0x0212cda0
 func_ov084_0212ce50 kind:function(arm,size=0xc0) addr:0x0212ce50
-_ZN11BobOmbBuddy16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x0212cf10
-_ZN11BobOmbBuddy6RenderEv kind:function(arm,size=0x2c) addr:0x0212cf40
-_ZN11BobOmbBuddy8BehaviorEv kind:function(arm,size=0xbc) addr:0x0212cf6c
-_ZN11BobOmbBuddy13InitResourcesEv kind:function(arm,size=0x1d8) addr:0x0212d028
+_ZN14daRedBombhei_c16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x0212cf10
+_ZN14daRedBombhei_c6RenderEv kind:function(arm,size=0x2c) addr:0x0212cf40
+_ZN14daRedBombhei_c8BehaviorEv kind:function(arm,size=0xbc) addr:0x0212cf6c
+_ZN14daRedBombhei_c13InitResourcesEv kind:function(arm,size=0x1d8) addr:0x0212d028
 daRedBombhei_c_classInit kind:function(arm,size=0x48) addr:0x0212d200
 _ZN8daFPkn_cD1Ev kind:function(arm,size=0x40) addr:0x0212d248
 _ZN8daFPkn_cD0Ev kind:function(arm,size=0x54) addr:0x0212d288
@@ -154,7 +154,6 @@ data_ov084_021309ec kind:data(any) addr:0x021309ec
 _ZTI14daRedBombhei_c kind:data(any) addr:0x021309f4
 _ZTS14daRedBombhei_c kind:data(any) addr:0x02130a00
 g_profile_RED_BOMBHEI kind:data(any) addr:0x02130a14
-_ZTV11BobOmbBuddy kind:data(any) addr:0x02130a38
 _ZTV14daRedBombhei_c kind:data(any) addr:0x02130a38
 _ZTS8daFPkn_c kind:data(any) addr:0x02130ab4
 _ZTI8daFPkn_c kind:data(any) addr:0x02130ac0

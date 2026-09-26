@@ -323,6 +323,78 @@ class MsvcArmsAreNotDecompSource(unittest.TestCase):
         self.assertEqual(self.side("#if defined(PC) && defined(_MSC_VER)\nHOST\n#endif"),
                          "\n\n")
 
+    def test_compound_expressions_cannot_hide_rom_code(self):
+        for cond in ("(defined(_MSC_VER) && X) == 0",
+                     "defined(_MSC_VER) && X ? 0 : 1",
+                     "defined(_MSC_VER) && X || Y",
+                     "(defined(_MSC_VER) && X) | 1"):
+            with self.subTest(cond=cond):
+                text = f"#if {cond}\nvoid f() {{ _ZN4Base4KillEv(0); }}\n#endif\n"
+                self.assertEqual(self.side(text), text)
+                self.assertEqual(msvc_arms.unresolved(text), [1])
+                self.assertFalse(tiers.score_file("x.cpp", text)["no_mangled_refs"])
+
+    def test_balanced_simple_conjunctions_still_drop_host_code(self):
+        for cond in ("(defined(X)) && (defined(_MSC_VER)) && !defined(Y)",
+                     "1 && _MSC_VER",
+                     "(defined(X) && defined(_MSC_VER))"):
+            with self.subTest(cond=cond):
+                self.assertEqual(self.side(f"#if {cond}\nHOST\n#else\nROM\n#endif"),
+                                 "\n\n\nROM\n")
+
+    def test_macro_expansion_cannot_hide_rom_code(self):
+        for prefix, cond in (("#define X 1 || 1\n", "X && defined(_MSC_VER)"),
+                             ("#define X 0 ? 0 : 1\n", "defined(_MSC_VER) && X"),
+                             ("", "X && defined(_MSC_VER)")):
+            with self.subTest(cond=cond):
+                text = prefix + f"#if {cond}\nvoid f() {{ _ZN4Base4KillEv(0); }}\n#endif\n"
+                self.assertEqual(self.side(text), text)
+                self.assertFalse(tiers.score_file("x.cpp", text)["no_mangled_refs"])
+
+    def test_local_msc_definition_or_undef_keeps_the_file(self):
+        for directive in ("#define _MSC_VER 1900", "#undef _MSC_VER"):
+            with self.subTest(directive=directive):
+                text = directive + "\n#ifdef _MSC_VER\nvoid f() { _ZN4Base4KillEv(0); }\n#endif\n"
+                self.assertEqual(self.side(text), text)
+                self.assertFalse(tiers.score_file("x.cpp", text)["no_mangled_refs"])
+                self.assertEqual(msvc_arms.unresolved(text), [2])
+
+    def test_commented_msc_definition_does_not_disable_filtering(self):
+        for prefix in ("// #define _MSC_VER 1900\n", "/* #undef _MSC_VER */\n"):
+            with self.subTest(prefix=prefix):
+                self.assertEqual(self.side(prefix + "#ifdef _MSC_VER\nHOST\n#endif"),
+                                 prefix + "\n\n")
+
+    def test_commented_directive_cannot_hide_following_rom_code(self):
+        for comment in ("/*\n#ifdef _MSC_VER\n*/\n",
+                        "/*\n#ifndef _MSC_VER\n#else\n#endif\n*/\n"):
+            with self.subTest(comment=comment):
+                text = comment + "void f() { _ZN4Base4KillEv(0); }\n"
+                self.assertEqual(self.side(text), text)
+                self.assertFalse(tiers.score_file("x.cpp", text)["no_mangled_refs"])
+                self.assertEqual(msvc_arms.unresolved(text), [])
+
+    def test_commented_endif_does_not_end_a_real_group(self):
+        text = ("#ifdef _MSC_VER\n/*\n#endif\n*/\nHOST\n#else\n"
+                "void f() { _ZN4Base4KillEv(0); }\n#endif\n")
+        stripped = self.side(text)
+        self.assertNotIn("HOST", stripped)
+        self.assertIn("_ZN4Base4KillEv", stripped)
+        self.assertFalse(tiers.score_file("x.cpp", text)["no_mangled_refs"])
+
+    def test_multiline_directive_comment_is_conservatively_kept(self):
+        for text in ("#ifndef _MSC_VER /*\ncomment */\nvoid f() { _ZN4Base4KillEv(0); }\n#endif\n",
+                     "/* comment\n*/ #ifndef _MSC_VER\nvoid f() { _ZN4Base4KillEv(0); }\n#endif\n"):
+            with self.subTest(text=text):
+                self.assertEqual(self.side(text), text)
+                self.assertFalse(tiers.score_file("x.cpp", text)["no_mangled_refs"])
+
+    def test_continued_condition_is_conservatively_kept(self):
+        text = ("#if defined(_MSC_VER) && X " + chr(92) + "\n? 0 : 1\n"
+                "void f() { _ZN4Base4KillEv(0); }\n#endif\n")
+        self.assertEqual(self.side(text), text)
+        self.assertFalse(tiers.score_file("x.cpp", text)["no_mangled_refs"])
+
     def test_elif_after_the_host_side_is_an_ordinary_if(self):
         self.assertEqual(
             self.side("#ifdef _MSC_VER\nH\n#elif X\nB\n#else\nC\n#endif"),
