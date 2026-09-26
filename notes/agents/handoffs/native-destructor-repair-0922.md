@@ -11,6 +11,8 @@ It preserves the newer native methods, factories, fields and TU promotions.
 Eykn and Hanachan now construct native dBgCh_Gnd objects; Cannon uses native new.
 Those owners' replacements supersede the earlier proposed raw declaration edits.
 No retired source or removed local declaration is restored.
+The Slot1/Slot3 shadow TU uses the existing shared base-constructor declaration;
+its redundant old declaration is removed so the experiment still compiles.
 
 Direct constructor and non-deleting destructor ABI views retain their receiver
 and pointer result. Array counts and strides use the runtime's unsigned types;
@@ -33,7 +35,7 @@ source acceptance. Previous source/checker branches and older measurements remai
 historical evidence; they do not replace the applied candidate's acceptance.
 
 Carry NDT0922-01..03, RCV2908-01..04, RCV-PACKET-01..04 and
-STALE-ARRAY-RUNTIME-TEST into the independent handoff. The original NDT findings
+STALE-ARRAY-RUNTIME-TEST and RCV-SHADOW-01 into the independent handoff. The original NDT findings
 were top-level records and require explicit carry-forward. Preserve their kinds
 and evidence, including the resolved UTF-8 BOM harness failure.
 
