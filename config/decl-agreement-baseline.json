@@ -1416,6 +1416,9 @@
       ]
     },
     "IsCannonOpenInCurLevel": {
+      "src/game/actors/d_a_red_bombhei.cpp": [
+        "return:int"
+      ],
       "include/decl_common.h": [
         "return:int"
       ]
@@ -1426,6 +1429,9 @@
       ]
     },
     "IsStarCollected": {
+      "src/game/actors/d_a_red_bombhei.cpp": [
+        "param:#1 int"
+      ],
       "src/_ZN11BobOmbBuddy13InitResourcesEv.cpp": [
         "param:#1 int"
       ],
@@ -1476,6 +1482,9 @@
       ]
     },
     "LenVec3": {
+      "src/game/actors/d_a_red_bombhei.cpp": [
+        "param:#1 const Vector3 *"
+      ],
       "src/_Z14ApproachLinearR7Vector3RKS_5Fix12IiE.cpp": [
         "param:#1 const Vector3 *"
       ],
@@ -4418,6 +4427,11 @@
       ]
     },
     "Vec3_Add": {
+      "src/game/actors/d_a_red_bombhei.cpp": [
+        "param:#1 Vector3 *",
+        "param:#2 const Vector3 *",
+        "param:#3 const Vector3 *"
+      ],
       "src/_ZN11dCapEnemy_c10ReleaseCapERK7Vector3.cpp": [
         "param:#1 Vector3 *",
         "param:#2 const Vector3 *",
@@ -5495,6 +5509,9 @@
       ]
     },
     "Vec3_MulScalarInPlace": {
+      "src/game/actors/d_a_red_bombhei.cpp": [
+        "param:#1 Vector3 *"
+      ],
       "src/_ZN6dMap_c15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_.cpp": [
         "param:#1 Vector3 *"
       ],
@@ -5613,6 +5630,11 @@
       ]
     },
     "Vec3_Sub": {
+      "src/game/actors/d_a_red_bombhei.cpp": [
+        "param:#1 Vector3 *",
+        "param:#2 const Vector3 *",
+        "param:#3 const Vector3 *"
+      ],
       "src/Vec3_VertAngle.c": [
         "param:#1 Vector3 *",
         "param:#2 const Vector3 *",
@@ -7082,6 +7104,10 @@
         "param:#5 Vector3_16 *",
         "param:#6 Vector3_16 *"
       ],
+      "src/game/actors/d_a_shl.cpp": [
+        "param:#2 dActor_c *",
+        "param:#5 Vector3_16 *"
+      ],
       "src/game/actors/daBrq_c.cpp": [
         "param:#2 dActor_c *",
         "param:#5 Vector3_16 *",
@@ -7860,6 +7886,9 @@
       "src/game/actors/d_a_holhei.cpp": [
         "param:#2 void *",
         "param:#3 void *",
+        "param:#4 int"
+      ],
+      "src/game/actors/d_a_shl.cpp": [
         "param:#4 int"
       ],
       "src/unnamed/ov063/func_ov063_0211a0dc.cpp": [
@@ -20934,6 +20963,9 @@
       ]
     },
     "data_0209d6d4": {
+      "src/game/actors/d_a_red_bombhei.cpp": [
+        "return:unsigned short"
+      ],
       "src/_ZN7Message19DisplaySaveMenuTextEt.cpp": [
         "return:unsigned short"
       ],
@@ -21511,6 +21543,9 @@
       ]
     },
     "data_0209f318": {
+      "src/game/actors/d_a_red_bombhei.cpp": [
+        "return:Camera *"
+      ],
       "src/_ZN5Stage16CheckCameraInputEv.cpp": [
         "return:unsigned char *"
       ],
@@ -30547,6 +30582,9 @@
       ]
     },
     "data_ov084_02130d9c": {
+      "src/game/actors/d_a_red_bombhei.cpp": [
+        "return:SharedFilePtr"
+      ],
       "include/decl_common.h": [
         "return:void *"
       ],
@@ -30558,6 +30596,9 @@
       ]
     },
     "data_ov084_02130da4": {
+      "src/game/actors/d_a_red_bombhei.cpp": [
+        "return:SharedFilePtr"
+      ],
       "include/decl_common.h": [
         "return:void *"
       ],
@@ -31130,6 +31171,11 @@
         "return:int []"
       ]
     },
+    "data_ov102_0214ea58": {
+      "src/game/actors/d_a_shl.cpp": [
+        "return:ShlState"
+      ]
+    },
     "func_ov002_020df300": {
       "src/game/actors/d_a_cnn.cpp": [
         "param:#1 Player *"
@@ -31375,6 +31421,9 @@
       ],
       "src/func_ov102_0214cf98.cpp": [
         "return:int []"
+      ],
+      "src/game/actors/d_a_shl.cpp": [
+        "return:ShlState"
       ]
     },
     "data_ov102_0214ea68": {
@@ -31385,6 +31434,9 @@
     "data_ov102_0214ea78": {
       "src/func_ov102_0214cf4c.cpp": [
         "return:int []"
+      ],
+      "src/game/actors/d_a_shl.cpp": [
+        "return:ShlState"
       ]
     },
     "func_01ff8000": {

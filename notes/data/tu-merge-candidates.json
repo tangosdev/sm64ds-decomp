@@ -29033,13 +29033,13 @@
    "start": "0x212c10c",
    "end": "0x212d248",
    "classes": [
-    "BobOmbBuddy"
+    "daRedBombhei_c"
    ],
    "n_functions_map": 23,
    "n_files": 23,
    "files": [
-    "src/_ZN11BobOmbBuddyD1Ev.cpp",
-    "src/_ZN11BobOmbBuddyD0Ev.c",
+    "src/_ZN14daRedBombhei_cD1Ev.cpp",
+    "src/_ZN14daRedBombhei_cD0Ev.c",
     "src/func_ov084_0212c1a0.c",
     "src/func_ov084_0212c4a0.c",
     "src/func_ov084_0212c508.cpp",
@@ -29056,10 +29056,10 @@
     "src/func_ov084_0212ccb4.cpp",
     "src/func_ov084_0212cda0.c",
     "src/func_ov084_0212ce50.cpp",
-    "src/_ZN11BobOmbBuddy16CleanupResourcesEv.c",
-    "src/_ZN11BobOmbBuddy6RenderEv.cpp",
-    "src/_ZN11BobOmbBuddy8BehaviorEv.cpp",
-    "src/_ZN11BobOmbBuddy13InitResourcesEv.cpp",
+    "src/_ZN14daRedBombhei_c16CleanupResourcesEv.c",
+    "src/_ZN14daRedBombhei_c6RenderEv.cpp",
+    "src/_ZN14daRedBombhei_c8BehaviorEv.cpp",
+    "src/_ZN14daRedBombhei_c13InitResourcesEv.cpp",
     "src/d_a_red_bombhei.c"
    ],
    "ext_mix": {
