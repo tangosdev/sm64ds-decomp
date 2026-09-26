@@ -99,7 +99,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov006",
       "canonical_address": "0x0213b000",
-      "reason": "Single-inheritance RTTI record emitted beside the vtable; the cartridge configures it at ov006 0x0213b000. romdata_check verified the emitted 8-byte record equal to the cartridge before isolation."
+      "reason": "Plain class RTTI record for this class with no base, emitted beside the vtable. The cartridge configures it at ov006 0x0213b000; its first word relocates to arm9 0x0209a774 (_ZTVN3abi17__class_type_infoE), not the single-inheritance type-info vtable. romdata_check verified the emitted 8-byte record equal to the cartridge before isolation."
     }
   ]
 }
