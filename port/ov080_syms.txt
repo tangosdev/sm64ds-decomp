@@ -53,7 +53,10 @@ g_profile_BATTA_BLOCK:0x1c data_ov080_02128214 data_ov080_0212821c data_ov080_02
 data_ov080_0212822c data_ov080_02128234 data_ov080_0212823c data_ov080_02128244
 data_ov080_0212824c data_ov080_02128254 data_ov080_0212825c data_ov080_02128264
 data_ov080_0212826c _ZTI11daPicGate_c _ZTS11daPicGate_c g_profile_PICTURE_GATE:0x1c
-_ZTV13daObjMaruta_c data_ov080_021283c0 data_ov080_021283c8 data_ov080_021283d0
+# _ZTV13daObjMaruta_c (0x02128338) left this list at run linkfull lane VARIANT5,
+# the _ZTV* rule above: it is a host array now, hal/actor_classes_ov080.cpp,
+# and --pack pads its 0x88 bytes so the run keeps the ROM spacing.
+data_ov080_021283c0 data_ov080_021283c8 data_ov080_021283d0
 data_ov080_021283d8 data_ov080_021283e0 data_ov080_021283e8 data_ov080_021283f0
 data_ov080_021283fc data_ov080_02128408 data_ov080_02128414 data_ov080_02128420
 data_ov080_0212842c data_ov080_02128438 data_ov080_02128468 data_ov080_02128470

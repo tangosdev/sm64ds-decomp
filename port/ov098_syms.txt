@@ -22,7 +22,12 @@ data_ov098_0213c488:0x8 data_ov098_0213c490:0x8 data_ov098_0213c498:0x8
 data_ov098_0213c4a0:0x8 data_ov098_0213c4a8:0x8 data_ov098_0213c4b0:0x8
 data_ov098_0213c4b8:0x8 data_ov098_0213c4c0:0x8 data_ov098_0213c4c8:0xc
 _ZTI13daObjBlockS_c:0xc data_ov098_0213c4e0:0x10 data_ov098_0213c4f0:0x10
-_ZTS13daObjBlockS_c:0x10 g_profile_BLOCK_S:0x1c _ZTV16daObjFallBlock_c:0x80 data_ov098_0213c63c:0x8
+_ZTS13daObjBlockS_c:0x10 g_profile_BLOCK_S:0x1c
+# _ZTV16daObjFallBlock_c (0x0213c5bc, 0x80) left this list at run linkfull lane
+# VARIANT5, the vtable rule above: it is a host array now,
+# hal/actor_classes_ov098.cpp, and --pack pads its span so the run keeps the
+# ROM spacing.
+data_ov098_0213c63c:0x8
 data_ov098_0213c644:0x8 data_ov098_0213c64c:0x8 data_ov098_0213c654:0x8
 data_ov098_0213c65c:0x8 _ZTS7daCnn_c:0xc _ZTI7daCnn_c:0xc
 g_profile_CANNON:0x1c data_ov098_0213c71c:0x8 data_ov098_0213c724:0x8 data_ov098_0213c72c:0x8
