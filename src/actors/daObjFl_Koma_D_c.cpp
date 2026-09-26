@@ -1,4 +1,5 @@
 //cpp
+#pragma defer_codegen off
 /**
  * daObjFl_Koma_D_c -- a rotating lava-flow platform (ROM profile FL_KOMA_D).
  *
@@ -7,9 +8,9 @@
  * (RTTI, type name, profile, vtable) is what names this class: the tree called
  * it RotatingPlatformLll until the rename in this branch.
  *
- * The resource methods are written in reverse ROM order for mwccarm 2004/b56.
- * Its out-of-line destructor group emits D0 before D1, unlike the ROM; the
- * manifest records this order difference as partial reconstruction.
+ * With defer_codegen off, mwccarm 2004/b56 emits this source in ROM order,
+ * including the out-of-line D1-before-D0 destructor group. This setting and
+ * the ascending method order are measured together on this translation unit.
  * The adjacent classInit factory and the class/profile/resource data remain
  * outside this four-function text promotion and need an owned continuation.
  *
@@ -62,6 +63,49 @@ extern ResourceDescriptor data_ov022_02113da4;
 }
 
 /* -------------------------------------------------------------------------- */
+/* ROM ordinal 1 -- _ZN16daObjFl_Koma_D_cD0Ev, 0x021115f8, size 0x64 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN16daObjFl_Koma_D_cD0Ev
+/* recovered: real C++ deleting destructor -- the compiler emits the whole body
+ *
+ * D0 is the DELETING destructor: destroy through this class and its bases --
+ * which is why more than one vptr store appears -- then return the object to
+ * its heap. Nobody writes that; declaring `~daObjFl_Koma_D_c()` is enough, because mwcc
+ * emits D2, D0 and D1 together and objisolate keeps the one this file is bound
+ * to.
+ *
+ * The deallocation is an inline operator delete, which is why nothing below
+ * mentions a heap.
+ */
+/*
+ * Also emits _ZN16daObjFl_Koma_D_cD1Ev (0x021115a8, size 0x50): one `~daObjFl_Koma_D_c()` declaration
+ * makes mwcc emit the D2/D0/D1 variant group together.
+ */
+daObjFl_Koma_D_c::~daObjFl_Koma_D_c()
+{
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 2 -- _ZN16daObjFl_Koma_D_c16CleanupResourcesEv, 0x0211165c, size 0x14 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN16daObjFl_Koma_D_c16CleanupResourcesEv
+// Cross-overlay tail-call veneer. #pragma long_calls forces mwccarm to emit the pooled
+// `ldr ip,[pc]; bx ip` indirect tail-call (a plain near `b` otherwise) that the ROM uses
+// to reach another overlay. func_ov002_020b66a8 is daObjKaitendai_c's shared cleanup
+// helper, out of this task's scope, kept under its existing name.
+#pragma long_calls on  /* carried verbatim from the legacy file (positional) */
+int daObjFl_Koma_D_c::CleanupResources()
+{
+    /* The legacy shard declared this `extern int data_ov022_02113da4[]`, so the
+     * bare name decayed to a pointer. The merged TU keeps the other member's
+     * spelling -- the real ResourceDescriptor object -- so take its address
+     * explicitly. Same pointer value, same codegen. */
+    return func_ov002_020b66a8(this, &data_ov022_02113da4);
+}
+#pragma long_calls off  /* close the bracket: positional, must not leak downward */
+
+/* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- _ZN16daObjFl_Koma_D_c13InitResourcesEv, 0x02111670, size 0x18 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjFl_Koma_D_c13InitResourcesEv
@@ -86,49 +130,6 @@ int daObjFl_Koma_D_c::InitResources()
 {
     return func_ov002_020b676c(this, &data_ov022_02113da4, 0x100);
 }
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN16daObjFl_Koma_D_c16CleanupResourcesEv, 0x0211165c, size 0x14 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjFl_Koma_D_c16CleanupResourcesEv
-// Cross-overlay tail-call veneer. #pragma long_calls forces mwccarm to emit the pooled
-// `ldr ip,[pc]; bx ip` indirect tail-call (a plain near `b` otherwise) that the ROM uses
-// to reach another overlay. func_ov002_020b66a8 is daObjKaitendai_c's shared cleanup
-// helper, out of this task's scope, kept under its existing name.
-#pragma long_calls on  /* carried verbatim from the legacy file (positional) */
-int daObjFl_Koma_D_c::CleanupResources()
-{
-    /* The legacy shard declared this `extern int data_ov022_02113da4[]`, so the
-     * bare name decayed to a pointer. The merged TU keeps the other member's
-     * spelling -- the real ResourceDescriptor object -- so take its address
-     * explicitly. Same pointer value, same codegen. */
-    return func_ov002_020b66a8(this, &data_ov022_02113da4);
-}
-#pragma long_calls off  /* close the bracket: positional, must not leak downward */
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN16daObjFl_Koma_D_cD0Ev, 0x021115f8, size 0x64 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjFl_Koma_D_cD0Ev
-/* recovered: real C++ deleting destructor -- the compiler emits the whole body
- *
- * D0 is the DELETING destructor: destroy through this class and its bases --
- * which is why more than one vptr store appears -- then return the object to
- * its heap. Nobody writes that; declaring `~daObjFl_Koma_D_c()` is enough, because mwcc
- * emits D2, D0 and D1 together and objisolate keeps the one this file is bound
- * to.
- *
- * The deallocation is an inline operator delete, which is why nothing below
- * mentions a heap.
- */
-/*
- * Also emits _ZN16daObjFl_Koma_D_cD1Ev (0x021115a8, size 0x50): one `~daObjFl_Koma_D_c()` declaration
- * makes mwcc emit the D2/D0/D1 variant group together.
- */
-daObjFl_Koma_D_c::~daObjFl_Koma_D_c()
-{
-}
-
 
 #ifdef _MSC_VER
 /* The host uses flat ROM destructor names. Keep the renamed canonical entry
