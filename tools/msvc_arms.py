@@ -22,7 +22,7 @@ other macro:
     #ifdef _MSC_VER / #ifndef _MSC_VER
     #if _MSC_VER / #if defined(_MSC_VER) / #if defined _MSC_VER   (optionally parenthesised)
     #if !defined(_MSC_VER) / #if !defined _MSC_VER
-    #if A && defined(_MSC_VER) && B     (false under mwccarm whatever A and B are)
+    #if defined(A) && defined(_MSC_VER) && 1     (defined terms or numeric literals)
 
 plus their `#elif` / `#else` / `#endif`. Any other condition that mentions `_MSC_VER`
 (`#if _MSC_VER >= 1300`, one joined with `||`) is left as it is and every side of it is
@@ -31,6 +31,10 @@ read, which is how both tools read every conditional before this module existed;
 evaluated: `#if 0`, `SM64DS_PLATFORM_PC` and the rest read exactly as they did.
 
 Dropped lines become empty lines, so line numbers stay what they are in the file.
+Directives inside comments or literals are ignored. Files with continued lines or
+multiline comments crossing a directive, or a local #define/#undef of _MSC_VER
+are retained whole, conservatively. Bare macro terms in conjunctions stay unknown:
+their expansions can introduce operators that change precedence.
 Pure string work: stdlib only, no compiler, no ROM.
 """
 import re
@@ -38,17 +42,56 @@ import re
 _DIRECTIVE = re.compile(r"^\s*#\s*(ifdef|ifndef|if|elif|else|endif)\b(.*)$")
 _TRAILING_COMMENT = re.compile(r"\s*(//.*|/\*.*?\*/\s*)$")
 _MSC = r"(?:defined\s*\(\s*_MSC_VER\s*\)|defined\s+_MSC_VER\b|_MSC_VER)"
-_MSC_POS = re.compile(r"^\(?\s*" + _MSC + r"\s*\)?$")
-_MSC_NEG = re.compile(r"^!\s*\(?\s*" + r"(?:defined\s*\(\s*_MSC_VER\s*\)|defined\s+_MSC_VER\b)"
-                      + r"\s*\)?$")
-_MSC_TERM = re.compile(r"^\(?\s*(?:defined\s*\(\s*_MSC_VER\s*\)|defined\s+_MSC_VER\b)\s*\)?$")
+_MSC_POS = re.compile(r"^" + _MSC + r"$")
+_MSC_NEG = re.compile(r"^!\s*(?:defined\s*\(\s*_MSC_VER\s*\)|defined\s+_MSC_VER\b)$")
+_TERM = re.compile(r"^!?\s*(?:defined\s*\(\s*[A-Za-z_]\w*\s*\)|"
+                   r"defined\s+[A-Za-z_]\w*|_MSC_VER|[0-9]+)$")
+_MSC_WRITE = re.compile(r"^\s*#\s*(?:define|undef)\s+_MSC_VER\b")
+_NON_CODE = re.compile(r'/\*.*?(?:\*/|\Z)|//[^\n]*|"(?:\\.|[^"\\])*"|'
+                       r"'(?:\\.|[^'\\])*'", re.S)
+
+
+def _unparen(text):
+    """Remove only balanced parentheses enclosing the entire expression."""
+    text = text.strip()
+    while text.startswith("(") and text.endswith(")"):
+        depth = 0
+        for i, char in enumerate(text):
+            depth += (char == "(") - (char == ")")
+            if depth == 0:
+                break
+        if i != len(text) - 1 or depth != 0:
+            break
+        text = text[1:-1].strip()
+    return text
+
+
+def _directive_view(text):
+    """Mask comments/literals for recognition; retain the original output text.
+
+    Continued lines and comments crossing a directive boundary need a full
+    preprocessor. Keep those files whole rather than risk hiding compiled code or
+    leaving an unmatched comment delimiter after blanking a directive.
+    """
+    crossing_lines = set()
+    def mask(match):
+        token = match.group()
+        if "\n" in token:
+            first = text.count("\n", 0, match.start())
+            crossing_lines.update(range(first, first + token.count("\n") + 1))
+        return "".join("\n" if c == "\n" else " " for c in token)
+    lines = _NON_CODE.sub(mask, text).split("\n")
+    unsupported = bool(re.search(r"\\\r?\n", text)) or any(
+        _DIRECTIVE.match(lines[i]) for i in crossing_lines) or any(
+        _MSC_WRITE.match(line) for line in lines)
+    return lines, unsupported
 
 TRUE, FALSE, UNKNOWN = "true", "false", "unknown"
 
 
 def _condition(kind, arg):
     """TRUE/FALSE when mwccarm's answer for this condition is certain, else UNKNOWN."""
-    a = _TRAILING_COMMENT.sub("", arg).strip()
+    a = _unparen(_TRAILING_COMMENT.sub("", arg))
     if kind == "ifdef":
         return FALSE if a == "_MSC_VER" else UNKNOWN
     if kind == "ifndef":
@@ -57,9 +100,14 @@ def _condition(kind, arg):
         return FALSE
     if _MSC_NEG.match(a):
         return TRUE
-    if "||" not in a and "&&" in a:
-        # A conjunction is false as soon as one term is: `defined(_MSC_VER)` is.
-        if any(_MSC_TERM.match(t.strip()) for t in a.split("&&")):
+    if "&&" in a:
+        # Only defined tests, numeric literals and the known _MSC_VER atom are
+        # supported: other macros may expand operators. Splitting arbitrary C
+        # expressions loses precedence: (defined(_MSC_VER) && X) == 0 and
+        # defined(_MSC_VER) && X ? 0 : 1 are both true with _MSC_VER undefined.
+        terms = [_unparen(term) for term in a.split("&&")]
+        if all(_TERM.fullmatch(term) for term in terms) and any(
+                _MSC_POS.fullmatch(term) for term in terms):
             return FALSE
     return UNKNOWN
 
@@ -81,9 +129,13 @@ class _Group:
 def _walk(text):
     """Yield (line, visible, unresolved_msc) for every line of `text`."""
     stack = []
-    for line in text.split("\n"):
+    directive_lines, unsupported = _directive_view(text)
+    for line, directive in zip(text.split("\n"), directive_lines):
         visible = all(g.keep for g in stack)
-        m = _DIRECTIVE.match(line)
+        m = _DIRECTIVE.match(directive)
+        if unsupported:
+            yield line, True, bool(m and _mentions_msc(m.group(2)))
+            continue
         if not m:
             yield line, visible, False
             continue
@@ -122,7 +174,9 @@ def _walk(text):
                 # Turn the group into an unresolved one and keep this directive, spelled
                 # as the `#if` it now is, so every remaining side is read.
                 g.resolved, g.keep = False, True
-                yield re.sub(r"#\s*elif", "#if", line, count=1), outer, _mentions_msc(arg)
+                start = directive.index("#")
+                rewritten = line[:start] + re.sub(r"#\s*elif", "#if", line[start:], count=1)
+                yield rewritten, outer, _mentions_msc(arg)
                 continue
             else:
                 g.keep = g.taken = (c == TRUE)
