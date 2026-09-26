@@ -86,18 +86,25 @@ int _ZN4cstd6strcmpEPKcS1_(const char *a, const char *b)
 char *_ZN4cstd6strchrEPKcc(const char *s, char ch)
 { return cstd::strchr(s, ch); }
 
-/* PORT_HOST_ABI: ARM asm primitive (halfword copy loop), MSVC cannot assemble.
-   MultiCopyHalf: halfword copy loop, (src, dst, byteCount) in r0-r2 */
-void MultiCopyHalf(unsigned short *src, unsigned short *dst, unsigned n)
+/* MultiCopyHalf IS THE ROM'S OWN BODY: src/MultiCopyHalf.c is C since main
+   #3167 (the halfword loop, `s32 size` compared signed as the ROM's blt does),
+   and the port compiles it under a per-source rename,
+   MultiCopyHalf=MultiCopyHalf_rom (the ASMCPORT block of port/CMakeLists.txt).
+   This definition keeps the ROM name every caller links against and makes one
+   call into that body, so the copy itself is the cartridge's code. What stays
+   here is host instrumentation at the seam between the callers and the body:
+   run link60 Stage 5 lane T2's census of every halfword block copy, counted by
+   destination region in the 2D audit. The BG tilemap upload path
+   (func_ov007_020c076c -> func_020565xx -> G2::GetBGxScrPtr) ends in this
+   primitive, so "the tilemap is empty" and "nothing ever tried to write it"
+   are separable from one table. Inert unless SM64DS_PPU_AUDIT is set, and it
+   still counts before the copy, as the census's source-nonzero column needs. */
+void MultiCopyHalf_rom(const void *src, void *dst, int size);
+void MultiCopyHalf(const void *src, void *dst, int size)
 {
-    /* run link60 Stage 5 lane T2: every halfword block copy this primitive
-       makes, counted by destination region in the 2D audit. The BG tilemap
-       upload path (func_ov007_020c076c -> func_020565xx -> G2::GetBGxScrPtr)
-       ends here, so "the tilemap is empty" and "nothing ever tried to write
-       it" are separable from one table. Inert unless SM64DS_PPU_AUDIT is set. */
-    ntr::ppu_audit_note_copy((unsigned)(size_t)src, (unsigned)(size_t)dst, n);
-    for (unsigned i = 0; i < n; i += 2)
-        *(unsigned short *)((char *)dst + i) = *(unsigned short *)((char *)src + i);
+    ntr::ppu_audit_note_copy((unsigned)(size_t)src, (unsigned)(size_t)dst,
+                             (unsigned)size);
+    MultiCopyHalf_rom(src, dst, size);
 }
 
 /* PORT_HOST_ABI: ARM/Thumb asm primitives (matrix builders), MSVC cannot assemble.

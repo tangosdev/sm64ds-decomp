@@ -23586,6 +23586,23 @@ if(MSVC)
     endforeach()
 endif()
 
+# ===========================================================================
+# ASMCPORT (run linkfull, lane ASMCPORT): ROM ROUTINES THE PORT HOSTED FOR
+# THEIR OLD src SPELLINGS, BUILT AS THE ROM'S OWN BODIES
+# ===========================================================================
+#
+# A1. src/MultiCopyHalf.c, the halfword block copy (C since main #3167), on the
+# three targets that compile hal/cxx_aliases.cpp. It is compiled under a
+# per-source rename, MultiCopyHalf=MultiCopyHalf_rom: hal/cxx_aliases.cpp keeps
+# the ROM name as the one call into this body, with the PPU audit's copy census
+# in front of it. src/ is untouched; the ARM object is main's.
+set(ASMCPORT_A1_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../src/MultiCopyHalf.c")
+set_property(SOURCE "${ASMCPORT_A1_SRC}" APPEND PROPERTY COMPILE_DEFINITIONS
+    "MultiCopyHalf=MultiCopyHalf_rom")
+foreach(_tasmc1 walk_window walk_window_hires smoke_player)
+    target_sources(${_tasmc1} PRIVATE "${ASMCPORT_A1_SRC}")
+endforeach()
+
 # XREL1 (run linkfull): EVERY OVERLAY MOUNT DEPENDS ON THE CONFIG IT READS.
 #
 # tools/ovdata.py builds each mount out of its overlay's config/arm9/overlays/
