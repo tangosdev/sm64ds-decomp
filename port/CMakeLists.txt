@@ -23702,39 +23702,6 @@ set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/fs.cpp" APPEND PROPERTY
     COMPILE_DEFINITIONS
     "$<$<IN_LIST:$<TARGET_PROPERTY:NAME>,port_slice_shared;walk_window;walk_window_hires;smoke_player>:SM64DS_LOADFILE_ROM=1>")
 
-# XREL1 (run linkfull): EVERY OVERLAY MOUNT DEPENDS ON THE CONFIG IT READS.
-#
-# tools/ovdata.py builds each mount out of its overlay's config/arm9/overlays/
-# <ov>/relocs.txt (which words are addresses), delinks.txt (the base and the
-# section ends) and symbols.txt (the per-symbol ranges), and the cross pass
-# builds on the mounts' sidecar maps. None of the add_custom_command calls
-# above names those three files, so a config edit -- a relocation row removed
-# because the word is not a pointer, a symbol moved -- left host-src/<ov>_data.c,
-# <ov>_syms.c and ov_cross.c holding the OLD patch lists in every incremental
-# build, and only a clean build saw the change. That is how a removed false
-# relocation can look fixed in one tree and still ship from another.
-#
-# So append the three files of each mount's OWN overlay to that mount's
-# command. The cross pass already depends on every sidecar map, so it re-runs
-# whenever a mount does. A mount whose name does not start ovNNN_ is refused
-# here rather than skipped: it would be the one that goes stale.
-set(_xrel1_mounts 0)
-foreach(_xrel1_map IN LISTS OV_DATA_MAPS)
-    string(REGEX REPLACE "[.]map$" "" _xrel1_out "${_xrel1_map}")
-    get_filename_component(_xrel1_name "${_xrel1_out}" NAME)
-    if(NOT _xrel1_name MATCHES "^(ov[0-9][0-9][0-9])_")
-        message(FATAL_ERROR "ovdata mount ${_xrel1_name} does not name its "
-                "overlay (ovNNN_...), so the XREL1 block cannot tie it to "
-                "its config/arm9/overlays/<ov>/ files")
-    endif()
-    set(_xrel1_cfg "${PORT_REPO_ROOT_ABS}/config/arm9/overlays/${CMAKE_MATCH_1}")
-    add_custom_command(OUTPUT "${_xrel1_out}" APPEND
-        DEPENDS "${_xrel1_cfg}/relocs.txt" "${_xrel1_cfg}/delinks.txt"
-                "${_xrel1_cfg}/symbols.txt")
-    math(EXPR _xrel1_mounts "${_xrel1_mounts} + 1")
-endforeach()
-message(STATUS "XREL1: ${_xrel1_mounts} ovdata mount(s) rebuild when their overlay's config changes")
-
 # B5INPUT (run linkfull): THE GAME LOOP'S OWN INPUT STEPS. port/slice_w31_b5input.txt
 # lists the ROM TUs tests/walk_window.cpp's level loop calls at the frame loop's
 # input phases (0x15, the pad read; 0x17, PadData, the ring and the soft-reset
@@ -24062,3 +24029,63 @@ foreach(_tw31v5c2 walk_window walk_window_hires smoke_player smoke_actor
                   smoke_savestate smoke_persist)
     target_sources(${_tw31v5c2} PRIVATE "${VARIANT5_C2_SRC}")
 endforeach()
+
+# ===========================================================================
+# LOOPIN2 (run linkfull, lane LOOPIN2): THE END OF PHASE 0x17, AND PHASE 7
+# ===========================================================================
+#
+# port/slice_w31_loopin2.txt carries func_02023498 (the ROM's soft-reset latch,
+# the last call of src/func_020197b8.c's phase 0x17) with the two clears it
+# makes, and func_0201a4bc (phase 7, the VBlank sleep). tests/walk_window.cpp's
+# level loop and hal/scene_boot.cpp's port_scene_tick / port_scene_run call
+# them, and hal/scene_boot.cpp is compiled by all three hosting targets, so all
+# three take the slice. smoke_player also takes hal/b5input_globals.cpp here:
+# that file hosts data_0209f1dc, the latch's "combo still held" word, and the
+# lane's census, and lane B5INPUT's block gives it to the two window targets
+# only.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_loopin2.txt" SLICE_W31_LOOPIN2_LINES)
+set(SLICE_W31_LOOPIN2_SOURCES "")
+foreach(line IN LISTS SLICE_W31_LOOPIN2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W31_LOOPIN2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tw31loopin2 walk_window walk_window_hires smoke_player)
+    target_sources(${_tw31loopin2} PRIVATE ${SLICE_W31_LOOPIN2_SOURCES})
+endforeach()
+target_sources(smoke_player PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/hal/b5input_globals.cpp")
+
+# XREL1 (run linkfull): EVERY OVERLAY MOUNT DEPENDS ON THE CONFIG IT READS.
+#
+# tools/ovdata.py builds each mount out of its overlay's config/arm9/overlays/
+# <ov>/relocs.txt (which words are addresses), delinks.txt (the base and the
+# section ends) and symbols.txt (the per-symbol ranges), and the cross pass
+# builds on the mounts' sidecar maps. None of the add_custom_command calls
+# above names those three files, so a config edit -- a relocation row removed
+# because the word is not a pointer, a symbol moved -- left host-src/<ov>_data.c,
+# <ov>_syms.c and ov_cross.c holding the OLD patch lists in every incremental
+# build, and only a clean build saw the change. That is how a removed false
+# relocation can look fixed in one tree and still ship from another.
+#
+# So append the three files of each mount's OWN overlay to that mount's
+# command. The cross pass already depends on every sidecar map, so it re-runs
+# whenever a mount does. A mount whose name does not start ovNNN_ is refused
+# here rather than skipped: it would be the one that goes stale.
+set(_xrel1_mounts 0)
+foreach(_xrel1_map IN LISTS OV_DATA_MAPS)
+    string(REGEX REPLACE "[.]map$" "" _xrel1_out "${_xrel1_map}")
+    get_filename_component(_xrel1_name "${_xrel1_out}" NAME)
+    if(NOT _xrel1_name MATCHES "^(ov[0-9][0-9][0-9])_")
+        message(FATAL_ERROR "ovdata mount ${_xrel1_name} does not name its "
+                "overlay (ovNNN_...), so the XREL1 block cannot tie it to "
+                "its config/arm9/overlays/<ov>/ files")
+    endif()
+    set(_xrel1_cfg "${PORT_REPO_ROOT_ABS}/config/arm9/overlays/${CMAKE_MATCH_1}")
+    add_custom_command(OUTPUT "${_xrel1_out}" APPEND
+        DEPENDS "${_xrel1_cfg}/relocs.txt" "${_xrel1_cfg}/delinks.txt"
+                "${_xrel1_cfg}/symbols.txt")
+    math(EXPR _xrel1_mounts "${_xrel1_mounts} + 1")
+endforeach()
+message(STATUS "XREL1: ${_xrel1_mounts} ovdata mount(s) rebuild when their overlay's config changes")

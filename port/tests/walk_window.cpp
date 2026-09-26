@@ -836,6 +836,14 @@ extern "C" unsigned short data_0209d534[];
 extern "C" unsigned char data_0209e64c;    /* hal/boot_arms.cpp: the gate */
 extern "C" int data_0209d574[];            /* hal/actor_vtables.cpp: the
                                               watchdog alarm, ROM span 68 */
+/* run linkfull lane LOOPIN2: phase 0x17's last call, the ROM's soft-reset
+   latch (src/func_02023498.c), the latch byte it raises (hal/auto_bss.cpp), and
+   the lane's census of phases 0x17 and 7 (hal/b5input_globals.cpp). */
+extern "C" void func_02023498(void);
+extern "C" unsigned char data_0209f1e0[];
+extern "C" void port_loopin2_p17(int frame, int latch_before,
+                                 unsigned held_before, unsigned held_after);
+extern "C" void port_loopin2_p7(void);
 /* the ROM's own camera math, which the freecam rig builds its view with:
    the same eye construction func_02009e70 uses and the same two G3i entry
    points plus CopyToViewMat that Camera::Render ends in */
@@ -1755,6 +1763,11 @@ extern "C" void _ZN4CP1516WaitForInterruptEv(void);
    circuit itself proven rather than the whole thing merely suspect. */
 extern "C" void OS_SleepThread(unsigned short *q);
 extern "C" unsigned char data_0209d500[4];
+/* AND THE ROM'S OWN TU FOR IT (run linkfull, lane LOOPIN2): src/func_0201a4bc.c
+   is that one statement, OS_SleepThread(data_0209d500), so phase 7 below calls
+   it by name where it used to carry the statement inlined. Same sleep, same
+   wait, same host pacing inside it: the body is identical. */
+extern "C" void func_0201a4bc(void);
 /* hal/boot2_thread.cpp. Raised around the sleep below while a frame is being
    re-simulated, so the halt inside it takes no radio turn: run link100, lane
    DET, and the whole reason is at the call site. */
@@ -12646,23 +12659,44 @@ int main(void)
                these are the cartridge's own words, hosted in
                hal/b5input_globals.cpp.
 
-               func_020197b8.c:47, func_02023498(), IS NOT CALLED YET, and that
-               is measured rather than assumed (run linkfull, lane B5INPUT). It
-               is the cartridge's soft reset: func_0203bc7c above raises
-               data_020a0e44 when the key word is L+R+START+SELECT, and
-               func_02023498 turns that into data_0209f1e0, then zeroes PadData,
-               TouchInfo and the Ctrl records on every frame the latch is up
-               while dScene_c::BeforeBehavior fades the scene out and ends it,
-               for the title to take over. On this port the latch rose (f400)
-               and the Stage's BeforeBehavior started the brightness fade on
-               data_0209f5d0 (f401) -- and nothing ever stepped that fade, so it
-               never reached its end, the latch never came down, and every
-               button was zeroed for the rest of the run: a softlock where the
-               cartridge goes back to the title. Past the fade the ROM marks the
-               Stage for destruction, and the Stage's CleanupResources slot is
-               not hosted (hal/level_change.cpp, the MFD_STAGE row). The call
-               belongs here, after the ring, once the frame's fader step (phase
-               2) and that teardown exist. */
+               func_020197b8.c:47, func_02023498(): THE SOFT-RESET LATCH, called
+               here after the ring as the ROM orders it (run linkfull, lane
+               LOOPIN2). func_0203bc7c above raises data_020a0e44 when a key
+               word is exactly L+R+START+SELECT (0x30c); func_02023498 turns
+               that into data_0209f1e0 plus data_0209f1dc ("still held", so a
+               held combo cannot re-arm it), unless data_0209f1d8 says the
+               minigame menu is holding the reset off; and on every later frame
+               the latch is up it zeroes PadData (func_0203bc50), TouchInfo
+               (func_0203bb14) and the Ctrl records (ResetInput) before phase 3
+               spawns or phase 4 ticks. Every one of those is the ROM's body.
+
+               WHERE THE CARTRIDGE GOES NEXT AND THIS PORT CANNOT. Its
+               dScene_c::BeforeBehavior (the Stage's slot 7, dispatched every
+               frame) starts a 16-frame fade to black on the brightness fader
+               data_0209f5d0, parks it in data_0209f1e4, and at the fade's end
+               asks for scene 1 (the title) and marks the Stage for destruction.
+               Here that fade is stepped by phase 2's func_0202345c through
+               data_0208eacc slot 2, FaderBrightness::AdvanceFade, which
+               hal/scene_boot.cpp still traps (lane FADERTRAP: seating it is a
+               MASTER_BRIGHT rendering change for a screen, not a headless
+               proof). So the fade would never end, the latch would never come
+               down, and every button would stay zeroed: the softlock lane
+               B5INPUT measured on this call. And past a fade the Stage's
+               teardown is hal/stage_bridges.cpp's named abort.
+
+               SO THE LATCH IS ANSWERED HERE, ON THE FIRST FRAME THE ROM'S
+               CLEARS HAVE RUN -- the frame after the rise, the cartridge's first
+               reset frame -- and it is answered the way port_front_end_quit_poll
+               answers every other ROM request to go back to the front end on a
+               level: start the game again at its front door (the title) and
+               post WM_QUIT; the pump at the top of the next frame ends the run
+               before any trapped fade step or Stage teardown can matter. What
+               a player sees is the title coming up, as on the cartridge; what
+               is missing is the fade to black in between, which waits on that
+               trapped slot. Under a selftest there is no successor, the same
+               as the front-end row: it says what it would have done and quits.
+               A re-simulated rollback frame never answers it (the frame it
+               replays already did). */
             {
                 data_0209d50c = 0x17;
                 const unsigned short b5_v = *(unsigned short *)(
@@ -12670,6 +12704,36 @@ int main(void)
                 data_0209d534[data_0209d4e8[0]] = b5_v;
                 data_0209d51c = b5_v;
                 data_0209d4e8[0] = (unsigned char)((data_0209d4e8[0] + 1) & 0x1f);
+                const int srst_up = data_0209f1e0[0] != 0;
+                func_02023498();
+                port_loopin2_p17(frame, srst_up, b5_v,
+                                 *(unsigned short *)((char *)data_020a0e58 +
+                                     ((unsigned)data_020a0e40[0] << 2)));
+                static int srst_answered;
+                if (srst_up && data_0209f1e0[0] && !srst_answered &&
+                    !rb_replaying()) {
+                    srst_answered = 1;
+                    fprintf(stderr, "[loopin2] f%d soft reset: the ROM's latch "
+                            "is up and its clears ran this frame; its fade "
+                            "cannot step on this port (data_0208eacc slot 2 is "
+                            "trapped), so the level loop answers it as a return "
+                            "to the front door\n", frame);
+                    if (g_selftest_frames) {
+                        fprintf(stderr, "[loopin2] soft reset: no successor: "
+                                "this run is a %d-frame selftest, which has no "
+                                "window to hand over\n", g_selftest_frames);
+                    } else if (port_menu_relaunch(-1, -1)) {
+                        fprintf(stderr, "[loopin2] soft reset: started the "
+                                "game again at its front door (the title), "
+                                "this process is quitting\n");
+                    } else {
+                        fprintf(stderr, "[loopin2] soft reset: could not start "
+                                "the front door (win32 %lu): quitting anyway, "
+                                "which lands the player back in the launcher\n",
+                                (unsigned long)GetLastError());
+                    }
+                    W.PostQuitMessage_(0);
+                }
             }
             g_pad_mirror_prev = raw_all;
             /* ---- THE THIRD BUTTON WRITER, AND THE ONE HIS HANDS FOUND ------
@@ -17119,22 +17183,31 @@ int main(void)
             r3e_census("the first probed or ROM-loop frame foot");
         r3e_heap_watch("the frame foot");
         if (r3d_sleep_probe_left > 0) {
-            /* func_0201a4bc's whole body, at func_020197b8's phase-7 point.
+            /* func_0201a4bc, at func_020197b8's phase-7 point (its one
+               statement used to be inlined here; lane LOOPIN2 calls the TU).
                The flag data_0209d4f0 is already up (it was raised at the frame
                foot above, rung R3b step B1), which is the gate the handler's
                wake tests, so this is the ROM's own condition and not a fixture. */
             --r3d_sleep_probe_left;
             ++r3d_sleep_probe_taken;
-            OS_SleepThread((unsigned short *)data_0209d500);
+            data_0209d50c = 7;
+            port_loopin2_p7();
+            func_0201a4bc();
         } else if (r3d_wait_probe_left > 0) {
             --r3d_wait_probe_left;
             ++r3d_wait_probe_taken;
             _ZN4CP1516WaitForInterruptEv();
         } else if (port_rom_loop_enabled()) {
-            /* RUNG E1. func_0201a4bc's whole body at func_020197b8's phase-7
-               point, on every frame. The flag data_0209d4f0 the handler's wake
-               tests is already up -- raised at the frame foot above, rung R3b
-               step B1 -- so this is the ROM's own condition and not a fixture. */
+            /* RUNG E1. func_0201a4bc at func_020197b8.c:57's phase-7 point,
+               `data_0209d50c = 7; func_0201a4bc();`, on every frame. Its one
+               statement, OS_SleepThread(data_0209d500), was inlined here until
+               run linkfull lane LOOPIN2 called the ROM's own TU: the same
+               sleep onto the idle thread, whose CP15::WaitForInterrupt runs the
+               host frame pump (the pacer) and the VBlank edge, so the frame's
+               wait and its pacing are exactly what they were. The flag
+               data_0209d4f0 the handler's wake tests is already up -- raised
+               at the frame foot above, rung R3b step B1 -- so this is the
+               ROM's own condition and not a fixture. */
             ++r3e_rom_loop_sleeps;
             r3e_heap_watch("the frame foot, before the ROM's sleep");
             /* AND THE RADIO STANDS DOWN FOR A RE-SIMULATED FRAME (run link100,
@@ -17155,7 +17228,9 @@ int main(void)
             const int det_resim = rb_replaying();
             if (det_resim) port_thread_pump_suspend(1);
             port_thread_frame_wait_begin();
-            OS_SleepThread((unsigned short *)data_0209d500);
+            data_0209d50c = 7;
+            port_loopin2_p7();
+            func_0201a4bc();
             if (det_resim) port_thread_pump_suspend(0);
             r3e_heap_watch("the frame foot, after the ROM's sleep");
         } else {

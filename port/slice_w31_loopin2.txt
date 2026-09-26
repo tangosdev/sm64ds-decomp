@@ -1,0 +1,20 @@
+# LOOPIN2 (run linkfull, wave 31B): THE END OF PHASE 0x17, AND PHASE 7.
+#
+# src/func_020197b8.c, the ROM's frame loop, ends phase 0x17 with
+# func_02023498() -- the soft-reset latch, which calls the two clears below and
+# ResetInput (already linked) -- and runs phase 7 as `func_0201a4bc()`, the
+# VBlank sleep, whose one statement both host loops used to carry inlined.
+# tests/walk_window.cpp's level loop and hal/scene_boot.cpp's port_scene_tick /
+# port_scene_run call both at those points. hal/scene_boot.cpp is compiled
+# into walk_window, walk_window_hires and smoke_player, so all three targets
+# take this slice (a target that compiles a caller without its callee answers
+# LNK2019).
+#
+# phase 0x17: the latch, and the two clears it makes while the latch is up
+# (PadData, TouchInfo)
+src/func_02023498.c
+src/func_0203bc50.c
+src/func_0203bb14.c
+#
+# phase 7: OS_SleepThread(data_0209d500)
+src/func_0201a4bc.c

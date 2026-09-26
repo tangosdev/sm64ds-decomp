@@ -278,6 +278,18 @@
 //      null because the port does not link the ROM's static initialiser for it
 //      (hal/auto_bss.cpp carries that note at the storage).
 //
+//      [SUPERSEDED, run linkfull, lane LOOPIN2: src/func_02023498.c is in the
+//       link now and runs at phase 0x17 of both host loops, and slot 7 is
+//       dispatched on the Stage every frame, so L+R+START+SELECT on a level
+//       ENTERS this branch: that frame it starts the reset fade on
+//       &data_0209f5d0 and parks it in data_0209f1e4, the next frame it asks
+//       IsAtEnd -- and there it stops, because the fade's step
+//       (data_0208eacc slot 2) is still a named trap and the level loop
+//       answers the reset on that second frame by starting the game again at
+//       the title and ending the run (tests/walk_window.cpp's phase-0x17
+//       block). Its MarkForDestruction is never reached. The paragraph
+//       below is the reading from before, kept for its account of the
+//       hazards.]
 //      IT CANNOT RUN, and the reason is a linked-set fact rather than a hope:
 //      src/func_02023498.c is the ONLY writer in the whole of src/ that ever
 //      sets data_0209f1e0 non-zero, and that TU is not in walk_window.map.

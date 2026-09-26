@@ -41,9 +41,10 @@ src/func_02057e34.c
 #       symbols and DTCM for the main thread's stack bounds and writes
 #       data_020a6134 through +0x54; run/link100's BOOT lane refused it for
 #       that. hal/boot2_thread.cpp seats the fields the linked TUs read.
-#   src/func_0201a4bc.c   OS_SleepThread(data_0209d500). data_0209d500 is
-#       hosted nowhere on this branch, so the row would be an unresolved
-#       external, not a link.
+#   src/func_0201a4bc.c   OS_SleepThread(data_0209d500). It was refused here
+#       because data_0209d500 was hosted nowhere; hal/boot_globals.cpp hosts it
+#       now, and run linkfull lane LOOPIN2 enrols the TU in
+#       port/slice_w31_loopin2.txt, called at phase 7 of both host loops.
 #   the OS lock family (func_02058894, func_020587e4, func_0205816c,
 #       func_020581a8, func_0205c864, func_0205cd5c, func_0205ffd0,
 #       func_020600e0) -- measured and reported separately by the lane; each
