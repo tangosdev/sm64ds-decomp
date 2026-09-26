@@ -1506,7 +1506,7 @@ src/_ZN14dScMgBomroom_c13InitResourcesEv.cpp:
     complete
     .text start:0x020d9244 end:0x020d9574
 
-src/d_s_mg_bomroom.c:
+src/d_s_mg_bomroom.cpp:
     complete
     .text start:0x020d9574 end:0x020d95a4
 
@@ -1718,7 +1718,7 @@ src/_ZN14dScMgCurling_c13InitResourcesEv.cpp:
     complete
     .text start:0x020e3578 end:0x020e3820
 
-src/d_s_mg_curling.c:
+src/d_s_mg_curling.cpp:
     complete
     .text start:0x020e3820 end:0x020e3854
 
@@ -1806,7 +1806,7 @@ src/_ZN15dScMgCurling2_c13InitResourcesEv.cpp:
     complete
     .text start:0x020e6894 end:0x020e6bf4
 
-src/d_s_mg_curling2.c:
+src/d_s_mg_curling2.cpp:
     complete
     .text start:0x020e6bf4 end:0x020e6c28
 
@@ -2292,7 +2292,7 @@ src/_ZN15dScMgPachinko_c13InitResourcesEv.cpp:
     complete
     .text start:0x020fefc0 end:0x020ff3ec
 
-src/d_s_mg_pachinko.c:
+src/d_s_mg_pachinko.cpp:
     complete
     .text start:0x020ff3ec end:0x020ff420
 
@@ -2304,7 +2304,7 @@ src/actors/dScMgPanel_c.cpp:
     complete
     .text start:0x0210428c end:0x02107858
 
-src/d_s_mg_panel.c:
+src/d_s_mg_panel.cpp:
     complete
     .text start:0x02107858 end:0x0210788c
 
@@ -3073,7 +3073,7 @@ src/_ZN13dScMgTeresa_c13InitResourcesEv.cpp:
     complete
     .text start:0x021203fc end:0x021207a8
 
-src/d_s_mg_teresa.c:
+src/d_s_mg_teresa.cpp:
     complete
     .text start:0x021207a8 end:0x021207dc
 
