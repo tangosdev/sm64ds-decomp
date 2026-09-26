@@ -5,7 +5,7 @@
 #include "decl_Model.h"
 #include "decl_dCcAc_c.h"
 #include "decl_common.h"
-extern void _ZN10dCapIcon_cC1Ev(void *);
+extern void *_ZN10dCapIcon_cC1Ev(void *);
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV12daDossyCap_c */
 /* Reconstructed source-style name: SM64DS proves daDossyCap_c through RTTI,

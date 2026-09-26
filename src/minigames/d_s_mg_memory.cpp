@@ -87,7 +87,7 @@ void func_ov004_020b04d0(int v);
 void func_ov004_020b682c(void);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
-void _ZN11dScMgBase_cC2Ev(void *scene);
+void *_ZN11dScMgBase_cC2Ev(void *scene);
 void _ZN8Particle10SysTrackerC1Ev(void *tracker);
 /* local extern: only sibling scene headers (dScMgCard_c.h, dScMgMemory2_c.h)
    declare it; this TU includes neither */

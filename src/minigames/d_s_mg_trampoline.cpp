@@ -226,7 +226,7 @@ extern void *data_ov006_02134f00[];
 extern void *data_ov006_02134f08;
 extern void func_ov006_020cd270(void);
 extern void func_ov006_020d09e0(void);
-extern void _ZN11dScMgBase_cC2Ev(void *self);
+extern void *_ZN11dScMgBase_cC2Ev(void *self);
 extern void _ZN8Particle10SysTrackerC1Ev(void *self);
 extern void __cxa_vec_ctor(void *base, int count, int stride, void *ctor, void *dtor);
 extern int _ZTV14dScMgD3DBase_c[];

@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 extern void _ZN7dCcAc_c10GetOwnerIDEv(void);
-extern void _ZN7dCcAc_cC1Ev(void*);
+extern void *_ZN7dCcAc_cC1Ev(void*);
 extern void _ZN7dCcAc_cD1Ev(void*);
 
 

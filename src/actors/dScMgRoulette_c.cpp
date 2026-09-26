@@ -182,7 +182,7 @@ void NullDestructor_0203d47c(void);
 void Camera_UpdateMatrices(char *cam);
 
 void func_02012790(int a);
-void func_020731dc(int a, int b, void **node);
+void func_020731dc(void *object, void *destructor, void **node);
 void func_0203d680(Vec2_Fix12 *out, const Vec2_Fix12 *in, int scale);
 void *func_ov004_020adc68(int id);
 void func_ov004_020b1b08(int c);
@@ -854,7 +854,7 @@ void func_ov006_021092e8(void* racer)
     if (b == 0) {
         data_ov006_021428d4[0] = 0xc000;
         data_ov006_021428d4[1] = 0xc000;
-        func_020731dc((int)data_ov006_021428d4, (int)NullDestructor_0203d47c, &data_ov006_02142948);
+        func_020731dc(data_ov006_021428d4, (void *)NullDestructor_0203d47c, &data_ov006_02142948);
         data_ov006_021428cc |= 1;
     }
     func_ov006_02109530((int *)racer, data_ov006_021428d4, 0x80);

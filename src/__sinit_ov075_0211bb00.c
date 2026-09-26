@@ -5,7 +5,7 @@ struct P6 { struct P2 lo, hi, tail; };
 /* This generated C initializer must use the compiler-owned linker spelling
  * until its globals can be reconstructed as their original typed C++
  * definitions. */
-extern void _ZN10dScEntry_c15graphCallback_cC1Ev(void *);
+extern void *_ZN10dScEntry_c15graphCallback_cC1Ev(void *);
 extern void func_020731dc(void *, void *, void **);
 extern void NoOpDestructor(void);
 

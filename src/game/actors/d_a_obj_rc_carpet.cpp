@@ -75,11 +75,11 @@ FlyingCarpetResources data_ov036_02113f58 = {
     &data_ov036_02112b28
 };
 
-extern void _ZN10dBgActor_cC2Ev(dBgActor_c *actor);
-extern void _ZN5ModelC1Ev(Model *model);
+extern void *_ZN10dBgActor_cC2Ev(dBgActor_c *actor);
+extern void *_ZN5ModelC1Ev(Model *model);
 extern void _ZN5ModelD1Ev(Model *model);
-extern void _ZN7PathPtrC1Ev(PathPtr *path);
-extern void _ZN9ModelAnimC1Ev(ModelAnim *model);
+extern void *_ZN7PathPtrC1Ev(PathPtr *path);
+extern void *_ZN9ModelAnimC1Ev(ModelAnim *model);
 extern void __cxa_vec_ctor(
     Model *models, int count, int size, void *ctor, void *dtor);
 extern int _ZTV15daObjRcCarpet_c[];

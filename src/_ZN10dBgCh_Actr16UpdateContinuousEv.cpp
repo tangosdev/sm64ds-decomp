@@ -19,7 +19,7 @@ typedef struct dBgPiLoc { char pad[0x28]; } dBgPiLoc;
 extern "C" {
 extern int func_02037938(void* p);
 extern void func_02038324(int a, int* b, int c, int d);
-extern void _ZN5dBgPiC1Ev(dBgPiLoc* r);
+extern void *_ZN5dBgPiC1Ev(dBgPiLoc* r);
 extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, Vec3* a, Vec3* b, void* actor);
 extern int _ZN9dBgCh_Lin10DetectClsnEv(void* self);
 extern void _ZN9dBgCh_Lin10GetClsnPosEv(Vec3* out, void* self);

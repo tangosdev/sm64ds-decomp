@@ -10,7 +10,7 @@ extern unsigned int data_ov100_0214870c;
 extern int data_ov100_021487e4[];
 extern unsigned int data_ov100_02148714;
 extern int data_ov100_02148808[];
-extern void _ZN7Vector3D1Ev(void);
+extern void *_ZN7Vector3D1Ev(void *object);
 extern int data_ov100_021487cc[];
 extern int data_ov100_021487fc[];
 

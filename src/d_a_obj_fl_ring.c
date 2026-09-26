@@ -1,6 +1,6 @@
 // @symbol daObjFl_Ring_c_classInit
 extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN10dBgActor_cC2Ev(void *);
+extern void *_ZN10dBgActor_cC2Ev(void *);
 extern int _ZTV14daObjFl_Ring_c[];
 /* Reconstructed source-style name: SM64DS proves daObjFl_Ring_c through RTTI,
  * allocation size, vtable identity, and the FL_RING registry profile; later

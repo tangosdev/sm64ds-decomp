@@ -26,7 +26,7 @@ extern int _ZNK9Animation13GetFrameCountEv(void*);
 extern void _ZN9Animation17UpdateFileOffsetsER8BCA_File(char*);
 extern void _ZN9Animation4CopyERKS_(void*, const void*);
 extern void _ZN9Animation8SetFlagsEi(void*, int);
-extern void _ZN9AnimationC2Ev(void*);
+extern void *_ZN9AnimationC2Ev(void*);
 
 
 #ifdef __cplusplus

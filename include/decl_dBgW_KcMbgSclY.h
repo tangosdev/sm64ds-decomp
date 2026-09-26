@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 extern int _ZN14dBgW_KcMbgSclY9SetScaleYE5Fix12IiE(void*, int);
-extern void _ZN14dBgW_KcMbgSclYC1Ev(void*);
+extern void *_ZN14dBgW_KcMbgSclYC1Ev(void*);
 extern void _ZN14dBgW_KcMbgSclYD1Ev(void*);
 
 

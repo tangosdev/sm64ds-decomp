@@ -1492,7 +1492,7 @@ int func_ov002_020bf40c(char* c){
     struct dBgCh_Gnd { char pad[0x50]; };
     extern unsigned char NumStars(void);
     extern void AddVec3(void*, void*, void*);
-    extern void _ZN9dBgCh_GndC1Ev(void*);
+    extern void *_ZN9dBgCh_GndC1Ev(void*);
     extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void*, void*, void*);
     extern int _ZN9dBgCh_Gnd10DetectClsnEv(void*);
     extern void _ZN9dBgCh_GndD1Ev(void*);
@@ -1994,7 +1994,7 @@ int func_ov002_020c0108(char *self, int p1)
     typedef int s32;
     typedef struct { s32 x, y, z; } Vec3i;
     typedef struct { void *a; u32 b; } PathPtr;
-    extern void _ZN7PathPtrC1Ev(void*);
+    extern void *_ZN7PathPtrC1Ev(void*);
     extern void _ZN7PathPtr6FromIDEj(void*, u32 id);
     extern int _ZNK7PathPtr8NumNodesEv(void*);
     extern void _ZNK7PathPtr7GetNodeER7Vector3j(void*, void*, u32 idx);
@@ -2265,7 +2265,7 @@ int func_ov002_020c06fc(char *c, int arg)
     extern int Vec3_HorzLen(void*);
     extern int _ZN4cstd5atan2E5Fix12IiES1_(int x, int z);
     extern int AngleDiff(int a, int b);
-    extern void _ZN9dBgCh_LinC1Ev(void*);
+    extern void *_ZN9dBgCh_LinC1Ev(void*);
     extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void*, void*, void*, void*);
     extern int _ZN9dBgCh_Lin10DetectClsnEv(void*);
     extern void _ZN9dBgCh_LinD1Ev(void*);
@@ -2756,7 +2756,7 @@ void func_ov002_020c14b8(void *arg0)
         int f1c, f20, f24;
     } ClsnResultTmp;
     typedef struct { int x, y, z; } Vector3i;
-    extern void _ZN9dBgCh_GndC1Ev(void*);
+    extern void *_ZN9dBgCh_GndC1Ev(void*);
     extern int _ZN6Player12Unk_020c9e5cEh(void*, unsigned char state);
     extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void*, void*, void*);
     extern int _ZN9dBgCh_Gnd10DetectClsnEv(void*);
@@ -3649,7 +3649,7 @@ void func_ov002_020c2b08(void *arg0)
     extern void *_ZNK10dBgCh_Actr14GetFloorResultEv(void*);
     extern int SurfaceInfo_TestFlag0x20(void*);
     extern int Player_ScaleByCharFactor(void*, int a);
-    extern void _ZN9dBgCh_GndC1Ev(void*);
+    extern void *_ZN9dBgCh_GndC1Ev(void*);
     extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void*, void*, void*);
     extern int _ZN9dBgCh_Gnd10DetectClsnEv(void*);
     extern void _ZN9dBgCh_GndD1Ev(void*);
@@ -4667,8 +4667,8 @@ int func_ov002_020c44c4(char* self)
     extern int data_0209caa0[];
     extern s8 data_0209f2f8;
     extern u8 data_0209f264;
-    extern void _ZN7Vector3D1Ev(void);
-    extern void func_020731dc(int a, int b, void*);
+    extern void *_ZN7Vector3D1Ev(void *object);
+    extern void func_020731dc(void *object, void *destructor, void *node);
     extern void Vec3_RotateYAndTranslate(void*, void*, short angle, void*);
     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void*, void*, unsigned int id, const void* pos, unsigned int a, unsigned int b);
     extern void func_02012694(unsigned int id, const struct Vector3* v);
@@ -4719,7 +4719,7 @@ cont:
                 data_ov002_0210f3b0.x = 0;
                 data_ov002_0210f3b0.y = 0x96000;
                 data_ov002_0210f3b0.z = 0x64000;
-                func_020731dc((int)&data_ov002_0210f3b0, (int)_ZN7Vector3D1Ev, &data_ov002_0210f350);
+                func_020731dc(&data_ov002_0210f3b0, (void *)_ZN7Vector3D1Ev, &data_ov002_0210f350);
                 data_ov002_0210e14c |= 1;
             }
             Vec3_RotateYAndTranslate((int*)&pos, (int*)(self + 0x5c), *(s16*)(self + 0x8e), (int*)&data_ov002_0210f3b0);
@@ -5030,7 +5030,7 @@ int Player::ShowMessage2(fBase_c & actor_, unsigned int msg, const Vector3 * pos
     extern int data_ov002_0210e15c;
     extern int data_ov002_0210f224[3];
     extern int data_ov002_0210f1ac;
-    extern void _ZN7Vector3D1Ev(void);
+    extern void *_ZN7Vector3D1Ev(void *object);
     extern void *data_0209f318;
     fBase_c *actor = &actor_;
     int r7;
@@ -5924,7 +5924,7 @@ int func_ov002_020c61ac(char *c) {
     extern void func_ov002_020de968(void*);
     extern void func_ov002_020bdd2c(void*);
     extern int func_ov002_020c607c(void*, int a, int b, void*);
-    extern void _ZN9dBgCh_GndC1Ev(void*);
+    extern void *_ZN9dBgCh_GndC1Ev(void*);
     extern void _ZN5dBgCh19StartDetectingWaterEv(void*);
     extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void*, void*, void*);
     extern int _ZN9dBgCh_Gnd10DetectClsnEv(void*);
@@ -6353,7 +6353,7 @@ int Player::St_Teleport_Main()
     extern void func_02035860(void*, void*);
     extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, void*);
     extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 a, void*);
-    extern void _ZN9dBgCh_GndC1Ev(void*);
+    extern void *_ZN9dBgCh_GndC1Ev(void*);
     extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void*, void*, void*);
     extern int _ZN9dBgCh_Gnd10DetectClsnEv(void*);
     extern void _ZN9dBgCh_GndD1Ev(void*);
@@ -6938,7 +6938,7 @@ int Player::St_LevelEnter_Init()
     extern int _ZNK6Player14GetBodyModelIDEjb(void*, u32 a, int b);
     extern void _ZN9Animation8SetFlagsEi(void*, int flags);
     extern void Player_DisableInteraction(void*);
-    extern void _ZN9dBgCh_GndC1Ev(void*);
+    extern void *_ZN9dBgCh_GndC1Ev(void*);
     extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void*, void*, void*);
     extern int _ZN9dBgCh_Gnd10DetectClsnEv(void*);
     extern int func_ov002_020c7cbc(void*);
@@ -7691,7 +7691,7 @@ int func_ov002_020c8a4c(char* self) {
     extern short Vec3_HorzAngle(const Vector3*, const Vector3*);
     extern void func_020731dc(void*, void*, void*);
     extern void Vec3_RotateYAndTranslate(void*, const Vector3*, int, const Vector3*);
-    extern void _ZN7Vector3D1Ev(void);
+    extern void *_ZN7Vector3D1Ev(void *object);
     extern int func_ov002_020c8a4c(void*);
     extern int func_02053274(const Vector3*, const Vector3*);
     extern int data_ov002_0210e150;
@@ -7757,7 +7757,7 @@ int func_ov002_020c8b78(char *self) {
     extern void func_02012790(int);
     extern int _ZN6Player12FinishedAnimEv(void*);
     extern void func_020731dc(void*, void*, void*);
-    extern void _ZN7Vector3D1Ev(void);
+    extern void *_ZN7Vector3D1Ev(void *object);
     extern void Vec3_RotateYAndTranslate(void*, void*, int, void*);
     extern void _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void*, fBase_c &, unsigned int, Vector3 const *, unsigned int, unsigned int);
     extern int data_ov002_0210e154;
@@ -9030,9 +9030,9 @@ int Player::TryEnterStarDoor(Vector3 & pos_, short kind)
     extern int data_ov002_0210e164;
     extern int data_ov002_0210f344[3];
     extern int data_ov002_0210f308;
-    extern void _ZN7Vector3D1Ev(void);
+    extern void *_ZN7Vector3D1Ev(void *object);
     extern int _ZN6Player17SetNoControlStateEhih(void*, unsigned char a, int b, unsigned char d);
-    extern void func_020731dc(int a, int b, void*);
+    extern void func_020731dc(void *object, void *destructor, void *node);
     extern void Vec3_RotateYAndTranslate(void*, void*, short angle, void*);
     extern short Vec3_HorzAngle(const void *v0, const void *v1);
     int *pos = (int *)&pos_;
@@ -9047,7 +9047,7 @@ int Player::TryEnterStarDoor(Vector3 & pos_, short kind)
                 data_ov002_0210f344[0] = 0;
                 data_ov002_0210f344[1] = 0;
                 data_ov002_0210f344[2] = 0x64000;
-                func_020731dc((int)data_ov002_0210f344, (int)_ZN7Vector3D1Ev, (void **)&data_ov002_0210f308);
+                func_020731dc(data_ov002_0210f344, (void *)_ZN7Vector3D1Ev, (void **)&data_ov002_0210f308);
                 data_ov002_0210e164 |= 1;
             }
             Vec3_RotateYAndTranslate(&unk_744, &unk_750, unk_69e, data_ov002_0210f344);
@@ -11461,7 +11461,7 @@ int func_ov002_020ce324(char* c)
     extern short data_02082214[];
     extern char data_ov002_02110694;
     extern int func_ov002_020ceb54(void*);
-    extern void _ZN9dBgCh_LinC1Ev(void*);
+    extern void *_ZN9dBgCh_LinC1Ev(void*);
     extern void _ZN9dBgCh_LinD1Ev(void*);
     extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void*, const Vec3i* a, const Vec3i* b, void*);
     extern int _ZN9dBgCh_Lin10DetectClsnEv(void*);
@@ -11661,7 +11661,7 @@ void func_ov002_020ce798(char* c)
     extern char data_ov002_0211067c;
     extern int _ZN6Player7IsStateERNS_5StateE(void*, void*);
     extern int _ZNK10dBgCh_Actr10IsOnGroundEv(const void* self);
-    extern void _ZN9dBgCh_LinC1Ev(void*);
+    extern void *_ZN9dBgCh_LinC1Ev(void*);
     extern void _ZN9dBgCh_LinD1Ev(void*);
     extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void*, const Vec3i* a, const Vec3i* b, void*);
     extern int _ZN9dBgCh_Lin10DetectClsnEv(void*);

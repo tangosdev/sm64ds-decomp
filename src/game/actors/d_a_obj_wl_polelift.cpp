@@ -63,11 +63,11 @@ int fdiv(int a, int b);
 extern "C" {
 /* Factory ABI: the allocation goes through fBase_c::operator new by name, but
  * the base/subobject construction sequence stays explicit here. */
-void _ZN8dActor_cC2Ev(void *self);
-void _ZN5ModelC1Ev(void *self);
-void _ZN10dCcAcPos_cC1Ev(void *self);
-void _ZN7PathPtrC1Ev(void *self);
-void _ZN11ShadowModelC1Ev(void *self);
+void *_ZN8dActor_cC2Ev(void *self);
+void *_ZN5ModelC1Ev(void *self);
+void *_ZN10dCcAcPos_cC1Ev(void *self);
+void *_ZN7PathPtrC1Ev(void *self);
+void *_ZN11ShadowModelC1Ev(void *self);
 
 /* ABI seams: both take Fix12<int> by value. */
 void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(

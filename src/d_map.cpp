@@ -8,7 +8,7 @@
 
 extern "C" {
 void *_ZN7fBase_cnwEj(unsigned int size);
-void _ZN7fBase_cC2Ev(void *self);
+void *_ZN7fBase_cC2Ev(void *self);
 extern void *_ZTV7dBase_c[];
 extern void *_ZTV6dMap_c[];
 }

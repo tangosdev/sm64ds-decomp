@@ -1,8 +1,8 @@
 extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN12dEnemyBase_cC2Ev(void *);
-extern void _ZN10dCcAcPos_cC1Ev(void *);
-extern void _ZN10dBgCh_ActrC1Ev(void *);
-extern void _ZN9ModelAnimC1Ev(void *);
+extern void *_ZN12dEnemyBase_cC2Ev(void *);
+extern void *_ZN10dCcAcPos_cC1Ev(void *);
+extern void *_ZN10dBgCh_ActrC1Ev(void *);
+extern void *_ZN9ModelAnimC1Ev(void *);
 extern int _ZTV9daMenbo_c[];
 /* Reconstructed source-style name: SM64DS proves daMenbo_c through RTTI,
  * allocation size, vtable identity, and the MENBO registry profile;

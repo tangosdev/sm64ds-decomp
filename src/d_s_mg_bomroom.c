@@ -6,7 +6,7 @@
  */
 
 extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN11dScMgBase_cC2Ev(void *);
+extern void *_ZN11dScMgBase_cC2Ev(void *);
 extern int data_ov006_0213bbb4[];
 /* Reconstructed source-style name: SM64DS proves dScMgBomroom_c through RTTI,
  * allocation size, vtable identity, and the MG_BOMROOM registry profile;

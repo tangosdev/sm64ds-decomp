@@ -90,7 +90,7 @@
 extern "C" {
 
 /* ground probe / collision */
-void  _ZN9dBgCh_GndC1Ev(void *);
+void *_ZN9dBgCh_GndC1Ev(void *);
 void  _ZN9dBgCh_GndD1Ev(void *);
 int   SurfaceInfo_TestFlag0x20(void *);
 void  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, void *, s32, s32, void *, void *);
@@ -113,15 +113,15 @@ bool  _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32, u32, u32, s32, int);
 
 /* model / animation / shadow */
 void  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, s32, u32);
-void  _ZN9ModelAnimC1Ev(void *);
-void  _ZN11ShadowModelC1Ev(void *);
+void *_ZN9ModelAnimC1Ev(void *);
+void *_ZN11ShadowModelC1Ev(void *);
 
 /* path, particle, construction */
-void  _ZN7PathPtrC1Ev(void *);
+void *_ZN7PathPtrC1Ev(void *);
 int   _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32, u32, s32, s32, s32, void *, void *);
-void  _ZN12dEnemyBase_cC2Ev(void *);
-void  _ZN7dCcAc_cC1Ev(void *);
-void  _ZN10dBgCh_ActrC1Ev(void *);
+void *_ZN12dEnemyBase_cC2Ev(void *);
+void *_ZN7dCcAc_cC1Ev(void *);
+void *_ZN10dBgCh_ActrC1Ev(void *);
 
 /* maths and the still-unnamed helpers */
 s16   Vec3_HorzAngle(const void *, const void *);

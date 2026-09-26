@@ -13,7 +13,7 @@ extern void func_02035684(int *p, int v);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
 extern void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 extern int _ZNK10dBgCh_Actr12TouchesWaterEv(void* self);
-extern void _ZN9dBgCh_GndC1Ev(struct RG*);
+extern void *_ZN9dBgCh_GndC1Ev(struct RG*);
 extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(struct RG*, const Vector3*, void*);
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(struct RG*);
 extern void _ZN8dActor_c13SmallPoofDustEv(void* self);

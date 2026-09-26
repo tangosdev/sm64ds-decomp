@@ -7,10 +7,10 @@
  * and member subobject the original construction sequence initializes. */
 extern "C" {
 void *_ZN7fBase_cnwEj(unsigned int size);
-void _ZN10dBgActor_cC2Ev(void *self);
-void _ZN10dBgCh_ActrC1Ev(void *self);
-void _ZN10dCcAcPos_cC1Ev(void *self);
-void _ZN7PathPtrC1Ev(void *self);
+void *_ZN10dBgActor_cC2Ev(void *self);
+void *_ZN10dBgCh_ActrC1Ev(void *self);
+void *_ZN10dCcAcPos_cC1Ev(void *self);
+void *_ZN7PathPtrC1Ev(void *self);
 extern void *_ZTV8daOnms_c;
 }
 

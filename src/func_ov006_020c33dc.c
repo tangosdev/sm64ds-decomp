@@ -1,7 +1,7 @@
-extern void _ZN14BlendModelAnimC1Ev(void *);
-extern int _ZN5ModelC1Ev();
-extern int _ZN15TextureSequenceC1Ev();
-extern int _ZN18TextureTransformerC1Ev();
+extern void *_ZN14BlendModelAnimC1Ev(void *);
+extern void *_ZN5ModelC1Ev(void *object);
+extern void *_ZN15TextureSequenceC1Ev(void *object);
+extern void *_ZN18TextureTransformerC1Ev(void *object);
 extern int func_02017acc();
 extern int _ZN13SharedFilePtr9ConstructEj();
 extern int SharedFilePtr_Construct_TexSeq();

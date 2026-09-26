@@ -133,12 +133,12 @@ extern void DecompressLZ16(void *src, void *dst);
 extern int func_ov006_020c1a88(char *p);
 extern unsigned char data_0209d45c;
 extern unsigned char data_0209d454;
-void _ZN11dScMgBase_cC2Ev(void*);
+void *_ZN11dScMgBase_cC2Ev(void*);
 void _ZN8Particle10SysTrackerC1Ev(void*);
 void __cxa_vec_ctor(void*, int, int, void*, void*);
 extern int _ZTV19dScMgSingle3DBase_c;
 extern int _ZTV13dScMgMCarlo_c[];
-void _ZN18dMgMCarloCardObj_cC1Ev(void*);
+void *_ZN18dMgMCarloCardObj_cC1Ev(void*);
 /* TUBUILD CONFLICT -- alternate declaration of data_ov006_0213d574, from the legacy file for func_ov006_020f7994, NOT applied: extern Fix12 data_ov006_0213d574; */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov006_02142500, from the legacy file for func_ov006_020f7994, NOT applied: extern struct Node* data_ov006_02142500; */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov006_021424fc, from the legacy file for func_ov006_020f7a90, NOT applied: extern int data_ov006_021424fc; */

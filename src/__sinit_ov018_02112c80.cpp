@@ -3,7 +3,7 @@
 
 extern "C" {
 int func_02017acc(void*, unsigned int);
-int func_020731dc(void*, void*, void*);
+void func_020731dc(void*, void*, void*);
 int SharedFilePtr_Construct_TexSeq(void*, unsigned int);
 
 extern char data_ov018_02113c00[];

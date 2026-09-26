@@ -181,7 +181,7 @@ extern u8 data_0209d454;
    The two vtable stores differ on purpose. dScMgSingle3DBase_c's table is
    external and its symbol is the address point; this class's table is
    emitted here, where the symbol sits two words lower, hence the `+ 2`. */
-extern "C" void _ZN11dScMgBase_cC2Ev(void *);
+extern "C" void *_ZN11dScMgBase_cC2Ev(void *);
 extern "C" void _ZN8Particle10SysTrackerC1Ev(void *);
 extern "C" void func_ov006_020c33dc(void *);
 extern void *_ZTV19dScMgSingle3DBase_c[];

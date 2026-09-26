@@ -118,7 +118,7 @@ extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
 extern void MulVec3Mat4x3(const Vector3* v, const void* m, Vector3* res);
 extern int data_020a0e68[];
-extern "C" void _ZN7PathPtrC1Ev(void *self);
+extern "C" void *_ZN7PathPtrC1Ev(void *self);
 extern "C" int Vec3_HorzDist(const Vector3* a, const Vector3* b);
 extern signed char data_0209f2f8;
 extern "C" int func_ov062_0211c658(void *c, void *p);

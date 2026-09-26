@@ -13,7 +13,7 @@
 
 extern "C" {
 void *_ZN7fBase_cnwEj(unsigned int size);
-void _ZN7fBase_cC2Ev(void *self);
+void *_ZN7fBase_cC2Ev(void *self);
 void Matrix4x3_LoadIdentity(Matrix4x3 *matrix);
 extern void *_ZTV7dBase_c[];
 extern void *_ZTV4View[];

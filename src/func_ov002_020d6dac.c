@@ -9,7 +9,7 @@ typedef struct dBgPi { void *vtb; int s0, s1, s2, s3, s4; u16 f, g; int h, i, j;
 typedef struct Vec3_16 { s16 x, y, z; } Vec3_16;
 typedef struct dBgCh_Lin { char pad[0x78]; } dBgCh_Lin;
 
-extern void _ZN9dBgCh_LinC1Ev(dBgCh_Lin *self);
+extern void *_ZN9dBgCh_LinC1Ev(dBgCh_Lin *self);
 extern void _ZN9dBgCh_LinD1Ev(void *self);
 extern int _ZNK6Player14GetBodyModelIDEjb(void *thiz, unsigned int a, int b);
 extern void MulVec3Mat4x3(void *v, void *m, void *dst);

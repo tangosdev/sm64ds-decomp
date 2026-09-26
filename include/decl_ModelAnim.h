@@ -22,8 +22,8 @@ extern "C" {
 
 extern void _ZN9ModelAnim4CopyERKS_Pc(void*, const void*, void*);
 extern void _ZN9ModelAnim6RenderEPK7Vector3(void*, void*);
-extern void _ZN9ModelAnimC1Ev(void*);
-extern void _ZN9ModelAnimC2Ev(void*);
+extern void *_ZN9ModelAnimC1Ev(void*);
+extern void *_ZN9ModelAnimC2Ev(void*);
 extern void _ZN9ModelAnimD1Ev(void*);
 
 

@@ -25,7 +25,7 @@ extern int _ZN11dCapEnemy_c21DestroyIfCapNotNeededEv();
 extern int _ZN11dCapEnemy_c6AddCapEj();
 extern void _ZN11dCapEnemy_c12Unk_02005d94Ev(char*);
 extern void _ZN11dCapEnemy_c14RenderCapModelEPK7Vector3(char*, const Vector3*);
-extern void _ZN11dCapEnemy_cC2Ev(void*);
+extern void *_ZN11dCapEnemy_cC2Ev(void*);
 
 
 #ifdef __cplusplus

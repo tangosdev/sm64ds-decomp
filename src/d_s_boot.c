@@ -1,6 +1,6 @@
 // @symbol dScBoot_c_classInit
 extern void* _ZN7fBase_cnwEj(unsigned int size);
-extern void _ZN7fBase_cC2Ev(void* self);
+extern void *_ZN7fBase_cC2Ev(void* self);
 extern int data_0208e4b8[];
 extern int _ZTV8dScene_c[];
 extern int data_02091528[];

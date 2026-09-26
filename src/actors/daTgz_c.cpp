@@ -87,7 +87,7 @@ struct dBgCh_Gnd {
     int m44;
     char pad48[0xc];
 };
-extern "C" void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd*);
+extern "C" void *_ZN9dBgCh_GndC1Ev(dBgCh_Gnd*);
 /* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
 extern "C" void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd*, const Vector3&, dActor_c*);
 /* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
@@ -157,7 +157,7 @@ struct dBgPi;
 struct SurfaceInfo;
 
 extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void* p);
-extern "C" void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd* self);
+extern "C" void *_ZN9dBgCh_GndC1Ev(dBgCh_Gnd* self);
 /* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
 extern "C" void _ZN5dBgCh19StartDetectingToxicEv(void* self);
 /* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */

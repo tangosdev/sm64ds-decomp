@@ -6,7 +6,7 @@
 extern int _ZTV12MetalNetLift[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV12MetalNetLift */
-extern void _ZN7PathPtrC1Ev(void *);
+extern void *_ZN7PathPtrC1Ev(void *);
 /* Reconstructed source-style name: SM64DS proves daObjFl_Amilift_c through
  * RTTI, allocation size, vtable identity, and the FL_AMILIFT registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not

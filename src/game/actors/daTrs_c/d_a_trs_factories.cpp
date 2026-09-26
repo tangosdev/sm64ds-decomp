@@ -30,12 +30,12 @@
 #include "daTrs_c.h"
 
 extern "C" {
-extern void _ZN11dCapEnemy_cC2Ev(void *self);
-extern void _ZN10dCcAcPos_cC1Ev(void *self);
-extern void _ZN10dBgCh_ActrC1Ev(void *self);
-extern void _ZN9ModelAnimC1Ev(void *self);
-extern void _ZN5ModelC1Ev(void *self);
-extern void _ZN11ShadowModelC1Ev(void *self);
+extern void *_ZN11dCapEnemy_cC2Ev(void *self);
+extern void *_ZN10dCcAcPos_cC1Ev(void *self);
+extern void *_ZN10dBgCh_ActrC1Ev(void *self);
+extern void *_ZN9ModelAnimC1Ev(void *self);
+extern void *_ZN5ModelC1Ev(void *self);
+extern void *_ZN11ShadowModelC1Ev(void *self);
 }
 
 /* Importing-TU spelling: &_ZTV[0]. [2] is the emitting-TU form and lands +8
