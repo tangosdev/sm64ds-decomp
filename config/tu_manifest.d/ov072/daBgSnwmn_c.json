@@ -9,7 +9,7 @@
   "boundary_evidence": [
     "build/tu_map.json identifies the eight-function daBgSnwmn_c run at 0x02120824..0x02120c00 but leaves the immediately following factory run at 0x02120c00..0x02120c58 unattributed",
     "the main registry maps BIG_SNOWMAN to the 0x02122954 descriptor, whose first word relocates to daBgSnwmn_c_classInit at 0x02120c00",
-    "daBgSnwmn_c_classInit allocates the RTTI-proven class size 0x1f0, installs _ZTV11daBgSnwmn_c, constructs the five header-proven members, and ends exactly at BabyPenguin's D1 at 0x02120c58; the factory join is registry/factory-backed rather than tu_map-proven"
+    "daBgSnwmn_c_classInit allocates the RTTI-proven class size 0x1f0, installs _ZTV11daBgSnwmn_c, constructs the five header-proven members, and ends exactly at daPgBby_c's D1 at 0x02120c58; the factory join is registry/factory-backed rather than tu_map-proven"
   ],
   "sections": [
     {

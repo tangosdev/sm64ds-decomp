@@ -439,7 +439,6 @@ extern int _ZTV10daObjKey_c[];
 extern int _ZTV10daPgDfdr_c[];
 extern int _ZTV10daPgMthr_c[];
 extern int _ZTV10daUdlift_c[];
-extern int _ZTV11BabyPenguin[];
 extern int _ZTV11BobOmbBuddy[];
 extern int _ZTV20daObjCannonShutter_c[];
 extern int _ZTV18daObjMc_Metalnet_c[];

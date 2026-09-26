@@ -165,7 +165,7 @@ daObjWc_Obj03_c	DONE	include\daObjWc_Obj03_c.h	dActor_c	0	ov029	9
 daObjWlPolelift_c	DONE	include\daObjWlPolelift_c.h	dActor_c	0	ov026	6
 daObj_volcanoCannon_c	DONE	include\daObj_volcanoCannon_c.h	dActor_c	0	ov022	6
 daPeach_c	DONE	include\daPeach_c.h	dActor_c	0	ov085	23
-daPgBby_c	DONE	include\BabyPenguin.h  [alias: header uses pre-rename name]	dActor_c	0	ov072	9
+daPgBby_c	DONE	include\daPgBby_c.h  [alias: header uses pre-rename name]	dActor_c	0	ov072	9
 daPgMthr_c	DONE	include\daPgMthr_c.h	dActor_c	0	ov018	7
 daPgRcer_c	DONE	include\daPgRcer_c.h  [alias: header uses pre-rename name]	dActor_c	0	ov019	7
 daPicGate_c	PARTIAL	include\daPicGate_c.h	dActor_c	0	ov080	7
