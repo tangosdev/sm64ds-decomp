@@ -1,10 +1,10 @@
 //cpp
 // @symbol _ZN16dScMgPachinko2_c13InitResourcesEv
 // recovered name: dScMgPachinko2_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 #include "dScMgPachinko2_c.h"
-/* dScMgPachinko2_c::InitResources - recovered from vtable slot identity */
+/* Slot 0. Loads both screens' backgrounds and OBJ graphics, then runs the
+   three helpers and the two stores of Behavior's case 0. */
 extern "C" {
 extern int LoadFile(int handle);
 extern void DecompressLZ16(int src, void *dst);
@@ -22,9 +22,9 @@ extern u8 data_0209d454;
 
 s32 dScMgPachinko2_c::InitResources()
 {
-    char *c = (char *)this;
     char *b;
     char *dst;
+    /* volatile: the ROM stores each fill value to the stack and reloads it */
     volatile u16 spC;
     volatile u16 spE;
     int sp4;
@@ -34,7 +34,7 @@ s32 dScMgPachinko2_c::InitResources()
     int y;
     int x;
 
-    data_0209d45c |= 8;
+    data_0209d45c |= 8; /* main BG3 on */
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
     *(volatile u16 *)0x400000e &= ~0x40;
     *(volatile u32 *)0x400001c = 0;
@@ -57,7 +57,7 @@ s32 dScMgPachinko2_c::InitResources()
     DecompressLZ16(sp4, (void *)0x6400000);
     _ZN2GX11LoadOBJPlttEPKvjj((const void *)sp8, 0, 0x100);
 
-    data_0209d454 |= 0xd;
+    data_0209d454 |= 0xd; /* sub BG0, BG2 and BG3 on */
     *(volatile u16 *)0x400100c &= ~3;
     *(volatile u16 *)0x400100c &= ~0x40;
     *(volatile u32 *)0x4001018 = 0;
@@ -77,7 +77,7 @@ s32 dScMgPachinko2_c::InitResources()
         }
     }
 
-    func_ov004_020af2f8(c, 0, 2, 0);
+    func_ov004_020af2f8((char *)this, 0, 2, 0);
 
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 2;
     *(volatile u16 *)0x400100e &= ~0x40;
@@ -110,14 +110,14 @@ s32 dScMgPachinko2_c::InitResources()
     Deallocate((void *)sp4);
     Deallocate((void *)sp8);
 
-    func_ov006_02103bfc(c);
-    func_ov006_02100084(c);
-    func_ov006_021024e0((int)c);
-    func_ov006_020fffec(c);
+    func_ov006_02103bfc((char *)this);
+    func_ov006_02100084((char *)this);
+    func_ov006_021024e0((int)this);
+    func_ov006_020fffec((char *)this);
     func_ov004_020b04d0(0x20);
 
-    *(int *)(c + 0xa4) = 1;
-    *(u16 *)(c + 0x566c) = 0x10;
-    *(int *)(c + 0x5660) = 1;
+    unk_0a4 = 1;
+    unk_566c = 0x10;
+    unk_5660 = 1;
     return 1;
 }
