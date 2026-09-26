@@ -120,85 +120,9 @@ src/d_a_obj_pile.c:
     complete
     .text start:0x02133938 end:0x02133968
 
-src/_ZN6FwooshD1Ev.cpp:
+src/game/actors/d_a_hyuhyu.cpp:
     complete
-    .text start:0x02133968 end:0x021339a8
-
-src/_ZN6FwooshD0Ev.cpp:
-    complete
-    .text start:0x021339a8 end:0x021339fc
-
-src/func_ov091_021339fc.c:
-    complete
-    .text start:0x021339fc end:0x02133c6c
-
-src/func_ov091_02133c6c.cpp:
-    complete
-    .text start:0x02133c6c end:0x02133d1c
-
-src/func_ov091_02133d1c.c:
-    complete
-    .text start:0x02133d1c end:0x02133d30
-
-src/func_ov091_02133d30.cpp:
-    complete
-    .text start:0x02133d30 end:0x02133f24
-
-src/func_ov091_02133f24.c:
-    complete
-    .text start:0x02133f24 end:0x02133f60
-
-src/func_ov091_02133f60.c:
-    complete
-    .text start:0x02133f60 end:0x0213400c
-
-src/func_ov091_0213400c.c:
-    complete
-    .text start:0x0213400c end:0x02134044
-
-src/func_ov091_02134044.cpp:
-    complete
-    .text start:0x02134044 end:0x02134094
-
-src/func_ov091_02134094.c:
-    complete
-    .text start:0x02134094 end:0x02134108
-
-src/_ZN6Fwoosh16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02134108 end:0x02134180
-
-src/_ZN6Fwoosh16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x02134180 end:0x02134184
-
-src/_ZN6Fwoosh6RenderEv.cpp:
-    complete
-    .text start:0x02134184 end:0x021341ec
-
-src/_ZN6Fwoosh8BehaviorEv.cpp:
-    complete
-    .text start:0x021341ec end:0x02134324
-
-src/_ZN6Fwoosh13InitResourcesEv.cpp:
-    complete
-    .text start:0x02134324 end:0x02134484
-
-src/_ZN6Fwoosh16OnAimedAtWithEggEv.cpp:
-    complete
-    .text start:0x02134484 end:0x0213448c
-
-src/_ZN6Fwoosh13OnTurnIntoEggER6Player.cpp:
-    complete
-    .text start:0x0213448c end:0x02134498
-
-src/_ZN6Fwoosh13OnYoshiTryEatEv.cpp:
-    complete
-    .text start:0x02134498 end:0x021344a0
-
-src/d_a_hyuhyu.c:
-    complete
-    .text start:0x021344a0 end:0x021344e8
+    .text start:0x02133968 end:0x021344e8
 
 src/__sinit_ov091_02134524.c:
     complete

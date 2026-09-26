@@ -1449,13 +1449,13 @@
    "start": "0x2133968",
    "end": "0x21344e8",
    "classes": [
-    "Fwoosh"
+    "daHyuhyu_c"
    ],
    "n_functions_map": 20,
    "n_files": 20,
    "files": [
-    "src/_ZN6FwooshD1Ev.cpp",
-    "src/_ZN6FwooshD0Ev.cpp",
+    "src/_ZN10daHyuhyu_cD1Ev.cpp",
+    "src/_ZN10daHyuhyu_cD0Ev.cpp",
     "src/func_ov091_021339fc.c",
     "src/func_ov091_02133c6c.cpp",
     "src/func_ov091_02133d1c.c",
@@ -1465,14 +1465,14 @@
     "src/func_ov091_0213400c.c",
     "src/func_ov091_02134044.cpp",
     "src/func_ov091_02134094.c",
-    "src/_ZN6Fwoosh16CleanupResourcesEv.cpp",
-    "src/_ZN6Fwoosh16OnPendingDestroyEv.cpp",
-    "src/_ZN6Fwoosh6RenderEv.cpp",
-    "src/_ZN6Fwoosh8BehaviorEv.cpp",
-    "src/_ZN6Fwoosh13InitResourcesEv.cpp",
-    "src/_ZN6Fwoosh16OnAimedAtWithEggEv.cpp",
-    "src/_ZN6Fwoosh13OnTurnIntoEggER6Player.cpp",
-    "src/_ZN6Fwoosh13OnYoshiTryEatEv.cpp",
+    "src/_ZN10daHyuhyu_c16CleanupResourcesEv.cpp",
+    "src/_ZN10daHyuhyu_c16OnPendingDestroyEv.cpp",
+    "src/_ZN10daHyuhyu_c6RenderEv.cpp",
+    "src/_ZN10daHyuhyu_c8BehaviorEv.cpp",
+    "src/_ZN10daHyuhyu_c13InitResourcesEv.cpp",
+    "src/_ZN10daHyuhyu_c16OnAimedAtWithEggEv.cpp",
+    "src/_ZN10daHyuhyu_c13OnTurnIntoEggER6Player.cpp",
+    "src/_ZN10daHyuhyu_c13OnYoshiTryEatEv.cpp",
     "src/d_a_hyuhyu.c"
    ],
    "ext_mix": {
@@ -37988,11 +37988,11 @@
    "start": "0x2133968",
    "end": "0x21344e8",
    "classes": [
-    "Fwoosh"
+    "daHyuhyu_c"
    ],
    "files": [
-    "src/_ZN6FwooshD1Ev.cpp",
-    "src/_ZN6FwooshD0Ev.cpp",
+    "src/_ZN10daHyuhyu_cD1Ev.cpp",
+    "src/_ZN10daHyuhyu_cD0Ev.cpp",
     "src/func_ov091_021339fc.c",
     "src/func_ov091_02133c6c.cpp",
     "src/func_ov091_02133d1c.c",
@@ -38002,14 +38002,14 @@
     "src/func_ov091_0213400c.c",
     "src/func_ov091_02134044.cpp",
     "src/func_ov091_02134094.c",
-    "src/_ZN6Fwoosh16CleanupResourcesEv.cpp",
-    "src/_ZN6Fwoosh16OnPendingDestroyEv.cpp",
-    "src/_ZN6Fwoosh6RenderEv.cpp",
-    "src/_ZN6Fwoosh8BehaviorEv.cpp",
-    "src/_ZN6Fwoosh13InitResourcesEv.cpp",
-    "src/_ZN6Fwoosh16OnAimedAtWithEggEv.cpp",
-    "src/_ZN6Fwoosh13OnTurnIntoEggER6Player.cpp",
-    "src/_ZN6Fwoosh13OnYoshiTryEatEv.cpp",
+    "src/_ZN10daHyuhyu_c16CleanupResourcesEv.cpp",
+    "src/_ZN10daHyuhyu_c16OnPendingDestroyEv.cpp",
+    "src/_ZN10daHyuhyu_c6RenderEv.cpp",
+    "src/_ZN10daHyuhyu_c8BehaviorEv.cpp",
+    "src/_ZN10daHyuhyu_c13InitResourcesEv.cpp",
+    "src/_ZN10daHyuhyu_c16OnAimedAtWithEggEv.cpp",
+    "src/_ZN10daHyuhyu_c13OnTurnIntoEggER6Player.cpp",
+    "src/_ZN10daHyuhyu_c13OnYoshiTryEatEv.cpp",
     "src/d_a_hyuhyu.c"
    ],
    "ext_mix": {

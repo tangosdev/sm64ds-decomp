@@ -4541,6 +4541,10 @@
       ]
     },
     "Vec3_Asr": {
+      "src/game/actors/d_a_hyuhyu.cpp": [
+        "param:#1 Vector3 *",
+        "param:#2 const Vector3 *"
+      ],
       "src/_ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16.cpp": [
         "param:#1 Vector3 *",
         "param:#2 const Vector3 *"
@@ -6765,6 +6769,11 @@
       ]
     },
     "_ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_": {
+      "src/game/actors/d_a_hyuhyu.cpp": [
+        "param:#2 dActor_c *",
+        "param:#5 Vector3_16 *",
+        "param:#6 Vector3_16 *"
+      ],
       "src/_ZN10BowserFire13InitResourcesEv.cpp": [
         "param:#2 void *",
         "param:#5 void *"
@@ -14549,6 +14558,9 @@
       ]
     },
     "_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE": {
+      "src/game/actors/d_a_hyuhyu.cpp": [
+        "param:#6 const Vector3_16 *"
+      ],
       "src/game/actors/d_a_cnn.cpp": [
         "param:#6 const Vector3_16 *"
       ],
@@ -30922,6 +30934,9 @@
       ]
     },
     "data_ov091_02135674": {
+      "src/game/actors/d_a_hyuhyu.cpp": [
+        "return:SharedFilePtr"
+      ],
       "src/_ZN6Fwoosh13InitResourcesEv.cpp": [
         "return:char []"
       ],
@@ -30930,6 +30945,9 @@
       ]
     },
     "data_ov091_0213567c": {
+      "src/game/actors/d_a_hyuhyu.cpp": [
+        "return:SharedFilePtr"
+      ],
       "src/_ZN6Fwoosh13InitResourcesEv.cpp": [
         "return:char []"
       ],
@@ -30941,6 +30959,9 @@
       ]
     },
     "data_ov091_02135684": {
+      "src/game/actors/d_a_hyuhyu.cpp": [
+        "return:SharedFilePtr"
+      ],
       "src/_ZN6Fwoosh13InitResourcesEv.cpp": [
         "return:char []"
       ],

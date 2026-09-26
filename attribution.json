@@ -5264,6 +5264,26 @@
     "src/game/actors/d_a_klr.cpp#_ZN7daKlr_c6RenderEv": "tangosdev",
     "src/game/actors/d_a_klr.cpp#_ZN7daKlr_c8BehaviorEv": "lunavyqo",
     "src/game/actors/d_a_klr.cpp#_ZN7daKlr_c13InitResourcesEv": "tangosdev",
-    "src/game/actors/d_a_klr.cpp#daKlr_c_classInit": "tangosdev"
+    "src/game/actors/d_a_klr.cpp#daKlr_c_classInit": "tangosdev",
+    "src/game/actors/d_a_hyuhyu.cpp#_ZN10daHyuhyu_cD1Ev": "tangosdev",
+    "src/game/actors/d_a_hyuhyu.cpp#_ZN10daHyuhyu_cD0Ev": "tangosdev",
+    "src/game/actors/d_a_hyuhyu.cpp#func_ov091_021339fc": "lunavyqo",
+    "src/game/actors/d_a_hyuhyu.cpp#func_ov091_02133c6c": "lunavyqo",
+    "src/game/actors/d_a_hyuhyu.cpp#func_ov091_02133d1c": "tangosdev",
+    "src/game/actors/d_a_hyuhyu.cpp#func_ov091_02133d30": "ruspecial",
+    "src/game/actors/d_a_hyuhyu.cpp#func_ov091_02133f24": "tangosdev",
+    "src/game/actors/d_a_hyuhyu.cpp#func_ov091_02133f60": "tangosdev",
+    "src/game/actors/d_a_hyuhyu.cpp#func_ov091_0213400c": "tangosdev",
+    "src/game/actors/d_a_hyuhyu.cpp#func_ov091_02134044": "tangosdev",
+    "src/game/actors/d_a_hyuhyu.cpp#func_ov091_02134094": "tangosdev",
+    "src/game/actors/d_a_hyuhyu.cpp#_ZN10daHyuhyu_c16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/d_a_hyuhyu.cpp#_ZN10daHyuhyu_c16OnPendingDestroyEv": "andrewboudreau",
+    "src/game/actors/d_a_hyuhyu.cpp#_ZN10daHyuhyu_c6RenderEv": "tangosdev",
+    "src/game/actors/d_a_hyuhyu.cpp#_ZN10daHyuhyu_c8BehaviorEv": "tangosdev",
+    "src/game/actors/d_a_hyuhyu.cpp#_ZN10daHyuhyu_c13InitResourcesEv": "tangosdev",
+    "src/game/actors/d_a_hyuhyu.cpp#_ZN10daHyuhyu_c16OnAimedAtWithEggEv": "tangosdev",
+    "src/game/actors/d_a_hyuhyu.cpp#_ZN10daHyuhyu_c13OnTurnIntoEggER6Player": "ruspecial",
+    "src/game/actors/d_a_hyuhyu.cpp#_ZN10daHyuhyu_c13OnYoshiTryEatEv": "andrewboudreau",
+    "src/game/actors/d_a_hyuhyu.cpp#daHyuhyu_c_classInit": "tangosdev"
   }
 }
