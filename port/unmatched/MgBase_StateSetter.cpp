@@ -216,7 +216,7 @@
 //
 // which preserves every register, so r0 arrives at 0x020b743c untouched. Its
 // target writes through that pointer on its first instruction pair
-// (`mov r2,#0xa; str r2,[r0,#0x1c]`). src/func_ov004_020b7460.c spells the
+// (`mov r2,#0xa; str r2,[r0,#0x1c]`). src/func_ov004_020b7460.c spelled the
 // veneer as
 //
 //     extern void func_ov004_020b743c(void);
@@ -235,11 +235,12 @@
 // Only the definition drops it, which is why nothing in the tree diagnoses it
 // and why the byte gate is right to be silent (the ROM bytes and the src agree).
 //
-// So src/func_ov004_020b7460.c is EXCLUDED from port/slice_mg1.txt and the
-// veneer is defined here instead, with the parameter its two callers already
-// pass. That is the whole change: one parameter added, forwarded to the address
-// the ROM's own literal names. Nothing else about the body differs, because
-// there is no other body.
+// FIXED AT THE SOURCE (main #3166; run linkfull, lane ASMCPORT). The src TU now
+// spells the veneer with the pointer both callers pass,
+// `void func_ov004_020b7460(void *c) { func_ov004_020b743c(c); }`, still
+// byte-identical to the ROM, so it is back on port/slice_mg1.txt and the host
+// copy that stood in this file (the same one parameter, forwarded) is retired.
+// Slot 12's face below and the two tick bodies call the ROM's own veneer.
 //
 // ---- 7. WHAT IS NOT HERE ---------------------------------------------------
 //
@@ -432,6 +433,7 @@ void func_ov004_020b798c(char *c);
 void func_ov004_020b7854(char *c);
 void func_ov004_020b7744(char *c);
 void func_ov004_020b7594(char *c);
+void func_ov004_020b7460(void *c);   /* section 6's veneer, src spelling */
 void func_ov004_020b743c(char *c);
 void func_ov004_020b724c(char *c);
 void func_ov004_020b70b4(char *c);
@@ -502,17 +504,6 @@ void func_ov004_020b7fec(char *c);
 void port_mg_framework_tables_seat(void);
 
 }  /* extern "C" */
-
-// ---- section 6's veneer, with the pointer its callers already pass ---------
-
-/* HOST COPY of src/func_ov004_020b7460.c, which is off port/slice_mg1.txt for
-   this file. The ROM is `ldr ip,[pc]; bx ip; .word 0x020b743c`, a tail jump that
-   preserves r0. One parameter added, forwarded. */
-/* PORT_HOST_ABI: ARM r0 ride-through; src spells the tail-jump veneer (void) and drops the object pointer its callers pass in r0 */
-extern "C" void func_ov004_020b7460(void *c)
-{
-    func_ov004_020b743c((char *)c);
-}
 
 // ---- the address switch ----------------------------------------------------
 
@@ -760,7 +751,7 @@ static void mgbase_seat_rows(const SeatRow *rows, unsigned n)
    zero-argument __fastcall face; the index in each face's name is the slot
    the ROM's table puts that pair in (section 4), and the face counts what the
    retired host copy counted for it. data_ov004_020bc9a4 is section 6's veneer,
-   whose host body above forwards the pointer. */
+   the ROM's own body again (src/func_ov004_020b7460.c takes the pointer). */
 #define SA_FACE(i, code)                                                           static void __fastcall sa_##i(void *c, void *)                                 {                                                                                  ++g_setter_calls;                                                              ++g_setter_idx[i];                                                             ++g_setter_dispatched;                                                         ++g_base_state_hits;                                                           func_ov004_##code((char *)c);                                              }
 SA_FACE(0, 020b8688)
 SA_FACE(1, 020b853c)

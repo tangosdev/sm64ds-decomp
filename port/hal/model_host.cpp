@@ -402,16 +402,15 @@ extern "C" void DMAStartTransferFB(unsigned char ch, u32 src, u32 dst, u32 ctrl)
     DMAStartTransfer(ch, (int)src, (int)dst, (int)ctrl);
 }
 
-// operator_new2 on the DS is a register-passthrough tail-call veneer to
-// func_0203cc0c; that shape breaks on cdecl (the callee would read the
-// wrong stack slot), so the host bridge passes the argument explicitly.
-extern "C" void *func_0203cc0c(unsigned size);
-// PORT_HOST_ABI: ARM register ride-through: the ROM is a tail-call veneer
-//   to func_0203cc0c that never names its argument. See the note above.
-extern "C" void *_ZN6Memory13operator_new2Ej(unsigned size)
-{
-    return func_0203cc0c(size);
-}
+// Memory::operator_new2 IS THE ROM'S OWN BODY (run linkfull, lane ASMCPORT).
+// src/_ZN6Memory13operator_new2Ej.cpp, the three-word veneer at 0x0203cbd8
+// onto func_0203cc0c (Heap::Allocate on the game heap word), names its size
+// argument since main #1243, so the cdecl call passes it and the host copy
+// that stood here for the old void/void spelling is retired. The src TU builds
+// on every target that compiles this file (the ASMCPORT block of
+// port/CMakeLists.txt); MSVC spells it ?operator_new2@Memory@@YAPAXI@Z, and
+// the flat C name every ROM caller uses is bridged onto it here.
+#pragma comment(linker, "/alternatename:__ZN6Memory13operator_new2Ej=?operator_new2@Memory@@YAPAXI@Z")
 
 // OAM::Reset declares its globals at C++ linkage; alias them onto the
 // C-named storage above (same mechanism as the LoadTex globals).

@@ -7855,9 +7855,9 @@ set(SCENE_MG_SOURCES
     # from port_mg_call0, so a target that compiles the dispatch and not this
     # fails the link twice over.
     #
-    # It also DEFINES func_ov004_020b7460, the slot 12 tail-jump veneer whose
-    # src TU drops the pointer its two callers already pass, so
-    # src/func_ov004_020b7460.c is off port/slice_mg1.txt for this file.
+    # It no longer defines func_ov004_020b7460, the slot 12 tail-jump veneer:
+    # the src TU takes the pointer its two callers pass (main #3166) and is back
+    # on port/slice_mg1.txt (run linkfull, lane ASMCPORT).
     unmatched/MgBase_StateSetter.cpp
     # unmatched/MgBase_Slot5.cpp RETIRED (run linkfull, lane RS2PORT). It was
     # dScMgBase_c slot 5's host copy (run mg5, lane BASESET): the src TU called
@@ -23624,6 +23624,47 @@ endforeach()
 set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/fs.cpp" APPEND PROPERTY
     COMPILE_DEFINITIONS
     "$<$<IN_LIST:$<TARGET_PROPERTY:NAME>,port_slice_shared;walk_window;walk_window_hires;smoke_player>:SM64DS_LOADAT_ROM=1>")
+
+# ===========================================================================
+# ASMCPORT (run linkfull, lane ASMCPORT): ROM ROUTINES THE PORT HOSTED FOR
+# THEIR OLD src SPELLINGS, BUILT AS THE ROM'S OWN BODIES
+# ===========================================================================
+#
+# A1. src/MultiCopyHalf.c, the halfword block copy (C since main #3167), on the
+# three targets that compile hal/cxx_aliases.cpp. It is compiled under a
+# per-source rename, MultiCopyHalf=MultiCopyHalf_rom: hal/cxx_aliases.cpp keeps
+# the ROM name as the one call into this body, with the PPU audit's copy census
+# in front of it. src/ is untouched; the ARM object is main's.
+set(ASMCPORT_A1_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../src/MultiCopyHalf.c")
+set_property(SOURCE "${ASMCPORT_A1_SRC}" APPEND PROPERTY COMPILE_DEFINITIONS
+    "MultiCopyHalf=MultiCopyHalf_rom")
+foreach(_tasmc1 walk_window walk_window_hires smoke_player)
+    target_sources(${_tasmc1} PRIVATE "${ASMCPORT_A1_SRC}")
+endforeach()
+
+# A2. src/_ZN6Memory13operator_new2Ej.cpp (its real signature since main #1243)
+# on every target that compiles hal/model_host.cpp, whose host copy of the flat
+# name is retired for an /alternatename onto this body. All fourteen already
+# carry src/func_0203cc0c.c, the veneer's one callee.
+foreach(_tasmc2 walk_window walk_window_hires smoke_player smoke_actor
+                smoke_anim smoke_clsn smoke_frames smoke_model smoke_modelanim
+                smoke_oam smoke_persist smoke_savestate smoke_soak smoke_soak_anim)
+    target_sources(${_tasmc2} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN6Memory13operator_new2Ej.cpp")
+endforeach()
+
+# A3. src/_ZN6Memory16operator_delete2EPv.cpp on the six targets that compile
+# hal/cxxname_bridge.cpp, whose host body of the flat name is retired for an
+# /alternatename onto this one; all six carry src/_ZdlPv.cpp, its one callee.
+# The ten smoke targets that already build it (PORT_SMOKE_HEAP_TEARDOWN_SRC,
+# slice_gate24) are not listed again. smoke_player, smoke_actor,
+# smoke_savestate and smoke_persist stay EXCLUDE_FROM_ALL; they take A1-A3 so
+# their link lines keep the symbols the retired host bodies defined.
+foreach(_tasmc3 walk_window walk_window_hires smoke_player smoke_actor
+                smoke_savestate smoke_persist)
+    target_sources(${_tasmc3} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN6Memory16operator_delete2EPv.cpp")
+endforeach()
 
 # XREL1 (run linkfull): EVERY OVERLAY MOUNT DEPENDS ON THE CONFIG IT READS.
 #

@@ -227,21 +227,27 @@ void func_020593f4(void) {
 // caller. Unreachable either way: ntr/card.cpp never raises IF bit 20 and the
 // port dispatches no card interrupt.
 
-// --- the MSL printf core ----------------------------------------------------
-// src/func_0206a928.c is MSL's 0x1360-byte formatting DFA, kept as assembly
-// because of a stack-home wall under C. Its one caller here is func_0206ccd8,
-// the ROM's varargs print, which this slice seats only because the debug/assert
-// arm of func_0201a5cc reaches it -- no path the port runs calls it. A stub
-// that quietly formatted nothing would be a silent wrong answer if that ever
+// --- the MSL printf core: a DS debug-console path ---------------------------
+// src/func_0206a928.c is MSL's printf formatting DFA, C since main #2293 and
+// byte-matched, so the old "stack-home wall" reason is gone. It stays unlinked
+// by the 09-25 scope ruling (only what the PC runs goes in). Its one caller,
+// func_0206ccd8 (the ROM's varargs print, reached from cstd::__assert), returns
+// before formatting anything unless func_0206cf7c(0x20000) finds the IS-NITRO
+// debugger bit in the shared word at 0x027fff74, and what it formats goes to
+// the debugger's ring buffer in that shared block (func_0206cbc0 ->
+// func_0206ca7c). A retail DS never has that bit set and the port's shared
+// block holds 0 there, so no path the port runs calls this. A stub that
+// quietly formatted nothing would be a silent wrong answer if that ever
 // changed, so it says where it is and returns without writing.
-// PORT_HOST_ABI: hand-asm MSL format DFA (0x1360 bytes, stack-home wall).
+// PORT_HOST_ABI: DS-only debug-console path (the IS-NITRO debugger print).
 void func_0206a928(void *state, int first, void *ap, void *end) {
     (void)state; (void)first; (void)ap; (void)end;
     static int said;
     if (!said) {
         said = 1;
-        std::fputs("[boot_hw] the ROM's MSL formatter was called; the host does "
-                   "not assemble it, so this print produced nothing\n", stderr);
+        std::fputs("[boot_hw] the ROM's MSL formatter was called; the port "
+                   "does not link it (a DS debug-console path), so this print "
+                   "produced nothing\n", stderr);
         std::fflush(stderr);
     }
 }

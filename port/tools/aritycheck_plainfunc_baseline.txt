@@ -155,7 +155,6 @@ func_ov004_020b19f0|src/func_ov006_021004c0.c
 _ZN11dScMgBase_cC2Ev|src/minigames/d_s_mg_roulette.cpp
 _ZN11dScMgBase_cC2Ev|src/actors/dScMgCup_c.cpp
 func_ov004_020b42c0|src/func_ov004_020b31b4.cpp
-func_ov004_020b743c|src/func_ov004_020b7460.c
 func_ov005_020c0030|include/decl_common.h
 func_ov005_020c007c|src/func_ov005_020c0030.c
 func_ov006_020fbb2c|src/func_ov006_020fb7e0.c

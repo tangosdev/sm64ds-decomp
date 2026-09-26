@@ -86,18 +86,25 @@ int _ZN4cstd6strcmpEPKcS1_(const char *a, const char *b)
 char *_ZN4cstd6strchrEPKcc(const char *s, char ch)
 { return cstd::strchr(s, ch); }
 
-/* PORT_HOST_ABI: ARM asm primitive (halfword copy loop), MSVC cannot assemble.
-   MultiCopyHalf: halfword copy loop, (src, dst, byteCount) in r0-r2 */
-void MultiCopyHalf(unsigned short *src, unsigned short *dst, unsigned n)
+/* MultiCopyHalf IS THE ROM'S OWN BODY: src/MultiCopyHalf.c is C since main
+   #3167 (the halfword loop, `s32 size` compared signed as the ROM's blt does),
+   and the port compiles it under a per-source rename,
+   MultiCopyHalf=MultiCopyHalf_rom (the ASMCPORT block of port/CMakeLists.txt).
+   This definition keeps the ROM name every caller links against and makes one
+   call into that body, so the copy itself is the cartridge's code. What stays
+   here is host instrumentation at the seam between the callers and the body:
+   run link60 Stage 5 lane T2's census of every halfword block copy, counted by
+   destination region in the 2D audit. The BG tilemap upload path
+   (func_ov007_020c076c -> func_020565xx -> G2::GetBGxScrPtr) ends in this
+   primitive, so "the tilemap is empty" and "nothing ever tried to write it"
+   are separable from one table. Inert unless SM64DS_PPU_AUDIT is set, and it
+   still counts before the copy, as the census's source-nonzero column needs. */
+void MultiCopyHalf_rom(const void *src, void *dst, int size);
+void MultiCopyHalf(const void *src, void *dst, int size)
 {
-    /* run link60 Stage 5 lane T2: every halfword block copy this primitive
-       makes, counted by destination region in the 2D audit. The BG tilemap
-       upload path (func_ov007_020c076c -> func_020565xx -> G2::GetBGxScrPtr)
-       ends here, so "the tilemap is empty" and "nothing ever tried to write
-       it" are separable from one table. Inert unless SM64DS_PPU_AUDIT is set. */
-    ntr::ppu_audit_note_copy((unsigned)(size_t)src, (unsigned)(size_t)dst, n);
-    for (unsigned i = 0; i < n; i += 2)
-        *(unsigned short *)((char *)dst + i) = *(unsigned short *)((char *)src + i);
+    ntr::ppu_audit_note_copy((unsigned)(size_t)src, (unsigned)(size_t)dst,
+                             (unsigned)size);
+    MultiCopyHalf_rom(src, dst, size);
 }
 
 /* PORT_HOST_ABI: ARM/Thumb asm primitives (matrix builders), MSVC cannot assemble.
@@ -3024,7 +3031,8 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:?data_ov035_02112cb0@@3USharedFilePtr@@A=_data_ov035_02112cb0")
 #pragma comment(linker, "/alternatename:?data_ov035_02112cb8@@3USharedFilePtr@@A=_data_ov035_02112cb8")
 #pragma comment(linker, "/alternatename:?data_ov047_02112508@@3PAUdaObjDorifuResources@@A=_data_ov047_02112508")
-#pragma comment(linker, "/alternatename:?operator_delete2@Memory@@YAXPAX@Z=__ZN6Memory16operator_delete2EPv")
+/* RETIRED (run linkfull, lane ASMCPORT). The left hand side is DEFINED in this link now: src/_ZN6Memory16operator_delete2EPv.cpp builds on every target that compiles this file, so the row would be defeated. The flat name aliases the other way, onto that body, in hal/cxxname_bridge.cpp. */
+// #pragma comment(linker, "/alternatename:?operator_delete2@Memory@@YAXPAX@Z=__ZN6Memory16operator_delete2EPv")
 #pragma comment(linker, "/alternatename:?_ZTV16daObjPushblock_c@@3PAPAXA=__ZTV16daObjPushblock_c")
 #pragma comment(linker, "/alternatename:?data_ov002_0210dbc0@@3PAP8dEnemyBase_c@@AEHAAUdBgCh_Actr@@@ZA=_data_ov002_0210dbc0")
 #pragma comment(linker, "/alternatename:?data_ov004_020beb68@@3PADA=_data_ov004_020beb68")
