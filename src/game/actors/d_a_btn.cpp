@@ -19,8 +19,9 @@
  *    9 func_ov079_021246d8  the king beaten, waiting to go
  *   10 func_ov079_02124638  wobbling from a hit in front
  *   11 func_ov079_02124530  knocked over from behind
- * The handlers are free functions: their member spellings are not
- * recovered, so they keep their address names and take the actor.
+ * The handlers retain address names and explicit actor parameters.
+ * Converting them to methods remains reconstruction work; unknown original
+ * names do not establish a compiler requirement for this free-function form.
  *
  * The file tables: data_ov079_021275ec holds the plain Whomp's five
  * animation handles and, from data_ov079_02127600 on, the king's six, read
@@ -1375,8 +1376,8 @@ extern "C" void func_ov079_02124638(daBtn_c *self)
 
 // @symbol func_ov079_02124530
 /* State 11, knocked over from behind: finish the hop, then tip forward like
-   state 4 (a little faster) until flat, landing in state 5. While the hop
-   plays the body rises. */
+   state 4 with variant-specific pitch acceleration until flat, landing in
+   state 5. While the hop plays the body rises. */
 extern "C" void func_ov079_02124530(daBtn_c *self)
 {
     self->mModelAnim.Advance();
