@@ -3529,8 +3529,15 @@ extern "C" void hal_sub_screen_level_init(void)
     }
 }
 
-/* Top of the 2D frame: both shadows back to "every sprite disabled" and both
-   entry counters to zero, so this frame's Render calls fill from the start. */
+/* Top of the 2D frame. It used to put both OAM shadows back to "every sprite
+   disabled" and both entry counters to zero with OAM::Reset, so the frame's
+   Render calls filled from the start. That is the ROM's frame phase 2's first
+   statement on its full arm (src/func_02019390.c), and both host loops call the
+   ROM's phase 2 now (hal/fader_wipes.cpp's port_frame_phase2, run linkfull lane
+   RESET2), before anything renders, so the reset is gone from here: the ROM
+   decides it, including the scenes whose graphics block answers 0 and skips it
+   (the title). hal/scene_boot.cpp keeps a host OAM::Reset for the frames its
+   own pause holds still, which the ROM has no counterpart for. */
 void hal_sub_screen_frame_begin(void)
 {
     /* Once, on the first frame, and deliberately here rather than in init:
@@ -3572,7 +3579,6 @@ void hal_sub_screen_frame_begin(void)
             tab_was = tab;
         }
     }
-    OAM::Reset();
     poll_touch();
     /* Inert unless SM64DS_TOUCH_CLIENT_PROBE is set, and here rather than
        inside poll_touch because it wants a present rectangle the frame loop

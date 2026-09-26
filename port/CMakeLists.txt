@@ -23899,3 +23899,42 @@ endforeach()
 foreach(_tw31s42d walk_window walk_window_hires smoke_player)
     target_sources(${_tw31s42d} PRIVATE ${SLICE_W31_S42D_ALL_SOURCES})
 endforeach()
+
+# ===========================================================================
+# RESET2 (run linkfull, lane RESET2): THE GAME LOOP'S OWN PHASE 2
+# ===========================================================================
+#
+# port/slice_w31b_reset2.txt carries func_02019390, the ROM's frame phase 2
+# (src/func_020197b8.c: `data_0209d50c = 2; func_02019390();`), and the four
+# TUs only it calls. hal/fader_wipes.cpp's port_frame_phase2 calls it, and both
+# host loops call that at the ROM's point (tests/walk_window.cpp's level loop,
+# hal/scene_boot.cpp's port_scene_tick). A line whose path is followed by the
+# word `hostgen` compiles its build/host-src copy made by port/tools/hostgen.py
+# (the PMF3 block's shape): func_0200f4b4's three stores are geometry command
+# ports. All three hosting targets take the slice, because hal/fader_wipes.cpp
+# is compiled once for all of them and hal/scene_boot.cpp by each of them.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31b_reset2.txt" SLICE_W31B_RESET2_LINES)
+set(SLICE_W31B_RESET2_SOURCES "")
+foreach(line IN LISTS SLICE_W31B_RESET2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    if(line MATCHES "^(src/[^ ]+)[ ]+hostgen$")
+        set(_w31breset2_src "${CMAKE_MATCH_1}")
+        string(REGEX REPLACE "[.]c$" ".cpp" _w31breset2_rel "${_w31breset2_src}")
+        set(_w31breset2_out "${CMAKE_BINARY_DIR}/host-src/${_w31breset2_rel}")
+        add_custom_command(OUTPUT "${_w31breset2_out}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" ${_w31breset2_src}
+            DEPENDS "${PORT_REPO_ROOT_ABS}/${_w31breset2_src}"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen ${_w31breset2_src}")
+        list(APPEND SLICE_W31B_RESET2_SOURCES "${_w31breset2_out}")
+    else()
+        list(APPEND SLICE_W31B_RESET2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+    endif()
+endforeach()
+foreach(_tw31breset2 walk_window walk_window_hires smoke_player)
+    target_sources(${_tw31breset2} PRIVATE ${SLICE_W31B_RESET2_SOURCES})
+endforeach()
