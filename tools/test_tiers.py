@@ -335,11 +335,35 @@ class MsvcArmsAreNotDecompSource(unittest.TestCase):
                 self.assertFalse(tiers.score_file("x.cpp", text)["no_mangled_refs"])
 
     def test_balanced_simple_conjunctions_still_drop_host_code(self):
-        for cond in ("(X) && (defined(_MSC_VER)) && !Y",
+        for cond in ("(defined(X)) && (defined(_MSC_VER)) && !defined(Y)",
+                     "1 && _MSC_VER",
                      "(defined(X) && defined(_MSC_VER))"):
             with self.subTest(cond=cond):
                 self.assertEqual(self.side(f"#if {cond}\nHOST\n#else\nROM\n#endif"),
                                  "\n\n\nROM\n")
+
+    def test_macro_expansion_cannot_hide_rom_code(self):
+        for prefix, cond in (("#define X 1 || 1\n", "X && defined(_MSC_VER)"),
+                             ("#define X 0 ? 0 : 1\n", "defined(_MSC_VER) && X"),
+                             ("", "X && defined(_MSC_VER)")):
+            with self.subTest(cond=cond):
+                text = prefix + f"#if {cond}\nvoid f() {{ _ZN4Base4KillEv(0); }}\n#endif\n"
+                self.assertEqual(self.side(text), text)
+                self.assertFalse(tiers.score_file("x.cpp", text)["no_mangled_refs"])
+
+    def test_local_msc_definition_or_undef_keeps_the_file(self):
+        for directive in ("#define _MSC_VER 1900", "#undef _MSC_VER"):
+            with self.subTest(directive=directive):
+                text = directive + "\n#ifdef _MSC_VER\nvoid f() { _ZN4Base4KillEv(0); }\n#endif\n"
+                self.assertEqual(self.side(text), text)
+                self.assertFalse(tiers.score_file("x.cpp", text)["no_mangled_refs"])
+                self.assertEqual(msvc_arms.unresolved(text), [2])
+
+    def test_commented_msc_definition_does_not_disable_filtering(self):
+        for prefix in ("// #define _MSC_VER 1900\n", "/* #undef _MSC_VER */\n"):
+            with self.subTest(prefix=prefix):
+                self.assertEqual(self.side(prefix + "#ifdef _MSC_VER\nHOST\n#endif"),
+                                 prefix + "\n\n")
 
     def test_commented_directive_cannot_hide_following_rom_code(self):
         for comment in ("/*\n#ifdef _MSC_VER\n*/\n",

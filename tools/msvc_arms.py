@@ -22,7 +22,7 @@ other macro:
     #ifdef _MSC_VER / #ifndef _MSC_VER
     #if _MSC_VER / #if defined(_MSC_VER) / #if defined _MSC_VER   (optionally parenthesised)
     #if !defined(_MSC_VER) / #if !defined _MSC_VER
-    #if A && defined(_MSC_VER) && B     (a chain of macro/defined terms)
+    #if defined(A) && defined(_MSC_VER) && 1     (defined terms or numeric literals)
 
 plus their `#elif` / `#else` / `#endif`. Any other condition that mentions `_MSC_VER`
 (`#if _MSC_VER >= 1300`, one joined with `||`) is left as it is and every side of it is
@@ -32,7 +32,9 @@ evaluated: `#if 0`, `SM64DS_PLATFORM_PC` and the rest read exactly as they did.
 
 Dropped lines become empty lines, so line numbers stay what they are in the file.
 Directives inside comments or literals are ignored. Files with continued lines or
-multiline comments crossing a directive are retained whole, conservatively.
+multiline comments crossing a directive, or a local #define/#undef of _MSC_VER
+are retained whole, conservatively. Bare macro terms in conjunctions stay unknown:
+their expansions can introduce operators that change precedence.
 Pure string work: stdlib only, no compiler, no ROM.
 """
 import re
@@ -43,7 +45,8 @@ _MSC = r"(?:defined\s*\(\s*_MSC_VER\s*\)|defined\s+_MSC_VER\b|_MSC_VER)"
 _MSC_POS = re.compile(r"^" + _MSC + r"$")
 _MSC_NEG = re.compile(r"^!\s*(?:defined\s*\(\s*_MSC_VER\s*\)|defined\s+_MSC_VER\b)$")
 _TERM = re.compile(r"^!?\s*(?:defined\s*\(\s*[A-Za-z_]\w*\s*\)|"
-                   r"defined\s+[A-Za-z_]\w*|[A-Za-z_]\w*|[0-9]+)$")
+                   r"defined\s+[A-Za-z_]\w*|_MSC_VER|[0-9]+)$")
+_MSC_WRITE = re.compile(r"^\s*#\s*(?:define|undef)\s+_MSC_VER\b")
 _NON_CODE = re.compile(r'/\*.*?(?:\*/|\Z)|//[^\n]*|"(?:\\.|[^"\\])*"|'
                        r"'(?:\\.|[^'\\])*'", re.S)
 
@@ -79,7 +82,8 @@ def _directive_view(text):
         return "".join("\n" if c == "\n" else " " for c in token)
     lines = _NON_CODE.sub(mask, text).split("\n")
     unsupported = bool(re.search(r"\\\r?\n", text)) or any(
-        _DIRECTIVE.match(lines[i]) for i in crossing_lines)
+        _DIRECTIVE.match(lines[i]) for i in crossing_lines) or any(
+        _MSC_WRITE.match(line) for line in lines)
     return lines, unsupported
 
 TRUE, FALSE, UNKNOWN = "true", "false", "unknown"
@@ -97,7 +101,8 @@ def _condition(kind, arg):
     if _MSC_NEG.match(a):
         return TRUE
     if "&&" in a:
-        # Only simple complete terms are supported. Splitting arbitrary C
+        # Only defined tests, numeric literals and the known _MSC_VER atom are
+        # supported: other macros may expand operators. Splitting arbitrary C
         # expressions loses precedence: (defined(_MSC_VER) && X) == 0 and
         # defined(_MSC_VER) && X ? 0 : 1 are both true with _MSC_VER undefined.
         terms = [_unparen(term) for term in a.split("&&")]
