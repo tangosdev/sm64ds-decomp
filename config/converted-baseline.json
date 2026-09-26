@@ -7,7 +7,7 @@
     "no_codegen_trick",
     "no_mangled_refs"
   ],
-  "count": 3005,
+  "count": 3007,
   "converted": [
     "src/ARMMathLoadState.c",
     "src/ARMMathSaveState.c",
@@ -339,10 +339,6 @@
     "src/game/actors/d_a_pg_bby.cpp#_ZN9daPgBby_cD0Ev",
     "src/game/actors/d_a_pg_bby.cpp#_ZN9daPgBby_cD1Ev",
     "src/game/actors/d_a_pg_bby.cpp#daPgBby_c_classInit",
-    "src/_ZN11BobOmbBuddy16CleanupResourcesEv.cpp",
-    "src/_ZN11BobOmbBuddy6RenderEv.cpp",
-    "src/_ZN11BobOmbBuddyD0Ev.cpp",
-    "src/_ZN11BobOmbBuddyD1Ev.cpp",
     "src/_ZN11CommonModel12SetPolygonIDEj.cpp",
     "src/_ZN11CommonModel6RenderEPK7Vector3.cpp",
     "src/_ZN11CommonModel9DoSetFileEPcii.cpp",
@@ -619,9 +615,9 @@
     "src/_ZN16dPathLiftActor_c9AfterClsnEi.cpp",
     "src/_ZN16dPathLiftActor_cD0Ev.cpp",
     "src/_ZN16dPathLiftActor_cD1Ev.cpp",
-    "src/_ZN16dScMgPachinko2_c6RenderEv.cpp",
-    "src/_ZN16dScMgPachinko2_cD0Ev.cpp",
-    "src/_ZN16dScMgPachinko2_cD1Ev.cpp",
+    "src/actors/dScMgPachinko2_c.cpp#_ZN16dScMgPachinko2_c6RenderEv",
+    "src/actors/dScMgPachinko2_c.cpp#_ZN16dScMgPachinko2_cD0Ev",
+    "src/actors/dScMgPachinko2_c.cpp#_ZN16dScMgPachinko2_cD1Ev",
     "src/_ZN16dScMgSmartball_c13OnYoshiTryEatEi.cpp",
     "src/_ZN16dScMgSmartball_c6RenderEv.cpp",
     "src/_ZN16dScMgSmartball_c8OnPushedEv.cpp",
@@ -3013,6 +3009,12 @@
     "src/game/actors/d_a_shl.cpp#_ZN7daShl_c8BehaviorEv",
     "src/game/actors/d_a_shl.cpp#_ZN7daShl_cD0Ev",
     "src/game/actors/d_a_shl.cpp#_ZN7daShl_cD1Ev",
-    "src/game/actors/d_a_shl.cpp#daShl_c_classInit"
+    "src/game/actors/d_a_shl.cpp#daShl_c_classInit",
+    "src/game/actors/d_a_red_bombhei.cpp#_ZN14daRedBombhei_c16CleanupResourcesEv",
+    "src/game/actors/d_a_red_bombhei.cpp#_ZN14daRedBombhei_c6RenderEv",
+    "src/game/actors/d_a_red_bombhei.cpp#_ZN14daRedBombhei_c8BehaviorEv",
+    "src/game/actors/d_a_red_bombhei.cpp#_ZN14daRedBombhei_cD0Ev",
+    "src/game/actors/d_a_red_bombhei.cpp#_ZN14daRedBombhei_cD1Ev",
+    "src/game/actors/d_a_red_bombhei.cpp#daRedBombhei_c_classInit"
   ]
 }

@@ -8,97 +8,9 @@ src/actors/daKrb_c.cpp:
     complete
     .text start:0x02129020 end:0x0212c10c
 
-src/_ZN11BobOmbBuddyD1Ev.cpp:
+src/game/actors/d_a_red_bombhei.cpp:
     complete
-    .text start:0x0212c10c end:0x0212c14c
-
-src/_ZN11BobOmbBuddyD0Ev.cpp:
-    complete
-    .text start:0x0212c14c end:0x0212c1a0
-
-src/func_ov084_0212c1a0.c:
-    complete
-    .text start:0x0212c1a0 end:0x0212c4a0
-
-src/func_ov084_0212c4a0.c:
-    complete
-    .text start:0x0212c4a0 end:0x0212c508
-
-src/func_ov084_0212c508.cpp:
-    complete
-    .text start:0x0212c508 end:0x0212c89c
-
-src/func_ov084_0212c89c.c:
-    complete
-    .text start:0x0212c89c end:0x0212c8b0
-
-src/func_ov084_0212c8b0.cpp:
-    complete
-    .text start:0x0212c8b0 end:0x0212c92c
-
-src/func_ov084_0212c92c.cpp:
-    complete
-    .text start:0x0212c92c end:0x0212c960
-
-src/func_ov084_0212c960.cpp:
-    complete
-    .text start:0x0212c960 end:0x0212c9a8
-
-src/func_ov084_0212c9a8.cpp:
-    complete
-    .text start:0x0212c9a8 end:0x0212c9f0
-
-src/func_ov084_0212c9f0.c:
-    complete
-    .text start:0x0212c9f0 end:0x0212ca60
-
-src/func_ov084_0212ca60.c:
-    complete
-    .text start:0x0212ca60 end:0x0212caa8
-
-src/func_ov084_0212caa8.c:
-    complete
-    .text start:0x0212caa8 end:0x0212cac0
-
-src/func_ov084_0212cac0.c:
-    complete
-    .text start:0x0212cac0 end:0x0212cae0
-
-src/func_ov084_0212cae0.c:
-    complete
-    .text start:0x0212cae0 end:0x0212ccb4
-
-src/func_ov084_0212ccb4.cpp:
-    complete
-    .text start:0x0212ccb4 end:0x0212cda0
-
-src/func_ov084_0212cda0.c:
-    complete
-    .text start:0x0212cda0 end:0x0212ce50
-
-src/func_ov084_0212ce50.cpp:
-    complete
-    .text start:0x0212ce50 end:0x0212cf10
-
-src/_ZN11BobOmbBuddy16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0212cf10 end:0x0212cf40
-
-src/_ZN11BobOmbBuddy6RenderEv.cpp:
-    complete
-    .text start:0x0212cf40 end:0x0212cf6c
-
-src/_ZN11BobOmbBuddy8BehaviorEv.cpp:
-    complete
-    .text start:0x0212cf6c end:0x0212d028
-
-src/_ZN11BobOmbBuddy13InitResourcesEv.cpp:
-    complete
-    .text start:0x0212d028 end:0x0212d200
-
-src/d_a_red_bombhei.c:
-    complete
-    .text start:0x0212d200 end:0x0212d248
+    .text start:0x0212c10c end:0x0212d248
 
 src/actors/daFPkn_c.cpp:
     complete

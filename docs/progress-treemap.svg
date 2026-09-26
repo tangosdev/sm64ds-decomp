@@ -41757,11 +41757,11 @@ matched: yes</title></rect><rect x="1189.72" y="891.49" width="3.97" height="12.
 module: ov084
 addr: 0x0212c0b0
 size: 92 bytes
-matched: yes</title></rect><rect x="1193.69" y="891.49" width="2.76" height="12.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11BobOmbBuddyD1Ev
+matched: yes</title></rect><rect x="1193.69" y="891.49" width="2.76" height="12.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daRedBombhei_cD1Ev
 module: ov084
 addr: 0x0212c10c
 size: 64 bytes
-matched: yes</title></rect><rect x="1196.45" y="891.49" width="3.63" height="12.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11BobOmbBuddyD0Ev
+matched: yes</title></rect><rect x="1196.45" y="891.49" width="3.63" height="12.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daRedBombhei_cD0Ev
 module: ov084
 addr: 0x0212c14c
 size: 84 bytes
@@ -41829,19 +41829,19 @@ matched: yes</title></rect><rect x="1246.47" y="903.71" width="12.52" height="8.
 module: ov084
 addr: 0x0212ce50
 size: 192 bytes
-matched: yes</title></rect><rect x="1258.98" y="903.71" width="3.13" height="8.09" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11BobOmbBuddy16CleanupResourcesEv
+matched: yes</title></rect><rect x="1258.98" y="903.71" width="3.13" height="8.09" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daRedBombhei_c16CleanupResourcesEv
 module: ov084
 addr: 0x0212cf10
 size: 48 bytes
-matched: yes</title></rect><rect x="1262.11" y="903.71" width="2.87" height="8.09" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11BobOmbBuddy6RenderEv
+matched: yes</title></rect><rect x="1262.11" y="903.71" width="2.87" height="8.09" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daRedBombhei_c6RenderEv
 module: ov084
 addr: 0x0212cf40
 size: 44 bytes
-matched: yes</title></rect><rect x="1264.98" y="903.71" width="12.26" height="8.09" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11BobOmbBuddy8BehaviorEv
+matched: yes</title></rect><rect x="1264.98" y="903.71" width="12.26" height="8.09" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daRedBombhei_c8BehaviorEv
 module: ov084
 addr: 0x0212cf6c
 size: 188 bytes
-matched: yes</title></rect><rect x="1189.10" y="911.80" width="8.47" height="29.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11BobOmbBuddy13InitResourcesEv
+matched: yes</title></rect><rect x="1189.10" y="911.80" width="8.47" height="29.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daRedBombhei_c13InitResourcesEv
 module: ov084
 addr: 0x0212d028
 size: 472 bytes
