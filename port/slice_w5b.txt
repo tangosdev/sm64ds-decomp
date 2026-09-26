@@ -102,9 +102,11 @@ src/_ZN12WorkElevator6RenderEv.cpp
 src/_ZN12WorkElevator8BehaviorEv.cpp
 src/_ZN12WorkElevator13InitResourcesEv.cpp
 src/func_ov021_0211129c.c
-# src/func_ov021_02111434.c is NOT here: it ends in a two-instruction mwcc
-# asm veneer (ands r0,r0,#1; bx lr) MSVC cannot compile -- hosted in
-# port/unmatched/WorkElevator_Mtx.cpp until hostgen grows asm excision (U5).
+# The render-side matrix pass, main's daObjCvNewsLift_c::UpdateModelTransforms
+# back-ported into its per-function file (run linkfull, lane ASMCPORT): the
+# ending is main's blink test, so the mwcc asm veneer is gone and the host copy
+# that stood in port/unmatched/WorkElevator_Mtx.cpp is retired.
+src/func_ov021_02111434.c
 src/func_ov021_02111ec4.c
 src/func_ov021_02111edc.cpp
 src/func_ov021_02111f1c.c
@@ -163,4 +165,3 @@ port/hal/actor_classes_ov065.cpp
 port/unmatched/Ov065_StateDispatch.cpp
 port/unmatched/Snufit_Behavior.cpp
 port/unmatched/Swoop_Behavior.cpp
-port/unmatched/WorkElevator_Mtx.cpp

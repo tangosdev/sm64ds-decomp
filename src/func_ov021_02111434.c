@@ -1,8 +1,14 @@
 // @symbol func_ov021_02111434
-/* recovered: shared common types */
+/* The News Lift's (daObjCvNewsLift_c, the port's WorkElevator) render-side
+ * matrix pass: the pose at model scale (positions shifted down by 3) into the
+ * main model's matrix at +0xf0, then each of the four platform models' at
+ * +0x33c, 0x50 apart. Main has this body as daObjCvNewsLift_c::
+ * UpdateModelTransforms inside the promoted src/actors/daObjCvNewsLift_c.cpp,
+ * and its ending is main's: the function returns nothing, and the last test is
+ * Render's blink test (reset timer below 45 and odd) with nothing after it,
+ * which the ROM keeps. That ending replaces the two-instruction asm veneer
+ * this file used to call for the final `ands r0, r0, #1`. */
 #include "common.h"
-typedef int Fix12;
-typedef short s16;
 
 struct Quaternion;
 struct Matrix4x3;
@@ -14,20 +20,13 @@ extern void MulMat4x3Mat4x3(void *a, void *b, void *c);
 extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *mF, s16 angX);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(struct Matrix4x3 *mF, s16 angZ);
 extern void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3 *mF, s16 angY);
-extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, Fix12 x, Fix12 y, Fix12 z);
-
-
+extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, int x, int y, int z);
 
 extern struct Matrix4x3 data_020a0e68;
 extern const int data_ov021_02114a20[];
 extern const s16 data_ov021_02114740[];
 
-static asm unsigned conv_ov021(unsigned x) {
-    ands r0, r0, #1
-    bx lr
-}
-
-int func_ov021_02111434(char *c)
+void func_ov021_02111434(char *c)
 {
     struct Matrix4x3 mtx;
     int i;
@@ -73,8 +72,7 @@ int func_ov021_02111434(char *c)
         obj += 0x50;
     }
 
-    rv = *((unsigned short *)((c + 0xc00) + 0x74));
-    if (rv >= 0x2d)
-        return rv;
-    return conv_ov021(rv);
+    /* Render's blink test with nothing after it; the ROM keeps the test. */
+    if (*(u16 *)(c + 0xc74) < 45 && (*(u16 *)(c + 0xc74) & 1))
+        return;
 }
