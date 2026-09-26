@@ -282,6 +282,10 @@
    "ref": "tools/deepen_rtti.py"
   },
   {
+   "file": "notes/sinit-ownership-wave-resource-handles.md",
+   "ref": "tools/tu_config.py"
+  },
+  {
    "file": "notes/smartball-provenance.md",
    "ref": "include/cMgSmartball_"
   },
