@@ -173,19 +173,20 @@ LEDGER = [
      "ecx,eax / pop ebp / jmp`, so [esp+4] really is the receiver there",
      r"^_func_ov077_(?!02126640|0212679c|02126ad0|02126a50|021269a8)"),
     ("ECX", r"^\?g_ov060_states@",
-     "ov060's Bowser pack: the four tables dispatched by __thiscall members "
-     "(?Behavior and ?InitResources of BowserFire, ?Behavior of "
-     "BowserSkyPlatform, and the Bowser tail) already carry the ov60_* "
-     "__fastcall faces and must keep them. The raw matched bodies in this "
-     "table are the adjudicated __cdecl set below: _func_ov060_021128c0 "
-     "(va 00505da0) decodes the record by hand and dispatches it at +0x8f "
-     "`push edx / call eax`, PUSHING the receiver, and HOST COPY 1 "
-     "func_ov060_02112434 in port/unmatched/Ov060_StateDispatch.cpp spells the "
-     "same call as ((void (*)(char *))e->fn)(thiz + (e->adj >> 1))",
+     "ov060's Bowser pack: the five tables dispatched by a matched TU's own "
+     "pointer-to-member call (?Behavior and ?InitResources of BowserFire, "
+     "?Behavior of BowserSkyPlatform, the Bowser tail, and since run linkfull "
+     "lane SEATS3 retired HOST COPY 1, Bowser's 0211aeb4 through the matched "
+     "_func_ov060_02112434, receiver in ecx) carry the ov60_* __fastcall faces "
+     "and must keep them. The raw matched bodies in this table are the "
+     "adjudicated __cdecl set below: _func_ov060_021128c0 decodes 0211aed4's "
+     "record by hand and dispatches it `push edx / call eax`, PUSHING the "
+     "receiver, and ?Behavior@SpikeBomb reads 0211b1d8 as int[] and does the "
+     "same",
      r"^_func_ov060_(?!02115c1c|02115d50|02115d68|021167c8|021167ec|"
      r"021168c4|021169b0|021169f8|02116b18|02116b68|02116c68|02116d78|"
      r"02116f74|02116f90|021171e8|0211722c|0211747c|02117db8|021180e0|"
-     r"021181b4)"),
+     r"021181b4|021128c0|02112724|021125f0)"),
 
     ("ECX", r"^\?g_scuttlebug_sources@@",
      "Scuttlebug: all eighteen cells take their receiver in ecx. The nine MAIN "
