@@ -52,17 +52,12 @@ extern int data_020a0e68[];
 
 /* mesh collision */
 extern int dBgCh_Actr_UpdateContinuous_Veneer(void *c);
-extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *c);
 extern void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *c);
-extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *c);
 extern void *_ZNK10dBgCh_Actr13GetWallResultEv(void *c);
-extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *s, int *out);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);
 
 /* actor plumbing */
-extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cc);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *thiz, void *sm, void *mtx, int f, int g, unsigned int h);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
@@ -70,16 +65,6 @@ extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
 
 /* model / animation */
 extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *self, void *bca, int frame, int speed, unsigned int flags);
-extern void _ZN9Animation8SetFlagsEi(char *self, int flags);
-extern int _ZN9Animation7AdvanceEv(void *self);
-extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *fp);
-extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
-
-/* the player side of the conversation */
-extern int _ZN6Player9StartTalkER7fBase_cb(void *self, void *ab, int b);
-extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
-    void *self, void *ab, unsigned a, const Vector3 *v, unsigned d, unsigned e);
-extern int _ZN6Player12GetTalkStateEv(void *self);
 
 /* ov085 statics. data_ov085_0212f280 and data_ov085_021304f4 keep
  * include/decl_common.h's spelling, so this file adds no new reading of
@@ -168,8 +153,8 @@ void daPeach_c::UpdateGroundCollision(dBgCh_Actr *clsn)
     int n0[3];
     int n1[3];
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(clsn)) {
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn) + 4, n0);
+    if (clsn->IsOnGround()) {
+        ((SurfaceInfo *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn) + 4))->CopyNormalTo(*(Vector3 *)n0);
         if (n0[1] != 0) {
             long long a = (long long)n0[0] * (long long)self[0xa4 / 4];
             long long b = (long long)n0[2] * (long long)self[0xac / 4];
@@ -178,8 +163,8 @@ void daPeach_c::UpdateGroundCollision(dBgCh_Actr *clsn)
             self[0xa8 / 4] = -(_ZN4cstd4fdivEii(x + y, n0[1]) + 0x8000);
         }
     }
-    if (_ZNK10dBgCh_Actr8IsOnWallEv(clsn)) {
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)_ZNK10dBgCh_Actr13GetWallResultEv(clsn) + 4, n1);
+    if (clsn->IsOnWall()) {
+        ((SurfaceInfo *)((char *)_ZNK10dBgCh_Actr13GetWallResultEv(clsn) + 4))->CopyNormalTo(*(Vector3 *)n1);
     }
 }
 
@@ -194,7 +179,7 @@ int func_ov085_02129f8c(char *c) {
     unsigned short kind;
     int r;
     if (id == 0) return id;
-    actor = _ZN8dActor_c10FindWithIDEj(id);
+    actor = dActor_c::FindWithID(id);
     if (actor == 0) return (int)actor;
     kind = *(unsigned short *)((char *)actor + 0xc);
     if (kind == 0xbf) r = 1; else r = 0;
@@ -243,7 +228,7 @@ int daPeach_c::State0()
 {
     char *c = (char *)this;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, data_ov085_021304ec[1], 0, 0x1000, 0);
-    _ZN9Animation8SetFlagsEi(c + 0x124, 0x40000000);
+    ((Animation *)(c + 0x124))->SetFlags(0x40000000);
     *(int *)(c + 0x98) = 0x4000;
     *(int *)(c + 0xa8) = 0xa000;
     *(int *)(c + 0x354) = 4;
@@ -272,7 +257,7 @@ int daPeach_c::InitState4()
     char *c = (char *)this;
     short v = *(short *)(c + 0x8e);
     *(short *)(c + 0x94) = v;
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x160);
+    ((dActor_c *)c)->UpdatePos((dCc_c *)(c + 0x160));
     UpdateGroundCollision(&mWithMeshClsn);
     func_ov085_02129f8c(c);
     return 1;
@@ -328,7 +313,7 @@ int daPeach_c::InitState1()
     char *c = (char *)this;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&((daPeach_c *)c)->mModelAnim, data_ov085_021304d4[1], 0, 0x1000, 0);
     *(int *)(c + 0x12c) = 0;
-    _ZN9Animation7AdvanceEv(c + 0x124);
+    ((Animation *)(c + 0x124))->Advance();
     *(char *)(c + 0x368) = 1;
     *(int *)(c + 0x354) = 1;
     return 1;
@@ -341,7 +326,7 @@ int daPeach_c::InitState3()
 {
     char *c = (char *)this;
     if (*(int *)(c + 0x180) & 0x8000000) {
-        char *a = (char *)_ZN8dActor_c10FindWithIDEj(*(unsigned int *)(c + 0x184));
+        char *a = (char *)dActor_c::FindWithID(*(unsigned int *)(c + 0x184));
         if (a) {
             int match = (((dActor_c *)a)->actorID == 0xbf) ? 1 : 0;
             if (match != 0) {
@@ -444,10 +429,10 @@ int daPeach_c::Behavior()
 int daPeach_c::InitResources()
 {
     char *s = (char *)((dActor_c *)this);
-    void *f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_021304f4);
+    void *f = Model::LoadFile(*(SharedFilePtr *)&data_ov085_021304f4);
     ((ModelBase *)(s + 0xd4))->SetFile((BMD_File *)f, 1, -1);
     for (int i = 0; i < 7; i++)
-        _ZN9Animation8LoadFileER13SharedFilePtr((void *)data_ov085_0212f280[i]);
+        Animation::LoadFile(*(SharedFilePtr *)data_ov085_0212f280[i]);
     if (mShadowModel.InitCylinder() == 0)
         return 0;
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(

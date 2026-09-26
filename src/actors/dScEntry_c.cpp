@@ -33,8 +33,6 @@
  *   and icon_c::Render.
  * Leftover: OAM::Render Fix12-by-value stays mangled (OAM.h, wall 6az).
  *   This TU's icon_c::Render.
- * Leftover: OAM::RenderSub stays mangled. OAM.h has the method; this
- *   TU's icon_c::Render still uses the linker name.
  * Leftover: data_ov075_0211cb64 / 0211c720 / 0211c730 / 0211c954 are
  *   OAM. 0211d72c / 0211d72e / 0211d740 / 0211d742 / 0211d754 /
  *   0211d756 / 0211d948 / 0211d94a are language- or type-indexed
@@ -51,6 +49,7 @@
  */
 
 #include "dScEntry_c.h"
+#include "OAM.h"
 
 extern "C" {
 unsigned int _ZN3G2S12GetBG2ScrPtrEv();
@@ -61,7 +60,6 @@ int _Z15ApproachLinear2Rsss(short *, short, short);
 extern unsigned char data_0209b2e4;
 
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int a, void *oam, int b, int c, int d, int e, int f, int g, int h, int i);
-extern void _ZN3OAM9RenderSubEP7OamAttrii(void *oam, int x, int y);
 extern int func_0203d974(void);
 
 int func_0200f0bc(void);
@@ -295,7 +293,7 @@ void dScEntry_c::icon_c::Render()
     }
 
 renderSub:
-    _ZN3OAM9RenderSubEP7OamAttrii(oam, xy[0], xy[1]);
+    OAM::RenderSub((OamAttr *)oam, xy[0], xy[1]);
 }
 
 // @symbol _ZN12OamAnimationD1Ev

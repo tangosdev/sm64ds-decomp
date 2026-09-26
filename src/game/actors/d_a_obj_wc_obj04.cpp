@@ -47,7 +47,6 @@ void func_ov029_02112710(daObjWc_Obj04_c *t);
 extern SharedFilePtr data_ov029_0211432c;
 extern SharedFilePtr data_ov029_02114324;
 extern CLPS_Block data_ov029_0211304c;
-extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -86,7 +85,7 @@ int daObjWc_Obj04_c::InitResources()
     }
     func_020393d4(
         (int *)&mMeshCollider,
-        (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+        (int)&dBgW::UpdatePosWithTransform);
     mState = 0;
     mStateTimer = 0;
     mVisible = 0;

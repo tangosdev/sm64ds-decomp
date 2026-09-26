@@ -41557,11 +41557,11 @@ matched: yes</title></rect><rect x="1233.18" y="825.69" width="9.20" height="4.4
 module: ov081
 addr: 0x02127adc
 size: 88 bytes
-matched: yes</title></rect><rect x="1233.18" y="830.13" width="9.20" height="3.84" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8IceBlockD1Ev
+matched: yes</title></rect><rect x="1233.18" y="830.13" width="9.20" height="3.84" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjIceBlock_cD1Ev
 module: ov081
 addr: 0x02127b34
 size: 76 bytes
-matched: yes</title></rect><rect x="1233.18" y="833.97" width="9.20" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8IceBlockD0Ev
+matched: yes</title></rect><rect x="1233.18" y="833.97" width="9.20" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjIceBlock_cD0Ev
 module: ov081
 addr: 0x02127b80
 size: 96 bytes
@@ -41569,27 +41569,27 @@ matched: yes</title></rect><rect x="1242.37" y="797.21" width="16.20" height="6.
 module: ov081
 addr: 0x02127be0
 size: 236 bytes
-matched: yes</title></rect><rect x="1258.57" y="797.21" width="2.75" height="6.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8IceBlock15OnHitByMegaCharER6Player
+matched: yes</title></rect><rect x="1258.57" y="797.21" width="2.75" height="6.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjIceBlock_c15OnHitByMegaCharER6Player
 module: ov081
 addr: 0x02127ccc
 size: 40 bytes
-matched: yes</title></rect><rect x="1261.31" y="797.21" width="11.26" height="6.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8IceBlock4KillEv
+matched: yes</title></rect><rect x="1261.31" y="797.21" width="11.26" height="6.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjIceBlock_c4KillEv
 module: ov081
 addr: 0x02127cf4
 size: 164 bytes
-matched: yes</title></rect><rect x="1272.57" y="797.21" width="4.67" height="6.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8IceBlock16CleanupResourcesEv
+matched: yes</title></rect><rect x="1272.57" y="797.21" width="4.67" height="6.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjIceBlock_c16CleanupResourcesEv
 module: ov081
 addr: 0x02127d98
 size: 68 bytes
-matched: yes</title></rect><rect x="1242.37" y="803.97" width="9.44" height="3.15" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8IceBlock6RenderEv
+matched: yes</title></rect><rect x="1242.37" y="803.97" width="9.44" height="3.15" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjIceBlock_c6RenderEv
 module: ov081
 addr: 0x02127ddc
 size: 64 bytes
-matched: yes</title></rect><rect x="1242.37" y="807.12" width="9.44" height="23.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8IceBlock8BehaviorEv
+matched: yes</title></rect><rect x="1242.37" y="807.12" width="9.44" height="23.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjIceBlock_c8BehaviorEv
 module: ov081
 addr: 0x02127e1c
 size: 468 bytes
-matched: yes</title></rect><rect x="1242.37" y="830.15" width="9.44" height="8.66" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8IceBlock13InitResourcesEv
+matched: yes</title></rect><rect x="1242.37" y="830.15" width="9.44" height="8.66" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjIceBlock_c13InitResourcesEv
 module: ov081
 addr: 0x02127ff0
 size: 176 bytes
@@ -42605,7 +42605,7 @@ matched: yes</title></rect><rect x="1490.99" y="679.56" width="19.46" height="25
 module: ov089
 addr: 0x0213162c
 size: 1260 bytes
-matched: yes</title></rect><rect x="1473.51" y="705.17" width="34.92" height="7.84" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov089_02131b18
+matched: yes</title></rect><rect x="1473.51" y="705.17" width="34.92" height="7.84" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daObjKey_c9StateDropEv
 module: ov089
 addr: 0x02131b18
 size: 692 bytes
@@ -42625,7 +42625,7 @@ matched: yes</title></rect><rect x="1473.51" y="746.95" width="4.01" height="0.7
 module: ov089
 addr: 0x02131f4c
 size: 8 bytes
-matched: yes</title></rect><rect x="1477.52" y="713.01" width="17.38" height="6.92" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov089_02131f54
+matched: yes</title></rect><rect x="1477.52" y="713.01" width="17.38" height="6.92" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daObjKey_c20UpdateModelTransformEv
 module: ov089
 addr: 0x02131f54
 size: 304 bytes

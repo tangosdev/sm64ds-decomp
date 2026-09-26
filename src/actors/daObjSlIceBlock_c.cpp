@@ -38,21 +38,13 @@ extern char data_ov027_02113be0[];
 extern int DecIfAbove0_Short(void*);
 extern int DecIfAbove0_Byte(void*);
 extern int _Z14ApproachLinearRiii(int*, int, int);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void*, void*);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int, unsigned int, unsigned int, void*, unsigned int);
-extern int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, void*, void*, int, int);
-int _ZN5Model8LoadFileER13SharedFilePtr(void *);
-int _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *);
-int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, int, int, int);
-void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *);
-void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
 void *, int, void *, int, int, void *);
 void func_020393d4(int *p, int v);
 /* data_ov027_02113be8 is already declared above as char[]; keeping that FIRST
  * declaration and casting where a word is read. */
 extern char data_ov027_02113108[];
-extern int _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_[];
 }
 
 /* Emission order is ROM order: the destructor pair must stay first.
@@ -128,7 +120,7 @@ int daObjSlIceBlock_c::Behavior()
       }
       unsigned char cnt = mNumToBigIce;
       mDelayTimer = (cnt + 1) * 0x14;
-      _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x5d, spawnType, &pos, ((char *)this)+0x8c, mAreaId, -1);
+      dActor_c::Spawn(0x5d, spawnType, *(Vector3 *)&pos, (Vector3_16 *)(((char *)this)+0x8c), mAreaId, -1);
     }
   }
   return 1;
@@ -137,12 +129,12 @@ int daObjSlIceBlock_c::Behavior()
 // @symbol _ZN17daObjSlIceBlock_c13InitResourcesEv
 int daObjSlIceBlock_c::InitResources()
 {
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov027_02113be8);
-    _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov027_02113be0);
+    Model::LoadFile(*(SharedFilePtr *)data_ov027_02113be8);
+    dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov027_02113be0);
 
     int on = (actorID == 0x5d);
     if (on) {
-        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, ((int *)data_ov027_02113be8)[1], 1, -1) == 0)
+        if (mModel.SetFile(((BMD_File **)data_ov027_02113be8)[1], 1, -1) == 0)
             return 0;
         UpdateModelPosAndRotY();
         UpdateClsnPosAndRot();
@@ -150,7 +142,7 @@ int daObjSlIceBlock_c::InitResources()
             &mMeshCollider, *(int *)(data_ov027_02113be0 + 4), &mClsnMat,
             0x1000, mAngleY, data_ov027_02113108);
         func_020393d4((int *)&mMeshCollider,
-            (int)_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+            (int)&dBgW::UpdatePosWithVelocity);
         mMeshCollider.unk_4c = 0;
         mMeshCollider.Enable(this);
         mHorzSpeed = 0x2d000;

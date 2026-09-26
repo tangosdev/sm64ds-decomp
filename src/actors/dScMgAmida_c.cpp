@@ -35,7 +35,6 @@ extern u32  LoadCompressedFileAt(u16 fileID, void *target);
 extern int  LoadFile(int handle);
 extern void _ZN3G2x13SetBlendAlphaEPVttttj(void *p, u16 a, u16 b, u16 c, u16 d);
 extern void SetSubBg2Offset(int a, int b);
-extern void *_ZN7fBase_cnwEj(unsigned int sz);
 extern void __cxa_vec_ctor(void *obj, int a, int b, void *cb1, void *cb2);
 extern void func_0203d738(void *p);
 

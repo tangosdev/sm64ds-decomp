@@ -95,6 +95,10 @@
 #include "types.h"
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
+#include "SaveData.h"
+#include "Message.h"
+#include "Player.h"
+#include "Camera.h"
 
 struct C;
 typedef int (C::*PMF)();
@@ -155,7 +159,6 @@ extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_
 extern void func_0200d8c8(void *cam, void *v, int strength);
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
-extern void _ZN8dActor_c17HugeLandingDustAtER7Vector3b(void *self, void *v, int b);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 extern void *data_0209f318;
 extern struct Matrix4x3 data_020a0e68;
@@ -165,42 +168,21 @@ extern Fix12i Vec3_HorzLen(Vec3 *v);
 extern short data_02082214[];
 extern u16 data_0209e650;
 extern u16 DecIfAbove0_Short(void* p);
-extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov073_0211f494(void *pa, void *pb);
-extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void* c, void* clsn, void* player);
 extern void func_02012694(int a, void* b);
 extern int RandomIntInternal(u16* seed);
-extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3* v, void* rot, s32 e, s32 f);
-extern int _ZN8SaveData19IsCharacterUnlockedEj(u32 id);
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, Fix12i f, u32 b, u32 c, u32 d);
 extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void* thiz, struct BCA_File* f, int i, int j, Fix12i fx, u16 k);
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void _Z14ApproachLinearRiii(int* p, int t, int s);
-extern void _ZN7Message7EndTalkEv(void);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
-extern short _ZN8dActor_c18HorzAngleToCPlayerEv(void* self);
-extern void* _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void* prev);
-extern void _ZN8dActor_c10PoofDustAtERK7Vector3(void* self, void* pos);
-extern void _ZN7fBase_c18MarkForDestructionEv(void* self);
-extern void* _ZN8dActor_c13ClosestPlayerEv(void* actor);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, struct Vector3* v, unsigned int d);
-extern void _ZN6Camera9SetLookAtERK7Vector3(void* cam, struct Vector3* v);
-extern void _ZN6Camera6SetPosERK7Vector3(void* cam, struct Vector3* v);
-extern int _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);
-extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msg, const struct Vector3* pos, unsigned int a, unsigned int b);
 extern void _Z14ApproachLinearRsss(short* a, short b, short c);
 extern s16 Vec3_VertAngle(const void* a, const void* b);
-extern void _ZN6Player12Unk_020c6a10Ej(void* self, u32 a);
-extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
 extern void func_ov073_0211f2c0(void *self, int strength);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
 extern int func_ov073_0211f61c(void *c);
 extern void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int a, int b, int c);
-extern int _ZN9Animation8FinishedEv(void* anim);
-extern int _ZN8dActor_c13DistToCPlayerEv(void *self);
-extern int _ZN6Player12GetHurtStateEv(void *self);
-extern int _ZNK9Animation12WillHitFrameEi(void *self, int f);
-extern int _ZN6Player12GetTalkStateEv(void* self);
 extern void Vec3_Asr(Vec3* d, Vec3* s, int sh);
 extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
@@ -289,7 +271,7 @@ void func_ov073_0211f2c0(void *self, int strength)
     dv.x = x;
     dv.y = y;
     dv.z = z;
-    _ZN8dActor_c17HugeLandingDustAtER7Vector3b(c, &dv, 1);
+    ((dActor_c *)c)->HugeLandingDustAt(*(Vector3 *)&dv, 1);
     return;
   }
   pv.x = *((int *) (c + 0x5c));
@@ -405,7 +387,7 @@ extern "C" s32 func_ov073_0211f61c(void* self)
     id = *(u32*)(c + 0x134);
     if (id == 0)
         return 0;
-    target = _ZN8dActor_c10FindWithIDEj(id);
+    target = dActor_c::FindWithID(id);
     if (!target)
         return 0;
 
@@ -436,7 +418,7 @@ extern "C" s32 func_ov073_0211f61c(void* self)
             }
             if (hit == 0) {
                 if ((*(s32*)(c + 0x130) & 0x70) || (*(u8*)((char*)target + 0x6f9) != 0)
-                    || (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x110, target) != 0)) {
+                    || (((dActor_c *)c)->JumpedOnByPlayer(*(dCc_c *)(c + 0x110), *(Player *)target) != 0)) {
                     func_ov073_0211f494(c, c);
                     *(s32*)(c + 0x98) = 0x20000;
                     hit = 1;
@@ -474,7 +456,7 @@ extern "C" s32 func_ov073_0211f61c(void* self)
             i = 0;
             if (count > 0) {
                 do {
-                    void* actor = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x120, 0, &v, 0, *(s8*)(c + 0xcc), -1);
+                    void* actor = dActor_c::Spawn(0x120, 0, v, 0, *(s8*)(c + 0xcc), -1);
                     if (actor != 0) {
                         rnd = RandomIntInternal(&data_0209e650);
                         shortY = ((s32)((((u32)rnd >> 8) & 0xf) << 0x1c)) >> 0x10;
@@ -482,10 +464,10 @@ extern "C" s32 func_ov073_0211f61c(void* self)
                         *(s16*)((char*)actor + 0x94) = (s16)shortY;
                         *(s16*)((char*)actor + 0x96) = 0;
                         *(s32*)((char*)actor + 0x98) = 0xa000;
-                        if (_ZN8SaveData19IsCharacterUnlockedEj(2) != 0) {
+                        if (SaveData::IsCharacterUnlocked(2) != 0) {
                             *(s32*)(void*)(int)(c + 0x4c0) += 1;
                             if (*(s32*)(c + 0x4c0) > 0x1e) {
-                                void* actor2 = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x115, 0, &v, 0, *(s8*)(c + 0xcc), -1);
+                                void* actor2 = dActor_c::Spawn(0x115, 0, v, 0, *(s8*)(c + 0xcc), -1);
                                 if (actor2 != 0) {
                                     *(s16*)((char*)actor2 + 0x92) = 0;
                                     *(s16*)((char*)actor2 + 0x94) = (s16)shortY;
@@ -558,7 +540,7 @@ int func_ov073_0211fa74(char* c) {
     pos.x = *(int*)(c + 0x3d8);
     pos.y = *(int*)(c + 0x3dc);
     pos.z = *(int*)(c + 0x3e0);
-    _ZN7Message7EndTalkEv();
+    Message::EndTalk();
     _ZN5Sound22StopLoadedMusic_Layer3Ev();
     func_02011cfc();
     _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0x15666);
@@ -571,11 +553,11 @@ int func_ov073_0211fa74(char* c) {
         rot.x = b ? a : a;
         rot.y = b;
         rot.z = *(unsigned short*)(c + 0x90);
-        rot.y = (unsigned short)_ZN8dActor_c18HorzAngleToCPlayerEv(c);
+        rot.y = (unsigned short)((dActor_c *)c)->HorzAngleToCPlayer();
     }
 
-    spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x11a, 4, &pos, 0, *(signed char*)(c + 0xcc), -1);
-    found = _ZN8dActor_c15FindWithActorIDEjPS_(0x13d, 0);
+    spawned = dActor_c::Spawn(0x11a, 4, pos, 0, *(signed char*)(c + 0xcc), -1);
+    found = dActor_c::FindWithActorID(0x13d, 0);
     func_02012694(0xbb, c + 0x74);
     if (found != 0) {
         struct Vector3 fp;
@@ -583,12 +565,12 @@ int func_ov073_0211fa74(char* c) {
         fp.x = *(int*)pv;
         fp.y = *(int*)(pv + 4);
         fp.z = *(int*)(pv + 8);
-        _ZN8dActor_c10PoofDustAtERK7Vector3(c, &fp);
-        _ZN7fBase_c18MarkForDestructionEv(found);
+        ((dActor_c *)c)->PoofDustAt(fp);
+        ((fBase_c *)found)->MarkForDestruction();
     }
     if (spawned != 0) {
         *(int*)(((int)cam + 0x154)) &= ~8;
-        _ZN7fBase_c18MarkForDestructionEv(c);
+        ((fBase_c *)c)->MarkForDestruction();
     }
 end:
     return 1;
@@ -611,7 +593,7 @@ int func_ov073_0211fbf4(char* c){
   *(unsigned int*)(c+0x500) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int*)(c+0x500), 3, 0x170, (struct Vector3 *)(c+0x74), 0);
   _ZN6Camera9SetFlag_3Ev(data_0209f318);
   func_ov073_0211f144(c);
-  if(_ZN6Player12GetTalkStateEv(pl) == -1){
+  if(((Player *)pl)->GetTalkState() == -1){
     ChiefChilly_ChangeState((C *)(c), (PMF *)(data_ov073_02123370));
   }
   return 1;
@@ -634,7 +616,7 @@ int func_ov073_0211fc78(char* c) {
     void* player;
     void* cam;
 
-    player = _ZN8dActor_c13ClosestPlayerEv(c);
+    player = ((dActor_c *)c)->ClosestPlayer();
     *(unsigned int*)(c + 0x500) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int*)(c + 0x500), 3, 0x170, (struct Vector3*)(c + 0x74), 0);
     if (player == 0) return 1;
 
@@ -673,8 +655,8 @@ int func_ov073_0211fc78(char* c) {
     ps.y = ps.y + 0x200000;
     ps.z = ps.z + out.z;
 
-    _ZN6Camera9SetLookAtERK7Vector3(cam, &la);
-    _ZN6Camera6SetPosERK7Vector3(cam, &ps);
+    ((Camera *)cam)->SetLookAt(la);
+    ((Camera *)cam)->SetPos(ps);
 
     if (player != 0) {
         int msg;
@@ -682,9 +664,9 @@ int func_ov073_0211fc78(char* c) {
         msg = (short)(*(int*)((char*)*(void**)(c + 0x3e4) + 8) + 0xe7);
         _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x14, 0x15666);
         _ZN7Message11PrepareTalkEv();
-        if (_ZN6Player9StartTalkER7fBase_cb(*(void**)(c + 0x3e4), c, 1)) {
+        if ((*(Player **)(c + 0x3e4))->StartTalk(*(fBase_c *)c, 1)) {
             _ZN6Camera9SetFlag_3Ev(cam);
-            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(c + 0x3e4), c, msg, &msgpos[1], 0, 2)) {
+            if ((*(Player **)(c + 0x3e4))->ShowMessage(*(fBase_c *)c, msg, &msgpos[1], 0, 2)) {
                 func_02012694(0x12a, (void*)(c + 0x74));
                 ChiefChilly_ChangeState((C *)(c), (PMF *)(&data_ov073_02123410));
             }
@@ -711,11 +693,11 @@ int func_ov073_0211fe8c(char* c) {
 
     *(unsigned int*)(c + 0x500) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int*)(c + 0x500), 3, 0x170, (struct Vector3*)(c + 0x74), 0);
 
-    player = _ZN8dActor_c13ClosestPlayerEv(c);
+    player = ((dActor_c *)c)->ClosestPlayer();
     if (player != 0 && *(unsigned char*)((char*)player + 0x6de) == 0) {
         int angle;
-        _ZN6Player9StartTalkER7fBase_cb(player, c, 1);
-        angle = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
+        ((Player *)player)->StartTalk(*(fBase_c *)c, 1);
+        angle = ((dActor_c *)c)->HorzAngleToCPlayer();
         *(short*)((char*)player + 0x8c) = 0;
         *(short*)((char*)player + 0x8e) = angle + 0x8000;
         *(short*)((char*)player + 0x90) = 0;
@@ -746,8 +728,8 @@ int func_ov073_0211fe8c(char* c) {
     pos.x = pos.x + out.x;
     pos.z = pos.z + out.z;
 
-    _ZN6Camera9SetLookAtERK7Vector3(cam, &look);
-    _ZN6Camera6SetPosERK7Vector3(cam, &pos);
+    ((Camera *)cam)->SetLookAt(look);
+    ((Camera *)cam)->SetPos(pos);
 
     if (*(unsigned short*)(c + 0x100) == 0) {
         ChiefChilly_ChangeState((C *)(c), (PMF *)(&data_ov073_021233e0));
@@ -827,13 +809,13 @@ int func_ov073_021200e0(u8* thiz)
         if (*(int*)(thiz + 0xa8) < 0) {
             int id = *(int*)(thiz + 0x134);
             if (id != 0) {
-                void* actor = _ZN8dActor_c10FindWithIDEj((u32)id);
+                void* actor = dActor_c::FindWithID((u32)id);
                 if (actor != 0) {
                     enum Bool eq = (enum Bool)(*(u16*)((u8*)actor + 0xc) == 0xbf);
                     if (eq != FALSE) {
                         Vec3 pos = *(Vec3*)((u8*)actor + 0x5c);
                         if (*(int*)(thiz + 0x60) > pos.y) {
-                            _ZN6Player12Unk_020c6a10Ej(actor, 1);
+                            ((Player *)actor)->Unk_020c6a10(1);
                         }
                     }
                 }
@@ -841,7 +823,7 @@ int func_ov073_021200e0(u8* thiz)
         }
     }
     /* 0x1a8 */
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(thiz + 0x150) != 0) {
+    if (((dBgCh_Actr *)(thiz + 0x150))->IsOnGround() != 0) {
         if (*(int*)(thiz + 0x4b4) == 0) {
             *(int*)(thiz + 0x98) = 0;
             *(int*)(thiz + 0xa4) = 0;
@@ -931,7 +913,7 @@ mainblock:
         *(int *)(c + 0xa4) = out[0];
         *(int *)(c + 0xac) = out[2];
     }
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x150) != 0) {
+    if (((dBgCh_Actr *)(c + 0x150))->IsOnGround() != 0) {
         *(unsigned char *)(c + 0x4c5) = *(unsigned char *)(c + 0x4c4);
         *(int *)(c + 0x98) = 0;
         *(int *)(c + 0xa4) = 0;
@@ -1014,7 +996,7 @@ extern "C" {
             }
             *(int *)(c + 0xac) = out[2];
         }
-        if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x150) != 0) {
+        if (((dBgCh_Actr *)(c + 0x150))->IsOnGround() != 0) {
             *(unsigned char *)(c + 0x4c5) = *(unsigned char *)(c + 0x4c4);
             *(int *)(c + 0x98) = 0;
             *(int *)(c + 0xa4) = 0;
@@ -1048,7 +1030,7 @@ int func_ov073_02120844(int *t)
 {
     _Z14ApproachLinearRsss((short *)((char*)t + 0x8c), -0x4000, 0x400);
     t[0x140] = _ZN5Sound8PlayLongEjjjRK7Vector3s(t[0x140], 3, 0x170, (struct Vector3 *)((char*)t + 0x74), 0);
-    if (t[0xf7] > t[0x18] && _ZNK10dBgCh_Actr10IsOnGroundEv((char*)t + 0x150)) {
+    if (t[0xf7] > t[0x18] && ((dBgCh_Actr *)((char*)t + 0x150))->IsOnGround()) {
         func_ov073_0211f2c0(t, 0x7d0000);
         func_02012694(0x16c, (char*)t + 0x74);
         t[0x26] = 0;
@@ -1146,7 +1128,7 @@ extern "C" {
 int func_ov073_02120b78(char* c){
     _Z14ApproachLinearRsss((short*)(c+0x8c), -0x4000, 0x400);
     if(*(int*)(c+0x3dc) > *(int*)(c+0x60)){
-        if(_ZNK10dBgCh_Actr10IsOnGroundEv(c+0x150)){
+        if(((dBgCh_Actr *)(c+0x150))->IsOnGround()){
             func_ov073_0211f2c0(c, 0xfa0000);
             *(int*)(c+0x98) = 0;
             *(short*)(c+0x94) = Vec3_HorzAngle((const Vector3 *)(c+0x5c), (const Vector3 *)(c+0x3d8));
@@ -1196,7 +1178,7 @@ extern "C" int func_ov073_02120c7c(CB* c)
         return 1;
     }
     _Z14ApproachLinearRiii(&c->field_98, 0, 0x1000);
-    if (_ZN9Animation8FinishedEv(&c->anim_35c)) {
+    if (((Animation *)&c->anim_35c)->Finished()) {
         int b = c->field_98; if (b < 0) b = -b;
         if (b < 0xa) {
             c->field_98 = 0;
@@ -1220,7 +1202,7 @@ int func_ov073_02120d80(char *c)
     t = 0;
     _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(c + 0x30c, data_ov073_021232a8[1], 4, 0x40000000, fix, t);
     *(int *)(c + 0x368) = fix;
-    ang = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
+    ang = ((dActor_c *)c)->HorzAngleToCPlayer();
     *(short *)(c + 0x94) = ang;
     *(short *)(((int)c + 0x94)) =
         (short)((int)*(short *)(((int)c + 0x94)) + 0x8000);
@@ -1269,7 +1251,7 @@ int func_ov073_02120ed0(void *self)
     switch (c[0x4c8]) {
     case 0:
         if (*(u16 *)(c + 0x100) == 0) {
-            *(s16 *)(c + 0x4c6) = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
+            *(s16 *)(c + 0x4c6) = ((dActor_c *)c)->HorzAngleToCPlayer();
             *(int *)(c + 0x4b4) = 0;
             if (AngleDiff(*(s16 *)(c + 0x94), *(s16 *)(c + 0x4c6)) <= 0x2000) {
                 *(s16 *)(c + 0x100) = 0x1e;
@@ -1284,7 +1266,7 @@ int func_ov073_02120ed0(void *self)
         } else {
             _Z14ApproachLinearRiii((int *)(c + 0x98), 0x1e000, 0x3000);
             if (*(int *)(c + 0x4b4) == 0) {
-                if (_ZN8dActor_c13DistToCPlayerEv(c) < 0x1f4000) {
+                if (((dActor_c *)c)->DistToCPlayer() < 0x1f4000) {
                     *(int *)(c + 0x4b4) = 1;
                     if ((((unsigned int)RandomIntInternal(&data_0209e650) >> 0x18) & 7) == 0) {
                         c[0x4c8] = 3;
@@ -1328,7 +1310,7 @@ int func_ov073_02120ed0(void *self)
         }
         _Z14ApproachLinearRiii((int *)(c + 0x98), 0, *(int *)(c + 0x4d0));
         if (c[0x4c8] == 1) {
-            *(s16 *)(c + 0x4c6) = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
+            *(s16 *)(c + 0x4c6) = ((dActor_c *)c)->HorzAngleToCPlayer();
             _Z14ApproachLinearRsss((s16 *)(c + 0x8e), *(s16 *)(c + 0x4c6), 0x500);
         }
         d = *(int *)(c + 0x98);
@@ -1336,17 +1318,17 @@ int func_ov073_02120ed0(void *self)
         if (d >= 0xa) break;
         if (*(u16 *)(c + 0x100) != 0) break;
         if (c[0x4c8] == 2) {
-            u8 *p = (u8 *)_ZN8dActor_c13ClosestPlayerEv(c);
+            u8 *p = (u8 *)((dActor_c *)c)->ClosestPlayer();
             if (p != 0) {
                 int t;
-                if (_ZN6Player12GetHurtStateEv(p) == 4) goto hz;
-                if (_ZN6Player12GetHurtStateEv(p) == 5) goto hz;
+                if (((Player *)p)->GetHurtState() == 4) goto hz;
+                if (((Player *)p)->GetHurtState() == 5) goto hz;
                 t = p[0x709] ? 1 : 0;
                 if (t == 1) {
 hz:
                     *(s16 *)(c + 0x4c6) = Vec3_HorzAngle((Vector3 *)(c + 0x5c), (Vector3 *)(c + 0x3d8));
                 } else {
-                    *(s16 *)(c + 0x4c6) = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
+                    *(s16 *)(c + 0x4c6) = ((dActor_c *)c)->HorzAngleToCPlayer();
                 }
             }
         }
@@ -1363,8 +1345,8 @@ hz:
     }
 
     if (c[0x4c8] == 0) {
-        if (_ZNK9Animation12WillHitFrameEi(c + 0x35c, 0) != 0 ||
-            _ZNK9Animation12WillHitFrameEi(c + 0x35c, 0xe) != 0) {
+        if (((Animation *)(c + 0x35c))->WillHitFrame(0) != 0 ||
+            ((Animation *)(c + 0x35c))->WillHitFrame(0xe) != 0) {
             func_ov073_0211f2c0(c, 0x3e8000);
             func_02012694(0x168, c + 0x74);
         }
@@ -1411,10 +1393,10 @@ int func_ov073_0212128c(char* c)
     ps.y = ps.y + 0x20000;
     ps.z = ps.z + 0xffa34000;
 
-    _ZN6Camera9SetLookAtERK7Vector3(cam, &la);
-    _ZN6Camera6SetPosERK7Vector3(cam, &ps);
+    ((Camera *)cam)->SetLookAt(la);
+    ((Camera *)cam)->SetPos(ps);
 
-    if (_ZN6Player12GetTalkStateEv(player) == -1) {
+    if (((Player *)player)->GetTalkState() == -1) {
         *(int*)(((int)cam + 0x154)) &= ~8;
         _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);
         func_02011d08();
@@ -1444,7 +1426,7 @@ int func_ov073_02121388(char* c) {
     int msg;
     char* p;
 
-    player = _ZN8dActor_c13ClosestPlayerEv(c);
+    player = ((dActor_c *)c)->ClosestPlayer();
     if (player == 0) return 1;
 
     {
@@ -1472,8 +1454,8 @@ int func_ov073_02121388(char* c) {
     ps.y = ps.y + 0x20000;
     ps.z = ps.z + 0xffa34000;
 
-    _ZN6Camera9SetLookAtERK7Vector3(cam, &la);
-    _ZN6Camera6SetPosERK7Vector3(cam, &ps);
+    ((Camera *)cam)->SetLookAt(la);
+    ((Camera *)cam)->SetPos(ps);
 
     vmsg.y = vmsg.y + 0x64000;
     _Z14ApproachLinearRsss((short*)(c + 0x94), Vec3_HorzAngle((struct Vector3*)(c + 0x5c), &vplayer), 0x800);
@@ -1481,13 +1463,13 @@ int func_ov073_02121388(char* c) {
     *(void**)(c + 0x3e4) = player;
     p = *(char**)(c + 0x3e4);
     msg = (short)(*(int*)(p + 8) + 0xe3);
-    if (_ZN6Player9StartTalkER7fBase_cb(p, c, 1)) {
+    if (((Player *)p)->StartTalk(*(fBase_c *)c, 1)) {
         if (*(unsigned char*)(c + 0x4c8) == 0) {
             _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2c);
             *(unsigned char*)(c + 0x4c8) = 0;
         }
 
-        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(c + 0x3e4), c, msg, &vmsg, 0, 2)) {
+        if ((*(Player **)(c + 0x3e4))->ShowMessage(*(fBase_c *)c, msg, &vmsg, 0, 2)) {
             func_02012694(0x12a, c + 0x74);
             ChiefChilly_ChangeState((C *)(c), (PMF *)(data_ov073_02123350));
         }

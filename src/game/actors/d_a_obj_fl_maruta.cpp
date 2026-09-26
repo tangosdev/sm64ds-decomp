@@ -46,9 +46,6 @@ extern "C" {
    parameters (Fix12<int>), which mwccarm passes differently at the call site,
    so declaring the true types breaks the byte match. */
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN8dActor_c9UpdatePosEP5dCc_c(void *a, dCc_c *c);
-void _ZN5dCc_c5ClearEv(void *c);
-void _ZN5dCc_c6UpdateEv(void *c);
 unsigned int _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
     unsigned int a, unsigned int b, Fix12i c, Fix12i d, Fix12i e, const Vector3_16f *f);
 void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
@@ -59,10 +56,8 @@ void func_020393a4(dBgW_KcMbg *p, int v);
 extern int data_ov022_02112c98[];
 
 /* Shared by the two flame helpers below. */
-int _ZN7fBase_c18MarkForDestructionEv(void *c);
 int RandomIntInternal(int *seed);
 extern int data_0209e650;
-void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 void func_ov022_02112654(char *c);
 
 }
@@ -130,12 +125,12 @@ daObj_volcanoCannon_c::~daObj_volcanoCannon_c()
 extern "C" void func_ov022_02112654(char *c)
 {
     if (*(unsigned int *)(c + 0xf8) == 0) return;
-    void *a = _ZN8dActor_c10FindWithIDEj(*(unsigned int *)(c + 0xf8));
+    void *a = dActor_c::FindWithID(*(unsigned int *)(c + 0xf8));
     if (a == 0) return;
     unsigned int b = ((dActor_c *)a)->actorID == 0xbf;
     if (b == 0) return;
     ((Player *)a)->Burn();
-    _ZN7fBase_c18MarkForDestructionEv(c);
+    ((fBase_c *)c)->MarkForDestruction();
 }
 
 // @symbol func_ov022_021126ac
@@ -146,12 +141,12 @@ extern "C" int func_ov022_021126ac(char *c)
     int a = *(int *)(c + 0x60);
     int b = *(int *)(c + 0x118);
     if (a < b) {
-        _ZN7fBase_c18MarkForDestructionEv(c);
+        ((fBase_c *)c)->MarkForDestruction();
         return 1;
     }
     unsigned short h = *(unsigned short *)(c + 0x100 + 0x10);
     if (h == 0) {
-        _ZN7fBase_c18MarkForDestructionEv(c);
+        ((fBase_c *)c)->MarkForDestruction();
         return 1;
     }
     func_ov022_02112654(c);

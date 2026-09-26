@@ -48,19 +48,11 @@ void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int)
 int func_02012694(int, const Vector3 &);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 void _Z14ApproachLinearRiii(int *p, int a, int b);
-void _ZN8dActor_c9UpdatePosEP5dCc_c(void *a, void *clsn);
 extern short data_02082214[];
 extern int data_02092138;
 extern int data_ov073_021234a0;
 int _Z14ApproachLinearRsss(short &v, short a, short b);
-void _ZN7fBase_c18MarkForDestructionEv(void *a);
-char *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, char *t);
-void _ZN8dActor_c10PoofDustAtERK7Vector3(void *self, const Vector3 &vec);
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3 &pos);
-void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
-int _ZN5Model8LoadFileER13SharedFilePtr(int);
-int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, int, int, int);
-int _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(int);
 int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *, int, void *, int, short, int);
 void func_020393d4(void *, void *);
@@ -76,7 +68,6 @@ int func_ov073_021227d0(void *, void *, void *);
 void Matrix4x3_FromRotationXYZExt(void *, int, int, int);
 }
 
-extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_[];
 
 // @symbol _ZN13daObjEwbIce_cD1Ev
 // @symbol _ZN13daObjEwbIce_cD0Ev
@@ -133,7 +124,7 @@ extern "C" int func_ov073_021220c0(char *c)
     }
     *(short *)(c + 0x8c) = 0;
     *(int *)(c + 0x9c) = -0xa000;
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
+    ((dActor_c *)c)->UpdatePos(0);
     if (*(unsigned char *)(c + 0x32c) != 0) goto end;
     {
         int v = data_02092138 + 0x96000;
@@ -160,7 +151,7 @@ extern "C" int func_ov073_021221e0(char *c)
 extern "C" int func_ov073_02122200(char *thiz)
 {
     char *c = thiz;
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
+    ((dActor_c *)c)->UpdatePos(0);
     if (*(unsigned short *)(c + 0x330) < 0x18d) {
         *(int *)(c + 0x9c) = 0;
         *(int *)(c + 0xa8) = 0;
@@ -173,7 +164,7 @@ extern "C" int func_ov073_02122200(char *thiz)
     }
     if (DecIfAbove0_Short((unsigned short *)(c + 0x330)) == 0 ||
         data_02092138 - 0xc8000 > *(int *)(c + 0x60)) {
-        _ZN7fBase_c18MarkForDestructionEv(c);
+        ((fBase_c *)c)->MarkForDestruction();
     }
     return 1;
 }
@@ -192,7 +183,7 @@ extern "C" int func_ov073_021222c8(void *c)
 extern "C" int func_ov073_021222ec(char *c)
 {
     if (DecIfAbove0_Short((unsigned short *)(c + 0x330)) == 1) {
-        char *a = _ZN8dActor_c15FindWithActorIDEjPS_(0xda, 0);
+        char *a = (char *)dActor_c::FindWithActorID(0xda, 0);
         if (a != 0) {
             switch (*(u16 *)(c + 0xc)) {
             case 0xaa:
@@ -250,7 +241,7 @@ void daObjEwbIce_c::Kill()
     ((int *)&vec2)[0] = ((int *)&vec)[0];
     ((int *)&vec2)[1] = ((int *)&vec)[1];
     ((int *)&vec2)[2] = ((int *)&vec)[2];
-    _ZN8dActor_c10PoofDustAtERK7Vector3(c, vec2);
+    ((dActor_c *)c)->PoofDustAt(vec2);
     _ZN5Sound9PlayBank3EjRK7Vector3(0x41, *(Vector3 *)(c + 0x74));
 }
 
@@ -292,7 +283,7 @@ int daObjEwbIce_c::Behavior()
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
     mModel.mat4x3.t.z = mPosZ >> 3;
-    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
+    UpdateClsnPosAndRot();
     return 1;
 }
 
@@ -322,22 +313,22 @@ int daObjEwbIce_c::InitResources()
     }
 
     idx = mVariant;
-    f = _ZN5Model8LoadFileER13SharedFilePtr(*(int *)(data_ov073_021231bc + idx * 0xc));
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, f, 1, -1);
+    f = (int)Model::LoadFile(**(SharedFilePtr **)(data_ov073_021231bc + idx * 0xc));
+    mModel.SetFile((BMD_File *)f, 1, -1);
     Matrix4x3_FromRotationXYZExt(((char *)this) + 0xf0, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
     mModel.mat4x3.t.z = mPosZ >> 3;
-    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
+    UpdateClsnPosAndRot();
 
     {
         unsigned char i = mVariant;
-        f = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(int *)(data_ov073_021231c0 + i * 0xc));
+        f = (int)dBgW_Kc::LoadFile(**(SharedFilePtr **)(data_ov073_021231c0 + i * 0xc));
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             ((char *)this) + 0x124, f, ((char *)this) + 0x2ec, 0x1000, mAngleY, *(int *)(data_ov073_021231c4 + i * 0xc));
     }
 
-    func_020393d4(((char *)this) + 0x124, _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+    func_020393d4(((char *)this) + 0x124, (void *)&dBgW::UpdatePosWithTransform);
     func_020393c4(((char *)this) + 0x124, func_ov073_021227d0);
     ((dBgW *)(((char *)this) + 0x124))->Enable((dActor_c *)(((char *)this)));
 

@@ -6,7 +6,7 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "tu_map unit ov089/daObjKey_c is 0x02130f00..0x021327d0 and starts at D1. The unmatched func_ov089_0213162c (0x0213162c, no complete marker) sits between the destructors and this run, so the licensed span is only the complete side 0x02131b18..0x021327d0, ten functions. D1, D0, UnloadKeyModels, LoadKeyModels and the unmatched hole stay shards."
+    "tu_map unit ov089/daObjKey_c is 0x02130f00..0x021327d0 and starts at D1. The not complete-enrolled func_ov089_0213162c (0x0213162c, no complete marker) sits between the destructors and this run, so the licensed span is only the complete side 0x02131b18..0x021327d0, ten functions. D1, D0, UnloadKeyModels, LoadKeyModels and the not complete-enrolled hole stay shards."
   ],
   "sections": [
     {
@@ -17,7 +17,7 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov089_02131b18",
+      "symbol": "_ZN10daObjKey_c9StateDropEv",
       "address": "0x02131b18",
       "size": "0x000002b4",
       "legacy_source": "src/func_ov089_02131b18.c",
@@ -52,7 +52,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_ov089_02131f54",
+      "symbol": "_ZN10daObjKey_c20UpdateModelTransformEv",
       "address": "0x02131f54",
       "size": "0x00000130",
       "legacy_source": "src/func_ov089_02131f54.cpp",
@@ -90,7 +90,8 @@
   "data": [],
   "bss": [],
   "notes": [
-    "Stripped from the tubuild candidate before verify. Destructors are not in this file. The next function, daObjKey_c_classInit_LAST_STAR at 0x021327d0, is not absorbed."
+    "Stripped from the tubuild candidate before verify. Destructors are not in this file. The next function, daObjKey_c_classInit_LAST_STAR at 0x021327d0, is not absorbed.",
+    "Two functions are members under coined names, their ov089 symbols.txt rows renamed in place: func_ov089_02131b18 is _ZN10daObjKey_c9StateDropEv (reached only through six of the eight state records, at 0x02132b00, 0x02132b08, 0x02132b10, 0x02132b20, 0x02132b28 and 0x02132b38) and func_ov089_02131f54 is _ZN10daObjKey_c20UpdateModelTransformEv. func_ov089_02131dcc and func_ov089_02131df4 keep C linkage because the func_ov089_021311c0 and func_ov089_0213162c shards call them by those names."
   ],
   "compiler_only_output": [
     {
@@ -98,7 +99,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "func_ov089_02131b18 declares a local Vector3, so this TU odr-uses inline ~Vector3. The cartridge's copy lives at arm9:0x020072c0, owned by src/_ZN7Vector3D1Ev.cpp; rombuild compares this object copy against those cartridge bytes before dropping it."
+      "reason": "StateDrop, Behavior and InitResources declare local Vector3s, so this TU odr-uses inline ~Vector3. The cartridge's copy lives at arm9:0x020072c0, owned by src/_ZN7Vector3D1Ev.cpp; rombuild compares this object copy against those cartridge bytes before dropping it."
     }
   ],
   "verification": {

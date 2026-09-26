@@ -70,18 +70,10 @@ extern SharedFilePtr data_ov090_0213452c;
 extern unsigned char data_0209f2d8;
 extern Matrix4x3 data_020a0e68;
 
-void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(
-    dCcAcPos_c *, const Vector3 &);
-Player *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
     Player *, const Vector3 &, unsigned int, Fix12i, unsigned int,
     unsigned int, unsigned int);
-void _ZN9Animation7AdvanceEv(void *a);
-void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-    u32 id, u32 a, const Vector3 &v, const Vector3_16 *r, int b, int c);
 void func_02012790(u32 a);
-void *_ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(
-    void *self, const Vector3 &v, u32 n, int b, u16 t, void *p);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Matrix4x3_FromTranslation(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
 void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
@@ -132,13 +124,12 @@ extern "C" void func_ov090_02132730(char *thiz)
     v.x = data_ov090_02134200.x;
     v.y = data_ov090_02134200.y;
     v.z = data_ov090_02134200.z;
-    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(
-        (dCcAcPos_c *)(c + 0x110), v);
+    ((dCcAcPos_c *)(c + 0x110))->SetPosRelativeToActor(v);
     {
         unsigned int id = *(unsigned int *)(c + 0x134);
         if (id == 0) return;
         {
-        Player *a = _ZN8dActor_c10FindWithIDEj(id);
+        Player *a = (Player *)dActor_c::FindWithID(id);
         int b = (int)(*(unsigned short *)((char *)a + 0xc) == 0xbf);
         if (b == 0) return;
         {
@@ -159,14 +150,14 @@ extern "C" int func_ov090_021327e4(char *c)
     Vector3 num1;
     Vector3 num2;
 
-    _ZN9Animation7AdvanceEv(c + 0x35c);
+    ((Animation *)(c + 0x35c))->Advance();
     func_ov090_02132730(c);
 
     if (*(int *)(c + 0x378) >= 5)
         goto Ldecay;
 
     if (*(u16 *)(c + 0x100) == 0) {
-        o = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
+        o = dActor_c::Spawn(
                 0xf4, 1, *(Vector3 *)(c + 0x39c), (Vector3_16 *)(c + 0x8c),
                 *(signed char *)(c + 0xcc), -1);
         if (o != 0) {
@@ -194,7 +185,7 @@ extern "C" int func_ov090_021327e4(char *c)
                 *(int *)(c + 0x378) += 1;
                 func_02012790(0x25);
                 num1 = *(Vector3 *)((char *)*(void **)(c + 0x3a8) + 0x5c);
-                _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(c, num1, *(int *)(c + 0x378), 0, 0, 0);
+                ((dActor_c *)c)->SpawnNumber(num1, *(int *)(c + 0x378), 0, 0, 0);
                 *(int *)(c + 0x3a8) = 0;
                 return 1;
             }
@@ -216,7 +207,7 @@ extern "C" int func_ov090_021327e4(char *c)
         *(int *)(c + 0x378) += 1;
         func_02012790(0x25);
         num2 = *(Vector3 *)((char *)*(void **)(c + 0x3a8) + 0x5c);
-        _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(c, num2, *(int *)(c + 0x378), 0, 0, 0);
+        ((dActor_c *)c)->SpawnNumber(num2, *(int *)(c + 0x378), 0, 0, 0);
         *(int *)(c + 0x3a8) = 0;
         return 1;
     }
@@ -229,7 +220,7 @@ Ldecay:
     if (*(int *)(c + 0x378) == 5) {
         *(int *)(c + 0x38c) += 1;
         if (*(int *)(c + 0x38c) > 0x1e) {
-            _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
+            dActor_c::Spawn(
                 0xb2, *(int *)(c + 0x388) | 0x40, *(Vector3 *)(c + 0x5c),
                 (Vector3_16 *)(c + 0x8c), *(signed char *)(c + 0xcc), -1);
             *(int *)(c + 0x378) = 0xa;
