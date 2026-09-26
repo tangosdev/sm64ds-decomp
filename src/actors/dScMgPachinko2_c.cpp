@@ -13,9 +13,12 @@
  * own push/pop bracket around the one member that needs it.
  *
  * Still raw: the helpers are unnamed in symbols.txt and reach the scene
- * through byte offsets; the offsets above 0x5260 are padding in
- * dScMgPachinko2_c.h. Where two helpers once named different views of the
- * scene alike, the later view carries its helper's address as a suffix.
+ * through byte offsets and the local views below. dScMgPachinko2_c.h types
+ * 0x5260..0x565f as the tail of mBalls[0x40], which those views read as
+ * other records; it names unk_5660, unk_566c and unk_566e, and only
+ * 0x5664..0x566b and 0x5670..0x567b are padding. Where two helpers once named
+ * different views of the scene alike, the later view carries its helper's
+ * address as a suffix.
  */
 
 #pragma defer_codegen off
@@ -27,16 +30,15 @@ namespace Sound {
     void PlayBank2_2D(unsigned int id);
 }
 
-/* The receiver the pointer-to-member tables dispatch on. The member type is
-   formed while C is still incomplete: the compiler picks the
-   pointer-to-member layout from that, and completing the class first changes
-   the code. */
+/* The receiver the pointer-to-member tables dispatch on. Measured under
+   2004/b56: completing C before the typedef, completing it as
+   { int dummy; }, or never completing it compiles to the same object. */
 struct C;
 typedef void (C::*PMF)(int);
 struct Entry { PMF pmf; };
 struct C { char pad[1]; };
 
-/* func_ov006_020ff47c's two score popups at 0x5620. */
+/* func_ov006_020ff47c's view of the two 0x20-byte entries at 0x5620. */
 struct E {
     int x;                  /* 0x00 */
     int y;                  /* 0x04 */
@@ -2236,9 +2238,8 @@ void func_ov006_02102f3c(char *base, int arg1)
         *(int *)(e + 0x670) = a << 12;
         *(int *)(e + 0x674) = b << 12;
         *(u8 *)(e + 0x69b) = 0;
-        arg1 = (int)e;
     }
-    ((void (*)(char *, int))func_ov006_02102864)(base, arg1);
+    func_ov006_02102864(base);
 }
 
 // @symbol func_ov006_02102fe8
