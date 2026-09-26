@@ -4275,7 +4275,12 @@ __ZN14dScMgD3DBase_c9Virtual84Ev                                         ?Virtua
 #    config/arm9/overlays/ov002/symbols.txt (daTree_c 0x020ec1d8); both flat
 #    bodies are defined in this link and neither decorated name is defined by
 #    anything else, so neither row can duplicate.
-__ZN4Toad8BehaviorEv                                                     ?Behavior@Toad@@UAEHXZ                                           0x02129878 F
+#    TOAD'S ROW IS REVERSE NOW (run linkfull lane SEATS3). The matched
+#    src/_ZN4Toad8BehaviorEv.cpp is on port/slice_gate205.txt and DEFINES
+#    ?Behavior@Toad@@UAEHXZ, so the vftable resolves to the ROM's own body and
+#    the host copy the forward face reached is retired. The face now defines
+#    the flat name and calls the member (the WallSign flip lane SMALLS2 made).
+__ZN4Toad8BehaviorEv                                                     ?Behavior@Toad@@UAEHXZ                                           0x02129878 R
 __ZN8daTree_c8BehaviorEv                                                 ?Behavior@daTree_c@@UAEHXZ                                       0x020ec1d8 F
 
 # ---- BATCH 9 (lane FACES4, wave 9c): the rows lane HALROWS settled by ADDRESS

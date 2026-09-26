@@ -54,15 +54,16 @@
 // bury a real override if one ever turned up; a [31] array is the ROM's
 // answer.
 //
-// ---- SLOT 6 IS NOT DECOMPILED ON EITHER CLASS -----------------------------
+// ---- SLOT 6 RUNS THE ROM'S OWN BODY ON BOTH CLASSES -----------------------
 //
-// Neither _ZN8WallSign8BehaviorEv (0x0212eea4, 0x30c) nor
-// _ZN4Toad8BehaviorEv (0x02129878, 0x204) exists in src/ in any form. Both are
-// HOST REIMPLEMENTATIONS written from the ROM, in
-// port/unmatched/Ov085_Behaviors.cpp, and both are queued as decomp crack
-// targets -- when the matched bodies land, the two functions come out of that
-// file and the slice takes the src TUs instead, with nothing here changing.
-// That file's header carries the derivation and the two convention hazards.
+// Both slot-6 bodies were once HOST REIMPLEMENTATIONS written from the ROM in
+// port/unmatched/Ov085_Behaviors.cpp, because src/ had neither. main has
+// matched both since, and both host bodies are retired:
+// _ZN8WallSign8BehaviorEv (0x0212eea4, 0x30c) by run linkfull lane SMALLS2,
+// through the generated reverse face for its flat name, and
+// _ZN4Toad8BehaviorEv (0x02129878, 0x204) by lane SEATS3, called below as the
+// member it is. That file keeps the record, including why Toad's ModelAnim
+// slot-3 call needs no host respelling any more.
 //
 // ---- SLOT 16 ON TOAD IS SPELLED HERE, THE SlideDecorationSilverStar CASE --
 //
@@ -146,8 +147,10 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
    assumed:
      183  InitResources / Render                 -> methods
      183  CleanupResources / D1 / D0             -> C names
-     185  CleanupResources                       -> method
-     185  InitResources / Render / D0            -> C names   */
+     185  CleanupResources / Behavior            -> methods
+     185  InitResources / Render / D0            -> C names
+   183's Behavior is a method too, reached through the generated reverse face
+   for its flat name (port/faces_sync.txt).  */
 #include "WallSign.h"
 #include "Toad.h"
 
@@ -177,14 +180,13 @@ void port_actor_render_probe(const char *cls, void *model); /* actor_classes */
 
 /* ---- WALL_SIGN (183), _ZTV8WallSign / _ZTV13daObjKanban_c 0x02130400 ----- */
 int _ZN8WallSign16CleanupResourcesEv(void);        /* slot 3, takes nothing */
-int _ZN8WallSign8BehaviorEv(void *self);           /* slot 6, HOST REIMPL   */
+int _ZN8WallSign8BehaviorEv(void *self);           /* slot 6, reverse face  */
 int *_ZN8WallSignD1Ev(int *self);                  /* slot 16 */
 int *_ZN8WallSignD0Ev(int *self);                  /* slot 17 */
 void *daObjKanban_c_classInit(void);                        /* the factory */
 
 /* ---- TOAD (185), _ZTV4Toad / _ZTV11daKinopio_c 0x0212feb8 ---------------- */
 int _ZN4Toad13InitResourcesEv(char *self);         /* slot 0  */
-int _ZN4Toad8BehaviorEv(void *self);               /* slot 6, HOST REIMPL   */
 int _ZN4Toad6RenderEv(char *self);                 /* slot 9  */
 int *_ZN4ToadD0Ev(int *self);                      /* slot 17 */
 void *daKinopio_c_classInit(void);                            /* the factory */
@@ -366,8 +368,10 @@ static int __fastcall td_init(void *s, void *)
 { return _ZN4Toad13InitResourcesEv((char *)s); }
 static int __fastcall td_clean(void *s, void *)
 { return ((Toad *)s)->Toad::CleanupResources(); }
+/* the matched src/_ZN4Toad8BehaviorEv.cpp, the ROM's own body (run linkfull
+   lane SEATS3; the host reimplementation it replaces is retired) */
 static int __fastcall td_behavior(void *s, void *)
-{ return _ZN4Toad8BehaviorEv(s); }
+{ return ((Toad *)s)->Toad::Behavior(); }
 static int __fastcall td_render(void *s, void *)
 { port_actor_render_probe("TOAD", (char *)s + 0x108);
   return _ZN4Toad6RenderEv((char *)s); }
