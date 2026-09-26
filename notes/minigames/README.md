@@ -8,7 +8,7 @@ other notes go deeper:
 - [themes.md](themes.md) lists the readability rewrites that recur across the suite, with
   whether each is byte-proven.
 
-Every claim is tagged:
+Claims are tagged where the source matters:
 - **[ROM]**: read from RTTI, symbols or the cartridge bytes.
 - **[CODE]**: read from matched source in this tree.
 - **[GUESS]**: an inference that nothing has checked yet.
@@ -19,7 +19,7 @@ Every claim is tagged:
 |---|---|
 | arm9 | Entry and exit (`StartMinigameMenu`, `ExitMinigameMenu`), the scene-ID test `IsMinigameActorID`, `GetSceneOverlayID`, and the saved records (`SaveData::SaveMinigames`, `ReadMinigameData`, `SetDefaultValuesMg`). |
 | ov005 | `dScMiniGm_c`, the select menu (scene 5, profile `MINIGAME`). |
-| ov004 | `dScMgBase_c` and the runtime every game shares: the shared state machine, the pause menu `dMgPsOpt_c`, the HUD and sprite records, and the score functions. |
+| ov004 | `dScMgBase_c` and the runtime every game shares: the shared state machine, the pause menu and its `dMgPsOpt_c` options panel, the HUD and sprite records, and the score functions. |
 | ov006 | The 30 game scenes, the two intermediate bases, and their helper objects (`dMgCardObj_c`, `dMgTrmp*`, `cMgSmartball_*`, ...). |
 
 - ov005 and ov006 both load at 0x020bfec0, so the menu and a game are never resident at the same time. [ROM: both overlays' delinks]
@@ -49,15 +49,18 @@ fBase_c > dBase_c > dScene_c
    - The table has 36 rows for 30 scene IDs [ROM]. Six games appear twice, with different parameters.
 3. **Load the game.** An ID in 0x169..0x186 loads ov006 (and with it ov004), and the profile's factory builds the scene.
 4. **Play.** The scene runs until a quit from the pause menu, or an end-of-game state, fades back to scene 5.
-5. **Leave the menu.** `ExitMinigameMenu` returns to the rec room when the flag from step 1 is set, and to scene 1 otherwise.
+5. **Leave the menu.** When the flag from step 1 is set, `ExitMinigameMenu` loads level 0x32 at entrance 4 and fades to scene 3, the stage. Otherwise it fades to scene 1.
+   - [GUESS] Level 0x32 is the rec room.
 
 ## One frame [CODE]
 
 `fBase_c::Process` runs `Before*`, then the method itself, then `After*`. If `Before*` returns 0, the method is skipped for that frame.
 
 **Behavior.** `dScMgBase_c::BeforeBehavior` does the shared work, in this order:
-1. Read the stylus. A new touch either opens the pause menu or selects in it.
-2. While the pause menu is open, run it and return 0, so the game's own `Behavior` does not run.
+1. Check the buttons. This runs only while the screen fader `data_0209f5bc` answers slot 5, `IsAtStart`, as true ([GUESS] no fade is running). If A, B, Select or Start was just pressed:
+   - with the pause menu closed and the stylus up, open it (slot 27)
+   - with it open, no item highlighted and the options panel idle, close it (slot 28)
+2. While the pause menu is open, run it and return 0, so the game's own `Behavior` does not run. Its items are picked by touch.
 3. Step the shared state machine, then the three UI records and the 0x40 sprite records.
 4. Count `mFrameCounter` from 0 to 39, then wrap to 0.
 
@@ -65,30 +68,43 @@ fBase_c > dBase_c > dScene_c
 
 **What each game implements.** Every game overrides the same core set [ROM: vtable walk]:
 - `InitResources`, `Behavior`, `Render` and its destructors
-- slot 18, which games call as a round-reset hook, for example `OnYoshiTryEat(-1)`
-  - The name is a placeholder; see Names below.
-  - The base's slot-18 body is empty.
+- slot 18, which games call with -1, 3, 4 or 5, for example `OnYoshiTryEat(-1)`
+  - [GUESS] It resets or starts a round.
+  - The name is a placeholder; see Names below. The base's slot-18 body is empty.
 
-## Shared services
+## Shared services [CODE]
 
 - **Shared state machine.**
-  - `mStateController` sits at `dScMgBase_c+0xcc`. Its type name `dMgState_c` is coined: it has no RTTI.
+  - `mStateController` sits at `dScMgBase_c+0xcc`. Its type name `dMgState_c` is inferred: it has no RTTI.
   - It owns 20 states, entered through `func_ov004_020b0a54(n)`.
   - [GUESS] The states run the common banners and jingles: ready, go, time up, results.
   - A game's own rules are a separate, game-local state table.
-- **Score and records.** `func_ov004_020adb1c(score)` submits a score:
+- **Score.** `func_ov004_020adb1c(score)` submits a score:
   - It writes the live score to `+0x464c`.
   - The menu row's scoring mode decides the direction: mode 5 is lower-is-better, and every other mode is capped and higher-is-better.
-  - A new session best is stored at `+0x4654`. If it also beats the saved record, the record is written and the new-record flag at `+0x465c` is set.
-  - Seven games (BSC, Card, Memory, Memory2, MCarlo, Roulette, Slot1) instead save two values each, through `func_ov004_020ad79c`.
-- **Touch.** The stylus owner is `data_0209f5bc`. Each input mode has a four-byte sample `{pressed, held, x, y}` in `data_020a0de8`.
-- **Pause menu.** `dMgPsOpt_c mTouchOptions` sits at `+0xf4`: eight touch icons and a close timer.
+  - A new session best is stored at `+0x4654`. If it also beats the record copy at `+0x4650`, that copy is updated and the new-record flag at `+0x465c` is set.
+- **Saved records.**
+  - The scene's constructor loads the record copy from the save.
+  - At cleanup, `func_ov004_020ad940` writes it back into the save table, but only when the menu row's word `+0x10` is 0.
+  - Seven games (BSC, Card, Memory, Memory2, MCarlo, Roulette, Slot1) have that word set to 1. They save two values each through `func_ov004_020ad79c` instead. All but Roulette still submit through `func_ov004_020adb1c`.
+- **Input.**
+  - `data_0209f5bc` is the installed screen fader.
+  - Each of the four input slots (index `data_020a0e40`) has a four-byte touch sample `{down, changed, x, y}` in `data_020a0de8`. A new touch is `down && changed`.
+  - The per-slot button state is in `data_020a0e58`; its second halfword holds the buttons pressed this frame.
+- **Pause menu.** Fields `+0x4628..+0x4648` of `dScMgBase_c` hold a three-item menu. The items are:
+  - resume (slot 28)
+  - quit to the menu (scene 5)
+  - options: the `dMgPsOpt_c mTouchOptions` panel at `+0xf4`, with eight touch icons and a close timer
 
 ## Game file map
 
 - **ID, profile and class** are all [ROM]; **Base** is the RTTI parent.
 - **"+ N shards"** means N methods are still one-function files in `src/`.
-- **Two games (Pachinko2, 3DEsp) exist only as shards.** Five others (Pachinko, Bomroom, Coin, Curling, Teresa) have a promoted TU, but it holds only their free helper functions; their methods are still shards.
+- **Four games exist only as shards in `src/`:** Slot3, Pachinko2, Smartball and 3DEsp. Slot3 and Smartball also have a `src_tu` unit.
+- **Five games have a promoted TU that holds their free helpers but few of their methods:**
+  - Pachinko, Curling and Teresa: it also holds the destructors D1 and D0.
+  - Bomroom and Coin: it holds no method.
+  - Their other methods are still shards.
 
 | ID | Profile | Class | Base | Source |
 |---|---|---|---|---|
@@ -141,9 +157,9 @@ fBase_c > dBase_c > dScene_c
 - **Placeholders:**
   - `dScMgBase_c` slots 18, 19 and 21-30 borrow `dActor_c` method names by slot index only, so `OnYoshiTryEat` does not mean Yoshi. See [notes/dScMgBase_c-slots-18-35.md](../dScMgBase_c-slots-18-35.md).
   - Slots 20 and 31-35 are named after their vtable offset, for example `Virtual7C`.
-- **Coined in this tree:**
-  - `dMgState_c`, the three shared-state block types, and many method and field names
-  - Each is marked `coined` at its declaration.
+- **Coined or inferred in this tree [CODE]:**
+  - `dMgState_c`, the three shared-state block types, and many method and field names.
+  - The markers are not uniform yet. `dMgState_c` says "inferred", only MCarlo2's shared-state type says "coined", and the `dScMgBase_c.h` field names carry no marker.
 - **Candidate only:** the `d_s_mg_*.cpp` filenames.
 
 **Naming rule for the readability passes.** A new name needs evidence from its uses and is marked `coined`. Without evidence, the placeholder stays, with a one-line note on what is known.
@@ -153,5 +169,6 @@ fBase_c > dBase_c > dScene_c
 - **Shared states:** what do the 20 shared states show? Callers most often enter 0x12, 5, 4, 0 and 0x10.
 - **Scoring modes:** what separate modes 0, 1 and 3? Mode 5 is Snowball's lower-is-better time.
 - **Duplicate rows:** are the six duplicated menu rows one game offered in two variants?
-- **Pause gate:** why does `BeforeBehavior` stop a game while `unk_462c` is set, or while `unk_0a4` is 0 and the stylus is idle?
+- **Pause gate:** why does `BeforeBehavior` stop a game while `unk_462c` is set, or while `unk_0a4` is 0 and the fader is not at its start?
+- **Local mislabels:** `d_s_mg_base.cpp` and `dScMiniGm_c.cpp` still call the fader the "stylus owner", and `dScMiniGm_c.cpp` names the touch bytes `{pressed, held}`. A later pass should fix these comments.
 - **Slot 18:** what does it really do? Callers pass -1, 3, 4 and 5.
