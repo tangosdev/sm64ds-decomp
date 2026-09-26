@@ -3,7 +3,8 @@
  * Fwoosh, the cloud that blows (profile HYUHYU).
  *
  * The cloud (mVariant 0) turns toward the nearest player. Once that player
- * is within 1000.0 and roughly in front, it plays its blow animation; on
+ * is within 1000.0 and passes the signed bearing threshold, it plays its
+ * blow animation; on
  * frames 31 and later it emits the two gust particle streams and, every
  * other frame, spawns a gust -- another HYUHYU actor with param1 = 1 --
  * aimed at the player with a little random spread in heading. When the
@@ -12,9 +13,9 @@
  * A gust (mVariant 1) has no model. It flies 30.0 a frame along its pitch
  * and heading while its pitch climbs, and removes itself after 40 frames or
  * on touching the ground or a wall. A player it hits, unless metal, mega,
- * already collecting a cap, wearing wings or in balloon form, is blown away
- * and loses the cap: the cap is dropped as a OBJ_MARIO_CAP actor that
- * flies off.
+ * already collecting a cap, is blown away. Wings and balloon form prevent
+ * the subsequent cap loss; otherwise an eligible cap is dropped as an
+ * OBJ_MARIO_CAP actor that flies off.
  *
  * daHyuhyu_c_classInit is reconstructed (RTTI daHyuhyu_c, HYUHYU registry
  * profile). Retail does not store that spelling. Historical alias:
@@ -262,7 +263,8 @@ extern "C" int func_ov091_0213400c(daHyuhyu_c *self)
 
 // @symbol func_ov091_02133f60
 /* Cloud, waiting: execute. Turn toward the nearest player; blow once the
-   cool-down is over and that player is within 1000.0 and in front. */
+   cool-down is over, that player is within 1000.0, and the signed bearing
+   returned by Vec3_HorzAngle is below 0x1000. */
 extern "C" int func_ov091_02133f60(daHyuhyu_c *self)
 {
     Player *player = self->ClosestPlayer();
@@ -397,8 +399,8 @@ extern "C" int func_ov091_02133c6c(daHyuhyu_c *self)
 /* What the collision cylinder hit this frame.
    The cloud: fire hurts it, an egg or a metal player pops it, and a mega
    player destroys it for a mega-kill.
-   A gust: blows a player away and knocks off the cap, unless the player
-   is metal, mega, collecting a cap, winged or a balloon. When mCharacter
+   A gust: blows a player away unless metal, mega or collecting a cap.
+   Wings and balloon form prevent the subsequent cap loss. When mCharacter
    and the player's param1 differ the player is switched back with
    SetNewHatCharacter; otherwise the cap is recorded as lost (once). Either
    way an OBJ_MARIO_CAP is dropped and flies off along the gust. The

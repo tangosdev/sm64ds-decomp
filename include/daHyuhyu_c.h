@@ -15,7 +15,7 @@
  *      param1 = 1, it flies along its pitch and heading and knocks the cap
  *      off the player it hits. It has no model.
  *
- * mState points at one of three two-word records (enter, execute) of
+ * mState points at one of three two-member-pointer records (enter, execute) of
  * pointer-to-members that ov091's static initializer fills in .bss:
  * data_ov091_021356d0 (cloud waiting), data_ov091_021356b0 (cloud
  * blowing) and data_ov091_021356c0 (gust flying).

@@ -91,8 +91,9 @@ def has_draft_banner(text):
     Callers scanned `text[:200]` (chaos_db_ci, cluster_targets, coddog, enroll,
     pr_linkcheck), `text[:400]` (nearmiss_db, prepush_linkcheck), or the whole file
     (classify, below). So one file could be a draft to one gate and matched to another,
-    which is exactly what happened: src/func_ov091_021339fc.c says "does NOT count as
-    matched" at byte 246 -- past the 200-byte window -- and the progress bar counted it
+    which is exactly what happened: the former Fwoosh collision shard (now in
+    src/game/actors/d_a_hyuhyu.cpp) said "does NOT count as matched" at byte 246
+    -- past the 200-byte window -- and the progress bar counted it
     as matched regardless of what its author wrote.
 
     A fixed byte count was always going to rot, because the banner did not move; the
