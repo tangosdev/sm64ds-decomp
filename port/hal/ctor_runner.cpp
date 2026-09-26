@@ -290,10 +290,16 @@
  * without giving data_0209f5d0 a real vptr first." This rung is that. The vptr
  * is now data_0208eacc, whose slot 5 is hal/scene_boot.cpp's named l2_vt_trap
  * rather than address zero, so the worst case moved from an access violation
- * to a line of output. The branch itself is still unreachable for its own
- * separate reason -- every call site is behind `data_0209f1e0 != 0` and that
- * byte's only writer, src/func_02023498.c, is not in the link -- and that half
- * of the paragraph is kept where it stands.
+ * to a line of output. The branch itself was unreachable for its own separate
+ * reason -- every call site is behind `data_0209f1e0 != 0` and that byte's
+ * only writer, src/func_02023498.c, was not in the link. It is now (run
+ * linkfull, lane LOOPIN2: phase 0x17 of both host loops), so the soft-reset
+ * combo on a level enters the branch for two frames -- SetForwardTime on this
+ * object, then IsAtEnd -- before the level loop answers the reset by starting
+ * the game again at the title (hal/method_faces.cpp's face banner and
+ * tests/walk_window.cpp's phase-0x17 block carry the account). This object's
+ * constructed vptr is what makes those two calls land on bodies rather than
+ * on address zero.
  *
  * hal/fader_wipes.cpp is NOT this lane's file in the sense that its
  * placement-new is now the pre-Entry value rather than the final one. Lane

@@ -995,19 +995,49 @@ int _ZN13QuestionBlock16CleanupResourcesEv(void *self)
    than hopeful: the table this object's vptr names is live when the vptr is
    written.
 
-   THE BRANCH IS STILL UNREACHABLE, and for its own separate reason rather than
-   for the null: every call site is behind `data_0209f1e0 != 0`, and the only
-   TU that ever writes that byte non-zero (src/func_02023498.c) is not in the
-   link. The sizing note in hal/auto_bss.cpp carries the same constraint at the
-   storage, and slice_w1l2.txt's blocked list names the job that would lift it
-   (the ROM-class swap slice_w1l3.txt already scoped). What waking it now costs
-   is a trap report rather than a crash. */
+   THE BRANCH IS REACHABLE NOW, AND FOR ONE FRAME EACH (run linkfull, lane
+   LOOPIN2). Every call site of these two faces on &data_0209f5d0 is
+   dScene_c::BeforeBehavior's soft-reset branch, behind `data_0209f1e0 != 0`,
+   and src/func_02023498.c -- the only TU that writes that byte non-zero -- is
+   in the link and runs every frame at phase 0x17 (tests/walk_window.cpp's
+   level loop, hal/scene_boot.cpp's port_scene_tick). So L+R+START+SELECT on a
+   level raises the latch; that frame's BeforeBehavior calls SetForwardTime
+   here and parks the fader in data_0209f1e4, and the next frame's calls
+   IsAtEnd. It goes no further: the fade itself is stepped through
+   data_0208eacc slot 2 (FaderBrightness::AdvanceFade, still hal/scene_boot.cpp's
+   named trap), so on that second frame the level loop answers the reset by
+   starting the game again at the title and ending the run
+   (tests/walk_window.cpp, the phase-0x17 block says why). The two counters
+   below count exactly those entries -- the latch up and the receiver the reset
+   fader -- so a run says whether the branch was entered; every other caller
+   (the fader tables' stubs dispatch IsAtEnd on the installed fader) is left
+   out of them. They put a compare and an increment ahead of each forward; the
+   forward itself -- the receiver into ecx, the qualified call to the intended
+   body -- is the one the dumpbin paragraph above reads, whether MSVC ends it
+   in a call or a tail jmp. hal/auto_bss.cpp's sizing note still reads "no
+   linked writer"; that note is history now. */
 #include "FaderBrightness.h"
 extern "C" {
+extern unsigned char data_0209f1e0[4];   /* hal/auto_bss.cpp: the latch */
+extern int data_0209f5d0[3];             /* hal/auto_bss.cpp: the reset fader */
+}
+static unsigned g_fb_latch_setfwd, g_fb_latch_atend;
+extern "C" {
+void port_fader_latch_face_hits(unsigned *set_forward, unsigned *is_at_end)
+{
+    *set_forward = g_fb_latch_setfwd;
+    *is_at_end = g_fb_latch_atend;
+}
 int _ZN15FaderBrightness7IsAtEndEv(void *self)
-{ return ((FaderBrightness *)self)->FaderBrightness::IsAtEnd(); }
+{
+    if (data_0209f1e0[0] && self == (void *)data_0209f5d0) ++g_fb_latch_atend;
+    return ((FaderBrightness *)self)->FaderBrightness::IsAtEnd();
+}
 int _ZN15FaderBrightness14SetForwardTimeEj(void *self, u32 frames)
-{ return ((FaderBrightness *)self)->FaderBrightness::SetForwardTime(frames); }
+{
+    if (data_0209f1e0[0] && self == (void *)data_0209f5d0) ++g_fb_latch_setfwd;
+    return ((FaderBrightness *)self)->FaderBrightness::SetForwardTime(frames);
+}
 }
 
 /* ---- gate 22: the door ring's Player entry points ------------------------

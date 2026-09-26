@@ -7504,6 +7504,30 @@ static void port_title_state_trace(int frame)
     l_pick = pick; l_f10 = f10; l_f14 = f14; l_pend = pend; l_dlg = dlg;
 }
 
+/* ---- PHASE 0x17's LAST CALL, ON THIS LOOP TOO (run linkfull, lane LOOPIN2) --
+   src/func_020197b8.c:47 is func_02023498(), the ROM's soft-reset latch, at the
+   end of phase 0x17 and before phase 3. port_scene_tick calls it at that point
+   (after phase 2, before the scene-request carrier and the actor phases), on
+   every frame the game ticks, as tests/walk_window.cpp's level loop does.
+
+   IT ONLY EVER ACTS ON data_020a0e44, which func_0203bc7c raises when a key
+   word is exactly L+R+START+SELECT. That builder runs on the LEVEL loop (lane
+   B5INPUT) and, on a scene, only inside a session's fan-out: the scene half of
+   phase 0x17 -- func_0203bc7c and the ring over this loop's records -- is still
+   lane B5INPUT's LATER (the stylus cadence). So in single player nothing can
+   raise the latch on a scene and the call runs its idle path; the combo on a
+   title or minigame screen does what it did before, nothing. The level loop's
+   answer to a raised latch (starting the game again at the title) is
+   walk_window.cpp's and has no counterpart here; a latch seen up on a scene
+   frame is printed, once per edge, so a session that ever reaches it says so.
+
+   The two counters are the lane's census: this loop's func_02023498 calls,
+   and port_scene_run's phase-7 func_0201a4bc calls, printed at the headless
+   loop's end beside its [r3g] G1 line. */
+extern "C" void func_02023498(void);
+extern "C" void func_0201a4bc(void);
+static unsigned g_loopin2_sc_p17, g_loopin2_sc_p7;
+
 extern "C" void port_scene_tick(int frame, int tick_game)
 {
     ntr::Framebuffer &fb = scn_fb;
@@ -7569,6 +7593,23 @@ extern "C" void port_scene_tick(int frame, int tick_game)
             port_frame_phase2();
         } else {
             OAM::Reset();
+        }
+        /* PHASE 0x17's LAST CALL, func_02023498 (lane LOOPIN2; the banner
+           above port_scene_tick): after phase 2, before phase 3's carrier
+           below, under tick_game with the rest of the frame's game phases. */
+        if (tick_game) {
+            data_0209d50c = 0x17;
+            ++g_loopin2_sc_p17;
+            func_02023498();
+            static int sc_latch_was;
+            if ((data_0209f1e0[0] != 0) != sc_latch_was) {
+                sc_latch_was = data_0209f1e0[0] != 0;
+                std::fprintf(stderr, "[loopin2] scene f%d: the soft-reset latch "
+                             "data_0209f1e0 is %s on the scene loop (only a "
+                             "session's fan-out can raise it here)\n", frame,
+                             sc_latch_was ? "UP" : "down again");
+                std::fflush(stderr);
+            }
         }
         /* THE SCENE-REQUEST CARRIER, run mg16 arc 3.
          *
@@ -8237,7 +8278,13 @@ extern "C" int port_scene_run(void)
             r3g_census("the scene frame foot", port_rom_frame());
             r3g_heap_watch("the scene frame foot", port_rom_frame());
             ++r3g_sleeps;
-            OS_SleepThread((unsigned short *)data_0209d500);
+            /* func_020197b8.c:57, `data_0209d50c = 7; func_0201a4bc();`: the
+               ROM's own TU for the statement that was inlined here
+               (OS_SleepThread(data_0209d500)), run linkfull lane LOOPIN2. The
+               same sleep and the same wait. */
+            data_0209d50c = 7;
+            ++g_loopin2_sc_p7;
+            func_0201a4bc();
             r3g_heap_watch("the scene frame foot, after the ROM's sleep",
                            port_rom_frame());
             /* func_020197b8.c:56 -- and down the instant the wait returns. */
@@ -8249,6 +8296,10 @@ extern "C" int port_scene_run(void)
         std::fprintf(stderr, "[r3g] G1: phase 7 was the ROM's own sleep on %d "
                              "of %d scene frames (SM64DS_ROM_LOOP)\n",
                      r3g_sleeps, scn_frames);
+        std::fprintf(stderr, "[loopin2] scene loop: phase 0x17 func_02023498 "
+                             "%u call(s), phase 7 func_0201a4bc %u call(s), %d "
+                             "frame(s) of the ROM's phase-6 account\n",
+                     g_loopin2_sc_p17, g_loopin2_sc_p7, port_rom_frame());
         std::fprintf(stderr, "[r3g] G2(a): graphics-block face entries by slot "
                              "0/1/2/3 = %u/%u/%u/%u, entered with the WRONG "
                              "block %u time(s). Slots 2 and 3 are what the "
