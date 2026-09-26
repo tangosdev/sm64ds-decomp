@@ -58,6 +58,10 @@
    "ref": "src_tu/actors/Koopa"
   },
   {
+   "file": "notes/agents/handoffs/pr2231-rescue-ov022-ov013-batch2.md",
+   "ref": "src_tu/actors/daObj_volcanoCannon_c.cpp"
+  },
+  {
    "file": "notes/archive/crack-loop-runbook.md",
    "ref": "notes/pret-idioms.md"
   },
