@@ -1,0 +1,29 @@
+# slice_w31_variant5 -- run linkfull, lane VARIANT5: THE TWO ABSTRACT BASE
+# TABLES THE PORT MOUNTED AS BYTES, AND THEIR FOUR DESTRUCTORS.
+#
+# daObjMaruta_c (the rolling logs' base, ov080) and daObjFallBlock_c (the
+# falling blocks' base, ov098) are abstract: each has two or three null slots
+# and no actor id, and each leaf's factory and destructors store the base
+# table between their own and dBgActor_c's. The port mounted both tables as
+# raw ROM bytes (port/ov080_syms.txt, port/ov098_syms.txt), so their slot
+# words were DS code addresses and nothing could name the two destructors the
+# ROM puts in slots 16 and 17. Both tables are host arrays now, the rule every
+# other derived vtable in the port follows: hal/actor_classes_ov080.cpp and
+# hal/actor_classes_ov098.cpp, ROM contents slot for slot.
+#
+# THE EDGE IS THE ROM'S OWN: config/arm9/overlays/ov080/relocs.txt holds
+# from:0x02128378 -> 0x02127014 (D1) and from:0x0212837c -> 0x02126fbc (D0),
+# and ov098's from:0x0213c5fc -> 0x02139fc8 (D1) and from:0x0213c600 ->
+# 0x02139f70 (D0), words 16 and 17 of each table. No keep-alive, no new call.
+#
+# Each file below gains an `#ifdef _MSC_VER` arm that defines the flat ROM name
+# and spells the ROM body step for step (each class's own table store, the
+# inlined dBgActor_c destructor's table store, the MovingMeshCollider at +0x124,
+# the Model at +0xd4, dActor_c's D2, and in D0 the game-heap deallocation).
+# The `#else` side is the file's own text, byte for byte, so mwccarm compiles
+# what it always compiled (tools/match.py 2004/b56 strict MATCHING and
+# tools/linkcheck.py VERIFIED, before and after, object identical).
+src/_ZN13daObjMaruta_cD1Ev.cpp
+src/_ZN13daObjMaruta_cD0Ev.cpp
+src/_ZN16daObjFallBlock_cD1Ev.cpp
+src/_ZN16daObjFallBlock_cD0Ev.cpp

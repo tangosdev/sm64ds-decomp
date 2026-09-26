@@ -32,6 +32,18 @@
 #       hal/actor_classes_ov045.cpp), each of which seats its OWN class's
 #       destructor in slot 16. Same probe result as Maruta.
 #
+#   BOTH REFUSALS ABOVE ARE SUPERSEDED (run linkfull, lane VARIANT5). Their
+#   premise was the mount, and the mount was the anomaly: both tables are host
+#   arrays now (hal/actor_classes_ov080.cpp, hal/actor_classes_ov098.cpp, ROM
+#   contents slot for slot), both tokens are off their per-symbol lists, and
+#   slots 16/17 of each hold the class's own D1/D0 -- the ROM's words at
+#   0x02128378/0x0212837c and 0x0213c5fc/0x0213c600. The four bodies are the
+#   `#ifdef _MSC_VER` arms of their own src files, each spelling the ROM body
+#   step for step (MSVC never emits an inline destructor under the flat name),
+#   on port/slice_w31_variant5.txt. The INLINE-DTOR-COMDAT ruling below still
+#   holds for daDsnBase_c; it never applied to these two, whose arms define a
+#   flat name no COMDAT carries.
+#
 #   _ZN11daDsnBase_cD1Ev     ov091 0x02132d6c   (b) MEASURED AND REFUSED.
 #       A THIRD ARTEFACT SHAPE, alongside census.md's DTOR_VARIANT and
 #       CTOR_VARIANT rulings: call it INLINE-DTOR-COMDAT. daDsnBase_c.h defines

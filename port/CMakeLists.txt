@@ -23938,3 +23938,50 @@ endforeach()
 foreach(_tw31breset2 walk_window walk_window_hires smoke_player)
     target_sources(${_tw31breset2} PRIVATE ${SLICE_W31B_RESET2_SOURCES})
 endforeach()
+
+# ===========================================================================
+# VARIANT5 (run linkfull, lane VARIANT5): THE TWO ABSTRACT BASE TABLES
+# ===========================================================================
+#
+# _ZTV13daObjMaruta_c (ov080 0x02128338) and _ZTV16daObjFallBlock_c (ov098
+# 0x0213c5bc) leave their per-symbol mounts (port/ov080_syms.txt,
+# port/ov098_syms.txt) for host arrays holding the ROM contents slot for slot,
+# hal/actor_classes_ov080.cpp and hal/actor_classes_ov098.cpp. Words 16 and 17
+# of each are the class's own D1 and D0, whose flat ROM names the `#ifdef
+# _MSC_VER` arms of the four src files on port/slice_w31_variant5.txt define.
+# No ovdata mount is added or re-listed here (two tokens left two existing
+# lists), so the XREL1 mount-deps block above still covers every mount.
+#
+# ALL THREE HOSTING TARGETS: the per-symbol mounts that used to define the two
+# names (ACTOR_OV_SYMS) and the leaves' factories and destructors that store
+# them are on walk_window's, walk_window_hires' and smoke_player's link lines
+# alike, so the two arrays must be answered on all three.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_variant5.txt" SLICE_W31_VARIANT5_LINES)
+set(SLICE_W31_VARIANT5_SOURCES "")
+foreach(line IN LISTS SLICE_W31_VARIANT5_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W31_VARIANT5_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SLICE_W31_VARIANT5_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/actor_classes_ov080.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/actor_classes_ov098.cpp")
+foreach(_tw31v5 walk_window walk_window_hires smoke_player)
+    target_sources(${_tw31v5} PRIVATE ${SLICE_W31_VARIANT5_SOURCES})
+endforeach()
+
+# VARIANT5, THE DROPPABLE HALF: fBase_c's base-object constructor. The
+# transcription of arm9 0x02043dec that hal/actor_vtables.cpp carried moves,
+# statement for statement, into the #ifdef _MSC_VER arm of
+# src/_ZN7fBase_cC2Ev.cpp (the ROM's first store, the transient table
+# data_02099edc, included), and hal/actor_vtables.cpp keeps only the storage
+# the constructor reads. EVERY TARGET THAT COMPILES hal/actor_vtables.cpp takes
+# the arm, so none of them loses the definition: the three hosting targets and
+# the three excluded smokes (smoke_actor, smoke_savestate, smoke_persist).
+set(VARIANT5_C2_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN7fBase_cC2Ev.cpp")
+foreach(_tw31v5c2 walk_window walk_window_hires smoke_player smoke_actor
+                  smoke_savestate smoke_persist)
+    target_sources(${_tw31v5c2} PRIVATE "${VARIANT5_C2_SRC}")
+endforeach()
