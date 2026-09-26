@@ -23754,3 +23754,17 @@ list(APPEND SLICE_W31_VARIANT5_SOURCES
 foreach(_tw31v5 walk_window walk_window_hires smoke_player)
     target_sources(${_tw31v5} PRIVATE ${SLICE_W31_VARIANT5_SOURCES})
 endforeach()
+
+# VARIANT5, THE DROPPABLE HALF: fBase_c's base-object constructor. The
+# transcription of arm9 0x02043dec that hal/actor_vtables.cpp carried moves,
+# statement for statement, into the #ifdef _MSC_VER arm of
+# src/_ZN7fBase_cC2Ev.cpp (the ROM's first store, the transient table
+# data_02099edc, included), and hal/actor_vtables.cpp keeps only the storage
+# the constructor reads. EVERY TARGET THAT COMPILES hal/actor_vtables.cpp takes
+# the arm, so none of them loses the definition: the three hosting targets and
+# the three excluded smokes (smoke_actor, smoke_savestate, smoke_persist).
+set(VARIANT5_C2_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN7fBase_cC2Ev.cpp")
+foreach(_tw31v5c2 walk_window walk_window_hires smoke_player smoke_actor
+                  smoke_savestate smoke_persist)
+    target_sources(${_tw31v5c2} PRIVATE "${VARIANT5_C2_SRC}")
+endforeach()
