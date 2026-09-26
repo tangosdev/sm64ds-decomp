@@ -1,8 +1,8 @@
 {
   "id": "ov006/dMg3DHeyhoObjAdapter_c",
   "module": "ov006",
-  "source": "src/actors/dMg3DHeyhoObjAdapter_c.cpp",
-  "promoted_source": "src/actors/dMg3DHeyhoObjAdapter_c.cpp",
+  "source": "src/actors/_ZN22dMg3DHeyhoObjAdapter_cC2Ev.cpp",
+  "promoted_source": "src/actors/_ZN22dMg3DHeyhoObjAdapter_cC2Ev.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [

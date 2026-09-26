@@ -1,8 +1,8 @@
 {
   "id": "ov002/StarCamera",
   "module": "ov002",
-  "source": "src/actors/StarCamera.cpp",
-  "promoted_source": "src/actors/StarCamera.cpp",
+  "source": "src/actors/StarCamera_Spawn.cpp",
+  "promoted_source": "src/actors/StarCamera_Spawn.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
