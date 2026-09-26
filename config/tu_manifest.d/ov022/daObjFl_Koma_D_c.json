@@ -1,9 +1,9 @@
 {
   "id": "ov022/daObjFl_Koma_D_c",
   "module": "ov022",
-  "source": "src_tu/actors/daObjFl_Koma_D_c.cpp",
+  "source": "src/actors/daObjFl_Koma_D_c.cpp",
   "promoted_source": "src/actors/daObjFl_Koma_D_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x21115a8..0x2111688, 4 function(s), from build/tu_map.json (tools/tu_map.py)",

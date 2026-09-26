@@ -5264,6 +5264,10 @@
     "src/game/actors/d_a_klr.cpp#_ZN7daKlr_c6RenderEv": "tangosdev",
     "src/game/actors/d_a_klr.cpp#_ZN7daKlr_c8BehaviorEv": "lunavyqo",
     "src/game/actors/d_a_klr.cpp#_ZN7daKlr_c13InitResourcesEv": "tangosdev",
-    "src/game/actors/d_a_klr.cpp#daKlr_c_classInit": "tangosdev"
+    "src/game/actors/d_a_klr.cpp#daKlr_c_classInit": "tangosdev",
+    "src/actors/daObjFl_Koma_D_c.cpp#_ZN16daObjFl_Koma_D_cD1Ev": "tangosdev",
+    "src/actors/daObjFl_Koma_D_c.cpp#_ZN16daObjFl_Koma_D_cD0Ev": "tangosdev",
+    "src/actors/daObjFl_Koma_D_c.cpp#_ZN16daObjFl_Koma_D_c16CleanupResourcesEv": "lunavyqo",
+    "src/actors/daObjFl_Koma_D_c.cpp#_ZN16daObjFl_Koma_D_c13InitResourcesEv": "tangosdev"
   }
 }
