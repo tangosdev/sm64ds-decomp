@@ -278,77 +278,9 @@ src/game/actors/d_a_star_gate.cpp:
     .data start:0x02148334 end:0x02148448
     .bss start:0x02148934 end:0x021489a4
 
-src/_ZN4FishD1Ev.cpp:
+src/game/actors/d_a_fish.cpp:
     complete
-    .text start:0x0214620c end:0x0214623c
-
-src/_ZN4FishD0Ev.cpp:
-    complete
-    .text start:0x0214623c end:0x02146280
-
-src/func_ov100_02146280.c:
-    complete
-    .text start:0x02146280 end:0x0214629c
-
-src/func_ov100_0214629c.cpp:
-    complete
-    .text start:0x0214629c end:0x0214639c
-
-src/func_ov100_0214639c.c:
-    complete
-    .text start:0x0214639c end:0x021463b0
-
-src/func_ov100_021463b0.cpp:
-    complete
-    .text start:0x021463b0 end:0x02146468
-
-src/func_ov100_02146468.c:
-    complete
-    .text start:0x02146468 end:0x021464f4
-
-src/func_ov100_021464f4.cpp:
-    complete
-    .text start:0x021464f4 end:0x02146640
-
-src/func_ov100_02146640.c:
-    complete
-    .text start:0x02146640 end:0x021467d4
-
-src/func_ov100_021467d4.c:
-    complete
-    .text start:0x021467d4 end:0x021467e8
-
-src/func_ov100_021467e8.cpp:
-    complete
-    .text start:0x021467e8 end:0x02146828
-
-src/func_ov100_02146828.c:
-    complete
-    .text start:0x02146828 end:0x02146a98
-
-src/_ZN4Fish16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02146a98 end:0x02146b00
-
-src/_ZN4Fish16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x02146b00 end:0x02146b04
-
-src/_ZN4Fish6RenderEv.cpp:
-    complete
-    .text start:0x02146b04 end:0x02146b38
-
-src/_ZN4Fish8BehaviorEv.cpp:
-    complete
-    .text start:0x02146b38 end:0x02146c68
-
-src/_ZN4Fish13InitResourcesEv.cpp:
-    complete
-    .text start:0x02146c68 end:0x02146d38
-
-src/d_a_fish.cpp:
-    complete
-    .text start:0x02146d38 end:0x02146d7c
+    .text start:0x0214620c end:0x02146d7c
 
 src/game/actors/daObjPathLift_c.cpp:
     complete

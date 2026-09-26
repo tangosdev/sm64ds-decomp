@@ -27778,14 +27778,14 @@
    "start": "0x2120c58",
    "end": "0x2121ffc",
    "classes": [
-    "BabyPenguin"
+    "daPgBby_c"
    ],
    "n_functions_map": 32,
    "n_files": 32,
    "files": [
-    "src/_ZN11BabyPenguinD1Ev.cpp",
-    "src/_ZN11BabyPenguinD0Ev.c",
-    "src/_ZN11BabyPenguin13OnYoshiTryEatEv.cpp",
+    "src/_ZN9daPgBby_cD1Ev.cpp",
+    "src/_ZN9daPgBby_cD0Ev.c",
+    "src/_ZN9daPgBby_c13OnYoshiTryEatEv.cpp",
     "src/func_ov072_02120d04.cpp",
     "src/func_ov072_02120ddc.c",
     "src/func_ov072_02120e20.cpp",
@@ -27808,12 +27808,12 @@
     "src/func_ov072_02121cdc.cpp",
     "src/func_ov072_02121d18.cpp",
     "src/func_ov072_02121d50.c",
-    "src/_ZN11BabyPenguin16CleanupResourcesEv.c",
-    "src/_ZN11BabyPenguin16OnPendingDestroyEv.c",
-    "src/_ZN11BabyPenguin6RenderEv.cpp",
-    "src/_ZN11BabyPenguin8BehaviorEv.cpp",
-    "src/_ZN11BabyPenguin13InitResourcesEv.cpp",
-    "src/_ZN11BabyPenguin13OnTurnIntoEggER6Player.cpp",
+    "src/_ZN9daPgBby_c16CleanupResourcesEv.c",
+    "src/_ZN9daPgBby_c16OnPendingDestroyEv.c",
+    "src/_ZN9daPgBby_c6RenderEv.cpp",
+    "src/_ZN9daPgBby_c8BehaviorEv.cpp",
+    "src/_ZN9daPgBby_c13InitResourcesEv.cpp",
+    "src/_ZN9daPgBby_c13OnTurnIntoEggER6Player.cpp",
     "src/daPgBby_c_classInit.c"
    ],
    "ext_mix": {
@@ -30437,13 +30437,13 @@
    "start": "0x214620c",
    "end": "0x2146d7c",
    "classes": [
-    "Fish"
+    "daFish_c"
    ],
    "n_functions_map": 18,
    "n_files": 18,
    "files": [
-    "src/_ZN4FishD1Ev.cpp",
-    "src/_ZN4FishD0Ev.cpp",
+    "src/_ZN8daFish_cD1Ev.cpp",
+    "src/_ZN8daFish_cD0Ev.cpp",
     "src/func_ov100_02146280.c",
     "src/func_ov100_0214629c.cpp",
     "src/func_ov100_0214639c.c",
@@ -30454,11 +30454,11 @@
     "src/func_ov100_021467d4.c",
     "src/func_ov100_021467e8.cpp",
     "src/func_ov100_02146828.c",
-    "src/_ZN4Fish16CleanupResourcesEv.cpp",
-    "src/_ZN4Fish16OnPendingDestroyEv.c",
-    "src/_ZN4Fish6RenderEv.cpp",
-    "src/_ZN4Fish8BehaviorEv.cpp",
-    "src/_ZN4Fish13InitResourcesEv.cpp",
+    "src/_ZN8daFish_c16CleanupResourcesEv.cpp",
+    "src/_ZN8daFish_c16OnPendingDestroyEv.c",
+    "src/_ZN8daFish_c6RenderEv.cpp",
+    "src/_ZN8daFish_c8BehaviorEv.cpp",
+    "src/_ZN8daFish_c13InitResourcesEv.cpp",
     "src/daFish_c_classInit.cpp"
    ],
    "ext_mix": {

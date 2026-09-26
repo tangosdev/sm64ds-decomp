@@ -56,9 +56,9 @@ _ZN11daBgSnwmn_c6RenderEv kind:function(arm,size=0x48) addr:0x021209c0
 _ZN11daBgSnwmn_c8BehaviorEv kind:function(arm,size=0x3c) addr:0x02120a08
 _ZN11daBgSnwmn_c13InitResourcesEv kind:function(arm,size=0x1bc) addr:0x02120a44
 daBgSnwmn_c_classInit kind:function(arm,size=0x58) addr:0x02120c00
-_ZN11BabyPenguinD1Ev kind:function(arm,size=0x48) addr:0x02120c58
-_ZN11BabyPenguinD0Ev kind:function(arm,size=0x5c) addr:0x02120ca0
-_ZN11BabyPenguin13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02120cfc
+_ZN9daPgBby_cD1Ev kind:function(arm,size=0x48) addr:0x02120c58
+_ZN9daPgBby_cD0Ev kind:function(arm,size=0x5c) addr:0x02120ca0
+_ZN9daPgBby_c13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02120cfc
 func_ov072_02120d04 kind:function(arm,size=0xd8) addr:0x02120d04
 func_ov072_02120ddc kind:function(arm,size=0x44) addr:0x02120ddc
 func_ov072_02120e20 kind:function(arm,size=0x30) addr:0x02120e20
@@ -81,12 +81,12 @@ func_ov072_02121c94 kind:function(arm,size=0x48) addr:0x02121c94
 func_ov072_02121cdc kind:function(arm,size=0x3c) addr:0x02121cdc
 func_ov072_02121d18 kind:function(arm,size=0x38) addr:0x02121d18
 func_ov072_02121d50 kind:function(arm,size=0x1c) addr:0x02121d50
-_ZN11BabyPenguin16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02121d6c
-_ZN11BabyPenguin16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02121db0
-_ZN11BabyPenguin6RenderEv kind:function(arm,size=0x54) addr:0x02121db4
-_ZN11BabyPenguin8BehaviorEv kind:function(arm,size=0x7c) addr:0x02121e08
-_ZN11BabyPenguin13InitResourcesEv kind:function(arm,size=0x11c) addr:0x02121e84
-_ZN11BabyPenguin13OnTurnIntoEggER6Player kind:function(arm,size=0xc) addr:0x02121fa0
+_ZN9daPgBby_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02121d6c
+_ZN9daPgBby_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02121db0
+_ZN9daPgBby_c6RenderEv kind:function(arm,size=0x54) addr:0x02121db4
+_ZN9daPgBby_c8BehaviorEv kind:function(arm,size=0x7c) addr:0x02121e08
+_ZN9daPgBby_c13InitResourcesEv kind:function(arm,size=0x11c) addr:0x02121e84
+_ZN9daPgBby_c13OnTurnIntoEggER6Player kind:function(arm,size=0xc) addr:0x02121fa0
 daPgBby_c_classInit kind:function(arm,size=0x50) addr:0x02121fac
 data_ov072_02121ffc kind:data(any) addr:0x02121ffc
 data_ov072_02122004 kind:data(any) addr:0x02122004
@@ -145,7 +145,6 @@ data_ov072_02122a4c kind:data(any) addr:0x02122a4c
 _ZTS9daPgBby_c kind:data(any) addr:0x02122a54
 _ZTI9daPgBby_c kind:data(any) addr:0x02122a60
 g_profile_PENGUIN_BABY kind:data(any) addr:0x02122a6c ambiguous
-_ZTV11BabyPenguin kind:data(any) addr:0x02122a90
 _ZTV9daPgBby_c kind:data(any) addr:0x02122a90
 data_ov072_02122b20 kind:bss addr:0x02122b20
 data_ov072_02122b28 kind:bss addr:0x02122b28
