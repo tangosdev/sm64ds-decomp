@@ -58,6 +58,30 @@
    "ref": "src_tu/actors/Koopa"
   },
   {
+   "file": "notes/agents/handoffs/mg-p1-factories-0926.md",
+   "ref": "src/d_s_mg_bomroom.c"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-factories-0926.md",
+   "ref": "src/d_s_mg_curling.c"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-factories-0926.md",
+   "ref": "src/d_s_mg_curling2.c"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-factories-0926.md",
+   "ref": "src/d_s_mg_pachinko.c"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-factories-0926.md",
+   "ref": "src/d_s_mg_panel.c"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-factories-0926.md",
+   "ref": "src/d_s_mg_teresa.c"
+  },
+  {
    "file": "notes/agents/handoffs/mg-p1-tamaire-0925.md",
    "ref": "src/_ZN16dScMgPachinko2_c13InitResourcesEv.cpp"
   },

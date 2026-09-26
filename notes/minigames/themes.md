@@ -36,7 +36,7 @@ A pass must not change a single emitted byte or relocation target.
    - No header declares the SDK namespaces `GX`, `GXS` and `G2S`. A local namespace declaration compiles identically (the `InitResources` of `dScMgPachinko2_c` and `dScMg3DEsp_c`), but was not applied: a shared header is the readable form.
 4. **Hand-built factories** (`fBase_c::operator new`, the base `C2`, then vptr stores).
    - Readable form: `return new dScMgX_c;`.
-   - Proven: `dScMgMemory2_c`'s factory, and the one-function factories in `src/d_s_mg_bomroom.c`, `src/d_s_mg_curling.c`, `src/d_s_mg_curling2.c`, `src/d_s_mg_pachinko.c`, `src/d_s_mg_panel.c` and `src/d_s_mg_teresa.c`. A `.c` factory takes `//cpp` and keeps its path.
+   - Proven: `dScMgMemory2_c`'s factory, and the one-function factories in `src/d_s_mg_bomroom.cpp`, `src/d_s_mg_curling.cpp`, `src/d_s_mg_curling2.cpp`, `src/d_s_mg_pachinko.cpp`, `src/d_s_mg_panel.cpp` and `src/d_s_mg_teresa.cpp`. The form is C++, so the file is a `.cpp` that starts with `//cpp`. rombuild picks the language from `//cpp`, so the rename from `.c` changed no byte.
    - Measured negative where the factory constructs a member that the header keeps as raw bytes, so the implicit constructor never calls it. Sizes are the `new` form against the ROM:
      - Coin: 0x34 against 0x48, without `func_0203b9b4(this + 0x51c4, 1)`. An inline class constructor making that call, tried in a scratch copy of the header, matches.
      - 3DEsp: 0x50 against 0x90, without the two `Model`, the `dMg3DEspModel_c` and the `TextureTransformer` constructors.
