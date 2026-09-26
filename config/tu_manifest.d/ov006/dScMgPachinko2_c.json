@@ -1,0 +1,776 @@
+{
+  "id": "ov006/dScMgPachinko2_c",
+  "module": "ov006",
+  "source": "src_tu/actors/dScMgPachinko2_c.cpp",
+  "promoted_source": "src/actors/dScMgPachinko2_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20ff420..0x210428c, 74 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label: dScMgPachinko2_c. tu_map also lists dScMgPachinko_c for this run, but only because rtti_vtables.py over-reads dScMgPachinko_c's vtable into the neighbouring g_profile_MG_TAMAIRE descriptor, landing its spurious slots 36 and 38 on func_ov006_021019e0 and dScMgPachinko2_c_classInit (include/dScMgPachinko_c.h records both as spurious). No dScMgPachinko_c symbol lies in the run, and this TU defines and emits nothing of dScMgPachinko_c.",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020ff420",
+      "end": "0x0210428c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN16dScMgPachinko2_cD1Ev",
+      "address": "0x020ff420",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN16dScMgPachinko2_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16dScMgPachinko2_cD0Ev",
+      "address": "0x020ff444",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN16dScMgPachinko2_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov006_020ff47c",
+      "address": "0x020ff47c",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov006_020ff47c.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_020ff4ec",
+      "address": "0x020ff4ec",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_020ff4ec.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov006_020ff534",
+      "address": "0x020ff534",
+      "size": "0x0000015c",
+      "legacy_source": "src/func_ov006_020ff534.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_020ff690",
+      "address": "0x020ff690",
+      "size": "0x00000238",
+      "legacy_source": "src/func_ov006_020ff690.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov006_020ff8c8",
+      "address": "0x020ff8c8",
+      "size": "0x0000028c",
+      "legacy_source": "src/func_ov006_020ff8c8.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov006_020ffb54",
+      "address": "0x020ffb54",
+      "size": "0x00000290",
+      "legacy_source": "src/func_ov006_020ffb54.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov006_020ffde4",
+      "address": "0x020ffde4",
+      "size": "0x00000170",
+      "legacy_source": "src/func_ov006_020ffde4.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov006_020fff54",
+      "address": "0x020fff54",
+      "size": "0x00000030",
+      "legacy_source": "src/func_ov006_020fff54.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov006_020fff84",
+      "address": "0x020fff84",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov006_020fff84.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov006_020fffec",
+      "address": "0x020fffec",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_020fffec.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov006_02100058",
+      "address": "0x02100058",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov006_02100058.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov006_02100084",
+      "address": "0x02100084",
+      "size": "0x000000bc",
+      "legacy_source": "src/func_ov006_02100084.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov006_02100140",
+      "address": "0x02100140",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_02100140.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov006_021001ac",
+      "address": "0x021001ac",
+      "size": "0x000000cc",
+      "legacy_source": "src/func_ov006_021001ac.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov006_02100278",
+      "address": "0x02100278",
+      "size": "0x0000009c",
+      "legacy_source": "src/func_ov006_02100278.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov006_02100314",
+      "address": "0x02100314",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_02100314.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov006_02100380",
+      "address": "0x02100380",
+      "size": "0x00000088",
+      "legacy_source": "src/func_ov006_02100380.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov006_02100408",
+      "address": "0x02100408",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov006_02100408.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov006_02100488",
+      "address": "0x02100488",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov006_02100488.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov006_021004c0",
+      "address": "0x021004c0",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov006_021004c0.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov006_021004f4",
+      "address": "0x021004f4",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov006_021004f4.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov006_02100554",
+      "address": "0x02100554",
+      "size": "0x00000138",
+      "legacy_source": "src/func_ov006_02100554.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov006_0210068c",
+      "address": "0x0210068c",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov006_0210068c.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov006_021006f4",
+      "address": "0x021006f4",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov006_021006f4.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov006_02100734",
+      "address": "0x02100734",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov006_02100734.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov006_0210076c",
+      "address": "0x0210076c",
+      "size": "0x0000024c",
+      "legacy_source": "src/func_ov006_0210076c.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov006_021009b8",
+      "address": "0x021009b8",
+      "size": "0x00000150",
+      "legacy_source": "src/func_ov006_021009b8.c",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_ov006_02100b08",
+      "address": "0x02100b08",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov006_02100b08.c",
+      "ordinal": 29
+    },
+    {
+      "symbol": "func_ov006_02100bac",
+      "address": "0x02100bac",
+      "size": "0x000001e4",
+      "legacy_source": "src/func_ov006_02100bac.c",
+      "ordinal": 30
+    },
+    {
+      "symbol": "func_ov006_02100d90",
+      "address": "0x02100d90",
+      "size": "0x000000ac",
+      "legacy_source": "src/func_ov006_02100d90.c",
+      "ordinal": 31
+    },
+    {
+      "symbol": "func_ov006_02100e3c",
+      "address": "0x02100e3c",
+      "size": "0x00000140",
+      "legacy_source": "src/func_ov006_02100e3c.c",
+      "ordinal": 32
+    },
+    {
+      "symbol": "func_ov006_02100f7c",
+      "address": "0x02100f7c",
+      "size": "0x0000010c",
+      "legacy_source": "src/func_ov006_02100f7c.c",
+      "ordinal": 33
+    },
+    {
+      "symbol": "func_ov006_02101088",
+      "address": "0x02101088",
+      "size": "0x000000c0",
+      "legacy_source": "src/func_ov006_02101088.c",
+      "ordinal": 34
+    },
+    {
+      "symbol": "func_ov006_02101148",
+      "address": "0x02101148",
+      "size": "0x000000dc",
+      "legacy_source": "src/func_ov006_02101148.c",
+      "ordinal": 35
+    },
+    {
+      "symbol": "func_ov006_02101224",
+      "address": "0x02101224",
+      "size": "0x000000a8",
+      "legacy_source": "src/func_ov006_02101224.c",
+      "ordinal": 36
+    },
+    {
+      "symbol": "func_ov006_021012cc",
+      "address": "0x021012cc",
+      "size": "0x00000420",
+      "legacy_source": "src/func_ov006_021012cc.c",
+      "ordinal": 37
+    },
+    {
+      "symbol": "func_ov006_021016ec",
+      "address": "0x021016ec",
+      "size": "0x000002f4",
+      "legacy_source": "src/func_ov006_021016ec.c",
+      "ordinal": 38
+    },
+    {
+      "symbol": "func_ov006_021019e0",
+      "address": "0x021019e0",
+      "size": "0x00000110",
+      "legacy_source": "src/func_ov006_021019e0.c",
+      "ordinal": 39
+    },
+    {
+      "symbol": "func_ov006_02101af0",
+      "address": "0x02101af0",
+      "size": "0x00000398",
+      "legacy_source": "src/func_ov006_02101af0.c",
+      "ordinal": 40
+    },
+    {
+      "symbol": "func_ov006_02101e88",
+      "address": "0x02101e88",
+      "size": "0x0000023c",
+      "legacy_source": "src/func_ov006_02101e88.c",
+      "ordinal": 41
+    },
+    {
+      "symbol": "func_ov006_021020c4",
+      "address": "0x021020c4",
+      "size": "0x000001b0",
+      "legacy_source": "src/func_ov006_021020c4.c",
+      "ordinal": 42
+    },
+    {
+      "symbol": "func_ov006_02102274",
+      "address": "0x02102274",
+      "size": "0x000001f8",
+      "legacy_source": "src/func_ov006_02102274.c",
+      "ordinal": 43
+    },
+    {
+      "symbol": "func_ov006_0210246c",
+      "address": "0x0210246c",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov006_0210246c.cpp",
+      "ordinal": 44
+    },
+    {
+      "symbol": "func_ov006_021024e0",
+      "address": "0x021024e0",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov006_021024e0.c",
+      "ordinal": 45
+    },
+    {
+      "symbol": "func_ov006_02102564",
+      "address": "0x02102564",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_02102564.c",
+      "ordinal": 46
+    },
+    {
+      "symbol": "func_ov006_0210258c",
+      "address": "0x0210258c",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov006_0210258c.cpp",
+      "ordinal": 47
+    },
+    {
+      "symbol": "func_ov006_02102624",
+      "address": "0x02102624",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov006_02102624.c",
+      "ordinal": 48
+    },
+    {
+      "symbol": "func_ov006_0210265c",
+      "address": "0x0210265c",
+      "size": "0x000000bc",
+      "legacy_source": "src/func_ov006_0210265c.c",
+      "ordinal": 49
+    },
+    {
+      "symbol": "func_ov006_02102718",
+      "address": "0x02102718",
+      "size": "0x000000cc",
+      "legacy_source": "src/func_ov006_02102718.c",
+      "ordinal": 50
+    },
+    {
+      "symbol": "func_ov006_021027e4",
+      "address": "0x021027e4",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov006_021027e4.c",
+      "ordinal": 51
+    },
+    {
+      "symbol": "func_ov006_02102864",
+      "address": "0x02102864",
+      "size": "0x000003d8",
+      "legacy_source": "src/func_ov006_02102864.c",
+      "ordinal": 52
+    },
+    {
+      "symbol": "func_ov006_02102c3c",
+      "address": "0x02102c3c",
+      "size": "0x00000130",
+      "legacy_source": "src/func_ov006_02102c3c.c",
+      "ordinal": 53
+    },
+    {
+      "symbol": "func_ov006_02102d6c",
+      "address": "0x02102d6c",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov006_02102d6c.c",
+      "ordinal": 54
+    },
+    {
+      "symbol": "func_ov006_02102dbc",
+      "address": "0x02102dbc",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_02102dbc.c",
+      "ordinal": 55
+    },
+    {
+      "symbol": "func_ov006_02102de4",
+      "address": "0x02102de4",
+      "size": "0x000000a8",
+      "legacy_source": "src/func_ov006_02102de4.c",
+      "ordinal": 56
+    },
+    {
+      "symbol": "func_ov006_02102e8c",
+      "address": "0x02102e8c",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov006_02102e8c.cpp",
+      "ordinal": 57
+    },
+    {
+      "symbol": "func_ov006_02102ef4",
+      "address": "0x02102ef4",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_02102ef4.c",
+      "ordinal": 58
+    },
+    {
+      "symbol": "func_ov006_02102f3c",
+      "address": "0x02102f3c",
+      "size": "0x000000ac",
+      "legacy_source": "src/func_ov006_02102f3c.c",
+      "ordinal": 59
+    },
+    {
+      "symbol": "func_ov006_02102fe8",
+      "address": "0x02102fe8",
+      "size": "0x00000378",
+      "legacy_source": "src/func_ov006_02102fe8.cpp",
+      "ordinal": 60
+    },
+    {
+      "symbol": "func_ov006_02103360",
+      "address": "0x02103360",
+      "size": "0x000002a8",
+      "legacy_source": "src/func_ov006_02103360.c",
+      "ordinal": 61
+    },
+    {
+      "symbol": "func_ov006_02103608",
+      "address": "0x02103608",
+      "size": "0x00000114",
+      "legacy_source": "src/func_ov006_02103608.c",
+      "ordinal": 62
+    },
+    {
+      "symbol": "func_ov006_0210371c",
+      "address": "0x0210371c",
+      "size": "0x00000154",
+      "legacy_source": "src/func_ov006_0210371c.c",
+      "ordinal": 63
+    },
+    {
+      "symbol": "func_ov006_02103870",
+      "address": "0x02103870",
+      "size": "0x0000010c",
+      "legacy_source": "src/func_ov006_02103870.c",
+      "ordinal": 64
+    },
+    {
+      "symbol": "func_ov006_0210397c",
+      "address": "0x0210397c",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov006_0210397c.c",
+      "ordinal": 65
+    },
+    {
+      "symbol": "func_ov006_02103994",
+      "address": "0x02103994",
+      "size": "0x0000012c",
+      "legacy_source": "src/func_ov006_02103994.c",
+      "ordinal": 66
+    },
+    {
+      "symbol": "func_ov006_02103ac0",
+      "address": "0x02103ac0",
+      "size": "0x0000013c",
+      "legacy_source": "src/func_ov006_02103ac0.c",
+      "ordinal": 67
+    },
+    {
+      "symbol": "func_ov006_02103bfc",
+      "address": "0x02103bfc",
+      "size": "0x000000c0",
+      "legacy_source": "src/func_ov006_02103bfc.c",
+      "ordinal": 68
+    },
+    {
+      "symbol": "_ZN16dScMgPachinko2_c13OnYoshiTryEatEi",
+      "address": "0x02103cbc",
+      "size": "0x0000006c",
+      "legacy_source": "src/_ZN16dScMgPachinko2_c13OnYoshiTryEatEi.cpp",
+      "ordinal": 69
+    },
+    {
+      "symbol": "_ZN16dScMgPachinko2_c6RenderEv",
+      "address": "0x02103d28",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN16dScMgPachinko2_c6RenderEv.cpp",
+      "ordinal": 70
+    },
+    {
+      "symbol": "_ZN16dScMgPachinko2_c8BehaviorEv",
+      "address": "0x02103d78",
+      "size": "0x00000158",
+      "legacy_source": "src/_ZN16dScMgPachinko2_c8BehaviorEv.cpp",
+      "ordinal": 71
+    },
+    {
+      "symbol": "_ZN16dScMgPachinko2_c13InitResourcesEv",
+      "address": "0x02103ed0",
+      "size": "0x00000388",
+      "legacy_source": "src/_ZN16dScMgPachinko2_c13InitResourcesEv.cpp",
+      "ordinal": 72
+    },
+    {
+      "symbol": "dScMgPachinko2_c_classInit",
+      "address": "0x02104258",
+      "size": "0x00000034",
+      "legacy_source": "src/d_s_mg_pachinko2.c",
+      "ordinal": 73
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-assembled from the 74 legacy one-function sources of ROM ordinals 0..73 in ROM-ascending order under #pragma defer_codegen off. tools/tubuild.py create was used only for the function table: its splitter emits members in reverse order and drops per-function pragmas, and it cannot split func_ov006_0210258c, whose legacy body sits inside an extern \"C\" block.",
+    "Each legacy per-function pragma is carried in its own #pragma push and pop bracket around that member.",
+    "tubuild id at inspect time was ov006/dScMgPachinko2_c+dScMgPachinko_c. The manifest id drops the second class because the label is spurious (see boundary_evidence) and a + in promoted_source blocks promotion.",
+    "dScMgPachinko2_c_classInit keeps its hand-built factory form."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgPachinko2_c/dScMgPachinko2_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 74,
+    "functions_declared": 74,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN16dScMgPachinko2_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN16dScMgPachinko2_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154
+      ],
+      "data": [
+        "_ZTV16dScMgPachinko2_c",
+        "_ZTI16dScMgPachinko2_c",
+        "_ZTS16dScMgPachinko2_c",
+        "_ZTI11dScMgBase_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS8dScene_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11dScMgBase_c",
+        "_ZTI16dScMgPachinko2_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTS16dScMgPachinko2_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dScene_c",
+        "_ZTV16dScMgPachinko2_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov006-dScMgPachinko2_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020ff420",
+        "end": "0x0210428c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020ff420",
+          "end": "0x0210428c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 74
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN16dScMgPachinko2_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. mwcc emits three destructor variants from the one out-of-line definition -- D1, D0, D2 -- but the cartridge carries only D1 (0x020ff420) and D0 (0x020ff444), which are adjacent: 0x020ff444 - 0x020ff420 = 0x24, exactly D1's size, so the image has no room for a D2 between them. dScMgPachinko2_c is a leaf -- include/dScMgPachinko2_c.h records that no RTTI record names it as a base -- so its own D2 is never odr-used. _ZN16dScMgPachinko2_cD2Ev appears in no symbols.txt and no delinks.txt anywhere in the tree, so it has no ROM home at all: plain deadstrip rather than deadstrip-duplicate, and production isolation discards it."
+    },
+    {
+      "symbol": "_ZTV16dScMgPachinko2_c",
+      "disposition": "deadstrip-data",
+      "reason": "The class's own vtable, emitted because this TU owns the key function. Extent corroborated two ways that agree: (a) the address point in config/arm9/overlays/ov006/symbols.txt is 0x0213dbbc and the next data symbol is data_ov006_0213dc4c, giving symbol extent 0x90 = 36 slots and STORAGE 0x0213dbb4..0x0213dc4c = 0x98 once the 8-byte offset-to-top and typeinfo preamble is counted; (b) tubuild verify reports the emitted .data section for this symbol as exactly size=0x98. The cartridge keeps its canonical copy at ov006:0x0213dbbc, outside this TU's only licensed range (.text 0x020ff420-0x0210428c), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213dbbc"
+    },
+    {
+      "symbol": "_ZTI16dScMgPachinko2_c",
+      "disposition": "deadstrip-data",
+      "reason": "Own record. This TU defines dScMgPachinko2_c's key function -- the destructor, which include/dScMgPachinko2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at ov006:0x0213db4c, outside this TU's only licensed range (.text 0x020ff420-0x0210428c), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213db4c"
+    },
+    {
+      "symbol": "_ZTS16dScMgPachinko2_c",
+      "disposition": "deadstrip-data",
+      "reason": "Own record. This TU defines dScMgPachinko2_c's key function -- the destructor, which include/dScMgPachinko2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at ov006:0x0213db58, outside this TU's only licensed range (.text 0x020ff420-0x0210428c), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213db58"
+    },
+    {
+      "symbol": "_ZTI11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPachinko2_c's key function -- the destructor, which include/dScMgPachinko2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at ov004:0x020bbf6c, outside this TU's only licensed range (.text 0x020ff420-0x0210428c), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf6c"
+    },
+    {
+      "symbol": "_ZTS11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPachinko2_c's key function -- the destructor, which include/dScMgPachinko2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at ov004:0x020bbf84, outside this TU's only licensed range (.text 0x020ff420-0x0210428c), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf84"
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPachinko2_c's key function -- the destructor, which include/dScMgPachinko2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x020914d4, outside this TU's only licensed range (.text 0x020ff420-0x0210428c), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914d4"
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPachinko2_c's key function -- the destructor, which include/dScMgPachinko2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x020914b0, outside this TU's only licensed range (.text 0x020ff420-0x0210428c), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914b0"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPachinko2_c's key function -- the destructor, which include/dScMgPachinko2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e78, outside this TU's only licensed range (.text 0x020ff420-0x0210428c), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPachinko2_c's key function -- the destructor, which include/dScMgPachinko2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e54, outside this TU's only licensed range (.text 0x020ff420-0x0210428c), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPachinko2_c's key function -- the destructor, which include/dScMgPachinko2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086d70, outside this TU's only licensed range (.text 0x020ff420-0x0210428c), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPachinko2_c's key function -- the destructor, which include/dScMgPachinko2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e60, outside this TU's only licensed range (.text 0x020ff420-0x0210428c), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    }
+  ]
+}
