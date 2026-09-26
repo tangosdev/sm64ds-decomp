@@ -2517,12 +2517,12 @@ ov084	0x0212c054	func_ov084_0212c054	GoombaSmall_Spawn	spawnfunc
 ov084	0x0212c054	GoombaSmall_Spawn	daKrb_c_classInit_KURIBO_S	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov084	0x0212c0b0	func_ov084_0212c0b0	Goomba_Spawn	spawnfunc
 ov084	0x0212c0b0	Goomba_Spawn	daKrb_c_classInit_KURIBO	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov084	0x0212c10c	func_ov084_0212c10c	_ZN11BobOmbBuddyD1Ev	vtable slot 16
-ov084	0x0212c14c	func_ov084_0212c14c	_ZN11BobOmbBuddyD0Ev	vtable slot 17
-ov084	0x0212cf10	func_ov084_0212cf10	_ZN11BobOmbBuddy16CleanupResourcesEv	vtable slot 3
-ov084	0x0212cf40	func_ov084_0212cf40	_ZN11BobOmbBuddy6RenderEv	vtable slot 9
-ov084	0x0212cf6c	func_ov084_0212cf6c	_ZN11BobOmbBuddy8BehaviorEv	vtable slot 6
-ov084	0x0212d028	func_ov084_0212d028	_ZN11BobOmbBuddy13InitResourcesEv	vtable slot 0
+ov084	0x0212c10c	func_ov084_0212c10c	_ZN14daRedBombhei_cD1Ev	vtable slot 16
+ov084	0x0212c14c	func_ov084_0212c14c	_ZN14daRedBombhei_cD0Ev	vtable slot 17
+ov084	0x0212cf10	func_ov084_0212cf10	_ZN14daRedBombhei_c16CleanupResourcesEv	vtable slot 3
+ov084	0x0212cf40	func_ov084_0212cf40	_ZN14daRedBombhei_c6RenderEv	vtable slot 9
+ov084	0x0212cf6c	func_ov084_0212cf6c	_ZN14daRedBombhei_c8BehaviorEv	vtable slot 6
+ov084	0x0212d028	func_ov084_0212d028	_ZN14daRedBombhei_c13InitResourcesEv	vtable slot 0
 ov084	0x0212d200	func_ov084_0212d200	BobOmbBuddy_Spawn	spawnfunc
 ov084	0x0212d200	BobOmbBuddy_Spawn	daRedBombhei_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov084	0x0212d248	func_ov084_0212d248	_ZN8daFPkn_cD1Ev	vtable slot 16
@@ -2548,7 +2548,7 @@ ov084	0x02130924	GoombaLarge_SpawnInfo	g_profile_KURIBO_L	reconstructed profile 
 ov084	0x02130948	data_ov084_02130948	_ZTV7daKrb_c	vtable alloc=?
 ov084	0x02130a14	data_ov084_02130a14	BobOmbBuddy_SpawnInfo	spawninfo
 ov084	0x02130a14	BobOmbBuddy_SpawnInfo	g_profile_RED_BOMBHEI	reconstructed profile global; literal ROM ID RED_BOMBHEI+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov084	0x02130a38	data_ov084_02130a38	_ZTV11BobOmbBuddy	vtable alloc=0x1f0
+ov084	0x02130a38	data_ov084_02130a38	_ZTV14daRedBombhei_c	vtable alloc=0x1f0
 ov084	0x02130acc	data_ov084_02130acc	FirePiranhaPlant_SpawnInfo	spawninfo
 ov084	0x02130acc	FirePiranhaPlant_SpawnInfo	g_profile_PAKUN2	reconstructed profile global; literal ROM ID PAKUN2+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov084	0x02130ae8	data_ov084_02130ae8	FirePiranhaPlantBig_SpawnInfo	spawninfo

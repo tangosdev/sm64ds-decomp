@@ -325,7 +325,7 @@
     "offsets_agree_with_rom": true,
     "divergences_to_consider": [
       "The header declares `virtual ~PiranhaPlant();` as the FIRST virtual, out of line. Both promoted dEnemyBase_c oracles took the opposite shape: daOts_c.h and daObjMarioCap_c.h define the destructor INLINE in the class body so that a later out-of-line virtual becomes the key function. Which shape this class takes decides whether the TU emits the _ZTV/_ZTI/_ZTS group, and that group's canonical copy is in ov084 .data, which no shard owns. This is a stage-2 codegen decision; it is recorded here because the ROM does not settle it.",
-      "InitResources, CleanupResources, Behavior, Render and OnPendingDestroy are declared WITHOUT the `virtual` keyword. This is not a defect: they redeclare virtuals fBase_c.h already declares (slots 0/3/6/9/12) and `typedef signed int s32` in include/types.h makes the header's `int` return types identical to fBase_c's `s32`, so they override correctly. It is only inconsistent with include/BobOmbBuddy.h, which spells the same five `virtual s32`.",
+      "InitResources, CleanupResources, Behavior, Render and OnPendingDestroy are declared WITHOUT the `virtual` keyword. This is not a defect: they redeclare virtuals fBase_c.h already declares (slots 0/3/6/9/12) and `typedef signed int s32` in include/types.h makes the header's `int` return types identical to fBase_c's `s32`, so they override correctly. It is only inconsistent with include/daRedBombhei_c.h, which spells the same five `virtual s32`.",
       "The header does not mention the 9-entry state PMF array or any of the 15 non-virtual functions."
     ]
   },
