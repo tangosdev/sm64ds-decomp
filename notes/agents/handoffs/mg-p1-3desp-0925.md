@@ -5,16 +5,19 @@ This document describes this commit. The queue records its immutable output SHA.
 ## Identity and resumption
 
 - Issue URL, task ID, stage, session and harness: https://github.com/tangosdev/sm64ds-decomp/issues/3171,
-  `mg-p1-3desp-0925`, stage `revise` (producer), session `claude-prod-mg-p1-3desp-0925`, Claude Code.
+  `mg-p1-3desp-0925`, stage `revise` (producer, rework round 2), session
+  `claude-prod-mg-p1-3desp-0925-r2`, Claude Code. Round 1 was session `claude-prod-mg-p1-3desp-0925`.
 - Source branch and previous accepted input SHA: `readable/mg-p1-3desp-0925`, input
-  `e63828444b7ad3fc20afb58de29857b618dddbcf`.
+  `68f14c35c56c96930e9eeb9bcc9c0abca93c1b19`, the round-1 candidate, which verification returned
+  with finding V1 open.
 - Original source base SHA and installed workflow/tool SHA: both `e63828444b7ad3fc20afb58de29857b618dddbcf`.
 - Separate evidence commits and required artifacts in this commit: none; this note only.
-- Next action, responsible role and blockers: independent verification (byte, relocation,
-  whole-object and source review of this exact commit). No blockers.
+- Next action, responsible role and blockers: independent verification, round 2 (byte,
+  relocation, whole-object and source review of this exact commit). No blockers.
 - Status: verified candidate (evidence below).
 - Remaining uncommitted/local-only material and where it is preserved: none needed; the
-  object comparison is described below and can be repeated from the base and this commit.
+  object comparison and each experiment variant are described below and can be repeated
+  from the base and this commit.
 
 ## What changed and why
 
@@ -28,10 +31,16 @@ This document describes this commit. The queue records its immutable output SHA.
   inside the 0x21c-byte block at `0x4fd8`, so it is that `dMg3DEspModel_c`'s `unk_20c`.
   The header comment says so; the field keeps its name.
 - Hypothesized names/filenames, explicitly not recovered facts: none added.
-- Compiler experiments and measured barriers: see the finding list and theme results.
+- Compiler experiments and measured barriers: see the finding list, the theme results and
+  the V1 experiments under Proof.
 
 ### Findings
 
+- **V1, fixed.** Verification of `68f14c35c5` found the comment above `struct M48` in
+  `InitResources` false: a `Matrix4x3` copy compiles to the same object. `InitResources` now
+  declares `extern volatile Matrix4x3 data_ov006_0213c88c`, types its temporary `Matrix4x3`
+  and assigns `mat4x3` by name. `M48` is gone. The comment claims only the two shapes
+  re-measured on this form (R5).
 - **R1, fixed.** `InitResources` reached every field through `char *c` plus an offset.
   It now uses the header names (`mCameraEye*`, `mCameraTarget*`, `mCameraAngle`,
   `pad_4660`, `mModel1`, `mModel2`, `pad_4fd8`, `mTextureTransformer`, `unk_0a4`,
@@ -45,10 +54,11 @@ This document describes this commit. The queue records its immutable output SHA.
   Through the header with a `Fix12<int>` by value, the function grows by 12 bytes
   (member assignment) or by 20 bytes plus a `.data` section (aggregate initializer).
   A one-line comment records this.
-- **R5, partially fixed.** The two matrix copies now target `Model::mat4x3` by name. The
-  word-array `M48` type, the `volatile` extern and the stack copy stay. A `Matrix4x3`
-  copy changes the bytes at the same size, a non-volatile extern adds 32 bytes, and no
-  stack copy removes 32 bytes. One comment names the three.
+- **R5, fixed.** The two matrix copies target `Model::mat4x3` by name, as `Matrix4x3`
+  copies (V1). The `volatile` extern and the stack copy stay, with one comment. Measured
+  on this form, a non-volatile extern adds 32 bytes, with or without the casts, and
+  copying both models straight from the extern removes 32 bytes. The `(Matrix4x3&)`
+  casts strip the `volatile`: without them mwcc rejects the copy (`illegal operands`).
 - **R6, fixed.** The `zero` temporary is gone; literal zeros match.
 - **R7, fixed.** Ten local redeclarations in `InitResources` repeated `decl_common.h`
   exactly (`InitialiseVramGlobals`, `func_ov004_020b04d0`, `Deallocate`, `func_02056374`,
@@ -117,9 +127,11 @@ This document describes this commit. The queue records its immutable output SHA.
   the existing handles agree with it.
 - Theme 14, Fix12: `Fix12<int>` by value at a call site is **measured negative here**
   (`InitResources`, `SetFile`).
-- Also measured in `InitResources`: a `Matrix4x3` struct copy, a non-volatile matrix
-  extern and dropping the stack copy are each negative. In `Render`, `Model::data` by
-  name is negative. In `OnYoshiTryEat`, the post-zero clamp is load-bearing.
+- Also measured in `InitResources`: a `Matrix4x3` struct copy in place of the `M48`
+  word array is **proven here** and applied (V1). A non-volatile matrix extern (+32
+  bytes) and dropping the stack copy (-32 bytes) are each negative. In `Render`,
+  `Model::data` by name is negative. In `OnYoshiTryEat`, the post-zero clamp is
+  load-bearing.
 
 ## Reconstruction dimensions
 
@@ -127,9 +139,10 @@ This document describes this commit. The queue records its immutable output SHA.
   relocation. The comparison is object-level, not masked.
 - Genuine methods; remaining free-function/ABI bridges: all eight are real methods.
   Remaining bridges are `SetFile` (R4) and the G2S, GXS and G3X calls (R8).
-- Recovered layout/fields; remaining shadow structs/raw offsets: raw offsets remain for
-  `Model::data` (R15), the halfword at `0x5548` (inside `pad_5540`) and the SharedFilePtr
-  file word (its header declares no fields).
+- Recovered layout/fields; remaining shadow structs/raw offsets: no local shadow struct
+  remains; the matrix copies use `Matrix4x3` (V1). Raw offsets remain for `Model::data`
+  (R15), the halfword at `0x5548` (inside `pad_5540`) and the SharedFilePtr file word (its
+  header declares no fields).
 - Lifecycle, vtable/RTTI, initializer and data ownership: unchanged. The destructor is
   still the key function; the D1 and D0 raw objects still emit the same vtable and RTTI.
 - Attribution preserved through each move/rename: no moves or renames.
@@ -137,46 +150,60 @@ This document describes this commit. The queue records its immutable output SHA.
 
 ## Proof
 
-All results are from source commit `5cd510f0b7` (this note's parent, identical sources),
-on Windows with the pinned `2004/b56` compiler.
+All results are from source commit `01eeb375f6` (this note's parent, identical sources),
+on Windows with the pinned `2004/b56` compiler. The extracted ROM, the compiler and dsd
+were copied into the worktree.
 
-- **Baseline**, `python tools/rombuild.py -j8 --no-rom` at the base: exit 0. The eight
-  objects were compiled (0 reused from cache, 7069 compiled) and linked, with 11,214 of
-  11,214 functions reproducing and 0 mismatching.
+- **Baseline**, `python tools/rombuild.py -j8 --no-rom` with the nine files checked out
+  from the base: exit 0. 0 reused from cache, 7069 compiled; 11,214 of 11,214 functions
+  reproducing, 0 mismatching; 106 of 106 modules exact. The eight objects were saved as
+  the baseline, and the same base files were raw-compiled with the production flags.
 - **Full-ROM build**, `python tools/rombuild.py -j8 --no-cache`: exit 0, status passed.
-  - `intactTuRom.identical` is true.
+  - `intactTuRom.identical` is true; the ROM sha256 is
+    `d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8`, the expected one.
   - `objectCache`: compiled 7069, reused 0, so the eight files were compiled from this
-    tree.
+    tree. All eight are enrolled in the ov006 `delinks.txt` and listed in
+    `build/objects.txt`.
   - 11,214 of 11,214 functions reproduce, 0 mismatch; module fidelity 106 of 106 exact;
     ROM-build analysis PASS.
-  - An earlier cached run overlapped a temporary checkout of the base files and was
-    discarded.
 - **Explicit relocation checks**, `python tools/prepush_linkcheck.py --range e63828444b..HEAD`:
   exit 0. The changed header fans out to 8 sources; 8 verified, 0 warnings, 0 blocking.
-- **Complete emitted object checks**, pyelftools, base against candidate:
+- **Complete emitted object checks**, pyelftools, base against candidate. Sections are
+  compared by index and bytes, relocations by (section, offset, type, symbol, addend),
+  defined symbols by (name, section, value, size, binding, type), and undefined symbols
+  by name.
   - The eight production objects (post-isolation, from the two rombuild runs) are
-    byte-identical files.
-  - Whole raw compiles (production flags) were compared too, including D2, D0, D1, the
-    vtable and RTTI in the destructor files. Sections are byte-identical, relocations
-    match by (offset, type, symbol, addend), and the defined symbols (name, section,
-    value, size, binding, type) and undefined symbols match.
-  - The same comparison ran after every lever, and a deliberate one-constant change
-    showed as a difference, as a positive control.
+    identical, and byte-identical files.
+  - The eight whole raw compiles are identical, and byte-identical files. That covers
+    D2, D1, D0, the vtable and RTTI in the destructor files (17 sections, 80
+    relocations and 22 defined symbols each).
+  - As a positive control, `mCameraAngle = 0xc01` in `InitResources` shows as a
+    difference (+4 bytes).
+- **V1 experiments.** Each is one edit to this commit's `InitResources`, raw-compiled with
+  the production flags and compared to the base object:
+  - the committed `Matrix4x3` form: identical;
+  - `extern Matrix4x3` without `volatile`, casts kept: +32 bytes (0x380 to 0x3a0);
+  - the same with the casts dropped: +32 bytes;
+  - no `tmp`, both models copied straight from the extern: -32 bytes (0x380 to 0x360);
+  - `volatile` kept with the casts dropped: mwcc rejects it with
+    `illegal operands 'Matrix4x3' = 'volatile Matrix4x3'`.
 - **Shared-header consumer expansion**: `python tools/affected_src.py include/dScMg3DEsp_c.h`
   exits 0 and lists exactly the eight files above, all covered.
   `python tools/check_header_offsets.py include/dScMg3DEsp_c.h`: exit 0, 9 commented
-  fields, 0 mismatched, 0 unparsed, spans 0x5558.
+  fields, 0 mismatched, 0 unparsed, spans 0x5558. The header is unchanged in round 2.
 - **Declaration gates**, no baseline edits:
   - `python tools/check_decl_agreement.py --changed e63828444b`: exit 0, no new local
     redeclarations, no new disagreements.
-  - `python tools/check_decl_agreement.py`: exit 0, no new disagreements.
-  - Against the same tree with these nine files at the base: 15,207 disagreements, down
-    from 15,213; healed banked entries 1,030, up from 1,024; declarations 35,881, down
-    from 35,896.
+  - `python tools/check_decl_agreement.py`: exit 0, no new disagreements; 15,207
+    disagreements, 35,881 declarations, 1,030 healed banked entries.
+  - The same check with these nine files at the base: 15,213 disagreements, 35,896
+    declarations, 1,024 healed banked entries. `data_ov006_0213c88c` has one
+    declaration, this file's, so retyping it moves no count.
 - **Other static gates**, each exit 0:
   - `python tools/prepush_attribution.py --base e63828444b --head HEAD`: 7241 tracked,
     0 changed, 0 lost.
   - `python tools/check_dead_references.py`: no new dead references, no broken links.
+    It was run again with this note in the working tree, with the same result.
   - `python tools/tiers_ratchet.py --check`: CONVERTED ratchet PASS, baseline 3001,
     current 3219.
   - `python tools/check_tubuild_conflicts.py`: 302 entries, every conflict recorded.
@@ -195,7 +222,7 @@ after (one helper call). `char *` alias locals went from 3 to 0.
 
 | File | lines | `func_` | `unk_` | `_ZN` | `extern "C"` | `goto` | `(char *)this` |
 |---|---|---|---|---|---|---|---|
-| `_ZN12dScMg3DEsp_c13InitResourcesEv.cpp` | 142 → 120 | 12 → 9 | 0 → 4 | 12 → 10 | 1 → 1 | 0 → 0 | 0 → 0 |
+| `_ZN12dScMg3DEsp_c13InitResourcesEv.cpp` | 142 → 119 | 12 → 9 | 0 → 4 | 12 → 10 | 1 → 1 | 0 → 0 | 0 → 0 |
 | `_ZN12dScMg3DEsp_c13OnYoshiTryEatEi.cpp` | 36 → 26 | 2 → 2 | 5 → 6 | 1 → 1 | 0 → 0 | 0 → 0 | 1 → 1 |
 | `_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp` | 50 → 21 | 0 → 0 | 0 → 0 | 2 → 1 | 1 → 1 | 0 → 0 | 0 → 0 |
 | `_ZN12dScMg3DEsp_c6RenderEv.cpp` | 37 → 32 | 4 → 4 | 0 → 0 | 1 → 1 | 1 → 1 | 0 → 0 | 1 → 4 |
