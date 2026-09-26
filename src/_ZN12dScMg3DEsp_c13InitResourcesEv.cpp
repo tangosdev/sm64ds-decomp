@@ -25,14 +25,13 @@ extern unsigned char data_0209d45c;
 extern unsigned char data_0209d454;
 }
 
-/* Both models' starting matrix. A Matrix4x3 copy, a non-volatile extern or
-   no stack copy in InitResources each changes the bytes. */
-struct M48 { int w[12]; };
-extern volatile M48 data_ov006_0213c88c;
+/* Both models' starting matrix. Declaring it non-volatile adds 32 bytes to
+   InitResources, and copying it without the stack temporary removes 32. */
+extern volatile Matrix4x3 data_ov006_0213c88c;
 
 s32 dScMg3DEsp_c::InitResources()
 {
-    M48 tmp;
+    Matrix4x3 tmp;
     int f;
     int r5v;
     int r4v;
@@ -65,9 +64,9 @@ s32 dScMg3DEsp_c::InitResources()
 
     if (func_020179b4(&data_ov006_02141e74, mModel2, 1) == 0) return 0;
 
-    tmp = (M48&)data_ov006_0213c88c;
-    (M48&)((Model*)mModel1)->mat4x3 = (M48&)data_ov006_0213c88c;
-    (M48&)((Model*)mModel2)->mat4x3 = tmp;
+    tmp = (Matrix4x3&)data_ov006_0213c88c;
+    ((Model*)mModel1)->mat4x3 = (Matrix4x3&)data_ov006_0213c88c;
+    ((Model*)mModel2)->mat4x3 = tmp;
 
     data_0209d454 |= 4;
     /* sub BG2CNT, then the sub BG2 scroll offsets */
