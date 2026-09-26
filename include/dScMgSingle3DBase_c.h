@@ -1,7 +1,8 @@
-/* Base class for the "single 3D minigame" family -- 13 direct RTTI children
- * (card, cup, memory x2, mahjong-carlo x2, roulette, slot3, sound, BSC,
- * snowball, flower, 3DEsp). Adds a Particle::SysTracker at 0x471c. See
- * notes/minigame-provenance.md for the field evidence. */
+/* Base class for the single-camera 3D minigames. Its 13 direct RTTI
+ * children are Cup, Memory, Memory2, Slot3, Sound, Snowball, Card, MCarlo,
+ * MCarlo2, Roulette, BSC, 3DEsp and Flower. Adds one camera at 0x4660 and
+ * a Particle::SysTracker at 0x471c. See notes/minigame-provenance.md for
+ * the field evidence. */
 #ifndef DSCMGSINGLE3DBASE_C_H
 #define DSCMGSINGLE3DBASE_C_H
 #include "dScMgBase_c.h"
@@ -14,35 +15,18 @@ void RenderAll();
 }
 
 struct dScMgSingle3DBase_c : dScMgBase_c {
-    /* Declared first, so it takes slots 16 (D1) and 17 (D0) -- but it is NOT
-       this class's key function.  An inline destructor is emitted in every
-       TU that needs it, so it anchors nothing; the key function is
-       AfterInitResources, the first DECLARED non-inline virtual, which is
-       why the vtable and typeinfo land in src/minigames/d_s_mg_single3_d_base.cpp
-       (see that class's rows in config/tu_manifest.d/ov006/).
-       MUST STAY DEFINED INLINE -- all 13 children inline this body, and
-       _ZN19dScMgSingle3DBase_cD2Ev exists nowhere in the ROM, so an
-       out-of-line definition leaves every child with an undefined external.
-       MEASURED on dScMgMemory_c; do not move the body out. */
+    /* Overrides the destructor slots 16 (D1) and 17 (D0). Must stay inline:
+       all 13 children inline this teardown, and the ROM has no
+       _ZN19dScMgSingle3DBase_cD2Ev, so an out-of-line body leaves each child
+       an undefined external (measured on dScMgMemory_c). Being inline, it is
+       not the key function; AfterInitResources is, which places the vtable
+       and typeinfo in src/minigames/d_s_mg_single3_d_base.cpp. */
     virtual ~dScMgSingle3DBase_c() {}
 
-    /* --- re-overrides of dScMgBase_c's virtuals, in _ZTV order.
-           Slots 26 and 33 are ALSO re-overrides, not new virtuals: this class
-           was previously annotated as introducing them, but dScMgBase_c's own
-           vtable already carries bodies at both (ov004:0x020b04e0 for slot 26,
-           ov004:0x020b265c for slot 33).  Slot 26 is declared below now that
-           dScMgBase_c has named it, and its ov006 body is a real member
-           definition in src/minigames/d_s_mg_single3_d_base.cpp rather than the
-           mangled free function it had to be while the base was silent.
-           Slot 33 is declared below now as well, and its ov006 body is a
-           real member definition in the same file, where it byte-verified for
-           three commits as the mangled free function func_ov006_0210a708.  It
-           was the LAST vtable slot in that unit still spelled that way; the
-           one function left there under a func_<module>_<address> name,
-           0x0210a534, is in no vtable at all.
-           Declaring dScMgBase_c's remaining two (34-35) is what lets
-           this class emit its full 36-slot vtable; today it emits a byte-exact
-           34-slot prefix. --- */
+    /* Overrides of dScMgBase_c virtuals, in vtable order; dScMgBase_c has
+       its own bodies at all six slots, 26 and 33 included. This class adds
+       no virtual, so its vtable is dScMgBase_c's 36 slots, and the compiler
+       emits all 36, matching the ROM's table at ov006:0x0213e448. */
     virtual void AfterInitResources(u32 vfSuccess); /* slot  2 */
     virtual void AfterCleanupResources(u32 vfSuccess); /* slot  5 */
     virtual int  BeforeBehavior();                  /* slot  7 */
