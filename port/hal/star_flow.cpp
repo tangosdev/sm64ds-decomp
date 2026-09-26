@@ -531,7 +531,17 @@ void seat_engine_a_layers(void)
      * calling the ROM's own SetGraphicsMode instead is worse: its `a` and `b`
      * arguments also set the display mode and the BG mode, two fields the port
      * deliberately leaves at zero because it does not drive engine A. One bit,
-     * which is the one bit of that call the port can honour. */
+     * which is the one bit of that call the port can honour.
+     *
+     * "THE PORT NEVER CALLS SetGraphicsMode" IS HISTORY ON THE LEVEL PATH (run
+     * linkfull, lane HUDQUIT1). hal/level_boot.cpp's port_stage_boot_body now
+     * makes Stage::InitResources' own first call, dScene_c::Initialise3dGraphics,
+     * on every Stage build, and that function calls GX::SetGraphicsMode(1, 0,
+     * 1) after its register reset: the ROM sets bit 3 itself, and the
+     * display-mode and BG-mode fields it writes are its own values. The store below therefore finds the bit set
+     * and changes nothing on a level boot; it is kept because it is harmless,
+     * and retiring it is a separate change. The layer mask and the BG0CNT
+     * priority are still this seat's alone. */
     *(volatile unsigned int *)0x04000000 |= 8;
     /* AND THE 3D LAYER'S PRIORITY, WHICH IS WHY HALF THE VS HUD WAS INVISIBLE.
      *
