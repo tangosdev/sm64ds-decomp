@@ -3440,6 +3440,12 @@ signed char GetLevelPart(int idx);
    Stage::InitResources:313. Called from port_stage_boot_body below. */
 extern "C" void func_ov001_020ab2e4(void);
 
+/* src/_ZN8dScene_c20Initialise3dGraphicsEv.cpp and src/Enable3dEngines.c, the
+   first two statements of Stage::InitResources, spelled the way that function
+   declares them. Called from port_stage_boot_body below. */
+extern "C" void _ZN8dScene_c20Initialise3dGraphicsEv(void);
+extern "C" void Enable3dEngines(void);
+
 extern "C" void *port_stage_boot_body(void *mc, int spawn)
 {
     const double lvlperf_t0 = port_lvlperf_now();
@@ -3456,6 +3462,47 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
         extern void port_quarantine_reset(void);
         port_quarantine_reset();
     }
+    /* STAGE::INITRESOURCES' FIRST TWO STATEMENTS, ON EVERY STAGE BUILD.
+       src/_ZN5Stage13InitResourcesEv.cpp:152-153, at the top of the
+       once-per-init block this body stands in for:
+
+           _ZN8dScene_c20Initialise3dGraphicsEv();   dScene_c::Initialise3dGraphics
+           Enable3dEngines();
+
+       dScene_c::Initialise3dGraphics opens with dScene_c::ResetHardwareRegisters
+       (src/_ZN8dScene_c22ResetHardwareRegistersEv.cpp), which puts both 2D
+       engines back to the ROM's starting state, and its first store is
+       POWCNT1 |= 0x8000: engine A drives the top screen. OAM::Load reads that
+       bit to decide which sprite shadow goes to which engine
+       (src/_ZN3OAM4LoadEv.cpp), so it is what keeps the HUD's lives and star
+       counter on the top screen and the camera buttons and the map marker on
+       the bottom one.
+
+       THE PORT NEVER MADE THESE TWO CALLS FOR A LEVEL. Every hosted scene makes
+       them through its own slot 1, dScene_c::BeforeInitResources; the Stage's
+       slot 1 is only Scene::ResetFadersAndSound
+       (src/_ZN5Stage19BeforeInitResourcesEv.cpp), so for a level they belong
+       here, and this body did not have them. The one port write of bit 15 was
+       hal/sub_screen.cpp's hal_sub_screen_init_hw, once a process, after the
+       first level boot. The title and its file select run with the bit CLEAR,
+       so a level entered after Game Over -> QUIT -> title -> a file kept it
+       clear: the lives and star counter came up on the bottom screen and the
+       camera buttons and map marker were drawn on the top one out of the other
+       engine's character memory, as stray pieces of text. Measured with the
+       display registers read at the selftest picture: POWCNT1 020f there
+       against 820f on a fresh boot into the same level, the 3D pixel-identical
+       and every changed pixel a sprite.
+
+       What the reset clears that a level draws with is set again further down
+       by the statements the port already hosts, in InitResources' own order:
+       hal_sub_screen_level_init (SetVramBanks, the screen base, the sub
+       DISPCNT, and Stage::LoadGraphics2D, which writes BG2CNT and BG3CNT on
+       both engines) and port_boot_course_sound's engine-A seat (the layer
+       mask, DISPCNT bit 3, the BG0CNT priority). Its DISPCAPCNT store names
+       VRAM block 0, which holds texture slot 0 by then, so ntr/ppu.cpp's
+       capture unit declines it exactly as it does at every scene boot. */
+    _ZN8dScene_c20Initialise3dGraphicsEv();
+    Enable3dEngines();
     /* Settle which level this boot is for BEFORE the mount reads it. The direct
        boot seeds the target from SM64DS_LEVEL here; the handoff has already set
        it to the latched level (port_level_set_target), so this is a no-op on
