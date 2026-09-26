@@ -649,7 +649,14 @@ __ZN6Player16St_WallJump_InitEv                                          ?St_Wal
 # for real and the generated face was the second one. Measured as an LNK2005
 # row against faces_sync_gen.cpp.obj in build_s2.log.
 #__ZN6Player17SetNoControlStateEhih                                       ?SetNoControlState@Player@@QAEHEHE@Z                             0x020ca1b8 F
-__ZN6Player17St_EndingFly_MainEv                                         ?St_EndingFly_Main@Player@@QAEXXZ                                0x020c3d1c R
+# RE-POINTED (run linkfull, lane ENDFLY1). This row used to name the VOID
+# spelling ?St_EndingFly_Main@Player@@QAEXXZ, which only hal/scene_boot.cpp
+# defined, as a bridge onto func_ov007_020c3d1c: ov007's free() trampoline,
+# which sits at the same address in another overlay. So the ov002 state
+# dispatcher's EndingFly case (hal/player_bridges.cpp, case 0x020c3d1c) ran
+# that trampoline on the Player at the game's ending, and the real body, the
+# int member src/actors/Player.cpp defines, was never referenced.
+__ZN6Player17St_EndingFly_MainEv                                         ?St_EndingFly_Main@Player@@QAEHXZ                                0x020c3d1c R
 # RETIRED at SYNC6: the class translation unit that owns this body is back in
 # the link (today's main un-quarantine), so the definition below now exists
 # for real and the generated face was the second one. Measured as an LNK2005

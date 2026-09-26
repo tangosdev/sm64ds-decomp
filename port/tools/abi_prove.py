@@ -72,6 +72,7 @@ DEFAULT_ROOT = os.path.dirname(os.path.dirname(HERE))
 
 FIXTURE_FILE = "abi_prove_reinjected.cpp"
 NS_FIXTURE_FILE = "abi_prove_nsdecl.cpp"
+NS_DEF_FILE = "abi_prove_nsdef.cpp"
 
 # --------------------------------------------------------------------------
 # alias-form fixtures: (name, directive text, what it cost, where it was fixed)
@@ -413,20 +414,22 @@ def prove_nsdecl(root, scratch, results):
          body is not what the declaration calls.
       2. QUIET AGAIN. Removing the file must take the row away. A detector
          that never goes quiet is a detector nobody can ratchet.
-      3. THE REAL SITE, which is the regression proof for the FIX rather than
-         for the detector. src/func_ov007_020b7764.cpp still carries its
-         byte-locked namespaced declaration; what changed is that
-         hal/scene_boot.cpp no longer points that spelling at the flat body.
-         Put THAT ONE DIRECTIVE back in the scratch copy and the real row must
-         return. This is the arm that would fail if somebody re-added the
-         alias without re-adding the face.
+      3. THE REAL SITE, RETIRED (run linkfull, lane ENDFLY1). This arm put
+         the deleted scene_boot directive back and expected
+         src/func_ov007_020b7764.cpp's namespaced declaration to return as a
+         real row. Main has since respelled that site to call
+         func_ov007_020c3d1c by its flat name, so the declaration is gone,
+         the arm could never go red again, and the face it guarded is
+         retired too. Arms 1 and 2 still prove the detector on the shape.
     """
     print("\n" + "=" * 74)
     print("## aritycheck, the namespaced C++ declaration spelling")
     print("=" * 74)
 
+    # the flat ITANIUM target: ns_bindings only counts a binding whose right
+    # side is a __ZN name (an address-named right side binds nothing)
     ns_alias = ("?St_EndingFly_Main@Player@@YAXXZ="
-                "_func_ov007_020c3d1c")
+                "__ZN6Player17St_EndingFly_MainEv")
 
     path = os.path.join(scratch, "src", NS_FIXTURE_FILE)
     with open(path, "w", encoding="utf-8") as f:
@@ -435,10 +438,24 @@ def prove_nsdecl(root, scratch, results):
                 "   src/func_ov007_020b7764.cpp:2, which nothing in this\n"
                 "   suite could see before 2026-08-17. */\n"
                 "namespace Player { void St_EndingFly_Main(); }\n")
+    # THE FLAT BODY THE BINDING POINTS AT. The tree carried it as the ov007
+    # definition until main renamed that body func_ov007_020c3d1c, and the
+    # census only makes a row when a declaration meets a definition. Without
+    # it this arm passed on the "unbound" exclusion line naming the file,
+    # which proved nothing (run linkfull lane ENDFLY1 measured that), so the
+    # fixture brings its own body: one parameter, the receiver the
+    # namespaced declaration drops.
+    defpath = os.path.join(scratch, "src", NS_DEF_FILE)
+    with open(defpath, "w", encoding="utf-8") as f:
+        f.write("//cpp\n"
+                "/* abi_prove fixture, scratch copy only: the flat body. */\n"
+                "extern \"C\" void _ZN6Player17St_EndingFly_MainEv(void *self) "
+                "{ (void)self; }\n")
     inject_alias(scratch, ns_alias, "namespaced declaration binding")
     rc, out = run([PY, os.path.join(HERE, "aritycheck.py"), scratch,
                    "--gate-receiver"])
     os.remove(path)
+    os.remove(defpath)
     clear_alias(scratch)
     caught = (rc == 1 and "NEW RECEIVER-SHAPE" in out
               and NS_FIXTURE_FILE in out)
@@ -456,18 +473,11 @@ def prove_nsdecl(root, scratch, results):
     print("  %-4s and green again with the fixture removed (exit %d)"
           % ("PASS" if back else "FAIL", rc2))
 
-    # Arm 3: the real site, re-broken by restoring only the deleted directive.
-    inject_alias(scratch, ns_alias, "the deleted scene_boot directive")
-    rc3, out3 = run([PY, os.path.join(HERE, "aritycheck.py"), scratch,
-                     "--gate-receiver"])
-    clear_alias(scratch)
-    real = (rc3 == 1 and "NEW RECEIVER-SHAPE" in out3
-            and "func_ov007_020b7764" in out3)
-    results.append(("aritycheck RED: the real sixth-defect site returns when "
-                    "its alias does", real))
-    print("  %-4s and re-adding ONLY the deleted scene_boot directive brings "
-          "src/func_ov007_020b7764.cpp back (exit %d, named: %s)"
-          % ("PASS" if real else "FAIL", rc3, "yes" if real else "NO"))
+    # Arm 3 (the real sixth-defect site) is RETIRED: see the docstring. Said
+    # on every run so the smaller arm count is never read as a silent drop.
+    print("  RETIRED the real-site arm: src/func_ov007_020b7764.cpp now calls "
+          "func_ov007_020c3d1c by its flat name, so no namespaced "
+          "declaration is left to bring back")
 
 
 def prove_ride(root, scratch, results):
@@ -618,7 +628,8 @@ def main(argv):
     root = os.path.abspath(args.root)
 
     for stray in (os.path.join(root, "port", "hal", FIXTURE_FILE),
-                  os.path.join(root, "src", NS_FIXTURE_FILE)):
+                  os.path.join(root, "src", NS_FIXTURE_FILE),
+                  os.path.join(root, "src", NS_DEF_FILE)):
         if not os.path.exists(stray):
             continue
         print("abi_prove: REFUSED -- %s exists in the REAL tree. An earlier "
