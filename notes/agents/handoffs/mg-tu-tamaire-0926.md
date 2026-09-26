@@ -11,12 +11,10 @@ This document describes this commit. The queue records its immutable output SHA.
   installed workflow and tool SHA: `70f055a670e80271a79713cabfbf825c251de2ec`.
 - Commits on the input: the folded candidate (`6b91ced57a`), the promotion
   (`4a4865967c`), declaration agreement and baseline re-key (`12223a9ec0`),
-  and this note. No separate evidence commits.
-- Status: byte-verified production candidate, NOT published. Two required
-  gates fail, and each fix needs a file outside this task's reservation
-  (see Blockers).
-- Next action: coordinator ruling on the two blockers, then independent
-  verification of the resulting commit.
+  the first cut of this note (`354583ab2c`), and the two ledger edits with
+  this revision of the note. No separate evidence commits.
+- Status: byte-verified production candidate; every required gate exits 0.
+- Next action: independent verification of this commit.
 - Nothing uncommitted. Logs, probes and the assembler script stayed in the
   producer worktree's ignored build directory.
 
@@ -143,20 +141,21 @@ size changes, so its remaining `opt_common_subs off` bracket stays proven.
 - Enrolled sources went from 7069 to 6996 (74 retired, one added).
   Source-built functions stay at 11,214.
 
-## Blockers
+## Ledger edits
 
-1. `check_dead_references.py` exits 1.
-   `notes/agents/handoffs/mg-p1-tamaire-0925.md` names seven retired sources
-   by repo path, and that note is a historical record. Either fix touches a
-   file this task has not reserved:
-   - bank those seven paths in `config/dead-reference-baseline.json`, as
-     #3112 did for a historical handoff; or
-   - reword that note.
-2. `queue_audit.py --check-promoted` exits 1. In
-   `notes/data/tu-promotion-queue.tsv`, the row
-   `dScMgPachinko2_c+dScMgPachinko_c` has `already_promoted` set to no, and
-   it needs yes. That file is not reserved here, and the running task
-   `pr2877-interface-repair-0921` holds it.
+The first cut of this note left two gates red on files outside the
+reservation. The coordinator ruled that both edits belong to this
+promotion, as in-place edits of the class's own rows: #3112 (`6e972a7d8e`)
+banked a historical handoff's retired paths, and #3159 (`93fa5f1e8b`) and
+the other 09-25 promotions each flipped their own queue row.
+
+1. `config/dead-reference-baseline.json`: seven entries for
+   `notes/agents/handoffs/mg-p1-tamaire-0925.md`, one per retired source it
+   cites, inserted by hand at their place in the existing order. That note
+   describes its own commit and is unchanged. No `--update`, no re-sort.
+2. `notes/data/tu-promotion-queue.tsv`: in the row
+   `dScMgPachinko2_c+dScMgPachinko_c`, only the `already_promoted` cell
+   changed, from no to yes. No `--write`.
 
 ## Reconstruction dimensions
 
@@ -229,11 +228,14 @@ Pinned mwccarm `2004/b56`, producer worktree, `-j8` throughout.
     `_ZTI16dScMgPachinko2_c` and the four ancestor `_ZTI`;
   - 5 PARTIAL: the five `_ZTS` strings;
   - 0 DIFFERS.
-- `python tools/check_dead_references.py` exit 1 (Blocker 1).
+- `python tools/check_dead_references.py`: exit 1 before the ledger edits
+  (the seven paths above), exit 0 after.
 - `python tools/tiers_ratchet.py --check` exit 0.
 - `python tools/check_tubuild_conflicts.py` exit 0.
-- `python tools/queue_audit.py --check-promoted` exit 1 (Blocker 2).
+- `python tools/queue_audit.py --check-promoted`: exit 1 before the ledger
+  edits (the unflipped cell), exit 0 after.
 - `python tools/check_src_tu_compiles.py` exit 0, 303 of 303.
 - `python tools/port_refcheck.py` exit 0, 408 checked, 0 stale.
-- `git diff --check 70f055a670..HEAD` exit 0.
+- `git diff --check 70f055a670..HEAD` exit 0, and `git diff --check` on the
+  ledger edits exit 0.
 - Private validation and Source review: not run; they belong to later stages.

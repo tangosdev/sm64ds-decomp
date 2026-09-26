@@ -58,6 +58,34 @@
    "ref": "src_tu/actors/Koopa"
   },
   {
+   "file": "notes/agents/handoffs/mg-p1-tamaire-0925.md",
+   "ref": "src/_ZN16dScMgPachinko2_c13InitResourcesEv.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-tamaire-0925.md",
+   "ref": "src/_ZN16dScMgPachinko2_c13OnYoshiTryEatEi.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-tamaire-0925.md",
+   "ref": "src/_ZN16dScMgPachinko2_c6RenderEv.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-tamaire-0925.md",
+   "ref": "src/_ZN16dScMgPachinko2_c8BehaviorEv.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-tamaire-0925.md",
+   "ref": "src/_ZN16dScMgPachinko2_cD0Ev.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-tamaire-0925.md",
+   "ref": "src/_ZN16dScMgPachinko2_cD1Ev.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-tamaire-0925.md",
+   "ref": "src/d_s_mg_pachinko2.c"
+  },
+  {
    "file": "notes/archive/crack-loop-runbook.md",
    "ref": "notes/pret-idioms.md"
   },
