@@ -7073,6 +7073,10 @@
         "param:#5 Vector3_16 *",
         "param:#6 Vector3_16 *"
       ],
+      "src/game/actors/d_a_shl.cpp": [
+        "param:#2 dActor_c *",
+        "param:#5 Vector3_16 *"
+      ],
       "src/game/actors/daBrq_c.cpp": [
         "param:#2 dActor_c *",
         "param:#5 Vector3_16 *",
@@ -7851,6 +7855,9 @@
       "src/game/actors/d_a_holhei.cpp": [
         "param:#2 void *",
         "param:#3 void *",
+        "param:#4 int"
+      ],
+      "src/game/actors/d_a_shl.cpp": [
         "param:#4 int"
       ],
       "src/unnamed/ov063/func_ov063_0211a0dc.cpp": [
@@ -31109,6 +31116,11 @@
         "return:int []"
       ]
     },
+    "data_ov102_0214ea58": {
+      "src/game/actors/d_a_shl.cpp": [
+        "return:ShlState"
+      ]
+    },
     "func_ov002_020df300": {
       "src/game/actors/d_a_cnn.cpp": [
         "param:#1 Player *"
@@ -31354,6 +31366,9 @@
       ],
       "src/func_ov102_0214cf98.cpp": [
         "return:int []"
+      ],
+      "src/game/actors/d_a_shl.cpp": [
+        "return:ShlState"
       ]
     },
     "data_ov102_0214ea68": {
@@ -31364,6 +31379,9 @@
     "data_ov102_0214ea78": {
       "src/func_ov102_0214cf4c.cpp": [
         "return:int []"
+      ],
+      "src/game/actors/d_a_shl.cpp": [
+        "return:ShlState"
       ]
     },
     "func_01ff8000": {

@@ -30,7 +30,8 @@ So a converted method cannot carry any other symbol, and the only way to pass
 `real_name` was to **un-convert** the method back into a flat `extern "C"`
 function. The tier paid you to undo the work it exists to measure.
 
-This is not a hypothetical. `src/_ZN10KoopaShell13OnYoshiTryEatEv.cpp` is:
+This is not a hypothetical. The former KoopaShell OnYoshiTryEat shard
+(now `daShl_c::OnYoshiTryEat` in `src/game/actors/d_a_shl.cpp`) was:
 
 ```cpp
 // @symbol _ZN10KoopaShell13OnYoshiTryEatEv
