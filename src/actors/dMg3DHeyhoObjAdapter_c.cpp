@@ -1,15 +1,17 @@
 //cpp
 /**
- * Command adapter for the Shy Guy ("Heyho") objects in the 3D minigame.
+ * Base adapter of dMgJump3DMario_c, used by the Bounce and Pounce scenes.
+ * dMg3DHeyhoObjAdapter_c is the cartridge's RTTI spelling; its name alone
+ * does not establish a separate Shy Guy object role.
  *
- * The whole translation unit is this one constructor: the adapter starts with
- * no pending command. ov006 0x020c4048..0x020c4060.
+ * This production source contains the constructor at ov006 0x020c4048..0x020c4060.
+ * It starts the adapter with no pending command.
  *
- * The cartridge configures only the base-object constructor (C2) for this
- * class. The complete-object C1 the compiler emits beside it, and the vtable,
- * type-name string and RTTI record the definition drags in, are declared as
- * compiler-only output in the manifest and compared against their ov006 homes
- * at 0x0213afd8, 0x0213afe4 and 0x0213b000.
+ * The cartridge configures only the base-object constructor (C2). The extra
+ * complete-object C1 emitted by mwccarm has no configured ROM home and is
+ * explicitly discarded. The emitted vtable, type-name string and RTTI are
+ * checked against their ov006 homes at 0x0213afd8, 0x0213afe4 and 0x0213b000
+ * before text isolation discards their duplicate storage.
  */
 
 #include "dMgJump3DMario_c.h"

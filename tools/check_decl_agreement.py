@@ -225,8 +225,7 @@ TAG_KEYWORDS = {"struct", "union", "enum", "class"}
 UNSPECIFIED = None
 
 SKIP_DIRS = {".git", "build", "extracted", "__pycache__", ".mypy_cache",
-             ".pytest_cache", "node_modules", ".venv", "venv", "port", "src_tu",
-             "config_tu"}
+             ".pytest_cache", "node_modules", ".venv", "venv", "port", "src_tu"}
 
 # Canonical spellings for the integer zoo. `char` is deliberately absent: plain
 # `char` is a third type distinct from both `signed char` and `unsigned char`, and

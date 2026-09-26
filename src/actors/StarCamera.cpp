@@ -1,18 +1,22 @@
 //cpp
 /**
- * Spawn hook for the star-select camera actor.
+ * Factory registered by the STAR_CAMERA actor profile.
  *
- * The whole translation unit is this one factory: take 0xd4 bytes from
- * fBase_c's own operator new and construct a plain dActor_c in them, or
- * propagate the null when the heap is exhausted. ov002 0x020ebe5c..0x020ebe8c.
+ * Allocates 0xd4 bytes through fBase_c::operator new, returns null on
+ * allocation failure, and invokes dActor_c's constructor on the allocation.
+ * The surviving vptr is dActor_c's. The most-derived identity is unresolved:
+ * the allocation is four bytes larger than sizeof(dActor_c), but this factory
+ * installs no most-derived vptr and has no identifying RTTI record.
+ * StarCamera is the existing profile-derived label, not a recovered class name.
+ * This production source contains the factory at ov002 0x020ebe5c..0x020ebe8c;
+ * it does not establish an original single-function translation-unit boundary.
  *
- * deslop
- * Leftover: operator new and the dActor_c constructor are still called
- *   through their mangled spellings as extern "C". Giving them real C++
- *   forms needs a StarCamera class definition this TU does not yet have,
- *   and the call shapes are what reproduce the ROM here. Not yet
- *   reconstructed -- see notes/tu-promotion-conventions.md on source
- *   reconstruction being a separate claim from production packaging.
+ * Partial reconstruction: the allocation and base constructor retain their
+ * legacy mangled extern "C" calls. The four extra bytes, most-derived identity,
+ * and natural C++ construction form require further evidence and pinned
+ * compiler experiments. These are deferred work, not a measured compiler limit.
+ * Follow-up: https://github.com/tangosdev/sm64ds-decomp/issues/3198
+ * Continuation owner: codex-integrate-open-0926; completion remains partial.
  */
 
 extern "C" {

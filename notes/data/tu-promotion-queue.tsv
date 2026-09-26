@@ -47,7 +47,7 @@ MrBlizzard	34	1352	ov081	yes	no	compiler-only:>=11(derived from own chain: 5 cla
 daSanbo_c	1	1129	ov096	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	-	text-only
 daBmb_c	1	1546	ov102	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	-	text-only
 dBgActor_c	1	272	ov002	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	daBar_c	text-only
-BabyPenguin	31	840	ov072	yes	no	intact-object(owns non-text data at natural address; see sibling daBgSnwmn_c);compiler-only:>=6(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1-3 intact-object)	daBgSnwmn_c	intact-object
+daPgBby_c	31	840	ov072	yes	yes	intact-object(owns non-text data at natural address; see sibling daBgSnwmn_c);compiler-only:>=6(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1-3 intact-object)	daBgSnwmn_c	intact-object
 daPgDfdr_c	1	336	ov027	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daIDonketu_c	text-only
 daMip_c	1	1868	ov085	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	-	text-only
 UnknownVsEntry+UnknownVsPlayer	43	1157	ov075	partial	no	multi-class-tu:2;compiler-only:>=7(derived from own chain: 3 classes incl. self via build/rtti.json + include/ base clause; floor 2x3+1; excludes 1 unresolved: UnknownVsPlayer)	-	text-only
@@ -129,7 +129,7 @@ daSnowball_c+daSnowman_c	13	290	ov081	partial	no	multi-class-tu:2;classif:no-hea
 daManta_c+daMenbo_c	13	508	ov090	partial	yes	multi-class-tu:2;compiler-only:>=14(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+2)	-	text-only
 daShark_c+daPukupuku_c	13	323	ov090	partial	yes	multi-class-tu:2;classif:no-header:daPukupuku_c;compiler-only:>=14(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+2)	-	text-only
 daObjLava_c+daObjLava_c	1	88	ov002	partial	yes	multi-class-tu:2;compiler-only:>=10(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+2)	daBar_c	text-only
-StarCamera	1	10	ov002	no	no	compiler-only:unknown(no chain for StarCamera: no RTTI record in build/rtti.json and no include/ base clause; measure with tubuild verify)	daBar_c	text-only
+StarCamera	1	10	ov002	no	yes	compiler-only:unknown(no chain for StarCamera: no RTTI record in build/rtti.json and no include/ base clause; measure with tubuild verify)	daBar_c	text-only
 daDonketu_c	10	234	ov064	yes	yes	compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+1)	daObjFl_Gura_c	text-only
 daLuigi_c	11	276	ov055	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	-	text-only
 RotatingUpDownPlatformUtm	11	549	ov091	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
@@ -177,7 +177,7 @@ dScGameOver_c	1	567	ov003	yes	yes	pragma:1;compiler-only:>=9(derived from own ch
 daMenbo_c	24	1041	ov090	yes	yes	pragma:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 daSnmBth_c+SnowmanBreathParticle	16	450	ov027	partial	yes	multi-class-tu:2;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1; excludes 1 unresolved: SnowmanBreathParticle)	daIDonketu_c	text-only
 dMap_c	11	1104	ov002	yes	no	pragma:2;compiler-only:>=7(derived from own chain: 3 classes incl. self via build/rtti.json + include/ base clause; floor 2x3+1)	daBar_c	text-only
-Fish	17	437	ov100	yes	no	pragma:1;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daObjPathLift_c	text-only
+daFish_c	17	437	ov100	yes	yes	pragma:1;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daObjPathLift_c	text-only
 daBtfly_c	15	662	ov100	yes	yes	pragma:1;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daObjPathLift_c	text-only
 daPiano_c	3	609	ov063	yes	yes	pragma:2;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	-	text-only
 SpikeBomb	15	391	ov060	yes	no	pragma:1;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	-	text-only
@@ -195,7 +195,7 @@ daObjCloset_c	5	230	ov058	yes	yes	pragma:1;compiler-only:>=9(derived from own ch
 daObjTh_Fall_Block_c	1	63	ov063	yes	yes	pragma:2;compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1)	-	text-only
 daObjFlamethrower_c	4	283	ov095	yes	yes	pragma:2;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	-	text-only
 PyramidTag+PyramidTop	14	291	ov024	yes	no	pragma:1;multi-class-tu:2;compiler-only:>=14(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+2)	-	text-only
-dMg3DHeyhoObjAdapter_c	1	7	ov006	no	no	compiler-only:>=3(derived from own chain: 1 classes incl. self via build/rtti.json; floor 2x1+1)	dScMgSingle3DBase_c	text-only
+dMg3DHeyhoObjAdapter_c	1	7	ov006	no	yes	compiler-only:>=3(derived from own chain: 1 classes incl. self via build/rtti.json; floor 2x1+1)	dScMgSingle3DBase_c	text-only
 dMgCardObj_c+dMgDilarCardObj_c+dScMgCard_c	1	1997	ov006	partial	no	multi-class-tu:3;already-one-legacy-file:src/actors/dScMgCard_c.cpp(needs manifest registration, not a shard merge);compiler-only:>=19(derived from own chain: 8 classes incl. self via build/rtti.json; floor 2x8+3)	dScMgSingle3DBase_c	text-only
 dMgMCarloCardObj_c+dScMgMCarlo_c	1	1255	ov006	partial	no	multi-class-tu:2;already-one-legacy-file:src/actors/dScMgMCarlo_c.cpp(needs manifest registration, not a shard merge);compiler-only:>=16(derived from own chain: 7 classes incl. self via build/rtti.json; floor 2x7+2)	dScMgSingle3DBase_c	text-only
 dMgMCarlo2CardObj_c+dScMgMCarlo2_c	1	1048	ov006	partial	no	multi-class-tu:2;already-one-legacy-file:src/actors/dScMgMCarlo2_c.cpp(needs manifest registration, not a shard merge);compiler-only:>=16(derived from own chain: 7 classes incl. self via build/rtti.json; floor 2x7+2)	dScMgSingle3DBase_c	text-only

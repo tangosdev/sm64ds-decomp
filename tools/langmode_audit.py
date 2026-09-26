@@ -34,6 +34,10 @@ Four families are counted:
                      stack for those (+0x14) on every one of the 25 sweep versions at
                      every optimization level. See runbook section 7.
 
+Every src file is read as mwccarm compiles it (msvc_arms.mwcc_side, see _source_text):
+an `#ifdef _MSC_VER` arm is the PC port's host build, not decomp source, so a flat
+`extern "C" ... _ZN5ModelD0Ev(...)` definition inside one is not a hand-spelled symbol.
+
 Usage:
     python tools/langmode_audit.py                    # human summary
     python tools/langmode_audit.py --by-class         # per-class backlog table
@@ -70,7 +74,16 @@ sys.path.insert(0, str(REPO / "tools"))
 import asm_policy  # noqa: E402
 import delaunder  # noqa: E402
 import demangle as D  # noqa: E402
+import msvc_arms  # noqa: E402
 import srcpath as SP  # noqa: E402
+
+
+def _source_text(path):
+    """A tracked source as mwccarm sees it: `_MSC_VER` host arms dropped.
+
+    Raises OSError like read_text, so every caller keeps its own fallback.
+    """
+    return msvc_arms.mwcc_side((REPO / path).read_text(errors="ignore"))
 
 # A mangled basename, with or without the .c/.cpp extension.
 MANGLED = re.compile(r"^_Z[A-Za-z0-9_]+$")
@@ -114,7 +127,7 @@ def hand_spells_own_symbol(path, stem):
     is a declarator token and `(` is not.
     """
     try:
-        t = (REPO / path).read_text(errors="ignore")
+        t = _source_text(path)
     except OSError:
         return False
     for m in re.finditer(re.escape(stem) + r"\s*\([^;{]*\)\s*\{", t, re.S):
@@ -135,7 +148,7 @@ def is_nonmatching(path):
     signatures are guesses -- so they must not be counted as proof that a pattern works.
     """
     try:
-        t = (REPO / path).read_text(errors="ignore")
+        t = _source_text(path)
     except OSError:
         return False
     return asm_policy.has_draft_banner(t)
@@ -251,7 +264,7 @@ def defined_mangled_symbols(path):
     mangled symbol is a mangled-symbol file wherever it lives.
     """
     try:
-        t = (REPO / path).read_text(errors="ignore")
+        t = _source_text(path)
     except OSError:
         return []
     found = []
@@ -492,7 +505,7 @@ def audit():
     extern_vtable, extern_vtable_classes = z(), set()
     for p in srcs:
         try:
-            t = (REPO / p).read_text(errors="ignore")
+            t = _source_text(p)
         except OSError:
             continue
         k = "c" if p.endswith(".c") else "cpp"

@@ -42,6 +42,7 @@
 
 struct KCL_File;
 struct CLPS_Block;
+struct Vec3;
 
 typedef void (dBgActor_c::*StateFunc)();
 
@@ -54,7 +55,7 @@ extern s16 data_02082214[];                  /* sin/cos pairs */
 
 void Vec3_Sub(Vector3 *res, const Vector3 *a, const Vector3 *b);
 s32 Vec3_HorzLen(const Vector3 *v);
-void AddVec3(Vector3 *out, const Vector3 *a, const Vector3 *b);
+void AddVec3(Vec3 *a, Vec3 *b, Vec3 *out);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int Vec3_Equal(void *a, void *b);
 s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
@@ -267,7 +268,7 @@ extern "C" void func_ov091_02131ef0(daLinelift2_c *self)
 extern "C" int func_ov091_02131db8(daLinelift2_c *self)
 {
     int result;
-    AddVec3((Vector3 *)&self->mPosX, (const Vector3 *)&self->unk_0a4, (const Vector3 *)&self->mPosX);
+    AddVec3((Vec3 *)&self->mPosX, (Vec3 *)&self->unk_0a4, (Vec3 *)&self->mPosX);
     if (Vec3_Dist((const Vector3 *)&self->mPosX, (const Vector3 *)&self->mTargetPosX) < (self->mHorzSpeed >> 1)) {
         result = 1;
         self->mBasePosX = self->mTargetPosX;
