@@ -3044,3 +3044,43 @@ display statements of Stage::InitResources are hosted once a process
 (hal/star_flow.cpp's port_course_seat), so a level entered after the title keeps
 the title's main-engine state. The CONTINUE path's HUD is right. The VS results
 request (scene 7) is unhosted and unchanged.
+
+20. LANE HUDQUIT1 (run linkfull): STAGE::INITRESOURCES' OWN RESET, ON EVERY
+    STAGE BUILD
+------------------------------------------------------------------------------
+
+Section 19 ended on a leftover: after QUIT -> title -> file select -> a file,
+the level plays but its HUD is on the wrong screens. Its guess at the cause
+(main-engine display statements hosted once a process in hal/star_flow.cpp's
+port_course_seat) was an inference and is corrected here: port_course_seat
+seats the player globals and nothing else.
+
+MEASURED (the display registers read at the selftest picture, the same route
+and a fresh boot into the same level and file): POWCNT1 020f on the route,
+820f on the fresh boot. Bit 15 is the display swap, and OAM::Load
+(src/_ZN3OAM4LoadEv.cpp) sends the two sprite shadows to the engines by it, so
+the lives and star counter landed on the bottom screen and the camera buttons
+and the map marker on the top one, drawn out of the wrong engine's character
+memory. Every changed pixel was a sprite; the 3D matched.
+
+WHERE THE CARTRIDGE SETS IT: src/_ZN5Stage13InitResourcesEv.cpp:152-153, the
+first two statements of the once-per-init block, dScene_c::Initialise3dGraphics
+(its dScene_c::ResetHardwareRegisters starts with POWCNT1 |= 0x8000 and resets
+both 2D engines) and Enable3dEngines. Scenes reach the same reset through
+dScene_c::BeforeInitResources (slot 1); the Stage's slot 1 is
+Scene::ResetFadersAndSound only, so for a level the reset is InitResources'
+own, and hal/level_boot.cpp's port_stage_boot_body (the port's copy of that
+block) did not make it. The title and its file select clear the bit; nothing
+on the level path set it again after the first boot.
+
+WHAT CHANGED: port_stage_boot_body makes both calls at their InitResources
+position, before the archive mount. The statements it already hosted later in
+that order (hal_sub_screen_level_init, the engine-A seat in
+port_boot_course_sound) re-seat what the reset clears. The route's picture is
+now byte-identical to the fresh boot's.
+
+NOT HOSTED STILL, from the same block, each unchanged by this section and none
+of them measured to differ between routes after the reset: GX::DisableAllBanks
+before SetVramBanks, Initialise3dGraphics(0x1F), GX::DispOn,
+InitialiseVramGlobals, BG1CNT_A = 0x1f1c, and the DISPCNT layer-bit stores
+(the port publishes the two masks every frame instead).
