@@ -315,9 +315,15 @@ extern "C" int port_level_is_mounted(int level)
 
 /* ---- what the game is asking for ------------------------------------------ */
 
+static int port_scene_crossing_due(void);   /* the level-to-scene crossing,
+                                              below port_level_change_poll */
+
 extern "C" int port_level_change_pending(void)
 {
-    return data_02092110 >= 0;
+    /* A level change, or (run linkfull, lane GAMEOVER1) the ROM tearing its
+       Stage down for a scene: both are answered by port_level_change_poll at
+       the ROM's own position for them, where Scene::SpawnIfNecessary sits. */
+    return data_02092110 >= 0 || port_scene_crossing_due();
 }
 
 /* ---- teardown -------------------------------------------------------------
@@ -1843,6 +1849,10 @@ static void port_level_scene_interlude(void)
     port_scene_request_release("the star-select interlude is over");
 }
 
+static int g_crossed_scenes;
+extern "C" int port_level_crossed_scenes(void);
+extern "C" void *port_stage_create(void);   /* hal/stage_bridges.cpp */
+
 extern "C" int port_level_change_apply(void)
 {
     if (data_02092110 < 0)
@@ -1954,6 +1964,17 @@ extern "C" int port_level_change_apply(void)
     port_level_set_target((int)data_0209f2f8);
 
     void *stage = port_stage_object();
+    if (!stage && port_level_crossed_scenes()) {
+        /* THE ROM DESTROYED THE LAST ONE (run linkfull, lane GAMEOVER1). A
+           level-to-scene crossing (the Game Over screen) ran the Stage's own
+           teardown, so this level entry is the cartridge's scene-3 spawn: a
+           new Stage out of the ROM's own factory, booted through the same
+           first-entry path the process's first level took (aliveState 0, so
+           port_stage_lifecycle_boot runs the init Process over slots 1/0/2). */
+        stage = port_stage_create();
+        std::fprintf(stderr, "  [lvl] the level-to-scene crossing destroyed the "
+                     "Stage; this entry builds a new one: %p\n", stage);
+    }
     if (!stage) {
         std::fprintf(stderr, "  [lvl] no Stage: the change needs the real "
                      "boot (SM64DS_LEGACY_BOOT is on)\n");
@@ -1964,6 +1985,7 @@ extern "C" int port_level_change_apply(void)
     port_lvlperf_note(0, port_lvlperf_now() - lvlperf_t0);
     port_stage_a_boot((char *)stage + 0x91c, 1);
 
+    g_crossed_scenes = 0;
     const unsigned free_after = port_level_heap_free();
     std::fprintf(stderr, "[lvl] level %d up. heap free: %u before, %u torn down, %u "
                 "after (net %+d)\n", (int)data_0209f2f8, free_before,
@@ -2026,14 +2048,307 @@ extern "C" int port_level_change_apply(void)
 
    SM64DS_SCENE_LATCH=1 still declines every release, this one included, which
    is how the abort above is reproduced from a fixed binary. */
+static int port_level_scene_crossing(void);
+
 extern "C" int port_level_change_poll(void)
 {
+    if (data_02092110 < 0 && port_scene_crossing_due())
+        port_level_scene_crossing();
     if (data_02092110 < 0)
         return 0;
     const int changed = port_level_change_apply();
     port_scene_request_release("the level change has been serviced (or "
                                "declined) and the port spawns no scene for it");
     return changed;
+}
+
+/* ---- THE LEVEL-TO-SCENE CROSSING (run linkfull, lane GAMEOVER1) -----------
+ *
+ * THE REPORT: "When you die with 0 Lives and get a game over, the game simply
+ * crashes." Measured on every build before this one (lane BUGS2, R11):
+ *
+ *     HITDEATHPLANE arg=2 lives=0 -> STARTSCENEFADE scene=8
+ *     FATAL: Stage vtable slot 3 (CleanupResources) is not hosted  (0xc0000409)
+ *
+ * WHAT THE CARTRIDGE DOES, every step a matched TU the port already runs.
+ * KillPlayer (src/KillPlayer.c:15-18) and HitDeathPlane (src/HitDeathPlane.c:
+ * 14-17) ask for scene 8 through dScene_c::StartSceneFade when no life is left,
+ * and ask for NO level. Scene::BeforeBehavior, _ZTV5Stage slot 7, runs the
+ * installed fader and, once it is at its end, marks the STAGE for destruction.
+ * The next phase-1 pass (func_02043880) moves the Stage onto the cleanup list
+ * and marks every child in its scene tree, which is every actor the level
+ * spawned; the cleanup Process then runs each one's own CleanupResources --
+ * the Stage's slots 4, 3 (Stage::CleanupResources) and 5, whose
+ * dScene_c::AfterCleanupResources clears data_02092660, the "a scene has
+ * spawned" latch, before fBase_c::AfterCleanupResources destroys the object.
+ * With the latch clear and scene 8 pending, Scene::SpawnIfNecessary spawns
+ * dScGameOver_c. Its CONTINUE row ends in StartFile(1, 0) (src/func_0202ae74.c)
+ * -- a level request for the castle grounds and scene 3 -- and its QUIT row in
+ * StartSceneFade(1, 0, 0), the title and its file select, which ends in the
+ * same StartFile when a file is picked (src/_ZN9dScDSMT_c8BehaviorEv.cpp).
+ *
+ * WHAT THE PORT DID: nothing between the mark and the abort. Its level path has
+ * no Scene::SpawnIfNecessary (the change poll sits in that seat), so nothing
+ * consumed the id, and slot 3 was a deliberate named abort because a torn-down
+ * Stage under a still-running frame loop is a walk over freed memory.
+ *
+ * WHAT THIS DOES: the same steps, with the frame loop held still. It is entered
+ * from the change poll -- the ROM's own seat for SpawnIfNecessary -- on the
+ * first frame after the ROM marked the Stage, and it
+ *   1. pumps the ROM's own phase passes (the scene pass, then the tick whose
+ *      phase 4 is the cleanup Process, then the scene pass) until the Stage
+ *      has been destroyed by its own teardown. That is where
+ *      Stage::CleanupResources runs, _ZTV5Stage slot 3, with the host
+ *      adapters hal/stage_bridges.cpp's st_clean carries. Anything still live
+ *      afterwards (a host actor the ROM's tree cascade did not reach) goes
+ *      through the port's ordinary level teardown, the same as a warp's;
+ *   2. runs the scene frames -- the WHOLE host frame, tests/walk_window.cpp's
+ *      port_interlude_frame, the one the star select already runs in: input,
+ *      the scene tick whose carrier is the ROM's own Scene::SpawnIfNecessary,
+ *      the present and the pace -- until a scene hands the game back to a
+ *      level: scene 3 asked for, a level request pending, and the outgoing
+ *      scene torn down (data_02092660 == 0). Those are the title bridge's own
+ *      two words plus the request StartFile writes (hal/title_entry.cpp);
+ *   3. returns, and the poll applies that level request the ordinary way. The
+ *      apply finds no Stage and builds one (port_stage_create), and the level
+ *      boots through the first-entry path the process's first level took.
+ *
+ * SCOPE, and each exclusion is somebody else's working path:
+ *   scene 3 and scene 4 are the level path's own (the level change and the
+ *     star-select interlude release or run them before the Stage is marked);
+ *   scene 1, the pause and level-clear menus' quit rows, is answered by
+ *     tests/walk_window.cpp's port_front_end_quit_poll, which releases the id
+ *     before the Stage is marked and relaunches at the front door;
+ *   a scene the port does not host is refused here, loudly, and the dispatch
+ *     keeps the named slot-3 abort (st_clean only runs the ROM body inside
+ *     this crossing): tearing a world down for a spawn the carrier will
+ *     decline would strand the session. That is the VS results request
+ *     (scene 7, hal/star_flow.cpp, off by default) -- parked, and unchanged.
+ *
+ * A SCRIPTED RUN HAS A BACKSTOP, a session has none -- the interlude's rule.
+ * SM64DS_CROSSING_FRAMES overrides it; SM64DS_CROSSING_SHOT=<f>[,<f>...]
+ * writes the scene's two screens at those crossing frames
+ * (crossing_f<f>.bmp and crossing_f<f>_subB.bmp in the working directory). */
+extern "C" {
+int port_scene_is_hosted(int id);            /* hal/scene_boot.cpp */
+void *port_scene_live_object(void);         /* hal/scene_boot.cpp */
+extern void *data_0209f5bc;                /* the installed fader */
+extern int data_0209d4b0[];                /* the fader in motion */
+const void *port_scene_framebuffer(void);    /* hal/scene_boot.cpp */
+int hal_sub_screen_write_bmp(const char *path);   /* hal/sub_screen.cpp */
+}
+
+static int g_crossing_live;       /* the reap pump is running: slot 3 may run
+                                     the ROM's own body (hal/stage_bridges.cpp) */
+/* g_crossed_scenes (defined above port_level_change_apply): a crossing
+   destroyed the Stage and no level has booted since, so the apply builds one */
+
+extern "C" int port_level_crossing_live(void) { return g_crossing_live; }
+extern "C" int port_level_crossed_scenes(void) { return g_crossed_scenes; }
+
+static int port_scene_crossing_due(void)
+{
+    if (data_02092110 >= 0)
+        return 0;                  /* a level change: the apply owns it */
+    const unsigned id = data_02092664;
+    if (id == 0x187 || id == 1 || id == 3 || id == 4)
+        return 0;                  /* nothing, or a path above owns it */
+    void *st = port_stage_object();
+    if (!st)
+        return 0;
+    /* MARKED, or already moved onto the cleanup list. fBase_c::shouldBeKilled
+       (+0x0f) is set by MarkForDestruction in the tick, and the frame's own
+       phase-1 pass (func_02043880) clears it again as it moves the Stage onto
+       the cleanup list with aliveState (+0x0e) = 2 -- so by the next frame's
+       poll it is the second word that says so. */
+    const unsigned char killed = *(unsigned char *)((char *)st + 0x0f);
+    const unsigned char alive = *(unsigned char *)((char *)st + 0x0e);
+    if (killed == 0 && alive != 2)
+        return 0;                  /* the ROM has not marked the Stage yet
+                                      (its fade is still running) */
+    if (!port_scene_is_hosted((int)id)) {
+        static unsigned said = 0xffff;
+        if (said != id) {
+            said = id;
+            std::fprintf(stderr, "[cross] the ROM marked the Stage for scene %u, "
+                         "which this build does not host: NOT crossing (the "
+                         "spawn would be declined and the session stranded); "
+                         "the Stage's teardown stops at the named slot-3 "
+                         "abort as before\n", id);
+        }
+        return 0;
+    }
+    return 1;
+}
+
+namespace ntr { struct Framebuffer;
+                bool ppu_write_bmp(const char *path, const Framebuffer &fb); }
+
+static void port_crossing_shot(int f)
+{
+    static const char *spec = (const char *)1;
+    if (spec == (const char *)1)
+        spec = std::getenv("SM64DS_CROSSING_SHOT");
+    if (!spec)
+        return;
+    for (const char *q = spec; *q;) {
+        char *end;
+        const long v = std::strtol(q, &end, 10);
+        if (end == q)
+            break;
+        if (v == f) {
+            char a[64], b[64];
+            std::snprintf(a, sizeof a, "crossing_f%d.bmp", f);
+            std::snprintf(b, sizeof b, "crossing_f%d_subB.bmp", f);
+            const bool wa = ntr::ppu_write_bmp(
+                a, *(const ntr::Framebuffer *)port_scene_framebuffer());
+            const int wb = hal_sub_screen_write_bmp(b);
+            std::fprintf(stderr, "[cross] f%d wrote %s (%s) and %s (%s)\n", f,
+                         a, wa ? "ok" : "FAILED", b, wb ? "ok" : "FAILED");
+            /* the display words a picture is made of, so a capture that looks
+               wrong can be told apart from a layer that is merely faded */
+            std::fprintf(stderr, "[cross] f%d DISPCNT %08x/%08x BLDCNT %04x/%04x "
+                         "BLDY %04x/%04x MASTER_BRIGHT %04x/%04x\n", f,
+                         *(volatile unsigned *)0x04000000,
+                         *(volatile unsigned *)0x04001000,
+                         *(volatile unsigned short *)0x04000050,
+                         *(volatile unsigned short *)0x04001050,
+                         *(volatile unsigned short *)0x04000054,
+                         *(volatile unsigned short *)0x04001054,
+                         *(volatile unsigned short *)0x0400006c,
+                         *(volatile unsigned short *)0x0400106c);
+            {
+                volatile unsigned char *v = (volatile unsigned char *)0x04000240;
+                std::fprintf(stderr, "[cross] f%d VRAMCNT A-I %02x %02x %02x %02x "
+                             "%02x %02x %02x %02x %02x POWCNT1 %04x BG0-3CNT "
+                             "%04x %04x %04x %04x / %04x %04x %04x %04x\n", f,
+                             v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[8],
+                             v[9], *(volatile unsigned short *)0x04000304,
+                             *(volatile unsigned short *)0x04000008,
+                             *(volatile unsigned short *)0x0400000a,
+                             *(volatile unsigned short *)0x0400000c,
+                             *(volatile unsigned short *)0x0400000e,
+                             *(volatile unsigned short *)0x04001008,
+                             *(volatile unsigned short *)0x0400100a,
+                             *(volatile unsigned short *)0x0400100c,
+                             *(volatile unsigned short *)0x0400100e);
+            }
+            {
+                const unsigned char *o =
+                    (const unsigned char *)port_scene_live_object();
+                const int *fd = (const int *)data_0209f5bc;
+                std::fprintf(stderr, "[cross] f%d scene %p alive %u kill %u "
+                             "flags %02x state %02x/%02x/%02x/%02x/%02x | fader "
+                             "%p vt %p interp %d speed %d | animating %p\n", f,
+                             (const void *)o, o ? o[0x0e] : 0, o ? o[0x0f] : 0,
+                             o ? o[0x13] : 0, o ? o[0x90] : 0, o ? o[0x91] : 0,
+                             o ? o[0x92] : 0, o ? o[0x93] : 0, o ? o[0x94] : 0,
+                             (const void *)fd, fd ? (void *)(size_t)fd[0] : 0,
+                             fd ? fd[1] : 0, fd ? fd[2] : 0,
+                             (void *)(size_t)data_0209d4b0[0]);
+            }
+            return;
+        }
+        q = *end == ',' ? end + 1 : end;
+    }
+}
+
+static int port_level_scene_crossing(void)
+{
+    const unsigned want = data_02092664;
+    void *stage = port_stage_object();
+    const int live0 = port_level_live_count();
+    std::fprintf(stderr, "[cross] the ROM marked the Stage %p for destruction "
+                 "with scene %u pending and no level change (level %d, %d live "
+                 "actor(s)): crossing to the scene in this process\n", stage,
+                 want, (int)data_0209f2f8, live0);
+
+    /* 1. THE ROM'S OWN TEARDOWN, pumped. */
+    g_crossing_live = 1;
+    int k = 0;
+    for (; k < 32 && port_stage_object(); ++k) {
+        port_actor_scene_pass();
+        port_actor_tick();
+        port_actor_scene_pass();
+    }
+    g_crossing_live = 0;
+    if (port_stage_object()) {
+        std::fprintf(stderr, "FATAL: [cross] the Stage %p was not destroyed by "
+                     "its own teardown after %d rounds (frozen by the "
+                     "quarantine, or a cleanup that never finished); the "
+                     "level cannot be left for scene %u\n",
+                     port_stage_object(), k, want);
+        std::fflush(stderr);
+        std::abort();
+    }
+    g_crossed_scenes = 1;
+    int left = port_level_live_count();
+    std::fprintf(stderr, "[cross] the Stage's own teardown ran in %d round(s): "
+                 "Stage destroyed, %d live actor(s) left, scene tree head %p, "
+                 "spawned latch %u, pending scene %u\n", k, left,
+                 (void *)(size_t)data_020a4b6c[0], (unsigned)data_02092660,
+                 (unsigned)data_02092664);
+    if (left || data_020a4b6c[0]) {
+        const int ok = port_level_teardown();
+        std::fprintf(stderr, "[cross] the port's own teardown took the %d the "
+                     "ROM's cascade did not reach: %s, scene tree head %p\n",
+                     left, ok ? "converged" : "DID NOT CONVERGE",
+                     (void *)(size_t)data_020a4b6c[0]);
+    }
+
+    /* 2. THE SCENE, in the whole host frame, until it hands back a level. */
+    const int selftest = std::getenv("SM64DS_WINDOW_SELFTEST") != 0;
+    int cap = selftest ? 1800 : 0;
+    if (const char *e = std::getenv("SM64DS_CROSSING_FRAMES"))
+        cap = std::atoi(e);
+    if (cap > 0)
+        std::fprintf(stderr, "[cross] BACKSTOP ARMED: a scripted run gives the "
+                     "scene %d frames. That is a harness rule, not the game's: "
+                     "a session has no cap.\n", cap);
+    unsigned was_pending = 0xffffu, was_latch = 0xffu;
+    int was_level = -2;
+    int f = 0, closed = 0, handed = 0;
+    for (; cap <= 0 || f < cap; ++f) {
+        if (port_interlude_frame_hook) {
+            if (port_interlude_frame_hook(f)) {
+                closed = 1;
+                break;
+            }
+        } else {
+            port_scene_tick(f, 1);
+        }
+        port_crossing_shot(f);
+        if (data_02092664 != was_pending || data_02092660 != was_latch ||
+            (int)data_02092110 != was_level) {
+            was_pending = data_02092664;
+            was_latch = data_02092660;
+            was_level = (int)data_02092110;
+            std::fprintf(stderr, "[cross] f%d pending scene %u, spawned latch "
+                         "%u, level request %d\n", f, was_pending, was_latch,
+                         was_level);
+        }
+        if (data_02092664 == 3 && data_02092660 == 0 && data_02092110 >= 0) {
+            handed = 1;
+            break;
+        }
+    }
+    if (handed) {
+        std::fprintf(stderr, "[cross] the scene handed the game back at crossing "
+                     "frame %d: level %d, entrance %u (the ROM's own StartFile / "
+                     "LoadLevelNoReturn); the level boots into a new Stage\n", f,
+                     (int)data_02092110, (unsigned)data_0209f268);
+        return 1;
+    }
+    std::fprintf(stderr, "[cross] %s at crossing frame %d (pending scene %u, "
+                 "latch %u, level request %d): no level to return to, so the "
+                 "session ends here\n",
+                 closed ? "the window was closed"
+                        : "the scripted-run backstop fired",
+                 f, (unsigned)data_02092664, (unsigned)data_02092660,
+                 (int)data_02092110);
+    std::fflush(stderr);
+    std::fflush(stdout);
+    std::exit(0);
 }
 
 /* ---- the front door -------------------------------------------------------

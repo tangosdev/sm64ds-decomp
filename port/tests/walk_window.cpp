@@ -13883,6 +13883,23 @@ int main(void)
                     fprintf(stderr, "[lvl] the new level spawned no player\n");
                     return 3;
                 }
+                /* THE STAGE CAN BE NEW (run linkfull, lane GAMEOVER1). A level
+                   reached through the level-to-scene crossing (the Game Over
+                   screen, hal/level_change.cpp) boots into a Stage built after
+                   the ROM's own teardown destroyed the last one, so the three
+                   pointers main() holds into the Stage are re-read here, with
+                   the expressions the first boot used. On every other change
+                   the Stage is the same object and nothing below moves. */
+                if (real_boot) {
+                    char *ns = (char *)port_stage_object();
+                    if (ns && ns != stage) {
+                        printf("[lvl] the Stage is new: %p -> %p\n",
+                               (void *)stage, (void *)ns);
+                        stage = ns;
+                        level_model = stage + 0x86c;
+                        g_mc = stage + 0x91c;
+                    }
+                }
                 c = (char *)player;
                 /* the character state was read off the boot's Player; across
                    a warp the entrance spawned a fresh one (ExitLevel wipes

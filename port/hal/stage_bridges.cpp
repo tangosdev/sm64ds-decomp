@@ -349,8 +349,15 @@ void  port_stage_boot_set_result(void *o);
    exactly what it did before. */
 extern "C" int port_slot0_rom_init(void *self);   /* hal/stage_slot0.cpp */
 
+/* forward: the wipe pool's reclaim sits with its withdrawal above st_clean */
+static void port_stage_wipes_reclaim(void);
+
 static int __fastcall st_init(void *self, void *)
 {
+    /* Stage::InitResources builds the fader-wipe array; on this port that is
+       the static pool coming back to the Stage, which is a no-op on every boot
+       but the first one after a Stage teardown (see st_wipes_withdraw). */
+    port_stage_wipes_reclaim();
     port_stage_boot_set_result(
         port_stage_boot_body(port_stage_boot_arg_mc(),
                              port_stage_boot_arg_spawn()));
@@ -634,18 +641,31 @@ static void __fastcall st_pdes(void *s, void *)
  * expects is still named on the way through.
  */
 
-/* THE GATE. Read once, so a run cannot change its mind halfway, and read for
-   PRESENCE: SM64DS_STAGE_SLOT3_ROM=0 is still on. That is deliberately simpler
-   than SM64DS_SLOT0_ROM, which parses a number because it has four modes to
-   select between; slot 3 has one, so the only question is whether the variable
-   is there. */
-static int st_slot3_rom(void)
+/* THE GATE, TURNED ROUND (run linkfull, lane GAMEOVER1). Everything above
+   argued for the named abort on one condition: "until the port has a real
+   Stage teardown". It has one now. hal/level_change.cpp's level-to-scene
+   crossing is the port's answer to the ROM destroying its Stage -- the Game
+   Over request (KillPlayer / HitDeathPlane with no lives left ask for scene 8)
+   is the one every player reaches -- and it pumps the ROM's own cleanup
+   Process over the Stage and every actor under it, so slot 3 is dispatched by
+   the cartridge's own code at the cartridge's own moment, with the frame loop
+   suspended while the world it holds is torn down. The ROM's
+   Stage::CleanupResources is therefore THE DEFAULT, with the host adapters
+   below around it.
+
+   SM64DS_STAGE_SLOT3_TRAP (presence = on) puts the named abort back, byte for
+   byte the old program: the negative control port/tools/stage_seat_proof.py
+   rung 6 runs, and the before-arm of lane GAMEOVER1's own A/B.
+   SM64DS_STAGE_SLOT3_ROM is no longer read: what it switched on is the
+   default. */
+static int st_slot3_trap(void)
 {
     static int on = -1;
     if (on < 0)
-        on = std::getenv("SM64DS_STAGE_SLOT3_ROM") != 0;
+        on = std::getenv("SM64DS_STAGE_SLOT3_TRAP") != 0;
     return on;
 }
+static int st_slot3_rom(void) { return !st_slot3_trap(); }
 
 /* ---- THE SKYBOX'S OWN VTABLE, patched, one object only (run link100, lane
  * STAGEFIX) ------------------------------------------------------------
@@ -710,23 +730,104 @@ extern void *_ZTV5Model[];   /* storage in hal/model_host.cpp; shared, see
                                  hal/method_faces.cpp:199 -- do not renumber */
 }
 
-static void __fastcall stage_skybox_d0(void *s, void *) { _ZN5ModelD0Ev(s); }
+/* __cdecl, NOT __fastcall (run linkfull, lane GAMEOVER1). The dispatch this
+   word answers is DestroyVirt's in src/_ZN5Stage16CleanupResourcesEv.cpp, and
+   the host object code of that call site is `mov eax,[ecx]; push ecx; mov
+   eax,[eax+4]; call eax; add esp,4`: the receiver is PUSHED, one cdecl
+   argument, popped by the caller. The __fastcall face this used to be read the
+   receiver out of ECX, which held it only because the compiler happened to
+   load the pointer through ECX first -- a register coincidence, not a
+   contract. A cdecl face reads the argument the call site actually passes. */
+static void __cdecl stage_skybox_d0(void *s) { _ZN5ModelD0Ev(s); }
 
 static void *g_stage_skybox_vtable[8];
 
-static void st_skybox_vtable_fixup(void *self)
+/* WHICHEVER TABLE THE SKYBOX CARRIES (run linkfull, lane GAMEOVER1). The
+   check above used to be `vptr == _ZTV5Model`, and on this tree it never
+   matches: Stage::LoadSkybox builds the Model through the MSVC constructor,
+   which stores ??_7Model@@6B@, not the host array. That table is ROM-numbered
+   already (include/ModelBase.h's respelling; hal/model_dtor_seat.cpp's
+   model_d0 at slot 1), so the dispatch reaches the ROM's D0 -- but through a
+   __fastcall face that reads its receiver out of ECX, while this call site
+   PUSHES it (see stage_skybox_d0 above). It works because the compiler
+   happened to load the pointer through ECX. So the copy is taken of the
+   skybox's OWN table, whatever it is, and only slot 1 changes: to the cdecl
+   face that reads the argument the call site actually passes. */
+static int st_skybox_vtable_fixup(void *self)
 {
     void **sky = (void **)((char *)self + 0x9bc);
     if (!*sky)
-        return;                                   /* no skybox this level */
-    if (*(void **)*sky != (void *)_ZTV5Model)
-        return;                                    /* already patched, or not
-                                                        the shape expected --
-                                                        leave it alone */
+        return 0;                                 /* no skybox this level */
+    void **vt = *(void ***)*sky;
+    if (!vt || vt == g_stage_skybox_vtable)
+        return -1;                                /* no table, or patched */
     for (int i = 0; i < 8; ++i)
-        g_stage_skybox_vtable[i] = _ZTV5Model[i];
+        g_stage_skybox_vtable[i] = vt[i];
     g_stage_skybox_vtable[1] = (void *)stage_skybox_d0;
     *(void **)*sky = g_stage_skybox_vtable;
+    return 1;
+}
+
+/* ---- THE AREA TRANSFORMERS: the same fold, a second class (run linkfull,
+ * lane GAMEOVER1) ------------------------------------------------------
+ *
+ * The skybox is not the only DestroyVirt the ROM body makes. Its area loop,
+ * `for (j < data_0209f340->count) { if (e->mTransformer) DestroyVirt(...) }`,
+ * deletes every TextureTransformer Stage::LoadTextureTransformers newed, and it
+ * reads the same ROM slot 1 -- the deleting destructor -- through each one's
+ * vptr. On this host those objects carry ??_7TextureTransformer@@6B@, MSVC's
+ * own table for include/TextureTransformer.h's one virtual, and MSVC folds the
+ * ROM's D1/D0 pair into ONE slot (the scalar deleting destructor at [0]). There
+ * IS no slot 1: the word after [0] is the next table's RTTI locator. MEASURED
+ * on this tree's build: ??_7TextureTransformer@@6B@ + 4 holds
+ * ??_R4RabbitKey@@6B@, an .rdata address, and a dispatch there is the DEP
+ * fault lane BUGS2 recorded with SM64DS_STAGE_SLOT3_ROM=1 (`[quarantine] actor
+ * ... id 3 ... faulted ... +0047fe50`, ??_R4RabbitKey@@6B@ in that map).
+ *
+ * The answer is the skybox's, for the skybox's reason: nothing can renumber
+ * the class table (it is MSVC's), and nothing reads these objects' vptrs after
+ * this dispatch -- they are deleted inside it. So each transformer gets a
+ * private two-word copy whose slot 1 is the ROM's own deleting destructor,
+ * src/_ZN18TextureTransformerD0Ev.cpp (its _MSC_VER arm runs the D1 body and
+ * the class's operator delete, Memory::operator_delete2 -- the heap
+ * LoadTextureTransformers' _Znwj allocated from). Slot 0 keeps the class's own
+ * word. A transformer whose vptr is not the class's is left alone and named. */
+extern "C" void *_ZN18TextureTransformerD0Ev(void *self);
+extern "C" unsigned char *data_0209f340;         /* the level's area info */
+
+static void __cdecl stage_texxfm_d0(void *s) { _ZN18TextureTransformerD0Ev(s); }
+
+static void *g_stage_texxfm_vtable[2];
+
+static int st_texxfm_vtable_fixup(void *self)
+{
+    const unsigned char *info = data_0209f340;
+    if (!info)
+        return 0;
+    const unsigned n = info[0x14];                /* the ROM loop's own bound */
+    char *slots = (char *)self + 0x8bc;           /* stride 0xc, transformer +0 */
+    void *cls = 0;
+    int patched = 0;
+    for (unsigned i = 0; i < n; ++i) {
+        void **o = *(void ***)(slots + i * 0xc);
+        if (!o)
+            continue;
+        if (!cls) {
+            cls = *o;
+            g_stage_texxfm_vtable[0] = ((void **)cls)[0];
+            g_stage_texxfm_vtable[1] = (void *)stage_texxfm_d0;
+        }
+        if (*o == cls) {
+            *o = (void *)g_stage_texxfm_vtable;
+            ++patched;
+        } else {
+            std::fprintf(stderr, "[stage] slot 3: area %u's transformer %p "
+                         "carries vtable %p, not the class's %p -- left alone, "
+                         "and the ROM's slot-1 read will say what it is\n",
+                         i, (void *)o, *o, cls);
+        }
+    }
+    return patched;
 }
 
 /* ---- THE WIPE ARRAY'S OWN SUBSTITUTE, gated path only (run link100, lane
@@ -781,47 +882,130 @@ void *func_02073470(int count, int size, int cookie,
 extern void *data_0209f324;   /* WIPES; storage in hal/fader_wipes.cpp */
 }
 
-static void st_wipes_vtable_fixup(void)
+/* THE THROWAWAY BLOCK THIS USED TO BUILD IS RETIRED (run linkfull, lane
+ * GAMEOVER1), and both of the reasons above are kept: the pool is static host
+ * storage with no array-new cookie in front of it, and _ZdlPv on it would free
+ * memory no heap handed out. What changed is WHEN this runs. The throwaway was
+ * safe only because the dispatch ran at process exit and "nothing after it
+ * ever reads WIPES again"; the Game Over crossing runs this teardown in the
+ * middle of a session, and the next level boots with fader wipes. A block
+ * fabricated to be destroyed in the pool's place would also leave
+ * data_0209f324 null for good.
+ *
+ * WHAT THE PORT DOES INSTEAD IS SAY WHOSE THE POOL IS. On the cartridge the
+ * seven wipes are the Stage's own allocation: Stage::InitResources builds them
+ * (func_02073470(7, 0x60, 8, FaderWipe::FaderWipe, ~FaderWipe)) and
+ * Stage::CleanupResources destroys them. On this port they are not: they are
+ * hal/fader_wipes.cpp's static pool, built once, OUTLIVING every Stage, and
+ * given their constructed state back at each level boot by
+ * port_fader_wipes_reset. So the Stage's teardown RELEASES ITS CLAIM on the
+ * pool and frees nothing: the pointer is withdrawn from data_0209f324 just
+ * before the ROM body runs, the ROM's own func_02073244 takes its own
+ * `if (a == 0) return;` arm, and the ROM's own next statement stores the 0 it
+ * stores anyway. The next Stage's slot 0 -- where Stage::InitResources builds
+ * the array -- hands the pool back (port_stage_wipes_reclaim, from st_init). */
+static void *g_stage_wipe_pool;
+
+static int st_wipes_withdraw(void)
 {
-    void *fresh = func_02073470(7, 0x60, 8, 0, 0);
-    if (!fresh)
-        return;
-    std::memset(fresh, 0, 7 * 0x60);
-    data_0209f324 = fresh;
+    if (!data_0209f324)
+        return 0;
+    g_stage_wipe_pool = data_0209f324;
+    data_0209f324 = 0;
+    return 1;
 }
+
+static void port_stage_wipes_reclaim(void)
+{
+    if (data_0209f324 || !g_stage_wipe_pool)
+        return;
+    data_0209f324 = g_stage_wipe_pool;
+    std::fprintf(stderr, "[stage] slot 0: the fader-wipe pool %p belongs to "
+                 "the new Stage now (the old Stage's teardown released it)\n",
+                 g_stage_wipe_pool);
+}
+
+/* THE LEVEL'S KCL, and the one statement in the ROM body that the host object
+ * could not carry (run linkfull, lane GAMEOVER1). The body ends its collider
+ * block with `func_01ffb0c8(&mMeshCollider); Deallocate();` -- MeshCollider::
+ * GetFile, then a free of the pointer GetFile left in r0, which the source
+ * spells with no argument because on ARM the register rides through. Built for
+ * this host that was `push esi; call func_01ffb0c8; call Deallocate` with the
+ * push not yet popped, so Deallocate read &mMeshCollider as its argument and
+ * would have freed the middle of the Stage. The src file now carries the
+ * argument on its _MSC_VER side (the DS side and its bytes are untouched), so
+ * the ROM frees the level's KCL image itself, which is what the cartridge
+ * does. The port loaded that image through hal/level_boot.cpp's LoadFile table
+ * and frees it at a level change from the table's row; the row is dropped here
+ * so no later level change frees the same block again. */
+extern "C" void *func_01ffb0c8(void *collider);        /* MeshCollider::GetFile */
+extern "C" int port_level_kcl_released(void *image);   /* hal/level_boot.cpp */
+
+extern "C" int port_level_crossing_live(void);   /* hal/level_change.cpp */
+static int g_slot3_probe_live;   /* SM64DS_STAGE_SLOT3_DISPATCH's at-exit call */
 
 static int  __fastcall st_clean(void *s, void *d)
 {
-    if (!st_slot3_rom()) {
-        /* THE SAFETY STOP, unchanged. Same reporter, same message, same
-           abort -- st_trap is the trap thunks' own body, called here with the
-           slot recorded the way HAL_STAGE_TRAP(3) records it. */
+    /* THE SAFETY STOP, kept twice. As the negative control (the env), and on
+       every dispatch that does NOT come from the level-to-scene crossing or
+       the at-exit probe: the crossing is the one place the port holds its
+       frame loop still while the ROM destroys the world, so a slot-3 dispatch
+       anywhere else is the old hazard -- a torn-down Stage under a running
+       frame -- and it keeps the old answer, the same reporter, the same
+       message, the same abort. */
+    if (st_slot3_trap() || (!port_level_crossing_live() && !g_slot3_probe_live)) {
+        if (!st_slot3_trap())
+            std::fprintf(stderr, "[stage] slot 3 was dispatched outside the "
+                         "level-to-scene crossing (a pending scene this build "
+                         "cannot cross to, or no crossing ran): the port "
+                         "cannot follow the ROM's teardown from here\n");
         hal_stage_trap_slot = 3;
         return st_trap(s, d);
     }
-    static int noted;
-    if (!noted) {
-        noted = 1;
-        std::fprintf(stderr, "[stage] slot 3: SM64DS_STAGE_SLOT3_ROM is set, so "
-                     "the ROM's Stage::CleanupResources is running instead of "
-                     "the named abort. The port keeps one Stage across every "
-                     "level change and does not rebuild it -- see "
-                     "port/stage_lifecycle_map.txt sections 5 and 9.\n");
-    }
-    st_skybox_vtable_fixup(s);
-    st_wipes_vtable_fixup();
-    return port_stage_cleanup_resources(s);
+    /* The host adapters, then the ROM's own body. Each answers one statement
+       of the body for this host: the two DestroyVirt reads (skybox, area
+       transformers), the wipe pool the body would free, and the KCL row the
+       body's own free leaves behind in the port's LoadFile table. */
+    const int sky = st_skybox_vtable_fixup(s);
+    const int xfm = st_texxfm_vtable_fixup(s);
+    const int wipes = st_wipes_withdraw();
+    void *kcl = func_01ffb0c8((char *)s + 0x91c);
+    std::fprintf(stderr, "[stage] slot 3: the ROM's Stage::CleanupResources "
+                 "is tearing the Stage %p down (skybox %s; %d area "
+                 "transformer(s) given the ROM's D0 at slot 1; fader-wipe "
+                 "pool %s; level KCL %p)\n", s,
+                 sky > 0 ? "given the ROM's D0 at slot 1 (cdecl face)"
+                         : (sky < 0 ? "no table to copy, left alone"
+                                    : "absent"),
+                 xfm, wipes ? "withdrawn (the port's, not the Stage's)"
+                            : "already absent", kcl);
+    std::fflush(stderr);
+    const int r = port_stage_cleanup_resources(s);
+    const int dropped = kcl ? port_level_kcl_released(kcl) : 0;
+    std::fprintf(stderr, "[stage] slot 3: Stage::CleanupResources returned %d; "
+                 "the KCL image went back through the ROM's own Deallocate%s\n",
+                 r, dropped ? " and its LoadFile row is dropped" : "");
+    std::fflush(stderr);
+    return r;
 }
+
+/* g_stage lives below (the construction block); these two forget it when the
+   ROM destroys the object it mirrors. */
+static void st_stage_forget(void *s);
 
 static void *__fastcall st_d2(void *s, void *)
 {
-    static int noted;
-    if (!noted) {
-        noted = 1;
-        std::fprintf(stderr, "[stage] slot 16: ~Stage (D2) is running. Nothing "
-                     "in the port was supposed to destroy the Stage.\n");
-    }
-    return _ZN5StageD1Ev(s);
+    /* The ROM's own fBase_c::AfterCleanupResources dispatches this after
+       slots 4, 3 and 5, and then returns the storage to the game heap. Since
+       lane GAMEOVER1 that is a path a session takes (the level-to-scene
+       crossing in hal/level_change.cpp), so the note prints every time, and
+       the host mirror of the Stage follows the object into its destructor
+       rather than dangling past it. */
+    std::fprintf(stderr, "[stage] slot 16: ~Stage (D1) is running on %p -- the "
+                 "ROM's own teardown is destroying the Stage\n", s);
+    void *r = _ZN5StageD1Ev(s);
+    st_stage_forget(s);
+    return r;
 }
 
 static void *__fastcall st_d0(void *s, void *)
@@ -832,7 +1016,9 @@ static void *__fastcall st_d0(void *s, void *)
         std::fprintf(stderr, "[stage] slot 17: ~Stage (D0) is running -- the "
                      "Stage is being deleted and its storage returned.\n");
     }
-    return _ZN5StageD0Ev(s);
+    void *r = _ZN5StageD0Ev(s);
+    st_stage_forget(s);
+    return r;
 }
 
 extern "C" void hal_seat_stage_lifecycle(void)
@@ -901,9 +1087,9 @@ extern "C" void port_stage_seat_probe(void)
                         _ZTV5Stage[i] == hal_stage_trap_thunk[i] ? "TRAP"
                                                                  : "SEATED");
     }
-    std::printf("[stage-seat] slot 3 gate: SM64DS_STAGE_SLOT3_ROM %s, so a "
-                "dispatch reaches %s\n",
-                st_slot3_rom() ? "SET" : "unset",
+    std::printf("[stage-seat] slot 3 gate: SM64DS_STAGE_SLOT3_TRAP %s, so a "
+                "dispatch from the level-to-scene crossing reaches %s\n",
+                st_slot3_rom() ? "unset" : "SET",
                 st_slot3_rom() ? "the ROM's Stage::CleanupResources"
                                : "the named abort");
 }
@@ -955,6 +1141,20 @@ DSSTATE_END
 
 extern "C" void *port_stage_object(void) { return g_stage; }
 
+/* THE MIRROR FOLLOWS THE OBJECT (run linkfull, lane GAMEOVER1). The ROM's own
+   teardown destroys the Stage now (slot 16 / 17 above), so the one host word
+   that names it is cleared in the same breath. From here until the next
+   port_stage_create there is no Stage, which is exactly the cartridge's state
+   between a scene request and the scene that answers it. */
+static void st_stage_forget(void *s)
+{
+    if (s && s == g_stage) {
+        g_stage = 0;
+        std::fprintf(stderr, "[stage] the Stage %p is destroyed; the port holds "
+                     "no Stage until the next level boot builds one\n", s);
+    }
+}
+
 /* ---- THE SLOT-3 DISPATCH PROBE (run link100, lane STAGEFIX) ----------------
  *
  * SM64DS_STAGE_SLOT3_DISPATCH=1 dispatches _ZTV5Stage[3] on the Stage once,
@@ -986,10 +1186,13 @@ static void port_stage_slot3_dispatch(void)
         return;
     }
     std::fprintf(stderr, "[stage-slot3] dispatching _ZTV5Stage[3] on %p "
-                 "(SM64DS_STAGE_SLOT3_ROM %s)\n", g_stage,
-                 st_slot3_rom() ? "SET" : "unset");
+                 "(%s)\n", g_stage,
+                 st_slot3_rom() ? "the ROM's body"
+                                : "SM64DS_STAGE_SLOT3_TRAP: the named abort");
     std::fflush(stderr);
+    g_slot3_probe_live = 1;
     const int r = ((StageSlot0)_ZTV5Stage[3])(g_stage, 0);
+    g_slot3_probe_live = 0;
     std::fprintf(stderr, "[stage-slot3] Stage::CleanupResources returned %d\n",
                  r);
     std::fflush(stderr);
@@ -999,6 +1202,16 @@ extern "C" void *port_stage_create(void)
 {
     if (g_stage)
         return g_stage;
+    /* A SECOND STAGE IN ONE PROCESS (run linkfull, lane GAMEOVER1). Until the
+       Game Over crossing, this ran once per process. Now the ROM's own
+       teardown can destroy the Stage, and the next level entry builds a new
+       one through the same factory, exactly as the cartridge's scene 3 spawn
+       does; everything below is the per-object half and runs again. */
+    static int built;
+    if (built++)
+        std::fprintf(stderr, "[stage] building Stage #%d in this process (the "
+                     "previous one was destroyed by the ROM's own teardown)\n",
+                     built);
 
     hal_fill_stage_vtable();
 
@@ -1112,8 +1325,11 @@ extern "C" void *port_stage_create(void)
     /* The slot-3 dispatch probe, armed here because this is the first moment
        there is a Stage to dispatch on. See its banner above port_stage_object:
        the call itself happens at exit, never during a frame. */
-    if (std::getenv("SM64DS_STAGE_SLOT3_DISPATCH"))
+    static int probe_armed;
+    if (!probe_armed && std::getenv("SM64DS_STAGE_SLOT3_DISPATCH")) {
+        probe_armed = 1;
         std::atexit(port_stage_slot3_dispatch);
+    }
     return g_stage;
 }
 

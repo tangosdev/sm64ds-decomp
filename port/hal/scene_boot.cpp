@@ -2029,12 +2029,62 @@ __declspec(naked) static void l2_eb2c_s10(void)
    call for l2_ea6c_s1c's reason: the matched IsBetweenStartAndEnd re-dispatches
    two slots, and the face in hal/fdr_arm9_fader_seat.cpp is the one that lands
    them on this object's ROM +0x14 and +0x18. */
+/* THE RECEIVER, TAKEN FROM WHERE THE CALLER PUT IT (run linkfull, lane
+   GAMEOVER1). These three were plain __fastcall faces, so they took the
+   receiver out of ECX, and that is right for the two call shapes they were
+   written against: a __thiscall virtual (ECX = the fader) and
+   dScene_c::BeforeBehavior's ROM-shaped `vt->IsAtEnd(fader)`, which MSVC
+   compiles as `mov ecx,[data_0209f5bc]; push ecx; call [eax+0x18]` -- the
+   fader in ECX AND on the stack. It is WRONG for the third shape, and that
+   shape is the Game Over screen's own gate: dScGameOver_c::Behavior opens with
+   `o = data_0209f5bc; if (o->vt->m_14(o) == 0) goto end;` (src/actors/
+   dScGameOver_c.cpp), compiled as `mov edx,[data_0209f5bc]; push edx; ...;
+   call [eax+0x14]` with ECX still holding the scene's own `this`. The face
+   asked "is the fader at its start" of the dScGameOver_c object, reading its
+   +0x04 word as currInterp. MEASURED (cdb, lane GAMEOVER1): 299 Behavior
+   calls, the drop-in phase byte +0x94 stuck at 0 for all of them, so the
+   letters never land and no press is ever read. A direct SM64DS_SCENE=8 boot
+   only escaped it because the scene's +0x04 happened to read 0 there.
+   So the receiver is ECX when ECX IS a fader on one of the two tables these
+   faces are seated in, and otherwise the first stack argument when THAT one
+   is -- the cdecl shape's own receiver. Anything else keeps ECX, which is
+   what every call did before. No shape that answered correctly changes. */
+extern "C" void *_AddressOfReturnAddress(void);
+#pragma intrinsic(_AddressOfReturnAddress)
+
+static int l2_eb2c_is_fader(const void *p)
+{
+    if (!p || ((size_t)p & 3) || IsBadReadPtr(p, 4))
+        return 0;
+    const void *vt = *(const void *const *)p;
+    return vt == (const void *)data_0208eb2c || vt == (const void *)data_0208eacc;
+}
+
+static void *l2_eb2c_recv(void *ecx_recv, void *const *ret_slot)
+{
+    if (l2_eb2c_is_fader(ecx_recv))
+        return ecx_recv;
+    void *stack_recv = ret_slot[1];            /* [esp+4] at entry */
+    if (l2_eb2c_is_fader(stack_recv))
+        return stack_recv;
+    return ecx_recv;
+}
+
 static int __fastcall l2_eb2c_s14(void *s, void *)
-{ l2_eb2c_note(5); return _ZN15FaderBrightness9IsAtStartEv(s); }
+{
+    s = l2_eb2c_recv(s, (void *const *)_AddressOfReturnAddress());
+    l2_eb2c_note(5); return _ZN15FaderBrightness9IsAtStartEv(s);
+}
 static int __fastcall l2_eb2c_s18(void *s, void *)
-{ l2_eb2c_note(6); return _ZN15FaderBrightness7IsAtEndEv(s); }
+{
+    s = l2_eb2c_recv(s, (void *const *)_AddressOfReturnAddress());
+    l2_eb2c_note(6); return _ZN15FaderBrightness7IsAtEndEv(s);
+}
 static int __fastcall l2_eb2c_s1c(void *s, void *)
-{ l2_eb2c_note(7); return _ZN15FaderBrightness20IsBetweenStartAndEndEv(s); }
+{
+    s = l2_eb2c_recv(s, (void *const *)_AddressOfReturnAddress());
+    l2_eb2c_note(7); return _ZN15FaderBrightness20IsBetweenStartAndEndEv(s);
+}
 
 /* +0x20 and +0x24. Both matched, both non-virtual in the header, so a
    qualified call is a direct call and no host vtable is read. */

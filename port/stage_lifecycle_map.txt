@@ -2972,3 +2972,75 @@ one combination that differs is SM64DS_ROLLBACK_ACTOR_RENDER=1 (the conservative
 re-sim), where the bucket runs but rb_skip_render() is still true: the ROM's
 Render now draws a level the old path would have skipped. Nothing is presented
 on those frames, so the cost is rasterising work in a debug mode.
+
+
+19. LANE GAMEOVER1 (run linkfull): THE PORT HAS A STAGE TEARDOWN, ON ONE PATH
+------------------------------------------------------------------------------
+
+Sections 5, 9 and 12 each ended on the same condition: slot 3 stays a named
+abort "until the port has a real Stage teardown". The Game Over report made the
+condition urgent -- losing the last life aborted every build with "FATAL: Stage
+vtable slot 3 (CleanupResources) is not hosted" -- and this lane gave the port
+that teardown for the one family of requests that needs it: a scene request
+from a level with no level change behind it.
+
+THE PATH, every step the ROM's own:
+  KillPlayer / HitDeathPlane (no life left)  StartSceneFade(8, 0, 0), no level
+  Scene::BeforeBehavior, slot 7              runs the fade, marks the Stage
+  func_02043880, phase 1                     Stage and every child to cleanup
+  cleanup Process, slots 4 / 3 / 5           Stage::CleanupResources runs;
+                                             Scene::AfterCleanupResources
+                                             clears data_02092660;
+                                             fBase_c::AfterCleanupResources
+                                             destroys the Stage (slot 16)
+  Scene::SpawnIfNecessary                    spawns dScGameOver_c
+  CONTINUE: StartFile(1, 0)                  level request + scene 3
+  QUIT: StartSceneFade(1, 0, 0)              the title; its file select ends
+                                             in the same StartFile
+
+WHERE THE PORT HOLDS IT (hal/level_change.cpp, port_level_scene_crossing): the
+change poll, the ROM's seat for SpawnIfNecessary, enters the crossing on the
+first frame after the Stage is marked, pumps the ROM's own phase passes until
+the Stage is gone, runs the scene frames in the whole host frame (the
+star-select interlude's port_interlude_frame) until a scene hands back a level,
+and returns; the ordinary apply then builds a NEW Stage (port_stage_create is
+re-entrant now) and boots it through the first-entry path. Scenes 1, 3 and 4
+keep their existing paths; an unhosted scene keeps the named abort.
+
+SLOT 3 (hal/stage_bridges.cpp, st_clean): the ROM's body inside the crossing
+and inside the at-exit probe; the named abort on any other dispatch and under
+SM64DS_STAGE_SLOT3_TRAP. SM64DS_STAGE_SLOT3_ROM is no longer read. The
+paragraphs above that describe slot 3 as "SEATED AND ENV-GATED", "reached only
+under SM64DS_STAGE_SLOT3_ROM" and "AND SLOT 3 STILL STOPS THERE", and the
+skybox note's "exists only when SM64DS_STAGE_SLOT3_ROM is set", are history as
+of this section; the banner "THE GATE, TURNED ROUND" in that file is current.
+
+THE HOST ADAPTERS around the body, each one statement of it:
+  skybox DestroyVirt         a private copy of the skybox's own table, slot 1 a
+                             cdecl face onto the ROM's Model D0 (the call site
+                             pushes its receiver)
+  area transformers          the same for ??_7TextureTransformer@@6B@, which
+                             has no ROM slot 1 at all (MSVC's one folded
+                             destructor; +4 is the next table's RTTI locator:
+                             the DEP fault BUGS2 saw with the old gate open)
+  func_02073244 on WIPES     the static pool is the port's, not the Stage's:
+                             withdrawn before the body (its own null arm
+                             runs), handed back at the next Stage's slot 0
+  Deallocate() after GetFile the src _MSC_VER arm passes GetFile's result (the
+                             ARM register ride); the port's LoadFile row for
+                             that KCL image is dropped so no level change frees
+                             it again (hal/level_boot.cpp,
+                             port_level_kcl_released)
+
+ONE MORE, NOT IN THE STAGE: dScGameOver_c::Behavior's gate calls the installed
+fader's slot 0x14 cdecl-shaped with its own `this` in ECX, and the FaderColor
+predicate faces in hal/scene_boot.cpp read ECX. They now take the receiver from
+ECX only when ECX is a fader on their tables, else from the stack argument.
+
+WHAT IS NOT DONE, measured: after QUIT -> title -> file select -> a file, the
+level boots and plays but its 2D HUD shows the wrong sprites. The sub engine's
+bring-up runs per level entry (hal_sub_screen_level_init); the main engine's
+display statements of Stage::InitResources are hosted once a process
+(hal/star_flow.cpp's port_course_seat), so a level entered after the title keeps
+the title's main-engine state. The CONTINUE path's HUD is right. The VS results
+request (scene 7) is unhosted and unchanged.
