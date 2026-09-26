@@ -273,7 +273,7 @@
    ]
   },
   "ov079:0x02126164": {
-   "name": "_ZN5Whomp13InitResourcesEv",
+   "name": "_ZN7daBtn_c13InitResourcesEv",
    "missing": [
     "func_021135d4"
    ]

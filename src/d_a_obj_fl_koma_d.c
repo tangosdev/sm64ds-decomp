@@ -4,13 +4,13 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 extern int _ZTV16daObjKaitendai_c[];
-extern int _ZTV19RotatingPlatformLll[];
+extern int _ZTV16daObjFl_Koma_D_c[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV16daObjKaitendai_c */
 /* Reconstructed source-style name: SM64DS proves daObjFl_Koma_D_c through
  * RTTI, allocation size, most-derived vtable identity, and the FL_KOMA_D
  * registry profile; later EAD lineage supplies classInit. Exact original
- * spelling is not preserved. The project's RotatingPlatformLll implementation
+ * spelling is not preserved. The project's daObjFl_Koma_D_c implementation
  * aliases remain unchanged. Historical alias: RotatingPlatformLll_Spawn. */
 int *daObjFl_Koma_D_c_classInit(void)
 {
@@ -18,7 +18,7 @@ int *daObjFl_Koma_D_c_classInit(void)
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV16daObjKaitendai_c;
-        p[0] = (int)_ZTV19RotatingPlatformLll;
+        p[0] = (int)_ZTV16daObjFl_Koma_D_c;
     }
     return p;
 }

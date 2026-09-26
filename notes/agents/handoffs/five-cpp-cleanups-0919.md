@@ -27,7 +27,7 @@ verification and GitHub checks are separate acceptance steps.
 | --- | --- | --- | --- |
 | `_ZN11PowerFlower6RenderEv` | [ov002](../../../config/arm9/overlays/ov002/symbols.txt) | `0x020b9aac` | 196 |
 | `_ZN11RollingRock6RenderEv` | [ov021](../../../config/arm9/overlays/ov021/symbols.txt) | `0x0211281c` | 56 |
-| `_ZN5Whomp6RenderEv` | [ov079](../../../config/arm9/overlays/ov079/symbols.txt) | `0x02125f78` | 84 |
+| `_ZN7daBtn_c6RenderEv` | [ov079](../../../config/arm9/overlays/ov079/symbols.txt) | `0x02125f78` | 84 |
 | `_ZN12daBDonketu_c6RenderEv` | [ov064](../../../config/arm9/overlays/ov064/symbols.txt) | `0x0211764c` | 56 |
 | `_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd` | [arm9](../../../config/arm9/symbols.txt) | `0x02039cb8` | 256 |
 

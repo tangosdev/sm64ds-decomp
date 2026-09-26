@@ -1,12 +1,12 @@
-_ZN5WhompD1Ev kind:function(arm,size=0x58) addr:0x02123740
-_ZN5WhompD0Ev kind:function(arm,size=0x6c) addr:0x02123798
+_ZN7daBtn_cD1Ev kind:function(arm,size=0x58) addr:0x02123740
+_ZN7daBtn_cD0Ev kind:function(arm,size=0x6c) addr:0x02123798
 func_ov079_02123804 kind:function(arm,size=0x288) addr:0x02123804
 func_ov079_02123a8c kind:function(arm,size=0xc8) addr:0x02123a8c
-_ZN5Whomp25OnAimedAtWithEggReturnVecEv kind:function(arm,size=0xc) addr:0x02123b54
-_ZN5Whomp16OnAimedAtWithEggEv kind:function(arm,size=0x6c) addr:0x02123b60
+_ZN7daBtn_c25OnAimedAtWithEggReturnVecEv kind:function(arm,size=0xc) addr:0x02123b54
+_ZN7daBtn_c16OnAimedAtWithEggEv kind:function(arm,size=0x6c) addr:0x02123b60
 func_ov079_02123bcc kind:function(arm,size=0x180) addr:0x02123bcc
 func_ov079_02123d4c kind:function(arm,size=0x114) addr:0x02123d4c
-_ZN5Whomp15OnHitByMegaCharER6Player kind:function(arm,size=0xd4) addr:0x02123e60
+_ZN7daBtn_c15OnHitByMegaCharER6Player kind:function(arm,size=0xd4) addr:0x02123e60
 func_ov079_02123f34 kind:function(arm,size=0xd4) addr:0x02123f34
 func_ov079_02124008 kind:function(arm,size=0x180) addr:0x02124008
 func_ov079_02124188 kind:function(arm,size=0x258) addr:0x02124188
@@ -28,10 +28,10 @@ func_ov079_02125504 kind:function(arm,size=0x1d0) addr:0x02125504
 func_ov079_021256d4 kind:function(arm,size=0x228) addr:0x021256d4
 func_ov079_021258fc kind:function(arm,size=0x248) addr:0x021258fc
 func_ov079_02125b44 kind:function(arm,size=0x36c) addr:0x02125b44
-_ZN5Whomp16CleanupResourcesEv kind:function(arm,size=0xc8) addr:0x02125eb0
-_ZN5Whomp6RenderEv kind:function(arm,size=0x54) addr:0x02125f78
-_ZN5Whomp8BehaviorEv kind:function(arm,size=0x198) addr:0x02125fcc
-_ZN5Whomp13InitResourcesEv kind:function(arm,size=0x424) addr:0x02126164
+_ZN7daBtn_c16CleanupResourcesEv kind:function(arm,size=0xc8) addr:0x02125eb0
+_ZN7daBtn_c6RenderEv kind:function(arm,size=0x54) addr:0x02125f78
+_ZN7daBtn_c8BehaviorEv kind:function(arm,size=0x198) addr:0x02125fcc
+_ZN7daBtn_c13InitResourcesEv kind:function(arm,size=0x424) addr:0x02126164
 daBtn_c_classInit_BATANKING kind:function(arm,size=0x60) addr:0x02126588
 daBtn_c_classInit_BATAN kind:function(arm,size=0x60) addr:0x021265e8
 _ZN7daKlr_cD1Ev kind:function(arm,size=0x50) addr:0x02126648
@@ -94,7 +94,7 @@ _ZTS7daBtn_c kind:data(any) addr:0x02127c28
 _ZTI7daBtn_c kind:data(any) addr:0x02127c34
 g_profile_BATANKING kind:data(any) addr:0x02127c40 ambiguous
 g_profile_BATAN kind:data(any) addr:0x02127c5c ambiguous
-_ZTV5Whomp kind:data(any) addr:0x02127c80
+_ZTV7daBtn_c kind:data(any) addr:0x02127c80
 data_ov079_02127cfc kind:data(any) addr:0x02127cfc
 data_ov079_02127e7c kind:data(any) addr:0x02127e7c
 data_ov079_02127e9c kind:data(any) addr:0x02127e9c
