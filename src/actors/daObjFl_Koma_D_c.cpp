@@ -114,7 +114,7 @@ int daObjFl_Koma_D_c::CleanupResources()
  * A tail call into daObjKaitendai_c's shared cross-overlay helper
  * func_ov002_020b676c(this, filetable, angle) -- out of this task's scope,
  * kept under its existing name, same idiom as
- * src/_ZN17daObjBk_Ukisima_c13InitResourcesEv.cpp (ov015). Return the helper's
+ * src/game/actors/d_a_obj_bk_ukisima.cpp (ov015). Return the helper's
  * resource status: the ROM tail call already leaves that result in r0.
  * The explicit return is relocation-verified under mwccarm 2004/b56.
  *
