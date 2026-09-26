@@ -1,10 +1,10 @@
 //cpp
 extern "C" {
 void* _ZN7fBase_cnwEj(unsigned int sz);
-void _ZN10dBgActor_cC2Ev(void* p);
-void _ZN10dBgCh_ActrC1Ev(void* p);
-void _ZN11ShadowModelC1Ev(void* p);
-void _ZN10dCcAcPos_cC1Ev(void* p);
+void *_ZN10dBgActor_cC2Ev(void* p);
+void *_ZN10dBgCh_ActrC1Ev(void* p);
+void *_ZN11ShadowModelC1Ev(void* p);
+void *_ZN10dCcAcPos_cC1Ev(void* p);
 }
 extern void* _ZTV13daObjBlockS_c;
 

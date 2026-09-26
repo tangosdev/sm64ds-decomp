@@ -12,7 +12,7 @@ extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(char* m, void* f, int a, int b);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(void* fp);
-extern void _ZN7PathPtrC1Ev(void* p);
+extern void *_ZN7PathPtrC1Ev(void* p);
 extern void _ZN7PathPtr6FromIDEj(void* p, unsigned int id);
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* self, char* actor, struct V3* pos, int r3, int sp0, int sp4, int sp8);
 extern int IsStarCollected(int a, int b);

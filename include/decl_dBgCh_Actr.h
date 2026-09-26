@@ -29,7 +29,7 @@ extern void _ZN10dBgCh_Actr15ClearLimMovFlagEv(void*);
 extern void _ZN10dBgCh_Actr18StopDetectingWaterEv(void*);
 extern void _ZN10dBgCh_Actr19ClearAllGroundFlagsEv(void*);
 extern void _ZN10dBgCh_Actr22ClearJustHitGroundFlagEv(void*);
-extern void _ZN10dBgCh_ActrC1Ev(void*);
+extern void *_ZN10dBgCh_ActrC1Ev(void*);
 extern void _ZN10dBgCh_ActrD1Ev(void*);
 extern void*_ZNK10dBgCh_Actr13GetWallResultEv(void*);
 

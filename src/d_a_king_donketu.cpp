@@ -1,15 +1,15 @@
 //cpp
 #include "daKing_Donketu_c.h"
 extern "C" void* _ZN7fBase_cnwEj(unsigned int sz);
-extern "C" void _ZN12dEnemyBase_cC2Ev(void*);
-extern "C" void _ZN10dCcAcPos_cC1Ev(void*);
-extern "C" void _ZN10dBgCh_ActrC1Ev(void*);
-extern "C" void _ZN14BlendModelAnimC1Ev(void*);
-extern "C" void _ZN11ShadowModelC1Ev(void*);
+extern "C" void *_ZN12dEnemyBase_cC2Ev(void*);
+extern "C" void *_ZN10dCcAcPos_cC1Ev(void*);
+extern "C" void *_ZN10dBgCh_ActrC1Ev(void*);
+extern "C" void *_ZN14BlendModelAnimC1Ev(void*);
+extern "C" void *_ZN11ShadowModelC1Ev(void*);
 extern "C" void __cxa_vec_ctor(void* p, int a, int b, void* f1, void* f2);
 
 extern int _ZTV16daKing_Donketu_c;
-extern "C" void _ZN7Vector3D1Ev(void);
+extern "C" void *_ZN7Vector3D1Ev(void *object);
 extern "C" void func_0203d384(void);
 
 /* Reconstructed source-style name: SM64DS proves daKing_Donketu_c through RTTI,

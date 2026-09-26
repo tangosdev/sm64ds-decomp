@@ -1,5 +1,5 @@
 #include "types.h"
-extern void func_020731dc(int a, int b, void **node);
+extern void func_020731dc(void *object, void *destructor, void **node);
 extern void func_0203d704(int* o, int* a, int* b);
 extern void func_0203d388(int *p, int angle);
 extern int RandomIntInternal(int* seed);
@@ -53,7 +53,7 @@ void func_ov004_020b39a4(char* c) {
     if (flags == 0) {
         data_ov004_020bf3f4[0] = 0;
         data_ov004_020bf3f4[1] = 0xc0;
-        func_020731dc((int)data_ov004_020bf3f4, (int)NullDestructor_0203d47c, data_ov004_020bf410);
+        func_020731dc(data_ov004_020bf3f4, (void *)NullDestructor_0203d47c, data_ov004_020bf410);
         data_ov004_020bf3ec = data_ov004_020bf3ec | 1;
     }
 

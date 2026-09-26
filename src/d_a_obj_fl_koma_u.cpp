@@ -2,9 +2,9 @@
 // @symbol daObjFl_KomaU_c_classInit
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned int);
-extern void _ZN10dBgActor_cC2Ev(void*);
+extern void *_ZN10dBgActor_cC2Ev(void*);
 extern void _ZN8dCcPos_cD1Ev(void*);
-extern void _ZN8dCcPos_cC1Ev(void*);
+extern void *_ZN8dCcPos_cC1Ev(void*);
 extern void __cxa_vec_ctor(void* arr, int count, int size, void* ctor, void* dtor);
 extern void* _ZTV15daObjFl_KomaU_c[];
 /* Reconstructed source-style name: SM64DS proves daObjFl_KomaU_c through RTTI,

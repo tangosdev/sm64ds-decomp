@@ -9,7 +9,7 @@ extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
 extern void func_02012694(int a, void *b);
 extern int func_ov081_02125488(void *c, void *p);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix, unsigned int b);
-extern void _ZN7PathPtrC1Ev(struct PathPtr *self);
+extern void *_ZN7PathPtrC1Ev(struct PathPtr *self);
 extern void _ZN7PathPtr6FromIDEj(struct PathPtr *self, unsigned int id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(struct PathPtr *self, struct Vector3 *v, unsigned int i);
 extern short Vec3_HorzAngle(struct Vector3 *a, struct Vector3 *b);

@@ -89,7 +89,7 @@ extern void *LoadFile(int);
 extern int GetGameLanguage(void);
 extern void DecompressLZ16(void *, void *);
 extern int func_ov006_020c1a88(char *);
-void _ZN11dScMgBase_cC2Ev(void*);
+void *_ZN11dScMgBase_cC2Ev(void*);
 void _ZN8Particle10SysTrackerC1Ev(void*);
 typedef void (*CardElementCallback)(void *);
 void __cxa_vec_ctor(void *, unsigned int, unsigned int,

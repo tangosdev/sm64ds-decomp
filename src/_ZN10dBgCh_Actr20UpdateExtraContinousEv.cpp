@@ -33,7 +33,7 @@ extern u32 data_02099368[];
 int  func_020355a0(void *);
 void *func_02037938(void *);
 void func_02038324(void *, Vector3 *, void *, void *);
-void _ZN5dBgPiC1Ev(dBgPiLoc *);
+void *_ZN5dBgPiC1Ev(dBgPiLoc *);
 void _ZN5dBgPiD1Ev(dBgPiLoc *);
 void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *, const Vector3 *, const Vector3 *, void *);
 int  func_0203859c(void *);

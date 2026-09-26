@@ -2,14 +2,14 @@
 #include "daLuigi_c.h"
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned int sz);
-extern void _ZN8dActor_cC2Ev(void* c);
-extern void _ZN9ModelAnimC1Ev(void* c);
-extern void _ZN5ModelC1Ev(void* c);
-extern void _ZN11ShadowModelC1Ev(void* c);
+extern void *_ZN8dActor_cC2Ev(void* c);
+extern void *_ZN9ModelAnimC1Ev(void* c);
+extern void *_ZN5ModelC1Ev(void* c);
+extern void *_ZN11ShadowModelC1Ev(void* c);
 extern void* __cxa_vec_ctor(void* a, int b, int n, void* ctor, void* dtor);
 extern int _ZTV9daLuigi_c[];
 extern void _ZN15TextureSequenceD1Ev(void*);
-extern void _ZN15TextureSequenceC1Ev(void*);
+extern void *_ZN15TextureSequenceC1Ev(void*);
 /* Reconstructed source-style name: SM64DS proves daLuigi_c through RTTI,
  * allocation size, vtable identity, and the LUIGI registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not

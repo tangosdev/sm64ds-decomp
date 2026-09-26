@@ -1,7 +1,7 @@
 extern int func_02017acc();
 extern void func_020731dc();
 extern void func_02017ab4(void);
-extern void _ZN7Vector3D1Ev(void);
+extern void *_ZN7Vector3D1Ev(void *object);
 extern char data_ov072_02122b20[];
 extern char data_ov072_02122b28[];
 

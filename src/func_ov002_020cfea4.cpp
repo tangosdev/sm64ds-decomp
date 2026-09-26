@@ -35,7 +35,7 @@ extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int AngleDiff(int a, int b);
 extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
 extern void *_ZNK10dBgCh_Actr13GetWallResultEv(void *self);
-extern void _ZN9dBgCh_GndC1Ev(void *self);
+extern void *_ZN9dBgCh_GndC1Ev(void *self);
 extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, const Vector3 *pos, void *actor);
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
 extern void _ZN9dBgCh_GndD1Ev(void *self);

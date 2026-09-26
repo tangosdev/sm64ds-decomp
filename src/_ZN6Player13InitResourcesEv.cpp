@@ -32,12 +32,12 @@ extern "C" {
     int _ZN8SaveData16HasPlayerLostCapEv(void);
     void func_02013a00(void);
     void func_ov002_020c7dd0(void* p, int a);
-    void _ZN9dBgCh_GndC1Ev(void* p);
+    void *_ZN9dBgCh_GndC1Ev(void* p);
     void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void* p, void* v, void* a);
     void _ZN5dBgCh19StartDetectingWaterEv(void* p);
     int StartWithFarCamera(void);
     void _ZN9dBgCh_GndD1Ev(void* p);
-    void _ZN7Vector3D1Ev(void);
+    void *_ZN7Vector3D1Ev(void *object);
     void func_0203d384(void);
 
     extern u8 data_0209f2d8;

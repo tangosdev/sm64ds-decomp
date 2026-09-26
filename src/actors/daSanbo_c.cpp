@@ -103,11 +103,11 @@ namespace cstd { int fdiv(int,int); }
 enum Bool { FALSE, TRUE };
 
 extern "C" {
-extern void _ZN8dActor_cC2Ev(void *self);
-extern void _ZN5ModelC1Ev(void *self);
-extern void _ZN11ShadowModelC1Ev(void *self);
-extern void _ZN7dCcAc_cC1Ev(void *self);
-extern void _ZN10dBgCh_ActrC1Ev(void *self);
+extern void *_ZN8dActor_cC2Ev(void *self);
+extern void *_ZN5ModelC1Ev(void *self);
+extern void *_ZN11ShadowModelC1Ev(void *self);
+extern void *_ZN7dCcAc_cC1Ev(void *self);
+extern void *_ZN10dBgCh_ActrC1Ev(void *self);
 extern "C" void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern "C" void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
 extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);

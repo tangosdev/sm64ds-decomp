@@ -22,7 +22,7 @@ extern "C" {
    enrolled, so every byte gate skips it and the ROM keeps the original bytes for
    this range. Declare only what decl_common.h does not. */
 void func_0203cbc0(void *p);
-void _ZN7Vector3D1Ev(void *self);
+void *_ZN7Vector3D1Ev(void *self);
 void func_ov002_020bebd4(char *c);
 void UnloadSilverStarAndNumber(void);
 void UnloadKeyModels(int n);
@@ -96,7 +96,8 @@ int Player::CleanupResources()
     {
         int q = unk_578;
         if (q != 0)
-            func_02073244((void *)q, 0xc, 8, _ZN7Vector3D1Ev);
+            /* Array destruction discards the receiver result. */
+            func_02073244((void *)q, 0xc, 8, (void (*)(void *))_ZN7Vector3D1Ev);
         q = unk_57c;
         if (q != 0)
             func_0203cbc0((void *)q);

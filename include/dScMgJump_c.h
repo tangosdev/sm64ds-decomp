@@ -45,8 +45,11 @@
 #include "dMgJump3DMario_c.h"
 #include "Model.h"
 
-extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
-extern "C" void func_ov006_020c6f3c(void);
+/* The array runtime passes each element address and ignores callback results.
+ * The casts below adapt the existing lifecycle entries at that ABI boundary. */
+extern "C" void __cxa_vec_cleanup(void *base, unsigned int count, unsigned int stride,
+                       void (*dtor)(void *));
+extern "C" int func_ov006_020c6f3c(int *object);
 
 struct dScMgJump_c : dScMgD3DBase_c {
     /* DEFINED IN THE CLASS BODY, DELIBERATELY -- not a style choice.
@@ -65,7 +68,7 @@ struct dScMgJump_c : dScMgD3DBase_c {
        src/actors/dScMgJump_c.cpp, so _ZTV11dScMgJump_c is emitted by that one
        translation unit and by no other. */
     virtual ~dScMgJump_c() {
-        __cxa_vec_cleanup(mArray2, 6, 0xf0, (void *)func_ov006_020c6f3c);
+        __cxa_vec_cleanup(mArray2, 6, 0xf0, (void (*)(void *))func_ov006_020c6f3c);
     }
 
     /* This class's own overrides, read off the ROM's vtable: the slots where the

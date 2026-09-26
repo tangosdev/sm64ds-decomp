@@ -19,7 +19,7 @@
 extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
 extern "C" void *func_ov006_020ca604(void);
 extern "C" void func_ov006_020d1008(void);
-extern "C" void func_ov006_020eed64(void);
+extern "C" void func_ov006_020eed64(void *object);
 struct Model;
 extern "C" int func_ov006_021227c8(char *object);
 extern "C" Model *func_ov006_02122c68(Model *model);

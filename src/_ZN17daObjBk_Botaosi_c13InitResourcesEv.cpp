@@ -14,7 +14,7 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*
 void Matrix4x3_FromRotationY(void* m, int angle);
 void MulVec3Mat4x3(Vector3* v, void* m, Vector3* out);
 void Vec3_Add(Vector3* out, Vector3* a, Vector3* b);
-void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd* self);
+void *_ZN9dBgCh_GndC1Ev(dBgCh_Gnd* self);
 void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* self, Vector3* v, void* a);
 int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* self);
 int IsStarCollectedInCurLevel(int starID);

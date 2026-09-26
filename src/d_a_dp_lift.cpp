@@ -2,11 +2,11 @@
 // @symbol daDpLift_c_classInit
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned int);
-extern void _ZN10dBgActor_cC2Ev(void*);
-extern void _ZN5ModelC1Ev(void*);
+extern void *_ZN10dBgActor_cC2Ev(void*);
+extern void *_ZN5ModelC1Ev(void*);
 extern int __cxa_vec_ctor(void*,int,int,void*,void*);
 extern void* _ZTV10daDpLift_c;
-extern void _ZN7Vector3D1Ev(void);
+extern void *_ZN7Vector3D1Ev(void *object);
 extern void func_0203d384(void);
 /* Reconstructed source-style name: SM64DS proves daDpLift_c through RTTI,
  * allocation size, vtable identity, and the DP_LIFT registry profile; later

@@ -8,7 +8,7 @@ struct Flags { unsigned short b0 : 1, b1 : 1, b2 : 1, b3 : 1, fld : 2; };
 
 extern int _ZNK10dBgCh_Actr12TouchesWaterEv(void* c);
 extern void _ZN10dBgCh_Actr19StartDetectingWaterEv(void* c);
-extern void _ZN9dBgCh_GndC1Ev(void* r);
+extern void *_ZN9dBgCh_GndC1Ev(void* r);
 extern void _ZN9dBgCh_GndD1Ev(void* r);
 extern void _ZN5dBgCh19StartDetectingWaterEv(void* r);
 extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void* r, struct Vector3* p, void* a);

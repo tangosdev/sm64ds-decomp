@@ -8,18 +8,23 @@
  *  ~1 *(T *)(p + 0x..)           class layout does not name these offsets.
  */
 
+struct dMgJump3DMario_c;
+
+/* The array runtime passes each element address and ignores callback results.
+ * The casts below adapt the existing lifecycle entries at that ABI boundary. */
 extern "C" {
 extern void *_ZN7fBase_cnwEj(unsigned int sz);
-extern int _ZN11dScMgBase_cC2Ev(void *p);
+extern void *_ZN11dScMgBase_cC2Ev(void *p);
 extern void _ZN8Particle10SysTrackerC1Ev(void *);
-extern void _ZN5ModelC1Ev(void *);
-extern void __cxa_vec_ctor(void *p, int a, int b, void *f1, void *f2);
+extern void *_ZN5ModelC1Ev(void *);
+extern void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride,
+                    void (*ctor)(void *), void (*dtor)(void *));
 extern int _ZTV14dScMgD3DBase_c[];
 extern int _ZTV11dScMgJump_c[];
-extern void _ZN16dMgJump3DMario_cD1Ev(void *);
-extern void _ZN16dMgJump3DMario_cC1Ev();
-extern void func_ov006_020c6f70();
-extern void func_ov006_020c6f3c();
+extern dMgJump3DMario_c *_ZN16dMgJump3DMario_cD1Ev(dMgJump3DMario_c *object);
+extern dMgJump3DMario_c *_ZN16dMgJump3DMario_cC1Ev(dMgJump3DMario_c *object);
+extern int func_ov006_020c6f70(char *object);
+extern int func_ov006_020c6f3c(int *object);
 }
 
 /* Reconstructed source-style name: SM64DS proves dScMgJump_c through RTTI,
@@ -46,11 +51,11 @@ extern "C" void *dScMgJump_c_classInit(void)
         *(int *)p = (int)_ZTV11dScMgJump_c;
         _ZN5ModelC1Ev(p + 0x501c);
         __cxa_vec_ctor(p + 0x506c, 3, 0xb8,
-                      (void *)_ZN16dMgJump3DMario_cC1Ev,
-                      (void *)_ZN16dMgJump3DMario_cD1Ev);
+                      (void (*)(void *))_ZN16dMgJump3DMario_cC1Ev,
+                      (void (*)(void *))_ZN16dMgJump3DMario_cD1Ev);
         __cxa_vec_ctor(p + 0x5294, 6, 0xf0,
-                      (void *)func_ov006_020c6f70,
-                      (void *)func_ov006_020c6f3c);
+                      (void (*)(void *))func_ov006_020c6f70,
+                      (void (*)(void *))func_ov006_020c6f3c);
     }
     return p;
 }

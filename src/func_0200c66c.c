@@ -17,12 +17,12 @@ extern char data_020871ac;
 extern char data_020871d4;
 extern char data_02087404;
 
-extern void _ZN9dBgCh_LinC1Ev(dBgCh_Lin* t);
+extern void *_ZN9dBgCh_LinC1Ev(dBgCh_Lin* t);
 extern void _ZN9dBgCh_LinD1Ev(dBgCh_Lin* t);
 extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(dBgCh_Lin* t, Vector3* a, Vector3* b, void* actor);
 extern int _ZN9dBgCh_Lin10DetectClsnEv(dBgCh_Lin* t);
 extern void _ZN9dBgCh_Lin10GetClsnPosEv(Vector3* ret, dBgCh_Lin* t);
-extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd* t);
+extern void *_ZN9dBgCh_GndC1Ev(dBgCh_Gnd* t);
 extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* t);
 extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* t, Vector3* a, void* actor);
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* t);

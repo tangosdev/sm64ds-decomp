@@ -1,6 +1,6 @@
 // @symbol daObjKi_Hasira_c_classInit
 extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN10dBgActor_cC2Ev(void *);
+extern void *_ZN10dBgActor_cC2Ev(void *);
 extern int _ZTV16daObjKi_Hasira_c[];
 /* Reconstructed source-style name: SM64DS proves daObjKi_Hasira_c through
  * RTTI, allocation size, vtable identity, and the KI_HASIRA registry profile;

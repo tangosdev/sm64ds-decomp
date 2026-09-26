@@ -10,9 +10,9 @@ extern FaderNode data_0209f5d0;
 extern int data_0208eafc[];
 extern int data_0208eacc[];
 extern int data_0208eb2c[];
-extern void _ZN10FaderColorD1Ev(void *self);
+extern void *_ZN10FaderColorD1Ev(void *self);
 extern int data_0209f5dc[];
-extern void _ZN15FaderBrightnessD1Ev(void *self);
+extern void *_ZN15FaderBrightnessD1Ev(void *self);
 extern int data_0209f5c4[];
 extern void func_020731dc(void *node, void *dtor, void *extra);
 
