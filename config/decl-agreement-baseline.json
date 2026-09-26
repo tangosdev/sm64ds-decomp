@@ -5282,6 +5282,10 @@
       "src/actors/daObjSm_Lift_c.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
+      ],
+      "src/actors/dPathLiftActor_c.cpp": [
+        "param:#1 const void *",
+        "param:#2 const void *"
       ]
     },
     "Vec3_HorzLen": {
@@ -11334,6 +11338,10 @@
       "src/actors/daObjSeesaw_c.cpp": [
         "param:#1 int",
         "return:int"
+      ],
+      "src/game/actors/d_a_e_switch.cpp": [
+        "param:#1 void *",
+        "return:void"
       ]
     },
     "_ZN5ModelC1Ev": {
@@ -17154,6 +17162,12 @@
       "src/actors/daEykn_c.cpp": [
         "return:void *",
         "param:#3 Vector3 *"
+      ],
+      "src/game/actors/d_a_e_switch.cpp": [
+        "param:#3 void *",
+        "param:#5 int",
+        "param:#6 int",
+        "return:void *"
       ]
     },
     "_ZN8dActor_c7FindEggER5dCc_c": {
@@ -23950,6 +23964,9 @@
         "return:void *"
       ],
       "src/func_ov002_020efaf0.cpp": [
+        "return:PathStuff"
+      ],
+      "src/actors/dPathLiftActor_c.cpp": [
         "return:PathStuff"
       ]
     },
@@ -32365,6 +32382,9 @@
       "src/actors/daObjPile_c.cpp": [
         "param:#1 int",
         "return:int"
+      ],
+      "src/actors/dPathLiftActor_c.cpp": [
+        "param:#1 int"
       ]
     },
     "func_02012718": {
@@ -36018,6 +36038,9 @@
       "src/actors/daObjRc_Tikuwa_c.cpp": [
         "param:#1 dBgW *",
         "param:#2 void *"
+      ],
+      "src/actors/dPathLiftActor_c.cpp": [
+        "param:#1 char *"
       ]
     },
     "func_020393d4": {

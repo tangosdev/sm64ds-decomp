@@ -12,13 +12,9 @@ src/actors/dEnemyBase_c.cpp:
     complete
     .text start:0x020ad838 end:0x020aedbc
 
-src/_ZN11dCapEnemy_cD2Ev.cpp:
+src/actors/dCapEnemy_c.cpp:
     complete
-    .text start:0x020aedbc end:0x020aedf4
-
-src/_ZN11dCapEnemy_cD0Ev.cpp:
-    complete
-    .text start:0x020aedf4 end:0x020aee40
+    .text start:0x020aedbc end:0x020aee40
 
 src/actors/da1up_c.cpp:
     complete
@@ -2365,93 +2361,9 @@ src/func_ov002_020ef2a4.cpp:
     complete
     .text start:0x020ef2a4 end:0x020ef320
 
-src/_ZN16dPathLiftActor_cD0Ev.cpp:
+src/actors/dPathLiftActor_c.cpp:
     complete
-    .text start:0x020ef320 end:0x020ef390
-
-src/_ZN16dPathLiftActor_cD1Ev.cpp:
-    complete
-    .text start:0x020ef390 end:0x020ef3ec
-
-src/func_ov002_020ef3ec.c:
-    complete
-    .text start:0x020ef3ec end:0x020ef3f0
-
-src/func_ov002_020ef3f0.c:
-    complete
-    .text start:0x020ef3f0 end:0x020ef408
-
-src/func_ov002_020ef408.c:
-    complete
-    .text start:0x020ef408 end:0x020ef57c
-
-src/func_ov002_020ef57c.c:
-    complete
-    .text start:0x020ef57c end:0x020ef670
-
-src/func_ov002_020ef670.c:
-    complete
-    .text start:0x020ef670 end:0x020efa44
-
-src/func_ov002_020efa44.c:
-    complete
-    .text start:0x020efa44 end:0x020efa54
-
-src/func_ov002_020efa54.cpp:
-    complete
-    .text start:0x020efa54 end:0x020efaa0
-
-src/_ZN16dPathLiftActor_c12BaseBehaviorEv.cpp:
-    complete
-    .text start:0x020efaa0 end:0x020efaf0
-
-src/func_ov002_020efaf0.cpp:
-    complete
-    .text start:0x020efaf0 end:0x020efbdc
-
-src/func_ov002_020efbdc.c:
-    complete
-    .text start:0x020efbdc end:0x020efc74
-
-src/func_ov002_020efc74.cpp:
-    complete
-    .text start:0x020efc74 end:0x020efcf4
-
-src/func_ov002_020efcf4.c:
-    complete
-    .text start:0x020efcf4 end:0x020efe68
-
-src/func_ov002_020efe68.c:
-    complete
-    .text start:0x020efe68 end:0x020efe7c
-
-src/func_ov002_020efe7c.c:
-    complete
-    .text start:0x020efe7c end:0x020efe9c
-
-src/func_ov002_020efe9c.c:
-    complete
-    .text start:0x020efe9c end:0x020efebc
-
-src/func_ov002_020efebc.c:
-    complete
-    .text start:0x020efebc end:0x020efedc
-
-src/func_ov002_020efedc.c:
-    complete
-    .text start:0x020efedc end:0x020eff04
-
-src/func_ov002_020eff04.cpp:
-    complete
-    .text start:0x020eff04 end:0x020eff18
-
-src/_ZN16dPathLiftActor_c9AfterClsnEi.cpp:
-    complete
-    .text start:0x020eff18 end:0x020eff90
-
-src/func_ov002_020eff90.cpp:
-    complete
-    .text start:0x020eff90 end:0x020effb8
+    .text start:0x020ef320 end:0x020effb8
 
 src/func_ov002_020effb8.c:
     complete
@@ -2486,53 +2398,9 @@ src/game/actors/d_a_obj_bc_switch.cpp:
     complete
     .text start:0x020f11b0 end:0x020f15fc
 
-src/_ZN14EnemySwitchTagD1Ev.cpp:
+src/game/actors/d_a_e_switch.cpp:
     complete
-    .text start:0x020f15fc end:0x020f162c
-
-src/_ZN14EnemySwitchTagD0Ev.cpp:
-    complete
-    .text start:0x020f162c end:0x020f1670
-
-src/_ZN12EnemySpawnerD1Ev.cpp:
-    complete
-    .text start:0x020f1670 end:0x020f1694
-
-src/_ZN12EnemySpawnerD0Ev.cpp:
-    complete
-    .text start:0x020f1694 end:0x020f16cc
-
-src/_ZN14EnemySwitchTag16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020f16cc end:0x020f16ec
-
-src/_ZN12EnemySpawner8BehaviorEv.cpp:
-    complete
-    .text start:0x020f16ec end:0x020f1760
-
-src/_ZN14EnemySwitchTag8BehaviorEv.cpp:
-    complete
-    .text start:0x020f1760 end:0x020f1814
-
-src/_ZN12EnemySpawner16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020f1814 end:0x020f1838
-
-src/_ZN12EnemySpawner13InitResourcesEv.cpp:
-    complete
-    .text start:0x020f1838 end:0x020f1878
-
-src/_ZN14EnemySwitchTag13InitResourcesEv.cpp:
-    complete
-    .text start:0x020f1878 end:0x020f1924
-
-src/d_a_e_create.c:
-    complete
-    .text start:0x020f1924 end:0x020f1954
-
-src/d_a_e_switch.c:
-    complete
-    .text start:0x020f1954 end:0x020f198c
+    .text start:0x020f15fc end:0x020f198c
 
 src/game/actors/d_a_set_se.cpp:
     complete

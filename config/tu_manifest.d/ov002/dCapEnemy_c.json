@@ -1,9 +1,9 @@
 {
   "id": "ov002/dCapEnemy_c",
   "module": "ov002",
-  "source": "src_tu/actors/dCapEnemy_c.cpp",
+  "source": "src/actors/dCapEnemy_c.cpp",
   "promoted_source": "src/actors/dCapEnemy_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20aedbc..0x20aee40, 2 function(s), from build/tu_map.json (tools/tu_map.py)",
