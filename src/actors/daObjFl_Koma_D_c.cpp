@@ -7,9 +7,11 @@
  * (RTTI, type name, profile, vtable) is what names this class: the tree called
  * it RotatingPlatformLll until the rename in this branch.
  *
- * Function order is the REVERSE of the ROM's: mwccarm 2004/b56 emits one .text
- * section per function and lays them out in reverse source order, so the
- * highest-address ROM function is written first. Do not reorder.
+ * The resource methods are written in reverse ROM order for mwccarm 2004/b56.
+ * Its out-of-line destructor group emits D0 before D1, unlike the ROM; the
+ * manifest records this order difference as partial reconstruction.
+ * The adjacent classInit factory and the class/profile/resource data remain
+ * outside this four-function text promotion and need an owned continuation.
  *
  * CleanupResources keeps its #pragma long_calls bracket: it tail-calls into
  * another overlay, and the pragma is what makes mwccarm emit the pooled
@@ -53,7 +55,7 @@ typedef char ResourceDescriptor_size_must_be_0x0c[
     sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
 extern "C" {
-extern int func_ov002_020b66a8(void *self, void *data);
+extern int func_ov002_020b66a8(daObjKaitendai_c *self, ResourceDescriptor *data);
 extern int func_ov002_020b676c(daObjKaitendai_c *self, ResourceDescriptor *a,
 short arg2);
 extern ResourceDescriptor data_ov022_02113da4;
@@ -68,10 +70,9 @@ extern ResourceDescriptor data_ov022_02113da4;
  * A tail call into daObjKaitendai_c's shared cross-overlay helper
  * func_ov002_020b676c(this, filetable, angle) -- out of this task's scope,
  * kept under its existing name, same idiom as
- * src/_ZN17daObjBk_Ukisima_c13InitResourcesEv.cpp (ov015). The pre-migration
- * recovery discarded the helper's return value (void call, despite the
- * header's `int` slot signature), so this keeps that shape rather than
- * adding a `return` the ROM does not have.
+ * src/_ZN17daObjBk_Ukisima_c13InitResourcesEv.cpp (ov015). Return the helper's
+ * resource status: the ROM tail call already leaves that result in r0.
+ * The explicit return is relocation-verified under mwccarm 2004/b56.
  *
  * The helper takes the BASE, daObjKaitendai_c, not this leaf: this class's
  * __si_class_type_info in ov022 records exactly one base, daObjKaitendai_c at
@@ -83,7 +84,7 @@ extern ResourceDescriptor data_ov022_02113da4;
  * func_ov002_020b676c -- spells it. */
 int daObjFl_Koma_D_c::InitResources()
 {
-    func_ov002_020b676c(this, &data_ov022_02113da4, 0x100);
+    return func_ov002_020b676c(this, &data_ov022_02113da4, 0x100);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -128,3 +129,21 @@ daObjFl_Koma_D_c::~daObjFl_Koma_D_c()
 {
 }
 
+
+#ifdef _MSC_VER
+/* The host uses flat ROM destructor names. Keep the renamed canonical entry
+ * and the legacy entry introduced by PR #3096 at the same ABI boundary.
+ * Qualified destruction calls this class directly before its actor-heap delete.
+ * Neither compatibility entry is compiled into the cartridge object. */
+extern "C" daObjFl_Koma_D_c *_ZN16daObjFl_Koma_D_cD0Ev(daObjFl_Koma_D_c *thiz)
+{
+    thiz->daObjFl_Koma_D_c::~daObjFl_Koma_D_c();
+    daObjFl_Koma_D_c::operator delete(thiz);
+    return thiz;
+}
+
+extern "C" daObjFl_Koma_D_c *_ZN19RotatingPlatformLllD0Ev(daObjFl_Koma_D_c *thiz)
+{
+    return _ZN16daObjFl_Koma_D_cD0Ev(thiz);
+}
+#endif

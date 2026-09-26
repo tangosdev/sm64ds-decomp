@@ -884,8 +884,8 @@ src/_ZN4Door16OnPendingDestroyEv.c	P1-vtable+mangled	ov100	daDoor_c	Door/daDoor_
 src/_ZN4DoorD0Ev.c	DTOR-ONLY	ov100	daDoor_c	Door/daDoor_c	_ZN4DoorD0Ev	1		True	_ZTV4Door	-
 src/_ZN4DoorD1Ev.c	DTOR-ONLY	ov100	daDoor_c	Door/daDoor_c	_ZN4DoorD1Ev	1		True	_ZTV4Door	-
 src/_ZN11daChScene_cD0Ev.c	DTOR-ONLY	ov002	daChScene_c	daChScene_c/daChScene_c	_ZN11daChScene_cD0Ev	1		True	_ZTV11daChScene_c	-
-src/_ZN4Fish16OnPendingDestroyEv.c	P1-vtable+mangled	ov100	daFish_c	Fish/daFish_c	vtable daFish_c slot 12 @0x2146b00 | _ZN4Fish16OnPendingDestroyEv	1		True		-
-src/_ZN4FishD0Ev.cpp	DTOR-ONLY	ov100	daFish_c	Fish/daFish_c	_ZN4FishD0Ev	1		True		-
+src/_ZN8daFish_c16OnPendingDestroyEv.c	P1-vtable+mangled	ov100	daFish_c	daFish_c/daFish_c	vtable daFish_c slot 12 @0x2146b00 | _ZN8daFish_c16OnPendingDestroyEv	1		True		-
+src/_ZN8daFish_cD0Ev.cpp	DTOR-ONLY	ov100	daFish_c	daFish_c/daFish_c	_ZN8daFish_cD0Ev	1		True		-
 src/_ZN10daMcFlag_c16CleanupResourcesEv.c	P1-vtable+mangled	ov009	daMcFlag_c	daMcFlag_c/daMcFlag_c	vtable daMcFlag_c slot 3 @0x21120ec | _ZN10daMcFlag_c16CleanupResourcesEv	1		True		-
 src/_ZN10daMcFlag_cD0Ev.c	DTOR-ONLY	ov009	daMcFlag_c	daMcFlag_c/daMcFlag_c	_ZN10daMcFlag_cD0Ev	1		True		-
 src/_ZN4HeapC1EPvjP4Heap.c	P3-mangled-method-only	arm9		Heap	_ZN4HeapC1EPvjP4Heap	1		True		-

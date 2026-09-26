@@ -1,0 +1,351 @@
+{
+  "id": "ov102/daShl_c",
+  "module": "ov102",
+  "source": "src/game/actors/d_a_shl.cpp",
+  "promoted_source": "src/game/actors/d_a_shl.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x214c748..0x214d70c, 24 function(s): the 23 from build/tu_map.json (tools/tu_map.py) -- D1/D0, the fifteen state/helper routines and the six class members -- extended over the zero-gap registry factory daShl_c_classInit (0x0214d6b4..0x0214d70c), which tu_map cannot label because it cuts on symbol name. daBmb_c_classInit ends at 0x0214c748 below; .text ends at 0x0214d70c above (then .rodata).",
+    "class label(s): daShl_c",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0214c748",
+      "end": "0x0214d70c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN7daShl_cD1Ev",
+      "address": "0x0214c748",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN7daShl_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN7daShl_cD0Ev",
+      "address": "0x0214c798",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN7daShl_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov102_0214c7fc",
+      "address": "0x0214c7fc",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov102_0214c7fc.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov102_0214c84c",
+      "address": "0x0214c84c",
+      "size": "0x000003a0",
+      "legacy_source": "src/func_ov102_0214c84c.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov102_0214cbec",
+      "address": "0x0214cbec",
+      "size": "0x00000274",
+      "legacy_source": "src/func_ov102_0214cbec.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov102_0214ce60",
+      "address": "0x0214ce60",
+      "size": "0x000000ec",
+      "legacy_source": "src/func_ov102_0214ce60.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov102_0214cf4c",
+      "address": "0x0214cf4c",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov102_0214cf4c.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov102_0214cf98",
+      "address": "0x0214cf98",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov102_0214cf98.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov102_0214cfe4",
+      "address": "0x0214cfe4",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov102_0214cfe4.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov102_0214d020",
+      "address": "0x0214d020",
+      "size": "0x00000024",
+      "legacy_source": "src/func_ov102_0214d020.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov102_0214d044",
+      "address": "0x0214d044",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov102_0214d044.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov102_0214d0bc",
+      "address": "0x0214d0bc",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov102_0214d0bc.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov102_0214d114",
+      "address": "0x0214d114",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov102_0214d114.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov102_0214d148",
+      "address": "0x0214d148",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov102_0214d148.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov102_0214d1b0",
+      "address": "0x0214d1b0",
+      "size": "0x00000008",
+      "legacy_source": "src/func_ov102_0214d1b0.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov102_0214d1b8",
+      "address": "0x0214d1b8",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov102_0214d1b8.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov102_0214d1f8",
+      "address": "0x0214d1f8",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov102_0214d1f8.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN7daShl_c16CleanupResourcesEv",
+      "address": "0x0214d248",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN7daShl_c16CleanupResourcesEv.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN7daShl_c16OnPendingDestroyEv",
+      "address": "0x0214d274",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN7daShl_c16OnPendingDestroyEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN7daShl_c6RenderEv",
+      "address": "0x0214d278",
+      "size": "0x00000070",
+      "legacy_source": "src/_ZN7daShl_c6RenderEv.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN7daShl_c8BehaviorEv",
+      "address": "0x0214d2e8",
+      "size": "0x00000264",
+      "legacy_source": "src/_ZN7daShl_c8BehaviorEv.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN7daShl_c13InitResourcesEv",
+      "address": "0x0214d54c",
+      "size": "0x00000154",
+      "legacy_source": "src/_ZN7daShl_c13InitResourcesEv.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN7daShl_c13OnYoshiTryEatEv",
+      "address": "0x0214d6a0",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN7daShl_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "daShl_c_classInit",
+      "address": "0x0214d6b4",
+      "size": "0x00000058",
+      "legacy_source": "src/d_a_shl.c",
+      "ordinal": 23
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-assembled: tubuild create generated the 23 tu_map members (class members, D1/D0 and the fifteen state/helper routines); the zero-gap classInit factory was folded in by hand. The four state records (.bss, filled by __sinit_ov102_0214dfac) and the .rodata model-handle pair data_ov102_0214d70c stay unclaimed: this is a text-only TU, like its ov102 sibling daBmb_c."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov102-daShl_c/d_a_shl.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 24,
+    "functions_declared": 24,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        32
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI7daShl_c",
+        "_ZTS7daShl_c",
+        "_ZTV7daShl_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7daShl_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7daShl_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV7daShl_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "The key function is InitResources -- the first non-inline virtual declared in daShl_c, the destructor above it being inline -- so mwccarm emits the whole ancestor chain's vague-linkage RTTI here as passengers: daShl_c -> dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c. fBase_c is the chain root. The cartridge's own copy is at arm9:0x02086d70, outside every range this entry claims; romdata_check compares this object's bytes and relocations against that home before text-only isolation discards the duplicate."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Type-name string `7fBase_c\u0000` emitted beside _ZTI7fBase_c. ROM home arm9:0x02086e60, 0x9 bytes -- the size verify reports for the copy in this object."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "__si_class_type_info for the second link of the chain; its +8 word relocates to _ZTI7fBase_c. ROM home arm9:0x02086e78."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Type-name string `7dBase_c\u0000`. ROM home arm9:0x02086e54, 0x9 bytes."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "__si_class_type_info whose +8 word reaches _ZTI7dBase_c. ROM home arm9:0x0208e390."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Type-name string `8dActor_c\u0000`. ROM home arm9:0x0208e384, 0xa bytes."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "__si_class_type_info for this class's direct base; its +8 word reaches _ZTI8dActor_c. Homed at ov002:0x021081c0 by dEnemyBase_c's own key-function TU -- this copy is strictly a duplicate."
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "Type-name string `12dEnemyBase_c\u0000`. ROM home ov002:0x021081cc, 0xf bytes."
+    },
+    {
+      "symbol": "_ZTI7daShl_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov102",
+      "canonical_address": "0x0214e620",
+      "reason": "This class's own typeinfo record. The cartridge's copy lives at ov102:0x0214e620 -- inside this module's .data but OUTSIDE the 0x0214c748..0x0214d70c .text run this entry claims. MEASURED in extracted/overlays/overlay_0102.bin (base 0x02148a80): the three words there are 0x0209a764 (__si_class_type_info's vtable+8), 0x0214e614 (its _ZTS) and 0x021081c0 (_ZTI12dEnemyBase_c), so the cartridge itself states the direct base is dEnemyBase_c, exactly as the header declares."
+    },
+    {
+      "symbol": "_ZTS7daShl_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov102",
+      "canonical_address": "0x0214e614",
+      "reason": "This class's own type-name string. MEASURED: ov102:0x0214e614 holds the NUL-terminated '7daShl_c', 0x9 bytes -- the ROM's own spelling of this class's name, and the reason this TU and header are named daShl_c; the tree's former KoopaShell was coined and has no cartridge attestation."
+    },
+    {
+      "symbol": "_ZTV7daShl_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov102",
+      "canonical_address": "0x0214e650",
+      "reason": "This class's own vtable, emitted here because this TU holds the key function (InitResources). verify reports size=0x84: the two-word prologue plus 31 slots. MEASURED in extracted/overlays/overlay_0102.bin: 0x0214e650 IS the address point -- 0x0214e648 is the offset-to-top word 0 and 0x0214e64c is 0x0214e620 (&_ZTI7daShl_c). Slots 0, 3, 6, 9 and 12 hold 0x0214d54c, 0x0214d248, 0x0214d2e8, 0x0214d278 and 0x0214d274 (InitResources, CleanupResources, Behavior, Render, OnPendingDestroy); slots 16 and 17 hold 0x0214c748 / 0x0214c798 (D1 then D0); slot 18 holds 0x0214d6a0 (OnYoshiTryEat); every other slot is an inherited word. The folded factory's vptr store odr-uses this copy; production isolation rebinds it to the ROM home and deadstrips the duplicate."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "This TU builds Vector3 temporaries by value (func_ov102_0214ce60's carry offset, func_ov102_0214cbec's hurt positions), so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+    }
+  ]
+}

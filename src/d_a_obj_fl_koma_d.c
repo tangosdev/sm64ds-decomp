@@ -11,7 +11,7 @@ extern int _ZTV16daObjFl_Koma_D_c[];
  * RTTI, allocation size, most-derived vtable identity, and the FL_KOMA_D
  * registry profile; later EAD lineage supplies classInit. Exact original
  * spelling is not preserved. The project's daObjFl_Koma_D_c implementation
- * aliases remain unchanged. Historical alias: daObjFl_Koma_D_c_Spawn. */
+ * aliases remain unchanged. Historical alias: RotatingPlatformLll_Spawn. */
 int *daObjFl_Koma_D_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(800);

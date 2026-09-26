@@ -305,7 +305,7 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 | N64 behavior | → | DS class | overlay |
 |---|---|---|---|
 | `bhvGoomba` | → | `Goomba` | [ov084](../../config/arm9/overlays/ov084/symbols.txt) |
-| `bhvBobomb` / `bhvKingBobomb` / `bhvBobombBuddy` | → | `BobOmb` / `daBombking_c` / `BobOmbBuddy` | [ov102](../../config/arm9/overlays/ov102/symbols.txt) / [ov078](../../config/arm9/overlays/ov078/symbols.txt) / [ov084](../../config/arm9/overlays/ov084/symbols.txt) |
+| `bhvBobomb` / `bhvKingBobomb` / `bhvBobombBuddy` | → | `BobOmb` / `daBombking_c` / `daRedBombhei_c` | [ov102](../../config/arm9/overlays/ov102/symbols.txt) / [ov078](../../config/arm9/overlays/ov078/symbols.txt) / [ov084](../../config/arm9/overlays/ov084/symbols.txt) |
 | `bhvChainChomp` | → | `daWanwan_c` (+`daObjWanwanShutter_c`) | [ov014](../../config/arm9/overlays/ov014/symbols.txt) |
 | `bhvSmallBully` / `bhvBigBully` | → | `daDonketu_c` / `daBDonketu_c` | [ov064](../../config/arm9/overlays/ov064/symbols.txt) |
 | `bhvSmallWhomp` (+King) | → | `Whomp` (`mIsKing` flag) | [ov079](../../config/arm9/overlays/ov079/symbols.txt) |
