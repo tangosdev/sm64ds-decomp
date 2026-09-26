@@ -2,8 +2,16 @@
 /**
  * dPathLiftActor_c -- the path-following lift base.
  *
- * Twenty-two functions consolidated into the translation unit the cartridge built
- * them from.
+ * Partial production consolidation: 19 class methods and the existing C bridge
+ * occupy ov002:0x020ef3ec..0x020effb8. The two retail destructor bodies remain
+ * in their legacy sources; their inline copies here are byte-checked duplicates.
+ * This contiguous range is packaging evidence, not proof of the original TU.
+ *
+ * The state table at 0x0210af2c and its initializer at 0x021071f4 retain their
+ * existing ROM/data and source owners. The scale vector uses its configured
+ * identity data_ov002_0210af00. Compiler-emitted class metadata is separately
+ * measured against its configured ROM homes and discarded from this text slice.
+ * Completing lifecycle and state-data ownership remains deferred work.
  *
  * Function order is the REVERSE of the ROM's: mwccarm 2004/b56 emits one .text
  * section per function and lays them out in reverse source order, so the
@@ -16,13 +24,8 @@
  *   which is matching work needing its own byte proof -- not done here.
  */
 
-static char PATH_LIFT_FALL_NAME[] __attribute__((aligned(8))) = "FALL";
-static char PATH_LIFT_WAIT_NAME[] __attribute__((aligned(8))) = "WAIT";
-static char PATH_LIFT_PATH_NAME[] __attribute__((aligned(8))) = "PATH";
 
-/* Includes: union of the legacy files', first-seen in ROM-ascending
- * processing order. NOT verified for header ordering constraints (e.g. a
- * common.h-before-X rule) -- watch for new compile errors after this. */
+/* Header order preserves the measured mwccarm 2004/b56 output. */
 #include "PathLift.h"
 #include "types.h"
 #include "decl_PathPtr.h"
@@ -50,26 +53,15 @@ extern short Vec3_HorzAngle(void *a, void *b);
 extern short Vec3_VertAngle(void *a, void *b);
 extern void Vec3_MulScalar(void *out, void *v, int s);
 extern void SubVec3(void *a, void *b, void *c);
-struct PathLiftModelScale {
-    s32 x, y, z;
-};
-
-PathLiftModelScale PATH_LIFT_MODEL_SCALE = {0x2000, 0x2000, 0x2000};
 void func_02012694(int a, void *p);
 }
 
-PathLiftState data_ov002_0210af2c[] = {
-    {&dPathLiftActor_c::StateWaitInit, &dPathLiftActor_c::StateWait,
-     PATH_LIFT_WAIT_NAME},
-    {&dPathLiftActor_c::StatePathInit, &dPathLiftActor_c::StatePath,
-     PATH_LIFT_PATH_NAME},
-    {&dPathLiftActor_c::StateFallInit, &dPathLiftActor_c::StateFall,
-     PATH_LIFT_FALL_NAME},
-};
+extern "C" PathLiftState data_ov002_0210af2c[];
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- func_ov002_020eff90, 0x020eff90, size 0x28 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020eff90
 extern "C" void func_ov002_020eff90(int unused, dPathLiftActor_c* lift, int x) {
   lift->AfterClsn(x);
 }
@@ -96,6 +88,7 @@ void dPathLiftActor_c::AfterClsn(int)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 19 -- func_ov002_020eff04, 0x020eff04, size 0x14 */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZNK16dPathLiftActor_c11IsUnk42cSetEv
 int dPathLiftActor_c::IsUnk42cSet() const {
   unsigned char v = unk_42c;
   if (v != 0x0) return 1;
@@ -105,6 +98,7 @@ int dPathLiftActor_c::IsUnk42cSet() const {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- func_ov002_020efedc, 0x020efedc, size 0x28 */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZNK16dPathLiftActor_c17Param08ModeIs1Or2Ev
 int dPathLiftActor_c::Param08ModeIs1Or2() const
 {
     unsigned char v = (param1 >> 8) & 3;
@@ -117,6 +111,7 @@ int dPathLiftActor_c::Param08ModeIs1Or2() const
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- func_ov002_020efebc, 0x020efebc, size 0x20 */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZNK16dPathLiftActor_c14Param08ModeIs2Ev
 int dPathLiftActor_c::Param08ModeIs2() const {
     return (unsigned char)((param1 >> 8) & 3) == 2;
 }
@@ -124,6 +119,7 @@ int dPathLiftActor_c::Param08ModeIs2() const {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- func_ov002_020efe9c, 0x020efe9c, size 0x20 */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZNK16dPathLiftActor_c14Param12ModeIs1Ev
 int dPathLiftActor_c::Param12ModeIs1() const {
     return (unsigned char)((param1 >> 0xc) & 3) == 1;
 }
@@ -131,6 +127,7 @@ int dPathLiftActor_c::Param12ModeIs1() const {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- func_ov002_020efe7c, 0x020efe7c, size 0x20 */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZNK16dPathLiftActor_c14Param10ModeIs1Ev
 int dPathLiftActor_c::Param10ModeIs1() const {
     return (unsigned char)((param1 >> 0xa) & 3) == 1;
 }
@@ -138,6 +135,7 @@ int dPathLiftActor_c::Param10ModeIs1() const {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- func_ov002_020efe68, 0x020efe68, size 0x14 */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZNK16dPathLiftActor_c16HasNonzeroAngleZEv
 int dPathLiftActor_c::HasNonzeroAngleZ() const {
   return mAngleZ != 0;
 }
@@ -145,7 +143,7 @@ int dPathLiftActor_c::HasNonzeroAngleZ() const {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- func_ov002_020efcf4, 0x020efcf4, size 0x174 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020efcf4
+// @symbol _ZN16dPathLiftActor_c16UpdatePathModelsEv
 /* recovered: shared common types */
 void dPathLiftActor_c::UpdatePathModels()
 {
@@ -206,7 +204,7 @@ void dPathLiftActor_c::UpdatePathModels()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- func_ov002_020efc74, 0x020efc74, size 0x80 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020efc74
+// @symbol _ZN16dPathLiftActor_c16RenderPathModelsEv
 /* recovered: shared common types */
 void dPathLiftActor_c::RenderPathModels()
 {
@@ -215,7 +213,7 @@ void dPathLiftActor_c::RenderPathModels()
     int i = 0;
     Model* model = mModels;
     do {
-        Vector3 local = *(Vector3 *)&PATH_LIFT_MODEL_SCALE;
+        Vector3 local = *(Vector3 *)&data_ov002_0210af00;
         model->Render(&local);
         i++;
         model++;
@@ -225,6 +223,7 @@ void dPathLiftActor_c::RenderPathModels()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov002_020efbdc, 0x020efbdc, size 0x98 */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN16dPathLiftActor_c9ResetPathEv
 void dPathLiftActor_c::ResetPath()
 {
     mPosX = mInitialPos.x;
@@ -245,6 +244,7 @@ void dPathLiftActor_c::ResetPath()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov002_020efaf0, 0x020efaf0, size 0xec */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN16dPathLiftActor_c17BaseInitResourcesEv
 struct BMD_File;
 struct PathStuff { void* a; void* file; };  // data_0210d9f0: load [4]
 
@@ -277,6 +277,7 @@ void dPathLiftActor_c::BaseInitResources()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- _ZN16dPathLiftActor_c12BaseBehaviorEv, 0x020efaa0, size 0x50 */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN16dPathLiftActor_c12BaseBehaviorEv
 void dPathLiftActor_c::BaseBehavior()
 {
     PathLiftState &state = data_ov002_0210af2c[mState];
@@ -287,6 +288,7 @@ void dPathLiftActor_c::BaseBehavior()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov002_020efa54, 0x020efa54, size 0x4c */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN16dPathLiftActor_c8SetStateEi
 void dPathLiftActor_c::SetState(int state) {
     mState = state;
     int next = mState;
@@ -296,6 +298,7 @@ void dPathLiftActor_c::SetState(int state) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov002_020efa44, 0x020efa44, size 0x10 */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN16dPathLiftActor_c13StatePathInitEv
 void dPathLiftActor_c::StatePathInit()
 {
     mWaitTimer = 300;
@@ -304,7 +307,7 @@ void dPathLiftActor_c::StatePathInit()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov002_020ef670, 0x020ef670, size 0x3d4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020ef670
+// @symbol _ZN16dPathLiftActor_c9StatePathEv
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 void dPathLiftActor_c::StatePath()
@@ -422,6 +425,7 @@ void dPathLiftActor_c::StatePath()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov002_020ef57c, 0x020ef57c, size 0xf4 */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN16dPathLiftActor_c13StateFallInitEv
 void dPathLiftActor_c::StateFallInit()
 {
   int b = (int)(actorID == 0x82);
@@ -458,6 +462,7 @@ void dPathLiftActor_c::StateFallInit()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov002_020ef408, 0x020ef408, size 0x174 */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN16dPathLiftActor_c9StateFallEv
 void dPathLiftActor_c::StateFall()
 {
     char *c = (char *)this;
@@ -502,6 +507,7 @@ void dPathLiftActor_c::StateFall()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- func_ov002_020ef3f0, 0x020ef3f0, size 0x18 */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN16dPathLiftActor_c13StateWaitInitEv
 void dPathLiftActor_c::StateWaitInit()
 {
     mTriggerDelay = 24;
@@ -511,6 +517,7 @@ void dPathLiftActor_c::StateWaitInit()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov002_020ef3ec, 0x020ef3ec, size 0x4 */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN16dPathLiftActor_c9StateWaitEv
 void dPathLiftActor_c::StateWait()
 {
 }

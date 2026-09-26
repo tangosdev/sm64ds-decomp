@@ -93,21 +93,22 @@ blue-coin model; `func_ov096_0213670c` reads it through the head to select a
 zero or 90-frame regrowth delay, and `func_ov096_021365d4` clears it when the
 segment count reaches three. Its complete gameplay meaning is not claimed.
 
-## BabyPenguin -- include/BabyPenguin.h
+## daPgBby_c -- include/daPgBby_c.h
+
+All bodies are in `src/game/actors/d_a_pg_bby.cpp`.
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x350 | `mSpawnPosX` | `src/_ZN11BabyPenguin13InitResourcesEv.cpp` copies `mPosX` in; never written again. |
+| 0x0d0 | `mEatingPlayer` | InitResources and the state-4 update clear it; the state-5 enter step (`func_ov072_02121368`) places the penguin 0x50 in front of it and clears it. |
+| 0x350 | `mSpawnPosX` | InitResources copies `mPosX` in; `func_ov072_02120d04` copies it back to respawn. |
 | 0x354 | `mSpawnPosY` | same, `mPosY`. |
 | 0x358 | `mSpawnPosZ` | same, `mPosZ`. |
-| 0x364 | `mCachedActor` | `src/_ZN11BabyPenguin8BehaviorEv.cpp`: `if (mCachedActor == 0) mCachedActor = FindWithActorID(0x101, 0)`, lazily filled and never cleared. A `dActor_c*` spelt `s32`. |
-
-`mCachedActor` is named for what it holds and not for what it means on purpose:
-nothing in the tree names actor 0x101, and no enrolled body reads the pointer
-back, so a name like "mMotherPenguin" would be a claim the bytes do not make.
-
-Deliberately left `unk_`: 0x360 (zeroed, never read); 0x36c (set to 0x384 every
-frame the penguin is near the player, never read).
+| 0x35c | `mState` | `func_ov072_02121d50` stores `&data_ov072_02122d6c[state]` (16-byte {enter, update} member-pointer pairs); `func_ov072_02121d18` / `func_ov072_02121cdc` call through it. |
+| 0x360 | `mCarrier` | Set to the touching player (actor 0xbf) by `func_ov072_02120e50`; ShowMessage, GetTalkState and DropActor are called on it. |
+| 0x364 | `mMother` | Behavior: `if (mMother == 0) mMother = FindWithActorID(0x101, 0)`; `func_ov072_02120ddc` and `func_ov072_02121670` measure the distance to it. Actor 0x101 (257) is PENGUIN_MOTHER (`notes/ead-debug-name-crossref.md`). |
+| 0x368 | `mStateId` | Each enter step stores its own index 0..5; `func_ov072_02120d04` skips the respawn in state 3. |
+| 0x36c | `mRespawnTimer` | Behavior resets it to 0x384 every near frame; `func_ov072_02120d04` counts it down with DecIfAbove0_Short. |
+| 0x36e | `mSubState` | The per-state step counter every update step switches on. |
 
 ## daJgm_c -- include/daJgm_c.h
 
@@ -334,10 +335,17 @@ translation unit.
 
 Source: `src/_ZN10BowserTail8BehaviorEv.cpp`.
 
+## daRedBombhei_c -- include/daRedBombhei_c.h
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x198 | `mShutterID` | initialized to zero, filled with the cannon shutter actor's `uniqueID`, and resolved with `dActor_c::FindWithID` during the camera/opening cutscene. |
+
+Source: `src/game/actors/d_a_red_bombhei.cpp`. The former observation that this
+slot was never read was incomplete; the consolidated helpers expose its uses.
+
 ## More leaves searched, nothing named
 
-- `BobOmbBuddy` 0x198: zeroed in `src/_ZN11BobOmbBuddy13InitResourcesEv.cpp`,
-  never read.
 - `daCamTag_c` 0x0d0 and `daBgSnwmn_c` 0x0d0: four opaque bytes each, touched by
   no enrolled body. `daBgSnwmn_c` already carries a note saying its 0x0cc read
   is the inherited `mAreaId`, not a field of its own.

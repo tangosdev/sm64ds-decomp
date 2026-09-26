@@ -20,8 +20,6 @@
  * Leftover: func_020393d4 is an 8-byte store into dBgW+0x18
  *   (beforeClsnCallback). This TU calls it; naming belongs with
  *   dBgW in arm9.
- * Leftover: func_ov002_020efaf0 is the path-lift setup helper
- *   (ROM label; symbols.txt has not renamed it to a method).
  * Leftover: func_ov036_021122c0 / 0211224c keep ROM labels.
  * Leftover: 021122c0 / 0211224c translation stores stay
  *   `(char *)self + 0x490/0x494/0x498` (mModelAnim.mat4x3.t) and
@@ -92,7 +90,6 @@ extern int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block
     dBgW_KcMbg *collider, KCL_File *file, const Matrix4x3 *matrix,
     Fix12i scale, s16 angle, CLPS_Block *clps);
 extern void func_020393d4(dBgW *collider, void *callback);
-extern void func_ov002_020efaf0(dPathLiftActor_c *lift);
 extern void _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(
     dBgActor_c *actor, Fix12i low, Fix12i high);
 extern void Matrix4x3_FromRotationXYZExt(
@@ -153,7 +150,7 @@ int daObjRcCarpet_c::InitResources()
     func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
     mPathSpeed = 0xa000;
     mHorzSpeed = mPathSpeed;
-    func_ov002_020efaf0(this);
+    BaseInitResources();
     mPathDirection = 1;
     unk_42c = 1;
     return 1;

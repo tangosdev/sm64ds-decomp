@@ -2,7 +2,7 @@
 // @symbol _ZN16dScMgPachinko2_c8BehaviorEv
 // recovered name: dScMgPachinko2_c_Behavior
 #include "dScMgPachinko2_c.h"
-/* dScMgPachinko2_c::Behavior - recovered from vtable slot identity */
+/* Slot 6. unk_5660 selects which helpers run this frame. */
 extern "C" {
 extern void func_ov006_02100084(void *c);
 extern void func_ov006_021024e0(void *c);
@@ -22,49 +22,47 @@ extern void func_ov004_020b0a54(void *c);
 
 s32 dScMgPachinko2_c::Behavior()
 {
-    char *c = (char *)this;
-
-    switch (*(s32 *)(c + 0x5660)) {
+    switch (unk_5660) {
     case 0:
-        func_ov006_02100084(c);
-        func_ov006_021024e0(c);
-        func_ov006_020fffec(c);
-        *(u16 *)(c + 0x566c) = 0x10;
-        *(s32 *)(c + 0x5660) = 1;
+        func_ov006_02100084(this);
+        func_ov006_021024e0(this);
+        func_ov006_020fffec(this);
+        unk_566c = 0x10;
+        unk_5660 = 1;
         break;
     case 1:
-        if (*(u8 *)(c + 0xc4) == 0) {
-            *(u8 *)(c + 0xc3) = 1;
-            *(u8 *)(c + 0xc4) = 1;
-            *(u16 *)(c + 0xc0) = 0;
+        if (mPromptBlinkCount == 0) {
+            mPromptEnabled = 1;
+            mPromptBlinkCount = 1;
+            mPromptBlinkTimer = 0;
         }
-        func_ov006_0210265c(c);
-        func_ov006_02102ef4(c);
-        func_ov006_02103ac0(c);
-        func_ov006_02102e8c(c);
-        func_ov006_0210246c(c);
-        func_ov006_020fff84(c);
-        func_ov006_02100380(c);
-        func_ov006_0210258c(c);
+        func_ov006_0210265c(this);
+        func_ov006_02102ef4(this);
+        func_ov006_02103ac0(this);
+        func_ov006_02102e8c(this);
+        func_ov006_0210246c(this);
+        func_ov006_020fff84(this);
+        func_ov006_02100380(this);
+        func_ov006_0210258c(this);
         break;
     case 2:
-        func_ov006_02102e8c(c);
-        func_ov006_0210246c(c);
-        func_ov006_020fff84(c);
-        func_ov006_02100380(c);
-        func_ov006_02100554(c);
-        func_ov006_021001ac(c);
+        func_ov006_02102e8c(this);
+        func_ov006_0210246c(this);
+        func_ov006_020fff84(this);
+        func_ov006_02100380(this);
+        func_ov006_02100554(this);
+        func_ov006_021001ac(this);
         break;
     case 3:
-        func_ov006_02102e8c(c);
-        func_ov006_0210246c(c);
-        func_ov006_020fff84(c);
-        func_ov006_021001ac(c);
-        if (*(u16 *)(c + 0x566e) != 0) {
-            *(u16 *)(u32)(c + 0x566e) -= 1;
-            if (*(s16 *)(c + 0x566e) <= 0) {
+        func_ov006_02102e8c(this);
+        func_ov006_0210246c(this);
+        func_ov006_020fff84(this);
+        func_ov006_021001ac(this);
+        if (unk_566e != 0) {
+            unk_566e--;
+            if ((s16)unk_566e <= 0) {
                 func_ov004_020b0a54((void *)0x10);
-                *(u8 *)(c + 0xc3) = 0;
+                mPromptEnabled = 0;
             }
         }
         break;

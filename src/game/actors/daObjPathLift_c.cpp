@@ -15,9 +15,6 @@
  * and classInit and shifts the factory.
  *
  * deslop
- * Leftover: func_ov002_020efcf4 / func_ov002_020efc74 /
- *   func_ov002_020efaf0 are shared ov002 helpers taking
- *   dPathLiftActor_c; naming belongs in ov002.
  * Leftover: data_0209f2f8 == 13 is a level-ID check (the current
  *   level); data_0209f2d8 == 1 is the mode-1 check used tree-wide.
  */
@@ -28,9 +25,6 @@
 
 extern "C" {
 extern CLPS_Block data_ov002_0210d7d4;
-extern void func_ov002_020efcf4(dPathLiftActor_c *lift);
-extern void func_ov002_020efc74(dPathLiftActor_c *lift);
-extern void func_ov002_020efaf0(dPathLiftActor_c *lift);
 extern void func_ov100_02146e70(daObjPathLift_c *self);
 extern int func_ov100_0214700c(daObjPathLift_c *self);
 
@@ -85,7 +79,7 @@ int daObjPathLift_c::InitResources()
         (void *)&dBgW::UpdatePosAndAngs);
     mPathSpeed = 0xa000;
     mHorzSpeed = mPathSpeed;
-    func_ov002_020efaf0(this);
+    BaseInitResources();
     mPathDirection = 1;
     pos.x = mPosX;
     pos.y = mPosY;
@@ -109,7 +103,7 @@ int daObjPathLift_c::InitResources()
 // @symbol _ZN15daObjPathLift_c8BehaviorEv
 int daObjPathLift_c::Behavior()
 {
-    func_ov002_020efcf4(this);
+    UpdatePathModels();
     BaseBehavior();
     if (Vec3_Dist((Vector3 *)&mPosX, (Vector3 *)&mPrevPosX) != 0) {
         if (DecIfAbove0_Byte(&mTimer) == 0) {
@@ -141,7 +135,7 @@ int daObjPathLift_c::Render()
         if (h & 1)
             return 1;
     }
-    func_ov002_020efc74(this);
+    RenderPathModels();
     mModel.Render(0);
     return 1;
 }

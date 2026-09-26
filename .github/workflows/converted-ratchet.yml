@@ -68,6 +68,7 @@ on:
       - "tools/tiers_ratchet.py"
       - "tools/test_tiers_ratchet.py"
       - "tools/delaunder.py"
+      - "tools/msvc_arms.py"
       # Member identities are derived from the enrollment table, so the file that maps a
       # source to the functions it owns decides how many identities this gate banks. A PR
       # that only changes srcpath.py touches no other path here and would otherwise
@@ -90,6 +91,7 @@ on:
       - "tools/tiers_ratchet.py"
       - "tools/test_tiers_ratchet.py"
       - "tools/delaunder.py"
+      - "tools/msvc_arms.py"
       - "tools/srcpath.py"
       - "tools/tu_manifest.py"
       - "config/tu_manifest.d/**"

@@ -1,9 +1,9 @@
 {
   "id": "ov002/EnemySpawner+EnemySwitchTag",
   "module": "ov002",
-  "source": "src/game/actors/d_a_e_switch.cpp",
+  "source": "src_tu/actors/EnemySpawner+EnemySwitchTag.cpp",
   "promoted_source": "src/game/actors/d_a_e_switch.cpp",
-  "status": "promoted",
+  "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20f15fc..0x20f198c, 12 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -117,34 +117,16 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov002-EnemySpawner+EnemySwitchTag/d_a_e_switch.o (gitignored)",
+    "object": "build/tu/ov002-EnemySpawner+EnemySwitchTag/EnemySpawner+EnemySwitchTag.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 12,
     "functions_declared": 12,
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 12 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 14 unlicensed section/symbol(s); see unlicensed_output_observed",
       "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1), (2, 3)]",
       "relocation_destinations_verified": "PASS"
-    },
-    "compilerOnlyOutput": {
-      "requested": [
-        "_ZN14EnemySwitchTagD2Ev",
-        "_ZN12EnemySpawnerD2Ev"
-      ],
-      "deadstripped": [
-        "_ZN12EnemySpawnerD2Ev",
-        "_ZN14EnemySwitchTagD2Ev"
-      ],
-      "droppedSections": [
-        24,
-        25,
-        30,
-        31
-      ],
-      "data": [],
-      "dataExternalized": []
     }
   },
   "partial_isolation": {

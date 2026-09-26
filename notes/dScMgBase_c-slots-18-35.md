@@ -113,7 +113,7 @@ source is really `this`; it becomes implicit when the free function turns into a
 Two independent sources agree, and neither of them is this table:
 
 1. **`include/dActor_c.h:131`** declares `virtual int OnYoshiTryEat(); /* slot 18 */`,
-   and a dozen further headers repeat the declaration at the same index — BabyPenguin,
+   and a dozen further headers repeat the declaration at the same index — daPgBby_c,
    daObjFire_c, BobOmb, BookShot, Coin, daObjBlockS_c, CrazedCrate, `daDossyCap_c`, `daEyBm_c`,
    `daKpFr_c`, `daKrb_c`, `daKrpa_c`, `daObjMarioCap_c`, `daTrs_c`. `dActor_c` sits on
    the *other* branch of `fBase_c` (`fBase_c → dBase_c → dActor_c`, where this family
