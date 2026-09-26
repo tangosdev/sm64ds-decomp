@@ -157,12 +157,12 @@ extern int  func_ov004_020adbc0(void);
 extern int  func_ov004_020adbe0(void);
 extern int  func_ov004_020adc1c(void);
 extern void func_ov004_020b19f0(void);
-extern int  func_ov004_020b1a5c(int, int);
+extern void func_ov004_020b1a5c(int, int);
 extern void func_ov004_020b1e44(int a0);
 extern void func_ov004_020adb1c(int self);
-extern void func_ov004_020af2f8(char*, int, int, int);
+extern void func_ov004_020af2f8(char *, char, int, int);
 extern void func_ov004_020b04d0(int);
-extern void func_ov004_020b0a54(void *c);
+extern void func_ov004_020b0a54(int);
 extern void FreeGfxSlotsById(int n);
 extern int  RandomIntInternal(int *seed);
 extern int  Sound_PlayIfNotActive(int a, int b, int c, int d);
@@ -184,8 +184,8 @@ extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
-extern char *_ZN3G2S12GetBG2ScrPtrEv(void);
-extern char *_ZN3G2S13GetBG3CharPtrEv(void);
+extern unsigned _ZN3G2S12GetBG2ScrPtrEv(void);
+extern unsigned _ZN3G2S13GetBG3CharPtrEv(void);
 extern void *_ZN11dScMgBase_cC2Ev(void*);
 
 /* --- ROM data this TU reads --- */
@@ -198,7 +198,7 @@ extern u8   data_020a0de8[];
 extern u8   data_020a0de9[];
 extern u8   data_020a0dea[];
 extern u8   data_020a0deb[];
-extern void *data_ov006_02136b80[];
+extern int  data_ov006_02136b80[];
 extern int  data_ov006_02136bd4[];
 extern int  data_ov006_0213386c;
 extern int  data_ov006_021389ec;
@@ -312,7 +312,7 @@ void func_ov006_020ff47c(struct Obj* o) {
     int i;
     for (i = 0; i < 2; i++) {
         if (o->arr[i].flag) {
-            func_ov004_020afdd0(data_ov006_02136b80[o->arr[i].idx],
+            func_ov004_020afdd0((void *)data_ov006_02136b80[o->arr[i].idx],
                                 o->arr[i].x >> 12, o->arr[i].y >> 12, -1, 2);
         }
     }
@@ -2750,7 +2750,7 @@ s32 dScMgPachinko2_c::Behavior()
         if (unk_566e != 0) {
             unk_566e--;
             if ((s16)unk_566e <= 0) {
-                func_ov004_020b0a54((void *)0x10);
+                func_ov004_020b0a54(0x10);
                 mPromptEnabled = 0;
             }
         }
