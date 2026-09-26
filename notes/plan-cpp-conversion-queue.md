@@ -216,7 +216,7 @@ python tools/mangle.py src/game/actors/d_a_obj_km2_fall_block.cpp \
 **Entry:** S2 green, and the S2 bracket showed no enrollment loss.
 Add one method declaration to `include/<Class>.h` inside the existing `#ifdef __cplusplus`
 block, then do the S2 edit. Representative classes: `daObjRc_Tikuwa_c`, `FlameChomp`,
-`Scuttlebug`, `dScEntry_c`, `dScTitle_c`, `BabyPenguin`. Two classes have no header at all
+`Scuttlebug`, `dScEntry_c`, `dScTitle_c`, `daPgBby_c`. Two classes have no header at all
 (`daObjCloset_c` + one more) — drop those files; that is header-reconstruction work.
 
 **Why a separate stage:** a header edit has blast radius through every includer, and

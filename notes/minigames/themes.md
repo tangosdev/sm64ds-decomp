@@ -20,18 +20,20 @@ A pass must not change a single emitted byte or relocation target.
 1. **Inherited base fields by name.**
    - Before: `*(u8 *)(c + 0xc3) = 1`.
    - After: `mPromptEnabled = 1`.
-   - Proven: `dScMgCard_c`'s prompt handling in `src/minigames/d_s_mg_card.cpp`.
+   - Proven: `dScMgCard_c`'s prompt handling in `src/minigames/d_s_mg_card.cpp`, `dScMgPachinko2_c`'s `Behavior` and `InitResources`, and `dScMg3DEsp_c::InitResources`.
    - Exception: when the singleton `data_ov004_020beb68` is declared `int`, mwcc loads a `+0x46xx` offset from the literal pool instead of splitting it as `add #0x4000` (see `func_ov004_020adafc`). So the accessor functions keep a `char *` base.
    - Access to the same block through `this` or a `dScMgBase_c *` matches: `dScMgBase_c::BeforeInitResources`, `BeforeBehavior` and `OnHitByMegaChar` all use the names.
 2. **`char *c = (char *)this` inside a real member.**
    - Readable form: plain member access.
-   - Proven: in `dScMgBase_c`. Untested in each game.
+   - Proven: in `dScMgBase_c`, `dScMgPachinko2_c`'s `Behavior` and `InitResources`, and `dScMg3DEsp_c`'s `InitResources`, `OnYoshiTryEat` and `Render`.
    - Caution, [GUESS]: mixing `c` and `this` in one function may move register allocation, so convert a function all at once.
 3. **Mangled `extern "C"` calls to real C++ methods.**
    - Readable form: a normal call through the header.
-   - Proven for plain arguments: `Sound::StopLoadedMusic_Layer1` in `dScMgBase_c::AfterCleanupResources`.
+   - Proven for plain arguments: `Sound::StopLoadedMusic_Layer1` in `dScMgBase_c::AfterCleanupResources`, and in `dScMg3DEsp_c` for `TextureTransformer::Prepare`, `Animation::Advance` and the qualified destructor calls in D0 and D1.
    - Measured negative for native `u16` SDK arguments (`dScMgD3DBase_c`).
-   - Blocked, not measured, for `cstd::atan2`: it keeps its mangled name because no readable spelling links (`src/actors/dScMgHanachan_c.cpp`). The caller cost of passing `Fix12<int>` by value is untested.
+   - Measured negative for `Fix12<int>` by value: `TextureTransformer::SetFile` costs at least 12 bytes in `dScMg3DEsp_c::InitResources`.
+   - Blocked, not measured, for `cstd::atan2`: it keeps its mangled name because no readable spelling links (`src/actors/dScMgHanachan_c.cpp`).
+   - No header declares the SDK namespaces `GX`, `GXS` and `G2S`. A local namespace declaration compiles identically (the `InitResources` of `dScMgPachinko2_c` and `dScMg3DEsp_c`), but was not applied: a shared header is the readable form.
 4. **Hand-built factories** (`fBase_c::operator new`, the base `C2`, then vptr stores).
    - Readable form: `return new dScMgX_c;`.
    - Proven: `dScMgMemory2_c`'s factory.
@@ -39,6 +41,7 @@ A pass must not change a single emitted byte or relocation target.
 5. **Pointer-to-member state tables.**
    - Readable form: a typedef over named state members.
    - Proven with the complete class in `dScMgCoin_c` and `dScMgMemory_c`.
+   - `dScMg3DEsp_c::Behavior` matches with either receiver.
    - Measured to need an incomplete receiver in Curling and Curling2. Teresa keeps its receiver incomplete too.
    - Jump needs a non-polymorphic receiver instead.
    - Test the receiver per file.
@@ -48,13 +51,15 @@ A pass must not change a single emitted byte or relocation target.
    - Status: untested.
 7. **The scene singleton `data_ov004_020beb68`, retyped in each file** (`int`, `char *[]`, `struct Obj *`).
    - Readable form: the one `extern` in `dScMgBase_c.h`, plus member access. Theme 1's `char *` exception applies.
-   - Status: partly proven (`func_ov004_020b0a54`).
+   - Status: partly proven (`func_ov004_020b0a54`, and through `dScMgBase_c *` in `dScMg3DEsp_c::OnYoshiTryEat`).
 8. **Local redeclarations that disagree with a header**, including the manifests' `CONFLICT` notes.
    - Readable form: one prototype in one header.
    - Every change here is matching work: rebuild and compare.
-   - Status: untested.
+   - Proven: deleting a local copy that agrees with `decl_common.h` (`dScMgSingle3DBase_c`, `dScMgPachinko2_c::Render`, `dScMg3DEsp_c::InitResources`).
+   - Blocked where the copies disagree: including `decl_common.h` in `dScMgPachinko2_c::Behavior` fails with "illegal function overloading" (`void *` against `char *` or `int`). `LoadFile` returns `int` at its definition and `void *` in Card and Memory.
 9. **`add #0x4000` and `add #0x5000` split cursors.** A walk pointer is padded so that a field lands past 0x4000 or 0x5000.
    - Measured negative: `mCards[i]` did not match in `dScMgMemory_c`'s `DrawCards`, `RoundWaitDeal` and `ShuffleCards`. It does match in the class's other members.
+   - Measured negative in `dScMgSingle3DBase_c::Virtual84`: both plainer spellings of its two `DecompressLZ16` destinations differ by 44 words.
    - Where it does not match, keep the cursor, with a one-line comment.
 10. **The touch sample**, `{down, changed, x, y}` in `data_020a0de8`, is spelled as `u8[]`, as scalars, or as local structs.
     - Some local views name the bytes `{pressed, held}`, which is wrong: byte 1 flips on both press and release.
@@ -62,7 +67,7 @@ A pass must not change a single emitted byte or relocation target.
     - Status: untested. It would change every consumer.
 11. **Hand-rolled vtable views.**
     - Readable form: a real virtual call, such as `OnYoshiTryEat(-1)`.
-    - Proven in `dScMgTrampoline2_c` and `dScMgCup_c`.
+    - Proven in `dScMgTrampoline2_c`, `dScMgCup_c` and `dScMg3DEsp_c` (`OnYoshiTryEat(-1)` in `InitResources`, `Model::Render(0)` in `Render`).
 12. **The sine table `data_02082214`.** It holds interleaved fx16 sine and cosine pairs [ROM].
     - Readable form: a named table or accessor. [GUESS] It is NitroSDK's `FX_SinCosTable_`.
     - Status: untested.
@@ -72,4 +77,8 @@ A pass must not change a single emitted byte or relocation target.
     - Measured negative: narrowing the file ID to `u16` grows `Virtual7C` by 16 bytes (`dScMgD3DBase_c`).
 14. **Fix12 arithmetic.**
     - Spelling a value `Fix12i` (a plain `s32`) is safe.
-    - Passing the `Fix12<int>` template by value is untested at the call site; see theme 3.
+    - Passing the `Fix12<int>` template by value is measured negative at the call site; see theme 3.
+15. **Hardware registers by raw address.**
+    - Readable form: the names in `nitro/hw/registers.h`.
+    - Proven: `REG_DISPCNT` and `REG_DISPCNT_SUB` in `dScMgSingle3DBase_c::Virtual84`.
+    - Registers the header does not name yet (the light and sub-BG3 registers there) stay raw.
