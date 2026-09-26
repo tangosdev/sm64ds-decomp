@@ -46188,12 +46188,6 @@
         "return:int"
       ]
     },
-    "func_ov079_0212522c": {
-      "include/decl_common.h": [
-        "arity:0",
-        "return:int"
-      ]
-    },
     "func_ov080_02124208": {
       "src/_ZN9MontyMole8BehaviorEv.cpp": [
         "return:int"
