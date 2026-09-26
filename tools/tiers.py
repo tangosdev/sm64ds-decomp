@@ -44,6 +44,7 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 import delaunder  # noqa: E402  (code_mask only -- no compiler, no ROM; see _code_only)
 import demangle  # noqa: E402  (pure string work, no compiler, no ROM; see _reader_name)
+import msvc_arms  # noqa: E402  (pure string work; the side of a file mwccarm compiles)
 import srcpath  # noqa: E402  (enrolled source -> function ownership)
 
 SRC = REPO / "src"
@@ -62,6 +63,14 @@ LINKED_STAMP = REPO / "config" / "port_linkage.json"
 #
 # Three of them run over `_code_only(text)`, not raw text, so a comment that names
 # a defect no longer scores as the defect. See _code_only for the measurement.
+#
+# Every criterion reads the file as mwccarm compiles it (msvc_arms.mwcc_side): an
+# `#ifdef _MSC_VER` side exists only for the PC port's MSVC build and is not decomp
+# source, so it neither fails nor passes a criterion. Before this, a host arm that
+# defines the ROM's flat D0 name (`extern "C" Model *_ZN5ModelD0Ev(...)`) failed
+# no_mangled_refs for its whole file although the ROM side calls nothing by a mangled
+# name. Measured on the tree it landed on: CONVERTED 3221 -> 3227, the six Model-family
+# variant files that carry such an arm, and no other file moved.
 #
 # The bar was set on 2026-08-07 and is deliberately strict. Softer readings were
 # considered and rejected: "includes a shared header" scores 28.9% but measures
@@ -295,6 +304,7 @@ def _real_name_for_symbol(sym):
 
 def score_file(path, text):
     """The five criteria for one source file, plus the header reading."""
+    text = msvc_arms.mwcc_side(text)
     code = _code_only(text)
     return {
         "real_name": _real_name(path, text),
@@ -433,7 +443,7 @@ def _lifecycle_member_fragment(path, text, symbol, repo_root=None):
         candidates.append(root / "include" / name)
         for header in candidates:
             try:
-                header_text = header.read_text(errors="replace")
+                header_text = msvc_arms.mwcc_side(header.read_text(errors="replace"))
             except OSError:
                 continue
             fragment = _balanced_lifecycle_fragment(
@@ -452,6 +462,7 @@ def score_member(path, text, symbol, repo_root=None):
     evidence is scored against the
     entire file, preserving the old conservative behavior.
     """
+    text = msvc_arms.mwcc_side(text)
     fragment = _marked_member_fragment(text, symbol)
     if fragment is None:
         fragment = _lifecycle_member_fragment(path, text, symbol, repo_root)
