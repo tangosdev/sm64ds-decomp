@@ -2218,20 +2218,20 @@ ov072	0x02120638	func_ov072_02120638	_ZN12daBgSnmHed_c6RenderEv	vtable slot 9
 ov072	0x0212066c	func_ov072_0212066c	_ZN12daBgSnmHed_c8BehaviorEv	vtable slot 6
 ov072	0x0212069c	func_ov072_0212069c	_ZN12daBgSnmHed_c13InitResourcesEv	vtable slot 0
 ov072	0x021207d4	func_ov072_021207d4	SnowmanHead_Spawn	spawnfunc
-ov072	0x02120c58	func_ov072_02120c58	_ZN11BabyPenguinD1Ev	vtable slot 16
-ov072	0x02120ca0	func_ov072_02120ca0	_ZN11BabyPenguinD0Ev	vtable slot 17
-ov072	0x02121d6c	func_ov072_02121d6c	_ZN11BabyPenguin16CleanupResourcesEv	vtable slot 3
-ov072	0x02121db0	func_ov072_02121db0	_ZN11BabyPenguin16OnPendingDestroyEv	vtable slot 12
-ov072	0x02121db4	func_ov072_02121db4	_ZN11BabyPenguin6RenderEv	vtable slot 9
-ov072	0x02121e08	func_ov072_02121e08	_ZN11BabyPenguin8BehaviorEv	vtable slot 6
-ov072	0x02121e84	func_ov072_02121e84	_ZN11BabyPenguin13InitResourcesEv	vtable slot 0
+ov072	0x02120c58	func_ov072_02120c58	_ZN9daPgBby_cD1Ev	vtable slot 16
+ov072	0x02120ca0	func_ov072_02120ca0	_ZN9daPgBby_cD0Ev	vtable slot 17
+ov072	0x02121d6c	func_ov072_02121d6c	_ZN9daPgBby_c16CleanupResourcesEv	vtable slot 3
+ov072	0x02121db0	func_ov072_02121db0	_ZN9daPgBby_c16OnPendingDestroyEv	vtable slot 12
+ov072	0x02121db4	func_ov072_02121db4	_ZN9daPgBby_c6RenderEv	vtable slot 9
+ov072	0x02121e08	func_ov072_02121e08	_ZN9daPgBby_c8BehaviorEv	vtable slot 6
+ov072	0x02121e84	func_ov072_02121e84	_ZN9daPgBby_c13InitResourcesEv	vtable slot 0
 ov072	0x02121fac	func_ov072_02121fac	BabyPenguin_Spawn	spawnfunc
 ov072	0x0212279c	data_ov072_0212279c	SnowmanBody_SpawnInfo	spawninfo
 ov072	0x021227c0	data_ov072_021227c0	_ZTV12daBgSnmBdy_c	vtable alloc=0x3a8
 ov072	0x02122898	data_ov072_02122898	SnowmanHead_SpawnInfo	spawninfo
 ov072	0x021228bc	data_ov072_021228bc	_ZTV12daBgSnmHed_c	vtable alloc=0x338
 ov072	0x02122a6c	data_ov072_02122a6c	BabyPenguin_SpawnInfo	spawninfo
-ov072	0x02122a90	data_ov072_02122a90	_ZTV11BabyPenguin	vtable alloc=0x370
+ov072	0x02122a90	data_ov072_02122a90	_ZTV9daPgBby_c	vtable alloc=0x370
 ov073	0x0211f000	func_ov073_0211f000	_ZN16daKing_Donketu_cD1Ev	vtable slot 16 (was _ZN11ChiefChillyD1Ev)
 ov073	0x0211f098	func_ov073_0211f098	_ZN16daKing_Donketu_cD0Ev	vtable slot 17 (was _ZN11ChiefChillyD0Ev)
 ov073	0x021217e0	func_ov073_021217e0	_ZN16daKing_Donketu_c16CleanupResourcesEv	vtable slot 3 (was _ZN11ChiefChilly16CleanupResourcesEv)
