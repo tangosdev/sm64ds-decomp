@@ -23614,6 +23614,19 @@ foreach(_tasmc2 walk_window walk_window_hires smoke_player smoke_actor
         "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN6Memory13operator_new2Ej.cpp")
 endforeach()
 
+# A3. src/_ZN6Memory16operator_delete2EPv.cpp on the six targets that compile
+# hal/cxxname_bridge.cpp, whose host body of the flat name is retired for an
+# /alternatename onto this one; all six carry src/_ZdlPv.cpp, its one callee.
+# The ten smoke targets that already build it (PORT_SMOKE_HEAP_TEARDOWN_SRC,
+# slice_gate24) are not listed again. smoke_player, smoke_actor,
+# smoke_savestate and smoke_persist stay EXCLUDE_FROM_ALL; they take A1-A3 so
+# their link lines keep the symbols the retired host bodies defined.
+foreach(_tasmc3 walk_window walk_window_hires smoke_player smoke_actor
+                smoke_savestate smoke_persist)
+    target_sources(${_tasmc3} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN6Memory16operator_delete2EPv.cpp")
+endforeach()
+
 # XREL1 (run linkfull): EVERY OVERLAY MOUNT DEPENDS ON THE CONFIG IT READS.
 #
 # tools/ovdata.py builds each mount out of its overlay's config/arm9/overlays/

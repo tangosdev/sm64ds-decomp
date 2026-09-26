@@ -70,10 +70,9 @@ extern "C" void _Z14ApproachLinearRiii(int *value, int target, int step)
 //
 // GATE 1 HAS NO HEAP. Its whole source list is the C math slice, Timer, and
 // the Fader interpolation half (port/CMakeLists.txt:1200): no allocator, no
-// Memory::Deallocate, no _ZdlPv. hal/cxxname_bridge.cpp's definition of this
-// same name forwards to _ZN6Memory10DeallocateEPv and says in its own comment
-// that it does so because that name "does resolve in all five targets that
-// compile this file" -- this is not one of those five, and pulling the heap in
+// Memory::Deallocate, no _ZdlPv. The game's targets link the ROM body itself
+// (hal/cxxname_bridge.cpp bridges this flat name onto it, run linkfull lane
+// ASMCPORT), and it runs _ZdlPv into the game heap; pulling that heap in here
 // to satisfy a slot nothing calls would change what gate 1 proves.
 //
 // So it is a stub, and a LOUD one, in the same spirit as the inert virtual

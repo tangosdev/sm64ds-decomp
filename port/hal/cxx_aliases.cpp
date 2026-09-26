@@ -3031,7 +3031,8 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:?data_ov035_02112cb0@@3USharedFilePtr@@A=_data_ov035_02112cb0")
 #pragma comment(linker, "/alternatename:?data_ov035_02112cb8@@3USharedFilePtr@@A=_data_ov035_02112cb8")
 #pragma comment(linker, "/alternatename:?data_ov047_02112508@@3PAUdaObjDorifuResources@@A=_data_ov047_02112508")
-#pragma comment(linker, "/alternatename:?operator_delete2@Memory@@YAXPAX@Z=__ZN6Memory16operator_delete2EPv")
+/* RETIRED (run linkfull, lane ASMCPORT). The left hand side is DEFINED in this link now: src/_ZN6Memory16operator_delete2EPv.cpp builds on every target that compiles this file, so the row would be defeated. The flat name aliases the other way, onto that body, in hal/cxxname_bridge.cpp. */
+// #pragma comment(linker, "/alternatename:?operator_delete2@Memory@@YAXPAX@Z=__ZN6Memory16operator_delete2EPv")
 #pragma comment(linker, "/alternatename:?_ZTV16daObjPushblock_c@@3PAPAXA=__ZTV16daObjPushblock_c")
 #pragma comment(linker, "/alternatename:?data_ov002_0210dbc0@@3PAP8dEnemyBase_c@@AEHAAUdBgCh_Actr@@@ZA=_data_ov002_0210dbc0")
 #pragma comment(linker, "/alternatename:?data_ov004_020beb68@@3PADA=_data_ov004_020beb68")
