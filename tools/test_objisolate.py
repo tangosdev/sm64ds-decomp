@@ -19,6 +19,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import objisolate as OI  # noqa: E402
@@ -1477,6 +1478,63 @@ class Isolate(unittest.TestCase):
         OI.isolate(obj, "_ZN1MC1Ev")
         after = sorted(set(self._vtable_addends(obj, "_ZN1MC1Ev")))
         self.assertEqual(after, [0, 16])
+
+    def test_corrects_a_one_function_new_factory(self):
+        """Nothing to drop is not nothing to do.
+
+        `return new F;` inlines F's implicit constructor, so the object is the
+        factory alone: one `.text`, no `.data`, and `_ZTV1F` UNDEF because F's
+        key function lives elsewhere. The vptr store still carries mwcc's
+        addend 8, and still needs the preamble taken off. This is every
+        minigame factory written as a plain `new`: `dScMgPachinko2_c_classInit`
+        linked 0x0213dbc4 where ov006 has 0x0213dbbc while plan's empty
+        drop and externalise lists short-circuited the rewrite."""
+        obj = self.build("struct B { B(); virtual ~B(); int p[4]; };\n"
+                         "struct F : B { virtual ~F(); };\n"
+                         "extern \"C\" void *F_classInit() { return new F; }\n")
+        raw = obj.read_bytes()
+        plan = OI.plan(raw, "F_classInit")
+        self.assertIsNone(plan["error"])
+        self.assertEqual((plan["drop"], plan["externalise"]), ([], []))
+        self.assertTrue(plan["ztvRebase"])
+        self.assertEqual(self._reloc_addends(raw, "_ZTV1F"), [OI.VTABLE_PREAMBLE])
+
+        out, plan = OI.derive(raw, "F_classInit")
+        self.assertIsNone(plan["error"])
+        self.assertEqual(obj.read_bytes(), raw, "derive must not touch the file")
+        self.assertEqual(self._reloc_addends(out, "_ZTV1F"), [0])
+        self.assertEqual(len(out), len(raw), "only the addend changes")
+        OI.isolate(obj, "F_classInit")
+        self.assertEqual(obj.read_bytes(), out, "isolate and derive must agree")
+        # ...and re-running must not subtract another 8.
+        OI.isolate(obj, "F_classInit")
+        self.assertEqual(obj.read_bytes(), out)
+
+    def _assert_left_alone(self, source, keep):
+        obj = self.build(source)
+        raw = obj.read_bytes()
+        out, plan = OI.derive(raw, keep)
+        self.assertIsNone(plan["error"])
+        self.assertFalse(plan["ztvRebase"])
+        self.assertEqual(out, raw)
+        with mock.patch.object(type(obj), "write_bytes",
+                               side_effect=AssertionError("isolate rewrote an "
+                                                          "unchanged object")):
+            OI.isolate(obj, keep)
+        self.assertEqual(obj.read_bytes(), raw)
+        return raw
+
+    def test_leaves_a_rom_convention_vptr_store_alone(self):
+        """`extern int _ZTV1F[];` already names the slot array: addend 0, no rewrite."""
+        raw = self._assert_left_alone(
+            "extern int _ZTV1F[];\n"
+            "extern \"C\" int *F_install(int *p) { p[0] = (int)_ZTV1F; return p; }\n",
+            "F_install")
+        self.assertEqual(self._reloc_addends(raw, "_ZTV1F"), [0])
+
+    def test_leaves_a_plain_function_alone(self):
+        """No RTTI reference, nothing to drop: the object is already the answer."""
+        self._assert_left_alone("int f(int n) { return n + 1; }\n", "_Z1fi")
 
     def test_still_refuses_a_vtable_addend_below_the_preamble(self):
         """Correctable means "past the preamble". An addend under it is not.
