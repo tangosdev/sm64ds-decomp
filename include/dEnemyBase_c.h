@@ -58,7 +58,7 @@ struct dEnemyBase_c : dActor_c {
        while others count it down through DecIfAbove0_Short. Derived
        independently by two passes over disjoint subclass sets (Unagi,
        MrBlizzard, daShark_c, PiranhaPlant, FirePiranhaPlantBig, daKrb_c) and
-       (Whomp) -- see notes/enemy-provenance.md and
+       (daBtn_c) -- see notes/enemy-provenance.md and
        notes/enemy-leaf-provenance.md. Named mStateTimer, not mTimer, because
        daJango_c already owns an unrelated mTimer and the shorter name silently
        rebinds it. */

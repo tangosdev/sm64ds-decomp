@@ -545,8 +545,8 @@ src/daWater_Ring_c_classInit.c	WEAK-refs-only	ov064				1		None		-
 src/d_a_water_suikomi.c	WEAK-refs-only	ov026				1		None		-
 src/daObjWaterfall_c_classInit.cpp	WEAK-refs-only	ov002				1		None		-
 src/d_a_water_tatumaki.c	WEAK-refs-only	ov026				1		None		-
-src/d_a_btn_batanking.c	S1-stores-rom-vptr	ov079			stores _ZTV5Whomp	1		None	_ZTV5Whomp	-
-src/d_a_btn_batan.c	S1-stores-rom-vptr	ov079			stores _ZTV5Whomp	1		None	_ZTV5Whomp	-
+src/d_a_btn_batanking.c	S1-stores-rom-vptr	ov079			stores _ZTV7daBtn_c	1		None	_ZTV7daBtn_c	-
+src/d_a_btn_batan.c	S1-stores-rom-vptr	ov079			stores _ZTV7daBtn_c	1		None	_ZTV7daBtn_c	-
 src/d_a_hanachan.c	S1-stores-rom-vptr	ov034			stores _ZTV7Wiggler	1		None	_ZTV7Wiggler	-
 src/game/actors/daFeather_c/d_a_feather.c	WEAK-refs-only	ov002				1		None		-
 src/Wireless_Reset.c	PURE-C	arm9				1		None		-

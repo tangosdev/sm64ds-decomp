@@ -5,7 +5,7 @@ the offset. Where the bodies only *write* a field and nothing in the tree reads 
 back, the field stays `unk_NNN` and the reason is recorded — a name nobody can
 check is a claim the next reader would trust for nothing.
 
-Classes covered here: daWater_Hakidasi_c, Goomboss, daWanwan_c, BobOmb, Whomp,
+Classes covered here: daWater_Hakidasi_c, Goomboss, daWanwan_c, BobOmb, daBtn_c,
 RollingIronBall, KoopaShell, Klepto, daMip_c, daKing_Donketu_c.
 
 A recurring source of `unk_` in these headers is the `#else` C twin, which
@@ -184,12 +184,10 @@ with" flag rather than a counter.
 
 ---
 
-## Whomp (`include/Whomp.h`, [ov079](../config/arm9/overlays/ov079/symbols.txt))
+## daBtn_c (`include/daBtn_c.h`, [ov079](../config/arm9/overlays/ov079/symbols.txt))
 
-Bodies read: `src/_ZN5Whomp13InitResourcesEv.cpp`,
-`src/_ZN5Whomp8BehaviorEv.cpp`, `src/_ZN5Whomp6RenderEv.cpp`,
-`src/_ZN5Whomp16OnAimedAtWithEggEv.cpp`,
-`src/_ZN5Whomp15OnHitByMegaCharER6Player.cpp`.
+Bodies read: `InitResources`, `Behavior`, `Render`, `OnAimedAtWithEgg` and
+`OnHitByMegaChar`, all now in `src/game/actors/d_a_btn.cpp`.
 
 | offset | name | evidence |
 | --- | --- | --- |
@@ -231,7 +229,7 @@ Byte-neutral cleanups (each re-verified, `2004/b56`):
 * `OnAimedAtWithEgg` — `*(unsigned char*)(c+0x414)` and `*(unsigned short*)(c+0x8c)`
   became `mIsKing` and `(unsigned short)mAngleX`.
 
-**Landed as `dEnemyBase_c::mStateTimer`.** `Whomp::Behavior` increments it (as `u16`)
+**Landed as `dEnemyBase_c::mStateTimer`.** `daBtn_c::Behavior` increments it (as `u16`)
 once per frame and resets it to 0 the moment the state handler changes `mState`.
 That is a state-elapsed frame counter, which fits the 28 subclasses that declare
 the offset better than `unk_100` does.
