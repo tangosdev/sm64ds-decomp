@@ -363,6 +363,8 @@ def plan(raw, keep_symbol):
       drop        section indices to zero
       externalise symbol names to turn into imports (referenced by the survivor)
       dead        symbol names dropped and referenced by nothing
+      ztvRebase   whether a kept-text `_ZTV` relocation still needs the preamble
+                  taken off its addend -- true even when nothing is dropped
       error       why isolation is impossible, or None
       kind        machine-readable tag for an error a caller must branch on;
                   only NOT_A_FUNCTION today, absent for every other error
@@ -433,6 +435,7 @@ def plan(raw, keep_symbol):
     # than corrected: there is no enrolled instance to verify a correction against,
     # and fail-closed costs one function while fail-open corrupts a module.
     ext = set(externalise)
+    ztv_rebase = False
     for s in secs:
         if not isinstance(s, RelocationSection) or s.header["sh_info"] != keep:
             continue
@@ -495,8 +498,16 @@ def plan(raw, keep_symbol):
                                      f"addend {addend}; the ROM symbol is already the "
                                      f"slot array, so this would land {addend} past it"}
 
+            # The same test `_apply` makes before re-addending. A `new C` factory
+            # is the whole object -- nothing to drop, nothing to externalise -- and
+            # still stores UNDEF `_ZTV<C>` at addend 8, so `derive` must know.
+            if (sym.name.startswith("_ZTV") and addend >= VTABLE_PREAMBLE
+                    and (sym.name in ext or shndx in ("SHN_UNDEF", SHN_UNDEF))):
+                ztv_rebase = True
+
     return {"keep": keep, "drop": sorted(set(drop)), "externalise": sorted(externalise),
-            "dead": sorted(dead), "referenced": sorted(referenced), "error": None}
+            "dead": sorted(dead), "referenced": sorted(referenced),
+            "ztvRebase": ztv_rebase, "error": None}
 
 
 def plan_many(raw, keep_symbols):
@@ -677,11 +688,15 @@ def derive(raw, keep_symbol):
     drop, externalise and re-addend, and `isolate` is now this function plus a
     write. A caller that wants the derived object on disk under a DIFFERENT name
     (the TU case: one source, N object paths) writes the bytes itself.
+
+    The input comes back unchanged only when there is nothing to drop, nothing to
+    externalise and no `_ZTV` addend to rebase: an object that is already just the
+    function can still carry mwcc's preamble skip.
     """
     p = plan(bytes(raw), keep_symbol)
     if p.get("error"):
         return None, p
-    if not p["drop"] and not p["externalise"]:
+    if not p["drop"] and not p["externalise"] and not p["ztvRebase"]:
         return bytes(raw), p
     return _apply(raw, p, keep_symbol), p
 
@@ -1806,14 +1821,14 @@ def rebias_object_symbols(raw, symbol_policies, normalize_undefined=False):
 def isolate(obj, keep_symbol):
     """Apply `plan` to the object file in place. Returns the plan.
 
-    Idempotent: an object with nothing left to drop is rewritten to the same bytes,
-    so a cached object processed by an earlier build is not corrupted by a later
-    one."""
+    Writes only when the derived bytes differ. Expects the compiler's object:
+    re-running on its own output leaves a primary vptr store at 0, but would take
+    the preamble off a secondary store's remaining addend again. rombuild caches
+    the RAW object and isolates each fetched copy once."""
     raw = obj.read_bytes()
     out, p = derive(raw, keep_symbol)
-    if p.get("error") or not (p["drop"] or p["externalise"]):
-        return p
-    obj.write_bytes(out)
+    if out is not None and out != raw:
+        obj.write_bytes(out)
     return p
 
 

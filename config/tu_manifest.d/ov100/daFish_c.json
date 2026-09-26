@@ -1,0 +1,288 @@
+{
+  "id": "ov100/daFish_c",
+  "module": "ov100",
+  "source": "src/game/actors/d_a_fish.cpp",
+  "promoted_source": "src/game/actors/d_a_fish.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x214620c..0x2146d7c, 18 function(s): the seventeen from build/tu_map.json (tools/tu_map.py), extended over the zero-gap daFish_c_classInit factory tu_map cannot label because it cuts on symbol name; the run sits between daStarGate_c_classInit (ends 0x214620c) and _ZN15daObjPathLift_cD1Ev (0x2146d7c), and no other class's symbol falls inside it",
+    "class label(s): daFish_c",
+    "module sinit corroboration: 7 sinit(s) / 7 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0214620c",
+      "end": "0x02146d7c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN8daFish_cD1Ev",
+      "address": "0x0214620c",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN8daFish_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN8daFish_cD0Ev",
+      "address": "0x0214623c",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN8daFish_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov100_02146280",
+      "address": "0x02146280",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov100_02146280.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov100_0214629c",
+      "address": "0x0214629c",
+      "size": "0x00000100",
+      "legacy_source": "src/func_ov100_0214629c.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov100_0214639c",
+      "address": "0x0214639c",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov100_0214639c.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov100_021463b0",
+      "address": "0x021463b0",
+      "size": "0x000000b8",
+      "legacy_source": "src/func_ov100_021463b0.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov100_02146468",
+      "address": "0x02146468",
+      "size": "0x0000008c",
+      "legacy_source": "src/func_ov100_02146468.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov100_021464f4",
+      "address": "0x021464f4",
+      "size": "0x0000014c",
+      "legacy_source": "src/func_ov100_021464f4.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov100_02146640",
+      "address": "0x02146640",
+      "size": "0x00000194",
+      "legacy_source": "src/func_ov100_02146640.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov100_021467d4",
+      "address": "0x021467d4",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov100_021467d4.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov100_021467e8",
+      "address": "0x021467e8",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov100_021467e8.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov100_02146828",
+      "address": "0x02146828",
+      "size": "0x00000270",
+      "legacy_source": "src/func_ov100_02146828.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN8daFish_c16CleanupResourcesEv",
+      "address": "0x02146a98",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN8daFish_c16CleanupResourcesEv.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN8daFish_c16OnPendingDestroyEv",
+      "address": "0x02146b00",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN8daFish_c16OnPendingDestroyEv.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN8daFish_c6RenderEv",
+      "address": "0x02146b04",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN8daFish_c6RenderEv.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN8daFish_c8BehaviorEv",
+      "address": "0x02146b38",
+      "size": "0x00000130",
+      "legacy_source": "src/_ZN8daFish_c8BehaviorEv.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN8daFish_c13InitResourcesEv",
+      "address": "0x02146c68",
+      "size": "0x000000d0",
+      "legacy_source": "src/_ZN8daFish_c13InitResourcesEv.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "daFish_c_classInit",
+      "address": "0x02146d38",
+      "size": "0x00000044",
+      "legacy_source": "src/d_a_fish.cpp",
+      "ordinal": 17
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-assembled: tubuild create generated the seventeen class members and helpers; the classInit factory was folded in by hand, following the ov045 daObjKm2_Agaru_c and ov091 daLinelift2_c promotions."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov100-daFish_c/d_a_fish.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 18,
+    "functions_declared": 18,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        29
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI8daFish_c",
+        "_ZTS8daFish_c",
+        "_ZTV8daFish_c"
+      ],
+      "dataExternalized": [
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI8daFish_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS8daFish_c",
+        "_ZTV8daFish_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so every TU that destroys a Vector3 re-emits it as vague linkage. The cartridge keeps one copy at arm9:0x020072c0 and src/_ZN7Vector3D1Ev.cpp owns it; this object's copy is the identical 4-byte `bx lr` body and no surviving section here references it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086d70, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Vague-linkage type-name string for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e60, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e78, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Vague-linkage type-name string for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e54, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Vague-linkage typeinfo record for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e390, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Vague-linkage type-name string for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e384, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI8daFish_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov100",
+      "canonical_address": "0x0214848c",
+      "reason": "This class's own typeinfo record, vague-linkage and re-emitted by every TU that names its RTTI. The cartridge's own copy lives at ov100:0x0214848c -- inside this module's .data but OUTSIDE the 0x0214620c..0x02146d7c .text run this entry claims -- so dsd delinks it from the image whatever this object does. MEASURED in extracted/overlays/overlay_0100.bin: the three words there are 0x0209a764 (__si_class_type_info's vtable+8), 0x02148480 (its _ZTS) and 0x0208e390 (_ZTI8dActor_c), so the cartridge itself states the direct base is dActor_c, exactly as the header declares."
+    },
+    {
+      "symbol": "_ZTS8daFish_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov100",
+      "canonical_address": "0x02148480",
+      "reason": "This class's own type-name string. The cartridge's own copy lives at ov100:0x02148480, outside the .text run this entry claims. MEASURED: the bytes there are the NUL-terminated '8daFish_c' -- the ROM's own spelling of this class's name. This is where the promotion's class name comes from; the tree's Fish was coined and has no cartridge attestation."
+    },
+    {
+      "symbol": "_ZTV8daFish_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov100",
+      "canonical_address": "0x021484bc",
+      "reason": "This class's own vtable, emitted here because InitResources -- the first non-inline virtual declared in the class body, the destructor above it being inline -- makes this TU the class's key-function TU. The cartridge's own copy lives outside the .text run this entry claims. MEASURED in extracted/overlays/overlay_0100.bin: 0x021484bc IS the address point -- 0x021484b4 is the offset-to-top word 0 and 0x021484b8 is 0x0214848c (&_ZTI8daFish_c). Slots 0, 3, 6, 9 and 12 hold 0x02146c68, 0x02146a98, 0x02146b38, 0x02146b04 and 0x02146b00 (InitResources, CleanupResources, Behavior, Render, OnPendingDestroy); slots 16 and 17 hold 0x0214620c / 0x0214623c (D1 then D0); every other slot is dActor_c's inherited word, and the table ends after 31 slots at 0x02148538 where _ZTI15daObjPathLift_c begins."
+    }
+  ]
+}

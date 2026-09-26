@@ -86,6 +86,10 @@
    "ref": "src/d_s_mg_pachinko2.c"
   },
   {
+   "file": "notes/agents/handoffs/pr2231-rescue-ov022-ov013-batch2.md",
+   "ref": "src_tu/actors/daObj_volcanoCannon_c.cpp"
+  },
+  {
    "file": "notes/archive/crack-loop-runbook.md",
    "ref": "notes/pret-idioms.md"
   },
@@ -308,6 +312,10 @@
   {
    "file": "notes/runbook-type-reconstruction.md",
    "ref": "tools/deepen_rtti.py"
+  },
+  {
+   "file": "notes/sinit-ownership-wave-resource-handles.md",
+   "ref": "tools/tu_config.py"
   },
   {
    "file": "notes/smartball-provenance.md",
