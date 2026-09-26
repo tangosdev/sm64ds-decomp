@@ -4,7 +4,7 @@
 // materialized byte pointer, sets the +0x50 sub-object vtables, and constructs
 // the member at +0x54 via func_02017278.
 extern void *_ZN7fBase_cnwEj(unsigned int size);
-extern void _ZN7fBase_cC2Ev(void *p);
+extern void *_ZN7fBase_cC2Ev(void *p);
 extern void func_02017278(int *p);
 
 extern int data_0208e4b8[];

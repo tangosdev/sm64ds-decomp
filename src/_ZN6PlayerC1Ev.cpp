@@ -4,16 +4,16 @@
 #include "Player.h"
 extern "C" {
 extern int data_ov002_0210a83c[];
-void _ZN8dActor_cC2Ev(void*);
-void _ZN9ModelAnimC1Ev(void*);
+void *_ZN8dActor_cC2Ev(void*);
+void *_ZN9ModelAnimC1Ev(void*);
 void __cxa_vec_ctor(void*,int,int,void*,void*);
-void _ZN15TextureSequenceC1Ev(void*);
+void *_ZN15TextureSequenceC1Ev(void*);
 void _ZN15TextureSequenceD1Ev(void*);
-void _ZN15MaterialChangerC1Ev(void*);
+void *_ZN15MaterialChangerC1Ev(void*);
 void _ZN15MaterialChangerD1Ev(void*);
-void _ZN11ShadowModelC1Ev(void*);
-void _ZN10dCcAcPos_cC1Ev(void*);
-void _ZN10dBgCh_ActrC1Ev(void*);
+void *_ZN11ShadowModelC1Ev(void*);
+void *_ZN10dCcAcPos_cC1Ev(void*);
+void *_ZN10dBgCh_ActrC1Ev(void*);
 void* _ZN6PlayerC1Ev(void* c){
   char* p=(char*)c;
   _ZN8dActor_cC2Ev(c);

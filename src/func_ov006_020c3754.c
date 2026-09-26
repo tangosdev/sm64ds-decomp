@@ -3,8 +3,8 @@ extern int data_ov006_021402e4;
 extern int data_ov006_021402f0[3];
 extern int data_0209e650;
 extern int data_02092768[4];
-extern void func_020731dc(void **node, int a, int b);
-extern void _ZN7Vector3D1Ev(void);
+extern void func_020731dc(void *object, void *destructor, void **node);
+extern void *_ZN7Vector3D1Ev(void *object);
 extern int RandomIntInternal(int *seed);
 extern void func_0203cd80(void *q, int a);
 extern void Quaternion_FromVector3(void *out, void *p, int *in);
@@ -17,7 +17,7 @@ void func_ov006_020c3754(int *r6, int *r5, int *r4)
         n[0] = 0;
         n[1] = 0x1000;
         n[2] = 0;
-        func_020731dc((void **)n, (int)_ZN7Vector3D1Ev, (int)&data_ov006_021402e4);
+        func_020731dc(n, (void *)_ZN7Vector3D1Ev, (void **)&data_ov006_021402e4);
         data_ov006_021402e0 |= 1;
     }
     r6[0] = r5[0];

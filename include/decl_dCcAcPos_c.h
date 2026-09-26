@@ -20,7 +20,7 @@
 extern "C" {
 #endif
 
-extern void _ZN10dCcAcPos_cC1Ev(void*);
+extern void *_ZN10dCcAcPos_cC1Ev(void*);
 
 
 #ifdef __cplusplus

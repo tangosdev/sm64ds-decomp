@@ -23,7 +23,7 @@ struct dBgPc {
 #ifndef __cplusplus
 /* Readable C spellings for the C++ ABI entry points used by generated
  * initialization and destruction code. */
-void _ZN5dBgPcC1Ev(struct dBgPc *self);
+void *_ZN5dBgPcC1Ev(struct dBgPc *self);
 void _ZN5dBgPcD1Ev(struct dBgPc *self);
 #define dBgPc_Construct _ZN5dBgPcC1Ev
 #define dBgPc_Destroy   _ZN5dBgPcD1Ev

@@ -1,7 +1,7 @@
 struct Node72 {
     struct Node72 *next;
-    void (*fn)(int arg, int v);
-    int arg;
+    void (*fn)(void *object, int v);
+    void *object;
 };
 extern struct Node72 *data_020aa3f0;
 
@@ -10,7 +10,7 @@ void func_02072f3c(void) {
     if (head == 0) return;
     do {
         data_020aa3f0 = head->next;
-        head->fn(head->arg, -1);
+        head->fn(head->object, -1);
         head = data_020aa3f0;
     } while (head != 0);
 }

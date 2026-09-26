@@ -73,7 +73,7 @@ enum {
 /* Shared ABI seams, kept above the first `// @symbol` marker so no member
  * is charged with their mangled spellings. */
 extern "C" {
-void _ZN8dCcPos_cC1Ev(void *clsn);
+void *_ZN8dCcPos_cC1Ev(void *clsn);
 void _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(
     dCcPos_c *self, const Vector3 &pos, int radius, int height, u32 flags,
     u32 vuln);

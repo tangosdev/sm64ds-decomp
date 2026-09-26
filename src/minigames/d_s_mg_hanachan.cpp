@@ -14,7 +14,7 @@
 #include "dScMgHanachan_c.h"
 
 extern "C" {
-extern int _ZN11dScMgBase_cC2Ev(void *p);
+extern void *_ZN11dScMgBase_cC2Ev(void *p);
 extern void __cxa_vec_ctor(void *obj, int a, int b, void *cb1, void *cb2);
 extern int data_ov006_0213cab8[];
 void *dScMgHanachan_c_classInit(void);

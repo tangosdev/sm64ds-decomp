@@ -31,7 +31,7 @@ struct dBgPc { SurfaceInfo surface; dBgPc(); ~dBgPc(); };
 extern "C" {
 int  func_020397dc(s32 x);
 int  func_020397b8(s32 x);
-void _ZN5dBgPcC1Ev(dBgPc *info);
+void *_ZN5dBgPcC1Ev(dBgPc *info);
 void _ZN5dBgPcD1Ev(dBgPc *info);
 void func_02037fd4(int *res, short triIdx, int *info);
 void func_020375ec(int *ray, int *pos);

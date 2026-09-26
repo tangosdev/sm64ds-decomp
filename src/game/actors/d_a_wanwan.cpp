@@ -82,32 +82,35 @@ void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
 
 // @symbol daWanwan_c_classInit
 extern "C" {
-void _ZN12dEnemyBase_cC2Ev(void *);
-int _ZN10dCcAcPos_cC1Ev(void *);
-int _ZN9ModelAnimC1Ev(void *);
-int _ZN11ShadowModelC1Ev(void *);
-int __cxa_vec_ctor(void *, int, int, void *, void *);
+dEnemyBase_c *_ZN12dEnemyBase_cC2Ev(dEnemyBase_c *object);
+dCcAcPos_c *_ZN10dCcAcPos_cC1Ev(dCcAcPos_c *object);
+ModelAnim *_ZN9ModelAnimC1Ev(ModelAnim *object);
+ShadowModel *_ZN11ShadowModelC1Ev(ShadowModel *object);
+void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride,
+    void (*ctor)(void *), void (*dtor)(void *));
 extern int _ZTV10daWanwan_c[];
-extern void _ZN5ModelD1Ev(void *);
-extern void _ZN5ModelC1Ev();
-extern void _ZN11ShadowModelD1Ev(void *);
-extern void _ZN7Vector3D1Ev();
-extern void func_0203d384();
+extern Model *_ZN5ModelD1Ev(Model *object);
+extern Model *_ZN5ModelC1Ev(Model *object);
+extern ShadowModel *_ZN11ShadowModelD1Ev(ShadowModel *object);
+extern Vector3 *_ZN7Vector3D1Ev(Vector3 *object);
+extern void func_0203d384(void);
 }
 
+/* Array callbacks receive the element address and discard lifecycle results.
+ * The empty func_0203d384 callbacks ignore that address. */
 extern "C" daWanwan_c *daWanwan_c_classInit()
 {
     char *c = (char *)fBase_c::operator new(0x620);
     if (c) {
-        _ZN12dEnemyBase_cC2Ev(c);
+        _ZN12dEnemyBase_cC2Ev((dEnemyBase_c *)c);
         *(int **)c = &_ZTV10daWanwan_c[2];
-        _ZN10dCcAcPos_cC1Ev(c + 0x110);
-        _ZN9ModelAnimC1Ev(c + 0x150);
-        _ZN11ShadowModelC1Ev(c + 0x1b4);
-        __cxa_vec_ctor(c + 0x1dc, 7, 0x50, (void *)_ZN5ModelC1Ev, (void *)_ZN5ModelD1Ev);
-        __cxa_vec_ctor(c + 0x40c, 7, 0x28, (void *)_ZN11ShadowModelC1Ev, (void *)_ZN11ShadowModelD1Ev);
-        __cxa_vec_ctor(c + 0x524, 7, 0xc, (void *)func_0203d384, (void *)_ZN7Vector3D1Ev);
-        __cxa_vec_ctor(c + 0x578, 7, 0xc, (void *)func_0203d384, (void *)_ZN7Vector3D1Ev);
+        _ZN10dCcAcPos_cC1Ev((dCcAcPos_c *)(c + 0x110));
+        _ZN9ModelAnimC1Ev((ModelAnim *)(c + 0x150));
+        _ZN11ShadowModelC1Ev((ShadowModel *)(c + 0x1b4));
+        __cxa_vec_ctor(c + 0x1dc, 7, 0x50, (void (*)(void *))_ZN5ModelC1Ev, (void (*)(void *))_ZN5ModelD1Ev);
+        __cxa_vec_ctor(c + 0x40c, 7, 0x28, (void (*)(void *))_ZN11ShadowModelC1Ev, (void (*)(void *))_ZN11ShadowModelD1Ev);
+        __cxa_vec_ctor(c + 0x524, 7, 0xc, (void (*)(void *))func_0203d384, (void (*)(void *))_ZN7Vector3D1Ev);
+        __cxa_vec_ctor(c + 0x578, 7, 0xc, (void (*)(void *))func_0203d384, (void (*)(void *))_ZN7Vector3D1Ev);
     }
     return (daWanwan_c *)c;
 }

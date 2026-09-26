@@ -1,19 +1,19 @@
 #include "daHanachan_c.h"
 extern void* _ZN7fBase_cnwEj(unsigned int sz);
-extern void _ZN12dEnemyBase_cC2Ev(void *p);
+extern void *_ZN12dEnemyBase_cC2Ev(void *p);
 extern int __cxa_vec_ctor(void *p, int a, int b, void *ctor, void *dtor);
-extern int _ZN10dBgCh_ActrC1Ev(void *p);
-extern int _ZN10dCcAcPos_cC1Ev(void *p);
+extern void *_ZN10dBgCh_ActrC1Ev(void *p);
+extern void *_ZN10dCcAcPos_cC1Ev(void *p);
 extern int _ZN10dCcAcPos_cD1Ev(void *p);
 extern int func_0203d73c(void *p);
-extern int _ZN8Vector3sD1Ev(void *p);
+extern void *_ZN8Vector3sD1Ev(void *p);
 extern int func_0203d384(void *p);
-extern int _ZN7Vector3D1Ev(void *p);
-extern int _ZN15TextureSequenceC1Ev(void *p);
+extern void *_ZN7Vector3D1Ev(void *p);
+extern void *_ZN15TextureSequenceC1Ev(void *p);
 extern int _ZN15TextureSequenceD1Ev(void *p);
-extern int _ZN15MaterialChangerC1Ev(void *p);
+extern void *_ZN15MaterialChangerC1Ev(void *p);
 extern int _ZN15MaterialChangerD1Ev(void *p);
-extern int _ZN9ModelAnimC1Ev(void *p);
+extern void *_ZN9ModelAnimC1Ev(void *p);
 extern int _ZN9ModelAnimD1Ev(void *p);
 extern int _ZTV12daHanachan_c[];
 

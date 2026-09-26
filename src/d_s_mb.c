@@ -1,7 +1,7 @@
 // @symbol dScMB_c_classInit
 #include "types.h"
 extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN7fBase_cC2Ev(void *);
+extern void *_ZN7fBase_cC2Ev(void *);
 
 extern int data_0208e4b8[];
 extern int _ZTV8dScene_c[];

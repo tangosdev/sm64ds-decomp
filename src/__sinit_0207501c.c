@@ -1,4 +1,4 @@
-extern void _ZN9dBgCh_LinC1Ev();
+extern void *_ZN9dBgCh_LinC1Ev(void *object);
 extern void func_020731dc();
 extern int data_020a0d0c[];
 extern int _ZN9dBgCh_LinD1Ev[];

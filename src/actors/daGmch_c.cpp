@@ -914,12 +914,12 @@ extern "C" {
 int *daGmch_c_classInit(void)
 {
     extern void *_ZN7fBase_cnwEj(unsigned int size);
-    extern void _ZN8dActor_cC2Ev(void *p);
-    extern void _ZN9ModelAnimC1Ev(void *p);
-    extern void _ZN5ModelC1Ev(void *p);
-    extern void _ZN11ShadowModelC1Ev(void *p);
-    extern void _ZN7dCcAc_cC1Ev(void *p);
-    extern void _ZN10dBgCh_ActrC1Ev(void *p);
+    extern void *_ZN8dActor_cC2Ev(void *p);
+    extern void *_ZN9ModelAnimC1Ev(void *p);
+    extern void *_ZN5ModelC1Ev(void *p);
+    extern void *_ZN11ShadowModelC1Ev(void *p);
+    extern void *_ZN7dCcAc_cC1Ev(void *p);
+    extern void *_ZN10dBgCh_ActrC1Ev(void *p);
     /* _ZTV8daGmch_c is declared in daGmch_c.h -- see the note there. */
 
     int *p = (int *)_ZN7fBase_cnwEj(1012);

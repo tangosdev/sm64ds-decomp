@@ -69,12 +69,12 @@ void func_ov006_020c1804(void* t);
 void func_ov006_020c19d0(void* t);
 int  func_ov006_020c1a88(void* t);
 
-void _ZN11dScMgBase_cC2Ev(void*);
+void *_ZN11dScMgBase_cC2Ev(void*);
 void _ZN8Particle10SysTrackerC1Ev(void*);
 void __cxa_vec_ctor(void*, int, int, void*, void*);
 extern int _ZTV19dScMgSingle3DBase_c;
 extern int _ZTV14dScMgMCarlo2_c[];
-void _ZN19dMgMCarlo2CardObj_cC1Ev(void*);
+void *_ZN19dMgMCarlo2CardObj_cC1Ev(void*);
 }
 
 namespace GX { void LoadOBJPltt(const void*, unsigned int, unsigned int); }

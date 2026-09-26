@@ -3,7 +3,7 @@ struct B16 { struct B8 p, q; };
 
 extern void func_ov004_020ae104(void *c);
 extern void __cxa_vec_ctor(void *obj, int a, int b, void *cb1, void *cb2);
-extern void func_020731dc(int a, int b, void **node);
+extern void func_020731dc(void *object, void *destructor, void **node);
 extern char data_ov004_020beb74[];
 extern char data_ov004_020bebe8[];
 extern void func_ov004_020b2c7c(void);
@@ -21,7 +21,7 @@ void __sinit_ov004_020b948c(void)
 {
     func_ov004_020ae104(data_ov004_020beb74);
     __cxa_vec_ctor(data_ov004_020bebe8, 0x40, 0x20, (void *)func_ov004_020b2c80, (void *)func_ov004_020b2c7c);
-    func_020731dc(0, (int)func_ov004_020b2c58, data_ov004_020beb7c);
+    func_020731dc(0, (void *)func_ov004_020b2c58, data_ov004_020beb7c);
     data_ov004_020beb88.p = data_ov004_020bbf4c;
     data_ov004_020beb88.q = data_ov004_020bbf5c;
     data_ov004_020beb98.p = data_ov004_020bbf54;

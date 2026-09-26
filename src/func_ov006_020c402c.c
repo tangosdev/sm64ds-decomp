@@ -1,4 +1,4 @@
-extern int _ZN5ModelC1Ev();
+extern void *_ZN5ModelC1Ev(void *object);
 
 int func_ov006_020c402c(char *t)
 {

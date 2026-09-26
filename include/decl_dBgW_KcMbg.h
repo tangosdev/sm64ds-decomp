@@ -20,7 +20,7 @@
 extern "C" {
 #endif
 
-extern void _ZN10dBgW_KcMbgC1Ev(void*);
+extern void *_ZN10dBgW_KcMbgC1Ev(void*);
 extern void _ZN10dBgW_KcMbgD1Ev(void*);
 
 

@@ -3,7 +3,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern void _ZN7PathPtrC1Ev(void* self);
+extern void *_ZN7PathPtrC1Ev(void* self);
 extern void _ZN7PathPtr6FromIDEj(void* self, unsigned int id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* self, void* out, unsigned int idx);
 extern short Vec3_HorzAngle(const void* a, const void* b);

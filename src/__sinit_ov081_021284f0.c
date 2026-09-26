@@ -3,7 +3,7 @@ extern void func_020731dc();
 extern void _ZN13SharedFilePtr9ConstructEj();
 extern void func_02017ab4();
 extern void SharedFilePtr_Destruct_Anim();
-extern void _ZN7Vector3D1Ev();
+extern void *_ZN7Vector3D1Ev(void *object);
 
 typedef struct { int a, b; } S8;
 

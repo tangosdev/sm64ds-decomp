@@ -134,16 +134,19 @@ short ApproachLinear2(short &value, short target, short step);
 int   ApproachLinear(int &value, int target, int step);
 
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void _ZN11dScMgBase_cC2Ev(void *p);
-void __cxa_vec_ctor(void *o, int a, int b, void *f1, void *f2);
+void *_ZN11dScMgBase_cC2Ev(void *p);
+void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride,
+                    void (*ctor)(void *), void (*dtor)(void *));
 void _ZN8Particle10SysTrackerC1Ev(void *p);
-void _ZN5ModelC1Ev(void *p);
+void *_ZN5ModelC1Ev(void *p);
 extern char _ZTV14dScMgD3DBase_c[];
-void _ZN16dMgJump3DMario_cD1Ev(void *p);
-void _ZN16dMgJump3DMario_cC1Ev();
-void func_ov006_020c6f70();
-void func_ov006_020efc08();
+dMgJump3DMario_c *_ZN16dMgJump3DMario_cD1Ev(dMgJump3DMario_c *object);
+dMgJump3DMario_c *_ZN16dMgJump3DMario_cC1Ev(dMgJump3DMario_c *object);
+int func_ov006_020c6f70(char *object);
+void func_ov006_020efc08(void *object);
 
+/* The array runtime passes each element address and ignores callback results.
+ * The casts below adapt the existing lifecycle entries at that ABI boundary. */
 // @symbol dScMgJump2_c_classInit
 /* Builds the scene by hand (operator new, base constructor, vtables, member
  * construction) because the class has no constructor declared yet. The empty
@@ -166,9 +169,9 @@ void *dScMgJump2_c_classInit()
         } while (e != end);
         _ZN8Particle10SysTrackerC1Ev(raw + 0x47e4);
         *(char **)raw = (char *)&_ZTV12dScMgJump2_c[2];
-        __cxa_vec_ctor(raw + 0x500c, 3, 0xb8, (void *)_ZN16dMgJump3DMario_cC1Ev, (void *)_ZN16dMgJump3DMario_cD1Ev);
-        __cxa_vec_ctor(raw + 0x5234, 6, 0xf0, (void *)func_ov006_020c6f70, (void *)func_ov006_020c6f3c);
-        __cxa_vec_ctor(raw + 0x57d4, 0x10, 0x24, (void *)func_ov006_020efc08, (void *)func_ov006_020eed64);
+        __cxa_vec_ctor(raw + 0x500c, 3, 0xb8, (void (*)(void *))_ZN16dMgJump3DMario_cC1Ev, (void (*)(void *))_ZN16dMgJump3DMario_cD1Ev);
+        __cxa_vec_ctor(raw + 0x5234, 6, 0xf0, (void (*)(void *))func_ov006_020c6f70, (void (*)(void *))func_ov006_020c6f3c);
+        __cxa_vec_ctor(raw + 0x57d4, 0x10, 0x24, func_ov006_020efc08, func_ov006_020eed64);
         _ZN5ModelC1Ev(raw + 0x5a14);
     }
     return raw;
@@ -690,7 +693,7 @@ void func_ov006_020eed68(char *raw)
 }
 
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020eed64(void)
+void func_ov006_020eed64(void *object)
 {
 }
 }

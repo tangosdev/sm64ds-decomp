@@ -7,7 +7,7 @@
  */
 
 extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN11dScMgBase_cC2Ev(void *);
+extern void *_ZN11dScMgBase_cC2Ev(void *);
 extern void _ZN8Particle10SysTrackerC1Ev(void *);
 extern int func_ov006_020c221c(char *t);
 extern int _ZTV19dScMgSingle3DBase_c[];

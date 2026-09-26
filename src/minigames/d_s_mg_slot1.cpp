@@ -11,7 +11,7 @@
 #include "dScMgSlot1_c.h"
 
 extern "C" {
-extern void _ZN11dScMgBase_cC2Ev(void *);
+extern void *_ZN11dScMgBase_cC2Ev(void *);
 extern void func_ov006_0210c2b0(char *p);
 extern void func_ov006_0210c208(char *p);
 extern void *_ZTV12dScMgSlot1_c;

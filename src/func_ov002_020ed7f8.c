@@ -1,7 +1,7 @@
 typedef struct Vec3 { int x, y, z; } Vec3;
 typedef struct dBgCh_Gnd { char buf[0x68 - 0x18]; } dBgCh_Gnd;
 
-extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *self);
+extern void *_ZN9dBgCh_GndC1Ev(dBgCh_Gnd *self);
 extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd *self, const Vec3 *v, void *actor);
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *self);
 extern void Matrix4x3_FromRotationY(void *m, int angle);

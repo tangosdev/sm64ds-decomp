@@ -214,7 +214,7 @@ extern "C" {
 void func_ov030_02111734(char* c)
 {
     extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-    extern void _ZN9dBgCh_LinC1Ev(void* self);
+    extern void *_ZN9dBgCh_LinC1Ev(void* self);
     extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, void* a, void* b, void* actor);
     extern int _ZN9dBgCh_Lin10DetectClsnEv(void* self);
     extern void Vec3_Asr(void* d, void* s, int sh);

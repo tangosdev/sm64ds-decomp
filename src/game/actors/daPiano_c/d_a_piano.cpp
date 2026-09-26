@@ -88,13 +88,13 @@ void func_0203568c(int *clsn, int radius);
 void func_02035684(int *clsn, int height);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *, int, int);
 void func_ov063_0211ddf4(daPiano_c *self);
-void _ZN10dBgActor_cC2Ev(void *self);
-void _ZN9ModelAnimC1Ev(void *self);
-void _ZN11ShadowModelC1Ev(void *self);
+void *_ZN10dBgActor_cC2Ev(void *self);
+void *_ZN9ModelAnimC1Ev(void *self);
+void *_ZN11ShadowModelC1Ev(void *self);
 void __cxa_vec_ctor(void *array, int count, int stride, void *ctor, void *dtor);
-void _ZN10dCcAcPos_cC1Ev(void *self);
+void *_ZN10dCcAcPos_cC1Ev(void *self);
 void _ZN10dCcAcPos_cD1Ev(void *self);
-void _ZN10dBgCh_ActrC1Ev(void *self);
+void *_ZN10dBgCh_ActrC1Ev(void *self);
 }
 
 /* The registry factory. C LINKAGE IS LOAD-BEARING -- the ROM symbol is the

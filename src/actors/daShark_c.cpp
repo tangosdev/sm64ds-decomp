@@ -97,7 +97,7 @@ extern s16 Vec3_VertAngle(Vector3 *a, Vector3 *b);
 extern void Matrix4x3_FromRotationY(void *matrix, s32 angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *matrix, s16 angle);
 extern void MulVec3Mat4x3(void *a, void *matrix, void *b);
-extern void _ZN7PathPtrC1Ev(void *thiz);
+extern void *_ZN7PathPtrC1Ev(void *thiz);
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     void *thiz, void *actor, void *pos, int f, int g,
     unsigned int h, unsigned int i);

@@ -1,14 +1,14 @@
 //cpp
 extern "C" void *_ZN7fBase_cnwEj(unsigned int sz);
-extern "C" void _ZN10dBgActor_cC2Ev(void *thiz);
-extern "C" void _ZN10dCcAcPos_cC1Ev(void *thiz);
-extern "C" void _ZN14BlendModelAnimC1Ev(void *thiz);
-extern "C" void _ZN5ModelC1Ev(void *thiz);
-extern "C" void _ZN11ShadowModelC1Ev(void *thiz);
-extern "C" void _ZN15TextureSequenceC1Ev(void *thiz);
+extern "C" void *_ZN10dBgActor_cC2Ev(void *thiz);
+extern "C" void *_ZN10dCcAcPos_cC1Ev(void *thiz);
+extern "C" void *_ZN14BlendModelAnimC1Ev(void *thiz);
+extern "C" void *_ZN5ModelC1Ev(void *thiz);
+extern "C" void *_ZN11ShadowModelC1Ev(void *thiz);
+extern "C" void *_ZN15TextureSequenceC1Ev(void *thiz);
 extern "C" void __cxa_vec_ctor(void *p, int a, int b, void *f1, void *f2);
-extern "C" void _ZN10dBgW_KcMbgC1Ev(void *thiz);
-extern "C" void _ZN7Vector3D1Ev(void);
+extern "C" void *_ZN10dBgW_KcMbgC1Ev(void *thiz);
+extern "C" void *_ZN7Vector3D1Ev(void *object);
 extern "C" void func_0203d384(void);
 extern void *_ZTV6Eyerok[];
 

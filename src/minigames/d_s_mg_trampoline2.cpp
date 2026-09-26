@@ -120,7 +120,7 @@ extern unsigned char *data_ov006_02142f7c;
 extern void func_ov006_0212287c(char *obj);
 extern void func_ov006_021228bc(void *obj, void *kind);
 extern void func_ov006_02122a1c(void* self);
-extern int _ZN5ModelC1Ev(void *model);
+extern void *_ZN5ModelC1Ev(void *model);
 extern void _ZN5ModelD1Ev(void *model);
 extern int data_ov006_02142f78[];
 extern void *func_02054efc(void);
@@ -211,15 +211,15 @@ extern int data_ov006_021373fc[];
 extern int data_ov006_0213734c[];
 extern int data_ov006_021372f4[];
 extern int data_ov006_02137454[];
-extern void _ZN11dScMgBase_cC2Ev(void *scene);
+extern void *_ZN11dScMgBase_cC2Ev(void *scene);
 extern void _ZN8Particle10SysTrackerC1Ev(void *tracker);
 extern void __cxa_vec_ctor(void *base, int count, int stride, void *ctor, void *dtor);
 extern int _ZTV14dScMgD3DBase_c[];
 extern void _ZN6Player29TryExitCharacterDoorWithIntroEv(void);
 extern void func_ov006_020d100c(void);
-extern void func_ov006_020efc08(void);
+extern void func_ov006_020efc08(void *object);
 extern void func_ov006_021225a8(void);
-extern void _ZN18TextureTransformerC1Ev(void *transformer);
+extern void *_ZN18TextureTransformerC1Ev(void *transformer);
 /* local extern: only sibling minigame headers (dScMgAmida_c.h and four
    others) declare it; this TU includes none of them */
 extern void NullDestructor_0203d47c(void);
