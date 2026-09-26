@@ -334,10 +334,17 @@ translation unit.
 
 Source: `src/_ZN10BowserTail8BehaviorEv.cpp`.
 
+## daRedBombhei_c -- include/daRedBombhei_c.h
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x198 | `mShutterID` | initialized to zero, filled with the cannon shutter actor's `uniqueID`, and resolved with `dActor_c::FindWithID` during the camera/opening cutscene. |
+
+Source: `src/game/actors/d_a_red_bombhei.cpp`. The former observation that this
+slot was never read was incomplete; the consolidated helpers expose its uses.
+
 ## More leaves searched, nothing named
 
-- `daRedBombhei_c` 0x198: zeroed in `src/_ZN14daRedBombhei_c13InitResourcesEv.cpp`,
-  never read.
 - `daCamTag_c` 0x0d0 and `daBgSnwmn_c` 0x0d0: four opaque bytes each, touched by
   no enrolled body. `daBgSnwmn_c` already carries a note saying its 0x0cc read
   is the inherited `mAreaId`, not a field of its own.
