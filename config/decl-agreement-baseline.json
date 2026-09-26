@@ -4651,6 +4651,10 @@
       "src/game/actors/d_a_c_jugem.cpp": [
         "param:#2 const void *"
       ],
+      "src/game/actors/d_a_fish.cpp": [
+        "param:#1 Vector3 *",
+        "param:#2 Vector3 *"
+      ],
       "src/game/actors/d_a_obj_hatena_switch.cpp": [
         "param:#2 const void *"
       ],
@@ -5837,6 +5841,11 @@
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
       ],
+      "src/game/actors/d_a_fish.cpp": [
+        "param:#1 Vector3 *",
+        "param:#2 Vector3 *",
+        "param:#3 Vector3 *"
+      ],
       "src/game/actors/d_a_linelift2.cpp": [
         "param:#1 Vector3 *",
         "param:#2 const Vector3 *",
@@ -6507,6 +6516,9 @@
         "return:int"
       ],
       "src/game/actors/d_a_bakubaku.cpp": [
+        "return:int"
+      ],
+      "src/game/actors/d_a_fish.cpp": [
         "return:int"
       ],
       "src/game/actors/d_a_kinopio.cpp": [
@@ -17944,6 +17956,9 @@
         "param:#5 unsigned int"
       ],
       "src/game/actors/d_a_c_jugem.cpp": [
+        "param:#5 unsigned int"
+      ],
+      "src/game/actors/d_a_fish.cpp": [
         "param:#5 unsigned int"
       ],
       "src/game/actors/d_a_holhei.cpp": [
@@ -31227,6 +31242,9 @@
       ],
       "src/func_ov100_02146640.c": [
         "return:void * []"
+      ],
+      "src/game/actors/d_a_fish.cpp": [
+        "return:SharedFilePtr"
       ]
     },
     "data_ov100_02148a54": {

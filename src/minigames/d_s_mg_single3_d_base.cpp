@@ -11,6 +11,7 @@
 #include "dScMgSingle3DBase_c.h"
 #include "types.h"
 #include "decl_common.h"
+#include "nitro/hw/registers.h"
 
 /* SDK calls this file makes. */
 namespace GX {
@@ -42,7 +43,6 @@ s32 GetGameLanguage(void);
  * argument and result, so this file keeps a local declaration. */
 void *func_ov004_020adc68(int fileId);
 void func_ov004_020b0d30(void);
-void InitialiseVramGlobals(void);
 void FreeGfxSlotsById(int id);
 extern u8 data_0209d454;
 extern u8 data_0209d45c;
@@ -50,35 +50,37 @@ extern u32 data_020a0db0;
 extern int data_ov004_020beb6c;
 extern int data_ov006_0213e42c[];
 extern int data_0208ee44;
-extern int data_ov004_020beb74[];
 extern void **data_0209d4a8;
 }
 
 // @symbol _ZN19dScMgSingle3DBase_c9Virtual84Ev
 /* Slot 33 brings up both graphics engines, assigns VRAM banks and loads
- * their character data and OBJ palettes before publishing this scene, then
- * sets lights 0 and 1 to white. All thirteen children inherit this override. */
+ * the language's OBJ characters and the OBJ palettes into both engines
+ * before publishing this scene, then sets lights 0 and 1 to white. All
+ * thirteen children inherit this override. */
 void dScMgSingle3DBase_c::Virtual84()
 {
     void *fileData;
 
-    *(vu32 *)0x4001000u |= 0x10000u;
+    REG_DISPCNT_SUB |= 0x10000u;
     data_ov004_020beb6c = 0;
-    func_ov004_020b290c();
-    func_ov004_020b2980();
+    func_ov004_020b290c(); /* zero all eight BG scroll offsets */
+    func_ov004_020b2980(); /* GX::DisableAllBanks */
     data_0209d45c = 0x10;
     data_0209d454 = 0x10;
-    *(vu32 *)0x4000000u &= ~0x7000000u;
-    *(vu32 *)0x4000000u &= ~0x38000000u;
+    REG_DISPCNT &= ~0x7000000u;
+    REG_DISPCNT &= ~0x38000000u;
     GX::SetBankForBG(2);
     GX::SetBankForOBJ(0x10);
     GX::SetBankForTex(1);
     GX::SetBankForTexPltt(0x20);
     GX::SetGraphicsMode(1, 0, 1);
-    *(vu32 *)0x4000000u &= 0xffcfffefu;
+    REG_DISPCNT &= ~0x300010u;
     GX::SetBankForSubBG(4);
     GX::SetBankForSubOBJ(8);
     fileData = func_ov004_020adc68(data_ov006_0213e42c[GetGameLanguage()]);
+    /* Each split `dst += 0x4000` keeps the ROM's mov and add pair; a single
+     * constant becomes a literal-pool load. */
     {
         char *dst = (char *)0x6400000; dst += 0x4000;
         DecompressLZ16(fileData, dst);
@@ -134,14 +136,14 @@ int dScMgSingle3DBase_c::BeforeRender()
 }
 
 // @symbol _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj
-/* Slot 5 resets the light vector and light color registers and frees the
- * common model data on teardown. The volatile stores are hardware writes;
- * keep their width and order. */
+/* Slot 5: when vfSuccess is 2, reset light 0's vector and color and free
+ * the common model data, then run the base. Keep the hardware stores'
+ * width and order. */
 void dScMgSingle3DBase_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess == 2) {
-        *(volatile int *)0x40004c8 = 0x296a5800;
-        *(volatile int *)0x40004cc = 0x7fff;
+        *(vu32 *)0x40004c8u = 0x296a5800;
+        *(vu32 *)0x40004ccu = 0x7fff;
         CleanCommonModelDataArr();
     }
     dScMgBase_c::AfterCleanupResources(vfSuccess);
@@ -155,12 +157,13 @@ int dScMgSingle3DBase_c::OnHitByCannonBlastedChar()
 }
 
 // @symbol func_ov006_0210a534
-/* Load the shared sub-screen background assets, releasing each buffer. */
+/* Load the sub screen's BG3 characters, palette and map, releasing each
+ * buffer. */
 extern "C" void func_ov006_0210a534(void)
 {
     void *fileData = (void *)LoadFile(0x26);
     data_0209d454 |= 8;
-    *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & 0x43) | 0x214;
+    *(vu16 *)0x400100eu = (*(vu16 *)0x400100eu & 0x43) | 0x214;
     DecompressLZ16(fileData, (void *)G2S::GetBG3CharPtr());
     Ov004_Deallocate(fileData);
     fileData = (void *)LoadFile(0x27);
@@ -169,9 +172,9 @@ extern "C" void func_ov006_0210a534(void)
     fileData = (void *)LoadFile(0x28);
     func_020562b4(fileData, 0, 0x800);
     Deallocate(fileData);
-    *(volatile u16*)0x400100e &= ~0x40;
-    *(volatile u32*)0x400101c = 0;
-    *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & ~3) | 1;
+    *(vu16 *)0x400100eu &= ~0x40;
+    *(vu32 *)0x400101cu = 0;
+    *(vu16 *)0x400100eu = (*(vu16 *)0x400100eu & ~3) | 1;
 }
 
 /* The inline destructor plus AfterInitResources as key function emit D1

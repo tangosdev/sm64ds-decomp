@@ -2998,13 +2998,13 @@ ov100	0x021460dc	func_ov100_021460dc	_ZN12daStarGate_c8BehaviorEv	vtable slot 6 
 ov100	0x0214612c	func_ov100_0214612c	_ZN12daStarGate_c13InitResourcesEv	vtable slot 0 (was _ZN4Door13InitResourcesEv); corrected to the ROM-RTTI-backed class identity
 ov100	0x021461d4	func_ov100_021461d4	StarDoor_Spawn	spawnfunc
 ov100	0x021461d4	StarDoor_Spawn	daStarGate_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov100	0x0214620c	func_ov100_0214620c	_ZN4FishD1Ev	vtable slot 16
-ov100	0x0214623c	func_ov100_0214623c	_ZN4FishD0Ev	vtable slot 17
-ov100	0x02146a98	func_ov100_02146a98	_ZN4Fish16CleanupResourcesEv	vtable slot 3
-ov100	0x02146b00	func_ov100_02146b00	_ZN4Fish16OnPendingDestroyEv	vtable slot 12
-ov100	0x02146b04	func_ov100_02146b04	_ZN4Fish6RenderEv	vtable slot 9
-ov100	0x02146b38	func_ov100_02146b38	_ZN4Fish8BehaviorEv	vtable slot 6
-ov100	0x02146c68	func_ov100_02146c68	_ZN4Fish13InitResourcesEv	vtable slot 0
+ov100	0x0214620c	func_ov100_0214620c	_ZN8daFish_cD1Ev	vtable slot 16
+ov100	0x0214623c	func_ov100_0214623c	_ZN8daFish_cD0Ev	vtable slot 17
+ov100	0x02146a98	func_ov100_02146a98	_ZN8daFish_c16CleanupResourcesEv	vtable slot 3
+ov100	0x02146b00	func_ov100_02146b00	_ZN8daFish_c16OnPendingDestroyEv	vtable slot 12
+ov100	0x02146b04	func_ov100_02146b04	_ZN8daFish_c6RenderEv	vtable slot 9
+ov100	0x02146b38	func_ov100_02146b38	_ZN8daFish_c8BehaviorEv	vtable slot 6
+ov100	0x02146c68	func_ov100_02146c68	_ZN8daFish_c13InitResourcesEv	vtable slot 0
 ov100	0x02146d38	func_ov100_02146d38	Fish_Spawn	spawnfunc
 ov100	0x02146d38	Fish_Spawn	daFish_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov100	0x02147328	func_ov100_02147328	PathLift_Spawn	spawnfunc
@@ -3025,7 +3025,7 @@ ov100	0x021483a8	StarDoor_SpawnInfo	g_profile_STAR_GATE	reconstructed profile gl
 ov100	0x021483cc	data_ov100_021483cc	_ZTV12daStarGate_c	ROM RTTI class identity; unchanged public vtable address point (previous project aliases were _ZTV4Door and _ZTV8StarDoor)
 ov100	0x02148498	data_ov100_02148498	Fish_SpawnInfo	spawninfo
 ov100	0x02148498	Fish_SpawnInfo	g_profile_FISH	reconstructed profile global; literal ROM ID FISH+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov100	0x021484bc	data_ov100_021484bc	_ZTV4Fish	vtable alloc=0x160
+ov100	0x021484bc	data_ov100_021484bc	_ZTV8daFish_c	vtable alloc=0x160
 ov100	0x02148558	data_ov100_02148558	PathLift_SpawnInfo	spawninfo
 ov100	0x02148558	PathLift_SpawnInfo	g_profile_PATH_LIFT	reconstructed profile global; literal ROM ID PATH_LIFT+registry role+later EAD lineage; exact SM64DS spelling not preserved; row recorded retroactively -- the rename reached symbols.txt without a ledger entry
 ov102	0x02148a80	func_ov102_02148a80	_ZN15daObjSimpleBg_cD1Ev	vtable slot 16
