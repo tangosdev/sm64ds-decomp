@@ -5,7 +5,7 @@ extern int SharedFilePtr_Construct_TexSeq(void*, int);
 extern void func_02017ab4(void);
 extern void SharedFilePtr_Destruct_Anim(void);
 extern void SharedFilePtr_Destruct_TexSeq(void);
-extern void _ZN7Vector3D1Ev(void);
+extern void *_ZN7Vector3D1Ev(void *object);
 
 extern void* data_ov077_02127b50;
 extern void* data_ov077_02127b94;

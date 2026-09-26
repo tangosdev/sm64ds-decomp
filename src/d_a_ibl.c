@@ -9,7 +9,7 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV15RollingIronBall */
-extern void _ZN7PathPtrC1Ev(void *);
+extern void *_ZN7PathPtrC1Ev(void *);
 /* Reconstructed source-style name: SM64DS proves daIbl_c through RTTI,
  * allocation size, vtable identity, and the IRONBALL registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not

@@ -10,7 +10,7 @@ extern int LenVec3(Vec3* v);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void Vec3_MulScalarInPlace(Vec3* v, int s);
 extern void Vec3_Add(Vec3* out, Vec3* a, Vec3* b);
-extern void _ZN9dBgCh_LinC1Ev(dBgCh_Lin* rc);
+extern void *_ZN9dBgCh_LinC1Ev(dBgCh_Lin* rc);
 extern void func_0200897c(char* self, dBgCh_Lin* rc);
 extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(dBgCh_Lin* rc, Vec3* a, Vec3* b, void* actor);
 extern int _ZN9dBgCh_Lin10DetectClsnEv(dBgCh_Lin* rc);

@@ -4,14 +4,15 @@
  * would only preserve the extern-C shell. The constructed member sequence is
  * nevertheless the exact daDossy_c layout declared in include/daDossy_c.h. */
 extern void* _ZN7fBase_cnwEj(unsigned int);
-extern void _ZN8dActor_cC2Ev(void*);
-extern void _ZN9ModelAnimC1Ev(void*);
-extern void _ZN10dBgCh_ActrC1Ev(void*);
-extern void _ZN7dCcAc_cC1Ev(void*);
-extern void _ZN10dCcAcPos_cC1Ev(void*);
+extern void *_ZN8dActor_cC2Ev(void*);
+extern void *_ZN9ModelAnimC1Ev(void*);
+extern void *_ZN10dBgCh_ActrC1Ev(void*);
+extern void *_ZN7dCcAc_cC1Ev(void*);
+extern void *_ZN10dCcAcPos_cC1Ev(void*);
+/* The array runtime discards the constructor's receiver result. */
 extern void __cxa_vec_ctor(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
 extern void _ZN14DorriePlatformD1Ev(void*);
-extern void _ZN14DorriePlatformC1Ev(void*);
+extern void *_ZN14DorriePlatformC1Ev(void*);
 extern void* _ZTV9daDossy_c[];
 
 /* Reconstructed source-style name: SM64DS proves daDossy_c through RTTI,
@@ -26,7 +27,7 @@ int* daDossy_c_classInit(void)
         *(void***)p = (void**)_ZTV9daDossy_c;
         _ZN9ModelAnimC1Ev((char*)p + 0xec);
         __cxa_vec_ctor((char*)p + 0x150, 7, 0x200,
-                      _ZN14DorriePlatformC1Ev, _ZN14DorriePlatformD1Ev);
+                      (void (*)(void *))_ZN14DorriePlatformC1Ev, _ZN14DorriePlatformD1Ev);
         _ZN10dBgCh_ActrC1Ev((char*)p + 0xf50);
         _ZN7dCcAc_cC1Ev((char*)p + 0x110c);
         _ZN10dCcAcPos_cC1Ev((char*)p + 0x1140);

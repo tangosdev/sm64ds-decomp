@@ -1,8 +1,8 @@
 //cpp
 extern "C" {
-void _ZN11dScMgBase_cC2Ev(void* p);
+void *_ZN11dScMgBase_cC2Ev(void* p);
 void _ZN8Particle10SysTrackerC1Ev(void* p);
-void _ZN5ModelC1Ev(void* p);
+void *_ZN5ModelC1Ev(void* p);
 void __cxa_vec_ctor(void* arr, int count, int size, void* ctor, void* dtor);
 }
 extern void* _ZTV19dScMgSingle3DBase_c;

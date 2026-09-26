@@ -1,6 +1,6 @@
 extern int func_02017acc();
 extern int _ZN13SharedFilePtr9ConstructEj();
-extern void _ZN14BlendModelAnimC1Ev(void *);
+extern void *_ZN14BlendModelAnimC1Ev(void *);
 
 int func_ov006_020c221c(char *t)
 {

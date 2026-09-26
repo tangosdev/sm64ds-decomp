@@ -9,7 +9,7 @@ extern int func_020355a0(void* p);
 extern int _ZNK10dBgCh_Actr15ShouldUpdatePosEv(void* p);
 extern int func_02037938(void* p);
 extern void func_02038324(int a, int* b, int c, int d);
-extern void _ZN5dBgPiC1Ev(dBgPi* r);
+extern void *_ZN5dBgPiC1Ev(dBgPi* r);
 extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, Vec3* a, Vec3* b, void* actor);
 extern int func_0203842c(void* self);
 extern void _ZN9dBgCh_Lin10GetClsnPosEv(Vec3* out, void* self);

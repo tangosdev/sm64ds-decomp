@@ -137,7 +137,7 @@ extern void SetSubBg2Offset(int, int);
 extern void SetSubBg3Offset(int, int);
 extern void func_020731dc(void *, void *, void **);
 extern void Quaternion_Normalize(s32 *);
-extern void _ZN7Vector3D1Ev(void);
+extern void *_ZN7Vector3D1Ev(void *object);
 extern void func_ov006_02126948(char *);
 extern void func_ov006_0212a3c0(char *);
 extern void func_ov006_02125994(char *);

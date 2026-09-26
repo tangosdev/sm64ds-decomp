@@ -2,11 +2,11 @@
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV9daGrock_c */
 extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN12dEnemyBase_cC2Ev(void *);
-extern void _ZN5ModelC1Ev(void *);
-extern void _ZN11ShadowModelC1Ev(void *);
-extern void _ZN10dCcAcPos_cC1Ev(void *);
-extern void _ZN10dBgCh_ActrC1Ev(void *);
+extern void *_ZN12dEnemyBase_cC2Ev(void *);
+extern void *_ZN5ModelC1Ev(void *);
+extern void *_ZN11ShadowModelC1Ev(void *);
+extern void *_ZN10dCcAcPos_cC1Ev(void *);
+extern void *_ZN10dBgCh_ActrC1Ev(void *);
 extern int _ZTV9daGrock_c[];
 /* Reconstructed source-style name: SM64DS proves daGrock_c through RTTI,
  * allocation size, vtable identity, and the GORO_ROCK registry profile;

@@ -3,7 +3,7 @@
 #include "common.h"
 struct PathPtr { int a, b; };
 
-extern void _ZN7PathPtrC1Ev(struct PathPtr *self);
+extern void *_ZN7PathPtrC1Ev(struct PathPtr *self);
 extern void _ZN7PathPtr6FromIDEj(struct PathPtr *self, unsigned int id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(struct PathPtr *self, struct Vector3 *v, unsigned int i);
 extern void Vec3_Sub(struct Vector3 *out, struct Vector3 *a, struct Vector3 *b);

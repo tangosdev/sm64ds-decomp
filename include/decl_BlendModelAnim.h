@@ -20,7 +20,7 @@
 extern "C" {
 #endif
 
-extern void _ZN14BlendModelAnimC1Ev(void*);
+extern void *_ZN14BlendModelAnimC1Ev(void*);
 extern void _ZN14BlendModelAnimD1Ev(void*);
 
 

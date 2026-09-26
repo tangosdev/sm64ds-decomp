@@ -1,4 +1,4 @@
-extern int _ZN9ModelAnimC1Ev();
+extern void *_ZN9ModelAnimC1Ev(void *object);
 
 int func_ov006_020c6f70(char *t)
 {

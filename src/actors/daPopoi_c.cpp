@@ -558,7 +558,7 @@ typedef struct dBgCh_LinPad {
 extern signed char data_0209f2f8;
 extern char data_020a0e68[];
 
-extern void _ZN9dBgCh_LinC1Ev(void *self);
+extern void *_ZN9dBgCh_LinC1Ev(void *self);
 extern void _ZN9dBgCh_LinD1Ev(void *self);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);

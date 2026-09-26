@@ -8,11 +8,11 @@ extern struct Data02086f2c data_02086f2c;
 
 extern void Vec3_RotateYAndTranslate(struct Vector3 *out, void *a, short ang, int *t);
 typedef struct dBgCh_Lin { char pad[0x78]; } dBgCh_Lin;
-extern void _ZN9dBgCh_LinC1Ev(dBgCh_Lin *self);
+extern void *_ZN9dBgCh_LinC1Ev(dBgCh_Lin *self);
 extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, const struct Vector3 *a, const struct Vector3 *b, void *actor);
 extern int _ZN9dBgCh_Lin10DetectClsnEv(void *self);
 extern void _ZN9dBgCh_Lin10GetClsnPosEv(struct Vector3 *out, void *self);
-extern void _ZN9dBgCh_GndC1Ev(void *self);
+extern void *_ZN9dBgCh_GndC1Ev(void *self);
 extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, const struct Vector3 *p, void *actor);
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
 extern void SubVec3(struct Vector3 *a, void *b, struct Vector3 *c);

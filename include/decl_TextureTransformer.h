@@ -20,7 +20,7 @@
 extern "C" {
 #endif
 
-extern void _ZN18TextureTransformerC1Ev(void*);
+extern void *_ZN18TextureTransformerC1Ev(void*);
 extern void _ZN18TextureTransformerD1Ev(void*);
 
 

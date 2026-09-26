@@ -1,5 +1,5 @@
 extern void __cxa_vec_ctor(void* obj, int a, int b, void* cb1, void* cb2);
-extern void _ZN7Vector3D1Ev(void);
+extern void *_ZN7Vector3D1Ev(void *object);
 extern void func_0203d384(void);
 
 void* func_ov002_020f6a50(char* c)

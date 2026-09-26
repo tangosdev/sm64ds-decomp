@@ -16,7 +16,7 @@ extern void _ZN11ShadowModel12InitCylinderEv(void *self);
 extern void *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp);
 extern int _ZN8dActor_c18GetBitInDeathTableEv(void *self);
 extern void _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const void *v, const void *v16, int e, int f);
-extern void _ZN7PathPtrC1Ev(void *self);
+extern void *_ZN7PathPtrC1Ev(void *self);
 extern void _ZN7PathPtr6FromIDEj(void *self, u32 id);
 }
 extern "C" {

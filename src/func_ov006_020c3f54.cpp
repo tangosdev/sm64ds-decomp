@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern void* __cxa_vec_ctor(void* a, int b, int c, void* d, void* e);
-extern void _ZN9ModelAnimC1Ev(void* t);
+extern void *_ZN9ModelAnimC1Ev(void* t);
 extern void* func_02017acc(void* t, unsigned int n);
 extern void _ZN13SharedFilePtr9ConstructEj(void* t, unsigned int n);
 extern void func_ov006_020c3e54();

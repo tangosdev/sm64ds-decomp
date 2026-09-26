@@ -1,6 +1,6 @@
 // @symbol daObjFl_Coin_c_classInit
 extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN8dActor_cC2Ev(void *);
+extern void *_ZN8dActor_cC2Ev(void *);
 extern int _ZTV19BowserPuzzleManager[];
 /* Reconstructed source-style name: SM64DS proves daObjFl_Coin_c through RTTI,
  * allocation size, vtable identity, and the FL_COIN registry profile; later

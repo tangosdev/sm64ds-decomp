@@ -5,7 +5,7 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV18daObjEwmIceBlock_c */
-extern void _ZN7PathPtrC1Ev(void *);
+extern void *_ZN7PathPtrC1Ev(void *);
 /* Reconstructed source-style name: SM64DS proves daObjEwmIceBlock_c through RTTI,
  * allocation size, vtable identity, and the EWM_ICE_BLOCK registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not

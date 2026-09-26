@@ -161,7 +161,7 @@ void *_ZNK10dBgCh_Actr13GetWallResultEv(void *self);
 char *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 
 
-void  _ZN9dBgCh_GndC1Ev(char *ray);
+void *_ZN9dBgCh_GndC1Ev(char *ray);
 void  _ZN9dBgCh_GndD1Ev(char *ray);
 
 /* SetRanges carries Fix12<int> by value; dActor_c.h deliberately omits it

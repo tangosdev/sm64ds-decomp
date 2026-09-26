@@ -2,11 +2,12 @@
 #include "daObjFlamethrower_c.h"
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned int);
-extern void _ZN8dActor_cC2Ev(void*);
+extern void *_ZN8dActor_cC2Ev(void*);
 extern void _ZN8dCcPos_cD1Ev(void*);
-extern void _ZN8dCcPos_cC1Ev(void*);
-extern void _ZN7Vector3D1Ev(void*);
+extern void *_ZN8dCcPos_cC1Ev(void*);
+extern void *_ZN7Vector3D1Ev(void*);
 extern void func_0203d384(void*);
+/* The array runtime discards lifecycle receiver results. */
 extern void __cxa_vec_ctor(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
 extern void* _ZTV19daObjFlamethrower_c[];
 
@@ -19,8 +20,8 @@ int* daObjFlamethrower_c_classInit(void){
   if(p){
     _ZN8dActor_cC2Ev(p);
     *(void***)p = (void**)_ZTV19daObjFlamethrower_c;
-    __cxa_vec_ctor((char*)p+0xd4, 0xc, 0x3c, _ZN8dCcPos_cC1Ev, _ZN8dCcPos_cD1Ev);
-    __cxa_vec_ctor((char*)p+0x3a4, 0xc, 0xc, func_0203d384, _ZN7Vector3D1Ev);
+    __cxa_vec_ctor((char*)p+0xd4, 0xc, 0x3c, (void (*)(void *))_ZN8dCcPos_cC1Ev, _ZN8dCcPos_cD1Ev);
+    __cxa_vec_ctor((char*)p+0x3a4, 0xc, 0xc, func_0203d384, (void (*)(void *))_ZN7Vector3D1Ev);
   }
   return p;
 }

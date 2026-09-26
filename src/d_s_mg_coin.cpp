@@ -9,7 +9,7 @@
 
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned int sz);
-extern int _ZN11dScMgBase_cC2Ev(void* p);
+extern void *_ZN11dScMgBase_cC2Ev(void* p);
 extern void func_0203b9b4(int *p, int v);
 extern int data_ov006_0213bf50[];
 /* Reconstructed source-style name: SM64DS proves dScMgCoin_c through RTTI,

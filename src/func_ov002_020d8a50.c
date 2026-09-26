@@ -12,7 +12,7 @@ extern void _ZN5dCc_c5ClearEv(void* c);
 extern void func_ov002_020dbf4c(char* c);
 extern void _ZN5dCc_c6UpdateEv(void* c);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, struct Vector3* v);
-extern void _ZN9dBgCh_LinC1Ev(struct dBgCh_Lin* r);
+extern void *_ZN9dBgCh_LinC1Ev(struct dBgCh_Lin* r);
 extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(struct dBgCh_Lin* r, struct Vector3* a, struct Vector3* b, void* actor);
 extern int _ZN9dBgCh_Lin10DetectClsnEv(struct dBgCh_Lin* r);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* s, struct Vector3* n);

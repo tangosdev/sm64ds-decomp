@@ -8,7 +8,7 @@ typedef struct
 extern unsigned int RandomIntInternal(int *seed);
 extern void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
 extern void func_0201267c(int a, void *p);
-extern void func_020731dc(int a, int b, void **node);
+extern void func_020731dc(void *object, void *destructor, void **node);
 extern void func_ov002_020f6f48(char *c, Vec3 *v, int amt);
 extern void MulVec3Mat4x3(void *m, void *v, Vec3 *out);
 extern void Vec3_LslInPlace(Vec3 *v, int sh);
@@ -64,7 +64,7 @@ int func_ov002_020f6c60(void *arg0, void *arg1, int arg2, int arg3)
       data_ov002_02110c20[0] = 0xffdd6000;
       data_ov002_02110c20[1] = 0xbe4000;
       data_ov002_02110c20[2] = 0x2ae000;
-      func_020731dc((int) data_ov002_02110c20, (int) (&_ZN7Vector3D1Ev), (void **) (&data_ov002_02110db8));
+      func_020731dc(data_ov002_02110c20, (void *)(&_ZN7Vector3D1Ev), (void **) (&data_ov002_02110db8));
       data_ov002_02110b0c |= 1;
     }
     func_ov002_020f6f48(c, (Vec3 *) data_ov002_02110c20, 0x20);

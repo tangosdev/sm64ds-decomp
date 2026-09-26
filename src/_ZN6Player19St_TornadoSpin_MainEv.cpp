@@ -15,7 +15,7 @@ struct dBgCh_Gnd { int filler[21]; };
 
 extern "C" {
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* self, int state);
-extern void _ZN9dBgCh_GndC1Ev(struct dBgCh_Gnd* self);
+extern void *_ZN9dBgCh_GndC1Ev(struct dBgCh_Gnd* self);
 extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(struct dBgCh_Gnd* self, const Vector3* pos, void* actor);
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(struct dBgCh_Gnd* self);
 extern void Player_AdvanceAnims(void* self);
