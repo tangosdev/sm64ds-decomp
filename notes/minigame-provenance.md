@@ -133,34 +133,29 @@ family.
 dScMgSingle3DBase_c : dScMgBase_c, confirmed by build/rtti.json (its
 `__si_class_type_info` points at dScMgBase_c, offset 0). It is itself a
 hierarchy root: 13 direct RTTI children -- the "single 3D minigame" family
-(card, cup, memory x2, mahjong-carlo x2, roulette, slot3, sound, BSC, snowball,
-flower, plus dScMg3DEsp_c). Its own fields start at ROM offset 0x4660 ==
-sizeof(dScMgBase_c).
+(dScMgCard_c, dScMgCup_c, dScMg3DEsp_c, dScMgMemory_c, dScMgMemory2_c,
+dScMgMCarlo_c, dScMgMCarlo2_c, dScMgRoulette_c, dScMgSlot3_c, dScMgSound_c,
+dScMgBSC_c, dScMgSnowball_c, dScMgFlower_c). Its own fields start at ROM offset
+0x4660 == sizeof(dScMgBase_c).
 
 **Own vtable slots** (`tools/rtti_vtables.py --own dScMgSingle3DBase_c`): 2, 5,
-7, 10 re-override slots dScMgBase_c already gave a body (AfterInitResources,
-AfterCleanupResources, BeforeBehavior, BeforeRender); 16/17 are its own D1/D0;
-26 and 33 are new overrides (an OnHitByCannonBlastedChar-shaped routine and a
-VRAM/graphics-bank setup routine). The eight source files still carry an
-auto-generated `recovered name: dScMgFlower_c_*` comment -- the same off-by-one
-"recovered from vtable slot identity" mislabelling documented for dScMgBase_c's
-siblings, where an arbitrary concrete descendant's name is borrowed for what is
-really the base's own method. The vtable dump is the authority, not the comment.
+7, 10, 26 and 33 re-override slots dScMgBase_c already gave a body
+(AfterInitResources, AfterCleanupResources, BeforeBehavior, BeforeRender,
+OnHitByCannonBlastedChar, Virtual84); 16/17 are its own D1/D0. It adds no
+virtual, so its table is dScMgBase_c's 36 slots (ov006:0x0213e448, 0x90 bytes).
 
 **mSysTracker at 0x471c is hand-verified**, four independent witnesses agreeing
 on the offset: this class's D1 and D0 both destroy it
 (`_ZN8Particle10SysTrackerD1Ev((char*)c + 0x471c)`), AfterInitResources
-initialises it, BeforeBehavior updates it conditionally. Particle::SysTracker is
-declared locally rather than shared, for the reason Stage.h's own note gives
-(two independent gen_header.py shadows, union gives 0x81c, no file here includes
-either shadow header). This is a third local copy of the identical type;
-consolidating all three is a separate change with its own blast radius.
+initialises it, BeforeBehavior updates it conditionally. Its type is the one
+shared definition in include/Particle__SysTracker.h, which Stage.h also uses.
 
 **0x4700..0x4718** (seven fields) were split out of the former `pad_4660[0xbc]`:
 dScMgRoulette_c's Render (_ZN15dScMgRoulette_c6RenderEv, in src/actors/dScMgRoulette_c.cpp) and dScMg3DEsp_c's Render
 (src/_ZN12dScMg3DEsp_c6RenderEv.cpp) both write those exact offsets, so they belong to
-this class, not either leaf. 0x4718..0x471b has no matched access and stays
-padding.
+this class, not either leaf. The camera angle at 0x4718 comes from
+Camera_UpdateMatrices (see the camera section below); 0x471a..0x471b has no
+matched access and stays padding.
 
 **Their comments deliberately avoid the usual `/* 0xNN */` style.**
 tools/check_header_offsets.py's `DATA_SIZE` precompute walks a struct's commented
@@ -188,8 +183,9 @@ latent bug; #1421 never tested a real descendant. No separate `operator delete`
 copy is needed here -- dScMgBase_c, the immediate base, already provides one,
 and mwcc's inline-D0 route only needs to reach the immediate base.
 
-`Particle::SysTracker::Initialise` / `::Update` and `Particle::RenderAll` are
-declared in the header only so the calls can be spelled normally; they are
+`Particle::SysTracker::Initialise` / `::Update` (in Particle__SysTracker.h) and
+`Particle::RenderAll` (in this class's header) are declared so the calls can be
+spelled normally; they are
 non-virtual and add neither a field nor a vtable slot. Before that they were
 reached through `extern "C"` declarations of the mangled symbols at the call
 sites, which is the same call the compiler emits from the declaration.

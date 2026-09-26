@@ -38741,15 +38741,15 @@ matched: yes</title></rect><rect x="1121.11" y="684.03" width="6.10" height="6.5
 module: ov072
 addr: 0x02120c00
 size: 88 bytes
-matched: yes</title></rect><rect x="1127.21" y="684.03" width="4.99" height="6.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11BabyPenguinD1Ev
+matched: yes</title></rect><rect x="1127.21" y="684.03" width="4.99" height="6.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daPgBby_cD1Ev
 module: ov072
 addr: 0x02120c58
 size: 72 bytes
-matched: yes</title></rect><rect x="1132.20" y="684.03" width="6.37" height="6.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11BabyPenguinD0Ev
+matched: yes</title></rect><rect x="1132.20" y="684.03" width="6.37" height="6.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daPgBby_cD0Ev
 module: ov072
 addr: 0x02120ca0
 size: 92 bytes
-matched: yes</title></rect><rect x="1081.22" y="690.57" width="4.63" height="0.78" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11BabyPenguin13OnYoshiTryEatEv
+matched: yes</title></rect><rect x="1081.22" y="690.57" width="4.63" height="0.78" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daPgBby_c13OnYoshiTryEatEv
 module: ov072
 addr: 0x02120cfc
 size: 8 bytes
@@ -38841,27 +38841,27 @@ matched: yes</title></rect><rect x="1107.63" y="707.00" width="4.71" height="2.6
 module: ov072
 addr: 0x02121d50
 size: 28 bytes
-matched: yes</title></rect><rect x="1112.34" y="707.00" width="11.43" height="2.69" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11BabyPenguin16CleanupResourcesEv
+matched: yes</title></rect><rect x="1112.34" y="707.00" width="11.43" height="2.69" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daPgBby_c16CleanupResourcesEv
 module: ov072
 addr: 0x02121d6c
 size: 68 bytes
-matched: yes</title></rect><rect x="1123.77" y="707.00" width="0.67" height="2.69" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11BabyPenguin16OnPendingDestroyEv
+matched: yes</title></rect><rect x="1123.77" y="707.00" width="0.67" height="2.69" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daPgBby_c16OnPendingDestroyEv
 module: ov072
 addr: 0x02121db0
 size: 4 bytes
-matched: yes</title></rect><rect x="1124.45" y="707.00" width="14.12" height="2.69" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11BabyPenguin6RenderEv
+matched: yes</title></rect><rect x="1124.45" y="707.00" width="14.12" height="2.69" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daPgBby_c6RenderEv
 module: ov072
 addr: 0x02121db4
 size: 84 bytes
-matched: yes</title></rect><rect x="1107.63" y="709.69" width="9.40" height="5.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11BabyPenguin8BehaviorEv
+matched: yes</title></rect><rect x="1107.63" y="709.69" width="9.40" height="5.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daPgBby_c8BehaviorEv
 module: ov072
 addr: 0x02121e08
 size: 124 bytes
-matched: yes</title></rect><rect x="1117.04" y="709.69" width="21.53" height="5.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11BabyPenguin13InitResourcesEv
+matched: yes</title></rect><rect x="1117.04" y="709.69" width="21.53" height="5.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daPgBby_c13InitResourcesEv
 module: ov072
 addr: 0x02121e84
 size: 284 bytes
-matched: yes</title></rect><rect x="1107.63" y="715.67" width="1.52" height="3.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11BabyPenguin13OnTurnIntoEggER6Player
+matched: yes</title></rect><rect x="1107.63" y="715.67" width="1.52" height="3.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9daPgBby_c13OnTurnIntoEggER6Player
 module: ov072
 addr: 0x02121fa0
 size: 12 bytes
@@ -44641,11 +44641,11 @@ matched: yes</title></rect><rect x="1428.56" y="932.83" width="5.08" height="5.7
 module: ov100
 addr: 0x021461d4
 size: 56 bytes
-matched: yes</title></rect><rect x="1433.64" y="932.83" width="4.36" height="5.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4FishD1Ev
+matched: yes</title></rect><rect x="1433.64" y="932.83" width="4.36" height="5.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daFish_cD1Ev
 module: ov100
 addr: 0x0214620c
 size: 48 bytes
-matched: yes</title></rect><rect x="1438.00" y="932.83" width="6.17" height="5.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4FishD0Ev
+matched: yes</title></rect><rect x="1438.00" y="932.83" width="6.17" height="5.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daFish_cD0Ev
 module: ov100
 addr: 0x0214623c
 size: 68 bytes
@@ -44689,23 +44689,23 @@ matched: yes</title></rect><rect x="1441.99" y="938.55" width="39.84" height="8.
 module: ov100
 addr: 0x02146828
 size: 624 bytes
-matched: yes</title></rect><rect x="1481.83" y="938.55" width="6.64" height="8.14" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4Fish16CleanupResourcesEv
+matched: yes</title></rect><rect x="1481.83" y="938.55" width="6.64" height="8.14" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daFish_c16CleanupResourcesEv
 module: ov100
 addr: 0x02146a98
 size: 104 bytes
-matched: yes</title></rect><rect x="1436.63" y="946.70" width="3.87" height="0.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4Fish16OnPendingDestroyEv
+matched: yes</title></rect><rect x="1436.63" y="946.70" width="3.87" height="0.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daFish_c16OnPendingDestroyEv
 module: ov100
 addr: 0x02146b00
 size: 4 bytes
-matched: yes</title></rect><rect x="1436.63" y="947.24" width="3.87" height="6.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4Fish6RenderEv
+matched: yes</title></rect><rect x="1436.63" y="947.24" width="3.87" height="6.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daFish_c6RenderEv
 module: ov100
 addr: 0x02146b04
 size: 52 bytes
-matched: yes</title></rect><rect x="1436.63" y="954.21" width="3.87" height="40.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4Fish8BehaviorEv
+matched: yes</title></rect><rect x="1436.63" y="954.21" width="3.87" height="40.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daFish_c8BehaviorEv
 module: ov100
 addr: 0x02146b38
 size: 304 bytes
-matched: yes</title></rect><rect x="1440.50" y="946.70" width="10.70" height="10.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4Fish13InitResourcesEv
+matched: yes</title></rect><rect x="1440.50" y="946.70" width="10.70" height="10.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daFish_c13InitResourcesEv
 module: ov100
 addr: 0x02146c68
 size: 208 bytes

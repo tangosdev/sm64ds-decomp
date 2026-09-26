@@ -99,8 +99,8 @@ _ZN12daStarGate_c6RenderEv kind:function(arm,size=0xf8) addr:0x02145fe4
 _ZN12daStarGate_c8BehaviorEv kind:function(arm,size=0x50) addr:0x021460dc
 _ZN12daStarGate_c13InitResourcesEv kind:function(arm,size=0xa8) addr:0x0214612c
 daStarGate_c_classInit kind:function(arm,size=0x38) addr:0x021461d4
-_ZN4FishD1Ev kind:function(arm,size=0x30) addr:0x0214620c
-_ZN4FishD0Ev kind:function(arm,size=0x44) addr:0x0214623c
+_ZN8daFish_cD1Ev kind:function(arm,size=0x30) addr:0x0214620c
+_ZN8daFish_cD0Ev kind:function(arm,size=0x44) addr:0x0214623c
 func_ov100_02146280 kind:function(arm,size=0x1c) addr:0x02146280
 func_ov100_0214629c kind:function(arm,size=0x100) addr:0x0214629c
 func_ov100_0214639c kind:function(arm,size=0x14) addr:0x0214639c
@@ -111,11 +111,11 @@ func_ov100_02146640 kind:function(arm,size=0x194) addr:0x02146640
 func_ov100_021467d4 kind:function(arm,size=0x14) addr:0x021467d4
 func_ov100_021467e8 kind:function(arm,size=0x40) addr:0x021467e8
 func_ov100_02146828 kind:function(arm,size=0x270) addr:0x02146828
-_ZN4Fish16CleanupResourcesEv kind:function(arm,size=0x68) addr:0x02146a98
-_ZN4Fish16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02146b00
-_ZN4Fish6RenderEv kind:function(arm,size=0x34) addr:0x02146b04
-_ZN4Fish8BehaviorEv kind:function(arm,size=0x130) addr:0x02146b38
-_ZN4Fish13InitResourcesEv kind:function(arm,size=0xd0) addr:0x02146c68
+_ZN8daFish_c16CleanupResourcesEv kind:function(arm,size=0x68) addr:0x02146a98
+_ZN8daFish_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02146b00
+_ZN8daFish_c6RenderEv kind:function(arm,size=0x34) addr:0x02146b04
+_ZN8daFish_c8BehaviorEv kind:function(arm,size=0x130) addr:0x02146b38
+_ZN8daFish_c13InitResourcesEv kind:function(arm,size=0xd0) addr:0x02146c68
 daFish_c_classInit kind:function(arm,size=0x44) addr:0x02146d38
 _ZN15daObjPathLift_cD1Ev kind:function(arm,size=0x70) addr:0x02146d7c
 _ZN15daObjPathLift_cD0Ev kind:function(arm,size=0x84) addr:0x02146dec
@@ -215,7 +215,6 @@ data_ov100_02148478 kind:data(any) addr:0x02148478
 _ZTS8daFish_c kind:data(any) addr:0x02148480
 _ZTI8daFish_c kind:data(any) addr:0x0214848c
 g_profile_FISH kind:data(any) addr:0x02148498
-_ZTV4Fish kind:data(any) addr:0x021484bc
 _ZTV8daFish_c kind:data(any) addr:0x021484bc
 _ZTI15daObjPathLift_c kind:data(any) addr:0x02148538
 _ZTS15daObjPathLift_c kind:data(any) addr:0x02148544

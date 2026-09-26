@@ -1,36 +1,26 @@
 //cpp
 // @symbol _ZN12dScMg3DEsp_c13OnYoshiTryEatEi
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dMg3DEspModel_c.h"
 #include "dScMg3DEsp_c.h"
-// recovered name: dScMg3DEsp_c_OnYoshiTryEat_020e9c20
-/* recovered: renamed to Class_Method, vtable slot 18 -- an override of
-   dScMgBase_c::OnYoshiTryEat(int). The signature must repeat the base
-   declaration exactly, or mwcc appends a slot instead of overriding. */
-/* data_ov004_020beb68 is declared `void *` by dScMgBase_c.h; cast at the use site
-   rather than redeclaring it with a different pointer type. */
+/* dScMg3DEsp_c::OnYoshiTryEat, vtable slot 18. The name is a placeholder
+   borrowed from dActor_c by slot index; see dScMgBase_c.h. The signature
+   repeats the base declaration, or mwcc appends a slot instead of
+   overriding. */
 
 void dScMg3DEsp_c::OnYoshiTryEat(int a)
 {
-    char *c = (char *)this;
-
-    dScMg3DEsp_c *self = (dScMg3DEsp_c *)(void *)c;
-    func_ov006_020e984c(c);
-    self->unk_553c = 0;
+    func_ov006_020e984c((char *)this);
+    unk_553c = 0;
     if (a == 0) {
-        int* p = (int*)(((int)c + 0xbc));
-        *p += 1;
-        if (self->unk_0bc > 0x270e) self->unk_0bc = 0x270e;
+        unk_0bc++;
+        if (unk_0bc > 9998) unk_0bc = 9998;
     } else if (a == 0x12) {
-        if (data_ov004_020beb68 != 0) *(int*)((char*)data_ov004_020beb68 + 0xb4) = 0;
-        self->unk_0bc = 0;
-        if (self->unk_0bc > 0x270e) self->unk_0bc = 0x270e;
+        if (data_ov004_020beb68 != 0) ((dScMgBase_c*)data_ov004_020beb68)->mHudScore = 0;
+        unk_0bc = 0;
+        if (unk_0bc > 9998) unk_0bc = 9998; /* the ROM keeps this clamp; 16 bytes */
     }
-    {
-        self->unk_51e4 = 0;
-        ((dMg3DEspModel_c*)(c + 0x4fd8))->Reset();
-    }
+    unk_51e4 = 0;
+    ((dMg3DEspModel_c*)pad_4fd8)->Reset();
     func_ov004_020b0cac(0xd, 0x80, 0xa8, 1, -1, 0xd);
 }

@@ -1,13 +1,10 @@
 //cpp
-#include "dScMg3DEsp_c.h"
 // @symbol _ZN12dScMg3DEsp_c9Virtual50Ev
-/* Minigame slot 20; Virtual50 is a placeholder, not an original name.
-   The reconstructed void contract is documented in dScMgBase_c.h. */
-/* _ZN12dScMg3DEsp_c9Virtual50Ev at 0x020e9c10 - thunk: FreeGfxSlotsById(8) */
+#include "dScMg3DEsp_c.h"
+/* dScMg3DEsp_c::Virtual50, vtable slot 20. Virtual50 is a placeholder named
+   for the slot's byte offset; dScMgBase_c.h documents the void contract. */
 
-extern "C" {
-extern void FreeGfxSlotsById(int a);
-}
+extern "C" void FreeGfxSlotsById(int a);
 
 void dScMg3DEsp_c::Virtual50()
 {

@@ -75,7 +75,7 @@ fBase_c > dBase_c > dScene_c
 ## Shared services [CODE]
 
 - **Shared state machine.**
-  - `mStateController` sits at `dScMgBase_c+0xcc`. Its type name `dMgState_c` is inferred: it has no RTTI.
+  - `mStateController` sits at `dScMgBase_c+0xcc`. Its type has no RTTI, so the name `dMgState_c` is the tree's own.
   - It owns 20 states, entered through `func_ov004_020b0a54(n)`.
   - [GUESS] The states run the common banners and jingles: ready, go, time up, results.
   - A game's own rules are a separate, game-local state table.
@@ -159,7 +159,7 @@ fBase_c > dBase_c > dScene_c
   - Slots 20 and 31-35 are named after their vtable offset, for example `Virtual7C`.
 - **Coined or inferred in this tree [CODE]:**
   - `dMgState_c`, the three shared-state block types, and many method and field names.
-  - The markers are not uniform yet. `dMgState_c` says "inferred", only MCarlo2's shared-state type says "coined", and the `dScMgBase_c.h` field names carry no marker.
+  - The markers are not uniform yet: some say "coined", some "inferred" or "reconstructed", and the `dScMgBase_c.h` field names carry none.
 - **Candidate only:** the `d_s_mg_*.cpp` filenames.
 
 **Naming rule for the readability passes.** A new name needs evidence from its uses and is marked `coined`. Without evidence, the placeholder stays, with a one-line note on what is known.
