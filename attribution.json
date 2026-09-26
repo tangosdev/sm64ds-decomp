@@ -518,11 +518,6 @@
     "src/_ZN19FirePiranhaPlantBig13OnTurnIntoEggER6Player.c": "tangosdev",
     "src/_ZN19FirePiranhaPlantBig13OnTurnIntoEggER6Player.cpp": "tangosdev",
     "src/_ZN19RickshawPlatformBdwD0Ev.cpp": "tangosdev",
-    "src/_ZN19RotatingPlatformLll13InitResourcesEv.c": "tangosdev",
-    "src/_ZN19RotatingPlatformLll13InitResourcesEv.cpp": "tangosdev",
-    "src/_ZN19RotatingPlatformLll16CleanupResourcesEv.c": "lunavyqo",
-    "src/_ZN19RotatingPlatformLll16CleanupResourcesEv.cpp": "lunavyqo",
-    "src/_ZN19RotatingPlatformLllD0Ev.cpp": "tangosdev",
     "src/_ZN19RotatingPlatformWdwD0Ev.cpp": "tangosdev",
     "src/_ZN19cMgSmartball_ball_c12SaveSnapshotEv.cpp": "ruspecial",
     "src/_ZN19cMgSmartball_ball_c14RestoreInitialEv.cpp": "andrewboudreau",
@@ -5528,6 +5523,15 @@
     "src/actors/dScMgPachinko2_c.cpp#_ZN16dScMgPachinko2_c6RenderEv": "andrewboudreau",
     "src/actors/dScMgPachinko2_c.cpp#_ZN16dScMgPachinko2_c8BehaviorEv": "andrewboudreau",
     "src/actors/dScMgPachinko2_c.cpp#_ZN16dScMgPachinko2_c13InitResourcesEv": "andrewboudreau",
-    "src/actors/dScMgPachinko2_c.cpp#dScMgPachinko2_c_classInit": "tangosdev"
+    "src/actors/dScMgPachinko2_c.cpp#dScMgPachinko2_c_classInit": "tangosdev",
+    "src/_ZN16daObjFl_Koma_D_c13InitResourcesEv.c": "tangosdev",
+    "src/_ZN16daObjFl_Koma_D_c13InitResourcesEv.cpp": "tangosdev",
+    "src/_ZN16daObjFl_Koma_D_c16CleanupResourcesEv.c": "lunavyqo",
+    "src/_ZN16daObjFl_Koma_D_c16CleanupResourcesEv.cpp": "lunavyqo",
+    "src/_ZN16daObjFl_Koma_D_cD0Ev.cpp": "tangosdev",
+    "src/actors/daObjFl_Koma_D_c.cpp#_ZN16daObjFl_Koma_D_cD1Ev": "tangosdev",
+    "src/actors/daObjFl_Koma_D_c.cpp#_ZN16daObjFl_Koma_D_cD0Ev": "tangosdev",
+    "src/actors/daObjFl_Koma_D_c.cpp#_ZN16daObjFl_Koma_D_c16CleanupResourcesEv": "lunavyqo",
+    "src/actors/daObjFl_Koma_D_c.cpp#_ZN16daObjFl_Koma_D_c13InitResourcesEv": "tangosdev"
   }
 }

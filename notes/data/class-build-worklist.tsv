@@ -376,7 +376,7 @@ dScMgSlot1_c	DONE	include\dScMgSlot1_c.h	dScMgBase_c	0	ov006	10
 dScMgSmartball_c	DONE	include\dScMgSmartball_c.h	dScMgBase_c	0	ov006	9
 dScMgTeresa_c	DONE	include\dScMgTeresa_c.h	dScMgBase_c	0	ov006	8
 daObjBk_Ukisima_c	DONE	include\daObjBk_Ukisima_c.h	daObjKaitendai_c	0	ov015	4
-daObjFl_Koma_D_c	DONE	include\RotatingPlatformLll.h  [alias: header uses pre-rename name]	daObjKaitendai_c	0	ov022	4
+daObjFl_Koma_D_c	DONE	include\daObjFl_Koma_D_c.h	daObjKaitendai_c	0	ov022	4
 daObjKm3_Kaitendai_c	DONE	include\daObjKm3_Kaitendai_c.h	daObjKaitendai_c	0	ov047	4
 daObjRc_Kaitendai_c	DONE	include\daObjRc_Kaitendai_c.h	daObjKaitendai_c	0	ov036	4
 daObjWc_Obj07_c	DONE	include\daObjWc_Obj07_c.h	daObjKaitendai_c	0	ov029	4

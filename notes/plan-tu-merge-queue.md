@@ -64,7 +64,7 @@ it lose it. Both directions are live. Affected Tier 1:
 |---|
 |[ov029](../config/arm9/overlays/ov029/symbols.txt)/`daObjWc_Obj02_c(1/9)`  [ov029](../config/arm9/overlays/ov029/symbols.txt)/`daObjWc_Obj05_c(1/9)`  [ov029](../config/arm9/overlays/ov029/symbols.txt)/`daObjWc_Obj07_c(1/5)` |
 |[ov014](../config/arm9/overlays/ov014/symbols.txt)/`daObjBSwdoor_c(1/6)` [ov030](../config/arm9/overlays/ov030/symbols.txt)/`daObjHmMaruta_c(3/6)` [ov063](../config/arm9/overlays/ov063/symbols.txt)/`daObjTh_Fall_Block_c(2/5)` |
-|[ov015](../config/arm9/overlays/ov015/symbols.txt)/`daObjBk_Fall_Block_c(2/5)` [ov015](../config/arm9/overlays/ov015/symbols.txt)/`daObjBk_Ukisima_c(1/5)` [ov022](../config/arm9/overlays/ov022/symbols.txt)/`RotatingPlatformLll(1/5)` |
+|[ov015](../config/arm9/overlays/ov015/symbols.txt)/`daObjBk_Fall_Block_c(2/5)` [ov015](../config/arm9/overlays/ov015/symbols.txt)/`daObjBk_Ukisima_c(1/5)` [ov022](../config/arm9/overlays/ov022/symbols.txt)/`daObjFl_Koma_D_c(1/5)` |
 |[ov036](../config/arm9/overlays/ov036/symbols.txt)/`RotatingPlatformRr(1/5)` [ov064](../config/arm9/overlays/ov064/symbols.txt)/`TiltingPlatformLll(2/5)` [ov016](../config/arm9/overlays/ov016/symbols.txt)/`FloatOnWaterPlatformJrb(1/4)` |
 
 
@@ -286,7 +286,7 @@ first module where a `config_tu/` conversion becomes conceivable.
 |[ov015](../config/arm9/overlays/ov015/symbols.txt)| 0x2112bd0|  n=5|    `daObjBk_Ukisima_c`|       1/5|
 |[ov015](../config/arm9/overlays/ov015/symbols.txt)| 0x2112cf4|  n=5|    `daObjBk_Fall_Block_c`|              2/5  pcov=3|
 |[ov016](../config/arm9/overlays/ov016/symbols.txt)| 0x2112ef4|  n=4|    `FloatOnWaterPlatformJrb`|  1/4|
-|[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x21115a8|  n=5|    `RotatingPlatformLll`|      1/5|
+|[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x21115a8|  n=5|    `daObjFl_Koma_D_c`|      1/5|
 |[ov029](../config/arm9/overlays/ov029/symbols.txt)| 0x211137c|  n=9|    `daObjWc_Obj02_c`|                1/9  CONF2|
 |[ov029](../config/arm9/overlays/ov029/symbols.txt)| 0x2111ac4|  n=9|    `daObjWc_Obj05_c`|                 1/9  NORM1|
 |[ov029](../config/arm9/overlays/ov029/symbols.txt)| 0x2112080|  n=5|    `daObjWc_Obj07_c`|          1/5  pcov=3|

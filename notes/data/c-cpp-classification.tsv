@@ -374,7 +374,7 @@ src/d_a_grock.c	S1-stores-rom-vptr	ov021			stores _ZTV11RollingRock	1		None	_ZTV
 src/d_a_obj_simple_bg_mc_hazad.c	WEAK-refs-only	ov102				1		None		-
 src/d_a_obj_ct_mecha10_ct_mecha10.c	WEAK-refs-only	ov035				1		None		-
 src/d_a_obj_ct_mecha10_ct_mecha12s.c	WEAK-refs-only	ov035				1		None		-
-src/d_a_obj_fl_koma_d.c	S1-stores-rom-vptr	ov022			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV19RotatingPlatformLll	-
+src/d_a_obj_fl_koma_d.c	S1-stores-rom-vptr	ov022			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV16daObjFl_Koma_D_c	-
 src/game/actors/d_a_obj_wc_obj07.cpp	S1-stores-rom-vptr	ov029			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV19RotatingPlatformWdw	-
 src/d_a_obj_rotate_updown_lift_hs_updown_lift.c	WEAK-refs-only	ov091				1		None		-
 src/d_a_obj_rotate_updown_lift_updown_lift.c	WEAK-refs-only	ov091				1		None		-
@@ -818,7 +818,7 @@ src/_ZN19CylinderClsnWithPosC1Ev.c	P3-mangled-method-only	arm9		CylinderClsnWith
 src/_ZN17daObjKm1_Kuruma_c13InitResourcesEv.c	P1-vtable+mangled	ov043	daObjKm1_Kuruma_c	daObjKm1_Kuruma_c/daObjKm1_Kuruma_c	vtable daObjKm1_Kuruma_c slot 0 @0x21115e0 | _ZN17daObjKm1_Kuruma_c13InitResourcesEv	1		True		-
 src/_ZN17daObjKm1_Kuruma_c16CleanupResourcesEv.c	P1-vtable+mangled	ov043	daObjKm1_Kuruma_c	daObjKm1_Kuruma_c/daObjKm1_Kuruma_c	vtable daObjKm1_Kuruma_c slot 3 @0x21115cc | _ZN17daObjKm1_Kuruma_c16CleanupResourcesEv	1		True		-
 src/_ZN17daObjKm1_Kuruma_cD0Ev.c	DTOR-ONLY	ov043	daObjKm1_Kuruma_c	daObjKm1_Kuruma_c/daObjKm1_Kuruma_c	_ZN17daObjKm1_Kuruma_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV13daObjKuruma_c/_ZTV17daObjKm1_Kuruma_c	-
-src/_ZN19RotatingPlatformLllD0Ev.c	DTOR-ONLY	ov022	daObjFl_Koma_D_c	RotatingPlatformLll/daObjFl_Koma_D_c	_ZN19RotatingPlatformLllD0Ev	1		True	_ZTV10dBgActor_c/_ZTV16daObjKaitendai_c/_ZTV19RotatingPlatformLll	-
+src/_ZN16daObjFl_Koma_D_cD0Ev.c	DTOR-ONLY	ov022	daObjFl_Koma_D_c	daObjFl_Koma_D_c/daObjFl_Koma_D_c	_ZN16daObjFl_Koma_D_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV16daObjKaitendai_c/_ZTV16daObjFl_Koma_D_c	-
 src/_ZN15daObjWc_Obj07_c13InitResourcesEv.c	P1-vtable+mangled	ov029	daObjWc_Obj07_c	daObjWc_Obj07_c/daObjWc_Obj07_c	vtable daObjWc_Obj07_c slot 0 @0x2112148 | _ZN15daObjWc_Obj07_c13InitResourcesEv	1		True		-
 src/_ZN15daObjWc_Obj07_c16CleanupResourcesEv.c	P1-vtable+mangled	ov029	daObjWc_Obj07_c	daObjWc_Obj07_c/daObjWc_Obj07_c	vtable daObjWc_Obj07_c slot 3 @0x2112134 | _ZN15daObjWc_Obj07_c16CleanupResourcesEv	1		True		-
 src/_ZN15daObjWc_Obj07_cD0Ev.c	DTOR-ONLY	ov029	daObjWc_Obj07_c	daObjWc_Obj07_c/daObjWc_Obj07_c	_ZN15daObjWc_Obj07_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV16daObjKaitendai_c/_ZTV15daObjWc_Obj07_c	-

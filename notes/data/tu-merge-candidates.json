@@ -10150,7 +10150,7 @@
    "start": "0x21115a8",
    "end": "0x21116c4",
    "classes": [
-    "RotatingPlatformLll"
+    "daObjFl_Koma_D_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
@@ -10200,7 +10200,8 @@
    "c_members_marked_cpp": 0,
    "c_members": 2,
    "tier": 1,
-   "tier_rank": 84
+   "tier_rank": 84,
+   "historical_snapshot_note": "Discovery snapshot before PR3200 promotion: the five-file list preserves historical paths and is not the current production owner list. Four methods at ov022:0x021115a8..0x02111688 are now owned by src/actors/daObjFl_Koma_D_c.cpp; the adjacent factory remains src/d_a_obj_fl_koma_d.c. Current enrollment is config/arm9/overlays/ov022/delinks.txt; factory/data continuation is issue3202."
   },
   {
    "module": "ov036",
