@@ -138,7 +138,7 @@ struct ModelBase {
     /* RETURNS int, not void. The definition at 0x02016fd4 is eight
        instructions: load the vtable, `blx` slot 2 (DoSetFile, which returns
        int), then the epilogue -- r0 is never touched after the call, so it
-       flows straight out. Callers corroborate: KoopaShell::InitResources tests
+       flows straight out. Callers corroborate: daShl_c::InitResources tests
        the result and bails on 0. */
     int SetFile(BMD_File *file, int a, int b);       /* dispatches DoSetFile */
     /* Retail callers pass two scalar words. The second is unused here;

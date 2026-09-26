@@ -346,7 +346,7 @@ daPropeller_Heyho_c	DONE	include\daPropeller_Heyho_c.h	dEnemyBase_c	0	ov070	10
 daPukupuku_c	DONE	include\daPukupuku_c.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov090	7
 daRNk_c	DONE	include\daRNk_c.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov062	6
 daShark_c	DONE	include\daShark_c.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov090	7
-daShl_c	DONE	include\KoopaShell.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov102	8
+daShl_c	DONE	include\daShl_c.h	dEnemyBase_c	0	ov102	8
 daSnowball_c	DONE	include\daSnowball_c.h	dEnemyBase_c	0	ov081	7
 daSnowman_c	DONE	include\MrBlizzard.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov081	8
 daStar_c	DONE	include\PowerStar.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov002	9

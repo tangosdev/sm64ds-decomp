@@ -419,7 +419,6 @@ extern int _ZTV10BowserFire[];
 extern int _ZTV10BowserTail[];
 extern int _ZTV19daObjBlockItemTag_c[];
 extern int _ZTV12daBombking_c[];
-extern int _ZTV10KoopaShell[];
 extern int _ZTV7daBbl_c[];
 extern int _ZTV10MrBlizzard[];
 extern int _ZTV10PyramidTag[];
