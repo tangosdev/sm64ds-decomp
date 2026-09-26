@@ -10,9 +10,12 @@ must still be caught next to the thing that must now be let through.
 import json
 import pathlib
 import sys
+import tempfile
 import unittest
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import langmode_audit  # noqa: E402
+import msvc_arms  # noqa: E402
 import tiers  # noqa: E402
 import tiers_ratchet as ratchet  # noqa: E402
 
@@ -274,6 +277,118 @@ class MatchedCaptionNamesTheAssemblySubset(unittest.TestCase):
         block = tiers.bar_block(dict(self.BASE, matched=None), preserved)
         self.assertIn("11,342 / 11,390", block)
         self.assertIn("of which 113 are byte-exact assembly", block)
+
+
+class MsvcArmsAreNotDecompSource(unittest.TestCase):
+    """Both scoreboards read a file as mwccarm compiles it (tools/msvc_arms.py).
+
+    An `#ifdef _MSC_VER` side is the PC port's host build. The negative half matters as
+    much: the `#else` side is the ROM's source and every defect in it still scores, and a
+    condition whose mwccarm answer depends on another macro is read whole, as before.
+    """
+
+    ARM = ('#include "Model.h"\n'
+           "#ifdef _MSC_VER\n"
+           'extern "C" Model *_ZN5ModelD0Ev(Model *thiz) {\n'
+           "    thiz->~Model();\n"
+           "    return thiz;\n"
+           "}\n"
+           "#else\n"
+           "Model::~Model() {}\n"
+           "#endif\n")
+
+    def side(self, text):
+        return msvc_arms.mwcc_side(text)
+
+    def test_ifdef_drops_the_host_side_and_keeps_else(self):
+        self.assertEqual(self.side("a\n#ifdef _MSC_VER\nHOST\n#else\nROM\n#endif\nb"),
+                         "a\n\n\n\nROM\n\nb")
+
+    def test_ifndef_keeps_its_first_side(self):
+        self.assertEqual(self.side("#ifndef _MSC_VER\nROM\n#else\nHOST\n#endif"),
+                         "\nROM\n\n\n")
+
+    def test_if_defined_spellings(self):
+        for cond in ("defined(_MSC_VER)", "defined _MSC_VER", "_MSC_VER",
+                     "(defined(_MSC_VER))", "defined( _MSC_VER ) // host"):
+            with self.subTest(cond=cond):
+                self.assertEqual(self.side(f"#if {cond}\nHOST\n#else\nROM\n#endif"),
+                                 "\n\n\nROM\n")
+
+    def test_if_not_defined(self):
+        self.assertEqual(self.side("#if !defined(_MSC_VER)\nROM\n#endif"), "\nROM\n")
+        self.assertEqual(self.side("#if !defined _MSC_VER\nROM\n#endif"), "\nROM\n")
+
+    def test_a_conjunction_with_msc_is_false_whatever_the_other_macro(self):
+        self.assertEqual(self.side("#if defined(PC) && defined(_MSC_VER)\nHOST\n#endif"),
+                         "\n\n")
+
+    def test_elif_after_the_host_side_is_an_ordinary_if(self):
+        self.assertEqual(
+            self.side("#ifdef _MSC_VER\nH\n#elif X\nB\n#else\nC\n#endif"),
+            "\n\n#if X\nB\n#else\nC\n#endif")
+
+    def test_elif_after_an_ifndef_side_is_never_reached(self):
+        self.assertEqual(
+            self.side("#ifndef _MSC_VER\nR\n#elif X\nB\n#else\nC\n#endif"),
+            "\nR\n\n\n\n\n")
+
+    def test_nesting(self):
+        text = ("#if X\nA\n#ifdef _MSC_VER\nH\n#if Y\nHY\n#endif\n#else\n"
+                "R\n#ifdef _MSC_VER\nH2\n#endif\n#endif\n#endif")
+        self.assertEqual(self.side(text),
+                         "#if X\nA\n\n\n\n\n\n\nR\n\n\n\n\n#endif")
+
+    def test_other_macros_are_never_evaluated(self):
+        for text in ("#if 0\nA\n#endif", "#ifdef SM64DS_PLATFORM_PC\nA\n#else\nB\n#endif",
+                     "#if _MSC_VER >= 1300\nH\n#else\nR\n#endif",
+                     "#if defined(_MSC_VER) || defined(X)\nH\n#endif"):
+            with self.subTest(text=text):
+                self.assertEqual(self.side(text), text)
+
+    def test_unresolved_names_what_is_read_whole(self):
+        self.assertEqual(msvc_arms.unresolved("x\n#if _MSC_VER >= 1300\nH\n#endif"), [2])
+        self.assertEqual(msvc_arms.unresolved(self.ARM), [])
+
+    def test_line_count_kept_and_idempotent(self):
+        once = self.side(self.ARM)
+        self.assertEqual(once.count("\n"), self.ARM.count("\n"))
+        self.assertEqual(self.side(once), once)
+
+    def test_host_arm_no_longer_fails_mangled_refs(self):
+        self.assertIsNotNone(tiers.MANGLED_REF.search(tiers._code_only(self.ARM)))
+        self.assertTrue(tiers.score_file("src/_ZN5ModelD0Ev.cpp", self.ARM)["no_mangled_refs"])
+
+    def test_the_rom_side_still_scores(self):
+        rom_dirty = self.ARM.replace("Model::~Model() {}",
+                                     "Model::~Model() { _ZN4Base4KillEv(this); }")
+        self.assertFalse(tiers.score_file("x.cpp", rom_dirty)["no_mangled_refs"])
+        unk = self.ARM.replace("Model::~Model() {}", "Model::~Model() { unk_74 = 0; }")
+        self.assertFalse(tiers.score_file("x.cpp", unk)["no_unk_field"])
+
+    def test_ifndef_side_still_scores(self):
+        text = "#ifndef _MSC_VER\nvoid f() { _ZN4Base4KillEv(0); }\n#endif\n"
+        self.assertFalse(tiers.score_file("x.cpp", text)["no_mangled_refs"])
+
+    def test_langmode_reads_the_same_side(self):
+        with tempfile.TemporaryDirectory() as d:
+            (pathlib.Path(d) / "src").mkdir()
+            (pathlib.Path(d) / "src" / "_ZN5ModelD0Ev.cpp").write_text(self.ARM)
+            (pathlib.Path(d) / "src" / "_ZN5ModelD2Ev.cpp").write_text(
+                'extern "C" Model *_ZN5ModelD2Ev(Model *thiz) {\n    return thiz;\n}\n')
+            saved = langmode_audit.REPO
+            langmode_audit.REPO = pathlib.Path(d)
+            try:
+                armed = langmode_audit.hand_spells_own_symbol(
+                    "src/_ZN5ModelD0Ev.cpp", "_ZN5ModelD0Ev")
+                flat = langmode_audit.hand_spells_own_symbol(
+                    "src/_ZN5ModelD2Ev.cpp", "_ZN5ModelD2Ev")
+                defs = langmode_audit.defined_mangled_symbols("src/_ZN5ModelD0Ev.cpp")
+            finally:
+                langmode_audit.REPO = saved
+        self.assertFalse(armed)
+        self.assertTrue(flat)
+        self.assertEqual(defs, [])
 
 
 if __name__ == "__main__":
