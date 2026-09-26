@@ -10150,15 +10150,15 @@
    "start": "0x21115a8",
    "end": "0x21116c4",
    "classes": [
-    "RotatingPlatformLll"
+    "daObjFl_Koma_D_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/_ZN19RotatingPlatformLllD1Ev.cpp",
-    "src/_ZN19RotatingPlatformLllD0Ev.c",
-    "src/_ZN19RotatingPlatformLll16CleanupResourcesEv.cpp",
-    "src/_ZN19RotatingPlatformLll13InitResourcesEv.cpp",
+    "src/_ZN16daObjFl_Koma_D_cD1Ev.cpp",
+    "src/_ZN16daObjFl_Koma_D_cD0Ev.c",
+    "src/_ZN16daObjFl_Koma_D_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daObjFl_Koma_D_c13InitResourcesEv.cpp",
     "src/d_a_obj_fl_koma_d.c"
    ],
    "ext_mix": {

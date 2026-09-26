@@ -7,10 +7,10 @@ _ZN14daObjFl_Ring_c13InitResourcesEv kind:function(arm,size=0xbc) addr:0x0211149
 func_ov022_02111558 kind:function(arm,size=0xc) addr:0x02111558
 func_ov022_02111564 kind:function(arm,size=0x14) addr:0x02111564
 daObjFl_Ring_c_classInit kind:function(arm,size=0x30) addr:0x02111578
-_ZN19RotatingPlatformLllD1Ev kind:function(arm,size=0x50) addr:0x021115a8
-_ZN19RotatingPlatformLllD0Ev kind:function(arm,size=0x64) addr:0x021115f8
-_ZN19RotatingPlatformLll16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x0211165c
-_ZN19RotatingPlatformLll13InitResourcesEv kind:function(arm,size=0x18) addr:0x02111670
+_ZN16daObjFl_Koma_D_cD1Ev kind:function(arm,size=0x50) addr:0x021115a8
+_ZN16daObjFl_Koma_D_cD0Ev kind:function(arm,size=0x64) addr:0x021115f8
+_ZN16daObjFl_Koma_D_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x0211165c
+_ZN16daObjFl_Koma_D_c13InitResourcesEv kind:function(arm,size=0x18) addr:0x02111670
 daObjFl_Koma_D_c_classInit kind:function(arm,size=0x3c) addr:0x02111688
 _ZN15daObjFl_Block_cD1Ev kind:function(arm,size=0x44) addr:0x021116c4
 _ZN15daObjFl_Block_cD0Ev kind:function(arm,size=0x58) addr:0x02111708
@@ -201,7 +201,7 @@ data_ov022_02113da4 kind:data(any) addr:0x02113da4
 data_ov022_02113da8 kind:data(any) addr:0x02113da8 ambiguous
 _ZTS16daObjFl_Koma_D_c kind:data(any) addr:0x02113db0
 g_profile_FL_KOMA_D kind:data(any) addr:0x02113dc4 ambiguous
-_ZTV19RotatingPlatformLll kind:data(any) addr:0x02113de8
+_ZTV16daObjFl_Koma_D_c kind:data(any) addr:0x02113de8
 data_ov022_02113e00 kind:data(any) addr:0x02113e00 ambiguous
 data_ov022_02113e50 kind:data(any) addr:0x02113e50 ambiguous
 _ZTI15daObjFl_Block_c kind:data(any) addr:0x02113e68

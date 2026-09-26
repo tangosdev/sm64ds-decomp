@@ -1,5 +1,5 @@
-#ifndef ROTATINGPLATFORMLLL_H
-#define ROTATINGPLATFORMLLL_H
+#ifndef DAOBJFL_KOMA_D_C_H
+#define DAOBJFL_KOMA_D_C_H
 
 #include "types.h"
 
@@ -12,7 +12,7 @@
  *
  *   _ZTI16daObjFl_Koma_D_c  ov022 0x02113d98
  *   _ZTS16daObjFl_Koma_D_c  ov022 0x02113db0
- *   _ZTV19RotatingPlatformLll  ov022 0x02113de8  (its record sits at V-4)
+ *   _ZTV16daObjFl_Koma_D_c  ov022 0x02113de8  (its record sits at V-4)
  *   kind  __si_class_type_info, ONE base, subobject offset 0
  *   base  daObjKaitendai_c, ov002 0x021091ac
  *
@@ -24,9 +24,9 @@
 
 #include "daObjKaitendai_c.h"
 
-struct RotatingPlatformLll : daObjKaitendai_c {
+struct daObjFl_Koma_D_c : daObjKaitendai_c {
     /* --- vtable --- */
-    virtual ~RotatingPlatformLll(); /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjFl_Koma_D_c(); /* slots 16 (D1), 17 (D0) */
 
     int CleanupResources();            /* slot  3 */
     int InitResources();               /* slot  0 */
@@ -34,9 +34,9 @@ struct RotatingPlatformLll : daObjKaitendai_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char RotatingPlatformLll_size_must_be_0x320[sizeof(RotatingPlatformLll) == 0x320 ? 1 : -1];
+typedef char daObjFl_Koma_D_c_size_must_be_0x320[sizeof(daObjFl_Koma_D_c) == 0x320 ? 1 : -1];
 #endif
 
 #endif /* __cplusplus */
 
-#endif /* ROTATINGPLATFORMLLL_H */
+#endif /* DAOBJFL_KOMA_D_C_H */

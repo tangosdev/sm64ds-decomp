@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN19RotatingPlatformLll16CleanupResourcesEv
-#include "RotatingPlatformLll.h"
+// @symbol _ZN16daObjFl_Koma_D_c16CleanupResourcesEv
+#include "daObjFl_Koma_D_c.h"
 
 // Cross-overlay tail-call veneer. #pragma long_calls forces mwccarm to emit the pooled
 // `ldr ip,[pc]; bx ip` indirect tail-call (a plain near `b` otherwise) that the ROM uses
@@ -12,7 +12,7 @@ extern int func_ov002_020b66a8(void *self, void *data);
 extern int data_ov022_02113da4[];
 }
 
-int RotatingPlatformLll::CleanupResources()
+int daObjFl_Koma_D_c::CleanupResources()
 {
     return func_ov002_020b66a8(this, data_ov022_02113da4);
 }

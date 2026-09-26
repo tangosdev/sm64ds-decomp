@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN19RotatingPlatformLll13InitResourcesEv
-#include "RotatingPlatformLll.h"
+// @symbol _ZN16daObjFl_Koma_D_c13InitResourcesEv
+#include "daObjFl_Koma_D_c.h"
 
-/* RotatingPlatformLll::InitResources -- vtable slot 0, ov022 0x02111670.
+/* daObjFl_Koma_D_c::InitResources -- vtable slot 0, ov022 0x02111670.
  *
  * A tail call into daObjKaitendai_c's shared cross-overlay helper
  * func_ov002_020b676c(this, filetable, angle) -- out of this task's scope,
@@ -37,7 +37,7 @@ extern int func_ov002_020b676c(daObjKaitendai_c *self, ResourceDescriptor *a,
 extern ResourceDescriptor data_ov022_02113da4;
 }
 
-int RotatingPlatformLll::InitResources()
+int daObjFl_Koma_D_c::InitResources()
 {
     func_ov002_020b676c(this, &data_ov022_02113da4, 0x100);
 }
