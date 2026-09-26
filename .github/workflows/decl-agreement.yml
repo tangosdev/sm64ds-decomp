@@ -115,11 +115,21 @@ jobs:
       # declarations resolve through a type the branch changed, transitively down the
       # typedef chain. Both sides of a rename count: Git reports `old -> new` as one
       # `R` row, and a definition can move and change signature in the same commit.
+      #
+      # EXCEPT when the pull request changes the checker itself. The checker is not a
+      # source file, so the changed scope holds nothing that could disagree, and the
+      # scoped run passes no matter what the change does to the rest of the tree.
+      # #3143 taught the checker the constructor contract, passed this job that way,
+      # and turned every push to main red with 341 findings. A change to the ruler is
+      # measured against the whole tree, the way main will measure it.
       - name: Declarations agree with the definitions they name
         env:
           BASE: ${{ github.event.pull_request.base.sha }}
         run: |
           if [ -z "$BASE" ]; then
+            python tools/check_decl_agreement.py
+          elif git diff --name-only "$BASE"...HEAD | grep -qx 'tools/check_decl_agreement\.py'; then
+            echo "This pull request changes the checker: checking the whole tree."
             python tools/check_decl_agreement.py
           else
             python tools/check_decl_agreement.py --changed "$BASE"
