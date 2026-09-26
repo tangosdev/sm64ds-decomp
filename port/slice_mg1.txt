@@ -442,16 +442,11 @@ src/func_ov004_020b7124.cpp
 src/func_ov004_020b724c.c
 src/func_ov004_020b72d4.cpp
 src/func_ov004_020b743c.c
-# Run mg5, lane BASESET. src/func_ov004_020b7460.c IS EXCLUDED, host-copied in
-# port/unmatched/MgBase_StateSetter.cpp. The ROM at 0x020b7460 is a three-word
-# tail-jump veneer (`ldr ip,[pc]; bx ip; .word 0x020b743c`) that preserves r0,
-# and its target writes through that pointer on its first instruction pair. The
-# src TU spells BOTH sides with no parameter, so on the host the target stores
-# 10 through a stack slot. Its three call paths are slot 12 of the setter's own
-# state table, src/func_ov004_020b6ddc.c:39 and src/func_ov004_020b6f88.c:24,
-# and the two src callers ALREADY declare and pass the pointer: only the
-# definition drops it. ONE PARAMETER differs from src.
-# HOST-COPIED (BASESET): src/func_ov004_020b7460.c
+# The slot 12 tail-jump veneer (`ldr ip,[pc]; bx ip; .word 0x020b743c`), back
+# on this slice (run linkfull, lane ASMCPORT): main #3166 spells it with the
+# pointer its callers pass, so the host copy run mg5 lane BASESET kept in
+# port/unmatched/MgBase_StateSetter.cpp for the old (void) spelling is retired.
+src/func_ov004_020b7460.c
 src/func_ov004_020b746c.cpp
 src/func_ov004_020b7594.cpp
 src/func_ov004_020b75e4.c

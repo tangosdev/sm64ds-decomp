@@ -7855,9 +7855,9 @@ set(SCENE_MG_SOURCES
     # from port_mg_call0, so a target that compiles the dispatch and not this
     # fails the link twice over.
     #
-    # It also DEFINES func_ov004_020b7460, the slot 12 tail-jump veneer whose
-    # src TU drops the pointer its two callers already pass, so
-    # src/func_ov004_020b7460.c is off port/slice_mg1.txt for this file.
+    # It no longer defines func_ov004_020b7460, the slot 12 tail-jump veneer:
+    # the src TU takes the pointer its two callers pass (main #3166) and is back
+    # on port/slice_mg1.txt (run linkfull, lane ASMCPORT).
     unmatched/MgBase_StateSetter.cpp
     # unmatched/MgBase_Slot5.cpp RETIRED (run linkfull, lane RS2PORT). It was
     # dScMgBase_c slot 5's host copy (run mg5, lane BASESET): the src TU called
