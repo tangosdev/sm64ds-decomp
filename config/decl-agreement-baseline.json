@@ -171,11 +171,6 @@
         "param:#2 const Vec3 *",
         "param:#3 const Vec3 *"
       ],
-      "src/game/actors/d_a_linelift2.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *",
-        "param:#3 const Vector3 *"
-      ],
       "src/game/actors/d_a_obj_cannon_shutter.cpp": [
         "param:#1 const Vector3 *",
         "param:#2 const Vector3 *",
