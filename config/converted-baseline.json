@@ -713,7 +713,7 @@
     "src/game/actors/d_a_linelift2.cpp#_ZN13daLinelift2_cD1Ev",
     "src/game/actors/d_a_linelift2.cpp#daLinelift2_c_classInit_KM2_SUSUMU",
     "src/game/actors/d_a_linelift2.cpp#daLinelift2_c_classInit_KM3_LIFT",
-    "src/_ZN22dMg3DHeyhoObjAdapter_cC2Ev.cpp",
+    "src/actors/dMg3DHeyhoObjAdapter_c.cpp",
     "src/_ZN25RotatingUpDownPlatformUtm16CleanupResourcesEv.cpp",
     "src/_ZN25RotatingUpDownPlatformUtm6RenderEv.cpp",
     "src/_ZN25RotatingUpDownPlatformUtmD0Ev.cpp",

@@ -1,9 +1,9 @@
 {
   "id": "ov006/dMg3DHeyhoObjAdapter_c",
   "module": "ov006",
-  "source": "src_tu/actors/dMg3DHeyhoObjAdapter_c.cpp",
+  "source": "src/actors/dMg3DHeyhoObjAdapter_c.cpp",
   "promoted_source": "src/actors/dMg3DHeyhoObjAdapter_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20c4048..0x20c4060, 1 function(s), from build/tu_map.json (tools/tu_map.py)",

@@ -5264,6 +5264,8 @@
     "src/game/actors/d_a_klr.cpp#_ZN7daKlr_c6RenderEv": "tangosdev",
     "src/game/actors/d_a_klr.cpp#_ZN7daKlr_c8BehaviorEv": "lunavyqo",
     "src/game/actors/d_a_klr.cpp#_ZN7daKlr_c13InitResourcesEv": "tangosdev",
-    "src/game/actors/d_a_klr.cpp#daKlr_c_classInit": "tangosdev"
+    "src/game/actors/d_a_klr.cpp#daKlr_c_classInit": "tangosdev",
+    "src/actors/StarCamera.cpp#StarCamera_Spawn": "tangosdev",
+    "src/actors/dMg3DHeyhoObjAdapter_c.cpp#_ZN22dMg3DHeyhoObjAdapter_cC2Ev": "tangosdev"
   }
 }

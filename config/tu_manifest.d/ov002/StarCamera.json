@@ -1,9 +1,9 @@
 {
   "id": "ov002/StarCamera",
   "module": "ov002",
-  "source": "src_tu/actors/StarCamera.cpp",
+  "source": "src/actors/StarCamera.cpp",
   "promoted_source": "src/actors/StarCamera.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20ebe5c..0x20ebe8c, 1 function(s), from build/tu_map.json (tools/tu_map.py)",

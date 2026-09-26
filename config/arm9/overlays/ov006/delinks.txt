@@ -374,7 +374,7 @@ src/func_ov006_020c402c.c:
     complete
     .text start:0x020c402c end:0x020c4048
 
-src/_ZN22dMg3DHeyhoObjAdapter_cC2Ev.cpp:
+src/actors/dMg3DHeyhoObjAdapter_c.cpp:
     complete
     .text start:0x020c4048 end:0x020c4060
 
