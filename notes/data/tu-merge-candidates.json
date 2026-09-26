@@ -30437,13 +30437,13 @@
    "start": "0x214620c",
    "end": "0x2146d7c",
    "classes": [
-    "Fish"
+    "daFish_c"
    ],
    "n_functions_map": 18,
    "n_files": 18,
    "files": [
-    "src/_ZN4FishD1Ev.cpp",
-    "src/_ZN4FishD0Ev.cpp",
+    "src/_ZN8daFish_cD1Ev.cpp",
+    "src/_ZN8daFish_cD0Ev.cpp",
     "src/func_ov100_02146280.c",
     "src/func_ov100_0214629c.cpp",
     "src/func_ov100_0214639c.c",
@@ -30454,11 +30454,11 @@
     "src/func_ov100_021467d4.c",
     "src/func_ov100_021467e8.cpp",
     "src/func_ov100_02146828.c",
-    "src/_ZN4Fish16CleanupResourcesEv.cpp",
-    "src/_ZN4Fish16OnPendingDestroyEv.c",
-    "src/_ZN4Fish6RenderEv.cpp",
-    "src/_ZN4Fish8BehaviorEv.cpp",
-    "src/_ZN4Fish13InitResourcesEv.cpp",
+    "src/_ZN8daFish_c16CleanupResourcesEv.cpp",
+    "src/_ZN8daFish_c16OnPendingDestroyEv.c",
+    "src/_ZN8daFish_c6RenderEv.cpp",
+    "src/_ZN8daFish_c8BehaviorEv.cpp",
+    "src/_ZN8daFish_c13InitResourcesEv.cpp",
     "src/daFish_c_classInit.cpp"
    ],
    "ext_mix": {
