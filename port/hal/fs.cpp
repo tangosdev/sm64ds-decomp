@@ -148,6 +148,75 @@ unsigned (*port_fs_mod_map)(unsigned fileID);
 u32 (*port_fs_mod_filter)(unsigned fileID, u8 **data, u32 size);
 }
 
+/* ---- the patched range: mod files served by the card ---------------------
+   Run linkfull, lane S4FILE. The ROM's own loaders (LoadFile and
+   LoadCompressedFileAt's func_0201817c, both func_0201818c) read loose files
+   through the card, not through the Load seam below, so a mod whose file
+   travels them has to be served where the card reads. hal/fs_names.cpp's
+   virtual ROM image asks this function, once, on its first read, for every
+   file a mod claims; each comes back as the bytes the patched cartridge holds
+   for it, and the image points that id's FAT entry at them.
+
+   A mod CLAIMS a file id through port_fs_mod_claims (null in every target
+   that links no mod; hal/stage_geom.cpp chains onto it the way it chains onto
+   the filter). The bytes are exactly what the Load seam would serve: the ROM
+   file, decompressed, through port_fs_mod_map and port_fs_mod_filter. Served
+   as the cartridge would hold them: a file that carries the "LZ77" magic in
+   the ROM is wrapped back into an LZ77 stream (literal runs, which every LZ77
+   reader decodes to the same bytes), so the ROM's loaders take the same
+   decompress-into-a-fresh-block arm they take for the stock file and the
+   block they hand back has the stock file's allocation shape. Archive members
+   are not placed here: no mod claims one that the ROM loaders read (the
+   member mods ride SharedFilePtr::Load, which still serves them itself). */
+extern "C" {
+void (*port_fs_mod_claims)(void (*claim)(unsigned fileID));
+}
+
+static void (*g_patch_emit)(unsigned, const u8 *, u32);
+/* Defined further down, inside the game-facing extern "C" block, so declared
+   with the same linkage here. */
+struct fs_cache_entry;
+extern "C" {
+static int fs_patch_trace(void);
+static void fs_patch_claim(unsigned fid);
+}
+
+/* "LZ77" + a type-0x10 stream of literal runs: one flag byte of zeros, then
+   eight literal bytes, repeated. */
+static u8 *fs_lz77_wrap(const u8 *d, u32 n, u32 *out_len)
+{
+    const u32 groups = (n + 7) / 8;
+    const u32 len = 8 + groups + n;
+    u8 *o = (u8 *)malloc(len), *p;
+    u32 i;
+    if (!o)
+        return 0;
+    memcpy(o, "LZ77", 4);
+    o[4] = 0x10;
+    o[5] = (u8)n;
+    o[6] = (u8)(n >> 8);
+    o[7] = (u8)(n >> 16);
+    p = o + 8;
+    for (i = 0; i < n; i += 8) {
+        u32 k = n - i < 8 ? n - i : 8;
+        *p++ = 0;
+        memcpy(p, d + i, k);
+        p += k;
+    }
+    *out_len = (u32)(p - o);
+    return o;
+}
+
+extern "C" void port_fs_card_patches(void (*emit)(unsigned, const u8 *, u32))
+{
+    if (!port_fs_mod_claims)
+        return;
+    catalog_load();
+    g_patch_emit = emit;
+    port_fs_mod_claims(fs_patch_claim);
+    g_patch_emit = 0;
+}
+
 /* Read-only: the catalog's path for a FAT file id, or 0.
    Run link60 lane NFS. hal/fs_names.cpp owns the open-by-name seam and shares
    THIS table rather than reading files.tsv a second time, so the two seams
@@ -573,6 +642,71 @@ static int fs_cache_fill(struct fs_cache_entry *e, unsigned fileID)
     return ok;
 }
 
+static int fs_patch_trace(void)
+{
+    static int v = -1;
+    if (v < 0) v = fs_env_on("SM64DS_FS_TRACE") || fs_env_on("SM64DS_CARD_PATCH_TRACE");
+    return v;
+}
+
+/* One claimed loose file into the patched range: the bytes the Load seam
+   would serve for it, wrapped the way the cartridge holds the stock file.
+   Archive members are the Load seam's alone (see the header of this block),
+   so a claim on one is said and dropped rather than half-served. */
+static void fs_patch_claim(unsigned fid)
+{
+    struct fs_cache_entry e;
+    unsigned src = fid;
+    char path[PATH_MAX_ * 2];
+    FILE *f;
+    int lz = 0;
+    u8 head[4];
+    u8 *served;
+    u32 served_len = 0;
+
+    if (!g_patch_emit)
+        return;
+    if (fid >= MAX_FILES || g_paths[fid][0] == 0) {
+        fprintf(stderr, "[mods] a mod claimed file id %u for the card, and it "
+                "is %s; the ROM loaders read it unmodified\n", fid,
+                fid >= 0x8000 ? "an archive member (served by SharedFilePtr"
+                                "::Load only)" : "not in the catalog");
+        return;
+    }
+    if (port_fs_mod_map)
+        src = port_fs_mod_map(fid);
+    if (src >= MAX_FILES || g_paths[src][0] == 0)
+        return;
+    /* the STOCK file's shape decides the wrapping, not the substitute's */
+    snprintf(path, sizeof path, "%s/extracted/dsd/files/%s", asset_root(),
+             g_paths[fid]);
+    f = fopen(path, "rb");
+    if (f) {
+        lz = fread(head, 1, 4, f) == 4 && memcmp(head, "LZ77", 4) == 0;
+        fclose(f);
+    }
+    memset(&e, 0, sizeof e);
+    if (!fs_cache_fill(&e, src))
+        return;
+    if (port_fs_mod_filter)
+        e.size = port_fs_mod_filter(fid, &e.data, e.size);
+    if (lz) {
+        served = fs_lz77_wrap(e.data, e.size, &served_len);
+    } else {
+        served = e.data;
+        served_len = e.size;
+        e.data = 0;
+    }
+    if (served && served_len)
+        g_patch_emit(fid, served, served_len);
+    if (fs_patch_trace())
+        fprintf(stderr, "fs: card patch id=%u (%s) %u bytes served%s%s\n", fid,
+                g_paths[fid], e.size, lz ? ", LZ77-wrapped" : "",
+                src != fid ? " (mapped)" : "");
+    free(served);
+    free(e.data);
+}
+
 /* hand the caller its own buffer, allocated the way the uncached path did */
 static void *fs_hand_out(const struct fs_cache_entry *e)
 {
@@ -740,6 +874,9 @@ extern "C" const unsigned char *port_fs_archive_member(unsigned fileID,
     return p;
 }
 
+/* Both callers (func_0201817c and func_02018270 below) are the narrow
+   harnesses' only; the hosting targets link the ROM's readers instead. */
+#if !defined(SM64DS_LOADFILE_ROM) || !defined(SM64DS_LOADAT_ROM)
 static u8 *port_fs_read_raw(u32 handle, long *len_out)
 {
     char path[PATH_MAX_ * 2];
@@ -804,11 +941,21 @@ static u8 *port_fs_read_raw(u32 handle, long *len_out)
         return raw;
     }
 }
+#endif /* !SM64DS_LOADFILE_ROM || !SM64DS_LOADAT_ROM */
 
 /* func_0201817c: the file, still compressed, on the game's own heap so the
    caller's Deallocate matches.
    PORT_HOST_ABI: src is func_0201818c(handle,0) -- the DS card loader (CpuCopy8
-   asm, CP15 flushes, FS_CloseFile); the HAL reimplements the load contract. */
+   asm, CP15 flushes, FS_CloseFile); the HAL reimplements the load contract.
+
+   ONLY FOR THE NARROW HARNESSES since run linkfull wave 31 (lane S4FILE). The
+   three hosting targets compile this file with SM64DS_LOADFILE_ROM and link
+   src/func_0201817c.c, src/LoadFile.c and the func_0201818c they share
+   (port/slice_w31_s4file.txt): an archive member comes out of the NARC the
+   ROM's LoadArchive mounted (func_020186c0 / func_0204ede8), a loose file
+   through FS off the card (hal/fs_names.cpp's image, with its cache and the
+   patched range for mod files). */
+#ifndef SM64DS_LOADFILE_ROM
 void *func_0201817c(u32 handle)
 {
     long len = 0;
@@ -825,6 +972,7 @@ void *func_0201817c(u32 handle)
     free(raw);
     return dst;
 }
+#endif /* SM64DS_LOADFILE_ROM */
 
 /* func_02018270: the file's bytes straight to an address. The card reads raw,
    but a compressed file arriving here would mean the caller wanted

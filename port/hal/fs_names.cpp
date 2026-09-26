@@ -384,9 +384,154 @@ void ovt_load(void)
                 g_tables.ovt_off, g_tables.ovt_size, path);
 }
 
+/* ---- THE FILES BEHIND THE VIRTUAL ROM IMAGE (run linkfull, lane S4FILE) ---
+   Since this lane the game's own loaders -- LoadFile, LoadCompressedFileAt's
+   func_0201817c, and the func_0201818c they share -- read loose files through
+   the card, where they used to read them through hal/fs.cpp's host copy of
+   SharedFilePtr::Load and its file cache. Two things moved under the read with
+   them, and both live here because this is where the cartridge's bytes are
+   served.
+
+   THE CACHE. A card block is 0x200 bytes, and the image used to answer each one
+   with a scan of all 2,175 FAT entries and an fopen / fseek / fread / fclose of
+   every file the block touched: a 70 KB collision file cost 140 opens. The
+   cartridge is read-only, so keeping a file's bytes after the first block that
+   touches it changes nothing the game can see -- the card returns what it
+   returned before -- and a sorted index finds the files a block covers without
+   the scan. This is hal/fs.cpp's jump-hitch cache in its honest place: it
+   caches the CARTRIDGE, under the read, instead of the decoded file above it.
+
+   THE PATCHED RANGE. A mod serves a file the game reads by id (hal/fs_mods.cpp
+   states the rules; hal/stage_geom.cpp's collision swap is the one whose file
+   travels the ROM loaders today). The ROM learns a file's size from the FAT,
+   so a mod file that grew cannot sit in the ROM file's own range: the FAT the
+   card serves points a modded id at a range PAST THE CARTRIDGE instead, and
+   that range holds the ROM file run through the mod chain (hal/fs.cpp,
+   port_fs_card_patches). The cartridge's own range still holds the cartridge's
+   own bytes, so every neighbour a block crosses into reads as it always did.
+   Latched once, on the first card read, like every mod. */
+struct ImgFile { u32 start, stop, id; };
+ImgFile *g_img;          /* the FAT's live entries, sorted by start          */
+u32 g_img_n;
+u8 **g_img_bytes;        /* by FAT id: the file's bytes once touched          */
+
+enum : u32 { PATCH_BASE = 0x10000000u, PATCH_ALIGN = 0x200u };
+u8 *g_fat_served;        /* the FAT as the card serves it: patched entries    */
+u8 *g_patch;             /* the patched range's bytes, from PATCH_BASE        */
+u32 g_patch_len;
+
+int img_cmp(const void *a, const void *b)
+{
+    const ImgFile *x = (const ImgFile *)a, *y = (const ImgFile *)b;
+    return x->start < y->start ? -1 : x->start > y->start;
+}
+
+void img_index(void)
+{
+    u32 n = g_tables.fat_size / 8, i;
+    if (g_img)
+        return;
+    g_img = (ImgFile *)calloc(n ? n : 1, sizeof *g_img);
+    g_img_bytes = (u8 **)calloc(n ? n : 1, sizeof *g_img_bytes);
+    if (!g_img || !g_img_bytes) {
+        fprintf(stderr, "FATAL: out of host memory indexing the FAT\n");
+        fflush(stderr);
+        exit(2);
+    }
+    for (i = 0; i < n; ++i) {
+        u32 start, stop;
+        memcpy(&start, g_tables.fat + i * 8, 4);
+        memcpy(&stop, g_tables.fat + i * 8 + 4, 4);
+        if (stop <= start)
+            continue;
+        g_img[g_img_n].start = start;
+        g_img[g_img_n].stop = stop;
+        g_img[g_img_n].id = i;
+        ++g_img_n;
+    }
+    qsort(g_img, g_img_n, sizeof *g_img, img_cmp);
+}
+
+/* The whole file behind FAT entry `f`, read on its first touch and kept. A
+   file the catalog names and the disk does not hold is a broken extraction
+   (a correct one holds all of them): the game would read 0xFF where its data
+   should be and fail somewhere far from the cause, so this stops it here and
+   names the file. */
+const u8 *img_file(const ImgFile *f, const char *rel)
+{
+    u8 *buf = g_img_bytes[f->id];
+    char path[520];
+    FILE *fp;
+    u32 want;
+    if (buf)
+        return buf;
+    want = f->stop - f->start;
+    snprintf(path, sizeof path, "%s/extracted/dsd/files/%s", asset_root(), rel);
+    fp = fopen(path, "rb");
+    buf = (u8 *)malloc(want);
+    if (!fp || !buf || fread(buf, 1, want, fp) != want) {
+        fprintf(stderr, "FATAL: the game read file id %u (%s) and it is %s: "
+                "the extracted game files are incomplete; extract them again\n",
+                f->id, rel, fp ? "shorter than the cartridge says" : "missing");
+        fflush(stderr);
+        exit(2);
+    }
+    fclose(fp);
+    g_img_bytes[f->id] = buf;
+    return buf;
+}
+
+/* hal/fs.cpp hands each modded file here once, at the latch. */
+void patch_emit(unsigned id, const u8 *bytes, u32 len)
+{
+    u32 at, top;
+    if (id >= g_tables.fat_size / 8 || !len)
+        return;
+    at = (g_patch_len + PATCH_ALIGN - 1) & ~(PATCH_ALIGN - 1);
+    top = at + len;
+    u8 *grown = (u8 *)realloc(g_patch, top);
+    if (!grown) {
+        fprintf(stderr, "[mods] out of host memory placing file id %u in the "
+                "card's patched range; it keeps the cartridge's bytes\n", id);
+        return;
+    }
+    g_patch = grown;
+    memset(g_patch + g_patch_len, 0xFF, at - g_patch_len);
+    memcpy(g_patch + at, bytes, len);
+    g_patch_len = top;
+    {
+        const u32 start = PATCH_BASE + at, stop = PATCH_BASE + top;
+        memcpy(g_fat_served + id * 8, &start, 4);
+        memcpy(g_fat_served + id * 8 + 4, &stop, 4);
+    }
+}
+
+}  /* anonymous namespace */
+
+extern "C" void port_fs_card_patches(void (*emit)(unsigned, const u8 *, u32));
+
+namespace {
+
+void patch_latch(void)
+{
+    static int done;
+    if (done)
+        return;
+    done = 1;
+    g_fat_served = (u8 *)malloc(g_tables.fat_size);
+    if (!g_fat_served) {
+        fprintf(stderr, "FATAL: out of host memory copying the FAT\n");
+        fflush(stderr);
+        exit(2);
+    }
+    memcpy(g_fat_served, g_tables.fat, g_tables.fat_size);
+    port_fs_card_patches(patch_emit);
+}
+
 /* The FAT is 8 bytes per file id, {u32 start, u32 end}, in id order but NOT in
    offset order for every ROM, so the lookup is a scan rather than a bisect.
-   2,175 entries and one call per file load; the cost is not worth an index. */
+   2,175 entries and one call per file load; the cost is not worth an index.
+   (smoke_player's synchronous face only; the card image uses img_index.) */
 int fat_entry_of(u32 off, u32 len, u32 *start_out)
 {
     u32 n = g_tables.fat_size / 8;
@@ -581,18 +726,21 @@ void port_nitrofs_rom_read(u32 addr, u32 len, unsigned char *out)
 {
     static unsigned long long unserved;
     const u32 end = addr + len;
-    u32 n, i;
+    u32 i, lo_i, hi_i;
 
     memset(out, 0xFF, len);
     if (!len)
         return;
     tables_load();
     ovt_load();
+    img_index();
+    patch_latch();
 
-    {   /* the three tables */
+    {   /* the three tables; the FAT as served, with any mod file's entry
+           pointing into the patched range */
         struct { u32 off, size; const u8 *blob; } t[3] = {
             {g_tables.fnt_off, g_tables.fnt_size, g_tables.fnt},
-            {g_tables.fat_off, g_tables.fat_size, g_tables.fat},
+            {g_tables.fat_off, g_tables.fat_size, g_fat_served},
             {g_tables.ovt_off, g_tables.ovt_size, g_tables.ovt},
         };
         for (i = 0; i < 3; ++i) {
@@ -603,36 +751,41 @@ void port_nitrofs_rom_read(u32 addr, u32 len, unsigned char *out)
         }
     }
 
-    n = g_tables.fat_size / 8;
-    for (i = 0; i < n; ++i) {
-        u32 start, stop, lo, hi;
+    if (g_patch_len && end > PATCH_BASE && addr < PATCH_BASE + g_patch_len) {
+        const u32 lo = addr > PATCH_BASE ? addr : PATCH_BASE;
+        const u32 hi = end < PATCH_BASE + g_patch_len ? end : PATCH_BASE + g_patch_len;
+        memcpy(out + (lo - addr), g_patch + (lo - PATCH_BASE), hi - lo);
+    }
+
+    /* The first entry that ends past addr, then every entry that starts
+       before end: the files this block covers, in offset order. */
+    lo_i = 0;
+    hi_i = g_img_n;
+    while (lo_i < hi_i) {
+        const u32 mid = lo_i + (hi_i - lo_i) / 2;
+        if (g_img[mid].start < addr && g_img[mid].stop <= addr)
+            lo_i = mid + 1;
+        else
+            hi_i = mid;
+    }
+    if (lo_i > 0 && g_img[lo_i - 1].stop > addr)
+        --lo_i;   /* an entry that starts before addr and still covers it */
+    for (i = lo_i; i < g_img_n && g_img[i].start < end; ++i) {
+        const ImgFile *f = &g_img[i];
+        const u32 lo = f->start > addr ? f->start : addr;
+        const u32 hi = f->stop < end ? f->stop : end;
         const char *rel;
-        char path[520];
-        FILE *f;
-        memcpy(&start, g_tables.fat + i * 8, 4);
-        memcpy(&stop, g_tables.fat + i * 8 + 4, 4);
-        lo = start > addr ? start : addr;
-        hi = stop < end ? stop : end;
-        if (stop <= start || lo >= hi)
+        if (lo >= hi)
             continue;
-        rel = port_fs_catalog_path(i);
+        rel = port_fs_catalog_path(f->id);
         if (!rel || !rel[0]) {
             if (!unserved++)
                 fprintf(stderr, "[nfs] the virtual ROM image has no file for FAT "
-                        "entry %u (%#x..%#x); served as 0xFF\n", i, start, stop);
+                        "entry %u (%#x..%#x); served as 0xFF\n", f->id,
+                        f->start, f->stop);
             continue;
         }
-        snprintf(path, sizeof path, "%s/extracted/dsd/files/%s", asset_root(), rel);
-        f = fopen(path, "rb");
-        if (!f || fseek(f, (long)(lo - start), SEEK_SET) != 0 ||
-            fread(out + (lo - addr), 1, hi - lo, f) != hi - lo) {
-            if (!unserved++)
-                fprintf(stderr, "[nfs] the virtual ROM image could not read %u "
-                        "bytes at +%#x of %s; served as 0xFF\n", hi - lo,
-                        lo - start, path);
-        }
-        if (f)
-            fclose(f);
+        memcpy(out + (lo - addr), img_file(f, rel) + (lo - f->start), hi - lo);
     }
 }
 

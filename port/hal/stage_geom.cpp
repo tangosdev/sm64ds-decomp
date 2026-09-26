@@ -26,7 +26,10 @@
 
      src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp
          if (ovl->kclFileId != 0) { f = LoadFile(ovl->kclFileId); ... }
-         LoadFile is SharedFilePtr, so the KCL is filtered.
+         LoadFile is the ROM's own since run linkfull lane S4FILE and reads
+         the KCL through the card, not through the filter: the card serves
+         this folder's collision out of its patched range instead (the claim
+         at the foot of this file), with the bytes this filter would serve.
 
      src/_ZN5Stage9LoadModelEv.cpp
          Model::LoadAndSetFile(self + 0x86c,
@@ -167,6 +170,11 @@ extern "C" void DecompressLZ16(void *src, void *dst);          /* hal/fs.cpp */
 
 extern "C" {
 extern u32 (*port_fs_mod_filter)(unsigned fileID, u8 **data, u32 size);
+/* hal/fs.cpp, run linkfull lane S4FILE: the ids a mod changes, for the card's
+   patched range. The ROM's own LoadFile reads the level's collision through
+   the card now, not through the filter above, so the collision swap is served
+   there too (see the claim function at the foot of this file). */
+extern void (*port_fs_mod_claims)(void (*claim)(unsigned fileID));
 }
 
 namespace {
@@ -207,6 +215,7 @@ int g_stages_scanned;
 
 u32 (*g_prev_filter)(unsigned fileID, u8 **data, u32 size);
 int g_chained;          /* a filter was already installed when we claimed it */
+void (*g_prev_claims)(void (*claim)(unsigned fileID));
 
 /* Every refusal goes through here, so they all read the same way and they all
    say what happens instead. */
@@ -1047,48 +1056,70 @@ void latch(void)
 
 /* ---- the filter --------------------------------------------------------- */
 
-u32 stage_geom_apply(unsigned fileID, u8 **data, u32 size)
+/* The stage and kind a catalog path names, or 0 when it is not a stage file:
+   data/stage/<stage>/<basename>.bmd|.kcl, exactly one level deep. */
+int stage_path_parse(const char *path, char *stage, int *kind_out)
 {
-    const char *path, *rest, *slash, *dot;
-    char stage[NAME_CAP];
+    const char *rest, *slash, *dot;
     size_t n;
     int kind = -1;
     unsigned i;
+
+    if (!path)
+        return 0;               /* an archive interior, or an id with no row */
+    if (strncmp(path, "data/stage/", 11) != 0)
+        return 0;
+    rest = path + 11;
+    slash = strchr(rest, '/');
+    if (!slash)
+        return 0;
+    n = (size_t)(slash - rest);
+    if (n == 0 || n >= NAME_CAP)
+        return 0;
+    if (strchr(slash + 1, '/'))
+        return 0;               /* deeper than one level: not a stage file */
+    dot = strrchr(slash + 1, '.');
+    if (!dot)
+        return 0;
+    for (i = 0; i < KIND_COUNT; ++i)
+        if (strcmp(dot, KIND_EXT[i]) == 0)
+            kind = (int)i;
+    if (kind < 0)
+        return 0;
+    memcpy(stage, rest, n);
+    stage[n] = '\0';
+    *kind_out = kind;
+    return 1;
+}
+
+/* The substitute for a stage file, or 0. */
+Sub *stage_sub_for(const char *stage, int kind)
+{
+    for (unsigned i = 0; i < g_nsub; ++i)
+        if (g_sub[i].kind == kind && strcmp(g_sub[i].stage, stage) == 0)
+            return &g_sub[i];
+    return 0;
+}
+
+u32 stage_geom_apply(unsigned fileID, u8 **data, u32 size)
+{
+    const char *path;
+    char stage[NAME_CAP];
+    int kind = -1;
 
     latch();
     if (g_state != 1)
         return size;
 
     path = port_fs_catalog_path(fileID);
-    if (!path)
-        return size;            /* an archive interior, or an id with no row */
-    if (strncmp(path, "data/stage/", 11) != 0)
+    if (!stage_path_parse(path, stage, &kind))
         return size;
-    rest = path + 11;
-    slash = strchr(rest, '/');
-    if (!slash)
-        return size;
-    n = (size_t)(slash - rest);
-    if (n == 0 || n >= NAME_CAP)
-        return size;
-    if (strchr(slash + 1, '/'))
-        return size;            /* deeper than one level: not a stage file */
-    dot = strrchr(slash + 1, '.');
-    if (!dot)
-        return size;
-    for (i = 0; i < KIND_COUNT; ++i)
-        if (strcmp(dot, KIND_EXT[i]) == 0)
-            kind = (int)i;
-    if (kind < 0)
-        return size;
-    memcpy(stage, rest, n);
-    stage[n] = '\0';
 
-    for (i = 0; i < g_nsub; ++i) {
-        Sub *s = &g_sub[i];
+    {
+        Sub *s = stage_sub_for(stage, kind);
         u8 *copy;
-        if (s->kind != kind || strcmp(s->stage, stage) != 0)
-            continue;
+        if (!s)
+            return size;
         /* A COPY, not the latched image. The fs cache takes ownership of
            whatever this returns in *data and is free to free it; the latched
            image has to survive for the next load of the same level. */
@@ -1118,7 +1149,6 @@ u32 stage_geom_apply(unsigned fileID, u8 **data, u32 size)
         fflush(stderr);
         return s->len;
     }
-    return size;
 }
 
 u32 geom_filter(unsigned fileID, u8 **data, u32 size)
@@ -1127,6 +1157,29 @@ u32 geom_filter(unsigned fileID, u8 **data, u32 size)
     if (g_prev_filter)
         size = g_prev_filter(fileID, data, size);
     return size;
+}
+
+/* THE CLAIM (run linkfull, lane S4FILE). Every catalog id this folder has a
+   substitute for, so the card's patched range serves it: the ROM's own
+   LoadFile reads the level's KCL through the card since that lane, and the
+   bytes it gets there are the ones geom_filter above would serve (hal/fs.cpp
+   runs the whole chain for each claimed id). The model is claimed as well,
+   because it is the same folder's and "every file this mod changes" is the
+   question the card asks. The latch runs here if nothing has run it yet, so
+   a refused folder claims nothing, exactly as it serves nothing. */
+void geom_claims(void (*claim)(unsigned fileID))
+{
+    latch();
+    if (g_state == 1)
+        for (unsigned id = 0; id < CATALOG_SCAN_MAX; ++id) {
+            char stage[NAME_CAP];
+            int kind = -1;
+            if (stage_path_parse(port_fs_catalog_path(id), stage, &kind) &&
+                stage_sub_for(stage, kind))
+                claim(id);
+        }
+    if (g_prev_claims)
+        g_prev_claims(claim);
 }
 
 /* Runs AFTER every ordinary dynamic initializer, hal/fs_mods.cpp's included,
@@ -1138,6 +1191,8 @@ void __cdecl geom_install(void)
     g_prev_filter = port_fs_mod_filter;
     g_chained = g_prev_filter != 0;
     port_fs_mod_filter = geom_filter;
+    g_prev_claims = port_fs_mod_claims;
+    port_fs_mod_claims = geom_claims;
 }
 
 } /* namespace */

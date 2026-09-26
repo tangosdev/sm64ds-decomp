@@ -23666,6 +23666,42 @@ foreach(_tasmc3 walk_window walk_window_hires smoke_player smoke_actor
         "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN6Memory16operator_delete2EPv.cpp")
 endforeach()
 
+# ===========================================================================
+# W31 S4FILE (run linkfull wave 31, lane S4FILE): THE FILE LOADER, PART A
+# ===========================================================================
+# The game's own LoadFile, func_0201817c and the func_0201818c they share, with
+# the archive-member lookup behind it (func_020186c0, func_0204ede8), in place
+# of hal/level_boot.cpp's host LoadFile (a SharedFilePtr load plus a per-handle
+# table, both retired) and hal/fs.cpp's host func_0201817c. Loose files read
+# through FS off the card; hal/fs_names.cpp's image keeps a file's bytes after
+# the first block that touches it and serves mod files out of a patched range.
+#
+# All three hosting targets compile hal/level_boot.cpp, where the host LoadFile
+# was, so all three take the slice. hal/fs.cpp is compiled ONCE for them
+# (port_slice_shared), so its host func_0201817c retires behind
+# SM64DS_LOADFILE_ROM on that whole name list, the SM64DS_LOADAT_ROM shape
+# above; the smoke_* harnesses keep it.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_s4file.txt" SLICE_W31_S4FILE_LINES)
+set(SLICE_W31_S4FILE_SOURCES "")
+foreach(line IN LISTS SLICE_W31_S4FILE_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W31_S4FILE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+set(S4FILE_READER_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0201817c.c")
+if(NOT S4FILE_READER_SRC IN_LIST SLICE_W31_S4FILE_SOURCES)
+    message(FATAL_ERROR "port/slice_w31_s4file.txt does not list "
+            "src/func_0201817c.c, the reader hal/fs.cpp's copy retires for")
+endif()
+foreach(_ts4file walk_window walk_window_hires smoke_player)
+    target_sources(${_ts4file} PRIVATE ${SLICE_W31_S4FILE_SOURCES})
+endforeach()
+set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/fs.cpp" APPEND PROPERTY
+    COMPILE_DEFINITIONS
+    "$<$<IN_LIST:$<TARGET_PROPERTY:NAME>,port_slice_shared;walk_window;walk_window_hires;smoke_player>:SM64DS_LOADFILE_ROM=1>")
+
 # XREL1 (run linkfull): EVERY OVERLAY MOUNT DEPENDS ON THE CONFIG IT READS.
 #
 # tools/ovdata.py builds each mount out of its overlay's config/arm9/overlays/
