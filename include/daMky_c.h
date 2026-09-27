@@ -96,7 +96,7 @@ struct daMky_c : dActor_c {
     u8  mActionTimer;       /* 0x3c6 -- EnterState10 arms 0x1e; DecIfAbove0_Byte */
     u8  unk_3c7;            /* 0x3c7 -- this TU switches on it; not padding */
     u8  mHasSpawnedCap;     /* 0x3c8 */
-    u8  pad_3c9;
+    u8  mPlayerWasOwnCharacter; /* 0x3c9 -- Behavior case 0: Player mCharacter == param1 */
     u8  mAnimIdx;           /* 0x3ca -- 02111a00 indexes data_ov030_02115bc8 */
     u8  unk_3cb;            /* 0x3cb */
 

@@ -1286,9 +1286,9 @@ int daMky_c::func_ov030_021136b0()
                 Player *p = (Player *)*(char **)((char *)this + 0x3a8);
                 int t = (p->mCharacter == p->param1);
                 t = (t != 0);
-                this->pad_3c9 = t;
+                this->mPlayerWasOwnCharacter = t;
             }
-            if (this->pad_3c9 == 0) {
+            if (this->mPlayerWasOwnCharacter == 0) {
                 Player *p = (Player *)*(char **)((char *)this + 0x3a8);
                 p->mHasNoCap = 1;
             } else {
@@ -1309,7 +1309,7 @@ int daMky_c::func_ov030_021136b0()
                 this->mCapUniqueID = ((u32 *)spawned)[1];
             }
         } else {
-            if (this->pad_3c9 != 0)
+            if (this->mPlayerWasOwnCharacter != 0)
                 func_02012790(0xa);
         }
         {
@@ -1382,7 +1382,7 @@ int daMky_c::func_ov030_021136b0()
         int f1 = (int)((this->mFlags & 0x100) != 0);
         if (f1 == 0) {
             if (this->mHasSpawnedCap != 0) {
-                if (this->pad_3c9 == 0) {
+                if (this->mPlayerWasOwnCharacter == 0) {
                     Player *p = (Player *)*(char **)((char *)this + 0x3a8);
                     p->SetNewHatCharacter(p->mCharacter, 0, 0);
                 }
@@ -1690,7 +1690,7 @@ int daMky_c::EnterState0()
     return 1;
 }
 
-// @symbol func_ov030_02114134
+// @symbol _ZN7daMky_c19func_ov030_02114134Ev
 typedef void (daMky_c::*PMF)();
 void daMky_c::func_ov030_02114134()
 {
