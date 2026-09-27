@@ -117,6 +117,33 @@ struct daMky_c : dActor_c {
     s32  EnterState9();        /* 0x02112560 -- PMF record 8 of 22 */
     s32  EnterState10();       /* 0x021123a4 -- PMF record 6 of 22 */
 
+    /* The func_ov030_* methods. r0 is this Ukiki. The address is the
+     * name: the cartridge does not spell these. */
+    void func_ov030_02111734();
+    void func_ov030_02111890();
+    void func_ov030_02111908();
+    int func_ov030_02111a00();
+    int func_ov030_02111b20();
+    int func_ov030_02111bc4();
+    int func_ov030_02111dd0();
+    int func_ov030_02111ea4();
+    void func_ov030_02111f6c(dBgCh_Actr* w);
+    void func_ov030_02112094();
+    int func_ov030_021122b0();
+    int func_ov030_02112400();
+    int func_ov030_02112578();
+    int func_ov030_02112a84();
+    int func_ov030_02112da0();
+    int func_ov030_02113094();
+    int func_ov030_02113324();
+    int func_ov030_021136b0();
+    int func_ov030_02113b38();
+    int func_ov030_02113d20();
+    int func_ov030_02113ff0();
+    void func_ov030_02114134();
+    void func_ov030_02114170();
+    void func_ov030_021141a8(int idx);
+
     virtual ~daMky_c();            /* slots 16 (D1), 17 (D0) */
 
     virtual s32  InitResources();         /* slot  0 */

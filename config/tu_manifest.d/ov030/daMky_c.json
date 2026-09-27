@@ -40,77 +40,77 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov030_02111734",
+      "symbol": "_ZN7daMky_c19func_ov030_02111734Ev",
       "address": "0x02111734",
       "size": "0x0000015c",
       "legacy_source": "src/func_ov030_02111734.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov030_02111890",
+      "symbol": "_ZN7daMky_c19func_ov030_02111890Ev",
       "address": "0x02111890",
       "size": "0x00000078",
       "legacy_source": "src/func_ov030_02111890.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov030_02111908",
+      "symbol": "_ZN7daMky_c19func_ov030_02111908Ev",
       "address": "0x02111908",
       "size": "0x000000f8",
       "legacy_source": "src/func_ov030_02111908.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov030_02111a00",
+      "symbol": "_ZN7daMky_c19func_ov030_02111a00Ev",
       "address": "0x02111a00",
       "size": "0x00000120",
       "legacy_source": "src/func_ov030_02111a00.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov030_02111b20",
+      "symbol": "_ZN7daMky_c19func_ov030_02111b20Ev",
       "address": "0x02111b20",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov030_02111b20.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov030_02111bc4",
+      "symbol": "_ZN7daMky_c19func_ov030_02111bc4Ev",
       "address": "0x02111bc4",
       "size": "0x0000020c",
       "legacy_source": "src/func_ov030_02111bc4.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov030_02111dd0",
+      "symbol": "_ZN7daMky_c19func_ov030_02111dd0Ev",
       "address": "0x02111dd0",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov030_02111dd0.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov030_02111ea4",
+      "symbol": "_ZN7daMky_c19func_ov030_02111ea4Ev",
       "address": "0x02111ea4",
       "size": "0x000000c8",
       "legacy_source": "src/func_ov030_02111ea4.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov030_02111f6c",
+      "symbol": "_ZN7daMky_c19func_ov030_02111f6cEP10dBgCh_Actr",
       "address": "0x02111f6c",
       "size": "0x00000128",
       "legacy_source": "src/func_ov030_02111f6c.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov030_02112094",
+      "symbol": "_ZN7daMky_c19func_ov030_02112094Ev",
       "address": "0x02112094",
       "size": "0x0000021c",
       "legacy_source": "src/func_ov030_02112094.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov030_021122b0",
+      "symbol": "_ZN7daMky_c19func_ov030_021122b0Ev",
       "address": "0x021122b0",
       "size": "0x000000f4",
       "legacy_source": "src/func_ov030_021122b0.cpp",
@@ -124,7 +124,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "func_ov030_02112400",
+      "symbol": "_ZN7daMky_c19func_ov030_02112400Ev",
       "address": "0x02112400",
       "size": "0x00000160",
       "legacy_source": "src/func_ov030_02112400.cpp",
@@ -138,7 +138,7 @@
       "ordinal": 16
     },
     {
-      "symbol": "func_ov030_02112578",
+      "symbol": "_ZN7daMky_c19func_ov030_02112578Ev",
       "address": "0x02112578",
       "size": "0x0000049c",
       "legacy_source": "src/func_ov030_02112578.c",
@@ -152,7 +152,7 @@
       "ordinal": 18
     },
     {
-      "symbol": "func_ov030_02112a84",
+      "symbol": "_ZN7daMky_c19func_ov030_02112a84Ev",
       "address": "0x02112a84",
       "size": "0x00000190",
       "legacy_source": "src/func_ov030_02112a84.c",
@@ -166,7 +166,7 @@
       "ordinal": 20
     },
     {
-      "symbol": "func_ov030_02112da0",
+      "symbol": "_ZN7daMky_c19func_ov030_02112da0Ev",
       "address": "0x02112da0",
       "size": "0x00000258",
       "legacy_source": "src/func_ov030_02112da0.c",
@@ -180,7 +180,7 @@
       "ordinal": 22
     },
     {
-      "symbol": "func_ov030_02113094",
+      "symbol": "_ZN7daMky_c19func_ov030_02113094Ev",
       "address": "0x02113094",
       "size": "0x00000240",
       "legacy_source": "src/func_ov030_02113094.c",
@@ -194,7 +194,7 @@
       "ordinal": 24
     },
     {
-      "symbol": "func_ov030_02113324",
+      "symbol": "_ZN7daMky_c19func_ov030_02113324Ev",
       "address": "0x02113324",
       "size": "0x000002e8",
       "legacy_source": "src/func_ov030_02113324.cpp",
@@ -208,7 +208,7 @@
       "ordinal": 26
     },
     {
-      "symbol": "func_ov030_021136b0",
+      "symbol": "_ZN7daMky_c19func_ov030_021136b0Ev",
       "address": "0x021136b0",
       "size": "0x000003d0",
       "legacy_source": "src/func_ov030_021136b0.c",
@@ -222,7 +222,7 @@
       "ordinal": 28
     },
     {
-      "symbol": "func_ov030_02113b38",
+      "symbol": "_ZN7daMky_c19func_ov030_02113b38Ev",
       "address": "0x02113b38",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov030_02113b38.cpp",
@@ -236,7 +236,7 @@
       "ordinal": 30
     },
     {
-      "symbol": "func_ov030_02113d20",
+      "symbol": "_ZN7daMky_c19func_ov030_02113d20Ev",
       "address": "0x02113d20",
       "size": "0x000002b8",
       "legacy_source": "src/func_ov030_02113d20.c",
@@ -250,7 +250,7 @@
       "ordinal": 32
     },
     {
-      "symbol": "func_ov030_02113ff0",
+      "symbol": "_ZN7daMky_c19func_ov030_02113ff0Ev",
       "address": "0x02113ff0",
       "size": "0x00000134",
       "legacy_source": "src/func_ov030_02113ff0.cpp",
@@ -264,21 +264,21 @@
       "ordinal": 34
     },
     {
-      "symbol": "func_ov030_02114134",
+      "symbol": "_ZN7daMky_c19func_ov030_02114134Ev",
       "address": "0x02114134",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov030_02114134.cpp",
       "ordinal": 35
     },
     {
-      "symbol": "func_ov030_02114170",
+      "symbol": "_ZN7daMky_c19func_ov030_02114170Ev",
       "address": "0x02114170",
       "size": "0x00000038",
       "legacy_source": "src/func_ov030_02114170.cpp",
       "ordinal": 36
     },
     {
-      "symbol": "func_ov030_021141a8",
+      "symbol": "_ZN7daMky_c19func_ov030_021141a8Ei",
       "address": "0x021141a8",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov030_021141a8.c",
@@ -538,7 +538,7 @@
       "reason": "Vague-linkage Vector3 destructor. Vector3 carries a user-declared ~Vector3() (include/types.h) and this TU odr-uses several as function locals -- three in func_ov030_02111734 alone. One row however many objects: the emitted symbol is the single vague copy. arm9 owns the kept copy at 0x020072c0, four bytes of bx lr."
     },
     {
-      "symbol": "_ZN21Bundle$808daMky_c_cppD1Ev",
+      "symbol": "_ZN7daMky_c21Bundle$805daMky_c_cppD1Ev",
       "disposition": "deadstrip",
       "reason": "The implicit destructor of the file-local `struct Bundle` that func_ov030_02112094 declares in its own body -- it holds a Vector3_16 and a Vector3, so the aggregate gets a destructor of its own, and mwccarm names it after the file. The name is file-scoped by construction and exists nowhere in the cartridge, so it is genuinely homeless: a plain deadstrip, not a duplicate of anything. The $724 in the name is a POSITION-DEPENDENT uniquifier, not a stable identity, and not a line number either: this row read _ZN21Bundle$701daMky_c_cppD1Ev until stage 3b added the file-scope declaration region and converted eleven members, at which point the same struct came back as $724 -- and a later 25-line comment edit above it moved nothing. The struct itself is declared inside func_ov030_02112094's body and has not moved in the source at all. Including Player.h, SurfaceInfo.h and dBgCh_Lin.h ahead of it moved the uniquifier from $743 to $808. Any future edit to this TU may renumber it, and the promotion then refuses with `unlicensed function ... has no compiler_only_output policy` until this row is updated. Re-read the symbol from verify's output rather than assuming it held."
     }
@@ -555,11 +555,11 @@
       "requested": [
         "_ZN7daMky_cD2Ev",
         "_ZN7Vector3D1Ev",
-        "_ZN21Bundle$808daMky_c_cppD1Ev"
+        "_ZN7daMky_c21Bundle$805daMky_c_cppD1Ev"
       ],
       "deadstripped": [
-        "_ZN21Bundle$808daMky_c_cppD1Ev",
         "_ZN7Vector3D1Ev",
+        "_ZN7daMky_c21Bundle$805daMky_c_cppD1Ev",
         "_ZN7daMky_cD2Ev"
       ],
       "droppedSections": [
