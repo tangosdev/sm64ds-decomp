@@ -303,13 +303,12 @@ int func_ov002_020af218(char* c, int range){
 // @symbol func_ov002_020af248
 extern "C" {
 int func_ov002_020af248(char* c, int n){
-  extern int _ZN8dActor_c24KillAndTrackInDeathTableEv(void*);
   int v = ((da1up_c*)c)->unk_38c;
   if(v < n) return 0;
   if(v < n + 0x28){
     *(unsigned char*)(c+0x38f) = (v & 1) != 0;
   } else {
-    _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
+    ((da1up_c*)c)->KillAndTrackInDeathTable();
     return 1;
   }
   return 0;

@@ -1,9 +1,9 @@
-#ifndef FIREBALL_H
-#define FIREBALL_H
+#ifndef DAFPKNBALL_C_H
+#define DAFPKNBALL_C_H
 
 #include "types.h"
 
-/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN8FireballD1Ev`
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN12daFPknBall_cD1Ev`
  * stores this vtable, destroys its members in reverse declaration order, then
  * calls `dEnemyBase_c::~dEnemyBase_c`. Everything this header used to restate below 0x110
  * belongs to that chain and is inherited now.
@@ -33,7 +33,7 @@
 #include "TextureTransformer.h"
 #include "dBgCh_Actr.h"
 
-struct Fireball : dEnemyBase_c {
+struct daFPknBall_c : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     ShadowModel                  mShadowModel;          /* 0x300 */
@@ -49,7 +49,7 @@ struct Fireball : dEnemyBase_c {
     s32                          unk_374;               /* 0x374 */
 
     /* --- vtable --- */
-    virtual ~Fireball();
+    virtual ~daFPknBall_c();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
 
@@ -60,7 +60,7 @@ struct Fireball : dEnemyBase_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char Fireball_size_must_be_0x378[sizeof(Fireball) == 0x378 ? 1 : -1];
+typedef char daFPknBall_c_size_must_be_0x378[sizeof(daFPknBall_c) == 0x378 ? 1 : -1];
 #endif
 
-#endif /* FIREBALL_H */
+#endif /* DAFPKNBALL_C_H */

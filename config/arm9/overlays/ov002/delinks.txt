@@ -3015,41 +3015,9 @@ src/_ZThn80_N8daDemo_c10anmModel_cD1Ev.cpp:
     complete
     .text start:0x020f8848 end:0x020f8858
 
-src/_ZN8FireballD1Ev.cpp:
+src/actors/daFPknBall_c.cpp:
     complete
-    .text start:0x020f8858 end:0x020f8898
-
-src/_ZN8FireballD0Ev.cpp:
-    complete
-    .text start:0x020f8898 end:0x020f88ec
-
-src/func_ov002_020f88ec.c:
-    complete
-    .text start:0x020f88ec end:0x020f897c
-
-src/func_ov002_020f897c.c:
-    complete
-    .text start:0x020f897c end:0x020f8b24
-
-src/func_ov002_020f8b24.c:
-    complete
-    .text start:0x020f8b24 end:0x020f8c8c
-
-src/_ZN8Fireball6RenderEv.cpp:
-    complete
-    .text start:0x020f8c8c end:0x020f8c94
-
-src/_ZN8Fireball8BehaviorEv.cpp:
-    complete
-    .text start:0x020f8c94 end:0x020f9204
-
-src/_ZN8Fireball13InitResourcesEv.cpp:
-    complete
-    .text start:0x020f9204 end:0x020f92e4
-
-src/_ZN8Fireball13OnYoshiTryEatEv.cpp:
-    complete
-    .text start:0x020f92e4 end:0x020f9304
+    .text start:0x020f8858 end:0x020f9304
 
 src/d_a_f_pkn_ball.c:
     complete

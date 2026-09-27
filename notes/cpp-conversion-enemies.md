@@ -41,7 +41,7 @@ written the way the original was.
 | `_ZN11dCapEnemy_cD0Ev` | [ov002](../config/arm9/overlays/ov002/symbols.txt) 0x020aedf4 0x4c | 2 sub-object dtors, base chain |
 | `_ZN15daObjMarioCap_cD0Ev` | [ov002](../config/arm9/overlays/ov002/symbols.txt) 0x020b6f68 0x64 | 5 sub-object dtors, base chain |
 | `_ZN8Goomboss13InitResourcesEv` | [ov074](../config/arm9/overlays/ov074/symbols.txt) 0x02121e98 0x404 | name mangling; header decl added |
-| `_ZN8Fireball8BehaviorEv` | [ov002](../config/arm9/overlays/ov002/symbols.txt) 0x020f8c94 0x570 | name mangling |
+| `_ZN12daFPknBall_c8BehaviorEv` | [ov002](../config/arm9/overlays/ov002/symbols.txt) 0x020f8c94 0x570 | name mangling |
 
 Every one passed `tools/match.py` (byte comparison *and* relocation destination)
 under 2004/b56 and then `rombuild.py -j16`: **106/106 exact** after each commit. The

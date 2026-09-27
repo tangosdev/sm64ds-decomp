@@ -22,7 +22,7 @@ functions and RTTI labels `CutsceneObject` and `daDemo_c`. [Overlay 2](../config
 - [ov002](../config/arm9/overlays/ov002/symbols.txt):`59`, `0x020f1bc4..0x020f1f70`, `MugenBgm`;
 - [ov002](../config/arm9/overlays/ov002/symbols.txt):`61`, `0x020f8838..0x020f8858`, the two `daDemo_c::anmModel_c`
   `this`-adjusting destructor thunks;
-- [ov002](../config/arm9/overlays/ov002/symbols.txt):`62`, `0x020f8858..0x020f934c`, `Fireball`.
+- [ov002](../config/arm9/overlays/ov002/symbols.txt):`62`, `0x020f8858..0x020f934c`, `daFPknBall_c`.
 
 The initializer creates 34 eight-byte resource objects (5 model, 14 animation,
 15 texture-sequence objects), registers 34 twelve-byte destructor records, and

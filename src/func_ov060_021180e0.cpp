@@ -1,11 +1,12 @@
 //cpp
+#include "fBase_c.h"
+
 extern "C" {
 void* _ZN8dActor_c10FindWithIDEj(unsigned int);
-int _ZN7fBase_c18MarkForDestructionEv(void*);
 void func_ov060_021180e0(char* c){
   char* a;
   a=(char*)_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c+0x320));
-  if(a==0){ _ZN7fBase_c18MarkForDestructionEv(c); return; }
+  if(a==0){ ((fBase_c*)c)->MarkForDestruction(); return; }
   if(*(unsigned char*)(c+0x32b)!=0 && *(int*)(a+0x40c)==0xd){
     if((*(int*)(a+0x418)&0x10000)!=0) *(unsigned char*)(c+0x328)=2;
   }

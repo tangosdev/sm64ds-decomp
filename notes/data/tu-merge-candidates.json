@@ -17460,21 +17460,21 @@
    "start": "0x20f8858",
    "end": "0x20f934c",
    "classes": [
-    "Fireball"
+    "daFPknBall_c"
    ],
    "n_functions_map": 11,
    "n_files": 11,
    "files": [
     "src/func_ov002_020ad660.cpp",
-    "src/_ZN8FireballD1Ev.cpp",
-    "src/_ZN8FireballD0Ev.cpp",
+    "src/_ZN12daFPknBall_cD1Ev.cpp",
+    "src/_ZN12daFPknBall_cD0Ev.cpp",
     "src/func_ov002_020f88ec.c",
     "src/func_ov002_020f897c.c",
     "src/func_ov002_020f8b24.c",
-    "src/_ZN8Fireball6RenderEv.cpp",
-    "src/_ZN8Fireball8BehaviorEv.cpp",
-    "src/_ZN8Fireball13InitResourcesEv.cpp",
-    "src/_ZN8Fireball13OnYoshiTryEatEv.cpp",
+    "src/_ZN12daFPknBall_c6RenderEv.cpp",
+    "src/_ZN12daFPknBall_c8BehaviorEv.cpp",
+    "src/_ZN12daFPknBall_c13InitResourcesEv.cpp",
+    "src/_ZN12daFPknBall_c13OnYoshiTryEatEv.cpp",
     "src/d_a_f_pkn_ball.c"
    ],
    "ext_mix": {

@@ -1,4 +1,4 @@
-extern int _ZN7fBase_c18MarkForDestructionEv(void*);
+extern void _ZN7fBase_c18MarkForDestructionEv(void*);
 void func_ov002_020b1a60(void* c) {
   {
     unsigned short* n = (unsigned short*)(((int)c + 0x3a8));

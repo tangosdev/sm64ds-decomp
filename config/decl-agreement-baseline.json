@@ -4702,10 +4702,6 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/_ZN8Fireball8BehaviorEv.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/actors/daShark_c.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
@@ -4903,6 +4899,10 @@
       "src/actors/daWater_Tatumaki_c.cpp": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *"
+      ],
+      "src/actors/daFPknBall_c.cpp": [
+        "param:#1 const void *",
+        "param:#2 const void *"
       ]
     },
     "Vec3_HorzDist": {
@@ -5907,9 +5907,6 @@
       "src/_ZN6Player15St_Balloon_MainEv.cpp": [
         "param:#1 int &"
       ],
-      "src/_ZN8Fireball8BehaviorEv.cpp": [
-        "return:int"
-      ],
       "src/actors/daKrb_c.cpp": [
         "return:int"
       ],
@@ -6040,12 +6037,12 @@
       ],
       "src/actors/daMenbo_c.cpp": [
         "param:#1 int &"
+      ],
+      "src/actors/daFPknBall_c.cpp": [
+        "return:int"
       ]
     },
     "_Z14ApproachLinearRsss": {
-      "src/_ZN8Fireball8BehaviorEv.cpp": [
-        "return:int"
-      ],
       "src/actors/Scuttlebug.cpp": [
         "param:#1 short &"
       ],
@@ -6169,6 +6166,9 @@
         "return:int"
       ],
       "src/game/actors/d_a_btn.cpp": [
+        "return:int"
+      ],
+      "src/actors/daFPknBall_c.cpp": [
         "return:int"
       ]
     },
@@ -6414,10 +6414,6 @@
         "param:#2 void *",
         "param:#5 void *",
         "param:#6 void *"
-      ],
-      "src/_ZN8Fireball13InitResourcesEv.cpp": [
-        "param:#2 void *",
-        "param:#5 void *"
       ],
       "src/_ZN8Goomboss13InitResourcesEv.cpp": [
         "param:#2 void *",
@@ -6700,6 +6696,10 @@
         "param:#6 void *"
       ],
       "src/actors/daSnowman_c.cpp": [
+        "param:#2 void *",
+        "param:#5 void *"
+      ],
+      "src/actors/daFPknBall_c.cpp": [
         "param:#2 void *",
         "param:#5 void *"
       ]
@@ -10960,9 +10960,6 @@
         "param:#2 void *",
         "return:int"
       ],
-      "src/_ZN8Fireball8BehaviorEv.cpp": [
-        "param:#2 const void *"
-      ],
       "src/actors/Scuttlebug.cpp": [
         "param:#2 const void *"
       ],
@@ -11008,6 +11005,9 @@
       ],
       "src/func_ov100_02141fb0.cpp": [
         "param:#2 void *"
+      ],
+      "src/actors/daFPknBall_c.cpp": [
+        "param:#2 const void *"
       ]
     },
     "_ZN5Sound9PlayBank3EjRK7Vector3": {
@@ -11744,10 +11744,10 @@
       "include/decl_Player.h": [
         "return:void"
       ],
-      "src/_ZN8Fireball8BehaviorEv.cpp": [
+      "src/func_ov060_02116740.cpp": [
         "return:void"
       ],
-      "src/func_ov060_02116740.cpp": [
+      "src/actors/daFPknBall_c.cpp": [
         "return:void"
       ]
     },
@@ -13057,10 +13057,6 @@
         "param:#6 const void *",
         "return:unsigned int"
       ],
-      "src/func_ov002_020f8b24.c": [
-        "param:#6 const void *",
-        "return:void *"
-      ],
       "src/func_ov006_020c8f20.cpp": [
         "param:#6 const Vector3_16f *",
         "return:System *"
@@ -13173,6 +13169,10 @@
         "param:#6 int",
         "param:#7 int",
         "return:void *"
+      ],
+      "src/actors/daFPknBall_c.cpp": [
+        "return:void *",
+        "param:#6 const void *"
       ]
     },
     "_ZN8Particle6System9NewRippleE5Fix12IiES2_S2_": {
@@ -13200,9 +13200,6 @@
         "return:void"
       ],
       "src/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp": [
-        "return:void"
-      ],
-      "src/_ZN8Fireball8BehaviorEv.cpp": [
         "return:void"
       ],
       "src/_ZN8SignPost4KillEv.cpp": [
@@ -13430,6 +13427,9 @@
       "src/game/actors/d_a_btn.cpp": [
         "return:void"
       ],
+      "src/actors/daFPknBall_c.cpp": [
+        "return:void"
+      ],
       "src/actors/daObjRotateUpdownLift_c.cpp": [
         "return:System *"
       ]
@@ -13585,9 +13585,6 @@
       ],
       "src/_ZN17BowserPuzzlePiece8BehaviorEv.cpp": [
         "return:char *"
-      ],
-      "src/_ZN8Fireball8BehaviorEv.cpp": [
-        "return:void *"
       ],
       "src/_ZN9PowerStar13InitResourcesEv.cpp": [
         "return:char *"
@@ -13818,6 +13815,9 @@
         "return:void *"
       ],
       "src/actors/daWater_Ring_c.cpp": [
+        "return:void *"
+      ],
+      "src/actors/daFPknBall_c.cpp": [
         "return:void *"
       ]
     },
@@ -14083,9 +14083,6 @@
         "param:#2 char *",
         "return:char *"
       ],
-      "src/func_ov002_020f897c.c": [
-        "return:void *"
-      ],
       "src/func_ov060_02113740.c": [
         "return:void *"
       ],
@@ -14115,6 +14112,9 @@
       "src/unnamed/ov063/func_ov063_02119c18.c": [
         "return:void *"
       ],
+      "src/actors/daFPknBall_c.cpp": [
+        "return:void *"
+      ],
       "src/actors/daObjRotateUpdownLift_c.cpp": [
         "return:void *"
       ]
@@ -14130,7 +14130,7 @@
       ]
     },
     "_ZN8dActor_c18ClosestWithActorIDEj": {
-      "src/func_ov002_020f897c.c": [
+      "src/actors/daFPknBall_c.cpp": [
         "return:void *"
       ]
     },
@@ -14213,7 +14213,7 @@
       ]
     },
     "_ZN8dActor_c19DisappearPoofDustAtERK7Vector3": {
-      "src/_ZN8Fireball8BehaviorEv.cpp": [
+      "src/actors/daFPknBall_c.cpp": [
         "param:#2 const Vec3F *"
       ]
     },
@@ -14289,9 +14289,6 @@
         "return:int"
       ],
       "src/func_ov002_020ed7f8.c": [
-        "param:#6 unsigned int"
-      ],
-      "src/func_ov002_020f8b24.c": [
         "param:#6 unsigned int"
       ],
       "src/actors/daGrock_c.cpp": [
@@ -14394,6 +14391,9 @@
         "param:#6 unsigned int"
       ],
       "src/actors/daSnowman_c.cpp": [
+        "param:#6 unsigned int"
+      ],
+      "src/actors/daFPknBall_c.cpp": [
         "param:#6 unsigned int"
       ]
     },
@@ -14589,18 +14589,6 @@
         "param:#5 int",
         "param:#6 int"
       ],
-      "src/func_ov002_020f88ec.c": [
-        "param:#3 void *",
-        "param:#5 int",
-        "param:#6 int",
-        "return:char *"
-      ],
-      "src/func_ov002_020f897c.c": [
-        "param:#3 const Vector3 *",
-        "param:#5 int",
-        "param:#6 int",
-        "return:void *"
-      ],
       "src/func_ov009_0211145c.c": [
         "param:#3 void *",
         "param:#5 int",
@@ -14758,6 +14746,12 @@
       ],
       "src/actors/daMoray_c.cpp": [
         "return:void *",
+        "param:#5 int",
+        "param:#6 int"
+      ],
+      "src/actors/daFPknBall_c.cpp": [
+        "return:char *",
+        "param:#3 void *",
         "param:#5 int",
         "param:#6 int"
       ],
@@ -16550,9 +16544,6 @@
       ]
     },
     "dBgCh_Actr_UpdateContinuous_Veneer": {
-      "src/_ZN8Fireball8BehaviorEv.cpp": [
-        "arity:1"
-      ],
       "src/_ZN9daDossy_c8BehaviorEv.cpp": [
         "arity:1"
       ],
@@ -16655,6 +16646,9 @@
         "arity:1"
       ],
       "src/actors/daObjRc_Tikuwa_c.cpp": [
+        "arity:1"
+      ],
+      "src/actors/daFPknBall_c.cpp": [
         "arity:1"
       ]
     },
@@ -28684,9 +28678,6 @@
       "src/_ZN6Player16St_BurnFire_MainEv.cpp": [
         "param:#2 const void *"
       ],
-      "src/_ZN8Fireball8BehaviorEv.cpp": [
-        "param:#2 const void *"
-      ],
       "src/_ZN8Goomboss8BehaviorEv.cpp": [
         "param:#1 int"
       ],
@@ -28922,6 +28913,9 @@
       ],
       "src/actors/daMoray_c.cpp": [
         "param:#1 int"
+      ],
+      "src/actors/daFPknBall_c.cpp": [
+        "param:#2 const void *"
       ],
       "src/actors/daObjRotateUpdownLift_c.cpp": [
         "param:#1 int"

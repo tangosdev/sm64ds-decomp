@@ -25,9 +25,6 @@
  *   12-word struct. A class Matrix4x3 makes the copy in func_ov077_021251d0
  *   call an assignment operator the cartridge does not.
  *
- *   The two dBgCh_Gnd views (0x54 bytes in rg54, 0x50 at file scope) are
- *   stack-frame sizes; each function's frame depends on its own.
- *
  *   Base, the 30-slot vtable stand-in, is how the OnAimedAtWithEgg calls
  *   reach slot 29 from C-linkage code.
  */
@@ -76,29 +73,9 @@ int daTgz_c::OnAimedAtWithEgg()
 // @symbol func_ov077_02124c28
 #include "common.h"
 
-struct dActor_c;
+#include "dBgCh_Gnd.h"
 
-namespace rg54 {  /* this function's 0x54-byte dBgCh_Gnd view is stack-frame-load-bearing;
-                     func_ov077_02124d08 uses a 0x50-byte view of the same name -- the
-                     namespace keeps both, binding the same C symbols */
-struct dBgCh_Gnd {
-    char pad0[0x14];
-    int m14[12];
-    int m44;
-    char pad48[0xc];
-};
-extern "C" void *_ZN9dBgCh_GndC1Ev(dBgCh_Gnd*);
-/* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
-extern "C" void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd*, const Vector3&, dActor_c*);
-/* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
-extern "C" void _ZN5dBgCh19StartDetectingWaterEv(void*);
-/* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
-extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd*);
 extern "C" int SurfaceInfo_TestFlag0x20(int* p);
-extern "C" void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd*);
-/* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
-extern "C" void _ZN5dBgCh18StopDetectingWaterEv(void*);
-}
 
 /* Until one is found, probe for a water surface below the Spiny and cache
  * its height at +0x3dc. Returns how far above it the Spiny is (0 while
@@ -107,10 +84,8 @@ extern "C" int func_ov077_02124c28(void* vc)
 {
     char* c = (char*)vc;
     if (*(int*)(c + 0x3dc) == 0) {
-        rg54::dBgCh_Gnd rg;
+        dBgCh_Gnd rg;
         Vector3 pos;
-        int r;
-        rg54::_ZN9dBgCh_GndC1Ev(&rg);
         {
             int y = *(int*)(c + 0x60);
             int z = *(int*)(c + 0x64);
@@ -120,19 +95,13 @@ extern "C" int func_ov077_02124c28(void* vc)
             pos.y = y2;
             pos.z = z;
         }
-        rg54::_ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, pos, (dActor_c*)c);
-        rg54::_ZN5dBgCh19StartDetectingWaterEv(&rg);
-        if (rg54::_ZN9dBgCh_Gnd10DetectClsnEv(&rg) == 0) goto fail;
-        r = rg54::SurfaceInfo_TestFlag0x20(rg.m14);
-        if (r != 0) {
-            *(int*)(c + 0x3dc) = rg.m44;
-        } else {
-        fail:
-            rg54::_ZN9dBgCh_GndD1Ev(&rg);
+        rg.SetObjAndPos(pos, (dActor_c*)c);
+        rg.StartDetectingWater();
+        if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20((int*)&rg.surface) != 0)
+            *(int*)(c + 0x3dc) = rg.clsnY;
+        else
             return 0;
-        }
-        rg54::_ZN5dBgCh18StopDetectingWaterEv(&rg);
-        rg54::_ZN9dBgCh_GndD1Ev(&rg);
+        rg.StopDetectingWater();
     }
     return *(int*)(c + 0x60) - *(int*)(c + 0x3dc);
 }
@@ -152,34 +121,23 @@ typedef short s16;
 
 struct dBgCh_Actr;
 struct dActor_c;
-struct dBgCh_Gnd { char buf0[0x14]; int floor[12]; char buf1[0x50-0x14-0x30]; };
-struct dBgPi;
 struct SurfaceInfo;
 
 extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void* p);
-extern "C" void *_ZN9dBgCh_GndC1Ev(dBgCh_Gnd* self);
-/* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
-extern "C" void _ZN5dBgCh19StartDetectingToxicEv(void* self);
-/* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
-extern "C" void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* self, const Vector3& v, void* actor);
-/* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
-extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* self);
 extern "C" void func_02012694(unsigned int id, const Vector3* pos);
-extern "C" void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);
 extern "C" void* _ZNK10dBgCh_Actr14GetFloorResultEv(void* self);
 extern "C" int _ZN4cstd4fdivEii(int a, int b);
 extern "C" s32 func_02010844(void* unused, Vector3* v, s16 angle);
 
 extern "C" void func_ov077_02124d08(void* va, void* vw) {
     char* a = (char*)va; char* w = (char*)vw;
-    dBgCh_Gnd rc;
     Vector3 pos;
     Vector3 normal;
     Vector3 wallnormal;
 
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(w);
     if (((dBgCh_Actr *)w)->IsOnGround()) {
-        _ZN9dBgCh_GndC1Ev(&rc);
+        dBgCh_Gnd rc;
         {
             int actorY = *(int*)(a+0x60);
             int pz = *(int*)(a+0x64);
@@ -188,14 +146,13 @@ extern "C" void func_ov077_02124d08(void* va, void* vw) {
             pos.y = py;
             pos.z = pz;
         }
-        _ZN5dBgCh19StartDetectingToxicEv(&rc);
-        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rc, pos, a);
-        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc)) {
-            if (func_02037e20(rc.floor) != 0 && *(int*)(a+0x60) < rc.floor[(0x44-0x14)/4]) {
+        rc.StartDetectingToxic();
+        rc.SetObjAndPos(pos, (dActor_c*)a);
+        if (rc.DetectClsn()) {
+            if (func_02037e20((int*)&rc.surface) != 0 && *(int*)(a+0x60) < rc.clsnY) {
                 ((dActor_c *)a)->PoofDust();
                 func_02012694(0xc4, (const Vector3*)(a+0x74));
                 ((fBase_c *)a)->MarkForDestruction();
-                _ZN9dBgCh_GndD1Ev(&rc);
                 return;
             }
             {
@@ -211,7 +168,6 @@ extern "C" void func_ov077_02124d08(void* va, void* vw) {
             *(s16*)(a+0x8c) = func_02010844(a, &normal, *(s16*)(a+0x8e));
             *(s16*)(a+0x90) = func_02010844(a, &normal, (s16)(*(s16*)(a+0x8e) - 0x4000));
         }
-        _ZN9dBgCh_GndD1Ev(&rc);
     }
     if (((dBgCh_Actr *)w)->IsOnWall()) {
         void* wr = _ZNK10dBgCh_Actr13GetWallResultEv(w);
