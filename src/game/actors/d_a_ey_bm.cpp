@@ -88,7 +88,7 @@ extern "C" DaEyBmSpawnInfo g_profile_EYEKUN_BEAM = {
     0x01000000
 };
 
-
+// @symbol _ZN8daEyBm_c13InitResourcesEv
 extern "C" {
 /* Known by-value Fix12 compiler walls: these exact ABI imports preserve the
  * retail register calling convention while the owned objects remain typed. */
@@ -124,7 +124,7 @@ int daEyBm_c::InitResources()
     return 1;
 }
 
-
+// @symbol _ZN8daEyBm_c8BehaviorEv
 extern "C" {
 extern void Matrix4x3_FromRotationY(Matrix4x3 *matrix, s16 angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *matrix, s16 angle);
@@ -176,7 +176,7 @@ int daEyBm_c::Behavior()
     return 1;
 }
 
-
+// @symbol _ZN8daEyBm_c6RenderEv
 extern "C" u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
     u32 handle, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
     const Vector3_16f *rotation);
@@ -191,18 +191,17 @@ int daEyBm_c::Render()
             mParticle2, 0x47, mPosX, mPosY, mPosZ, 0);
     return 1;
 }
-
-
+// @symbol _ZN8daEyBm_c16OnPendingDestroyEv
 void daEyBm_c::OnPendingDestroy()
 {
 }
 
-
+// @symbol _ZN8daEyBm_c16CleanupResourcesEv
 int daEyBm_c::CleanupResources()
 {
     return 1;
 }
-
+// @symbol _ZN8daEyBm_c12UpdateShadowEv
 extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     dActor_c *actor, ShadowModel *shadow, Matrix4x3 *matrix,
     Fix12i radius, Fix12i depth, u32 opacity);
@@ -227,6 +226,7 @@ void daEyBm_c::UpdateShadow()
 /*
  * 0x02121ba4, size 0xc8. Player::Hurt retains the measured by-value Fix12
  * ABI seam; Player itself and all accessed fields are the real type. */
+ // @symbol _ZN8daEyBm_c10HurtPlayerEv
 extern "C" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
     Player *player, const DaEyBmVector3Words *position, u32 source,
     Fix12i amount, u32 a, u32 b, u32 c);
@@ -262,6 +262,7 @@ void daEyBm_c::HurtPlayer()
  * 0x02121b50, size 0x54. The coined mangling uses a reference; a pointer
  * would generate identical ARM. The retail caller passes the owned
  * collision subobject explicitly in r1. */
+ // @symbol _ZN8daEyBm_c15UpdateCollisionER10dBgCh_Actr
 extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *collision);
 
 void daEyBm_c::UpdateCollision(dBgCh_Actr &collision)
@@ -274,6 +275,7 @@ void daEyBm_c::UpdateCollision(dBgCh_Actr &collision)
 /*
  * 0x02121b08, size 0x48. Particle::System::New is not yet shared-header
  * declared, so this exact typed ABI import remains local. */
+ // @symbol _ZN8daEyBm_c18SpawnDestroyEffectEv
 extern "C" u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
     const Vector3_16f *rotation, Particle::Callback *callback);
@@ -286,7 +288,7 @@ void daEyBm_c::SpawnDestroyEffect()
     MarkForDestruction();
 }
 
-
+// @symbol _ZN8daEyBm_c13OnYoshiTryEatEv
 int daEyBm_c::OnYoshiTryEat()
 {
     return 4;
