@@ -51,7 +51,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short angZ);
 extern int data_020a0e68[];
 
 /* mesh collision */
-extern int dBgCh_Actr_UpdateContinuous_Veneer(void *c);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(void *c);
 extern void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *c);
 extern void *_ZNK10dBgCh_Actr13GetWallResultEv(void *c);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(

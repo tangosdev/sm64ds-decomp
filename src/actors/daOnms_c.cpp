@@ -38,7 +38,7 @@ extern SharedFilePtr data_ov092_02132548;
 
 extern "C" {
 int func_ov002_020de328(void *player);
-void dBgCh_Actr_UpdateContinuous_Veneer(void);
+void dBgCh_Actr_UpdateContinuous_Veneer(void *self);
 void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *v, int f);
 void func_02012694(unsigned int id, const Vector3 *v);
@@ -118,7 +118,7 @@ int daOnms_c::StateBounce()
     }
 
     UpdatePos(0);
-    ((void (*)(void *))dBgCh_Actr_UpdateContinuous_Veneer)(&mWithMeshClsn);
+    dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     {
         int g = mWithMeshClsn.IsOnGround();
         if (g == 0) return g;
@@ -166,7 +166,7 @@ void daOnms_c::StateKnocked()
     saved.x = mPosX;
     saved.y = mPosY;
     saved.z = mPosZ;
-    ((void (*)(void *))dBgCh_Actr_UpdateContinuous_Veneer)(&mWithMeshClsn);
+    dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 
     if (mWithMeshClsn.IsOnWall() != 0) {
         TriplePoofDust();

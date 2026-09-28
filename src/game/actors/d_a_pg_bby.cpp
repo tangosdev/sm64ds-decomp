@@ -71,7 +71,7 @@ void _Z14ApproachLinearRsss(short *cur, short tgt, short step);
 
 /* The dBgCh_Actr::UpdateContinuous call goes through a veneer, and the two
    result getters are not declared by dBgCh_Actr.h. */
-int dBgCh_Actr_UpdateContinuous_Veneer(void *c);
+void dBgCh_Actr_UpdateContinuous_Veneer(void *c);
 void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *c);
 void *_ZNK10dBgCh_Actr13GetWallResultEv(void *c);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *surface, Vector3 &out);
