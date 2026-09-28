@@ -1,32 +1,55 @@
 //cpp
-/* Production translation unit for ov071/daEykn_c.
- * 23 function(s), .text 0x02120668..0x021219cc. Mr. I (EYEKUN / EYEKUN_BOSS):
- * actor 0x106 is the small one, 0x107 the big one that holds a star.
+/* Enemy - Mr. I (EYEKUN / EYEKUN_BOSS). Not Eyerok.
+ * The small eye and the big one that holds a star turn in place and shoot
+ * EYEKUN_BEAM. Circling one of them until the yaw count passes kDizzyYaw
+ * makes it die. Wait, attack, and die are the three rows of
+ * data_ov071_02123088.
  *
- * NAME: _ZTS8daEykn_c is "8daEykn_c" at ov071 0x02122cd8; _ZTI at 0x02122ce4
- * reads [__si_class_type_info, that string, _ZTI8dActor_c]. The vtable address
- * point _ZTV8daEykn_c is 0x02122d30 (offset-to-top 0 at 0x02122d28, typeinfo
- * 0x02122ce4 at 0x02122d2c). The tree previously called the class MrI (coined;
- * ov071/symbols.txt only aliased _ZTV3MrI to the same vtable address).
- *
- * The out-of-line destructor is the key function, so this TU emits _ZTV/_ZTI/
- * _ZTS (externalized to those addresses; the TU is text-only). Under
- * `#pragma defer_codegen off` it comes out D1 (0x02120668), D0 (0x021206b0),
- * then a D2 the cartridge has no home for (manifest: deadstrip); the same
- * pragma lays .text down in source order, so this file is ROM-ascending.
- *
- * Behavior runs one of three states out of the { init, exec } table at
- * data_ov071_02123088, which __sinit_ov071_021228c8 fills:
- *
- *   0 wait    init St_Wait_Init    exec St_Wait_Main
- *   1 attack  init St_Attack_Init  exec St_Attack_Main
- *   2 die     init St_Die_Init     exec St_Die_Main
- *
- * The state names are descriptive; the table has no name strings.
- *
- * InitResources (0x02121734) closes the unit. The two classInit factories
- * after it (src/d_a_eykn_eyekun_boss.c, src/d_a_eykn_eyekun.c) are separate
- * units and are not absorbed.
+ * deslop leftovers:
+ * - TextureSequence::SetFile as a member (Fix12<int> by value):
+ *   ResetEyeAnim 0x58->0x64, UpdateEyeAnim 0x168->0x178.
+ *   ModelAnim::SetAnim as a member: St_Die_Init 0xd4->0xe0.
+ *   InitResources' SetAnim and SetFile together 0x298->0x2ac.
+ * - DropShadowRadHeight as a member: UpdateModelTransform 0xa0->0xb0.
+ * - dCcAcPos_c::Init as a member, both call sites: InitResources
+ *   0x298->0x2b8.
+ * - Particle::System::New, NewUnkCallback818, and NewSimple, and
+ *   Player::Hurt, stay scalar externs. System does not declare the
+ *   three New* calls, and Player.h does not declare Hurt. A Fix12<int>
+ *   parameter is the caller cost measured on SetFile, SetAnim,
+ *   DropShadow, and Init above.
+ * - func_0201267c is the bank-3 veneer around Sound::Play. Sound::Play(3,
+ *   id, Vector3 &) is +4 a call: St_Die_Init 0xd4->0xd8, St_Attack_Main
+ *   0x314->0x318, St_Die_Main (two calls) 0x3dc->0x3e4. &mCamSpacePosX
+ *   does not bind to Vector3 &.
+ * - func_0200f760 clears cylinder +0x18 bit 2 unless the closest player's
+ *   byte at +0x6fb is set. No recovered name.
+ * - UpdateCircling `if (actorID == kBigMrI)` is 0x154->0x148. The (int)
+ *   flag stays. CheckAttacks' egg test and its player test are each
+ *   0x17c->0x170; both at once 0x17c->0x164.
+ * - St_Wait_Main `mAngleY += mHorzSpeed` is 0x44->0x48.
+ * - St_Attack_Main `(u16)mAngleX/Y/Z` is 44 words off at 0x314. The
+ *   unsigned-short pun is what loads them with ldrh.
+ * - CheckAttacks as one || is 6 words off at 0x17c. The gotos stay.
+ * - St_Die_Main's blue-coin position as plain field copies is 13 words
+ *   off at 0x3dc.
+ * - St_Attack_Main's three aim points written off mTarget are
+ *   0x314->0x32c. LookForPlayer's eye point written off the player is
+ *   27 words off at 0xcc.
+ * - (Vector3 *)&mPosX: dActor_c has no Pos().
+ * - The shadow matrix is twelve s32s. Assigning a Matrix4x3 in
+ *   InitResources is 0x298->0x2b4.
+ * - data_ov071_02123038 / 02123040 are BTP files 0x2f8 / 0x2fb,
+ *   02123048 is BCA 0x2f9, 02123050 is BMD 0x2f7. 021226a4 points at
+ *   the two BTPs and 021226a0 at the BCA. data_ov002_0210da38 is the
+ *   shared blue-coin model. SharedFilePtr has no fields, so the loaded
+ *   word is read as LoadedFile.
+ * - data_0209f2f8 is the current sublevel. 0x2e maps through
+ *   SUBLEVEL_LEVEL_TABLE to course 19, which is not BBH's entrance
+ *   (that is sublevel 0xc). On 0x2e the kill is entered in the death
+ *   table; otherwise the eye is only marked for destruction.
+ * - g_profile_EYEKUN, g_profile_EYEKUN_BOSS, and the two classInit
+ *   factories stay outside this TU.
  */
 
 #pragma defer_codegen off
@@ -65,20 +88,15 @@ s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 void LoadBlueCoinModel(void *actor);
 void UnloadBlueCoinModel(void *actor);
-void func_0201267c(u32 id, void *pos);
+void func_0201267c(u32 id, void *pos); /* Sound::Play(3, id, pos) */
 void func_0200f760(void *actor, void *clsn);
 
-/* Each of these takes a Fix12<int> by value and stays declared by its
-   mangled name. Only DropShadowRadHeight was measured as a member call: it
-   gives 0xb0 bytes against the cartridge's 0xa0 in UpdateModelTransform. */
+/* Fix12<int> by value. Scalar parameters: the member form size-DIFFs.
+   See the leftover list. */
 int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 uniqueID, u32 effectID, int x, int y, int z, const void *dir, void *callback);
 u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
     u32 uniqueID, u32 effectID, int x, int y, int z, const Vector3_16f *dir);
-/* FindEgg keeps its mangled name: declared through dActor_c instead, the
-   tree's plurality spelling of it flips and src/actors/Scuttlebug.cpp's
-   declaration reads as a contradiction. */
-void *_ZN8dActor_c7FindEggER5dCc_c(void *actor, void *clsn);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 effectID, int x, int y, int z);
 int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
     Player *player, void *source, u32 damage, int speed, u8 a, u8 b, u8 c);
@@ -93,17 +111,36 @@ void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
 
 /* Sine and cosine pairs indexed by (angle >> 4) * 2. */
 extern s16 data_02082214[];
-extern s8 data_0209f2f8;
+extern s8 data_0209f2f8; /* current sublevel id */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern daEykn_c::State data_ov071_02123088[];
-extern LoadedFile data_ov071_02123038;
-extern LoadedFile data_ov071_02123040;
-extern LoadedFile data_ov071_02123048;
-extern SharedFilePtr data_ov002_0210da38;
-extern SharedFilePtr data_ov071_02123050;
-extern SharedFilePtr *data_ov071_021226a4[2];
-extern SharedFilePtr *data_ov071_021226a0;
+extern LoadedFile data_ov071_02123038; /* BTP 0x2f8 */
+extern LoadedFile data_ov071_02123040; /* BTP 0x2fb */
+extern LoadedFile data_ov071_02123048; /* BCA 0x2f9 */
+extern SharedFilePtr data_ov002_0210da38; /* blue-coin model */
+extern SharedFilePtr data_ov071_02123050; /* BMD 0x2f7 */
+extern SharedFilePtr *data_ov071_021226a4[2]; /* the two BTPs */
+extern SharedFilePtr *data_ov071_021226a0; /* the BCA */
 }
+
+/* Debug-table actor ids, and the thresholds this file compares against. */
+enum {
+    kYoshiEgg = 9,
+    kPlayer = 0xbf,
+    kSmallMrI = 0x106,
+    kBigMrI = 0x107,
+    kMrIBeam = 0x108,
+    kBlueCoin = 0x122,
+    kCircleFrames = 0x2e,
+    kDizzyYaw = 0x17fff,
+    kBigTurnLimit = 0x190,
+    kSmallTurnLimit = 0x320,
+    kWatchFov = 0x190,
+    kWatchRange = 0x5dc000,
+    kKillHit = 0x40000,
+    kDeathPtcl0 = 0x13a,
+    kDeathPtcl1 = 0x13b
+};
 
 // @symbol _ZN8daEykn_cD1Ev
 // @symbol _ZN8daEykn_cD0Ev
@@ -123,18 +160,16 @@ int daEykn_c::UpdateCircling()
     int limit;
 
     delta = (short)(mAngleY - mTurnRefAngleY);
-    /* The int flags here and below are load-bearing: testing actorID
-       directly compiles differently. */
-    isBig = (int)(actorID == 0x107);
+    isBig = (int)(actorID == kBigMrI);
     if (isBig != 0)
-        limit = 0x190;
+        limit = kBigTurnLimit;
     else
-        limit = 0x320;
+        limit = kSmallTurnLimit;
 
     if (delta > limit) {
         if (mCircleAngle >= 0) {
             mCircleAngle += delta;
-            mCircleTimer = 0x2e;
+            mCircleTimer = kCircleFrames;
         } else {
             if (mCircleTimer == 0)
                 mCircleAngle = 0;
@@ -143,7 +178,7 @@ int daEykn_c::UpdateCircling()
     } else if (delta < -limit) {
         if (mCircleAngle <= 0) {
             mCircleAngle += delta;
-            mCircleTimer = 0x2e;
+            mCircleTimer = kCircleFrames;
         } else {
             if (mCircleTimer == 0)
                 mCircleAngle = 0;
@@ -155,9 +190,9 @@ int daEykn_c::UpdateCircling()
         DecIfAbove0_Byte(&mCircleTimer);
     }
 
-    if (mCircleAngle > 0x17fff || mCircleAngle < -0x17fff) {
+    if (mCircleAngle > kDizzyYaw || mCircleAngle < -kDizzyYaw) {
         mCircleAngle = 0;
-        mCircleTimer = 0x2e;
+        mCircleTimer = kCircleFrames;
         return 1;
     }
     return 0;
@@ -240,9 +275,9 @@ void daEykn_c::LookForPlayer()
     Player *p = ClosestNonVanishPlayer();
     if (p == 0)
         return;
-    if (Vec3_Dist((Vector3 *)&mPosX, (Vector3 *)&p->mPosX) > 0x5dc000)
+    if (Vec3_Dist((Vector3 *)&mPosX, (Vector3 *)&p->mPosX) > kWatchRange)
         return;
-    if (AngleDiff(Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&p->mPosX), mAngleY) > 0x190)
+    if (AngleDiff(Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&p->mPosX), mAngleY) > kWatchFov)
         return;
     int px = p->mPosX;
     int pz = p->mPosZ;
@@ -254,7 +289,7 @@ void daEykn_c::LookForPlayer()
     if (DetectRaycastClsn(v, *(Vector3 *)&mPosX, false) != 0)
         return;
     mTarget = p;
-    mCircleTimer = 0x2e;
+    mCircleTimer = kCircleFrames;
     SetState(1);
 }
 
@@ -262,13 +297,13 @@ void daEykn_c::LookForPlayer()
 // @symbol _ZN8daEykn_c12CheckAttacksEv
 /* An egg (actor 9) or an explosion kills the eye. A player (actor 0xbf)
  * touching it is hurt, unless hit flag 0x40000 is set, which kills the eye
- * with particle systems 0x13a and 0x13b attached. */
+ * with particle systems kDeathPtcl0 and kDeathPtcl1 attached. */
 void daEykn_c::CheckAttacks()
 {
-    /* The gotos are load-bearing: the same test as one || condition misses. */
-    dActor_c *egg = (dActor_c *)_ZN8dActor_c7FindEggER5dCc_c(this, &mdCcAcPos_c);
+    /* One || is 6 words off. */
+    dActor_c *egg = FindEgg(mdCcAcPos_c);
     if (egg != 0) {
-        int isEgg9 = (int)(egg->actorID == 9);
+        int isEgg9 = (int)(egg->actorID == kYoshiEgg);
         if (isEgg9) goto playSound;
     }
 
@@ -286,12 +321,12 @@ idCheck:
     dActor_c *f = FindWithID(mdCcAcPos_c.otherOwner);
     if (f == 0) return;
 
-    int isPlayer = (int)(f->actorID == 0xbf);
+    int isPlayer = (int)(f->actorID == kPlayer);
     if (!isPlayer) return;
 
-    if (mdCcAcPos_c.hitFlags & 0x40000) {
-        mParticleID0 = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(mParticleID0, 0x13a, mPosX, mPosY, mPosZ, 0, 0);
-        mParticleID1 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(mParticleID1, 0x13b, mPosX, mPosY, mPosZ, 0);
+    if (mdCcAcPos_c.hitFlags & kKillHit) {
+        mParticleID0 = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(mParticleID0, kDeathPtcl0, mPosX, mPosY, mPosZ, 0, 0);
+        mParticleID1 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(mParticleID1, kDeathPtcl1, mPosX, mPosY, mPosZ, 0);
         SetState(2);
         return;
     }
@@ -339,9 +374,9 @@ int daEykn_c::St_Die_Main()
         Particle::System *p0;
         Particle::System *p1;
         mParticleID0 = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            id0, 0x13a, mPosX, mPosY, mPosZ, 0, 0);
+            id0, kDeathPtcl0, mPosX, mPosY, mPosZ, 0, 0);
         mParticleID1 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-            mParticleID1, 0x13b, mPosX, mPosY, mPosZ, 0);
+            mParticleID1, kDeathPtcl1, mPosX, mPosY, mPosZ, 0);
         p0 = Particle::System::FromUniqueID(mParticleID0);
         p1 = Particle::System::FromUniqueID(mParticleID1);
         if (p0 != 0) {
@@ -356,8 +391,7 @@ int daEykn_c::St_Die_Main()
     case 0: {
         s16 sinv = data_02082214[((int)mWobblePhase >> 4) * 2];
         mAngleX = (s16)((int)(((s64)mWobbleAmp * sinv + 0x800) >> 12));
-        /* Read back signed (ldrsh); a plain += misses. */
-        *(s16 *)&mWobblePhase = (s16)(*(s16 *)&mWobblePhase + 0xe000);
+        mWobblePhase = (u16)((s16)mWobblePhase + 0xe000);
         ApproachLinear(mWobbleAmp, 0, 0x1b);
         if (DecIfAbove0_Byte(&mSubTimer) == 0) {
             mSubState++;
@@ -382,11 +416,11 @@ int daEykn_c::St_Die_Main()
         mScaleY = scale;
         mScaleZ = scale;
         kind = actorID;
-        isSmall = (int)(kind == 0x106);
+        isSmall = (kind == kSmallMrI);
         if (isSmall != 0) {
             mdCcAcPos_c.radius = mScale * 0x55;
         } else {
-            int isBig = (int)(kind == 0x107);
+            int isBig = (kind == kBigMrI);
             if (isBig != 0) {
                 mdCcAcPos_c.radius = mScale * 0x55;
             }
@@ -395,9 +429,9 @@ int daEykn_c::St_Die_Main()
     }
     case 3: {
         unsigned short kind = actorID;
-        int isSmall = (int)(kind == 0x106);
+        int isSmall = (kind == kSmallMrI);
         if (isSmall != 0) {
-            /* This load order is the cartridge's; plain field copies miss. */
+            /* Plain field copies are 13 words off. */
             int yadj, zcopy, y, z, x;
             Vector3 pos;
             y = mPosY;
@@ -409,10 +443,10 @@ int daEykn_c::St_Die_Main()
             pos.x = x;
             pos.z = zcopy;
             pos.y = yadj;
-            Spawn(0x122, 2, pos, 0, mAreaId, -1);
+            Spawn(kBlueCoin, 2, pos, 0, mAreaId, -1);
             PoofDust();
         } else {
-            int isBig = (int)(kind == 0x107);
+            int isBig = (kind == kBigMrI);
             if (isBig != 0) {
                 unsigned char star = (unsigned char)(param1 & 0xf);
                 UntrackAndSpawnStar(mStarTrackID, star, *(Vector3 *)&mPosX, 4);
@@ -449,7 +483,7 @@ int daEykn_c::St_Die_Init()
     mModelAnim.speed = 0x2800;
     mModelAnim.currFrame = 0;
     mSubState = 0;
-    mSubTimer = 0x2e;
+    mSubTimer = kCircleFrames;
     mWobblePhase = 0;
     func_0201267c(0x119, &mCamSpacePosX);
     mFlags &= ~1;
@@ -462,8 +496,9 @@ int daEykn_c::St_Die_Init()
 // @symbol _ZN8daEykn_c14St_Attack_MainEv
 /* State 1 exec: turn toward the target, blink and fire a bullet (actor 0x108)
  * each time the blink reaches step 7, and fall back to waiting when the target
- * leaves range, vanishes or goes behind terrain. Each target vector is built
- * through locals; spelled straight off mTarget, the second or the third misses. */
+ * leaves range, vanishes or goes behind terrain. The three aim points
+ * are built through locals; written off mTarget the function grows
+ * 0x314->0x32c. */
 int daEykn_c::St_Attack_Main()
 {
     Vector3_16 rot;
@@ -533,7 +568,7 @@ int daEykn_c::St_Attack_Main()
             pos.z = pz;
 
             {
-                /* Read unsigned: the cartridge loads these with ldrh. */
+                /* ldrh. A (u16) cast is 44 words off. */
                 unsigned short rx = *(unsigned short *)&mAngleX;
                 unsigned short ry = *(unsigned short *)&mAngleY;
                 rot.y = ry;
@@ -552,14 +587,14 @@ int daEykn_c::St_Attack_Main()
 
             rot.x = Vec3_VertAngle(&pos, &target2);
 
-            isBig = (int)(actorID == 0x107);
+            isBig = (actorID == kBigMrI);
             if (isBig != 0)
                 param = 1;
             else
                 param = 0;
-            Spawn(0x108, param, pos, &rot, mAreaId, -1);
+            Spawn(kMrIBeam, param, pos, &rot, mAreaId, -1);
             func_0201267c(0x165, &mCamSpacePosX);
-            mCircleTimer = 0x2e;
+            mCircleTimer = kCircleFrames;
             unk_212 = 0xf0;
             mShotTimer = 0x53;
             mCircleAngle = 0;
@@ -586,7 +621,7 @@ int daEykn_c::St_Attack_Main()
 
     if (UpdateCircling() != 0) {
         SetState(2);
-    } else if (Vec3_Dist((Vector3 *)&mPosX, &target1) > 0x5dc000) {
+    } else if (Vec3_Dist((Vector3 *)&mPosX, &target1) > kWatchRange) {
         SetState(0);
     } else if (mTarget->mIsVanish != 0) {
         SetState(0);
@@ -718,8 +753,8 @@ s32 daEykn_c::InitResources()
     for (i = 0; i < 2; i++) {
         SharedFilePtr *seq = data_ov071_021226a4[i];
         TextureSequence::LoadFile(*seq);
-        BMD_File *bmd2 = *(BMD_File **)((char *)&data_ov071_02123050 + 4);
-        BTP_File *btp = *(BTP_File **)((char *)seq + 4);
+        BMD_File *bmd2 = (BMD_File *)((LoadedFile *)&data_ov071_02123050)->file;
+        BTP_File *btp = (BTP_File *)((LoadedFile *)seq)->file;
         TextureSequence::Prepare(*bmd2, *btp);
     }
 
@@ -729,7 +764,7 @@ s32 daEykn_c::InitResources()
         return 0;
 
     unsigned short kind = actorID;
-    int isSmall = (kind == 0x106);
+    int isSmall = (kind == kSmallMrI);
     if (isSmall) {
         Vector3 v;
         v.x = 0;
@@ -741,7 +776,7 @@ s32 daEykn_c::InitResources()
         mScaleZ = 0x1000;
         mScale = 0x1000;
     } else {
-        int isBig = (kind == 0x107);
+        int isBig = (kind == kBigMrI);
         if (isBig) {
             Vector3 v;
             v.x = 0;
@@ -770,7 +805,7 @@ s32 daEykn_c::InitResources()
 
     mTextureSequence.speed = 0x1000;
     mTarget = 0;
-    mCircleTimer = 0x2e;
+    mCircleTimer = kCircleFrames;
 
     *(MatrixWords *)mShadowMat = *(MatrixWords *)&IDENTITY_MATRIX4X3;
 

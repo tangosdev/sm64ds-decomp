@@ -20,20 +20,14 @@
  *   keep mangled (func_ov025_02111a84).
  * - Particle::System::NewSimple Fix12-by-value; Particle__System.h has no
  *   NewSimple -- keep mangled (func_ov025_02111a84).
- * - func_ov025_021119a4 / 021119f4 / 02111a84 ROM labels (no symbols.txt
- *   names) -- stay extern "C". (int)c + 0x39e / 0x39f integer-cast forms:
- *   named stores CSE.
+ * - func_ov025_021119a4 / 021119f4 / 02111a84: (int)c + 0x39e / 0x39f
+ *   integer-cast forms: named stores CSE.
  * - func_ov091_* shared daDsnBase leaf helpers; data_ov025_02113814 file-table
  *   handle.
  * - common.h first via daDkk_c.h -> dBgActor_c.h (Matrix4x3 flat s32 m[12]).
  * - Leaf operator new(unsigned long) until #2570.
  * - g_profile_DONKAKU stays overlay data (not this TU).
  * - ApproachLinear / func_0201267c stay mangled free functions.
- *
- * func_ov025_021119a4, func_ov025_021119f4 and func_ov025_02111a84 keep their
- * address-derived names: nothing in config/ or include/ spells them any other
- * way, so they stay C-linkage free functions here rather than becoming invented
- * members.
  *
  * Superseded one-function sources (ROM address order):
  *   [0] 0x021118c8  src/_ZN7daDkk_cD1Ev.cpp              (now the header's inline body)
@@ -162,9 +156,9 @@ int daDkk_c::Behavior()
     case 2: func_ov091_02132f04(c); break;
     case 3: func_ov091_02132e98(c); break;
     case 4: func_ov091_02132e64(c); break;
-    case 5: func_ov025_02111a84(c); break;
-    case 6: func_ov025_021119f4(c); break;
-    case 7: func_ov025_021119a4(c); break;
+    case 5: func_ov025_02111a84(); break;
+    case 6: func_ov025_021119f4(); break;
+    case 7: func_ov025_021119a4(); break;
     }
     UpdateModelPosAndRotY();
     func_ov091_02133098(c);
@@ -179,7 +173,7 @@ int daDkk_c::Behavior()
 /* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov025_02111a84
+// @symbol _ZN7daDkk_c19func_ov025_02111a84Ev
 /* mState 5, the fall. Integrates the drop, and on reaching the stored ground
  * height snaps to it, shakes the camera, spawns the impact particle and hands
  * over to state 6.
@@ -187,75 +181,72 @@ int daDkk_c::Behavior()
  * Offset soup kept: named member stores CSE (mVertSpeed/mVertAccel/mPosY/
  * unk_394/mState/unk_39e) and (int)c + 0x39f is the increment the cartridge
  * emits. Earthquake / NewSimple stay mangled (Fix12-by-value). */
-extern "C" void func_ov025_02111a84(char *c)
+void daDkk_c::func_ov025_02111a84()
 {
-    daDkk_c *self = (daDkk_c *)c;
     Vector3 v[2];
-    ((daDkk_c *)c)->UpdatePos(0);
-    if (*(int *)(c + 0xa8) >= 0)
-        *(int *)(c + 0x9c) = -0x4000;
+    UpdatePos(0);
+    if (*(int *)((char *)this + 0xa8) >= 0)
+        *(int *)((char *)this + 0x9c) = -0x4000;
     else
-        *(int *)(c + 0x9c) = -0x8000;
-    if (*(int *)(c + 0x60) > self->unk_394)
+        *(int *)((char *)this + 0x9c) = -0x8000;
+    if (*(int *)((char *)this + 0x60) > this->unk_394)
         return;
-    *(int *)(c + 0x60) = self->unk_394;
-    v[1].x = *(int *)(c + 0x5c);
-    v[1].y = *(int *)(c + 0x60);
-    v[1].z = *(int *)(c + 0x64);
-    _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(c, v[1], 0x7d0000);
-    self->unk_39e = 0x3c;
-    *(unsigned char *)(((int)c + 0x39f)) =
-        *(unsigned char *)(((int)c + 0x39f)) + 1;
-    self->mState = 6;
-    v[0].x = *(int *)(c + 0x5c);
-    v[0].y = *(int *)(c + 0x60);
-    v[0].z = *(int *)(c + 0x64);
+    *(int *)((char *)this + 0x60) = this->unk_394;
+    v[1].x = *(int *)((char *)this + 0x5c);
+    v[1].y = *(int *)((char *)this + 0x60);
+    v[1].z = *(int *)((char *)this + 0x64);
+    _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(this, v[1], 0x7d0000);
+    this->unk_39e = 0x3c;
+    *(unsigned char *)(((int)this + 0x39f)) =
+        *(unsigned char *)(((int)this + 0x39f)) + 1;
+    this->mState = 6;
+    v[0].x = *(int *)((char *)this + 0x5c);
+    v[0].y = *(int *)((char *)this + 0x60);
+    v[0].z = *(int *)((char *)this + 0x64);
     v[0].y = v[0].y + 0x3c000;
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x2e, v[0].x, v[0].y, v[0].z);
-    func_0201267c(0xc7, c + 0x74);
+    func_0201267c(0xc7, (char *)this + 0x74);
 }
 
 /* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov025_021119f4
+// @symbol _ZN7daDkk_c19func_ov025_021119f4Ev
 /* mState 6, the pause after landing. Counts 0x39e down; at zero it either
  * starts the next fall (state 5) or, on the fourth pass, turns to face the
  * opposite way (state 7).
  *
  * (int)c + 0x39e integer-cast form is the decrement the cartridge emits. */
-extern "C" void func_ov025_021119f4(char *c)
+void daDkk_c::func_ov025_021119f4()
 {
-    daDkk_c *self = (daDkk_c *)c;
-    *(u8 *)(((int)c + 0x39e)) =
-        *(u8 *)(((int)c + 0x39e)) - 1;
-    if (self->unk_39e != 0) return;
-    if (self->unk_39f != 4) {
-        self->mState = 5;
-        *(s32 *)(c + 0xa8) = 0x3c000;
-        func_0201267c(0xf4, c + 0x74);
+    *(u8 *)(((int)this + 0x39e)) =
+        *(u8 *)(((int)this + 0x39e)) - 1;
+    if (this->unk_39e != 0) return;
+    if (this->unk_39f != 4) {
+        this->mState = 5;
+        *(s32 *)((char *)this + 0xa8) = 0x3c000;
+        func_0201267c(0xf4, (char *)this + 0x74);
         return;
     }
-    self->mState = 7;
-    self->unk_39c = (s16)(*(s16 *)(c + 0x8e) + 0x8000);
+    this->mState = 7;
+    this->unk_39c = (s16)(*(s16 *)((char *)this + 0x8e) + 0x8000);
 }
 
 /* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov025_021119a4
+// @symbol _ZN7daDkk_c19func_ov025_021119a4Ev
 /* mState 7, the turn. Steps mAngleY toward the target angle at 0x39c; once
  * ApproachLinear reports it has arrived, copies it into 0x94, clears the pass
  * counter and goes back to state 6. */
-extern "C" int func_ov025_021119a4(char *c)
+int daDkk_c::func_ov025_021119a4()
 {
-    daDkk_c *self = (daDkk_c *)c;
-    int r = _Z14ApproachLinearRsss(*(short *)(c + 0x8e), self->unk_39c, 0x400);
+    int r = _Z14ApproachLinearRsss(*(short *)((char *)this + 0x8e), this->unk_39c, 0x400);
     if (r == 0) return r;
-    *(short *)(c + 0x94) = *(short *)(c + 0x8e);
-    self->mState = 6;
-    self->unk_39f = 0;
-    self->unk_39e = 0x28;
+    *(short *)((char *)this + 0x94) = *(short *)((char *)this + 0x8e);
+    this->mState = 6;
+    this->unk_39f = 0;
+    this->unk_39e = 0x28;
     return 0x28;
 }
 

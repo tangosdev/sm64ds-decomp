@@ -1,57 +1,40 @@
 //cpp
-/* daObjFallBlock_c -- the abstract falling-block base, ov098.
+/* Abstract falling block. Stood on, it shakes, then drops until mKillY,
+ * the ground sampled under it at init. Actor ids are the leaf profiles:
+ * FL_KUZURE 0x53 (ov022), KM2_KUZURE 0x8b (ov045). BK_DOWN_B and TH_DOWN_B
+ * share this body. No factory and no g_profile: slots 0 and 3 are pure,
+ * and the leaves construct the object.
  *
- * A block that shakes when stood on, then drops until it reaches mKillY (the
- * ground found under it at Init). A block may be linked to the POWER_STAR
- * whose +0x49d matches its param1 (func_ov098_0213a0e8).
+ * common.h stays first. ApplyModelXyz writes Model::mat4x3 as a flat
+ * s32 m[12]; math/Matrix.h's {Matrix3x3 r; Vector3 t;} is the other
+ * spelling of the same 0x30 bytes, and this TU needs the word stores.
  *
- * ov098 is mixed (CRATE / CANNON / WATER_BOMB / ARROW_SIGN). This class is
- * none of those: RTTI `_ZTS16daObjFallBlock_c` lives in ov015 at 0x0211488c,
- * the vtable lives here at 0x0213c5bc, and the four leaf profiles are
- * FALL_BLOCK_WF (ov015), FALL_BLOCK_LLL (ov022), FALL_BLOCK_BFS (ov045) and
- * FALL_BLOCK_BBH (ov063). ABSTRACT: slots 0 and 3 are pure, so there is no
- * classInit to fold. Leaves call daObjFallBlock_c_InitResources /
- * func_ov098_0213a2cc with this overlay's model/KCL/CLPS table, and own
- * classInit themselves (daObjBk_Fall_Block_c_classInit /
- * daObjFl_Fall_Block_c_classInit / daObjKm2_Fall_Block_c_classInit /
- * daObjTh_Fall_Block_c_classInit).
- *
- * DO NOT "TIDY" THESE -- each one is load-bearing:
- *
- *   common.h FIRST: func_ov098_0213a23c writes Model::mat4x3 (this+0xf0) as
- *   a rotation plus translation row. common.h's flat s32 m[12] keeps those
- *   stores as word writes; math/Matrix.h's nested {Matrix3x3 r; Vector3 t;}
- *   is the other 0x30-byte claim.
- *
- *   D0 below D1: the in-class inline destructor (the cartridge form for the
- *   four descendants) emits D1 then D0; the pair stays in its own shards.
- *
- *   daObjFallBlock_c_OnStoodOn keeps #pragma long_calls. The ROM veneer is
- *   the pooled `ldr ip,[pc,#8]; bx ip` absolute tail-call (size 0x14); a near
- *   `b` to RequestShake in this same TU is 0xc.
- *
- *   daObjFallBlock_c_RequestShake keeps a second, unused parameter: the
- *   veneer forwards two registers after dropping the collider, and a 1-arg
- *   callee drops `mov r1, r2`.
- *
- *   Behavior case 2 keeps `((int)this + 0x8c) & U64` / `+ 0x90` for mAngleX /
- *   mAngleZ: the named stores do not match. Case 1 keeps
- *   (long long)sinv * 0x19000; a plain int multiply changes the code size.
- *
- * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, see
- * notes/mwccarm-codegen.md 6az, unless noted):
- *   dBgActor_c::IsClsnInRange (Behavior); the header method form is refused
- *   by the bytes (include/dBgActor_c.h).
- *   Particle::System::NewSimple (Kill's three Fix12<int>); declaring the
- *   true types changes how the caller passes them.
- *   dBgW_KcMbg::SetFile (InitResources' scale 0x199); the header method
- *   homes the argument and changes the code size.
- *
- * Known limits:
- *   func_020393c4 is a 4-byte store into dBgW+0x1c (unk_1c); this TU stores
- *   daObjFallBlock_c_OnStoodOn there. Naming belongs with dBgW in arm9.
- *   No factory and no g_profile: the class is abstract, with
- *   InitResources / CleanupResources = 0; the leaves own their records.
+ * Leftover: func_ov098_0213a2cc is shared CleanupResources. Its body
+ *   disables mMeshCollider and Release()s the model and collision
+ *   SharedFilePtrs (descriptor slots 0 and 1). The four leaves import
+ *   that linker name, and the virtual slot stays pure, so it is not
+ *   renamed here.
+ * Leftover: dBgW_KcMbg::SetFile's definition takes an int scale (this
+ *   InitResources passes 0x199). The header method takes Fix12<int> by
+ *   value and changes the caller, so the call stays the mangled symbol.
+ * Leftover: dBgActor_c::IsClsnInRange's definition takes two ints
+ *   (Behavior passes 0, 0). There is no int method on the class.
+ * Leftover: Particle::System::NewSimple's definition takes three s32
+ *   positions (Kill). A Fix12<int> declaration changes the caller.
+ * Leftover: func_020393c4 is `p[7] = v`, the store of OnStoodOn into
+ *   dBgW::unk_1c. The ROM calls it; an inlined store would drop the bl.
+ *   Naming belongs on dBgW.
+ * Leftover: OnStoodOn keeps long_calls. The ROM tail is the pooled
+ *   absolute veneer (size 0x14); a near branch to RequestShake is 0xc.
+ * Leftover: RequestShake keeps the unused second parameter. The veneer
+ *   forwards it, and a 1-arg callee drops `mov r1, r2`.
+ * Leftover: Behavior case 2 keeps the masked address of mAngleX
+ *   (this+0x8c) and mAngleZ (this+0x90). Named stores change the size.
+ *   Case 1 keeps `(long long)sinv * 0x19000`.
+ * Leftover: Kill materialises `(actorID == KM2_KUZURE)` into an int
+ *   before the branch. Folding the test changes the compare.
+ * Leftover: the inline destructor emits D1 then D0; the ROM has D0
+ *   below D1, so the pair stays in its own shards.
  */
 
 #include "common.h"
@@ -59,8 +42,16 @@
 #include "Sound.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
+#include "PowerStar.h"
 
 #define U64 0xFFFFFFFFFFFFFFFFLL
+
+/* Profile actor ids (symbols/profile_reconstruction_registry.json). */
+enum {
+    ACTOR_FL_KUZURE = 0x53,
+    ACTOR_KM2_KUZURE = 0x8b,
+    ACTOR_STAR = 0xb2
+};
 
 struct CLPS_Block;
 
@@ -78,26 +69,32 @@ extern "C" {
 s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
-void func_ov098_0213a00c(daObjFallBlock_c *c);
+void daObjFallBlock_c_LinkGroup(daObjFallBlock_c *c);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, Fix12i x, Fix12i y, Fix12i z);
 void Matrix4x3_FromRotationXYZExt(void *, int, int, int);
 int DecIfAbove0_Byte(u8 *p);
 int DecIfAbove0_Short(u16 *p);
 int Vec3_HorzDist(void *a, void *b);
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-void func_ov098_0213a0a8(daObjFallBlock_c *c);
-void func_ov098_0213a0e8(daObjFallBlock_c *c);
-void func_ov098_0213a148(daObjFallBlock_c *c);
-void func_ov098_0213a23c(daObjFallBlock_c *c);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int radius, int yOffset);
+void daObjFallBlock_c_PollLinkedStar(daObjFallBlock_c *c);
+void daObjFallBlock_c_FindLinkedStar(daObjFallBlock_c *c);
+void daObjFallBlock_c_ResetMotion(daObjFallBlock_c *c);
+void daObjFallBlock_c_ApplyModelXyz(daObjFallBlock_c *c);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, const Matrix4x3 *mat, int scale, short angle, void *clps);
 void func_020393c4(int *p, int v);
 int daObjFallBlock_c_RequestShake(daObjFallBlock_c *block, void *unused);
 int daObjFallBlock_c_OnStoodOn(void *collider, daObjFallBlock_c *block, void *unused);
 int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *fp);
-extern s16 data_02082214[];
-extern signed char data_0209f2f8;
+extern s16 data_02082214[]; /* sine table */
+extern signed char data_0209f2f8; /* current level id */
 }
+
+/* Free definitions take ints. SetFile's header method takes Fix12<int>
+   by value; IsClsnInRange and NewSimple have no int method. */
+#define dBgW_KcMbg_SetFile _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block
+#define dBgActor_c_IsClsnInRange _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_
+#define Particle_System_NewSimple _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_
 
 // @symbol daObjFallBlock_c_OnStoodOn
 /* dBgW+0x1c callback veneer. Drops the collider and forwards the actor into
@@ -135,7 +132,7 @@ int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *f
     self->mModel.SetFile((BMD_File *)Model::LoadFile(*fp->model), 1, -1);
     self->UpdateModelPosAndRotY();
     self->UpdateClsnPosAndRot();
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    dBgW_KcMbg_SetFile(
         &self->mMeshCollider,
         dBgW_Kc::LoadFile(*fp->collision),
         &self->mClsnMat,
@@ -163,7 +160,7 @@ int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *f
         self->mRestPos.y = self->mPosY;
         self->mRestPos.z = self->mPosZ;
         self->mLinkedStarID = 0;
-        if (self->actorID != 0x53)
+        if (self->actorID != ACTOR_FL_KUZURE)
             on = 0;
         if (on != 0)
             self->mSuppressed = 1;
@@ -193,18 +190,18 @@ s32 daObjFallBlock_c::Behavior()
     u8 *st;
     void *pl;
 
-    is53 = (int)(actorID == 0x53);
+    is53 = (int)(actorID == ACTOR_FL_KUZURE);
     if (is53 != 0) {
         if (mSuppressed != 0) {
             if (mLinkedStarID == 0)
-                func_ov098_0213a0e8(this);
+                daObjFallBlock_c_FindLinkedStar(this);
             else
-                func_ov098_0213a0a8(this);
+                daObjFallBlock_c_PollLinkedStar(this);
             return 1;
         }
     }
 
-    func_ov098_0213a00c(this);
+    daObjFallBlock_c_LinkGroup(this);
     if (mRespawnDelay != 0) {
         if (DecIfAbove0_Byte(&mRespawnDelay) == 0) {
             if (mMeshCollider.IsEnabled() != 0)
@@ -213,7 +210,7 @@ s32 daObjFallBlock_c::Behavior()
         return 1;
     }
 
-    is53 = (int)(actorID == 0x53);
+    is53 = (int)(actorID == ACTOR_FL_KUZURE);
     if (is53 == 0) {
         if (mPrevInGroup == 0) {
             p = this;
@@ -232,7 +229,7 @@ s32 daObjFallBlock_c::Behavior()
                 while (1) {
                     if (q == 0)
                         break;
-                    func_ov098_0213a148(q);
+                    daObjFallBlock_c_ResetMotion(q);
                     q = q->mNextInGroup;
                 }
             }
@@ -316,7 +313,7 @@ s32 daObjFallBlock_c::Behavior()
         mPosX = mRestPos.x;
         mPosY = mRestPos.y;
         mPosZ = mRestPos.z;
-        is53 = (int)(actorID == 0x53);
+        is53 = (int)(actorID == ACTOR_FL_KUZURE);
         if (is53 == 0) {
             pl = ClosestPlayer();
             dist = Vec3_HorzDist(&mRestPos, (char *)pl + 0x5c);
@@ -335,9 +332,9 @@ s32 daObjFallBlock_c::Behavior()
         break;
     }
 
-    func_ov098_0213a23c(this);
+    daObjFallBlock_c_ApplyModelXyz(this);
     if (mState <= 1) {
-        if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0)
+        if (dBgActor_c_IsClsnInRange(this, 0, 0) != 0)
             UpdateClsnPosAndRot();
     }
     mShakeRequested = 0;
@@ -354,15 +351,15 @@ s32 daObjFallBlock_c::Render()
 }
 
 // @symbol func_ov098_0213a2cc
-/* Shared CleanupResources body for the four leaves. Keeps the C name because
-   they call it as a free function. */
+/* Shared CleanupResources. Linker name stays: the four leaves import it.
+   Slot 0 is the model SharedFilePtr, slot 1 the collision file. */
 extern "C" {
-int func_ov098_0213a2cc(daObjFallBlock_c *t, SharedFilePtr **f)
+int func_ov098_0213a2cc(daObjFallBlock_c *t, ResourceDescriptor *files)
 {
     if (t->mMeshCollider.IsEnabled())
         t->mMeshCollider.Disable();
-    f[0]->Release();
-    f[1]->Release();
+    files->model->Release();
+    files->collision->Release();
     return 1;
 }
 }
@@ -379,9 +376,11 @@ void daObjFallBlock_c::OnHitByMegaChar(Player &player)
     mStateTimer = 0x3c;
 }
 
-// @symbol func_ov098_0213a23c
+// @symbol daObjFallBlock_c_ApplyModelXyz
+/* Full XYZ model matrix. Translation is model space, position >> 3,
+   same row UpdateModelPosAndRotY writes for yaw alone. */
 extern "C" {
-void func_ov098_0213a23c(daObjFallBlock_c *t)
+void daObjFallBlock_c_ApplyModelXyz(daObjFallBlock_c *t)
 {
     Matrix4x3_FromRotationXYZExt(&t->mModel.mat4x3, t->mAngleX, t->mAngleY, t->mAngleZ);
     t->mModel.mat4x3.m[9] = t->mPosX >> 3;
@@ -417,11 +416,11 @@ void daObjFallBlock_c::Kill()
        instructions. The ROM materialises the comparison into a register first
        and then tests THAT: cmp/moveq #1/movne #0/cmp #0/movne, five. Writing
        the int is what asks for the second shape. */
-    int isFallBlockBfs = (actorID == 0x8b);
+    int isFallBlockBfs = (actorID == ACTOR_KM2_KUZURE);
     if (isFallBlockBfs) {
         id = 0x49;
     }
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(id, pos.x, pos.y, pos.z);
+    Particle_System_NewSimple(id, pos.x, pos.y, pos.z);
     dustPos.x = pos.x;
     dustPos.y = pos.y;
     dustPos.z = pos.z;
@@ -434,9 +433,11 @@ void daObjFallBlock_c::Kill()
     mReady = 0;
 }
 
-// @symbol func_ov098_0213a148
+// @symbol daObjFallBlock_c_ResetMotion
+/* Group re-arm. Clears the shake and the fall, and gives case 0 four
+   frames before it will accept another stand. */
 extern "C" {
-void func_ov098_0213a148(daObjFallBlock_c *c)
+void daObjFallBlock_c_ResetMotion(daObjFallBlock_c *c)
 {
     c->mState = 0;
     c->mAngleX = 0;
@@ -450,38 +451,45 @@ void func_ov098_0213a148(daObjFallBlock_c *c)
 }
 }
 
-// @symbol func_ov098_0213a0e8
+// @symbol daObjFallBlock_c_FindLinkedStar
+/* STAR whose unk_49d equals param1's low nibble. AddStarMarker passes
+   that byte to IsStarCollectedInCurLevel, so it is the star index. */
 extern "C" {
-void func_ov098_0213a0e8(daObjFallBlock_c *self)
+void daObjFallBlock_c_FindLinkedStar(daObjFallBlock_c *self)
 {
     dActor_c *star;
-    star = dActor_c::FindWithActorID(0xb2, 0); /* POWER_STAR */
+    star = dActor_c::FindWithActorID(ACTOR_STAR, 0);
     while (star) {
-        /* POWER_STAR +0x49d */
-        if (*(unsigned char *)((char *)star + 0x49d) == (self->param1 & 0xf)) {
+        if (static_cast<PowerStar *>(star)->unk_49d == (self->param1 & 0xf)) {
             self->mLinkedStarID = (s32)star->uniqueID;
         }
-        star = dActor_c::FindWithActorID(0xb2, star);
+        star = dActor_c::FindWithActorID(ACTOR_STAR, star);
     }
 }
 }
 
-// @symbol func_ov098_0213a0a8
+// @symbol daObjFallBlock_c_PollLinkedStar
+/* unk_440 is PowerStar's state index into data_ov002_021109d8.
+   Slot 4 is func_ov002_020ea420. Reaching it clears mSuppressed so
+   this FL_KUZURE block renders and runs. A missing star destroys it. */
 extern "C" {
-void func_ov098_0213a0a8(daObjFallBlock_c *c)
+void daObjFallBlock_c_PollLinkedStar(daObjFallBlock_c *c)
 {
     dActor_c *a = dActor_c::FindWithID((unsigned int)c->mLinkedStarID);
     if (a == 0) {
         c->MarkForDestruction();
         return;
     }
-    if (*(int *)((char *)a + 0x440) == 4) /* POWER_STAR +0x440 */
+    if (static_cast<PowerStar *>(a)->unk_440 == 4)
         c->mSuppressed = 0;
 }
 }
 
-// @symbol func_ov098_0213a00c
-void func_ov098_0213a00c(daObjFallBlock_c *c)
+// @symbol daObjFallBlock_c_LinkGroup
+/* Once (unk_341). Same-id neighbours closer than 0x96000 become
+   mNextInGroup when they sit within a quarter-turn of mAngleY, and
+   mPrevInGroup otherwise. Vec3_HorzAngle / Vec3_Dist / AngleDiff. */
+void daObjFallBlock_c_LinkGroup(daObjFallBlock_c *c)
 {
     if (c->unk_341 != 0) return;
     dActor_c *r = dActor_c::FindWithActorID(c->actorID, 0);

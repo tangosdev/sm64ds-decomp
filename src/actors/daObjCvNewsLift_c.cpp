@@ -1,11 +1,43 @@
 //cpp
-/* daObjCvNewsLift_c: the four-platform lift (CV_NEWS_LIFT). A dBgActor_c
- * whose main mesh carries four hanging platforms, each with its own model
- * and moving-mesh collider. Stepping on a platform lowers it; standing on
- * the main mesh tilts the lift toward the player.
+/* ov021/daObjCvNewsLift_c -- the four-platform lift (CV_NEWS_LIFT).
  *
- * mwccarm emits .text in reverse source order, so the highest ROM address
- * (the factory) is written first and the destructor last. */
+ * A dBgActor_c. The main mesh carries four hanging platforms, each with
+ * its own model and moving-mesh collider. Stepping on a platform lowers
+ * it and drives the lift that way; standing on the main mesh tilts the
+ * lift toward the player. A wall ahead bumps it, wobbles, then reverses
+ * onto the opposite platform (0/1 and 2/3). Left alone it blinks and
+ * snaps home.
+ *
+ * mwccarm emits .text in reverse source order, so the factory is written
+ * first and the destructor last.
+ *
+ * deslop leftovers:
+ * - InitResources: dBgW_KcMbg::SetFile as a method is 0x264 against 0x258
+ *   (Fix12<int> by value). The scalar mangled call stays.
+ * - InitResources: mMeshCollider.unk_1c = &MainMeshCallback, and a cast
+ *   store of UpdatePosWithTransform into beforeClsnCallback, are each
+ *   0x254 against 0x258. func_020393c4 and func_020393d4 stay.
+ * - InitResources: probePos.y = mPosY - 0x14000 is 0x254 against 0x258.
+ * - InitResources: Model::LoadFile's return in place of filePtr differs
+ *   by 20 words. NewsLiftFile stays; SharedFilePtr has no fields.
+ * - OnMainMeshRide: copying mTargetRotation in a loop is 0x100 against
+ *   0x104.
+ * - Behavior: reset reads of data_02092768 without volatile are 0x594
+ *   against 0x5a4. Dropping (u16)(s16) on mWobblePhase is 0x59c, and so
+ *   is writing rayStart[1] and rayStart[2] by name. Dropping the zero
+ *   fills of rayFrom and rayTo is 0x54c.
+ * - UpdateClsnTransforms: mPlatformMats[i] = differs by 8 words;
+ *   *platformMat = is 0x194 against 0x198; folding i = 0 into the
+ *   for-init differs by 4 words. The this-cursor store stays.
+ * - UpdateModelTransforms: an empty blink test is 0x18c against 0x1a8.
+ *   The trailing return stays.
+ * - MainMeshCallback and Platform0Callback: testing actorID == 0xbf
+ *   inline is 0x34 against 0x40. The int temporary stays on all five
+ *   callbacks.
+ * - data_ov021_* handles, data_02092768, data_020a0e68 and data_02082214
+ *   stay address names (__sinit_ov021_02113500 owns the handles).
+ *   dActor_c has no Pos(), so callers cast &mPosX.
+ */
 
 #include "daObjCvNewsLift_c.h"
 #include "SharedFilePtr.h"
@@ -51,8 +83,7 @@ void Quaternion_SLerp(void *q0, void *q1, int t, void *out);
 s32 Vec3_Equal(const Vector3 *a, const Vector3 *b);
 u16 DecIfAbove0_Short(u16 *p);
 u8 DecIfAbove0_Byte(u8 *p);
-/* dBgW_KcMbg::SetFile by its mangled name: the member call, with a Fix12<int>
- * scale, makes InitResources 0x26c bytes against the ROM's 0x258. */
+/* Scalar SetFile. The method form size-DIFFs InitResources; see leftovers. */
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
     Fix12i scale, s16 angle, CLPS_Block *clps);
@@ -67,21 +98,16 @@ extern const u16 data_ov021_02114740[];
 }
 
 // @symbol daObjCvNewsLift_c_classInit
-/* Reconstructed source-style name: SM64DS proves daObjCvNewsLift_c through
- * RTTI, allocation size, vtable identity, and the CV_NEWS_LIFT registry
- * profile; later EAD lineage supplies classInit. Exact original spelling is
- * not preserved. Historical aliases: WorkElevator (the class) and
- * WorkElevator_Spawn. */
+/* CV_NEWS_LIFT factory. classInit is the EAD shape; the cartridge's RTTI
+ * names the class, not this function. */
 extern "C" daObjCvNewsLift_c *daObjCvNewsLift_c_classInit()
 {
     return new daObjCvNewsLift_c();
 }
 
 // @symbol _ZN17daObjCvNewsLift_c16MainMeshCallbackEP4dBgWPS_P8dActor_c
-/* Collision callbacks. InitResources registers one per collider; each fires
- * when an actor touches that mesh and reacts only to the player (0xbf). The
- * comparison is kept in an int: testing it inline drops the ROM's moveq/movne
- * materialisation. */
+/* One callback per collider. Only the player (actor 0xbf) is handled.
+ * The comparison stays in an int; see leftovers. */
 void daObjCvNewsLift_c::MainMeshCallback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other)
 {
     int isPlayer = other->actorID == 0xbf;
@@ -104,14 +130,14 @@ void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player)
     } else {
         data_020a0e68 = mClsnMat;
         InvMat4x3(&data_020a0e68, &data_020a0e68);
-        Vector3 t;
-        MulVec3Mat4x3((Vector3 *)&player->mPosX, &data_020a0e68, &t);
-        t.y = t.y * 0x30;
+        Vector3 inFrame;
+        MulVec3Mat4x3((Vector3 *)&player->mPosX, &data_020a0e68, &inFrame);
+        inFrame.y *= 0x30;
         Vector3 axis;
         axis.x = 0;
         axis.y = 0x1000;
         axis.z = 0;
-        Quaternion_FromVector3(&mTargetRotation[0], &axis, &t);
+        Quaternion_FromVector3(&mTargetRotation[0], &axis, &inFrame);
         Quaternion_Normalize(&mTargetRotation[0]);
         mTiltHoldTimer = 10;
     }
@@ -186,12 +212,8 @@ s32 daObjCvNewsLift_c::InitResources()
     dBgW_Kc::LoadFile(*(SharedFilePtr *)&data_ov021_021149b8);
 
     mModel.SetFile((BMD_File *)data_ov021_021149a0.filePtr, 1, -1);
-    {
-        int i = 0;
-        Model *platformModel = mPlatformModels;
-        for (; i < 4; i++, platformModel++)
-            platformModel->SetFile((BMD_File *)data_ov021_021149b0.filePtr, 1, -1);
-    }
+    for (int i = 0; i < 4; i++)
+        mPlatformModels[i].SetFile((BMD_File *)data_ov021_021149b0.filePtr, 1, -1);
 
     mLoweredPlatform = -1;
     UpdateModelTransforms();
@@ -204,16 +226,11 @@ s32 daObjCvNewsLift_c::InitResources()
     func_020393c4(&mMeshCollider, (void *)&MainMeshCallback);
     mMeshCollider.Enable(this);
 
-    {
-        int i = 0;
-        Matrix4x3 *platformMat = mPlatformMats;
-        dBgW_KcMbg *platformCollider = mPlatformColliders;
-        for (; i < 4; i++, platformMat++, platformCollider++) {
-            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-                platformCollider, (KCL_File *)data_ov021_021149b8.filePtr, platformMat,
-                0x199, mAngleY, &data_ov021_02113a80);
-            func_020393d4(platformCollider, (void *)&dBgW::UpdatePosWithTransform);
-        }
+    for (int i = 0; i < 4; i++) {
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+            &mPlatformColliders[i], (KCL_File *)data_ov021_021149b8.filePtr,
+            &mPlatformMats[i], 0x199, mAngleY, &data_ov021_02113a80);
+        func_020393d4(&mPlatformColliders[i], (void *)&dBgW::UpdatePosWithTransform);
     }
 
     func_020393c4(&mPlatformColliders[0], (void *)&Platform0Callback);
@@ -224,9 +241,7 @@ s32 daObjCvNewsLift_c::InitResources()
     for (int i = 0; i < 4; i++)
         mPlatformColliders[i].Enable(this);
 
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos = *(Vector3 *)&mPosX;
 
     Vector3 probePos;
     probePos.x = mPosX;
@@ -248,36 +263,34 @@ s32 daObjCvNewsLift_c::InitResources()
  * it. A bump wobbles the lift from the sine table, then reverses the
  * direction (0 and 1, 2 and 3 are opposite platforms). The shared tail slerps
  * the tilt toward its target, snaps home when mResetTimer runs out and
- * rebuilds both sets of matrices.
- * Measured: the double cast on mWobblePhase (0x59c without it), the
- * volatile reads in the reset (0x594 without them) and the per-element
- * pointer writes to va[1..2] are load-bearing against the ROM's 0x5a4. */
+ * rebuilds both sets of matrices. The wobble cast, the volatile rest-pose
+ * reads and the ray-element pointer writes are load-bearing; see leftovers. */
 s32 daObjCvNewsLift_c::Behavior()
 {
-    Vector3 va[3];
-    Vector3 vb[3];
-    Vector3 vc[3];
-    Vector3 sp74;
+    Vector3 rayStart[3];
+    Vector3 rayFrom[3];
+    Vector3 rayTo[3];
+    Vector3 ahead;
     s32 i;
 
-    if (mBumped != 0) {
-        if (DecIfAbove0_Short(&mWobbleTimer) != 0) {
+    if (mBumped) {
+        if (DecIfAbove0_Short(&mWobbleTimer)) {
             mWobblePhase += 0x1f00;
             {
-                s16 v = data_02082214[((u16)(s16)mWobblePhase >> 4) * 2];
-                s32 prod = mWobbleTimer * 0x1a;
-                s8 sel = mLoweredPlatform;
-                s16 t = (s16)(s32)(((long long)prod * v + 0x800) >> 12);
-                switch (sel) {
-                case 0: mAngleX = -t; break;
-                case 1: mAngleX = t; break;
-                case 2: mAngleZ = t; break;
-                case 3: mAngleZ = -t; break;
+                s16 sine = data_02082214[((u16)(s16)mWobblePhase >> 4) * 2];
+                s32 amp = mWobbleTimer * 0x1a;
+                s8 which = mLoweredPlatform;
+                s16 wobble = (s16)(s32)(((long long)amp * sine + 0x800) >> 12);
+                switch (which) {
+                case 0: mAngleX = -wobble; break;
+                case 1: mAngleX = wobble; break;
+                case 2: mAngleZ = wobble; break;
+                case 3: mAngleZ = -wobble; break;
                 }
             }
         } else {
-            s8 s = mLoweredPlatform;
-            if (s == 0 || s == 2)
+            s8 which = mLoweredPlatform;
+            if (which == 0 || which == 2)
                 mLoweredPlatform++;
             else
                 mLoweredPlatform--;
@@ -299,40 +312,40 @@ s32 daObjCvNewsLift_c::Behavior()
             mMotorSound = Sound::PlayLong(mMotorSound, 3, 0x88, *(Vector3 *)&mCamSpacePosX, 0);
             mPrevAngleY = data_ov021_02114740[mLoweredPlatform];
             mHorzSpeed = 0x5000;
-            va[0].x = 0; va[0].y = -0xa000; va[0].z = 0x10e000;
+            rayStart[0].x = 0; rayStart[0].y = -0xa000; rayStart[0].z = 0x10e000;
             {
-                Vector3 *p = &va[1];
-                p->x = 0x12c000; p->y = -0xa000; p->z = 0x10e000;
-                p = &va[2];
-                p->x = -0x12c000; p->y = -0xa000; p->z = 0x10e000;
+                Vector3 *ray = &rayStart[1];
+                ray->x = 0x12c000; ray->y = -0xa000; ray->z = 0x10e000;
+                ray = &rayStart[2];
+                ray->x = -0x12c000; ray->y = -0xa000; ray->z = 0x10e000;
             }
-            vb[0].x = 0; vb[0].y = 0; vb[0].z = 0;
+            rayFrom[0].x = 0; rayFrom[0].y = 0; rayFrom[0].z = 0;
             {
-                Vector3 *p = &vb[1];
-                p->x = 0; p->y = 0; p->z = 0;
-                p = &vb[2];
-                p->x = 0; p->y = 0; p->z = 0;
+                Vector3 *ray = &rayFrom[1];
+                ray->x = 0; ray->y = 0; ray->z = 0;
+                ray = &rayFrom[2];
+                ray->x = 0; ray->y = 0; ray->z = 0;
             }
-            vc[0].x = 0; vc[0].y = 0; vc[0].z = 0;
+            rayTo[0].x = 0; rayTo[0].y = 0; rayTo[0].z = 0;
             {
-                Vector3 *p = &vc[1];
-                p->x = 0; p->y = 0; p->z = 0;
-                p = &vc[2];
-                p->x = 0; p->y = 0; p->z = 0;
+                Vector3 *ray = &rayTo[1];
+                ray->x = 0; ray->y = 0; ray->z = 0;
+                ray = &rayTo[2];
+                ray->x = 0; ray->y = 0; ray->z = 0;
             }
             Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
             {
-                Vector3 *pa = va;
-                Vector3 *pb = vb;
-                Vector3 *pc = vc;
+                Vector3 *start = rayStart;
+                Vector3 *from = rayFrom;
+                Vector3 *to = rayTo;
                 for (i = 0; i < 3; i++) {
-                    sp74 = *pa;
-                    sp74.z += 0x28000;
-                    MulVec3Mat4x3(pa, &data_020a0e68, pb);
-                    MulVec3Mat4x3(&sp74, &data_020a0e68, pc);
-                    AddVec3(pb, (Vector3 *)&mPosX, pb);
-                    AddVec3(pc, (Vector3 *)&mPosX, pc);
-                    pa++; pb++; pc++;
+                    ahead = *start;
+                    ahead.z += 0x28000;
+                    MulVec3Mat4x3(start, &data_020a0e68, from);
+                    MulVec3Mat4x3(&ahead, &data_020a0e68, to);
+                    AddVec3(from, (Vector3 *)&mPosX, from);
+                    AddVec3(to, (Vector3 *)&mPosX, to);
+                    start++; from++; to++;
                 }
             }
             {
@@ -341,25 +354,25 @@ s32 daObjCvNewsLift_c::Behavior()
                 dBgCh_Lin l2;
                 {
                     s32 j = 0;
-                    Vector3 *pc = vc;
-                    Vector3 *pb = vb;
-                    dBgCh_Lin *pl = &l0;
-                    u32 snd = 0x1b;
+                    Vector3 *to = rayTo;
+                    Vector3 *from = rayFrom;
+                    dBgCh_Lin *line = &l0;
+                    u32 hitSound = 0x1b;
                     for (; j < 3; j++) {
-                        pl->SetObjAndLine(*pb, *pc, this);
-                        if (pl->DetectClsn() && pl->clsnDist <= 0x1f000) {
+                        line->SetObjAndLine(*from, *to, this);
+                        if (line->DetectClsn() && line->clsnDist <= 0x1f000) {
                             mHorzSpeed = 0;
                             mBumped = 1;
-                            mWobbleTimer = 0x3c;
-                            Sound::PlayBank3(snd, *(Vector3 *)&mCamSpacePosX);
+                            mWobbleTimer = 60;
+                            Sound::PlayBank3(hitSound, *(Vector3 *)&mCamSpacePosX);
                         }
-                        pc++; pb++; pl++;
+                        to++; from++; line++;
                     }
                 }
                 UpdatePos(0);
             }
         }
-        if (DecIfAbove0_Byte(&mTiltHoldTimer) == 0) {
+        if (!DecIfAbove0_Byte(&mTiltHoldTimer)) {
             mTargetRotation[0] = data_02092768[0];
             mTargetRotation[1] = data_02092768[1];
             mTargetRotation[2] = data_02092768[2];
@@ -367,12 +380,10 @@ s32 daObjCvNewsLift_c::Behavior()
         }
     }
     Quaternion_SLerp(&mRotation[0], &mTargetRotation[0], 0x199, &mRotation[0]);
-    if (Vec3_Equal((Vector3 *)&mPosX, &mHomePos) != 0)
-        mResetTimer = 0x12c;
-    if (DecIfAbove0_Short(&mResetTimer) == 0) {
-        mPosX = mHomePos.x;
-        mPosY = mHomePos.y;
-        mPosZ = mHomePos.z;
+    if (Vec3_Equal((Vector3 *)&mPosX, &mHomePos))
+        mResetTimer = 300;
+    if (!DecIfAbove0_Short(&mResetTimer)) {
+        *(Vector3 *)&mPosX = mHomePos;
         mRotation[0] = *(volatile s32 *)&data_02092768[0];
         mRotation[1] = *(volatile s32 *)&data_02092768[1];
         mRotation[2] = *(volatile s32 *)&data_02092768[2];
@@ -389,7 +400,7 @@ s32 daObjCvNewsLift_c::Behavior()
         mAngleZ = 0;
         mHorzSpeed = 0;
     }
-    if (mBumped == 0 && mResetTimer < 0x10e) {
+    if (!mBumped && mResetTimer < 270) {
         mLoweredPlatform = -1;
         mHorzSpeed = 0;
     }
@@ -418,13 +429,9 @@ s32 daObjCvNewsLift_c::Render()
 // @symbol _ZN17daObjCvNewsLift_c16CleanupResourcesEv
 s32 daObjCvNewsLift_c::CleanupResources()
 {
-    int i;
     mMeshCollider.Disable();
-    dBgW_KcMbg *platformCollider = mPlatformColliders;
-    for (i = 0; i < 4; i++) {
-        platformCollider->Disable();
-        platformCollider++;
-    }
+    for (int i = 0; i < 4; i++)
+        mPlatformColliders[i].Disable();
     ((SharedFilePtr *)&data_ov021_021149b0)->Release();
     ((SharedFilePtr *)&data_ov021_021149b8)->Release();
     ((SharedFilePtr *)&data_ov021_021149a0)->Release();
@@ -441,7 +448,7 @@ void daObjCvNewsLift_c::UpdateModelTransforms()
     int i;
     Matrix4x3 *mainMat;
     const Vector3 *offset;
-    Vector3 v;
+    Vector3 hang;
     Vector3 pos;
     Vector3 scaled;
 
@@ -455,20 +462,19 @@ void daObjCvNewsLift_c::UpdateModelTransforms()
     mModel.mat4x3 = data_020a0e68;
     mainMat = &mModel.mat4x3;
     offset = data_ov021_02114a20;
-    i = 0;
-    for (; i < 4; i++) {
-        v = *offset;
+    for (i = 0; i < 4; i++) {
+        hang = *offset;
         if (mLoweredPlatform == i && !mBumped)
-            v.y -= 0x1e000;
+            hang.y -= 0x1e000;
         data_020a0e68 = *mainMat;
-        Vec3_Asr(&scaled, &v, 3);
+        Vec3_Asr(&scaled, &hang, 3);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, scaled.x, scaled.y, scaled.z);
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, data_ov021_02114740[i]);
         mPlatformModels[i].mat4x3 = data_020a0e68;
         offset++;
     }
 
-    /* Render's blink test with nothing after it; the ROM keeps the test. */
+    /* Same test as Render, and then nothing. An empty if drops it. */
     if (mResetTimer < 45 && (mResetTimer & 1))
         return;
 }
@@ -482,10 +488,10 @@ void daObjCvNewsLift_c::UpdateClsnTransforms()
     Matrix4x3 tilt;
     int i;
     const Vector3 *offset;
-    daObjCvNewsLift_c *platform;
+    daObjCvNewsLift_c *cursor;
     Matrix4x3 *platformMat;
     dBgW_KcMbg *platformCollider;
-    Vector3 v;
+    Vector3 hang;
 
     Matrix4x3_FromQuaternion((Quaternion *)mRotation, &tilt);
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
@@ -498,23 +504,21 @@ void daObjCvNewsLift_c::UpdateClsnTransforms()
 
     offset = data_ov021_02114a20;
     i = 0;
-    platform = this;
+    cursor = this;
     platformMat = mPlatformMats;
     platformCollider = mPlatformColliders;
     for (; i < 4; i++) {
-        v = *offset;
+        hang = *offset;
         if (mLoweredPlatform == i && !mBumped)
-            v.y -= 0x1e000;
+            hang.y -= 0x1e000;
         data_020a0e68 = mClsnMat;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, v.x, v.y, v.z);
+        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, hang.x, hang.y, hang.z);
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, data_ov021_02114740[i]);
-        /* Stored through a this-based cursor stepped one matrix at a time,
-         * which folds the member offset into the str. mPlatformMats[i] is 8
-         * words off and *platformMat is 4 bytes short. */
-        platform->mPlatformMats[0] = data_020a0e68;
+        /* this stepped one matrix at a time. An index or *platformMat misses. */
+        cursor->mPlatformMats[0] = data_020a0e68;
         platformCollider->Transform(*platformMat, mAngleY);
         offset++;
-        platform = (daObjCvNewsLift_c *)((Matrix4x3 *)platform + 1);
+        cursor = (daObjCvNewsLift_c *)((Matrix4x3 *)cursor + 1);
         platformMat++;
         platformCollider++;
     }

@@ -2223,7 +2223,6 @@ extern void func_ov005_020bffc8(void*, int, int, int);
 extern void func_ov005_020c0030(void*, int);
 extern void func_ov005_020c0140(char*);
 extern void func_ov005_020c0250(char*);
-extern void func_ov005_020c0378(char*);
 extern void func_ov005_020c06cc(char*);
 extern void func_ov005_020c0878(char*);
 extern void func_ov005_020c0f38(void*);

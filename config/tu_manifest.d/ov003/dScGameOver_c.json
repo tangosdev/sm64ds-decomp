@@ -34,14 +34,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov003_020b060c",
+      "symbol": "_ZN13dScGameOver_c19func_ov003_020b060cEv",
       "address": "0x020b060c",
       "size": "0x00000124",
       "legacy_source": "src/func_ov003_020b060c.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov003_020b0730",
+      "symbol": "_ZN13dScGameOver_c19func_ov003_020b0730Ei",
       "address": "0x020b0730",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov003_020b0730.c",

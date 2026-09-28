@@ -1,8 +1,8 @@
 /* The cartridge's RTTI names this Tick Tock Clock rotating-platform class
  * daObjCtKaitendai_c. overlay_actors maps profiles 114/115 to
  * TTC_ROTATING_GEAR / TTC_ROTATING_TRIANGLE; the debug table strings are
- * CT_MECHA06 / CT_MECHA07. ov065 is TTC — this is the rotating bar pair,
- * not the conveyor (mecha04) or moving bar (mecha05).
+ * CT_MECHA06 / CT_MECHA07. ov065 is TTC — this is the rotating gear and
+ * triangle, not the conveyor (mecha04) or the moving bar (mecha05).
  *
  * Derives from dBgActor_c directly: _ZTI/_ZTS18daObjCtKaitendai_c give the
  * class name, and both factories construct dBgActor_c then ShadowModel at

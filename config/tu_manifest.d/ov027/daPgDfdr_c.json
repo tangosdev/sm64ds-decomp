@@ -40,7 +40,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov027_02111a28",
+      "symbol": "_ZN10daPgDfdr_c19func_ov027_02111a28Ev",
       "address": "0x02111a28",
       "size": "0x00000104",
       "legacy_source": "src/func_ov027_02111a28.c",
@@ -68,21 +68,21 @@
       "ordinal": 6
     },
     {
-      "symbol": "func_ov027_02111cfc",
+      "symbol": "_ZN10daPgDfdr_c19func_ov027_02111cfcEv",
       "address": "0x02111cfc",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov027_02111cfc.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov027_02111d38",
+      "symbol": "_ZN10daPgDfdr_c19func_ov027_02111d38Ev",
       "address": "0x02111d38",
       "size": "0x00000038",
       "legacy_source": "src/func_ov027_02111d38.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov027_02111d70",
+      "symbol": "_ZN10daPgDfdr_c19func_ov027_02111d70Ei",
       "address": "0x02111d70",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov027_02111d70.c",

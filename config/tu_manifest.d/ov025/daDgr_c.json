@@ -33,21 +33,21 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov025_0211123c",
+      "symbol": "_ZN7daDgr_c19func_ov025_0211123cEv",
       "address": "0x0211123c",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov025_0211123c.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov025_021112e0",
+      "symbol": "_ZN7daDgr_c19func_ov025_021112e0Ev",
       "address": "0x021112e0",
       "size": "0x00000064",
       "legacy_source": "src/func_ov025_021112e0.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov025_02111344",
+      "symbol": "_ZN7daDgr_c19func_ov025_02111344Ev",
       "address": "0x02111344",
       "size": "0x00000040",
       "legacy_source": "src/func_ov025_02111344.c",

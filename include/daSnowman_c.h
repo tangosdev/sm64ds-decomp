@@ -52,9 +52,12 @@ struct daSnowman_c : dEnemyBase_c {
     u32 mSnowballID;                  /* 0x3fc */
     s32 mCapUniqueID;                 /* 0x400 */
     u8  pad_404[0x4];
-    s32 unk_408;                      /* 0x408 -- hop counter while walking; turn sign while spinning */
+    /* Coined. Walk uses it as a hop-phase counter (0 start, 1 landed,
+       then frames until the next hop). Spin stores mAngleY - player
+       angle and uses the sign to pick the spin direction. */
+    s32 mStep;                        /* 0x408 */
     s32 mClosestPlayerIdx;            /* 0x40c -- coined; written by func_ov081_021245e8 */
-    s32 unk_410;                      /* 0x410 -- frame counter */
+    s32 mTimer;                       /* 0x410 -- coined; lean frames, then spin frames */
     s16 mInitAngleY;                  /* 0x414 */
     u8  pad_416[0x2];
     s32 mPathId;                      /* 0x418 */
@@ -69,8 +72,13 @@ struct daSnowman_c : dEnemyBase_c {
     s32 mSinkOffsetY;                 /* 0x45c -- coined; added to mPosY when rendering */
     u32 mParticleID1;                 /* 0x460 -- coined; Particle::System::New handle */
     u32 mParticleID2;                 /* 0x464 -- coined; Particle::System::New handle */
-    u8  unk_468;                      /* 0x468 */
-    u8  unk_469;                      /* 0x469 */
+    /* Coined. Set to 2 on a 0x40 hit while the player's param1 is 2.
+       Behavior plays 0x166 once the death update has finished, then clears it. */
+    u8  mDeathSound;                  /* 0x468 */
+    /* Coined. Kind 3's cap watch: 0 until the first look, 1 while the
+       cap stays lost, 2 once the player has it. Nonzero also suppresses
+       the coin drop, so a watcher that becomes kind 2 does not pay coins. */
+    u8  mCapPhase;                    /* 0x469 */
     u8  pad_46a[0x2];
 
     /* --- vtable --- */

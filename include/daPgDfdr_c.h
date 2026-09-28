@@ -63,6 +63,11 @@ struct daPgDfdr_c : dBgActor_c {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 
+    void func_ov027_02111cfc();
+    void func_ov027_02111d38();
+    void func_ov027_02111d70(int idx);
+    int func_ov027_02111a28();
+
     /* slot 31 (Kill) is NOT overridden: vtable word at data_ov027_02113a90
        + 0x7c is 0x020ee55c, identical to dBgActor_c's own slot 31. */
 };

@@ -5,7 +5,7 @@
  * then a yes/no continue prompt (stylus or button; left is yes). 10
  * functions, .text 0x020b0580..0x020b117c: the seven dScene_c slots every
  * direct child overrides (0, 3, 6, 9, 12, 16, 17 -- the class adds no new
- * virtual), the two free helpers that share the TU, and the factory
+ * virtual), two non-virtual helpers that share the TU, and the factory
  * dScGameOver_c_classInit, which abuts InitResources at 0x020b1118 and ends
  * at ov003's .text end. D1/D0 are not
  * written here: the header's inline destructor plus the key function
@@ -15,18 +15,9 @@
  * reverse source order. Do not reorder.
  *
  * deslop leftovers:
- * - The two func_ov003_* helpers are written free here, and that is a
- *   reconstruction choice, not a deduction. The image preserves no original
- *   linker symbol table, so `func_ov003_*` are address-derived analysis
- *   labels, and RTTI supplies class identities, not function spellings
- *   (notes/tu-promotion-conventions.md section 1 and
- *   notes/symbol-name-provenance.md). Their absence from the reconstructed
- *   mangled set is therefore evidence of nothing about the original
- *   spelling. Both take the object and every call to them is inside this
- *   class's region: that is evidence to narrow ownership on later -- call,
- *   layout or codegen -- not proof that the original was free. Until it is
- *   narrowed, the original ownership and form stay uncertain, and the free
- *   form is only what this TU reproduces.
+ * - func_ov003_020b060c and func_ov003_020b0730 are non-virtual methods.
+ *   The address stays the method name. 060c keeps the GO_OFF pointer
+ *   arithmetic and the goto/case skeleton; member indexing does not match.
  * - `#pragma opt_strength_reduction off` is file-global last-wins;
  *   func_ov003_020b060c needs it (glyph-loop induction) and the other nine
  *   members verify with it set, so it costs nothing. No narrower form.
@@ -265,7 +256,7 @@ s32 dScGameOver_c::InitResources()
     Deallocate((void *)f);
 
     func_0201cebc(0x27d);
-    func_ov003_020b0730(this, 1);
+    func_ov003_020b0730(1);
 
     mCursorState = 0;
     mSelection = 0;
@@ -308,7 +299,7 @@ s32 dScGameOver_c::Behavior()
     if (data_0209f5bc->f05() == 0)
         goto end;
 
-    func_ov003_020b060c(this);
+    func_ov003_020b060c();
 
     if (mIntroPhase < 2)
         return 1;
@@ -345,7 +336,7 @@ state0:
         if (mSelection == 0)
             mFlashTimer = (unsigned char)(data_0208ee44 << 3);
         mSelection = 0;
-        func_ov003_020b0730(this, 0);
+        func_ov003_020b0730(0);
         mCommitTimer = (unsigned char)(data_0208ee44 << 4);
         func_02012790(0x9a);
         mCursorState = 1;
@@ -367,7 +358,7 @@ state0:
         if (mSelection == 1)
             mFlashTimer = (unsigned char)(data_0208ee44 << 3);
         mSelection = 1;
-        func_ov003_020b0730(this, 0);
+        func_ov003_020b0730(0);
         mCommitTimer = (unsigned char)(data_0208ee44 << 4);
         func_02012790(0x9b);
         mCursorState = 1;
@@ -377,7 +368,7 @@ state1:
         if (mFlashTimer != 0) {
             mFlashTimer -= data_0208ee44;
             if (mFlashTimer == 0)
-                func_ov003_020b0730(this, 0);
+                func_ov003_020b0730(0);
         }
         if (mCommitTimer != 0) {
             mCommitTimer -= data_0208ee44;
@@ -423,15 +414,10 @@ void dScGameOver_c::OnPendingDestroy()
  * yes/no boxes: two 0x20-by-4 rectangles whose screen-map origins come from
  * data_ov003_020b174c. `arg` non-zero forces both back to the unselected
  * bank; zero picks the highlighted bank for whichever box mSelection names,
- * and only while the mFlashTimer has run out. Written free here as a
- * reconstruction choice: it takes the receiver and every call to it is
- * inside this class's region, which is evidence to narrow ownership on
- * later, not proof that the original was free. */
- // @symbol func_ov003_020b0730
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov003_020b0730(void *self, int arg)
+ * and only while the mFlashTimer has run out. */
+ // @symbol _ZN13dScGameOver_c19func_ov003_020b0730Ei
+void dScGameOver_c::func_ov003_020b0730(int arg)
 {
-  dScGameOver_c *o = (dScGameOver_c *)self;
   int i;
   for (i = 0; i < 2; i++)
   {
@@ -446,7 +432,7 @@ void func_ov003_020b0730(void *self, int arg)
     else
     {
       unsigned int w;
-      if ((o->mSelection == i) && (o->mFlashTimer == 0))
+      if ((mSelection == i) && (mFlashTimer == 0))
         w = 0x2000;
       else
         w = 0x1000;
@@ -462,10 +448,8 @@ void func_ov003_020b0730(void *self, int arg)
     }
   }
 }
-}
 
 /* [2] 0x020b060c -- the glyph drop-in step, one frame per call. */
- // @symbol func_ov003_020b060c
 /* offsetof without <stddef.h>: the tree includes no system headers, and
  * func_ov003_020b060c is the one member that needs field offsets as
  * constants. dScGameOver_c's layout is pinned by the header's sizeof
@@ -498,11 +482,10 @@ void func_ov003_020b0730(void *self, int arg)
  * form perturbs the tail: 999 words differ, size 0x124 vs 0x11c, pinned in
  * notes/experiments/gameover-2711-case1-gooff-spelling.md) are the ROM's own
  * shape too. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov003_020b060c(void *self)
+ // @symbol _ZN13dScGameOver_c19func_ov003_020b060cEv
+void dScGameOver_c::func_ov003_020b060c()
 {
-    dScGameOver_c *o = (dScGameOver_c *)self;
-    unsigned char s = o->mIntroPhase;
+    unsigned char s = this->mIntroPhase;
     int i;
     int ip;
     if (s == 0)
@@ -515,7 +498,7 @@ case0:
     i = 0;
     ip = 0xa;
     do {
-        char *e = (char *)o + (i << 1);
+        char *e = (char *)this + (i << 1);
         if (*(unsigned short *)(e + GO_OFF(mGlyphDelay)) != 0) {
             *(unsigned short *)((long long)(int)(e + GO_OFF(mGlyphDelay))) =
                 (unsigned short)(*(unsigned short *)((long long)(int)(e + GO_OFF(mGlyphDelay))) - 1);
@@ -535,7 +518,7 @@ case0:
                     if (*(short *)(e + GO_OFF(mGlyphX)) <= tgt) {
                         *(short *)(e + GO_OFF(mGlyphX)) = tgt;
                         *(unsigned short *)(e + GO_OFF(mGlyphDelay)) = (unsigned short)ip;
-                        o->mIntroPhase = 1;
+                        this->mIntroPhase = 1;
                     }
                 }
             }
@@ -546,15 +529,14 @@ case0:
     return;
 
 case1:
-    if (*(unsigned short *)((char *)o + GO_OFF(mGlyphDelay)) != 0) {
-        unsigned short *p = (unsigned short *)((char *)o + GO_OFF(mGlyphDelay));
+    if (*(unsigned short *)((char *)this + GO_OFF(mGlyphDelay)) != 0) {
+        unsigned short *p = (unsigned short *)((char *)this + GO_OFF(mGlyphDelay));
         *p = (unsigned short)(*p - 1);
         return;
     }
-    o->mIntroPhase = 2;
+    this->mIntroPhase = 2;
     data_0209d45c |= 1;
     data_0209d454 |= 3;
-}
 }
 
 /* [1] [0] 0x020b05bc (D0) and 0x020b0580 (D1) -- neither is written here.

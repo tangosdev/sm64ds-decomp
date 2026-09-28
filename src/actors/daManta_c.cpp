@@ -1,65 +1,67 @@
 //cpp
-/* daManta_c -- ov090 0x0213269c..0x02132fe8, twelve functions.
+/* daManta_c -- Jolly Roger Bay manta (MANTA 226).
  *
- * The cartridge spells the class 9daManta_c at 0x021341f4. _ZTI9daManta_c
- * at 0x0213420c is the __si_class_type_info record [__si_class_type_info,
- * that string, _ZTI12dEnemyBase_c], and _ZTV9daManta_c at 0x0213423c is the
- * vtable; the word before it, at 0x02134238, relocates to _ZTI9daManta_c.
- * The name is the cartridge's own; the tree's historical factory alias was
- * MantaRay_Spawn.
+ * Swims the path in param1's low byte. Every 0x27 frames it drops a
+ * WATER_RING (244) on bone 3 and remembers that ring's uniqueID.
+ * Rings taken in that order play the collection jingle and count up.
+ * Five of them, then 0x1e frames, spawn STAR (178) with the star index
+ * from param1 bits 12..15. A cylinder on data_ov090_02134200 hurts
+ * PLAYER (191).
  *
- * One out-of-line destructor is the key function, so this object emits
- * _ZTV9daManta_c, _ZTI9daManta_c and _ZTS9daManta_c. It comes out D1
- * (0x0213269c) then D0 (0x021326dc); the D2 the compiler also emits has no
- * home on the cartridge (manifest: compiler_only_output). daManta_c_classInit
- * at 0x02132fe8 abuts this run and stays in src/d_a_manta.c.
+ * daManta_c_classInit abuts this run and stays in src/d_a_manta.c.
+ * g_profile_MANTA stays in its own file. #pragma defer_codegen off
+ * below emits .text in source order, which is the ROM order.
  *
- * tu_map also hangs daMenbo_c on this run. daMenbo_c's table is 31 slots
- * and ends at 0x021341e4; the two words there and at 0x021341ec relocate
- * to func_ov090_021327e4 and func_ov090_02132a58. Those are this file's
- * helpers, not menbo methods. No daMenbo_c function is in the span.
- *
- * #pragma defer_codegen off emits .text in source order, so this file is
- * ROM-ascending. decl_common.h is included first so Matrix4x3 stays the
- * flat m[12] spelling: func_ov090_02132b14 indexes .m, not .t.
+ * deslop leftovers:
+ * - func_ov090_021327e4: mRingIDs[mRingRead] != mHitRing->uniqueID is 1
+ *   word (cmp r1, r0; the cartridge is cmp r0, r1). Both operand orders
+ *   missed. The address dance below keeps cmp r0, r1.
+ * - func_ov090_02132a58: mModelAnim.SetAnim with Fix12<int> speed is
+ *   0x6c -> 0x78. The scalar _ZN9ModelAnim7SetAnim call stays.
+ * - daManta_c::InitResources: mdCcAcPos_c.Init with Fix12<int> radius
+ *   and height is 0x1b0 -> 0x1c0 and moves reloc destinations. The
+ *   scalar _ZN10dCcAcPos_c4Init call stays.
+ * - daManta_c::Behavior: dropping the unk_0ac copy after the terminal
+ *   clamp is 0x1a4 -> 0x19c and moves the calls that follow it.
  */
 
 #pragma defer_codegen off
 
+/* decl_common.h first: Matrix4x3 must stay the flat s32[12] spelling.
+ * func_ov090_02132b14 indexes .m. */
 #include "decl_common.h"
 #include "daManta_c.h"
+#include "daWater_Ring_c.h"
 #include "PathPtr.h"
 #include "SharedFilePtr.h"
 
-/* Render calls ModelAnim slot 5 through a view parked at 0x30c. The
- * parameter is an int in the matched body, not Vector3 const *. */
-struct MantaRenderBase {
-    virtual void v0();
-    virtual void v1();
-    virtual void v2();
-    virtual void v3();
-    virtual void v4();
-    virtual void m(int);
-};
-struct MantaRenderView {
-    char pad[0x30c];
-    MantaRenderBase base;
+/* init at +0, execute at +8. Same shape as daWater_Ring_c::State.
+ * The overlay image stores each as (function, this-delta) with delta 0. */
+struct MantaState {
+    int (daManta_c::*init)();
+    int (daManta_c::*execute)();
 };
 
-/* Behavior's state node: eight bytes, then the pointer-to-member it calls. */
-struct MantaCallbackOwner;
-typedef void (MantaCallbackOwner::*MantaCallback)();
-struct MantaBehaviorState {
-    char pad_00[8];
-    MantaCallback callback;
+/* SharedFilePtr.h has no fields. The BCA pointer SetAnim reads is the
+ * word at +4, which is where Construct leaves the loaded file. */
+struct MantaFileWord {
+    int head;
+    void *file;
 };
 
-/* func_ov090_02132ac4 writes the state at 0x370 and calls it. */
-struct MantaStateHolder;
-typedef int (MantaStateHolder::*MantaStatePMF)();
-struct MantaStateHolder {
-    char pad[0x370];
-    MantaStatePMF *pp;
+enum {
+    MANTA_STAR = 0xb2,
+    MANTA_PLAYER = 0xbf,
+    MANTA_WATER_RING = 0xf4,
+    MANTA_RING_GOAL = 5,
+    MANTA_RING_SLOTS = 0x14,
+    MANTA_RING_INTERVAL = 0x27,
+    MANTA_STAR_WAIT = 0x1e,
+    MANTA_STAR_SPAWNED = 0xa,
+    MANTA_COLLECT_JINGLE = 0x25,
+    MANTA_NODE_REACH = 0x258000,
+    MANTA_FORWARD = 0xa000,
+    MANTA_STAR_FLAG = 0x40
 };
 
 extern "C" {
@@ -92,194 +94,190 @@ void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
 int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
     void *anim, void *file, int a, int b, unsigned int u);
 
-void func_ov090_02132730(char *thiz);
-int func_ov090_021327e4(char *c);
-int func_ov090_02132a58(char *c);
-int func_ov090_02132ac4(MantaStateHolder *c, MantaStatePMF *p);
-void func_ov090_02132b14(char *self);
+void func_ov090_02132730(daManta_c *self);
+int func_ov090_021327e4(daManta_c *self);
+int func_ov090_02132a58(daManta_c *self);
+int func_ov090_02132ac4(daManta_c *self, MantaState *state);
+void func_ov090_02132b14(daManta_c *self);
 }
 
 int ApproachLinear(short &v, short target, short step);
 
-/* One written destructor. The compiler emits D1 then D0.
- *
- * D1 is one vtable store and four destructor calls, every one a consequence
- * of `struct daManta_c : dEnemyBase_c` and the members it types: the
- * vptr, then ModelAnim (0x30c), dBgCh_Actr (0x150) and dCcAcPos_c (0x110) in
- * reverse declaration order, then dEnemyBase_c::~dEnemyBase_c. That body is
- * the evidence for the header's member layout; daManta_c_classInit constructs
- * the same types at the same offsets. D0 adds dEnemyBase_c's inline operator
- * delete, which is why nothing here names a heap. */
+/* One written destructor. The compiler emits D1 then D0 from the
+ * members above; D0 adds dEnemyBase_c's inline operator delete. */
 // @symbol _ZN9daManta_cD1Ev
 // @symbol _ZN9daManta_cD0Ev
 daManta_c::~daManta_c()
 {
 }
 
+/* Cylinder follows data_ov090_02134200. A PLAYER inside it is hurt
+ * from this actor's position. */
 // @symbol func_ov090_02132730
-extern "C" void func_ov090_02132730(char *thiz)
+extern "C" void func_ov090_02132730(daManta_c *self)
 {
-    char *c = thiz;
-    Vector3 v;
-    v.x = data_ov090_02134200.x;
-    v.y = data_ov090_02134200.y;
-    v.z = data_ov090_02134200.z;
-    ((dCcAcPos_c *)(c + 0x110))->SetPosRelativeToActor(v);
+    Vector3 offset;
+    offset.x = data_ov090_02134200.x;
+    offset.y = data_ov090_02134200.y;
+    offset.z = data_ov090_02134200.z;
+    self->mdCcAcPos_c.SetPosRelativeToActor(offset);
+    unsigned int id = self->mdCcAcPos_c.otherOwner;
+    if (id == 0)
+        return;
+    dActor_c *actor = dActor_c::FindWithID(id);
+    int isPlayer = (int)(actor->actorID == MANTA_PLAYER);
+    if (isPlayer == 0)
+        return;
     {
-        unsigned int id = *(unsigned int *)(c + 0x134);
-        if (id == 0) return;
-        {
-        Player *a = (Player *)dActor_c::FindWithID(id);
-        int b = (int)(*(unsigned short *)((char *)a + 0xc) == 0xbf);
-        if (b == 0) return;
-        {
-            Vector3 hv;
-            hv.x = *(int *)(c + 0x5c);
-            hv.y = *(int *)(c + 0x60);
-            hv.z = *(int *)(c + 0x64);
-            _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(a, hv, 1, 0xc000, 1, 0, 1);
-        }
-        }
+        Vector3 hit;
+        hit.x = self->mPosX;
+        hit.y = self->mPosY;
+        hit.z = self->mPosZ;
+        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
+            (Player *)actor, hit, 1, 0xc000, 1, 0, 1);
     }
 }
 
+/* State execute. Advance the swim anim, hurt, drop the next ring,
+ * score an in-order pass, and spawn the star once five have landed. */
 // @symbol func_ov090_021327e4
-extern "C" int func_ov090_021327e4(char *c)
+extern "C" int func_ov090_021327e4(daManta_c *self)
 {
-    void *o;
+    dActor_c *spawned;
     Vector3 num1;
     Vector3 num2;
 
-    ((Animation *)(c + 0x35c))->Advance();
-    func_ov090_02132730(c);
+    self->mModelAnim.Advance();
+    func_ov090_02132730(self);
 
-    if (*(int *)(c + 0x378) >= 5)
+    if (self->mRingCount >= MANTA_RING_GOAL)
         goto Ldecay;
 
-    if (*(u16 *)(c + 0x100) == 0) {
-        o = dActor_c::Spawn(
-                0xf4, 1, *(Vector3 *)(c + 0x39c), (Vector3_16 *)(c + 0x8c),
-                *(signed char *)(c + 0xcc), -1);
-        if (o != 0) {
-            int idx = *(int *)(c + 0x3fc);
-            int *pf = (int *)(c + 0x3fc);
-            *(int *)(c + idx * 4 + 0x3ac) = *(int *)((char *)o + 4);
-            *pf += 1;
-            if (*(int *)(c + 0x3fc) >= 0x14)
-                *(int *)(c + 0x3fc) = 0;
-            *(int *)((char *)o + 0x38c) = (int)c;
+    if (*(unsigned short *)&self->mStateTimer == 0) {
+        spawned = dActor_c::Spawn(
+            MANTA_WATER_RING, 1, self->mRingPos, (Vector3_16 *)&self->mAngleX,
+            self->mAreaId, -1);
+        if (spawned != 0) {
+            self->mRingIDs[self->mRingWrite] = spawned->uniqueID;
+            self->mRingWrite += 1;
+            if (self->mRingWrite >= MANTA_RING_SLOTS)
+                self->mRingWrite = 0;
+            ((daWater_Ring_c *)spawned)->unk_38c = (char *)self;
         }
-        *(u16 *)(c + 0x100) = 0x27;
+        self->mStateTimer = MANTA_RING_INTERVAL;
     }
 
-    if (*(int **)(c + 0x3a8) == 0)
+    if (self->mHitRing == 0)
         goto Ldecay;
 
-    if (*(int *)(c + 0x378) == 0) {
+    if (self->mRingCount == 0) {
         int i;
-        int key = (*(int **)(c + 0x3a8))[1];
-        for (i = 0; i < 0x14; i++) {
-            int slot = ((int *)(c + 0x3ac))[i];
-            if ((0, slot) == key) {
-                *(int *)(c + 0x400) = i;
-                *(int *)(c + 0x378) += 1;
-                func_02012790(0x25);
-                num1 = *(Vector3 *)((char *)*(void **)(c + 0x3a8) + 0x5c);
-                ((dActor_c *)c)->SpawnNumber(num1, *(int *)(c + 0x378), 0, 0, 0);
-                *(int *)(c + 0x3a8) = 0;
+        int key = self->mHitRing->uniqueID;
+        for (i = 0; i < MANTA_RING_SLOTS; i++) {
+            int slot = self->mRingIDs[i];
+            if (slot == key) {
+                self->mRingRead = i;
+                self->mRingCount += 1;
+                func_02012790(MANTA_COLLECT_JINGLE);
+                num1 = *(Vector3 *)&self->mHitRing->mPosX;
+                self->SpawnNumber(num1, self->mRingCount, 0, 0, 0);
+                self->mHitRing = 0;
                 return 1;
             }
         }
         goto Lreset;
     } else {
-        *(int *)(c + 0x400) += 1;
-        if (*(int *)(c + 0x400) >= 0x14)
-            *(int *)(c + 0x400) = 0;
-        {
-            int r0 = *(int *)(c + 0x400);
-            int r1 = (int)*(int **)(c + 0x3a8);
-            r0 = (int)(c + (r0 << 2));
-            r1 = *(int *)(r1 + 4);
-            r0 = *(int *)(r0 + 0x3ac);
-            if (r0 != r1)
-                goto Lreset;
-        }
-        *(int *)(c + 0x378) += 1;
-        func_02012790(0x25);
-        num2 = *(Vector3 *)((char *)*(void **)(c + 0x3a8) + 0x5c);
-        ((dActor_c *)c)->SpawnNumber(num2, *(int *)(c + 0x378), 0, 0, 0);
-        *(int *)(c + 0x3a8) = 0;
+        self->mRingRead += 1;
+        if (self->mRingRead >= MANTA_RING_SLOTS)
+            self->mRingRead = 0;
+        /* A direct != here is the same loads and then `cmp r1, r0`.
+         * The cartridge has `cmp r0, r1`. The two ints keep that order. */
+        int slotAddr = self->mRingRead;
+        int ringId = (int)self->mHitRing;
+        slotAddr = (int)((char *)self + (slotAddr << 2));
+        ringId = *(int *)(ringId + 4);
+        slotAddr = *(int *)(slotAddr + 0x3ac);
+        if (slotAddr != ringId)
+            goto Lreset;
+        self->mRingCount += 1;
+        func_02012790(MANTA_COLLECT_JINGLE);
+        num2 = *(Vector3 *)&self->mHitRing->mPosX;
+        self->SpawnNumber(num2, self->mRingCount, 0, 0, 0);
+        self->mHitRing = 0;
         return 1;
     }
 
 Lreset:
-    *(int *)(c + 0x378) = 0;
-    *(int *)(c + 0x400) = 0;
-    *(int *)(c + 0x3a8) = 0;
+    self->mRingCount = 0;
+    self->mRingRead = 0;
+    self->mHitRing = 0;
 Ldecay:
-    if (*(int *)(c + 0x378) == 5) {
-        *(int *)(c + 0x38c) += 1;
-        if (*(int *)(c + 0x38c) > 0x1e) {
+    if (self->mRingCount == MANTA_RING_GOAL) {
+        self->mStarDelay += 1;
+        if (self->mStarDelay > MANTA_STAR_WAIT) {
             dActor_c::Spawn(
-                0xb2, *(int *)(c + 0x388) | 0x40, *(Vector3 *)(c + 0x5c),
-                (Vector3_16 *)(c + 0x8c), *(signed char *)(c + 0xcc), -1);
-            *(int *)(c + 0x378) = 0xa;
+                MANTA_STAR, self->mStarID | MANTA_STAR_FLAG,
+                *(Vector3 *)&self->mPosX, (Vector3_16 *)&self->mAngleX,
+                self->mAreaId, -1);
+            self->mRingCount = MANTA_STAR_SPAWNED;
         }
     }
     return 1;
 }
 
+/* State init. Swim anim at 1.0, empty ring list. */
 // @symbol func_ov090_02132a58
-extern "C" int func_ov090_02132a58(char *c)
+extern "C" int func_ov090_02132a58(daManta_c *self)
 {
-    void **bundle = (void **)&data_ov090_0213452c;
+    MantaFileWord *anim = (MantaFileWord *)&data_ov090_0213452c;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        (void *)(c + 0x30c), bundle[1], 0, 0x1000, 0);
-    *(int *)(c + 0x3a8) = 0;
-    *(int *)(c + 0x3fc) = 0;
-    *(int *)(c + 0x400) = 0;
-    *(int *)(c + 0x368) = 0x1000;
+        &self->mModelAnim, anim->file, 0, 0x1000, 0);
+    self->mHitRing = 0;
+    self->mRingWrite = 0;
+    self->mRingRead = 0;
+    self->mModelAnim.speed = 0x1000;
     int i;
-    for (i = 0; i < 0x14; i++) ((int *)(c + 0x3ac))[i] = 0;
+    for (i = 0; i < MANTA_RING_SLOTS; i++)
+        self->mRingIDs[i] = 0;
     return 1;
 }
 
+/* Install state and run its init PMF. A null init is "do nothing". */
 // @symbol func_ov090_02132ac4
-extern "C" int func_ov090_02132ac4(MantaStateHolder *c, MantaStatePMF *p)
+extern "C" int func_ov090_02132ac4(daManta_c *self, MantaState *state)
 {
-    c->pp = p;
-    MantaStatePMF *q = c->pp;
-    if (*q == 0)
+    self->mState = state;
+    MantaState *current = self->mState;
+    if (current->init == 0)
         return 1;
-    return (c->**q)();
+    return (self->*(current->init))();
 }
 
+/* Position >> 3 and the angle triple become the model matrix. Bone 3's
+ * transform is then folded in, and its translation << 3 is where the
+ * next ring spawns. */
 // @symbol func_ov090_02132b14
-extern "C" void func_ov090_02132b14(char *self)
+extern "C" void func_ov090_02132b14(daManta_c *self)
 {
-    struct Vector3 v;
-    Vec3_Asr(&v, (struct Vector3 *)(self + 0x5c), 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
-        *(s16 *)(self + 0x8c), *(s16 *)(self + 0x8e), *(s16 *)(self + 0x90));
-    *(struct Matrix4x3 *)(self + 0x328) = data_020a0e68;
-    *(int *)(self + 0x39c) = 0;
-    *(int *)(self + 0x3a0) = 0;
-    *(int *)(self + 0x3a4) = 0;
-    data_020a0e68 = *(struct Matrix4x3 *)(self + 0x328);
-    MulMat4x3Mat4x3((const int *)(*(char **)(self + 0x320) + 0x90),
+    Vector3 scaled;
+    Vec3_Asr(&scaled, (Vector3 *)&self->mPosX, 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, scaled.x, scaled.y, scaled.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(
+        &data_020a0e68, self->mAngleX, self->mAngleY, self->mAngleZ);
+    self->mModelAnim.mat4x3 = data_020a0e68;
+    self->mRingPos.x = 0;
+    self->mRingPos.y = 0;
+    self->mRingPos.z = 0;
+    data_020a0e68 = self->mModelAnim.mat4x3;
+    MulMat4x3Mat4x3(
+        (const int *)(self->mModelAnim.data.transforms + 3),
         data_020a0e68.m, data_020a0e68.m);
-    {
-        int *p9 = (int *)((unsigned long long)((int)(self) + 0x39c));
-        int *p10 = (int *)((unsigned long long)((int)(self) + 0x3a0));
-        int *p11 = (int *)((unsigned long long)((int)(self) + 0x3a4));
-        *(int *)(self + 0x39c) = data_020a0e68.m[9];
-        *(int *)(self + 0x3a0) = data_020a0e68.m[10];
-        *(int *)(self + 0x3a4) = data_020a0e68.m[11];
-        *p9 <<= 3;
-        *p10 <<= 3;
-        *p11 <<= 3;
-    }
+    self->mRingPos.x = data_020a0e68.m[9];
+    self->mRingPos.y = data_020a0e68.m[10];
+    self->mRingPos.z = data_020a0e68.m[11];
+    self->mRingPos.x <<= 3;
+    self->mRingPos.y <<= 3;
+    self->mRingPos.z <<= 3;
 }
 
 // @symbol _ZN9daManta_c16CleanupResourcesEv
@@ -300,36 +298,35 @@ void daManta_c::OnPendingDestroy()
 // @symbol _ZN9daManta_c6RenderEv
 int daManta_c::Render()
 {
-    MantaRenderBase *b = &((MantaRenderView *)this)->base;
-    b->m(0);
+    mModelAnim.Render(0);
     return 1;
 }
 
 // @symbol _ZN9daManta_c8BehaviorEv
 int daManta_c::Behavior()
 {
-    char *c = (char *)this;
     DecIfAbove0_Short((unsigned short *)&mStateTimer);
     {
-        MantaBehaviorState *o = *(MantaBehaviorState **)&unk_370;
-        if (*(int *)((char *)o + 8) != 0) {
-            (((MantaCallbackOwner *)c)->*(o->callback))();
-        }
+        MantaState *state = mState;
+        /* The execute word, not &state->execute: taking the address of a
+         * pointer-to-member materialises the whole 8-byte PMF. */
+        if (*(int *)((char *)state + 8) != 0)
+            (this->*(state->execute))();
     }
     {
-        PathPtr p;
+        PathPtr path;
         Vector3 node;
         Vector3 diff;
-        Vector3 v;
+        Vector3 forward;
         int len;
 
-        p.FromID(*(unsigned int *)&unk_37c);
-        p.GetNode(node, *(unsigned int *)&mPathNode);
+        path.FromID(*(unsigned int *)&mPathID);
+        path.GetNode(node, *(unsigned int *)&mPathNode);
         Vec3_Sub(&diff, (Vector3 *)&mPosX, &node);
         len = LenVec3(&diff);
-        if (len == 0 || len <= 0x258000) {
+        if (len == 0 || len <= MANTA_NODE_REACH) {
             mPathNode++;
-            if (mPathNode >= unk_380)
+            if (mPathNode >= mNumNodes)
                 mPathNode = 0;
         }
         ApproachLinear(mPrevAngleY, Vec3_HorzAngle((Vector3 *)&mPosX, &node), 0x60);
@@ -337,22 +334,23 @@ int daManta_c::Behavior()
         mAngleX = mPrevAngleX;
         mAngleY = mPrevAngleY;
         mAngleZ = mPrevAngleZ;
-        v.y = v.x = v.z = 0;
-        v.z = 0xa000;
+        forward.y = forward.x = forward.z = 0;
+        forward.z = MANTA_FORWARD;
         Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-        MulVec3Mat4x3(&v, &data_020a0e68, (Vector3 *)&unk_0a4);
+        MulVec3Mat4x3(&forward, &data_020a0e68, (Vector3 *)&unk_0a4);
     }
     {
         int s = mVertSpeed + mVertAccel;
         int m2 = mTerminalVelocity;
         int ac = unk_0ac;
-        if (s >= m2) m2 = s;
+        if (s >= m2)
+            m2 = s;
         mVertSpeed = m2;
         unk_0ac = ac;
     }
     UpdatePosWithOnlySpeed(&mdCcAcPos_c);
-    func_ov090_02132b14(c);
+    func_ov090_02132b14(this);
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
     return 1;
@@ -361,43 +359,45 @@ int daManta_c::Behavior()
 // @symbol _ZN9daManta_c13InitResourcesEv
 int daManta_c::InitResources()
 {
-    unsigned char *thiz = (unsigned char *)this;
     mModelAnim.SetFile((BMD_File *)Model::LoadFile(data_ov090_02134524), 1, -1);
     Model::LoadFile(data_ov002_0210da10);
     Model::LoadFile(data_ov002_0210d9a8);
     Animation::LoadFile(data_ov090_0213452c);
 
-    unk_37c = param1 & 0xff;
-    unk_388 = (*(unsigned int *)&param1 >> 0xc) & 0xf;
-    if (unk_37c < 0) unk_37c = 0;
+    mPathID = param1 & 0xff;
+    mStarID = (param1 >> 12) & 0xf;
+    if (mPathID < 0)
+        mPathID = 0;
 
     {
-        PathPtr pp;
-        pp.FromID(*(unsigned int *)&unk_37c);
-        unk_380 = pp.NumNodes();
+        PathPtr path;
+        path.FromID(*(unsigned int *)&mPathID);
+        mNumNodes = path.NumNodes();
     }
 
     mTerminalVelocity = -0x3c000;
 
     {
-        Vector3 v;
-        v.x = data_ov090_02134200.x;
-        v.y = data_ov090_02134200.y;
-        v.z = data_ov090_02134200.z;
-        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, (dActor_c *)thiz, v,
-            0x150000, 0xc8000, 0x200004, 0);
+        Vector3 offset;
+        offset.x = data_ov090_02134200.x;
+        offset.y = data_ov090_02134200.y;
+        offset.z = data_ov090_02134200.z;
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+            &mdCcAcPos_c, this, offset, 0x150000, 0xc8000, 0x200004, 0);
     }
 
     {
-        PathPtr pp;
-        pp.FromID(*(unsigned int *)&unk_37c);
+        PathPtr path;
+        path.FromID(*(unsigned int *)&mPathID);
         mPathNode = 1;
-        pp.GetNode(*(Vector3 *)&mPosX, *(unsigned int *)&mPathNode);
+        path.GetNode(*(Vector3 *)&mPosX, *(unsigned int *)&mPathNode);
     }
 
     {
-        int b = (int)(data_0209f2d8 == 2);
-        if (b != 0) {
+        /* ContinueKuppaScriptIfNecessary stores 2 here. That visit snaps
+         * the manta onto node 3 at a fixed pose and clears mFlags. */
+        int kuppa = (int)(data_0209f2d8 == 2);
+        if (kuppa != 0) {
             mPathNode = 3;
             mPrevAngleX = (short)0xf303;
             mPrevAngleY = 0xb50;
@@ -409,6 +409,6 @@ int daManta_c::InitResources()
         }
     }
 
-    func_ov090_02132ac4((MantaStateHolder *)thiz, (MantaStatePMF *)&data_ov090_0213454c);
+    func_ov090_02132ac4(this, (MantaState *)&data_ov090_0213454c);
     return 1;
 }
