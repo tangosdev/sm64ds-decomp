@@ -94,6 +94,7 @@ concurrency:
 
 jobs:
   coverage:
+    name: source coverage
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

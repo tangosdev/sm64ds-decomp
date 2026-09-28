@@ -206,6 +206,34 @@
    "ref": "nearmiss/ledger"
   },
   {
+   "file": "notes/experiments/boo-2710-advance-thunk.md",
+   "ref": "src/game/actors/daTrs_c/_ZN7daTrs_c8BehaviorEv.cpp"
+  },
+  {
+   "file": "notes/experiments/boo-2710-ccacpos-raw.md",
+   "ref": "src/game/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp"
+  },
+  {
+   "file": "notes/experiments/boo-2710-factory-vtable.md",
+   "ref": "src/game/actors/daTrs_c/d_a_trs_factories.cpp"
+  },
+  {
+   "file": "notes/experiments/boo-2710-flags-shift.md",
+   "ref": "src/game/actors/daTrs_c/_ZN7daTrs_c8BehaviorEv.cpp"
+  },
+  {
+   "file": "notes/experiments/boo-2710-flags16.md",
+   "ref": "src/game/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp"
+  },
+  {
+   "file": "notes/experiments/boo-2710-render-shadow.md",
+   "ref": "src/game/actors/daTrs_c/d_a_trs_cleanup_render.cpp"
+  },
+  {
+   "file": "notes/experiments/boo-2710-setanim-6az.md",
+   "ref": "src/game/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp"
+  },
+  {
    "file": "notes/ghidra-dsd-landscape.md",
    "ref": "assets/signatures"
   },

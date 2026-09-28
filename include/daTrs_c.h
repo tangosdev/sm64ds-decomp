@@ -25,17 +25,15 @@
  * each member's own constructor), so declaring one risks an implicit body the
  * compiler would inline somewhere the ROM does not.
  *
- * ~daTrs_c() is declared but not defined in-class, so _ZN7daTrs_cD1Ev /
- * _ZN7daTrs_cD0Ev are the compiler's own synthesized bodies. The D1/D0 pair
- * stays in two one-function files: a single out-of-line definition emits
- * D2/D0/D1 (see the measurement on include/daObjBk_Dossunbar_c.h), and the
- * inline-in-header form would home both bodies in the key-function TU, which
- * cannot license the 0x02115ee0 range under one-range-per-file delinks.
+ * ~daTrs_c() is declared here and defined once, out of line and first, in
+ * src/actors/daTrs_c.cpp, the TU it shares with daTBasket_c and daTrsIcon_c.
+ * Under that file's `#pragma defer_codegen off` it emits D1 (0x02115ee0) and
+ * D0 (0x02115f48) in ROM order; the extra D2 is licensed as homeless.
  *
  * unk_5cc (state) and unk_5cf (variant) keep their placeholder spellings:
- * the ov063 state helper src/game/actors/daTrs_c/func_ov063_021166ac.cpp
- * names them, and renaming is that TU's follow-up, not this header's.
- * Their roles are documented below, not in the spelling.
+ * the TU's C-linkage state helpers still address them by raw offset, and
+ * renaming is that follow-up, not this header's. Their roles are documented
+ * below, not in the spelling.
  */
 #ifndef DATRS_C_H
 #define DATRS_C_H
@@ -53,8 +51,9 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 /* named (not anonymous inline) so check_header_offsets can parse the member
    declaration; layout identical. Bits, proven by use:
    b0: set when the course is 0xc and the spawn matches (InitResources); gates
-       the z clamp in Behavior. b1: body model drawn (Render, helper).
-   b2: set for variants 5/0/1/2/6/8..0xb and 7; gates the yaw copy in
+       the z clamp in Behavior. b1: body model drawn (Render, helper);
+       InitResources sets it for variants 5/0/1/2/6/8..0xb and 7.
+   b2: set by InitResources for every variant; gates the yaw copy in
        Behavior. b3: drawn at all (Render, helper); cleared on invincible
        death. b4: set when the player is high (variants 4/0xb) and in the
        hide block. b5: ground found (Behavior raycast). b6: unused. b7: set in

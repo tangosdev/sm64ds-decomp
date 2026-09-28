@@ -1,0 +1,196 @@
+{
+  "schema": "bounded-source-experiments-1",
+  "task": "tu-ov063-trs-0927",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2721",
+  "input_commit": "bdad205e5b5dea75ec04f732bf4445ce831fc9f1",
+  "original_base": "88abae803b62fb68004f117ca024a8d4853c7678",
+  "compiler": "2004/b56",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "formal_acceptance": false,
+  "command": "python tools/tubuild.py verify ov063/daTrs_c  (after applying the variant to src/actors/daTrs_c.cpp; reproduce_python applies every variant and restores the file)",
+  "reproduce_python": "\"\"\"Pinned re-measurement on the committed TU: the #2721 FLAGS16/FLAGS16T grid\nand the delete-outright controls for the launders that survive the fold.\"\"\"\nimport subprocess, json, re\nP = 'src/actors/daTrs_c.cpp'\norig = open(P, encoding='utf-8', newline='').read()\nnl = '\\r\\n' if '\\r\\n' in orig else '\\n'\nF_SITES = [('mFlags_5d4.b0 = 1;', 'FLAGS16 = (FLAGS16 & ~1) | 1;'), ('mFlags_5d4.b1 = 1;\\n        mCarriedID = 0xd4;', 'FLAGS16 |= 2;\\n        mCarriedID = 0xd4;'),\n           ('mdCcAcPos_c.vulnFlags |= 0x8000;\\n        mFlags_5d4.b1 = 1;', 'mdCcAcPos_c.vulnFlags |= 0x8000;\\n        FLAGS16 |= 2;'),\n           ('mFlags_5d4.b2 = 1;', 'FLAGS16 |= 4;'), ('mFlags_5d4.b3 = 1;', 'FLAGS16 |= 8;')]\nT_SITES = [('mFlags_5d4.b4 = 1;', 'FLAGS16T |= 0x10;'), ('mFlags_5d4.b1 = 1;\\n            mCarriedID = 0x120;', 'FLAGS16T |= 2;\\n            mCarriedID = 0x120;')]\nFORMS = {\n    'F': {'plain': '#define FLAGS16 (*(unsigned short *)(c + 0x5d4))',\n          'laundered': '#define FLAGS16 (*(unsigned short *)((long long)(c + 0x5d4)))'},\n    'T': {'plain': '#define FLAGS16T (*(unsigned short *)(c + 0x5d4))',\n          'laundered': '#define FLAGS16T (*(unsigned short *)((long long)((char *)((long long)c) + 0x5d4)))'},\n}\nANCHOR = 'int daTrs_c::InitResources()\\n{\\n    char *c = (char *)this;\\n'\n\n\ndef run(src):\n    open(P, 'w', encoding='utf-8', newline='').write(src)\n    r = subprocess.run(['python', 'tools/tubuild.py', 'verify', 'ov063/daTrs_c'], capture_output=True, text=True)\n    out = r.stdout + r.stderr\n    diffs = [' '.join(l.split()[1:2] + l.split('--')[1:]).strip() for l in out.splitlines() if l.startswith('DIFF')]\n    summ = [l for l in out.splitlines() if l.startswith('Result')]\n    return {'diffs': diffs, 'result': summ[0] if summ else out[-400:]}\n\n\ndef cell(f, t):\n    s = orig.replace('\\r\\n', '\\n')\n    defs = []\n    for form, sites, key in ((f, F_SITES, 'F'), (t, T_SITES, 'T')):\n        if form == 'member':\n            continue\n        for a, b in sites:\n            assert s.count(a) >= 1, a\n            s = s.replace(a, b, 1)\n        defs.append(FORMS[key][form])\n    assert ANCHOR in s\n    if defs:\n        s = s.replace(ANCHOR, '\\n'.join(defs) + '\\n' + ANCHOR)\n    return s.replace('\\n', nl)\n\n\nres = {'grid': {}, 'survivors': {}}\ntry:\n    for f in ('plain', 'laundered', 'member'):\n        for t in ('plain', 'laundered', 'member'):\n            if (f == 'member') != (t == 'member') and not (f == 'member' and t == 'member'):\n                pass\n            name = 'FLAGS16=%s FLAGS16T=%s' % (f, t)\n            res['grid'][name] = run(cell(f, t))\n            print(name, res['grid'][name])\n    SURV = {\n        'func_ov063_02119074: delete `volatile int dummy[2]; (void)&dummy;`': [('    volatile int dummy[2];\\n    (void)&dummy;\\n', '')],\n        'func_ov063_02117364: `volatile Vec3 pos` -> `Vec3 pos`': [('    volatile Vec3 pos;\\n', '    Vec3 pos;\\n', 1)],\n        'func_ov063_02117364: drop the volatile u32 reads of the particle handles': [('New(*(volatile u32*)((char*)c + 0x5d8)', 'New(*(u32*)((char*)c + 0x5d8)'), ('New(*(volatile u32*)((char*)c + 0x5dc)', 'New(*(u32*)((char*)c + 0x5dc)')],\n        'func_ov063_021177b0: `volatile Vec3 pos` -> `Vec3 pos`': [('            volatile Vec3 pos;\\n', '            Vec3 pos;\\n')],\n        'func_ov063_021177b0: `px * (volatile int)m` -> `px * m`': [('pos.x = px * (volatile int)m;', 'pos.x = px * m;')],\n    }\n    base = orig.replace('\\r\\n', '\\n')\n    for name, reps in SURV.items():\n        s = base\n        for r in reps:\n            assert r[0] in s, r[0]\n            s = s.replace(r[0], r[1]) if len(r) < 3 else s.replace(r[0], r[1], r[2])\n        res['survivors'][name] = run(s.replace('\\n', nl))\n        print(name, res['survivors'][name])\n    res['control'] = run(orig)\n    print('control', res['control'])\nfinally:\n    open(P, 'w', encoding='utf-8', newline='').write(orig)\njson.dump(res, open('build/grid3.json', 'w'), indent=1)\n",
+  "flags16_grid": {
+    "question": "#2721: which of the FLAGS16 / FLAGS16T (long long) launders in daTrs_c::InitResources are load-bearing?",
+    "sites": {
+      "FLAGS16": "the five stores of bits 0..3 (course-0xc spawn, variant flag b1 twice, b2, b3)",
+      "FLAGS16T": "the three later stores (b4 twice, b1 for variant 7)"
+    },
+    "forms": {
+      "plain": "*(unsigned short *)(c + 0x5d4)",
+      "laundered": "the shard macros: *(unsigned short *)((long long)(c + 0x5d4)) and the double-laundered FLAGS16T",
+      "member": "mFlags_5d4.bN = 1 on the BooFlags16 bitfield member (what the committed TU spells)"
+    },
+    "cells": {
+      "FLAGS16=plain FLAGS16T=plain": {
+        "diffs": [
+          "_ZN7daTrs_c13InitResourcesEv  999 word(s) differ; 8 reloc destination(s) WRONG (first: data_ov063_0211ede4 != 0x0211edd4:ov063)"
+        ],
+        "result": "Result: 96/97 MATCH -> NOT verified (see DIFF/MISSING/ERROR lines above)"
+      },
+      "FLAGS16=plain FLAGS16T=laundered": {
+        "diffs": [
+          "_ZN7daTrs_c13InitResourcesEv  999 word(s) differ; 8 reloc destination(s) WRONG (first: data_ov063_0211ede4 != 0x0211edd4:ov063)"
+        ],
+        "result": "Result: 96/97 MATCH -> NOT verified (see DIFF/MISSING/ERROR lines above)"
+      },
+      "FLAGS16=plain FLAGS16T=member": {
+        "diffs": [
+          "_ZN7daTrs_c13InitResourcesEv  999 word(s) differ; 8 reloc destination(s) WRONG (first: data_ov063_0211ede4 != 0x0211edd4:ov063)"
+        ],
+        "result": "Result: 96/97 MATCH -> NOT verified (see DIFF/MISSING/ERROR lines above)"
+      },
+      "FLAGS16=laundered FLAGS16T=plain": {
+        "diffs": [],
+        "result": "Result: 97/97 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED"
+      },
+      "FLAGS16=laundered FLAGS16T=laundered": {
+        "diffs": [],
+        "result": "Result: 97/97 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED"
+      },
+      "FLAGS16=laundered FLAGS16T=member": {
+        "diffs": [],
+        "result": "Result: 97/97 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED"
+      },
+      "FLAGS16=member FLAGS16T=plain": {
+        "diffs": [],
+        "result": "Result: 97/97 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED"
+      },
+      "FLAGS16=member FLAGS16T=laundered": {
+        "diffs": [],
+        "result": "Result: 97/97 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED"
+      },
+      "FLAGS16=member FLAGS16T=member": {
+        "diffs": [],
+        "result": "Result: 97/97 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED"
+      }
+    },
+    "conclusion": "Only the plain pointer-cast spelling of the FLAGS16 sites fails (InitResources 999 words, 8 reloc destinations shifted). FLAGS16T is inert in every form. The member bitfield stores match for both site groups, so the committed TU carries neither launder."
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "location": "src/actors/daTrs_c.cpp: daTrs_c::InitResources",
+      "kind": "launder",
+      "disposition": "fixed",
+      "summary": "FLAGS16/FLAGS16T (long long) launders replaced by mFlags_5d4 bitfield stores; see flags16_grid."
+    },
+    {
+      "id": "F2",
+      "location": "src/actors/daTrs_c.cpp: func_ov063_02119074, func_ov063_0211a0dc (five (long long)(int) launders), func_ov063_02117b0c (LAUND)",
+      "kind": "launder",
+      "disposition": "fixed",
+      "summary": "Six (long long) address launders (one in 02119074, five in 0211a0dc) and the LAUND() macro in 02117b0c proved inert once the shards were folded (delete-outright each, 97/97 after each and after all together)."
+    },
+    {
+      "id": "F3",
+      "location": "src/actors/daTrs_c.cpp: func_ov063_0211ab68, daTrs_c::InitResources",
+      "kind": "launder",
+      "disposition": "fixed",
+      "summary": "volatile int* stores into the static Vector3s and the three `*(volatile int *)&mClsnZBias` reads proved inert once folded; removed."
+    },
+    {
+      "id": "F4",
+      "location": "src/actors/daTrs_c.cpp: func_ov063_02119074",
+      "kind": "launder",
+      "disposition": "compiler_constraint",
+      "summary": "A volatile qualifier the shard needed still reproduces the ROM only with the qualifier present.",
+      "evidence": {
+        "tested_commit": "bdad205e5b5dea75ec04f732bf4445ce831fc9f1",
+        "compiler": "2004/b56",
+        "attempted_change": "delete `volatile int dummy[2]; (void)&dummy;` (a stack-frame filler)",
+        "command": "python tools/tubuild.py verify ov063/daTrs_c  (after applying the variant to src/actors/daTrs_c.cpp; reproduce_python applies every variant and restores the file)",
+        "result": "Result: 96/97 MATCH -> NOT verified (see DIFF/MISSING/ERROR lines above)",
+        "log": "func_ov063_02119074  3 word(s) differ",
+        "artifact_commit": "the commit that adds this file (see git log -- notes/experiments/tu-ov063-trs-0927.json)",
+        "artifact_path": "notes/experiments/tu-ov063-trs-0927.json"
+      }
+    },
+    {
+      "id": "F5",
+      "location": "src/actors/daTrs_c.cpp: func_ov063_02117364",
+      "kind": "launder",
+      "disposition": "compiler_constraint",
+      "summary": "A volatile qualifier the shard needed still reproduces the ROM only with the qualifier present.",
+      "evidence": {
+        "tested_commit": "bdad205e5b5dea75ec04f732bf4445ce831fc9f1",
+        "compiler": "2004/b56",
+        "attempted_change": "`volatile Vec3 pos` -> `Vec3 pos`",
+        "command": "python tools/tubuild.py verify ov063/daTrs_c  (after applying the variant to src/actors/daTrs_c.cpp; reproduce_python applies every variant and restores the file)",
+        "result": "Result: 96/97 MATCH -> NOT verified (see DIFF/MISSING/ERROR lines above)",
+        "log": "func_ov063_02117364  999 word(s) differ",
+        "artifact_commit": "the commit that adds this file (see git log -- notes/experiments/tu-ov063-trs-0927.json)",
+        "artifact_path": "notes/experiments/tu-ov063-trs-0927.json"
+      }
+    },
+    {
+      "id": "F6",
+      "location": "src/actors/daTrs_c.cpp: func_ov063_02117364",
+      "kind": "launder",
+      "disposition": "compiler_constraint",
+      "summary": "A volatile qualifier the shard needed still reproduces the ROM only with the qualifier present.",
+      "evidence": {
+        "tested_commit": "bdad205e5b5dea75ec04f732bf4445ce831fc9f1",
+        "compiler": "2004/b56",
+        "attempted_change": "drop the volatile u32 reads of the particle handles at +0x5d8/+0x5dc",
+        "command": "python tools/tubuild.py verify ov063/daTrs_c  (after applying the variant to src/actors/daTrs_c.cpp; reproduce_python applies every variant and restores the file)",
+        "result": "Result: 96/97 MATCH -> NOT verified (see DIFF/MISSING/ERROR lines above)",
+        "log": "func_ov063_02117364  8 word(s) differ",
+        "artifact_commit": "the commit that adds this file (see git log -- notes/experiments/tu-ov063-trs-0927.json)",
+        "artifact_path": "notes/experiments/tu-ov063-trs-0927.json"
+      }
+    },
+    {
+      "id": "F7",
+      "location": "src/actors/daTrs_c.cpp: func_ov063_021177b0",
+      "kind": "launder",
+      "disposition": "compiler_constraint",
+      "summary": "A volatile qualifier the shard needed still reproduces the ROM only with the qualifier present.",
+      "evidence": {
+        "tested_commit": "bdad205e5b5dea75ec04f732bf4445ce831fc9f1",
+        "compiler": "2004/b56",
+        "attempted_change": "`volatile Vec3 pos` -> `Vec3 pos`",
+        "command": "python tools/tubuild.py verify ov063/daTrs_c  (after applying the variant to src/actors/daTrs_c.cpp; reproduce_python applies every variant and restores the file)",
+        "result": "Result: 96/97 MATCH -> NOT verified (see DIFF/MISSING/ERROR lines above)",
+        "log": "func_ov063_021177b0  999 word(s) differ",
+        "artifact_commit": "the commit that adds this file (see git log -- notes/experiments/tu-ov063-trs-0927.json)",
+        "artifact_path": "notes/experiments/tu-ov063-trs-0927.json"
+      }
+    },
+    {
+      "id": "F8",
+      "location": "src/actors/daTrs_c.cpp: func_ov063_021177b0",
+      "kind": "launder",
+      "disposition": "compiler_constraint",
+      "summary": "A volatile qualifier the shard needed still reproduces the ROM only with the qualifier present.",
+      "evidence": {
+        "tested_commit": "bdad205e5b5dea75ec04f732bf4445ce831fc9f1",
+        "compiler": "2004/b56",
+        "attempted_change": "`px * (volatile int)m` -> `px * m`",
+        "command": "python tools/tubuild.py verify ov063/daTrs_c  (after applying the variant to src/actors/daTrs_c.cpp; reproduce_python applies every variant and restores the file)",
+        "result": "Result: 96/97 MATCH -> NOT verified (see DIFF/MISSING/ERROR lines above)",
+        "log": "func_ov063_021177b0  999 word(s) differ",
+        "artifact_commit": "the commit that adds this file (see git log -- notes/experiments/tu-ov063-trs-0927.json)",
+        "artifact_path": "notes/experiments/tu-ov063-trs-0927.json"
+      }
+    },
+    {
+      "id": "F9",
+      "location": "src/actors/daTrs_c.cpp: the C-linkage helpers",
+      "kind": "raw-offsets",
+      "disposition": "deferred",
+      "summary": "The 70-odd file-local helpers keep C linkage, char* self and raw member offsets (the landed text-only precedent, e.g. src/actors/daObjPowerUpItem_c.cpp). Turning them into daTrs_c / daTBasket_c members is the next readability pass; the ROM symbols are the bare func_ov063_* names, so each needs an asm-label or a real member rename first."
+    },
+    {
+      "id": "F10",
+      "location": "src/actors/daTrs_c.cpp: func_ov063_0211ab68",
+      "kind": "lifecycle",
+      "disposition": "deferred",
+      "summary": "The guard bit at data_ov063_0211edc0 plus func_020731dc(&vec, Vector3 dtor, &node) is a function-local `static Vector3` initialised on first use; it is still spelled by hand."
+    }
+  ],
+  "measurements": {
+    "opt_propagation_bracket": "func_ov063_0211640c needs opt_propagation off. With `#pragma opt_propagation off` before it and `on` directly after it: 96/97 (0211640c DIFF). Moving the `on`/pop to after the next definition (021166ac): 97/97. File-wide off: 82/97. No bracket: 96/97 (0211640c alone).",
+    "dead_brackets": "The shards also carried opt_common_subs off (02116a1c) and optimize_for_size on (02119a50). Deleting either bracket from the fold left 97/97, so both were deleted rather than carried as unfalsifiable pragmas.",
+    "short_param": "func_ov063_02119e38 takes `short a2` (callee skips the sign-extension); its callers 0211873c and 02118f74 pass a local that is itself `short`, so they emit no extension either. Declaring the parameter int unmatched 02119e38 (lsl/asr pair); keeping it short with int locals in the callers unmatched both callers."
+  }
+}
