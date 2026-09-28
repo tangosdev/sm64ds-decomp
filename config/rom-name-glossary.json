@@ -18,7 +18,17 @@
     "",
     "Course codes are deliberately thin here. The code -> overlay -> level MAPPING is",
     "derivable (tools/rtti_reference.py joins it from symbols/overlay_actors.md), so only",
-    "the etymology is recorded, and only where it is more than a guess."
+    "the etymology is recorded, and only where it is more than a guess.",
+    "",
+    "Evidence beyond the actor lists: the ROM's own actor debug strings",
+    "(symbols/actor_debug_names.tsv, e.g. SPIDER, KERONPA_FIRE, CH_ROOM) and the stage and",
+    "model directory names in the ROM file-name table (extracted/overlays/overlay_0000.bin,",
+    "e.g. data/stage/kaizoku_irie, fire_land, desert_land). Those give most course codes",
+    "their etymology.",
+    "",
+    "classes: a per-class override. tools/rtti_reference.py looks a part up here first, so",
+    "a part that means something else in one class (the Bk of daBttBk_c is 'block', not the",
+    "Battan King course) does not borrow the global reading."
   ],
   "domain": {
     "f": {
@@ -131,49 +141,122 @@
       "note": "ov027: SLIDING_ICE, CHILL_BULLY, SNOWMAN_BREATH."
     },
     "Ki": {
-      "gloss": "Jolly Roger Bay",
-      "confidence": "medium",
-      "note": "Mapping is certain (ov016: SHIP_UP/DOWN, ROCK_PILLAR, UNAGI); the two letters are not read."
+      "gloss": "Kaizoku Irie (pirate cove) -- Jolly Roger Bay",
+      "confidence": "high",
+      "note": "Stage dir data/stage/kaizoku_irie in the ROM file-name table (extracted/overlays/overlay_0000.bin); its sibling kaizoku_ship is Ks. ov016: SHIP_UP/DOWN, ROCK_PILLAR, UNAGI."
     },
     "Fl": {
-      "gloss": "Lethal Lava Land",
-      "confidence": "medium",
-      "note": "Mapping certain (ov022 is entirely LLL); etymology unread."
+      "gloss": "Fire Land -- Lethal Lava Land",
+      "confidence": "high",
+      "note": "Stage dir data/stage/fire_land in the ROM file-name table (extracted/overlays/overlay_0000.bin); the volcano interior is fire_mt (Fm). ov022 is entirely LLL."
     },
     "Wc": {
-      "gloss": "Wet-Dry World",
-      "confidence": "medium",
-      "note": "Mapping from ov029."
+      "gloss": "Water City -- Wet-Dry World",
+      "confidence": "high",
+      "note": "Stage dir data/stage/water_city in the ROM file-name table (extracted/overlays/overlay_0000.bin); mapping from ov029."
     },
     "Dl": {
-      "gloss": "Shifting Sand Land (pyramid)",
-      "confidence": "medium",
-      "note": "ov024: PYRAMID_TOP, PYRAMID_TAG."
+      "gloss": "Desert Land -- Shifting Sand Land (the outdoor desert)",
+      "confidence": "high",
+      "note": "Stage dir data/stage/desert_land in the ROM file-name table (extracted/overlays/overlay_0000.bin). ov024: PYRAMID_TOP, PYRAMID_TAG -- the pyramid seen from outside; its interior is Dp."
     },
     "Dp": {
-      "gloss": "Shifting Sand Land (pyramid interior)",
-      "confidence": "medium",
-      "note": "ov025: PYRAMID_STEP, PYRAMID_LIFT, GRINDEL."
+      "gloss": "Desert Pyramid -- Shifting Sand Land (pyramid interior)",
+      "confidence": "high",
+      "note": "Stage dir data/stage/desert_py in the ROM file-name table (extracted/overlays/overlay_0000.bin). ov025: PYRAMID_STEP, PYRAMID_LIFT, GRINDEL."
     },
     "Hm": {
-      "gloss": "Tall, Tall Mountain",
-      "confidence": "low",
-      "note": "Mapping from ov030 (daObjHmBskt_c, monkey); letters unread."
+      "gloss": "High Mountain -- Tall, Tall Mountain",
+      "confidence": "high",
+      "note": "Stage dir data/stage/high_mt in the ROM file-name table (extracted/overlays/overlay_0000.bin); ov030 carries HM_BASKET and HM_MARUTA."
     },
     "Rc": {
-      "gloss": "Rainbow Ride",
-      "confidence": "low",
-      "note": "Mapping only."
+      "gloss": "Rainbow Cruise -- Rainbow Ride",
+      "confidence": "high",
+      "note": "Stage dir data/stage/rainbow_cruise in the ROM file-name table (extracted/overlays/overlay_0000.bin)."
     },
     "Ct": {
-      "gloss": "Tick Tock Clock",
-      "confidence": "low",
-      "note": "Mapping only."
+      "gloss": "Clock Tower -- Tick Tock Clock",
+      "confidence": "high",
+      "note": "Stage dir data/stage/clock_tower in the ROM file-name table (extracted/overlays/overlay_0000.bin); every CT_MECHA* model is special_obj/ct_mecha_objNN."
     },
     "Km": {
-      "gloss": "Bowser stage (Km1/Km2/Km3 are the three)",
+      "gloss": "Koopa Map -- a Bowser stage (Km1/Km2/Km3 are the three)",
+      "confidence": "high",
+      "note": "Stage dirs data/stage/koopa1_map..koopa3_map in the ROM file-name table (extracted/overlays/overlay_0000.bin); the boss arenas are koopaN_boss (Kb). ov043/ov045/ov047 carry the three courses' furniture."
+    },
+    "Mc": {
+      "gloss": "Main Castle -- the castle grounds (outside)",
+      "confidence": "high",
+      "note": "ROM stage dir data/stage/main_castle; ov009 carries MC_WATER = CASTLE_WATER (moat), MC_METALNET, MC_FLAG, SBIRD (include/daObjMcWater_c.h:1)."
+    },
+    "C0": {
+      "gloss": "Castle basement (B1)",
+      "confidence": "high",
+      "note": "Stage dir data/stage/castle_b1; C0_WATER = BASEMENT_WATER, C0_SWITCH = SWITCH_PILLAR (ov012). The splitter currently cuts this as C + 0."
+    },
+    "C1": {
+      "gloss": "Castle first floor (1F)",
+      "confidence": "high",
+      "note": "Stage dir data/stage/castle_1f; C1_PEACH = PEACH_PAINTING, C1_HIKARI = LIGHT_BEAM, C1_TRAP = TRAP (ov010). C2 (castle_2f) shows up in the file table as c2_huriko / c2_hari_* but not in RTTI."
+    },
+    "Sm": {
+      "gloss": "Snow Mountain -- Cool, Cool Mountain",
+      "confidence": "high",
+      "note": "Stage dir data/stage/snow_mt; SM_LIFT(63) = SKI_LIFT, ov018 (include/daObjSm_Lift_c.h:7)."
+    },
+    "Ks": {
+      "ja": "海賊船",
+      "gloss": "Kaizoku Ship -- the sunken pirate ship in Jolly Roger Bay",
+      "confidence": "high",
+      "note": "Stage dir data/stage/kaizoku_ship; KS_MIZU(62) = SHIP_WATER, ov017 (include/daObjKsWater_c.h:1)."
+    },
+    "Th": {
+      "gloss": "Teresa House -- Big Boo's Haunt",
+      "confidence": "high",
+      "note": "Stage dir data/stage/teresa_house; TH_DOWN_B(66) = FALL_BLOCK_BBH, ov063; the file table also has th_hondana, th_kaidan, th_mery_go, th_trap. NOT the Th of dThIcon_c (touch)."
+    },
+    "Hs": {
+      "gloss": "High Slider -- the Princess's Secret Slide",
       "confidence": "medium",
-      "note": "ov043/ov045/ov047 carry the rickshaw/lift furniture of the three Bowser courses."
+      "note": "Stage dir data/stage/high_slider; HS_MOON / HS_STAR / HS_Y_STAR / HS_B_STAR (302-305) are the ov031 slide decorations (include/daObjHsBillboard_c.h:1). Caveat: HS_UPDOWN_LIFT(30) is labelled ROTATING_UP_DOWN_PLATFORM_UTM, which does not obviously belong to the slide."
+    },
+    "Td": {
+      "ja": "ちびでか",
+      "gloss": "Tibi-Deka, deka (huge) side -- Tiny-Huge Island",
+      "confidence": "high",
+      "note": "Stage dir data/stage/tibi_deka_d; TD_FUTA(106) = HUGE_COVER, TD_WATER(107) = HUGE_WATER (ov032). tibi (tiny) / deka (huge) is THI's Japanese name."
+    },
+    "Tt": {
+      "ja": "ちびでか",
+      "gloss": "Tibi-Deka, tibi (tiny) side -- Tiny-Huge Island",
+      "confidence": "high",
+      "note": "Stage dir data/stage/tibi_deka_t; TT_FUTA(104) = TINY_COVER, TT_WATER(105) = TINY_WATER (ov033)."
+    },
+    "Kb": {
+      "gloss": "Koopa Boss -- a Bowser battle arena (Kb1/Kb2/Kb3)",
+      "confidence": "high",
+      "note": "Stage dirs data/stage/koopa1_boss..koopa3_boss; the file table has kb1_ball, kb2_stage, kb3_stage. KB1_BILLBOARD(301) = ORANGE_BALL_BILLBOARD, ov044 (include/daObjKb1Billboard_c.h:1). Mirrors Km = koopaN_map."
+    },
+    "Emm": {
+      "gloss": "Ex Mario map -- an extra (secret) stage",
+      "confidence": "medium",
+      "note": "Stage dir data/stage/ex_m_map, alongside ex_mario, ex_l_map / ex_luigi, ex_w_map / ex_wario. EMM_LOG(174), EMM_YUKA(175) in ov052. Which in-game stage this is was not confirmed."
+    },
+    "Ewm": {
+      "gloss": "Ex Wario map -- an extra (secret) stage",
+      "confidence": "medium",
+      "note": "Stage dir data/stage/ex_w_map; EWM_ICE_BLOCK(173) = BIG_MOVING_ICE_BLOCK, ov056; file special_obj/ewm_ice_brock."
+    },
+    "Ewb": {
+      "gloss": "Ex Wario boss? -- Chief Chilly's arena",
+      "confidence": "low",
+      "note": "EWB_ICE_A/B/C (170-172) = CCC_ARENA / BIG_ICE / SMALL_ICE, ov073, alongside KING_DONKETU (Chief Chilly). E + w follows the ex_w_* pattern; reading b as boss follows Kb = koopaN_boss. There is no ex_w_boss dir (only ex_wario), so the b is a guess."
+    },
+    "Fm": {
+      "gloss": "Fire Mountain -- inside Lethal Lava Land's volcano",
+      "confidence": "medium",
+      "note": "The only matching stage dir is data/stage/fire_mt (next to fire_land = Fl). FM_BATTAN(84) = SQUASHER is ov023's only actor. Conflicts with include/daObjFm_Battan_c.h:3, which calls it Shifting Sand Land's squasher without citing evidence."
     }
   },
   "terms": {
@@ -468,9 +551,9 @@
       "confidence": "high"
     },
     "Dorifu": {
-      "gloss": "drifting platform",
+      "gloss": "rising staircase (drift?)",
       "confidence": "low",
-      "note": "Reading unconfirmed. daObjDorifu_c's own code steps a 0..4 index over five dBgW_Kc subobjects, enabling one at a time -- a platform that moves between five stations. See include/daObjDorifu_c.h."
+      "note": "Reading unconfirmed. daObjDorifu_c's own code steps a 0..4 index over five dBgW_Kc subobjects, enabling one at a time (include/daObjDorifu_c.h). The debug strings fit a staircase better than a drifting platform: KM1_DORIFU = STAIRS_BDW, KM3_DORIFU = STAIRS_BS, RC_DORIFU = TRICKY_TRIANGLES, and the file table has km3_dan0..4 (dan = step) -- a staircase that raises one step at a time."
     },
     "Ots": {
       "gloss": "unknown",
@@ -538,6 +621,670 @@
     "Sc": {
       "gloss": "scene",
       "confidence": "high"
+    },
+    "Pg": {
+      "ja": "ペンギン",
+      "gloss": "penguin",
+      "confidence": "high",
+      "note": "All four Pg classes carry PENGUIN_* ROM debug strings (symbols/actor_debug_names.tsv): 256 PENGUIN_BABY, 257 PENGUIN_MOTHER, 258 PENGUIN_DEFENDER, 259 PENGUIN_RACER; model dir data/enemy/penguin (overlay_0000 file-name table)."
+    },
+    "Mthr": {
+      "gloss": "mother",
+      "confidence": "high",
+      "note": "daPgMthr_c = PENGUIN_MOTHER(257); MOTHER_PENGUIN in overlay_actors.md ov018."
+    },
+    "Rcer": {
+      "gloss": "racer",
+      "confidence": "high",
+      "note": "daPgRcer_c = PENGUIN_RACER(259); RACING_PENGUIN ov019."
+    },
+    "Dfdr": {
+      "gloss": "defender",
+      "confidence": "high",
+      "note": "daPgDfdr_c = PENGUIN_DEFENDER(258) (include/daPgDfdr_c.h:1-3); overlay_actors.md calls it BRIDGE_PENGUIN -- the penguin that blocks the bridge."
+    },
+    "Bby": {
+      "gloss": "baby",
+      "confidence": "high",
+      "note": "daPgBby_c = PENGUIN_BABY(256), BABY_PENGUIN ov072; commit 9683eb5129 (was BabyPenguin)."
+    },
+    "Snm": {
+      "gloss": "snowman (the big snowman)",
+      "confidence": "high",
+      "note": "daBgSnmBdy_c / daBgSnmHed_c = BIG_SNOWMAN_BODY(274) / BIG_SNOWMAN_HEAD(273); daSnmBth_c = SNOWMAN_BREATH(275). Not Mr. Blizzard -- that is daSnowman_c."
+    },
+    "Snwmn": {
+      "gloss": "snowman (the big snowman)",
+      "confidence": "high",
+      "note": "daBgSnwmn_c = BIG_SNOWMAN(272), ov072; model dir data/enemy/big_snowman."
+    },
+    "Bdy": {
+      "gloss": "body",
+      "confidence": "high",
+      "note": "daBgSnmBdy_c = BIG_SNOWMAN_BODY(274); file big_snowman_body.bmd."
+    },
+    "Hed": {
+      "gloss": "head",
+      "confidence": "high",
+      "note": "daBgSnmHed_c = BIG_SNOWMAN_HEAD(273); file big_snowman_head.bmd."
+    },
+    "Bth": {
+      "gloss": "breath",
+      "confidence": "high",
+      "note": "daSnmBth_c = SNOWMAN_BREATH(275), ov027; include/daSnmBth_c.h:1 (one collision-bearing breath particle)."
+    },
+    "Snowman": {
+      "gloss": "Mr. Blizzard (NOT the big snowman)",
+      "confidence": "high",
+      "note": "The English is misleading: daSnowman_c = debug string SNOWMAN(223) = MR_BLIZZARD in overlay_actors.md ov081 (files snowman/snowman_model.bmd, snow_ball.bmd). The big snowman is daBgSnwmn_c."
+    },
+    "Spd": {
+      "gloss": "spider -- Scuttlebug",
+      "confidence": "high",
+      "note": "daSpd_c = SPIDER(255) = SCUTTLEBUG, ov071; model dir data/enemy/spider; build/rtti_reconcile.json coined name Scuttlebug."
+    },
+    "Btfly": {
+      "gloss": "butterfly",
+      "confidence": "high",
+      "note": "daBtfly_c = BUTTERFLY(336), ov100; dir data/normal_obj/butterfly."
+    },
+    "Tor": {
+      "gloss": "tornado",
+      "confidence": "high",
+      "note": "daTor_c = TORNADO(308), ov096; model dir data/enemy/sand_tornado; commit 67752d9092 (was Tornado)."
+    },
+    "Ibl": {
+      "gloss": "iron ball",
+      "confidence": "high",
+      "note": "daIbl_c = IRONBALL(220) = ROLLING_IRON_BALL, ov100; rtti_reconcile coined name RollingIronBall."
+    },
+    "Wbm": {
+      "gloss": "water bomb",
+      "confidence": "high",
+      "note": "daWbm_c = WATERBOMB(208), ov098; include/daWbm_c.h:1 (the tree called it WaterBomb); dir data/enemy/water_bomb."
+    },
+    "Cnn": {
+      "gloss": "cannon",
+      "confidence": "high",
+      "note": "daCnn_c = CANNON(207), ov098; include/daCnn_c.h:1."
+    },
+    "Bmb": {
+      "gloss": "bomb -- Bob-omb",
+      "confidence": "high",
+      "note": "daBmb_c = BOMBHEI(206) = BOB_OMB, ov102."
+    },
+    "Bombhei": {
+      "ja": "ボム兵",
+      "gloss": "Bob-omb",
+      "confidence": "high",
+      "note": "daRedBombhei_c = RED_BOMBHEI(181) = BOB_OMB_BUDDY (the red Bob-omb); files bombhei/red_bombhei.bmd. Standard Mario name."
+    },
+    "Bombking": {
+      "ja": "ボムキング",
+      "gloss": "King Bob-omb",
+      "confidence": "high",
+      "note": "daBombking_c = BOMBKING(189) = KING_BOB_OMB, ov078; file bombking/bomb_king.bmd."
+    },
+    "Shl": {
+      "gloss": "shell -- Koopa shell",
+      "confidence": "high",
+      "note": "daShl_c = SHELL(285) = KOOPA_SHELL, ov102; include/daShl_c.h:1."
+    },
+    "Shell": {
+      "gloss": "clam (NOT a Koopa shell)",
+      "confidence": "high",
+      "note": "Misleading English: daObjShell_c = OBJ_SHELL(315) = CLAM in overlay_actors.md ov064 (dir normal_obj/obj_shell). The Koopa shell is daShl_c."
+    },
+    "Bbl": {
+      "gloss": "bubble -- Lava Bubble (Podoboo)",
+      "confidence": "high",
+      "note": "daBbl_c = debug string BUBBLE(214) = LAVA_BUBBLE, ov064; include/daBbl_c.h:1. Not the water bubble, which is daObjAbuku_c (OBJ_ABUKU 291)."
+    },
+    "Brq": {
+      "ja": "ビリキュー",
+      "gloss": "Birikyu -- Amp",
+      "confidence": "high",
+      "note": "daBrq_c = BIRIKYU(266) = AMP, ov070; dir data/enemy/birikyu. Brq is the consonant skeleton of biri-kyu."
+    },
+    "Krpa": {
+      "ja": "ケロンパ",
+      "gloss": "Keronpa -- Flame Chomp",
+      "confidence": "high",
+      "note": "daKrpa_c = KERONPA(270) = FLAME_CHOMP, ov070; include/daKrpa_c.h:1 (the tree once coined FlameChomp); dir data/enemy/keronpa."
+    },
+    "Kp": {
+      "gloss": "Keronpa -- Flame Chomp (NOT Koopa)",
+      "confidence": "high",
+      "note": "In daKpFr_c, Kp is short for Keronpa: the debug string is KERONPA_FIRE(271) = FLAME_CHOMP_FIRE, ov070, next to KERONPA. Do not read it as Kpa/Koopa."
+    },
+    "Fr": {
+      "gloss": "fire",
+      "confidence": "high",
+      "note": "daKpFr_c = KERONPA_FIRE(271)."
+    },
+    "Eykn": {
+      "ja": "アイくん",
+      "gloss": "Eyekun -- Mr. I",
+      "confidence": "high",
+      "note": "daEykn_c = EYEKUN(262) / EYEKUN_BOSS(263) = MR_I / BIG_MR_I, ov071; include/daEykn_c.h:1; dir data/enemy/eyekun."
+    },
+    "Ey": {
+      "gloss": "Eyekun -- Mr. I",
+      "confidence": "high",
+      "note": "daEyBm_c = EYEKUN_BEAM(264) = MR_I_PROJECTILE, ov071."
+    },
+    "Bm": {
+      "gloss": "beam",
+      "confidence": "high",
+      "note": "daEyBm_c = EYEKUN_BEAM(264)."
+    },
+    "Jgm": {
+      "ja": "ジュゲム",
+      "gloss": "Jugem -- Lakitu",
+      "confidence": "high",
+      "note": "daJgm_c = JUGEM(265) = LAKITU, ov077 (the Spiny-throwing Lakitu); dir data/enemy/jugem. Same word as the existing Jugem term."
+    },
+    "Tgz": {
+      "ja": "トゲゾー",
+      "gloss": "Togezo -- Spiny",
+      "confidence": "high",
+      "note": "daTgz_c = TOGEZO(260) = SPINY, ov077; include/daTgz_c.h:1; dir data/enemy/togezo."
+    },
+    "Popoi": {
+      "gloss": "Heave-Ho",
+      "confidence": "high",
+      "note": "daPopoi_c = POPOI(238) = HEAVE_HO, ov077; dir data/enemy/popoi."
+    },
+    "Holhei": {
+      "gloss": "Chuckya",
+      "confidence": "high",
+      "note": "daHolhei_c = HOLHEI(190) = CHUCKYA, ov062; include/daHolhei_c.h:1; the model dir spells it horuhei."
+    },
+    "Jango": {
+      "ja": "ジャンゴ",
+      "gloss": "Klepto",
+      "confidence": "high",
+      "note": "daJango_c = JANGO(239) = KLEPTO, ov062; dir data/enemy/jango."
+    },
+    "Menbo": {
+      "ja": "アメンボ",
+      "gloss": "Skeeter (from amenbo, water strider)",
+      "confidence": "high",
+      "note": "daMenbo_c = MENBO(230) = SKEETER, ov090; include/daMenbo_c.h (Skeeter_Spawn)."
+    },
+    "Huwa": {
+      "ja": "ふわふわ",
+      "gloss": "fluffy -- Spindrift",
+      "confidence": "high",
+      "note": "daHuwa_c = HUWAHUWA(312) = SPINDRIFT, ov081; include/daHuwa_c.h (Spindrift_Spawn). huwahuwa = fluffy / floaty."
+    },
+    "Hyuhyu": {
+      "ja": "ヒューヒュー",
+      "gloss": "whoosh -- Fwoosh",
+      "confidence": "high",
+      "note": "daHyuhyu_c = HYUHYU(231) = FWOOSH, ov091; include/daHyuhyu_c.h:1; commit deef65a62a (was Fwoosh)."
+    },
+    "Onms": {
+      "ja": "オニマス",
+      "gloss": "Onimasu -- Tox Box",
+      "confidence": "high",
+      "note": "daOnms_c = ONIMASU(309) = TOX_BOX, ov092; include/daOnms_c.h:1; dir data/enemy/onimasu."
+    },
+    "Gmch": {
+      "ja": "がま口",
+      "gloss": "gamaguchi (clasp coin purse) -- Moneybag",
+      "confidence": "high",
+      "note": "daGmch_c = GAMAGUCHI(261) = MONEYBAG, ov081; include/daGmch_c.h (Moneybag_Spawn)."
+    },
+    "Dgr": {
+      "gloss": "Donguru -- Spindel",
+      "confidence": "high",
+      "note": "daDgr_c = DONGURU(163) = SPINDEL; include/daDgr_c.h:1; dir data/enemy/donguru."
+    },
+    "Dkk": {
+      "gloss": "Donkaku -- Grindel",
+      "confidence": "high",
+      "note": "daDkk_c = DONKAKU(162) = GRINDEL, ov025; dir data/enemy/donkaku. Its base is daDsnBase_c (include/daDkk_c.h), which fits a Thwomp relative."
+    },
+    "Btn": {
+      "ja": "バッタン",
+      "gloss": "Battan -- Whomp",
+      "confidence": "high",
+      "note": "daBtn_c = BATAN(164) / BATANKING(165) = WHOMP / WHOMP_KING, ov079; commit c87a04846a (was Whomp)."
+    },
+    "Battan": {
+      "ja": "バッタン",
+      "gloss": "Battan -- Whomp; here a slamming squasher",
+      "confidence": "high",
+      "note": "FM_BATTAN(84) = SQUASHER, the only actor in ov023; dir special_obj/fm_battan. Battan is Whomp's Japanese name (data/enemy/battan, battan_king); the object is a Whomp-like slab that slams down."
+    },
+    "Btt": {
+      "ja": "バッタ",
+      "gloss": "batta (grasshopper) -- Crazed Crate",
+      "confidence": "high",
+      "note": "daBttBk_c = BATTA_BLOCK(193) = CRAZED_CRATE, ov080; dir data/enemy/batta_block. The hopping crate. Its Bk is block, not the Bk course."
+    },
+    "Choro": {
+      "gloss": "Choropu -- Monty Mole",
+      "confidence": "high",
+      "note": "daChoro_Rock_c = CHORO_ROCK(311) = MONTY_MOLE_ROCK; file choropu/rock.bmd; rtti_reconcile coined MontyMoleRock."
+    },
+    "Iwante": {
+      "ja": "岩手",
+      "gloss": "rock hands -- Eyerok",
+      "confidence": "high",
+      "note": "daIwante_c = IWANTE(176) = EYEROK, ov066; files iwante_lhand/iwante_rhand.bmd; rtti_reconcile coined Eyerok. iwa (rock) + te (hand)."
+    },
+    "Grock": {
+      "ja": "ゴロ岩",
+      "gloss": "goro rock -- rolling rock",
+      "confidence": "high",
+      "note": "daGrock_c = GORO_ROCK(221) = ROLLING_ROCK, ov021; dir special_obj/cv_goro_rock. goro(goro) is the sound of rolling."
+    },
+    "Nknk": {
+      "ja": "ノコノコ",
+      "gloss": "Nokonoko -- Koopa Troopa",
+      "confidence": "high",
+      "note": "daNknk_c = NOKONOKO(203) / NOKONOKO_S(204) = KOOPA / KOOPA_SMALL, ov062; rtti_reconcile coined Koopa; dir data/enemy/nokonoko."
+    },
+    "Nk": {
+      "ja": "ノコノコ",
+      "gloss": "Nokonoko -- Koopa Troopa",
+      "confidence": "high",
+      "note": "daRNk_c = RACE_NOKO(188) = KOOPA_THE_QUICK, ov062."
+    },
+    "Mky": {
+      "gloss": "monkey -- Ukiki",
+      "confidence": "high",
+      "note": "daMky_c = MONKEY_THIEF(267) / MONKEY_STAR(268) = UKIKI_THIEF / UKIKI_STAR, ov030; dir data/enemy/monkey."
+    },
+    "Bakubaku": {
+      "ja": "バクバク",
+      "gloss": "Bubba",
+      "confidence": "high",
+      "note": "daBakubaku_c = BAKUBAKU(228) = BUBBA; dir data/enemy/bakubaku. bakubaku = munch munch."
+    },
+    "Yurei": {
+      "ja": "幽霊",
+      "gloss": "ghost",
+      "confidence": "high",
+      "note": "daYurei_Mucho_c = YUREI_MUCHO(236) = SNUFIT, ov065; include/daYurei_Mucho_c.h:1."
+    },
+    "Mucho": {
+      "gloss": "second half of Snufit's Japanese name (Yurei Mucho)",
+      "confidence": "medium",
+      "note": "Proper-name fragment; YUREI_MUCHO(236) = SNUFIT. No separate meaning offered for Mucho."
+    },
+    "Kuri": {
+      "ja": "クリ",
+      "gloss": "Kuribo -- Goomba",
+      "confidence": "high",
+      "note": "daKuriKing_c = KURIKING(198) = GOOMBOSS, ov074; rtti_reconcile coined Goomboss; dir data/enemy/kuriking. Same root as the existing Krb term."
+    },
+    "Teresa": {
+      "ja": "テレサ",
+      "gloss": "Teresa -- Boo",
+      "confidence": "high",
+      "note": "dScMgTeresa_c = MG_TERESA(387) = MG_HIDE_AND_BOO_SEEK. The same word the existing Trs term abbreviates."
+    },
+    "Koopa": {
+      "ja": "クッパ",
+      "gloss": "Koopa -- Bowser (NOT a Koopa Troopa)",
+      "confidence": "high",
+      "note": "In EAD usage Koopa is Bowser: KOOPA(279) = BOWSER, WL_KOOPA_SHUTTER(91) = BOWSER_SHUTTER (commit 49e7449f63 renamed BowserShutter to daObjWlKoopaShutter_c). A Koopa Troopa is Nokonoko."
+    },
+    "Koma": {
+      "ja": "独楽",
+      "gloss": "spinning top",
+      "confidence": "high",
+      "note": "FL_KOMA_D(80) = ROTATING_PLATFORM_LLL, FL_KOMA_U(81) = ROTATING_FIREBAR; include/daObjFl_Koma_D_c.h:1 (a spinning disc derived from daObjKaitendai_c)."
+    },
+    "Gura": {
+      "ja": "ぐら",
+      "gloss": "wobble / tilt (short for Guragura)",
+      "confidence": "high",
+      "note": "FL_GURA(72) = TILTING_PLATFORM_LLL, KM2_GURA(141) = TILTING_PLATFORM_BFS; include/daObjFl_Gura_c.h: its storage is filled by the base daObjGuragura_c."
+    },
+    "London": {
+      "gloss": "London Bridge -- a collapsing lava bridge",
+      "confidence": "medium",
+      "note": "FL_LONDON(73) = LAVA_BRIDGE, ov022 (include/daObjFl_London_c.h:1). Read as the nursery rhyme 'London Bridge is falling down'. Inferred from the object, not documented anywhere."
+    },
+    "Uki": {
+      "ja": "浮き",
+      "gloss": "floating",
+      "confidence": "high",
+      "note": "FL_UKI_KI(82) = LAVA_PLANK, a bobbing plank (include/daObjFl_UkiKi_c.h:1); dir special_obj/fl_uki_ki next to fl_uki_yuka. The Ki that follows is ki (wood), not the Ki course."
+    },
+    "Amilift": {
+      "ja": "網リフト",
+      "gloss": "net lift",
+      "confidence": "high",
+      "note": "ami (net) + lift. FL_AMILIFT(69) = METAL_NET_LIFT; rtti_reconcile coined MetalNetLift."
+    },
+    "Dossunbar": {
+      "gloss": "Thwomp bar -- a sliding bar that slams",
+      "confidence": "medium",
+      "note": "dossun (Thwomp / thud) + bar. BK_DOSSUNBAR_L/S(53/54) = MOVING_BAR_BIG/SMALL, ov015; include/daObjBk_Dossunbar_c.h:1."
+    },
+    "Rotebar": {
+      "gloss": "rotating bar",
+      "confidence": "high",
+      "note": "BK_ROTEBAR(51) = ROTATING_BRIDGE, ov015; include/daObjBk_Rotebar_c.h: turns by half-turns with pauses."
+    },
+    "Killerdai": {
+      "ja": "キラー台",
+      "gloss": "Killer stand -- Bullet Bill launcher",
+      "confidence": "high",
+      "note": "killer (Bullet Bill) + dai (stand). BK_KILLER_DAI(43) = BILL_BLASTER, ov079; include/daObjBkKillerdai_c.h:1."
+    },
+    "Swdoor": {
+      "gloss": "switch door",
+      "confidence": "high",
+      "note": "include/daObjSwdoor_c.h:1-2: 'swdoor is switch door, the ROM's own contraction'. daObjBSwdoor_c = SWITCHDOOR(40) = SHUTTER_BOB."
+    },
+    "Udlift": {
+      "gloss": "up-down lift",
+      "confidence": "high",
+      "note": "daUdlift_c = UDLIFT(33) / UDLIFT_TERESA(32) = UP_DOWN_LIFT_HMC / UP_DOWN_LIFT_BBH; dir normal_obj/obj_updnlift."
+    },
+    "Guruguru": {
+      "ja": "ぐるぐる",
+      "gloss": "round and round -- a spinning platform",
+      "confidence": "high",
+      "note": "RC_GURUGURU(132) = ARMED_ROTATING_PLATFORM, ov036; include/daObjRc_Guruguru_c.h:1."
+    },
+    "Mecha": {
+      "ja": "メカ",
+      "gloss": "mechanism -- a clockwork piece of Tick Tock Clock",
+      "confidence": "high",
+      "note": "Every Mecha class is a CT_MECHA0N debug string (108-122: TTC conveyor belts, moving bars, cubes, beam, cogs, clock hand) with model dir special_obj/ct_mecha_objNN. The number is EAD's part index; decompose() strips it."
+    },
+    "Brock": {
+      "gloss": "block (EAD spelling)",
+      "confidence": "high",
+      "note": "DP_BROCK(87) = PYRAMID_STEP (include/daObjDpBrock_c.h:1). The ROM spells block as brock elsewhere too: special_obj/ewm_ice_brock, special_obj/sl_ice_brock."
+    },
+    "Kinoko": {
+      "ja": "キノコ",
+      "gloss": "mushroom",
+      "confidence": "high",
+      "note": "KINOKO_TAG(320) / KINOKO_CREATE_TAG(319) = MEGA_MUSHROOM_TAG / _CREATE_TAG; ONEUPKINOKO(276) and SCALEUP_KINOKO(277) are da1up_c; dir normal_obj/scale_up_kinoko. The case-insensitive lookup also covers cMgSmartball_kinoko_c."
+    },
+    "Hatena": {
+      "ja": "はてな",
+      "gloss": "question mark",
+      "confidence": "high",
+      "note": "HATENA_BLOCK(20) = QUESTION_BLOCK, HATENA_SWITCH(26) = QUESTION_SWITCH; commit 7d5ecfe955 renamed QuestionBlock to daObjHatenaBlock_c."
+    },
+    "Warpkun": {
+      "ja": "ワープくん",
+      "gloss": "Mr. Warp -- a warp point",
+      "confidence": "high",
+      "note": "daWarpkun_c = WARPKUN(347) = WARP, ov002. -kun is the familiar name suffix."
+    },
+    "Yegg": {
+      "gloss": "Yoshi egg",
+      "confidence": "high",
+      "note": "daYegg_c = YOSHI_EGG(9); rtti_reconcile coined YoshiEgg."
+    },
+    "Ply": {
+      "gloss": "player",
+      "confidence": "high",
+      "note": "daPly_c = PLAYER(191); rtti_reconcile coined Player."
+    },
+    "Pic": {
+      "gloss": "picture -- a painting",
+      "confidence": "high",
+      "note": "daPicGate_c = PICTURE_GATE(307) = PAINTING, ov080."
+    },
+    "Sld": {
+      "gloss": "slider -- the ice slide",
+      "confidence": "high",
+      "note": "daSldMng_c = SLIDER_MANAGER(356) = ICE_SLIDE_MANAGER, ov019; include/daSldMng_c.h:1."
+    },
+    "Mng": {
+      "gloss": "manager",
+      "confidence": "high",
+      "note": "daSldMng_c = SLIDER_MANAGER(356)."
+    },
+    "Cre": {
+      "gloss": "create -- a spawn trigger",
+      "confidence": "high",
+      "note": "daSCre_c = STAR_CREATE(355) = POWER_STAR_CREATE, ov018; include/daSCre_c.h:1 (star-create trigger)."
+    },
+    "Gen": {
+      "gloss": "generator",
+      "confidence": "high",
+      "note": "daBookGen_c = BOOK_GENERATOR(328) = BOOK_SHOT_SPAWNER; rtti_reconcile coined BookShotSpawner."
+    },
+    "Bskt": {
+      "gloss": "basket -- the Ukiki cage",
+      "confidence": "high",
+      "note": "daObjHmBskt_c = HM_BASKET(103) = UKIKI_CAGE, ov030; dir special_obj/hm_basket."
+    },
+    "Tbox": {
+      "gloss": "treasure box -- treasure chest",
+      "confidence": "high",
+      "note": "daObjTbox_c = TREASURE_BOX(13) = TREASURE_CHEST; dir normal_obj/t_box."
+    },
+    "Ent": {
+      "gloss": "entry -- VS-mode entry",
+      "confidence": "medium",
+      "note": "dEntObj_c = ENTRY_OBJECT(346), ov075, next to ENTRY(6) / RESULT(7) (dScEntry_c). rtti_reconcile coined UnknownVsEntry."
+    },
+    "News": {
+      "gloss": "N-E-W-S? (a lift moving in compass directions)",
+      "confidence": "low",
+      "note": "CV_NEWS_LIFT(68) = WORK_ELEVATOR in Hazy Maze Cave (commit e4e674a324, was WorkElevator). Reading it as North-East-West-South from a lift that moves in compass directions is a guess; not checked against daObjCvNewsLift_c's code."
+    },
+    "Bar": {
+      "gloss": "pole (a climbable bar)",
+      "confidence": "medium",
+      "note": "Misleading English: daBar_c = BAR(287) = INVISIBLE_POLE, ov002."
+    },
+    "Pile": {
+      "gloss": "stake / post -- the Pound-the-Pole stump",
+      "confidence": "medium",
+      "note": "daObjPile_c = PILE(27) = STUMP, ov091; dir normal_obj/obj_pile. Pile in the driven-post sense, not a heap."
+    },
+    "Linelift2": {
+      "gloss": "line lift -- a lift that follows a path line",
+      "confidence": "medium",
+      "note": "daLinelift2_c covers KM2_SUSUMU(144) = SQUARE_METAL_NET_LIFT and KM3_LIFT(157) = ARROW_PATH_LIFT."
+    },
+    "Kc": {
+      "gloss": "KCL collision mesh",
+      "confidence": "medium",
+      "note": "dBgW_Kc is the static-mesh collider (include/dBgW_Kc.h:1); every collidable model in the file table ships a .kcl next to its .bmd (e.g. special_obj/bk_futa/bk_futa.kcl)."
+    },
+    "Mbg": {
+      "gloss": "moving background -- a moving collision mesh",
+      "confidence": "medium",
+      "note": "include/dBgW_KcMbg.h:1 'The moving-mesh collider'; Mbg read as Move-Bg, fitting the Bg subsystem."
+    },
+    "Scl": {
+      "gloss": "scale",
+      "confidence": "high",
+      "note": "include/dBgW_KcMbgSclY.h:1: a moving mesh collider that stretches vertically; SclY = scale Y."
+    },
+    "Actr": {
+      "gloss": "actor",
+      "confidence": "high",
+      "note": "include/dBgCh_Actr.h: a dActor_c's mesh-collision query."
+    },
+    "Gnd": {
+      "gloss": "ground",
+      "confidence": "medium",
+      "note": "dBgCh_Gnd is one of the dBgCh_* terrain queries; the reading is the usual abbreviation. Its header is auto-generated and names no role."
+    },
+    "Ac": {
+      "gloss": "actor (attached to an actor)",
+      "confidence": "medium",
+      "note": "include/dCcAc_c.h:1 'A cylinder attached to an dActor_c'; dCcAcPos_c likewise."
+    },
+    "Pos": {
+      "gloss": "position",
+      "confidence": "high",
+      "note": "include/dCcPos_c.h:1 'A cylinder that carries its own position'; dCcAcPos_c 'keeps its own position'."
+    },
+    "Anm": {
+      "ja": "アニメ",
+      "gloss": "animation",
+      "confidence": "high",
+      "note": "The dExt*Anm* classes are the tree's ModelAnim / MaterialChanger / TextureTransformer family (coined names in build/rtti_reconcile.json; notes/model-rtti-names.md). A common Nintendo abbreviation."
+    },
+    "Tex": {
+      "gloss": "texture",
+      "confidence": "high",
+      "note": "dExtAnmTexSRT_c (coined TextureTransformer), dExtAnmTexPat_c (coined TextureSequence)."
+    },
+    "SRT": {
+      "gloss": "scale-rotate-translate (texture-matrix animation)",
+      "confidence": "high",
+      "note": "dExtAnmTexSRT_c, coined TextureTransformer in build/rtti_reconcile.json."
+    },
+    "Pat": {
+      "gloss": "pattern -- texture-pattern (frame-swap) animation",
+      "confidence": "high",
+      "note": "dExtAnmTexPat_c, coined TextureSequence in build/rtti_reconcile.json; pairs with the .btp files in the file table."
+    },
+    "Exp": {
+      "gloss": "expanded (expanded heap)",
+      "confidence": "high",
+      "note": "mHeap::ExpHeap_t, coined ExpandingHeap in build/rtti_reconcile.json; NitroSDK's expanded-heap term."
+    },
+    "Esp": {
+      "gloss": "ESP -- psychic",
+      "confidence": "high",
+      "note": "dScMg3DEsp_c = MG_3DESP(389) = MG_PSYCHE_OUT (include/dScMg3DEsp_c.h:1); minigame file MG/esp_card.bmd."
+    },
+    "Amida": {
+      "ja": "あみだ",
+      "gloss": "amidakuji -- ghost-leg lottery",
+      "confidence": "medium",
+      "note": "dScMgAmida_c = MG_AMIDA(371); overlay_actors.md gives no English name, so the minigame is not independently identified."
+    },
+    "Bomroom": {
+      "gloss": "bomb room -- Sort or 'Splode",
+      "confidence": "high",
+      "note": "dScMgBomroom_c = MG_BOMROOM(370) = MG_SORT_OR_SPLODE."
+    },
+    "Carlo": {
+      "gloss": "Monte Carlo (with the M before it) -- a casino card game",
+      "confidence": "medium",
+      "note": "dScMgMCarlo_c = MG_MCARLO(381), dScMgMCarlo2_c = MG_MCARLO2(382) = PAIR_A_GONE_AND_ON; MG/casino_back.bmd is in the file table. The splitter cuts MCarlo into M + Carlo."
+    },
+    "Trmp": {
+      "gloss": "trampoline",
+      "confidence": "high",
+      "note": "dMgTrmp* sit with dScMgTrampoline_c = MG_TRAMPOLINE(384)."
+    },
+    "Trmpln": {
+      "gloss": "trampoline",
+      "confidence": "high",
+      "note": "dMgTrmpln3DMario_c / dMgTrmpln2Mario_c: Trampoline Time / Terror (MG_TRAMPOLINE 384, MG_TRAMPOLINE2 385). The parts arrive as Trmpln3 / Trmpln2; the trailing-digit strip lands here."
+    },
+    "Gm": {
+      "gloss": "game (MiniGm = minigame)",
+      "confidence": "high",
+      "note": "dScMiniGm_c = MINIGAME(5)."
+    },
+    "MB": {
+      "gloss": "multiboot (DS Download Play)",
+      "confidence": "high",
+      "note": "dScMB_c = MULTIBOOT(360), arm9."
+    },
+    "SE": {
+      "gloss": "sound effect",
+      "confidence": "high",
+      "note": "daSetSE_c = SET_SE(350) = AMBIENT_SOUND_EFFECTS."
+    },
+    "Cam": {
+      "gloss": "camera",
+      "confidence": "high",
+      "note": "daCamTag_c = CAMERA_TAG(333)."
+    },
+    "Yogan": {
+      "ja": "溶岩",
+      "gloss": "lava",
+      "confidence": "medium",
+      "note": "dPa_c::level_c::checkYoganCallback_c sits next to checkWaterCallback_c. The reading is unambiguous; not traced to its code."
+    },
+    "Kira": {
+      "ja": "キラ",
+      "gloss": "sparkle",
+      "confidence": "medium",
+      "note": "dPa_c::level_c::edStarKiraCallback_c -- the ending star's sparkle (kirakira)."
+    },
+    "ed": {
+      "gloss": "ending",
+      "confidence": "medium",
+      "note": "Player animations in the file table use the same prefix for the ending (ed_kiss_wait, ed_wave, ed_fly, peach_ed_*). edStarKiraCallback_c = the ending star's sparkle."
+    },
+    "dokan": {
+      "ja": "土管",
+      "gloss": "pipe (warp pipe)",
+      "confidence": "high",
+      "note": "DOKAN(298) = WARP_PIPE; dir normal_obj/obj_dokan."
+    },
+    "Dilar": {
+      "gloss": "dealer? (card-game dealer)",
+      "confidence": "low",
+      "note": "dMgDilarCardObj_c is a minigame card object; dilar read as a misspelled 'dealer'. Unverified."
+    },
+    "Pc": {
+      "gloss": "polygon (common info)",
+      "confidence": "low",
+      "note": "include/dBgPc.h:1 'Common polygon information carried by collision results'. The letters are not read."
+    },
+    "Pi": {
+      "gloss": "polygon (hit info)",
+      "confidence": "low",
+      "note": "include/dBgPi.h:1 'A polygon hit produced by the background-collision system'. The letters are not read."
+    },
+    "Crr": {
+      "gloss": "correction? (sphere push-out)",
+      "confidence": "low",
+      "note": "dBgCh_SphCrr is the sphere terrain query; Crr read as 'correct'. The header is auto-generated and documents no role."
+    }
+  },
+  "classes": {
+    "daBttBk_c": {
+      "Bk": {
+        "gloss": "block",
+        "confidence": "high",
+        "note": "BATTA_BLOCK(193) = CRAZED_CRATE (symbols/actor_debug_names.tsv); not the Battan King course code."
+      }
+    },
+    "daObjFl_UkiKi_c": {
+      "Ki": {
+        "ja": "木",
+        "gloss": "wood -- a floating plank",
+        "confidence": "high",
+        "note": "FL_UKI_KI(82) = LAVA_PLANK; dir special_obj/fl_uki_ki. uki (floating) + ki (wood), not the Jolly Roger Bay course code."
+      }
+    },
+    "daChRoom_c": {
+      "Ch": {
+        "gloss": "change (change room)",
+        "confidence": "medium",
+        "note": "CH_ROOM(348) = VIRTUAL_DOOR, an area-transition trigger box (include/daChRoom_c.h:1). Not the Ch of the dBgCh_* collision queries."
+      }
+    },
+    "daChScene_c": {
+      "Ch": {
+        "gloss": "change (change scene)",
+        "confidence": "medium",
+        "note": "CH_SCENE(349) = EXIT, the scene-transition sibling of daChRoom_c. Not the Ch of the dBgCh_* collision queries."
+      }
+    },
+    "dThIcon_c": {
+      "Th": {
+        "gloss": "touch",
+        "confidence": "medium",
+        "note": "dThIcon_c is the touch-screen icon base; dMgPsOpt_c::TouchIcon_c derives from it (include/dMgPsOpt_c.h:11). Not the Teresa House course code."
+      }
     }
   }
 }
