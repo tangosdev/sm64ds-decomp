@@ -95,6 +95,7 @@ td.m,th.m{font-family:var(--mono)}
 .tree .inf{color:var(--inferred)}
 .tree .ct{color:var(--contra)}
 .tree .dim{color:var(--mute)}
+td .dim{color:var(--mute); font-size:.9em}
 .tree .cnt{color:var(--mute); font-size:11.5px}
 details{border:1px solid var(--rule-soft); background:var(--card); margin:10px 0}
 summary{cursor:pointer; padding:11px 16px; font:600 13px/1.4 var(--sans);
@@ -126,7 +127,7 @@ footer{margin-top:72px; padding-top:18px; border-top:1.5px solid var(--ink);
 <dl class="fields">
 <div class="f"><dt>Source</dt><dd>retail ROM, ARM9 + 103 overlays</dd></div>
 <div class="f"><dt>Classes</dt><dd>429 named by the ROM</dd></div>
-<div class="f"><dt>Edges</dt><dd>413 proven · 57 inferred</dd></div>
+<div class="f"><dt>Edges</dt><dd>413 proven · 0 inferred</dd></div>
 <div class="f"><dt>Deepest chain</dt><dd>5 levels</dd></div>
 <div class="f"><dt>Generated</dt><dd>tools/rtti_hierarchy_page.py</dd></div>
 </dl></div>
@@ -140,9 +141,9 @@ footer{margin-top:72px; padding-top:18px; border-top:1.5px solid var(--ink);
 <div class="scroll"><table><thead><tr><th>Tier</th><th>Count</th><th>What makes it true</th><th>Can it be wrong?</th></tr></thead><tbody>
 <tr><td><strong>Proven</strong></td><td class="m">413 edges</td><td>The class's <code>type_info</code> record holds a pointer to its base's record. The compiler wrote it; this is read, not inferred.</td><td>Only if the pointer was misread. 0 of 413 are unresolved.</td></tr>
 <tr><td><strong>Proven root</strong></td><td class="m">24 classes</td><td>A <code>__class_type_info</code> record — the ABI's own encoding for “no base”.</td><td>No. The record kind is the statement.</td></tr>
-<tr><td><strong>Inferred</strong></td><td class="m">57 classes</td><td>No <code>type_info</code> exists, so the base comes from vptr stores in the constructor/destructor chain.</td><td>Yes. A shim or an inlined base constructor can mislead it.</td></tr>
+<tr><td><strong>Inferred</strong></td><td class="m">0 classes</td><td>No <code>type_info</code> exists, so the base comes from vptr stores in the constructor/destructor chain.</td><td>Yes. A shim or an inlined base constructor can mislead it.</td></tr>
 <tr><td><strong>Contradicted</strong></td><td class="m">0 classes</td><td>The repo's header names a real ancestor, but not the immediate base. The ROM names the immediate one.</td><td>The ROM is right by construction; the header is the error.</td></tr>
-<tr><td><strong>Unplaced</strong></td><td class="m">3 classes</td><td>Known to the repo, no <code>type_info</code>, and no vptr chain placed it.</td><td>Nothing is claimed, so nothing can be wrong.</td></tr>
+<tr><td><strong>Unplaced</strong></td><td class="m">0 classes</td><td>Known to the repo, no <code>type_info</code>, and no vptr chain placed it.</td><td>Nothing is claimed, so nothing can be wrong.</td></tr>
 </tbody></table></div>
 <div class="note">The ROM stores 429 type_info records and 413 base pointers, and <strong>every one of those pointers resolves</strong> — 293 of them across an overlay boundary. Where this page is silent it is because the ROM is silent, not because the reading was hard.</div>
 </section><section><div class="sec-h"><span class="sec-n">§2</span><h2>The spine</h2></div>
@@ -198,7 +199,6 @@ footer{margin-top:72px; padding-top:18px; border-top:1.5px solid var(--ink);
 <span class="dim">├─ </span><span class="cls pv">dPathLiftActor_c</span><span class="cnt">  2 below</span>
 │  <span class="dim">├─ </span><span class="cls pv">daObjPathLift_c</span>
 │  <span class="dim">└─ </span><span class="cls pv">daObjRcCarpet_c</span>
-│  <span class="inf">└┈ daObjPathLift_c</span><span class="cnt">  inferred · high</span>
 <span class="dim">├─ </span><span class="cls pv">daDsnBase_c</span><span class="cnt">  2 below</span>
 │  <span class="dim">├─ </span><span class="cls pv">daDkk_c</span>
 │  <span class="dim">└─ </span><span class="cls pv">daDsn_c</span>
@@ -308,24 +308,7 @@ footer{margin-top:72px; padding-top:18px; border-top:1.5px solid var(--ink);
 <span class="dim">├─ </span><span class="cls pv">daPgDfdr_c</span>
 <span class="dim">├─ </span><span class="cls pv">daPiano_c</span>
 <span class="dim">├─ </span><span class="cls pv">daSlide_Box_c</span>
-<span class="dim">└─ </span><span class="cls pv">daUdlift_c</span>
-<span class="inf">├┈ BowserFireSeaArena</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ HugeWater</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ IceBlock</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ MetalNet</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ PoleLift</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ RotatingUpDownPlatform</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ RotatingUpDownPlatformUtm</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ ShipWater</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ SignPost</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ SwitchActivatedPlank</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ TowerStep</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ TtcConveyorBeltLarge</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ WDW_Water</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ WallSign</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ daDsnBase_c</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ daObjFallBlock_c</span><span class="cnt">  inferred · high</span>
-<span class="inf">└┈ daObjMaruta_c</span><span class="cnt">  inferred · high</span></div></details>
+<span class="dim">└─ </span><span class="cls pv">daUdlift_c</span></div></details>
 <details><summary>dEnemyBase_c — 55 direct children, 60 in the subtree</summary><div class="tree"><span class="dim"></span><span class="cls pv">dEnemyBase_c</span><span class="cnt">  60 below</span>
 <span class="dim">├─ </span><span class="cls pv">daOts_c</span><span class="cnt">  3 below</span>
 │  <span class="dim">├─ </span><span class="cls pv">daBDonketu_c</span>
@@ -386,26 +369,7 @@ footer{margin-top:72px; padding-top:18px; border-top:1.5px solid var(--ink);
 <span class="dim">├─ </span><span class="cls pv">daWater_Tatumaki_c</span>
 <span class="dim">├─ </span><span class="cls pv">daWbm_c</span>
 <span class="dim">├─ </span><span class="cls pv">daYegg_c</span>
-<span class="dim">└─ </span><span class="cls pv">daYurei_Mucho_c</span>
-<span class="inf">├┈ BooCage</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ Bullet</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ Chuckya</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ Fireball</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ FlyGuy</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ Fwoosh</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ JetStream</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ Key</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ LakituBro</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ PowerStar</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ RabbitKey</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ Snowball</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ Snufit</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ Spindrift</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ Swoop</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ WaterBomb</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ WaterRing</span><span class="cnt">  inferred · high</span>
-<span class="inf">├┈ Whirlpool</span><span class="cnt">  inferred · high</span>
-<span class="inf">└┈ daOts_c</span><span class="cnt">  inferred · high</span></div></details>
+<span class="dim">└─ </span><span class="cls pv">daYurei_Mucho_c</span></div></details>
 <details><summary>dScMgBase_c — 15 direct children, 32 in the subtree</summary><div class="tree"><span class="dim"></span><span class="cls pv">dScMgBase_c</span><span class="cnt">  32 below</span>
 <span class="dim">├─ </span><span class="cls pv">dScMgSingle3DBase_c</span><span class="cnt">  13 below</span>
 │  <span class="dim">├─ </span><span class="cls pv">dScMg3DEsp_c</span>
@@ -445,14 +409,115 @@ footer{margin-top:72px; padding-top:18px; border-top:1.5px solid var(--ink);
 </section><section><div class="sec-h"><span class="sec-n">§5</span><h2>Where the repo's headers are wrong</h2></div>
 <p><strong>Nowhere.</strong> Every class the repo both names and holds a belief about names the <em>immediate</em> base the ROM records. Not one header names a class absent from the ROM's ancestor chain, and — the weaker failure this section was built to catch — not one names a genuine ancestor further up the chain than the real parent.</p>
 <p>The chain-flattening this section reports comes from modelling a class's grandparent as its parent, which happens when the intermediate has no header and the evidence for the edge is a destructor vptr store that skips it. It is therefore retired by writing the intermediate down, not by correcting the children.</p>
-<div class="note">Empty because the finding was acted on, not because the test was relaxed: the same comparison still runs against all 429 records. 260 of them are parented by a hand-written <code>struct D : B</code> in a de-bannered header rather than by a base pointer the ROM supplied, and those are the only rows that <em>can</em> disagree with the ROM. None does.</div>
-</section><section><div class="sec-h"><span class="sec-n">§6</span><h2>What is still guessed</h2></div>
-<p>60 classes the repo knows have no <code>type_info</code> record at all. They are not polymorphic, or their vtable was never emitted, so RTTI cannot speak to them and their placement rests entirely on constructor evidence. 57 of them have an inferred base; 3 have none.</p>
-<div class="scroll"><table><thead><tr><th>Status</th><th>Count</th><th>Classes</th></tr></thead><tbody>
-<tr><td style="color:var(--inferred)"><strong>Inferred base</strong></td><td class="n">57</td><td class="m">BlueFlame, BooCage, BowserFireSeaArena, Bullet, Chuckya, Clam, ClockPaintingHandShort, Cloud, EnemySwitchTag, Fireball, Flag, FlyGuy, Fwoosh, HugeWater, IceBlock, JetStream, Key, LakituBro, LightBeam, MansionSteps, MegaMushroomCreateTag, MetalNet, MontyMole, MotherPenguin, Number, OneUpLogo, PoleLift, PowerStar, RabbitKey, RacingPenguin, RotatingUpDownPlatform, RotatingUpDownPlatformUtm, ShipWater, ShipWing, SignPost, SlideDecorationSilverStar, Snowball, Snufit, Spindrift, StarDoor, SwitchActivatedPlank, Swoop, Toad, TowerStep, TreasureChest, TtcConveyorBeltLarge, WDW_Water, WallSign, WaterBomb, WaterRing, Whirlpool, dScEntry_c, daDsnBase_c, daObjFallBlock_c, daObjMaruta_c, daObjPathLift_c, daOts_c</td></tr>
-<tr><td><strong>No placement</strong></td><td class="n">3</td><td class="m">FaderBrightness, FaderColor, dWipe_c</td></tr>
+<div class="note">Empty because the finding was acted on, not because the test was relaxed: the same comparison still runs against all 429 records. 360 of them are parented by a hand-written <code>struct D : B</code> in a de-bannered header rather than by a base pointer the ROM supplied, and those are the only rows that <em>can</em> disagree with the ROM. None does.</div>
+</section><section><div class="sec-h"><span class="sec-n">§6</span><h2>What is still open</h2></div>
+<p><strong>No base is guessed.</strong> Every class the repo's headers define joins a ROM <code>type_info</code> record through its vtable symbol, so every edge on this page is one the ROM wrote down. What is left open is naming, not structure: the three lists below.</p>
+<h3>ROM classes with no repo name on their vtable (14)</h3>
+<p>The repo is joined to the ROM by vtable symbol alone. These records are proven within this graph but no <code>_ZTV</code> symbol names them, which is not the same as the project never having seen them.</p>
+<div class="scroll"><table><thead><tr><th>Why</th><th>Count</th><th>Classes</th></tr></thead><tbody>
+<tr><td><strong>C++ runtime</strong><br><span class="dim">The standard library's own root record; not game code.</span></td><td class="n">1</td><td class="m">std::type_info <span class="dim">arm9</span></td></tr>
+<tr><td><strong>No primary vtable</strong><br><span class="dim">Seen only as a secondary base inside a multiple-inheritance class (§4), or never given a vtable of its own, so there is no <code>_ZTV</code> to name.</span></td><td class="n">3</td><td class="m">dBgPc <span class="dim">arm9</span><br>dM3dGLin <span class="dim">arm9</span><br>daDemo_c::param_c <span class="dim">ov002</span></td></tr>
+<tr><td><strong>Vtable still a placeholder</strong><br><span class="dim">The repo already names members of the class, but its vtable is still a <code>data_*</code> symbol in <code>config/</code>, so the join misses it.</span></td><td class="n">5</td><td class="m">dScMB_c::graphCallback_c <span class="dim">arm9</span><br>daDemo_c::anmModel_c <span class="dim">ov002</span><br>daDemo_c::simpleModel_c <span class="dim">ov002</span><br>dScMgBase_c::graphCallback_c <span class="dim">ov004</span><br>dScDSMT_c::graphCallback_c <span class="dim">ov007</span></td></tr>
+<tr><td><strong>Not yet named</strong><br><span class="dim">Neither the vtable nor any member has a name in <code>config/</code>.</span></td><td class="n">5</td><td class="m">dScStage_c::graphCallback_c <span class="dim">arm9</span><br>dMgTrmpObjAdapter_c <span class="dim">ov006</span><br>dMgTrmpRingObjAdapter_c <span class="dim">ov006</span><br>dMgTrmpln2Mario_c <span class="dim">ov006</span><br>dMgTrmpln3DMario_c <span class="dim">ov006</span></td></tr>
 </tbody></table></div>
-<p>Separately, 54 ROM classes have no name in the repo at all — the ROM knows them, the project has never given them a header. They are proven within this graph and invisible outside it.</p>
+<h3>Repo classes with no header-sourced base (36)</h3>
+<p>The ROM supplies the base for each of these, so the graph above is complete. What is missing is an independent reading of the repo's header to check it against: until one exists, §5's comparison cannot run on these rows.</p>
+<div class="scroll"><table><thead><tr><th>Why</th><th>Repo class</th><th>Header writes</th><th>ROM base</th></tr></thead><tbody>
+<tr><td rowspan="13"><strong>Header still auto-generated</strong> (13)<br><span class="dim">It carries the generator's banner, so the base it writes is not admitted as evidence until someone reviews it and removes the banner.</span></td><td class="m">BowserPuzzlePiece</td><td class="m">dBgActor_c</td><td class="m">dBgActor_c</td></tr>
+<tr><td class="m">EnemySwitchTag</td><td class="m">dActor_c</td><td class="m">dActor_c</td></tr>
+<tr><td class="m">ExpandingHeap</td><td class="m">—</td><td class="m">mHeap::Heap_t</td></tr>
+<tr><td class="m">SolidHeap</td><td class="m">—</td><td class="m">mHeap::Heap_t</td></tr>
+<tr><td class="m">StarMarker</td><td class="m">dActor_c</td><td class="m">dActor_c</td></tr>
+<tr><td class="m">dBgCh_Gnd</td><td class="m">—</td><td class="m">dBgCh, dBgPi</td></tr>
+<tr><td class="m">dBgCh_Lin</td><td class="m">—</td><td class="m">dBgCh, dBgPi, dM3dGLin</td></tr>
+<tr><td class="m">dBgCh_SphCrr</td><td class="m">—</td><td class="m">dBgCh, dBgPi, dM3dGSph</td></tr>
+<tr><td class="m">dEnemyBase_c</td><td class="m">dActor_c</td><td class="m">dActor_c</td></tr>
+<tr><td class="m">daBtfly_c</td><td class="m">dActor_c</td><td class="m">dActor_c</td></tr>
+<tr><td class="m">daObjEwbIce_c</td><td class="m">—</td><td class="m">dBgActor_c</td></tr>
+<tr><td class="m">daObjRotateUpdownLift_c</td><td class="m">—</td><td class="m">dBgActor_c</td></tr>
+<tr><td class="m">daTor_c</td><td class="m">dActor_c</td><td class="m">dActor_c</td></tr>
+<tr><td rowspan="2"><strong>Header not read</strong> (2)<br><span class="dim">A hand-written header exists, but the parser took no base from it: the file is named for one spelling while its struct uses another, or the struct lists more than one base.</span></td><td class="m">Koopa</td><td class="m">—</td><td class="m">dEnemyBase_c</td></tr>
+<tr><td class="m">ModelAnim</td><td class="m">—</td><td class="m">dExtFrameCtrl_c, dExtSimpleModel_c</td></tr>
+<tr><td rowspan="21"><strong>No header of its own</strong> (21)<br><span class="dim">Nested classes and runtime types declared inside another file.</span></td><td class="m">abi::__class_type_info</td><td class="m">—</td><td class="m">std::type_info</td></tr>
+<tr><td class="m">abi::__si_class_type_info</td><td class="m">—</td><td class="m">abi::__class_type_info</td></tr>
+<tr><td class="m">abi::__vmi_class_type_info</td><td class="m">—</td><td class="m">abi::__class_type_info</td></tr>
+<tr><td class="m">dMgDilarCardObj_c</td><td class="m">—</td><td class="m">dMgCardObj_c</td></tr>
+<tr><td class="m">dMgPsOpt_c::TouchIcon_c</td><td class="m">—</td><td class="m">dThIcon_c</td></tr>
+<tr><td class="m">dPa_c::level_c::bubbleCallback_c</td><td class="m">—</td><td class="m">dPa_c::level_c::simpleCallback_c</td></tr>
+<tr><td class="m">dPa_c::level_c::checkWaterCallback_c</td><td class="m">—</td><td class="m">dPa_c::level_c::callback_c</td></tr>
+<tr><td class="m">dPa_c::level_c::checkWaterRippleCallback_c</td><td class="m">—</td><td class="m">dPa_c::level_c::callback_c</td></tr>
+<tr><td class="m">dPa_c::level_c::checkYoganCallback_c</td><td class="m">—</td><td class="m">dPa_c::level_c::simpleCallback_c</td></tr>
+<tr><td class="m">dPa_c::level_c::cleanParticleCallback_c</td><td class="m">—</td><td class="m">dPa_c::level_c::callback_c</td></tr>
+<tr><td class="m">dPa_c::level_c::clipCallback_c</td><td class="m">—</td><td class="m">dPa_c::level_c::callback_c</td></tr>
+<tr><td class="m">dPa_c::level_c::edStarKiraCallback_c</td><td class="m">—</td><td class="m">dPa_c::level_c::simpleCallback_c</td></tr>
+<tr><td class="m">dPa_c::level_c::fitWaterCallback_c</td><td class="m">—</td><td class="m">dPa_c::level_c::callback_c</td></tr>
+<tr><td class="m">dPa_c::level_c::fitWaterSimpleCallback_c</td><td class="m">—</td><td class="m">dPa_c::level_c::simpleCallback_c</td></tr>
+<tr><td class="m">dPa_c::level_c::scaleCallback_c</td><td class="m">—</td><td class="m">dPa_c::level_c::simpleCallback_c</td></tr>
+<tr><td class="m">dPa_c::level_c::simpleCallback_c</td><td class="m">—</td><td class="m">dPa_c::level_c::callback_c</td></tr>
+<tr><td class="m">dPa_c::level_c::splashCallback_c</td><td class="m">—</td><td class="m">dPa_c::level_c::simpleCallback_c</td></tr>
+<tr><td class="m">dPathLiftActor_c</td><td class="m">—</td><td class="m">dBgActor_c</td></tr>
+<tr><td class="m">dScEntry_c::graphCallback_c</td><td class="m">—</td><td class="m">dGraph_c::callback_c</td></tr>
+<tr><td class="m">dScEntry_c::icon_c</td><td class="m">—</td><td class="m">dThIcon_c</td></tr>
+<tr><td class="m">dScMgSlot1_c::betIcon_c</td><td class="m">—</td><td class="m">dThIcon_c</td></tr>
+</tbody></table></div>
+<h3>Repo classes still under a coined name (54)</h3>
+<p>The ROM spells these classes one way and the repo another. The edge is proven either way, since the join goes through the vtable address, but a reader searching the source for the ROM's name will not find it.</p>
+<div class="scroll"><table><thead><tr><th>ROM name</th><th>Repo name</th><th>Module</th></tr></thead><tbody>
+<tr><td class="m">dCamera_c</td><td class="m">Camera</td><td class="m">arm9</td></tr>
+<tr><td class="m">dClipper</td><td class="m">Clipper</td><td class="m">arm9</td></tr>
+<tr><td class="m">dEntObj_c</td><td class="m">UnknownVsEntry</td><td class="m">ov075</td></tr>
+<tr><td class="m">dExtAnm2Model_c</td><td class="m">ModelAnim2</td><td class="m">arm9</td></tr>
+<tr><td class="m">dExtAnmMaterial_c</td><td class="m">MaterialChanger</td><td class="m">arm9</td></tr>
+<tr><td class="m">dExtAnmModel_c</td><td class="m">ModelAnim</td><td class="m">arm9</td></tr>
+<tr><td class="m">dExtAnmTexPat_c</td><td class="m">TextureSequence</td><td class="m">arm9</td></tr>
+<tr><td class="m">dExtAnmTexSRT_c</td><td class="m">TextureTransformer</td><td class="m">arm9</td></tr>
+<tr><td class="m">dExtBlendAnmModel_c</td><td class="m">BlendModelAnim</td><td class="m">arm9</td></tr>
+<tr><td class="m">dExtCommonModel_c</td><td class="m">CommonModel</td><td class="m">arm9</td></tr>
+<tr><td class="m">dExtFrameCtrl_c</td><td class="m">Animation</td><td class="m">arm9</td></tr>
+<tr><td class="m">dExtModel_c</td><td class="m">ModelBase</td><td class="m">arm9</td></tr>
+<tr><td class="m">dExtShadowModel_c</td><td class="m">ShadowModel</td><td class="m">arm9</td></tr>
+<tr><td class="m">dExtSimpleModel_c</td><td class="m">Model</td><td class="m">arm9</td></tr>
+<tr><td class="m">dFader_c</td><td class="m">Fader</td><td class="m">arm9</td></tr>
+<tr><td class="m">dFdBrightness_c</td><td class="m">FaderBrightness</td><td class="m">arm9</td></tr>
+<tr><td class="m">dFdColor_c</td><td class="m">FaderColor</td><td class="m">arm9</td></tr>
+<tr><td class="m">dFdWipe_c</td><td class="m">FaderWipe</td><td class="m">arm9</td></tr>
+<tr><td class="m">dScBoot_c</td><td class="m">BootScene</td><td class="m">arm9</td></tr>
+<tr><td class="m">dScStage_c</td><td class="m">Stage</td><td class="m">arm9</td></tr>
+<tr><td class="m">dView_c</td><td class="m">View</td><td class="m">arm9</td></tr>
+<tr><td class="m">daBookGen_c</td><td class="m">BookShotSpawner</td><td class="m">ov020</td></tr>
+<tr><td class="m">daBook_c</td><td class="m">BookShot</td><td class="m">ov020</td></tr>
+<tr><td class="m">daChoro_Rock_c</td><td class="m">MontyMoleRock</td><td class="m">ov080</td></tr>
+<tr><td class="m">daChoropu_c</td><td class="m">MontyMole</td><td class="m">ov080</td></tr>
+<tr><td class="m">daDemo_c</td><td class="m">CutsceneObject</td><td class="m">ov002</td></tr>
+<tr><td class="m">daDoor_c</td><td class="m">Door</td><td class="m">ov100</td></tr>
+<tr><td class="m">daECreate_c</td><td class="m">EnemySpawner</td><td class="m">ov002</td></tr>
+<tr><td class="m">daESwitch_c</td><td class="m">EnemySwitchTag</td><td class="m">ov002</td></tr>
+<tr><td class="m">daIbl_c</td><td class="m">RollingIronBall</td><td class="m">ov100</td></tr>
+<tr><td class="m">daIwante_c</td><td class="m">Eyerok</td><td class="m">ov066</td></tr>
+<tr><td class="m">daKpa3Bg_c</td><td class="m">BowserSkyPlatform</td><td class="m">ov060</td></tr>
+<tr><td class="m">daKpaFire_c</td><td class="m">BowserFire</td><td class="m">ov060</td></tr>
+<tr><td class="m">daKpaTail_c</td><td class="m">BowserTail</td><td class="m">ov060</td></tr>
+<tr><td class="m">daKpa_c</td><td class="m">Bowser</td><td class="m">ov060</td></tr>
+<tr><td class="m">daKuriKing_c</td><td class="m">Goomboss</td><td class="m">ov074</td></tr>
+<tr><td class="m">daMugenBGM_c</td><td class="m">MugenBgm</td><td class="m">ov002</td></tr>
+<tr><td class="m">daNknk_c</td><td class="m">Koopa</td><td class="m">ov062</td></tr>
+<tr><td class="m">daObjDlPyramidDummy_c</td><td class="m">PyramidTag</td><td class="m">ov024</td></tr>
+<tr><td class="m">daObjDlPyramid_c</td><td class="m">PyramidTop</td><td class="m">ov024</td></tr>
+<tr><td class="m">daObjFl_Amilift_c</td><td class="m">MetalNetLift</td><td class="m">ov064</td></tr>
+<tr><td class="m">daObjFl_Coin_c</td><td class="m">BowserPuzzleManager</td><td class="m">ov064</td></tr>
+<tr><td class="m">daObjFl_Puzzle_c</td><td class="m">BowserPuzzlePiece</td><td class="m">ov064</td></tr>
+<tr><td class="m">daObjTatefuda_c</td><td class="m">SignPost</td><td class="m">ov002</td></tr>
+<tr><td class="m">daPly_c</td><td class="m">Player</td><td class="m">ov002</td></tr>
+<tr><td class="m">daPropeller_Heyho_Fire_c</td><td class="m">Bullet</td><td class="m">ov002</td></tr>
+<tr><td class="m">daSpd_c</td><td class="m">Scuttlebug</td><td class="m">ov071</td></tr>
+<tr><td class="m">daStarBase_c</td><td class="m">StarMarker</td><td class="m">ov002</td></tr>
+<tr><td class="m">daStar_c</td><td class="m">PowerStar</td><td class="m">ov002</td></tr>
+<tr><td class="m">daWanwan2_c</td><td class="m">UnchainedChomp</td><td class="m">ov100</td></tr>
+<tr><td class="m">daYegg_c</td><td class="m">YoshiEgg</td><td class="m">ov002</td></tr>
+<tr><td class="m">mHeap::ExpHeap_t</td><td class="m">ExpandingHeap</td><td class="m">arm9</td></tr>
+<tr><td class="m">mHeap::Heap_t</td><td class="m">Heap</td><td class="m">arm9</td></tr>
+<tr><td class="m">mHeap::SolidHeap_t</td><td class="m">SolidHeap</td><td class="m">arm9</td></tr>
+</tbody></table></div>
 </section><section><div class="sec-h"><span class="sec-n">§7</span><h2>What this document cannot tell you</h2></div>
 <p>The ROM's RTTI carries class <em>names</em> and base <em>pointers</em>. That is all it carries. Specifically:</p>
 <div class="scroll"><table><thead><tr><th>Not available</th><th>Why</th></tr></thead><tbody>
@@ -460,7 +525,7 @@ footer{margin-top:72px; padding-top:18px; border-top:1.5px solid var(--ink);
 <tr><td><strong>Parameter types</strong></td><td>The <code>type_info</code> kinds that encode a signature (<code>__function_type_info</code>, <code>__pointer_type_info</code>) were never linked in — this program never does <code>typeid</code> on a function type.</td></tr>
 <tr><td><strong>Field names or layouts</strong></td><td>RTTI records a base's <em>offset</em>, never its members. Sizes come from the <code>operator new</code> literal at each call site instead.</td></tr>
 <tr><td><strong>Original filenames</strong></td><td>Exactly one <code>__FILE__</code> string survives ROM-wide — <code>isdoverlay.c</code>, Nintendo's debugger SDK. Game code was built with asserts stripped.</td></tr>
-<tr><td><strong>Non-polymorphic classes</strong></td><td>A class with no virtual function gets no vtable and no record. The 60 inferred classes in §6 are exactly this population.</td></tr>
+<tr><td><strong>Non-polymorphic classes</strong></td><td>A class with no virtual function gets no vtable and no record, so it cannot appear on this page at all. Every class the repo's headers define does have one, so the repo currently models no class this page cannot see.</td></tr>
 </tbody></table></div></section>
 <footer>Generated by <code>tools/rtti_hierarchy_page.py</code> from <code>build/rtti.json</code>, <code>build/rtti_reconcile.json</code> and <code>build/evidence_hierarchy.json</code>. Every count, edge and offset on this page is joined at generation time; nothing is typed by hand. Re-run <code>tools/rtti_extract.py --check</code> to re-prove the census before trusting a number here.</footer>
 </div>
