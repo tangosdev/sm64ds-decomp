@@ -54,6 +54,8 @@
 #include "dBgPi.h"
 #include "Player.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 enum {
     ACTOR_PLAYER = 0xbf,
     ACTOR_BABY_PENGUIN = 0x100,
@@ -98,7 +100,6 @@ extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int AngleDiff(int a, int b);
 extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-extern int _Z14ApproachLinearRsss(s16 *dst, s16 target, s16 step);
 /* 0x0201267c plays Sound::Play(3, id, pos). Sound::PlayBank3 is the
    previous function (0x02012664); this TU's bl is not that one. */
 extern void func_0201267c(int a, void *b);
@@ -304,7 +305,7 @@ int daPgMthr_c::func_ov018_02111fac()
         }
         break;
     case 1:
-        if (_Z14ApproachLinearRsss(&mAngleY,
+        if (ApproachLinear(mAngleY,
                 Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&mPlayer->mPosX), 0x514)) {
             Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
             Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
@@ -371,7 +372,7 @@ int daPgMthr_c::func_ov018_02111f1c()
 // @symbol _ZN10daPgMthr_c19func_ov018_02111e28Ev
 int daPgMthr_c::func_ov018_02111e28()
 {
-    _Z14ApproachLinearRsss(&mAngleY,
+    ApproachLinear(mAngleY,
         Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&mPlayer->mPosX), 0x514);
     mPrevAngleY = mAngleY;
     UpdatePos(&mdCcAc_c);
@@ -543,8 +544,8 @@ void daPgMthr_c::func_ov018_02111a48(char *b)
         delta = 0;
     }
 
-    _Z14ApproachLinearRsss(&mLookAngY, delta, 0x250);
-    _Z14ApproachLinearRsss(&mLookAngX, vert, 0x250);
+    ApproachLinear(mLookAngY, delta, 0x250);
+    ApproachLinear(mLookAngX, vert, 0x250);
 }
 
 // @symbol _ZN10daPgMthr_c19func_ov018_02111968EPvPc

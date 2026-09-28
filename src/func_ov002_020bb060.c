@@ -4,7 +4,7 @@ struct M43 { int w[12]; };
 extern char *func_ov002_020e496c(void *p);
 extern int _ZN6Player14IsFrontSlidingEv(void *p);
 extern int _ZN6Player17LostGrabbedObjectEv(void *p);
-extern void _Z14ApproachLinearRsss(short *dst, short target, short step);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 extern void MulMat4x3Mat4x3(void *a, void *b, void *c);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);

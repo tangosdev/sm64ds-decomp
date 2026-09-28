@@ -1,12 +1,13 @@
 //cpp
 #include "dBgCh_Actr.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 struct dActor_c { int GetSubtraction(short a, short b); };
 
 extern "C" {
 void func_ov060_02111cc0(char *c, int idx, int fix);
 int Bowser_IsAnimAtLastFrame(void *o);
-void _Z14ApproachLinearRsss(short *dst, short target, short step);
 int _Z14ApproachLinearRiii(int *dst, int target, int step);
 unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int a, unsigned int b, int c, int d, int e, void const *f, void *g);
@@ -39,7 +40,7 @@ extern "C" void func_ov060_02113d8c(char *r4)
                 }
             }
         }
-        _Z14ApproachLinearRsss((short *)(r4 + 0x8e), *(short *)(r4 + 0x406), 0x200);
+        ApproachLinear(*(short *)(r4 + 0x8e), *(short *)(r4 + 0x406), 0x200);
         break;
     case 3:
         *(u16 *)(r4 + 0x3fe) = 0;

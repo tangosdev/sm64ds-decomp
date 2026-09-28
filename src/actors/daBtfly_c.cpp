@@ -50,6 +50,8 @@
 #include "SharedFilePtr.h"
 #include "Player.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* Makes the per-member `#pragma opt_common_subs` bracket around State2 bind.
  * Without it mwccarm defers codegen and the last file-global state wins. */
 #pragma defer_codegen off
@@ -75,7 +77,6 @@ typedef void (daBtfly_c::*ButterflyState)();
 
 extern "C" {
 void _Z14ApproachLinearRiii(int *p, int target, int step);
-void _Z14ApproachLinearRsss(s16 *p, s16 target, s16 step);
 s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 s16 Vec3_HorzAngle(const void *a, const void *b);
 void Vec3_Sub(Vector3 *out, void *a, void *b);
@@ -144,8 +145,8 @@ void daBtfly_c::State7()
 
     Player *player = ClosestPlayer();
     if (player != 0) {
-        _Z14ApproachLinearRsss(&mPrevAngleY, HorzAngleToCPlayer(), 0x320);
-        _Z14ApproachLinearRsss(&mPrevAngleX,
+        ApproachLinear(mPrevAngleY, HorzAngleToCPlayer(), 0x320);
+        ApproachLinear(mPrevAngleX,
             Vec3_VertAngle((Vector3 *)&mPosX, (Vector3 *)&player->mPosX), 0x320);
     }
 
@@ -252,10 +253,10 @@ void daBtfly_c::State5()
             target = -0x2000;
         else
             target = 0x2000;
-        _Z14ApproachLinearRsss(&mPrevAngleX, target, 0x190);
+        ApproachLinear(mPrevAngleX, target, 0x190);
     }
 
-    _Z14ApproachLinearRsss(&mPrevAngleY, hAngle,
+    ApproachLinear(mPrevAngleY, hAngle,
         (s16)((((unsigned)RandomIntInternal(&data_0209e650) >> 16) % 800) + 0x190));
 }
 
@@ -309,8 +310,8 @@ void daBtfly_c::State4()
 // @symbol _ZN9daBtfly_c6State3Ev
 void daBtfly_c::State3()
 {
-    _Z14ApproachLinearRsss(&mPrevAngleY, Vec3_HorzAngle(&mPosX, &mHomePosX), 0x800);
-    _Z14ApproachLinearRsss(&mPrevAngleX, Vec3_VertAngle((Vector3 *)&mPosX, (Vector3 *)&mHomePosX), 0x50);
+    ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPosX, &mHomePosX), 0x800);
+    ApproachLinear(mPrevAngleX, Vec3_VertAngle((Vector3 *)&mPosX, (Vector3 *)&mHomePosX), 0x50);
     UpdatePos(0);
 
     {
@@ -373,7 +374,7 @@ void daBtfly_c::State2()
         v.x = v.x + t / 4;
         t = mStateTimer * k;
         v.z = v.z + t / 4;
-        _Z14ApproachLinearRsss(&mPrevAngleY, Vec3_HorzAngle(&mPosX, &v), 0x300);
+        ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPosX, &v), 0x300);
 
         pp = (int *)(int)M(player + 0x5c);
         v.x = pp[0];
@@ -381,7 +382,7 @@ void daBtfly_c::State2()
         v.y = py;
         v.z = pp[2];
         v.y = py + ((mStateTimer * five + 0x100) << 12) / 4;
-        _Z14ApproachLinearRsss(&mPrevAngleX, Vec3_VertAngle((Vector3 *)&mPosX, &v), 0x500);
+        ApproachLinear(mPrevAngleX, Vec3_VertAngle((Vector3 *)&mPosX, &v), 0x500);
 
         UpdatePos(0);
 

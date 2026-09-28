@@ -103,7 +103,7 @@ int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 }
 
 int ApproachLinear(int &value, int target, int step);
-int ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 extern "C" {
 
@@ -910,11 +910,10 @@ static inline void incRelease(daWanwan_c *self)
 // @symbol func_ov014_021115ec
 extern "C" void func_ov014_021115ec(u8 *raw)
 {
-    /* This body's parameter widths stay here. A file-scope short& ApproachLinear
-     * and the header's void Vec3_ApproachHorz do not describe these calls. */
+    /* This body's parameter widths stay here. The header's void
+     * Vec3_ApproachHorz does not describe these calls. */
     int ApproachAngle(void *angles, s32 a, s32 b, s32 c, s32 d);
     s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-    s32 _Z14ApproachLinearRsss(void *dst, s32 target, s32 step);
     u16 DecIfAbove0_Short(void *p);
     s32 _Z14ApproachLinearRiii(void *dst, s32 target, s32 step);
     void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self_, void *bca, s32 a, s32 fix, unsigned b);
@@ -949,7 +948,7 @@ extern "C" void func_ov014_021115ec(u8 *raw)
     switch (self->mReleaseStep) {
     case 0:
         *(daWanwan_c **)((char *)camera + 0x118) = self;
-        if (_Z14ApproachLinearRsss(&self->mAngleY, angleToPlayer, 0x320) != 0
+        if (ApproachLinear(self->mAngleY, angleToPlayer, 0x320) != 0
             && DecIfAbove0_Short(&self->mActionTimer) == 0)
             incRelease(self);
         self->mPrevAngleY = self->mAngleY;

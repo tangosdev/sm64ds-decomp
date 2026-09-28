@@ -34,6 +34,8 @@
 #include "Sound.h"
 #include "dBgCh_Gnd.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 extern "C" {
 /* shared engine entry points without a header declaration */
 void LoadKeyModels(int n);
@@ -91,7 +93,6 @@ void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
 int RandomIntInternal(int *seed);
 void Vec3_Asr(void *d, const void *s, int sh);
 void _Z14ApproachLinearRiii(int *p, int target, int step);
-int _Z14ApproachLinearRsss(s16 *p, s16 target, s16 step);
 char *_ZN11dCapEnemy_c15RespawnIfHasCapEv(void *self);
 void _ZN15ModelComponents21UpdateVertsUsingBonesEv(void *self);
 void _ZN5Model12SetPolygonIDEi(void *self, int id);
@@ -574,7 +575,7 @@ extern "C" void func_ov063_02116a1c(void *cc)
     }
 
     *(int *)(c + 0xa8) = 0;
-    _Z14ApproachLinearRsss((short *)(c + 0x94), Vec3_HorzAngle(c + 0x5c, &v, 0), 0x5a8);
+    ApproachLinear(*(short *)(c + 0x94), Vec3_HorzAngle(c + 0x5c, &v, 0), 0x5a8);
     func_ov063_0211a964(c, 1);
 }
 
@@ -809,7 +810,7 @@ extern "C" void func_ov063_02116fac(char* c)
         *(int*)(c + 0xa8) = 0;
         *(s16*)(c + 0x5bc) = Vec3_HorzAngle(c + 0x5c, &fr.v);
     }
-    _Z14ApproachLinearRsss((short*)(c + 0x94), *(short*)(c + 0x5bc), r4);
+    ApproachLinear(*(short *)(c + 0x94), *(short*)(c + 0x5bc), r4);
     func_ov063_0211a964(c, 1);
 }
 #undef L16
@@ -1206,7 +1207,7 @@ extern "C" void func_ov063_02117cdc(u8 *arg0) {
         v[2] = q[2];
         b = func_020092c4(cam, (char *)cam + 0x8c, arg0 + 0x54c);
         b = b & func_020092c4(cam, (char *)cam + 0x80, arg0 + 0x558);
-        if (_Z14ApproachLinearRsss(&v[1], ang, 0x200) != 0 && b != 0) {
+        if (ApproachLinear(v[1], ang, 0x200) != 0 && b != 0) {
             *(u8 *)(arg0 + 0x5ce) += 1;
             *(s16 *)(arg0 + 0x100) = 0;
         }
@@ -1376,7 +1377,7 @@ extern "C" void func_ov063_02118458(void* self)
     char* c = (char*)self;
     int r4 = func_ov063_0211a0dc(c);
 
-    _Z14ApproachLinearRsss((s16*)(c + 0x94), *(s16*)(c + 0x5b0),
+    ApproachLinear(*(short *)(c + 0x94), *(s16*)(c + 0x5b0),
         data_ov063_0211e1c0[*(u8*)(c + 0x5ca) - 1]);
 
     if (_ZN9Animation8FinishedEv(c + 0x3d0)) {
@@ -2250,7 +2251,7 @@ extern "C" void func_ov063_02119cc0(char *c, int unused, s16 a2, int a3)
         }
     }
 
-    _Z14ApproachLinearRsss((s16 *)(c + 0x94), *(s16 *)(c + 0x5bc), a2);
+    ApproachLinear(*(short *)(c + 0x94), *(s16 *)(c + 0x5bc), a2);
     *(int *)(c + 0xa8) = 0;
     func_ov063_0211a030((struct C *)c, 0xa000 - *(int *)(c + 0x588), a3);
 
@@ -2303,7 +2304,7 @@ extern "C" void func_ov063_02119e38(char *thiz, int a1, short a2, int a3) {
         angle = Vec3_HorzAngle((Vec3*)(thiz + 0x5c), (Vec3*)(thiz + 0x51c));
     }
 
-    _Z14ApproachLinearRsss((short*)(thiz + 0x94), angle, a2);
+    ApproachLinear(*(short *)(thiz + 0x94), angle, a2);
     *(int*)(thiz + 0xa8) = 0;
 
     {

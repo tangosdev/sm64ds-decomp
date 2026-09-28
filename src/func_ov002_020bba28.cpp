@@ -1,6 +1,7 @@
 //cpp
 #include "dBgW.h"
-extern "C" void _Z14ApproachLinearRsss(short* cur, short to, short step);
+
+bool ApproachLinear(short &value, short target, short step);
 extern "C" void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
 extern "C" void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 extern "C" int _ZNK10dBgCh_Actr10IsOnGroundEv(void* p);
@@ -21,7 +22,7 @@ struct Obj {
 };
 
 extern "C" void func_ov002_020bba28(char* self){
-    _Z14ApproachLinearRsss((short*)(self + 0x8c), 0x4000, 0x1000);
+    ApproachLinear(*(short *)(self + 0x8c), 0x4000, 0x1000);
     _ZN8dActor_c9UpdatePosEP5dCc_c(self, 0);
     dBgCh_Actr_UpdateContinuous_Veneer(self + 0x3c8);
     if (_ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x3c8)

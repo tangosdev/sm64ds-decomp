@@ -39,7 +39,7 @@ extern u8 data_0209f284;
 extern int _ZN6Player12GetTalkStateEv(void *player);
 extern s32 Vec3_HorzDist(struct Vector3 *a, struct Vector3 *b);
 extern s16 Vec3_HorzAngle(struct Vector3 *a, struct Vector3 *b);
-extern int _Z14ApproachLinearRsss(s16 *val, s16 target, s16 step);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 extern int Vec3_ApproachHorz(struct Vector3 *pos, struct Vector3 *target, s32 step);
 extern int func_ov002_020bec84(void *player, unsigned int i);
 extern int func_ov002_020bec9c(void *player, unsigned int a, int b, int d, unsigned short e);

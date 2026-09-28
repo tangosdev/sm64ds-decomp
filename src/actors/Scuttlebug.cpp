@@ -21,6 +21,8 @@
 #include "Animation.h"
 #include "SurfaceInfo.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* ------------------------------------------------------------------------
  * Local value shapes carried from the legacy one-function files.
  * ------------------------------------------------------------------------ */
@@ -71,7 +73,6 @@ short AngleDiff(short a, short b);
 void  DecIfAbove0_Short(void *p);
 int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-void  _Z14ApproachLinearRsss(short &dst, short target, short step);
 int   _ZN4cstd4fdivEii(int a, int b);
 
 void  Matrix4x3_FromRotationY(void *m, int angle);
@@ -517,7 +518,7 @@ extern "C" int func_ov071_0211fb24(char *c)
     Scuttlebug *self = (Scuttlebug *)c;
     short ang = Vec3_HorzAngle((Vector3 *)&self->mPosX,
                                (Vector3 *)&self->mAnchorX);
-    _Z14ApproachLinearRsss(self->mAngleY, ang, 0x2bc);
+    ApproachLinear(self->mAngleY, ang, 0x2bc);
     self->mPrevAngleY = self->mAngleY;
     self->mModelAnim.Advance();
     if (Vec3_Dist((Vector3 *)&self->mPosX,

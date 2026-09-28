@@ -47,6 +47,8 @@
 #include "SurfaceInfo.h"
 #include "dBgPi.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* Word 1 of a SharedFilePtr is the loaded file. SharedFilePtr itself has no
  * fields; the sinit constructs these and this TU's LoadFile / SetAnim / SetFile
  * read that word. */
@@ -94,7 +96,6 @@ extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void _Z11UpdateAngleRssis(short *ang, short target, int step, short max);
-extern int _Z14ApproachLinearRsss(short *cur, short target, short step);
 extern void _Z14ApproachLinearRiii(int *cur, int target, int step);
 extern void Matrix4x3_FromRotationY(Matrix4x3 *m, short angle);
 
@@ -281,7 +282,7 @@ int func_ov019_02111fec(daPgRcer_c *self)
     switch (self->mActionStep) {
     case 0: {
         short ang = Vec3_HorzAngle((Vector3 *)&self->mPosX, (Vector3 *)&self->mTalkPlayer->mPosX);
-        if (_Z14ApproachLinearRsss(&self->mAngleY, ang, 0x514) != 0) {
+        if (ApproachLinear(self->mAngleY, ang, 0x514) != 0) {
             Vector3 pos;
             int msg;
             int eq;
@@ -518,7 +519,7 @@ int func_ov019_021117a8(daPgRcer_c *self)
         self->mPath.GetNode(*(Vector3 *)node, n - 1);
         self->mPathDist = Vec3_Dist((Vector3 *)&self->mPosX, (Vector3 *)node);
         TARGET_ANG_Y(self) = Vec3_HorzAngle((Vector3 *)&self->mPosX, (Vector3 *)node);
-        _Z14ApproachLinearRsss(&self->mAngleY, TARGET_ANG_Y(self), 0x200);
+        ApproachLinear(self->mAngleY, TARGET_ANG_Y(self), 0x200);
         self->mPrevAngleY = self->mAngleY;
         if (self->mPathDist < self->mHorzSpeed) {
             self->mHorzSpeed = self->mPathDist;
@@ -536,7 +537,7 @@ int func_ov019_021117a8(daPgRcer_c *self)
     }
     case 1: {
         short ang = Vec3_HorzAngle((Vector3 *)&self->mPosX, (Vector3 *)&self->mTalkPlayer->mPosX);
-        if (_Z14ApproachLinearRsss(&self->mAngleY, ang, 0x514) != 0) {
+        if (ApproachLinear(self->mAngleY, ang, 0x514) != 0) {
             self->func_ov019_021122dc(5);
         }
         break;
@@ -578,7 +579,7 @@ int func_ov019_02111558(daPgRcer_c *self)
     }
     case 1: {
         short ang = Vec3_HorzAngle((Vector3 *)&self->mPosX, (Vector3 *)&self->mTalkPlayer->mPosX);
-        if (_Z14ApproachLinearRsss(&self->mAngleY, ang, 0x514) != 0) {
+        if (ApproachLinear(self->mAngleY, ang, 0x514) != 0) {
             unsigned int id;
             struct { int x, y, z; } v;
             int z = self->mPosZ;

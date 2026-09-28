@@ -184,7 +184,7 @@ int daKpFr_c::func_ov070_02121fb0()
     return 1;
 }
 
-int ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);

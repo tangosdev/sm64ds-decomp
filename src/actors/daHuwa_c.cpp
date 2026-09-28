@@ -81,7 +81,7 @@ void _ZN6Player10SpinBounceE5Fix12IiE(void *player, int speed);
 }
 
 int ApproachLinear(int &value, int target, int step);
-int ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 /* dCc_c hitFlags bits this actor tests. 0x10 / 0x2000 / 0x4000 / 0x40000 /
  * 0x400000 are the names in dCc_c.h. 0x20000 is not in that table; this

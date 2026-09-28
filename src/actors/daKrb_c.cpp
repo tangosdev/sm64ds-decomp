@@ -123,7 +123,6 @@ extern char data_ov084_0213089c;
 extern void func_ov084_02129c9c(char *c);
 extern void func_ov084_02129cf4(char *self, int a);
 extern int _Z14ApproachLinearRiii(int *a, int b, int c);
-extern int _Z14ApproachLinearRsss(short *a, short b, short c);
 extern int RandomIntInternal(int *seed);
 extern int data_ov084_02130228[];
 extern int data_ov084_02130268[];
@@ -1033,7 +1032,7 @@ void func_ov084_0212a774(char *c)
 }
 }
 
-void ApproachLinear(short &v, short t, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 // @symbol _ZN7daKrb_c19func_ov084_0212aab0Ev
 void daKrb_c::func_ov084_0212aab0()
@@ -1078,7 +1077,7 @@ void func_ov084_0212abd4(char *self)
     func_ov084_02129cf4(self, 0x3e8000);
     _Z14ApproachLinearRiii((int *)(self + 0x98), *(int *)(self + 0x444), 0x500);
     if (((Flag *)(self + 0x468))->b0) {
-        if (_Z14ApproachLinearRsss((short *)(self + 0x94), *(s16 *)(self + 0x45a), step)) {
+        if (ApproachLinear(*(short *)(self + 0x94), *(s16 *)(self + 0x45a), step)) {
             *(unsigned char *)(((int)self + 0x468)) &= ~1;
             return;
         }
@@ -1104,7 +1103,7 @@ void func_ov084_0212abd4(char *self)
             *(s16 *)(self + 0x45c) = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x41c));
             step = 0x400;
         }
-        _Z14ApproachLinearRsss((short *)(self + 0x94), *(s16 *)(self + 0x45c), step);
+        ApproachLinear(*(short *)(self + 0x94), *(s16 *)(self + 0x45c), step);
         return;
     }
     if (*(int *)(self + 0x440) >= 0x61a8000) {
@@ -1154,7 +1153,7 @@ void func_ov084_0212abd4(char *self)
         if (*(u16 *)(self + 0x456) > 0x1e)
             *(u16 *)(self + 0x458) = *(u16 *)(self + 0x456);
     }
-    _Z14ApproachLinearRsss((short *)(self + 0x94), *(s16 *)(self + 0x45c), step);
+    ApproachLinear(*(short *)(self + 0x94), *(s16 *)(self + 0x45c), step);
 }
 }
 

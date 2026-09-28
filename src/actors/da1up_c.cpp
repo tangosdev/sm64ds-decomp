@@ -113,6 +113,8 @@
 #include "Sound.h"
 #include "SharedFilePtr.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* The only two intra-TU calls that run UPWARD in ROM address order, so the only
    two that ROM-ascending source order cannot satisfy from the definition above:
    ordinal 21 (0x020afa50) calls ordinal 22 (0x020afa6c), and ordinal 18
@@ -232,9 +234,8 @@ void func_ov002_020af0c0(char* c){
     extern char* _ZN8dActor_c13ClosestPlayerEv(void*);
     extern int func_ov002_020d0d2c(void*);
     extern int Vec3_HorzLen(const Vector3*);
-    extern int _ZN4cstd5atan2E5Fix12IiES1_(int, int);
+    extern short _ZN4cstd5atan2E5Fix12IiES1_(int, int);
     extern short Vec3_HorzAngle(const Vector3*, const Vector3*);
-    extern void _Z14ApproachLinearRsss(short*, int, int);
     /* Forward: ordinal 11 sits above this one in ROM order. */
     extern void func_ov002_020af3a8(char* thiz);
 
@@ -253,10 +254,10 @@ void func_ov002_020af0c0(char* c){
             diff.y = ppos.y - *(int*)(c+0x60) + 0x78000;
         diff.z = ppos.z - *(int*)(c+0x64);
         int len = Vec3_HorzLen(&diff);
-        int pitch = _ZN4cstd5atan2E5Fix12IiES1_(len, diff.y);
+        short pitch = _ZN4cstd5atan2E5Fix12IiES1_(len, diff.y);
         short yaw = Vec3_HorzAngle((Vector3*)(c+0x5c), &ppos);
-        _Z14ApproachLinearRsss((short*)(c+0x94), yaw, 0x1000);
-        _Z14ApproachLinearRsss((short*)(c+0x92), pitch, 0x1000);
+        ApproachLinear(*(short *)(c+0x94), yaw, 0x1000);
+        ApproachLinear(*(short *)(c+0x92), pitch, 0x1000);
         *(int*)(c+0xa8) = (short)data_02082214[(*(unsigned short*)(c+0x92) >> 4)*2+1] * (short)0x1e;
         *(int*)(c+0x98) = (short)data_02082214[(*(unsigned short*)(c+0x92) >> 4)*2] * (short)0x1e;
     }

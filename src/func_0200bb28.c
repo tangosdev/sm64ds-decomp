@@ -11,7 +11,7 @@ extern u16 data_0209f49e[];
 extern u32 func_02012790(u32 a);
 extern s32 ApproachAngle(s16* cur, s16 target, s32 div, s32 band, s32 step);
 extern u16 DecIfAbove0_Short(u16* p);
-extern void _Z14ApproachLinearRsss(s16* p, s16 t, s16 r);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 extern void Vec3_RotateYAndTranslate(s32* out, s32* in, s16 ang, s32* src);
 extern s32 Math_Function_0203b14c(s32* p, s32 tgt, s32 rate, s32 lim, s32 step);
 extern s32 _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(s32* v, s32* t, s32 rate);

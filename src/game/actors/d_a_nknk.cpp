@@ -38,6 +38,8 @@
 #include "decl_ShadowModel.h"
 #include "Particle__System.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* Remaining legacy helper views are local to this translation unit. */
 /* shadow struct 'Entry' */
 struct Entry { char pad[4]; void *file; };
@@ -83,7 +85,6 @@ extern "C" void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int a, int b,
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
 extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
-extern int _Z14ApproachLinearRsss(short *a, short b, short c);
 extern void *func_ov062_02117b9c(void *c);
 extern void func_ov062_02118058(char *c);
 extern void func_ov062_02118004(void *c, int a1);
@@ -436,13 +437,13 @@ void func_ov062_02118cdc(char *c)
 {
     daNknk_c *self = (daNknk_c *)c;
     if (self->mTurning) {
-        self->mTurning = (_Z14ApproachLinearRsss(&self->mPrevAngleY, self->mTargetAngle, 0x200) ^ 1) != 0;
+        self->mTurning = (ApproachLinear(self->mPrevAngleY, self->mTargetAngle, 0x200) ^ 1) != 0;
     } else {
         if (self->mPlayerDist >= 0x61a8000) {
             self->mTargetAngle = self->mAimAngle;
         }
         self->mTurning = self->AngleAwayFromWallOrCliff(self->mWithMeshClsn, self->mTargetAngle);
-        _Z14ApproachLinearRsss(&self->mPrevAngleY, self->mTargetAngle, 0x200);
+        ApproachLinear(self->mPrevAngleY, self->mTargetAngle, 0x200);
     }
     if (self->mAnimIndex == 1) {
         func_ov062_02117724(c, 2, 8, 0x13, 0x19);
@@ -473,7 +474,7 @@ void func_ov062_02118b4c(char *self) {
             func_ov062_02117994(self, 2);
             return;
         }
-        _Z14ApproachLinearRsss(&obj->mPrevAngleY, obj->mAimAngle, 0x400);
+        ApproachLinear(obj->mPrevAngleY, obj->mAimAngle, 0x400);
         _Z14ApproachLinearRiii(&obj->mHorzSpeed, 0x11000, 0x1000);
         return;
     }
@@ -490,7 +491,7 @@ void func_ov062_02118b4c(char *self) {
         func_ov062_02117994(self, 2);
         return;
     }
-    _Z14ApproachLinearRsss(&obj->mPrevAngleY, (s16)(obj->mAimAngle + 0x8000), 0x400);
+    ApproachLinear(obj->mPrevAngleY, (s16)(obj->mAimAngle + 0x8000), 0x400);
     _Z14ApproachLinearRiii(&obj->mHorzSpeed, 0x11000, 0x1000);
 }
 }
@@ -566,7 +567,7 @@ void func_ov062_02118718(char *c)
 
     if (self->mTurning) {
         self->mTurning =
-            (_Z14ApproachLinearRsss(&self->mPrevAngleY, self->mTargetAngle, 0x200) ^ 1) != 0;
+            (ApproachLinear(self->mPrevAngleY, self->mTargetAngle, 0x200) ^ 1) != 0;
     } else {
         if (self->mPlayerDist >= 0x61a8000)
             self->mTargetAngle = self->mAimAngle;
@@ -597,12 +598,12 @@ void func_ov062_02118718(char *c)
             (other != 0 &&
              self->GetSubtraction(self->mTargetAngle,
                  (short)(self->mPrevAngleY + 0x8000)) < 0x2000)) {
-            _Z14ApproachLinearRsss(&self->mPrevAngleY, self->mTargetAngle, 0x600);
+            ApproachLinear(self->mPrevAngleY, self->mTargetAngle, 0x600);
         } else {
             if (self->mModelIndex != 0)
-                _Z14ApproachLinearRsss(&self->mPrevAngleY, self->mAimAngle, 0x600);
+                ApproachLinear(self->mPrevAngleY, self->mAimAngle, 0x600);
             else
-                _Z14ApproachLinearRsss(&self->mPrevAngleY, (short)(self->mAimAngle + 0x8000), 0x600);
+                ApproachLinear(self->mPrevAngleY, (short)(self->mAimAngle + 0x8000), 0x600);
         }
     }
 
@@ -690,7 +691,7 @@ void func_ov062_021183e0(char *c)
         func_ov062_02117994(c, 1);
 
     if (self->mTurning) {
-        self->mTurning = (_Z14ApproachLinearRsss(&self->mPrevAngleY, self->mTargetAngle, 0x200) ^ 1) != 0;
+        self->mTurning = (ApproachLinear(self->mPrevAngleY, self->mTargetAngle, 0x200) ^ 1) != 0;
     } else {
         if (self->mPlayerDist >= 0x61a8000)
             self->mTargetAngle = self->mAimAngle;
@@ -701,7 +702,7 @@ void func_ov062_021183e0(char *c)
                 self->mTargetAngle = Vec3_HorzAngle((const Vector3 *)&self->mPosX, (const Vector3 *)&((dActor_c *)other)->mPosX);
         }
         self->mTurning = self->AngleAwayFromWallOrCliff(self->mWithMeshClsn, self->mTargetAngle);
-        _Z14ApproachLinearRsss(&self->mPrevAngleY, self->mTargetAngle, 0x200);
+        ApproachLinear(self->mPrevAngleY, self->mTargetAngle, 0x200);
     }
 
     if (dist < 0xc8000 && self->GetSubtraction(self->mTargetAngle, self->mPrevAngleY) < 0xc00) {

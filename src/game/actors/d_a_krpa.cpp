@@ -406,7 +406,7 @@ extern "C" void func_ov070_02121310(daKrpa_c *self)
         self->mScaleX * 0x46, self->mGroundDistance, 0xf);
 }
 
-int ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 extern "C" {
 extern int Vec3_Dist(void* a, void* b);
 extern short Vec3_HorzAngle(void* a, void* b);

@@ -101,7 +101,7 @@ int func_ov090_02132ac4(daManta_c *self, MantaState *state);
 void func_ov090_02132b14(daManta_c *self);
 }
 
-int ApproachLinear(short &v, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 /* One written destructor. The compiler emits D1 then D0 from the
  * members above; D0 adds dEnemyBase_c's inline operator delete. */

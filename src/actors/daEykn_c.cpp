@@ -76,7 +76,7 @@ struct LoadedFile {
 };
 
 int ApproachLinear(int &value, int target, int step);
-void ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 void UpdateAngle(s16 &angle, s16 target, int div, s16 maxStep);
 
 extern "C" {

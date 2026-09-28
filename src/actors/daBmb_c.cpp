@@ -42,6 +42,8 @@
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* Arm 0 reads the actor through this shadow. Bmb_Vec3 is not Vector3: the
    file already has that name, and this body's Vec3_HorzAngle declaration
    uses Bmb_Vec3. */
@@ -121,11 +123,7 @@ void  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor
 /* Hoisted out of four member bodies.  A class member function may not sit in a
    block-scope linkage specification, so daBmb_c::State1/3/4/5 cannot carry their
    own extern "C" declarations the way the free members below do -- these have to
-   be file-scope, and they are spelled to agree with every other user in the TU.
-   _Z14ApproachLinearRsss takes the reference its own mangled name encodes; the
-   free func_ov102_0214be1c shard had recovered it as a pointer, and State1's two
-   call sites bind the same address through the reference instead. */
-void  _Z14ApproachLinearRsss(short &v, short target, short step);
+   be file-scope, and they are spelled to agree with every other user in the TU. */
 void  func_ov102_0214b3b8(void *c);
 /* Real definitions: func_0201267c and func_0200fc44 (arm9).
    The methods call through these so the names stay unmangled. aa18, a free
@@ -432,7 +430,6 @@ void func_ov102_0214bf64(void *ov)
 {
     extern unsigned short DecIfAbove0_Short(unsigned short* p);
     extern void _Z14ApproachLinearRiii(int& v, int target, int step);
-    extern void _Z14ApproachLinearRsss(short& v, short target, short step);
     extern short Vec3_HorzAngle(const Bmb_Vec3* v0, const Bmb_Vec3* v1);
     extern int Vec3_Dist(const Bmb_Vec3* a, const Bmb_Vec3* b);
     extern void func_ov102_0214b988(void* c);
@@ -451,7 +448,7 @@ void func_ov102_0214bf64(void *ov)
             } else {
                 if (o->variant == 5) {
                     s16 ang = Vec3_HorzAngle(&o->pos, &o->home);
-                    _Z14ApproachLinearRsss(o->prevAngY, ang, 0x200);
+                    ApproachLinear(o->prevAngY, ang, 0x200);
                     o->angY = o->prevAngY;
                 } else {
                     if (o->turnTimer == 0 || Vec3_Dist(&o->pos, &o->home) >= 0x500000) {
@@ -469,7 +466,7 @@ void func_ov102_0214bf64(void *ov)
                 if (b)
                     target = o->prevAngY;
             }
-            _Z14ApproachLinearRsss(o->prevAngY, target, 0x800);
+            ApproachLinear(o->prevAngY, target, 0x800);
             o->angY = o->prevAngY;
         }
         o->animSpeed = o->horzSpeed >> 3;
@@ -522,10 +519,10 @@ void func_ov102_0214beb4(void *cv)
 void daBmb_c::State1() {
     if (mChasePlayer == 0) {
         mModelAnim.speed = 0x800;
-        _Z14ApproachLinearRsss(mPrevAngleY, *(short *)&mTargetAngY, 0x400);
+        ApproachLinear(mPrevAngleY, *(short *)&mTargetAngY, 0x400);
     } else {
         mModelAnim.speed = 0x1000;
-        _Z14ApproachLinearRsss(mPrevAngleY, *(short *)&mTargetAngY, 0x800);
+        ApproachLinear(mPrevAngleY, *(short *)&mTargetAngY, 0x800);
     }
     mAngleY = mPrevAngleY;
     ((Animation *)((char *)this + 0x350))->Advance();

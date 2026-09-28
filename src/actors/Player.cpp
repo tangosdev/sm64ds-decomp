@@ -103,6 +103,8 @@
 #include "dBgCh_Lin.h"
 #include "dBgCh_Actr.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* ---------------------------------------------------------------------------
  * Shadow types that cannot live inside a function body.
  * ------------------------------------------------------------------------- */
@@ -9675,7 +9677,6 @@ int Player::St_Climb_Main()
     extern void _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
     extern int func_ov002_020cb354(void*);
     extern s16 GetAngleToCamera(u8 i);
-    extern void _Z14ApproachLinearRsss(void*, s16 target, s16 step);
     extern void func_ov002_020bf340(void*, void*, s32 delta, s32 limit);
     extern void func_ov002_020cb400(void*);
     extern void func_ov002_020cb474(void*);
@@ -9761,7 +9762,7 @@ int Player::St_Climb_Main()
             if (v < -0x400) {
                 func_ov002_020cb354(c);
                 mAngleYSpeed = 0;
-                _Z14ApproachLinearRsss((s16*)(c + 0x8e), GetAngleToCamera(mPlayerNo), 0x200);
+                ApproachLinear(*(short *)(c + 0x8e), GetAngleToCamera(mPlayerNo), 0x200);
                 if (*(s32*)(*(char**)(c + 0x37c) + 8) <= mAttachOffsetY) {
                     if ((*(u32*)(*(char**)(c + 0x37c) + 0x18) & 0x2000000) && mVertSpeed == 0 && (s32)(*(s16*)((char*)data_0209f4a4 + (u32)data_020a0e40 * 0x18)) < -0xc00 && mStateWork == 1) {
                         _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_021106f4);
@@ -12132,7 +12133,6 @@ int Player::St_OnWall_Main()
     extern int func_ov002_020d36d8(void*, int a);
     extern void _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
     extern int _ZN4cstd5atan2E5Fix12IiES1_(Fix12i a, int b);
-    extern void _Z14ApproachLinearRsss(void*, s16 t, s16 s);
     extern int func_ov002_020bf224(void*, int a, int b);
     extern void _ZN6Player7SetAnimEji5Fix12IiEj(void*, u32 anim, int a, Fix12i b, u32 d);
     extern int func_ov002_020d4d88(void*, int a, int b);
@@ -12182,7 +12182,7 @@ int Player::St_OnWall_Main()
             _ZN6Player14St_OnWall_InitEv(((char*)this));
             return 1;
         }
-        _Z14ApproachLinearRsss((s16*)((char*)&mAngleY), (s16)a, 0x800);
+        ApproachLinear(*(short *)((char*)&mAngleY), (s16)a, 0x800);
         mPrevAngleY = a;
         mHorzSpeed = func_ov002_020bf224(((char*)this), 0xa000, 0x2000);
         func_ov002_020eee3c(((char*)this) + 0x380, ((char*)this));
@@ -12200,7 +12200,7 @@ int Player::St_OnWall_Main()
                 return 1;
             }
             int a2 = ang + 0x8000;
-            _Z14ApproachLinearRsss((s16*)((char*)&mAngleY), (s16)a2, 0x800);
+            ApproachLinear(*(short *)((char*)&mAngleY), (s16)a2, 0x800);
             u32 anim;
             if ((s16)a2 == (s16)(mDesiredAngleY + d)) {
                 mPrevAngleY = ang + 0x4000;

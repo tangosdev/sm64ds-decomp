@@ -65,6 +65,8 @@
 #include "Player.h"
 #include "Animation.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 
@@ -114,7 +116,6 @@ int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 s16   Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int   AngleDiff(int a, int b);
 int   ApproachAngle(s16 *cur, int target, int divisor, int band, int maxStep);
-void  _Z14ApproachLinearRsss(s16 *cur, s16 target, s16 step);
 void  _Z14ApproachLinearRiii(int &cur, int target, int step);
 u16   DecIfAbove0_Short(u16 *p);
 int   RandomIntInternal(int *seed);
@@ -545,7 +546,7 @@ int func_ov090_02131648(MenboState *c)
         self->unk_3a4 = 0x1000;
     }
 
-    _Z14ApproachLinearRsss(&self->mPrevAngleY, (s16)self->unk_39a, 0x500);
+    ApproachLinear(self->mPrevAngleY, (s16)self->unk_39a, 0x500);
 
     if (self->unk_394 == 0 && self->unk_396 == 0) {
         self->unk_3a4 = 0x1000;
@@ -767,7 +768,7 @@ int daMenbo_c::Behavior()
         if (mDeathState == 0)
             PoofDust();
         if (unk_3a1 == 3) {
-            _Z14ApproachLinearRsss(&mAngleX, -32767, 0x500);
+            ApproachLinear(mAngleX, -32767, 0x500);
             if (AngleDiff(*&mAngleX, -32767) < 0x1000) {
                 s16 *yaw = &mAngleY;
                 *yaw += 0x1000;

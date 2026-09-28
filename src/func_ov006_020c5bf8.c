@@ -4,7 +4,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
-extern void _Z14ApproachLinearRsss(short *a, short b, short c);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 
 void func_ov006_020c5bf8(char *c)
 {

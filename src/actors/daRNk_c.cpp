@@ -20,7 +20,7 @@
 #include "Timer.h"
 #include "SharedFilePtr.h"
 
-int ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 int ApproachLinear(int &value, int target, int step);
 
 extern "C" {

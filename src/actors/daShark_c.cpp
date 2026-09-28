@@ -74,7 +74,7 @@ extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
     void *, void *, unsigned int, int, unsigned int, unsigned int, unsigned int);
 }
 
-void ApproachLinear(s16 &value, s16 target, s16 step);
+bool ApproachLinear(short &value, short target, short step);
 
 struct SharkLoadedFile {
     u32 id;

@@ -53,6 +53,8 @@
 #include "dCc_c.h"
 #include "dBgCh_Gnd.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 struct BCA_File;
 struct BMD_File;
 
@@ -80,13 +82,12 @@ extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* math / vector helpers.
-   `_Z14ApproachLinearRsss` returns int and that is load-bearing: St_Talk_Main
+   ApproachLinear returns whether it arrived, and that is load-bearing: St_Talk_Main
    tests the result to decide whether the turn has finished. */
 s16 Vec3_HorzAngle(const void *a, const void *b);
 s16 Vec3_VertAngle(const void *a, const void *b);
 s32 Vec3_HorzDist(const void *a, const void *b);
 s32 AngleDiff(s32 a, s32 b);
-int _Z14ApproachLinearRsss(s16 *cur, s16 tgt, s16 step);
 void _Z15ApproachLinear2Riii(s32 *cur, s32 tgt, s32 step);
 void Matrix4x3_FromRotationY(void *m, int angY);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 ang);
@@ -207,7 +208,7 @@ void daKinopio_c::St_Talk_Main()
     talkState = ((Player *)player)->GetTalkState();
     switch (talkState) {
     case 0: {
-        if (_Z14ApproachLinearRsss(&mAngleY, angleToPlayer, 0x800) == 0)
+        if (ApproachLinear(mAngleY, angleToPlayer, 0x800) == 0)
             return;
         if (data_0209f2f8 == 0x32) {
             if ((data_0209caa0[1] & 0x40000000) == 0)
@@ -489,7 +490,7 @@ int daKinopio_c::Behavior()
             mHeadYawTarget = 0;
             mHeadPitchTarget = 0;
         } else {
-            _Z14ApproachLinearRsss(&mAngleY, yawToPlayer, 0x100);
+            ApproachLinear(mAngleY, yawToPlayer, 0x100);
             mHeadYawTarget = 0;
             mHeadPitchTarget = 0;
         }
@@ -508,8 +509,8 @@ int daKinopio_c::Behavior()
     if (data_0209f2f8 == 0x32)
         mTargetOpacity = 0xff;
 
-    _Z14ApproachLinearRsss(&mHeadYaw, mHeadYawTarget, 0x250);
-    _Z14ApproachLinearRsss(&mHeadPitch, mHeadPitchTarget, 0x100);
+    ApproachLinear(mHeadYaw, mHeadYawTarget, 0x250);
+    ApproachLinear(mHeadPitch, mHeadPitchTarget, 0x100);
 
     _Z15ApproachLinear2Riii((s32 *)&mOpacity, mTargetOpacity, 6);
 

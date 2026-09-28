@@ -27,7 +27,7 @@
  * - common.h first via daDkk_c.h -> dBgActor_c.h (Matrix4x3 flat s32 m[12]).
  * - Leaf operator new(unsigned long) until #2570.
  * - g_profile_DONKAKU stays overlay data (not this TU).
- * - ApproachLinear / func_0201267c stay mangled free functions.
+ * - func_0201267c stays a free function.
  *
  * Superseded one-function sources (ROM address order):
  *   [0] 0x021118c8  src/_ZN7daDkk_cD1Ev.cpp              (now the header's inline body)
@@ -51,6 +51,8 @@
 #include "decl_common.h"
 #include "dBgCh_Lin.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* decl_common.h already declares every address-named symbol this TU touches --
  * func_ov025_021119a4/021119f4/02111a84, func_ov091_02132e64/02132e98/02132ff4
  * and data_ov025_02113814 -- all taking
@@ -70,7 +72,6 @@
  * signature and links because the symbol is extern "C". */
 extern "C" {
 extern void func_0201267c(int a, void *b);
-extern int _Z14ApproachLinearRsss(short &a, short b, short c);
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *p, Fix12i a, Fix12i b);
 extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *thiz, const Vector3 &v, int f);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int x, int y, int z);
@@ -241,7 +242,7 @@ void daDkk_c::func_ov025_021119f4()
  * counter and goes back to state 6. */
 int daDkk_c::func_ov025_021119a4()
 {
-    int r = _Z14ApproachLinearRsss(*(short *)((char *)this + 0x8e), this->unk_39c, 0x400);
+    int r = ApproachLinear(*(short *)((char *)this + 0x8e), this->unk_39c, 0x400);
     if (r == 0) return r;
     *(short *)((char *)this + 0x94) = *(short *)((char *)this + 0x8e);
     this->mState = 6;

@@ -32,6 +32,8 @@
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* The state table's member pointers are called through a plain,
    non-polymorphic view of the actor: an {address, adjustment} pair with no
    virtual bit, matching the eight-byte literals in overlay .data. */
@@ -67,7 +69,6 @@ unsigned short DecIfAbove0_Short(unsigned short *p);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void func_0201267c(unsigned int soundID, const Vector3 *pos);
-void _Z14ApproachLinearRsss(short *cur, short tgt, short step);
 
 /* The dBgCh_Actr::UpdateContinuous call goes through a veneer, and the two
    result getters are not declared by dBgCh_Actr.h. */
@@ -237,7 +238,7 @@ extern "C" int func_ov072_02121a84(daPgBby_c *self)
     switch (self->mSubState) {
     case 0:
         angle = (short)(Vec3_HorzAngle((Vector3 *)&self->mPosX, (Vector3 *)&player->mPosX) + 0x8000);
-        _Z14ApproachLinearRsss(&self->mAngleY, angle, 0x514);
+        ApproachLinear(self->mAngleY, angle, 0x514);
         self->mPrevAngleY = self->mAngleY;
         self->mHorzSpeed = 0x5000;
         if (dist >= 0x1c2000) {
@@ -246,7 +247,7 @@ extern "C" int func_ov072_02121a84(daPgBby_c *self)
         break;
     case 1:
         angle = Vec3_HorzAngle((Vector3 *)&self->mPosX, (Vector3 *)&player->mPosX);
-        _Z14ApproachLinearRsss(&self->mAngleY, angle, 0x514);
+        ApproachLinear(self->mAngleY, angle, 0x514);
         self->mPrevAngleY = self->mAngleY;
         self->mHorzSpeed = 0x5000;
         if (dist > 0x384000) {
@@ -411,7 +412,7 @@ extern "C" int func_ov072_02121670(daPgBby_c *self)
     } else if (dist < 0xc8000) {
         tgt = (short)(Vec3_HorzAngle((Vector3 *)&self->mPosX, (Vector3 *)&self->mMother->mPosX) + 0x8000);
     }
-    _Z14ApproachLinearRsss(&self->mAngleY, tgt, 0x2bc);
+    ApproachLinear(self->mAngleY, tgt, 0x2bc);
     self->mPrevAngleY = self->mAngleY;
     self->mModelAnim.Advance();
     self->UpdatePos(&self->mCylClsn);

@@ -281,6 +281,8 @@ int daPropeller_Heyho_c::CleanupResources()
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_02120070
 #include "common.h"
+
+bool ApproachLinear(short &value, short target, short step);
 extern "C" {
 
 extern void Vec3_Asr(void* d, void* s, int sh);
@@ -339,7 +341,6 @@ extern int Vec3_Dist(void *a, void *b);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern void ApproachAngle(s16 *dst, s16 target, int a, int b, int c);
 extern short Vec3_VertAngle(void *a, void *b);
-extern void _Z14ApproachLinearRsss(void *dst, short a, short b);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
@@ -368,7 +369,7 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
     }
     ApproachAngle(&c->mPrevAngleY, c->mTargetAngY, 0xa, 0x200, 0x100);
 
-    _Z14ApproachLinearRsss(&c->mPrevAngleX, Vec3_VertAngle(&c->mPosX, &c->mHomePosX), 0x100);
+    ApproachLinear(c->mPrevAngleX, Vec3_VertAngle(&c->mPosX, &c->mHomePosX), 0x100);
 
     ApproachAngle(&c->mPrevAngleZ,
                   (c->mPrevAngleY - c->mTargetAngY) / 2,
@@ -812,7 +813,6 @@ struct Vector3_16f;
 extern "C" unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, Fix12i c, Fix12i d, Fix12i e, void* f, void* g);
 extern "C" u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const Vector3_16f* f);
 extern "C" void ApproachAngle(short* v, short a, int b, int c, int d);
-extern "C" void _Z14ApproachLinearRsss(void* v, short a, short b);
 
 extern "C" int func_ov070_0211f368(daPropeller_Heyho_c* c)
 {
@@ -831,7 +831,7 @@ extern "C" int func_ov070_0211f368(daPropeller_Heyho_c* c)
             c->mParticle1, 0x13b, v.x, v.y, v.z, 0);
     }
     ApproachAngle(&c->mAngleX, -0x4000, 0xa, 0x200, 0x100);
-    _Z14ApproachLinearRsss(&c->mAngleX, -0x4000, 0x200);
+    ApproachLinear(c->mAngleX, -0x4000, 0x200);
     if ((u16)c->mStateTimer == 0)
         func_ov070_0211f0a4(c);
     return 1;

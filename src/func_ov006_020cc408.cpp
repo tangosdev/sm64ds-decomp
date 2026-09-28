@@ -1,5 +1,7 @@
 //cpp
 #include "types.h"
+
+bool ApproachLinear(short &value, short target, short step);
 extern "C" {
 void func_ov006_020cbfd8(void *c);
 void func_ov006_020cbaec(void *c);
@@ -7,7 +9,6 @@ void func_ov006_020bfec0(void *a0, void *a1, short *a2);
 void func_ov006_020cb814(void *c);
 void func_ov006_020cb690(void *c);
 int func_ov006_020e6e3c(int a, int b);
-int _Z14ApproachLinearRsss(short *v, short step, short rate);
 void func_ov006_020cc37c(void *c);
 }
 
@@ -101,11 +102,11 @@ L180:
     {
         int r = *(int *)(c + 0x34);
         if (r > 0x4000) {
-            _Z14ApproachLinearRsss((short *)(c + 0x4a), 0x4000, 0xc00);
+            ApproachLinear(*(short *)(c + 0x4a), 0x4000, 0xc00);
         } else if (r < -0x8000) {
-            _Z14ApproachLinearRsss((short *)(c + 0x4a), -0x4000, 0xc00);
+            ApproachLinear(*(short *)(c + 0x4a), -0x4000, 0xc00);
         } else {
-            _Z14ApproachLinearRsss((short *)(c + 0x4a), (short)r, 0xc00);
+            ApproachLinear(*(short *)(c + 0x4a), (short)r, 0xc00);
         }
     }
 

@@ -268,7 +268,7 @@ int daSanbo_c::func_ov096_021368a4()
 namespace Sound { void PlayBank0(unsigned int id, const Vector3 &pos); }
 
 void ApproachLinear(int &dst, int target, int step);
-void ApproachLinear(short &dst, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 extern "C" {
 void func_ov096_021358c8(char *c);

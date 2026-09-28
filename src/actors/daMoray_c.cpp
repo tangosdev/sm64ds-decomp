@@ -171,7 +171,7 @@ struct MorayStarCarrier {
 
 extern "C" MorayRenderStep data_ov016_02114908[];
 
-void ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 namespace cstd { int fdiv(int a, int b); }
 
 /* Path-swim execute. Turns toward the current node and steps to the next

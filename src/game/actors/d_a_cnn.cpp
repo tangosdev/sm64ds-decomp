@@ -62,7 +62,7 @@
 
 typedef void (daCnn_c::*State)();
 
-int ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 extern "C" {
 /* The cannon's model, and the water bomb's two (bomb and fragment), which

@@ -1,7 +1,7 @@
 #include "types.h"
 extern int _ZN9Animation8FinishedEv(void *self);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int i, int fix, u32 j);
-extern int _Z14ApproachLinearRsss(s16 *a, s16 b, s16 c);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 extern void func_ov006_020cc9fc(char *c);
 
 extern void *data_ov006_021405c8;

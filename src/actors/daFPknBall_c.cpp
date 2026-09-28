@@ -13,6 +13,8 @@
 #include "common.h"
 #include "daFPknBall_c.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 typedef struct { s32 x, y, z; } Vec3;
 
 struct Vector3_16f;
@@ -63,7 +65,6 @@ void func_02012694(u32 id, const void* v);
 void _ZN7fBase_c18MarkForDestructionEv(void* self);
 void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 int _Z14ApproachLinearRiii(void* p, s32 target, s32 step);
-int _Z14ApproachLinearRsss(void* p, s16 target, s16 step);
 int _ZNK10dBgCh_Actr8IsOnWallEv(void* self);
 int _ZNK10dBgCh_Actr12TouchesWaterEv(void* self);
 void func_ov002_020f897c(void* self);
@@ -323,7 +324,7 @@ int daFPknBall_c::Behavior() {
 
     dBgCh_Actr_UpdateContinuous_Veneer(c + 0x144);
     if (_Z14ApproachLinearRiii(c + 0x98, *(int*)(c + 0x35c), 0x999) != 0) {
-        _Z14ApproachLinearRsss(c + 0x94, *(s16*)(c + 0x368), 0x200);
+        ApproachLinear(*(short *)(c + 0x94), *(s16*)(c + 0x368), 0x200);
     }
 
     lr = (*(int*)(c + 0x98) * data_02082214[(*(u16*)(c + 0x92) >> 4) * 2 + 1]) / 4096;

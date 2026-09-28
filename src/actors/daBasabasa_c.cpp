@@ -66,7 +66,7 @@ extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, dActor_c* a, i
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, int r, int h, Vector3_16* p, Vector3_16* q);
 }
 
-void ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 /* The four states, by the address of their .bss record. */
 extern daBasabasa_c::State data_ov065_0211d6e0;   /* chase */
