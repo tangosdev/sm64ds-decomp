@@ -152,6 +152,7 @@ concurrency:
 
 jobs:
   tools:
+    name: tool tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

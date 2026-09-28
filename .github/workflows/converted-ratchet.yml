@@ -108,6 +108,7 @@ concurrency:
 
 jobs:
   ratchet:
+    name: converted ratchet
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -61,6 +61,7 @@ concurrency:
 
 jobs:
   references:
+    name: dead references
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

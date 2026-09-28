@@ -3,7 +3,8 @@
 (report.json, format version 2) for decomp.dev.
 
 decomp.dev ingests objdiff-format reports from a GitHub Actions artifact named
-"<version>-report" (see .github/workflows/report.yml). This reads the same
+"<version>-report". The workflow that uploaded it, report.yml, was disabled in
+August and deleted on 2026-09-28; run this by hand to regenerate. This reads the same
 committed-data chaos-db.json that powers the README bar and the treemap, so the
 decomp.dev numbers always agree with the atlas. No ROM or extracted binaries are
 needed: matched status and sizes come from committed src/ and config symbols.
