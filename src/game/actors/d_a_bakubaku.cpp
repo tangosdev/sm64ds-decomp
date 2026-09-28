@@ -1,52 +1,82 @@
 //cpp
-/* daBakubaku_c -- Bubba, the big fish that patrols Jolly Roger Bay.
+/**
+ * daBakubaku_c -- Bubba, the fish that patrols Jolly Roger Bay.
  *
- * A state machine driven by a table of { enter, main } pointer-to-member
- * pairs 0x10 apart (0xa7c / 0xa8c / 0xa9c / 0xaac / 0xabc); mState points at
- * the live entry. data_0209f32c is the water height the actor swims under.
+ * Five { enter, main } records in ov032 BSS, filled by
+ * __sinit_ov032_02112c10 from the PMF constants at 0x0211377c.
+ * mState points at the live record. Behavior calls main; 02111ff4
+ * stores the record and calls enter.
  *
- * Things here that look like slop and are load-bearing: the gotos, the
- * dead-store in[2] pairs, and a few register-named locals (r5, v1/v2). They
- * are what reproduces the ROM; see the S8/S15 notes in the manifest.
- * common.h must be included first -- reaching Matrix.h through a nested
- * include instead scalarizes the twelve-word mat4x3 and mShadowMat copies.
- * decl_common.h is here because 02113a48 / 02113a50 / 02113a8c are extern int
- * there, so the BMD/BCA handles are int[] punned to SharedFilePtr and
- * 02113a8c is taken by address.
+ *   02113a8c wander   enter 02111f9c  main 02111e24
+ *   02113a9c pause    enter 02111dd8  main 02111d7c
+ *   02113aac chase    enter 02111d58  main 02111b9c
+ *   02113a7c surface  enter 02111814  main 02111620   (vert angle > 0)
+ *   02113abc dive     enter 02111b50  main 02111830   (vert angle <= 0)
  *
- * Reconstruction notes. RTTI and the BAKUBAKU registry name the class
- * daBakubaku_c; `daBakubaku_c_classInit` is a source-style name retail does
- * not store. func_ov032_02111254..02112044 are written as free functions,
- * which is a choice and not a deduction: the image preserves no original
- * mangled symbol table, so those labels are address-derived. Fifteen of them
- * are defined here, fourteen take daBakubaku_c *self first, and no other TU
- * or header names one, so ownership is clear -- the exception is 02111ff4,
- * whose (void *, void *) state-table shape does not say which class owns it.
- * Making them members is a migration of this file plus the ov032 symbols.txt
- * rows; until then their original form stays unknown. ModelAnim::SetAnim,
- * dCcAcPos_c::Init, DropShadowRadHeight and Player::Hurt stay mangled
- * (Fix12-by-value, wall 6az). dBgCh_Actr::Init stays mangled for a different
- * reason: types.h makes Fix12i a plain s32, so the member form would mangle
- * that argument as int while the arm9 symbols.txt row spells it 5Fix12IiE.
- * That link failure is reasoned, NOT MEASURED -- no full mwldarm link of the
- * member form has been run. The BMD/BCA SharedFilePtrs and the state-table
- * symbols keep their data_ov032_* spellings; sinit file IDs are 661/662/663.
- * Particle and sound work goes through func_02022c80 / func_02022d00 /
- * func_02012694 / func_ov002_020c5cd8.
+ * File handles, same sinit: 02113a40 model file 0x295 (func_02017acc),
+ * 02113a48 bite anim 0x296, 02113a50 swim anim 0x297. The word at +4
+ * is the loaded BCA/BMD. data_0209f32c is the stage water height
+ * (daObjC0Water_c publishes it). data_ov032_021137cc / 021137d8 are
+ * the body and head cylinder offsets.
+ *
+ * DO NOT "TIDY" THESE -- each one is load-bearing on this file:
+ *
+ *   common.h before daBakubaku_c.h. mShadowMat and the mat4x3 copy are
+ *   twelve-word moves. The nested Matrix4x3 scalarizes them.
+ *
+ *   mSpawnPos* / mTargetPos* stay three s32s. A Vector3 member runs
+ *   ~Vector3 from the inline D1.
+ *
+ *   mStateTimer is dEnemyBase_c's s16. The tests load it as an unsigned
+ *   halfword (ldrh). A signed load is ldrsh and misses by one word.
+ *
+ *   The double stores into the forward-vector's Z, the gotos, and the
+ *   register-named locals (r5, v1, v2, s5) are the shape that matches.
+ *
+ *   g_profile_BAKUBAKU is this TU's .data. It stays here, not on the class.
+ *
+ * Measured on this file, not copied from a sibling:
+ *   dBgCh_Actr::Init stays a mangled free call: types.h makes Fix12i a
+ *   plain s32, so the header method mangles as int and the link fails
+ *   (undefined dBgCh_Actr::Init(dActor_c*, int, int, ...)). 02111ff4 calls enter as int (daBakubaku_c::*)(); that matches
+ *   too. The record type stays out of the class: a member PMF of
+ *   daBakubaku_c inside the class is the ICE.
+ *   ModelAnim::SetAnim, dCcAcPos_c::Init, and DropShadowRadHeight with a
+ *   Fix12<int> local grow the caller and retarget its relocs. Those stay
+ *   scalar externs. Player.h has no Hurt, so that call is the scalar too.
+ *   func_02022c80 / func_02022d00 wrap Particle::System::New and pass the
+ *   tracker callbacks at +0x800 and +0x7f4. func_02012694 is Sound::Play
+ *   with bank 3. func_ov002_020c5cd8 sets Player::mStateStep to 6 and
+ *   stores this fish in mAttachedActor.
  */
 
 #include "common.h"
 #include "daBakubaku_c.h"
-#include "types.h"
-#include "decl_common.h"
-#include "dCc_c.h"
 #include "Player.h"
 #include "SharedFilePtr.h"
 
-typedef daBakubaku_c Klass;  /* real class: 2004/b56 does not ICE on this PMF */
-typedef void (Klass::*PMF)();
-/* Tables are 0x10 apart. SetState calls enter at +0; Behavior calls main at +8. */
-struct StateEntry { PMF enter; PMF main; };
+bool ApproachLinear(short &value, short target, short step);
+
+/* dCc_c bit table: flags/vulnFlags/hitFlags share it. */
+enum {
+    kCcCharMove = 0x2,
+    kCcCharProjectile = 0x4,
+    kCcMega = 0x10,
+    kCcEnemy = 0x200000
+};
+
+enum { kPlayerActorId = 0xbf };
+
+/* PMF of this class, outside the class. Two words, delta 0 in the ROM. */
+struct BakubakuState {
+    void (daBakubaku_c::*enter)();
+    void (daBakubaku_c::*main)();
+};
+
+struct BcaHandle {
+    s32 fileId;
+    BCA_File *file;
+};
 
 struct BakubakuSpawnInfo {
     daBakubaku_c *(*classInit)();
@@ -62,22 +92,26 @@ typedef char BakubakuSpawnInfo_size_must_be_0x1c[
     sizeof(BakubakuSpawnInfo) == 0x1c ? 1 : -1];
 
 extern "C" {
+/* These four keep the int spellings __sinit_ov032_02112c10 and
+   decl_common.h give them; uses cast to SharedFilePtr/BcaHandle/BakubakuState. */
 extern int data_ov032_02113a40[];
-extern int data_ov032_02113abc[];
-extern int data_ov032_02113a7c[];
-extern int data_0209f32c[];
-extern int data_ov032_02113aac[];
-extern int data_ov032_02113a9c[];
-extern int data_020a0e68[];
+extern int data_ov032_02113a48;
+extern int data_ov032_02113a50;
+extern int data_ov032_02113a8c; /* wander */
+extern BakubakuState data_ov032_02113a9c; /* pause */
+extern BakubakuState data_ov032_02113aac; /* chase */
+extern BakubakuState data_ov032_02113a7c; /* surface */
+extern BakubakuState data_ov032_02113abc; /* dive */
+extern s32 data_0209f32c;
+extern Matrix4x3 data_020a0e68;
 extern int data_0209e650[];
 
-extern Vector3 data_ov032_021137cc;
-extern Vector3 data_ov032_021137d8;
+extern Vector3 data_ov032_021137cc; /* body cylinder */
+extern Vector3 data_ov032_021137d8; /* head cylinder */
 
 int func_ov032_02111254(daBakubaku_c *self);
 int func_ov032_02111350(daBakubaku_c *self);
 void func_ov032_021113fc(daBakubaku_c *self);
-int func_ov032_02111ff4(void *self, void *state);
 void func_ov032_02112044(daBakubaku_c *self);
 
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
@@ -94,6 +128,7 @@ void Matrix4x3_FromRotationY(void *m, s16 angY);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 void MulVec3Mat4x3(void *in, void *m, void *out);
 
+/* Scalar so the immediate stays in a register. Fix12<int> by value homes it. */
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
     void *self, void *bca, int a, int fix, unsigned int b);
 void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
@@ -109,11 +144,8 @@ int func_ov002_020c5cd8(void *a, void *self);
 void func_02012694(int a, void *p);
 u32 func_02022c80(u32, u32, Fix12i, Fix12i, Fix12i, const void *);
 u32 func_02022d00(u32, u32, Fix12i, Fix12i, Fix12i, void *);
-int _Z14ApproachLinearRsss(s16 *dst, s16 target, s16 step);
 void _Z14ApproachLinearRiii(int *p, int t, int s);
 }
-
-enum { kPlayerActorId = 0xbf };
 
 // @symbol daBakubaku_c_classInit
 extern "C" daBakubaku_c *daBakubaku_c_classInit()
@@ -136,7 +168,7 @@ extern "C" BakubakuSpawnInfo g_profile_BAKUBAKU = {
 // @symbol _ZN12daBakubaku_c16OnAimedAtWithEggEv
 int daBakubaku_c::OnAimedAtWithEgg()
 {
-    return 0xa0000; /* 10.0 Fix12, egg aim height */
+    return 0xa0000; /* Fix12 160.0, egg aim height */
 }
 
 // @symbol _ZN12daBakubaku_c13InitResourcesEv
@@ -156,13 +188,15 @@ s32 daBakubaku_c::InitResources()
     bodyOffset.y = data_ov032_021137cc.y;
     bodyOffset.z = data_ov032_021137cc.z;
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-        &mBodyClsn, this, bodyOffset, 0x64000, 0x64000, 0x200004, 0x10);
+        &mBodyClsn, this, bodyOffset, 0x64000, 0x64000,
+        kCcEnemy | kCcCharProjectile, kCcMega);
 
     headOffset.x = data_ov032_021137d8.x;
     headOffset.y = data_ov032_021137d8.y;
     headOffset.z = data_ov032_021137d8.z;
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-        &mHeadClsn, this, headOffset, 0x64000, 0x8c000, 0x200004, 0);
+        &mHeadClsn, this, headOffset, 0x64000, 0x8c000,
+        kCcEnemy | kCcCharProjectile, 0);
 
     mSpawnPosX = mPosX;
     mSpawnPosY = mPosY;
@@ -173,10 +207,10 @@ s32 daBakubaku_c::InitResources()
 
     mTerminalVelocity = -0x1e000;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &mModelAnim, (void *)(&data_ov032_02113a50)[1], 0, 0x1000, 0);
+        &mModelAnim, ((BcaHandle *)&data_ov032_02113a50)->file, 0, 0x1000, 0);
     mModelAnim.speed = 0x1000;
 
-    func_ov032_02111ff4(this, &data_ov032_02113a8c);
+    func_ov032_02111ff4((BakubakuState *)&data_ov032_02113a8c);
     return 1;
 }
 
@@ -189,7 +223,7 @@ s32 daBakubaku_c::Behavior()
     DecIfAbove0_Short((unsigned short *)&mStateTimer);
     DecIfAbove0_Short(&mChaseCooldown);
 
-    StateEntry *state = (StateEntry *)mState;
+    BakubakuState *state = mState;
     if (state->main != 0)
         (this->*(state->main))();
 
@@ -200,7 +234,7 @@ s32 daBakubaku_c::Behavior()
     UpdateWMClsn(mWithMeshClsn, 0);
     func_ov032_02112044(this);
 
-    if (mState != data_ov032_02113aac) {
+    if (mState != &data_ov032_02113aac) {
         mModelAnim.speed = 0x1000;
     } else {
         mModelAnim.speed = 0x2000;
@@ -223,7 +257,7 @@ s32 daBakubaku_c::Behavior()
 // @symbol _ZN12daBakubaku_c6RenderEv
 s32 daBakubaku_c::Render()
 {
-    /* Temporary is load-bearing: ROM materialises 0/1 then cmp. */
+    /* 0x40000 is a yoshi-mouth flag. The 0/1 temporary is the ROM's cmp. */
     int b = ((mFlags & 0x40000) != 0);
     if (b) return 1;
     mModelAnim.Render(0);
@@ -244,40 +278,38 @@ s32 daBakubaku_c::CleanupResources()
     return 1;
 }
 
-/* Update model matrix, shadow matrix, drop shadow. */
+/* Model matrix, shadow matrix, drop shadow. */
 // @symbol func_ov032_02112044
 extern "C" void func_ov032_02112044(daBakubaku_c *self)
 {
     Vector3 v;
     Vec3_Asr(&v, &self->mPosX, 3);
-    Matrix4x3_FromTranslation(data_020a0e68, v.x, v.y, v.z);
+    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(
-        data_020a0e68, self->mAngleX, self->mAngleY, self->mAngleZ);
-    self->mModelAnim.mat4x3 = *(Matrix4x3 *)data_020a0e68;
+        &data_020a0e68, self->mAngleX, self->mAngleY, self->mAngleZ);
+    self->mModelAnim.mat4x3 = data_020a0e68;
     Matrix4x3_FromTranslation(
-        data_020a0e68, self->mPosX >> 3,
+        &data_020a0e68, self->mPosX >> 3,
         (self->mPosY - 0x5a000) >> 3, self->mPosZ >> 3);
-    *(Matrix4x3 *)self->mShadowMat = *(Matrix4x3 *)data_020a0e68;
+    self->mShadowMat = data_020a0e68;
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-        self, &self->mShadowModel, self->mShadowMat, 0xfa000, 0x258000, 0xf);
+        self, &self->mShadowModel, &self->mShadowMat, 0xfa000, 0x258000, 0xf);
 }
 
-/* Install mState (PMF table entry) and run its enter function. */
-struct SC;
-typedef int (SC::*SPMF)();
-struct SC { char pad[0x3b0]; SPMF *pp; };
-// @symbol func_ov032_02111ff4
-extern "C" int func_ov032_02111ff4(void *cv, void *pv)
+/* Install mState and run its enter function. Enter returns int, so this
+   PMF is not Behavior's void one. */
+typedef int (daBakubaku_c::*EnterFn)();
+// @symbol _ZN12daBakubaku_c19func_ov032_02111ff4EPv
+int daBakubaku_c::func_ov032_02111ff4(void *pv)
 {
-    daBakubaku_c *c = (daBakubaku_c *)cv;
-    SPMF *p = (SPMF *)pv;
-    c->mState = p;
-    SPMF *q = (SPMF *)c->mState;
+    EnterFn *p = (EnterFn *)pv;
+    mState = (BakubakuState *)p;
+    EnterFn *q = (EnterFn *)mState;
     if (*q == 0) return 1;
-    return (((SC *)c)->*(*q))();
+    return (this->*(*q))();
 }
 
-/* Wander-enter: random yaw and state timer. */
+/* Wander enter: random yaw and a state timer. */
 // @symbol func_ov032_02111f9c
 extern "C" int func_ov032_02111f9c(daBakubaku_c *self)
 {
@@ -289,7 +321,7 @@ extern "C" int func_ov032_02111f9c(daBakubaku_c *self)
     return 1;
 }
 
-/* Wander: turn toward spawn, maybe chase. */
+/* Wander: steer toward the spawn point, or start a chase. */
 // @symbol func_ov032_02111e24
 extern "C" int func_ov032_02111e24(daBakubaku_c *self)
 {
@@ -306,11 +338,11 @@ extern "C" int func_ov032_02111e24(daBakubaku_c *self)
             (const Vector3 *)&self->mSpawnPosX);
         self->mAngTarget = ang;
     }
-    _Z14ApproachLinearRsss(&self->mPrevAngleY, self->mAngTarget, 0x100);
+    ApproachLinear(self->mPrevAngleY, self->mAngTarget, 0x100);
     ang = Vec3_VertAngle(
         (const Vector3 *)&self->mPosX,
         (const Vector3 *)&self->mSpawnPosX);
-    _Z14ApproachLinearRsss(&self->mPrevAngleX, ang, 0x100);
+    ApproachLinear(self->mPrevAngleX, ang, 0x100);
     in[2] = 0;
     in[2] = 0x5000;
     in[0] = 0;
@@ -318,27 +350,26 @@ extern "C" int func_ov032_02111e24(daBakubaku_c *self)
     out[0] = 0;
     out[1] = 0;
     out[2] = 0;
-    Matrix4x3_FromRotationY(data_020a0e68, self->mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, self->mAngleX);
-    MulVec3Mat4x3(in, data_020a0e68, out);
+    Matrix4x3_FromRotationY(&data_020a0e68, self->mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, self->mAngleX);
+    MulVec3Mat4x3(in, &data_020a0e68, out);
     self->mVertSpeed = out[1];
     if (func_ov032_02111254(self) == 1) {
-        func_ov032_02111ff4(self, data_ov032_02113aac);
+        self->func_ov032_02111ff4(&data_ov032_02113aac);
         return 1;
     }
-    /* Measured: signed mStateTimer load DIFFs 1 word (ldrh vs ldrsh). */
     if (*(unsigned short *)&self->mStateTimer == 0) {
         unsigned int r = (unsigned int)RandomIntInternal(data_0209e650);
         if (((r >> 8) & 3) == 0) {
-            func_ov032_02111ff4(self, data_ov032_02113a9c);
+            self->func_ov032_02111ff4(&data_ov032_02113a9c);
         } else {
-            func_ov032_02111ff4(self, &data_ov032_02113a8c);
+            self->func_ov032_02111ff4((BakubakuState *)&data_ov032_02113a8c);
         }
     }
     return 1;
 }
 
-/* Pause-enter: short timer, clear vertical motion. */
+/* Pause enter: short timer, kill the velocity. */
 // @symbol func_ov032_02111dd8
 extern "C" int func_ov032_02111dd8(daBakubaku_c *self)
 {
@@ -351,21 +382,20 @@ extern "C" int func_ov032_02111dd8(daBakubaku_c *self)
     return 1;
 }
 
-/* Pause: give up to chase, else back to wander. */
+/* Pause: give up into a chase, else wander again. */
 // @symbol func_ov032_02111d7c
 extern "C" int func_ov032_02111d7c(daBakubaku_c *self)
 {
     if (func_ov032_02111254(self) == 1) {
-        func_ov032_02111ff4(self, data_ov032_02113aac);
+        self->func_ov032_02111ff4(&data_ov032_02113aac);
         return 1;
     }
-    /* Measured: signed mStateTimer load DIFFs 1 word (ldrh vs ldrsh). */
     if (*(unsigned short *)&self->mStateTimer == 0)
-        func_ov032_02111ff4(self, &data_ov032_02113a8c);
+        self->func_ov032_02111ff4((BakubakuState *)&data_ov032_02113a8c);
     return 1;
 }
 
-/* Surface-enter. */
+/* Chase enter. */
 // @symbol func_ov032_02111d58
 extern "C" int func_ov032_02111d58(daBakubaku_c *self)
 {
@@ -375,32 +405,29 @@ extern "C" int func_ov032_02111d58(daBakubaku_c *self)
     return 1;
 }
 
-/* Chase: close on stored player pos, then lunge up or down. */
+/* Chase: close on the stored player position, then surface or dive. */
 // @symbol func_ov032_02111b9c
 extern "C" int func_ov032_02111b9c(daBakubaku_c *self)
 {
-    /* Measured: signed mStateTimer load DIFFs 1 word (ldrh vs ldrsh). */
     if (*(unsigned short *)&self->mStateTimer != 0) {
-        if (func_ov032_02111350(self) == 1) goto init;
-        if (func_ov032_02111254(self) != 0) goto track;
+        if (func_ov032_02111350(self) == 1) goto give_up;
+        if (func_ov032_02111254(self) != 0) goto aim;
     }
-init:
+give_up:
     {
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &self->mModelAnim,
-            *(BCA_File **)((unsigned char *)&data_ov032_02113a50 + 4),
-            0, 0x1000, 0);
+            &self->mModelAnim, ((BcaHandle *)&data_ov032_02113a50)->file, 0, 0x1000, 0);
         self->mChaseCooldown = 0x64;
-        func_ov032_02111ff4(self, &data_ov032_02113a8c);
+        self->func_ov032_02111ff4((BakubakuState *)&data_ov032_02113a8c);
         return 1;
     }
-track:
+aim:
     {
         self->mAngTarget = Vec3_HorzAngle(
             (Vector3 *)&self->mPosX, (Vector3 *)&self->mTargetPosX);
         unsigned int r = (unsigned int)RandomIntInternal(data_0209e650);
         int s5 = (int)(((r >> 8) & 3) << 0x1c) >> 0x10;
-        _Z14ApproachLinearRsss(&self->mPrevAngleY, self->mAngTarget, 0x200);
+        ApproachLinear(self->mPrevAngleY, self->mAngTarget, 0x200);
         if (Vec3_HorzDist(
                 (Vector3 *)&self->mPosX,
                 (Vector3 *)&self->mTargetPosX) < 0x258000) {
@@ -416,13 +443,12 @@ track:
                 self->mHorzSpeed = 0x14000;
                 self->unk_429 = 0;
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-                    &self->mModelAnim,
-                    *(BCA_File **)((unsigned char *)&data_ov032_02113a48 + 4),
+                    &self->mModelAnim, ((BcaHandle *)&data_ov032_02113a48)->file,
                     0x40000000, 0x1000, 0);
                 if (self->mAngTarget > 0)
-                    func_ov032_02111ff4(self, data_ov032_02113a7c);
+                    self->func_ov032_02111ff4(&data_ov032_02113a7c);
                 else
-                    func_ov032_02111ff4(self, data_ov032_02113abc);
+                    self->func_ov032_02111ff4(&data_ov032_02113abc);
                 return 1;
             }
         }
@@ -430,29 +456,29 @@ track:
     }
 }
 
-/* Lunge-enter: pitch down, enable char-movement clsn bit. */
+/* Dive enter: pitch down, and let the cylinders count as char-movement. */
 // @symbol func_ov032_02111b50
 extern "C" int func_ov032_02111b50(daBakubaku_c *self)
 {
     self->mAngTarget = -0x4000;
-    self->mBodyClsn.flags |= 2;
-    self->mHeadClsn.flags |= 2;
+    self->mBodyClsn.flags |= kCcCharMove;
+    self->mHeadClsn.flags |= kCcCharMove;
     self->mMouthOpen = 0;
     self->mHorzSpeed = 0xa000;
     self->mLungePhase = 0;
     return 1;
 }
 
-/* Lunge: splash particles, then return to wander. */
+/* Dive: splash when the mouth crosses the surface, then wander. */
 // @symbol func_ov032_02111830
 extern "C" int func_ov032_02111830(daBakubaku_c *self)
 {
     s16 speed;
     speed = 0x3000;
-    if (data_0209f32c[0] - 0x64000 > self->mPosY)
+    if (data_0209f32c - 0x64000 > self->mPosY)
         speed = 0;
     if (self->mLungePhase == 0) {
-        if (data_0209f32c[0] > self->mPosY) {
+        if (data_0209f32c > self->mPosY) {
             if (self->mAngTarget > 0)
                 self->mLungePhase = 1;
         }
@@ -460,6 +486,7 @@ extern "C" int func_ov032_02111830(daBakubaku_c *self)
     if (self->mLungePhase > 0 && self->mLungePhase < 5) {
         self->mLungePhase++;
         if (self->mLungePhase == 4) {
+            /* Int triples, not Vector3: a Vector3 temporary runs ~Vector3. */
             typedef struct { int x, y, z; } V3;
             V3 v[3];
             v[0].x = self->mPosX;
@@ -472,13 +499,13 @@ extern "C" int func_ov032_02111830(daBakubaku_c *self)
             v[2].y = 0;
             v[2].z = 0;
             v[1].z = 0xa0000;
-            Matrix4x3_FromRotationY(data_020a0e68, self->mAngleY);
-            MulVec3Mat4x3(&v[1], data_020a0e68, &v[2]);
+            Matrix4x3_FromRotationY(&data_020a0e68, self->mAngleY);
+            MulVec3Mat4x3(&v[1], &data_020a0e68, &v[2]);
             v[0].x += v[2].x;
             v[0].z += v[2].z;
             func_02022c80(0, 0x55, v[0].x, v[0].y, v[0].z, 0);
             self->mSplashParticle = func_02022d00(
-                self->mSplashParticle, 0x56, v[0].x, data_0209f32c[0],
+                self->mSplashParticle, 0x56, v[0].x, data_0209f32c,
                 v[0].z, 0);
             v[0].y += 0x4b000;
             func_02022c80(0, 0x54, v[0].x, v[0].y, v[0].z, 0);
@@ -486,17 +513,17 @@ extern "C" int func_ov032_02111830(daBakubaku_c *self)
     }
 
     if (func_ov032_02111350(self) == 1)
-        goto zeroblock;
+        goto stop;
     if (func_ov032_02111254(self) != 0)
-        goto matrixblock;
-zeroblock:
+        goto thrust;
+stop:
     speed = 0;
     self->mHorzSpeed = 0;
     self->unk_0a4 = 0;
     self->mVertSpeed = 0;
     self->unk_0ac = 0;
-    goto afterblock;
-matrixblock:
+    goto pitched;
+thrust:
     {
         int in2[3];
         int out2[3];
@@ -507,14 +534,14 @@ matrixblock:
         out2[0] = 0;
         out2[1] = 0;
         out2[2] = 0;
-        Matrix4x3_FromRotationY(data_020a0e68, self->mAngleY);
-        Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, self->mAngleX);
-        MulVec3Mat4x3(in2, data_020a0e68, out2);
+        Matrix4x3_FromRotationY(&data_020a0e68, self->mAngleY);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, self->mAngleX);
+        MulVec3Mat4x3(in2, &data_020a0e68, out2);
         self->mVertSpeed = out2[1];
     }
-afterblock: ;
-    _Z14ApproachLinearRsss(&self->mAngTarget, speed, 0x200);
-    _Z14ApproachLinearRsss(&self->mPrevAngleX, self->mAngTarget, 0x200);
+pitched: ;
+    ApproachLinear(self->mAngTarget, speed, 0x200);
+    ApproachLinear(self->mPrevAngleX, self->mAngTarget, 0x200);
     if (self->mModelAnim.Finished() != 0) {
         self->mMouthOpen = 0;
         if (speed == 0) {
@@ -523,17 +550,18 @@ afterblock: ;
             if (a < 0x100) {
                 self->mChaseCooldown = 0x64;
                 self->mAngTarget = self->mAngleY;
-                self->mFlags = 3;
-                self->mBodyClsn.flags &= ~2;
-                self->mHeadClsn.flags &= ~2;
+                self->mFlags = 3; /* profile clip bits 1|2 */
+                self->mBodyClsn.flags &= ~kCcCharMove;
+                self->mHeadClsn.flags &= ~kCcCharMove;
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-                    &self->mModelAnim, (void *)(&data_ov032_02113a50)[1],
+                    &self->mModelAnim, ((BcaHandle *)&data_ov032_02113a50)->file,
                     0, 0x1000, 0);
-                func_ov032_02111ff4(self, &data_ov032_02113a8c);
+                self->func_ov032_02111ff4((BakubakuState *)&data_ov032_02113a8c);
                 return 1;
             }
         }
     } else {
+        /* currFrame is 20.12. lsl #4 / lsr #16 is the integer frame. */
         unsigned int t = (unsigned int)(self->mModelAnim.currFrame << 4) >> 0x10;
         if (t > 0x14 && t < 0x3c)
             self->mMouthOpen = 1;
@@ -543,7 +571,7 @@ afterblock: ;
     return 1;
 }
 
-/* Lunge-reset enter. */
+/* Surface enter. */
 // @symbol func_ov032_02111814
 extern "C" int func_ov032_02111814(daBakubaku_c *self)
 {
@@ -553,7 +581,7 @@ extern "C" int func_ov032_02111814(daBakubaku_c *self)
     return 1;
 }
 
-/* Surface toward player, then wander. */
+/* Surface toward the player, then wander. */
 // @symbol func_ov032_02111620
 extern "C" int func_ov032_02111620(daBakubaku_c *self)
 {
@@ -562,16 +590,16 @@ extern "C" int func_ov032_02111620(daBakubaku_c *self)
         return 1;
 
     if (func_ov032_02111350(self) == 1)
-        goto zeroblock;
+        goto stop;
     if (func_ov032_02111254(self) != 0)
-        goto matrixblock;
-zeroblock:
+        goto thrust;
+stop:
     self->mHorzSpeed = 0;
     self->unk_0a4 = 0;
     self->mVertSpeed = 0;
     self->unk_0ac = 0;
-    goto afterblock;
-matrixblock:
+    goto pitched;
+thrust:
     {
         int in[3];
         int out[3];
@@ -582,19 +610,19 @@ matrixblock:
         out[0] = 0;
         out[1] = 0;
         out[2] = 0;
-        Matrix4x3_FromRotationY(data_020a0e68, self->mAngleY);
-        Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, self->mAngleX);
-        MulVec3Mat4x3(in, data_020a0e68, out);
+        Matrix4x3_FromRotationY(&data_020a0e68, self->mAngleY);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, self->mAngleX);
+        MulVec3Mat4x3(in, &data_020a0e68, out);
         self->mVertSpeed = out[1];
     }
-afterblock: ;
+pitched: ;
 
     if (self->mLungePhase == 0) {
         if (self->mModelAnim.Finished() == 0)
-            goto player_path;
+            goto at_player;
     }
 
-    _Z14ApproachLinearRsss(&self->mPrevAngleX, 0, 0x200);
+    ApproachLinear(self->mPrevAngleX, 0, 0x200);
     self->mLungePhase = 1;
     self->mMouthOpen = 0;
     if (AngleDiff(self->mPrevAngleX, 0) < 0x200) {
@@ -603,13 +631,13 @@ afterblock: ;
         self->mAngTarget = self->mAngleY;
         self->mFlags = 3;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &self->mModelAnim, (void *)(&data_ov032_02113a50)[1],
+            &self->mModelAnim, ((BcaHandle *)&data_ov032_02113a50)->file,
             0, 0x1000, 0);
-        func_ov032_02111ff4(self, &data_ov032_02113a8c);
+        self->func_ov032_02111ff4((BakubakuState *)&data_ov032_02113a8c);
     }
-    goto end;
+    goto done;
 
-player_path:
+at_player:
     {
         int vec[3];
         unsigned int n;
@@ -617,11 +645,11 @@ player_path:
         vec[0] = p[0];
         vec[1] = p[1];
         vec[2] = p[2];
-        if (data_0209f32c[0] > self->mPosY) {
-            _Z14ApproachLinearRsss(&self->mPrevAngleX, 0, 0x200);
+        if (data_0209f32c > self->mPosY) {
+            ApproachLinear(self->mPrevAngleX, 0, 0x200);
         } else {
-            _Z14ApproachLinearRsss(
-                &self->mPrevAngleX,
+            ApproachLinear(
+                self->mPrevAngleX,
                 Vec3_VertAngle((const Vector3 *)&self->mPosX, (const Vector3 *)vec),
                 0x200);
         }
@@ -631,11 +659,11 @@ player_path:
         else
             self->mMouthOpen = 0;
     }
-end:
+done:
     return 1;
 }
 
-/* Hit cylinders: mega-kill, bite, or Hurt Mario. */
+/* Body cylinder: mega-kill or a bite. Head cylinder: mega-kill or Hurt. */
 // @symbol func_ov032_021113fc
 extern "C" void func_ov032_021113fc(daBakubaku_c *self)
 {
@@ -648,11 +676,10 @@ extern "C" void func_ov032_021113fc(daBakubaku_c *self)
     u32 id1 = self->mBodyClsn.otherOwner;
     if (id1 != 0) {
         Player *f = (Player *)dActor_c::FindWithID(id1);
-        /* Temporary is load-bearing: ROM materialises 0/1 then cmp. */
         int isPlayer = (int)(f->actorID == kPlayerActorId);
         if (isPlayer) {
             if (f->mIsVanish != 0) return;
-            if (self->mBodyClsn.hitFlags & 0x10) {
+            if (self->mBodyClsn.hitFlags & kCcMega) {
                 self->SpawnMegaCharParticles(*f, 0);
                 self->PoofDust();
                 f->IncMegaKillCount();
@@ -681,7 +708,7 @@ extern "C" void func_ov032_021113fc(daBakubaku_c *self)
     int isPlayer2 = (int)(f2->actorID == kPlayerActorId);
     if (isPlayer2 == 0) return;
 
-    if (self->mHeadClsn.hitFlags & 0x10) {
+    if (self->mHeadClsn.hitFlags & kCcMega) {
         self->SpawnMegaCharParticles(*f2, 0);
         self->PoofDust();
         f2->IncMegaKillCount();
@@ -689,8 +716,8 @@ extern "C" void func_ov032_021113fc(daBakubaku_c *self)
         return;
     }
 
-    if (self->mState == data_ov032_02113abc) return;
-    if (self->mState == data_ov032_02113a7c) return;
+    if (self->mState == &data_ov032_02113abc) return;
+    if (self->mState == &data_ov032_02113a7c) return;
 
     Vector3 hv;
     hv.x = self->mPosX;
@@ -699,7 +726,8 @@ extern "C" void func_ov032_021113fc(daBakubaku_c *self)
     _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(f2, &hv, 2, 0xc000, 1, 0, 1);
 }
 
-/* True if Bubba should abort chase (no player, wall/floor, too far). */
+/* Abort the chase: no player, a wall or floor, or too far from home.
+   Above the water aborts too, except during the dive. */
 // @symbol func_ov032_02111350
 extern "C" int func_ov032_02111350(daBakubaku_c *self)
 {
@@ -711,13 +739,13 @@ extern "C" int func_ov032_02111350(daBakubaku_c *self)
             (struct Vector3 *)&self->mSpawnPosX,
             (struct Vector3 *)&self->mPosX) > 0x4b0000)
         return 1;
-    if (self->mState != data_ov032_02113abc) {
-        if (data_0209f32c[0] < self->mPosY) return 1;
+    if (self->mState != &data_ov032_02113abc) {
+        if (data_0209f32c < self->mPosY) return 1;
     }
     return 0;
 }
 
-/* True if Mario is a chase target; stores his position. */
+/* Mario is a chase target. Stores his position. */
 // @symbol func_ov032_02111254
 extern "C" int func_ov032_02111254(daBakubaku_c *self)
 {
@@ -732,15 +760,15 @@ extern "C" int func_ov032_02111254(daBakubaku_c *self)
     self->mTargetPosY = s[1];
     self->mTargetPosZ = s[2];
     t = self->mState;
-    if (t != data_ov032_02113abc && t != data_ov032_02113a7c) {
+    if (t != &data_ov032_02113abc && t != &data_ov032_02113a7c) {
         if (pl->mIsUnderwater == 0)
             return 0;
     }
-    d = pl->mGroundY - data_0209f32c[0];
+    d = pl->mGroundY - data_0209f32c;
     if (d < 0) d = -d;
     if (d < 0xb4000)
         return 0;
-    if (t != data_ov032_02113abc && t != data_ov032_02113a7c) {
+    if (t != &data_ov032_02113abc && t != &data_ov032_02113a7c) {
         if (Vec3_HorzDist(
                 (const Vector3 *)&self->mSpawnPosX,
                 (const Vector3 *)&self->mTargetPosX) > 0x4b0000)

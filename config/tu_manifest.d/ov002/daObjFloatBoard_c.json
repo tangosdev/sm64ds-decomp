@@ -20,14 +20,14 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov002_020b5ab4",
+      "symbol": "_ZN17daObjFloatBoard_c19func_ov002_020b5ab4Ev",
       "address": "0x020b5ab4",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov002_020b5ab4.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "func_ov002_020b5b98",
+      "symbol": "_ZN17daObjFloatBoard_c19func_ov002_020b5b98Ev",
       "address": "0x020b5b98",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020b5b98.c",

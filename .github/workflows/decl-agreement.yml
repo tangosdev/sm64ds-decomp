@@ -75,6 +75,7 @@ concurrency:
 
 jobs:
   declarations:
+    name: declaration agreement
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -1,5 +1,5 @@
 //cpp
-int ApproachLinear(short &x, short target, short step)
+bool ApproachLinear(short &x, short target, short step)
 {
     if (step != 0) {
         short d = (short)(x - target);
@@ -8,10 +8,10 @@ int ApproachLinear(short &x, short target, short step)
         d = (short)(x - target);
         if (step * d >= 0) {
             x = target;
-            return 1;
+            return true;
         }
     } else if (x == target) {
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }

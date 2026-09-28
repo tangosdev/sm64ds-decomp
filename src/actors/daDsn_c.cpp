@@ -1,61 +1,71 @@
 //cpp
-/* daDsn_c -- DOSUN, the Thwomp (ov091, 0x02132938..0x02132cb8).
+/* daDsn_c -- DOSUN, the Thwomp (actor 161).
  *
- * The dropping leaf of daDsnBase_c; its sibling is daDkk_c, the sliding
- * Grindel in ov025. The base owns the shared 0..4 cycle -- rise, hover, slam,
- * rest, recover -- as seven C-linkage helpers in src/actors/daDsnBase_c.cpp;
- * this class owns only the trigger logic that decides when to drop, the file
- * table it hands to daDsnBase_c::Init, and what happens when a mega character
- * flattens it.
+ * The dropping leaf of daDsnBase_c. Grindel (daDkk_c, ov025) is the sibling
+ * that slides. The base owns the shared cycle -- rise, hover, slam, rest,
+ * recover -- plus the drop-shadow update and the Yoshi-egg wake, as seven
+ * helpers in src/actors/daDsnBase_c.cpp. This leaf owns the trigger that
+ * cuts that cycle short, the texture-frame countdown in front of the rise
+ * and the slam, and the mega-character kill.
  *
- * mwccarm emits ordinary functions in reverse source order, so the definitions
- * below run from the highest retail address back down. The destructor pair is
- * written by nobody: include/daDsn_c.h defines ~daDsn_c() in the class body,
- * and that alone makes mwccarm emit D1 (0x02132938) then D0 (0x02132998) at the
- * bottom of the section list -- the cartridge's own order. See the header for
- * why the in-class form is load-bearing.
+ * Ordinary functions are written highest ROM address first. mwccarm emits
+ * one .text section per function in reverse source order. ~daDsn_c() is
+ * inline in include/daDsn_c.h, which is what places D1 then D0 at the
+ * bottom of the section list. The factory is src/d_a_dsn.c, immediately
+ * after this range. g_profile_DOSUN stays overlay data.
  *
- * The factory, daDsn_c_classInit at 0x02132cb8, directly follows this range
- * and still lives in src/d_a_dsn.c.
- *
- * Folded from six one-function sources, one per member (ROM address order):
- *   [0] 0x02132938  D1                  (now the header's inline body)
- *   [1] 0x02132998  D0                  (now the header's inline body)
- *   [2] 0x02132a0c  OnAimedAtWithEgg
- *   [3] 0x02132a14  OnHitByMegaChar
- *   [4] 0x02132ab0  Behavior
- *   [5] 0x02132c84  InitResources
+ * deslop leftovers:
+ * - Behavior: `(frame - 1) << 12` is one lsl #12 and the function shrinks
+ *   0x1d4 to 0x1d0. The ROM is lsl #16; lsr #4, which is
+ *   `(((unsigned)frame - 1) << 16) >> 4`.
+ * - Behavior: dBgActor_c::IsClsnInRange as Fix12<int> by value grows it
+ *   0x1d4 to 0x1f0 (stack temps). `Fix12<int>{0}` does not compile here
+ *   ("( expected"). The scalar (void *, int, int) call with (0, 0) is the
+ *   ROM's mov r1, #0; mov r2, r1. dBgActor_c.h does not declare it.
+ * - OnHitByMegaChar: `Vector3 poofPosCopy = poofPos` is ldm/stm and shrinks
+ *   the function 0x9c to 0x94. The three field stores are the ROM copies.
+ * - OnHitByMegaChar: Particle::System::NewSimple as Fix12<int> by value
+ *   grows it 0x9c to 0xc0. include/Particle__System.h has no NewSimple.
+ *   Scalar ints match r0 = id, r1/r2/r3 = x/y/z.
+ * - OnHitByMegaChar: Sound::Play(3, 0x1e, &mCamSpacePosX) grows it 0x9c to
+ *   0xa0 and the reloc is _ZN5Sound4PlayEjjRK7Vector3, not func_02012694.
+ *   func_02012694 is the bank-3 veneer the ROM calls.
+ * - The seven func_ov091_* names stay. They are defined in
+ *   src/actors/daDsnBase_c.cpp and daDkk_c calls the same symbols. Four
+ *   are daDsnBase_c methods now. Three stay C-linkage.
  */
 
 #include "daDsn_c.h"
-#include "decl_common.h"
 #include "Player.h"
 
-/* ABI seam: everything here still answers to its linker name, because no
-   header declares it in a form this TU can call. Kept above the first
-   @symbol marker so no member is charged with the spellings.
+/* data_ov091_02135138 is the six-word table daDsnBase_c::Init reads out of
+   the pointer this leaf stores:
+     +0x00 SharedFilePtr * BMD      +0x0c SharedFilePtr * BTP
+     +0x04 SharedFilePtr * KCL      +0x10 shadow extent X
+     +0x08 CLPS block (not a file)  +0x14 shadow extent Z
+   It is declared int [] as include/decl_common.h has it. The symbol stays
+   the overlay's; this TU does not own the bytes.
 
-   func_ov091_* are daDsnBase_c's shared state steps. They keep ROM labels
-   and C linkage because daDkk_c::Behavior (ov025) calls the same seven by
-   name across the module boundary. */
+   func_ov091_02132ff4, func_ov091_02132e98 and func_ov091_02132e64 stay
+   C-linkage with a char * parameter. func_ov091_02133098,
+   func_ov091_02133020, func_ov091_02132f04 and func_ov091_02132dc0 are
+   daDsnBase_c methods. */
 extern "C" {
+extern int data_ov091_02135138[];
+void func_ov091_02132ff4(char *self); /* hover */
+void func_ov091_02132e98(char *self); /* rest */
+void func_ov091_02132e64(char *self); /* recover */
 void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 void func_02012694(unsigned int id, const Vector3 *pos);
-void func_ov091_02133020(char *c);
-void func_ov091_02132ff4(char *c);
-void func_ov091_02132f04(char *c);
-void func_ov091_02132e98(char *c);
-void func_ov091_02132e64(char *c);
-void func_ov091_02133098(char *c);
-int func_ov091_02132dc0(char *c);
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int radius, int yOffset);
 }
 
 /* -------------------------------------------------------------------------- */
 
 // @symbol _ZN7daDsn_c13InitResourcesEv
-/* Vtable slot 0, which daDsnBase_c leaves pure. Hands the base this leaf's
- * file table, runs the shared setup, and starts the cycle at rest. */
+/* Vtable slot 0. Stores this leaf's file table and starts the cycle at rest.
+   data_ov091_02135138 is the table daDsnBase_c::Init reads: model, KCL,
+   CLPS, BTP, then the two shadow extents. Overlay .data owns the bytes. */
 int daDsn_c::InitResources()
 {
     mFileTable = (int)data_ov091_02135138;
@@ -67,18 +77,17 @@ int daDsn_c::InitResources()
 }
 
 // @symbol _ZN7daDsn_c8BehaviorEv
-/* Vtable slot 6, which daDsnBase_c leaves pure, and this class's ABI key
- * function. A trigger while resting or rising sends the Thwomp straight to the
- * slam; otherwise each state runs its base-class step.
+/* Vtable slot 6, and this class's key function.
  *
- * Animation::currFrame is reached as a raw 20.12 word. The ROM shifts it right
- * by 12 to read and left by 12 to write, in the same function that calls
- * Animation::Advance on the same sub-object, so it is the member and not four
- * bytes of daDsn_c -- see include/daDsn_c.h. It is spelled through a cast
- * rather than `mTextureSequence.currFrame.val` because mwccarm 2004/b56
- * rejects the member chain through the Fix12<int> template with an expression
- * syntax error; the bare member and the cast both compile, and only the cast
- * takes the shifts. */
+ * A trigger while the countdown (0) or the hover (1) is running skips
+ * straight to the wind-up (2). Otherwise:
+ *   0  count the texture frame down, hold, then rise
+ *   1  hover
+ *   2  play the wind-up; a fresh trigger slams immediately
+ *   3  rest, and if it ends while still triggered, stretch the timer
+ *   4  recover, same stretch
+ * The seven calls are daDsnBase_c's helpers, in that order of the cycle
+ * plus the shadow update and the egg-proximity wake. */
 int daDsn_c::Behavior()
 {
     if (mState < 2) {
@@ -87,44 +96,43 @@ int daDsn_c::Behavior()
     }
     switch (mState) {
     case 0: {
-        unsigned short frame = (unsigned short)((*(s32 *)&mTextureSequence.currFrame) >> 12);
+        unsigned short frame = (unsigned short)(mTextureSequence.currFrame >> 12);
         if (frame != 0) {
-            (*(s32 *)&mTextureSequence.currFrame) = (int)((((unsigned)frame - 1) << 16) >> 4);
-            frame = (unsigned short)((*(s32 *)&mTextureSequence.currFrame) >> 12);
-            if (frame == 0) {
+            /* (frame - 1) << 12, written as << 16 >> 4. One lsl #12 shrinks
+               this function (see the file comment). */
+            mTextureSequence.currFrame = (int)((((unsigned)frame - 1) << 16) >> 4);
+            frame = (unsigned short)(mTextureSequence.currFrame >> 12);
+            if (frame == 0)
                 mHoldTimer = 0xa;
-            }
         } else {
-            if (mHoldTimer != 0) {
+            if (mHoldTimer != 0)
                 mHoldTimer--;
-            } else {
-                func_ov091_02133020((char *)this);
-            }
+            else
+                func_ov091_02133020(); /* rise */
         }
         break;
     }
     case 1:
-        func_ov091_02132ff4((char *)this);
+        func_ov091_02132ff4((char *)this); /* hover */
         break;
     case 2:
         if (mTriggered != 0) {
-            (*(s32 *)&mTextureSequence.currFrame) = 0;
-            func_ov091_02132f04((char *)this);
+            mTextureSequence.currFrame = 0;
+            func_ov091_02132f04(); /* slam */
         } else {
-            ((Animation *)&mTextureSequence)->Advance();
-            if (((Animation *)&mTextureSequence)->Finished() != 0) {
-                if (mHoldTimer != 0) {
+            mTextureSequence.Advance();
+            if (mTextureSequence.Finished() != 0) {
+                if (mHoldTimer != 0)
                     mHoldTimer--;
-                } else {
-                    func_ov091_02132f04((char *)this);
-                }
+                else
+                    func_ov091_02132f04(); /* slam */
             } else {
                 mHoldTimer = 5;
             }
         }
         break;
     case 3:
-        func_ov091_02132e98((char *)this);
+        func_ov091_02132e98((char *)this); /* rest */
         if (mState == 4) {
             if (mTriggered != 0) {
                 mRetrigger = 0x5a;
@@ -137,25 +145,22 @@ int daDsn_c::Behavior()
             mTriggered = 0;
             mRetrigger = 0x5a;
         }
-        func_ov091_02132e64((char *)this);
+        func_ov091_02132e64((char *)this); /* recover */
         break;
     }
     UpdateModelPosAndRotY();
-    func_ov091_02133098((char *)this);
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_((char *)this, 0, 0) == 0) {
-        if (func_ov091_02132dc0((char *)this) == 0)
-            goto done;
-    }
-    UpdateClsnPosAndRot();
-done:
+    func_ov091_02133098(); /* drop shadow */
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0 ||
+        func_ov091_02132dc0() != 0) /* Yoshi egg within mClipRadius */
+        UpdateClsnPosAndRot();
     return 1;
 }
 
 // @symbol _ZN7daDsn_c15OnHitByMegaCharER6Player
-/* Vtable slot 27. A mega character walks through the Thwomp: credit the kill,
- * burst particle 0x48 and a dust poof at the Thwomp's position lifted by
- * OnAimedAtWithEgg()'s height -- called through the real virtual dispatch --
- * and remove it. mPosX/mPosY/mPosZ are dActor_c's, inherited. */
+/* Vtable slot 27. Credit the mega kill, burst particle 0x48 at the
+   actor position plus OnAimedAtWithEgg's height (real virtual call),
+   poof, remove, and play bank-3 sound 0x1e at the camera-space position.
+   func_02012694 is that veneer (src/func_02012694.cpp -> Sound::Play). */
 void daDsn_c::OnHitByMegaChar(Player &player)
 {
     player.IncMegaKillCount();
@@ -163,24 +168,20 @@ void daDsn_c::OnHitByMegaChar(Player &player)
     poofPos.x = mPosX;
     poofPos.y = mPosY;
     poofPos.z = mPosZ;
-    int height = OnAimedAtWithEgg();
-    poofPos.y += height;
+    poofPos.y += OnAimedAtWithEgg();
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x48, poofPos.x, poofPos.y, poofPos.z);
-    /* Copied word by word on purpose: `Vector3 poofPosCopy = poofPos;`
-       changes the size of this function (measured; the bytes differ). */
     Vector3 poofPosCopy;
-    ((int *)&poofPosCopy)[0] = ((int *)&poofPos)[0];
-    ((int *)&poofPosCopy)[1] = ((int *)&poofPos)[1];
-    ((int *)&poofPosCopy)[2] = ((int *)&poofPos)[2];
+    poofPosCopy.x = poofPos.x;
+    poofPosCopy.y = poofPos.y;
+    poofPosCopy.z = poofPos.z;
     PoofDustAt(poofPosCopy);
     MarkForDestruction();
-    func_02012694(0x1e, (const Vector3 *)((char *)this + 0x74));
+    func_02012694(0x1e, (const Vector3 *)&mCamSpacePosX);
 }
 
 // @symbol _ZN7daDsn_c16OnAimedAtWithEggEv
-/* Vtable slot 29. A constant: the height (20.12 fixed point, 206.0)
- * OnHitByMegaChar adds to the dust-poof position. */
+/* Vtable slot 29. Constant aim height, 206.0 in 20.12. */
 int daDsn_c::OnAimedAtWithEgg()
 {
-    return 843776;
+    return 0xce000;
 }

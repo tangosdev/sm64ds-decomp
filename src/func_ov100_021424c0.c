@@ -10,7 +10,7 @@ extern int _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int
 extern int func_02012694(int, char *);
 extern void func_ov100_02141fb0(char *);
 extern int func_ov100_0214233c(char *);
-extern void _Z14ApproachLinearRsss(char *, int, int);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 extern int _ZNK10dBgCh_Actr10IsOnGroundEv(char *);
 extern void func_ov100_02142130(char *);
 extern int _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(char *, int, int, int);
@@ -47,7 +47,7 @@ int func_ov100_021424c0(char *c)
     }
 
     r = func_ov100_0214233c(c);
-    _Z14ApproachLinearRsss(c + 0x94, *(s16 *)(c + 0x3ba), 0x800);
+    _Z14ApproachLinearRsss((short *)(c + 0x94), *(s16 *)(c + 0x3ba), 0x800);
 
     if (r == -1) {
         *(u8 *)(c + 0x3d0) = 3;

@@ -92,6 +92,15 @@ struct daObjMarioCap_c : dEnemyBase_c {
     int Render();
     void OnPendingDestroy();
     void OnTurnIntoEgg(Player &player);  /* slot 19, ov002 0x020b81e0 */
+    void func_ov002_020b7f7c();
+    int func_ov002_020b7e08();
+    int func_ov002_020b7d9c();
+    int func_ov002_020b7d58();
+    int func_ov002_020b7cec();
+    int func_ov002_020b7c30();
+    int func_ov002_020b76ec();
+    int func_ov002_020b74d0();
+    int func_ov002_020b7200();
 
     /* Leaf until fBase_c can declare operator new (#2570). unsigned long, not
        unsigned int: size_t is unsigned int on this include path and mangles

@@ -136,7 +136,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "func_ov084_0212a580",
+      "symbol": "_ZN7daKrb_c19func_ov084_0212a580Ev",
       "address": "0x0212a580",
       "size": "0x00000178",
       "legacy_source": "src/func_ov084_0212a580.cpp",
@@ -157,7 +157,7 @@
       "ordinal": 18
     },
     {
-      "symbol": "func_ov084_0212aab0",
+      "symbol": "_ZN7daKrb_c19func_ov084_0212aab0Ev",
       "address": "0x0212aab0",
       "size": "0x00000098",
       "legacy_source": "src/func_ov084_0212aab0.cpp",

@@ -79,6 +79,19 @@ struct daKpFr_c : dActor_c {
     virtual void OnPendingDestroy();    /* slot 12 */
     virtual int  OnYoshiTryEat();       /* slot 18 */
 
+    void func_ov070_02121be4();
+    void func_ov070_02121c8c();
+    void func_ov070_02121cbc();
+    void func_ov070_02121d50(void *vclsn);
+    void func_ov070_02121e14();
+    int func_ov070_02121eb0();
+    int func_ov070_02121ef8();
+    int func_ov070_02121f18();
+    int func_ov070_02121fb0();
+    void func_ov070_02121fd0();
+    void func_ov070_0212200c();
+    void func_ov070_02122044(int idx);
+
     static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }

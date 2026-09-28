@@ -52,6 +52,7 @@ concurrency:
 
 jobs:
   ledger:
+    name: rename ledger
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

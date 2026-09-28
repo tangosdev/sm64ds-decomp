@@ -47,6 +47,8 @@
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 struct CLPS_Block;
 
 /* Carried from func_ov079_02123f34's legacy file, where it is load-bearing
@@ -110,7 +112,6 @@ void Vec3_Asr(void *d, void *s, int sh);
 int Vec3_Dist(void *a, void *b);
 s16 Vec3_HorzAngle(const void *a, const void *b);
 int Vec3_HorzDist(const void *a, const void *b);
-int _Z14ApproachLinearRsss(s16 *p, s16 a, s16 b);
 
 void func_01ffb07c(void *, void *);
 void func_01ffb098(void *);
@@ -501,7 +502,7 @@ extern "C" void func_ov079_02125b44(daBtn_c *self)
         self->mHitPoints = 3;
         break;
     case 1:
-        if (_Z14ApproachLinearRsss(&self->mPrevAngleY, self->mTargetAngle, 0x800) != 0) {
+        if (ApproachLinear(self->mPrevAngleY, self->mTargetAngle, 0x800) != 0) {
             u8 *st = &self->mSubState;
             (*st)++;
         }
@@ -706,7 +707,7 @@ extern "C" void func_ov079_021256d4(daBtn_c *self)
     self->mModelAnim.speed = 0x1000;
     func_ov079_02123bcc(self);
 
-    _Z14ApproachLinearRsss(&self->mPrevAngleY, self->mTargetAngle, 0x200);
+    ApproachLinear(self->mPrevAngleY, self->mTargetAngle, 0x200);
     self->mAngleY = self->mPrevAngleY;
 
     if (*(u16 *)&self->mStateTimer > 0x1e) {

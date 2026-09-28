@@ -40,6 +40,8 @@
 #include "Player.h"
 #include "SharedFilePtr.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 struct daFishState {
     void (daFish_c::*func)();
 };
@@ -58,7 +60,6 @@ int RandomIntInternal(int *seed);
 void func_0203b9b4(s32 *value, s32 initial);
 void func_0201267c(unsigned int soundID, const Vector3 *camSpacePos);
 unsigned char DecIfAbove0_Byte(unsigned char *counter);
-int _Z14ApproachLinearRsss(s16 *value, s16 target, s16 step);
 void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
 int Vec3_HorzLen(const Vector3 *v);
 s16 Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
@@ -303,7 +304,7 @@ extern "C" void func_ov100_02146640(daFish_c *self)
     Player *p = self->ClosestPlayer();
     if (p) {
         s16 ang = Vec3_HorzAngle((Vector3 *)&self->mPosX, (Vector3 *)&p->mPosX);
-        if (_Z14ApproachLinearRsss(&self->mPrevAngleY, ang, 0x400) != 0) {
+        if (ApproachLinear(self->mPrevAngleY, ang, 0x400) != 0) {
             if (self->mModelIndex == 0) {
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
                     &self->mModelAnim, LoadedBCA(&data_ov100_021489cc), 0, 0x1000, 0);
@@ -343,7 +344,7 @@ extern "C" void func_ov100_021464f4(daFish_c *self)
     }
     pl = self->ClosestPlayer();
     if (pl == 0) return;
-    _Z14ApproachLinearRsss(&self->mPrevAngleY,
+    ApproachLinear(self->mPrevAngleY,
         Vec3_HorzAngle((Vector3 *)&pl->mPosX, (Vector3 *)&self->mPosX), self->mTurnSpeed);
     Vec3_Sub(&v, (Vector3 *)&self->mPosX, (Vector3 *)&pl->mPosX);
     if (Vec3_HorzLen(&v) <= self->mTriggerDist) return;
@@ -373,7 +374,7 @@ extern "C" void func_ov100_02146468(daFish_c *self)
 extern "C" void func_ov100_021463b0(daFish_c *self)
 {
     Vector3 v;
-    if (!_Z14ApproachLinearRsss(&self->mPrevAngleY, self->mTargetAngle, self->mTurnSpeed))
+    if (!ApproachLinear(self->mPrevAngleY, self->mTargetAngle, self->mTurnSpeed))
         return;
     {
         dActor_c *spawner = dActor_c::FindWithID(self->mSpawnerID);

@@ -14,7 +14,7 @@ extern struct dActor_c* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 id, u32 param, const struct Vector3* pos,
     const struct Vector3_16* rot, int a, int b);
 extern void _ZN10dCapIcon_c6UnlinkEv(char* p);
-extern void func_ov001_020ab228(char* p, char* self, int a, int b, int c);
+extern void _ZN10dCapIcon_c19func_ov001_020ab228EPciih(char* p, char* self, int a, int b, unsigned char c);
 
 int func_ov065_021180d4(char* self)
 {
@@ -61,7 +61,7 @@ int func_ov065_021180d4(char* self)
                 *(s8*)(self + 0xcc), -1) != 0)
         {
             _ZN10dCapIcon_c6UnlinkEv(self + 0xd4);
-            func_ov001_020ab228(self + 0xd4, self, 2, 0, 0);
+            _ZN10dCapIcon_c19func_ov001_020ab228EPciih(self + 0xd4, self, 2, 0, 0);
             *(u16*)(*(char**)(self + 0x174) + 0xe6) = 0x1e;
         }
     }

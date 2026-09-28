@@ -48,6 +48,8 @@
 #include "Animation.h"
 #include "SharedFilePtr.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* Cached model handle: the loaded BMD file is the second word (da1up_c
  * reads the same home the same way). Wants a shared home with da1up_c's
  * ModelCache; kept file-local until then. */
@@ -104,7 +106,7 @@ struct Bca2 { int w[2]; };
  *   that every caller discards or compares against zero (func_02038414,
  *   ModelAnim::SetAnim, DecIfAbove0_Byte) or which pointer type spells the same
  *   address (Vec3_HorzAngle, ModelAnim::SetAnim, and ApproachLinear, which
- *   keeps a short * so the turn helpers pass &mAngleY).
+ *   takes the short & its mangled name encodes).
  *
  *   ONE needed a call site adapted rather than a declaration chosen.
  *   Sound::PlayBank0's position is the camera-space triple, passed as
@@ -141,7 +143,6 @@ extern void   _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12I
 extern int    DecIfAbove0_Byte(void *p);
 extern void   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix, unsigned int j);
 extern void   _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
-extern void   _Z14ApproachLinearRsss(short *p, short target, short step);
 extern int    _Z15ApproachLinear2Riii(int *p, int target, int step);
 extern void   func_0201267c(int id, void *pos);
 extern void   _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int a, int b, unsigned int c, unsigned int d);
@@ -535,7 +536,7 @@ int daGmch_c::UpdateState5()
         mPrevAngleY = mAngleY;
         mHorzSpeed = d;
     } else {
-        _Z14ApproachLinearRsss(&mAngleY, Vec3_HorzAngle(&mPosX, &mSpawnPosX), 0x2bc);
+        ApproachLinear(mAngleY, Vec3_HorzAngle(&mPosX, &mSpawnPosX), 0x2bc);
         mPrevAngleY = mAngleY;
     }
     mModelAnim.Advance();
@@ -662,7 +663,7 @@ int daGmch_c::EnterState2()
 // @symbol _ZN8daGmch_c12UpdateState1Ev
 int daGmch_c::UpdateState1()
 {
-    _Z14ApproachLinearRsss(&mAngleY, mTargetAngleY, 0x2bc);
+    ApproachLinear(mAngleY, mTargetAngleY, 0x2bc);
     mPrevAngleY = mAngleY;
     UpdatePos(&mdCcAc_c);
     ApplySlopeToVertSpeed(&mWithMeshClsn);

@@ -47,6 +47,8 @@
 #include "SaveData.h"
 #include "dBgCh_Gnd.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 extern "C" {
 
 /* ground probe / collision */
@@ -89,8 +91,6 @@ void  SubVec3(void *, void *, void *);
 s32   LenVec3(const void *);
 int   AngleDiff(int, int);
 int   ApproachAngle(void *, s16, int, int, int);
-/* Same as Sound::PlaySub: StateTalkMain guards on the result. */
-int   _Z14ApproachLinearRsss(s16 *, s16, s16);
 int   _ZN4cstd4fdivEii(int, int);
 void  Matrix4x3_FromTranslation(void *, int, int, int);
 void  Matrix4x3_FromRotationY(void *, int);
@@ -302,7 +302,7 @@ int daMip_c::StateTalkMain()
         if (mRabbitId == 6) {
             id = 0x13a;
         }
-        if (_Z14ApproachLinearRsss(&mPrevAngleY, angle, 0x800)) {
+        if (ApproachLinear(mPrevAngleY, angle, 0x800)) {
             if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x26, 0x12, 0x7f, 0x15ccc, 0)) {
                 Message::PrepareTalk();
                 player->ShowMessage(*this, id, (Vector3 *)&pos, 0, 0);
@@ -463,7 +463,7 @@ int daMip_c::StateCaughtMain()
 
         if (unk_426 != 0) {
             s16 ang = Vec3_HorzAngle((Vector3 *)&mPosX, &pv);
-            _Z14ApproachLinearRsss(&mPrevAngleY, ang, 0x800);
+            ApproachLinear(mPrevAngleY, ang, 0x800);
             if (AngleDiff(mPrevAngleY, ang) > 0x200)
                 return 1;
         }

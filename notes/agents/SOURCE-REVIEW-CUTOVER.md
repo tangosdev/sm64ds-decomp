@@ -1,5 +1,15 @@
 # Require source review on the existing fleet
 
+**The GitHub check is retired (2026-09-27).** `source-review.yml` published a
+**Source review** check run on every PR, but step 5 below was never carried out:
+the check was never added to the main ruleset, so it could not block a merge.
+Only fleet-queued PRs can carry a queue review, so every other source PR was
+red by construction: 59 of the 60 most recent PRs, and the one green PR changed
+no source. The workflow was deleted. The queue review itself is unchanged, and
+`python tools/check_pr_source_review.py --pr NUMBER` still reads it. Run that by
+hand before landing fleet work. Steps 5 and 6 and the workflow refresh below no
+longer apply.
+
 This upgrades the in-progress fleet. It does not restart classes, rebase worker
 branches, erase earlier proof or replace the designated coordinator. The tooling
 PR for [#2449](https://github.com/tangosdev/sm64ds-decomp/issues/2449) installs the
@@ -12,7 +22,7 @@ The independent verifier publishes `source_review` using
 [the evidence template](templates/verification.json). It identifies the exact
 candidate, tested base, reviewer session, inspected file paths and concrete source
 judgment. Include changed/retired source paths, shared headers, enrollment/symbol/
-relocation configuration and TU manifests. The GitHub check requires coverage of
+relocation configuration and TU manifests. The review check requires coverage of
 every such path in the actual PR, including both paths of a rename.
 
 The review examines existing real interfaces, fake virtual tables, raw field
@@ -92,9 +102,9 @@ a timer with nobody touching the PR. Measured 2026-09-12 before the change:
 **0 of 117 open PRs** contained the live tip and could clear ancestry at all;
 after it, 72 did.
 
-Ruleset activation is a repository setting, not a consequence of this source PR.
-Until it is configured, the check is advisory at GitHub even though upgraded
-queue transitions enforce review. Coordinators must still honor rejected reviews.
+Ruleset activation was a repository setting, not a consequence of this source PR,
+and it never happened (see the top of this note). Upgraded
+queue transitions still enforce review. Coordinators must honor rejected reviews.
 
 ## Adopt existing PRs and changed compositions
 
@@ -129,23 +139,19 @@ The first concrete adoption case is [PR #2447](https://github.com/tangosdev/sm64
 under `composed_head`. That old pass has no source review and must not be
 reinterpreted as approval of the PR. Refresh its live head before assigning work.
 
-## Keep GitHub and the coordinator current
+## Keep the coordinator current
 
-The workflow executes default-branch tools and API metadata only. It never checks
-out or executes PR code. It refreshes on PR changes, main pushes, explicit dispatch
-and a five-minute schedule. After review, rejection, rework or cancellation, run:
+After review, rejection, rework or cancellation, and again immediately before
+landing, run:
 
 ```powershell
-gh workflow run source-review.yml --repo tangosdev/sm64ds-decomp -f pr=2447
 python tools/check_pr_source_review.py --pr 2447
 ```
 
-Use the actual PR number. The Python command is read-only unless `--publish` is
-explicitly supplied. Its current queue/head/base result is required immediately
-before landing. The GitHub check is a snapshot: queue updates can precede the
-scheduled/queued refresh, so a previously green check never overrides a current
-rejection. PR and queue identities are rechecked before publishing a verdict.
-Transport failure or incomplete file coverage cannot become a pass.
+Use the actual PR number. The command is read-only; its current queue/head/base
+result is the review gate. (`--publish` creates a GitHub check run and only works
+with a GitHub Actions token; nothing runs it now.) Transport failure or
+incomplete file coverage cannot become a pass.
 
 ## Review the existing classes
 

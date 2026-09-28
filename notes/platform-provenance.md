@@ -352,8 +352,8 @@ the base leaves null.
 **The header was once built from the wrong factory.** It said `sizeof 0x368`,
 "`daObjFl_Amilift_c_classInit` asks `fBase_c::operator new` for 872 bytes", and a
 `PathPtr mPath` at 0x360 "named by `daObjFl_Amilift_c_classInit` calling `_ZN7PathPtrC1Ev`
-at +0x360". `MetalNetLift` is a different class: its factory stores
-`_ZTV12MetalNetLift`, ov064 0x0211bc68, and never mentions this one. This class's
+at +0x360". `daObjFl_Amilift_c` is a different class: its factory stores
+`_ZTV17daObjFl_Amilift_c`, ov064 0x0211bc68, and never mentions this one. This class's
 factory is `daObjFl_Gura_c_classInit`, which allocates 848 = 0x350, stores
 `_ZTV15daObjGuragura_c` and then `_ZTV14daObjFl_Gura_c`, ov064 0x0211bd2c, and
 constructs no `PathPtr`. The two vtables are 0xc4 apart in the same overlay, which

@@ -67,7 +67,7 @@ namespace Sound {
 int PlaySmallSecretSound(dActor_c *actor, u16 *counter);
 }
 
-int ApproachLinear(s16 &val, s16 target, s16 step);
+bool ApproachLinear(short &value, short target, short step);
 
 extern int _ZTV15daObjC1Hikari_c[];
 

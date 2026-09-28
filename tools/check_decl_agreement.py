@@ -2326,6 +2326,22 @@ def _is_type_or_config_input(path):
             and pathlib.PurePosixPath(path).name == "symbols.txt")
 
 
+def diff_rows(base, repo=REPO, head="HEAD"):
+    """Every `--name-status` row from base to head, plus the working tree's when head
+    is HEAD. Unfiltered: `_paths_of` decides which rows the gate reads."""
+    rows, err = _git_status_rows(["diff", "--name-status", "-M", "-C",
+                                  "%s...%s" % (base, head)], repo)
+    if err:
+        return None, err
+    if head == "HEAD":
+        more, err = _git_status_rows(["diff", "--name-status", "-M", "-C", "HEAD"],
+                                     repo)
+        if err:
+            return None, err
+        rows = rows + more
+    return rows, None
+
+
 def changed_paths(base, repo=REPO, head="HEAD"):
     """Every path this branch added, modified, renamed or copied; untracked included.
 
@@ -2334,17 +2350,11 @@ def changed_paths(base, repo=REPO, head="HEAD"):
     pre-commit run that reports a pass over a file it never opened is worse than no
     gate at all.
     """
-    rows, err = _git_status_rows(["diff", "--name-status", "-M", "-C",
-                                  "%s...%s" % (base, head)], repo)
+    rows, err = diff_rows(base, repo, head)
     if err:
         return None, err
     paths = _paths_of(rows)
     if head == "HEAD":
-        rows, err = _git_status_rows(["diff", "--name-status", "-M", "-C", "HEAD"],
-                                     repo)
-        if err:
-            return None, err
-        paths |= _paths_of(rows)
         untracked, err = _git_lines(["ls-files", "--others", "--exclude-standard"],
                                     repo)
         if err:
@@ -2712,6 +2722,19 @@ def main(argv=None):
             print("check_decl_agreement: %s" % err, file=sys.stderr)
             return 1
         if not total:
+            # An empty work list is not always an empty diff. `_paths_of` keeps a
+            # deleted file only when it is a header or a symbols.txt, so a branch
+            # that only deletes other files (#3294 deleted a single workflow)
+            # reaches here with a base that resolved fine. It leaves no declaration
+            # or definition behind that could disagree; a deleted definition is
+            # check_references.py's question. Only a diff with no rows at all is the
+            # unresolved base this check exists to catch.
+            rows, _err = diff_rows(args.changed, REPO)
+            if rows and all(status.startswith("D") for status, _paths in rows):
+                print("check_decl_agreement: %d file(s) changed vs %s, every one a "
+                      "deletion this gate does not read -- nothing for this gate to "
+                      "check." % (len(rows), args.changed))
+                return 0
             print("check_decl_agreement: the diff against %s is EMPTY -- no file "
                   "added or modified anywhere in the tree." % args.changed,
                   file=sys.stderr)

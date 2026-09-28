@@ -39,7 +39,7 @@ extern void func_ov002_020d718c(char*);
 extern void func_ov002_020d8118(char*);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char*, void*);
 extern int func_ov002_020e0ccc(char*, void*);
-extern void func_ov002_020d7430(char*);
+extern void func_ov002_020d7430(Player& player);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*, void*, int, int, unsigned int);
 extern void func_ov002_020d5cec(void*);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int, unsigned int, void*);
@@ -210,7 +210,7 @@ int Player::St_YoshiPower_Main()
                     _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_0211013c);
                 }
             } else {
-                func_ov002_020d7430(c);
+                func_ov002_020d7430(*this);
             }
             return 1;
         }

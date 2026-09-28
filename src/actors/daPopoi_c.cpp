@@ -266,16 +266,18 @@ int func_ov077_02126cd4(char* c){
 }
 }
 
+bool ApproachLinear(short &value, short target, short step);
+
 extern "C" {
 // @symbol func_ov077_02126ad0
 #include "decl_Player.h"
 #include "common.h"
+
 extern int Vec3_Dist(void* a, void* b);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int d);
 extern int func_ov077_02126300(void* c);
 extern int func_ov077_02126d5c(void* c, void* p);
 extern short Vec3_HorzAngle(void* a, void* b);
-extern void _Z14ApproachLinearRsss(short* a, short b, short cc);
 
 extern char data_ov077_02127cf8[];
 
@@ -303,9 +305,9 @@ int func_ov077_02126ad0(char* c)
         *(short*)(c + 0x420) = Vec3_HorzAngle(c + 0x5c, c + 0x404);
         if (*(unsigned short*)(c + 0x100) < 0x14)
             *(unsigned short*)(c + 0x100) = 0x14;
-        _Z14ApproachLinearRsss((short*)(c + 0x94), *(short*)(c + 0x420), 0x400);
+        ApproachLinear(*(short *)(c + 0x94), *(short*)(c + 0x420), 0x400);
     }
-    _Z14ApproachLinearRsss((short*)(c + 0x94), *(short*)(c + 0x420), 0x100);
+    ApproachLinear(*(short *)(c + 0x94), *(short*)(c + 0x420), 0x100);
 
     if (*(unsigned short*)(c + 0x100) < 0x64)
         *(int*)(c + 0x39c) = 0x1000 / (0x64 - *(unsigned short*)(c + 0x100));
@@ -371,12 +373,11 @@ int func_ov077_02126a04(char *c) {
 }
 
 extern "C" {
-extern void _Z14ApproachLinearRsss(short*, short, short);
 extern int func_ov077_02126d5c(void*, void*);
 int func_ov077_021269a8(char* c) {
     extern int AngleDiff(short, short); /* this file's own view (decl_common says int,int); short is byte-load-bearing here */
     short tgt = *(short*)(c + 0x420);
-    _Z14ApproachLinearRsss((short*)(c + 0x94), tgt, 0x500);
+    ApproachLinear(*(short *)(c + 0x94), tgt, 0x500);
     int diff = AngleDiff(*(short*)(c + 0x94), *(short*)(c + 0x420));
     if (diff < 0x100) {
         *(short*)(c + 0x426) = 0x1e;
@@ -407,7 +408,6 @@ extern int Vec3_Dist(void *a, void *b);
 extern int func_ov077_02126300(void *c);
 extern int func_ov077_02126d5c(void *c, void *p);
 extern short Vec3_HorzAngle(void *a, void *b);
-extern void _Z14ApproachLinearRsss(short *r, short a, short b);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, void *v, unsigned int d);
 extern char data_ov077_02127cf8[];
 
@@ -442,8 +442,8 @@ int func_ov077_0212679c(char *c)
         *(short *)(c + 0x420) = Vec3_HorzAngle((void *)(c + 0x5c), &pv);
     }
 
-    _Z14ApproachLinearRsss((short *)(c + 0x94), *(short *)(c + 0x420), *(short *)(c + 0x422));
-    _Z14ApproachLinearRsss((short *)(c + 0x422), 0x600, 0x100);
+    ApproachLinear(*(short *)(c + 0x94), *(short *)(c + 0x420), *(short *)(c + 0x422));
+    ApproachLinear(*(short *)(c + 0x422), 0x600, 0x100);
 
     *(unsigned int *)(c + 0x428) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
         *(unsigned int *)(c + 0x428), 3, 0x186, c + 0x74, 0);

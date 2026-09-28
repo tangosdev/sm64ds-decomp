@@ -107,7 +107,7 @@ int daKpFr_c::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    func_ov070_02122044(((char*)this), 0);
+    func_ov070_02122044(0);
     *(struct M48*)&mMatrix = *(struct M48*)IDENTITY_MATRIX4X3;
     return 1;
 }
@@ -115,8 +115,8 @@ int daKpFr_c::InitResources()
 // @symbol _ZN8daKpFr_c8BehaviorEv
 int daKpFr_c::Behavior()
 {
-    func_ov070_02121fd0(((char*)this));
-    func_ov070_02121e14(((char*)this));
+    func_ov070_02121fd0();
+    func_ov070_02121e14();
     return 1;
 }
 
@@ -154,95 +154,80 @@ int daKpFr_c::CleanupResources()
     return 1;
 }
 
-extern "C" {  /* Unresolved func_ placeholder; retain its current C ABI spelling. */
 extern "C" daKpFrState data_ov070_021236ec[];
-extern void func_ov070_0212200c(void *self);
 
-void func_ov070_02122044(void *vself, int idx)
+// @symbol _ZN8daKpFr_c19func_ov070_02122044Ei
+void daKpFr_c::func_ov070_02122044(int idx)
 {
-    daKpFr_c *self = (daKpFr_c *)vself;
-    self->mStateMethods = &data_ov070_021236ec[idx];
-    func_ov070_0212200c(self);
-}
+    mStateMethods = &data_ov070_021236ec[idx];
+    func_ov070_0212200c();
 }
 
-extern "C" void func_ov070_0212200c(void *raw) {
-    daKpFr_c *self = (daKpFr_c *)raw;
-    daKpFrStateMethod *method = &self->mStateMethods->init;
-    (self->**method)();
+// @symbol _ZN8daKpFr_c19func_ov070_0212200cEv
+void daKpFr_c::func_ov070_0212200c() {
+    daKpFrStateMethod *method = &mStateMethods->init;
+    (this->**method)();
 }
 
-extern "C" void func_ov070_02121fd0(char *raw) {
-    daKpFr_c *self = (daKpFr_c *)raw;
-    daKpFrStateMethod *method = &self->mStateMethods->behavior;
-    (self->**method)();
+// @symbol _ZN8daKpFr_c19func_ov070_02121fd0Ev
+void daKpFr_c::func_ov070_02121fd0() {
+    daKpFrStateMethod *method = &mStateMethods->behavior;
+    (this->**method)();
 }
 
-extern "C" {  /* Unresolved func_ placeholder; retain its current C ABI spelling. */
-// @symbol func_ov070_02121fb0
-int func_ov070_02121fb0(char *raw)
+// @symbol _ZN8daKpFr_c19func_ov070_02121fb0Ev
+int daKpFr_c::func_ov070_02121fb0()
 {
-    daKpFr_c *self = (daKpFr_c *)raw;
-    self->mHorzSpeed = 40960;
-    self->mStateTimer = 105;
-    self->mStateResult = 0;
+    mHorzSpeed = 40960;
+    mStateTimer = 105;
+    mStateResult = 0;
     return 1;
 }
-}
 
-int ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-extern void func_ov070_02121c8c(void* c);
 extern short Vec3_HorzAngle(void* v0, void* v1);
-extern void func_ov070_02121be4(void* c);
-extern void func_ov070_02121d50(void* c, void* p);
-extern void func_ov070_02121cbc(char* c);
-int func_ov070_02121f18(char* raw) {
-  daKpFr_c *self = (daKpFr_c*)raw;
+}
+// @symbol _ZN8daKpFr_c19func_ov070_02121f18Ev
+int daKpFr_c::func_ov070_02121f18() {
   Player* player;
-  if (DecIfAbove0_Byte(&self->mStateTimer) == 0)
-    func_ov070_02121c8c(self);
-  player = self->ClosestNonVanishPlayer();
+  if (DecIfAbove0_Byte(&mStateTimer) == 0)
+    func_ov070_02121c8c();
+  player = ClosestNonVanishPlayer();
   if (player) {
-    short angleToPlayer = Vec3_HorzAngle(&self->mPosX, &player->mPosX);
-    ApproachLinear(self->mAngleY, angleToPlayer, 0x180);
-    self->mPrevAngleY = self->mAngleY;
+    short angleToPlayer = Vec3_HorzAngle(&mPosX, &player->mPosX);
+    ApproachLinear(mAngleY, angleToPlayer, 0x180);
+    mPrevAngleY = mAngleY;
   }
-  self->UpdatePos(&self->mdCcAc_c);
-  func_ov070_02121be4(self);
-  func_ov070_02121d50(self, &self->mWithMeshClsn);
-  func_ov070_02121cbc((char*)self);
-  self->mdCcAc_c.Clear();
-  self->mdCcAc_c.Update();
+  UpdatePos(&mdCcAc_c);
+  func_ov070_02121be4();
+  func_ov070_02121d50(&mWithMeshClsn);
+  func_ov070_02121cbc();
+  mdCcAc_c.Clear();
+  mdCcAc_c.Update();
   return 1;
 }
-}
 
-extern "C" {  /* Unresolved func_ placeholder; retain its current C ABI spelling. */
-int func_ov070_02121ef8(char *raw)
+// @symbol _ZN8daKpFr_c19func_ov070_02121ef8Ev
+int daKpFr_c::func_ov070_02121ef8()
 {
-    daKpFr_c *self = (daKpFr_c *)raw;
-    self->mdCcAc_c.Clear();
-    self->mStateResult = 1;
+    mdCcAc_c.Clear();
+    mStateResult = 1;
     return 1;
 }
-}
 
-extern "C" {  /* Unresolved func_ placeholder; retain its current C ABI spelling. */
-extern void func_ov070_02121c8c(void *t);
-int func_ov070_02121eb0(void *c) {
-    daKpFr_c *self = (daKpFr_c *)c;
-    int flags = self->mFlags;
+// @symbol _ZN8daKpFr_c19func_ov070_02121eb0Ev
+int daKpFr_c::func_ov070_02121eb0() {
+    int flags = mFlags;
     int isSet = (flags & 0x20000) ? 1 : 0;
     if (isSet == 0) {
         isSet = (flags & 0x40000) ? 1 : 0;
         if (isSet == 0)
-            func_ov070_02121c8c(c);
+            func_ov070_02121c8c();
     }
     return 1;
-}
 }
 
 extern "C" {
@@ -251,24 +236,24 @@ extern "C" {
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     dActor_c *actor, ShadowModel *shadow, Matrix4x3 *matrix,
     Fix12i radius, Fix12i depth, u32 opacity);
-void func_ov070_02121e14(char *raw) {
-  daKpFr_c *self = (daKpFr_c *)raw;
+}
+// @symbol _ZN8daKpFr_c19func_ov070_02121e14Ev
+void daKpFr_c::func_ov070_02121e14() {
   int shadowDepth;
-  self->mMatrix.t.x = self->mPosX >> 3;
-  self->mMatrix.t.y = self->mPosY >> 3;
-  self->mMatrix.t.z = self->mPosZ >> 3;
+  mMatrix.t.x = mPosX >> 3;
+  mMatrix.t.y = mPosY >> 3;
+  mMatrix.t.z = mPosZ >> 3;
   dBgCh_Gnd ground;
-  ground.SetObjAndPos(*(Vector3*)&self->mPosX, self);
+  ground.SetObjAndPos(*(Vector3*)&mPosX, this);
   if (ground.DetectClsn() != 0)
-    shadowDepth = (self->mPosY - ground.clsnY) + 0x1e000;
+    shadowDepth = (mPosY - ground.clsnY) + 0x1e000;
   else
     shadowDepth = 0x12c000;
   _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-      self, &self->mShadowModel, &self->mMatrix, 0x64000, shadowDepth, 0xf);
-}
+      this, &mShadowModel, &mMatrix, 0x64000, shadowDepth, 0xf);
 }
 
-// @symbol func_ov070_02121d50
+// @symbol _ZN8daKpFr_c19func_ov070_02121d50EPv
 /* GetFloorResult is not declared in the shared header yet; keep only that
  * proven typed ABI seam. ROM calls the UpdateContinuous veneer, not the
  * method. (long long) smull is the MATCH addressing form. */
@@ -277,84 +262,76 @@ namespace cstd { int fdiv(int a, int b); }
 extern "C" void dBgCh_Actr_UpdateContinuous_Veneer(void* c);
 extern "C" dBgPi* _ZNK10dBgCh_Actr14GetFloorResultEv(const dBgCh_Actr*);
 
-extern "C" void func_ov070_02121d50(void* vself, void* vclsn) {
-    daKpFr_c* self = (daKpFr_c*)vself;
+void daKpFr_c::func_ov070_02121d50(void* vclsn) {
     dBgCh_Actr* clsn = (dBgCh_Actr*)vclsn;
     Fix12i normal[3];
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {
         _ZNK10dBgCh_Actr14GetFloorResultEv(clsn)->surface.CopyNormalTo(*(Vector3*)normal);
         if (normal[1] != 0) {
-            int a = (int)(((long long)normal[0] * self->unk_0a4 + 0x800) >> 12);
-            int b = (int)(((long long)normal[2] * self->unk_0ac + 0x800) >> 12);
-            self->mVertSpeed = -(cstd::fdiv(a + b, normal[1]) + 0x8000);
+            int a = (int)(((long long)normal[0] * unk_0a4 + 0x800) >> 12);
+            int b = (int)(((long long)normal[2] * unk_0ac + 0x800) >> 12);
+            mVertSpeed = -(cstd::fdiv(a + b, normal[1]) + 0x8000);
         }
     }
     if (clsn->IsOnWall())
-        func_ov070_02121c8c(self);
+        func_ov070_02121c8c();
 }
 
-extern "C" {  /* Unresolved func_ placeholder; retain its current C ABI spelling. */
-extern void func_ov070_02122044(void* c, int a);
-extern void func_ov070_02121c8c(void* c);
+extern "C" void func_02012694(int id, void *pos);
 
-void func_ov070_02121cbc(char* raw){
-  daKpFr_c* self = (daKpFr_c*)raw;
+// @symbol _ZN8daKpFr_c19func_ov070_02121cbcEv
+void daKpFr_c::func_ov070_02121cbc(){
   dActor_c* found;
   Player* player;
   int b;
-  unsigned int id = self->mdCcAc_c.otherOwner;
+  unsigned int id = mdCcAc_c.otherOwner;
   if (id == 0) return;
   found = dActor_c::FindWithID(id);
   if (found == 0) return;
   b = (int)(found->actorID == 0xbf);
   if (b == 0) return;
   player = (Player*)found;
-  b = (int)((self->mFlags & 0x20000) != 0);
+  b = (int)((mFlags & 0x20000) != 0);
   if (b != 0) {
-    func_ov070_02122044(self, 1);
+    func_ov070_02122044(1);
     return;
   }
   if (player->mIsVanish != 0) return;
   player->Burn();
-  func_ov070_02121c8c(self);
-}
-}
-
-extern "C" {  /* Unresolved func_ placeholder; retain its current C ABI spelling. */
-extern void func_02012694(int id, void *pos);
-void func_ov070_02121c8c(void *c)
-{
-    daKpFr_c *self = (daKpFr_c *)c;
-    func_02012694(0x166, &self->mCamSpacePosX);
-    self->SmallPoofDust();
-    self->MarkForDestruction();
-}
+  func_ov070_02121c8c();
 }
 
-// @symbol func_ov070_02121be4
-extern "C" void func_ov070_02121be4(void *raw)
+// @symbol _ZN8daKpFr_c19func_ov070_02121c8cEv
+void daKpFr_c::func_ov070_02121c8c()
 {
-    daKpFr_c *self = (daKpFr_c*)raw;
+    func_02012694(0x166, &mCamSpacePosX);
+    SmallPoofDust();
+    MarkForDestruction();
+}
+
+// @symbol _ZN8daKpFr_c19func_ov070_02121be4Ev
+void daKpFr_c::func_ov070_02121be4()
+{
     Fix12i pos[3];
 
-    if (!self->mWithMeshClsn.IsOnGround()) return;
+    if (!mWithMeshClsn.IsOnGround()) return;
 
     dBgCh_Gnd ground;
     {
-        Fix12i z = self->mPosZ;
-        Fix12i y = self->mPosY + 0x1e000;
-        Fix12i x = self->mPosX;
+        Fix12i z = mPosZ;
+        Fix12i y = mPosY + 0x1e000;
+        Fix12i x = mPosX;
         pos[0] = x;
         pos[1] = y;
         pos[2] = z;
     }
-    ground.SetObjAndPos(*(Vector3*)pos, self);
+    ground.SetObjAndPos(*(Vector3*)pos, this);
     if (ground.DetectClsn() == 0 ||
-        ground.clsnY < self->mPosY - 0x32000) {
-        self->mPosX = self->mPrevPosX;
-        self->mPosY = self->mPrevPosY;
-        self->mPosZ = self->mPrevPosZ;
+        ground.clsnY < mPosY - 0x32000) {
+        mPosX = mPrevPosX;
+        mPosY = mPrevPosY;
+        mPosZ = mPrevPosZ;
     }
 }
 

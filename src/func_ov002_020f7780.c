@@ -11,7 +11,7 @@ extern void Math_Function_0203b0fc(int *p, int target, int scale, int max);
 extern short Vec3_HorzAngle(const int *v0, const int *v1);
 extern void _Z15ApproachLinear2Rsss(short *v, short t, short s);
 extern void _Z11UpdateAngleRssis(void *p, short a, int step, short d);
-extern void _Z14ApproachLinearRsss(short *dst, short target, short step);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 
 int func_ov002_020f7780(char *self, void *unused, int mode)
 {

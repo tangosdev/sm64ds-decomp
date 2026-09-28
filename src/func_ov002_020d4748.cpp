@@ -1,6 +1,6 @@
 //cpp
+#include "Player.h"
 extern "C" {
-void func_ov002_020bf5e0(void*);
 int _ZN6Player6IsAnimEj(void*, unsigned int);
 void _ZN6Player7SetAnimEji5Fix12IiEj(void*, unsigned int, int, int, unsigned int);
 int _ZNK6Player14GetBodyModelIDEjb(void*, unsigned int, int);
@@ -46,7 +46,7 @@ extern "C" void func_ov002_020d4748(char* c)
     if (*(unsigned char*)(c + 0x703) != 0) {
         int i2;
         short v;
-        func_ov002_020bf5e0(c);
+        ((Player *)(c))->func_ov002_020bf5e0();
         if (_ZN6Player6IsAnimEj(c, 0x9f) != 0)
             return;
         i2 = data_020a0e40 * 0x18;

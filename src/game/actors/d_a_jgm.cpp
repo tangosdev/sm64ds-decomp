@@ -99,6 +99,8 @@
 #include "Sound.h"
 #include "SurfaceInfo.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 namespace cstd { int fdiv(int, int); }
 
 /* Local three-word ABI value. Vector3 has a genuine non-trivial destructor;
@@ -146,7 +148,6 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern void _Z14ApproachLinearRsss(short *a, short b, short c);
 extern void _Z14ApproachLinearRiii(int *a, int b, int c);
 extern void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *collision);
 extern void *_ZNK10dBgCh_Actr13GetWallResultEv(dBgCh_Actr *collision);
@@ -772,7 +773,7 @@ L64:
     {
         int hd = Vec3_HorzDist((Vector3 *)&mPosX, (Vector3 *)tgt);
         short ha = Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)tgt);
-        _Z14ApproachLinearRsss(&mAngleY, ha, 0x5e8);
+        ApproachLinear(mAngleY, ha, 0x5e8);
         if (mTurnDir != 0)
             mPrevAngleY = (short)(mAngleY - TurnOffsetFromDist(hd));
         else

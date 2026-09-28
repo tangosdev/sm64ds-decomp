@@ -7,7 +7,7 @@
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV4Coin */
+/* resolved: VT0 = _ZTV8daCoin_c */
 /* Reconstructed source-style name: SM64DS proves daCoin_c through RTTI,
  * allocation size, vtable identity, and the COIN registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -17,7 +17,7 @@ int *daCoin_c_classInit_COIN(void)
     int *p = (int *)_ZN7fBase_cnwEj(948);
     if (p) {
         _ZN8dActor_cC2Ev(p);
-        p[0] = (int)_ZTV4Coin;
+        p[0] = (int)_ZTV8daCoin_c;
         _ZN11CommonModelC1Ev((char *)p + 0xd8);
         _ZN11CommonModelC1Ev((char *)p + 0x114);
         _ZN11ShadowModelC1Ev((char *)p + 0x150);

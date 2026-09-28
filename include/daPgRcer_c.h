@@ -74,6 +74,15 @@ struct daPgRcer_c : dActor_c {
     virtual int Behavior();           /* slot 6 */
     virtual int Render();             /* slot 9 */
     virtual void OnPendingDestroy();  /* slot 12 */
+
+    int func_ov019_0211127c(Vector3 *pos, unsigned int nodeIndex);
+    void func_ov019_021112b8();
+    int func_ov019_0211131c();
+    void func_ov019_021113b0();
+    int func_ov019_02112168();
+    void func_ov019_02112268();
+    void func_ov019_021122a4();
+    void func_ov019_021122dc(int state);
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -1,56 +1,45 @@
 //cpp
 /**
- * daPgMthr_c -- the mother penguin of Cool, Cool Mountain (`pg_mthr`,
- * MOTHER_PENGUIN 257), ov018.
+ * daPgMthr_c -- Cool, Cool Mountain mother penguin (PENGUIN_MOTHER 257), ov018.
  *
- * She stands at her home spot (state 0 holds mHorzSpeed at 0) and talks when
- * a player touches her. What that player holds picks the message: 0xac with
- * no baby, 0xad with her own BABY_PENGUIN (actor 256, param1 0, held in
- * Player+0x358 / +0x360), 0xae with the other baby (param1 1). When the 0xad
- * talk ends she spawns a POWER_STAR (actor 0xb2) and sets mGaveStar. Only
- * after that, a player within 1500.0 of her home who holds her own baby
- * sends her into state 2, where she walks toward that player; she returns to
- * state 0 when he lets go of the baby or leaves that range.
+ * She stands at her home (state 0 holds mHorzSpeed at 0) and talks when a
+ * player touches her. The actor in his hand picks the message: 0xac with
+ * nothing, 0xad with her own BABY_PENGUIN (actor 0x100, param1 0), 0xae
+ * with the other baby (param1 1). Yoshi is player param1 3 and carries the
+ * baby in mObjInMouth; the other characters use mHeldObj. The idle touch
+ * path only looks at the hand. When the 0xad talk ends she spawns
+ * POWER_STAR (actor 0xb2, param (param1 & 0xf) | 0x40) and sets mGaveStar.
+ * After that, a player within 1500 of her home who holds her own baby --
+ * mouth included -- sends her to state 2. She walks toward him and returns
+ * to state 0 when he lets go or leaves that range.
  *
- * daPgMthr_c_classInit is reconstructed (RTTI daPgMthr_c, PENGUIN_MOTHER
- * registry); retail does not store that spelling.
+ * State pairs live in data_ov018_02113c4c, filled by __sinit_ov018_02112c80
+ * from the PMF literals at 0211394c. Index << 4 selects {enter, update}:
+ *   0  021122ec / 02112234   stand
+ *   1  021121dc / 02111fac   talk
+ *   2  02111f1c / 02111e28   follow
+ * common.h stays first: Matrix4x3 is the flat 12-word copy this file assigns.
  *
- * DO NOT "TIDY" THESE -- each one is load-bearing:
- *
- *   common.h must be first. func_ov018_02111d28 copies Matrix4x3 as twelve
- *   uniform words; the nested Matrix.h spelling scalarizes.
- *
- *   ModelAnim::SetAnim, TextureSequence::SetFile, dCcAc_c::Init and
- *   DropShadowRadHeight stay mangled. The Fix12-by-value method form
- *   changes the sizes: SetAnim 0x58->0x64, Init 0x1ac->0x1c4, DropShadow
- *   0x100->0x110.
- *
- *   dBgCh_Actr::Init stays mangled. types.h makes Fix12i a plain s32, so a
- *   member-form call mangles that argument as int, while the arm9
- *   symbols.txt row spells it 5Fix12IiE -- the member form would reference
- *   a name no config row defines. That link failure is NOT YET MEASURED: no
- *   full mwldarm link of the member form has been run, and match.py cannot
- *   decide it.
- *
- * Known limits:
- *   func_ov018_021118fc..021123d0 are written free here, and that is a
- *   reconstruction choice, not a deduction. The image preserves no original
- *   mangled symbol table, so the func_ov labels are address-derived
- *   repository names and the historical spellings remain unknown. Ownership
- *   evidence: all 15 helpers in that range are defined in this file, each
- *   takes the object as its first parameter (spelled char*, void*, dActor_c*
- *   or daPgMthr_c*), and no other TU calls one. To narrow them to real
- *   daPgMthr_c members later, rename together: this file, the two in-range
- *   declarations in decl_common.h (02111bf0 and 021123d0), the 02111bf0
- *   declaration in SurfaceInfo.h, and the ov018 symbols.txt rows.
- *   The BMD/BCA/BTP handles are still data_ov018_*; decl_common spells
- *   02112c0c as int[].
- *   The Player talk/message helpers and func_0201267c are named with those
- *   callees, not here. The Player+0x358 / +0x360 held-actor slots belong on
- *   Player.
- *
- * NOT OWNED BY THIS TU: it is text-only, so g_profile_PENGUIN_MOTHER is not
- * defined here.
+ * Measured on this file, 2004/b56, and left as the call that matches:
+ *   SetAnim(Fix12<int> speed = {0x1000}) is 021121dc 0x58->0x60 and
+ *   021122ec 0x70->0x78. SetFile the same way is 02111f1c 0x90->0x9c.
+ *   dCcAc_c::Init(Fix12<int> radius/height = {...}) is InitResources
+ *   0x1ac->0x1bc; an int literal does not convert, so that call does not
+ *   compile. Each aggregate also emitted an unlicensed local .data word.
+ *   DropShadowRadHeight the same way is 02111d28 0x100->0x110.
+ *   dBgCh_Actr::Init(this, 0x32000, 0x32000, 0, 0) keeps the 0x1ac body, but
+ *   the reloc is _ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_, which is
+ *   not the ROM row (5Fix12IiE). The header parameter is Fix12i, a typedef
+ *   of s32. 02111b3c without the (int) actorID compare is 0xa8, not 0xb4.
+ *   Writing 02111d28's translation through mat4x3.m[] and passing that
+ *   member into DropShadow, then storing the bone back through one pointer,
+ *   is 0xfc, not 0x100. Hoisting the follow state's Player* is 0xf8, not
+ *   0xf4; reloading mPlayer matches.
+ *   func_0201267c is Sound::Play(3, id, pos) at 0x0201267c. PlayBank3 is the
+ *   other wrapper, at 0x02012664. GetFloorResult and GetWallResult are not
+ *   on dBgCh_Actr.h. The state helpers stay func_ov018_*: the PMF literals
+ *   relocate to those names. The file symbols stay data_ov018_*; the sinit
+ *   TU constructs them. g_profile_PENGUIN_MOTHER is not in this text TU.
  */
 
 #include "common.h"
@@ -62,41 +51,80 @@
 #include "dBgCh_Gnd.h"
 #include "Animation.h"
 #include "SurfaceInfo.h"
+#include "dBgPi.h"
 #include "Player.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
+enum {
+    ACTOR_PLAYER = 0xbf,
+    ACTOR_BABY_PENGUIN = 0x100,
+    ACTOR_POWER_STAR = 0xb2,
+    CHAR_YOSHI = 3,
+    MSG_NO_BABY = 0xac,
+    MSG_OWN_BABY = 0xad,
+    MSG_OTHER_BABY = 0xae,
+    BABY_OWN = 0,
+    BABY_OTHER = 1,
+    /* 1500.0 and 450.0 in 20.12. The look test also wants the player in
+       front (angle within 0x1400 of mAngleY). */
+    HOME_RANGE = 0x5dc000,
+    LOOK_RANGE = 0x1c2000,
+    /* transforms[5]: 5 * sizeof(Matrix4x3) == 0xf0, the bone 02111d28 rotates
+       and 02111a48 aims from. */
+    LOOK_BONE = 5,
+    /* dCc hit bit both the touch test and the new-player scan use. */
+    HIT_TOUCH = 0x8000000
+};
+
+/* SharedFilePtr's header has no fields. Model::LoadFile and
+   SharedFilePtr::Load both store the loaded buffer at +0x4. */
+struct PgLoadedFile {
+    u16 fileID;
+    u8 numRefs;
+    u8 pad;
+    void *filePtr;
+};
+
+/* __sinit_ov018_02112c80 constructs these, and the relocs at 02112c04 /
+   02112c0c point the two tables at them:
+     02113c00  file 0x3fb  BMD   model          (dtor 02017ab4)
+     02113bf0  file 0x406  BCA   stand/talk
+     02113c08  file 0x408  BCA   walk
+     02113bf8  file 0x3fd  BTP   walk
+     02113be8  file 0x407  BTP   stand/talk
+     02112c04 = { &02113bf8, &02113be8 }
+     02112c0c = { &02113bf0, &02113c08 }   (decl_common spells this int[]) */
 extern "C" {
-extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
-extern s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);
+extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int AngleDiff(int a, int b);
-extern s16 Vec3_VertAngle(const Vector3* v1, const Vector3* v0);
-extern int _Z14ApproachLinearRsss(s16* dst, s16 target, s16 step);
+extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
+/* 0x0201267c plays Sound::Play(3, id, pos). Sound::PlayBank3 is the
+   previous function (0x02012664); this TU's bl is not that one. */
 extern void func_0201267c(int a, void *b);
-extern int Vec3_Dist(const struct Vector3* a, const struct Vector3* b);
-extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *, ShadowModel &sm, Matrix4x3 &mf, int c, int d, unsigned int e);
-extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *mf, short angY);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *mf, short angX);
-extern "C" Matrix4x3 data_020a0e68;
-extern "C" void func_ov018_02111a48(char *c, char *p);
-extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File *f, int a, int b, unsigned int c);
-extern "C" void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *, BTP_File &f, int a, int b, unsigned int c);
-extern void *data_ov018_02113c08[];
-extern void *data_ov018_02113bf8[];
+extern int Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *, ShadowModel &sm, Matrix4x3 &mf, int c, int d, unsigned int e);
+extern void Matrix4x3_FromRotationY(void *m, int angle);
+extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *mf, short angY);
+extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *mf, short angX);
+extern Matrix4x3 data_020a0e68;
+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File *f, int a, int b, unsigned int c);
+extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *, BTP_File &f, int a, int b, unsigned int c);
+extern SharedFilePtr data_ov018_02113c08;
+extern SharedFilePtr data_ov018_02113bf8;
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern void func_ov018_02111b3c(char* c);
-extern dActor_c* func_ov018_021118fc(char* c);
-extern void func_ov018_02111968(char* c, void* found, char* held);
-extern int data_ov018_02113be8[];
-extern int data_ov018_02113bf0[];
+extern dActor_c *func_ov018_021118fc(char *c);
+extern SharedFilePtr data_ov018_02113be8;
+extern SharedFilePtr data_ov018_02113bf0;
 extern char data_ov018_02113c4c[];
 typedef void (daPgMthr_c::*PMF)();
 extern void func_ov018_02112398(daPgMthr_c *self);
 extern void func_ov018_0211235c(daPgMthr_c *self);
 extern SharedFilePtr data_ov018_02113c00;
 extern SharedFilePtr *data_ov018_02112c04[2];
-extern void func_ov018_02111d28(dActor_c *self);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *act, int a, int b, unsigned int c2, unsigned int d);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *act, int a, int b, void *c2, void *d);
 }
@@ -117,17 +145,21 @@ int daPgMthr_c::InitResources()
     for (int i = 0; i < 2; i++) {
         SharedFilePtr *t = data_ov018_02112c04[i];
         TextureSequence::LoadFile(*t);
-        TextureSequence::Prepare(*(BMD_File *)((int *)&data_ov018_02113c00)[1], *(BTP_File *)((int *)t)[1]);
+        TextureSequence::Prepare(
+            *(BMD_File *)((PgLoadedFile *)&data_ov018_02113c00)->filePtr,
+            *(BTP_File *)((PgLoadedFile *)t)->filePtr);
     }
     if (mShadowModel.InitCylinder() == 0)
         return 0;
+    /* Cylinder 260 x 300. Flags 0x4800004 / vuln 0x900000. */
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x104000, 0x12c000, 0x4800004, 0x900000);
-    func_ov018_021123d0((char *)this, 0);
+    func_ov018_021123d0(0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
+    /* Mesh radius and height 50.0. */
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
     Vector3 pos;
     pos.x = mPosX;
@@ -144,7 +176,7 @@ int daPgMthr_c::InitResources()
     mHomePosY = mPosY;
     mHomePosZ = mPosZ;
     mPlayer = 0;
-    func_ov018_02111d28(this);
+    func_ov018_02111d28();
     return 1;
 }
 
@@ -157,30 +189,20 @@ int daPgMthr_c::Behavior()
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     mModelAnim.UpdateVerts();
-    func_ov018_02111d28(this);
+    func_ov018_02111d28();
     return 1;
 }
 
 // @symbol _ZN10daPgMthr_c6RenderEv
-/* daPgMthr_c::Render -- vtable slot 9, ov018 0x02112454. Real C++ method over
-   the shared header: advance the texture animation, then draw the model.
-
-   THE Model::Render CALL IS QUALIFIED, AND THAT IS LOAD-BEARING. Model::Render is
-   virtual (slot 5 of _ZTV5Model) and ModelAnim overrides it, so a plain
-   mModelAnim.Render(0) would emit the vtable dispatch -- three words where the ROM
-   has one bl. Naming the base explicitly (mModelAnim.Model::Render(0)) suppresses
-   the dispatch and reproduces the ROM's direct call exactly. Same idiom as
-   daPeach_c::Render. TextureSequence::Update is a plain (non-virtual) method,
-   so it is a direct call already; mModelAnim.data is the ModelComponents at +0xdc. */
-int daPgMthr_c::Render() {
+int daPgMthr_c::Render()
+{
     mTextureSequence.Update(mModelAnim.data);
+    /* ModelAnim overrides Render. Qualifying it is the direct bl. */
     mModelAnim.Model::Render(0);
     return 1;
 }
 
 // @symbol _ZN10daPgMthr_c16OnPendingDestroyEv
-/* daPgMthr_c::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
- * override exists only to occupy the slot. */
 void daPgMthr_c::OnPendingDestroy()
 {
 }
@@ -196,118 +218,107 @@ int daPgMthr_c::CleanupResources()
     return 1;
 }
 
-extern "C" {
-void func_ov018_021123d0(char *c, int i) {
-    daPgMthr_c *self = (daPgMthr_c *)c;
-    self->mState = data_ov018_02113c4c + (i << 4);
-    func_ov018_02112398(self);
-}
-}
-
-extern "C" void func_ov018_02112398(daPgMthr_c *self) {
-    PMF *p = (PMF *)self->mState;
-    (self->* *p)();
+// @symbol _ZN10daPgMthr_c19func_ov018_021123d0Ei
+void daPgMthr_c::func_ov018_021123d0(int i)
+{
+    mState = data_ov018_02113c4c + (i << 4);
+    func_ov018_02112398(this);
 }
 
-extern "C" void func_ov018_0211235c(daPgMthr_c *self) {
-    PMF *p = (PMF *)self->mState + 1;
-    (self->* *p)();
+extern "C" void func_ov018_02112398(daPgMthr_c *self)
+{
+    PMF *enter = (PMF *)self->mState;
+    (self->* *enter)();
 }
 
-// @symbol func_ov018_021122ec
-/* One of the four state-entry helpers this class dispatches through the table
- * at +0x370 (see func_ov018_021123d0). The legacy source called it
- * daObjSm_Lift_c::AfterClsn and cast the pointer to that class; that was wrong.
- * ov018 0x021122ec lies inside daPgMthr_c's own span, and every offset it
- * touches is a daPgMthr_c offset: +0xd4 is mModelAnim, +0x138 is
- * mTextureSequence, +0x98 is dActor_c::mHorzSpeed, +0x374 is unk_374. The
- * offsets are written raw, the way the neighbouring .c-derived helpers write
- * them, because the ROM reaches +0x130 (inside mModelAnim). */
-extern "C" {
-int func_ov018_021122ec(char* c){
-  daPgMthr_c *self = (daPgMthr_c *)c;
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, (BCA_File *)data_ov018_02113bf0[1], 0, 0x1000, 0);
-  *(int*)(c+0x130)=0x1000;
-  _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&self->mTextureSequence, *(BTP_File *)data_ov018_02113be8[1], 0, 0x1000, 0);
-  self->mHorzSpeed = 0;
-  self->mPlayer = 0;
-  self->unk_37c = 0;
-  return 1;
-}
+extern "C" void func_ov018_0211235c(daPgMthr_c *self)
+{
+    PMF *update = (PMF *)self->mState + 1;
+    (self->* *update)();
 }
 
-extern "C" {
-int func_ov018_02112234(char* c) {
-    daPgMthr_c *self = (daPgMthr_c *)c;
-    void* a;
-    int v;
-    char* p;
-    if (self->mGaveStar != 0)
-        func_ov018_02111b3c(c);
-    a = func_ov018_021118fc(c);
-    v = 0;
-    if (a != 0) {
-        if (*(int*)((char*)a + 8) != 3)
-            v = *(int*)((char*)a + 0x358);
-        func_ov018_02111968(c, a, (char*)v);
+// @symbol _ZN10daPgMthr_c19func_ov018_021122ecEv
+/* State 0 enter. Idle anim, stopped, not talking. */
+int daPgMthr_c::func_ov018_021122ec()
+{
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File *)((PgLoadedFile *)&data_ov018_02113bf0)->filePtr, 0, 0x1000, 0);
+    mModelAnim.speed = 0x1000;
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, *(BTP_File *)((PgLoadedFile *)&data_ov018_02113be8)->filePtr, 0, 0x1000, 0);
+    mHorzSpeed = 0;
+    mPlayer = 0;
+    unk_37c = 0;
+    return 1;
+}
+
+// @symbol _ZN10daPgMthr_c19func_ov018_02112234Ev
+int daPgMthr_c::func_ov018_02112234()
+{
+    Player *toucher;
+    dActor_c *held;
+    Player *near;
+
+    if (mGaveStar != 0)
+        func_ov018_02111b3c();
+    toucher = (Player *)func_ov018_021118fc((char *)this);
+    held = 0;
+    if (toucher != 0) {
+        /* Yoshi's baby is in his mouth; this path does not count it. */
+        if (toucher->param1 != CHAR_YOSHI)
+            held = (dActor_c *)toucher->mHeldObj;
+        func_ov018_02111968(toucher, (char *)held);
     }
-    p = (char *)self->ClosestPlayer();
-    func_ov018_02111a48(c, p);
-    self->UpdatePos(&self->mdCcAc_c);
-    func_ov018_02111bf0(c, &self->mWithMeshClsn);
-    if (self->mGaveStar == 0 && self->mHoldingBaby == 0) {
-        unsigned int x = ((unsigned int)*(int*)(c + 0x12c) << 4) >> 16;
-        if (x == 0x10 || x == 0x25)
-            func_0201267c(0xdf, &self->mCamSpacePosX);
+    near = ClosestPlayer();
+    func_ov018_02111a48((char *)near);
+    UpdatePos(&mdCcAc_c);
+    func_ov018_02111bf0((char *)this, &mWithMeshClsn);
+    if (mGaveStar == 0 && mHoldingBaby == 0) {
+        unsigned int frame = ((unsigned int)mModelAnim.currFrame << 4) >> 16;
+        if (frame == 0x10 || frame == 0x25)
+            func_0201267c(0xdf, &mCamSpacePosX);
     }
     return 1;
 }
-}
 
-extern "C" {
-int func_ov018_021121dc(char* c){
-  daPgMthr_c *self = (daPgMthr_c *)c;
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, (BCA_File *)data_ov018_02113bf0[1], 0, 0x1000, 0);
-  *(int*)(c+0x130)=0x1000;
-  self->mTalkStep = 0;
-  self->mTalkTimer = 0x3c;
-  self->unk_37c = 1;
-  return 1;
-}
-}
-
-extern "C" {
-int func_ov018_02111fac(char *c)
+// @symbol _ZN10daPgMthr_c19func_ov018_021121dcEv
+int daPgMthr_c::func_ov018_021121dc()
 {
-    /* Whole-function member form changes the size, 0x230 -> 0x224. The
-       named-field pointer increments of mTalkStep / mTalkTimer match.
-       *(s16 *)(c + 0x300 + 0x84) for mMessageId stays. */
-    switch (((daPgMthr_c *)c)->mTalkStep) {
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File *)((PgLoadedFile *)&data_ov018_02113bf0)->filePtr, 0, 0x1000, 0);
+    mModelAnim.speed = 0x1000;
+    mTalkStep = 0;
+    mTalkTimer = 0x3c;
+    unk_37c = 1;
+    return 1;
+}
+
+// @symbol _ZN10daPgMthr_c19func_ov018_02111facEv
+int daPgMthr_c::func_ov018_02111fac()
+{
+    switch (mTalkStep) {
     case 0:
-        if (*(int *)(c + 0x194) & 0x8000000) {
-            if (((Player *)*(void **)(c + 0x374))->StartTalk(*(fBase_c *)c, 1)) {
-                u8 *p = &((daPgMthr_c *)c)->mTalkStep;
+        if (mdCcAc_c.hitFlags & HIT_TOUCH) {
+            if (mPlayer->StartTalk(*(fBase_c *)this, 1)) {
+                u8 *p = &mTalkStep;
                 *p = *p + 1;
             }
         } else {
-            func_ov018_021123d0(c, 0);
+            func_ov018_021123d0(0);
         }
         break;
     case 1:
-        if (_Z14ApproachLinearRsss((s16 *)(c + 0x8e),
-                Vec3_HorzAngle((Vector3 *)(c + 0x5c), (Vector3 *)(*(char **)(c + 0x374) + 0x5c)), 0x514)) {
-            Matrix4x3_FromTranslation(&data_020a0e68, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
-            Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(s16 *)(c + 0x8e));
+        if (ApproachLinear(mAngleY,
+                Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&mPlayer->mPosX), 0x514)) {
+            Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
+            Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x300000, -0x480000);
             {
-                int v[3];
-                v[0] = *(int *)((char *)&data_020a0e68 + 0x24);
-                v[1] = *(int *)((char *)&data_020a0e68 + 0x28);
-                v[2] = *(int *)((char *)&data_020a0e68 + 0x2c);
-                if (((Player *)*(void **)(c + 0x374))->ShowMessage(*(fBase_c *)c, *(s16 *)(c + 0x300 + 0x84), (Vector3 *)v, 0, 0)) {
-                    func_0201267c(0xdf, c + 0x74);
+                int mouth[3];
+                mouth[0] = data_020a0e68.m[9];
+                mouth[1] = data_020a0e68.m[10];
+                mouth[2] = data_020a0e68.m[11];
+                if (mPlayer->ShowMessage(*(fBase_c *)this, mMessageId, (Vector3 *)mouth, 0, 0)) {
+                    func_0201267c(0xdf, &mCamSpacePosX);
                     {
-                        u8 *p = &((daPgMthr_c *)c)->mTalkStep;
+                        u8 *p = &mTalkStep;
                         *p = *p + 1;
                     }
                 }
@@ -315,279 +326,274 @@ int func_ov018_02111fac(char *c)
         }
         break;
     case 2:
-        if (((Player *)*(void **)(c + 0x374))->GetTalkState() == -1) {
-            if (*(s16 *)(c + 0x300 + 0x84) == 0xad) {
+        if (mPlayer->GetTalkState() == -1) {
+            if (mMessageId == MSG_OWN_BABY) {
                 unsigned starParam;
-                unsigned char b;
-                *(unsigned char *)(c + 0x386) = 1;
-                b = (unsigned char)(*(unsigned *)(c + 8) & 0xf);
-                starParam = (unsigned)b | 0x40;
-                dActor_c::Spawn(
-                    0xb2, starParam, *(Vector3 *)(c + 0x5c), 0, *(signed char *)(c + 0xcc), -1);
+                unsigned char slot;
+                mGaveStar = 1;
+                slot = (unsigned char)(param1 & 0xf);
+                starParam = (unsigned)slot | 0x40;
+                dActor_c::Spawn(ACTOR_POWER_STAR, starParam, *(Vector3 *)&mPosX, 0, mAreaId, -1);
             }
-            ((Player *)*(void **)(c + 0x374))->DropActor();
+            mPlayer->DropActor();
             {
-                u8 *p = &((daPgMthr_c *)c)->mTalkStep;
+                u8 *p = &mTalkStep;
                 *p = *p + 1;
             }
         }
         break;
     case 3:
-        if (!DecIfAbove0_Byte(&((daPgMthr_c *)c)->mTalkTimer))
-            func_ov018_021123d0(c, 0);
+        if (!DecIfAbove0_Byte(&mTalkTimer))
+            func_ov018_021123d0(0);
         break;
     }
-    func_ov018_02111a48(c, *(char **)(c + 0x374));
-    if (*(unsigned char *)(c + 0x386) == 0 && *(unsigned char *)(c + 0x387) == 0) {
-        unsigned t = (unsigned)*(int *)(c + 0x12c) << 4 >> 0x10;
-        if (t == 0x10 || t == 0x25)
-            func_0201267c(0xdf, c + 0x74);
+    func_ov018_02111a48((char *)mPlayer);
+    if (mGaveStar == 0 && mHoldingBaby == 0) {
+        unsigned frame = ((unsigned)mModelAnim.currFrame << 4) >> 0x10;
+        if (frame == 0x10 || frame == 0x25)
+            func_0201267c(0xdf, &mCamSpacePosX);
     }
     return 1;
 }
-}
 
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" int func_ov018_02111f1c(char *c)
+// @symbol _ZN10daPgMthr_c19func_ov018_02111f1cEv
+int daPgMthr_c::func_ov018_02111f1c()
 {
-    daPgMthr_c *self = (daPgMthr_c *)c;
-    if (self->mPlayer == 0 && self->mGaveStar == 0)
-        func_ov018_021123d0(c, 0);
-    self->mHorzSpeed = 0x5000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, (BCA_File *)data_ov018_02113c08[1], 0, 0x1000, 0);
-    *(int *)(c + 0x130) = 0x1000;
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&self->mTextureSequence, *(BTP_File *)data_ov018_02113bf8[1], 0, 0x1000, 0);
-    self->unk_37c = 2;
+    if (mPlayer == 0 && mGaveStar == 0)
+        func_ov018_021123d0(0);
+    mHorzSpeed = 0x5000;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File *)((PgLoadedFile *)&data_ov018_02113c08)->filePtr, 0, 0x1000, 0);
+    mModelAnim.speed = 0x1000;
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, *(BTP_File *)((PgLoadedFile *)&data_ov018_02113bf8)->filePtr, 0, 0x1000, 0);
+    unk_37c = 2;
     return 1;
 }
 
-extern "C" int func_ov018_02111e28(dActor_c *act)
+// @symbol _ZN10daPgMthr_c19func_ov018_02111e28Ev
+int daPgMthr_c::func_ov018_02111e28()
 {
-    daPgMthr_c *self = (daPgMthr_c *)act;
-    char *s = (char *)self;
-    _Z14ApproachLinearRsss(&self->mAngleY,
-        Vec3_HorzAngle((Vector3 *)&self->mPosX, (Vector3 *)((char *)self->mPlayer + 0x5c)), 0x514);
-    self->mPrevAngleY = self->mAngleY;
-    self->UpdatePos(&self->mdCcAc_c);
-    func_ov018_02111bf0(s, &self->mWithMeshClsn);
-    func_ov018_02111a48(s, (char *)self->mPlayer);
-    unsigned int v = (unsigned int)(*(int*)(s + 0x12c) << 4) >> 0x10;
-    if (v == 9 || v == 0x15)
-        func_0201267c(0xde, &self->mCamSpacePosX);
-    char *p2 = (char *)self->mPlayer;
-    int r;
-    if (*(int*)(p2 + 8) == 3)
-        r = (*(int*)(p2 + 0x360) != 0);
+    ApproachLinear(mAngleY,
+        Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&mPlayer->mPosX), 0x514);
+    mPrevAngleY = mAngleY;
+    UpdatePos(&mdCcAc_c);
+    func_ov018_02111bf0((char *)this, &mWithMeshClsn);
+    func_ov018_02111a48((char *)mPlayer);
+    unsigned int frame = ((unsigned int)mModelAnim.currFrame << 4) >> 0x10;
+    if (frame == 9 || frame == 0x15)
+        func_0201267c(0xde, &mCamSpacePosX);
+    int holding;
+    if (mPlayer->param1 == CHAR_YOSHI)
+        holding = (mPlayer->mObjInMouth != 0);
     else
-        r = (*(int*)(p2 + 0x358) != 0);
-    if (r == 0 || Vec3_Dist((Vector3 *)&self->mHomePosX, (Vector3 *)((char *)self->mPlayer + 0x5c)) > 0x5dc000) {
-        self->mPlayer = 0;
-        func_ov018_021123d0(s, 0);
+        holding = (mPlayer->mHeldObj != 0);
+    if (holding == 0 || Vec3_Dist((Vector3 *)&mHomePosX, (Vector3 *)&mPlayer->mPosX) > HOME_RANGE) {
+        mPlayer = 0;
+        func_ov018_021123d0(0);
     }
     return 1;
 }
 
-// @symbol func_ov018_02111d28
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void func_ov018_02111d28(dActor_c *act)
+// @symbol _ZN10daPgMthr_c19func_ov018_02111d28Ev
+void daPgMthr_c::func_ov018_02111d28()
 {
-    daPgMthr_c *self = (daPgMthr_c *)act;
-    char *s = (char *)self;
-    Matrix4x3_FromRotationY(s + 0xf0, self->mAngleY);
-    *(int*)(s + 0x114) = self->mPosX >> 3;
-    *(int*)(s + 0x118) = self->mPosY >> 3;
-    *(int*)(s + 0x11c) = self->mPosZ >> 3;
-    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(self, self->mShadowModel, *(Matrix4x3*)(s + 0xf0), 0x140000, 0x50000, 0xf);
-    if (self->mLookAngX != 0 || self->mLookAngY != 0) {
-        Matrix4x3 *dst = (Matrix4x3*)((*(char**)(s + 0xe8)) + 0xf0);
-        data_020a0e68 = *dst;
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->mLookAngY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, self->mLookAngX);
-        *(Matrix4x3*)((*(char**)(s + 0xe8)) + 0xf0) = data_020a0e68;
+    char *s = (char *)this;
+    Matrix4x3_FromRotationY(&mModelAnim.mat4x3, mAngleY);
+    /* 0x114/0x118/0x11c are mat4x3's translation (pos >> 3). Writing those
+       through m[] and passing the member into DropShadow, then storing the
+       bone back through the same pointer, was 0xfc. ROM is 0x100. */
+    *(int *)(s + 0x114) = mPosX >> 3;
+    *(int *)(s + 0x118) = mPosY >> 3;
+    *(int *)(s + 0x11c) = mPosZ >> 3;
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+        this, mShadowModel, *(Matrix4x3 *)(s + 0xf0), 0x140000, 0x50000, 0xf);
+    if (mLookAngX != 0 || mLookAngY != 0) {
+        Matrix4x3 *bone = &mModelAnim.data.transforms[LOOK_BONE];
+        data_020a0e68 = *bone;
+        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mLookAngY);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mLookAngX);
+        *(Matrix4x3 *)((*(char **)(s + 0xe8)) + 0xf0) = data_020a0e68;
     }
 }
 
 extern "C" {
-/* NOT SurfaceInfo. This is the 0x24 remainder of dBgPi after its vptr
-   (0x28 = 4 + 0x24), and it was the only definition in the tree claiming a
-   size other than 0x14 for a type called SurfaceInfo. Renamed 2026-08-19 so
-   the name means one thing; the real one is include/SurfaceInfo.h. */
+/* dBgPi is 0x28. The copy below is not dBgPi::CopyTo: `b ? a : a` is the
+   load that matches, and a real dBgPi local would run the constructor. */
 struct dBgPiRawBody {
-  int a, b, c, d, e;
-  unsigned short f, g;
-  int h, i, j;
+    int a, b, c, d, e;
+    unsigned short f, g;
+    int h, i, j;
 };
 struct dBgPiRaw {
-  void* vt;
-  struct dBgPiRawBody info;
+    void *vt;
+    struct dBgPiRawBody info;
 };
-void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void* w);
-void* _ZNK10dBgCh_Actr14GetFloorResultEv(dBgCh_Actr* w);
+void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void *w);
+void *_ZNK10dBgCh_Actr14GetFloorResultEv(dBgCh_Actr *w);
 int _ZN4cstd4fdivEii(int a, int b);
-struct dBgPiRaw* _ZNK10dBgCh_Actr13GetWallResultEv(dBgCh_Actr* w);
-void _ZN5dBgPiD1Ev(struct dBgPiRaw* r);
+struct dBgPiRaw *_ZNK10dBgCh_Actr13GetWallResultEv(dBgCh_Actr *w);
+void _ZN5dBgPiD1Ev(struct dBgPiRaw *r);
 extern int data_02099368[];
 
-void func_ov018_02111bf0(void* cv, void* wv){
-  char* c = (char*)cv;
-  dBgCh_Actr* w = (dBgCh_Actr*)wv;
-  dBgCh_Actr_UpdateDiscreteNoLava_veneer(w);
-  if (w->IsOnGround() != 0) {
-    Vector3 n;
-    ((SurfaceInfo *)((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(w) + 4))->CopyNormalTo(n);
-    if (n.y != 0) {
-      int s = (int)(((long long)n.x * *(int*)(c+0xa4) + 0x800) >> 0xc)
-            + (int)(((long long)n.z * *(int*)(c+0xac) + 0x800) >> 0xc);
-      *(int*)(c+0xa8) = -(_ZN4cstd4fdivEii(s, n.y) + 0x8000);
-    }
-  }
-  if (w->IsOnWall() != 0) {
-    struct dBgPiRaw* src = _ZNK10dBgCh_Actr13GetWallResultEv(w);
-    struct dBgPiRaw cr;
-    Vector3 wn;
-    struct dBgPiRawBody* dst = &cr.info;
-    // demand a first (should get r4), then b (r1), then dst (r2)
-    int a = *(int*)((char*)src + 4);
-    int b = *(int*)((char*)src + 8);
-    /* Measured: `= a` DIFFs 4 words. The tautology is load-bearing. */
-    *(int*)((char*)dst + 0) = b ? a : a;
-    *(int*)((char*)dst + 4) = b;
-    int t = *(int*)((char*)src + 0xc);
-    void* vt = (void*)data_02099368;
-    *(int*)((char*)dst + 8) = t;
-    t = *(int*)((char*)src + 0x10);
-    *(int*)((char*)dst + 0xc) = t;
-    t = *(int*)((char*)src + 0x14);
-    *(int*)((char*)dst + 0x10) = t;
-    cr.vt = vt;
-    // remaining via cr members for sp-relative
-    cr.info.f = *(unsigned short*)((char*)src + 0x18);
-    cr.info.g = *(unsigned short*)((char*)src + 0x1a);
-    cr.info.h = *(int*)((char*)src + 0x1c);
-    cr.info.i = *(int*)((char*)src + 0x20);
-    cr.info.j = *(int*)((char*)src + 0x24);
-    ((SurfaceInfo *)dst)->CopyNormalTo(wn);
-    _ZN5dBgPiD1Ev(&cr);
-  }
-}
-}
-
-// @symbol func_ov018_02111b3c
-extern "C" {
-void func_ov018_02111b3c(char* c) {
-  daPgMthr_c *self = (daPgMthr_c *)c;
-  Player *p = self->ClosestPlayer();
-  char* held;
-  if (p == 0) return;
-  if (Vec3_Dist((Vector3 *)&self->mHomePosX, (Vector3 *)((char *)p + 0x5c)) > 0x5dc000) return;
-  if (*(int*)((char*)p+8) == 3) held = *(char**)((char*)p+0x360);
-  else held = *(char**)((char*)p+0x358);
-  if (held == 0) return;
-  {
-    int b = (int)(*(u16*)(held+0xc) == 0x100);
-    if (b == 0) return;
-  }
-  if (*(int*)(held+8) != 0) return;
-  self->mPlayer = p;
-  func_ov018_021123d0(c, 2);
-}
-}
-
-extern "C" {
-void func_ov018_02111a48(char* a, char* b)
+void func_ov018_02111bf0(void *cv, void *wv)
 {
-    daPgMthr_c *self = (daPgMthr_c *)a;
+    daPgMthr_c *self = (daPgMthr_c *)cv;
+    dBgCh_Actr *w = (dBgCh_Actr *)wv;
+    /* ROM calls the veneer at 0x02038420, not UpdateDiscreteNoLava. */
+    dBgCh_Actr_UpdateDiscreteNoLava_veneer(w);
+    if (w->IsOnGround() != 0) {
+        Vector3 n;
+        dBgPi *floor = (dBgPi *)_ZNK10dBgCh_Actr14GetFloorResultEv(w);
+        floor->surface.CopyNormalTo(n);
+        if (n.y != 0) {
+            int s = (int)(((long long)n.x * self->unk_0a4 + 0x800) >> 0xc)
+                  + (int)(((long long)n.z * self->unk_0ac + 0x800) >> 0xc);
+            self->mVertSpeed = -(_ZN4cstd4fdivEii(s, n.y) + 0x8000);
+        }
+    }
+    if (w->IsOnWall() != 0) {
+        struct dBgPiRaw *src = _ZNK10dBgCh_Actr13GetWallResultEv(w);
+        struct dBgPiRaw cr;
+        Vector3 wn;
+        struct dBgPiRawBody *dst = &cr.info;
+        int a = *(int *)((char *)src + 4);
+        int b = *(int *)((char *)src + 8);
+        /* `= a` DIFFs. The tautology is the load. */
+        *(int *)((char *)dst + 0) = b ? a : a;
+        *(int *)((char *)dst + 4) = b;
+        int t = *(int *)((char *)src + 0xc);
+        void *vt = (void *)data_02099368;
+        *(int *)((char *)dst + 8) = t;
+        t = *(int *)((char *)src + 0x10);
+        *(int *)((char *)dst + 0xc) = t;
+        t = *(int *)((char *)src + 0x14);
+        *(int *)((char *)dst + 0x10) = t;
+        cr.vt = vt;
+        cr.info.f = *(unsigned short *)((char *)src + 0x18);
+        cr.info.g = *(unsigned short *)((char *)src + 0x1a);
+        cr.info.h = *(int *)((char *)src + 0x1c);
+        cr.info.i = *(int *)((char *)src + 0x20);
+        cr.info.j = *(int *)((char *)src + 0x24);
+        ((SurfaceInfo *)dst)->CopyNormalTo(wn);
+        _ZN5dBgPiD1Ev(&cr);
+    }
+}
+}
+
+// @symbol _ZN10daPgMthr_c19func_ov018_02111b3cEv
+void daPgMthr_c::func_ov018_02111b3c()
+{
+    Player *p = ClosestPlayer();
+    dActor_c *held;
+
+    if (p == 0)
+        return;
+    if (Vec3_Dist((Vector3 *)&mHomePosX, (Vector3 *)&p->mPosX) > HOME_RANGE)
+        return;
+    if (p->param1 == CHAR_YOSHI)
+        held = (dActor_c *)p->mObjInMouth;
+    else
+        held = (dActor_c *)p->mHeldObj;
+    if (held == 0)
+        return;
+    /* (int) of the compare is the longer body. A plain != is 0xa8, ROM is 0xb4. */
+    {
+        int baby = (int)(held->actorID == ACTOR_BABY_PENGUIN);
+        if (baby == 0)
+            return;
+    }
+    if (held->param1 != BABY_OWN)
+        return;
+    mPlayer = p;
+    func_ov018_021123d0(2);
+}
+
+// @symbol _ZN10daPgMthr_c19func_ov018_02111a48EPc
+void daPgMthr_c::func_ov018_02111a48(char *b)
+{
+    dActor_c *who;
     Fix12i dist;
     s16 horzAngle;
     s16 delta, vert;
     Vector3 lookTarget;
     Vector3 nodePos;
-    char* q;
+    Matrix4x3 *bone;
     Fix12i tx, ty, tz;
 
-    if (b == 0) return;
+    if (b == 0)
+        return;
+    who = (dActor_c *)b;
 
-    dist = Vec3_HorzDist((Vector3*)&self->mPosX, (Vector3*)(b + 0x5c));
-    horzAngle = Vec3_HorzAngle((Vector3*)&self->mPosX, (Vector3*)(b + 0x5c));
+    dist = Vec3_HorzDist((Vector3 *)&mPosX, (Vector3 *)&who->mPosX);
+    horzAngle = Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&who->mPosX);
 
-    if (dist < 0x1c2000 && AngleDiff(horzAngle, self->mAngleY) < 0x1400) {
-        tz = *(Fix12i*)(b + 0x64);
-        ty = *(Fix12i*)(b + 0x60) + 0x640000;
-        tx = *(Fix12i*)(b + 0x5c);
+    if (dist < LOOK_RANGE && AngleDiff(horzAngle, mAngleY) < 0x1400) {
+        tz = who->mPosZ;
+        ty = who->mPosY + 0x640000;
+        tx = who->mPosX;
         lookTarget.x = tx;
         lookTarget.z = tz;
         lookTarget.y = ty;
-        q = *(char**)(a + 0xe8) + 0xf0;
-        nodePos.x = *(Fix12i*)(q + 0x24);
-        nodePos.y = *(Fix12i*)(q + 0x28);
-        nodePos.z = *(Fix12i*)(q + 0x2c);
+        bone = &mModelAnim.data.transforms[LOOK_BONE];
+        nodePos.x = bone->m[9];
+        nodePos.y = bone->m[10];
+        nodePos.z = bone->m[11];
         vert = Vec3_VertAngle(&nodePos, &lookTarget);
-        delta = horzAngle - self->mAngleY;
+        delta = horzAngle - mAngleY;
     } else {
         vert = 0;
         delta = 0;
     }
 
-    _Z14ApproachLinearRsss(&self->mLookAngY, delta, 0x250);
-    _Z14ApproachLinearRsss(&self->mLookAngX, vert, 0x250);
-}
+    ApproachLinear(mLookAngY, delta, 0x250);
+    ApproachLinear(mLookAngX, vert, 0x250);
 }
 
-extern "C" {
-void func_ov018_02111968(char* c, void* found, char* held){
-  daPgMthr_c *self = (daPgMthr_c *)c;
-  char* a = held;
-  void* v = found;
-  if (a) {
-    int b = *(unsigned short*)(a+0xc);
-    b = b == 0x100;
-    if (b != false) {
-      if (*(int*)(a+8) == 1) {
-        self->mPlayer = (Player *)v;
-        self->mMessageId = 0xae;
-        self->mHoldingBaby = 1;
-        func_ov018_021123d0(c, 1);
+// @symbol _ZN10daPgMthr_c19func_ov018_02111968EPvPc
+void daPgMthr_c::func_ov018_02111968(void *found, char *heldRaw)
+{
+    dActor_c *held = (dActor_c *)heldRaw;
+    Player *who = (Player *)found;
+
+    if (held) {
+        int baby = held->actorID == ACTOR_BABY_PENGUIN;
+        if (baby != 0) {
+            if (held->param1 == BABY_OTHER) {
+                mPlayer = who;
+                mMessageId = MSG_OTHER_BABY;
+                mHoldingBaby = 1;
+                func_ov018_021123d0(1);
+                return;
+            }
+        }
+    }
+    if (mGaveStar)
         return;
-      }
+    if (held) {
+        int baby = held->actorID == ACTOR_BABY_PENGUIN;
+        if (baby != 0) {
+            if (held->param1 == BABY_OWN) {
+                mMessageId = MSG_OWN_BABY;
+                goto talk;
+            }
+        }
     }
-  }
-  if (self->mGaveStar) return;
-  if (a) {
-    int b = *(unsigned short*)(a+0xc);
-    b = b == 0x100;
-    if (b != false) {
-      if (*(int*)(a+8) == 0) {
-        self->mMessageId = 0xad;
-        goto tail;
-      }
-    }
-  }
-  if (self->mHoldingBaby) return;
-  self->mMessageId = 0xac;
-tail:
-  self->mPlayer = (Player *)v;
-  func_ov018_021123d0(c, 1);
-}
+    if (mHoldingBaby)
+        return;
+    mMessageId = MSG_NO_BABY;
+talk:
+    mPlayer = who;
+    func_ov018_021123d0(1);
 }
 
 extern "C" {
-struct dActor_c* func_ov018_021118fc(char* c) {
+struct dActor_c *func_ov018_021118fc(char *c)
+{
     daPgMthr_c *self = (daPgMthr_c *)c;
-    struct dActor_c* newToucher = 0;
-    if (self->mdCcAc_c.hitFlags & 0x8000000) {
-        struct dActor_c* a = dActor_c::FindWithID(self->mdCcAc_c.otherOwner);
+    struct dActor_c *newToucher = 0;
+    if (self->mdCcAc_c.hitFlags & HIT_TOUCH) {
+        struct dActor_c *a = dActor_c::FindWithID(self->mdCcAc_c.otherOwner);
         if (a) {
-            int ok = (a->actorID == 0xbf) ? 1 : (int)newToucher;
+            int ok = (a->actorID == ACTOR_PLAYER) ? 1 : (int)newToucher;
             if (ok) {
                 if (a != self->mLastPlayer)
                     newToucher = a;

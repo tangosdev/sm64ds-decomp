@@ -1,87 +1,112 @@
 //cpp
 /**
- * daWanwan_c -- the Chain Chomp on Bob-omb Battlefield, plus the two objects
- * it is anchored to.
+ * daWanwan_c -- Bob-omb Battlefield Chain Chomp. Seven links, the stump it
+ * spawns (STUMP 0x1b, daObjPile_c) and the fence it finds
+ * (CHAIN_CHOMP_FENCE 0x29, daObjWanwanShutter_c).
  *
- * The chomp is seven chain links, a stump it is chained to (STUMP, actor
- * 0x1b) and the fence behind it (CHAIN_CHOMP_FENCE, actor 0x29), all in
- * ov014. daWanwan_c_classInit is a reconstructed name (RTTI daWanwan_c,
- * WANWAN registry); retail does not store that spelling.
+ * common.h stays first. Matrix4x3 has two 0x30-byte spellings, and the
+ * shadow placement copies twelve words of whichever one is already in scope.
  *
- * DO NOT "TIDY" THESE -- each one is load-bearing:
- *
- *   common.h must be included first. Matrix4x3 has two 0x30-byte spellings
- *   and func_ov014_02112788 copies twelve uniform words; the wrong one wins
- *   if a nested include gets there first.
- *
- *   The factory is the hand-rolled C2 / vec_ctor walk, not `return new`. The
- *   Vector3[7] constructor the ROM calls is func_0203d384, not the implicit
- *   default, so `return new` size-DIFFs.
- *
- *   `(Vector3 *)&mPosX` and `&mScaleX` stay as they are -- dActor_c on this
- *   branch has no Pos().
- *
- *   dCcAcPos_c::Init and DropShadowRadHeight stay spelled as mangled symbols:
- *   Fix12 passed by value, wall 6az.
- *
- * THE FREE FUNCTIONS ARE A CHOICE, NOT A DEDUCTION. func_ov014_02111484
- * through 02112788 are written as free functions here. The image preserves no
- * original mangled symbol table, so those labels are address-derived
- * repository names; the historical spellings are unknown, and an existing
- * label is no barrier to making one a member -- a migration renames source
- * and config together. The ownership evidence is thinner here than a typed
- * receiver would give: all 22 are defined in this file and each takes the
- * object first, but spelled char*, void* or u8*, so the receiver type is
- * assumed rather than recovered. Migrating them would touch this file, the
- * 02111fb8 declaration in daWanwan_c.h, the 02111ebc declaration in
- * decl_common.h, and the ov014 symbols.txt rows. func_ov014_02112ea8 is
- * outside that range, is not defined here, and is shared with the
- * wanwan-shutter TU.
- *
- * NOT OWNED BY THIS TU. SharedFilePtr has no recovered layout, so Init's
- * `&data_ov014_02114978 + 4` is simply the BMD pointer LoadFile has just
- * filled in, and since decl_common.h spells the four handles as char,
- * LoadFile and Release go through that view. The BMD/BCA handles keep their
- * data_ov014_* names and the sinit file IDs belong with that sinit. This is a
- * text-only TU, so g_profile_WANWAN is not defined here (S14). The byte at
- * ClosestPlayer()+0x6fb is a Player field this TU reads; naming it belongs on
- * Player. The spawned stump is reached through daObjPile_c::mBusy -- daObjPile_c.h does
- * not disturb this TU's matrix copies.
+ * g_profile_WANWAN is not defined here. The func_ov014_* bodies stay free
+ * functions: the sinit installs them as 8-byte PMFs in data_ov014_0211476c,
+ * enter at +0 and update at +8, and this file does not own that table.
  */
 
 #include "common.h"
 #include "daWanwan_c.h"
 #include "daObjPile_c.h"
-#include "decl_common.h"
+#include "daObjWanwanShutter_c.h"
 #include "SharedFilePtr.h"
 #include "Player.h"
+#include "Camera.h"
+#include "Sound.h"
 #include "dCc_c.h"
 #include "Animation.h"
 
 enum {
-    kStumpActorId = 0x1b, /* STUMP */
-    kFenceActorId = 0x29  /* CHAIN_CHOMP_FENCE */
+    kYoshiEggId = 9,
+    kStumpActorId = 0x1b,
+    kFenceActorId = 0x29,
+    kPlayerActorId = 0xbf,
+    kBobOmbActorId = 0xce,
+    kRestLift = 0xc8000,       /* 200.0, spawn offset and rest height */
+    kChainSlack = 0x50000,     /* idle leash */
+    kChainMax = 0x64000        /* fully extended lunge */
 };
 
-extern "C" {
-extern char data_ov014_02114970;
-extern char data_ov014_02114980;
+/* Two words, from this TU's LoadFile / SetFile / SetAnim uses. SharedFilePtr
+ * has no fields; +4 is the BMD or BCA the load just filled in.
+ *   02114968  body BMD   sinit 0x9c02, Model::LoadFile, mModelAnim
+ *   02114978  link BMD   sinit 0x9c01, Model::LoadFile, mLinkModels
+ *   02114980  idle BCA   sinit 0x9c04, Animation::LoadFile
+ *   02114970  lunge BCA  sinit 0x9c03, Animation::LoadFile
+ */
+struct Ov014Loaded {
+    u32 id;
+    void *file;
+};
+#define ov014_loaded(handle) (((Ov014Loaded *)&(handle))->file)
 
-int func_ov014_02111fb8(char *c);
-void func_ov014_02111f08(void *c);
+extern "C" {
+extern SharedFilePtr data_ov014_02114968;
+extern SharedFilePtr data_ov014_02114978;
+extern SharedFilePtr data_ov014_02114980;
+extern SharedFilePtr data_ov014_02114970;
+extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
+extern Matrix4x3 data_020a0e68;
+extern const Matrix4x3 IDENTITY_MATRIX4X3;
+extern s16 data_02082214[];
+extern void *data_0209f318;
+
+extern int func_ov014_02111fb8(char *c);
 void func_ov014_02112114(void *c);
 void func_ov014_02111fe0(char *c);
 void func_ov014_0211250c(char *c);
 void func_ov014_0211236c(char *c);
 void func_ov014_021122dc(char *c);
 void func_ov014_02112788(char *c);
-void func_ov014_02111ebc(void *c, int i);
+void func_ov014_02112ea8(void *fence);
+void func_ov102_0214ae1c(void *bomb);
+
+/* Scalar stand-ins. The header methods take Fix12<int> by value. */
 void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-    void *self, void *actor, void *pos, int fix, int t, unsigned a, unsigned b);
+    dCcAcPos_c *self, dActor_c *actor, const Vector3 *pos, int radius, int height,
+    unsigned flags, unsigned vuln);
+void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    dActor_c *self, ShadowModel *shadow, Matrix4x3 *mtx, int radius, int depth,
+    unsigned opacity);
+void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+    ModelAnim *self, void *bca, int flags, int speed, unsigned start);
+void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
+    Player *player, const Vector3 *pos, unsigned kind, int power, unsigned a,
+    unsigned b, unsigned c);
+short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
+void _ZN6Camera9SetFlag_3Ev(Camera *cam);
+
+void MulVec3Mat4x3(void *v, void *m, void *dst);
+void Vec3_Add(void *out, void *a, void *b);
+void Vec3_Sub(void *out, void *a, void *b);
+void Vec3_MulScalar(void *out, void *v, int s);
+void AddVec3(void *a, void *b, void *c);
+int Vec3_HorzLen(void *v);
+int LenVec3(Vector3 *v);
+short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+short Vec3_VertAngle(const void *a, const void *b);
+void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
+void Matrix4x3_FromRotationY(void *m, int ang);
+void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
+int AngleDiff(int a, int b);
+int func_0201267c(int id, void *pos);
+int ApproachAngle(short *angles, int target, int a, int b, int c);
+unsigned short DecIfAbove0_Short(unsigned short *p);
+int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 }
 
-// @symbol daWanwan_c_classInit
+int ApproachLinear(int &value, int target, int step);
+bool ApproachLinear(short &value, short target, short step);
+
 extern "C" {
+
 dEnemyBase_c *_ZN12dEnemyBase_cC2Ev(dEnemyBase_c *object);
 dCcAcPos_c *_ZN10dCcAcPos_cC1Ev(dCcAcPos_c *object);
 ModelAnim *_ZN9ModelAnimC1Ev(ModelAnim *object);
@@ -96,49 +121,73 @@ extern Vector3 *_ZN7Vector3D1Ev(Vector3 *object);
 extern void func_0203d384(void);
 }
 
-/* Array callbacks receive the element address and discard lifecycle results.
- * The empty func_0203d384 callbacks ignore that address. */
+namespace cstd {
+int fdiv(int a, int b);
+}
+
+namespace call3_267c {
+extern "C" int func_0201267c(int id, void *pos, int unused);
+}
+
+/* ModelAnim::SetAnim(BCA_File *, int, Fix12<int>, u32) measured +8 bytes:
+   02111e74 0x48->0x50, 02111dc4 0x50->0x58, 02111a6c 0x84->0x8c,
+   02111b70 0x138->0x140. The scalar extern stays. */
+#define SetChompAnim(self, bca) \
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj( \
+        &(self)->mModelAnim, ov014_loaded(bca), 0, 0x1000, 0)
+
+// @symbol daWanwan_c_classInit
+/* Hand-rolled. The two Vector3[7] arrays are constructed by func_0203d384,
+ * not by Vector3's implicit default. */
+/* return new daWanwan_c() measured 0xf0->0xa0, and the vec_ctor slot
+   relocates ShadowModelD1 where the ROM still has 0x020733a8. func_0203d384
+   stays the Vector3[7] constructor. */
 extern "C" daWanwan_c *daWanwan_c_classInit()
 {
-    char *c = (char *)fBase_c::operator new(0x620);
+    daWanwan_c *c = (daWanwan_c *)fBase_c::operator new(0x620);
     if (c) {
-        _ZN12dEnemyBase_cC2Ev((dEnemyBase_c *)c);
+        _ZN12dEnemyBase_cC2Ev(c);
         *(int **)c = &_ZTV10daWanwan_c[2];
-        _ZN10dCcAcPos_cC1Ev((dCcAcPos_c *)(c + 0x110));
-        _ZN9ModelAnimC1Ev((ModelAnim *)(c + 0x150));
-        _ZN11ShadowModelC1Ev((ShadowModel *)(c + 0x1b4));
-        __cxa_vec_ctor(c + 0x1dc, 7, 0x50, (void (*)(void *))_ZN5ModelC1Ev, (void (*)(void *))_ZN5ModelD1Ev);
-        __cxa_vec_ctor(c + 0x40c, 7, 0x28, (void (*)(void *))_ZN11ShadowModelC1Ev, (void (*)(void *))_ZN11ShadowModelD1Ev);
-        __cxa_vec_ctor(c + 0x524, 7, 0xc, (void (*)(void *))func_0203d384, (void (*)(void *))_ZN7Vector3D1Ev);
-        __cxa_vec_ctor(c + 0x578, 7, 0xc, (void (*)(void *))func_0203d384, (void (*)(void *))_ZN7Vector3D1Ev);
+        _ZN10dCcAcPos_cC1Ev(&c->mdCcAcPos_c);
+        _ZN9ModelAnimC1Ev(&c->mModelAnim);
+        _ZN11ShadowModelC1Ev(&c->mShadowModel);
+        __cxa_vec_ctor(c->mLinkModels, 7, 0x50,
+            (void (*)(void *))_ZN5ModelC1Ev, (void (*)(void *))_ZN5ModelD1Ev);
+        __cxa_vec_ctor(c->mLinkShadows, 7, 0x28,
+            (void (*)(void *))_ZN11ShadowModelC1Ev,
+            (void (*)(void *))_ZN11ShadowModelD1Ev);
+        __cxa_vec_ctor(c->mLinkPos, 7, 0xc,
+            (void (*)(void *))func_0203d384, (void (*)(void *))_ZN7Vector3D1Ev);
+        __cxa_vec_ctor(c->mLinkDelta, 7, 0xc,
+            (void (*)(void *))func_0203d384, (void (*)(void *))_ZN7Vector3D1Ev);
     }
-    return (daWanwan_c *)c;
+    return c;
 }
 
 // @symbol _ZN10daWanwan_c13InitResourcesEv
 int daWanwan_c::InitResources()
 {
-    void *f = Model::LoadFile(*(SharedFilePtr *)&data_ov014_02114968);
+    void *f = Model::LoadFile(data_ov014_02114968);
     mModelAnim.SetFile((BMD_File *)f, 1, 1);
-    Model::LoadFile(*(SharedFilePtr *)&data_ov014_02114978);
-    Animation::LoadFile(*(SharedFilePtr *)&data_ov014_02114980);
-    Animation::LoadFile(*(SharedFilePtr *)&data_ov014_02114970);
+    Model::LoadFile(data_ov014_02114978);
+    Animation::LoadFile(data_ov014_02114980);
+    Animation::LoadFile(data_ov014_02114970);
 
-    int i = 0;
-    unsigned char *p = (unsigned char *)mLinkModels;
-    do {
-        ((Model *)p)->SetFile(
-            (BMD_File *)*(void **)((char *)&data_ov014_02114978 + 4), 1, 1);
-        i = i + 1;
-        p = p + 0x50;
-    } while (i < 7);
+    {
+        int i = 0;
+        unsigned char *p = (unsigned char *)mLinkModels;
+        do {
+            ((Model *)p)->SetFile(
+                (BMD_File *)ov014_loaded(data_ov014_02114978), 1, 1);
+            i = i + 1;
+            p = p + 0x50;
+        } while (i < 7);
+    }
 
     mShadowModel.InitCylinder();
     {
-        int si;
-        unsigned char *sp;
-        si = 0;
-        sp = (unsigned char *)mLinkShadows;
+        int si = 0;
+        unsigned char *sp = (unsigned char *)mLinkShadows;
         do {
             ((ShadowModel *)sp)->InitCylinder();
             si = si + 1;
@@ -154,13 +203,16 @@ int daWanwan_c::InitResources()
         v[0] = data_ov014_02114700[0];
         v[1] = data_ov014_02114700[1];
         v[2] = data_ov014_02114700[2];
+        /* dCcAcPos_c::Init(Fix12<int>, Fix12<int>) measured 0x208->0x218. */
         _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-            &mdCcAcPos_c, this, v, 0x96000, 0x12c000, 0x200004, 0x26ff0);
+            &mdCcAcPos_c, this, (Vector3 *)v, 0x96000, 0x12c000, 0x200004, 0x26ff0);
     }
 
-    func_ov014_02111ebc(this, 1);
+    func_ov014_02111ebc(1);
 
     {
+        /* dst stays the actor. The stores are [dst, #0x524] -- mLinkPos -- and
+           a pointer that already points at the array is two instructions longer. */
         int cnt = 0;
         unsigned char *dst = (unsigned char *)this;
         do {
@@ -183,11 +235,11 @@ int daWanwan_c::InitResources()
     ((daObjPile_c *)spawned)->mBusy = (unsigned char)one;
     mFenceUniqueID = 0;
 
-    mPosX = mPosX + 0xc8000;
-    mPosY = mPosY + 0xc8000;
-    mPosZ = mPosZ + 0xc8000;
+    mPosX = mPosX + kRestLift;
+    mPosY = mPosY + kRestLift;
+    mPosZ = mPosZ + kRestLift;
 
-    mChainExtension = 0x50000;
+    mChainExtension = kChainSlack;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
@@ -199,9 +251,9 @@ int daWanwan_c::Behavior()
 {
     mIsOnGround = 0;
     {
-        int v = mSpawnPosY + 0xc8000;
-        if (mPosY <= v) {
-            mPosY = v;
+        int rest = mSpawnPosY + kRestLift;
+        if (mPosY <= rest) {
+            mPosY = rest;
             if (mWasOnGround == 0)
                 func_ov014_02111fb8((char *)this);
             mIsOnGround = 1;
@@ -209,10 +261,10 @@ int daWanwan_c::Behavior()
     }
     mWasOnGround = mIsOnGround;
     if (mFenceUniqueID == 0) {
-        dActor_c *r = dActor_c::FindWithActorID(kFenceActorId, 0);
-        mFenceUniqueID = r->uniqueID;
+        dActor_c *fence = dActor_c::FindWithActorID(kFenceActorId, 0);
+        mFenceUniqueID = fence->uniqueID;
     }
-    func_ov014_02111f08(this);
+    func_ov014_02111f08();
     UpdatePos(&mdCcAcPos_c);
     func_ov014_02112114(this);
     if (mChainBroken == 0)
@@ -231,7 +283,7 @@ int daWanwan_c::Behavior()
         mdCcAcPos_c.SetPosRelativeToActor(*(Vector3 *)v);
     }
     mdCcAcPos_c.Clear();
-    if (*(unsigned char *)((char *)ClosestPlayer() + 0x6fb) == 0)
+    if (ClosestPlayer()->mIsVanish == 0)
         mdCcAcPos_c.Update();
     return 1;
 }
@@ -242,11 +294,11 @@ int daWanwan_c::Render()
     mModelAnim.Render((const Vector3 *)&mScaleX);
 
     int j = 0;
-    char *p2 = (char *)mLinkModels;
+    Model *p = mLinkModels;
     for (;;) {
-        ((Model *)p2)->Render(0);
+        p->Render(0);
         j++;
-        p2 += 0x50;
+        p = p + 1;
         if (j >= 7)
             break;
     }
@@ -256,38 +308,39 @@ int daWanwan_c::Render()
 // @symbol _ZN10daWanwan_c16CleanupResourcesEv
 int daWanwan_c::CleanupResources()
 {
-    ((SharedFilePtr *)&data_ov014_02114968)->Release();
-    ((SharedFilePtr *)&data_ov014_02114978)->Release();
-    ((SharedFilePtr *)&data_ov014_02114980)->Release();
-    ((SharedFilePtr *)&data_ov014_02114970)->Release();
+    data_ov014_02114968.Release();
+    data_ov014_02114978.Release();
+    data_ov014_02114980.Release();
+    data_ov014_02114970.Release();
     return 1;
 }
 
-/* ROM ordinal 23 -- func_ov014_02112788, 0x02112788, size 0x1c4 */
+/* Place the head and each link, then drop a cylinder shadow under them. */
 extern "C" {
 // @symbol func_ov014_02112788
-typedef short s16;
-extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int a, int b, unsigned int g);
-
-
-extern const struct Matrix4x3 IDENTITY_MATRIX4X3;
-
-void func_ov014_02112788(char* c) {
-    struct Matrix4x3 tmp;
+void func_ov014_02112788(char *c)
+{
+    /* Head matrix is mModelAnim.mat4x3 (actor+0x16c); translation is m[9..11]
+       at +0x190. Link models sit at +0x1dc, their translation at o+0x21c while
+       o walks from the actor by 0x50. e+0x524 is mLinkPos. A named base for
+       those stores changes the register the loop keeps live. */
+    Matrix4x3 tmp;
     int i;
     int t;
-    char* m;
-    char* e;
-    char* o;
-    char* sm;
-    Matrix4x3_FromRotationXYZExt(c+0x16c, *(s16*)(c+0x8c), *(s16*)(c+0x8e), *(s16*)(c+0x90));
-    *(int*)(c+0x190) = *(int*)(c+0x5c) >> 3;
-    *(int*)(c+0x194) = *(int*)(c+0x60) >> 3;
-    *(int*)(c+0x198) = *(int*)(c+0x64) >> 3;
-    t = *(int*)(c+0x60) - *(int*)(c+0x5f0);
-    if (t <= 0x1000) t = 0x1000;
+    char *m;
+    char *e;
+    char *o;
+    char *sm;
+    Matrix4x3_FromRotationXYZExt(c + 0x16c, *(s16 *)(c + 0x8c), *(s16 *)(c + 0x8e), *(s16 *)(c + 0x90));
+    *(int *)(c + 0x190) = *(int *)(c + 0x5c) >> 3;
+    *(int *)(c + 0x194) = *(int *)(c + 0x60) >> 3;
+    *(int *)(c + 0x198) = *(int *)(c + 0x64) >> 3;
+    t = *(int *)(c + 0x60) - *(int *)(c + 0x5f0);
+    if (t <= 0x1000)
+        t = 0x1000;
+    /* DropShadowRadHeight(Fix12<int>, Fix12<int>) measured 0x1c4->0x1e4 for both calls. */
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-        c, c+0x1b4, c+0x16c,
+        (dActor_c *)c, (ShadowModel *)(c + 0x1b4), (Matrix4x3 *)(c + 0x16c),
         0x15e000 - (int)(((long long)t * 0x180 + 0x800) >> 12),
         t + 0x28000,
         0xf);
@@ -298,14 +351,15 @@ void func_ov014_02112788(char* c) {
     e = c;
     o = c;
     for (; i < 7; i++) {
-        *(struct Matrix4x3*)(m+0x1c) = tmp;
-        *(int*)(o+0x21c) = *(int*)(e+0x524) >> 3;
-        *(int*)(o+0x220) = *(int*)(e+0x528) >> 3;
-        *(int*)(o+0x224) = *(int*)(e+0x52c) >> 3;
-        t = *(int*)(e+0x528) - *(int*)(c+0x5f0);
-        if (t <= 0x1000) t = 0x1000;
+        *(Matrix4x3 *)(m + 0x1c) = tmp;
+        *(int *)(o + 0x21c) = *(int *)(e + 0x524) >> 3;
+        *(int *)(o + 0x220) = *(int *)(e + 0x528) >> 3;
+        *(int *)(o + 0x224) = *(int *)(e + 0x52c) >> 3;
+        t = *(int *)(e + 0x528) - *(int *)(c + 0x5f0);
+        if (t <= 0x1000)
+            t = 0x1000;
         _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-            c, sm, m+0x1c,
+            (dActor_c *)c, (ShadowModel *)sm, (Matrix4x3 *)(m + 0x1c),
             0x78000 - (int)(((long long)t * 0x180 + 0x800) >> 12),
             t + 0x28000,
             0xf);
@@ -317,42 +371,31 @@ void func_ov014_02112788(char* c) {
 }
 }
 
-/* ROM ordinal 22 -- func_ov014_0211250c, 0x0211250c, size 0x27c */
+/* Forward chain: head at the actor, then links 1..6, carrying mLinkDelta. */
 extern "C" {
 // @symbol func_ov014_0211250c
-typedef struct { int x, y, z; } Vec3;
+typedef struct { int x, y, z; } WanwanVec;
 
-extern void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
-extern void MulVec3Mat4x3(void* v, void* m, void* dst);
-extern void Vec3_Add(void* out, void* a, void* b);
-extern short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
-extern int Vec3_HorzLen(void* v);
-extern void Matrix4x3_FromRotationY(void *m, int ang);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-extern void Vec3_Sub(void* out, void* a, void* b);
-extern void Vec3_MulScalar(void* out, void* v, int s);
-
-extern int data_020a0e68[];
-
-void func_ov014_0211250c(char *c)
+void func_ov014_0211250c(char *raw)
 {
+    daWanwan_c *c = (daWanwan_c *)raw;
     int yoff;
-    Vec3 dvec;
-    Vec3 head;
-    Vec3 rotated;
-    Vec3 saved;
-    Vec3 tmp;
-    Vec3 sum;
-    Vec3 diff;
-    Vec3 mul;
+    WanwanVec dvec;
+    WanwanVec head;
+    WanwanVec rotated;
+    WanwanVec saved;
+    WanwanVec tmp;
+    WanwanVec sum;
+    WanwanVec diff;
+    WanwanVec mul;
     int scale;
-    Vec3 *seg;
-    Vec3 *dst;
+    WanwanVec *seg;
+    WanwanVec *dst;
     int *bound;
     int state;
     short angY;
     short angX;
-    Vec3 *prev;
+    WanwanVec *prev;
     int i;
 
     head.x = 0;
@@ -360,18 +403,18 @@ void func_ov014_0211250c(char *c)
     rotated.x = 0;
     rotated.y = 0;
     rotated.z = 0;
-    head.z = -0xc8000;
+    head.z = -kRestLift;
 
     /* setup order is load-bearing: seg before state so add/cmp schedule matches */
-    seg = (Vec3 *)(c + 0x530);
-    dst = (Vec3 *)(c + 0x584);
-    state = *(int *)(c + 0x610);
-    bound = (int *)(c + 0x5d0);
+    seg = (WanwanVec *)&c->mLinkPos[1];
+    dst = (WanwanVec *)&c->mLinkDelta[1];
+    state = c->mState;
+    bound = c->mLinkFloorY;
     scale = 0xb68;
     yoff = -0x5000;
 
     if (state == 2 || state == 4) {
-        if (*(unsigned char *)(c + 0x605) == 0) {
+        if (c->mChainBroken == 0) {
             scale += 0x7800;
             yoff = 0;
         } else {
@@ -380,20 +423,17 @@ void func_ov014_0211250c(char *c)
     }
 
     Matrix4x3_FromRotationXYZExt(
-        data_020a0e68,
-        *(short *)(c + 0x8c),
-        *(short *)(c + 0x8e),
-        *(short *)(c + 0x90));
-    MulVec3Mat4x3(&head, data_020a0e68, &rotated);
-    Vec3_Add(&tmp, (Vec3 *)(c + 0x5c), &rotated);
+        &data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
+    MulVec3Mat4x3(&head, &data_020a0e68, &rotated);
+    Vec3_Add(&tmp, (WanwanVec *)&c->mPosX, &rotated);
     saved.x = tmp.x;
     saved.y = tmp.y;
     saved.z = tmp.z;
-    *(int *)(c + 0x524) = tmp.x;
-    *(int *)(c + 0x528) = saved.y;
-    *(int *)(c + 0x52c) = saved.z;
+    c->mLinkPos[0].x = tmp.x;
+    c->mLinkPos[0].y = saved.y;
+    c->mLinkPos[0].z = saved.z;
 
-    head.z = *(int *)(c + 0x5f8);
+    head.z = c->mChainExtension;
     head.x = 0;
     head.y = 0;
     rotated.x = 0;
@@ -405,7 +445,7 @@ void func_ov014_0211250c(char *c)
         if (i == 0)
             prev = &saved;
         else
-            prev = (Vec3 *)((char *)seg - 0xc);
+            prev = (WanwanVec *)((char *)seg - 0xc);
 
         dvec.x = (seg->x - prev->x) + dst->x;
         dvec.z = (seg->z - prev->z) + dst->z;
@@ -416,11 +456,12 @@ void func_ov014_0211250c(char *c)
             dvec.y = t - prev->y;
         }
 
+        /* cstd::atan2(Fix12<int>, Fix12<int>) measured 0x27c->0x2a4 on this function. */
         angY = _ZN4cstd5atan2E5Fix12IiES1_(dvec.x, dvec.z);
         angX = (short)(-_ZN4cstd5atan2E5Fix12IiES1_(dvec.y, Vec3_HorzLen(&dvec)));
-        Matrix4x3_FromRotationY(data_020a0e68, angY);
-        Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, angX);
-        MulVec3Mat4x3(&head, data_020a0e68, &rotated);
+        Matrix4x3_FromRotationY(&data_020a0e68, angY);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angX);
+        MulVec3Mat4x3(&head, &data_020a0e68, &rotated);
 
         dst->x = seg->x;
         dst->y = seg->y;
@@ -435,47 +476,38 @@ void func_ov014_0211250c(char *c)
         dst->y = mul.y;
         dst->z = mul.z;
 
-        if (*bound <= *(int *)(c + 0x5f0))
-            *bound = *(int *)(c + 0x5f0) + 0x28000;
+        if (*bound <= c->mSpawnPosY)
+            *bound = c->mSpawnPosY + 0x28000;
 
-        seg = (Vec3 *)((char *)seg + 0xc);
-        dst = (Vec3 *)((char *)dst + 0xc);
+        seg = (WanwanVec *)((char *)seg + 0xc);
+        dst = (WanwanVec *)((char *)dst + 0xc);
     }
 }
 }
 
-/* ROM ordinal 21 -- func_ov014_0211236c, 0x0211236c, size 0x1a0 */
+/* Backward chain, from the stump end (link 6) toward the head. */
 extern "C" {
 // @symbol func_ov014_0211236c
-extern void Vec3_Sub(void* out, void* a, void* b);
-extern short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
-extern int Vec3_HorzLen(void* v);
-extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
-extern void MulVec3Mat4x3(void* v, void* m, void* dst);
-extern void Vec3_Add(void* out, void* a, void* b);
-extern void Vec3_MulScalar(void* out, void* v, int s);
-extern int data_020a0e68[];
-
-void func_ov014_0211236c(char* c)
+void func_ov014_0211236c(char *raw)
 {
-    Vec3 tmp;
-    Vec3 head;
-    Vec3 rotated;
-    Vec3 sum;
-    Vec3 prevpos;
-    Vec3 diff;
-    Vec3 delta;
-    Vec3 scaled;
-    Vec3 mul;
+    daWanwan_c *c = (daWanwan_c *)raw;
+    WanwanVec tmp;
+    WanwanVec head;
+    WanwanVec rotated;
+    WanwanVec sum;
+    WanwanVec prevpos;
+    WanwanVec diff;
+    WanwanVec delta;
+    WanwanVec scaled;
+    WanwanVec mul;
     short angY;
-    Vec3* target;
-    Vec3* cur;
+    WanwanVec *target;
+    WanwanVec *cur;
     short angX;
     int i;
     int z;
 
-    z = *(int*)(c + 0x5f8);
+    z = c->mChainExtension;
     head.x = 0;
     head.y = 0;
     head.z = z;
@@ -483,15 +515,15 @@ void func_ov014_0211236c(char* c)
     rotated.y = 0;
     rotated.z = 0;
 
-    prevpos.x = *(int*)(c + 0x5ec);
+    prevpos.x = c->mSpawnPosX;
     {
-        int py = *(int*)(c + 0x5f0);
+        int py = c->mSpawnPosY;
         prevpos.y = py;
-        prevpos.z = *(int*)(c + 0x5f4);
+        prevpos.z = c->mSpawnPosZ;
         prevpos.y = py + 0x1e000;
     }
 
-    z = *(int*)(c + 0x5f8);
+    z = c->mChainExtension;
     head.x = 0;
     head.y = 0;
     head.z = z;
@@ -499,19 +531,20 @@ void func_ov014_0211236c(char* c)
     rotated.y = 0;
     rotated.z = 0;
 
-    cur = (Vec3*)(c + 0x56c);
+    cur = (WanwanVec *)&c->mLinkPos[6];
     i = 6;
     do {
-        target = (i == 6) ? &prevpos : (Vec3*)((char*)cur + 0xc);
+        target = (i == 6) ? &prevpos : (WanwanVec *)((char *)cur + 0xc);
         Vec3_Sub(&diff, cur, target);
         tmp.x = diff.x;
         tmp.y = diff.y;
         tmp.z = diff.z;
+        /* cstd::atan2(Fix12<int>, Fix12<int>) measured 0x1a0->0x1c4 on this function. */
         angY = _ZN4cstd5atan2E5Fix12IiES1_(tmp.x, tmp.z);
         angX = (short)(-_ZN4cstd5atan2E5Fix12IiES1_(tmp.y, Vec3_HorzLen(&tmp)));
-        Matrix4x3_FromRotationY(data_020a0e68, angY);
-        Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, angX);
-        MulVec3Mat4x3(&head, data_020a0e68, &rotated);
+        Matrix4x3_FromRotationY(&data_020a0e68, angY);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angX);
+        MulVec3Mat4x3(&head, &data_020a0e68, &rotated);
         sum.x = cur->x;
         sum.y = cur->y;
         sum.z = cur->z;
@@ -525,448 +558,435 @@ void func_ov014_0211236c(char* c)
         sum.y = mul.y;
         sum.z = mul.z;
         i = i - 1;
-        cur = (Vec3*)((char*)cur - 0xc);
+        cur = (WanwanVec *)((char *)cur - 0xc);
     } while (i >= 0);
 }
 }
 
-/* ROM ordinal 20 -- func_ov014_021122dc, 0x021122dc, size 0x90 */
+/* Blend the actor position into the chain. Integer (7-i)/7 is 1 only for i == 0. */
 extern "C" {
 // @symbol func_ov014_021122dc
-extern void Vec3_Sub(void *out, void *a, void *b);
-extern void Vec3_MulScalar(void *out, void *v, int s);
-extern void AddVec3(void *a, void *b, void *c);
-
-void func_ov014_021122dc(char *c)
+void func_ov014_021122dc(char *raw)
 {
-    char *p;
+    daWanwan_c *c = (daWanwan_c *)raw;
+    WanwanVec *p;
     int i;
     int diff[3];
     int scaled[3];
 
-    Vec3_Sub(diff, c + 0x5c, c + 0x524);
-    p = c + 0x524;
+    Vec3_Sub(diff, &c->mPosX, &c->mLinkPos[0].x);
+    p = (WanwanVec *)&c->mLinkPos[0];
     i = 0;
     do {
         Vec3_MulScalar(scaled, diff, (7 - i) / 7);
         AddVec3(p, scaled, p);
         i++;
-        p += 0xc;
+        p = (WanwanVec *)((char *)p + 0xc);
     } while (i < 7);
 }
 }
 
-/* ROM ordinal 19 -- func_ov014_02112114, 0x02112114, size 0x1c8 */
+/* Hit response. Egg (actor 9, hit 0x2000) pops the scale into state 0.
+ * Explosion (0x4000) and a Bob-omb (0xce) go to state 4. A mega hit from
+ * the player (0xbf, hit 0x10) starts the bite (state 5) and hurts when facing. */
 extern "C" {
 // @symbol func_ov014_02112114
-extern void func_ov014_02111ebc(void *c, int i);
-extern int Vec3_HorzAngle(void *a, void *b);
-extern int AngleDiff(int a, int b);
-extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *o, void *v, unsigned a, int fx, unsigned b, unsigned d, unsigned e);
-extern void func_ov102_0214ae1c(void *o);
-
 void func_ov014_02112114(void *cc)
 {
-    char *c = (char*)cc;
-    char *e;
-    int id;
-    unsigned h;
+    daWanwan_c *c = (daWanwan_c *)cc;
+    dActor_c *other;
+    unsigned id;
     int ang;
 
-    if ((unsigned)(*(int*)(c + 0x610) - 3) <= 1)
+    if ((unsigned)(c->mState - 3) <= 1)
         return;
-    id = *(int*)(c + 0x134);
+    id = c->mdCcAcPos_c.otherOwner;
     if (id == 0)
         return;
-    e = (char*)dActor_c::FindWithID(id);
-    if (e == 0)
+    other = dActor_c::FindWithID(id);
+    if (other == 0)
         return;
 
-    h = *(unsigned short*)(e + 0xc);
-    if ((int)(h == 9) != 0) {
-        if (*(int*)(c + 0x130) & 0x2000) {
-            *(int*)(c + 0x80) = 0x2000;
-            *(int*)(c + 0x84) = *(int*)(c + 0x80);
-            *(int*)(c + 0x88) = *(int*)(c + 0x84);
-            func_ov014_02111ebc(c, 0);
+    if ((int)(other->actorID == kYoshiEggId) != 0) {
+        if (c->mdCcAcPos_c.hitFlags & 0x2000) {
+            c->mScaleX = 0x2000;
+            c->mScaleY = c->mScaleX;
+            c->mScaleZ = c->mScaleY;
+            c->func_ov014_02111ebc(0);
             return;
         }
     }
 
-    if (*(int*)(c + 0x130) & 0x4000) {
-        *(int*)(c + 0x80) = 0x2000;
-        *(int*)(c + 0x84) = *(int*)(c + 0x80);
-        *(int*)(c + 0x88) = *(int*)(c + 0x84);
-        func_ov014_02111ebc(c, 4);
+    if (c->mdCcAcPos_c.hitFlags & 0x4000) {
+        c->mScaleX = 0x2000;
+        c->mScaleY = c->mScaleX;
+        c->mScaleZ = c->mScaleY;
+        c->func_ov014_02111ebc(4);
         return;
     }
 
-    if ((int)(h == 0xbf) != 0) {
-        ang = Vec3_HorzAngle(c + 0x5c, e + 0x5c);
-        if (*(int*)(c + 0x130) & 0x10) {
-            func_ov014_02111ebc(c, 5);
-            *(short*)(c + 0x94) = *(short*)(e + 0x8e);
+    if ((int)(other->actorID == kPlayerActorId) != 0) {
+        ang = Vec3_HorzAngle((const Vector3 *)&c->mPosX, (const Vector3 *)&other->mPosX);
+        if (c->mdCcAcPos_c.hitFlags & 0x10) {
+            c->func_ov014_02111ebc(5);
+            c->mPrevAngleY = other->mAngleY;
         }
-        if (AngleDiff(ang, *(short*)(c + 0x8e)) < 0x4000) {
+        if (AngleDiff(ang, c->mAngleY) < 0x4000) {
             int v[3];
-            v[0] = *(int*)(c + 0x5c);
-            v[1] = *(int*)(c + 0x60);
-            v[2] = *(int*)(c + 0x64);
-            _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(e, v, 3, 0xc000, 1, 0, 1);
+            v[0] = c->mPosX;
+            v[1] = c->mPosY;
+            v[2] = c->mPosZ;
+            _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
+                (Player *)other, (Vector3 *)v, 3, 0xc000, 1, 0, 1);
         }
     }
 
-    if (*(int*)(c + 0x610) == 4)
+    if (c->mState == 4)
         return;
-    if ((int)(*(unsigned short*)(e + 0xc) == 0xce) != 0) {
-        func_ov102_0214ae1c(e);
-        func_ov014_02111ebc(c, 4);
+    if ((int)(other->actorID == kBobOmbActorId) != 0) {
+        func_ov102_0214ae1c(other);
+        c->func_ov014_02111ebc(4);
     }
 }
 }
 
-/* ROM ordinal 18 -- func_ov014_02111fe0, 0x02111fe0, size 0x134 */
+/* Pull the chomp back inside chainExtension * 7 + 200 of the spawn point.
+ * A fully extended lunge (state 2, extension 0x64000) also kills both speeds. */
 extern "C" {
 // @symbol func_ov014_02111fe0
-typedef int Fix12i;
-typedef long long s64;
-
-
-extern void Vec3_Sub(void* out, void* a, void* b);
-extern int LenVec3(struct Vector3* v);
-extern int _ZN4cstd4fdivEii(int a, int b);
-extern void Vec3_Add(void* out, void* a, void* b);
-
-void func_ov014_02111fe0(char* c){
-    struct Vector3 v;
-    struct Vector3 out;
-    int len, lim;
-    Vec3_Sub(&v, (struct Vector3*)(c + 0x5c), (struct Vector3*)(c + 0x5ec));
+void func_ov014_02111fe0(char *raw)
+{
+    daWanwan_c *c = (daWanwan_c *)raw;
+    Vector3 v;
+    Vector3 out;
+    int len;
+    int lim;
+    Vec3_Sub(&v, (Vector3 *)&c->mPosX, (Vector3 *)&c->mSpawnPosX);
     len = LenVec3(&v);
-    lim = *(int*)(c + 0x5f8) * 7 + 0xc8000;
-    if (len <= lim) return;
-    v.x = (int)(((s64)v.x * _ZN4cstd4fdivEii(lim, len) + 0x800) >> 12);
-    v.y = (int)(((s64)v.y * _ZN4cstd4fdivEii(lim, len) + 0x800) >> 12);
-    v.z = (int)(((s64)v.z * _ZN4cstd4fdivEii(lim, len) + 0x800) >> 12);
-    Vec3_Add(&out, (struct Vector3*)(c + 0x5ec), &v);
-    *(int*)(c + 0x5c) = out.x;
-    *(int*)(c + 0x60) = out.y;
-    *(int*)(c + 0x64) = out.z;
-    if (*(int*)(c + 0x610) != 2) return;
-    if (*(int*)(c + 0x5f8) == 0x64000) {
-        *(int*)(c + 0x98) = 0;
-        *(int*)(c + 0xa8) = 0;
+    lim = c->mChainExtension * 7 + kRestLift;
+    if (len <= lim)
+        return;
+    v.x = (int)(((s64)v.x * cstd::fdiv(lim, len) + 0x800) >> 12);
+    v.y = (int)(((s64)v.y * cstd::fdiv(lim, len) + 0x800) >> 12);
+    v.z = (int)(((s64)v.z * cstd::fdiv(lim, len) + 0x800) >> 12);
+    Vec3_Add(&out, (Vector3 *)&c->mSpawnPosX, &v);
+    c->mPosX = out.x;
+    c->mPosY = out.y;
+    c->mPosZ = out.z;
+    if (c->mState != 2)
+        return;
+    if (c->mChainExtension == kChainMax) {
+        c->mHorzSpeed = 0;
+        c->mVertSpeed = 0;
     }
 }
 }
 
-/* ROM ordinal 17 -- func_ov014_02111fb8, 0x02111fb8, size 0x28 */
-extern "C" {
 // @symbol func_ov014_02111fb8
-extern int func_0201267c(int,void*);
-int func_ov014_02111fb8(char* c){
-  func_0201267c(0x39, (char*)c+0x74);
-  ((dActor_c *)c)->HugeLandingDust(1);
-}
+/* Landing one-shot. Sound 0x39 at camera-space position, then the dust. */
+extern "C" int func_ov014_02111fb8(char *raw)
+{
+    daWanwan_c *c = (daWanwan_c *)raw;
+    func_0201267c(0x39, &c->mCamSpacePosX);
+    c->HugeLandingDust(1);
 }
 
-/* ROM ordinal 16 -- func_ov014_02111f54, 0x02111f54, size 0x64 */
-extern "C" {
 // @symbol func_ov014_02111f54
-void func_ov014_02111ebc(void* c, int i);
-int func_ov014_02111f54(void* c){
-  char* self=(char*)c;
-  void* a=dActor_c::FindWithID(*(unsigned int*)(self+0x608));
-  if(*(unsigned char*)((char*)a+0x31e)!=0) goto fail;
-  {
-    void* p=((dActor_c *)self)->ClosestPlayer();
-    if(((Player *)p)->SetNoControlState(4, -1, 0)==0) goto fail;
-    func_ov014_02111ebc(self,3);
-    *(unsigned char*)(self+0x605)=1;
+/* Start the release cutscene when the stump's mState is 0 and the player
+ * accepts the no-control lock. */
+extern "C" int func_ov014_02111f54(void *raw)
+{
+    daWanwan_c *self = (daWanwan_c *)raw;
+    daObjPile_c *stump = (daObjPile_c *)dActor_c::FindWithID((unsigned)self->mStumpUniqueID);
+    if (stump->mState != 0)
+        goto fail;
+    if (self->ClosestPlayer()->SetNoControlState(4, -1, 0) == 0)
+        goto fail;
+    self->func_ov014_02111ebc(3);
+    self->mChainBroken = 1;
     return 1;
-  }
 fail:
-  return 0;
-}
+    return 0;
 }
 
-/* ROM ordinal 15 -- func_ov014_02111f08, 0x02111f08, size 0x4c */
-// @symbol func_ov014_02111f08
-/* C IS COMPLETE BEFORE THE POINTER-TO-MEMBER TYPE, and that ordering is
-   load-bearing on the host. CodeWarrior gives every pointer-to-member the same
-   8 bytes, so the forward declaration cost it nothing; MSVC picks the
-   representation from what it knows at the point of declaration, and for an
-   INCOMPLETE class it picks the 16-byte fully general one, which makes
-   `20 - 8 - sizeof(PMF)` negative and the array declaration ill-formed. With
-   the class defined first the host reads a single-inheritance member pointer
-   and the expression stays positive. mwccarm is unaffected: the object is
-   byte-identical either way. */
-struct C { char pad[0x610]; int idx; };
-typedef void (C::*PMF)();
-struct Entry { char pad[8]; PMF pmf; char tail[20 - 8 - sizeof(PMF)]; };
+/* CodeWarrior's pointer-to-member is 8 bytes for a complete single-inheritance
+ * class. MSVC picks 16 bytes if the class is still incomplete here, and then
+ * `20 - 8 - sizeof(PMF)` does not fit. The class is complete above, so both
+ * compilers agree. mwccarm's object does not change either way.
+ *
+ * sinit copies six pairs into data_ov014_0211476c. Each pair is an 8-byte PMF
+ * (function, adjustment 0) measured from the rodata at 021146a0:
+ *   0  enter 02111e74  update 02111e14   scale back to 1.0
+ *   1  enter 02111dc4  update 02111ca8   idle, face the player
+ *   2  enter 02111b70  update 02111af0   lunge
+ *   3  enter 02111a6c  update 021115ec   break the chain and the fence
+ *   4  enter 021115c0  update 0211150c   knocked
+ *   5  enter 021114d8  update 02111484   bite
+ * 02111ebc reads the PMF at +0 (enter). 02111f08 reads the PMF at +8 (update).
+ */
+struct WanwanState {
+    char pad[0x610];
+    int mState;
+};
+typedef void (WanwanState::*WanwanPmf)();
+struct Entry {
+    char pad[8];
+    WanwanPmf pmf;
+    char tail[20 - 8 - sizeof(WanwanPmf)];
+};
 extern Entry data_ov014_0211476c[];
-extern "C" void func_ov014_02111f08(void *vc) {
-  C *c = (C *)vc;
-  int j = c->idx;
-  (c->*data_ov014_0211476c[j].pmf)();
+
+// @symbol _ZN10daWanwan_c19func_ov014_02111f08Ev
+void daWanwan_c::func_ov014_02111f08()
+{
+    WanwanState *c = (WanwanState *)this;
+    int j = c->mState;
+    (c->*data_ov014_0211476c[j].pmf)();
 }
 
-/* ROM ordinal 14 -- func_ov014_02111ebc, 0x02111ebc, size 0x4c */
-// @symbol func_ov014_02111ebc
-namespace ent0 {  /* this member reads the state table's +0 field; ordinal 15's view
-                     reads +8 -- two honest views of one table, isolated by namespace */
-struct Entry { void (C::*pmf)(); char rest[12]; };
+namespace ent0 {
+struct Entry {
+    void (WanwanState::*pmf)();
+    char rest[12];
+};
 extern "C" Entry data_ov014_0211476c[];
 }
-extern "C" void func_ov014_02111ebc(void *vc, int i) {
-  C *c = (C *)vc;
-  c->idx = i;
-  int j = c->idx;
-  (c->*ent0::data_ov014_0211476c[j].pmf)();
+
+// @symbol _ZN10daWanwan_c19func_ov014_02111ebcEi
+void daWanwan_c::func_ov014_02111ebc(int i)
+{
+    WanwanState *c = (WanwanState *)this;
+    c->mState = i;
+    int j = c->mState;
+    (c->*ent0::data_ov014_0211476c[j].pmf)();
 }
 
-/* ROM ordinal 13 -- func_ov014_02111e74, 0x02111e74, size 0x48 */
 // @symbol func_ov014_02111e74
-struct BCA_File;
-/* (ModelAnim: real header type in scope; call stays on the mangled spelling with
-   int in place of the by-value Fix12<int> -- notes/mwccarm-codegen.md 6az) */
-extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void*, int, int, unsigned int);
-extern "C" void func_ov014_02111e74(char* c){
-  *(int*)(c+0xa8)=0;
-  *(int*)(c+0x98)=0;
-  *(short*)(c+0x500+0xfc)=0x78;
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)(c+0x150), *(BCA_File**)((char*)&data_ov014_02114980 + 4), 0, 0x1000, 0);
+/* State 0 enter: stop, hold for 0x78 frames, play the idle BCA. */
+extern "C" void func_ov014_02111e74(char *raw)
+{
+    daWanwan_c *c = (daWanwan_c *)raw;
+    c->mVertSpeed = 0;
+    c->mHorzSpeed = 0;
+    c->mActionTimer = 0x78;
+    SetChompAnim(c, data_ov014_02114980);
 }
 
-/* ROM ordinal 12 -- func_ov014_02111e14, 0x02111e14, size 0x60 */
-extern "C" {
 // @symbol func_ov014_02111e14
-extern unsigned short DecIfAbove0_Short(unsigned short*);
-extern void func_ov014_02111ebc(void*, int);
-extern int _Z14ApproachLinearRiii(int*, int, int);
-void func_ov014_02111e14(char* c){
-  *(int*)(c+0xa8)=0;
-  _Z14ApproachLinearRiii((int*)(c+0x80), 0x1000, 0x500);
-  *(int*)(c+0x88)=*(int*)(c+0x80);
-  *(int*)(c+0x84)=*(int*)(c+0x88);
-  if(DecIfAbove0_Short((unsigned short*)(c+0x5fc))!=0) return;
-  func_ov014_02111ebc(c, 1);
-}
+/* State 0 update: scale back to 1.0, then idle. */
+extern "C" void func_ov014_02111e14(char *raw)
+{
+    daWanwan_c *c = (daWanwan_c *)raw;
+    c->mVertSpeed = 0;
+    ApproachLinear(c->mScaleX, 0x1000, 0x500);
+    c->mScaleZ = c->mScaleX;
+    c->mScaleY = c->mScaleZ;
+    if (DecIfAbove0_Short(&c->mActionTimer) != 0)
+        return;
+    c->func_ov014_02111ebc(1);
 }
 
-/* ROM ordinal 11 -- func_ov014_02111dc4, 0x02111dc4, size 0x50 */
-extern "C" {
 // @symbol func_ov014_02111dc4
-void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*,void*,int,int,unsigned int);
-void func_ov014_02111dc4(char *c){
-  *(int*)(c+0xa8)=0;
-  *(int*)(c+0x9c)=-0x2000;
-  *(short*)(c+0x5fc)=0x78;
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c+0x150,(void*)((int*)&data_ov014_02114980)[1],0,0x1000,0);
-}
+/* State 1 enter: gravity back on, idle BCA, 0x78-frame pause. */
+extern "C" void func_ov014_02111dc4(char *raw)
+{
+    daWanwan_c *c = (daWanwan_c *)raw;
+    c->mVertSpeed = 0;
+    c->mVertAccel = -0x2000;
+    c->mActionTimer = 0x78;
+    SetChompAnim(c, data_ov014_02114980);
 }
 
-/* ROM ordinal 10 -- func_ov014_02111ca8, 0x02111ca8, size 0x11c */
 // @symbol func_ov014_02111ca8
-typedef short s16;
-extern "C" {
-int func_ov014_02111f54(void* c);
-int ApproachAngle(void* p, int a, int b, int c, int d);
-unsigned short DecIfAbove0_Short(unsigned short* p);
-int _Z14ApproachLinearRiii(int* p, int to, int step);
-void _Z14ApproachLinearRsss(short* p, short to, short step);
-int AngleDiff(int a, int b);
-void func_ov014_02111ebc(void* c, int i);
-
-void func_ov014_02111ca8(char* c){
-    if (func_ov014_02111f54(c)) return;
-    ApproachAngle(c + 0x8c, 0, 4, 0x200, 0x80);
-    DecIfAbove0_Short((unsigned short*)(c + 0x5fc));
-    _Z14ApproachLinearRiii((int*)(c + 0x5f8), 0x50000, 0x1000);
-    _Z14ApproachLinearRsss((short*)(c + 0x8e), *(short*)(c + 0x602), 0x190);
-    _Z14ApproachLinearRiii((int*)(c + 0x98), 0, 0x400);
-    if (*(unsigned char*)(c + 0x61c)) {
-        int d = ((dActor_c *)c)->DistToCPlayer();
-        *(short*)(c + 0x602) = ((dActor_c *)c)->HorzAngleToCPlayer();
-        *(short*)(c + 0x94) = *(short*)(c + 0x8e);
-        *(int*)(c + 0x98) = 0xa000;
-        *(int*)(c + 0xa8) = 0x14000;
-        *(short*)(c + 0x600) = 0;
+/* State 1 update. Tries the release, turns toward mTargetAngY, and on the
+ * ground lunges (state 2) when the player is close and in front. */
+extern "C" void func_ov014_02111ca8(char *raw)
+{
+    daWanwan_c *c = (daWanwan_c *)raw;
+    if (func_ov014_02111f54(c))
+        return;
+    ApproachAngle(&c->mAngleX, 0, 4, 0x200, 0x80);
+    DecIfAbove0_Short(&c->mActionTimer);
+    ApproachLinear(c->mChainExtension, kChainSlack, 0x1000);
+    ApproachLinear(c->mAngleY, c->mTargetAngY, 0x190);
+    ApproachLinear(c->mHorzSpeed, 0, 0x400);
+    if (c->mIsOnGround) {
+        int d = c->DistToCPlayer();
+        c->mTargetAngY = c->HorzAngleToCPlayer();
+        c->mPrevAngleY = c->mAngleY;
+        c->mHorzSpeed = 0xa000;
+        c->mVertSpeed = 0x14000;
+        c->unk_600 = 0;
         if (d < 0x500000 &&
-            AngleDiff(*(short*)(c + 0x602), *(short*)(c + 0x8e)) < 0x800 &&
-            *(unsigned short*)(c + 0x5fc) == 0) {
-            func_ov014_02111ebc(c, 2);
+            AngleDiff(c->mTargetAngY, c->mAngleY) < 0x800 &&
+            c->mActionTimer == 0) {
+            c->func_ov014_02111ebc(2);
         }
     }
-    ((Animation *)(c + 0x1a0))->Advance();
-}
+    static_cast<Animation &>(c->mModelAnim).Advance();
 }
 
-/* ROM ordinal 9 -- func_ov014_02111b70, 0x02111b70, size 0x138 */
-extern "C" {
 // @symbol func_ov014_02111b70
-namespace call3_267c { extern "C" int func_0201267c(int, void *, int); } /* this member byte-requires the three-argument call (r2 set); the TU's file-scope view is (int, void*) */
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int, unsigned int);
-extern short Vec3_VertAngle(const void *, const void *);
-extern short data_02082214[];
-
-void func_ov014_02111b70(char *c)
+/* State 2 enter: sound 0x3a, lunge BCA, launch along the vertical angle to
+ * the player (raised 0x50000). The third argument of the sound call is real
+ * in this body; the two-argument definition ignores it. */
+extern "C" void func_ov014_02111b70(char *raw)
 {
+    daWanwan_c *c = (daWanwan_c *)raw;
     int tgt[3];
-    char *p;
+    Player *player;
     int a;
     int i;
     int v;
 
-    *((int *)(c + 0x9c)) = 0;
-    call3_267c::func_0201267c(0x3a, c + 0x74, 0);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x150, (void *)((int *)&data_ov014_02114970)[1], 0, 0x1000, 0);
-    p = (char *)((dActor_c *)c)->ClosestPlayer();
+    c->mVertAccel = 0;
+    call3_267c::func_0201267c(0x3a, &c->mCamSpacePosX, 0);
+    SetChompAnim(c, data_ov014_02114970);
+    player = c->ClosestPlayer();
 
     /* ROM load order: y, z, x — then y+0x50000, store x, setup call, store y/z */
     {
-        int y = *((int *)(p + 0x60));
-        int z = *((int *)(p + 0x64));
-        int x = *((int *)(p + 0x5c));
+        int y = player->mPosY;
+        int z = player->mPosZ;
+        int x = player->mPosX;
         tgt[0] = x;
         tgt[1] = y + 0x50000;
         tgt[2] = z;
     }
 
-    a = (unsigned short)Vec3_VertAngle(c + 0x5c, tgt);
+    a = (unsigned short)Vec3_VertAngle(&c->mPosX, tgt);
     i = (a >> 4) << 1;
-    *((int *)(c + 0xa8)) = -((int)(((((long long)data_02082214[i]) * 0x8c000) + 0x800) >> 12));
-    v = *((int *)(c + 0xa8));
-    if (v < 0x5000) {
+    c->mVertSpeed = -((int)(((((long long)data_02082214[i]) * 0x8c000) + 0x800) >> 12));
+    v = c->mVertSpeed;
+    if (v < 0x5000)
         v = 0x5000;
-    } else if (v > 0x2d000) {
+    else if (v > 0x2d000)
         v = 0x2d000;
-    }
-    *((int *)(c + 0xa8)) = v;
-    *((int *)(c + 0x98)) = (int)(((((long long)data_02082214[i + 1]) * 0x8c000) + 0x800) >> 12);
-    *((short *)(c + 0x5fc)) = 0x3c;
-}
+    c->mVertSpeed = v;
+    c->mHorzSpeed = (int)(((((long long)data_02082214[i + 1]) * 0x8c000) + 0x800) >> 12);
+    c->mActionTimer = 0x3c;
 }
 
-/* ROM ordinal 8 -- func_ov014_02111af0, 0x02111af0, size 0x80 */
-extern "C" {
 // @symbol func_ov014_02111af0
-extern int func_ov014_02111f54(void*);
-extern int Math_Function_0203b14c(void*,int,int,int,int);
-extern unsigned short DecIfAbove0_Short(unsigned short*);
-extern void func_ov014_02111ebc(void*,int);
-int func_ov014_02111af0(char* c){
-  int r = func_ov014_02111f54(c);
-  if(r) return r;
-  if(Math_Function_0203b14c((char*)c+0x5f8, 0x64000, 0x800, 0x10000, 0x800)) goto adv;
-  if(DecIfAbove0_Short((unsigned short*)(c+0x5fc))) goto adv;
-  func_ov014_02111ebc(c, 1);
+/* State 2 update: stretch the leash to kChainMax, then back to idle. */
+extern "C" int func_ov014_02111af0(char *raw)
+{
+    daWanwan_c *c = (daWanwan_c *)raw;
+    int r = func_ov014_02111f54(c);
+    if (r)
+        return r;
+    if (Math_Function_0203b14c(&c->mChainExtension, kChainMax, 0x800, 0x10000, 0x800))
+        goto adv;
+    if (DecIfAbove0_Short(&c->mActionTimer))
+        goto adv;
+    c->func_ov014_02111ebc(1);
 adv:
-  ((Animation *)((char*)c+0x1a0))->Advance();
-}
+    static_cast<Animation &>(c->mModelAnim).Advance();
 }
 
-/* ROM ordinal 7 -- func_ov014_02111a6c, 0x02111a6c, size 0x84 */
 // @symbol func_ov014_02111a6c
-struct BCA_File;
-/* (ModelAnim: real header type in scope; call stays on the mangled spelling with
-   int in place of the by-value Fix12<int> -- notes/mwccarm-codegen.md 6az) */
-extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void*, int, int, unsigned int);
-extern "C" void func_ov014_02111a6c(char* c){
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)(c+0x150), *(BCA_File**)((char*)&data_ov014_02114980 + 4), 0, 0x1000, 0);
-  *(int*)(c+0xa8)=0;
-  *(int*)(c+0x98)=0;
-  *(int*)(c+0x9c)=-0x2000;
-  *(char*)(c+0x604)=0;
-  *(short*)(c+0x600)=0;
-  *(short*)(c+0x500+0xfc)=0x3c;
-  *(int*)(((int)c + 0xb0)) &= ~3;
-  *(int*)(c+0x60)=*(int*)(c+0x5f0)+0xc8000;
+/* State 3 enter: idle BCA, snap back to the rest height, clear clip flags. */
+extern "C" void func_ov014_02111a6c(char *raw)
+{
+    daWanwan_c *c = (daWanwan_c *)raw;
+    SetChompAnim(c, data_ov014_02114980);
+    c->mVertSpeed = 0;
+    c->mHorzSpeed = 0;
+    c->mVertAccel = -0x2000;
+    c->mReleaseStep = 0;
+    c->unk_600 = 0;
+    c->mActionTimer = 0x3c;
+    c->mFlags &= ~3;
+    c->mPosY = c->mSpawnPosY + kRestLift;
 }
 
-/* ROM ordinal 6 -- func_ov014_021115ec, 0x021115ec, size 0x480 */
-#include "types.h"
-// @symbol func_ov014_021115ec
-static inline void inc604(u8 *self) {
-    u8 *p = (u8 *)(self + 0x604);
+/* State 3 update: the fence-break cutscene. mReleaseStep is the phase. */
+static inline void incRelease(daWanwan_c *self)
+{
+    u8 *p = &self->mReleaseStep;
     *p = (u8)(*p + 1);
 }
-extern "C" void func_ov014_021115ec(u8 *self)
+
+// @symbol func_ov014_021115ec
+extern "C" void func_ov014_021115ec(u8 *raw)
 {
-    /* This member's declaration views (parameter widths and pointer spellings)
-     * are byte-load-bearing and diverge from the TU's canonical ones; block
-     * scope keeps them its own (C linkage inherited, file-scope views hidden). */
-    void _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void *actor, u16 *snd);
-    int ApproachAngle(void *self_, s32 a, s32 b, s32 c, s32 d);
+    /* This body's parameter widths stay here. The header's void
+     * Vec3_ApproachHorz does not describe these calls. */
+    int ApproachAngle(void *angles, s32 a, s32 b, s32 c, s32 d);
     s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-    s32 _Z14ApproachLinearRsss(void *dst, s32 target, s32 step);
     u16 DecIfAbove0_Short(void *p);
     s32 _Z14ApproachLinearRiii(void *dst, s32 target, s32 step);
     void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self_, void *bca, s32 a, s32 fix, unsigned b);
     s32 Vec3_ApproachHorz(Vector3 *out, Vector3 *target, s32 maxStep);
     void func_ov014_02112ea8(void *actor);
     void _ZN6Camera9SetFlag_3Ev(void *cam);
-    s32 _ZN6Player12Unk_020ca150Eh(void *player, u8 a);
-    void _ZN6Camera9SetLookAtERK7Vector3(void *cam, const Vector3 *v);
-    void _ZN7fBase_c18MarkForDestructionEv(void *self_);
     extern s16 data_02082214[];
     extern void *data_0209f318;
+
+    daWanwan_c *self = (daWanwan_c *)raw;
+    daObjWanwanShutter_c *fence;
     Vector3 partnerPos;
-    u8 *partner; s16 angleToPlayer; s16 angleToAnchor; u8 *camera;
-    _ZN5Sound15PlaySecretSoundEP8dActor_cPt(self, (u16 *)(self + 0x5fe));
-    partner = (u8 *)dActor_c::FindWithID(*(unsigned *)(self + 0x60c));
+    s16 angleToPlayer;
+    s16 angleToAnchor;
+    Camera *camera;
+
+    Sound::PlaySecretSound(self, &self->mSecretSound);
+    fence = (daObjWanwanShutter_c *)dActor_c::FindWithID((unsigned)self->mFenceUniqueID);
     {
-        s32 *src = (s32 *)(partner + 0x5c);
+        s32 *src = &fence->mPosX;
         s32 fifth = 0x80;
         partnerPos.x = src[0];
-        void *ap = self + 0x8c;
+        void *ap = &self->mAngleX;
         partnerPos.y = src[1];
         s32 z = 0;
         partnerPos.z = src[2];
         ApproachAngle(ap, z, 4, 0x200, fifth);
     }
-    camera = *(u8 **)&data_0209f318;
-    angleToPlayer = ((dActor_c *)self)->HorzAngleToCPlayer();
-    angleToAnchor = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x5ec));
-    switch (*(u8 *)(self + 0x604)) {
+    camera = (Camera *)data_0209f318;
+    angleToPlayer = self->HorzAngleToCPlayer();
+    angleToAnchor = Vec3_HorzAngle((Vector3 *)&self->mPosX, (Vector3 *)&self->mSpawnPosX);
+    switch (self->mReleaseStep) {
     case 0:
-        *(u8 **)(camera + 0x118) = self;
-        if (_Z14ApproachLinearRsss(self + 0x8e, angleToPlayer, 0x320) != 0 && DecIfAbove0_Short(self + 0x5fc) == 0)
-            inc604(self);
-        *(s16 *)(self + 0x94) = *(s16 *)(self + 0x8e);
+        *(daWanwan_c **)((char *)camera + 0x118) = self;
+        if (ApproachLinear(self->mAngleY, angleToPlayer, 0x320) != 0
+            && DecIfAbove0_Short(&self->mActionTimer) == 0)
+            incRelease(self);
+        self->mPrevAngleY = self->mAngleY;
         break;
     case 1: case 2: case 3: case 4:
-        *(u8 **)(camera + 0x118) = self;
-        _Z14ApproachLinearRiii(self + 0x98, 0, 0x400);
-        if (*(u8 *)(self + 0x61c) != 0) {
-            *(s16 *)(self + 0x94) = (s16)(angleToAnchor + 0x2000);
-            *(s16 *)(self + 0x8e) = *(s16 *)(self + 0x94);
-            *(s32 *)(self + 0xa8) = 0x32000;
-            *(s32 *)(self + 0x98) = 0x1e000;
-            inc604(self);
+        *(daWanwan_c **)((char *)camera + 0x118) = self;
+        _Z14ApproachLinearRiii(&self->mHorzSpeed, 0, 0x400);
+        if (self->mIsOnGround != 0) {
+            self->mPrevAngleY = (s16)(angleToAnchor + 0x2000);
+            self->mAngleY = self->mPrevAngleY;
+            self->mVertSpeed = 0x32000;
+            self->mHorzSpeed = 0x1e000;
+            incRelease(self);
         }
         break;
     case 5:
-        *(u8 **)(camera + 0x118) = self;
-        _Z14ApproachLinearRiii(self + 0x98, 0, 0x400);
-        if (*(u8 *)(self + 0x61c) != 0) {
-            *(s16 *)(self + 0x94) = angleToAnchor;
-            *(s16 *)(self + 0x8e) = *(s16 *)(self + 0x94);
-            *(s32 *)(self + 0xa8) = 0x32000;
-            *(s32 *)(self + 0x98) = 0x1e000;
-            inc604(self);
-            if (*(u8 *)(partner + 0x31e) != 0) *(u8 *)(self + 0x604) = 7;
+        *(daWanwan_c **)((char *)camera + 0x118) = self;
+        _Z14ApproachLinearRiii(&self->mHorzSpeed, 0, 0x400);
+        if (self->mIsOnGround != 0) {
+            self->mPrevAngleY = angleToAnchor;
+            self->mAngleY = self->mPrevAngleY;
+            self->mVertSpeed = 0x32000;
+            self->mHorzSpeed = 0x1e000;
+            incRelease(self);
+            if (fence->mDisabled != 0)
+                self->mReleaseStep = 7;
         }
         break;
     case 6: {
-        *(u8 **)(camera + 0x118) = self;
-        _Z14ApproachLinearRiii(self + 0x618, 0x1000, 0x400);
-        if (*(u8 *)(self + 0x61c) != 0) {
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x150, ((void**)&data_ov014_02114970)[1], 0, 0x1000, 0);
-            *(s16 *)(self + 0x8e) = Vec3_HorzAngle((Vector3 *)(self + 0x5c), &partnerPos);
-            *(s16 *)(self + 0x94) = *(s16 *)(self + 0x8e);
-            *(s32 *)(self + 0xa8) = 0x14000;
-            *(s32 *)(self + 0x618) = 0x64000;
+        *(daWanwan_c **)((char *)camera + 0x118) = self;
+        _Z14ApproachLinearRiii(&self->mReleaseSpeed, 0x1000, 0x400);
+        if (self->mIsOnGround != 0) {
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+                &self->mModelAnim, ov014_loaded(data_ov014_02114970), 0, 0x1000, 0);
+            self->mAngleY = Vec3_HorzAngle((Vector3 *)&self->mPosX, &partnerPos);
+            self->mPrevAngleY = self->mAngleY;
+            self->mVertSpeed = 0x14000;
+            self->mReleaseSpeed = kChainMax;
         }
         {
             Vector3 target;
@@ -978,159 +998,117 @@ extern "C" void func_ov014_021115ec(u8 *self)
             target.y = y;
             {
                 s16 *tbl = data_02082214;
-                u16 ang = *(u16 *)(partner + 0x8e);
+                u16 ang = fence->mAngleY;
                 s32 s = tbl[(ang >> 4) << 1];
                 s32 add = (s32)(((((long long)s) * 0x96000) + 0x800) >> 12);
                 target.x = x + add;
             }
             {
                 s16 *tbl = data_02082214;
-                u16 ang = *(u16 *)(partner + 0x8e);
+                u16 ang = fence->mAngleY;
                 s32 s = tbl[(((ang >> 4) << 1) + 1)];
                 s32 add = (s32)(((((long long)s) * 0x96000) + 0x800) >> 12);
                 target.z = z + add;
             }
-            if (Vec3_ApproachHorz((Vector3 *)(self + 0x5c), &target, *(s32 *)(self + 0x618)) != 0) {
-                inc604(self);
-                *(s16 *)(self + 0x94) = (s16)(Vec3_HorzAngle((Vector3 *)(self + 0x5c), &partnerPos) + 0x8000);
-                *(s32 *)(self + 0x98) = 0x28000;
-                *(s32 *)(self + 0xa8) = 0xa000;
-                func_ov014_02112ea8(partner);
+            if (Vec3_ApproachHorz((Vector3 *)&self->mPosX, &target, self->mReleaseSpeed) != 0) {
+                incRelease(self);
+                self->mPrevAngleY = (s16)(Vec3_HorzAngle((Vector3 *)&self->mPosX, &partnerPos) + 0x8000);
+                self->mHorzSpeed = 0x28000;
+                self->mVertSpeed = 0xa000;
+                func_ov014_02112ea8(fence);
             }
         }
         break;
     }
     case 7:
-        if (*(u8 *)(self + 0x61c) != 0) {
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x150, ((void**)&data_ov014_02114980)[1], 0, 0x1000, 0);
-            *(s16 *)(self + 0x94) = Vec3_HorzAngle((Vector3 *)(self + 0x5c), &partnerPos);
-            *(u16 *)(self + 0x5fc) = 0x3c;
-            *(s16 *)(self + 0x8e) = *(s16 *)(self + 0x94);
-            if (*(u8 *)(partner + 0x31e) != 0) {
-                *(s32 *)(self + 0x98) = 0x28000; *(s32 *)(self + 0xa8) = 0x5a000;
+        if (self->mIsOnGround != 0) {
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+                &self->mModelAnim, ov014_loaded(data_ov014_02114980), 0, 0x1000, 0);
+            self->mPrevAngleY = Vec3_HorzAngle((Vector3 *)&self->mPosX, &partnerPos);
+            self->mActionTimer = 0x3c;
+            self->mAngleY = self->mPrevAngleY;
+            if (fence->mDisabled != 0) {
+                self->mHorzSpeed = 0x28000;
+                self->mVertSpeed = 0x5a000;
             } else {
-                *(s32 *)(self + 0x98) = 0x1e000; *(s32 *)(self + 0xa8) = 0x50000;
+                self->mHorzSpeed = 0x1e000;
+                self->mVertSpeed = kChainSlack;
             }
             _ZN6Camera9SetFlag_3Ev(camera);
-            inc604(self);
+            incRelease(self);
         }
         break;
     case 8:
-        if (DecIfAbove0_Short(self + 0x5fc) == 0) {
-            {
-                unsigned *flag = (unsigned *)(camera + 0x154);
-                *flag &= ~8u;
-            }
-            if (_ZN6Player12Unk_020ca150Eh(((dActor_c *)self)->ClosestPlayer(), 4) != 0) {
-                inc604(self);
-                *(u16 *)(self + 0x5fc) = 0x3c;
+        if (DecIfAbove0_Short(&self->mActionTimer) == 0) {
+            camera->mFlags &= ~8u;
+            if (self->ClosestPlayer()->Unk_020ca150(4) != 0) {
+                incRelease(self);
+                self->mActionTimer = 0x3c;
             }
         } else {
-            _ZN6Camera9SetLookAtERK7Vector3(camera, (Vector3 *)(self + 0x5c));
+            camera->SetLookAt(*(Vector3 *)&self->mPosX);
         }
         break;
     case 9:
-        if (DecIfAbove0_Short(self + 0x5fc) == 0)
-            _ZN7fBase_c18MarkForDestructionEv(self);
+        if (DecIfAbove0_Short(&self->mActionTimer) == 0)
+            self->MarkForDestruction();
         break;
     }
-    ((Animation *)(self + 0x1a0))->Advance();
+    static_cast<Animation &>(self->mModelAnim).Advance();
 }
 
-/* ROM ordinal 5 -- func_ov014_021115c0, 0x021115c0, size 0x2c */
-extern "C" {
 // @symbol func_ov014_021115c0
-extern int func_0201267c(int,void*);
-
-void func_ov014_021115c0(char *self) {
-    func_0201267c(0x3a, self + 0x74);
-    *(int *)(self + 0xa8) = 0x12c000;
-    *(int *)(self + 0x9c) = 0;
+/* State 4 enter: sound 0x3a and a hard upward speed. */
+extern "C" void func_ov014_021115c0(char *raw)
+{
+    daWanwan_c *c = (daWanwan_c *)raw;
+    func_0201267c(0x3a, &c->mCamSpacePosX);
+    c->mVertSpeed = 0x12c000;
+    c->mVertAccel = 0;
 }
-}
 
-/* ROM ordinal 4 -- func_ov014_0211150c, 0x0211150c, size 0xb4 */
-extern "C" {
 // @symbol func_ov014_0211150c
-/* THE EARLY EXITS ARE SPELT AS NESTED IFS, NOT `return;`. mwccarm accepts a
-   valueless `return` in a non-void function; C++ does not, and no host option
-   reaches it (MSVC C2561). The ROM sets no return value on these paths -- it
-   leaves r0 holding whatever the last call left there and branches straight to
-   the epilogue -- so the faithful shape is a body that reaches its closing
-   brace with nothing to return, which is what the host already accepts for the
-   rest of this family. Byte-identical under 2004/b56: the compiled object is
-   unchanged. */
-int func_ov014_0211150c(char *c) {
-    /* views moved to block scope: this file's return/parameter spellings differ
-     * from the TU's canonical declarations (C linkage inherited). */
-    extern int _Z14ApproachLinearRiii(int *p, int a, int b);
-    extern int ApproachAngle(void *p, int a, int b, int c, int d);
-    extern int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
-    extern int DecIfAbove0_Short(void *p);
-    extern void func_ov014_02111ebc(void *c, int i);
-    _Z14ApproachLinearRiii((int*)(c + 0x80), 0x1000, 0x500);
-    *(int*)(c + 0x88) = *(int*)(c + 0x80);
-    *(int*)(c + 0x84) = *(int*)(c + 0x88);
-    ApproachAngle(c + 0x8c, -0x4000, 4, 0x1000, 0x400);
-    if (Math_Function_0203b14c(c + 0x5f8, 0x64000, 0x800, 0x10000, 0x800) == 0) {
-        if (DecIfAbove0_Short(c + 0x5fc) == 0) {
-            func_ov014_02111ebc(c, 1);
-        }
+/* State 4 update. The early exits fall out of the bottom: the ROM leaves r0
+ * alone on those paths, and a valueless return is not available to the host. */
+extern "C" int func_ov014_0211150c(char *raw)
+{
+    daWanwan_c *c = (daWanwan_c *)raw;
+    ApproachLinear(c->mScaleX, 0x1000, 0x500);
+    c->mScaleZ = c->mScaleX;
+    c->mScaleY = c->mScaleZ;
+    ApproachAngle(&c->mAngleX, -0x4000, 4, 0x1000, 0x400);
+    if (Math_Function_0203b14c(&c->mChainExtension, kChainMax, 0x800, 0x10000, 0x800) == 0) {
+        if (DecIfAbove0_Short(&c->mActionTimer) == 0)
+            c->func_ov014_02111ebc(1);
     }
 }
-}
 
-/* ROM ordinal 3 -- func_ov014_021114d8, 0x021114d8, size 0x34 */
-extern "C" {
 // @symbol func_ov014_021114d8
-void func_ov014_021114d8(char *c) {
-    short v = *(short *)(c + 0x94);
-    *(short *)(c + 0x8e) = v;
-    *(short *)(c + 0x5fc) = 0x3c;
-    *(int *)(c + 0x98) = 0x64000;
-    *(int *)(c + 0xa8) = 0xc8000;
-    *(int *)(c + 0x9c) = -0xa000;
-}
+/* State 5 enter: face mPrevAngleY and launch. */
+extern "C" void func_ov014_021114d8(char *raw)
+{
+    daWanwan_c *c = (daWanwan_c *)raw;
+    c->mAngleY = c->mPrevAngleY;
+    c->mActionTimer = 0x3c;
+    c->mHorzSpeed = kChainMax;
+    c->mVertSpeed = kRestLift;
+    c->mVertAccel = -0xa000;
 }
 
-/* ROM ordinal 2 -- func_ov014_02111484, 0x02111484, size 0x54 */
-extern "C" {
 // @symbol func_ov014_02111484
-extern unsigned short DecIfAbove0_Short(unsigned short*);
-extern void func_ov014_02111ebc(void*, int);
-extern int _Z14ApproachLinearRiii(int*, int, int);
-void func_ov014_02111484(char* c){
-  if(DecIfAbove0_Short((unsigned short*)(c+0x5fc))==0)
-    func_ov014_02111ebc(c, 1);
-  if(*(unsigned char*)(c+0x61c)!=0)
-    *(int*)(c+0xa8)=*(int*)(c+0x98);
-  _Z14ApproachLinearRiii((int*)(c+0x98), 0, 0x2000);
-}
+/* State 5 update: back to idle when the timer ends. On the ground the
+ * vertical speed copies the horizontal one, which then brakes. */
+extern "C" void func_ov014_02111484(char *raw)
+{
+    daWanwan_c *c = (daWanwan_c *)raw;
+    if (DecIfAbove0_Short(&c->mActionTimer) == 0)
+        c->func_ov014_02111ebc(1);
+    if (c->mIsOnGround != 0)
+        c->mVertSpeed = c->mHorzSpeed;
+    ApproachLinear(c->mHorzSpeed, 0, 0x2000);
 }
 
-/* ROM ordinal 1 -- _ZN10daWanwan_cD0Ev, 0x021113bc, size 0xc8 */
 // @symbol _ZN10daWanwan_cD0Ev
-/* recovered: real C++ deleting destructor -- the compiler emits the whole body
- *
- * Destroy through daWanwan_c and dEnemyBase_c, then hand the object back through
- * dActor_c's inline operator delete. The hand-written version declared its own
- * `data_020a0eac` for the actor heap, which collides with the `void *` dActor_c.h
- * supplies for that same symbol once the real header is in scope.
- */
-
-/* (no separate definition: the single ~daWanwan_c() below emits the D0 and
- * D1 variants together.) */
-
-/* ROM ordinal 0 -- _ZN10daWanwan_cD1Ev, 0x02111308, size 0xb4 */
 // @symbol _ZN10daWanwan_cD1Ev
-/* recovered: real C++ destructor -- the compiler emits the whole body
- *
- * Four array cleanups and three member destructors, reverse declaration order
- * out of daWanwan_c.h. Seven links means seven of nearly everything: Model[7]
- * at 0x1dc, ShadowModel[7] at 0x40c, and two Vector3[7] at 0x524 and 0x578 for
- * the per-link positions. Every element type was already named in the tree.
- */
-
-/* (no out-of-line body: the destructor is defined inline in daWanwan_c.h, which
- * is what makes mwccarm emit D1 then D0 and no D2 -- the ROM's own order.) */
-
+/* Both variants come from the inline destructor in daWanwan_c.h. Inline,
+ * mwccarm emits D1 then D0 and no D2, which is the ROM order. */

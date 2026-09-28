@@ -8,7 +8,7 @@
  * pragmas are needed too, and so is the include order (see below).
  *
  * Blocked: the helpers are unnamed in symbols.txt. Some calls stay mangled:
- * cstd::atan2, ApproachLinear and Particle::System take Fix12 or reference
+ * cstd::atan2 and Particle::System take Fix12 or reference
  * arguments, and decl_common.h declares a global named G2, so no
  * `namespace G2` can be opened here.
  */
@@ -27,6 +27,8 @@
 #include "Sound.h"
 #include "dScMgBase_c.h"
 #include "Particle__System.h"
+
+bool ApproachLinear(short &value, short target, short step);
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
@@ -91,7 +93,6 @@ struct SPS {
 #define atan2 _ZN4cstd5atan2E5Fix12IiES1_
 #define pnew _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE
 #define pfromid(id) ((int *)Particle::System::FromUniqueID(id))
-#define ApproachLinear _Z14ApproachLinearRsss
 /* H is `short` in Behavior and `unsigned short` in the helpers; HS is the
  * signed read where a site needs it. */
 
@@ -153,7 +154,6 @@ s32  GetGameLanguage(void);
 void func_02012790(int a);
 void FreeGfxSlotsById(int arg);
 void Vec2_Sub(int *o, int *a, int *b);
-void _Z14ApproachLinearRsss(short *a, short b, short cc);
 extern unsigned char data_020a0e40[];
 extern unsigned char data_020a0de8[];
 extern unsigned char data_020a0de9[];
@@ -1659,7 +1659,7 @@ s32 dScMgSnowball_c::Behavior()
             q = __aeabi_idiv(v * 0x2710, I(0xaba0));
             *hp = *hp + (unsigned short)q;
             m = atan2(I(0xab60), I(0xab64));
-            ApproachLinear((short*)AT(c,0xab7c), (short)m, (short)(Vec2_Len((int*)ATI(0xab60)) / 16));
+            ApproachLinear(*(short*)AT(c,0xab7c), (short)m, (short)(Vec2_Len((int*)ATI(0xab60)) / 16));
         }
 
         if (B(0xb9e5) == 1 || I(0xb9dc) <= 0) {

@@ -1,4 +1,6 @@
 //cpp
+
+bool ApproachLinear(short &value, short target, short step);
 typedef struct Vec3 { int x, y, z; } Vec3;
 
 struct VB {
@@ -9,7 +11,6 @@ struct VB {
 
 extern "C" {
 extern int _Z14ApproachLinearRiii(int *p, int t, int r);
-extern int _Z14ApproachLinearRsss(short *p, short t, short r);
 extern int _Z15ApproachLinear2Rsss(short *p, short t, short r);
 extern int RandomIntInternal(int *seed);
 extern int NormalizeVec3IfNonZero(Vec3 *v);
@@ -58,7 +59,7 @@ extern "C" void func_ov006_020c4fa4(char *c)
     if (ra != 0) *(int *)(c + 0xa8) = 0;
     if (rb != 0) *(int *)(c + 0xac) = 0;
     if (ra != 0 && rb != 0
-        && _Z14ApproachLinearRsss((short *)(c + 0xe6), 0, 0x200) != 0
+        && ApproachLinear(*(short *)(c + 0xe6), 0, 0x200) != 0
         && _Z15ApproachLinear2Rsss((short *)(c + 0xec), 0, 1) != 0) {
         best = 0;
         bm = 0x20000;
@@ -132,8 +133,8 @@ extern "C" void func_ov006_020c4fa4(char *c)
         }
     } else {
         int df = *(int *)(c + 0xb4) - *(int *)(c + 0x9c);
-        if (df > 0) _Z14ApproachLinearRsss((short *)(c + 0xe6), 0x3000, 0x200);
-        else if (df < 0) _Z14ApproachLinearRsss((short *)(c + 0xe6), -0x3000, 0x200);
+        if (df > 0) ApproachLinear(*(short *)(c + 0xe6), 0x3000, 0x200);
+        else if (df < 0) ApproachLinear(*(short *)(c + 0xe6), -0x3000, 0x200);
     }
     func_ov006_020c49d8(c);
 }

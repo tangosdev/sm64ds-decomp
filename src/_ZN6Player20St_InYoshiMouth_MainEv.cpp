@@ -36,7 +36,7 @@ int Player::St_InYoshiMouth_Main()
                 mPosY = p[1];
                 mPosZ = p[2];
             }
-            d = func_ov002_020beb38(((char *)this));
+            d = func_ov002_020beb38();
             t = *(u16 *)(r4 + 0x6c6);
             if (*(u8 *)(r4 + 0x709) == 0 && *(u8 *)(r4 + 0x708) == 0) {
                 t = (u16)(t - d);
@@ -75,7 +75,7 @@ int Player::St_InYoshiMouth_Main()
         break;
     case 3:
         {
-            int d = func_ov002_020beb38(((char *)this));
+            int d = func_ov002_020beb38();
             *(u16 *)((char *)&mStateTimer) -= (d << 2);
             mStateWork = d;
             if ((s16)mStateTimer <= 0) {

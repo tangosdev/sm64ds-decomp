@@ -82,6 +82,7 @@ struct daObjMaruta_c : dBgActor_c {
        declares it virtual, and re-adding the keyword here is a style
        choice this header hasn't made for its own other declarations. */
     s32 Render();
+    void func_ov080_02127094();
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
        there is no __cxa_pure_virtual in this image for it to point at -- so a zero

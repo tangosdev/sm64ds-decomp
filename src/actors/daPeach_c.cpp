@@ -19,6 +19,8 @@
 #include "dCc_c.h"
 #include "types.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 struct BMD_File;
 struct Vector3_16;
 
@@ -43,7 +45,6 @@ extern int AngleDiff(int, int);
 extern int Vec3_HorzDist(const void *a, const void *b);
 extern short Vec3_HorzAngle(const void *a, const void *b);
 extern short Vec3_VertAngle(const void *a, const void *b);
-extern int _Z14ApproachLinearRsss(short *dst, short target, short rate);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
@@ -137,8 +138,8 @@ void daPeach_c::UpdateLookAt()
         *(short *)(s + 0x364) = 0;
         *(short *)(s + 0x366) = 0;
     }
-    _Z14ApproachLinearRsss((short *)(s + 0x362), *(short *)(s + 0x366), 0x250);
-    _Z14ApproachLinearRsss((short *)(s + 0x360), *(short *)(s + 0x364), 0x100);
+    ApproachLinear(*(short *)(s + 0x362), *(short *)(s + 0x366), 0x250);
+    ApproachLinear(*(short *)(s + 0x360), *(short *)(s + 0x364), 0x100);
 }
 
 /* ROM ordinal 3 -- _ZN9daPeach_c21UpdateGroundCollisionEP10dBgCh_Actr,
@@ -287,7 +288,7 @@ int daPeach_c::State3()
             *(u8 *)(((int)c + 0x368)) += 1;
         break;
     case 1:
-        if (_Z14ApproachLinearRsss((s16 *)(c + 0x8e),
+        if (ApproachLinear(*(short *)(c + 0x8e),
                 Vec3_HorzAngle((Vector3 *)(c + 0x5c),
                                (Vector3 *)&((daPeach_c *)c)->mTalkPlayer->mPosX),
                 0x514) != 0) {

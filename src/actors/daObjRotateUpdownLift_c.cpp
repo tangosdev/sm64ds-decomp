@@ -1,108 +1,142 @@
 //cpp
-/* daObjRotateUpdownLift_c. ov091 0x02130f00..0x02131ba4, 11 functions.
+/* daObjRotateUpdownLift_c -- the rotating up-down lift, ov091.
  *
- * ROM name from _ZTS23daObjRotateUpdownLift_c. Both vtable labels share
- * 0x02134c5c. daObjRotateUpdownLift_c_classInit_HS_UPDOWN_LIFT at 0x02131ba4
- * and daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT at 0x02131bdc stay out.
+ * UPDOWN_LIFT (actor 0x1d) and HS_UPDOWN_LIFT (actor 0x1e) share this
+ * class. param1's low nibble is the node the lift starts on. A 10-node
+ * path in data_ov091_02134cdc (one 0x78-byte path per variant, each node
+ * a 12-byte point) is rotated by mAngleY and added to the spawn position.
+ * Variant 0 is the default path, variant 1 when data_0209f2f8 (the level
+ * id) is 7, variant 2 when the actor is HS_UPDOWN_LIFT. The step along
+ * the path is data_ov091_021344e8[variant] (0x5000 for all three).
  *
- * #pragma defer_codegen off lays .text down in source order. One out-of-line
- * destructor emits D1 then D0.
+ * param1 0xffff is not a riding lift. InitResources spawns one of those
+ * at node 2, at the path's first point plus the Y of node 5
+ * (data_ov091_02134d1c). Behavior of that watcher finds the two nearby
+ * UPDOWN_LIFT actors, holds sound 0x8d until both are dead, and once the
+ * player is far (mFlags bit 0x8 and DistToCPlayer > 0x7d0000) puts them
+ * back on their spawn node through func_ov091_02130fac.
+ *
+ * Nodes 4..7 set mPitchStep to 0x2000; every other node clears it. The
+ * pitch base at 0x3a2 is a halfword (the header's u8 mPitchBase plus the
+ * following pad byte). The shadow bobs with sin(mAngleX) and scales with
+ * the height above mGroundY.
+ *
+ * #pragma defer_codegen off lays .text down in source order. The out-of-line
+ * destructor emits D1 then D0. Factories and both profiles stay out of
+ * this TU.
+ *
+ * deslop leftovers:
+ * - Kill: Particle::System::NewSimple(Fix12<int> x, y, z) is +0x24
+ *   (0x8c -> 0xb0). The scalar extern passes the three positions in r1-r3.
+ * - func_ov091_02131160: dActor_c::DropShadowScaleXYZ as a method is +0x1c
+ *   (0x1e0 -> 0x1fc). A Matrix4x3 * at pad_348 is +4 (0x1e0 -> 0x1e4);
+ *   the translation row stays this+0x36c / 0x370 / 0x374.
+ * - Behavior: dBgActor_c::UpdateKillByMegaChar as a method is +0xc
+ *   (0x488 -> 0x494). One this+0x3a2 halfword for the arrived pitch is
+ *   -0xc (0x488 -> 0x47c); &mPitchBase is a pool add of 0x3a2 and the
+ *   step stays this+0x300+0xa4.
+ * - InitResources: dBgW_KcMbg::SetFile as a method is +4 (0x2b4 -> 0x2b8).
+ *   paths[variant].node[index] swaps the mla registers (3 words, same
+ *   size); the char* stride multiply stays.
  */
 
 #pragma defer_codegen off
 
 #include "daObjRotateUpdownLift_c.h"
-#include "types.h"
+#include "Player.h"
+#include "Sound.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
-#include "decl_Platform.h"
 #include "dBgCh_Gnd.h"
+#include "decl_Platform.h"
 
-/* Local shadow declarations carried from the legacy files verbatim.
- * NOT reconciled against real project headers -- check include/*.h for
- * each of these before compiling; a real header should usually win. */
-/* shadow namespace 'Particle' */
-namespace Particle {
-struct System { static System* NewSimple(unsigned int, int, int, int); };
-/* Signature deliberately copied from the local declaration above: the ROM
-   name carries by-value class parameters (e.g. Fix12<int>), which mwccarm
-   passes differently at the call site, so declaring the true types breaks
-   the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" System* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
-}
-
-/* shadow namespace 'Sound' */
-namespace Sound { void PlayBank3(unsigned int, const Vector3&); }
-
-/* shadow struct 'Player' */
-struct Player;
-
-/* shadow struct 'V3' */
-struct V3 { int x, y, z; };
-
-/* shadow struct 'SFP' */
-struct SFP { void *a, *b, *c; };
-
-/* shadow struct 'Sub' */
-struct Sub {
-    virtual void m0();
-    virtual void m1();
-    virtual void m2();
-    virtual void m3();
-    virtual void m4();
-    virtual void doit(int);
+/* Plain 12-byte point. Vector3's destructor is empty but the type is not
+   POD, and the copies below are three-word ldm/stm with no cleanup. */
+struct PodVec3 {
+    s32 x, y, z;
 };
 
-/* shadow typedef 'Vec3' */
-typedef Vector3 Vec3;
+/* Ten nodes, 0x78 bytes. Three of these sit at data_ov091_02134cdc. */
+struct UpdownPath {
+    PodVec3 node[10];
+};
 
-/* shadow enum 'Bool' */
-enum Bool { FALSE, TRUE };
+/* Node 5's Y, one word per path, stride 0x78. The symbol is 0x40 bytes
+   into the path table (node 5.y), which is what InitResources adds when
+   it spawns the watcher. */
+struct UpdownTopY {
+    s32 y;
+    u8 pad[0x74];
+};
+
+/* Three words, one per variant. Copied onto the stack and indexed by
+   mVariant. */
+struct VariantWords {
+    s32 v[3];
+};
+
+/* The file table at 0x02134c30 is three records of
+   { SharedFilePtr *model, SharedFilePtr *collision, CLPS_Block *clps }.
+   Each symbol below is one field of that record, so [variant] on that
+   symbol is that field and the stride stays 0xc. */
+struct UpdownFileSlot {
+    SharedFilePtr *file;
+    u32 pad4;
+    u32 pad8;
+};
+
+struct UpdownClpsSlot {
+    CLPS_Block *clps;
+    u32 pad4;
+    u32 pad8;
+};
+
+extern UpdownPath data_ov091_02134cdc[3];
+extern UpdownTopY data_ov091_02134d1c[3];
+extern s32 data_ov091_021344e8[];
+extern VariantWords data_ov091_02134bac;
+extern VariantWords data_ov091_02134bd0;
+extern VariantWords data_ov091_02134bb8;
+extern VariantWords data_ov091_02134ba0;
+extern UpdownFileSlot data_ov091_02134c30[];
+extern UpdownFileSlot data_ov091_02134c34[];
+extern UpdownClpsSlot data_ov091_02134c38[];
+extern Matrix4x3 data_020a0e68;
+extern s16 data_02082214[];
+extern s8 data_0209f2f8;
+
+namespace cstd {
+int fdiv(int numerator, int denominator);
+}
 
 extern "C" {
-void _ZN6Player16IncMegaKillCountEv(Player *);
-void func_02012694(int a, void *b);
-extern void Matrix4x3_FromRotationY(void *m, s16 ang);
-extern int _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(void *self, void *sm, void *mtx, int a, int b, int d, unsigned int e);
-extern s16 data_02082214[];
-extern struct V3 data_ov091_02134bac;
-extern struct V3 data_ov091_02134bd0;
-extern struct V3 data_ov091_02134bb8;
-extern struct V3 data_ov091_02134ba0;
-extern void Matrix4x3_FromRotationXYZExt(void *, int, int, int);
-extern struct SFP data_ov091_02134c30[];
-extern struct SFP data_ov091_02134c34[];
-extern void *_ZN8dActor_c15FindWithActorIDEjPS_(u32 id, void *p);
-extern int Vec3_HorzDist(const Vec3 *a, const Vec3 *b);
-extern int _ZN8dActor_c13DistToCPlayerEv(void *thiz);
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, const Vec3 *pos, u32 e);
-extern void MulVec3Mat4x3(void *src, void *m, void *dst);
-extern void Vec3_Add(void *out, void *a, void *b);
-extern void Vec3_Sub(Vec3 *out, Vec3 *a, Vec3 *b);
-extern int LenVec3(Vec3 *v);
-extern int _ZN4cstd4fdivEii(int a, int b);
-extern void Vec3_MulScalar(Vec3 *out, const Vec3 *in, int scale);
-extern void SubVec3(Vec3 *a, Vec3 *b, Vec3 *c);
-extern void func_ov091_02131340(char *t);
-extern void func_020393a4(int *p, int v);
-extern void func_02039394(int *p, int v);
-extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *thiz, int a, int b);
-extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *thiz);
-extern char data_020a0e68[];
-extern void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void *self, int a, int b, int c, int d);
-extern int _ZN11ShadowModel10InitCuboidEv(void *self);
-extern int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
-extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b);
-extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *f);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
-extern void func_020393d4(void *p, void *v);
-extern signed char data_0209f2f8;
-extern char data_ov091_02134cdc[];
-extern char data_ov091_02134d1c[];
-extern int data_ov091_021344e8[];
-extern void *data_ov091_02134c38[];
-extern void *_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
+void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 ang);
+void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
+void MulVec3Mat4x3(void *src, void *m, void *dst);
+void Vec3_Add(void *out, void *a, void *b);
+void Vec3_Sub(void *out, void *a, void *b);
+void Vec3_MulScalar(void *out, void *in, int scale);
+void SubVec3(void *a, void *b, void *c);
+int LenVec3(void *v);
+int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+void func_02012694(unsigned int id, const Vector3 *pos);
+/* dBgW range/callback setters. Their C definitions take int *; the calls
+   cast &mMeshCollider. */
+void func_020393a4(int *collider, int range);
+void func_02039394(int *collider, int range);
+void func_020393d4(int *collider, void *callback);
+void func_ov091_02130fac(daObjRotateUpdownLift_c *lift);
+int func_ov091_02131160(daObjRotateUpdownLift_c *lift);
+void func_ov091_02131340(daObjRotateUpdownLift_c *lift);
+
+void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
+void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void *self, int a, int b, int c, int d);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+int _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+    void *self, void *shadow, void *mat, int sx, int sy, int sz, unsigned int opacity);
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
+    int scale, s16 angY, CLPS_Block *clps);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -127,33 +161,26 @@ extern "C" daObjRotateUpdownLift_c *_ZN23daObjRotateUpdownLift_cD0Ev(daObjRotate
 /* ROM ordinal 2 -- func_ov091_02130fac, 0x02130fac, size 0xc4 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov091_02130fac
-extern "C" {
-extern void Matrix4x3_FromRotationY(void*, short);
-extern void MulVec3Mat4x3(void*, void*, void*);
-extern void Vec3_Add(void*, void*, void*);
-extern char data_020a0e68[];
-extern char data_ov091_02134cdc[];
-void func_ov091_02130fac(int c) {
-    unsigned char *b = (unsigned char*)c;
-    char tmp[0x18];
-    *(char*)(b + 0x3a0) = 0;
-    *(short*)(b + 0x8c) = *(short*)(b + 0x380);
-    *(short*)(b + 0x8e) = *(short*)(b + 0x382);
-    *(short*)(b + 0x90) = *(short*)(b + 0x384);
-    *(int*)(b + 0x5c) = *(int*)(b + 0x388);
-    *(int*)(b + 0x60) = *(int*)(b + 0x38c);
-    *(int*)(b + 0x64) = *(int*)(b + 0x390);
-    *(char*)(b + 0x394) = (char)(*(int*)(b + 8) & 0xf);
-    Matrix4x3_FromRotationY((void*)data_020a0e68, *(short*)(b + 0x8e));
-    MulVec3Mat4x3(
-        (void*)(data_ov091_02134cdc + *(unsigned char*)(b + 0x395) * 0x78 + *(unsigned char*)(b + 0x394) * 0xc),
-        (void*)data_020a0e68,
-        (void*)tmp);
-    Vec3_Add((void*)(tmp + 0xc), (void*)(b + 0x388), (void*)tmp);
-    *(int*)(b + 0x5c) = *(int*)(tmp + 0xc);
-    *(int*)(b + 0x60) = *(int*)(tmp + 0x10);
-    *(int*)(b + 0x64) = *(int*)(tmp + 0x14);
-}
+/* Put a killed lift back on its spawn node. The watcher calls this. */
+extern "C" void func_ov091_02130fac(daObjRotateUpdownLift_c *lift)
+{
+    PodVec3 tmp[2];
+
+    lift->mIsDead = 0;
+    lift->mAngleX = lift->mSpawnAngleX;
+    lift->mAngleY = lift->mSpawnAngleY;
+    lift->mAngleZ = lift->mSpawnAngleZ;
+    lift->mPosX = lift->mBasePosX;
+    lift->mPosY = lift->mBasePosY;
+    lift->mPosZ = lift->mBasePosZ;
+    lift->mWaypointIndex = (u8)(lift->param1 & 0xf);
+    Matrix4x3_FromRotationY(&data_020a0e68, lift->mAngleY);
+    MulVec3Mat4x3(&data_ov091_02134cdc[lift->mVariant].node[lift->mWaypointIndex],
+                  &data_020a0e68, &tmp[0]);
+    Vec3_Add(&tmp[1], &lift->mBasePosX, &tmp[0]);
+    lift->mPosX = tmp[1].x;
+    lift->mPosY = tmp[1].y;
+    lift->mPosZ = tmp[1].z;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -162,92 +189,100 @@ void func_ov091_02130fac(int c) {
 // @symbol _ZN23daObjRotateUpdownLift_c4KillEv
 void daObjRotateUpdownLift_c::Kill()
 {
-    Particle::_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xbb, mPosX, mPosY, mPosZ);
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xbb, mPosX, mPosY, mPosZ);
     Vector3 v = { mPosX, mPosY, mPosZ };
     PoofDustAt(v);
-    Sound::PlayBank3(0xf, *(Vector3*)&mCamSpacePosX);
+    Sound::PlayBank3(0xf, *(Vector3 *)&mCamSpacePosX);
     mIsDead = 1;
     unk_31c = 0;
-    if (mMeshCollider.IsEnabled()) {
+    if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    }
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- _ZN23daObjRotateUpdownLift_c15OnHitByMegaCharER6Player, 0x021310fc, size 0x64 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN23daObjRotateUpdownLift_c15OnHitByMegaCharER6Player
+/* HS_UPDOWN_LIFT ignores the hit. The others count it, play 0x1e, and
+   snap yaw back to the previous angle. */
 void daObjRotateUpdownLift_c::OnHitByMegaChar(Player &player)
 {
-    char *self = (char *)this;
-    Player *p = &player;
-    unsigned short h = *(unsigned short *)(self + 0xc);
-    int eq = (h == 0x1e);
-    if (eq) return;
-    _ZN6Player16IncMegaKillCountEv(p);
-    func_02012694(0x1e, self + 0x74);
-    _ZN10dBgActor_c14KillByMegaCharER6Player(self, p);
-    *(short *)(self + 0x8e) = *(short *)(self + 0x94);
+    unsigned short id = actorID;
+    int isHs = (id == 0x1e);
+    if (isHs)
+        return;
+    player.IncMegaKillCount();
+    func_02012694(0x1e, (const Vector3 *)&mCamSpacePosX);
+    KillByMegaChar(player);
+    mAngleY = mPrevAngleY;
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov091_02131160, 0x02131160, size 0x1e0 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov091_02131160
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov091_02131160(char *c) {
-    struct V3 v0 = data_ov091_02134bac;
-    struct V3 v1 = data_ov091_02134bd0;
-    struct V3 v2 = data_ov091_02134bb8;
-    struct V3 v3 = data_ov091_02134ba0;
+/* Aim the cuboid shadow and the clip volume. Called every frame except
+   for HS_UPDOWN_LIFT. */
+extern "C" int func_ov091_02131160(daObjRotateUpdownLift_c *lift)
+{
+    /* The shadow matrix is the 0x30 bytes at 0x348 (pad_348). Holding that
+       as a Matrix4x3 * steals r4 from `this` and the function grows. The
+       three translation words are stored from `this`, not from that pointer. */
+    char *c = (char *)lift;
+    VariantWords v0 = data_ov091_02134bac;
+    VariantWords v1 = data_ov091_02134bd0;
+    VariantWords v2 = data_ov091_02134bb8;
+    VariantWords v3 = data_ov091_02134ba0;
 
-    Matrix4x3_FromRotationY(c + 0x348, *(s16 *)(c + 0x8e));
-    *(int *)(c + 0x36c) = *(int *)(c + 0x5c) >> 3;
+    Matrix4x3_FromRotationY((Matrix4x3 *)(c + 0x348), lift->mAngleY);
+    *(int *)(c + 0x36c) = lift->mPosX >> 3;
 
-    int idx = *(u16 *)(c + 0x8c) >> 4;
+    int idx = (u16)lift->mAngleX >> 4;
     int s = data_02082214[idx << 1];
     int sa = s < 0 ? -s : s;
     int scaled = (int)(((long long)sa * 0xa0000 + 0x800) >> 12);
-    int b5 = *(u8 *)(c + 0x395);
-    int base = (&v0.x)[b5];
+    int b5 = lift->mVariant;
+    int base = v0.v[b5];
     int sum = base + scaled;
-    int py = *(int *)(c + 0x60);
+    int py = lift->mPosY;
     *(int *)(c + 0x370) = (py - sum) >> 3;
-    *(int *)(c + 0x374) = *(int *)(c + 0x64) >> 3;
+    *(int *)(c + 0x374) = lift->mPosZ >> 3;
 
-    int b5b = *(u8 *)(c + 0x395);
-    int h = *(int *)(c + 0x60) - *(int *)(c + 0x37c);
-    if (h <= 0x1000) h = 0x1000;
-    int r3 = (&v3.x)[b5b];
-    if (h + 0x100000 >= r3) r3 = h + 0x100000;
-    *(int *)(c + 0xb4) = -((int)(h + ((unsigned)h >> 31)) >> 1);
-    *(int *)(c + 0xb8) = (int)(r3 + ((unsigned)r3 >> 31)) >> 4;
+    int b5b = lift->mVariant;
+    int h = lift->mPosY - lift->mGroundY;
+    if (h <= 0x1000)
+        h = 0x1000;
+    int cap = v3.v[b5b];
+    if (h + 0x100000 >= cap)
+        cap = h + 0x100000;
+    lift->mClipOffsetY = -((int)(h + ((unsigned)h >> 31)) >> 1);
+    lift->mClipRadius = (int)(cap + ((unsigned)cap >> 31)) >> 4;
 
-    int r5 = (int)(((long long)h * 32 + 0x800) >> 12);
-    int idx2 = *(u16 *)(c + 0x8c) >> 4;
-    int b5c = *(u8 *)(c + 0x395);
-    int a_arg = (&v1.x)[b5c] - r5;
-    int s2 = data_02082214[(idx2 << 1) + 1];
-    int fac = 0xa0000 - r5;
-    if (s2 < 0) s2 = -s2;
+    int shr = (int)(((long long)h * 32 + 0x800) >> 12);
+    int idx2 = (u16)lift->mAngleX >> 4;
+    int b5c = lift->mVariant;
+    int sx = v1.v[b5c] - shr;
+    int cosine = data_02082214[(idx2 << 1) + 1];
+    int fac = 0xa0000 - shr;
+    if (cosine < 0)
+        cosine = -cosine;
     return _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
-        c, c + 0x320, c + 0x348, a_arg, h,
-        (&v2.x)[b5c] + (int)(((long long)fac * s2 + 0x800) >> 12), 0xf);
-}
+        c, c + 0x320, c + 0x348, sx, h,
+        v2.v[b5c] + (int)(((long long)fac * cosine + 0x800) >> 12), 0xf);
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov091_02131340, 0x02131340, size 0x48 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov091_02131340
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov091_02131340(char *t)
+/* Write the model matrix: full rotation, translation at 1/8 of position. */
+extern "C" void func_ov091_02131340(daObjRotateUpdownLift_c *lift)
 {
-    Matrix4x3_FromRotationXYZExt(t + 0xf0, *(short *)(t + 0x8c), *(short *)(t + 0x8e), *(short *)(t + 0x90));
-    *(int *)(t + 0x114) = *(int *)(t + 0x5c) >> 3;
-    *(int *)(t + 0x118) = *(int *)(t + 0x60) >> 3;
-    *(int *)(t + 0x11c) = *(int *)(t + 0x64) >> 3;
-}
+    Matrix4x3_FromRotationXYZExt(&lift->mModel.mat4x3,
+                                 lift->mAngleX, lift->mAngleY, lift->mAngleZ);
+    lift->mModel.mat4x3.t.x = lift->mPosX >> 3;
+    lift->mModel.mat4x3.t.y = lift->mPosY >> 3;
+    lift->mModel.mat4x3.t.z = lift->mPosZ >> 3;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -256,12 +291,13 @@ void func_ov091_02131340(char *t)
 // @symbol _ZN23daObjRotateUpdownLift_c16CleanupResourcesEv
 int daObjRotateUpdownLift_c::CleanupResources()
 {
-  if(param1 == 0xffff) return 1;
-  if(((dBgW *)((char *)&mMeshCollider))->IsEnabled())
-    ((dBgW *)((char *)&mMeshCollider))->Disable();
-  ((SharedFilePtr *)(data_ov091_02134c30[mVariant].a))->Release();
-  ((SharedFilePtr *)(data_ov091_02134c34[mVariant].a))->Release();
-  return 1;
+    if (param1 == 0xffff)
+        return 1;
+    if (mMeshCollider.IsEnabled())
+        mMeshCollider.Disable();
+    data_ov091_02134c30[mVariant].file->Release();
+    data_ov091_02134c34[mVariant].file->Release();
+    return 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -270,9 +306,11 @@ int daObjRotateUpdownLift_c::CleanupResources()
 // @symbol _ZN23daObjRotateUpdownLift_c6RenderEv
 int daObjRotateUpdownLift_c::Render()
 {
-    if (mIsDead) return 1;
-    if (param1 == 0xffff) return 1;
-    ((struct Sub*)((char *)&mModel))->doit(0);
+    if (mIsDead)
+        return 1;
+    if (param1 == 0xffff)
+        return 1;
+    mModel.Render(0);
     return 1;
 }
 
@@ -282,85 +320,81 @@ int daObjRotateUpdownLift_c::Render()
 // @symbol _ZN23daObjRotateUpdownLift_c8BehaviorEv
 int daObjRotateUpdownLift_c::Behavior()
 {
-    Vec3 pos;
-    Vec3 sp10;
-    Vec3 sp1C;
-    Vec3 sp28;
-    Vec3 sp34;
-    Vec3 sp40;
-    Vec3 sp4C;
-    Vec3 sp58;
-    int r4;
-    int r6;
-    int r5;
-    int len2;
-    int len1;
-    int fd;
-    void *r8;
+    Vector3 pos;
+    Vector3 cur;
+    Vector3 prev;
+    Vector3 remain;
+    Vector3 target;
+    Vector3 edge;
+    Vector3 snapped;
+    Vector3 stepVec;
+    int keepSound;
+    int arrived;
+    int prevIndex;
+    int stepLen;
+    int dist;
+    int span;
+    int along;
 
-    if (mIsDead != 0) {
+    if (mIsDead != 0)
         return 1;
-    }
 
     if (param1 == 0xffff) {
-        int is1d;
-        r4 = 1;
-        is1d = actorID;
-        is1d = (is1d == 0x1d);
-        if (is1d != 0) {
-            void *a;
-            void *b;
-            if (*(void **)((char *)&mPlatform0) == 0 || *(void **)((char *)&mPlatform1) == 0) {
-                r8 = _ZN8dActor_c15FindWithActorIDEjPS_(0x1d, 0);
-                if (r8 != 0) {
+        int isParent;
+        keepSound = 1;
+        isParent = actorID;
+        isParent = (isParent == 0x1d);
+        if (isParent != 0) {
+            daObjRotateUpdownLift_c *a;
+            daObjRotateUpdownLift_c *b;
+            if ((daObjRotateUpdownLift_c *)mPlatform0 == 0
+                || (daObjRotateUpdownLift_c *)mPlatform1 == 0) {
+                daObjRotateUpdownLift_c *found;
+                found = (daObjRotateUpdownLift_c *)FindWithActorID(0x1d, 0);
+                if (found != 0) {
                     do {
-                        if (r8 != (void *)((char *)this) &&
-                            Vec3_HorzDist((Vec3 *)((char *)&mPosX), (Vec3 *)((char *)r8 + 0x5c)) < 0xa0000) {
-                            if (*(void **)((char *)&mPlatform0) == 0) {
-                                *(void **)((char *)&mPlatform0) = r8;
-                            } else if (*(void **)((char *)&mPlatform1) == 0) {
-                                *(void **)((char *)&mPlatform1) = r8;
-                            }
+                        if (found != this
+                            && Vec3_HorzDist((Vector3 *)&mPosX,
+                                             (Vector3 *)&found->mPosX) < 0xa0000) {
+                            if ((daObjRotateUpdownLift_c *)mPlatform0 == 0)
+                                mPlatform0 = (s32)found;
+                            else if ((daObjRotateUpdownLift_c *)mPlatform1 == 0)
+                                mPlatform1 = (s32)found;
                         }
-                        r8 = _ZN8dActor_c15FindWithActorIDEjPS_(0x1d, r8);
-                    } while (r8 != 0);
+                        found = (daObjRotateUpdownLift_c *)FindWithActorID(0x1d, found);
+                    } while (found != 0);
                 }
             }
-            a = *(void **)((char *)&mPlatform0);
+            a = (daObjRotateUpdownLift_c *)mPlatform0;
             if (a != 0) {
-                b = *(void **)((char *)&mPlatform1);
+                b = (daObjRotateUpdownLift_c *)mPlatform1;
                 if (b != 0) {
-                    int b8;
-                    if (*(u8 *)((char *)a + 0x3a0) != 0 && *(u8 *)((char *)b + 0x3a0) != 0) {
-                        r4 = 0;
-                    }
-                    b8 = (mFlags & 8) ? 1 : 0;
-                    if (b8 != 0) {
-                        if (_ZN8dActor_c13DistToCPlayerEv(((char *)this)) > 0x7d0000) {
-                            char *p398 = *(char **)((char *)&mPlatform0);
-                            char *p39c;
-                            if (*(u8 *)(p398 + 0x3a0) != 0) {
-                                func_ov091_02130fac((int)p398);
-                            }
-                            p39c = *(char **)((char *)&mPlatform1);
-                            if (*(u8 *)(p39c + 0x3a0) != 0) {
-                                func_ov091_02130fac((int)p39c);
-                            }
+                    int offScreen;
+                    if (a->mIsDead != 0 && b->mIsDead != 0)
+                        keepSound = 0;
+                    offScreen = (mFlags & 8) ? 1 : 0;
+                    if (offScreen != 0) {
+                        if (DistToCPlayer() > 0x7d0000) {
+                            a = (daObjRotateUpdownLift_c *)mPlatform0;
+                            if (a->mIsDead != 0)
+                                func_ov091_02130fac(a);
+                            b = (daObjRotateUpdownLift_c *)mPlatform1;
+                            if (b->mIsDead != 0)
+                                func_ov091_02130fac(b);
                         }
                     }
                 }
             }
         }
-        if (r4 != 0) {
-            mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-                mSoundHandle, 3, 0x8d, (Vec3 *)((char *)&mCamSpacePosX), 0);
+        if (keepSound != 0) {
+            mSoundHandle = Sound::PlayLong(
+                mSoundHandle, 3, 0x8d, *(Vector3 *)&mCamSpacePosX, 0);
         }
         return 1;
     }
 
-    if (_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(((char *)this), 0x2000, 0, 0, 0) != 0) {
+    if (_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(this, 0x2000, 0, 0, 0) != 0)
         return 1;
-    }
 
     {
         int py;
@@ -373,80 +407,74 @@ int daObjRotateUpdownLift_c::Behavior()
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);
     mGroundY = pos.y;
-    if (ground.DetectClsn() != 0) {
+    if (ground.DetectClsn() != 0)
         mGroundY = ground.clsnY;
-    }
 
-    r6 = 0;
-    r5 = data_ov091_021344e8[mVariant];
-    r4 = mWaypointIndex - 1;
-    if (r4 < 0) {
-        r4 = 9;
-    }
-    Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
-    MulVec3Mat4x3(data_ov091_02134cdc + mVariant * 0x78 + mWaypointIndex * 0xc,
-                  data_020a0e68, &sp10);
-    MulVec3Mat4x3(data_ov091_02134cdc + mVariant * 0x78 + r4 * 0xc,
-                  data_020a0e68, &sp1C);
-    Vec3_Add(&sp34, (Vec3 *)((char *)&mBasePosX), &sp10);
-    Vec3_Sub(&sp28, (Vec3 *)((char *)&mPosX), &sp34);
-    Vec3_Sub(&sp40, &sp10, &sp1C);
-    len1 = LenVec3(&sp40);
-    len2 = LenVec3(&sp28);
-    fd = _ZN4cstd4fdivEii(len1 - len2, len1);
-    {
-        s16 *b300 = (s16 *)((char *)this + 0x300);
-        int mul = *(s16 *)((char *)b300 + 0xa4);
-        int base = *(s16 *)((char *)b300 + 0xa2);
-        mAngleX = (s16)(base + (int)((short)(((long long)mul * fd + 0x800) >> 12)));
-    }
+    arrived = 0;
+    stepLen = data_ov091_021344e8[mVariant];
+    prevIndex = mWaypointIndex - 1;
+    if (prevIndex < 0)
+        prevIndex = 9;
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    MulVec3Mat4x3(&data_ov091_02134cdc[mVariant].node[mWaypointIndex],
+                  &data_020a0e68, &cur);
+    MulVec3Mat4x3(&data_ov091_02134cdc[mVariant].node[prevIndex],
+                  &data_020a0e68, &prev);
+    Vec3_Add(&target, &mBasePosX, &cur);
+    Vec3_Sub(&remain, &mPosX, &target);
+    Vec3_Sub(&edge, &cur, &prev);
+    span = LenVec3(&edge);
+    dist = LenVec3(&remain);
+    along = cstd::fdiv(span - dist, span);
+    /* 0x3a2 is a halfword. mPitchBase in the header is only the low byte. */
+    mAngleX = (s16)(*(s16 *)((char *)this + 0x3a2)
+                    + (s16)(((long long)mPitchStep * along + 0x800) >> 12));
 
-    if (len2 == 0 || len2 <= r5) {
-        Vec3_Add(&sp4C, (Vec3 *)((char *)&mBasePosX), &sp10);
-        mPosX = sp4C.x;
-        mPosY = sp4C.y;
-        mPosZ = sp4C.z;
+    if (dist == 0 || dist <= stepLen) {
+        Vec3_Add(&snapped, &mBasePosX, &cur);
+        mPosX = snapped.x;
+        mPosY = snapped.y;
+        mPosZ = snapped.z;
+        /* &mPitchBase is offsetof 0x3a2, which is not an ARM immediate, so this
+           is a pool add. The step is the halfword at this+0x300+0xa4. One
+           base for both grows the function. */
         {
-            s16 *r2 = (s16 *)((char *)&mPitchBase);
-            s16 *b300 = (s16 *)((char *)this + 0x300);
-            r6 = 1;
-            *r2 = (s16)(*r2 + *(s16 *)((char *)b300 + 0xa4));
+            s16 *pitch = (s16 *)&mPitchBase;
+            s16 *stepAt = (s16 *)((char *)this + 0x300);
+            arrived = 1;
+            *pitch = (s16)(*pitch + *(s16 *)((char *)stepAt + 0xa4));
         }
     } else {
-        Vec3_MulScalar(&sp58, &sp28, _ZN4cstd4fdivEii(r5, len2));
-        SubVec3((Vec3 *)((char *)&mPosX), &sp58, (Vec3 *)((char *)&mPosX));
+        Vec3_MulScalar(&stepVec, &remain, cstd::fdiv(stepLen, dist));
+        SubVec3(&mPosX, &stepVec, &mPosX);
     }
 
-    if (r6 != 0) {
-        u8 *p394 = (u8 *)((char *)&mWaypointIndex);
-        *p394 = (u8)(*p394 + 1);
-        if ((u32)mWaypointIndex >= 0xa) {
+    if (arrived != 0) {
+        u8 *waypoint = &mWaypointIndex;
+        *waypoint = (u8)(*waypoint + 1);
+        if ((u32)mWaypointIndex >= 0xa)
             mWaypointIndex = 0;
-        }
-        if ((u32)mWaypointIndex > 3 && (u32)mWaypointIndex < 8) {
+        if ((u32)mWaypointIndex > 3 && (u32)mWaypointIndex < 8)
             mPitchStep = 0x2000;
-        } else {
+        else
             mPitchStep = 0;
-        }
     }
 
-    func_ov091_02131340(((char *)this));
+    func_ov091_02131340(this);
 
     {
-    int is1e = actorID;
-    is1e = (is1e == 0x1e);
-    if (is1e == 0) {
-        func_ov091_02131160(((char *)this));
-        func_020393a4((int *)((char *)&mMeshCollider), 0x150000);
-        func_02039394((int *)((char *)&mMeshCollider), 0x1000);
-        if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0x150000, 0x1000) != 0) {
-            _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
+        int isHs = actorID;
+        isHs = (isHs == 0x1e);
+        if (isHs == 0) {
+            func_ov091_02131160(this);
+            func_020393a4((int *)&mMeshCollider, 0x150000);
+            func_02039394((int *)&mMeshCollider, 0x1000);
+            if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0x150000, 0x1000) != 0)
+                UpdateClsnPosAndRot();
+        } else {
+            if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0)
+                UpdateClsnPosAndRot();
         }
-    } else {
-        if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0, 0) != 0) {
-            _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
-        }
-    }
     }
 
     return 1;
@@ -458,94 +486,86 @@ int daObjRotateUpdownLift_c::Behavior()
 // @symbol _ZN23daObjRotateUpdownLift_c13InitResourcesEv
 int daObjRotateUpdownLift_c::InitResources()
 {
-    Vector3 v;
+    Vector3 spawnAt;
     Vector3 rotated;
-    Vector3 posVec;
-    Vector3 v2;
-    unsigned char idx394, idx395;
+    Vector3 probe;
+    Vector3 placed;
+    unsigned char node;
+    unsigned char variant;
     void *bmd;
     void *kcl;
 
     if (param1 == 0xffff) {
-        int *p = (int*)(((int)((char *)this) + 0xb0));
-        *p = *p & ~2;
-        _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(((char *)this), 0, 0x1000, 0, 0);
+        mFlags &= ~2;
+        _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(this, 0, 0x1000, 0, 0);
         return 1;
     }
 
     mBasePosX = mPosX;
     mBasePosY = mPosY;
     mBasePosZ = mPosZ;
-    _ZN11ShadowModel10InitCuboidEv((char *)&mShadowModel);
+    mShadowModel.InitCuboid();
 
+    mVariant = 0;
     {
-        enum Bool isSpecial;
-        ((char *)this)[0x395] = 0;
-        isSpecial = (enum Bool)(actorID == 0x1e);
-        if (isSpecial) {
-            ((char *)this)[0x395] = 2;
-        } else if (data_0209f2f8 == 7) {
-            ((char *)this)[0x395] = 1;
-        }
+        int isHs = (actorID == 0x1e);
+        if (isHs)
+            mVariant = 2;
+        else if (data_0209f2f8 == 7)
+            mVariant = 1;
     }
 
-    ((char *)this)[0x394] = (unsigned char)(param1 & 0xf);
+    mWaypointIndex = (u8)(param1 & 0xf);
 
-    if ((unsigned char)((char *)this)[0x394] == 2) {
-        char *tbl = data_ov091_02134cdc;
-        int s = 0x78;
-        int i = (unsigned char)((char *)this)[0x395];
-        Vec3_Add(&v, (Vector3*)((char *)&mBasePosX), (Vector3*)(tbl + i * s));
-        i = (unsigned char)((char *)this)[0x395];
-        v.y += *(int*)(data_ov091_02134d1c + i * s);
-        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x1d, 0xffff, &v, 0, mAreaId, -1);
+    if (mWaypointIndex == 2) {
+        Vec3_Add(&spawnAt, &mBasePosX, &data_ov091_02134cdc[mVariant].node[0]);
+        spawnAt.y += data_ov091_02134d1c[mVariant].y;
+        Spawn(0x1d, 0xffff, spawnAt, 0, mAreaId, -1);
     }
 
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    {
+        char *tbl = (char *)data_ov091_02134cdc;
+        int stride = 0x78;
+        int i = mVariant;
+        node = mWaypointIndex;
+        MulVec3Mat4x3(tbl + i * stride + node * 0xc, &data_020a0e68, &rotated);
+    }
+    Vec3_Add(&placed, &mBasePosX, &rotated);
+    mPosX = placed.x;
+    mPosY = placed.y;
+    mPosZ = placed.z;
+
+    variant = mVariant;
+    bmd = Model::LoadFile(*data_ov091_02134c30[variant].file);
+    mModel.SetFile((BMD_File *)bmd, 1, -1);
+
+    func_ov091_02131340(this);
+    UpdateClsnPosAndRot();
+
+    variant = mVariant;
+    kcl = dBgW_Kc::LoadFile(*data_ov091_02134c34[variant].file);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        &mMeshCollider, (KCL_File *)kcl, &mClsnMat, 0x199, mAngleY,
+        data_ov091_02134c38[variant].clps);
+    func_020393d4((int *)&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
 
     {
-        char *tbl = data_ov091_02134cdc;
-        int s = 0x78;
-        int i = (unsigned char)((char *)this)[0x395];
-        idx394 = (unsigned char)((char *)this)[0x394];
-        MulVec3Mat4x3((Vector3*)(tbl + i * s + idx394 * 0xc), &data_020a0e68, &rotated);
+        int py;
+        probe.x = mPosX;
+        py = mPosY;
+        probe.y = py;
+        probe.z = mPosZ;
+        probe.y = py - 0x14000;
     }
-
-    Vec3_Add(&v2, (Vector3*)((char *)&mBasePosX), &rotated);
-
-    mPosX = v2.x;
-    mPosY = v2.y;
-    mPosZ = v2.z;
-
-    idx395 = (unsigned char)((char *)this)[0x395];
-    bmd = _ZN5Model8LoadFileER13SharedFilePtr(*(void**)((char*)data_ov091_02134c30 + idx395 * 0xc));
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, bmd, 1, -1);
-
-    func_ov091_02131340(((char *)this));
-    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
-
-    idx395 = (unsigned char)((char *)this)[0x395];
-    kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(void**)((char*)data_ov091_02134c34 + idx395 * 0xc));
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char *)this) + 0x124, kcl, ((char *)this) + 0x2ec, 0x199, mAngleY,
-        *(void**)((char*)data_ov091_02134c38 + idx395 * 0xc));
-
-    func_020393d4(((char *)this) + 0x124, &_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
-
-    posVec.x = mPosX;
-    posVec.y = mPosY;
-    posVec.z = mPosZ;
-    posVec.y -= 0x14000;
-
     dBgCh_Gnd ground;
-    ground.SetObjAndPos(posVec, 0);
-    mGroundY = posVec.y;
+    ground.SetObjAndPos(probe, 0);
+    mGroundY = probe.y;
     if (ground.DetectClsn())
         mGroundY = ground.clsnY;
 
     mSpawnAngleX = mAngleX;
     mSpawnAngleY = mAngleY;
     mSpawnAngleZ = mAngleZ;
-
     return 1;
 }

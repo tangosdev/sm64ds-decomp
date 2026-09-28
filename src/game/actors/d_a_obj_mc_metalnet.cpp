@@ -2,7 +2,7 @@
 /* Peach's Castle chain-link net -- a climbable mesh with no state of its
  * own. ov009/daObjMc_Metalnet_c, profile MC_METALNET (METAL_NET 339).
  * ov009 is mixed (DOCK_POLE / CASTLE_WATER / FLAG / BIRD); this is the net,
- * not castle water or the flag. MetalNetLift (ov064) is a different class.
+ * not castle water or the flag. daObjFl_Amilift_c (ov064) is a different class.
  *
  * 8 function(s), .text 0x02111dc4..0x02112078.
  *

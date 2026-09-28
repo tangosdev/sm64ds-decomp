@@ -9,35 +9,39 @@
  * load-bearing: out-of-line D1 then D0 then homeless D2 matches the
  * cartridge (deferred codegen emits D2, D0, D1).
  *
- * deslop leftovers:
- * - dCcAc_c::Init / dBgCh_Actr::Init / ModelAnim::SetAnim /
- *   MaterialChanger::SetFile / DropShadowRadHeight /
- *   KillByInvincibleChar / Player::Hurt / Bounce /
- *   IsTooFarAwayFromPlayer 6az: this TU passes Fix12<int> by value;
- *   the header method form size-DIFFs. dBgCh Init header Fix12i
- *   mangles as i; ROM is Fix12<int>. Callers: InitResources,
- *   func_ov084_02129ed4 / 0212a774 / 0212abd4 / 0212af74 / Render.
- * - dCapEnemy_c::UpdateCapPos stays mangled in the helpers
- *   (C-linkage offset soup). Named members already call AddCap /
- *   DestroyIfCapNotNeeded / GetCapState / RenderCapModel.
- * - Animation::Advance stays this+0x160 (named mModelAnim.Advance
- *   this-adjusts). Behavior / func_ov084_021298d0.
- * - The death helper uses receiver, attacker, and nullable collision pointers.
- * - func_ov084_* helpers stay offset soup. InitResources /
- *   OnTurnIntoEgg keep `char *c = (char *)this` (named fields CSE
- *   the +8 param word).
- * - data_ov084_02130cf8 BMD; 02130278[7] BCA table; 02130ce0/ce8/cf0
- *   /cc0/cc8/cd0 BCA handles (SetAnim reads [1]); 0213089c / 0213088c
- *   BMA. Init LoadFile/SetFile and Cleanup Release them.
- * - data_ov084_02130258 / 02130208 / 02130228 / 02130238 / 02130248 /
- *   02130268 / 02130204 per-type scale/height/speed/accel/hurt tables.
- *   S14: g_profile_KURIBO / _S / _L stay outside this text-only TU.
- * - `#pragma opt_common_subs off` on Render and `#pragma optimize_for_size
- *   on` are file-global last-wins; not carried (Render MATCHes without
- *   them; optimize_for_size recompiled 17 members).
- * - Flags / Flag / Obj / Sub / Vector3_16_local shadows are load-bearing
- *   (0212934c bitfield, OnTurnIntoEgg GetState, Render m5, UpdateCapPos).
- * - volatile Vector3 backup in Render (frame-slot).
+ * Leftover, remeasured on this TU:
+ * - ModelAnim::SetAnim, MaterialChanger::SetFile, dCcAc_c::Init,
+ *   DropShadowRadHeight and KillByInvincibleChar take Fix12<int> by value.
+ *   The header call size-DIFFs (0212a6f8, 02129a00, 0212a580, 02129ed4,
+ *   InitResources). The bridges below pass those bits as scalars and still
+ *   name the 5Fix12IiE symbols.
+ * - dBgCh_Actr::Init stays the mangled free call. types.h makes Fix12i a
+ *   plain s32, so the header method mangles as int and the link fails.
+ * - Player::Hurt, Player::Bounce and dActor_c::IsTooFarAwayFromPlayer are
+ *   not declared on those classes. The scalar bridges stay in this file.
+ * - dBgCh_Actr::GetFloorResult and dCapEnemy_c::UpdateCapPos have no header
+ *   member. UpdateCapPos still needs the unsigned Vector3_16_local and the
+ *   equal-arm ternary so r2 is set up before r1.
+ * - Animation::Advance is called on the subobject at +0x3c0. mModelAnim.Advance()
+ *   this-adjusts.
+ * - func_ov084_021290d4 recomputes the chase radius at +0x448. A named
+ *   temporary size-DIFFs, and mTimer458 spelled the same way on both sides
+ *   of the decrement CSEs the halfword.
+ * - OnTurnIntoEgg and the reward helper load param1 through a raw word.
+ *   Spelling both sides as the member CSEs +8.
+ * - +0x448 chase radius, +0x452 bounce countdown and +0x45c target heading
+ *   are unnamed in the class. mWanderRerollTimer is s16 in the header and
+ *   this TU loads it unsigned.
+ * - Flags / Flag stay. The bitfield test is lsl/lsrs; `&= ~n` on the u8
+ *   member compiles to and, and the ROM has bic.
+ * - data_ov084_02130cf8 is the BMD. 02130278[7] is the BCA table.
+ *   02130ce0/ce8/cf0/cc0/cc8/cd0 are BCA handles (SetAnim reads [1]).
+ *   0213089c / 0213088c are BMA. 02130258 / 02130208 / 02130228 /
+ *   02130238 / 02130248 / 02130268 / 02130204 are the per-type tables.
+ *   g_profile_KURIBO / _S / _L stay outside this text TU.
+ * - Render keeps a volatile Vector3 backup of the scale (frame slot).
+ * - func_ov002_020aea30 takes the receiver, the attacker, and a nullable
+ *   collision pointer.
  */
 
 #pragma defer_codegen off
@@ -53,6 +57,8 @@
 #include "MaterialChanger.h"
 #include "Player.h"
 
+namespace cstd { int fdiv(int a, int b); }
+
 typedef struct {
     unsigned char b0 : 1;
     unsigned char flag : 1;
@@ -61,37 +67,6 @@ typedef struct {
 struct Vector3_16_local { unsigned short x, y, z; };
 
 typedef struct { unsigned char b0 : 1; } Flag;
-
-struct Obj {
-    virtual int f00();
-    virtual int f01();
-    virtual int f02();
-    virtual int f03();
-    virtual int f04();
-    virtual int f05();
-    virtual int f06();
-    virtual int f07();
-    virtual int f08();
-    virtual int f09();
-    virtual int f10();
-    virtual int f11();
-    virtual int f12();
-    virtual int f13();
-    virtual int f14();
-    virtual int f15();
-    virtual int f16();
-    virtual int f17();
-    virtual int GetState();
-};
-
-struct Sub {
-    virtual void m0();
-    virtual void m1();
-    virtual void m2();
-    virtual void m3();
-    virtual void m4();
-    virtual void m5(Vector3* v);
-};
 
 struct BMD_File;
 struct BMA_File;
@@ -130,7 +105,6 @@ extern void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void *m, void *f,
 /* Three-register reconstructed interface; death-state stores also use r3. */
 extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, void *f, int a, int fix, unsigned int j);
-extern void func_ov084_0212a580(char *self);
 extern void func_ov084_021294d0(char *self);
 extern int *data_ov084_0213088c;
 extern int data_ov084_02130248[];
@@ -145,12 +119,10 @@ extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int fix, int t, unsigned int j);
 extern short data_02082214[];
 extern "C" void _ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16(void *, const Vector3&, const Vector3_16_local&);
-extern int _ZN4cstd4fdivEii(int a, int b);
 extern char data_ov084_0213089c;
 extern void func_ov084_02129c9c(char *c);
 extern void func_ov084_02129cf4(char *self, int a);
 extern int _Z14ApproachLinearRiii(int *a, int b, int c);
-extern int _Z14ApproachLinearRsss(short *a, short b, short c);
 extern int RandomIntInternal(int *seed);
 extern int data_ov084_02130228[];
 extern int data_ov084_02130268[];
@@ -185,50 +157,54 @@ daKrb_c::~daKrb_c()
 }
 
 // @symbol func_ov084_021290d4
+/* Chase radius lives at +0x448 (four unnamed bytes ahead of mSavedParam).
+ * The address has to be recomputed at each store: a named temporary, or
+ * mTimer458 spelled the same way on both sides of the decrement, lets mwcc
+ * CSE the field and the function stops matching. */
 extern "C" {
-inline char *inline_fn(char *arg0)
+inline char *chaseRadius(char *goomba)
 {
-  return arg0 + 0x448;
+    return goomba + 0x448;
 }
 
 void func_ov084_021290d4(char *c)
 {
-  int new_var;
-  char *new_var2;
-  char *base = c + 0x400;
-  int new_var3;
-  new_var = 0x458;
-  if ((*((unsigned short *) (base + 0x58))) != 0)
-  {
-    /* Comparison stays in the `if`: assigning `== 1` to an int is a bool
-       in C++ and materialises moveq/movne (S8). */
-    new_var3 = (int)(*((int *) (c + 0x434)));
-    if (new_var3 == 1)
+    int timerOff;
+    char *self2;
+    char *base = c + 0x400;
+    int state;
+    timerOff = 0x458;
+    if ((*((unsigned short *)(base + 0x58))) != 0)
     {
-      *((unsigned short *) ((c + 0x400) + 0x58)) = 0;
+        /* Comparison stays in the `if`: assigning `== 1` to an int is a bool
+           in C++ and materialises moveq/movne. */
+        state = (int)(*((int *)(c + 0x434)));
+        if (state == 1)
+        {
+            *((unsigned short *)((c + 0x400) + 0x58)) = 0;
+        }
+        else
+        {
+            *((unsigned short *)((((int)c) + timerOff))) = (*((unsigned short *)((((int)c) + 0x458)))) - 1;
+        }
+        return;
     }
-    else
+    if ((*((unsigned char *)((self2 = c) + 0x113))) < 6)
     {
-      *((unsigned short *) ((((int) c) + new_var))) = (*((unsigned short *) ((((int) c) + 0x458)))) - 1;
+        *((int *)chaseRadius(self2)) = 0x1f4000;
+        return;
     }
-    return;
-  }
-  if ((*((unsigned char *) ((new_var2 = c) + 0x113))) < 6)
-  {
-    *((int *) inline_fn(new_var2)) = 0x1f4000;
-    return;
-  }
-  unsigned short v = *((unsigned short *) ((c + 0x400) + 0x56));
-  if (v > 0xa)
-  {
-    *((int *) inline_fn(new_var2)) = 0x1f4000 - (((v - 0xa) * 0x14) << 12);
-    if ((*((int *) inline_fn(new_var2))) < 0xa000)
+    unsigned short stuck = *((unsigned short *)((c + 0x400) + 0x56));
+    if (stuck > 0xa)
     {
-      *((int *) inline_fn(new_var2)) = 0xa000;
+        *((int *)chaseRadius(self2)) = 0x1f4000 - (((stuck - 0xa) * 0x14) << 12);
+        if ((*((int *)chaseRadius(self2))) < 0xa000)
+        {
+            *((int *)chaseRadius(self2)) = 0xa000;
+        }
+        return;
     }
-    return;
-  }
-  *((int *) inline_fn(new_var2)) = 0x1f4000;
+    *((int *)chaseRadius(self2)) = 0x1f4000;
 }
 }
 
@@ -236,7 +212,6 @@ void func_ov084_021290d4(char *c)
 #include "decl_dBgCh_Actr.h"
 extern "C" {
 
-extern int _ZN4cstd4fdivEii(int a, int b);
 extern int Vec3_HorzLen(void* v);
 extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int a, int b, unsigned int e);
@@ -244,33 +219,39 @@ extern void func_02012694(unsigned int id, const Vector3 *pos);
 
 void func_ov084_02129168(char* c, char* actor)
 {
-    *(short*)(c + 0x452) = 0x3c;
-    *(int*)(c + 0xa8) = _ZN4cstd4fdivEii(0xd000 - *(int*)(c + 0x9c), *(int*)(c + 0xd8));
-    *(int*)(c + 0x98) = Vec3_HorzLen(c + 0xa4) * -1;
+    daKrb_c *goomba = (daKrb_c *)c;
+    /* +0x452 is the two unnamed bytes between mHeadingHoldTimer and
+       mWanderRerollTimer. A short store there is the bounce countdown. */
+    *(short *)((char *)goomba + 0x452) = 0x3c;
+    goomba->mVertSpeed = cstd::fdiv(0xd000 - goomba->mVertAccel, goomba->mFloorNormalY);
+    goomba->mHorzSpeed = Vec3_HorzLen((char *)&goomba->unk_0a4) * -1;
     if (actor != 0)
-        *(short*)(c + 0x94) = Vec3_HorzAngle((Vector3*)(c + 0x5c), (Vector3*)(actor + 0x5c));
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x370, *(void**)((char*)data_ov084_02130cc0 + 4), 0, 0x1000, 0);
-    *(int*)(c + 0x434) = 3;
-    *(unsigned char*)(c + 0x107) = 0;
-    _ZN10dBgCh_Actr13SetLimMovFlagEv(c + 0x1b4);
-    _ZN10dBgCh_Actr12Unk_0203589cEv(c + 0x1b4);
-    _ZN10dBgCh_Actr22ClearJustHitGroundFlagEv(c + 0x1b4);
-    ((dBgCh_Actr *)(c + 0x1b4))->ClearGroundFlag();
-    func_02012694(0x13a, (const ::Vector3 *)(c + 0x74));
-    *(unsigned char*)(c + 0x467) = 0;
+        goomba->mPrevAngleY = Vec3_HorzAngle((Vector3 *)&goomba->mPosX, (Vector3 *)(actor + 0x5c));
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, *(void **)((char *)data_ov084_02130cc0 + 4), 0, 0x1000, 0);
+    goomba->mState = 3;
+    goomba->mEatenByYoshi = 0;
+    goomba->mWithMeshClsn.SetLimMovFlag();
+    _ZN10dBgCh_Actr12Unk_0203589cEv(&goomba->mWithMeshClsn);
+    goomba->mWithMeshClsn.ClearJustHitGroundFlag();
+    goomba->mWithMeshClsn.ClearGroundFlag();
+    func_02012694(0x13a, (const Vector3 *)&goomba->mCamSpacePosX);
+    goomba->unk_467 = 0;
 }
 }
 
 // @symbol func_ov084_02129238
 void func_ov084_02129238(char* c)
 {
-    if (((dBgCh_Actr *)(c + 0x1b4))->IsOnGround() != 0) return;
+    daKrb_c *goomba = (daKrb_c *)c;
+    if (goomba->mWithMeshClsn.IsOnGround() != 0)
+        return;
     {
         Vector3 pos;
         {
-            int vx = *(int*)(c + 0x5c);
-            int vz = *(int*)(c + 0x64);
-            int vy = *(int*)(c + 0x60) + 0x190000;
+            /* z before y: mwcc keeps that load order. */
+            int vx = goomba->mPosX;
+            int vz = goomba->mPosZ;
+            int vy = goomba->mPosY + 0x190000;
             pos.x = vx;
             pos.y = vy;
             pos.z = vz;
@@ -279,25 +260,25 @@ void func_ov084_02129238(char* c)
         rg.StartDetectingWater();
         rg.StartDetectingToxic();
         rg.StopDetectingOrdinary();
-        rg.SetObjAndPos(pos, (dActor_c*)c);
+        rg.SetObjAndPos(pos, goomba);
         if (rg.DetectClsn() != 0) {
             if (func_02037e20((int*)&rg.surface) != 0) {
                 if (rg.clsnY != (int)0x80000000) {
-                    if (*(int*)(c + 0x60) < rg.clsnY) {
-                        ((dEnemyBase_c *)c)->SpawnCoin();
-                        ((dActor_c *)c)->PoofDust();
+                    if (goomba->mPosY < rg.clsnY) {
+                        goomba->SpawnCoin();
+                        goomba->PoofDust();
                         func_ov084_02129498((char*)c);
                         {
                             Vector3 cap;
                             cap.x = 0;
                             cap.y = 0x6c000;
                             cap.z = 0;
-                            ((dCapEnemy_c *)c)->ReleaseCap(cap);
+                            goomba->ReleaseCap(cap);
                         }
-                        *(int*)(c + 0x5c) = *(int*)(c + 0x41c);
-                        *(int*)(c + 0x60) = *(int*)(c + 0x420);
-                        *(int*)(c + 0x64) = *(int*)(c + 0x424);
-                        ((dCapEnemy_c *)c)->RespawnIfHasCap();
+                        goomba->mPosX = goomba->mHomePos.x;
+                        goomba->mPosY = goomba->mHomePos.y;
+                        goomba->mPosZ = goomba->mHomePos.z;
+                        goomba->RespawnIfHasCap();
                     }
                 }
             }
@@ -309,47 +290,44 @@ void func_ov084_02129238(char* c)
 extern "C" {
 void func_ov084_0212934c(char* c)
 {
+    daKrb_c *goomba = (daKrb_c *)c;
     unsigned int kind;
-    int v;
+    int frame;
     int type;
-    unsigned char *fp;
 
-    if (*(int*)(c + 0x434) != 0)
+    if (goomba->mState != 0)
         return;
 
-    if (!((dBgCh_Actr *)(c + 0x1b4))->IsOnGround())
+    if (!goomba->mWithMeshClsn.IsOnGround())
         return;
 
-    /* kind before type load: forces v=r3 / type1=r1 coloring (short extract form) */
-    v = *(int*)(c + 0x3c8);
-    kind = (unsigned short)((unsigned)v >> 12);
-    type = *(int*)(c + 0x3d0);
+    /* Frame before the file pointer: that order is what colors the short
+       extract and the file load into the registers the ROM uses. */
+    frame = static_cast<Animation &>(goomba->mModelAnim).currFrame;
+    kind = (unsigned short)((unsigned)frame >> 12);
+    type = (int)goomba->mModelAnim.file;
 
     if (type == (int)data_ov084_02130ce8[1]) {
         if (kind <= 4 || (kind >= 0xc && kind <= 0x10)) {
-            if (((Flags*)(c + 0x468))->flag)
+            if (((Flags *)(c + 0x468))->flag)
                 return;
-            func_02012694(0xd0, (const ::Vector3 *)(c + 0x74));
-            fp = (unsigned char *)(((int)c + 0x468));
-            *fp |= 2;
+            func_02012694(0xd0, (const Vector3 *)&goomba->mCamSpacePosX);
+            goomba->mSoundLatchFlags |= 2;
             return;
         }
-        fp = (unsigned char *)(((int)c + 0x468));
-        *fp &= ~2;
+        *(unsigned char *)&goomba->mSoundLatchFlags &= ~2;
         return;
     }
 
     if (type == (int)data_ov084_02130cf0[1]) {
         if (kind <= 3 || (kind >= 0x10 && kind <= 0x13)) {
-            if (((Flags*)(c + 0x468))->flag)
+            if (((Flags *)(c + 0x468))->flag)
                 return;
-            func_02012694(0xd0, (const ::Vector3 *)(c + 0x74));
-            fp = (unsigned char *)(((int)c + 0x468));
-            *fp |= 2;
+            func_02012694(0xd0, (const Vector3 *)&goomba->mCamSpacePosX);
+            goomba->mSoundLatchFlags |= 2;
             return;
         }
-        fp = (unsigned char *)(((int)c + 0x468));
-        *fp &= ~2;
+        *(unsigned char *)&goomba->mSoundLatchFlags &= ~2;
     }
 }
 }
@@ -357,38 +335,40 @@ void func_ov084_0212934c(char* c)
 // @symbol func_ov084_02129498
 extern "C" {
 void func_ov084_02129498(char* r0) {
-  if ((*(unsigned char*)(r0 + 0x113) & 0xf) < 6)
-    ((fBase_c *)r0)->MarkForDestruction();
-  else
-    ((dActor_c *)r0)->KillAndTrackInDeathTable();
+    daKrb_c *goomba = (daKrb_c *)r0;
+    if ((goomba->mCapId & 0xf) < 6)
+        goomba->MarkForDestruction();
+    else
+        goomba->KillAndTrackInDeathTable();
 }
 }
 
 // @symbol func_ov084_021294d0
 extern "C" void func_ov084_021294d0(char* c)
 {
+    daKrb_c *goomba = (daKrb_c *)c;
     char obj[0x28];
-    if (!((dBgCh_Actr *)(c + 0x1b4))->IsOnGround())
+    if (!goomba->mWithMeshClsn.IsOnGround())
         return;
 
-    char* fr = _ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x1b4);
+    char* fr = _ZNK10dBgCh_Actr14GetFloorResultEv(&goomba->mWithMeshClsn);
     if (SurfaceInfo_TestFlag0x20((int*)(fr + 4))) {
         func_ov084_021296cc(c);
-        ((dEnemyBase_c *)c)->SpawnCoin();
+        goomba->SpawnCoin();
         func_ov084_02129498(c);
         Vector3 v;
         v.x = 0; v.y = 0x6c000; v.z = 0;
-        ((dCapEnemy_c *)c)->ReleaseCap(v);
-        *(int*)(c + 0x5c) = *(int*)(c + 0x41c);
-        *(int*)(c + 0x60) = *(int*)(c + 0x420);
-        *(int*)(c + 0x64) = *(int*)(c + 0x424);
-        ((dCapEnemy_c *)c)->RespawnIfHasCap();
+        goomba->ReleaseCap(v);
+        goomba->mPosX = goomba->mHomePos.x;
+        goomba->mPosY = goomba->mHomePos.y;
+        goomba->mPosZ = goomba->mHomePos.z;
+        goomba->RespawnIfHasCap();
         return;
     }
 
     /* Copy the floor result into obj's own surface record, then ask what kind of
      * ground it is. The Goomba dies on some terrain types and acts on others. */
-    char* floorResult = _ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x1b4);
+    char* floorResult = _ZNK10dBgCh_Actr14GetFloorResultEv(&goomba->mWithMeshClsn);
     int surfaceType;
     {
     char* surface = obj + 4;
@@ -420,17 +400,16 @@ extern "C" void func_ov084_021294d0(char* c)
     if ((unsigned)(surfaceType - 4) > 1)
         goto dtor;
 action:
-    ((dEnemyBase_c *)c)->SpawnCoin();
+    goomba->SpawnCoin();
     func_ov084_02129498(c);
-    if ((*(unsigned char*)(c + 0x113) & 0xf) < 6 ||
-        *(unsigned char*)(c + 0x464) == 2) {
-        *(int*)(c + 0x5c) = *(int*)(c + 0x41c);
-        *(int*)(c + 0x60) = *(int*)(c + 0x420);
-        *(int*)(c + 0x64) = *(int*)(c + 0x424);
+    if ((goomba->mCapId & 0xf) < 6 || goomba->mRewardType == 2) {
+        goomba->mPosX = goomba->mHomePos.x;
+        goomba->mPosY = goomba->mHomePos.y;
+        goomba->mPosZ = goomba->mHomePos.z;
         Vector3 v2;
         v2.x = 0; v2.y = 0x6c000; v2.z = 0;
-        ((dCapEnemy_c *)c)->ReleaseCap(v2);
-        ((dCapEnemy_c *)c)->RespawnIfHasCap();
+        goomba->ReleaseCap(v2);
+        goomba->RespawnIfHasCap();
     }
 dtor:
     _ZN5dBgPiD1Ev(obj);
@@ -440,7 +419,10 @@ dtor:
 extern "C" {
 void func_ov084_021296b0(int *a, int *b)
 {
-    a[263] = b[0]; a[264] = b[1]; a[265] = b[2];
+    daKrb_c *goomba = (daKrb_c *)a;
+    goomba->mHomePos.x = b[0];
+    goomba->mHomePos.y = b[1];
+    goomba->mHomePos.z = b[2];
 }
 }
 
@@ -448,52 +430,53 @@ void func_ov084_021296b0(int *a, int *b)
 extern "C" {
 void func_ov084_021296cc(char *c)
 {
-    if (*(u8 *)(c + 0x464) == 1) {
-        char *a;
-        char *b;
-        ((dActor_c *)c)->UntrackStar(*(s8 *)(c + 0x465));
-        a = (char *)dActor_c::Spawn(
-            0xb4, 0x50, *(Vector3 *)(c + 0x41c), 0,
-            *(signed char *)(c + 0xcc), -1);
-        b = (char *)dActor_c::Spawn(
-            0xb3, 0x10, *(Vector3 *)(c + 0x5c), 0,
-            *(signed char *)(c + 0xcc), -1);
-        if (a != 0 && b != 0) {
-            *(int *)(b + 0x434) = *(int *)(a + 4);
-            LinkSilverStarAndStarMarker(a, b);
-            ((dActor_c *)c)->SpawnSoundObj(1);
+    daKrb_c *goomba = (daKrb_c *)c;
+    if (goomba->mRewardType == 1) {
+        char *star;
+        char *marker;
+        goomba->UntrackStar(goomba->mStarTracked);
+        star = (char *)dActor_c::Spawn(
+            0xb4, 0x50, goomba->mHomePos, 0, goomba->mAreaId, -1);
+        marker = (char *)dActor_c::Spawn(
+            0xb3, 0x10, *(Vector3 *)&goomba->mPosX, 0, goomba->mAreaId, -1);
+        if (star != 0 && marker != 0) {
+            *(int *)(marker + 0x434) = *(int *)(star + 4);
+            LinkSilverStarAndStarMarker(star, marker);
+            goomba->SpawnSoundObj(1);
         }
-        *(int *)(c + 8) = *(const int *)((const char *)c + 8) & 0xff0f;
+        /* Load side stays a raw word: spelling both sides as param1 CSEs +8. */
+        goomba->param1 = *(const int *)((const char *)goomba + 8) & 0xff0f;
         return;
     }
-    if (*(u8 *)(c + 0x464) != 2)
+    if (goomba->mRewardType != 2)
         return;
-    if (*(u8 *)(c + 0x466) != data_0209f344[data_0209f208[0]])
+    if (goomba->mStarID != data_0209f344[data_0209f208[0]])
         return;
-    ((dActor_c *)c)->UntrackStar(*(s8 *)(c + 0x465));
+    goomba->UntrackStar(goomba->mStarTracked);
     dActor_c::Spawn(
-        0xb4, *(u8 *)(c + 0x466) | 0x30, *(Vector3 *)(c + 0x5c), 0,
-        *(signed char *)(c + 0xcc), -1);
+        0xb4, goomba->mStarID | 0x30, *(Vector3 *)&goomba->mPosX, 0,
+        goomba->mAreaId, -1);
     dActor_c::Spawn(
-        0xb3, *(u8 *)(c + 0x466) | 0x30, *(Vector3 *)(c + 0x5c), 0,
-        *(signed char *)(c + 0xcc), -1);
-    *(u8 *)(c + 0x464) = 3;
-    *(int *)(c + 8) = *(const int *)((const char *)c + 8) & 0xff0f;
-    ((dActor_c *)c)->SpawnSoundObj(1);
+        0xb3, goomba->mStarID | 0x30, *(Vector3 *)&goomba->mPosX, 0,
+        goomba->mAreaId, -1);
+    goomba->mRewardType = 3;
+    goomba->param1 = *(const int *)((const char *)goomba + 8) & 0xff0f;
+    goomba->SpawnSoundObj(1);
 }
 }
 
 // @symbol func_ov084_02129864
 extern "C" {
 void func_ov084_02129864(char *c){
-    if(*(unsigned char*)(c+0x464)!=2) return;
-    if(*(signed char*)(c+0x465)>=0) return;
-    unsigned int b3=*(unsigned char*)data_0209f208;
-    char *p=(char*)data_0209f344;
-    unsigned int m=*(unsigned char*)(p + b3);
-    unsigned int v=*(unsigned char*)(c+0x466);
-    if(v!=m) return;
-    *(unsigned char*)(c+0x465)=(unsigned char)((dActor_c *)c)->TrackStar(v,1);
+    daKrb_c *goomba = (daKrb_c *)c;
+    if (goomba->mRewardType != 2)
+        return;
+    if (goomba->mStarTracked >= 0)
+        return;
+    unsigned int current = data_0209f344[data_0209f208[0]];
+    if (goomba->mStarID != current)
+        return;
+    goomba->mStarTracked = (s8)goomba->TrackStar(goomba->mStarID, 1);
 }
 }
 
@@ -504,43 +487,43 @@ void func_02012694(unsigned int id, const Vector3 *pos);
 extern int data_ov084_02130218[];
 
 int func_ov084_021298d0(char* c){
-    int deathState = ((dEnemyBase_c *)c)->UpdateDeath(*(dBgCh_Actr *)(c + 0x1b4));
-    if ((unsigned int)(*(int*)(c + 0x10c) - 2) > 4) goto L_a4;
-    *(int*)(c + 0x3cc) = 0x1000;
-    ((Animation *)(c + 0x3c0))->Advance();
-    if (*(int*)(c + 0x460) != 3) goto L_a4;
+    daKrb_c *goomba = (daKrb_c *)c;
+    int deathState = goomba->UpdateDeath(goomba->mWithMeshClsn);
+    if ((unsigned int)(goomba->mDeathState - 2) > 4) goto L_a4;
+    static_cast<Animation &>(goomba->mModelAnim).speed = 0x1000;
+    ((Animation *)((char *)goomba + 0x3c0))->Advance();
+    if (goomba->mGoombaType != 3) goto L_a4;
 
-    /* SpawnCoin only when linked actor is type 0xc6; flag+cylinder always when state==3 */
-    unsigned int id = *(unsigned int*)(c + 0x1a4);
+    /* SpawnCoin only when the actor we hit is type 0xc6. The flag and the
+       cylinder update always run for a giant Goomba in this death phase. */
+    unsigned int id = goomba->mdCcAc_c.otherOwner;
     if (id != 0) {
         char* r = (char*)dActor_c::FindWithID(id);
         if (r != 0) {
             int b = (*(unsigned short*)(r + 0xc) == 0xc6);
             if (b != 0) {
-                ((dEnemyBase_c *)c)->SpawnCoin();
+                goomba->SpawnCoin();
                 func_ov084_02129498(c);
             }
         }
     }
-    /* cast launder: force add r2,r5,#0x198 materialization (sibling ov084 idiom) */
+    /* Integer cast forces add rN, rBase, #0x198. A named flags |= CSEs it. */
     *(int*)(((int)c + 0x198)) |= 0x20000;
-    ((dCc_c *)(c + 0x180))->Clear();
-    ((dCc_c *)(c + 0x180))->Update();
+    goomba->mdCcAc_c.Clear();
+    goomba->mdCcAc_c.Update();
 
 L_a4:
     if (deathState == 0) goto L_end;
-    func_02012694(data_ov084_02130218[*(int*)(c + 0x460)], (const ::Vector3 *)(c + 0x74));
+    func_02012694(data_ov084_02130218[goomba->mGoombaType], (const Vector3 *)&goomba->mCamSpacePosX);
     func_ov084_021296cc(c);
-    /* ROM: copy+respawn when (deathPhase < 6) OR (byte_464 == 2) */
-    if ((*(unsigned char*)(c + 0x113) & 0xf) < 6 || *(unsigned char*)(c + 0x464) == 2) {
-        *(int*)(c + 0x5c) = *(int*)(c + 0x41c);
-        *(int*)(c + 0x60) = *(int*)(c + 0x420);
-        *(int*)(c + 0x64) = *(int*)(c + 0x424);
-        ((dCapEnemy_c *)c)->RespawnIfHasCap();
+    if ((goomba->mCapId & 0xf) < 6 || goomba->mRewardType == 2) {
+        goomba->mPosX = goomba->mHomePos.x;
+        goomba->mPosY = goomba->mHomePos.y;
+        goomba->mPosZ = goomba->mHomePos.z;
+        goomba->RespawnIfHasCap();
     }
-    if ((*(unsigned char*)(c + 0x113) & 0xf) < 6) {
-        ((dActor_c *)c)->UntrackInDeathTable();
-    }
+    if ((goomba->mCapId & 0xf) < 6)
+        goomba->UntrackInDeathTable();
 L_end:
     return deathState;
 }
@@ -582,7 +565,7 @@ int func_ov084_02129a00(char *self) {
         return 1;
     }
 
-    func_ov084_0212a580(self);
+    ((daKrb_c *)self)->func_ov084_0212a580();
     ((dCc_c *)(self + 0x180))->Clear();
     if (*(u8 *)(self + 0x107) != 0) {
         func_ov084_021294d0(self);
@@ -623,14 +606,14 @@ ret0:
 extern "C" {
 void func_ov084_02129c9c(char *c)
 {
-  char *new_var;
-  func_02012694(0x118, (const ::Vector3 *)(c + 0x74));
-  *((int *) (c + 0x434)) = 2;
-  *((int *) (c + 0x98)) = 0;
-  new_var = c;
-  *((int *) (new_var + 0xa8)) = data_ov084_02130248[*((int *) (new_var + 0x460))];
-  ((dBgCh_Actr *)(new_var + 0x1b4))->ClearGroundFlag();
-  *((int *) ((char *)(((int)(new_var + 0x198)) + 0))) |= 4;
+    daKrb_c *goomba = (daKrb_c *)c;
+    func_02012694(0x118, (const Vector3 *)&goomba->mCamSpacePosX);
+    goomba->mState = 2;
+    goomba->mHorzSpeed = 0;
+    goomba->mVertSpeed = data_ov084_02130248[goomba->mGoombaType];
+    goomba->mWithMeshClsn.ClearGroundFlag();
+    /* Integer cast keeps the orr on a freshly formed +0x198, not a CSE of flags. */
+    *((int *)((char *)(((int)((char *)goomba + 0x198)) + 0))) |= 4;
 }
 }
 
@@ -889,36 +872,36 @@ block_68:
 }
 }
 
-// @symbol func_ov084_0212a580
+// @symbol _ZN7daKrb_c19func_ov084_0212a580Ev
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void func_ov084_0212a580(char* c){
+void daKrb_c::func_ov084_0212a580(){
     Vector3_16_local rotation;
     Vector3 pos;
     Vector3 arg;
     Vector3_16_local arg16;
 
-    Matrix4x3_FromRotationY(c + 0x38c, *(short*)(c + 0x8e));
-    *(int*)(c + 0x3b0) = *(int*)(c + 0x5c) >> 3;
-    *(int*)(c + 0x3b4) = *(int*)(c + 0x60) >> 3;
-    *(int*)(c + 0x3b8) = *(int*)(c + 0x64) >> 3;
-    rotation.x = *(short*)(c + 0x8c);
-    rotation.y = *(short*)(c + 0x8e);
-    rotation.z = *(short*)(c + 0x90);
-    if ((*(int*)(c + 0xb0) & 0x40000 ? 1 : 0) == 0) {
-        if (((dBgCh_Actr *)(c + 0x1b4))->IsOnGround()) {
-            _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x3d4, c + 0x38c, *(int*)(c + 0x80) * 0x50, 0x1e000, 0xf);
+    Matrix4x3_FromRotationY((char *)this + 0x38c, *(short*)((char *)this + 0x8e));
+    *(int*)((char *)this + 0x3b0) = *(int*)((char *)this + 0x5c) >> 3;
+    *(int*)((char *)this + 0x3b4) = *(int*)((char *)this + 0x60) >> 3;
+    *(int*)((char *)this + 0x3b8) = *(int*)((char *)this + 0x64) >> 3;
+    rotation.x = *(short*)((char *)this + 0x8c);
+    rotation.y = *(short*)((char *)this + 0x8e);
+    rotation.z = *(short*)((char *)this + 0x90);
+    if ((*(int*)((char *)this + 0xb0) & 0x40000 ? 1 : 0) == 0) {
+        if (((dBgCh_Actr *)((char *)this + 0x1b4))->IsOnGround()) {
+            _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j((char *)this, (char *)this + 0x3d4, (char *)this + 0x38c, *(int*)((char *)this + 0x80) * 0x50, 0x1e000, 0xf);
         } else {
-            _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x3d4, c + 0x38c, *(int*)(c + 0x80) * 0x50, 0x96000, 0xf);
+            _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j((char *)this, (char *)this + 0x3d4, (char *)this + 0x38c, *(int*)((char *)this + 0x80) * 0x50, 0x96000, 0xf);
         }
     }
     pos.x = 0;
     pos.z = 0;
     pos.y = 0x6c000;
-    pos.x += ((short*)data_02082214)[(*(unsigned short*)(c + 0x8e) >> 4) * 2] * 10;
-    pos.z += ((short*)data_02082214)[(*(unsigned short*)(c + 0x8e) >> 4) * 2 + 1] * 10;
+    pos.x += ((short*)data_02082214)[(*(unsigned short*)((char *)this + 0x8e) >> 4) * 2] * 10;
+    pos.z += ((short*)data_02082214)[(*(unsigned short*)((char *)this + 0x8e) >> 4) * 2 + 1] * 10;
     arg.x = ((int*)&pos)[0];
     arg.y = ((int*)&pos)[1];
     arg.z = ((int*)&pos)[2];
@@ -926,21 +909,24 @@ extern "C" void func_ov084_0212a580(char* c){
     arg16.y = ((unsigned short*)&rotation)[1];
     arg16.z = ((unsigned short*)&rotation)[2];
     /* equal-arm ternary forces arg16 setup (r2) before arg (r1) — matches ROM call-arg order */
-    _ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16((dCapEnemy_c*)c, arg, c ? arg16 : arg16);
+    _ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16((dCapEnemy_c*)this, arg, this ? arg16 : arg16);
 }
 
 // @symbol func_ov084_0212a6f8
 extern "C" {
 void func_ov084_0212a6f8(char *c)
 {
-    *(int *)(c + 0x98) = 0;
-    if (*(unsigned short *)(c + 0x400 + 0x54)) {
-        *(unsigned short *)(((int)c + 0x454)) -= 1;
+    daKrb_c *goomba = (daKrb_c *)c;
+    goomba->mHorzSpeed = 0;
+    /* Header spells this s16; the body loads it unsigned, and the two
+       address forms stop mwcc from CSEing the halfword. */
+    if (*(unsigned short *)((char *)goomba + 0x400 + 0x54)) {
+        *(unsigned short *)(((int)goomba + 0x454)) -= 1;
     }
-    if (*(unsigned short *)(c + 0x400 + 0x54))
+    if (*(unsigned short *)((char *)goomba + 0x400 + 0x54))
         return;
-    *(int *)(c + 0x434) = 0;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x370, data_ov084_02130ce8[1], 0, 0x1000, 0);
+    goomba->mState = 0;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130ce8[1], 0, 0x1000, 0);
 }
 }
 
@@ -998,7 +984,7 @@ void func_ov084_0212a774(char *c)
             if (aa <= cnt * 0x500) {
                 *(s32 *)(c + 0xa8) = (cnt << 0xa) - *(s32 *)(c + 0x9c);
             } else {
-                *(s32 *)(c + 0xa8) = _ZN4cstd4fdivEii((a8 * -0x50) / 100, *(s32 *)(c + 0xd8));
+                *(s32 *)(c + 0xa8) = cstd::fdiv((a8 * -0x50) / 100, *(s32 *)(c + 0xd8));
             }
         }
         {
@@ -1046,43 +1032,40 @@ void func_ov084_0212a774(char *c)
 }
 }
 
-// @symbol func_ov084_0212aab0
-void ApproachLinear(short &v, short t, short step);
+bool ApproachLinear(short &value, short target, short step);
 
-extern "C" void func_ov084_0212aab0(char *c)
+// @symbol _ZN7daKrb_c19func_ov084_0212aab0Ev
+void daKrb_c::func_ov084_0212aab0()
 {
-    if (((dBgCh_Actr *)(c + 0x1b4))->JustHitGround()) {
-        int s = *(int *)(c + 0x460);
-        switch (s) {
-        case 2: ((dActor_c *)c)->HugeLandingDust(true); break;
-        case 1: ((dActor_c *)c)->LandingDust(true); break;
+    if (mWithMeshClsn.JustHitGround()) {
+        switch (mGoombaType) {
+        case 2: HugeLandingDust(true); break;
+        case 1: LandingDust(true); break;
         }
     }
-    if (((dBgCh_Actr *)(c + 0x1b4))->IsOnGround()) {
-        *(int *)(c + 0x434) = 0;
-        int *p = (int *)(((int)c + 0x198));
-        *p &= ~4;
+    if (mWithMeshClsn.IsOnGround()) {
+        mState = 0;
+        mdCcAc_c.flags &= ~4;
     } else {
-        ApproachLinear(*(short *)(c + 0x94), *(short *)(c + 0x45c), 0x800);
+        ApproachLinear(mPrevAngleY, *(short *)((char *)this + 0x45c), 0x800);
     }
-    *(short *)(c + 0x8e) = *(short *)(c + 0x94);
+    mAngleY = mPrevAngleY;
 }
 
 // @symbol func_ov084_0212ab48
 extern "C" {
 void func_ov084_0212ab48(char *c)
 {
-    unsigned char *p;
-    int b;
+    daKrb_c *goomba = (daKrb_c *)c;
+    int large;
     func_ov084_02129c9c(c);
-    b = (int)(*(unsigned short *)(c + 0xc) == 0xca);
-    if (b != 0) {
-        *(int *)(c + 0xa8) = (int)(((long long)*(int *)(c + 0xa8) * 0x1800 + 0x800) >> 0xc);
+    large = (int)(goomba->actorID == (unsigned short)0xca);
+    if (large != 0) {
+        goomba->mVertSpeed = (int)(((long long)goomba->mVertSpeed * 0x1800 + 0x800) >> 0xc);
     }
-    *(short *)(c + 0x45c) = *(short *)(c + 0x45a);
-    p = (unsigned char *)(((int)c + 0x468));
-    *p &= ~1;
-    *(short *)(c + 0x8e) = *(short *)(c + 0x94);
+    *(short *)((char *)goomba + 0x45c) = goomba->mInitAngleY;
+    *(unsigned char *)&goomba->mSoundLatchFlags &= ~1;
+    goomba->mAngleY = goomba->mPrevAngleY;
 }
 }
 
@@ -1094,7 +1077,7 @@ void func_ov084_0212abd4(char *self)
     func_ov084_02129cf4(self, 0x3e8000);
     _Z14ApproachLinearRiii((int *)(self + 0x98), *(int *)(self + 0x444), 0x500);
     if (((Flag *)(self + 0x468))->b0) {
-        if (_Z14ApproachLinearRsss((short *)(self + 0x94), *(s16 *)(self + 0x45a), step)) {
+        if (ApproachLinear(*(short *)(self + 0x94), *(s16 *)(self + 0x45a), step)) {
             *(unsigned char *)(((int)self + 0x468)) &= ~1;
             return;
         }
@@ -1120,7 +1103,7 @@ void func_ov084_0212abd4(char *self)
             *(s16 *)(self + 0x45c) = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x41c));
             step = 0x400;
         }
-        _Z14ApproachLinearRsss((short *)(self + 0x94), *(s16 *)(self + 0x45c), step);
+        ApproachLinear(*(short *)(self + 0x94), *(s16 *)(self + 0x45c), step);
         return;
     }
     if (*(int *)(self + 0x440) >= 0x61a8000) {
@@ -1170,7 +1153,7 @@ void func_ov084_0212abd4(char *self)
         if (*(u16 *)(self + 0x456) > 0x1e)
             *(u16 *)(self + 0x458) = *(u16 *)(self + 0x456);
     }
-    _Z14ApproachLinearRsss((short *)(self + 0x94), *(s16 *)(self + 0x45c), step);
+    ApproachLinear(*(short *)(self + 0x94), *(s16 *)(self + 0x45c), step);
 }
 }
 
@@ -1279,23 +1262,24 @@ void func_ov084_0212af74(char *c)
 // @symbol func_ov084_0212b2dc
 extern "C" {
 void func_ov084_0212b2dc(char *c) {
-    if (*(int *)(c + 0x460) == 3) {
+    daKrb_c *goomba = (daKrb_c *)c;
+    if (goomba->mGoombaType == 3)
         func_ov084_0212af74(c);
-    } else {
+    else
         func_ov084_0212abd4(c);
-    }
-    *(short *)(c + 0x8e) = *(short *)(c + 0x94);
+    goomba->mAngleY = goomba->mPrevAngleY;
 }
 }
 
 // @symbol _ZN7daKrb_c16OnAimedAtWithEggEv
 int daKrb_c::OnAimedAtWithEgg()
 {
-    unsigned short v = *(unsigned short*)((char*)this + 0xc);
-    int b = (v == (unsigned short)0xc8) ? 1 : 0;
-    if (b) return 0x41000;
-    int b2 = (v == (unsigned short)0xca) ? 1 : 0;
-    if (b2) return 0x96000;
+    int normal = (actorID == (unsigned short)0xc8) ? 1 : 0;
+    if (normal)
+        return 0x41000;
+    int large = (actorID == (unsigned short)0xca) ? 1 : 0;
+    if (large)
+        return 0x96000;
     return 0x14000;
 }
 
@@ -1304,47 +1288,45 @@ void daKrb_c::OnTurnIntoEgg(Player &playerRef)
 {
     char *self = (char *)this;
     char *player = (char *)&playerRef;
-    Obj *o = (Obj *)self;
     int b5;
     bool b4;
 
-    if ((*(unsigned char *)(self + 0x113) & 0xf) < 6 || mRewardType == 2) {
-        *(int *)(self + 0x5c) = *(int *)(self + 0x41c);
-        *(int *)(self + 0x60) = *(int *)(self + 0x420);
-        *(int *)(self + 0x64) = *(int *)(self + 0x424);
-        ((dCapEnemy_c *)self)->RespawnIfHasCap();
+    if ((mCapId & 0xf) < 6 || mRewardType == 2) {
+        mPosX = mHomePos.x;
+        mPosY = mHomePos.y;
+        mPosZ = mHomePos.z;
+        RespawnIfHasCap();
     }
 
-    if (o->GetState() == 6) {
+    if (((dActor_c *)self)->OnYoshiTryEat() == 6) {
         if (((Player *)player)->IsCollectingCap()) {
-            if (*(unsigned char *)(self + 0x108) == 1)
-                ((dActor_c *)self)->GivePlayerCoins(*(Player *)player, 1, 0);
+            if (unk_108 == 1)
+                GivePlayerCoins(*(Player *)player, 1, 0);
             func_ov084_021296cc(self);
         } else {
             b5 = 0;
             b4 = b5;
-            if (*(unsigned char *)(self + 0x108) == 1)
+            if (unk_108 == 1)
                 b5 = 1;
             if (mRewardType == 1) {
-                ((dActor_c *)self)->UntrackStar(*(s8 *)(self + 0x465));
+                UntrackStar(mStarTracked);
                 b4 = 1;
-                dActor_c::Spawn(0xb4, 0x50, *(Vector3 *)(self + 0x41c), 0, *(signed char *)(self + 0xcc), -1);
-                /* unsigned on the load side only: spelling both sides identically
-                   lets mwccarm CSE the field address (add r2,r7,#8 + [r2]),
-                   one instruction the ROM does not have -- it wants [r7,#8] direct */
+                dActor_c::Spawn(0xb4, 0x50, mHomePos, 0, mAreaId, -1);
+                /* unsigned on the load side only: spelling both sides as param1
+                   lets mwccarm CSE the field address. The ROM wants [rN,#8]. */
                 *(int *)(self + 8) = *(unsigned int *)(self + 8) & 0xff0f;
             } else if (mRewardType == 2) {
                 if (mStarID == data_0209f344[data_0209f208[0]]) {
-                    ((dActor_c *)self)->UntrackStar(*(s8 *)(self + 0x465));
+                    UntrackStar(mStarTracked);
                     mRewardType = 3;
                     b4 = 1;
                 }
             }
             ((Player *)player)->RegisterEggCoinCount(b5, b4, 0);
         }
-    } else if (o->GetState() == 4) {
-        if (*(unsigned char *)(self + 0x108) == 1)
-            ((dActor_c *)self)->GivePlayerCoins(*(Player *)player, 1, 0);
+    } else if (((dActor_c *)self)->OnYoshiTryEat() == 4) {
+        if (unk_108 == 1)
+            GivePlayerCoins(*(Player *)player, 1, 0);
     }
 
     func_ov084_02129498(self);
@@ -1399,16 +1381,13 @@ int daKrb_c::Render()
         mScaleZ = (int)(((long long)mScaleZ * data_ov084_02130258[mGoombaType] + 0x800) >> 12);
     }
 
-    {
-        Sub* b = (Sub*)((char*)&mModelAnim);
-        b->m5((Vector3*)((char*)&mScaleX));
-    }
+    mModelAnim.Render((const Vector3 *)&mScaleX);
 
     mScaleX = backup.x;
     mScaleY = backup.y;
     mScaleZ = backup.z;
-    ((MaterialChanger *)(((char*)this) + 0x3fc))->Update(*(ModelComponents *)(((char*)this) + 0x378));
-    _ZN11dCapEnemy_c14RenderCapModelEPK7Vector3(((char*)this), 0);
+    mMaterialChanger.Update(mModelAnim.data);
+    RenderCapModel(0);
     return 1;
 }
 
@@ -1433,7 +1412,7 @@ int daKrb_c::Behavior()
         mEatenByYoshi == 0 && mDeathState == 0 &&
         _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char*)this), 0x5dc000) != 0)
     {
-        _ZN11dCapEnemy_c12Unk_02005d94Ev(((char*)this));
+        Unk_02005d94();
         return 1;
     }
 
@@ -1458,7 +1437,7 @@ int daKrb_c::Behavior()
             return 1;
         }
         if (func_ov084_021298d0(((char*)this)) == 0)
-            func_ov084_0212a580(((char*)this));
+            func_ov084_0212a580();
         return 1;
     }
 
@@ -1470,7 +1449,7 @@ int daKrb_c::Behavior()
     {
         mModelAnim.speed = 0x1000;
     } else {
-        int v = _ZN4cstd4fdivEii(mHorzSpeed, mScaleX * 2);
+        int v = cstd::fdiv(mHorzSpeed, mScaleX * 2);
         if (v > 0x3000)
             v = 0x3000;
         mModelAnim.speed = v;
@@ -1540,7 +1519,7 @@ int daKrb_c::Behavior()
     ((dCc_c *)&mdCcAc_c)->Clear();
     if (mDeathState == 0)
         ((dCc_c *)&mdCcAc_c)->Update();
-    func_ov084_0212a580(((char*)this));
+    func_ov084_0212a580();
     func_ov084_02129238(((char*)this));
 
     if (mState == 0) {
@@ -1707,12 +1686,13 @@ int daKrb_c::InitResources()
 // @symbol _ZN7daKrb_c13OnYoshiTryEatEv
 int daKrb_c::OnYoshiTryEat()
 {
-    unsigned short v = *(unsigned short*)((char*)this + 0xc);
-    int b = (v == (unsigned short)0xc8) ? 1 : 0;
-    if (b) return 0x6;
-    int b2 = (v == (unsigned short)0xc9) ? 1 : 0;
-    if (b2) return 0x4;
-    return 0x0;
+    int normal = (actorID == (unsigned short)0xc8) ? 1 : 0;
+    if (normal)
+        return 0x6;
+    int small = (actorID == (unsigned short)0xc9) ? 1 : 0;
+    if (small)
+        return 0x4;
+    return 0;
 }
 
 // @symbol daKrb_c_classInit_KURIBO_L

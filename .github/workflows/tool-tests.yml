@@ -141,6 +141,16 @@ on:
       - "tools/**"
       - "nearmiss/**"
       - ".github/workflows/tool-tests.yml"
+  # Nightly, because the paths filters above see only the tests' own code, not the
+  # data they read. tools.test_reloc_audit_flags reads every promoted
+  # config/tu_manifest.d entry. #3199 promoted ov002/dPathLiftActor_c without its
+  # verification block, and main stayed "green" because nothing under tools/ changed.
+  # The red only appeared on the next unrelated tools PR (#3222, 2026-09-27), whose
+  # author had to find and fix it (#3223) before their own change could land. This
+  # run catches that shape within a day on main itself. GitHub mails a scheduled
+  # run's failure to whoever last edited this cron line.
+  schedule:
+    - cron: "23 7 * * *"
   workflow_dispatch:
 
 permissions:
@@ -152,6 +162,7 @@ concurrency:
 
 jobs:
   tools:
+    name: tool tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

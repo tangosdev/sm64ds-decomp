@@ -3,7 +3,7 @@ typedef struct { int x, y, z; } Vec3;
 extern void Vec3_Sub(Vec3 *out, Vec3 *a, Vec3 *b);
 extern void Vec3_MulScalar(Vec3 *out, const Vec3 *in, int scale);
 extern void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
-extern void _Z14ApproachLinearRsss(short *p, short b, short c);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 extern void func_ov006_020c4d20(char *self);
 
 void func_ov006_020c6400(char *self)

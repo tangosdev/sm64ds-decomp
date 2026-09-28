@@ -33,6 +33,8 @@ extern "C" int AngleDiff(int a, int b);
 #include "BlendModelAnim.h"
 #include "Animation.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* Local shadow declarations carried from the legacy files verbatim.
  * NOT reconciled against real project headers -- check include/*.h for
  * each of these before compiling; a real header should usually win. */
@@ -126,7 +128,6 @@ extern void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void *a, int b, int c, int
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *pl, Vector3 *v, unsigned int a, int b, unsigned int c, unsigned int d, unsigned int e);
 extern char data_ov062_0211e14c[];
 extern char data_ov062_0211e17c[];
-extern void _Z14ApproachLinearRsss(short *dst, short target, short step);
 extern "C" int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *, BCA_File& f, int a, int b, int d, unsigned short e);
 extern SharedFilePtr data_ov062_0211e104;
 extern "C" void func_02012790(int);
@@ -165,7 +166,6 @@ extern void *data_0209f394;
 /* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov062_0211b930, NOT applied: extern "C" int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *, BCA_File& f, int a, int b, Fix12 spd, unsigned short t); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c13ClosestPlayerEv, from the legacy file for func_ov062_0211ba84, NOT applied: extern char *_ZN8dActor_c13ClosestPlayerEv(char *self); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211ba84, NOT applied: extern int func_ov062_0211c658(char *c, void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRsss, from the legacy file for func_ov062_0211ba84, NOT applied: extern void _Z14ApproachLinearRsss(s16 *cur, s16 tgt, s16 step); */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov062_0211ba84, NOT applied: extern void Matrix4x3_FromRotationY(void *m, int angle); */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_ApplyInPlaceToRotationX, from the legacy file for func_ov062_0211ba84, NOT applied: extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX); */
 /* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov062_0211ba84, NOT applied: extern void MulVec3Mat4x3(const Vector3 *v, void *m, Vector3 *out); */
@@ -176,7 +176,6 @@ extern void *data_0209f394;
 /* TUBUILD CONFLICT -- alternate declaration of _ZNK10dBgCh_Actr8IsOnWallEv, from the legacy file for func_ov062_0211bd10, NOT applied: extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *self); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov062_0211bd10, NOT applied: extern s16 Vec3_HorzAngle(const void *a, const void *b); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_VertAngle, from the legacy file for func_ov062_0211bd10, NOT applied: extern s16 Vec3_VertAngle(const void *a, const void *b); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRsss, from the legacy file for func_ov062_0211bd10, NOT applied: extern int _Z14ApproachLinearRsss(s16 *cur, s16 target, s16 step); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c13ClosestPlayerEv, from the legacy file for func_ov062_0211bd10, NOT applied: extern void *_ZN8dActor_c13ClosestPlayerEv(void *self); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov062_0211bd10, NOT applied: extern int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt( void *anim, void *file, int a, int b, int speed, unsigned short flags); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211bd10, NOT applied: extern int func_ov062_0211c658(void *self, void *state); */
@@ -642,9 +641,9 @@ int func_ov062_0211bd10(char *c)
         } else {
             *(s16 *)(c + 0x44a) = Vec3_HorzAngle((const Vector3 *)(c + 0x5c), (const Vector3 *)(c + 0x484));
         }
-        _Z14ApproachLinearRsss((s16 *)(c + 0x94), *(s16 *)(c + 0x44a), 0x1000);
-        _Z14ApproachLinearRsss((s16 *)(c + 0x92), Vec3_VertAngle((const Vector3 *)(c + 0x5c), (const Vector3 *)(c + 0x484)), 0x500);
-        _Z14ApproachLinearRsss((s16 *)(c + 0x96), 0, 0x500);
+        ApproachLinear(*(short *)(c + 0x94), *(s16 *)(c + 0x44a), 0x1000);
+        ApproachLinear(*(short *)(c + 0x92), Vec3_VertAngle((const Vector3 *)(c + 0x5c), (const Vector3 *)(c + 0x484)), 0x500);
+        ApproachLinear(*(short *)(c + 0x96), 0, 0x500);
         if (Vec3_Dist(c + 0x5c, c + 0x484) < 0x1f4000) {
             *(u16 *)(c + 0x444) = 0;
         } else {
@@ -665,7 +664,7 @@ int func_ov062_0211bd10(char *c)
     if (data_0209f2f8 == 0x10) {
         ApproachAngle((s16 *)(c + 0x92), angV, 0xa, 0x400, 0x200);
     } else {
-        _Z14ApproachLinearRsss((s16 *)(c + 0x92), angV, 0x300);
+        ApproachLinear(*(short *)(c + 0x92), angV, 0x300);
     }
     ApproachAngle((s16 *)(c + 0x96), angD, 0xa, 0x200, 0x100);
 
@@ -836,11 +835,11 @@ int func_ov062_0211ba84(char *c)
 
     }
     if (data_0209f2f8 == 0x10) {
-        _Z14ApproachLinearRsss((s16 *)(c + 0x94), *(s16 *)(c + 0x44a), (s16)*(int *)(c + 0x43c));
-        _Z14ApproachLinearRsss((s16 *)(c + 0x92), pitch, (s16)*(int *)(c + 0x43c));
+        ApproachLinear(*(short *)(c + 0x94), *(s16 *)(c + 0x44a), (s16)*(int *)(c + 0x43c));
+        ApproachLinear(*(short *)(c + 0x92), pitch, (s16)*(int *)(c + 0x43c));
     } else {
-        _Z14ApproachLinearRsss((s16 *)(c + 0x94), *(s16 *)(c + 0x44a), (s16)(*(int *)(c + 0x43c) + 0x500));
-        _Z14ApproachLinearRsss((s16 *)(c + 0x92), pitch, (s16)(*(int *)(c + 0x43c) + 0x500));
+        ApproachLinear(*(short *)(c + 0x94), *(s16 *)(c + 0x44a), (s16)(*(int *)(c + 0x43c) + 0x500));
+        ApproachLinear(*(short *)(c + 0x92), pitch, (s16)(*(int *)(c + 0x43c) + 0x500));
     }
     v.z = 0x1e000;
     Matrix4x3_FromRotationY(data_020a0e68, *(s16 *)(c + 0x8e));
@@ -924,8 +923,8 @@ extern "C" int func_ov062_0211b880(unsigned char* c) {
 extern "C" {
 int func_ov062_0211b800(char *c) {
     *(int*)(c + 0xa8) = 0x14000;
-    _Z14ApproachLinearRsss((short*)(c + 0x92), 0, 0x300);
-    _Z14ApproachLinearRsss((short*)(c + 0x96), 0, 0x300);
+    ApproachLinear(*(short *)(c + 0x92), 0, 0x300);
+    ApproachLinear(*(short *)(c + 0x96), 0, 0x300);
     if (*(int*)(c + 0x60) >= *(int*)(c + 0x434) - 0x2000) {
         *(int*)(c + 0xa4) = 0;
         *(int*)(c + 0xa8) = 0;

@@ -1659,6 +1659,51 @@ class DeletedTypeInputTests(unittest.TestCase):
         self.assertNotIn("src/filler_0001.c", total)
 
 
+class DeletionOnlyDiffTests(unittest.TestCase):
+    """#3294 deleted one workflow file and changed nothing else. Every row was a `D`
+    that `_paths_of` does not keep, so the work list came back empty. The run then
+    failed as "a base ref that resolved to nothing", although the base resolved
+    fine. The fixture's README.md exists to step around this; these tests
+    deliberately do not touch it."""
+
+    def test_a_deletion_only_diff_is_nothing_to_check(self):
+        """FAILS before the fix: rc 1, "the diff against HEAD is EMPTY"."""
+        repo = BigRepo.shared()
+        repo.reset()
+        (repo.root / "README.md").unlink()
+        rc, out = repo.run_main(["--changed", "HEAD"])
+        self.assertEqual(rc, 0, out)
+        self.assertIn("every one a deletion", out)
+
+    def test_a_deleted_source_alone_is_nothing_to_check_either(self):
+        """The carve-out above, reached with no other change beside it."""
+        repo = BigRepo.shared()
+        repo.reset()
+        (repo.root / "src" / "filler_0001.c").unlink()
+        rc, out = repo.run_main(["--changed", "HEAD"])
+        self.assertEqual(rc, 0, out)
+        self.assertIn("every one a deletion", out)
+
+    def test_a_deleted_header_alone_is_still_scanned(self):
+        """A deletion the gate DOES read never reaches the new exit. It stays in the
+        work list and is scanned as before."""
+        repo = BigRepo.shared()
+        repo.reset()
+        (repo.root / "include" / "types.h").unlink()
+        rc, out = repo.run_main(["--changed", "HEAD", "--list"])
+        self.assertEqual(rc, 1, out)
+        self.assertNotIn("every one a deletion", out)
+        self.assertIn("src/tdef_user.c", out)
+
+    def test_a_diff_with_no_rows_is_still_an_unresolved_base(self):
+        """Control: the guard the new exit sits beside is unchanged."""
+        repo = BigRepo.shared()
+        repo.reset()
+        rc, out = repo.run_main(["--changed", "HEAD"])
+        self.assertEqual(rc, 1, out)
+        self.assertNotIn("every one a deletion", out)
+
+
 class BomTests(unittest.TestCase):
     """A UTF-8 BOM is not part of the first token.
 

@@ -1,5 +1,5 @@
 #include "types.h"
-extern void func_ov002_020be3b0(char* c);
+extern void _ZN6Player19func_ov002_020be3b0Ev(char* c);
 extern u32 _ZNK6Player14GetBodyModelIDEjb(char* c, u32 a, char b);
 extern void _ZN10ModelAnim24CopyERKS_Pcj(void* self, void* src, char* p, u32 n);
 extern void func_ov002_020e444c(char* c);
@@ -16,7 +16,7 @@ void func_ov002_020e4bb8(char* self)
     u8 save_6fb;
     u8 save_6ff;
 
-    func_ov002_020be3b0(self);
+    _ZN6Player19func_ov002_020be3b0Ev(self);
 
     save_6fd = *(u8*)(self + 0x6fd);
     save_6f9 = *(u8*)(self + 0x6f9);

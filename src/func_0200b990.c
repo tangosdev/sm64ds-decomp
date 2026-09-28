@@ -11,7 +11,7 @@ extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *surf, V3 *out);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern int AngleDiff(int a, int b);
 extern void _ZN9dBgCh_LinD1Ev(dBgCh_Lin *rc);
-extern void _Z14ApproachLinearRsss(s16 *v, s16 step, s16 rate);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 extern signed char data_0209f2f8;
 
 void func_0200b990(char *self, char *arg1, int arg2)

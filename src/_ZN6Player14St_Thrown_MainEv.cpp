@@ -6,10 +6,8 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 extern "C" {
-extern void func_ov002_020bf90c(char* c);
 extern void func_ov002_020c06fc(char* c, u32 mask);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, const Vector3& v);
-extern void func_ov002_020bf9d4(char* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(Fix12i a, int b);
 extern void _Z15ApproachLinear2Rsss(s16* v, s16 target, s16 step);
@@ -27,7 +25,7 @@ int Player::St_Thrown_Main()
     if (mStateTimer == 1) {
         *(int*)((int)((char*)this) + 0x2ec) |= 0x2000;
     }
-    func_ov002_020bf90c(((char*)this));
+    func_ov002_020bf90c();
 
     u8 state = mStateStep;
     switch (state) {
@@ -42,7 +40,7 @@ int Player::St_Thrown_Main()
             }
             int r5 = func_ov002_020e2c84(((char*)this));
             if (r5 != 2 && mIsInShallowWater == 0) {
-                func_ov002_020bf9d4(((char*)this));
+                func_ov002_020bf9d4();
             }
             if (r5 != 0) {
                 return 1;

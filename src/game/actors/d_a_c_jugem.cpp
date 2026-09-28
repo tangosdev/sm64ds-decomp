@@ -13,6 +13,8 @@
 #include "Camera.h"
 #include "SharedFilePtr.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* Calls with no usable header declaration are declared once, with C linkage,
    under their ROM names; the rest are real method calls.
    Pointer parameters are spelled void *: the mangled names already carry the
@@ -25,7 +27,6 @@ void  _ZN6Camera9SetFlag_3Ev(void *cam);
 
 /* math / vector helpers */
 void  _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(void *cur, const void *tgt, int step);
-void  _Z14ApproachLinearRsss(s16 *cur, s16 tgt, s16 step);
 void  _Z14ApproachLinearRiii(int *cur, int tgt, int step);
 int   Vec3_Dist(const void *a, const void *b);
 int   Vec3_HorzDist(const void *a, const void *b);
@@ -204,10 +205,10 @@ int func_ov085_0212d73c(daC_Jugem_c *c)
     cam = data_0209f318;
     _ZN6Camera9SetFlag_3Ev(cam);
     c->mSfxHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(c->mSfxHandle, 3, 0x182, &c->mCamSpacePosX, 0);
-    _Z14ApproachLinearRsss(&c->mAngleY, Vec3_HorzAngle(&c->mPosX, &data_ov085_0213084c), 0x200);
-    _Z14ApproachLinearRsss(&c->mAngleX, Vec3_VertAngle(&c->mPosX, &data_ov085_0213084c), 0x200);
+    ApproachLinear(c->mAngleY, Vec3_HorzAngle(&c->mPosX, &data_ov085_0213084c), 0x200);
+    ApproachLinear(c->mAngleX, Vec3_VertAngle(&c->mPosX, &data_ov085_0213084c), 0x200);
     _Z14ApproachLinearRiii(&c->mHorzSpeed, 0x28000, 0x2000);
-    _Z14ApproachLinearRsss(&c->mPrevAngleY, Vec3_HorzAngle(&c->mPosX, &data_ov085_0213084c), (s16)c->unk_2cc);
+    ApproachLinear(c->mPrevAngleY, Vec3_HorzAngle(&c->mPosX, &data_ov085_0213084c), (s16)c->unk_2cc);
     c->mAngleY = c->mPrevAngleY;
     *(int *)(((int)&c->unk_2cc)) += 5;
     if (c->unk_2cc > 0x800)
@@ -278,7 +279,7 @@ int func_ov085_0212d9b8(daC_Jugem_c *c)
     }
 
     if (c->mTimer == 0x32) {
-        func_ov002_020c3ea0(pl);
+        ((Player *)(pl))->func_ov002_020c3ea0();
     }
     c->mAngleY = 0x6000;
     c->mPrevAngleY = c->mAngleY;
@@ -406,9 +407,9 @@ int func_ov085_0212dd10(daC_Jugem_c *c)
     {
         int s = c->mTimer;
         if (s > 0x57 && s < 0x5b)
-            _Z14ApproachLinearRsss(&c->mAngleX, 0x2000, 0x400);
+            ApproachLinear(c->mAngleX, 0x2000, 0x400);
         else
-            _Z14ApproachLinearRsss(&c->mAngleX, 0x1000, 0x400);
+            ApproachLinear(c->mAngleX, 0x1000, 0x400);
     }
     if (c->mTimer > 0x78)
         func_ov085_0212e728((JugemHost *)c, &data_ov085_021307c0);
@@ -522,8 +523,8 @@ extern "C" {
 
 int func_ov085_0212e078(daC_Jugem_c *c)
 {
-    _Z14ApproachLinearRsss(&c->mPrevAngleY, Vec3_HorzAngle(&c->mPosX, &c->mTargetX), 0x800);
-    _Z14ApproachLinearRsss(&c->mAngleY, c->mPrevAngleY, 0x800);
+    ApproachLinear(c->mPrevAngleY, Vec3_HorzAngle(&c->mPosX, &c->mTargetX), 0x800);
+    ApproachLinear(c->mAngleY, c->mPrevAngleY, 0x800);
     c->mSfxHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
         c->mSfxHandle, 3, 0x182, &c->mCamSpacePosX, 0);
     if (AngleDiff(c->mPrevAngleY, Vec3_HorzAngle(&c->mPosX, &c->mTargetX)) < 0x2000) {
@@ -558,7 +559,7 @@ int func_ov085_0212e180(daC_Jugem_c *c) {
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov085_0212e19c(daC_Jugem_c *c)
 {
-    _Z14ApproachLinearRsss(&c->mAngleY, ((dActor_c *)c)->HorzAngleToCPlayer(), 0x800);
+    ApproachLinear(c->mAngleY, ((dActor_c *)c)->HorzAngleToCPlayer(), 0x800);
     switch (c->mTalkStep) {
     case 0:
         {
@@ -644,7 +645,7 @@ int func_ov085_0212e310(daC_Jugem_c *c)
     out.z += p->mPosZ;
 
     _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(&c->mPosX, &out, 0x14000);
-    _Z14ApproachLinearRsss(&c->mPrevAngleY, Vec3_HorzAngle(&c->mPosX, &out), 0x800);
+    ApproachLinear(c->mPrevAngleY, Vec3_HorzAngle(&c->mPosX, &out), 0x800);
     c->mAngleY = c->mPrevAngleY;
 
     if (Vec3_Dist(&c->mPosX, &out) < 0x14000) {

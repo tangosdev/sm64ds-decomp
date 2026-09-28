@@ -20,9 +20,10 @@
  *   state records (FlyGuy_ChangeState) are sinit-owned BSS, not this TU's data
  *   claim. FlyGuy_ChangeState keeps its C-ABI name. Helpers stay func_ov070_*
  *   (cartridge addresses, no identifiers). ApproachAngle int-target vs short
- *   via block-scope extern (this TU). V3w/V3h array-wrapper for struct copy
- *   (this TU). func_ov070_0211f48c / 0211f62c / 0211f6e0 keep char* for the
- *   inherited dActor/Player offsets and the V3w copy (this TU, measured).
+ *   via namespace ApproachAngleInt (this TU). V3w/V3h array-wrapper for struct copy
+ *   (this TU). func_ov070_0211f48c / 0211f62c / 0211f6e0 keep
+ *   `(char *)this + off` for the inherited dActor/Player offsets and the V3w
+ *   copy (this TU, measured).
  */
 
 #include "daPropeller_Heyho_c.h"
@@ -280,6 +281,8 @@ int daPropeller_Heyho_c::CleanupResources()
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_02120070
 #include "common.h"
+
+bool ApproachLinear(short &value, short target, short step);
 extern "C" {
 
 extern void Vec3_Asr(void* d, void* s, int sh);
@@ -338,7 +341,6 @@ extern int Vec3_Dist(void *a, void *b);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern void ApproachAngle(s16 *dst, s16 target, int a, int b, int c);
 extern short Vec3_VertAngle(void *a, void *b);
-extern void _Z14ApproachLinearRsss(void *dst, short a, short b);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
@@ -367,7 +369,7 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
     }
     ApproachAngle(&c->mPrevAngleY, c->mTargetAngY, 0xa, 0x200, 0x100);
 
-    _Z14ApproachLinearRsss(&c->mPrevAngleX, Vec3_VertAngle(&c->mPosX, &c->mHomePosX), 0x100);
+    ApproachLinear(c->mPrevAngleX, Vec3_VertAngle(&c->mPosX, &c->mHomePosX), 0x100);
 
     ApproachAngle(&c->mPrevAngleZ,
                   (c->mPrevAngleY - c->mTargetAngY) / 2,
@@ -534,8 +536,16 @@ int func_ov070_0211fa80(daPropeller_Heyho_c *c) {
 }
 }
 
+/* ApproachAngle, int-target view (byte-load-bearing: the target is not
+ * narrowed to short). The file-scope C declarations take a short target. A
+ * block-scope extern inside a member function gets C++ linkage and names a
+ * symbol nothing defines, so the view is a C-linkage redeclaration in its own
+ * namespace, used by func_ov070_0211f6e0 and func_ov070_0211f48c. */
+namespace ApproachAngleInt {
+extern "C" int ApproachAngle(s16 *angle, int target, int step, int maxDelta, int minDelta);
+}
+
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov070_0211f6e0
 extern "C" {
 typedef int s32;
 typedef short s16;
@@ -552,7 +562,7 @@ extern daPropeller_Heyho_c::State data_ov070_021235dc;
 extern s32 data_0209f32c;
 extern int data_020a0e68[];
 
-/* (ApproachAngle: this file's own int-target view, declared inside the function body) */
+/* (ApproachAngle: this file's own int-target view, namespace ApproachAngleInt above) */
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern short Vec3_VertAngle(void* v1, void* v0);
@@ -561,10 +571,11 @@ extern u16 DecIfAbove0_Short(u16* p);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* mF, s16 angX);
 extern void MulVec3Mat4x3(void* v, void* m, void* res);
+}
 
-int func_ov070_0211f6e0(char* c)
+// @symbol _ZN19daPropeller_Heyho_c19func_ov070_0211f6e0Ev
+int daPropeller_Heyho_c::func_ov070_0211f6e0()
 {
-    extern int ApproachAngle(s16* angle, int target, int step, int maxDelta, int minDelta); /* byte-load-bearing: int target */
     char* player;
     Vector3 tmp;
     Vector3 v;
@@ -572,63 +583,62 @@ int func_ov070_0211f6e0(char* c)
     s16 vAngle;
     s16 half;
     s32 z;
-    daPropeller_Heyho_c* self = (daPropeller_Heyho_c*)c;
 
-    ApproachAngle((s16*)(c + 0x94), self->mTargetAngY, 0x100, 0x1000, 0x1000);
-    ApproachAngle((s16*)(c + 0x96), 0, 0x100, 0x1000, 0x1000);
+    ApproachAngleInt::ApproachAngle((s16*)((char *)this + 0x94), mTargetAngY, 0x100, 0x1000, 0x1000);
+    ApproachAngleInt::ApproachAngle((s16*)((char *)this + 0x96), 0, 0x100, 0x1000, 0x1000);
 
-    if (((Animation *)(c + 0x350))->Finished()) {
-        if (self->mStateStep == 0) {
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x300, (void*)((int *)&data_ov070_02123510)[1], 0, 0x1000, 0);
-            self->mStateStep = 1;
+    if (((Animation *)((char *)this + 0x350))->Finished()) {
+        if (mStateStep == 0) {
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)this + 0x300, (void*)((int *)&data_ov070_02123510)[1], 0, 0x1000, 0);
+            mStateStep = 1;
         }
-        if (self->mHitDuringAttack == 1) {
+        if (mHitDuringAttack == 1) {
             if (data_0209f2f8 != 0x16)
-                self->mHomePosY += 0x12c000;
-            self->mStateStep = 0;
-            self->mCooldown = 0x5a;
-            FlyGuy_ChangeState(self, &data_ov070_0212359c);
+                mHomePosY += 0x12c000;
+            mStateStep = 0;
+            mCooldown = 0x5a;
+            FlyGuy_ChangeState(this, &data_ov070_0212359c);
             return 1;
         }
     }
 
-    if (*(u16*)(c + 0x100) == 0 || ((dBgCh_Actr *)(c + 0x144))->IsOnWall()) {
+    if (*(u16*)((char *)this + 0x100) == 0 || ((dBgCh_Actr *)((char *)this + 0x144))->IsOnWall()) {
         if (data_0209f2f8 != 0x16) {
-            self->mHomePosX = *(s32*)(c + 0x5c);
-            self->mHomePosY = *(s32*)(c + 0x60);
-            self->mHomePosZ = *(s32*)(c + 0x64);
+            mHomePosX = *(s32*)((char *)this + 0x5c);
+            mHomePosY = *(s32*)((char *)this + 0x60);
+            mHomePosZ = *(s32*)((char *)this + 0x64);
         }
-        *(u16*)(c + 0x92) = 0;
-        FlyGuy_ChangeState(self, &data_ov070_021235dc);
+        *(u16*)((char *)this + 0x92) = 0;
+        FlyGuy_ChangeState(this, &data_ov070_021235dc);
         return 1;
     }
 
-    player = (char*)((daPropeller_Heyho_c*)c)->ClosestNonVanishPlayer();
+    player = (char*)ClosestNonVanishPlayer();
     if (player == 0) {
         if (data_0209f2f8 != 0x16) {
-            self->mHomePosX = *(s32*)(c + 0x5c);
-            self->mHomePosY = *(s32*)(c + 0x60);
-            self->mHomePosZ = *(s32*)(c + 0x64);
+            mHomePosX = *(s32*)((char *)this + 0x5c);
+            mHomePosY = *(s32*)((char *)this + 0x60);
+            mHomePosZ = *(s32*)((char *)this + 0x64);
         }
-        *(u16*)(c + 0x92) = 0;
-        FlyGuy_ChangeState(self, &data_ov070_021235dc);
+        *(u16*)((char *)this + 0x92) = 0;
+        FlyGuy_ChangeState(this, &data_ov070_021235dc);
         return 1;
     }
 
-    if (*(u8*)(player + 0x706) != 0 && data_0209f32c > *(s32*)(c + 0x60)) {
+    if (*(u8*)(player + 0x706) != 0 && data_0209f32c > *(s32*)((char *)this + 0x60)) {
         if (data_0209f2f8 != 0x16) {
-            self->mHomePosX = *(s32*)(c + 0x5c);
-            self->mHomePosY = *(s32*)(c + 0x60);
-            self->mHomePosZ = *(s32*)(c + 0x64);
-            self->mHomePosY += 0xc8000;
+            mHomePosX = *(s32*)((char *)this + 0x5c);
+            mHomePosY = *(s32*)((char *)this + 0x60);
+            mHomePosZ = *(s32*)((char *)this + 0x64);
+            mHomePosY += 0xc8000;
         }
-        *(s32*)(c + 0x5c) = *(s32*)(c + 0x68);
-        *(s32*)(c + 0x60) = *(s32*)(c + 0x6c);
-        *(s32*)(c + 0x64) = *(s32*)(c + 0x70);
-        *(u16*)(c + 0x92) = 0;
-        *(u16*)(c + 0x100) = 0;
-        *(u32*)(c + 0xa8) = 0;
-        FlyGuy_ChangeState(self, &data_ov070_021235dc);
+        *(s32*)((char *)this + 0x5c) = *(s32*)((char *)this + 0x68);
+        *(s32*)((char *)this + 0x60) = *(s32*)((char *)this + 0x6c);
+        *(s32*)((char *)this + 0x64) = *(s32*)((char *)this + 0x70);
+        *(u16*)((char *)this + 0x92) = 0;
+        *(u16*)((char *)this + 0x100) = 0;
+        *(u32*)((char *)this + 0xa8) = 0;
+        FlyGuy_ChangeState(this, &data_ov070_021235dc);
         return 1;
     }
 
@@ -650,26 +660,25 @@ int func_ov070_0211f6e0(char* c)
         aim.y = ty;
         aim.z = tz;
     }
-    vAngle = Vec3_VertAngle((Vector3*)(c + 0x5c), &aim);
-    ApproachAngle((s16*)(c + 0x92), vAngle, 0xa, 0x200, 0x100);
+    vAngle = Vec3_VertAngle((Vector3*)((char *)this + 0x5c), &aim);
+    ApproachAngleInt::ApproachAngle((s16*)((char *)this + 0x92), vAngle, 0xa, 0x200, 0x100);
 
     v.z = 0x11000;
-    if (*(s32*)(c + 0x60) <= *(s32*)((char*)&tmp + 4) + 0x5000 ||
-        *(s32*)(c + 0x60) <= *(s32*)(player + 0x60) + 0x5000 ||
-        Vec3_Dist((Vector3*)(c + 0x5c), &self->mHomePosX) > 0x5dc000) {
-        DecIfAbove0_Short((u16*)(c + 0x100));
+    if (*(s32*)((char *)this + 0x60) <= *(s32*)((char*)&tmp + 4) + 0x5000 ||
+        *(s32*)((char *)this + 0x60) <= *(s32*)(player + 0x60) + 0x5000 ||
+        Vec3_Dist((Vector3*)((char *)this + 0x5c), &mHomePosX) > 0x5dc000) {
+        DecIfAbove0_Short((u16*)((char *)this + 0x100));
         v.z = 0x9000;
     }
 
-    half = (*(s16*)(c + 0x94) - self->mTargetAngY) / 2;
-    ApproachAngle((s16*)(c + 0x96), half, 0xa, 0x100, 0x50);
+    half = (*(s16*)((char *)this + 0x94) - mTargetAngY) / 2;
+    ApproachAngleInt::ApproachAngle((s16*)((char *)this + 0x96), half, 0xa, 0x100, 0x50);
 
-    Matrix4x3_FromRotationY(data_020a0e68, *(s16*)(c + 0x8e));
-    Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, *(s16*)(c + 0x92));
-    MulVec3Mat4x3(&v, data_020a0e68, (Vector3*)(c + 0xa4));
+    Matrix4x3_FromRotationY(data_020a0e68, *(s16*)((char *)this + 0x8e));
+    Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, *(s16*)((char *)this + 0x92));
+    MulVec3Mat4x3(&v, data_020a0e68, (Vector3*)((char *)this + 0xa4));
 
     return 1;
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -686,23 +695,23 @@ int func_ov070_0211f694(daPropeller_Heyho_c *c) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov070_0211f62c
 extern "C" {
 extern signed char data_0209f2f8;
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
+}
 
-int func_ov070_0211f62c(char *c)
+// @symbol _ZN19daPropeller_Heyho_c19func_ov070_0211f62cEv
+int daPropeller_Heyho_c::func_ov070_0211f62c()
 {
-    if (((Animation *)(c + 0x350))->Finished() != 0) {
+    if (((Animation *)((char *)this + 0x350))->Finished() != 0) {
         if (data_0209f2f8 != 0x16)
-            ((daPropeller_Heyho_c *)c)->mHomePosY += 0x12c000;
-        ((daPropeller_Heyho_c *)c)->mStateStep = 0;
-        ((daPropeller_Heyho_c *)c)->mCooldown = 0x5a;
-        FlyGuy_ChangeState((daPropeller_Heyho_c *)c, &data_ov070_0212359c);
+            mHomePosY += 0x12c000;
+        mStateStep = 0;
+        mCooldown = 0x5a;
+        FlyGuy_ChangeState(this, &data_ov070_0212359c);
     }
     return 1;
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -727,28 +736,27 @@ extern "C" int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
 
 /* -------------------------------------------------------------------------- */
 extern "C" {
-// @symbol func_ov070_0211f48c
 short Vec3_HorzAngle(void* a, void* b);
-/* (ApproachAngle: this file's own int-target view, declared inside the function body) */
+/* (ApproachAngle: this file's own int-target view, namespace ApproachAngleInt above) */
 short Vec3_VertAngle(void* a, void* b);
 void* _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(void* self, void* pos, void* vel, int a, int b, unsigned int d);
 void func_02012694(int a, void* p);
 int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
+}
 
 #define M(p) (p)
 
-int func_ov070_0211f48c(char* c) {
-    extern void ApproachAngle(short* p, int target, int a, int b, int limit); /* byte-load-bearing: int target */
+// @symbol _ZN19daPropeller_Heyho_c19func_ov070_0211f48cEv
+int daPropeller_Heyho_c::func_ov070_0211f48c() {
     char* pl;
     struct Vector3_16 vel;
     struct Vector3 posbuf;
     struct Vector3 fp;
     struct Vector3 tmp;
-    daPropeller_Heyho_c* self = (daPropeller_Heyho_c*)c;
 
-    pl = (char *)((dActor_c *)c)->ClosestPlayer();
-    if ((unsigned)(*(int*)(c+0x358) << 4) >> 0x10 >= 0xd)
+    pl = (char *)ClosestPlayer();
+    if ((unsigned)(*(int*)((char *)this + 0x358) << 4) >> 0x10 >= 0xd)
         goto hitframe;
 
     if (pl != 0) {
@@ -756,30 +764,29 @@ int func_ov070_0211f48c(char* c) {
         tmp.x = posbuf.x;
         tmp.y = posbuf.y;
         tmp.z = posbuf.z;
-        self->mTargetAngY = Vec3_HorzAngle(c+0x5c, &tmp);
+        mTargetAngY = Vec3_HorzAngle((char *)this + 0x5c, &tmp);
     }
-    ApproachAngle((short*)(c+0x94), self->mTargetAngY, 0xa, 0x400, 0x200);
+    ApproachAngleInt::ApproachAngle((short*)((char *)this + 0x94), mTargetAngY, 0xa, 0x400, 0x200);
 
 hitframe:
-    if (((Animation *)(c+0x350))->WillHitFrame(0xd) != 0) {
-        *(V3h*)&vel = *(V3h*)(c+0x8c);
+    if (((Animation *)((char *)this + 0x350))->WillHitFrame(0xd) != 0) {
+        *(V3h*)&vel = *(V3h*)((char *)this + 0x8c);
         if (pl != 0) {
             int *base = (int *)(int)M(pl + 0x5c);
             fp.x = base[0];
             fp.y = base[1];
             fp.z = base[2];
-            vel.x = Vec3_VertAngle(c+0x5c, &fp);
+            vel.x = Vec3_VertAngle((char *)this + 0x5c, &fp);
         }
-        _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(c, c+0x5c, &vel, 0x1e000, 0xa000, 1);
-        func_02012694(0x105, c+0x74);
+        _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j((char *)this, (char *)this + 0x5c, &vel, 0x1e000, 0xa000, 1);
+        func_02012694(0x105, (char *)this + 0x74);
     }
-    if (((Animation *)(c+0x350))->Finished() != 0) {
-        *(int*)(c+0x358) = 0;
-        self->mCooldown = 0x5a;
-        FlyGuy_ChangeState(self, &data_ov070_0212359c);
+    if (((Animation *)((char *)this + 0x350))->Finished() != 0) {
+        *(int*)((char *)this + 0x358) = 0;
+        mCooldown = 0x5a;
+        FlyGuy_ChangeState(this, &data_ov070_0212359c);
     }
     return 1;
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -806,7 +813,6 @@ struct Vector3_16f;
 extern "C" unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, Fix12i c, Fix12i d, Fix12i e, void* f, void* g);
 extern "C" u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const Vector3_16f* f);
 extern "C" void ApproachAngle(short* v, short a, int b, int c, int d);
-extern "C" void _Z14ApproachLinearRsss(void* v, short a, short b);
 
 extern "C" int func_ov070_0211f368(daPropeller_Heyho_c* c)
 {
@@ -825,7 +831,7 @@ extern "C" int func_ov070_0211f368(daPropeller_Heyho_c* c)
             c->mParticle1, 0x13b, v.x, v.y, v.z, 0);
     }
     ApproachAngle(&c->mAngleX, -0x4000, 0xa, 0x200, 0x100);
-    _Z14ApproachLinearRsss(&c->mAngleX, -0x4000, 0x200);
+    ApproachLinear(c->mAngleX, -0x4000, 0x200);
     if ((u16)c->mStateTimer == 0)
         func_ov070_0211f0a4(c);
     return 1;

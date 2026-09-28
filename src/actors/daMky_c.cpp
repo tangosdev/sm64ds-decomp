@@ -82,7 +82,6 @@ int   _ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(void *m, void 
 void  _ZNK7PathPtr7GetNodeER7Vector3j(const void *self, Vector3 &node, unsigned int idx); /* local extern: the member form costs 02111b20 four words */
 int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void  _Z11UpdateAngleRssis(short *p, short a, int b, short c);
-int   _Z14ApproachLinearRsss(short *dst, short target, short rate);
 void  _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *self, void *shadow, void *mtx, int rad, int height, unsigned char flags);
 void  dBgCh_Actr_UpdateContinuous_Veneer(void *self);
 int   func_02038ea4(void *self);
@@ -98,6 +97,8 @@ void  MulMat4x3Mat4x3(void *a, void *b, void *out);
 unsigned int func_02012790(unsigned int arg);
 
 }
+
+bool ApproachLinear(short &value, short target, short step);
 
 /* ~daMky_c is the first virtual DECLARED in include/daMky_c.h and it is
  * defined here, out of line, so it is this class's key function: this TU owns
@@ -494,7 +495,7 @@ int daMky_c::func_ov030_021122b0()
 {
     char *s = (char*)this;
     short ang = this->HorzAngleToCPlayer() + 0x8000;
-    _Z14ApproachLinearRsss((short*)(s + 0x8e), ang, 0xa28);
+    ApproachLinear(this->mAngleY, ang, 0xa28);
     this->mPrevAngleY = this->mAngleY;
     if (DecIfAbove0_Byte((unsigned char*)(s + 0x3c6)) == 0)
         func_ov030_021141a8(0);
@@ -620,7 +621,7 @@ int daMky_c::func_ov030_02112578()
         func_ov030_02111890();
         break;
     case 1:
-        _Z14ApproachLinearRsss((s16 *)(c + 0x8e), Vec3_HorzAngle((Vector3 *)&this->mPosX, (u8 *)player + 0x5c), 0x300);
+        ApproachLinear(this->mAngleY, Vec3_HorzAngle((Vector3 *)&this->mPosX, (u8 *)player + 0x5c), 0x300);
         if (Vec3_Dist((Vector3 *)&this->mPosX, (u8 *)player + 0x5c) < 0x96000) {
             if (((Player *)player)->StartTalk(*this, 1) != 0) {
                 { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
@@ -650,7 +651,7 @@ int daMky_c::func_ov030_02112578()
         }
         break;
     case 4:
-        if (_Z14ApproachLinearRsss((s16 *)(c + 0x8e), (s16)0xffffe04e, 0x400) != 0) {
+        if (ApproachLinear(this->mAngleY, (s16)0xffffe04e, 0x400) != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, data_ov030_02115d08[1], 0x40000000, 0x1000, 0);
             this->mPrevAngleY = this->mAngleY;
             this->mHorzSpeed = 0xf000;
@@ -1500,7 +1501,7 @@ int daMky_c::func_ov030_02113d20()
         break;
     }
 
-    _Z14ApproachLinearRsss((s16 *)((char *)this + 0x8e), angle, 0xa28);
+    ApproachLinear(this->mAngleY, angle, 0xa28);
     this->mPrevAngleY = this->mAngleY;
     if (this->mHorzSpeed != 0)
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&this->mModelAnim,
@@ -1558,7 +1559,7 @@ int daMky_c::func_ov030_02113ff0()
     this->mHorzSpeed = 0;
     func_ov030_02111a00();
   }
-  _Z14ApproachLinearRsss((s16*)((char *)this+0x8e), this->HorzAngleToCPlayer(), 0x514);
+  ApproachLinear(this->mAngleY, this->HorzAngleToCPlayer(), 0x514);
   this->mPrevAngleY = this->mAngleY;
   this->mModelAnim.speed = 0x1000;
   ((Animation *)((char *)this + 0x124))->Advance();

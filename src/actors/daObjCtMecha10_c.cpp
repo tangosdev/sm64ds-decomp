@@ -33,7 +33,7 @@
  *   mangled extern-C free functions. Each takes Fix12<int> by value, and a
  *   real method call homes the argument and size-DIFFs the caller
  *   (notes/mwccarm-codegen.md 6az); include/dBgW_KcMbg.h records the same.
- * Leftover: _Z14ApproachLinearRsss, DecIfAbove0_Short and RandomIntInternal
+ * Leftover: DecIfAbove0_Short and RandomIntInternal
  *   keep linker names -- no header home, the kaitendai precedent.
  * Leftover: func_020393d4 and func_020396c0 are small stores into dBgW (the
  *   collision callback and the range flag). This TU calls them; naming
@@ -52,6 +52,8 @@
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 extern "C" {
 extern SharedFilePtr data_ov035_02112c60;   /* CT_MECHA10 model */
 extern SharedFilePtr data_ov035_02112c68;   /* CT_MECHA12S collision KCL */
@@ -63,7 +65,6 @@ extern s16 data_ov035_02111ef4[][4];        /* dwell by state, by clock setting 
 extern u8  data_0209f2c0[];                 /* arm9 clock setting */
 extern int data_0209e650[];                 /* arm9 RNG state */
 
-int _Z14ApproachLinearRsss(s16 *p, s16 target, s16 step);
 u16 DecIfAbove0_Short(u16 *p);
 int RandomIntInternal(int *state);
 void func_020393d4(dBgW *collider, void *callback);
@@ -138,7 +139,7 @@ int daObjCtMecha10_c::Behavior()
         return 1;
     }
 
-    if (_Z14ApproachLinearRsss(&mAngleY, mTargetAngleY, 0xc8) != 0 &&
+    if (ApproachLinear(mAngleY, mTargetAngleY, 0xc8) != 0 &&
         DecIfAbove0_Short((u16 *)&mStepTimer) == 0) {
         mTargetAngleY += mAngleYStep;
 

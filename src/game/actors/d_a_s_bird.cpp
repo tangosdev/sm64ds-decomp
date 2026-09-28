@@ -46,6 +46,8 @@
 #include "common.h"
 #include "SharedFilePtr.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 typedef void (daSBird_c::*BirdState)();
 
 struct BirdMtx {
@@ -68,7 +70,6 @@ extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, s16 a);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 a);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
-extern void _Z14ApproachLinearRsss(void *p, s16 target, s16 step);
 extern int func_0201267c(unsigned int a, void *b);
 extern void func_ov009_02111224(char *c, int r1);
 

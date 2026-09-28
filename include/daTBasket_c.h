@@ -20,16 +20,12 @@
  * offsets in exactly the reverse order. It closes: 0x350 + sizeof(ShadowModel)
  * 0x28 = 0x378, and the tail fields reach the 0x380 the ROM allocates.
  *
- * SPLIT, AND THAT IS LAYOUT, NOT TASTE. The class owns seven functions and the
- * ROM interleaves five of them with daTrs_c/daTrsIcon_c (Cleanup at 0x0211ae1c
- * sits between a helper and daTrs_c::CleanupResources; Render, Behavior,
- * InitResources and the factory each sit between other classes' members), so
- * no single file can own the run: the link places one .text section per
- * object. The true original TU is the whole Boo family; this class keeps one
- * file per function until that merge. The destructor pair IS contiguous
- * (D1 0x02115fc4, D0 0x0211600c) and stays two shards of one definition for
- * the same reason: merging them needs manifest licensing for the homeless D2
- * and the vague-linkage passengers, which a split TU does not have.
+ * ONE TU WITH THE BOO FAMILY. The ROM interleaves five of this class's seven
+ * functions with daTrs_c/daTrsIcon_c (Cleanup at 0x0211ae1c sits between a
+ * helper and daTrs_c::CleanupResources; Render, Behavior, InitResources and
+ * the factory each sit between other classes' members), so every member is
+ * defined in src/actors/daTrs_c.cpp, in ROM order. ~daTBasket_c is defined
+ * there once, out of line: D1 0x02115fc4, D0 0x0211600c, homeless D2 licensed.
  *
  * deslop leftovers:
  * - (Vector3 *)&mPosX for the JumpIntoBooCage argument: dActor_c has no Pos()
@@ -43,13 +39,12 @@
  * - Sound::PlaySecretSound / Particle::System::New stay TU-local mangled: no
  *   shared header declares them yet (d_a_wanwan / da1up precedent).
  * - func_ov063_021169c4 is this class's own shadow helper (writes
- *   mModel.mat4x3, drops mShadowModel; Behavior is its only caller) but is
- *   enrolled as its own shard and is not contiguous with this TU, so the call
- *   stays by ROM label.
+ *   mModel.mat4x3, drops mShadowModel; Behavior is its only caller). It is
+ *   still a C-linkage helper in the shared TU, so the call stays by ROM label.
  * - data_ov063_0211edec is the shared model file both this class and daTrs_c
  *   load and release; the sinit owns it, this TU only externs it.
- * - Factory stays hand-rolled (typed C-ABI): `return new` reproduces the
- *   bytes but links the vptr slot +8 past the ROM; see d_a_t_basket.cpp.
+ * - The factory is `return new daTBasket_c()`: this TU emits the vtable, so
+ *   the vptr store is the emitting-TU spelling and verifies as-is.
  */
 
 #include "dEnemyBase_c.h"

@@ -92,7 +92,7 @@ struct RedBombheiState {
     RedBombheiStatePMF update;
 };
 
-int ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 extern SharedFilePtr data_ov084_02130da4;   /* the model */
 extern SharedFilePtr data_ov084_02130d9c;   /* the idle animation */
@@ -134,7 +134,6 @@ int  ObjectMessageIDToActualMessageID(int);
 int  IsStarCollected(int level, int star);
 int  SublevelToLevel(int sublevel);
 s8   NumRedCoins(void);
-void func_ov002_020bc990(void *shutter);
 void func_02012694(unsigned int soundID, const Vector3 *camSpacePos);
 unsigned int func_02012790(unsigned int soundID);
 
@@ -702,7 +701,7 @@ extern "C" void func_ov084_0212c1a0(daRedBombhei_c *self)
         shutter = dActor_c::FindWithID(self->mShutterID);
         if (shutter == 0)
             return;
-        func_ov002_020bc990(shutter);
+        ((daObjCannonShutter_c *)shutter)->func_ov002_020bc990();
         self->mCutsceneStep += 1;
         return;
     }

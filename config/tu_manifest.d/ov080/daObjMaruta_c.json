@@ -32,7 +32,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "func_ov080_02127094",
+      "symbol": "_ZN13daObjMaruta_c19func_ov080_02127094Ev",
       "address": "0x02127094",
       "size": "0x00000048",
       "legacy_source": "src/func_ov080_02127094.c",

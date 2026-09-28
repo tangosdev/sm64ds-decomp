@@ -28,10 +28,11 @@ checklist applies when adopting a legacy fleet, not on every restart.
 
 A PR is mergeable only when the **`validate`** CI check is green. It compiles each
 changed `src/*.c|*.cpp` on a private build box and compares the *relocated* bytes to
-the ROM. Source reconstruction also requires the independent **Source review**
-check described in [the review cutover](notes/agents/SOURCE-REVIEW-CUTOVER.md).
-A byte pass establishes byte correctness; source review establishes acceptance
-of the reconstructed C++ and its explicitly recorded remaining work.
+the ROM. A byte pass establishes byte correctness only; whether the reconstructed
+C++ is acceptable, and what remaining work it records, is decided in review.
+Fleet-coordinated work records that review in its queue
+([the review cutover](notes/agents/SOURCE-REVIEW-CUTOVER.md)); there is no CI
+check for it.
 Red byte validation means at least one file either:
 
 - doesn't reproduce the ROM bytes, or
@@ -177,7 +178,7 @@ it or on the line above.
 ## How your PR is handled
 
 See [`MERGE.md`](MERGE.md). In short: a maintainer (human or AI) merges once
-both required checks are green for the proposed candidate and base. If some files
+the required byte check is green for the proposed candidate and base. If some files
 pass and some fail, only the verified subset is
 landed and the failing files are dropped — verify locally first so that's
 unnecessary.

@@ -18,8 +18,6 @@
  * with its spellings.
  *
  * Still raw:
- * - The eight func_ov006_ members keep their linker names because
- *   unpromoted C files still call them by those names (issue #2722).
  * - ModelAnim::SetAnim takes Fix12<int> by value; its real spelling makes
  *   the compiler home the argument and the size changes. NewSimple takes
  *   Fix12<int> the same way and has no header. Both stay mangled.
@@ -46,9 +44,6 @@ struct Mtx { int a, b, c, d; };
 /* Everything this file calls or reads that no header declares. Keep it
  * above the first function. */
 extern "C" {
-
-/* Defined below, called from above. */
-void func_ov006_020c8658(void *c);
 
 /* Fix12<int> by value in the real signatures; see the banner. */
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int a, int b, unsigned int d);
@@ -175,26 +170,19 @@ void *dMgJump3DMario_c::Unk_020c76d8()
 }
 
 
-extern "C" {
-// @symbol func_ov006_020c76e0
+// @symbol _ZN16dMgJump3DMario_c19func_ov006_020c76e0Ev
 /* Rebuilds the model matrix from mPos and mAngleY. */
-void func_ov006_020c76e0(char *raw)
+void dMgJump3DMario_c::func_ov006_020c76e0()
 {
-    dMgJump3DMario_c *self = (dMgJump3DMario_c *)raw;
-
-    Matrix4x3_FromTranslation(&data_020a0e68, self->mPos.x, self->mPos.y, self->mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->mAngleY);
-    self->mModelAnim.mat4x3 = data_020a0e68;
-}
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    mModelAnim.mat4x3 = data_020a0e68;
 }
 
-
-extern "C" {
-// @symbol func_ov006_020c7734
+// @symbol _ZN16dMgJump3DMario_c19func_ov006_020c7734Ev
 /* OAM shadow sprite plus the model render. */
-void func_ov006_020c7734(char *raw)
+void dMgJump3DMario_c::func_ov006_020c7734()
 {
-    dMgJump3DMario_c *self = (dMgJump3DMario_c *)raw;
     short screen[2];
     int scaleX;
     int scaleY;
@@ -202,11 +190,11 @@ void func_ov006_020c7734(char *raw)
     int wave;
     Mtx mtx;
 
-    if (self->mVisible == 0)
+    if (mVisible == 0)
         return;
 
     if (data_ov006_02140400 != 0) {
-        func_ov006_020bfec0(data_ov006_02141a44, &self->mPos, screen);
+        func_ov006_020bfec0(data_ov006_02141a44, &mPos, screen);
 
         angle = data_ov006_02140404;
         wave = data_02082214[(angle >> 4) * 2];
@@ -225,27 +213,20 @@ void func_ov006_020c7734(char *raw)
         OAM::Render(false, data_ov006_02134d1c, screen[0], screen[1], -1, -1, (Matrix2x2 *)&mtx);
     }
 
-    self->mModelAnim.Render(&data_ov006_0212ddd0);
-}
+    mModelAnim.Render(&data_ov006_0212ddd0);
 }
 
-
-extern "C" {
-// @symbol func_ov006_020c7860
+// @symbol _ZN16dMgJump3DMario_c19func_ov006_020c7860Ev
 /* The per-frame update: gravity, integrate, dispatch mState. */
-void func_ov006_020c7860(char *raw)
+void dMgJump3DMario_c::func_ov006_020c7860()
 {
-    dMgJump3DMario_c *self = (dMgJump3DMario_c *)raw;
-
-    ApproachLinear(self->mVel.y, data_ov006_0213b010, data_ov006_0213b018);
-    AddVec3(&self->mPos, &self->mVel, &self->mPos);
-    (self->*self->mState)();
-    func_ov006_020bfec0(data_ov006_02141a40, &self->mPos, &self->mScreenX);
-    func_ov006_020c76e0(raw);
-    self->mModelAnim.Animation::Advance();
+    ApproachLinear(mVel.y, data_ov006_0213b010, data_ov006_0213b018);
+    AddVec3(&mPos, &mVel, &mPos);
+    (this->*mState)();
+    func_ov006_020bfec0(data_ov006_02141a40, &mPos, &mScreenX);
+    func_ov006_020c76e0();
+    mModelAnim.Animation::Advance();
 }
-}
-
 
 // @symbol _ZN16dMgJump3DMario_c9StateDampEv
 void dMgJump3DMario_c::StateDamp()
@@ -483,30 +464,25 @@ void dMgJump3DMario_c::StateFallOut()
     if (mPos.y >= -0x120000)
         return;
     mVel.y = 0;
-    func_ov006_020c8658(this);
+    func_ov006_020c8658();
 }
 
 
-extern "C" {
-// @symbol func_ov006_020c8084
-void func_ov006_020c8084(char *raw)
+// @symbol _ZN16dMgJump3DMario_c19func_ov006_020c8084Ev
+void dMgJump3DMario_c::func_ov006_020c8084()
 {
-    dMgJump3DMario_c *self = (dMgJump3DMario_c *)raw;
-
-    if (self->mState == data_ov006_0213b088) {
-        self->mVel.y = 0;
-        func_ov006_020c8658(raw);
+    if (mState == data_ov006_0213b088) {
+        mVel.y = 0;
+        func_ov006_020c8658();
     } else {
-        self->mVel.x = 0;
-        self->mVel.y = 0x2000;
+        mVel.x = 0;
+        mVel.y = 0x2000;
         Sound::PlayBank2_2D(0x1c9);
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, data_ov006_0214042c, 0, kAnimSpeed, 0);
-        self->mModelAnim.Animation::currFrame = 0;
-        self->mState = data_ov006_0213b090;
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_0214042c, 0, kAnimSpeed, 0);
+        mModelAnim.Animation::currFrame = 0;
+        mState = data_ov006_0213b090;
     }
 }
-}
-
 
 // @symbol _ZN16dMgJump3DMario_c12StateRiseOutEv
 void dMgJump3DMario_c::StateRiseOut()
@@ -521,26 +497,21 @@ void dMgJump3DMario_c::StateRiseOut()
         return;
     mVel.y = 0;
     data_ov006_02140434++;
-    func_ov006_020c8658(this);
+    func_ov006_020c8658();
 }
 
 
-extern "C" {
-// @symbol func_ov006_020c81e0
-void func_ov006_020c81e0(char *raw)
+// @symbol _ZN16dMgJump3DMario_c19func_ov006_020c81e0Ev
+void dMgJump3DMario_c::func_ov006_020c81e0()
 {
-    dMgJump3DMario_c *self = (dMgJump3DMario_c *)raw;
-
-    self->mVel.x = 0;
-    self->mVel.y = data_ov006_0213b00c;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, data_ov006_0214041c, 0x40000000, kAnimSpeed, 0);
-    self->mModelAnim.Animation::currFrame = 0;
+    mVel.x = 0;
+    mVel.y = data_ov006_0213b00c;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_0214041c, 0x40000000, kAnimSpeed, 0);
+    mModelAnim.Animation::currFrame = 0;
     Sound::PlayBank2_2D(0x10f);
-    func_02012718(0x1b5, self->mScreenX << 12);
-    self->mState = data_ov006_0213b080;
+    func_02012718(0x1b5, mScreenX << 12);
+    mState = data_ov006_0213b080;
 }
-}
-
 
 // @symbol _ZN16dMgJump3DMario_c8EnterHitEv
 void dMgJump3DMario_c::EnterHit()
@@ -633,17 +604,12 @@ void dMgJump3DMario_c::StateWindUp()
 }
 
 
-extern "C" {
-// @symbol func_ov006_020c862c
-void func_ov006_020c862c(int *raw, int timer)
+// @symbol _ZN16dMgJump3DMario_c19func_ov006_020c862cEi
+void dMgJump3DMario_c::func_ov006_020c862c(int timer)
 {
-    dMgJump3DMario_c *self = (dMgJump3DMario_c *)raw;
-
-    self->mTimer = (s16)timer;
-    self->mState = data_ov006_0213b050;
+    mTimer = (s16)timer;
+    mState = data_ov006_0213b050;
 }
-}
-
 
 // @symbol _ZN16dMgJump3DMario_c9StateIdleEv
 void dMgJump3DMario_c::StateIdle()
@@ -652,18 +618,13 @@ void dMgJump3DMario_c::StateIdle()
 }
 
 
-extern "C" {
-// @symbol func_ov006_020c8658
-void func_ov006_020c8658(void *raw)
+// @symbol _ZN16dMgJump3DMario_c19func_ov006_020c8658Ev
+void dMgJump3DMario_c::func_ov006_020c8658()
 {
-    dMgJump3DMario_c *self = (dMgJump3DMario_c *)raw;
-
-    self->mVisible = 0;
-    self->mPos.y = 0;
-    self->mState = data_ov006_0213b048;
+    mVisible = 0;
+    mPos.y = 0;
+    mState = data_ov006_0213b048;
 }
-}
-
 
 // @symbol _ZN16dMgJump3DMario_c12StateRespawnEv
 void dMgJump3DMario_c::StateRespawn()
@@ -700,19 +661,16 @@ void dMgJump3DMario_c::EnterRespawn()
 }
 
 
-extern "C" {
-// @symbol func_ov006_020c87d0
+// @symbol _ZN16dMgJump3DMario_c19func_ov006_020c87d0Ev
 /* Loads the model and the six anims. */
-int func_ov006_020c87d0(char *raw)
+int dMgJump3DMario_c::func_ov006_020c87d0()
 {
-    dMgJump3DMario_c *self = (dMgJump3DMario_c *)raw;
-
     /* Keep `t`: folding the comparison into the `if` below shrinks
        the function to 0x160 bytes against the ROM's 0x16c
        (notes/experiments/jump3d-2711-87d0-int-temp.md). */
     int t;
 
-    if (func_020179b4(&data_ov006_02140450, &self->mModelAnim, 1) == 0)
+    if (func_020179b4(&data_ov006_02140450, &mModelAnim, 1) == 0)
         return 0;
 
     data_ov006_02140430 = (BCA_File *)Animation::LoadFile(data_ov006_02140460);
@@ -722,23 +680,21 @@ int func_ov006_020c87d0(char *raw)
     data_ov006_02140408 = (BCA_File *)Animation::LoadFile(data_ov006_02140440);
     data_ov006_0214042c = (BCA_File *)Animation::LoadFile(data_ov006_02140448);
 
-    self->mAnimIdx = 0;
+    mAnimIdx = 0;
     if (data_ov006_02141a40 != 0)
-        func_ov006_020bfec0(data_ov006_02141a40, &self->mPos, &self->mScreenX);
+        func_ov006_020bfec0(data_ov006_02141a40, &mPos, &mScreenX);
 
     t = data_0209f5c0->actorID == 0x175;
     if (t != 0) {
-        func_02016a14(&self->mModelAnim, 0x7fff);
-        func_02016a04(&self->mModelAnim, 0x210);
+        func_02016a14(&mModelAnim, 0x7fff);
+        func_02016a04(&mModelAnim, 0x210);
     }
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &self->mModelAnim, data_ov006_02140430, 0x40000000, kAnimSpeed, 0);
+        &mModelAnim, data_ov006_02140430, 0x40000000, kAnimSpeed, 0);
 
-    func_ov006_020c8658(raw);
+    func_ov006_020c8658();
     return 1;
 }
-}
-
 
 // @symbol _ZN16dMgJump3DMario_cD1Ev
 dMgJump3DMario_c::~dMgJump3DMario_c()

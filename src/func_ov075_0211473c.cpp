@@ -7,7 +7,7 @@
 typedef short s16;
 
 extern "C" s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);
-int ApproachLinear(short&,short,short);
+bool ApproachLinear(short &value, short target, short step);
 extern "C" void func_ov075_0211473c(char* c){
   s16 a=Vec3_HorzAngle((Vector3*)(c+0x118),(Vector3*)(c+0x130));
   unsigned char idx=*(unsigned char*)(c+0x152);

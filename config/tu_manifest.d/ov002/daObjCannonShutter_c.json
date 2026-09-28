@@ -33,7 +33,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov002_020bc990",
+      "symbol": "_ZN20daObjCannonShutter_c19func_ov002_020bc990Ev",
       "address": "0x020bc990",
       "size": "0x00000020",
       "legacy_source": "src/func_ov002_020bc990.c",
@@ -91,7 +91,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov002-daObjCannonShutter_c/daObjCannonShutter_c.o (gitignored)",
+    "object": "build/tu/ov002-daObjCannonShutter_c/d_a_obj_cannon_shutter.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 8,
     "functions_declared": 8,
@@ -131,7 +131,9 @@
         21,
         22,
         23,
-        36
+        36,
+        41,
+        42
       ],
       "data": [
         "_ZTI7fBase_c",

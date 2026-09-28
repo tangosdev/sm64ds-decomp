@@ -67,7 +67,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "func_ov070_0211f48c",
+      "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f48cEv",
       "address": "0x0211f48c",
       "size": "0x00000164",
       "legacy_source": "src/func_ov070_0211f48c.c",
@@ -81,7 +81,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "func_ov070_0211f62c",
+      "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f62cEv",
       "address": "0x0211f62c",
       "size": "0x00000068",
       "legacy_source": "src/func_ov070_0211f62c.c",
@@ -95,7 +95,7 @@
       "ordinal": 9
     },
     {
-      "symbol": "func_ov070_0211f6e0",
+      "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f6e0Ev",
       "address": "0x0211f6e0",
       "size": "0x000003a0",
       "legacy_source": "src/func_ov070_0211f6e0.c",

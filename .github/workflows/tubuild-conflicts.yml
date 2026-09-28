@@ -59,6 +59,7 @@ concurrency:
 
 jobs:
   conflicts:
+    name: tubuild manifest conflicts
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

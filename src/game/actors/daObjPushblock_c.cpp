@@ -42,6 +42,7 @@
 #include "Player.h"
 #include "SharedFilePtr.h"
 #include "decl_common.h"
+#include "daSCoin_c.h"
 #include "decl_Platform.h"
 #include "dBgCh_Gnd.h"
 
@@ -201,7 +202,7 @@ int daObjPushblock_c::Behavior()
                 q->mPosX = homeX;
                 q->mPosY = pos.y;
                 q->mPosZ = pos.z;
-                func_ov002_020f0438(mLinkedActor);
+                ((daSCoin_c *)mLinkedActor)->func_ov002_020f0438();
             }
             mLinkedActor = 0;
         }

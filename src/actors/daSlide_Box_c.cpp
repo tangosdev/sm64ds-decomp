@@ -1,30 +1,39 @@
 //cpp
-/**
- * Production translation unit for ov016/daSlide_Box_c.
- * 7 function(s), .text 0x02112ff8..0x02113510. Jolly Roger Bay's sliding
- * crate (SLIDE_BOX).
+/* Jolly Roger Bay's sliding crate (SLIDE_BOX, daSlide_Box_c).
  *
- * NAME: _ZTS13daSlide_Box_c is "13daSlide_Box_c" at ov016 0x02114c58; _ZTI at
- * 0x02114c4c reads [__si_class_type_info, that string, _ZTI10dBgActor_c]. The
- * tree previously called the class SlidingBox (coined; vtable address only).
+ * Actor 0x39 is KI_FUNE_UP, the upward sunken ship. Until the crate
+ * lands it falls with the actor's gravity. On the deck it copies the
+ * ship's angles, slides by the sine of the pitch, and steps out from
+ * the landing spot by the sine and cosine of the ship's yaw. The deck
+ * normal then rebuilds mVertSpeed from the horizontal velocity at
+ * unk_0a4 / unk_0ac so the next step stays on the tilt.
  *
- * The out-of-line destructor is the key function, so this TU emits _ZTV/_ZTI/
- * _ZTS. Under `#pragma defer_codegen off` it comes out D1 (0x02112ff8), D0
- * (0x02113044), then a D2 the cartridge has no home for (manifest: deadstrip);
- * the same pragma lays .text down in source order, so this file is ROM-ascending.
+ * The rolling-sound gate reads mHorzSpeed after this state has stored
+ * 0 there, so the sound does not start.
  *
- * InitResources loads the model and the mesh collider, then waits. Behavior
- * looks up actor 0x39 (KI_FUNE_UP, the upward ship). Until the crate is on
- * the deck it falls with the actor's gravity. Once grounded it copies the
- * ship's angles, slides along the pitch (sine of mAngleX, clamped), and
- * places itself out from mBasePos along the ship's yaw. The deck normal
- * sets mVertSpeed so the next UpdatePos stays on the tilt. Near a player,
- * and moving, it keeps a rolling sound alive.
+ * The factory daSlide_Box_c_classInit and g_profile_SLIDE_BOX are the
+ * next TU.
  *
- * The factory daSlide_Box_c_classInit is the next TU (0x02113510).
+ * deslop leftovers:
+ * - Behavior: UpdateContinuous() is WRONG-DEST. Both sites must call
+ *   the veneer at arm9 0x020383fc, not _ZN10dBgCh_Actr16UpdateContinuousEv.
+ * - Behavior: mShip->mAngleX/Y/Z each reloads mShip and grows the
+ *   function 0x2dc to 0x2e0. One pointer, then the three halfwords.
+ * - Behavior: IsClsnInRange(Fix12<int>, Fix12<int>) homes the two
+ *   zeros and grows the function 0x2dc to 0x2e8. dBgActor_c.h does
+ *   not declare it; the int extern is the call that matches.
+ * - Behavior: keeping the pre-clear slide speed for the rolling-sound
+ *   test differs by 99 words. The ROM reloads mHorzSpeed after the
+ *   store of 0, so the gate does not open.
+ * - Behavior: GetFloorResult is not declared on dBgCh_Actr.h. A
+ *   temporary declaration made the member call match; that edit is
+ *   the shared header, not this TU, so the call stays mangled.
+ * - InitResources: SetFile(Fix12<int> by value) grows the function
+ *   0xdc to 0xe8. The int extern is the call that matches.
+ * - InitResources: storing beforeClsnCallback directly shrinks the
+ *   function 0xdc to 0xd8. The ROM calls func_020393d4, the store.
  */
 
-#include "decl_common.h"
 #include "daSlide_Box_c.h"
 #include "SharedFilePtr.h"
 #include "SurfaceInfo.h"
@@ -33,27 +42,40 @@
 
 namespace cstd { int fdiv(int a, int b); }
 
+/* __sinit_ov016_02113a50 constructs these. 02114e74 is the model
+ * (file 1605, destructor func_02017ab4). 02114e6c is the collision
+ * (file 1606, destructor SharedFilePtr_Destruct_Clsn). 02113bac is
+ * the CLPS block SetFile takes. decl_common and the sinit both spell
+ * them int[], so this TU keeps that and casts at the use. */
 extern "C" {
+/* dBgCh_Actr::Init's header takes Fix12i (= s32), so the method form
+   mangles the two radii as `i` and names
+   _ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_, which no object
+   defines. The ROM's is ..._5Fix12IiES3_P10Vector3_16S5_. */
+void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+    dBgCh_Actr *self, int actor, Fix12i radius, Fix12i height, int a, int b);
+extern int data_ov016_02114e74[];
+extern int data_ov016_02114e6c[];
+extern int data_ov016_02113bac[];
 extern short data_02082214[];
-void dBgCh_Actr_UpdateContinuous_Veneer(void *p);
-dBgPi *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
-/* dBgActor_c::IsClsnInRange takes Fix12<int> by value, so it stays mangled. */
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+extern void Matrix4x3_FromRotationXYZExt(void *mtx, int angleX, int angleY, int angleZ);
+
+void dBgCh_Actr_UpdateContinuous_Veneer(void *clsn);
+dBgPi *_ZNK10dBgCh_Actr14GetFloorResultEv(void *clsn);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int radius, int height);
 extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *thiz, void *kcl, void *mtx, int fix, short s, void *clps);
-extern void func_020393d4(void *p, void *v);
-/* dBgCh_Actr::Init takes Fix12<int> by value (the ROM name mangles 5Fix12IiE).
- * dBgCh_Actr.h declares those parameters as Fix12i, a plain s32, so a member
- * call would mangle ii and link to a symbol the ROM does not have: it stays
- * mangled. */
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-    void *thiz, void *act, int radius, int height, void *rotA, int rotB);
+    void *thiz, void *kcl, void *mtx, int scale, short angleY, void *clps);
+extern void func_020393d4(void *clsn, void *callback);
 }
 
 /* Radius and height passed to dBgCh_Actr::Init, 20.0 in 20.12. */
 enum { kClsnRadius = 0x14000 };
 
-/* Pitch-to-speed scale, and the travel clamp along the ship. */
+/* Scale every moving mesh hands to SetFile. */
+enum { kMeshScale = 0x199 };
+
+/* Pitch-to-speed scale, and the travel clamp along the ship.
+ * 1279.0 and -50.0 in 20.12. kFixRound is the 0.5 added before >> 12. */
 enum {
     kSlideScale = 0x8c,
     kHorzPosMax = 0x4ff000,
@@ -61,23 +83,48 @@ enum {
     kFixRound = 0x800
 };
 
-/* How close a player has to be before the rolling sound starts, and
- * how fast the crate has to be moving. */
+/* How close a player has to be, and how fast the crate has to be
+ * moving, before the rolling sound would start. 2000.0 and 3.0. */
 enum {
     kSoundRange = 0x7d0000,
     kSoundSpeed = 0x3000,
-    kRollSound = 0x9f
+    kRollSound = 0x9f,
+    kSoundPlayer = 3
 };
 
-/* The upward ship. KI_FUNE_UP's profile word at ov016 0x02114a1c is 0x00b50039. */
+/* Extra downward speed once the crate is on the deck, 8.0 in 20.12. */
+enum { kDeckSink = 0x8000 };
+
+/* Gravity and terminal velocity, -2.0 and -20.0. */
+enum {
+    kGravity = -0x2000,
+    kTerminalVelocity = -0x14000
+};
+
+/* KI_FUNE_UP. */
 enum { kShipActorId = 0x39 };
+
+enum {
+    kStateSeekShip = 0,
+    kStateFall = 1,
+    kStateRide = 2
+};
+
+/* data_02082214 is sin, cos pairs. (u16)angle >> 4 selects the pair.
+ * Angle 0 is (0, 4096): the first short is sine, the second cosine. */
+#define Sine(angle) (data_02082214[((u16)(angle) >> 4) * 2])
+#define Cosine(angle) (data_02082214[((u16)(angle) >> 4) * 2 + 1])
+#define FixMul(a, b) ((int)(((long long)(a) * (b) + kFixRound) >> 12))
+
+#define ModelFile (*(SharedFilePtr *)data_ov016_02114e74)
+#define ClsnFile (*(SharedFilePtr *)data_ov016_02114e6c)
 
 #pragma defer_codegen off
 
 // @symbol _ZN13daSlide_Box_cD1Ev
 // @symbol _ZN13daSlide_Box_cD0Ev
 /* Empty on purpose. mwccarm destroys mWithMeshClsn, then the inlined
- * dBgActor_c teardown, and emits retail D1 followed by D0. */
+ * dBgActor_c teardown, and emits D1 followed by D0. */
 daSlide_Box_c::~daSlide_Box_c()
 {
 }
@@ -86,6 +133,7 @@ daSlide_Box_c::~daSlide_Box_c()
 void daSlide_Box_c::UpdateModel()
 {
     Matrix4x3_FromRotationXYZExt((void *)&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    /* Flat Matrix4x3 (common.h): words 9..11 are the translation, at 1/8. */
     mModel.mat4x3.m[9] = mPosX >> 3;
     mModel.mat4x3.m[10] = mPosY >> 3;
     mModel.mat4x3.m[11] = mPosZ >> 3;
@@ -97,8 +145,8 @@ int daSlide_Box_c::CleanupResources()
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }
-    ((SharedFilePtr *)data_ov016_02114e74)->Release();
-    ((SharedFilePtr *)data_ov016_02114e6c)->Release();
+    ModelFile.Release();
+    ClsnFile.Release();
     return 1;
 }
 
@@ -115,7 +163,7 @@ int daSlide_Box_c::Behavior()
     Vector3 normal;
 
     switch (mState) {
-    case 0:
+    case kStateSeekShip:
         mShip = dActor_c::FindWithActorID(kShipActorId, 0);
         if (mShip == 0) {
             MarkForDestruction();
@@ -123,11 +171,9 @@ int daSlide_Box_c::Behavior()
         }
         mState++;
         /* fallthrough */
-    case 1:
+    case kStateFall:
         UpdatePos(0);
-        /* Behavior: UpdateContinuous() relocates to the real method.
-         * The ROM calls the veneer at arm9 0x020383fc. */
-        dBgCh_Actr_UpdateContinuous_Veneer((char *)&mWithMeshClsn);
+        dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
         if (mWithMeshClsn.IsOnGround()) {
             mState++;
             mBasePos.x = mPosX;
@@ -135,35 +181,34 @@ int daSlide_Box_c::Behavior()
             mBasePos.z = mPosZ;
         }
         break;
-    case 2: {
-        /* Behavior: mShip->mAngleX/Y/Z each reloads mShip and the three
-         * halfword loads DIFF. One pointer, then [0]/[1]/[2], matches. */
+    case kStateRide: {
+        /* One pointer, then the three halfwords. mShip->mAngleX/Y/Z
+         * each reloads mShip. */
         s16 *shipAngles = &mShip->mAngleX;
         int spd;
         mAngleX = shipAngles[0];
         mAngleY = shipAngles[1];
         mAngleZ = shipAngles[2];
         mPrevAngleY = mAngleY;
-        mHorzSpeed = data_02082214[((u16)mAngleX >> 4) * 2] * kSlideScale;
+        mHorzSpeed = Sine(mAngleX) * kSlideScale;
         mHorzPos += mHorzSpeed;
         spd = mHorzPos;
         if (spd >= kHorzPosMax)
             mHorzPos = kHorzPosMax;
         else if (spd < kHorzPosMin)
             mHorzPos = kHorzPosMin;
-        mPosX = mBasePos.x + (int)(((long long)mHorzPos * data_02082214[((u16)mAngleY >> 4) * 2] + kFixRound) >> 12);
-        mPosZ = mBasePos.z + (int)(((long long)mHorzPos * data_02082214[((u16)mAngleY >> 4) * 2 + 1] + kFixRound) >> 12);
+        mPosX = mBasePos.x + FixMul(mHorzPos, Sine(mAngleY));
+        mPosZ = mBasePos.z + FixMul(mHorzPos, Cosine(mAngleY));
         mHorzSpeed = 0;
         UpdatePos(0);
-        dBgCh_Actr_UpdateContinuous_Veneer((char *)&mWithMeshClsn);
+        dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
         if (mWithMeshClsn.IsOnGround()) {
-            dBgPi *floor = _ZNK10dBgCh_Actr14GetFloorResultEv((char *)&mWithMeshClsn);
+            dBgPi *floor = _ZNK10dBgCh_Actr14GetFloorResultEv(&mWithMeshClsn);
             floor->surface.CopyNormalTo(normal);
             if (normal.y != 0) {
                 mVertSpeed = -(cstd::fdiv(
-                    (int)(((long long)normal.x * unk_0a4 + kFixRound) >> 12)
-                  + (int)(((long long)normal.z * unk_0ac + kFixRound) >> 12),
-                    normal.y) + 0x8000);
+                    FixMul(normal.x, unk_0a4) + FixMul(normal.z, unk_0ac),
+                    normal.y) + kDeckSink);
             }
         }
         if (DistToCPlayer() < kSoundRange) {
@@ -172,7 +217,7 @@ int daSlide_Box_c::Behavior()
                 vel = -vel;
             if (vel > kSoundSpeed) {
                 mSoundID = Sound::PlayLong(
-                    mSoundID, 3, kRollSound, *(Vector3 *)&mCamSpacePosX, 0);
+                    mSoundID, kSoundPlayer, kRollSound, *(Vector3 *)&mCamSpacePosX, 0);
             }
         }
         break;
@@ -180,7 +225,7 @@ int daSlide_Box_c::Behavior()
     }
 
     UpdateModel();
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_((char *)this, 0, 0)) {
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0)) {
         UpdateClsnPosAndRot();
     }
     return 1;
@@ -189,25 +234,19 @@ int daSlide_Box_c::Behavior()
 // @symbol _ZN13daSlide_Box_c13InitResourcesEv
 int daSlide_Box_c::InitResources()
 {
-    BMD_File *modelFile = (BMD_File *)Model::LoadFile(
-        *(SharedFilePtr *)data_ov016_02114e74);
+    BMD_File *modelFile = (BMD_File *)Model::LoadFile(ModelFile);
     mModel.SetFile(modelFile, 1, -1);
     UpdateModel();
     UpdateClsnPosAndRot();
-    KCL_File *clsnFile = (KCL_File *)dBgW_Kc::LoadFile(
-        *(SharedFilePtr *)data_ov016_02114e6c);
-    /* InitResources: dBgW_KcMbg::SetFile takes Fix12<int> by value.
-     * An int argument does not match that parameter, so the call stays
-     * the mangled symbol. */
+    KCL_File *clsnFile = (KCL_File *)dBgW_Kc::LoadFile(ClsnFile);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, clsnFile, &mClsnMat, 0x199, mAngleY, data_ov016_02113bac);
+        &mMeshCollider, clsnFile, &mClsnMat, kMeshScale, mAngleY, data_ov016_02113bac);
     func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        &mWithMeshClsn, this, kClsnRadius, kClsnRadius, 0, 0);
-    mVertAccel = -0x2000;
-    mTerminalVelocity = -0x14000;
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, (int)this, kClsnRadius, kClsnRadius, 0, 0);
+    mVertAccel = kGravity;
+    mTerminalVelocity = kTerminalVelocity;
     mShip = 0;
-    mState = 0;
+    mState = kStateSeekShip;
     mSoundID = 0;
     return 1;
 }

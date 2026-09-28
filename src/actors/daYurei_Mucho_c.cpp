@@ -43,6 +43,8 @@
 #include "SharedFilePtr.h"
 #include "Player.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* POD views preserve the retail aggregate copies. Matrix4x3 and Vector3 are
    available, but their non-POD copies change these two helpers' codegen; see
    the measured alternatives in the handoff. */
@@ -85,7 +87,6 @@ extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
 extern unsigned int RandomIntInternal(void *seed);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void ApproachAngle(void *p, short target, int a, int b, int limit);
-extern void _Z14ApproachLinearRsss(short *p, short target, short step);
 extern void _Z14ApproachLinearRiii(int *x, int target, int step);
 extern short Vec3_HorzAngle(const void *a, const void *b);
 extern short Vec3_VertAngle(const void *a, const void *b);
@@ -600,7 +601,7 @@ int daYurei_Mucho_c::func_ov065_02116328()
 int daYurei_Mucho_c::func_ov065_021162c0()
 {
     ApproachAngle(&mAngleX, -0x4000, 0xa, 0x200, 0x100);
-    _Z14ApproachLinearRsss(&mAngleX, -0x4000, 0x200);
+    ApproachLinear(mAngleX, -0x4000, 0x200);
     if (*(unsigned short *)((char *)this + 0x100) == 0)
         func_ov065_02115f84();
     return 1;

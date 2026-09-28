@@ -40,28 +40,28 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov064_02115f98",
+      "symbol": "_ZN7daOts_c19func_ov064_02115f98EPc",
       "address": "0x02115f98",
       "size": "0x00000178",
       "legacy_source": "src/func_ov064_02115f98.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov064_02116110",
+      "symbol": "_ZN7daOts_c19func_ov064_02116110Es",
       "address": "0x02116110",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov064_02116110.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov064_0211616c",
+      "symbol": "_ZN7daOts_c19func_ov064_0211616cEv",
       "address": "0x0211616c",
       "size": "0x000000b4",
       "legacy_source": "src/func_ov064_0211616c.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov064_02116220",
+      "symbol": "_ZN7daOts_c19func_ov064_02116220Ev",
       "address": "0x02116220",
       "size": "0x00000128",
       "legacy_source": "src/func_ov064_02116220.cpp",
@@ -110,14 +110,14 @@
       "ordinal": 12
     },
     {
-      "symbol": "func_ov064_02116460",
+      "symbol": "_ZN7daOts_c19func_ov064_02116460Ev",
       "address": "0x02116460",
       "size": "0x00000100",
       "legacy_source": "src/func_ov064_02116460.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov064_02116560",
+      "symbol": "_ZN7daOts_c19func_ov064_02116560Ev",
       "address": "0x02116560",
       "size": "0x00000074",
       "legacy_source": "src/func_ov064_02116560.cpp",
@@ -131,28 +131,28 @@
       "ordinal": 15
     },
     {
-      "symbol": "func_ov064_021165d8",
+      "symbol": "_ZN7daOts_c19func_ov064_021165d8Ev",
       "address": "0x021165d8",
       "size": "0x00000118",
       "legacy_source": "src/func_ov064_021165d8.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "func_ov064_021166f0",
+      "symbol": "_ZN7daOts_c19func_ov064_021166f0Ev",
       "address": "0x021166f0",
       "size": "0x00000064",
       "legacy_source": "src/func_ov064_021166f0.c",
       "ordinal": 17
     },
     {
-      "symbol": "func_ov064_02116754",
+      "symbol": "_ZN7daOts_c19func_ov064_02116754Ev",
       "address": "0x02116754",
       "size": "0x00000458",
       "legacy_source": "src/func_ov064_02116754.cpp",
       "ordinal": 18
     },
     {
-      "symbol": "func_ov064_02116bac",
+      "symbol": "_ZN7daOts_c19func_ov064_02116bacEv",
       "address": "0x02116bac",
       "size": "0x000000f4",
       "legacy_source": "src/func_ov064_02116bac.cpp",

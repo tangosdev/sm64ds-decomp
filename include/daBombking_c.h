@@ -109,6 +109,7 @@ struct daBombking_c : dEnemyBase_c {
     int InitResources();
     void OnPendingDestroy();
     int Render();
+    int func_ov078_02123eb8();
 
     static void *operator new(unsigned long size) {
         return _ZN7fBase_cnwEj((unsigned)size);

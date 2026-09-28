@@ -3,6 +3,8 @@
 // @symbol func_ov009_02111234
 /* recovered: shared common types */
 #include "common.h"
+
+bool ApproachLinear(short &value, short target, short step);
 extern "C" {
     void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cc);
     void *_ZN8dActor_c10FindWithIDEj(u32 id);
@@ -11,7 +13,6 @@ extern "C" {
     s32 Vec3_HorzLen(void *v);
     s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
     s32 LenVec3(void *v);
-    void _Z14ApproachLinearRsss(void *p, s16 target, s16 step);
 }
 
 extern short data_02082214[];
@@ -52,8 +53,8 @@ extern "C" void func_ov009_02111234(void *self)
         *(s32 *)(c + 0x174) = LenVec3(&diff) / 25 + 0x14000;
     }
 
-    _Z14ApproachLinearRsss((void *)(c + 0x92), *(s16 *)(c + 0x16c), 0x8c);
-    _Z14ApproachLinearRsss((void *)(c + 0x94), *(s16 *)(c + 0x16e), 0x320);
+    ApproachLinear(*(short *)(c + 0x92), *(s16 *)(c + 0x16c), 0x8c);
+    ApproachLinear(*(short *)(c + 0x94), *(s16 *)(c + 0x16e), 0x320);
 
     s32 hi = 0x3000;
     s32 dd = (s16)(*(s16 *)(c + 0x94) - *(s16 *)(c + 0x16e));
@@ -62,7 +63,7 @@ extern "C" void func_ov009_02111234(void *self)
     else if (dd > hi)
         dd = hi;
     *(s16 *)(c + 0x170) = (s16)dd;
-    _Z14ApproachLinearRsss((void *)(c + 0x90), *(s16 *)(c + 0x170), 0x258);
+    ApproachLinear(*(short *)(c + 0x90), *(s16 *)(c + 0x170), 0x258);
 
     {
         u16 a = *(u16 *)(c + 0x92);

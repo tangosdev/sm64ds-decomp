@@ -1,86 +1,53 @@
 //cpp
-/* daSanbo_c -- the Pokey (ov096).
+/* daSanbo_c -- Pokey (ov096).
  *
- * SM64DS RTTI names this class daSanbo_c. ov096 0x02137980 holds the
- * null-terminated string '9daSanbo_c'; _ZTI9daSanbo_c at 0x0213798c
- * points its name word back at that string and its base word at
- * _ZTI8dActor_c in arm9; the vtable object
- * at 0x021379d0 points its typeinfo word at the _ZTI. The tree used to carry
- * the class under the coined English name Pokey, which appears nowhere in the
- * cartridge. This file and include/daSanbo_c.h use the cartridge's spelling,
- * and Pokey survives only as prose. That rename is not cosmetic here: a coined
- * name emits '5Pokey' and its terminator (seven bytes total), which matches no
- * configured ROM record, so the RTTI group would have been discarded
- * unverified.
+ * Head (actor id 0xf0) and body segments (0xf1) are the same class.
+ * mPrevSegment / mNextSegment link the pieces. Both factories are
+ * return new daSanbo_c(). There is no out-of-line constructor.
  *
- * The base is dActor_c, read from _ZTI9daSanbo_c+8 -> arm9 0x0208e390, and
- * _ZTV9daSanbo_c is 31 slots, the dActor_c length. daSanbo_c declares no new
- * virtual; it overrides ten inherited slots -- 0 InitResources, 3
- * CleanupResources, 6 Behavior, 9 Render, 12 OnPendingDestroy, 16 D1, 17 D0,
- * 18 OnYoshiTryEat, 19 OnTurnIntoEgg and 29 OnAimedAtWithEgg -- and every one
- * of them lies inside this run. The other 21 slots hold dActor_c's own words.
+ * Source order is ROM-descending. mwccarm emits .text in reverse
+ * source order, and the inline destructor in include/daSanbo_c.h
+ * emits D1 then D0 with no D2. Do not reorder, and do not write
+ * the destructor out of line.
  *
- * THE DESTRUCTOR IS INLINE IN THE HEADER. The cartridge puts D1 at 0x02135700
- * above D0 at 0x02135748 and carries no D2 anywhere, which is what mwccarm
- * 2004/b56 emits for an inline in-class destructor; the out-of-line form emits
- * D2/D0/D1 and adds a homeless D2. Both bodies below are therefore the
- * compiler's own, written from the empty body in include/daSanbo_c.h and the
- * typed member list beside it, which is what owns the Model, ShadowModel,
- * dCcAc_c and dBgCh_Actr teardowns and the chain into _ZN8dActor_cD2Ev.
+ * common.h stays above daSanbo_c.h. Matrix4x3 has to be the flat
+ * s32[12] here: the structured spelling scalarises InitResources'
+ * copy of IDENTITY_MATRIX4X3 (0x23c against the cartridge's 0x220).
  *
- * mwccarm emits one .text section per function in the REVERSE of source order,
- * so this file is written ROM-DESCENDING: daSanbo_c_classInit_SANBO
- * (0x02136d60) first and the destructor pair last, at the bottom of the run,
- * which is where the cartridge has them. Do not reorder.
- *
- * The promoted run is 36 functions, 0x02135700..0x02136db0. Before the fold,
- * tools/tu_map.py reported 34 and cut a boundary at 0x02136d10, because it
- * segmented on symbol name and
- * neither classInit spelling looks like a member; the two functions above that
- * cut are the ACTOR_SPAWN_TABLE factories for SANBO and SANBO_BODY, and both
- * allocate this class's 0x3b0 bytes and store this class's vptr, so they are
- * included in this reconstruction. The delink span runs without a gap from 0x02135700 to
- * 0x02136db0, where daTor_c's own run begins.
- *
- * A daSanbo_c is not a container of segments. SANBO and SANBO_BODY construct
- * the SAME class and the head/segment split is a runtime test on the fBase_c
- * actor id; mPrevSegment and mNextSegment link the separate instances. There is no
- * out-of-line constructor anywhere in the image -- both factories inline it.
- *
- * common.h is included FIRST on purpose. daSanbo_c.h reaches math/Matrix.h,
- * which spells Matrix4x3 structurally, where common.h spells it flat. With the
- * two swapped, InitResources scalarises its trailing whole-struct Matrix4x3
- * copy and comes out 0x23c bytes against the cartridge's 0x220. The order
- * below is load-bearing; it is not stylistic.
- *
- * The state table remains outside this TU. __sinit_ov096_0213770c copies
- * twelve constant PMF records from .data 0x02137920..0x02137980 into
- * .bss 0x02137b48..0x02137ba8, reordering them into six entry/update pairs.
- * func_ov096_02136928 selects a pair at 0x02137b48 + state * 16 and stores
- * its address at this+0x384. The dispatchers use that runtime pair, not the
- * constants in address order. The existing initializer remains a separate
- * source owner; this text-only promotion does not reconstruct its table.
- *
- * Known limits: dCcAc_c::Init / dBgCh_Actr::Init / DropShadowRadHeight /
- *   IsTooFarAwayFromPlayer stay mangled (Fix12-by-value, 6az; dBgCh Init
- *   header Fix12i mangles as int -- this TU's InitResources call).
- *   func_02038414 is the
- *   veneer to dBgCh_Actr::UpdateDiscreteNoLava_2. Player+8 param1 belongs
- *   on Player. data_ov096_* SharedFilePtr handles (Init LoadFile / Cleanup
- *   Release) and state records (func_ov096_02136928). S14 no
- *   g_profile_SANBO. common.h first (mMatrix IDENTITY copy).
- *   unk_3a8 stays the placeholder.
- *
- * ov096 delinks no .data at all, so this is a text-only entry: it licenses one
- * .text span and nothing else. Owning every virtual makes mwcc emit the vtable
- * and the whole RTTI group regardless of declaration order, and each of those
- * records is licensed away against its configured ROM home in
- * config/tu_manifest.d/ov096/daSanbo_c.json, which is also where the
- * function-by-function verification evidence lives. The full class dossier --
- * vtable extent proof, base-class evidence, destructor disassembly, field
- * provenance -- is notes/data/class-facts/daSanbo_c.json.
+ * Leftover: dCcAc_c::Init, dBgCh_Actr::Init, DropShadowRadHeight and
+ *   IsTooFarAwayFromPlayer take Fix12 by value, so the calls stay
+ *   computed names (InitResources, Behavior, func_ov096_02135efc).
+ * Leftover: func_02038414 is the veneer onto
+ *   dBgCh_Actr::UpdateDiscreteNoLava_2 (func_ov096_02136434,
+ *   func_ov096_021360c4, func_ov096_02135e2c).
+ * Leftover: Particle::System::New, NewUnkCallback818, NewSimple,
+ *   RunningSlidingDustAt and Player::Hurt take Fix12 by value
+ *   (func_ov096_02136434, func_ov096_02135948, func_ov096_02136134,
+ *   func_ov096_021365d4).
+ * Leftover: GetFloorResult and GetWallResult are not members of
+ *   dBgCh_Actr. func_ov096_02135e2c reads SurfaceInfo at result+4.
+ *   The wall normal is fetched and unused.
+ * Leftover: the func_ov096_* helpers keep their linker names. The
+ *   state pairs live in data_ov096_02137b48, filled by
+ *   __sinit_ov096_0213770c, which this file does not own.
+ * Leftover: data_ov096_02137b20 and data_ov096_02137b28 are the head
+ *   and segment file handles (InitResources LoadFile, CleanupResources
+ *   Release). g_profile_SANBO stays in its own file.
+ * Leftover: unk_3a8 is the head byte func_ov096_0213670c reads to
+ *   choose a 0 or 0x5a regrowth delay. func_ov096_021365d4 clears it
+ *   once three segments exist. It stays unk_ until that role is
+ *   measured past those two stores.
+ * Leftover: dActor_c has no Pos(). Spawn and PlayBank0 take the
+ *   mPosX and mCamSpacePosX triples through a Vector3 pun.
+ * Leftover: unk_0a4 and unk_0ac keep dActor_c's names.
+ *   func_ov096_02135e2c multiplies them by the floor normal.
+ * Leftover: func_ov096_02135948 keeps five int[3] positions. One
+ *   Vector3 in their place changes that function.
+ * Leftover: data_02082214 is arm9's sine table. data_020a0e68 is the
+ *   scratch matrix func_ov096_02135efc fills before copying it onto
+ *   the model. Actor id 0x135 is only the id that function shoves
+ *   the segment away from.
  */
-
 /* common.h first: Matrix4x3 must stay the flat s32[12] spelling. */
 #include "common.h"
 #include "daSanbo_c.h"
@@ -92,22 +59,10 @@
 
 enum { SANBO_HEAD = 0xf0, SANBO_BODY = 0xf1 };
 
-/* Declarations retained from the individually matched fragments. These ABI
- * bridges and raw helper layouts remain reconstruction work; their presence
- * does not imply that the corresponding class interfaces are unavailable. */
-/* shadow namespace 'cstd' */
-namespace cstd { int fdiv(int,int); }
+namespace cstd { int fdiv(int, int); }
 
-
-/* shadow enum 'Bool' */
-enum Bool { FALSE, TRUE };
 
 extern "C" {
-extern void *_ZN8dActor_cC2Ev(void *self);
-extern void *_ZN5ModelC1Ev(void *self);
-extern void *_ZN11ShadowModelC1Ev(void *self);
-extern void *_ZN7dCcAc_cC1Ev(void *self);
-extern void *_ZN10dBgCh_ActrC1Ev(void *self);
 extern "C" void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern "C" void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
 extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
@@ -116,17 +71,13 @@ extern "C" void Matrix4x3_FromRotationY(void* m, int angle);
 extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j( void* self, void* sm, void* mtx, Fix12i fx, int t, u32 u);
 extern struct Matrix4x3 data_020a0e68;
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int, void*);
-extern void func_ov096_02135800(char* c);
 extern short Vec3_HorzAngle(const void* a, const void* b);
 extern int RandomIntInternal(void*);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
 extern int data_0209e650[];
 extern s16 data_02082214[];
-extern void func_ov096_02135948(char* c);
-extern void func_ov096_0213585c(void *t);
 extern char *func_ov096_021357b4(char *c);
 extern char data_ov096_02137b48;
-extern void func_ov096_021368f0(char *c);
 extern int Vec3_HorzDist(const void* a, const void* b);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void func_02038414(void *p);
@@ -140,35 +91,15 @@ void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, voi
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
 
-/* The two ACTOR_SPAWN_TABLE factories are grouped with this class because
- * both store its vptr, both allocate its 0x3b0 bytes, and both
- * inline the same constructor body byte for byte apart from their literal
- * pools. There is no out-of-line daSanbo_c constructor anywhere in the image.
- *
- * A daSanbo_c is not a container of segments: SANBO (spawn-table index 0xf0)
- * and SANBO_BODY (index 0xf1) construct the SAME class, and the head/segment
- * split is a runtime test on the fBase_c actor id at [this+0x0c]. mPrevSegment and
- * mNextSegment link the separate instances.
- *
- * Reconstructed source-style names: SM64DS proves the RTTI class daSanbo_c, the
- * SANBO / SANBO_BODY registry IDs, the allocation size and the vtable identity;
- * later EAD lineage supplies the classInit spelling. The exact original SM64DS
- * symbols are not preserved. Historical project aliases: Pokey_Spawn and
- * PokeySegment_Spawn. */
-
-/* Both factories are `return new daSanbo_c()`. The synthesized ctor stores
+/* Both profiles construct this class. The synthesized ctor stores
  * `_ZTV9daSanbo_c + 2`; do not restate a file-local `extern _ZTV`. */
 
-/* ROM ordinal 35 -- daSanbo_c_classInit_SANBO, 0x02136d60, size 0x50 */
 // @symbol daSanbo_c_classInit_SANBO
-/* The registry factory behind the SANBO profile. `return new daSanbo_c()`
- * MATCHES (size 0x50); the synthesized ctor stores `_ZTV9daSanbo_c + 2`. */
 extern "C" daSanbo_c *daSanbo_c_classInit_SANBO(void)
 {
     return new daSanbo_c();
 }
 
-/* ROM ordinal 34 -- daSanbo_c_classInit_SANBO_BODY, 0x02136d10, size 0x50 */
 // @symbol daSanbo_c_classInit_SANBO_BODY
 /* Same class, SANBO_BODY profile (actor id 0xf1). */
 extern "C" daSanbo_c *daSanbo_c_classInit_SANBO_BODY(void)
@@ -176,11 +107,8 @@ extern "C" daSanbo_c *daSanbo_c_classInit_SANBO_BODY(void)
     return new daSanbo_c();
 }
 
-/* ROM ordinal 33 -- _ZN9daSanbo_c13OnTurnIntoEggER6Player, 0x02136cd0, size 0x40 */
 // @symbol _ZN9daSanbo_c13OnTurnIntoEggER6Player
-/* daSanbo_c::OnTurnIntoEgg -- vtable slot 19, recovered from vtable slot identity.
- * Only the head segment (actorID 0xf0) pays out a coin; every segment marks
- * itself for destruction. */
+/* Only the head pays out a coin. Every piece then destroys itself. */
 void daSanbo_c::OnTurnIntoEgg(Player &player)
 {
     int flag = (actorID == SANBO_HEAD);
@@ -189,7 +117,6 @@ void daSanbo_c::OnTurnIntoEgg(Player &player)
     MarkForDestruction();
 }
 
-/* ROM ordinal 32 -- _ZN9daSanbo_c13InitResourcesEv, 0x02136ab0, size 0x220 */
 // @symbol _ZN9daSanbo_c13InitResourcesEv
 int daSanbo_c::InitResources()
 {
@@ -248,13 +175,12 @@ int daSanbo_c::InitResources()
         }
     }
 
-    func_ov096_02136928(((char*)this), 1);
+    func_ov096_02136928(1);
     mMatrix = IDENTITY_MATRIX4X3;
-    func_ov096_02135efc(((char*)this));
+    func_ov096_02135efc();
     return 1;
 }
 
-/* ROM ordinal 31 -- _ZN9daSanbo_c8BehaviorEv, 0x02136a50, size 0x60 */
 // @symbol _ZN9daSanbo_c8BehaviorEv
 int daSanbo_c::Behavior()
 {
@@ -262,13 +188,12 @@ int daSanbo_c::Behavior()
     if (s != 2 && s != 5) {
         if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char *)this), 0x5dc000)) return 1;
     }
-    func_ov096_021368b4(((char *)this));
+    func_ov096_021368b4();
     MakeVanishLuigiWork(mdCcAc_c);
-    func_ov096_02135efc(((char *)this));
+    func_ov096_02135efc();
     return 1;
 }
 
-/* ROM ordinal 30 -- _ZN9daSanbo_c6RenderEv, 0x021369fc, size 0x54 */
 // @symbol _ZN9daSanbo_c6RenderEv
 int daSanbo_c::Render()
 {
@@ -280,7 +205,6 @@ int daSanbo_c::Render()
     return 1;
 }
 
-/* ROM ordinal 29 -- _ZN9daSanbo_c16OnPendingDestroyEv, 0x021369b0, size 0x4c */
 // @symbol _ZN9daSanbo_c16OnPendingDestroyEv
 void daSanbo_c::OnPendingDestroy()
 {
@@ -290,12 +214,11 @@ void daSanbo_c::OnPendingDestroy()
     daSanbo_c *p = mNextSegment;
     if (!p) return;
     do {
-        func_ov096_0213585c(p);
+        p->func_ov096_0213585c();
         p = p->mNextSegment;
     } while (p);
 }
 
-/* ROM ordinal 28 -- _ZN9daSanbo_c16CleanupResourcesEv, 0x02136944, size 0x6c */
 // @symbol _ZN9daSanbo_c16CleanupResourcesEv
 int daSanbo_c::CleanupResources()
 {
@@ -314,710 +237,688 @@ int daSanbo_c::CleanupResources()
   return 1;
 }
 
-/* ROM ordinal 27 -- func_ov096_02136928, 0x02136928, size 0x1c */
-// @symbol func_ov096_02136928
-extern "C" {
-void func_ov096_02136928(void *cc, int a) {
-    daSanbo_c *c = (daSanbo_c *)cc;
-    c->mStateFunctions = (daSanbo_c::StateFunc *)(&data_ov096_02137b48 + (a << 4));
-    func_ov096_021368f0((char *)c);
-}
+// @symbol _ZN9daSanbo_c19func_ov096_02136928Ei
+void daSanbo_c::func_ov096_02136928(int a) {
+    mStateFunctions = (daSanbo_c::StateFunc *)(&data_ov096_02137b48 + (a << 4));
+    func_ov096_021368f0();
 }
 
-/* ROM ordinal 26 -- func_ov096_021368f0, 0x021368f0, size 0x38 */
-// @symbol func_ov096_021368f0
-extern "C" void func_ov096_021368f0(char *cc)
+// @symbol _ZN9daSanbo_c19func_ov096_021368f0Ev
+void daSanbo_c::func_ov096_021368f0()
 {
-    daSanbo_c *c = (daSanbo_c *)cc;
-    daSanbo_c::StateFunc *p = c->mStateFunctions;
-    (c->**p)();
+    daSanbo_c::StateFunc *p = mStateFunctions;
+    (this->**p)();
 }
 
-/* ROM ordinal 25 -- func_ov096_021368b4, 0x021368b4, size 0x3c */
-// @symbol func_ov096_021368b4
-extern "C" void func_ov096_021368b4(void *cc)
+// @symbol _ZN9daSanbo_c19func_ov096_021368b4Ev
+void daSanbo_c::func_ov096_021368b4()
 {
-    daSanbo_c *c = (daSanbo_c *)cc;
-    daSanbo_c::StateFunc *p = c->mStateFunctions + 1;
-    (c->**p)();
+    daSanbo_c::StateFunc *p = mStateFunctions + 1;
+    (this->**p)();
 }
 
-/* ROM ordinal 24 -- func_ov096_021368a4, 0x021368a4, size 0x10 */
-// @symbol func_ov096_021368a4
-extern "C" {
-int func_ov096_021368a4(int *p)
+// @symbol _ZN9daSanbo_c19func_ov096_021368a4Ev
+int daSanbo_c::func_ov096_021368a4()
 {
-    ((daSanbo_c *)p)->mState = 0;
+    mState = 0;
     return 1;
 }
+
+
+namespace Sound { void PlayBank0(unsigned int id, const Vector3 &pos); }
+
+void ApproachLinear(int &dst, int target, int step);
+bool ApproachLinear(short &value, short target, short step);
+
+extern "C" {
+void func_ov096_021358c8(char *c);
+void func_ov096_02135e2c(daSanbo_c *actor, void *clsn);
+int func_ov096_02135878(void *unused, int x);
+void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int x, int y, int z);
+unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+    unsigned a, unsigned b, int x, int y, int z, const void *dir, void *cb);
+unsigned _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+    unsigned a, unsigned b, int x, int y, int z, const Vector3_16f *dir);
+void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
+    void *player, void *at, unsigned a, int fix, unsigned b, unsigned d, unsigned e);
 }
 
-/* ROM ordinal 23 -- func_ov096_02136754, 0x02136754, size 0x150 */
 // @symbol func_ov096_02136754
-extern "C" {
-int func_ov096_02136754(char* self)
+/* A segment tracks the one in front of it while that piece is still small. */
+extern "C" int func_ov096_02136754(char *raw)
 {
-    char *other = *(char**)(self + 0x394);
-    if (!other) {
-        func_ov096_02136928(self, 1);
-    } else {
+    daSanbo_c *self = (daSanbo_c *)raw;
+    daSanbo_c *next = self->mNextSegment;
 
-        char *p = self + 0x60;
-        int sp, t, a0, z, lim, b;
-        s16 *tbl, c, sn;
+    if (!next) {
+        self->func_ov096_02136928(1);
+    } else {
+        int offset = 0xe000;
+        int round;
+        int vy;
+        int clamped;
+        s16 *tbl;
+        s16 cs;
+        s16 sn;
         u16 ang;
 
-        *(int*)(self+0x5c) = *(int*)(other+0x5c);
-        other = *(char**)(self+0x394);
-        t = *(int*)(other+0x64);
-        sp = 0xe000;
-        *(int*)(self+0x64) = t;
+        self->mPosX = next->mPosX;
+        next = self->mNextSegment;
+        self->mPosZ = next->mPosZ;
 
-        t = *(int*)(self+0xa8) - 0x2000;
-        a0 = *(int*)(self+0xa0);
-        if (t >= a0) a0 = t;
-        *(int*)(self+0xa8) = a0;
-        *(int*)p += *(int*)(self+0xa8);
-        other = *(char**)(self+0x394);
-        t = *(int*)(self+0x60);
-        lim = *(int*)(other+0x60) + 0x6e000;
-        if (t < lim) {
-            *(int*)(self+0x60) = lim;
-            *(int*)(self+0xa8) = 0;
+        vy = self->mVertSpeed - 0x2000;
+        clamped = self->mTerminalVelocity;
+        if (vy >= clamped)
+            clamped = vy;
+        self->mVertSpeed = clamped;
+        self->mPosY += self->mVertSpeed;
+
+        next = self->mNextSegment;
+        if (self->mPosY < next->mPosY + 0x6e000) {
+            self->mPosY = next->mPosY + 0x6e000;
+            self->mVertSpeed = 0;
         }
-        other = *(char**)(self+0x394);
-        tbl = data_02082214;
-        c = *(s16*)(other+0x8e);
-        z = 0;
-        *(s16*)(self+0x8e) = c;
-        other = *(char**)(self+0x394);
-        other = other + 0x300;
-        c = *(s16*)(other+0xaa);
-        b = 0x800;
-        c = (s16)(c + 0x13000);
-        *(s16*)(self + 0x3aa) = c;
-        ang = *(u16*)(self + 0x3aa);
-        c = tbl[(ang>>4)*2];
-        *(int*)(self+0x378) = (int)(((s64)c * sp + b) >> 12);
-        *(int*)(self+0x37c) = z;
-        ang = *(u16*)(self + 0x3aa);
-        sn = tbl[(ang>>4)*2+1];
-        *(int*)(self+0x380) = (int)(((s64)sn * sp + b) >> 12);
 
+        next = self->mNextSegment;
+        tbl = data_02082214;
+        self->mAngleY = next->mAngleY;
+        next = self->mNextSegment;
+        cs = (s16)(next->mSegAngY + 0x13000);
+        round = 0x800;
+        self->mSegAngY = cs;
+        ang = (u16)self->mSegAngY;
+        cs = tbl[(ang >> 4) * 2];
+        self->mOffsetX = (int)(((s64)cs * offset + round) >> 12);
+        self->mOffsetY = 0;
+        ang = (u16)self->mSegAngY;
+        sn = tbl[(ang >> 4) * 2 + 1];
+        self->mOffsetZ = (int)(((s64)sn * offset + round) >> 12);
     }
-    func_ov096_02135948(self);
-    ((dCc_c *)(self + 0x14c))->Clear();
-    ((dCc_c *)(self + 0x14c))->dCc_c::Update();
+    self->func_ov096_02135948();
+    self->mdCcAc_c.Clear();
+    self->mdCcAc_c.dCc_c::Update();
     return 1;
 }
-}
 
-/* ROM ordinal 22 -- func_ov096_0213670c, 0x0213670c, size 0x48 */
 // @symbol func_ov096_0213670c
-extern "C" {
-void func_ov096_0213670c(void *c) {
-    s32 self = (s32)c;
-    void *ret = func_ov096_021357b4((char *)c);
-    u8 timer = *(u8*)((char*)ret + 0x3a8);
-    if (timer != 0) timer = 0; else timer = 0x5a;
-    ((daSanbo_c *)self)->mTimer = timer;
-    timer = ((daSanbo_c *)self)->mTimer;
+/* unk_3a8 on the head picks a zero delay or a 90-frame one. */
+extern "C" void func_ov096_0213670c(void *raw)
+{
+    daSanbo_c *self = (daSanbo_c *)raw;
+    daSanbo_c *head = (daSanbo_c *)func_ov096_021357b4((char *)raw);
+    u8 timer = head->unk_3a8;
+
+    if (timer != 0)
+        timer = 0;
+    else
+        timer = 0x5a;
+    self->mTimer = timer;
+    timer = self->mTimer;
     if (timer == 0) {
-        *(s32*)((char*)(s32)self + 0x80) = 0x1000;
-        *(s32*)((char*)(s32)self + 0x84) = 0x1000;
-        *(s32*)((char*)(s32)self + 0x88) = 0x1000;
+        self->mScaleX = 0x1000;
+        self->mScaleY = 0x1000;
+        self->mScaleZ = 0x1000;
     }
-    ((daSanbo_c *)self)->mState = 1;
-}
+    self->mState = 1;
 }
 
-/* ROM ordinal 21 -- func_ov096_021365d4, 0x021365d4, size 0x138 */
 // @symbol func_ov096_021365d4
-extern "C" {
-void _Z14ApproachLinearRiii(int* dst, int target, int step);
-void func_ov096_021358c8(char* c);
-int func_ov096_02135838(char* c);
-void func_ov096_02135e2c(int* self, void* clsn);
-void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int a, int b, int c);
+/* Grow this segment, then sprout the next one when the timer expires. */
+extern "C" int func_ov096_021365d4(char *raw)
+{
+    daSanbo_c *self = (daSanbo_c *)raw;
+    int scale = self->mScaleX;
+    int copied;
 
-int func_ov096_021365d4(char* c) {
-    int t = *(int*)(c + 0x80);
-    int v;
-    _Z14ApproachLinearRiii(&t, 0x1000, 0x12c);
-    v = t;
-    *(int*)(c + 0x80) = v;
-    *(int*)(c + 0x84) = v;
-    *(int*)(c + 0x88) = v;
-    *(short*)(c + 0x3aa) = *(short*)(c + 0x3aa) + 0x500;
-    *(int*)(c + 0x378) = 0;
-    *(int*)(c + 0x37c) = 0;
-    *(int*)(c + 0x380) = 0;
-    func_ov096_021358c8(c);
-    if (func_ov096_02135838(c) < 4) {
-        if (DecIfAbove0_Byte((unsigned char*)(c + 0x3ac)) == 0) {
-            void* sp = dActor_c::Spawn(SANBO_BODY, *(unsigned int*)(c + 4), *(Vector3*)(c + 0x5c), (Vector3_16*)(c + 0x8c), *(signed char*)(c + 0xcc), -1);
-            if (sp != 0) {
-                *(void**)(c + 0x394) = sp;
-                func_ov096_02136928(c, 4);
-                if (func_ov096_02135838(c) >= 3) {
-                    *(unsigned char*)(func_ov096_021357b4(c) + 0x3a8) = 0;
-                }
+    ApproachLinear(scale, 0x1000, 0x12c);
+    copied = scale;
+    self->mScaleX = copied;
+    self->mScaleY = copied;
+    self->mScaleZ = copied;
+    self->mSegAngY = (s16)(self->mSegAngY + 0x500);
+    self->mOffsetX = 0;
+    self->mOffsetY = 0;
+    self->mOffsetZ = 0;
+    func_ov096_021358c8(raw);
+    if (self->func_ov096_02135838() < 4) {
+        if (DecIfAbove0_Byte(&self->mTimer) == 0) {
+            dActor_c *spawned = dActor_c::Spawn(SANBO_BODY, self->uniqueID,
+                *(Vector3 *)&self->mPosX, (Vector3_16 *)&self->mAngleX,
+                self->mAreaId, -1);
+            if (spawned != 0) {
+                self->mNextSegment = (daSanbo_c *)spawned;
+                self->func_ov096_02136928(4);
+                if (self->func_ov096_02135838() >= 3)
+                    ((daSanbo_c *)func_ov096_021357b4(raw))->unk_3a8 = 0;
             }
         }
     }
-    ((dActor_c *)c)->UpdatePos((dCc_c *)(c + 0x14c));
-    func_ov096_02135e2c((int*)c, c + 0x180);
-    func_ov096_02135948(c);
-    ((dCc_c *)(c + 0x14c))->Clear();
-    ((dCc_c *)(c + 0x14c))->dCc_c::Update();
-    if (((dBgCh_Actr *)(c + 0x180))->IsOnGround() != 0) {
-        _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(*(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
+    self->UpdatePos(&self->mdCcAc_c);
+    func_ov096_02135e2c(self, &self->mWithMeshClsn);
+    self->func_ov096_02135948();
+    self->mdCcAc_c.Clear();
+    self->mdCcAc_c.dCc_c::Update();
+    if (self->mWithMeshClsn.IsOnGround() != 0) {
+        _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(
+            self->mPosX, self->mPosY, self->mPosZ);
     }
     return 1;
 }
-}
 
-/* ROM ordinal 20 -- func_ov096_02136534, 0x02136534, size 0xa0 */
-// @symbol func_ov096_02136534
-extern "C" int func_ov096_02136534(char *c)
+// @symbol _ZN9daSanbo_c19func_ov096_02136534Ev
+int daSanbo_c::func_ov096_02136534()
 {
-    int b = (int)(*(unsigned short *)(c + 0xc) == SANBO_HEAD);
-    if (b != 0) {
-        dActor_c::Spawn(0x122, 2, *(Vector3 *)(c + 0x5c), (Vector3_16 *)0, *(signed char *)(c + 0xcc), -1);
+    int head = (actorID == SANBO_HEAD);
+
+    if (head != 0) {
+        dActor_c::Spawn(0x122, 2, *(Vector3 *)&mPosX, (Vector3_16 *)0,
+            mAreaId, -1);
     }
-    func_ov096_02135800(c);
-    *(short *)(c + 0x94) = Vec3_HorzAngle((Vector3 *)(*(char **)(c + 0x388) + 0x5c), (Vector3 *)(c + 0x5c));
-    *(int *)(c + 0xa8) = 0x14000;
-    if (*(int *)(*(char **)(c + 0x388) + 8) == 2)
-        *(int *)(c + 0x98) = 0x28000;
+    func_ov096_02135800();
+    mPrevAngleY = Vec3_HorzAngle(&mHitActor->mPosX, &mPosX);
+    mVertSpeed = 0x14000;
+    if (mHitActor->param1 == 2)
+        mHorzSpeed = 0x28000;
     else
-        *(int *)(c + 0x98) = 0x14000;
-    ((daSanbo_c *)c)->mState = 2;
+        mHorzSpeed = 0x14000;
+    mState = 2;
     return 1;
 }
 
-/* ROM ordinal 19 -- func_ov096_02136434, 0x02136434, size 0x100 */
 // @symbol func_ov096_02136434
-extern "C" {
-
-struct Vector3_16f;
-extern unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, int f, int t1, int t2, const void *v, void *cb);
-extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int f, int t1, int t2, const Vector3_16f *v);
-
-int func_ov096_02136434(void *c)
+extern "C" int func_ov096_02136434(void *raw)
 {
-    char *s = (char*)c;
+    daSanbo_c *self = (daSanbo_c *)raw;
     struct Vector3 pos;
-    void *p0, *p1;
-    int x, y, z;
-    ((dActor_c *)c)->UpdatePos((dCc_c *)(s+0x14c));
-    if (*(unsigned*)(s+0x3a0) != 0 && *(unsigned*)(s+0x3a4) != 0) {
-        x = *(int*)(s+0x5c);
-        z = *(int*)(s+0x64);
-        y = *(int*)(s+0x60) + 0x3c000;
-        ((int*)&pos)[0] = x;
-        ((int*)&pos)[1] = y;
-        ((int*)&pos)[2] = z;
-        *(unsigned*)(s+0x3a0) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            *(unsigned*)(s+0x3a0), 0x13a, pos.x, pos.y, pos.z, 0, 0);
-        *(unsigned*)(s+0x3a4) = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-            *(unsigned*)(s+0x3a4), 0x13b, pos.x, pos.y, pos.z, 0);
-        p0 = Particle::System::FromUniqueID(*(unsigned*)(s+0x3a0));
-        p1 = Particle::System::FromUniqueID(*(unsigned*)(s+0x3a4));
-        if (p0) *(int*)((char*)p0+0x50) = 0x7fff;
-        if (p1) *(int*)((char*)p1+0x50) = 0x7fff;
+    Particle::System *p0;
+    Particle::System *p1;
+    int x;
+    int y;
+    int z;
+
+    self->UpdatePos(&self->mdCcAc_c);
+    if (self->mParticle0 != 0 && self->mParticle1 != 0) {
+        x = self->mPosX;
+        z = self->mPosZ;
+        y = self->mPosY + 0x3c000;
+        ((int *)&pos)[0] = x;
+        ((int *)&pos)[1] = y;
+        ((int *)&pos)[2] = z;
+        self->mParticle0 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            self->mParticle0, 0x13a, pos.x, pos.y, pos.z, 0, 0);
+        self->mParticle1 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+            self->mParticle1, 0x13b, pos.x, pos.y, pos.z, 0);
+        p0 = Particle::System::FromUniqueID(self->mParticle0);
+        p1 = Particle::System::FromUniqueID(self->mParticle1);
+        if (p0)
+            p0->callbackScale = 0x7fff;
+        if (p1)
+            p1->callbackScale = 0x7fff;
     }
-    func_02038414(s+0x180);
-    if (((dBgCh_Actr *)(s+0x180))->JustHitGround() != 0)
-        func_ov096_0213585c(c);
+    func_02038414(&self->mWithMeshClsn);
+    if (self->mWithMeshClsn.JustHitGround() != 0)
+        self->func_ov096_0213585c();
     return 1;
 }
-}
 
-/* ROM ordinal 18 -- func_ov096_0213640c, 0x0213640c, size 0x28 */
-// @symbol func_ov096_0213640c
-extern "C" {
-int func_ov096_0213640c(char *c)
+// @symbol _ZN9daSanbo_c19func_ov096_0213640cEv
+int daSanbo_c::func_ov096_0213640c()
 {
-    func_ov096_02135800(c);
-    *(int *)(c + 0x98) = 0;
-    ((daSanbo_c *)c)->mState = 3;
+
+    func_ov096_02135800();
+    mHorzSpeed = 0;
+    mState = 3;
     return 1;
 }
-}
 
-/* ROM ordinal 17 -- func_ov096_021363c4, 0x021363c4, size 0x48 */
 // @symbol func_ov096_021363c4
-extern "C" {
-int func_ov096_021363c4(void *c) {
-    int flags = *(int *)((char *)c + 0xb0);
-    int flag = (flags & 0x20000) ? 1 : 0;
-    if (flag == 0) {
-        flag = (flags & 0x40000) ? 1 : 0;
-        if (flag == 0)
-            func_ov096_0213585c(c);
+extern "C" int func_ov096_021363c4(void *raw)
+{
+    daSanbo_c *self = (daSanbo_c *)raw;
+    int flags = self->mFlags;
+    int held = (flags & 0x20000) ? 1 : 0;
+
+    if (held == 0) {
+        held = (flags & 0x40000) ? 1 : 0;
+        if (held == 0)
+            self->func_ov096_0213585c();
     }
     return 1;
 }
-}
 
-/* ROM ordinal 16 -- func_ov096_021363b4, 0x021363b4, size 0x10 */
-// @symbol func_ov096_021363b4
-extern "C" {
-int func_ov096_021363b4(int *p)
+// @symbol _ZN9daSanbo_c19func_ov096_021363b4Ev
+int daSanbo_c::func_ov096_021363b4()
 {
-    ((daSanbo_c *)p)->mState = 4;
+    mState = 4;
     return 1;
 }
-}
 
-/* ROM ordinal 15 -- func_ov096_02136264, 0x02136264, size 0x150 */
 // @symbol func_ov096_02136264
-extern "C" {
-int func_ov096_02136264(char* self)
+/* Follow the segment ahead. Once its scale reaches full size, settle. */
+extern "C" int func_ov096_02136264(char *raw)
 {
-    char *other = *(char**)(self + 0x394);
-    if (!other) {
-        func_ov096_02136928(self, 1);
+    daSanbo_c *self = (daSanbo_c *)raw;
+    daSanbo_c *next = self->mNextSegment;
+
+    if (!next) {
+        self->func_ov096_02136928(1);
     } else {
-        int velx, r, sp, t, z, b;
-        s64 prod;
-        s16 *tbl, c, sn;
+        int scale = next->mScaleX;
+        s64 prod = (s64)scale * 0x6e000;
+        int raised;
+        int offset = 0xe000;
+        int round = 0x800;
+        s16 *tbl;
+        s16 cs;
+        s16 sn;
         u16 ang;
 
-        velx = *(int*)(other + 0x80);
-        prod = (s64)velx * 0x6e000;
-        *(int*)(self + 0x5c) = *(int*)(other + 0x5c);
-        r = (int)((prod + 0x800) >> 12);
-        other = *(char**)(self + 0x394);
-        *(int*)(self + 0x60) = r + *(int*)(other + 0x60);
-        other = *(char**)(self + 0x394);
-        t = *(int*)(other + 0x64);
+        self->mPosX = next->mPosX;
+        raised = (int)((prod + 0x800) >> 12);
+        next = self->mNextSegment;
+        self->mPosY = raised + next->mPosY;
+        next = self->mNextSegment;
         tbl = data_02082214;
-        *(int*)(self + 0x64) = t;
-        other = *(char**)(self + 0x394);
-        sp = 0xe000;
-        c = *(s16*)(other + 0x8e);
-        *(s16*)(self + 0x8e) = c;
-        other = *(char**)(self + 0x394);
-        other = other + 0x300;
-        c = *(s16*)(other + 0xaa);
-        c = (s16)(c + 0x13000);
-        *(s16*)(self + 0x3aa) = c;
-        ang = *(u16*)(self + 0x3aa);
-        c = tbl[(ang >> 4) * 2];
-        b = 0x800;
-        z = 0;
-        *(int*)(self + 0x378) = (int)(((s64)c * sp + b) >> 12);
-        *(int*)(self + 0x37c) = z;
-        ang = *(u16*)(self + 0x3aa);
+        self->mPosZ = next->mPosZ;
+        next = self->mNextSegment;
+        self->mAngleY = next->mAngleY;
+        next = self->mNextSegment;
+        cs = (s16)(next->mSegAngY + 0x13000);
+        self->mSegAngY = cs;
+        ang = (u16)self->mSegAngY;
+        cs = tbl[(ang >> 4) * 2];
+        self->mOffsetX = (int)(((s64)cs * offset + round) >> 12);
+        self->mOffsetY = 0;
+        ang = (u16)self->mSegAngY;
         sn = tbl[(ang >> 4) * 2 + 1];
-        *(int*)(self + 0x380) = (int)(((s64)sn * sp + b) >> 12);
-        if (r == 0x6e000)
-            func_ov096_02136928(self, 0);
+        self->mOffsetZ = (int)(((s64)sn * offset + round) >> 12);
+        if (raised == 0x6e000)
+            self->func_ov096_02136928(0);
     }
-    func_ov096_02135948(self);
-    ((dCc_c *)(self + 0x14c))->Clear();
-    ((dCc_c *)(self + 0x14c))->dCc_c::Update();
+    self->func_ov096_02135948();
+    self->mdCcAc_c.Clear();
+    self->mdCcAc_c.dCc_c::Update();
     return 1;
 }
-}
 
-/* ROM ordinal 14 -- func_ov096_02136134, 0x02136134, size 0x130 */
-// @symbol func_ov096_02136134
-extern "C" int func_ov096_02136134(char* c){
-  int cond = (*(unsigned short*)(c+0xc) == SANBO_HEAD);
-  if(cond){
-    dActor_c::Spawn(0x122, 2, *(Vector3*)(c+0x5c), 0, *(signed char*)(c+0xcc), -1);
-  }
-  {
-    _ZN5Sound9PlayBank0EjRK7Vector3(9, c+0x74);
-    func_ov096_02135800(c);
-    *(short*)(c+0x94) = Vec3_HorzAngle((char*)*(void**)(c+0x388)+0x5c, c+0x5c);
-    int rnd = RandomIntInternal(data_0209e650);
-    *(short*)(c+0x94) = *(short*)(c+0x94) + ((rnd & 0x7fff) - 0x4000);
-    *(short*)(c+0x8e) = *(short*)(c+0x94) + 0x8000;
-    *(int*)(c+0xa8) = 0x28000;
-    *(int*)(c+0x98) = 0xa000;
-    *(unsigned char*)(c+0x3ac) = 0x2d;
-    daSanbo_c* o = (daSanbo_c*)c;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x43, *(int*)(c+0x5c), *(int*)(c+0x60)+o->OnAimedAtWithEgg(), *(int*)(c+0x64));
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x44, *(int*)(c+0x5c), *(int*)(c+0x60)+o->OnAimedAtWithEgg(), *(int*)(c+0x64));
-    ((daSanbo_c *)c)->mState = 5;
-  }
-  return 1;
-}
-
-/* ROM ordinal 13 -- func_ov096_021360c4, 0x021360c4, size 0x70 */
-// @symbol func_ov096_021360c4
-extern "C" {
-int func_ov096_021360c4(char *c) {
-    int eq = (*(unsigned short*)(c+0xc) == SANBO_HEAD) ? 1 : 0;
-    if (eq != 0) {
-        *(short*)(c+0x8c) = *(short*)(c+0x8c) - 0x1000;
-    }
-    ((dActor_c *)c)->UpdatePos((dCc_c *)(c+0x14c));
-    func_02038414(c+0x180);
-    if (((dBgCh_Actr *)(c+0x180))->JustHitGround() || !DecIfAbove0_Byte((unsigned char*)(c+0x3ac))) {
-        func_ov096_0213585c(c);
-    }
-    return 1;
-}
-}
-
-/* ROM ordinal 12 -- func_ov096_02135efc, 0x02135efc, size 0x1c8 */
-// @symbol func_ov096_02135efc
-extern "C" void func_ov096_02135efc(void* cv)
+// @symbol _ZN9daSanbo_c19func_ov096_02136134Ev
+int daSanbo_c::func_ov096_02136134()
 {
-    char* c = (char*)cv;
-    struct Vector3 v;
-    enum Bool b;
+    int head = (actorID == SANBO_HEAD);
+    int rnd;
 
-    if (((daSanbo_c *)c)->mState == 5) {
-        b = (enum Bool)(*(unsigned short*)(c + 0xc) == SANBO_HEAD);
-        if (b) {
-            int y1, y2;
+    if (head) {
+        dActor_c::Spawn(0x122, 2, *(Vector3 *)&mPosX, 0, mAreaId, -1);
+    }
+    Sound::PlayBank0(9, *(Vector3 *)&mCamSpacePosX);
+    func_ov096_02135800();
+    mPrevAngleY = Vec3_HorzAngle(&mHitActor->mPosX, &mPosX);
+    rnd = RandomIntInternal(data_0209e650);
+    mPrevAngleY = (s16)(mPrevAngleY + ((rnd & 0x7fff) - 0x4000));
+    mAngleY = (s16)(mPrevAngleY + 0x8000);
+    mVertSpeed = 0x28000;
+    mHorzSpeed = 0xa000;
+    mTimer = 0x2d;
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x43, mPosX,
+        mPosY + OnAimedAtWithEgg(), mPosZ);
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x44, mPosX,
+        mPosY + OnAimedAtWithEgg(), mPosZ);
+    mState = 5;
+    return 1;
+}
 
-            Vec3_Asr(&v, (struct Vector3*)(c + 0x5c), 3);
-            Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
+// @symbol func_ov096_021360c4
+extern "C" int func_ov096_021360c4(char *raw)
+{
+    daSanbo_c *self = (daSanbo_c *)raw;
+    int head = (self->actorID == SANBO_HEAD) ? 1 : 0;
 
-            y1 = ((daSanbo_c*)c)->OnAimedAtWithEgg() >> 3;
-            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y1, 0);
+    if (head != 0)
+        self->mAngleX = (s16)(self->mAngleX - 0x1000);
+    self->UpdatePos(&self->mdCcAc_c);
+    func_02038414(&self->mWithMeshClsn);
+    if (self->mWithMeshClsn.JustHitGround() || !DecIfAbove0_Byte(&self->mTimer))
+        self->func_ov096_0213585c();
+    return 1;
+}
 
+// @symbol _ZN9daSanbo_c19func_ov096_02135efcEv
+void daSanbo_c::func_ov096_02135efc()
+{
+    struct Vector3 cam;
+    int head;
+
+    if (mState == 5) {
+        head = (actorID == SANBO_HEAD);
+        if (head) {
+            int y;
+
+            Vec3_Asr(&cam, (struct Vector3 *)&mPosX, 3);
+            Matrix4x3_FromTranslation(&data_020a0e68, cam.x, cam.y, cam.z);
+
+            y = OnAimedAtWithEgg() >> 3;
+            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y, 0);
             Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
-                *(s16*)(c + 0x8c), *(s16*)(c + 0x8e), *(s16*)(c + 0x90));
+                mAngleX, mAngleY, mAngleZ);
 
-            y2 = (-((daSanbo_c*)c)->OnAimedAtWithEgg()) >> 3;
-            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
+            y = (-OnAimedAtWithEgg()) >> 3;
+            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y, 0);
+            mModel.mat4x3 = data_020a0e68;
 
-            *(struct Matrix4x3*)(c + 0xf0) = data_020a0e68;
-
-            *(int*)(c + 0x360) = *(int*)(c + 0x5c) >> 3;
-            *(int*)(c + 0x364) = *(int*)(c + 0x60) >> 3;
-            *(int*)(c + 0x368) = *(int*)(c + 0x64) >> 3;
+            mMatrix.m[9] = mPosX >> 3;
+            mMatrix.m[10] = mPosY >> 3;
+            mMatrix.m[11] = mPosZ >> 3;
 
             _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-                c, c + 0x124, c + 0x33c, 0xa0000, 0x2bc000, 0xf);
+                this, &mShadowModel, &mMatrix, 0xa0000, 0x2bc000, 0xf);
             return;
         }
     }
 
-    Matrix4x3_FromRotationY(c + 0xf0, *(s16*)(c + 0x8e));
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+    mModel.mat4x3.m[9] = (mPosX + mOffsetX) >> 3;
+    mModel.mat4x3.m[10] = (mPosY + 0x3c000) >> 3;
+    mModel.mat4x3.m[11] = (mPosZ + mOffsetZ) >> 3;
 
-    *(int*)(c + 0x114) = (*(int*)(c + 0x5c) + *(int*)(c + 0x378)) >> 3;
-    *(int*)(c + 0x118) = (*(int*)(c + 0x60) + 0x3c000) >> 3;
-    *(int*)(c + 0x11c) = (*(int*)(c + 0x64) + *(int*)(c + 0x380)) >> 3;
-
-    if (*(int*)(c + 0x394) == 0 || ((daSanbo_c *)c)->mState == 2 || ((daSanbo_c *)c)->mState == 5) {
+    if (mNextSegment == 0 || mState == 2 || mState == 5) {
         _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-            c, c + 0x124, c + 0xf0, 0x82000, 0x2bc000, 0xf);
+            this, &mShadowModel, &mModel.mat4x3, 0x82000, 0x2bc000, 0xf);
     }
 }
 
-/* ROM ordinal 11 -- func_ov096_02135e2c, 0x02135e2c, size 0xd0 */
 // @symbol func_ov096_02135e2c
 extern "C" {
-void* _ZNK10dBgCh_Actr14GetFloorResultEv(void* c);
-int _ZN4cstd4fdivEii(int a, int b);
-void* _ZNK10dBgCh_Actr13GetWallResultEv(void* c);
+void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *c);
+void *_ZNK10dBgCh_Actr13GetWallResultEv(void *c);
 
-void func_ov096_02135e2c(int* self, void* clsn)
+void func_ov096_02135e2c(daSanbo_c *self, void *clsn)
 {
     int n0[3];
     int n1[3];
+
     func_02038414(clsn);
     if (((dBgCh_Actr *)clsn)->IsOnGround()) {
-        ((SurfaceInfo *)((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn)+4))->CopyNormalTo(*(Vector3 *)n0);
+        ((SurfaceInfo *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn) + 4))->CopyNormalTo(*(Vector3 *)n0);
         if (n0[1] != 0) {
-            long long a = (long long)n0[0] * (long long)self[0xa4/4];
-            long long b = (long long)n0[2] * (long long)self[0xac/4];
-            int x = (int)((a + 0x800) >> 12);
-            int y = (int)((b + 0x800) >> 12);
-            self[0xa8/4] = -(_ZN4cstd4fdivEii(x + y, n0[1]) + 0x8000);
+            long long ax = (long long)n0[0] * (long long)self->unk_0a4;
+            long long az = (long long)n0[2] * (long long)self->unk_0ac;
+            int x = (int)((ax + 0x800) >> 12);
+            int z = (int)((az + 0x800) >> 12);
+            self->mVertSpeed = -(cstd::fdiv(x + z, n0[1]) + 0x8000);
         }
     }
     if (((dBgCh_Actr *)clsn)->IsOnWall()) {
-        ((SurfaceInfo *)((char*)_ZNK10dBgCh_Actr13GetWallResultEv(clsn)+4))->CopyNormalTo(*(Vector3 *)n1);
+        ((SurfaceInfo *)((char *)_ZNK10dBgCh_Actr13GetWallResultEv(clsn) + 4))->CopyNormalTo(*(Vector3 *)n1);
     }
 }
 }
 
-/* ROM ordinal 10 -- func_ov096_02135948, 0x02135948, size 0x4e4 */
-// @symbol func_ov096_02135948
 #include "decl_Actor.h"
 #include "decl_Player.h"
-typedef long long s64;
 
-
-
-extern "C" {
-extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, void* pos);
-extern s16 data_02082214[];
-extern unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, int f, int t1, int t2, const void* v, void* cb);
-extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int f, int t1, int t2, const Vector3_16f* v);
-extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, void* v, unsigned int a, int fix, unsigned int b, unsigned int d, unsigned int e);
-
-void func_ov096_02135948(char* c)
+// @symbol _ZN9daSanbo_c19func_ov096_02135948Ev
+void daSanbo_c::func_ov096_02135948()
 {
-    unsigned int id170;
-    char* p;
-    int r150;
+    unsigned int hitId;
+    dActor_c *other;
+    int radius;
     int angle;
-    int a;
+    int index;
     s16 cs;
     int dist;
     s16 sn;
     int dist2;
     unsigned int flags;
-    int st38c;
-    char* q;
+    int state;
+    daSanbo_c *prev;
     struct Vector3 pos;
-    /* Five arrays: collapsing to one int vv[3] DIFFs this helper 23 words. */
+    /* Five arrays on purpose. One shared int[3] changes this function. */
     int vv1[3];
     int vv2[3];
     int vv3[3];
     int vv4[3];
     int vv5[3];
-    int x, y, z;
+    int x;
+    int y;
+    int z;
 
-    if (_ZN8dActor_c7FindEggER5dCc_c(c, c + 0x14c) != 0 ||
-        _ZN8dActor_c18FindExplosionActorER5dCc_c(c, c + 0x14c) != 0) {
-        _ZN5Sound9PlayBank0EjRK7Vector3(9, c + 0x74);
-        func_ov096_02135800(c);
+    if (FindEgg(mdCcAc_c) != 0 ||
+        FindExplosionActor(mdCcAc_c) != 0) {
+        Sound::PlayBank0(9, *(Vector3 *)&mCamSpacePosX);
+        func_ov096_02135800();
         {
-            int b = (*(unsigned short*)(c + 0xc) == SANBO_HEAD);
-            if (b) {
-                dActor_c::Spawn(0x122, 2, *(Vector3 *)(c + 0x5c), 0, *(signed char*)(c + 0xcc), -1);
-            }
+            int head = (actorID == SANBO_HEAD);
+            if (head)
+                dActor_c::Spawn(0x122, 2, *(Vector3 *)&mPosX, 0, mAreaId, -1);
         }
-        func_ov096_0213585c(c);
+        func_ov096_0213585c();
         return;
     }
 
-    id170 = *(unsigned int*)(c + 0x170);
-    if (id170 == 0)
+    hitId = mdCcAc_c.otherOwner;
+    if (hitId == 0)
         return;
 
-    p = (char*)dActor_c::FindWithID(id170);
-    if (p == 0)
+    other = dActor_c::FindWithID(hitId);
+    if (other == 0)
         return;
 
-    if (((daSanbo_c *)c)->mState == 1) {
-        int b = (*(unsigned short*)(p + 0xc) == 0x135);
-        if (b) {
-            r150 = *(int*)(c + 0x150);
-            if (Vec3_HorzDist(c + 0x5c, p + 0x5c) < r150 + 0x1a9000) {
-                angle = Vec3_HorzAngle(p + 0x5c, c + 0x5c);
-                a = ((unsigned short)angle >> 4) * 2;
-                cs = data_02082214[a];
-                dist = *(int*)(c + 0x150) + 0x1a9000;
-                *(int*)(c + 0x5c) = *(int*)(p + 0x5c) + (int)(((s64)dist * cs + 0x800) >> 12);
-                sn = data_02082214[a + 1];
-                dist2 = *(int*)(c + 0x150) + 0x1a9000;
-                *(int*)(c + 0x64) = *(int*)(p + 0x64) + (int)(((s64)dist2 * sn + 0x800) >> 12);
-            }
+    if (mState == 1) {
+        int shove = (other->actorID == 0x135);
+        if (shove) {
+        radius = mdCcAc_c.radius;
+        if (Vec3_HorzDist(&mPosX, &other->mPosX) < radius + 0x1a9000) {
+            angle = Vec3_HorzAngle(&other->mPosX, &mPosX);
+            index = ((unsigned short)angle >> 4) * 2;
+            cs = data_02082214[index];
+            dist = mdCcAc_c.radius + 0x1a9000;
+            mPosX = other->mPosX + (int)(((s64)dist * cs + 0x800) >> 12);
+            sn = data_02082214[index + 1];
+            dist2 = mdCcAc_c.radius + 0x1a9000;
+            mPosZ = other->mPosZ + (int)(((s64)dist2 * sn + 0x800) >> 12);
+        }
         }
     }
 
     {
-        int bf = (*(unsigned short*)(p + 0xc) == 0xbf);
-        if (!bf)
+        int playerId = (other->actorID == 0xbf);
+        if (!playerId)
             return;
     }
 
-    flags = *(unsigned int*)(c + 0x16c);
+    flags = mdCcAc_c.hitFlags;
     if (!(flags & 0x8000)) {
+        Player *player = (Player *)other;
+
         if (flags & 0x40000) {
-            x = *(int*)(c + 0x5c);
-            z = *(int*)(c + 0x64);
-            y = *(int*)(c + 0x60) + 0x3c000;
-            ((int*)&pos)[0] = x;
-            ((int*)&pos)[1] = y;
-            ((int*)&pos)[2] = z;
-            *(unsigned*)(c + 0x3a0) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                *(unsigned*)(c + 0x3a0), 0x13a, pos.x, pos.y, pos.z, 0, 0);
-            *(unsigned*)(c + 0x3a4) = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-                *(unsigned*)(c + 0x3a4), 0x13b, pos.x, pos.y, pos.z, 0);
-            _ZN5Sound9PlayBank0EjRK7Vector3(9, c + 0x74);
-            *(void**)(c + 0x388) = p;
-            func_ov096_02136928(c, 2);
-        } else if ((flags & 0x26fe0) || _ZN6Player9IsOnShellEv(p) != 0 ||
-                   *(unsigned char*)(p + 0x6f9) != 0) {
-            _ZN5Sound9PlayBank0EjRK7Vector3(9, c + 0x74);
-            *(void**)(c + 0x388) = p;
-            func_ov096_02136928(c, 2);
-        } else if (*(unsigned int*)(c + 0x16c) & 0x10) {
-            *(void**)(c + 0x388) = p;
-            ((Player *)p)->IncMegaKillCount();
-            func_ov096_02136928(c, 5);
+            x = mPosX;
+            z = mPosZ;
+            y = mPosY + 0x3c000;
+            ((int *)&pos)[0] = x;
+            ((int *)&pos)[1] = y;
+            ((int *)&pos)[2] = z;
+            mParticle0 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+                mParticle0, 0x13a, pos.x, pos.y, pos.z, 0, 0);
+            mParticle1 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+                mParticle1, 0x13b, pos.x, pos.y, pos.z, 0);
+            Sound::PlayBank0(9, *(Vector3 *)&mCamSpacePosX);
+            mHitActor = player;
+            func_ov096_02136928(2);
+        } else if ((flags & 0x26fe0) || player->IsOnShell() != 0 ||
+                   player->mIsMetal != 0) {
+            Sound::PlayBank0(9, *(Vector3 *)&mCamSpacePosX);
+            mHitActor = player;
+            func_ov096_02136928(2);
+        } else if (mdCcAc_c.hitFlags & 0x10) {
+            mHitActor = player;
+            player->IncMegaKillCount();
+            func_ov096_02136928(5);
         } else {
-            st38c = ((daSanbo_c *)c)->mState;
-            if (st38c == 0) {
-                q = *(char**)(c + 0x390);
-                if (q == 0) {
-                    if (*(int*)(c + 0xa8) == 0) {
-                        vv1[0] = *(int*)(c + 0x5c);
-                        vv1[1] = *(int*)(c + 0x60);
-                        vv1[2] = *(int*)(c + 0x64);
-                        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(p, vv1, 2, 0xc000, 1, 0, 1);
+            state = mState;
+            if (state == 0) {
+                prev = mPrevSegment;
+                if (prev == 0) {
+                    if (mVertSpeed == 0) {
+                        vv1[0] = mPosX;
+                        vv1[1] = mPosY;
+                        vv1[2] = mPosZ;
+                        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
+                            player, vv1, 2, 0xc000, 1, 0, 1);
                     }
-                } else if (*(int*)(c + 0xa8) == 0 && *(int*)(q + 0xa8) == 0) {
-                    vv2[0] = *(int*)(c + 0x5c);
-                    vv2[1] = *(int*)(c + 0x60);
-                    vv2[2] = *(int*)(c + 0x64);
-                    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(p, vv2, 2, 0xc000, 1, 0, 1);
+                } else if (mVertSpeed == 0 && prev->mVertSpeed == 0) {
+                    vv2[0] = mPosX;
+                    vv2[1] = mPosY;
+                    vv2[2] = mPosZ;
+                    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
+                        player, vv2, 2, 0xc000, 1, 0, 1);
                 }
-            } else if (st38c == 1) {
-                if (*(void**)(c + 0x390) == 0) {
-                    if (((dBgCh_Actr *)(c + 0x180))->IsOnGround() != 0) {
-                        vv3[0] = *(int*)(c + 0x5c);
-                        vv3[1] = *(int*)(c + 0x60);
-                        vv3[2] = *(int*)(c + 0x64);
-                        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(p, vv3, 2, 0xc000, 1, 0, 1);
+            } else if (state == 1) {
+                if (mPrevSegment == 0) {
+                    if (mWithMeshClsn.IsOnGround() != 0) {
+                        vv3[0] = mPosX;
+                        vv3[1] = mPosY;
+                        vv3[2] = mPosZ;
+                        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
+                            player, vv3, 2, 0xc000, 1, 0, 1);
                     }
-                } else if (((dBgCh_Actr *)(c + 0x180))->IsOnGround() != 0 &&
-                           *(int*)(*(char**)(c + 0x390) + 0xa8) == 0) {
-                    vv4[0] = *(int*)(c + 0x5c);
-                    vv4[1] = *(int*)(c + 0x60);
-                    vv4[2] = *(int*)(c + 0x64);
-                    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(p, vv4, 2, 0xc000, 1, 0, 1);
+                } else if (mWithMeshClsn.IsOnGround() != 0 &&
+                           mPrevSegment->mVertSpeed == 0) {
+                    vv4[0] = mPosX;
+                    vv4[1] = mPosY;
+                    vv4[2] = mPosZ;
+                    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
+                        player, vv4, 2, 0xc000, 1, 0, 1);
                 }
             } else {
-                vv5[0] = *(int*)(c + 0x5c);
-                vv5[1] = *(int*)(c + 0x60);
-                vv5[2] = *(int*)(c + 0x64);
-                _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(p, vv5, 2, 0xc000, 1, 0, 1);
+                vv5[0] = mPosX;
+                vv5[1] = mPosY;
+                vv5[2] = mPosZ;
+                _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
+                    player, vv5, 2, 0xc000, 1, 0, 1);
             }
         }
     }
 
     {
-        int t = (*(unsigned int*)(c + 0xb0) & 0x20000) != 0;
-        if (t) {
-            func_ov096_02136928(c, 3);
-        }
+        int inMouth = (mFlags & 0x20000) != 0;
+        if (inMouth)
+            func_ov096_02136928(3);
     }
 }
-}
 
-/* ROM ordinal 9 -- func_ov096_021358c8, 0x021358c8, size 0x80 */
 // @symbol func_ov096_021358c8
-extern "C" {
-void _Z14ApproachLinearRsss(short*, short, short);
-int func_ov096_02135878(void*, int);
-void func_ov096_021358c8(char* c){
-  char* p = (char*)((dActor_c *)c)->ClosestNonVanishPlayer();
-  char* tgt;
-  if(p){
-    int d = Vec3_HorzDist(c+0x36c, p+0x5c);
-    if(d < 0x3e8000) tgt = p+0x5c; else tgt = c+0x36c;
-  } else {
-    tgt = c+0x36c;
-  }
-  int dist = Vec3_HorzDist(c+0x5c, tgt);
-  short ang = Vec3_HorzAngle(c+0x5c, tgt);
-  _Z14ApproachLinearRsss((short*)(c+0x8e), ang, 0x320);
-  int r = func_ov096_02135878(c, dist);
-  short v = *(short*)(c+0x8e);
-  *(short*)(c+0x94) = v + r;
-}
-}
-
-/* ROM ordinal 8 -- func_ov096_02135878, 0x02135878, size 0x50 */
-// @symbol func_ov096_02135878
-extern "C" int func_ov096_02135878(void* unused, int x){
-  if(x>0x190000) return 0;
-  int q=cstd::fdiv(0x4000,0xc8000);
-  long long m=(long long)q*x;
-  m+=0x800;
-  int r=(int)(m>>12);
-  r=0x8000-r;
-  return (short)r;
-}
-
-/* ROM ordinal 7 -- func_ov096_0213585c, 0x0213585c, size 0x1c */
-// @symbol func_ov096_0213585c
-extern "C" {
-void func_ov096_0213585c(void *t)
+extern "C" void func_ov096_021358c8(char *raw)
 {
-    daSanbo_c *segment = (daSanbo_c *)t;
-    segment->PoofDust();
-    segment->MarkForDestruction();
-}
+    daSanbo_c *self = (daSanbo_c *)raw;
+    Player *player = self->ClosestNonVanishPlayer();
+    void *target;
+    int dist;
+    short ang;
+    int turn;
+
+    if (player) {
+        dist = Vec3_HorzDist(&self->mRootPosX, &player->mPosX);
+        if (dist < 0x3e8000)
+            target = &player->mPosX;
+        else
+            target = &self->mRootPosX;
+    } else {
+        target = &self->mRootPosX;
+    }
+    dist = Vec3_HorzDist(&self->mPosX, target);
+    ang = Vec3_HorzAngle(&self->mPosX, target);
+    ApproachLinear(self->mAngleY, ang, (short)0x320);
+    turn = func_ov096_02135878(raw, dist);
+    self->mPrevAngleY = (short)(self->mAngleY + turn);
 }
 
-/* ROM ordinal 6 -- func_ov096_02135838, 0x02135838, size 0x24 */
-// @symbol func_ov096_02135838
-extern "C" {
-int func_ov096_02135838(char *c) {
-    daSanbo_c *seg = ((daSanbo_c *)c)->mPrevSegment;
+// @symbol func_ov096_02135878
+extern "C" int func_ov096_02135878(void *unused, int x)
+{
+    int q;
+    long long m;
+    int r;
+
+    if (x > 0x190000)
+        return 0;
+    q = cstd::fdiv(0x4000, 0xc8000);
+    m = (long long)q * x;
+    m += 0x800;
+    r = (int)(m >> 12);
+    r = 0x8000 - r;
+    return (short)r;
+}
+
+// @symbol _ZN9daSanbo_c19func_ov096_0213585cEv
+void daSanbo_c::func_ov096_0213585c()
+{
+
+    PoofDust();
+    MarkForDestruction();
+}
+
+// @symbol _ZN9daSanbo_c19func_ov096_02135838Ev
+int daSanbo_c::func_ov096_02135838()
+{
+    daSanbo_c *seg = mPrevSegment;
     int count = 0;
-    if (seg == 0) return count;
+
+    if (seg == 0)
+        return count;
     do {
         seg = seg->mPrevSegment;
         count = count + 1;
     } while (seg != 0);
     return count;
 }
+
+// @symbol _ZN9daSanbo_c19func_ov096_02135800Ev
+void daSanbo_c::func_ov096_02135800()
+{
+    daSanbo_c *next;
+    daSanbo_c *prev;
+    int head = (actorID == SANBO_HEAD);
+
+    if (head)
+        return;
+    next = mNextSegment;
+    prev = mPrevSegment;
+    prev->mNextSegment = next;
+    next = mNextSegment;
+    if (next)
+        next->mPrevSegment = mPrevSegment;
 }
 
-/* ROM ordinal 5 -- func_ov096_02135800, 0x02135800, size 0x38 */
-// @symbol func_ov096_02135800
-extern "C" void func_ov096_02135800(char* c){
-  daSanbo_c *segment = (daSanbo_c *)c;
-  int b = (segment->actorID == SANBO_HEAD);
-  if(b) return;
-  daSanbo_c *next = segment->mNextSegment;
-  daSanbo_c *prev = segment->mPrevSegment;
-  prev->mNextSegment = next;
-  next = segment->mNextSegment;
-  if(next) next->mPrevSegment = segment->mPrevSegment;
-}
-
-/* ROM ordinal 4 -- func_ov096_021357b4, 0x021357b4, size 0x4c */
 // @symbol func_ov096_021357b4
-extern "C" {
-char *func_ov096_021357b4(char *cc){
-    daSanbo_c *c = (daSanbo_c *)cc;
-    daSanbo_c *p = c->mPrevSegment;
-    if(p==0) return (char *)c;
-    while(p){
-        unsigned notHead = (p->actorID != SANBO_HEAD) ? 1u : 0u;
-        if(!notHead) return (char *)p;
-        p = p->mPrevSegment;
+extern "C" char *func_ov096_021357b4(char *raw)
+{
+    daSanbo_c *self = (daSanbo_c *)raw;
+    daSanbo_c *prev = self->mPrevSegment;
+
+    if (prev == 0)
+        return (char *)self;
+    while (prev) {
+        unsigned int notHead = (prev->actorID != SANBO_HEAD) ? 1u : 0u;
+        if (!notHead)
+            return (char *)prev;
+        prev = prev->mPrevSegment;
     }
     return 0;
 }
-}
 
-/* ROM ordinal 3 -- _ZN9daSanbo_c16OnAimedAtWithEggEv, 0x021357ac, size 0x8 */
 // @symbol _ZN9daSanbo_c16OnAimedAtWithEggEv
-/* daSanbo_c::OnAimedAtWithEgg -- vtable slot 29, recovered from vtable slot identity.
- * The ROM body ignores `this` and returns a constant. */
+/* Constant height used by the segment particles and the head's shadow. */
 int daSanbo_c::OnAimedAtWithEgg()
 {
     return 245760;
 }
 
-/* ROM ordinal 2 -- _ZN9daSanbo_c13OnYoshiTryEatEv, 0x021357a4, size 0x8 */
 // @symbol _ZN9daSanbo_c13OnYoshiTryEatEv
-/* daSanbo_c::OnYoshiTryEat -- vtable slot 18, recovered from vtable slot identity.
- * The ROM body ignores `this` and returns a constant. */
+/* Returns a constant. The body ignores `this`. */
 int daSanbo_c::OnYoshiTryEat()
 {
     return 4;
 }
 
-/* ROM ordinal 1 -- _ZN9daSanbo_cD0Ev, 0x02135748, size 0x5c */
-/* _ZN9daSanbo_cD0Ev, 0x02135748, size 0x5c -- vtable slot 17.
- * No definition here and no @symbol marker: the destructor is written inline in
- * include/daSanbo_c.h, so mwccarm emits the vague-linkage D1/D0 pair itself, in
- * the cartridge's own D1-then-D0 order, and emits no homeless D2. Writing it out
- * of line here would emit D2,D0,D1 and put D0 below D1, which is not the ROM's
- * layout and which production isolation refuses. */
-
-/* ROM ordinal 0 -- _ZN9daSanbo_cD1Ev, 0x02135700, size 0x48 */
-/* _ZN9daSanbo_cD1Ev, 0x02135700, size 0x48 -- vtable slot 16. Also emitted from
- * the inline body in include/daSanbo_c.h: one vptr store, then mModel /
- * mShadowModel / mdCcAc_c / mWithMeshClsn destroyed in reverse declaration
- * order, then ~dActor_c. Every instruction of it is the compiler's. */
+/* D1 and D0 come from the inline destructor in include/daSanbo_c.h.
+ * An out-of-line body here would emit D2 and put D0 below D1. */

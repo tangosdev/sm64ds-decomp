@@ -63,7 +63,7 @@ struct PknMtx43 { int w[12]; };
    records at 0x02130ba4. */
 typedef void (daPkn_c::*PknStatePMF)();
 
-int ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 /* C-linkage declarations for the remaining raw entry points and shared data. */
 extern "C" {

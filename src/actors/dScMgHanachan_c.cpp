@@ -160,7 +160,7 @@ struct SelfV {
 extern int ApproachLinear(int &, int, int);
 extern void UpdateAngle(short &, short, int, short);
 extern int ApproachLinear2(short &, short, short);
-extern int ApproachLinear(short &, short, short);
+bool ApproachLinear(short &value, short target, short step);
 namespace Sound { u32 PlayBank2_2D(u32 id); }
 namespace G2S { char *GetBG3CharPtr(); }
 namespace GX {
