@@ -96,7 +96,7 @@ void Matrix4x3_FromRotationXYZExt(Matrix4x3 *mat, int x, int y, int z);
 }
 
 int ApproachLinear(int &value, int target, int step);
-int ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 // @symbol _ZN13daObjEwbIce_cD1Ev
 // @symbol _ZN13daObjEwbIce_cD0Ev

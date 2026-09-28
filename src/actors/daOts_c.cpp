@@ -51,7 +51,7 @@
  *   func_ov064_021165d8 / 02116560. Header methods carry Fix12<int>.
  * - KillByInvincibleChar 6az: func_ov064_02116754.
  * - Particle::System::New / NewSimple 6az: func_ov064_0211616c / 02115f98.
- * - ApproachLinear stays mangled (Rsss / Riii); no header method form here.
+ * - _Z14ApproachLinearRiii stays mangled; no header method form here.
  * - func_0201267c: PlayStepSound / PlayHitSound / PlayDeathSound at mCamSpacePosX.
  * - SharedFilePtr +4: SetAnim BCA loads; SharedFilePtr.h has no fields.
  * - 0x398..0x3f9 stay children's padding (annexing would shrink daDonketu_c /
@@ -86,6 +86,8 @@
 #include "dBgCh_Gnd.h"
 #include "SharedFilePtr.h"
 #include "Player.h"
+
+bool ApproachLinear(short &value, short target, short step);
 
 /* Local stand-ins with no header of their own. */
 
@@ -134,11 +136,8 @@ short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
  * func_ov064_02116560 tail-forwards it, so the `int` return is the spelling all
  * six agree with. It stays the mangled free function rather than
  * ModelAnim::SetAnim: the ROM name carries a by-value Fix12<int>, which mwccarm
- * passes differently at the call site (wall 6az). Same story for
- * _Z14ApproachLinearRsss, which arrived as a reference form, a pointer form and
- * a plain `ApproachLinear`. */
+ * passes differently at the call site (wall 6az). */
 int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, BCA_File *f, int a, int b, unsigned int c);
-int _Z14ApproachLinearRsss(short &cur, short tgt, short step);
 int _Z14ApproachLinearRiii(int *dst, int target, int rate);
 
 int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void* self, int fix12);
@@ -517,7 +516,7 @@ int func_ov064_021166f0(daOts_c *t)
     Vector3 v;
     char *c = (char *)t;
     *(short *)(c + 0x3e4) = Vec3_HorzAngle((Vector3 *)&t->mPosX, (Vector3 *)(c + 0x3a8));
-    _Z14ApproachLinearRsss(t->mPrevAngleY, *(short *)(c + 0x3e4), 0x140);
+    ApproachLinear(t->mPrevAngleY, *(short *)(c + 0x3e4), 0x140);
     v.x = *(int *)(c + 0x3a8);
     v.y = *(int *)(c + 0x3ac);
     v.z = *(int *)(c + 0x3b0);
@@ -616,7 +615,7 @@ extern "C" void func_ov064_021163c0(char *c)
         }
     }
     *(int *)(c + 0x98) = 0x5000;
-    _Z14ApproachLinearRsss(*(short *)(c + 0x8e), *(short *)(c + 0x94), 0x200);
+    ApproachLinear(*(short *)(c + 0x8e), *(short *)(c + 0x94), 0x200);
     if (*(unsigned short *)(c + 0x100) < 0xf)
         return;
     *(short *)(c + 0x94) = *(short *)(c + 0x8e);
@@ -736,7 +735,7 @@ extern "C" int func_ov064_02116110(daOts_c *self, short step){
     dActor_c *p = (dActor_c *)self->ClosestPlayer();
     if(p != 0){
         short ang = Vec3_HorzAngle((const Vector3*)&self->mPosX,(const Vector3*)&p->mPosX);
-        if(_Z14ApproachLinearRsss(self->mPrevAngleY, ang, step)) return 1;
+        if(ApproachLinear(self->mPrevAngleY, ang, step)) return 1;
     }
     return 0;
 }

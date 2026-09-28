@@ -21,7 +21,7 @@ extern u16 _ZN6Player9StartTalkER7fBase_cb(void *p, void *a, int b);
 extern void _ZN6Camera9SetFlag_3Ev(void *c);
 extern s16 Vec3_HorzAngle(const int *v0, const int *v1);
 extern int func_020092c4(void *a, void *out, void *target);
-extern int _Z14ApproachLinearRsss(s16 *a, s16 b, s16 c);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 extern void _ZN17daObjSlIceBlock_c16CleanupResourcesEv(void);
 extern u16 func_0201277c(int a);
 extern int func_ov002_020c51d0(void *c, int *st);

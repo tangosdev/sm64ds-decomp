@@ -1,5 +1,7 @@
 //cpp
 #include "types.h"
+
+bool ApproachLinear(short &value, short target, short step);
 extern "C" {
 void func_ov006_020ca2ec(void *c);
 int _ZNK9Animation12WillHitFrameEi(void *thisPtr, int frame);
@@ -8,7 +10,6 @@ void func_ov006_020bfec0(void *a0, void *a1, short *a2);
 int _Z14ApproachLinearRiii(int *v, int step, int rate);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thisPtr, void *file, int i, int fix, unsigned int flags);
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
-int _Z14ApproachLinearRsss(short *v, short step, short rate);
 }
 
 extern int data_ov006_0214059c;
@@ -126,11 +127,11 @@ L260:
     {
         int v = *(int *)(c + 0x3c);
         if (v > 0x2000) {
-            _Z14ApproachLinearRsss((short *)(c + 0x52), 0x2000, 0xc00);
+            ApproachLinear(*(short *)(c + 0x52), 0x2000, 0xc00);
         } else if (v < -0x2000) {
-            _Z14ApproachLinearRsss((short *)(c + 0x52), -0x2000, 0xc00);
+            ApproachLinear(*(short *)(c + 0x52), -0x2000, 0xc00);
         } else {
-            _Z14ApproachLinearRsss((short *)(c + 0x52), (short)v, 0xc00);
+            ApproachLinear(*(short *)(c + 0x52), (short)v, 0xc00);
         }
     }
 }

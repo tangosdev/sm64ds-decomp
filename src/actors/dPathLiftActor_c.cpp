@@ -32,6 +32,8 @@
 #include "decl_common.h"
 #include "common.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 typedef void (dPathLiftActor_c::*PathLiftStateFn)();
 
 struct PathLiftState {
@@ -44,7 +46,6 @@ extern "C" {
 extern s16 data_02082214[];
 extern u16 DecIfAbove0_Short(u16 *p);
 extern u8 DecIfAbove0_Byte(u8 *p);
-extern void _Z14ApproachLinearRsss(s16 *p, s16 target, s16 step);
 extern int Vec3_HorzDist(const void* a, const void* b);
 extern void Vec3_Sub(void *out, void *a, void *b);
 extern int LenVec3(void *v);
@@ -379,9 +380,9 @@ void dPathLiftActor_c::StatePath()
     ad1 = AngleDiff(mPrevPathAngle.y, sl);
     ad2 = AngleDiff(mPrevPathAngle.x, sb);
     q2 = (short)(ad2 / dv);
-    _Z14ApproachLinearRsss(&mAngleY, sl, (short)(ad1 / dv));
+    ApproachLinear(mAngleY, sl, (short)(ad1 / dv));
     if (HasNonzeroAngleZ() != 0) {
-        _Z14ApproachLinearRsss(&mAngleX, sb, q2);
+        ApproachLinear(mAngleX, sb, q2);
     }
 
     if (len1 == 0 || len1 <= mHorzSpeed) {
@@ -494,7 +495,7 @@ void dPathLiftActor_c::StateFall()
     }
     UpdatePos(0);
     if (HasNonzeroAngleZ() != 0)
-        _Z14ApproachLinearRsss(&mAngleX, 0x3000, 0x100);
+        ApproachLinear(mAngleX, 0x3000, 0x100);
     if (DecIfAbove0_Byte(&mTriggerDelay) != 0)
         return;
     if (IsUnk42cSet() != 0) {

@@ -56,7 +56,7 @@ void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *t, void *a, int b, int c, void *d, void *e);
 }
 
-int ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 // @symbol _ZN12daBgSnmHed_cD1Ev
 // @symbol _ZN12daBgSnmHed_cD0Ev

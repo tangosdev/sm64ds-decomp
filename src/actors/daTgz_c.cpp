@@ -49,6 +49,8 @@
 #include "decl_dBgCh_Actr.h"
 #include "decl_Particle.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 #pragma defer_codegen off
 
 /* SharedFilePtr publishes no fields. The loaded BCA is the word at +4. */
@@ -68,7 +70,6 @@ void func_ov077_02125e5c(daTgz_c *self);
 void func_ov077_02125e94(daTgz_c *self, int state);
 /* decl_common.h already declares these four as void* / char*. A second
  * extern "C" prototype with daTgz_c* is illegal overloading. */
-int _Z14ApproachLinearRsss(short *cur, short target, short step);
 
 int SurfaceInfo_TestFlag0x20(int *p);
 void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void *p);
@@ -620,7 +621,7 @@ extern "C" int func_ov077_02125a0c(daTgz_c *self)
 extern "C" int func_ov077_02125a54(daTgz_c *self)
 {
     int d;
-    _Z14ApproachLinearRsss(&self->mAngleY, self->mTurnTarget, 0x64);
+    ApproachLinear(self->mAngleY, self->mTurnTarget, 0x64);
     self->mPrevAngleY = self->mAngleY;
     self->mModelAnim.Animation::Advance();
     func_ov077_02124eb0(self);

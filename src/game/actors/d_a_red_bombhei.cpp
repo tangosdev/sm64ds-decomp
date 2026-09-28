@@ -92,7 +92,7 @@ struct RedBombheiState {
     RedBombheiStatePMF update;
 };
 
-int ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 extern SharedFilePtr data_ov084_02130da4;   /* the model */
 extern SharedFilePtr data_ov084_02130d9c;   /* the idle animation */

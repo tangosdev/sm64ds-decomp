@@ -1,5 +1,5 @@
 extern void AddVec3(void* a, void* b, void* c);
-extern void _Z14ApproachLinearRsss(short* x, short a, short b);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 extern void func_ov006_020c49d8(void* c);
 extern short data_02082214[];
 

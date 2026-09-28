@@ -43,6 +43,8 @@
 #include "Player.h"
 #include "SharedFilePtr.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 typedef daBakubaku_c Klass;  /* real class: 2004/b56 does not ICE on this PMF */
 typedef void (Klass::*PMF)();
 /* Tables are 0x10 apart. SetState calls enter at +0; Behavior calls main at +8. */
@@ -109,7 +111,6 @@ int func_ov002_020c5cd8(void *a, void *self);
 void func_02012694(int a, void *p);
 u32 func_02022c80(u32, u32, Fix12i, Fix12i, Fix12i, const void *);
 u32 func_02022d00(u32, u32, Fix12i, Fix12i, Fix12i, void *);
-int _Z14ApproachLinearRsss(s16 *dst, s16 target, s16 step);
 void _Z14ApproachLinearRiii(int *p, int t, int s);
 }
 
@@ -306,11 +307,11 @@ extern "C" int func_ov032_02111e24(daBakubaku_c *self)
             (const Vector3 *)&self->mSpawnPosX);
         self->mAngTarget = ang;
     }
-    _Z14ApproachLinearRsss(&self->mPrevAngleY, self->mAngTarget, 0x100);
+    ApproachLinear(self->mPrevAngleY, self->mAngTarget, 0x100);
     ang = Vec3_VertAngle(
         (const Vector3 *)&self->mPosX,
         (const Vector3 *)&self->mSpawnPosX);
-    _Z14ApproachLinearRsss(&self->mPrevAngleX, ang, 0x100);
+    ApproachLinear(self->mPrevAngleX, ang, 0x100);
     in[2] = 0;
     in[2] = 0x5000;
     in[0] = 0;
@@ -400,7 +401,7 @@ track:
             (Vector3 *)&self->mPosX, (Vector3 *)&self->mTargetPosX);
         unsigned int r = (unsigned int)RandomIntInternal(data_0209e650);
         int s5 = (int)(((r >> 8) & 3) << 0x1c) >> 0x10;
-        _Z14ApproachLinearRsss(&self->mPrevAngleY, self->mAngTarget, 0x200);
+        ApproachLinear(self->mPrevAngleY, self->mAngTarget, 0x200);
         if (Vec3_HorzDist(
                 (Vector3 *)&self->mPosX,
                 (Vector3 *)&self->mTargetPosX) < 0x258000) {
@@ -513,8 +514,8 @@ matrixblock:
         self->mVertSpeed = out2[1];
     }
 afterblock: ;
-    _Z14ApproachLinearRsss(&self->mAngTarget, speed, 0x200);
-    _Z14ApproachLinearRsss(&self->mPrevAngleX, self->mAngTarget, 0x200);
+    ApproachLinear(self->mAngTarget, speed, 0x200);
+    ApproachLinear(self->mPrevAngleX, self->mAngTarget, 0x200);
     if (self->mModelAnim.Finished() != 0) {
         self->mMouthOpen = 0;
         if (speed == 0) {
@@ -594,7 +595,7 @@ afterblock: ;
             goto player_path;
     }
 
-    _Z14ApproachLinearRsss(&self->mPrevAngleX, 0, 0x200);
+    ApproachLinear(self->mPrevAngleX, 0, 0x200);
     self->mLungePhase = 1;
     self->mMouthOpen = 0;
     if (AngleDiff(self->mPrevAngleX, 0) < 0x200) {
@@ -618,10 +619,10 @@ player_path:
         vec[1] = p[1];
         vec[2] = p[2];
         if (data_0209f32c[0] > self->mPosY) {
-            _Z14ApproachLinearRsss(&self->mPrevAngleX, 0, 0x200);
+            ApproachLinear(self->mPrevAngleX, 0, 0x200);
         } else {
-            _Z14ApproachLinearRsss(
-                &self->mPrevAngleX,
+            ApproachLinear(
+                self->mPrevAngleX,
                 Vec3_VertAngle((const Vector3 *)&self->mPosX, (const Vector3 *)vec),
                 0x200);
         }

@@ -6,7 +6,7 @@ typedef int Fix12;
 typedef struct { int x, y, z; } Vector3;
 
 extern int func_ov063_0211a0dc(void* c);
-extern void _Z14ApproachLinearRsss(s16* p, s16 a, s16 b);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 extern int _ZN9Animation8FinishedEv(void* self);
 extern int func_ov063_0211a8a4(char* thiz);
 extern void func_02012694(int a, void* p);

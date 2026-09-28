@@ -29,7 +29,7 @@
 #include "Message.h"
 
 void ApproachLinear(int &value, int target, int step);
-void ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 /* The state table, filled in by __sinit_ov034_021138ec. */
 extern daHanachan_c::State data_ov034_02114538[];

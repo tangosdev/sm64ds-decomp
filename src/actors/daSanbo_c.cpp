@@ -746,6 +746,8 @@ void func_ov096_02135e2c(int* self, void* clsn)
 // @symbol func_ov096_02135948
 #include "decl_Actor.h"
 #include "decl_Player.h"
+
+bool ApproachLinear(short &value, short target, short step);
 typedef long long s64;
 
 
@@ -903,7 +905,6 @@ void func_ov096_02135948(char* c)
 /* ROM ordinal 9 -- func_ov096_021358c8, 0x021358c8, size 0x80 */
 // @symbol func_ov096_021358c8
 extern "C" {
-void _Z14ApproachLinearRsss(short*, short, short);
 int func_ov096_02135878(void*, int);
 void func_ov096_021358c8(char* c){
   char* p = (char*)((dActor_c *)c)->ClosestNonVanishPlayer();
@@ -916,7 +917,7 @@ void func_ov096_021358c8(char* c){
   }
   int dist = Vec3_HorzDist(c+0x5c, tgt);
   short ang = Vec3_HorzAngle(c+0x5c, tgt);
-  _Z14ApproachLinearRsss((short*)(c+0x8e), ang, 0x320);
+  ApproachLinear(*(short *)(c+0x8e), ang, 0x320);
   int r = func_ov096_02135878(c, dist);
   short v = *(short*)(c+0x8e);
   *(short*)(c+0x94) = v + r;

@@ -71,7 +71,7 @@ void func_ov079_02126794(daKlr_c *self);
 void func_ov079_0212682c(daKlr_c *self);
 }
 
-void ApproachLinear(s16 &value, s16 target, s16 step);
+bool ApproachLinear(short &value, short target, short step);
 
 /* The per-state tick table, indexed by mState: [0] func_ov079_0212682c,
    [1] func_ov079_02126794. It lives in .bss and __sinit_ov079_021279d4

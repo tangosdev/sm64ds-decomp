@@ -40,7 +40,7 @@
  * _Z14ApproachLinearRiii and _Z14ApproachLinearRsss, so they are declared as
  * real C++ overloads and the compiler produces the reference. */
 int  ApproachLinear(int &p, int value, int speed);
-void ApproachLinear(short &p, short value, short speed);
+bool ApproachLinear(short &value, short target, short step);
 
 /* cstd::atan2 and dBgActor_c::IsClsnInRangeOnScreen take Fix12<int> BY VALUE,
  * which hits the documented mwccarm stack-homing wall when they are spelled

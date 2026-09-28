@@ -24,8 +24,6 @@
  *   destructor makes the function 0x3f0 against 0x3e0.
  * - Behavior: the jingles call func_02012790. Sound::Play2D(2, id) is
  *   0x3e8 and relocates to _ZN5Sound6Play2DEjj, not 0x02012790.
- * - Behavior: the turn calls _Z14ApproachLinearRsss. Spelling it
- *   ApproachLinear matches the bytes and leaves that reloc unresolved.
  * - InitResources: dCcAcPos_c::Init with Fix12<int> by value is 0x7c
  *   against 0x6c. The call stays the scalar mangled symbol
  *   (notes/mwccarm-codegen.md 6az).
@@ -34,6 +32,8 @@
 #include "daObjCloset_c.h"
 #include "Player.h"
 #include "Message.h"
+
+bool ApproachLinear(short &value, short target, short step);
 
 /* include/types.h's Vector3 declares a destructor. Under that type the
    five locals below grow the frame by 0x10. The ROM copies are a plain
@@ -64,7 +64,6 @@ enum {
 extern "C" {
 /* Sound::Play2D(2, id). The ROM calls this wrapper, not Play2D. */
 unsigned int func_02012790(unsigned int id);
-int _Z14ApproachLinearRsss(short *cur, short target, short step);
 short Vec3_HorzAngle(const struct Vec3Raw *a, const struct Vec3Raw *b);
 int AngleDiff(int a, int b);
 /* 1: return to the rec room when the menu closes. */
@@ -127,7 +126,7 @@ s32 daObjCloset_c::Behavior()
         case 0: {
             /* Face the cupboard: half a turn off its yaw, stepped by 0x800. */
             short facing = (short)(mAngleY + kHalfTurn);
-            if (_Z14ApproachLinearRsss(&target->mAngleY, facing, kTurnStep) != 0) {
+            if (ApproachLinear(target->mAngleY, facing, kTurnStep) != 0) {
                 mMessageID = kMenuMessage;
                 Message::PrepareTalk();
                 target->ShowMessage2(*this, (s16)mMessageID, 0, 1, 0);

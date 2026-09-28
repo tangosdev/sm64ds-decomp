@@ -3,7 +3,7 @@ typedef struct Vector3 { int x, y, z; } Vector3;
 extern int func_ov063_0211a8a4(char *thiz);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern void _Z14ApproachLinearRsss(short *dst, short target, short step);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 extern int func_ov063_0211a0a8(char *thiz, int a1, int a2, int a3, int a4);
 extern void func_ov063_0211a030(char *thiz, int a1, int a2);
 extern void func_ov063_0211a964(char *thiz, int arg1);

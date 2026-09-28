@@ -64,12 +64,13 @@
 #include "SurfaceInfo.h"
 #include "Player.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 extern "C" {
 extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
 extern s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern int AngleDiff(int a, int b);
 extern s16 Vec3_VertAngle(const Vector3* v1, const Vector3* v0);
-extern int _Z14ApproachLinearRsss(s16* dst, s16 target, s16 step);
 extern void func_0201267c(int a, void *b);
 extern int Vec3_Dist(const struct Vector3* a, const struct Vector3* b);
 extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *, ShadowModel &sm, Matrix4x3 &mf, int c, int d, unsigned int e);
@@ -294,7 +295,7 @@ int func_ov018_02111fac(char *c)
         }
         break;
     case 1:
-        if (_Z14ApproachLinearRsss((s16 *)(c + 0x8e),
+        if (ApproachLinear(*(short *)(c + 0x8e),
                 Vec3_HorzAngle((Vector3 *)(c + 0x5c), (Vector3 *)(*(char **)(c + 0x374) + 0x5c)), 0x514)) {
             Matrix4x3_FromTranslation(&data_020a0e68, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
             Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(s16 *)(c + 0x8e));
@@ -372,7 +373,7 @@ extern "C" int func_ov018_02111e28(dActor_c *act)
 {
     daPgMthr_c *self = (daPgMthr_c *)act;
     char *s = (char *)self;
-    _Z14ApproachLinearRsss(&self->mAngleY,
+    ApproachLinear(self->mAngleY,
         Vec3_HorzAngle((Vector3 *)&self->mPosX, (Vector3 *)((char *)self->mPlayer + 0x5c)), 0x514);
     self->mPrevAngleY = self->mAngleY;
     self->UpdatePos(&self->mdCcAc_c);
@@ -538,8 +539,8 @@ void func_ov018_02111a48(char* a, char* b)
         delta = 0;
     }
 
-    _Z14ApproachLinearRsss(&self->mLookAngY, delta, 0x250);
-    _Z14ApproachLinearRsss(&self->mLookAngX, vert, 0x250);
+    ApproachLinear(self->mLookAngY, delta, 0x250);
+    ApproachLinear(self->mLookAngX, vert, 0x250);
 }
 }
 

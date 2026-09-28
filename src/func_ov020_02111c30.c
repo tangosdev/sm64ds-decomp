@@ -5,7 +5,7 @@ extern int _Z14ApproachLinearRiii(s32 *, int, int);
 extern int _ZN9Animation8FinishedEv(void *);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int, int);
 extern void func_ov020_021112b0(char *c);
-extern int _Z14ApproachLinearRsss(s16 *, short, short);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 
 extern void *data_ov020_02114ab0[];
 extern s16 data_02082214[];

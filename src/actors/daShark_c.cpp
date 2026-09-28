@@ -108,7 +108,7 @@ void func_ov090_02133904(char *c);
 void func_ov090_02133710(char *c);
 }
 
-void ApproachLinear(s16 &value, s16 target, s16 step);
+bool ApproachLinear(short &value, short target, short step);
 
 /* One written destructor. The compiler emits D1 (0x0213367c) and D0
  * (0x021336bc). Writing it out of line anchors _ZTV9daShark_c. */

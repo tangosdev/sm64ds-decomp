@@ -47,6 +47,8 @@
 #include "SharedFilePtr.h"
 #include "SurfaceInfo.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 typedef struct { int x, y, z; } Vec3;
 #define LB(off) (*(unsigned char *)(((int)c + (off))))
 
@@ -80,7 +82,6 @@ extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern int Vec3_Dist(void *a, void *b);
 extern void _Z11UpdateAngleRssis(short *a, short b, int n, short s);
-extern int _Z14ApproachLinearRsss(short *p, short target, short step);
 extern void _Z14ApproachLinearRiii(int *p, int a, int b);
 extern void Matrix4x3_FromRotationY(void *m, short angle);
 
@@ -286,7 +287,7 @@ int func_ov019_02111fec(char *c)
     case 0: {
         char *tgt = *(char **)(c + 0x378);
         short ang = Vec3_HorzAngle((struct Vector3 *)(c + 0x5c), (struct Vector3 *)(tgt + 0x5c));
-        if (_Z14ApproachLinearRsss((short *)(c + 0x8e), ang, 0x514) != 0) {
+        if (ApproachLinear(*(short *)(c + 0x8e), ang, 0x514) != 0) {
             struct Vector3 pos;
             int msg;
             int eq;
@@ -526,8 +527,8 @@ int func_ov019_021117a8(char *c)
         *(int *)(c + 0x380) = Vec3_Dist(c + 0x5c, node);
         *(short *)((char *)(((int)c + 0x300)) + 0x8c) =
             Vec3_HorzAngle(c + 0x5c, node);
-        _Z14ApproachLinearRsss(
-            (short *)(c + 0x8e),
+        ApproachLinear(
+            *(short *)(c + 0x8e),
             *(short *)((char *)(((int)c + 0x300)) + 0x8c),
             0x200);
         *(short *)(c + 0x94) = *(short *)(c + 0x8e);
@@ -547,7 +548,7 @@ int func_ov019_021117a8(char *c)
     }
     case 1: {
         short ang = Vec3_HorzAngle(c + 0x5c, *(char **)(c + 0x378) + 0x5c);
-        if (_Z14ApproachLinearRsss((short *)(c + 0x8e), ang, 0x514) != 0) {
+        if (ApproachLinear(*(short *)(c + 0x8e), ang, 0x514) != 0) {
             func_ov019_021122dc(c, 5);
         }
         break;
@@ -590,7 +591,7 @@ int func_ov019_02111558(void *thiz)
     }
     case 1: {
         short ang = Vec3_HorzAngle(c + 0x5c, (char *)*(void **)(c + 0x378) + 0x5c);
-        if (_Z14ApproachLinearRsss((short *)(c + 0x8e), ang, 0x514) != 0) {
+        if (ApproachLinear(*(short *)(c + 0x8e), ang, 0x514) != 0) {
             unsigned int id;
             Vec3 v;
             int z = *(int *)(c + 0x64);

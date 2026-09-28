@@ -130,6 +130,8 @@
 #include "Camera.h"
 #include "Message.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* Remaining reconstruction views. Reconciled by hand against include/: every type
  * the real headers already define (Vector3, Matrix4x3, Fix12<int>, u8/u16/s16,
  * dActor_c, fBase_c, Player, BMD_File, BlendModelAnim) was DROPPED here -- the
@@ -216,7 +218,6 @@ extern int RandomIntInternal(int* seed);
 extern int data_0209e650;
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *out);
-extern void _Z14ApproachLinearRsss(s16 *cur, s16 tgt, s16 step);
 extern short Vec3_VertAngle(const void *a, const void *b);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
 extern void func_0200fa8c(void *c, int a);
@@ -780,7 +781,7 @@ int func_ov078_02124520(char *c)
         pos.z += out.z;
         ((Camera *)cam)->SetLookAt(look);
         ((Camera *)cam)->SetPos(pos);
-        _Z14ApproachLinearRsss((s16 *)(c + 0x8e), ang, 0x800);
+        ApproachLinear(*(short *)(c + 0x8e), ang, 0x800);
         *(s16 *)(c + 0x94) = *(s16 *)(c + 0x8e);
         return 1;
     }
@@ -1408,8 +1409,6 @@ int func_ov078_021258e4(int *t)
 
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125950
-void ApproachLinear(short &v, short t, short step);
-
 extern "C" int func_ov078_02125950(char *c)
 {
     char *target = *(char **)(c + 0x430);
@@ -1466,7 +1465,7 @@ int func_ov078_021259ec(char* c)
         }
     }
 
-    _Z14ApproachLinearRsss((short*)(c + 0x8e), *(short*)(c + 0x4f8), 0x800);
+    ApproachLinear(*(short *)(c + 0x8e), *(short*)(c + 0x4f8), 0x800);
     *(short*)(c + 0x94) = *(short*)(c + 0x8e);
 
     if (func_ov078_02123804(c) == 1) {

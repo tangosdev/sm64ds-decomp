@@ -62,6 +62,8 @@
 #include "SharedFilePtr.h"
 #include "Player.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 extern SharedFilePtr gPianoModelFile;
 extern SharedFilePtr gPianoCollisionFile;
 extern SharedFilePtr gPianoAttackAnimationFile;
@@ -394,7 +396,6 @@ void func_ov063_0211d8cc(daPiano_c* self)
     extern void Vec3_Sub(PianoVec3* out, PianoVec3* a, PianoVec3* b);
     extern int LenVec3(PianoVec3* v);
     extern s16 Vec3_HorzAngle(const PianoVec3* v0, const PianoVec3* v1);
-    extern int _Z14ApproachLinearRsss(s16& v, s16 target, s16 step);
     extern void func_ov063_0211ddac(daPiano_c* c, int state);
 
     extern s16 data_02082214[];   /* sine table: (angle >> 4) * 2 taps sin/cos */
@@ -453,7 +454,7 @@ void func_ov063_0211d8cc(daPiano_c* self)
     if (target != 0) {
         Vec3_Sub(&tmp, (PianoVec3*)&self->mPosX, (PianoVec3*)&target->mPosX);
         dist = LenVec3(&tmp);
-        _Z14ApproachLinearRsss(
+        ApproachLinear(
             self->mPrevAngleY,
             Vec3_HorzAngle((PianoVec3*)&self->mPosX, (PianoVec3*)&self->mTarget->mPosX),
             0x200);

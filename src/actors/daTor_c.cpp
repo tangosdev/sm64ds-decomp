@@ -54,7 +54,7 @@ void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, void *actor, int radius, int height, void *a, int b);
 }
 
-void ApproachLinear(s16 &value, s16 target, s16 step);
+bool ApproachLinear(short &value, short target, short step);
 
 // @symbol _ZN7daTor_cD1Ev
 // @symbol _ZN7daTor_cD0Ev

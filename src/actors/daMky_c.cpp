@@ -94,6 +94,8 @@
 #include "dBgCh_Actr.h"
 #include "SaveData.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* ==========================================================================
  * The eleven state-entry members.
  *
@@ -643,7 +645,6 @@ void func_ov030_02112094(void* self)
 extern "C" {
 int func_ov030_021122b0(dActor_c *self)
 {
-    extern void _Z14ApproachLinearRsss(short *dst, short target, short rate);
     extern unsigned char DecIfAbove0_Byte(unsigned char *p);
     extern void func_ov030_021141a8(char *c, int x);
     extern void func_ov030_02111dd0(char *c);
@@ -653,7 +654,7 @@ int func_ov030_021122b0(dActor_c *self)
     extern void func_ov030_02111890(char *c);
     char *s = (char*)self;
     short ang = self->HorzAngleToCPlayer() + 0x8000;
-    _Z14ApproachLinearRsss((short*)(s + 0x8e), ang, 0xa28);
+    ApproachLinear(*(short *)(s + 0x8e), ang, 0xa28);
     *(short*)(s + 0x94) = *(short*)(s + 0x8e);
     if (DecIfAbove0_Byte((unsigned char*)(s + 0x3c6)) == 0)
         func_ov030_021141a8(s, 0);
@@ -779,7 +780,6 @@ int func_ov030_02112578(void *arg0)
     void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thiz, void *bca, int a, int fx, unsigned int f);
     void func_ov030_02111890(void *c);
     s16 Vec3_HorzAngle(const void *v0, const void *v1);
-    int _Z14ApproachLinearRsss(s16 *v, s16 target, s16 step);
     s32 Vec3_Dist(const void *a, const void *b);
     int _ZN6Player9StartTalkER7fBase_cb(void *player, void *actor, int b);
     void func_ov030_02111908(void *c);
@@ -821,7 +821,7 @@ int func_ov030_02112578(void *arg0)
         func_ov030_02111890(arg0);
         break;
     case 1:
-        _Z14ApproachLinearRsss((s16 *)(c + 0x8e), Vec3_HorzAngle(c + 0x5c, (u8 *)player + 0x5c), 0x300);
+        ApproachLinear(*(short *)(c + 0x8e), Vec3_HorzAngle(c + 0x5c, (u8 *)player + 0x5c), 0x300);
         if (Vec3_Dist(c + 0x5c, (u8 *)player + 0x5c) < 0x96000) {
             if (_ZN6Player9StartTalkER7fBase_cb(player, arg0, 1) != 0) {
                 { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
@@ -851,7 +851,7 @@ int func_ov030_02112578(void *arg0)
         }
         break;
     case 4:
-        if (_Z14ApproachLinearRsss((s16 *)(c + 0x8e), (s16)0xffffe04e, 0x400) != 0) {
+        if (ApproachLinear(*(short *)(c + 0x8e), (s16)0xffffe04e, 0x400) != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, data_ov030_02115d08[1], 0x40000000, 0x1000, 0);
             *(s16 *)(c + 0x94) = *(s16 *)(c + 0x8e);
             *(s32 *)(c + 0x98) = 0xf000;
@@ -1767,7 +1767,6 @@ int func_ov030_02113d20(void *c) {
 
     extern Fix12i Vec3_Dist(const void *a, const void *b);
     extern s16 Vec3_HorzAngle(const void *v0, const void *v1);
-    extern void _Z14ApproachLinearRsss(s16 *dst, s16 target, s16 step);
     extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *anim, void *file, int n, Fix12i speed, unsigned int flags);
     extern void func_ov030_02111a00(void *c);
     extern void _ZN9Animation7AdvanceEv(void *c);
@@ -1825,7 +1824,7 @@ int func_ov030_02113d20(void *c) {
         break;
     }
 
-    _Z14ApproachLinearRsss((s16 *)((char *)c + 0x8e), angle, 0xa28);
+    ApproachLinear(*(short *)((char *)c + 0x8e), angle, 0xa28);
     *(s16 *)((char *)c + 0x94) = *(s16 *)((char *)c + 0x8e);
     if (*(int *)((char *)c + 0x98) != 0)
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)c + 0xd4,
@@ -1881,7 +1880,6 @@ int func_ov030_02113ff0(char* c){
     extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char* ma, void* f, int b, Fix12i c, unsigned int d);
     extern void func_ov030_02111a00(char* c);
     extern s16 _ZN8dActor_c18HorzAngleToCPlayerEv(char* c);
-    extern void _Z14ApproachLinearRsss(s16* p, s16 target, s16 step);
     extern void _ZN9Animation7AdvanceEv(char* a);
     extern void _ZN8dActor_c9UpdatePosEP5dCc_c(char* c, char* cl);
     extern void func_ov030_02111dd0(char* c);
@@ -1900,7 +1898,7 @@ int func_ov030_02113ff0(char* c){
     *(int*)(c+0x98) = 0;
     func_ov030_02111a00(c);
   }
-  _Z14ApproachLinearRsss((s16*)(c+0x8e), _ZN8dActor_c18HorzAngleToCPlayerEv(c), 0x514);
+  ApproachLinear(*(short *)(c+0x8e), _ZN8dActor_c18HorzAngleToCPlayerEv(c), 0x514);
   *(s16*)(c+0x94) = *(s16*)(c+0x8e);
   *(int*)(c+0x130) = 0x1000;
   _ZN9Animation7AdvanceEv(c+0x124);

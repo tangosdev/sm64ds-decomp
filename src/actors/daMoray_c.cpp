@@ -105,7 +105,7 @@ struct MorayRenderStep {
 
 extern "C" MorayRenderStep data_ov016_02114908[];
 
-void ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 namespace cstd { int fdiv(int a, int b); }
 
 /* Swims to the current path node, turning toward it, and steps to the next

@@ -14,7 +14,7 @@ extern void _ZN5dCc_c5ClearEv(char* c);
 extern void func_0201267c(u32 id, char* p);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern void _Z14ApproachLinearRiii(int* p, int target, int step);
-extern void _Z14ApproachLinearRsss(s16* p, s16 target, s16 step);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 extern void _ZN5dCc_c6UpdateEv(char* c);
 extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(char* c, const struct Vector3* v);
 

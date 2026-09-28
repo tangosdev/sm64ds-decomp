@@ -3,7 +3,7 @@ extern int _Z14ApproachLinearRiii(int* v, int target, int step);
 extern void Vec3_Sub(Vec3* out, Vec3* a, Vec3* b);
 extern void func_0203ce80(Vec3* dst, Vec3* src);
 extern void Vec3_MulScalarInPlace(int* v, int s);
-extern void _Z14ApproachLinearRsss(short* v, short target, short step);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 extern void func_ov006_020c49d8(void* c);
 
 void func_ov006_020c5658(char* c)

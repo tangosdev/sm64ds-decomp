@@ -7,7 +7,7 @@
 extern void func_0201267c(unsigned int id, void* p);
 extern void _Z14ApproachLinearRiii(int* p, int target, int step);
 extern short Vec3_HorzAngle(const void* a, const void* b);
-extern void _Z14ApproachLinearRsss(short* p, short target, int step);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 
 
 struct Frame {
@@ -21,7 +21,7 @@ struct Frame {
 void func_ov063_02116fac(char* c)
 {
     struct Frame fr;
-    int r4 = 0xc00;
+    short r4 = 0xc00;
     u16* flags;
     u8* state;
 

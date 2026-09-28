@@ -58,6 +58,8 @@
 #include "dCc_c.h"
 #include "Animation.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 enum {
     kStumpActorId = 0x1b, /* STUMP */
     kFenceActorId = 0x29  /* CHAIN_CHOMP_FENCE */
@@ -774,7 +776,6 @@ int func_ov014_02111f54(void* c);
 int ApproachAngle(void* p, int a, int b, int c, int d);
 unsigned short DecIfAbove0_Short(unsigned short* p);
 int _Z14ApproachLinearRiii(int* p, int to, int step);
-void _Z14ApproachLinearRsss(short* p, short to, short step);
 int AngleDiff(int a, int b);
 void func_ov014_02111ebc(void* c, int i);
 
@@ -783,7 +784,7 @@ void func_ov014_02111ca8(char* c){
     ApproachAngle(c + 0x8c, 0, 4, 0x200, 0x80);
     DecIfAbove0_Short((unsigned short*)(c + 0x5fc));
     _Z14ApproachLinearRiii((int*)(c + 0x5f8), 0x50000, 0x1000);
-    _Z14ApproachLinearRsss((short*)(c + 0x8e), *(short*)(c + 0x602), 0x190);
+    ApproachLinear(*(short *)(c + 0x8e), *(short*)(c + 0x602), 0x190);
     _Z14ApproachLinearRiii((int*)(c + 0x98), 0, 0x400);
     if (*(unsigned char*)(c + 0x61c)) {
         int d = ((dActor_c *)c)->DistToCPlayer();
@@ -899,7 +900,6 @@ extern "C" void func_ov014_021115ec(u8 *self)
     void _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void *actor, u16 *snd);
     int ApproachAngle(void *self_, s32 a, s32 b, s32 c, s32 d);
     s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-    s32 _Z14ApproachLinearRsss(void *dst, s32 target, s32 step);
     u16 DecIfAbove0_Short(void *p);
     s32 _Z14ApproachLinearRiii(void *dst, s32 target, s32 step);
     void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self_, void *bca, s32 a, s32 fix, unsigned b);
@@ -931,7 +931,7 @@ extern "C" void func_ov014_021115ec(u8 *self)
     switch (*(u8 *)(self + 0x604)) {
     case 0:
         *(u8 **)(camera + 0x118) = self;
-        if (_Z14ApproachLinearRsss(self + 0x8e, angleToPlayer, 0x320) != 0 && DecIfAbove0_Short(self + 0x5fc) == 0)
+        if (ApproachLinear(*(short *)(self + 0x8e), angleToPlayer, 0x320) != 0 && DecIfAbove0_Short(self + 0x5fc) == 0)
             inc604(self);
         *(s16 *)(self + 0x94) = *(s16 *)(self + 0x8e);
         break;

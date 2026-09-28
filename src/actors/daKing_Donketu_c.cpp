@@ -100,6 +100,8 @@
 #include "Player.h"
 #include "Camera.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 struct C;
 typedef int (C::*PMF)();
 struct C { char pad[0x37c]; PMF *pp; };
@@ -177,7 +179,6 @@ extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void _Z14ApproachLinearRiii(int* p, int t, int s);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, struct Vector3* v, unsigned int d);
-extern void _Z14ApproachLinearRsss(short* a, short b, short c);
 extern s16 Vec3_VertAngle(const void* a, const void* b);
 extern void func_ov073_0211f2c0(void *self, int strength);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
@@ -787,10 +788,10 @@ int func_ov073_021200e0(u8* thiz)
         Vec3 offset;
         Vec3 rotated;
         s16 horz;
-        _Z14ApproachLinearRsss((short*)(thiz + 0x8c), 0, 0x2000);
+        ApproachLinear(*(short *)(thiz + 0x8c), 0, 0x2000);
         horz = Vec3_HorzAngle((const Vector3 *)(thiz + 0x5c), (const Vector3 *)(thiz + 0x3d8));
         Vec3_VertAngle((const void*)(thiz + 0x5c), (const void*)(thiz + 0x3d8));
-        _Z14ApproachLinearRsss((short*)(thiz + 0x94), horz, 0x800);
+        ApproachLinear(*(short *)(thiz + 0x94), horz, 0x800);
         offset.x = 0;
         offset.y = 0;
         offset.z = 0;
@@ -903,7 +904,7 @@ mainblock:
         short vt = Vec3_VertAngle(c + 0x5c, v);
         int in[3];
         int out[3];
-        _Z14ApproachLinearRsss((short *)(c + 0x94), hz, 0x800);
+        ApproachLinear(*(short *)(c + 0x94), hz, 0x800);
         in[0] = 0; in[1] = 0; in[2] = 0;
         out[0] = 0; out[1] = 0; out[2] = 0;
         in[2] = 0x50000;
@@ -966,7 +967,7 @@ extern "C" {
         return 1;
 
     mainblock:
-        _Z14ApproachLinearRsss((short *)(c + 0x8c), 0, 0x2000);
+        ApproachLinear(*(short *)(c + 0x8c), 0, 0x2000);
         if (*(unsigned char *)(c + 0x4cb) == 2) {
             src = (int *)(c + 0x448 + *(unsigned char *)(c + 0x4c4) * 0xc);
             v[0] = src[0];
@@ -1028,7 +1029,7 @@ int func_ov073_0212081c(char* self)
 extern "C" {
 int func_ov073_02120844(int *t)
 {
-    _Z14ApproachLinearRsss((short *)((char*)t + 0x8c), -0x4000, 0x400);
+    ApproachLinear(*(short *)((char*)t + 0x8c), -0x4000, 0x400);
     t[0x140] = _ZN5Sound8PlayLongEjjjRK7Vector3s(t[0x140], 3, 0x170, (struct Vector3 *)((char*)t + 0x74), 0);
     if (t[0xf7] > t[0x18] && ((dBgCh_Actr *)((char*)t + 0x150))->IsOnGround()) {
         func_ov073_0211f2c0(t, 0x7d0000);
@@ -1090,7 +1091,7 @@ int func_ov073_02120910(char *c)
     *(short *)(c + 0x8e) = Vec3_HorzAngle((const Vector3 *)(c + 0x5c), (const Vector3 *)(c + 0x3d8));
     *(short *)(c + 0x94) = *(short *)(c + 0x8e) + 0x8000;
     *(int *)(((int)c + 0x4b4)) += 0x500;
-    _Z14ApproachLinearRsss((short *)(c + 0x8c),
+    ApproachLinear(*(short *)(c + 0x8c),
         ((s64)*(int *)(c + 0x4d0) * data_02082214[((unsigned short)(short)*(int *)(c + 0x4b4) >> 4) * 2] + 0x800) >> 12,
         0x400);
     if (func_ov073_0211f61c(c)) {
@@ -1126,7 +1127,7 @@ int func_ov073_02120ad8(int *t)
 // @symbol func_ov073_02120b78
 extern "C" {
 int func_ov073_02120b78(char* c){
-    _Z14ApproachLinearRsss((short*)(c+0x8c), -0x4000, 0x400);
+    ApproachLinear(*(short *)(c+0x8c), -0x4000, 0x400);
     if(*(int*)(c+0x3dc) > *(int*)(c+0x60)){
         if(((dBgCh_Actr *)(c+0x150))->IsOnGround()){
             func_ov073_0211f2c0(c, 0xfa0000);
@@ -1213,7 +1214,7 @@ int func_ov073_02120d80(char *c)
 // @symbol func_ov073_02120dec
 extern "C" {
 int func_ov073_02120dec(char *c) {
-    _Z14ApproachLinearRsss((short *)(c + 0x94), *(short *)(c + 0x4c6), 0x500);
+    ApproachLinear(*(short *)(c + 0x94), *(short *)(c + 0x4c6), 0x500);
     if (AngleDiff(*(short *)(c + 0x4c6), *(short *)(c + 0x8e)) < 0x100) {
         ChiefChilly_ChangeState((C *)(c), (PMF *)(data_ov073_02123360));
         *(short *)(c + 0x100) = 0x1e;
@@ -1275,7 +1276,7 @@ int func_ov073_02120ed0(void *self)
                     }
                 }
             }
-            _Z14ApproachLinearRsss((s16 *)(c + 0x94), *(s16 *)(c + 0x4c6), 0x1d0);
+            ApproachLinear(*(short *)(c + 0x94), *(s16 *)(c + 0x4c6), 0x1d0);
             *(s16 *)(c + 0x8c) = *(s16 *)(c + 0x92);
             *(s16 *)(c + 0x8e) = *(s16 *)(c + 0x94);
             *(s16 *)(c + 0x90) = *(s16 *)(c + 0x96);
@@ -1311,7 +1312,7 @@ int func_ov073_02120ed0(void *self)
         _Z14ApproachLinearRiii((int *)(c + 0x98), 0, *(int *)(c + 0x4d0));
         if (c[0x4c8] == 1) {
             *(s16 *)(c + 0x4c6) = ((dActor_c *)c)->HorzAngleToCPlayer();
-            _Z14ApproachLinearRsss((s16 *)(c + 0x8e), *(s16 *)(c + 0x4c6), 0x500);
+            ApproachLinear(*(short *)(c + 0x8e), *(s16 *)(c + 0x4c6), 0x500);
         }
         d = *(int *)(c + 0x98);
         if (d < 0) d = -d;
@@ -1458,7 +1459,7 @@ int func_ov073_02121388(char* c) {
     ((Camera *)cam)->SetPos(ps);
 
     vmsg.y = vmsg.y + 0x64000;
-    _Z14ApproachLinearRsss((short*)(c + 0x94), Vec3_HorzAngle((struct Vector3*)(c + 0x5c), &vplayer), 0x800);
+    ApproachLinear(*(short *)(c + 0x94), Vec3_HorzAngle((struct Vector3*)(c + 0x5c), &vplayer), 0x800);
 
     *(void**)(c + 0x3e4) = player;
     p = *(char**)(c + 0x3e4);

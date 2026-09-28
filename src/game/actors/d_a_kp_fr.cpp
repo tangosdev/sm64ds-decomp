@@ -190,7 +190,7 @@ int func_ov070_02121fb0(char *raw)
 }
 }
 
-int ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);

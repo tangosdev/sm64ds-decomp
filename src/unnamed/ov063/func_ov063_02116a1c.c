@@ -2,8 +2,8 @@ extern unsigned NumStars(void);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *o);
 extern void func_0201267c(int a, void *b);
 extern void _Z14ApproachLinearRiii(int *p, int t, int s);
-extern int Vec3_HorzAngle(void *a, void *b, int c);
-extern void _Z14ApproachLinearRsss(short *p, int t, int s);
+extern short Vec3_HorzAngle(void *a, void *b, int c);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 extern void func_ov063_0211a964(void *c, int b);
 
 typedef struct { int x, y, z; } V3;
@@ -67,7 +67,6 @@ void func_ov063_02116a1c(void *cc)
     }
 
     *(int *)(c + 0xa8) = 0;
-    a = Vec3_HorzAngle(c + 0x5c, &v, 0);
-    _Z14ApproachLinearRsss((short *)(c + 0x94), a, 0x5a8);
+    _Z14ApproachLinearRsss((short *)(c + 0x94), Vec3_HorzAngle(c + 0x5c, &v, 0), 0x5a8);
     func_ov063_0211a964(c, 1);
 }

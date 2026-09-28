@@ -31,6 +31,8 @@
 #include "Player.h"
 #include "SharedFilePtr.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* func_ov081_02123910 calls vtable slot 29 (OnAimedAtWithEgg) through a
  * view with that slot at index 29. The object's own table supplies the
  * function; this type only fixes the index. */
@@ -79,7 +81,6 @@ void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* thiz, ShadowModel& sm, Matrix4x3& mtx, Fix12i a, Fix12i b, unsigned int c);
 void _Z14ApproachLinearRiii(void *, int, int);
 int Vec3_HorzDist(void *a, void *b);
-void _Z14ApproachLinearRsss(void *, int, int);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, BCA_File *f, int b, int c, unsigned int d);
 void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *a, int r, int h, unsigned int d, unsigned int e);
 void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int r, int h, void *v, void *w);
@@ -303,7 +304,7 @@ int daHuwa_c::Behavior()
             }
             unk_398 = Vec3_HorzAngle(((char *)this) + 0x5c, ((char *)this) + 0x38c);
         after_st0:
-            _Z14ApproachLinearRsss(((char *)this) + 0x8e, unk_398, 0x200);
+            ApproachLinear(*(short *)(((char *)this) + 0x8e), unk_398, 0x200);
             mPrevAngleY = mAngleY;
         }
         break;

@@ -48,7 +48,7 @@ struct CasketState {
     const char *name;
 };
 
-int ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 extern "C" {
 /* The state table, indexed by mState. */

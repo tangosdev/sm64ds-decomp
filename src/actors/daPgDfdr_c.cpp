@@ -42,6 +42,8 @@
 #include "TextureSequence.h"
 #include "dBgCh_Gnd.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 struct BMD_File;
 struct BTP_File;
 
@@ -69,7 +71,6 @@ enum {
 extern "C" {
 void Matrix4x3_FromRotationY(void *mat, short angY);
 int DecIfAbove0_Byte(void *p);
-int _Z14ApproachLinearRsss(short *value, short target, short step);
 /* Sound::Play(3, id, pos). The ROM calls this veneer, not Play itself. */
 void func_0201267c(int id, char *pos);
 /* Stores dBgW::beforeClsnCallback (p[6]). dBgW.h has no setter. */
@@ -248,7 +249,7 @@ extern "C" int func_ov027_02111c48(daPgDfdr_c *self)
     if (DecIfAbove0_Byte(&self->mTimer) == 0) {
         unsigned char step = self->mStepIndex;
         short endHeading = data_ov027_02113a1c[step].endHeading;
-        if (_Z14ApproachLinearRsss(&self->mAngleY, endHeading, 0x514) != 0) {
+        if (ApproachLinear(self->mAngleY, endHeading, 0x514) != 0) {
             self->func_ov027_02111d70(kStateWalk);
         }
     }

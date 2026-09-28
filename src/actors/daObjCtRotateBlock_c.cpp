@@ -53,7 +53,7 @@ extern int data_0209e650;
 extern s32 data_020a0e68[];
 }
 
-int ApproachLinear(s16 &val, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 #pragma defer_codegen off
 

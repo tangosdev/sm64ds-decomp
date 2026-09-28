@@ -4,7 +4,7 @@
 
 struct ModelAnim;
 struct BCA_File;
-int ApproachLinear(short& value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 extern "C" {
 int func_ov020_02111418(char *c);

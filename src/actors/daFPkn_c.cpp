@@ -53,7 +53,7 @@ struct Locals {
 };
 
 int ApproachLinear(int &value, int target, int step);
-int ApproachLinear(short &value, short target, short step);
+bool ApproachLinear(short &value, short target, short step);
 
 extern "C" {
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, int b, unsigned short cc);

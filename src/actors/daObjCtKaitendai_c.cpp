@@ -33,9 +33,6 @@
  *   mPrevAngleY = mPrevAngleY + mPrevAngleZ comes out 0x134, against
  *   Behavior's 0x138. The pointer is what keeps the halfword multiply
  *   and the reload into mAngleY.
- * - ApproachLinear stays _Z14ApproachLinearRsss with an s16* first
- *   parameter, the declaration the rest of the tree agrees on. An s16&
- *   parameter matches this call's bytes and would be a new disagreement.
  * - func_ov065_0211b40c keeps the name in ov065's symbols.txt.
  * - data_ov065_0211d334 (the 200/400 speeds) and data_ov065_0211d35c
  *   (the two resource rows) are not this TU's data. Neither are
@@ -56,6 +53,8 @@
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 struct CLPS_Block;
 
 /* One row is {model, collision, clps}. InitResources indexes it by
@@ -72,7 +71,6 @@ typedef char KaitendaiResources_size_must_be_0x0c[
 /* Fix12-by-value calls keep the scalar argument the callee actually
  * reads. The class spelling homes it (see the leftover above). */
 extern "C" {
-extern int _Z14ApproachLinearRsss(s16 *cur, s16 target, s16 step);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     dActor_c *actor, ShadowModel *shadow, Matrix4x3 *matrix,
     int radius, int height, u32 opacity);
@@ -157,7 +155,7 @@ int daObjCtKaitendai_c::Behavior()
         break;
 
     case 2:
-        if (_Z14ApproachLinearRsss(&mPrevAngleZ, mPrevAngleX, 50) != 0) {
+        if (ApproachLinear(mPrevAngleZ, mPrevAngleX, 50) != 0) {
             unsigned short roll =
                 (unsigned short)(RandomIntInternal(&data_0209e650) >> 16);
 

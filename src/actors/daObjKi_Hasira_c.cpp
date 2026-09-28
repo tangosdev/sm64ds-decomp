@@ -47,6 +47,8 @@
 #include "Player.h"
 #include "Sound.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 typedef long long s64;
 
 struct Camera;
@@ -65,7 +67,6 @@ int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-void _Z14ApproachLinearRsss(s16 *dst, s16 target, s16 step);
 u8 DecIfAbove0_Byte(u8 *p);
 void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 /* The camera-shake request and the camera it goes to (arm9). */
@@ -134,7 +135,7 @@ s32 daObjKi_Hasira_c::Behavior()
     case 1: /* turn to face them for ten frames */
         if (mTarget != 0) {
             s16 angle = Vec3_HorzAngle((Vector3 *)&mPosX, &targetPos);
-            _Z14ApproachLinearRsss(&mAngleY, angle, 0x400);
+            ApproachLinear(mAngleY, angle, 0x400);
             if (DecIfAbove0_Byte(&mTurnTimer) == 0)
                 mState++;
         }

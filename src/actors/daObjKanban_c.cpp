@@ -9,9 +9,8 @@
  * sign model and lays the collider.
  *
  * deslop
- * Leftover: _Z14ApproachLinearRsss / Vec3_HorzDist / Vec3_HorzAngle /
- *   Vec3_ApproachHorz / AngleDiff keep linker names (no header home;
- *   kaitendai precedent keeps ApproachLinear mangled too).
+ * Leftover: Vec3_HorzDist / Vec3_HorzAngle / Vec3_ApproachHorz /
+ *   AngleDiff keep linker names (no header home).
  * Leftover: func_ov002_020bec9c is still the linker name of the
  *   Player SetAnim wrapper owned by the Player TU. Naming belongs there.
  * Leftover: data_02082214 is the shared arm9 sine table.
@@ -23,6 +22,8 @@
 #include "daObjKanban_c.h"
 #include "SharedFilePtr.h"
 #include "Player.h"
+
+bool ApproachLinear(short &value, short target, short step);
 
 /* The sign model's shared file; Cleanup releases it, Init loads it. */
 extern SharedFilePtr data_ov085_02130858;
@@ -36,7 +37,6 @@ extern struct Vector3 data_ov085_0212f29c;
 extern int Vec3_HorzDist(Vector3 *a, Vector3 *b);
 extern s16 Vec3_HorzAngle(Vector3 *a, Vector3 *b);
 extern int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
-extern int _Z14ApproachLinearRsss(s16 *p, s16 target, s16 step);
 extern int AngleDiff(int a, int b);
 extern s16 data_02082214[];
 
@@ -108,7 +108,7 @@ int daObjKanban_c::Behavior()
             case 0:
                 if (Vec3_HorzDist(&tpos, &pos) < 0x32000) {
                     mState += 1;
-                } else if (_Z14ApproachLinearRsss((s16 *)((char *)tgt + 0x8e), Vec3_HorzAngle(&tpos, &pos), 0x800)) {
+                } else if (ApproachLinear(*(short *)((char *)tgt + 0x8e), Vec3_HorzAngle(&tpos, &pos), 0x800)) {
                     mState += 1;
                     func_ov002_020bec9c(tgt, 1, 0, 0x1000, 0);
                 }
@@ -120,7 +120,7 @@ int daObjKanban_c::Behavior()
                 }
                 break;
             case 2:
-                if (_Z14ApproachLinearRsss((s16 *)((char *)tgt + 0x8e), (s16)(mAngleY + 0x8000), 0x800)) {
+                if (ApproachLinear(*(short *)((char *)tgt + 0x8e), (s16)(mAngleY + 0x8000), 0x800)) {
                     mMessageID = 0;
                     if (param1 != 0xffff)
                         mMessageID = (s16)param1;

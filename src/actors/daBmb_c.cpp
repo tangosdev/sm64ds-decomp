@@ -39,6 +39,8 @@
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 
+bool ApproachLinear(short &value, short target, short step);
+
 /* func_ov102_0214bf64's own view of the object.  It reaches fifteen fields by
    name through a shadow struct rather than through daBmb_c, and it is kept that
    way: the member is byte-matched in that spelling.  The tags are uniquified
@@ -122,11 +124,7 @@ void  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor
 /* Hoisted out of four member bodies.  A class member function may not sit in a
    block-scope linkage specification, so daBmb_c::State1/3/4/5 cannot carry their
    own extern "C" declarations the way the free members below do -- these have to
-   be file-scope, and they are spelled to agree with every other user in the TU.
-   _Z14ApproachLinearRsss takes the reference its own mangled name encodes; the
-   free func_ov102_0214be1c shard had recovered it as a pointer, and State1's two
-   call sites bind the same address through the reference instead. */
-void  _Z14ApproachLinearRsss(short &v, short target, short step);
+   be file-scope, and they are spelled to agree with every other user in the TU. */
 void  func_ov102_0214b3b8(void *c);
 
 extern signed char   data_0209f2f8;
@@ -433,7 +431,6 @@ void func_ov102_0214bf64(void *ov)
 {
     extern unsigned short DecIfAbove0_Short(unsigned short* p);
     extern void _Z14ApproachLinearRiii(int& v, int target, int step);
-    extern void _Z14ApproachLinearRsss(short& v, short target, short step);
     extern short Vec3_HorzAngle(const Bmb_Vec3* v0, const Bmb_Vec3* v1);
     extern int Vec3_Dist(const Bmb_Vec3* a, const Bmb_Vec3* b);
     extern void func_ov102_0214b988(void* c);
@@ -452,7 +449,7 @@ void func_ov102_0214bf64(void *ov)
             } else {
                 if (o->f3f5 == 5) {
                     s16 ang = Vec3_HorzAngle(&o->f5c, &o->f3c4);
-                    _Z14ApproachLinearRsss(o->f94, ang, 0x200);
+                    ApproachLinear(o->f94, ang, 0x200);
                     o->f8e = o->f94;
                 } else {
                     if (o->f3e8 == 0 || Vec3_Dist(&o->f5c, &o->f3c4) >= 0x500000) {
@@ -470,7 +467,7 @@ void func_ov102_0214bf64(void *ov)
                 if (b)
                     target = o->f94;
             }
-            _Z14ApproachLinearRsss(o->f94, target, 0x800);
+            ApproachLinear(o->f94, target, 0x800);
             o->f8e = o->f94;
         }
         o->f35c = o->f98 >> 3;
@@ -524,10 +521,10 @@ void daBmb_c::State1() {
     char *c = (char *)this;
     if (unk_38c == 0) {
         *(int*)(c + 0x35c) = 0x800;
-        _Z14ApproachLinearRsss(*(short*)(c + 0x94), *(short*)(c + 0x3ee), 0x400);
+        ApproachLinear(*(short*)(c + 0x94), *(short*)(c + 0x3ee), 0x400);
     } else {
         *(int*)(c + 0x35c) = 0x1000;
-        _Z14ApproachLinearRsss(*(short*)(c + 0x94), *(short*)(c + 0x3ee), 0x800);
+        ApproachLinear(*(short*)(c + 0x94), *(short*)(c + 0x3ee), 0x800);
     }
     *(short*)(c + 0x8e) = *(short*)(c + 0x94);
     ((Animation *)(c + 0x350))->Advance();

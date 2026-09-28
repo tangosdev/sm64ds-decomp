@@ -2,7 +2,7 @@ extern int data_ov006_021405c8[];
 extern int data_ov006_021405c0;
 extern short data_ov006_02140538;
 extern void _Z14ApproachLinearRiii(int* p, int b, int c);
-extern void _Z14ApproachLinearRsss(short* p, short b, short c);
+extern int _Z14ApproachLinearRsss(short *value, short target, short step);
 extern int _ZN9Animation8FinishedEv(void* a);
 extern void func_ov006_020cb528(char* c);
 extern void func_ov006_020cc8c8(char* c);
