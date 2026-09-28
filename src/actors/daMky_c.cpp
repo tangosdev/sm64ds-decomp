@@ -55,16 +55,77 @@
 #include "SurfaceInfo.h"
 #include "dBgCh_Lin.h"
 
-/* EnterState* are C++ members, so they cannot hold an extern "C" block.
- * These four are the spellings those members call. A free function below
- * may redeclare one of them; -gccext,on keeps the second spelling. Data
- * objects are not hoisted: two data spellings of one name are rejected. */
+/* The callees of this TU's members, spelled by their mangled or ROM names.
+ * They cannot be declared inside a method body: a block-scope extern in a
+ * daMky_c member gets C++ linkage, the reference mangles a second time, and
+ * the module no longer links. They are declared once, here, because C++
+ * rejects two extern "C" declarations of one name that disagree ("illegal
+ * function overloading"), so object pointers are void * throughout. Data
+ * objects stay in the bodies: a variable's name does not mangle. */
 extern "C" {
 
 void  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int idx, int speed, unsigned int flags);
 short Vec3_HorzAngle(const void *a, const void *b);
 int   Vec3_Dist(const void *a, const void *b);
-void func_0201267c(unsigned int id, const Vector3 *pos);
+void  func_0201267c(unsigned int id, const Vector3 *pos);
+void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
+void *_ZNK10dBgCh_Actr13GetWallResultEv(void *self);
+void  _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, void *out);
+int   _ZN4cstd4fdivEii(int a, int b);
+void  func_020383f0(void *p);
+void  _ZN9Animation8SetFlagsEi(void *self, int flags);
+int   _ZN9Animation8FinishedEv(void *self);
+bool  _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int speed, int e);
+int   _ZN6Player18HasFinishedTalkingEv(void *player);
+unsigned char DecIfAbove0_Byte(unsigned char *p);
+void *_ZN9dBgCh_LinC1Ev(void *self);
+void  _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *actor);
+int   _ZN9dBgCh_Lin10DetectClsnEv(void *self);
+void  _ZN9dBgCh_LinD1Ev(void *self);
+void  Vec3_Asr(void *d, void *s, int sh);
+int   _ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(void *m, void *v, void *w, int fix, void *out);
+int   _ZNK9Animation12WillHitFrameEi(void *a, int f);
+void  _ZN9Animation7AdvanceEv(void *self);
+void  _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, unsigned int i);
+int   Vec3_HorzDist(const void *a, const void *b);
+void  _Z11UpdateAngleRssis(short *p, short a, int b, short c);
+int   _Z14ApproachLinearRsss(short *dst, short target, short rate);
+void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
+void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int param, const void *pos, const void *rot, int areaID, int deathTableID);
+void *_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(void *self, void *player, void *offset);
+void  _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *self, void *shadow, void *mtx, int rad, int height, unsigned int flags);
+void  _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
+int   _ZN8dActor_c13DistToCPlayerEv(void *self);
+short _ZN8dActor_c18HorzAngleToCPlayerEv(void *self);
+void  _ZN7fBase_c18MarkForDestructionEv(void *self);
+int   _ZN6Player7TryGrabER8dActor_c(void *player, void *actor);
+int   _ZN6Player14IsFrontSlidingEv(void *player);
+int   _ZN6Player17LostGrabbedObjectEv(void *player);
+int   _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *player, void *speaker, unsigned int msgId, const void *pos, unsigned int a, unsigned int b);
+int   _ZN6Player12GetTalkStateEv(void *player);
+int   _ZN6Player9DropActorEv(void *player);
+int   _ZN6Player9StartTalkER7fBase_cb(void *player, void *actor, int b);
+void  _ZN6Player18SetNewHatCharacterEjjb(void *player, unsigned int a, unsigned int b, int c);
+int   _ZN6Player7IsInAirEv(void *player);
+void  _ZN8SaveData13PlayerLoseCapEv(void);
+int   _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
+int   _ZNK10dBgCh_Actr13JustHitGroundEv(const void *self);
+int   _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
+void  _ZN10dBgCh_Actr15ClearLimMovFlagEv(void *self);
+void  dBgCh_Actr_UpdateContinuous_Veneer(void *self);
+void  _ZN5dCc_c6UpdateEv(void *self);
+int   func_02038ea4(void *self);
+char *func_0203567c(void *self);
+int   func_02037f44(void *result);
+unsigned int _ZNK5dBgPi9GetClsnIDEv(const void *result);
+void  _ZN5dBgPiD1Ev(void *result);
+void  Matrix4x3_FromRotationY(void *m, int angle);
+void  Matrix4x3_FromTranslation(void *m, int x, int y, int z);
+void  Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
+void  Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
+void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
+void  MulMat4x3Mat4x3(void *a, void *b, void *out);
+unsigned int func_02012790(unsigned int arg);
 
 }
 
@@ -99,13 +160,6 @@ s32 daMky_c::OnYoshiTryEat()
 // @symbol _ZN7daMky_c19func_ov030_02111734Ev
 void daMky_c::func_ov030_02111734()
 {
-    extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-    extern void *_ZN9dBgCh_LinC1Ev(void* self);
-    extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, void* a, void* b, void* actor);
-    extern int _ZN9dBgCh_Lin10DetectClsnEv(void* self);
-    extern void Vec3_Asr(void* d, void* s, int sh);
-    extern int _ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(void* m, void* v, void* w, int fix, void* out);
-    extern void _ZN9dBgCh_LinD1Ev(void* self);
 
     extern char data_0209f43c;
     extern char data_0209b3ec;
@@ -155,7 +209,6 @@ done:
 // @symbol _ZN7daMky_c19func_ov030_02111890Ev
 void daMky_c::func_ov030_02111890()
 {
-    extern void func_0201267c(unsigned int id, const Vector3 *pos);
     extern int data_ov030_02115d18[];
     int b = (int)((int)this->mModelAnim.file == data_ov030_02115d18[1]);
     if (b == 0)
@@ -170,7 +223,6 @@ void daMky_c::func_ov030_02111908()
     extern int data_ov030_02115cf0[];
     extern int data_ov030_02115cd0[];
     extern int data_ov030_02115cf8[];
-    extern void func_0201267c(unsigned int id, const Vector3 *pos);
 
     enum Bool { FALSE, TRUE };
     int frame = (short)(((unsigned)(this->mModelAnim.currFrame << 4)) >> 16);
@@ -201,8 +253,6 @@ void daMky_c::func_ov030_02111908()
 // @symbol _ZN7daMky_c19func_ov030_02111a00Ev
 int daMky_c::func_ov030_02111a00()
 {
-    extern int _ZNK9Animation12WillHitFrameEi(void* a, int f);
-    extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* m, void* f, int a, int b, unsigned int e);
     extern int data_ov030_02115cf0[];
     extern int data_ov030_02115cd0[];
     extern int data_ov030_02115cf8[];
@@ -235,10 +285,6 @@ int daMky_c::func_ov030_02111b20()
 {
     typedef short s16;
 
-    extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* self, struct Vector3* v, unsigned int i);
-    extern int Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
-    extern s16 Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
-    extern void _Z11UpdateAngleRssis(short* p, short a, int b, short c);
   struct Vector3 v;
   int d;
   s16 ang;
@@ -264,8 +310,6 @@ int daMky_c::func_ov030_02111b20()
 // @symbol _ZN7daMky_c19func_ov030_02111bc4Ev
 int daMky_c::func_ov030_02111bc4()
 {
-    extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-    extern int _ZN6Player7TryGrabER8dActor_c(void *p, void *a);
     unsigned char *player;
     int b;
 
@@ -324,8 +368,6 @@ int daMky_c::func_ov030_02111bc4()
 // @symbol _ZN7daMky_c19func_ov030_02111dd0Ev
 int daMky_c::func_ov030_02111dd0()
 {
-    extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* thiz);
-    extern int func_02038ea4(void* thiz);
     if (this->mWithMeshClsn.IsOnGround() != 0) {
         dBgCh_Gnd rg;
         Vector3 v;
@@ -354,7 +396,6 @@ int daMky_c::func_ov030_02111dd0()
 int daMky_c::func_ov030_02111ea4()
 {
 
-    extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void*);
 
     #define ABS(x) ((x) < 0 ? -(x) : (x))
     char* c = (char *)this;
@@ -388,14 +429,6 @@ void daMky_c::func_ov030_02111f6c(dBgCh_Actr* w)
     typedef struct { int x, y, z; } Vector3;
     typedef struct dBgCh_Actr dBgCh_Actr;
     typedef struct SurfaceInfo SurfaceInfo;
-    void func_020383f0(void* p);
-    void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
-    int _ZNK10dBgCh_Actr10IsOnGroundEv(dBgCh_Actr* w);
-    void* _ZNK10dBgCh_Actr14GetFloorResultEv(dBgCh_Actr* w);
-    void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo* s, Vector3* v);
-    int _ZN4cstd4fdivEii(int a, int b);
-    int _ZNK10dBgCh_Actr8IsOnWallEv(dBgCh_Actr* w);
-    void* _ZNK10dBgCh_Actr13GetWallResultEv(dBgCh_Actr* w);
   int b = (int)((this->mFlags & 0x4000) != 0);
   if (b != 0) return;
   int bb = (int)(this->actorID == 0x10b);
@@ -425,16 +458,6 @@ void daMky_c::func_ov030_02112094()
 
     struct Bundle { Vector3_16 rot; short _p; Vector3 trans; int _tail[2]; };
 
-    extern int _ZN6Player14IsFrontSlidingEv(void*);
-    extern int _ZN6Player17LostGrabbedObjectEv(void*);
-    extern void* _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(void*, void*, void*);
-    extern void Matrix4x3_FromRotationY(void* m, int angle);
-    extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-        void* self, void* shadow, void* mtx, int rad, int height, unsigned int flags);
-    extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
-    extern void MulMat4x3Mat4x3(void* a, void* b, void* out);
-    extern void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
-    extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
     extern M4x3 data_020a0e68;
     char* c = (char*)this;
     int idx;
@@ -499,8 +522,6 @@ void daMky_c::func_ov030_02112094()
 // @symbol _ZN7daMky_c19func_ov030_021122b0Ev
 int daMky_c::func_ov030_021122b0()
 {
-    extern void _Z14ApproachLinearRsss(short *dst, short target, short rate);
-    extern unsigned char DecIfAbove0_Byte(unsigned char *p);
     char *s = (char*)this;
     short ang = this->HorzAngleToCPlayer() + 0x8000;
     _Z14ApproachLinearRsss((short*)(s + 0x8e), ang, 0xa28);
@@ -544,7 +565,6 @@ int daMky_c::func_ov030_02112400()
 
     struct Vector3;
 
-    extern int Vec3_Dist(const Vector3* a, const Vector3* b);
     extern void* data_02099368[];
 
 
@@ -556,10 +576,6 @@ int daMky_c::func_ov030_02112400()
         u16 h0, h1;
         int t0, t1, t2;
     };
-    extern char* func_0203567c(dBgCh_Actr* w);
-    extern int func_02037f44(ClsnResultTmp* r);
-    extern unsigned _ZNK5dBgPi9GetClsnIDEv(const ClsnResultTmp* r);
-    extern void _ZN5dBgPiD1Ev(ClsnResultTmp* r);
     func_ov030_02111a00();
     ((Animation *)((char *)this + 0x124))->Advance();
     this->UpdatePos(&this->mdCcAc_c);
@@ -609,23 +625,6 @@ int daMky_c::EnterState9()
 // @symbol _ZN7daMky_c19func_ov030_02112578Ev
 int daMky_c::func_ov030_02112578()
 {
-    void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thiz, void *bca, int a, int fx, unsigned int f);
-    s16 Vec3_HorzAngle(const void *v0, const void *v1);
-    int _Z14ApproachLinearRsss(s16 *v, s16 target, s16 step);
-    s32 Vec3_Dist(const void *a, const void *b);
-    int _ZN6Player9StartTalkER7fBase_cb(void *player, void *actor, int b);
-    int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *player, void *actor, unsigned int id, const void *pos, unsigned int a, unsigned int b);
-    void _ZN9Animation8SetFlagsEi(void *thiz, int flags);
-    void func_0201267c(unsigned int id, const Vector3 *pos);
-    int _ZN6Player12GetTalkStateEv(void);
-    void _ZN6Player18HasFinishedTalkingEv(void *player);
-    int _ZNK10dBgCh_Actr13JustHitGroundEv(const void *thiz);
-    int _ZN9Animation8FinishedEv(void *thiz);
-    bool _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int fx, int e);
-    u8 DecIfAbove0_Byte(u8 *p);
-    void _ZN7fBase_c18MarkForDestructionEv(void *thiz);
-    void _ZN9Animation7AdvanceEv(void *thiz);
-    void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
 
     extern void *data_ov030_02115cd0[];
     extern void *data_ov030_02115cf8[];
@@ -674,7 +673,7 @@ int daMky_c::func_ov030_02112578()
         break;
     }
     case 3:
-        if (_ZN6Player12GetTalkStateEv() == 2) {
+        if (_ZN6Player12GetTalkStateEv(player) == 2) {
             _ZN6Player18HasFinishedTalkingEv(player);
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, data_ov030_02115d18[1], 0, 0x1000, 0);
             { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
@@ -769,15 +768,6 @@ int daMky_c::func_ov030_02112a84()
         int h, i, j;
     } dBgPi;
 
-    extern void dBgCh_Actr_UpdateContinuous_Veneer(void *p);
-    extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *p);
-    extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *p);
-    extern void *func_0203567c(void *p);
-    extern u32 _ZNK5dBgPi9GetClsnIDEv(void *r);
-    extern void _ZN5dBgPiD1Ev(void *r);
-    extern int Vec3_Dist(void *a, void *b);
-    extern void _ZN9Animation7AdvanceEv(void *p);
-    extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *a, void *c);
     extern void *data_02099368[];
     dBgPi res;
 
@@ -903,12 +893,6 @@ int daMky_c::EnterState7()
 // @symbol _ZN7daMky_c19func_ov030_02112da0Ev
 int daMky_c::func_ov030_02112da0()
 {
-    extern int Vec3_Dist(void *a, void *b);
-    extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *a, void *self, unsigned int, void *, unsigned int, unsigned int);
-    extern void func_0201267c(unsigned int id, const Vector3 *pos);
-    extern int _ZN6Player12GetTalkStateEv(void *p);
-    extern int _ZN6Player9DropActorEv(void *p);
-    extern u8 DecIfAbove0_Byte(u8 *p);
     extern u8 data_0209d684;
     int b = (int)((this->mFlags & 0x40000) != 0);
     if (b != 0) {
@@ -1014,13 +998,6 @@ int daMky_c::func_ov030_02113094()
     struct dActor_c;
 
 
-    extern struct dActor_c* _ZN8dActor_c10FindWithIDEj(u32 id);
-    extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(char* p, char* self, u32 msg, const struct Vector3* pos, u32 a, u32 b);
-    extern void func_0201267c(unsigned int id, const Vector3 *pos);
-    extern int _ZN6Player12GetTalkStateEv(char* p);
-    extern int _ZN6Player9DropActorEv(char* p);
-    extern struct dActor_c* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, const struct Vector3* pos, const struct Vector3_16* rot, int a, int b);
-    extern void _ZN7fBase_c18MarkForDestructionEv(char* self);
     {
         int b = (int)((this->mFlags & 0x40000) != 0);
         if (b != 0) {
@@ -1110,18 +1087,6 @@ int daMky_c::EnterState5() {
 // @symbol _ZN7daMky_c19func_ov030_02113324Ev
 int daMky_c::func_ov030_02113324()
 {
-    extern int Vec3_Dist(const Vector3* a, const Vector3* b);
-    extern int _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);
-    extern short Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
-    extern void Matrix4x3_FromTranslation(Matrix4x3* m, int x, int y, int z);
-    extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3* m, short angY);
-    extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3* m, int x, int y, int z);
-    extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msgId, const Vector3* pos, unsigned int d, unsigned int e);
-    extern void func_0201267c(unsigned int id, const Vector3 *pos);
-    extern int _ZN6Player12GetTalkStateEv(void* self);
-    extern int _ZN6Player9DropActorEv(void* self);
-    extern void _ZN9Animation7AdvanceEv(void* self);
-    extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 
     extern void* data_0209f318;
     extern Matrix4x3 data_020a0e68;
@@ -1252,25 +1217,7 @@ int daMky_c::func_ov030_021136b0()
     typedef int s32;
 
 
-    extern void _ZN8SaveData13PlayerLoseCapEv(void);
     /* The arm9 symbols.txt row spells this Vector3_16 (not Vector3s) — a wrong mangling here left the reloc BLIND and broke mwldarm. */
-    extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-        u32 actorID, u32 param1, const Vector3 *pos,
-        const void *rot, int areaID, int deathTableID);
-    extern unsigned int func_02012790(unsigned int arg);
-    extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-    extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-    extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);
-    extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int z);
-    extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
-        void *self, void *actor, unsigned int msgId, const Vector3 *pos,
-        unsigned int d, unsigned int e);
-    extern void func_0201267c(unsigned int id, const Vector3 *pos);
-    extern int _ZN6Player12GetTalkStateEv(void *self);
-    extern int _ZN6Player9DropActorEv(void *self);
-    extern void _ZN6Player18SetNewHatCharacterEjjb(void *self, unsigned int a, unsigned int b, int c);
-    extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
-    extern void _ZN9Animation7AdvanceEv(void *self);
 
     extern void *data_0209f318;
     extern Matrix4x3 data_020a0e68;
@@ -1478,11 +1425,6 @@ int daMky_c::EnterState3()
 int daMky_c::func_ov030_02113b38()
 {
     typedef int Fix12i;
-    extern void _ZN9Animation7AdvanceEv(char* a);
-    extern void _ZN8dActor_c9UpdatePosEP5dCc_c(char* c, char* cl);
-    extern int _ZNK10dBgCh_Actr13JustHitGroundEv(char* w);
-    extern void _ZN10dBgCh_Actr15ClearLimMovFlagEv(char* w);
-    extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char* ma, void* f, int b, Fix12i c, unsigned int d);
     extern int data_ov030_02115d18[];
   ((Animation *)((char *)this + 0x124))->Advance();
   this->UpdatePos(&this->mdCcAc_c);
@@ -1544,15 +1486,6 @@ int daMky_c::func_ov030_02113d20()
     typedef int Fix12i;
     typedef short s16;
 
-    extern Fix12i Vec3_Dist(const void *a, const void *b);
-    extern s16 Vec3_HorzAngle(const void *v0, const void *v1);
-    extern void _Z14ApproachLinearRsss(s16 *dst, s16 target, s16 step);
-    extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *anim, void *file, int n, Fix12i speed, unsigned int flags);
-    extern void _ZN9Animation7AdvanceEv(void *c);
-    extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *clsn);
-    extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *c);
-    extern int _ZN6Player7IsInAirEv(void *p);
-    extern void _ZN5dCc_c6UpdateEv(void *c);
     extern void *data_ov030_02115d18;
     void *p;
     Fix12i dist;
@@ -1645,13 +1578,6 @@ int daMky_c::func_ov030_02113ff0()
 {
     typedef int Fix12i;
     typedef short s16;
-    extern int _ZN8dActor_c13DistToCPlayerEv(char* c);
-    extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char* ma, void* f, int b, Fix12i c, unsigned int d);
-    extern s16 _ZN8dActor_c18HorzAngleToCPlayerEv(char* c);
-    extern void _Z14ApproachLinearRsss(s16* p, s16 target, s16 step);
-    extern void _ZN9Animation7AdvanceEv(char* a);
-    extern void _ZN8dActor_c9UpdatePosEP5dCc_c(char* c, char* cl);
-    extern void _ZN5dCc_c6UpdateEv(char* cl);
     extern int data_ov030_02115d18[];
   int dist = this->DistToCPlayer();
   int b;
