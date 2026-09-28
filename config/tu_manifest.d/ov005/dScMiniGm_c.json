@@ -103,7 +103,7 @@
       "ordinal": 11
     },
     {
-      "symbol": "func_ov005_020c0378",
+      "symbol": "_ZN11dScMiniGm_c19func_ov005_020c0378Ev",
       "address": "0x020c0378",
       "size": "0x00000354",
       "legacy_source": "src/func_ov005_020c0378.cpp",

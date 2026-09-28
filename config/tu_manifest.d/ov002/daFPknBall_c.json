@@ -1,0 +1,246 @@
+{
+  "id": "ov002/daFPknBall_c",
+  "module": "ov002",
+  "source": "src/actors/daFPknBall_c.cpp",
+  "promoted_source": "src/actors/daFPknBall_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20f8858..0x20f9304, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daFPknBall_c",
+    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020f8858",
+      "end": "0x020f9304"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN12daFPknBall_cD1Ev",
+      "address": "0x020f8858",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN12daFPknBall_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN12daFPknBall_cD0Ev",
+      "address": "0x020f8898",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN12daFPknBall_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov002_020f88ec",
+      "address": "0x020f88ec",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov002_020f88ec.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov002_020f897c",
+      "address": "0x020f897c",
+      "size": "0x000001a8",
+      "legacy_source": "src/func_ov002_020f897c.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov002_020f8b24",
+      "address": "0x020f8b24",
+      "size": "0x00000168",
+      "legacy_source": "src/func_ov002_020f8b24.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN12daFPknBall_c6RenderEv",
+      "address": "0x020f8c8c",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN12daFPknBall_c6RenderEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN12daFPknBall_c8BehaviorEv",
+      "address": "0x020f8c94",
+      "size": "0x00000570",
+      "legacy_source": "src/_ZN12daFPknBall_c8BehaviorEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN12daFPknBall_c13InitResourcesEv",
+      "address": "0x020f9204",
+      "size": "0x000000e0",
+      "legacy_source": "src/_ZN12daFPknBall_c13InitResourcesEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN12daFPknBall_c13OnYoshiTryEatEv",
+      "address": "0x020f92e4",
+      "size": "0x00000020",
+      "legacy_source": "src/_ZN12daFPknBall_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 8
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Text span 0x020f8858..0x020f9304, 9 functions, class daFPknBall_c only. daFPknBall_c_classInit at 0x020f9304 is the next function and is not absorbed.",
+    "One out-of-line destructor under #pragma defer_codegen off. D2 is homeless deadstrip. The vtable and the ancestor RTTI chain are deadstrip-data at their existing addresses. The coined _ZTV8Fireball alias was deleted."
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN12daFPknBall_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. One out-of-line destructor under #pragma defer_codegen off emits D1, D0, then D2. The cartridge has D1 at ov002:0x020f8858 and D0 at 0x020f8898 and no D2."
+    },
+    {
+      "symbol": "_ZTV12daFPknBall_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x0210bf94",
+      "reason": "The out-of-line destructor is the key function, so this TU emits the vtable. Public address point ov002:0x0210bf94 is outside the licensed text span."
+    },
+    {
+      "symbol": "_ZTI12daFPknBall_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x0210bf54",
+      "reason": "This class's __si_class_type_info, dragged in with the vtable. Cartridge copy ov002:0x0210bf54."
+    },
+    {
+      "symbol": "_ZTS12daFPknBall_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x0210bf60",
+      "reason": "Type-name string 12daFPknBall_c at ov002:0x0210bf60."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "Ancestor RTTI passenger. Cartridge copy ov002:0x021081c0."
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "Ancestor type-name string 12dEnemyBase_c. Cartridge copy ov002:0x021081cc."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Ancestor RTTI passenger. Cartridge copy arm9:0x0208e390."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Ancestor type-name string 8dActor_c. Cartridge copy arm9:0x0208e384."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Ancestor RTTI passenger. Cartridge copy arm9:0x02086e78."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Ancestor type-name string 7dBase_c. Cartridge copy arm9:0x02086e54."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Root __class_type_info passenger. Cartridge copy arm9:0x02086d70."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Root type-name string 7fBase_c. Cartridge copy arm9:0x02086e60."
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-daFPknBall_c/daFPknBall_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 9,
+    "functions_declared": 9,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN12daFPknBall_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN12daFPknBall_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "data": [
+        "_ZTV12daFPknBall_c",
+        "_ZTI12daFPknBall_c",
+        "_ZTS12daFPknBall_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI12daFPknBall_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS12daFPknBall_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV12daFPknBall_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

@@ -1822,41 +1822,9 @@ src/_ZN12dScMg3DEsp_cD0Ev.cpp:
     complete
     .text start:0x020e76e4 end:0x020e777c
 
-src/_ZN17dMg3DEspAnimSet_c6RenderEv.cpp:
+src/actors/dMg3DEspAnimSet_c.cpp:
     complete
-    .text start:0x020e777c end:0x020e7818
-
-src/_ZN17dMg3DEspAnimSet_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020e7818 end:0x020e7910
-
-src/_ZN17dMg3DEspAnimSet_c5ResetEv.cpp:
-    complete
-    .text start:0x020e7910 end:0x020e792c
-
-src/func_ov006_020e792c.c:
-    complete
-    .text start:0x020e792c end:0x020e7940
-
-src/func_ov006_020e7940.c:
-    complete
-    .text start:0x020e7940 end:0x020e794c
-
-src/func_ov006_020e794c.c:
-    complete
-    .text start:0x020e794c end:0x020e7954
-
-src/_ZN17dMg3DEspAnimSet_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020e7954 end:0x020e7a50
-
-src/_ZN17dMg3DEspAnimSet_cD1Ev.cpp:
-    complete
-    .text start:0x020e7a50 end:0x020e7aac
-
-src/_ZN17dMg3DEspAnimSet_cC1Ev.cpp:
-    complete
-    .text start:0x020e7aac end:0x020e7b0c
+    .text start:0x020e777c end:0x020e7b0c
 
 src/_ZN15dMg3DEspModel_c14ResetTransformEv.cpp:
     complete

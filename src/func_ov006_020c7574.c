@@ -1,6 +1,6 @@
-extern int func_ov006_020c87d0(char *p);
-extern void func_ov006_020c8658(void *c);
-extern void func_ov006_020c76e0(char *c);
+extern int _ZN16dMgJump3DMario_c19func_ov006_020c87d0Ev(char *p);
+extern void _ZN16dMgJump3DMario_c19func_ov006_020c8658Ev(void *c);
+extern void _ZN16dMgJump3DMario_c19func_ov006_020c76e0Ev(char *c);
 extern char *data_ov006_02140420;
 extern int data_ov006_02140418;
 extern int data_ov006_02140428;
@@ -19,9 +19,9 @@ int func_ov006_020c7574(char *base, int count)
         off = i;
         do {
             char *q;
-            if (!func_ov006_020c87d0(data_ov006_02140420 + off)) return 0;
-            func_ov006_020c8658(data_ov006_02140420 + off);
-            func_ov006_020c76e0(data_ov006_02140420 + off);
+            if (!_ZN16dMgJump3DMario_c19func_ov006_020c87d0Ev(data_ov006_02140420 + off)) return 0;
+            _ZN16dMgJump3DMario_c19func_ov006_020c8658Ev(data_ov006_02140420 + off);
+            _ZN16dMgJump3DMario_c19func_ov006_020c76e0Ev(data_ov006_02140420 + off);
             q = data_ov006_02140420 + off;
             if (i < 3) data_ov006_021403f4[i] = q;
             i++;

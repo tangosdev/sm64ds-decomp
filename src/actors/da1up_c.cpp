@@ -352,7 +352,7 @@ void da1up_c::OnTurnIntoEgg(Player &player)
         Spawn(0x14b, 8, vec, 0, mAreaId, -1);
         KillAndTrackInDeathTable();
     } else {
-        func_ov002_020bdf8c(&player);
+        ((Player *)(&player))->func_ov002_020bdf8c();
         KillAndTrackInDeathTable();
     }
 }
@@ -373,7 +373,6 @@ void func_ov002_020af3a8(char* c)
     extern void _ZN5Sound9PlayBank3EjRK7Vector3(u32 id, struct Vector3* v);
     extern void _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, struct Vector3* v, void* rot, int e, int f);
     extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void* thiz);
-    extern void func_ov002_020bdf8c(int);
 
     int r = func_ov002_020af1dc(c);
     if (r == 0)
@@ -382,7 +381,7 @@ void func_ov002_020af3a8(char* c)
     unsigned short h = *(unsigned short*)(c + 0xc);
     unsigned is115 = (h == 0x115);
     if (is115) {
-        func_ov002_020bdf8c(r);
+        ((Player *)(r))->func_ov002_020bdf8c();
     } else {
         unsigned is114 = (h == 0x114);
         if (is114) {

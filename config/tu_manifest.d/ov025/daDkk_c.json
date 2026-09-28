@@ -42,21 +42,21 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov025_021119a4",
+      "symbol": "_ZN7daDkk_c19func_ov025_021119a4Ev",
       "address": "0x021119a4",
       "size": "0x00000050",
       "legacy_source": "src/func_ov025_021119a4.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov025_021119f4",
+      "symbol": "_ZN7daDkk_c19func_ov025_021119f4Ev",
       "address": "0x021119f4",
       "size": "0x00000090",
       "legacy_source": "src/func_ov025_021119f4.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov025_02111a84",
+      "symbol": "_ZN7daDkk_c19func_ov025_02111a84Ev",
       "address": "0x02111a84",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov025_02111a84.cpp",

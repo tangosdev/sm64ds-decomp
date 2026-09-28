@@ -4,6 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
+#include "Player.h"
 extern "C" {
 
 extern unsigned int _ZNK6Player14GetBodyModelIDEjb(char* c, unsigned int a, int b);
@@ -13,7 +14,7 @@ extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callba
   unsigned int a, unsigned int b, int c, int d, int e, const void* f, void* g);
 
 void func_ov002_020d98b4(char* self){
-  int t = func_ov002_020beb38(self);
+  int t = ((Player *)(self))->func_ov002_020beb38();
   *(unsigned short*)(((int)self + 0x6a4)) -= t;
   {
     short* q = (short*)(self + 0x600);

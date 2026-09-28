@@ -71,6 +71,9 @@ struct daKrb_c : dCapEnemy_c {
     int OnYoshiTryEat();                        /* slot 18 */
     void OnTurnIntoEgg(Player &player);          /* slot 19 */
     int OnAimedAtWithEgg();                     /* slot 29 */
+
+    void func_ov084_0212a580();
+    void func_ov084_0212aab0();
 };
 
 #ifndef SM64DS_PLATFORM_PC

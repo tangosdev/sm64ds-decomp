@@ -54,6 +54,13 @@ struct daObjHatenaBlock_c : dBgActor_c {
     void OnKicked(dActor_c &other);            /* slot 24 */
     void OnHitByMegaChar(Player &player);      /* slot 27 */
     int OnHitFromUnderneath(dActor_c &other);  /* slot 28 */
+
+    void func_ov102_02149428();
+    void func_ov102_02149478();
+    int func_ov102_02149878();
+    void func_ov102_021498e0();
+    void func_ov102_02149ccc();
+    void func_ov102_02149e38();
 };
 
 #ifndef SM64DS_PLATFORM_PC

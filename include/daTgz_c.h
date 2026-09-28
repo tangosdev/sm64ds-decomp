@@ -9,58 +9,66 @@
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
 
-/* TWO WITNESSES, and they close on each other:
+/* daTgz_c -- Spiny (TOGEZO). sizeof is the factory literal 1004 (0x3ec).
  *
- *   daTgz_c_classInit  fBase_c::operator new(1004 = 0x3ec), dActor_c::dActor_c(), stores _ZTV7daTgz_c,
- *                then the five members below in this order.
- *   ~daTgz_c       the same members destroyed in reverse, then ~dActor_c.
+ * daTgz_c_classInit does fBase_c::operator new(1004), dActor_c::C2, stores
+ * _ZTV7daTgz_c, then constructs Model, ModelAnim, ShadowModel, dCcAc_c and
+ * dBgCh_Actr in that order. ~daTgz_c destroys those five in reverse. The
+ * pointer at 0xd0 is not constructed.
  *
- * SIZE 0x3ec is the factory's own literal, and the trailing byte fields close exactly on it.
+ * The vtable was diffed against _ZTV8dActor_c. Only the slots declared below
+ * differ; every other slot is the base's word and is not redeclared.
  *
- * THE VTABLE was diffed slot by slot against _ZTV8dActor_c (relocs.txt, ov077). Only the
- * slots declared below differ; every other slot holds the base's own word and is inherited,
- * so it is deliberately not redeclared here.
- *
- * SM64DS RTTI names the implementation daTgz_c. The reconstructed
- * factory daTgz_c_classInit (historical alias
- * Spiny_Spawn) constructs it for the TOGEZO
- * registry profile.
+ * RTTI names this class daTgz_c. The factory (historical alias Spiny_Spawn)
+ * builds it for the TOGEZO profile.
  */
 struct daTgz_c : dActor_c {
-    u8  pad_0d0[0x4];
-    Model mModel;                            /* 0x0d4 */
-    ModelAnim mModelAnim;                    /* 0x124 */
-    ShadowModel mShadowModel;                /* 0x188 */
-    dCcAc_c mdCcAc_c;  /* 0x1b0 */
-    dBgCh_Actr mWithMeshClsn;              /* 0x1e4 */
-    /* InitResources assigns IDENTITY_MATRIX4X3 into this slot, so it begins a
-       Matrix4x3. Still spelt u8 + pad so the header need not pull in
-       math/Matrix.h. [_ZN7daTgz_c13InitResourcesEv.cpp] */
-    u8  mMatrix;            /* 0x3a0 */
-    u8  pad_3a1[0x37];
+    /* Actor holding this Spiny. State 4 copies its position and yaw, then
+       clears the pointer once the Spiny is thrown. */
+    dActor_c *mCarrier;                  /* 0x0d0 */
+    Model mModel;                        /* 0x0d4 */
+    ModelAnim mModelAnim;                /* 0x124 */
+    ShadowModel mShadowModel;            /* 0x188 */
+    dCcAc_c mdCcAc_c;                    /* 0x1b0 */
+    dBgCh_Actr mWithMeshClsn;            /* 0x1e4 */
+    /* Drop-shadow matrix. InitResources copies IDENTITY_MATRIX4X3 here and
+       the shadow helper writes the translation as position >> 3. Twelve
+       words, not Matrix4x3: this header must not pick a Matrix4x3 spelling. */
+    s32 mShadowMatrix[12];               /* 0x3a0 */
+    /* PMF pair. func_ov077_02125e94 stores data_ov077_02127c28 + i*16.
+       func_ov077_02125e5c calls slot 0; func_ov077_02125e20 calls slot 1. */
+    void *mStateDesc;                    /* 0x3d0 */
+    /* Player stored when a hit sends the Spiny into state 2. */
+    Player *mChasePlayer;                /* 0x3d4 */
     /* Render draws the still Model in states 0 and 4 and the ModelAnim
-       otherwise; Behavior treats 1 (only once on the ground), 4 and 5 as states
-       that must keep running whatever the distance to the player.
-       [_ZN7daTgz_c6RenderEv.cpp, _ZN7daTgz_c8BehaviorEv.cpp] */
-    s32 mState;            /* 0x3d8 */
-    u8  pad_3dc[0xd];
-    /* Seeded 0x2c (44 frames) in InitResources and counted down ONLY on the
-       frames daTgz_c is too far from the player to behave; at 0 it marks itself
-       for destruction. [_ZN7daTgz_c13InitResourcesEv.cpp,
-        _ZN7daTgz_c8BehaviorEv.cpp] */
-    u8  mDespawnTimer;            /* 0x3e9 */
-    u8  pad_3ea[0x2];
+       otherwise. Behavior keeps states 4 and 5 running however far the
+       player is, and state 1 only once it is on the ground. */
+    s32 mState;                          /* 0x3d8 */
+    /* 0 until a water surface is found under the Spiny, then that height. */
+    s32 mWaterY;                         /* 0x3dc */
+    /* Particle::System::New id for the ripple while underwater. */
+    u32 mRippleId;                       /* 0x3e0 */
+    u8 mInWater;                         /* 0x3e4 */
+    u8 pad_3e5;                          /* 0x3e5 */
+    /* ApproachLinear target for mAngleY while walking. */
+    s16 mTurnTarget;                     /* 0x3e6 */
+    /* DecIfAbove0_Byte. State 5 arms 45 frames; state 1 arms a random byte. */
+    u8 mActionTimer;                     /* 0x3e8 */
+    /* Seeded 0x2c (44 frames) in InitResources and counted down only while
+       the Spiny is too far from the player to behave. At 0 it is destroyed. */
+    u8 mDespawnTimer;                    /* 0x3e9 */
+    u8 pad_3ea[2];                       /* 0x3ea */
 
-    virtual ~daTgz_c();            /* slots 16 (D1), 17 (D0) */
+    virtual ~daTgz_c();                  /* slots 16 (D1), 17 (D0) */
 
     virtual int   OnYoshiTryEat();               /* slot 18 */
     virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
     virtual int   OnAimedAtWithEgg();            /* slot 29 */
 
     int Behavior();
-    int CleanupResources();                  /* slot  3 */
+    int CleanupResources();              /* slot  3 */
     int InitResources();
-    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
+    void OnPendingDestroy();             /* slot 12 -- empty body in the ROM */
     int Render();
 };
 

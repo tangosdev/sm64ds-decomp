@@ -650,7 +650,14 @@ def matched_caption(m):
 
 
 def bar_block(t, preserved_matched=None):
-    """The fenced block shown under the README "## The three tiers" heading."""
+    """The fenced block shown under the README "## Progress" heading.
+
+    It sits after the progress bar, as a SIBLING of the `progress:start` /
+    `progress:end` markers rather than nested inside them: `progress.py`
+    replaces everything between those two markers, so a block nested in that
+    range would be deleted by the next progress refresh and the next
+    `tiers.py` refresh would then throw on the missing marker.
+    """
     rows = []
     m, c, k = t["matched"], t["converted"], t["linked"]
     if m:

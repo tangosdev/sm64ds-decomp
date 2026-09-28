@@ -1,0 +1,139 @@
+{
+  "id": "ov006/dMg3DEspAnimSet_c",
+  "module": "ov006",
+  "source": "src/actors/dMg3DEspAnimSet_c.cpp",
+  "promoted_source": "src/actors/dMg3DEspAnimSet_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x020e777c..0x020e7b0c, 9 function(s), cut from the tu_map unit 0x020e7660..0x020ea1f0 that also contained dMg3DEspModel_c and dScMg3DEsp_c",
+    "class label(s): dMg3DEspAnimSet_c",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020e777c",
+      "end": "0x020e7b0c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN17dMg3DEspAnimSet_c6RenderEv",
+      "address": "0x020e777c",
+      "size": "0x0000009c",
+      "legacy_source": "src/_ZN17dMg3DEspAnimSet_c6RenderEv.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN17dMg3DEspAnimSet_c8BehaviorEv",
+      "address": "0x020e7818",
+      "size": "0x000000f8",
+      "legacy_source": "src/_ZN17dMg3DEspAnimSet_c8BehaviorEv.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN17dMg3DEspAnimSet_c5ResetEv",
+      "address": "0x020e7910",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN17dMg3DEspAnimSet_c5ResetEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_020e792c",
+      "address": "0x020e792c",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov006_020e792c.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov006_020e7940",
+      "address": "0x020e7940",
+      "size": "0x0000000c",
+      "legacy_source": "src/func_ov006_020e7940.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_020e794c",
+      "address": "0x020e794c",
+      "size": "0x00000008",
+      "legacy_source": "src/func_ov006_020e794c.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN17dMg3DEspAnimSet_c13InitResourcesEv",
+      "address": "0x020e7954",
+      "size": "0x000000fc",
+      "legacy_source": "src/_ZN17dMg3DEspAnimSet_c13InitResourcesEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN17dMg3DEspAnimSet_cD1Ev",
+      "address": "0x020e7a50",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN17dMg3DEspAnimSet_cD1Ev.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN17dMg3DEspAnimSet_cC1Ev",
+      "address": "0x020e7aac",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN17dMg3DEspAnimSet_cC1Ev.cpp",
+      "ordinal": 8
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Cut to dMg3DEspAnimSet_c only (0x020e777c..0x020e7b0c) before verify. dMg3DEspModel_c stays the next file.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_02141e94' differs between the legacy file that used to hold _ZN17dMg3DEspAnimSet_c13InitResourcesEv and the one that held _ZN17dMg3DEspAnimSet_cD1Ev; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_02141e6c' differs between the legacy file that used to hold _ZN17dMg3DEspAnimSet_c13InitResourcesEv and the one that held _ZN17dMg3DEspAnimSet_cD1Ev; kept the first, the other is commented out for review"
+  ],
+  "production_mode": "text-only",
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dMg3DEspAnimSet_c/dMg3DEspAnimSet_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 9,
+    "functions_declared": 9,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN17dMg3DEspAnimSet_cD2Ev",
+        "_ZN17dMg3DEspAnimSet_cC2Ev"
+      ],
+      "deadstripped": [
+        "_ZN17dMg3DEspAnimSet_cC2Ev",
+        "_ZN17dMg3DEspAnimSet_cD2Ev"
+      ],
+      "droppedSections": [
+        17,
+        18,
+        19,
+        20
+      ],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN17dMg3DEspAnimSet_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. One out-of-line destructor emits D1 and D2. The span carries only D1 at 0x020e7a50 (size 0x5c); symbols.txt has no D2 for this class and no D0 is written. With #pragma defer_codegen off the D2 is emitted beside D1 and does not disturb the nine licensed functions, which stay in ROM order."
+    },
+    {
+      "symbol": "_ZN17dMg3DEspAnimSet_cC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. One out-of-line constructor emits C1 and C2. The span carries only C1 at 0x020e7aac (size 0x60); symbols.txt has no C2 for this class. It is emitted after C1, past the licensed run, and is deadstripped."
+    }
+  ]
+}

@@ -6,10 +6,8 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 extern "C" {
-extern void func_ov002_020bf90c(char* c);
 extern void func_ov002_020c06fc(char* c, u32 a);
 extern int func_ov002_020dd2f4(char* c);
-extern int func_ov002_020c0688(char* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* s);
 extern int func_0201226c(int a0, int a1, int a2, char* a3, int a4, int a5);
 extern void func_ov002_020e25f0(char* c, int a);
@@ -30,7 +28,7 @@ int Player::St_ButtSlide_Main()
 {
     switch (mStatePhase) {
     case 0:
-        func_ov002_020bf90c(((char*)this));
+        func_ov002_020bf90c();
         if (mIsAirborne == 0) {
             mIsSlidingOnGround = 1;
             func_ov002_020c06fc(((char*)this), 0x4000);
@@ -51,7 +49,7 @@ int Player::St_ButtSlide_Main()
         } else {
             mSlideStoppedTimer = 0;
         }
-        if (func_ov002_020c0688(((char*)this)) != 0) {
+        if (func_ov002_020c0688() != 0) {
             if ((*(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18) & 2) != 0
                 && mStateWaitTimer == 0) {
                 mJumpComboStage = 0;

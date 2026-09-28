@@ -69,6 +69,20 @@ struct daYurei_Mucho_c : dEnemyBase_c {
     void OnPendingDestroy();
     int Render();
 
+    /* Non-virtual. Unowned .data PMFs resolve these by symbols.txt name. */
+    void func_ov065_0211696c();
+    int func_ov065_0211691c(State *s);
+    int func_ov065_021168a8();
+    int func_ov065_02116744();
+    int func_ov065_0211672c();
+    int func_ov065_021165d8();
+    short func_ov065_02116588();
+    int func_ov065_02116364();
+    int func_ov065_02116328();
+    int func_ov065_021162c0();
+    void func_ov065_02115ff0();
+    int func_ov065_02115f84();
+
     static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }

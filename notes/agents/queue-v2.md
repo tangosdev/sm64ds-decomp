@@ -229,14 +229,13 @@ It reserves its report artifact, with source files declared as read-only
 `requires`; it does not acquire the existing source reservation. The composition
 must preserve the accepted source and declared base as ancestors.
 
-Refresh the external check after a review decision:
+Read the review verdict after a review decision:
 
 ```powershell
-gh workflow run source-review.yml --repo tangosdev/sm64ds-decomp -f pr=2447
 python tools/check_pr_source_review.py --pr 2447
 ```
 
-Use the actual PR number. The second command reads current state and exits
+Use the actual PR number. The command reads current state and exits
 nonzero on missing/stale review; it does not publish or merge anything.
 
 ### Failed verification and additional dependencies

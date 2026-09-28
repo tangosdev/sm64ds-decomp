@@ -6,7 +6,6 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 extern "C" {
-extern void func_ov002_020bf90c(void* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern int _ZN6Player6IsAnimEj(void* c, u32 a);
 extern int _ZN6Player12FinishedAnimEv(void* c);
@@ -26,7 +25,7 @@ extern int data_ov002_0211013c[];
 
 int Player::St_Crouch_Main()
 {
-    func_ov002_020bf90c(((char*)this));
+    func_ov002_020bf90c();
 
     if (mIsAirborne != 0) {
         int d = mPosY - mGroundY;

@@ -23,8 +23,7 @@
  * - data_ov002_0210e12c / 0210e124 SharedFilePtr handles and
  *   data_ov002_0210d7f4 CLPS; this TU consumes them, overlay .data/.bss owns
  *   them. S14: g_profile_CANNON_SHUTTER stays outside the licensed .text.
- * - func_ov002_020bc990: inbound from ov084; the ROM symbol is not a member.
- *   No coined name.
+ * - func_ov002_020bc990: inbound from ov084 (daRedBombhei_c). No coined name.
  * - func_0201277c (sound 0x47); data_020a0e68 scratch matrix;
  *   data_0209f2f8 / data_0209f220 scene/level gates.
  * - no Camera.h. Player.h is required for ClosestPlayer()->mIsMega.
@@ -219,16 +218,13 @@ int daObjCannonShutter_c::CleanupResources()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bc990
+// @symbol _ZN20daObjCannonShutter_c19func_ov002_020bc990Ev
 /* Inbound "start opening" trigger from ov084. Plays sound 0x47 and sets
-   mOpening. The ROM symbol is not a member; no coined name. Parameter stays
-   void * because include/decl_common.h declares it that way. */
-extern "C" {
-void func_ov002_020bc990(void *actor)
+   mOpening. No coined name. */
+void daObjCannonShutter_c::func_ov002_020bc990()
 {
     func_0201277c(0x47);
-    ((daObjCannonShutter_c *)actor)->mOpening = 1;
-}
+    mOpening = 1;
 }
 
 /* -------------------------------------------------------------------------- */

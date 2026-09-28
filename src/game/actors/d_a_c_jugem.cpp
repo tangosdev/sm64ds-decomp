@@ -278,7 +278,7 @@ int func_ov085_0212d9b8(daC_Jugem_c *c)
     }
 
     if (c->mTimer == 0x32) {
-        func_ov002_020c3ea0(pl);
+        ((Player *)(pl))->func_ov002_020c3ea0();
     }
     c->mAngleY = 0x6000;
     c->mPrevAngleY = c->mAngleY;

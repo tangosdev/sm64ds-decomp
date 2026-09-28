@@ -96,6 +96,10 @@ struct daDkk_c : daDsnBase_c {
     int Behavior();
     int OnAimedAtWithEgg();
 
+    int func_ov025_021119a4();
+    void func_ov025_021119f4();
+    void func_ov025_02111a84();
+
     /* Leaf operator new until #2570 merges fBase_c's own. unsigned long, not
        unsigned int: mwccarm 2004/b56 mangles the two differently and the
        global ::operator new the implicit `new` would otherwise call is

@@ -23,7 +23,7 @@ int Player::St_Grabbed_Main()
     if (grab != 0) {
         int isBob = (*(u16*)(grab + 0xc) == 0xbf);
         if (isBob != 0) {
-            ret = func_ov002_020beb38(((char*)this));
+            ret = func_ov002_020beb38();
             if (ret != 0) {
                 p = (u8*)(int)((char*)&mStateStep);
                 *p = (u8)(*p + ret);

@@ -5,7 +5,6 @@
 struct V3 { int x, y, z; };
 struct State;
 extern "C" {
-extern void func_ov002_020bda48(char* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* thiz, struct State* s);
 extern void func_ov002_020bd9ec(char* c, unsigned int a);
 extern void func_ov002_020c43c4(char* c, int a);
@@ -21,7 +20,7 @@ void Player::InitBalloonMario()
 
     if (mIsBalloon != 0) return;
 
-    func_ov002_020bda48(((char*)this));
+    func_ov002_020bda48();
     mIsBalloon = 1;
     mBalloonTimer = 0x258;
     _ZN6Player11ChangeStateERNS_5StateE(((char*)this), &data_ov002_0211028c);

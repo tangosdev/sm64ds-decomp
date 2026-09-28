@@ -3,40 +3,21 @@
 
 #include "types.h"
 
-/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
- * the class's own destructor `_ZN9daManta_cD1Ev` destroys each member, and
- * `daManta_c_classInit` constructs the same types at the same offsets before
- * storing `_ZTV9daManta_c`. Everything this header used to restate below
- * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
+/* Jolly Roger Bay manta. ROM RTTI ov090:0x021341f4 names daManta_c; the
+ * debug table names MANTA (226). One direct base, dEnemyBase_c.
  *
- * The members close on each other, which is what makes the layout a
- * reading rather than a guess:
+ * The destructor and daManta_c_classInit agree on the owned objects:
+ *     0x110 dCcAcPos_c   0x40  -> 0x150
+ *     0x150 dBgCh_Actr   0x1bc -> 0x30c
+ *     0x30c ModelAnim    0x64  -> 0x370
+ * classInit allocates 0x404. The tail through 0x400 is the ring challenge
+ * (see src/actors/daManta_c.cpp); nothing past 0x400 is read.
  *
- *     0x110 dCcAcPos_c  0x40    -> 0x150
- *     0x150 dBgCh_Actr               0x1bc   -> 0x30c
- *     0x30c ModelAnim                  0x64    -> 0x370
- *
- * SIZE IS THE FACTORY'S LITERAL, NOT THE FIELD SPAN. `daManta_c_classInit` calls
- * `fBase_c::operator new(1028)` -- 0x404 -- and stores this class's vtable,
- * so that literal IS this class's sizeof. The evidenced fields reach only
- * 0x38c; the 0x94 between is trailing space no source reads, and a rounded-up
- * field span would have made this assert wrong by 120 bytes.
- *
- * THE CLASS NAME IS READ OUT OF THE CARTRIDGE, NOT COINED. `_ZTV9daManta_c`
- * sits at 0x0213423c; the word before it, at 0x02134238, is the type_info
- * pointer and resolves to `_ZTI9daManta_c` at 0x0213420c. That record's name
- * pointer reaches 0x021341f4, where the overlay image literally spells
- * `9daManta_c`. This header used to call the class MantaRay, which was a
- * readable invention; the cartridge had a name for it all along.
- *
- * The factory and profile spellings below are NOT read out of the cartridge.
- * They are reconstructed source-style names -- evidence-bounded proposals,
- * not recovered SM64DS symbols.
- *
- * daManta_c_classInit at 0x02132fe8 (historical alias MantaRay_Spawn)
- * allocates 0x404 and installs this class's cartridge vtable. It backs the
- * MANTA registry profile, whose descriptor at 0x02134218 is reconstructed as
- * g_profile_MANTA.
+ * mState points at a two-pointer-to-member record. __sinit_ov090_02133ea8
+ * copies the init PMF (func_ov090_02132a58) and the execute PMF
+ * (func_ov090_021327e4) into data_ov090_0213454c. Behavior calls execute.
+ * The record type is completed in the TU; a member spelling of those two
+ * functions would mangle to symbols the cartridge does not have.
  */
 
 #include "dEnemyBase_c.h"
@@ -44,17 +25,26 @@
 #include "dCcAcPos_c.h"
 #include "dBgCh_Actr.h"
 
+struct MantaState;
+
 struct daManta_c : dEnemyBase_c {
-    dCcAcPos_c    mdCcAcPos_c; /* 0x110 */
-    dBgCh_Actr                 mWithMeshClsn;         /* 0x150 */
-    ModelAnim                    mModelAnim;            /* 0x30c */
-    u8                           unk_370;               /* 0x370 */
-    u8  pad_371[0xb];
-    s32                          unk_37c;               /* 0x37c */
-    s32                          unk_380;               /* 0x380 */
-    s32                          mPathNode;             /* 0x384 */
-    s32                          unk_388;               /* 0x388 */
-    u8  pad_38c[0x78];
+    dCcAcPos_c mdCcAcPos_c;    /* 0x110 */
+    dBgCh_Actr mWithMeshClsn;  /* 0x150 */
+    ModelAnim mModelAnim;      /* 0x30c */
+    MantaState *mState;        /* 0x370 */
+    u8 pad_374[4];             /* 0x374 */
+    s32 mRingCount;            /* 0x378 -- rings taken in order; 5 starts the star wait; 0xa after it spawns */
+    s32 mPathID;               /* 0x37c -- param1 & 0xff, PathPtr::FromID */
+    s32 mNumNodes;             /* 0x380 -- PathPtr::NumNodes */
+    s32 mPathNode;             /* 0x384 */
+    s32 mStarID;               /* 0x388 -- (param1 >> 12) & 0xf, OR 0x40 into the STAR spawn */
+    s32 mStarDelay;            /* 0x38c -- frames after the fifth ring, before the star */
+    u8 pad_390[0xc];           /* 0x390 */
+    Vector3 mRingPos;          /* 0x39c -- bone 3's translation, where the next WATER_RING spawns */
+    dActor_c *mHitRing;        /* 0x3a8 -- ring whose cylinder just reported a hit; cleared after scoring */
+    s32 mRingIDs[0x14];        /* 0x3ac -- uniqueIDs of the rings spawned this lap */
+    s32 mRingWrite;            /* 0x3fc */
+    s32 mRingRead;             /* 0x400 */
 
     /* --- vtable --- */
     virtual ~daManta_c();

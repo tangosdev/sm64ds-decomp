@@ -151,6 +151,16 @@ struct daOts_c : dEnemyBase_c {
        method names. */
     int InitResourcesCommon();
     int BehaviorCommon();
+    void func_ov064_02115f98(char* a1);
+    int func_ov064_02116110(short step);
+    int func_ov064_0211616c();
+    void func_ov064_02116220();
+    void func_ov064_02116460();
+    int func_ov064_02116560();
+    void func_ov064_021165d8();
+    int func_ov064_021166f0();
+    void func_ov064_02116754();
+    void func_ov064_02116bac();
 };
 
 #ifndef SM64DS_PLATFORM_PC

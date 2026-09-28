@@ -50,7 +50,7 @@
  *          at 0x60 against it and calls slot 31 when it drops under.
  *   0x330  mLinkedStarID, unique ID of a linked POWER_STAR (actor 0xb2). On
  *          actorID 0x53 (FALL_BLOCK_LLL) with mSuppressed set, Behavior calls
- *          func_ov098_0213a0e8 to fill it (when 0) or func_ov098_0213a0a8 to
+ *          daObjFallBlock_c_FindLinkedStar to fill it (when 0) or daObjFallBlock_c_PollLinkedStar to
  *          poll it (when set).
  *   0x334  mShakeX, the shake step added to mAngleX each frame in case 2.
  *   0x336  mTiltVelZ, added to mAngleZ (0x90) each frame in case 2, not mAngleY.
@@ -61,7 +61,7 @@
  *   0x33f  the respawn delay. While it runs the collider is disabled and Behavior
  *          returns early.
  *   0x340  this block's "ready" flag, and the one the group walk tests.
- *   0x341  grouping latch. func_ov098_0213a00c returns early once this is set.
+ *   0x341  grouping latch. daObjFallBlock_c_LinkGroup returns early once this is set.
  *   0x342  suppresses Render as well as Behavior, for actor id 0x53.
  *   0x344  mPrevInGroup, pointer to a same-id neighbour behind this block
  *          (angle diff >= 0x4000). Zero means this block is the head of the
@@ -94,7 +94,7 @@ struct daObjFallBlock_c : dBgActor_c {
     u8   mShakeRequested;               /* 0x33e */
     u8   mRespawnDelay;                 /* 0x33f */
     u8   mReady;                        /* 0x340 */
-    u8   unk_341;                       /* 0x341 -- grouping latch, written by func_ov098_0213a00c */
+    u8   unk_341;                       /* 0x341 -- grouping latch, written by daObjFallBlock_c_LinkGroup */
     u8   mSuppressed;                   /* 0x342 */
     u8   pad_343[0x1];
     daObjFallBlock_c *mPrevInGroup;     /* 0x344 */

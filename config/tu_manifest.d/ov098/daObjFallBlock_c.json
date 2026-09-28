@@ -22,28 +22,28 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov098_0213a00c",
+      "symbol": "daObjFallBlock_c_LinkGroup",
       "address": "0x0213a00c",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov098_0213a00c.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "func_ov098_0213a0a8",
+      "symbol": "daObjFallBlock_c_PollLinkedStar",
       "address": "0x0213a0a8",
       "size": "0x00000040",
       "legacy_source": "src/func_ov098_0213a0a8.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "func_ov098_0213a0e8",
+      "symbol": "daObjFallBlock_c_FindLinkedStar",
       "address": "0x0213a0e8",
       "size": "0x00000060",
       "legacy_source": "src/func_ov098_0213a0e8.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov098_0213a148",
+      "symbol": "daObjFallBlock_c_ResetMotion",
       "address": "0x0213a148",
       "size": "0x00000034",
       "legacy_source": "src/func_ov098_0213a148.c",
@@ -57,7 +57,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_ov098_0213a23c",
+      "symbol": "daObjFallBlock_c_ApplyModelXyz",
       "address": "0x0213a23c",
       "size": "0x00000048",
       "legacy_source": "src/func_ov098_0213a23c.c",

@@ -40,28 +40,28 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov019_0211127c",
+      "symbol": "_ZN10daPgRcer_c19func_ov019_0211127cEP7Vector3j",
       "address": "0x0211127c",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov019_0211127c.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov019_021112b8",
+      "symbol": "_ZN10daPgRcer_c19func_ov019_021112b8Ev",
       "address": "0x021112b8",
       "size": "0x00000064",
       "legacy_source": "src/func_ov019_021112b8.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov019_0211131c",
+      "symbol": "_ZN10daPgRcer_c19func_ov019_0211131cEv",
       "address": "0x0211131c",
       "size": "0x00000094",
       "legacy_source": "src/func_ov019_0211131c.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov019_021113b0",
+      "symbol": "_ZN10daPgRcer_c19func_ov019_021113b0Ev",
       "address": "0x021113b0",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov019_021113b0.c",
@@ -152,7 +152,7 @@
       "ordinal": 18
     },
     {
-      "symbol": "func_ov019_02112168",
+      "symbol": "_ZN10daPgRcer_c19func_ov019_02112168Ev",
       "address": "0x02112168",
       "size": "0x00000090",
       "legacy_source": "src/func_ov019_02112168.c",
@@ -166,21 +166,21 @@
       "ordinal": 20
     },
     {
-      "symbol": "func_ov019_02112268",
+      "symbol": "_ZN10daPgRcer_c19func_ov019_02112268Ev",
       "address": "0x02112268",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov019_02112268.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "func_ov019_021122a4",
+      "symbol": "_ZN10daPgRcer_c19func_ov019_021122a4Ev",
       "address": "0x021122a4",
       "size": "0x00000038",
       "legacy_source": "src/func_ov019_021122a4.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "func_ov019_021122dc",
+      "symbol": "_ZN10daPgRcer_c19func_ov019_021122dcEi",
       "address": "0x021122dc",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov019_021122dc.c",

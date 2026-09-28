@@ -1,22 +1,34 @@
 //cpp
-/* daOnms_c -- the rolling crush box. ov092 0x02130f00..0x02132018,
- * twenty-two functions.
+/* daOnms_c -- the rolling crush box (profile ONIMASU), ov092.
  *
- * The cartridge spells the class 8daOnms_c: _ZTS8daOnms_c at 0x02132288.
- * _ZTI8daOnms_c at 0x021322a0 reads [__si_class_type_info, 0x02132288,
- * _ZTI10dBgActor_c], so the single base is dBgActor_c, and the word before
- * _ZTV8daOnms_c (0x021322d0) is that _ZTI. The class was coined ToxBox
- * before the ROM name was read (factory alias ToxBox_Spawn).
- * daOnms_c_classInit at 0x02132018 abuts this run and stays in
- * src/d_a_onms.cpp.
+ * defer_codegen off emits this file in source order, which is the ROM order.
+ * The out-of-line destructor is the key function (D1 then D0). daOnms_c.h is
+ * included first so common.h's flat Matrix4x3 stands; the matrix copies below
+ * are twelve words, not .r/.t. The factory daOnms_c_classInit stays in
+ * src/d_a_onms.cpp. func_ov092_021313b0, func_ov092_02131578 and
+ * func_ov092_02131a88 stay extern "C": include/decl_common.h declares them
+ * under those names.
  *
- * #pragma defer_codegen off emits .text in source order, so this file is
- * ROM-ascending. One out-of-line destructor is the key function: it emits
- * D1 (0x02130f00) then D0 (0x02130f5c) and anchors _ZTV8daOnms_c. The D2
- * it also emits has no home in ov092 (manifest: deadstrip). The factory is
- * not instantiated here.
- *
- * daOnms_c.h is included first so common.h's flat Matrix4x3 stands.
+ * deslop leftovers:
+ * - StateBounce: `return 0` for the tested zero, size 0x1a0 -> 0x1a8.
+ *   Building the landing dust without the dead tmp copy, size 0x1a0 -> 0x190.
+ * - StateKnocked: o->mPosX/Y/Z instead of int *p = &o->mPosX, size
+ *   0x200 -> 0x1f8. Hoisting &floor->surface.clps.w0, 13 words (size stayed
+ *   0x200); each call adds 4. mRadius = 0x78000 instead of func_0203568c
+ *   (the +0x18 store), size 0x200 -> 0x1fc. UpdateContinuous() relocates to
+ *   _ZN10dBgCh_Actr16UpdateContinuousEv; the ROM calls the veneer at
+ *   0x020383fc (size stayed 0x200).
+ * - CheckPlayerHit: `if (actorID != 0xbf) return`, size 0xd8 -> 0xcc.
+ *   0xbf is PLAYER. The flag form stays.
+ * - StateLand: Sound::Play(3, id, pos) instead of func_02012694, size
+ *   0x74 -> 0x78. That wrapper is Sound::Play(3, id, pos).
+ * - func_ov092_02131a88: UpdateClsnPosAndRot(), size 0x64 -> 0xc. The
+ *   body is that function written out; the ROM does not call it.
+ * - InitResources: dCcAcPos_c::Init and dBgW_KcMbg::SetFile do not compile
+ *   (header Fix12<int>, and this TU's ints are not that type). A direct
+ *   beforeClsnCallback store, size 0x278 -> 0x274. func_020393d4 stays;
+ *   it writes dBgW + 0x18. dBgCh_Actr::Init stays the mangled free call:
+ *   the header method mangles with int, the ROM symbol with Fix12<int>.
  */
 
 #pragma defer_codegen off
@@ -26,12 +38,34 @@
 #include "dBgW.h"
 #include "Sound.h"
 
-/* The movement-state table, one member pointer per mMoveDir value. The ov092
-   static initializer fills it. */
+/* mMoveDir indexes the member-pointer table the ov092 static initializer
+   fills. State 1 is func_ov092_02131578; the rest are members. */
+enum {
+    kDirLand = 0,
+    kDirWait = 1,
+    kDirRollPosZ = 2,
+    kDirRollNegZ = 3,
+    kDirRollNegX = 4,
+    kDirRollPosX = 5,
+    kDirKnocked = 6,
+    kDirBounce = 7,
+    kDirSink = 8
+};
+
+/* param1 & 3. 3 follows the path in param1 bits 8..11; 0..2 index a script. */
+enum { kMoveAlongPath = 3 };
+
+/* One member pointer per mMoveDir. */
 typedef void (daOnms_c::*daOnms_cState)();
 struct daOnms_cStateEntry { daOnms_cState state; };
+
+/* Vec3, not Vector3: Vec3_Asr would emit ~Vector3 if the arg were Vector3. */
 typedef struct { int x, y, z; } Vec3;
 
+#define ActorPos(actor) ((Vector3 *)&(actor)->mPosX)
+#define CamPos(actor)   ((const Vector3 *)&(actor)->mCamSpacePosX)
+
+/* BMD (Model::LoadFile) and KCL (dBgW_Kc::LoadFile). Cleanup releases both. */
 extern daOnms_cStateEntry data_ov092_02132568[];
 extern SharedFilePtr data_ov092_02132540;
 extern SharedFilePtr data_ov092_02132548;
@@ -41,9 +75,11 @@ int func_ov002_020de328(void *player);
 void dBgCh_Actr_UpdateContinuous_Veneer(void);
 void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *v, int f);
+/* Sound::Play(3, id, pos). The overlay calls this wrapper, not Sound::Play. */
 void func_02012694(unsigned int id, const Vector3 *v);
 int func_02037e38(void *p);
 int func_02037e84(void *p);
+/* Stores mRadius: p[6] = value, the word at dBgCh_Actr + 0x18. */
 void func_0203568c(void *p, int v);
 void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int b, int cc, int d);
 s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
@@ -60,27 +96,28 @@ void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
     int scale, short angY, void *clps);
+/* Stores beforeClsnCallback: p[6] = value, the word at dBgW + 0x18. */
 void func_020393d4(int *p, int v);
 void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     dCcAcPos_c *self, dActor_c *actor, const Vector3 *offset,
     int radius, int height, unsigned int flags, unsigned int vulnFlags);
+/* CLPS block ("CLPS" magic) handed to SetFile. */
 extern char data_ov092_02132220;
+/* Three s32* move scripts, indexed by param1 & 3. A path (kind 3) ignores it. */
 extern char data_ov092_02132294;
 extern struct Matrix4x3 data_020a0e68;
 }
 
 // @symbol _ZN8daOnms_cD1Ev
 // @symbol _ZN8daOnms_cD0Ev
-/* Complete destructor: the compiler emits the typed dCcAcPos_c and
- * dBgCh_Actr teardown and the inline dBgActor_c base teardown.
- * D0, the deleting destructor, is the same typed teardown followed by the
- * inherited actor-heap deallocation. */
+/* D1 tears down dCcAcPos_c, dBgCh_Actr and the inline dBgActor_c base.
+   D0 is that teardown plus the actor-heap free. */
 daOnms_c::~daOnms_c()
 {
 }
 
 // @symbol _ZN8daOnms_c9StateSinkEv
-/* State 8: sink into the floor and go once 0x3e8000 below the rest height. */
+/* State 8: sink, then go once 0x3e8000 below the rest height. */
 void daOnms_c::StateSink()
 {
     mPosY -= 0x5000;
@@ -89,7 +126,7 @@ void daOnms_c::StateSink()
 }
 
 // @symbol _ZN8daOnms_c11StateBounceEv
-/* State 7: tumble until the box lands again, then shake the ground. */
+/* State 7: tumble until the box lands, then shake the ground. */
 int daOnms_c::StateBounce()
 {
     Vector3 tmp;
@@ -112,17 +149,15 @@ int daOnms_c::StateBounce()
     mAngleZ += mTumbleVelZ;
 
     /* Both early exits return the zero they tested; `return 0` differs. */
-    {
-        int v = mVertAccel;
-        if (v == 0) return v;
-    }
+    int v = mVertAccel;
+    if (v == 0)
+        return v;
 
     UpdatePos(0);
     ((void (*)(void *))dBgCh_Actr_UpdateContinuous_Veneer)(&mWithMeshClsn);
-    {
-        int g = mWithMeshClsn.IsOnGround();
-        if (g == 0) return g;
-    }
+    int g = mWithMeshClsn.IsOnGround();
+    if (g == 0)
+        return g;
 
     mTumbleVelX = mTumbleVelY = mTumbleVelZ = 0;
     mHorzSpeed = 0;
@@ -133,9 +168,9 @@ int daOnms_c::StateBounce()
     eq.z = mPosZ;
     ((void (*)(void *, const Vector3 *, int))_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE)(
         this, &eq, 0x5dc000);
-    func_02012694(0x46, (const Vector3 *)&mCamSpacePosX);
+    func_02012694(0x46, CamPos(this));
 
-    /* tmp is a dead copy the ROM keeps; dust built directly differs. */
+    /* tmp is a dead copy the ROM keeps; building dust directly differs. */
     tmp.x = mPosX;
     tmp.y = mPosY;
     tmp.z = mPosZ;
@@ -148,14 +183,14 @@ int daOnms_c::StateBounce()
 }
 
 // @symbol _ZN8daOnms_c12StateKnockedEv
-/* State 6: fly and tumble after a hit. A wall destroys the box; floor type 9
-   sinks it, floor type 8 bounces it, any other floor breaks it. */
+/* State 6: fly and tumble after a hit. A wall destroys the box. Surface
+   type 9 (CLPS w0 >> 19) sinks it, collision kind 8 (CLPS w0 & 31) bounces
+   it, and any other floor breaks it. */
 void daOnms_c::StateKnocked()
 {
     Vector3 saved;
     Vector3 v1;
     Vector3 v2;
-    char *fr;
 
     mAngleX += mTumbleVelX;
     mAngleY += mTumbleVelY;
@@ -171,7 +206,7 @@ void daOnms_c::StateKnocked()
     if (mWithMeshClsn.IsOnWall() != 0) {
         TriplePoofDust();
         MarkForDestruction();
-        Sound::PlayBank3(0x41, *(const Vector3 *)&mCamSpacePosX);
+        Sound::PlayBank3(0x41, *CamPos(this));
         return;
     }
 
@@ -179,19 +214,21 @@ void daOnms_c::StateKnocked()
         return;
 
     mRestPos.y = mPosY;
-    fr = (char *)_ZNK10dBgCh_Actr14GetFloorResultEv(&mWithMeshClsn);
+    /* GetFloorResult is the floor dBgPi. CLPS w0 sits at +4 (past the
+       vptr). Hoisting that address DIFF 13 words in this function. */
+    dBgPi *floor = (dBgPi *)_ZNK10dBgCh_Actr14GetFloorResultEv(&mWithMeshClsn);
 
-    if (func_02037e38(fr + 4) == 9) {
-        mMoveDir = 8;
+    if (func_02037e38((char *)floor + 4) == 9) {
+        mMoveDir = kDirSink;
         mHorzSpeed = 0;
         mVertSpeed = 0;
-        func_02012694(0x178, (const Vector3 *)&mCamSpacePosX);
-    } else if (func_02037e84(fr + 4) == 8) {
-        /* The player's position is read through p: reading o->mPosX and
-           the rest directly changes the code. */
+        func_02012694(0x178, CamPos(this));
+    } else if (func_02037e84((char *)floor + 4) == 8) {
+        /* The player's position is read through p: reading o->mPosX
+           directly changes the code. */
         dActor_c *o;
         int *p;
-        mMoveDir = 7;
+        mMoveDir = kDirBounce;
         func_0203568c(&mWithMeshClsn, 0x78000);
         o = mPlayerActor;
         p = &o->mPosX;
@@ -203,7 +240,7 @@ void daOnms_c::StateKnocked()
         mPosX = saved.x;
         mPosY = saved.y;
         mPosZ = saved.z;
-        func_02012694(0x178, (const Vector3 *)&mCamSpacePosX);
+        func_02012694(0x178, CamPos(this));
     } else {
         dActor_c *o;
         int *p;
@@ -217,7 +254,7 @@ void daOnms_c::StateKnocked()
         v2.z = p[2];
         ((void (*)(void *, const Vector3 *, int))_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE)(
             this, &v2, 0xff8000);
-        Sound::PlayBank3(0x41, *(const Vector3 *)&mCamSpacePosX);
+        Sound::PlayBank3(0x41, *CamPos(this));
     }
     mPlayerActor = 0;
 }
@@ -235,20 +272,20 @@ extern "C" void func_ov092_021313b0(void *t)
         self->mPathNodeIndex = 0;
     self->mPathPtr.GetNode(self->mPathNode, self->mPathNodeIndex);
     if (self->mPathNode.x == old.x && self->mPathNode.z == old.z) {
-        self->mMoveDir = 1;
+        self->mMoveDir = kDirWait;
         return;
     }
     u16 a = (u16)Vec3_HorzAngle(&old, &self->mPathNode);
-    if (a >= 0x2000 && a < 0x6000) self->mMoveDir = 5;
-    else if (a >= 0x6000 && a < 0xa000) self->mMoveDir = 3;
-    else if (a >= 0xa000 && a < 0xe000) self->mMoveDir = 4;
-    else self->mMoveDir = 2;
+    if (a >= 0x2000 && a < 0x6000) self->mMoveDir = kDirRollPosX;
+    else if (a >= 0x6000 && a < 0xa000) self->mMoveDir = kDirRollNegZ;
+    else if (a >= 0xa000 && a < 0xe000) self->mMoveDir = kDirRollNegX;
+    else self->mMoveDir = kDirRollPosZ;
 }
 
 // @symbol _ZN8daOnms_c8NextMoveEv
 void daOnms_c::NextMove()
 {
-    if (mMoveKind == 3) {
+    if (mMoveKind == kMoveAlongPath) {
         func_ov092_021313b0(this);
     } else {
         mMoveSeqIndex++;
@@ -267,8 +304,7 @@ void daOnms_c::NextMove()
 }
 
 // @symbol func_ov092_02131578
-/* State 1: sit still, take the next move after 0x14 frames, and watch for a
-   player hit. */
+/* State 1: sit still, take the next move after 0x14 frames, watch for a hit. */
 extern "C" void func_ov092_02131578(char *c)
 {
     daOnms_c *self = (daOnms_c *)c;
@@ -289,7 +325,7 @@ void daOnms_c::StateLand()
         v.x = mPosX; v.y = mPosY; v.z = mPosZ;
         ((void (*)(void *, const Vector3 *, int))_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE)(
             this, &v, 0x860000);
-        func_02012694(0x46, (const Vector3 *)&mCamSpacePosX);
+        func_02012694(0x46, CamPos(this));
     }
     mPosY = mRestPos.y + 0x3000;
     func_ov092_02131578((char *)this);
@@ -320,8 +356,9 @@ void daOnms_c::StateRollPosZ()
 }
 
 // @symbol _ZN8daOnms_c4RollEiiis
-/* One frame of an eight-frame roll: hop along the sine table, step the
-   position, and turn the face that the orientation bits say is leading. */
+/* One frame of an eight-frame roll: hop along the sine table, step, and
+   turn the face sBankAxis says is leading. The table is an s8 index from
+   &mAngleX; a negative index subtracts `bank` from that angle instead. */
 void daOnms_c::Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank)
 {
     int idx;
@@ -373,31 +410,32 @@ void daOnms_c::Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank)
     mPrevAngleY += mAngleY;
     mPrevAngleZ += mAngleZ;
 
-    if (mMoveKind == 3)
-        mMoveDir = 0;
+    if (mMoveKind == kMoveAlongPath)
+        mMoveDir = kDirLand;
     else
         NextMove();
     mRollDone = 1;
 }
 
 // @symbol _ZN8daOnms_c6LaunchEP8dActor_cj
-/* A player punched (how 0), kicked (1) or bumped the box from below (2):
-   knock it away, flat side down only. */
+/* A player punched (how 0), kicked (1) or bumped the box from below (2).
+   Only a flat side (orient bits 0..3 clear) and a player whose param1 low
+   bits are 2 can launch it. */
 void daOnms_c::Launch(dActor_c *player, u32 how)
 {
     u8 f = mOrientBits;
     int t = (f & 0xf) + ((f >> 4) & 3);
     if ((t & 3) != 0) return;
     if ((player->param1 & 3) != 2) return;
-    if (Vec3_HorzDist((Vector3 *)&mPosX, (Vector3 *)&player->mPosX) >= 0xd2000) return;
-    func_02012694(0x177, (const Vector3 *)&mCamSpacePosX);
-    mMoveDir = 6;
+    if (Vec3_HorzDist(ActorPos(this), ActorPos(player)) >= 0xd2000) return;
+    func_02012694(0x177, CamPos(this));
+    mMoveDir = kDirKnocked;
     mVertAccel = -0xc000;
     mTerminalVelocity = -0x48000;
     mVertSpeed = sLaunchVertSpeed[how];
     mHorzSpeed = sLaunchHorzSpeed[how];
     if (how < 2) mPrevAngleY = player->mAngleY;
-    else mPrevAngleY = Vec3_HorzAngle((Vector3 *)&player->mPosX, (Vector3 *)&mPosX);
+    else mPrevAngleY = Vec3_HorzAngle(ActorPos(player), ActorPos(this));
 
     unsigned n = ((u16)mPrevAngleY) >> 4;
     mTumbleVelX = (s16)(data_02082214[(n << 1) + 1] >> 2);
@@ -414,13 +452,14 @@ void daOnms_c::CheckPlayerHit()
     if (id == 0) return;
     dActor_c *o = dActor_c::FindWithID(id);
     if (o == 0) return;
-    /* A flag, not `if (o->actorID != 0xbf)`: the direct test differs. */
+    /* PLAYER is actor 0xbf. A flag, not `if (o->actorID != 0xbf)`: the
+       direct test differs. */
     int b = (o->actorID == 0xbf);
     if (b == 0) return;
     int f = mdCcAcPos_c.hitFlags;
     if (f & 0x40) {
         Launch(o, 0);
-    } else if (f & 0x380) {
+    } else if (f & (0x80 | 0x100 | 0x200)) {
         Launch(o, 1);
     } else if (BumpedUnderneathByPlayer(*(Player *)o) != 0) {
         if (o->mPosY > mPosY - 0x64000)
@@ -430,7 +469,8 @@ void daOnms_c::CheckPlayerHit()
 }
 
 // @symbol func_ov092_02131a88
-/* Put the collision mesh where the model is. */
+/* Copy the model matrix over the collider and put the actor position in
+   the translation row (flat Matrix4x3 words 9..11), then Transform. */
 extern "C" void func_ov092_02131a88(char *c)
 {
     daOnms_c *self = (daOnms_c *)c;
@@ -525,7 +565,7 @@ int daOnms_c::InitResources()
     mWithMeshClsn.SetLimMovFlag();
 
     mMoveKind = param1 & 3;
-    if (mMoveKind != 3) {
+    if (mMoveKind != kMoveAlongPath) {
         mMoveSeq = ((s32 **)&data_ov092_02132294)[mMoveKind];
         mMoveSeqIndex = 0;
         mMoveDir = *mMoveSeq;
@@ -541,7 +581,7 @@ int daOnms_c::InitResources()
     mRestPos.x = mPosX;
     mRestPos.y = mPosY;
     mRestPos.z = mPosZ;
-    Vec3_Asr(&tmp, (Vec3 *)&mPosX, 3);
+    Vec3_Asr(&tmp, (Vec3 *)ActorPos(this), 3);
 
     Matrix4x3_FromTranslation(&data_020a0e68, tmp.x, tmp.y, tmp.z);
     mModel.mat4x3 = data_020a0e68;

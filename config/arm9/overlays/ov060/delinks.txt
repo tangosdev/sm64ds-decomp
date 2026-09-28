@@ -434,10 +434,7 @@ src/d_a_kpa_fire.c:
 
 src/actors/daKpa2Bg_c.cpp:
     complete
-    .text start:0x02117980 end:0x02117c30
-
-src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp:
-    .text start:0x02117c30 end:0x02117cdc
+    .text start:0x02117980 end:0x02117cdc
 
 src/d_a_kpa2_bg.c:
     complete

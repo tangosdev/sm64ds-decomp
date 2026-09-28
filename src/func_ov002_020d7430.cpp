@@ -1,41 +1,39 @@
 //cpp
 // @symbol func_ov002_020d7430
-/* recovered: shared common types */
-#include "common.h"
+#include "Player.h"
+#include "Sound.h"
 
-struct Obj {
-  virtual int v0(); virtual int v1(); virtual int v2(); virtual int v3();
-  virtual int v4(); virtual int v5(); virtual int v6(); virtual int v7();
-  virtual int v8(); virtual int v9(); virtual int v10(); virtual int v11();
-  virtual int v12(); virtual int v13(); virtual int v14(); virtual int v15();
-  virtual int v16(); virtual int v17(); virtual int v18(); virtual void v19(char* c);
-};
 extern "C" {
-extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(char* c, Vector3* v, unsigned int a, int fix, unsigned int b, unsigned int d, unsigned int e);
-extern void func_ov002_020c9e18(char* c);
-extern int _ZN6Player7IsStateERNS_5StateE(char* c, void* s);
-extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* s);
-extern void func_ov002_020d718c(char* c);
-extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, void* v);
+void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(char* player, Vector3* pos,
+    unsigned int damage, int knockback, unsigned int arg4,
+    unsigned int arg5, unsigned int arg6);
+void func_ov002_020d718c(char* player);
+// State globals still have incompatible declarations across the legacy callers.
+int _ZN6Player7IsStateERNS_5StateE(char* player, void* state);
+void _ZN6Player11ChangeStateERNS_5StateE(char* player, void* state);
 extern char data_ov002_02110034;
 extern char data_ov002_0211013c;
-void func_ov002_020d7430(char* c){
-  Obj* o = *(Obj**)(c+0x360);
-  if(o->v18() == 2){
-    Vector3 v;
-    v.x = *(int*)(c+0x5c);
-    v.y = *(int*)(c+0x60);
-    v.z = *(int*)(c+0x64);
-    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(c, &v, 1, 0xc000, 1, 0, 0);
-    return;
-  }
-  func_ov002_020c9e18(c);
-  o = *(Obj**)(c+0x360);
-  o->v19(c);
-  if(_ZN6Player7IsStateERNS_5StateE(c, &data_ov002_02110034)){
-    _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_0211013c);
-  }
-  func_ov002_020d718c(c);
-  _ZN5Sound13PlayCharVoiceEjjRK7Vector3(0, 0xfd, c+0x74);
+
+void func_ov002_020d7430(Player& player)
+{
+    char* c = reinterpret_cast<char*>(&player);
+    dActor_c* mouthActor = reinterpret_cast<dActor_c*>(player.mObjInMouth);
+    if (mouthActor->OnYoshiTryEat() == 2) {
+        Vector3 pos;
+        pos.x = player.mPosX;
+        pos.y = player.mPosY;
+        pos.z = player.mPosZ;
+        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(c, &pos, 1, 0xc000, 1, 0, 0);
+        return;
+    }
+    player.func_ov002_020c9e18();
+    mouthActor = reinterpret_cast<dActor_c*>(player.mObjInMouth);
+    mouthActor->OnTurnIntoEgg(player);
+    if (_ZN6Player7IsStateERNS_5StateE(c, &data_ov002_02110034)) {
+        _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_0211013c);
+    }
+    func_ov002_020d718c(c);
+    Sound::PlayCharVoice(0, 0xfd,
+        *reinterpret_cast<const Vector3*>(&player.mCamSpacePosX));
 }
 }

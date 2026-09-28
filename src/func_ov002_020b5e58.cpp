@@ -5,6 +5,7 @@
 /* recovered: shared common types */
 #include "common.h"
 #include "dBgCh_Gnd.h"
+#include "daObjFloatBoard_c.h"
 struct SharedFilePtr;
 struct BMD_File;
 struct KCL_File;
@@ -31,7 +32,7 @@ extern "C" int func_ov002_020b5e58(char *self, char *fp)
     bmd = _ZN5Model8LoadFileER13SharedFilePtr(**(SharedFilePtr **)fp);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(self + 0xd4, bmd, 1, -1);
     *(char **)(self + 0x32c) = fp;
-    func_ov002_020b5b98(self);
+    ((daObjFloatBoard_c *)self)->func_ov002_020b5b98();
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
     kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(**(SharedFilePtr **)(fp + 4));
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(

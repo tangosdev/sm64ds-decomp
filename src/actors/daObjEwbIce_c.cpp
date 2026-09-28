@@ -1,206 +1,250 @@
 //cpp
-/* daObjEwbIce_c, ov073. Sixteen functions, .text 0x02121f90..0x02122730.
+/* daObjEwbIce_c -- Chief Chilly's rink ice (EWB_ICE_A/B/C).
  *
- * NAME: _ZTS13daObjEwbIce_c is the cartridge string "13daObjEwbIce_c" at
- * 0x02123158. _ZTI13daObjEwbIce_c at 0x0212314c reads [__si_class_type_info,
- * 0x02123158, _ZTI10dBgActor_c], so the single base is dBgActor_c, and the
- * word before _ZTV13daObjEwbIce_c (0x021231e8), at 0x021231e4, is that _ZTI.
- * The class was coined CccArena before the ROM name was read (factory
- * aliases CccArena_Spawn, CccBigIce_Spawn and CccSmallIce_Spawn for the
- * EWB_ICE_A/B/C profiles, all one class).
+ * Actor 0xaa is the arena, 0xab the big pieces, 0xac the small ones.
+ * Each reports a point to daKing_Donketu_c, then the arena settles on the
+ * course datum and the other two fall away.
  *
- * `#pragma defer_codegen off` is load-bearing. The out-of-line destructor is
- * the key function, so this TU emits _ZTV/_ZTI/_ZTS. It comes out D1
- * (0x02121f90), D0 (0x02121fd4), then a D2 the cartridge does not keep
- * (manifest: deadstrip), and every other function follows source order.
- * This file is ROM-ascending. One destructor.
+ * #pragma defer_codegen off is load-bearing. The out-of-line destructor is
+ * the key function, so this TU emits D1, D0, then a D2 the cartridge does
+ * not keep. The functions below stay in ROM order.
  *
- * func_ov073_02122730 and func_ov073_021227d0 sit between InitResources and
- * the three factories and stay one-function sources.
- *
- * The class header comes first so mModel.mat4x3.t sees the structured
- * Matrix4x3. Including dBgActor_c.h ahead of it would lock in common.h's
- * flat spelling.
+ * deslop leftovers:
+ * - func_ov073_02122034: one Vector3 store then pos.y -= kSplashDrop is
+ *   0x74 bytes. The cartridge is 0x8c: mPos is stored, stored again, then y
+ *   is adjusted.
+ * - func_ov073_021220c0: mWobblePhase += 0x800 is 0x114 bytes. The cartridge
+ *   is 0x120: the increment adds the pooled offset 0x332, and the sine index
+ *   is a second sign-extending load through this+0x300.
+ * - func_ov073_021222ec: mWaypointsA[mSpawnIndex] / mWaypointsB component
+ *   stores are 0xc8 bytes. The cartridge is 0xb0: one mla, then stores at
+ *   +0x3e8 and +0x448. uniqueID is the word at boss+4.
  */
 
 #pragma defer_codegen off
 
 #include "daObjEwbIce_c.h"
 #include "SharedFilePtr.h"
-#include "dBgW.h"
+#include "Sound.h"
 
-struct C;
-typedef int (C::*PMF)();
-struct C { char pad[0x320]; PMF *pp; };
+struct CLPS_Block;
 
-struct Base {
-    virtual void v0();
-    virtual void v1();
-    virtual void v2();
-    virtual void v3();
-    virtual void v4();
-    virtual void m(int);
+/* Column of the 0xc-stride file table. 021231bc / 021231c0 / 021231c4 are
+   the model, collision and CLPS of row 0; each symbol is its own column. */
+struct EwbIceFileSlot {
+    SharedFilePtr *file;
+    u8 pad[8];
 };
-struct Derived { char pad[0xd4]; Base base; };
+struct EwbIceClpsSlot {
+    CLPS_Block *clps;
+    u8 pad[8];
+};
+typedef char EwbIceFileSlot_must_be_0xc[sizeof(EwbIceFileSlot) == 0xc ? 1 : -1];
+typedef char EwbIceClpsSlot_must_be_0xc[sizeof(EwbIceClpsSlot) == 0xc ? 1 : -1];
+
+struct daObjEwbIce_State {
+    int (daObjEwbIce_c::*enter)();
+    int (daObjEwbIce_c::*update)();
+};
+typedef char daObjEwbIce_State_must_be_0x10[sizeof(daObjEwbIce_State) == 0x10 ? 1 : -1];
+
+enum {
+    ACTOR_EWB_ICE_A = 0xaa,
+    ACTOR_EWB_ICE_B = 0xab,
+    ACTOR_EWB_ICE_C = 0xac,
+    ACTOR_KING_DONKETU = 0xda,
+
+    kReportFrames = 3,
+    kArenaFrames = 0x64,
+    kSinkFrames = 0x190,
+    kSinkQuietBelow = 0x18d,
+    kSinkSoundAt = 0x183,
+
+    kWobbleAmp = 0x400,
+    kWobbleStep = 0x800,
+    kWobbleApproach = 0x40000,
+    kSplashDrop = 0x12c000,
+    kKillRise = 0x32000,
+    kSurfaceAboveVoid = 0x96000,
+    kDeathBelowVoid = 0xc8000,
+    kFallAccel = 0xa000,
+    kSinkSpeed = 0x14000,
+    kTiltTarget = 0x2000,
+    kTiltStep = 0x80
+};
 
 extern "C" {
-void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
-int func_02012694(int, const Vector3 &);
+void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
+void func_02012694(unsigned int id, const Vector3 *pos);
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _Z14ApproachLinearRiii(int *p, int a, int b);
-extern short data_02082214[];
+extern s16 data_02082214[];
 extern int data_02092138;
-extern int data_ov073_021234a0;
-int _Z14ApproachLinearRsss(short &v, short a, short b);
-void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3 &pos);
-int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *, int, void *, int, short, int);
-void func_020393d4(void *, void *);
-void func_020393c4(void *, void *);
-int func_ov073_021223a4(C *c, PMF *p);
-extern unsigned char data_ov073_02123420[];
-extern unsigned char data_ov073_02123424[];
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void *mesh, void *kcl, const Matrix4x3 *mat, int scale, short angY, void *clps);
+void func_020393d4(void *mesh, void *callback);
+void func_020393c4(void *mesh, void *callback);
+extern u8 data_ov073_02123420[];
+extern u8 data_ov073_02123424[];
 extern char data_ov073_021231bc[];
 extern char data_ov073_021231c0[];
 extern char data_ov073_021231c4[];
+extern daObjEwbIce_State data_ov073_021234a0;
 extern void *data_ov073_021234b0;
-int func_ov073_021227d0(void *, void *, void *);
-void Matrix4x3_FromRotationXYZExt(void *, int, int, int);
+int func_ov073_021223a4(daObjEwbIce_c *ice, daObjEwbIce_State *state);
+int func_ov073_021227d0(void *a, void *b, void *c);
+void Matrix4x3_FromRotationXYZExt(Matrix4x3 *mat, int x, int y, int z);
 }
 
+int ApproachLinear(int &value, int target, int step);
+int ApproachLinear(short &value, short target, short step);
 
 // @symbol _ZN13daObjEwbIce_cD1Ev
 // @symbol _ZN13daObjEwbIce_cD0Ev
-/* D1: own vptr, then dBgActor_c's -- inlined, because dBgActor_c's
- * destructor is defined in its class body -- then dBgActor_c's own dBgW_Kc
- * and Model, then dActor_c. This class adds no member with a destructor of
- * its own (see include/daObjEwbIce_c.h). D0 adds the inline operator delete
- * inherited from dActor_c. */
 daObjEwbIce_c::~daObjEwbIce_c()
 {
 }
 
 // @symbol func_ov073_0212202c
+/* Update after the splash. Nothing left to do. */
 extern "C" int func_ov073_0212202c(void)
 {
     return 1;
 }
 
 // @symbol func_ov073_02122034
-extern "C" int func_ov073_02122034(char *c)
+/* Enter the settled state: ice-splash particles under the piece, then bank-3 sound 0x172. */
+extern "C" int func_ov073_02122034(char *raw)
 {
+    daObjEwbIce_c *ice = (daObjEwbIce_c *)raw;
     Vector3 pos;
-    int t;
-    *(short *)(c + 0x332) = 0;
-    ((int *)&pos)[0] = *(int *)(c + 0x5c);
-    ((int *)&pos)[1] = *(int *)(c + 0x60);
-    ((int *)&pos)[2] = *(int *)(c + 0x64);
-    ((int *)&pos)[0] = *(int *)(c + 0x5c);
-    t = *(int *)(c + 0x60);
-    ((int *)&pos)[1] = t;
-    ((int *)&pos)[2] = *(int *)(c + 0x64);
-    ((int *)&pos)[1] = t - 0x12c000;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x8b, ((int *)&pos)[0], ((int *)&pos)[1], ((int *)&pos)[2]);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x8c, ((int *)&pos)[0], ((int *)&pos)[1], ((int *)&pos)[2]);
-    func_02012694(0x172, *(Vector3 *)(c + 0x74));
+    int y;
+
+    ice->mWobblePhase = 0;
+    /* Written twice. One assignment then `pos.y -=` is 0x74 against the
+       cartridge's 0x8c: the first copy is a separate store of mPos. */
+    pos.x = ice->mPosX;
+    pos.y = ice->mPosY;
+    pos.z = ice->mPosZ;
+    pos.x = ice->mPosX;
+    y = ice->mPosY;
+    pos.y = y;
+    pos.z = ice->mPosZ;
+    pos.y = y - kSplashDrop;
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x8b, pos.x, pos.y, pos.z);
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x8c, pos.x, pos.y, pos.z);
+    func_02012694(0x172, (const Vector3 *)&ice->mCamSpacePosX);
     return 1;
 }
 
 // @symbol func_ov073_021220c0
-extern "C" int func_ov073_021220c0(char *c)
+/* Arena update. Wobble mAngleX while the timer runs; then drop onto the datum. */
+extern "C" int func_ov073_021220c0(daObjEwbIce_c *ice)
 {
-    *(int *)(c + 0x328) = 0x400;
-    if (DecIfAbove0_Short((unsigned short *)(c + 0x330)) != 0) {
-        unsigned short *q = (unsigned short *)(((int)c + 0x332));
-        int t;
-        *q += 0x800;
-        t = *(int *)(c + 0x328);
-        {
-            int v = *(short *)((char *)(c + 0x300) + 0x32);
-            *(short *)(c + 0x8c) = t + (int)(((long long)t * data_02082214[(((int)((unsigned int)(v << 16) >> 16)) >> 4) * 2] + 0x800) >> 12);
-        }
-        _Z14ApproachLinearRiii((int *)(c + 0x328), 0, 0x40000);
+    ice->mWobbleAmp = kWobbleAmp;
+    if (DecIfAbove0_Short(&ice->mTimer) != 0) {
+        /* mWobblePhase += 0x800 collapses both accesses to this+0x300 and
+           shrinks this function 0x120 -> 0x114. The increment is an add of
+           the pooled offset 0x332; the sine index sign-extends a second load. */
+        unsigned short *phase = (unsigned short *)((int)ice + 0x332);
+        s16 angle;
+        s32 amp;
+        int sine;
+
+        *phase = (unsigned short)(*phase + kWobbleStep);
+        angle = *(s16 *)((char *)((char *)ice + 0x300) + 0x32);
+        amp = ice->mWobbleAmp;
+        sine = data_02082214[(((int)((unsigned)(angle << 16) >> 16)) >> 4) * 2];
+        ice->mAngleX = (s16)(amp + (int)(((long long)amp * sine + 0x800) >> 12));
+        ApproachLinear(ice->mWobbleAmp, 0, kWobbleApproach);
         return 1;
     }
-    *(short *)(c + 0x8c) = 0;
-    *(int *)(c + 0x9c) = -0xa000;
-    ((dActor_c *)c)->UpdatePos(0);
-    if (*(unsigned char *)(c + 0x32c) != 0) goto end;
+    ice->mAngleX = 0;
+    ice->mVertAccel = -kFallAccel;
+    ice->UpdatePos(0);
+    if (ice->mVariant != 0)
+        goto done;
     {
-        int v = data_02092138 + 0x96000;
-        if (v <= *(int *)(c + 0x60)) goto end;
-        *(int *)(c + 0x60) = v;
-        *(short *)(c + 0x330) = 0;
-        *(int *)(c + 0x9c) = 0;
-        *(int *)(c + 0xa8) = 0;
-        func_ov073_021223a4((C *)c, (PMF *)&data_ov073_021234a0);
+        int surface = data_02092138 + kSurfaceAboveVoid;
+        if (surface <= ice->mPosY)
+            goto done;
+        ice->mPosY = surface;
+        ice->mTimer = 0;
+        ice->mVertAccel = 0;
+        ice->mVertSpeed = 0;
+        func_ov073_021223a4(ice, &data_ov073_021234a0);
     }
-end:
+done:
     return 1;
 }
 
 // @symbol func_ov073_021221e0
-extern "C" int func_ov073_021221e0(char *c)
+/* Arena enter: a short timer, then fall no faster than 200 units/frame. */
+extern "C" int func_ov073_021221e0(daObjEwbIce_c *ice)
 {
-    *(short *)(c + 0x330) = 0x64;
-    *(int *)(c + 0xa0) = -0xc8000;
+    ice->mTimer = kArenaFrames;
+    ice->mTerminalVelocity = -kDeathBelowVoid;
     return 1;
 }
 
 // @symbol func_ov073_02122200
-extern "C" int func_ov073_02122200(char *thiz)
+/* Big/small update. Hold still, creak, tilt, then destroy at the datum. */
+extern "C" int func_ov073_02122200(daObjEwbIce_c *ice)
 {
-    char *c = thiz;
-    ((dActor_c *)c)->UpdatePos(0);
-    if (*(unsigned short *)(c + 0x330) < 0x18d) {
-        *(int *)(c + 0x9c) = 0;
-        *(int *)(c + 0xa8) = 0;
-        if (*(unsigned short *)(c + 0x330) == 0x183)
-            func_02012694(0x171, *(Vector3 *)(c + 0x74));
-        if (*(unsigned short *)(c + 0x330) < 0x183) {
-            *(int *)(c + 0x9c) = -0xa000;
-            _Z14ApproachLinearRsss(*(short *)(c + 0x8c), 0x2000, 0x80);
+    ice->UpdatePos(0);
+    if (ice->mTimer < kSinkQuietBelow) {
+        ice->mVertAccel = 0;
+        ice->mVertSpeed = 0;
+        if (ice->mTimer == kSinkSoundAt)
+            func_02012694(0x171, (const Vector3 *)&ice->mCamSpacePosX);
+        if (ice->mTimer < kSinkSoundAt) {
+            ice->mVertAccel = -kFallAccel;
+            ApproachLinear(ice->mAngleX, kTiltTarget, kTiltStep);
         }
     }
-    if (DecIfAbove0_Short((unsigned short *)(c + 0x330)) == 0 ||
-        data_02092138 - 0xc8000 > *(int *)(c + 0x60)) {
-        ((fBase_c *)c)->MarkForDestruction();
+    if (DecIfAbove0_Short(&ice->mTimer) == 0 ||
+        data_02092138 - kDeathBelowVoid > ice->mPosY) {
+        ice->MarkForDestruction();
     }
     return 1;
 }
 
 // @symbol func_ov073_021222c8
-extern "C" int func_ov073_021222c8(void *c)
+/* Big/small enter: long timer, accel and terminal both -20 units/frame. */
+extern "C" int func_ov073_021222c8(daObjEwbIce_c *ice)
 {
-    *(unsigned short *)((char *)c + 0x330) = 0x190;
-    int neg = -0x14000;
-    *(int *)((char *)c + 0x9c) = neg;
-    *(int *)((char *)c + 0xa0) = neg;
+    int neg = -kSinkSpeed;
+    ice->mTimer = kSinkFrames;
+    ice->mVertAccel = neg;
+    ice->mTerminalVelocity = neg;
     return 1;
 }
 
 // @symbol func_ov073_021222ec
-extern "C" int func_ov073_021222ec(char *c)
+/* Initial update. The frame the timer reads 1, tell Chief Chilly where this piece is. */
+extern "C" int func_ov073_021222ec(daObjEwbIce_c *ice)
 {
-    if (DecIfAbove0_Short((unsigned short *)(c + 0x330)) == 1) {
-        char *a = (char *)dActor_c::FindWithActorID(0xda, 0);
-        if (a != 0) {
-            switch (*(u16 *)(c + 0xc)) {
-            case 0xaa:
-                *(int *)(c + 0x334) = *(int *)(a + 4);
+    if (DecIfAbove0_Short(&ice->mTimer) == 1) {
+        /* mWaypointsA/B[mSpawnIndex] = pos recomputes the address per
+           component (0xb0 -> 0xc8). One scaled pointer, then +0x3e8 / +0x448,
+           is what the cartridge stores. uniqueID is boss+4. */
+        char *boss = (char *)dActor_c::FindWithActorID(ACTOR_KING_DONKETU, 0);
+        if (boss != 0) {
+            switch (ice->actorID) {
+            case ACTOR_EWB_ICE_A:
+                ice->mBossID = *(s32 *)(boss + 4);
                 break;
-            case 0xab: {
-                char *p = a + (*(unsigned char *)(c + 0x32d)) * 0xc;
-                *(int *)(p + 0x3e8) = *(int *)(c + 0x5c);
-                *(int *)(p + 0x3ec) = *(int *)(c + 0x60);
-                *(int *)(p + 0x3f0) = *(int *)(c + 0x64);
+            case ACTOR_EWB_ICE_B: {
+                char *slot = boss + ice->mSpawnIndex * 0xc;
+                *(s32 *)(slot + 0x3e8) = ice->mPosX;
+                *(s32 *)(slot + 0x3ec) = ice->mPosY;
+                *(s32 *)(slot + 0x3f0) = ice->mPosZ;
                 break;
             }
-            case 0xac: {
-                char *p = a + (*(unsigned char *)(c + 0x32d)) * 0xc;
-                *(int *)(p + 0x448) = *(int *)(c + 0x5c);
-                *(int *)(p + 0x44c) = *(int *)(c + 0x60);
-                *(int *)(p + 0x450) = *(int *)(c + 0x64);
+            case ACTOR_EWB_ICE_C: {
+                char *slot = boss + ice->mSpawnIndex * 0xc;
+                *(s32 *)(slot + 0x448) = ice->mPosX;
+                *(s32 *)(slot + 0x44c) = ice->mPosY;
+                *(s32 *)(slot + 0x450) = ice->mPosZ;
                 break;
             }
             }
@@ -210,76 +254,60 @@ extern "C" int func_ov073_021222ec(char *c)
 }
 
 // @symbol func_ov073_0212239c
+/* Enter the initial state. The report timer was armed in InitResources. */
 extern "C" int func_ov073_0212239c(void)
 {
     return 1;
 }
 
 // @symbol func_ov073_021223a4
-extern "C" int func_ov073_021223a4(C *c, PMF *p)
+extern "C" int func_ov073_021223a4(daObjEwbIce_c *ice, daObjEwbIce_State *state)
 {
-    c->pp = p;
-    PMF *q = c->pp;
-    if (*q == 0) return 1;
-    return (c->**q)();
+    ice->mState = state;
+    if (ice->mState->enter == 0)
+        return 1;
+    return (ice->*(ice->mState->enter))();
 }
 
 // @symbol _ZN13daObjEwbIce_c4KillEv
-/* Slot 31, attributed by the vtable: _ZTV13daObjEwbIce_c + 4*31 =
- * 0x021231e8 + 0x7c = 0x02123264; ov073 relocs.txt: 0x02123264 -> 0x021223f4.
- * Not the key function. */
 void daObjEwbIce_c::Kill()
 {
-    char *c = (char *)this;
-    Vector3 vec;
-    Vector3 vec2;
-    vec.x = *(int *)(c + 0x5c);
-    vec.y = *(int *)(c + 0x60);
-    vec.z = *(int *)(c + 0x64);
-    vec.y += 0x32000;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xa, vec.x, vec.y, vec.z);
-    ((int *)&vec2)[0] = ((int *)&vec)[0];
-    ((int *)&vec2)[1] = ((int *)&vec)[1];
-    ((int *)&vec2)[2] = ((int *)&vec)[2];
-    ((dActor_c *)c)->PoofDustAt(vec2);
-    _ZN5Sound9PlayBank3EjRK7Vector3(0x41, *(Vector3 *)(c + 0x74));
+    Vector3 pos;
+    Vector3 dust;
+
+    pos.x = mPosX;
+    pos.y = mPosY;
+    pos.z = mPosZ;
+    pos.y += kKillRise;
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xa, pos.x, pos.y, pos.z);
+    dust = pos;
+    PoofDustAt(dust);
+    Sound::PlayBank3(0x41, *(const Vector3 *)&mCamSpacePosX);
 }
 
 // @symbol _ZN13daObjEwbIce_c16CleanupResourcesEv
 int daObjEwbIce_c::CleanupResources()
 {
-    if (((dBgW *)((char *)&mMeshCollider))->IsEnabled())
-        ((dBgW *)((char *)&mMeshCollider))->Disable();
-    ((SharedFilePtr *)(*(void **)(data_ov073_021231bc + mVariant * 0xc)))->Release();
-    ((SharedFilePtr *)(*(void **)(data_ov073_021231c0 + mVariant * 0xc)))->Release();
+    if (mMeshCollider.IsEnabled())
+        mMeshCollider.Disable();
+    ((EwbIceFileSlot *)data_ov073_021231bc)[mVariant].file->Release();
+    ((EwbIceFileSlot *)data_ov073_021231c0)[mVariant].file->Release();
     return 1;
 }
 
 // @symbol _ZN13daObjEwbIce_c6RenderEv
 int daObjEwbIce_c::Render()
 {
-    Base *b = &((Derived *)this)->base;
-    b->m(0);
+    mModel.Render(0);
     return 1;
 }
 
 // @symbol _ZN13daObjEwbIce_c8BehaviorEv
 int daObjEwbIce_c::Behavior()
 {
-    void *o = *(void **)&mState;
-    if (*(int *)((char *)o + 8)) {
-        char *base = (char *)o + 8;
-        int adj = *(int *)(base + 4);
-        char *self = ((char *)this) + (adj >> 1);
-        void *fn;
-        if (adj & 1) {
-            void *vt = *(void **)self;
-            fn = *(void **)((char *)vt + *(int *)base);
-        } else
-            fn = *(void **)base;
-        ((void (*)(char *))fn)(self);
-    }
-    Matrix4x3_FromRotationXYZExt(((char *)this) + 0xf0, mAngleX, mAngleY, mAngleZ);
+    if (mState->update != 0)
+        (this->*(mState->update))();
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
     mModel.mat4x3.t.z = mPosZ >> 3;
@@ -290,51 +318,51 @@ int daObjEwbIce_c::Behavior()
 // @symbol _ZN13daObjEwbIce_c13InitResourcesEv
 int daObjEwbIce_c::InitResources()
 {
-    unsigned char idx;
-    int f;
+    BMD_File *bmd;
+    KCL_File *kcl;
 
     switch (actorID) {
-        case 0xaa:
-            unk_330 = 3;
-            mVariant = 0;
-            break;
-        case 0xab:
-            unk_330 = 3;
-            mSpawnIndex = data_ov073_02123424[0];
-            data_ov073_02123424[0]++;
-            mVariant = 1;
-            break;
-        case 0xac:
-            unk_330 = 3;
-            mSpawnIndex = data_ov073_02123420[0];
-            data_ov073_02123420[0]++;
-            mVariant = 2;
-            break;
+    case ACTOR_EWB_ICE_A:
+        mTimer = kReportFrames;
+        mVariant = 0;
+        break;
+    case ACTOR_EWB_ICE_B:
+        mTimer = kReportFrames;
+        mSpawnIndex = data_ov073_02123424[0];
+        data_ov073_02123424[0]++;
+        mVariant = 1;
+        break;
+    case ACTOR_EWB_ICE_C:
+        mTimer = kReportFrames;
+        mSpawnIndex = data_ov073_02123420[0];
+        data_ov073_02123420[0]++;
+        mVariant = 2;
+        break;
     }
 
-    idx = mVariant;
-    f = (int)Model::LoadFile(**(SharedFilePtr **)(data_ov073_021231bc + idx * 0xc));
-    mModel.SetFile((BMD_File *)f, 1, -1);
-    Matrix4x3_FromRotationXYZExt(((char *)this) + 0xf0, mAngleX, mAngleY, mAngleZ);
+    bmd = (BMD_File *)Model::LoadFile(*((EwbIceFileSlot *)data_ov073_021231bc)[mVariant].file);
+    mModel.SetFile(bmd, 1, -1);
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
     mModel.mat4x3.t.z = mPosZ >> 3;
     UpdateClsnPosAndRot();
 
+    /* mVariant reloaded after LoadFile is a second mul (0x1b8 -> 0x1c4).
+       The byte has to stay live in a register across the call. */
     {
-        unsigned char i = mVariant;
-        f = (int)dBgW_Kc::LoadFile(**(SharedFilePtr **)(data_ov073_021231c0 + i * 0xc));
+        u8 variant = mVariant;
+        kcl = (KCL_File *)dBgW_Kc::LoadFile(*((EwbIceFileSlot *)data_ov073_021231c0)[variant].file);
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            ((char *)this) + 0x124, f, ((char *)this) + 0x2ec, 0x1000, mAngleY, *(int *)(data_ov073_021231c4 + i * 0xc));
+            &mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY,
+            ((EwbIceClpsSlot *)data_ov073_021231c4)[variant].clps);
     }
-
-    func_020393d4(((char *)this) + 0x124, (void *)&dBgW::UpdatePosWithTransform);
-    func_020393c4(((char *)this) + 0x124, func_ov073_021227d0);
-    ((dBgW *)(((char *)this) + 0x124))->Enable((dActor_c *)(((char *)this)));
+    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
+    func_020393c4(&mMeshCollider, (void *)func_ov073_021227d0);
+    mMeshCollider.Enable(this);
 
     unk_338 = 0;
-    unk_334 = 0;
-    func_ov073_021223a4((C *)((char *)this), (PMF *)&data_ov073_021234b0);
-
+    mBossID = 0;
+    func_ov073_021223a4(this, (daObjEwbIce_State *)&data_ov073_021234b0);
     return 1;
 }

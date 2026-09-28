@@ -149,15 +149,7 @@ int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, s3
 void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *a, int r, int h, unsigned int d, unsigned int e);
 void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, int a, int b, int c, int d, int e);
 
-void func_ov064_02115f98(daOts_c* a0, char* a1);
-void func_ov064_02116220(daOts_c* c);
 void func_ov064_021163c0(char *c);
-void func_ov064_02116460(daOts_c *self);
-int func_ov064_02116560(daOts_c* c);
-void func_ov064_021165d8(daOts_c* c);
-int func_ov064_021166f0(daOts_c *t);
-void func_ov064_02116754(daOts_c* self);
-void func_ov064_02116bac(daOts_c* self);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -269,33 +261,33 @@ int daOts_c::BehaviorCommon()
     *(int *)(thiz + 0x3a0) = mPosY;
     *(int *)(thiz + 0x3a4) = mPosZ;
     MakeVanishLuigiWork(mdCcAc_c);
-    func_ov064_02116754(this);
+    func_ov064_02116754();
 
     switch (*(int *)(thiz + 0x398)) {
     case 0:
         mHorzSpeed = 0x5000;
-        if (func_ov064_021166f0(this) != 0) {
+        if (func_ov064_021166f0() != 0) {
             *(int *)(thiz + 0x398) = 1;
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim,
                 *(BCA_File **)((char *)((BullyResourceConfig *)mFileTable)->files[4] + 4),
                 0, 0x2000, 0);
         }
-        func_ov064_021165d8(this);
+        func_ov064_021165d8();
         mAngleY = mPrevAngleY;
         break;
     case 1:
-        func_ov064_02116560(this);
-        func_ov064_021165d8(this);
+        func_ov064_02116560();
+        func_ov064_021165d8();
         mAngleY = mPrevAngleY;
         *(int *)(thiz + 0x16c) = 0x2000;
         break;
     case 2:
-        func_ov064_02116460(this);
-        func_ov064_021165d8(this);
+        func_ov064_02116460();
+        func_ov064_021165d8();
         break;
     case 3:
         func_ov064_021163c0(thiz);
-        func_ov064_021165d8(this);
+        func_ov064_021165d8();
         break;
     case 4:
         UpdateDeathState();
@@ -312,7 +304,7 @@ int daOts_c::BehaviorCommon()
     *p100 = *p100 + 1;
     if (four != *(int *)(thiz + 0x398))
         *p100 = 0;
-    func_ov064_02116bac(this);
+    func_ov064_02116bac();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -361,35 +353,37 @@ int daOts_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-extern "C" void func_ov064_02116bac(daOts_c* self){
-  char* raw = (char*)self;
-  Matrix4x3_FromRotationY(&self->mModelAnim.mat4x3, self->mAngleY);
-  self->mModelAnim.mat4x3.t.x = self->mPosX >> 3;
-  self->mModelAnim.mat4x3.t.y = (self->mPosY + *(int*)(raw+0x3ec)) >> 3;
-  self->mModelAnim.mat4x3.t.z = self->mPosZ >> 3;
-  int d = self->mPosY - *(int*)(raw+0x3f4);
+// @symbol _ZN7daOts_c19func_ov064_02116bacEv
+void daOts_c::func_ov064_02116bac(){
+  char* raw = (char*)this;
+  Matrix4x3_FromRotationY(&this->mModelAnim.mat4x3, this->mAngleY);
+  this->mModelAnim.mat4x3.t.x = this->mPosX >> 3;
+  this->mModelAnim.mat4x3.t.y = (this->mPosY + *(int*)(raw+0x3ec)) >> 3;
+  this->mModelAnim.mat4x3.t.z = this->mPosZ >> 3;
+  int d = this->mPosY - *(int*)(raw+0x3f4);
   if(d <= 0x1000) d = 0x1000;
   int rad = (int)(((long long)d * 0x180 + 0x800) >> 12);
   int h = *(int*)(raw+0x3f0) - rad;
   if(h < 0xa000) h = 0xa000;
-  Matrix4x3_FromRotationY(raw+0x3b4, self->mAngleY);
-  *(int*)(raw+0x3d8) = self->mPosX >> 3;
-  *(int*)(raw+0x3dc) = self->mPosY >> 3;
-  *(int*)(raw+0x3e0) = self->mPosZ >> 3;
-  _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(self, &self->mShadowModel, raw+0x3b4, h, d+0x28000, 0xf);
+  Matrix4x3_FromRotationY(raw+0x3b4, this->mAngleY);
+  *(int*)(raw+0x3d8) = this->mPosX >> 3;
+  *(int*)(raw+0x3dc) = this->mPosY >> 3;
+  *(int*)(raw+0x3e0) = this->mPosZ >> 3;
+  _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(this, &this->mShadowModel, raw+0x3b4, h, d+0x28000, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */
-extern "C" void func_ov064_02116754(daOts_c* self)
+// @symbol _ZN7daOts_c19func_ov064_02116754Ev
+void daOts_c::func_ov064_02116754()
 {
     dActor_c* hitPlayer;
     s32 hitFlags;
     u32 id;
-    char* c = (char*)self;
+    char* c = (char*)this;
 
     if (*(s32*)(c + 0x398) == 2)
         return;
-    id = self->mdCcAc_c.otherOwner;
+    id = this->mdCcAc_c.otherOwner;
     if (id == 0)
         return;
 
@@ -403,80 +397,80 @@ extern "C" void func_ov064_02116754(daOts_c* self)
             return;
     }
 
-    hitFlags = (s32)self->mdCcAc_c.hitFlags;
+    hitFlags = (s32)this->mdCcAc_c.hitFlags;
     if ((hitFlags & 0x7c0) || *(u8*)((char*)hitPlayer + 0x6f9) != 0) {
-        self->mPrevAngleY = hitPlayer->mAngleY;
+        this->mPrevAngleY = hitPlayer->mAngleY;
         if (hitPlayer->param1 == 2)
-            self->mHorzSpeed = 0x32000;
+            this->mHorzSpeed = 0x32000;
         else
-            self->mHorzSpeed = 0x28000;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, *(BCA_File**)((char*)((BullyResourceConfig *)self->mFileTable)->files[2] + 4), 0, 0x1000, 0);
-        func_ov064_02115f98(self, (char*)hitPlayer);
+            this->mHorzSpeed = 0x28000;
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, *(BCA_File**)((char*)((BullyResourceConfig *)this->mFileTable)->files[2] + 4), 0, 0x1000, 0);
+        func_ov064_02115f98((char*)hitPlayer);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        self->PlayHitSound();
+        this->PlayHitSound();
         return;
     }
 
     if (hitFlags & 0x2000) {
-        self->mPrevAngleY = hitPlayer->mPrevAngleY;
-        self->mHorzSpeed = 0x28000;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, *(BCA_File**)((char*)((BullyResourceConfig *)self->mFileTable)->files[2] + 4), 0, 0x1000, 0);
-        func_ov064_02115f98(self, (char*)hitPlayer);
+        this->mPrevAngleY = hitPlayer->mPrevAngleY;
+        this->mHorzSpeed = 0x28000;
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, *(BCA_File**)((char*)((BullyResourceConfig *)this->mFileTable)->files[2] + 4), 0, 0x1000, 0);
+        func_ov064_02115f98((char*)hitPlayer);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        self->PlayHitSound();
+        this->PlayHitSound();
         return;
     }
 
     {
-        int isD8 = (int)(self->actorID == 0xd8);
+        int isD8 = (int)(this->actorID == 0xd8);
         if (!isD8 && (hitFlags & 0x10)) {
             s16 v[3];
             v[0] = 0x2000;
             v[1] = 0;
             v[2] = 0;
-            _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(self, v, hitPlayer, ((BullyResourceConfig *)self->mFileTable)->eggAimHeight);
-            self->PlayHitSound();
+            _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(this, v, hitPlayer, ((BullyResourceConfig *)this->mFileTable)->eggAimHeight);
+            this->PlayHitSound();
             return;
         }
     }
 
     if (hitFlags & 0x40000) {
-        self->mPrevAngleY = hitPlayer->mAngleY;
-        self->mHorzSpeed = 0x39800;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, *(BCA_File**)((char*)((BullyResourceConfig *)self->mFileTable)->files[2] + 4), 0, 0x1000, 0);
-        func_ov064_02115f98(self, (char*)hitPlayer);
+        this->mPrevAngleY = hitPlayer->mAngleY;
+        this->mHorzSpeed = 0x39800;
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, *(BCA_File**)((char*)((BullyResourceConfig *)this->mFileTable)->files[2] + 4), 0, 0x1000, 0);
+        func_ov064_02115f98((char*)hitPlayer);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        self->PlayHitSound();
+        this->PlayHitSound();
         return;
     }
 
-    if (self->JumpedOnByPlayer(self->mdCcAc_c, *(Player *)hitPlayer) != 0) {
-        self->mPrevAngleY = hitPlayer->mAngleY;
+    if (this->JumpedOnByPlayer(this->mdCcAc_c, *(Player *)hitPlayer) != 0) {
+        this->mPrevAngleY = hitPlayer->mAngleY;
         if (hitPlayer->param1 == 2)
-            self->mHorzSpeed = 0x32000;
+            this->mHorzSpeed = 0x32000;
         else
-            self->mHorzSpeed = 0x28000;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, *(BCA_File**)((char*)((BullyResourceConfig *)self->mFileTable)->files[2] + 4), 0, 0x1000, 0);
-        func_ov064_02115f98(self, (char*)hitPlayer);
+            this->mHorzSpeed = 0x28000;
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, *(BCA_File**)((char*)((BullyResourceConfig *)this->mFileTable)->files[2] + 4), 0, 0x1000, 0);
+        func_ov064_02115f98((char*)hitPlayer);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        self->PlayHitSound();
+        this->PlayHitSound();
         return;
     }
 
     if (((Player *)hitPlayer)->IsOnShell() != 0) {
-        hitPlayer->mHorzSpeed = -self->mHorzSpeed;
-        self->mPrevAngleY = (s16)(self->mAngleY + 0x8000);
-        self->mHorzSpeed = 0x28000;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, *(BCA_File**)((char*)((BullyResourceConfig *)self->mFileTable)->files[4] + 4), 0, 0x1000, 0);
-        self->PlayShellHitSound();
-        func_ov064_02115f98(self, (char*)hitPlayer);
+        hitPlayer->mHorzSpeed = -this->mHorzSpeed;
+        this->mPrevAngleY = (s16)(this->mAngleY + 0x8000);
+        this->mHorzSpeed = 0x28000;
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, *(BCA_File**)((char*)((BullyResourceConfig *)this->mFileTable)->files[4] + 4), 0, 0x1000, 0);
+        this->PlayShellHitSound();
+        func_ov064_02115f98((char*)hitPlayer);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        self->PlayHitSound();
+        this->PlayHitSound();
         return;
     }
 
@@ -485,79 +479,78 @@ extern "C" void func_ov064_02116754(daOts_c* self)
 
     *(s32*)(c + 0x398) = 2;
     *(u8*)(c + 0x3f9) = 0;
-    self->PlayHitSound();
+    this->PlayHitSound();
 
     {
         Vector3 v;
-        v.x = self->mPosX;
-        v.y = self->mPosY;
-        v.z = self->mPosZ;
+        v.x = this->mPosX;
+        v.y = this->mPosY;
+        v.z = this->mPosZ;
         if (_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(hitPlayer, &v, 0, 0x14000, 1, 0, 1) != 0) {
-            func_ov064_02115f98(self, (char*)hitPlayer);
+            func_ov064_02115f98((char*)hitPlayer);
         }
     }
 
-    self->mPrevAngleY = (s16)(self->mAngleY + 0x8000);
+    this->mPrevAngleY = (s16)(this->mAngleY + 0x8000);
     {
-        int isD8 = (int)(self->actorID == 0xd8);
+        int isD8 = (int)(this->actorID == 0xd8);
         if (!isD8)
-            self->mHorzSpeed = 0x14000;
+            this->mHorzSpeed = 0x14000;
         else
-            self->mHorzSpeed = 0xa000;
+            this->mHorzSpeed = 0xa000;
     }
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, *(BCA_File**)((char*)((BullyResourceConfig *)self->mFileTable)->files[4] + 4), 0, 0x1000, 0);
-    self->PlayShellHitSound();
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, *(BCA_File**)((char*)((BullyResourceConfig *)this->mFileTable)->files[4] + 4), 0, 0x1000, 0);
+    this->PlayShellHitSound();
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov064_021166f0
-extern "C" {
-int func_ov064_021166f0(daOts_c *t)
+// @symbol _ZN7daOts_c19func_ov064_021166f0Ev
+int daOts_c::func_ov064_021166f0()
 {
     Vector3 v;
-    char *c = (char *)t;
-    *(short *)(c + 0x3e4) = Vec3_HorzAngle((Vector3 *)&t->mPosX, (Vector3 *)(c + 0x3a8));
-    _Z14ApproachLinearRsss(t->mPrevAngleY, *(short *)(c + 0x3e4), 0x140);
+    char *c = (char *)this;
+    *(short *)(c + 0x3e4) = Vec3_HorzAngle((Vector3 *)&this->mPosX, (Vector3 *)(c + 0x3a8));
+    _Z14ApproachLinearRsss(this->mPrevAngleY, *(short *)(c + 0x3e4), 0x140);
     v.x = *(int *)(c + 0x3a8);
     v.y = *(int *)(c + 0x3ac);
     v.z = *(int *)(c + 0x3b0);
-    return t->IsPlayerInRange(v, 0x320);
-}
+    return this->IsPlayerInRange(v, 0x320);
 }
 
 /* -------------------------------------------------------------------------- */
-extern "C" void func_ov064_021165d8(daOts_c* c)
+// @symbol _ZN7daOts_c19func_ov064_021165d8Ev
+void daOts_c::func_ov064_021165d8()
 {
-    char *p = (char *)c;
-    c->UpdatePos(0);
+    char *p = (char *)this;
+    this->UpdatePos(0);
 
-    if (c->IsGoingOffCliff(
-            c->mWithMeshClsn,
-            ((BullyResourceConfig *)c->mFileTable)->cliffDown,
+    if (this->IsGoingOffCliff(
+            this->mWithMeshClsn,
+            ((BullyResourceConfig *)this->mFileTable)->cliffDown,
             0x2888, 0, 1, 0x32000) != 0
         && *(int*)(p + 0x398) != 2
         && *(int*)(p + 0x398) != 3) {
-        c->mPosX = *(int*)(p + 0x39c);
-        c->mPosZ = *(int*)(p + 0x3a4);
+        this->mPosX = *(int*)(p + 0x39c);
+        this->mPosZ = *(int*)(p + 0x3a4);
         *(int*)(p + 0x398) = 3;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &c->mModelAnim,
-            *(BCA_File**)((char*)((BullyResourceConfig *)c->mFileTable)->files[3] + 4),
+            &this->mModelAnim,
+            *(BCA_File**)((char*)((BullyResourceConfig *)this->mFileTable)->files[3] + 4),
             0, 0x1000, 0);
     }
 
-    c->UpdateWMClsn(c->mWithMeshClsn, 0);
+    this->UpdateWMClsn(this->mWithMeshClsn, 0);
 
-    if (c->mWithMeshClsn.IsOnGround() != 0
-        && _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(c, 0x5dc000) != 0) {
-        c->mFlags |= 1;
+    if (this->mWithMeshClsn.IsOnGround() != 0
+        && _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(this, 0x5dc000) != 0) {
+        this->mFlags |= 1;
     } else {
-        c->mFlags &= ~1;
+        this->mFlags &= ~1;
     }
 
-    c->PlayStepSound();
+    this->PlayStepSound();
 
-    func_ov064_02116220(c);
+    func_ov064_02116220();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -567,26 +560,28 @@ int daOts_c::UpdateRunState()
 }
 
 /* -------------------------------------------------------------------------- */
-extern "C" int func_ov064_02116560(daOts_c* c){
-  char *p = (char *)c;
-  c->UpdateRunState();
-  int r=_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i(c,*(int*)(p+0x3a8),c->mPosY,*(int*)(p+0x3b0),0x3e8);
+// @symbol _ZN7daOts_c19func_ov064_02116560Ev
+int daOts_c::func_ov064_02116560(){
+  char *p = (char *)this;
+  this->UpdateRunState();
+  int r=_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i(this,*(int*)(p+0x3a8),this->mPosY,*(int*)(p+0x3b0),0x3e8);
   if(r) return r;
   *(int*)(p+0x398)=0;
-  return _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, (BCA_File*)*(int*)((char*)((BullyResourceConfig *)c->mFileTable)->files[4] + 4), 0, 0x1000, 0);
+  return _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, (BCA_File*)*(int*)((char*)((BullyResourceConfig *)this->mFileTable)->files[4] + 4), 0, 0x1000, 0);
 }
 
 /* -------------------------------------------------------------------------- */
-extern "C" void func_ov064_02116460(daOts_c *self)
+// @symbol _ZN7daOts_c19func_ov064_02116460Ev
+void daOts_c::func_ov064_02116460()
 {
-    char *c = (char *)self;
-    if (_Z14ApproachLinearRiii(&self->mHorzSpeed, 0, *(int *)(c + 0x3e8)) != 0) {
-        int b = (self->actorID == 0xd8);
+    char *c = (char *)this;
+    if (_Z14ApproachLinearRiii(&this->mHorzSpeed, 0, *(int *)(c + 0x3e8)) != 0) {
+        int b = (this->actorID == 0xd8);
         int lim = b ? 0x14 : 0xa;
         if (*(unsigned char *)(c + 0x3f9) < 2) {
-            if (self->mWithMeshClsn.IsOnGround()) {
+            if (this->mWithMeshClsn.IsOnGround()) {
                 unsigned char *p = (unsigned char *)(c + 0x3f9);
-                self->mVertSpeed = 0xf000;
+                this->mVertSpeed = 0xf000;
                 *p = *p + 1;
             }
             *(short *)(c + 0x100) = 0;
@@ -595,10 +590,10 @@ extern "C" void func_ov064_02116460(daOts_c *self)
         if (*(unsigned short *)(c + 0x100) < (unsigned int)lim)
             return;
         *(int *)(c + 0x398) = 1;
-        self->mPrevAngleY = self->mAngleY;
+        this->mPrevAngleY = this->mAngleY;
         {
-            BCA_File *anim = (BCA_File *)*(int *)((char *)((BullyResourceConfig *)self->mFileTable)->files[4] + 4);
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, anim, 0, 0x2000, 0);
+            BCA_File *anim = (BCA_File *)*(int *)((char *)((BullyResourceConfig *)this->mFileTable)->files[4] + 4);
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, anim, 0, 0x2000, 0);
         }
         return;
     }
@@ -664,36 +659,37 @@ void daOts_c::PlayDeathSound()
 }
 
 /* -------------------------------------------------------------------------- */
-extern "C" void func_ov064_02116220(daOts_c* c){
+// @symbol _ZN7daOts_c19func_ov064_02116220Ev
+void daOts_c::func_ov064_02116220(){
   dBgCh_Gnd rg;
   Vector3 v;
-  char *p = (char *)c;
-  int y = c->mPosY;
+  char *p = (char *)this;
+  int y = this->mPosY;
   int yoff = *(int*)(p+0x3ec);
-  int z = c->mPosZ;
-  int x = c->mPosX;
+  int z = this->mPosZ;
+  int x = this->mPosX;
   int sum = y + yoff;
   int yv = sum + 0x96000;
   v.x = x;
   v.y = yv;
   v.z = z;
 
-  rg.SetObjAndPos(v, c);
+  rg.SetObjAndPos(v, this);
   if (rg.DetectClsn() != 0) {
     *(int*)(p+0x3f4) = rg.clsnY;
-    if (c->mPosY <= rg.clsnY + 0x14000) {
+    if (this->mPosY <= rg.clsnY + 0x14000) {
       int r = func_02037e38((unsigned int*)&rg.surface);
       if (r == 4 || r == 5 || r == 0x13) {
         *(int*)(p+0x398) = 5;
       } else if (r == 1) {
         *(int*)(p+0x398) = 4;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim,
-            *(BCA_File**)((char*)((BullyResourceConfig *)c->mFileTable)->files[1] + 4), 0, 0x1000, 0);
-        c->mFlags &= ~1u;
-        c->PlayDeathSound();
-        *(int*)(p+0x3a8) = c->mPosX;
-        *(int*)(p+0x3ac) = c->mPosY;
-        *(int*)(p+0x3b0) = c->mPosZ;
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim,
+            *(BCA_File**)((char*)((BullyResourceConfig *)this->mFileTable)->files[1] + 4), 0, 0x1000, 0);
+        this->mFlags &= ~1u;
+        this->PlayDeathSound();
+        *(int*)(p+0x3a8) = this->mPosX;
+        *(int*)(p+0x3ac) = this->mPosY;
+        *(int*)(p+0x3b0) = this->mPosZ;
         *(int*)(p+0x3ac) = rg.clsnY + 0x5000;
       }
     }
@@ -701,26 +697,26 @@ extern "C" void func_ov064_02116220(daOts_c* c){
 }
 
 /* -------------------------------------------------------------------------- */
-extern "C" {
-int func_ov064_0211616c(daOts_c* c) {
-    char *p = (char *)c;
+// @symbol _ZN7daOts_c19func_ov064_0211616cEv
+int daOts_c::func_ov064_0211616c() {
+    char *p = (char *)this;
     /* mStateTimer is s16; the ROM compares ldrh (unsigned). Named signed > DIFFs. */
-    if (*(unsigned short *)((char *)c + 0x100) > 0x1e) {
-        c->MarkForDestruction();
+    if (*(unsigned short *)((char *)this + 0x100) > 0x1e) {
+        this->MarkForDestruction();
         return 1;
     }
-    c->mPosY = c->mPosY - 0x5000;
-    c->mParticle0 = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        c->mParticle0,
-        ((BullyResourceConfig *)c->mFileTable)->particleId,
+    this->mPosY = this->mPosY - 0x5000;
+    this->mParticle0 = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        this->mParticle0,
+        ((BullyResourceConfig *)this->mFileTable)->particleId,
         *(Fix12i*)(p + 0x3a8),
         *(Fix12i*)(p + 0x3ac),
         *(Fix12i*)(p + 0x3b0),
         (const Vector3_16f*)0,
         (struct Callback*)0);
-    c->mParticle1 = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        c->mParticle1,
-        ((BullyResourceConfig *)c->mFileTable)->particleId + 1,
+    this->mParticle1 = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        this->mParticle1,
+        ((BullyResourceConfig *)this->mFileTable)->particleId + 1,
         *(Fix12i*)(p + 0x3a8),
         *(Fix12i*)(p + 0x3ac),
         *(Fix12i*)(p + 0x3b0),
@@ -728,22 +724,21 @@ int func_ov064_0211616c(daOts_c* c) {
         (struct Callback*)0);
     return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov064_02116110
-extern "C" int func_ov064_02116110(daOts_c *self, short step){
-    dActor_c *p = (dActor_c *)self->ClosestPlayer();
+// @symbol _ZN7daOts_c19func_ov064_02116110Es
+int daOts_c::func_ov064_02116110(short step){
+    dActor_c *p = (dActor_c *)this->ClosestPlayer();
     if(p != 0){
-        short ang = Vec3_HorzAngle((const Vector3*)&self->mPosX,(const Vector3*)&p->mPosX);
-        if(_Z14ApproachLinearRsss(self->mPrevAngleY, ang, step)) return 1;
+        short ang = Vec3_HorzAngle((const Vector3*)&this->mPosX,(const Vector3*)&p->mPosX);
+        if(_Z14ApproachLinearRsss(this->mPrevAngleY, ang, step)) return 1;
     }
     return 0;
 }
 
 /* -------------------------------------------------------------------------- */
-extern "C" {
-void func_ov064_02115f98(daOts_c* a0, char* a1)
+// @symbol _ZN7daOts_c19func_ov064_02115f98EPc
+void daOts_c::func_ov064_02115f98(char* a1)
 {
     int scratch[3];
     int pos0[3];
@@ -758,20 +753,20 @@ void func_ov064_02115f98(daOts_c* a0, char* a1)
     int y0;
     int* p1;
     int tmpy;
-    char *c = (char *)a0;
+    char *c = (char *)this;
 
     p1 = (int*)&((dActor_c *)a1)->mPosX;
-    pos0[0] = a0->mPosX;
-    y0 = a0->mPosY;
+    pos0[0] = this->mPosX;
+    y0 = this->mPosY;
     pos0[1] = y0;
-    pos0[2] = a0->mPosZ;
+    pos0[2] = this->mPosZ;
     pos1[0] = *p1;
     tmpy = p1[1];
     pos1[1] = tmpy;
     pos1[2] = p1[2];
     tmpy = tmpy + 0x46000;
 
-    scale = ((BullyResourceConfig *)a0->mFileTable)->knockbackScale;
+    scale = ((BullyResourceConfig *)this->mFileTable)->knockbackScale;
     pos0[1] = y0 + *(int*)(c + 0x3ec);
     pos1[1] = tmpy;
 
@@ -816,7 +811,6 @@ void func_ov064_02115f98(daOts_c* a0, char* a1)
     pos0[2] = pos0[2] + t1;
 
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xf6, pos0[0], pos0[1], pos0[2]);
-}
 }
 
 /* -------------------------------------------------------------------------- */

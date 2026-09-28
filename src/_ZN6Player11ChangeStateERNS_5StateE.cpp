@@ -12,7 +12,6 @@
 #include "Player.h"
 extern "C" {
 extern void func_ov002_020d4540(void *p);
-extern void func_ov002_020c9e18(void *c);
 extern void func_0200d81c(void *thiz, int playerID);
 
 extern void *data_0209f318;
@@ -105,7 +104,7 @@ int Player::ChangeState(State &state) {
     func_ov002_020d4540(this);
 
     mIsTakingDamage = 0;
-    func_ov002_020c9e18(this);
+    func_ov002_020c9e18();
 
     func_ov002_020e6780((char *)this);
 

@@ -44,7 +44,6 @@
 #include "dBgCh_Gnd.h"
 
 extern "C" {
-extern int func_ov064_0211616c(void *self);
 extern int _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void* a, u16* p);
 extern s16 data_02082214[];
 }
@@ -151,7 +150,7 @@ int daBDonketu_c::Behavior()
             q = (u8*)(((int)((char*)this) + 0x3fe));
             *q = *q + 1;
         }
-        func_ov064_02116bac(((char*)this));
+        func_ov064_02116bac();
     }
     return 1;
 }
@@ -174,7 +173,7 @@ int daBDonketu_c::Render()
 // @symbol _ZN12daBDonketu_c16UpdateDeathStateEv
 void daBDonketu_c::UpdateDeathState()
 {
-    int result = func_ov064_0211616c(this);
+    int result = func_ov064_0211616c();
     if (result == 0)
         return;
     TriplePoofDust();
@@ -194,7 +193,7 @@ int daBDonketu_c::UpdateRunState()
 {
     if (*(u16 *)&mStateTimer < 0xa) {
         mHorzSpeed = 0;
-        int result = func_ov064_02116110((char *)this, 0x700);
+        int result = func_ov064_02116110(0x700);
         if (result != 0)
             return result;
         u16 *timer = (u16 *)&mStateTimer;

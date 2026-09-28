@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+struct Player;
 struct Obj {
   virtual int v0(); virtual int v1(); virtual int v2(); virtual int v3();
   virtual int v4(); virtual int v5(); virtual int v6(); virtual int v7();
@@ -12,7 +13,7 @@ extern "C" {
 extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* s);
 extern int _ZN6Player7IsStateERNS_5StateE(char* c, void* s);
 extern void Player_DisableInteraction(char* c);
-extern void func_ov002_020d7430(char* c);
+extern void func_ov002_020d7430(Player& player);
 extern void func_ov002_020d8118(char* c);
 
 extern char data_ov002_02110034;
@@ -49,7 +50,7 @@ isbf_ret0:
     switch (o->v18()) {
     case 2:
     case 4:
-        func_ov002_020d7430(self);
+        func_ov002_020d7430(*reinterpret_cast<Player*>(self));
         goto ret0;
     case 5: {
         int eq132 = (*(u16*)((char*)(*(Obj**)(self + 0x360)) + 0xc) == 0x132);

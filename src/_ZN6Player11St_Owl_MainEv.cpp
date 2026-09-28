@@ -11,7 +11,6 @@ extern int ApproachAngle(short* cur, short target, int divisor, int band, int ma
 extern void func_0201f32c(int a);
 extern void func_0200d3f8(void* thiz, unsigned char playerID, void* ptr);
 extern void Player_DisableInteraction(char* c);
-extern void func_ov002_020c9e18(char* c);
 extern int _ZN6Player12FinishedAnimEv(void* c);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void* c, unsigned int a, int b, int d, unsigned int e);
 extern void Player_AdvanceAnims(void* c);
@@ -107,7 +106,7 @@ int Player::St_Owl_Main()
         if ((*(int*)(data_0209f318 + 0x154) & 0x8000) == 0) {
             mStateStep = 4;
             mStateTimer = 0x3c;
-            func_ov002_020c9e18(((char*)this));
+            func_ov002_020c9e18();
             unk_724 = 0;
         }
         break;

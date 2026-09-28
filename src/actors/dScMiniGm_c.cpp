@@ -171,6 +171,7 @@ extern void _ZN2GX15SetBankForSubBGEt(u16 v);
 extern void _ZN2GX16SetBankForSubOBJEt(u16 v);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
+void _ZN5Sound22StopLoadedMusic_Layer1Ej(u32 n);
 }
 
 // @symbol dScMiniGm_c_classInit
@@ -606,7 +607,7 @@ s32 dScMiniGm_c::Behavior()
     }
     func_ov005_020c0878((char *)this);
     func_ov005_020c06cc((char *)this);
-    func_ov005_020c0378((char *)this);
+    func_ov005_020c0378();
     func_ov005_020c0250((char *)this);
     func_ov005_020c0140((char *)this);
     return 1;
@@ -985,23 +986,19 @@ void func_ov005_020c06cc(char *self)
 }
 }
 
-// @symbol func_ov005_020c0378
-extern "C" {
-void _ZN5Sound22StopLoadedMusic_Layer1Ej(u32 n);
-
-void func_ov005_020c0378(char *selfc)
+// @symbol _ZN11dScMiniGm_c19func_ov005_020c0378Ev
+void dScMiniGm_c::func_ov005_020c0378()
 {
-    dScMiniGm_c *self = (dScMiniGm_c *)selfc;
     int sel;
     int ok;
     int row;
 
     if (data_0209f5bc->IsActive() == 0) return;
-    if (self->mExiting != 0) return;
-    if (self->mPageFlipped == 1) return;
-    if (self->mPrevPageTimer > 0) return;
-    if (self->mNextPageTimer > 0) return;
-    if (self->mExitTimer > 0) return;
+    if (mExiting != 0) return;
+    if (mPageFlipped == 1) return;
+    if (mPrevPageTimer > 0) return;
+    if (mNextPageTimer > 0) return;
+    if (mExitTimer > 0) return;
 
     sel = -1;
     ok = 0;
@@ -1027,7 +1024,7 @@ void func_ov005_020c0378(char *selfc)
     }
 
     if (sel < 0) return;
-    if (func_ov005_020c00b4(self, sel) == 0) return;
+    if (func_ov005_020c00b4(this, sel) == 0) return;
 
     {
         const MgEntry *src = &data_ov005_020c24d8[sel];
@@ -1042,16 +1039,15 @@ void func_ov005_020c0378(char *selfc)
         data_0209b308.unk2c = src->unk2c;
         data_0209b308.unk30 = src->unk30;
     }
-    func_ov005_020c1688(selfc, sel);
+    func_ov005_020c1688((char *)this, sel);
     func_02012790(0x1e);
     _ZN8dScene_c9SetFadersEP15FaderBrightness(&data_0209f61c);
     func_0202ec9c(&data_0209f61c, 0);
-    data_0209b308.unk30 = self->unk_05c;
+    data_0209b308.unk30 = unk_05c;
     dScene_c::StartSceneFade(data_ov005_020c24d8[data_0208a174[0]].id, data_ov005_020c24d8[data_0208a174[0]].unk4, 0);
     _ZN5Sound22StopLoadedMusic_Layer1Ej(0x1e);
-    self->mExiting = 1;
+    mExiting = 1;
     data_0209b2fc = 1;
-}
 }
 
 // @symbol func_ov005_020c0250

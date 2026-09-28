@@ -16,7 +16,6 @@ extern void func_ov002_020d9aac(void* c);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int a, void* v);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, void* v);
 extern void func_ov002_020d94cc(void *self);
-extern void func_ov002_020bf9d4(void* c);
 extern void func_ov002_020d98b4(void* self);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern void Player_AdvanceAnims(void* c);
@@ -52,7 +51,7 @@ int Player::St_Hurt_Main()
             mHurtDamage = 0;
         }
         if (mIsInShallowWater == 0) {
-            func_ov002_020bf9d4(this);
+            func_ov002_020bf9d4();
         }
         mStatePhase = 1;
         break;

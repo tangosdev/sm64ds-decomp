@@ -671,7 +671,7 @@ already stale. Getting this wrong costs a full validation cycle.
   prefix on purpose: this gate reads a `tools/...` token in prose as a path
   claim and goes red on it.)
 - **`pytest tools/` is not a CI signal.** The workflows invoke targeted
-  `python -m unittest tools.test_<gate>` modules only, so a green `tools` check
+  `python -m unittest tools.test_<gate>` modules only, so a green `tool tests` check
   does not mean the suite passes. Two tests fail on untouched `origin/main`
   (`test_dtor_members.py::test_the_frozen_census_reproduces` and
   `test_opnew_sizes.py::test_only_two_live_classes_are_genuinely_headerless`).

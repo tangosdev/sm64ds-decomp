@@ -113,24 +113,15 @@ extern "C" {
 void  func_ov002_020b6fcc(void *self);
 int   func_ov002_020b71e8(void);
 int   func_ov002_020b71f0(int *p);
-int   func_ov002_020b7200(char *c);
 int   func_ov002_020b7330(char *self);
-int   func_ov002_020b74d0(char *c);
-int   func_ov002_020b76ec(char *self);
 int   func_ov002_020b781c(char *c);
 int   func_ov002_020b7b70(char *c);
-int   func_ov002_020b7c30(void *c);
 int   func_ov002_020b7cdc(int *p);
-int   func_ov002_020b7cec(char *c);
-int   func_ov002_020b7d58(char *p);
 int   func_ov002_020b7d6c(char *c);
 int   func_ov002_020b7d94(void);
-int   func_ov002_020b7d9c(char *c);
-int   func_ov002_020b7e08(char *p);
 /* func_ov002_020b7e1c is declared by decl_common.h; do not restate it. */
 int   func_ov002_020b7f24(void);
 int   func_ov002_020b7f2c(C *c, PMF *p);
-void  func_ov002_020b7f7c(char *c);
 
 /* -- other modules -- */
 void  func_02013a88(void);
@@ -241,7 +232,7 @@ int daObjMarioCap_c::Behavior()
         }
     }
 
-    func_ov002_020b7f7c((char *)this);
+    func_ov002_020b7f7c();
     mModelAnim.Advance();
 
     if (mModelAnim.file != 0) {
@@ -356,38 +347,37 @@ void daObjMarioCap_c::OnTurnIntoEgg(Player &player)
 /* into the shared matrix and copies it in; then for grounded states computes  */
 /* the drop shadow (raycast below when airborne).                              */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020b7f7c
-extern "C" void func_ov002_020b7f7c(char *c)
+// @symbol _ZN15daObjMarioCap_c19func_ov002_020b7f7cEv
+void daObjMarioCap_c::func_ov002_020b7f7c()
 {
-    daObjMarioCap_c *self = (daObjMarioCap_c *)c;
     int probe[3];
     int v[3];
     char ray[0x50];
-    int m = self->mType;
+    int m = mType;
     if (m != 5 && m != 0x12 && m != 0x10 && m != 0xb && m != 7 && m != 9 &&
         m != 0x14 && m != 0x15 && m != 0x16) {
-        self->mAngleX = self->mPrevAngleX;
-        self->mAngleY = self->mPrevAngleY;
-        self->mAngleZ = self->mPrevAngleZ;
+        mAngleX = mPrevAngleX;
+        mAngleY = mPrevAngleY;
+        mAngleZ = mPrevAngleZ;
     }
 
     /* +0xc8 is inside dActor_c pad_0c5; this class does not own that header. */
-    if (*(Matrix4x3 **)(c + 0xc8) != 0) {
-        self->mModelAnim.mat4x3 = **(Matrix4x3 **)(c + 0xc8);
+    if (*(Matrix4x3 **)((char *)this + 0xc8) != 0) {
+        mModelAnim.mat4x3 = **(Matrix4x3 **)((char *)this + 0xc8);
         return;
     }
 
-    if ((unsigned int)(self->mType - 6) <= 1)
-        self->mModelAnim.ApplyOpacity(0, 0);
+    if ((unsigned int)(mType - 6) <= 1)
+        mModelAnim.ApplyOpacity(0, 0);
 
-    Vec3_Asr(v, &self->mPosX, 3);
+    Vec3_Asr(v, &mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, self->mAngleX,
-                                           self->mAngleY, self->mAngleZ);
-    self->mModelAnim.mat4x3 = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX,
+                                           mAngleY, mAngleZ);
+    mModelAnim.mat4x3 = data_020a0e68;
 
     {
-        char *s = *(char **)&self->unk_3bc;
+        char *s = *(char **)&unk_3bc;
         if (s == &data_ov002_0210df54)
             return;
         if (s == &data_ov002_0210df74)
@@ -396,16 +386,16 @@ extern "C" void func_ov002_020b7f7c(char *c)
             return;
     }
 
-    if (self->mScaleX < 0x500)
+    if (mScaleX < 0x500)
         return;
 
     {
-        int y = self->mPosY;
+        int y = mPosY;
         int off;
-        if (self->mWithMeshClsn.IsOnGround() == 0) {
-            probe[0] = self->mPosX;
-            probe[1] = self->mPosY;
-            probe[2] = self->mPosZ;
+        if (mWithMeshClsn.IsOnGround() == 0) {
+            probe[0] = mPosX;
+            probe[1] = mPosY;
+            probe[2] = mPosZ;
             probe[1] = probe[1] + 0x28000;
             _ZN9dBgCh_GndC1Ev(ray);
             ((dBgCh_Gnd *)ray)->SetObjAndPos(*(Vector3 *)probe, 0);
@@ -417,7 +407,7 @@ extern "C" void func_ov002_020b7f7c(char *c)
 
         off = 0;
         {
-            int t = self->mModelIndex;
+            int t = mModelIndex;
             if (t == 0)
                 goto neg;
             if (t == 1) {
@@ -425,12 +415,12 @@ extern "C" void func_ov002_020b7f7c(char *c)
                 off = -10;
             }
         }
-        Matrix4x3_FromRotationY(&self->unk_38c, self->mAngleY);
-        self->unk_38c.m[9] = self->mPosX >> 3;
-        self->unk_38c.m[10] = (y + (off << 12)) >> 3;
-        self->unk_38c.m[11] = self->mPosZ >> 3;
+        Matrix4x3_FromRotationY(&unk_38c, mAngleY);
+        unk_38c.m[9] = mPosX >> 3;
+        unk_38c.m[10] = (y + (off << 12)) >> 3;
+        unk_38c.m[11] = mPosZ >> 3;
         _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-            self, &self->mShadowModel, &self->unk_38c, 0x50000, 0x32000, 0xf);
+            this, &mShadowModel, &unk_38c, 0x50000, 0x32000, 0xf);
     }
 }
 
@@ -468,23 +458,22 @@ extern "C" int func_ov002_020b7e1c(char* self) {
     return 1;
 }
 
-// @symbol func_ov002_020b7e08
-extern "C" int func_ov002_020b7e08(char *p)
+// @symbol _ZN15daObjMarioCap_c19func_ov002_020b7e08Ev
+int daObjMarioCap_c::func_ov002_020b7e08()
 {
-    ((daObjMarioCap_c *)p)->mStateTimer = 200;
+    mStateTimer = 200;
     return 1;
 }
 
-// @symbol func_ov002_020b7d9c
-extern "C" int func_ov002_020b7d9c(char* c)
+// @symbol _ZN15daObjMarioCap_c19func_ov002_020b7d9cEv
+int daObjMarioCap_c::func_ov002_020b7d9c()
 {
-    daObjMarioCap_c *self = (daObjMarioCap_c *)c;
-    if (data_02092138 > self->mPosY
-        || self->mWithMeshClsn.IsOnGround()
-        || !DecIfAbove0_Short((unsigned short*)&self->mStateTimer)
-        || (self->mFlags & 8))
+    if (data_02092138 > mPosY
+        || mWithMeshClsn.IsOnGround()
+        || !DecIfAbove0_Short((unsigned short*)&mStateTimer)
+        || (mFlags & 8))
     {
-        self->MarkForDestruction();
+        MarkForDestruction();
         return 1;
     }
     return 1;
@@ -503,23 +492,22 @@ extern "C" int func_ov002_020b7d6c(char* c) {
     return 1;
 }
 
-// @symbol func_ov002_020b7d58
-extern "C" int func_ov002_020b7d58(char *p)
+// @symbol _ZN15daObjMarioCap_c19func_ov002_020b7d58Ev
+int daObjMarioCap_c::func_ov002_020b7d58()
 {
-    ((daObjMarioCap_c *)p)->mStateTimer = 200;
+    mStateTimer = 200;
     return 1;
 }
 
-// @symbol func_ov002_020b7cec
-extern "C" int func_ov002_020b7cec(char* c)
+// @symbol _ZN15daObjMarioCap_c19func_ov002_020b7cecEv
+int daObjMarioCap_c::func_ov002_020b7cec()
 {
-    daObjMarioCap_c *self = (daObjMarioCap_c *)c;
-    if (data_02092138 > self->mPosY
-        || self->mWithMeshClsn.IsOnGround()
-        || !DecIfAbove0_Short((unsigned short*)&self->mStateTimer)
-        || (self->mFlags & 8))
+    if (data_02092138 > mPosY
+        || mWithMeshClsn.IsOnGround()
+        || !DecIfAbove0_Short((unsigned short*)&mStateTimer)
+        || (mFlags & 8))
     {
-        self->MarkForDestruction();
+        MarkForDestruction();
         return 1;
     }
     return 1;
@@ -532,22 +520,21 @@ extern "C" int func_ov002_020b7cdc(int *p)
     p[39] = 0; return 1;
 }
 
-// @symbol func_ov002_020b7c30
-extern "C" int func_ov002_020b7c30(void* c) {
-  daObjMarioCap_c *self = (daObjMarioCap_c *)c;
-  if (self->mVertAccel != 0) {
-    self->UpdatePos(&self->mdCcAc_c);
-    self->UpdateWMClsn(self->mWithMeshClsn, 0);
-    self->mdCcAc_c.vulnFlags |= 0x8000;
-    if (self->mWithMeshClsn.IsOnGround()) {
-      self->mHorzSpeed = 0;
-      func_ov002_020b6fcc(c);
-      _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(c, 0x32000, 0x32000, 0x1000000, 0x1000000);
+// @symbol _ZN15daObjMarioCap_c19func_ov002_020b7c30Ev
+int daObjMarioCap_c::func_ov002_020b7c30() {
+  if (mVertAccel != 0) {
+    UpdatePos(&mdCcAc_c);
+    UpdateWMClsn(mWithMeshClsn, 0);
+    mdCcAc_c.vulnFlags |= 0x8000;
+    if (mWithMeshClsn.IsOnGround()) {
+      mHorzSpeed = 0;
+      func_ov002_020b6fcc(this);
+      _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(this, 0x32000, 0x32000, 0x1000000, 0x1000000);
     }
   }
-  if (data_02092138 > self->mPosY) {
+  if (data_02092138 > mPosY) {
     SaveData::PlayerLoseCap();
-    self->MarkForDestruction();
+    MarkForDestruction();
   }
   return 1;
 }
@@ -675,120 +662,118 @@ extern "C" int func_ov002_020b781c(char *c)
     return 1;
 }
 
-// @symbol func_ov002_020b76ec
-extern "C" int func_ov002_020b76ec(char *selfv)
+// @symbol _ZN15daObjMarioCap_c19func_ov002_020b76ecEv
+int daObjMarioCap_c::func_ov002_020b76ec()
 {
-    daObjMarioCap_c *self = (daObjMarioCap_c *)selfv;
-    self->unk_0a4 = 0;
-    self->mVertSpeed = 0;
-    self->unk_0ac = 0;
-    self->mVertAccel = 0;
-    self->unk_401 = 0;
-    self->unk_3ec = 0;
-    *(int *)(selfv + 0xc8) = 0;
-    self->unk_403 = 1;
+    unk_0a4 = 0;
+    mVertSpeed = 0;
+    unk_0ac = 0;
+    mVertAccel = 0;
+    unk_401 = 0;
+    unk_3ec = 0;
+    *(int *)((char *)this + 0xc8) = 0;
+    unk_403 = 1;
 
     /* (int)self + off is the MATCH form; mFlags &= / vulnFlags &= CSE. */
-    *(u32 *)(((int)selfv + 0xb0)) &= ~0x40000u;
-    *(u32 *)(((int)selfv + 0x12c)) &= ~0x8000u;
+    *(u32 *)(((int)(char *)this + 0xb0)) &= ~0x40000u;
+    *(u32 *)(((int)(char *)this + 0x12c)) &= ~0x8000u;
 
-    if (self->unk_3c0 == 0) {
-        *(void **)&self->unk_3c0 = self->ClosestPlayer();
+    if (unk_3c0 == 0) {
+        *(void **)&unk_3c0 = ClosestPlayer();
     }
 
     {
         unsigned b = (data_0209f2d8[0] == 1);
         if (b == 0) {
-            Player *p = *(Player **)&self->unk_3c0;
+            Player *p = *(Player **)&unk_3c0;
             if (p->mCharacter == 3) {
-                if (self->mModelIndex == (int)p->param1) {
+                if (mModelIndex == (int)p->param1) {
                     struct Vector3 v;
-                    Sound::PlayBank3(0x6e, *(Vector3 *)&self->mCamSpacePosX);
+                    Sound::PlayBank3(0x6e, *(Vector3 *)&mCamSpacePosX);
                     GiveLives(1);
-                    v.x = self->mPosX;
-                    v.y = self->mPosY;
-                    v.z = self->mPosZ;
+                    v.x = mPosX;
+                    v.y = mPosY;
+                    v.z = mPosZ;
                     v.y += 0x64000;
-                    dActor_c::Spawn(0x14b, 8, v, (Vector3_16 *)0, self->mAreaId, -1);
+                    dActor_c::Spawn(0x14b, 8, v, (Vector3_16 *)0, mAreaId, -1);
                 }
             }
         }
     }
 
-    self->mStateTimer = 0x96;
-    self->mScaleX = 0x1000;
-    self->mScaleY = 0x1000;
-    self->mScaleZ = 0x1000;
+    mStateTimer = 0x96;
+    mScaleX = 0x1000;
+    mScaleY = 0x1000;
+    mScaleZ = 0x1000;
     return 1;
 }
 
-// @symbol func_ov002_020b74d0
-extern "C" int func_ov002_020b74d0(char *c) {
-    daObjMarioCap_c *self = (daObjMarioCap_c *)c;
-    if (DecIfAbove0_Short((unsigned short *)&self->mStateTimer) == 0) {
-        self->MarkForDestruction();
+// @symbol _ZN15daObjMarioCap_c19func_ov002_020b74d0Ev
+int daObjMarioCap_c::func_ov002_020b74d0() {
+    if (DecIfAbove0_Short((unsigned short *)&mStateTimer) == 0) {
+        MarkForDestruction();
         return 1;
     }
 
-    if (*(void **)&self->unk_3c0 == 0) {
-        *(void **)&self->unk_3c0 = self->ClosestPlayer();
+    if (*(void **)&unk_3c0 == 0) {
+        *(void **)&unk_3c0 = ClosestPlayer();
         return 1;
     }
 
-    *(int *)(c + 0xc8) = 0;
+    *(int *)((char *)this + 0xc8) = 0;
 
     {
-        char *p = *(char **)&self->unk_3c0;
+        char *p = *(char **)&unk_3c0;
         char *q = (char *)(((int)(p + 0x8c)));
-        self->mPrevAngleX = *(s16 *)(q + 0);
-        self->mPrevAngleY = *(s16 *)(q + 2);
-        self->mPrevAngleZ = *(s16 *)(q + 4);
+        mPrevAngleX = *(s16 *)(q + 0);
+        mPrevAngleY = *(s16 *)(q + 2);
+        mPrevAngleZ = *(s16 *)(q + 4);
     }
-    self->mAngleX = self->mPrevAngleX;
-    self->mAngleY = self->mPrevAngleY;
-    self->mAngleZ = self->mPrevAngleZ;
+    mAngleX = mPrevAngleX;
+    mAngleY = mPrevAngleY;
+    mAngleZ = mPrevAngleZ;
 
     {
-        char *p = *(char **)&self->unk_3c0;
+        char *p = *(char **)&unk_3c0;
         char *q = (char *)(((int)(p + 0x5c)));
-        self->mPosX = *(int *)(q + 0);
-        self->mPosY = *(int *)(q + 4);
-        self->mPosZ = *(int *)(q + 8);
+        mPosX = *(int *)(q + 0);
+        mPosY = *(int *)(q + 4);
+        mPosZ = *(int *)(q + 8);
     }
 
-    switch (self->unk_401) {
+    switch (unk_401) {
     case 1:
-        if ((*(Player **)&self->unk_3c0)->SetNoControlState(0xf, -1, 0) == 1) {
-            (*(Player **)&self->unk_3c0)->SetNewHatCharacter(self->mModelIndex & 0xff, 0, 0);
+        if ((*(Player **)&unk_3c0)->SetNoControlState(0xf, -1, 0) == 1) {
+            (*(Player **)&unk_3c0)->SetNewHatCharacter(mModelIndex & 0xff, 0, 0);
             func_02013a88();
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, data_ov002_0210de38.file, 0x40000000, 0x1000, 0);
-            self->unk_401 = 2;
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov002_0210de38.file, 0x40000000, 0x1000, 0);
+            unk_401 = 2;
         }
         break;
     case 2:
-        if (self->mModelAnim.Finished() != 0) {
-            self->MarkForDestruction();
+        if (mModelAnim.Finished() != 0) {
+            MarkForDestruction();
         }
         break;
     }
 
-    if (self->unk_401 != 0) {
+    if (unk_401 != 0) {
         return 1;
     }
 
-    if (self->unk_3fe == 0) {
-        if ((*(Player **)&self->unk_3c0)->Unk_020c9e5c(8) == 1) {
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, data_ov002_0210de30.file, 0x40000000, 0x1000, 0);
-            self->unk_3fe = 1;
+    if (unk_3fe == 0) {
+        if ((*(Player **)&unk_3c0)->Unk_020c9e5c(8) == 1) {
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov002_0210de30.file, 0x40000000, 0x1000, 0);
+            unk_3fe = 1;
         }
     }
 
-    if (self->unk_3fe == 1) {
-        if (self->mModelAnim.Finished() != 0) {
-            if (self->mType == 4) {
-                dActor_c::Spawn(0x10d, self->param1, *(const Vector3 *)&self->unk_3c4, (const Vector3_16 *)0, self->mAreaId, -1);
+    if (unk_3fe == 1) {
+        if (mModelAnim.Finished() != 0) {
+            if (mType == 4) {
+                dActor_c::Spawn(0x10d, param1, *(const Vector3 *)&unk_3c4, (const Vector3_16 *)0, mAreaId, -1);
             }
-            self->MarkForDestruction();
+            MarkForDestruction();
         }
     }
 
@@ -845,50 +830,49 @@ extern "C" int func_ov002_020b7330(char* self)
     return 1;
 }
 
-// @symbol func_ov002_020b7200
-extern "C" int func_ov002_020b7200(char* c)
+// @symbol _ZN15daObjMarioCap_c19func_ov002_020b7200Ev
+int daObjMarioCap_c::func_ov002_020b7200()
 {
-    daObjMarioCap_c *self = (daObjMarioCap_c *)c;
     short* sp;
     int* ip;
 
-    if (self->mType == 0xa || self->mType == 0xf) {
-        if (self->unk_3c0 != 0) {
+    if (mType == 0xa || mType == 0xf) {
+        if (unk_3c0 != 0) {
             sp = (short*)(
-                (char*)self->unk_3c0 + 0x8c);
-            self->mPrevAngleX = sp[0];
-            self->mPrevAngleY = sp[1];
-            self->mPrevAngleZ = sp[2];
-            self->mAngleX = self->mPrevAngleX;
-            self->mAngleY = self->mPrevAngleY;
-            self->mAngleZ = self->mPrevAngleZ;
+                (char*)unk_3c0 + 0x8c);
+            mPrevAngleX = sp[0];
+            mPrevAngleY = sp[1];
+            mPrevAngleZ = sp[2];
+            mAngleX = mPrevAngleX;
+            mAngleY = mPrevAngleY;
+            mAngleZ = mPrevAngleZ;
 
             ip = (int*)(
-                (char*)self->unk_3c0 + 0x5c);
-            self->mPosX = ip[0];
-            self->mPosY = ip[1];
-            self->mPosZ = ip[2];
+                (char*)unk_3c0 + 0x5c);
+            mPosX = ip[0];
+            mPosY = ip[1];
+            mPosZ = ip[2];
         }
     }
 
-    if (self->mModelAnim.Finished() != 0) {
-        switch (self->mType) {
+    if (mModelAnim.Finished() != 0) {
+        switch (mType) {
         case 0xa:
         case 0xf:
         case 0x16:
-            self->MarkForDestruction();
+            MarkForDestruction();
             break;
 
         case 0x15:
             break;
 
         case 0x14:
-            if (self->unk_3fe == 0) {
+            if (unk_3fe == 0) {
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-                    &self->mModelAnim,
-                    (void*)data_ov002_020ff0c4[self->mModelIndex][1],
+                    &mModelAnim,
+                    (void*)data_ov002_020ff0c4[mModelIndex][1],
                     0, 0x1000, 0);
-                self->unk_3fe = 1;
+                unk_3fe = 1;
             }
             break;
         }

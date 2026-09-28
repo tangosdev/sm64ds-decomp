@@ -25,6 +25,10 @@
 
 #include "dBgActor_c.h"
 
+/* Enter/update pair installed at 0x320. Defined in the TU; a pointer is all
+   the header needs, and the pair is 8+8 so Behavior's update lives at +8. */
+struct daObjEwbIce_State;
+
 struct daObjEwbIce_c : dBgActor_c {
     /* dBgActor_c's own last named fields (unk_31c/unk_31d) are u8, so its
        sizeof (0x320) includes 2 bytes of pure tail padding to reach 4-byte
@@ -32,17 +36,18 @@ struct daObjEwbIce_c : dBgActor_c {
        member when that member's OWN alignment does not require the full
        round-up -- a byte field placed first lands at 0x31e, not 0x320,
        which the ROM disagrees with (Behavior reads [this, #0x320]).
-       Claiming it explicitly here forces unk_320 to its real offset. */
+       Claiming it explicitly here forces the state pointer to its real offset. */
     u8  pad_31e[0x2];
-    u8  mState;             /* 0x320 -- read as a pointer to the current state descriptor */
-    u8  pad_321[0xb];
+    daObjEwbIce_State *mState; /* 0x320 */
+    u8  pad_324[0x4];
+    s32 mWobbleAmp;         /* 0x328 -- arena ice, reset to 0x400 each wobble frame */
     u8  mVariant;           /* 0x32c -- 0/1/2 from actorID 0xaa/0xab/0xac; indexes the three ov073 file tables */
     u8  mSpawnIndex;        /* 0x32d -- the per-variant global counter's value at spawn */
     u8  pad_32e[0x2];
-    u16 unk_330;            /* 0x330 */
-    u8  pad_332[0x2];
-    s32 unk_334;            /* 0x334 */
-    s32 unk_338;            /* 0x338 */
+    u16 mTimer;             /* 0x330 -- DecIfAbove0_Short */
+    u16 mWobblePhase;       /* 0x332 -- advanced by 0x800 while the arena ice wobbles */
+    s32 mBossID;            /* 0x334 -- arena ice copies daKing_Donketu_c::uniqueID */
+    s32 unk_338;            /* 0x338 -- InitResources clears it; no reader in this TU */
 
     /* --- vtable --- */
     virtual ~daObjEwbIce_c();
@@ -91,14 +96,15 @@ struct daObjEwbIce_c {
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x34];
-    u8  mState;             /* 0x320 -- read as a pointer to the current state descriptor */
-    u8  pad_321[0xb];
-    u8  mVariant;           /* 0x32c -- 0/1/2 from actorID 0xaa/0xab/0xac; indexes the three ov073 file tables */
-    u8  mSpawnIndex;        /* 0x32d -- the per-variant global counter's value at spawn */
+    void *mState;           /* 0x320 */
+    u8  pad_324[0x4];
+    s32 mWobbleAmp;         /* 0x328 */
+    u8  mVariant;           /* 0x32c -- 0/1/2 from actorID 0xaa/0xab/0xac */
+    u8  mSpawnIndex;        /* 0x32d */
     u8  pad_32e[0x2];
-    u16 unk_330;            /* 0x330 */
-    u8  pad_332[0x2];
-    s32 unk_334;            /* 0x334 */
+    u16 mTimer;             /* 0x330 */
+    u16 mWobblePhase;       /* 0x332 */
+    s32 mBossID;            /* 0x334 */
     s32 unk_338;            /* 0x338 */
 };
 

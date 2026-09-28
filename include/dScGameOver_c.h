@@ -50,6 +50,10 @@ struct dScGameOver_c : dScene_c {
     virtual s32  Behavior();                              /* slot  6 */
     virtual s32  Render();                                /* slot  9 */
     virtual void OnPendingDestroy();                      /* slot 12 */
+
+    /* Non-virtual. The address is the method name; no new vtable slot. */
+    void func_ov003_020b060c();
+    void func_ov003_020b0730(int arg);
 };
 
 #ifndef SM64DS_PLATFORM_PC

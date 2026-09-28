@@ -61,6 +61,10 @@ struct daSCoin_c : dActor_c {
     virtual s32  CleanupResources(); /* slot  3 */
     virtual s32  Behavior();         /* slot  6 */
 
+    void func_ov002_020f0438();
+    void func_ov002_020f051c();
+    void func_ov002_020f05f4();
+
     static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }

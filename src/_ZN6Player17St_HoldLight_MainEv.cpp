@@ -8,7 +8,6 @@
 #include "Player.h"
 extern "C" {
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
-extern int func_ov002_020c0434(void* c);
 extern void func_ov002_020c0364(void* c, u32 arg);
 extern void _Z14ApproachLinearRiii(int* a, int b, int c);
 extern int _ZN6Player6IsAnimEj(void* c, u32 anim);
@@ -39,7 +38,7 @@ int Player::St_HoldLight_Main()
         _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
         return 1;
     }
-    if (func_ov002_020c0434(((char*)this))) {
+    if (func_ov002_020c0434()) {
         func_ov002_020c0364(((char*)this), 3);
         return 1;
     }

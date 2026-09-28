@@ -136,7 +136,7 @@ int daDonketu_c::Behavior()
  * finally returns non-zero. */
 void daDonketu_c::UpdateDeathState()
 {
-    if (func_ov064_0211616c(this) == 0)
+    if (func_ov064_0211616c() == 0)
         return;
     int pz = mPosZ;
     int py = mPosY + 0x136000;
@@ -174,7 +174,7 @@ int daDonketu_c::UpdateRunState()
 {
     if (*(u16 *)&mStateTimer < 0xa) {
         mHorzSpeed = 0;
-        int result = func_ov064_02116110((char *)this, 0x700);
+        int result = func_ov064_02116110(0x700);
         if (result != 0)
             return result;
         u16 *timer = (u16 *)&mStateTimer;

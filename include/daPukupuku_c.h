@@ -29,6 +29,10 @@
 #include "dCcAcPos_c.h"
 #include "dBgCh_Actr.h"
 
+/* Incomplete on purpose: the state pointer-to-member is 8 bytes (code, delta). */
+struct PukuStateC;
+typedef int (PukuStateC::*PukuStatePMF)();
+
 struct daPukupuku_c : dEnemyBase_c {
     dCcAcPos_c mdCcAcPos_c;/* 0x110 */
     dBgCh_Actr mWithMeshClsn;       /* 0x150 */
@@ -50,6 +54,9 @@ struct daPukupuku_c : dEnemyBase_c {
     int InitResources();
     void OnPendingDestroy();
     int Render();
+    int func_ov090_02133190();
+    int func_ov090_02133200();
+    int func_ov090_021332e8(PukuStatePMF *p);
 
     /* Tail padding. The field span stops short of the real size:
        daPukupuku_c_classInit calls fBase_c::operator new(0x388), read off

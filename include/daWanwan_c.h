@@ -3,21 +3,9 @@
 
 #include "types.h"
 
-/* The Chain Chomp, and its chain -- seven links, which is why seven of nearly
- * everything. NINE CONSECUTIVE BOUNDARIES close on sizes other headers assert,
- * the longest unbroken run this branch has found:
- *
- *     dEnemyBase_c                     ends 0x110
- *     dCcAcPos_c 0x110 +   0x40  = 0x150  -> ModelAnim
- *     ModelAnim                 0x150 +   0x64  = 0x1b4  -> ShadowModel
- *     ShadowModel               0x1b4 +   0x28  = 0x1dc  -> the link models
- *     Model[7]                  0x1dc + 7*0x50  = 0x40c  -> the link shadows
- *     ShadowModel[7]            0x40c + 7*0x28  = 0x524  -> the first triple
- *     Vector3[7]                0x524 + 7*0x0c  = 0x578  -> the second
- *     Vector3[7]                0x578 + 7*0x0c  = 0x5cc
- *
- * Every element type was already named in the tree, so this class needed no new
- * one: the two Vector3 arrays are the per-link positions.
+/* Bob-omb Battlefield Chain Chomp. Seven links, so seven of each subobject.
+ * dEnemyBase_c ends at 0x110; dCcAcPos_c, ModelAnim and ShadowModel close on
+ * 0x150, 0x1b4 and 0x1dc; then Model[7], ShadowModel[7] and two Vector3[7].
  */
 
 #ifdef __cplusplus
@@ -34,32 +22,36 @@ struct daWanwan_c : dEnemyBase_c {
     ShadowModel mShadowModel;                              /* 0x1b4 */
     Model mLinkModels[7];                                  /* 0x1dc */
     ShadowModel mLinkShadows[7];                           /* 0x40c */
-    /* InitResources seeds all seven with the chomp's own position, one per link.
-       0211250c reads and writes unk_578[1..6] (c+0x584) as the previous-position
-       history of those links. unk_578[0] is constructed and unused by that loop. */
+    /* InitResources copies the chomp position into every link. 0211250c then
+       walks [1..6]; [0] is the head, written from the actor position each frame. */
     Vector3 mLinkPos[7];                                   /* 0x524 */
-    Vector3 unk_578[7];                                    /* 0x578 */
-    u8  pad_5cc[0x20];
-    /* InitResources copies mPosX/mPosY/mPosZ here and then moves the actor itself
-       by +200.0 on each axis, so this is where it started. Behavior clamps
-       mPosY up to mSpawnPosY + 0xc8000 every frame. */
+    /* 0211250c adds the stored value into the link step, then replaces it with
+       the scaled movement. [0] is constructed and that loop never touches it. */
+    Vector3 mLinkDelta[7];                                 /* 0x578 */
+    u8  pad_5cc[4];
+    /* 0211250c, one floor per link [1..6]. Raised to mSpawnPosY + 0x28000. */
+    s32 mLinkFloorY[6];                                    /* 0x5d0 */
+    u8  pad_5e8[4];
+    /* InitResources copies the position here, then adds 0xc8000 to the live
+       position. Behavior clamps mPosY up to mSpawnPosY + 0xc8000. */
     s32 mSpawnPosX;         /* 0x5ec */
     s32 mSpawnPosY;         /* 0x5f0 */
     s32 mSpawnPosZ;         /* 0x5f4 */
-    s32 mChainExtension;    /* 0x5f8 */
-    u8  pad_5fc[0x9];
-    u8  mChainBroken;            /* 0x605 -- 02111f54 writes 1; Behavior helpers gate on it */
-    u8  pad_606[0x2];
-    /* uniqueIDs (fBase_c +0x04) of two other actors. 0x1b and 0x29 are resolved
-       through ACTOR_SPAWN_TABLE at 0x02090864 -- see notes/enemy-leaf-provenance.md. */
-    s32 mStumpUniqueID;     /* 0x608 -- the actor 0x1b InitResources spawns */
-    s32 mFenceUniqueID;     /* 0x60c -- actor 0x29, found lazily by Behavior */
-    u8  pad_610[0xc];
-    /* Set when this frame's position had to be clamped up to the rest height,
-       and last frame's copy of it. Behavior fires func_ov014_02111fb8 only on
-       the rising edge, which is what a landing one-shot looks like. */
-    u8  mIsOnGround;        /* 0x61c */
-    u8  mWasOnGround;       /* 0x61d */
+    s32 mChainExtension;    /* 0x5f8 -- leash slack; 02111fe0 uses it * 7 */
+    u16 mActionTimer;       /* 0x5fc -- DecIfAbove0_Short */
+    u16 mSecretSound;       /* 0x5fe -- Sound::PlaySecretSound counter */
+    s16 unk_600;            /* 0x600 -- idle lunge and release enter store 0; unread */
+    s16 mTargetAngY;        /* 0x602 -- idle faces this; HorzAngleToCPlayer writes it */
+    u8  mReleaseStep;       /* 0x604 -- release cutscene step, 021115ec */
+    u8  mChainBroken;       /* 0x605 -- 02111f54 writes 1; Behavior skips the leash */
+    u8  pad_606[2];
+    s32 mStumpUniqueID;     /* 0x608 -- STUMP (0x1b) spawned by InitResources */
+    s32 mFenceUniqueID;     /* 0x60c -- CHAIN_CHOMP_FENCE (0x29), found by Behavior */
+    s32 mState;             /* 0x610 -- index into data_ov014_0211476c */
+    u8  pad_614[4];
+    s32 mReleaseSpeed;      /* 0x618 -- release step 6 approach speed */
+    u8  mIsOnGround;        /* 0x61c -- set when mPosY was clamped to the rest height */
+    u8  mWasOnGround;       /* 0x61d -- previous frame; landing fires on the rising edge */
 
     /* Defined INLINE on purpose. Out of line, mwccarm emits D2, D0, D1; the ROM
        has D1 at 0x02111308 then D0 at 0x021113bc and no D2 anywhere in ov014.
@@ -73,6 +65,8 @@ struct daWanwan_c : dEnemyBase_c {
     int CleanupResources();
     int InitResources();
     int Render();
+    void func_ov014_02111ebc(int i);
+    void func_ov014_02111f08();
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -122,18 +116,27 @@ struct daWanwan_c {
     u8  mModelAnim[0x64];            /* 0x150 */
     u8  mShadowModel;            /* 0x1b4 */
     u8  pad_1b5[0x36f];
-    s32 mLinkPos[21];       /* 0x524 -- the C++ branch's Vector3 mLinkPos[7], flat */
-    u8  pad_578[0x74];
+    s32 mLinkPos[21];       /* 0x524 -- Vector3 mLinkPos[7] */
+    s32 mLinkDelta[21];     /* 0x578 */
+    u8  pad_5cc[4];
+    s32 mLinkFloorY[6];     /* 0x5d0 */
+    u8  pad_5e8[4];
     s32 mSpawnPosX;         /* 0x5ec */
     s32 mSpawnPosY;         /* 0x5f0 */
     s32 mSpawnPosZ;         /* 0x5f4 */
     s32 mChainExtension;    /* 0x5f8 */
-    u8  pad_5fc[0x9];
-    u8  mChainBroken;            /* 0x605 */
-    u8  pad_606[0x2];
+    u16 mActionTimer;       /* 0x5fc */
+    u16 mSecretSound;       /* 0x5fe */
+    s16 unk_600;            /* 0x600 */
+    s16 mTargetAngY;        /* 0x602 */
+    u8  mReleaseStep;       /* 0x604 */
+    u8  mChainBroken;       /* 0x605 */
+    u8  pad_606[2];
     s32 mStumpUniqueID;     /* 0x608 */
     s32 mFenceUniqueID;     /* 0x60c */
-    u8  pad_610[0xc];
+    s32 mState;             /* 0x610 */
+    u8  pad_614[4];
+    s32 mReleaseSpeed;      /* 0x618 */
     u8  mIsOnGround;        /* 0x61c */
     u8  mWasOnGround;       /* 0x61d */
 };

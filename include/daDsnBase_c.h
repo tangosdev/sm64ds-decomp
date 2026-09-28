@@ -124,6 +124,12 @@ struct daDsnBase_c : dBgActor_c {
        (load model/KCL, bind CLPS, optional BTP, cuboid shadow, ground
        probe); the ROM has no mangled spelling. */
     s32 Init();
+
+    /* Not virtual. The address is the method name. */
+    int func_ov091_02132dc0();
+    void func_ov091_02132f04();
+    void func_ov091_02133020();
+    void func_ov091_02133098();
 };
 
 #ifndef SM64DS_PLATFORM_PC

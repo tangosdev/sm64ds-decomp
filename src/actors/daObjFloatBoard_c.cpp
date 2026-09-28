@@ -11,8 +11,7 @@
  *
  * deslop
  * Leftover: func_ov002_020b5ab4 / 020b5b98 keep ROM address names (neither
- *   occupies a vtable slot, nothing in the ROM names them); their (char *)
- *   signatures stay too, shared with decl_common.h and func_ov002_020b5e58.
+ *   occupies a vtable slot, nothing in the ROM names them).
  * Leftover: cstd::atan2 / dBgActor_c::IsClsnInRangeOnScreen stay TU-local
  *   mangled scalars (Fix12<int> by value, wall 6az; types.h).
  * Leftover: func_020393a4 is an 8-byte store into dBgW+0x0c (d_a_obj_emm_log
@@ -58,9 +57,6 @@ void func_020393a4(dBgW_KcMbg *clsn, int range);
 int  Vec3_HorzDist(const void *a, const void *b);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 
-int  func_ov002_020b5ab4(char *c);
-void func_ov002_020b5b98(char *t);
-
 short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 int   _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(dBgActor_c *self, int x, int z);
 }
@@ -84,7 +80,7 @@ int daObjFloatBoard_c::Behavior()
 
     func_020393a4(&mMeshCollider, 0x300000);
 
-    if (func_ov002_020b5ab4((char *)this) != 0) {
+    if (func_ov002_020b5ab4() != 0) {
         if (ApproachLinear(mSinkOffset, mRider != 0 ? -0x28000 : 0, 0x5000) != 0) {
             short *ctr = &mBobPhase;
             short cval = *ctr;
@@ -126,7 +122,7 @@ int daObjFloatBoard_c::Behavior()
         mAngleX = mAngleZ;
     }
 
-    func_ov002_020b5b98((char *)this);
+    func_ov002_020b5b98();
     if (_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(this, 0, 0) != 0)
         UpdateClsnPosAndRot();
 
@@ -169,34 +165,29 @@ int daObjFloatBoard_c::CleanupResources()
 
 /* ROM ordinal 1 -- ov002 0x020b5b98. Writes the model matrix from the actor's
  * Euler angles and its translation row from the position >> 3. Also called
- * from func_ov002_020b5e58 in the next TU, so the (char *) signature stays. */
-// @symbol func_ov002_020b5b98
-extern "C" void func_ov002_020b5b98(char *t)
+ * from func_ov002_020b5e58 in the next TU. */
+// @symbol _ZN17daObjFloatBoard_c19func_ov002_020b5b98Ev
+void daObjFloatBoard_c::func_ov002_020b5b98()
 {
-    daObjFloatBoard_c *board = (daObjFloatBoard_c *)t;
-
-    Matrix4x3_FromRotationZXYExt(&board->mModel.mat4x3,
-        board->mAngleX, board->mAngleY, board->mAngleZ);
-    board->mModel.mat4x3.m[9] = board->mPosX >> 3;
-    board->mModel.mat4x3.m[10] = board->mPosY >> 3;
-    board->mModel.mat4x3.m[11] = board->mPosZ >> 3;
+    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3.m[9] = mPosX >> 3;
+    mModel.mat4x3.m[10] = mPosY >> 3;
+    mModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
 /* ROM ordinal 0 -- ov002 0x020b5ab4. Asks whether the board is on water and
  * writes the surface height to mWaterY: on stage 0x15 from the class's own
  * fallback level, otherwise from a downward water raycast. Reached only from
  * this TU's Behavior. */
-// @symbol func_ov002_020b5ab4
-extern "C" int func_ov002_020b5ab4(char *c)
+// @symbol _ZN17daObjFloatBoard_c19func_ov002_020b5ab4Ev
+int daObjFloatBoard_c::func_ov002_020b5ab4()
 {
-    daObjFloatBoard_c *board = (daObjFloatBoard_c *)c;
-
     if (data_0209f2f8 == 0x15) {
-        s32 fallback = board->mFallbackWaterY;
-        board->mWaterY = fallback;
+        s32 fallback = mFallbackWaterY;
+        mWaterY = fallback;
         s32 tide = data_0209f32c;
         if (tide > fallback) {
-            board->mWaterY = tide;
+            mWaterY = tide;
             return 1;
         }
         return 0;
@@ -205,16 +196,16 @@ extern "C" int func_ov002_020b5ab4(char *c)
     Vector3 vec;
     dBgCh_Gnd rg;
     /* Staged through locals: direct member stores schedule differently. */
-    int vx = board->mPosX;
-    int vz = board->mPosZ;
-    int vy = board->mPosY + 0x64000;
+    int vx = mPosX;
+    int vz = mPosZ;
+    int vy = mPosY + 0x64000;
     vec.x = vx;
     vec.y = vy;
     vec.z = vz;
     rg.StartDetectingWater();
-    rg.SetObjAndPos(vec, board);
+    rg.SetObjAndPos(vec, this);
     if (rg.DetectClsn() != 0) {
-        board->mWaterY = rg.clsnY;
+        mWaterY = rg.clsnY;
         if (SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
             return 1;
         }

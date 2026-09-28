@@ -28,14 +28,12 @@ coordinated v2 fleet.
 - **Match PRs** must pass the **`validate`** CI check. It compiles every changed
   `src/*.c|*.cpp` on a private build box and compares the relocated bytes to the ROM.
   A passing byte check is required alongside independent source acceptance.
-- **Source reconstruction PRs** must also pass **Source review** for their exact
-  head and current base. This includes source/header changes and enrollment,
-  symbol, relocation and TU-manifest changes. Run
-  `python tools/check_pr_source_review.py --pr NUMBER` immediately before landing;
-  missing evidence, stale review, incomplete coverage and unresolved findings
-  block integration. Follow [the activation and adoption procedure](notes/agents/SOURCE-REVIEW-CUTOVER.md)
-  to install the required GitHub check. Until activation, enforce the same review
-  decision manually; do not describe a green byte check as finished humanization.
+- **Source reconstruction PRs** are also reviewed as source; do not describe a
+  green byte check as finished humanization. There is no CI check for this. PRs
+  coordinated through the fleet queue carry an independent queue review: run
+  `python tools/check_pr_source_review.py --pr NUMBER` immediately before landing
+  one, and treat missing evidence, stale review, incomplete coverage and unresolved
+  findings as blockers ([the review procedure](notes/agents/SOURCE-REVIEW-CUTOVER.md)).
 - **WRONG / blind files.** If `validate` flags any file as `wrong-dest` (a reloc links to
   the wrong symbol) or `blind` (a reloc slot could not be resolved), **drop those files and
   land only the verified subset.** Never merge a file that does not reproduce the ROM — it

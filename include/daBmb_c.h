@@ -54,53 +54,52 @@ struct daBmb_c : dEnemyBase_c {
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     ModelAnim                    mModelAnim;            /* 0x300 */
     ShadowModel                  mShadowModel;          /* 0x364 */
-    /* 0214b988 stores ClosestPlayer here after Dist/angle checks;
-       0214ad14 stores ClosestPlayer unconditionally. Arm 0 (0214bf64)
-       chases this pointer. Live pad. */
-    void                        *unk_38c;               /* 0x38c */
-    /* The Player carrying this Bob-omb, or 0.  Proven by use, not guessed:
-       func_ov102_0214b53c passes it as the `Player &` argument of
-       dActor_c::UpdateCarry(Player &, Vector3 const &) and calls
-       Player::IsFrontSliding and Player::LostGrabbedObject on it;
-       func_ov102_0214ae1c calls Player::DropActor and Player::Hurt on it and
-       then clears it; func_ov102_0214b3f0 is the setter and
-       func_ov102_0214b3b8 the clearer.  InitResources zeroes it. */
+    /* 0214b988 stores ClosestPlayer here after the notice-angle test;
+       0214ad14 stores it unconditionally. Arm 0 chases this pointer. */
+    Player                      *mChasePlayer;          /* 0x38c */
+    /* The Player carrying this Bob-omb, or 0. 0214b53c passes it to
+       UpdateCarry and calls IsFrontSliding / LostGrabbedObject; 0214ae1c
+       calls DropActor and Hurt, then clears it; 0214b3f0 sets it and
+       0214b3b8 clears it. InitResources zeroes it. */
     Player                      *mCarrier;              /* 0x390 */
-    /* A Matrix4x3, copied wholesale from IDENTITY_MATRIX4X3 by InitResources.
-       Left as twelve words rather than typed: daBmb_c.h is included by files that
-       do not pull common.h, and embedding the real type would force it on them. */
+    /* Twelve words, not a Matrix4x3: this header is included by files that
+       do not pull common.h. InitResources copies IDENTITY_MATRIX4X3 here.
+       0214b444 writes the translation at [9..11] before the shadow drop. */
     s32                          mMatrix[12];           /* 0x394 */
     s32                          mHomePosX;             /* 0x3c4 */
     s32                          mHomePosY;             /* 0x3c8 */
     s32                          mHomePosZ;             /* 0x3cc */
-    /* 0214b53c: UpdateCarry offset; zeroed after the copy. Live pad. */
-    s32                          unk_3d0[3];            /* 0x3d0 */
-    /* Behavior's state selector: it branches on == 5 (skip almost everything),
-       == 4 (the egg/daHolhei_c hand-off) and == 0 (allow the wall bounce). */
+    /* UpdateCarry offset. Zeroed when the Bob-omb is not in a player's hand. */
+    s32                          mCarryOff[3];          /* 0x3d0 */
+    /* Behavior skips the body at 5, the egg hand-off is 4, the wall bounce
+       is allowed only at 0. 0214b03c dispatches arms 0..5. */
     s32                          mState;                /* 0x3dc */
-    s32                          unk_3e0;               /* 0x3e0 -- InitResources stores 2; 0214ae1c Hurt damage */
-    /* 0214b248 Sound::PlayLong recycled handle. Live pad. */
-    u32                          unk_3e4;               /* 0x3e4 */
-    u16                          unk_3e8;               /* 0x3e8 -- zeroed by InitResources */
-    u16                          unk_3ea;               /* 0x3ea -- 0214b384 setter; 0214b248 explodes at 1 */
-    u16                          unk_3ec;               /* 0x3ec -- InitResources stores 0x2000 */
-    u16                          unk_3ee;               /* 0x3ee */
-    /* InitResources' last statement: a snapshot of mAngleY taken next to the
-       mHomePos* snapshot of the position. */
+    /* Hurt damage. InitResources stores 2. ov078/daBombking_c writes 0. */
+    s32                          unk_3e0;               /* 0x3e0 */
+    /* Sound::PlayLong handle for the fuse tick. */
+    u32                          mFuseSound;            /* 0x3e4 */
+    u16                          mTurnTimer;            /* 0x3e8 */
+    /* Fuse countdown. 0214b384 only shortens it; 0214b248 explodes at 1. */
+    u16                          mFuse;                 /* 0x3ea */
+    /* Half-angle window. 0214b988 will not chase a player outside it.
+       InitResources stores 0x2000. */
+    u16                          mNoticeAngle;          /* 0x3ec */
+    /* State1 walks mPrevAngleY toward this. beb4 adds a random kick when
+       the Bob-omb is turning with nobody to chase. */
+    u16                          mTargetAngY;           /* 0x3ee */
+    /* Snapshot of mAngleY beside the mHomePos* snapshot. */
     u16                          mHomeAngleY;           /* 0x3f0 */
-    u8                           unk_3f2;               /* 0x3f2 -- zeroed by InitResources */
-    /* Render draws nothing at all while this is 0; InitResources sets it to 1. */
+    u8                           mTurnCount;            /* 0x3f2 */
+    /* Render draws nothing while this is 0. InitResources sets it to 1. */
     u8                           mShouldRender;         /* 0x3f3 */
     u8                           unk_3f4;               /* 0x3f4 */
-    /* param1 & 7. InitResources switches on it: 2 starts inert (sets the
-       collision volume's hit bit and clears mFlags bit 0), 4 starts clear,
-       anything else starts live. Behavior reads it again for the egg path. */
+    /* param1 & 7. 2 starts inert, 4 starts clear, anything else starts live. */
     u8                           mVariant;              /* 0x3f5 */
-    /* ov078/daBombking_c 02123864 sets 1; Behavior explodes via 0214ae1c. */
+    /* Non-zero: Behavior detonates and returns. ov078/daBombking_c sets 1. */
     u8                           unk_3f6;               /* 0x3f6 */
     u8                           pad_3f7;               /* 0x3f7 */
-    u32                          unk_3f8;               /* 0x3f8 -- 0214b53c particle handle, eff 0x13 */
-    u32                          unk_3fc;               /* 0x3fc -- 0214b53c particle handle, eff 0x19 */
+    u32                          mCarryParticle;        /* 0x3f8 -- effect 0x13 while carried */
+    u32                          mFuseParticle;         /* 0x3fc -- effect 0x19 while the fuse is lit */
 
     /* --- vtable --- */
 
@@ -129,16 +128,18 @@ struct daBmb_c : dEnemyBase_c {
     /* Four of the six arms of the mState state machine.  The NUMBER is what the
        cartridge proves: func_ov102_0214b03c switches on mState (+0x3dc) and
        dispatches exactly six bodies for 0..5, one each, and nothing else reads the
-       field to choose between them.  The NAMES are coined -- ov102 carries these
+       field to choose between them.  State1/3/4/5 are coined -- ov102 carries these
        addresses and no identifier -- so they claim the index and nothing more; what
-       each arm does is written at its body.  Arms 0 and 2 stay free functions
-       (func_ov102_0214bf64, func_ov102_0214bd90): their recovered bodies carry
-       block-scope extern "C" declarations that contradict declarations other members
-       of this TU own, and a member function may not hold a linkage specification. */
+       each arm does is written at its body.  Arm 0 stays a free function
+       (func_ov102_0214bf64): its body casts to Bmb_Bf64Obj, a different object.
+       func_ov102_0214bd90 and func_ov102_0214b03c are methods; the address is the
+       method name. */
     void State1();
     void State3();
     int  State4();
     void State5();
+    void func_ov102_0214bd90();
+    void func_ov102_0214b03c();
 
     /* Leaf adapter until fBase_c::operator new(unsigned long) lands (#2570).
        `return new daBmb_c()` then routes through the retail allocator. */

@@ -19,10 +19,6 @@
 
 struct dActor_c;
 
-extern "C" {
-extern void func_ov001_020ab228(unsigned char *a, unsigned char *b, unsigned char idx, int e, unsigned char f);
-}
-
 int dCapEnemy_c::GetCapEatenOffIt(const Vector3 & v_)
 {
     unsigned char *c = (unsigned char *)this;
@@ -42,7 +38,7 @@ int dCapEnemy_c::GetCapEatenOffIt(const Vector3 & v_)
         mEatingPlayer = 0;
         if (mCapBank == 0) {
             idx = mCapId & 7;
-            func_ov001_020ab228((unsigned char *)&mCapIcon, c, idx, 0, 0);
+            mCapIcon.func_ov001_020ab228((char *)c, idx, 0, 0);
         }
         return 1;
     }

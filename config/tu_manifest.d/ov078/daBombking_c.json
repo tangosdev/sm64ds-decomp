@@ -97,7 +97,7 @@
       "ordinal": 10
     },
     {
-      "symbol": "func_ov078_02123eb8",
+      "symbol": "_ZN12daBombking_c19func_ov078_02123eb8Ev",
       "address": "0x02123eb8",
       "size": "0x00000064",
       "legacy_source": "src/func_ov078_02123eb8.c",

@@ -32,10 +32,6 @@ void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor,
                                               int radius, int height,
                                               unsigned int flags,
                                               unsigned int vulnFlags);
-void func_ov002_020f0438(void *self);
-void func_ov002_020f051c(void *self);
-void func_ov002_020f05f4(void *self);
-
 extern SharedFilePtr data_ov002_0210d9a8;
 }
 
@@ -93,7 +89,7 @@ s32 daSCoin_c::Behavior()
 {
     if (mDeathTimer) {
         if (DecIfAbove0_Byte(&mDeathTimer) == 0) {
-            func_ov002_020f05f4(this);
+            func_ov002_020f05f4();
             MarkForDestruction();
         }
         return 1;
@@ -120,9 +116,9 @@ s32 daSCoin_c::Behavior()
         MarkForDestruction();
         return 1;
     }
-    func_ov002_020f051c(this);
+    func_ov002_020f051c();
     if (mdCcAc_c.otherOwner) {
-        func_ov002_020f0438(this);
+        func_ov002_020f0438();
     }
     mdCcAc_c.Clear();
     if (mClsnDisabled == 0) {
@@ -142,18 +138,17 @@ s32 daSCoin_c::CleanupResources()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020f05f4
-extern "C" void func_ov002_020f05f4(void *self)
+// @symbol _ZN9daSCoin_c19func_ov002_020f05f4Ev
+void daSCoin_c::func_ov002_020f05f4()
 {
     /* MATCH form: dActor_c::Spawn as a real method size-DIFFs (s8/s16
      * areaID/deathTableID vs the scalar ABI). Named mPosX/Y/Z on the
      * STAR_MARKER also size-DIFFs; keep the int* +0x5c copy. */
-    daSCoin_c *c = (daSCoin_c *)self;
     char *a = 0;
     for (;;) {
         a = (char *)dActor_c::FindWithActorID(0xb4, (dActor_c *)a);
         if (a == 0) return;
-        if (c->unk_10d == *(unsigned char *)(a + 0x1d9)) {
+        if (unk_10d == *(unsigned char *)(a + 0x1d9)) {
             int *base = (int *)(a + 0x5c);
             Vector3 pos;
             pos.x = base[0];
@@ -162,7 +157,7 @@ extern "C" void func_ov002_020f05f4(void *self)
             pos.y += 0x12c000;
             {
                 char *p = (char *)dActor_c::Spawn(
-                    0xb2, c->unk_10d | 0x40, pos, 0, c->mAreaId, -1);
+                    0xb2, unk_10d | 0x40, pos, 0, mAreaId, -1);
                 if (p != 0) {
                     ((PowerStar *)p)->AddStarMarker();
                 }
@@ -174,14 +169,13 @@ extern "C" void func_ov002_020f05f4(void *self)
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020f051c
-extern "C" void func_ov002_020f051c(void *self)
+// @symbol _ZN9daSCoin_c19func_ov002_020f051cEv
+void daSCoin_c::func_ov002_020f051c()
 {
-    daSCoin_c *c = (daSCoin_c *)self;
     dActor_c *a;
     u32 t;
     int b;
-    if (c->unk_112 != 0) return;
+    if (unk_112 != 0) return;
     a = dActor_c::Next(0);
     if (a == 0) goto done;
     do {
@@ -191,49 +185,48 @@ extern "C" void func_ov002_020f051c(void *self)
             b = (t == 0x15);
             if (b == 0) goto chk2;
         }
-        if (Vec3_Dist((Vector3 *)&c->mPosX, (Vector3 *)&a->mPosX) < 0xc8000) {
-            c->mClsnDisabled = 1;
-            *(int *)((char *)a + 0x3f4) = (int)c;
+        if (Vec3_Dist((Vector3 *)&mPosX, (Vector3 *)&a->mPosX) < 0xc8000) {
+            mClsnDisabled = 1;
+            *(int *)((char *)a + 0x3f4) = (int)this;
             goto done;
         }
         goto next;
       chk2:
         b = (t == 0xc0);
         if (b == 0) goto next;
-        if (Vec3_Dist((Vector3 *)&c->mPosX, (Vector3 *)&a->mPosX) < 0xc8000) {
-            c->mClsnDisabled = 1;
-            *(int *)((char *)a + 0x4f0) = (int)c;
+        if (Vec3_Dist((Vector3 *)&mPosX, (Vector3 *)&a->mPosX) < 0xc8000) {
+            mClsnDisabled = 1;
+            *(int *)((char *)a + 0x4f0) = (int)this;
             goto done;
         }
       next:
         a = dActor_c::Next(a);
     } while (a != 0);
   done:
-    c->unk_112 = 1;
+    unk_112 = 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020f0438
-extern "C" void func_ov002_020f0438(void *self)
+// @symbol _ZN9daSCoin_c19func_ov002_020f0438Ev
+void daSCoin_c::func_ov002_020f0438()
 {
-    daSCoin_c *thiz = (daSCoin_c *)self;
-    daSCoin_c *o = (daSCoin_c *)dActor_c::FindWithID(thiz->mLeaderUniqueID);
+    daSCoin_c *o = (daSCoin_c *)dActor_c::FindWithID(mLeaderUniqueID);
     if (!o) return;
-    if (thiz->mGroupId != 0xf && thiz->mGroupId != o->mCollectedCount) return;
+    if (mGroupId != 0xf && mGroupId != o->mCollectedCount) return;
     func_02012790(0x25);
     o->mCollectedCount++;
     {
         Vector3 v;
-        v.x = thiz->mPosX;
-        v.y = thiz->mPosY;
-        v.z = thiz->mPosZ;
-        thiz->SpawnNumber(v, o->mCollectedCount, false, 0, 0);
+        v.x = mPosX;
+        v.y = mPosY;
+        v.z = mPosZ;
+        SpawnNumber(v, o->mCollectedCount, false, 0, 0);
     }
-    thiz->mdCcAc_c.flags |= 1;
-    if (o->mCollectedCount == 5) { thiz->mDeathTimer = 0x1e; return; }
-    if (thiz->mGroupRole != 2) return;
-    thiz->MarkForDestruction();
+    mdCcAc_c.flags |= 1;
+    if (o->mCollectedCount == 5) { mDeathTimer = 0x1e; return; }
+    if (mGroupRole != 2) return;
+    MarkForDestruction();
 }
 
 /* -------------------------------------------------------------------------- */

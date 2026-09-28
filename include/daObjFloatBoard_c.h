@@ -107,6 +107,8 @@ struct daObjFloatBoard_c : dBgActor_c {
     int CleanupResources();             /* slot 3, ov002 0x020b5be0 */
     int Behavior();                     /* slot 6, ov002 0x020b5c4c */
     s32 Render();                       /* slot 9, ov002 0x020b5c24 -- mModel.Render(0) */
+    void func_ov002_020b5b98();
+    int func_ov002_020b5ab4();
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
        there is no __cxa_pure_virtual in this image for it to point at -- so a zero

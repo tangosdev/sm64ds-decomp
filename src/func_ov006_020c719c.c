@@ -1,6 +1,6 @@
 #include "types.h"
 extern void func_ov006_020c6f8c(int);
-extern void func_ov006_020c8658(void *c);
+extern void _ZN16dMgJump3DMario_c19func_ov006_020c8658Ev(void *c);
 extern void func_ov006_020c8a9c(int a0, int a1);
 
 extern u32 data_ov006_02140414;
@@ -25,7 +25,7 @@ void func_ov006_020c719c(u32 a0, u32 a1) {
         data_ov006_02140428 = data_ov006_02140418;
     }
     for (i = 0; i < data_ov006_02140418; i++) {
-        func_ov006_020c8658(data_ov006_02140420 + i * 0xb8);
+        _ZN16dMgJump3DMario_c19func_ov006_020c8658Ev(data_ov006_02140420 + i * 0xb8);
     }
     func_ov006_020c8a9c(data_ov006_02140418 - data_ov006_02140428, 0);
     data_ov006_02140434 = 0;
