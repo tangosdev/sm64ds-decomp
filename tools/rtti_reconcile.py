@@ -111,23 +111,53 @@ def load_symbols():
     return out
 
 
+def unjoined_detail(r, syms, member_prefixes):
+    """Why an unknown_class row did not join: what its vtable is called, and how
+    many config symbols already name a member of the class.
+
+    The join is by _ZTV symbol only, so a class the repo defines methods for still
+    lands here when its vtable is a `data_*` placeholder -- or when it has no
+    primary vtable to name (a class seen only as a secondary base).
+    """
+    vmod = r.get("vtable_module") or r["module"]
+    vsyms = (sorted(syms.get(vmod, {}).get(int(r["vtable"], 16), []))
+             if r["vtable"] else [])
+    prefix = "".join("%d%s" % (len(p), p) for p in r["name"].split("::"))
+    members = sum(n for k, n in member_prefixes.items() if k.startswith(prefix))
+    return {"vtable_module": vmod, "vtable_symbols": vsyms,
+            "member_symbols": members}
+
+
 def build(rtti_path, eh_path):
     rtti = json.loads(pathlib.Path(rtti_path).read_text(encoding="utf-8"))
     eh = json.loads(pathlib.Path(eh_path).read_text(encoding="utf-8"))
     hier = eh["hierarchy"]
     syms = load_symbols()
 
+    member_prefixes = collections.Counter()
+    for names in (n for m in syms.values() for n in m.values()):
+        for n in names:
+            if n.startswith("_ZN"):
+                member_prefixes[n[3:]] += 1
+
     # ---- ROM class -> tree name, via the vtable address --------------------
     tree_name = {}          # rtti record key -> tree's class name
     for key, r in rtti["records"].items():
         if not r["vtable"]:
             continue
-        for n in sorted(syms.get(r["module"], {}).get(int(r["vtable"], 16), [])):
-            if n.startswith("_ZTV"):
-                c = ztv_to_class(n)
-                if c:
-                    tree_name[key] = c
-                    break
+        # The vtable can sit in a different overlay from the typeinfo it points at
+        # (rtti_extract.attach_vtables); look it up where it actually lives.
+        vmod = r.get("vtable_module") or r["module"]
+        # Several _ZTV names can share one vtable: the ROM's own spelling next to
+        # the tree's coined one (_ZTV8daStar_c and _ZTV9PowerStar).  Take the one
+        # the tree actually has a class for, as evidence_hierarchy's alias map
+        # does; sorted-first picked the ROM spelling and left the tree's class
+        # reported as having no ROM record at all.
+        names = [c for c in (ztv_to_class(n) for n in
+                             sorted(syms.get(vmod, {}).get(int(r["vtable"], 16), []))
+                             if n.startswith("_ZTV")) if c]
+        if names:
+            tree_name[key] = next((c for c in names if c in hier), names[0])
 
     rom_name = {k: r["name"] for k, r in rtti["records"].items()}
     stats_alias = collections.Counter()
@@ -308,6 +338,8 @@ def build(rtti_path, eh_path):
             "proven_by": proven_by,
             "vtable": rtti["records"][key]["vtable"],
         })
+        if verdict == "unknown_class":
+            rows[-1].update(unjoined_detail(rtti["records"][key], syms, member_prefixes))
 
     # classes the tree believes in that the ROM has no record for
     known_tree = {v for v in tree_name.values()}

@@ -801,7 +801,10 @@ def load_rtti_edges(root, stats):
     for key, r in sorted(data.get("records", {}).items()):
         if not r.get("vtable"):
             continue
-        for n in sorted(by_mod.get((r["module"], int(r["vtable"], 16)), [])):
+        # The vtable can sit in a different overlay from the typeinfo it points at
+        # (rtti_extract.attach_vtables); look it up where it actually lives.
+        vmod = r.get("vtable_module") or r["module"]
+        for n in sorted(by_mod.get((vmod, int(r["vtable"], 16)), [])):
             if n.startswith("_ZTV"):
                 p = split_nested(n[4:-1] if n[4:5] == "N" and n.endswith("E")
                                  else n[4:])
@@ -1511,6 +1514,11 @@ def build(root, seed_path):
             },
         },
         "hierarchy": {k: hierarchy[k] for k in sorted(hierarchy)},
+        # Per header: what kind it is and the base it writes, whether or not that
+        # base was admitted as evidence.  Lets a reader say *why* a class has no
+        # header-sourced base -- still bannered, unparsed, or no header at all.
+        "headers": {c: {"path": h.path, "kind": h.kind, "base": h.base}
+                    for c, h in sorted(headers.items())},
         "conflicts": conflicts,
         "overlaps_agreeing": agreeing,
     }

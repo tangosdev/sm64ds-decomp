@@ -273,6 +273,12 @@ def build():
     rec_addrs = collections.defaultdict(set)
     for v in recs.values():
         rec_addrs[v["module"]].add(int(v["addr"], 16))
+        # A vtable whose record lives in another overlay still ends the table before
+        # it in ITS module: its header's typeinfo pointer is the stop signal.  Missing
+        # this walked daObjBlockS_c straight through daObjFallBlock_c's table: 66
+        # slots against a base of 32.
+        if v.get("vtable_module"):
+            rec_addrs[v["vtable_module"]].add(int(v["addr"], 16))
 
     tables = {}
     for v in recs.values():

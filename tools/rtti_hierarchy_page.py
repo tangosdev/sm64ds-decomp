@@ -262,6 +262,7 @@ td.m,th.m{font-family:var(--mono)}
 .tree .inf{color:var(--inferred)}
 .tree .ct{color:var(--contra)}
 .tree .dim{color:var(--mute)}
+td .dim{color:var(--mute); font-size:.9em}
 .tree .cnt{color:var(--mute); font-size:11.5px}
 details{border:1px solid var(--rule-soft); background:var(--card); margin:10px 0}
 summary{cursor:pointer; padding:11px 16px; font:600 13px/1.4 var(--sans);
@@ -601,26 +602,127 @@ def build(d):
                        for k, v in inter.most_common()),
              "it" if len(inter) == 1 else "those %d" % len(inter)))
 
-    # ---- §6 unproven
+    # ---- §6 open
+    # What is still open, joined not typed.  This section used to be only the
+    # tree-only list; once every header class joined a ROM record it went to
+    # "0 classes ... 0 of them ... 0 have none", which reads as a broken page.
     A('</section><section><div class="sec-h"><span class="sec-n">§6</span>'
-      "<h2>What is still guessed</h2></div>")
-    A("<p>%d classes the repo knows have no <code>type_info</code> record at all. "
-      "They are not polymorphic, or their vtable was never emitted, so RTTI cannot "
-      "speak to them and their placement rests entirely on constructor evidence. "
-      "%d of them have an inferred base; %d have none.</p>"
-      % (len(tree_only), len(tree_only) - len(unplaced), len(unplaced)))
-    A('<div class="scroll"><table><thead><tr><th>Status</th><th>Count</th>'
+      "<h2>What is still open</h2></div>")
+    if tree_only:
+        A("<p>%d classes the repo knows have no <code>type_info</code> record at all. "
+          "They are not polymorphic, or their vtable was never emitted, so RTTI cannot "
+          "speak to them and their placement rests entirely on constructor evidence. "
+          "%d of them have an inferred base; %d have none.</p>"
+          % (len(tree_only), len(tree_only) - len(unplaced), len(unplaced)))
+        A('<div class="scroll"><table><thead><tr><th>Status</th><th>Count</th>'
+          "<th>Classes</th></tr></thead><tbody>")
+        inf_flat = sorted(c for v in inferred_children.values() for c, _ in v)
+        A('<tr><td style="color:var(--inferred)"><strong>Inferred base</strong></td>'
+          '<td class="n">%d</td><td class="m">%s</td></tr>'
+          % (len(inf_flat), E(", ".join(inf_flat))))
+        A('<tr><td><strong>No placement</strong></td><td class="n">%d</td>'
+          '<td class="m">%s</td></tr>' % (len(unplaced), E(", ".join(sorted(unplaced)))))
+        A("</tbody></table></div>")
+    else:
+        A("<p><strong>No base is guessed.</strong> Every class the repo's headers "
+          "define joins a ROM <code>type_info</code> record through its vtable "
+          "symbol, so every edge on this page is one the ROM wrote down. What is "
+          "left open is naming, not structure: the three lists below.</p>")
+
+    # (a) ROM classes the repo's vtable symbols do not name.
+    unknown = by_verdict["unknown_class"]
+    groups = [
+        ("C++ runtime", "The standard library's own root record; not game code.",
+         [r for r in unknown if r["rom_name"].startswith("std::")]),
+        ("No primary vtable",
+         "Seen only as a secondary base inside a multiple-inheritance class (§4), or "
+         "never given a vtable of its own, so there is no <code>_ZTV</code> to name.",
+         [r for r in unknown if not r["rom_name"].startswith("std::")
+          and not r["vtable"]]),
+        ("Vtable still a placeholder",
+         "The repo already names members of the class, but its vtable is still a "
+         "<code>data_*</code> symbol in <code>config/</code>, so the join misses it.",
+         [r for r in unknown if not r["rom_name"].startswith("std::") and r["vtable"]
+          and r.get("member_symbols")]),
+        ("Not yet named",
+         "Neither the vtable nor any member has a name in <code>config/</code>.",
+         [r for r in unknown if not r["rom_name"].startswith("std::") and r["vtable"]
+          and not r.get("member_symbols")]),
+    ]
+    A("<h3>ROM classes with no repo name on their vtable (%d)</h3>" % len(unknown))
+    A("<p>The repo is joined to the ROM by vtable symbol alone. These records are "
+      "proven within this graph but no <code>_ZTV</code> symbol names them, which "
+      "is not the same as the project never having seen them.</p>")
+    A('<div class="scroll"><table><thead><tr><th>Why</th><th>Count</th>'
       "<th>Classes</th></tr></thead><tbody>")
-    inf_flat = sorted(c for v in inferred_children.values() for c, _ in v)
-    A('<tr><td style="color:var(--inferred)"><strong>Inferred base</strong></td>'
-      '<td class="n">%d</td><td class="m">%s</td></tr>'
-      % (len(inf_flat), E(", ".join(inf_flat))))
-    A('<tr><td><strong>No placement</strong></td><td class="n">%d</td>'
-      '<td class="m">%s</td></tr>' % (len(unplaced), E(", ".join(sorted(unplaced)))))
+    for label, why, rs in groups:
+        if not rs:
+            continue
+        A('<tr><td><strong>%s</strong><br><span class="dim">%s</span></td>'
+          '<td class="n">%d</td><td class="m">%s</td></tr>'
+          % (E(label), why, len(rs),
+             "<br>".join("%s <span class=\"dim\">%s</span>"
+                         % (E(r["rom_name"]), E(r["module"]))
+                         for r in sorted(rs, key=lambda x: (x["module"], x["rom_name"])))))
     A("</tbody></table></div>")
-    A("<p>Separately, %d ROM classes have no name in the repo at all — the ROM knows "
-      "them, the project has never given them a header. They are proven within this "
-      "graph and invisible outside it.</p>" % st.get("unknown_class", 0))
+
+    # (b) classes the repo names but whose headers supply no base to check.  The
+    #     ROM's own edge is never graded against itself, so these rows only say
+    #     the header has not yet been read as independent evidence -- and why.
+    heads = eh.get("headers", {})
+    nb = sorted(by_verdict["no_belief"], key=lambda r: r["tree_name"] or "")
+
+    def nb_reason(r):
+        h = heads.get(r["tree_name"])
+        if not h:
+            return "none"
+        if h["kind"] in ("bannered", "other_generated", "decl"):
+            return "generated"
+        return "unparsed"
+    reasons = [
+        ("generated", "Header still auto-generated",
+         "It carries the generator's banner, so the base it writes is not admitted as "
+         "evidence until someone reviews it and removes the banner."),
+        ("unparsed", "Header not read",
+         "A hand-written header exists, but the parser took no base from it: the "
+         "file is named for one spelling while its struct uses another, or the "
+         "struct lists more than one base."),
+        ("none", "No header of its own",
+         "Nested classes and runtime types declared inside another file."),
+    ]
+    A("<h3>Repo classes with no header-sourced base (%d)</h3>" % len(nb))
+    A("<p>The ROM supplies the base for each of these, so the graph above is "
+      "complete. What is missing is an independent reading of the repo's header "
+      "to check it against: until one exists, §5's comparison cannot run on these "
+      "rows.</p>")
+    A('<div class="scroll"><table><thead><tr><th>Why</th><th>Repo class</th>'
+      "<th>Header writes</th><th>ROM base</th></tr></thead><tbody>")
+    for key, label, why in reasons:
+        rs = [r for r in nb if nb_reason(r) == key]
+        for i, r in enumerate(rs):
+            h = heads.get(r["tree_name"]) or {}
+            cell = ('<td rowspan="%d"><strong>%s</strong> (%d)<br>'
+                    '<span class="dim">%s</span></td>' % (len(rs), E(label), len(rs), why)
+                    if i == 0 else "")
+            A('<tr>%s<td class="m">%s</td><td class="m">%s</td><td class="m">%s</td></tr>'
+              % (cell, E(r["tree_name"]), E(h.get("base") or "—"),
+                 E(", ".join(r["rom_bases"]) or "— (root)")))
+    A("</tbody></table></div>")
+
+    # (c) coined names.
+    coined = sorted((r for r in rows if r["tree_name"]
+                     and r["tree_name"] != r["rom_name"]),
+                    key=lambda r: r["rom_name"])
+    A("<h3>Repo classes still under a coined name (%d)</h3>" % len(coined))
+    A("<p>The ROM spells these classes one way and the repo another. The edge is "
+      "proven either way, since the join goes through the vtable address, but a "
+      "reader searching the source for the ROM's name will not find it.</p>")
+    A('<div class="scroll"><table><thead><tr><th>ROM name</th><th>Repo name</th>'
+      "<th>Module</th></tr></thead><tbody>")
+    for r in coined:
+        A('<tr><td class="m">%s</td><td class="m">%s</td><td class="m">%s</td></tr>'
+          % (E(r["rom_name"]), E(r["tree_name"]), E(r["module"])))
+    A("</tbody></table></div>")
 
     # ---- §7 limits
     A('</section><section><div class="sec-h"><span class="sec-n">§7</span>'
@@ -646,8 +748,12 @@ def build(d):
          "<code>isdoverlay.c</code>, Nintendo's debugger SDK. Game code was built "
          "with asserts stripped."),
         ("Non-polymorphic classes",
-         "A class with no virtual function gets no vtable and no record. The %d "
-         "inferred classes in §6 are exactly this population." % len(tree_only)),
+         "A class with no virtual function gets no vtable and no record, so it "
+         "cannot appear on this page at all. "
+         + ("The %d inferred classes in §6 are exactly the ones the repo "
+            "defines." % len(tree_only) if tree_only else
+            "Every class the repo's headers define does have one, so the repo "
+            "currently models no class this page cannot see.")),
     ]:
         A("<tr><td><strong>%s</strong></td><td>%s</td></tr>" % (E(what), why))
     A("</tbody></table></div></section>")
