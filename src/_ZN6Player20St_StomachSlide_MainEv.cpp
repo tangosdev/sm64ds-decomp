@@ -6,13 +6,11 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 extern "C" {
-extern void func_ov002_020bf90c(void* c);
 extern int _ZN6Player7IsStateERNS_5StateE(void* c, void* s);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern void func_ov002_020c06fc(void* c, u32 arg);
 extern int func_ov002_020dd2f4(void* c);
 extern void func_ov002_020c0364(void* c, u32 arg);
-extern int func_ov002_020c0688(void* c);
 extern int func_ov002_020e2ea0(void* c);
 extern int _ZN6Player6IsAnimEj(void* c, u32 anim);
 extern int _ZN6Player12FinishedAnimEv(void* c);
@@ -46,7 +44,7 @@ int Player::St_StomachSlide_Main()
 
     switch (mStatePhase) {
     case 0:
-        func_ov002_020bf90c(((char*)this));
+        func_ov002_020bf90c();
         if (mIsAirborne == 0) {
             mIsSlidingOnGround = 1;
             if (_ZN6Player7IsStateERNS_5StateE(((char*)this), data_ov002_021105bc)) {
@@ -86,7 +84,7 @@ int Player::St_StomachSlide_Main()
             mSlideStoppedTimer = 0;
         }
 
-        if (func_ov002_020c0688(((char*)this))) {
+        if (func_ov002_020c0688()) {
             if (func_ov002_020e2ea0(((char*)this))) {
                 return 1;
             }

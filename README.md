@@ -25,66 +25,19 @@ Code size  ███████████████████████
 ```
 <!-- progress:end -->
 
-![Decompilation progress treemap](docs/progress-treemap.svg)
-
-For an interactive version where you can hover any function for its name, address,
-size, and status, see the [progress treemap on GitHub Pages](https://tangosdev.github.io/sm64ds-decomp/).
-
-## The three tiers
-
-The bar above measures one thing: whether the C compiles to the ROM's exact bytes.
-That is the hardest guarantee to earn and the one the project is named for, but on
-its own it overstates how finished the game is. "Done" means three separate things
-here, and they move independently.
-
 <!-- tiers:start -->
 ```
 MATCHED    ██████████████████████████████  99.8%   11,368 / 11,389 functions
            of which 121 are byte-exact assembly (hand-written in the original, not C)
-CONVERTED  █████████░░░░░░░░░░░░░░░░░░░░░  28.8%   3,278 / 11,386 functions
+CONVERTED  █████████░░░░░░░░░░░░░░░░░░░░░  28.8%   3,279 / 11,386 functions
 LINKED     ████████████████████████████░░  93.5%   10,595 / 11,328 matched TUs
 ```
 <!-- tiers:end -->
 
-- **MATCHED** is source that compiles to the ROM's exact bytes, checked against the
-  cartridge. Nearly all of it is C and C++. The rest is the small set of routines the
-  original game wrote in assembly, which count under the rule in
-  [What counts as matched](#what-counts-as-matched) below. This is the bar above and
-  the treemap.
-- **CONVERTED** is source-owned code a person can read without the ROM open beside
-  them. Matching
-  does not require readable code, so this tier does not move on its own and is by far
-  the furthest behind.
-- **LINKED** is matched code that actually reaches the [PC port](port/)'s binary,
-  replacing the host stand-in that stood there before. On `main` that `port/` tree holds
-  the port's smoke-gate suite: the platform seam, the slice manifests and the native test
-  executables. The playable build is developed on the `port/*` branches, and that is what
-  the download link at the top of this file serves.
+![Decompilation progress treemap](docs/progress-treemap.svg)
 
-They are not stages of one pipeline. A function can be matched and linked while still
-being unreadable, and converting a file never changes its matched bytes.
-
-CONVERTED is strict on purpose. A function counts only if its source passes all five of: a real
-function name, no raw offset arithmetic, no `unk_<off>` fields, no codegen tricks, and
-no calls through mangled names. A merged translation unit contributes one unit per
-enrolled function, so restoring original file boundaries cannot change progress by
-itself. Most of the tree is partway there rather than nowhere near it, which the
-headline alone hides: roughly 26% of functions pass three of the five, and 31% pass
-four. Run `python tools/tiers.py` for the full breakdown and two softer readings of
-the same tree.
-
-The name criterion reads the name a *reader* sees, not the linker symbol. For a C++
-method those differ — the ROM's `KoopaShell::OnYoshiTryEat` can only ever link as
-`_ZN10KoopaShell13OnYoshiTryEatEv` — so judging the symbol asked a question no
-converted method could answer, and the tier paid you to un-convert methods back into
-flat C. It read 3.8% for that reason. See [notes/converted-tier.md](notes/converted-tier.md),
-which also records two evasions in the other criteria that are left open on purpose.
-
-LINKED is a stamped measurement, not a live counter. It needs an MSVC build of the
-port, which CI on this branch cannot produce, so it is measured by hand and recorded
-in [config/port_linkage.json](config/port_linkage.json) with the branch and commit it
-came from. Because the port branches are not merged, it is the best single branch and
-so a floor. Reproduce it with `python port/tools/linkage.py` against a port build.
+For an interactive version where you can hover any function for its name, address,
+size, and status, see the [progress treemap on GitHub Pages](https://tangosdev.github.io/sm64ds-decomp/).
 
 ## What "matching" means
 

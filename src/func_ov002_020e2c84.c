@@ -54,7 +54,7 @@ int func_ov002_020e2c84(char *self)
         *(u8 *)(self + 0x70d) = 0;
         _ZN5Sound13PlayCharVoiceEjjRK7Vector3(*(u8 *)(self + 0x6d9), 7, (struct Vector3 *)(self + 0x74));
     } else if (diff > 0x47e000) {
-        if (func_ov002_020c0cbc(self) == 0) {
+        if (_ZN6Player19func_ov002_020c0cbcEv(self) == 0) {
             if (func_ov002_020d91e0(self, 0x200, 1) != 0) {
                 if (_ZN6Player7IsStateERNS_5StateE(self, &data_ov002_02110094) != 0) {
                     {

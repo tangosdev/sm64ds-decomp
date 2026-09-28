@@ -103,7 +103,7 @@
       "ordinal": 11
     },
     {
-      "symbol": "func_ov062_021164e8",
+      "symbol": "_ZN10daHolhei_c19func_ov062_021164e8Ev",
       "address": "0x021164e8",
       "size": "0x000000f8",
       "legacy_source": "src/func_ov062_021164e8.cpp",
@@ -117,7 +117,7 @@
       "ordinal": 13
     },
     {
-      "symbol": "func_ov062_021165e8",
+      "symbol": "_ZN10daHolhei_c19func_ov062_021165e8Ev",
       "address": "0x021165e8",
       "size": "0x0000019c",
       "legacy_source": "src/func_ov062_021165e8.c",
@@ -131,7 +131,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "func_ov062_021167c0",
+      "symbol": "_ZN10daHolhei_c19func_ov062_021167c0Ev",
       "address": "0x021167c0",
       "size": "0x00000090",
       "legacy_source": "src/func_ov062_021167c0.cpp",
@@ -145,14 +145,14 @@
       "ordinal": 17
     },
     {
-      "symbol": "func_ov062_02116894",
+      "symbol": "_ZN10daHolhei_c19func_ov062_02116894Ev",
       "address": "0x02116894",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov062_02116894.cpp",
       "ordinal": 18
     },
     {
-      "symbol": "func_ov062_02116980",
+      "symbol": "_ZN10daHolhei_c19func_ov062_02116980Ev",
       "address": "0x02116980",
       "size": "0x00000088",
       "legacy_source": "src/func_ov062_02116980.c",
@@ -173,14 +173,14 @@
       "ordinal": 21
     },
     {
-      "symbol": "func_ov062_02116bf8",
+      "symbol": "_ZN10daHolhei_c19func_ov062_02116bf8Ev",
       "address": "0x02116bf8",
       "size": "0x00000080",
       "legacy_source": "src/func_ov062_02116bf8.c",
       "ordinal": 22
     },
     {
-      "symbol": "func_ov062_02116c78",
+      "symbol": "_ZN10daHolhei_c19func_ov062_02116c78Ev",
       "address": "0x02116c78",
       "size": "0x00000060",
       "legacy_source": "src/func_ov062_02116c78.cpp",
@@ -194,7 +194,7 @@
       "ordinal": 24
     },
     {
-      "symbol": "func_ov062_02116d28",
+      "symbol": "_ZN10daHolhei_c19func_ov062_02116d28Ev",
       "address": "0x02116d28",
       "size": "0x00000094",
       "legacy_source": "src/func_ov062_02116d28.cpp",

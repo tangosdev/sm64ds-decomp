@@ -38,21 +38,21 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov002_020f0438",
+      "symbol": "_ZN9daSCoin_c19func_ov002_020f0438Ev",
       "address": "0x020f0438",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov002_020f0438.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov002_020f051c",
+      "symbol": "_ZN9daSCoin_c19func_ov002_020f051cEv",
       "address": "0x020f051c",
       "size": "0x000000d8",
       "legacy_source": "src/func_ov002_020f051c.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov002_020f05f4",
+      "symbol": "_ZN9daSCoin_c19func_ov002_020f05f4Ev",
       "address": "0x020f05f4",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov002_020f05f4.c",

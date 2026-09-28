@@ -54,8 +54,8 @@
 bool ApproachLinear(short &value, short target, short step);
 
 /* decl_common.h already declares every address-named symbol this TU touches --
- * func_ov025_021119a4/021119f4/02111a84, func_ov091_02132dc0/02132e64/02132e98/
- * 02132f04/02132ff4/02133020/02133098 and data_ov025_02113814 -- all taking
+ * func_ov025_021119a4/021119f4/02111a84, func_ov091_02132e64/02132e98/02132ff4
+ * and data_ov025_02113814 -- all taking
  * char*, where several shards had spelled them void*. The real header wins;
  * their shadow declarations are gone and the definitions below match it.
  *
@@ -152,9 +152,9 @@ int daDkk_c::Behavior()
 {
     char *c = (char *)this;
     switch (mState) {
-    case 0: func_ov091_02133020(c); break;
+    case 0: ((daDsnBase_c *)c)->func_ov091_02133020(); break;
     case 1: func_ov091_02132ff4(c); break;
-    case 2: func_ov091_02132f04(c); break;
+    case 2: ((daDsnBase_c *)c)->func_ov091_02132f04(); break;
     case 3: func_ov091_02132e98(c); break;
     case 4: func_ov091_02132e64(c); break;
     case 5: func_ov025_02111a84(); break;
@@ -162,10 +162,10 @@ int daDkk_c::Behavior()
     case 7: func_ov025_021119a4(); break;
     }
     UpdateModelPosAndRotY();
-    func_ov091_02133098(c);
+    ((daDsnBase_c *)c)->func_ov091_02133098();
     /* IsClsnInRange: header method form refused (Fix12-by-value 6az). */
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0 ||
-        func_ov091_02132dc0(c) != 0) {
+        ((daDsnBase_c *)c)->func_ov091_02132dc0() != 0) {
         UpdateClsnPosAndRot();
     }
     return 1;

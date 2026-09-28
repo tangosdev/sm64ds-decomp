@@ -1,4 +1,4 @@
-extern int func_ov002_020c0434(char* c);
+extern int _ZN6Player19func_ov002_020c0434Ev(char* c);
 extern void func_ov002_020c0364(char* c, unsigned int arg);
 extern int func_ov002_020dd824(char* c);
 extern int func_ov002_020d5c6c(char* c);
@@ -19,7 +19,7 @@ int func_ov002_020d36d8(char* c, int arg)
 {
     if ((unsigned short)(*(unsigned short*)(c + 0x6ce) & 0x40)) return 0;
 
-    if (func_ov002_020c0434(c) != 0) {
+    if (_ZN6Player19func_ov002_020c0434Ev(c) != 0) {
         func_ov002_020c0364(c, 3);
         return 1;
     }

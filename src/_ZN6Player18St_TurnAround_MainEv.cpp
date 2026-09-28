@@ -58,7 +58,7 @@ int Player::St_TurnAround_Main()
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
         }
     } else {
-        func_ov002_020bf88c(((char*)this));
+        func_ov002_020bf88c();
         mLoopingSoundHandle = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2, (int)((char*)&mCamSpacePosX), mHorzSpeed, 0);
     }
 

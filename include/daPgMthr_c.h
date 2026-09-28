@@ -70,6 +70,18 @@ struct daPgMthr_c : dActor_c {
     virtual int Behavior();                      /* slot 6 */
     virtual int Render();                        /* slot 9 */
     virtual void OnPendingDestroy();             /* slot 12 */
+
+    void func_ov018_02111968(void *found, char *heldRaw);
+    void func_ov018_02111a48(char *b);
+    void func_ov018_02111b3c();
+    void func_ov018_02111d28();
+    int func_ov018_02111e28();
+    int func_ov018_02111f1c();
+    int func_ov018_02111fac();
+    int func_ov018_021121dc();
+    int func_ov018_02112234();
+    int func_ov018_021122ec();
+    void func_ov018_021123d0(int i);
 };
 
 #ifndef SM64DS_PLATFORM_PC

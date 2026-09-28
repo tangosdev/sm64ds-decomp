@@ -1,359 +1,372 @@
 //cpp
-/* daHuwa_c, the Spindrift. ov081 0x02123740..0x02124040, twelve functions.
+/* daHuwa_c, the Spindrift (HUWAHUWA). ov081, twelve functions.
  *
- * The cartridge spells the class 8daHuwa_c at 0x02128840. _ZTI8daHuwa_c at
- * 0x0212884c is the __si_class_type_info record (base _ZTI12dEnemyBase_c),
- * and the word before _ZTV8daHuwa_c (0x0212887c) points at that typeinfo.
- * The header used to coin the class Spindrift.
+ * common.h is first so Matrix4x3 stays the flat { s32 m[12]; }. The death
+ * and shadow helpers index that matrix through .m. daHuwa_c.h pulls in
+ * math/Matrix.h, whose nested spelling would stand instead if it were first.
  *
- * The run is the whole class and nothing else: D1, D0, OnAimedAtWithEgg,
- * three file-local helpers, CleanupResources, Render, Behavior,
- * InitResources, OnTurnIntoEgg, OnYoshiTryEat. daHuwa_c_classInit at
- * 0x02124040 abuts the end and stays out of this compiler input.
+ * #pragma defer_codegen off emits .text in source order. One out-of-line
+ * destructor is the key function, so this TU emits _ZTV/_ZTI/_ZTS and a D2
+ * the cartridge has no home for (manifest: deadstrip).
  *
- * #pragma defer_codegen off emits .text in source order, so this file is
- * ROM-ascending. One out-of-line destructor is the key function, so this TU
- * emits _ZTV/_ZTI/_ZTS: D1 (0x02123740), D0 (0x02123788), then a D2 the
- * cartridge has no home for (manifest: deadstrip).
+ * daHuwa_c_classInit and g_profile_HUWAHUWA stay in other files. The two
+ * file handles are constructed by __sinit_ov081_021280e8 (file ids 813 and
+ * 814); this TU only loads and releases them.
  *
- * common.h is first so its flat Matrix4x3 { s32 m[12]; } is seen before
- * daHuwa_c.h reaches math/Matrix.h. func_ov081_021237ec copies that matrix
- * through .m. decl_common.h is not included: it prototypes the three
- * helpers as void(void*), and the definitions that match are void(char*).
+ * deslop leftovers:
+ * - func_ov081_021237ec SpawnCoins as dActor_c::SpawnCoins: 0x124 -> 0x130 (+12).
+ *   Particle::System::NewSimple with Fix12<int> x/y/z: 0x124 -> 0x148 (+36).
+ * - func_ov081_02123910 `actorID != 0xbf` instead of the int compare: 0x210 -> 0x200
+ *   (-16). KillByInvincibleChar as the method: 0x210 -> 0x218 (+8). Player::Hurt
+ *   with Fix12<int> knockback: 0x210 -> 0x21c (+12). SpinBounce with Fix12<int>:
+ *   0x210 -> 0x21c (+12).
+ * - func_ov081_02123b20 direct mFlags test instead of the int 0/1: 0xcc -> 0xc0
+ *   (-12). Each DropShadowRadHeight method call: 0xcc -> 0xdc (+16).
+ * - Render direct mFlags test instead of the ? 1 : 0: 0x50 -> 0x44 (-12).
+ * - Behavior copying player->mPosX/Y/Z instead of int* at player+0x5c: 0x264 -> 0x260
+ *   (-4).
+ * - InitResources ModelAnim::SetAnim: 0x108 -> 0x114 (+12). dCcAc_c::Init:
+ *   0x108 -> 0x120 (+24). dBgCh_Actr::Init stays 0x108 but the header's Fix12i
+ *   parameters mangle to _ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_,
+ *   not the ROM's 5Fix12IiE symbol.
  */
 
 #pragma defer_codegen off
 
 #include "common.h"
 #include "decl_Enemy.h"
-#include "decl_Player.h"
 #include "daHuwa_c.h"
 #include "Player.h"
 #include "SharedFilePtr.h"
 
-bool ApproachLinear(short &value, short target, short step);
+/* Model file (sinit id 813) and animation (sinit id 814). SharedFilePtr has
+ * no fields; SetAnim reads the loaded BCA out of the second word. */
+extern SharedFilePtr data_ov081_02128d60;
+extern SharedFilePtr data_ov081_02128d68;
 
-/* func_ov081_02123910 calls vtable slot 29 (OnAimedAtWithEgg) through a
- * view with that slot at index 29. The object's own table supplies the
- * function; this type only fixes the index. */
-struct HuwaSlot29 {
-    virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
-    virtual void v04(); virtual void v05(); virtual void v06(); virtual void v07();
-    virtual void v08(); virtual void v09(); virtual void v10(); virtual void v11();
-    virtual void v12(); virtual void v13(); virtual void v14(); virtual void v15();
-    virtual void v16(); virtual void v17(); virtual void v18(); virtual void v19();
-    virtual void v20(); virtual void v21(); virtual void v22(); virtual void v23();
-    virtual void v24(); virtual void v25(); virtual void v26(); virtual void v27();
-    virtual void v28(); virtual int m29();
+struct HuwaLoadedFile {
+    int fileId;
+    BCA_File *file;
 };
 
-/* Render calls ModelAnim slot 5. The argument is an int, not Vector3 const *. */
-struct HuwaModelView {
-    virtual void m0(); virtual void m1(); virtual void m2();
-    virtual void m3(); virtual void m4(); virtual void m5(int);
-};
-
-/* Spell the ROM's own symbols. The shards once called these through local
- * stand-in classes whose methods mangled to names that exist nowhere
- * (_ZN7dCcAc_c4InitEP8dActor_ciijj and friends). match.py wildcards every
- * relocated word, so only check_references saw it; these are the real symbols,
- * and the bytes are unchanged. */
 extern "C" {
-/* Same spellings InitResources matched under: a char, and an int array
- * whose [1] is the animation file pointer. */
-extern char data_ov081_02128d60;
-extern int data_ov081_02128d68[];
-
-int _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void* c, Vector3* v, unsigned int n, int f, short s);
-void Matrix4x3_FromTranslation(struct Matrix4x3* m, int x, int y, int z);
-void MulMat4x3Mat4x3(const int* a, const int* b, int* dst);
-void SubVec3(Vector3* a, Vector3* b, Vector3* c);
-void Vec3_LslInPlace(Vector3* v, int n);
-void AddVec3(Vector3* a, Vector3* b, Vector3* c);
-void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int x, int y, int z);
-void func_0201267c(int a, void* b);
 extern struct Matrix4x3 data_020a0e68;
-extern int func_ov002_020e10a8(void*);
-extern short Vec3_HorzAngle(void* a, void* b);
-extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, void* v, unsigned n, int f, unsigned a, unsigned b, unsigned c);
-void Matrix4x3_FromRotationY(void* m, int angle);
+extern int func_ov002_020e10a8(void *);
+extern void func_0201267c(unsigned int id, const Vector3 *pos);
+
+void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
+void Matrix4x3_FromRotationY(void *m, int angle);
+void MulMat4x3Mat4x3(const int *a, const int *b, int *dst);
+void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
+void AddVec3(Vector3 *a, Vector3 *b, Vector3 *out);
+void Vec3_LslInPlace(Vector3 *v, int shift);
+int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+
+/* Scalar stand-ins for Fix12<int> by-value callees. The header methods
+ * mangle to these same symbols and home the argument. */
+int _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, Vector3 *pos, unsigned int count, int spread, short angle);
+void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-    void* thiz, ShadowModel& sm, Matrix4x3& mtx, Fix12i a, Fix12i b, unsigned int c);
-void _Z14ApproachLinearRiii(void *, int, int);
-int Vec3_HorzDist(void *a, void *b);
-void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, BCA_File *f, int b, int c, unsigned int d);
-void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *a, int r, int h, unsigned int d, unsigned int e);
-void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int r, int h, void *v, void *w);
+    void *self, ShadowModel &shadow, Matrix4x3 &mtx, int radius, int height, unsigned int opacity);
+void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, BCA_File *file, int flags, int speed, unsigned int startFrame);
+void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *actor, int radius, int height, unsigned int flags, unsigned int vulnFlags);
+void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *actor, int radius, int height, void *a, void *b);
+/* dEnemyBase_c::KillByInvincibleChar takes a Fix12<int> by value, so the header
+   member form size-DIFFs (0x210 -> 0x218, see the leftover note). decl_Enemy.h
+   already declares the ROM symbol with plain scalars; use that one spelling
+   rather than adding a third local copy. */
+void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *player, void *pos, unsigned int n, int knockback, unsigned int a, unsigned int b, unsigned int c);
+void _ZN6Player10SpinBounceE5Fix12IiE(void *player, int speed);
 }
 
-/* One written destructor. The compiler emits D1 then D0 and anchors
- * _ZTV8daHuwa_c. The members D1 used to destroy by hand are typed members of
- * daHuwa_c now (see daHuwa_c.h for the two layout witnesses), so the compiler
- * emits the same chain. D0 is the deleting destructor: it destroys through
- * this class and its bases, which is why more than one vptr store appears,
- * then frees through an inline operator delete, which is why nothing here
- * mentions a heap. */
+int ApproachLinear(int &value, int target, int step);
+bool ApproachLinear(short &value, short target, short step);
+
+/* dCc_c hitFlags bits this actor tests. 0x10 / 0x2000 / 0x4000 / 0x40000 /
+ * 0x400000 are the names in dCc_c.h. 0x20000 is not in that table; this
+ * function ORs it with the egg and explosion bits. 0x26fe0 is the attack
+ * mask below the bounce check: spin, punch, kick, 0x100, slide, dive,
+ * 0x800, egg, explosion and 0x20000. */
+enum {
+    kHitMega = 0x10,
+    kHitEggOrBlast = 0x26000,
+    kHitFire = 0x40000,
+    kHitAttack = 0x26fe0,
+    kHitPlayer = 0x400000,
+    kFlagYoshiMouth = 0x40000,
+    kPlayerActorId = 0xbf,
+    kStateChase = 0,
+    kStateRecoil = 1,
+    kRecoilFrames = 0x14
+};
+
 // @symbol _ZN8daHuwa_cD1Ev
 // @symbol _ZN8daHuwa_cD0Ev
 daHuwa_c::~daHuwa_c()
 {
 }
 
-/* Vtable slot 29: _ZTV8daHuwa_c + 0x74 -> 0x021237e4. */
+/* Vtable slot 29. 0x3c000 is 60.0; KillByInvincibleChar receives it and
+ * does not read it. */
 // @symbol _ZN8daHuwa_c16OnAimedAtWithEggEv
-s32 daHuwa_c::OnAimedAtWithEgg() {
-    return 245760;
+s32 daHuwa_c::OnAimedAtWithEgg()
+{
+    return 0x3c000;
 }
 
+/* Poof, three coins, bone-1 particle, sound 0xd5, then the death table.
+ * func_0201267c is Sound::Play(bank 3, id, pos). */
 // @symbol func_ov081_021237ec
-extern "C" void func_ov081_021237ec(char* c)
+extern "C" void func_ov081_021237ec(daHuwa_c *self)
 {
-    Vector3 t;
-    Vector3 v;
-    Vector3 b;
+    Vector3 dust;
+    Vector3 dustCopy;
+    Vector3 coins;
 
-    t.x = *(int*)(c + 0x5c);
-    t.y = *(int*)(c + 0x60);
-    t.z = *(int*)(c + 0x64);
-    t.y += *(int*)(c + 0x1a4) - 0x50000;
-    v = t;
-    ((dActor_c *)c)->PoofDustAt(v);
+    dust.x = self->mPosX;
+    dust.y = self->mPosY;
+    dust.z = self->mPosZ;
+    dust.y += self->mdCcAc_c.height - 0x50000;
+    dustCopy = dust;
+    self->PoofDustAt(dustCopy);
 
-    b.x = *(int*)(c + 0x5c);
-    b.y = *(int*)(c + 0x60);
-    b.z = *(int*)(c + 0x64);
-    _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &b, 3, 0xa000, 0);
+    coins.x = self->mPosX;
+    coins.y = self->mPosY;
+    coins.z = self->mPosZ;
+    _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(self, &coins, 3, 0xa000, 0);
 
-    Matrix4x3_FromTranslation(&data_020a0e68, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
-    MulMat4x3Mat4x3((const int*)(*(char**)(c + 0x124) + 0x30), data_020a0e68.m, data_020a0e68.m);
+    Matrix4x3_FromTranslation(&data_020a0e68, self->mPosX, self->mPosY, self->mPosZ);
+    MulMat4x3Mat4x3((const int *)(self->mModelAnim.data.transforms + 1), data_020a0e68.m, data_020a0e68.m);
 
-    t.x = data_020a0e68.m[9];
-    t.y = data_020a0e68.m[10];
-    t.z = data_020a0e68.m[11];
-    SubVec3(&t, (Vector3*)(c + 0x5c), &t);
-    Vec3_LslInPlace(&t, 3);
-    AddVec3(&t, (Vector3*)(c + 0x5c), &t);
+    dust.x = data_020a0e68.m[9];
+    dust.y = data_020a0e68.m[10];
+    dust.z = data_020a0e68.m[11];
+    SubVec3(&dust, (Vector3 *)&self->mPosX, &dust);
+    Vec3_LslInPlace(&dust, 3);
+    AddVec3(&dust, (Vector3 *)&self->mPosX, &dust);
 
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x53, t.x, t.y, t.z);
-    func_0201267c(0xd5, c + 0x74);
-    ((dActor_c *)c)->KillAndTrackInDeathTable();
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x53, dust.x, dust.y, dust.z);
+    func_0201267c(0xd5, (const Vector3 *)&self->mCamSpacePosX);
+    self->KillAndTrackInDeathTable();
 }
 
+/* Cylinder hits. Slot 29 is OnAimedAtWithEgg; called through dActor_c so it
+ * stays a virtual call. func_ov002_020e10a8 is Player::IsState of the state
+ * SpinBounce enters. */
 // @symbol func_ov081_02123910
-extern "C" void func_ov081_02123910(char* c)
+extern "C" void func_ov081_02123910(daHuwa_c *self)
 {
-    void* other;
+    dActor_c *other;
     unsigned int id;
     int flags;
-    int isPlayer;
-    Vector3_16 kv;
+    Player *player;
+    Vector3_16 knock;
     Vector3 pos;
 
-    id = *(unsigned int*)(c + 0x1c0);
+    id = self->mdCcAc_c.otherOwner;
     if (id == 0)
         return;
     other = dActor_c::FindWithID(id);
     if (other == 0)
         return;
 
-    flags = *(int*)(c + 0x1bc);
-    if ((flags & 0x10) != 0) {
-        int tmp;
-        kv.x = (short)-0x2000;
-        kv.y = 0;
-        kv.z = 0;
-        tmp = ((HuwaSlot29*)c)->m29();
-        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, &kv, other, tmp);
+    flags = self->mdCcAc_c.hitFlags;
+    if ((flags & kHitMega) != 0) {
+        int height;
+        knock.x = (short)-0x2000;
+        knock.y = 0;
+        knock.z = 0;
+        height = ((dActor_c *)self)->OnAimedAtWithEgg();
+        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(self, &knock, other, height);
         return;
     }
 
-    if ((flags & 0x26000) != 0) {
-        func_ov081_021237ec(c);
+    if ((flags & kHitEggOrBlast) != 0) {
+        func_ov081_021237ec(self);
         return;
     }
 
-    isPlayer = (int)(*(unsigned short*)((char*)other + 0xc) == 0xbf);
+    int isPlayer = (int)(other->actorID == kPlayerActorId);
     if (isPlayer == 0)
         return;
 
-    if (*(unsigned char*)((char*)other + 0x6f9) == 0) {
-        if (_ZN6Player9IsOnShellEv(other) == 0) {
-            flags = *(int*)(c + 0x1bc);
-            if ((flags & 0x40000) == 0)
+    player = (Player *)other;
+    if (player->mIsMetal == 0) {
+        if (player->IsOnShell() == 0) {
+            flags = self->mdCcAc_c.hitFlags;
+            if ((flags & kHitFire) == 0)
                 goto cont;
         }
     }
-    func_ov081_021237ec(c);
+    func_ov081_021237ec(self);
     return;
 
 cont:
-    if ((flags & 0x26fe0) != 0) {
-        if (func_ov002_020e10a8(other) == 0) {
-            func_ov081_021237ec(c);
+    if ((flags & kHitAttack) != 0) {
+        if (func_ov002_020e10a8(player) == 0) {
+            func_ov081_021237ec(self);
             return;
         }
     }
 
-    if (((dActor_c *)c)->JumpedOnByPlayer(*(dCc_c *)(c + 0x19c), *(Player *)other) != 0) {
-        _ZN6Player10SpinBounceE5Fix12IiE(other, 0x28000);
-        func_ov081_021237ec(c);
+    if (self->JumpedOnByPlayer(self->mdCcAc_c, *player) != 0) {
+        _ZN6Player10SpinBounceE5Fix12IiE(player, 0x28000);
+        func_ov081_021237ec(self);
         return;
     }
 
-    if (*(unsigned char*)((char*)other + 0x6fb) != 0)
+    if (player->mIsVanish != 0)
         return;
-    if ((*(int*)(c + 0x1bc) & 0x400000) == 0)
+    if ((self->mdCcAc_c.hitFlags & kHitPlayer) == 0)
         return;
 
     {
-        unsigned char one = 1;
-        int a;
-        short* p;
-        *(unsigned char*)(c + 0x39a) = one;
-        a = 0xa000;
-        p = (short*)(c + 0x100);
-        *p = 0;
-        *(int*)(c + 0x98) = -a;
+        unsigned char recoil = 1;
+        int speed;
+        self->mState = recoil;
+        speed = 0xa000;
+        self->mStateTimer = 0;
+        self->mHorzSpeed = -speed;
     }
-    *(short*)(c + 0x94) = Vec3_HorzAngle(c + 0x5c, (char*)other + 0x5c);
+    self->mPrevAngleY = Vec3_HorzAngle((const Vector3 *)&self->mPosX, (const Vector3 *)&player->mPosX);
 
-    pos.x = *(int*)(c + 0x5c);
-    pos.y = *(int*)(c + 0x60);
-    pos.z = *(int*)(c + 0x64);
-    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(other, &pos, 2, 0xc000, 1, 0, 1);
+    pos.x = self->mPosX;
+    pos.y = self->mPosY;
+    pos.z = self->mPosZ;
+    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(player, &pos, 2, 0xc000, 1, 0, 1);
 }
 
+/* Yaw the model, plant its translation at pos>>3, then the drop shadow.
+ * In Yoshi's mouth (mFlags 0x40000) neither the shadow nor Render runs. */
 // @symbol func_ov081_02123b20
-extern "C" void func_ov081_02123b20(char* thiz)
+extern "C" void func_ov081_02123b20(daHuwa_c *self)
 {
-    char* c = thiz;
-    Matrix4x3_FromRotationY(c + 0x12c, *(short*)(c + 0x8e));
-    *(int*)(c + 0x150) = *(int*)(c + 0x5c) >> 3;
-    *(int*)(c + 0x154) = *(int*)(c + 0x60) >> 3;
-    *(int*)(c + 0x158) = *(int*)(c + 0x64) >> 3;
+    Matrix4x3_FromRotationY(&self->mModelAnim.mat4x3, self->mAngleY);
+    self->mModelAnim.mat4x3.m[9] = self->mPosX >> 3;
+    self->mModelAnim.mat4x3.m[10] = self->mPosY >> 3;
+    self->mModelAnim.mat4x3.m[11] = self->mPosZ >> 3;
     {
-        int b = (int)((*(int*)(c + 0xb0) & 0x40000) != 0);
-        if (b != 0) return;
+        int hidden = (int)((self->mFlags & kFlagYoshiMouth) != 0);
+        if (hidden != 0)
+            return;
     }
-    if (((dBgCh_Actr *)(c + 0x1d0))->IsOnGround() != 0) {
+    if (self->mWithMeshClsn.IsOnGround() != 0) {
         _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-            c, *(ShadowModel*)(c + 0x174), *(Matrix4x3*)(c + 0x12c), 0x50000, 0x1e000, 0xf);
+            self, self->mShadowModel, self->mModelAnim.mat4x3, 0x50000, 0x1e000, 0xf);
     } else {
         _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-            c, *(ShadowModel*)(c + 0x174), *(Matrix4x3*)(c + 0x12c), 0x50000, 0x96000, 0xf);
+            self, self->mShadowModel, self->mModelAnim.mat4x3, 0x50000, 0x96000, 0xf);
     }
 }
 
 // @symbol _ZN8daHuwa_c16CleanupResourcesEv
 int daHuwa_c::CleanupResources()
 {
-    ((SharedFilePtr *)&data_ov081_02128d60)->Release();
-    ((SharedFilePtr *)data_ov081_02128d68)->Release();
+    data_ov081_02128d60.Release();
+    data_ov081_02128d68.Release();
     return 1;
 }
 
 // @symbol _ZN8daHuwa_c6RenderEv
 int daHuwa_c::Render()
 {
-  int b = (mFlags & 0x40000) ? 1 : 0; if (b) return 1;
-  HuwaModelView* o = (HuwaModelView*)((char*)&mModelAnim);
-  o->m5(0);
-  return 1;
+    int hidden = (mFlags & kFlagYoshiMouth) ? 1 : 0;
+    if (hidden)
+        return 1;
+    mModelAnim.Render(0);
+    return 1;
 }
 
 // @symbol _ZN8daHuwa_c8BehaviorEv
 int daHuwa_c::Behavior()
 {
-    int r = ((dEnemyBase_c *)(((char *)this)))->UpdateKillByInvincibleChar(*(dBgCh_Actr *)(((char *)this) + 0x1d0), *(ModelAnim *)(((char *)this) + 0x110), 3);
-    if (r != 0) {
-        if (r == 2)
-            func_ov081_021237ec(((char *)this));
+    int killed = UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 3);
+    if (killed != 0) {
+        if (killed == 2)
+            func_ov081_021237ec(this);
         return 1;
     }
 
-    if (((dEnemyBase_c *)(((char *)this)))->UpdateYoshiEat(*(dBgCh_Actr *)(((char *)this) + 0x1d0)) != 0) {
-        if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(((char *)this), ((char *)this) + 0x19c) != 0)
-            func_ov081_021237ec(((char *)this));
-        func_ov081_02123b20(((char *)this));
-        ((dCc_c *)((char *)&mdCcAc_c))->Clear();
-        if (mEatenByYoshi != 0 && unk_104 == 0) {
-            ((dCc_c *)((char *)&mdCcAc_c))->dCc_c::Update();
-        }
+    if (UpdateYoshiEat(mWithMeshClsn) != 0) {
+        if (SpawnParticlesIfHitOtherObj(mdCcAc_c) != 0)
+            func_ov081_021237ec(this);
+        func_ov081_02123b20(this);
+        mdCcAc_c.Clear();
+        if (mEatenByYoshi != 0 && unk_104 == 0)
+            mdCcAc_c.Update();
         return 1;
     }
 
-    ((dActor_c *)(((char *)this)))->MakeVanishLuigiWork(*(dCc_c *)(((char *)this) + 0x19c));
-    func_ov081_02123910(((char *)this));
+    MakeVanishLuigiWork(mdCcAc_c);
+    func_ov081_02123910(this);
 
-    switch (unk_39a) {
-    case 0: {
-            _Z14ApproachLinearRiii(((char *)this) + 0x98, 0x4000, 0x1000);
-            void *cp = ((dActor_c *)(((char *)this)))->ClosestPlayer();
-            if (cp != 0) {
-                int *src = (int *)((int)cp + 0x5c);
-                int v3[3];
-                v3[0] = src[0];
-                v3[1] = src[1];
-                v3[2] = src[2];
-                if (Vec3_HorzDist(((char *)this) + 0x38c, (void *)v3) > 0x3e8000) {
-                    unk_398 = Vec3_HorzAngle(((char *)this) + 0x5c, ((char *)this) + 0x38c);
-                } else if (Vec3_HorzDist(((char *)this) + 0x5c, (void *)v3) > 0x12c000) {
-                    unk_398 = Vec3_HorzAngle(((char *)this) + 0x5c, (void *)v3);
-                }
-                goto after_st0;
-            }
-            unk_398 = Vec3_HorzAngle(((char *)this) + 0x5c, ((char *)this) + 0x38c);
-        after_st0:
-            ApproachLinear(*(short *)(((char *)this) + 0x8e), unk_398, 0x200);
-            mPrevAngleY = mAngleY;
+    switch (mState) {
+    case kStateChase: {
+        Player *player;
+        ApproachLinear(mHorzSpeed, 0x4000, 0x1000);
+        player = (Player *)ClosestPlayer();
+        if (player != 0) {
+            int *src = (int *)((int)player + 0x5c);
+            int playerPos[3];
+            playerPos[0] = src[0];
+            playerPos[1] = src[1];
+            playerPos[2] = src[2];
+            if (Vec3_HorzDist((const Vector3 *)&mHomePosX, (const Vector3 *)playerPos) > 0x3e8000)
+                mTargetAngY = Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&mHomePosX);
+            else if (Vec3_HorzDist((const Vector3 *)&mPosX, (const Vector3 *)playerPos) > 0x12c000)
+                mTargetAngY = Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)playerPos);
+        } else {
+            mTargetAngY = Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&mHomePosX);
         }
+        ApproachLinear(mAngleY, mTargetAngY, 0x200);
+        mPrevAngleY = mAngleY;
         break;
-    case 1:
-        *(unsigned short *)((int)((char *)this) + 0x100) += 1;
-        if (*(unsigned short *)((int)((char *)this) + 0x100) >= 0x14)
-            unk_39a = 0;
+    }
+    case kStateRecoil:
+        *(unsigned short *)&mStateTimer += 1;
+        if (*(unsigned short *)&mStateTimer >= kRecoilFrames)
+            mState = kStateChase;
         break;
     }
 
-    ((Animation *)((char *)(Animation *)&mModelAnim))->Advance();
-    ((dActor_c *)(((char *)this)))->UpdatePos(0);
-    ((dEnemyBase_c *)(((char *)this)))->UpdateWMClsn(*(dBgCh_Actr *)(((char *)this) + 0x1d0), 0);
+    mModelAnim.Advance();
+    UpdatePos(0);
+    UpdateWMClsn(mWithMeshClsn, 0);
 
-    if (((dEnemyBase_c *)(((char *)this)))->IsGoingOffCliff(*(dBgCh_Actr *)(((char *)this) + 0x1d0), 0x3c000, 0x2888, 1, 1, 0x32000) != 0) {
+    if (IsGoingOffCliff(mWithMeshClsn, 0x3c000, 0x2888, 1, 1, 0x32000) != 0) {
         mPosX = mPrevPosX;
         mPosY = mPrevPosY;
         mPosZ = mPrevPosZ;
     }
-    func_ov081_02123b20(((char *)this));
-    ((dCc_c *)((char *)&mdCcAc_c))->Clear();
-    ((dCc_c *)((char *)&mdCcAc_c))->dCc_c::Update();
+    func_ov081_02123b20(this);
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     return 1;
 }
 
 // @symbol _ZN8daHuwa_c13InitResourcesEv
 int daHuwa_c::InitResources()
 {
-    char *s = (char*)((dActor_c *)this);
-    void *mf = Model::LoadFile(*(SharedFilePtr *)&data_ov081_02128d60);
-    ((ModelBase *)(s + 0x110))->ModelBase::SetFile((BMD_File*)mf, 1, -1);
-    Animation::LoadFile(*(SharedFilePtr *)data_ov081_02128d68);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(s + 0x110, (BCA_File*)data_ov081_02128d68[1], 0, 0x1000, 0);
-    if (((ShadowModel *)(s + 0x174))->InitCylinder() == 0)
+    void *modelFile = Model::LoadFile(data_ov081_02128d60);
+    mModelAnim.ModelBase::SetFile((BMD_File *)modelFile, 1, -1);
+    Animation::LoadFile(data_ov081_02128d68);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+        &mModelAnim, ((HuwaLoadedFile *)&data_ov081_02128d68)->file, 0, 0x1000, 0);
+    if (mShadowModel.InitCylinder() == 0)
         return 0;
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(s + 0x19c, ((dActor_c *)this), 0x3c000, 0x78000, 0x200000, 0xa6efe0);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(s + 0x1d0, ((dActor_c *)this), 0x3c000, 0x3c000, 0, 0);
-    ((dBgCh_Actr *)(s + 0x1d0))->StartDetectingWater();
-    *(int*)(s + 0x38c) = *(int*)(s + 0x5c);
-    *(int*)(s + 0x390) = *(int*)(s + 0x60);
-    *(int*)(s + 0x394) = *(int*)(s + 0x64);
-    *(char*)(s + 0x39a) = 0;
-    *(int*)(s + 0x9c) = -0x2000;
-    *(int*)(s + 0xa0) = -0x3c000;
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x3c000, 0x78000, 0x200000, 0xa6efe0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x3c000, 0x3c000, 0, 0);
+    mWithMeshClsn.StartDetectingWater();
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
+    mState = 0;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
     return 1;
 }
 
-/* Vtable slot 19: _ZTV8daHuwa_c + 0x4c -> 0x02123fd8 (formerly
- * func_ov081_02123fd8). */
 // @symbol _ZN8daHuwa_c13OnTurnIntoEggER6Player
 void daHuwa_c::OnTurnIntoEgg(Player &player)
 {
@@ -365,6 +378,7 @@ void daHuwa_c::OnTurnIntoEgg(Player &player)
 }
 
 // @symbol _ZN8daHuwa_c13OnYoshiTryEatEv
-s32 daHuwa_c::OnYoshiTryEat() {
+s32 daHuwa_c::OnYoshiTryEat()
+{
     return 6;
 }

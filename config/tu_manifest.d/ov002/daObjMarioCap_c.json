@@ -56,7 +56,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_ov002_020b7200",
+      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b7200Ev",
       "address": "0x020b7200",
       "size": "0x00000130",
       "legacy_source": "src/func_ov002_020b7200.c",
@@ -70,14 +70,14 @@
       "ordinal": 6
     },
     {
-      "symbol": "func_ov002_020b74d0",
+      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b74d0Ev",
       "address": "0x020b74d0",
       "size": "0x0000021c",
       "legacy_source": "src/func_ov002_020b74d0.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov002_020b76ec",
+      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b76ecEv",
       "address": "0x020b76ec",
       "size": "0x00000130",
       "legacy_source": "src/func_ov002_020b76ec.c",
@@ -98,7 +98,7 @@
       "ordinal": 10
     },
     {
-      "symbol": "func_ov002_020b7c30",
+      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b7c30Ev",
       "address": "0x020b7c30",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov002_020b7c30.c",
@@ -112,14 +112,14 @@
       "ordinal": 12
     },
     {
-      "symbol": "func_ov002_020b7cec",
+      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b7cecEv",
       "address": "0x020b7cec",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov002_020b7cec.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov002_020b7d58",
+      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b7d58Ev",
       "address": "0x020b7d58",
       "size": "0x00000014",
       "legacy_source": "src/func_ov002_020b7d58.c",
@@ -140,14 +140,14 @@
       "ordinal": 16
     },
     {
-      "symbol": "func_ov002_020b7d9c",
+      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b7d9cEv",
       "address": "0x020b7d9c",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov002_020b7d9c.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "func_ov002_020b7e08",
+      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b7e08Ev",
       "address": "0x020b7e08",
       "size": "0x00000014",
       "legacy_source": "src/func_ov002_020b7e08.c",
@@ -175,7 +175,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "func_ov002_020b7f7c",
+      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b7f7cEv",
       "address": "0x020b7f7c",
       "size": "0x00000264",
       "legacy_source": "src/func_ov002_020b7f7c.c",

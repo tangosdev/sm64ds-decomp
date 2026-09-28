@@ -14,11 +14,11 @@
  * flatten the split.
  *
  * deslop
- * Leftover: func_ov001_020ab228 / func_ov001_020ab2e4 stay the linker
- *   names. The image preserves no original mangled table; an existing
- *   label is not a barrier to a member -- a migration renames source and
- *   config together. Callers are outside this TU. The link helper keeps
- *   a char* first parameter so those declarations stay ABI-identical.
+ * Leftover: func_ov001_020ab2e4 stays the linker name. The image preserves
+ *   no original mangled table; an existing label is not a barrier to a
+ *   member -- a migration renames source and config together.
+ *   func_ov001_020ab228 is a dCapIcon_c method; the address is the method
+ *   name. Callers are outside this TU.
  * Leftover: func_ov001_020aa6b0 / func_ov001_020aa6cc are other TUs.
  * Leftover: owner uniqueID is fBase_c::uniqueID at +4; this TU keeps
  *   the +4 load.
@@ -87,35 +87,34 @@ void dCapIcon_c::Unlink()
         --data_ov001_020ad630[mCharacter];
 }
 
-// @symbol func_ov001_020ab228
+// @symbol _ZN10dCapIcon_c19func_ov001_020ab228EPciih
 /* CSE off is load-bearing: the cartridge re-issues the list-head load
  * across the store into mNext. The bracket binds because codegen is
  * not deferred here. */
 #pragma opt_common_subs off
-extern "C" void func_ov001_020ab228(char *c_, char *a1, int idx, int a3,
+void dCapIcon_c::func_ov001_020ab228(char *a1, int idx, int a3,
                                     unsigned char a5)
 {
-    dCapIcon_c *c = (dCapIcon_c *)c_;
-    c->mCharacter = (unsigned char)idx;
-    c->mOwner = (dActor_c *)a1;
-    c->mOwnerUniqueID = *(u32 *)(a1 + 4);
-    c->unk_19 = (unsigned char)a3;
-    c->mNext = data_ov001_020ad634[idx];
+    mCharacter = (unsigned char)idx;
+    mOwner = (dActor_c *)a1;
+    mOwnerUniqueID = *(u32 *)(a1 + 4);
+    unk_19 = (unsigned char)a3;
+    mNext = data_ov001_020ad634[idx];
     if (data_ov001_020ad634[idx])
-        data_ov001_020ad634[idx]->mPrev = c;
-    data_ov001_020ad634[idx] = c;
+        data_ov001_020ad634[idx]->mPrev = this;
+    data_ov001_020ad634[idx] = this;
     data_ov001_020ad630[idx]++;
     if (a3 == 3)
         data_ov001_020ad628[idx] |= 8;
-    c->unk_1a = 0;
-    c->mFlags = 0;
+    unk_1a = 0;
+    mFlags = 0;
     {
-        unsigned char *p1b = (unsigned char *)(int)&c->mFlags;
+        unsigned char *p1b = (unsigned char *)(int)&mFlags;
         *p1b = (*p1b & ~1) | (a5 & 1);
     }
     if (a5 != 0 || a3 == 3)
         func_ov001_020aa6cc(idx);
-    c->mSlot = -1;
+    mSlot = -1;
 }
 #pragma opt_common_subs on
 #pragma defer_codegen on

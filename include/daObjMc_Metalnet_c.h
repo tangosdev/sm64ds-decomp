@@ -9,7 +9,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 /* Peach's Castle chain-link net (profile MC_METALNET / METAL_NET 339). A
  * climbable mesh with no state of its own. ov009 is mixed -- CASTLE_WATER
  * (338) and FLAG (342) sit next door -- this is the net, not those.
- * MetalNetLift (ov064, _ZTV12MetalNetLift at 0x0211bc68) is a different class.
+ * daObjFl_Amilift_c (ov064, _ZTV17daObjFl_Amilift_c at 0x0211bc68) is a different class.
  *
  * WHAT THE CARTRIDGE PROVES ABOUT THE NAME AND THE SHAPE:
  *   _ZTS  ov009 0x02113aa4  "18daObjMc_Metalnet_c"

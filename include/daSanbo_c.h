@@ -97,6 +97,20 @@ struct daSanbo_c : dActor_c {
     int Render();
     void OnPendingDestroy();
 
+    void func_ov096_02135800();
+    int func_ov096_02135838();
+    void func_ov096_0213585c();
+    void func_ov096_02135948();
+    void func_ov096_02135efc();
+    int func_ov096_02136134();
+    int func_ov096_021363b4();
+    int func_ov096_0213640c();
+    int func_ov096_02136534();
+    int func_ov096_021368a4();
+    void func_ov096_021368b4();
+    void func_ov096_021368f0();
+    void func_ov096_02136928(int a);
+
     static void *operator new(unsigned long size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }

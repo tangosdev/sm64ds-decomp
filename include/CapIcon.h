@@ -43,6 +43,7 @@ struct dCapIcon_c {
     dCapIcon_c();
     virtual ~dCapIcon_c();
     void Unlink();
+    void func_ov001_020ab228(char *a1, int idx, int a3, unsigned char a5);
     void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 };
 

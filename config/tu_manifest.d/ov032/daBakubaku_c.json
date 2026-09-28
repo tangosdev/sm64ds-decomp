@@ -131,7 +131,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "func_ov032_02111ff4",
+      "symbol": "_ZN12daBakubaku_c19func_ov032_02111ff4EPv",
       "address": "0x02111ff4",
       "size": "0x00000050",
       "legacy_source": "src/func_ov032_02111ff4.cpp",

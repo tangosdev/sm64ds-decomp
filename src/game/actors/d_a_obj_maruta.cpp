@@ -25,9 +25,6 @@
  *   daObjFlMaruta_c (ov022) and daObjHmMaruta_c (ov030) forward InitResources,
  *   Behavior and CleanupResources into these exact symbols. No ROM-proven
  *   English spelling; a member rename would fan those leaves. THIS-TU reason.
- * Leftover: func_ov080_02127094 keeps C linkage (private matrix helper;
- *   same shape as func_ov036_0211123c). Member form unmeasured. Parameter
- *   stays char * because include/decl_common.h declares it that way.
  * Leftover: func_ov080_0212758c / 02127658 stay placeholder labels
  *   (BeforeClsn body + arg-shifting veneer). 02127658 is stored as a
  *   dBgW callback address, so it cannot be a non-static member.
@@ -99,7 +96,6 @@ void func_020393d4(int *p, int v);
 void func_020393c4(int *p, int v);
 extern s16 data_02082214[];
 
-void func_ov080_02127094(char *self);
 int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
 int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
 int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
@@ -172,7 +168,7 @@ extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg)
     struct Vector3 d;
     self->mModel.SetFile(
         (BMD_File *)Model::LoadFile(*arg->model), 1, -1);
-    func_ov080_02127094((char *)self);
+    self->func_ov080_02127094();
     self->UpdateClsnPosAndRot();
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &self->mMeshCollider,
@@ -303,7 +299,7 @@ extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist)
             DecIfAbove0_Short((u16 *)(c + 0x340));
         }
     }
-    func_ov080_02127094((char *)self);
+    self->func_ov080_02127094();
     {
         int is66 = (int)(self->actorID == 0x66);
         if (is66 != 0) {
@@ -347,15 +343,14 @@ extern "C" int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 1 -- func_ov080_02127094, 0x02127094, size 0x48 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov080_02127094
-extern "C" void func_ov080_02127094(char *self_)
+// @symbol _ZN13daObjMaruta_c19func_ov080_02127094Ev
+void daObjMaruta_c::func_ov080_02127094()
 {
-    daObjMaruta_c *self = (daObjMaruta_c *)self_;
-    Matrix4x3_FromRotationXYZExt(&self->mModel.mat4x3,
-        self->mAngleX, self->mAngleY, self->mAngleZ);
-    self->mModel.mat4x3.m[9]  = self->mPosX >> 3;
-    self->mModel.mat4x3.m[10] = self->mPosY >> 3;
-    self->mModel.mat4x3.m[11] = self->mPosZ >> 3;
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3,
+        mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3.m[9]  = mPosX >> 3;
+    mModel.mat4x3.m[10] = mPosY >> 3;
+    mModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
 /* -------------------------------------------------------------------------- */

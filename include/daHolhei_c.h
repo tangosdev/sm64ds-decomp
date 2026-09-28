@@ -10,63 +10,58 @@
 
 /* Chuckya (HOLHEI 190) -- ov062/daHolhei_c.
  *
- * RTTI ov062:0x0211d9ac is the NUL-terminated string 10daHolhei_c;
- * _ZTI10daHolhei_c at 0x0211d9a0 points its name word there and its base
- * at dEnemyBase_c. The tree used to carry this class under the coined
- * English name Chuckya, which appears nowhere in the cartridge.
- *
- * Factory daHolhei_c_classInit (historical alias Chuckya_Spawn) allocates
- * 0x438 bytes; that is this class's size. Member NAMES below are from this
- * TU's own methods. dCcAc_c::Init / dBgCh_Actr::Init keep Fix12<int> by
- * value in their ROM mangled names; a method call homes those to the stack
- * (notes/mwccarm-codegen.md 6az), so those two stay scalar-slot wrappers.
- *
- * SM64DS RTTI names the implementation daHolhei_c. The reconstructed
- * factory daHolhei_c_classInit (historical alias Chuckya_Spawn) installs
- * this class's cartridge vtable; the reconstructed profile global
- * g_profile_HOLHEI (historical alias Chuckya_SpawnInfo) is its registry
- * descriptor. Exact original SM64DS member spellings are not preserved.
+ * RTTI ov062:0x0211d9ac is the string 10daHolhei_c. The factory
+ * daHolhei_c_classInit allocates 0x438 bytes. Member names below are from
+ * this TU's own reads and writes. g_profile_HOLHEI stays outside the TU.
  */
 
 struct daHolhei_c : dEnemyBase_c {
     dCcAc_c     mdCc_c;        /* 0x110 */
     dBgCh_Actr  mMeshClsn;     /* 0x144 */
     ModelAnim   mModel;        /* 0x300 */
-    /* State pointer between ModelAnim (ends 0x364) and ShadowModel (0x368).
-       Behavior dispatches the PMF at *mState; InitResources seeds it via
-       daHolhei_c_ChangeState onto data_ov062_0211dee0. */
+    /* Behavior calls the PMF at *mState + 8. InitResources enters
+       data_ov062_0211dee0 through daHolhei_c_ChangeState. */
     void       *mState;        /* 0x364 */
     ShadowModel mShadowModel;  /* 0x368 */
-    /* 0x390..0x3c0: func_ov062_02116dbc / 02116d28 copy IDENTITY_MATRIX
-       then pos>>3 and hand the result to DropShadowRadHeight. */
-    u8          pad_390[0x30];
+    /* func_ov062_02116dbc / 02116d28 copy identity here, write pos>>3 into
+       the translation, and pass it to DropShadowRadHeight. */
+    Matrix4x3   mShadowMtx;    /* 0x390 */
     s32         mHomePosX;     /* 0x3c0 -- InitResources copies mPos here */
     s32         mHomePosY;     /* 0x3c4 */
     s32         mHomePosZ;     /* 0x3c8 */
-    /* 0x3cc..0x3d8: func_ov062_021165e8 stores the closest player's pos
-       when the charge sub-step starts. */
+    /* func_ov062_021165e8 stores the closest player's pos when the charge starts. */
     s32         mChasePosX;    /* 0x3cc */
     s32         mChasePosY;    /* 0x3d0 */
     s32         mChasePosZ;    /* 0x3d4 */
-    /* Own previous-position triple, not dActor_c::mPrevPos at 0x068.
-       Behavior rewinds mPos from these on a cliff/bound trip and
-       republishes them after terrain. */
+    /* Not dActor_c::mPrevPos at 0x068. Behavior rewinds mPos from these on a
+       cliff or level-fence trip, then republishes them. */
     s32         mPrevPosX;     /* 0x3d8 */
     s32         mPrevPosY;     /* 0x3dc */
     s32         mPrevPosZ;     /* 0x3e0 */
-    /* Behavior sets 1 when IsGoingOffCliff or the level fence trips, 0
-       when the walk is clear. State handlers also read it. */
+    /* 1 when IsGoingOffCliff or the level fence trips, else 0. */
     u8          mEdgeStop;     /* 0x3e4 */
-    u8          unk_3e5;       /* 0x3e5 -- func_ov062_021164e8 grab-anim flag */
-    u16         unk_3e6;       /* 0x3e6 -- Behavior DecIfAbove0_Short */
-    u16         unk_3e8;       /* 0x3e8 -- Behavior DecIfAbove0_Short */
-    u8          pad_3ea[0xe];
-    void       *mHeld;         /* 0x3f8 -- grabbed actor; Render/Behavior +0xc8 */
-    /* 0x3fc..0x42c: func_ov062_02116e80 writes the hold matrix and stores
-       its address at this+0xc8. */
-    u8          pad_3fc[0x30];
-    /* Behavior zeroes these every frame; func_ov062_02116edc homes them
-       toward data_ov062_0211df10 and hands them to UpdateCarry. */
+    /* func_ov062_021164e8 sets this once it has started the grab animation. */
+    u8          mGrabAnim;     /* 0x3e5 */
+    /* Behavior counts this down. func_ov062_02116bf8 will not turn while it is set. */
+    u16         mTurnWait;     /* 0x3e6 */
+    /* Behavior counts this down. func_ov062_02116a08 will not re-engage the
+       player while it is set; 021167c0 and 02116894 reload it with 0x1e. */
+    u16         mChaseCooldown;/* 0x3e8 */
+    u8          pad_3ea[2];    /* 0x3ea */
+    /* Sound::PlayLong handle. func_ov062_021165e8 and 02116a08 pass id 0x18a. */
+    u32         mMoveSound;    /* 0x3ec */
+    /* 0 aim at the player, 1 run, 2 past the point saved in mChasePos. */
+    s32         mChargeStep;   /* 0x3f0 */
+    s16         mTargetAngY;   /* 0x3f4 */
+    u8          pad_3f6[2];    /* 0x3f6 */
+    /* Actor being held, or the player holding this. +0xc8 on that actor is
+       still an unnamed dActor_c gap; Behavior and Render read it raw. */
+    dActor_c   *mHeld;         /* 0x3f8 */
+    /* func_ov062_02116e80 builds this from bone 3 and stores its address at
+       this+0xc8, the same unnamed gap. */
+    Matrix4x3   mHoldMtx;      /* 0x3fc */
+    /* Behavior zeroes these. func_ov062_02116edc homes them toward the two
+       Vector3s at data_ov062_0211df10 and hands them to UpdateCarry. */
     s32         mCarryOffsX;   /* 0x42c */
     s32         mCarryOffsY;   /* 0x430 */
     s32         mCarryOffsZ;   /* 0x434 */
@@ -83,6 +78,15 @@ struct daHolhei_c : dEnemyBase_c {
     int InitResources();
     void OnPendingDestroy();
     int Render();
+
+    int func_ov062_021164e8();
+    int func_ov062_021165e8();
+    int func_ov062_021167c0();
+    int func_ov062_02116894();
+    int func_ov062_02116980();
+    int func_ov062_02116bf8();
+    int func_ov062_02116c78();
+    void func_ov062_02116d28();
 };
 
 #ifndef SM64DS_PLATFORM_PC

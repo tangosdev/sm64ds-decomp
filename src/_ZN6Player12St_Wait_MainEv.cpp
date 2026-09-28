@@ -38,7 +38,7 @@ int Player::St_Wait_Main()
     if (func_ov002_020c5244()) {
         return 1;
     }
-    if (func_ov002_020c6adc(((char*)this))) {
+    if (func_ov002_020c6adc()) {
         return 1;
     }
     if (mSinkDepth >= 0x1e000) {

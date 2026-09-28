@@ -117,6 +117,10 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     void OnPendingDestroy();
     int Render();
 
+    int func_ov070_0211f48c();
+    int func_ov070_0211f62c();
+    int func_ov070_0211f6e0();
+
     static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }

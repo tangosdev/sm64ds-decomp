@@ -67,7 +67,7 @@ struct dMg3DHeyhoObjAdapter_c {
     u8 pad_048[4];          /* 0x48 */
 };
 
-/* The fifteen non-virtual names below are COINED: the cartridge proves each
+/* The fifteen State* and Enter* names below are COINED: the cartridge proves each
  * member's address, size, and -- for the nine reached through mState -- which
  * 8-byte record installs it and which member writes that record, but no
  * spelling. `State*` is a handler the object dispatches to through mState;
@@ -83,17 +83,12 @@ struct dMg3DHeyhoObjAdapter_c {
  *   StateIdle     <- 0x0213b040, 0x0213b048 and 0x0213b058
  *   StateRespawn  <- 0x0213b038 (EnterRespawn) and 0x0213b088
  *
- * Eight members of the same run keep their `func_ov006_*` names. That is a
- * migration dependency, not a limit on what can be spelled: each is called by
- * a plain `bl` from a still-unpromoted `.c` shard below the run, and while a C
- * shard cannot name a C++ member by its source spelling, it can declare the
- * mangled linker symbol, as this tree does elsewhere. Converting them means
- * rewriting those twelve call sites in seven shards and their TU
- * configuration. That work is deferred with partial scope and tracked in
- * tangosdev/sm64ds-decomp issue #2722, which enumerates the eight members,
- * the seven shards and every call site, and carries its next owner; this PR
- * reserves none of it. The `func_ov006_*` names are inferred labels and carry
- * no claim about the original spellings. See src/actors/dMgJump3DMario_c.cpp.
+ * Eight further members keep the address as the method name
+ * (func_ov006_020c76e0, func_ov006_020c7734, func_ov006_020c7860,
+ * func_ov006_020c8084, func_ov006_020c81e0, func_ov006_020c862c,
+ * func_ov006_020c8658, func_ov006_020c87d0). The unpromoted C shards
+ * below this run call them by the mangled linker symbol. Those names
+ * are inferred labels and carry no claim about the original spellings.
  */
 struct dMgJump3DMario_c : dMg3DHeyhoObjAdapter_c {
     dMgJump3DMario_c();
@@ -103,6 +98,9 @@ struct dMgJump3DMario_c : dMg3DHeyhoObjAdapter_c {
     virtual void *Unk_020c76d0(); /* slot 1 */
     virtual int Unk_020c762c();   /* slot 2 */
 
+    void func_ov006_020c76e0(); /* 0x020c76e0 */
+    void func_ov006_020c7734(); /* 0x020c7734 */
+    void func_ov006_020c7860(); /* 0x020c7860 */
     void StateDamp();    /* 0x020c78ec */
     void EnterDamp();    /* 0x020c79a8 */
     void StateHold();    /* 0x020c7a30 */
@@ -110,14 +108,19 @@ struct dMgJump3DMario_c : dMg3DHeyhoObjAdapter_c {
     void StateMove();    /* 0x020c7c68 */
     void EnterMove();    /* 0x020c802c */
     void StateFallOut(); /* 0x020c8048 */
+    void func_ov006_020c8084(); /* 0x020c8084 */
     void StateRiseOut(); /* 0x020c814c */
+    void func_ov006_020c81e0(); /* 0x020c81e0 */
     void EnterHit();     /* 0x020c8270 */
     void StateBounce();  /* 0x020c833c */
     void EnterBounce();  /* 0x020c85a0 */
     void StateWindUp();  /* 0x020c85bc */
+    void func_ov006_020c862c(int timer); /* 0x020c862c */
     void StateIdle();    /* 0x020c864c */
+    void func_ov006_020c8658(); /* 0x020c8658 */
     void StateRespawn(); /* 0x020c8680 */
     void EnterRespawn(); /* 0x020c8768 */
+    int func_ov006_020c87d0(); /* 0x020c87d0 */
 
     ModelAnim mModelAnim; /* 0x4c */
     u8 unk_0b0[0x08];     /* 0xb0 -- untouched by every member; proven only by sizeof */

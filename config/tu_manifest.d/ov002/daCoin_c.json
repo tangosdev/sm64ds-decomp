@@ -1,0 +1,393 @@
+{
+  "id": "ov002/daCoin_c",
+  "module": "ov002",
+  "source": "src/actors/daCoin_c.cpp",
+  "promoted_source": "src/actors/daCoin_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20b0f54..0x20b2a98, 28 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daCoin_c",
+    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020b0f54",
+      "end": "0x020b2a98"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN8daCoin_cD1Ev",
+      "address": "0x020b0f54",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN8daCoin_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN8daCoin_cD0Ev",
+      "address": "0x020b0fa4",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN8daCoin_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov002_020b1008",
+      "address": "0x020b1008",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov002_020b1008.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov002_020b10a0",
+      "address": "0x020b10a0",
+      "size": "0x00000044",
+      "legacy_source": "src/func_ov002_020b10a0.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov002_020b10e4",
+      "address": "0x020b10e4",
+      "size": "0x00000208",
+      "legacy_source": "src/func_ov002_020b10e4.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov002_020b12ec",
+      "address": "0x020b12ec",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov002_020b12ec.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov002_020b1328",
+      "address": "0x020b1328",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov002_020b1328.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov002_020b1384",
+      "address": "0x020b1384",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov002_020b1384.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov002_020b13e0",
+      "address": "0x020b13e0",
+      "size": "0x000000f8",
+      "legacy_source": "src/func_ov002_020b13e0.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov002_020b14d8",
+      "address": "0x020b14d8",
+      "size": "0x0000019c",
+      "legacy_source": "src/func_ov002_020b14d8.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov002_020b1674",
+      "address": "0x020b1674",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov002_020b1674.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov002_020b16c4",
+      "address": "0x020b16c4",
+      "size": "0x000001c0",
+      "legacy_source": "src/func_ov002_020b16c4.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov002_020b1884",
+      "address": "0x020b1884",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov002_020b1884.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov002_020b18f0",
+      "address": "0x020b18f0",
+      "size": "0x000000ec",
+      "legacy_source": "src/func_ov002_020b18f0.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov002_020b19dc",
+      "address": "0x020b19dc",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov002_020b19dc.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov002_020b1a60",
+      "address": "0x020b1a60",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov002_020b1a60.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov002_020b1ad4",
+      "address": "0x020b1ad4",
+      "size": "0x00000128",
+      "legacy_source": "src/func_ov002_020b1ad4.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov002_020b1bfc",
+      "address": "0x020b1bfc",
+      "size": "0x000000c4",
+      "legacy_source": "src/func_ov002_020b1bfc.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov002_020b1cc0",
+      "address": "0x020b1cc0",
+      "size": "0x000003b0",
+      "legacy_source": "src/func_ov002_020b1cc0.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov002_020b2070",
+      "address": "0x020b2070",
+      "size": "0x00000044",
+      "legacy_source": "src/func_ov002_020b2070.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov002_020b20b4",
+      "address": "0x020b20b4",
+      "size": "0x0000009c",
+      "legacy_source": "src/func_ov002_020b20b4.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov002_020b2150",
+      "address": "0x020b2150",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov002_020b2150.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN8daCoin_c16CleanupResourcesEv",
+      "address": "0x020b2198",
+      "size": "0x000000ec",
+      "legacy_source": "src/_ZN8daCoin_c16CleanupResourcesEv.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZN8daCoin_c6RenderEv",
+      "address": "0x020b2284",
+      "size": "0x000000a0",
+      "legacy_source": "src/_ZN8daCoin_c6RenderEv.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN8daCoin_c8BehaviorEv",
+      "address": "0x020b2324",
+      "size": "0x000001e4",
+      "legacy_source": "src/_ZN8daCoin_c8BehaviorEv.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN8daCoin_c13InitResourcesEv",
+      "address": "0x020b2508",
+      "size": "0x0000052c",
+      "legacy_source": "src/_ZN8daCoin_c13InitResourcesEv.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZN8daCoin_c13OnTurnIntoEggER6Player",
+      "address": "0x020b2a34",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN8daCoin_c13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN8daCoin_c13OnYoshiTryEatEv",
+      "address": "0x020b2a90",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN8daCoin_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 27
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov002_020b1384.cpp (func_ov002_020b1384) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov002_020b13e0.cpp (func_ov002_020b13e0) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov002_020b1674.cpp (func_ov002_020b1674) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov002_020b1bfc.cpp (func_ov002_020b1bfc) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov002_020b2070.cpp (func_ov002_020b2070) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov002_020b20b4.cpp (func_ov002_020b20b4) did not split (the definition is inside the extern \"C\" block opened on line 7, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov002_020b2150.cpp (func_ov002_020b2150) did not split (the definition is inside the extern \"C\" block opened on line 8, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c15FindWithActorIDEjPS_' differs between the legacy file that used to hold func_ov002_020b1008 and the one that held func_ov002_020b1328; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c24KillAndTrackInDeathTableEv' differs between the legacy file that used to hold func_ov002_020b10a0 and the one that held func_ov002_020b16c4; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020b1328' differs between the legacy file that used to hold func_ov002_020b10a0 and the one that held func_ov002_020b16c4; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c24KillAndTrackInDeathTableEv' differs between the legacy file that used to hold func_ov002_020b10a0 and the one that held func_ov002_020b1884; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound9PlayBank3EjRK7Vector3' differs between the legacy file that used to hold func_ov002_020b16c4 and the one that held func_ov002_020b1884; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player4HealEi' differs between the legacy file that used to hold func_ov002_020b16c4 and the one that held func_ov002_020b1884; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9PowerStar13AddStarMarkerEv' differs between the legacy file that used to hold func_ov002_020b16c4 and the one that held func_ov002_020b18f0; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold func_ov002_020b16c4 and the one that held func_ov002_020b18f0; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov002_020b10e4 and the one that held func_ov002_020b19dc; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov002_020b1008 and the one that held func_ov002_020b1ad4; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound9PlayBank3EjRK7Vector3' differs between the legacy file that used to hold func_ov002_020b16c4 and the one that held _ZN8daCoin_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgCh_Actr13SetLimMovFlagEv' differs between the legacy file that used to hold func_ov002_020b1ad4 and the one that held _ZN8daCoin_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f2f8' differs between the legacy file that used to hold func_ov002_020b10e4 and the one that held _ZN8daCoin_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f2d8' differs between the legacy file that used to hold _ZN8daCoin_c8BehaviorEv and the one that held _ZN8daCoin_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210d9a8' differs between the legacy file that used to hold _ZN8daCoin_c16CleanupResourcesEv and the one that held _ZN8daCoin_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'BF3ae') differs between the legacy file that used to hold func_ov002_020b10e4 and the one that held func_ov002_020b14d8; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov002_020b1008 and the one that held func_ov002_020b16c4; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov002_020b1008 and the one that held func_ov002_020b1ad4; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('enum', '<anonymous enum in this file>') differs between the legacy file that used to hold func_ov002_020b14d8 and the one that held func_ov002_020b1cc0; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope."
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN8daCoin_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. One out-of-line destructor emits D1, D0, D2 under pragma defer_codegen off, but the cartridge has only D1 at 0x020b0f54 (0x50) and D0 at 0x020b0fa4 (0x64). No symbols.txt row names a D2."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3 locals odr-use the vague-linkage empty destructor. The cartridge keeps one copy at arm9:0x020072c0 (size 0x4); this TU emits a duplicate and production isolation discards it after a byte compare."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Type-name string for fBase_c, pulled in with this key function. ROM home arm9:0x02086e60."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Typeinfo for fBase_c. ROM home arm9:0x02086d70."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Type-name string for dBase_c. ROM home arm9:0x02086e54."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Typeinfo for dBase_c. ROM home arm9:0x02086e78."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Type-name string for dActor_c, this class base. ROM home arm9:0x0208e384."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Typeinfo for dActor_c. ROM home arm9:0x0208e390."
+    },
+    {
+      "symbol": "_ZTS8daCoin_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108778",
+      "reason": "This class type-name string. ov002:0x02108778 holds 8daCoin_c."
+    },
+    {
+      "symbol": "_ZTI8daCoin_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108784",
+      "reason": "This class typeinfo. ROM home ov002:0x02108784."
+    },
+    {
+      "symbol": "_ZTV8daCoin_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021087ec",
+      "reason": "Vtable for the key function. ROM home ov002:0x021087ec is the address point; the object also holds the 8-byte RTTI preamble. Production isolation rebinds references and discards this copy."
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-daCoin_c/daCoin_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 28,
+    "functions_declared": 28,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN8daCoin_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev",
+        "_ZN8daCoin_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        17,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75
+      ],
+      "data": [
+        "_ZTS7fBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI8dActor_c",
+        "_ZTS8daCoin_c",
+        "_ZTI8daCoin_c",
+        "_ZTV8daCoin_c"
+      ],
+      "dataExternalized": [
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI8daCoin_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS8daCoin_c",
+        "_ZTV8daCoin_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

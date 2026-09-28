@@ -46,6 +46,7 @@ struct daObjCannonShutter_c : dBgActor_c {
     int CleanupResources();
     int InitResources();
     int Render();
+    void func_ov002_020bc990();
 
     /* Leaf operator new until #2570 puts the same allocator on fBase_c.
        Parameter is size_t (unsigned long on this compiler). `return new`

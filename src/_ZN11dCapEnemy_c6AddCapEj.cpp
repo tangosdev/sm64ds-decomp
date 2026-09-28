@@ -21,7 +21,6 @@ extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *this_, void *file, int a, int b);
 extern int _ZN13SharedFilePtr7ReleaseEv(void *sfp);
-extern void func_ov001_020ab228(char *c, char *a1, int idx, int a3, int a5);
 extern int func_02005e28(unsigned char *self);
 extern void *data_ov002_020ff028[];
 }
@@ -51,7 +50,7 @@ int dCapEnemy_c::AddCap(unsigned int param)
     }
 
     *(int *)(((long long)(int)((char *)this + 0xb0))) &= ~1;
-    func_ov001_020ab228((char *)&mCapIcon, (char *)this, mCapId, mHadBank1Cap, mCapBank != 0);
+    mCapIcon.func_ov001_020ab228((char *)this, mCapId, mHadBank1Cap, mCapBank != 0);
 
     int result = func_02005e28((unsigned char *)this);
     if (result != 0) {

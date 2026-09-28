@@ -116,7 +116,7 @@ Lac:
     }
 Ld0:
     func_ov002_020e5948(c);
-    if (changed != 0) func_ov002_020beabc(c);
+    if (changed != 0) ((Player *)(c))->func_ov002_020beabc();
     *(void**)(&unk_578) = func_02073470(0x32, 0xc, 8, (void*)func_0203d384, (void*)_ZN7Vector3D1Ev);
     *(void**)(&unk_57c) = _ZN6Memory13operator_new2Ej(0x32);
     *(void**)(&mHeldObjQueue) = _ZN6Memory13operator_new2Ej(0x14);

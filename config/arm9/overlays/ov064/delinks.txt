@@ -24,49 +24,9 @@ src/d_a_b_donketu.c:
     complete
     .text start:0x0211791c end:0x02117978
 
-src/_ZN12MetalNetLiftD1Ev.cpp:
+src/actors/daObjFl_Amilift_c.cpp:
     complete
-    .text start:0x02117978 end:0x021179bc
-
-src/_ZN12MetalNetLiftD0Ev.cpp:
-    complete
-    .text start:0x021179bc end:0x02117a14
-
-src/func_ov064_02117a14.cpp:
-    complete
-    .text start:0x02117a14 end:0x02117a44
-
-src/func_ov064_02117a44.cpp:
-    complete
-    .text start:0x02117a44 end:0x02117b8c
-
-src/func_ov064_02117b8c.c:
-    complete
-    .text start:0x02117b8c end:0x02117bdc
-
-src/func_ov064_02117bdc.c:
-    complete
-    .text start:0x02117bdc end:0x02117c24
-
-src/func_ov064_02117c24.c:
-    complete
-    .text start:0x02117c24 end:0x02117cc4
-
-src/_ZN12MetalNetLift16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02117cc4 end:0x02117cfc
-
-src/_ZN12MetalNetLift6RenderEv.cpp:
-    complete
-    .text start:0x02117cfc end:0x02117d24
-
-src/_ZN12MetalNetLift8BehaviorEv.cpp:
-    complete
-    .text start:0x02117d24 end:0x02117e44
-
-src/_ZN12MetalNetLift13InitResourcesEv.cpp:
-    complete
-    .text start:0x02117e44 end:0x02117fb4
+    .text start:0x02117978 end:0x02117fb4
 
 src/func_ov064_02117fb4.cpp:
     complete

@@ -116,7 +116,7 @@ int Player::Behavior()
     data_020a0e40 = mPlayerNo;
 after_player_slot:
 
-    if (func_ov002_020c4188(((char *)this)) != 0)
+    if (func_ov002_020c4188() != 0)
         return 1;
 
     DecIfAbove0_Short(&mStateTimer);
@@ -144,8 +144,8 @@ after_player_slot:
             func_ov002_020d80d0(((char *)this));
         if (DecIfAbove0_Short(&mPowerupTimer) == 0) {
             func_ov002_020e032c(((char *)this));
-            func_ov002_020bdef0(((char *)this));
-            func_ov002_020bdd9c(((char *)this));
+            func_ov002_020bdef0();
+            func_ov002_020bdd9c();
         }
         if (DecIfAbove0_Short(&unk_6c2) == 0)
             func_ov002_020bdd2c(((char *)this));
@@ -174,7 +174,7 @@ after_player_slot:
         }
     }
 
-    func_ov002_020c2e78(((char *)this));
+    func_ov002_020c2e78();
     func_ov002_020ca940(((char *)this));
     func_ov002_020d8158(((char *)this));
 
@@ -224,7 +224,7 @@ after_player_slot:
     mPreClsnPosY = mPosY;
     mPreClsnPosZ = mPosZ;
     func_ov002_020bf36c(((char *)this), ((char *)this) + 0x2d4);
-    func_ov002_020bf13c(((char *)this));
+    func_ov002_020bf13c();
 
     {
         s32 *p = (s32 *)LAU((int)&v0);

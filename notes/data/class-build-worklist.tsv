@@ -252,7 +252,7 @@ daObjEmmLog_c	DONE	include\daObjEmmLog_c.h	dBgActor_c	0	ov052	6
 daObjEmmYuka_c	DONE	include\daObjEmmYuka_c.h	dBgActor_c	0	ov052	6
 daObjEwbIce_c	DONE	include\daObjEwbIce_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov073	7
 daObjEwmIceBlock_c	DONE	include\daObjEwmIceBlock_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov056	6
-daObjFl_Amilift_c	DONE	include\MetalNetLift.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov064	6
+daObjFl_Amilift_c	DONE	include\daObjFl_Amilift_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov064	6
 daObjFl_Block_c	DONE	include\daObjFl_Block_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov022	6
 daObjFl_KomaU_c	DONE	include\daObjFl_KomaU_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov064	6
 daObjFl_London_c	PARTIAL	include\daObjFl_London_c.h	dBgActor_c	0	ov022	6

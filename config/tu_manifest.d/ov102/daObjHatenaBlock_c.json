@@ -87,14 +87,14 @@
       "ordinal": 8
     },
     {
-      "symbol": "func_ov102_02149428",
+      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149428Ev",
       "address": "0x02149428",
       "size": "0x00000050",
       "legacy_source": "src/func_ov102_02149428.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov102_02149478",
+      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149478Ev",
       "address": "0x02149478",
       "size": "0x00000054",
       "legacy_source": "src/func_ov102_02149478.c",
@@ -164,7 +164,7 @@
       "ordinal": 19
     },
     {
-      "symbol": "func_ov102_02149878",
+      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149878Ev",
       "address": "0x02149878",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov102_02149878.c",
@@ -178,7 +178,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "func_ov102_021498e0",
+      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021498e0Ev",
       "address": "0x021498e0",
       "size": "0x00000398",
       "legacy_source": "src/func_ov102_021498e0.cpp",
@@ -192,7 +192,7 @@
       "ordinal": 23
     },
     {
-      "symbol": "func_ov102_02149ccc",
+      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149cccEv",
       "address": "0x02149ccc",
       "size": "0x000000b4",
       "legacy_source": "src/func_ov102_02149ccc.cpp",
@@ -220,7 +220,7 @@
       "ordinal": 27
     },
     {
-      "symbol": "func_ov102_02149e38",
+      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149e38Ev",
       "address": "0x02149e38",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov102_02149e38.cpp",

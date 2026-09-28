@@ -27,8 +27,6 @@ extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor, s
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *thiz, void *actor, s32 f1, s32 f2, void *v, void *w);
 extern int _ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern void func_ov002_020b7f2c(void *c, void *p);
-extern void func_ov002_020b7f7c(void *thiz);
-extern void func_ov001_020ab228(void *c, void *a1, int idx, int a3, int a5);
 }
 
 extern char data_ov002_0210de50;
@@ -49,7 +47,7 @@ extern char data_ov002_0210df54;
 int daObjMarioCap_c::InitResources()
 {
     int flag;
-    int v;
+    unsigned char v;
 
     mType = param1 & 0xff;
     mModelIndex = (param1 >> 8) & 0xf;
@@ -150,7 +148,7 @@ int daObjMarioCap_c::InitResources()
     case 20:
     case 21:
     case 22:
-        func_ov002_020b7f7c(((char *)this));
+        func_ov002_020b7f7c();
         /* fallthrough */
     case 10:
     case 15:
@@ -219,7 +217,7 @@ int daObjMarioCap_c::InitResources()
             v = 1;
         else
             v = 0;
-        func_ov001_020ab228(((char *)this) + 0x3d0, ((char *)this), mModelIndex & 0xff, unk_400, v);
+        mCapIcon.func_ov001_020ab228((char *)this, mModelIndex & 0xff, unk_400, v);
     }
 
     /* The second materialised param1 read-modify-write, at +0x448; see the

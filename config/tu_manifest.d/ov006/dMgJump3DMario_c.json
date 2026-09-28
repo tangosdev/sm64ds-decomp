@@ -42,21 +42,21 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov006_020c76e0",
+      "symbol": "_ZN16dMgJump3DMario_c19func_ov006_020c76e0Ev",
       "address": "0x020c76e0",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020c76e0.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov006_020c7734",
+      "symbol": "_ZN16dMgJump3DMario_c19func_ov006_020c7734Ev",
       "address": "0x020c7734",
       "size": "0x0000012c",
       "legacy_source": "src/func_ov006_020c7734.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov006_020c7860",
+      "symbol": "_ZN16dMgJump3DMario_c19func_ov006_020c7860Ev",
       "address": "0x020c7860",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov006_020c7860.cpp",
@@ -112,7 +112,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "func_ov006_020c8084",
+      "symbol": "_ZN16dMgJump3DMario_c19func_ov006_020c8084Ev",
       "address": "0x020c8084",
       "size": "0x000000c8",
       "legacy_source": "src/func_ov006_020c8084.cpp",
@@ -126,7 +126,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "func_ov006_020c81e0",
+      "symbol": "_ZN16dMgJump3DMario_c19func_ov006_020c81e0Ev",
       "address": "0x020c81e0",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_020c81e0.c",
@@ -161,7 +161,7 @@
       "ordinal": 19
     },
     {
-      "symbol": "func_ov006_020c862c",
+      "symbol": "_ZN16dMgJump3DMario_c19func_ov006_020c862cEi",
       "address": "0x020c862c",
       "size": "0x00000020",
       "legacy_source": "src/func_ov006_020c862c.c",
@@ -175,7 +175,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "func_ov006_020c8658",
+      "symbol": "_ZN16dMgJump3DMario_c19func_ov006_020c8658Ev",
       "address": "0x020c8658",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020c8658.c",
@@ -196,7 +196,7 @@
       "ordinal": 24
     },
     {
-      "symbol": "func_ov006_020c87d0",
+      "symbol": "_ZN16dMgJump3DMario_c19func_ov006_020c87d0Ev",
       "address": "0x020c87d0",
       "size": "0x0000016c",
       "legacy_source": "src/func_ov006_020c87d0.cpp",

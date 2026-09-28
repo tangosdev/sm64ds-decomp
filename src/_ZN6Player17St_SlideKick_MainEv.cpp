@@ -6,14 +6,12 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 extern "C" {
-extern void func_ov002_020bf90c(void* c);
 extern void func_ov002_020c06fc(void* c, u32 flag);
 extern int func_ov002_020dd2f4(void* c);
 extern int _ZN6Player12FinishedAnimEv(void* c);
 extern int _ZN6Player6IsAnimEj(void* c, u32 id);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
-extern int func_ov002_020c0688(void* c);
 extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);
 extern void _ZN5dCc_c5ClearEv(void* c);
 extern void _ZN5dCc_c6UpdateEv(void* c);
@@ -27,7 +25,7 @@ extern int data_ov002_021101b4[];
 
 int Player::St_SlideKick_Main()
 {
-    func_ov002_020bf90c(((char*)this));
+    func_ov002_020bf90c();
     if (mIsAirborne == 0) {
         mIsSlidingOnGround = 1;
         func_ov002_020c06fc(((char*)this), 0x4000);
@@ -53,7 +51,7 @@ L88:
     goto L1d8;
 
 La8:
-    if (func_ov002_020c0688(((char*)this)) == 0)
+    if (func_ov002_020c0688() == 0)
         goto L14c;
 
     if (mStateWork == 0) {

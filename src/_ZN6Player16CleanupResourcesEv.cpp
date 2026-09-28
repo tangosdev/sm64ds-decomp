@@ -48,8 +48,8 @@ int Player::CleanupResources()
     u32 b;
 
     func_ov002_020bdd2c(((char *)this));
-    func_ov002_020bdef0(((char *)this));
-    func_ov002_020bdd9c(((char *)this));
+    func_ov002_020bdef0();
+    func_ov002_020bdd9c();
     func_ov002_020e032c(((char *)this));
     for (i = 0; i < 4; i++) {
         int j;
