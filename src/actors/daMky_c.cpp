@@ -54,14 +54,15 @@
 #include "Player.h"
 #include "SurfaceInfo.h"
 #include "dBgCh_Lin.h"
+#include "dBgPi.h"
 
 /* The callees of this TU's members, spelled by their mangled or ROM names.
  * They cannot be declared inside a method body: a block-scope extern in a
  * daMky_c member gets C++ linkage, the reference mangles a second time, and
- * the module no longer links. They are declared once, here, because C++
- * rejects two extern "C" declarations of one name that disagree ("illegal
- * function overloading"), so object pointers are void * throughout. Data
- * objects stay in the bodies: a variable's name does not mangle. */
+ * the module no longer links. Each is declared once, here, because C++
+ * rejects two extern "C" declarations of one name that disagree, so one
+ * spelling has to serve every call site. Data objects stay in the bodies:
+ * a variable's name does not mangle. */
 extern "C" {
 
 void  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int idx, int speed, unsigned int flags);
@@ -70,55 +71,24 @@ int   Vec3_Dist(const void *a, const void *b);
 void  func_0201267c(unsigned int id, const Vector3 *pos);
 void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 void *_ZNK10dBgCh_Actr13GetWallResultEv(void *self);
-void  _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, void *out);
 int   _ZN4cstd4fdivEii(int a, int b);
 void  func_020383f0(void *p);
-void  _ZN9Animation8SetFlagsEi(void *self, int flags);
-int   _ZN9Animation8FinishedEv(void *self);
 bool  _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int speed, int e);
-int   _ZN6Player18HasFinishedTalkingEv(void *player);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 void *_ZN9dBgCh_LinC1Ev(void *self);
-void  _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *actor);
-int   _ZN9dBgCh_Lin10DetectClsnEv(void *self);
-void  _ZN9dBgCh_LinD1Ev(void *self);
+dBgCh_Lin *_ZN9dBgCh_LinD1Ev(void *self);
 void  Vec3_Asr(void *d, void *s, int sh);
 int   _ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(void *m, void *v, void *w, int fix, void *out);
-int   _ZNK9Animation12WillHitFrameEi(void *a, int f);
-void  _ZN9Animation7AdvanceEv(void *self);
-void  _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, unsigned int i);
-int   Vec3_HorzDist(const void *a, const void *b);
+void  _ZNK7PathPtr7GetNodeER7Vector3j(const void *self, Vector3 &node, unsigned int idx); /* local extern: the member form costs 02111b20 four words */
+int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void  _Z11UpdateAngleRssis(short *p, short a, int b, short c);
 int   _Z14ApproachLinearRsss(short *dst, short target, short rate);
-void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int param, const void *pos, const void *rot, int areaID, int deathTableID);
-void *_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(void *self, void *player, void *offset);
-void  _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *self, void *shadow, void *mtx, int rad, int height, unsigned int flags);
-void  _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
-int   _ZN8dActor_c13DistToCPlayerEv(void *self);
-short _ZN8dActor_c18HorzAngleToCPlayerEv(void *self);
-void  _ZN7fBase_c18MarkForDestructionEv(void *self);
-int   _ZN6Player7TryGrabER8dActor_c(void *player, void *actor);
-int   _ZN6Player14IsFrontSlidingEv(void *player);
-int   _ZN6Player17LostGrabbedObjectEv(void *player);
-int   _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *player, void *speaker, unsigned int msgId, const void *pos, unsigned int a, unsigned int b);
-int   _ZN6Player12GetTalkStateEv(void *player);
-int   _ZN6Player9DropActorEv(void *player);
-int   _ZN6Player9StartTalkER7fBase_cb(void *player, void *actor, int b);
-void  _ZN6Player18SetNewHatCharacterEjjb(void *player, unsigned int a, unsigned int b, int c);
-int   _ZN6Player7IsInAirEv(void *player);
-void  _ZN8SaveData13PlayerLoseCapEv(void);
-int   _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
-int   _ZNK10dBgCh_Actr13JustHitGroundEv(const void *self);
-int   _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
-void  _ZN10dBgCh_Actr15ClearLimMovFlagEv(void *self);
+void  _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *self, void *shadow, void *mtx, int rad, int height, unsigned char flags);
 void  dBgCh_Actr_UpdateContinuous_Veneer(void *self);
-void  _ZN5dCc_c6UpdateEv(void *self);
 int   func_02038ea4(void *self);
-char *func_0203567c(void *self);
+int   func_0203567c(int self);
 int   func_02037f44(void *result);
-unsigned int _ZNK5dBgPi9GetClsnIDEv(const void *result);
-void  _ZN5dBgPiD1Ev(void *result);
+dBgPi *_ZN5dBgPiD1Ev(void *result);
 void  Matrix4x3_FromRotationY(void *m, int angle);
 void  Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void  Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
@@ -293,7 +263,7 @@ int daMky_c::func_ov030_02111b20()
   /* GetNode's header takes Vector3&. This body was matched as a pointer
      call, and the member form is four words off. mPathNode is unsigned;
      the compare here is a signed word. */
-  _ZNK7PathPtr7GetNodeER7Vector3j((char *)this+0x398, &v, *(unsigned int*)((char *)this+0x3a0));
+  _ZNK7PathPtr7GetNodeER7Vector3j((char *)this+0x398, v, *(unsigned int*)((char *)this+0x3a0));
   d = Vec3_HorzDist((struct Vector3*)((char *)this+0x5c), &v);
   ang = Vec3_HorzAngle((struct Vector3*)((char *)this+0x5c), &v);
   _Z11UpdateAngleRssis((short*)((char *)this+0x8e), ang, 2, 0x400);
@@ -434,18 +404,18 @@ void daMky_c::func_ov030_02111f6c(dBgCh_Actr* w)
   int bb = (int)(this->actorID == 0x10b);
   if (bb != 0 && this->mState != 9) func_020383f0(&this->mWithMeshClsn);
   else dBgCh_Actr_UpdateContinuous_Veneer(&this->mWithMeshClsn);
-  if (_ZNK10dBgCh_Actr10IsOnGroundEv(w) != 0) {
+  if (w->IsOnGround() != 0) {
     Vector3 n;
-    _ZNK11SurfaceInfo12CopyNormalToER7Vector3((SurfaceInfo*)((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(w) + 4), &n);
+    ((SurfaceInfo*)((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(w) + 4))->CopyNormalTo((::Vector3 &)n);
     if (n.y != 0) {
       int s = (int)(((long long)n.x * this->unk_0a4 + 0x800) >> 0xc)
             + (int)(((long long)n.z * this->unk_0ac + 0x800) >> 0xc);
       this->mVertSpeed = -(_ZN4cstd4fdivEii(s, n.y) + 0x8000);
     }
   }
-  if (_ZNK10dBgCh_Actr8IsOnWallEv(w) != 0) {
+  if (w->IsOnWall() != 0) {
     Vector3 wn;
-    _ZNK11SurfaceInfo12CopyNormalToER7Vector3((SurfaceInfo*)((char*)_ZNK10dBgCh_Actr13GetWallResultEv(w) + 4), &wn);
+    ((SurfaceInfo*)((char*)_ZNK10dBgCh_Actr13GetWallResultEv(w) + 4))->CopyNormalTo((::Vector3 &)wn);
   }
 }
 // @symbol _ZN7daMky_c19func_ov030_02112094Ev
@@ -470,15 +440,15 @@ void daMky_c::func_ov030_02112094()
     if (a && *(void**)(c + 0x3a8)
         && *(int*)(*(char**)(c + 0x3a8) + 0xc8)) {
         idx = 0;
-        if (_ZN6Player14IsFrontSlidingEv(*(void**)(c + 0x3a8))
-            || _ZN6Player17LostGrabbedObjectEv(*(void**)(c + 0x3a8))) {
+        if ((*(Player **)(c + 0x3a8))->IsFrontSliding()
+            || (*(Player **)(c + 0x3a8))->LostGrabbedObject()) {
             idx = 1;
         }
         if (*(int*)(*(char**)(c + 0x3a8) + 8) == 2) {
             idx = (idx + 2) & 0xff;
         }
-        res = _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(c, *(void**)(c + 0x3a8),
-            data_ov030_02115ddc + idx * 0xc);
+        res = UpdateCarry(**(Player **)(c + 0x3a8),
+            *(Vector3 *)(data_ov030_02115ddc + idx * 0xc));
         *(M4x3*)(&this->mModelAnim.mat4x3) = *(M4x3*)res;
     } else {
         Matrix4x3_FromRotationY(&this->mModelAnim.mat4x3, this->mAngleY);
@@ -593,7 +563,7 @@ int daMky_c::func_ov030_02112400()
         }
     } else {
         if (this->mWithMeshClsn.IsOnGround()) {
-            char* r = func_0203567c((dBgCh_Actr*)(&this->mWithMeshClsn));
+            char* r = (char *)func_0203567c((int)&this->mWithMeshClsn);
             ClsnResultTmp res;
             int* d = (int*)&res.v;
             *(double*)d = *(double*)(r + 4);
@@ -606,7 +576,7 @@ int daMky_c::func_ov030_02112400()
             res.t0 = *(int*)(r + 0x1c);
             res.t1 = *(int*)(r + 0x20);
             res.t2 = *(int*)(r + 0x24);
-            if (_ZNK5dBgPi9GetClsnIDEv(&res) == -1 || func_02037f44(&res) == 0) {
+            if (((dBgPi *)&res)->GetClsnID() == -1 || func_02037f44(&res) == 0) {
                 func_ov030_021141a8(0);
             }
             _ZN5dBgPiD1Ev(&res);
@@ -652,7 +622,7 @@ int daMky_c::func_ov030_02112578()
     case 1:
         _Z14ApproachLinearRsss((s16 *)(c + 0x8e), Vec3_HorzAngle((Vector3 *)&this->mPosX, (u8 *)player + 0x5c), 0x300);
         if (Vec3_Dist((Vector3 *)&this->mPosX, (u8 *)player + 0x5c) < 0x96000) {
-            if (_ZN6Player9StartTalkER7fBase_cb(player, this, 1) != 0) {
+            if (((Player *)player)->StartTalk(*this, 1) != 0) {
                 { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
             }
         }
@@ -664,7 +634,7 @@ int daMky_c::func_ov030_02112578()
         sp[1] = this->mPosY;
         sp[2] = this->mPosZ;
         sp[1] += 0x50000;
-        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(player, this, 0xbd, sp, 1, 0) != 0) {
+        if (((Player *)player)->ShowMessage(*this, 0xbd, (const Vector3 *)sp, 1, 0) != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, data_ov030_02115cf8[1], 0, 0x1000, 0);
             ((Animation *)(c + 0x124))->SetFlags( 0);
             func_0201267c(0xd1, (const Vector3 *)&this->mCamSpacePosX);
@@ -673,8 +643,8 @@ int daMky_c::func_ov030_02112578()
         break;
     }
     case 3:
-        if (_ZN6Player12GetTalkStateEv(player) == 2) {
-            _ZN6Player18HasFinishedTalkingEv(player);
+        if (((Player *)player)->GetTalkState() == 2) {
+            ((Player *)player)->HasFinishedTalking();
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, data_ov030_02115d18[1], 0, 0x1000, 0);
             { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
         }
@@ -728,7 +698,7 @@ int daMky_c::func_ov030_02112578()
         break;
     case 10:
         if (dActor_c::FindWithActorID(0x67, 0) == 0) {
-            _ZN7fBase_c18MarkForDestructionEv(this);
+            MarkForDestruction();
         }
         break;
     default:
@@ -736,7 +706,7 @@ int daMky_c::func_ov030_02112578()
     }
 
     ((Animation *)(c + 0x124))->Advance();
-    _ZN8dActor_c9UpdatePosEP5dCc_c(this, &this->mdCcAc_c);
+    UpdatePos(&this->mdCcAc_c);
     func_ov030_02111f6c(&this->mWithMeshClsn);
     this->mdCcAc_c.Clear();
     return 1;
@@ -782,7 +752,7 @@ int daMky_c::func_ov030_02112a84()
         if (id == 0x10b)
             b = 1;
         if (b) {
-            char *r = (char *)func_0203567c(&this->mWithMeshClsn);
+            char *r = (char *)func_0203567c((int)&this->mWithMeshClsn);
             int *d = &res.s0;
             *(P2 *)d = *(P2 *)(r + 4);
             d[2] = *(int *)(r + 0xc);
@@ -794,7 +764,7 @@ int daMky_c::func_ov030_02112a84()
             res.h = *(int *)(r + 0x1c);
             res.i = *(int *)(r + 0x20);
             res.j = *(int *)(r + 0x24);
-            if (_ZNK5dBgPi9GetClsnIDEv(&res) != 0xffffffff)
+            if (((::dBgPi *)&res)->GetClsnID() != 0xffffffff)
                 func_ov030_021141a8(9);
             else
                 func_ov030_021141a8(this->mPrevState);
@@ -936,7 +906,7 @@ int daMky_c::func_ov030_02112da0()
         case 1:
             if (Vec3_Dist((Vector3 *)&this->mPerchPosX, (Vector3 *)&this->mPosX) < 0x514000 &&
                 this->mPosY > this->mPerchPosY - 0x12c000) {
-                if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(char **)((char *)this + 0x3a8), (char *)this, 0xc1, 0, 0, 0) != 0) {
+                if ((*(Player **)((char *)this + 0x3a8))->ShowMessage(*this, 0xc1, 0, 0, 0) != 0) {
                     func_0201267c(0xd1, (const Vector3 *)&this->mCamSpacePosX);
                     (*(u8 *)((int)(char *)this + 0x3c7))++;
                 }
@@ -952,10 +922,10 @@ int daMky_c::func_ov030_02112da0()
             }
             break;
         case 2:
-            if (_ZN6Player12GetTalkStateEv(*(char **)((char *)this + 0x3a8)) == -1) {
+            if ((*(Player **)((char *)this + 0x3a8))->GetTalkState() == -1) {
                 u8 g = data_0209d684;
                 if (g == 1) {
-                    _ZN6Player9DropActorEv(*(char **)((char *)this + 0x3a8));
+                    (*(Player **)((char *)this + 0x3a8))->DropActor();
                     this->mPrevState = 8;
                     func_ov030_021141a8(7);
                 } else if (g == 2) {
@@ -1029,7 +999,7 @@ int daMky_c::func_ov030_02113094()
     }
     case 1: {
         int msg = (this->mHasSpawnedCap != 0) ? 0xc2 : 0xc3;
-        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(char**)((char *)this + 0x3a8), (char *)this, (s16)msg, 0, 0, 0) != 0) {
+        if ((*(Player **)((char *)this + 0x3a8))->ShowMessage(*this, (s16)msg, 0, 0, 0) != 0) {
             func_0201267c(0xd1, (const Vector3 *)&this->mCamSpacePosX);
             (*(u8*)(((int)(char *)this + 0x3c7)))++;
         }
@@ -1042,8 +1012,8 @@ int daMky_c::func_ov030_02113094()
         break;
     }
     case 2:
-        if (_ZN6Player12GetTalkStateEv(*(char**)((char *)this + 0x3a8)) == -1) {
-            _ZN6Player9DropActorEv(*(char**)((char *)this + 0x3a8));
+        if ((*(Player **)((char *)this + 0x3a8))->GetTalkState() == -1) {
+            (*(Player **)((char *)this + 0x3a8))->DropActor();
             (*(u8*)(((int)(char *)this + 0x3c7)))++;
         }
         break;
@@ -1051,7 +1021,7 @@ int daMky_c::func_ov030_02113094()
         int b5 = (int)((this->mFlags & 0x80000) != 0);
         if (b5 != 0) {
             if (this->mHasSpawnedCap != 0) {
-                _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x10d, (this->mCapPlayerNo << 8) | 5, (struct Vector3*)(*(char**)((char *)this + 0x3a8) + 0x5c), 0, this->mAreaId, -1);
+                Spawn(0x10d, (this->mCapPlayerNo << 8) | 5, *(Vector3 *)(*(char**)((char *)this + 0x3a8) + 0x5c), 0, this->mAreaId, -1);
                 ((fBase_c *)::dActor_c::FindWithID(this->mCapUniqueID))->MarkForDestruction();
                 {
                     u32 z = 0;
@@ -1134,7 +1104,7 @@ skip_raycast:
     case 0:
         if (Vec3_Dist((Vector3 *)&this->mPerchPosX, (Vector3 *)&this->mPosX) < 0x514000 &&
             this->mPosY > this->mPerchPosY - 0x12c000) {
-            if (_ZN6Player9StartTalkER7fBase_cb(*(void**)(c + 0x3a8), c, 1) != 0) {
+            if ((*(Player **)(c + 0x3a8))->StartTalk(*this, 1) != 0) {
                 Vector3 camPos;
                 {
                     Vector3 *src = (Vector3*)((char*)data_0209f318 + 0x8c);
@@ -1156,7 +1126,7 @@ skip_raycast:
                 msgPos.z = data_020a0e68.t.z;
                 msgPos.y = this->mPosY + 0x64000;
 
-                if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(c + 0x3a8), c, 0xc0, &msgPos, 0, 2) != 0) {
+                if ((*(Player **)(c + 0x3a8))->ShowMessage(*this, 0xc0, &msgPos, 0, 2) != 0) {
                     func_0201267c(0xd1, (const Vector3 *)&this->mCamSpacePosX);
                     {
                         unsigned char *p = (unsigned char*)(c + 0x3c7);
@@ -1168,10 +1138,10 @@ skip_raycast:
         this->mActionTimer = 0x3c;
         break;
     case 1:
-        if (_ZN6Player12GetTalkStateEv(*(void**)(c + 0x3a8)) == -1) {
+        if ((*(Player **)(c + 0x3a8))->GetTalkState() == -1) {
             unsigned char g = data_0209d684;
             if (g == 1) {
-                _ZN6Player9DropActorEv(*(void**)(c + 0x3a8));
+                (*(Player **)(c + 0x3a8))->DropActor();
                 func_ov030_021141a8(8);
             } else if (g == 2) {
                 unsigned char *p = (unsigned char*)(c + 0x3c7);
@@ -1246,10 +1216,10 @@ int daMky_c::func_ov030_021136b0()
                 void *spawned;
                 this->mCapPlayerNo = p->param1;
                 msg = this->mAreaId;
-                spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
+                spawned = Spawn(
                     0x10d,
                     (this->mCapPlayerNo << 8) | 2,
-                    (Vector3 *)&this->mPosX,
+                    *(Vector3 *)&this->mPosX,
                     0,
                     msg,
                     -1);
@@ -1293,8 +1263,8 @@ int daMky_c::func_ov030_021136b0()
             msgPos.y = my;
             msgPos.z = mz;
             msgPos.y = this->mPosY + 0x64000;
-            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
-                    *(void **)((char *)this + 0x3a8), (char *)this, msgArg, &msgPos, 0, 2) != 0) {
+            if ((*(Player **)((char *)this + 0x3a8))->ShowMessage(
+                    *this, msgArg, &msgPos, 0, 2) != 0) {
                 func_0201267c(0xd1, (const Vector3 *)&this->mCamSpacePosX);
                 {
                     u8 *st = (u8 *)((char *)this + 0x3c7);
@@ -1305,19 +1275,19 @@ int daMky_c::func_ov030_021136b0()
         break;
     }
     case 2:
-        if (_ZN6Player12GetTalkStateEv(*(void **)((char *)this + 0x3a8)) == -1) {
+        if ((*(Player **)((char *)this + 0x3a8))->GetTalkState() == -1) {
             if (this->mHasSpawnedCap != 0) {
                 {
                     u32 *fl = (u32 *)((char *)this + 0xb0);
                     *fl &= ~0x200u;
                 }
-                _ZN6Player9DropActorEv(*(void **)((char *)this + 0x3a8));
+                (*(Player **)((char *)this + 0x3a8))->DropActor();
                 {
                     u32 *fl = (u32 *)((char *)this + 0xb0);
                     *fl |= 0x200u;
                 }
             } else {
-                _ZN6Player9DropActorEv(*(void **)((char *)this + 0x3a8));
+                (*(Player **)((char *)this + 0x3a8))->DropActor();
             }
             {
                 u8 *st = (u8 *)((char *)this + 0x3c7);
@@ -1538,23 +1508,23 @@ int daMky_c::func_ov030_02113d20()
     else
         func_ov030_02111a00();
 
-    _ZN9Animation7AdvanceEv((char *)this + 0x124);
+    ((Animation *)((char *)this + 0x124))->Advance();
 
     b = (int)(this->actorID == 0x10b);
     if (b) {
-        _ZN8dActor_c9UpdatePosEP5dCc_c(this, (char *)&this->mdCcAc_c);
-        onWall = (func_ov030_02111dd0() | _ZNK10dBgCh_Actr8IsOnWallEv((char *)&this->mWithMeshClsn)) != 0;
+        UpdatePos(&this->mdCcAc_c);
+        onWall = (func_ov030_02111dd0() | this->mWithMeshClsn.IsOnWall()) != 0;
         func_ov030_02111f6c(&this->mWithMeshClsn);
         func_ov030_02111bc4();
     } else {
-        _ZN8dActor_c9UpdatePosEP5dCc_c(this, (char *)&this->mdCcAc_c);
+        UpdatePos(&this->mdCcAc_c);
         func_ov030_02111f6c(&this->mWithMeshClsn);
         func_ov030_02111bc4();
-        onWall = (func_ov030_02111ea4() | _ZNK10dBgCh_Actr8IsOnWallEv((char *)&this->mWithMeshClsn)) != 0;
+        onWall = (func_ov030_02111ea4() | this->mWithMeshClsn.IsOnWall()) != 0;
     }
 
     if (this->mState == 1 && onWall && dist < 0x12c000) {
-        if (*(int *)((char *)p + 0x98) > 0x9000 || _ZN6Player7IsInAirEv(p) != 0) {
+        if (*(int *)((char *)p + 0x98) > 0x9000 || ((Player *)p)->IsInAir() != 0) {
             this->mPrevState = 1;
             func_ov030_021141a8(2);
         }
@@ -1562,7 +1532,7 @@ int daMky_c::func_ov030_02113d20()
 
     ((dCc_c *)((char *)&this->mdCcAc_c))->Clear();
     if (this->mState == 1)
-        _ZN5dCc_c6UpdateEv((char *)&this->mdCcAc_c);
+        this->mdCcAc_c.Update();
     func_ov030_02111890();
     return 1;
 }
