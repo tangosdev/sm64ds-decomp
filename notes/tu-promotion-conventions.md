@@ -106,8 +106,9 @@ individual verdicts; its exit status is not a pass/fail gate, and a failed compi
 can leave no records. For a shadow source, confirm its filename-based compiler pin
 agrees with the TU's pin. Normal isolation can discard the metadata under review.
 Apply the header, references, attribution and source-state gates required by
-AGENTS and the changed surfaces. The private byte validator and independent
-**Source review** must pass for the proposed candidate/base before landing.
+AGENTS and the changed surfaces. The private byte validator must pass for the
+proposed candidate/base before landing; fleet work also needs its queue source
+review (`tools/check_pr_source_review.py --pr NUMBER`).
 
 ## When staging or a smaller production change is justified
 

@@ -36,11 +36,11 @@ static gates. Publish the coherent result and monitor the required private check
 to terminal success. Pending, queued, report-only and masked-byte results are not
 completion. Follow repository merge rules and the human's publication authority.
 
-After source review, rework or cancellation, dispatch `source-review.yml` for the
-affected PR. Immediately before landing, run
+Immediately before landing, run
 `python tools/check_pr_source_review.py --pr NUMBER` from the active review tools
-and require success alongside terminal private byte validation. A failed live
-read is a blocker even if a previously posted GitHub check remains green.
+and require success alongside terminal private byte validation. There is no
+GitHub check for it; that live read is the review gate, and a failed one is a
+blocker.
 
 ## Record the outcome
 
