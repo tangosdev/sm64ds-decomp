@@ -59,6 +59,8 @@ struct daObjKi_Hasira_c : dBgActor_c {
     virtual s32 CleanupResources();  /* slot  3 */
     virtual s32 Behavior();          /* slot  6 */
     virtual s32 Render();            /* slot  9 */
+
+    void func_ov016_02112a9c();
 };
 
 #ifndef SM64DS_PLATFORM_PC

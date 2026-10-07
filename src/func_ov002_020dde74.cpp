@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "PlayerInput.h"
 struct State;
 struct Player;
 extern "C" int _ZN6Player11ChangeStateERNS_5StateE(Player* thiz, State* s);
@@ -11,7 +12,6 @@ extern State data_ov002_021101e4;
 extern State data_ov002_0211019c;
 extern State data_ov002_021105bc;
 extern State data_ov002_02110574;
-extern u8 data_020a0e40;
 extern char data_0209f49c[];
 
 extern "C" int func_ov002_020dde74(char* thiz){
@@ -24,7 +24,7 @@ extern "C" int func_ov002_020dde74(char* thiz){
     _ZN6Player11ChangeStateERNS_5StateE((Player*)thiz, &data_ov002_02110034);
     return 1;
   }
-  if ((*(u16*)(data_0209f49c + (u8)data_020a0e40 * 0x18) & 2) ||
+  if ((*(u16*)(data_0209f49c + (u8)gActivePlayerSlot * 0x18) & 2) ||
       *(u8*)(thiz + 0x703) != 0)
     goto change574;
 

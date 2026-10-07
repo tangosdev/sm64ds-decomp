@@ -69,7 +69,10 @@ src/actors/daObjDorifu_c.cpp:
 src/game/actors/d_a_obj_hatena_switch.cpp:
     complete
     .text start:0x020b4ed8 end:0x020b5734
+    .init start:0x02100ec4 end:0x02100f84
+    .ctor start:0x021080e8 end:0x021080ec
     .data start:0x02108e14 end:0x02108edc
+    .bss start:0x0210dd50 end:0x0210dda0
 
 src/actors/daObjFire_c.cpp:
     complete
@@ -1544,10 +1547,6 @@ src/__sinit_ov002_02100d44.c:
 src/__sinit_ov002_02100e50.c:
     complete
     .init start:0x02100e50 end:0x02100ec4
-
-src/__sinit_ov002_02100ec4.c:
-    complete
-    .init start:0x02100ec4 end:0x02100f84
 
 src/__sinit_ov002_02100f84.c:
     complete

@@ -19,6 +19,7 @@
 #include "dScMgSound_c.h"
 #include "types.h"
 #include "decl_common.h"
+#include "PlayerInput.h"
 
 /* A cursor keeps the add-#0x5000 split on a walk that advances the scene
    pointer. Pointing the record itself at the slot pools the base instead. */
@@ -146,11 +147,6 @@ void func_02012174(u32 bank, u32 id);
 extern u16 data_ov006_0212ef3c[];
 extern u16 data_ov006_0213f794[];
 extern u16 data_ov006_0213f7e8[];
-extern u8 data_020a0e40[];
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0dea[];
-extern u8 data_020a0deb[];
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 extern u8 data_ov006_0212ee10[];
@@ -612,11 +608,11 @@ void func_ov006_0211bf44(dScMgSound_c* scene, int slot)
         return;
     }
 
-    player = data_020a0e40[0];
+    player = gActivePlayerSlot;
     offset = player * 4;
     active = 0;
-    if (data_020a0de8[offset] != 0) {
-        if (data_020a0de9[offset] != 0) {
+    if (gTouchHeld[offset] != 0) {
+        if (gTouchEdge[offset] != 0) {
             active = 1;
         }
     }
@@ -624,8 +620,8 @@ void func_ov006_0211bf44(dScMgSound_c* scene, int slot)
         return;
     }
 
-    dx = data_020a0dea[player * 4] - (scene->mNotes[slot].x >> 12);
-    dy = data_020a0deb[player * 4] - (scene->mNotes[slot].y >> 12);
+    dx = gTouchX[player * 4] - (scene->mNotes[slot].x >> 12);
+    dy = gTouchY[player * 4] - (scene->mNotes[slot].y >> 12);
 
     if (dx > 0x18) {
         return;

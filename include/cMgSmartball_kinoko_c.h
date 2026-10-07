@@ -4,25 +4,25 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * SIZE 0x40, from _Znwj(0x40) in func_ov006_02115b0c. Base ends at
+ * SIZE 0x40, from _Znwj(0x40) in dScMgSmartball_c::SpawnObjects. Base ends at
  * 0x34, so this class adds 0x0c bytes -- one of the smallest children.
  *
- * FIELD EVIDENCE. SaveSnapshot (func_ov006_0211192c) and Update
- * (func_ov006_021117bc) are the only two functions that touch anything past
- * 0x34; RestoreInitial (func_ov006_02111b20) zeroes mWasHit and mHitTimer but,
+ * FIELD EVIDENCE. SaveSnapshot and Update
+ *  are the only two functions that touch anything past
+ * 0x34; RestoreInitial zeroes mWasHit and mHitTimer but,
  * read exhaustively, says nothing at all about mVariant -- so this header
  * does not invent a reset for it.
  *
  * mVariant says WHICH KIND of mushroom this is, not what it is doing. It is
  * written exactly twice in the whole tree, both by the spawner
- * func_ov006_02115b0c, which walks two different tilemap layers looking for
+ * dScMgSmartball_c::SpawnObjects, which walks two different tilemap layers looking for
  * the same tile id 0x328: the objects it builds from the first layer get 0,
  * the ones from the second get 1. The constructor func_ov006_02111b40 leaves
  * 2 behind, which is the value Update has no case for -- a kinoko the spawner
  * never claimed renders nothing. Update switches on it and SaveSnapshot only
  * reads it; nothing ever assigns it at runtime.
  *
- * mWasHit is raised by func_ov006_02112190 -- the ball-vs-kinoko proximity
+ * mWasHit is raised by HitKinokos -- the ball-vs-kinoko proximity
  * test -- on the object it found a hit against, reached through the manager's
  * kinoko table at mgr+0x46bc (count at mgr+0x4670). SaveSnapshot consumes it:
  * on the frame it sees the flag it fires the effect and sound (only if
@@ -63,11 +63,16 @@ struct cMgSmartball_kinoko_c : cMgSmartball_object_c {
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
 
+    /* Recovered helper: the squared hit radius the ball's HitKinokos sweep
+       compares a plane distance against -- mRadius * mRadius in fixed
+       point. */
+    int  HitRadiusSq();
+
     s32 mVariant;     /* 0x034 -- which tilemap layer spawned this mushroom
                           (0 or 1), or 2 for one the spawner never claimed;
                           see the header comment */
     u8  mWasHit;      /* 0x038 -- a ball touched this mushroom; raised by
-                          func_ov006_02112190, consumed by SaveSnapshot */
+                          HitKinokos, consumed by SaveSnapshot */
     u8  pad_039[0x3]; /* 0x039-0x03b -- alignment; see header comment */
     s32 mHitTimer;    /* 0x03c -- frames the mushroom stays down, re-armed
                           while a ball is still resting on it */

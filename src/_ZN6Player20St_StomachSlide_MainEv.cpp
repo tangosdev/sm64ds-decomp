@@ -5,6 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
+#include "PlayerInput.h"
 extern "C" {
 extern int _ZN6Player7IsStateERNS_5StateE(void* c, void* s);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
@@ -25,7 +26,6 @@ extern Fix12i _ZN4cstd5atan2E5Fix12IiES1_(Fix12i a, Fix12i b);
 extern void _Z15ApproachLinear2Rsss(short* cur, short target, short step);
 extern void Player_AdvanceAnims(void* c);
 
-extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
 extern u8 data_0209ee90;
 extern int data_ov002_021105bc[];
@@ -92,7 +92,7 @@ int Player::St_StomachSlide_Main()
                 _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x43, 0x40000000, 0x1000, 0);
             }
             {
-                u16 flags = *(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18);
+                u16 flags = *(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18);
                 if ((flags & 1) || (flags & 2)) {
                     if (!(u16)(mStateFlags & 1)) {
                         _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021101fc);

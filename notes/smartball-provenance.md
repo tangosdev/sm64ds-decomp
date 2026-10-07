@@ -178,7 +178,7 @@ load-bearing. `Update` and `RestoreInitial` are unaffected -- see the header.
 | offset | name | evidence |
 | --- | --- | --- |
 | 0x038 | `mDriveBase` | Captured at the trigger frame from the same table as `mDriveNow`, less however far `mCurrent1` already sat above the 0xa0000 rest height. Every active frame `cMgSmartball_spring_c::SaveSnapshot` recomputes `mCurrent1 = mDriveNow - mDriveBase + 0xa0000`, so this is the zero point the live reading is measured from. |
-| 0x040 | `mDriveNow` | [data_020a0deb](../config/arm9/symbols.txt)`[level*4] << 12`, re-read every active frame and clamped to `[mDriveBase, mDriveBase + 0x38000]` before it sets the height. |
+| 0x040 | `mDriveNow` | [gTouchY](../config/arm9/symbols.txt)`[level*4] << 12`, re-read every active frame and clamped to `[mDriveBase, mDriveBase + 0x38000]` before it sets the height. |
 | 0x044 | `mSoundHandle` | `mSoundHandle = Sound_PlayIfNotActive(mSoundHandle, 2, 0x16c, 0)` -- the handle fed back in as its own first argument. The only field this class's `RestoreInitial` zeroes. |
 
 Left `unk_`, deliberately: 0x034 and 0x03c, and the outside-the-class search
@@ -190,7 +190,7 @@ reaches that slot was read: `dScMgSmartball_c::Behavior` and
 `dScMgSmartball_c::AfterCleanupResources` only build and free it,
 and [func_ov006_0211248c](../src/actors/dScMgSmartball_c.cpp) only reads its position. None of them touches
 0x34 or 0x3c. `SaveSnapshot` sets `unk_03c` from
-[data_020a0dea](../config/arm9/symbols.txt)`[level*4] << 12` in the trigger branch and copies it to
+[gTouchX](../config/arm9/symbols.txt)`[level*4] << 12` in the trigger branch and copies it to
 `unk_034`; nothing in the tree ever reads either back. Their width and their
 one write are evidenced, their meaning is not.
 

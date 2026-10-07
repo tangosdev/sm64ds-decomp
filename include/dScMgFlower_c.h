@@ -150,7 +150,7 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
                               make the compiler add a second, implicit pass. */
     u8  pad_51f8[0xdc0];   /* 0x51f8 -- opaque object, see file banner */
     s32 mCursorX;          /* 0x5fb8 -- Fix12 stylus position, from the touch
-                              sample data_020a0dea/deb << 12 */
+                              sample gTouchX/gTouchY << 12 */
     s32 mCursorY;          /* 0x5fbc */
     s32 mPrevCursorX;      /* 0x5fc0 -- last tick's mCursor; the drag delta */
     s32 mPrevCursorY;      /* 0x5fc4 */

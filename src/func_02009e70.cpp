@@ -53,6 +53,7 @@
 // macro rather than inlined at every call site so the history stays reviewable.
 #include "dBgCh_Gnd.h"
 #include "dBgCh_Lin.h"
+#include "PlayerInput.h"
 
 extern "C" {
 struct CamMode {
@@ -105,7 +106,6 @@ extern void _ZN9dBgCh_Lin10GetClsnPosEv(struct Vector3 *out, dBgCh_Lin *line);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *t, struct Vector3 *out);
 
 extern s16 data_02082214[];
-extern u8 data_020a0e40;
 extern u16 data_0209f49c[];
 extern u16 data_0209f49e[];
 extern u8 data_0209f2d8;
@@ -235,7 +235,7 @@ s32 func_02009e70(char *self)
         sl = func_020093f4(self, r5);
     }
     sp04 = func_0200bec4(self, (struct Vector3 *)(self + 0x98), r6, sp1c, r7);
-    r5 = *(u16 *)((char *)data_0209f49e + data_020a0e40 * 0x18) & 0x4300;
+    r5 = *(u16 *)((char *)data_0209f49e + gActivePlayerSlot * 0x18) & 0x4300;
     if (*(s32 *)(self + 0x118) != 0) {
         *(s16 *)(self + 0x17c) = Vec3_HorzAngle((struct Vector3 *)(self + 0x80), (struct Vector3 *)(self + 0x8c));
         goto L_AE14;
@@ -350,7 +350,7 @@ L_A534:
         *(u8 *)(self + 0x1a6) = 0;
     } else {
         if (*(u8 *)(self + 0x1a6) == 0) {
-            r5 = *(u16 *)((char *)data_0209f49c + data_020a0e40 * 0x18) & 0x4300;
+            r5 = *(u16 *)((char *)data_0209f49c + gActivePlayerSlot * 0x18) & 0x4300;
         }
     }
     if (*(s32 *)(self + 0x154) & 0x100) {

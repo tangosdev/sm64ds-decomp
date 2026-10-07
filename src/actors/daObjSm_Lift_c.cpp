@@ -82,17 +82,16 @@ void daObjSm_Lift_c::OnHitByMegaChar(Player &player)
     mAngleY = mPrevAngleY + 0x4000;
 }
 
-// @symbol func_ov018_02111278
-extern "C" void func_ov018_02111278(void *p)
+// @symbol _ZN14daObjSm_Lift_c19func_ov018_02111278Ev
+void daObjSm_Lift_c::func_ov018_02111278()
 {
-    daObjSm_Lift_c *self = (daObjSm_Lift_c *)p;
     Vector3 t;
-    Vec3_Asr(&t, (Vector3 *)&self->mPosX, 3);
+    Vec3_Asr(&t, (Vector3 *)&mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, self->mAngleX);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, 0x4000);
-    self->mModel.mat4x3 = data_020a0e68;
+    mModel.mat4x3 = data_020a0e68;
 }
 
 // @symbol _ZN14daObjSm_Lift_c16CleanupResourcesEv
@@ -214,7 +213,7 @@ int daObjSm_Lift_c::Behavior()
         mHorzSpeed = 0;
     }
 
-    func_ov018_02111278(self);
+    func_ov018_02111278();
 
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, 0, 0) != 0) {
         UpdateClsnPosAndRot();
@@ -232,7 +231,7 @@ s32 daObjSm_Lift_c::InitResources()
         return 0;
     void *f = Model::LoadFile(reinterpret_cast<SharedFilePtr &>(data_ov018_02113bc8));
     ((ModelBase *)(c + 0xd4))->SetFile((BMD_File *)f, 1, -1);
-    func_ov018_02111278(c);
+    func_ov018_02111278();
     UpdateClsnPosAndRot();
     void *kf = dBgW_Kc::LoadFile(reinterpret_cast<SharedFilePtr &>(data_ov018_02113bc0));
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(

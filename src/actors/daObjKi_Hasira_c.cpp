@@ -39,10 +39,10 @@
  * Leftover: dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange stay mangled in
  *   this TU -- both take Fix12<int> by value (wall 6az); a member call homes
  *   the argument and size-DIFFs InitResources / Behavior.
- * Leftover: func_ov016_02112a9c is still the linker name of this class's
- *   three-axis model-matrix update (dBgActor_c::UpdateModelPosAndRotY's
- *   pitch-and-roll sibling). It stays a C-linkage helper under that name;
- *   giving it a member spelling would coin a mangled name.
+ * Leftover: func_ov016_02112a9c is a member retaining its linker address as
+ *   its name -- the three-axis model-matrix update (dBgActor_c::
+ *   UpdateModelPosAndRotY's pitch-and-roll sibling); the real name is
+ *   unrecovered.
  * Leftover: the model and collision SharedFilePtrs are ov016 .bss rows still
  *   named RockPillar_ModelFile / RockPillar_ClsnFile in symbols.txt; they are
  *   data names, not the class name, and renaming them is a separate change.
@@ -82,8 +82,6 @@ void func_0200d8c8(dCamera_c *cam, const Vector3 *pos, int strength);
 extern void *data_0209f318;
 /* The sin/cos table: (sin, cos) pairs of s16 indexed by angle >> 4. */
 extern s16 data_02082214[];
-
-void func_ov016_02112a9c(daObjKi_Hasira_c *self);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -104,7 +102,7 @@ s32 daObjKi_Hasira_c::InitResources()
 {
     void *f = Model::LoadFile(RockPillar_ModelFile);
     mModel.SetFile((BMD_File *)f, 1, -1);
-    func_ov016_02112a9c(this);
+    func_ov016_02112a9c();
     UpdateClsnPosAndRot();
 
     char *k = dBgW_Kc::LoadFile(RockPillar_ClsnFile);
@@ -199,7 +197,7 @@ s32 daObjKi_Hasira_c::Behavior()
     }
     }
 
-    func_ov016_02112a9c(this);
+    func_ov016_02112a9c();
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0)
         UpdateClsnPosAndRot();
     return 1;
@@ -226,14 +224,14 @@ s32 daObjKi_Hasira_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov016_02112a9c
+// @symbol _ZN16daObjKi_Hasira_c19func_ov016_02112a9cEv
 /* dBgActor_c::UpdateModelPosAndRotY with pitch and roll as well: rebuild the
  * model matrix from all three angles, then drop the position into its
  * translation row at 1/8 scale, the model-space unit. */
-extern "C" void func_ov016_02112a9c(daObjKi_Hasira_c *self)
+void daObjKi_Hasira_c::func_ov016_02112a9c()
 {
-    Matrix4x3_FromRotationXYZExt(&self->mModel.mat4x3, self->mAngleX, self->mAngleY, self->mAngleZ);
-    self->mModel.mat4x3.m[9]  = self->mPosX >> 3;
-    self->mModel.mat4x3.m[10] = self->mPosY >> 3;
-    self->mModel.mat4x3.m[11] = self->mPosZ >> 3;
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3.m[9]  = mPosX >> 3;
+    mModel.mat4x3.m[10] = mPosY >> 3;
+    mModel.mat4x3.m[11] = mPosZ >> 3;
 }

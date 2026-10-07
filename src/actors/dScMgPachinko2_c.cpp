@@ -37,6 +37,7 @@
 
 #include "types.h"
 #include "dScMgPachinko2_c.h"
+#include "PlayerInput.h"
 
 namespace Sound {
     void PlayBank2_2D(unsigned int id);
@@ -203,11 +204,6 @@ extern int  data_0209d4b8;
 extern u8   data_0209d45c;
 extern u8   data_0209d454;
 extern s16  data_02082214[];
-extern u8   data_020a0e40;
-extern u8   data_020a0de8[];
-extern u8   data_020a0de9[];
-extern u8   data_020a0dea[];
-extern u8   data_020a0deb[];
 extern int  data_ov006_02136b80[];
 extern int  data_ov006_02136bd4[];
 extern int  data_ov006_0213386c;
@@ -2230,19 +2226,19 @@ void dScMgPachinko2_c::func_ov006_02102f3c(int arg1)
     char *e;
     int a, b;
 
-    idx = data_020a0e40;
+    idx = gActivePlayerSlot;
     off = idx * 4;
     has = 0;
-    if (data_020a0de8[off])
+    if (gTouchHeld[off])
     {
-        if (data_020a0de9[off])
+        if (gTouchEdge[off])
             has = 1;
     }
     if (has != 0)
     {
         e = base + arg1 * 0x40 + 0x4000;
-        a = (*(int *)(e + 0x660) >> 12) - data_020a0dea[idx * 4];
-        b = (*(int *)(e + 0x664) >> 12) - data_020a0deb[idx * 4];
+        a = (*(int *)(e + 0x660) >> 12) - gTouchX[idx * 4];
+        b = (*(int *)(e + 0x664) >> 12) - gTouchY[idx * 4];
         *(u8 *)(e + 0x699) = 1;
         *(int *)(e + 0x670) = a << 12;
         *(int *)(e + 0x674) = b << 12;
@@ -2255,18 +2251,18 @@ void dScMgPachinko2_c::func_ov006_02102f3c(int arg1)
 /* dScMgPachinko2_c ball i under a live pen record: while the pen is down the
    ball follows the pen (x/y = pen + held offset, clamped to the field, offset
    re-derived); on release it aims the ball at (0x80, 0x20) and launches it.
-   Touch record reads: data_020a0dea (pen x) is a volatile byte read and
-   data_020a0deb (pen y) is read through a plain u8 pointer. Measured under
+   Touch record reads: gTouchX (pen x) is a volatile byte read and
+   gTouchY (pen y) is read through a plain u8 pointer. Measured under
    2004/b56: both volatile 4 div (ldrb/add and literal/ldr order), both plain
    arrays 18 div (the y read sinks past the x store), both pointer reads 7 div
    (r3/r6 colouring); only this pairing reproduces the ROM's literal hoisting
    and load order at both sites. */
 void dScMgPachinko2_c::func_ov006_02102fe8(int i)
 {
-    int idx = data_020a0e40;
+    int idx = gActivePlayerSlot;
     int off = idx * 4;
 
-    if (data_020a0de8[off] != 0) {
+    if (gTouchHeld[off] != 0) {
         int sx;
         int sy;
         int dx;
@@ -2274,8 +2270,8 @@ void dScMgPachinko2_c::func_ov006_02102fe8(int i)
         int dist;
         int sq;
         int prev;
-        int tx = ((volatile u8 *)data_020a0dea)[off];
-        int ty = ((u8 *)data_020a0deb)[off];
+        int tx = ((volatile u8 *)gTouchX)[off];
+        int ty = ((u8 *)gTouchY)[off];
 
         this->mBalls[i].x = this->mBalls[i].px + (tx << 12);
         this->mBalls[i].y = this->mBalls[i].py + (ty << 12);
@@ -2294,8 +2290,8 @@ void dScMgPachinko2_c::func_ov006_02102fe8(int i)
             this->mBalls[i].y = 0x8000;
         }
         {
-            int nx = (this->mBalls[i].x >> 12) - ((volatile u8 *)data_020a0dea)[data_020a0e40 * 4];
-            int ny = (this->mBalls[i].y >> 12) - ((u8 *)data_020a0deb)[data_020a0e40 * 4];
+            int nx = (this->mBalls[i].x >> 12) - ((volatile u8 *)gTouchX)[gActivePlayerSlot * 4];
+            int ny = (this->mBalls[i].y >> 12) - ((u8 *)gTouchY)[gActivePlayerSlot * 4];
             this->mBalls[i].px = nx << 12;
             this->mBalls[i].py = ny << 12;
         }

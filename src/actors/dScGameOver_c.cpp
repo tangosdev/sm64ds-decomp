@@ -46,6 +46,7 @@
 #include "dScStage_c.h"
 #include "OamAttr.h"
 #include "decl_common.h"
+#include "PlayerInput.h"
 
 /* File scope is the only place this pragma works. 0x020b060c needs
  * `#pragma opt_strength_reduction off`: it walks the eight glyphs with an
@@ -74,11 +75,6 @@ extern short data_ov003_020b1774[];
 extern unsigned short data_ov003_020b174c[];
 extern OamAttr *data_ov003_020b1824[];
 extern SceneGate *data_0209f5bc;
-extern unsigned char data_020a0e40;
-extern unsigned char data_020a0de8[];
-extern unsigned char data_020a0de9[];
-extern unsigned char data_020a0dea[];
-extern unsigned char data_020a0deb[];
 extern int data_0208ee44;
 /* Scalars, not tables: the two BG-enable bit registers, main and sub --
  * the spelling the rest of the tree uses for this pair. */
@@ -312,19 +308,19 @@ s32 dScGameOver_c::Behavior()
 
 state0:
         {
-            unsigned char idx = data_020a0e40;
+            unsigned char idx = gActivePlayerSlot;
             int b = 0;
-            if (data_020a0de8[idx * 4] != 0)
-                b = (data_020a0de9[idx * 4] != 0);
+            if (gTouchHeld[idx * 4] != 0)
+                b = (gTouchEdge[idx * 4] != 0);
             if (!b) {
                 if (!IsButtonInputValid())
                     goto end;
             }
         }
         {
-            unsigned char idx = data_020a0e40;
-            if ((unsigned char)(data_020a0dea[idx * 4] - 8) < 0xf0) {
-                if ((unsigned char)(data_020a0deb[idx * 4] - 0x38) < 0x20)
+            unsigned char idx = gActivePlayerSlot;
+            if ((unsigned char)(gTouchX[idx * 4] - 8) < 0xf0) {
+                if ((unsigned char)(gTouchY[idx * 4] - 0x38) < 0x20)
                     goto left;
             }
         }
@@ -344,9 +340,9 @@ state0:
 
     right_check:
         {
-            unsigned char idx = data_020a0e40;
-            if ((unsigned char)(data_020a0dea[idx * 4] - 8) < 0xf0) {
-                if ((unsigned char)(data_020a0deb[idx * 4] - 0x68) < 0x20)
+            unsigned char idx = gActivePlayerSlot;
+            if ((unsigned char)(gTouchX[idx * 4] - 8) < 0xf0) {
+                if ((unsigned char)(gTouchY[idx * 4] - 0x68) < 0x20)
                     goto right;
             }
         }

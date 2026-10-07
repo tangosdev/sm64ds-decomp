@@ -88,6 +88,10 @@ struct daKpa2Bg_c : dBgActor_c {
     virtual int CleanupResources();     /* slot  3 */
     virtual int InitResources();        /* slot  0 */
     virtual int Render();               /* slot  9 */
+
+    void func_ov060_02117a3c();         /* plays mSoundHandle's sound */
+    void func_ov060_02117a64();         /* rebuilds the collider matrix */
+    void func_ov060_02117ae0();         /* rebuilds the model matrix */
 };
 
 #ifndef SM64DS_PLATFORM_PC

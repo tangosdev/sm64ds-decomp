@@ -2,6 +2,7 @@
 // @symbol _ZN6Player12St_Walk_InitEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
+#include "PlayerInput.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 extern "C" {
@@ -16,7 +17,6 @@ extern int RandomIntInternal(int *seed);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, void *v);
 extern void _ZN6Player17SetNoControlStateEhih(void *c, unsigned char a, int b, unsigned char d);
 
-extern unsigned char data_020a0e40;
 extern short data_0209f4a0;
 extern unsigned char data_0209f2d8;
 extern int data_0209caa0[3];
@@ -41,7 +41,7 @@ int Player::St_Walk_Init()
         mHorzSpeed = -0xe000;
     }
 
-    if (*(short *)((char *)&data_0209f4a0 + data_020a0e40 * 0x18) == 0) {
+    if (*(short *)((char *)&data_0209f4a0 + gActivePlayerSlot * 0x18) == 0) {
         int byte1 = data_0209f2d8;
         int cond = (byte1 == 1);
         if (cond) goto do_anim;
@@ -59,7 +59,7 @@ do_anim:
     }
 merge:
     mStateTimer = 0;
-    if (*(unsigned char *)((char *)&data_0209f4ac + data_020a0e40 * 0x18) == 0) {
+    if (*(unsigned char *)((char *)&data_0209f4ac + gActivePlayerSlot * 0x18) == 0) {
         if (mHorzSpeed == 0) {
             mStateTimer = 0x3c;
         }
@@ -84,7 +84,7 @@ merge:
     mEatingPlayer = 0;
     if (func_ov002_020e3078(((char *)this), data_ov002_02110154) != 0) {
         mWalkTimer = 0x10;
-        if (*(short *)((char *)&data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
+        if (*(short *)((char *)&data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
             mPrevAngleY = mDesiredAngleY;
             mAngleY = mPrevAngleY;
         }

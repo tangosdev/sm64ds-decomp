@@ -19,7 +19,7 @@
  *   - ProbeRung took the two rung ends as int pointers; it now takes them
  *     as by-value Points, the way the pen handler already declared it,
  *     and uses the member names.
- *   - data_020a0dea/deb are declared as 4-byte rows, the form
+ *   - gTouchX/gTouchY are declared as 4-byte rows, the form
  *     CheckHurryButton matched under. Indexing them as flat arrays costs
  *     it four words.
  *   - each shard's file-wide optimisation pragma is now a push/pop bracket
@@ -41,7 +41,7 @@
  *   array's element dtor/ctor callbacks for __cxa_vec_cleanup / vec_ctor;
  *   declaring them on dScMgAmida_c_Piece would make the class destructor
  *   emit a second vector cleanup.
- * - data_020a0dea/deb stay 4-byte rows (flat indexing costs CheckHurryButton
+ * - gTouchX/gTouchY stay 4-byte rows (flat indexing costs CheckHurryButton
  *   four words, measured at promotion), the pattern table is five separate
  *   data symbols, and unk_53e4 keeps its name -- its only use is as the
  *   sixth argument of the line-draw helper.
@@ -88,11 +88,16 @@ extern void *dScMgAmida_c_classInit(void);
 extern s16 data_02082214[];
 extern u8  data_0209d45c;
 extern u8  data_0209d454;
-extern u8  data_020a0e40;
-extern u8  data_020a0de8[];
-extern u8  data_020a0de9[];
-extern u8  data_020a0dea[][4];
-extern u8  data_020a0deb[][4];
+// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
+extern u8  gActivePlayerSlot;
+// local extern: see above.
+extern u8  gTouchHeld[];
+// local extern: see above.
+extern u8  gTouchEdge[];
+// local extern: see above.
+extern u8  gTouchX[][4];
+// local extern: see above.
+extern u8  gTouchY[][4];
 extern int data_ov006_0212e1c0[];
 extern s32 data_0208ee44;
 extern char data_ov006_0212e1a8[];
@@ -496,14 +501,14 @@ void dScMgAmida_c::CheckHurryButton()
     if (Unk36() == 0) return;
     if (mHurry == 1) return;
     unsigned int i = 0;
-    int b3 = data_020a0e40;
-    if (data_020a0de8[b3 << 2] != 0) {
+    int b3 = gActivePlayerSlot;
+    if (gTouchHeld[b3 << 2] != 0) {
         unsigned int off = b3 << 2;
-        if (data_020a0de9[off] != 0) i = 1;
+        if (gTouchEdge[off] != 0) i = 1;
     }
     if (i == 0) return;
-    int v1 = data_020a0dea[b3][0];
-    int v0 = data_020a0deb[b3][0];
+    int v1 = gTouchX[b3][0];
+    int v0 = gTouchY[b3][0];
     if (v1 < 0x60) return;
     if (v1 >= 0xa0) return;
     if (v0 < 0xa0) return;
@@ -522,19 +527,19 @@ void dScMgAmida_c::CheckEdgeBoost()
 
     if (Unk36()) return;
 
-    idx = data_020a0e40;
+    idx = gActivePlayerSlot;
     flag = 0;
-    if (data_020a0de8[idx * 4]) {
-        if (data_020a0de9[idx * 4] != 0) flag = 1;
+    if (gTouchHeld[idx * 4]) {
+        if (gTouchEdge[idx * 4] != 0) flag = 1;
     }
     if (flag != 0) {
         mPenLocked = 0;
         mEdgeBoostCount = 0;
     }
-    idx = data_020a0e40;
-    if (data_020a0de8[idx * 4] != 0) {
-        a = data_020a0dea[idx][0];
-        b = data_020a0deb[idx][0];
+    idx = gActivePlayerSlot;
+    if (gTouchHeld[idx * 4] != 0) {
+        a = gTouchX[idx][0];
+        b = gTouchY[idx][0];
         if ((a >= 0 && a < 0x10 && b >= 0x40 && b < 0x80) ||
             (a >= 0xf0 && a < 0x100 && b >= 0x40 && b < 0x80)) {
             if (mEdgeBoostCount >= 5) {
@@ -571,9 +576,9 @@ void dScMgAmida_c::HandlePen()
     oldX = this->mPen.x;
     oldY = this->mPen.y;
 
-    if (data_020a0de8[data_020a0e40 * 4] != 0) {
-        int newX = data_020a0dea[data_020a0e40][0];
-        int newY = data_020a0deb[data_020a0e40][0];
+    if (gTouchHeld[gActivePlayerSlot * 4] != 0) {
+        int newX = gTouchX[gActivePlayerSlot][0];
+        int newY = gTouchY[gActivePlayerSlot][0];
         if (newX < 0) return;
         if (newX >= 0x100) return;
         if (newY < 0) return;
@@ -600,7 +605,7 @@ void dScMgAmida_c::HandlePen()
         return;
     } else {
         int released;
-        if (data_020a0de8[data_020a0e40 * 4] == 0 && data_020a0de9[data_020a0e40 * 4] != 0) {
+        if (gTouchHeld[gActivePlayerSlot * 4] == 0 && gTouchEdge[gActivePlayerSlot * 4] != 0) {
             released = 1;
         } else {
             released = 0;
@@ -2013,10 +2018,10 @@ s32 dScMgAmida_c::Behavior()
         if (mEndDelayTimer > 0)
             mEndDelayTimer -= 1;
         touched = 0;
-        touch = data_020a0e40;
+        touch = gActivePlayerSlot;
         j4 = touch * 4;
-        if (data_020a0de8[touch * 4] != 0) {
-            if (data_020a0de9[j4] != 0)
+        if (gTouchHeld[touch * 4] != 0) {
+            if (gTouchEdge[j4] != 0)
                 touched = 1;
         }
         if (touched != 0)

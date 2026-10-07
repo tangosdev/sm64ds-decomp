@@ -35,20 +35,16 @@
 #include "dFdColor_c.h"
 #include "decl_common.h"
 #include "MessageBank.h"
+#include "PlayerInput.h"
 
 #pragma opt_common_subs off
 
 extern "C" {
 extern dFdBrightness_c *data_0209f5bc;
 extern u8 data_0209f1e8;
-extern u8 data_020a0e40;
 extern u16 data_020a0e58[];
 extern u16 data_020a0e5a[];
 extern int data_0208ee44;
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0dea[];
-extern u8 data_020a0deb[];
 extern u8 data_0209d454;
 extern u8 data_0209d45c;
 extern dFdColor_c data_0209f5e8;
@@ -170,8 +166,8 @@ s32 dScBoot_c::Behavior()
     int r4;
 
     r4 = data_0208ee44;
-    keysHeld = *(u16 *)((char *)data_020a0e58 + data_020a0e40 * 4);
-    keysPressed = *(u16 *)((char *)data_020a0e5a + data_020a0e40 * 4);
+    keysHeld = *(u16 *)((char *)data_020a0e58 + gActivePlayerSlot * 4);
+    keysPressed = *(u16 *)((char *)data_020a0e5a + gActivePlayerSlot * 4);
 
     if (data_0209f1e8 == 0) {
         data_0209f1e8 = (u8)func_0201a1bc();
@@ -243,26 +239,26 @@ s32 dScBoot_c::Behavior()
         case 1:
         case 3:
         {
-            int padIndex = data_020a0e40;
+            int padIndex = gActivePlayerSlot;
             u8 touchDown;
 
             r4 = 0;
-            touchDown = data_020a0de8[padIndex * 4];
-            if (touchDown != 0 && data_020a0de9[padIndex * 4] != 0) {
+            touchDown = gTouchHeld[padIndex * 4];
+            if (touchDown != 0 && gTouchEdge[padIndex * 4] != 0) {
                 r4 = 1;
             }
             if (r4 != 0 || (keysPressed & 0x39)) {
                 int ok2;
 
-                if (touchDown != 0 && data_020a0de9[padIndex * 4] != 0) {
+                if (touchDown != 0 && gTouchEdge[padIndex * 4] != 0) {
                     ok2 = 1;
                 } else {
                     ok2 = 0;
                 }
                 /* left button: touch x 0x28..0x78, y 0x98..0xb8, or Left */
                 if ((ok2 != 0
-                     && (u8)(data_020a0dea[padIndex * 4] - 0x28) < 0x50
-                     && (u8)(data_020a0deb[padIndex * 4] - 0x98) < 0x20)
+                     && (u8)(gTouchX[padIndex * 4] - 0x28) < 0x50
+                     && (u8)(gTouchY[padIndex * 4] - 0x98) < 0x20)
                     || (keysPressed & 0x20)) {
                     if (mSelectedButton == 0) {
                         mButtonFlashTimer = 0x10;
@@ -270,8 +266,8 @@ s32 dScBoot_c::Behavior()
                     mSelectedButton = 0;
                     func_02005348();
                     func_02012790(0);
-                    if ((u8)(data_020a0dea[data_020a0e40 * 4] - 0x28) < 0x50
-                        && (u8)(data_020a0deb[data_020a0e40 * 4] - 0x98) < 0x20) {
+                    if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0x28) < 0x50
+                        && (u8)(gTouchY[gActivePlayerSlot * 4] - 0x98) < 0x20) {
                         mInputLockTimer = 0x20;
                         if (mState == 1) {
                             mState = 2;
@@ -282,15 +278,15 @@ s32 dScBoot_c::Behavior()
                 } else {
                     int ok3;
 
-                    if (touchDown != 0 && data_020a0de9[padIndex * 4] != 0) {
+                    if (touchDown != 0 && gTouchEdge[padIndex * 4] != 0) {
                         ok3 = 1;
                     } else {
                         ok3 = 0;
                     }
                     /* right button: touch x 0x88..0xd8, same rows, or Right */
                     if ((ok3 != 0
-                         && (u8)(data_020a0dea[padIndex * 4] - 0x88) < 0x50
-                         && (u8)(data_020a0deb[padIndex * 4] - 0x98) < 0x20)
+                         && (u8)(gTouchX[padIndex * 4] - 0x88) < 0x50
+                         && (u8)(gTouchY[padIndex * 4] - 0x98) < 0x20)
                         || (keysPressed & 0x10)) {
                         if (mSelectedButton == 1) {
                             mButtonFlashTimer = 0x10;
@@ -298,8 +294,8 @@ s32 dScBoot_c::Behavior()
                         mSelectedButton = 1;
                         func_02005348();
                         func_02012790(0);
-                        if ((u8)(data_020a0dea[data_020a0e40 * 4] - 0x88) < 0x50) {
-                            if ((u8)(data_020a0deb[data_020a0e40 * 4] - 0x98) < 0x20) {
+                        if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0x88) < 0x50) {
+                            if ((u8)(gTouchY[gActivePlayerSlot * 4] - 0x98) < 0x20) {
                                 mInputLockTimer = 0x20;
                                 mState = 6;
                             }

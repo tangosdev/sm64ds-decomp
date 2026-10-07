@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "PlayerInput.h"
 extern "C" {
     short ReadUnalignedShort(unsigned char* p);
     unsigned int ReadUnalignedInt(unsigned char* p);
@@ -13,9 +14,7 @@ extern "C" {
 
     extern unsigned char* data_0209fc48;
     extern u16 data_0209b274;
-    extern u8 data_020a0e40;
     extern u8 data_020a0e58[];
-    extern u8 data_020a0de8[];
     extern u8 data_0209d66c;
     extern u32 data_0209fc4c;
     extern u8 data_0209f2d8;
@@ -91,10 +90,10 @@ extern "C" void ProcessKuppaScript(void)
             u8 cmd = s[1];
             if (cmd == 5) {
                 if (data_0209f5bc->u7() == 0) {
-                    u32 i = data_020a0e40;
+                    u32 i = gActivePlayerSlot;
                     u32 off = i * 4;
                     if (*(u16*)(data_020a0e58 + i * 4 + 2) != 0 ||
-                        ((data_020a0de8[off] != 0 && *(data_020a0de8 + off + 1) != 0) ? 1 : 0)) {
+                        ((gTouchHeld[off] != 0 && *(gTouchHeld + off + 1) != 0) ? 1 : 0)) {
                         dScene_c::StartSceneFade(1, 0, 0);
                         Sound::StopLoadedMusic_Layer1(0x3c);
                     }

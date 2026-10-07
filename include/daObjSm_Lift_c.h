@@ -54,6 +54,8 @@ struct daObjSm_Lift_c : dBgActor_c {
     virtual s32   Behavior();              /* slot  6 */
     virtual s32   Render();                /* slot  9 */
     virtual void  OnHitByMegaChar(Player &player); /* slot 27 */
+
+    void func_ov018_02111278();
 };
 
 #ifndef SM64DS_PLATFORM_PC

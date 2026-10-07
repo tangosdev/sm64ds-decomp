@@ -1,3 +1,4 @@
+#include "PlayerInput.h"
 extern void FUN_02029ab0(void);
 extern int func_02008b08(void *cam);
 extern short func_02008abc(void *cam);
@@ -7,7 +8,6 @@ extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short a);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short a);
 extern void MulVec3Mat4x3(void *v, void *m, void *dst);
-extern unsigned char data_020a0e40[];
 extern short data_0209f4a0[];
 extern unsigned char data_0209f4ae[];
 extern int data_020a0e68[];
@@ -23,7 +23,7 @@ int func_020095e4(void *cam)
     FUN_02029ab0();
     func_02008b08(cam);
 
-    off = data_020a0e40[0] * 0x18;
+    off = gActivePlayerSlot * 0x18;
     if (*(short *)((char *)data_0209f4a0 + off) != 0) {
         r7 = (data_0209f4ae[off] == 2) ? 0x240 : 0x200;
         old186 = *(short *)(c + 0x186);

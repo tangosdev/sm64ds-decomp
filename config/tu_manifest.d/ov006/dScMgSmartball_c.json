@@ -40,28 +40,28 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov006_0210d898",
+      "symbol": "_ZN19cMgSmartball_wing_c9IsSettledEv",
       "address": "0x0210d898",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_0210d898.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov006_0210d8bc",
+      "symbol": "_ZN19cMgSmartball_wing_c7TriggerEv",
       "address": "0x0210d8bc",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_0210d8bc.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov006_0210d93c",
+      "symbol": "_ZN19cMgSmartball_wing_c12RebuildVertsEv",
       "address": "0x0210d93c",
       "size": "0x00000274",
       "legacy_source": "src/func_ov006_0210d93c.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov006_0210dbb0",
+      "symbol": "_ZN19cMgSmartball_wing_c7HitTestEPi",
       "address": "0x0210dbb0",
       "size": "0x00000240",
       "legacy_source": "src/func_ov006_0210dbb0.c",
@@ -96,14 +96,14 @@
       "ordinal": 10
     },
     {
-      "symbol": "func_ov006_0210e120",
+      "symbol": "_ZN25cMgSmartball_pushswitch_c10BallsClearEv",
       "address": "0x0210e120",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov006_0210e120.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov006_0210e1fc",
+      "symbol": "_ZN25cMgSmartball_pushswitch_c9CheckBallEPi",
       "address": "0x0210e1fc",
       "size": "0x00000168",
       "legacy_source": "src/func_ov006_0210e1fc.c",
@@ -138,7 +138,7 @@
       "ordinal": 16
     },
     {
-      "symbol": "func_ov006_0210e4c8",
+      "symbol": "_ZN20cMgSmartball_board_c13AnyLineActiveEv",
       "address": "0x0210e4c8",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_0210e4c8.c",
@@ -152,14 +152,14 @@
       "ordinal": 18
     },
     {
-      "symbol": "func_ov006_0210eca4",
+      "symbol": "_ZN20cMgSmartball_board_c9PaintCellEiPi",
       "address": "0x0210eca4",
       "size": "0x000002a4",
       "legacy_source": "src/func_ov006_0210eca4.c",
       "ordinal": 19
     },
     {
-      "symbol": "func_ov006_0210ef48",
+      "symbol": "_ZN20cMgSmartball_board_c9ClaimCellEi",
       "address": "0x0210ef48",
       "size": "0x0000061c",
       "legacy_source": "src/func_ov006_0210ef48.c",
@@ -180,7 +180,7 @@
       "ordinal": 22
     },
     {
-      "symbol": "func_ov006_0210f998",
+      "symbol": "_ZN20cMgSmartball_board_c12ShuffleCellsEv",
       "address": "0x0210f998",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_0210f998.c",
@@ -194,28 +194,28 @@
       "ordinal": 24
     },
     {
-      "symbol": "func_ov006_0210fa40",
+      "symbol": "_ZN19cMgSmartball_slot_c12ReelsStoppedEv",
       "address": "0x0210fa40",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_0210fa40.c",
       "ordinal": 25
     },
     {
-      "symbol": "func_ov006_0210fa6c",
+      "symbol": "_ZN19cMgSmartball_slot_c9BeginStopEv",
       "address": "0x0210fa6c",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_0210fa6c.c",
       "ordinal": 26
     },
     {
-      "symbol": "func_ov006_0210fb04",
+      "symbol": "_ZN19cMgSmartball_slot_c9StartSpinEv",
       "address": "0x0210fb04",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_0210fb04.c",
       "ordinal": 27
     },
     {
-      "symbol": "func_ov006_0210fb58",
+      "symbol": "_ZN19cMgSmartball_slot_c10UpdateSpinEv",
       "address": "0x0210fb58",
       "size": "0x000003c4",
       "legacy_source": "src/func_ov006_0210fb58.c",
@@ -250,7 +250,7 @@
       "ordinal": 32
     },
     {
-      "symbol": "func_ov006_02110244",
+      "symbol": "_ZN21cMgSmartball_pakkun_c9CheckBallEPi",
       "address": "0x02110244",
       "size": "0x0000027c",
       "legacy_source": "src/func_ov006_02110244.c",
@@ -285,7 +285,7 @@
       "ordinal": 37
     },
     {
-      "symbol": "func_ov006_021108bc",
+      "symbol": "_ZN20cMgSmartball_dokan_c9CheckBallEPi",
       "address": "0x021108bc",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_021108bc.c",
@@ -320,14 +320,14 @@
       "ordinal": 42
     },
     {
-      "symbol": "func_ov006_02110c08",
+      "symbol": "_ZN24cMgSmartball_propeller_c7HitTestEPi",
       "address": "0x02110c08",
       "size": "0x00000220",
       "legacy_source": "src/func_ov006_02110c08.c",
       "ordinal": 43
     },
     {
-      "symbol": "func_ov006_02110e28",
+      "symbol": "_ZN24cMgSmartball_propeller_c12RebuildVertsEv",
       "address": "0x02110e28",
       "size": "0x00000204",
       "legacy_source": "src/func_ov006_02110e28.c",
@@ -390,14 +390,14 @@
       "ordinal": 52
     },
     {
-      "symbol": "func_ov006_021115c4",
+      "symbol": "_ZN18cMgSmartball_ana_c7HasBallEv",
       "address": "0x021115c4",
       "size": "0x00000008",
       "legacy_source": "src/func_ov006_021115c4.c",
       "ordinal": 53
     },
     {
-      "symbol": "func_ov006_021115cc",
+      "symbol": "_ZN18cMgSmartball_ana_c7SwallowEv",
       "address": "0x021115cc",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_021115cc.c",
@@ -460,133 +460,133 @@
       "ordinal": 62
     },
     {
-      "symbol": "func_ov006_02111b90",
+      "symbol": "_ZN19cMgSmartball_ball_c12PlayHitSoundEiPi",
       "address": "0x02111b90",
       "size": "0x000001bc",
       "legacy_source": "src/func_ov006_02111b90.c",
       "ordinal": 63
     },
     {
-      "symbol": "func_ov006_02111d4c",
+      "symbol": "_ZN19cMgSmartball_ball_c6FreezeEv",
       "address": "0x02111d4c",
       "size": "0x00000020",
       "legacy_source": "src/func_ov006_02111d4c.c",
       "ordinal": 64
     },
     {
-      "symbol": "func_ov006_02111d6c",
+      "symbol": "_ZN19cMgSmartball_ball_c6HasHitEv",
       "address": "0x02111d6c",
       "size": "0x00000008",
       "legacy_source": "src/func_ov006_02111d6c.c",
       "ordinal": 65
     },
     {
-      "symbol": "func_ov006_02111d74",
+      "symbol": "_ZN19cMgSmartball_ball_c5IsOutEv",
       "address": "0x02111d74",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_02111d74.c",
       "ordinal": 66
     },
     {
-      "symbol": "func_ov006_02111dcc",
+      "symbol": "_ZN19cMgSmartball_ball_c9ArmExpireEi",
       "address": "0x02111dcc",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_02111dcc.c",
       "ordinal": 67
     },
     {
-      "symbol": "func_ov006_02111df4",
+      "symbol": "_ZN19cMgSmartball_ball_c10IsFinishedEv",
       "address": "0x02111df4",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_02111df4.c",
       "ordinal": 68
     },
     {
-      "symbol": "func_ov006_02111e48",
+      "symbol": "_ZN19cMgSmartball_ball_c5BurstEv",
       "address": "0x02111e48",
       "size": "0x00000034",
       "legacy_source": "src/func_ov006_02111e48.c",
       "ordinal": 69
     },
     {
-      "symbol": "func_ov006_02111e7c",
+      "symbol": "_ZN19cMgSmartball_ball_c9PutInPlayEv",
       "address": "0x02111e7c",
       "size": "0x00000014",
       "legacy_source": "src/func_ov006_02111e7c.c",
       "ordinal": 70
     },
     {
-      "symbol": "func_ov006_02111e90",
+      "symbol": "_ZN19cMgSmartball_ball_c7HitWingEPi",
       "address": "0x02111e90",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_02111e90.c",
       "ordinal": 71
     },
     {
-      "symbol": "func_ov006_02111ee8",
+      "symbol": "_ZN19cMgSmartball_ball_c11HitSwitchesEPi",
       "address": "0x02111ee8",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov006_02111ee8.c",
       "ordinal": 72
     },
     {
-      "symbol": "func_ov006_02111f8c",
+      "symbol": "_ZN19cMgSmartball_ball_c10HitPakkunsEPi",
       "address": "0x02111f8c",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov006_02111f8c.cpp",
       "ordinal": 73
     },
     {
-      "symbol": "func_ov006_02112030",
+      "symbol": "_ZN19cMgSmartball_ball_c9HitDokansEPi",
       "address": "0x02112030",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov006_02112030.c",
       "ordinal": 74
     },
     {
-      "symbol": "func_ov006_021120d4",
+      "symbol": "_ZN19cMgSmartball_ball_c13HitPropellersEPi",
       "address": "0x021120d4",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov006_021120d4.c",
       "ordinal": 75
     },
     {
-      "symbol": "func_ov006_02112190",
+      "symbol": "_ZN19cMgSmartball_ball_c10HitKinokosEPi",
       "address": "0x02112190",
       "size": "0x00000150",
       "legacy_source": "src/func_ov006_02112190.c",
       "ordinal": 76
     },
     {
-      "symbol": "func_ov006_021122e0",
+      "symbol": "_ZN19cMgSmartball_ball_c10CheckExitsEPi",
       "address": "0x021122e0",
       "size": "0x000001ac",
       "legacy_source": "src/func_ov006_021122e0.c",
       "ordinal": 77
     },
     {
-      "symbol": "func_ov006_0211248c",
+      "symbol": "_ZN19cMgSmartball_ball_c8AtSpringEPi",
       "address": "0x0211248c",
       "size": "0x00000078",
       "legacy_source": "src/func_ov006_0211248c.c",
       "ordinal": 78
     },
     {
-      "symbol": "func_ov006_02112504",
+      "symbol": "_ZN19cMgSmartball_ball_c7OnSlopeEPi",
       "address": "0x02112504",
       "size": "0x000001b0",
       "legacy_source": "src/func_ov006_02112504.c",
       "ordinal": 79
     },
     {
-      "symbol": "func_ov006_021126b4",
+      "symbol": "_ZN19cMgSmartball_ball_c12NeedsRespawnEPi",
       "address": "0x021126b4",
       "size": "0x00000248",
       "legacy_source": "src/func_ov006_021126b4.c",
       "ordinal": 80
     },
     {
-      "symbol": "func_ov006_021128fc",
+      "symbol": "_ZN19cMgSmartball_ball_c11QueueBehindEv",
       "address": "0x021128fc",
       "size": "0x000001dc",
       "legacy_source": "src/func_ov006_021128fc.c",
@@ -600,7 +600,7 @@
       "ordinal": 82
     },
     {
-      "symbol": "func_ov006_02113c14",
+      "symbol": "_ZN19cMgSmartball_ball_c10DrawMarkerEv",
       "address": "0x02113c14",
       "size": "0x00000240",
       "legacy_source": "src/func_ov006_02113c14.c",
@@ -635,42 +635,42 @@
       "ordinal": 87
     },
     {
-      "symbol": "func_ov006_02114590",
+      "symbol": "_ZN21cMgSmartball_object_c15PointInTriangleEPiS0_S0_S0_",
       "address": "0x02114590",
       "size": "0x0000011c",
       "legacy_source": "src/func_ov006_02114590.c",
       "ordinal": 88
     },
     {
-      "symbol": "func_ov006_021146ac",
+      "symbol": "_ZN21cMgSmartball_kinoko_c11HitRadiusSqEv",
       "address": "0x021146ac",
       "size": "0x00000020",
       "legacy_source": "src/func_ov006_021146ac.c",
       "ordinal": 89
     },
     {
-      "symbol": "func_ov006_021146cc",
+      "symbol": "_ZN21cMgSmartball_object_c6SetVelEPi",
       "address": "0x021146cc",
       "size": "0x00000014",
       "legacy_source": "src/func_ov006_021146cc.c",
       "ordinal": 90
     },
     {
-      "symbol": "func_ov006_021146e0",
+      "symbol": "CopyObjectVel",
       "address": "0x021146e0",
       "size": "0x00000014",
       "legacy_source": "src/func_ov006_021146e0.c",
       "ordinal": 91
     },
     {
-      "symbol": "func_ov006_021146f4",
+      "symbol": "GetObjectDelta",
       "address": "0x021146f4",
       "size": "0x00000018",
       "legacy_source": "src/func_ov006_021146f4.c",
       "ordinal": 92
     },
     {
-      "symbol": "func_ov006_0211470c",
+      "symbol": "CopyObjectPos",
       "address": "0x0211470c",
       "size": "0x00000014",
       "legacy_source": "src/func_ov006_0211470c.c",
@@ -712,175 +712,175 @@
       "ordinal": 98
     },
     {
-      "symbol": "func_ov006_021147d0",
+      "symbol": "_ZN16dScMgSmartball_c12SparksActiveEv",
       "address": "0x021147d0",
       "size": "0x00000030",
       "legacy_source": "src/func_ov006_021147d0.c",
       "ordinal": 99
     },
     {
-      "symbol": "func_ov006_02114800",
+      "symbol": "_ZN16dScMgSmartball_c10EmitSparksEPii",
       "address": "0x02114800",
       "size": "0x00000310",
       "legacy_source": "src/func_ov006_02114800.c",
       "ordinal": 100
     },
     {
-      "symbol": "func_ov006_02114b10",
+      "symbol": "_ZN16dScMgSmartball_c12RenderSparksEv",
       "address": "0x02114b10",
       "size": "0x000000f4",
       "legacy_source": "src/func_ov006_02114b10.c",
       "ordinal": 101
     },
     {
-      "symbol": "func_ov006_02114c04",
+      "symbol": "_ZN16dScMgSmartball_c12UpdateSparksEv",
       "address": "0x02114c04",
       "size": "0x000001cc",
       "legacy_source": "src/func_ov006_02114c04.c",
       "ordinal": 102
     },
     {
-      "symbol": "func_ov006_02114dd0",
+      "symbol": "_ZN16dScMgSmartball_c11ResetSparksEv",
       "address": "0x02114dd0",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_02114dd0.c",
       "ordinal": 103
     },
     {
-      "symbol": "func_ov006_02114dfc",
+      "symbol": "_ZN16dScMgSmartball_c8EndRoundEv",
       "address": "0x02114dfc",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov006_02114dfc.c",
       "ordinal": 104
     },
     {
-      "symbol": "func_ov006_02114ec0",
+      "symbol": "_ZN16dScMgSmartball_c13ServeNextBallEv",
       "address": "0x02114ec0",
       "size": "0x000000d8",
       "legacy_source": "src/func_ov006_02114ec0.c",
       "ordinal": 105
     },
     {
-      "symbol": "func_ov006_02114f98",
+      "symbol": "_ZN16dScMgSmartball_c8CountOutEv",
       "address": "0x02114f98",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_02114f98.c",
       "ordinal": 106
     },
     {
-      "symbol": "func_ov006_02114fb4",
+      "symbol": "_ZN16dScMgSmartball_c10CountAwardEi",
       "address": "0x02114fb4",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_02114fb4.c",
       "ordinal": 107
     },
     {
-      "symbol": "func_ov006_02114fd0",
+      "symbol": "_ZN16dScMgSmartball_c10CountDokanEv",
       "address": "0x02114fd0",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_02114fd0.c",
       "ordinal": 108
     },
     {
-      "symbol": "func_ov006_02114fec",
+      "symbol": "_ZN16dScMgSmartball_c8CountAnaEv",
       "address": "0x02114fec",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_02114fec.c",
       "ordinal": 109
     },
     {
-      "symbol": "func_ov006_02115008",
+      "symbol": "_ZN16dScMgSmartball_c11CountKinokoEv",
       "address": "0x02115008",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_02115008.c",
       "ordinal": 110
     },
     {
-      "symbol": "func_ov006_02115024",
+      "symbol": "_ZN16dScMgSmartball_c10CountBingoEv",
       "address": "0x02115024",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_02115024.c",
       "ordinal": 111
     },
     {
-      "symbol": "func_ov006_02115040",
+      "symbol": "_ZN16dScMgSmartball_c9CountLineEi",
       "address": "0x02115040",
       "size": "0x00000020",
       "legacy_source": "src/func_ov006_02115040.c",
       "ordinal": 112
     },
     {
-      "symbol": "func_ov006_02115060",
+      "symbol": "_ZN16dScMgSmartball_c9CountCellEv",
       "address": "0x02115060",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_02115060.c",
       "ordinal": 113
     },
     {
-      "symbol": "func_ov006_0211507c",
+      "symbol": "_ZN16dScMgSmartball_c7GetTileEPi",
       "address": "0x0211507c",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov006_0211507c.c",
       "ordinal": 114
     },
     {
-      "symbol": "func_ov006_02115150",
+      "symbol": "_ZN16dScMgSmartball_c10UpdateDustEv",
       "address": "0x02115150",
       "size": "0x000000f8",
       "legacy_source": "src/func_ov006_02115150.c",
       "ordinal": 115
     },
     {
-      "symbol": "func_ov006_02115248",
+      "symbol": "_ZN16dScMgSmartball_c9SpawnDustEPi",
       "address": "0x02115248",
       "size": "0x00000238",
       "legacy_source": "src/func_ov006_02115248.cpp",
       "ordinal": 116
     },
     {
-      "symbol": "func_ov006_02115480",
+      "symbol": "_ZN16dScMgSmartball_c12UpdateScoresEv",
       "address": "0x02115480",
       "size": "0x00000118",
       "legacy_source": "src/func_ov006_02115480.c",
       "ordinal": 117
     },
     {
-      "symbol": "func_ov006_02115598",
+      "symbol": "_ZN16dScMgSmartball_c9EmitScoreEPiiii",
       "address": "0x02115598",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov006_02115598.cpp",
       "ordinal": 118
     },
     {
-      "symbol": "func_ov006_02115680",
+      "symbol": "_ZN16dScMgSmartball_c8KickGateEi",
       "address": "0x02115680",
       "size": "0x00000078",
       "legacy_source": "src/func_ov006_02115680.c",
       "ordinal": 119
     },
     {
-      "symbol": "func_ov006_021156f8",
+      "symbol": "_ZN16dScMgSmartball_c13IsTableAtRestEv",
       "address": "0x021156f8",
       "size": "0x00000138",
       "legacy_source": "src/func_ov006_021156f8.c",
       "ordinal": 120
     },
     {
-      "symbol": "func_ov006_02115830",
+      "symbol": "_ZN16dScMgSmartball_c15ResolveBallPairEiiPhS0_",
       "address": "0x02115830",
       "size": "0x0000022c",
       "legacy_source": "src/func_ov006_02115830.c",
       "ordinal": 121
     },
     {
-      "symbol": "func_ov006_02115a5c",
+      "symbol": "_ZN16dScMgSmartball_c12CollideBallsEv",
       "address": "0x02115a5c",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov006_02115a5c.c",
       "ordinal": 122
     },
     {
-      "symbol": "func_ov006_02115b0c",
+      "symbol": "_ZN16dScMgSmartball_c12SpawnObjectsEv",
       "address": "0x02115b0c",
       "size": "0x000018bc",
       "legacy_source": "src/func_ov006_02115b0c.c",
@@ -950,7 +950,7 @@
     "Immediate code generation and ROM-ascending source order preserve the 2004/b56 per-function optimizer settings. Push/pop alone is ineffective under deferred code generation.",
     "Constructor and teardown bridges explicitly use compiler vtable address point +8. All virtual methods remain real class members; the existing C ABI helpers, local layout views and manual scene factory remain partial source reconstruction.",
     "The generated candidate confused scalar data_ov006_0212edfc with its array address; the board helper now loads element zero, matching the production control.",
-    "func_ov006_02114800 preserves both unsigned and signed angle narrowing before the actual int-parameter rotation interface. func_ov006_02115830 uses the existing local TVec2 lifetime-bearing pair and scoped opt_common_subs off to preserve its stack copy and separate signed narrowings; without the pair 8 bytes disappear, without the pragma six instructions differ.",
+    "_ZN16dScMgSmartball_c10EmitSparksEPii preserves both unsigned and signed angle narrowing before the actual int-parameter rotation interface. _ZN16dScMgSmartball_c15ResolveBallPairEiiPhS0_ uses the existing local TVec2 lifetime-bearing pair and scoped opt_common_subs off to preserve its stack copy and separate signed narrowings; without the pair 8 bytes disappear, without the pragma six instructions differ.",
     "Metadata ownership remains in the existing ROM data gaps. Every exact emitted RTTI/vtable record is declared below for independently byte-checked compiler-only reduction. No new metadata ownership is claimed.",
     "The 12 PARTIAL romdata_check records are null-terminated RTTI name strings shorter than their alignment-rounded configured extents. All full words match with zero blind words; the producer separately checks all emitted string bytes including the trailing null. Padding remains owned by the existing data gaps."
   ],

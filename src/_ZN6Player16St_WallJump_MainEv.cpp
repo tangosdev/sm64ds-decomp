@@ -4,6 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
+#include "PlayerInput.h"
 extern "C" {
 typedef int Fix12i;
 extern int func_ov002_020eeca8(void*, void*);
@@ -12,7 +13,6 @@ extern int _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
 extern int _ZN6Player7IsStateERNS_5StateE(void*, void*);
 extern int Player_AdvanceAnims(void*);
 extern char data_ov002_02110424[];
-extern unsigned char data_020a0e40[];
 extern unsigned short data_0209f49e[];
 extern char data_ov002_0211052c[];
 }
@@ -24,7 +24,7 @@ int Player::St_WallJump_Main()
   if (*(unsigned char*)((char*)&mIsAirborne) == 0) {
     _ZN6Player11ChangeStateERNS_5StateE(((void*)this), data_ov002_02110424);
   } else {
-    if (*(unsigned short*)((char*)data_0209f49e + data_020a0e40[0]*0x18) & 0x400) {
+    if (*(unsigned short*)((char*)data_0209f49e + gActivePlayerSlot*0x18) & 0x400) {
       if (_ZN6Player7IsStateERNS_5StateE(((void*)this), data_ov002_0211052c)) {
         *(short*)((char*)&mPrevAngleY) = *(short*)((char*)&mAngleY);
       }

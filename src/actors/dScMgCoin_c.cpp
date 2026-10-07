@@ -49,6 +49,7 @@
 #include "decl_common.h"
 #include "Sound.h"
 #include "dScMgCoin_c.h"
+#include "PlayerInput.h"
 
 #pragma defer_codegen off /* ROM-ascending emission; dropping this inverts it */
 
@@ -133,11 +134,6 @@ extern void *data_ov006_02133f10[];
 extern void *data_ov006_02136e24[];
 extern void *data_ov006_02134b4c[];
 extern void func_ov004_020b023c(void *obj, int x, int y, int w, int *vec);
-extern u8 data_020a0e40;
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0dea[];
-extern u8 data_020a0deb[];
 extern void func_020127a4(int a, int b, int c, int d);
 extern int data_ov006_0212e358[];
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
@@ -800,7 +796,7 @@ void dScMgCoin_c::func_ov006_020dd000(int index)
    something starts its hop, otherwise the round ends (phase 3, a 0x40 timer,
    the panned reveal jingle, and the win flag from the other score).
    Four spellings carry the match: p1 is assigned before p0; the touch point
-   is re-read through data_020a0e40 rather than the i already in hand; each
+   is re-read through gActivePlayerSlot rather than the i already in hand; each
    of the five coin stores spells its own self + n + 0x4000 + ... with no
    hoisted base; and the hop target re-reads its address instead of *p1. */
 void dScMgCoin_c::func_ov006_020dd0e0(int idx)
@@ -824,9 +820,9 @@ void dScMgCoin_c::func_ov006_020dd0e0(int idx)
     if (*(int *)(self + 0x5000 + 0x1c8) != 2)
         return;
 
-    i = data_020a0e40;
+    i = gActivePlayerSlot;
     ok = 0;
-    if (data_020a0de8[i * 4] != 0 && data_020a0de9[i * 4] != 0)
+    if (gTouchHeld[i * 4] != 0 && gTouchEdge[i * 4] != 0)
         ok = 1;
     if (ok == 0)
         return;
@@ -835,8 +831,8 @@ void dScMgCoin_c::func_ov006_020dd0e0(int idx)
     p1 = (int *)(self + 0x4ac4 + n);
     p0 = (int *)(self + 0x4ac0 + n);
     q1 = *p1;
-    ax = data_020a0dea[data_020a0e40 * 4];
-    ay = data_020a0deb[data_020a0e40 * 4];
+    ax = gTouchX[gActivePlayerSlot * 4];
+    ay = gTouchY[gActivePlayerSlot * 4];
     q0 = *p0;
     v = ax - (q0 >> 12);
     w = ay - (q1 >> 12);
@@ -1429,10 +1425,10 @@ void dScMgCoin_c::func_ov006_020de0e0()
     char *self = (char *)this;
     if (*(int *)(self + 0x5000 + 0x1cc) == 0) return;
     *(int *)(((int)self + 0x51cc)) -= 1;
-    unsigned int idx = data_020a0e40;
+    unsigned int idx = gActivePlayerSlot;
     int flag = 0;
-    if (data_020a0de8[idx * 4] != 0) {
-        if (data_020a0de9[idx * 4] != 0) flag = 1;
+    if (gTouchHeld[idx * 4] != 0) {
+        if (gTouchEdge[idx * 4] != 0) flag = 1;
     }
     if (flag != 0 && *(int *)(self + 0x51cc) <= 0x80) {
         *(int *)(self + 0x51cc) = 0;

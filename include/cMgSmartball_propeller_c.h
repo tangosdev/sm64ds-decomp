@@ -4,7 +4,7 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * SIZE 0x78, from _Znwj(0x78) in func_ov006_02115b0c. Base ends at 0x34, so
+ * SIZE 0x78, from _Znwj(0x78) in dScMgSmartball_c::SpawnObjects. Base ends at 0x34, so
  * this class adds 0x44 bytes.
  *
  * ONLY TWO OF THOSE BYTES ARE TOUCHED BY THIS CLASS'S OWN FOUR FUNCTIONS
@@ -28,7 +28,7 @@
  * already records.
  *
  * THE TAIL FROM 0x38 TO 0x77 IS AN EXPLICIT PAD, and it is UNMODELLED, NOT
- * UNREAD. func_ov006_02110e28 -- a free helper called from both
+ * UNREAD. RebuildVerts -- a free helper called from both
  * SaveSnapshot and RestoreInitial, and not touched by this migration --
  * reinterprets `this` through its own local struct and read-modify-writes
  * eight (int x, int y) pairs there (its `v[8]`), a ring of propeller-blade
@@ -66,6 +66,12 @@ struct cMgSmartball_propeller_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+
+    /* Recovered helpers: HitTest runs the ball-vs-blade fan collision (the
+       0x38..0x77 tip ring); RebuildVerts rewrites that ring from the base's
+       0x32 angle and mCurrent position. */
+    int  HitTest(int *pos);
+    void RebuildVerts();
 
     s16 mSpinSpeedTarget; /* 0x034 -- the rotation speed mSpinSpeed is eased
                               toward. RestoreInitial is the only writer in the

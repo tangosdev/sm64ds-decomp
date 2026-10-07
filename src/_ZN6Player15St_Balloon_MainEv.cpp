@@ -9,6 +9,7 @@
  * driven from the turn rate.
  */
 #include "Player.h"
+#include "PlayerInput.h"
 extern "C" {
 extern void _Z14ApproachLinearRiii(s32 &, s32, s32);
 extern void func_ov002_020de968(void *);
@@ -24,7 +25,6 @@ extern void func_ov002_020de3d0(void *, s16 *, s16 *);
 /* local extern: the call passes an untyped this, so it cannot use the header method. */
 extern void _ZN15dExtFrameCtrl_c7AdvanceEv(void *);
 
-extern u8 data_020a0e40;
 extern s16 data_0209f49e[];
 extern s16 data_0209f4a0[];
 extern s16 data_02082214[];
@@ -48,7 +48,7 @@ s32 Player::St_Balloon_Main()
         return 1;
     }
 
-    u16 flags = *(u16 *)((char *)&data_0209f49e + data_020a0e40 * 0x18);
+    u16 flags = *(u16 *)((char *)&data_0209f49e + gActivePlayerSlot * 0x18);
     if (flags & 0x400) {
         func_ov002_020de968(this);
         _ZN6Player11ChangeStateERNS_5StateE(this, data_ov002_021105a4);
@@ -114,7 +114,7 @@ s32 Player::St_Balloon_Main()
         mVertSpeed = 0xa000;
 
     s32 r4 = 0;
-    if (*(s16 *)((char *)&data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
+    if (*(s16 *)((char *)&data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
         ApproachAngle(&mPrevAngleY, mDesiredAngleY, 0x20, 0x2000, 0x10);
         r4 = 0x10000;
     }
