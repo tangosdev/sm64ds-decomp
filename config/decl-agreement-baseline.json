@@ -14278,6 +14278,15 @@
       ],
       "src/actors/dScStage_c.cpp": [
         "return:volatile unsigned char []"
+      ],
+      "include/PlayerInput.h": [
+        "return:unsigned char []"
+      ],
+      "src/actors/dScMgBomroom_c.cpp": [
+        "return:unsigned char []"
+      ],
+      "src/actors/dScMiniGm_c.cpp": [
+        "return:unsigned char []"
       ]
     },
     "gTouchY": {
@@ -14301,6 +14310,15 @@
       ],
       "src/actors/dScStage_c.cpp": [
         "return:volatile unsigned char []"
+      ],
+      "include/PlayerInput.h": [
+        "return:unsigned char []"
+      ],
+      "src/actors/dScMgBomroom_c.cpp": [
+        "return:unsigned char []"
+      ],
+      "src/actors/dScMiniGm_c.cpp": [
+        "return:unsigned char []"
       ]
     },
     "data_020a0df8": {
