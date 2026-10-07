@@ -114,6 +114,66 @@ struct dScMgCoin_c : dScMgBase_c {
     virtual s32 Render();                    /* slot 9 */
     virtual void OnYoshiTryEat(int arg);     /* slot 18 */
 
+    /* The scene's helpers and the per-state handlers reached through the
+       .bss PMF tables (data_ov006_021417b0 / 021417c8 / 021417e8 /
+       02141810 / 02141840), in ROM order. */
+    void func_ov006_020dbe9c();
+    void func_ov006_020dbf7c(int i);
+    void func_ov006_020dc154(int index);
+    void func_ov006_020dc1c4(int index);
+    void func_ov006_020dc26c();
+    void func_ov006_020dc294();
+    void func_ov006_020dc298();
+    void func_ov006_020dc2f8();
+    void func_ov006_020dc334();
+    void func_ov006_020dc348();
+    void func_ov006_020dc370();
+    void func_ov006_020dc3bc();
+    void func_ov006_020dc414(int index);
+    void func_ov006_020dc4b0(int index);
+    void func_ov006_020dc4c8(int index);
+    void func_ov006_020dc5c4(int index);
+    void func_ov006_020dc6d0(int index);
+    void func_ov006_020dc754();
+    void func_ov006_020dc7b4();
+    void func_ov006_020dc7fc();
+    void func_ov006_020dc814();
+    void func_ov006_020dc870();
+    void func_ov006_020dc900();
+    void func_ov006_020dc960(int index);
+    void func_ov006_020dc99c();
+    void func_ov006_020dca04();
+    void func_ov006_020dcb1c(int coinIndex);
+    void func_ov006_020dcc48();
+    void func_ov006_020dccb8();
+    void func_ov006_020dcd74();
+    void func_ov006_020dce3c();
+    void func_ov006_020dcea8();
+    void func_ov006_020dcffc();
+    void func_ov006_020dd000(int index);
+    void func_ov006_020dd0e0(int idx);
+    void func_ov006_020dd2cc();
+    void func_ov006_020dd334();
+    void func_ov006_020dd4b0(int id);
+    void func_ov006_020dd594();
+    void func_ov006_020dd658(int i);
+    void func_ov006_020dd7bc();
+    void func_ov006_020dd7c0(int index);
+    void func_ov006_020dd880(int i);
+    void func_ov006_020dda94(int i);
+    void func_ov006_020ddca0(int i);
+    void func_ov006_020ddcf8(int idx);
+    void func_ov006_020ddd6c();
+    void func_ov006_020dde28(int index);
+    void func_ov006_020ddeb0();
+    void func_ov006_020ddf9c();
+    void func_ov006_020de0e0();
+    void func_ov006_020de1d4();
+    void func_ov006_020de26c();
+    void func_ov006_020de440();
+    void func_ov006_020de584();
+    void func_ov006_020de5ac();
+
     u8 pad_4660[0x460];                      /* 0x4660 */
     dScMgCoin_Coin mCoins[24];               /* 0x4ac0 */
     u8 pad_4d00[0x8];                        /* 0x4d00 */

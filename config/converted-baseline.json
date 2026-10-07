@@ -817,7 +817,7 @@
     "src/_ZN5Model17LoadTextureToVramEPcj.cpp",
     "src/_ZN5Model27LoadCompressedTextureToVramEPcjS0_.cpp",
     "src/_ZN5Model8LoadFileER13SharedFilePtr.cpp",
-    "src/_ZN5Sound6Player19SetPlayableSeqCountEii.cpp",
+    "src/engine/sound/SoundEngine.cpp#_ZN5Sound6Player19SetPlayableSeqCountEii",
     "src/actors/daTgz_c.cpp#_ZN7daTgz_c13OnTurnIntoEggER6Player",
     "src/actors/daTgz_c.cpp#_ZN7daTgz_c13OnYoshiTryEatEv",
     "src/actors/daTgz_c.cpp#_ZN7daTgz_c16OnAimedAtWithEggEv",
