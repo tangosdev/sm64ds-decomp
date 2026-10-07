@@ -3247,6 +3247,9 @@ ov090	0x021343c8	Shark_SpawnInfo	g_profile_SHARK	reconstructed profile global; l
 ov090	0x021343ec	data_ov090_021343ec	_ZTV9daShark_c	vtable alloc=0x3a0
 ov091	0x02130f00	func_ov091_02130f00	_ZN23daObjRotateUpdownLift_cD1Ev	vtable slot 16
 ov091	0x02130f4c	func_ov091_02130f4c	_ZN23daObjRotateUpdownLift_cD0Ev	vtable slot 17
+ov091	0x02130fac	func_ov091_02130fac	_ZN23daObjRotateUpdownLift_c19func_ov091_02130facEv	daObjRotateUpdownLift_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov091	0x02131160	func_ov091_02131160	_ZN23daObjRotateUpdownLift_c19func_ov091_02131160Ev	daObjRotateUpdownLift_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov091	0x02131340	func_ov091_02131340	_ZN23daObjRotateUpdownLift_c19func_ov091_02131340Ev	daObjRotateUpdownLift_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
 ov091	0x02131388	func_ov091_02131388	_ZN23daObjRotateUpdownLift_c16CleanupResourcesEv	vtable slot 3
 ov091	0x02131408	func_ov091_02131408	_ZN23daObjRotateUpdownLift_c6RenderEv	vtable slot 9
 ov091	0x02131468	func_ov091_02131468	_ZN23daObjRotateUpdownLift_c8BehaviorEv	vtable slot 6

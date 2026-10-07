@@ -2401,7 +2401,6 @@ extern void func_ov089_02131f54(void*);
 extern void func_ov090_021330c8(char*);
 extern void func_ov090_02133338(char*);
 extern int func_ov090_021338b4(void*, void*);
-extern int func_ov091_02131160(void*);
 extern void func_ov091_02131cb0(void*, const struct Vector3*, const struct Vector3*);
 extern void func_ov091_02132e64(char*);
 extern void func_ov091_02132e98(char*);
