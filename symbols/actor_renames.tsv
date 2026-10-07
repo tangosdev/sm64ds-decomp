@@ -317,6 +317,9 @@ ov002	0x020f8808	func_ov002_020f8808	CutsceneObject_Spawn	spawnfunc
 ov002	0x020f8808	CutsceneObject_Spawn	daDemo_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x020f8858	func_ov002_020f8858	_ZN12daFPknBall_cD1Ev	vtable slot 16
 ov002	0x020f8898	func_ov002_020f8898	_ZN12daFPknBall_cD0Ev	vtable slot 17
+ov002	0x020f88ec	func_ov002_020f88ec	_ZN12daFPknBall_c19func_ov002_020f88ecEv	daFPknBall_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov002	0x020f897c	func_ov002_020f897c	_ZN12daFPknBall_c19func_ov002_020f897cEv	daFPknBall_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov002	0x020f8b24	func_ov002_020f8b24	_ZN12daFPknBall_c19func_ov002_020f8b24Ev	daFPknBall_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
 ov002	0x020f8c8c	func_ov002_020f8c8c	_ZN12daFPknBall_c6RenderEv	vtable slot 9
 ov002	0x020f8c94	func_ov002_020f8c94	_ZN12daFPknBall_c8BehaviorEv	vtable slot 6
 ov002	0x020f9204	func_ov002_020f9204	_ZN12daFPknBall_c13InitResourcesEv	vtable slot 0
@@ -716,6 +719,8 @@ ov006	0x021255f8	MgLuckyStars_Spawn	dScMgBSC_c_classInit	reconstructed classInit
 ov006	0x0212a520	func_ov006_0212a520	MgSnowballSlalom_Spawn	spawnfunc
 ov006	0x0212a520	MgSnowballSlalom_Spawn	dScMgSnowball_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0212b7f8	func_ov006_0212b7f8	dScMgFlower_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0212a654	func_ov006_0212a654	_ZN13dScMgFlower_c19func_ov006_0212a654Ev	object-as-this; receiver is the scene object, called with this in r0
+ov006	0x0212a764	func_ov006_0212a764	_ZN13dScMgFlower_c19func_ov006_0212a764Ev	object-as-this; receiver is the scene object, called with this in r0
 ov006	0x0213b814	data_ov006_0213b814	g_profile_MG_AMIDA	reconstructed profile global; literal ROM ID MG_AMIDA+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213badc	data_ov006_0213badc	MgSortOrSplode_SpawnInfo	spawninfo
 ov006	0x0213badc	MgSortOrSplode_SpawnInfo	g_profile_MG_BOMROOM	reconstructed profile global; literal ROM ID MG_BOMROOM+registry role+later EAD lineage; exact SM64DS spelling not preserved
@@ -1928,6 +1933,17 @@ ov062	0x0211970c	func_ov062_0211970c	Koopa_Spawn	spawnfunc
 ov062	0x0211970c	Koopa_Spawn	daNknk_c_classInit_NOKONOKO	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov062	0x0211975c	func_ov062_0211975c	_ZN7daRNk_cD1Ev	vtable slot 16
 ov062	0x021197a4	func_ov062_021197a4	_ZN7daRNk_cD0Ev	vtable slot 17
+ov062	0x02119800	func_ov062_02119800	_ZN7daRNk_c19func_ov062_02119800Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x02119954	func_ov062_02119954	_ZN7daRNk_c19func_ov062_02119954Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x021199ac	func_ov062_021199ac	_ZN7daRNk_c19func_ov062_021199acEv	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x02119af0	func_ov062_02119af0	_ZN7daRNk_c19func_ov062_02119af0Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x02119be0	func_ov062_02119be0	_ZN7daRNk_c19func_ov062_02119be0Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x0211a0f0	func_ov062_0211a0f0	_ZN7daRNk_c19func_ov062_0211a0f0Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x0211a168	func_ov062_0211a168	_ZN7daRNk_c19func_ov062_0211a168Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x0211a1f4	func_ov062_0211a1f4	_ZN7daRNk_c19func_ov062_0211a1f4Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x0211a740	func_ov062_0211a740	_ZN7daRNk_c19func_ov062_0211a740Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x0211a9c4	func_ov062_0211a9c4	_ZN7daRNk_c19func_ov062_0211a9c4Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x0211aac0	func_ov062_0211aac0	_ZN7daRNk_c19func_ov062_0211aac0Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
 ov062	0x0211ab50	func_ov062_0211ab50	_ZN7daRNk_c6RenderEv	vtable slot 9
 ov062	0x0211ab88	func_ov062_0211ab88	_ZN7daRNk_c8BehaviorEv	vtable slot 6
 ov062	0x0211ac10	func_ov062_0211ac10	_ZN7daRNk_c16CleanupResourcesEv	vtable slot 3

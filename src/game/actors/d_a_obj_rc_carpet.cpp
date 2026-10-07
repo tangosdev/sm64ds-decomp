@@ -26,9 +26,9 @@
  *   `+ 0x310/0x314/0x318` (mClsnMat.t). Nested-member stores make
  *   b56 materialise a second 0x46c base and grow the function.
  * Leftover: SharedFilePtr +4 BCA load (layout unrecovered).
- * Leftover: data_ov002_0210d9f0 / data_ov036_0211419c / 021141a4 /
- *   021141ac handles and data_ov036_02112b28 CLPS. This TU does
- *   not own those overlay cells.
+ * Leftover: data_ov002_0210d9f0 and data_ov036_02112b28 CLPS stay
+ *   outside this TU. The three ov036 handles are file-scope objects
+ *   at the bottom of this file.
  */
 
 #include "common.h"
@@ -59,11 +59,35 @@ struct FlyingCarpetSpawnInfo {
 typedef char FlyingCarpetSpawnInfo_size_must_be_0x1c[
     sizeof(FlyingCarpetSpawnInfo) == 0x1c ? 1 : -1];
 
+/* Retail constructs these 8-byte handles in this order and registers
+ * their destructors. The wrapper names are local; the ctor/dtor
+ * addresses are the ROM resource-family functions. */
+struct CarpetModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    CarpetModelFilePtr(u32 fileID);
+    ~CarpetModelFilePtr();
+};
+
+struct CarpetAnimationFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    CarpetAnimationFilePtr(u32 fileID);
+    ~CarpetAnimationFilePtr();
+};
+
+struct CarpetCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    CarpetCollisionFilePtr(u32 fileID);
+    ~CarpetCollisionFilePtr();
+};
+
 extern "C" {
 extern SharedFilePtr data_ov002_0210d9f0;
-extern SharedFilePtr data_ov036_0211419c;
-extern SharedFilePtr data_ov036_021141a4;
-extern SharedFilePtr data_ov036_021141ac;
+extern CarpetModelFilePtr data_ov036_021141a4;
+extern CarpetAnimationFilePtr data_ov036_0211419c;
+extern CarpetCollisionFilePtr data_ov036_021141ac;
 extern CLPS_Block data_ov036_02112b28;
 
 /* Retail resource-pointer table at ov036:0x02113f58. */
@@ -220,3 +244,7 @@ extern "C" void func_ov036_0211224c(daObjRcCarpet_c *self)
 /* ROM ordinals 0/1 are emitted by the inline virtual destructor:*/
 // @symbol _ZN15daObjRcCarpet_cD1Ev
 // @symbol _ZN15daObjRcCarpet_cD0Ev
+
+CarpetModelFilePtr data_ov036_021141a4(1687);
+CarpetAnimationFilePtr data_ov036_0211419c(1689);
+CarpetCollisionFilePtr data_ov036_021141ac(1688);

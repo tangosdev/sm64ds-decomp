@@ -1,27 +1,23 @@
 //cpp
-/* dBgCh_SphCrr -- the sphere collision query: dBgCh plus a dBgPi hit record
- * at 0x10 plus the dM3dGSph query sphere at 0x38 (the ROM's own
- * __vmi_class_type_info lists all three bases; _ZTS12dBgCh_SphCrr @
- * 0x020992f8, _ZTI @ 0x02099308, primary _ZTV @ 0x02099338 and the two
- * secondary thunk blocks at 0x02099348 / 0x02099358).
- *
- * The class keeps three result records -- mClsnResult1/2/3 at
- * 0x74/0x9c/0xc4, the floor / wall / underneath hits the query found -- each
- * with a copy setter that preserves the record's own vptr (the stores start
- * at +4, past it) and a slot getter. DetectClsn and the two registry scans
- * live in dBgCh_SphCrr_query.cpp: the cartridge emits this file's members at
- * 0x0203782c..0x02037dc4 and those at 0x02038824..0x02038ea4, with the
- * SurfaceInfo/dBgPi/dBgPc block linked between them.
- *
- * Deferred codegen emits the plain members in reverse definition order and
- * the lifecycle group in its fixed order at the tail, so the file defines
- * ctor and dtor first. The dBgPi/dM3dGSph-base destructor thunks (_ZThn16_
- * and _ZThn56_) are compiler-emitted after C1.
- */
+// Sphere collision query: a dM3dGSph probe sphere (secondary base) swept
+// against the KCL collider registry, with a dBgPi base record for the best
+// hit and mClsnResult1/2/3 holding the floor / wall / underneath hits.
+// DetectClsn and the two registry scans live in dBgCh_SphCrr_query.cpp.
+//
+// comment leftovers:
+//   - SetObjAndSphere is defined by its mangled name: the real signature
+//     carries Fix12<int> by value and the member form changes codegen under
+//     2004/b56. The header declaration is the real one; callers use it.
+//   - func_020353b0 stays a free extern: the shared dBgCh-side bind helper is
+//     owned by its own shard and called by the Gnd/Lin query TUs as well.
+//   - unk_0fc/unk_100/unk_104 stay unnamed: all that is evidenced is a score
+//     at +0x100 selecting a three-word payload starting at +0xfc (see the
+//     class header).
 #include "dBgCh_SphCrr.h"
 
 extern "C" {
-void func_020353b0(char *c, int *p);    /* dBgCh-side: bind query to its actor */
+void func_020353b0(char *c, int *p);    /* local extern: shared bind helper,
+   writes the bound actor + its uniqueID into the query's dBgCh tail */
 /* local extern: dBgPi::RecordHit by its mangled name -- the forwarders take
    int triID byte-required; the member's s16 parameter emits sxth here. */
 void _ZN5dBgPi9RecordHitEsP11SurfaceInfo(void *res, int triID, void *info);
@@ -40,9 +36,6 @@ dBgCh_SphCrr::~dBgCh_SphCrr()
 {
 }
 
-/* Stays a mangled free definition: the real signature carries Fix12<int> and
-   wall 6az homes class-typed by-value parameters. The declaration in
-   dBgCh_SphCrr.h is the real one and callers may use it. */
 extern "C" void _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(
     dBgCh_SphCrr *self, const Vector3 *pos, int radius, dActor_c *actor)
 {
@@ -54,6 +47,8 @@ extern "C" void _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c
     self->mScale = 0x1000;
 }
 
+/* Reset the whole query state: bounds, every flag bit, the base record and
+   all three result slots, then the +0xfc payload (score back to -0x1000). */
 // @symbol _ZN12dBgCh_SphCrr13func_02037b5cEv
 void dBgCh_SphCrr::func_02037b5c()
 {
@@ -65,7 +60,7 @@ void dBgCh_SphCrr::func_02037b5c()
     flags &= ~2;
     flags &= ~0x20;
     flags &= ~0x40;
-    ((dBgPi *)((char *)this + 0x10))->Reset();   /* the dBgPi secondary base */
+    ((dBgPi &)*this).Reset();
     mClsnResult1.Reset();
     mClsnResult2.Reset();
     mClsnResult3.Reset();
@@ -74,6 +69,7 @@ void dBgCh_SphCrr::func_02037b5c()
     unk_104 = 0;
 }
 
+/* Clear the displacement and the broad-phase box the scan accumulates. */
 // @symbol _ZN12dBgCh_SphCrr13func_02037b1cEv
 void dBgCh_SphCrr::func_02037b1c()
 {
@@ -83,6 +79,7 @@ void dBgCh_SphCrr::func_02037b1c()
     aabbMin.z = aabbMax.z = 0;
 }
 
+/* Grow the broad-phase box so it covers both of a hit's corner points. */
 // @symbol _ZN12dBgCh_SphCrr13func_02037a6cEiiiiii
 void dBgCh_SphCrr::func_02037a6c(s32 minX, s32 minY, s32 minZ, s32 maxX, s32 maxY, s32 maxZ)
 {
@@ -100,6 +97,7 @@ void dBgCh_SphCrr::func_02037a6c(s32 minX, s32 minY, s32 minZ, s32 maxX, s32 max
     if (aabbMax.z < maxZ) aabbMax.z = maxZ;
 }
 
+/* Commit the accumulated box into the displacement the actor moves by. */
 // @symbol _ZN12dBgCh_SphCrr13func_02037a38Ev
 void dBgCh_SphCrr::func_02037a38()
 {
@@ -119,16 +117,18 @@ void dBgCh_SphCrr::func_02037a04(Vector3 *outMin, Vector3 *outMax)
     outMax->z = aabbMax.z;
 }
 
+/* Hit-record forwarders for the three result slots (1 = floor, 2 = wall,
+   3 = underneath): one copies the surface hit, one the collider identity. */
 // @symbol _ZN12dBgCh_SphCrr13func_020379f4EiPv
 void dBgCh_SphCrr::func_020379f4(int triID, void *src)
 {
     _ZN5dBgPi9RecordHitEsP11SurfaceInfo(&mClsnResult1, triID, src);
 }
 
-// @symbol _ZN12dBgCh_SphCrr13func_020379d0Eiiii
-void dBgCh_SphCrr::func_020379d0(int i, int clsnID, int owner, int collider)
+// @symbol _ZN12dBgCh_SphCrr13func_020379d0EiiP8dActor_cP4dBgW
+void dBgCh_SphCrr::func_020379d0(int i, int clsnID, dActor_c *owner, dBgW *collider)
 {
-    mClsnResult1.SetCollider(i, clsnID, (dActor_c *)owner, (dBgW *)collider);
+    mClsnResult1.SetCollider(i, clsnID, owner, collider);
 }
 
 // @symbol _ZN12dBgCh_SphCrr13func_020379c0EiPv
@@ -137,10 +137,10 @@ void dBgCh_SphCrr::func_020379c0(int triID, void *src)
     _ZN5dBgPi9RecordHitEsP11SurfaceInfo(&mClsnResult2, triID, src);
 }
 
-// @symbol _ZN12dBgCh_SphCrr13func_0203799cEiiii
-void dBgCh_SphCrr::func_0203799c(int i, int clsnID, int owner, int collider)
+// @symbol _ZN12dBgCh_SphCrr13func_0203799cEiiP8dActor_cP4dBgW
+void dBgCh_SphCrr::func_0203799c(int i, int clsnID, dActor_c *owner, dBgW *collider)
 {
-    mClsnResult2.SetCollider(i, clsnID, (dActor_c *)owner, (dBgW *)collider);
+    mClsnResult2.SetCollider(i, clsnID, owner, collider);
 }
 
 // @symbol _ZN12dBgCh_SphCrr13func_0203798cEiPv
@@ -149,12 +149,13 @@ void dBgCh_SphCrr::func_0203798c(int triID, void *src)
     _ZN5dBgPi9RecordHitEsP11SurfaceInfo(&mClsnResult3, triID, src);
 }
 
-// @symbol _ZN12dBgCh_SphCrr13func_02037968Eiiii
-void dBgCh_SphCrr::func_02037968(int i, int clsnID, int owner, int collider)
+// @symbol _ZN12dBgCh_SphCrr13func_02037968EiiP8dActor_cP4dBgW
+void dBgCh_SphCrr::func_02037968(int i, int clsnID, dActor_c *owner, dBgW *collider)
 {
-    mClsnResult3.SetCollider(i, clsnID, (dActor_c *)owner, (dBgW *)collider);
+    mClsnResult3.SetCollider(i, clsnID, owner, collider);
 }
 
+/* Copy the three-word payload the winning scan selected at +0xfc. */
 // @symbol _ZN12dBgCh_SphCrr13func_0203794cEPKi
 void dBgCh_SphCrr::func_0203794c(const s32 *payload)
 {
@@ -163,6 +164,7 @@ void dBgCh_SphCrr::func_0203794c(const s32 *payload)
     unk_104 = payload[2];
 }
 
+/* Merge another query's flag byte, dropping its hit-result bits (0x1c). */
 // @symbol _ZN12dBgCh_SphCrr13func_02037940Eh
 void dBgCh_SphCrr::func_02037940(u8 flags_)
 {

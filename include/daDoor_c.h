@@ -5,6 +5,8 @@
 #include "dActor_c.h"
 #include "ModelAnim.h"
 
+class Player;
+
 /* The plain warp door -- the leaf dActor_c child whose code is the ov100
  * linker unit 0x021443f4..0x021458d4, src/actors/daDoor_c.cpp (its registry
  * factory included; daStarGate_c starts at 0x021458d4). Distinct from
@@ -146,6 +148,33 @@ struct daDoor_c : dActor_c {
     virtual s32 Behavior();               /* slot 6 */
     virtual s32 Render();                 /* slot 9 */
     virtual void OnPendingDestroy();      /* slot 12 */
+
+    /* The helpers the state tables' pointer-to-member pairs name, and the
+       ones those call: each takes the door as its implicit this exactly
+       where the old C sources took it explicitly. The state record's
+       execute half always receives the player (as Player* or, where the
+       body only forwards it, the int the dispatch carries). The original
+       names are not recovered; the addresses stand in. */
+    int func_ov100_02144468(int p);         /* state 021488a4 execute */
+    int func_ov100_021444e8(int a1);        /* state 02148924 execute */
+    int func_ov100_02144528(Player *pl);    /* state 02148904 execute */
+    void func_ov100_021446f8(Player *r1);   /* state 02148904 enter */
+    int func_ov100_02144730(Player *arg1);  /* states 021488f4/02148914 execute */
+    int func_ov100_0214491c();              /* state 02148914 enter */
+    int func_ov100_02144950(Player *pl, int unused); /* state 021488f4 enter */
+    int func_ov100_021449c8(Player *a2);    /* state 021488e4 execute */
+    int func_ov100_02144a38(Player *p);     /* state 021488e4 enter */
+    int func_ov100_02144bf4(Player *a2);    /* state 021488d4 execute */
+    int func_ov100_02144c64();              /* state 021488d4 enter */
+    int func_ov100_02144c6c(Player *r1);    /* state 021488c4 execute */
+    int func_ov100_02144ccc();              /* state 021488c4 enter */
+    int func_ov100_02144cf8(Player *b);     /* state 021488b4 execute */
+    int func_ov100_02145080(Player *arg1);  /* the exit timing */
+    void func_ov100_02145170(Player *pl, Vector3 *a, Vector3 *b); /* place the player */
+    int func_ov100_021451c4(void *r5, Player *r4);  /* send the player through */
+    int func_ov100_021452e4(Player *r1);    /* player inside the door's box */
+    Player *func_ov100_02145370();          /* the current player */
+    int func_ov100_021453d8(void *p, int a2); /* the state installer */
 };
 
 /* Holds the chain to the size daDoor_c_classInit's operator new(0x148) call
