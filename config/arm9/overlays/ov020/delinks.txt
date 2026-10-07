@@ -7,14 +7,13 @@
 src/actors/daBook_c.cpp:
     complete
     .text start:0x021111a0 end:0x02112938
+    .init start:0x02113674 end:0x0211372c
+    .ctor start:0x02113768 end:0x0211376c
+    .bss start:0x02114aa0 end:0x02114af0
 
 src/actors/daChair_c.cpp:
     complete
     .text start:0x02112938 end:0x021134e4
-
-src/__sinit_ov020_02113674.c:
-    complete
-    .init start:0x02113674 end:0x0211372c
 
 src/__sinit_ov020_0211372c.c:
     complete

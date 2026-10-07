@@ -2,16 +2,16 @@
 /* The MG_3DESP minigame scene (scene 0x185): dScMg3DEsp_c and
  * the two helper classes it embeds, dMg3DEspModel_c and dMg3DEspAnimSet_c.
  *
- * This TU is the minigame's whole linker unit: 67 functions, .text
- * 0x020e7660..0x020ea1f0. It opens with dScMg3DEsp_c's destructor, which
+ * This TU is the minigame's whole linker unit: 68 functions, .text
+ * 0x020e7660..0x020ea280. It opens with dScMg3DEsp_c's destructor, which
  * the header declares first and out of line, so this file owns the key
  * function and emits the vtable and the RTTI chain. Then come
  * dMg3DEspAnimSet_c (three animated models), dMg3DEspModel_c (an animated
  * model that dispatches through a member-function state), the scene's
  * slot, row and card state handlers and its round phases, and it closes
  * with dScMg3DEsp_c's own members, Virtual50 through InitResources.
- * dScMg3DEsp_c_classInit, the factory just above, stays in
- * src/d_s_mg3_d_esp.cpp. Functions run in ROM order under
+ * dScMg3DEsp_c_classInit, the scene factory, follows at 0x020ea1f0..0x020ea280
+ * and ends the unit. Functions run in ROM order under
  * `#pragma defer_codegen off`; do not reorder.
  *
  * Each pragma bracket below carries the file-global pragma of the file
@@ -1675,4 +1675,35 @@ s32 dScMg3DEsp_c::InitResources()
     mHudScore = 0;
 
     return 1;
+}
+
+extern "C" {
+extern void *_ZN7fBase_cnwEj(unsigned int sz);
+extern void *_ZN11dScMgBase_cC2Ev(void *p);
+extern void _ZN8Particle10SysTrackerC1Ev(void *);
+extern void *_ZN5ModelC1Ev(void *);
+extern void *_ZN15dMg3DEspModel_cC1Ev(void *);
+extern void *_ZN18TextureTransformerC1Ev(void *);
+extern int _ZTV19dScMgSingle3DBase_c[];
+extern int _ZTV12dScMg3DEsp_c[];
+void *dScMg3DEsp_c_classInit(void);
+/* Reconstructed source-style name: SM64DS proves dScMg3DEsp_c through RTTI,
+ * allocation size, vtable identity, and the MG_3DESP registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgPsycheOut_Spawn. */
+// @symbol dScMg3DEsp_c_classInit
+void *dScMg3DEsp_c_classInit(void){
+    char *o = (char *)_ZN7fBase_cnwEj(0x5558);
+    if(o != 0){
+        _ZN11dScMgBase_cC2Ev(o);
+        *(int *)o = (int)_ZTV19dScMgSingle3DBase_c;
+        _ZN8Particle10SysTrackerC1Ev(o + 0x471c);
+        *(int *)o = (int)&_ZTV12dScMg3DEsp_c[2];
+        _ZN5ModelC1Ev(o + 0x4f38);
+        _ZN5ModelC1Ev(o + 0x4f88);
+        _ZN15dMg3DEspModel_cC1Ev(o + 0x4fd8);
+        _ZN18TextureTransformerC1Ev(o + 0x51f4);
+    }
+    return o;
+}
 }
