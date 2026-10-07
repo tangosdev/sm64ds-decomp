@@ -53,9 +53,9 @@
     "unmigrated_total": 75
   },
   "shadow_decls": {
-    "local_body_no_include": 406,
-    "local_body_no_include_cpp": 49,
-    "local_struct_body": 845,
+    "local_body_no_include": 401,
+    "local_body_no_include_cpp": 48,
+    "local_struct_body": 843,
     "local_struct_body_cpp": 365,
     "pad_layout": 179
   },
