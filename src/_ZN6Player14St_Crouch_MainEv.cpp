@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "PlayerInput.h"
 // @symbol _ZN6Player14St_Crouch_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
@@ -16,7 +17,6 @@ extern void func_ov002_020c0364(void* c, u32 a);
 extern void Player_AdvanceAnims(void* c);
 
 extern u16 data_0209f49c[];
-extern u8 data_020a0e40;
 extern s16 data_0209f4a0[];
 extern int data_ov002_021101b4[];
 extern int data_ov002_02110514[];
@@ -46,7 +46,7 @@ int Player::St_Crouch_Main()
         func_ov002_020d1204(((char*)this));
         break;
     case 1:
-        if ((*(u16*)((char*)data_0209f49c + data_020a0e40 * 0x18) & 0x400) != 0
+        if ((*(u16*)((char*)data_0209f49c + gActivePlayerSlot * 0x18) & 0x400) != 0
             || mHorzSpeed != 0
             || func_ov002_020d1164(((char*)this)) != 0) {
             if (mHorzSpeed != 0) {
@@ -54,7 +54,7 @@ int Player::St_Crouch_Main()
                 func_ov002_020dd2f4(((char*)this));
             } else {
                 if (mIsMega == 0) {
-                    if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) >= 0x200) {
+                    if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) >= 0x200) {
                         _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_02110514);
                         return 1;
                     }

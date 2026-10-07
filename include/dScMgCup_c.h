@@ -83,7 +83,7 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
 
     CupModelParts mModel; /* 0x4f38 */
     /* func_ov006_020c2be8: while mTouchLock != 0, divide these by 255 and 192
-       instead of the live data_020a0dea / data_020a0deb touch. */
+       instead of the live gTouchX / gTouchY touch. */
     s32 mTouchX;          /* 0x50d4 */
     s32 mTouchY;          /* 0x50d8 */
     s32 mTouchLock;       /* 0x50dc -- component +0x1a4; the ctor zeroes it */

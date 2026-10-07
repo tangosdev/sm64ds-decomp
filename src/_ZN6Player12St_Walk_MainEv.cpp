@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "PlayerInput.h"
 // @symbol _ZN6Player12St_Walk_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Animation.h"
@@ -20,7 +21,6 @@ extern void func_ov002_020cabe0(void* c);
 extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);
 extern void Player_AdvanceAnims(void* c);
 
-extern u8 data_020a0e40;
 extern u8 data_0209f4ae[];
 extern s16 data_0209f4a0[];
 extern int data_ov002_02110154[];
@@ -69,7 +69,7 @@ int Player::St_Walk_Main()
     if (mHorzSpeed != 0) goto label_29c;
 
     {
-        u8 idx = data_020a0e40;
+        u8 idx = gActivePlayerSlot;
         int off = idx * 0x18;
         u8 b = data_0209f4ae[off];
         int thresh = (b != 2) ? 0x471 : 0x555;

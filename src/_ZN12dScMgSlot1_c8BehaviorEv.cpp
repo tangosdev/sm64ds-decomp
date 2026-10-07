@@ -10,6 +10,7 @@
 // decompiled, not matched; tools/enroll.py leaves it out of the ROM build, which keeps the
 // original bytes for this range. A byte-exact match replaces this file and drops the banner.
 #include "dScMgSlot1_c.h"
+#include "PlayerInput.h"
 #include "dWipe_c.h"
 
 extern "C" {
@@ -27,9 +28,6 @@ extern void func_ov006_0210c278(void *o);
 extern void func_ov006_0210c2c0(void *o, int v);
 extern void func_ov006_0210c2d4(void *o);
 extern int func_ov006_0210c500(void *self);
-extern u8 data_020a0e40;
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
 extern int data_ov006_0213e600[];
 extern int data_ov006_0213e63c[][2];
 extern u8 data_ov006_0213e4d8[];
@@ -98,15 +96,15 @@ s32 dScMgSlot1_c::Behavior()
         }
         if (*(u8 *)(c + 0x4705) < 3) {
             int hit = 0;
-            u8 idx = data_020a0e40;
-            if (data_020a0de8[idx * 4] != 0) {
-                if (data_020a0de9[idx * 4] != 0) {
+            u8 idx = gActivePlayerSlot;
+            if (gTouchHeld[idx * 4] != 0) {
+                if (gTouchEdge[idx * 4] != 0) {
                     hit = 1;
                 }
             }
             if (hit != 0) {
                 u16 off = idx * 4;
-                u8 *q = &data_020a0de8[off];
+                u8 *q = &gTouchHeld[off];
                 int tx = q[2];
                 int ty = q[3];
                 for (i = 0; i < 3; i++) {

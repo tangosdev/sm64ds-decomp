@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "PlayerInput.h"
 // @symbol _ZN6Player13St_Crawl_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Animation.h"
@@ -20,7 +21,6 @@ extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern int func_ov002_020d4d88(void* c, int a, int b);
 extern void Player_AdvanceAnims(void* c);
 
-extern u8 data_020a0e40;
 extern s16 data_0209f4a0[];
 extern u16 data_0209f49c[];
 extern int data_ov002_021104e4;
@@ -39,7 +39,7 @@ int Player::St_Crawl_Main()
         }
         break;
     case 4: {
-        u8 idx = data_020a0e40;
+        u8 idx = gActivePlayerSlot;
         int off = idx * 0x18;
         s16 val1 = *(s16*)((char*)data_0209f4a0 + off);
         if (val1 >= 0x200 && ((*(u16*)((char*)data_0209f49c + off) & 0x400) != 0 || func_ov002_020d1164(((char*)this)) != 0)) {

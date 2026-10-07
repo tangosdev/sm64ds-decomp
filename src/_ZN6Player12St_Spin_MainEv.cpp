@@ -7,7 +7,7 @@
  * between two spin rates and two terminal velocities.
  */
 #include "Player.h"
-extern u8 data_020a0e40;
+#include "PlayerInput.h"
 extern u16 data_0209f49c[];
 extern char data_ov002_02110424;
 extern "C" {
@@ -23,7 +23,7 @@ int Player::St_Spin_Main()
         mAngleY = mPrevAngleY;
         _ZN6Player11ChangeStateERNS_5StateE(this, &data_ov002_02110424);
     }
-    if (*(u16*)((char*)data_0209f49c + (&data_020a0e40)[0] * 0x18) & 2) {
+    if (*(u16*)((char*)data_0209f49c + gActivePlayerSlot * 0x18) & 2) {
         mTerminalVelocity = -0x9000;
         mAngleY += 0x2000;
     } else {

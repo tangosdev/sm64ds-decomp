@@ -10,10 +10,10 @@
  * tail function.
  */
 #include "Player.h"
+#include "PlayerInput.h"
 
 extern char data_ov002_0211013c;
 extern s16 data_02082214[];
-extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
 extern s16 data_0209f4a0[];
 
@@ -106,7 +106,7 @@ int Player::St_BurnFire_Main()
         break;
     case 1:
         {
-            int idx = data_020a0e40 * 0x18;
+            int idx = gActivePlayerSlot * 0x18;
             if ((*(u16 *)((char *)data_0209f49e + idx) & 2) != 0) {
                 mStateStep = 0;
                 _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x53, 0, 0x1000, 0);
@@ -129,7 +129,7 @@ int Player::St_BurnFire_Main()
             *(int *)(anim + 0xc) = 0x4000;
         }
         {
-            int idx = data_020a0e40 * 0x18;
+            int idx = gActivePlayerSlot * 0x18;
             speed = 0x28000;
             if (*(s16 *)((char *)data_0209f4a0 + idx) != 0) {
                 ApproachAngle(&mAngleY, mDesiredAngleY, 8, 0x4000, 0x10);

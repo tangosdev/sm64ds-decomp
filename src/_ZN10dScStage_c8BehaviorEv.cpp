@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "PlayerInput.h"
 extern "C" {
     void ProcessKuppaScript();
     void func_02032f54();
@@ -38,7 +39,6 @@ extern "C" {
     extern s8 data_02092118;
     extern u8 data_0209f268;
     extern u8 data_0209f20c;
-    extern u8 data_020a0e40;
     extern u16 data_020a0e58[];
     extern u16 data_020a0e5a[];
     extern u8 data_0209d660;
@@ -208,7 +208,7 @@ int dScStage_c::Behavior()
     } else if (data_0209f2c4 != 0) {
         PS_Update();
     } else {
-        u32 pi = data_020a0e40;
+        u32 pi = gActivePlayerSlot;
         u16 h1 = *(u16*)((char*)data_020a0e58 + pi * 4);
         if ((((h1 & 0x200) == 0 && (h1 & 0x100) == 0) || (*(u16*)((char*)data_020a0e5a + pi * 4) & 8) == 0)
             && data_0209d660 == 0 && data_0209d4b0 == 0
@@ -223,7 +223,7 @@ int dScStage_c::Behavior()
                     int b3 = (data_0209fc48 != 0);
                     if (b3 == 0) {
                         if (data_0209f300 == 0) {
-                            u32 pj = data_020a0e40;
+                            u32 pj = gActivePlayerSlot;
                             u16 h2 = *(u16*)((char*)data_020a0e5a + pj * 4);
                             int t8 = h2 & 8;
                             if ((t8 != 0 && (*(u16*)((char*)data_020a0e58 + pj * 4) & 4) == 0)
@@ -234,7 +234,7 @@ int dScStage_c::Behavior()
                                     data_0209d4c8.StopTimer();
                                     data_0209f2a0 = 1;
                                 }
-                                if (*(u16*)((char*)data_020a0e58 + data_020a0e40 * 4) & 4)
+                                if (*(u16*)((char*)data_020a0e58 + gActivePlayerSlot * 4) & 4)
                                     data_0209f218 = 1;
                                 else
                                     data_0209f218 = 0;

@@ -2,6 +2,7 @@
 // @symbol _ZN6Player12St_Wait_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Animation.h"
+#include "PlayerInput.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
@@ -19,7 +20,6 @@ extern void func_ov002_020cabe0(void* c);
 extern void Player_AdvanceAnims(void* c);
 
 extern void* data_0209f318;
-extern unsigned char data_020a0e40;
 extern unsigned char data_0209f49c[];
 extern char data_0209f4a0[];
 extern unsigned char data_0209f4ae[];
@@ -54,7 +54,7 @@ int Player::St_Wait_Main()
         break;
 
     case 8: {
-        if (!(*(unsigned short*)(data_0209f49c+data_020a0e40*0x18) & 0x800) &&
+        if (!(*(unsigned short*)(data_0209f49c+gActivePlayerSlot*0x18) & 0x800) &&
             _ZNK15dExtFrameCtrl_c12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0)<<2)+0xdc))+0x50, 0)) {
             _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2c, ((char*)this)+0x74);
         }
@@ -76,7 +76,7 @@ int Player::St_Wait_Main()
         if (func_ov002_020d2fdc(((char*)this)) == 0) {
             blk0_36:
             {
-                int idx0 = data_020a0e40 * 0x18;
+                int idx0 = gActivePlayerSlot * 0x18;
                 short lvl0 = *(short*)(data_0209f4a0+idx0);
                 if (lvl0 != 0) {
                     int thr0 = (*(unsigned char*)(data_0209f4ae+idx0)!=2) ? 0x471 : 0x555;
@@ -101,7 +101,7 @@ int Player::St_Wait_Main()
             mStateTimer = 0x384;
         }
         {
-            int idx10 = data_020a0e40 * 0x18;
+            int idx10 = gActivePlayerSlot * 0x18;
             short lvl10 = *(short*)(data_0209f4a0+idx10);
             if (lvl10 != 0) {
                 int thr10 = (*(unsigned char*)(data_0209f4ae+idx10)!=2) ? 0x471 : 0x555;
@@ -201,7 +201,7 @@ int Player::St_Wait_Main()
             mStateStep = 3;
             mSleepStage = 1;
         }
-        if (*(unsigned short*)(data_0209f49e+data_020a0e40*0x18) & 2) {
+        if (*(unsigned short*)(data_0209f49e+gActivePlayerSlot*0x18) & 2) {
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211019c);
             (*(unsigned int*)(((int)r4 + 0x154))) &= ~0x2000;
             _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2e, ((char*)this)+0x74);
