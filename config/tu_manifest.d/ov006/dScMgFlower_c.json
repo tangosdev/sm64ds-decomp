@@ -12,7 +12,7 @@
     "RANGE ENDS ARE BOTH PINNED BY A SYMBOL, NOT BY A GAP. The low end 0x0212a554 is _ZN13dScMgFlower_cD1Ev, the first symbol of this class anywhere in ov006; the word below it is the end of the previous class's run. The high end 0x0212b7f8 is dScMgFlower_c_classInit, this class's factory, which already lives in its own translation unit at src/d_s_mg_flower.cpp and is deliberately left there -- that file does not include this class's header, so the boundary is a real file boundary and not a slicing choice.",
     "EMISSION ORDER WAS MEASURED, NOT ASSUMED, AND THE SIBLING CLASSES' RULE DOES NOT APPLY HERE. ov006 has D1 at 0x0212a554 BELOW D0 at 0x0212a5c8 and no D2 at all. Under mwccarm 2004/b56's default DEFERRED code generation an out-of-line destructor emits D2, D0, D1, which is what include/dScMgRoulette_c.h records and why every promoted ov006 sibling uses an inline in-class destructor. This TU cannot use the deferred regime (see the next row), and with `#pragma defer_codegen off` the variant group emits D1, D0, D2 instead -- so here an OUT-OF-LINE destructor is what reproduces the cartridge's order.",
     "FOUR VERIFY ROUNDS, EACH THE WHOLE TU, SETTLED THE FORM: (a) inline destructor + deferred codegen + members in descending source order -> 8/9 MATCH, section order correct, Behavior cannot match; (b) inline destructor + `defer_codegen off` + ascending source order -> 9/9 bytes, but D1/D0 emit LAST, after the vtable, so the licensed range is not reproducible; (c) out-of-line destructor + `defer_codegen off` + ascending source order -> 9/9 MATCH, objisolate clean, reloc-destinations clean, and all nine functions in ROM-ascending section order; (d) exactly (c) with the `opt_common_subs` bracket removed -> Behavior alone falls to DIFF (999 words differ, 3 relocation destinations wrong, first data_020a0e40 != 0x020a0de8:arm9) for 8/9. (c) ships. (d) is the control that makes the bracket, and therefore `defer_codegen off`, demonstrably load-bearing rather than decorative.",
-    "THE PRAGMA PAIR IS THE QUEUE'S `pragma:1` BLOCKER, RESOLVED. Behavior needs common-subexpression elimination OFF and no other member does: with CSE on, mwcc coalesces the adjacent touch-sample base loads (data_020a0de8/de9/dea/deb and data_020a0e40) into one pooled address. Under deferred codegen an optimisation pragma is effectively file-global and last-wins, so a bracket around one member applies to all of them and two other members regress; `#pragma defer_codegen off` is what makes the bracket bind positionally. `opt_strength_reduction off` is file-global here on purpose -- both members that want it, Behavior and func_ov006_0212a764, are the only ones it changes.",
+    "THE PRAGMA PAIR IS THE QUEUE'S `pragma:1` BLOCKER, RESOLVED. Behavior needs common-subexpression elimination OFF and no other member does: with CSE on, mwcc coalesces the adjacent touch-sample base loads (data_020a0de8/de9/dea/deb and data_020a0e40) into one pooled address. Under deferred codegen an optimisation pragma is effectively file-global and last-wins, so a bracket around one member applies to all of them and two other members regress; `#pragma defer_codegen off` is what makes the bracket bind positionally. `opt_strength_reduction off` is file-global here on purpose -- both members that want it, Behavior and _ZN13dScMgFlower_c19func_ov006_0212a764Ev, are the only ones it changes.",
     "SCRATCH LINK: the whole range 0x0212a554..0x0212b7f8, 4772 bytes, is IDENTICAL to retail from ONE object; module ov006 built 525344 bytes against 525344 retail; 106/106 modules exact, 100.000000% of compared bytes, mismatching 0; the full ROM builds to sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8, identical to the source-independent stock control produced by `tubuild.py linkcheck --baseline` on the same tree. `dsd check symbols --fail` reports 9 errors, all 9 present in that same baseline control: 0 new, 0 resolved."
   ],
   "sections": [
@@ -45,14 +45,14 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov006_0212a654",
+      "symbol": "_ZN13dScMgFlower_c19func_ov006_0212a654Ev",
       "address": "0x0212a654",
       "size": "0x00000110",
       "legacy_source": "src/func_ov006_0212a654.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov006_0212a764",
+      "symbol": "_ZN13dScMgFlower_c19func_ov006_0212a764Ev",
       "address": "0x0212a764",
       "size": "0x00000310",
       "legacy_source": "src/func_ov006_0212a764.cpp",
@@ -98,7 +98,7 @@
     {
       "symbol": "_ZN13dScMgFlower_c4Vec2D1Ev",
       "disposition": "deadstrip",
-      "reason": "Four-byte `bx lr` for the nested dScMgFlower_c::Vec2's empty destructor, emitted as vague linkage because the type has a user-declared destructor (which is load-bearing -- it is what keeps func_ov006_0212a764's swap temp an 8-byte stack home; see include/dScMgFlower_c.h). No caller survives: mwccarm inlines the empty body at the one use site, func_ov006_0212a764 reproduces its 0x310 cartridge bytes with clean relocation destinations, and no ROM symbol of this spelling exists in any module's symbols.txt. Homeless, so a plain deadstrip."
+      "reason": "Four-byte `bx lr` for the nested dScMgFlower_c::Vec2's empty destructor, emitted as vague linkage because the type has a user-declared destructor (which is load-bearing -- it is what keeps _ZN13dScMgFlower_c19func_ov006_0212a764Ev's swap temp an 8-byte stack home; see include/dScMgFlower_c.h). No caller survives: mwccarm inlines the empty body at the one use site, _ZN13dScMgFlower_c19func_ov006_0212a764Ev reproduces its 0x310 cartridge bytes with clean relocation destinations, and no ROM symbol of this spelling exists in any module's symbols.txt. Homeless, so a plain deadstrip."
     },
     {
       "symbol": "_ZTV13dScMgFlower_c",
@@ -194,9 +194,9 @@
   ],
   "notes": [
     "Reconstructed by tools/tubuild.py create, then reconciled by hand. The file's own banner carries the reasoning; this entry's boundary_evidence carries the measurements.",
-    "RESOLVED, was a tubuild create warning: the two legacy shards behind func_ov006_0212a764 and _ZN13dScMgFlower_c13InitResourcesEv declared _ZN3G2x13SetBlendAlphaEPVttttj with different signatures. Reconciled to the more complete observation -- `void (volatile u16 *, u16, u16, u16, u32)` -- which both call sites satisfy, rather than keeping one and commenting the other out. Same rule applied to func_ov006_020c3e70 and the element destructor func_ov006_0212a650, where include/decl_common.h's signature wins and the two bodies that assumed a different one take a cast at the head of the body instead of a redeclaration.",
+    "RESOLVED, was a tubuild create warning: the two legacy shards behind _ZN13dScMgFlower_c19func_ov006_0212a764Ev and _ZN13dScMgFlower_c13InitResourcesEv declared _ZN3G2x13SetBlendAlphaEPVttttj with different signatures. Reconciled to the more complete observation -- `void (volatile u16 *, u16, u16, u16, u32)` -- which both call sites satisfy, rather than keeping one and commenting the other out. Same rule applied to func_ov006_020c3e70 and the element destructor func_ov006_0212a650, where include/decl_common.h's signature wins and the two bodies that assumed a different one take a cast at the head of the body instead of a redeclaration.",
     "func_ov006_0212a650 keeps external C linkage on purpose: it is the element destructor this class's own ~dScMgFlower_c passes to __cxa_vec_cleanup, and src/d_s_mg_flower.cpp -- the factory TU, immediately above this range -- also names it.",
-    "NEAR-MISS RESOLVED. func_ov006_0212a764 was a banked near-miss (CLAIMS.md, released after 500+ variants and 1000 permuter iterations, best 49 of 44 with the frame at 0x14 against the cartridge's 0x1c). It matches here at 0x310 bytes exact. The lever was the frame, as that claim recorded: the nested dScMgFlower_c::Vec2 the petal setup swaps through carries a user-declared empty destructor, which is what keeps its 8-byte stack home alive even though every copy through it is register to register. A plain POD pair, a ctor-only pair, an int[2] and two scalar temps all lose the slot."
+    "NEAR-MISS RESOLVED. _ZN13dScMgFlower_c19func_ov006_0212a764Ev was a banked near-miss (CLAIMS.md, released after 500+ variants and 1000 permuter iterations, best 49 of 44 with the frame at 0x14 against the cartridge's 0x1c). It matches here at 0x310 bytes exact. The lever was the frame, as that claim recorded: the nested dScMgFlower_c::Vec2 the petal setup swaps through carries a user-declared empty destructor, which is what keeps its 8-byte stack home alive even though every copy through it is register to register. A plain POD pair, a ctor-only pair, an int[2] and two scalar temps all lose the slot."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

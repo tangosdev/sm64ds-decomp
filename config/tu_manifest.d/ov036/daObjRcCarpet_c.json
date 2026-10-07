@@ -9,7 +9,8 @@
   "boundary_evidence": [
     "contiguous linker run: 0x2112158..0x21125b0, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjRcCarpet_c",
-    "module sinit corroboration: 7 sinit(s) / 7 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 7 sinit(s) / 7 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "the compiler-generated __sinit_d_a_obj_rc_carpet.cpp is byte-identical to retail __sinit_ov036_02112944 (0x98) and carries the same fifteen relocation sites; the ctor word at 0x021129f4 points at it; the three handles and three registration nodes occupy 0x0211419c..0x021141d8"
   ],
   "sections": [
     {
@@ -18,9 +19,24 @@
       "end": "0x021125b0"
     },
     {
+      "name": ".init",
+      "start": "0x02112944",
+      "end": "0x021129dc"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x021129f4",
+      "end": "0x021129f8"
+    },
+    {
       "name": ".data",
       "start": "0x02113f4c",
       "end": "0x02114020"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0211419c",
+      "end": "0x021141d8"
     }
   ],
   "functions": [
@@ -88,6 +104,24 @@
       "ordinal": 8
     }
   ],
+  "init": [
+    {
+      "symbol": "__sinit_d_a_obj_rc_carpet.cpp",
+      "address": "0x02112944",
+      "size": "0x98",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov036_02112944 and carries the same fifteen relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_obj_rc_carpet.cpp",
+      "address": "0x021129f4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
   "data": [
     {
       "symbol": "_ZTI15daObjRcCarpet_c",
@@ -142,8 +176,291 @@
       "evidence": "compiler storage includes the two-word ABI preamble at 0x02113f94; the configured public address point is eight bytes later and all 33 slots through 0x0211401c match retail"
     }
   ],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov036_0211419c",
+      "address": "0x0211419c",
+      "size": "0x8",
+      "evidence": "animation resource handle constructed with file ID 1689"
+    },
+    {
+      "symbol": "data_ov036_021141a4",
+      "address": "0x021141a4",
+      "size": "0x8",
+      "evidence": "model resource handle constructed with file ID 1687"
+    },
+    {
+      "symbol": "data_ov036_021141ac",
+      "address": "0x021141ac",
+      "size": "0x8",
+      "evidence": "collision resource handle constructed with file ID 1688"
+    },
+    {
+      "symbol": "@453",
+      "address": "0x021141b4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated model resource destructor-registration node"
+    },
+    {
+      "symbol": "@455",
+      "address": "0x021141c0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated collision resource destructor-registration node"
+    },
+    {
+      "symbol": "@454",
+      "address": "0x021141cc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated animation resource destructor-registration node"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN18CarpetModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN18CarpetModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor registration destination and the model wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN22CarpetAnimationFilePtrC1Ej",
+      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0201799c",
+      "evidence": "retail initializer call destination and the animation wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN22CarpetAnimationFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017984",
+      "evidence": "retail destructor registration destination and the animation SharedFilePtr family identity"
+    },
+    {
+      "symbol": "_ZN22CarpetCollisionFilePtrC1Ej",
+      "canonical_symbol": "func_02017b4c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b4c",
+      "evidence": "retail initializer call destination and the collision wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN22CarpetCollisionFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b34",
+      "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and the six direct retail references in this initializer"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_a_obj_rc_carpet.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_a_obj_rc_carpet.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@453",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local model registration node is a configured initializer relocation destination at 0x021141b4"
+    },
+    {
+      "symbol": "@454",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local animation registration node is a configured initializer relocation destination at 0x021141cc"
+    },
+    {
+      "symbol": "@455",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local collision registration node is a configured initializer relocation destination at 0x021141c0"
+    }
+  ],
   "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02112954",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112964",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112970",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112980",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211298c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017b4c",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211299c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_021141a4",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x021141a4"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@453",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x021141b4"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_0211419c",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x0211419c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Anim",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017984"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@454",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x021141cc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_021141ac",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x021141ac"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017b34"
+    },
+    {
+      "section": ".init",
+      "source": "0x021129d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@455",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x021141c0"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x021129f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_obj_rc_carpet.cpp",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02112944"
+    },
     {
       "section": ".data",
       "source": "0x02113f4c",
@@ -562,7 +879,9 @@
     "tubuild create warning: RAW: src/func_ov036_021122c0.cpp (func_ov036_021122c0) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: RAW: src/daObjRcCarpet_c_classInit.cpp (daObjRcCarpet_c_classInit) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
     "The base class is now the ROM-proven dPathLiftActor_c identity. The compiler naturally emits daObjRcCarpet_c RTTI with its base relocation to ov002:0x0210af0c; no RTTI or lifecycle data is hand-authored.",
-    "daObjRcCarpet_c_classInit and g_profile_RC_CARPET are reconstructed source-style names: SM64DS proves the RTTI class, RC_CARPET registry ID, descriptor/factory relationship, allocation size, and vtable identity; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical aliases were daObjRcCarpet_c_classInit and g_profile_RC_CARPET."
+    "daObjRcCarpet_c_classInit and g_profile_RC_CARPET are reconstructed source-style names: SM64DS proves the RTTI class, RC_CARPET registry ID, descriptor/factory relationship, allocation size, and vtable identity; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical aliases were daObjRcCarpet_c_classInit and g_profile_RC_CARPET.",
+    "The three ov036 resource handles at 0x021141a4 (model, file 1687), 0x0211419c (animation, file 1689) and 0x021141ac (collision, file 1688) are file-scope objects in this TU. mwcc emits __sinit_d_a_obj_rc_carpet.cpp, the ctor word, and the three registration nodes. The handwritten src/__sinit_ov036_02112944.c is retired. The vtable partition is unchanged.",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -652,16 +971,36 @@
           "firstDiff": null
         },
         {
+          "section": ".init",
+          "start": "0x02112944",
+          "end": "0x021129dc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x021129f4",
+          "end": "0x021129f8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data",
           "start": "0x02113f4c",
           "end": "0x02114020",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0211419c",
+          "end": "0x021141d8",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 16
+          "LICENSED": 24
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -670,19 +1009,56 @@
       "nontextSectionOrder": {
         "groups": [
           {
+            "section": ".init",
+            "original": [
+              54
+            ],
+            "desired": [
+              54
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              52
+            ],
+            "desired": [
+              52
+            ]
+          },
+          {
             "section": ".data",
             "original": [
-              14,
-              20,
-              23,
-              25,
+              18,
+              22,
+              29,
+              31,
+              33
+            ],
+            "desired": [
+              18,
+              22,
+              29,
+              31,
+              33
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              7,
+              17,
+              24,
               27
             ],
             "desired": [
-              20,
-              14,
-              23,
-              25,
+              7,
+              6,
+              5,
+              17,
+              24,
               27
             ]
           }
@@ -690,33 +1066,36 @@
         "objisolate": {
           "reordered": [
             {
-              "section": ".data",
+              "section": ".bss",
               "original": [
-                14,
-                20,
-                23,
-                25,
+                5,
+                6,
+                7,
+                17,
+                24,
                 27
               ],
               "desired": [
-                20,
-                14,
-                23,
-                25,
+                7,
+                6,
+                5,
+                17,
+                24,
                 27
               ],
               "slots": [
-                14,
-                20,
-                23,
-                25,
+                5,
+                6,
+                7,
+                17,
+                24,
                 27
               ]
             }
           ],
-          "symbolIndices": 5,
+          "symbolIndices": 6,
           "sectionLinks": 0,
-          "sectionInfos": 4,
+          "sectionInfos": 0,
           "error": null
         },
         "errors": null
@@ -755,7 +1134,7 @@
                 "section": "OV036"
               }
             },
-            "baselineElfSha256": "4bbf15564461479de0bb4650899ab0b82f82fea7da90b778c2d67b05aa5b212b",
+            "baselineElfSha256": "380bcbe26909e142e1f0a44ce224f5173bf7ed205d74fea65e4761af21086210",
             "exact": true
           }
         ],

@@ -9,7 +9,8 @@
   "boundary_evidence": [
     "build/tu_map.json identifies the eight-function daBgSnwmn_c run at 0x02120824..0x02120c00 but leaves the immediately following factory run at 0x02120c00..0x02120c58 unattributed",
     "the main registry maps BIG_SNOWMAN to the 0x02122954 descriptor, whose first word relocates to daBgSnwmn_c_classInit at 0x02120c00",
-    "daBgSnwmn_c_classInit allocates the RTTI-proven class size 0x1f0, installs _ZTV11daBgSnwmn_c, constructs the five header-proven members, and ends exactly at daPgBby_c's D1 at 0x02120c58; the factory join is registry/factory-backed rather than tu_map-proven"
+    "daBgSnwmn_c_classInit allocates the RTTI-proven class size 0x1f0, installs _ZTV11daBgSnwmn_c, constructs the five header-proven members, and ends exactly at daPgBby_c's D1 at 0x02120c58; the factory join is registry/factory-backed rather than tu_map-proven",
+    "the compiler-generated __sinit_daBgSnwmn_c.cpp is byte-identical to retail __sinit_ov072_02122350 (0xc4) and carries the same call and pool destinations: two model handles, the texseq handle, and the cylinder offset"
   ],
   "sections": [
     {
@@ -18,9 +19,24 @@
       "end": "0x02120c58"
     },
     {
+      "name": ".init",
+      "start": "0x02122350",
+      "end": "0x02122414"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02122710",
+      "end": "0x02122714"
+    },
+    {
       "name": ".data",
       "start": "0x02122938",
       "end": "0x021229f4"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02122c40",
+      "end": "0x02122c94"
     }
   ],
   "functions": [
@@ -88,6 +104,24 @@
       "ordinal": 8
     }
   ],
+  "init": [
+    {
+      "symbol": "__sinit_daBgSnwmn_c.cpp",
+      "address": "0x02122350",
+      "size": "0xc4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov072_02122350 and carries the same relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_daBgSnwmn_c.cpp",
+      "address": "0x02122710",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
   "data": [
     {
       "symbol": "_ZTI11daBgSnwmn_c",
@@ -116,7 +150,104 @@
       "evidence": "compiler storage has the two-word ABI preamble; the configured public address point remains unchanged at 0x02122978"
     }
   ],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov072_02122c40",
+      "address": "0x02122c40",
+      "size": "0x8",
+      "evidence": "model resource handle constructed with file ID 0x2ad"
+    },
+    {
+      "symbol": "data_ov072_02122c48",
+      "address": "0x02122c48",
+      "size": "0x8",
+      "evidence": "model resource handle constructed with file ID 0x2af"
+    },
+    {
+      "symbol": "data_ov072_02122c50",
+      "address": "0x02122c50",
+      "size": "0x8",
+      "evidence": "texseq resource handle constructed with file ID 0x2b0"
+    },
+    {
+      "symbol": "@398",
+      "address": "0x02122c58",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated texseq destructor-registration node"
+    },
+    {
+      "symbol": "@399",
+      "address": "0x02122c64",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated cylinder-offset destructor-registration node"
+    },
+    {
+      "symbol": "data_ov072_02122c70",
+      "address": "0x02122c70",
+      "size": "0xc",
+      "evidence": "cylinder offset Vector3, initialized to (0, -0x50000, 0)"
+    },
+    {
+      "symbol": "@397",
+      "address": "0x02122c7c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated second model destructor-registration node"
+    },
+    {
+      "symbol": "@396",
+      "address": "0x02122c88",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated first model destructor-registration node"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN17SnwmnModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN17SnwmnModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor registration destination and the model wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN23SnwmnTexSequenceFilePtrC1Ej",
+      "canonical_symbol": "SharedFilePtr_Construct_TexSeq",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017934",
+      "evidence": "retail initializer call destination and the texseq wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN23SnwmnTexSequenceFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_TexSeq",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0201791c",
+      "evidence": "retail destructor registration destination and the texseq wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN14SnwmnCylOffsetD1Ev",
+      "canonical_symbol": "_ZN7Vector3D1Ev",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "evidence": "retail destructor registration destination; the offset is a Vector3 and the cartridge dtor is arm9:0x020072c0"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and four direct retail references in this initializer"
+    }
+  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "_ZN11daBgSnwmn_cD1Ev",
@@ -129,9 +260,235 @@
       "from": "STB_LOPROC",
       "to": "STB_GLOBAL",
       "evidence": "mwccarm emits the inline deleting destructor with processor-specific binding; the one-function control and configured ROM symbol use global binding"
+    },
+    {
+      "symbol": "__sinit_daBgSnwmn_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_daBgSnwmn_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@396",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local first-model registration node is a configured initializer relocation destination at 0x02122c88"
+    },
+    {
+      "symbol": "@397",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local second-model registration node is a configured initializer relocation destination at 0x02122c7c"
+    },
+    {
+      "symbol": "@398",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local texseq registration node is a configured initializer relocation destination at 0x02122c58"
+    },
+    {
+      "symbol": "@399",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local cylinder-offset registration node is a configured initializer relocation destination at 0x02122c64"
     }
   ],
   "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02122360",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122370",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212237c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212238c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122398",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017934"
+    },
+    {
+      "section": ".init",
+      "source": "0x021223a8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021223d0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021223e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122c40",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122c40"
+    },
+    {
+      "section": ".init",
+      "source": "0x021223e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x021223ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@396",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122c88"
+    },
+    {
+      "section": ".init",
+      "source": "0x021223f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122c48",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122c48"
+    },
+    {
+      "section": ".init",
+      "source": "0x021223f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@397",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122c7c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021223fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122c50",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122c50"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122400",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_TexSeq",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201791c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122404",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@398",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122c58"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122408",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov072_02122c70",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122c70"
+    },
+    {
+      "section": ".init",
+      "source": "0x0212240c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7Vector3D1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020072c0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02122410",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@399",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122c64"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02122710",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_daBgSnwmn_c.cpp",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122350"
+    },
     {
       "section": ".data",
       "source": "0x02122938",
@@ -493,7 +850,13 @@
       "target_address": "0x020100dc"
     }
   ],
-  "compiler_only_output": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base destructor of the cylinder-offset wrapper. The cartridge registers _ZN7Vector3D1Ev at arm9:0x020072c0 and has no D2."
+    }
+  ],
   "externalized_output": [
     {
       "symbol": "_ZTI7fBase_c",
@@ -642,7 +1005,9 @@
     "The full factory join is a tested reconstruction hypothesis backed by direct registry and constructor evidence; build/tu_map.json does not itself label that one-function run as daBgSnwmn_c.",
     "The typed 0x1c profile layout is classInit, signed 16-bit behaviorPriority, signed 16-bit renderPriority, actorFlags, clipOffsetY, clipRadius, clipDistance, and farDistance. Its unchanged retail words are 0x0110, 0x0083, 3, 1, 0x0012c000, 0x01000000, and 0x00001000 after the factory pointer.",
     "The inline destructor declared last makes mwccarm emit the exact D1 then D0 pair with no D2 body. The class-local operator new routes ordinary `new daBgSnwmn_c()` to the retail fBase_c allocator; the compiler emits and owns the vptr store.",
-    "Legacy per-function contribution comparison is not applicable to the final lifecycle form: the two old out-of-line destructor shards cannot compile beside the inline destructor that emits their exact replacements. The ordinary intact-object linkcheck is the production proof."
+    "Legacy per-function contribution comparison is not applicable to the final lifecycle form: the two old out-of-line destructor shards cannot compile beside the inline destructor that emits their exact replacements. The ordinary intact-object linkcheck is the production proof.",
+    "The file-scope model handles, texseq handle, and cylinder offset are defined in this TU. mwcc emits __sinit_daBgSnwmn_c.cpp, the ctor word, and four anonymous registration nodes. Class RTTI and the vtable stay where they were. The handwritten src/__sinit_ov072_02122350.c is retired.",
+    "Local scratch link matched this machine's stock control. The recorded rom.sha256 is the fleet SHA every other intact entry shares. Module set, symbol inventory, and the owned ranges matched."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -693,16 +1058,36 @@
           "firstDiff": null
         },
         {
+          "section": ".init",
+          "start": "0x02122350",
+          "end": "0x02122414",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02122710",
+          "end": "0x02122714",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data",
           "start": "0x02122938",
           "end": "0x021229f4",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02122c40",
+          "end": "0x02122c94",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 13
+          "LICENSED": 23
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -711,18 +1096,59 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".data",
+            "section": ".init",
             "original": [
-              12,
-              16,
-              17,
-              19
+              48
             ],
             "desired": [
-              12,
-              16,
-              17,
-              19
+              48
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              46
+            ],
+            "desired": [
+              46
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              13,
+              24,
+              25,
+              27
+            ],
+            "desired": [
+              13,
+              24,
+              25,
+              27
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              9,
+              15,
+              18,
+              19,
+              22,
+              23
+            ],
+            "desired": [
+              5,
+              6,
+              9,
+              15,
+              18,
+              19,
+              22,
+              23
             ]
           }
         ],

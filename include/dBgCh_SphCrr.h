@@ -1,19 +1,15 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class dBgCh_SphCrr: 4 matched functions, 16 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen.
+/* Sphere collision query: a dM3dGSph probe sphere swept against the KCL
+ * collider registry, keeping a dBgPi best-hit record and three result slots
+ * (floor / wall / underneath). The ROM's __vmi_class_type_info states the
+ * base list outright:
  *
- * PROMOTED 2026-08-23 to a real MI declaration (notes/ctor-migration.md item
- * 2). The ROM's own RTTI record states the base list outright:
- *
- *     dBgCh    @ 0x00   polymorphic   (vptr store at +0)
+ *     dBgCh    @ 0x00   polymorphic
  *     dBgPi    @ 0x10   polymorphic   (secondary block VTable_dBgPi_dBgCh_SphCrrThunk)
  *     dM3dGSph @ 0x38   polymorphic   (secondary block VTable_dM3dGSph_dBgCh_SphCrrThunk;
  *                                     this IS the query sphere below)
  *
- * The C++ branch declares exactly that; the C branch below stays field-for-
- * field IDENTICAL to what this header carried before promotion, because .c
- * translation units reach into these interiors by the old member names.
+ * The C branch below stays field-for-field identical to the C++ layout:
+ * .c translation units reach into these interiors by the old member names.
  */
 #ifndef DBGCH_SPHCRR_H
 #define DBGCH_SPHCRR_H
@@ -119,11 +115,11 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
        fields above. */
     void func_02037940(u8 flags_);
     void func_0203794c(const s32 *payload);
-    void func_02037968(int i, int clsnID, int owner, int collider);
+    void func_02037968(int i, int clsnID, dActor_c *owner, dBgW *collider);
     void func_0203798c(int triID, void *src);
-    void func_0203799c(int i, int clsnID, int owner, int collider);
+    void func_0203799c(int i, int clsnID, dActor_c *owner, dBgW *collider);
     void func_020379c0(int triID, void *src);
-    void func_020379d0(int i, int clsnID, int owner, int collider);
+    void func_020379d0(int i, int clsnID, dActor_c *owner, dBgW *collider);
     void func_020379f4(int triID, void *src);
     void func_02037a04(Vector3 *outMin, Vector3 *outMax);
     void func_02037a38();

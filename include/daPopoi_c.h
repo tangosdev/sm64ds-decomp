@@ -129,6 +129,29 @@ struct daPopoi_c : dEnemyBase_c {
     int Render();
     int CleanupResources();
     void OnPendingDestroy();
+
+    /* Probe ahead for a wall/missing floor (Behavior and the Wander/Chase
+       updates); 1 = blocked, with the position rolled back. Only casts rays in
+       level 0x2a. */
+    int  func_ov077_02126300();
+    /* Sensor scan for a Player to grab; installs the Grab state. Behavior only. */
+    void func_ov077_02126528();
+    /* State installer: stores the record in mState and runs its enter handler. */
+    int  func_ov077_02126d5c(daPopoi_StateRecord *next);
+    /* Rebuilds mModelAnim.mat4x3 from mAngleY and mPos. Behavior only. */
+    void func_ov077_02126dac();
+
+    /* The five state records' handler pairs; see the table above. */
+    int  func_ov077_02126758();   /* Grab    enter  (record 02127cd8) */
+    int  func_ov077_02126640();   /* Grab    update */
+    int  func_ov077_02126cd4();   /* Wander  enter  (record 02127ce8) */
+    int  func_ov077_02126ad0();   /* Wander  update */
+    int  func_ov077_02126a84();   /* Pause   enter  (record 02127cf8) */
+    int  func_ov077_02126a50();   /* Pause   update */
+    int  func_ov077_02126930();   /* Chase   enter  (record 02127d08) */
+    int  func_ov077_0212679c();   /* Chase   update */
+    int  func_ov077_02126a04();   /* TurnAway enter (record 02127d18) */
+    int  func_ov077_021269a8();   /* TurnAway update */
 };
 
 #ifndef SM64DS_PLATFORM_PC

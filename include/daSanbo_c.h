@@ -28,8 +28,9 @@
 extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 struct daSanbo_c : dActor_c {
-    /* Dispatch ignores results; void is a reconstructed interface. The state
-       handlers retain their existing external identities until methodization. */
+    /* Dispatch ignores results; void is a reconstructed interface. Some state
+       handlers return int in the ROM; the records are raw words, so the PMF
+       spelling is a convenience, not a constraint. */
     typedef void (daSanbo_c::*StateFunc)();
 
     u8  pad_0d0[0x4];
@@ -97,15 +98,26 @@ struct daSanbo_c : dActor_c {
     int Render();
     void OnPendingDestroy();
 
+    daSanbo_c *func_ov096_021357b4();
     void func_ov096_02135800();
     int func_ov096_02135838();
     void func_ov096_0213585c();
+    int func_ov096_02135878(int x);
+    void func_ov096_021358c8();
     void func_ov096_02135948();
+    void func_ov096_02135e2c(dBgCh_Actr *clsn);
     void func_ov096_02135efc();
+    int func_ov096_021360c4();
     int func_ov096_02136134();
+    int func_ov096_02136264();
     int func_ov096_021363b4();
+    int func_ov096_021363c4();
     int func_ov096_0213640c();
+    int func_ov096_02136434();
     int func_ov096_02136534();
+    int func_ov096_021365d4();
+    void func_ov096_0213670c();
+    int func_ov096_02136754();
     int func_ov096_021368a4();
     void func_ov096_021368b4();
     void func_ov096_021368f0();
