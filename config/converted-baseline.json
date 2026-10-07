@@ -1434,7 +1434,6 @@
     "src/__sinit_ov091_021346e8.c",
     "src/__sinit_ov091_02134930.c",
     "src/__sinit_ov091_021349c4.c",
-    "src/__sinit_ov092_021320cc.c",
     "src/__sinit_ov095_02136fe0.c",
     "src/__sinit_ov095_0213722c.c",
     "src/__sinit_ov096_0213770c.c",
@@ -3516,5 +3515,5 @@
     "src/_ZN15dExtFrameCtrl_cD1Ev.cpp",
     "src/_ZN15dExtFrameCtrl_cD2Ev.cpp"
   ],
-  "count": 3507
+  "count": 3506
 }
