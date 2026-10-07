@@ -40,7 +40,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov018_02111278",
+      "symbol": "_ZN14daObjSm_Lift_c19func_ov018_02111278Ev",
       "address": "0x02111278",
       "size": "0x00000084",
       "legacy_source": "src/func_ov018_02111278.cpp",
