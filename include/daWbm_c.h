@@ -81,6 +81,8 @@ struct daWbm_c : dEnemyBase_c {
 
     void Land();
     void Burst();
+    void func_ov098_0213b584();
+    int func_ov098_0213b6e0();
 
     void StateDrop();
     void StateFall();

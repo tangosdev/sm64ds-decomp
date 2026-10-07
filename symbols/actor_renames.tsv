@@ -3540,6 +3540,8 @@ ov098	0x0213b43c	func_ov098_0213b43c	Cannon_Spawn	spawnfunc
 ov098	0x0213b43c	Cannon_Spawn	daCnn_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov098	0x0213b47c	func_ov098_0213b47c	_ZN7daWbm_cD1Ev	vtable slot 16
 ov098	0x0213b4c4	func_ov098_0213b4c4	_ZN7daWbm_cD0Ev	vtable slot 17
+ov098	0x0213b584	func_ov098_0213b584	_ZN7daWbm_c19func_ov098_0213b584Ev	object-first helper -> daWbm_c member
+ov098	0x0213b6e0	func_ov098_0213b6e0	_ZN7daWbm_c19func_ov098_0213b6e0Ev	object-first helper -> daWbm_c member
 ov098	0x0213bb9c	func_ov098_0213bb9c	_ZN7daWbm_c16CleanupResourcesEv	vtable slot 3
 ov098	0x0213bbe4	func_ov098_0213bbe4	_ZN7daWbm_c6RenderEv	vtable slot 9
 ov098	0x0213bc20	func_ov098_0213bc20	_ZN7daWbm_c8BehaviorEv	vtable slot 6
