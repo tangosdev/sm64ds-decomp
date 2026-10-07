@@ -6,10 +6,10 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "PARTIAL RUN, 301 of 600. tu_map calls 0x020bd828..0x020e6a08 one contiguous linker run of 600 function(s) (build/tu_map.json, tools/tu_map.py). This TU licenses 0x020bd828..0x020cfea4, 301 function(s), ROM ordinals 0..300. The other 299 keep their own shards and their own delinks.txt entries.",
+    "PARTIAL RUN, 344 of 600. tu_map calls 0x020bd828..0x020e6a08 one contiguous linker run of 600 function(s) (build/tu_map.json, tools/tu_map.py). This TU licenses 0x020bd828..0x020d3b9c, 344 function(s), ROM ordinals 0..343. The other 256 keep their own shards and their own delinks.txt entries.",
     "class label(s): Player",
-    "EDGE 1 (the only edge, at the TOP) -- a sourceless hole splits the run. ROM ordinal 301, func_ov002_020cfea4 (0x020cfea4), has no shard anywhere in src/ and no entry in config/arm9/overlays/ov002/delinks.txt: the cartridge's own bytes cover that range. No delink block and no TU manifest in this tree expresses a .text claim with a hole in it, so the run can only be licensed as one of the segments a hole leaves. Ordinals 0..300 is the LARGEST of them and is the side taken.",
-    "The run's other holes, all above this claim and all left alone: ordinal 344 func_ov002_020d3b9c (0x020d3b9c) and ordinal 430 _ZN6Player19St_SwingPlayer_MainEv (0x020d9fec) are sourceless the same way; ordinal 470 func_ov002_020dc560 (0x020dc560) has a shard that reproduces under the pinned compiler but carries no `complete` marker, so it is not delinked and cannot be folded in either. Segment sizes: 0..300 = 301 (TAKEN), 471..599 = 129, 345..429 = 85, 302..343 = 42, 431..469 = 39. Every rejected candidate is smaller than the one taken.",
+    "EDGE 1 (the only edge, at the TOP) -- a sourceless hole splits the run. ROM ordinal 344, func_ov002_020d3b9c (0x020d3b9c), has a shard (src/func_ov002_020d3b9c.c) that is a NONMATCHING banner (div 50 of 360 words) and no delinks.txt entry, so no .text claim can cross it: a `complete` delink block cannot contain a hole. Ordinals 0..343 are the LARGEST segment the holes leave and are the side taken. History: this entry first licensed ordinals 0..300 (hole at 301, then a sourceless range); ordinals 301..343 (43 shards, all `complete`, contiguous, 0x020cfea4..0x020d3b9c, class Player: St_LedgeGrab/LedgeHang/WallSlide/Crawl/Crouch/HoldHeavy/HoldLight/WaitQuicksand/Wait/TurnAround/Walk plus their file-local helpers) were folded in later, as their own commit, once they matched.",
+    "Why the next segments are NOT folded, each by its own blocker. Run ordinals 344..599: 344 func_ov002_020d3b9c is NONMATCHING (div 50/360). Segment 345..429 (0x020d413c..0x020d9fec, 85 fns) is ended at 430 by _ZN6Player19St_SwingPlayer_MainEv (NONMATCHING, div 8/241, no delinks entry). Segment 431..469 (0x020da3b0..0x020dc560, 39 fns) is ended at 470 by func_ov002_020dc560, which matches under 2004/b56 but carries no `complete` marker and no delinks entry (blocker: not enrolled; its baseline symbolCheckErrors name ITCM symbols, check eligibility before enrolling). Segment 471..599 (0x020dc740..0x020e6a08, 129 fns) holds the key function (D1 0x020e6858, D0 0x020e67a8) and the vtable owner. All four are the same original TU as this one interrupted by unmatched functions, not separate TUs, so splitting them into their own TUs would assert a false boundary; they stay shards until the three holes (d3b9c, SwingPlayer_Main, dc560) are matched and enrolled, after which a single widening can span them. Segment sizes now: 0..343 = 344 (TAKEN), 471..599 = 129, 345..429 = 85, 431..469 = 39.",
     "EDGE 0 (the bottom) is the linker run's own start, 0x020bd828 -- not a boundary this TU chose. The claim begins where the run begins.",
     "The KEY FUNCTION falls OUTSIDE this range. include/Player.h declares `virtual ~Player();` first among the non-inline virtuals, so the destructor is the key function; its variants live at ordinals 595/596, far above ordinal 300. The compiled object confirms the consequence: it defines no _ZTV6Player, _ZTI6Player or _ZTS6Player at all, so this promotion emits no vtable, needs no header edit, and the 2*(ancestors+self)+1 vtable-record formula does not apply to it.",
     "The three near-miss recoveries this claim depends on landed FIRST, as their own commit with their own `complete` markers (compound-assign field-address CSE in func_ov002_020c70ac and func_ov002_020e2664; pointer-vs-int parameter typing in func_ov002_020d0948). Only func_ov002_020c70ac and func_ov002_020e2664's sibling recovery sit inside this range; the third is above it and was recovered because it was measured in the same pass."
@@ -18,7 +18,7 @@
     {
       "name": ".text",
       "start": "0x020bd828",
-      "end": "0x020cfea4"
+      "end": "0x020d3b9c"
     }
   ],
   "functions": [
@@ -2128,6 +2128,307 @@
       "size": "0x00000120",
       "legacy_source": "src/func_ov002_020cfd84.cpp",
       "ordinal": 300
+    },
+    {
+      "symbol": "func_ov002_020cfea4",
+      "address": "0x020cfea4",
+      "size": "0x000002d4",
+      "legacy_source": "src/func_ov002_020cfea4.cpp",
+      "ordinal": 301
+    },
+    {
+      "symbol": "func_ov002_020d0178",
+      "address": "0x020d0178",
+      "size": "0x00000408",
+      "legacy_source": "src/func_ov002_020d0178.c",
+      "ordinal": 302
+    },
+    {
+      "symbol": "func_ov002_020d0580",
+      "address": "0x020d0580",
+      "size": "0x00000140",
+      "legacy_source": "src/func_ov002_020d0580.cpp",
+      "ordinal": 303
+    },
+    {
+      "symbol": "func_ov002_020d06c0",
+      "address": "0x020d06c0",
+      "size": "0x00000164",
+      "legacy_source": "src/func_ov002_020d06c0.cpp",
+      "ordinal": 304
+    },
+    {
+      "symbol": "_ZN6Player17St_LedgeGrab_MainEv",
+      "address": "0x020d0824",
+      "size": "0x0000008c",
+      "legacy_source": "src/_ZN6Player17St_LedgeGrab_MainEv.cpp",
+      "ordinal": 305
+    },
+    {
+      "symbol": "_ZN6Player17St_LedgeGrab_InitEv",
+      "address": "0x020d08b0",
+      "size": "0x0000007c",
+      "legacy_source": "src/_ZN6Player17St_LedgeGrab_InitEv.cpp",
+      "ordinal": 306
+    },
+    {
+      "symbol": "_ZN6Player20St_LedgeHang_CleanupEv",
+      "address": "0x020d092c",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN6Player20St_LedgeHang_CleanupEv.cpp",
+      "ordinal": 307
+    },
+    {
+      "symbol": "func_ov002_020d0948",
+      "address": "0x020d0948",
+      "size": "0x000000fc",
+      "legacy_source": "src/func_ov002_020d0948.c",
+      "ordinal": 308
+    },
+    {
+      "symbol": "_ZN6Player17St_LedgeHang_MainEv",
+      "address": "0x020d0a44",
+      "size": "0x00000210",
+      "legacy_source": "src/_ZN6Player17St_LedgeHang_MainEv.cpp",
+      "ordinal": 309
+    },
+    {
+      "symbol": "_ZN6Player17St_LedgeHang_InitEv",
+      "address": "0x020d0c54",
+      "size": "0x000000d8",
+      "legacy_source": "src/_ZN6Player17St_LedgeHang_InitEv.cpp",
+      "ordinal": 310
+    },
+    {
+      "symbol": "func_ov002_020d0d2c",
+      "address": "0x020d0d2c",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov002_020d0d2c.cpp",
+      "ordinal": 311
+    },
+    {
+      "symbol": "_ZN6Player17St_WallSlide_MainEv",
+      "address": "0x020d0d78",
+      "size": "0x00000114",
+      "legacy_source": "src/_ZN6Player17St_WallSlide_MainEv.cpp",
+      "ordinal": 312
+    },
+    {
+      "symbol": "_ZN6Player17St_WallSlide_InitEv",
+      "address": "0x020d0e8c",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN6Player17St_WallSlide_InitEv.cpp",
+      "ordinal": 313
+    },
+    {
+      "symbol": "_ZN6Player13St_Crawl_MainEv",
+      "address": "0x020d0ee0",
+      "size": "0x0000024c",
+      "legacy_source": "src/_ZN6Player13St_Crawl_MainEv.cpp",
+      "ordinal": 314
+    },
+    {
+      "symbol": "_ZN6Player13St_Crawl_InitEv",
+      "address": "0x020d112c",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN6Player13St_Crawl_InitEv.cpp",
+      "ordinal": 315
+    },
+    {
+      "symbol": "func_ov002_020d1164",
+      "address": "0x020d1164",
+      "size": "0x000000a0",
+      "legacy_source": "src/func_ov002_020d1164.cpp",
+      "ordinal": 316
+    },
+    {
+      "symbol": "func_ov002_020d1204",
+      "address": "0x020d1204",
+      "size": "0x000000ac",
+      "legacy_source": "src/func_ov002_020d1204.cpp",
+      "ordinal": 317
+    },
+    {
+      "symbol": "func_ov002_020d12b0",
+      "address": "0x020d12b0",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov002_020d12b0.cpp",
+      "ordinal": 318
+    },
+    {
+      "symbol": "_ZN6Player14St_Crouch_MainEv",
+      "address": "0x020d1354",
+      "size": "0x0000028c",
+      "legacy_source": "src/_ZN6Player14St_Crouch_MainEv.cpp",
+      "ordinal": 319
+    },
+    {
+      "symbol": "_ZN6Player14St_Crouch_InitEv",
+      "address": "0x020d15e0",
+      "size": "0x000000dc",
+      "legacy_source": "src/_ZN6Player14St_Crouch_InitEv.cpp",
+      "ordinal": 320
+    },
+    {
+      "symbol": "_ZN6Player17St_HoldHeavy_MainEv",
+      "address": "0x020d16bc",
+      "size": "0x000002ec",
+      "legacy_source": "src/_ZN6Player17St_HoldHeavy_MainEv.cpp",
+      "ordinal": 321
+    },
+    {
+      "symbol": "_ZN6Player17St_HoldHeavy_InitEv",
+      "address": "0x020d19a8",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN6Player17St_HoldHeavy_InitEv.cpp",
+      "ordinal": 322
+    },
+    {
+      "symbol": "_ZN6Player20St_HoldLight_CleanupEv",
+      "address": "0x020d19fc",
+      "size": "0x00000020",
+      "legacy_source": "src/_ZN6Player20St_HoldLight_CleanupEv.cpp",
+      "ordinal": 323
+    },
+    {
+      "symbol": "_ZN6Player17St_HoldLight_MainEv",
+      "address": "0x020d1a1c",
+      "size": "0x00000484",
+      "legacy_source": "src/_ZN6Player17St_HoldLight_MainEv.cpp",
+      "ordinal": 324
+    },
+    {
+      "symbol": "_ZN6Player17St_HoldLight_InitEv",
+      "address": "0x020d1ea0",
+      "size": "0x000000d8",
+      "legacy_source": "src/_ZN6Player17St_HoldLight_InitEv.cpp",
+      "ordinal": 325
+    },
+    {
+      "symbol": "func_ov002_020d1f78",
+      "address": "0x020d1f78",
+      "size": "0x0000020c",
+      "legacy_source": "src/func_ov002_020d1f78.c",
+      "ordinal": 326
+    },
+    {
+      "symbol": "_ZN6Player21St_WaitQuicksand_MainEv",
+      "address": "0x020d2184",
+      "size": "0x000000a0",
+      "legacy_source": "src/_ZN6Player21St_WaitQuicksand_MainEv.cpp",
+      "ordinal": 327
+    },
+    {
+      "symbol": "_ZN6Player21St_WaitQuicksand_InitEv",
+      "address": "0x020d2224",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN6Player21St_WaitQuicksand_InitEv.cpp",
+      "ordinal": 328
+    },
+    {
+      "symbol": "func_ov002_020d225c",
+      "address": "0x020d225c",
+      "size": "0x00000030",
+      "legacy_source": "src/func_ov002_020d225c.c",
+      "ordinal": 329
+    },
+    {
+      "symbol": "func_ov002_020d228c",
+      "address": "0x020d228c",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov002_020d228c.cpp",
+      "ordinal": 330
+    },
+    {
+      "symbol": "func_ov002_020d22ec",
+      "address": "0x020d22ec",
+      "size": "0x0000008c",
+      "legacy_source": "src/func_ov002_020d22ec.c",
+      "ordinal": 331
+    },
+    {
+      "symbol": "_ZN6Player15St_Wait_CleanupEv",
+      "address": "0x020d2378",
+      "size": "0x0000008c",
+      "legacy_source": "src/_ZN6Player15St_Wait_CleanupEv.cpp",
+      "ordinal": 332
+    },
+    {
+      "symbol": "_ZN6Player12St_Wait_MainEv",
+      "address": "0x020d2404",
+      "size": "0x0000099c",
+      "legacy_source": "src/_ZN6Player12St_Wait_MainEv.cpp",
+      "ordinal": 333
+    },
+    {
+      "symbol": "func_ov002_020d2da0",
+      "address": "0x020d2da0",
+      "size": "0x000000d4",
+      "legacy_source": "src/func_ov002_020d2da0.c",
+      "ordinal": 334
+    },
+    {
+      "symbol": "func_ov002_020d2e74",
+      "address": "0x020d2e74",
+      "size": "0x000000b0",
+      "legacy_source": "src/func_ov002_020d2e74.cpp",
+      "ordinal": 335
+    },
+    {
+      "symbol": "func_ov002_020d2f24",
+      "address": "0x020d2f24",
+      "size": "0x000000b8",
+      "legacy_source": "src/func_ov002_020d2f24.c",
+      "ordinal": 336
+    },
+    {
+      "symbol": "func_ov002_020d2fdc",
+      "address": "0x020d2fdc",
+      "size": "0x000002e0",
+      "legacy_source": "src/func_ov002_020d2fdc.c",
+      "ordinal": 337
+    },
+    {
+      "symbol": "_ZN6Player12St_Wait_InitEv",
+      "address": "0x020d32bc",
+      "size": "0x000001dc",
+      "legacy_source": "src/_ZN6Player12St_Wait_InitEv.cpp",
+      "ordinal": 338
+    },
+    {
+      "symbol": "func_ov002_020d3498",
+      "address": "0x020d3498",
+      "size": "0x00000024",
+      "legacy_source": "src/func_ov002_020d3498.c",
+      "ordinal": 339
+    },
+    {
+      "symbol": "_ZN6Player18St_TurnAround_MainEv",
+      "address": "0x020d34bc",
+      "size": "0x000001e0",
+      "legacy_source": "src/_ZN6Player18St_TurnAround_MainEv.cpp",
+      "ordinal": 340
+    },
+    {
+      "symbol": "_ZN6Player18St_TurnAround_InitEv",
+      "address": "0x020d369c",
+      "size": "0x0000003c",
+      "legacy_source": "src/_ZN6Player18St_TurnAround_InitEv.cpp",
+      "ordinal": 341
+    },
+    {
+      "symbol": "func_ov002_020d36d8",
+      "address": "0x020d36d8",
+      "size": "0x000001e8",
+      "legacy_source": "src/func_ov002_020d36d8.c",
+      "ordinal": 342
+    },
+    {
+      "symbol": "_ZN6Player12St_Walk_MainEv",
+      "address": "0x020d38c0",
+      "size": "0x000002dc",
+      "legacy_source": "src/_ZN6Player12St_Walk_MainEv.cpp",
+      "ordinal": 343
     }
   ],
   "data": [],
@@ -2138,7 +2439,8 @@
     "Only what a function body cannot hold is hoisted: a namespace, a class with static or declared-but-undefined members, and any type named in a member's own signature. Those tags are made unique per member. `struct Sound` and `namespace Sound` were the one true conflict and were resolved to the namespace spelling, which mangles identically.",
     "PRAGMA, measured with the delete-outright control first, and RE-MEASURED by the builder at the shipped revision -- the writer's counts predate the three near-miss recoveries in this branch and no longer reproduce. The shard for ordinal 35, _ZN6Player7SetAnimEji5Fix12IiEj, carries `#pragma opt_propagation off`. Under default deferred codegen that pragma is FILE-GLOBAL: it costs 46 other members their match (255/301 with it file-global, 300/301 with it simply deleted). Bracketing it in #pragma push/pop buys back nothing at all -- also 300/301, byte-identical to deleting it -- because with codegen deferred the state that binds is the state at end of file. `#pragma defer_codegen off` plus a ROM-ASCENDING source order makes the bracket bind positionally and recovers ordinal 35 as well: 301/301, which is what this entry's verification block records. Deleting only `defer_codegen off` still scores 300/301 on bytes, but the emitted .text order reverses (300 out-of-order ordinal pairs) and the pre-link object audit refuses with `licensed .text functions are not emitted in ROM address order`; the byte compare alone would not have caught it. That is why this file is written low address first, the opposite of the default deferred-codegen convention.",
     "Two members needed a source change to survive the C-to-C++ language flip, both the same construct and both from the known scalarization family: a two-int struct copy (`*(Pair2i *)dst = *(Pair2i *)(p + k)`) that C compiles as load/load/store/store and C++ scalarizes into load/store/load/store. The array-wrapper view (`struct P2w { int w[2]; }; *(P2w *)dst = *(P2w *)(p + k);`) restores the ROM's shape exactly, in func_ov002_020c14b8 and func_ov002_020c25a8. Three other spellings were measured and rejected first (two scalar locals: 4 words wrong; copy through a named temporary: 12 bytes too long). The builder diffed all 301 shipped bodies against their pre-promotion shards and found a SECOND change family this note omitted: func_ov002_020c6fe4 and func_ov002_020c897c each do arithmetic on a `void **` load, `*(void**)(c + id*4 + 0xdc) + 0x50`, which is a GNU extension C accepts under -gccext and C++ does not; both casts became `char **`. Byte-neutral -- the address arithmetic is identical -- but an edit. Apart from those four members and the local struct TAG renames that hoisting forces (Vector3 -> Vec3i, V3 -> V3a/V3b, Obj -> ObjHS and Obj2fec, State -> State3i, Camera -> CameraRaw), no body was rewritten.",
-    "All 301 members reproduce the cartridge byte-for-byte; none is NONMATCHING and none carries an asm body."
+    "All 301 members reproduce the cartridge byte-for-byte; none is NONMATCHING and none carries an asm body.",
+    "WIDENED to ordinals 0..343 (43 members, 0x020cfea4..0x020d3b9c) by the same member format as the first 301: per-member block-scope declarations inside the extern \"C\" body, ROM-ascending, `#pragma defer_codegen off` unchanged. Three members (func_ov002_020d0580, func_ov002_020d06c0, func_ov002_020d2e74) had declared a LOCAL shadow `struct Player`; with the real Player.h type in scope that clashes with their `Player *` parameter, so the shadow was dropped (calls resolve to Player::GetHealth/IsInAir, which mangle to the same ROM symbols) and func_ov002_020d2e74 reads its fields through a file-local `PlayerView` cast. Ten members needed ROM-symbol declarations that their shards took from include/decl_common.h; decl_common.h is NOT included here (it redeclares dozens of symbols this file already declares with other types: 'redeclared' / 'illegal function overloading'), so each member declares what it uses, copied verbatim from the header row. decl_Animation.h and Sound.h are included; they conflict with nothing. func_ov002_020d12b0 takes u8*, so its two callers cast to u8* instead of char*."
   ],
   "compiler_only_output": [
     {
@@ -2161,8 +2463,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov002-Player/Player.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 301,
-    "functions_declared": 301,
+    "functions_matched": 344,
+    "functions_declared": 344,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN7Vector3D1Ev",
