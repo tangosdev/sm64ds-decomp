@@ -23,6 +23,7 @@
 #include "types.h"
 #include "common.h"
 #include "decl_common.h"
+#include "PlayerInput.h"
 
 /* Car, Ctx, B, Slot and Work are views over the scene that three functions
  * still need to match. They are not the original class layouts. */
@@ -95,11 +96,6 @@ extern u16 data_ov006_0213d45c[];
 extern void *data_ov006_02142490[];
 extern s32 data_ov006_0212e930[];
 extern unsigned short data_ov006_0213d344[];
-extern u8 data_020a0e40;
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0dea[];
-extern u8 data_020a0deb[];
 extern void func_ov004_020ad79c(int a, int b);
 extern u16* data_ov006_0213d338[];
 extern int data_ov006_0212e8e8[];
@@ -459,17 +455,17 @@ void dScMgMemory2_c::CardSelect(int idx)
     count = mSelectedCount;
     if (count >= 2) return;
 
-    touch = data_020a0e40;
+    touch = gActivePlayerSlot;
     touching = 0;
-    if (data_020a0de8[touch * 4] != 0) {
-        if (data_020a0de9[touch * 4] != 0) {
+    if (gTouchHeld[touch * 4] != 0) {
+        if (gTouchEdge[touch * 4] != 0) {
             touching = 1;
         }
     }
     if (touching == 0) return;
 
-    dx = data_020a0dea[data_020a0e40 * 4] - (mCards[idx].x >> 12);
-    dy = data_020a0deb[data_020a0e40 * 4] - (mCards[idx].y >> 12);
+    dx = gTouchX[gActivePlayerSlot * 4] - (mCards[idx].x >> 12);
+    dy = gTouchY[gActivePlayerSlot * 4] - (mCards[idx].y >> 12);
 
     if (dx < -0x10) return;
     if (dx > 0x10) return;
@@ -555,9 +551,9 @@ void dScMgMemory2_c::ResultFinish()
     }
 
     touching = 0;
-    touch = data_020a0e40;
-    if (data_020a0de8[touch * 4] != 0) {
-        if (data_020a0de9[touch * 4] != 0) {
+    touch = gActivePlayerSlot;
+    if (gTouchHeld[touch * 4] != 0) {
+        if (gTouchEdge[touch * 4] != 0) {
             touching = 1;
         }
     }

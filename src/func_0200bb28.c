@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern u8 data_020a0e40;
+#include "PlayerInput.h"
 extern u16 data_0209f49c[];
 extern u16 data_0209f49e[];
 
@@ -38,7 +38,7 @@ void func_0200bb28(char* c, char* a1)
 
     *(u32*)L0(c + 0x154) |= 0x1000;
 
-    m = data_020a0e40 * 0x18;
+    m = gActivePlayerSlot * 0x18;
     flag4000 = *(u16*)((char*)data_0209f49c + m) & 0x4000;
 
     if (flag4000 != 0 || *(u16*)(c + 0x1a0) != 0) {
@@ -70,7 +70,7 @@ void func_0200bb28(char* c, char* a1)
             s32 m2;
             s32 f1;
             DecIfAbove0_Short((u16*)(c + 0x196));
-            m2 = data_020a0e40 * 0x18;
+            m2 = gActivePlayerSlot * 0x18;
             f1 = *(u16*)((char*)data_0209f49c + m2) & 0x300;
             if (f1 != 0) {
                 s32 f2 = *(u16*)((char*)data_0209f49e + m2) & 0x300;

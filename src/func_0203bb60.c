@@ -1,16 +1,16 @@
 #include "types.h"
+#include "PlayerInput.h"
 struct R {
     u16 field_0;   /* 0x0 */
     u16 field_2;   /* 0x2 */
     u16 field_4;   /* 0x4 */
 };
 
-extern u8 data_020a0de8[];
 extern struct R *func_0203dabc(int idx);
 
 void func_0203bb60(void)
 {
-    u8 *p = data_020a0de8;
+    u8 *p = gTouchHeld;
     int i;
     for (i = 0; i < 4; i++) {
         struct R *r = func_0203dabc(i);

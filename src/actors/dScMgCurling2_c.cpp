@@ -17,6 +17,7 @@
 
 #include "types.h"
 #include "dScMgCurling2_c.h"
+#include "PlayerInput.h"
 
 /* The receiver for the pointer-to-member tables. It must stay incomplete:
  * mwccarm picks the pointer-to-member layout from whether the class is
@@ -43,11 +44,6 @@ extern int  GetGameLanguage(void);
 extern int  _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 
 extern int            data_0209d4b8;
-extern u8             data_020a0e40;
-extern u8             data_020a0de8[];
-extern u8             data_020a0de9[];
-extern u8             data_020a0dea[];
-extern u8             data_020a0deb[];
 extern s16            data_02082214[];
 extern unsigned char  data_ov006_0212e4f4[];
 extern unsigned char  data_ov006_0212e4f8[];
@@ -738,16 +734,16 @@ void dScMgCurling2_c::DragUpdate()
     int mag;
     int i4;
 
-    idx = data_020a0e40;
+    idx = gActivePlayerSlot;
     i4 = idx * 4;
-    if (data_020a0de8[idx * 4] != 0) {
+    if (gTouchHeld[idx * 4] != 0) {
         int dy2;
         int dy;
         u8 bx;
         u8 by;
 
-        by = data_020a0deb[i4];
-        bx = data_020a0dea[i4];
+        by = gTouchY[i4];
+        bx = gTouchX[i4];
         oldx = self->unk_5584;
         oldy = self->unk_5588;
         self->unk_5584 = self->unk_5594 + (bx << 12);
@@ -801,9 +797,9 @@ void dScMgCurling2_c::DragUpdate()
         if (mag > self->unk_559c) self->unk_559c = mag;
         if (self->unk_559c > mag) self->unk_559c -= (self->unk_559c - mag) >> 1;
         {
-            int j = data_020a0e40;
-            int ay = (self->unk_5588 >> 12) - data_020a0deb[j * 4];
-            int ax = (self->unk_5584 >> 12) - data_020a0dea[j * 4];
+            int j = gActivePlayerSlot;
+            int ay = (self->unk_5588 >> 12) - gTouchY[j * 4];
+            int ax = (self->unk_5584 >> 12) - gTouchX[j * 4];
 
             self->unk_5594 = ax << 12;
             self->unk_5598 = ay << 12;
@@ -827,20 +823,20 @@ void dScMgCurling2_c::DragBegin()
     int x;
     int y;
 
-    idx = data_020a0e40;
+    idx = gActivePlayerSlot;
     /* `4 & 0xFFFFFFFF` is not decoration: 0xFFFFFFFF is unsigned, so the mask
        makes this one subscript unsigned where the next is signed, and that is
        what the ROM's index arithmetic does.  Deleting it costs 20 words. */
-    if (data_020a0de8[idx * (4 & 0xFFFFFFFF)] != 0)
+    if (gTouchHeld[idx * (4 & 0xFFFFFFFF)] != 0)
     {
-        if (data_020a0de9[idx * 4] != 0)
+        if (gTouchEdge[idx * 4] != 0)
             flag = 1;
     }
     if (flag == 0)
         return;
 
-    x = (unk_5584 >> 0xc) - data_020a0dea[idx * 4];
-    y = (unk_5588 >> 0xc) - data_020a0deb[idx * 4];
+    x = (unk_5584 >> 0xc) - gTouchX[idx * 4];
+    y = (unk_5588 >> 0xc) - gTouchY[idx * 4];
 
     unk_5594 = x << 0xc;
     unk_5598 = y << 0xc;
