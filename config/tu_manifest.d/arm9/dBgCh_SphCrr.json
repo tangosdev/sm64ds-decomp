@@ -131,7 +131,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "_ZN12dBgCh_SphCrr13func_02037968Eiiii",
+      "symbol": "_ZN12dBgCh_SphCrr13func_02037968EiiP8dActor_cP4dBgW",
       "address": "0x02037968",
       "size": "0x00000024",
       "legacy_source": "src/func_02037968.c",
@@ -145,7 +145,7 @@
       "ordinal": 9
     },
     {
-      "symbol": "_ZN12dBgCh_SphCrr13func_0203799cEiiii",
+      "symbol": "_ZN12dBgCh_SphCrr13func_0203799cEiiP8dActor_cP4dBgW",
       "address": "0x0203799c",
       "size": "0x00000024",
       "legacy_source": "src/func_0203799c.c",
@@ -159,7 +159,7 @@
       "ordinal": 11
     },
     {
-      "symbol": "_ZN12dBgCh_SphCrr13func_020379d0Eiiii",
+      "symbol": "_ZN12dBgCh_SphCrr13func_020379d0EiiP8dActor_cP4dBgW",
       "address": "0x020379d0",
       "size": "0x00000024",
       "legacy_source": "src/func_020379d0.c",
@@ -396,7 +396,7 @@
                 "section": "ARM9"
               }
             },
-            "baselineElfSha256": "56d74878d32bfde0b75df221344164d7f8387fec640a5900433f014f30acf25c",
+            "baselineElfSha256": "5b594f0abc57257a376a20790affc18ad48403728f3135b3031da8d634b4cb7b",
             "exact": true
           }
         ],

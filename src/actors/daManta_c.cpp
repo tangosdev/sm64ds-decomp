@@ -54,6 +54,22 @@ struct MantaState {
     int (daManta_c::*execute)();
 };
 
+/* 8-byte file handles. The model destructor is func_02017ab4 (file 0x39d);
+ * the anim destructor is SharedFilePtr_Destruct_Anim (file 0x39e). */
+struct MantaModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    MantaModelFilePtr(u32 fileID);
+    ~MantaModelFilePtr();
+};
+
+struct MantaAnimationFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    MantaAnimationFilePtr(u32 fileID);
+    ~MantaAnimationFilePtr();
+};
+
 /* SharedFilePtr.h has no fields. The BCA pointer SetAnim reads is the
  * word at +4, which is where Construct leaves the loaded file. */
 struct MantaFileWord {
@@ -77,10 +93,10 @@ enum {
 };
 
 extern "C" {
-extern SharedFilePtr data_ov090_02134524;
+extern MantaModelFilePtr data_ov090_02134524;
 extern SharedFilePtr data_ov002_0210da10;
 extern SharedFilePtr data_ov002_0210d9a8;
-extern SharedFilePtr data_ov090_0213452c;
+extern MantaAnimationFilePtr data_ov090_0213452c;
 extern unsigned char data_0209f2d8;
 extern Matrix4x3 data_020a0e68;
 
@@ -108,6 +124,8 @@ int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
 }
 
 bool ApproachLinear(short &value, short target, short step);
+
+extern MantaState data_ov090_0213454c;
 
 /* One written destructor. The compiler emits D1 then D0 from the
  * members above; D0 adds dEnemyBase_c's inline operator delete. */
@@ -418,3 +436,12 @@ extern "C" daManta_c *daManta_c_classInit()
 {
     return new daManta_c();
 }
+
+/* Model, anim, then the state record. The record's pointer-to-member
+ * descriptors stay anonymous. This is what emits __sinit_daManta_c.cpp. */
+MantaModelFilePtr data_ov090_02134524(0x39d);
+MantaAnimationFilePtr data_ov090_0213452c(0x39e);
+MantaState data_ov090_0213454c = {
+    &daManta_c::func_ov090_02132a58,
+    &daManta_c::func_ov090_021327e4,
+};

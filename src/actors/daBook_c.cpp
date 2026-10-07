@@ -42,9 +42,8 @@
  *    call would mangle to a symbol the ROM does not have;
  *  - GetWallResult has no dBgCh_Actr method, and the ROM calls
  *    dBgCh_Actr_UpdateContinuous_Veneer, not UpdateContinuous;
- *  - data_ov020_02114aa0/aa8/ab0/ab8 are the four SharedFilePtr model and
- *    animation slots. SharedFilePtr's layout is not recovered, so they are
- *    typed `int[]` and [1] is the loaded file pointer.
+ *  - data_ov020_02114aa0/ab8 are model handles and aa8/ab0 are animation
+ *    handles. words[1] is the loaded file pointer.
  */
 
 #include "common.h"
@@ -140,15 +139,33 @@ extern s16 data_02082214[];     /* sin/cos table, see SINCOS_INDEX */
  * partner's low three book bits must have when that book is pushed. {0, 1, 3}
  * is book 0, then book 1, then book 2. */
 extern u8 data_ov020_02114828[];
-/* The four model and animation slots, by how they are used below:
+/* Model handles construct through func_02017acc and destroy through
+ * func_02017ab4. Animation handles construct through SharedFilePtr::Construct
+ * and destroy through SharedFilePtr_Destruct_Anim. The manifest aliases those
+ * undefined members onto the ROM symbols. */
+struct BookModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    BookModelFilePtr(u32 fileID);
+    ~BookModelFilePtr();
+};
+
+struct BookAnimationFileHandle : SharedFilePtr {
+    u32 words[2];
+
+    BookAnimationFileHandle(u32 fileID);
+    ~BookAnimationFileHandle();
+};
+
+/* The four slots, by how they are used below:
  *   aa0  the animated model that mModelAnim switches to (STATE_TILT_BACK)
  *   ab8  the model mModel starts with
  *   aa8  the animation that plays during STATE_WIND_UP
  *   ab0  the animation that plays in flight */
-extern int data_ov020_02114aa0[];
-extern int data_ov020_02114aa8[];
-extern int data_ov020_02114ab0[];
-extern int data_ov020_02114ab8[];
+extern "C" BookModelFilePtr data_ov020_02114aa0;
+extern "C" BookModelFilePtr data_ov020_02114ab8;
+extern "C" BookAnimationFileHandle data_ov020_02114aa8;
+extern "C" BookAnimationFileHandle data_ov020_02114ab0;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 #pragma defer_codegen off
@@ -574,7 +591,7 @@ void daBook_c::func_ov020_02111c30()
     }
 
     if (mModelAnim.Finished()) {
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File*)data_ov020_02114ab0[1], 0, 0x1000, 0);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File*)data_ov020_02114ab0.words[1], 0, 0x1000, 0);
         mState = STATE_FLY;
         mHorzSpeed = 0;
         func_ov020_021112b0();
@@ -634,10 +651,10 @@ void daBook_c::func_ov020_02111ee0()
   if(ApproachLinear(mAngleX, -0x2000, 0x200)){
     int s;
     mHorzSpeed = 0;
-    s = mModelAnim.SetFile((BMD_File*)data_ov020_02114aa0[1], 1, -1);
+    s = mModelAnim.SetFile((BMD_File*)data_ov020_02114aa0.words[1], 1, -1);
     if(s == 0) return;
     mState = STATE_WIND_UP;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File*)data_ov020_02114aa8[1], 0x40000000, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File*)data_ov020_02114aa8.words[1], 0x40000000, 0x1000, 0);
     mUsesModelAnim = 1;
     mStateTimer = 0;
     {
@@ -865,7 +882,7 @@ int daBook_c::InitResources()
     mHomePosY = mPosY;
     mHomePosZ = mPosZ;
 
-    if (mModel.SetFile((BMD_File*)data_ov020_02114ab8[1], 1, -1) == 0)
+    if (mModel.SetFile((BMD_File*)data_ov020_02114ab8.words[1], 1, -1) == 0)
         return 0;
 
     mShadowMat = IDENTITY_MATRIX4X3;
@@ -922,8 +939,8 @@ success:
 int daBookGen_c::InitResources()
 {
     mSpawnTimer = 0;
-    Model::LoadFile(*(SharedFilePtr *)data_ov020_02114aa0);
-    Model::LoadFile(*(SharedFilePtr *)data_ov020_02114ab8);
+    Model::LoadFile(*(SharedFilePtr *)&data_ov020_02114aa0);
+    Model::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab8);
     LoadBlueCoinModel(this);
     return 1;
 }
@@ -967,3 +984,10 @@ extern "C" daBook_c *daBook_c_classInit_SHOOT_BOOK()
 {
     return new daBook_c;
 }
+
+/* Order is the retail initializer: model 0x2c8, model 0x2cb, anim 0x2c9,
+ * anim 0x2ca. mwcc emits __sinit_daBook_c.cpp from these four definitions. */
+BookModelFilePtr data_ov020_02114aa0(0x2c8);
+BookModelFilePtr data_ov020_02114ab8(0x2cb);
+BookAnimationFileHandle data_ov020_02114aa8(0x2c9);
+BookAnimationFileHandle data_ov020_02114ab0(0x2ca);

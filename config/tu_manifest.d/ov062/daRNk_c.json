@@ -33,77 +33,77 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov062_02119800",
+      "symbol": "_ZN7daRNk_c19func_ov062_02119800Ev",
       "address": "0x02119800",
       "size": "0x00000154",
       "legacy_source": "src/func_ov062_02119800.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov062_02119954",
+      "symbol": "_ZN7daRNk_c19func_ov062_02119954Ev",
       "address": "0x02119954",
       "size": "0x00000058",
       "legacy_source": "src/func_ov062_02119954.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov062_021199ac",
+      "symbol": "_ZN7daRNk_c19func_ov062_021199acEv",
       "address": "0x021199ac",
       "size": "0x00000144",
       "legacy_source": "src/func_ov062_021199ac.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov062_02119af0",
+      "symbol": "_ZN7daRNk_c19func_ov062_02119af0Ev",
       "address": "0x02119af0",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov062_02119af0.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov062_02119be0",
+      "symbol": "_ZN7daRNk_c19func_ov062_02119be0Ev",
       "address": "0x02119be0",
       "size": "0x00000510",
       "legacy_source": "src/func_ov062_02119be0.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov062_0211a0f0",
+      "symbol": "_ZN7daRNk_c19func_ov062_0211a0f0Ev",
       "address": "0x0211a0f0",
       "size": "0x00000078",
       "legacy_source": "src/func_ov062_0211a0f0.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov062_0211a168",
+      "symbol": "_ZN7daRNk_c19func_ov062_0211a168Ev",
       "address": "0x0211a168",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov062_0211a168.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov062_0211a1f4",
+      "symbol": "_ZN7daRNk_c19func_ov062_0211a1f4Ev",
       "address": "0x0211a1f4",
       "size": "0x0000054c",
       "legacy_source": "src/func_ov062_0211a1f4.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov062_0211a740",
+      "symbol": "_ZN7daRNk_c19func_ov062_0211a740Ev",
       "address": "0x0211a740",
       "size": "0x00000284",
       "legacy_source": "src/func_ov062_0211a740.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov062_0211a9c4",
+      "symbol": "_ZN7daRNk_c19func_ov062_0211a9c4Ev",
       "address": "0x0211a9c4",
       "size": "0x000000fc",
       "legacy_source": "src/func_ov062_0211a9c4.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov062_0211aac0",
+      "symbol": "_ZN7daRNk_c19func_ov062_0211aac0Ev",
       "address": "0x0211aac0",
       "size": "0x00000090",
       "legacy_source": "src/func_ov062_0211aac0.c",

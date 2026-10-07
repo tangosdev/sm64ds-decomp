@@ -65,11 +65,11 @@ _ZN9daShark_c8BehaviorEv kind:function(arm,size=0x1c0) addr:0x021339d8
 _ZN9daShark_c13InitResourcesEv kind:function(arm,size=0x108) addr:0x02133b98
 daShark_c_classInit kind:function(arm,size=0x48) addr:0x02133ca0
 __sinit_ov090_02133ce8 kind:function(arm,size=0x1c0) addr:0x02133ce8
-__sinit_ov090_02133ea8 kind:function(arm,size=0xa4) addr:0x02133ea8
+__sinit_daManta_c.cpp kind:function(arm,size=0xa4) addr:0x02133ea8
 __sinit_ov090_02133f4c kind:function(arm,size=0xd4) addr:0x02133f4c
 __sinit_ov090_02134020 kind:function(arm,size=0xa4) addr:0x02134020
 .p__sinit_ov090_02133ce8 kind:data(word) addr:0x021340c4
-.p__sinit_ov090_02133ea8 kind:data(word) addr:0x021340c8
+.p__sinit_daManta_c.cpp kind:data(word) addr:0x021340c8
 .p__sinit_ov090_02133f4c kind:data(word) addr:0x021340cc
 .p__sinit_ov090_02134020 kind:data(word) addr:0x021340d0
 data_ov090_021340e0 kind:data(any) addr:0x021340e0
@@ -85,8 +85,8 @@ data_ov090_0213412c kind:data(any) addr:0x0213412c
 _ZTI9daMenbo_c kind:data(any) addr:0x02134138
 g_profile_MENBO kind:data(any) addr:0x02134144 ambiguous
 _ZTV9daMenbo_c kind:data(any) addr:0x02134168
-data_ov090_021341e4 kind:data(any) addr:0x021341e4
-data_ov090_021341ec kind:data(any) addr:0x021341ec
+@771 kind:data(any) addr:0x021341e4
+@769 kind:data(any) addr:0x021341ec
 _ZTS9daManta_c kind:data(any) addr:0x021341f4
 data_ov090_02134200 kind:data(any) addr:0x02134200
 _ZTI9daManta_c kind:data(any) addr:0x0213420c
@@ -123,8 +123,8 @@ data_ov090_02134504 kind:bss addr:0x02134504
 data_ov090_02134514 kind:bss addr:0x02134514
 data_ov090_02134524 kind:bss addr:0x02134524
 data_ov090_0213452c kind:bss addr:0x0213452c
-data_ov090_02134534 kind:bss addr:0x02134534
-data_ov090_02134540 kind:bss addr:0x02134540
+@766 kind:bss addr:0x02134534
+@767 kind:bss addr:0x02134540
 data_ov090_0213454c kind:bss addr:0x0213454c
 data_ov090_0213455c kind:bss addr:0x0213455c
 data_ov090_02134564 kind:bss addr:0x02134564
