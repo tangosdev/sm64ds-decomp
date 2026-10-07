@@ -4,7 +4,7 @@
  * The eleventh and last direct child of cMgSmartball_object_c -- see that
  * header for the family's shape (a root, three slots, no virtual destructor).
  *
- * SIZE 0x9c, from _Znwj(0x9c) in func_ov006_02115b0c immediately before the
+ * SIZE 0x9c, from _Znwj(0x9c) in dScMgSmartball_c::SpawnObjects immediately before the
  * call to this class's constructor func_ov006_0210f9f8. Base ends at 0x34, so
  * this class adds 0x68 bytes.
  *
@@ -15,7 +15,7 @@
  * and Update corroborate all of it -- both indexed the same nine- and
  * eight-element arrays in the pre-migration matched source.
  *
- * THE FIELD NAMES BELOW MOSTLY COME FROM func_ov006_0210ef48, the out-of-scope
+ * THE FIELD NAMES BELOW MOSTLY COME FROM cMgSmartball_board_c::ClaimCell, the out-of-scope
  * helper SaveSnapshot calls the instant a ball claims a cell. It reaches this
  * object through its own shadow struct -- `u8 cells[9]` at 0x31, `int
  * lines[8]` at 0x6c, `u8 marks[8]` at 0x8c, and the two scalars at 0x94/0x98
@@ -67,13 +67,23 @@ struct cMgSmartball_board_c : cMgSmartball_object_c {
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
 
+    /* Recovered helpers: AnyLineActive reports a line banner still in its
+       score window (mLineTimer[i] > 0x168); PaintCell writes a claimed cell's
+       tilemap runes around pos; ClaimCell marks a cell and scores any lines
+       it completes; ShuffleCells reshuffles the shared cell-order table
+       (static -- it takes no receiver and emits no this load). */
+    int  AnyLineActive();
+    void PaintCell(int idx, int *pos);
+    void ClaimCell(int idx);
+    static void ShuffleCells();
+
     u8  mCellsTail[6]; /* 0x034-0x039 -- the TAIL of a 9-element per-cell CLAIMED
                         flag array that BEGINS AT 0x31, inside the base (1 = a
                         ball has flipped this cell). Never indexed through this
                         name: the whole array is reached as (&unk_031)[i],
                         because a member cannot straddle the base boundary.
                         Declared only so the layout below sits at the right
-                        offsets. func_ov006_0210ef48 models the same nine bytes
+                        offsets. cMgSmartball_board_c::ClaimCell models the same nine bytes
                         as a plain `u8 cells[9]` at 0x31 in its own shadow
                         struct, which is the corroboration for the length. */
 
@@ -97,22 +107,22 @@ struct cMgSmartball_board_c : cMgSmartball_object_c {
     u8  pad_069[3]; /* 0x069-0x06b */
 
     s32 mLineTimer[8]; /* 0x06c -- per-line banner countdown, armed with 0x21d by
-                        func_ov006_0210ef48 the moment that line completes.
+                        cMgSmartball_board_c::ClaimCell the moment that line completes.
                         SaveSnapshot ages each one while positive and Update
                         draws the line's banner while it is positive. Eight
                         lines, see above. */
     u8  mLineScored[8]; /* 0x08c -- per-line: this line HAS been completed, set
-                        alongside its timer by func_ov006_0210ef48 and never
+                        alongside its timer by cMgSmartball_board_c::ClaimCell and never
                         cleared until RestoreInitial. Update keeps drawing the
                         banner for such a line after its timer has expired,
                         provided the manager's own 0x4660 flag is up. */
-    s32 mFanfareTimer;  /* 0x094 -- armed with 0xb5 by func_ov006_0210ef48 every
+    s32 mFanfareTimer;  /* 0x094 -- armed with 0xb5 by cMgSmartball_board_c::ClaimCell every
                         time a line completes. SaveSnapshot spends it and
                         replays the jingle once a second (% 60) while it lasts;
                         Update reads bits 0x3c of it to blink the highlighted
                         cells. */
     s32 mLinesScored;   /* 0x098 -- how many lines have been completed:
-                        func_ov006_0210ef48 increments it once per line it
+                        cMgSmartball_board_c::ClaimCell increments it once per line it
                         completes, and SaveSnapshot switches on it to pick
                         which of four jingles mFanfareTimer replays. */
 };

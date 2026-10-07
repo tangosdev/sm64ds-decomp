@@ -3,16 +3,16 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * SIZE 0x38, from _Znwj(0x38) in func_ov006_02115b0c. Base ends at 0x34, so
+ * SIZE 0x38, from _Znwj(0x38) in dScMgSmartball_c::SpawnObjects. Base ends at 0x34, so
  * this class adds exactly one field: a 4-byte countdown at 0x34.
  *
  * WHAT THE ONE FIELD IS. mRespawnTimer is armed with 0x3c -- one second --
- * by func_ov006_021115cc, which func_ov006_02112ad8 (the ball physics)
+ * by Swallow, which func_ov006_02112ad8 (the ball physics)
  * calls on this hole the frame a ball falls into it; the same call raises the
  * base's unk_031, awards the drop and plays the effect. SaveSnapshot opens
  * with the base's own SaveSnapshot body written out inline (same pattern as
  * every sibling), then ages the timer, and on the frame it reaches zero calls
- * func_ov006_02114ec0 on the manager -- which walks the ball table and puts
+ * dScMgSmartball_c::ServeNextBall on the manager -- which walks the ball table and puts
  * the first active ball that is not yet in play INTO play -- and sets the
  * base's unk_032. So the field is the delay between losing a ball down this
  * hole and being served the next one. Update reads it as exactly that: while
@@ -45,6 +45,12 @@ struct cMgSmartball_ana_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+
+    /* Recovered helpers: HasBall reads the base's unk_031 (a ball has fallen
+       in); Swallow is the drop itself -- arms mRespawnTimer, raises unk_031,
+       and awards the 2000-point burst on the manager. */
+    int  HasBall();
+    void Swallow();
 
     s32 mRespawnTimer; /* 0x034 -- frames from a ball dropping into this hole
                            to the next waiting ball being put into play; see

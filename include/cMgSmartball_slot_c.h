@@ -4,7 +4,7 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * SIZE 0x88, from _Znwj(0x88) in func_ov006_02115b0c. Base ends at 0x34, so
+ * SIZE 0x88, from _Znwj(0x88) in dScMgSmartball_c::SpawnObjects. Base ends at 0x34, so
  * this class adds 0x54 bytes. This class's own four functions never touch
  * the base's 0x31-0x33 region, so no raw cast is needed anywhere here
  * (unlike wing_c/ana_c/board_c).
@@ -32,13 +32,13 @@
  * WHAT THE CLASS IS: a three-reel slot machine, and every name below comes
  * from reading its three out-of-scope helpers alongside its own four
  * functions.
- *   - func_ov006_0210fb04 starts a spin: raises mIsSpinning and
+ *   - StartSpin starts a spin: raises mIsSpinning and
  *     mIsSpeedingUp, arms mSpinTimer with 0xb4 (180 frames), plays sound
  *     0x160 -- and, if a spin is already running, hands the credit back by
  *     incrementing mSpinsQueued instead.
- *   - func_ov006_0210fa6c begins the stop: raises mIsSlowingDown, clears every
+ *   - BeginStop begins the stop: raises mIsSlowingDown, clears every
  *     mReelStopping, and rolls each mReelStopCount to a random 3..5.
- *   - func_ov006_0210fb58 runs every frame. While mIsSpeedingUp it ramps each
+ *   - UpdateSpin runs every frame. While mIsSpeedingUp it ramps each
  *     mReelVel[i].y up toward 0x3000 and drops the flag when all three have
  *     arrived; while mIsSlowingDown it ramps them back down. It always adds
  *     mReelVel[i].y into mReelOffset[i].y and wraps that at 0x30000 -- three
@@ -74,38 +74,47 @@ struct cMgSmartball_slot_c : cMgSmartball_object_c {
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
 
+    /* Recovered helpers: ReelsStopped reports all three mReelVel[i].y at or
+       below zero; BeginStop arms the slow-down phase and rolls the stop
+       counts; StartSpin begins a spin (or queues one while spinning);
+       UpdateSpin is the per-frame reel stepper. */
+    int  ReelsStopped();
+    void BeginStop();
+    void StartSpin();
+    void UpdateSpin();
+
     /* 0x034 -- per-reel render offset from mCurrent, placement-constructed by
        the ctor. Update adds .x/.y to mCurrent0/mCurrent1; .y is the reel's
-       scroll position, wrapped at 0x30000 by func_ov006_0210fb58. .x is
+       scroll position, wrapped at 0x30000 by UpdateSpin. .x is
        zeroed by RestoreInitial and never written anywhere else. */
     struct { s32 x; s32 y; } mReelOffset[3];
 
     /* 0x04c -- per-reel scroll speed, placement-constructed by the ctor. Only
-       .y is ever used: func_ov006_0210fb58 ramps it up to 0x3000 while
+       .y is ever used: UpdateSpin ramps it up to 0x3000 while
        mIsSpeedingUp, back down to 0x200/0x800 while mIsSlowingDown, and adds
        it into mReelOffset[i].y every frame. */
     struct { s32 x; s32 y; } mReelVel[3];
 
     s32 mReelStopCount[3]; /* 0x064 -- symbols this reel still has to travel
-                               before it stops. func_ov006_0210fa6c rolls it to
+                               before it stops. BeginStop rolls it to
                                a random 3..5 when the stop begins;
-                               func_ov006_0210fb58 spends one per symbol
+                               UpdateSpin spends one per symbol
                                boundary crossed and snaps the reel at zero. */
     u8  mReelStopping[3]; /* 0x070 -- per-reel: this reel has slowed to its
                               final creep and may now stop on a boundary. Set
-                              by func_ov006_0210fb58 when the speed bottoms out
-                              at 0x800, cleared by func_ov006_0210fa6c. */
+                              by UpdateSpin when the speed bottoms out
+                              at 0x800, cleared by BeginStop. */
     u8  mIsSpinning;    /* 0x073 -- a spin is in progress. Raised by
-                            func_ov006_0210fb04, cleared by
-                            func_ov006_0210fb58 once every reel has settled.
+                            StartSpin, cleared by
+                            UpdateSpin once every reel has settled.
                             SaveSnapshot will not start a spin while it is
-                            set, and func_ov006_0210fb04 refunds the credit. */
-    u8  mIsSpeedingUp;  /* 0x074 -- the spin-up phase: func_ov006_0210fb58
+                            set, and StartSpin refunds the credit. */
+    u8  mIsSpeedingUp;  /* 0x074 -- the spin-up phase: UpdateSpin
                             ramps every mReelVel[i].y toward 0x3000 and clears
                             this once all three have got there. */
     u8  mIsSlowingDown; /* 0x075 -- the spin-down phase, raised by
-                            func_ov006_0210fa6c; while set,
-                            func_ov006_0210fb58 brakes the reels and counts
+                            BeginStop; while set,
+                            UpdateSpin brakes the reels and counts
                             mReelStopCount down. */
 
     /* Genuine gap -- see the header comment. */
@@ -113,19 +122,19 @@ struct cMgSmartball_slot_c : cMgSmartball_object_c {
 
     s32 mSpinsQueued;  /* 0x078 -- spins still owed. SaveSnapshot spends one and
                            starts a spin when mIsSpinning is clear and
-                           mSpinCooldown has drained; func_ov006_0210fb04 hands
+                           mSpinCooldown has drained; StartSpin hands
                            it straight back if a spin was already running.
                            Zeroed by RestoreInitial. */
     s32 mSpinCooldown; /* 0x07c -- frames before the next spin may start, set to
-                           0x3c by func_ov006_0210fb58 when a spin finishes and
+                           0x3c by UpdateSpin when a spin finishes and
                            aged by SaveSnapshot. Zeroed by RestoreInitial. */
     s32 mSpinTimer;    /* 0x080 -- how long the reels free-run: armed with 0xb4
-                           by func_ov006_0210fb04, aged by SaveSnapshot, and on
-                           reaching exactly 0 it calls func_ov006_0210fa6c to
+                           by StartSpin, aged by SaveSnapshot, and on
+                           reaching exactly 0 it calls BeginStop to
                            begin the stop. Zeroed by RestoreInitial. */
     s32 mSoundHandle;  /* 0x084 -- the handle Sound_PlayIfNotActive returns for
                            the reel-spin loop, fed back in as its own first
-                           argument by func_ov006_0210fb58 and cleared there
+                           argument by UpdateSpin and cleared there
                            when the loop should stop. This class's own
                            SaveSnapshot/Update never touch it; RestoreInitial
                            zeroes it. */
