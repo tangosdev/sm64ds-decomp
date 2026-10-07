@@ -1,3 +1,4 @@
+#include "PlayerInput.h"
 typedef short s16;
 
 extern void func_ov075_02115e8c(char *self, int a, int b, s16 c, s16 e);
@@ -9,7 +10,6 @@ extern void func_02033bb8(int a);
 extern void _ZN3G2x18SetBlendBrightnessEPVtts(void *p, unsigned short a, s16 b);
 extern void func_02020304(void);
 
-extern unsigned char data_020a0e40[];
 extern unsigned char data_0209f4ae[];
 extern s16 data_ov075_0211b5d4[];
 extern unsigned char data_0209d454[];
@@ -27,7 +27,7 @@ void func_ov075_02117918(char *self)
     i = 0;
     p = self + 0x70;
     v = 0x30;
-    *(unsigned char *)(self + 0x281) = data_0209f4ae[data_020a0e40[0] * 0x18];
+    *(unsigned char *)(self + 0x281) = data_0209f4ae[gActivePlayerSlot * 0x18];
 
     for (; i <= 2; i++) {
         func_ov075_02115e8c(p, 0, 0, 0x80, (s16)v);

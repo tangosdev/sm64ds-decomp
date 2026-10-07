@@ -1,3 +1,4 @@
+#include "PlayerInput.h"
 extern int _ZN6Player19func_ov002_020c0434Ev(char* c);
 extern void func_ov002_020c0364(char* c, unsigned int arg);
 extern int func_ov002_020dd824(char* c);
@@ -7,7 +8,6 @@ extern int func_ov002_020d674c(char* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* st);
 extern int func_ov002_020d1204(char* c);
 
-extern unsigned char data_020a0e40;
 extern unsigned char data_0209f49e[];
 extern unsigned char data_0209f49c[];
 extern int data_ov002_0211004c;
@@ -27,7 +27,7 @@ int func_ov002_020d36d8(char* c, int arg)
     if (func_ov002_020d5c6c(c) != 0) return 1;
 
     {
-        int idx = data_020a0e40 * 0x18;
+        int idx = gActivePlayerSlot * 0x18;
         unsigned short f49e = *(unsigned short*)(data_0209f49e + idx);
         if (f49e & 1) {
             return func_ov002_020dde74(c) != 0;

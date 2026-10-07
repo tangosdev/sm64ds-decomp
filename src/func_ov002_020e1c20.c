@@ -1,10 +1,4 @@
-typedef int Fix12i;
-struct Vector3
-{
-  int x;
-  int y;
-  int z;
-};
+#include "PlayerInput.h"
 
 extern void _ZN6Player11ChangeStateERNS_5StateE(void *p, void *state);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void *p, unsigned int a, int b, Fix12i c, unsigned int d);
@@ -12,7 +6,6 @@ extern int _ZNK6Player14GetBodyModelIDEjb(void *p, unsigned int a, int b);
 extern int func_02012120(unsigned int p0, unsigned int p1, unsigned int p2, const struct Vector3 *p3, short p4);
 extern int func_ov002_020bf27c(char *c, int r1);
 
-extern unsigned char data_020a0e40;
 extern unsigned char data_0209f49c[];
 extern int data_ov002_021101b4;
 
@@ -26,7 +19,7 @@ void func_ov002_020e1c20(char *c)
 
   if ((*((unsigned char *) (c + 0x6e3))) != 0)
   {
-    if ((*((unsigned short *) (&data_0209f49c[data_020a0e40 * 0x18]))) & 2)
+    if ((*((unsigned short *) (&data_0209f49c[gActivePlayerSlot * 0x18]))) & 2)
     {
       if ((*((unsigned char *) (c + 0x6e9))) & 4)
       {
@@ -59,7 +52,7 @@ void func_ov002_020e1c20(char *c)
   if ((*((int *) (c + 0xa8))) >= 0)
   {
     *((int *) (c + 0x9c)) = -0x8000;
-    if ((*((unsigned short *) (&data_0209f49c[data_020a0e40 * 0x18]))) & 2)
+    if ((*((unsigned short *) (&data_0209f49c[gActivePlayerSlot * 0x18]))) & 2)
     {
       *((int *) (c + 0x9c)) = func_ov002_020bf27c(c, -0x3000);
     }
@@ -71,7 +64,7 @@ void func_ov002_020e1c20(char *c)
     return;
   }
 
-  if ((*((unsigned short *) (&data_0209f49c[data_020a0e40 * 0x18]))) & 2)
+  if ((*((unsigned short *) (&data_0209f49c[gActivePlayerSlot * 0x18]))) & 2)
   {
     if ((*((unsigned char *) (c + 0x6e5))) == 1)
     {

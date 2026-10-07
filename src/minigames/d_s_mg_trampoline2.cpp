@@ -27,13 +27,18 @@
 #define func_ov006_02122c68 func_ov006_02122c68_decl_common_shadow
 #define _ZTV18dScMgTrampoline2_c _ZTV18dScMgTrampoline2_c_decl_common_shadow
 #include "decl_common.h"
+#include "PlayerInput.h"
+/* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
+#define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
+/* local: these readers only reproduce through a 4-byte-record view of the lane. */
+#define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
 #undef func_ov006_021227c8
 #undef func_ov006_02122c68
 #undef _ZTV18dScMgTrampoline2_c
 
 extern int _ZTV18dScMgTrampoline2_c[];
 
-/* C, Obj, B4, P2, S2, T, SpawnDef and the forward declarations below are
+/* C, Obj, P2, S2, T, SpawnDef and the forward declarations below are
  * local stand-ins for types that have no header yet (issue #2497). */
 struct C {
     virtual void v0();
@@ -65,11 +70,6 @@ struct Vec3i {
     int x;
     int y;
     int z;
-};
-
-struct B4 {
-    unsigned char v;
-    unsigned char pad[3];
 };
 
 struct P2 { int words[2]; };
@@ -154,11 +154,6 @@ extern int func_ov006_021237c8(int kind);
 extern int func_ov006_0212373c(int kind);
 extern void func_0203cc28(int *vector, int angle);
 extern char *func_ov006_020cefa4(int resource, int *up, int variant, int face);
-extern volatile unsigned char data_020a0e40[];
-extern struct B4 data_020a0de8[];
-extern struct B4 data_020a0de9[];
-extern struct B4 data_020a0dea[];
-extern struct B4 data_020a0deb[];
 extern int func_ov004_020ae5c4(int a, int b, int c, int d, int e, int f, int g);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
@@ -691,10 +686,10 @@ void func_ov006_02123b24(char *raw)
     self->mTimer -= 1;
     if (self->mTimer != 0)
     {
-        idx = data_020a0e40[0];
+        idx = ACTIVE_SLOT;
         b = 0;
-        if (((unsigned char *)data_020a0de8)[idx * 4] != 0 &&
-            ((unsigned char *)data_020a0de9)[idx * 4] != 0)
+        if (gTouchHeld[idx * 4] != 0 &&
+            gTouchEdge[idx * 4] != 0)
             b = 1;
         if (b == 0)
             return;
@@ -737,12 +732,12 @@ void func_ov006_02123938(void *arg)
         return;
     }
 
-    i = data_020a0e40[0];
-    b = (data_020a0de8[i].v != 0 && data_020a0de9[i].v != 0);
+    i = ACTIVE_SLOT;
+    b = (TOUCH_REC(gTouchHeld)[i][0] != 0 && TOUCH_REC(gTouchEdge)[i][0] != 0);
     if (b) {
-        self->mTouchX = data_020a0dea[i].v;
+        self->mTouchX = TOUCH_REC(gTouchX)[i][0];
         self->mTouchStartX = self->mTouchX;
-        self->mTouchY = data_020a0deb[i].v;
+        self->mTouchY = TOUCH_REC(gTouchY)[i][0];
         self->mTouchStartY = self->mTouchY;
         self->mTouching = 1;
         self->mDragSoundHandle = 0;
@@ -750,17 +745,17 @@ void func_ov006_02123938(void *arg)
 
     if (self->mTouching != 1) return;
 
-    i = data_020a0e40[0];
-    if (data_020a0de8[i].v != 0) {
+    i = ACTIVE_SLOT;
+    if (TOUCH_REC(gTouchHeld)[i][0] != 0) {
         func_ov004_020ae5c4((int)arg, self->mTouchX, self->mTouchY,
-                            data_020a0dea[i].v, data_020a0deb[i].v, 2, 4);
-        i = data_020a0e40[0];
-        self->mTouchX = data_020a0dea[i].v;
-        self->mTouchY = data_020a0deb[i].v;
+                            TOUCH_REC(gTouchX)[i][0], TOUCH_REC(gTouchY)[i][0], 2, 4);
+        i = ACTIVE_SLOT;
+        self->mTouchX = TOUCH_REC(gTouchX)[i][0];
+        self->mTouchY = TOUCH_REC(gTouchY)[i][0];
         self->mDragSoundHandle = func_02012468(self->mDragSoundHandle, 2, 0x1b0, 2, 0,
                                              func_020126e8(self->mTouchX << 12), 0, 0);
     } else {
-        b = (int)(data_020a0de8[i].v == 0 && data_020a0de9[i].v != 0);
+        b = (int)(TOUCH_REC(gTouchHeld)[i][0] == 0 && TOUCH_REC(gTouchEdge)[i][0] != 0);
         if (b != 0) {
             self->mTouchReleased = 1;
         }
