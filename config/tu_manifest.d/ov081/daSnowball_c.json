@@ -153,14 +153,14 @@
   ],
   "data": [
     {
-      "symbol": "@673",
+      "symbol": "@701",
       "address": "0x02128a6c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the state record's enter pointer-to-member; retail first word is 0x021261b8"
     },
     {
-      "symbol": "@675",
+      "symbol": "@703",
       "address": "0x02128a74",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -190,13 +190,13 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@673",
+      "symbol": "@701",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local enter descriptor is a configured initializer relocation destination at 0x02128a6c"
     },
     {
-      "symbol": "@675",
+      "symbol": "@703",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local update descriptor is a configured initializer relocation destination at 0x02128a74"
@@ -208,7 +208,7 @@
       "source": "0x021284e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@673",
+      "symbol": "@701",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02128a6c"
@@ -218,7 +218,7 @@
       "source": "0x021284e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@675",
+      "symbol": "@703",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02128a74"
@@ -268,6 +268,7 @@
     "Widened to the full unit 0x02125f14..0x021264b4 (the destructor pair and the five helpers folded in front of the five virtuals). The factory daSnowball_c_classInit at 0x021264b4 was folded in afterwards by the 0930c classInit fold (below).",
     "classInit fold (0930c): daSnowball_c_classInit is folded in last, in ROM order, under the file's `#pragma defer_codegen off`, as `return new daSnowball_c();`. The retired one-function source hand-called fBase_c::operator new(908 = 0x38c), dEnemyBase_c's C2 constructor, this class's vtable store and the four member C1 constructors (dCcAc_c 0x110, dBgCh_Actr 0x144, Model 0x300, dExtShadowModel_c 0x350); daSnowball_c has no user-declared constructor, so the synthesized one emits the identical sequence and no new compiler-only output. tubuild verify: 13/13 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED. Retired src/d_a_snowball.c; its credit carries in attribution.json as a path#symbol override.",
     "The file-scope state record data_ov081_02128eb4 is defined in this TU. mwcc emits __sinit_daSnowball_c.cpp, the ctor word, and the two anonymous pointer-to-member descriptors. Class RTTI and the vtable stay externalized; this claim stops at 0x02128a7c, where _ZTI12daSnowball_c begins. The handwritten src/__sinit_ov081_021284b4.c is retired.",
+    "Uniquifier resync: the fold recorded those descriptors as @673 and @675 against headers from before the dBgCh_SphCrr fold. Parsing the post-fold dBgCh_SphCrr.h (included through dBgCh_Actr.h) advances mwcc's positional counter by 30, and the decl_common.h externs removed in that same merge move it back by 2, so this tree emits @701 and @703. Addresses, sizes, and section bytes are unchanged. The folded TU stays folded.",
     "Local scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this machine's stock control. The recorded rom.sha256 is the fleet SHA every other intact entry shares. Module set, symbol inventory, and the five owned ranges matched."
   ],
   "compiler_only_output": [

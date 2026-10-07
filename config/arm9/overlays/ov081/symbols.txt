@@ -149,8 +149,8 @@ _ZTI11daSnowman_c kind:data(any) addr:0x021289b0
 _ZTS11daSnowman_c kind:data(any) addr:0x021289bc
 g_profile_SNOWMAN kind:data(any) addr:0x021289cc
 _ZTV11daSnowman_c kind:data(any) addr:0x021289f0
-@673 kind:data(any) addr:0x02128a6c
-@675 kind:data(any) addr:0x02128a74
+@701 kind:data(any) addr:0x02128a6c
+@703 kind:data(any) addr:0x02128a74
 _ZTI12daSnowball_c kind:data(any) addr:0x02128a7c
 _ZTS12daSnowball_c kind:data(any) addr:0x02128a88
 g_profile_SNOWBALL kind:data(any) addr:0x02128a98
