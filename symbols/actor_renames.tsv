@@ -1860,6 +1860,9 @@ ov060	0x02117938	func_ov060_02117938	BowserFire_Spawn	spawnfunc
 ov060	0x02117938	BowserFire_Spawn	daKpaFire_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov060	0x02117980	func_ov060_02117980	_ZN10daKpa2Bg_cD1Ev	vtable slot 16
 ov060	0x021179d4	func_ov060_021179d4	_ZN10daKpa2Bg_cD0Ev	vtable slot 17
+ov060	0x02117a3c	func_ov060_02117a3c	_ZN10daKpa2Bg_c19func_ov060_02117a3cEv	daKpa2Bg_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov060	0x02117a64	func_ov060_02117a64	_ZN10daKpa2Bg_c19func_ov060_02117a64Ev	daKpa2Bg_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov060	0x02117ae0	func_ov060_02117ae0	_ZN10daKpa2Bg_c19func_ov060_02117ae0Ev	daKpa2Bg_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
 ov060	0x02117b58	func_ov060_02117b58	_ZN10daKpa2Bg_c16CleanupResourcesEv	vtable slot 3
 ov060	0x02117b9c	func_ov060_02117b9c	_ZN10daKpa2Bg_c6RenderEv	vtable slot 9
 ov060	0x02117bc8	func_ov060_02117bc8	_ZN10daKpa2Bg_c8BehaviorEv	vtable slot 6

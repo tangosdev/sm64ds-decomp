@@ -3297,7 +3297,6 @@ frames with v non-zero func_ov060_02117a3c is called on the arena. When no row i
 left, go to BOWSER_STATE_IDLE and zero the arena's three angular speeds and three
 angles, and mVertSpeed. */
 extern "C" {
-void func_ov060_02117a3c(char* self);
 extern short data_ov060_02119294[];
 extern short data_ov060_02119296[];
 extern short data_ov060_02119298[];
@@ -3327,7 +3326,7 @@ void daKpa_c::func_ov060_02112bfc(){
                 v = (short)(b * (r1 - *(short*)((char*)data_ov060_02119298 + off)));
             }
             func_ov060_02112d48(v);
-            if (v != 0 && (this->mTimer & 1)) { func_ov060_02117a3c((char *)found); }
+            if (v != 0 && (this->mTimer & 1)) { found->func_ov060_02117a3c(); }
             flag = 0; break;
         }
         p += 3;
