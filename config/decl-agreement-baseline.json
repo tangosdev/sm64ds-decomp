@@ -14217,7 +14217,7 @@
         "return:short []"
       ]
     },
-    "data_020a0de8": {
+    "gTouchHeld": {
       "src/_ZN12dScStarSel_c8BehaviorEv.cpp": [
         "return:unsigned char [][]"
       ],
@@ -14240,7 +14240,7 @@
         "return:unsigned char [][]"
       ]
     },
-    "data_020a0de9": {
+    "gTouchEdge": {
       "src/_ZN12dScStarSel_c8BehaviorEv.cpp": [
         "return:unsigned char [][]"
       ],
@@ -14257,7 +14257,7 @@
         "return:unsigned char [][]"
       ]
     },
-    "data_020a0dea": {
+    "gTouchX": {
       "src/actors/dMgJump3DMario_c.cpp": [
         "return:unsigned char [][]"
       ],
@@ -14280,7 +14280,7 @@
         "return:volatile unsigned char []"
       ]
     },
-    "data_020a0deb": {
+    "gTouchY": {
       "src/actors/dMgJump3DMario_c.cpp": [
         "return:unsigned char [][]"
       ],
@@ -14308,7 +14308,7 @@
         "return:void *"
       ]
     },
-    "data_020a0e40": {
+    "gActivePlayerSlot": {
       "src/_ZN6Player12St_Land_InitEv.cpp": [
         "return:unsigned char []"
       ],
