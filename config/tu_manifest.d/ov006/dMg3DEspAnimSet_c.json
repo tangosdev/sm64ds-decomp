@@ -6,16 +6,17 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "The whole linker unit, 0x020e7660..0x020ea1f0, 67 functions, as build/tu_map.json (tools/tu_map.py) calls it: from dScMg3DEsp_c's D1 (0x020e7660) through dScMg3DEsp_c::InitResources (0x020e9e70, 0x380). The unit below, src/actors/dScMgD3DBase_c.cpp, is dScMgD3DBase_c's own and ends at 0x020e7660; the next entry, src/d_s_mg3_d_esp.cpp (dScMg3DEsp_c_classInit, 0x020ea1f0..0x020ea280), is followed by dScMgHanachan_c's D1 at 0x020ea280, so the unit is bounded by another class below and by its own factory above. The factory keeps its own file and is not folded here.",
+    "The whole linker unit, 0x020e7660..0x020ea280, 68 functions: dScMg3DEsp_c's D1 (0x020e7660) through dScMg3DEsp_c::InitResources (0x020e9e70, 0x380) plus the scene factory dScMg3DEsp_c_classInit (0x020ea1f0, 0x90), zero-gap contiguous. tools/tu_map.py calls only 0x020e7660..0x020ea1f0 the unit because it never attributes `_classInit` to its class; the factory is folded here on its own evidence: it allocates exactly this class (fBase_c::operator new 0x5558 = sizeof(dScMg3DEsp_c), static_assert in include/dScMg3DEsp_c.h), stores this TU's own _ZTV12dScMg3DEsp_c address point (0x0213c8c4), and constructs the two Models, dMg3DEspModel_c and TextureTransformer members whose destructor sits at ordinal 0 of this TU. The unit below, src/actors/dScMgD3DBase_c.cpp, is dScMgD3DBase_c's own and ends at 0x020e7660; the next entry, src/actors/dScMgHanachan_c.cpp, begins at 0x020ea280 with dScMgHanachan_c's D1 (a different class, RTTI-distinct), so the unit is bounded by other classes on both sides.",
     "class label(s): dScMg3DEsp_c (_ZTI12dScMg3DEsp_c at 0x0213c7c8, _ZTS12dScMg3DEsp_c at 0x0213c7d4, _ZTV12dScMg3DEsp_c address point 0x0213c8c4), dMg3DEspModel_c and dMg3DEspAnimSet_c (no RTTI; named by their constructor/destructor pairs, and embedded in dScMg3DEsp_c at 0x4fd8 and in dMg3DEspModel_c at 0x84).",
     "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "Every member of the unit carried a `complete` delinks entry before this widen, so the unit has no hole: the 58 files around the nine-function dMg3DEspAnimSet_c span fold in with the bodies they matched with."
+    "Every member of the unit carried a `complete` delinks entry before this widen, so the unit has no hole: the 58 files around the nine-function dMg3DEspAnimSet_c span fold in with the bodies they matched with.",
+    "classInit FOLDED IN: src/d_s_mg3_d_esp.cpp (one function, 0x020ea1f0..0x020ea280, formerly a stand-alone delinks entry) is retired into this TU's tail; its extern \"C\" ABI-seam declarations and body move verbatim, with a `// @symbol` marker. It is written last because defer_codegen off emits in source order and the ROM places the factory after InitResources."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020e7660",
-      "end": "0x020ea1f0"
+      "end": "0x020ea280"
     }
   ],
   "functions": [
@@ -487,6 +488,13 @@
       "size": "0x00000380",
       "legacy_source": "src/_ZN12dScMg3DEsp_c13InitResourcesEv.cpp",
       "ordinal": 66
+    },
+    {
+      "symbol": "dScMg3DEsp_c_classInit",
+      "address": "0x020ea1f0",
+      "size": "0x00000090",
+      "legacy_source": "src/d_s_mg3_d_esp.cpp",
+      "ordinal": 67
     }
   ],
   "data": [],
@@ -497,7 +505,8 @@
     "Pragma brackets carry each retired file's file-global pragma around its own function: opt_strength_reduction off around the nine dMg3DEspAnimSet_c members (the previous TU's file-global) and dScMg3DEsp_c::ResetSlots, opt_common_subs off around SlotKick (with opt_strength_reduction off), SlotRise, SlotSetup, SlotFall and SlotWait.",
     "The file does not include decl_common.h, which declares the file handles and data_ov006_0213c844 as void * and func_ov006_020e8354 as taking char *. The ten SharedFilePtr file handles are declared as SharedFilePtr here, as the retired destructor and CleanupResources files did. The helper declarations decl_common.h used to carry for these functions were dropped when they methodized; the calls now go through the class member declarations. The ModelAnim::SetAnim, TextureSequence::SetFile and TextureTransformer::SetFile calls stay mangled with a scalar speed and an unsigned short last parameter.",
     "Folding changed four spellings, all measured byte-identical: func_ov006_020e91a0 tests data_020a0de9 directly (the retired C file stored `x != 0` in an int, which in C++ is a bool conversion and costs three instructions); func_ov006_020e989c reads data_ov004_020beb68 through `char *` casts, and the one load the ROM repeats is a volatile read, because dScMgBase_c.h declares it void * and every non-volatile spelling reuses the earlier load; func_ov006_020e9b70 is void, as func_ov006_020e82fc is; and the retired files' mangled `_ZN5Sound12PlayBank2_2DEj` calls are spelled Sound::PlayBank2_2D.",
-    "Each member keeps its own legacy shadow types, suffixed with the member's address (G2_7d7c, Ent_82fc, Outer_8354, C_8a44, C_8d08, P_8e10, C_9374, C_989c, C_9b70, ...) so that the retired files' independently-invented tags coexist. The incomplete structs and PMF typedefs above the pointer-to-member dispatchers (C_8a44, C_8d08, C_9374, C_9b70) keep their order: completing a struct before its PMF typedef changes the pointer-to-member representation mwcc emits."
+    "Each member keeps its own legacy shadow types, suffixed with the member's address (G2_7d7c, Ent_82fc, Outer_8354, C_8a44, C_8d08, P_8e10, C_9374, C_989c, C_9b70, ...) so that the retired files' independently-invented tags coexist. The incomplete structs and PMF typedefs above the pointer-to-member dispatchers (C_8a44, C_8d08, C_9374, C_9b70) keep their order: completing a struct before its PMF typedef changes the pointer-to-member representation mwcc emits.",
+    "The classInit tail fold keeps the hand-built construction sequence (fBase_c::operator new, dScMgBase_c C2, the Single3DBase vptr store, SysTracker, the own-vptr store, then the four embedded constructors) rather than `new dScMg3DEsp_c`: the header still keeps the Model/dMg3DEspModel_c/TextureTransformer members as raw storage, and typing them is a separate reconstruction that must change the factory and the destructor together. The own-vtable store is spelled `(int)&_ZTV12dScMg3DEsp_c[2]`: now that this TU owns the vtable, the emitted symbol addresses the storage start and the +8 address-point bias is computed by the compiler (the retired stand-alone file stored the bare symbol, which tubuild verify rejects here as an addend-0 relocation). The base vtable store is unchanged."
   ],
   "production_mode": "text-only",
   "verification": {
@@ -506,8 +515,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov006-dMg3DEspAnimSet_c/dMg3DEspAnimSet_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 67,
-    "functions_declared": 67,
+    "functions_matched": 68,
+    "functions_declared": 68,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN12dScMg3DEsp_cD2Ev",
