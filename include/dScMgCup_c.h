@@ -1,5 +1,5 @@
 /* Shell game (MG_CUP). Three cups shuffle on the sub screen; the player
- * touches the one whose unk_5462 matches unk_5468.
+ * touches the cup containing the requested item.
  *
  * mModel is the object func_ov006_020c33dc builds and func_ov006_020c3288
  * tears down. mFx is the 0x20 effects under the cups. mCup is the three
@@ -107,16 +107,17 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
     s32 mShuffleSound;    /* 0x5458 */
     u16 mShuffleAngle;    /* 0x545c */
     s16 mShuffleSpeed;    /* 0x545e */
-    u8  unk_5460;         /* 0x5460 -- swaps left this round */
-    u8  unk_5461;         /* 0x5461 -- round row in data_ov006_0213c094 */
-    u8  unk_5462[3];      /* 0x5462 -- per-cup value; deed8's mode argument */
+    /* Field names below describe their observed use; they are not ROM names. */
+    u8  mSwapsRemaining;  /* 0x5460 -- swaps left this round */
+    u8  mRoundRow;        /* 0x5461 -- round row in data_ov006_0213c094 */
+    u8  mCupContents[3];  /* 0x5462 -- per-cup value; deed8's mode argument */
     u8  mFlags[3];        /* 0x5465 */
-    u8  unk_5468;         /* 0x5468 -- the value the HUD is asking for */
-    u8  mCorrect;         /* 0x5469 -- 1 when the touched cup's unk_5462 matched unk_5468 */
+    u8  mTargetContent;   /* 0x5468 -- the value the HUD is asking for */
+    u8  mCorrect;         /* 0x5469 -- 1 when the touched cup's mCupContents matched mTargetContent */
     u8  mFakeOut;         /* 0x546a -- the next swap turns back a third of the way in */
     u8  mSparkleShuffles; /* 0x546b -- shuffles left that trail mFx; nothing here sets it */
-    u8  mFakeOutAt;       /* 0x546c -- 1..10; row 7 fakes out when unk_5460 reaches it */
-    u8  mRevealCup;       /* 0x546d -- first cup with a nonzero unk_5462 revealed while mCorrect != 1, or 0xff */
+    u8  mFakeOutAt;       /* 0x546c -- 1..10; row 7 fakes out when mSwapsRemaining reaches it */
+    u8  mRevealCup;       /* 0x546d -- first cup with a nonzero mCupContents revealed while mCorrect != 1, or 0xff */
     u8  pad_546e[2];      /* 0x546e */
 };
 
