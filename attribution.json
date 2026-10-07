@@ -9171,6 +9171,7 @@
     "src/actors/dMg3DEspAnimSet_c.cpp#_ZN17dMg3DEspAnimSet_c10SetRepeatsEs": "tangosdev",
     "src/actors/dMg3DEspAnimSet_c.cpp#_ZN17dMg3DEspAnimSet_c8SetSpeedEi": "tangosdev",
     "src/actors/dMg3DEspAnimSet_c.cpp#_ZN17dMg3DEspAnimSet_c9SetPeriodEs": "tangosdev",
+    "src/actors/dMg3DEspAnimSet_c.cpp#dScMg3DEsp_c_classInit": "tangosdev",
     "src/actors/dScMgSnowball_c.cpp#_ZN15dScMgSnowball_c19func_ov006_02125804Ev": "tangosdev",
     "src/actors/dScMgSnowball_c.cpp#_ZN15dScMgSnowball_c19func_ov006_02125890Ev": "andrewboudreau",
     "src/actors/dScMgSnowball_c.cpp#_ZN15dScMgSnowball_c19func_ov006_02125994Ev": "tangosdev",
