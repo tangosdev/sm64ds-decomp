@@ -14,36 +14,40 @@
  * s32[12] here: the structured spelling scalarises InitResources'
  * copy of IDENTITY_MATRIX4X3 (0x23c against the cartridge's 0x220).
  *
- * Leftover: dCcAc_c::Init, dBgCh_Actr::Init, DropShadowRadHeight and
+ * All helpers are daSanbo_c members; the func_ov096_<addr> names are
+ * ours, not recovered. The state pairs they serve live in
+ * data_ov096_02137b48, filled by __sinit_ov096_0213770c, which this
+ * file does not own. func_ov096_02135878's ROM signature carried a
+ * dead first argument (r0) that was never read -- as a member its
+ * real argument lands in r1 either way.
+ *
+ * deslop leftovers:
+ *   - dCcAc_c::Init, dBgCh_Actr::Init, DropShadowRadHeight and
  *   IsTooFarAwayFromPlayer take Fix12 by value, so the calls stay
  *   computed names (InitResources, Behavior, func_ov096_02135efc).
- * Leftover: func_02038414 is the veneer onto
+ *   - func_02038414 is the veneer onto
  *   dBgCh_Actr::UpdateDiscreteNoLava_2 (func_ov096_02136434,
  *   func_ov096_021360c4, func_ov096_02135e2c).
- * Leftover: Particle::System::New, NewUnkCallback818, NewSimple,
+ *   - Particle::System::New, NewUnkCallback818, NewSimple,
  *   RunningSlidingDustAt and Player::Hurt take Fix12 by value
  *   (func_ov096_02136434, func_ov096_02135948, func_ov096_02136134,
  *   func_ov096_021365d4).
- * Leftover: GetFloorResult and GetWallResult are not members of
- *   dBgCh_Actr. func_ov096_02135e2c reads SurfaceInfo at result+4.
- *   The wall normal is fetched and unused.
- * Leftover: the func_ov096_* helpers keep their linker names. The
- *   state pairs live in data_ov096_02137b48, filled by
- *   __sinit_ov096_0213770c, which this file does not own.
- * Leftover: data_ov096_02137b20 and data_ov096_02137b28 are the head
+ *   - func_ov096_02135e2c reads SurfaceInfo at floor result+4;
+ *   the wall normal it fetches the same way is unused.
+ *   - data_ov096_02137b20 and data_ov096_02137b28 are the head
  *   and segment file handles (InitResources LoadFile, CleanupResources
  *   Release). g_profile_SANBO stays in its own file.
- * Leftover: unk_3a8 is the head byte func_ov096_0213670c reads to
+ *   - unk_3a8 is the head byte func_ov096_0213670c reads to
  *   choose a 0 or 0x5a regrowth delay. func_ov096_021365d4 clears it
  *   once three segments exist. It stays unk_ until that role is
  *   measured past those two stores.
- * Leftover: dActor_c has no Pos(). Spawn and PlayBank0 take the
+ *   - dActor_c has no Pos(). Spawn and PlayBank0 take the
  *   mPosX and mCamSpacePosX triples through a Vector3 pun.
- * Leftover: unk_0a4 and unk_0ac keep dActor_c's names.
+ *   - unk_0a4 and unk_0ac keep dActor_c's names.
  *   func_ov096_02135e2c multiplies them by the floor normal.
- * Leftover: func_ov096_02135948 keeps five int[3] positions. One
+ *   - func_ov096_02135948 keeps five int[3] positions. One
  *   Vector3 in their place changes that function.
- * Leftover: data_02082214 is arm9's sine table. data_020a0e68 is the
+ *   - data_02082214 is arm9's sine table. data_020a0e68 is the
  *   scratch matrix func_ov096_02135efc fills before copying it onto
  *   the model. Actor id 0x135 is only the id that function shoves
  *   the segment away from.
@@ -63,20 +67,18 @@ namespace cstd { int fdiv(int, int); }
 
 
 extern "C" {
-extern "C" void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
-extern "C" void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
-extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
-extern "C" void Matrix4x3_FromRotationY(void* m, int angle);
-extern "C" void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j( void* self, void* sm, void* mtx, Fix12i fx, int t, u32 u);
+extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
+extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
+extern void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
+extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
+extern void Matrix4x3_FromRotationY(void* m, int angle);
+extern void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j( void* self, void* sm, void* mtx, Fix12i fx, int t, u32 u);
 extern struct Matrix4x3 data_020a0e68;
-extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int, void*);
 extern short Vec3_HorzAngle(const void* a, const void* b);
 extern int RandomIntInternal(void*);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
 extern int data_0209e650[];
 extern s16 data_02082214[];
-extern char *func_ov096_021357b4(char *c);
 extern char data_ov096_02137b48;
 extern int Vec3_HorzDist(const void* a, const void* b);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
@@ -127,7 +129,7 @@ int daSanbo_c::InitResources()
         void* m = Model::LoadFile(*(SharedFilePtr *)data_ov096_02137b20);
         mModel.SetFile((BMD_File *)m, 1, 1);
         Model::LoadFile(*(SharedFilePtr *)data_ov096_02137b28);
-        LoadBlueCoinModel(((char*)this));
+        LoadBlueCoinModel(this);
         unk_3a8 = 1;
     } else {
         t = (actorID == SANBO_BODY);
@@ -186,7 +188,7 @@ int daSanbo_c::Behavior()
 {
     int s = mState;
     if (s != 2 && s != 5) {
-        if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char *)this), 0x5dc000)) return 1;
+        if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(this, 0x5dc000)) return 1;
     }
     func_ov096_021368b4();
     MakeVanishLuigiWork(mdCcAc_c);
@@ -225,7 +227,7 @@ int daSanbo_c::CleanupResources()
   int id = actorID;
   int a = (id == SANBO_HEAD);
   if (a) {
-    UnloadBlueCoinModel(((char *)this));
+    UnloadBlueCoinModel(this);
     ((SharedFilePtr *)(data_ov096_02137b20))->Release();
     ((SharedFilePtr *)(data_ov096_02137b28))->Release();
   } else {
@@ -271,9 +273,6 @@ void ApproachLinear(int &dst, int target, int step);
 bool ApproachLinear(short &value, short target, short step);
 
 extern "C" {
-void func_ov096_021358c8(char *c);
-void func_ov096_02135e2c(daSanbo_c *actor, void *clsn);
-int func_ov096_02135878(void *unused, int x);
 void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int x, int y, int z);
 unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned a, unsigned b, int x, int y, int z, const void *dir, void *cb);
@@ -283,15 +282,14 @@ void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
     void *player, void *at, unsigned a, int fix, unsigned b, unsigned d, unsigned e);
 }
 
-// @symbol func_ov096_02136754
+// @symbol _ZN9daSanbo_c19func_ov096_02136754Ev
 /* A segment tracks the one in front of it while that piece is still small. */
-extern "C" int func_ov096_02136754(char *raw)
+int daSanbo_c::func_ov096_02136754()
 {
-    daSanbo_c *self = (daSanbo_c *)raw;
-    daSanbo_c *next = self->mNextSegment;
+    daSanbo_c *next = mNextSegment;
 
     if (!next) {
-        self->func_ov096_02136928(1);
+        func_ov096_02136928(1);
     } else {
         int offset = 0xe000;
         int round;
@@ -302,105 +300,103 @@ extern "C" int func_ov096_02136754(char *raw)
         s16 sn;
         u16 ang;
 
-        self->mPosX = next->mPosX;
-        next = self->mNextSegment;
-        self->mPosZ = next->mPosZ;
+        mPosX = next->mPosX;
+        next = mNextSegment;
+        mPosZ = next->mPosZ;
 
-        vy = self->mVertSpeed - 0x2000;
-        clamped = self->mTerminalVelocity;
+        vy = mVertSpeed - 0x2000;
+        clamped = mTerminalVelocity;
         if (vy >= clamped)
             clamped = vy;
-        self->mVertSpeed = clamped;
-        self->mPosY += self->mVertSpeed;
+        mVertSpeed = clamped;
+        mPosY += mVertSpeed;
 
-        next = self->mNextSegment;
-        if (self->mPosY < next->mPosY + 0x6e000) {
-            self->mPosY = next->mPosY + 0x6e000;
-            self->mVertSpeed = 0;
+        next = mNextSegment;
+        if (mPosY < next->mPosY + 0x6e000) {
+            mPosY = next->mPosY + 0x6e000;
+            mVertSpeed = 0;
         }
 
-        next = self->mNextSegment;
+        next = mNextSegment;
         tbl = data_02082214;
-        self->mAngleY = next->mAngleY;
-        next = self->mNextSegment;
+        mAngleY = next->mAngleY;
+        next = mNextSegment;
         cs = (s16)(next->mSegAngY + 0x13000);
         round = 0x800;
-        self->mSegAngY = cs;
-        ang = (u16)self->mSegAngY;
+        mSegAngY = cs;
+        ang = (u16)mSegAngY;
         cs = tbl[(ang >> 4) * 2];
-        self->mOffsetX = (int)(((s64)cs * offset + round) >> 12);
-        self->mOffsetY = 0;
-        ang = (u16)self->mSegAngY;
+        mOffsetX = (int)(((s64)cs * offset + round) >> 12);
+        mOffsetY = 0;
+        ang = (u16)mSegAngY;
         sn = tbl[(ang >> 4) * 2 + 1];
-        self->mOffsetZ = (int)(((s64)sn * offset + round) >> 12);
+        mOffsetZ = (int)(((s64)sn * offset + round) >> 12);
     }
-    self->func_ov096_02135948();
-    self->mdCcAc_c.Clear();
-    self->mdCcAc_c.dCc_c::Update();
+    func_ov096_02135948();
+    mdCcAc_c.Clear();
+    mdCcAc_c.dCc_c::Update();
     return 1;
 }
 
-// @symbol func_ov096_0213670c
+// @symbol _ZN9daSanbo_c19func_ov096_0213670cEv
 /* unk_3a8 on the head picks a zero delay or a 90-frame one. */
-extern "C" void func_ov096_0213670c(void *raw)
+void daSanbo_c::func_ov096_0213670c()
 {
-    daSanbo_c *self = (daSanbo_c *)raw;
-    daSanbo_c *head = (daSanbo_c *)func_ov096_021357b4((char *)raw);
+    daSanbo_c *head = func_ov096_021357b4();
     u8 timer = head->unk_3a8;
 
     if (timer != 0)
         timer = 0;
     else
         timer = 0x5a;
-    self->mTimer = timer;
-    timer = self->mTimer;
+    mTimer = timer;
+    timer = mTimer;
     if (timer == 0) {
-        self->mScaleX = 0x1000;
-        self->mScaleY = 0x1000;
-        self->mScaleZ = 0x1000;
+        mScaleX = 0x1000;
+        mScaleY = 0x1000;
+        mScaleZ = 0x1000;
     }
-    self->mState = 1;
+    mState = 1;
 }
 
-// @symbol func_ov096_021365d4
+// @symbol _ZN9daSanbo_c19func_ov096_021365d4Ev
 /* Grow this segment, then sprout the next one when the timer expires. */
-extern "C" int func_ov096_021365d4(char *raw)
+int daSanbo_c::func_ov096_021365d4()
 {
-    daSanbo_c *self = (daSanbo_c *)raw;
-    int scale = self->mScaleX;
+    int scale = mScaleX;
     int copied;
 
     ApproachLinear(scale, 0x1000, 0x12c);
     copied = scale;
-    self->mScaleX = copied;
-    self->mScaleY = copied;
-    self->mScaleZ = copied;
-    self->mSegAngY = (s16)(self->mSegAngY + 0x500);
-    self->mOffsetX = 0;
-    self->mOffsetY = 0;
-    self->mOffsetZ = 0;
-    func_ov096_021358c8(raw);
-    if (self->func_ov096_02135838() < 4) {
-        if (DecIfAbove0_Byte(&self->mTimer) == 0) {
-            dActor_c *spawned = dActor_c::Spawn(SANBO_BODY, self->uniqueID,
-                *(Vector3 *)&self->mPosX, (Vector3_16 *)&self->mAngleX,
-                self->mAreaId, -1);
+    mScaleX = copied;
+    mScaleY = copied;
+    mScaleZ = copied;
+    mSegAngY = (s16)(mSegAngY + 0x500);
+    mOffsetX = 0;
+    mOffsetY = 0;
+    mOffsetZ = 0;
+    func_ov096_021358c8();
+    if (func_ov096_02135838() < 4) {
+        if (DecIfAbove0_Byte(&mTimer) == 0) {
+            dActor_c *spawned = dActor_c::Spawn(SANBO_BODY, uniqueID,
+                *(Vector3 *)&mPosX, (Vector3_16 *)&mAngleX,
+                mAreaId, -1);
             if (spawned != 0) {
-                self->mNextSegment = (daSanbo_c *)spawned;
-                self->func_ov096_02136928(4);
-                if (self->func_ov096_02135838() >= 3)
-                    ((daSanbo_c *)func_ov096_021357b4(raw))->unk_3a8 = 0;
+                mNextSegment = (daSanbo_c *)spawned;
+                func_ov096_02136928(4);
+                if (func_ov096_02135838() >= 3)
+                    func_ov096_021357b4()->unk_3a8 = 0;
             }
         }
     }
-    self->UpdatePos(&self->mdCcAc_c);
-    func_ov096_02135e2c(self, &self->mWithMeshClsn);
-    self->func_ov096_02135948();
-    self->mdCcAc_c.Clear();
-    self->mdCcAc_c.dCc_c::Update();
-    if (self->mWithMeshClsn.IsOnGround() != 0) {
+    UpdatePos(&mdCcAc_c);
+    func_ov096_02135e2c(&mWithMeshClsn);
+    func_ov096_02135948();
+    mdCcAc_c.Clear();
+    mdCcAc_c.dCc_c::Update();
+    if (mWithMeshClsn.IsOnGround() != 0) {
         _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(
-            self->mPosX, self->mPosY, self->mPosZ);
+            mPosX, mPosY, mPosZ);
     }
     return 1;
 }
@@ -425,10 +421,9 @@ int daSanbo_c::func_ov096_02136534()
     return 1;
 }
 
-// @symbol func_ov096_02136434
-extern "C" int func_ov096_02136434(void *raw)
+// @symbol _ZN9daSanbo_c19func_ov096_02136434Ev
+int daSanbo_c::func_ov096_02136434()
 {
-    daSanbo_c *self = (daSanbo_c *)raw;
     struct Vector3 pos;
     Particle::System *p0;
     Particle::System *p1;
@@ -436,28 +431,28 @@ extern "C" int func_ov096_02136434(void *raw)
     int y;
     int z;
 
-    self->UpdatePos(&self->mdCcAc_c);
-    if (self->mParticle0 != 0 && self->mParticle1 != 0) {
-        x = self->mPosX;
-        z = self->mPosZ;
-        y = self->mPosY + 0x3c000;
+    UpdatePos(&mdCcAc_c);
+    if (mParticle0 != 0 && mParticle1 != 0) {
+        x = mPosX;
+        z = mPosZ;
+        y = mPosY + 0x3c000;
         ((int *)&pos)[0] = x;
         ((int *)&pos)[1] = y;
         ((int *)&pos)[2] = z;
-        self->mParticle0 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            self->mParticle0, 0x13a, pos.x, pos.y, pos.z, 0, 0);
-        self->mParticle1 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-            self->mParticle1, 0x13b, pos.x, pos.y, pos.z, 0);
-        p0 = Particle::System::FromUniqueID(self->mParticle0);
-        p1 = Particle::System::FromUniqueID(self->mParticle1);
+        mParticle0 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            mParticle0, 0x13a, pos.x, pos.y, pos.z, 0, 0);
+        mParticle1 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+            mParticle1, 0x13b, pos.x, pos.y, pos.z, 0);
+        p0 = Particle::System::FromUniqueID(mParticle0);
+        p1 = Particle::System::FromUniqueID(mParticle1);
         if (p0)
             p0->callbackScale = 0x7fff;
         if (p1)
             p1->callbackScale = 0x7fff;
     }
-    func_02038414(&self->mWithMeshClsn);
-    if (self->mWithMeshClsn.JustHitGround() != 0)
-        self->func_ov096_0213585c();
+    func_02038414(&mWithMeshClsn);
+    if (mWithMeshClsn.JustHitGround() != 0)
+        func_ov096_0213585c();
     return 1;
 }
 
@@ -471,17 +466,16 @@ int daSanbo_c::func_ov096_0213640c()
     return 1;
 }
 
-// @symbol func_ov096_021363c4
-extern "C" int func_ov096_021363c4(void *raw)
+// @symbol _ZN9daSanbo_c19func_ov096_021363c4Ev
+int daSanbo_c::func_ov096_021363c4()
 {
-    daSanbo_c *self = (daSanbo_c *)raw;
-    int flags = self->mFlags;
+    int flags = mFlags;
     int held = (flags & 0x20000) ? 1 : 0;
 
     if (held == 0) {
         held = (flags & 0x40000) ? 1 : 0;
         if (held == 0)
-            self->func_ov096_0213585c();
+            func_ov096_0213585c();
     }
     return 1;
 }
@@ -493,15 +487,14 @@ int daSanbo_c::func_ov096_021363b4()
     return 1;
 }
 
-// @symbol func_ov096_02136264
+// @symbol _ZN9daSanbo_c19func_ov096_02136264Ev
 /* Follow the segment ahead. Once its scale reaches full size, settle. */
-extern "C" int func_ov096_02136264(char *raw)
+int daSanbo_c::func_ov096_02136264()
 {
-    daSanbo_c *self = (daSanbo_c *)raw;
-    daSanbo_c *next = self->mNextSegment;
+    daSanbo_c *next = mNextSegment;
 
     if (!next) {
-        self->func_ov096_02136928(1);
+        func_ov096_02136928(1);
     } else {
         int scale = next->mScaleX;
         s64 prod = (s64)scale * 0x6e000;
@@ -513,31 +506,31 @@ extern "C" int func_ov096_02136264(char *raw)
         s16 sn;
         u16 ang;
 
-        self->mPosX = next->mPosX;
+        mPosX = next->mPosX;
         raised = (int)((prod + 0x800) >> 12);
-        next = self->mNextSegment;
-        self->mPosY = raised + next->mPosY;
-        next = self->mNextSegment;
+        next = mNextSegment;
+        mPosY = raised + next->mPosY;
+        next = mNextSegment;
         tbl = data_02082214;
-        self->mPosZ = next->mPosZ;
-        next = self->mNextSegment;
-        self->mAngleY = next->mAngleY;
-        next = self->mNextSegment;
+        mPosZ = next->mPosZ;
+        next = mNextSegment;
+        mAngleY = next->mAngleY;
+        next = mNextSegment;
         cs = (s16)(next->mSegAngY + 0x13000);
-        self->mSegAngY = cs;
-        ang = (u16)self->mSegAngY;
+        mSegAngY = cs;
+        ang = (u16)mSegAngY;
         cs = tbl[(ang >> 4) * 2];
-        self->mOffsetX = (int)(((s64)cs * offset + round) >> 12);
-        self->mOffsetY = 0;
-        ang = (u16)self->mSegAngY;
+        mOffsetX = (int)(((s64)cs * offset + round) >> 12);
+        mOffsetY = 0;
+        ang = (u16)mSegAngY;
         sn = tbl[(ang >> 4) * 2 + 1];
-        self->mOffsetZ = (int)(((s64)sn * offset + round) >> 12);
+        mOffsetZ = (int)(((s64)sn * offset + round) >> 12);
         if (raised == 0x6e000)
-            self->func_ov096_02136928(0);
+            func_ov096_02136928(0);
     }
-    self->func_ov096_02135948();
-    self->mdCcAc_c.Clear();
-    self->mdCcAc_c.dCc_c::Update();
+    func_ov096_02135948();
+    mdCcAc_c.Clear();
+    mdCcAc_c.dCc_c::Update();
     return 1;
 }
 
@@ -567,18 +560,17 @@ int daSanbo_c::func_ov096_02136134()
     return 1;
 }
 
-// @symbol func_ov096_021360c4
-extern "C" int func_ov096_021360c4(char *raw)
+// @symbol _ZN9daSanbo_c19func_ov096_021360c4Ev
+int daSanbo_c::func_ov096_021360c4()
 {
-    daSanbo_c *self = (daSanbo_c *)raw;
-    int head = (self->actorID == SANBO_HEAD) ? 1 : 0;
+    int head = (actorID == SANBO_HEAD) ? 1 : 0;
 
     if (head != 0)
-        self->mAngleX = (s16)(self->mAngleX - 0x1000);
-    self->UpdatePos(&self->mdCcAc_c);
-    func_02038414(&self->mWithMeshClsn);
-    if (self->mWithMeshClsn.JustHitGround() || !DecIfAbove0_Byte(&self->mTimer))
-        self->func_ov096_0213585c();
+        mAngleX = (s16)(mAngleX - 0x1000);
+    UpdatePos(&mdCcAc_c);
+    func_02038414(&mWithMeshClsn);
+    if (mWithMeshClsn.JustHitGround() || !DecIfAbove0_Byte(&mTimer))
+        func_ov096_0213585c();
     return 1;
 }
 
@@ -626,31 +618,26 @@ void daSanbo_c::func_ov096_02135efc()
     }
 }
 
-// @symbol func_ov096_02135e2c
-extern "C" {
-void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *c);
-void *_ZNK10dBgCh_Actr13GetWallResultEv(void *c);
-
-void func_ov096_02135e2c(daSanbo_c *self, void *clsn)
+// @symbol _ZN9daSanbo_c19func_ov096_02135e2cEP10dBgCh_Actr
+void daSanbo_c::func_ov096_02135e2c(dBgCh_Actr *clsn)
 {
     int n0[3];
     int n1[3];
 
     func_02038414(clsn);
-    if (((dBgCh_Actr *)clsn)->IsOnGround()) {
-        ((SurfaceInfo *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn) + 4))->CopyNormalTo(*(Vector3 *)n0);
+    if (clsn->IsOnGround()) {
+        ((SurfaceInfo *)((char *)clsn->GetFloorResult() + 4))->CopyNormalTo(*(Vector3 *)n0);
         if (n0[1] != 0) {
-            long long ax = (long long)n0[0] * (long long)self->unk_0a4;
-            long long az = (long long)n0[2] * (long long)self->unk_0ac;
+            long long ax = (long long)n0[0] * (long long)unk_0a4;
+            long long az = (long long)n0[2] * (long long)unk_0ac;
             int x = (int)((ax + 0x800) >> 12);
             int z = (int)((az + 0x800) >> 12);
-            self->mVertSpeed = -(cstd::fdiv(x + z, n0[1]) + 0x8000);
+            mVertSpeed = -(cstd::fdiv(x + z, n0[1]) + 0x8000);
         }
     }
-    if (((dBgCh_Actr *)clsn)->IsOnWall()) {
-        ((SurfaceInfo *)((char *)_ZNK10dBgCh_Actr13GetWallResultEv(clsn) + 4))->CopyNormalTo(*(Vector3 *)n1);
+    if (clsn->IsOnWall()) {
+        ((SurfaceInfo *)((char *)clsn->GetWallResult() + 4))->CopyNormalTo(*(Vector3 *)n1);
     }
-}
 }
 
 #include "decl_Actor.h"
@@ -806,34 +793,33 @@ void daSanbo_c::func_ov096_02135948()
     }
 }
 
-// @symbol func_ov096_021358c8
-extern "C" void func_ov096_021358c8(char *raw)
+// @symbol _ZN9daSanbo_c19func_ov096_021358c8Ev
+void daSanbo_c::func_ov096_021358c8()
 {
-    daSanbo_c *self = (daSanbo_c *)raw;
-    Player *player = self->ClosestNonVanishPlayer();
+    Player *player = ClosestNonVanishPlayer();
     void *target;
     int dist;
     short ang;
     int turn;
 
     if (player) {
-        dist = Vec3_HorzDist(&self->mRootPosX, &player->mPosX);
+        dist = Vec3_HorzDist(&mRootPosX, &player->mPosX);
         if (dist < 0x3e8000)
             target = &player->mPosX;
         else
-            target = &self->mRootPosX;
+            target = &mRootPosX;
     } else {
-        target = &self->mRootPosX;
+        target = &mRootPosX;
     }
-    dist = Vec3_HorzDist(&self->mPosX, target);
-    ang = Vec3_HorzAngle(&self->mPosX, target);
-    ApproachLinear(self->mAngleY, ang, (short)0x320);
-    turn = func_ov096_02135878(raw, dist);
-    self->mPrevAngleY = (short)(self->mAngleY + turn);
+    dist = Vec3_HorzDist(&mPosX, target);
+    ang = Vec3_HorzAngle(&mPosX, target);
+    ApproachLinear(mAngleY, ang, (short)0x320);
+    turn = func_ov096_02135878(dist);
+    mPrevAngleY = (short)(mAngleY + turn);
 }
 
-// @symbol func_ov096_02135878
-extern "C" int func_ov096_02135878(void *unused, int x)
+// @symbol _ZN9daSanbo_c19func_ov096_02135878Ei
+int daSanbo_c::func_ov096_02135878(int x)
 {
     int q;
     long long m;
@@ -889,18 +875,17 @@ void daSanbo_c::func_ov096_02135800()
         next->mPrevSegment = mPrevSegment;
 }
 
-// @symbol func_ov096_021357b4
-extern "C" char *func_ov096_021357b4(char *raw)
+// @symbol _ZN9daSanbo_c19func_ov096_021357b4Ev
+daSanbo_c *daSanbo_c::func_ov096_021357b4()
 {
-    daSanbo_c *self = (daSanbo_c *)raw;
-    daSanbo_c *prev = self->mPrevSegment;
+    daSanbo_c *prev = mPrevSegment;
 
     if (prev == 0)
-        return (char *)self;
+        return this;
     while (prev) {
         unsigned int notHead = (prev->actorID != SANBO_HEAD) ? 1u : 0u;
         if (!notHead)
-            return (char *)prev;
+            return prev;
         prev = prev->mPrevSegment;
     }
     return 0;
