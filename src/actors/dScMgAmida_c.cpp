@@ -19,7 +19,7 @@
  *   - ProbeRung took the two rung ends as int pointers; it now takes them
  *     as by-value Points, the way the pen handler already declared it,
  *     and uses the member names.
- *   - gTouchX/deb are declared as 4-byte rows, the form
+ *   - gTouchX/gTouchY are declared as 4-byte rows, the form
  *     CheckHurryButton matched under. Indexing them as flat arrays costs
  *     it four words.
  *   - each shard's file-wide optimisation pragma is now a push/pop bracket
@@ -41,7 +41,7 @@
  *   array's element dtor/ctor callbacks for __cxa_vec_cleanup / vec_ctor;
  *   declaring them on dScMgAmida_c_Piece would make the class destructor
  *   emit a second vector cleanup.
- * - gTouchX/deb stay 4-byte rows (flat indexing costs CheckHurryButton
+ * - gTouchX/gTouchY stay 4-byte rows (flat indexing costs CheckHurryButton
  *   four words, measured at promotion), the pattern table is five separate
  *   data symbols, and unk_53e4 keeps its name -- its only use is as the
  *   sixth argument of the line-draw helper.
@@ -88,15 +88,15 @@ extern void *dScMgAmida_c_classInit(void);
 extern s16 data_02082214[];
 extern u8  data_0209d45c;
 extern u8  data_0209d454;
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
 extern u8  gActivePlayerSlot;
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern u8  gTouchHeld[];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern u8  gTouchEdge[];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern u8  gTouchX[][4];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern u8  gTouchY[][4];
 extern int data_ov006_0212e1c0[];
 extern s32 data_0208ee44;

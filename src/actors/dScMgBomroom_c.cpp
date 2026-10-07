@@ -65,9 +65,9 @@ extern void *data_ov006_02133a70[];
 extern int data_ov006_0212e2c0[];
 extern int func_ov004_020adbc0(void);
 extern int RandomIntInternal(int *seed);
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
 extern u8 gTouchX[];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern u8 gTouchY[];
 extern u16 data_ov006_0212e2e8[];
 extern int data_ov006_021416a0[];
@@ -1055,9 +1055,9 @@ void func_ov006_020d6c90(char *raw, int index)
 extern "C" {
 
 typedef struct { u8 f0, f1, f2, f3; } Tab;
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern u8 gActivePlayerSlot;
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern Tab gTouchHeld[];
 
 void func_ov006_020d6d7c(char *raw, int index) {

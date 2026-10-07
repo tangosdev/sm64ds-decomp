@@ -141,15 +141,15 @@ extern OamAttr *data_ov006_02134d1c;
 extern Vector3 data_ov006_0212ddd0;
 extern char data_ov006_0212dddc[];
 
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
 extern u8 gActivePlayerSlot;
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern u8 gTouchHeld[][4];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern u8 gTouchEdge[][4];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern u8 gTouchX[][4];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern u8 gTouchY[][4];
 extern Matrix4x3 data_020a0e68;
 extern short data_02082214[];

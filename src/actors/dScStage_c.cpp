@@ -48,10 +48,11 @@ struct CamInput {
     u8 f17;
 };
 
-/* TU-local overlay of the touch records the ROM keeps at gTouchHeld. */
+/* TU-local overlay of the touch records the ROM keeps at gTouchHeld:
+   held/edge are the gTouchHeld/gTouchEdge lanes, x/y the gTouchX/gTouchY lanes. */
 struct TouchInfo {
-    u8 touched;
     u8 held;
+    u8 edge;
     u8 x;
     u8 y;
 };
@@ -205,7 +206,7 @@ namespace G2S { u16 *GetBG1ScrPtr(); }
 
 #define REG16(a) (*(volatile u16 *)(a))
 #define REG32(a) (*(volatile u32 *)(a))
-#define DE8P(off) ((u8 *)(gTouchHeld + (off)))
+#define TOUCHP(off) ((u8 *)(gTouchHeld + (off)))
 
 #pragma defer_codegen off
 
@@ -661,12 +662,12 @@ void dScStage_c::CheckCameraInput()
         do {
             cam->pressed = 0;
             cam->held = 0;
-            if (((TouchInfo *)gTouchHeld)[i].touched != 0) {
+            if (((TouchInfo *)gTouchHeld)[i].held != 0) {
                 if (*(int *)((u8 *)data_0209f318 + 0x154) & 0x1000) {
                     u8 state = *((u8*)data_0209f498 + i * 0x18 + 0x16);
                     if ((state == 0 && ((((TouchInfo *)gTouchHeld)[i].x <= 0x58 && ((TouchInfo *)gTouchHeld)[i].y >= 0x8a) || (((TouchInfo *)gTouchHeld)[i].x >= 0xa7 && ((TouchInfo *)gTouchHeld)[i].y >= 0x8a)))
                         || (state == 2 && ((TouchInfo *)gTouchHeld)[i].x >= 0xa7 && ((TouchInfo *)gTouchHeld)[i].y >= 0x9a)) {
-                        if (((((TouchInfo *)gTouchHeld)[i].touched && ((TouchInfo *)gTouchHeld)[i].held) ? 1 : 0) || *st == 1) {
+                        if (((((TouchInfo *)gTouchHeld)[i].held && ((TouchInfo *)gTouchHeld)[i].edge) ? 1 : 0) || *st == 1) {
                             u16 mask;
                             if ((state == 0 && ((TouchInfo *)gTouchHeld)[i].x < 0x2b) || (((TouchInfo *)gTouchHeld)[i].x >= 0xa7 && ((TouchInfo *)gTouchHeld)[i].x < 0xd1))
                                 mask = 0x200;
@@ -676,7 +677,7 @@ void dScStage_c::CheckCameraInput()
                                 mask = data_0209f368[i];
                                 if (mask == 0) mask = 0x200;
                             }
-                            if ((((TouchInfo *)gTouchHeld)[i].touched && ((TouchInfo *)gTouchHeld)[i].held) ? 1 : 0)
+                            if ((((TouchInfo *)gTouchHeld)[i].held && ((TouchInfo *)gTouchHeld)[i].edge) ? 1 : 0)
                                 *(u16*)(((int)cam + 6)) |= mask;
                             else
                                 *(u16*)(((int)cam + 6)) |= mask & (mask ^ data_0209f368[i]);
@@ -696,7 +697,7 @@ void dScStage_c::CheckCameraInput()
             {
                 u8 state2 = *((u8*)data_0209f498 + i * 0x18 + 0x16);
                 if (state2 != 0) {
-                    if (((*((u8*)gTouchHeld + i * 4) && ((TouchInfo *)gTouchHeld)[i].held) ? 1 : 0)
+                    if (((*((u8*)gTouchHeld + i * 4) && ((TouchInfo *)gTouchHeld)[i].edge) ? 1 : 0)
                         && ((state2 == 1 && ((TouchInfo *)gTouchHeld)[i].x >= 0xd7 && ((TouchInfo *)gTouchHeld)[i].y >= 0x8d)
                             || (state2 == 2 && ((TouchInfo *)gTouchHeld)[i].x >= 0xd7 && ((TouchInfo *)gTouchHeld)[i].y >= 0x73 && ((TouchInfo *)gTouchHeld)[i].y < 0x97))) {
                         data_ov002_02111180 = 0x10;
@@ -1126,7 +1127,7 @@ void dScStage_c::PS_Cleanup(){
  *      backlight_on extends tmpv's live range r0-shaped and flipped the whole
  *      case-0xa tx/ty cascade (tx=r3, ty reloads=r2) in one move: 68 -> 3.
  *   3) opt_okback first gTouchY check reads gTouchY[gActivePlayerSlot * 4]
- *      DIRECTLY (volatile gActivePlayerSlot reload indexes the ldrb, +0x26e4); the old
+ *      DIRECTLY (fresh gActivePlayerSlot load indexes the ldrb, +0x26e4); the old
  *      "u8 s4 = gActivePlayerSlot; (void)s4" kept slot/r6 as index. With (2) in place the
  *      direct read no longer drops slot's r6 coloring.
  *
@@ -1358,20 +1359,20 @@ void dScStage_c::PS_Update()
                 u8 a;
                 u8 vx;
                 {
-                    volatile u8 *pe40 = &gActivePlayerSlot;
+                    volatile u8 *pSlot = &gActivePlayerSlot;
                     volatile s32 *psp = &sp0;
                     var_r0 = *psp;
-                    sl2 = *pe40;
+                    sl2 = *pSlot;
                     {
                         register u8 aa = gTouchHeld[sl2 * 4];
                         a = aa;
                     }
                     de_off = sl2 * 4;
                 }
-                if ((a != 0) && (DE8P(de_off)[1] != 0)) {
+                if ((a != 0) && (TOUCHP(de_off)[1] != 0)) {
                     var_r0 = 1;
                 }
-                if ((var_r0 != 0) && ((u32)(vx = DE8P(sl2 * 4)[2]) < 0x38U) && ((u32)DE8P(sl2 * 4)[3] < 0x20U)) {
+                if ((var_r0 != 0) && ((u32)(vx = TOUCHP(sl2 * 4)[2]) < 0x38U) && ((u32)TOUCHP(sl2 * 4)[3] < 0x20U)) {
                     u8 t;
                     data_0209f2c8 = (u8)(data_0209f2c8 - 1);
                     var_fp = 1;
@@ -1387,13 +1388,13 @@ void dScStage_c::PS_Update()
                     }
                 } else {
                     s32 var_r0_2;
-                    if ((a != 0) && (DE8P(sl2 * 4)[1] != 0)) {
+                    if ((a != 0) && (TOUCHP(sl2 * 4)[1] != 0)) {
                         var_r0_2 = 1;
                     } else {
                         var_r0_2 = sp4;
                     }
                     if (var_r0_2 != 0) {
-                        if (((u32)(u8)(DE8P(sl2 * 4)[2] - 0xC8) < 0x38U) && ((u32)DE8P(sl2 * 4)[3] < 0x20U)) {
+                        if (((u32)(u8)(TOUCHP(sl2 * 4)[2] - 0xC8) < 0x38U) && ((u32)TOUCHP(sl2 * 4)[3] < 0x20U)) {
                             data_0209f2c8 = (u8)(data_0209f2c8 + 1);
                             data_0209f238 = 2;
                             var_fp = 1;

@@ -2500,8 +2500,8 @@ void cMgSmartball_spring_c::Update()
 #pragma opt_propagation off
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- same pattern as every sibling. Then a three-way
- * state machine gated by two level-indexed byte tables (gTouchHeld/gTouchEdge)
- * and driven by two fixed-point tables (gTouchX/gTouchY): trigger sets
+ * state machine gated by two slot-indexed byte lanes (gTouchHeld/gTouchEdge)
+ * and driven by the touch x/y lanes (gTouchX/gTouchY, shifted <<12 into fixed point): trigger sets
  * unk_031 and latches unk_034/mDriveBase/unk_03c/mDriveNow; active recomputes
  * and clamps mDriveNow each call and plays a sound on change; release clears
  * unk_031, or -- if neither holds -- eases mCurrent1 back toward baseline.
@@ -2513,8 +2513,8 @@ void cMgSmartball_spring_c::Update()
  * compound assignments below and reproduce byte-exact. */
 void cMgSmartball_spring_c::SaveSnapshot()
 {
-    u8 lvl;
-    int de8v;
+    u8 slot;
+    int held;
     int flag;
     int d;
 
@@ -2523,11 +2523,11 @@ void cMgSmartball_spring_c::SaveSnapshot()
     if (*(u8 *)((char *)mpManager + 0x595d) != 0)
         return;
 
-    de8v = gTouchHeld[gActivePlayerSlot * 4];
-    lvl = gActivePlayerSlot;
+    held = gTouchHeld[gActivePlayerSlot * 4];
+    slot = gActivePlayerSlot;
     flag = 0;
-    if (de8v != 0)
-        flag = gTouchEdge[lvl * 4] != 0;
+    if (held != 0)
+        flag = gTouchEdge[slot * 4] != 0;
 
     if (flag != 0) {
         unk_031 = 1;
@@ -2543,8 +2543,8 @@ void cMgSmartball_spring_c::SaveSnapshot()
         return;
     }
 
-    if (unk_031 == 1 && de8v != 0) {
-        mDriveNow = gTouchY[lvl * 4] << 12;
+    if (unk_031 == 1 && held != 0) {
+        mDriveNow = gTouchY[slot * 4] << 12;
         d = mDriveNow - mDriveBase;
         if (d >= 0x38000)
             mDriveNow = mDriveBase + 0x38000;
@@ -2559,7 +2559,7 @@ void cMgSmartball_spring_c::SaveSnapshot()
 
     {
         int m;
-        if (de8v == 0 && gTouchEdge[lvl * 4] != 0)
+        if (held == 0 && gTouchEdge[slot * 4] != 0)
             m = 1;
         else
             m = 0;

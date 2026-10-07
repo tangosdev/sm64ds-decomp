@@ -1141,15 +1141,15 @@ void dScMgLuigi_c::BeginCatch(int p1)
 // @symbol _ZN12dScMgLuigi_c10CheckTouchEv
 void dScMgLuigi_c::CheckTouch()
 {
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
     extern unsigned char gActivePlayerSlot;
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
     extern unsigned char gTouchHeld[][4];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
     extern unsigned char gTouchEdge[][4];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
     extern unsigned char gTouchX[][4];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
     extern unsigned char gTouchY[][4];
     extern unsigned short data_ov006_0212e848[];
     int idx = gActivePlayerSlot;

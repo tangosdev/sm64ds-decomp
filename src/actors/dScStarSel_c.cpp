@@ -131,15 +131,15 @@ extern void func_02012790(int a);
 extern int func_ov003_020adec0(char *scene, unsigned int chr);
 extern void func_ov003_020ae1a4(char *scene, int value);
 extern unsigned char NumStars(void);
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
 extern unsigned char gActivePlayerSlot;
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern unsigned char gTouchHeld[][4];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern unsigned char gTouchEdge[][4];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern unsigned char gTouchX[][4];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern unsigned char gTouchY[][4];
 extern int data_0208ee44;
 extern unsigned short data_020a0e5a[][2];
@@ -366,7 +366,7 @@ void func_ov003_020ae238(char *scene)
 // tests and the D-pad.
 //
 // gActivePlayerSlot selects the active record in the 4-byte-stride tables at
-// gTouchHeld..deb. If byte 0 of that record is set and byte 1 (gTouchEdge)
+// gTouchHeld..gTouchY. If byte 0 of that record is set and byte 1 (gTouchEdge)
 // is set, its bytes 2 and 3 are tested against a box around (0x80, PANEL_Y); a
 // hit sets CURSOR_MODE 2, PICKED_CHAR 3, ANIM_MODE 1, seeds the timers at
 // c+0x118/0x119 and plays sound data_0209caa0[0x41] + 0x3c.
@@ -384,7 +384,7 @@ void func_ov003_020ae238(char *scene)
 //
 // Codegen note: the stride belongs in the TYPE, and the INDEX is what gets named.
 // The 4-byte records are declared `[][4]` so each read refolds its own scale
-// (`add r2, r4, r1, lsl #2`); flattening gTouchX/deb to a bare `[]` with an
+// (`add r2, r4, r1, lsl #2`); flattening gTouchX/gTouchY to a bare `[]` with an
 // explicit `* 4` costs 17 words, and the same is true of data_020a0e5a. The last
 // six words were a register transposition between the `c + i` and record-row
 // address temps, and what closed it was naming the INDEX (`int ri`) for the second

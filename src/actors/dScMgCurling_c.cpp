@@ -61,9 +61,8 @@ struct DragView {
     int aimY;
 };
 
-/* gTouchX and gTouchY are four-byte touch records. The drag
- * handler reads them through a `u8 *` cast; a plain `u8 []` costs eighteen
- * words there. */
+/* B4 is a 4-byte-record view of a touch lane, used by the stone-drag
+ * reader; the other readers index the lanes flat. */
 struct B4 { unsigned char v; unsigned char pad[3]; };
 
 /* Launder: forces an address through an integer so it is not shared. */

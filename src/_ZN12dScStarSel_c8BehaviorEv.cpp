@@ -53,7 +53,7 @@
 // compile" -- they compile and they tie); moving the `ty` read into the loop with
 // opt_loop_invariants re-enabled, which keeps SCHED==0 and scores 23; the callee
 // return-type and argument-type axis; the `gTouchEdge` respellings
-// (`[idx][1]` on a [][4] array, flat `[idx * 4]`, struct arrays). Two randomized product
+// (`gTouchHeld[idx][1]` on a [][4] array, flat `gTouchEdge[idx * 4]`, struct arrays). Two randomized product
 // scans over declaration order x type names x spellings (1475 cells from the old shape,
 // 1359 from this one) never produce the ROM's `ldrb r7,[r6,#3]`, and neither does a
 // 45-minute permuter run on a plain-C base that compiles byte-identically to this file.

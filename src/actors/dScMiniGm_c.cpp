@@ -74,7 +74,7 @@ struct TouchOwner {
     virtual int v0(); virtual int v1(); virtual int v2();
     virtual int v3(); virtual int v4(); virtual int IsActive();
 };
-struct TouchRec { u8 pressed; u8 held; u8 x; u8 y; };
+struct TouchRec { u8 held; u8 edge; u8 x; u8 y; };
 struct MgMid { s32 v[5]; };
 struct MgEntry {
     u16 id; u16 pad;
@@ -117,15 +117,15 @@ extern TouchOwner *data_0209f5bc;
 extern u8 data_0209f5f8;
 extern dWipe_c data_0209f61c;
 extern int data_0208ee44;
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
 extern TouchRec gTouchHeld[];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern u8 gTouchEdge[];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern u8 gTouchX[];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern u8 gTouchY[];
-// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+// local extern: see above.
 extern u8 gActivePlayerSlot;
 extern unsigned short data_020a0e5a[];
 
@@ -1008,8 +1008,8 @@ void dScMiniGm_c::func_ov005_020c0378()
 
     sel = -1;
     ok = 0;
-    if (gTouchHeld[gActivePlayerSlot].pressed != 0) {
-        if (gTouchHeld[gActivePlayerSlot].held != 0) ok = 1;
+    if (gTouchHeld[gActivePlayerSlot].held != 0) {
+        if (gTouchHeld[gActivePlayerSlot].edge != 0) ok = 1;
     }
     if (ok != 0) {
         if (data_0209b304 == 0) {
@@ -1070,8 +1070,8 @@ void func_ov005_020c0250(char *self) {
     if (*(int*)(self+0x98) > 0) return;
     unsigned int i = gActivePlayerSlot;
     bool ok = false;
-    if (gTouchHeld[i].pressed != 0) {
-        if (gTouchHeld[i].held != 0) ok = true;
+    if (gTouchHeld[i].held != 0) {
+        if (gTouchHeld[i].edge != 0) ok = true;
     }
     if (!ok) return;
     unsigned char x = gTouchHeld[i].x;
