@@ -994,6 +994,7 @@ ov016	0x021129a0	func_ov016_021129a0	ShipUp_Spawn	spawnfunc
 ov016	0x021129a0	ShipUp_Spawn	daObjKi_Fune_c_classInit_KI_FUNE_UP	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov016	0x021129d0	func_ov016_021129d0	ShipDown_Spawn	spawnfunc
 ov016	0x021129d0	ShipDown_Spawn	daObjKi_Fune_c_classInit_KI_FUNE	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov016	0x02112a9c	func_ov016_02112a9c	_ZN16daObjKi_Hasira_c19func_ov016_02112a9cEv	daObjKi_Hasira_c method. The first argument is the pillar, so the function is a member and the parameter is this. The address is kept as the method name.
 ov016	0x02112ec4	func_ov016_02112ec4	RockPillar_Spawn	spawnfunc
 ov016	0x02112ec4	RockPillar_Spawn	daObjKi_Hasira_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov016	0x02112fbc	func_ov016_02112fbc	FloatOnWaterPlatformJrb_Spawn	spawnfunc

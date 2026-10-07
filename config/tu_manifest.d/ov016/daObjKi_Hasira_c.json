@@ -36,7 +36,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov016_02112a9c",
+      "symbol": "_ZN16daObjKi_Hasira_c19func_ov016_02112a9cEv",
       "address": "0x02112a9c",
       "size": "0x00000048",
       "legacy_source": "src/func_ov016_02112a9c.c",

@@ -18589,7 +18589,7 @@ matched: yes</title></rect><rect x="590.22" y="848.14" width="5.81" height="13.2
 module: ov002
 addr: 0x02100e50
 size: 116 bytes
-matched: yes</title></rect><rect x="596.03" y="848.14" width="9.62" height="13.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_ov002_02100ec4
+matched: yes</title></rect><rect x="596.03" y="848.14" width="9.62" height="13.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_d_a_obj_hatena_switch.cpp
 module: ov002
 addr: 0x02100ec4
 size: 192 bytes
@@ -30805,7 +30805,7 @@ matched: yes</title></rect><rect x="1546.50" y="86.16" width="3.71" height="6.20
 module: ov016
 addr: 0x02112a44
 size: 88 bytes
-matched: yes</title></rect><rect x="1546.50" y="92.36" width="3.71" height="5.07" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov016_02112a9c
+matched: yes</title></rect><rect x="1546.50" y="92.36" width="3.71" height="5.07" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16daObjKi_Hasira_c19func_ov016_02112a9cEv
 module: ov016
 addr: 0x02112a9c
 size: 72 bytes
