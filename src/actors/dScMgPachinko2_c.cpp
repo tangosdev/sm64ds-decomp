@@ -1,7 +1,7 @@
 //cpp
 /* Tamaire (scene 0x171, profile MG_TAMAIRE): dScMgPachinko2_c, the whole
  * class in one translation unit. 74 functions, .text 0x020ff420..0x0210428c:
- * the destructor pair, 67 free helpers, OnYoshiTryEat, Render, Behavior,
+ * the destructor pair, 67 members, OnYoshiTryEat, Render, Behavior,
  * InitResources and the factory.
  *
  * The destructor is declared first in the class header, so this TU owns the
@@ -12,13 +12,25 @@
  * defer_codegen off`. Do not reorder. Each optimisation pragma sits in its
  * own push/pop bracket around the one member that needs it.
  *
- * Still raw: the helpers are unnamed in symbols.txt and reach the scene
- * through byte offsets and the local views below. dScMgPachinko2_c.h types
- * 0x5260..0x565f as the tail of mBalls[0x40], which those views read as
- * other records; it names unk_5660, unk_566c and unk_566e, and only
- * 0x5664..0x566b and 0x5670..0x567b are padding. Where two helpers once named
- * different views of the scene alike, the later view carries its helper's
- * address as a suffix.
+ * The scene's three PMF state tables dispatch on this class: cups at
+ * data_ov006_021426cc (5 states on the two 0x20 records at 0x5620), balls at
+ * data_ov006_021426f4 (8 states on mBalls[]), paddles at
+ * data_ov006_02142734 (15 states on the three 0x40 records at 0x5260). The
+ * descriptor records they are built from live at data_ov006_0213da*; the
+ * runtime copies are made by __sinit_ov006_02131cd0.
+ *
+ * comment leftovers:
+ * - The helpers still address the scene through byte offsets and the local
+ *   view structs below. mBalls[0x40] is the typed name for 0x4660..0x565f,
+ *   but only balls 0..0x2f are live balls: the tail overlaps three 0x40-byte
+ *   paddle records at 0x5260, two 16 x 0x18 sprite records at 0x5320/0x54a0
+ *   and the two 0x20-byte cup records at 0x5620. Naming those sub-records as
+ *   members needs a union or punned views and is deferred; receivers stay as
+ *   `char *c = (char *)this` locals because the offset arithmetic is what
+ *   the matching bytes already prove.
+ * - func_ov006_021027e4 keeps an unused receiver: every call passes the
+ *   scene in r0 and the body only uses (a1, a2, a3). Memberized with the
+ *   others for the uniform call shape.
  */
 
 #pragma defer_codegen off
@@ -30,13 +42,9 @@ namespace Sound {
     void PlayBank2_2D(unsigned int id);
 }
 
-/* The receiver the pointer-to-member tables dispatch on. Measured under
-   2004/b56: completing C before the typedef, completing it as
-   { int dummy; }, or never completing it compiles to the same object. */
-struct C;
-typedef void (C::*PMF)(int);
+/* The pointer-to-member tables dispatch on this class. */
+typedef void (dScMgPachinko2_c::*PMF)(int);
 struct Entry { PMF pmf; };
-struct C { char pad[1]; };
 
 /* func_ov006_020ff47c's view of the two 0x20-byte entries at 0x5620. */
 struct E {
@@ -230,75 +238,6 @@ extern Entry data_ov006_021426cc[];
 extern Entry data_ov006_021426f4[];
 extern PMF   data_ov006_02142734[];
 
-/* This TU's own helpers, forward-declared for the callers above them. */
-extern void func_ov006_020ff47c(struct Obj* o);
-extern void func_ov006_020ff4ec(struct Obj4ec *self);
-extern void func_ov006_020ff534(char *c, int k);
-extern void func_ov006_020ff690(char *c, int n);
-extern void func_ov006_020ff8c8(char *c, int i);
-extern void func_ov006_020ffb54(char *c, int i);
-extern void func_ov006_020ffde4(char *c, int k);
-extern void func_ov006_020fff54(char *base, int i);
-extern void func_ov006_020fff84(C *c);
-extern void func_ov006_020fffec(char *c);
-extern void func_ov006_02100058(unsigned char (*c)[0x20]);
-extern void func_ov006_02100084(char *c);
-extern void func_ov006_02100140(char *c);
-extern void func_ov006_021001ac(char* p);
-extern void func_ov006_02100278(char *c, int r1, int r2, int r3);
-extern void func_ov006_02100314(char *c);
-extern void func_ov006_02100380(char* c);
-extern void func_ov006_02100408(char *c, int a2, int a3);
-extern void func_ov006_02100488(char *c);
-extern void func_ov006_021004c0(struct Obj4c0 *o);
-extern void func_ov006_021004f4(char *c, int a);
-extern void func_ov006_02100554(void *self);
-extern void func_ov006_0210068c(struct Obj68c *o);
-extern void func_ov006_021006f4(unsigned char* o);
-extern void func_ov006_02100734(char* c, int idx);
-extern void func_ov006_0210076c(char *c, int idx);
-extern void func_ov006_021009b8(char *p, int i);
-extern void func_ov006_02100b08(char *self, int idx);
-extern void func_ov006_02100bac(char* self, int i);
-extern void func_ov006_02100d90(char *base, int idx);
-extern void func_ov006_02100e3c(struct Obje3c *obj, int idx);
-extern void func_ov006_02100f7c(char *c, int i);
-extern void func_ov006_02101088(char *p, int i);
-extern void func_ov006_02101148(char *c, int i);
-extern void func_ov006_02101224(char *c, int i);
-extern void func_ov006_021012cc(char* p, int i);
-extern void func_ov006_021016ec(char* p, int i);
-extern void func_ov006_021019e0(char *c, int i);
-extern void func_ov006_02101af0(char* p, int i);
-extern void func_ov006_02101e88(char* p, int i);
-extern void func_ov006_021020c4(char* p, int i);
-extern void func_ov006_02102274(char *c, int idx);
-extern void func_ov006_0210246c(C *self);
-extern void func_ov006_021024e0(char *c);
-extern void func_ov006_02102564(char (*c)[64]);
-extern void func_ov006_0210258c(char* c);
-extern void func_ov006_02102624(char* c);
-extern void func_ov006_0210265c(char *c);
-extern void func_ov006_02102718(char* c);
-extern void func_ov006_021027e4(int a0, int a1, int a2, int a3);
-extern void func_ov006_02102864(char *c);
-extern void func_ov006_02102c3c(char *o, int x, int z, int d);
-extern void func_ov006_02102d6c(struct Objd6c *self, int i);
-extern void func_ov006_02102dbc(char (*c)[64]);
-extern void func_ov006_02102de4(char *p);
-extern void func_ov006_02102e8c(C *c);
-extern void func_ov006_02102ef4(unsigned char *r0);
-extern void func_ov006_02102f3c(char *base, int arg1);
-extern void func_ov006_02102fe8(dScMgPachinko2_c *self, int i);
-extern void func_ov006_02103360(char *c, int i);
-extern void func_ov006_02103608(char *o, int i);
-extern void func_ov006_0210371c(char *c, int i);
-extern void func_ov006_02103870(char *c, int i);
-extern void func_ov006_0210397c(unsigned char* base, int idx);
-extern void func_ov006_02103994(char *c, int i);
-extern void func_ov006_02103ac0(char *c);
-extern void func_ov006_02103bfc(char *c);
-
 }  /* extern "C" */
 
 // @symbol _ZN16dScMgPachinko2_cD1Ev
@@ -309,8 +248,10 @@ dScMgPachinko2_c::~dScMgPachinko2_c()
 {
 }
 
-// @symbol func_ov006_020ff47c
-void func_ov006_020ff47c(struct Obj* o) {
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_020ff47cEv
+void dScMgPachinko2_c::func_ov006_020ff47c()
+{
+    struct Obj *o = (struct Obj *)this;
     int i;
     for (i = 0; i < 2; i++) {
         if (o->arr[i].flag) {
@@ -320,10 +261,11 @@ void func_ov006_020ff47c(struct Obj* o) {
     }
 }
 
-// @symbol func_ov006_020ff4ec
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_020ff4ecEv
 /* Resets two 0x20-byte slot entries: flag=1, id=0xff, two counters=0. */
-void func_ov006_020ff4ec(struct Obj4ec *self)
+void dScMgPachinko2_c::func_ov006_020ff4ec()
 {
+    struct Obj4ec *self = (struct Obj4ec *)this;
     int i;
 
     for (i = 0; i < 2; i++) {
@@ -334,12 +276,13 @@ void func_ov006_020ff4ec(struct Obj4ec *self)
     }
 }
 
-// @symbol func_ov006_020ff534
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_020ff534Ei
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
-void func_ov006_020ff534(char *c, int k)
+void dScMgPachinko2_c::func_ov006_020ff534(int k)
 {
+    char *c = (char *)this;
     int found = 0;
     int i = 0;
     int *px = (int *)(c + k * 32 + 0x5620);
@@ -376,11 +319,12 @@ void func_ov006_020ff534(char *c, int k)
 }
 #pragma pop
 
-// @symbol func_ov006_020ff690
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_020ff690Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_020ff690(char *c, int n)
+void dScMgPachinko2_c::func_ov006_020ff690(int n)
 {
+    char *c = (char *)this;
     unsigned int r;
     int flag;
 
@@ -461,11 +405,12 @@ void func_ov006_020ff690(char *c, int n)
 }
 #pragma pop
 
-// @symbol func_ov006_020ff8c8
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_020ff8c8Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_020ff8c8(char *c, int i)
+void dScMgPachinko2_c::func_ov006_020ff8c8(int i)
 {
+    char *c = (char *)this;
     int v;
 
     if (*(u8 *)(c + (i << 5) + 0x5000 + 0x636) == 1) {
@@ -540,11 +485,12 @@ void func_ov006_020ff8c8(char *c, int i)
 }
 #pragma pop
 
-// @symbol func_ov006_020ffb54
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_020ffb54Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_020ffb54(char *c, int i)
+void dScMgPachinko2_c::func_ov006_020ffb54(int i)
 {
+    char *c = (char *)this;
     int v;
 
     if (*(u8 *)(c + (i << 5) + 0x5000 + 0x636) == 1) {
@@ -619,11 +565,12 @@ void func_ov006_020ffb54(char *c, int i)
 }
 #pragma pop
 
-// @symbol func_ov006_020ffde4
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_020ffde4Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_020ffde4(char *c, int k)
+void dScMgPachinko2_c::func_ov006_020ffde4(int k)
 {
+    char *c = (char *)this;
     if (*(unsigned char *)(c + k * 32 + 0x563b) != 0) {
         (*(unsigned short *)(c + 0x5630 + k * 32))++;
         if (*(unsigned short *)(c + k * 32 + 0x5630) >= data_ov006_0212ebe0[*(unsigned char *)(c + k * 32 + 0x5638)]) {
@@ -650,14 +597,15 @@ void func_ov006_020ffde4(char *c, int k)
             }
             *(unsigned char *)(c + k * 32 + 0x5637) = data_ov006_0213daa4[k][*(unsigned char *)(c + k * 32 + 0x5638)];
         }
-        func_ov006_020ff534(c, k);
+        func_ov006_020ff534(k);
     }
 }
 #pragma pop
 
-// @symbol func_ov006_020fff54
-void func_ov006_020fff54(char *base, int i)
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_020fff54Ei
+void dScMgPachinko2_c::func_ov006_020fff54(int i)
 {
+    char *base = (char *)this;
   char *p;
   *((base + (i << 5)) + 0x5637) = 0x10;
   *((unsigned char *) ((base + (i << 5)) + 0x5638)) = 0;
@@ -666,24 +614,27 @@ void func_ov006_020fff54(char *base, int i)
   *((unsigned char *) ((base + (i << 5)) + 0x5635)) = 1;
 }
 
-// @symbol func_ov006_020fff84
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_020fff84Ev
 #pragma push
 #pragma opt_strength_reduction off
-void func_ov006_020fff84(C *c) {
+void dScMgPachinko2_c::func_ov006_020fff84()
+{
     int i;
     for (i = 0; i < 2; i++) {
-        char *b = (char *)c + (i << 5);
+        char *b = (char *)this + (i << 5);
         if (*(unsigned char *)(b + 0x5634) != 0) {
-            (c->*data_ov006_021426cc[*(unsigned char *)(b + 0x5635)].pmf)(i);
+            (this->*data_ov006_021426cc[*(unsigned char *)(b + 0x5635)].pmf)(i);
         }
     }
 }
 #pragma pop
 
-// @symbol func_ov006_020fffec
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_020fffecEv
 #pragma push
 #pragma opt_strength_reduction off
-void func_ov006_020fffec(char *c){
+void dScMgPachinko2_c::func_ov006_020fffec()
+{
+    char *c = (char *)this;
     int i;
     for(i=0;i<2;i++){
         *(unsigned char*)(c+(i<<5)+0x5000+0x634) = 1;
@@ -699,9 +650,10 @@ void func_ov006_020fffec(char *c){
 }
 #pragma pop
 
-// @symbol func_ov006_02100058
-void func_ov006_02100058(unsigned char (*c)[0x20])
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02100058Ev
+void dScMgPachinko2_c::func_ov006_02100058()
 {
+    unsigned char (*c)[0x20] = (unsigned char (*)[0x20])this;
     int i;
     for (i = 0; i < 2; i++) {
         c[i][0x5634] = 0;
@@ -710,9 +662,10 @@ void func_ov006_02100058(unsigned char (*c)[0x20])
     }
 }
 
-// @symbol func_ov006_02100084
-void func_ov006_02100084(char *c)
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02100084Ev
+void dScMgPachinko2_c::func_ov006_02100084()
 {
+    char *c = (char *)this;
     unsigned int a, b;
     if (*(int *)(c + 0xbc) != 0) {
         a = ((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 6) >> 0xf;
@@ -727,8 +680,10 @@ void func_ov006_02100084(char *c)
     *(unsigned int *)(c + 0x5668) = ((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 6) >> 0xf;
 }
 
-// @symbol func_ov006_02100140
-void func_ov006_02100140(char *c){
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02100140Ev
+void dScMgPachinko2_c::func_ov006_02100140()
+{
+    char *c = (char *)this;
     int i;
     for(i=0;i<0x10;i++){
         if(*(unsigned char*)(c+0x5000+0x4b5) != 0){
@@ -742,9 +697,10 @@ void func_ov006_02100140(char *c){
     }
 }
 
-// @symbol func_ov006_021001ac
-void func_ov006_021001ac(char* p)
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_021001acEv
+void dScMgPachinko2_c::func_ov006_021001ac()
 {
+    char *p = (char *)this;
     int i;
     for (i = 0; i < 0x10; i++, p += 0x18) {
         if (*(u8*)(p + 0x54b4) != 0) {
@@ -766,9 +722,10 @@ void func_ov006_021001ac(char* p)
     }
 }
 
-// @symbol func_ov006_02100278
-void func_ov006_02100278(char *c, int r1, int r2, int r3)
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02100278Eiii
+void dScMgPachinko2_c::func_ov006_02100278(int r1, int r2, int r3)
 {
+    char *c = (char *)this;
     int i;
     char *p = c;
     for (i = 0; i < 0x10; i++, p += 0x18) {
@@ -795,8 +752,10 @@ void func_ov006_02100278(char *c, int r1, int r2, int r3)
     }
 }
 
-// @symbol func_ov006_02100314
-void func_ov006_02100314(char *c){
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02100314Ev
+void dScMgPachinko2_c::func_ov006_02100314()
+{
+    char *c = (char *)this;
     int i;
     for(i=0;i<0x10;i++){
         if(*(unsigned char*)(c+0x5000+0x334) != 0){
@@ -810,11 +769,12 @@ void func_ov006_02100314(char *c){
     }
 }
 
-// @symbol func_ov006_02100380
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02100380Ev
 /* For each of 16 active entries (stride 0x18 array at 0x5330): every 8
  * ticks bump a stage byte; after 4 stages clear the entry. */
-void func_ov006_02100380(char* c)
+void dScMgPachinko2_c::func_ov006_02100380()
 {
+    char *c = (char *)this;
     int i;
     for (i = 0; i < 16; i++, c += 0x18) {
         View *v = (View*)c;
@@ -832,9 +792,10 @@ void func_ov006_02100380(char* c)
     }
 }
 
-// @symbol func_ov006_02100408
-void func_ov006_02100408(char *c, int a2, int a3)
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02100408Eii
+void dScMgPachinko2_c::func_ov006_02100408(int a2, int a3)
 {
+    char *c = (char *)this;
     int i = 0;
     char *p = c;
     do {
@@ -855,24 +816,28 @@ void func_ov006_02100408(char *c, int a2, int a3)
     } while (i < 0x10);
 }
 
-// @symbol func_ov006_02100488
-void func_ov006_02100488(char *c){
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02100488Ev
+void dScMgPachinko2_c::func_ov006_02100488()
+{
+    char *c = (char *)this;
   if (*(int *)(c + 0x5660) < 2) return;
   func_ov004_020b1a5c(func_ov004_020adbc0(), 6);
 }
 
-// @symbol func_ov006_021004c0
-void func_ov006_021004c0(struct Obj4c0 *o)
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_021004c0Ev
+void dScMgPachinko2_c::func_ov006_021004c0()
 {
+    struct Obj4c0 *o = (struct Obj4c0 *)this;
     if (o->f < 2)
         return;
     func_ov004_020adc1c();
     func_ov004_020b19f0();
 }
 
-// @symbol func_ov006_021004f4
-void func_ov006_021004f4(char *c, int a)
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_021004f4Ei
+void dScMgPachinko2_c::func_ov006_021004f4(int a)
 {
+    char *c = (char *)this;
     char *dst;
     volatile unsigned short v;
     *(int *)(c + 0x5660) = 3;
@@ -881,12 +846,13 @@ void func_ov006_021004f4(char *c, int a)
     v = 0;
     MultiStore16(v, dst, 0x6000);
     *(unsigned char *)(c + 0x5677) = (unsigned char)a;
-    func_ov006_02102dbc((char (*)[64])c);
+    func_ov006_02102dbc();
 }
 
-// @symbol func_ov006_02100554
-void func_ov006_02100554(void *self) {
-    char *s = (char *)self;
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02100554Ev
+void dScMgPachinko2_c::func_ov006_02100554()
+{
+    char *s = (char *)this;
     int count;
     int i;
 
@@ -907,14 +873,16 @@ void func_ov006_02100554(void *self) {
     if (count) return;
 
     if (func_ov004_020adbe0())
-        func_ov006_021004f4((char *)self, 1);
+        func_ov006_021004f4(1);
     else
-        func_ov006_021004f4((char *)self, 0);
-    func_ov006_021006f4((unsigned char *)self);
+        func_ov006_021004f4(0);
+    func_ov006_021006f4();
 }
 
-// @symbol func_ov006_0210068c
-void func_ov006_0210068c(struct Obj68c *o){
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_0210068cEv
+void dScMgPachinko2_c::func_ov006_0210068c()
+{
+    struct Obj68c *o = (struct Obj68c *)this;
     int i;
     for(i=0;i<3;i++){
         if(o->arr[i].flag){
@@ -927,10 +895,12 @@ void func_ov006_0210068c(struct Obj68c *o){
     }
 }
 
-// @symbol func_ov006_021006f4
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_021006f4Ev
 #pragma push
 #pragma opt_strength_reduction off
-void func_ov006_021006f4(unsigned char* o){
+void dScMgPachinko2_c::func_ov006_021006f4()
+{
+    unsigned char *o = (unsigned char *)this;
   int i;
   for(i=0;i<3;i++){
     unsigned char* b = o + (i<<6);
@@ -942,8 +912,10 @@ void func_ov006_021006f4(unsigned char* o){
 }
 #pragma pop
 
-// @symbol func_ov006_02100734
-void func_ov006_02100734(char* c, int idx){
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02100734Ei
+void dScMgPachinko2_c::func_ov006_02100734(int idx)
+{
+    char *c = (char *)this;
     char* e = c + idx * 0x40;
     if (*(unsigned char*)(e + 0x5294) == 0) return;
     *(unsigned short*)(e + 0x5290) = 0;
@@ -952,12 +924,13 @@ void func_ov006_02100734(char* c, int idx){
     *(unsigned char*)(e + 0x5296) = 0xc;
 }
 
-// @symbol func_ov006_0210076c
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_0210076cEi
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
-void func_ov006_0210076c(char *c, int idx)
+void dScMgPachinko2_c::func_ov006_0210076c(int idx)
 {
+    char *c = (char *)this;
     int i;
     u8 (*arr)[0x40];
     u8 *slot;
@@ -1020,9 +993,9 @@ void func_ov006_0210076c(char *c, int idx)
                             row[0x469a] = (u8)z;
                             pxrow = (int *)(row + 0x4660);
                             *pflag = (u8)z;
-                            func_ov006_02100408(c, *pxrow, *p4664);
+                            func_ov006_02100408(*pxrow, *p4664);
                             func_02012718(0x19a, *pxrow);
-                            func_ov006_02101148(c, idx);
+                            func_ov006_02101148(idx);
                         } else if (dx >= -0x20 && dx <= 0x20) {
                             if (dx < 0)
                                 *(int *)(arr[i] + 0x4668) = *pvx - 0x1800;
@@ -1047,11 +1020,12 @@ void func_ov006_0210076c(char *c, int idx)
 }
 #pragma pop
 
-// @symbol func_ov006_021009b8
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_021009b8Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_021009b8(char *p, int i)
+void dScMgPachinko2_c::func_ov006_021009b8(int i)
 {
+    char *p = (char *)this;
     int v;
     u8 state;
 
@@ -1085,9 +1059,10 @@ void func_ov006_021009b8(char *p, int i)
 }
 #pragma pop
 
-// @symbol func_ov006_02100b08
-void func_ov006_02100b08(char *self, int idx)
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02100b08Ei
+void dScMgPachinko2_c::func_ov006_02100b08(int idx)
 {
+    char *self = (char *)this;
     char *base = self + idx * 64;
 
     if (*(unsigned short *)(base + 0x5292) != 0) {
@@ -1105,15 +1080,16 @@ void func_ov006_02100b08(char *self, int idx)
         *(unsigned short *)(base + 0x5292) = 0x30;
         x = *(int *)(base + 0x5260) >> 12;
         z = *(int *)(base + 0x5264) >> 12;
-        func_ov006_02102c3c(self, x, z, *(unsigned char *)(base + 0x5299) & 1);
+        func_ov006_02102c3c(x, z, *(unsigned char *)(base + 0x5299) & 1);
     }
 }
 
-// @symbol func_ov006_02100bac
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02100bacEi
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_02100bac(char* self, int i)
+void dScMgPachinko2_c::func_ov006_02100bac(int i)
 {
+    char *self = (char *)this;
     int b = i << 6;
 
     if (*(u16*)(self + 0x5292 + b) != 0) {
@@ -1162,7 +1138,7 @@ void func_ov006_02100bac(char* self, int i)
         *(int*)(self + (i << 6) + 0x5260) = 0x80000;
         *(int*)(self + (i << 6) + 0x5264) = r4 << 12;
         *(unsigned char*)(self + (i << 6) + 0x5296) = 0xd;
-        func_ov006_020ff4ec((struct Obj4ec *)self);
+        func_ov006_020ff4ec();
         *(u16*)(self + (i << 6) + 0x5292) = 0x40;
         if (i & 1) {
             *(u16*)(self + 0x5292 + (i << 6)) += 0x20;
@@ -1171,9 +1147,10 @@ void func_ov006_02100bac(char* self, int i)
 }
 #pragma pop
 
-// @symbol func_ov006_02100d90
-void func_ov006_02100d90(char *base, int idx)
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02100d90Ei
+void dScMgPachinko2_c::func_ov006_02100d90(int idx)
 {
+    char *base = (char *)this;
   char *r3 = base + (idx * 0x40);
   if ((*((unsigned short *) (r3 + 0x5292))) != 0)
   {
@@ -1196,9 +1173,10 @@ void func_ov006_02100d90(char *base, int idx)
   *((int *) ((r3 + 0x5000) + 0x26c)) = *((int *) ((r3 + 0x5000) + 0x288));
 }
 
-// @symbol func_ov006_02100e3c
-void func_ov006_02100e3c(struct Obje3c *obj, int idx)
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02100e3cEi
+void dScMgPachinko2_c::func_ov006_02100e3c(int idx)
 {
+    struct Obje3c *obj = (struct Obje3c *)this;
     obj->sub[idx].unk00 += obj->sub[idx].unk08;
 
     if (obj->sub[idx].unk3a == 0) {
@@ -1232,11 +1210,12 @@ void func_ov006_02100e3c(struct Obje3c *obj, int idx)
     obj->sub[idx].unk08 = 0;
 }
 
-// @symbol func_ov006_02100f7c
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02100f7cEi
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_02100f7c(char *c, int i)
+void dScMgPachinko2_c::func_ov006_02100f7c(int i)
 {
+    char *c = (char *)this;
     int d;
     *(int *)(c + 0x5264 + (i << 6)) += *(int *)(c + 0x5000 + (i << 6) + 0x26c);
     d = *(int *)(c + 0x5000 + (i << 6) + 0x264) >> 12;
@@ -1258,11 +1237,12 @@ void func_ov006_02100f7c(char *c, int i)
 }
 #pragma pop
 
-// @symbol func_ov006_02101088
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02101088Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_02101088(char *p, int i)
+void dScMgPachinko2_c::func_ov006_02101088(int i)
 {
+    char *p = (char *)this;
     int d;
     *(int *)(p + 0x5264 + (i << 6)) += *(int *)(p + 0x5000 + (i << 6) + 0x26c);
     d = (*(int *)(p + 0x5000 + (i << 6) + 0x264) - *(int *)(p + 0x5000 + (i << 6) + 0x280)) >> 12;
@@ -1279,11 +1259,12 @@ void func_ov006_02101088(char *p, int i)
 }
 #pragma pop
 
-// @symbol func_ov006_02101148
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02101148Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_02101148(char *c, int i)
+void dScMgPachinko2_c::func_ov006_02101148(int i)
 {
+    char *c = (char *)this;
     if ((int)*(unsigned char*)(c + i * 0x40 + 0x5000 + 0x296) >= 8) return;
 
     *(unsigned char*)(c + 0x529c + i * 0x40) += 1;
@@ -1310,11 +1291,12 @@ void func_ov006_02101148(char *c, int i)
 }
 #pragma pop
 
-// @symbol func_ov006_02101224
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02101224Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_02101224(char *c, int i)
+void dScMgPachinko2_c::func_ov006_02101224(int i)
 {
+    char *c = (char *)this;
     *(int *)(c + (i << 6) + 0x5000 + 0x28c) = Sound_PlayIfNotActive(*(int *)(c + (i << 6) + 0x5000 + 0x28c), 2, 0x198, 0);
 
     if (*(unsigned short *)(c + (i << 6) + 0x5200 + 0x92) != 0) {
@@ -1331,11 +1313,12 @@ void func_ov006_02101224(char *c, int i)
 }
 #pragma pop
 
-// @symbol func_ov006_021012cc
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_021012ccEi
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_021012cc(char* p, int i)
+void dScMgPachinko2_c::func_ov006_021012cc(int i)
 {
+    char *p = (char *)this;
     int v1;
     int v2;
     u8 state;
@@ -1431,11 +1414,12 @@ void func_ov006_021012cc(char* p, int i)
 }
 #pragma pop
 
-// @symbol func_ov006_021016ec
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_021016ecEi
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_021016ec(char* p, int i)
+void dScMgPachinko2_c::func_ov006_021016ec(int i)
 {
+    char *p = (char *)this;
     int v;
     u8 flag;
 
@@ -1501,11 +1485,12 @@ void func_ov006_021016ec(char* p, int i)
 }
 #pragma pop
 
-// @symbol func_ov006_021019e0
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_021019e0Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_021019e0(char *c, int i)
+void dScMgPachinko2_c::func_ov006_021019e0(int i)
 {
+    char *c = (char *)this;
     {
         unsigned short angle = *(unsigned short *)(c + (i << 6) + 0x5200 + 0x90);
         long long t0 = (long long)data_02082214[(angle >> 4) * 2 + 1] * 0x50000 + 0x800;
@@ -1528,11 +1513,12 @@ void func_ov006_021019e0(char *c, int i)
 }
 #pragma pop
 
-// @symbol func_ov006_02101af0
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02101af0Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_02101af0(char* p, int i)
+void dScMgPachinko2_c::func_ov006_02101af0(int i)
 {
+    char *p = (char *)this;
     int v;
     u8 state;
 
@@ -1619,11 +1605,12 @@ void func_ov006_02101af0(char* p, int i)
 }
 #pragma pop
 
-// @symbol func_ov006_02101e88
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02101e88Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_02101e88(char* p, int i)
+void dScMgPachinko2_c::func_ov006_02101e88(int i)
 {
+    char *p = (char *)this;
     int v;
     u8 flag;
 
@@ -1673,11 +1660,12 @@ void func_ov006_02101e88(char* p, int i)
 }
 #pragma pop
 
-// @symbol func_ov006_021020c4
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_021020c4Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_021020c4(char* p, int i)
+void dScMgPachinko2_c::func_ov006_021020c4(int i)
 {
+    char *p = (char *)this;
     int limit;
 
     *(int*)(p + 0x5264 + (i << 6)) += *(int*)(p + 0x5000 + (i << 6) + 0x26c);
@@ -1735,15 +1723,16 @@ void func_ov006_021020c4(char* p, int i)
         *(int*)(p + 0x526c + (i << 6)) -= 0x20;
     }
 
-    func_ov006_02101e88(p, i);
+    func_ov006_02101e88(i);
 }
 #pragma pop
 
-// @symbol func_ov006_02102274
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02102274Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_02102274(char *c, int idx)
+void dScMgPachinko2_c::func_ov006_02102274(int idx)
 {
+    char *c = (char *)this;
     char *slot;
     char *ip;
     char *base;
@@ -1831,22 +1820,24 @@ void func_ov006_02102274(char *c, int idx)
 }
 #pragma pop
 
-// @symbol func_ov006_0210246c
-void func_ov006_0210246c(C *self)
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_0210246cEv
+void dScMgPachinko2_c::func_ov006_0210246c()
 {
-    Row *rows = (Row *)self;
+    Row *rows = (Row *)this;
     for (int i = 0; i < 3; i++) {
         if (rows[i].d[0x5294]) {
-            (self->*data_ov006_02142734[rows[i].d[0x5296]])(i);
-            func_ov006_0210076c((char *)self, i);
+            (this->*data_ov006_02142734[rows[i].d[0x5296]])(i);
+            func_ov006_0210076c(i);
         }
     }
 }
 
-// @symbol func_ov006_021024e0
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_021024e0Ev
 #pragma push
 #pragma opt_strength_reduction off
-void func_ov006_021024e0(char *c) {
+void dScMgPachinko2_c::func_ov006_021024e0()
+{
+    char *c = (char *)this;
     int n = data_ov006_0212ebb8[*(int*)(c + 0x5000 + 0x668)];
     int i = 0;
     if (n <= 0) return;
@@ -1866,38 +1857,45 @@ void func_ov006_021024e0(char *c) {
 }
 #pragma pop
 
-// @symbol func_ov006_02102564
-void func_ov006_02102564(char (*c)[64]){
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02102564Ev
+void dScMgPachinko2_c::func_ov006_02102564()
+{
+    char (*c)[64] = (char (*)[64])this;
   int i;
   for(i=0;i<3;i++){ c[i][0x5294]=0; c[i][0x5295]=0; }
 }
 
-// @symbol func_ov006_0210258c
-void func_ov006_0210258c(char* c) {
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_0210258cEv
+void dScMgPachinko2_c::func_ov006_0210258c()
+{
+    char *c = (char *)this;
   volatile unsigned short v;
   char* dst;
   if (*(unsigned short*)(c + 0x5674) != 0) return;
-  func_ov006_02100734(c, 0);
-  func_ov006_02100734(c, 1);
-  func_ov006_02100734(c, 2);
+  func_ov006_02100734(0);
+  func_ov006_02100734(1);
+  func_ov006_02100734(2);
   *(int*)(c + 0x5660) = 2;
   *(short*)(c + 0x566e) = 0x40;
   dst = (char*)_ZN3G2S13GetBG2CharPtrEv();
   v = 0;
   MultiStore16(v, dst, 0x6000);
   *(unsigned char*)(c + 0x5677) = 0;
-  func_ov006_02102dbc((char (*)[64])c);
+  func_ov006_02102dbc();
 }
 
-// @symbol func_ov006_02102624
-void func_ov006_02102624(char* c){
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02102624Ev
+void dScMgPachinko2_c::func_ov006_02102624()
+{
+    char *c = (char *)this;
     if (*(unsigned char*)(c + 0x567a) == 0) return;
     func_ov004_020b1e44(*(unsigned short*)(c + 0x5674));
 }
 
-// @symbol func_ov006_0210265c
-void func_ov006_0210265c(char *c)
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_0210265cEv
+void dScMgPachinko2_c::func_ov006_0210265c()
 {
+    char *c = (char *)this;
     unsigned char *q;
     unsigned short *h;
     unsigned short t;
@@ -1919,9 +1917,10 @@ void func_ov006_0210265c(char *c)
         *(unsigned char *)(c + 0x567a) = 0;
 }
 
-// @symbol func_ov006_02102718
-void func_ov006_02102718(char* c)
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02102718Ev
+void dScMgPachinko2_c::func_ov006_02102718()
 {
+    char *c = (char *)this;
     volatile unsigned short tmp;
     int n = *(unsigned char*)(c + 0x5676);
     int a, b;
@@ -1947,10 +1946,10 @@ void func_ov006_02102718(char* c)
     }
 }
 
-// @symbol func_ov006_021027e4
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_021027e4Eiii
 #pragma push
 #pragma opt_loop_invariants off
-void func_ov006_021027e4(int a0, int a1, int a2, int a3)
+void dScMgPachinko2_c::func_ov006_021027e4(int a1, int a2, int a3)
 {
     int i, j, x, lo, hi, col, row, yb, s;
     u32 *bp;
@@ -1973,7 +1972,7 @@ void func_ov006_021027e4(int a0, int a1, int a2, int a3)
 }
 #pragma pop
 
-// @symbol func_ov006_02102864
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02102864Ev
 #define LA(p) (*(int *)((((int)(p)) + 0x5664)))
 #define LB(p) (*(int *)((((unsigned int)(p)) + 0x5664)))
 #define LC(p) (*(int *)(((int)((p) + 0x5664))))
@@ -1985,8 +1984,9 @@ void func_ov006_021027e4(int a0, int a1, int a2, int a3)
 #pragma push
 #pragma opt_loop_invariants off
 #pragma opt_dead_assignments off
-void func_ov006_02102864(char *c)
+void dScMgPachinko2_c::func_ov006_02102864()
 {
+    char *c = (char *)this;
     int k;                       /* sp+0x00 */
     int tx;                      /* sp+0x04 */
     int ty;                      /* sp+0x08 */
@@ -2052,7 +2052,7 @@ void func_ov006_02102864(char *c)
                 *(int *)(c + 0x5664) = adx / 2;
             LX:
                 if (dx == 0) {
-                    func_ov006_021027e4((int)c, cx, cy, layer);
+                    func_ov006_021027e4(cx, cy, layer);
                 } else if (dx > 0) {
                     cx++;
                     LA(c) += ady;
@@ -2060,7 +2060,7 @@ void func_ov006_02102864(char *c)
                         if (dy >= 0) cy++; else cy--;
                         LB(c) -= adx;
                     }
-                    func_ov006_021027e4((int)c, cx, cy, layer);
+                    func_ov006_021027e4(cx, cy, layer);
                     if (cx == tx) goto DONEK;
                     goto LX;
                 } else {
@@ -2070,7 +2070,7 @@ void func_ov006_02102864(char *c)
                         if (dy >= 0) cy++; else cy--;
                         LD(c) -= adx;
                     }
-                    func_ov006_021027e4((int)c, cx, cy, layer);
+                    func_ov006_021027e4(cx, cy, layer);
                     if (cx == tx) goto DONEK;
                     goto LX;
                 }
@@ -2078,7 +2078,7 @@ void func_ov006_02102864(char *c)
                 *(int *)(c + 0x5664) = ady / 2;
             LY:
                 if (dy == 0) {
-                    func_ov006_021027e4((int)c, cx, cy, layer);
+                    func_ov006_021027e4(cx, cy, layer);
                 } else if (dy > 0) {
                     cy++;
                     LE(c) += adx;
@@ -2086,7 +2086,7 @@ void func_ov006_02102864(char *c)
                         if (dx >= 0) cx++; else cx--;
                         LF(c) -= ady;
                     }
-                    func_ov006_021027e4((int)c, cx, cy, layer);
+                    func_ov006_021027e4(cx, cy, layer);
                     if (cy == ty) goto DONEK;
                     goto LY;
                 } else {
@@ -2096,7 +2096,7 @@ void func_ov006_02102864(char *c)
                         if (dx >= 0) cx++; else cx--;
                         LH(c) -= ady;
                     }
-                    func_ov006_021027e4((int)c, cx, cy, layer);
+                    func_ov006_021027e4(cx, cy, layer);
                     if (cy != ty) goto LY;
                 }
             }
@@ -2112,12 +2112,13 @@ void func_ov006_02102864(char *c)
 }
 #pragma pop
 
-// @symbol func_ov006_02102c3c
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02102c3cEiii
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
-void func_ov006_02102c3c(char *o, int x, int z, int d)
+void dScMgPachinko2_c::func_ov006_02102c3c(int x, int z, int d)
 {
+    char *o = (char *)this;
     int i;
     for (i = 0; i < 0x30; i++) {
         char *q = o + i * 0x40;
@@ -2143,12 +2144,13 @@ void func_ov006_02102c3c(char *o, int x, int z, int d)
 }
 #pragma pop
 
-// @symbol func_ov006_02102d6c
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02102d6cEi
 /* Resets entry i of a 0x40-stride array at this+0x4660: reverses and
  * quarters its velocity, clears counters, and tail-calls func_02012718
  * (sound: id 0x19c) with the entry's handle. */
-void func_ov006_02102d6c(struct Objd6c *self, int i)
+void dScMgPachinko2_c::func_ov006_02102d6c(int i)
 {
+    struct Objd6c *self = (struct Objd6c *)this;
     self->entries[i].state = 4;
     self->entries[i].vel = -self->entries[i].vel >> 2;
     self->entries[i].b = 0;
@@ -2158,17 +2160,20 @@ void func_ov006_02102d6c(struct Objd6c *self, int i)
     func_02012718(0x19c, self->entries[i].handle);
 }
 
-// @symbol func_ov006_02102dbc
-void func_ov006_02102dbc(char (*c)[64]){
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02102dbcEv
+void dScMgPachinko2_c::func_ov006_02102dbc()
+{
+    char (*c)[64] = (char (*)[64])this;
   int i;
   for(i=0;i<0x30;i++){ c[i][0x469a]=0; c[i][0x4698]=0; }
 }
 
-// @symbol func_ov006_02102de4
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02102de4Ev
 #pragma push
 #pragma opt_strength_reduction off
-void func_ov006_02102de4(char *p)
+void dScMgPachinko2_c::func_ov006_02102de4()
 {
+    char *p = (char *)this;
     int i;
     for (i = 0; i < 0x30; i++) {
         if (*(unsigned char *)(p + i * 64 + 0x469a) != 0) {
@@ -2186,22 +2191,25 @@ void func_ov006_02102de4(char *p)
 }
 #pragma pop
 
-// @symbol func_ov006_02102e8c
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02102e8cEv
 #pragma push
 #pragma opt_strength_reduction off
-void func_ov006_02102e8c(C *c) {
+void dScMgPachinko2_c::func_ov006_02102e8c()
+{
     int i;
     for (i = 0; i < 0x30; i++) {
-        if (*(unsigned char *)((char *)c + i * 0x40 + 0x4698) != 0) {
-            unsigned char k = *(unsigned char *)((char *)c + i * 0x40 + 0x4699);
-            (c->*data_ov006_021426f4[k].pmf)(i);
+        if (*(unsigned char *)((char *)this + i * 0x40 + 0x4698) != 0) {
+            unsigned char k = *(unsigned char *)((char *)this + i * 0x40 + 0x4699);
+            (this->*data_ov006_021426f4[k].pmf)(i);
         }
     }
 }
 #pragma pop
 
-// @symbol func_ov006_02102ef4
-void func_ov006_02102ef4(unsigned char *r0) {
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02102ef4Ev
+void dScMgPachinko2_c::func_ov006_02102ef4()
+{
+    unsigned char *r0 = (unsigned char *)this;
     if (r0[0x5678] != 0) return;
     *(unsigned short *)(r0 + 0x5674) = 0x1e;
     r0[0x5679] = 0;
@@ -2212,9 +2220,10 @@ void func_ov006_02102ef4(unsigned char *r0) {
     }
 }
 
-// @symbol func_ov006_02102f3c
-void func_ov006_02102f3c(char *base, int arg1)
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02102f3cEi
+void dScMgPachinko2_c::func_ov006_02102f3c(int arg1)
 {
+    char *base = (char *)this;
     u8 idx;
     int off;
     int has;
@@ -2239,10 +2248,10 @@ void func_ov006_02102f3c(char *base, int arg1)
         *(int *)(e + 0x674) = b << 12;
         *(u8 *)(e + 0x69b) = 0;
     }
-    func_ov006_02102864(base);
+    func_ov006_02102864();
 }
 
-// @symbol func_ov006_02102fe8
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02102fe8Ei
 /* dScMgPachinko2_c ball i under a live pen record: while the pen is down the
    ball follows the pen (x/y = pen + held offset, clamped to the field, offset
    re-derived); on release it aims the ball at (0x80, 0x20) and launches it.
@@ -2252,7 +2261,7 @@ void func_ov006_02102f3c(char *base, int arg1)
    arrays 18 div (the y read sinks past the x store), both pointer reads 7 div
    (r3/r6 colouring); only this pairing reproduces the ROM's literal hoisting
    and load order at both sites. */
-void func_ov006_02102fe8(dScMgPachinko2_c *self, int i)
+void dScMgPachinko2_c::func_ov006_02102fe8(int i)
 {
     int idx = data_020a0e40;
     int off = idx * 4;
@@ -2268,40 +2277,40 @@ void func_ov006_02102fe8(dScMgPachinko2_c *self, int i)
         int tx = ((volatile u8 *)data_020a0dea)[off];
         int ty = ((u8 *)data_020a0deb)[off];
 
-        self->mBalls[i].x = self->mBalls[i].px + (tx << 12);
-        self->mBalls[i].y = self->mBalls[i].py + (ty << 12);
-        sx = self->mBalls[i].x >> 12;
-        sy = self->mBalls[i].y >> 12;
+        this->mBalls[i].x = this->mBalls[i].px + (tx << 12);
+        this->mBalls[i].y = this->mBalls[i].py + (ty << 12);
+        sx = this->mBalls[i].x >> 12;
+        sy = this->mBalls[i].y >> 12;
         if (sx >= 0xf8) {
-            self->mBalls[i].x = 0xf8000;
+            this->mBalls[i].x = 0xf8000;
         }
         if (sx <= 8) {
-            self->mBalls[i].x = 0x8000;
+            this->mBalls[i].x = 0x8000;
         }
         if (sy >= 0xb8) {
-            self->mBalls[i].y = 0xb8000;
+            this->mBalls[i].y = 0xb8000;
         }
         if (sy <= 8) {
-            self->mBalls[i].y = 0x8000;
+            this->mBalls[i].y = 0x8000;
         }
         {
-            int nx = (self->mBalls[i].x >> 12) - ((volatile u8 *)data_020a0dea)[data_020a0e40 * 4];
-            int ny = (self->mBalls[i].y >> 12) - ((u8 *)data_020a0deb)[data_020a0e40 * 4];
-            self->mBalls[i].px = nx << 12;
-            self->mBalls[i].py = ny << 12;
+            int nx = (this->mBalls[i].x >> 12) - ((volatile u8 *)data_020a0dea)[data_020a0e40 * 4];
+            int ny = (this->mBalls[i].y >> 12) - ((u8 *)data_020a0deb)[data_020a0e40 * 4];
+            this->mBalls[i].px = nx << 12;
+            this->mBalls[i].py = ny << 12;
         }
 
-        dy = 0x80 - (self->mBalls[i].x >> 12);
-        dx = 0x20 - (self->mBalls[i].y >> 12);
+        dy = 0x80 - (this->mBalls[i].x >> 12);
+        dx = 0x20 - (this->mBalls[i].y >> 12);
         dist = dy * dy + dx * dx;
         sq = _ZN4cstd4sqrtEy(dist);
-        prev = self->mBalls[i].prevDist;
-        self->mBalls[i].prevDist = sq;
+        prev = this->mBalls[i].prevDist;
+        this->mBalls[i].prevDist = sq;
         if (sq > prev) {
             if (sq > prev + 10) {
-                self->mBalls[i].sound = Sound_PlayIfNotActive(self->mBalls[i].sound, 2, 0x17b, 0);
+                this->mBalls[i].sound = Sound_PlayIfNotActive(this->mBalls[i].sound, 2, 0x17b, 0);
             } else {
-                self->mBalls[i].sound = Sound_PlayIfNotActive(self->mBalls[i].sound, 2, 0x17c, 0);
+                this->mBalls[i].sound = Sound_PlayIfNotActive(this->mBalls[i].sound, 2, 0x17c, 0);
             }
         }
     } else {
@@ -2310,53 +2319,54 @@ void func_ov006_02102fe8(dScMgPachinko2_c *self, int i)
         int dist;
         int sq;
 
-        self->mBalls[i].state = 2;
-        dy = 0x80 - (self->mBalls[i].x >> 12);
-        dx = 0x20 - (self->mBalls[i].y >> 12);
+        this->mBalls[i].state = 2;
+        dy = 0x80 - (this->mBalls[i].x >> 12);
+        dx = 0x20 - (this->mBalls[i].y >> 12);
         dist = dy * dy + dx * dx;
         sq = _ZN4cstd4sqrtEy(dist);
         if (sq >= 0x10) {
-            self->mBalls[i].angle = _ZN4cstd5atan2E5Fix12IiES1_(dx, dy);
-            self->mBalls[i].speed = _ZN4cstd4sqrtEy(dist) << 8;
-            self->mBalls[i].speed += self->mBalls[i].speed >> 3;
-            self->mBalls[i].speed += 0x1800;
-            if (self->mBalls[i].speed >= 0x9400) {
-                self->mBalls[i].speed = 0x9400;
+            this->mBalls[i].angle = _ZN4cstd5atan2E5Fix12IiES1_(dx, dy);
+            this->mBalls[i].speed = _ZN4cstd4sqrtEy(dist) << 8;
+            this->mBalls[i].speed += this->mBalls[i].speed >> 3;
+            this->mBalls[i].speed += 0x1800;
+            if (this->mBalls[i].speed >= 0x9400) {
+                this->mBalls[i].speed = 0x9400;
             }
-            self->unk_566c = self->mBalls[i].speed >> 11;
-            self->unk_566c += self->unk_566c >> 1;
-            if (self->unk_566c == 0) {
-                self->unk_566c = 1;
-            }
-            {
-                s16 c = data_02082214[((u16)self->mBalls[i].angle >> 4) * 2 + 1];
-                self->mBalls[i].vx = (s32)(((s64)c * self->mBalls[i].speed + 0x800) >> 12);
+            this->unk_566c = this->mBalls[i].speed >> 11;
+            this->unk_566c += this->unk_566c >> 1;
+            if (this->unk_566c == 0) {
+                this->unk_566c = 1;
             }
             {
-                s16 s = data_02082214[((u16)self->mBalls[i].angle >> 4) * 2];
-                self->mBalls[i].vy = (s32)(((s64)s * self->mBalls[i].speed + 0x800) >> 12);
+                s16 c = data_02082214[((u16)this->mBalls[i].angle >> 4) * 2 + 1];
+                this->mBalls[i].vx = (s32)(((s64)c * this->mBalls[i].speed + 0x800) >> 12);
             }
-            self->mBalls[i].unk_36 = 0;
-            self->mBalls[i].unk_32 = self->mBalls[i].vx >> 2;
+            {
+                s16 s = data_02082214[((u16)this->mBalls[i].angle >> 4) * 2];
+                this->mBalls[i].vy = (s32)(((s64)s * this->mBalls[i].speed + 0x800) >> 12);
+            }
+            this->mBalls[i].unk_36 = 0;
+            this->mBalls[i].unk_32 = this->mBalls[i].vx >> 2;
             if (sq >= 0x40) {
                 Sound::PlayBank2_2D(0x17e);
             } else {
                 Sound::PlayBank2_2D(0x17d);
             }
         } else {
-            self->mBalls[i].x = 0x80000;
-            self->mBalls[i].y = 0x28000;
-            self->mBalls[i].state = 0;
+            this->mBalls[i].x = 0x80000;
+            this->mBalls[i].y = 0x28000;
+            this->mBalls[i].state = 0;
         }
     }
-    func_ov006_02102864((char *)self);
+    func_ov006_02102864();
 }
 
-// @symbol func_ov006_02103360
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02103360Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_02103360(char *c, int i)
+void dScMgPachinko2_c::func_ov006_02103360(int i)
 {
+    char *c = (char *)this;
     int idx;
     int velX, velY;
     int idx2;
@@ -2433,18 +2443,19 @@ void func_ov006_02103360(char *c, int i)
         *(unsigned char*)(c + i * 0x40 + 0x4000 + 0x699) = 6;
     }
 
-    func_ov006_02102718(c);
+    func_ov006_02102718();
     if (*(unsigned char*)(c + 0x5676) != 0) {
-        func_ov006_02102864(c);
+        func_ov006_02102864();
     }
 }
 #pragma pop
 
-// @symbol func_ov006_02103608
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02103608Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_02103608(char *o, int i)
+void dScMgPachinko2_c::func_ov006_02103608(int i)
 {
+    char *o = (char *)this;
     int v660, v664, t660;
     *(int *)((char *)(((int)o + 0x4660)) + i * 0x40) += *(int *)(o + i * 0x40 + 0x4668);
     *(int *)((char *)(((int)o + 0x4664)) + i * 0x40) += *(int *)(o + i * 0x40 + 0x466c);
@@ -2461,15 +2472,16 @@ void func_ov006_02103608(char *o, int i)
     if (v660 >= 0x140 || v660 <= -0x40)
         *(u8 *)(o + i * 0x40 + 0x4699) = 6;
     if (v664 >= 0xa8)
-        func_ov006_02102d6c((struct Objd6c *)o, i);
+        func_ov006_02102d6c(i);
 }
 #pragma pop
 
-// @symbol func_ov006_0210371c
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_0210371cEi
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_0210371c(char *c, int i)
+void dScMgPachinko2_c::func_ov006_0210371c(int i)
 {
+    char *c = (char *)this;
     int old;
     int v;
     int w;
@@ -2511,11 +2523,12 @@ void func_ov006_0210371c(char *c, int i)
 }
 #pragma pop
 
-// @symbol func_ov006_02103870
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02103870Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_02103870(char *c, int i)
+void dScMgPachinko2_c::func_ov006_02103870(int i)
 {
+    char *c = (char *)this;
     *(unsigned short *)(c + 0x4696 + (i << 6)) += 1;
 
     if (*(unsigned short *)(c + (i << 6) + 0x4600 + 0x96) >= 4) {
@@ -2544,17 +2557,20 @@ void func_ov006_02103870(char *c, int i)
 }
 #pragma pop
 
-// @symbol func_ov006_0210397c
-void func_ov006_0210397c(unsigned char* base, int idx) {
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_0210397cEi
+void dScMgPachinko2_c::func_ov006_0210397c(int idx)
+{
+    unsigned char *base = (unsigned char *)this;
     *(unsigned char*)(base + (idx << 6) + 0x4000 + 0x698) = 0;
     *(unsigned char*)(base + (idx << 6) + 0x4000 + 0x69a) = 0;
 }
 
-// @symbol func_ov006_02103994
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02103994Ei
 #pragma push
 #pragma opt_common_subs off
-void func_ov006_02103994(char *c, int i)
+void dScMgPachinko2_c::func_ov006_02103994(int i)
 {
+    char *c = (char *)this;
     *(int*)(c + 0x4660 + i * 0x40) += *(int*)(c + i * 0x40 + 0x4000 + 0x668);
     *(int*)(c + 0x4664 + i * 0x40) += *(int*)(c + i * 0x40 + 0x4000 + 0x66c);
     *(int*)(c + 0x4684 + i * 0x40) += 0x10;
@@ -2572,22 +2588,23 @@ void func_ov006_02103994(char *c, int i)
             int r3 = func_ov004_020adbc0();
             int f660 = *(int*)(c + i * 0x40 + 0x4000 + 0x660);
             int f664 = *(int*)(c + i * 0x40 + 0x4000 + 0x664);
-            func_ov006_02100278(c, f660, f664, r3 + 1);
+            func_ov006_02100278(f660, f664, r3 + 1);
             func_ov004_020adb1c(func_ov004_020adbc0() + 1);
         }
     }
 
     if ((*(int*)(c + i * 0x40 + 0x4000 + 0x664) >> 12) < 0xa8) return;
 
-    func_ov006_02102d6c((struct Objd6c *)c, i);
+    func_ov006_02102d6c(i);
 }
 #pragma pop
 
-// @symbol func_ov006_02103ac0
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02103ac0Ev
 #pragma push
 #pragma opt_strength_reduction off
-void func_ov006_02103ac0(char *c)
+void dScMgPachinko2_c::func_ov006_02103ac0()
 {
+    char *c = (char *)this;
     int i;
     unsigned short *q;
     if (*(unsigned short *)(c + 0x566c) == 0) return;
@@ -2629,11 +2646,12 @@ void func_ov006_02103ac0(char *c)
 }
 #pragma pop
 
-// @symbol func_ov006_02103bfc
+// @symbol _ZN16dScMgPachinko2_c19func_ov006_02103bfcEv
 #pragma push
 #pragma opt_strength_reduction off
-void func_ov006_02103bfc(char *c)
+void dScMgPachinko2_c::func_ov006_02103bfc()
 {
+    char *c = (char *)this;
     int i;
     int j;
     char *p;
@@ -2666,8 +2684,8 @@ void func_ov006_02103bfc(char *c)
     *(unsigned char *)(c + 0x567a) = 0;
     *(unsigned short *)(c + 0x5670) = 0;
     func_ov004_020adb1c(0);
-    func_ov006_02102564((char (*)[64])c);
-    func_ov006_02100058((unsigned char (*)[0x20])c);
+    func_ov006_02102564();
+    func_ov006_02100058();
 }
 #pragma pop
 
@@ -2690,21 +2708,21 @@ void dScMgPachinko2_c::OnYoshiTryEat(int n)
         if (unk_0bc > 0x270e) unk_0bc = 0x270e;
     }
     FreeGfxSlotsById(0x1d);
-    func_ov006_02103bfc((char *)this);
+    func_ov006_02103bfc();
 }
 
 // @symbol _ZN16dScMgPachinko2_c6RenderEv
-/* Slot 9. Its eight helpers are still free functions. */
+/* Slot 9. */
 s32 dScMgPachinko2_c::Render()
 {
-    func_ov006_021004c0((struct Obj4c0 *)this);
-    func_ov006_02100488((char *)this);
-    func_ov006_02102624((char *)this);
-    func_ov006_02100314((char *)this);
-    func_ov006_02100140((char *)this);
-    func_ov006_02102de4((char *)this);
-    func_ov006_0210068c((struct Obj68c *)this);
-    func_ov006_020ff47c((struct Obj *)this);
+    func_ov006_021004c0();
+    func_ov006_02100488();
+    func_ov006_02102624();
+    func_ov006_02100314();
+    func_ov006_02100140();
+    func_ov006_02102de4();
+    func_ov006_0210068c();
+    func_ov006_020ff47c();
     return 1;
 }
 
@@ -2714,9 +2732,9 @@ s32 dScMgPachinko2_c::Behavior()
 {
     switch (unk_5660) {
     case 0:
-        func_ov006_02100084((char *)this);
-        func_ov006_021024e0((char *)this);
-        func_ov006_020fffec((char *)this);
+        func_ov006_02100084();
+        func_ov006_021024e0();
+        func_ov006_020fffec();
         unk_566c = 0x10;
         unk_5660 = 1;
         break;
@@ -2726,28 +2744,28 @@ s32 dScMgPachinko2_c::Behavior()
             mPromptBlinkCount = 1;
             mPromptBlinkTimer = 0;
         }
-        func_ov006_0210265c((char *)this);
-        func_ov006_02102ef4((unsigned char *)this);
-        func_ov006_02103ac0((char *)this);
-        func_ov006_02102e8c((C *)this);
-        func_ov006_0210246c((C *)this);
-        func_ov006_020fff84((C *)this);
-        func_ov006_02100380((char *)this);
-        func_ov006_0210258c((char *)this);
+        func_ov006_0210265c();
+        func_ov006_02102ef4();
+        func_ov006_02103ac0();
+        func_ov006_02102e8c();
+        func_ov006_0210246c();
+        func_ov006_020fff84();
+        func_ov006_02100380();
+        func_ov006_0210258c();
         break;
     case 2:
-        func_ov006_02102e8c((C *)this);
-        func_ov006_0210246c((C *)this);
-        func_ov006_020fff84((C *)this);
-        func_ov006_02100380((char *)this);
-        func_ov006_02100554(this);
-        func_ov006_021001ac((char *)this);
+        func_ov006_02102e8c();
+        func_ov006_0210246c();
+        func_ov006_020fff84();
+        func_ov006_02100380();
+        func_ov006_02100554();
+        func_ov006_021001ac();
         break;
     case 3:
-        func_ov006_02102e8c((C *)this);
-        func_ov006_0210246c((C *)this);
-        func_ov006_020fff84((C *)this);
-        func_ov006_021001ac((char *)this);
+        func_ov006_02102e8c();
+        func_ov006_0210246c();
+        func_ov006_020fff84();
+        func_ov006_021001ac();
         if (unk_566e != 0) {
             unk_566e--;
             if ((s16)unk_566e <= 0) {
@@ -2853,10 +2871,10 @@ s32 dScMgPachinko2_c::InitResources()
     Deallocate((void *)sp4);
     Deallocate((void *)sp8);
 
-    func_ov006_02103bfc((char *)this);
-    func_ov006_02100084((char *)this);
-    func_ov006_021024e0((char *)this);
-    func_ov006_020fffec((char *)this);
+    func_ov006_02103bfc();
+    func_ov006_02100084();
+    func_ov006_021024e0();
+    func_ov006_020fffec();
     func_ov004_020b04d0(0x20);
 
     unk_0a4 = 1;

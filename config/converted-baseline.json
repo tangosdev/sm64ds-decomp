@@ -3566,7 +3566,16 @@
     "src/engine/fader/dWipe_c.cpp#_ZN7dWipe_c9IsAtStartEv",
     "src/engine/fader/dWipe_c.cpp#_ZN7dWipe_cC1Ev",
     "src/engine/fader/dWipe_c.cpp#_ZN7dWipe_cD0Ev",
-    "src/engine/fader/dWipe_c.cpp#_ZN7dWipe_cD1Ev"
+    "src/engine/fader/dWipe_c.cpp#_ZN7dWipe_cD1Ev",
+    "src/actors/dScMgAmida_c.cpp#_ZN12dScMgAmida_c11ClearStrokeEv",
+    "src/actors/dScMgAmida_c.cpp#_ZN12dScMgAmida_c11InitWalkersEv",
+    "src/actors/dScMgAmida_c.cpp#_ZN12dScMgAmida_c11RenderBoardEv",
+    "src/actors/dScMgAmida_c.cpp#_ZN12dScMgAmida_c12ShuffleGoalsEi",
+    "src/actors/dScMgAmida_c.cpp#_ZN12dScMgAmida_c14CheckEdgeBoostEv",
+    "src/actors/dScMgAmida_c.cpp#_ZN12dScMgAmida_c14RenderBoardAltEv",
+    "src/actors/dScMgAmida_c.cpp#_ZN12dScMgAmida_c16CheckHurryButtonEv",
+    "src/actors/dScMgAmida_c.cpp#_ZN12dScMgAmida_c21AfterCleanupResourcesEj",
+    "src/actors/dScMgAmida_c.cpp#_ZN12dScMgAmida_c8BehaviorEv"
   ],
-  "count": 3559
+  "count": 3568
 }

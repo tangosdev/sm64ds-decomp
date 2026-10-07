@@ -1327,14 +1327,6 @@ extern int func_ov006_020f7b90(void);
 /* The former func_ov006_020f9000..020f9f40 range is owned by the real
    dScMgMCarlo2_c / dMgMCarlo2CardObj_c classes. Every caller is in that
    original TU, so none of those private members belongs in this header. */
-extern void func_ov006_020ff47c(void*);
-extern void func_ov006_02100140(void*);
-extern void func_ov006_02100314(void*);
-extern void func_ov006_02100488(void*);
-extern void func_ov006_021004c0(void*);
-extern void func_ov006_0210068c(void*);
-extern void func_ov006_02102624(void*);
-extern void func_ov006_02102de4(void*);
 extern void func_ov006_02104354(void*);
 extern void func_ov006_02104ac4(void*);
 extern int func_ov006_02107a6c(void);
@@ -2147,7 +2139,6 @@ extern void func_ov006_020d09e0(void);
 extern void func_ov006_020d0b2c(void);
 extern void func_ov006_020d1008();
 extern void func_ov006_020d116c(void);
-extern void func_ov006_020d3ba0(char*);
 extern void func_ov006_020d604c(void*);
 extern void func_ov006_020d62e0(void*);
 extern void func_ov006_020d6630(void*);
@@ -2218,10 +2209,6 @@ extern void func_ov006_020f7740(void);
 extern void func_ov006_020f7994(void);
 extern void func_ov006_020fad90(char*);
 extern void func_ov006_020fadfc(char*);
-extern void func_ov006_020fffec(char*);
-extern void func_ov006_02100084(char*);
-extern void func_ov006_021024e0(int);
-extern void func_ov006_02103bfc(char*);
 extern void func_ov006_021042e8(void*);
 extern void func_ov006_02104b24(char*);
 extern void func_ov006_02104b5c(void*);
