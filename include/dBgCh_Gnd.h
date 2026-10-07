@@ -1,27 +1,18 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class dBgCh_Gnd: 3 matched functions, 2 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen.
+/* Ground-ray collision query: a probe position swept downward against the
+ * KCL collider registry, reporting the floor through an embedded dBgPi hit
+ * record. The ROM's __vmi_class_type_info states the base list outright:
  *
- * HAND-EXTENDED for dBgW_Kc::DetectClsn(dBgCh_Gnd&) at 0x01ffd3f8:
- *   0x010  the dBgPi the hit is written into (_ZN5dBgPi9RecordHitEsP11SurfaceInfo(ray+0x10, ...))
- *   0x038  the probe position, a Fix12i Vector3, read as .x, .z, .y
- *   0x044  the collision height in Fix12i: the search seed on entry, the hit on exit
- *   0x048  the has-collision byte
- * Consistent with dBgW_KcMbg::DetectClsn(dBgCh_Gnd&), which writes
- * 0x44/0x48 and reads 0x44/0x48/0x4c.
- *
- * PROMOTED 2026-08-24 to a real MI declaration (notes/ctor-migration.md item
- * 9). The ROM's own RTTI record (_ZTS9dBgCh_Gnd at 0x02099224) states the
- * base list outright:
- *
- *     dBgCh    @ 0x00   polymorphic   (vptr store at +0)
+ *     dBgCh    @ 0x00   polymorphic
  *     dBgPi    @ 0x10   polymorphic   (secondary block VTable_dBgPi_dBgCh_GndThunk;
- *                                     this IS the hit record at 0x10 below)
+ *                                     this IS the hit record below)
  *
- * The C++ branch declares exactly that; the C branch stays field-for-field
- * IDENTICAL to what this header carried before promotion, because .c
- * translation units reach into the 0x10 interior by the old member spelling.
+ * Layout evidence (dBgW_Kc::DetectClsn(dBgCh_Gnd&) at 0x01ffd3f8, and the
+ * KcMbg sibling): 0x38 = probe position, 0x44 = ray length in / hit height
+ * out, 0x48 = has-collision byte, 0x4c = default probe height.
+ *
+ * The C branch below stays field-for-field identical to the C++ layout:
+ * .c translation units reach into the 0x10 interior by the old member
+ * spelling.
  */
 #ifndef DBGCH_GND_H
 #define DBGCH_GND_H
@@ -37,19 +28,20 @@ struct dActor_c;
 
 struct dBgCh_Gnd : dBgCh, dBgPi {
     /* 0x10..0x37 is the dBgPi base sub-object itself -- THE HIT RECORD,
-       written by dBgW_Kc::DetectClsn through _ZN5dBgPi9RecordHitEsP11SurfaceInfo(&ray->base, ...).
+       written by dBgW_Kc::DetectClsn through RecordHit(&ray->dBgPi, ...).
 
        THE PROBE STATE, supplied by the caller of DetectClsn and overwritten
        with the answer: pos is the search position (read .z, .x, .y by the
        collider walk); clsnY is the floor height seeded on entry and the hit
-       on exit; hasClsn says whether the walk found anything at all. unk_04c
-       the constructor seeds 0x1f4000 -- a Fix12i of 496.0, the default probe
-       height above pos. */
+       on exit; hasClsn says whether the walk found anything at all.
+       mProbeHeight the constructor seeds 0x1f4000 -- 500.0 fixed-point, the
+       default probe height above pos. Callers override it with round <<12
+       distances (daMenbo 3000.0, daObjHatenaBlock/daStar 1000.0). */
     Vector3 pos;            /* 0x038 */
     Fix12i clsnY;           /* 0x044 */
     u8  hasClsn;            /* 0x048 */
     u8  pad_049[0x3];
-    s32 mProbeHeight;            /* 0x04c */
+    Fix12i mProbeHeight;    /* 0x04c */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     /* Defined as real C++ in separate D1/D0 source files. Dedicated TUs with
@@ -101,7 +93,7 @@ struct dBgCh_Gnd {
     Fix12i clsnY;           /* 0x044 */
     u8  hasClsn;            /* 0x048 */
     u8  pad_049[0x3];
-    s32 mProbeHeight;            /* 0x04c */
+    Fix12i mProbeHeight;        /* 0x04c */
 
 #ifdef __cplusplus
     /* methods */
