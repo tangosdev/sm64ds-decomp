@@ -16,7 +16,10 @@ src/actors/daBgSnmHed_c.cpp:
 src/actors/daBgSnwmn_c.cpp:
     complete
     .text start:0x02120824 end:0x02120c58
+    .init start:0x02122350 end:0x02122414
+    .ctor start:0x02122710 end:0x02122714
     .data start:0x02122938 end:0x021229f4
+    .bss start:0x02122c40 end:0x02122c94
 
 src/game/actors/d_a_pg_bby.cpp:
     complete
@@ -29,10 +32,6 @@ src/__sinit_ov072_02122018.c:
 src/__sinit_ov072_021221f8.c:
     complete
     .init start:0x021221f8 end:0x02122350
-
-src/__sinit_ov072_02122350.c:
-    complete
-    .init start:0x02122350 end:0x02122414
 
 src/__sinit_ov072_02122414.c:
     complete

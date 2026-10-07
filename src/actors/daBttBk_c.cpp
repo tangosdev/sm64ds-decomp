@@ -34,7 +34,7 @@
  * is this. The ROM ties each one to this class --
  *   - the six state bodies are the pointer-to-member constants at ov080
  *     0x0212812c..0x02128158, the .data words directly before
- *     _ZTS9daBttBk_c. __sinit_ov080_02127a60 constructs this class's model
+ *     _ZTS9daBttBk_c. __sinit_daBttBk_c.cpp constructs this class's model
  *     file data_ov080_02128468 and copies those constants into the 3-row
  *     state table data_ov080_0212847c (.bss): state 0 = {0212509c enter,
  *     0212500c update}, state 1 = {02124fec, 02124edc}, state 2 =
@@ -104,7 +104,24 @@ void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, voi
 
 extern Mtx43 data_020a0e68;
 extern s16 data_02082214[];
-extern char data_ov080_0212847c[];
+
+/* Model-file handle. The derived constructor and destructor are the retail
+ * SharedFilePtr pair; this TU does not define them. */
+struct BttBkModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    BttBkModelFilePtr(u32 fileID);
+    ~BttBkModelFilePtr();
+};
+
+typedef int (daBttBk_c::*daBttBk_StateFn)();
+struct daBttBk_StateRow {
+    daBttBk_StateFn enter;
+    daBttBk_StateFn update;
+};
+
+extern "C" BttBkModelFilePtr data_ov080_02128468;
+extern "C" daBttBk_StateRow data_ov080_0212847c[3];
 
 #pragma defer_codegen off
 
@@ -358,7 +375,7 @@ void daBttBk_c::func_ov080_02125104()
 // @symbol _ZN9daBttBk_c19func_ov080_0212513cEi
 void daBttBk_c::func_ov080_0212513c(int i)
 {
-    mStateRow = data_ov080_0212847c + (i << 4);
+    mStateRow = (char *)data_ov080_0212847c + (i << 4);
     func_ov080_02125104();
 }
 
@@ -457,3 +474,12 @@ extern "C" daBttBk_c *daBttBk_c_classInit()
 {
     return new daBttBk_c();
 }
+
+/* __sinit_daBttBk_c.cpp constructs the model handle, then copies the six
+ * anonymous pointer-to-member descriptors into this table. */
+BttBkModelFilePtr data_ov080_02128468(0x2ac);
+daBttBk_StateRow data_ov080_0212847c[3] = {
+    { &daBttBk_c::func_ov080_0212509c, &daBttBk_c::func_ov080_0212500c },
+    { &daBttBk_c::func_ov080_02124fec, &daBttBk_c::func_ov080_02124edc },
+    { &daBttBk_c::func_ov080_02124eb0, &daBttBk_c::func_ov080_02124e60 },
+};
