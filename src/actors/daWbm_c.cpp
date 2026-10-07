@@ -37,9 +37,8 @@
  *   Player::Hurt and Particle::System::NewSimple stay mangled. Each takes
  *   Fix12<int> by value (wall 6az): passing a Fix12<int> local to
  *   mdCcAc_c.Init makes InitResources 0x20 bytes longer.
- * - The hit check and the placement helper keep their func_ov098_* linker
- *   names as C-linkage functions over a daWbm_c pointer, because
- *   include/decl_common.h declares both by those names.
+ * - The hit check and the placement helper are members but keep their
+ *   func_ov098_* address names.
  * - The state table (data_ov098_0213c930, .bss), the fragment angle table
  *   (data_ov098_0213bf90) and the bomb model file (data_ov098_0213c91c) are
  *   unnamed ov098 rows this TU does not own; func_0201267c, the sound call,
@@ -102,9 +101,6 @@ void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES
 int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(Player *self, const Vector3 *from,
     u32 a, s32 b, u8 c, u8 d, u8 e);
 void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, s32 x, s32 y, s32 z);
-
-void func_ov098_0213b584(daWbm_c *bomb);
-int func_ov098_0213b6e0(daWbm_c *bomb);
 }
 
 // @symbol daWbm_c_classInit
@@ -184,8 +180,8 @@ int daWbm_c::InitResources()
 // @symbol _ZN7daWbm_c8BehaviorEv
 int daWbm_c::Behavior()
 {
-    if (func_ov098_0213b6e0(this)) {
-        func_ov098_0213b584(this);
+    if (func_ov098_0213b6e0()) {
+        func_ov098_0213b584();
         mdCcAc_c.Clear();
         return 1;
     }
@@ -202,7 +198,7 @@ int daWbm_c::Behavior()
                 MarkForDestruction();
             return 0;
         }
-        func_ov098_0213b584(this);
+        func_ov098_0213b584();
         mdCcAc_c.Clear();
         mdCcAc_c.Update();
     } else {
@@ -366,14 +362,14 @@ void daWbm_c::StateBounce()
     }
 }
 
-// @symbol func_ov098_0213b6e0
+// @symbol _ZN7daWbm_c19func_ov098_0213b6e0Ev
 /* The hit check. Touching a player hurts them, and a bomb
  * bursts with a splash; touching a BOMBHEI (actor 206) bursts a bomb too. Returns 1
  * when the bomb burst. */
-extern "C" int func_ov098_0213b6e0(daWbm_c *bomb)
+int daWbm_c::func_ov098_0213b6e0()
 {
     Vector3 pos;
-    u32 otherID = bomb->mdCcAc_c.otherOwner;
+    u32 otherID = mdCcAc_c.otherOwner;
     if (otherID != 0) {
         dActor_c *other = dActor_c::FindWithID(otherID);
         if (other != 0) {
@@ -382,21 +378,21 @@ extern "C" int func_ov098_0213b6e0(daWbm_c *bomb)
                function is shorter than the ROM's. */
             int cmp = actorID == ACTOR_PLAYER;
             if (cmp) {
-                pos.x = bomb->mPosX;
-                pos.y = bomb->mPosY;
-                pos.z = bomb->mPosZ;
+                pos.x = mPosX;
+                pos.y = mPosY;
+                pos.z = mPosZ;
                 _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj((Player *)other, &pos, 1, 0xc000, 1, 0, 1);
-                if (bomb->mVariant == 1) {
-                    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x1c, bomb->mPosX, bomb->mPosY, bomb->mPosZ);
-                    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x1d, bomb->mPosX, bomb->mPosY, bomb->mPosZ);
-                    bomb->Burst();
+                if (mVariant == 1) {
+                    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x1c, mPosX, mPosY, mPosZ);
+                    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x1d, mPosX, mPosY, mPosZ);
+                    Burst();
                     return 1;
                 }
             } else {
                 cmp = actorID == ACTOR_BOMBHEI;
                 if (cmp) {
-                    if (bomb->mVariant == 1) {
-                        bomb->Burst();
+                    if (mVariant == 1) {
+                        Burst();
                         return 1;
                     }
                 }
@@ -426,19 +422,19 @@ void daWbm_c::Burst()
     MarkForDestruction();
 }
 
-// @symbol func_ov098_0213b584
+// @symbol _ZN7daWbm_c19func_ov098_0213b584Ev
 /* Place the model and the drop shadow at the bomb's position. */
-extern "C" void func_ov098_0213b584(daWbm_c *bomb)
+void daWbm_c::func_ov098_0213b584()
 {
     Vector3 shadowPos;
-    Vec3_Asr(&shadowPos, (Vector3 *)&bomb->mPosX, 3);
+    Vec3_Asr(&shadowPos, (Vector3 *)&mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, shadowPos.x, shadowPos.y, shadowPos.z);
-    bomb->mShadowMat = data_020a0e68;
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, bomb->mAngleY);
-    bomb->mModel.mat4x3 = data_020a0e68;
+    mShadowMat = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    mModel.mat4x3 = data_020a0e68;
     _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        bomb, &bomb->mShadowModel, &bomb->mShadowMat,
-        bomb->mScaleX * 0xa0, 0x3e8000, 6);
+        this, &mShadowModel, &mShadowMat,
+        mScaleX * 0xa0, 0x3e8000, 6);
 }
 
 // @symbol _ZN7daWbm_c4LandEv

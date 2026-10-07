@@ -954,8 +954,10 @@ typedef struct WarpEntry_730 {
 void func_ov006_02105730(char *c)
 {
     dScMgPanel_c *s = (dScMgPanel_c *)c;
-    extern u8 data_020a0e40;
-    extern WarpEntry_730 data_020a0de8[];
+// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
+    extern u8 gActivePlayerSlot;
+// local extern: see above.
+    extern WarpEntry_730 gTouchHeld[];
     u8 idx;
     s32 b;
     s32 dx;
@@ -964,16 +966,16 @@ void func_ov006_02105730(char *c)
     if (*(u8 *)(c + 0x4fe9) != 0) {
         return;
     }
-    idx = data_020a0e40;
+    idx = gActivePlayerSlot;
     b = 0;
-    if (data_020a0de8[idx].a != 0) {
-        b = (data_020a0de8[idx].b != 0);
+    if (gTouchHeld[idx].a != 0) {
+        b = (gTouchHeld[idx].b != 0);
     }
     if (b == 0) {
         return;
     }
-    dx = data_020a0de8[idx].c - 0xe8;
-    dy = data_020a0de8[idx].d - 0x10;
+    dx = gTouchHeld[idx].c - 0xe8;
+    dy = gTouchHeld[idx].d - 0x10;
     if (dx < -15) {
         return;
     }
@@ -1258,9 +1260,12 @@ typedef struct PanelObj_de4 {
 
 void func_ov006_02105de4(char *scene)
 {
-    extern u8 data_020a0e40;
-    extern u8 data_020a0de8[];
-    extern u8 data_020a0de9[];
+// local extern: see above.
+    extern u8 gActivePlayerSlot;
+// local extern: see above.
+    extern u8 gTouchHeld[];
+// local extern: see above.
+    extern u8 gTouchEdge[];
     extern void func_ov006_02104e80(char *);
     u8 lvl;
     int n;
@@ -1270,10 +1275,10 @@ void func_ov006_02105de4(char *scene)
     if (*(u8 *)(scene + 0x4fe9) != 0)
         return;
 
-    lvl = data_020a0e40;
+    lvl = gActivePlayerSlot;
     n = 0;
-    if (data_020a0de8[lvl * 4] != 0)
-        n = data_020a0de9[lvl * 4] != 0;
+    if (gTouchHeld[lvl * 4] != 0)
+        n = gTouchEdge[lvl * 4] != 0;
     if (n == 0)
         return;
 
@@ -1283,7 +1288,7 @@ void func_ov006_02105de4(char *scene)
         return;
 
     {
-        u8 *e = &data_020a0de8[lvl * 4];
+        u8 *e = &gTouchHeld[lvl * 4];
         tx = e[2];
         ty = e[3];
     }
@@ -1868,9 +1873,12 @@ typedef void (PanelC_ca4::*PanelPmf_ca4)(int);
 void func_ov006_02106ca4(char *scene)
 {
     extern PanelPmf_ca4 data_ov006_02142840[];
-    extern u8 data_020a0e40;
-    extern u8 data_020a0de8[];
-    extern u8 data_020a0de9[];
+// local extern: see above.
+    extern u8 gActivePlayerSlot;
+// local extern: see above.
+    extern u8 gTouchHeld[];
+// local extern: see above.
+    extern u8 gTouchEdge[];
     void func_ov006_021050bc(void *scene);
     void func_ov006_02104580(void *scene);
     void func_ov006_02104870(void *scene);
@@ -1911,9 +1919,9 @@ void func_ov006_02106ca4(char *scene)
             int hit;
             u8 index;
             hit = 0;
-            index = data_020a0e40;
-            if (data_020a0de8[index * 4] != 0) {
-                if (data_020a0de9[index * 4] != 0)
+            index = gActivePlayerSlot;
+            if (gTouchHeld[index * 4] != 0) {
+                if (gTouchEdge[index * 4] != 0)
                     hit = 1;
             }
             if (hit)

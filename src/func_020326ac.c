@@ -1,4 +1,5 @@
 #include "types.h"
+#include "PlayerInput.h"
 #pragma opt_common_subs off
 extern u8 data_0209fcc8;
 extern u8 data_0209fc7c;
@@ -7,7 +8,6 @@ extern u8 data_0209fc70;
 extern u8 data_0209fcd0;
 extern u8 data_0209fc98;
 extern u8 data_0209fcb8;
-extern u8 data_020a0e40;
 extern u8 data_0209f4a2;
 extern u8 data_0209f4a4;
 extern int data_0209caa0[];
@@ -22,9 +22,6 @@ extern u8 data_ov002_0210c3a8;
 extern u8 data_ov002_0210c3a0;
 extern u8 data_ov002_0210c390;
 extern u8 data_ov002_0210c398;
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0deb[];
 extern s16 data_0209fcec;
 extern s16 data_0209fcf0;
 extern s32 data_0209fd0c;
@@ -75,13 +72,13 @@ void func_020326ac(void)
             data_0209fcb8 = 1;
             return;
         }
-        t = *(s16*)(&data_0209f4a2 + data_020a0e40 * 0x18);
+        t = *(s16*)(&data_0209f4a2 + gActivePlayerSlot * 0x18);
         if (t > 0x80) {
             data_0209fcd0 = 1;
         } else if (t < -0x80) {
             data_0209fcd0 = 0;
         } else if (*((u8*)data_0209caa0 + 0x42) == 0 &&
-                   (*(u16*)(&data_020a0e5a + data_020a0e40 * 4) & 0x30)) {
+                   (*(u16*)(&data_020a0e5a + gActivePlayerSlot * 4) & 0x30)) {
             data_0209fcd0 ^= 1;
         }
         {
@@ -102,13 +99,13 @@ void func_020326ac(void)
             data_0209fcb8 = 1;
             return;
         }
-        t = *(s16*)(&data_0209f4a4 + data_020a0e40 * 0x18);
+        t = *(s16*)(&data_0209f4a4 + gActivePlayerSlot * 0x18);
         if (t > 0x80) {
             data_0209fcd0 = 1;
         } else if (t < -0x80) {
             data_0209fcd0 = 0;
         } else if (*((u8*)data_0209caa0 + 0x42) == 0 &&
-                   (*(u16*)(&data_020a0e5a + data_020a0e40 * 4) & 0xC0)) {
+                   (*(u16*)(&data_020a0e5a + gActivePlayerSlot * 4) & 0xC0)) {
             data_0209fcd0 ^= 1;
         }
         {
@@ -131,19 +128,19 @@ void func_020326ac(void)
             data_0209fcb8 = 1;
             return;
         }
-        idx = data_020a0e40;
+        idx = gActivePlayerSlot;
         hasf1 = 0;
-        f0 = data_020a0de8[idx * 4];
+        f0 = gTouchHeld[idx * 4];
         if (f0 != 0) {
-            if (data_020a0de9[idx * 4] != 0) {
+            if (gTouchEdge[idx * 4] != 0) {
                 hasf1 = 1;
             }
         }
         if (hasf1 != 0) {
-            data_0209fcec = data_020a0deb[idx * 4];
+            data_0209fcec = gTouchY[idx * 4];
             data_0209fcec -= (s16)(data_0209fcd0 * 8);
         } else if (f0 != 0) {
-            s16 debval = data_020a0deb[idx * 4];
+            s16 debval = gTouchY[idx * 4];
             data_0209fcf0 = debval - data_0209fcec;
             if (data_0209fcf0 > 0x10) {
                 data_0209fcf0 = 0x10;

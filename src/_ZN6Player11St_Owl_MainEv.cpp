@@ -2,6 +2,7 @@
 // @symbol _ZN6Player11St_Owl_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
+#include "PlayerInput.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 extern "C" {
@@ -15,7 +16,6 @@ extern int _ZN6Player12FinishedAnimEv(void* c);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void* c, unsigned int a, int b, int d, unsigned int e);
 extern void Player_AdvanceAnims(void* c);
 
-extern unsigned char data_020a0e40;
 extern unsigned char data_0209f49c[];
 extern char data_0209f4a0[];
 extern int data_ov002_021101b4[];
@@ -32,7 +32,7 @@ int Player::St_Owl_Main()
     st = mStateStep;
     if (st != 2 && st != 3) {
         if (mHeldObj == 0 ||
-            (*(unsigned short*)(data_0209f49c + data_020a0e40*0x18) & 2) == 0 ||
+            (*(unsigned short*)(data_0209f49c + gActivePlayerSlot*0x18) & 2) == 0 ||
             (mClsnFlags & 2)) {
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021101b4);
             return 1;
@@ -72,7 +72,7 @@ int Player::St_Owl_Main()
         i = (unsigned short)ang >> 4;
         mVertSpeed = data_02082214[i*2+1] * mag;
         mHorzSpeed = 0x14000;
-        if (*(short*)(data_0209f4a0 + data_020a0e40*0x18) != 0) {
+        if (*(short*)(data_0209f4a0 + gActivePlayerSlot*0x18) != 0) {
             ApproachAngle((short*)((char*)&mAngleY), mDesiredAngleY, 0x20, 0x100, 0);
         }
         if (mStateStep == 1) {

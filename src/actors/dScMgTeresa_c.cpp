@@ -51,6 +51,7 @@
 #include "dScMgTeresa_c.h"
 #include "decl_common.h"
 #include "G2x.h"
+#include "PlayerInput.h"
 
 /* Local views of object ranges the header does not type yet. The layouts
  * disagree offset for offset (the second 0x20-stride element at 0x4bcc
@@ -205,10 +206,6 @@ extern int            data_ov006_0212f050[];
 extern int            data_ov006_0212f08c[];
 extern int            data_ov006_0213f9e4[];
 extern short          data_02082214[];
-extern u8             data_020a0e40;
-extern u8             data_020a0de8[];
-extern u8             data_020a0dea[];
-extern u8             data_020a0deb[];
 extern int            data_ov004_020beb6c;
 
 /* The four pointer-to-member state tables. Pmf handlers take the Boo/slot
@@ -1956,20 +1953,20 @@ void dScMgTeresa_c::func_ov006_0211f9fc()
 void dScMgTeresa_c::func_ov006_0211fb1c()
 {
     char *c = (char *)this;
-    int i = data_020a0e40;
-    if (data_020a0de8[(unsigned int)i * 4] != 0 && *(u8*)(c + 0x4c1d) == 0) {
-        *(int*)(c + 0x4bec) = data_020a0dea[i * 4];
-        *(int*)(c + 0x4bf0) = data_020a0deb[i * 4];
+    int i = gActivePlayerSlot;
+    if (gTouchHeld[(unsigned int)i * 4] != 0 && *(u8*)(c + 0x4c1d) == 0) {
+        *(int*)(c + 0x4bec) = gTouchX[i * 4];
+        *(int*)(c + 0x4bf0) = gTouchY[i * 4];
         *(int*)(c + 0x4bf4) = *(int*)(c + 0x4bec);
         *(int*)(c + 0x4bf8) = *(int*)(c + 0x4bf0);
         *(u8*)AT(c, 0x4c1d) += 1;
     }
-    if (data_020a0de8[(unsigned int)data_020a0e40 * 4] == 0) {
+    if (gTouchHeld[(unsigned int)gActivePlayerSlot * 4] == 0) {
         *(u8*)(c + 0x4c1d) = 0;
     }
     if (*(u8*)(c + 0x4c1d) == 0) return;
-    *(int*)(c + 0x4bec) = data_020a0dea[(unsigned int)data_020a0e40 * 4];
-    *(int*)(c + 0x4bf0) = data_020a0deb[(unsigned int)data_020a0e40 * 4];
+    *(int*)(c + 0x4bec) = gTouchX[(unsigned int)gActivePlayerSlot * 4];
+    *(int*)(c + 0x4bf0) = gTouchY[(unsigned int)gActivePlayerSlot * 4];
 }
 #undef AT
 

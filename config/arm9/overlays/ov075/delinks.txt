@@ -12,6 +12,10 @@ src/actors/dScEntry_c.cpp:
     complete
     .text start:0x02115ab8 end:0x02116128
 
+src/func_ov075_0211621c.c:
+    complete
+    .text start:0x0211621c end:0x021165b0
+
 src/func_ov075_021165b0.c:
     complete
     .text start:0x021165b0 end:0x02116818
@@ -89,6 +93,7 @@ src/func_ov075_02117b58.cpp:
     .text start:0x02117b58 end:0x02117bc4
 
 src/func_ov075_02117bc4.c:
+    complete
     .text start:0x02117bc4 end:0x02117c0c
 
 src/func_ov075_02117c0c.c:

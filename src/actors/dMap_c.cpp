@@ -26,6 +26,7 @@
 #include "dMap_c.h"
 #include "decl_common.h"
 #include "types.h"
+#include "PlayerInput.h"
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which makes its
@@ -132,7 +133,6 @@ extern u8   data_0209f350[];
 extern s8   data_02092110;
 extern u8   data_0209f204;
 extern u8   data_ov002_02111150;
-extern u8   data_020a0e40;
 extern u8   data_0209f4ac[];
 extern u8   data_0209d454;
 extern u8   data_0209f4a8[];
@@ -613,16 +613,16 @@ s32 dMap_c::Behavior()
     if (data_ov002_02111150 != 0) goto L200;
     if (data_0209d660 != 0) goto L200;
     {
-        u8 v = data_0209f4ac[data_020a0e40 * 0x18];
+        u8 v = data_0209f4ac[gActivePlayerSlot * 0x18];
         if (v == 0 && this->mTouchCircleTimer == 0) goto L200;
         data_0209d454 |= 4;
         if (v != 0) {
             this->mTouchCircleTimer = 0x1e;
-            SetSubBg2Offset(0x100 - data_0209f4a8[data_020a0e40 * 0x18],
-                            0x80 - data_0209f4a9[data_020a0e40 * 0x18]);
+            SetSubBg2Offset(0x100 - data_0209f4a8[gActivePlayerSlot * 0x18],
+                            0x80 - data_0209f4a9[gActivePlayerSlot * 0x18]);
         }
         _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16 *)0x4001050, 4, 0x28, 4, 0xd);
-        if (data_0209f4ae[data_020a0e40 * 0x18] != 2)
+        if (data_0209f4ae[gActivePlayerSlot * 0x18] != 2)
             *(volatile u16 *)0x400100c = (u16)((*(volatile u16 *)0x400100c & 0x43) | 0x5300);
         else
             *(volatile u16 *)0x400100c = (u16)((*(volatile u16 *)0x400100c & 0x43) | 0x5500);

@@ -1,11 +1,11 @@
 #include "types.h"
+#include "PlayerInput.h"
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void *c, u32 anim, int a, Fix12i b, u32 d);
 extern int _ZNK6Player14GetBodyModelIDEjb(void *c, u32 id, int b);
 extern int RandomIntInternal(int *seed);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, void *v);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 a, void *v);
 extern u16 data_0209f49c[];
-extern u8 data_020a0e40;
 extern int data_ov002_0210a5c0[];
 extern u16 data_ov002_02109dbc[];
 extern int data_ov002_0210e160;
@@ -19,7 +19,7 @@ void func_ov002_020dd5ec(char *c)
   int idx;
   int *new_var;
   int new_var2;
-  if ((*((u16 *) (((char *) data_0209f49c) + (data_020a0e40 * 0x18)))) & 2)
+  if ((*((u16 *) (((char *) data_0209f49c) + (gActivePlayerSlot * 0x18)))) & 2)
   {
     *((u8 *) (c + 0x6e2)) = 2;
   }
@@ -36,7 +36,7 @@ void func_ov002_020dd5ec(char *c)
   *((u16 *) (c + 0x6aa)) = data_ov002_02109dbc[*((u8 *) (c + 0x6e2))];
   if ((*((u8 *) (c + 0x6e2))) == 2)
   {
-    if ((((*((u16 *) (((char *) data_0209f49c) + (data_020a0e40 * 0x18)))) & 2) != 0) || ((*((u8 *) (c + 0x6de))) != 0))
+    if ((((*((u16 *) (((char *) data_0209f49c) + (gActivePlayerSlot * 0x18)))) & 2) != 0) || ((*((u8 *) (c + 0x6de))) != 0))
     {
       *((int *) (c + 0xa8)) = 0x20000;
       *((int *) (c + 0x9c)) = new_var2;

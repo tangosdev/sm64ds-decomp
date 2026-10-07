@@ -17,6 +17,7 @@
 #include "dScMgCard_c.h"
 #include "types.h"
 #include "decl_common.h"
+#include "PlayerInput.h"
 
 /* The state table: one pointer-to-member per state, indexed by mState.
  * Declared outside extern "C" it still links by its plain name. */
@@ -38,9 +39,6 @@ extern void func_ov006_020c0d68(void* c);
 extern void func_ov004_020adb1c(int self);
 extern void func_ov004_020b0a54(int v);
 extern void func_ov004_020ad79c(int a, int b);
-extern unsigned char data_020a0e40;
-extern unsigned char data_020a0de8[];
-extern unsigned char data_020a0de9[];
 extern int data_ov006_0213fd44[];
 extern int data_ov004_020bf9ec;
 extern int RandomIntInternal(int* seed);
@@ -325,16 +323,16 @@ after_loop:
  * 0x60. The touched card becomes mChosenCard and the machine moves on. */
 void dScMgBSC_c::StateChooseCard()
 {
-    unsigned int sample = data_020a0e40;
+    unsigned int sample = gActivePlayerSlot;
     int touched = 0;
     int lane;
-    if (data_020a0de8[sample * 4] != 0) {
-        if (data_020a0de9[sample * 4] != 0) touched = 1;
+    if (gTouchHeld[sample * 4] != 0) {
+        if (gTouchEdge[sample * 4] != 0) touched = 1;
     }
     if (touched == 0) return;
     for (lane = 0; lane < 2; lane++) {
-        unsigned char idx = *(volatile unsigned char *)&data_020a0e40;
-        unsigned char *touch = &data_020a0de8[(unsigned int)idx * 4];
+        unsigned char idx = *(volatile unsigned char *)&gActivePlayerSlot;
+        unsigned char *touch = &gTouchHeld[(unsigned int)idx * 4];
         int dx = (int)touch[2] - (data_ov006_0213fd44[lane] >> 12);
         int dy = (int)touch[3] - 0x60;
         if (dx < -0x10) continue;

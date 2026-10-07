@@ -1,5 +1,6 @@
 //cpp
 #include "Player.h"
+#include "PlayerInput.h"
 extern "C" {
 int _ZN6Player6IsAnimEj(void*, unsigned int);
 void _ZN6Player7SetAnimEji5Fix12IiEj(void*, unsigned int, int, int, unsigned int);
@@ -11,7 +12,6 @@ int _ZNK15dExtFrameCtrl_c12WillHitFrameEi(void*, int);
 void func_ov002_020d4c30(void*);
 }
 
-extern unsigned char data_020a0e40;
 extern unsigned char data_0209f4ac;
 extern unsigned short data_0209f49c;
 extern unsigned char data_0209f4ae;
@@ -31,7 +31,7 @@ static inline unsigned int AnimSpeed(char* c)
 
 extern "C" void func_ov002_020d4748(char* c)
 {
-    int i = data_020a0e40 * 0x18;
+    int i = gActivePlayerSlot * 0x18;
     int flag = 0;
 
     if (*(unsigned char*)((char*)&data_0209f4ac + i) == 0) {
@@ -50,7 +50,7 @@ extern "C" void func_ov002_020d4748(char* c)
         ((Player *)(c))->func_ov002_020bf5e0();
         if (_ZN6Player6IsAnimEj(c, 0x9f) != 0)
             return;
-        i2 = data_020a0e40 * 0x18;
+        i2 = gActivePlayerSlot * 0x18;
         v = *(short*)((char*)&data_0209f4a0 + i2);
         if (v != 0) {
             if (flag != 0) {
@@ -71,7 +71,7 @@ extern "C" void func_ov002_020d4748(char* c)
             return;
         }
     } else {
-        int i3 = data_020a0e40 * 0x18;
+        int i3 = gActivePlayerSlot * 0x18;
         if (*(unsigned char*)((char*)&data_0209f4ac + i3) != 0) {
             unsigned char* p = (unsigned char*)(c + 0x6e3);
             unsigned char d;
@@ -79,7 +79,7 @@ extern "C" void func_ov002_020d4748(char* c)
             int i4;
             int thr;
             *p = *p + 1;
-            i4 = data_020a0e40 * 0x18;
+            i4 = gActivePlayerSlot * 0x18;
             thr = (*(unsigned char*)((char*)&data_0209f4ae + i4) != 2) ? 0x955 : 0xaaa;
             if (*(short*)((char*)&data_0209f4a0 + i4) > thr)
                 *(unsigned char*)(c + 0x6e3) = 0;
@@ -99,11 +99,11 @@ extern "C" void func_ov002_020d4748(char* c)
 
         if (*(int*)(c + 0x68c) > 0x32000) {
             _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x7e, 0,
-                *(short*)((char*)&data_0209f4a0 + data_020a0e40 * 0x18), AnimSpeed(c));
+                *(short*)((char*)&data_0209f4a0 + gActivePlayerSlot * 0x18), AnimSpeed(c));
         } else if (*(unsigned char*)(c + 0x6e3) >= 0x17) {
             *(unsigned char*)(c + 0x6e3) = 0x17;
             _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x61, 0, 0x1000, AnimSpeed(c));
-        } else if (*(int*)(c + 0x658) == 4 && *(short*)((char*)&data_0209f4a0 + data_020a0e40 * 0x18) == 0) {
+        } else if (*(int*)(c + 0x658) == 4 && *(short*)((char*)&data_0209f4a0 + gActivePlayerSlot * 0x18) == 0) {
             _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(*(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
             _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x47, 0, 0x1000, 0);
         } else if (*(unsigned char*)(c + 0x710) != 0) {

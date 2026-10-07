@@ -45,6 +45,13 @@ struct cMgSmartball_object_c {
     virtual void Update();         /* slot 1 -- empty in this class */
     virtual void RestoreInitial(); /* slot 2 -- mCurrent = mInitial */
 
+    /* Recovered helpers. PointInTriangle is the fan-collision predicate every
+       child's HitTest calls on `this` (the receiver is never read). SetVel is
+       the writer half of the mVelocity pair accessors -- the reader halves
+       take (out, obj) order, so they stay free functions in the TU. */
+    int  PointInTriangle(int *p, int *q0, int *q1, int *q2);
+    void SetVel(int *v);           /* mVel0/mVel1 = v[0]/v[1] */
+
     /* The C spelling of this class gets no explicit vtable member because
        no .c file declares it; every reader reaches these fields by raw
        offset today. */
@@ -85,11 +92,11 @@ struct cMgSmartball_object_c {
                           most-touched field of the class. */
     s32 mIndex;       /* 0x02c -- the constructor's second argument: this
                           object's slot in the manager's tables.
-                          func_ov006_021128fc compares it against mgr+0x4664
+                          QueueBehind compares it against mgr+0x4664
                           and indexes mgr+0x4688 with it minus one. */
     u8  mIsActive;    /* 0x030 -- constructor sets it to 1. While it is 0
                           cMgSmartball_ball_c's SaveSnapshot and Update return
-                          immediately, func_ov006_02111dcc refuses to arm an
+                          immediately, ArmExpire refuses to arm an
                           expiry, and both cMgSmartball_board_c::SaveSnapshot
                           and cMgSmartball_kinoko_c::SaveSnapshot skip a
                           tracked ball whose byte at 0x30 is 0. */

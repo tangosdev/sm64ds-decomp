@@ -65,8 +65,10 @@ extern void *data_ov006_02133a70[];
 extern int data_ov006_0212e2c0[];
 extern int func_ov004_020adbc0(void);
 extern int RandomIntInternal(int *seed);
-extern u8 data_020a0dea[];
-extern u8 data_020a0deb[];
+// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
+extern u8 gTouchX[];
+// local extern: see above.
+extern u8 gTouchY[];
 extern u16 data_ov006_0212e2e8[];
 extern int data_ov006_021416a0[];
 extern void func_ov006_020d8904(char *p);
@@ -1053,22 +1055,24 @@ void func_ov006_020d6c90(char *raw, int index)
 extern "C" {
 
 typedef struct { u8 f0, f1, f2, f3; } Tab;
-extern u8 data_020a0e40;
-extern Tab data_020a0de8[];
+// local extern: see above.
+extern u8 gActivePlayerSlot;
+// local extern: see above.
+extern Tab gTouchHeld[];
 
 void func_ov006_020d6d7c(char *raw, int index) {
-    u8 touch = data_020a0e40;
+    u8 touch = gActivePlayerSlot;
     int touching = 0;
     char *bomb;
     int dx, dy;
-    if (data_020a0de8[touch].f0 != 0) {
-        if (data_020a0de8[touch].f1 != 0) touching = 1;
+    if (gTouchHeld[touch].f0 != 0) {
+        if (gTouchHeld[touch].f1 != 0) touching = 1;
     }
     if (touching == 0) return;
     if (*(u8*)(raw + 0x62f6) != 0xff) return;
     bomb = raw + index * 0x40;
-    dx = data_020a0de8[touch].f2 - (((Bomb *)(bomb + 0x4660))->x >> 0xc);
-    dy = data_020a0de8[touch].f3 - (((Bomb *)(bomb + 0x4660))->y >> 0xc);
+    dx = gTouchHeld[touch].f2 - (((Bomb *)(bomb + 0x4660))->x >> 0xc);
+    dy = gTouchHeld[touch].f3 - (((Bomb *)(bomb + 0x4660))->y >> 0xc);
     if (dx > 0xc) return;
     if (dx < -0xc) return;
     if (dy > 0xf) return;
@@ -1627,19 +1631,19 @@ void func_ov006_020d7f5c(char *self_, int idx)
         int old_y = *(int *)(B + 0x664);
         int cx, cy;
         u8 was;
-        int t = data_020a0e40;
+        int t = gActivePlayerSlot;
 
-        *(int *)(B + 0x660) = (data_020a0dea[t << 2] << 12) - *(int *)(B + 0x668);
-        *(int *)(B + 0x664) = (data_020a0deb[t << 2] << 12) - *(int *)(B + 0x66c);
+        *(int *)(B + 0x660) = (gTouchX[t << 2] << 12) - *(int *)(B + 0x668);
+        *(int *)(B + 0x664) = (gTouchY[t << 2] << 12) - *(int *)(B + 0x66c);
         cx = old_x >> 12;
         cy = old_y >> 12;
 
         func_ov006_020d6e8c(self_, idx);
 
         {
-            int t2 = data_020a0e40;
-            *(int *)(B + 0x660) = (data_020a0dea[t2 << 2] << 12) - *(int *)(B + 0x668);
-            *(int *)(B + 0x664) = (data_020a0deb[t2 << 2] << 12) - *(int *)(B + 0x66c);
+            int t2 = gActivePlayerSlot;
+            *(int *)(B + 0x660) = (gTouchX[t2 << 2] << 12) - *(int *)(B + 0x668);
+            *(int *)(B + 0x664) = (gTouchY[t2 << 2] << 12) - *(int *)(B + 0x66c);
         }
 
         was = *(u8 *)(B + 0x69e);
@@ -1772,7 +1776,7 @@ typedef void (C_836c::*PMF_836c)(int);
 extern PMF_836c data_ov006_02141730[];
 void func_ov006_020d836c(char *c)
 {
-    if (*(u8 *)(data_020a0de8 + data_020a0e40) == 0)
+    if (*(u8 *)(gTouchHeld + gActivePlayerSlot) == 0)
         *(u8 *)(c + 0x62f6) = 0xff;
     int i;
     for (i = 0; i < 0x70; i++) {

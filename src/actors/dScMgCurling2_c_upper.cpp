@@ -26,6 +26,7 @@
 
 #include "types.h"
 #include "dScMgCurling2_c.h"
+#include "PlayerInput.h"
 
 /* The receiver for the pointer-to-member tables. It must stay incomplete:
  * mwccarm picks the pointer-to-member layout from whether the class is
@@ -73,10 +74,6 @@ extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile u16 *p, u16 a, u16 b, u16 c, u32 d);
 
 extern s16  data_02082214[];
-extern u8   data_020a0e40;
-extern u8   data_020a0de8[];
-extern u8   data_020a0dea[];
-extern u8   data_020a0deb[];
 extern int  data_0209d4b8;
 extern u8   data_0209d45c;
 extern u8   data_0209d454;
@@ -122,18 +119,18 @@ void dScMgCurling2_c::StoneSpin(int i)
  * stone is armed again and, when the drag point is close, snaps above it. */
 void dScMgCurling2_c::StoneSteer(int idx)
 {
-    u8 i = data_020a0e40;
+    u8 i = gActivePlayerSlot;
     int off = i * 4;
-    if (data_020a0de8[i * 4] != 0) {
+    if (gTouchHeld[i * 4] != 0) {
         int bp = mStone[idx].velX;
-        mStone[idx].x = bp + (data_020a0dea[off] << 12);
+        mStone[idx].x = bp + (gTouchX[off] << 12);
         int t = mStone[idx].x >> 12;
         if (t < 0xe) mStone[idx].x = 0xe000;
         if (t > 0xf2) mStone[idx].x = 0xf2000;
         int av = mStone[idx].x >> 12;
-        int bv = av - data_020a0dea[i * 4];
+        int bv = av - gTouchX[i * 4];
         int cv = mStone[idx].y >> 12;
-        int dv = cv - data_020a0deb[i * 4];
+        int dv = cv - gTouchY[i * 4];
         mStone[idx].velX = bv << 12;
         mStone[idx].velY = dv << 12;
     } else {

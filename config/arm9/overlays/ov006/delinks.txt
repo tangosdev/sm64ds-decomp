@@ -102,11 +102,7 @@ src/actors/dScMgD3DBase_c.cpp:
 
 src/actors/dMg3DEspAnimSet_c.cpp:
     complete
-    .text start:0x020e7660 end:0x020ea1f0
-
-src/d_s_mg3_d_esp.cpp:
-    complete
-    .text start:0x020ea1f0 end:0x020ea280
+    .text start:0x020e7660 end:0x020ea280
 
 src/actors/dScMgHanachan_c.cpp:
     complete
