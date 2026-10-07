@@ -3,6 +3,7 @@
 // @symbol _ZN6Player22St_GrabBowserTail_MainEv
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
+#include "PlayerInput.h"
 extern "C" {
 extern int _ZN6Player12FinishedAnimEv(char* c);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, u32 anim, int a, Fix12i b, u32 d);
@@ -13,7 +14,6 @@ extern void func_02012694(u32 id, void* v);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* s);
 extern void Player_AdvanceAnims(char* c);
 
-extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
 extern s16 data_0209f4a0[];
 extern char data_0209ee90[];
@@ -30,7 +30,7 @@ int Player::St_GrabBowserTail_Main()
         }
         break;
     case 1:
-        if ((*(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18) & 1) != 0) {
+        if ((*(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18) & 1) != 0) {
             s16 x = mAngleYSpeed;
             if (x < 0) x = -x;
             if (x > 0xe00)
@@ -44,7 +44,7 @@ int Player::St_GrabBowserTail_Main()
         }
         if (*(int*)(data_0209ee90 + 0x24c) != 0)
             mStateWork = 0;
-        if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) == 0) {
+        if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) == 0) {
             u8 v = mStateWork;
             (*(u8*)(((int)((char*)this) + 0x6e5)))++;
             if (v > 0x78) {
@@ -56,7 +56,7 @@ int Player::St_GrabBowserTail_Main()
         } else {
             mStateWork = 0;
         }
-        if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) > 0x200) {
+        if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) > 0x200) {
             if (mStateArg == 0) {
                 mStateArg = 1;
                 mPrevDesiredAngleY = mDesiredAngleY;

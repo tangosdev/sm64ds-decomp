@@ -18,6 +18,11 @@
 #include "types.h"
 #include "G2x.h"
 #include "Sound.h"
+#include "PlayerInput.h"
+/* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
+#define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
+/* local: these readers only reproduce through a 4-byte-record view of the lane. */
+#define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
 
 namespace cstd { int fdiv(int numerator, int denominator); }
 namespace G2   { void *GetBG0ScrPtr(); void *GetBG1ScrPtr(); void *GetBG2ScrPtr(); void *GetBG3ScrPtr(); void *GetBG2CharPtr(); }
@@ -64,11 +69,6 @@ struct UnkObj {
 };
 
 typedef struct Vec2s { s16 x, y; } Vec2s;
-
-struct B4 {
-    unsigned char v;
-    unsigned char pad[3];
-};
 
 /* The door mark's layout lives in the header. */
 typedef dScMgTrampoline_DoorMark DoorMark;
@@ -162,11 +162,6 @@ extern "C" void func_ov004_020ad90c(void *scene);
 int  GetGameLanguage(void);
 void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
 int  RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
-extern volatile unsigned char data_020a0e40[];
-extern struct B4 data_020a0de8[];
-extern struct B4 data_020a0de9[];
-extern struct B4 data_020a0dea[];
-extern struct B4 data_020a0deb[];
 extern void func_ov004_020ae5c4(void *a, int b, int c, int d, int e, int f, int g);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
@@ -736,9 +731,9 @@ void dScMgTrampoline_c::StateWaitExit()
     mTimer -= 1;
     if (mTimer != 0)
     {
-        idx = data_020a0e40[0];
+        idx = ACTIVE_SLOT;
         b = 0;
-        if (data_020a0de8[idx].v != 0 && data_020a0de9[idx].v != 0)
+        if (TOUCH_REC(gTouchHeld)[idx][0] != 0 && TOUCH_REC(gTouchEdge)[idx][0] != 0)
             b = 1;
         if (b == 0)
             return;
@@ -792,12 +787,12 @@ void dScMgTrampoline_c::UpdateTouchInput()
         return;
     }
 
-    i = data_020a0e40[0];
-    b = (data_020a0de8[i].v != 0 && data_020a0de9[i].v != 0);
+    i = ACTIVE_SLOT;
+    b = (TOUCH_REC(gTouchHeld)[i][0] != 0 && TOUCH_REC(gTouchEdge)[i][0] != 0);
     if (b) {
-        mTouchX = data_020a0dea[i].v;
+        mTouchX = TOUCH_REC(gTouchX)[i][0];
         mTouchStartX = mTouchX;
-        mTouchY = data_020a0deb[i].v;
+        mTouchY = TOUCH_REC(gTouchY)[i][0];
         mTouchStartY = mTouchY;
         mTouching = 1;
         mDragSoundHandle = 0;
@@ -805,17 +800,17 @@ void dScMgTrampoline_c::UpdateTouchInput()
 
     if (mTouching != 1) return;
 
-    i = data_020a0e40[0];
-    if (data_020a0de8[i].v != 0) {
+    i = ACTIVE_SLOT;
+    if (TOUCH_REC(gTouchHeld)[i][0] != 0) {
         func_ov004_020ae5c4(this, mTouchX, mTouchY,
-                            data_020a0dea[i].v, data_020a0deb[i].v, 2, 4);
-        i = data_020a0e40[0];
-        mTouchX = data_020a0dea[i].v;
-        mTouchY = data_020a0deb[i].v;
+                            TOUCH_REC(gTouchX)[i][0], TOUCH_REC(gTouchY)[i][0], 2, 4);
+        i = ACTIVE_SLOT;
+        mTouchX = TOUCH_REC(gTouchX)[i][0];
+        mTouchY = TOUCH_REC(gTouchY)[i][0];
         mDragSoundHandle = func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0,
                                          func_020126e8(mTouchX << 12), 0, 0);
     } else {
-        b = (int)(data_020a0de8[i].v == 0 && data_020a0de9[i].v != 0);
+        b = (int)(TOUCH_REC(gTouchHeld)[i][0] == 0 && TOUCH_REC(gTouchEdge)[i][0] != 0);
         if (b != 0) { mTouchReleased = 1; }
     }
 }

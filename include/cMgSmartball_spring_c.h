@@ -17,9 +17,9 @@
  * the base, and RestoreInitial's own zero pass touches only mSoundHandle (see
  * below) -- read exhaustively, it says nothing about the other four.
  *
- * SaveSnapshot is a three-way state machine gated by two level-indexed
- * byte tables (data_020a0de8/de9) and driven by two more (data_020a0dea/
- * deb, both shifted left 12 to become fixed-point):
+ * SaveSnapshot is a three-way state machine gated by two slot-indexed
+ * byte tables (gTouchHeld/gTouchEdge) and driven by the touch x/y lanes -- the two more (gTouchX/
+ * gTouchY, both shifted left 12 to become fixed-point):
  *   - "trigger" (a new flag byte set): sets the base's unk_031, zeroes the
  *     base's mVel0/mVel1, latches unk_03c/mDriveNow from the tables and
  *     mirrors each into unk_034/mDriveBase -- then, only if mCurrent1 is above
@@ -79,10 +79,10 @@ struct cMgSmartball_spring_c : cMgSmartball_object_c {
                           height is recomputed as
                           `mCurrent1 = mDriveNow - mDriveBase + 0xa0000`, so this
                           is the zero point that reading is measured from. */
-    s32 unk_03c;     /* 0x03c -- data_020a0dea[level*4] << 12, latched once in
+    s32 unk_03c;     /* 0x03c -- gTouchX[slot*4] << 12, latched once in
                           the trigger branch (and mirrored into unk_034).
                           Nothing in the tree reads either back. No name. */
-    s32 mDriveNow;   /* 0x040 -- data_020a0deb[level*4] << 12, the live drive
+    s32 mDriveNow;   /* 0x040 -- gTouchY[slot*4] << 12, the live drive
                           reading. Latched at trigger, then re-read every active
                           frame and clamped to
                           [mDriveBase, mDriveBase + 0x38000] before it sets the

@@ -20,6 +20,7 @@
 #include "dScMgRoulette_c.h"
 #include "Model.h"
 #include "decl_common.h"
+#include "PlayerInput.h"
 
 /* Local views of the records the helpers walk. */
 
@@ -226,11 +227,6 @@ extern short data_ov006_0212ed8e[];
 extern int   data_ov006_021428cc;
 extern int   data_ov006_021428d4[];
 extern void *data_ov006_02142948;
-extern u8    data_020a0e40;
-extern u8    data_020a0de8[];
-extern u8    data_020a0de9[];
-extern u8    data_020a0dea[];
-extern u8    data_020a0deb[];
 extern s32   data_ov004_020b9488;
 extern u16   data_ov004_020bf9e4;
 extern u8    data_0209d45c;
@@ -942,10 +938,10 @@ void func_ov006_02108f2c(Thing* racer)
             racer->state = 6;
     } else if (state == 2) {
         s32 vec[2];
-        u8 idx = data_020a0e40;
-        if (data_020a0de8[idx * 4] != 0) {
-            vec[0] = data_020a0dea[idx * 4] << 12;
-            vec[1] = data_020a0deb[idx * 4] << 12;
+        u8 idx = gActivePlayerSlot;
+        if (gTouchHeld[idx * 4] != 0) {
+            vec[0] = gTouchX[idx * 4] << 12;
+            vec[1] = gTouchY[idx * 4] << 12;
             func_ov006_021094ac((RacerXY *)racer, vec);
         } else {
             type = func_ov006_02108650(racer->targetX >> 12, racer->targetY >> 12);
@@ -997,11 +993,11 @@ int func_ov006_02108e24(int *racer)
   {
     return 0;
   }
-  idx = data_020a0e40;
+  idx = gActivePlayerSlot;
   flag = 0;
-  if (data_020a0de8[idx * 4])
+  if (gTouchHeld[idx * 4])
   {
-    if (data_020a0de9[idx * 4] != 0)
+    if (gTouchEdge[idx * 4] != 0)
     {
       flag = 1;
     }
@@ -1010,9 +1006,9 @@ int func_ov006_02108e24(int *racer)
   {
     return 0;
   }
-  idx = data_020a0e40;
-  dx = (racer[0] >> 0xc) - data_020a0dea[idx * stride];
-  dy = (racer[1] >> 0xc) - data_020a0deb[idx * 4];
+  idx = gActivePlayerSlot;
+  dx = (racer[0] >> 0xc) - gTouchX[idx * stride];
+  dy = (racer[1] >> 0xc) - gTouchY[idx * 4];
   if ((((dx >= (-8)) && (dx < 8)) && (dy >= (-8))) && (dy < 8))
   {
     Sound::PlayBank2_2D(0x15d);
@@ -1039,24 +1035,24 @@ void func_ov006_02108d28(int *racer)
   s16 tile;
   stride = 4;
   if (data_ov006_021428c8 != 0) return;
-  idx = data_020a0e40;
+  idx = gActivePlayerSlot;
   flag = 0;
-  if (data_020a0de8[idx * 4])
+  if (gTouchHeld[idx * 4])
   {
-    if (data_020a0de9[idx * 4] != 0)
+    if (gTouchEdge[idx * 4] != 0)
     {
       flag = 1;
     }
   }
   if (flag == 0) return;
   if (*((u8 *)(((char *)racer) + 0x32)) != 1) return;
-  idx = data_020a0e40;
+  idx = gActivePlayerSlot;
   px = racer[0];
   py = racer[1];
-  touchX = data_020a0dea[idx * stride];
+  touchX = gTouchX[idx * stride];
   tile = *((s16 *)(((char *)racer) + 0x2c));
   px >>= 12;
-  touchY = data_020a0deb[idx * 4];
+  touchY = gTouchY[idx * 4];
   py >>= 12;
   dx = px - touchX;
   dy = py - touchY;

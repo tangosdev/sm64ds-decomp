@@ -34,6 +34,7 @@
 #include "types.h"
 #include "dEnemyBase_c.h"
 #include "private/ov004_obj_vtbl.h"
+#include "PlayerInput.h"
 
 #pragma defer_codegen off
 
@@ -60,9 +61,7 @@ void func_ov004_020aeb24(char *c);
 void func_ov004_020b321c(char *c);
 void func_ov004_020adf2c(char *c);
 extern SceneVCall6 *data_0209f5bc;
-extern unsigned char data_020a0e40;
 extern unsigned short data_020a0e5a[];
-extern unsigned char data_020a0de8[];
 extern int data_0208ee44;
 extern void func_ov004_020ad90c(void);
 extern void FreeGfxSlotsById(int arg);
@@ -1424,17 +1423,12 @@ extern int _Z14ApproachLinearRiii(int* v, int a, int b);
 extern void func_02012dd0(int a);
 extern void func_ov004_020b9220(char* p);
 
-extern unsigned char data_020a0e40[];
 extern unsigned short data_020a0e5a[];
-extern unsigned char data_020a0de8[];
-extern unsigned char data_020a0de9[];
-extern unsigned char data_020a0dea[];
-extern unsigned char data_020a0deb[];
 extern dWipe_c data_0209f61c;
 
 void func_ov004_020aeb24(char* c)
 {
-    unsigned char idx = data_020a0e40[0];
+    unsigned char idx = gActivePlayerSlot;
     unsigned short flags = data_020a0e5a[idx * 2];
     int unlocked;
     short tmp[2];
@@ -1452,15 +1446,15 @@ void func_ov004_020aeb24(char* c)
     _Z15ApproachLinear2Rsss((short*)(c + 0x4638), 0x80, 0x10);
     _Z15ApproachLinear2Rsss((short*)(c + 0x463e), 0x90, 5);
 
-    idx = data_020a0e40[0];
+    idx = gActivePlayerSlot;
     unlocked = 0;
-    if (data_020a0de8[idx * 4] != 0) {
-        unlocked = (data_020a0de9[idx * 4] != 0);
+    if (gTouchHeld[idx * 4] != 0) {
+        unlocked = (gTouchEdge[idx * 4] != 0);
     }
     if (unlocked == 0) goto after;
     if (*(short*)(c + 0x4646) >= 0) goto after;
-    tmp[0] = data_020a0dea[idx * 4];
-    tmp[1] = data_020a0deb[idx * 4];
+    tmp[0] = gTouchX[idx * 4];
+    tmp[1] = gTouchY[idx * 4];
     func_0203b958(d0, tmp, (short*)(c + 0x4634));
     func_0203b958(d1, tmp, (short*)(c + 0x4638));
     func_0203b958(d2, tmp, (short*)(c + 0x463c));
@@ -2474,7 +2468,7 @@ int dScMgBase_c::BeforeBehavior()
         return 0;
 
     if (data_0209f5bc->IsActive()) {
-        mode = data_020a0e40;
+        mode = gActivePlayerSlot;
         flags = data_020a0e5a[mode * 2];
         if ((flags & 8) || (flags & 4) || (flags & 1) || (flags & 2)) {
             if (mMenuOpen != 0) {
@@ -2483,7 +2477,7 @@ int dScMgBase_c::BeforeBehavior()
                         OnHitFromUnderneath();
                 }
             } else {
-                if (data_020a0de8[mode * 4] == 0)
+                if (gTouchHeld[mode * 4] == 0)
                     OnHitByMegaChar();
             }
         }
@@ -2672,11 +2666,6 @@ void FreeGfxSlotsById(int arg)
 // @symbol func_ov004_020b0b1c
 namespace s20b0b1c {
 extern "C" {
-extern unsigned char data_020a0e40;
-extern unsigned char data_020a0de8[][4];
-extern unsigned char data_020a0de9[][4];
-extern unsigned char data_020a0dea[][4];
-extern unsigned char data_020a0deb[][4];
 
 struct Vec2 {
     short x;
@@ -2700,19 +2689,21 @@ extern int data_ov004_020beb68;
 extern void func_ov004_020b422c(struct Obj004 *o);
 extern int func_ov004_020b40c0(struct Obj004 *o);
 
+// The ROM scales idx into the addressing mode here, which only the 4-byte-record view of the lane reproduces.
+#define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
 int func_ov004_020b0b1c(int arg) {
-    int idx = data_020a0e40;
+    int idx = gActivePlayerSlot;
     int flag = 0;
     int i;
 
-    if (data_020a0de8[idx][0] != 0) {
-        if (data_020a0de9[idx][0] != 0) flag = 1;
+    if (TOUCH_REC(gTouchHeld)[idx][0] != 0) {
+        if (TOUCH_REC(gTouchEdge)[idx][0] != 0) flag = 1;
     }
 
     if (flag) {
         struct Obj004 *o = data_ov004_020bf648;
-        int cx = data_020a0dea[idx][0];
-        int cy = data_020a0deb[idx][0];
+        int cx = TOUCH_REC(gTouchX)[idx][0];
+        int cy = TOUCH_REC(gTouchY)[idx][0];
         for (i = 0; i < 3; i++, o++) {
             if (arg == o->f20 && o->f32 != 0) {
                 volatile struct Vec2 pos;

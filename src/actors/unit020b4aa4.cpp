@@ -74,6 +74,7 @@
  */
 
 #include "types.h"
+#include "PlayerInput.h"
 
 struct Pair { int a, b; };
 struct V2 { int x, y; };
@@ -170,11 +171,6 @@ extern struct E36 data_ov004_020bfa34[];
 extern unsigned char data_ov004_020bfa56[];
 extern char* data_ov004_020beb68;
 extern int data_020a0db0;
-extern unsigned char data_020a0e40;
-extern unsigned char data_020a0de8[];
-extern unsigned char data_020a0de9[];
-extern unsigned char data_020a0dea[];
-extern unsigned char data_020a0deb[];
 }
 
 /* -------------------------------------------------------------------------- */
@@ -248,11 +244,11 @@ void func_ov004_020b65e4(void) {
     unsigned char *p;
 
     if (data_ov004_020bf9ec == 0 && data_ov004_020bfa18 != 0) {
-        int idx = data_020a0e40;
-        int flag = ((unsigned char (*)[4])data_020a0de8)[idx][0] != 0 && ((unsigned char (*)[4])data_020a0de9)[idx][0] != 0;
+        int idx = gActivePlayerSlot;
+        int flag = ((unsigned char (*)[4])gTouchHeld)[idx][0] != 0 && ((unsigned char (*)[4])gTouchEdge)[idx][0] != 0;
         if (flag) {
-            int a = ((unsigned char (*)[4])data_020a0dea)[idx][0];
-            int b = ((unsigned char (*)[4])data_020a0deb)[idx][0];
+            int a = ((unsigned char (*)[4])gTouchX)[idx][0];
+            int b = ((unsigned char (*)[4])gTouchY)[idx][0];
             if (a < 0x40 && b < 0x50) {
                 func_ov004_020b6234();
             }

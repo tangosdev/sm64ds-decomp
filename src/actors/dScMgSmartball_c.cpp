@@ -46,6 +46,7 @@ comment leftovers:
 #include "launder.h"
 #include "private/disp_obj_vtbl.h"
 #include "private/ov006_smartball_pair.h"
+#include "PlayerInput.h"
 
 /* Local shadow declarations carried from the legacy files. RECONCILED on
  * fold: where two files spelled one name for different memory, each keeps
@@ -324,11 +325,6 @@ extern "C" void *data_ov006_02137a00;
 extern "C" void *data_ov006_021379f4;
 extern "C" void Vec2_Sub(int *o, int *a, int *b);
 extern OamAttr *data_ov006_0213ec04[];
-extern "C" u8 data_020a0e40;
-extern "C" u8 data_020a0de8[];
-extern "C" u8 data_020a0de9[];
-extern "C" u8 data_020a0dea[];
-extern "C" u8 data_020a0deb[];
 extern OamAttr *data_ov006_02138318[];
 extern int func_020126e8(int a);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
@@ -2436,8 +2432,8 @@ void cMgSmartball_spring_c::Update()
 #pragma opt_propagation off
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- same pattern as every sibling. Then a three-way
- * state machine gated by two level-indexed byte tables (data_020a0de8/de9)
- * and driven by two fixed-point tables (data_020a0dea/deb): trigger sets
+ * state machine gated by two slot-indexed byte lanes (gTouchHeld/gTouchEdge)
+ * and driven by the touch x/y lanes (gTouchX/gTouchY, shifted <<12 into fixed point): trigger sets
  * unk_031 and latches unk_034/mDriveBase/unk_03c/mDriveNow; active recomputes
  * and clamps mDriveNow each call and plays a sound on change; release clears
  * unk_031, or -- if neither holds -- eases mCurrent1 back toward baseline.
@@ -2449,8 +2445,8 @@ void cMgSmartball_spring_c::Update()
  * compound assignments below and reproduce byte-exact. */
 void cMgSmartball_spring_c::SaveSnapshot()
 {
-    u8 lvl;
-    int de8v;
+    u8 slot;
+    int held;
     int flag;
     int d;
 
@@ -2459,19 +2455,19 @@ void cMgSmartball_spring_c::SaveSnapshot()
     if (*(u8 *)((char *)mpManager + 0x595d) != 0)
         return;
 
-    de8v = data_020a0de8[data_020a0e40 * 4];
-    lvl = data_020a0e40;
+    held = gTouchHeld[gActivePlayerSlot * 4];
+    slot = gActivePlayerSlot;
     flag = 0;
-    if (de8v != 0)
-        flag = data_020a0de9[lvl * 4] != 0;
+    if (held != 0)
+        flag = gTouchEdge[slot * 4] != 0;
 
     if (flag != 0) {
         unk_031 = 1;
         mVel0 = 0;
         mVel1 = 0;
-        unk_03c = data_020a0dea[data_020a0e40 * 4] << 12;
+        unk_03c = gTouchX[gActivePlayerSlot * 4] << 12;
         unk_034 = unk_03c;
-        mDriveNow = data_020a0deb[data_020a0e40 * 4] << 12;
+        mDriveNow = gTouchY[gActivePlayerSlot * 4] << 12;
         mDriveBase = mDriveNow;
         if (mCurrent1 <= 0xa0000)
             return;
@@ -2479,8 +2475,8 @@ void cMgSmartball_spring_c::SaveSnapshot()
         return;
     }
 
-    if (unk_031 == 1 && de8v != 0) {
-        mDriveNow = data_020a0deb[lvl * 4] << 12;
+    if (unk_031 == 1 && held != 0) {
+        mDriveNow = gTouchY[slot * 4] << 12;
         d = mDriveNow - mDriveBase;
         if (d >= 0x38000)
             mDriveNow = mDriveBase + 0x38000;
@@ -2495,7 +2491,7 @@ void cMgSmartball_spring_c::SaveSnapshot()
 
     {
         int m;
-        if (de8v == 0 && data_020a0de9[lvl * 4] != 0)
+        if (held == 0 && gTouchEdge[slot * 4] != 0)
             m = 1;
         else
             m = 0;
@@ -6442,8 +6438,8 @@ s32 dScMgSmartball_c::Behavior()
                 int* p = (int*)(((int)c + 0x5960));
                 (*p)++;
             } else {
-                int idx = data_020a0e40;
-                if (data_020a0de8[idx * 4] != 0 && data_020a0de9[idx * 4] != 0) {
+                int idx = gActivePlayerSlot;
+                if (gTouchHeld[idx * 4] != 0 && gTouchEdge[idx * 4] != 0) {
                     flag = 1;
                 }
                 if (flag != 0) {

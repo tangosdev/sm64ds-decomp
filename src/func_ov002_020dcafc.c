@@ -1,3 +1,4 @@
+#include "PlayerInput.h"
 /* func_ov002_020dcafc at 0x020dcafc
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
@@ -6,7 +7,6 @@ typedef short s16;
 
 extern int AngleDiff(int a, int b);
 extern int ApproachAngle(void* p, int a, int b, int c, int d);
-extern unsigned char data_020a0e40[];
 extern short data_0209f4a2[];
 extern short data_0209f4a4[];
 
@@ -16,7 +16,7 @@ void func_ov002_020dcafc(char* c) {
     s16 a, b;
 
     if (*(int*)(c + 0x98) != 0) {
-        idx = data_020a0e40[0] * 0x18;
+        idx = gActivePlayerSlot * 0x18;
         a = *(short*)((char*)data_0209f4a2 + idx);
         b = *(short*)((char*)data_0209f4a4 + idx);
         v5 = (s16)(((long long)a * 0xaab + 0x800) >> 12);

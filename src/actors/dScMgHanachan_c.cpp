@@ -52,6 +52,7 @@
 #include "private/ov006_ec4dc_obj.h"
 #include "dScMgHanachan_c.h"
 #include "decl_common.h"
+#include "PlayerInput.h"
 
 typedef struct V2 { int x, y; } V2;
 typedef struct { int x, y; } Vec2;
@@ -283,8 +284,6 @@ extern int data_ov006_0213ca54[];
 extern struct Pair data_ov006_0213ca5c;
 extern struct Pair data_ov006_0213ca64;
 extern int data_ov006_0213ca6c[];
-extern u8 data_020a0dea[];
-extern u8 data_020a0deb[];
 extern int data_ov006_0213ca4c[];
 extern int data_ov006_0213ca74[];
 extern void func_02012790(int a);
@@ -317,9 +316,6 @@ extern unsigned short data_ov006_02141fd4;
 /* data_ov006_02141fd8: func_ov006_020ed8a4 spelled it volatile and only ever
    stores to it (never re-reads), so the plain spelling emits the same strh. */
 extern s16 data_ov006_02141fd8;
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0e40[];
 /* LoadFile returns the buffer; one file typed it int and casts at each use. */
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
@@ -2001,9 +1997,9 @@ void func_ov006_020ed274(char *raw)
     s->mPhaseTimer -= 1;
     if (s->mPhaseTimer != 0)
     {
-        idx = data_020a0e40[0];
+        idx = gActivePlayerSlot;
         b = 0;
-        if (data_020a0de8[idx * 4] != 0 && data_020a0de9[idx * 4] != 0)
+        if (gTouchHeld[idx * 4] != 0 && gTouchEdge[idx * 4] != 0)
             b = 1;
         if (b == 0)
             return;
@@ -2115,17 +2111,17 @@ void func_ov006_020ed494(char *raw)
     V2 a;
     int vec[4];
     int b = 0;
-    int idx = data_020a0e40[0];
+    int idx = gActivePlayerSlot;
 
-    if (data_020a0de8[idx * 4] != 0 && data_020a0de9[idx * 4] != 0)
+    if (gTouchHeld[idx * 4] != 0 && gTouchEdge[idx * 4] != 0)
         b = 1;
 
     if (b != 0)
     {
         Thing *p;
         V2 *src;
-        a.x = data_020a0dea[(unsigned int)idx * 4] << 12;
-        a.y = data_020a0deb[(unsigned int)idx * 4] << 12;
+        a.x = gTouchX[(unsigned int)idx * 4] << 12;
+        a.y = gTouchY[(unsigned int)idx * 4] << 12;
         p = (Thing *)s->mTarget;
         src = (V2 *)(int)((char *)p + 0x18);
         vec[0] = src->x;

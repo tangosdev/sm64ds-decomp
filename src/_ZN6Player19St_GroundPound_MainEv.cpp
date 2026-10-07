@@ -10,6 +10,7 @@
  * the camera, and skips the upper particles in shallow water.
  */
 #include "Player.h"
+#include "PlayerInput.h"
 
 extern "C" {
 void _ZN6Player7SetAnimEji5Fix12IiEj(void* self, unsigned int anim, int a, int b, unsigned int c);
@@ -29,7 +30,6 @@ void Player_AdvanceAnims(void* self);
 }
 
 extern void* data_0209f318;
-extern u8 data_020a0e40;
 extern char data_0209f4a0[];
 extern int data_ov002_0211013c;
 
@@ -142,7 +142,7 @@ int Player::St_GroundPound_Main()
             }
         }
     } else {
-        if (*(short*)(data_0209f4a0 + data_020a0e40 * 0x18) != 0 || FinishedAnim() != 0) {
+        if (*(short*)(data_0209f4a0 + gActivePlayerSlot * 0x18) != 0 || FinishedAnim() != 0) {
             _ZN6Player11ChangeStateERNS_5StateE(this, &data_ov002_0211013c);
             return 1;
         }

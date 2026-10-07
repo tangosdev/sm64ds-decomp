@@ -74,7 +74,7 @@ struct TouchOwner {
     virtual int v0(); virtual int v1(); virtual int v2();
     virtual int v3(); virtual int v4(); virtual int IsActive();
 };
-struct TouchRec { u8 pressed; u8 held; u8 x; u8 y; };
+struct TouchRec { u8 held; u8 edge; u8 x; u8 y; };
 struct MgMid { s32 v[5]; };
 struct MgEntry {
     u16 id; u16 pad;
@@ -117,11 +117,16 @@ extern TouchOwner *data_0209f5bc;
 extern u8 data_0209f5f8;
 extern dWipe_c data_0209f61c;
 extern int data_0208ee44;
-extern TouchRec data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0dea[];
-extern u8 data_020a0deb[];
-extern u8 data_020a0e40;
+// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
+extern TouchRec gTouchHeld[];
+// local extern: see above.
+extern u8 gTouchEdge[];
+// local extern: see above.
+extern u8 gTouchX[];
+// local extern: see above.
+extern u8 gTouchY[];
+// local extern: see above.
+extern u8 gActivePlayerSlot;
 extern unsigned short data_020a0e5a[];
 
 /* ---- ov005 statics ---- */
@@ -569,7 +574,7 @@ s32 dScMiniGm_c::CleanupResources()
 // @symbol _ZN11dScMiniGm_c8BehaviorEv
 s32 dScMiniGm_c::Behavior()
 {
-    if ((data_020a0e5a[data_020a0e40 << 1] & 0xfff) != 0) {
+    if ((data_020a0e5a[gActivePlayerSlot << 1] & 0xfff) != 0) {
         func_02012790(0xe);
     }
     if (data_0209b300 == 1) {
@@ -879,10 +884,10 @@ void func_ov005_020c0878(char *self)
 
     {
         int flag = 0;
-        unsigned char idx = data_020a0e40;
-        unsigned char v = ((unsigned char*)data_020a0de8)[idx * 4];
+        unsigned char idx = gActivePlayerSlot;
+        unsigned char v = ((unsigned char*)gTouchHeld)[idx * 4];
         if (v != 0) {
-            if (data_020a0de9[idx * 4] != 0)
+            if (gTouchEdge[idx * 4] != 0)
                 flag = 1;
         }
         if (flag != 0 || (*(int*)(self + 0xa0) <= 0 && v != 0)) {
@@ -894,8 +899,8 @@ void func_ov005_020c0878(char *self)
             do {
                 int e = data_ov005_020c2250[i];
                 if (data_0208a170 != e) {
-                    unsigned char ix = data_020a0e40;
-                    unsigned char* p = (unsigned char*)data_020a0de8 + (ix * 4);
+                    unsigned char ix = gActivePlayerSlot;
+                    unsigned char* p = (unsigned char*)gTouchHeld + (ix * 4);
                     if (p[2] <= 0x30 && p[3] >= lo && p[3] <= hi) {
                         data_0208a170 = e;
                         *(int*)(self + 0x58) = e;
@@ -924,8 +929,8 @@ void func_ov005_020c0878(char *self)
             do {
                 int e = data_ov005_020c2250[i];
                 if (*(int*)(self + 0x58) != e) {
-                    unsigned char ix = data_020a0e40;
-                    unsigned char* p = (unsigned char*)data_020a0de8 + (ix * 4);
+                    unsigned char ix = gActivePlayerSlot;
+                    unsigned char* p = (unsigned char*)gTouchHeld + (ix * 4);
                     if (p[2] <= 0x30 && p[3] >= lo && p[3] <= hi) {
                         *(int*)(self + 0x58) = e;
                         func_02012790(z);
@@ -957,28 +962,28 @@ void func_ov005_020c06cc(char *self)
     if (func_ov005_020c00e4(self) == 0) return;
 
     {
-        u8 idx = data_020a0e40;
+        u8 idx = gActivePlayerSlot;
         int off = idx*4;
         int has = 0;
-        if (((u8*)data_020a0de8)[off]) {
-            if (data_020a0de9[off]) has = 1;
+        if (((u8*)gTouchHeld)[off]) {
+            if (gTouchEdge[off]) has = 1;
         }
         if (has == 0) return;
         if (data_0209b304 == 0) {
-            u8 v = data_020a0dea[idx*4];
+            u8 v = gTouchX[idx*4];
             if (v < 0xd8) return;
             if (v > 0xf8) return;
-            if (data_020a0deb[idx*4] < 0x40) return;
-            if (data_020a0deb[idx*4] > 0x80) return;
+            if (gTouchY[idx*4] < 0x40) return;
+            if (gTouchY[idx*4] > 0x80) return;
             func_02012790(0);
             *(int*)(self+0x94) = 0x12;
             return;
         } else {
-            u8 v = data_020a0dea[idx*4];
+            u8 v = gTouchX[idx*4];
             if (v < 0x38) return;
             if (v > 0x58) return;
-            if (data_020a0deb[idx*4] < 0x40) return;
-            if (data_020a0deb[idx*4] > 0x80) return;
+            if (gTouchY[idx*4] < 0x40) return;
+            if (gTouchY[idx*4] > 0x80) return;
             func_02012790(0);
             *(int*)(self+0x90) = 0x12;
             return;
@@ -1003,22 +1008,22 @@ void dScMiniGm_c::func_ov005_020c0378()
 
     sel = -1;
     ok = 0;
-    if (data_020a0de8[data_020a0e40].pressed != 0) {
-        if (data_020a0de8[data_020a0e40].held != 0) ok = 1;
+    if (gTouchHeld[gActivePlayerSlot].held != 0) {
+        if (gTouchHeld[gActivePlayerSlot].edge != 0) ok = 1;
     }
     if (ok != 0) {
         if (data_0209b304 == 0) {
             for (row = 0; row < 2; row++) {
                 for (int col = 0; col < 3; col++) {
-                    if (data_020a0de8[data_020a0e40].x >= 0x40 + col * 0x30 && data_020a0de8[data_020a0e40].x < 0x70 + col * 0x30 &&
-                        data_020a0de8[data_020a0e40].y >= 0x18 + row * 0x48 && data_020a0de8[data_020a0e40].y < 0x60 + row * 0x48)
+                    if (gTouchHeld[gActivePlayerSlot].x >= 0x40 + col * 0x30 && gTouchHeld[gActivePlayerSlot].x < 0x70 + col * 0x30 &&
+                        gTouchHeld[gActivePlayerSlot].y >= 0x18 + row * 0x48 && gTouchHeld[gActivePlayerSlot].y < 0x60 + row * 0x48)
                         sel = data_0208a170 + (row * 0xc + col * 4);
                 }
             }
         } else {
             for (int col = 0; col < 3; col++) {
-                if (data_020a0de8[data_020a0e40].x >= 0x60 + col * 0x30 && data_020a0de8[data_020a0e40].x < 0x90 + col * 0x30 &&
-                    data_020a0de8[data_020a0e40].y >= 0x38 && data_020a0de8[data_020a0e40].y < 0x80)
+                if (gTouchHeld[gActivePlayerSlot].x >= 0x60 + col * 0x30 && gTouchHeld[gActivePlayerSlot].x < 0x90 + col * 0x30 &&
+                    gTouchHeld[gActivePlayerSlot].y >= 0x38 && gTouchHeld[gActivePlayerSlot].y < 0x80)
                     sel = data_0208a170 + (0x18 + col * 4);
             }
         }
@@ -1063,16 +1068,16 @@ void func_ov005_020c0250(char *self) {
     if (*(int*)(self+0x90) > 0) return;
     if (*(int*)(self+0x94) > 0) return;
     if (*(int*)(self+0x98) > 0) return;
-    unsigned int i = data_020a0e40;
+    unsigned int i = gActivePlayerSlot;
     bool ok = false;
-    if (data_020a0de8[i].pressed != 0) {
-        if (data_020a0de8[i].held != 0) ok = true;
+    if (gTouchHeld[i].held != 0) {
+        if (gTouchHeld[i].edge != 0) ok = true;
     }
     if (!ok) return;
-    unsigned char x = data_020a0de8[i].x;
+    unsigned char x = gTouchHeld[i].x;
     if (x < 0xd8) return;
     if (x > 0xf8) return;
-    unsigned char y = data_020a0de8[i].y;
+    unsigned char y = gTouchHeld[i].y;
     if (y < 0x90) return;
     if (y > 0xb0) return;
     func_02012790(0x63);

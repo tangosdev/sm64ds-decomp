@@ -60,6 +60,7 @@
 #include "decl_Player.h"
 #include "Player.h"
 #include "dScStage_c.h"
+#include "PlayerInput.h"
 
 /* The declarations below are the union of what the nineteen shards declared
  * locally, minus everything a shared header already supplies. What is left is
@@ -135,7 +136,6 @@ struct HUDInfo {
     unsigned char field_6d9;
 };
 extern HUDInfo* data_0209f394[];
-extern u8 data_020a0e40;
 extern u8 data_ov002_02111180;
 extern S154 *data_0209f318;
 extern Rec18 data_0209f4ae[];
@@ -1018,7 +1018,7 @@ void dMeter_c::RenderSilverStars()
  * never reads it, which is why the legacy source could spell it static. */
 void dMeter_c::RenderCameraButtons()
 {
-    int idx = data_020a0e40;
+    int idx = gActivePlayerSlot;
     u8 mode = *(u8 *)&data_0209f4ae[idx];
     S154 *p = data_0209f318;
     u8 t = data_ov002_02111180;
@@ -1038,7 +1038,7 @@ void dMeter_c::RenderCameraButtons()
                 OAM::RenderSub(&OAM::CAM_BUTTON_L, 0x19, 0xa5, -1, 1);
                 OAM::RenderSub(&OAM::CAM_BUTTON_L, 0xbf, 0xa5, -1, 1);
             }
-            if (*(u16 *)&data_0209f49c[data_020a0e40] & 0x100) {
+            if (*(u16 *)&data_0209f49c[gActivePlayerSlot] & 0x100) {
                 OAM::RenderSub(&OAM::CAM_BUTTON_R_PRESSED, 0x41, 0xa5, -1, 1);
                 OAM::RenderSub(&OAM::CAM_BUTTON_R_PRESSED, 0xe7, 0xa5, -1, 1);
             } else {
@@ -1051,7 +1051,7 @@ void dMeter_c::RenderCameraButtons()
             } else {
                 OAM::RenderSub(&OAM::S_CAM_BUTTON_L, 0xbf, 0xad, -1, 1);
             }
-            if (*(u16 *)&data_0209f49c[data_020a0e40] & 0x100) {
+            if (*(u16 *)&data_0209f49c[gActivePlayerSlot] & 0x100) {
                 OAM::RenderSub(&OAM::S_CAM_BUTTON_R_PRESSED, 0xe7, 0xad, -1, 1);
             } else {
                 OAM::RenderSub(&OAM::S_CAM_BUTTON_R, 0xe7, 0xad, -1, 1);

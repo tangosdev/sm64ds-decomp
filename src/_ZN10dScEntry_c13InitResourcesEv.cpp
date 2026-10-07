@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "PlayerInput.h"
 // @symbol _ZN10dScEntry_c13InitResourcesEv
 #include "decl_common.h"
 #include "dScEntry_c.h"
@@ -35,7 +36,6 @@ extern "C" {
 
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
-extern u8 data_020a0e40;
 extern u8 data_0209f4ae[];
 extern void* data_0209d4a8;
 extern s32 data_0208ee44;
@@ -107,7 +107,7 @@ s32 dScEntry_c::InitResources()
                 }
                 {
                     int r = func_0203da9c();
-                    func_02020028(r, data_0209f4ae[data_020a0e40 * 0x18]);
+                    func_02020028(r, data_0209f4ae[gActivePlayerSlot * 0x18]);
                 }
             }
         } else {

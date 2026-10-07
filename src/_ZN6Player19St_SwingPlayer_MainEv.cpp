@@ -1,4 +1,5 @@
 //cpp
+#include "PlayerInput.h"
 // @symbol _ZN6Player19St_SwingPlayer_MainEv
 /* recovered: Player::St_SwingPlayer_Main, the per-frame body of the swing state (animation, particles, the approach helpers). */
 // NONMATCHING: div 8 of 241 words. mwccarm 2004/b56, --module ov002,
@@ -35,7 +36,6 @@ extern void _ZN5dCc_c6UpdateEv(char* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* s);
 extern void Player_AdvanceAnims(char* c);
 
-extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
 extern s16 data_0209f4a0[];
 extern int data_ov002_0211013c[];
@@ -54,7 +54,7 @@ extern "C" int _ZN6Player19St_SwingPlayer_MainEv(char* c)
     case 1: {
         int arr[3];
         Vec3 v;
-        if ((*(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18) & 1) != 0) {
+        if ((*(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18) & 1) != 0) {
             char* p = *(char**)(c + 0x358);
             if (p != 0) {
                 int b = (*(u32*)(p + 0xb0) & 0x200) != 0;
@@ -69,7 +69,7 @@ extern "C" int _ZN6Player19St_SwingPlayer_MainEv(char* c)
             }
             return 1;
         }
-        if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
+        if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
             s16 diff = *(s16*)(c + 0x6d2) - *(s16*)(c + 0x6d4);
             s16 av = *(s16*)(c + 0x69c);
             s32 step;

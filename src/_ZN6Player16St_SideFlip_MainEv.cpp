@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "PlayerInput.h"
 // @symbol _ZN6Player16St_SideFlip_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
@@ -17,7 +18,6 @@ extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 a, void* v);
 extern void Player_AdvanceAnims(void* c);
 
 extern int data_ov002_02110424[];
-extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
 extern int data_ov002_0211052c[];
 extern u16 data_0209f49c[];
@@ -41,7 +41,7 @@ int Player::St_SideFlip_Main()
         _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_02110424);
     } else {
         if (!_ZN6Player7IsStateERNS_5StateE(((char*)this), data_ov002_021101fc)) {
-            u16 r0v = *(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18);
+            u16 r0v = *(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18);
             if (r0v & 0x400) {
                 if (_ZN6Player7IsStateERNS_5StateE(((char*)this), data_ov002_0211052c)) {
                     mPrevAngleY = mAngleY;
@@ -59,7 +59,7 @@ int Player::St_SideFlip_Main()
         mVertAccel = -0x4000;
 
         if (mVertSpeed >= 0) {
-            u16 r1v = *(u16*)((char*)data_0209f49c + data_020a0e40 * 0x18);
+            u16 r1v = *(u16*)((char*)data_0209f49c + gActivePlayerSlot * 0x18);
             if ((r1v & 2) != 0
                 || _ZN6Player7IsStateERNS_5StateE(((char*)this), data_ov002_021101e4)
                 || _ZN6Player7IsStateERNS_5StateE(((char*)this), data_ov002_021101fc)

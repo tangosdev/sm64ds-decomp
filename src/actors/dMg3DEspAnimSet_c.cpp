@@ -47,6 +47,7 @@
 #include "TextureTransformer.h"
 #include "TextureSequence.h"
 #include "Sound.h"
+#include "PlayerInput.h"
 
 struct BMD_File;
 struct BTP_File;
@@ -124,11 +125,6 @@ extern dMg3DEspModel_c::State data_ov006_0213c764;
 extern dMg3DEspModel_c::State data_ov006_0213c76c;
 extern dMg3DEspModel_c::State data_ov006_0213c774;
 extern void *data_ov006_0213c844;
-extern u8 data_020a0e40;
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0dea[];
-extern u8 data_020a0deb[];
 extern s16 data_02082214[];
 extern unsigned char data_0209d45c;
 extern unsigned char data_0209d454;
@@ -1144,21 +1140,21 @@ void dScMg3DEsp_c::CardSeek(int i)
 void dScMg3DEsp_c::CardTouch(int idx)
 {
     char* self = (char*)this;
-    unsigned int i = data_020a0e40;
+    unsigned int i = gActivePlayerSlot;
     int ok = 0;
     int n;
     int v, w;
 
-    if (data_020a0de8[i * 4] != 0) {
-        if (data_020a0de9[i * 4] != 0) {
+    if (gTouchHeld[i * 4] != 0) {
+        if (gTouchEdge[i * 4] != 0) {
             ok = 1;
         }
     }
     if (ok == 0) return;
 
     n = idx * 0x18;
-    v = data_020a0dea[data_020a0e40 * 4] - (*(int*)(self + 0x5208 + n) >> 12);
-    w = data_020a0deb[data_020a0e40 * 4] - (*(int*)(self + 0x520c + n) >> 12);
+    v = gTouchX[gActivePlayerSlot * 4] - (*(int*)(self + 0x5208 + n) >> 12);
+    w = gTouchY[gActivePlayerSlot * 4] - (*(int*)(self + 0x520c + n) >> 12);
 
     if (v < -0xa) return;
     if (v > 0xa) return;
@@ -1468,9 +1464,9 @@ void dScMg3DEsp_c::Results()
         if (*(u8 *)(c + 0x5550) != 0)
             return;
         b = 0;
-        i = data_020a0e40;
-        if (data_020a0de8[i * 4] != 0) {
-            if (data_020a0de9[i * 4] != 0)
+        i = gActivePlayerSlot;
+        if (gTouchHeld[i * 4] != 0) {
+            if (gTouchEdge[i * 4] != 0)
                 b = 1;
         }
         if (b != 0)

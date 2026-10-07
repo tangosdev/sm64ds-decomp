@@ -30,6 +30,7 @@
 
 #include "types.h"
 #include "dScMgCurling_c.h"
+#include "PlayerInput.h"
 
 /* `C` is the receiver of the pointer-to-member state tables. It must stay
  * incomplete: mwccarm picks the pointer-to-member layout from whether the
@@ -60,9 +61,8 @@ struct DragView {
     int aimY;
 };
 
-/* data_020a0dea and data_020a0deb are four-byte touch records. The drag
- * handler reads them through a `u8 *` cast; a plain `u8 []` costs eighteen
- * words there. */
+/* B4 is a 4-byte-record view of a touch lane, used by the stone-drag
+ * reader; the other readers index the lanes flat. */
 struct B4 { unsigned char v; unsigned char pad[3]; };
 
 /* Launder: forces an address through an integer so it is not shared. */
@@ -110,11 +110,6 @@ extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile u16 *p, u16 a, u16 b, u16 c,
 
 extern int  data_0209d4b8;
 extern s16  data_02082214[];
-extern u8   data_020a0de8[];
-extern u8   data_020a0de9[];
-extern struct B4 data_020a0dea[];
-extern struct B4 data_020a0deb[];
-extern u8   data_020a0e40[];
 extern unsigned char data_ov006_0212e450[];
 extern unsigned char data_ov006_0212e454[];
 extern u8   data_ov006_0212e458[];
@@ -694,13 +689,13 @@ void dScMgCurling_c::func_ov006_020e1854()
     int diff;
     u16 ang;
 
-    idx = data_020a0e40[0];
-    if (data_020a0de8[idx * 4] != 0) {
+    idx = gActivePlayerSlot;
+    if (gTouchHeld[idx * 4] != 0) {
         int dy2, dy;
 
         int i4 = idx * 4;
-        u8 *pa = (u8 *)data_020a0dea;
-        u8 *pb = (u8 *)data_020a0deb;
+        u8 *pa = (u8 *)gTouchX;
+        u8 *pb = (u8 *)gTouchY;
         u8 bx = pa[i4];
         u8 by = pb[i4];
 
@@ -788,10 +783,10 @@ void dScMgCurling_c::func_ov006_020e1854()
         {
             int px = mAimX;
             int py = mAimY;
-            int j = data_020a0e40[0];
-            u8 jx = ((u8 *)data_020a0dea)[j * 4];
+            int j = gActivePlayerSlot;
+            u8 jx = ((u8 *)gTouchX)[j * 4];
             int ax = (px >> 12) - jx;
-            u8 jy = ((u8 *)data_020a0deb)[j * 4];
+            u8 jy = ((u8 *)gTouchY)[j * 4];
             int ay = (py >> 12) - jy;
             mGrabX = ax << 12;
             mGrabY = ay << 12;
@@ -812,10 +807,10 @@ void dScMgCurling_c::func_ov006_020e1b54()
   int touching = 0;
   int x;
   int y;
-  idx = data_020a0e40[0];
-  if (data_020a0de8[idx * (4 & 0xFFFFFFFF)] != 0)
+  idx = gActivePlayerSlot;
+  if (gTouchHeld[idx * (4 & 0xFFFFFFFF)] != 0)
   {
-    if (data_020a0de9[idx * 4] != 0)
+    if (gTouchEdge[idx * 4] != 0)
     {
       touching = 1;
     }
@@ -824,8 +819,8 @@ void dScMgCurling_c::func_ov006_020e1b54()
   {
     return;
   }
-  x = (mAimX >> 0xc) - ((u8 *)data_020a0dea)[idx * 4];
-  y = (mAimY >> 0xc) - ((u8 *)data_020a0deb)[idx * 4];
+  x = (mAimX >> 0xc) - ((u8 *)gTouchX)[idx * 4];
+  y = (mAimY >> 0xc) - ((u8 *)gTouchY)[idx * 4];
   mGrabX = x << 0xc;
   mGrabY = y << 0xc;
   mStylusHeld = 1;
@@ -1101,15 +1096,15 @@ void dScMgCurling_c::func_ov006_020e269c(int i)
 void dScMgCurling_c::func_ov006_020e26f8(int i)
 {
     DragView *w = (DragView *)this;
-    unsigned char idx = data_020a0e40[0];
-    if (((struct B4 *)data_020a0de8)[idx].v) {
+    unsigned char idx = gActivePlayerSlot;
+    if (((struct B4 *)gTouchHeld)[idx].v) {
         int t, mm, nn;
-        w->stone[i].x = w->stone[i].grabX + (data_020a0dea[idx].v << 12);
+        w->stone[i].x = w->stone[i].grabX + (((struct B4 *)gTouchX)[idx].v << 12);
         t = w->stone[i].x >> 12;
         if (t < 0xe) w->stone[i].x = 0xe000;
         if (t > 0xf2) w->stone[i].x = 0xf2000;
-        mm = (w->stone[i].x >> 12) - data_020a0dea[data_020a0e40[0]].v;
-        nn = (w->stone[i].y >> 12) - data_020a0deb[idx].v;
+        mm = (w->stone[i].x >> 12) - ((struct B4 *)gTouchX)[gActivePlayerSlot].v;
+        nn = (w->stone[i].y >> 12) - ((struct B4 *)gTouchY)[idx].v;
         w->stone[i].grabX = mm << 12;
         w->stone[i].grabY = nn << 12;
     } else {

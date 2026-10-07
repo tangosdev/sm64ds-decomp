@@ -1,8 +1,8 @@
 #include "types.h"
+#include "PlayerInput.h"
 extern int AngleDiff(int a, int b);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 
-extern u8 data_020a0e40;
 extern s16 data_0209f4a0[];
 extern int data_ov002_02110604[];
 
@@ -17,7 +17,7 @@ int func_ov002_020d9dcc(char* c)
     if (p == 0 || (int)(((long long)(*(u16*)(p + 0xc) == 0xbf))) == 0)
         return 0;
 
-    if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) == 0 || *(u8*)(c + 0x6de) != 0) {
+    if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) == 0 || *(u8*)(c + 0x6de) != 0) {
         *(u16*)(c + 0x6a4) = 0;
         return 0;
     }
