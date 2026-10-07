@@ -1,6 +1,6 @@
 //cpp
-/* Shell game (MG_CUP). Three cups shuffle on the sub screen; touch the one
- * whose unk_5462 matches unk_5468.
+/* Shell game (MG_CUP). Three cups shuffle on the sub screen; touch the cup
+ * containing the requested item.
  *
  * Leftover: func_ov006_020dec88 calls the mangled Fix12 OAM::Render.
  *   include/OAM.h will not declare that overload.
@@ -242,24 +242,19 @@ extern "C" void func_ov006_020dec88(char* sprite)
 
 extern "C" void func_ov006_020ded00(int sprite)
 {
-  *((int *) (sprite + 0)) += *((int *) (sprite + 8));
-  *((int *) (sprite + 4)) += *((int *) (sprite + 0xc));
-  if (*((unsigned char *) (sprite + 0x13)))
-  {
-    *((int *) (sprite + 4)) -= 6;
-  }
-  if (DecIfAbove0_Byte((unsigned char *) (sprite + 0x14)))
-  {
-    return;
-  }
-  *((unsigned char *) (sprite + 0x14)) = 3;
-  /* Keep the two spellings of +0x12 apart: the ROM re-reads the byte after
-     the decrement, and one shared spelling reuses the address instead. */
-  *((signed char *) (sprite + 0x12)) -= 1;
-  if (*((signed char *) sprite + 0x12) < 0)
-  {
-    *((signed char *) (sprite + 0x15)) = 0;
-  }
+    CupFx *fx = (CupFx *)sprite;
+    fx->x += fx->vx;
+    fx->y += fx->vy;
+    if (fx->row != 0)
+        fx->y -= 6;
+    if (DecIfAbove0_Byte(&fx->delay))
+        return;
+    fx->delay = 3;
+    /* Keep the frame reload through the byte view: using fx->frame again
+       reuses the decrement address and changes the emitted instructions. */
+    fx->frame -= 1;
+    if (*((signed char *) sprite + 0x12) < 0)
+        fx->active = 0;
 }
 
 extern "C" void func_ov006_020ded84(char* sprite, int kind, int x, int y, signed char cup)
@@ -394,9 +389,9 @@ extern "C" void func_ov006_020df024(char *raw)
     int rem;
 
     if (bits & 1) {
-        row = data_ov006_0213c094[self->unk_5461].hi;
+        row = data_ov006_0213c094[self->mRoundRow].hi;
     } else {
-        row = data_ov006_0213c094[self->unk_5461].lo;
+        row = data_ov006_0213c094[self->mRoundRow].lo;
     }
 
     row = row * 2;
@@ -418,9 +413,9 @@ extern "C" void func_ov006_020df024(char *raw)
     self->mShuffleAngle = 0;
 
     {
-        u8 kind = self->unk_5461;
+        u8 kind = self->mRoundRow;
         if (kind == 7) {
-            if (self->unk_5460 == self->mFakeOutAt) {
+            if (self->mSwapsRemaining == self->mFakeOutAt) {
                 goto set1;
             }
         }
@@ -535,7 +530,7 @@ void dScMgCup_c::StateSelect()
         mFlags[cup] = 1;
         func_ov006_020def80(raw, cup);
 
-        if (unk_5468 == unk_5462[cup]) {
+        if (mTargetContent == mCupContents[cup]) {
             mCorrect = 1;
             mAnim[cup] = 6;
         } else {
@@ -653,8 +648,8 @@ void dScMgCup_c::StateShuffle()
             int ta = mIds[*(int*)(raw + 0x542c)];
             mIds[*(int*)(raw + 0x542c)] = tb;
             mIds[*(int*)(raw + 0x5430)] = ta;
-            unk_5460 -= 1;
-            if (unk_5460 == 0) {
+            mSwapsRemaining -= 1;
+            if (mSwapsRemaining == 0) {
                 *(int*)(raw + 0x541c) = 0x1e;
                 mState = 3;
             } else {
@@ -782,25 +777,25 @@ void dScMgCup_c::StateSetup()
 
     score = mHudScore;
     if (score < 0xa) {
-        unk_5461 = (unsigned char)score;
+        mRoundRow = (unsigned char)score;
     } else {
         rnd = (unsigned int)RandomIntInternal(&data_0209e650);
         hi = rnd >> 16;
         kind = (hi % 5) + 5;
-        unk_5461 = (unsigned char)kind;
+        mRoundRow = (unsigned char)kind;
     }
 
-    unk_5460 = ((unsigned char *)data_ov006_0213c094)[unk_5461 * 2];
+    mSwapsRemaining = ((unsigned char *)data_ov006_0213c094)[mRoundRow * 2];
 
     if (score > 3) {
         rnd = (unsigned int)RandomIntInternal(&data_0209e650);
         if (rnd & 1) {
-            unk_5468 = 1;
+            mTargetContent = 1;
         } else {
-            unk_5468 = 2;
+            mTargetContent = 2;
         }
     } else if (score == 3) {
-        unk_5468 = 2;
+        mTargetContent = 2;
     }
 
     mSparkleShuffles = 0;
@@ -845,26 +840,26 @@ void dScMgCup_c::OnYoshiTryEat(int msg)
         }
         unk_0a8 = 2;
         unk_0ac = unk_0a8;
-        unk_5462[0] = 1;
-        unk_5462[1] = 0;
+        mCupContents[0] = 1;
+        mCupContents[1] = 0;
         if (mHudScore >= 3) {
-            unk_5462[2] = 2;
+            mCupContents[2] = 2;
         } else {
-            unk_5462[2] = 0;
+            mCupContents[2] = 0;
         }
-        unk_5468 = 1;
+        mTargetContent = 1;
     } else if (msg == 0) {
         unk_0a8 = 2;
         unk_0ac = unk_0a8;
         if (mHudScore == 3) {
-            unk_5462[0] = 1;
-            unk_5462[1] = 0;
-            unk_5462[2] = 2;
+            mCupContents[0] = 1;
+            mCupContents[1] = 0;
+            mCupContents[2] = 2;
         }
     }
 
     for (i = 0; i < 3; i++) {
-        if (unk_5462[i] != 0) {
+        if (mCupContents[i] != 0) {
             mAnim[i] = 3;
         } else {
             mAnim[i] = 0;
@@ -923,12 +918,12 @@ s32 dScMgCup_c::Render()
             *(int*)(raw + cup * 8 + 0x53e8),
             ((struct P8*)raw + cup)[0xa7d].b,
             mOnes[cup],
-            unk_5462[cup]);
+            mCupContents[cup]);
     }
 
     if (mState == 4 || mState == 5) {
         Hud_RenderSprite(data_ov006_02139df4, 0x92, 0x20,
-            (unk_5468 == 2) ? 4 : -1, -1);
+            (mTargetContent == 2) ? 4 : -1, -1);
     }
 
     func_ov004_020b2574(unk_0a8, 1);
