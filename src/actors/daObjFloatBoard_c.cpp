@@ -19,7 +19,7 @@
  *   dBgW_KcMbg * because that is what dBgActor_c::mMeshCollider is declared as
  *   in include/dBgActor_c.h, so the call needs no upcast; daObjPathLift_c.cpp
  *   already spells it the same way. The three dBgW * spellings elsewhere name
- *   a base of that type, and the definition in src/func_020393a4.c still says
+ *   a base of that type, and the definition in src/engine/collision/dBgW.cpp still says
  *   int *.
  * Leftover: sine table data_02082214 (arm9).
  * Leftover: mBobPhase's second spelling ((char *)this + 0x300, + 0x38):

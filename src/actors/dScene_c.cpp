@@ -7,14 +7,14 @@
  */
 #include "dScene_c.h"
 #include "dScStage_c.h"
-#include "FaderColor.h"
+#include "dFdColor_c.h"
 
 struct Matrix2x2 { int m[4]; };
 
 /* The transition calls pass a second word to fader slots 3/4, whereas the
  * shared class currently declares only the frame count. Preserve this local
  * ABI view until the fader-family contract is reconstructed. Direct calls to
- * FaderBrightness below use its existing native one-argument methods.
+ * dFdBrightness_c below use its existing native one-argument methods.
  */
 struct FaderVTable {
     void (*D1)(void *);
@@ -66,7 +66,7 @@ extern void Initialise3dGraphics(int arg);
 
 extern fBase_c *data_0209f5c0;
 
-extern FaderColor data_0209f5e8;
+extern dFdColor_c data_0209f5e8;
 
 extern void *data_0209f1e4;
 extern void func_02011b7c(void);
@@ -78,8 +78,8 @@ extern u8 data_02092660;
 
 extern u8   data_0209f1e0;
 
-extern FaderBrightness *data_0209f5bc;
-extern FaderBrightness data_0209f5d0;
+extern dFdBrightness_c *data_0209f5bc;
+extern dFdBrightness_c data_0209f5d0;
 extern u16  data_02092664;
 
 extern void func_02023544(void);
@@ -91,7 +91,7 @@ extern int func_0203d9b4(void);
 
 extern int func_02013edc(u32 sceneID, u32 param, int a);
 
-extern FaderBrightness *data_0209d4ac;
+extern dFdBrightness_c *data_0209d4ac;
 }
 
 // @symbol _ZN8dScene_c22ResetHardwareRegistersEv
@@ -289,9 +289,9 @@ int dScene_c::BeforeBehavior()
         } else {
             if (data_0209f1e4 == 0) {
                 data_0209f5d0.currInterp = 0;
-                data_0209f5d0.FaderBrightness::SetForwardTime(0x10);
+                data_0209f5d0.dFdBrightness_c::SetForwardTime(0x10);
                 data_0209f1e4 = &data_0209f5d0;
-            } else if (data_0209f5d0.FaderBrightness::IsAtEnd()) {
+            } else if (data_0209f5d0.dFdBrightness_c::IsAtEnd()) {
                 StartSceneFade(1, 0, 0);
                 ((FaderObject *)&data_0209f5e8)->vt->SetForwardTime((FaderObject *)&data_0209f5e8, 0, 0);
                 MarkForDestruction();
@@ -385,8 +385,8 @@ int dScene_c::SpawnIfNecessary()
     }
 }
 
-// @symbol _ZN8dScene_c9SetFadersEP15FaderBrightness
-void dScene_c::SetFaders(FaderBrightness *fader)
+// @symbol _ZN8dScene_c9SetFadersEP15dFdBrightness_c
+void dScene_c::SetFaders(dFdBrightness_c *fader)
 {
     if (data_0209f5bc) {
         if (data_0209f5bc->IsAtStart()) {

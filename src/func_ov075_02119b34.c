@@ -1,6 +1,6 @@
 extern int func_0203da9c(void);
 extern int func_02033464(unsigned char a, signed char b, int c);
-extern void func_ov075_02115134(char* c);
+extern void _ZN9dEntObj_c19func_ov075_02115134Ev(char* c);
 extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
 extern int TouchArea_Update(char* c, int a);
 extern int func_ov075_02116d9c(int unused, int id);
@@ -20,7 +20,7 @@ void func_ov075_02119b34(char* c) {
     for (int i = 1; i < 4; i++) {
         func_02033464((unsigned char)i, (signed char)i, 0);
     }
-    func_ov075_02115134(*(char**)(c + 0x50));
+    _ZN9dEntObj_c19func_ov075_02115134Ev(*(char**)(c + 0x50));
     *(int*)(c + 0x278) = Sound_PlayIfNotActive(*(int*)(c + 0x278), 2, 0x11c, 0);
     if (data_0209fc5c[r5] == 0)
         return;

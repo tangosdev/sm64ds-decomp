@@ -45,10 +45,10 @@
       "ordinal": 2
     },
     {
-      "symbol": "_ZN8dScene_c9SetFadersEP15FaderBrightness",
+      "symbol": "_ZN8dScene_c9SetFadersEP15dFdBrightness_c",
       "address": "0x0202e1e0",
       "size": "0x0000008c",
-      "legacy_source": "src/_ZN8dScene_c9SetFadersEP15FaderBrightness.cpp",
+      "legacy_source": "src/_ZN8dScene_c9SetFadersEP15dFdBrightness_c.cpp",
       "ordinal": 3
     },
     {
@@ -325,7 +325,7 @@
       "src/_ZN8dScene_cD1Ev.cpp",
       "src/_ZN8dScene_cD0Ev.cpp",
       "src/_ZN8dScene_c20SetAndStopColorFaderEv.cpp",
-      "src/_ZN8dScene_c9SetFadersEP15FaderBrightness.cpp",
+      "src/_ZN8dScene_c9SetFadersEP15dFdBrightness_c.cpp",
       "src/_ZN8dScene_c16SpawnIfNecessaryEv.cpp",
       "src/_ZN8dScene_c18PrepareToSpawnBootEv.cpp",
       "src/_ZN8dScene_c14StartSceneFadeEjjt.cpp",

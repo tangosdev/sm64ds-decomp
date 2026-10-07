@@ -246,7 +246,7 @@ def build_header(cls, old, sizes=None):
     tail = "".join(f"\n    {m};" for m in meths)
 
     # The C side keeps the flat struct verbatim -- same arrangement as
-    # include/dExtShadowModel_c.h and include/Fader.h. A C translation unit gets no
+    # include/dExtShadowModel_c.h and include/dFader_c.h. A C translation unit gets no
     # base sub-object and no implicit vptr, so it needs every offset spelled
     # out, and the generated declaration this replaces already is exactly that.
     # The D0 files are why it has to stay: they are C, they read fields, and

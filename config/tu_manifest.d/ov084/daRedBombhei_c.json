@@ -33,115 +33,115 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov084_0212c1a0",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c1a0Ev",
       "address": "0x0212c1a0",
       "size": "0x00000300",
-      "legacy_source": "src/func_ov084_0212c1a0.c",
+      "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212c1a0Ev.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov084_0212c4a0",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c4a0Ev",
       "address": "0x0212c4a0",
       "size": "0x00000068",
-      "legacy_source": "src/func_ov084_0212c4a0.c",
+      "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212c4a0Ev.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov084_0212c508",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c508Ev",
       "address": "0x0212c508",
       "size": "0x00000394",
-      "legacy_source": "src/func_ov084_0212c508.cpp",
+      "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212c508Ev.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov084_0212c89c",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c89cEv",
       "address": "0x0212c89c",
       "size": "0x00000014",
-      "legacy_source": "src/func_ov084_0212c89c.c",
+      "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212c89cEv.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov084_0212c8b0",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c8b0Ev",
       "address": "0x0212c8b0",
       "size": "0x0000007c",
-      "legacy_source": "src/func_ov084_0212c8b0.cpp",
+      "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212c8b0Ev.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov084_0212c92c",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c92cEv",
       "address": "0x0212c92c",
       "size": "0x00000034",
-      "legacy_source": "src/func_ov084_0212c92c.cpp",
+      "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212c92cEv.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov084_0212c960",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c960Ei",
       "address": "0x0212c960",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov084_0212c960.cpp",
+      "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212c960Ei.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov084_0212c9a8",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c9a8Ev",
       "address": "0x0212c9a8",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov084_0212c9a8.cpp",
+      "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212c9a8Ev.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov084_0212c9f0",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212c9f0Eij",
       "address": "0x0212c9f0",
       "size": "0x00000070",
-      "legacy_source": "src/func_ov084_0212c9f0.c",
+      "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212c9f0Eij.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov084_0212ca60",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212ca60Ev",
       "address": "0x0212ca60",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov084_0212ca60.c",
+      "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212ca60Ev.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov084_0212caa8",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212caa8Ev",
       "address": "0x0212caa8",
       "size": "0x00000018",
-      "legacy_source": "src/func_ov084_0212caa8.c",
+      "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212caa8Ev.c",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov084_0212cac0",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212cac0Ev",
       "address": "0x0212cac0",
       "size": "0x00000020",
-      "legacy_source": "src/func_ov084_0212cac0.c",
+      "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212cac0Ev.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov084_0212cae0",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212cae0Ev",
       "address": "0x0212cae0",
       "size": "0x000001d4",
-      "legacy_source": "src/func_ov084_0212cae0.c",
+      "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212cae0Ev.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov084_0212ccb4",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212ccb4Ev",
       "address": "0x0212ccb4",
       "size": "0x000000ec",
-      "legacy_source": "src/func_ov084_0212ccb4.cpp",
+      "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212ccb4Ev.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "func_ov084_0212cda0",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212cda0EP7Vector3S1_",
       "address": "0x0212cda0",
       "size": "0x000000b0",
-      "legacy_source": "src/func_ov084_0212cda0.c",
+      "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212cda0EP7Vector3S1_.c",
       "ordinal": 16
     },
     {
-      "symbol": "func_ov084_0212ce50",
+      "symbol": "_ZN14daRedBombhei_c19func_ov084_0212ce50Ev",
       "address": "0x0212ce50",
       "size": "0x000000c0",
-      "legacy_source": "src/func_ov084_0212ce50.cpp",
+      "legacy_source": "src/_ZN14daRedBombhei_c19func_ov084_0212ce50Ev.cpp",
       "ordinal": 17
     },
     {
@@ -184,26 +184,26 @@
   "bss": [],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
-    "Historical tubuild create RAW warning (RESOLVED): func_ov084_0212ce50 was initially carried from its legacy extern C block; the production TU now has a normal function definition with its includes and declarations at file scope.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212c508; kept the first during generation. Resolution: The TU uses short(const Vector3 *, const Vector3 *) consistently.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov084_0212c960' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212c508; kept the first during generation. Resolution: The TU forward declaration and definition both use void(daRedBombhei_c *, int).",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player12GetTalkStateEv' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212c508; kept the first during generation. Resolution: Calls now use Player::GetTalkState from Player.h.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212c508; kept the first during generation. Resolution: The TU uses the C++ ApproachLinear(short &, short, short) declaration.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f2f8' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212c508; kept the first during generation. Resolution: The TU consistently declares the level value as s8.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212c8b0; kept the first during generation. Resolution: Calls now use dActor_c::FindWithID from dActor_c.h.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov084_0212c960' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212c8b0; kept the first during generation. Resolution: The TU forward declaration and definition both use void(daRedBombhei_c *, int).",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f318' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212cae0; kept the first during generation. Resolution: The TU consistently declares the camera as dCamera_c *.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212cae0; kept the first during generation. Resolution: Calls now use dActor_c::FindWithID from dActor_c.h.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov084_0212cda0' differs between the legacy file that used to hold func_ov084_0212cae0 and the one that held func_ov084_0212ccb4; kept the first during generation. Resolution: The TU forward declaration and definition both use int(daRedBombhei_c *, Vector3 *, Vector3 *).",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f318' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held func_ov084_0212ccb4; kept the first during generation. Resolution: The TU consistently declares the camera as dCamera_c *.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov084_02130d9c' differs between the legacy file that used to hold func_ov084_0212c92c and the one that held _ZN14daRedBombhei_c16CleanupResourcesEv; kept the first during generation. Resolution: The TU consistently declares this handle as SharedFilePtr.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held _ZN14daRedBombhei_c8BehaviorEv; kept the first during generation. Resolution: The TU uses short(const Vector3 *, const Vector3 *) consistently.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held _ZN14daRedBombhei_c8BehaviorEv; kept the first during generation. Resolution: The TU uses the C++ ApproachLinear(short &, short, short) declaration.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov084_0212c9f0 and the one that held _ZN14daRedBombhei_c8BehaviorEv; kept the first during generation. Resolution: The TU uses one void(unsigned int, const Vector3 *) declaration.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov084_0212c960' differs between the legacy file that used to hold func_ov084_0212c1a0 and the one that held _ZN14daRedBombhei_c13InitResourcesEv; kept the first during generation. Resolution: The TU forward declaration and definition both use void(daRedBombhei_c *, int).",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov084_0212ca60' differs between the legacy file that used to hold func_ov084_0212c508 and the one that held _ZN14daRedBombhei_c13InitResourcesEv; kept the first during generation. Resolution: The TU forward declaration and definition both use int(daRedBombhei_c *).",
+    "Historical tubuild create RAW warning (RESOLVED): _ZN14daRedBombhei_c19func_ov084_0212ce50Ev was initially carried from its legacy extern C block; the production TU now has a normal function definition with its includes and declarations at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212c508Ev; kept the first during generation. Resolution: The TU uses short(const Vector3 *, const Vector3 *) consistently.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14daRedBombhei_c19func_ov084_0212c960Ei' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212c508Ev; kept the first during generation. Resolution: The TU forward declaration and definition both use void(daRedBombhei_c *, int).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player12GetTalkStateEv' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212c508Ev; kept the first during generation. Resolution: Calls now use Player::GetTalkState from Player.h.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212c508Ev; kept the first during generation. Resolution: The TU uses the C++ ApproachLinear(short &, short, short) declaration.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f2f8' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212c508Ev; kept the first during generation. Resolution: The TU consistently declares the level value as s8.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212c8b0Ev; kept the first during generation. Resolution: Calls now use dActor_c::FindWithID from dActor_c.h.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14daRedBombhei_c19func_ov084_0212c960Ei' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212c8b0Ev; kept the first during generation. Resolution: The TU forward declaration and definition both use void(daRedBombhei_c *, int).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f318' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212cae0Ev; kept the first during generation. Resolution: The TU consistently declares the camera as dCamera_c *.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212cae0Ev; kept the first during generation. Resolution: Calls now use dActor_c::FindWithID from dActor_c.h.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14daRedBombhei_c19func_ov084_0212cda0EP7Vector3S1_' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212cae0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212ccb4Ev; kept the first during generation. Resolution: The TU forward declaration and definition both use int(daRedBombhei_c *, Vector3 *, Vector3 *).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f318' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c19func_ov084_0212ccb4Ev; kept the first during generation. Resolution: The TU consistently declares the camera as dCamera_c *.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov084_02130d9c' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c92cEv and the one that held _ZN14daRedBombhei_c16CleanupResourcesEv; kept the first during generation. Resolution: The TU consistently declares this handle as SharedFilePtr.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c8BehaviorEv; kept the first during generation. Resolution: The TU uses short(const Vector3 *, const Vector3 *) consistently.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c8BehaviorEv; kept the first during generation. Resolution: The TU uses the C++ ApproachLinear(short &, short, short) declaration.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c9f0Eij and the one that held _ZN14daRedBombhei_c8BehaviorEv; kept the first during generation. Resolution: The TU uses one void(unsigned int, const Vector3 *) declaration.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14daRedBombhei_c19func_ov084_0212c960Ei' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev and the one that held _ZN14daRedBombhei_c13InitResourcesEv; kept the first during generation. Resolution: The TU forward declaration and definition both use void(daRedBombhei_c *, int).",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14daRedBombhei_c19func_ov084_0212ca60Ev' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c508Ev and the one that held _ZN14daRedBombhei_c13InitResourcesEv; kept the first during generation. Resolution: The TU forward declaration and definition both use int(daRedBombhei_c *).",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold _ZN14daRedBombhei_c8BehaviorEv and the one that held _ZN14daRedBombhei_c13InitResourcesEv; kept the first during generation. Resolution: Calls now use dActor_c::ClosestPlayer from dActor_c.h.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov084_02130d9c' differs between the legacy file that used to hold func_ov084_0212c92c and the one that held _ZN14daRedBombhei_c13InitResourcesEv; kept the first during generation. Resolution: The TU consistently declares this handle as SharedFilePtr."
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov084_02130d9c' differs between the legacy file that used to hold _ZN14daRedBombhei_c19func_ov084_0212c92cEv and the one that held _ZN14daRedBombhei_c13InitResourcesEv; kept the first during generation. Resolution: The TU consistently declares this handle as SharedFilePtr."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

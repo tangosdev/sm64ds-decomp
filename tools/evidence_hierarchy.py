@@ -16,7 +16,7 @@ Two jobs, one output file (build/evidence_hierarchy.json):
       instead of inheriting them, and the copies often disagree on width.
 
 Nothing is written outside build/.  This pass never proposes a change to a
-de-bannered header: those (include/dActor_c.h, include/Fader.h, ...) were
+de-bannered header: those (include/dActor_c.h, include/dFader_c.h, ...) were
 hand-reconstructed with real inheritance and are the *reference*, read-only.
 
 Evidence sources for an inheritance edge, strongest first

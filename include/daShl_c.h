@@ -31,6 +31,8 @@
  * Retail does not store that spelling. Historical aliases: KoopaShell
  * (the class), KoopaShell_Spawn.
  */
+struct ShlState;
+
 struct daShl_c : dEnemyBase_c {
     dCcAc_c mdCc_c;            /* 0x110 */
     dBgCh_Actr mMeshClsn;      /* 0x144 */
@@ -39,7 +41,7 @@ struct daShl_c : dEnemyBase_c {
     dCcAc_c mdCc_c2;           /* 0x378 */
     /* Current state record: {enter, tick}, two pointers-to-member. Behavior
        compares it against the four file-scope records by ADDRESS. */
-    void* mState;              /* 0x3ac */
+    ShlState *mState;          /* 0x3ac */
     /* Where it was spawned: InitResources copies mPos here verbatim, and
        Behavior stashes mPrevAngleY into mSpawnAngleY when the shell is spat
        back out of Yoshi's mouth. */
@@ -48,8 +50,8 @@ struct daShl_c : dEnemyBase_c {
     s32 mSpawnPosZ;            /* 0x3b8 */
     s16 mSpawnAngleY;          /* 0x3bc */
     u8  pad_3be[0x2];
-    /* The player riding or holding the shell (dActor_c *, stored as a word). */
-    s32 mCarrier;              /* 0x3c0 */
+    /* The player riding or holding the shell. */
+    dActor_c *mCarrier;        /* 0x3c0 */
     /* Model index, 0 or 1, off bit 0 of param1. Behavior gives index 0 a
        per-frame splash/trail pass the other does not get. */
     u8  mModelIndex;           /* 0x3c4 */
@@ -77,6 +79,25 @@ struct daShl_c : dEnemyBase_c {
     virtual s32  Render();             /* slot  9 */
     virtual void OnPendingDestroy();   /* slot 12 */
     virtual int  OnYoshiTryEat();      /* slot 18 */
+
+    /* The shell's own helpers, under their ROM addresses. The four pairs
+       marked state are the {enter, tick} records the state machine dispatches;
+       func_ov102_0214d1f8 switches states and runs the new record's enter. */
+    void func_ov102_0214c7fc();                        /* splash-floor check */
+    void func_ov102_0214c84c();                        /* ridden trail/sound */
+    void func_ov102_0214cbec();                        /* touch resolution */
+    void func_ov102_0214ce60();                        /* model mtx + shadow */
+    int  func_ov102_0214cf4c(dActor_c *kicker);        /* kicked -> sliding */
+    int  func_ov102_0214cf98(dActor_c *player);        /* jumped on -> ridden */
+    int  func_ov102_0214cfe4();                        /* state: held tick */
+    int  func_ov102_0214d020();                        /* state: held enter */
+    int  func_ov102_0214d044();                        /* state: ridden tick */
+    int  func_ov102_0214d0bc();                        /* state: ridden enter */
+    int  func_ov102_0214d114();                        /* state: sliding tick */
+    int  func_ov102_0214d148();                        /* state: sliding enter */
+    int  func_ov102_0214d1b0();                        /* state: idle tick */
+    int  func_ov102_0214d1b8();                        /* state: idle enter */
+    int  func_ov102_0214d1f8(ShlState *state);         /* state switch */
 };
 
 #ifndef SM64DS_PLATFORM_PC

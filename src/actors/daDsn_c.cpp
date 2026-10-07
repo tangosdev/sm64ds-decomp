@@ -176,7 +176,7 @@ int daDsn_c::Behavior()
 /* Vtable slot 27. Credit the mega kill, burst particle 0x48 at the
    actor position plus OnAimedAtWithEgg's height (real virtual call),
    poof, remove, and play bank-3 sound 0x1e at the camera-space position.
-   func_02012694 is that veneer (src/func_02012694.cpp -> Sound::Play). */
+   func_02012694 is that veneer (src/engine/sound/Sound.cpp -> Sound::Play). */
 void daDsn_c::OnHitByMegaChar(Player &player)
 {
     player.IncMegaKillCount();

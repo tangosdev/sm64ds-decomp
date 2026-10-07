@@ -29,7 +29,7 @@
  * flag bits at fBase_c's own 0x13 (unrelated to this class), then at 0x50
  * writes a nested object's vtable word twice (data_0208ee14, then
  * data_ov007_021032b0 -- a base-then-derived vptr-store pair) and calls the
- * shared helper func_02017278(p + 0x54) to finish constructing it. The
+ * shared helper _ZN10dFdDummy_cC1Ev(p + 0x54) to finish constructing it. The
  * destructor (func_ov007_020cc028 / _020cc070) tears down the same range
  * with func_02017254(t + 0x54) before calling fBase_c's D2.
  *

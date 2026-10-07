@@ -3,8 +3,8 @@
   "codegen_hacks": {
     "cv_launder": 3,
     "cv_launder_sites": 6,
-    "extern_vtable": 59,
-    "extern_vtable_classes": 75,
+    "extern_vtable": 60,
+    "extern_vtable_classes": 76,
     "inline_asm": 13,
     "launder_or_forced": 129,
     "launder_sites": 365
@@ -45,7 +45,7 @@
         "unmigrated": 65
       }
     },
-    "cpp_still_handspelled": 61,
+    "cpp_still_handspelled": 63,
     "mangled_c": 15,
     "mangled_cpp": 4828,
     "mangled_total": 4843,

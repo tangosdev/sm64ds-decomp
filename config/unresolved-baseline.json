@@ -2,7 +2,7 @@
  "eligible": 11044,
  "unresolved": {
   "arm9:0x02017848": {
-   "name": "_ZN5FaderD0Ev",
+   "name": "_ZN8dFader_cD0Ev",
    "missing": [
     "base_dtor_Fader"
    ]

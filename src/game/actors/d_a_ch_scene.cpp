@@ -25,7 +25,7 @@
 #include "common.h"
 #include "daChScene_c.h"
 #include "dScene_c.h"
-#include "FaderColor.h"
+#include "dFdColor_c.h"
 #include "Player.h"
 #include "dCamera_c.h"
 
@@ -50,7 +50,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angX);
 }
 
 extern void *data_0209f318;
-extern FaderColor data_0209f5e8;
+extern dFdColor_c data_0209f5e8;
 extern Matrix4x3 data_020a0e68;
 
 /* -------------------------------------------------------------------------- */

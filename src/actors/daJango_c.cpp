@@ -442,7 +442,7 @@ int daJango_c::Behavior()
                 goto skip_destroy;
             } else if (*(unsigned char *)((char *)p + 0x403) == 0) {
                 /* daObjMarioCap_c::unk_403: the cap sets it to 1 in
-                   func_ov002_020b76ec, the same function that clears the +0xc8
+                   InitTaken, the same function that clears the +0xc8
                    matrix pointer stored below. */
                 p->mPosX = mHeldPosX;
                 p->mPosY = mHeldPosY;

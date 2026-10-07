@@ -1,7 +1,7 @@
 extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
-extern void func_ov075_02115134(char* c);
+extern void _ZN9dEntObj_c19func_ov075_02115134Ev(char* c);
 extern int func_0203da9c(void);
-extern int func_ov075_02115098(char* c, int arg1);
+extern int _ZN9dEntObj_c19func_ov075_02115098Ei(char* c, int arg1);
 extern int func_0203da3c(void);
 extern void LoadTextNarcs(void);
 extern int LoadArchive(int idx);
@@ -12,8 +12,8 @@ extern int data_ov075_0211d918;
 void func_ov075_02119640(char* r4){
   *(int*)(r4 + 0x278) = Sound_PlayIfNotActive(*(int*)(r4 + 0x278), 2, 0x11d, 0);
   if (*(unsigned char*)(r4 + 0x282) == 0) {
-    func_ov075_02115134(*(char**)(r4 + 0x50));
-    *(unsigned char*)(r4 + 0x282) = (unsigned char)func_ov075_02115098(*(char**)(r4 + 0x50), func_0203da9c());
+    _ZN9dEntObj_c19func_ov075_02115134Ev(*(char**)(r4 + 0x50));
+    *(unsigned char*)(r4 + 0x282) = (unsigned char)_ZN9dEntObj_c19func_ov075_02115098Ei(*(char**)(r4 + 0x50), func_0203da9c());
   }
   if (func_0203da3c() != 0) return;
   LoadTextNarcs();

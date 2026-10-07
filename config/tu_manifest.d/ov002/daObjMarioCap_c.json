@@ -35,147 +35,147 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov002_020b6fcc",
+      "symbol": "_ZN15daObjMarioCap_c10CheckTouchEv",
       "address": "0x020b6fcc",
       "size": "0x0000021c",
       "legacy_source": "src/func_ov002_020b6fcc.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov002_020b71e8",
+      "symbol": "_ZN15daObjMarioCap_c7DormantEv",
       "address": "0x020b71e8",
       "size": "0x00000008",
       "legacy_source": "src/func_ov002_020b71e8.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov002_020b71f0",
+      "symbol": "_ZN15daObjMarioCap_c11InitDormantEv",
       "address": "0x020b71f0",
       "size": "0x00000010",
       "legacy_source": "src/func_ov002_020b71f0.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b7200Ev",
+      "symbol": "_ZN15daObjMarioCap_c4AnimEv",
       "address": "0x020b7200",
       "size": "0x00000130",
       "legacy_source": "src/func_ov002_020b7200.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov002_020b7330",
+      "symbol": "_ZN15daObjMarioCap_c8InitAnimEv",
       "address": "0x020b7330",
       "size": "0x000001a0",
       "legacy_source": "src/func_ov002_020b7330.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b74d0Ev",
+      "symbol": "_ZN15daObjMarioCap_c5TakenEv",
       "address": "0x020b74d0",
       "size": "0x0000021c",
       "legacy_source": "src/func_ov002_020b74d0.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b76ecEv",
+      "symbol": "_ZN15daObjMarioCap_c9InitTakenEv",
       "address": "0x020b76ec",
       "size": "0x00000130",
       "legacy_source": "src/func_ov002_020b76ec.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov002_020b781c",
+      "symbol": "_ZN15daObjMarioCap_c5SlideEv",
       "address": "0x020b781c",
       "size": "0x00000354",
       "legacy_source": "src/func_ov002_020b781c.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov002_020b7b70",
+      "symbol": "_ZN15daObjMarioCap_c9InitSlideEv",
       "address": "0x020b7b70",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov002_020b7b70.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b7c30Ev",
+      "symbol": "_ZN15daObjMarioCap_c4FallEv",
       "address": "0x020b7c30",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov002_020b7c30.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov002_020b7cdc",
+      "symbol": "_ZN15daObjMarioCap_c8InitFallEv",
       "address": "0x020b7cdc",
       "size": "0x00000010",
       "legacy_source": "src/func_ov002_020b7cdc.c",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b7cecEv",
+      "symbol": "_ZN15daObjMarioCap_c10TimedWait2Ev",
       "address": "0x020b7cec",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov002_020b7cec.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b7d58Ev",
+      "symbol": "_ZN15daObjMarioCap_c14InitTimedWait2Ev",
       "address": "0x020b7d58",
       "size": "0x00000014",
       "legacy_source": "src/func_ov002_020b7d58.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov002_020b7d6c",
+      "symbol": "_ZN15daObjMarioCap_c9TouchWaitEv",
       "address": "0x020b7d6c",
       "size": "0x00000028",
       "legacy_source": "src/func_ov002_020b7d6c.c",
       "ordinal": 15
     },
     {
-      "symbol": "func_ov002_020b7d94",
+      "symbol": "_ZN15daObjMarioCap_c13InitTouchWaitEv",
       "address": "0x020b7d94",
       "size": "0x00000008",
       "legacy_source": "src/func_ov002_020b7d94.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b7d9cEv",
+      "symbol": "_ZN15daObjMarioCap_c9TimedWaitEv",
       "address": "0x020b7d9c",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov002_020b7d9c.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b7e08Ev",
+      "symbol": "_ZN15daObjMarioCap_c13InitTimedWaitEv",
       "address": "0x020b7e08",
       "size": "0x00000014",
       "legacy_source": "src/func_ov002_020b7e08.c",
       "ordinal": 18
     },
     {
-      "symbol": "func_ov002_020b7e1c",
+      "symbol": "_ZN15daObjMarioCap_c4WaitEv",
       "address": "0x020b7e1c",
       "size": "0x00000108",
       "legacy_source": "src/func_ov002_020b7e1c.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "func_ov002_020b7f24",
+      "symbol": "_ZN15daObjMarioCap_c8InitWaitEv",
       "address": "0x020b7f24",
       "size": "0x00000008",
       "legacy_source": "src/func_ov002_020b7f24.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_ov002_020b7f2c",
+      "symbol": "_ZN15daObjMarioCap_c10EnterStateEPv",
       "address": "0x020b7f2c",
       "size": "0x00000050",
       "legacy_source": "src/func_ov002_020b7f2c.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN15daObjMarioCap_c19func_ov002_020b7f7cEv",
+      "symbol": "_ZN15daObjMarioCap_c12UpdateMatrixEv",
       "address": "0x020b7f7c",
       "size": "0x00000264",
       "legacy_source": "src/func_ov002_020b7f7c.c",
@@ -435,7 +435,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "func_ov002_020b781c and func_ov002_020b76ec hold Vector3 locals, and types.h gives Vector3 an inline destructor, so the compiler emits its own copy of the four-byte bx lr body. The ROM homes it in arm9; this copy is a duplicate and is discarded by text-only isolation."
+      "reason": "Slide and InitTaken hold Vector3 locals, and types.h gives Vector3 an inline destructor, so the compiler emits its own copy of the four-byte bx lr body. The ROM homes it in arm9; this copy is a duplicate and is discarded by text-only isolation."
     },
     {
       "symbol": "_ZTI7fBase_c",

@@ -6,7 +6,7 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x2111cac..0x2111f3c, 7 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "contiguous linker run: 0x2111cac..0x2111f6c, 8 function(s), from build/tu_map.json (tools/tu_map.py); deslop-1026 folded the abutting daObjFl_Seesaw_c_classInit factory in",
     "class label(s): daObjFl_Seesaw_c",
     "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
   ],
@@ -14,7 +14,7 @@
     {
       "name": ".text",
       "start": "0x02111cac",
-      "end": "0x02111f3c"
+      "end": "0x02111f6c"
     }
   ],
   "functions": [
@@ -33,7 +33,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov022_02111d48",
+      "symbol": "_ZN16daObjFl_Seesaw_c19func_ov022_02111d48Ev",
       "address": "0x02111d48",
       "size": "0x00000048",
       "legacy_source": "src/func_ov022_02111d48.c",
@@ -66,6 +66,13 @@
       "size": "0x0000009c",
       "legacy_source": "src/_ZN16daObjFl_Seesaw_c13InitResourcesEv.cpp",
       "ordinal": 6
+    },
+    {
+      "symbol": "daObjFl_Seesaw_c_classInit",
+      "address": "0x02111f3c",
+      "size": "0x00000030",
+      "legacy_source": "src/d_a_obj_fl_seesaw.c",
+      "ordinal": 7
     }
   ],
   "data": [],
@@ -79,20 +86,20 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov022-daObjFl_Seesaw_c/daObjFl_Seesaw_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 7,
-    "functions_declared": 7,
+    "functions_matched": 8,
+    "functions_declared": 8,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN16daObjFl_Seesaw_cD2Ev"
+        "_ZN16daObjFl_Seesaw_cD2Ev",
+        "_ZN10dBgActor_cD2Ev"
       ],
       "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
         "_ZN16daObjFl_Seesaw_cD2Ev"
       ],
       "droppedSections": [
         9,
         10,
-        20,
-        21,
         22,
         23,
         24,
@@ -107,7 +114,11 @@
         33,
         34,
         35,
-        36
+        36,
+        37,
+        38,
+        39,
+        40
       ],
       "data": [
         "_ZTV16daObjFl_Seesaw_c",
@@ -149,6 +160,11 @@
       "symbol": "_ZN16daObjFl_Seesaw_cD2Ev",
       "disposition": "deadstrip",
       "reason": "Out-of-line ~daObjFl_Seesaw_c emits the base-object D2 beside D1 and D0. symbols.txt has no row for it, and no kept section references the copy."
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "deslop-1026: the folded classInit factory's `new daObjFl_Seesaw_c()` instantiates the class, so mwccarm emits the base-object destructor helper (the same byproduct src/actors/daObjHatenaBlock_c.cpp and daObjKi_Hasira_c.cpp already document). No configured ROM symbol and no inbound relocation after the licensed function set is retained."
     },
     {
       "symbol": "_ZTV16daObjFl_Seesaw_c",

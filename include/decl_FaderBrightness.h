@@ -20,7 +20,7 @@
 extern "C" {
 #endif
 
-extern void _ZN15FaderBrightness8SetToEndEv(void);
+extern void _ZN15dFdBrightness_c8SetToEndEv(void);
 
 
 #ifdef __cplusplus

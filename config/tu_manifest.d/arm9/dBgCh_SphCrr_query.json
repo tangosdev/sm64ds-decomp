@@ -1,0 +1,85 @@
+{
+  "id": "arm9/dBgCh_SphCrr_query",
+  "module": "arm9",
+  "source": "src/engine/collision/dBgCh_SphCrr_query.cpp",
+  "promoted_source": "src/engine/collision/dBgCh_SphCrr_query.cpp",
+  "status": "promoted",
+  "production_mode": "text-only",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "CONTIGUOUS AND EXHAUSTIVE: 0x02038824..0x02038ea4 is covered by exactly 3 config/arm9/symbols.txt function symbols with no gap and no overlap, all carrying `complete` in config/arm9/delinks.txt.",
+    "MEMBERSHIP FROM FIRST-PARAMETER EVIDENCE: func_02038824 and func_02038a38 are called only on dBgCh_SphCrr objects (dBgCh_Actr's embedded mSphereClsn at +0x20 and the unclaimed func_02036acc update path), and all three drive the SphCrr-evidenced fields: the dM3dGSph sphere centre/radius at +0x3c/+0x48, the dBgPi base record at +0x10, and the three result records via the sibling wrappers.",
+    "func_02038ea4 (0x02038ea4..0x02038f44) stays its own shard: its only caller passes a dBgCh_Gnd and it touches only the shared +0x10 dBgPi base -- Gnd-family evidence, not this class's.",
+    "data_020a0c80 is dBgW's enabled-collider table (0x18 slots, documented in include/dBgW.h); the scans dispatch each registered collider's dBgW::DetectClsn(dBgCh_SphCrr&) (vtable slot 8) and fold its result mask into the three hit records."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02038824",
+      "end": "0x02038ea4"
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "functions": [
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13func_02038824Ev",
+      "address": "0x02038824",
+      "size": "0x00000214",
+      "legacy_source": "src/func_02038824.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13func_02038a38Ev",
+      "address": "0x02038a38",
+      "size": "0x00000140",
+      "legacy_source": "src/func_02038a38.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr10DetectClsnEv",
+      "address": "0x02038b78",
+      "size": "0x0000032c",
+      "legacy_source": "src/_ZN12dBgCh_SphCrr10DetectClsnEv.cpp",
+      "ordinal": 2
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-dBgCh_SphCrr_query/dBgCh_SphCrr_query.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 3,
+    "functions_declared": 3,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        7
+      ],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vague-linkage copy of Vector3's trivial destructor, emitted because the Vector3 members are struct-copied. The canonical cartridge copy is arm9:0x020072c0; isolation discards this one."
+    }
+  ]
+}

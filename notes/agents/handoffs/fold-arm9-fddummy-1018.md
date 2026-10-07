@@ -1,5 +1,10 @@
 # fold/arm9-fddummy-1018 — arm9 dFdDummy_c shard fold
 
+> **Superseded.** The family-wide fader fold (`src/engine/fader/dFader_c.cpp`,
+> manifest `arm9/dFader_c`) absorbed this standalone TU and its range; the
+> constructor at `0x02017278` is now `_ZN10dFdDummy_cC1Ev`. Kept as the record
+> of the earlier step; the file and manifest named below no longer exist.
+
 ## What
 
 - Class: `dFdDummy_c` (`include/dFdDummy_c.h`) — the no-op FaderColor
@@ -7,7 +12,7 @@
 - Range: `0x020171c8..0x02017278` (arm9), contiguous and exhaustive: 5
   members, bounded below by a ModelAnim2 thunk and above by the
   embedded-construction helper `func_02017278`, which keeps its own shard.
-- Staged under `src_tu/`, promoted to `src/engine/fader/dFdDummy_c.cpp`
+- Staged under `src_tu/`, promoted to a standalone `dFdDummy_c.cpp` TU (since superseded, see below)
   via `tools/tu_promote.py` (5 attribution overrides, 4 CONVERTED identities).
 - 5 legacy shards `git rm`'d.
 
@@ -42,7 +47,7 @@ class has no C1/C2 anywhere — it is only ever embedded.
 
 - `config/arm9/delinks.txt`: 5 shard blocks → one `complete` claim
   `.text 0x020171c8..0x02017278`.
-- `config/tu_manifest.d/arm9/dFdDummy_c.json`: `promoted`, 5/5,
+- the standalone `arm9/dFdDummy_c` manifest: `promoted`, 5/5,
   `compiler_only_output` records the D2 deadstrip + the
   `_ZTV10dFdDummy_c` deadstrip-data at `0x0208ea6c`.
 - `attribution.json`: five `dFdDummy_c.cpp#symbol` overrides preserve each

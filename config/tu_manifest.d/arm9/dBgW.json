@@ -1,0 +1,624 @@
+{
+  "id": "arm9/dBgW",
+  "module": "arm9",
+  "source": "src/engine/collision/dBgW.cpp",
+  "promoted_source": "src/engine/collision/dBgW.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "CONTIGUOUS AND EXHAUSTIVE: 0x02039140..0x020396d8 is covered by exactly 40 config/arm9/symbols.txt function symbols with no gap and no overlap, every one delinked to its own per-function object in config/arm9/delinks.txt with a .text section and nothing else.",
+    "CLASS IDENTITY FROM ROM RTTI: _ZTS4dBgW at arm9 0x02099370, _ZTI4dBgW at 0x02099378 (root __class_type_info, pointing at __class_type_info vtable 0x0209a774), _ZTV4dBgW address point at 0x02099388 naming 13 slots: D1+D0, Virtual08, three pure-virtual nulls, the DetectClsn triple, BeforeClsn, TransformPos, GetAngularVelY and GetVelocity -- the members in this run.",
+    "MIXED-TU MEMBERSHIP IS ROM-PROVEN: the contiguous run also contains _ZN10dScStage_c18ResetMeshCollidersEv and _ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b, so the original TU defined members of three collision-family classes. ResetMeshColliders clears the same data_020a0c80 registry dBgW::Enable fills.",
+    "NEXT TU: src/engine/collision/dBgW_Kc.cpp enrolls .text 0x020396d8..0x020398fc immediately after this run."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02039140",
+      "end": "0x020396d8"
+    },
+    {
+      "name": ".data",
+      "start": "0x02099370",
+      "end": "0x020993bc"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN4dBgW7DisableEv",
+      "address": "0x02039140",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN4dBgW7DisableEv.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN4dBgW6EnableEP8dActor_c",
+      "address": "0x02039184",
+      "size": "0x0000006c",
+      "legacy_source": "src/_ZN4dBgW6EnableEP8dActor_c.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_020391f0",
+      "address": "0x020391f0",
+      "size": "0x00000004",
+      "legacy_source": "src/func_020391f0.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN10dScStage_c18ResetMeshCollidersEv",
+      "address": "0x020391f4",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN10dScStage_c18ResetMeshCollidersEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_02039218",
+      "address": "0x02039218",
+      "size": "0x00000024",
+      "legacy_source": "src/func_02039218.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_",
+      "address": "0x0203923c",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_",
+      "address": "0x0203929c",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN4dBgW25UpdateAngsWithAngularVelYERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_",
+      "address": "0x020392f8",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN4dBgW25UpdateAngsWithAngularVelYERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_",
+      "address": "0x02039348",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_0203938c",
+      "address": "0x0203938c",
+      "size": "0x00000008",
+      "legacy_source": "src/func_0203938c.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_02039394",
+      "address": "0x02039394",
+      "size": "0x00000008",
+      "legacy_source": "src/func_02039394.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_0203939c",
+      "address": "0x0203939c",
+      "size": "0x00000008",
+      "legacy_source": "src/func_0203939c.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_020393a4",
+      "address": "0x020393a4",
+      "size": "0x00000008",
+      "legacy_source": "src/func_020393a4.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_020393ac",
+      "address": "0x020393ac",
+      "size": "0x00000008",
+      "legacy_source": "src/func_020393ac.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_020393b4",
+      "address": "0x020393b4",
+      "size": "0x00000008",
+      "legacy_source": "src/func_020393b4.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_020393bc",
+      "address": "0x020393bc",
+      "size": "0x00000008",
+      "legacy_source": "src/func_020393bc.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_020393c4",
+      "address": "0x020393c4",
+      "size": "0x00000008",
+      "legacy_source": "src/func_020393c4.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_020393cc",
+      "address": "0x020393cc",
+      "size": "0x00000008",
+      "legacy_source": "src/func_020393cc.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_020393d4",
+      "address": "0x020393d4",
+      "size": "0x00000008",
+      "legacy_source": "src/func_020393d4.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN4dBgW9IsEnabledEv",
+      "address": "0x020393dc",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN4dBgW9IsEnabledEv.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_020393f0",
+      "address": "0x020393f0",
+      "size": "0x0000000c",
+      "legacy_source": "src/func_020393f0.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_020393fc",
+      "address": "0x020393fc",
+      "size": "0x00000008",
+      "legacy_source": "src/func_020393fc.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_02039404",
+      "address": "0x02039404",
+      "size": "0x00000008",
+      "legacy_source": "src/func_02039404.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZN4dBgW11GetVelocityER7Vector3",
+      "address": "0x0203940c",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN4dBgW11GetVelocityER7Vector3.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN4dBgW14GetAngularVelYEv",
+      "address": "0x02039428",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN4dBgW14GetAngularVelYEv.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN4dBgW12TransformPosERK7Vector3RS0_",
+      "address": "0x02039430",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN4dBgW12TransformPosERK7Vector3RS0_.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZN4dBgW10BeforeClsnER5dBgPiP8dActor_cR7Vector3P10Vector3_16S7_",
+      "address": "0x02039438",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN4dBgW10BeforeClsnER5dBgPiP8dActor_cR7Vector3P10Vector3_16S7_.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN4dBgW10DetectClsnER12dBgCh_SphCrr",
+      "address": "0x02039470",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN4dBgW10DetectClsnER12dBgCh_SphCrr.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "_ZN4dBgW10DetectClsnER9dBgCh_Lin",
+      "address": "0x02039478",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN4dBgW10DetectClsnER9dBgCh_Lin.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "_ZN4dBgW10DetectClsnER9dBgCh_Gnd",
+      "address": "0x02039480",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN4dBgW10DetectClsnER9dBgCh_Gnd.cpp",
+      "ordinal": 29
+    },
+    {
+      "symbol": "_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b",
+      "address": "0x02039488",
+      "size": "0x00000174",
+      "legacy_source": "src/_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b.cpp",
+      "ordinal": 30
+    },
+    {
+      "symbol": "func_020395fc",
+      "address": "0x020395fc",
+      "size": "0x00000024",
+      "legacy_source": "src/func_020395fc.c",
+      "ordinal": 31
+    },
+    {
+      "symbol": "_ZN4dBgW9Virtual08Ev",
+      "address": "0x02039620",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN4dBgW9Virtual08Ev.cpp",
+      "ordinal": 32
+    },
+    {
+      "symbol": "func_02039624",
+      "address": "0x02039624",
+      "size": "0x00000034",
+      "legacy_source": "src/func_02039624.c",
+      "ordinal": 33
+    },
+    {
+      "symbol": "_ZN4dBgWD2Ev",
+      "address": "0x02039658",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN4dBgWD2Ev.cpp",
+      "ordinal": 34
+    },
+    {
+      "symbol": "_ZN4dBgWD0Ev",
+      "address": "0x02039668",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN4dBgWD0Ev.cpp",
+      "ordinal": 35
+    },
+    {
+      "symbol": "_ZN4dBgWD1Ev",
+      "address": "0x0203968c",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN4dBgWD1Ev.cpp",
+      "ordinal": 36
+    },
+    {
+      "symbol": "_ZN4dBgWC2Ev",
+      "address": "0x0203969c",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN4dBgWC2Ev.cpp",
+      "ordinal": 37
+    },
+    {
+      "symbol": "func_020396c0",
+      "address": "0x020396c0",
+      "size": "0x00000010",
+      "legacy_source": "src/func_020396c0.c",
+      "ordinal": 38
+    },
+    {
+      "symbol": "func_020396d0",
+      "address": "0x020396d0",
+      "size": "0x00000008",
+      "legacy_source": "src/func_020396d0.c",
+      "ordinal": 39
+    }
+  ],
+  "data": [
+    {
+      "symbol": "_ZTS4dBgW",
+      "address": "0x02099370",
+      "size": "0x6",
+      "evidence": "compiler-emitted ROM-proven class type-name string \"4dBgW\"; the class carries the cartridge's own dBgW spelling"
+    },
+    {
+      "symbol": "_ZTI4dBgW",
+      "address": "0x02099378",
+      "size": "0x8",
+      "evidence": "compiler-emitted root __class_type_info record: __class_type_info vtable pointer 0x0209a774 then the _ZTS4dBgW name pointer at 0x0209937c, matching the cartridge's root-class layout"
+    },
+    {
+      "symbol": "_ZTV4dBgW",
+      "address": "0x02099388",
+      "emitted_storage_address": "0x02099380",
+      "address_point_bias": "0x8",
+      "size": "0x3c",
+      "evidence": "compiler storage includes the two-word ABI preamble at 0x02099380 (offset-to-top 0, _ZTI4dBgW 0x02099378); the configured public address point is eight bytes later. Thirteen slots: D1 0x0203968c, D0 0x02039668, Virtual08 0x02039620, three zero words for the pure-virtual GetSurfaceInfo/GetNormal/GetTriangleOrigin, then DetectClsn Gnd/Lin/SphCrr, BeforeClsn, TransformPos, GetAngularVelY, GetVelocity -- every reloc word lands on this TU's own members"
+    }
+  ],
+  "bss": [],
+  "notes": [
+    "Cartridge RTTI names the class dBgW (_ZTS4dBgW at arm9 0x02099370, _ZTI at 0x02099378, vtable address point at 0x02099388). The licensed run is .text 0x02039140..0x020396d8 (40 functions): the lifecycle group, Enable/Disable/IsEnabled with the 0x18-slot registry data_020a0c80, the four static Update* BeforeClsn callbacks, the trivial virtuals, plus two members of neighbouring collision classes the original TU shared (dScStage_c::ResetMeshColliders, dBgCh::ShouldPassThroughImpl) and the TU-local func_ helpers between them.",
+    "Deferred codegen emits D2,D0,D1 then the constructor, and plain members in reverse source order; the file defines the trailing setters and the lifecycle pair first. func_02039624 is the shared field-init the ctor and dBgW_Kc::SetFile both call; func_020395fc/fc/f0/04 are the Enable/Disable slot-registry helpers; the ten 8-byte accessors 0x0203938c..0x020393d4 and func_020396c0/func_020396d0 are weak-emitted field accessors the dBgCh query TUs and derived colliders call by address -- they keep func_ names because no class evidence names them.",
+    "Only C2 has a configured home: dBgW is a root class whose C1 emits beside C2 and is deadstripped. D2/D0/D1 all have homes -- D1 sits in vtable slot 0, D2 answers derived-class direct calls, D0 is the deleting destructor.",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "UpdatePosWithVelocity and UpdatePosWithTransform materialize local Vector3s; types.h gives Vector3 a non-trivial (empty) destructor, so the front end emits D1 in this TU but elides every call site. The cartridge body (four bytes, bx lr) has its configured home at arm9:0x020072c0 and this emitted copy is discarded."
+    },
+    {
+      "symbol": "_ZN4dBgWC1Ev",
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits the complete-object constructor beside the licensed base-object C2; dBgW is a root class, the ROM has no configured C1 home and nothing references it."
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-dBgW/dBgW.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 40,
+    "functions_declared": 40,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev",
+        "_ZN4dBgWC1Ev"
+      ],
+      "deadstripped": [
+        "_ZN4dBgWC1Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        20,
+        57,
+        58
+      ],
+      "data": [
+        "_ZTV4dBgW",
+        "_ZTI4dBgW",
+        "_ZTS4dBgW"
+      ],
+      "dataExternalized": [
+        "_ZTI4dBgW",
+        "_ZTS4dBgW",
+        "_ZTV4dBgW"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/arm9-dBgW/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02039140",
+        "end": "0x020396d8",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02039140",
+          "end": "0x020396d8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02099370",
+          "end": "0x020993bc",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 43
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              5,
+              6,
+              8
+            ],
+            "desired": [
+              5,
+              6,
+              8
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "production_mode": "intact-object",
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02099378",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi17__class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a774"
+    },
+    {
+      "section": ".data",
+      "source": "0x0209937c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS4dBgW",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02099370"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099384",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI4dBgW",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02099378"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099388",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN4dBgWD1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203968c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0209938c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN4dBgWD0Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02039668"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099390",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN4dBgW9Virtual08Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02039620"
+    },
+    {
+      "section": ".data",
+      "source": "0x020993a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN4dBgW10DetectClsnER9dBgCh_Gnd",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02039480"
+    },
+    {
+      "section": ".data",
+      "source": "0x020993a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN4dBgW10DetectClsnER9dBgCh_Lin",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02039478"
+    },
+    {
+      "section": ".data",
+      "source": "0x020993a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN4dBgW10DetectClsnER12dBgCh_SphCrr",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02039470"
+    },
+    {
+      "section": ".data",
+      "source": "0x020993ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN4dBgW10BeforeClsnER5dBgPiP8dActor_cR7Vector3P10Vector3_16S7_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02039438"
+    },
+    {
+      "section": ".data",
+      "source": "0x020993b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN4dBgW12TransformPosERK7Vector3RS0_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02039430"
+    },
+    {
+      "section": ".data",
+      "source": "0x020993b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN4dBgW14GetAngularVelYEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02039428"
+    },
+    {
+      "section": ".data",
+      "source": "0x020993b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN4dBgW11GetVelocityER7Vector3",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0203940c"
+    }
+  ]
+}

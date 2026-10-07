@@ -15,7 +15,7 @@
  * This header has no C spelling and cannot be included from a C file, because
  * dBase_c.h has none either.
  */
-struct FaderBrightness;
+struct dFdBrightness_c;
 
 /* The actor heap and its deallocator, for the inline operator delete below.
    Spelt exactly as include/decl_common.h spells it -- see the note in dActor_c.h. */
@@ -59,7 +59,7 @@ struct dScene_c : dBase_c {
 
     /* --- static: every call site in the ROM puts the first declared argument in
            r0, so none of these receives a `this`. --- */
-    static void SetFaders(FaderBrightness *fader);
+    static void SetFaders(dFdBrightness_c *fader);
     static void SetAndStopColorFader();
     static void StartSceneFade(u32 sceneID, u32 param, u16 fadeColor);
     static int  SetSceneToSpawn(u32 sceneID, u32 param);

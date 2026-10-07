@@ -42,13 +42,13 @@ typedef char dScMgAmida_c_Piece_size_must_be_0x18[sizeof(dScMgAmida_c_Piece) == 
    to `== 1`. */
 struct dScMgAmida_c : dScMgBase_c {
     /* A touch-screen cell, x then y.  ALL THREE SPECIAL MEMBERS ARE
-       LOAD-BEARING, measured on the pen handler func_ov006_020d1ba0 under
+       LOAD-BEARING, measured on the pen handler HandlePen under
        2004/b56:
          - the empty destructor keeps a local of this type on the stack (the
            dScMgFlower_c::Vec2 rule) and, because the by-value temporaries
            below then need destroying after the call, makes mwcc materialise
            `func(...) == n` into a bool before the branch -- the ROM's
-           moveq/movne/cmp triple at every func_ov006_020d2580 call;
+           moveq/movne/cmp triple at every ProbeRung call;
          - the user copy constructor makes a by-value Point argument travel
            by reference to a caller-side temporary that is filled field by
            field, x before y and the first argument before the second (the
@@ -84,22 +84,42 @@ struct dScMgAmida_c : dScMgBase_c {
     virtual int  Virtual8C();                          /* slot 35 */
     virtual int  Unk36();                                /* slot 36 */
 
-    s32 unk_4660[4][2];      /* 0x4660 */
-    s8  unk_4680[4];          /* 0x4680 */
-    s32 unk_4684[4];          /* 0x4684 */
-    s32 unk_4694[4];          /* 0x4694 */
-    s32 unk_46a4[4];          /* 0x46a4 */
-    s8  unk_46b4[4];          /* 0x46b4 */
-    s32 unk_46b8[4];          /* 0x46b8 */
-    s32 unk_46c8;             /* 0x46c8 */
-    s32 unk_46cc;             /* 0x46cc */
+    void ShuffleGoals(int count);
+    void ClearStroke();
+    void CheckHurryButton();
+    void CheckEdgeBoost();
+    void HandlePen();
+    int  ProbeRung(Point p1, Point p2);
+    int  StepWalker(int walker, int dir);
+    void StepWalkers();
+    void InitWalkers();
+    void SetupRound();
+    void RenderBoard();
+    void RenderBoardAlt();
+
+    /* The four walkers that fall through the ghost-leg diagram each round.
+       mWalkerCell is the walker's grid position (column x, row y), seeded
+       to x = perm*0x40 + 0x20, y = -0xcc/-0xd4; mWalkerMark is the
+       occupancy mark it sits on, mWalkerDir its last step direction (-1
+       unset), mWalkerDelay its staggered spawn countdown, and mWalkerDone
+       latches when it settles. */
+    s32 mWalkerCell[4][2];    /* 0x4660 */
+    s8  mWalkerMark[4];       /* 0x4680 */
+    s32 mWalkerDir[4];        /* 0x4684 */
+    s32 mLanePerm[4];         /* 0x4694 -- the dealt lane permutation */
+    s32 mLaneWants[4];        /* 0x46a4 -- goal index each lane must reach */
+    s8  mWalkerDone[4];       /* 0x46b4 */
+    s32 mWalkerDelay[4];      /* 0x46b8 */
+    s32 mWalkerCount;         /* 0x46c8 */
+    s32 mWalkersDone;         /* 0x46cc -- settled; round ends at mWalkerCount */
     s32 mState;               /* 0x46d0 -- Behavior's state switch: 0 setup,
                                  1 playing, 2 result wait, 3 finale */
     u8  mFinished;            /* 0x46d4 -- set when mRoundCount reaches 5;
                                  never cleared except by a full reset */
-    u8  unk_46d5;             /* 0x46d5 */
+    u8  mRoundFailed;         /* 0x46d5 -- a walker dead-ended; Behavior
+                                 replays the round through SetupRound */
     u8  pad_46d6[0x2];
-    /* The rung the player is drawing, as func_ov006_020d1ba0 (the pen
+    /* The rung the player is drawing, as HandlePen (the pen
        handler) keeps it: mLineStart is the end snapped to the lane the pen
        started on, mLineEnd the end on the lane it crossed to.  x is the lane axis (0x20 + 0x40 * lane) and doubles as the row
        index of the two 0x158-stride grids below; -1 while idle. */
@@ -113,20 +133,25 @@ struct dScMgAmida_c : dScMgBase_c {
     u8  mLineStartSet;        /* 0x4704 -- mLineX1/Y1 accepted by the probe */
     u8  mLineEndSet;          /* 0x4705 -- mLineX2/Y2 accepted by the probe */
     u8  mLineCommit;          /* 0x4706 -- set while the accepted rung is painted */
-    u8  unk_4707;             /* 0x4707 */
+    u8  mSetupInk;            /* 0x4707 -- set while SetupRound paints the
+                                 board; Virtual88 commits straight to the
+                                 ink grid instead of probing */
     u8  mProbeMode;           /* 0x4708 -- slot 34 tests the grid instead of painting */
     u8  mProbeHit;            /* 0x4709 -- slot 34 found an occupied cell */
     u8  mLineCount;           /* 0x470a -- rungs drawn; 0xff stops the pen */
     u8  pad_470b;             /* 0x470b */
-    u8 *unk_470c;             /* 0x470c -- 0x100 rows x 0x158 bytes, cleared
-                                 row-wise; slot 34 indexes it as y*0x158 */
-    u8 *unk_4710;             /* 0x4710 -- second buffer of the same shape */
-    s32 unk_4714[4];          /* 0x4714 */
+    u8 *mStrokeGrid;          /* 0x470c -- 0x100 rows x 0x158 bytes: the
+                                 provisional stroke grid slot 34 paints
+                                 into; y indexes rows at 0x158 stride */
+    u8 *mInkGrid;             /* 0x4710 -- the committed occupancy grid;
+                                 Virtual88 probes it for collisions */
+    s32 mLaneResult[4];       /* 0x4714 -- ShuffleGoals' result table: which
+                                 lanes win (mode 1) or each lane's goal */
     s32 mLanePos[4][2];       /* 0x4724 -- Fix12 {x,y} of the four lane
                                  markers; seeded to x=0x20+0x40*i, y=0xb0 */
     s32 mLaneVel[4][2];       /* 0x4744 -- Fix12 {dx,dy} added into mLanePos
                                  each tick; dy loses 0x100 per tick (gravity) */
-    s32 unk_4764;             /* 0x4764 */
+    s32 mFinaleTimer;         /* 0x4764 -- ticks in the state-3 finale */
     dScMgAmida_c_Piece mPieces[0x80]; /* 0x4768 */
     s32 mScrollSpeed;          /* 0x5368 -- per-tick scroll step, from the
                                  pattern table and clamped to 0x64 */
@@ -135,7 +160,11 @@ struct dScMgAmida_c : dScMgBase_c {
     u8  pad_5370[0x4];
     s32 mRoundCount;           /* 0x5374 -- zeroed on reset; below 5 the scene
                                  replays, at 5 it finishes */
-    u8  pad_5378[0x24];
+    s32 mLaneFlashTimer[4];   /* 0x5378 -- per-lane wrong-goal flash
+                                 countdowns */
+    s32 mLaneFlashFrame[4];   /* 0x5388 -- flash animation frames */
+    u8  mLaneFlashFlag[4];    /* 0x5398 -- flash armed (StepWalkers sets
+                                 when a walker's goal mismatches) */
     s32 mLaneAnimTimer[4];     /* 0x539c -- per lane; wraps on the per-lane
                                  period in data_ov006_0213b880 */
     s32 mLaneAnimFrame[4];     /* 0x53ac -- per lane, cycles 0..0xd into the
@@ -153,10 +182,13 @@ struct dScMgAmida_c : dScMgBase_c {
                                  until it drains, then draws the finale */
     s32 mPatternIndex;          /* 0x53d4 -- selects the ghost-leg pattern;
                                  indexes five 0x1c-stride tables in ov006 */
-    u8  pad_53d8[0x4];
-    u8  unk_53dc;                /* 0x53dc */
-    u8  unk_53dd;                /* 0x53dd */
-    u8  unk_53de;                /* 0x53de -- input lock: the pen handler bails while set */
+    s32 mEdgeBoostCount;       /* 0x53d8 -- pen-in-edge-strip contact
+                                 count; arms mEdgeBoost at 5 */
+    u8  mEdgeBoost;            /* 0x53dc -- armed by CheckEdgeBoost for a
+                                 one-shot scroll boost */
+    u8  mHurry;                /* 0x53dd -- latched by CheckHurryButton;
+                                 speeds the scroll and locks the pen */
+    u8  mPenLocked;            /* 0x53de -- input lock: the pen handler bails while set */
     u8  pad_53df;
     s32 mRoundTimer;             /* 0x53e0 -- counts down; expiry ends the
                                  round and picks replay or finish */

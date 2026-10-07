@@ -4,9 +4,9 @@
 #
 # Deliberately excluded from gate 1, with the reason recorded so the next
 # person doesn't re-litigate:
-#   FaderBrightness::AdvanceFade / FaderColor::AdvanceFade
+#   dFdBrightness_c::AdvanceFade / dFdColor_c::AdvanceFade
 #       write GX/GXS palette + CP15 cache MMIO -- wait for the video seam
-#   FaderWipe::*    LoadAndSetFile calls the filesystem; ctor pulls the same
+#   dFdWipe_c::*    LoadAndSetFile calls the filesystem; ctor pulls the same
 #   StartEntranceFaderWipe / StartExitFaderWipe    global engine state
 #   *D0Ev.c / *D1Ev.c destructor TUs
 #       they define Itanium-mangled symbols as C functions, which satisfies
@@ -26,13 +26,7 @@ src/_Z14ApproachLinearRiii.cpp
 # Timer (plain struct + methods, no externs)
 src/Timer.cpp
 
-# Fader hierarchy (real C++ with vtables -- host vtables are exactly what a
-# port wants, unlike the hybrid, which must reject them)
-src/engine/fader/_ZN5Fader13AdvanceInterpEv.cpp
-src/engine/fader/_ZN15FaderBrightness10SetToStartEv.cpp
-src/engine/fader/_ZN15FaderBrightness8SetToEndEv.cpp
-src/engine/fader/_ZN15FaderBrightness9IsAtStartEv.cpp
-src/engine/fader/_ZN15FaderBrightness7IsAtEndEv.cpp
-src/engine/fader/_ZN15FaderBrightness20IsBetweenStartAndEndEv.cpp
-src/engine/fader/_ZN15FaderBrightness14SetForwardTimeEj.cpp
-src/engine/fader/_ZN15FaderBrightness15SetBackwardTimeEj.cpp
+# dFader_c hierarchy (real C++ with vtables -- host vtables are exactly what a
+# port wants, unlike the hybrid, which must reject them). One promoted TU; its
+# _MSC_VER guards host-compile exactly the non-hardware subset listed here.
+src/engine/fader/dFader_c.cpp

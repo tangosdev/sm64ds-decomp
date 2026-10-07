@@ -14,14 +14,15 @@ src/_ZN7dBgW_Kc8LoadFileER13SharedFilePtr.cpp
 src/engine/collision/dBgPc.cpp
 src/engine/collision/dBgPi.cpp
 src/engine/collision/dBgCh_Lin.cpp
-src/func_02039624.c
+# dBgW is one production translation unit; the constructor, the shared
+# func_02039624 init and the static ShouldPassThroughImpl this slice used
+# to name separately all live in it.
+src/engine/collision/dBgW.cpp
 src/engine/collision/CLPS_BlockRef.cpp
 src/func_020381cc.c
 src/func_02037eb0.c
 src/Vec3_Dist.c
-src/_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b.cpp
 src/_ZNK11SurfaceInfo12CopyNormalToER7Vector3.cpp
-src/_ZN4dBgWC2Ev.cpp
 src/engine/collision/CLPS_BlockRef.cpp
 src/SurfaceInfo_TestFlag0x20.c
 src/func_020353d4.c

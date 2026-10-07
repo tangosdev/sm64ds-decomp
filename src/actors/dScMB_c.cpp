@@ -15,7 +15,7 @@
  * makes emission ROM-ascending, so this file is written in ROM order.
  *
  * Leftover: OAM::Render stays mangled (Fix12 by value). func_02034d34
- * calls the fader at +0x50 through a local vtable view -- FaderColor's
+ * calls the fader at +0x50 through a local vtable view -- dFdColor_c's
  * header does not declare those slots. func_02034b1c writes the global
  * graphCallback_c by offset; it is that object's initializer, not a
  * dScMB_c method, and a member form was not required to match.
@@ -62,13 +62,13 @@ extern u8 func_0201a2f8[];
 void *_ZN7fBase_cC2Ev(void *);
 extern int data_0208e4b8[];
 extern int data_020943c4[];
-extern int data_0208eafc[];
-extern int data_0208eacc[];
-extern int data_0208eb2c[];
+extern int _ZTV8dFader_c[];
+extern int _ZTV15dFdBrightness_c[];
+extern int _ZTV10dFdColor_c[];
 }
 
 /* Fader at dScMB_c+0x50. Slots 5 and 2 are what this TU calls; the header's
- * FaderColor does not declare them. */
+ * dFdColor_c does not declare them. */
 struct ScMbFader {
     virtual int v0();
     virtual int v1();
@@ -351,11 +351,11 @@ extern "C" void *dScMB_c_classInit(void)
         *(int **)p = data_020943c4;
         {
             int *fp = (int *)((int)p + 0x50);
-            fp[0] = (int)data_0208eafc;
-            fp[0] = (int)data_0208eacc;
+            fp[0] = (int)_ZTV8dFader_c;
+            fp[0] = (int)_ZTV15dFdBrightness_c;
             fp[1] = 0x1000;
             fp[2] = 0;
-            fp[0] = (int)data_0208eb2c;
+            fp[0] = (int)_ZTV10dFdColor_c;
             *(short *)(fp + 3) = 0;
         }
     }

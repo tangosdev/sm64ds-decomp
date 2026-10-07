@@ -10,7 +10,7 @@
     "contiguous linker run: 0x02023598..0x02023688, 3 function(s), gapless in config/arm9/delinks.txt.",
     "TOP EDGE: func_02023544 (0x02023544..0x02023598) ends exactly where the run begins. It is a shared sound-state reset called by dScene_c and dScDSMT_c -- a system helper, not a dScBoot_c member. BOTTOM EDGE: _ZN5StageD1Ev begins exactly where the run ends and opens Stage's destructor unit at 0x02023688.",
     "CONTENTS: the class's destructor pair and its registration factory in one TU. ~dScBoot_c is dScBoot_c's key function (first declared non-inline virtual), so this TU emits _ZTV9dScBoot_c and the typeinfo chain; those are licensed deadstrip-data against their configured arm9 homes, which sit outside the licensed .text.",
-    "CLASS LABEL: the factory carries the cartridge's RTTI name dScBoot_c; the destructor symbols and this TU's header spelling carry the coinage dScBoot_c. One class, one TU."
+    "CLASS LABEL: the factory, the destructor pair and the header all carry the cartridge's RTTI name dScBoot_c (formerly the coinage BootScene). The class spans two TUs: this one and arm9/dScBoot_c, 0x1dc00 bytes below."
   ],
   "sections": [
     {
@@ -24,14 +24,14 @@
       "symbol": "_ZN9dScBoot_cD1Ev",
       "address": "0x02023598",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN9dScBoot_cD1Ev.cpp",
+      "legacy_source": "src/_ZN9BootSceneD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN9dScBoot_cD0Ev",
       "address": "0x020235d4",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN9dScBoot_cD0Ev.cpp",
+      "legacy_source": "src/_ZN9BootSceneD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -48,12 +48,12 @@
     {
       "symbol": "_ZN9dScBoot_cD2Ev",
       "disposition": "deadstrip",
-      "reason": "the unifying-out-of-line destructor emits D1, D0, D2 under `#pragma defer_codegen off`; D2 is unreferenced and homeless and drops at link, as the retail link did. Same cell as ov003/dScStarSel_c and ov006/dScMgFlower_c."
+      "reason": "the unifying-out-of-line destructor emits D1, D0, D2 under `#pragma defer_codegen off`; D2 is unreferenced and homeless and drops at link; the cartridge has no D2 here. Same cell as ov003/dScStarSel_c and ov006/dScMgFlower_c."
     },
     {
       "symbol": "_ZN8dScene_cD2Ev",
       "disposition": "deadstrip",
-      "reason": "dScBoot_c's destructor inlines the base destructor chain; the compiler emits dScene_c's D2 as a standalone fallback body. Unreferenced, homeless, drops at link -- as it did in retail."
+      "reason": "dScBoot_c's destructor inlines the base destructor chain; the compiler emits dScene_c's D2 as a standalone fallback body. Unreferenced, homeless, drops at link; the cartridge has no D2 here."
     },
     {
       "symbol": "_ZN7dBase_cD2Ev",
@@ -72,7 +72,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x020914c8",
-      "reason": "typeinfo emitted with the key function. The class now carries the cartridge's own RTTI spelling (the BootScene coinage is renamed), so the emitted record word-compares against its configured home."
+      "reason": "typeinfo emitted with the key function. The class now carries the cartridge's own RTTI spelling (the former BootScene coinage is renamed), so the emitted record word-compares against its configured home."
     },
     {
       "symbol": "_ZTS9dScBoot_c",

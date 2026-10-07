@@ -40,35 +40,35 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov006_020eed68",
+      "symbol": "_ZN4Elem19func_ov006_020eed68Ev",
       "address": "0x020eed68",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020eed68.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov006_020eedc8",
+      "symbol": "_ZN4Elem19func_ov006_020eedc8Ev",
       "address": "0x020eedc8",
       "size": "0x00000074",
       "legacy_source": "src/func_ov006_020eedc8.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov006_020eee3c",
+      "symbol": "_ZN4Elem19func_ov006_020eee3cEiii",
       "address": "0x020eee3c",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov006_020eee3c.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov006_020eeef4",
+      "symbol": "_ZN4Node19func_ov006_020eeef4Ev",
       "address": "0x020eeef4",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov006_020eeef4.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov006_020eef40",
+      "symbol": "_ZN4Node19func_ov006_020eef40Ev",
       "address": "0x020eef40",
       "size": "0x00000018",
       "legacy_source": "src/func_ov006_020eef40.c",
@@ -138,56 +138,56 @@
       "ordinal": 16
     },
     {
-      "symbol": "func_ov006_020ef47c",
+      "symbol": "_ZN12dScMgJump2_c19func_ov006_020ef47cEv",
       "address": "0x020ef47c",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020ef47c.c",
       "ordinal": 17
     },
     {
-      "symbol": "func_ov006_020ef480",
+      "symbol": "_ZN12dScMgJump2_c19func_ov006_020ef480Ev",
       "address": "0x020ef480",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_020ef480.c",
       "ordinal": 18
     },
     {
-      "symbol": "func_ov006_020ef4ec",
+      "symbol": "_ZN12dScMgJump2_c19func_ov006_020ef4ecEv",
       "address": "0x020ef4ec",
       "size": "0x00000094",
       "legacy_source": "src/func_ov006_020ef4ec.c",
       "ordinal": 19
     },
     {
-      "symbol": "func_ov006_020ef580",
+      "symbol": "_ZN12dScMgJump2_c19func_ov006_020ef580Ev",
       "address": "0x020ef580",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_020ef580.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_ov006_020ef5ac",
+      "symbol": "_ZN12dScMgJump2_c19func_ov006_020ef5acEv",
       "address": "0x020ef5ac",
       "size": "0x000001bc",
       "legacy_source": "src/func_ov006_020ef5ac.c",
       "ordinal": 21
     },
     {
-      "symbol": "func_ov006_020ef768",
+      "symbol": "_ZN12dScMgJump2_c19func_ov006_020ef768Ev",
       "address": "0x020ef768",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_020ef768.c",
       "ordinal": 22
     },
     {
-      "symbol": "func_ov006_020ef794",
+      "symbol": "_ZN12dScMgJump2_c19func_ov006_020ef794Ev",
       "address": "0x020ef794",
       "size": "0x00000064",
       "legacy_source": "src/func_ov006_020ef794.c",
       "ordinal": 23
     },
     {
-      "symbol": "func_ov006_020ef7f8",
+      "symbol": "_ZN12dScMgJump2_c19func_ov006_020ef7f8Ev",
       "address": "0x020ef7f8",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020ef7f8.c",
@@ -250,13 +250,63 @@
     "compilerOnlyOutput": {
       "requested": [],
       "deadstripped": [],
-      "data": [],
-      "dataExternalized": []
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS8dScene_c",
+        "_ZTI11dScMgBase_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTI14dScMgD3DBase_c",
+        "_ZTS14dScMgD3DBase_c",
+        "_ZTI12dScMgJump2_c",
+        "_ZTS12dScMgJump2_c",
+        "_ZTV12dScMgJump2_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11dScMgBase_c",
+        "_ZTI12dScMgJump2_c",
+        "_ZTI14dScMgD3DBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTS12dScMgJump2_c",
+        "_ZTS14dScMgD3DBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dScene_c",
+        "_ZTV12dScMgJump2_c"
+      ]
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 13 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },

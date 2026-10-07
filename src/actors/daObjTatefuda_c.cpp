@@ -21,52 +21,42 @@
  * because the compiler emits .text in reverse source order.
  *
  * State machine: the sign runs a five-state machine on mState, driven by
- * the helpers func_ov002_020bbd5c (switch state and run its enter routine) and
- * func_ov002_020bbda4 (run the current state's update routine) through the
- * table data_ov002_0210e084. The rows, read from the ROM, are
- *   IDLE    enter 020bba24  update 020bb9fc (-> 020bb520 talk start, 020bb42c grab/break)
- *   TALK    enter 020bb9f0  update 020bb614
- *   CARRIED enter 020bbd50  update 020bbcb8
- *   THROWN  enter 020bbc78  update 020bbb14
- *   DROPPED enter 020bbac8  update 020bba28
+ * the members SetState (switch state and run its enter routine) and
+ * UpdateState (run the current state's update routine) through the
+ * table data_ov002_0210e084. The rows are
+ *   IDLE    enter InitIdle   update Idle (-> TryStartTalk, CheckGrabOrBreak)
+ *   TALK    enter InitTalk   update Talk
+ *   CARRIED enter InitCarried update Carried
+ *   THROWN  enter InitThrown  update Thrown
+ *   DROPPED enter InitDropped update Dropped
  * The state names are descriptive, taken from what each routine does; the
  * ROM carries no names for them.
  *
- * Known limits:
- * - The eighteen func_ov002_* helpers are still free functions (extern "C"
- *   with the class pointer as their first parameter, or `char *` where
- *   include/decl_common.h fixes that spelling: 020baf80, 020bae9c, 020bbb14).
- *   Several are reached through the state table above, so method conversion
- *   needs per-helper semantic review. Follow-up lane.
+ * deslop leftovers:
+ * - RebuildModelMatrix and AttachToHolder stay free functions parsed as C:
+ *   their Matrix4x3 block copies scalarize under C++ (same wall as Bullet
+ *   020fed7c and ov062 ba84). `#pragma cplusplus off/on` wraps their
+ *   definitions only.
+ * - Behavior's `enum Bool` casts are a measured codegen view: plain `int`
+ *   spellings size-DIFF under 2004/b56.
  * - Still raw: the holder's word at +0xc8 (Behavior, Render; inside
  *   dActor_c's unnamed 0xc5..0xcb padding), and the offsets into the holder's
- *   body Model (the func_ov002_020e496c result) in func_ov002_020bb060: +0x14
+ *   body Model (the func_ov002_020e496c result) in AttachToHolder: +0x14
  *   (ModelBase.h's data.transforms), +0x1c (mat4x3), +0x58 (the animation's
- *   current frame, per Player.h) and +0x2a0 (0x2a0 / 0x30 = the matrix of
- *   bone 14). Not typed here.
+ *   current frame, per Player.h) and +0x2a0 (the matrix of bone 14).
  * - Unrecovered meanings: mFlags bits 0x100, 0x400, 0x2000, 0x4000 and
- *   0x4000000 as this class uses them, hit-flag bit 0x8000000 and bit 0x2000
- *   and 0x4000000 of mdCcAc_c.flags, the global words data_0209b454,
+ *   0x4000000 as this class uses them, hit-flag bit 0x8000000 and bits
+ *   0x2000/0x4000000 of mdCcAc_c.flags, the global words data_0209b454,
  *   data_0209d660, data_0209d6bc and data_0209f284, the Player::Hurt
  *   arguments after the first two, and what the player-side calls
- *   func_ov002_020bec84 and func_ov002_020bec9c are testing and starting.
- * - func_ov002_020bafc0 and func_ov002_020bb060 parse as C: their
- *   Matrix4x3 block copies scalarize under C++ (same wall as Bullet
- *   020fed7c and ov062 ba84). `#pragma cplusplus off/on` around the
- *   definitions only.
- * - func_ov002_020bb060 and func_ov002_020bafc0 are parsed as C and so
- *   take `struct daObjTatefuda_c *`.
- * - Vec3_ApproachHorz is fixed tree-wide to its int return (promoted
- *   TUs already declared it so; decl_common.h said void).
- * - daObjTatefuda_c_classInit (0x020bc3c8) abuts this run and stays a
- *   one-function source.
+ *   func_ov002_020bec84 and func_ov002_020bec9c test and start.
  * - dCcAc_c::Init, dBgCh_Actr::Init, DropShadow, Particle::New and the
- *   Player/Sound helpers stay mangled scalar externs (Fix12-by-value
+ *   Player/Sound helpers stay mangled scalar externs (Fix12<int>-by-value
  *   member form is the 6az wall).
  * - SignPost_ClsnFile / SignPost_ModelFile keep their coined BSS names
  *   (historical, like the Spawn aliases).
- * - data_ov002_0210e084 (the {enter, update} state table), the message/volume tables and
- *   g_profile_TATEFUDA are not this TU's data.
+ * - data_ov002_0210e084 (the {enter, update} state table), the
+ *   message/volume tables and g_profile_TATEFUDA are not this TU's data.
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -89,9 +79,6 @@
  * each of these before compiling; a real header should usually win. */
 /* shadow struct 'Vec3' */
 struct Vec3 { int x, y, z; };
-
-/* shadow struct 'M43' */
-struct M43 { int w[12]; };
 
 /* Bare Vec3 is used for the locals and casts below; the struct form above
  * feeds the elaborated-type uses. */
@@ -116,10 +103,7 @@ struct Vector3_16f;
 struct BMD_File; struct KCL_File; struct dActor_c; struct Vector3; struct Matrix4x3;
 
 /* shadow struct 'CLPS_Block' */
-struct CLPS_Block; struct SharedFilePtr; struct Vector3_16;
-
-/* shadow struct 'V3' */
-struct V3 { int x, y, z; };
+struct CLPS_Block; struct Vector3_16;
 
 /* Actor IDs, as symbols/actor_debug_names.tsv lists them. */
 enum {
@@ -128,13 +112,10 @@ enum {
 };
 
 #define FIXMUL(a, b) ((s32)(((s64)(a) * (b) + 0x800) >> 12))
-#define LD(p) ((int)(p))
 
 extern "C" {
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *c);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
-extern void func_ov002_020baf80(char *c);
-extern void func_ov002_020bbd5c(daObjTatefuda_c *c, int i);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor, int b, int d, unsigned int e, unsigned int f);
 extern void _ZN5dCc_c5ClearEv(void *c);
 extern void Matrix4x3_FromRotationY(void *, int);
@@ -172,8 +153,6 @@ extern int func_ov002_020bec9c(void *player, unsigned int a, int b, int d, unsig
 extern int _ZN6Player12FinishedAnimEv(void *player);
 extern void _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh( void *player, void *actor, unsigned int msg, struct Vector3 *pos, unsigned int a, unsigned int b);
 extern void func_02012790(int id);
-extern int func_ov002_020bb520(daObjTatefuda_c *c);
-extern void func_ov002_020bb42c(daObjTatefuda_c *c);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
 extern void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* p);
@@ -182,12 +161,11 @@ extern int _ZNK10dBgCh_Actr12TouchesWaterEv(void* p);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* thiz, void* v, unsigned a, int b, unsigned c, unsigned d, unsigned e);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
 extern int _ZN8dActor_c13DistToCPlayerEv(void* self);
-extern "C" void func_ov002_020bbb14(char* self);
 extern int SignPost_ClsnFile[];
 extern int SignPost_ModelFile[];
 extern "C" unsigned int data_0209b454;
 extern "C" void _ZN6Player9DropActorEv(void *self);
-extern "C" void func_ov002_020bb060(daObjTatefuda_c *c);
+extern "C" void AttachToHolder(struct daObjTatefuda_c *self);
 extern "C" u8 DecIfAbove0_Byte(u8 *p);
 extern "C" int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(void *self, short a, short b, short c, int fix);
 extern "C" void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
@@ -195,9 +173,8 @@ extern "C" u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vecto
 extern "C" void _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(void *self, const struct Vector3 *vec);
 extern "C" void _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(void *self, void *sm, void *m, int a, int b, int c, u32 j);
 extern "C" void _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-extern "C" void func_ov002_020bbda4(daObjTatefuda_c *c);
 extern "C" void _ZN5dCc_c6UpdateEv(void *self);
-extern "C" void func_ov002_020bafc0(daObjTatefuda_c *self);
+extern "C" void RebuildModelMatrix(struct daObjTatefuda_c *self);
 extern "C" void *_ZN5Model8LoadFileER13SharedFilePtr(void *);
 extern "C" void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *);
 extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block( void *self, KCL_File *f, const Matrix4x3 &m, s32 fix, s16 sh, CLPS_Block &b);
@@ -249,7 +226,7 @@ int daObjTatefuda_c::InitResources()
     int pz = mPosZ;
     int px = mPosX;
     int py2 = py + 0x64000;
-    V3 v = { px, py2, pz };
+    Vec3 v = { px, py2, pz };
     dBgCh_Gnd rg;
     rg.SetObjAndPos(*(Vector3*)&v, (dActor_c*)0);
     if (rg.DetectClsn() != 0)
@@ -257,7 +234,7 @@ int daObjTatefuda_c::InitResources()
 
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    func_ov002_020baf80((char *)this);
+    UpdateShadowMatrix();
 
     void *kf = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov002_0210e05c);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
@@ -301,7 +278,7 @@ int daObjTatefuda_c::InitResources()
  *     data_0209b454 are both set while a player holds it, tell that player to
  *     let go (Player::DropActor).
  *  2. If there is a holder, mFlags bit 0x4000 is set and the holder's word at
- *     +0xc8 is non-zero: put the sign on the holder (func_ov002_020bb060), clip radius
+ *     +0xc8 is non-zero: put the sign on the holder (AttachToHolder), clip radius
  *     0x20000 (32 units), and set mFlags bit 0x4000000. Otherwise clip radius
  *     0x10000 (16 units) and clear that bit.
  *  3. A hidden sign, or one that is fully pounded in (mPoundsLeft == 0), counts
@@ -313,16 +290,15 @@ int daObjTatefuda_c::InitResources()
  *  5. While the break countdown (mBreakTimer) runs: switch the mesh collider
  *     off, trail two particles at 0x50000 (80 units) above the sign, and refresh
  *     the drop shadow; on the frame it reaches 0, poof at 0x28000 (40 units) up and
- *     run the reset (func_ov002_020bae9c).
+ *     run the reset (Reset).
  *  6. Otherwise: tick the pound cooldown, call dBgActor_c::IsClsnInRange(0, 0)
  *     unless hidden, run the current state's update, clear and relink the collider, then if the
- *     state is THROWN rebuild the model matrix (func_ov002_020bafc0), else if
+ *     state is THROWN rebuild the model matrix (RebuildModelMatrix), else if
  *     the sign still has both pounds and the state is IDLE or TALK, refresh
  *     the drop shadow.
  *
- * LD() is a no-op macro the legacy file used to MARK its read-modify-write
- * sites on mFlags. It is kept, with its name, so the marking survives -- it
- * emits nothing, and it is not the reason those sites take an address. */
+ * Sites that take &mFlags do so as u32*: the flag word's declared type
+ * changes the store shape. */
 int daObjTatefuda_c::Behavior()
 {
     struct Vector3 v;
@@ -341,14 +317,14 @@ int daObjTatefuda_c::Behavior()
         if (p != 0 && (enum Bool)((mFlags & 0x4000) != 0) != FALSE
             && *(int *)((char *)p + 0xc8) != 0) {
             u32 *fp;
-            func_ov002_020bb060(this);
+            AttachToHolder(this);
             mClipRadius = 0x20000;
-            fp = (u32 *)LD(&mFlags);
+            fp = (u32 *)&mFlags;
             *fp = *fp | 0x4000000;
         } else {
             u32 *fp;
             mClipRadius = 0x10000;
-            fp = (u32 *)LD(&mFlags);
+            fp = (u32 *)&mFlags;
             *fp = *fp & ~0x4000000;
         }
     }
@@ -370,7 +346,7 @@ int daObjTatefuda_c::Behavior()
             mPosY = mHomePosY;
             _ZN10dBgActor_c21UpdateModelPosAndRotYEv(this);
             _ZN10dBgActor_c19UpdateClsnPosAndRotEv(this);
-            func_ov002_020baf80((char *)this);
+            UpdateShadowMatrix();
         }
     }
 
@@ -402,7 +378,7 @@ int daObjTatefuda_c::Behavior()
             ((int *)&vec)[2] = z2;
             vec2 = vec;
             _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(this, &vec2);
-            func_ov002_020bae9c((char *)this);
+            Reset();
             return 1;
         }
         _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
@@ -413,13 +389,13 @@ int daObjTatefuda_c::Behavior()
     DecIfAbove0_Byte(&mPoundCooldown);
     if (mHidden == 0)
         _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0);
-    func_ov002_020bbda4(this);
+    UpdateState();
     _ZN5dCc_c5ClearEv(&mdCcAc_c);
     _ZN5dCc_c6UpdateEv(&mdCcAc_c);
     {
         int s = mState;
         if (s == STATE_THROWN) {
-            func_ov002_020bafc0(this);
+            RebuildModelMatrix(this);
         } else if (mPoundsLeft == 2 && (u32)s <= 1) {  /* STATE_IDLE or STATE_TALK */
             _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
                 this, &mShadowModel, &mShadowMat, 0x50000, 0x28000, 0x28000, 0xf);
@@ -445,7 +421,7 @@ int daObjTatefuda_c::Render()
   if (r != 0) {
     int b = (mFlags & 0x4000) != 0;
     if (b && *(int*)((char*)r+0xc8) != 0) {
-      func_ov002_020bb060(this);
+      AttachToHolder(this);
     }
   }
   Sub041* s = (Sub041*)&mModel;
@@ -470,103 +446,98 @@ int daObjTatefuda_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- func_ov002_020bbda4, 0x020bbda4, size 0x48 */
+/* ROM ordinal 23 -- _ZN15daObjTatefuda_c11UpdateStateEv, 0x020bbda4, size 0x48 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bbda4
+// @symbol _ZN15daObjTatefuda_c11UpdateStateEv
 /* Runs the current state's UPDATE routine: row mState of the table, member 1.
    The rows are copied into data_ov002_0210e084 by this overlay's static
-   initializer; the pointer-to-member type here is a stand-in for the
-   routines' real signatures, which are the free functions below. */
+   initializer. */
 typedef void (daObjTatefuda_c::*PMF)();
 struct Entry { PMF pmf[2]; };
 extern Entry data_ov002_0210e084[];
-extern "C" void func_ov002_020bbda4(daObjTatefuda_c *c) { int j = c->mState; (c->*data_ov002_0210e084[j].pmf[1])(); }
+void daObjTatefuda_c::UpdateState() { int j = mState; (this->*data_ov002_0210e084[j].pmf[1])(); }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- func_ov002_020bbd5c, 0x020bbd5c, size 0x48 */
+/* ROM ordinal 22 -- _ZN15daObjTatefuda_c8SetStateEi, 0x020bbd5c, size 0x48 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bbd5c
-/* Switches to state `i` and runs that state's ENTER routine (row i, member 0). */
-extern "C" void func_ov002_020bbd5c(daObjTatefuda_c *c, int i) { c->mState = i; int j = c->mState; (c->*data_ov002_0210e084[j].pmf[0])(); }
+// @symbol _ZN15daObjTatefuda_c8SetStateEi
+/* Switches to state `state` and runs that state's ENTER routine (row state,
+   member 0). */
+void daObjTatefuda_c::SetState(int state) { mState = state; int j = mState; (this->*data_ov002_0210e084[j].pmf[0])(); }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- func_ov002_020bbd50, 0x020bbd50, size 0xc */
+/* ROM ordinal 21 -- _ZN15daObjTatefuda_c11InitCarriedEv, 0x020bbd50, size 0xc */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bbd50
+// @symbol _ZN15daObjTatefuda_c11InitCarriedEv
 /* CARRIED, enter: stop the sign's horizontal speed. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020bbd50(daObjTatefuda_c *self)
+void daObjTatefuda_c::InitCarried()
 {
-    self->mHorzSpeed = 0;
-}
+    mHorzSpeed = 0;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- func_ov002_020bbcb8, 0x020bbcb8, size 0x98 */
+/* ROM ordinal 20 -- _ZN15daObjTatefuda_c7CarriedEv, 0x020bbcb8, size 0x98 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bbcb8
-// func_ov002_020bbcb8 at 0x020bbcb8
+// @symbol _ZN15daObjTatefuda_c7CarriedEv
+// Carried at 0x020bbcb8
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 /* CARRIED, update. Leaves CARRIED according to three bits of mFlags (bits
  * this file only reads here; their meanings are not recovered): 0x400 set ->
  * THROWN; else 0x2000 set -> DROPPED; else 0x100 clear -> DROPPED. So the
  * sign stays carried only while 0x100 is set and 0x400 and 0x2000 are clear.
  * Either way the mesh collider is switched off while it is enabled. */
-extern "C" void func_ov002_020bbcb8(daObjTatefuda_c *c)
+void daObjTatefuda_c::Carried()
 {
-    int flags = c->mFlags;
+    int flags = mFlags;
     bool t;
 
     t = flags & 0x400;
     if (t != false) {
-        func_ov002_020bbd5c(c, daObjTatefuda_c::STATE_THROWN);
+        SetState(STATE_THROWN);
     } else {
         t = flags & 0x2000;
         if (t != false) {
-            func_ov002_020bbd5c(c, daObjTatefuda_c::STATE_DROPPED);
+            SetState(STATE_DROPPED);
         } else {
             t = flags & 0x100;
             if (t == false) {
-                func_ov002_020bbd5c(c, daObjTatefuda_c::STATE_DROPPED);
+                SetState(STATE_DROPPED);
             }
         }
     }
 
-    if (((dBgW *)&c->mMeshCollider)->IsEnabled()) {
-        ((dBgW *)&c->mMeshCollider)->Disable();
+    if (((dBgW *)&mMeshCollider)->IsEnabled()) {
+        ((dBgW *)&mMeshCollider)->Disable();
     }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- func_ov002_020bbc78, 0x020bbc78, size 0x40 */
+/* ROM ordinal 19 -- _ZN15daObjTatefuda_c10InitThrownEv, 0x020bbc78, size 0x40 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bbc78
+// @symbol _ZN15daObjTatefuda_c10InitThrownEv
 /* THROWN, enter: launch with horizontal speed 0x50000 (80 units/frame) and
  * vertical speed 0xa000 (10 units/frame), remember the holder as the last
  * holder and let go of it, and set bit 0x2000 and clear bit 0x4000000 of the
  * collider's own flags word (mdCcAc_c.flags, dCc_c offset 0x18). */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020bbc78(daObjTatefuda_c *self)
+void daObjTatefuda_c::InitThrown()
 {
-    self->mHorzSpeed = 0x50000;
-    self->mVertSpeed = 0xa000;
-    self->mLastHolder = self->mHoldingPlayer;
-    self->mHoldingPlayer = 0;
+    mHorzSpeed = 0x50000;
+    mVertSpeed = 0xa000;
+    mLastHolder = mHoldingPlayer;
+    mHoldingPlayer = 0;
     {
-        u32 *p = &self->mdCcAc_c.flags;
+        u32 *p = &mdCcAc_c.flags;
         *p |= 0x2000;
         *p &= ~0x4000000;
     }
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- func_ov002_020bbb14, 0x020bbb14, size 0x164 */
+/* ROM ordinal 18 -- _ZN15daObjTatefuda_c6ThrownEv, 0x020bbb14, size 0x164 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bbb14
+// @symbol _ZN15daObjTatefuda_c6ThrownEv
 /* recovered: shared common types */
-/* THROWN, update (declared with `char *` because include/decl_common.h
- * declares it that way). Each frame: tumble the sign about X by 0x2000 (one
+/* THROWN, update. Each frame: tumble the sign about X by 0x2000 (one
  * eighth of a turn); move it (dActor_c::UpdatePos); if it touched the ground, a
  * wall or water, Kill it and stop. Otherwise, if the collider reports an
  * actor that is a player and is not the last holder, hurt that player
@@ -574,93 +545,90 @@ void func_ov002_020bbc78(daObjTatefuda_c *self)
  * are not named here); slow the horizontal speed toward 0 by 0x555 (about
  * 0.33 unit) per frame; keep the mesh collider off; and once the sign is off
  * screen (mFlags bit 8) and more than 0x7d0000 (2000 units) from the player,
- * run the reset (func_ov002_020bae9c). */
-void func_ov002_020bbb14(char* self_)
+ * run the reset (Reset). */
+void daObjTatefuda_c::Thrown()
 {
-    daObjTatefuda_c *self = (daObjTatefuda_c *)self_;
     int b;
     struct Vector3 vec;
     void* found;
     unsigned id;
 
     {
-        s16* pa = &self->mAngleX;
+        s16* pa = &mAngleX;
         *pa = *pa + 0x2000;
     }
-    _ZN8dActor_c9UpdatePosEP5dCc_c(self, 0);
-    dBgCh_Actr_UpdateContinuous_Veneer(&self->mWithMeshClsn);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(this, 0);
+    dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(&self->mWithMeshClsn) != 0 ||
-        _ZNK10dBgCh_Actr8IsOnWallEv(&self->mWithMeshClsn) != 0 ||
-        _ZNK10dBgCh_Actr12TouchesWaterEv(&self->mWithMeshClsn) != 0) {
-        self->Kill();
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(&mWithMeshClsn) != 0 ||
+        _ZNK10dBgCh_Actr8IsOnWallEv(&mWithMeshClsn) != 0 ||
+        _ZNK10dBgCh_Actr12TouchesWaterEv(&mWithMeshClsn) != 0) {
+        Kill();
         return;
     }
 
     /* otherOwner: the uniqueID of the actor whose collider this one touched. */
-    id = self->mdCcAc_c.otherOwner;
+    id = mdCcAc_c.otherOwner;
     if (id != 0) {
         found = _ZN8dActor_c10FindWithIDEj(id);
         if (found != 0) {
-            if (found != self->mLastHolder) {
+            if (found != mLastHolder) {
                 b = ((dActor_c *)found)->actorID;
                 b = b == ACTOR_PLAYER;
                 if (b) {
-                    vec.x = self->mPosX;
-                    vec.y = self->mPosY;
-                    vec.z = self->mPosZ;
+                    vec.x = mPosX;
+                    vec.y = mPosY;
+                    vec.z = mPosZ;
                     _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(found, &vec, 1, 0xc000, 1, 0, 1);
                 }
             }
         }
     }
 
-    _Z14ApproachLinearRiii(&self->mHorzSpeed, 0, 0x555);
+    _Z14ApproachLinearRiii(&mHorzSpeed, 0, 0x555);
 
-    if (((dBgW *)&self->mMeshCollider)->IsEnabled() != 0) {
-        ((dBgW *)&self->mMeshCollider)->Disable();
+    if (((dBgW *)&mMeshCollider)->IsEnabled() != 0) {
+        ((dBgW *)&mMeshCollider)->Disable();
     }
 
-    b = self->mFlags & 8;
+    b = mFlags & 8;
     b = b != 0;
     if (b) {
-        if (_ZN8dActor_c13DistToCPlayerEv(self) > 0x7d0000) {
-            func_ov002_020bae9c((char *)self);
+        if (_ZN8dActor_c13DistToCPlayerEv(this) > 0x7d0000) {
+            Reset();
         }
     }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- func_ov002_020bbac8, 0x020bbac8, size 0x4c */
+/* ROM ordinal 17 -- _ZN15daObjTatefuda_c11InitDroppedEv, 0x020bbac8, size 0x4c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bbac8
+// @symbol _ZN15daObjTatefuda_c11InitDroppedEv
 /* DROPPED, enter: zero the horizontal and vertical speeds, move the sign to
  * the holder's position raised by 0x64000 (100 units), and hand the holder
  * over to mLastHolder (mHoldingPlayer becomes 0). No callees. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020bbac8(daObjTatefuda_c *self)
+void daObjTatefuda_c::InitDropped()
 {
     Player *other;
     int* py;
     Vec3* src;
-    self->mHorzSpeed = 0;
-    self->mVertSpeed = 0;
-    other = self->mHoldingPlayer;
-    py = &self->mPosY;
+    mHorzSpeed = 0;
+    mVertSpeed = 0;
+    other = mHoldingPlayer;
+    py = &mPosY;
     src = (Vec3*)&other->mPosX;
-    self->mPosX = src->x;
-    self->mPosY = src->y;
-    self->mPosZ = src->z;
+    mPosX = src->x;
+    mPosY = src->y;
+    mPosZ = src->z;
     *py += 0x64000;
-    self->mLastHolder = self->mHoldingPlayer;
-    self->mHoldingPlayer = 0;
-}
+    mLastHolder = mHoldingPlayer;
+    mHoldingPlayer = 0;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- func_ov002_020bba28, 0x020bba28, size 0xa0 */
+/* ROM ordinal 16 -- _ZN15daObjTatefuda_c7DroppedEv, 0x020bba28, size 0xa0 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bba28
+// @symbol _ZN15daObjTatefuda_c7DroppedEv
 bool ApproachLinear(short &value, short target, short step);
 extern "C" void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
 extern "C" void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
@@ -670,63 +638,58 @@ extern "C" int _ZNK10dBgCh_Actr12TouchesWaterEv(void* p);
 
 /* DROPPED, update: turn the X angle toward 0x4000 (a quarter turn) by at most
  * 0x1000 per frame, move, and Kill the sign if it touched the ground, a wall or
- * water. Otherwise rebuild the model matrix (func_ov002_020bafc0) and keep the
+ * water. Otherwise rebuild the model matrix (RebuildModelMatrix) and keep the
  * mesh collider off. */
-extern "C" void func_ov002_020bba28(daObjTatefuda_c* self){
-    ApproachLinear(self->mAngleX, 0x4000, 0x1000);
-    _ZN8dActor_c9UpdatePosEP5dCc_c(self, 0);
-    dBgCh_Actr_UpdateContinuous_Veneer(&self->mWithMeshClsn);
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(&self->mWithMeshClsn)
-        || _ZNK10dBgCh_Actr8IsOnWallEv(&self->mWithMeshClsn)
-        || _ZNK10dBgCh_Actr12TouchesWaterEv(&self->mWithMeshClsn)) {
-        self->Kill();
+void daObjTatefuda_c::Dropped(){
+    ApproachLinear(mAngleX, 0x4000, 0x1000);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(this, 0);
+    dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(&mWithMeshClsn)
+        || _ZNK10dBgCh_Actr8IsOnWallEv(&mWithMeshClsn)
+        || _ZNK10dBgCh_Actr12TouchesWaterEv(&mWithMeshClsn)) {
+        Kill();
     } else {
-        func_ov002_020bafc0(self);
-        if (((dBgW *)&self->mMeshCollider)->IsEnabled())
-            ((dBgW *)&self->mMeshCollider)->Disable();
+        RebuildModelMatrix(this);
+        if (((dBgW *)&mMeshCollider)->IsEnabled())
+            ((dBgW *)&mMeshCollider)->Disable();
     }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- func_ov002_020bba24, 0x020bba24, size 0x4 */
+/* ROM ordinal 15 -- _ZN15daObjTatefuda_c8InitIdleEv, 0x020bba24, size 0x4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bba24
-/* IDLE, enter: nothing to do. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020bba24(void)
+// @symbol _ZN15daObjTatefuda_c8InitIdleEv
+/* IDLE, enter: nothing to do. The PMF record binds a member, so this
+   receives `this` and ignores it. */
+void daObjTatefuda_c::InitIdle()
 {
 }
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 14 -- _ZN15daObjTatefuda_c4IdleEv, 0x020bb9fc, size 0x28 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN15daObjTatefuda_c4IdleEv
+/* IDLE, update: let a player start talking to the sign (TryStartTalk);
+ * only if that did not happen, check for a grab or a break (CheckGrabOrBreak). */
+void daObjTatefuda_c::Idle(){
+  if(TryStartTalk()!=0) return;
+  CheckGrabOrBreak();
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- func_ov002_020bb9fc, 0x020bb9fc, size 0x28 */
+/* ROM ordinal 13 -- _ZN15daObjTatefuda_c8InitTalkEv, 0x020bb9f0, size 0xc */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bb9fc
-/* IDLE, update: let a player start talking to the sign (func_ov002_020bb520);
- * only if that did not happen, check for a grab or a break (func_ov002_020bb42c). */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020bb9fc(daObjTatefuda_c* c){
-  if(func_ov002_020bb520(c)!=0) return;
-  func_ov002_020bb42c(c);
-}
-}
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_ov002_020bb9f0, 0x020bb9f0, size 0xc */
-/* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bb9f0
+// @symbol _ZN15daObjTatefuda_c8InitTalkEv
 /* TALK, enter: restart the talk walk-up at step 0. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020bb9f0(daObjTatefuda_c *p)
+void daObjTatefuda_c::InitTalk()
 {
-    p->mTalkStep = 0;
-}
+    mTalkStep = 0;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov002_020bb614, 0x020bb614, size 0x3dc */
+/* ROM ordinal 12 -- _ZN15daObjTatefuda_c4TalkEv, 0x020bb614, size 0x3dc */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bb614
+// @symbol _ZN15daObjTatefuda_c4TalkEv
 /* recovered: shared common types */
 /* TALK, update: daObjTatefuda_c's talk routine, ov002 0x020bb614, 0x3dc bytes.
  * Called on the signpost (`c` is a daObjTatefuda_c *, the class that owns
@@ -747,7 +710,7 @@ void func_ov002_020bb9f0(daObjTatefuda_c *p)
  * func_ov002_020bec84(player, n) is non-zero for n = 1 or 0 it calls
  * func_ov002_020bec9c(player, 2, ...); for n = 2 it calls (player, 3, ...); for
  * n = 3 it shows the message. The last two also wait on Player::FinishedAnim. A talk state other than 0 or 1 sends the sign back to
- * IDLE through func_ov002_020bbd5c.
+ * IDLE through SetState.
  *
  * The reading spot is the sign's own position pushed 0x5a000 (90 units), or
  * 0x78000 (120 units) when mPoundsLeft is 1, forward along the sign's facing
@@ -764,8 +727,7 @@ void func_ov002_020bb9f0(daObjTatefuda_c *p)
  *
  * Vec3_ApproachHorz returns int (the ROM does `bl` then `cmp r0, #0`), which
  * decl_common.h now declares. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020bb614(daObjTatefuda_c *c)
+void daObjTatefuda_c::Talk()
 {
     /* C89: all locals at top. */
     struct Vector3 msgPos;
@@ -773,7 +735,7 @@ void func_ov002_020bb614(daObjTatefuda_c *c)
     struct Vector3 plPos;
     Player *player;
     u16 msgId;
-    u8 *p58d;
+    u8 *talkStep;
     s32 scale;
     s32 talk;
     u8 st;
@@ -784,8 +746,8 @@ void func_ov002_020bb614(daObjTatefuda_c *c)
     s32 param;
 
     msgId = 0;
-    param = c->param1;
-    player = c->mTalkingPlayer;
+    param = param1;
+    player = mTalkingPlayer;
     if (param != 0xffff) {
         msgId = (u16)param;
     }
@@ -794,31 +756,31 @@ void func_ov002_020bb614(daObjTatefuda_c *c)
        ROM leaves after `lslne`, which in turn hands the height r1 and the depth
        r2 the way the ROM colours them. Folding the +0x50000 into the temp
        rather than into the store is the other half of it. */
-    mx = c->mPosX;
-    mz = c->mPosZ;
-    my = c->mPosY + 0x50000;
+    mx = mPosX;
+    mz = mPosZ;
+    my = mPosY + 0x50000;
     msgPos.x = mx;
     msgPos.y = my;
     msgPos.z = mz;
 
     scale = 0x5a000;
-    if (c->mPoundsLeft == 1) {
+    if (mPoundsLeft == 1) {
         scale = 0x78000;
     }
-    tx = c->mPosX;
+    tx = mPosX;
     tgt.x = tx;
-    ty = c->mPosY;
+    ty = mPosY;
     tgt.y = ty;
-    tz = c->mPosZ;
+    tz = mPosZ;
     tgt.z = tz;
 
 
-    ang = (s32) * (u16 *)&c->mAngleY;
+    ang = (s32) * (u16 *)&mAngleY;
     sinV = data_02082214[(ang >> 4) * 2];
     tx = tx + FIXMUL(scale, sinV);
     tgt.x = tx;
 
-    ang = (s32) * (u16 *)&c->mAngleY;
+    ang = (s32) * (u16 *)&mAngleY;
     cosV = data_02082214[(ang >> 4) * 2 + 1];
     tz = tz + FIXMUL(scale, cosV);
     tgt.z = tz;
@@ -833,35 +795,35 @@ void func_ov002_020bb614(daObjTatefuda_c *c)
     talk = _ZN6Player12GetTalkStateEv(player);
     switch (talk) {
     case 0:
-        st = c->mTalkStep;
+        st = mTalkStep;
         switch (st) {
         case 0:
             if (Vec3_HorzDist(&plPos, &tgt) < 0x32000) {
-                p58d = &c->mTalkStep;
-                *p58d = (u8)(*p58d + 1);
+                talkStep = &mTalkStep;
+                *talkStep = (u8)(*talkStep + 1);
             } else if (_Z14ApproachLinearRsss(
                            &player->mAngleY,
                            Vec3_HorzAngle(&plPos, &tgt),
                            0x800)
                        != 0) {
-                p58d = &c->mTalkStep;
-                *p58d = (u8)(*p58d + 1);
+                talkStep = &mTalkStep;
+                *talkStep = (u8)(*talkStep + 1);
                 func_ov002_020bec9c(player, 1, 0, 0x1000, 0);
             }
             break;
         case 1:
             if (Vec3_ApproachHorz((struct Vector3 *)&player->mPosX, &tgt, 0xa000) != 0) {
-                p58d = &c->mTalkStep;
-                *p58d = (u8)(*p58d + 1);
+                talkStep = &mTalkStep;
+                *talkStep = (u8)(*talkStep + 1);
             }
             break;
         case 2:
             if (_Z14ApproachLinearRsss(
                     &player->mAngleY,
-                    (s16)(c->mAngleY + 0x8000),
+                    (s16)(mAngleY + 0x8000),
                     0x800)
                 != 0) {
-                if (c->mPoundsLeft == 1) {
+                if (mPoundsLeft == 1) {
                     if (func_ov002_020bec84(player, 1) != 0
                         || func_ov002_020bec84(player, 0) != 0) {
                         func_ov002_020bec9c(player, 2, 0x40000000, 0x1000, 0);
@@ -871,12 +833,12 @@ void func_ov002_020bb614(daObjTatefuda_c *c)
                     } else if (func_ov002_020bec84(player, 3) != 0
                                && _ZN6Player12FinishedAnimEv(player) != 0) {
                         _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(
-                            player, c, (s16)msgId, &msgPos, 0, 1);
+                            player, this, (s16)msgId, &msgPos, 0, 1);
                     }
                 } else {
                     func_ov002_020bec9c(player, 0, 0, 0x1000, 0);
                     _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(
-                        player, c, (s16)msgId, &msgPos, 0, 1);
+                        player, this, (s16)msgId, &msgPos, 0, 1);
                 }
             }
             break;
@@ -885,7 +847,7 @@ void func_ov002_020bb614(daObjTatefuda_c *c)
     case 1:
         break;
     default:
-        func_ov002_020bbd5c(c, daObjTatefuda_c::STATE_IDLE);
+        SetState(STATE_IDLE);
         break;
     }
 
@@ -900,17 +862,16 @@ void func_ov002_020bb614(daObjTatefuda_c *c)
         }
     }
 
-    if (c->mFlagSeen != data_0209f284 && data_0209f284 != 0) {
+    if (mFlagSeen != data_0209f284 && data_0209f284 != 0) {
         func_02012790(0x24);
     }
-    c->mFlagSeen = data_0209f284;
-}
+    mFlagSeen = data_0209f284;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov002_020bb520, 0x020bb520, size 0xf4 */
+/* ROM ordinal 11 -- _ZN15daObjTatefuda_c12TryStartTalkEv, 0x020bb520, size 0xf4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bb520
+// @symbol _ZN15daObjTatefuda_c12TryStartTalkEv
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 /* IDLE, update, first half: has a player started talking to the sign? Needs,
@@ -921,12 +882,11 @@ void func_ov002_020bb614(daObjTatefuda_c *c)
  * absolute 16-bit difference. Then the player is remembered in mTalkingPlayer
  * (before Player::StartTalk is tried, so it stays set if that refuses) and, on
  * success, the sign enters TALK. Returns 1 only in that case. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov002_020bb520(daObjTatefuda_c* self){
-  unsigned int id = self->mdCcAc_c.otherOwner;
+int daObjTatefuda_c::TryStartTalk(){
+  unsigned int id = mdCcAc_c.otherOwner;
   if (id == 0) return 0;
-  if ((self->mdCcAc_c.hitFlags & 0x8000000) == 0) return 0;
-  if (self->mPoundsLeft == 0) return 0;
+  if ((mdCcAc_c.hitFlags & 0x8000000) == 0) return 0;
+  if (mPoundsLeft == 0) return 0;
   {
     dActor_c* other = (dActor_c*)_ZN8dActor_c10FindWithIDEj(id);
     if (other == 0) goto fail;
@@ -938,21 +898,20 @@ int func_ov002_020bb520(daObjTatefuda_c* self){
     return 0;
   success:
     {
-      int ang = Vec3_HorzAngle((struct Vector3*)&self->mPosX, (struct Vector3*)&other->mPosX);
-      if (AngleDiff(ang, self->mAngleY) > 0x4000) return 0;
-      self->mTalkingPlayer = (Player *)other;
-      if (_ZN6Player9StartTalkER7fBase_cb((char *)other, (char *)self, 0) == 0) return 0;
-      func_ov002_020bbd5c(self, daObjTatefuda_c::STATE_TALK);
+      int ang = Vec3_HorzAngle((struct Vector3*)&mPosX, (struct Vector3*)&other->mPosX);
+      if (AngleDiff(ang, mAngleY) > 0x4000) return 0;
+      mTalkingPlayer = (Player *)other;
+      if (_ZN6Player9StartTalkER7fBase_cb((char *)other, (char *)this, 0) == 0) return 0;
+      SetState(STATE_TALK);
       return 1;
     }
   }
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov002_020bb42c, 0x020bb42c, size 0xf4 */
+/* ROM ordinal 10 -- _ZN15daObjTatefuda_c16CheckGrabOrBreakEv, 0x020bb42c, size 0xf4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bb42c
+// @symbol _ZN15daObjTatefuda_c16CheckGrabOrBreakEv
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 /* IDLE, update, second half: is a player hit flagged 0x40000 or 0x1000? The
@@ -964,10 +923,9 @@ int func_ov002_020bb520(daObjTatefuda_c* self){
  * it in front), hit-flag bit 0x1000 (grab, in that table) must be set, and
  * Player::TryGrab must accept; then the player becomes mHoldingPlayer and the
  * sign enters CARRIED. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020bb42c(daObjTatefuda_c* self){
+void daObjTatefuda_c::CheckGrabOrBreak(){
   dActor_c* other;
-  unsigned int id = self->mdCcAc_c.otherOwner;
+  unsigned int id = mdCcAc_c.otherOwner;
   if (id == 0) return;
   other = (dActor_c*)_ZN8dActor_c10FindWithIDEj(id);
   if (other == 0) return;
@@ -975,20 +933,19 @@ void func_ov002_020bb42c(daObjTatefuda_c* self){
     int b = (int)(other->actorID == ACTOR_PLAYER);
     if (b == 0) return;
   }
-  if ((self->mdCcAc_c.hitFlags & 0x40000) != 0) {
-    self->mBreakTimer = 0x3c;
+  if ((mdCcAc_c.hitFlags & 0x40000) != 0) {
+    mBreakTimer = 0x3c;
     return;
   }
   {
-    int ang = Vec3_HorzAngle((struct Vector3*)&self->mPosX, (struct Vector3*)&other->mPosX);
+    int ang = Vec3_HorzAngle((struct Vector3*)&mPosX, (struct Vector3*)&other->mPosX);
     if (other->param1 != 2) return;
-    if (AngleDiff(ang, self->mAngleY) <= 0x4000) return;
+    if (AngleDiff(ang, mAngleY) <= 0x4000) return;
   }
-  if ((self->mdCcAc_c.hitFlags & 0x1000) == 0) return;
-  if (_ZN6Player7TryGrabER8dActor_c((char *)other, (char *)self) == 0) return;
-  self->mHoldingPlayer = (Player *)other;
-  func_ov002_020bbd5c(self, daObjTatefuda_c::STATE_CARRIED);
-}
+  if ((mdCcAc_c.hitFlags & 0x1000) == 0) return;
+  if (_ZN6Player7TryGrabER8dActor_c((char *)other, (char *)this) == 0) return;
+  mHoldingPlayer = (Player *)other;
+  SetState(STATE_CARRIED);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1006,7 +963,7 @@ void func_ov002_020bb42c(daObjTatefuda_c* self){
  *
  * The signpost does not destroy itself. It plays its particle 0x28000 (40.0 in
  * Fix12) above where it stands, poofs, plays sound bank 3 id 0x41 and then
- * tails into func_ov002_020bae9c, this class's own still-unnamed reset routine.
+ * tails into Reset, this class's own reset routine.
  * That is why there is no MarkForDestruction here, unlike dBgActor_c::Kill.
  *
  * The trailing call's return value is dropped: the ROM does `bl`, then the
@@ -1018,8 +975,7 @@ void func_ov002_020bb42c(daObjTatefuda_c* self){
  * instructions where the ROM has six. Particle::System::NewSimple stays spelled
  * as its mangled name -- its parameters are Fix12<int> BY VALUE and declaring
  * the true types changes how the caller passes them. */
-/* This class's own reset routine, still unnamed and still under its func_ov002_
-   symbol. It returns int; Kill drops it. */
+/* Reset returns void now; Kill drops the value regardless. */
 void daObjTatefuda_c::Kill()
 {
     Vector3 pos;
@@ -1036,7 +992,7 @@ void daObjTatefuda_c::Kill()
     dustPos.z = pos.z;
     DisappearPoofDustAt(dustPos);
     Sound::PlayBank3(0x41, *(Vector3 *)&mCamSpacePosX);
-    func_ov002_020bae9c((char *)this);
+    Reset();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1128,9 +1084,9 @@ int daObjTatefuda_c::OnAttacked1(dActor_c &other)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov002_020bb060, 0x020bb060, size 0x1dc */
+/* ROM ordinal 5 -- AttachToHolder, 0x020bb060, size 0x1dc */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bb060
+// @symbol AttachToHolder
 /* Put the sign on its holder (Behavior's step 2 and Render both call this).
  * `result` is the holder's current body model, from the shared helper
  * func_ov002_020e496c; m2 is the pointer stored at +0x14 of it, and the
@@ -1145,7 +1101,7 @@ int daObjTatefuda_c::OnAttacked1(dActor_c &other)
  * matrix's translation shifted left 3 (matrix units are position >> 3) and
  * the matrix itself is stored into mModel at 0xf0. */
 #pragma cplusplus off
-void func_ov002_020bb060(struct daObjTatefuda_c *self)
+void AttachToHolder(struct daObjTatefuda_c *self)
 {
     struct Vec3 v;
     struct Vec3 lo;
@@ -1192,9 +1148,9 @@ void func_ov002_020bb060(struct daObjTatefuda_c *self)
 #pragma cplusplus on
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov002_020bafc0, 0x020bafc0, size 0xa0 */
+/* ROM ordinal 4 -- RebuildModelMatrix, 0x020bafc0, size 0xa0 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bafc0
+// @symbol RebuildModelMatrix
 /* recovered: shared common types */
 /* Rebuild the model matrix from the sign's own position and angles: a
  * translation to position >> 3 (matrix units are position >> 3), a pivot
@@ -1202,7 +1158,7 @@ void func_ov002_020bb060(struct daObjTatefuda_c *self)
  * down, stored into mModel at 0xf0 through the scratch matrix data_020a0e68.
  * Called by DROPPED's update, and by Behavior while the state is THROWN. */
 #pragma cplusplus off
-void func_ov002_020bafc0(struct daObjTatefuda_c* self){
+void RebuildModelMatrix(struct daObjTatefuda_c* self){
     struct Vector3 v;
     Vec3_Asr(&v, (struct Vector3*)&self->mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
@@ -1215,65 +1171,57 @@ void func_ov002_020bafc0(struct daObjTatefuda_c* self){
 #pragma cplusplus on
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov002_020baf80, 0x020baf80, size 0x40 */
+/* ROM ordinal 3 -- _ZN15daObjTatefuda_c18UpdateShadowMatrixEv, 0x020baf80, size 0x40 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020baf80
+// @symbol _ZN15daObjTatefuda_c18UpdateShadowMatrixEv
 /* Rebuild the drop shadow's matrix: a rotation about Y by the sign's angle,
  * with the translation set to the position >> 3 (the matrix's 0x24..0x2f is
- * its translation row; units are position >> 3). Declared with `char *`
- * because include/decl_common.h declares it that way. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020baf80(char *t_)
+ * its translation row; units are position >> 3). */
+void daObjTatefuda_c::UpdateShadowMatrix()
 {
-    daObjTatefuda_c *t = (daObjTatefuda_c *)t_;
-    Matrix4x3_FromRotationY(&t->mShadowMat, t->mAngleY);
-    t->mShadowMat.t.x = t->mPosX >> 3;
-    t->mShadowMat.t.y = t->mPosY >> 3;
-    t->mShadowMat.t.z = t->mPosZ >> 3;
-}
+    Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
+    mShadowMat.t.x = mPosX >> 3;
+    mShadowMat.t.y = mPosY >> 3;
+    mShadowMat.t.z = mPosZ >> 3;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov002_020bae9c, 0x020bae9c, size 0xe4 */
+/* ROM ordinal 2 -- _ZN15daObjTatefuda_c5ResetEv, 0x020bae9c, size 0xe4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020bae9c
+// @symbol _ZN15daObjTatefuda_c5ResetEv
 /* The reset: the sign goes back where it was spawned and hides. Sets mHidden
  * and mRespawnDelay = 0x1e (30 frames), clears the break countdown and both
  * particle handles, restores position and angles from mHomePosX/Y/Z and mHomeAngleX/Y/Z,
  * stands it up again (mPoundsLeft = 2), refreshes the model/collision
  * matrices and the shadow matrix, returns to IDLE, re-initializes the collider
  * (same arguments as InitResources) and clears it, and switches the mesh
- * collider off while it is enabled. Declared with `char *` because
- * include/decl_common.h declares it that way. Called by Kill, by the break
+ * collider off while it is enabled. Called by Kill, by the break
  * countdown and by THROWN's update. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020bae9c(char *c_)
+void daObjTatefuda_c::Reset()
 {
-  daObjTatefuda_c *c = (daObjTatefuda_c *)c_;
-  c->mHidden = 1;
-  c->mRespawnDelay = 0x1e;
-  c->mBreakTimer = 0;
-  c->mParticleHandle1 = 0;
-  c->mParticleHandle2 = 0;
-  c->mPosX = c->mHomePosX;
-  c->mPosY = c->mHomePosY;
-  c->mPosZ = c->mHomePosZ;
-  c->mAngleX = c->mHomeAngleX;
-  c->mAngleY = c->mHomeAngleY;
-  c->mAngleZ = c->mHomeAngleZ;
-  c->mPoundsLeft = 2;
-  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
-  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
-  func_ov002_020baf80(c_);
-  func_ov002_020bbd5c(c, daObjTatefuda_c::STATE_IDLE);
-  c->unk_31c = 0;
-  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&c->mdCcAc_c, c, 0x64000, 0x64000, 0x4800002, 0x41000);
-  if (_ZN4dBgW9IsEnabledEv(&c->mMeshCollider))
+  mHidden = 1;
+  mRespawnDelay = 0x1e;
+  mBreakTimer = 0;
+  mParticleHandle1 = 0;
+  mParticleHandle2 = 0;
+  mPosX = mHomePosX;
+  mPosY = mHomePosY;
+  mPosZ = mHomePosZ;
+  mAngleX = mHomeAngleX;
+  mAngleY = mHomeAngleY;
+  mAngleZ = mHomeAngleZ;
+  mPoundsLeft = 2;
+  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(this);
+  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(this);
+  UpdateShadowMatrix();
+  SetState(STATE_IDLE);
+  unk_31c = 0;
+  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x64000, 0x64000, 0x4800002, 0x41000);
+  if (_ZN4dBgW9IsEnabledEv(&mMeshCollider))
   {
-    _ZN4dBgW7DisableEv(&c->mMeshCollider);
+    _ZN4dBgW7DisableEv(&mMeshCollider);
   }
-  _ZN5dCc_c5ClearEv(&c->mdCcAc_c);
-}
+  _ZN5dCc_c5ClearEv(&mdCcAc_c);
 }
 
 /* -------------------------------------------------------------------------- */

@@ -101,7 +101,6 @@ extern unsigned char data_ov006_0213e4d8[];
 extern void func_ov004_020b2444(int a1, int a2, int num, int a4, int a5, int sel, int idx);
 extern void func_ov004_020af868(void* a0, int a1, int a2, int a3, int a4, void* a5);
 extern void func_ov006_0210c234(unsigned char* o);
-extern int func_0202ec9c(void *fader, int a);
 extern void func_ov004_020ad79c(int a, int b);
 extern void func_ov004_020ae274(void *c);
 extern void func_ov006_0210c180(void *o);
@@ -116,7 +115,7 @@ extern s16 data_ov006_0213e654[][2];
 extern s16 data_ov006_0213e656[][2];
 extern s16 data_ov006_0213e4f8[][2];
 extern s16 data_ov006_0213e4fa[][2];
-extern struct FaderBrightness data_0209f61c;
+extern struct dFdBrightness_c data_0209f61c;
 extern void func_ov004_020af770(void* a0, int a1, int a2, int a3, int a4, int a5, unsigned short a6);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 }

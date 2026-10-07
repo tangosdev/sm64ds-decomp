@@ -9,7 +9,7 @@
     "tu_map CANNOT segment this module: tools/tu_map.py emits `main` as ONE unit covering 0x20049f0..0x20707a4 with 2984 functions and ~70 class labels. There is no tubuild.py create candidate id for dScBoot_c -- all readings below are hand-cut from the cartridge, the same route arm9/Scene took.",
     "contiguous linker run: 0x02005348..0x02005d94, 3 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all three marked `complete`).",
     "TOP EDGE: func_02005324 (0x02005324..0x02005348) ends exactly where the run begins. It is a camera helper (_ZN6Camera25SaveCameraStateBeforeTalkEv + func_0200cb58 on the same object), not a dScBoot_c member; nothing in the run references it. BOTTOM EDGE: _ZN11dCapEnemy_c12Unk_02005d94Ev begins exactly where the run ends and opens dCapEnemy_c's own method run.",
-    "CLASS LABEL: dScBoot_c, the name its configured symbols carry (_ZN9dScBoot_c*). The ROM's RTTI speaks dScBoot_c (_ZTS9dScBoot_c at 0x020914bc); dScBoot_c is the coinage recorded in notes/scene-provenance.md. func_02005348's mangled spelling _ZN9dScBoot_c13func_02005348Ev is coined under S33: member-ness is proven (only caller is Behavior, always on `this`; the body reads the dScBoot_c fields at 0x53/0x54), the original identifier is not.",
+    "CLASS LABEL: dScBoot_c, the name the ROM's own RTTI records (_ZTS9dScBoot_c at 0x020914bc). The tree carried it as the coinage BootScene until the fold renamed it (notes/scene-provenance.md). func_02005348's mangled spelling _ZN9dScBoot_c13func_02005348Ev is coined under S33: member-ness is proven (only caller is Behavior, always on `this`; the body reads the dScBoot_c fields at 0x53/0x54), the original identifier is not.",
     "The destructor pair and the dScBoot_c_classInit factory sit 0x1dc00 bytes away at 0x02023598..0x02023688 as a second TU (arm9/dScBoot_c_classInit): a class can span multiple TUs. func_02023544 (0x02023544..0x02023598), the sound-state reset called by dScene_c and dScDSMT_c, sits between the system-helper run and that TU and belongs to neither -- it is a shared scene helper, not a dScBoot_c member.",
     "module sinit corroboration: module-wide count only (23 sinit(s) / 23 .ctor entries for `main`); does not narrow to this TU."
   ],
@@ -32,14 +32,14 @@
       "symbol": "_ZN9dScBoot_c8BehaviorEv",
       "address": "0x02005418",
       "size": "0x00000640",
-      "legacy_source": "src/_ZN9dScBoot_c8BehaviorEv.cpp",
+      "legacy_source": "src/_ZN9BootScene8BehaviorEv.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN9dScBoot_c13InitResourcesEv",
       "address": "0x02005a58",
       "size": "0x0000033c",
-      "legacy_source": "src/_ZN9dScBoot_c13InitResourcesEv.cpp",
+      "legacy_source": "src/_ZN9BootScene13InitResourcesEv.cpp",
       "ordinal": 2
     }
   ],

@@ -21,11 +21,12 @@
  * FUNCTION ORDER IS THE REVERSE OF THE ROM'S -- mwccarm emits one .text
  * section per function in the reverse of source order.
  *
+ * The seven state functions and the three spawner/fish helpers are
+ * daFish_c members under their address names; ov100's static initializer
+ * copies the handler pointer-to-members into data_ov100_02148a1c, which
+ * Behavior calls through.
+ *
  * Known limits:
- * - The seven state functions keep C linkage and placeholder names. They
- *   are pointer-to-members on the real class (ov100's static initializer
- *   copies them into data_ov100_02148a1c, which Behavior calls through),
- *   but no ROM spelling survives.
  * - ModelAnim::SetAnim stays mangled: it takes Fix12<int> by value
  *   (notes/mwccarm-codegen.md 6az).
  * - SharedFilePtr carries no fields yet, so the loaded file pointer in a
@@ -70,16 +71,6 @@ void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
     ModelAnim *self, BCA_File *file, int flags, int speed,
     unsigned int startFrame);
 
-void func_ov100_02146280(daFish_c *spawner);
-void func_ov100_0214629c(daFish_c *fish, u32 spawnerID);
-int func_ov100_0214639c(daFish_c *spawner);
-void func_ov100_021463b0(daFish_c *self);
-void func_ov100_02146468(daFish_c *self);
-void func_ov100_021464f4(daFish_c *self);
-void func_ov100_02146640(daFish_c *self);
-void func_ov100_021467d4(daFish_c *self);
-int func_ov100_021467e8(daFish_c *self);
-void func_ov100_02146828(daFish_c *self);
 }
 
 enum {
@@ -148,7 +139,7 @@ s32 daFish_c::Behavior()
         (this->*data_ov100_02148a1c[mState].func)();
     } else {
         spawner = (daFish_c *)dActor_c::FindWithID(mSpawnerID);
-        if (spawner == 0 || func_ov100_0214639c(spawner) != 0) {
+        if (spawner == 0 || spawner->func_ov100_0214639c() != 0) {
             MarkForDestruction();
         } else {
             (this->*data_ov100_02148a1c[mState].func)();
@@ -189,15 +180,15 @@ s32 daFish_c::CleanupResources()
     data_ov100_021473b0[mModelIndex]->Release();
     if (mIsSpawner == 0 &&
         (spawner = (daFish_c *)dActor_c::FindWithID(mSpawnerID)) != 0)
-        func_ov100_02146280(spawner);
+        spawner->func_ov100_02146280();
     return 1;
 }
 
-// @symbol func_ov100_02146828
+// @symbol _ZN8daFish_c19func_ov100_02146828Ev
 /* Spawner state 0: wait for the player, then spawn the school. The legacy
    one-function source needed `#pragma opt_loop_invariants off`; the whole
    TU matches without it. */
-extern "C" void func_ov100_02146828(daFish_c *self)
+void daFish_c::func_ov100_02146828()
 {
     Vector3 diff;
     Vector3_16 rot;
@@ -207,208 +198,208 @@ extern "C" void func_ov100_02146828(daFish_c *self)
     unsigned int kind;
     Player *player;
 
-    player = self->ClosestPlayer();
+    player = this->ClosestPlayer();
     if (player == 0) return;
 
-    Vec3_Sub(&diff, (Vector3 *)&self->mPosX, (Vector3 *)&player->mPosX);
+    Vec3_Sub(&diff, (Vector3 *)&this->mPosX, (Vector3 *)&player->mPosX);
     if (Vec3_HorzLen(&diff) >= 0x1388000) return;
 
     if (data_0209caa0[2] & 0x80000) {
         int lim = data_0209f32c - 0x64000;
-        if (self->mSurfaceY > lim) {
-            self->mSurfaceY = lim;
+        if (this->mSurfaceY > lim) {
+            this->mSurfaceY = lim;
         }
     }
 
     {
-        n = self->param1 & 0xf;
-        *(RawVector3_16 *)&rot = *(RawVector3_16 *)&self->mPrevAngleX;
-        self->mNumFish = 0;
+        n = this->param1 & 0xf;
+        *(RawVector3_16 *)&rot = *(RawVector3_16 *)&this->mPrevAngleX;
+        this->mNumFish = 0;
         if (n < 1) n = 1;
     }
-    if (self->mVariant != 0) {
-        kind = (self->mVariant + 2) << 4;
+    if (this->mVariant != 0) {
+        kind = (this->mVariant + 2) << 4;
     } else {
-        kind = self->mModelIndex;
+        kind = this->mModelIndex;
     }
 
     for (i = 0; i < n; i++) {
         int r;
-        if (self->mVariant != 0) {
+        if (this->mVariant != 0) {
             r = RandomIntInternal(&data_0209e650);
-            pos.x = self->mPosX + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
+            pos.x = this->mPosX + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
             r = RandomIntInternal(&data_0209e650);
-            pos.z = self->mPosZ + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
+            pos.z = this->mPosZ + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
         } else {
             r = RandomIntInternal(&data_0209e650);
-            pos.x = self->mPosX + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
+            pos.x = this->mPosX + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
             r = RandomIntInternal(&data_0209e650);
-            pos.z = self->mPosZ + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
+            pos.z = this->mPosZ + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
         }
 
         r = RandomIntInternal(&data_0209e650);
-        pos.y = (self->mSurfaceY - 0x64000) - (((unsigned)r >> 11 & 0xfff) * 0xc8);
+        pos.y = (this->mSurfaceY - 0x64000) - (((unsigned)r >> 11 & 0xfff) * 0xc8);
 
         r = RandomIntInternal(&data_0209e650);
         rot.y = rot.y + (s16)((unsigned)r >> 16);
 
         {
             dActor_c *fish = dActor_c::Spawn(
-                kFishActorID, kind, pos, &rot, self->mAreaId, -1);
+                kFishActorID, kind, pos, &rot, this->mAreaId, -1);
             if (fish != 0) {
-                func_ov100_0214629c((daFish_c *)fish, self->uniqueID);
-                self->mNumFish++;
+                ((daFish_c *)fish)->func_ov100_0214629c(this->uniqueID);
+                this->mNumFish++;
             }
         }
     }
 
-    self->mState = 1;
+    this->mState = 1;
 }
 
-// @symbol func_ov100_021467e8
+// @symbol _ZN8daFish_c19func_ov100_021467e8Ev
 /* Spawner state 1: wait for the player to go beyond 6000.0. */
-extern "C" int func_ov100_021467e8(daFish_c *self)
+int daFish_c::func_ov100_021467e8()
 {
-    if (self->ClosestPlayer()) {
-        int d = self->DistToCPlayer();
+    if (this->ClosestPlayer()) {
+        int d = this->DistToCPlayer();
         if (d < 0x1770000) return d;
     }
-    self->mState = 2;
+    this->mState = 2;
     return 2;
 }
 
-// @symbol func_ov100_021467d4
+// @symbol _ZN8daFish_c19func_ov100_021467d4Ev
 /* Spawner state 2: wait for the last fish to be gone. */
-extern "C" void func_ov100_021467d4(daFish_c *self)
+void daFish_c::func_ov100_021467d4()
 {
-    if (self->mNumFish == 0)
-        self->mState = 0;
+    if (this->mNumFish == 0)
+        this->mState = 0;
 }
 
-// @symbol func_ov100_02146640
+// @symbol _ZN8daFish_c19func_ov100_02146640Ev
 /* Fish state 3: idle, turning to face the player; flee once it is close. */
-extern "C" void func_ov100_02146640(daFish_c *self)
+void daFish_c::func_ov100_02146640()
 {
     Vector3 d;
-    int st = self->mStateTimer;
+    int st = this->mStateTimer;
     if (st == 0) {
         unsigned r = RandomIntInternal(&data_0209e650);
-        self->mHorzSpeed = ((r >> 15) & 0x1fff) + 0x3000;
+        this->mHorzSpeed = ((r >> 15) & 0x1fff) + 0x3000;
         r = RandomIntInternal(&data_0209e650);
-        self->mTriggerDist = ((r % 500) + 0x96) << 0xc;
-        self->mModelAnim.speed = 0x2000;
+        this->mTriggerDist = ((r % 500) + 0x96) << 0xc;
+        this->mModelAnim.speed = 0x2000;
     } else if (st == 0xa) {
-        self->mModelAnim.speed = 0x1000;
+        this->mModelAnim.speed = 0x1000;
     }
 
-    Player *p = self->ClosestPlayer();
+    Player *p = this->ClosestPlayer();
     if (p) {
-        s16 ang = Vec3_HorzAngle((Vector3 *)&self->mPosX, (Vector3 *)&p->mPosX);
-        if (ApproachLinear(self->mPrevAngleY, ang, 0x400) != 0) {
-            if (self->mModelIndex == 0) {
+        s16 ang = Vec3_HorzAngle((Vector3 *)&this->mPosX, (Vector3 *)&p->mPosX);
+        if (ApproachLinear(this->mPrevAngleY, ang, 0x400) != 0) {
+            if (this->mModelIndex == 0) {
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-                    &self->mModelAnim, LoadedBCA(&data_ov100_021489cc), 0, 0x1000, 0);
+                    &this->mModelAnim, LoadedBCA(&data_ov100_021489cc), 0, 0x1000, 0);
             }
         }
-        Vec3_Sub(&d, (Vector3 *)&self->mPosX, (Vector3 *)&p->mPosX);
-        if (Vec3_HorzLen(&d) >= self->mTriggerDist)
+        Vec3_Sub(&d, (Vector3 *)&this->mPosX, (Vector3 *)&p->mPosX);
+        if (Vec3_HorzLen(&d) >= this->mTriggerDist)
             return;
-        self->mStateTimer = -1;
-        self->mState = 4;
+        this->mStateTimer = -1;
+        this->mState = 4;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &self->mModelAnim, LoadedBCA(data_ov100_021473b0[self->mModelIndex]), 0, 0x1000, 0);
+            &this->mModelAnim, LoadedBCA(data_ov100_021473b0[this->mModelIndex]), 0, 0x1000, 0);
     } else {
-        self->mStateTimer = -1;
-        self->mState = 4;
+        this->mStateTimer = -1;
+        this->mState = 4;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &self->mModelAnim, LoadedBCA(data_ov100_021473b0[self->mModelIndex]), 0, 0x1000, 0);
+            &this->mModelAnim, LoadedBCA(data_ov100_021473b0[this->mModelIndex]), 0, 0x1000, 0);
     }
 }
 
-// @symbol func_ov100_021464f4
+// @symbol _ZN8daFish_c19func_ov100_021464f4Ev
 /* Fish state 4: flee from the player until far enough away. */
-extern "C" void func_ov100_021464f4(daFish_c *self)
+void daFish_c::func_ov100_021464f4()
 {
     Player *pl;
     Vector3 v;
-    if (self->mStateTimer == 0) {
-        self->mMaxSpeed = (RandomIntInternal(&data_0209e650) & 0x3fff) + 0xd000;
-        self->mTriggerDist = (((unsigned int)RandomIntInternal(&data_0209e650) % 0x12c) + 0x1f4) << 12;
-        self->mTurnSpeed = (RandomIntInternal(&data_0209e650) & 0x3ff) + 0x400;
-        self->mModelAnim.speed = 0x4000;
-    } else if (self->mStateTimer == 0x14) {
-        self->mModelAnim.speed = 0x1000;
+    if (this->mStateTimer == 0) {
+        this->mMaxSpeed = (RandomIntInternal(&data_0209e650) & 0x3fff) + 0xd000;
+        this->mTriggerDist = (((unsigned int)RandomIntInternal(&data_0209e650) % 0x12c) + 0x1f4) << 12;
+        this->mTurnSpeed = (RandomIntInternal(&data_0209e650) & 0x3ff) + 0x400;
+        this->mModelAnim.speed = 0x4000;
+    } else if (this->mStateTimer == 0x14) {
+        this->mModelAnim.speed = 0x1000;
     }
-    if (self->mHorzSpeed < self->mMaxSpeed) {
-        self->mHorzSpeed += 0x800;
+    if (this->mHorzSpeed < this->mMaxSpeed) {
+        this->mHorzSpeed += 0x800;
     }
-    pl = self->ClosestPlayer();
+    pl = this->ClosestPlayer();
     if (pl == 0) return;
-    ApproachLinear(self->mPrevAngleY,
-        Vec3_HorzAngle((Vector3 *)&pl->mPosX, (Vector3 *)&self->mPosX), self->mTurnSpeed);
-    Vec3_Sub(&v, (Vector3 *)&self->mPosX, (Vector3 *)&pl->mPosX);
-    if (Vec3_HorzLen(&v) <= self->mTriggerDist) return;
-    self->mStateTimer = -1;
-    self->mState = 3;
-    func_0201267c(kFleeSound, (Vector3 *)&self->mCamSpacePosX);
+    ApproachLinear(this->mPrevAngleY,
+        Vec3_HorzAngle((Vector3 *)&pl->mPosX, (Vector3 *)&this->mPosX), this->mTurnSpeed);
+    Vec3_Sub(&v, (Vector3 *)&this->mPosX, (Vector3 *)&pl->mPosX);
+    if (Vec3_HorzLen(&v) <= this->mTriggerDist) return;
+    this->mStateTimer = -1;
+    this->mState = 3;
+    func_0201267c(kFleeSound, (Vector3 *)&this->mCamSpacePosX);
 }
 
-// @symbol func_ov100_02146468
+// @symbol _ZN8daFish_c19func_ov100_02146468Ev
 /* Fish state 5: wander until the timer runs out or it strays too far. */
-extern "C" void func_ov100_02146468(daFish_c *self)
+void daFish_c::func_ov100_02146468()
 {
     Vector3 v;
-    dActor_c *spawner = dActor_c::FindWithID(self->mSpawnerID);
-    Vec3_Sub(&v, (Vector3 *)&self->mPosX, (Vector3 *)&spawner->mPosX);
-    if (DecIfAbove0_Byte(&self->mWanderTimer) != 0) {
+    dActor_c *spawner = dActor_c::FindWithID(this->mSpawnerID);
+    Vec3_Sub(&v, (Vector3 *)&this->mPosX, (Vector3 *)&spawner->mPosX);
+    if (DecIfAbove0_Byte(&this->mWanderTimer) != 0) {
         if (Vec3_HorzLen(&v) < 0xfa000) return;
     }
-    self->mTurnSpeed = 0x800;
-    self->mTargetAngle = self->mPrevAngleY + 0x8000;
-    self->mModelAnim.speed = 0x2000;
-    self->mState = 6;
+    this->mTurnSpeed = 0x800;
+    this->mTargetAngle = this->mPrevAngleY + 0x8000;
+    this->mModelAnim.speed = 0x2000;
+    this->mState = 6;
 }
 
-// @symbol func_ov100_021463b0
+// @symbol _ZN8daFish_c19func_ov100_021463b0Ev
 /* Fish state 6: turn about, then wander again once back in range. */
-extern "C" void func_ov100_021463b0(daFish_c *self)
+void daFish_c::func_ov100_021463b0()
 {
     Vector3 v;
-    if (!ApproachLinear(self->mPrevAngleY, self->mTargetAngle, self->mTurnSpeed))
+    if (!ApproachLinear(this->mPrevAngleY, this->mTargetAngle, this->mTurnSpeed))
         return;
     {
-        dActor_c *spawner = dActor_c::FindWithID(self->mSpawnerID);
-        Vec3_Sub(&v, (Vector3 *)&self->mPosX, (Vector3 *)&spawner->mPosX);
+        dActor_c *spawner = dActor_c::FindWithID(this->mSpawnerID);
+        Vec3_Sub(&v, (Vector3 *)&this->mPosX, (Vector3 *)&spawner->mPosX);
     }
     if (Vec3_HorzLen(&v) >= 0xfa000) return;
-    self->mHorzSpeed = (((unsigned)RandomIntInternal(&data_0209e650) >> 15) & 0x1fff) + 0x2000;
-    self->mModelAnim.speed = 0x1000;
-    self->mWanderTimer = (unsigned char)((((unsigned)RandomIntInternal(&data_0209e650) >> 15) & 0x7f) + 0x3c);
-    self->mState = 5;
+    this->mHorzSpeed = (((unsigned)RandomIntInternal(&data_0209e650) >> 15) & 0x1fff) + 0x2000;
+    this->mModelAnim.speed = 0x1000;
+    this->mWanderTimer = (unsigned char)((((unsigned)RandomIntInternal(&data_0209e650) >> 15) & 0x7f) + 0x3c);
+    this->mState = 5;
 }
 
-// @symbol func_ov100_0214639c
+// @symbol _ZN8daFish_c19func_ov100_0214639cEv
 /* Is the spawner back in its idle wait? Its fish leave when it is. */
-extern "C" int func_ov100_0214639c(daFish_c *spawner)
+int daFish_c::func_ov100_0214639c()
 {
-    return spawner->mState == 2;
+    return this->mState == 2;
 }
 
-// @symbol func_ov100_0214629c
+// @symbol _ZN8daFish_c19func_ov100_0214629cEj
 /* Set up a fish its spawner has just created. */
-extern "C" void func_ov100_0214629c(daFish_c *fish, u32 spawnerID)
+void daFish_c::func_ov100_0214629c(u32 spawnerID)
 {
-    fish->mVertAccel = 0;
-    fish->mTerminalVelocity = -0x1e000;
+    this->mVertAccel = 0;
+    this->mTerminalVelocity = -0x1e000;
     unsigned int r = RandomIntInternal(&data_0209e650);
-    int fc = fish->mModelAnim.GetFrameCount();
-    fish->mModelAnim.currFrame = (unsigned short)(r % (unsigned)fc) << 12;
-    fish->mIsSpawner = 0;
-    fish->mSpawnerID = spawnerID;
-    if (fish->mVariant != 0) {
-        s16 *angle = &fish->mPrevAngleY;
+    int fc = this->mModelAnim.GetFrameCount();
+    this->mModelAnim.currFrame = (unsigned short)(r % (unsigned)fc) << 12;
+    this->mIsSpawner = 0;
+    this->mSpawnerID = spawnerID;
+    if (this->mVariant != 0) {
+        s16 *angle = &this->mPrevAngleY;
         *angle = *angle & 0x8000;
-        unsigned char v = fish->mVariant;
+        unsigned char v = this->mVariant;
         if (v == 3) {
             *angle = *angle + 0x2000;
         } else if (v == 2) {
@@ -416,20 +407,20 @@ extern "C" void func_ov100_0214629c(daFish_c *fish, u32 spawnerID)
         } else {
             *angle = *angle | 0x4000;
         }
-        fish->mHorzSpeed = (((unsigned)RandomIntInternal(&data_0209e650) >> 15) & 0x1fff) + 0x2000;
-        fish->mWanderTimer = (unsigned char)((((unsigned)RandomIntInternal(&data_0209e650) >> 15) & 0x7f) + 0x3c);
-        fish->mState = 5;
+        this->mHorzSpeed = (((unsigned)RandomIntInternal(&data_0209e650) >> 15) & 0x1fff) + 0x2000;
+        this->mWanderTimer = (unsigned char)((((unsigned)RandomIntInternal(&data_0209e650) >> 15) & 0x7f) + 0x3c);
+        this->mState = 5;
     } else {
-        fish->mState = 3;
+        this->mState = 3;
     }
 }
 
-// @symbol func_ov100_02146280
+// @symbol _ZN8daFish_c19func_ov100_02146280Ev
 /* A fish is gone: one fewer for its spawner. */
-extern "C" void func_ov100_02146280(daFish_c *spawner)
+void daFish_c::func_ov100_02146280()
 {
-    if (spawner->mNumFish != 0) {
-        spawner->mNumFish--;
+    if (this->mNumFish != 0) {
+        this->mNumFish--;
     }
 }
 

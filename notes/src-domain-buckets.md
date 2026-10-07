@@ -58,8 +58,8 @@ an empty leaf directory above is not created until a real class needs it.
 ## The `d`-prefix does not mean "actor"
 
 The working assumption had been that the ROM's `d`-prefixed RTTI classes (`daTrs_c`,
-`dBgCh_SphCrr`, ...) are gameplay actors, and mostly they are. `Fader` disproves it as a
-*sufficient* rule: `include/Fader.h:54-58` records that `tools/rtti_extract.py` reads
+`dBgCh_SphCrr`, ...) are gameplay actors, and mostly they are. `dFader_c` disproves it as a
+*sufficient* rule: `include/dFader_c.h:54-58` records that `tools/rtti_extract.py` reads
 `__si_class_type_info` naming the real classes `dFader_c`, `dFdBrightness_c`,
 `dFdColor_c` and `dFdWipe_c` — the same prefix family — but none of them appear in
 `ACTOR_SPAWN_TABLE` (the 391-entry table `notes/actor-naming.md` derives actor names
@@ -71,8 +71,8 @@ source of truth for that). A `d`-prefixed class without a spawn-table entry is a
 ROM-native RTTI class of some *other* kind, classified the same way as anything else in
 this doc: by what it actually does.
 
-`Fader`, by content, is a fixed-point screen-blend interpolator (`AdvanceInterp`,
-`currInterp` in 20.12) plus a wipe-pattern texture loader (`FaderWipe::LoadAndSetFile`) —
+`dFader_c`, by content, is a fixed-point screen-blend interpolator (`AdvanceInterp`,
+`currInterp` in 20.12) plus a wipe-pattern texture loader (`dFdWipe_c::LoadAndSetFile`) —
 a rendering primitive, not gameplay logic and not UI text/menus. That's
 `src/runtime/graphics/fader/`, not `src/game/actors/`.
 
@@ -80,7 +80,7 @@ a rendering primitive, not gameplay logic and not UI text/menus. That's
 
 - `runtime/` — engine primitives independent of any one actor or scene.
   - `memory/`, `math/` — no dedicated `notes/*.md` yet; placeholders only.
-  - `graphics/` — `fader/` is the one populated example (see above). `Fader` was
+  - `graphics/` — `fader/` is the one populated example (see above). `dFader_c` was
     previously under `src/engine/fader/`; remapping it here is migration debt, not done
     by this doc.
   - `audio/` — `_ZN5Sound6Player...` classes exist (`srcpath.py`'s `class_of` docstring

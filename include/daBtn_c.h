@@ -155,6 +155,46 @@ struct daBtn_c : dEnemyBase_c {
     int CleanupResources();
     int InitResources();
     int Render();
+
+    /* data_ov079_02128280's element type: one state handler per mState. */
+    typedef void (daBtn_c::*StateFunc)();
+
+    /* The mState handlers, in table order. */
+    void func_ov079_02125b44();                 /* 0: waiting / the king's introduction */
+    void func_ov079_021258fc();                 /* 1: walking */
+    void func_ov079_021256d4();                 /* 2: the king walking */
+    void func_ov079_021254b4();                 /* 3: leaning in */
+    void func_ov079_0212538c();                 /* 4: falling on its face */
+    void func_ov079_02125240();                 /* 5: slamming down */
+    void func_ov079_02124b08();                 /* 6: lying flat, getting up */
+    void func_ov079_021249f0();                 /* 7: turning back */
+    void func_ov079_021246dc();                 /* 8: defeated */
+    void func_ov079_021246d8();                 /* 9: the king beaten, waiting to go */
+    void func_ov079_02124638();                 /* 10: wobbling from a hit in front */
+    void func_ov079_02124530();                 /* 11: knocked over from behind */
+
+    /* The king shoves the nearest player aside; returns 1 when it did. */
+    int func_ov079_02123bcc();
+    /* Keeps the collision mesh on while an actor of ID 9 stands near the
+       egg-aim point; returns 1 then. */
+    int func_ov079_02123a8c();
+    /* A hit judged by where `other` stood a frame ago against the body's
+       facing: wobbles from the front, knocked over from behind. */
+    void func_ov079_02123804(dActor_c *other);
+    /* Surveys the watched players: nearest overall and nearest in front. */
+    void func_ov079_02123f34();
+    /* Rebuilds the collision mesh's matrix from the model's. */
+    void func_ov079_02124008();
+    /* Rebuilds the drop shadow's matrix and hands it to DropShadowScaleXYZ. */
+    void func_ov079_02124188();
+    /* Player survey helper used by Behavior. */
+    int func_ov079_021243e0(int range);
+    /* Contact while the body lies flat: hits arm mPounded, other touches
+       pay out one coin apiece while mCoinsLeft lasts. */
+    void func_ov079_02125058(dActor_c *other);
+    void func_ov079_02124dec();
+    void func_ov079_02124ed4();
+    void func_ov079_02125504();
 };
 
 #ifndef SM64DS_PLATFORM_PC

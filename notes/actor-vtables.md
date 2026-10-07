@@ -91,9 +91,9 @@ at byte offsets 0x34, 0x38 and 0x50 — slots 13, 14 and 20.
 ## Two traps for whoever writes the headers
 
 **Destructor position.** D1/D0 land at slots **16 and 17**, not 0 and 1. That differs from
-`include/Fader.h`, where the destructor is declared first and takes slots 0/1. Slot index
+`include/dFader_c.h`, where the destructor is declared first and takes slots 0/1. Slot index
 follows declaration order, so `ActorBase` must declare its destructor *after*
-`OnHeapCreated`. Copying the Fader header shape puts it first and shifts sixteen slots.
+`OnHeapCreated`. Copying the dFader_c header shape puts it first and shifts sixteen slots.
 
 **Which vptr store to read.** `Actor`'s constructor contains two. Taking "the" vptr store
 yields ActorDerived's vtable. Read each class's D1 destructor and take its *first* store.

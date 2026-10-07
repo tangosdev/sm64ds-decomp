@@ -72,8 +72,8 @@ typedef struct Player Player;
 
 struct daObjTatefuda_c : dBgActor_c {
     dCcAc_c mdCcAc_c;                /* 0x320 */
-    /* The index of the state this sign is in. func_ov002_020bbd5c stores a new
-       index here and runs that state's ENTER routine; func_ov002_020bbda4 runs
+    /* The index of the state this sign is in. SetState stores a new
+       index here and runs that state's ENTER routine; UpdateState runs
        the current state's UPDATE routine. Both go through the 5-row table
        data_ov002_0210e084, whose rows are {enter, update} pointer-to-member
        pairs copied in by this overlay's static initializer (the ROM words at
@@ -103,7 +103,7 @@ struct daObjTatefuda_c : dBgActor_c {
        Particle::System handles and the break countdown that consumes them. */
     u32 mParticleHandle1;            /* 0x584 */
     u32 mParticleHandle2;            /* 0x588 */
-    u8  mBreakTimer;                 /* 0x58c -- break countdown; func_ov002_020bb42c starts it at 0x3c */
+    u8  mBreakTimer;                 /* 0x58c -- break countdown; CheckGrabOrBreak starts it at 0x3c */
     u8  mTalkStep;                   /* 0x58d -- step of the talk walk-up; 0 on entering TALK */
     u8  mPoundsLeft;                 /* 0x58e */
     u8  mPoundCooldown;              /* 0x58f */
@@ -114,7 +114,7 @@ struct daObjTatefuda_c : dBgActor_c {
        plays sound 0x24 when the flag differs from this and is non-zero. */
     u8  mFlagSeen;               /* 0x594 */
     u8  pad_595[0x3];
-    /* The player this sign is talking to: set by func_ov002_020bb520 from the
+    /* The player this sign is talking to: set by TryStartTalk from the
        actor that hit the collider, and handed to Player::GetTalkState,
        Player::ShowMessage2 and friends as their `this`. */
     Player *mTalkingPlayer;          /* 0x598 */
@@ -166,13 +166,28 @@ struct daObjTatefuda_c : dBgActor_c {
     int  OnAttacked1(dActor_c &other);       /* slot 22 */
     void OnHitByMegaChar(Player &player);    /* slot 27 */
 
+    /* The five-state machine on mState: SetState enters a state (mState =
+       state, then runs the row's enter routine) and UpdateState runs the
+       current state's update routine through data_ov002_0210e084. The rest
+       are the five enter/update pairs plus the two helpers IDLE's update
+       calls, the respawn reset and the shadow-matrix rebuild.
+       AttachToHolder and RebuildModelMatrix are declared in the .cpp and
+       stay free: their Matrix4x3 block copies scalarize under C++, so they
+       parse as C there. */
+    void SetState(int state);
+    void UpdateState();
+    void InitIdle();  void Idle();
+    void InitTalk();  void Talk();
+    void InitCarried();  void Carried();
+    void InitThrown();   void Thrown();
+    void InitDropped();  void Dropped();
+    int  TryStartTalk();
+    void CheckGrabOrBreak();
+    void Reset();
+    void UpdateShadowMatrix();
+
     /* mState values, as the rows of data_ov002_0210e084 read. Each row is
-       {enter, update}; the addresses are the ov002 helpers in the .cpp.
-         row 0  enter 020bba24 (empty)      update 020bb9fc
-         row 1  enter 020bb9f0              update 020bb614
-         row 2  enter 020bbd50              update 020bbcb8
-         row 3  enter 020bbc78              update 020bbb14
-         row 4  enter 020bbac8              update 020bba28 */
+       {enter, update}. */
     enum State {
         STATE_IDLE    = 0,   /* standing; polls for a talk or a grab */
         STATE_TALK    = 1,   /* a player is talking to the sign */

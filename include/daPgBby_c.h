@@ -42,6 +42,15 @@ struct Player;
  * every other slot holds dActor_c's own word.
  */
 struct daPgBby_c : dActor_c {
+    /* One state is an {enter, update} member-pointer pair; the six-entry
+       table lives in overlay .bss, filled by the overlay's static
+       initializer. */
+    typedef int (daPgBby_c::*StateFunc)();
+    struct State {
+        StateFunc enter;
+        StateFunc update;
+    };
+
     /* The player whose Yoshi has the penguin in its mouth; state 5's enter
        step places the penguin in front of it and clears it. */
     Player *mEatingPlayer;          /* 0x0d0 */
@@ -54,7 +63,7 @@ struct daPgBby_c : dActor_c {
     s32 mSpawnPosX;                 /* 0x350 */
     s32 mSpawnPosY;                 /* 0x354 */
     s32 mSpawnPosZ;                 /* 0x358 */
-    void *mState;                   /* 0x35c -- current {enter, update} pair */
+    State *mState;                  /* 0x35c -- current {enter, update} pair */
     Player *mCarrier;               /* 0x360 -- the player holding it */
     /* Lazily filled with FindWithActorID(0x101, 0) and never cleared.
        Actor 0x101 (257) is PENGUIN_MOTHER (notes/ead-debug-name-crossref.md). */
@@ -62,6 +71,29 @@ struct daPgBby_c : dActor_c {
     s32 mStateId;                   /* 0x368 */
     u16 mRespawnTimer;              /* 0x36c */
     u8  mSubState;                  /* 0x36e */
+
+    void func_ov072_02120d04();             /* respawn check */
+    void func_ov072_02120ddc();             /* near the mother: state 3 */
+    void func_ov072_02120e20();             /* a diving player: state 1 */
+    int  func_ov072_02120e50();             /* touched: state 4 or 2 */
+    int  func_ov072_02120f14();             /* step-height guard */
+    void func_ov072_02120fd4(dBgCh_Actr *clsn); /* slope/wall pass */
+    void func_ov072_021210c4();             /* place the model, size the shadow */
+    int  func_ov072_021212c0();             /* state 5, update */
+    int  func_ov072_02121368();             /* state 5, enter */
+    int  func_ov072_021214dc();             /* state 4, update */
+    int  func_ov072_02121640();             /* state 4, enter */
+    int  func_ov072_02121670();             /* state 3, update */
+    int  func_ov072_02121758();             /* state 3, enter */
+    int  func_ov072_021217ac();             /* state 2, update */
+    int  func_ov072_02121890();             /* state 2, enter */
+    int  func_ov072_021218dc();             /* state 1, update */
+    int  func_ov072_02121a28();             /* state 1, enter */
+    int  func_ov072_02121a84();             /* state 0, update */
+    int  func_ov072_02121c94();             /* state 0, enter */
+    void func_ov072_02121cdc();             /* run the update step */
+    void func_ov072_02121d18();             /* run the enter step */
+    void func_ov072_02121d50(int state);    /* switch state, run enter */
 
     virtual s32  InitResources();               /* slot  0 */
     virtual s32  CleanupResources();            /* slot  3 */

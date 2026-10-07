@@ -1,8 +1,8 @@
 {
   "id": "ov085/daC_Jugem_c",
   "module": "ov085",
-  "source": "src/game/actors/d_a_c_jugem.cpp",
-  "promoted_source": "src/game/actors/d_a_c_jugem.cpp",
+  "source": "src/actors/daC_Jugem_c.cpp",
+  "promoted_source": "src/actors/daC_Jugem_c.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -33,175 +33,175 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov085_0212d5dc",
+      "symbol": "_ZN11daC_Jugem_c14StateIntroMainEv",
       "address": "0x0212d5dc",
       "size": "0x00000148",
       "legacy_source": "src/func_ov085_0212d5dc.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov085_0212d724",
+      "symbol": "_ZN11daC_Jugem_c14StateIntroInitEv",
       "address": "0x0212d724",
       "size": "0x00000018",
       "legacy_source": "src/func_ov085_0212d724.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov085_0212d73c",
+      "symbol": "_ZN11daC_Jugem_c17StateApproachMainEv",
       "address": "0x0212d73c",
       "size": "0x000001b0",
       "legacy_source": "src/func_ov085_0212d73c.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov085_0212d8ec",
+      "symbol": "_ZN11daC_Jugem_c17StateApproachInitEv",
       "address": "0x0212d8ec",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov085_0212d8ec.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov085_0212d9b8",
+      "symbol": "_ZN11daC_Jugem_c12StateBobMainEv",
       "address": "0x0212d9b8",
       "size": "0x0000014c",
       "legacy_source": "src/func_ov085_0212d9b8.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov085_0212db04",
+      "symbol": "_ZN11daC_Jugem_c12StateBobInitEv",
       "address": "0x0212db04",
       "size": "0x000000d8",
       "legacy_source": "src/func_ov085_0212db04.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov085_0212dbdc",
+      "symbol": "_ZN11daC_Jugem_c14StateGuideMainEv",
       "address": "0x0212dbdc",
       "size": "0x00000120",
       "legacy_source": "src/func_ov085_0212dbdc.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov085_0212dcfc",
+      "symbol": "_ZN11daC_Jugem_c14StateGuideInitEv",
       "address": "0x0212dcfc",
       "size": "0x00000014",
       "legacy_source": "src/func_ov085_0212dcfc.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov085_0212dd10",
+      "symbol": "_ZN11daC_Jugem_c13StateTurnMainEv",
       "address": "0x0212dd10",
       "size": "0x000000b4",
       "legacy_source": "src/func_ov085_0212dd10.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov085_0212ddc4",
+      "symbol": "_ZN11daC_Jugem_c13StateTurnInitEv",
       "address": "0x0212ddc4",
       "size": "0x00000098",
       "legacy_source": "src/func_ov085_0212ddc4.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov085_0212de5c",
+      "symbol": "_ZN11daC_Jugem_c15StateArriveMainEv",
       "address": "0x0212de5c",
       "size": "0x00000128",
       "legacy_source": "src/func_ov085_0212de5c.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov085_0212df84",
+      "symbol": "_ZN11daC_Jugem_c15StateArriveInitEv",
       "address": "0x0212df84",
       "size": "0x000000f4",
       "legacy_source": "src/func_ov085_0212df84.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov085_0212e078",
+      "symbol": "_ZN11daC_Jugem_c14StateLeaveMainEv",
       "address": "0x0212e078",
       "size": "0x00000108",
       "legacy_source": "src/func_ov085_0212e078.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov085_0212e180",
+      "symbol": "_ZN11daC_Jugem_c14StateLeaveInitEv",
       "address": "0x0212e180",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov085_0212e180.c",
       "ordinal": 15
     },
     {
-      "symbol": "func_ov085_0212e19c",
+      "symbol": "_ZN11daC_Jugem_c13StateTalkMainEv",
       "address": "0x0212e19c",
       "size": "0x00000150",
       "legacy_source": "src/func_ov085_0212e19c.c",
       "ordinal": 16
     },
     {
-      "symbol": "func_ov085_0212e2ec",
+      "symbol": "_ZN11daC_Jugem_c13StateTalkInitEv",
       "address": "0x0212e2ec",
       "size": "0x00000024",
       "legacy_source": "src/func_ov085_0212e2ec.c",
       "ordinal": 17
     },
     {
-      "symbol": "func_ov085_0212e310",
+      "symbol": "_ZN11daC_Jugem_c20StateFlyToPlayerMainEv",
       "address": "0x0212e310",
       "size": "0x00000170",
       "legacy_source": "src/func_ov085_0212e310.cpp",
       "ordinal": 18
     },
     {
-      "symbol": "func_ov085_0212e480",
+      "symbol": "_ZN11daC_Jugem_c20StateFlyToPlayerInitEv",
       "address": "0x0212e480",
       "size": "0x00000024",
       "legacy_source": "src/func_ov085_0212e480.c",
       "ordinal": 19
     },
     {
-      "symbol": "func_ov085_0212e4a4",
+      "symbol": "_ZN11daC_Jugem_c15StateHiddenMainEv",
       "address": "0x0212e4a4",
       "size": "0x000000f8",
       "legacy_source": "src/func_ov085_0212e4a4.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_ov085_0212e59c",
+      "symbol": "_ZN11daC_Jugem_c15StateHiddenInitEv",
       "address": "0x0212e59c",
       "size": "0x00000010",
       "legacy_source": "src/func_ov085_0212e59c.c",
       "ordinal": 21
     },
     {
-      "symbol": "func_ov085_0212e5ac",
+      "symbol": "_ZN11daC_Jugem_c14StateHoverMainEv",
       "address": "0x0212e5ac",
       "size": "0x00000174",
       "legacy_source": "src/func_ov085_0212e5ac.c",
       "ordinal": 22
     },
     {
-      "symbol": "func_ov085_0212e720",
+      "symbol": "_ZN11daC_Jugem_c14StateHoverInitEv",
       "address": "0x0212e720",
       "size": "0x00000008",
       "legacy_source": "src/func_ov085_0212e720.c",
       "ordinal": 23
     },
     {
-      "symbol": "func_ov085_0212e728",
+      "symbol": "_ZN11daC_Jugem_c8SetStateEPMS_FivE",
       "address": "0x0212e728",
       "size": "0x00000050",
       "legacy_source": "src/func_ov085_0212e728.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "func_ov085_0212e778",
+      "symbol": "_ZN11daC_Jugem_c12UpdateShadowEv",
       "address": "0x0212e778",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov085_0212e778.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "func_ov085_0212e858",
+      "symbol": "_ZN11daC_Jugem_c18UpdateShadowPlayerEv",
       "address": "0x0212e858",
       "size": "0x00000238",
       "legacy_source": "src/func_ov085_0212e858.c",
@@ -291,7 +291,8 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MulVec3Mat4x3' differs between the legacy file that used to hold func_ov085_0212e5ac and the one that held func_ov085_0212e858; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. MulVec3Mat4x3 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov085_021307e0' differs between the legacy file that used to hold func_ov085_0212d5dc and the one that held _ZN11daC_Jugem_c8BehaviorEv; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. data_ov085_021307e0 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling, `extern JugemInitPMF data_ov085_021307e0`. This is one of the state objects the class drives itself with, and the two legacy files saw different halves of it: the setter at 0x0212e728 uses the pointer-to-member at offset 0, Behavior the one at offset 8. The reconciled declaration is the union, not either half. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov085_021307d0' differs between the legacy file that used to hold _ZN11daC_Jugem_c8BehaviorEv and the one that held _ZN11daC_Jugem_c13InitResourcesEv; kept the first. RESOLVED: the generated head was discarded rather than kept-with-the-other-commented-out, so nothing is left commented out for review. data_ov085_021307d0 is declared exactly ONCE for the whole TU, in the single reconciled extern \"C\" block at the head of src_tu/actors/daC_Jugem_c.cpp, and every member reaches it through that one spelling, `extern JugemInitPMF data_ov085_021307d0` -- same state-object pair as the other 0x021307xx rows, declared on the union of the two legacy views. Checked per-note against the assembled source: one declaration line, the remaining occurrences are call sites. tubuild verify then reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it in place.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov085_0212d73c and the one that held func_ov085_0212dbdc; kept the first. RESOLVED: neither legacy typedef was kept. Both were dropped in favour of the tree's own spelling -- include/types.h's `typedef signed short s16;`, reached through common.h -- so the assembled TU declares no local integer typedef at all (its only typedefs are the four local shadow types, none of them scalar). Nothing is left commented out for review. tubuild verify reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it."
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov085_0212d73c and the one that held func_ov085_0212dbdc; kept the first. RESOLVED: neither legacy typedef was kept. Both were dropped in favour of the tree's own spelling -- include/types.h's `typedef signed short s16;`, reached through common.h -- so the assembled TU declares no local integer typedef at all (its only typedefs are the four local shadow types, none of them scalar). Nothing is left commented out for review. tubuild verify reports 33/33 byte MATCH, objisolate clean and reloc-destinations clean with it.",
+    "deslop pass (S41): the 25 func_ov085_* helpers are this class's own state machine -- the module sinit writes twelve {enter,run} pointer-to-member records at 0x02130790..0x02130830, SetState installs one and Behavior calls the run slot -- so they are now daC_Jugem_c members under behavior names (StateHover/StateIntro/StateHidden/StateFlyToPlayer/StateTalk/StateLeave plus the variant-1 lead-in StateArrive/StateTurn/StateGuide/StateBob/StateApproach), and the two per-variant shadow updaters are UpdateShadow/UpdateShadowPlayer. mState is typed StateFn*, and unk_2cc/2d0/2dc became mAuxCounter/mVariant/mHidden. Source re-homed to src/actors/daC_Jugem_c.cpp; symbols.txt, delinks, decl_common.h, attribution.json, actor_renames.tsv and the decl-agreement baseline re-keyed. The SharedFilePtr/StateFn/Vector3 extern spellings disagree with the sinit file's S16/void*/S12 on purpose (the C file cannot spell them; this side is byte-proved) -- banked in the baseline."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

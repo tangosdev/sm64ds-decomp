@@ -87,7 +87,7 @@ Invert the rule and it must find the other error: a `D1` of a polymorphic class
 that **no** load-reloc points at cannot be a D1. Run over the same 260 D1
 symbols, that returns exactly **one**:
 ```c
-    _ZN5ColorD1Ev   0x02017574   arm9   ->  _ZN10FaderColorD2Ev
+    _ZN5ColorD1Ev   0x02017574   arm9   ->  _ZN10dFdColor_cD2Ev
 ```
 which was **independently** proven in the same session by a completely unrelated
 argument — it writes `data_0208eb2c`, which is `dFdColor_c`'s vtable, and six
@@ -106,7 +106,7 @@ list with ordinary destructors.
 picks pilots from the per-class backlog. Both are affected:
 
 - **The count is wrong in both directions.** 17 named D2s minus 7 impostors is
-  10; plus the Fader family's three genuine D2s that carry no D2 name at all
+  10; plus the dFader_c family's three genuine D2s that carry no D2 name at all
   (`func_02017838`, `func_020177c4`, and `_ZN5ColorD1Ev`). The category was never
   measuring what it claimed.
 - **Five of the plan's six pilot classes are affected** — Scene, dScStage_c, Player,
@@ -196,7 +196,7 @@ It reproduces both of `include/dBgW.h`'s hand-derived claims exactly —
 `func_02039658` is `MeshColliderBase`'s D2, `func_020397fc` is `MeshCollider`'s —
 and the tree-name join gets `dBgW_Kc` → `MeshCollider` on its own. Nine more D2s
 follow that nothing in the tree had named: `dBgCh`, `dBgPi`, `dM3dGSph`,
-`dBgW_KcMbg`, `dEnemyBase_c`, `dCapEnemy_c`, `dScMgBase_c`, and the Fader family's
+`dBgW_KcMbg`, `dEnemyBase_c`, `dCapEnemy_c`, `dScMgBase_c`, and the dFader_c family's
 `func_02017838` / `func_020177c4`.
 
 ### A C2 has the same signature as a D2
@@ -230,8 +230,8 @@ out, because **both** ways of spelling a named D2 fail a gate:
 
 | spelling | what fails |
 |---|---|
-| `_ZN5FaderD2Ev` hand-spelt in a `.c` | the langmode ratchet: `unmigrated_total` 1274 → 1280. It is *right* — a hand-spelled mangled symbol is exactly the backlog `plan-cpp-language-mode.md` exists to shrink. Re-banking a **risen** count is the fake progress Phase 0 was built to make unrewarding. |
-| a real `Fader::~Fader() {}` | `eligible.py`: **"extra sections: .data"**, and enrolled falls 10699 → 10695. |
+| `_ZN8dFader_cD2Ev` hand-spelt in a `.c` | the langmode ratchet: `unmigrated_total` 1274 → 1280. It is *right* — a hand-spelled mangled symbol is exactly the backlog `plan-cpp-language-mode.md` exists to shrink. Re-banking a **risen** count is the fake progress Phase 0 was built to make unrewarding. |
+| a real `dFader_c::~dFader_c() {}` | `eligible.py`: **"extra sections: .data"**, and enrolled falls 10699 → 10695. |
 
 The second is the interesting one, and it has **two independent causes**. An earlier
 revision of this section named only the first and drew the wrong conclusion from it.
@@ -239,7 +239,7 @@ revision of this section named only the first and drew the wrong conclusion from
 **Cause 1 — the key function.** Defining a class's key function (the first non-inline
 virtual declared) makes mwccarm emit the vtable group into that TU:
 ```cpp
-    Fader::~Fader() {}   ->  .data x3 + .text x3,  defines _ZTV5Fader _ZTI5Fader _ZTS5Fader
+    dFader_c::~dFader_c() {}   ->  .data x3 + .text x3,  defines _ZTV8dFader_c _ZTI8dFader_c _ZTS8dFader_c
 ```
 **Cause 2 — one definition, three functions.** A `~Class()` definition always emits
 **D2, D0 and D1**, vtable or not, so the object has three `.text` sections.
@@ -254,7 +254,7 @@ So the two causes are separable, and **neither alone is the whole story**:
 
 | | cause 1 (vtable) | cause 2 (3 functions) |
 |---|---|---|
-| dtor declared first (`Fader`) | yes | yes |
+| dtor declared first (`dFader_c`) | yes | yes |
 | dtor declared last (`ActorBase`) | **no** | yes |
 
 Tree-wide today: **85** files are rejected with `extra sections: .data` and **13** with
@@ -281,18 +281,18 @@ schedules **463 destructor files** that this convention makes unmigratable — a
 which nominates pilots on the assumption that destructors are the tractable part.
 
 Confirmed empirically on `2004/b56` (dActor_c.h cites CW 1.2), by compiling three probes
-against the real `Fader.h`:
+against the real `dFader_c.h`:
 ```cpp
-    Fader::~Fader() {}          (declared first)  -> emits _ZTV5Fader _ZTI5Fader _ZTS5Fader
-    void Fader::AdvanceFade(){} (not first)       -> emits nothing
-    int Fader::IsAtEnd(){...}   (not first)       -> emits nothing
+    dFader_c::~dFader_c() {}          (declared first)  -> emits _ZTV8dFader_c _ZTI8dFader_c _ZTS8dFader_c
+    void dFader_c::AdvanceFade(){} (not first)       -> emits nothing
+    int dFader_c::IsAtEnd(){...}   (not first)       -> emits nothing
 ```
 **Phase 3 is therefore unaffected** — every non-key virtual can be migrated to a real
 method today. It is Phase 2 specifically that is blocked, which inverts the plan's
 stated ordering.
 
 **This is why `D2` reads 0 migrated, and it is not a codegen problem.** The bytes are
-perfect: `Fader::~Fader() {}` reproduces D2 at `0x02017838` *and* D1 at `0x0201786c`,
+perfect: `dFader_c::~dFader_c() {}` reproduces D2 at `0x02017838` *and* D1 at `0x0201786c`,
 both exact. What blocks it is how the object is *shaped*, not what it computes.
 
 ### The 72 "proven" D1s are not landed, and never were

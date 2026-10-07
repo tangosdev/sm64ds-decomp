@@ -1,0 +1,554 @@
+{
+  "id": "arm9/dWipe_c",
+  "module": "arm9",
+  "source": "src/engine/fader/dWipe_c.cpp",
+  "promoted_source": "src/engine/fader/dWipe_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "NOT FROM tu_map. tools/tu_map.py reports the arm9 `main` module as UNDER-SEGMENTED: one unit 0x20049f0..0x20707a4 carrying ~3000 functions and dozens of class labels, so there is no tu_map boundary or `tubuild.py create` candidate id here; every line below is hand-derived and independently checkable.",
+    "contiguous linker run 0x0202ec9c..0x0202fc98: the twenty-one delinks entries tile the span exactly with no hole and no foreign function inside (config/arm9/delinks.txt, config/arm9/symbols.txt).",
+    "class-label homogeneity: every named symbol in the run is a member of dWipe_c : dFdColor_c (the screen-wipe leaf of the fade hierarchy in include/dWipe_c.h), and the eight remaining `func_0202*` entries are the TU's statics -- the two table builders, the HBlank IRQ tail, the singleton reset/install helpers -- all called only from inside the run.",
+    "ROM evidence says one object: the emitted vtable lands at 0x020926f0 (_ZTV7dWipe_c), its typeinfo 0x020926dc names base _ZTI10dFdColor_c, and the ctor 0x0202fc40 writes the dFader_c -> dFdBrightness_c -> dFdColor_c -> dWipe_c vptr chain in one body -- the same adjacency this run shows in .text.",
+    "neighbour below: _ZN8dScene_c22ResetHardwareRegistersEv at 0x0202e7d4..0x0202ec9c (a different class). Neighbour above: _ZN4ViewD1Ev at 0x0202fc98. The run is bracketed rather than cut out of a uniform stretch."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0202ec9c",
+      "end": "0x0202fc98"
+    },
+    {
+      "name": ".data",
+      "start": "0x020926d0",
+      "end": "0x02092718"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN7dWipe_c13func_0202ec9cEi",
+      "address": "0x0202ec9c",
+      "size": "0x00000060",
+      "legacy_source": "src/func_0202ec9c.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN7dWipe_c10SetToStartEv",
+      "address": "0x0202ecfc",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN7dWipe_c10SetToStartEv.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN7dWipe_c8SetToEndEv",
+      "address": "0x0202ed08",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN7dWipe_c8SetToEndEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN7dWipe_c13func_0202ed14Ev",
+      "address": "0x0202ed14",
+      "size": "0x00000034",
+      "legacy_source": "src/func_0202ed14.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_0202ed48",
+      "address": "0x0202ed48",
+      "size": "0x00000034",
+      "legacy_source": "src/func_0202ed48.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN7dWipe_c20IsBetweenStartAndEndEv",
+      "address": "0x0202ed7c",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN7dWipe_c20IsBetweenStartAndEndEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN7dWipe_c7IsAtEndEv",
+      "address": "0x0202eddc",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN7dWipe_c7IsAtEndEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN7dWipe_c9IsAtStartEv",
+      "address": "0x0202ee38",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN7dWipe_c9IsAtStartEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN7dWipe_c13func_0202ee94Ev",
+      "address": "0x0202ee94",
+      "size": "0x0000010c",
+      "legacy_source": "src/func_0202ee94.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN7dWipe_c13func_0202efa0Ev",
+      "address": "0x0202efa0",
+      "size": "0x000002f0",
+      "legacy_source": "src/func_0202efa0.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN7dWipe_c13func_0202f290Ev",
+      "address": "0x0202f290",
+      "size": "0x00000034",
+      "legacy_source": "src/func_0202f290.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_0202f2c4",
+      "address": "0x0202f2c4",
+      "size": "0x000000e0",
+      "legacy_source": "src/func_0202f2c4.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_0202f3a4",
+      "address": "0x0202f3a4",
+      "size": "0x00000084",
+      "legacy_source": "src/func_0202f3a4.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN7dWipe_c11AdvanceFadeEv",
+      "address": "0x0202f428",
+      "size": "0x00000164",
+      "legacy_source": "src/_ZN7dWipe_c11AdvanceFadeEv.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN7dWipe_c13func_0202f58cEv",
+      "address": "0x0202f58c",
+      "size": "0x0000017c",
+      "legacy_source": "src/func_0202f58c.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN7dWipe_c14SetForwardTimeEj",
+      "address": "0x0202f708",
+      "size": "0x00000220",
+      "legacy_source": "src/_ZN7dWipe_c14SetForwardTimeEj.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN7dWipe_c15SetBackwardTimeEj",
+      "address": "0x0202f928",
+      "size": "0x00000208",
+      "legacy_source": "src/_ZN7dWipe_c15SetBackwardTimeEj.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN7dWipe_c13func_0202fb30Ev",
+      "address": "0x0202fb30",
+      "size": "0x00000098",
+      "legacy_source": "src/func_0202fb30.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN7dWipe_cD0Ev",
+      "address": "0x0202fbc8",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN7dWipe_cD0Ev.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN7dWipe_cD1Ev",
+      "address": "0x0202fc08",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN7dWipe_cD1Ev.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN7dWipe_cC1Ev",
+      "address": "0x0202fc40",
+      "size": "0x00000058",
+      "legacy_source": "src/func_0202fc40.c",
+      "ordinal": 20
+    }
+  ],
+  "data": [
+    {
+      "symbol": "_ZTS7dWipe_c",
+      "address": "0x020926d0",
+      "size": "0x9",
+      "evidence": "ROM type-name string '7dWipe_c'; emitted .data section (0x9 bytes, align 1) lands at its anchor"
+    },
+    {
+      "symbol": "_ZTI7dWipe_c",
+      "address": "0x020926dc",
+      "size": "0xc",
+      "evidence": "ROM single-inheritance typeinfo: si_class_type_info vptr+8, name 0x020926d0, base _ZTI10dFdColor_c 0x0208ea00; emitted section's three ABS32 relocs reproduce it exactly"
+    },
+    {
+      "symbol": "_ZTV7dWipe_c",
+      "address": "0x020926f0",
+      "emitted_storage_address": "0x020926e8",
+      "address_point_bias": "0x8",
+      "size": "0x30",
+      "evidence": "two-word ABI preamble (offset-to-top 0, typeinfo 0x020926dc) + ten slots D1 D0 AdvanceFade SetBackwardTime SetForwardTime IsAtStart IsAtEnd IsBetweenStartAndEnd SetToEnd SetToStart; public address point 0x020926f0"
+    }
+  ],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7dWipe_cC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant of the complete-object ctor _ZN7dWipe_cC1Ev (0x0202fc40): mwcc emits both from one out-of-line ctor, the retail link kept only C1 and no configured symbol names this copy."
+    },
+    {
+      "symbol": "_ZN7dWipe_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant of _ZN7dWipe_cD1Ev (0x0202fc08): one out-of-line dtor definition emits both, the cartridge keeps only D1/D0, so this copy is homeless."
+    },
+    {
+      "symbol": "_ZTI8dFader_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e9e0",
+      "reason": "compiler-emitted RTTI copy of the base; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTS8dFader_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e9e8",
+      "reason": "compiler-emitted type-name string; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTI15dFdBrightness_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208ea24",
+      "reason": "compiler-emitted RTTI copy of the base; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTS15dFdBrightness_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208ea50",
+      "reason": "compiler-emitted type-name string; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTI10dFdColor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208ea00",
+      "reason": "compiler-emitted RTTI copy of the base; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTS10dFdColor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208ea40",
+      "reason": "compiler-emitted type-name string; canonical bytes verified, contribution is gap data"
+    }
+  ],
+  "notes": [
+    "Hand-assembled, not generated by `tubuild.py create`: tu_map cannot segment arm9/main, so there was no candidate id to create from. The schema follows the arm9/dFader_c entry, which took the same route.",
+    "func_0202fc40 is the class's real constructor: it writes the whole dFader_c -> dFdBrightness_c -> dFdColor_c -> dWipe_c vptr chain and the inherited field stores, i.e. the complete-object ctor with every base sub-object ctor inlined. dWipe_c stores currInterp = 0 where the siblings store 0x1000, so the inherited ctors take a `Fix12i initial = 0x1000` parameter and dWipe_c passes 0. It is folded as the real member `dWipe_c::dWipe_c()`, the symbols.txt row is renamed to _ZN7dWipe_cC1Ev, and the sole caller src/__sinit_02074f80.c is respelled to the mangled name in the same change.",
+    "func_0202ec9c is the TU's wipe-arm entry (the singleton's `this` arrives in r0); the five scene callers' file-local externs are respelled to _ZN7dWipe_c13func_0202ec9cEi. The remaining `func_0202*` helpers that take `this` are folded as members; func_0202ed48 / func_0202f2c4 / func_0202f3a4 stay free functions -- no `this` in r0 -- and keep their linker names.",
+    "_ZN7dWipe_c15SetBackwardTimeEj keeps the measured ABI seam documented in notes/scene-provenance.md: the header carries `virtual int SetBackwardTime(u32)` for the vtable spelling, while the definition is the two-parameter free-form body -- the caller passes an extra argument in r2 that the body forwards to dFdColor_c::SetBackwardTime.",
+    "#pragma opt_strength_reduction off covers the tail of the file for the two table builders: mwccarm resolves the option at end of file, so a `reset` after the pair re-enables it for the functions it precedes (measured). Every function after the pragma emits identically under either setting, which the 21/21 comparison covers."
+  ],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x020926dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x020926e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS7dWipe_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020926d0"
+    },
+    {
+      "section": ".data",
+      "source": "0x020926e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI10dFdColor_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208ea00"
+    },
+    {
+      "section": ".data",
+      "source": "0x020926ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI7dWipe_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020926dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x020926f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7dWipe_cD1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202fc08"
+    },
+    {
+      "section": ".data",
+      "source": "0x020926f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7dWipe_cD0Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202fbc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x020926f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7dWipe_c11AdvanceFadeEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202f428"
+    },
+    {
+      "section": ".data",
+      "source": "0x020926fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7dWipe_c15SetBackwardTimeEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202f928"
+    },
+    {
+      "section": ".data",
+      "source": "0x02092700",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7dWipe_c14SetForwardTimeEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202f708"
+    },
+    {
+      "section": ".data",
+      "source": "0x02092704",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7dWipe_c9IsAtStartEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202ee38"
+    },
+    {
+      "section": ".data",
+      "source": "0x02092708",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7dWipe_c7IsAtEndEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202eddc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0209270c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7dWipe_c20IsBetweenStartAndEndEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202ed7c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02092710",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7dWipe_c8SetToEndEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202ed08"
+    },
+    {
+      "section": ".data",
+      "source": "0x02092714",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7dWipe_c10SetToStartEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202ecfc"
+    }
+  ],
+  "production_mode": "intact-object",
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-dWipe_c/dWipe_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 21,
+    "functions_declared": 21,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7dWipe_cC2Ev",
+        "_ZN7dWipe_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN7dWipe_cC2Ev",
+        "_ZN7dWipe_cD2Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        8,
+        9,
+        10,
+        11,
+        12,
+        15,
+        16,
+        53,
+        54,
+        61,
+        62
+      ],
+      "data": [
+        "_ZTI8dFader_c",
+        "_ZTS8dFader_c",
+        "_ZTI15dFdBrightness_c",
+        "_ZTS15dFdBrightness_c",
+        "_ZTI10dFdColor_c",
+        "_ZTS10dFdColor_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dFdColor_c",
+        "_ZTI15dFdBrightness_c",
+        "_ZTI8dFader_c",
+        "_ZTS10dFdColor_c",
+        "_ZTS15dFdBrightness_c",
+        "_ZTS8dFader_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/arm9-dWipe_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0202ec9c",
+        "end": "0x0202fc98",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0202ec9c",
+          "end": "0x0202fc98",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x020926d0",
+          "end": "0x02092718",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 24
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              7,
+              13,
+              17
+            ],
+            "desired": [
+              7,
+              13,
+              17
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}

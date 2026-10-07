@@ -45,11 +45,10 @@
 
 struct daSnowball_c;
 
-/* A two-entry state record: the pair of pointers-to-member the static
- * initialiser __sinit_ov081_021284b4 copies into data_ov081_02128eb4 (from the
- * two 8-byte words at data_ov081_02128a6c and data_ov081_02128a74, whose
- * first words are 0x021261b8 and 0x021260fc in the ROM).
- * `enter` runs once when the record is installed, `update` once per Behavior. */
+/* A two-entry state record. daSnowball_c.cpp defines data_ov081_02128eb4
+ * with these two methods; the compiler copies the descriptors in at overlay
+ * load. `enter` runs once when the record is installed, `update` once per
+ * Behavior. */
 typedef int (daSnowball_c::*daSnowball_StateFn)();
 struct daSnowball_StateRec {
     daSnowball_StateFn enter;   /* +0x00 -- func_ov081_021261b8 */
@@ -81,6 +80,10 @@ struct daSnowball_c : dEnemyBase_c {
     int Render();
     int CleanupResources();
     void OnPendingDestroy();
+
+    /* State-record targets. The address is the method name. */
+    int func_ov081_021261b8();
+    int func_ov081_021260fc();
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -139,6 +139,30 @@ struct daYegg_c : dEnemyBase_c {
     virtual ~daYegg_c();
 
     /* methods */
+    int func_ov002_020ec610();
+    int func_ov002_020ec628();
+    unsigned char func_ov002_020ec640();
+    int func_ov002_020ec654();
+    void func_ov002_020ec670(int arg);
+    void func_ov002_020ec728();
+    void func_ov002_020ec80c(void *b, int count, int sl, short arg5);
+    void func_ov002_020ec938();
+    void func_ov002_020ec978();
+    void func_ov002_020ec9c4();
+    void func_ov002_020ecad4();
+    void func_ov002_020ecb0c();
+    void func_ov002_020ecd18();
+    void func_ov002_020ecf94();
+    void func_ov002_020ecfc8();
+    void func_ov002_020ed0d4();
+    void func_ov002_020ed5b0();
+    void func_ov002_020ed684();
+    int func_ov002_020ed6cc();
+    void func_ov002_020ed738();
+    void func_ov002_020ed7f8();
+    void func_ov002_020ed998();
+    int func_ov002_020edb3c(int a1, int best);
+    int func_ov002_020eddc4();
     int Behavior();
     int CleanupResources();
     int InitResources();

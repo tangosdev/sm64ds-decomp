@@ -473,7 +473,7 @@ asm transcription, or absent.
    list; expect member-ctor synthesis work). Shape-check before attempting:
    if the disassembly starts `operator new` → null-check, it is a factory
    (§5c/§5d) and no source form exists. `dCamera_c` is settled that way;
-   FaderWipe C1 0x02017480 has no source at all and needs the same check
+   dFdWipe_c C1 0x02017480 has no source at all and needs the same check
    before anyone promotes its header.
 5. **Anim/model family**: `ModelAnimC1/C2Ev` 0x02016958/98 ·
    `ModelAnim2C1Ev` 0x020163a0 · `BlendModelAnimC1Ev` 0x020166d4.

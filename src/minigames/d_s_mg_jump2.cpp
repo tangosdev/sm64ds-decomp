@@ -7,9 +7,18 @@
  * `#pragma opt_propagation off`; it is not needed, and carried here it
  * would apply to every function in the file.
  *
- * deslop
- * Leftover: the func_ov006 helpers and data homes keep linker names;
- *   naming belongs at their definitions.
+ * comment leftovers:
+ *   - func_ov006_020ef0d4, ..ef05c, ..eeff0, ..eef90, ..eef58 and ..ef2b8
+ *     stay free: none takes the object (they walk the element list globals
+ *     or program the light registers), so a receiver exists only to be
+ *     passed, not used. func_ov006_020eed64 is the shared empty element
+ *     destructor -- dScMgTrampoline2_c's array cleanup calls it too --
+ *     and is registered through the C __cxa_vec_ctor boundary.
+ *   - pad_5004 stays bytes: the state functions copy the whole eight-byte
+ *     PMF record into it with a struct assign, and Behavior calls through
+ *     it. See the header's state-machine note.
+ *   - The func_ov006_020cNNN and func_ov004_* externs are foreign callees
+ *     (the board objects' TUs and the minigame base), not this TU's own.
  */
 
 #include "dScMgJump2_c.h"
@@ -19,8 +28,13 @@
 #include "decl_common.h"
 #include "Particle__System.h"
 
-/* The list link at the head of each Elem. */
-struct Node { struct Node* next; };
+/* The list link at the head of each Elem. Its two methods link `this` into
+ * and back out of the live list at data_ov006_021421c0. */
+struct Node {
+    struct Node* next;
+    void func_ov006_020eef40();   /* push */
+    void func_ov006_020eeef4();   /* remove */
+};
 
 /* The 0x24-byte entries of mArray3, read back from what the functions below
  * do with them. Local because nothing names the type yet. */
@@ -33,6 +47,10 @@ struct Elem {
     short sprite;           /* 0x1e */
     short active;           /* 0x20 */
     short _22;
+
+    void func_ov006_020eee3c(int startX, int startY, int spriteId);  /* spawn */
+    void func_ov006_020eedc8();                                      /* update */
+    void func_ov006_020eed68();                                      /* draw   */
 };
 
 /* Whole-matrix copies go through this so they stay one block move. */
@@ -77,14 +95,10 @@ struct Base {
 };
 
 extern "C" {
-extern void func_ov006_020eeef4(struct Node* node);
 extern void func_0203d630(int* p, int m);
 extern struct Node* data_ov006_021421c0;
-extern void func_ov006_020eed68(char *c);
-extern void func_ov006_020eedc8(char *p);
 extern int data_ov006_021421bc;
 extern struct Elem *data_ov006_021421b0;
-extern void func_ov006_020eee3c(int *thiz, int a1, int a2, int a3);
 extern void *data_ov006_021421b8;
 void func_ov004_020ad90c(void);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -106,17 +120,19 @@ extern struct G2 data_ov006_0213cc74;
 extern struct G2 data_ov006_0213cc9c;
 extern void func_ov006_020c4148(void);
 extern void func_ov006_020c6f8c(int a);
-extern void func_ov006_020ef580(char *self);
 extern int data_ov006_02140304;
 extern int data_ov006_02140328;
 extern int data_ov006_02140428;
 extern struct G2 data_ov006_0213cc84;
 extern void func_ov006_020c7490(void);
-extern void func_ov006_020ef768(char *self);
+extern struct G2 data_ov006_0213cc8c;
 extern struct G2 data_ov006_0213cc94;
 extern int LoadFile(int handle);
 extern void DecompressLZ16(int src, int dst);
 extern void Camera_UpdateMatrices(void *cam);
+extern void func_ov006_020c7388(void);
+extern void func_ov006_020c40e8(void);
+extern int func_ov004_020b04c0(void);
 extern int func_ov006_020c4684(void *ptr, int n);
 extern int func_ov006_020c7574(void *base, int count);
 extern u8 data_0209d45c;
@@ -187,7 +203,7 @@ void dScMgJump2_c::OnYoshiTryEat(int /* arg */)
   data_ov006_02140328 = 3;
   func_ov006_020c44b4(0, 0);
   func_ov006_020eeff0();
-  func_ov006_020ef7f8((char *)this);
+  func_ov006_020ef7f8();
 }
 
 // @symbol _ZN12dScMgJump2_c13OnTurnIntoEggEi
@@ -262,60 +278,55 @@ s32 dScMgJump2_c::InitResources()
     return 1;
 }
 
-/* The state functions below are unnamed in symbols.txt and take the object
- * as raw bytes, because dScMgJump2_c.h only has placeholders from 0x5a64 to
- * 0x5a78. What the code shows: 0x5004 is the current state (see Behavior),
- * 0x5a64 (unk_5a64) accumulates 0x5a68 >> 12 each tick and wraps at 0x1000,
- * and 0x5a74 is an s16 countdown. Naming those fields is what unblocks typed
- * access here.
+/* The state functions: five are the exec targets the PMF records at
+ * data_ov006_0213cc74..9c point into (see the header's state-machine note);
+ * the other three are the transitions that install a record and arm
+ * unk_5a74. unk_5a64 accumulates unk_5a68 >> 12 each tick and wraps at
+ * 0x1000.
  *
  * This one arms the countdown and installs the next state. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020ef7f8(char* raw){
-  *(short*)(raw+0x5a74) = 0x78;
-  *(int*)(raw+0x5a64) = 0;
-  *(int*)(raw+0x5a68) = 0x4000;
-  *(struct G2*)(raw+0x5004) = data_ov006_0213cc94;
-}
+// @symbol _ZN12dScMgJump2_c19func_ov006_020ef7f8Ev
+void dScMgJump2_c::func_ov006_020ef7f8(){
+  unk_5a74 = 0x78;
+  unk_5a64 = 0;
+  unk_5a68 = 0x4000;
+  *(struct G2*)pad_5004 = data_ov006_0213cc94;
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020ef794(char *raw)
+// @symbol _ZN12dScMgJump2_c19func_ov006_020ef794Ev
+void dScMgJump2_c::func_ov006_020ef794()
 {
-    s16 *countdown = (s16 *)(raw + 0x5a74);
+    s16 *countdown = &unk_5a74;
     *countdown = *countdown - 1;
-    if (*(s16 *)(raw + 0x5a74) == 0) {
-        dScMgJump2_c *scene = (dScMgJump2_c *)raw;
-        if (scene->mPromptBlinkCount == 0) {
-            scene->mPromptEnabled = 1;
-            scene->mPromptBlinkCount = 1;
-            scene->mPromptBlinkTimer = 0;
+    if (unk_5a74 == 0) {
+        if (mPromptBlinkCount == 0) {
+            mPromptEnabled = 1;
+            mPromptBlinkCount = 1;
+            mPromptBlinkTimer = 0;
         }
         func_ov006_020c7490();
-        func_ov006_020ef768(raw);
+        func_ov006_020ef768();
     }
     func_ov006_020c42bc();
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020ef768(char *raw)
+// @symbol _ZN12dScMgJump2_c19func_ov006_020ef768Ev
+void dScMgJump2_c::func_ov006_020ef768()
 {
-    *(short *)(raw + 0x5a74) = 0xf0;
-    *(struct G2 *)(raw + 0x5004) = data_ov006_0213cc84;
-}
+    unk_5a74 = 0xf0;
+    *(struct G2 *)pad_5004 = data_ov006_0213cc84;
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020ef5ac(char *raw)
+// @symbol _ZN12dScMgJump2_c19func_ov006_020ef5acEv
+void dScMgJump2_c::func_ov006_020ef5ac()
 {
     s16 done;
     int prevScore = data_ov006_02140308;
-    int *acc = (int *)(raw + 0x5a64);
+    int *acc = &unk_5a64;
     int mode;
 
-    *acc += *(int *)(raw + 0x5a68) >> 12;
-    if (*(int *)(raw + 0x5a64) > 0x1000)
+    *acc += unk_5a68 >> 12;
+    if (unk_5a64 > 0x1000)
         *acc -= 0x1000;
 
     done = 0;
@@ -326,14 +337,14 @@ void func_ov006_020ef5ac(char *raw)
         break;
     case 1:
         {
-            int rc = ApproachLinear2(*(s16 *)(raw + 0x5a74), done, 2);
+            int rc = ApproachLinear2(unk_5a74, done, 2);
             if (rc)
                 done = 1;
         }
         break;
     default:
         {
-            int rc = ApproachLinear2(*(s16 *)(raw + 0x5a74), done, 1);
+            int rc = ApproachLinear2(unk_5a74, done, 1);
             if (rc)
                 done = 1;
         }
@@ -344,11 +355,11 @@ void func_ov006_020ef5ac(char *raw)
         int value;
         s16 countdown;
         func_ov006_020c4148();
-        *(s16 *)(raw + 0x5a74) = 0xf0 - data_ov006_02140308 * 6;
-        countdown = *(s16 *)(raw + 0x5a74);
+        unk_5a74 = 0xf0 - data_ov006_02140308 * 6;
+        countdown = unk_5a74;
         if (countdown < 0x3c)
             countdown = 0x3c;
-        *(s16 *)(raw + 0x5a74) = countdown;
+        unk_5a74 = countdown;
         value = (data_ov006_02140308 << 4) + 0x1600;
         if (value > 0x2200)
             value = 0x2200;
@@ -362,7 +373,7 @@ void func_ov006_020ef5ac(char *raw)
         switch (data_ov006_02140308) {
         case 3:
             data_ov006_02140328 = 4;
-            ((dScMgJump2_c *)raw)->mPromptEnabled = 0;
+            mPromptEnabled = 0;
             break;
         case 0xa:
             data_ov006_02140328 = 5;
@@ -376,65 +387,55 @@ void func_ov006_020ef5ac(char *raw)
 
     if (data_ov006_02140428 != 0)
         return;
-    func_ov006_020ef580(raw);
-}
-}
-
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020ef580(char *raw)
-{
-    *(short *)(raw + 0x5a74) = 0x20;
-    *(struct G2 *)(raw + 0x5004) = data_ov006_0213cc9c;
-}
+    func_ov006_020ef580();
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020c42bc(void);
-void func_ov006_020c712c(void);
-void func_ov006_020c7388(void);
-void func_ov006_020c40e8(void);
-extern struct G2 data_ov006_0213cc8c;
-void func_ov006_020ef4ec(char *raw)
+// @symbol _ZN12dScMgJump2_c19func_ov006_020ef580Ev
+void dScMgJump2_c::func_ov006_020ef580()
 {
-  int *acc = (int *)(raw + 0x5a64);
-  *acc += *(int *)(raw + 0x5a68) >> 12;
-  if (*(int *)(raw + 0x5a64) > 0x1000)
+    unk_5a74 = 0x20;
+    *(struct G2 *)pad_5004 = data_ov006_0213cc9c;
+}
+
+// @symbol _ZN12dScMgJump2_c19func_ov006_020ef4ecEv
+void dScMgJump2_c::func_ov006_020ef4ec()
+{
+  int *acc = &unk_5a64;
+  *acc += unk_5a68 >> 12;
+  if (unk_5a64 > 0x1000)
   {
     *acc -= 0x1000;
   }
   func_ov006_020c42bc();
   func_ov006_020c712c();
-  if (ApproachLinear2(*(short *)(raw + 0x5a74), 0, 1) == 0)
+  if (ApproachLinear2(unk_5a74, 0, 1) == 0)
   {
     return;
   }
   func_ov006_020c7388();
   func_ov006_020c40e8();
-  *(struct G2 *)(raw + 0x5004) = data_ov006_0213cc8c;
-}
+  *(struct G2 *)pad_5004 = data_ov006_0213cc8c;
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020ef480(char *raw){
-    void *obj = func_ov006_020c7300(raw);
+// @symbol _ZN12dScMgJump2_c19func_ov006_020ef480Ev
+void dScMgJump2_c::func_ov006_020ef480(){
+    void *obj = func_ov006_020c7300(this);
     if(obj){
         obj = func_ov006_020c4060(obj);
         if(obj){
             func_ov004_020adb1c(data_ov006_02140308);
             func_ov004_020b0a54(0x12);
-            ((dScMgJump2_c *)raw)->mPromptEnabled = 0;
-            *(struct G2 *)(raw + 0x5004) = data_ov006_0213cc74;
+            mPromptEnabled = 0;
+            *(struct G2 *)pad_5004 = data_ov006_0213cc74;
         }
     }
     func_ov006_020c42bc();
     func_ov006_020c712c();
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020ef47c(void)
+// @symbol _ZN12dScMgJump2_c19func_ov006_020ef47cEv
+void dScMgJump2_c::func_ov006_020ef47c()
 {
-}
 }
 
 // @symbol _ZN12dScMgJump2_c8BehaviorEv
@@ -568,7 +569,7 @@ void func_ov006_020ef05c(int x, int y, int sprite)
     int i;
     for (i = data_ov006_021421bc - 1; i >= 0; i--) {
         if (data_ov006_021421b0[i].active == 0) {
-            func_ov006_020eee3c((int *)&data_ov006_021421b0[i], x, y, sprite);
+            data_ov006_021421b0[i].func_ov006_020eee3c(x, y, sprite);
             return;
         }
     }
@@ -592,7 +593,7 @@ void func_ov006_020eef90(void)
     if (i < data_ov006_021421bc) {
         int offset = 0;
         do {
-            func_ov006_020eedc8((char *)data_ov006_021421b0 + offset);
+            ((Elem *)((char *)data_ov006_021421b0 + offset))->func_ov006_020eedc8();
             i++;
             offset += 0x24;
         } while (i < data_ov006_021421bc);
@@ -605,91 +606,80 @@ void func_ov006_020eef58(void) {
     void *node = data_ov006_021421c0;
     if (node == 0) return;
     do {
-        func_ov006_020eed68((char *)node);
+        ((Elem *)node)->func_ov006_020eed68();
         node = *(void **)node;
     } while (node != 0);
 }
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020eef40(void *node){
-  *(void**)node = data_ov006_021421c0;
-  data_ov006_021421c0 = (struct Node *)node;
-}
+// @symbol _ZN4Node19func_ov006_020eef40Ev
+void Node::func_ov006_020eef40(){
+  *(void**)this = data_ov006_021421c0;
+  data_ov006_021421c0 = this;
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020eeef4(struct Node* node) {
+// @symbol _ZN4Node19func_ov006_020eeef4Ev
+void Node::func_ov006_020eeef4() {
     struct Node* prev = data_ov006_021421c0;
-    if (prev == node) {
-        data_ov006_021421c0 = node->next;
+    if (prev == this) {
+        data_ov006_021421c0 = this->next;
         return;
     }
     struct Node* cur = prev->next;
     while (cur) {
-        if (cur == node) {
-            prev->next = node->next;
+        if (cur == this) {
+            prev->next = this->next;
             return;
         }
         prev = cur;
         cur = cur->next;
     }
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov004_020b04c0(void);
-void func_ov006_020eef40(void *node);
-
-void func_ov006_020eee3c(int *raw, int startX, int startY, int spriteId)
+// @symbol _ZN4Elem19func_ov006_020eee3cEiii
+void Elem::func_ov006_020eee3c(int startX, int startY, int spriteId)
 {
-    struct Elem *e = (struct Elem *)raw;
-    e->x = startX;
-    e->y = startY;
-    e->speedX = 0;
-    e->speedY = 0x4000;
-    e->targetX = startX;
-    e->targetY = startY - 0x40000;
-    if (e->targetY < 0x8000) {
+    x = startX;
+    y = startY;
+    speedX = 0;
+    speedY = 0x4000;
+    targetX = startX;
+    targetY = startY - 0x40000;
+    if (targetY < 0x8000) {
         int limit = func_ov004_020b04c0() << 12;
-        if (e->targetY > -limit) {
-            e->targetY = 0x8000;
+        if (targetY > -limit) {
+            targetY = 0x8000;
             goto done;
         }
     }
-    if (e->targetY >= -0xb8000 - (func_ov004_020b04c0() << 12))
+    if (targetY >= -0xb8000 - (func_ov004_020b04c0() << 12))
         goto done;
-    e->targetY = -0xb8000 - (func_ov004_020b04c0() << 12);
+    targetY = -0xb8000 - (func_ov004_020b04c0() << 12);
 done:
-    e->life = 0x80;
-    e->active = 1;
-    e->sprite = (short)spriteId;
-    func_ov006_020eef40(raw);
-}
+    life = 0x80;
+    active = 1;
+    sprite = (short)spriteId;
+    ((Node *)this)->func_ov006_020eef40();
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020eedc8(char* raw) {
-    struct Elem *e = (struct Elem *)raw;
-    if (e->active == 0) return;
-    if (ApproachLinear2(e->life, 0, 1) != 0) {
-        func_ov006_020eeef4((struct Node *)raw);
-        e->active = 0;
+// @symbol _ZN4Elem19func_ov006_020eedc8Ev
+void Elem::func_ov006_020eedc8() {
+    if (active == 0) return;
+    if (ApproachLinear2(life, 0, 1) != 0) {
+        ((Node *)this)->func_ov006_020eeef4();
+        active = 0;
     }
-    ApproachLinear(e->x, e->targetX, e->speedX);
-    ApproachLinear(e->y, e->targetY, e->speedY);
-    func_0203d630(&e->speedX, 0xf00);
-}
+    ApproachLinear(x, targetX, speedX);
+    ApproachLinear(y, targetY, speedY);
+    func_0203d630(&speedX, 0xf00);
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020eed68(char *raw)
+// @symbol _ZN4Elem19func_ov006_020eed68Ev
+void Elem::func_ov006_020eed68()
 {
-    struct Elem *e = (struct Elem *)raw;
-    if (e->active == 0) return;
-    func_ov004_020b2444(e->x >> 12, e->y >> 12,
-                        e->sprite, -1, -1, 0, data_ov006_021421b4);
-}
+    if (active == 0) return;
+    func_ov004_020b2444(x >> 12, y >> 12,
+                        sprite, -1, -1, 0, data_ov006_021421b4);
 }
 
 extern "C" {  /* .c-derived member: C linkage for the whole block */

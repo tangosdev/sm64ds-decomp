@@ -6,8 +6,8 @@
 #include <stddef.h>
 #include "types.h"
 #include "Timer.h"
-#include "Fader.h"
-#include "FaderBrightness.h"
+#include "dFader_c.h"
+#include "dFdBrightness_c.h"
 
 // ---- ABI: the recovered layouts must survive the host compiler ----------
 static_assert(sizeof(u8) == 1 && sizeof(u16) == 2 && sizeof(u32) == 4, "int widths");
@@ -17,14 +17,14 @@ static_assert(sizeof(Fix12i) == 4, "Fix12i is a 32-bit 20.12 scalar");
 static_assert(offsetof(Timer, mTime) == 0, "Timer +0x0");
 static_assert(sizeof(((Timer *)0)->mTime) == 8, "Timer tick count is s64");
 static_assert(offsetof(Timer, mIsRunning) == 8, "Timer +0x8");
-// Fader's evidence header pins currInterp at +0x4 with the vptr at +0x0.
+// dFader_c's evidence header pins currInterp at +0x4 with the vptr at +0x0.
 // This only holds if the host vptr is exactly 4 bytes -- x86-32 MSVC -- which
 // is the whole 32-bit-first argument in one line:
-static_assert(offsetof(Fader, currInterp) == 4, "vptr must be 4 bytes");
-static_assert(offsetof(Fader, speed) == 8, "Fader +0x8");
+static_assert(offsetof(dFader_c, currInterp) == 4, "vptr must be 4 bytes");
+static_assert(offsetof(dFader_c, speed) == 8, "dFader_c +0x8");
 
 // ---- the C math slice ---------------------------------------------------
-// Vector3 comes from the shared headers (common.h via the Fader includes);
+// Vector3 comes from the shared headers (common.h via the dFader_c includes);
 // redefining it here was a redefinition error, which is itself a small ABI
 // win: the test uses the same type the game does.
 extern "C" Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
@@ -81,7 +81,7 @@ static void test_fader(void)
     // Host-constructible subclass; the base has no ctor of its own in the
     // slice. The vtable this creates is the HOST's -- which is the point:
     // the port uses real C++ dispatch where the hybrid must trampoline.
-    struct TestFader : FaderBrightness {} f;
+    struct TestFader : dFdBrightness_c {} f;
 
     f.SetToStart();
     CHECK(f.IsAtStart() == 1 && f.IsAtEnd() == 0);
@@ -112,6 +112,6 @@ int main(void)
         fprintf(stderr, "smoke: %d FAILURE(S)\n", g_failures);
         return 1;
     }
-    printf("smoke: all checks passed (math, Timer, Fader on host)\n");
+    printf("smoke: all checks passed (math, Timer, dFader_c on host)\n");
     return 0;
 }

@@ -15,6 +15,10 @@ src/actors/daSnowman_c.cpp:
 src/actors/daSnowball_c.cpp:
     complete
     .text start:0x02125f14 end:0x02126504
+    .init start:0x021284b4 end:0x021284f0
+    .ctor start:0x0212882c end:0x02128830
+    .data start:0x02128a6c end:0x02128a7c
+    .bss start:0x02128eb4 end:0x02128ec4
 
 src/actors/daGmch_c.cpp:
     complete
@@ -31,10 +35,6 @@ src/__sinit_ov081_021280e8.c:
 src/__sinit_ov081_02128154.c:
     complete
     .init start:0x02128154 end:0x021284b4
-
-src/__sinit_ov081_021284b4.c:
-    complete
-    .init start:0x021284b4 end:0x021284f0
 
 src/__sinit_ov081_021284f0.c:
     complete

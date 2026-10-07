@@ -32,14 +32,14 @@
 #include "Sound.h"
 #include "Message.h"
 #include "SaveData.h"
-#include "FaderColor.h"
+#include "dFdColor_c.h"
 #include "decl_common.h"
 #include "MessageBank.h"
 
 #pragma opt_common_subs off
 
 extern "C" {
-extern FaderBrightness *data_0209f5bc;
+extern dFdBrightness_c *data_0209f5bc;
 extern u8 data_0209f1e8;
 extern u8 data_020a0e40;
 extern u16 data_020a0e58[];
@@ -51,7 +51,7 @@ extern u8 data_020a0dea[];
 extern u8 data_020a0deb[];
 extern u8 data_0209d454;
 extern u8 data_0209d45c;
-extern FaderColor data_0209f5e8;
+extern dFdColor_c data_0209f5e8;
 
 u32 _ZN3G2S13GetBG1CharPtrEv(void);
 u32 LoadCompressedFileAt(u16 fileID, void *target);
@@ -81,7 +81,8 @@ int func_0201a244(int fn, int a, int b, int c, int d);
  * BG/OBJ on both screens, brings up a text-mode main BG and three sub BGs,
  * decompresses the same 0x020918c4 tile set into both screens' character
  * memory with the 0x020914e0 palette, starts the boot countdown at 0x3c
- * frames, and kicks off a fade through func_0201a244.
+ * frames, and starts the job func_0201a244(func_0201a2f8, ...) whose handle
+ * lands in data_0209f1e8 (Behavior polls it).
  *
  * The register writes stay as literal volatile stores to the ARM7/9 I/O
  * block: this tree has no register header, and the read-modify-write masks

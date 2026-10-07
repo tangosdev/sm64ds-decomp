@@ -4,24 +4,9 @@
 #include "types.h"
 #include "dBgActor_c.h"
 
-/* TWO WITNESSES, and they close on each other:
- *
- *   daObjFl_Seesaw_c_classInit  fBase_c::operator new(804 = 0x324), dBgActor_c::dBgActor_c(), stores _ZTV16daObjFl_Seesaw_c,
- *                 then the members below in this order.
- *   ~daObjFl_Seesaw_c   the same members destroyed in reverse, then ~dBgActor_c.
- *
- * SIZE 0x324 is the factory's own literal, and the last member closes exactly on it.
- *
- * THE VTABLE was diffed slot by slot against _ZTV10dBgActor_c. Only the slots declared
- * below differ; every other slot holds the base's own word and is inherited, so it
- * is deliberately not redeclared here.
- *
- * mSwingStep sits at 0x31e, in dBgActor_c's TAIL PADDING (same placement rationale
- * as daObjRc_Guruguru_c's mAngVelY): Behavior adds it to mAngleX every frame while
- * mSwingCooldown is zero, and flips its sign (a see-saw tilt reversal) once mAngleX
- * passes +-0x400, also reloading mSwingCooldown to 0x1e. InitResources seeds
- * mSwingStep to -0x10.
- */
+/* daObjFl_Seesaw_c is proven by _ZTS at ov022 0x02113ffc, the factory's
+ * allocation size (0x324) and a vtable that only redeclares the slots
+ * below. mSwingStep sits at 0x31e, in dBgActor_c's tail padding. */
 struct daObjFl_Seesaw_c : dBgActor_c {
     s16 mSwingStep;          /* 0x31e */
     u8  mSwingCooldown;      /* 0x320 */
@@ -33,6 +18,8 @@ struct daObjFl_Seesaw_c : dBgActor_c {
     virtual s32   CleanupResources();      /* slot  3 */
     virtual s32   Behavior();              /* slot  6 */
     virtual s32   Render();                /* slot  9 */
+
+    void func_ov022_02111d48();
 };
 
 #ifndef SM64DS_PLATFORM_PC

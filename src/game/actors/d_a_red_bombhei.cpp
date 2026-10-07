@@ -29,10 +29,10 @@
  * the highest-address ROM function, the factory, is written FIRST here. Do
  * not reorder.
  *
- * Leftover: the state bodies and helpers keep their func_ov084_* linker
- *   names as C-linkage functions over a daRedBombhei_c pointer. The state
- *   table reaches the state bodies only by address, through the .data words
- *   the static initializer copies into it.
+ * The state bodies and helpers are daRedBombhei_c members under their
+ *   address names. The state table reaches the state bodies only by
+ *   address, through the .data words the static initializer copies into
+ *   it.
  * Leftover: ModelAnim::SetAnim, dCcAc_c::Init and
  *   dActor_c::DropShadowRadHeight stay mangled; each takes Fix12<int> by
  *   value (notes/mwccarm-codegen.md 6az). Player::ShowMessage and
@@ -98,18 +98,6 @@ extern SharedFilePtr data_ov084_02130da4;   /* the model */
 extern SharedFilePtr data_ov084_02130d9c;   /* the idle animation */
 
 extern "C" {
-
-/* Local helper declarations. */
-void func_ov084_0212c960(daRedBombhei_c *self, int state);
-void func_ov084_0212c9a8(daRedBombhei_c *self);
-void func_ov084_0212c9f0(daRedBombhei_c *self, int msgID, unsigned int msgFlag);
-int  func_ov084_0212ca60(daRedBombhei_c *self);
-int  func_ov084_0212caa8(daRedBombhei_c *self);
-int  func_ov084_0212cac0(daRedBombhei_c *self);
-int  func_ov084_0212cae0(daRedBombhei_c *self);
-int  func_ov084_0212ccb4(daRedBombhei_c *self);
-int  func_ov084_0212cda0(daRedBombhei_c *self, Vector3 *cur, Vector3 *target);
-void func_ov084_0212ce50(daRedBombhei_c *self);
 
 /* -- the state table __sinit_ov084_02130558 fills in -- */
 extern RedBombheiState data_ov084_02130dc4[];
@@ -178,7 +166,7 @@ s32 daRedBombhei_c::InitResources()
     mShadowModel.InitCylinder();
     dExtFrameCtrl_c::LoadFile(data_ov084_02130d9c);
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x8c000, 0x8c000, 0x4200004, 0);
-    func_ov084_0212c960(this, 0);
+    func_ov084_0212c960(0);
     mShutterID = 0;
 
     {
@@ -194,7 +182,7 @@ s32 daRedBombhei_c::InitResources()
     if (ground.DetectClsn() != 0)
         mPosY = ground.clsnY;
 
-    if (func_ov084_0212ca60(this) != 0) {
+    if (func_ov084_0212ca60() != 0) {
         u8 character = ClosestPlayer()->mCharacter;
         if ((character == 0 && param1 == kParamMario) ||
             (character == 1 && param1 == kParamLuigi) ||
@@ -203,7 +191,7 @@ s32 daRedBombhei_c::InitResources()
             return 0;
     }
 
-    if (func_ov084_0212cac0(this) != 0 && data_0209f2f8 == 8 &&
+    if (func_ov084_0212cac0() != 0 && data_0209f2f8 == 8 &&
         (data_0209f220 == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0))
         return 0;
     return 1;
@@ -216,7 +204,7 @@ s32 daRedBombhei_c::Behavior()
 {
     Vector3 playerPos;
     Player *player;
-    func_ov084_0212c9a8(this);
+    func_ov084_0212c9a8();
     player = ClosestPlayer();
     if (player != 0) {
         Vector3 *src = (Vector3 *)&player->mPosX;
@@ -229,7 +217,7 @@ s32 daRedBombhei_c::Behavior()
     mModelAnim.Advance();
     if ((unsigned short)(mModelAnim.currFrame >> 12) == 0)
         func_02012694(0xd7, (Vector3 *)&mCamSpacePosX);
-    func_ov084_0212ce50(this);
+    func_ov084_0212ce50();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -250,25 +238,25 @@ s32 daRedBombhei_c::CleanupResources()
     return 1;
 }
 
-// @symbol func_ov084_0212ce50
+// @symbol _ZN14daRedBombhei_c19func_ov084_0212ce50Ev
 /* Places the model and drops the shadow under the body. */
-extern "C" void func_ov084_0212ce50(daRedBombhei_c *self)
+void daRedBombhei_c::func_ov084_0212ce50()
 {
-    Matrix4x3_FromRotationY(&self->mModelAnim.mat4x3, self->mAngleY);
-    self->mModelAnim.mat4x3.t.x = self->mPosX >> 3;
-    self->mModelAnim.mat4x3.t.y = (self->mPosY + 0x4000) >> 3;
-    self->mModelAnim.mat4x3.t.z = self->mPosZ >> 3;
-    *(RedBombheiMtx *)&self->mShadowMat = *(RedBombheiMtx *)&IDENTITY_MATRIX4X3;
-    self->mShadowMat.t.x = self->mPosX >> 3;
-    self->mShadowMat.t.y = (self->mPosY - 0x8000) >> 3;
-    self->mShadowMat.t.z = self->mPosZ >> 3;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(self, &self->mShadowModel, &self->mShadowMat, 0x64000, 0x32000, 0xf);
+    Matrix4x3_FromRotationY(&this->mModelAnim.mat4x3, this->mAngleY);
+    this->mModelAnim.mat4x3.t.x = this->mPosX >> 3;
+    this->mModelAnim.mat4x3.t.y = (this->mPosY + 0x4000) >> 3;
+    this->mModelAnim.mat4x3.t.z = this->mPosZ >> 3;
+    *(RedBombheiMtx *)&this->mShadowMat = *(RedBombheiMtx *)&IDENTITY_MATRIX4X3;
+    this->mShadowMat.t.x = this->mPosX >> 3;
+    this->mShadowMat.t.y = (this->mPosY - 0x8000) >> 3;
+    this->mShadowMat.t.z = this->mPosZ >> 3;
+    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(this, &this->mShadowModel, &this->mShadowMat, 0x64000, 0x32000, 0xf);
 }
 
-// @symbol func_ov084_0212cda0
+// @symbol _ZN14daRedBombhei_c19func_ov084_0212cda0EP7Vector3S1_
 /* Moves the camera point *cur one step toward target, easing the distance
    between them down toward zero. Returns 1 once it has arrived. */
-extern "C" int func_ov084_0212cda0(daRedBombhei_c *self, Vector3 *cur, Vector3 *target)
+int daRedBombhei_c::func_ov084_0212cda0(Vector3 *cur, Vector3 *target)
 {
     Vector3 delta;
     int len;
@@ -290,10 +278,10 @@ extern "C" int func_ov084_0212cda0(daRedBombhei_c *self, Vector3 *cur, Vector3 *
     return remaining == 0 ? 1 : 0;
 }
 
-// @symbol func_ov084_0212ccb4
+// @symbol _ZN14daRedBombhei_c19func_ov084_0212ccb4Ev
 /* Cutscene step 3: pan the camera back to where it was before the cutscene.
    Returns 1 once both points have arrived. */
-extern "C" int func_ov084_0212ccb4(daRedBombhei_c *self)
+int daRedBombhei_c::func_ov084_0212ccb4()
 {
     dCamera_c *cam = data_0209f318;
     int posDone;
@@ -307,13 +295,13 @@ extern "C" int func_ov084_0212ccb4(daRedBombhei_c *self)
     pos.x = camPos->x;
     pos.y = camPos->y;
     pos.z = camPos->z;
-    int lookAtDone = func_ov084_0212cda0(self, &lookAt, &self->mSavedCamLookAt);
-    posDone = func_ov084_0212cda0(self, &pos, &self->mSavedCamPos);
-    if ((self->mAngleX & 0xff) == kVariantCannonCut) {
+    int lookAtDone = func_ov084_0212cda0(&lookAt, &this->mSavedCamLookAt);
+    posDone = func_ov084_0212cda0(&pos, &this->mSavedCamPos);
+    if ((this->mAngleX & 0xff) == kVariantCannonCut) {
         lookAtDone = 1;
         posDone = 1;
-        cam->SetLookAt(self->mSavedCamLookAt);
-        cam->SetPos(self->mSavedCamPos);
+        cam->SetLookAt(this->mSavedCamLookAt);
+        cam->SetPos(this->mSavedCamPos);
     } else {
         cam->SetLookAt(lookAt);
         cam->SetPos(pos);
@@ -322,17 +310,17 @@ extern "C" int func_ov084_0212ccb4(daRedBombhei_c *self)
     return 0;
 }
 
-// @symbol func_ov084_0212cae0
+// @symbol _ZN14daRedBombhei_c19func_ov084_0212cae0Ev
 /* Cutscene step 1: pan the camera over to the cannon shutter -- looking at a
    point 128.0 up and 10.0 behind it from 512.0 up and 200.0 in front. Returns 1
    once both points have arrived. */
-extern "C" int func_ov084_0212cae0(daRedBombhei_c *self)
+int daRedBombhei_c::func_ov084_0212cae0()
 {
     int posDone, lookAtDone;
     dCamera_c *cam;
     dActor_c *shutter;
     Vector3 lookAt, pos, targetLookAt, targetPos, offset, sum, sum2;
-    unsigned id = self->mShutterID;
+    unsigned id = this->mShutterID;
     cam = data_0209f318;
     if (id != 0) {
         shutter = dActor_c::FindWithID(id);
@@ -372,9 +360,9 @@ body:
             pos.x = camPos[0]; pos.y = camPos[1]; pos.z = camPos[2];
         }
     }
-    lookAtDone = func_ov084_0212cda0(self, &lookAt, &targetLookAt);
-    posDone = func_ov084_0212cda0(self, &pos, &targetPos);
-    if ((self->mAngleX & 0xff) == kVariantCannonCut) {
+    lookAtDone = func_ov084_0212cda0(&lookAt, &targetLookAt);
+    posDone = func_ov084_0212cda0(&pos, &targetPos);
+    if ((this->mAngleX & 0xff) == kVariantCannonCut) {
         lookAtDone = 1; posDone = 1;
         cam->SetLookAt(targetLookAt);
         cam->SetPos(targetPos);
@@ -386,11 +374,11 @@ end:
     return (lookAtDone != 0 && posDone != 0) ? 1 : 0;
 }
 
-// @symbol func_ov084_0212cac0
+// @symbol _ZN14daRedBombhei_c19func_ov084_0212cac0Ev
 /* Is this the buddy that opens the cannon? */
-extern "C" int func_ov084_0212cac0(daRedBombhei_c *self)
+int daRedBombhei_c::func_ov084_0212cac0()
 {
-    int variant = self->mAngleX;
+    int variant = this->mAngleX;
     int result = 1;
     variant = variant & 0xff;
     if (variant == kVariantCannonPan) return result;
@@ -398,20 +386,20 @@ extern "C" int func_ov084_0212cac0(daRedBombhei_c *self)
     return result;
 }
 
-// @symbol func_ov084_0212caa8
+// @symbol _ZN14daRedBombhei_c19func_ov084_0212caa8Ev
 /* Is this the red-coin tutor? */
-extern "C" int func_ov084_0212caa8(daRedBombhei_c *self)
+int daRedBombhei_c::func_ov084_0212caa8()
 {
-    return (self->mAngleX & 0xff) == kVariantRedCoins;
+    return (this->mAngleX & 0xff) == kVariantRedCoins;
 }
 
-// @symbol func_ov084_0212ca60
+// @symbol _ZN14daRedBombhei_c19func_ov084_0212ca60Ev
 /* Was this buddy placed for one character only? */
-extern "C" int func_ov084_0212ca60(daRedBombhei_c *self)
+int daRedBombhei_c::func_ov084_0212ca60()
 {
     int result = 1;
     int isMarioOrLuigi = result;
-    int param = self->param1;
+    int param = this->param1;
     if (param != kParamMario) {
         if (param != kParamLuigi)
             isMarioOrLuigi = 0;
@@ -423,53 +411,53 @@ extern "C" int func_ov084_0212ca60(daRedBombhei_c *self)
     return result;
 }
 
-// @symbol func_ov084_0212c9f0
+// @symbol _ZN14daRedBombhei_c19func_ov084_0212c9f0Eij
 /* Opens message msgID on the talking player's screen, with the talk sound. */
-extern "C" void func_ov084_0212c9f0(daRedBombhei_c *self, int msgID, unsigned int msgFlag)
+void daRedBombhei_c::func_ov084_0212c9f0(int msgID, unsigned int msgFlag)
 {
-    Player *player = self->mTalkPlayer;
+    Player *player = this->mTalkPlayer;
     Vector3 pos;
-    int x = self->mPosX;
-    int z = self->mPosZ;
-    int y = self->mPosY + 0x32000;
+    int x = this->mPosX;
+    int z = this->mPosZ;
+    int y = this->mPosY + 0x32000;
     pos.x = x;
     pos.y = y;
     pos.z = z;
-    func_02012694(0x108, (Vector3 *)&self->mCamSpacePosX);
-    _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(player, self, (s16)msgID, &pos, msgFlag, 0);
+    func_02012694(0x108, (Vector3 *)&this->mCamSpacePosX);
+    _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(player, this, (s16)msgID, &pos, msgFlag, 0);
 }
 
-// @symbol func_ov084_0212c9a8
-extern "C" void func_ov084_0212c9a8(daRedBombhei_c *self)
+// @symbol _ZN14daRedBombhei_c19func_ov084_0212c9a8Ev
+void daRedBombhei_c::func_ov084_0212c9a8()
 {
-    int j = self->mState;
-    (self->*data_ov084_02130dc4[j].update)();
+    int j = this->mState;
+    (this->*data_ov084_02130dc4[j].update)();
 }
 
-// @symbol func_ov084_0212c960
-extern "C" void func_ov084_0212c960(daRedBombhei_c *self, int state)
+// @symbol _ZN14daRedBombhei_c19func_ov084_0212c960Ei
+void daRedBombhei_c::func_ov084_0212c960(int state)
 {
-    self->mState = state;
-    int j = self->mState;
-    (self->*data_ov084_02130dc4[j].enter)();
+    this->mState = state;
+    int j = this->mState;
+    (this->*data_ov084_02130dc4[j].enter)();
 }
 
-// @symbol func_ov084_0212c92c
-extern "C" void func_ov084_0212c92c(daRedBombhei_c *self)
+// @symbol _ZN14daRedBombhei_c19func_ov084_0212c92cEv
+void daRedBombhei_c::func_ov084_0212c92c()
 {
     unsigned int flags = 0;
     BCA_File *file = (BCA_File *)(((int *)&data_ov084_02130d9c)[1]);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, file, 0, 0x1000, flags);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, file, 0, 0x1000, flags);
 }
 
-// @symbol func_ov084_0212c8b0
+// @symbol _ZN14daRedBombhei_c19func_ov084_0212c8b0Ev
 /* State 0 update: start talking when a player walks into the talk cylinder. */
-extern "C" void func_ov084_0212c8b0(daRedBombhei_c *self)
+void daRedBombhei_c::func_ov084_0212c8b0()
 {
     dActor_c *other;
-    if ((self->mdCcAc_c.hitFlags & 0x8000000) == 0)
+    if ((this->mdCcAc_c.hitFlags & 0x8000000) == 0)
         return;
-    other = dActor_c::FindWithID(self->mdCcAc_c.otherOwner);
+    other = dActor_c::FindWithID(this->mdCcAc_c.otherOwner);
     if (other == 0)
         return;
     {
@@ -477,28 +465,28 @@ extern "C" void func_ov084_0212c8b0(daRedBombhei_c *self)
         if (isPlayer == 0)
             return;
     }
-    self->mTalkPlayer = (Player *)other;
-    if (self->mTalkPlayer->StartTalk(*self, false) == 0)
+    this->mTalkPlayer = (Player *)other;
+    if (this->mTalkPlayer->StartTalk(*this, false) == 0)
         return;
-    func_ov084_0212c960(self, kStateTalk);
+    func_ov084_0212c960(kStateTalk);
 }
 
-// @symbol func_ov084_0212c89c
+// @symbol _ZN14daRedBombhei_c19func_ov084_0212c89cEv
 /* State 1 enter. */
-extern "C" void func_ov084_0212c89c(daRedBombhei_c *self)
+void daRedBombhei_c::func_ov084_0212c89c()
 {
-    self->mMsgPage = 0;
-    self->mPrevMsgPageState = 0;
+    this->mMsgPage = 0;
+    this->mPrevMsgPageState = 0;
 }
 
-// @symbol func_ov084_0212c508
+// @symbol _ZN14daRedBombhei_c19func_ov084_0212c508Ev
 /* State 1 update: turn to the player, open the right message, and track the
    message box to light the hint arrow on the pages that point somewhere. */
-extern "C" void func_ov084_0212c508(daRedBombhei_c *self)
+void daRedBombhei_c::func_ov084_0212c508()
 {
-    Player *player = self->mTalkPlayer;
+    Player *player = this->mTalkPlayer;
     int msgID = 0;
-    int param = self->param1;
+    int param = this->param1;
     s16 angle;
     Vector3 playerPos;
     int msg;
@@ -514,19 +502,19 @@ extern "C" void func_ov084_0212c508(daRedBombhei_c *self)
         int c = p[2];
         playerPos.z = c;
     }
-    angle = Vec3_HorzAngle((Vector3 *)&self->mPosX, &playerPos);
+    angle = Vec3_HorzAngle((Vector3 *)&this->mPosX, &playerPos);
 
-    if (func_ov084_0212cac0(self) != 0) {
+    if (func_ov084_0212cac0() != 0) {
         if (IsCannonOpenInCurLevel() == 0) {
-            func_ov084_0212c960(self, kStateCannon);
+            func_ov084_0212c960(kStateCannon);
             return;
         }
     }
 
     switch (player->GetTalkState()) {
     case 0:
-        if (ApproachLinear(self->mAngleY, angle, 0x800) != 0) {
-            if (func_ov084_0212caa8(self) != 0) {
+        if (ApproachLinear(this->mAngleY, angle, 0x800) != 0) {
+            if (func_ov084_0212caa8() != 0) {
                 if ((data_0209caa0[2] & 0x8000) == 0) {
                     data_0209caa0[2] |= 0x8000;
                     msg = 0x15b;
@@ -539,10 +527,10 @@ extern "C" void func_ov084_0212c508(daRedBombhei_c *self)
                 } else {
                     msg = 0x15f;
                 }
-                func_ov084_0212c9f0(self, msg, 0);
+                func_ov084_0212c9f0(msg, 0);
                 data_0209f288 = 1;
-            } else if (func_ov084_0212cac0(self) != 0 && IsCannonOpenInCurLevel() != 0) {
-                if (self->mCannonOpened == 0) {
+            } else if (func_ov084_0212cac0() != 0 && IsCannonOpenInCurLevel() != 0) {
+                if (this->mCannonOpened == 0) {
                     if (data_0209f2f8 == 6)
                         msg = 0x8f;
                     else
@@ -553,19 +541,19 @@ extern "C" void func_ov084_0212c508(daRedBombhei_c *self)
                     else
                         msg = 0x14b;
                 }
-                self->mCannonOpened = 1;
-                func_ov084_0212c9f0(self, msg, 0);
+                this->mCannonOpened = 1;
+                func_ov084_0212c9f0(msg, 0);
             } else {
                 msg = ObjectMessageIDToActualMessageID((int)(s16)msgID);
                 msg = msg + player->param1;
-                func_ov084_0212c9f0(self, (u16)msg, 0);
+                func_ov084_0212c9f0((u16)msg, 0);
             }
         }
         break;
     case 1:
         break;
     default:
-        func_ov084_0212c960(self, kStateIdle);
+        func_ov084_0212c960(kStateIdle);
         break;
     }
 
@@ -573,20 +561,20 @@ extern "C" void func_ov084_0212c508(daRedBombhei_c *self)
         return;
 
     if (data_0209d6bc == 9) {
-        if (func_ov084_0212caa8(self) != 0)
+        if (func_ov084_0212caa8() != 0)
             data_0209f288 = 0;
     }
 
     {
         u8 pageState = data_0209d6bc;
-        if (self->mPrevMsgPageState != pageState) {
+        if (this->mPrevMsgPageState != pageState) {
             if (pageState == 3)
                 goto do_inc;
             if (pageState != 9)
                 goto skip_inc;
         do_inc:
             {
-                u8 *page = &self->mMsgPage;
+                u8 *page = &this->mMsgPage;
                 *page = (u8)(*page + 1);
             }
         skip_inc:
@@ -595,56 +583,56 @@ extern "C" void func_ov084_0212c508(daRedBombhei_c *self)
     }
 
     shownMsg = data_0209d6d4;
-    if (shownMsg == 0x15c || shownMsg == 0x15e || func_ov084_0212ca60(self) != 0) {
-        if (self->mMsgPage == 0)
+    if (shownMsg == 0x15c || shownMsg == 0x15e || func_ov084_0212ca60() != 0) {
+        if (this->mMsgPage == 0)
             data_0209f284 = 1;
         else
             data_0209f284 = 0;
     }
 
     if (shownMsg == 0x15b || shownMsg == 0x15d) {
-        if (self->mMsgPage == 1)
+        if (this->mMsgPage == 1)
             data_0209f284 = 1;
         else
             data_0209f284 = 0;
     }
 
     if (shownMsg == 0x8a) {
-        if (self->mMsgPage == 1)
+        if (this->mMsgPage == 1)
             data_0209f284 = 1;
         if (data_0209d6bc == 9)
             data_0209f284 = 0;
     }
 
-    if (self->mMsgHint != data_0209f284 && data_0209f284 != 0)
+    if (this->mMsgHint != data_0209f284 && data_0209f284 != 0)
         func_02012790(0x24);
 
-    self->mMsgHint = data_0209f284;
-    self->mPrevMsgPageState = data_0209d6bc;
+    this->mMsgHint = data_0209f284;
+    this->mPrevMsgPageState = data_0209d6bc;
 }
 
-// @symbol func_ov084_0212c4a0
+// @symbol _ZN14daRedBombhei_c19func_ov084_0212c4a0Ev
 /* State 2 enter: find this level's closed cannon shutter. */
-extern "C" void func_ov084_0212c4a0(daRedBombhei_c *self)
+void daRedBombhei_c::func_ov084_0212c4a0()
 {
     dActor_c *actor;
     actor = dActor_c::FindWithActorID(kCannonShutterActorID, 0);
     while (actor) {
         if ((actor->param1 & 0xff) == 1) {
             if (((daObjCannonShutter_c *)actor)->mCannonOpen == 0) {
-                self->mShutterID = actor->uniqueID;
+                this->mShutterID = actor->uniqueID;
             }
         }
         actor = dActor_c::FindWithActorID(kCannonShutterActorID, actor);
     }
-    self->mCutsceneStep = 0;
+    this->mCutsceneStep = 0;
 }
 
-// @symbol func_ov084_0212c1a0
+// @symbol _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev
 /* State 2 update: the cannon-opening cutscene, one step at a time. */
-extern "C" void func_ov084_0212c1a0(daRedBombhei_c *self)
+void daRedBombhei_c::func_ov084_0212c1a0()
 {
-    Player *player = self->mTalkPlayer;
+    Player *player = this->mTalkPlayer;
     dCamera_c *cam = data_0209f318;
     Vector3 playerPos;
     s16 angle;
@@ -653,71 +641,71 @@ extern "C" void func_ov084_0212c1a0(daRedBombhei_c *self)
     playerPos.x = src[0];
     playerPos.y = src[1];
     playerPos.z = src[2];
-    angle = Vec3_HorzAngle((Vector3 *)&self->mPosX, &playerPos);
+    angle = Vec3_HorzAngle((Vector3 *)&this->mPosX, &playerPos);
 
-    switch (self->mCutsceneStep) {
+    switch (this->mCutsceneStep) {
     case 0:
         /* Show the cannon message; on talk state 2 save the camera and take it. */
         switch (player->GetTalkState()) {
         case 0: {
             int msg;
-            if (ApproachLinear(self->mAngleY, angle, 0x800) == 0)
+            if (ApproachLinear(this->mAngleY, angle, 0x800) == 0)
                 return;
             msg = data_0209f2f8 == 6 ? 0x8f : 0x14a;
-            if (self->mShutterID != 0)
-                func_ov084_0212c9f0(self, msg, 1);
+            if (this->mShutterID != 0)
+                func_ov084_0212c9f0(msg, 1);
             else
-                func_ov084_0212c9f0(self, msg, 0);
+                func_ov084_0212c9f0(msg, 0);
             return;
         }
         case 2: {
             int *lookAt = (int *)&cam->lookAt;
             int *pos = (int *)&cam->pos;
-            self->mSavedCamLookAt.x = lookAt[0];
-            self->mSavedCamLookAt.y = lookAt[1];
-            self->mSavedCamLookAt.z = lookAt[2];
-            self->mSavedCamPos.x = pos[0];
-            self->mSavedCamPos.y = pos[1];
-            self->mSavedCamPos.z = pos[2];
+            this->mSavedCamLookAt.x = lookAt[0];
+            this->mSavedCamLookAt.y = lookAt[1];
+            this->mSavedCamLookAt.z = lookAt[2];
+            this->mSavedCamPos.x = pos[0];
+            this->mSavedCamPos.y = pos[1];
+            this->mSavedCamPos.z = pos[2];
             _ZN9dCamera_c9SetFlag_3Ev(cam);
-            self->mFlags &= ~1;
-            self->mCutsceneStep += 1;
+            this->mFlags &= ~1;
+            this->mCutsceneStep += 1;
             return;
         }
         case -1:
             OpenCannonInCurLevel();
-            self->mCannonOpened = 1;
-            func_ov084_0212c960(self, kStateIdle);
+            this->mCannonOpened = 1;
+            func_ov084_0212c960(kStateIdle);
             return;
         }
         return;
     case 1: {
         /* dCamera_c over to the shutter, then open it. */
         dActor_c *shutter;
-        if (self->mShutterID == 0)
+        if (this->mShutterID == 0)
             return;
-        if (func_ov084_0212cae0(self) == 0)
+        if (func_ov084_0212cae0() == 0)
             return;
-        shutter = dActor_c::FindWithID(self->mShutterID);
+        shutter = dActor_c::FindWithID(this->mShutterID);
         if (shutter == 0)
             return;
         ((daObjCannonShutter_c *)shutter)->func_ov002_020bc990();
-        self->mCutsceneStep += 1;
+        this->mCutsceneStep += 1;
         return;
     }
     case 2: {
         /* Wait for the shutter to finish opening. */
-        unsigned int id = self->mShutterID;
+        unsigned int id = this->mShutterID;
         if (id == 0)
             return;
         if (((daObjCannonShutter_c *)dActor_c::FindWithID(id))->mCannonOpen == 1)
-            self->mCutsceneStep += 1;
+            this->mCutsceneStep += 1;
         return;
     }
     case 3:
         /* dCamera_c back. */
-        if (func_ov084_0212ccb4(self) != 0)
-            self->mCutsceneStep += 1;
+        if (func_ov084_0212ccb4() != 0)
+            this->mCutsceneStep += 1;
         return;
     case 4: {
         /* Finish the talk and hand the camera back. */
@@ -726,14 +714,14 @@ extern "C" void func_ov084_0212c1a0(daRedBombhei_c *self)
             return;
         if (talkState == 2) {
             int msg = data_0209f2f8 == 6 ? 0x90 : 0x14b;
-            func_ov084_0212c9f0(self, msg, 0);
+            func_ov084_0212c9f0(msg, 0);
             return;
         }
-        self->mFlags |= 1;
+        this->mFlags |= 1;
         OpenCannonInCurLevel();
-        self->mCannonOpened = 1;
+        this->mCannonOpened = 1;
         cam->mFlags &= ~8;
-        func_ov084_0212c960(self, kStateIdle);
+        func_ov084_0212c960(kStateIdle);
         return;
     }
     }

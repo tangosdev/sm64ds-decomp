@@ -25,7 +25,7 @@
  *   id). This TU's Behavior and tap handlers (func_ov005_020c0378 /
  *   func_ov005_020c06cc / func_ov005_020c0250 / func_ov005_020c0878)
  *   call it. Naming belongs in arm9.
- * Leftover: func_0202ec9c is the brightness-fader start helper. This
+ * Leftover: _ZN7dWipe_c13func_0202ec9cEi is the wipe start helper. This
  *   TU's func_ov005_020c0378 hands it data_0209f61c.
  * Leftover: func_02019028 / func_020233f4 are arm9 graphics-setup
  *   tails. This TU's InitResources calls them.
@@ -56,6 +56,7 @@
  */
 
 #include "dScMiniGm_c.h"
+#include "dWipe_c.h"
 #include "types.h"
 #include "Sound.h"
 #include "OAM.h"
@@ -114,7 +115,7 @@ extern short data_0209d494[];
 extern int data_0209e650;
 extern TouchOwner *data_0209f5bc;
 extern u8 data_0209f5f8;
-extern u8 data_0209f61c;
+extern dWipe_c data_0209f61c;
 extern int data_0208ee44;
 extern TouchRec data_020a0de8[];
 extern u8 data_020a0de9[];
@@ -384,7 +385,7 @@ s32 dScMiniGm_c::InitResources()
     }
     data_0208ee44 = 1;
     if (data_0209b2fc != 0) {
-        _ZN8dScene_c9SetFadersEP15FaderBrightness(&data_0209f61c);
+        _ZN8dScene_c9SetFadersEP15dFdBrightness_c(&data_0209f61c);
     }
 
     data_0209b2fc = 0;
@@ -1041,8 +1042,8 @@ void dScMiniGm_c::func_ov005_020c0378()
     }
     func_ov005_020c1688((char *)this, sel);
     func_02012790(0x1e);
-    _ZN8dScene_c9SetFadersEP15FaderBrightness(&data_0209f61c);
-    func_0202ec9c(&data_0209f61c, 0);
+    _ZN8dScene_c9SetFadersEP15dFdBrightness_c(&data_0209f61c);
+    data_0209f61c.func_0202ec9c(0);
     data_0209b308.unk30 = unk_05c;
     dScene_c::StartSceneFade(data_ov005_020c24d8[data_0208a174[0]].id, data_ov005_020c24d8[data_0208a174[0]].unk4, 0);
     _ZN5Sound22StopLoadedMusic_Layer1Ej(0x1e);

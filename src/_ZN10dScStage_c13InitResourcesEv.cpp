@@ -137,8 +137,8 @@ u32 func_0203dad4(void);
 void func_0203b9b4(int *p, int v);
 void *func_02073470(int a, int b, int c, void *ctor, void *dtor);
 void func_ov001_020ab2e4(void);
-void *_ZN9FaderWipeC1Ev(void *thiz);
-void _ZN9FaderWipeD1Ev(void *thiz);
+void *_ZN9dFdWipe_cC1Ev(void *thiz);
+void _ZN9dFdWipe_cD1Ev(void *thiz);
 
 void _ZN5Sound6Player19SetPlayableSeqCountEii(int a, int b);
 void _ZN8dScene_c20Initialise3dGraphicsEv(void);
@@ -152,7 +152,8 @@ void _ZN2GX6DispOnEv(void);
 void _Z17LoadLevelOverlaysi(int level);
 void _ZN5Sound19LoadGroupAndSetBankEii(int a, int b);
 void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
-void _ZN9FaderWipe14LoadAndSetFileEt(int thiz, u16 fileID);
+// local extern: this file also passes &_ZN9dFdWipe_cC1Ev / &_ZN9dFdWipe_cD1Ev to func_02073470's ctor/dtor pair, which member syntax cannot express
+void _ZN9dFdWipe_c14LoadAndSetFileEt(int thiz, u16 fileID);
 void _ZN5Sound22LoadAndSetMusic_Layer1Ei(int x);
 int _ZN5Sound8SetMusicEjj(u32 a, u32 b);
 void _ZN8Particle10SysTracker10InitialiseEv(void *thiz);
@@ -371,11 +372,11 @@ L_after304:
             faderTbl = data_020755e0;
         }
 
-        data_0209f324 = (s32)func_02073470(7, 0x60, 8, (void*)&_ZN9FaderWipeC1Ev, (void*)&_ZN9FaderWipeD1Ev);
+        data_0209f324 = (s32)func_02073470(7, 0x60, 8, (void*)&_ZN9dFdWipe_cC1Ev, (void*)&_ZN9dFdWipe_cD1Ev);
         int r8_4 = 0;
         int r7_3 = 0;
         do {
-            _ZN9FaderWipe14LoadAndSetFileEt(data_0209f324 + r7_3, faderTbl[r8_4]);
+            _ZN9dFdWipe_c14LoadAndSetFileEt(data_0209f324 + r7_3, faderTbl[r8_4]);
             r8_4 += 1;
             r7_3 += 0x60;
         } while (r8_4 < 7);

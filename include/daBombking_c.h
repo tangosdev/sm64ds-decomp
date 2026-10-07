@@ -109,7 +109,51 @@ struct daBombking_c : dEnemyBase_c {
     int InitResources();
     void OnPendingDestroy();
     int Render();
+
+    /* State-record {enter, tick} handlers and their helpers, in ROM order. The
+       ov078 sinit copies PMF pairs into data_ov078_021270* records. */
+    int func_ov078_02123804();
+    void func_ov078_02123864();
+    int func_ov078_021238ac();
+    int func_ov078_02123a3c();
+    int func_ov078_02123aa0();
+    int func_ov078_02123bc4();
+    int func_ov078_02123c20();
+    int func_ov078_02123cf0();
+    int func_ov078_02123d3c();
     int func_ov078_02123eb8();
+    int func_ov078_02123f1c();
+    int func_ov078_02123fb4();
+    int func_ov078_02124000();
+    int func_ov078_02124060();
+    int func_ov078_021243c0();
+    int func_ov078_02124470();
+    int func_ov078_021244d0();
+    int func_ov078_02124520();
+    int func_ov078_02124778();
+    int func_ov078_021247bc();
+    int func_ov078_02124b40();
+    int func_ov078_02124bc4();
+    int func_ov078_02124c94();
+    int func_ov078_02124cf4();
+    int func_ov078_02124e9c();
+    int func_ov078_02124f28();
+    int func_ov078_021250d0();
+    int func_ov078_021250f8();
+    int func_ov078_02125350();
+    int func_ov078_02125448();
+    int func_ov078_02125734();
+    int func_ov078_02125790();
+    int func_ov078_021258e4();
+    int func_ov078_02125950();
+    int func_ov078_021259e4();
+    int func_ov078_021259ec();
+    int func_ov078_02125bc8();
+    void func_ov078_02125c98();
+    void func_ov078_02125c24(int strength);
+    int KingBobOmb_SetState(void *rec);
+    void func_ov078_02125de0();
+    void func_ov078_02125f8c();
 
     static void *operator new(unsigned long size) {
         return _ZN7fBase_cnwEj((unsigned)size);

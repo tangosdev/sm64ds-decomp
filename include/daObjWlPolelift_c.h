@@ -52,7 +52,7 @@
  * VTABLE ORDER follows dActor_c's (unchanged slot indices; daObjWlPolelift_c
  * adds no new virtual). The destructor pair is at slots 16/17, the
  * fBase_c/actor-family convention, matching every other actor and scene
- * class recovered so far -- not the Fader family's 0/1.
+ * class recovered so far -- not the dFader_c family's 0/1.
  *
  * Every member of this class is defined in one translation unit,
  * src/game/actors/d_a_obj_wl_polelift.cpp, which owns the whole

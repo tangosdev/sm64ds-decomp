@@ -40,241 +40,241 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov075_02114010",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114010Ev",
       "address": "0x02114010",
       "size": "0x000000d4",
-      "legacy_source": "src/func_ov075_02114010.c",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114010Ev.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov075_021140e4",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021140e4Ev",
       "address": "0x021140e4",
       "size": "0x000000d4",
-      "legacy_source": "src/func_ov075_021140e4.c",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021140e4Ev.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov075_021141b8",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021141b8Ev",
       "address": "0x021141b8",
       "size": "0x00000060",
-      "legacy_source": "src/func_ov075_021141b8.c",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021141b8Ev.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov075_02114218",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114218Ev",
       "address": "0x02114218",
       "size": "0x00000064",
-      "legacy_source": "src/func_ov075_02114218.c",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114218Ev.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov075_0211427c",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_0211427cEv",
       "address": "0x0211427c",
       "size": "0x00000080",
-      "legacy_source": "src/func_ov075_0211427c.c",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_0211427cEv.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov075_021142fc",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021142fcEv",
       "address": "0x021142fc",
       "size": "0x00000004",
-      "legacy_source": "src/func_ov075_021142fc.c",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021142fcEv.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov075_02114300",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114300Ev",
       "address": "0x02114300",
       "size": "0x00000090",
-      "legacy_source": "src/func_ov075_02114300.cpp",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114300Ev.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov075_02114390",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114390Ev",
       "address": "0x02114390",
       "size": "0x00000054",
-      "legacy_source": "src/func_ov075_02114390.c",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114390Ev.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov075_021143e4",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021143e4Ev",
       "address": "0x021143e4",
       "size": "0x0000017c",
-      "legacy_source": "src/func_ov075_021143e4.cpp",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021143e4Ev.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov075_02114560",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114560Ev",
       "address": "0x02114560",
       "size": "0x000001dc",
-      "legacy_source": "src/func_ov075_02114560.cpp",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114560Ev.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov075_0211473c",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_0211473cEv",
       "address": "0x0211473c",
       "size": "0x00000050",
-      "legacy_source": "src/func_ov075_0211473c.cpp",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_0211473cEv.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov075_0211478c",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_0211478cEv",
       "address": "0x0211478c",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov075_0211478c.c",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_0211478cEv.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov075_021147d4",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021147d4Ev",
       "address": "0x021147d4",
       "size": "0x000000bc",
-      "legacy_source": "src/func_ov075_021147d4.cpp",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021147d4Ev.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "func_ov075_02114890",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114890Ev",
       "address": "0x02114890",
       "size": "0x00000004",
-      "legacy_source": "src/func_ov075_02114890.c",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114890Ev.c",
       "ordinal": 16
     },
     {
-      "symbol": "func_ov075_02114894",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114894Ev",
       "address": "0x02114894",
       "size": "0x0000005c",
-      "legacy_source": "src/func_ov075_02114894.cpp",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114894Ev.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "func_ov075_021148f0",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021148f0Ev",
       "address": "0x021148f0",
       "size": "0x00000014",
-      "legacy_source": "src/func_ov075_021148f0.c",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021148f0Ev.c",
       "ordinal": 18
     },
     {
-      "symbol": "func_ov075_02114904",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114904Ei",
       "address": "0x02114904",
       "size": "0x00000084",
-      "legacy_source": "src/func_ov075_02114904.c",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114904Ei.c",
       "ordinal": 19
     },
     {
-      "symbol": "func_ov075_02114988",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114988Ev",
       "address": "0x02114988",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov075_02114988.cpp",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114988Ev.cpp",
       "ordinal": 20
     },
     {
-      "symbol": "func_ov075_021149d0",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021149d0Ei",
       "address": "0x021149d0",
       "size": "0x00000088",
-      "legacy_source": "src/func_ov075_021149d0.c",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021149d0Ei.c",
       "ordinal": 21
     },
     {
-      "symbol": "func_ov075_02114a58",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114a58Ev",
       "address": "0x02114a58",
       "size": "0x00000014",
-      "legacy_source": "src/func_ov075_02114a58.c",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114a58Ev.c",
       "ordinal": 22
     },
     {
-      "symbol": "func_ov075_02114a6c",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114a6cEv",
       "address": "0x02114a6c",
       "size": "0x00000058",
-      "legacy_source": "src/func_ov075_02114a6c.c",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114a6cEv.c",
       "ordinal": 23
     },
     {
-      "symbol": "func_ov075_02114ac4",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114ac4EP7Vector3S1_",
       "address": "0x02114ac4",
       "size": "0x0000009c",
-      "legacy_source": "src/func_ov075_02114ac4.cpp",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114ac4EP7Vector3S1_.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "func_ov075_02114b60",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114b60Ev",
       "address": "0x02114b60",
       "size": "0x00000084",
-      "legacy_source": "src/func_ov075_02114b60.c",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114b60Ev.c",
       "ordinal": 25
     },
     {
-      "symbol": "func_ov075_02114be4",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114be4Ev",
       "address": "0x02114be4",
       "size": "0x000000f4",
-      "legacy_source": "src/func_ov075_02114be4.cpp",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114be4Ev.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "func_ov075_02114cd8",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114cd8Ev",
       "address": "0x02114cd8",
       "size": "0x00000104",
-      "legacy_source": "src/func_ov075_02114cd8.cpp",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114cd8Ev.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "func_ov075_02114ddc",
+      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114ddcEhhi",
       "address": "0x02114ddc",
       "size": "0x000001cc",
-      "legacy_source": "src/func_ov075_02114ddc.cpp",
+      "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114ddcEhhi.cpp",
       "ordinal": 28
     },
     {
-      "symbol": "func_ov075_02114fa8",
+      "symbol": "_ZN9dEntObj_c19func_ov075_02114fa8Ev",
       "address": "0x02114fa8",
       "size": "0x000000b4",
-      "legacy_source": "src/func_ov075_02114fa8.c",
+      "legacy_source": "src/_ZN9dEntObj_c19func_ov075_02114fa8Ev.c",
       "ordinal": 29
     },
     {
-      "symbol": "func_ov075_0211505c",
+      "symbol": "_ZN9dEntObj_c19func_ov075_0211505cEv",
       "address": "0x0211505c",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov075_0211505c.c",
+      "legacy_source": "src/_ZN9dEntObj_c19func_ov075_0211505cEv.c",
       "ordinal": 30
     },
     {
-      "symbol": "func_ov075_02115098",
+      "symbol": "_ZN9dEntObj_c19func_ov075_02115098Ei",
       "address": "0x02115098",
       "size": "0x0000009c",
-      "legacy_source": "src/func_ov075_02115098.c",
+      "legacy_source": "src/_ZN9dEntObj_c19func_ov075_02115098Ei.c",
       "ordinal": 31
     },
     {
-      "symbol": "func_ov075_02115134",
+      "symbol": "_ZN9dEntObj_c19func_ov075_02115134Ev",
       "address": "0x02115134",
       "size": "0x00000080",
-      "legacy_source": "src/func_ov075_02115134.c",
+      "legacy_source": "src/_ZN9dEntObj_c19func_ov075_02115134Ev.c",
       "ordinal": 32
     },
     {
-      "symbol": "func_ov075_021151b4",
+      "symbol": "_ZN9dEntObj_c19func_ov075_021151b4Ei",
       "address": "0x021151b4",
       "size": "0x00000098",
-      "legacy_source": "src/func_ov075_021151b4.c",
+      "legacy_source": "src/_ZN9dEntObj_c19func_ov075_021151b4Ei.c",
       "ordinal": 33
     },
     {
-      "symbol": "func_ov075_0211524c",
+      "symbol": "_ZN9dEntObj_c19func_ov075_0211524cEi",
       "address": "0x0211524c",
       "size": "0x00000044",
-      "legacy_source": "src/func_ov075_0211524c.c",
+      "legacy_source": "src/_ZN9dEntObj_c19func_ov075_0211524cEi.c",
       "ordinal": 34
     },
     {
-      "symbol": "func_ov075_02115290",
+      "symbol": "_ZN9dEntObj_c19func_ov075_02115290Ei",
       "address": "0x02115290",
       "size": "0x00000044",
-      "legacy_source": "src/func_ov075_02115290.c",
+      "legacy_source": "src/_ZN9dEntObj_c19func_ov075_02115290Ei.c",
       "ordinal": 35
     },
     {
-      "symbol": "func_ov075_021152d4",
+      "symbol": "_ZN9dEntObj_c19func_ov075_021152d4Ev",
       "address": "0x021152d4",
       "size": "0x000000b4",
-      "legacy_source": "src/func_ov075_021152d4.cpp",
+      "legacy_source": "src/_ZN9dEntObj_c19func_ov075_021152d4Ev.cpp",
       "ordinal": 36
     },
     {
@@ -324,31 +324,31 @@
   "bss": [],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
-    "tubuild create warning: RAW: src/func_ov075_021143e4.cpp (func_ov075_021143e4) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov075_021147d4.cpp (func_ov075_021147d4) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov075_02114894.cpp (func_ov075_02114894) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov075_02114988.cpp (func_ov075_02114988) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov075_02114010 and the one that held func_ov075_021141b8; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov075_02114010 and the one that held func_ov075_02114218; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK15dExtFrameCtrl_c12WillHitFrameEi' differs between the legacy file that used to hold func_ov075_02114010 and the one that held func_ov075_0211427c; kept the first, the other is commented out for review -- RESOLVED: no declaration of this mangled symbol survives in the promoted TU; its members call the real member function instead. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dClipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_' differs between the legacy file that used to hold func_ov075_02114010 and the one that held func_ov075_0211427c; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0201251c' differs between the legacy file that used to hold func_ov075_02114010 and the one that held func_ov075_0211427c; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK15dExtFrameCtrl_c12WillHitFrameEi' differs between the legacy file that used to hold func_ov075_02114010 and the one that held func_ov075_02114390; kept the first, the other is commented out for review -- RESOLVED: no declaration of this mangled symbol survives in the promoted TU; its members call the real member function instead. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov075_02114010 and the one that held func_ov075_02114560; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov075_02114010 and the one that held func_ov075_02114904; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov075_02114010 and the one that held func_ov075_021149d0; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov075_02114010 and the one that held func_ov075_02114a6c; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov075_02114010 and the one that held func_ov075_02114ddc; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov075_02114904 and the one that held func_ov075_02114ddc; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209e650' differs between the legacy file that used to hold func_ov075_02114904 and the one that held func_ov075_02114ddc; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012790' differs between the legacy file that used to hold func_ov075_02114560 and the one that held func_ov075_02115134; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromTranslation' differs between the legacy file that used to hold func_ov075_02114cd8 and the one that held func_ov075_021151b4; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov075_02114cd8 and the one that held func_ov075_021151b4; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov075_02114ddc and the one that held _ZN9dEntObj_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov075_021152d4' differs between the legacy file that used to hold _ZN9dEntObj_c8BehaviorEv and the one that held _ZN9dEntObj_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov075_0211d384' differs between the legacy file that used to hold func_ov075_02114904 and the one that held _ZN9dEntObj_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov075_0211d42c' differs between the legacy file that used to hold func_ov075_021149d0 and the one that held _ZN9dEntObj_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov075_02114cd8 and the one that held _ZN9dEntObj_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH."
+    "tubuild create warning: RAW: src/_ZN15UnknownVsPlayer19func_ov075_021143e4Ev.cpp (_ZN15UnknownVsPlayer19func_ov075_021143e4Ev) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/_ZN15UnknownVsPlayer19func_ov075_021147d4Ev.cpp (_ZN15UnknownVsPlayer19func_ov075_021147d4Ev) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/_ZN15UnknownVsPlayer19func_ov075_02114894Ev.cpp (_ZN15UnknownVsPlayer19func_ov075_02114894Ev) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/_ZN15UnknownVsPlayer19func_ov075_02114988Ev.cpp (_ZN15UnknownVsPlayer19func_ov075_02114988Ev) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114010Ev and the one that held _ZN15UnknownVsPlayer19func_ov075_021141b8Ev; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114010Ev and the one that held _ZN15UnknownVsPlayer19func_ov075_02114218Ev; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK15dExtFrameCtrl_c12WillHitFrameEi' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114010Ev and the one that held _ZN15UnknownVsPlayer19func_ov075_0211427cEv; kept the first, the other is commented out for review -- RESOLVED: no declaration of this mangled symbol survives in the promoted TU; its members call the real member function instead. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dClipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114010Ev and the one that held _ZN15UnknownVsPlayer19func_ov075_0211427cEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0201251c' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114010Ev and the one that held _ZN15UnknownVsPlayer19func_ov075_0211427cEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK15dExtFrameCtrl_c12WillHitFrameEi' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114010Ev and the one that held _ZN15UnknownVsPlayer19func_ov075_02114390Ev; kept the first, the other is commented out for review -- RESOLVED: no declaration of this mangled symbol survives in the promoted TU; its members call the real member function instead. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114010Ev and the one that held _ZN15UnknownVsPlayer19func_ov075_02114560Ev; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114010Ev and the one that held _ZN15UnknownVsPlayer19func_ov075_02114904Ei; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114010Ev and the one that held _ZN15UnknownVsPlayer19func_ov075_021149d0Ei; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114010Ev and the one that held _ZN15UnknownVsPlayer19func_ov075_02114a6cEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114010Ev and the one that held _ZN15UnknownVsPlayer19func_ov075_02114ddcEhhi; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114904Ei and the one that held _ZN15UnknownVsPlayer19func_ov075_02114ddcEhhi; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209e650' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114904Ei and the one that held _ZN15UnknownVsPlayer19func_ov075_02114ddcEhhi; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012790' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114560Ev and the one that held _ZN9dEntObj_c19func_ov075_02115134Ev; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromTranslation' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114cd8Ev and the one that held _ZN9dEntObj_c19func_ov075_021151b4Ei; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114cd8Ev and the one that held _ZN9dEntObj_c19func_ov075_021151b4Ei; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114ddcEhhi and the one that held _ZN9dEntObj_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9dEntObj_c19func_ov075_021152d4Ev' differs between the legacy file that used to hold _ZN9dEntObj_c8BehaviorEv and the one that held _ZN9dEntObj_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov075_0211d384' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114904Ei and the one that held _ZN9dEntObj_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov075_0211d42c' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_021149d0Ei and the one that held _ZN9dEntObj_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold _ZN15UnknownVsPlayer19func_ov075_02114cd8Ev and the one that held _ZN9dEntObj_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: one file-scope declaration of this symbol survives in the promoted TU and every member uses it; the commented-out alternative is gone. Verified: 43/43 MATCH."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -515,12 +515,12 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "Vector3 four-byte destructor, vague linkage from the Vector3 locals in func_ov075_02114300 and func_ov075_021151b4. The cartridge owns the one copy at arm9:0x020072c0."
+      "reason": "Vector3 four-byte destructor, vague linkage from the Vector3 locals in _ZN15UnknownVsPlayer19func_ov075_02114300Ev and _ZN9dEntObj_c19func_ov075_021151b4Ei. The cartridge owns the one copy at arm9:0x020072c0."
     },
     {
       "symbol": "_ZN9Matrix4x3D1Ev",
       "disposition": "deadstrip",
-      "reason": "Matrix4x3 vague-linkage destructor from the view-matrix local in func_ov075_021152d4. No configured ROM symbol of that name exists in any module and no surviving reference reaches it."
+      "reason": "Matrix4x3 vague-linkage destructor from the view-matrix local in _ZN9dEntObj_c19func_ov075_021152d4Ev. No configured ROM symbol of that name exists in any module and no surviving reference reaches it."
     },
     {
       "symbol": "_ZTV9dEntObj_c",

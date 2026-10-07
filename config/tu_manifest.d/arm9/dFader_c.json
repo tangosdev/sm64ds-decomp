@@ -1,0 +1,1029 @@
+{
+  "id": "arm9/dFader_c",
+  "module": "arm9",
+  "source": "src/engine/fader/dFader_c.cpp",
+  "promoted_source": "src/engine/fader/dFader_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "NOT FROM tu_map. tools/tu_map.py reports the arm9 `main` module as UNDER-SEGMENTED: one unit 0x20049f0..0x20707a4 carrying ~3000 functions and dozens of class labels, so there is no tu_map boundary or `tubuild.py create` candidate id here; every line below is hand-derived and independently checkable.",
+    "contiguous linker run 0x020171c8..0x0201787c: the thirty delinks entries tile the span exactly with no hole and no foreign function inside (config/arm9/delinks.txt, config/arm9/symbols.txt).",
+    "class-label homogeneity: every symbol in the run is a member of the one inheritance chain -- dFdDummy_c : dFdColor_c : dFdBrightness_c : dFader_c, plus dFdWipe_c : dFdColor_c -- the screen-fade hierarchy documented in include/dFader_c.h.",
+    "ROM evidence says one family: the vtable chain written by _ZN9dFdWipe_cC1Ev (0x0208eafc, 0x0208eacc, 0x0208eb2c, 0x0208ea9c) and the __si_class_type_info records (dFader_c -> dFdBrightness_c -> dFdColor_c -> dFdWipe_c / dFdDummy_c) are the same adjacency this run shows in .text.",
+    "neighbour below: the ModelAnim thunk row _ZThn80_N10ModelAnim2D1Ev at 0x020171b8 (a different class). Neighbour above: func_0201787c, a SharedFilePtr/Model helper of the TextureSequence family at 0x020178e4+. The run is bracketed rather than cut out of a uniform stretch.",
+    "the tail is trimmed, not folded: _ZN8dFader_cD0Ev (0x02017848..0x0201786c) is the run's only non-`complete` delinks entry -- mwcc's emitted deleting-destructor body does not byte-match the cartridge's. This TU therefore defines ~dFader_c() but is licensed only through dFader_c's D2 at 0x02017848; _ZN8dFader_cD0Ev.cpp and _ZN8dFader_cD1Ev.cpp keep the tail as per-variant shards and the emitted D0/D1 copies deadstrip (the documented 'promoted TU trims its licensed range' pattern, cf. ov002/daObjKuruma_c)."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020171c8",
+      "end": "0x0201787c"
+    },
+    {
+      "name": ".data",
+      "start": "0x0208ea50",
+      "end": "0x0208eb54"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN10dFdDummy_c14SetForwardTimeEj",
+      "address": "0x020171c8",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN10dFdDummy_c14SetForwardTimeEj.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN10dFdDummy_c15SetBackwardTimeEj",
+      "address": "0x020171f0",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN10dFdDummy_c15SetBackwardTimeEj.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN10dFdDummy_c11AdvanceFadeEv",
+      "address": "0x0201721c",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN10dFdDummy_c11AdvanceFadeEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN10dFdDummy_cD0Ev",
+      "address": "0x02017228",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN10dFdDummy_cD0Ev.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN10dFdDummy_cD1Ev",
+      "address": "0x02017254",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN10dFdDummy_cD1Ev.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN10dFdDummy_cC1Ev",
+      "address": "0x02017278",
+      "size": "0x00000048",
+      "legacy_source": "src/func_02017278.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN9dFdWipe_c14LoadAndSetFileEt",
+      "address": "0x020172c0",
+      "size": "0x00000018",
+      "legacy_source": "src/engine/fader/_ZN9dFdWipe_c14LoadAndSetFileEt.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN9dFdWipe_c11AdvanceFadeEv",
+      "address": "0x020172d8",
+      "size": "0x00000140",
+      "legacy_source": "src/engine/fader/_ZN9dFdWipe_c11AdvanceFadeEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN9dFdWipe_cD0Ev",
+      "address": "0x02017418",
+      "size": "0x00000038",
+      "legacy_source": "src/engine/fader/_ZN9dFdWipe_cD0Ev.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN9dFdWipe_cD1Ev",
+      "address": "0x02017450",
+      "size": "0x00000030",
+      "legacy_source": "src/engine/fader/_ZN9dFdWipe_cD1Ev.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN9dFdWipe_cC1Ev",
+      "address": "0x02017480",
+      "size": "0x00000060",
+      "legacy_source": "src/engine/fader/_ZN9dFdWipe_cC1Ev.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN10dFdColor_c11AdvanceFadeEv",
+      "address": "0x020174e0",
+      "size": "0x00000094",
+      "legacy_source": "src/engine/fader/_ZN10dFdColor_c11AdvanceFadeEv.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN10dFdColor_cD2Ev",
+      "address": "0x02017574",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN10dFdColor_cD2Ev.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN10dFdColor_cD0Ev",
+      "address": "0x02017598",
+      "size": "0x0000002c",
+      "legacy_source": "src/engine/fader/_ZN10dFdColor_cD0Ev.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN10dFdColor_cD1Ev",
+      "address": "0x020175c4",
+      "size": "0x00000024",
+      "legacy_source": "src/engine/fader/_ZN10dFdColor_cD1Ev.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN8dFader_c13AdvanceInterpEv",
+      "address": "0x020175e8",
+      "size": "0x00000028",
+      "legacy_source": "src/engine/fader/_ZN8dFader_c13AdvanceInterpEv.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN15dFdBrightness_c10SetToStartEv",
+      "address": "0x02017610",
+      "size": "0x0000000c",
+      "legacy_source": "src/engine/fader/_ZN15dFdBrightness_c10SetToStartEv.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN15dFdBrightness_c8SetToEndEv",
+      "address": "0x0201761c",
+      "size": "0x0000000c",
+      "legacy_source": "src/engine/fader/_ZN15dFdBrightness_c8SetToEndEv.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN15dFdBrightness_c20IsBetweenStartAndEndEv",
+      "address": "0x02017628",
+      "size": "0x00000048",
+      "legacy_source": "src/engine/fader/_ZN15dFdBrightness_c20IsBetweenStartAndEndEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN15dFdBrightness_c7IsAtEndEv",
+      "address": "0x02017670",
+      "size": "0x00000014",
+      "legacy_source": "src/engine/fader/_ZN15dFdBrightness_c7IsAtEndEv.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN15dFdBrightness_c9IsAtStartEv",
+      "address": "0x02017684",
+      "size": "0x00000014",
+      "legacy_source": "src/engine/fader/_ZN15dFdBrightness_c9IsAtStartEv.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN15dFdBrightness_c14SetForwardTimeEj",
+      "address": "0x02017698",
+      "size": "0x00000040",
+      "legacy_source": "src/engine/fader/_ZN15dFdBrightness_c14SetForwardTimeEj.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN15dFdBrightness_c15SetBackwardTimeEj",
+      "address": "0x020176d8",
+      "size": "0x00000048",
+      "legacy_source": "src/engine/fader/_ZN15dFdBrightness_c15SetBackwardTimeEj.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZN15dFdBrightness_c11AdvanceFadeEv",
+      "address": "0x02017720",
+      "size": "0x000000a4",
+      "legacy_source": "src/engine/fader/_ZN15dFdBrightness_c11AdvanceFadeEv.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN15dFdBrightness_cD2Ev",
+      "address": "0x020177c4",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN15dFdBrightness_cD2Ev.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN15dFdBrightness_cD0Ev",
+      "address": "0x020177e8",
+      "size": "0x0000002c",
+      "legacy_source": "src/engine/fader/_ZN15dFdBrightness_cD0Ev.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZN15dFdBrightness_cD1Ev",
+      "address": "0x02017814",
+      "size": "0x00000024",
+      "legacy_source": "src/engine/fader/_ZN15dFdBrightness_cD1Ev.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN8dFader_cD2Ev",
+      "address": "0x02017838",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN8dFader_cD2Ev.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "_ZN8dFader_cD0Ev",
+      "address": "0x02017848",
+      "size": "0x00000024",
+      "legacy_source": "src/engine/fader/_ZN8dFader_cD0Ev.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "_ZN8dFader_cD1Ev",
+      "address": "0x0201786c",
+      "size": "0x00000010",
+      "legacy_source": "src/engine/fader/_ZN8dFader_cD1Ev.cpp",
+      "ordinal": 29
+    }
+  ],
+  "data": [
+    {
+      "symbol": "_ZTS15dFdBrightness_c",
+      "address": "0x0208ea50",
+      "size": "0x12",
+      "evidence": "ROM type-name string '15dFdBrightness_c'; emitted .data section (0x12 bytes, align 1) lands at its anchor"
+    },
+    {
+      "symbol": "_ZTV10dFdDummy_c",
+      "address": "0x0208ea6c",
+      "emitted_storage_address": "0x0208ea64",
+      "address_point_bias": "0x8",
+      "size": "0x30",
+      "evidence": "compiler storage includes the two-word ABI preamble (offset-to-top 0, typeinfo 0x0208ea0c); public address point 0x0208ea6c"
+    },
+    {
+      "symbol": "_ZTV9dFdWipe_c",
+      "address": "0x0208ea9c",
+      "emitted_storage_address": "0x0208ea94",
+      "address_point_bias": "0x8",
+      "size": "0x30",
+      "evidence": "two-word ABI preamble + slots; public address point 0x0208ea9c"
+    },
+    {
+      "symbol": "_ZTV15dFdBrightness_c",
+      "address": "0x0208eacc",
+      "emitted_storage_address": "0x0208eac4",
+      "address_point_bias": "0x8",
+      "size": "0x30",
+      "evidence": "two-word ABI preamble + slots; public address point 0x0208eacc"
+    },
+    {
+      "symbol": "_ZTV8dFader_c",
+      "address": "0x0208eafc",
+      "emitted_storage_address": "0x0208eaf4",
+      "address_point_bias": "0x8",
+      "size": "0x30",
+      "evidence": "two-word ABI preamble + slots; public address point 0x0208eafc"
+    },
+    {
+      "symbol": "_ZTV10dFdColor_c",
+      "address": "0x0208eb2c",
+      "emitted_storage_address": "0x0208eb24",
+      "address_point_bias": "0x8",
+      "size": "0x30",
+      "evidence": "two-word ABI preamble + slots; public address point 0x0208eb2c"
+    }
+  ],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN10dFdDummy_cC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant of the complete-object ctor _ZN10dFdDummy_cC1Ev (0x02017278): mwcc emits both from one out-of-line ctor, the retail link kept only C1 and no configured symbol names this copy."
+    },
+    {
+      "symbol": "_ZN10dFdDummy_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant of _ZN10dFdDummy_cD1Ev (0x02017254): one out-of-line dtor definition emits both, the cartridge keeps only D1/D0, so this copy is homeless."
+    },
+    {
+      "symbol": "_ZN9dFdWipe_cC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant of the complete-object ctor _ZN9dFdWipe_cC1Ev (0x02017480); the cartridge keeps only the C1 and no configured symbol names the C2."
+    },
+    {
+      "symbol": "_ZN9dFdWipe_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant of _ZN9dFdWipe_cD1Ev (0x02017450); the cartridge keeps only D1/D0, so the emitted D2 is homeless."
+    },
+    {
+      "symbol": "_ZTI8dFader_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e9e0",
+      "reason": "compiler-emitted RTTI copy; string/string packing pads differ from the intact contribution so these stay ROM bytes"
+    },
+    {
+      "symbol": "_ZTS8dFader_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e9e8",
+      "reason": "compiler-emitted type-name string; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTS9dFdWipe_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e9f4",
+      "reason": "compiler-emitted type-name string; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTI10dFdColor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208ea00",
+      "reason": "compiler-emitted RTTI copy; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTI9dFdWipe_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208ea18",
+      "reason": "compiler-emitted RTTI copy; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTI10dFdDummy_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208ea0c",
+      "reason": "compiler-emitted RTTI copy; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTI15dFdBrightness_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208ea24",
+      "reason": "compiler-emitted RTTI copy; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTS10dFdDummy_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208ea30",
+      "reason": "compiler-emitted type-name string; canonical bytes verified, contribution is gap data"
+    },
+    {
+      "symbol": "_ZTS10dFdColor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208ea40",
+      "reason": "compiler-emitted type-name string; canonical bytes verified, contribution is gap data"
+    }
+  ],
+  "notes": [
+    "Hand-assembled, not generated by `tubuild.py create`: tu_map cannot segment arm9/main, so there was no candidate id to create from. The schema follows the arm9/ActorDerived entry, which took the same route.",
+    "func_02017278 is the class's real constructor: it writes the whole dFader_c -> dFdBrightness_c -> dFdColor_c -> dFdDummy_c vptr chain and the inherited field stores, i.e. the complete-object ctor with every base sub-object ctor inlined (all bases carry inline ctors in their headers). It is folded as the real member `dFdDummy_c::dFdDummy_c()`, the symbols.txt row is renamed to _ZN10dFdDummy_cC1Ev, and the sole caller src/d_s_dsmt.c is respelled to the mangled name in the same change.",
+    "The mangled `_ZN8dFader_c13AdvanceInterpEv` extern each AdvanceFade shard used becomes the inherited member call `AdvanceInterp()` -- same target, same bytes.",
+    "dFader_c::D0 remains the family's one non-matching body and keeps its shard; dFader_c::D1 keeps its own entry past the D0 hole because delinks grants a file exactly one contiguous range."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-dFader_c/dFader_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 30,
+    "functions_declared": 30,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN10dFdDummy_cC2Ev",
+        "_ZN10dFdDummy_cD2Ev",
+        "_ZN9dFdWipe_cC2Ev",
+        "_ZN9dFdWipe_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN10dFdDummy_cC2Ev",
+        "_ZN10dFdDummy_cD2Ev",
+        "_ZN9dFdWipe_cC2Ev",
+        "_ZN9dFdWipe_cD2Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        34,
+        35,
+        42,
+        43,
+        48,
+        49,
+        56,
+        57
+      ],
+      "data": [
+        "_ZTI8dFader_c",
+        "_ZTS8dFader_c",
+        "_ZTS9dFdWipe_c",
+        "_ZTI10dFdColor_c",
+        "_ZTI9dFdWipe_c",
+        "_ZTI10dFdDummy_c",
+        "_ZTI15dFdBrightness_c",
+        "_ZTS10dFdDummy_c",
+        "_ZTS10dFdColor_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dFdColor_c",
+        "_ZTI10dFdDummy_c",
+        "_ZTI15dFdBrightness_c",
+        "_ZTI8dFader_c",
+        "_ZTI9dFdWipe_c",
+        "_ZTS10dFdColor_c",
+        "_ZTS10dFdDummy_c",
+        "_ZTS8dFader_c",
+        "_ZTS9dFdWipe_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/arm9-dFader_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020171c8",
+        "end": "0x0201787c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020171c8",
+          "end": "0x0201787c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0208ea50",
+          "end": "0x0208eb54",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 36
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              19,
+              20,
+              22,
+              24,
+              26,
+              28
+            ],
+            "desired": [
+              19,
+              20,
+              22,
+              24,
+              26,
+              28
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "production_mode": "intact-object",
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x0208ea68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI10dFdDummy_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208ea0c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208ea6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dFdDummy_cD1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017254"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208ea70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dFdDummy_cD0Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017228"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208ea74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dFdDummy_c11AdvanceFadeEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201721c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208ea78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dFdDummy_c15SetBackwardTimeEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020171f0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208ea7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dFdDummy_c14SetForwardTimeEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020171c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208ea80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c9IsAtStartEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017684"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208ea84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c7IsAtEndEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017670"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208ea88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c20IsBetweenStartAndEndEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017628"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208ea8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c8SetToEndEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201761c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208ea90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c10SetToStartEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017610"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208ea98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI9dFdWipe_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208ea18"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208ea9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9dFdWipe_cD1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017450"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eaa0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9dFdWipe_cD0Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017418"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eaa4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9dFdWipe_c11AdvanceFadeEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020172d8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eaa8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c15SetBackwardTimeEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020176d8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eaac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c14SetForwardTimeEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017698"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eab0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c9IsAtStartEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017684"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eab4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c7IsAtEndEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017670"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eab8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c20IsBetweenStartAndEndEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017628"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eabc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c8SetToEndEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201761c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eac0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c10SetToStartEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017610"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eac8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI15dFdBrightness_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208ea24"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eacc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_cD1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017814"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208ead0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_cD0Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020177e8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208ead4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c11AdvanceFadeEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017720"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208ead8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c15SetBackwardTimeEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020176d8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eadc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c14SetForwardTimeEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017698"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eae0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c9IsAtStartEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017684"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eae4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c7IsAtEndEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017670"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eae8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c20IsBetweenStartAndEndEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017628"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eaec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c8SetToEndEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201761c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eaf0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c10SetToStartEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017610"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eaf8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8dFader_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208e9e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eafc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dFader_cD1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201786c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eb00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dFader_cD0Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017848"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eb28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI10dFdColor_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208ea00"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eb2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dFdColor_cD1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020175c4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eb30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dFdColor_cD0Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017598"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eb34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dFdColor_c11AdvanceFadeEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020174e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eb38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c15SetBackwardTimeEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020176d8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eb3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c14SetForwardTimeEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017698"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eb40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c9IsAtStartEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017684"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eb44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c7IsAtEndEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017670"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eb48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c20IsBetweenStartAndEndEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017628"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eb4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c8SetToEndEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201761c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0208eb50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dFdBrightness_c10SetToStartEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017610"
+    }
+  ]
+}

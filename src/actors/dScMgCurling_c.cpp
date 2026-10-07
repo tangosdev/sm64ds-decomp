@@ -7,22 +7,24 @@
  * file (src/d_s_mg_curling.cpp).
  *
  * Functions run in ROM order under `#pragma defer_codegen off`; do not
- * reorder.
+ * reorder. The helpers are all dScMgCurling_c members: the state tables
+ * call them through pointers to member, the rest with the scene as r0.
  *
- * The nineteen functions from func_ov006_020e20bc to InitResources came
- * from one-function files, func_ov006_020e20bc last (it was the hole that
- * split the unit until it matched). Their bodies are kept as they matched
- * there; only the declarations were merged: cstd::atan2 keeps the int
- * spelling the lower half already needed, func_ov004_020adc1c takes no
- * argument, LoadFile returns void *, and func_ov006_020e3388 takes the
- * scene as char * rather than int. The two state tables read by
- * func_ov006_020e3078 and Behavior dispatch through the same incomplete
- * receiver C as the four below.
- *
- * Blocked: dScMgCurling_c.h types only the stones (mStone) and a few
- * fields; the falling bits at 0x478c, the score popups at 0x473c and the
- * dragged stone at 0x4eb0 are padding there, so the helpers take the scene
- * as raw bytes. The helpers are unnamed in symbols.txt.
+ * comment leftovers: a few spellings must stay raw because the typed form
+ * changes codegen (each was measured -- the DIFF size is in parentheses):
+ * - func_ov006_020e0edc / func_ov006_020e0ff0 keep the `bits + 0x47NN +
+ *   off` spelling; mBit[index] reschedules them (0ff0 also sits under
+ *   inline_depth(0)).
+ * - func_ov006_020e1608 / 020e1680 / 020e3078 / 020e3388 sit under
+ *   opt_strength_reduction off: 1608's volatile countdown launder, 1680's
+ *   M() popup-Y launder and stone walk, 3078's stone walk and base-field
+ *   words, and 3388's clear loops all DIFF when typed (20-999 words).
+ * - func_ov006_020e2868 keeps its pang/p668/p660/p664 pointer temps;
+ *   &mStone[idx] form moves the address math (45 words).
+ * - func_ov006_020e26f8 reads the dragged stone through DragView; the
+ *   mStone[i] spelling costs one word.
+ * - func_ov006_020e13a4's second init walk keeps `char *bit`; the
+ *   indexed form costs four words.
  */
 #pragma defer_codegen off
 
@@ -36,25 +38,6 @@ struct C;
 typedef void (C::*PMF)(int);
 struct Entry { PMF pmf; };
 typedef void (C::*PMF0)();
-
-/* The five score popups at 0x473c, as func_ov006_020e1554 reads them. The
- * other functions reach the same bytes by offset, which is what the ROM
- * shows. p0 covers the u16 countdown at +0xa and the active flag at +0xc. */
-typedef struct {
-    int x;
-    int y;
-    unsigned short points;
-    unsigned char p0[3];
-    unsigned char shown;
-    unsigned char p1[2];
-} ScorePopup;
-
-typedef struct {
-    unsigned char _pad[0x473c];
-    ScorePopup popups[5];
-    unsigned char _pad2[0x4ee8 - 0x473c - 5*16];
-    unsigned char unk_4ee8;
-} ScoreView;
 
 /* The dragged stone, as func_ov006_020e26f8 reads it: the stone row plus
  * the aim point at 0x4eb0 past the five rows. */
@@ -82,17 +65,6 @@ struct DragView {
  * words there. */
 struct B4 { unsigned char v; unsigned char pad[3]; };
 
-/* One of the 0x32 falling bits at 0x478c (0x24 bytes each): position,
- * velocity, a wait and a timer, and state bytes. */
-#define BIT_X(b,i)       (*(int*)  ((char*)(b) + 0x478c + (i)*0x24))
-#define BIT_Y(b,i)       (*(int*)  ((char*)(b) + 0x4790 + (i)*0x24))
-#define BIT_VX(b,i)      (*(int*)  ((char*)(b) + 0x4794 + (i)*0x24))
-#define BIT_VY(b,i)      (*(int*)  ((char*)(b) + 0x4798 + (i)*0x24))
-#define BIT_WAIT(b,i)    (*(unsigned short*)((char*)(b) + 0x47a0 + (i)*0x24))
-#define BIT_WAIT_S(b,i)  (*(short*)((char*)(b) + 0x47a0 + (i)*0x24))
-#define BIT_TIMER(b,i)   (*(unsigned short*)((char*)(b) + 0x47a2 + (i)*0x24))
-#define BIT_TIMER_S(b,i) (*(short*)((char*)(b) + 0x47a2 + (i)*0x24))
-#define BIT_STATE(b,i)   (*(unsigned char*)((char*)(b) + 0x47aa + (i)*0x24))
 /* Launder: forces an address through an integer so it is not shared. */
 #define M(p) ((int *)(int)(p))
 /* FX_Mul: 12-bit fixed-point product, rounded. */
@@ -172,48 +144,6 @@ extern PMF   data_ov006_02141910[];
 extern PMF   data_ov006_02141930[];
 extern PMF0  data_ov006_02141950[];
 
-/* Defined below. */
-extern void func_ov006_020e0694(char *c);
-extern void func_ov006_020e071c(char *c, int i);
-extern void func_ov006_020e07b0(char *o, int i);
-extern void func_ov006_020e0884(char *c, int i);
-extern void func_ov006_020e091c(char *base, int i);
-extern void func_ov006_020e0a24(char *base, int idx);
-extern void func_ov006_020e0b64(char *base, int index);
-extern void func_ov006_020e0ca0(char *o, int i);
-extern void func_ov006_020e0d84(char *c, int i);
-extern void func_ov006_020e0e18(char *base, int idx);
-extern void func_ov006_020e0edc(char *c, int idx);
-extern void func_ov006_020e0ff0(void *base, int idx);
-extern void func_ov006_020e1100(char *c, int idx);
-extern void func_ov006_020e1214(char *base, int idx);
-extern void func_ov006_020e1264(char *c, int idx);
-extern void func_ov006_020e12d0(char *o);
-extern void func_ov006_020e13a4(char *c);
-extern void func_ov006_020e1554(ScoreView *o);
-extern void func_ov006_020e1608(char *self);
-extern void func_ov006_020e1680(char *o);
-extern void func_ov006_020e17f8(char *self);
-extern void func_ov006_020e1854(void *arg);
-extern void func_ov006_020e1b54(char *c);
-extern void func_ov006_020e1c68(char *a0);
-extern void func_ov006_020e1dc8(dScMgCurling_c *self, int idx);
-extern void func_ov006_020e20bc(dScMgCurling_c *self, int idx);
-extern void func_ov006_020e269c(char *c, int i);
-extern void func_ov006_020e26f8(DragView *w, int i);
-extern void func_ov006_020e285c(dScMgCurling_c *self, int idx);
-extern void func_ov006_020e2868(char *c, int idx);
-extern void func_ov006_020e2c08(char *self, int idx);
-extern void func_ov006_020e2dbc(char *c);
-extern void func_ov006_020e2eb8(void);
-extern void func_ov006_020e2ebc(char *thiz);
-extern void func_ov006_020e2f78(char *c);
-extern void func_ov006_020e3078(char *c);
-extern void func_ov006_020e3210(char *c);
-extern void func_ov006_020e3250(char *c);
-extern void func_ov006_020e3378(char *p);
-extern void func_ov006_020e3388(char *raw);
-
 }  /* extern "C" */
 
 namespace cstd { int sqrt(u64 value); }
@@ -224,220 +154,192 @@ namespace Sound { u32 PlayBank2_2D(u32 id); }
 dScMgCurling_c::~dScMgCurling_c()
 {
 }
-// @symbol func_ov006_020e0694
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e0694Ev
 /* Draws the falling bits. The functions after this one are the bits'
  * states: each field is 0x24 * index past its base offset. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e0694(char *bit)
+void dScMgCurling_c::func_ov006_020e0694()
 {
     int i;
     for (i = 0; i < 0x32; i++) {
-        if (*(unsigned char *)(bit + 0x47ac)) {
-            int x = *(int *)(bit + 0x478c) >> 0xc;
-            int y = *(int *)(bit + 0x4790) >> 0xc;
-            func_ov004_020af948(data_ov006_0213a5e0[*(unsigned char *)(bit + 0x47ad)], x, y, 0);
-            DrawOamSprite(data_ov006_0213a5e0[*(unsigned char *)(bit + 0x47ae)], x, y, 0);
+        if (mBit[i].shown) {
+            int x = mBit[i].x >> 0xc;
+            int y = mBit[i].y >> 0xc;
+            func_ov004_020af948(data_ov006_0213a5e0[mBit[i].texA], x, y, 0);
+            DrawOamSprite(data_ov006_0213a5e0[mBit[i].texB], x, y, 0);
         }
-        bit += 0x24;
     }
 }
-}
 
-// @symbol func_ov006_020e071c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e071c(char *raw, int index)
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e071cEi
+void dScMgCurling_c::func_ov006_020e071c(int index)
 {
-    int off = index * 0x24;
-    if (*(unsigned short *)(raw + 0x47a4 + off) != 0) {
-        short *p = (short *)(raw + 0x47a4 + off);
+    if (mBit[index].wait2 != 0) {
+        short *p = (short *)&mBit[index].wait2;
         *p = (short)(*(unsigned short *)p - 1);
         if (*p < 0)
             *p = 0;
-    } else if (*(int *)(raw + 0x4798 + off) > 0x100) {
-        int *q = (int *)(raw + 0x4798 + off);
+    } else if (mBit[index].vy > 0x100) {
+        int *q = &mBit[index].vy;
         *q = *q - 0x10;
         if ((short)*q < 0x100)
             *q = 0x100;
     } else {
-        *(unsigned char *)(raw + 0x4000 + off + 0x7ab) = 0;
+        mBit[index].state2 = 0;
     }
 }
-}
 
-// @symbol func_ov006_020e07b0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e07b0(char *raw, int index)
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e07b0Ei
+void dScMgCurling_c::func_ov006_020e07b0(int index)
 {
-    int off = index * 0x24;
-    if (*(int *)(raw + 0x479c + off) > *(int *)(raw + 0x4798 + off)) {
-        *(int *)(raw + 0x4798 + off) += 0x10;
-        if (*(int *)(raw + 0x479c + off) > *(int *)(raw + 0x4798 + off))
-            *(int *)(raw + 0x4798 + off) = *(int *)(raw + 0x479c + off);
+    if (mBit[index].vyCap > mBit[index].vy) {
+        mBit[index].vy += 0x10;
+        if (mBit[index].vyCap > mBit[index].vy)
+            mBit[index].vy = mBit[index].vyCap;
     }
-    if (*(unsigned short *)(raw + 0x47a4 + off) != 0) {
-        *(unsigned short *)(raw + 0x47a4 + off) = *(unsigned short *)(raw + 0x47a4 + off) - 1;
-        if (*(short *)(raw + 0x47a4 + off) < 0) *(short *)(raw + 0x47a4 + off) = 0;
+    if (mBit[index].wait2 != 0) {
+        mBit[index].wait2 = mBit[index].wait2 - 1;
+        if ((s16&)mBit[index].wait2 < 0) (s16&)mBit[index].wait2 = 0;
     } else {
-        *(unsigned char *)(raw + off + 0x47ab) = 2;
-        *(short *)(raw + 0x47a4 + off) = (short)(unsigned char)((((0x20 * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)) >> 0xf)) + 0x20);
+        mBit[index].state2 = 2;
+        (s16&)mBit[index].wait2 = (short)(unsigned char)((((0x20 * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)) >> 0xf)) + 0x20);
     }
-}
 }
 
-// @symbol func_ov006_020e0884
-extern "C" {
-void func_ov006_020e0884(char* raw, int index) {
-  int off = index * 0x24;
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e0884Ei
+void dScMgCurling_c::func_ov006_020e0884(int index)
+{
   unsigned int roll;
-  *(int*)(raw + 0x4798 + off) = 0;
+  mBit[index].vy = 0;
   roll = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
-  *(int*)(raw + 0x479c + off) = (((roll << 4) >> 15) << 4) + 0x300;
-  *(unsigned char*)(raw + 0x47ab + off) = 1;
+  mBit[index].vyCap = (((roll << 4) >> 15) << 4) + 0x300;
+  mBit[index].state2 = 1;
   roll = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
   roll = ((roll << 5) >> 15) + 0x20;
-  *(short*)(raw + 0x47a4 + off) = (unsigned char)roll;
-}
+  (s16&)mBit[index].wait2 = (unsigned char)roll;
 }
 
-// @symbol func_ov006_020e091c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e091c(char *raw, int index)
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e091cEi
+void dScMgCurling_c::func_ov006_020e091c(int index)
 {
-    int off = index * 0x24;
-    char *vxs = raw + 0x4794;
-    char *xs = raw + 0x478c;
-    char *ys = raw + 0x4790;
-    *(int*)(xs + off) = *(int*)(xs + off) + *(int*)(vxs + off);
-    *(int*)(ys + off) = *(int*)(ys + off) + *(int*)(raw + off + 0x4798);
-    if (*(u16*)(raw + off + 0x47a0) != 0) {
-        char *timers = raw + 0x47a2;
-        *(u16*)(timers + off) = *(u16*)(timers + off) - 1;
-        if (*(s16*)(timers + off) < 0) *(s16*)(timers + off) = 0;
+    mBit[index].x = mBit[index].x + mBit[index].vx;
+    mBit[index].y = mBit[index].y + mBit[index].vy;
+    if (mBit[index].wait != 0) {
+        mBit[index].timer = mBit[index].timer - 1;
+        if ((s16&)mBit[index].timer < 0) (s16&)mBit[index].timer = 0;
         return;
     }
-    if (*(int*)(vxs + off) > 0) {
-        *(int*)(vxs + off) = *(int*)(vxs + off) - 8;
-        if ((s16)*(int*)(vxs + off) < 0) *(int*)(vxs + off) = 0;
+    if (mBit[index].vx > 0) {
+        mBit[index].vx = mBit[index].vx - 8;
+        if ((s16)mBit[index].vx < 0) mBit[index].vx = 0;
         return;
     }
-    if (*(int*)(vxs + off) < 0) {
-        *(int*)(vxs + off) = *(int*)(vxs + off) + 8;
-        if (*(int*)(vxs + off) > 0) *(int*)(vxs + off) = 0;
+    if (mBit[index].vx < 0) {
+        mBit[index].vx = mBit[index].vx + 8;
+        if (mBit[index].vx > 0) mBit[index].vx = 0;
         return;
     }
-    *(u8*)(raw + off + 0x47aa) = 0;
-}
+    mBit[index].state = 0;
 }
 
-// @symbol func_ov006_020e0a24
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e0a24(char *raw, int index)
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e0a24Ei
+void dScMgCurling_c::func_ov006_020e0a24(int index)
 {
     unsigned short timer;
 
-    BIT_X(raw, index) = BIT_X(raw, index) + BIT_VX(raw, index);
-    BIT_Y(raw, index) = BIT_Y(raw, index) + BIT_VY(raw, index);
+    mBit[index].x = mBit[index].x + mBit[index].vx;
+    mBit[index].y = mBit[index].y + mBit[index].vy;
 
-    if (BIT_WAIT(raw, index) != 0) {
-        BIT_WAIT(raw, index) = BIT_WAIT(raw, index) - 1;
-        if (BIT_WAIT_S(raw, index) < 0)
-            BIT_WAIT(raw, index) = 0;
+    if (mBit[index].wait != 0) {
+        mBit[index].wait = mBit[index].wait - 1;
+        if ((s16&)mBit[index].wait < 0)
+            mBit[index].wait = 0;
         return;
     }
 
-    if (BIT_VX(raw, index) > -0x300) {
-        BIT_VX(raw, index) -= 8;
-        if (BIT_VX(raw, index) <= -0x300)
-            BIT_VX(raw, index) = 0x300;
+    if (mBit[index].vx > -0x300) {
+        mBit[index].vx -= 8;
+        if (mBit[index].vx <= -0x300)
+            mBit[index].vx = 0x300;
     }
 
-    timer = BIT_TIMER(raw, index);
+    timer = mBit[index].timer;
     if (timer != 0) {
-        BIT_TIMER(raw, index) = timer - 1;
-        if (BIT_TIMER_S(raw, index) < 0)
-            BIT_TIMER(raw, index) = 0;
+        mBit[index].timer = timer - 1;
+        if ((s16&)mBit[index].timer < 0)
+            mBit[index].timer = 0;
         return;
     }
 
-    BIT_STATE(raw, index) = 3;
-    BIT_TIMER(raw, index) = (unsigned char)(((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5 >> 0xf) + 0x20);
-}
+    mBit[index].state = 3;
+    mBit[index].timer = (unsigned char)(((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5 >> 0xf) + 0x20);
 }
 
-// @symbol func_ov006_020e0b64
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e0b64(char *raw, int index)
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e0b64Ei
+void dScMgCurling_c::func_ov006_020e0b64(int index)
 {
-    int off = index * 0x24;
     unsigned short timer;
 
-    *(int *)(raw + 0x478c + off) += *(int *)(raw + 0x4794 + off);
-    *(int *)(raw + 0x4790 + off) += *(int *)(raw + 0x4798 + off);
+    mBit[index].x += mBit[index].vx;
+    mBit[index].y += mBit[index].vy;
 
-    timer = *(unsigned short *)(raw + 0x47a0 + off);
+    timer = mBit[index].wait;
     if (timer != 0) {
-        *(short *)(raw + 0x47a0 + off) = timer - 1;
-        if (*(short *)(raw + 0x47a0 + off) < 0)
-            *(short *)(raw + 0x47a0 + off) = 0;
+        (s16&)mBit[index].wait = timer - 1;
+        if ((s16&)mBit[index].wait < 0)
+            (s16&)mBit[index].wait = 0;
         return;
     }
 
-    if (*(int *)(raw + 0x4794 + off) < 0x300) {
-        *(int *)(raw + 0x4794 + off) += 8;
-        if (*(int *)(raw + 0x4794 + off) >= 0x300)
-            *(int *)(raw + 0x4794 + off) = 0x300;
+    if (mBit[index].vx < 0x300) {
+        mBit[index].vx += 8;
+        if (mBit[index].vx >= 0x300)
+            mBit[index].vx = 0x300;
     }
 
-    timer = *(unsigned short *)(raw + 0x47a2 + off);
+    timer = mBit[index].timer;
     if (timer != 0) {
-        *(short *)(raw + 0x47a2 + off) = timer - 1;
-        if (*(short *)(raw + 0x47a2 + off) < 0)
-            *(short *)(raw + 0x47a2 + off) = 0;
+        (s16&)mBit[index].timer = timer - 1;
+        if ((s16&)mBit[index].timer < 0)
+            (s16&)mBit[index].timer = 0;
         return;
     }
 
-    *(char *)(raw + 0x47aa + off) = 3;
-    *(short *)(raw + 0x47a2 + off) = (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) + 0x20 & 0xff;
-}
+    mBit[index].state = 3;
+    (s16&)mBit[index].timer = (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) + 0x20 & 0xff;
 }
 
-// @symbol func_ov006_020e0ca0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e0ca0(char *raw, int index)
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e0ca0Ei
+void dScMgCurling_c::func_ov006_020e0ca0(int index)
 {
-    int off = index * 0x24;
-    if (*(unsigned short *)(raw + 0x47a0 + off) != 0) {
-        *(unsigned short *)(raw + 0x47a0 + off) = *(unsigned short *)(raw + 0x47a0 + off) - 1;
-        if (*(short *)(raw + 0x47a0 + off) < 0) *(short *)(raw + 0x47a0 + off) = 0;
+    if (mBit[index].wait != 0) {
+        mBit[index].wait = mBit[index].wait - 1;
+        if ((s16&)mBit[index].wait < 0) (s16&)mBit[index].wait = 0;
         return;
     }
-    *(int *)(raw + 0x4794 + off) = 0;
-    *(unsigned char *)(raw + 0x47aa + off) = data_ov006_0212e450[(((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 1 >> 15];
-    *(unsigned short *)(raw + 0x47a0 + off) = (short)(unsigned char)((0x10 * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)) >> 0xf);
-    *(unsigned short *)(raw + 0x47a2 + off) = (short)(unsigned char)(((0x40 * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)) >> 0xf) + 0x60);
-}
+    mBit[index].vx = 0;
+    mBit[index].state = data_ov006_0212e450[(((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 1 >> 15];
+    mBit[index].wait = (short)(unsigned char)((0x10 * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)) >> 0xf);
+    mBit[index].timer = (short)(unsigned char)(((0x40 * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)) >> 0xf) + 0x60);
 }
 
-// @symbol func_ov006_020e0d84
-extern "C" void func_ov006_020e0d84(char *raw, int index)
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e0d84Ei
+void dScMgCurling_c::func_ov006_020e0d84(int index)
 {
-    C *self = (C *)raw;
-    int off = index * 0x24;
-    unsigned char state = *(unsigned char *)(raw + off + 0x47aa);
+    C *self = (C *)this;
+    unsigned char state = mBit[index].state;
     (self->*data_ov006_02141930[state])(index);
-    unsigned char state2 = *(unsigned char *)((char *)self + off + 0x47ab);
+    unsigned char state2 = mBit[index].state2;
     (self->*data_ov006_021418d8[state2])(index);
 }
 
-// @symbol func_ov006_020e0e18
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e0e18(char *raw, int index) {
-    int off = index * 0x24;
-    int *x = (int *)(raw + 0x478c + off);
-    int *vx = (int *)(raw + 0x4794 + off);
-    int *y = (int *)(raw + 0x4790 + off);
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e0e18Ei
+void dScMgCurling_c::func_ov006_020e0e18(int index)
+{
+    int *x = &mBit[index].x;
+    int *vx = &mBit[index].vx;
+    int *y = &mBit[index].y;
     *x += *vx;
-    *y += *(int *)(raw + off + 0x4798);
+    *y += mBit[index].vy;
     if (*vx > 0) {
         *vx -= 0x20;
         if ((int)(short)*vx < 0) *vx = 0;
@@ -445,16 +347,14 @@ void func_ov006_020e0e18(char *raw, int index) {
         *vx += 0x20;
         if (*vx > 0) *vx = 0;
     } else {
-        *(unsigned char *)(raw + off + 0x47aa) = 0;
+        mBit[index].state = 0;
     }
 }
-}
 
-// @symbol func_ov006_020e0edc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e0edc(char *raw, int index)
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e0edcEi
+void dScMgCurling_c::func_ov006_020e0edc(int index)
 {
-    char *bits = raw;
+    char *bits = (char *)this;
     int off = index * 0x24;
 
     *(int *)(bits + 0x478c + off) += *(int *)(bits + 0x4794 + off);
@@ -491,18 +391,17 @@ void func_ov006_020e0edc(char *raw, int index)
 
     *(unsigned char *)(bits + off + 0x47aa) = 3;
 }
-}
 
 #pragma push
 #pragma inline_depth(0)
-// @symbol func_ov006_020e0ff0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e0ff0(void* raw, int index) {
-    char* bits = (char*)raw;
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e0ff0Ei
+void dScMgCurling_c::func_ov006_020e0ff0(int index)
+{
+    char* bits = (char*)this;
     int off = index * 0x24;
 
     *(int*)(bits + 0x478c + off) += *(int*)(bits + 0x4794 + off);
-    *(int*)(bits + 0x4790 + off) += *(int*)((char*)raw + off + 0x4798);
+    *(int*)(bits + 0x4790 + off) += *(int*)((char*)bits + off + 0x4798);
 
     unsigned short* wait = (unsigned short*)(bits + 0x47a0 + off);
     if (*wait != 0) {
@@ -533,84 +432,75 @@ void func_ov006_020e0ff0(void* raw, int index) {
     }
 
     *(char*)(bits + off + 0x47aa) = 3;
-}
 #pragma pop
 }
 
-// @symbol func_ov006_020e1100
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e1100(char *raw, int idx)
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e1100Ei
+void dScMgCurling_c::func_ov006_020e1100(int idx)
 {
-    int off = idx * 0x24;
     unsigned short wait;
     short left;
     unsigned int roll;
-    wait = *(unsigned short *)(raw + 0x47a0 + off);
+    wait = mBit[idx].wait;
     if (wait != 0) {
         left = (short)(wait - 1);
-        *(short *)(raw + 0x47a0 + off) = left;
-        if (*(short *)(raw + 0x47a0 + off) < 0) *(short *)(raw + 0x47a0 + off) = 0;
+        (s16&)mBit[idx].wait = left;
+        if ((s16&)mBit[idx].wait < 0) (s16&)mBit[idx].wait = 0;
         return;
     }
-    *(int *)(raw + 0x4794 + off) = 0;
+    mBit[idx].vx = 0;
     roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
-    *(int *)(raw + 0x4798 + off) = (int)(((roll << 5) >> 15) << 4) + 0x600;
+    mBit[idx].vy = (int)(((roll << 5) >> 15) << 4) + 0x600;
     roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
-    *(unsigned char *)(raw + 0x47aa + off) = data_ov006_0212e454[(roll << 1) >> 15];
+    mBit[idx].state = data_ov006_0212e454[(roll << 1) >> 15];
     roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
-    *(short *)(raw + 0x47a0 + off) = (unsigned char)((roll << 4) >> 15);
+    (s16&)mBit[idx].wait = (unsigned char)((roll << 4) >> 15);
     roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
-    *(short *)(raw + 0x47a2 + off) = (unsigned char)(((roll * 0x30) >> 15) + 0x30);
-}
+    (s16&)mBit[idx].timer = (unsigned char)(((roll * 0x30) >> 15) + 0x30);
 }
 
-// @symbol func_ov006_020e1214
-extern "C" void func_ov006_020e1214(char *raw, int idx)
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e1214Ei
+void dScMgCurling_c::func_ov006_020e1214(int idx)
 {
-    unsigned char state = BIT_STATE(raw, idx);
-    (((C*)raw)->*data_ov006_021418f0[state].pmf)(idx);
+    unsigned char state = mBit[idx].state;
+    (((C*)this)->*data_ov006_021418f0[state].pmf)(idx);
 }
 
 #pragma push
 #pragma opt_propagation off
-// @symbol func_ov006_020e1264
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e1264(char *raw, int idx) {
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e1264Ei
+void dScMgCurling_c::func_ov006_020e1264(int idx)
+{
     unsigned roll = (unsigned)RandomIntInternal(&data_0209d4b8);
     int k = 0;
     unsigned pick = ((roll >> 16) & 0x7fff) << 3 >> 0xf;
     if (pick == 5) k = 1;
-    char *bit = raw + idx * 0x24;
-    *(unsigned char *)(bit + 0x47a9) = data_ov006_0212e460[k];
-    *(unsigned char *)(bit + 0x47aa) = 0;
-}
+    mBit[idx].kind = data_ov006_0212e460[k];
+    mBit[idx].state = 0;
 }
 #pragma pop
 
-// @symbol func_ov006_020e12d0
-extern "C" void func_ov006_020e12d0(char *raw)
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e12d0Ev
+void dScMgCurling_c::func_ov006_020e12d0()
 {
     int i;
-    char *bit = raw;
     for (i = 0; i < 0x32; i++) {
-        if (*(unsigned char *)(bit + 0x47a8) != 0) {
-            unsigned char kind = *(unsigned char *)(bit + 0x47a9);
-            (((C *)raw)->*data_ov006_021418c0[kind])(i);
-            if ((*(int *)(bit + 0x4790) >> 0xc) >= 0xc8) {
-                *(int *)(bit + 0x478c) = (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5 >> 0xf << 0xf;
-                *(int *)(bit + 0x4790) = -0x8000;
-                *(unsigned char *)(bit + 0x47aa) = 0;
-                *(unsigned char *)(bit + 0x47a9) = 0;
-                *(unsigned char *)(bit + 0x47ab) = 0;
+        if (mBit[i].on != 0) {
+            unsigned char kind = mBit[i].kind;
+            (((C *)this)->*data_ov006_021418c0[kind])(i);
+            if ((mBit[i].y >> 0xc) >= 0xc8) {
+                mBit[i].x = (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5 >> 0xf << 0xf;
+                mBit[i].y = -0x8000;
+                mBit[i].state = 0;
+                mBit[i].kind = 0;
+                mBit[i].state2 = 0;
             }
         }
-        bit += 0x24;
     }
 }
 
-// @symbol func_ov006_020e13a4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e13a4(char *raw)
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e13a4Ev
+void dScMgCurling_c::func_ov006_020e13a4()
 {
     int i;
     char *bit;
@@ -620,28 +510,26 @@ void func_ov006_020e13a4(char *raw)
     unsigned int m;
 
     i = 0;
-    bit = raw;
     for (; i < 0x32; i++)
     {
-        *(int *)(bit + 0x478c) = 0;
-        *(int *)(bit + 0x4790) = 0;
-        *(int *)(bit + 0x4794) = 0;
-        *(int *)(bit + 0x4798) = 0;
-        *(short *)(bit + 0x47a0) = 0;
-        *(short *)(bit + 0x47a2) = 0;
-        *(short *)(bit + 0x47a4) = 0;
-        *(char *)(bit + 0x47a8) = 0;
-        *(char *)(bit + 0x47a9) = 0;
-        *(char *)(bit + 0x47aa) = 0;
-        *(char *)(bit + 0x47ab) = 0;
-        *(char *)(bit + 0x47ac) = 0;
-        *(char *)(bit + 0x47ad) = 0;
-        *(char *)(bit + 0x47ae) = 1;
-        bit += 0x24;
+        mBit[i].x = 0;
+        mBit[i].y = 0;
+        mBit[i].vx = 0;
+        mBit[i].vy = 0;
+        mBit[i].wait = 0;
+        mBit[i].timer = 0;
+        mBit[i].wait2 = 0;
+        mBit[i].on = 0;
+        mBit[i].kind = 0;
+        mBit[i].state = 0;
+        mBit[i].state2 = 0;
+        mBit[i].shown = 0;
+        mBit[i].texA = 0;
+        mBit[i].texB = 1;
     }
 
     i = 0;
-    bit = raw;
+    bit = (char *)this;
     for (; i < 0x32; i++)
     {
         roll = (unsigned int)RandomIntInternal(&data_0209d4b8);
@@ -677,30 +565,28 @@ void func_ov006_020e13a4(char *raw)
         bit += 0x24;
     }
 }
-}
 
-// @symbol func_ov006_020e1554
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e1554(ScoreView *view)
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e1554Ev
+void dScMgCurling_c::func_ov006_020e1554()
 {
     int i;
     for (i = 0; i < 5; i++) {
-        if (view->popups[i].shown != 0) {
-            func_ov004_020b2444(view->popups[i].x >> 12, view->popups[i].y >> 12, view->popups[i].points, -1, -1, 0, 0);
+        if (mPopup[i].shown != 0) {
+            func_ov004_020b2444(mPopup[i].x >> 12, mPopup[i].y >> 12, mPopup[i].points, -1, -1, 0, 0);
         }
     }
-    if (view->unk_4ee8 != 0) {
+    if (mRoundOver != 0) {
         int r = func_ov004_020adbc0();
         func_ov004_020b2220(0x80, 0x60, r, 1, 0, 0x800, 0);
     }
 }
-}
 
 #pragma push
-// @symbol func_ov006_020e1608
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e1608Ev
 #pragma opt_strength_reduction off
-void func_ov006_020e1608(char *raw) {
+void dScMgCurling_c::func_ov006_020e1608()
+{
+    char *raw = (char *)this;
     int i;
     for (i = 0; i < 5; i++) {
         char *popup = raw + (i << 4);
@@ -715,15 +601,14 @@ void func_ov006_020e1608(char *raw) {
         Sound::PlayBank2_2D(0x1bc);
     }
 }
-}
 #pragma pop
 
 #pragma push
 #pragma opt_strength_reduction off
-// @symbol func_ov006_020e1680
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e1680(char *raw)
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e1680Ev
+void dScMgCurling_c::func_ov006_020e1680()
 {
+    char *raw = (char *)this;
     int slot = 0;
     int i, j;
     char *stone;
@@ -743,8 +628,8 @@ void func_ov006_020e1680(char *raw)
 
         if (*(u8 *)(stone + 0x4689) == 0)
             continue;
-        dx = *(int *)(stone + 0x4660) - *(int *)(raw + 0x4e94);
-        dz = *(int *)(stone + 0x4664) - *(int *)(raw + 0x4e98);
+        dx = *(int *)(stone + 0x4660) - mHouseX;
+        dz = *(int *)(stone + 0x4664) - mHouseY;
         {
             int ax = dx >> 12;
             int az = dz >> 12;
@@ -774,23 +659,22 @@ void func_ov006_020e1680(char *raw)
         slot++;
     }
 }
-}
 #pragma pop
 
-// @symbol func_ov006_020e17f8
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e17f8Ev
 /* Draws a sprite at the aimed stone's position (0x4eb0) once the stylus
  * handler has set 0x4ee5. */
-extern "C" void func_ov006_020e17f8(char *raw)
+void dScMgCurling_c::func_ov006_020e17f8()
 {
-  if(*(unsigned char*)(raw+0x4ee5)==0) return;
-  int x=*(int*)(raw+0x4eb0);
-  int y=*(int*)(raw+0x4eb4);
+  if(mAimShown==0) return;
+  int x=mAimX;
+  int y=mAimY;
   func_ov004_020afdd0((int)data_ov006_0213c2e4,(x>>12)-0x20,(y>>12)-8,-1,0);
 }
 
 #pragma push
 #pragma opt_common_subs off
-// @symbol func_ov006_020e1854
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e1854Ev
 /* Stylus handler for the stone being aimed. While the stylus is down, the
  * touch point plus the grab offset becomes the new position, clamped to the
  * 0x20000..0xe0000 by 0x94000..0xb8000 box; a move under two units is undone.
@@ -803,10 +687,8 @@ extern "C" void func_ov006_020e17f8(char *raw)
  * dx is computed before dy with no temporaries; the tail's index `j` is
  * wider than a byte; and the pragma keeps the 0x4eb0 and 0x4eb4 re-reads
  * after the clamps. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e1854(void *arg)
+void dScMgCurling_c::func_ov006_020e1854()
 {
-    u8 *raw = (u8 *)arg;
     u8 idx;
     int dx, oldx, oldy;
     int diff;
@@ -822,111 +704,109 @@ void func_ov006_020e1854(void *arg)
         u8 bx = pa[i4];
         u8 by = pb[i4];
 
-        oldx = *(int *)(raw + 0x4eb0);
-        oldy = *(int *)(raw + 0x4eb4);
-        *(int *)(raw + 0x4eb0) = (bx << 12) + *(int *)(raw + 0x4ec0);
-        *(int *)(raw + 0x4eb4) = *(int *)(raw + 0x4ec4) + (by << 12);
+        oldx = mAimX;
+        oldy = mAimY;
+        mAimX = (bx << 12) + mGrabX;
+        mAimY = mGrabY + (by << 12);
 
-        if (*(int *)(raw + 0x4eb4) <= 0x94000)
-            *(int *)(raw + 0x4eb4) = 0x94000;
-        if (*(int *)(raw + 0x4eb0) <= 0x20000)
-            *(int *)(raw + 0x4eb0) = 0x20000;
-        if (*(int *)(raw + 0x4eb0) >= 0xe0000)
-            *(int *)(raw + 0x4eb0) = 0xe0000;
-        if (*(int *)(raw + 0x4eb4) >= 0xb8000)
-            *(int *)(raw + 0x4eb4) = 0xb8000;
+        if (mAimY <= 0x94000)
+            mAimY = 0x94000;
+        if (mAimX <= 0x20000)
+            mAimX = 0x20000;
+        if (mAimX >= 0xe0000)
+            mAimX = 0xe0000;
+        if (mAimY >= 0xb8000)
+            mAimY = 0xb8000;
 
 
-        dx = (*(int *)(raw + 0x4eb0) - oldx) >> 12;
-        dy = (*(int *)(raw + 0x4eb4) - oldy) >> 12;
+        dx = (mAimX - oldx) >> 12;
+        dy = (mAimY - oldy) >> 12;
         dy2 = dy * dy;
 
         if (cstd::sqrt((s64)(dx * dx + dy2)) <= 1) {
-            *(int *)(raw + 0x4eb0) = oldx;
-            *(int *)(raw + 0x4eb4) = oldy;
+            mAimX = oldx;
+            mAimY = oldy;
             return;
         }
 
-        diff = (*(int *)(raw + 0x4eb4) - *(int *)(raw + 0x4ebc)) >> 12;
-        if (*(u8 *)(raw + 0x4eea) == 0) {
-            func_02012718(0x1d6, *(int *)(raw + 0x4eb0));
-            *(u8 *)(raw + 0x4eea) = 2;
-            *(int *)(raw + 0x4ed4) = (*(int *)(raw + 0x4eb4) - *(int *)(raw + 0x4ebc)) >> 12;
-            *(int *)(raw + 0x4ebc) = *(int *)(raw + 0x4eb4);
-        } else if (*(u8 *)(raw + 0x4eea) == 1) {
-            if (*(int *)(raw + 0x4ed4) * diff > 0) {
+        diff = (mAimY - mAimHomeY) >> 12;
+        if (mSwingState == 0) {
+            func_02012718(0x1d6, mAimX);
+            mSwingState = 2;
+            mSwingDelta = (mAimY - mAimHomeY) >> 12;
+            mAimHomeY = mAimY;
+        } else if (mSwingState == 1) {
+            if (mSwingDelta * diff > 0) {
                 if (diff < 0)
                     diff = -diff;
                 if (diff >= 0xa)
-                    *(u8 *)(raw + 0x4eea) = 0;
+                    mSwingState = 0;
             } else {
-                *(int *)(raw + 0x4ed4) = diff;
-                *(int *)(raw + 0x4ebc) = *(int *)(raw + 0x4eb4);
+                mSwingDelta = diff;
+                mAimHomeY = mAimY;
             }
         } else {
-            if (*(int *)(raw + 0x4ed4) * diff < 0)
-                *(u8 *)(raw + 0x4eea) = 1;
-            *(int *)(raw + 0x4ed4) = (*(int *)(raw + 0x4eb4) - *(int *)(raw + 0x4ebc)) >> 12;
-            *(int *)(raw + 0x4ebc) = *(int *)(raw + 0x4eb4);
+            if (mSwingDelta * diff < 0)
+                mSwingState = 1;
+            mSwingDelta = (mAimY - mAimHomeY) >> 12;
+            mAimHomeY = mAimY;
         }
 
-        ang = *(u16 *)(raw + 0x4ede);
-        *(u16 *)(raw + 0x4ede) = _ZN4cstd5atan2E5Fix12IiES1_(dy, dx >> 1);
+        ang = mSwingAng;
+        mSwingAng = _ZN4cstd5atan2E5Fix12IiES1_(dy, dx >> 1);
         {
-            u16 a = *(u16 *)(raw + 0x4ede);
+            u16 a = mSwingAng;
             if (a <= 0x8000) {
                 if (a >= 0x4000) {
-                    *(u16 *)(raw + 0x4ede) = 0x8000;
+                    mSwingAng = 0x8000;
                     goto ang_done;
                 }
             }
             if (a <= 0x4000)
-                *(u16 *)(raw + 0x4ede) = 0;
+                mSwingAng = 0;
         }
     ang_done:;
 
         {
             int mag;
-            *(u16 *)(raw + 0x4ede) = (u16)((*(u16 *)(raw + 0x4ede) + ang) >> 1);
+            mSwingAng = (u16)((mSwingAng + ang) >> 1);
             mag = cstd::sqrt((s64)((dx >> 1) * (dx >> 1) + dy2)) * 9;
             mag = (mag << 12) >> 4;
             if (mag >= 0xc000)
                 mag = 0xc000;
-            if (mag > *(int *)(raw + 0x4ec8))
-                *(int *)(raw + 0x4ec8) = mag;
+            if (mag > mSwingSpeed)
+                mSwingSpeed = mag;
             {
-                int cur = *(int *)(raw + 0x4ec8);
+                int cur = mSwingSpeed;
                 if (cur > mag) {
-                    *(int *)(raw + 0x4ec8) = *(int *)(raw + 0x4ec8) - ((cur - mag) >> 1);
+                    mSwingSpeed = mSwingSpeed - ((cur - mag) >> 1);
                 }
             }
         }
 
 
         {
-            int px = *(int *)(raw + 0x4eb0);
-            int py = *(int *)(raw + 0x4eb4);
+            int px = mAimX;
+            int py = mAimY;
             int j = data_020a0e40[0];
             u8 jx = ((u8 *)data_020a0dea)[j * 4];
             int ax = (px >> 12) - jx;
             u8 jy = ((u8 *)data_020a0deb)[j * 4];
             int ay = (py >> 12) - jy;
-            *(int *)(raw + 0x4ec0) = ax << 12;
-            *(int *)(raw + 0x4ec4) = ay << 12;
+            mGrabX = ax << 12;
+            mGrabY = ay << 12;
         }
 
         return;
     }
 
-    *(u8 *)(raw + 0x4ee4) = 0;
-    *(u8 *)(raw + 0x4ee5) = 1;
-}
+    mStylusHeld = 0;
+    mAimShown = 1;
 }
 #pragma pop
 
-// @symbol func_ov006_020e1b54
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e1b54(char *raw)
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e1b54Ev
+void dScMgCurling_c::func_ov006_020e1b54()
 {
   int idx;
   int touching = 0;
@@ -944,46 +824,41 @@ void func_ov006_020e1b54(char *raw)
   {
     return;
   }
-  x = ((*((int *) (raw + 0x4eb0))) >> 0xc) - ((u8 *)data_020a0dea)[idx * 4];
-  y = ((*((int *) (raw + 0x4eb4))) >> 0xc) - ((u8 *)data_020a0deb)[idx * 4];
-  *((int *) (raw + 0x4ec0)) = x << 0xc;
-  *((int *) (raw + 0x4ec4)) = y << 0xc;
-  *((u8 *) (raw + 0x4ee4)) = 1;
-  *((u16 *) (raw + 0x4ede)) = 0xc000;
-  if ((*((u8 *) (raw + 0x4ee9))) == 0)
+  x = (mAimX >> 0xc) - ((u8 *)data_020a0dea)[idx * 4];
+  y = (mAimY >> 0xc) - ((u8 *)data_020a0deb)[idx * 4];
+  mGrabX = x << 0xc;
+  mGrabY = y << 0xc;
+  mStylusHeld = 1;
+  mSwingAng = 0xc000;
+  if (mSwingTimer == 0)
   {
-    func_02012718(0x1d2, *((int *) (raw + 0x4eb0)));
-    *((u8 *) (raw + 0x4ee9)) = 6;
+    func_02012718(0x1d2, mAimX);
+    mSwingTimer = 6;
   }
-  *((int *) (raw + 0x4ecc)) = 0;
-  *((int *) (raw + 0x4ed0)) = 0;
-  *((int *) (raw + 0x4eb8)) = (*((int *) (raw + 0x4eb0))) + (*((int *) (raw + 0x4ec0)));
-  *((int *) (raw + 0x4ebc)) = (*((int *) (raw + 0x4eb4))) + (*((int *) (raw + 0x4ec4)));
-  *((int *) (raw + 0x4ed4)) = 0xff;
-  *((u8 *) (raw + 0x4eea)) = 0;
-}
+  unk_4ecc = 0;
+  unk_4ed0 = 0;
+  mAimHomeX = mAimX + mGrabX;
+  mAimHomeY = mAimY + mGrabY;
+  mSwingDelta = 0xff;
+  mSwingState = 0;
 }
 
-// @symbol func_ov006_020e1c68
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e1c68(char* raw) {
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e1c68Ev
+void dScMgCurling_c::func_ov006_020e1c68()
+{
     int x, y;
     int i;
-    char* stone;
     int remaining;
     int j;
-    stone = raw;
     for (i = 0; i < 5; i++) {
-        if (*(unsigned char*)(stone + 0x4689) == 0) goto next;
-        if (*(unsigned char*)(stone + 0x468a) == 0) goto next;
-        x = *(int*)(stone + 0x4660) >> 12;
-        y = *(int*)(stone + 0x4664) >> 12;
+        if (mStone[i].active == 0) continue;
+        if (mStone[i].dealt == 0) continue;
+        x = mStone[i].x >> 12;
+        y = mStone[i].y >> 12;
         RenderOamBothScreens(&data_ov006_0213c264, x, y, -1, 1, 0);
         RenderOamBothScreens(&data_ov006_0213c2ac, x, y + 8, -1, 2, 0);
-    next:
-        stone += 0x2c;
     }
-    remaining = 5 - *(unsigned char*)(raw + 0x4ee6);
+    remaining = 5 - mThrown;
     if (remaining < 0) remaining = 0;
     j = 0;
     if (remaining > 0) {
@@ -994,9 +869,8 @@ void func_ov006_020e1c68(char* raw) {
         }
     }
 }
-}
 
-// @symbol func_ov006_020e1dc8
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e1dc8Ei
 /* Stone separation. Stone idx has just moved: the first other active stone
  * within 24 units is pushed out to 26 units along the line between them,
  * then that stone gets the same check once against the rest (with a bump
@@ -1004,7 +878,7 @@ void func_ov006_020e1c68(char* raw) {
  *
  * The rotated offsets must be named (vx, vy), and the inner scan needs its
  * own dx, dy, dist and ang; sharing the outer ones changes the registers. */
-extern "C" void func_ov006_020e1dc8(dScMgCurling_c *self, int idx)
+void dScMgCurling_c::func_ov006_020e1dc8(int idx)
 {
     int i;
     int j;
@@ -1015,10 +889,10 @@ extern "C" void func_ov006_020e1dc8(dScMgCurling_c *self, int idx)
     int k;
 
     for (i = 0; i < 5; i++) {
-        if (self->mStone[i].active == 0) continue;
+        if (mStone[i].active == 0) continue;
         if (idx == i) continue;
-        dx = (self->mStone[i].x - self->mStone[idx].x) >> 12;
-        dy = (self->mStone[i].y - self->mStone[idx].y) >> 12;
+        dx = (mStone[i].x - mStone[idx].x) >> 12;
+        dy = (mStone[i].y - mStone[idx].y) >> 12;
         dist = cstd::sqrt((u64)(dx * dx + dy * dy));
         ang = _ZN4cstd5atan2E5Fix12IiES1_(dy, dx);
         if (dist > 0x18) continue;
@@ -1031,20 +905,20 @@ extern "C" void func_ov006_020e1dc8(dScMgCurling_c *self, int idx)
             k = (ang >> 4) * 2;
             cs = data_02082214[k + 1];
             vx = (int)(((long long)cs * 0x1a + 0x800) >> 12);
-            self->mStone[i].x = self->mStone[idx].x + (vx << 12);
+            mStone[i].x = mStone[idx].x + (vx << 12);
             sn = data_02082214[k];
             vy = (int)(((long long)sn * 0x1a + 0x800) >> 12);
-            self->mStone[i].y = self->mStone[idx].y + (vy << 12);
+            mStone[i].y = mStone[idx].y + (vy << 12);
             for (j = 0; j < 5; j++) {
                 int dx2;
                 int dy2;
                 int dist2;
                 u16 ang2;
 
-                if (self->mStone[j].active == 0) continue;
+                if (mStone[j].active == 0) continue;
                 if (i == j) continue;
-                dx2 = (self->mStone[j].x - self->mStone[i].x) >> 12;
-                dy2 = (self->mStone[j].y - self->mStone[i].y) >> 12;
+                dx2 = (mStone[j].x - mStone[i].x) >> 12;
+                dy2 = (mStone[j].y - mStone[i].y) >> 12;
                 dist2 = cstd::sqrt((u64)(dx2 * dx2 + dy2 * dy2));
                 ang2 = _ZN4cstd5atan2E5Fix12IiES1_(dy2, dx2);
                 if (dist2 > 0x18) continue;
@@ -1057,11 +931,11 @@ extern "C" void func_ov006_020e1dc8(dScMgCurling_c *self, int idx)
                     k = (ang2 >> 4) * 2;
                     cs2 = data_02082214[k + 1];
                     vx2 = (int)(((long long)cs2 * 0x1a + 0x800) >> 12);
-                    self->mStone[j].x = self->mStone[i].x + (vx2 << 12);
+                    mStone[j].x = mStone[i].x + (vx2 << 12);
                     sn2 = data_02082214[k];
                     vy2 = (int)(((long long)sn2 * 0x1a + 0x800) >> 12);
-                    self->mStone[j].y = self->mStone[i].y + (vy2 << 12);
-                    func_02012718(0xe8, self->mStone[idx].x);
+                    mStone[j].y = mStone[i].y + (vy2 << 12);
+                    func_02012718(0xe8, mStone[idx].x);
                     return;
                 }
             }
@@ -1070,7 +944,7 @@ extern "C" void func_ov006_020e1dc8(dScMgCurling_c *self, int idx)
     }
 }
 
-// @symbol func_ov006_020e20bc
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e20bcEi
 /* Stone idx has just moved, so find the first other stone it overlaps and
  * resolve the collision. The two exchange their velocity components along
  * the line between their centres and keep the components across it; the
@@ -1084,19 +958,19 @@ extern "C" void func_ov006_020e1dc8(dScMgCurling_c *self, int idx)
  * are reached through pointers taken beside each stone's reads, which puts
  * their addresses in the frame ahead of the temporaries; and the moving
  * stone's new x velocity reuses the outer dx. */
-extern "C" void func_ov006_020e20bc(dScMgCurling_c *self, int idx)
+void dScMgCurling_c::func_ov006_020e20bc(int idx)
 {
     int i;
     int dx;
     int dy;
 
     for (i = 0; i < 5; i++) {
-        if (self->mStone[i].active == 0) continue;
+        if (mStone[i].active == 0) continue;
         if (idx == i) continue;
-        if (self->mStone[i].state == 0) continue;
-        if (self->mStone[i].state == 3) continue;
-        dx = (self->mStone[i].x - self->mStone[idx].x) >> 12;
-        dy = (self->mStone[i].y - self->mStone[idx].y) >> 12;
+        if (mStone[i].state == 0) continue;
+        if (mStone[i].state == 3) continue;
+        dx = (mStone[i].x - mStone[idx].x) >> 12;
+        dy = (mStone[i].y - mStone[idx].y) >> 12;
         if (cstd::sqrt((long long)(dx * dx + dy * dy)) > 0x18) continue;
         {
             u16 *pAngle;
@@ -1124,22 +998,22 @@ extern "C" void func_ov006_020e20bc(dScMgCurling_c *self, int idx)
             int vhy;
 
             /* Contact line, from the hit stone to the moving one. */
-            dx = self->mStone[idx].x - self->mStone[i].x;
-            dy = self->mStone[idx].y - self->mStone[i].y;
+            dx = mStone[idx].x - mStone[i].x;
+            dy = mStone[idx].y - mStone[i].y;
             contact = _ZN4cstd5atan2E5Fix12IiES1_(dy, dx);
             rel = -contact;
 
             /* Both velocities as x/y. A hit stone at rest takes half the
              * moving stone's y so the exchange below cannot stall. */
-            pAngle = &self->mStone[idx].angle;
-            pSpeed = &self->mStone[idx].speed;
-            k = (self->mStone[idx].angle >> 4) * 2;
-            vmx = FMUL(data_02082214[k + 1], self->mStone[idx].speed);
-            vmy = FMUL(data_02082214[k], self->mStone[idx].speed);
-            pHitAngle = &self->mStone[i].angle;
-            k = (self->mStone[i].angle >> 4) * 2;
-            vhx = FMUL(data_02082214[k + 1], self->mStone[i].speed);
-            vhy = FMUL(data_02082214[k], self->mStone[i].speed);
+            pAngle = &mStone[idx].angle;
+            pSpeed = &mStone[idx].speed;
+            k = (mStone[idx].angle >> 4) * 2;
+            vmx = FMUL(data_02082214[k + 1], mStone[idx].speed);
+            vmy = FMUL(data_02082214[k], mStone[idx].speed);
+            pHitAngle = &mStone[i].angle;
+            k = (mStone[i].angle >> 4) * 2;
+            vhx = FMUL(data_02082214[k + 1], mStone[i].speed);
+            vhy = FMUL(data_02082214[k], mStone[i].speed);
             if (vhy == 0) vhy = vmy >> 1;
 
             /* sin/cos of -contact rotate into the contact frame; sin/cos of
@@ -1171,65 +1045,62 @@ extern "C" void func_ov006_020e20bc(dScMgCurling_c *self, int idx)
 
             /* Separate the stones along the contact line, then keep the
              * moving one on the board and hand any overshoot to the other. */
-            self->mStone[idx].x = self->mStone[i].x + FMUL(cosA, 0x1b000);
-            self->mStone[idx].y = self->mStone[i].y + FMUL(sinA, 0x1b000);
-            xi = self->mStone[idx].x >> 12;
-            yi = self->mStone[idx].y >> 12;
+            mStone[idx].x = mStone[i].x + FMUL(cosA, 0x1b000);
+            mStone[idx].y = mStone[i].y + FMUL(sinA, 0x1b000);
+            xi = mStone[idx].x >> 12;
+            yi = mStone[idx].y >> 12;
             if (xi - 0xc < 0) {
-                xi = self->mStone[idx].x - 0xc000;
-                self->mStone[i].x += xi;
-                self->mStone[idx].x = 0xc000;
+                xi = mStone[idx].x - 0xc000;
+                mStone[i].x += xi;
+                mStone[idx].x = 0xc000;
             }
             if (xi + 0xc > 0x100) {
-                self->mStone[i].x += self->mStone[idx].x - 0xf4000;
-                self->mStone[idx].x = 0xf4000;
+                mStone[i].x += mStone[idx].x - 0xf4000;
+                mStone[idx].x = 0xf4000;
             }
             if (yi - 0xc < -0xe0) {
-                self->mStone[i].y += self->mStone[idx].y + 0xd4000;
-                self->mStone[idx].y = -0xd4000;
+                mStone[i].y += mStone[idx].y + 0xd4000;
+                mStone[idx].y = -0xd4000;
             }
 
             *pHitAngle = _ZN4cstd5atan2E5Fix12IiES1_(hvy, hvx);
-            self->mStone[i].speed = cstd::sqrt((u64)((long long)hvx * hvx + (long long)hvy * hvy));
-            self->mStone[idx].state = 1;
-            self->mStone[i].state = 1;
-            if (self->mStone[i].speed >= 0x3800) {
-                self->mStone[i].fast = 1;
+            mStone[i].speed = cstd::sqrt((u64)((long long)hvx * hvx + (long long)hvy * hvy));
+            mStone[idx].state = 1;
+            mStone[i].state = 1;
+            if (mStone[i].speed >= 0x3800) {
+                mStone[i].fast = 1;
             } else {
-                self->mStone[i].fast = 0;
+                mStone[i].fast = 0;
             }
-            func_02012718(0xe8, self->mStone[idx].x);
+            func_02012718(0xe8, mStone[idx].x);
             return;
         }
     }
 }
 
-// @symbol func_ov006_020e269c
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e269cEi
 /* Sets stone i's spin (0x4682) from the x component of its velocity:
  * -(cos(angle) * speed) / 4. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e269c(char *c, int i)
+void dScMgCurling_c::func_ov006_020e269c(int i)
 {
-    char *o = c + i * 0x2c;
-    int h = *(unsigned short *)(o + 0x4686);
+    int h = mStone[i].angle;
     int idx = (((h >> 4) << 1) + 1) << 1;
     int s = *(short *)((char *)data_02082214 + idx);
-    int v = *(int *)(o + 0x4668);
+    int v = mStone[i].speed;
     long long m = (long long)s * v;
     int hi = (int)(((unsigned long long)(m + 0x800)) >> 12);
-    *(short *)(o + 0x4682) = (short)((-hi) >> 2);
-}
+    mStone[i].spin = (short)((-hi) >> 2);
 }
 
-// @symbol func_ov006_020e26f8
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e26f8Ei
 /* Stone i while it is being dragged. With the stylus down the stone
  * follows the touch point plus the grab offset (0x4674/0x4678), its x kept
  * between 0xe and 0xf2 units, and the offset is recomputed; with the stylus
  * up the drag flag clears and, if the aimed stone (0x4eb0) overlaps it, the
  * aimed stone is moved just below it. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e26f8(DragView *w, int i)
+void dScMgCurling_c::func_ov006_020e26f8(int i)
 {
+    DragView *w = (DragView *)this;
     unsigned char idx = data_020a0e40[0];
     if (((struct B4 *)data_020a0de8)[idx].v) {
         int t, mm, nn;
@@ -1252,16 +1123,15 @@ void func_ov006_020e26f8(DragView *w, int i)
         if (dy <= 0x14) w->aimY = w->stone[i].y + 0x15000;
     }
 }
-}
 
-// @symbol func_ov006_020e285c
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e285cEi
 /* A tail-call veneer to func_ov006_020e20bc. */
-extern "C" void func_ov006_020e285c(dScMgCurling_c *self, int idx)
+void dScMgCurling_c::func_ov006_020e285c(int idx)
 {
-    func_ov006_020e20bc(self, idx);
+    func_ov006_020e20bc(idx);
 }
 
-// @symbol func_ov006_020e2868
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e2868Ei
 /* Stone idx while it slides. Moves it by its velocity, adds the spin to
  * the angle, bounces it off the four walls (with a sound), then takes
  * friction off the speed: a base of speed/512 (at least 0x1c), more in the
@@ -1269,9 +1139,9 @@ extern "C" void func_ov006_020e285c(dScMgCurling_c *self, int idx)
  * steeper rate while the stone still travels upward above -0x20. At zero
  * speed the stone stops (state 2). The collision and spin helpers run, and
  * the slide sound at 0x467c is retuned to the speed. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e2868(char *c, int idx)
+void dScMgCurling_c::func_ov006_020e2868(int idx)
 {
+    char *c = (char *)this;
     int m;
     int zi;
     u16 *pang;
@@ -1302,7 +1172,7 @@ void func_ov006_020e2868(char *c, int idx)
     *p660 += (int)(((long long)sn * *p668 + 0x800) >> 12);
     cs = data_02082214[((*pang) >> 4) * 2];
     *p664 += (int)(((long long)cs * *p668 + 0x800) >> 12);
-    *(u16 *)(c + 0x4684 + m) += *(u16 *)(c + m + 0x4682);
+    mStone[idx].heading += (u16)mStone[idx].spin;
 
     x = *p660;
     z = *p664;
@@ -1320,11 +1190,11 @@ void func_ov006_020e2868(char *c, int idx)
     }
 
     if (zi + 0xc > 0xc0) {
-        *(u16 *)(c + 0x4686 + m) = -*(u16 *)(c + 0x4686 + m);
+        mStone[idx].angle = -mStone[idx].angle;
         *p664 = 0xb4000;
         func_02012718(0x1d4, *p660);
     } else if (zi - 0xc < -0xe0) {
-        *(u16 *)(c + 0x4686 + m) = -*(u16 *)(c + 0x4686 + m);
+        mStone[idx].angle = -mStone[idx].angle;
         *p664 = -0xd4000;
         func_02012718(0x1d4, *p660);
     }
@@ -1358,240 +1228,196 @@ void func_ov006_020e2868(char *c, int idx)
         }
     }
 
-    *(int *)(c + 0x4668 + m) -= v;
-    pd = (int *)(c + 0x4668 + m);
-    if (*(int *)(c + 0x4668 + m) <= 0) {
+    mStone[idx].speed -= v;
+    pd = &mStone[idx].speed;
+    if (mStone[idx].speed <= 0) {
         *p668 = 0;
-        *(u8 *)(c + idx * 0x2c + 0x4688) = 2;
+        mStone[idx].state = 2;
     }
 
-    func_ov006_020e20bc((dScMgCurling_c *)c, idx);
-    func_ov006_020e269c(c, idx);
+    func_ov006_020e20bc(idx);
+    func_ov006_020e269c(idx);
 
     v = *pd;
     w = -0xfa - ((0xc0 - (v >> 8)) * -0xfa) / 0xc0;
     p = v >> 7;
     if (p >= 0x7f)
         p = 0x7f;
-    *(int *)(c + 0x467c + m) = func_02012468(*(int *)(c + 0x467c + m), 2, 0xe7, 7, p, w, func_020126e8(*p660), 0);
-}
+    mStone[idx].slideSnd = func_02012468(mStone[idx].slideSnd, 2, 0xe7, 7, p, w, func_020126e8(*p660), 0);
 }
 
-// @symbol func_ov006_020e2c08
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e2c08Ei
 /* Releases stone idx if the aimed stone (0x4eb0) overlaps it: it takes the
  * aim angle (0x4ede, clamped to the lower half turn) and the swing speed
  * (0x4ec8), is flagged fast above 0x3800, and starts sliding. The aim is
  * then put away, the stones are separated, and the throw sound plays at a
  * volume that depends on the fast flag. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e2c08(char *self, int idx)
+void dScMgCurling_c::func_ov006_020e2c08(int idx)
 {
-    int n, v, w, vol;
+    int v, w, vol;
 
-    if (*(u8 *)(self + 0x4ee4) != 1) return;
+    if (mStylusHeld != 1) return;
 
-    n = idx * 0x2c;
-    v = (*(int *)(self + 0x4eb0) - *(int *)(self + 0x4660 + n)) >> 12;
-    w = (*(int *)(self + 0x4eb4) - *(int *)(self + n + 0x4664)) >> 12;
+    v = (mAimX - mStone[idx].x) >> 12;
+    w = (mAimY - mStone[idx].y) >> 12;
     if (v < -0x2e) return;
     if (v > 0x2e) return;
     if (w < -0x14) return;
     if (w > 0x14) return;
 
-    *(u8 *)(self + n + 0x4688) = 1;
-    *(u16 *)(self + 0x4686 + n) = *(u16 *)(self + 0x4ede);
-    *(int *)(self + n + 0x4668) = *(int *)(self + 0x4ec8);
+    mStone[idx].state = 1;
+    mStone[idx].angle = mSwingAng;
+    mStone[idx].speed = mSwingSpeed;
 
-    if (*(u16 *)(self + 0x4ede) < 0x9800u || *(u16 *)(self + 0x4ede) > 0xe800u) {
-        if (*(u16 *)(self + 0x4ede) >= 0x4000u && *(u16 *)(self + 0x4ede) <= 0x9800u) {
-            *(u16 *)(self + 0x4ede) = 0x9800;
+    if (mSwingAng < 0x9800u || mSwingAng > 0xe800u) {
+        if (mSwingAng >= 0x4000u && mSwingAng <= 0x9800u) {
+            mSwingAng = 0x9800;
         } else {
-            *(u16 *)(self + 0x4ede) = 0xe800;
+            mSwingAng = 0xe800;
         }
-        *(u16 *)(self + 0x4686 + n) = *(u16 *)(self + 0x4ede);
+        mStone[idx].angle = mSwingAng;
     }
 
-    if (*(int *)(self + 0x4ec8) >= 0x3800) {
-        *(u8 *)(self + 0x468b + n) = 1;
+    if (mSwingSpeed >= 0x3800) {
+        mStone[idx].fast = 1;
     } else {
-        *(u8 *)(self + 0x468b + n) = 0;
+        mStone[idx].fast = 0;
     }
 
-    *(u8 *)(self + 0x4ee7) = 1;
-    *(u16 *)(self + 0x4ee0) = 0;
-    func_ov006_020e1dc8((dScMgCurling_c *)self, idx);
+    mNextStone = 1;
+    mStoneDelay = 0;
+    func_ov006_020e1dc8(idx);
 
     vol = 0x7f;
-    if (*(u8 *)(self + 0x468b + n) == 0) vol = 0x3f;
-    func_020126ac(0x1d3, 5, vol, 0, func_020126e8(*(int *)(self + 0x4660 + n)));
-}
+    if (mStone[idx].fast == 0) vol = 0x3f;
+    func_020126ac(0x1d3, 5, vol, 0, func_020126e8(mStone[idx].x));
 }
 
-// @symbol func_ov006_020e2dbc
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e2dbcEv
 /* Brings out the next stone once the 0x4ee0 delay has run down: it starts
  * active at (0x80000, 0x80000), the stone count at 0x4ee6 goes up (with a
  * sound from the second stone on), and the aim point resets. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e2dbc(char *c)
+void dScMgCurling_c::func_ov006_020e2dbc()
 {
-    if (*(unsigned char *)(c + 0x4ee7) == 0) return;
-    if (*(unsigned short *)(c + 0x4ee0) != 0)
+    if (mNextStone == 0) return;
+    if (mStoneDelay != 0)
     {
-        *(unsigned short *)(((int)c + 0x4ee0)) -= 1;
-        if ((short)*(unsigned short *)(c + 0x4ee0) <= 0)
-            *(unsigned short *)(c + 0x4ee0) = 0;
+        (u16&)mStoneDelay -= 1;
+        if ((short)mStoneDelay <= 0)
+            mStoneDelay = 0;
         return;
     }
-    *(unsigned char *)(c + 0x4ee7) = 0;
+    mNextStone = 0;
     {
-        int idx = *(unsigned char *)(c + 0x4ee6);
+        int idx = mThrown;
         if (idx >= 5)
             return;
-        {
-            char *b = c + idx * 0x2c;
-            *(unsigned char *)(b + 0x4689) = 1;
-            *(unsigned char *)(b + 0x468a) = 1;
-            *(int *)(b + 0x4660) = 0x80000;
-            *(int *)(b + 0x4664) = 0x80000;
-            *(unsigned short *)(b + 0x4680) = 0;
-            *(unsigned char *)(b + 0x468b) = 0;
-        }
+        mStone[idx].active = 1;
+        mStone[idx].dealt = 1;
+        mStone[idx].x = 0x80000;
+        mStone[idx].y = 0x80000;
+        mStone[idx].timer = 0;
+        mStone[idx].fast = 0;
     }
-    if (*(unsigned char *)(c + 0x4ee6) != 0)
+    if (mThrown != 0)
         Sound::PlayBank2_2D(0x1d7);
-    (*(unsigned char *)(((int)c + 0x4ee6)))++;
-    *(int *)(c + 0x4eb0) = 0x80000;
-    *(int *)(c + 0x4eb4) = 0xb0000;
-    *(unsigned char *)(c + 0x4ee4) = 0;
-    *(unsigned char *)(c + 0x4ee5) = 1;
-}
+    mThrown++;
+    mAimX = 0x80000;
+    mAimY = 0xb0000;
+    mStylusHeld = 0;
+    mAimShown = 1;
 }
 
-// @symbol func_ov006_020e2eb8
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e2eb8Ev
 /* The scene's idle state. */
-extern "C" void func_ov006_020e2eb8(void)
+void dScMgCurling_c::func_ov006_020e2eb8()
 {
 }
 
-// @symbol func_ov006_020e2ebc
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e2ebcEv
 /* The scene's end state. After the 0x4ee2 delay it asks the base whether
  * the game is over, moves to state 4 with the base's own end state, and
  * clears the stones' visible flags. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e2ebc(char *thiz)
+void dScMgCurling_c::func_ov006_020e2ebc()
 {
     int i;
-    char *p;
-    if (*(unsigned short *)(thiz + 0x4ee2) != 0) {
-        *(unsigned short *)(((int)thiz + 0x4ee2)) -= 1;
-        if (*(short *)(thiz + 0x4ee2) <= 0)
-            *(unsigned short *)(thiz + 0x4ee2) = 0;
+    if (mStateDelay != 0) {
+        (u16&)mStateDelay -= 1;
+        if ((s16&)mStateDelay <= 0)
+            mStateDelay = 0;
         return;
     }
     if (func_ov004_020adbe0() != 0) {
-        *(unsigned char *)(thiz + 0x4000 + 0xee8) = 0;
-        *(int *)(thiz + 0x4000 + 0xeac) = 4;
+        mRoundOver = 0;
+        mState = 4;
         func_ov004_020b0a54(0x10);
     } else {
-        *(int *)(thiz + 0x4000 + 0xeac) = 4;
+        mState = 4;
         func_ov004_020b0a54(0x10);
     }
-    *(unsigned char *)(thiz + 0xc3) = 0;
-    *(unsigned char *)(thiz + 0x4000 + 0xee5) = 0;
-    p = thiz;
+    mPromptEnabled = 0;
+    mAimShown = 0;
     for (i = 0; i < 5; i++) {
-        *(unsigned char *)(p + 0x4000 + 0x68a) = 0;
-        p += 0x2c;
+        mStone[i].dealt = 0;
     }
 }
-}
 
-// @symbol func_ov006_020e2f78
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e2f78Ev
 /* The scoring state. Runs the popup countdowns, then after the 0x4ee2
  * delay either starts the next stone (state 1) or, once all five have been
  * thrown, ends the round (state 3) with the popups' points summed into the
- * score. The popups are cleared either way.
- *
- * The five score popups at 0x473c are spelled here with the u16 at +0xa
- * and the bytes at +0xc and +0xd as fields, which is how this function
- * clears them; ScorePopup above keeps func_ov006_020e1554's spelling. */
-typedef struct {
-    int x;
-    int y;
-    unsigned short points;
-    unsigned short countdown;
-    unsigned char shown;
-    unsigned char done;
-    unsigned char pad[2];
-} PopupSlot;
-
-typedef struct {
-    char pad0[0x473c];
-    PopupSlot slot[5];              /* 0x473c .. 0x478b */
-    char pad1[0x4eac - 0x478c];
-    int state;                      /* 0x4eac */
-    char pad2[0x4ee2 - 0x4eb0];
-    unsigned short delay;           /* 0x4ee2 */
-    char pad3[0x4ee6 - 0x4ee4];
-    unsigned char thrown;           /* 0x4ee6 */
-    char pad4;                      /* 0x4ee7 */
-    unsigned char roundOver;        /* 0x4ee8 */
-} PopupView;
-
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e2f78(char *c)
+ * score. The popups are cleared either way. */
+void dScMgCurling_c::func_ov006_020e2f78()
 {
-    PopupView *t = (PopupView *)c;
     int i;
     int sum;
 
-    func_ov006_020e1608(c);
+    func_ov006_020e1608();
 
-    if (t->delay != 0)
+    if (mStateDelay != 0)
     {
-        *(unsigned short *)(((int)c + 0x4ee2)) -= 1;
-        if ((short)t->delay <= 0)
-            t->delay = 0;
+        (u16&)mStateDelay -= 1;
+        if ((s16&)mStateDelay <= 0)
+            mStateDelay = 0;
         return;
     }
 
-    t->state = 1;
-    if (t->thrown >= 5)
+    mState = 1;
+    if (mThrown >= 5)
     {
-        t->state = 3;
-        t->delay = 0x80;
-        t->roundOver = 1;
+        mState = 3;
+        mStateDelay = 0x80;
+        mRoundOver = 1;
         sum = 0;
         Sound::PlayBank2_2D(0x1bc);
         for (i = 0; i < 5; i++)
-            sum += t->slot[i].points;
+            sum += mPopup[i].points;
         func_ov004_020adb1c(sum);
     }
 
     for (i = 0; i < 5; i++)
     {
-        t->slot[i].x = 0;
-        t->slot[i].y = 0;
-        t->slot[i].points = 0;
-        t->slot[i].countdown = 0;
-        t->slot[i].done = 0;
-        t->slot[i].shown = 0;
+        mPopup[i].x = 0;
+        mPopup[i].y = 0;
+        mPopup[i].points = 0;
+        mPopup[i].countdown = 0;
+        mPopup[i].shown = 0;
+        mPopup[i].live = 0;
     }
 
-    func_ov006_020e2dbc(c);
-}
+    func_ov006_020e2dbc();
 }
 
-// @symbol func_ov006_020e3078
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e3078Ev
 /* The playing state. After the 0x4ee2 delay it shows the HUD once, runs
  * the aim state (0x4ee4) through its table, then every active stone's own
  * state through the other table, remembering the last position of each.
  * When no stone is still moving, the popups are scored and the scene moves
  * to state 2 with a 0xc0 delay. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e3078(char *c)
+void dScMgCurling_c::func_ov006_020e3078()
 {
-    if (*(u16 *)(c + 0x4ee2) != 0) {
+    char *c = (char *)this;
+    if (mStateDelay != 0) {
         u16 *q = (u16 *)(c + 0x4ee2);
         *q = *q - 1;
         return;
@@ -1601,11 +1427,11 @@ void func_ov006_020e3078(char *c)
         *(u8 *)(c + 0xc4) = 1;
         *(u16 *)(c + 0xc0) = 0;
     }
-    if (*(u8 *)(c + 0x4ee9) != 0) {
+    if (mSwingTimer != 0) {
         u8 *q = (u8 *)(c + 0x4ee9);
         *q = *q - 1;
     }
-    (((C *)c)->*data_ov006_021418b0[*(u8 *)(c + 0x4ee4)])();
+    (((C *)c)->*data_ov006_021418b0[mStylusHeld])();
 
     {
         int count = 0;
@@ -1625,77 +1451,71 @@ void func_ov006_020e3078(char *c)
         }
         if (count != 0) return;
     }
-    *(int *)(c + 0x4eac) = 2;
-    func_ov006_020e1680(c);
-    *(u16 *)(c + 0x4ee2) = 0xc0;
-}
+    mState = 2;
+    func_ov006_020e1680();
+    mStateDelay = 0xc0;
 }
 
-// @symbol func_ov006_020e3210
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e3210Ev
 /* Starts a round: clears the stones, brings out the first one and enters
  * the aiming state. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e3210(char *c)
+void dScMgCurling_c::func_ov006_020e3210()
 {
-    func_ov006_020e3388(c);
-    *(unsigned char *)(c + 0x4ee7) = 1;
-    *(short *)(c + 0x4ee0) = 0;
-    func_ov006_020e2dbc(c);
-    *(int *)(c + 0x4eac) = 1;
-}
+    func_ov006_020e3388();
+    mNextStone = 1;
+    (s16&)mStoneDelay = 0;
+    func_ov006_020e2dbc();
+    mState = 1;
 }
 
-// @symbol func_ov006_020e3250
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e3250Ev
 /* Picks the house (0x4e9c): a fresh random one of three that differs from
  * the last, or the first one when the slot still holds its 0xff reset.
  * The house centre comes from data_ov006_0212e4dc and its background from
  * one of three files. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e3250(char *c)
+void dScMgCurling_c::func_ov006_020e3250()
 {
     int m;
     void *file;
-    if (*(int *)(c + 0x4e9c) == 0xff) {
-        *(int *)(c + 0x4e9c) = 0;
+    if (mHouse == 0xff) {
+        mHouse = 0;
     } else {
         m = (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 3 >> 15;
-        if (*(int *)(c + 0x4e9c) == m) {
+        if (mHouse == m) {
             m += ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 2 >> 15) + 1;
             if (m >= 3) m -= 3;
         }
-        *(int *)(c + 0x4e9c) = m;
+        mHouse = m;
     }
-    *(int *)(c + 0x4e94) = data_ov006_0212e4dc[*(int *)(c + 0x4e9c) * 2] << 12;
-    *(int *)(c + 0x4e98) = (data_ov006_0212e4dc[*(int *)(c + 0x4e9c) * 2 + 1] - 0xe0) << 12;
-    if (*(int *)(c + 0x4e9c) == 0) {
+    mHouseX = data_ov006_0212e4dc[mHouse * 2] << 12;
+    mHouseY = (data_ov006_0212e4dc[mHouse * 2 + 1] - 0xe0) << 12;
+    if (mHouse == 0) {
         file = LoadFile(0x30);
-    } else if (*(int *)(c + 0x4e9c) == 1) {
+    } else if (mHouse == 1) {
         file = LoadFile(0x2d);
-    } else if (*(int *)(c + 0x4e9c) == 2) {
+    } else if (mHouse == 2) {
         file = LoadFile(0x31);
     }
     func_020563d4(file, 0, 0x800);
     Deallocate(file);
 }
-}
 
-// @symbol func_ov006_020e3378
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e3378Ev
 /* Marks the house as not chosen yet. */
-extern "C" void func_ov006_020e3378(char *p)
+void dScMgCurling_c::func_ov006_020e3378()
 {
-    *(int *)(p + 0x4e9c) = 255;
+    mHouse = 255;
 }
 
 #pragma push
 #pragma opt_strength_reduction off
-// @symbol func_ov006_020e3388
+// @symbol _ZN14dScMgCurling_c19func_ov006_020e3388Ev
 /* Zeroes the five stones, the five score popups and the aim fields, and
  * resets the score. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020e3388(char *raw)
+void dScMgCurling_c::func_ov006_020e3388()
 {
     int i;
-    char *c = raw;
+    char *c = (char *)this;
     char *r = c;
     for (i = 0; i < 5; i++) {
         *(int *)(r + 0x4660) = 0;
@@ -1721,23 +1541,22 @@ void func_ov006_020e3388(char *raw)
         *(unsigned char *)(q + 0x4748) = 0;
         *(unsigned char *)(q + 0x4749) = 0;
     }
-    *(short *)(c + 0x4ee0) = 0;
-    *(unsigned char *)(c + 0x4ee6) = 0;
-    *(int *)(c + 0x4eb0) = 0;
-    *(int *)(c + 0x4eb4) = 0;
-    *(int *)(c + 0x4ec0) = 0;
-    *(int *)(c + 0x4ec4) = 0;
-    *(int *)(c + 0x4ec8) = 0;
-    *(short *)(c + 0x4ede) = 0;
-    *(unsigned char *)(c + 0x4ee4) = 0;
-    *(unsigned char *)(c + 0x4ee5) = 0;
-    *(unsigned char *)(c + 0x4ee7) = 0;
-    *(unsigned char *)(c + 0x4ee8) = 0;
-    *(short *)(c + 0x4ee2) = 0;
-    *(short *)(c + 0x4edc) = 0;
-    *(unsigned char *)(c + 0x4ee9) = 0;
+    (s16&)mStoneDelay = 0;
+    mThrown = 0;
+    mAimX = 0;
+    mAimY = 0;
+    mGrabX = 0;
+    mGrabY = 0;
+    mSwingSpeed = 0;
+    (s16&)mSwingAng = 0;
+    mStylusHeld = 0;
+    mAimShown = 0;
+    mNextStone = 0;
+    mRoundOver = 0;
+    (s16&)mStateDelay = 0;
+    (s16&)unk_4edc = 0;
+    mSwingTimer = 0;
     func_ov004_020adb1c(0);
-}
 }
 #pragma pop
 
@@ -1748,9 +1567,9 @@ void func_ov006_020e3388(char *raw)
  * again and the base's handle refreshed. */
 void dScMgCurling_c::OnYoshiTryEat(int /* arg */)
 {
-    unk_4eac = 0;
-    func_ov006_020e3388((char *)this);
-    func_ov006_020e3250((char *)this);
+    mState = 0;
+    func_ov006_020e3388();
+    func_ov006_020e3250();
     _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16 *)0x4000050, 0, 0xd, 2, 0x10);
     _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16 *)0x4001050, 0, 4, 2, 0x10);
     unk_4ed8 = func_ov004_020adc1c();
@@ -1761,25 +1580,23 @@ void dScMgCurling_c::OnYoshiTryEat(int /* arg */)
  * and the falling bits. */
 s32 dScMgCurling_c::Render()
 {
-    char *c = (char *)this;
     func_ov004_020b19f0(func_ov004_020adc1c());
-    func_ov006_020e1554((ScoreView *)c);
-    func_ov006_020e1c68(c);
-    func_ov006_020e17f8(c);
-    func_ov006_020e0694(c);
+    func_ov006_020e1554();
+    func_ov006_020e1c68();
+    func_ov006_020e17f8();
+    func_ov006_020e0694();
     return 1;
 }
 
 // @symbol _ZN14dScMgCurling_c8BehaviorEv
 /* Slot 6. The scene state through its table, then the falling bits. The
- * state index is read through PopupView, which already names the word at
- * 0x4eac; the table's receiver C stays incomplete. */
+ * table's receiver C stays incomplete. */
 s32 dScMgCurling_c::Behavior()
 {
     C *c = (C *)this;
-    int j = ((PopupView *)this)->state;
+    int j = mState;
     (c->*data_ov006_02141950[j])();
-    func_ov006_020e12d0((char *)this);
+    func_ov006_020e12d0();
     return 1;
 }
 
@@ -1788,7 +1605,6 @@ s32 dScMgCurling_c::Behavior()
  * palettes and the house, then starts the first round with a 0x40 delay. */
 s32 dScMgCurling_c::InitResources()
 {
-    char *self = (char *)this;
     char *a = func_ov004_020adc74(&data_ov006_0213c394);
     char *b = func_ov004_020adc74(&data_ov006_0213c3b4);
     void *f;
@@ -1836,19 +1652,19 @@ s32 dScMgCurling_c::InitResources()
         Deallocate(c8);
     }
 
-    func_ov006_020e3388(self);
-    func_ov006_020e3378(self);
-    func_ov006_020e3250(self);
-    *(unsigned char *)(self + 0x4ee7) = 1;
-    *(u16 *)(self + 0x4ee0) = 0;
-    func_ov006_020e2dbc(self);
-    func_ov006_020e13a4(self);
-    *(int *)(self + 0x4eac) = 1;
+    func_ov006_020e3388();
+    func_ov006_020e3378();
+    func_ov006_020e3250();
+    mNextStone = 1;
+    mStoneDelay = 0;
+    func_ov006_020e2dbc();
+    func_ov006_020e13a4();
+    mState = 1;
     func_ov004_020b04d0(0x20);
-    *(u16 *)(self + 0x4ee2) = 0x40;
-    *(int *)(self + 0xa4) = 1;
+    mStateDelay = 0x40;
+    unk_0a4 = 1;
     _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16 *)0x4000050, 0, 0xd, 2, 0x10);
     _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16 *)0x4001050, 0, 4, 2, 0x10);
-    *(int *)(self + 0x4ed8) = func_ov004_020adc1c();
+    unk_4ed8 = func_ov004_020adc1c();
     return 1;
 }

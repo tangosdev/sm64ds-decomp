@@ -53,11 +53,11 @@ destructor tears down in reverse order.
 ## 3. `fBase_c` vtable order
 
 Read directly out of `_ZTV7fBase_c` (`0x02099edc`, 18 slots). Every slot resolves
-to a named function, so no inference was needed here -- unlike `include/Fader.h`.
+to a named function, so no inference was needed here -- unlike `include/dFader_c.h`.
 Two consequences, both easy to get wrong:
 
 * The destructor is at slots 16/17, NOT 0/1. Slot index follows declaration
-  order, so `~fBase_c` must be declared AFTER `OnHeapCreated`. Copying the Fader
+  order, so `~fBase_c` must be declared AFTER `OnHeapCreated`. Copying the dFader_c
   header shape, where the destructor comes first, shifts sixteen slots and
   silently changes every virtual call in the tree.
 * `AfterCleanupResources` dispatches through `vtable+0x40`. That is slot 16, the

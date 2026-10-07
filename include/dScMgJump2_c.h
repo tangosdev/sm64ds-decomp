@@ -80,10 +80,26 @@ struct dScMgJump2_c : dScMgD3DBase_c {
     u8  mArray2[0x5a0];   /* 0x5234 -- 6 * 0xf0,  elem dtor func_ov006_020c6f3c */
     u8  mArray3[0x240];   /* 0x57d4 -- 0x10 * 0x24, elem dtor func_ov006_020eed64 */
     u8  mModel[0x50];     /* 0x5a14 -- a real Model, raw bytes; see banner */
-    s32 unk_5a64;         /* 0x5a64 */
-    u8  pad_5a68[0x4];    /* 0x5a68 */
+    s32 unk_5a64;         /* 0x5a64 -- scroll phase; feeds the model's anim clock */
+    s32 unk_5a68;         /* 0x5a68 -- phase advance rate, applied >> 12 */
     u32 unk_5a6c;         /* 0x5a6c */
-    u8  pad_5a70[0x8];    /* 0x5a70 -- no matched access */
+    u8  pad_5a70[0x4];    /* 0x5a70 -- no matched access */
+    s16 unk_5a74;         /* 0x5a74 -- the state functions' countdown */
+    u16 pad_5a76;         /* 0x5a76 */
+
+    /* The PMF state machine. data_ov006_0213cc74..9c are the eight-byte
+       records the state functions copy into pad_5004 whole; their first
+       words relocate to func_ov006_020ef47c, ..ef5ac, ..ef480, ..ef794 and
+       ..ef4ec respectively (config/arm9/overlays/ov006/relocs.txt). The
+       three remaining members are the transitions that install them. */
+    void func_ov006_020ef47c();
+    void func_ov006_020ef480();
+    void func_ov006_020ef4ec();
+    void func_ov006_020ef580();
+    void func_ov006_020ef5ac();
+    void func_ov006_020ef768();
+    void func_ov006_020ef794();
+    void func_ov006_020ef7f8();
 
     /* --- this class's own vtable overrides, defined out of line under their
        own mangled names. Each re-uses a slot fBase_c already holds rather

@@ -1,6 +1,6 @@
 #include "types.h"
 extern void func_020731dc(void *, void *, void **);
-extern void *_ZN10FaderColorD1Ev(void *);
+extern void *_ZN10dFdColor_cD1Ev(void *);
 extern unsigned char data_02089af8[];
 extern unsigned char data_020875bc[];
 extern unsigned char data_0208766c[];
@@ -96,9 +96,9 @@ extern unsigned char data_02089608[];
 extern unsigned char data_02087740[];
 extern unsigned char data_02088610[];
 extern unsigned char data_0209b294[];
-extern unsigned char data_0208eafc[];
-extern unsigned char data_0208eacc[];
-extern unsigned char data_0208eb2c[];
+extern int _ZTV8dFader_c[];
+extern int _ZTV15dFdBrightness_c[];
+extern int _ZTV10dFdColor_c[];
 extern unsigned char data_0209b278[];
 void __sinit_02073e6c(void)
 {
@@ -519,11 +519,11 @@ void __sinit_02073e6c(void)
     data_02088610[0x49] = (unsigned int)data_02087740 >> 8;
     data_02088610[0x4a] = (unsigned int)data_02087740 >> 16;
     data_02088610[0x4b] = (unsigned int)data_02087740 >> 24;
-    *(void **)&data_0209b294[0] = (void *)data_0208eafc;
-    *(void **)&data_0209b294[0] = (void *)data_0208eacc;
+    *(void **)&data_0209b294[0] = (void *)_ZTV8dFader_c;
+    *(void **)&data_0209b294[0] = (void *)_ZTV15dFdBrightness_c;
     *(int *)&data_0209b294[4] = 0x1000;
     *(int *)&data_0209b294[8] = 0;
-    *(void **)&data_0209b294[0] = (void *)data_0208eb2c;
+    *(void **)&data_0209b294[0] = (void *)_ZTV10dFdColor_c;
     *(unsigned short *)&data_0209b294[0xc] = 0;
-    func_020731dc(data_0209b294, (void *)&_ZN10FaderColorD1Ev, (void **)data_0209b278);
+    func_020731dc(data_0209b294, (void *)&_ZN10dFdColor_cD1Ev, (void **)data_0209b278);
 }

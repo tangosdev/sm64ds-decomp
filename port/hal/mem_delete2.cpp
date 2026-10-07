@@ -1,7 +1,7 @@
 // Memory::operator_delete2 under its Itanium spelling, for every target that
 // compiles a class in one of the seventeen hierarchies whose header declares it.
 //
-// THE SEAM. include/Heap.h, include/Fader.h:69 and fifteen more headers spell
+// THE SEAM. include/Heap.h, include/dFader_c.h:69 and fifteen more headers spell
 //
 //     extern "C" void _ZN6Memory16operator_delete2EPv(void *);
 //

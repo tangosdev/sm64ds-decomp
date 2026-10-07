@@ -56,6 +56,9 @@ struct daKrpaFrameController {
     u32 *frames;
     u32 count;
     u32 cursor;
+
+    void func_ov070_02121ae0(u32 *frames, u32 count, u32 mode);
+    u32  func_ov070_02121a64();
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -93,6 +96,21 @@ struct daKrpa_c : dActor_c {
     virtual s32  Render();              /* slot 9 */
     virtual void OnPendingDestroy();    /* slot 12 */
     virtual int  OnYoshiTryEat();       /* slot 18 */
+
+    void func_ov070_021211c4();
+    void func_ov070_02121298();
+    void func_ov070_02121310();
+    int  func_ov070_021213cc();
+    int  func_ov070_02121438();
+    int  func_ov070_021214f8();
+    int  func_ov070_02121548();
+    int  func_ov070_0212156c();
+    int  func_ov070_021216b8();
+    int  func_ov070_02121710();
+    int  func_ov070_021217ac();
+    void func_ov070_0212180c();
+    void func_ov070_02121848();
+    void func_ov070_02121880(int state);
 
     static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);

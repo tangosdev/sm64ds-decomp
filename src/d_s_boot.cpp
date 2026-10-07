@@ -9,7 +9,7 @@
  * files. With `#pragma defer_codegen off` and the file in ascending order,
  * the same out-of-line definition emits D1, D0, D2: the cartridge's order,
  * both byte-identical, written first so they land first. The extra D2 is
- * unreferenced and is dropped at link, as the retail link did. Because the
+ * unreferenced and is dropped at link (the cartridge has no D2 here). Because the
  * destructor is the first declared non-inline virtual in dScBoot_c.h, it is
  * the key function, so this file also emits the vtable and the typeinfo
  * chain; the cartridge's copies of those are outside this range and stay

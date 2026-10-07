@@ -24,10 +24,10 @@ extern "C" {
     extern void* data_0209f318;
     extern s8 data_02092110;
 }
-struct FaderBrightness {
+struct dFdBrightness_c {
     Fix12i currInterp;
     Fix12i speed;
-    virtual ~FaderBrightness();
+    virtual ~dFdBrightness_c();
     virtual int Advance();
     virtual int SetBackwardTime(unsigned frames, unsigned arg2);
     virtual int SetForwardTime(unsigned frames, unsigned arg2);
@@ -38,8 +38,8 @@ struct FaderBrightness {
     virtual void SetToStart();
     u16 fieldC;
 };
-extern "C" FaderBrightness data_0209b294;
-extern "C" FaderBrightness* data_0209d4b0;
+extern "C" dFdBrightness_c data_0209b294;
+extern "C" dFdBrightness_c* data_0209d4b0;
 
 struct UnkVis {
     virtual void u0();
@@ -57,7 +57,7 @@ class dScene_c {
 public:
     static void StartSceneFade(unsigned int a, unsigned int b, unsigned short c);
     static void SetAndStopColorFader();
-    static void SetFaders(FaderBrightness* f);
+    static void SetFaders(dFdBrightness_c* f);
 };
 class Sound {
 public:
@@ -125,32 +125,32 @@ extern "C" void ProcessKuppaScript(void)
                 dScene_c::SetAndStopColorFader();
                 data_0209d4b0 = 0;
             } else if (cmd == 0xc) {
-                FaderBrightness* f = &data_0209b294;
+                dFdBrightness_c* f = &data_0209b294;
                 f->SetToStart();
                 f->fieldC = 0x7fff;
                 f->SetForwardTime(0xe, 0);
                 data_0209d4b0 = f;
             } else if (cmd == 0xd) {
-                FaderBrightness* f = &data_0209b294;
+                dFdBrightness_c* f = &data_0209b294;
                 f->SetToEnd();
                 f->fieldC = 0x7fff;
                 f->SetBackwardTime(0x50, 0);
                 data_0209d4b0 = f;
             } else if (cmd == 0xe) {
-                FaderBrightness* f = &data_0209b294;
+                dFdBrightness_c* f = &data_0209b294;
                 f->SetToStart();
                 f->fieldC = 0;
                 f->SetForwardTime(0x1e, 0);
                 data_0209d4b0 = f;
             } else if (cmd == 0xf) {
-                FaderBrightness* f = &data_0209b294;
+                dFdBrightness_c* f = &data_0209b294;
                 data_0209d45c = 0x10;
                 f->SetToEnd();
                 f->fieldC = 0;
                 f->SetBackwardTime(0x50, 0);
                 data_0209d4b0 = f;
             } else if (cmd == 0x10) {
-                FaderBrightness* f = &data_0209b294;
+                dFdBrightness_c* f = &data_0209b294;
                 f->SetToEnd();
                 f->fieldC = 0;
                 f->SetForwardTime(0x1e, 0);

@@ -113,7 +113,7 @@
 #define HEAP_H
 #include "types.h"
 
-/* The class is spelled twice, the way include/Fader.h spells Fader: a C
+/* The class is spelled twice, the way include/dFader_c.h spells dFader_c: a C
  * translation unit gets no implicit vptr, so the C side must declare `vtable'
  * explicitly or every field below it shifts by 4. Nine .c files include this
  * header, so that is not hypothetical.

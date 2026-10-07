@@ -9,13 +9,13 @@
  * table of member pointers rather than of plain function addresses.
  *
  * The four methods sit in the middle of the unit. Below them, 0x020b67e8 to
- * 0x020b8714, are the 47 state handlers the table points at (the pointer-to-
- * member constants at 0x020bc92c..0x020bca44 name 33 of them as targets) and
- * the helpers they share. Above them, func_ov004_020b8a8c at 0x020b8a8c fills
- * in the screen-position words at 0x020bc850..0x020bc8b8 that the handlers read.
- * The handlers still take the machine as a char* and are written C-style under
- * their ROM names (extern "C"), so the link names stay the ROM's; turning them
- * into dMgState_c members is the next step for this unit.
+ * 0x020b8714, are the state handlers and the helpers they share. The .data
+ * records at 0x020bc8bc..0x020bca3c hold 46 pointer-to-member constants over
+ * 43 of them (the twenty-entry enter table at 0x020bc92c..0x020bca44 among
+ * them), so all 43 are written as dMgState_c members under their address
+ * names. The remaining five are genuine free helpers that write the shared
+ * .data window (func_ov004_020b67e8, 020b67f8, 020b6808, 020b682c and
+ * func_ov004_020b8a8c).
  *
  * Edges. 0x020b67e8 is the first function after func_ov004_020b67e4, the last
  * destructor helper __sinit_ov004_020b9ad0 registers for the preceding unit
@@ -33,10 +33,15 @@
  * construction order and the three callback roles. The class and member names
  * are inferred from the dMg* minigame family; see include/dMgState_c.h.
  *
- * Several handlers were matched in C and keep that spelling; the vtable-call
- * handlers were matched as C++ and carry local Base and Obj views of the
- * objects they call through. The two-word copies go through W2 (an int[2]
- * wrapper), which keeps the block-move shape under C++.
+ * comment leftovers:
+ *   - W2/Pair stay: the member-pointer records are 8-byte {func, adj} words
+ *     copied as one unit, and the int[2] wrapper keeps the block-move shape
+ *     under C++. The records keep their data_ov004_* names.
+ *   - Base/Obj stay TU-local views: the scene object at data_ov004_020beb68
+ *     and the object at data_0209f5bc have no shared header spelling for the
+ *     vtable slots used here (m_4c, m_50, m_c, m_10, m_18, m_1c).
+ *   - mState doubles as the id passed to Base::m_4c; the `(void *)mState`
+ *     spellings are the ROM's own reuse of the state word.
  *
  * Retired one-function sources (ROM address order):
  *   0x020b67e8  func_ov004_020b67e8
@@ -90,6 +95,8 @@
  */
 
 #include "dMgState_c.h"
+#include "dScene_c.h"
+#include "dWipe_c.h"
 
 extern int ApproachLinear(s32 &value, s32 target, s32 step);
 
@@ -103,6 +110,7 @@ struct Base {
     virtual void v12(); virtual void v13(); virtual void v14(); virtual void v15();
     virtual void v16(); virtual void v17(); virtual void v18();
     virtual int m_4c(void* arg);
+    virtual void m_50();
     char pad[0xa4];
     int a8;
 };
@@ -114,17 +122,13 @@ struct Obj {
     virtual int m_18();
     virtual int m_1c();
 };
-struct StateObj { char pad[0x10]; W2 p10; int f18; int f1c; };
 
 extern "C" {
 extern void FreeGfxSlotsById(int arg);
 extern int GetGameLanguage(void);
 extern unsigned int _ZN5Sound12PlayBank2_2DEj(unsigned int);
-extern void _ZN8dScene_c14StartSceneFadeEjjt(unsigned int a, unsigned int b, unsigned short c);
-extern void _ZN8dScene_c9SetFadersEP15FaderBrightness(void* fb);
 extern unsigned int func_02012790(unsigned int x);
 extern void func_02012dd0(void* c);
-extern int func_0202ec9c(void* thiz, int arg1);
 extern void func_ov004_020ad90c(void);
 extern int func_ov004_020adbc0(void);
 extern int func_ov004_020adbe0(void);
@@ -140,15 +144,11 @@ extern void func_ov004_020b14f0(void *);
 extern void func_ov004_020b2444(int a, int b, int c, int d, int e, int f, int g);
 extern void func_ov004_020b29a0(void* c, void* arg);
 extern void func_ov004_020b67e8(int);
-extern void func_ov004_020b6f14(char *c);
-extern void func_ov004_020b7020(char *c);
-extern void func_ov004_020b743c(char *p);
-extern void func_ov004_020b7460(void *c);
 }
 
 extern W2 data_02086b58;
 extern Obj* data_0209f5bc;
-extern char data_0209f61c[];
+extern dWipe_c data_0209f61c;
 extern unsigned char data_020a0e40;
 extern unsigned char data_020a0de8[];
 extern unsigned char data_020a0de9[];
@@ -333,139 +333,139 @@ void dMgState_c::Render()
     (this->*mRender)();
 }
 
-// @symbol func_ov004_020b8688
-extern "C" void func_ov004_020b8688(char* r4){
+// @symbol _ZN10dMgState_c19func_ov004_020b8688Ev
+void dMgState_c::func_ov004_020b8688() {
   int r3, c;
-  *(int*)(r4 + 0x1c) = 0xb4;
+  mTimer = 0xb4;
   r3 = data_ov004_020bc8a0;
   c = 3;
   if (r3 != 0x1d) { data_ov004_020bc8a0 = 0x1d; c = r3; }
   func_ov004_020b0cac(c, data_ov004_020bc880, data_ov004_020bc884, -1, -1, 0xd);
   func_ov004_020ae274((void*)4);
-  *(W2*)(r4 + 8) = data_ov004_020bca1c;
+  *(W2 *)&mBehavior = data_ov004_020bca1c;
 }
 
-// @symbol func_ov004_020b8560
-extern "C" void func_ov004_020b8560(char* c){
+// @symbol _ZN10dMgState_c19func_ov004_020b8560Ev
+void dMgState_c::func_ov004_020b8560() {
   Base* r4 = data_ov004_020beb68;
   if (data_0209f5bc->m_18()) {
     data_0209f5bc->m_c(0x1e, 0);
     FreeGfxSlotsById(0x1d);
     func_ov004_020ae20c();
     func_ov004_020ae2c8();
-    func_ov004_020b29a0(r4, *(void**)(c + 0x18));
-    *(int*)(c + 0x1c) = 0;
-    *(int*)(c + 0x18) = -1;
-    *(int*)(c + 0x20) = 0;
-    *(int*)(c + 0x24) = 0;
+    func_ov004_020b29a0(r4, (void *)mState);
+    mTimer = 0;
+    mState = -1;
+    unk_020 = 0;
+    unk_024 = 0;
   } else {
-    if (*(int*)(c + 0x1c) != 0)
+    if (mTimer != 0)
       return;
     if (data_0209f5bc->m_1c())
       return;
     if (r4 == 0)
       return;
-    if (r4->m_4c(*(void**)(c + 0x18)) == 0)
+    if (r4->m_4c((void *)mState) == 0)
       return;
     data_0209f5bc->m_10(0x1e, 0);
   }
 }
 
-// @symbol func_ov004_020b853c
-extern "C" void func_ov004_020b853c(char *p) { *(int *)(p + 0x1c) = 15; *(W2 *)(p + 0x8) = data_ov004_020bc8bc; }
+// @symbol _ZN10dMgState_c19func_ov004_020b853cEv
+void dMgState_c::func_ov004_020b853c() { mTimer = 15; *(W2 *)&mBehavior = data_ov004_020bc8bc; }
 
-// @symbol func_ov004_020b841c
-extern "C" void func_ov004_020b841c(char* c) {
+// @symbol _ZN10dMgState_c19func_ov004_020b841cEv
+void dMgState_c::func_ov004_020b841c() {
   if (data_0209f5bc->m_18() != 0) {
     Base* r5 = data_ov004_020beb68;
     if (r5 == 0) return;
-    if (r5->m_4c(*(void**)(c + 0x18)) == 0) return;
+    if (r5->m_4c((void *)mState) == 0) return;
     data_0209f5bc->m_c(0x1e, 0);
     FreeGfxSlotsById(0x1d);
-    func_ov004_020b29a0(r5, *(void**)(c + 0x18));
-    *(int*)(c + 0x1c) = 0;
-    *(int*)(c + 0x18) = -1;
-    *(int*)(c + 0x20) = 0;
-    *(int*)(c + 0x24) = 0;
+    func_ov004_020b29a0(r5, (void *)mState);
+    mTimer = 0;
+    mState = -1;
+    unk_020 = 0;
+    unk_024 = 0;
   } else {
-    if (*(int*)(c + 0x1c) != 0) return;
+    if (mTimer != 0) return;
     if (data_0209f5bc->m_1c() != 0) return;
     data_0209f5bc->m_10(0x1e, 0);
   }
 }
 
-// @symbol func_ov004_020b83ac
-extern "C" void func_ov004_020b83ac(char* c){
-  *(int*)(c+0x1c) = 0xb4;
+// @symbol _ZN10dMgState_c19func_ov004_020b83acEv
+void dMgState_c::func_ov004_020b83ac() {
+  mTimer = 0xb4;
   func_ov004_020b0cac(5, data_ov004_020bc854, data_ov004_020bc87c, -1, -1, 0xd);
   func_ov004_020ae274((void*)1);
-  *(W2*)(c+8) = data_ov004_020bc8c4;
+  *(W2 *)&mBehavior = data_ov004_020bc8c4;
 }
 
-// @symbol func_ov004_020b8284
-extern "C" void func_ov004_020b8284(char* c){
+// @symbol _ZN10dMgState_c19func_ov004_020b8284Ev
+void dMgState_c::func_ov004_020b8284() {
   if (data_0209f5bc->m_18()) {
     Base* r5 = data_ov004_020beb68;
     if (r5 == 0)
       return;
-    if (r5->m_4c(*(void**)(c + 0x18)) == 0)
+    if (r5->m_4c((void *)mState) == 0)
       return;
     data_0209f5bc->m_c(0x1e, 0);
     FreeGfxSlotsById(0x1d);
     func_ov004_020ae20c();
     func_ov004_020ae2c8();
-    func_ov004_020b29a0(r5, *(void**)(c + 0x18));
-    *(int*)(c + 0x1c) = 0;
-    *(int*)(c + 0x18) = -1;
-    *(int*)(c + 0x20) = 0;
-    *(int*)(c + 0x24) = 0;
+    func_ov004_020b29a0(r5, (void *)mState);
+    mTimer = 0;
+    mState = -1;
+    unk_020 = 0;
+    unk_024 = 0;
   } else {
-    if (*(int*)(c + 0x1c) != 0)
+    if (mTimer != 0)
       return;
     if (data_0209f5bc->m_1c() == 0)
       data_0209f5bc->m_10(0x1e, 0);
   }
 }
 
-// @symbol func_ov004_020b81f8
-extern "C" void func_ov004_020b81f8(char* r4){
+// @symbol _ZN10dMgState_c19func_ov004_020b81f8Ev
+void dMgState_c::func_ov004_020b81f8() {
   int r3, c;
-  *(int*)(r4 + 0x1c) = 0x3c;
+  mTimer = 0x3c;
   r3 = data_ov004_020bc8a0;
   c = 8;
   if (r3 != 0x1d) { data_ov004_020bc8a0 = 0x1d; c = r3; }
   func_ov004_020b0cac(c, data_ov004_020bc8b8, data_ov004_020bc8b4, -1, -1, 0xd);
   func_ov004_020ae274((void*)3);
-  *(W2*)(r4 + 8) = data_ov004_020bc8d4;
+  *(W2 *)&mBehavior = data_ov004_020bc8d4;
 }
 
-// @symbol func_ov004_020b8098
-extern "C" void func_ov004_020b8098(char* r4){
+// @symbol _ZN10dMgState_c19func_ov004_020b8098Ev
+void dMgState_c::func_ov004_020b8098() {
   Obj* o;
   if (func_ov004_020b0b1c(0)) {
     o = data_0209f5bc;
     o->m_10(0x1e, 0);
-    *(W2*)(r4 + 8) = data_ov004_020bc8dc;
+    *(W2 *)&mBehavior = data_ov004_020bc8dc;
     return;
   }
   if (func_ov004_020b0b1c(2) || func_ov004_020b0b1c(1)) {
     o = data_0209f5bc;
     if (o->m_1c())
       return;
-    _ZN8dScene_c9SetFadersEP15FaderBrightness(data_0209f61c);
-    func_0202ec9c(data_0209f61c, 2);
-    _ZN8dScene_c14StartSceneFadeEjjt(5, 0, 0);
+    dScene_c::SetFaders(&data_0209f61c);
+    data_0209f61c.func_0202ec9c(2);
+    dScene_c::StartSceneFade(5, 0, 0);
     func_02012dd0((void*)0x3c);
     return;
   }
-  if (*(int*)(r4 + 0x1c) != 0)
+  if (mTimer != 0)
     return;
   func_ov004_020b0cac(0, data_ov004_020bc8a8, data_ov004_020bc898, -1, -1, 0xd);
   func_ov004_020b0cac(2, data_ov004_020bc86c, data_ov004_020bc8a4, -1, -1, 0xd);
 }
 
-// @symbol func_ov004_020b7fec
-extern "C" void func_ov004_020b7fec(char* c){
+// @symbol _ZN10dMgState_c19func_ov004_020b7fecEv
+void dMgState_c::func_ov004_020b7fec() {
   if (data_0209f5bc->m_18() == 0)
     return;
   void* r5 = data_ov004_020beb68;
@@ -475,57 +475,57 @@ extern "C" void func_ov004_020b7fec(char* c){
   FreeGfxSlotsById(0x1d);
   func_ov004_020ae20c();
   func_ov004_020ae2c8();
-  func_ov004_020b29a0(r5, *(void**)(c + 0x18));
-  *(int*)(c + 0x1c) = 0;
-  *(int*)(c + 0x18) = -1;
-  *(int*)(c + 0x20) = 0;
-  *(int*)(c + 0x24) = 0;
+  func_ov004_020b29a0(r5, (void *)mState);
+  mTimer = 0;
+  mState = -1;
+  unk_020 = 0;
+  unk_024 = 0;
 }
 
-// @symbol func_ov004_020b7f5c
-extern "C" void func_ov004_020b7f5c(char* r4){
+// @symbol _ZN10dMgState_c19func_ov004_020b7f5cEv
+void dMgState_c::func_ov004_020b7f5c() {
   int r3, c;
-  *(int*)(r4 + 0x1c) = 0x78;
+  mTimer = 0x78;
   r3 = data_ov004_020bc8a0;
   c = 9;
   if (r3 != 0x1d) { data_ov004_020bc8a0 = 0x1d; c = r3; }
   func_ov004_020b0cac(c, data_ov004_020bc88c, data_ov004_020bc860, -1, -1, 0xd);
   _ZN5Sound12PlayBank2_2DEj(0x136);
-  *(W2*)(r4 + 8) = data_ov004_020bc8ec;
+  *(W2 *)&mBehavior = data_ov004_020bc8ec;
 }
 
-// @symbol func_ov004_020b7eac
-extern "C" void func_ov004_020b7eac(char* c){
-  if (*(int*)(c + 0x1c) > 0x64)
+// @symbol _ZN10dMgState_c19func_ov004_020b7eacEv
+void dMgState_c::func_ov004_020b7eac() {
+  if (mTimer > 0x64)
     return;
-  if (*(int*)(c + 0x1c) != 0)
+  if (mTimer != 0)
     return;
   Base* o = data_ov004_020beb68;
   if (o == 0)
     return;
-  if (o->m_4c(*(void**)(c + 0x18)) == 0)
+  if (o->m_4c((void *)mState) == 0)
     return;
   FreeGfxSlotsById(0x1d);
   func_ov004_020ae20c();
   func_ov004_020ae2c8();
-  func_ov004_020b29a0(o, *(void**)(c + 0x18));
-  *(int*)(c + 0x1c) = 0;
-  *(int*)(c + 0x18) = -1;
-  *(int*)(c + 0x20) = 0;
-  *(int*)(c + 0x24) = 0;
+  func_ov004_020b29a0(o, (void *)mState);
+  mTimer = 0;
+  mState = -1;
+  unk_020 = 0;
+  unk_024 = 0;
 }
 
-// @symbol func_ov004_020b7e38
-extern "C" void func_ov004_020b7e38(char* c) {
-    *(int*)(c + 0x1c) = 0x78;
+// @symbol _ZN10dMgState_c19func_ov004_020b7e38Ev
+void dMgState_c::func_ov004_020b7e38() {
+    mTimer = 0x78;
     func_ov004_020b0cac(0xa, data_ov004_020bc878, data_ov004_020bc890, -1, -1, 0xd);
     _ZN5Sound12PlayBank2_2DEj(0x137);
-    *(W2*)(c + 8) = data_ov004_020bc8f4;
+    *(W2 *)&mBehavior = data_ov004_020bc8f4;
 }
 
-// @symbol func_ov004_020b7cd0
-extern "C" void func_ov004_020b7cd0(char* c){
-  int state = *(int*)(c + 0x1c);
+// @symbol _ZN10dMgState_c19func_ov004_020b7cd0Ev
+void dMgState_c::func_ov004_020b7cd0() {
+  int state = mTimer;
   if (state > 0x64)
     return;
   Base* p = data_ov004_020beb68;
@@ -536,18 +536,18 @@ extern "C" void func_ov004_020b7cd0(char* c){
     Base* q = data_ov004_020beb68;
     if (q == 0)
       return;
-    if (q->m_4c(*(void**)(c + 0x18)) == 0)
+    if (q->m_4c((void *)mState) == 0)
       return;
     data_ov004_020bc7d4 = 0;
     data_ov004_020bfa24 = 0;
     func_ov004_020ae20c();
     FreeGfxSlotsById(0x1d);
-    *(int*)(c + 0x1c) = 0xb4;
+    mTimer = 0xb4;
     {
         int a = data_ov004_020bc904.a;
         int b = data_ov004_020bc904.b;
-        *(int*)(c + 8) = b ? a : a;
-        *(int*)(c + 0xc) = b;
+        ((W2 *)&mBehavior)->w[0] = b ? a : a;
+        ((W2 *)&mBehavior)->w[1] = b;
     }
   } else {
     if (state != 0)
@@ -555,24 +555,23 @@ extern "C" void func_ov004_020b7cd0(char* c){
     Base* r5 = data_ov004_020beb68;
     if (r5 == 0)
       return;
-    if (r5->m_4c(*(void**)(c + 0x18)) == 0)
+    if (r5->m_4c((void *)mState) == 0)
       return;
     FreeGfxSlotsById(0x1d);
     func_ov004_020ae20c();
     func_ov004_020ae2c8();
-    func_ov004_020b29a0(r5, *(void**)(c + 0x18));
-    *(int*)(c + 0x1c) = 0;
-    *(int*)(c + 0x18) = -1;
-    *(int*)(c + 0x20) = 0;
-    *(int*)(c + 0x24) = 0;
+    func_ov004_020b29a0(r5, (void *)mState);
+    mTimer = 0;
+    mState = -1;
+    unk_020 = 0;
+    unk_024 = 0;
   }
 }
 
-// @symbol func_ov004_020b7c04
-extern "C" void func_ov004_020b7c04(char* c)
-{
+// @symbol _ZN10dMgState_c19func_ov004_020b7c04Ev
+void dMgState_c::func_ov004_020b7c04() {
     Obj* o;
-    int v = *(int*)(c + 0x1c);
+    int v = mTimer;
     if (v == 0xb3) {
         func_ov004_020b0cac(8, data_ov004_020bc8b8, data_ov004_020bc8b4, -1, -1, 0xd);
         func_ov004_020ae274((void*)3);
@@ -581,196 +580,195 @@ extern "C" void func_ov004_020b7c04(char* c)
     if (v != 0) return;
     o = *(Obj**)&data_0209f5bc;
     if (o->m_1c() != 0) return;
-    _ZN8dScene_c9SetFadersEP15FaderBrightness(data_0209f61c);
-    func_0202ec9c(data_0209f61c, 2);
-    _ZN8dScene_c14StartSceneFadeEjjt(5, 0, 0);
+    dScene_c::SetFaders(&data_0209f61c);
+    data_0209f61c.func_0202ec9c(2);
+    dScene_c::StartSceneFade(5, 0, 0);
     func_02012dd0((void*)0x3c);
 }
 
-// @symbol func_ov004_020b7b90
-extern "C" void func_ov004_020b7b90(char* c) {
-    *(int*)(c + 0x1c) = 0x78;
+// @symbol _ZN10dMgState_c19func_ov004_020b7b90Ev
+void dMgState_c::func_ov004_020b7b90() {
+    mTimer = 0x78;
     func_ov004_020b0cac(0xa, data_ov004_020bc878, data_ov004_020bc890, -1, -1, 0xd);
     _ZN5Sound12PlayBank2_2DEj(0x137);
-    *(W2*)(c + 8) = data_ov004_020bc90c;
+    *(W2 *)&mBehavior = data_ov004_020bc90c;
 }
 
-// @symbol func_ov004_020b7b20
-extern "C" void func_ov004_020b7b20(char* c){
-  int v = *(int*)(c+0x1c);
+// @symbol _ZN10dMgState_c19func_ov004_020b7b20Ev
+void dMgState_c::func_ov004_020b7b20() {
+  int v = mTimer;
   if(v > 0x64) return;
   if(v != 0) return;
   FreeGfxSlotsById(0x1d);
-  *(W2*)(c+8) = data_ov004_020bc93c;
-  *(int*)(c+0x24) = 1;
+  *(W2 *)&mBehavior = data_ov004_020bc93c;
+  unk_024 = 1;
   data_ov004_020bc7d4 = 0;
   data_ov004_020bfa24 = 0;
 }
 
-// @symbol func_ov004_020b7a18
-extern "C" void func_ov004_020b7a18(char *c)
-{
+// @symbol _ZN10dMgState_c19func_ov004_020b7a18Ev
+void dMgState_c::func_ov004_020b7a18() {
     Base *g = data_ov004_020beb68;
     int cond = g ? g->a8 : 0;
     if (cond == 0) {
         g = data_ov004_020beb68;
         if (!g) return;
-        if (!g->m_4c(*(void**)(c + 0x18))) return;
+        if (!g->m_4c((void *)mState)) return;
         func_ov004_020ae20c();
-        *(int *)(c + 0x1c) = 0xb4;
-        *(W2 *)(c + 8) = data_ov004_020bc98c;
+        mTimer = 0xb4;
+        *(W2 *)&mBehavior = data_ov004_020bc98c;
         return;
     }
     g = data_ov004_020beb68;
     if (!g) return;
-    if (!g->m_4c(*(void**)(c + 0x18))) return;
+    if (!g->m_4c((void *)mState)) return;
     func_ov004_020ae20c();
     func_ov004_020ae2c8();
-    func_ov004_020b29a0(g, *(void**)(c + 0x18));
-    *(int *)(c + 0x1c) = 0;
-    *(int *)(c + 0x18) = -1;
-    *(int *)(c + 0x20) = 0;
-    *(int *)(c + 0x24) = 0;
+    func_ov004_020b29a0(g, (void *)mState);
+    mTimer = 0;
+    mState = -1;
+    unk_020 = 0;
+    unk_024 = 0;
 }
 
-// @symbol func_ov004_020b79b0
-extern "C" void func_ov004_020b79b0(char *c) {
-    *(int *)(c + 0x1c) = 0x78;
+// @symbol _ZN10dMgState_c19func_ov004_020b79b0Ev
+void dMgState_c::func_ov004_020b79b0() {
+    mTimer = 0x78;
     func_ov004_020b0cac(0xb, data_ov004_020bc868, data_ov004_020bc858, -1, -1, 0xd);
-    *(W2 *)(c + 8) = data_ov004_020bc9ac;
+    *(W2 *)&mBehavior = data_ov004_020bc9ac;
 }
 
-// @symbol func_ov004_020b798c
-extern "C" void func_ov004_020b798c(char *p) { *(int *)(p + 0x1c) = 0; *(W2 *)(p + 0x8) = data_ov004_020bc9b4; }
+// @symbol _ZN10dMgState_c19func_ov004_020b798cEv
+void dMgState_c::func_ov004_020b798c() { mTimer = 0; *(W2 *)&mBehavior = data_ov004_020bc9b4; }
 
-// @symbol func_ov004_020b78f4
-extern "C" void func_ov004_020b78f4(char* c) {
+// @symbol _ZN10dMgState_c19func_ov004_020b78f4Ev
+void dMgState_c::func_ov004_020b78f4() {
   Base* r4;
-  if (*(int*)(c + 0x1c) != 0) return;
+  if (mTimer != 0) return;
   r4 = data_ov004_020beb68;
   if (r4 == 0) return;
-  if (r4->m_4c(*(void**)(c + 0x18)) == 0) return;
+  if (r4->m_4c((void *)mState) == 0) return;
   FreeGfxSlotsById(0x1d);
-  func_ov004_020b29a0(r4, *(void**)(c + 0x18));
-  *(int*)(c + 0x1c) = 0;
-  *(int*)(c + 0x18) = -1;
-  *(int*)(c + 0x20) = 0;
-  *(int*)(c + 0x24) = 0;
+  func_ov004_020b29a0(r4, (void *)mState);
+  mTimer = 0;
+  mState = -1;
+  unk_020 = 0;
+  unk_024 = 0;
 }
 
-// @symbol func_ov004_020b7854
-extern "C" void func_ov004_020b7854(char* c){
+// @symbol _ZN10dMgState_c19func_ov004_020b7854Ev
+void dMgState_c::func_ov004_020b7854() {
     int arg0;
-    *(int*)(c+0x1c) = 0xb4;
+    mTimer = 0xb4;
     func_ov004_020ae274((void*)4);
     arg0 = 3;
     if (data_ov004_020bc8a0 != 0x1d) { arg0 = data_ov004_020bc8a0; data_ov004_020bc8a0 = 0x1d; }
     func_ov004_020b0cac(arg0, data_ov004_020bc8b0, data_ov004_020bc8ac - (data_ov004_020beb6c + 0xc0), -1, -1, 0xa);
-    *(W2*)(c+8) = data_ov004_020bc9e4;
+    *(W2 *)&mBehavior = data_ov004_020bc9e4;
 }
 
-// @symbol func_ov004_020b77b4
-extern "C" void func_ov004_020b77b4(char* c){
-  if (*(int*)(c + 0x1c) != 0)
+// @symbol _ZN10dMgState_c19func_ov004_020b77b4Ev
+void dMgState_c::func_ov004_020b77b4() {
+  if (mTimer != 0)
     return;
   Base* o = data_ov004_020beb68;
   if (o == 0)
     return;
-  if (o->m_4c(*(void**)(c + 0x18)) == 0)
+  if (o->m_4c((void *)mState) == 0)
     return;
   FreeGfxSlotsById(0x1d);
   func_ov004_020ae20c();
   func_ov004_020ae2c8();
-  func_ov004_020b29a0(o, *(void**)(c + 0x18));
-  *(int*)(c + 0x1c) = 0;
-  *(int*)(c + 0x18) = -1;
-  *(int*)(c + 0x20) = 0;
-  *(int*)(c + 0x24) = 0;
+  func_ov004_020b29a0(o, (void *)mState);
+  mTimer = 0;
+  mState = -1;
+  unk_020 = 0;
+  unk_024 = 0;
 }
 
-// @symbol func_ov004_020b7744
-extern "C" void func_ov004_020b7744(char* c){
-  *(int*)(c+0x1c) = 0xb4;
+// @symbol _ZN10dMgState_c19func_ov004_020b7744Ev
+void dMgState_c::func_ov004_020b7744() {
+  mTimer = 0xb4;
   func_ov004_020ae274((void*)3);
   func_ov004_020b0cac(8, data_ov004_020bc894, data_ov004_020bc874, -1, -1, 0xb);
-  *(W2*)(c+8) = data_ov004_020bc9fc;
+  *(W2 *)&mBehavior = data_ov004_020bc9fc;
 }
 
-// @symbol func_ov004_020b75e4
-extern "C" void func_ov004_020b75e4(char* r4){
+// @symbol _ZN10dMgState_c19func_ov004_020b75e4Ev
+void dMgState_c::func_ov004_020b75e4() {
   Obj* o;
   if (func_ov004_020b0b1c(0)) {
     o = data_0209f5bc;
     o->m_10(0x1e, 0);
-    *(W2*)(r4 + 8) = data_ov004_020bca14;
+    *(W2 *)&mBehavior = data_ov004_020bca14;
     return;
   }
   if (func_ov004_020b0b1c(2) || func_ov004_020b0b1c(1)) {
     o = data_0209f5bc;
     if (o->m_1c())
       return;
-    _ZN8dScene_c9SetFadersEP15FaderBrightness(data_0209f61c);
-    func_0202ec9c(data_0209f61c, 2);
-    _ZN8dScene_c14StartSceneFadeEjjt(5, 0, 0);
+    dScene_c::SetFaders(&data_0209f61c);
+    data_0209f61c.func_0202ec9c(2);
+    dScene_c::StartSceneFade(5, 0, 0);
     func_02012dd0((void*)0x3c);
     return;
   }
-  if (*(int*)(r4 + 0x1c) != 0)
+  if (mTimer != 0)
     return;
   func_ov004_020b0cac(0, data_ov004_020bc8a8, data_ov004_020bc898, -1, -1, 0xd);
   func_ov004_020b0cac(1, data_ov004_020bc86c, data_ov004_020bc8a4, -1, -1, 0xd);
 }
 
-// @symbol func_ov004_020b7594
-extern "C" void func_ov004_020b7594(char* c){
-  *(int*)(c+0x1c)=0xb4;
+// @symbol _ZN10dMgState_c19func_ov004_020b7594Ev
+void dMgState_c::func_ov004_020b7594() {
+  mTimer=0xb4;
   func_ov004_020ae274((void*)1);
-  *(W2*)(c+0x8)=data_ov004_020bca24;
-  *(W2*)(c+0x10)=data_ov004_020bc8cc;
+  *(W2 *)&mBehavior=data_ov004_020bca24;
+  *(W2 *)&mRender=data_ov004_020bc8cc;
 }
 
-// @symbol func_ov004_020b746c
-extern "C" void func_ov004_020b746c(char* c){
+// @symbol _ZN10dMgState_c19func_ov004_020b746cEv
+void dMgState_c::func_ov004_020b746c() {
   if (data_0209f5bc->m_18()) {
     Base* r5 = data_ov004_020beb68;
     if (r5 == 0)
       return;
-    if (r5->m_4c(*(void**)(c + 0x18)) == 0)
+    if (r5->m_4c((void *)mState) == 0)
       return;
     data_0209f5bc->m_c(0x1e, 0);
     FreeGfxSlotsById(0x1d);
     func_ov004_020ae20c();
     func_ov004_020ae2c8();
-    func_ov004_020b29a0(r5, *(void**)(c + 0x18));
-    *(int*)(c + 0x1c) = 0;
-    *(int*)(c + 0x18) = -1;
-    *(int*)(c + 0x20) = 0;
-    *(int*)(c + 0x24) = 0;
+    func_ov004_020b29a0(r5, (void *)mState);
+    mTimer = 0;
+    mState = -1;
+    unk_020 = 0;
+    unk_024 = 0;
   } else {
-    if (*(int*)(c + 0x1c) != 0)
+    if (mTimer != 0)
       return;
     if (data_0209f5bc->m_1c() == 0)
       data_0209f5bc->m_10(0x1e, 0);
   }
 }
 
-// @symbol func_ov004_020b7460
-extern "C" void func_ov004_020b7460(void *c) {
-    func_ov004_020b743c((char *)c);
+// @symbol _ZN10dMgState_c19func_ov004_020b7460Ev
+void dMgState_c::func_ov004_020b7460() {
+    func_ov004_020b743c();
 }
 
-// @symbol func_ov004_020b743c
-extern "C" void func_ov004_020b743c(char *p) { *(int *)(p + 0x1c) = 10; *(W2 *)(p + 0x8) = data_ov004_020bc8fc; }
+// @symbol _ZN10dMgState_c19func_ov004_020b743cEv
+void dMgState_c::func_ov004_020b743c() { mTimer = 10; *(W2 *)&mBehavior = data_ov004_020bc8fc; }
 
-// @symbol func_ov004_020b72d4
-extern "C" void func_ov004_020b72d4(char* c){
-  if (*(int*)(c + 0x1c) == 0) {
+// @symbol _ZN10dMgState_c19func_ov004_020b72d4Ev
+void dMgState_c::func_ov004_020b72d4() {
+  if (mTimer == 0) {
     if (func_ov004_020b0b1c(0) != 0) {
       data_0209f5bc->m_10(0x1e, 0);
       int a = data_ov004_020bc914.a;
       int b = data_ov004_020bc914.b;
-      *(int*)(c + 8) = b ? a : a;
-      *(int*)(c + 0xc) = b;
+      ((W2 *)&mBehavior)->w[0] = b ? a : a;
+      ((W2 *)&mBehavior)->w[1] = b;
       return;
     }
     if (func_ov004_020b0b1c(2) == 0) {
@@ -779,78 +777,78 @@ extern "C" void func_ov004_020b72d4(char* c){
     }
     if (data_0209f5bc->m_1c() != 0)
       return;
-    _ZN8dScene_c9SetFadersEP15FaderBrightness(data_0209f61c);
-    func_0202ec9c(data_0209f61c, 2);
-    _ZN8dScene_c14StartSceneFadeEjjt(5, 0, 0);
+    dScene_c::SetFaders(&data_0209f61c);
+    data_0209f61c.func_0202ec9c(2);
+    dScene_c::StartSceneFade(5, 0, 0);
     func_02012dd0((void*)0x3c);
     return;
   }
   func_ov004_020b0cac(0, data_ov004_020bc8a8, data_ov004_020bc898, -1, -1, 0xd);
   func_ov004_020b0cac(2, data_ov004_020bc86c, data_ov004_020bc8a4, -1, -1, 0xd);
-  *(int*)(c + 0x1c) = 0;
+  mTimer = 0;
 }
 
-// @symbol func_ov004_020b724c
-extern "C" void func_ov004_020b724c(char* c){
-  *(int*)(c+0x1c) = 0xb4;
+// @symbol _ZN10dMgState_c19func_ov004_020b724cEv
+void dMgState_c::func_ov004_020b724c() {
+  mTimer = 0xb4;
   func_ov004_020b0cac(5, data_ov004_020bc854, data_ov004_020bc87c, -1, -1, 0xd);
   func_ov004_020ae274((void*)1);
-  *(W2*)(c+8) = data_ov004_020bc994;
-  *(W2*)(c+0x10) = data_ov004_020bc9c4;
+  *(W2 *)&mBehavior = data_ov004_020bc994;
+  *(W2 *)&mRender = data_ov004_020bc9c4;
 }
 
-// @symbol func_ov004_020b7124
-extern "C" void func_ov004_020b7124(char* c){
+// @symbol _ZN10dMgState_c19func_ov004_020b7124Ev
+void dMgState_c::func_ov004_020b7124() {
   if (data_0209f5bc->m_18()) {
     Base* r5 = data_ov004_020beb68;
     if (r5 == 0)
       return;
-    if (r5->m_4c(*(void**)(c + 0x18)) == 0)
+    if (r5->m_4c((void *)mState) == 0)
       return;
     data_0209f5bc->m_c(0x1e, 0);
     func_ov004_020ae20c();
     func_ov004_020ae2c8();
-    func_ov004_020b29a0(r5, *(void**)(c + 0x18));
+    func_ov004_020b29a0(r5, (void *)mState);
     FreeGfxSlotsById(0x1d);
-    *(int*)(c + 0x1c) = 0;
-    *(int*)(c + 0x18) = -1;
-    *(int*)(c + 0x20) = 0;
-    *(int*)(c + 0x24) = 0;
+    mTimer = 0;
+    mState = -1;
+    unk_020 = 0;
+    unk_024 = 0;
   } else {
-    if (*(int*)(c + 0x1c) != 0)
+    if (mTimer != 0)
       return;
     if (data_0209f5bc->m_1c() == 0)
       data_0209f5bc->m_10(0x1e, 0);
   }
 }
 
-// @symbol func_ov004_020b70b4
-extern "C" void func_ov004_020b70b4(char* c){
-  *(int*)(c+0x1c) = 0x3c;
+// @symbol _ZN10dMgState_c19func_ov004_020b70b4Ev
+void dMgState_c::func_ov004_020b70b4() {
+  mTimer = 0x3c;
   func_ov004_020b0cac(0xe, data_ov004_020bc8b8, data_ov004_020bc8b4, -1, -1, 0xd);
   func_ov004_020ae274((void*)3);
-  *(W2*)(c+8) = data_ov004_020bca04;
+  *(W2 *)&mBehavior = data_ov004_020bca04;
 }
 
-// @symbol func_ov004_020b7020
-extern "C" void func_ov004_020b7020(char* c) {
+// @symbol _ZN10dMgState_c19func_ov004_020b7020Ev
+void dMgState_c::func_ov004_020b7020() {
   if (func_ov004_020adbe0()) {
-    func_ov004_020b6f14((char *)c);
+    func_ov004_020b6f14();
     return;
   }
   func_ov004_020b0cac(7, 0x80, 0x14, -1, -1, 0xd);
-  *(int*)(c+0x1c) = 0x78;
-  *(W2*)(c+8) = data_ov004_020bc8e4;
-  *(W2*)(c+0x10) = data_ov004_020bc91c;
+  mTimer = 0x78;
+  *(W2 *)&mBehavior = data_ov004_020bc8e4;
+  *(W2 *)&mRender = data_ov004_020bc91c;
   func_ov004_020ad90c();
 }
 
-// @symbol func_ov004_020b6f88
-extern "C" void func_ov004_020b6f88(char* c) {
+// @symbol _ZN10dMgState_c19func_ov004_020b6f88Ev
+void dMgState_c::func_ov004_020b6f88() {
   int ok;
   unsigned char idx;
   int i;
-  if (*(int*)(c + 0x1c) != 0) return;
+  if (mTimer != 0) return;
   idx = data_020a0e40;
   ok = 0;
   i = idx * 4;
@@ -860,30 +858,29 @@ extern "C" void func_ov004_020b6f88(char* c) {
   if (ok == 0) return;
   func_02012790(0x62);
   FreeGfxSlotsById(7);
-  *(W2*)(c + 0x10) = data_02086b58;
-  func_ov004_020b7460(c);
+  *(W2 *)&mRender = data_02086b58;
+  func_ov004_020b7460();
 }
 
-// @symbol func_ov004_020b6f14
-extern "C" void func_ov004_020b6f14(char* c) {
+// @symbol _ZN10dMgState_c19func_ov004_020b6f14Ev
+void dMgState_c::func_ov004_020b6f14() {
   func_ov004_020b0cac(7, 0x80, 0x14, -1, -1, 0xd);
-  *(int*)(c+0x1c) = 0x12c;
-  *(W2*)(c+8) = data_ov004_020bc9cc;
-  *(W2*)(c+0x10) = data_ov004_020bca2c;
+  mTimer = 0x12c;
+  *(W2 *)&mBehavior = data_ov004_020bc9cc;
+  *(W2 *)&mRender = data_ov004_020bca2c;
   func_ov004_020ad90c();
 }
 
-// @symbol func_ov004_020b6ddc
-extern "C" void func_ov004_020b6ddc(char *c)
-{
+// @symbol _ZN10dMgState_c19func_ov004_020b6ddcEv
+void dMgState_c::func_ov004_020b6ddc() {
     int idx;
     int flag;
-    void *o;
+    Base *o;
     int v;
     int s;
     int r4;
 
-    if (*(int *)(c + 0x1c) == 0) {
+    if (mTimer == 0) {
         idx = data_020a0e40;
         flag = 0;
         if (data_020a0de8[idx * 4] != 0) {
@@ -893,18 +890,17 @@ extern "C" void func_ov004_020b6ddc(char *c)
         if (flag != 0) {
             FreeGfxSlotsById(7);
             func_02012790(0x62);
-            *(W2 *)(c + 0x10) = data_02086b58;
-            func_ov004_020b7460(c);
+            *(W2 *)&mRender = data_02086b58;
+            func_ov004_020b7460();
         }
     }
 
-    if (*(int *)(c + 0x1c) != 0xb4)
+    if (mTimer != 0xb4)
         return;
 
     o = data_ov004_020beb68;
     if (o) {
-        void (*m50)(void *) = *(void (**)(void *))(*(unsigned int *)o + 0x50);
-        m50(o);
+        o->m_50();
     }
 
     r4 = 5;
@@ -922,19 +918,18 @@ extern "C" void func_ov004_020b6ddc(char *c)
     func_ov004_020ae274((void*)1);
 }
 
-// @symbol func_ov004_020b6d6c
-extern "C" void func_ov004_020b6d6c(char* c){
-  *(int*)(c+0x1c) = 0xb4;
+// @symbol _ZN10dMgState_c19func_ov004_020b6d6cEv
+void dMgState_c::func_ov004_020b6d6c() {
+  mTimer = 0xb4;
   func_ov004_020b0cac(8, data_ov004_020bc8b8, data_ov004_020bc8b4, -1, -1, 0xd);
   func_ov004_020ae274((void*)3);
-  *(W2*)(c+8) = data_ov004_020bc924;
+  *(W2 *)&mBehavior = data_ov004_020bc924;
 }
 
-// @symbol func_ov004_020b6c9c
-extern "C" void func_ov004_020b6c9c(StateObj *c)
-{
-    int x = c->f1c;
-    void *g = data_ov004_020beb68;
+// @symbol _ZN10dMgState_c19func_ov004_020b6c9cEv
+void dMgState_c::func_ov004_020b6c9c() {
+    int x = mTimer;
+    Base *g = data_ov004_020beb68;
     if (x != 0) {
         unsigned char idx = data_020a0e40;
         int off = idx * 4;
@@ -945,37 +940,33 @@ extern "C" void func_ov004_020b6c9c(StateObj *c)
         if (ok == 0)
             return;
     }
-    {
-        int (*fn)(void *, int) = (int (*)(void *, int)) (*(void ***)g)[0x13];
-        if (fn(g, c->f18) == 0)
-            return;
-    }
-    c->p10 = data_02086b58;
+    if (g->m_4c((void *)mState) == 0)
+        return;
+    *(W2 *)&mRender = data_02086b58;
     FreeGfxSlotsById(0x1d);
     if (func_ov004_020adbe0() != 0) {
-        func_ov004_020b6f14((char *)c);
+        func_ov004_020b6f14();
         return;
     }
-    func_ov004_020b7020((char *)c);
+    func_ov004_020b7020();
 }
 
-// @symbol func_ov004_020b6c10
-extern "C" void func_ov004_020b6c10(char* r4){
+// @symbol _ZN10dMgState_c19func_ov004_020b6c10Ev
+void dMgState_c::func_ov004_020b6c10() {
   int r3, c;
-  *(int*)(r4 + 0x1c) = 0xb4;
+  mTimer = 0xb4;
   r3 = data_ov004_020bc8a0;
   c = 3;
   if (r3 != 0x1d) { data_ov004_020bc8a0 = 0x1d; c = r3; }
   func_ov004_020b0cac(c, data_ov004_020bc880, data_ov004_020bc884, -1, -1, 0xd);
   func_ov004_020ae274((void*)4);
-  *(W2*)(r4 + 8) = data_ov004_020bca34;
+  *(W2 *)&mBehavior = data_ov004_020bca34;
 }
 
-// @symbol func_ov004_020b6b40
-extern "C" void func_ov004_020b6b40(StateObj *c)
-{
-    int x = c->f1c;
-    void *g = data_ov004_020beb68;
+// @symbol _ZN10dMgState_c19func_ov004_020b6b40Ev
+void dMgState_c::func_ov004_020b6b40() {
+    int x = mTimer;
+    Base *g = data_ov004_020beb68;
     if (x != 0) {
         unsigned char idx = data_020a0e40;
         int off = idx * 4;
@@ -986,30 +977,27 @@ extern "C" void func_ov004_020b6b40(StateObj *c)
         if (ok == 0)
             return;
     }
-    {
-        int (*fn)(void *, int) = (int (*)(void *, int)) (*(void ***)g)[0x13];
-        if (fn(g, c->f18) == 0)
-            return;
-    }
-    c->p10 = data_02086b58;
+    if (g->m_4c((void *)mState) == 0)
+        return;
+    *(W2 *)&mRender = data_02086b58;
     FreeGfxSlotsById(0x1d);
     if (func_ov004_020adbe0() != 0) {
-        func_ov004_020b6f14((char *)c);
+        func_ov004_020b6f14();
         return;
     }
-    func_ov004_020b7020((char *)c);
+    func_ov004_020b7020();
 }
 
-// @symbol func_ov004_020b6ad8
-extern "C" void func_ov004_020b6ad8(void) {
+// @symbol _ZN10dMgState_c19func_ov004_020b6ad8Ev
+void dMgState_c::func_ov004_020b6ad8() {
     int r;
     if (data_ov004_020beb68 == 0) return;
     r = func_ov004_020adbc0();
     func_ov004_020b2444(data_ov004_020bc850, data_ov004_020bc89c, r, -1, -1, 0, 0);
 }
 
-// @symbol func_ov004_020b6948
-extern "C" void func_ov004_020b6948(void) {
+// @symbol _ZN10dMgState_c19func_ov004_020b6948Ev
+void dMgState_c::func_ov004_020b6948() {
     unsigned int r;
     int idx;
 
@@ -1031,12 +1019,12 @@ extern "C" void func_ov004_020b6948(void) {
     func_ov004_020af948((void *)*(int *)(data_ov004_020bca44[idx] + 0x1c), data_ov004_020bc85c + 0x10, data_ov004_020bc870, 0);
 }
 
-// @symbol func_ov004_020b68e8
-extern "C" void func_ov004_020b68e8(int *c) {
+// @symbol _ZN10dMgState_c19func_ov004_020b68e8Ev
+void dMgState_c::func_ov004_020b68e8() {
     void *g = data_ov004_020beb68;
     if (g == 0) return;
     func_ov004_020b14f0(g);
-    if (c[7] > 0) return;
+    if (*(int *)((char *)this + 0x1c) > 0) return;
     func_ov004_020b0d8c(g, 0xe0, 0xa0);
 }
 

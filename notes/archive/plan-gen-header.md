@@ -188,12 +188,12 @@ evidence behind them.
 
 - **Do not let any pass report a bare zero.** §2. State recall or the number is unreadable.
 - **Do not emit a field no pass could prove.** A gap is recoverable; a wrong field is inherited.
-- **Do not rewrite a de-bannered header.** `include/Actor.h` and `include/Fader.h` were
+- **Do not rewrite a de-bannered header.** `include/Actor.h` and `include/dFader_c.h` were
   hand-reconstructed with real inheritance; `Actor.h`'s key-function arrangement (dtor
   declared first, no TU defining it as a method) is a deliberate invariant a regenerator
   would flatten. They are reconciliation *references*, and read-only.
-- **Do not touch vtables.** `Fader.h`'s vtable half is already known wrong -- the ROM's
-  four fader vtables have 10 slots with Fader's 2-9 null, an abstract base, against 7
+- **Do not touch vtables.** `dFader_c.h`'s vtable half is already known wrong -- the ROM's
+  four fader vtables have 10 slots with dFader_c's 2-9 null, an abstract base, against 7
   non-pure virtuals declared. Vtables are ROM data and deserve their own pass; mixing
   them in means one tool with two authorities.
 - **Do not change a 4-byte field's signedness on a hunch.** The load does not say, and

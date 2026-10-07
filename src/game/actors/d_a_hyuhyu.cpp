@@ -24,11 +24,12 @@
  * FUNCTION ORDER IS THE REVERSE OF THE ROM'S -- mwccarm emits one .text
  * section per function in the reverse of source order.
  *
+ * The six state handlers, the state setter and the two helpers are
+ * daHyuhyu_c members under their address names. ov091's static
+ * initializer copies their pointer-to-members into the three state
+ * records mState points at.
+ *
  * Known limits:
- * - The six state handlers and the state setter keep C linkage and
- *   placeholder names. The handlers are pointer-to-members on the real
- *   class (ov091's static initializer copies them into the three state
- *   records mState points at), but no ROM spelling survives.
  * - dCcAc_c::Init, dBgCh_Actr::Init, ModelAnim::SetAnim and
  *   Particle::System::New stay mangled: each takes Fix12<int> by value
  *   (notes/mwccarm-codegen.md 6az).
@@ -86,16 +87,6 @@ void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
     ModelAnim *self, BCA_File *file, int flags, int speed, u16 startFrame);
 int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 slot, u32 effect, int x, int y, int z, const Vector3_16 *rot, void *cb);
-
-void func_ov091_021339fc(daHyuhyu_c *self);
-int func_ov091_02133c6c(daHyuhyu_c *self);
-int func_ov091_02133d1c(daHyuhyu_c *self);
-int func_ov091_02133d30(daHyuhyu_c *self);
-int func_ov091_02133f24(daHyuhyu_c *self);
-int func_ov091_02133f60(daHyuhyu_c *self);
-int func_ov091_0213400c(daHyuhyu_c *self);
-int func_ov091_02134044(daHyuhyu_c *self, daHyuhyu_c_State *state);
-void func_ov091_02134094(daHyuhyu_c *self);
 }
 
 // @symbol daHyuhyu_c_classInit
@@ -133,7 +124,7 @@ int daHyuhyu_c::InitResources()
         mVariant = 0;
     if (mVariant == 1) {
         _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x3c000, 0x14000, 0x200002, 0);
-        func_ov091_02134044(this, &data_ov091_021356c0);
+        func_ov091_02134044(&data_ov091_021356c0);
         _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x14000, 0, 0, 0);
         mFlags = 0;
         return 1;
@@ -147,7 +138,7 @@ int daHyuhyu_c::InitResources()
     dExtFrameCtrl_c::LoadFile(data_ov091_0213567c);
     dExtFrameCtrl_c::LoadFile(data_ov091_02135684);
     mModelAnim.speed = 0x1000;
-    func_ov091_02134044(this, &data_ov091_021356d0);
+    func_ov091_02134044(&data_ov091_021356d0);
     return 1;
 }
 
@@ -158,7 +149,7 @@ int daHyuhyu_c::Behavior()
         mdCcAc_c.Clear();
         if (mEatenByYoshi != 0 && unk_104 == 0)
             mdCcAc_c.Update();
-        func_ov091_02134094(this);
+        func_ov091_02134094();
         return 1;
     }
 
@@ -184,7 +175,7 @@ int daHyuhyu_c::Behavior()
         unk_0ac = tmp;
     }
     UpdatePosWithOnlySpeed(&mdCcAc_c);
-    func_ov091_021339fc(this);
+    func_ov091_021339fc();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
 
@@ -194,7 +185,7 @@ int daHyuhyu_c::Behavior()
     }
 
     mModelAnim.Advance();
-    func_ov091_02134094(this);
+    func_ov091_02134094();
     return 1;
 }
 
@@ -229,45 +220,45 @@ int daHyuhyu_c::CleanupResources()
     return 1;
 }
 
-// @symbol func_ov091_02134094
+// @symbol _ZN10daHyuhyu_c19func_ov091_02134094Ev
 /* The model matrix: translation at 1/8 scale, then the rotation. */
-extern "C" void func_ov091_02134094(daHyuhyu_c *self)
+void daHyuhyu_c::func_ov091_02134094()
 {
     Vector3 pos;
-    Vec3_Asr(&pos, (Vector3 *)&self->mPosX, 3);
+    Vec3_Asr(&pos, (Vector3 *)&this->mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
-        self->mAngleX, self->mAngleY, self->mAngleZ);
-    self->mModelAnim.mat4x3 = data_020a0e68;
+        this->mAngleX, this->mAngleY, this->mAngleZ);
+    this->mModelAnim.mat4x3 = data_020a0e68;
 }
 
-// @symbol func_ov091_02134044
+// @symbol _ZN10daHyuhyu_c19func_ov091_02134044EP16daHyuhyu_c_State
 /* Enter `state`, running its enter handler if it has one. */
-extern "C" int func_ov091_02134044(daHyuhyu_c *self, daHyuhyu_c_State *state)
+int daHyuhyu_c::func_ov091_02134044(daHyuhyu_c_State *state)
 {
-    self->mState = state;
-    daHyuhyu_c_State *cur = self->mState;
+    this->mState = state;
+    daHyuhyu_c_State *cur = this->mState;
     if (cur->enter == 0)
         return 1;
-    return (self->*cur->enter)();
+    return (this->*cur->enter)();
 }
 
-// @symbol func_ov091_0213400c
+// @symbol _ZN10daHyuhyu_c19func_ov091_0213400cEv
 /* Cloud, waiting: enter. Loop the wait animation. */
-extern "C" int func_ov091_0213400c(daHyuhyu_c *self)
+int daHyuhyu_c::func_ov091_0213400c()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim,
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim,
         ((BCA_File **)&data_ov091_02135684)[1], 0, 0x1000, 0);
     return 1;
 }
 
-// @symbol func_ov091_02133f60
+// @symbol _ZN10daHyuhyu_c19func_ov091_02133f60Ev
 /* Cloud, waiting: execute. Turn toward the nearest player; blow once the
    cool-down is over, that player is within 1000.0, and the signed bearing
    returned by Vec3_HorzAngle is below 0x1000. */
-extern "C" int func_ov091_02133f60(daHyuhyu_c *self)
+int daHyuhyu_c::func_ov091_02133f60()
 {
-    Player *player = self->ClosestPlayer();
+    Player *player = this->ClosestPlayer();
     Vector3 target;
     s16 angle;
 
@@ -279,33 +270,33 @@ extern "C" int func_ov091_02133f60(daHyuhyu_c *self)
         target.y = pos->y;
         target.z = pos->z;
     }
-    angle = Vec3_HorzAngle((Vector3 *)&self->mPosX, &target);
-    ApproachAngle(&self->mPrevAngleY, angle, 0xa, 0x200, 0x100);
-    if ((u16)self->mStateTimer != 0)
+    angle = Vec3_HorzAngle((Vector3 *)&this->mPosX, &target);
+    ApproachAngle(&this->mPrevAngleY, angle, 0xa, 0x200, 0x100);
+    if ((u16)this->mStateTimer != 0)
         goto done;
-    if (Vec3_Dist((Vector3 *)&self->mPosX, &target) >= 0x3e8000)
+    if (Vec3_Dist((Vector3 *)&this->mPosX, &target) >= 0x3e8000)
         goto done;
     if (angle >= 0x1000)
         goto done;
-    func_ov091_02134044(self, &data_ov091_021356b0);
+    func_ov091_02134044(&data_ov091_021356b0);
 done:
     return 1;
 }
 
-// @symbol func_ov091_02133f24
+// @symbol _ZN10daHyuhyu_c19func_ov091_02133f24Ev
 /* Cloud, blowing: enter. Play the blow animation once. */
-extern "C" int func_ov091_02133f24(daHyuhyu_c *self)
+int daHyuhyu_c::func_ov091_02133f24()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim,
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim,
         ((BCA_File **)&data_ov091_0213567c)[1], 0x40000000, 0x1000, 0);
     return 1;
 }
 
-// @symbol func_ov091_02133d30
+// @symbol _ZN10daHyuhyu_c19func_ov091_02133d30Ev
 /* Cloud, blowing: execute. From frame 31 on, stream the gust particles
    and spawn a gust at the nearest player every other frame; when the
    animation ends, cool down for 100 frames and wait again. */
-extern "C" int func_ov091_02133d30(daHyuhyu_c *self)
+int daHyuhyu_c::func_ov091_02133d30()
 {
     Vector3_16 rot;
     Vector3 pos;
@@ -314,30 +305,30 @@ extern "C" int func_ov091_02133d30(daHyuhyu_c *self)
     Player *player;
     s16 heading;
 
-    pos.x = self->mPosX;
-    pos.y = self->mPosY;
-    pos.z = self->mPosZ;
+    pos.x = this->mPosX;
+    pos.y = this->mPosY;
+    pos.z = this->mPosZ;
 
-    u16 frame = (u16)(self->mModelAnim.currFrame >> 12);
+    u16 frame = (u16)(this->mModelAnim.currFrame >> 12);
     if (frame == 0x1f)
-        func_02012694(0x164, &self->mCamSpacePosX);
+        func_02012694(0x164, &this->mCamSpacePosX);
 
-    if ((u16)(self->mModelAnim.currFrame >> 12) > 0x1e) {
-        rot.x = data_02082214[((u16)self->mAngleY >> 4) * 2];
+    if ((u16)(this->mModelAnim.currFrame >> 12) > 0x1e) {
+        rot.x = data_02082214[((u16)this->mAngleY >> 4) * 2];
         rot.y = 0;
-        rot.z = data_02082214[((u16)self->mAngleY >> 4) * 2 + 1];
+        rot.z = data_02082214[((u16)this->mAngleY >> 4) * 2 + 1];
 
         pos.y = pos.y + 0x28000;
 
-        self->mGustParticle = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            self->mGustParticle, 0x72, pos.x, pos.y, pos.z, &rot, 0);
-        self->mGustParticle2 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            self->mGustParticle2, 0x73, pos.x, pos.y, pos.z, &rot, 0);
+        this->mGustParticle = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            this->mGustParticle, 0x72, pos.x, pos.y, pos.z, &rot, 0);
+        this->mGustParticle2 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            this->mGustParticle2, 0x73, pos.x, pos.y, pos.z, &rot, 0);
 
-        if (!((u16)(self->mModelAnim.currFrame >> 12) & 1)) {
-            gust = dActor_c::Spawn(0xe7, 1, *(Vector3 *)&self->mPosX, 0, self->mAreaId, -1);
+        if (!((u16)(this->mModelAnim.currFrame >> 12) & 1)) {
+            gust = dActor_c::Spawn(0xe7, 1, *(Vector3 *)&this->mPosX, 0, this->mAreaId, -1);
             if (gust != 0) {
-                player = self->ClosestPlayer();
+                player = this->ClosestPlayer();
                 if (player != 0) {
                     Vector3 *ppos = (Vector3 *)&player->mPosX;
                     target.x = ppos->x;
@@ -346,11 +337,11 @@ extern "C" int func_ov091_02133d30(daHyuhyu_c *self)
                     target.y = player->mGroundY;
 
                     {
-                        s16 base = self->mPrevAngleY;
+                        s16 base = this->mPrevAngleY;
                         heading = base + (s16)(0x2000 - ((((u32)RandomIntInternal(&data_0209e650) >> 8) & 3) << 0xc));
                     }
 
-                    gust->mPrevAngleX = Vec3_VertAngle((Vector3 *)&self->mPosX, &target);
+                    gust->mPrevAngleX = Vec3_VertAngle((Vector3 *)&this->mPosX, &target);
                     gust->mPrevAngleY = heading;
                     gust->mPrevAngleZ = 0;
                 }
@@ -358,44 +349,44 @@ extern "C" int func_ov091_02133d30(daHyuhyu_c *self)
         }
     }
 
-    if (self->mModelAnim.Finished() != 0) {
-        self->mStateTimer = 100;
-        func_ov091_02134044(self, &data_ov091_021356d0);
+    if (this->mModelAnim.Finished() != 0) {
+        this->mStateTimer = 100;
+        func_ov091_02134044(&data_ov091_021356d0);
     }
 
     return 1;
 }
 
-// @symbol func_ov091_02133d1c
+// @symbol _ZN10daHyuhyu_c19func_ov091_02133d1cEv
 /* Gust, flying: enter. Live 40 frames. */
-extern "C" int func_ov091_02133d1c(daHyuhyu_c *self)
+int daHyuhyu_c::func_ov091_02133d1c()
 {
-    self->mStateTimer = 40;
+    this->mStateTimer = 40;
     return 1;
 }
 
-// @symbol func_ov091_02133c6c
+// @symbol _ZN10daHyuhyu_c19func_ov091_02133c6cEv
 /* Gust, flying: execute. Climb, fly 30.0 a frame along pitch and heading,
    and go away when the time runs out or the gust touches ground or wall. */
-extern "C" int func_ov091_02133c6c(daHyuhyu_c *self)
+int daHyuhyu_c::func_ov091_02133c6c()
 {
     Vector3 fwd;
     fwd.x = 0;
     fwd.y = 0;
     fwd.z = 0x1e000;
-    self->mPrevAngleX -= 0x80;
-    Matrix4x3_FromRotationY(&data_020a0e68, self->mPrevAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, self->mPrevAngleX);
-    MulVec3Mat4x3(&fwd, &data_020a0e68, (Vector3 *)&self->unk_0a4);
-    if ((u16)self->mStateTimer == 0
-        || self->mWithMeshClsn.IsOnGround() != 0
-        || self->mWithMeshClsn.IsOnWall() != 0
-        || (self->mFlags & 8))
-        self->MarkForDestruction();
+    this->mPrevAngleX -= 0x80;
+    Matrix4x3_FromRotationY(&data_020a0e68, this->mPrevAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngleX);
+    MulVec3Mat4x3(&fwd, &data_020a0e68, (Vector3 *)&this->unk_0a4);
+    if ((u16)this->mStateTimer == 0
+        || this->mWithMeshClsn.IsOnGround() != 0
+        || this->mWithMeshClsn.IsOnWall() != 0
+        || (this->mFlags & 8))
+        this->MarkForDestruction();
     return 1;
 }
 
-// @symbol func_ov091_021339fc
+// @symbol _ZN10daHyuhyu_c19func_ov091_021339fcEv
 /* What the collision cylinder hit this frame.
    The cloud: fire hurts it, an egg or a metal player pops it, and a mega
    player destroys it for a mega-kill.
@@ -405,25 +396,25 @@ extern "C" int func_ov091_02133c6c(daHyuhyu_c *self)
    SetNewHatCharacter; otherwise the cap is recorded as lost (once). Either
    way an OBJ_MARIO_CAP is dropped and flies off along the gust. The
    isPlayer temporaries are the ROM's shape: a plain `!=` test misses. */
-extern "C" void func_ov091_021339fc(daHyuhyu_c *self)
+void daHyuhyu_c::func_ov091_021339fc()
 {
     u32 hitFlags;
-    u32 id = self->mdCcAc_c.otherOwner;
+    u32 id = this->mdCcAc_c.otherOwner;
     Player *player;
 
     if (id == 0)
         return;
     player = (Player *)dActor_c::FindWithID(id);
-    if (self->mVariant == 0) {
-        hitFlags = self->mdCcAc_c.hitFlags;
+    if (this->mVariant == 0) {
+        hitFlags = this->mdCcAc_c.hitFlags;
         if ((hitFlags & 0x40000) != 0) {
-            self->mDeathState = 4;
-            func_ov002_020aea30(self, player, 0);
+            this->mDeathState = 4;
+            func_ov002_020aea30(this, player, 0);
             return;
         }
         if ((hitFlags & 0x2000) != 0) {
-            self->PoofDust();
-            self->MarkForDestruction();
+            this->PoofDust();
+            this->MarkForDestruction();
             return;
         }
         {
@@ -432,17 +423,17 @@ extern "C" void func_ov091_021339fc(daHyuhyu_c *self)
                 return;
         }
         if (player->mIsMetal == 1) {
-            self->PoofDust();
-            self->MarkForDestruction();
+            this->PoofDust();
+            this->MarkForDestruction();
             return;
         }
         if ((hitFlags & 0x10) == 0)
             return;
-        self->PoofDust();
-        self->SpawnMegaCharParticles(*player, 0);
+        this->PoofDust();
+        this->SpawnMegaCharParticles(*player, 0);
         player->IncMegaKillCount();
-        func_02012694(0x1d, &self->mCamSpacePosX);
-        self->MarkForDestruction();
+        func_02012694(0x1d, &this->mCamSpacePosX);
+        this->MarkForDestruction();
         return;
     }
 
@@ -457,7 +448,7 @@ extern "C" void func_ov091_021339fc(daHyuhyu_c *self)
         return;
     if (player->IsCollectingCap() != 0)
         return;
-    player->BlowAway(self->mPrevAngleY);
+    player->BlowAway(this->mPrevAngleY);
     {
         u8 hasWings = player->mHasWings;
         u8 character = player->mCharacter;
@@ -482,10 +473,10 @@ extern "C" void func_ov091_021339fc(daHyuhyu_c *self)
                 rot.x = 0;
                 rot.y = 0;
                 rot.z = 0;
-                rot.y = self->mPrevAngleY;
+                rot.y = this->mPrevAngleY;
                 capParam = capParam | (capChar << 8);
-                cap = dActor_c::Spawn(0x10d, capParam, *(Vector3 *)&self->mPosX, &rot,
-                    self->mAreaId, -1);
+                cap = dActor_c::Spawn(0x10d, capParam, *(Vector3 *)&this->mPosX, &rot,
+                    this->mAreaId, -1);
                 if (cap == 0)
                     return;
                 cap->mHorzSpeed = 0x32000;

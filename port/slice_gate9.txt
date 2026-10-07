@@ -30,13 +30,11 @@ src/engine/model/dExtShadowModel_c.cpp
 # the func_02039e* transform helpers and Transform this slice used to name
 # separately all live in it.
 src/engine/collision/dBgW_KcMbg.cpp
-src/_ZN4dBgW7DisableEv.cpp
-src/_ZN4dBgW9IsEnabledEv.cpp
+# dBgW is one production translation unit; the lifecycle pair,
+# Enable/Disable/IsEnabled, the slot-registry helpers and the func_020393*
+# accessors this slice used to name separately all live in it.
+src/engine/collision/dBgW.cpp
 src/_ZN9ModelBase7SetFileEP8BMD_Fileii.cpp
-src/func_02039394.c
-src/func_020393a4.c
-src/func_020393f0.c
-src/func_02039404.c
 src/InvMat4x3.c
 src/func_02053200.c
 # dBgW_Kc is two production translation units, one per module; the C2
@@ -44,13 +42,10 @@ src/func_02053200.c
 src/engine/collision/dBgW_Kc.cpp
 src/func_0203b244.c
 src/LenVec3.c
-src/func_020396d0.c
 src/Matrix4x3_FromRotationY.c
 # The six func_01ffb0* flag/accessor helpers live in the ITCM half of the
 # dBgW_Kc production TU.
 src/engine/collision/dBgW_Kc_itcm.cpp
-src/func_020393fc.c
-src/func_020395fc.c
 # The fBase_c framework hook virtuals are already covered above by
 # src/actors/ActorBase.cpp, the single translation unit that defines them.
 src/func_0203b27c.c
@@ -69,8 +64,6 @@ src/func_0203b20c.c
 # just the ones a gate happens to exercise. These already existed in src/;
 # they were simply never sliced.
 
-# dBgW's non-virtual accessors: these were always sliced here. They are not
-# part of the vtable and have nothing to do with the constructor migration.
-src/_ZN4dBgW7DisableEv.cpp
-src/_ZN4dBgW9IsEnabledEv.cpp
-src/_ZN4dBgW6EnableEP8dActor_c.cpp
+# dBgW's non-virtual accessors are covered above by
+# src/engine/collision/dBgW.cpp, the single translation unit that defines
+# the whole class.

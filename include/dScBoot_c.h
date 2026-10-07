@@ -4,8 +4,8 @@
 #include "dScene_c.h"
 
 /* The boot/intro scene: fBase_c -> dBase_c -> dScene_c -> dScBoot_c
- * (dScBoot_c in the ROM's own type graph; the coinage comes from its
- * destructor symbols). A leaf -- nothing derives from it.
+ * (the ROM's own type graph spells it dScBoot_c). A leaf -- nothing derives
+ * from it.
  *
  * It draws the title/language screen and runs the two-button menu that can
  * erase all save data. Derivation, vtable and layout evidence:
@@ -23,8 +23,8 @@ struct dScBoot_c : dScene_c {
     u8  pad_057[0x1];
 
     /* Declared first, deliberately: that makes ~dScBoot_c the key function,
-       and it is only ever defined out of line in _ZN9dScBoot_cD1Ev.cpp /
-       _ZN9dScBoot_cD0Ev.cpp, so no TU here emits a vtable group. */
+       and it is defined out of line in src/d_s_boot.cpp, which therefore emits
+       the vtable/typeinfo group. */
     virtual ~dScBoot_c();
 
     virtual s32 InitResources();          /* slot 0 */
@@ -41,7 +41,7 @@ struct dScBoot_c : dScene_c {
    A silently-added member anywhere fails this. */
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char BootScene_size_must_be_0x58[sizeof(dScBoot_c) == 0x58 ? 1 : -1];
+typedef char dScBoot_c_size_must_be_0x58[sizeof(dScBoot_c) == 0x58 ? 1 : -1];
 #endif
 
 #endif

@@ -1,63 +1,71 @@
 //cpp
-/* Production translation unit for ov022/daObjFl_Seesaw_c.
- * 7 function(s), .text 0x02111cac..0x02111f3c. The Lethal Lava Land seesaw
- * (registry profile FL_SEESAW).
+/* Lethal Lava Land's seesaw platform (registry profile FL_SEESAW), a
+ * dBgActor_c leaf. While mSwingCooldown is zero Behavior adds mSwingStep
+ * to mAngleX every frame; once the tilt passes +-0x400 the step's sign
+ * flips and the cooldown reloads to 0x1e.
  *
- * NAME: _ZTS16daObjFl_Seesaw_c is "16daObjFl_Seesaw_c" at ov022 0x02113ffc;
- * _ZTI at 0x02113ff0 reads [__si_class_type_info, that string,
- * _ZTI10dBgActor_c]. The vtable's address point is 0x02114034; the word
- * before it is that _ZTI. The tree previously called the class LavaSeesaw
- * (coined).
+ * _ZTS16daObjFl_Seesaw_c is "16daObjFl_Seesaw_c" at ov022 0x02113ffc and
+ * _ZTI names dBgActor_c. The out-of-line destructor is the key function,
+ * so this TU emits _ZTV/_ZTI/_ZTS; `#pragma defer_codegen off` lays .text
+ * down in source order, so the file is ROM-ascending and the registry
+ * factory daObjFl_Seesaw_c_classInit comes last. Do not reorder.
  *
- * The out-of-line destructor is the key function, so this TU emits _ZTV/_ZTI/
- * _ZTS. Under `#pragma defer_codegen off` it comes out D1 (0x02111cac), D0
- * (0x02111cf0), then a D2 the cartridge has no home for (manifest: deadstrip);
- * the same pragma lays .text down in source order, so this file is
- * ROM-ascending. The factory daObjFl_Seesaw_c_classInit (0x02111f3c) is the
- * next function and stays in its own source, src/d_a_obj_fl_seesaw.c.
+ * leftovers:
+ * - dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange stay extern "C"
+ *   scalar spellings: the real members take Fix12<int> by value, which
+ *   the bytes refuse (the Fix12 wall; daObjFl_Block_c carries the same
+ *   note).
+ * - func_020393a4 and func_020393d4 stay extern "C": they store into dBgW
+ *   internals and have no member form.
+ * - data_ov022_021145a8 (the seesaw BMD), data_ov022_021145a0 (the KCL)
+ *   and data_ov064_0211bacc (the CLPS row SetFile is handed) are unnamed
+ *   data rows in their own modules.
  */
 
 #include "math/Matrix.h"
 #include "daObjFl_Seesaw_c.h"
 #include "SharedFilePtr.h"
-
-struct CLPS_Block;
+#include "dBgW.h"
 
 extern "C" {
-void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
-void func_020393a4(int *p, int v);
-void func_020393d4(int *p, int v);
-unsigned char DecIfAbove0_Byte(unsigned char *p);
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int radius, int yOffset);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *thiz, void *f, const Matrix4x3 *m, int fix, short s, void *b);
+extern SharedFilePtr data_ov022_021145a8;
+extern SharedFilePtr data_ov022_021145a0;
+extern char data_ov064_0211bacc[];
 
-extern int data_ov022_021145a8[];
-extern int data_ov022_021145a0[];
-extern CLPS_Block data_ov064_0211bacc;
+void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
+unsigned char DecIfAbove0_Byte(unsigned char *p);
+
+/* Scalar ABI. The real members take Fix12<int> by value. */
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    dBgW_KcMbg *self, char *kcl, const Matrix4x3 *mtx, int scale, s16 angleY,
+    char *clps);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int radius, int yOffset);
+
+/* Stores at dBgW+0x0c and +0x1c. Spellings match the C definitions. */
+void func_020393a4(int *mesh, int range);
+void func_020393d4(int *mesh, int callback);
 }
 
 #pragma defer_codegen off
 
-/* Vtable slots 16 (D1) and 17 (D0). D1 is one vtable store, the members in
- * reverse, then ~dBgActor_c. D0 is the deleting destructor: it destroys
- * through this class and its bases, which is why more than one vptr store
- * appears, then frees through an inline operator delete, which is why
- * nothing here mentions a heap. */
+/* Vtable slots 16 (D1) and 17 (D0). */
 // @symbol _ZN16daObjFl_Seesaw_cD1Ev
 // @symbol _ZN16daObjFl_Seesaw_cD0Ev
 daObjFl_Seesaw_c::~daObjFl_Seesaw_c()
 {
 }
 
-// @symbol func_ov022_02111d48
-extern "C" void func_ov022_02111d48(char *raw)
+/* Writes mModel's transform from mPosX/Y/Z and mAngleX/Y/Z -- the base's
+ * UpdateModelPosAndRotY job, on three axes. r0 is the object and the body
+ * only touches this class's members, so the function is a member and the
+ * parameter is this; the address is kept as the method name. */
+// @symbol _ZN16daObjFl_Seesaw_c19func_ov022_02111d48Ev
+void daObjFl_Seesaw_c::func_ov022_02111d48()
 {
-    daObjFl_Seesaw_c *t = (daObjFl_Seesaw_c *)raw;
-    Matrix4x3_FromRotationXYZExt(&t->mModel.mat4x3, t->mAngleX, t->mAngleY, t->mAngleZ);
-    t->mModel.mat4x3.t.x = t->mPosX >> 3;
-    t->mModel.mat4x3.t.y = t->mPosY >> 3;
-    t->mModel.mat4x3.t.z = t->mPosZ >> 3;
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3.t.x = mPosX >> 3;
+    mModel.mat4x3.t.y = mPosY >> 3;
+    mModel.mat4x3.t.z = mPosZ >> 3;
 }
 
 // @symbol _ZN16daObjFl_Seesaw_c16CleanupResourcesEv
@@ -66,8 +74,8 @@ s32 daObjFl_Seesaw_c::CleanupResources()
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }
-    ((SharedFilePtr *)data_ov022_021145a8)->Release();
-    ((SharedFilePtr *)data_ov022_021145a0)->Release();
+    data_ov022_021145a8.Release();
+    data_ov022_021145a0.Release();
     return 1;
 }
 
@@ -78,10 +86,7 @@ s32 daObjFl_Seesaw_c::Render()
     return 1;
 }
 
-/* Slot 6. mSwingStep/mSwingCooldown are this class's own fields
- * (daObjFl_Seesaw_c.h). dBgActor_c::IsClsnInRange stays extern "C" under its
- * ROM symbol: it takes Fix12<int> by value, which the bytes refuse as a real
- * parameter (dBgActor_c.h's own note). */
+/* Slot 6. */
 // @symbol _ZN16daObjFl_Seesaw_c8BehaviorEv
 s32 daObjFl_Seesaw_c::Behavior()
 {
@@ -93,28 +98,30 @@ s32 daObjFl_Seesaw_c::Behavior()
             mSwingCooldown = 0x1e;
         }
     }
-    func_ov022_02111d48((char *)this);
+    func_ov022_02111d48();
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0) {
         UpdateClsnPosAndRot();
     }
     return 1;
 }
 
-/* Slot 0. ModelBase::SetFile and UpdateClsnPosAndRot are real method calls.
- * dBgW_KcMbg::SetFile stays extern "C" under its exact ROM symbol: it takes
- * Fix12<int> BY VALUE, which the bytes refuse as a real parameter
- * (mwccarm-codegen.md 6az). */
+/* Slot 0. */
 // @symbol _ZN16daObjFl_Seesaw_c13InitResourcesEv
 s32 daObjFl_Seesaw_c::InitResources()
 {
-    void *f = Model::LoadFile(*(SharedFilePtr *)data_ov022_021145a8);
-    mModel.SetFile((BMD_File *)f, 1, -1);
-    func_ov022_02111d48((char *)this);
+    mModel.SetFile((BMD_File *)Model::LoadFile(data_ov022_021145a8), 1, -1);
+    func_ov022_02111d48();
     UpdateClsnPosAndRot();
-    void *k = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov022_021145a0);
+    char *kcl = dBgW_Kc::LoadFile(data_ov022_021145a0);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, k, &mClsnMat, 0x1000, mAngleY, &data_ov064_0211bacc);
+        &mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY, data_ov064_0211bacc);
     func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithTransform);
     mSwingStep = -0x10;
     return 1;
+}
+
+// @symbol daObjFl_Seesaw_c_classInit
+extern "C" daObjFl_Seesaw_c *daObjFl_Seesaw_c_classInit()
+{
+    return new daObjFl_Seesaw_c();
 }

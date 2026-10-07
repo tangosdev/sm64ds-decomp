@@ -345,12 +345,12 @@ class ProfileReconstructionOutputTests(unittest.TestCase):
         row = self.full_by_profile["FM_BATTAN"]
         self.assertEqual(row["class_filename_candidate"], "d_a_obj_fm_battan.cpp")
         self.assertEqual(row["factory_filename"], "d_a_obj_fm_battan.cpp")
-        # BOOT's factory still lives in a .c, so its target keeps the .c: the
-        # stem is reconstructed, the language mode is not up for reconstruction.
+        # BOOT's factory lives in src/d_s_boot.cpp with the class, so the
+        # reconstructed filename keeps that extension.
         boot = self.full_by_profile["BOOT"]
         self.assertEqual(boot["class_filename_candidate"], "d_s_boot.cpp")
-        self.assertTrue(boot["current_factory_file"].endswith(".c"))
-        self.assertEqual(boot["factory_filename"], "d_s_boot.c")
+        self.assertEqual(boot["current_factory_file"], "src/d_s_boot.cpp")
+        self.assertEqual(boot["factory_filename"], "d_s_boot.cpp")
 
     def test_shared_class_filenames_are_disambiguated_by_profile_id(self):
         """daTrsTrap_c has four factories; one stem cannot name four files."""

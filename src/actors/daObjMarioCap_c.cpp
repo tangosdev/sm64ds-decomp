@@ -22,41 +22,42 @@
  * daObjMarioCap_c.h -- so the compiler owns retail's D1/D0 pair and the
  * complete RTTI/vtable group, and no D2 is retained.
  *
- * STATES. InitResources' switch hands func_ov002_020b7f2c one of nine
+ * STATES. InitResources' switch hands EnterState one of nine
  * {enter, per-frame} records (data_ov002_0210df04 .. df84, filled in by
  * __sinit_ov002_02101064 from 8-byte member-pointer constants).
- * func_ov002_020b7f2c stores the record in mStateEntry and runs its enter
- * function; Behavior then runs the per-frame one. The handlers keep their
- * address names:
+ * EnterState stores the record in mStateEntry and runs its enter
+ * function; Behavior then runs the per-frame one.
  *
- *   record  enter  per-frame  mType            what the per-frame function does
- *   df64    7f24   7e1c       0                no override matrix and the player has not lost the
- *                                              cap: once on the ground, spawns OBJ_MARIO_CAP with
- *                                              0x12 ORed into param1 and removes itself a frame
- *                                              later. Otherwise: touch check, and PlayerLoseCap +
- *                                              removal below the kill height (data_02092138)
- *   df84    7e08   7d9c       1                200-frame timer; removed when it runs out, on
- *                                              touching the ground, below the kill height, or
- *                                              off screen (mFlags & 8)
- *   df04    7d94   7d6c       2                touch check only
- *   df24    7d58   7cec       3                same removal rules as df84
- *   df34    7b70   781c       4..9, 11,        the sliding / blinking state (types 4, 6, 8, 16, 17
- *                            16..18           only run the touch check; param1 type 14 is
- *                                              rewritten to 4 by InitResources, so no handler
- *                                              sees mType 14)
- *   df54    76ec   74d0       19, and any      the taken state: follows the player, plays the
- *                            type once        pickup animation, removes the cap when it ends;
- *                            touched or       hands the hat over itself only on the mTakenStep 1
- *                            turned into      path (see the function)
- *                            an egg
- *   df74    7330   7200       10, 15, 20..22   plays the type's animation, tracking the player for
- *                                              types 10 and 15; removed when it ends (types 10, 15,
- *                                              22)
- *   df14    7cdc   7c30       12               enter zeroes mVertAccel; the per-frame body only
- *                                              does anything while mVertAccel is nonzero; below
- *                                              the kill height it calls PlayerLoseCap and removes
- *                                              the cap
- *   df44    71f0   71e8       13               enter clears mBlinkHidden; per-frame does nothing
+ *   record  enter          per-frame   mType            what the per-frame function does
+ *   df64    InitWait       Wait        0                no override matrix and the player has not
+ *                                                       lost the cap: once on the ground, spawns
+ *                                                       OBJ_MARIO_CAP with 0x12 ORed into param1 and
+ *                                                       removes itself a frame later. Otherwise:
+ *                                                       touch check, and PlayerLoseCap + removal
+ *                                                       below the kill height (data_02092138)
+ *   df84    InitTimedWait  TimedWait   1                200-frame timer; removed when it runs out,
+ *                                                       on touching the ground, below the kill
+ *                                                       height, or off screen (mFlags & 8)
+ *   df04    InitTouchWait  TouchWait   2                touch check only
+ *   df24    InitTimedWait2 TimedWait2  3                same removal rules as df84
+ *   df34    InitSlide      Slide       4..9, 11,        the sliding / blinking state (types 4, 6, 8,
+ *                                      16..18           16, 17 only run the touch check; param1
+ *                                                       type 14 is rewritten to 4 by InitResources,
+ *                                                       so no handler sees mType 14)
+ *   df54    InitTaken      Taken       19, and any      the taken state: follows the player, plays
+ *                                      type once        the pickup animation, removes the cap when
+ *                                      touched or       it ends; hands the hat over itself only on
+ *                                      turned into      the mTakenStep 1 path (see the function)
+ *                                      an egg
+ *   df74    InitAnim       Anim        10, 15, 20..22   plays the type's animation, tracking the
+ *                                                       player for types 10 and 15; removed when it
+ *                                                       ends (types 10, 15, 22)
+ *   df14    InitFall       Fall        12               enter zeroes mVertAccel; the per-frame body
+ *                                                       only does anything while mVertAccel is
+ *                                                       nonzero; below the kill height it calls
+ *                                                       PlayerLoseCap and removes the cap
+ *   df44    InitDormant    Dormant     13               enter clears mBlinkHidden; per-frame does
+ *                                                       nothing
  *
  * Fix12 reads throughout: 0x1000 is 1.0, and positions / sizes shown as "N
  * units" are the raw value >> 12. Angles: 0x10000 is a full turn.
@@ -68,19 +69,19 @@
  *
  *   common.h comes first so Matrix4x3 is the flat s32[12] spelling; math/
  *   Matrix.h through ModelAnim.h would scalarize the copies in
- *   func_ov002_020b7f7c.
+ *   UpdateMatrix.
  *
- *   The PMF stand-in (CapStateSelf / Holder / C). A PMF on the real
- *   dEnemyBase_c makes mwccarm ICE rather than give a diagnostic.
+ *   The PMF stand-ins (CapStateSelf / CapStateRec / CapEnterSelf). A PMF on
+ *   the real dEnemyBase_c makes mwccarm ICE rather than give a diagnostic.
  *
- *   The (long long)(int) 20.12 multiplies in func_ov002_020b781c and the
- *   (unsigned long long)&vulnFlags or-into-vulnFlags in func_ov002_020b7b70
+ *   The (long long)(int) 20.12 multiplies in Slide and the
+ *   (unsigned long long)&vulnFlags or-into-vulnFlags in InitSlide
  *   are the matching forms; plain member addressing does not match.
  *
- *   func_ov002_020b6fcc's angle copy keeps `a = b ? a : a` through a V16.
+ *   CheckTouch's angle copy keeps `a = b ? a : a` through a V16.
  *
  *   Reading the player's angles / position as plain members (`closest->mAngleX`)
- *   misses in func_ov002_020b7330 (0x19c vs 0x1a0 bytes) and func_ov002_020b74d0
+ *   misses in InitAnim (0x19c vs 0x1a0 bytes) and Taken
  *   (0x224 vs 0x21c); taking `&player->mAngleX` / `&player->mPosX` and indexing
  *   the pointer matches. mStateTimer is s16 in dEnemyBase_c but the helpers
  *   read it unsigned, hence CAP_TIMER.
@@ -105,11 +106,11 @@
  *   file ids 0x8012 / 0x8013 and 0x476..0x480 are in __sinit_ov002_02101064), what func_ov002_020f030c's result (unused here) is, and the
  *   fields unk_403 and unk_408, which are written and never read in this file.
  *   mStateEntry stays an s32 because the member-pointer record is spelled by
- *   the file-local Holder / C stand-ins.
+ *   the file-local CapStateRec / CapEnterSelf stand-ins.
  *   The SharedFilePtr header has no fields; CleanupResources still casts the
  *   AnimRec tables.
  *   dBgCh_Gnd stays a 0x50 stack blob: its C1/D1 only run on the airborne
- *   path (func_ov002_020b7f7c).
+ *   path (UpdateMatrix).
  *   The +0xc8 override-matrix pointer lives in dActor_c's pad_0c5, a header
  *   this class does not own (CAP_OVERRIDE_MATRIX); this file never sets it.
  */
@@ -143,14 +144,14 @@ struct AnimRec { void *f0; void *file; };
  * diagnostic. */
 struct CapStateSelf { char pad[0x800]; };
 typedef void (CapStateSelf::*CapStatePmf)();
-struct Holder { char pad[8]; CapStatePmf fn; };
+struct CapStateRec { char pad[8]; CapStatePmf fn; };
 
-/* func_ov002_020b7f2c's own view of the same slot, with the class shaped so
+/* EnterState's own view of the same slot, with the class shaped so
  * the member pointer it stores and immediately calls is laid out the way the
  * ROM's bytes read it. */
-struct C;
-typedef int (C::*PMF)();
-struct C { char pad[0x3bc]; PMF *pp; };
+struct CapEnterSelf;
+typedef int (CapEnterSelf::*CapEnterPmf)();
+struct CapEnterSelf { char pad[0x3bc]; CapEnterPmf *pp; };
 
 /* Bit view of dCapIcon_c::mFlags. f1 is bit 1, the bit Behavior watches (the
  * one dCapIcon_c's GetCapState tests); f0 is the cap-bank bit. */
@@ -170,8 +171,8 @@ struct Flags3eb {
 /* A Matrix4x3 pointer at +0xc8, inside dActor_c's pad_0c5 (a header this class
  * does not own). The actor carrying the cap sets it (daMky_c stores its
  * mCapMtx there for the cap it spawns); this file only tests it and clears it. While it is non-null,
- * func_ov002_020b7f7c copies it into the model matrix instead of building one,
- * and the ordinary pickup in func_ov002_020b6fcc is skipped unless mType is 0
+ * UpdateMatrix copies it into the model matrix instead of building one,
+ * and the ordinary pickup in CheckTouch is skipped unless mType is 0
  * (the vanish and metal touches above it still fire). */
 #define CAP_OVERRIDE_MATRIX(cap) (*(Matrix4x3 **)((char *)(cap) + 0xc8))
 
@@ -197,21 +198,6 @@ enum {
  * does not mangle them a second time.
  * ------------------------------------------------------------------------ */
 extern "C" {
-
-/* -- this TU's own members, forward-declared: mwcc lays .text down in reverse
-      source order, so nearly every intra-TU call is a forward reference. -- */
-void  func_ov002_020b6fcc(daObjMarioCap_c *self);
-int   func_ov002_020b71e8(void);
-int   func_ov002_020b71f0(daObjMarioCap_c *cap);
-int   func_ov002_020b7330(daObjMarioCap_c *cap);
-int   func_ov002_020b781c(daObjMarioCap_c *cap);
-int   func_ov002_020b7b70(daObjMarioCap_c *cap);
-int   func_ov002_020b7cdc(daObjMarioCap_c *cap);
-int   func_ov002_020b7d6c(daObjMarioCap_c *cap);
-int   func_ov002_020b7d94(void);
-/* func_ov002_020b7e1c is declared by decl_common.h; do not restate it. */
-int   func_ov002_020b7f24(void);
-int   func_ov002_020b7f2c(C *c, PMF *p);
 
 /* -- other modules -- */
 void  func_02013a88(void);
@@ -385,25 +371,25 @@ int daObjMarioCap_c::InitResources()
     case 0:
         *(s32 *)(((long long)((char *)&mdCcAc_c.vulnFlags))) |= 0x8000;
         mIconKind = 4;
-        func_ov002_020b7f2c((C *)this, (PMF *)&data_ov002_0210df64);
+        EnterState(&data_ov002_0210df64);
         break;
     case 1:
         mIconKind = 0xff;
-        func_ov002_020b7f2c((C *)this, (PMF *)&data_ov002_0210df84);
+        EnterState(&data_ov002_0210df84);
         break;
     case 2:
         *(s32 *)(((long long)((char *)&mdCcAc_c.vulnFlags))) |= 0x8000;
         mIconKind = 4;
-        func_ov002_020b7f2c((C *)this, (PMF *)&data_ov002_0210df04);
+        EnterState(&data_ov002_0210df04);
         break;
     case 3:
         mIconKind = 0xff;
-        func_ov002_020b7f2c((C *)this, (PMF *)&data_ov002_0210df24);
+        EnterState(&data_ov002_0210df24);
         break;
     case TYPE_START_TAKEN:
         mIconKind = 0xff;
         mPlayer = ClosestPlayer();
-        func_ov002_020b7f2c((C *)this, (PMF *)&data_ov002_0210df54);
+        EnterState(&data_ov002_0210df54);
         mTakenStep = 1;
         break;
     case 20:
@@ -411,20 +397,20 @@ int daObjMarioCap_c::InitResources()
     case 22:
         /* These three run the render-matrix update once here before entering
            the animation state they share with 10 and 15. */
-        func_ov002_020b7f7c();
+        UpdateMatrix();
         /* fallthrough */
     case 10:
     case 15:
         mIconKind = 0xff;
-        func_ov002_020b7f2c((C *)this, (PMF *)&data_ov002_0210df74);
+        EnterState(&data_ov002_0210df74);
         break;
     case 12:
         mIconKind = 4;
-        func_ov002_020b7f2c((C *)this, (PMF *)&data_ov002_0210df14);
+        EnterState(&data_ov002_0210df14);
         break;
     case 13:
         mIconKind = 4;
-        func_ov002_020b7f2c((C *)this, (PMF *)&data_ov002_0210df44);
+        EnterState(&data_ov002_0210df44);
         break;
     case 14:
         mIconKind = 2;
@@ -442,13 +428,13 @@ int daObjMarioCap_c::InitResources()
            site below. */
         param1 = (u32)param1 - 0xa;   /* low byte 14 becomes 4, matching mType below */
         mType = TYPE_RESPAWNING;
-        func_ov002_020b7f2c((C *)this, (PMF *)&data_ov002_0210df34);
+        EnterState(&data_ov002_0210df34);
         break;
     case 17:
         mdCcAc_c.radius = kClsnSizeLarge;
         mdCcAc_c.height = kClsnSizeLarge;
         flag = 1;
-        func_ov002_020b7f2c((C *)this, (PMF *)&data_ov002_0210df34);
+        EnterState(&data_ov002_0210df34);
         break;
     case TYPE_VANISH_LUIGI_A:
     case TYPE_VANISH_LUIGI_B:
@@ -457,7 +443,7 @@ int daObjMarioCap_c::InitResources()
         mIconKind = 0xff;
         mdCcAc_c.radius = kClsnSizeLarge;
         mdCcAc_c.height = kClsnSizeLarge;
-        func_ov002_020b7f2c((C *)this, (PMF *)&data_ov002_0210df34);
+        EnterState(&data_ov002_0210df34);
         break;
     case 5:
     case 11:
@@ -470,7 +456,7 @@ int daObjMarioCap_c::InitResources()
     case TYPE_RESPAWNING:
         mdCcAc_c.radius = kClsnSizeLarge;
         mdCcAc_c.height = kClsnSizeLarge;
-        func_ov002_020b7f2c((C *)this, (PMF *)&data_ov002_0210df34);
+        EnterState(&data_ov002_0210df34);
         break;
     }
 
@@ -545,13 +531,13 @@ int daObjMarioCap_c::Behavior()
     /* Run the current state's per-frame function (the second member pointer
        of the record in mStateEntry), if it has one. */
     {
-        Holder *q = *(Holder **)&mStateEntry;
+        CapStateRec *q = *(CapStateRec **)&mStateEntry;
         if (q->fn != 0) {
             (((CapStateSelf *)this)->*(q->fn))();
         }
     }
 
-    func_ov002_020b7f7c();
+    UpdateMatrix();
     mModelAnim.Advance();
 
     if (mModelAnim.file != 0) {
@@ -658,7 +644,7 @@ s32 daObjMarioCap_c::OnYoshiTryEat() {
   return 4;
 }
 
-/* Slot 19. Gives the player the hat the way func_ov002_020b6fcc's touch does
+/* Slot 19. Gives the player the hat the way CheckTouch does
  * (SetNoControlState(8) then SetNewHatCharacter, but with 1 where the touch
  * passes 0 as the second argument) and starts the 0x8012 animation, then binds
  * the cap to that player and enters the taken state. */
@@ -672,7 +658,7 @@ void daObjMarioCap_c::OnTurnIntoEgg(Player &player)
         mAnimStarted = 1;
     }
     mPlayer = &player;
-    func_ov002_020b7f2c((C *)this, (PMF *)&data_ov002_0210df54);
+    EnterState(&data_ov002_0210df54);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -690,8 +676,8 @@ void daObjMarioCap_c::OnTurnIntoEgg(Player &player)
 /* depth 50 units, opacity 0xf, and sits 10 units lower for characters 0 and */
 /* 1.                                                                         */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjMarioCap_c19func_ov002_020b7f7cEv
-void daObjMarioCap_c::func_ov002_020b7f7c()
+// @symbol _ZN15daObjMarioCap_c12UpdateMatrixEv
+void daObjMarioCap_c::UpdateMatrix()
 {
     int probe[3];
     int v[3];
@@ -770,12 +756,19 @@ void daObjMarioCap_c::func_ov002_020b7f7c()
 /* Enter a state: stores the record in mStateEntry and calls its first member
  * pointer (the enter function) on the cap, returning its result, or returns 0
  * if that member pointer is null. */
-// @symbol func_ov002_020b7f2c
-extern "C" int func_ov002_020b7f2c(C *c, PMF *p) { c->pp = p; PMF *q = c->pp; if (*q == 0) return 0; return (c->**q)(); }
+// @symbol _ZN15daObjMarioCap_c10EnterStateEPv
+int daObjMarioCap_c::EnterState(void *rec)
+{
+    CapEnterSelf *c = (CapEnterSelf *)this;
+    c->pp = (CapEnterPmf *)rec;
+    CapEnterPmf *q = c->pp;
+    if (*q == 0) return 0;
+    return (c->**q)();
+}
 
 /* df64's enter function: nothing to do. */
-// @symbol func_ov002_020b7f24
-extern "C" int func_ov002_020b7f24(void)
+// @symbol _ZN15daObjMarioCap_c8InitWaitEv
+int daObjMarioCap_c::InitWait()
 {
     return 1;
 }
@@ -789,36 +782,34 @@ extern "C" int func_ov002_020b7f24(void)
  * far distance 4096 units); runs the touch check; and below the kill height
  * (STAR_CAP_MIN_POS_Y, data_02092138) marks the cap lost for the player
  * (SaveData::PlayerLoseCap) and removes it. The spawn arguments pass the
- * cap's own area ID. Takes a char* because include/decl_common.h declares it
- * that way. */
-// @symbol func_ov002_020b7e1c
-extern "C" int func_ov002_020b7e1c(char* self) {
-    daObjMarioCap_c *cap = (daObjMarioCap_c *)self;
-    if (CAP_OVERRIDE_MATRIX(cap) == 0 && !SaveData::HasPlayerLostCap()) {
-        if (CAP_TIMER(cap) == 0 && cap->mWithMeshClsn.IsOnGround()) {
-            if (dActor_c::Spawn(kActorMarioCap, cap->param1 | 0x12, *(const Vector3 *)&cap->mPosX, (const Vector3_16 *)0, cap->mAreaId, -1)) {
-                CAP_TIMER(cap) = 3;
+ * cap's own area ID. */
+// @symbol _ZN15daObjMarioCap_c4WaitEv
+int daObjMarioCap_c::Wait() {
+    if (CAP_OVERRIDE_MATRIX(this) == 0 && !SaveData::HasPlayerLostCap()) {
+        if (CAP_TIMER(this) == 0 && mWithMeshClsn.IsOnGround()) {
+            if (dActor_c::Spawn(kActorMarioCap, param1 | 0x12, *(const Vector3 *)&mPosX, (const Vector3_16 *)0, mAreaId, -1)) {
+                CAP_TIMER(this) = 3;
             }
         }
-        if (DecIfAbove0_Short(&CAP_TIMER(cap)) == 1) {
-            cap->MarkForDestruction();
+        if (DecIfAbove0_Short(&CAP_TIMER(this)) == 1) {
+            MarkForDestruction();
         }
         return 1;
     }
-    if (CAP_OVERRIDE_MATRIX(cap) == 0) {
-        _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(self, 0x32000, 0x32000, kClipFar, kClipFar);
+    if (CAP_OVERRIDE_MATRIX(this) == 0) {
+        _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(this, 0x32000, 0x32000, kClipFar, kClipFar);
     }
-    func_ov002_020b6fcc(cap);
-    if (data_02092138 > cap->mPosY) {
+    CheckTouch();
+    if (data_02092138 > mPosY) {
         SaveData::PlayerLoseCap();
-        cap->MarkForDestruction();
+        MarkForDestruction();
     }
     return 1;
 }
 
 /* df84's enter function (type 1): 200-frame timer. */
-// @symbol _ZN15daObjMarioCap_c19func_ov002_020b7e08Ev
-int daObjMarioCap_c::func_ov002_020b7e08()
+// @symbol _ZN15daObjMarioCap_c13InitTimedWaitEv
+int daObjMarioCap_c::InitTimedWait()
 {
     mStateTimer = 200;
     return 1;
@@ -827,8 +818,8 @@ int daObjMarioCap_c::func_ov002_020b7e08()
 /* df84's per-frame function (type 1): removes the cap when it is below the
  * kill height, on the ground, out of timer, or off screen (mFlags & 8).
  * Returns 1. */
-// @symbol _ZN15daObjMarioCap_c19func_ov002_020b7d9cEv
-int daObjMarioCap_c::func_ov002_020b7d9c()
+// @symbol _ZN15daObjMarioCap_c9TimedWaitEv
+int daObjMarioCap_c::TimedWait()
 {
     if (data_02092138 > mPosY
         || mWithMeshClsn.IsOnGround()
@@ -842,34 +833,34 @@ int daObjMarioCap_c::func_ov002_020b7d9c()
 }
 
 /* df04's enter function (type 2): nothing to do. */
-// @symbol func_ov002_020b7d94
-extern "C" int func_ov002_020b7d94(void)
+// @symbol _ZN15daObjMarioCap_c13InitTouchWaitEv
+int daObjMarioCap_c::InitTouchWait()
 {
     return 1;
 }
 
 /* df04's per-frame function (type 2): the touch check, unless an override
  * matrix is set. */
-// @symbol func_ov002_020b7d6c
-extern "C" int func_ov002_020b7d6c(daObjMarioCap_c *cap)
+// @symbol _ZN15daObjMarioCap_c9TouchWaitEv
+int daObjMarioCap_c::TouchWait()
 {
-    if (CAP_OVERRIDE_MATRIX(cap) == 0)
-        func_ov002_020b6fcc(cap);
+    if (CAP_OVERRIDE_MATRIX(this) == 0)
+        CheckTouch();
     return 1;
 }
 
 /* df24's enter function (type 3): 200-frame timer. */
-// @symbol _ZN15daObjMarioCap_c19func_ov002_020b7d58Ev
-int daObjMarioCap_c::func_ov002_020b7d58()
+// @symbol _ZN15daObjMarioCap_c14InitTimedWait2Ev
+int daObjMarioCap_c::InitTimedWait2()
 {
     mStateTimer = 200;
     return 1;
 }
 
 /* df24's per-frame function (type 3): the same removal rules as
- * func_ov002_020b7d9c. Returns 1. */
-// @symbol _ZN15daObjMarioCap_c19func_ov002_020b7cecEv
-int daObjMarioCap_c::func_ov002_020b7cec()
+ * TimedWait. Returns 1. */
+// @symbol _ZN15daObjMarioCap_c10TimedWait2Ev
+int daObjMarioCap_c::TimedWait2()
 {
     if (data_02092138 > mPosY
         || mWithMeshClsn.IsOnGround()
@@ -883,10 +874,10 @@ int daObjMarioCap_c::func_ov002_020b7cec()
 }
 
 /* df14's enter function (type 12): switches gravity off. */
-// @symbol func_ov002_020b7cdc
-extern "C" int func_ov002_020b7cdc(daObjMarioCap_c *cap)
+// @symbol _ZN15daObjMarioCap_c8InitFallEv
+int daObjMarioCap_c::InitFall()
 {
-    cap->mVertAccel = 0;
+    mVertAccel = 0;
     return 1;
 }
 
@@ -895,15 +886,15 @@ extern "C" int func_ov002_020b7cdc(daObjMarioCap_c *cap)
  * 0x8000 vulnFlags bit, and on landing stops its horizontal speed, runs the
  * touch check and widens the clip ranges. Below the kill height it marks the
  * cap lost for the player (SaveData::PlayerLoseCap) and removes it. */
-// @symbol _ZN15daObjMarioCap_c19func_ov002_020b7c30Ev
-int daObjMarioCap_c::func_ov002_020b7c30() {
+// @symbol _ZN15daObjMarioCap_c4FallEv
+int daObjMarioCap_c::Fall() {
   if (mVertAccel != 0) {
     UpdatePos(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     mdCcAc_c.vulnFlags |= 0x8000;
     if (mWithMeshClsn.IsOnGround()) {
       mHorzSpeed = 0;
-      func_ov002_020b6fcc(this);
+      CheckTouch();
       _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(this, 0x32000, 0x32000, kClipFar, kClipFar);
     }
   }
@@ -920,35 +911,35 @@ int daObjMarioCap_c::func_ov002_020b7c30() {
  * other modes; type 18: 300 frames; type 11: 180 frames -- and keeps a copy in
  * mStartTimer for the blink. Then sets the 0x8000 vulnFlags bit for every type.
  * Returns 1. */
-// @symbol func_ov002_020b7b70
-extern "C" int func_ov002_020b7b70(daObjMarioCap_c *cap)
+// @symbol _ZN15daObjMarioCap_c9InitSlideEv
+int daObjMarioCap_c::InitSlide()
 {
     int state;
     int* p;
     int val;
     int ret;
 
-    state = cap->mType;
+    state = mType;
     if (state == 5 || state == 7 || state == 9) {
-        CAP_TIMER(cap) = 0xd2;
-        if ((int)(data_0209f2d8[0] == 1) == 0) CAP_TIMER(cap) = 0x78;
-        cap->mStartTimer = CAP_TIMER(cap);
+        CAP_TIMER(this) = 0xd2;
+        if ((int)(data_0209f2d8[0] == 1) == 0) CAP_TIMER(this) = 0x78;
+        mStartTimer = CAP_TIMER(this);
     }
 
-    state = cap->mType;
+    state = mType;
     if (state == 0x12) {
-        CAP_TIMER(cap) = 0x12c;
-        cap->mStartTimer = CAP_TIMER(cap);
+        CAP_TIMER(this) = 0x12c;
+        mStartTimer = CAP_TIMER(this);
     }
 
-    state = cap->mType;
+    state = mType;
     if (state == 0xb) {
-        CAP_TIMER(cap) = 0xb4;
-        cap->mStartTimer = CAP_TIMER(cap);
+        CAP_TIMER(this) = 0xb4;
+        mStartTimer = CAP_TIMER(this);
     }
 
     /* (unsigned long long) is the MATCH form; mdCcAc_c.vulnFlags |= DIFFs. */
-    p = (int *)((unsigned long long)&cap->mdCcAc_c.vulnFlags);
+    p = (int *)((unsigned long long)&mdCcAc_c.vulnFlags);
     val = *p;
     ret = 1;
     val |= 0x8000;
@@ -973,8 +964,8 @@ extern "C" int func_ov002_020b7b70(daObjMarioCap_c *cap)
  * normal and the words at 0x0a4 / 0x0ac, with 0x8000 (8 units a frame) of
  * extra downward bias, and mAngleX / mAngleZ move toward the floor's tilt
  * along and across mAngleY (UpdateAngle with arguments 4 and 0x1000). Returns 1. */
-// @symbol func_ov002_020b781c
-extern "C" int func_ov002_020b781c(daObjMarioCap_c *cap)
+// @symbol _ZN15daObjMarioCap_c5SlideEv
+int daObjMarioCap_c::Slide()
 {
     struct Vector3 ownVel;
     struct Vector3 slopeVel;
@@ -992,42 +983,42 @@ extern "C" int func_ov002_020b781c(daObjMarioCap_c *cap)
     int s;
     int co;
 
-    st = cap->mType;
+    st = mType;
     if (st == 4 || st == 0x11 || st == 6 || st == 8 || st == 0x10) {
-        func_ov002_020b6fcc(cap);
+        CheckTouch();
         return 1;
     }
-    if (DecIfAbove0_Short((unsigned short *)&cap->mStateTimer) == 0)
+    if (DecIfAbove0_Short((unsigned short *)&mStateTimer) == 0)
         return 1;
-    if (CAP_TIMER(cap) == 1) {
-        b = (int)((cap->mFlags & 0x60000) != 0);
+    if (CAP_TIMER(this) == 1) {
+        b = (int)((mFlags & 0x60000) != 0);
         if (b == 0) {
-            cap->MarkForDestruction();
+            MarkForDestruction();
             return 1;
         }
     }
-    if (cap->mWithMeshClsn.IsOnGround() == 0) {
-        cap->unk_408 = cap->mHorzSpeed;
+    if (mWithMeshClsn.IsOnGround() == 0) {
+        unk_408 = mHorzSpeed;
         return 1;
     }
-    func_ov002_020b6fcc(cap);
-    if (CAP_TIMER(cap) < cap->mStartTimer >> 1) {
-        cap->mBlinkHidden = (CAP_TIMER(cap) & 4) >> 2;
-        if (CAP_TIMER(cap) < cap->mStartTimer >> 2)
-            cap->mBlinkHidden = (CAP_TIMER(cap) & 2) >> 1;
+    CheckTouch();
+    if (CAP_TIMER(this) < mStartTimer >> 1) {
+        mBlinkHidden = (CAP_TIMER(this) & 4) >> 2;
+        if (CAP_TIMER(this) < mStartTimer >> 2)
+            mBlinkHidden = (CAP_TIMER(this) & 2) >> 1;
     }
-    if (cap->mType == 0x12) {
-        cap->mHorzSpeed = 0;
+    if (mType == 0x12) {
+        mHorzSpeed = 0;
         return 1;
     }
-    fr = _ZNK10dBgCh_Actr14GetFloorResultEv(&cap->mWithMeshClsn);
-    ((SurfaceInfo *)(fr + 4))->CopyNormalTo(*(Vector3 *)&cap->mFloorNormalX);
+    fr = _ZNK10dBgCh_Actr14GetFloorResultEv(&mWithMeshClsn);
+    ((SurfaceInfo *)(fr + 4))->CopyNormalTo(*(Vector3 *)&mFloorNormalX);
     surface = func_02037e58(fr + 4);
-    cap->mSlopeAngle = _ZN4cstd5atan2E5Fix12IiES1_(cap->mFloorNormalX, cap->mFloorNormalZ);
+    mSlopeAngle = _ZN4cstd5atan2E5Fix12IiES1_(mFloorNormalX, mFloorNormalZ);
     slopePush = func_ov002_020f02c8(surface);
     func_ov002_020f030c(surface);
-    spd = cap->mHorzSpeed;
-    j = (CAP_ANGLE(cap->mPrevAngleY) >> 4) * 2;
+    spd = mHorzSpeed;
+    j = (CAP_ANGLE(mPrevAngleY) >> 4) * 2;
     s = data_02082214[j];
     co = data_02082214[j + 1];
     /* Velocity in the plane: speed times {sin, cos} of the angle, fix12 multiply
@@ -1036,27 +1027,27 @@ extern "C" int func_ov002_020b781c(daObjMarioCap_c *cap)
     ownVel.x = (int)(((long long)spd * s + 0x800) >> 12);
     ownVel.y = 0;
     ownVel.z = (int)(((long long)spd * co + 0x800) >> 12);
-    j = (CAP_ANGLE(cap->mSlopeAngle) >> 4) * 2;
+    j = (CAP_ANGLE(mSlopeAngle) >> 4) * 2;
     s = data_02082214[j];
     co = data_02082214[j + 1];
     slopeVel.x = (int)(((long long)slopePush * s + 0x800) >> 12);
     slopeVel.y = 0;
     slopeVel.z = (int)(((long long)slopePush * co + 0x800) >> 12);
-    Vec3_MulScalarInPlace(&slopeVel, Vec3_HorzLen(&cap->mFloorNormalX));
+    Vec3_MulScalarInPlace(&slopeVel, Vec3_HorzLen(&mFloorNormalX));
     Vec3_Add(&out, &ownVel, &slopeVel);
     ang = _ZN4cstd5atan2E5Fix12IiES1_(out.x, out.z);
-    cap->mHorzSpeed = Vec3_HorzLen(&out);
-    if (cap->mHorzSpeed > 0xf000)
-        cap->mHorzSpeed = 0xf000;
-    cap->mPrevAngleY = ang;
-    cap->mVertSpeed = -(_ZN4cstd4fdivEii(
-        (int)(((long long)cap->mFloorNormalX * cap->unk_0a4 + 0x800) >> 12)
-      + (int)(((long long)cap->mFloorNormalZ * cap->unk_0ac + 0x800) >> 12),
-        cap->mFloorNormalY) + 0x8000);
-    pitch = func_02010844(cap, &cap->mFloorNormalX, cap->mAngleY);
-    roll = func_02010844(cap, &cap->mFloorNormalX, cap->mAngleY - 0x4000);
-    _Z11UpdateAngleRssis(&cap->mAngleX, pitch, 4, 0x1000);
-    _Z11UpdateAngleRssis(&cap->mAngleZ, roll, 4, 0x1000);
+    mHorzSpeed = Vec3_HorzLen(&out);
+    if (mHorzSpeed > 0xf000)
+        mHorzSpeed = 0xf000;
+    mPrevAngleY = ang;
+    mVertSpeed = -(_ZN4cstd4fdivEii(
+        (int)(((long long)mFloorNormalX * unk_0a4 + 0x800) >> 12)
+      + (int)(((long long)mFloorNormalZ * unk_0ac + 0x800) >> 12),
+        mFloorNormalY) + 0x8000);
+    pitch = func_02010844(this, &mFloorNormalX, mAngleY);
+    roll = func_02010844(this, &mFloorNormalX, mAngleY - 0x4000);
+    _Z11UpdateAngleRssis(&mAngleX, pitch, 4, 0x1000);
+    _Z11UpdateAngleRssis(&mAngleZ, roll, 4, 0x1000);
     return 1;
 }
 
@@ -1068,8 +1059,8 @@ extern "C" int func_ov002_020b781c(daObjMarioCap_c *cap)
  * and mModelIndex equals the player's param1, plays the 1-up sound, gives one
  * life and spawns the 1-up logo actor 100 units above the cap. Finally
  * starts the 150-frame removal timer and resets the scale to 1.0. Returns 1. */
-// @symbol _ZN15daObjMarioCap_c19func_ov002_020b76ecEv
-int daObjMarioCap_c::func_ov002_020b76ec()
+// @symbol _ZN15daObjMarioCap_c9InitTakenEv
+int daObjMarioCap_c::InitTaken()
 {
     unk_0a4 = 0;
     mVertSpeed = 0;
@@ -1123,8 +1114,8 @@ int daObjMarioCap_c::func_ov002_020b76ec()
  * finished. With mTakenStep 0: plays data_ov002_0210de30 when
  * Player::Unk_020c9e5c(8) says 1, and when it has finished removes the cap,
  * first spawning a new OBJ_MARIO_CAP at mHomePos if mType is 4. Returns 1. */
-// @symbol _ZN15daObjMarioCap_c19func_ov002_020b74d0Ev
-int daObjMarioCap_c::func_ov002_020b74d0() {
+// @symbol _ZN15daObjMarioCap_c5TakenEv
+int daObjMarioCap_c::Taken() {
     if (DecIfAbove0_Short((unsigned short *)&mStateTimer) == 0) {
         MarkForDestruction();
         return 1;
@@ -1198,52 +1189,52 @@ int daObjMarioCap_c::func_ov002_020b74d0() {
  * over its angles. Then starts the animation for the type: 10, 15, 20, 21 or
  * 22 each play their own (the animation tables are unrecovered; 15 and 20
  * index them by mModelIndex). Returns 1. */
-// @symbol func_ov002_020b7330
-extern "C" int func_ov002_020b7330(daObjMarioCap_c *cap)
+// @symbol _ZN15daObjMarioCap_c8InitAnimEv
+int daObjMarioCap_c::InitAnim()
 {
     /* Reading the angles through closest->mAngleX / &mModelAnim methods
        changes the size; the pointer-to-first-member form below is the one
        that matches. */
     int state;
 
-    cap->mBlinkHidden = 0;
-    cap->mAnimStarted = 0;
+    mBlinkHidden = 0;
+    mAnimStarted = 0;
 
-    state = cap->mType;
+    state = mType;
     if (state == 0xa || state == 0xf) {
-        Player* closest = cap->ClosestPlayer();
+        Player* closest = ClosestPlayer();
         if (closest != 0) {
             s16* src = &closest->mAngleX;
-            cap->mPrevAngleX = src[0];
-            cap->mPrevAngleY = src[1];
-            cap->mPrevAngleZ = src[2];
-            cap->mAngleX = cap->mPrevAngleX;
-            cap->mAngleY = cap->mPrevAngleY;
-            cap->mAngleZ = cap->mPrevAngleZ;
-            cap->mPlayer = closest;
+            mPrevAngleX = src[0];
+            mPrevAngleY = src[1];
+            mPrevAngleZ = src[2];
+            mAngleX = mPrevAngleX;
+            mAngleY = mPrevAngleY;
+            mAngleZ = mPrevAngleZ;
+            mPlayer = closest;
         }
     }
 
-    switch (cap->mType) {
+    switch (mType) {
     case 0xa:
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &cap->mModelAnim, data_ov002_0210de30.file, 0x40000000, 0x1000, 0);
+            &mModelAnim, data_ov002_0210de30.file, 0x40000000, 0x1000, 0);
         break;
     case 0xf:
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &cap->mModelAnim, data_ov002_020ff0a0[cap->mModelIndex]->file, 0x40000000, 0x1000, 0);
+            &mModelAnim, data_ov002_020ff0a0[mModelIndex]->file, 0x40000000, 0x1000, 0);
         break;
     case 0x14:
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &cap->mModelAnim, data_ov002_020ff0b8[cap->mModelIndex]->file, 0x40000000, 0x1000, 0);
+            &mModelAnim, data_ov002_020ff0b8[mModelIndex]->file, 0x40000000, 0x1000, 0);
         break;
     case 0x15:
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &cap->mModelAnim, data_ov002_0210de58.file, 0x40000000, 0x1000, 0);
+            &mModelAnim, data_ov002_0210de58.file, 0x40000000, 0x1000, 0);
         break;
     case 0x16:
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &cap->mModelAnim, data_ov002_0210de18.file, 0x40000000, 0x1000, 0);
+            &mModelAnim, data_ov002_0210de18.file, 0x40000000, 0x1000, 0);
         break;
     }
 
@@ -1255,8 +1246,8 @@ extern "C" int func_ov002_020b7330(daObjMarioCap_c *cap)
  * types 10, 15 and 22 remove the cap; type 21 does nothing more; type 20
  * starts its second animation (data_ov002_020ff0c4 entry [1]) once, setting
  * mAnimStarted. Returns 1. */
-// @symbol _ZN15daObjMarioCap_c19func_ov002_020b7200Ev
-int daObjMarioCap_c::func_ov002_020b7200()
+// @symbol _ZN15daObjMarioCap_c4AnimEv
+int daObjMarioCap_c::Anim()
 {
     short* sp;
     int* ip;
@@ -1305,16 +1296,16 @@ int daObjMarioCap_c::func_ov002_020b7200()
 }
 
 /* df44's enter function: clears mBlinkHidden. Returns 1. */
-// @symbol func_ov002_020b71f0
-extern "C" int func_ov002_020b71f0(daObjMarioCap_c *cap)
+// @symbol _ZN15daObjMarioCap_c11InitDormantEv
+int daObjMarioCap_c::InitDormant()
 {
-    cap->mBlinkHidden = 0;
+    mBlinkHidden = 0;
     return 1;
 }
 
 /* df44's per-frame function: does nothing. Returns 1. */
-// @symbol func_ov002_020b71e8
-extern "C" int func_ov002_020b71e8(void)
+// @symbol _ZN15daObjMarioCap_c7DormantEv
+int daObjMarioCap_c::Dormant()
 {
     return 1;
 }
@@ -1331,80 +1322,80 @@ extern "C" int func_ov002_020b71e8(void)
  * Player::SetNoControlState(8) succeeds, it hands over the hat
  * (SetNewHatCharacter(mModelIndex)), copies the player's angles and enters
  * the taken state. */
-// @symbol func_ov002_020b6fcc
-extern "C" void func_ov002_020b6fcc(daObjMarioCap_c *self)
+// @symbol _ZN15daObjMarioCap_c10CheckTouchEv
+void daObjMarioCap_c::CheckTouch()
 {
     struct V16 { u16 x, y, z; } v;
     int normal[3];
     int state;
 
-    if (self->mWithMeshClsn.IsOnWall() != 0) {
-        void* wr = _ZNK10dBgCh_Actr13GetWallResultEv(&self->mWithMeshClsn);
+    if (mWithMeshClsn.IsOnWall() != 0) {
+        void* wr = _ZNK10dBgCh_Actr13GetWallResultEv(&mWithMeshClsn);
         ((SurfaceInfo *)((char*)wr + 4))->CopyNormalTo(*(Vector3 *)&normal[0]);
-        self->mPrevAngleY = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(
-            self, normal[0], normal[2], self->mPrevAngleY);
+        mPrevAngleY = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(
+            this, normal[0], normal[2], mPrevAngleY);
     }
 
-    if (self->mdCcAc_c.otherOwner == 0) return;
+    if (mdCcAc_c.otherOwner == 0) return;
 
-    self->mPlayer = (Player *)dActor_c::FindWithID(self->mdCcAc_c.otherOwner);
-    if (self->mPlayer == 0) return;
+    mPlayer = (Player *)dActor_c::FindWithID(mdCcAc_c.otherOwner);
+    if (mPlayer == 0) return;
 
     {
-        int t = (self->mPlayer->actorID == kActorPlayer);
+        int t = (mPlayer->actorID == kActorPlayer);
         if (t == false) return;
     }
 
-    if ((self->mdCcAc_c.hitFlags & 0x8000) != 0) return;
-    if (self->mPlayer->IsCollectingCap() != 0) return;
+    if ((mdCcAc_c.hitFlags & 0x8000) != 0) return;
+    if (mPlayer->IsCollectingCap() != 0) return;
 
-    if (self->mPlayer->param1 == 3) {
-        if (self->mPlayer->mObjInMouth != 0) return;
+    if (mPlayer->param1 == 3) {
+        if (mPlayer->mObjInMouth != 0) return;
     }
 
-    state = self->mType;
+    state = mType;
     if ((unsigned)(state - 6) <= 1) {
-        self->mPlayer->InitVanishLuigi();
-        self->MarkForDestruction();
+        mPlayer->InitVanishLuigi();
+        MarkForDestruction();
         return;
     }
     if ((unsigned)(state - 8) <= 1) {
-        self->mPlayer->InitMetalWario();
-        self->MarkForDestruction();
+        mPlayer->InitMetalWario();
+        MarkForDestruction();
         return;
     }
 
-    if (CAP_OVERRIDE_MATRIX(self) != 0) {
+    if (CAP_OVERRIDE_MATRIX(this) != 0) {
         if (state != 0) return;
     }
 
     if (SaveData::HasPlayerLostCap() != 0) {
-        func_ov002_020b7f2c((C*)self, (PMF*)&data_ov002_0210df54);
-        self->mTakenStep = 1;
+        EnterState(&data_ov002_0210df54);
+        mTakenStep = 1;
         return;
     }
 
-    if (self->mPlayer->SetNoControlState(8, -1, 0) == 0) return;
+    if (mPlayer->SetNoControlState(8, -1, 0) == 0) return;
 
-    self->mPlayer->SetNewHatCharacter(
-        self->mModelIndex & 0xff, 0, 0);
+    mPlayer->SetNewHatCharacter(
+        mModelIndex & 0xff, 0, 0);
 
     {
         /* `a = b ? a : a` through a V16 is the MATCH form. */
-        Player* found = self->mPlayer;
+        Player* found = mPlayer;
         int a = *(u16*)&found->mAngleX;
         int b = *(u16*)&found->mAngleY;
         a = b ? a : a;
         v.x = a;
         v.y = b;
         v.z = *(u16*)&found->mAngleZ;
-        self->mPrevAngleX = *(s16*)&v.x;
-        self->mPrevAngleY = *(s16*)&v.y;
-        self->mPrevAngleZ = *(s16*)&v.z;
-        self->mAngleX = self->mPrevAngleX;
-        self->mAngleY = self->mPrevAngleY;
-        self->mAngleZ = self->mPrevAngleZ;
+        mPrevAngleX = *(s16*)&v.x;
+        mPrevAngleY = *(s16*)&v.y;
+        mPrevAngleZ = *(s16*)&v.z;
+        mAngleX = mPrevAngleX;
+        mAngleY = mPrevAngleY;
+        mAngleZ = mPrevAngleZ;
     }
 
-    func_ov002_020b7f2c((C*)self, (PMF*)&data_ov002_0210df54);
+    EnterState(&data_ov002_0210df54);
 }

@@ -6,7 +6,7 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x020badd0..0x020bc3c8, 28 function(s), from build/tu_map.json (tools/tu_map.py, regenerated post-rename as ov002/daObjTatefuda_c). 27 carry complete delinks entries; func_ov002_020bb614 (the talk routine) verifies OK under the pin and is marked complete with this promotion. Boundaries medium on both sides; the daObjSwdoor_c run ends exactly where this one opens (0x020badd0), and daObjTatefuda_c_classInit (0x020bc3c8) abuts its end.",
+    "contiguous linker run: 0x020badd0..0x020bc3c8, 28 function(s), from build/tu_map.json (tools/tu_map.py, regenerated post-rename as ov002/daObjTatefuda_c). 27 carry complete delinks entries; _ZN15daObjTatefuda_c4TalkEv (the talk routine) verifies OK under the pin and is marked complete with this promotion. Boundaries medium on both sides; the daObjSwdoor_c run ends exactly where this one opens (0x020badd0), and daObjTatefuda_c_classInit (0x020bc3c8) abuts its end.",
     "class label: daObjTatefuda_c (ROM RTTI triple homed at ov002 0x02109ab4/0x02109ac0/0x02109af8; the tree's former SignPost was coined). Kill (slot 31, overriding dBgActor_c) is the key function: it emits the vtable, RTTI and destructor variants, so D1/D0 need no bodies here.",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide)"
   ],
@@ -33,28 +33,28 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov002_020bae9c",
+      "symbol": "_ZN15daObjTatefuda_c5ResetEv",
       "address": "0x020bae9c",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov002_020bae9c.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov002_020baf80",
+      "symbol": "_ZN15daObjTatefuda_c18UpdateShadowMatrixEv",
       "address": "0x020baf80",
       "size": "0x00000040",
       "legacy_source": "src/func_ov002_020baf80.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov002_020bafc0",
+      "symbol": "RebuildModelMatrix",
       "address": "0x020bafc0",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov002_020bafc0.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov002_020bb060",
+      "symbol": "AttachToHolder",
       "address": "0x020bb060",
       "size": "0x000001dc",
       "legacy_source": "src/func_ov002_020bb060.c",
@@ -89,98 +89,98 @@
       "ordinal": 9
     },
     {
-      "symbol": "func_ov002_020bb42c",
+      "symbol": "_ZN15daObjTatefuda_c16CheckGrabOrBreakEv",
       "address": "0x020bb42c",
       "size": "0x000000f4",
       "legacy_source": "src/func_ov002_020bb42c.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov002_020bb520",
+      "symbol": "_ZN15daObjTatefuda_c12TryStartTalkEv",
       "address": "0x020bb520",
       "size": "0x000000f4",
       "legacy_source": "src/func_ov002_020bb520.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov002_020bb614",
+      "symbol": "_ZN15daObjTatefuda_c4TalkEv",
       "address": "0x020bb614",
       "size": "0x000003dc",
       "legacy_source": "src/func_ov002_020bb614.c",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov002_020bb9f0",
+      "symbol": "_ZN15daObjTatefuda_c8InitTalkEv",
       "address": "0x020bb9f0",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov002_020bb9f0.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov002_020bb9fc",
+      "symbol": "_ZN15daObjTatefuda_c4IdleEv",
       "address": "0x020bb9fc",
       "size": "0x00000028",
       "legacy_source": "src/func_ov002_020bb9fc.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov002_020bba24",
+      "symbol": "_ZN15daObjTatefuda_c8InitIdleEv",
       "address": "0x020bba24",
       "size": "0x00000004",
       "legacy_source": "src/func_ov002_020bba24.c",
       "ordinal": 15
     },
     {
-      "symbol": "func_ov002_020bba28",
+      "symbol": "_ZN15daObjTatefuda_c7DroppedEv",
       "address": "0x020bba28",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov002_020bba28.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "func_ov002_020bbac8",
+      "symbol": "_ZN15daObjTatefuda_c11InitDroppedEv",
       "address": "0x020bbac8",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020bbac8.c",
       "ordinal": 17
     },
     {
-      "symbol": "func_ov002_020bbb14",
+      "symbol": "_ZN15daObjTatefuda_c6ThrownEv",
       "address": "0x020bbb14",
       "size": "0x00000164",
       "legacy_source": "src/func_ov002_020bbb14.cpp",
       "ordinal": 18
     },
     {
-      "symbol": "func_ov002_020bbc78",
+      "symbol": "_ZN15daObjTatefuda_c10InitThrownEv",
       "address": "0x020bbc78",
       "size": "0x00000040",
       "legacy_source": "src/func_ov002_020bbc78.c",
       "ordinal": 19
     },
     {
-      "symbol": "func_ov002_020bbcb8",
+      "symbol": "_ZN15daObjTatefuda_c7CarriedEv",
       "address": "0x020bbcb8",
       "size": "0x00000098",
       "legacy_source": "src/func_ov002_020bbcb8.cpp",
       "ordinal": 20
     },
     {
-      "symbol": "func_ov002_020bbd50",
+      "symbol": "_ZN15daObjTatefuda_c11InitCarriedEv",
       "address": "0x020bbd50",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov002_020bbd50.c",
       "ordinal": 21
     },
     {
-      "symbol": "func_ov002_020bbd5c",
+      "symbol": "_ZN15daObjTatefuda_c8SetStateEi",
       "address": "0x020bbd5c",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020bbd5c.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "func_ov002_020bbda4",
+      "symbol": "_ZN15daObjTatefuda_c11UpdateStateEv",
       "address": "0x020bbda4",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020bbda4.cpp",
@@ -374,7 +374,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "func_ov002_020bbb14 holds a real Vector3 local (vec) and types.h gives Vector3 an inline destructor, so the compiler emits its own copy of the four-byte body. The ROM homes it in arm9:0x020072c0; this copy is discarded by text-only isolation."
+      "reason": "_ZN15daObjTatefuda_c6ThrownEv holds a real Vector3 local (vec) and types.h gives Vector3 an inline destructor, so the compiler emits its own copy of the four-byte body. The ROM homes it in arm9:0x020072c0; this copy is discarded by text-only isolation."
     }
   ]
 }

@@ -24,6 +24,52 @@ struct dMgState_c {
     void Render();
     void Behavior();
     void SetState(s32 state);
+
+    /* State handlers: pointer-to-member constants at 0x020bc8bc..0x020bca3c
+       (the enter/behavior/render records) name these as targets. */
+    void func_ov004_020b68e8();
+    void func_ov004_020b6948();
+    void func_ov004_020b6ad8();
+    void func_ov004_020b6b40();
+    void func_ov004_020b6c10();
+    void func_ov004_020b6c9c();
+    void func_ov004_020b6d6c();
+    void func_ov004_020b6ddc();
+    void func_ov004_020b6f14();
+    void func_ov004_020b6f88();
+    void func_ov004_020b7020();
+    void func_ov004_020b70b4();
+    void func_ov004_020b7124();
+    void func_ov004_020b724c();
+    void func_ov004_020b72d4();
+    void func_ov004_020b743c();
+    void func_ov004_020b7460();
+    void func_ov004_020b746c();
+    void func_ov004_020b7594();
+    void func_ov004_020b75e4();
+    void func_ov004_020b7744();
+    void func_ov004_020b77b4();
+    void func_ov004_020b7854();
+    void func_ov004_020b78f4();
+    void func_ov004_020b798c();
+    void func_ov004_020b79b0();
+    void func_ov004_020b7a18();
+    void func_ov004_020b7b20();
+    void func_ov004_020b7b90();
+    void func_ov004_020b7c04();
+    void func_ov004_020b7cd0();
+    void func_ov004_020b7e38();
+    void func_ov004_020b7eac();
+    void func_ov004_020b7f5c();
+    void func_ov004_020b7fec();
+    void func_ov004_020b8098();
+    void func_ov004_020b81f8();
+    void func_ov004_020b8284();
+    void func_ov004_020b83ac();
+    void func_ov004_020b841c();
+    void func_ov004_020b853c();
+    void func_ov004_020b8560();
+    void func_ov004_020b8688();
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -20,7 +20,7 @@ src/actors/daObj_Mip_Key_c.cpp:
     complete
     .text start:0x0212cc88 end:0x0212d528
 
-src/game/actors/d_a_c_jugem.cpp:
+src/actors/daC_Jugem_c.cpp:
     complete
     .text start:0x0212d528 end:0x0212edac
 

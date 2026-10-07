@@ -20,7 +20,7 @@
 extern "C" {
 #endif
 
-extern void _ZN5Fader13AdvanceInterpEv(void);
+extern void _ZN8dFader_c13AdvanceInterpEv(void);
 
 
 #ifdef __cplusplus

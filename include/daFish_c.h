@@ -53,6 +53,17 @@ struct daFish_c : dActor_c {
     virtual s32 Behavior();            /* slot 6 */
     virtual s32 Render();              /* slot 9 */
     virtual void OnPendingDestroy();   /* slot 12 */
+
+    void func_ov100_02146280();
+    void func_ov100_0214629c(unsigned int spawnerID);
+    int  func_ov100_0214639c();
+    void func_ov100_021463b0();
+    void func_ov100_02146468();
+    void func_ov100_021464f4();
+    void func_ov100_02146640();
+    void func_ov100_021467d4();
+    int  func_ov100_021467e8();
+    void func_ov100_02146828();
 };
 
 #ifndef SM64DS_PLATFORM_PC

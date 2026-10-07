@@ -1,9 +1,9 @@
 #include "types.h"
 
 extern int func_0203d974(void);
-extern void func_ov075_02115134(void *c);
+extern void _ZN9dEntObj_c19func_ov075_02115134Ev(void *c);
 extern int func_0203da9c(void);
-extern int func_ov075_02115098(void *c, int a1);
+extern int _ZN9dEntObj_c19func_ov075_02115098Ei(void *c, int a1);
 extern u8 func_02020168(void);
 extern void func_02020304(void);
 extern void func_020200e0(void);
@@ -20,8 +20,8 @@ void func_ov075_021190a4(char *c)
 {
     if (func_0203d974() != 0) {
         if (*(int *)(c + 0x268) == 0) {
-            func_ov075_02115134(*(void **)(c + 0x50));
-            if (func_ov075_02115098(*(void **)(c + 0x50), func_0203da9c()) != 0)
+            _ZN9dEntObj_c19func_ov075_02115134Ev(*(void **)(c + 0x50));
+            if (_ZN9dEntObj_c19func_ov075_02115098Ei(*(void **)(c + 0x50), func_0203da9c()) != 0)
                 *(int *)(c + 0x268) = 1;
         }
         if (*(int *)(c + 0x268) != 0)

@@ -19,7 +19,7 @@
 #include "dBgW.h"
 
 extern "C" {
-/* Shared base init, defined in its own TU (src/func_02039624.c). */
+/* Shared base init, defined in its own TU (src/engine/collision/dBgW.cpp). */
 void func_02039624(dBgW *self);
 }
 

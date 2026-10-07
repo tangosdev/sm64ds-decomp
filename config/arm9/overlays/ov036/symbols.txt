@@ -56,14 +56,14 @@ __sinit_ov036_02112688 kind:function(arm,size=0x40) addr:0x02112688
 __sinit_ov036_021126c8 kind:function(arm,size=0x68) addr:0x021126c8
 __sinit_ov036_02112730 kind:function(arm,size=0x6c) addr:0x02112730
 __sinit_ov036_0211279c kind:function(arm,size=0x1a8) addr:0x0211279c
-__sinit_ov036_02112944 kind:function(arm,size=0x98) addr:0x02112944
+__sinit_d_a_obj_rc_carpet.cpp kind:function(arm,size=0x98) addr:0x02112944
 .p__sinit_ov036_021125b0 kind:data(word) addr:0x021129dc
 .p__sinit_ov036_0211261c kind:data(word) addr:0x021129e0
 .p__sinit_ov036_02112688 kind:data(word) addr:0x021129e4
 .p__sinit_ov036_021126c8 kind:data(word) addr:0x021129e8
 .p__sinit_ov036_02112730 kind:data(word) addr:0x021129ec
 .p__sinit_ov036_0211279c kind:data(word) addr:0x021129f0
-.p__sinit_ov036_02112944 kind:data(word) addr:0x021129f4
+.p__sinit_d_a_obj_rc_carpet.cpp kind:data(word) addr:0x021129f4
 data_ov036_02112a00 kind:data(any) addr:0x02112a00
 data_ov036_02112a04 kind:data(any) addr:0x02112a04
 data_ov036_02112a08 kind:data(any) addr:0x02112a08
@@ -249,6 +249,7 @@ data_ov036_02114190 kind:bss addr:0x02114190
 data_ov036_0211419c kind:bss addr:0x0211419c
 data_ov036_021141a4 kind:bss addr:0x021141a4
 data_ov036_021141ac kind:bss addr:0x021141ac
-data_ov036_021141b4 kind:bss addr:0x021141b4
-data_ov036_021141c0 kind:bss addr:0x021141c0
-data_ov036_021141cc kind:bss addr:0x021141cc
+@453 kind:bss addr:0x021141b4
+@455 kind:bss addr:0x021141c0
+@454 kind:bss addr:0x021141cc
+data_ov036_021141d8 kind:bss addr:0x021141d8

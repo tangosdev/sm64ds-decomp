@@ -51,11 +51,7 @@ src/actors/daObjFl_London_c.cpp:
 
 src/actors/daObjFl_Seesaw_c.cpp:
     complete
-    .text start:0x02111cac end:0x02111f3c
-
-src/d_a_obj_fl_seesaw.c:
-    complete
-    .text start:0x02111f3c end:0x02111f6c
+    .text start:0x02111cac end:0x02111f6c
 
 src/actors/daObjFl_Ukiyuka_c.cpp:
     complete

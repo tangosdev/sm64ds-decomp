@@ -162,6 +162,10 @@
    "ref": "src/func_ov006_020e7f5c.cpp"
   },
   {
+   "file": "notes/agents/handoffs/pr-2708-source-review-fixes.md",
+   "ref": "src/func_0201267c.cpp"
+  },
+  {
    "file": "notes/agents/handoffs/pr2231-rescue-ov022-ov013-batch2.md",
    "ref": "src_tu/actors/daObj_volcanoCannon_c.cpp"
   },
@@ -190,8 +194,28 @@
    "ref": "src/d_a_udlift_udlift_teresa.c"
   },
   {
+   "file": "notes/agents/handoffs/readable-ov021-newslift-0925.md",
+   "ref": "src/func_020393c4.c"
+  },
+  {
+   "file": "notes/agents/handoffs/readable-ov021-newslift-0925.md",
+   "ref": "src/func_020393d4.c"
+  },
+  {
+   "file": "notes/agents/handoffs/readable-ov025-dpbrock-0925.md",
+   "ref": "src/func_020393d4.c"
+  },
+  {
    "file": "notes/agents/handoffs/readable-ov055-luigi-0925.md",
    "ref": "src/d_a_luigi.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/readable-ov071-casket-0925.md",
+   "ref": "src/func_020393d4.c"
+  },
+  {
+   "file": "notes/agents/handoffs/readable-ov089-objkey-0925.md",
+   "ref": "src/func_02012694.cpp"
   },
   {
    "file": "notes/agents/handoffs/readable-ov092-onms-0925b.md",
@@ -326,6 +350,10 @@
    "ref": "src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp"
   },
   {
+   "file": "notes/collision-query-classes.md",
+   "ref": "src/func_02037a6c.c"
+  },
+  {
    "file": "notes/collision-system.md",
    "ref": "notes/drafts-sphereclsn-detectclsn.cpp"
   },
@@ -347,11 +375,11 @@
   },
   {
    "file": "notes/ctor-migration.md",
-   "ref": "src/_ZN5ModelC1Ev.cpp"
+   "ref": "src/_ZN12dBgCh_SphCrrC1Ev.cpp"
   },
   {
    "file": "notes/ctor-migration.md",
-   "ref": "src/engine/model/CommonModel.cpp"
+   "ref": "src/_ZN5ModelC1Ev.cpp"
   },
   {
    "file": "notes/declaration-centralization.md",
@@ -495,15 +523,15 @@
   },
   {
    "file": "notes/overlay-residency.md",
-   "ref": "src/actors/CutsceneObject.cpp"
-  },
-  {
-   "file": "notes/overlay-residency.md",
    "ref": "src/func_ov007_020cc2cc.c"
   },
   {
    "file": "notes/plan-cpp-conversion-queue.md",
    "ref": "src/_ZN10ChillBully14UpdateRunStateEv.cpp"
+  },
+  {
+   "file": "notes/plan-cpp-conversion-queue.md",
+   "ref": "src/_ZN7dWipe_c15SetBackwardTimeEj.c"
   },
   {
    "file": "notes/plan-cpp-language-mode.md",
@@ -576,6 +604,10 @@
   {
    "file": "notes/src-domain-buckets.md",
    "ref": "src/ui/messages"
+  },
+  {
+   "file": "notes/tu-cpp-census-2026-08.md",
+   "ref": "src/_ZN7dWipe_c15SetBackwardTimeEj.c"
   },
   {
    "file": "notes/tu-filename-reconstruction-pilot.md",

@@ -11,7 +11,7 @@
  * opt_strength_reduction and opt_common_subs off on func_ov078_02125448,
  * opt_strength_reduction off on InitResources.
  *
- * Leftover, remeasured on this TU:
+comment leftovers:
  * - BlendModelAnim::SetAnim, dCcAcPos_c::Init and DropShadowRadHeight take
  *   Fix12<int> by value. func_ov078_02124060 cannot call SetAnim with a
  *   scalar speed (illegal implicit conversion) and Fix12<int>(0x1000) is
@@ -20,28 +20,33 @@
  * - dBgCh_Actr::Init's definition is
  *   _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_. The header
  *   spells Fix12i, which mangles as i, so InitResources keeps the extern.
- * - dActor_c::Spawn is already the header call (s8 area, s16 death id).
  * - Player::param1 and Player::mStateFlags are used. The held matrix at
  *   actor+0xc8 is inside dActor_c's pad (0xc5..0xcb); naming it is a base
  *   change. func_ov078_02125de0, Render and the throw helper still store it.
  * - dCamera_c::mFlags (0x154, bit 8) is used. Behavior's store at dCamera_c+0x114
  *   is the word after mTargetPlayer, still pad_114.
- * - func_02035550 is the call that ORs 0x4000 into dBgCh_Actr::mFlags
- *   Inlining the or would delete the call.
+ * - func_02035550 is the call that ORs 0x4000 into dBgCh_Actr::mFlags;
+ *   inlining the or would delete the call.
  * - func_02012694 plays bank 3 at mCamSpacePos. It is not Sound::PlayBank3
  *   (that body is 0x02012664). func_0200d8c8 shakes the camera.
  *   func_ov002_020db54c launches the grabbed player; func_ov002_020db5f4
  *   starts the player's hold state. func_ov102_0214b384 arms a bob-omb
  *   fuse; func_ov102_0214ad14 makes it chase. GetHealth is called with no
  *   receiver in func_ov078_02123f1c: r0 is whatever the previous call left.
+ * - func_ov078_021240a0 stays a free function: it is method-shaped (object
+ *   in arg0, in a sinit PMF record) but the member spelling — and even the
+ *   `extern "C" int` definition spelling — reschedules the clamp arm's
+ *   register allocation under opt_propagation off (7 words). The
+ *   `extern "C" { }` block form is byte-correct; it still calls the
+ *   member helpers through k.
  * - File handles are BombkingFile (id, file at +4), filled by
  *   __sinit_ov078_02126660. State records stay data_ov078_021270*: the
  *   sinit copies an {enter, tick} PMF pair into each. g_profile_BOMBKING
- *   stays in the overlay data. KingBobOmb_SetState and the func_ov078_*
- *   helpers keep their labels. A few address launders stay because the
- *   plain member form moved a word: mPrevAngleY in func_ov078_02123d3c,
- *   mHealth in func_ov078_021243c0, mVertSpeed in func_ov078_021247bc,
- *   unk_50a in func_ov078_021259ec.
+ *   stays in the overlay data.
+ * - A few address launders stay because the plain member form moved a
+ *   word: mPrevAngleY in func_ov078_02123d3c, mHealth in
+ *   func_ov078_021243c0, mVertSpeed in func_ov078_021247bc, unk_50a in
+ *   func_ov078_021259ec.
  */
 
 /* common.h FIRST: daBombking_c.h reaches math/Matrix.h through BlendModelAnim.h,
@@ -83,7 +88,6 @@ struct M3 { int w[3]; };
 struct BCA_File;
 typedef daBombking_c::StateFunction PMF;
 extern "C" int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *self, void *bca, int a, int b, int fix, unsigned short t);
-extern "C" int KingBobOmb_SetState(void *c, void *p);
 
 /* What __sinit_ov078_02126660 builds. Construct stores the file id; Load
  * writes the bytes at +4, which is the pointer SetAnim reads. 02126f38 is
@@ -122,6 +126,7 @@ extern "C" {
     extern int data_ov078_021270fc[];
     extern int data_ov078_0212710c[];
 extern int data_ov078_02126ffc[];
+extern int data_02092138;
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
 extern void func_02012694(int a, void *p);
@@ -198,27 +203,27 @@ daBombking_c::~daBombking_c() {}
  */
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02123804
-extern "C" {
-int func_ov078_02123804(char *c){
-    daBombking_c *k = (daBombking_c *)c;
-    unsigned int v = k->mdCcAcPos_c2.otherOwner;
+// @symbol _ZN12daBombking_c19func_ov078_02123804Ev
+
+int daBombking_c::func_ov078_02123804()
+{
+    unsigned int v = this->mdCcAcPos_c2.otherOwner;
     if (v == 0) return 0;
     if (dActor_c::FindWithID(v) == 0) return 0;
-    if ((k->mdCcAcPos_c2.hitFlags & 0x4000) == 0) return 0;
-    KingBobOmb_SetState(c, data_ov078_02126ffc);
+    if ((this->mdCcAcPos_c2.hitFlags & 0x4000) == 0) return 0;
+    KingBobOmb_SetState(data_ov078_02126ffc);
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02123864
-extern "C" {
-void func_ov078_02123864(char* self) {
-  daBombking_c *k = (daBombking_c *)self;
+// @symbol _ZN12daBombking_c19func_ov078_02123864Ev
+
+void daBombking_c::func_ov078_02123864()
+{
   int i = 0;
   do {
-    daBmb_c *bmb = (daBmb_c *)dActor_c::FindWithID(k->mSpawnedId[i]);
+    daBmb_c *bmb = (daBmb_c *)dActor_c::FindWithID(this->mSpawnedId[i]);
     if (bmb) {
       bmb->unk_3e0 = 0;
       bmb->unk_3f6 = 1;
@@ -226,21 +231,20 @@ void func_ov078_02123864(char* self) {
     i++;
   } while (i < 2);
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_021238ac
-extern "C" {
-int func_ov078_021238ac(char *c)
+// @symbol _ZN12daBombking_c19func_ov078_021238acEv
+
+int daBombking_c::func_ov078_021238ac()
 {
-    daBombking_c *k = (daBombking_c *)c;
     dCamera_c *cam = (dCamera_c *)data_0209f318;
     struct Vec3 v;
     struct Vec3 t;
     struct Vec3 u;
 
-    if (k->mTalkingPlayer->GetTalkState() != -1) {
-        ((dCamera_c *)cam)->SetFlag_3();
+    if (this->mTalkingPlayer->GetTalkState() != -1) {
+        cam->SetFlag_3();
         return 1;
     }
 
@@ -248,8 +252,8 @@ int func_ov078_021238ac(char *c)
     v.x = 0;
     v.y = 0;
     v.z = 0;
-    data_020a0e68 = *(struct M12 *)&k->mBlendModelAnim.mat4x3;
-    MulMat4x3Mat4x3((char *)k->mBlendModelAnim.data.transforms + 0x30, &data_020a0e68, &data_020a0e68);
+    data_020a0e68 = *(struct M12 *)&this->mBlendModelAnim.mat4x3;
+    MulMat4x3Mat4x3((char *)this->mBlendModelAnim.data.transforms + 0x30, &data_020a0e68, &data_020a0e68);
 
     v.x = data_020a0e68.w[9];
     v.y = data_020a0e68.w[10];
@@ -258,179 +262,178 @@ int func_ov078_021238ac(char *c)
     v.x = t.x;
     v.y = t.y;
     v.z = t.z;
-    func_02012694(0x130, &k->mCamSpacePosX);
+    func_02012694(0x130, &this->mCamSpacePosX);
 
-    k->UntrackAndSpawnStar(*(s8 *)&k->mStarTracked, k->mStarID, *(Vector3 *)&v, 4);
+    this->UntrackAndSpawnStar(*(s8 *)&this->mStarTracked, this->mStarID, *(Vector3 *)&v, 4);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x1a, v.x, v.y, v.z);
     u.x = v.x;
     u.y = v.y;
     u.z = v.z;
-    k->TriplePoofDustAt(*(Vector3 *)&u);
+    this->TriplePoofDustAt(*(Vector3 *)&u);
 
-    if (k->mMusicLayer3 == 1) {
-        k->mMusicLayer3 = 0;
+    if (this->mMusicLayer3 == 1) {
+        this->mMusicLayer3 = 0;
         _ZN5Sound22StopLoadedMusic_Layer3Ev();
         func_02011cfc();
         _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0x15666);
     }
-    k->fBase_c::MarkForDestruction();
+    this->fBase_c::MarkForDestruction();
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02123a3c
-extern "C" {
-int func_ov078_02123a3c(char* c){
-    daBombking_c *k = (daBombking_c *)c;
-    k->mAnimSpeed = 2;
-    k->mHorzSpeed = 0;
-    k->mStateTimer = 0x32;
-    func_ov078_02123864(c);
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&k->mBlendModelAnim, data_ov078_02126f20.file, 0, 0, 0x1000, 0);
+// @symbol _ZN12daBombking_c19func_ov078_02123a3cEv
+
+int daBombking_c::func_ov078_02123a3c()
+{
+    this->mAnimSpeed = 2;
+    this->mHorzSpeed = 0;
+    this->mStateTimer = 0x32;
+    func_ov078_02123864();
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126f20.file, 0, 0, 0x1000, 0);
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02123aa0
-extern "C" {
-int func_ov078_02123aa0(char* c){
-    daBombking_c *k = (daBombking_c *)c;
-    short ang = Vec3_HorzAngle(&k->mPosX, &k->mHomePosX);
-    if (func_ov078_02123804(c) == 1) return 1;
-    Player *p = (Player *)k->ClosestPlayer();
+// @symbol _ZN12daBombking_c19func_ov078_02123aa0Ev
+
+int daBombking_c::func_ov078_02123aa0()
+{
+    short ang = Vec3_HorzAngle(&this->mPosX, &this->mHomePosX);
+    if (func_ov078_02123804() == 1) return 1;
+    Player *p = (Player *)this->ClosestPlayer();
     if (p != 0) {
         struct Vector3 v = *(struct Vector3 *)&p->mPosX;
-        if (Vec3_Dist(&k->mArenaPosX, &v) < 0x640000) {
-            if (k->mArenaPosY - 0x64000 < v.y) {
-                KingBobOmb_SetState(c, data_ov078_0212703c);
+        if (Vec3_Dist(&this->mArenaPosX, &v) < 0x640000) {
+            if (this->mArenaPosY - 0x64000 < v.y) {
+                KingBobOmb_SetState(data_ov078_0212703c);
                 return 1;
             }
         }
     }
-    if (k->unk_505 == 0) {
-        func_02012694(0x12d, &k->mCamSpacePosX);
-        k->unk_505 = 5;
+    if (this->unk_505 == 0) {
+        func_02012694(0x12d, &this->mCamSpacePosX);
+        this->unk_505 = 5;
     }
-    ApproachAngle(&k->mPrevAngleY, ang, 5, 0x1000, 0x100);
-    k->mAngleY = k->mPrevAngleY;
-    if (Vec3_Dist(&k->mPosX, &k->mHomePosX) < 0x32000) {
-        KingBobOmb_SetState(c, data_ov078_0212710c);
+    ApproachAngle(&this->mPrevAngleY, ang, 5, 0x1000, 0x100);
+    this->mAngleY = this->mPrevAngleY;
+    if (Vec3_Dist(&this->mPosX, &this->mHomePosX) < 0x32000) {
+        KingBobOmb_SetState(data_ov078_0212710c);
     }
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02123bc4
+// @symbol _ZN12daBombking_c19func_ov078_02123bc4Ev
 /* This caller retains the reconstructed SetAnim ABI declaration above.
    The callee's Fix12 definition experiment in notes/mwccarm-codegen.md 6az
    does not establish that a typed call here would fail to match. */
-extern "C" int func_ov078_02123bc4(char* c){
-  daBombking_c *k = (daBombking_c *)c;
-  k->mVertAccel = -0x2000;
-  k->mAnimSpeed = 2;
-  k->mHorzSpeed = 0xa000;
-  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&k->mBlendModelAnim, data_ov078_02126ee8.file, 4, 0, 0x1000, 0);
+int daBombking_c::func_ov078_02123bc4()
+{
+  this->mVertAccel = -0x2000;
+  this->mAnimSpeed = 2;
+  this->mHorzSpeed = 0xa000;
+  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126ee8.file, 4, 0, 0x1000, 0);
   return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02123c20
-extern "C" {
+// @symbol _ZN12daBombking_c19func_ov078_02123c20Ev
 
-int func_ov078_02123c20(char* c){
-    daBombking_c *k = (daBombking_c *)c;
-    if (func_ov078_02123804(c) == 1) {
-        func_ov078_02123864((char*)c);
-        int v = *(int*)(c+0x494);
+
+int daBombking_c::func_ov078_02123c20()
+{
+    if (func_ov078_02123804() == 1) {
+        func_ov078_02123864();
+        int v = *(int*)&this->mHeldActor;
         if (v != 0) {
-            func_ov002_020db54c((char*)v, 0, 0x50000, k->mAngleY);
-            k->mTalkingPlayer = k->mHeldActor;
-            k->mHeldActor = 0;
+            func_ov002_020db54c((char*)v, 0, 0x50000, this->mAngleY);
+            this->mTalkingPlayer = this->mHeldActor;
+            this->mHeldActor = 0;
         }
         return 1;
     }
-    if (((dExtFrameCtrl_c *)(c+0x31c))->WillHitFrame(0x14)) {
-        int v = *(int*)(c+0x494);
+    if (((dExtFrameCtrl_c *)&this->mBlendModelAnim)->WillHitFrame(0x14)) {
+        int v = *(int*)&this->mHeldActor;
         if (v != 0) {
-            func_ov002_020db54c((char*)v, 0x28000, 0x50000, k->mAngleY);
-            k->mTalkingPlayer = k->mHeldActor;
-            k->mHeldActor = 0;
-            func_02012694(0x131, c+0x74);
+            func_ov002_020db54c((char*)v, 0x28000, 0x50000, this->mAngleY);
+            this->mTalkingPlayer = this->mHeldActor;
+            this->mHeldActor = 0;
+            func_02012694(0x131, &this->mCamSpacePosX);
         }
     }
-    if (((dExtFrameCtrl_c *)(c+0x31c))->Finished()) {
-        KingBobOmb_SetState(c, data_ov078_021270fc);
+    if (((dExtFrameCtrl_c *)&this->mBlendModelAnim)->Finished()) {
+        KingBobOmb_SetState(data_ov078_021270fc);
     }
     return 1;
 }
+
+
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN12daBombking_c19func_ov078_02123cf0Ev
+struct BCA_File;
+
+int daBombking_c::func_ov078_02123cf0()
+{
+  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126ef0.file, 0, 0x40000000, 0x1000, 0);
+  this->mHorzSpeed = 0;
+  return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02123cf0
-struct BCA_File;
-extern "C" {
-int func_ov078_02123cf0(char* c){
-  daBombking_c *k = (daBombking_c *)c;
-  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&k->mBlendModelAnim, data_ov078_02126ef0.file, 0, 0x40000000, 0x1000, 0);
-  k->mHorzSpeed = 0;
-  return 1;
-}}
+// @symbol _ZN12daBombking_c19func_ov078_02123d3cEv
 
-/* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02123d3c
-extern "C" {
-int func_ov078_02123d3c(char* c)
+int daBombking_c::func_ov078_02123d3c()
 {
-    daBombking_c *k = (daBombking_c *)c;
-    if (func_ov078_02123804(c) == 1) {
-        func_ov078_02123864(c);
-        if (k->mHeldActor != 0) {
-            func_ov002_020db54c((char *)k->mHeldActor, 0, 0x50000, k->mAngleY);
-            k->mTalkingPlayer = k->mHeldActor;
-            k->mHeldActor = 0;
+    if (func_ov078_02123804() == 1) {
+        func_ov078_02123864();
+        if (this->mHeldActor != 0) {
+            func_ov002_020db54c((char *)this->mHeldActor, 0, 0x50000, this->mAngleY);
+            this->mTalkingPlayer = this->mHeldActor;
+            this->mHeldActor = 0;
         }
         return 1;
     }
 
     Vector3 v;
-    v.x = k->mArenaPosX;
-    v.y = k->mArenaPosY;
-    v.z = k->mArenaPosZ;
+    v.x = this->mArenaPosX;
+    v.y = this->mArenaPosY;
+    v.z = this->mArenaPosZ;
 
     if (data_0209f220[0] != 1) {
-        v.x = k->mPosX;
-        v.y = k->mPosY;
-        v.z = k->mPosZ;
+        v.x = this->mPosX;
+        v.y = this->mPosY;
+        v.z = this->mPosZ;
         /* Address launder: a plain mPrevAngleY += 0x1000 reschedules this arm. */
-        *(s16 *)(((int)c + 0x94)) += 0x1000;
-        k->mHorzSpeed = 0;
+        *(s16 *)(((int)this + 0x94)) += 0x1000;
+        this->mHorzSpeed = 0;
     } else {
-        s16 a = Vec3_HorzAngle((Vector3 *)&k->mPosX, &v);
-        ApproachAngle(&k->mPrevAngleY, a, 5, 0x1000, 0x100);
+        s16 a = Vec3_HorzAngle((Vector3 *)&this->mPosX, &v);
+        ApproachAngle(&this->mPrevAngleY, a, 5, 0x1000, 0x100);
     }
 
-    k->mAngleY = k->mPrevAngleY;
+    this->mAngleY = this->mPrevAngleY;
 
-    if (Vec3_Dist((Vector3 *)&k->mPosX, &v) > 0x1e000) {
-        if (k->unk_505 == 0) {
-            func_02012694(0x12d, &k->mCamSpacePosX);
-            k->unk_505 = 0xf;
+    if (Vec3_Dist((Vector3 *)&this->mPosX, &v) > 0x1e000) {
+        if (this->unk_505 == 0) {
+            func_02012694(0x12d, &this->mCamSpacePosX);
+            this->unk_505 = 0xf;
         }
     } else {
-        if (k->unk_505 == 0) {
-            k->unk_505 = 0x14;
-            func_02012694(0x12f, &k->mCamSpacePosX);
+        if (this->unk_505 == 0) {
+            this->unk_505 = 0x14;
+            func_02012694(0x12f, &this->mCamSpacePosX);
         }
     }
 
-    if ((u16)k->mStateTimer == 0)
-        KingBobOmb_SetState(c, &data_ov078_021270cc);
+    if ((u16)this->mStateTimer == 0)
+        KingBobOmb_SetState(&data_ov078_021270cc);
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c19func_ov078_02123eb8Ev
@@ -444,64 +447,63 @@ int daBombking_c::func_ov078_02123eb8()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02123f1c
-extern "C" int func_ov078_02123f1c(char *c)
+// @symbol _ZN12daBombking_c19func_ov078_02123f1cEv
+int daBombking_c::func_ov078_02123f1c()
 {
-    daBombking_c *k = (daBombking_c *)c;
-    if (func_ov078_02123804(c) != 1) {
-        if (k->mHeldActor == 0) goto L6c;
+    if (func_ov078_02123804() != 1) {
+        if (this->mHeldActor == 0) goto L6c;
         /* No receiver: r0 is whatever the previous call left. */
         if (_ZN6Player9GetHealthEv() != 0) goto L6c;
     }
-    func_ov078_02123864(c);
-    if (k->mHeldActor != 0) {
-        func_ov002_020db54c((char *)k->mHeldActor, 0, 0x50000, k->mAngleY);
-        k->mTalkingPlayer = k->mHeldActor;
-        k->mHeldActor = 0;
+    func_ov078_02123864();
+    if (this->mHeldActor != 0) {
+        func_ov002_020db54c((char *)this->mHeldActor, 0, 0x50000, this->mAngleY);
+        this->mTalkingPlayer = this->mHeldActor;
+        this->mHeldActor = 0;
     }
     return 1;
 L6c:
-    if (((dExtFrameCtrl_c *)&k->mBlendModelAnim)->Finished()) {
-        KingBobOmb_SetState(c, data_ov078_0212709c);
+    if (((dExtFrameCtrl_c *)&this->mBlendModelAnim)->Finished()) {
+        KingBobOmb_SetState(data_ov078_0212709c);
     }
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02123fb4
-extern "C" {
-int func_ov078_02123fb4(char *c){
-  daBombking_c *k = (daBombking_c *)c;
-  k->mVertAccel = -0x2000;
-  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&k->mBlendModelAnim, data_ov078_02126f18.file, 0, 0x40000000, 0x1000, 0);
+// @symbol _ZN12daBombking_c19func_ov078_02123fb4Ev
+
+int daBombking_c::func_ov078_02123fb4()
+{
+  this->mVertAccel = -0x2000;
+  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126f18.file, 0, 0x40000000, 0x1000, 0);
   return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02124000
-extern "C" {
-int func_ov078_02124000(char* c){
-  daBombking_c *k = (daBombking_c *)c;
-  int ang = k->HorzAngleToCPlayer();
-  ApproachAngle(&k->mPrevAngleY, ang, 1, 0x500, 0x500);
-  k->mAngleY = k->mPrevAngleY;
-  if (((dExtFrameCtrl_c *)&k->mBlendModelAnim)->Finished()) {
-    KingBobOmb_SetState(c, data_ov078_0212703c);
+// @symbol _ZN12daBombking_c19func_ov078_02124000Ev
+
+int daBombking_c::func_ov078_02124000()
+{
+  int ang = this->HorzAngleToCPlayer();
+  ApproachAngle(&this->mPrevAngleY, ang, 1, 0x500, 0x500);
+  this->mAngleY = this->mPrevAngleY;
+  if (((dExtFrameCtrl_c *)&this->mBlendModelAnim)->Finished()) {
+    KingBobOmb_SetState(data_ov078_0212703c);
   }
   return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02124060
-extern "C" {
-int func_ov078_02124060(char *c){
-  daBombking_c *k = (daBombking_c *)c;
-  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&k->mBlendModelAnim, data_ov078_02126f00.file, 0, 0x40000000, 0x1000, 0);
+// @symbol _ZN12daBombking_c19func_ov078_02124060Ev
+
+int daBombking_c::func_ov078_02124060()
+{
+  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126f00.file, 0, 0x40000000, 0x1000, 0);
   return 1;
 }
-}
+
 
 #pragma push
 #pragma opt_propagation off
@@ -519,7 +521,7 @@ int func_ov078_021240a0(char* c)
         if (k->mHealth <= 0) {
             if (k->mHorzSpeed != 0) {
                 k->mHorzSpeed = 0;
-                func_ov078_02125c24(c, 0x7d0000);
+                k->func_ov078_02125c24(0x7d0000);
             }
             if ((unsigned short)(k->mTalkingPlayer->mStateFlags & 0x800) != 0)
                 return 1;
@@ -538,7 +540,7 @@ int func_ov078_021240a0(char* c)
                     _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x14, 0x15666);
                     if (pl->ShowMessage(*(fBase_c *)c, (int)msg, (Vector3 *)&k->mPosX, 0, 0) != 0) {
                         func_02012694(0x12a, &k->mCamSpacePosX);
-                        KingBobOmb_SetState(c, &data_ov078_0212705c);
+                        k->KingBobOmb_SetState(&data_ov078_0212705c);
                     }
                 }
             }
@@ -547,13 +549,13 @@ int func_ov078_021240a0(char* c)
 
         if (k->mActionStep == 0) {
             func_02012694(0x128, &k->mCamSpacePosX);
-            func_ov078_02125c24(c, 0x7d0000);
+            k->func_ov078_02125c24(0x7d0000);
             k->HugeLandingDust(1);
             k->mActionStep = 1;
         }
         if ((unsigned short)k->mStateTimer == 0) {
             k->mSpawnSlot = 0;
-            KingBobOmb_SetState(c, &data_ov078_0212702c);
+            k->KingBobOmb_SetState(&data_ov078_0212702c);
             return 1;
         }
         if (Vec3_Dist(&k->mArenaPosX, &k->mPosX) < 0x258000) {
@@ -604,56 +606,54 @@ int func_ov078_021240a0(char* c)
 #pragma pop
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_021243c0
-extern "C" {
-int func_ov078_021243c0(char* c){
-  daBombking_c *k = (daBombking_c *)c;
-  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&k->mBlendModelAnim, (void*)data_ov078_02126f20.file, 0, 0, 0x1000, 0);
-  k->mStateTimer = 0xc8;
-  k->mTargetAngY = Vec3_HorzAngle(&k->mPosX, &k->mArenaPosX);
-  *(int*)(((long long)(int)(c + 0x500))) =
-    *(int*)(((long long)(int)(c + 0x500))) - 1;
-  k->mActionStep = 0;
-  k->mVertSpeed = 0x28000;
-  k->mHorzSpeed = 0x5000;
-  if (k->mHealth <= 0) k->mFlags = 0x10000000;
-  k->mVertAccel = -0x2000;
+// @symbol _ZN12daBombking_c19func_ov078_021243c0Ev
+
+int daBombking_c::func_ov078_021243c0()
+{
+  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, (void*)data_ov078_02126f20.file, 0, 0, 0x1000, 0);
+  this->mStateTimer = 0xc8;
+  this->mTargetAngY = Vec3_HorzAngle(&this->mPosX, &this->mArenaPosX);
+  *(int*)(((long long)(int)((char *)this + 0x500))) =
+    *(int*)(((long long)(int)((char *)this + 0x500))) - 1;
+  this->mActionStep = 0;
+  this->mVertSpeed = 0x28000;
+  this->mHorzSpeed = 0x5000;
+  if (this->mHealth <= 0) this->mFlags = 0x10000000;
+  this->mVertAccel = -0x2000;
   return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02124470
-extern "C" {
-int func_ov078_02124470(char* c)
+// @symbol _ZN12daBombking_c19func_ov078_02124470Ev
+
+int daBombking_c::func_ov078_02124470()
 {
-    daBombking_c *k = (daBombking_c *)c;
-    s16 ang = k->HorzAngleToCPlayer();
-    ApproachAngle(&k->mPrevAngleY, ang, 1, 0x500, 0x500);
-    k->mAngleY = k->mPrevAngleY;
-    if ((u16)k->mStateTimer == 0)
-        KingBobOmb_SetState(c, &data_ov078_0212702c);
+    s16 ang = this->HorzAngleToCPlayer();
+    ApproachAngle(&this->mPrevAngleY, ang, 1, 0x500, 0x500);
+    this->mAngleY = this->mPrevAngleY;
+    if ((u16)this->mStateTimer == 0)
+        KingBobOmb_SetState(&data_ov078_0212702c);
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_021244d0
-extern "C" {
-int func_ov078_021244d0(char *c) {
-    daBombking_c *k = (daBombking_c *)c;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&k->mBlendModelAnim, (void*)data_ov078_02126f20.file, 0, 0, 0x1000, 0);
-    k->mStateTimer = 0x32;
+// @symbol _ZN12daBombking_c19func_ov078_021244d0Ev
+
+int daBombking_c::func_ov078_021244d0()
+{
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, (void*)data_ov078_02126f20.file, 0, 0, 0x1000, 0);
+    this->mStateTimer = 0x32;
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02124520
-extern "C" {
-int func_ov078_02124520(char *c)
+// @symbol _ZN12daBombking_c19func_ov078_02124520Ev
+
+int daBombking_c::func_ov078_02124520()
 {
-    daBombking_c *k = (daBombking_c *)c;
     Vector3 a;
     Vector3 look;
     Vector3 pos;
@@ -668,14 +668,14 @@ int func_ov078_02124520(char *c)
     s16 ang;
 
     cam = (dCamera_c *)data_0209f318;
-    if (((dExtFrameCtrl_c *)&k->mBlendModelAnim)->WillHitFrame(0x46)) {
-        func_ov078_02125c24(c, 0x7d0000);
-        func_02012694(0x12c, &k->mCamSpacePosX);
+    if (((dExtFrameCtrl_c *)&this->mBlendModelAnim)->WillHitFrame(0x46)) {
+        func_ov078_02125c24(0x7d0000);
+        func_02012694(0x12c, &this->mCamSpacePosX);
         a.x = 0;
         a.y = 0;
         a.z = 0;
-        data_020a0e68 = *(struct M12 *)&k->mBlendModelAnim.mat4x3;
-        MulMat4x3Mat4x3((char *)k->mBlendModelAnim.data.transforms + 0x120, &data_020a0e68, &data_020a0e68);
+        data_020a0e68 = *(struct M12 *)&this->mBlendModelAnim.mat4x3;
+        MulMat4x3Mat4x3((char *)this->mBlendModelAnim.data.transforms + 0x120, &data_020a0e68, &data_020a0e68);
         a.x = data_020a0e68.w[9];
         a.y = data_020a0e68.w[10];
         a.z = data_020a0e68.w[11];
@@ -686,9 +686,9 @@ int func_ov078_02124520(char *c)
         dust.y = tmp.y;
         a.z = tmp.z;
         dust.z = tmp.z;
-        k->HugeLandingDustAt(dust, 1);
+        this->HugeLandingDustAt(dust, 1);
     }
-    player = k->mTalkingPlayer;
+    player = this->mTalkingPlayer;
     if (player->GetTalkState() != -1) {
         pp = (int *)((int)player + 0x5c);
         in.x = 0;
@@ -700,13 +700,13 @@ int func_ov078_02124520(char *c)
         ppos.x = pp[0];
         ppos.y = pp[1];
         ppos.z = pp[2];
-        ang = Vec3_HorzAngle((Vector3 *)&k->mPosX, &ppos);
-        look.x = k->mPosX;
-        look.y = k->mPosY;
-        look.z = k->mPosZ;
-        pos.x = k->mPosX;
-        pos.y = k->mPosY;
-        pos.z = k->mPosZ;
+        ang = Vec3_HorzAngle((Vector3 *)&this->mPosX, &ppos);
+        look.x = this->mPosX;
+        look.y = this->mPosY;
+        look.z = this->mPosZ;
+        pos.x = this->mPosX;
+        pos.y = this->mPosY;
+        pos.z = this->mPosZ;
         look.y += 0x100000;
         in.z = 0x800000;
         Matrix4x3_FromRotationY(&data_020a0e68, ang);
@@ -716,35 +716,33 @@ int func_ov078_02124520(char *c)
         pos.z += out.z;
         cam->SetLookAt(look);
         cam->SetPos(pos);
-        ApproachLinear(k->mAngleY, ang, 0x800);
-        k->mPrevAngleY = k->mAngleY;
+        ApproachLinear(this->mAngleY, ang, 0x800);
+        this->mPrevAngleY = this->mAngleY;
         return 1;
     }
     cam->mFlags &= ~8;
-    if (((dExtFrameCtrl_c *)&k->mBlendModelAnim)->Finished()) {
-        KingBobOmb_SetState(c, &data_ov078_0212703c);
+    if (((dExtFrameCtrl_c *)&this->mBlendModelAnim)->Finished()) {
+        KingBobOmb_SetState(&data_ov078_0212703c);
     }
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02124778
-extern "C" {
-int func_ov078_02124778(char *c){
-  daBombking_c *k = (daBombking_c *)c;
-  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&k->mBlendModelAnim, data_ov078_02126ef8.file, 8, 0x40000000, 0x1000, 0);
+// @symbol _ZN12daBombking_c19func_ov078_02124778Ev
+
+int daBombking_c::func_ov078_02124778()
+{
+  _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126ef8.file, 8, 0x40000000, 0x1000, 0);
   return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_021247bc
-extern "C" {
-int func_ov078_021247bc(void *thiz)
+// @symbol _ZN12daBombking_c19func_ov078_021247bcEv
+
+int daBombking_c::func_ov078_021247bc()
 {
-    daBombking_c *k = (daBombking_c *)thiz;
-    char *c = (char *)thiz;
     short horz;
     short vert;
     Vec3 vA;
@@ -753,17 +751,17 @@ int func_ov078_021247bc(void *thiz)
     Vec3 D;
     Vec3 E;
 
-    if (k->mActionStep != 2) {
-        horz = Vec3_HorzAngle(&k->mPosX, &k->mArenaPosX);
-        vert = Vec3_VertAngle(&k->mPosX, &k->mArenaPosX);
-        Vec3_Dist(&k->mPosX, &k->mArenaPosX);
+    if (this->mActionStep != 2) {
+        horz = Vec3_HorzAngle(&this->mPosX, &this->mArenaPosX);
+        vert = Vec3_VertAngle(&this->mPosX, &this->mArenaPosX);
+        Vec3_Dist(&this->mPosX, &this->mArenaPosX);
         vA.x = 0;
         vA.y = 0;
         vA.z = 0;
-        ApproachAngle(&k->mPrevAngleX, vert, 5, 0x1000, 0x300);
-        ApproachAngle(&k->mPrevAngleY, horz, 5, 0x1000, 0x300);
-        k->mAngleY = k->mPrevAngleY;
-        if (((dExtFrameCtrl_c *)&k->mBlendModelAnim)->Finished() == 0)
+        ApproachAngle(&this->mPrevAngleX, vert, 5, 0x1000, 0x300);
+        ApproachAngle(&this->mPrevAngleY, horz, 5, 0x1000, 0x300);
+        this->mAngleY = this->mPrevAngleY;
+        if (((dExtFrameCtrl_c *)&this->mBlendModelAnim)->Finished() == 0)
             return 1;
         vB.x = 0;
         vB.y = 0x3c000;
@@ -771,70 +769,70 @@ int func_ov078_021247bc(void *thiz)
         vC.x = 0;
         vC.y = 0;
         vC.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, k->mPrevAngleY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, k->mPrevAngleX);
+        Matrix4x3_FromRotationY(&data_020a0e68, this->mPrevAngleY);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngleX);
         MulVec3Mat4x3((Vector3 *)&vB, &data_020a0e68, (Vector3 *)&vC);
-        k->unk_0a4 = vC.x;
-        if (k->mActionStep == 0) {
-            k->mVertSpeed = vC.y;
-            if (k->mVertSpeed > 0x3c000)
-                k->mVertSpeed = 0x3c000;
-            else if (k->mVertSpeed < 0x1e000)
-                k->mVertSpeed = 0x1e000;
+        this->unk_0a4 = vC.x;
+        if (this->mActionStep == 0) {
+            this->mVertSpeed = vC.y;
+            if (this->mVertSpeed > 0x3c000)
+                this->mVertSpeed = 0x3c000;
+            else if (this->mVertSpeed < 0x1e000)
+                this->mVertSpeed = 0x1e000;
         }
-        k->unk_0ac = vC.z;
+        this->unk_0ac = vC.z;
         /* Address launder: mVertSpeed += mVertAccel reschedules this arm. */
-        *(int *)(((int)c + 0xa8)) += k->mVertAccel;
-        vA.x = k->mPosX;
-        vA.y = k->mPosY;
-        vA.z = k->mPosZ;
-        vA.y = k->mArenaPosY;
-        if (Vec3_Dist(&vA, &k->mArenaPosX) > 0x640000)
+        *(int *)(((int)this + 0xa8)) += this->mVertAccel;
+        vA.x = this->mPosX;
+        vA.y = this->mPosY;
+        vA.z = this->mPosZ;
+        vA.y = this->mArenaPosY;
+        if (Vec3_Dist(&vA, &this->mArenaPosX) > 0x640000)
             return 1;
-        k->mActionStep = 1;
+        this->mActionStep = 1;
     }
 
-    if (k->mWithMeshClsn.IsOnGround() != 0) {
-        Player *pl = (Player *)k->ClosestPlayer();
+    if (this->mWithMeshClsn.IsOnGround() != 0) {
+        Player *pl = (Player *)this->ClosestPlayer();
         if (pl != 0) {
             *(struct M3 *)&D = *(struct M3 *)&pl->mPosX;
-            if (Vec3_Dist(&k->mArenaPosX, &D) > 0x640000 ||
-                k->mArenaPosY - 0x64000 > D.y) {
-                k->unk_0a4 = 0;
-                k->mVertSpeed = 0;
-                k->unk_0ac = 0;
-                KingBobOmb_SetState(c, &data_ov078_021270fc);
+            if (Vec3_Dist(&this->mArenaPosX, &D) > 0x640000 ||
+                this->mArenaPosY - 0x64000 > D.y) {
+                this->unk_0a4 = 0;
+                this->mVertSpeed = 0;
+                this->unk_0ac = 0;
+                KingBobOmb_SetState(&data_ov078_021270fc);
                 return 1;
             }
         }
 
-        if (k->mActionStep == 1) {
-            _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&k->mBlendModelAnim, *(void **)((char *)&data_ov078_02126f08 + 4), 0, 0x40000000, 0x1000, 0);
-            k->mVertAccel = -0x2000;
-            k->mFlags = 0x10000002;
-            func_02012694(0x12c, &k->mCamSpacePosX);
-            func_ov078_02125c24(c, 0xfa0000);
-            func_0200fa8c(c, 1);
-            k->mActionStep = 2;
-            k->unk_0a4 = 0;
-            k->mVertSpeed = 0;
-            k->unk_0ac = 0;
+        if (this->mActionStep == 1) {
+            _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, *(void **)((char *)&data_ov078_02126f08 + 4), 0, 0x40000000, 0x1000, 0);
+            this->mVertAccel = -0x2000;
+            this->mFlags = 0x10000002;
+            func_02012694(0x12c, &this->mCamSpacePosX);
+            func_ov078_02125c24(0xfa0000);
+            func_0200fa8c(this, 1);
+            this->mActionStep = 2;
+            this->unk_0a4 = 0;
+            this->mVertSpeed = 0;
+            this->unk_0ac = 0;
             return 1;
         }
 
-        if (((dExtFrameCtrl_c *)&k->mBlendModelAnim)->Finished() != 0) {
-            Player *pl2 = k->mTalkingPlayer;
+        if (((dExtFrameCtrl_c *)&this->mBlendModelAnim)->Finished() != 0) {
+            Player *pl2 = this->mTalkingPlayer;
             unsigned short m;
-            E.x = k->mPosX;
-            E.y = k->mPosY;
-            E.z = k->mPosZ;
+            E.x = this->mPosX;
+            E.y = this->mPosY;
+            E.z = this->mPosZ;
             E.y += 0xc8000;
             m = pl2->mStateFlags & 0x800;
             if (m == 0) {
-                if (pl2->ShowMessage(*(fBase_c *)c, 0x94, (Vector3 *)(&E), 0, 0) != 0) {
+                if (pl2->ShowMessage(*(fBase_c *)this, 0x94, (Vector3 *)(&E), 0, 0) != 0) {
                     ((dCamera_c *)data_0209f318)->SetFlag_3();
-                    func_02012694(0x12a, &k->mCamSpacePosX);
-                    KingBobOmb_SetState(c, &data_ov078_021270dc);
+                    func_02012694(0x12a, &this->mCamSpacePosX);
+                    KingBobOmb_SetState(&data_ov078_021270dc);
                 }
             }
         }
@@ -842,105 +840,98 @@ int func_ov078_021247bc(void *thiz)
 
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02124b40
-extern "C" {
-int func_ov078_02124b40(char *c)
+// @symbol _ZN12daBombking_c19func_ov078_02124b40Ev
+
+int daBombking_c::func_ov078_02124b40()
 {
-    daBombking_c *k = (daBombking_c *)c;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&k->mBlendModelAnim, (void *)data_ov078_02126f10.file, 0, 0x40000000, 0x1000, 0);
-    func_02012694(0x129, &k->mCamSpacePosX);
-    k->mWithMeshClsn.ClearGroundFlag();
-    k->mPrevAngleX = 0;
-    k->mHorzSpeed = 0;
-    k->unk_0a4 = 0;
-    k->mVertSpeed = 0;
-    k->unk_0ac = 0;
-    k->mActionStep = 0;
-    k->mVertAccel = -0x6000;
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, (void *)data_ov078_02126f10.file, 0, 0x40000000, 0x1000, 0);
+    func_02012694(0x129, &this->mCamSpacePosX);
+    this->mWithMeshClsn.ClearGroundFlag();
+    this->mPrevAngleX = 0;
+    this->mHorzSpeed = 0;
+    this->unk_0a4 = 0;
+    this->mVertSpeed = 0;
+    this->unk_0ac = 0;
+    this->mActionStep = 0;
+    this->mVertAccel = -0x6000;
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02124bc4
-extern "C" {
-extern void func_0200fa8c(void* t, int a);
-extern void func_02012694(int a, void* v);
-extern int data_02092138;
+// @symbol _ZN12daBombking_c19func_ov078_02124bc4Ev
 
-int func_ov078_02124bc4(char* c)
+int daBombking_c::func_ov078_02124bc4()
 {
-    daBombking_c *k = (daBombking_c *)c;
-    if ((unsigned short)k->mStateTimer != 0) return 1;
-    if (*(int *)&data_02092138 > k->mPosY) {
-        KingBobOmb_SetState(c, data_ov078_021270bc);
+    if ((unsigned short)this->mStateTimer != 0) return 1;
+    if (*(int *)&data_02092138 > this->mPosY) {
+        KingBobOmb_SetState(data_ov078_021270bc);
         return 1;
     }
-    if (k->mWithMeshClsn.IsOnGround() != 0) {
-        if (k->mActionStep == 0) {
-            func_ov078_02125c24(c, 0x7d0000);
-            func_0200fa8c(c, 1);
-            func_02012694(0x128, &k->mCamSpacePosX);
-            k->mStateTimer = 5;
-            k->mVertSpeed = 0x14000;
-            k->mHorzSpeed = 0xa000;
-            k->mActionStep = 1;
+    if (this->mWithMeshClsn.IsOnGround() != 0) {
+        if (this->mActionStep == 0) {
+            func_ov078_02125c24(0x7d0000);
+            func_0200fa8c(this, 1);
+            func_02012694(0x128, &this->mCamSpacePosX);
+            this->mStateTimer = 5;
+            this->mVertSpeed = 0x14000;
+            this->mHorzSpeed = 0xa000;
+            this->mActionStep = 1;
         } else {
-            KingBobOmb_SetState(c, data_ov078_021270bc);
+            KingBobOmb_SetState(data_ov078_021270bc);
         }
     }
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02124c94
-extern "C" {
-int func_ov078_02124c94(char *p) {
-    daBombking_c *k = (daBombking_c *)p;
-    k->mVertAccel = -0x2000;
-    k->mVertSpeed = 0x1e000;
-    k->mHorzSpeed = 0x14000;
-    k->mActionStep = 0;
-    k->mStateTimer = 5;
-    k->mFlags = 0x10000000;
-    func_ov078_02125c24(p, 0xfa0000);
-    func_0200fa8c(k, 1);
+// @symbol _ZN12daBombking_c19func_ov078_02124c94Ev
+
+int daBombking_c::func_ov078_02124c94()
+{
+    this->mVertAccel = -0x2000;
+    this->mVertSpeed = 0x1e000;
+    this->mHorzSpeed = 0x14000;
+    this->mActionStep = 0;
+    this->mStateTimer = 5;
+    this->mFlags = 0x10000000;
+    func_ov078_02125c24(0xfa0000);
+    func_0200fa8c(this, 1);
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02124cf4
-extern "C" int func_ov078_02124cf4(unsigned char* thiz)
+// @symbol _ZN12daBombking_c19func_ov078_02124cf4Ev
+int daBombking_c::func_ov078_02124cf4()
 {
-    daBombking_c *k = (daBombking_c *)thiz;
-    if (k->mWithMeshClsn.IsOnGround() == 0) goto done;
-    k->mHorzSpeed = 0;
-    if ((int)(k->mArenaPosY - 0x28000) > k->mPosY) {
-        func_02012694(0x128, &k->mCamSpacePosX);
-        KingBobOmb_SetState(thiz, &data_ov078_021270ac);
+    if (this->mWithMeshClsn.IsOnGround() == 0) goto done;
+    this->mHorzSpeed = 0;
+    if ((int)(this->mArenaPosY - 0x28000) > this->mPosY) {
+        func_02012694(0x128, &this->mCamSpacePosX);
+        KingBobOmb_SetState(&data_ov078_021270ac);
         goto done;
     }
-    if (k->mActionStep == 0) {
-        func_02012694(0x128, &k->mCamSpacePosX);
-        func_02012694(0x12b, &k->mCamSpacePosX);
-        func_ov078_02125c24((char *)thiz, 0x7d0000);
-        func_0200fa8c(k, 1);
-        k->mActionStep = 1;
-        k->mHealth -= 1;
+    if (this->mActionStep == 0) {
+        func_02012694(0x128, &this->mCamSpacePosX);
+        func_02012694(0x12b, &this->mCamSpacePosX);
+        func_ov078_02125c24(0x7d0000);
+        func_0200fa8c(this, 1);
+        this->mActionStep = 1;
+        this->mHealth -= 1;
     }
-    if (k->mHealth > 0) {
-        KingBobOmb_SetState(thiz, &data_ov078_021270ec);
+    if (this->mHealth > 0) {
+        KingBobOmb_SetState(&data_ov078_021270ec);
         goto done;
     }
-    Player *other = k->mTalkingPlayer;
+    Player *other = this->mTalkingPlayer;
     if (other == 0) goto done;
     if ((unsigned short)(other->mStateFlags & 0x800) != 0) goto done;
-    if (other->StartTalk(*(fBase_c *)thiz, 1) == 0) goto done;
+    if (other->StartTalk(*(fBase_c *)this, 1) == 0) goto done;
 
     short msg = 0;
     _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x14, 0x15666);
@@ -950,74 +941,70 @@ extern "C" int func_ov078_02124cf4(unsigned char* thiz)
         msg = 0x95;
     }
 
-    if (other->ShowMessage(*(fBase_c *)thiz, (unsigned)(int)msg, (Vector3 *)&k->mPosX, 0, 0) == 0) goto done;
-    func_02012694(0x12a, &k->mCamSpacePosX);
-    KingBobOmb_SetState(thiz, &data_ov078_0212705c);
+    if (other->ShowMessage(*(fBase_c *)this, (unsigned)(int)msg, (Vector3 *)&this->mPosX, 0, 0) == 0) goto done;
+    func_02012694(0x12a, &this->mCamSpacePosX);
+    KingBobOmb_SetState(&data_ov078_0212705c);
 done:
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02124e9c
-extern "C" {
-int func_ov078_02124e9c(char *c)
+// @symbol _ZN12daBombking_c19func_ov078_02124e9cEv
+
+int daBombking_c::func_ov078_02124e9c()
 {
-    daBombking_c *k = (daBombking_c *)c;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&k->mBlendModelAnim, (void *)data_ov078_02126f20.file, 0, 0, 0x1000, 0);
-    if (k->mHealth <= 0)
-        k->mFlags = 0x10000000;
-    k->mWithMeshClsn.ClearGroundFlag();
-    k->mActionStep = 0;
-    k->mVertAccel = -0x2000;
-    k->mVertSpeed = 0x28000;
-    k->mHorzSpeed = 0x14000;
-    k->mTerminalVelocity = -0x3c000;
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, (void *)data_ov078_02126f20.file, 0, 0, 0x1000, 0);
+    if (this->mHealth <= 0)
+        this->mFlags = 0x10000000;
+    this->mWithMeshClsn.ClearGroundFlag();
+    this->mActionStep = 0;
+    this->mVertAccel = -0x2000;
+    this->mVertSpeed = 0x28000;
+    this->mHorzSpeed = 0x14000;
+    this->mTerminalVelocity = -0x3c000;
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02124f28
-extern "C" {
-extern int Vec3_Dist(const void* a, const void* b);
+// @symbol _ZN12daBombking_c19func_ov078_02124f28Ev
 
 
 
-int func_ov078_02124f28(unsigned char* c)
+int daBombking_c::func_ov078_02124f28()
 {
-    daBombking_c *k = (daBombking_c *)c;
-    if (k->mActionStep == 0) {
-        int b = (k->mFlags & 0x4000) != 0;
+    if (this->mActionStep == 0) {
+        int b = (this->mFlags & 0x4000) != 0;
         if (b != 0) {
-            _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&k->mBlendModelAnim, (void *)data_ov078_02126ee0.file, 0, 0, 0x1000, 0);
-            k->mActionStep = 1;
+            _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, (void *)data_ov078_02126ee0.file, 0, 0, 0x1000, 0);
+            this->mActionStep = 1;
         }
     }
 
     {
-        Player *obj = k->mHeldActor;
+        Player *obj = this->mHeldActor;
         if (obj == 0) {
-            KingBobOmb_SetState(c, &data_ov078_0212708c);
+            KingBobOmb_SetState(&data_ov078_0212708c);
             return 1;
         }
         {
             Vector3 copy = *(Vector3 *)&obj->mPosX;
-            if (Vec3_Dist(&k->mArenaPosX, &copy) > 0x640000)
+            if (Vec3_Dist(&this->mArenaPosX, &copy) > 0x640000)
                 goto drop;
-            if (k->mArenaPosY - 0xa000 <= copy.y)
+            if (this->mArenaPosY - 0xa000 <= copy.y)
                 goto flags;
         }
     }
 
 drop:
-    k->mHeldActor->DropActor();
-    k->mHeldActor = 0;
-    KingBobOmb_SetState(c, &data_ov078_0212708c);
+    this->mHeldActor->DropActor();
+    this->mHeldActor = 0;
+    KingBobOmb_SetState(&data_ov078_0212708c);
     return 1;
 
 flags:
     {
-        int flags = k->mFlags;
+        int flags = this->mFlags;
         int b0 = (flags & 0x400) != 0;
         if (b0 == 0) {
             int b1 = (flags & 0x2000) != 0;
@@ -1028,85 +1015,84 @@ flags:
             }
         }
         if (b0 != 0) {
-            k->mPrevAngleY = k->mHeldActor->mAngleY;
+            this->mPrevAngleY = this->mHeldActor->mAngleY;
         }
         {
-            short t = k->mPrevAngleY;
-            k->mAngleY = t;
+            short t = this->mPrevAngleY;
+            this->mAngleY = t;
         }
-        k->mdCcAcPos_c.flags &= ~2;
-        KingBobOmb_SetState(c, &data_ov078_0212708c);
+        this->mdCcAcPos_c.flags &= ~2;
+        KingBobOmb_SetState(&data_ov078_0212708c);
         {
-            Player *p = k->mHeldActor;
+            Player *p = this->mHeldActor;
             if (p != 0) {
                 if (p->param1 == 2) {
-                    k->mVertSpeed = 0x32000;
-                    k->mHorzSpeed = 0x1e000;
+                    this->mVertSpeed = 0x32000;
+                    this->mHorzSpeed = 0x1e000;
                 }
             }
         }
-        k->mHeldActor = 0;
+        this->mHeldActor = 0;
     }
 done:
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_021250d0
-extern "C" {
-int func_ov078_021250d0(char *c)
+// @symbol _ZN12daBombking_c19func_ov078_021250d0Ev
+
+int daBombking_c::func_ov078_021250d0()
 {
-    daBombking_c *k = (daBombking_c *)c;
-    k->mdCcAcPos_c.flags |= 2;
-    k->mVertAccel = 0;
-    k->mHorzSpeed = 0;
-    k->mActionStep = 0;
+    this->mdCcAcPos_c.flags |= 2;
+    this->mVertAccel = 0;
+    this->mHorzSpeed = 0;
+    this->mActionStep = 0;
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_021250f8
-extern "C" {
-int func_ov078_021250f8(char* c) {
-    daBombking_c *k = (daBombking_c *)c;
+// @symbol _ZN12daBombking_c19func_ov078_021250f8Ev
+
+int daBombking_c::func_ov078_021250f8()
+{
     struct Vector3 in, out, v[2];
     dActor_c *target;
     Player *player;
 
-    if (func_ov078_02123804(c) == 1) {
-        func_ov078_02123864(c);
+    if (func_ov078_02123804() == 1) {
+        func_ov078_02123864();
         return 1;
     }
 
-    if (k->mSpawnedThrown[k->mSpawnSlot] == 0) {
-        target = dActor_c::FindWithID(k->mSpawnedId[k->mSpawnSlot]);
+    if (this->mSpawnedThrown[this->mSpawnSlot] == 0) {
+        target = dActor_c::FindWithID(this->mSpawnedId[this->mSpawnSlot]);
         if (target != 0) {
-            target->mPosX = k->mThrowPosX;
-            target->mPosY = k->mThrowPosY;
-            target->mPosZ = k->mThrowPosZ;
-            target->mPrevAngleX = k->mPrevAngleX;
-            target->mPrevAngleY = k->mPrevAngleY;
-            target->mPrevAngleZ = k->mPrevAngleZ;
-            target->mAngleX = k->mAngleX;
-            target->mAngleY = k->mAngleY;
-            target->mAngleZ = k->mAngleZ;
+            target->mPosX = this->mThrowPosX;
+            target->mPosY = this->mThrowPosY;
+            target->mPosZ = this->mThrowPosZ;
+            target->mPrevAngleX = this->mPrevAngleX;
+            target->mPrevAngleY = this->mPrevAngleY;
+            target->mPrevAngleZ = this->mPrevAngleZ;
+            target->mAngleX = this->mAngleX;
+            target->mAngleY = this->mAngleY;
+            target->mAngleZ = this->mAngleZ;
             func_ov102_0214b384(target, 0x78);
-            if (((dExtFrameCtrl_c *)&k->mBlendModelAnim)->WillHitFrame(0x13) != 0
-                || func_ov078_02123804(c) == 1) {
+            if (((dExtFrameCtrl_c *)&this->mBlendModelAnim)->WillHitFrame(0x13) != 0
+                || func_ov078_02123804() == 1) {
                 in.x = 0; in.y = 0; in.z = 0x28000;
                 out.x = 0; out.y = 0; out.z = 0;
                 v[0].x = 0; v[0].y = 0; v[0].z = 0;
-                player = (Player *)k->ClosestPlayer();
+                player = (Player *)this->ClosestPlayer();
                 if (player != 0) {
                     int *q = (int *)((int)player + 0x5c);
                     v[1].x = q[0];
                     v[1].y = q[1];
                     v[1].z = q[2];
-                    v[0].x = v[1].x - k->mThrowPosX;
-                    v[0].y = v[1].y - k->mThrowPosY;
-                    v[0].z = v[1].z - k->mThrowPosZ;
+                    v[0].x = v[1].x - this->mThrowPosX;
+                    v[0].y = v[1].y - this->mThrowPosY;
+                    v[0].z = v[1].z - this->mThrowPosZ;
                     Matrix4x3_FromRotationY(&data_020a0e68,
                         _ZN4cstd5atan2E5Fix12IiES1_(v[0].x, v[0].z));
                     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68,
@@ -1120,69 +1106,67 @@ int func_ov078_021250f8(char* c) {
                     target->mVertAccel = -0x2000;
                     MulVec3Mat4x3(&in, &data_020a0e68, &out);
                 }
-                k->mSpawnedThrown[k->mSpawnSlot] = 1;
+                this->mSpawnedThrown[this->mSpawnSlot] = 1;
                 *(int *)((char *)target + 0xc8) = 0;
             }
         }
     } else {
-        if (func_ov078_02123804(c) == 1) {
+        if (func_ov078_02123804() == 1) {
             return 1;
         }
     }
 
-    if (((dExtFrameCtrl_c *)&k->mBlendModelAnim)->Finished() != 0) {
-        player = (Player *)k->ClosestPlayer();
+    if (((dExtFrameCtrl_c *)&this->mBlendModelAnim)->Finished() != 0) {
+        player = (Player *)this->ClosestPlayer();
         if (player != 0) {
             if (player->param1 != 3) {
-                k->unk_504 = 0x64;
+                this->unk_504 = 0x64;
             }
         }
-        KingBobOmb_SetState(c, &data_ov078_0212703c);
+        KingBobOmb_SetState(&data_ov078_0212703c);
     }
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02125350
-extern "C" {
-int func_ov078_02125350(int sl)
+// @symbol _ZN12daBombking_c19func_ov078_02125350Ev
+
+int daBombking_c::func_ov078_02125350()
 {
-    daBombking_c *self = (daBombking_c *)sl;
     int i;
     int r;
 
-    self->mAnimSpeed = 1;
-    self->mVertAccel = -0x2000;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&self->mBlendModelAnim, (void*)(data_ov078_02126ef0.file), 0, 0x40000000, 0x1000, 0);
+    this->mAnimSpeed = 1;
+    this->mVertAccel = -0x2000;
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, (void*)(data_ov078_02126ef0.file), 0, 0x40000000, 0x1000, 0);
 
-    self->mHorzSpeed = 0;
+    this->mHorzSpeed = 0;
 
-    for (i = 0; i < self->mPhase; i++) {
-        if (self->mSpawnedId[i] == 0) {
-            r = (int)dActor_c::Spawn(0xce, 2, *(Vector3 *)(&self->mThrowPosX), 0, self->mAreaId, -1);
+    for (i = 0; i < this->mPhase; i++) {
+        if (this->mSpawnedId[i] == 0) {
+            r = (int)dActor_c::Spawn(0xce, 2, *(Vector3 *)(&this->mThrowPosX), 0, this->mAreaId, -1);
             if (r != 0) {
-                self->mSpawnedId[i] = *(int*)(r + 4);
-                self->mSpawnSlot = i;
+                this->mSpawnedId[i] = *(int*)(r + 4);
+                this->mSpawnSlot = i;
                 return 1;
             }
         }
     }
 
-    self->mActionStep = 0;
+    this->mActionStep = 0;
     return 1;
 }
-}
+
 
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02125448
-extern "C" {
-int func_ov078_02125448(char* c)
+// @symbol _ZN12daBombking_c19func_ov078_02125448Ev
+
+int daBombking_c::func_ov078_02125448()
 {
-    daBombking_c *k = (daBombking_c *)c;
     Player *p;
     dActor_c *a;
     struct Vector3 v;
@@ -1194,82 +1178,82 @@ int func_ov078_02125448(char* c)
     int v4a0;
     int slot;
 
-    if (k->unk_505 == 0) {
-        func_02012694(0x12d, &k->mCamSpacePosX);
-        k->unk_505 = 0xf;
+    if (this->unk_505 == 0) {
+        func_02012694(0x12d, &this->mCamSpacePosX);
+        this->unk_505 = 0xf;
     }
-    if (func_ov078_02123804(c) == 1) {
-        func_ov078_02123864(c);
+    if (func_ov078_02123804() == 1) {
+        func_ov078_02123864();
         return 1;
     }
 
-    p = (Player *)k->ClosestPlayer();
+    p = (Player *)this->ClosestPlayer();
     if (p != 0) {
         *(struct M3 *)&v = *(struct M3 *)&p->mPosX;
-        if (Vec3_Dist(&k->mArenaPosX, &v) > 0x640000
-            || (k->mArenaPosY - 0xa000) > v.y) {
-            k->mHorzSpeed = 0;
-            KingBobOmb_SetState(c, data_ov078_021270fc);
+        if (Vec3_Dist(&this->mArenaPosX, &v) > 0x640000
+            || (this->mArenaPosY - 0xa000) > v.y) {
+            this->mHorzSpeed = 0;
+            KingBobOmb_SetState(data_ov078_021270fc);
             return 1;
         }
 
-        ApproachAngle(&k->mPrevAngleY, k->HorzAngleToCPlayer(), 0xa, 0x200, 0x100);
+        ApproachAngle(&this->mPrevAngleY, this->HorzAngleToCPlayer(), 0xa, 0x200, 0x100);
         {
-            s16 ang = k->mPrevAngleY;
-            k->mAngleY = ang;
-            k->mFlags &= ~0x80;
+            s16 ang = this->mPrevAngleY;
+            this->mAngleY = ang;
+            this->mFlags &= ~0x80;
         }
 
-        id = k->mdCcAcPos_c2.otherOwner;
+        id = this->mdCcAcPos_c2.otherOwner;
         if (id != 0) {
             a = dActor_c::FindWithID(id);
             if (a != 0) {
                 isType = (int)(a->actorID == 0xbf);
                 if (isType != 0) {
-                    if (AngleDiff(k->HorzAngleToCPlayer(), k->mAngleY) > 0x2800) {
-                        if ((k->mdCcAcPos_c2.hitFlags & 0x1000) != 0) {
-                            k->mFlags |= 0x80;
-                            if (((Player *)a)->TryGrab(*(dActor_c *)c) != 0) {
-                                k->mHeldActor = (Player *)a;
-                                k->mHorzSpeed = 0;
-                                KingBobOmb_SetState(c, data_ov078_0212707c);
+                    if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) > 0x2800) {
+                        if ((this->mdCcAcPos_c2.hitFlags & 0x1000) != 0) {
+                            this->mFlags |= 0x80;
+                            if (((Player *)a)->TryGrab(*(dActor_c *)this) != 0) {
+                                this->mHeldActor = (Player *)a;
+                                this->mHorzSpeed = 0;
+                                KingBobOmb_SetState(data_ov078_0212707c);
                             }
                         }
-                    } else if (func_ov002_020db5f4((char *)a, c) != 0) {
-                        k->mHeldActor = (Player *)a;
-                        k->mHorzSpeed = 0;
-                        KingBobOmb_SetState(c, data_ov078_0212706c);
+                    } else if (func_ov002_020db5f4((char *)a, (char *)this) != 0) {
+                        this->mHeldActor = (Player *)a;
+                        this->mHorzSpeed = 0;
+                        KingBobOmb_SetState(data_ov078_0212706c);
                     }
                 }
             }
             return 1;
         }
 
-        if (k->unk_504 == 0) {
+        if (this->unk_504 == 0) {
             if (data_0209f220[0] == 1) {
-                if (k->DistToCPlayer() < 0x3e8000) {
-                    if (AngleDiff(k->HorzAngleToCPlayer(), k->mAngleY) < 0x2800) {
+                if (this->DistToCPlayer() < 0x3e8000) {
+                    if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) < 0x2800) {
                         index = 0;
                         empty = index;
                         z = index;
                         for (; index < 2; index++) {
-                            slot = k->mSpawnedId[index];
+                            slot = this->mSpawnedId[index];
                             if (slot != 0) {
                                 if (dActor_c::FindWithID((unsigned int)slot) == 0) {
-                                    k->mSpawnedId[index] = z;
-                                    k->mSpawnedThrown[index] = (unsigned char)z;
+                                    this->mSpawnedId[index] = z;
+                                    this->mSpawnedThrown[index] = (unsigned char)z;
                                 }
                             }
-                            if (k->mSpawnedId[index] == 0) {
+                            if (this->mSpawnedId[index] == 0) {
                                 empty++;
                                 if (empty == 2)
-                                    k->mPhase ^= 3;
+                                    this->mPhase ^= 3;
                             }
                         }
-                        v4a0 = k->mPhase;
-                        if ((v4a0 == 2 && k->mSpawnedId[1] == 0)
+                        v4a0 = this->mPhase;
+                        if ((v4a0 == 2 && this->mSpawnedId[1] == 0)
                             || (v4a0 == 1 && empty == 2)) {
-                            KingBobOmb_SetState(c, data_ov078_0212704c);
+                            KingBobOmb_SetState(data_ov078_0212704c);
                             return 1;
                         }
                     }
@@ -1279,42 +1263,41 @@ int func_ov078_02125448(char* c)
     }
     return 1;
 }
-}
+
 
 #pragma pop
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02125734
-extern "C" {
-int func_ov078_02125734(char *c) {
-    daBombking_c *k = (daBombking_c *)c;
-    k->mAnimSpeed = 1;
-    k->mHorzSpeed = 0x5000;
-    k->mVertAccel = -0x2000;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&k->mBlendModelAnim, data_ov078_02126ee8.file, 8, 0, 0x1000, 0);
+// @symbol _ZN12daBombking_c19func_ov078_02125734Ev
+
+int daBombking_c::func_ov078_02125734()
+{
+    this->mAnimSpeed = 1;
+    this->mHorzSpeed = 0x5000;
+    this->mVertAccel = -0x2000;
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126ee8.file, 8, 0, 0x1000, 0);
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02125790
-extern "C" int func_ov078_02125790(char* self)
+// @symbol _ZN12daBombking_c19func_ov078_02125790Ev
+int daBombking_c::func_ov078_02125790()
 {
-  daBombking_c *k = (daBombking_c *)self;
   Vector3 s;
   Vector3 d;
   Vector3 v;
-  if (func_ov078_02123804(self) == 1) return 1;
-  ApproachAngle(&k->mPrevAngleY, k->HorzAngleToCPlayer(), 1, 0x500, 0x500);
-  k->mAngleY = k->mPrevAngleY;
-  if (((dExtFrameCtrl_c *)&k->mBlendModelAnim)->WillHitFrame(0x46)) {
-    func_ov078_02125c24(self, 0x7d0000);
-    func_02012694(0x12c, &k->mCamSpacePosX);
+  if (func_ov078_02123804() == 1) return 1;
+  ApproachAngle(&this->mPrevAngleY, this->HorzAngleToCPlayer(), 1, 0x500, 0x500);
+  this->mAngleY = this->mPrevAngleY;
+  if (((dExtFrameCtrl_c *)&this->mBlendModelAnim)->WillHitFrame(0x46)) {
+    func_ov078_02125c24(0x7d0000);
+    func_02012694(0x12c, &this->mCamSpacePosX);
     s.x = 0;
     s.y = 0;
     s.z = 0;
-    data_020a0e68 = *(struct M12 *)&k->mBlendModelAnim.mat4x3;
-    MulMat4x3Mat4x3((char *)k->mBlendModelAnim.data.transforms + 0x120, &data_020a0e68, &data_020a0e68);
+    data_020a0e68 = *(struct M12 *)&this->mBlendModelAnim.mat4x3;
+    MulMat4x3Mat4x3((char *)this->mBlendModelAnim.data.transforms + 0x120, &data_020a0e68, &data_020a0e68);
     s.x = data_020a0e68.w[9];
     s.y = data_020a0e68.w[10];
     s.z = data_020a0e68.w[11];
@@ -1325,124 +1308,121 @@ extern "C" int func_ov078_02125790(char* self)
     v.y = d.y;
     s.z = d.z;
     v.z = d.z;
-    k->HugeLandingDustAt(v, 1);
+    this->HugeLandingDustAt(v, 1);
   }
-  if (((dExtFrameCtrl_c *)&k->mBlendModelAnim)->Finished()) {
-    KingBobOmb_SetState(self, &data_ov078_0212703c);
+  if (((dExtFrameCtrl_c *)&this->mBlendModelAnim)->Finished()) {
+    KingBobOmb_SetState(&data_ov078_0212703c);
   }
   return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_021258e4
-extern "C" {
-int func_ov078_021258e4(int *t)
+// @symbol _ZN12daBombking_c19func_ov078_021258e4Ev
+
+int daBombking_c::func_ov078_021258e4()
 {
-    daBombking_c *k = (daBombking_c *)t;
-    k->mVertAccel = -0x2000;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&k->mBlendModelAnim, data_ov078_02126ef8.file, 8, 0x40000000, 0x1000, 0);
-    if (k->mMusicLayer3 == 0) {
-        k->mMusicLayer3 = 1;
-        k->mFlags = 0x10000002;
+    this->mVertAccel = -0x2000;
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, data_ov078_02126ef8.file, 8, 0x40000000, 0x1000, 0);
+    if (this->mMusicLayer3 == 0) {
+        this->mMusicLayer3 = 1;
+        this->mFlags = 0x10000002;
     }
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02125950
-extern "C" int func_ov078_02125950(char *c)
+// @symbol _ZN12daBombking_c19func_ov078_02125950Ev
+int daBombking_c::func_ov078_02125950()
 {
-    daBombking_c *k = (daBombking_c *)c;
-    Player *target = k->mTalkingPlayer;
+    Player *target = this->mTalkingPlayer;
     int *src = (int *)((int)target + 0x5c);
     Vector3 v;
     int t = src[0];
     v.x = t;
     v.y = src[1];
     v.z = src[2];
-    short ang = Vec3_HorzAngle(&k->mPosX, &v);
-    ApproachLinear(k->mAngleY, ang, 0x800);
-    k->mPrevAngleY = k->mAngleY;
+    short ang = Vec3_HorzAngle(&this->mPosX, &v);
+    ApproachLinear(this->mAngleY, ang, 0x800);
+    this->mPrevAngleY = this->mAngleY;
     if (target->GetTalkState() == -1) {
         Message::EndTalk();
         func_02011d44();
         _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);
-        KingBobOmb_SetState(c, &data_ov078_0212701c);
+        KingBobOmb_SetState(&data_ov078_0212701c);
     }
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_021259e4
-extern "C" {
-int func_ov078_021259e4(void)
+// @symbol _ZN12daBombking_c19func_ov078_021259e4Ev
+
+int daBombking_c::func_ov078_021259e4()
 {
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_021259ec
-extern "C" {
-int func_ov078_021259ec(char* c)
+// @symbol _ZN12daBombking_c19func_ov078_021259ecEv
+
+int daBombking_c::func_ov078_021259ec()
 {
-    daBombking_c *k = (daBombking_c *)c;
     int dist;
     struct Vector3 ppos;
     struct Vector3 v;
     Player *player;
     unsigned int b;
 
-    if (k->mMusicLayer3 == 1) {
-        unsigned char *p = (unsigned char *)((char *)k + 0x50a);
+    if (this->mMusicLayer3 == 1) {
+        unsigned char *p = (unsigned char *)((char *)this + 0x50a);
         *p += 1;
-        if (*(unsigned char *)((char *)k + 0x50a) > 0xc8) {
-            k->mFlags = 0x10000003;
-            k->mMusicLayer3 = 0;
-            *(unsigned char *)((char *)k + 0x50a) = 0;
-            k->mHealth = 3;
+        if (*(unsigned char *)((char *)this + 0x50a) > 0xc8) {
+            this->mFlags = 0x10000003;
+            this->mMusicLayer3 = 0;
+            *(unsigned char *)((char *)this + 0x50a) = 0;
+            this->mHealth = 3;
             _ZN5Sound22StopLoadedMusic_Layer3Ev();
             func_02011cfc();
-            k->mIntroTalked = 0;
+            this->mIntroTalked = 0;
         }
     }
 
-    ApproachLinear(k->mAngleY, k->mInitAngleY, 0x800);
-    k->mPrevAngleY = k->mAngleY;
+    ApproachLinear(this->mAngleY, this->mInitAngleY, 0x800);
+    this->mPrevAngleY = this->mAngleY;
 
-    if (func_ov078_02123804(c) == 1) {
+    if (func_ov078_02123804() == 1) {
         return 1;
     }
 
-    player = (Player *)k->ClosestPlayer();
+    player = (Player *)this->ClosestPlayer();
     if (player != 0) {
         *(struct M3 *)&ppos = *(struct M3 *)&player->mPosX;
 
-        if (k->mIntroTalked == 0) {
-            dist = Vec3_Dist((struct Vector3 *)&k->mPosX, &ppos);
+        if (this->mIntroTalked == 0) {
+            dist = Vec3_Dist((struct Vector3 *)&this->mPosX, &ppos);
             if (dist < 0x12c000) {
-                k->mTalkingPlayer = player;
-                v.x = k->mPosX;
-                v.y = k->mPosY;
-                v.z = k->mPosZ;
+                this->mTalkingPlayer = player;
+                v.x = this->mPosX;
+                v.y = this->mPosY;
+                v.z = this->mPosZ;
                 v.y = v.y + 0xc8000;
 
-                if (k->mTalkingPlayer->StartTalk(*(fBase_c *)c, 1)) {
+                if (this->mTalkingPlayer->StartTalk(*(fBase_c *)this, 1)) {
                     Message::PrepareTalk();
                     b = (data_0209f220[0] != 1) ? 0x93 : (unsigned int)(short)(player->param1 + 0x96);
-                    if (player->ShowMessage(*(fBase_c *)c, b, (Vector3 *)(&v), 0, 0)) {
-                        func_02012694(0x12a, &k->mCamSpacePosX);
-                        k->mIntroTalked = 1;
-                        KingBobOmb_SetState(c, &data_ov078_0212700c);
+                    if (player->ShowMessage(*(fBase_c *)this, b, (Vector3 *)(&v), 0, 0)) {
+                        func_02012694(0x12a, &this->mCamSpacePosX);
+                        this->mIntroTalked = 1;
+                        KingBobOmb_SetState(&data_ov078_0212700c);
                     }
                 }
             }
         } else {
-            dist = Vec3_Dist((struct Vector3 *)&k->mPosX, &ppos);
+            dist = Vec3_Dist((struct Vector3 *)&this->mPosX, &ppos);
             if (dist < 0x258000) {
-                if (k->mArenaPosY - 0xa000 < ppos.y) {
-                    KingBobOmb_SetState(c, &data_ov078_0212701c);
+                if (this->mArenaPosY - 0xa000 < ppos.y) {
+                    KingBobOmb_SetState(&data_ov078_0212701c);
                 }
             }
         }
@@ -1450,136 +1430,123 @@ int func_ov078_021259ec(char* c)
 
     return 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02125bc8
-extern "C" int func_ov078_02125bc8(char* c) {
-    daBombking_c *k = (daBombking_c *)c;
-    k->mHorzSpeed = 0;
-    k->mAnimSpeed = 1;
-    k->mVertAccel = -0x2000;
-    k->unk_50a = 0;
-    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&k->mBlendModelAnim, (void*)data_ov078_02126f30.file, 8, 0, 0x1000, 0);
+// @symbol _ZN12daBombking_c19func_ov078_02125bc8Ev
+int daBombking_c::func_ov078_02125bc8() {
+    this->mHorzSpeed = 0;
+    this->mAnimSpeed = 1;
+    this->mVertAccel = -0x2000;
+    this->unk_50a = 0;
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&this->mBlendModelAnim, (void*)data_ov078_02126f30.file, 8, 0, 0x1000, 0);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02125c24
-extern "C" {
-void func_ov078_02125c24(char* c, int strength) {
-    daBombking_c *k = (daBombking_c *)c;
-    func_0200d8c8(data_0209f318, &k->mPosX, strength);
-}
+// @symbol _ZN12daBombking_c19func_ov078_02125c24Ei
+void daBombking_c::func_ov078_02125c24(int strength) {
+    func_0200d8c8(data_0209f318, &this->mPosX, strength);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol KingBobOmb_SetState
-extern "C" int KingBobOmb_SetState(void *cv, void *pv) {
-    daBombking_c *c = (daBombking_c *)cv;
-    PMF *p = (PMF *)pv;
-    c->mState = p;
-    PMF *q = c->mState;
+// @symbol _ZN12daBombking_c19KingBobOmb_SetStateEPv
+int daBombking_c::KingBobOmb_SetState(void *pv) {
+    mState = (PMF *)pv;
+    PMF *q = mState;
     if (*q == 0) return 1;
-    return (c->**q)();
+    return (this->**q)();
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02125c98
-extern "C" void func_ov078_02125c98(void* cv) {
-  daBombking_c *k = (daBombking_c *)cv;
-  int h = k->mPosY;
-  if (k->mWithMeshClsn.IsOnGround() == 0) {
+// @symbol _ZN12daBombking_c19func_ov078_02125c98Ev
+void daBombking_c::func_ov078_02125c98() {
+  int h = mPosY;
+  if (this->mWithMeshClsn.IsOnGround() == 0) {
     dBgCh_Gnd rg;
-    rg.SetObjAndPos(*(const Vector3 *)&k->mPosX, 0);
+    rg.SetObjAndPos(*(const Vector3 *)&this->mPosX, 0);
     if (rg.DetectClsn() != 0)
       h = rg.clsnY;
   }
-  int b = (k->mFlags & 0x4000) != 0;
+  int b = (this->mFlags & 0x4000) != 0;
   if (b) {
-    Player *p = k->mHeldActor;
+    Player *p = this->mHeldActor;
     if (p != 0)
       h = p->mPosY;
   }
-  int ip = k->mPosY - h;
+  int ip = this->mPosY - h;
   if (ip <= 0x1000)
     ip = 0x1000;
   int scale = 0x15e000 - (int)(((long long)ip * 0x180 + 0x800) >> 12);
   if (scale < 0xa000)
     scale = 0xa000;
-  *(struct M12 *)k->mShadowMtx = *(struct M12 *)&IDENTITY_MATRIX4X3;
-  k->mShadowMtx[9] = k->mPosX >> 3;
-  k->mShadowMtx[10] = k->mPosY >> 3;
-  k->mShadowMtx[11] = k->mPosZ >> 3;
+  *(struct M12 *)this->mShadowMtx = *(struct M12 *)&IDENTITY_MATRIX4X3;
+  this->mShadowMtx[9] = this->mPosX >> 3;
+  this->mShadowMtx[10] = this->mPosY >> 3;
+  this->mShadowMtx[11] = this->mPosZ >> 3;
   _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-      k, &k->mShadowModel, k->mShadowMtx, scale, ip + 0x28000, 0xf);
+      this, &this->mShadowModel, this->mShadowMtx, scale, ip + 0x28000, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02125de0
-extern "C" {
-void func_ov078_02125de0(char *c)
+// @symbol _ZN12daBombking_c19func_ov078_02125de0Ev
+void daBombking_c::func_ov078_02125de0()
 {
-    daBombking_c *k = (daBombking_c *)c;
     struct Vector3 lv;
     int i;
 
-    Matrix4x3_FromRotationY(&k->mBlendModelAnim.mat4x3, k->mAngleY);
-    k->mBlendModelAnim.mat4x3.m[9] = k->mPosX >> 3;
-    k->mBlendModelAnim.mat4x3.m[10] = k->mPosY >> 3;
-    k->mBlendModelAnim.mat4x3.m[11] = k->mPosZ >> 3;
-    MulMat4x3Mat4x3((char *)k->mBlendModelAnim.data.transforms + 0x1e0,
-                    &k->mBlendModelAnim.mat4x3, k->mHoldMtx);
+    Matrix4x3_FromRotationY(&this->mBlendModelAnim.mat4x3, this->mAngleY);
+    this->mBlendModelAnim.mat4x3.m[9] = this->mPosX >> 3;
+    this->mBlendModelAnim.mat4x3.m[10] = this->mPosY >> 3;
+    this->mBlendModelAnim.mat4x3.m[11] = this->mPosZ >> 3;
+    MulMat4x3Mat4x3((char *)this->mBlendModelAnim.data.transforms + 0x1e0,
+                    &this->mBlendModelAnim.mat4x3, this->mHoldMtx);
 
     /* Held-matrix pointer. It sits in dActor_c's pad at 0xc8. */
-    *(void **)((char *)k + 0xc8) = k->mHoldMtx;
-    k->mThrowPosX = 0;
-    k->mThrowPosY = 0;
-    k->mThrowPosZ = 0;
-    k->mThrowPosX = k->mHoldMtx[9];
-    k->mThrowPosY = k->mHoldMtx[10];
-    k->mThrowPosZ = k->mHoldMtx[11];
-    Vec3_Lsl(&lv, &k->mThrowPosX, 3);
-    k->mThrowPosX = lv.x;
-    k->mThrowPosY = lv.y;
-    k->mThrowPosZ = lv.z;
+    *(void **)((char *)this + 0xc8) = this->mHoldMtx;
+    this->mThrowPosX = 0;
+    this->mThrowPosY = 0;
+    this->mThrowPosZ = 0;
+    this->mThrowPosX = this->mHoldMtx[9];
+    this->mThrowPosY = this->mHoldMtx[10];
+    this->mThrowPosZ = this->mHoldMtx[11];
+    Vec3_Lsl(&lv, &this->mThrowPosX, 3);
+    this->mThrowPosX = lv.x;
+    this->mThrowPosY = lv.y;
+    this->mThrowPosZ = lv.z;
 
     for (i = 0; i < 2; i++) {
         unsigned int id;
         void *actor;
 
-        if (k->mSpawnedThrown[i] != 0)
+        if (this->mSpawnedThrown[i] != 0)
             continue;
-        id = (unsigned int)k->mSpawnedId[i];
+        id = (unsigned int)this->mSpawnedId[i];
         if (id == 0)
             continue;
         actor = (void *)dActor_c::FindWithID(id);
         if (actor == 0)
             continue;
 
-        data_020a0e68 = *(struct M12 *)k->mHoldMtx;
+        data_020a0e68 = *(struct M12 *)this->mHoldMtx;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0xb000, -0x7000, -0x6000);
         Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0x4000, -0x1000, 0x2000);
-        *(struct M12 *)k->mHoldMtx = data_020a0e68;
-        *(void **)((char *)actor + 0xc8) = k->mHoldMtx;
+        *(struct M12 *)this->mHoldMtx = data_020a0e68;
+        *(void **)((char *)actor + 0xc8) = this->mHoldMtx;
     }
-}
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov078_02125f8c
+// @symbol _ZN12daBombking_c19func_ov078_02125f8cEv
 
 
-extern "C" {
-void func_ov078_02125f8c(void* c_){
-    daBombking_c *k = (daBombking_c *)c_;
-    Player *player = k->mHeldActor;
+void daBombking_c::func_ov078_02125f8c(){
+    Player *player = mHeldActor;
     int idx = 0;
     if (player == 0) return;
     if (player->param1 == 2) idx = 1;
-    Matrix4x3 *res = k->UpdateCarry(*player, data_ov078_0212711c[idx]);
-    *(struct M12 *)&k->mBlendModelAnim.mat4x3 = *(struct M12 *)res;
-}
+    Matrix4x3 *res = this->UpdateCarry(*player, data_ov078_0212711c[idx]);
+    *(struct M12 *)&this->mBlendModelAnim.mat4x3 = *(struct M12 *)res;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1618,7 +1585,7 @@ int daBombking_c::Render()
         int flag = (flags & 0x4000) ? 1 : 0;
         if (flag != 0) {
             if (*(int *)((char *)held + 0xc8) != 0) {
-                func_ov078_02125f8c(this);
+                func_ov078_02125f8c();
             }
         }
     }
@@ -1637,8 +1604,6 @@ extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 
 int daBombking_c::Behavior()
 {
-    char *self = (char *)this;
-
     if (DistToCPlayer() < 0x1770000) {
         *(daBombking_c **)((char *)data_0209f318 + 0x114) = this;
     }
@@ -1661,9 +1626,9 @@ int daBombking_c::Behavior()
                 goto skip_de0;
             }
         }
-        func_ov078_02125de0(self);
+        func_ov078_02125de0();
     skip_de0:
-        func_ov078_02125c98(self);
+        func_ov078_02125c98();
         return 1;
     }
 
@@ -1685,7 +1650,7 @@ int daBombking_c::Behavior()
         if (mWithMeshClsn.IsOnWall() != 0
             || mWithMeshClsn.IsOnGround() == 0
             || (mArenaPosY - 0x28000) > mPosY) {
-            KingBobOmb_SetState(self, data_ov078_021270bc);
+            KingBobOmb_SetState(data_ov078_021270bc);
         }
     }
 
@@ -1708,8 +1673,8 @@ int daBombking_c::Behavior()
     mdCcAcPos_c2.Clear();
     mdCcAcPos_c2.Update();
 
-    func_ov078_02125de0(self);
-    func_ov078_02125c98(self);
+    func_ov078_02125de0();
+    func_ov078_02125c98();
     return 1;
 }
 
@@ -1773,7 +1738,7 @@ int daBombking_c::InitResources()
     mPhase = ((unsigned int)RandomIntInternal(&data_0209e650) >> 0x1e) & 1;
     mPhase = mPhase + 1;
     mInitAngleY = mAngleY;
-    KingBobOmb_SetState(this, &data_ov078_0212710c);
+    KingBobOmb_SetState(&data_ov078_0212710c);
     return 1;
 }
 

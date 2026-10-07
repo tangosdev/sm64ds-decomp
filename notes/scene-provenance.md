@@ -111,7 +111,7 @@ that ignores `this` compiles the same either way. It is decided at the **call si
 
 - For the ones that take arguments — `SetFaders`, `SetSceneToSpawn`, `StartSceneFade` —
   the call site puts the first declared argument in r0, leaving no register for a
-  `this`. `SetAndStopColorFader` loads a `FaderColor` into r0 and `bl`s `SetFaders`;
+  `this`. `SetAndStopColorFader` loads a `dFdColor_c` into r0 and `bl`s `SetFaders`;
   `dScStage_c::Behavior` calls `SetSceneToSpawn` with `mov r0,#4; mov r1,#0`.
 - For the ones that take none — `SetAndStopColorFader`, `SpawnIfNecessary`,
   `PrepareToSpawnBoot`, `Initialise3dGraphics`, `ResetHardwareRegisters` — nothing is
@@ -321,7 +321,7 @@ the ROM's two reverse-order array-destruction calls and base destruction byte-fo
 flat struct has no base to attribute it to.
 
 **Vtable order** follows `dScene_c`'s; `dScEntry_c` adds no new virtual. The destructor
-pair is at slots 16/17, not 0/1 — the `fBase_c`/actor-family convention, not the Fader
+pair is at slots 16/17, not 0/1 — the `fBase_c`/actor-family convention, not the dFader_c
 family's.
 
 Native `dScEntry_c`, `icon_c` and `graphCallback_c` methods include this header directly.
@@ -332,14 +332,14 @@ name without evidence.
 
 ## dWipe_c (`include/dWipe_c.h`)
 
-Hardware screen wipe: a `FaderColor` concrete implementation that drives the
+Hardware screen wipe: a `dFdColor_c` concrete implementation that drives the
 capture/DMA-based wipe transition (CP15 cache flush + GX palette load + IRQ-driven
-per-scanline capture), instead of a flat blend register (`FaderColor`'s own path, still
-used when `type == 1`) or a 3D model (`FaderWipe`'s path — a different, unrelated class).
+per-scanline capture), instead of a flat blend register (`dFdColor_c`'s own path, still
+used when `type == 1`) or a 3D model (`dFdWipe_c`'s path — a different, unrelated class).
 
 **Derivation.** The ROM's `__si_class_type_info` for `dWipe_c` names its single base
-`dFdColor_c` (== `FaderColor`), confirmed independently by `dWipe_c::AdvanceFade`
-(0x0202f428), which forwards to `_ZN10FaderColor11AdvanceFadeEv` when `type == 1`.
+`dFdColor_c`, confirmed independently by `dWipe_c::AdvanceFade`
+(0x0202f428), which forwards to `_ZN10dFdColor_c11AdvanceFadeEv` when `type == 1`.
 
 **Construction.** `dWipe_c` is not spawned; it is a single global static object,
 `data_0209f61c`, placement-constructed by `__sinit_02074f80` (`func_0202fc40`) and
@@ -350,22 +350,22 @@ registered for atexit teardown via `func_020731dc(obj, D1, dso-handle)`. There i
 (`data_0209f61c` to the next symbol `data_0209f648` is exactly 0x2c) and the field span
 (the highest field written is a `u8` at 0x28, and 0x29 rounds up to 0x2c).
 
-**Members.** `FaderColor`'s own dsize (vptr + currInterp + speed + color) is 0xe; its
+**Members.** `dFdColor_c`'s own dsize (vptr + currInterp + speed + color) is 0xe; its
 `sizeof` of 0x10 leaves a 2-byte tail-padding gap at 0xe..0xf that the Itanium ABI lets
 a derived class reuse, and `dWipe_c`'s constructor helper (`func_0202ed14`) does: it
 writes single bytes at both 0xe and 0xf before touching anything past 0x10. Real,
 newly-added storage starts at 0x10.
 
-**Vtable.** `data_020926f0` (unnamed — like the rest of this family, only `FaderWipe`'s
+**Vtable.** `data_020926f0` (unnamed — like the rest of this family, only `dFdWipe_c`'s
 table has a real `_ZTV` symbol in [config/arm9/symbols.txt](../config/arm9/symbols.txt)) is ten slots and overrides
-*all* of them, even the ones `FaderColor` itself inherits unmodified from
-`FaderBrightness`: every `dWipe_c` word differs from `FaderColor`'s own vtable at the
+*all* of them, even the ones `dFdColor_c` itself inherits unmodified from
+`dFdBrightness_c`: every `dWipe_c` word differs from `dFdColor_c`'s own vtable at the
 same slot. Two of the ten (`SetToEnd`, `SetToStart`) are pure tail-call veneers to
-`FaderBrightness`'s implementation; the rest branch on `type == 1` to the same
-`FaderBrightness`/`FaderColor` bodies and otherwise run the hardware-capture path.
+`dFdBrightness_c`'s implementation; the rest branch on `type == 1` to the same
+`dFdBrightness_c`/`dFdColor_c` bodies and otherwise run the hardware-capture path.
 
 **`SetBackwardTime` stays plain C — measured, do not "fix".** The full record:
-`src/_ZN7dWipe_c15SetBackwardTimeEj.c` takes a third parameter that arrives in r2 and is
+`src/engine/fader/dWipe_c.cpp` takes a third parameter that arrives in r2 and is
 forwarded to the guard call with zero instructions, which keeps r2 live from entry to
 the call and forces the cached `type` into r3 as in the ROM. As a real method the
 mangled name fixes the arity at one (`Ej`), so the r2-holding parameter cannot exist,

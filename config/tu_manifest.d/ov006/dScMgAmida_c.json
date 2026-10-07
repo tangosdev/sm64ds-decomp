@@ -69,14 +69,14 @@
       "ordinal": 5
     },
     {
-      "symbol": "func_ov006_020d122c",
+      "symbol": "_ZN12dScMgAmida_c12ShuffleGoalsEi",
       "address": "0x020d122c",
       "size": "0x00000224",
       "legacy_source": "src/func_ov006_020d122c.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov006_020d1450",
+      "symbol": "_ZN12dScMgAmida_c11ClearStrokeEv",
       "address": "0x020d1450",
       "size": "0x00000070",
       "legacy_source": "src/func_ov006_020d1450.c",
@@ -90,42 +90,42 @@
       "ordinal": 8
     },
     {
-      "symbol": "func_ov006_020d1958",
+      "symbol": "_ZN12dScMgAmida_c16CheckHurryButtonEv",
       "address": "0x020d1958",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov006_020d1958.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov006_020d1a3c",
+      "symbol": "_ZN12dScMgAmida_c14CheckEdgeBoostEv",
       "address": "0x020d1a3c",
       "size": "0x00000164",
       "legacy_source": "src/func_ov006_020d1a3c.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov006_020d1ba0",
+      "symbol": "_ZN12dScMgAmida_c9HandlePenEv",
       "address": "0x020d1ba0",
       "size": "0x000009e0",
       "legacy_source": "src/func_ov006_020d1ba0.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov006_020d2580",
+      "symbol": "_ZN12dScMgAmida_c9ProbeRungENS_5PointES0_",
       "address": "0x020d2580",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov006_020d2580.c",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov006_020d25fc",
+      "symbol": "_ZN12dScMgAmida_c10StepWalkerEii",
       "address": "0x020d25fc",
       "size": "0x000001e0",
       "legacy_source": "src/func_ov006_020d25fc.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov006_020d27dc",
+      "symbol": "_ZN12dScMgAmida_c11StepWalkersEv",
       "address": "0x020d27dc",
       "size": "0x00000e48",
       "legacy_source": "src/func_ov006_020d27dc.cpp",
@@ -146,28 +146,28 @@
       "ordinal": 16
     },
     {
-      "symbol": "func_ov006_020d36a4",
+      "symbol": "_ZN12dScMgAmida_c11InitWalkersEv",
       "address": "0x020d36a4",
       "size": "0x000004fc",
       "legacy_source": "src/func_ov006_020d36a4.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "func_ov006_020d3ba0",
+      "symbol": "_ZN12dScMgAmida_c10SetupRoundEv",
       "address": "0x020d3ba0",
       "size": "0x0000098c",
       "legacy_source": "src/func_ov006_020d3ba0.cpp",
       "ordinal": 18
     },
     {
-      "symbol": "func_ov006_020d452c",
+      "symbol": "_ZN12dScMgAmida_c11RenderBoardEv",
       "address": "0x020d452c",
       "size": "0x000002c8",
       "legacy_source": "src/func_ov006_020d452c.c",
       "ordinal": 19
     },
     {
-      "symbol": "func_ov006_020d47f4",
+      "symbol": "_ZN12dScMgAmida_c14RenderBoardAltEv",
       "address": "0x020d47f4",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov006_020d47f4.c",

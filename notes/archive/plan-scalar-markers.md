@@ -49,11 +49,11 @@ That was a **recall limit reported as a zero** -- exactly the failure this progr
 exists to prevent. The hierarchy pass has no entry at all for 7 of the 34 retyped
 classes, so for those the question was never asked, let alone answered.
 
-`FaderWipe` is the counterexample and it is not a marginal one. ROM RTTI places
-`Fader <- FaderBrightness <- FaderColor <- FaderWipe`, and `include/Fader.h:34-35` --
+`dFdWipe_c` is the counterexample and it is not a marginal one. ROM RTTI places
+`dFader_c <- dFdBrightness_c <- dFdColor_c <- dFdWipe_c`, and `include/dFader_c.h:34-35` --
 de-bannered, hand-reconstructed, the strongest reference in the tree -- declares
 `Fix12i currInterp /* 0x04 */` and `Fix12i speed /* 0x08 */`. Those are precisely the
-two FaderWipe offsets retyped as "no ancestor". The generator's own input at
+two dFdWipe_c offsets retyped as "no ancestor". The generator's own input at
 `be9d58ed~1:src/_ZN9FaderWipeC1Ev.c` names them too.
 
 Both are now declared `Fix12i` (a typedef of `s32`, so byte-identical). So is

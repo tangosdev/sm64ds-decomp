@@ -1,4 +1,4 @@
-struct Node;
+typedef struct Node Node;
 
 struct Slot { struct Node *p18; struct Node *p1c; };
 

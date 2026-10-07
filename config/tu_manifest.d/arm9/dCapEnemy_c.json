@@ -10,7 +10,7 @@
     "Contiguous run 0x02005d94..0x02006588 for the class's arm9 methods. Twelve tile this TU's licensed range 0x02005d94..0x0200651c: 0x94+0xb0+0x34+0x94+0xb4+0xa0+0xbc+0xd0+0x38+0xf8+0x130+0x3c = 0x788. D1 (0x0200651c..0x02006554) and C2 (0x02006554..0x02006588) keep their single-function files at the run's end.",
     "func_02005e28 and func_02005ed8 are dCapEnemy_c methods, not foreign classes. 0x02005e28 reads mCapId and the player table; 0x02005ed8 tests mCapIcon.mFlags bit 2 and calls dCapIcon_c::Unlink. dCapIcon_c::Unlink itself is ov001 0x020ab110.",
     "D1 and C2 stay out of this TU because the destructor is the class's key function: only a member ~dCapEnemy_c() emits _ZTV11dCapEnemy_c, and a member dtor/ctor in a multi-function object also emits D0/D2/C1 as STB_GLOBAL homed to the ov002 TU (0x020aedbc, 0x020aedf4), which plan_many cannot deadstrip. The same shape as ov002/daObjKuruma_c's licensed-range trim.",
-    "Below: BootScene::InitResources ends at 0x02005d94. Above: main starts at 0x02007000. Nothing of another class sits inside the run."
+    "Below: dScBoot_c::InitResources ends at 0x02005d94. Above: main starts at 0x02007000. Nothing of another class sits inside the run."
   ],
   "sections": [
     {

@@ -41,280 +41,280 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov006_020e0694",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e0694Ev",
       "address": "0x020e0694",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020e0694.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov006_020e071c",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e071cEi",
       "address": "0x020e071c",
       "size": "0x00000094",
       "legacy_source": "src/func_ov006_020e071c.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov006_020e07b0",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e07b0Ei",
       "address": "0x020e07b0",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov006_020e07b0.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov006_020e0884",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e0884Ei",
       "address": "0x020e0884",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_020e0884.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov006_020e091c",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e091cEi",
       "address": "0x020e091c",
       "size": "0x00000108",
       "legacy_source": "src/func_ov006_020e091c.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov006_020e0a24",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e0a24Ei",
       "address": "0x020e0a24",
       "size": "0x00000140",
       "legacy_source": "src/func_ov006_020e0a24.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov006_020e0b64",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e0b64Ei",
       "address": "0x020e0b64",
       "size": "0x0000013c",
       "legacy_source": "src/func_ov006_020e0b64.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov006_020e0ca0",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e0ca0Ei",
       "address": "0x020e0ca0",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov006_020e0ca0.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov006_020e0d84",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e0d84Ei",
       "address": "0x020e0d84",
       "size": "0x00000094",
       "legacy_source": "src/func_ov006_020e0d84.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov006_020e0e18",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e0e18Ei",
       "address": "0x020e0e18",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov006_020e0e18.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov006_020e0edc",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e0edcEi",
       "address": "0x020e0edc",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_020e0edc.c",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov006_020e0ff0",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e0ff0Ei",
       "address": "0x020e0ff0",
       "size": "0x00000110",
       "legacy_source": "src/func_ov006_020e0ff0.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov006_020e1100",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e1100Ei",
       "address": "0x020e1100",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_020e1100.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov006_020e1214",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e1214Ei",
       "address": "0x020e1214",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_020e1214.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "func_ov006_020e1264",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e1264Ei",
       "address": "0x020e1264",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_020e1264.c",
       "ordinal": 16
     },
     {
-      "symbol": "func_ov006_020e12d0",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e12d0Ev",
       "address": "0x020e12d0",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov006_020e12d0.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "func_ov006_020e13a4",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e13a4Ev",
       "address": "0x020e13a4",
       "size": "0x000001b0",
       "legacy_source": "src/func_ov006_020e13a4.c",
       "ordinal": 18
     },
     {
-      "symbol": "func_ov006_020e1554",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e1554Ev",
       "address": "0x020e1554",
       "size": "0x000000b4",
       "legacy_source": "src/func_ov006_020e1554.c",
       "ordinal": 19
     },
     {
-      "symbol": "func_ov006_020e1608",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e1608Ev",
       "address": "0x020e1608",
       "size": "0x00000078",
       "legacy_source": "src/func_ov006_020e1608.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_ov006_020e1680",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e1680Ev",
       "address": "0x020e1680",
       "size": "0x00000178",
       "legacy_source": "src/func_ov006_020e1680.c",
       "ordinal": 21
     },
     {
-      "symbol": "func_ov006_020e17f8",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e17f8Ev",
       "address": "0x020e17f8",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_020e17f8.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "func_ov006_020e1854",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e1854Ev",
       "address": "0x020e1854",
       "size": "0x00000300",
       "legacy_source": "src/func_ov006_020e1854.c",
       "ordinal": 23
     },
     {
-      "symbol": "func_ov006_020e1b54",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e1b54Ev",
       "address": "0x020e1b54",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_020e1b54.c",
       "ordinal": 24
     },
     {
-      "symbol": "func_ov006_020e1c68",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e1c68Ev",
       "address": "0x020e1c68",
       "size": "0x00000160",
       "legacy_source": "src/func_ov006_020e1c68.c",
       "ordinal": 25
     },
     {
-      "symbol": "func_ov006_020e1dc8",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e1dc8Ei",
       "address": "0x020e1dc8",
       "size": "0x000002f4",
       "legacy_source": "src/func_ov006_020e1dc8.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "func_ov006_020e20bc",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e20bcEi",
       "address": "0x020e20bc",
       "size": "0x000005e0",
       "legacy_source": "src/func_ov006_020e20bc.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "func_ov006_020e269c",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e269cEi",
       "address": "0x020e269c",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_020e269c.c",
       "ordinal": 28
     },
     {
-      "symbol": "func_ov006_020e26f8",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e26f8Ei",
       "address": "0x020e26f8",
       "size": "0x00000164",
       "legacy_source": "src/func_ov006_020e26f8.c",
       "ordinal": 29
     },
     {
-      "symbol": "func_ov006_020e285c",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e285cEi",
       "address": "0x020e285c",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_020e285c.c",
       "ordinal": 30
     },
     {
-      "symbol": "func_ov006_020e2868",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e2868Ei",
       "address": "0x020e2868",
       "size": "0x000003a0",
       "legacy_source": "src/func_ov006_020e2868.c",
       "ordinal": 31
     },
     {
-      "symbol": "func_ov006_020e2c08",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e2c08Ei",
       "address": "0x020e2c08",
       "size": "0x000001b4",
       "legacy_source": "src/func_ov006_020e2c08.c",
       "ordinal": 32
     },
     {
-      "symbol": "func_ov006_020e2dbc",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e2dbcEv",
       "address": "0x020e2dbc",
       "size": "0x000000fc",
       "legacy_source": "src/func_ov006_020e2dbc.c",
       "ordinal": 33
     },
     {
-      "symbol": "func_ov006_020e2eb8",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e2eb8Ev",
       "address": "0x020e2eb8",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020e2eb8.c",
       "ordinal": 34
     },
     {
-      "symbol": "func_ov006_020e2ebc",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e2ebcEv",
       "address": "0x020e2ebc",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov006_020e2ebc.c",
       "ordinal": 35
     },
     {
-      "symbol": "func_ov006_020e2f78",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e2f78Ev",
       "address": "0x020e2f78",
       "size": "0x00000100",
       "legacy_source": "src/func_ov006_020e2f78.c",
       "ordinal": 36
     },
     {
-      "symbol": "func_ov006_020e3078",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e3078Ev",
       "address": "0x020e3078",
       "size": "0x00000198",
       "legacy_source": "src/func_ov006_020e3078.cpp",
       "ordinal": 37
     },
     {
-      "symbol": "func_ov006_020e3210",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e3210Ev",
       "address": "0x020e3210",
       "size": "0x00000040",
       "legacy_source": "src/func_ov006_020e3210.c",
       "ordinal": 38
     },
     {
-      "symbol": "func_ov006_020e3250",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e3250Ev",
       "address": "0x020e3250",
       "size": "0x00000128",
       "legacy_source": "src/func_ov006_020e3250.c",
       "ordinal": 39
     },
     {
-      "symbol": "func_ov006_020e3378",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e3378Ev",
       "address": "0x020e3378",
       "size": "0x00000010",
       "legacy_source": "src/func_ov006_020e3378.c",
       "ordinal": 40
     },
     {
-      "symbol": "func_ov006_020e3388",
+      "symbol": "_ZN14dScMgCurling_c19func_ov006_020e3388Ev",
       "address": "0x020e3388",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov006_020e3388.c",

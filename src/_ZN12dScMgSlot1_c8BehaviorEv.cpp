@@ -10,13 +10,13 @@
 // decompiled, not matched; tools/enroll.py leaves it out of the ROM build, which keeps the
 // original bytes for this range. A byte-exact match replaces this file and drops the banner.
 #include "dScMgSlot1_c.h"
+#include "dWipe_c.h"
 
 extern "C" {
 extern u8 DecIfAbove0_Byte(u8 *p);
 extern int Sound_PlayIfNotActive(int handle, int a, int b, int c);
 extern void func_02012718(void *a, int b);
 extern unsigned int func_02012790(unsigned int a);
-extern int func_0202ec9c(void *fader, int a);
 extern void func_ov004_020ad79c(int a, int b);
 extern void func_ov004_020adb1c(int a);
 extern void func_ov004_020ae274(void *c);
@@ -37,7 +37,7 @@ extern s16 data_ov006_0213e654[][2];
 extern s16 data_ov006_0213e656[][2];
 extern s16 data_ov006_0213e4f8[][2];
 extern s16 data_ov006_0213e4fa[][2];
-extern struct FaderBrightness data_0209f61c;
+extern dWipe_c data_0209f61c;
 }
 
 namespace Sound { void PlayBank2_2D(unsigned int); }
@@ -232,7 +232,7 @@ s32 dScMgSlot1_c::Behavior()
     case 8:
         if (DecIfAbove0_Byte((u8 *)(c + 0x470c)) == 0) {
             dScene_c::SetFaders(&data_0209f61c);
-            func_0202ec9c(&data_0209f61c, 2);
+            data_0209f61c.func_0202ec9c(2);
             dScene_c::StartSceneFade(5, 0, 0);
         }
         break;

@@ -63,6 +63,16 @@ struct daHyuhyu_c : dEnemyBase_c {
     virtual int OnYoshiTryEat();               /* slot 18 */
     virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
     virtual int OnAimedAtWithEgg();            /* slot 29 */
+
+    void func_ov091_021339fc();
+    int  func_ov091_02133c6c();
+    int  func_ov091_02133d1c();
+    int  func_ov091_02133d30();
+    int  func_ov091_02133f24();
+    int  func_ov091_02133f60();
+    int  func_ov091_0213400c();
+    int  func_ov091_02134044(daHyuhyu_c_State *state);
+    void func_ov091_02134094();
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -121,33 +121,6 @@ extern SharedFilePtr data_ov081_02128da0; /* hop land */
 extern SharedFilePtr data_ov081_02128d98; /* wait */
 extern SharedFilePtr data_ov081_02128da8; /* sink */
 extern SharedFilePtr data_ov081_02128db8; /* throw */
-
-void func_ov081_02124134(daSnowman_c *self);
-void func_ov081_0212423c(daSnowman_c *self, int idx);
-void func_ov081_021243cc(daSnowman_c *self);
-int func_ov081_021245e8(daSnowman_c *self);
-int func_ov081_021246a0(daSnowman_c *self);
-int func_ov081_0212479c(daSnowman_c *self);
-int func_ov081_02124894(daSnowman_c *self);
-int func_ov081_0212498c(daSnowman_c *self);
-int func_ov081_021249f4(daSnowman_c *self);
-int func_ov081_02124b08(daSnowman_c *self);
-int func_ov081_02124b98(daSnowman_c *self);
-int func_ov081_02124d14(daSnowman_c *self);
-int func_ov081_02124d50(daSnowman_c *self);
-int func_ov081_02124dfc(daSnowman_c *self);
-int func_ov081_02124e64(daSnowman_c *self);
-int func_ov081_02124ec0(daSnowman_c *self);
-int func_ov081_02124f20(daSnowman_c *self);
-int func_ov081_02124f7c(daSnowman_c *self);
-int func_ov081_02125038(daSnowman_c *self);
-int func_ov081_02125068(daSnowman_c *self);
-int func_ov081_021250c8(daSnowman_c *self);
-int func_ov081_02125200(void);
-int func_ov081_02125208(daSnowman_c *self);
-int func_ov081_0212538c(daSnowman_c *self);
-int func_ov081_02125488(daSnowman_c *self, daSnowman_c::State *state);
-void func_ov081_021254d8(daSnowman_c *self);
 }
 
 /* The ten states, by the address of their .bss record, with the handlers
@@ -172,22 +145,22 @@ daSnowman_c::~daSnowman_c()
 {
 }
 
-// @symbol func_ov081_02124134
+// @symbol _ZN11daSnowman_c19func_ov081_02124134Ev
 /* Drops the snowball and flings the cap. Kind 2 also plants a kind-3
    watcher at home. */
-extern "C" void func_ov081_02124134(daSnowman_c *self)
+void daSnowman_c::func_ov081_02124134()
 {
     dActor_c *a;
-    unsigned int id = self->mSnowballID;
+    unsigned int id = this->mSnowballID;
     if (id) {
         a = dActor_c::FindWithID(id);
         if (a) {
             a->mVertAccel = -0x2000;
             a->mTerminalVelocity = -0x28000;
-            self->mSnowballID = 0;
+            this->mSnowballID = 0;
         }
     }
-    id = self->mCapUniqueID;
+    id = this->mCapUniqueID;
     if (id) {
         a = dActor_c::FindWithID(id);
         if (a) {
@@ -203,18 +176,18 @@ extern "C" void func_ov081_02124134(daSnowman_c *self)
             *(int *)((char *)a + 0xc8) = 0;   /* the carry matrix; dActor_c pad */
         }
         func_02012790(0xa);
-        self->mCapUniqueID = 0;
+        this->mCapUniqueID = 0;
     }
-    if (self->mType == 2) {
-        dActor_c::Spawn(kSnowmanId, kSpawnWatcher, self->mHomePos, 0, self->mAreaId, -1);
+    if (this->mType == 2) {
+        dActor_c::Spawn(kSnowmanId, kSpawnWatcher, this->mHomePos, 0, this->mAreaId, -1);
     }
 }
 
-// @symbol func_ov081_0212423c
+// @symbol _ZN11daSnowman_c19func_ov081_0212423cEi
 /* Turns toward the closest visible player at the rate row idx gives. With
    idx 1 it also leans back while the player stays off to one side, and
    after 40 frames of that topples over. */
-extern "C" void func_ov081_0212423c(daSnowman_c *self, int idx)
+void daSnowman_c::func_ov081_0212423c(int idx)
 {
     Player *player;
     struct Vector3 v;
@@ -225,7 +198,7 @@ extern "C" void func_ov081_0212423c(daSnowman_c *self, int idx)
     s16 *divisor;
     int lim;
 
-    player = self->ClosestNonVanishPlayer();
+    player = this->ClosestNonVanishPlayer();
     if (player == 0)
         return;
 
@@ -239,7 +212,7 @@ extern "C" void func_ov081_0212423c(daSnowman_c *self, int idx)
         v.y = py;
         v.z = pz;
     }
-    ang = Vec3_HorzAngle((struct Vector3 *)&self->mPosX, &v);
+    ang = Vec3_HorzAngle((struct Vector3 *)&this->mPosX, &v);
 
     /* Two rows of (divisor, band, maxStep), six bytes apart. Both rows in
        the ROM are 1, 0x1000, 0x1000; idx still selects which one. */
@@ -248,59 +221,59 @@ extern "C" void func_ov081_0212423c(daSnowman_c *self, int idx)
     band = (s16 *)((char *)&data_ov081_021289a6 + off);
     divisor = (s16 *)((char *)&data_ov081_021289a4 + off);
 
-    ApproachAngle(&self->mPrevAngleY, ang, *divisor, *band, *maxStep);
+    ApproachAngle(&this->mPrevAngleY, ang, *divisor, *band, *maxStep);
 
     if (idx != 1) {
-        self->mInitAngleY = 0;
-        self->mTimer = 0;
-    } else if (AngleDiff(ang, self->mAngleY) > 0x200) {
+        this->mInitAngleY = 0;
+        this->mTimer = 0;
+    } else if (AngleDiff(ang, this->mAngleY) > 0x200) {
         lim = -0x2000;
-        self->mInitAngleY -= 0x100;
-        if (self->mInitAngleY < lim) {
-            self->mInitAngleY = (s16)lim;
-            self->mTimer++;
-            if (self->mTimer > 0x28) {
-                self->mStep = self->mAngleY - ang;
-                func_ov081_02125488(self, &data_ov081_02128e94);
+        this->mInitAngleY -= 0x100;
+        if (this->mInitAngleY < lim) {
+            this->mInitAngleY = (s16)lim;
+            this->mTimer++;
+            if (this->mTimer > 0x28) {
+                this->mStep = this->mAngleY - ang;
+                func_ov081_02125488(&data_ov081_02128e94);
                 return;
             }
         }
     } else {
-        self->mTimer = 0;
-        ApproachAngle(&self->mInitAngleY, 0, 1, 0x500, 0x500);
+        this->mTimer = 0;
+        ApproachAngle(&this->mInitAngleY, 0, 1, 0x500, 0x500);
     }
 
-    ApproachAngle(&self->mAngleX, self->mInitAngleY, *divisor, *band, *maxStep);
-    self->mAngleY = self->mPrevAngleY;
+    ApproachAngle(&this->mAngleX, this->mInitAngleY, *divisor, *band, *maxStep);
+    this->mAngleY = this->mPrevAngleY;
 }
 
-// @symbol func_ov081_021243cc
+// @symbol _ZN11daSnowman_c19func_ov081_021243ccEv
 /* Reacts to whatever the collision cylinder touched this frame. */
-extern "C" void func_ov081_021243cc(daSnowman_c *self)
+void daSnowman_c::func_ov081_021243cc()
 {
     Vector3 v;
     v = data_ov081_02128998;
-    self->mdCcAcPos_c.SetPosRelativeToActor(v);
+    this->mdCcAcPos_c.SetPosRelativeToActor(v);
 
-    u32 id = self->mdCcAcPos_c.otherOwner;
+    u32 id = this->mdCcAcPos_c.otherOwner;
     if (id == 0) return;
     Player *found = (Player *)dActor_c::FindWithID(id);
     if (found == 0) return;
 
     int hit;
-    s32 flags = self->mdCcAcPos_c.hitFlags;
+    s32 flags = this->mdCcAcPos_c.hitFlags;
     hit = 0;
 
     if (flags & 0x2000) {
-        self->mDeathState = 2;
-        func_ov002_020aea30(self, found, 0);
-        self->mPrevAngleY = (u16)(self->HorzAngleToCPlayer() + 0x8000);
+        this->mDeathState = 2;
+        func_ov002_020aea30(this, found, 0);
+        this->mPrevAngleY = (u16)(this->HorzAngleToCPlayer() + 0x8000);
         hit = 1;
     }
     if (flags & 0x40000) {
-        func_02012694(0xdb, &self->mCamSpacePosX);
+        func_02012694(0xdb, &this->mCamSpacePosX);
         hit = 1;
-        func_ov081_02125488(self, &data_ov081_02128e24);
+        func_ov081_02125488(&data_ov081_02128e24);
     }
     /* The flag is materialised; testing actorID in the if directly
        changes the compare. */
@@ -308,9 +281,9 @@ extern "C" void func_ov081_021243cc(daSnowman_c *self)
     if (isPlayer) {
         if (found->mIsVanish != 0) return;
         if (found->mIsMetal == 1) {
-            self->mDeathState = 2;
-            func_ov002_020aea30(self, found, 0);
-            self->mPrevAngleY = (u16)(self->HorzAngleToCPlayer() + 0x8000);
+            this->mDeathState = 2;
+            func_ov002_020aea30(this, found, 0);
+            this->mPrevAngleY = (u16)(this->HorzAngleToCPlayer() + 0x8000);
             hit = 1;
         }
         if (flags & 0x10) {
@@ -318,35 +291,35 @@ extern "C" void func_ov081_021243cc(daSnowman_c *self)
             vv.x = (s16)-0x1200;
             vv.y = 0;
             vv.z = 0;
-            _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(self, &vv, found);
-            func_02012694(0x1d, &self->mCamSpacePosX);
+            _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(this, &vv, found);
+            func_02012694(0x1d, &this->mCamSpacePosX);
             hit = 1;
         }
         if ((flags & 0x40) && (s32)found->param1 == 2) {
-            self->mDeathState = 2;
-            func_ov002_020aea30(self, found, 0);
-            self->mDeathSound = 2;
-            self->mPrevAngleY = (u16)(self->HorzAngleToCPlayer() + 0x8000);
+            this->mDeathState = 2;
+            func_ov002_020aea30(this, found, 0);
+            this->mDeathSound = 2;
+            this->mPrevAngleY = (u16)(this->HorzAngleToCPlayer() + 0x8000);
             hit = 1;
         }
         if (hit == 0) {
             Vector3 hv;
-            hv = *(Vector3 *)&self->mPosX;
+            hv = *(Vector3 *)&this->mPosX;
             _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(found, &hv, 2, 0xc000, 1, 0, 1);
         }
     }
     if (hit != 1) return;
-    func_ov081_02124134(self);
+    func_ov081_02124134();
 }
 
-// @symbol func_ov081_021245e8
+// @symbol _ZN11daSnowman_c19func_ov081_021245e8Ev
 /* Distance to the closest player; leaves that player's index behind. */
-extern "C" int func_ov081_021245e8(daSnowman_c *self)
+int daSnowman_c::func_ov081_021245e8()
 {
     int min = 0x2710000;
     int i = 0;
     Vector3 v;
-    self->mClosestPlayerIdx = -1;
+    this->mClosestPlayerIdx = -1;
     if ((int)data_0209f21c[0] > 0) {
         do {
             Player *obj = (Player *)data_0209f394[i];
@@ -356,13 +329,13 @@ extern "C" int func_ov081_021245e8(daSnowman_c *self)
                 v.x = s[0];
                 v.y = s[1];
                 v.z = s[2];
-                dist = Vec3_Dist((Vector3 *)&self->mPosX, &v);
+                dist = Vec3_Dist((Vector3 *)&this->mPosX, &v);
                 if (i == 0) {
                     min = dist;
-                    self->mClosestPlayerIdx = 0;
+                    this->mClosestPlayerIdx = 0;
                 } else if (dist < min) {
                     min = dist;
-                    self->mClosestPlayerIdx = i;
+                    this->mClosestPlayerIdx = i;
                 }
             }
             i++;
@@ -371,44 +344,44 @@ extern "C" int func_ov081_021245e8(daSnowman_c *self)
     return min;
 }
 
-// @symbol func_ov081_021246a0
+// @symbol _ZN11daSnowman_c19func_ov081_021246a0Ev
 /* State "melt", execute: shrink and sink, then pay out coins and die. */
-extern "C" int func_ov081_021246a0(daSnowman_c *self)
+int daSnowman_c::func_ov081_021246a0()
 {
     Vector3 v;
-    if (self->mType != 0 || self->mWithMeshClsn.IsOnGround() != 0) {
-        ApproachLinear(self->mScaleX, 0x1700, 0x50);
-        ApproachLinear(self->mScaleZ, 0x1700, 0x50);
-        ApproachLinear(self->mScaleY, 0, 0x50);
-        ApproachLinear(self->mSinkOffsetY, -0x4000, 0x199);
+    if (this->mType != 0 || this->mWithMeshClsn.IsOnGround() != 0) {
+        ApproachLinear(this->mScaleX, 0x1700, 0x50);
+        ApproachLinear(this->mScaleZ, 0x1700, 0x50);
+        ApproachLinear(this->mScaleY, 0, 0x50);
+        ApproachLinear(this->mSinkOffsetY, -0x4000, 0x199);
         /* Every read of mStateTimer here is ldrh: it is counted down
            through DecIfAbove0_Short, which takes it unsigned. */
-        if ((u16)self->mStateTimer == 0) self->mStateTimer = 0x14;
-        if (self->mScaleY < 0x50) {
-            if (self->mCapPhase == 0) {
-                v.x = self->mPosX;
-                v.y = self->mPosY;
-                v.z = self->mPosZ;
-                _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(self, &v, self->unk_10a + 1, 0xa000, 0);
+        if ((u16)this->mStateTimer == 0) this->mStateTimer = 0x14;
+        if (this->mScaleY < 0x50) {
+            if (this->mCapPhase == 0) {
+                v.x = this->mPosX;
+                v.y = this->mPosY;
+                v.z = this->mPosZ;
+                _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(this, &v, this->unk_10a + 1, 0xa000, 0);
             }
-            func_ov081_02124134(self);
-            self->KillAndTrackInDeathTable();
+            func_ov081_02124134();
+            this->KillAndTrackInDeathTable();
         }
     }
     return 1;
 }
 
-// @symbol func_ov081_0212479c
+// @symbol _ZN11daSnowman_c19func_ov081_0212479cEv
 /* State "melt", enter. */
-extern "C" int func_ov081_0212479c(daSnowman_c *self)
+int daSnowman_c::func_ov081_0212479c()
 {
-    self->mInitAngleY = 0;
-    self->mTimer = 0;
-    self->mStateTimer = 0;
-    if (self->mType == 0)
-        self->mVertAccel = -0x2000;
-    if (self->mCapUniqueID != 0) {
-        dActor_c *a = dActor_c::FindWithID(self->mCapUniqueID);
+    this->mInitAngleY = 0;
+    this->mTimer = 0;
+    this->mStateTimer = 0;
+    if (this->mType == 0)
+        this->mVertAccel = -0x2000;
+    if (this->mCapUniqueID != 0) {
+        dActor_c *a = dActor_c::FindWithID(this->mCapUniqueID);
         if (a != 0) {
             a->mVertAccel = -0x2000;
             int rv = ((unsigned int)RandomIntInternal(&data_0209e650) >> 8) & 0xf;
@@ -422,140 +395,140 @@ extern "C" int func_ov081_0212479c(daSnowman_c *self)
             *(int *)((char *)a + 0xc8) = 0;   /* the carry matrix; dActor_c pad */
         }
         func_02012790(0xa);
-        self->mCapUniqueID = 0;
+        this->mCapUniqueID = 0;
     }
-    if (self->mType == 2)
-        dActor_c::Spawn(kSnowmanId, kSpawnWatcher, self->mHomePos, 0, self->mAreaId, -1);
+    if (this->mType == 2)
+        dActor_c::Spawn(kSnowmanId, kSpawnWatcher, this->mHomePos, 0, this->mAreaId, -1);
     return 1;
 }
 
-// @symbol func_ov081_02124894
+// @symbol _ZN11daSnowman_c19func_ov081_02124894Ev
 /* State "spin and fall", execute. */
-extern "C" int func_ov081_02124894(daSnowman_c *self)
+int daSnowman_c::func_ov081_02124894()
 {
     Vector3 v;
     /* Source written as (>0 ? sub : add) so mwccarm inversion emits the
        ROM's le/add arm first, then the unconditional sub arm. */
-    if (self->mStep > 0)
-        self->mInitAngleY -= 0x200;
+    if (this->mStep > 0)
+        this->mInitAngleY -= 0x200;
     else
-        self->mInitAngleY += 0x200;
+        this->mInitAngleY += 0x200;
 
-    self->mPrevAngleY += self->mInitAngleY;
-    ApproachAngle(&self->mAngleX, -0x2800, 1, 0x500, 0x500);
-    self->mTimer++;
-    if (self->mTimer > 0x28) {
-        if (self->mCapPhase == 0) {
-            v.x = self->mPosX;
-            v.y = self->mPosY;
-            v.z = self->mPosZ;
-            _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(self, &v, self->unk_10a + 1, 0xa000, 0);
+    this->mPrevAngleY += this->mInitAngleY;
+    ApproachAngle(&this->mAngleX, -0x2800, 1, 0x500, 0x500);
+    this->mTimer++;
+    if (this->mTimer > 0x28) {
+        if (this->mCapPhase == 0) {
+            v.x = this->mPosX;
+            v.y = this->mPosY;
+            v.z = this->mPosZ;
+            _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(this, &v, this->unk_10a + 1, 0xa000, 0);
         }
-        func_ov081_02124134(self);
-        self->KillAndTrackInDeathTable();
+        func_ov081_02124134();
+        this->KillAndTrackInDeathTable();
     }
     return 1;
 }
 
-// @symbol func_ov081_0212498c
+// @symbol _ZN11daSnowman_c19func_ov081_0212498cEv
 /* State "spin and fall", enter. */
-extern "C" int func_ov081_0212498c(daSnowman_c *self)
+int daSnowman_c::func_ov081_0212498c()
 {
-    int id = self->mSnowballID;
+    int id = this->mSnowballID;
     if (id != 0) {
         dActor_c *a = dActor_c::FindWithID(id);
         if (a != 0) {
             a->mVertAccel = -0x2000;
             a->mTerminalVelocity = -0x28000;
-            self->mSnowballID = 0;
+            this->mSnowballID = 0;
         }
     }
-    func_02012694(0xdb, &self->mCamSpacePosX);
-    self->mInitAngleY = 0;
-    self->mTimer = 0;
+    func_02012694(0xdb, &this->mCamSpacePosX);
+    this->mInitAngleY = 0;
+    this->mTimer = 0;
     return 1;
 }
 
-// @symbol func_ov081_021249f4
+// @symbol _ZN11daSnowman_c19func_ov081_021249f4Ev
 /* State "sink", execute. */
-extern "C" int func_ov081_021249f4(daSnowman_c *self)
+int daSnowman_c::func_ov081_021249f4()
 {
     struct Vector3 pos;
     int t;
 
-    pos = self->mHomePos;
-    self->mParticleID1 =
+    pos = this->mHomePos;
+    this->mParticleID1 =
         _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            self->mParticleID1, 0x11d, pos.x, pos.y, pos.z, 0, 0);
+            this->mParticleID1, 0x11d, pos.x, pos.y, pos.z, 0, 0);
     pos.y = pos.y + 0x1e000;
-    self->mParticleID2 =
+    this->mParticleID2 =
         _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            self->mParticleID2, 0x11e, pos.x, pos.y, pos.z, 0, 0);
+            this->mParticleID2, 0x11e, pos.x, pos.y, pos.z, 0, 0);
 
-    if (self->mHomePos.y > self->mPosY) {
-        ApproachAngle(&self->mAngleX, self->mInitAngleY, 1, 0x1000, 0x1000);
+    if (this->mHomePos.y > this->mPosY) {
+        ApproachAngle(&this->mAngleX, this->mInitAngleY, 1, 0x1000, 0x1000);
     }
-    t = self->mHomePos.y - 0x118000;
-    if (t > self->mPosY) {
-        self->mPosY = t;
-        self->mVertSpeed = 0;
-        self->mVertAccel = 0;
-        func_ov081_02125488(self, &data_ov081_02128e84);
+    t = this->mHomePos.y - 0x118000;
+    if (t > this->mPosY) {
+        this->mPosY = t;
+        this->mVertSpeed = 0;
+        this->mVertAccel = 0;
+        func_ov081_02125488(&data_ov081_02128e84);
     }
-    self->mPrevAngleY += 0x2000;
-    self->mAngleY = self->mPrevAngleY;
+    this->mPrevAngleY += 0x2000;
+    this->mAngleY = this->mPrevAngleY;
     return 1;
 }
 
-// @symbol func_ov081_02124b08
+// @symbol _ZN11daSnowman_c19func_ov081_02124b08Ev
 /* State "sink", enter. */
-extern "C" int func_ov081_02124b08(daSnowman_c *self)
+int daSnowman_c::func_ov081_02124b08()
 {
-    unsigned int id = self->mSnowballID;
+    unsigned int id = this->mSnowballID;
     if (id != 0) {
         dActor_c *a = dActor_c::FindWithID(id);
         if (a != 0) {
             a->mVertAccel = -0x2000;
             a->mTerminalVelocity = -0x28000;
-            self->mSnowballID = 0;
+            this->mSnowballID = 0;
         }
     }
-    self->mVertSpeed = 0xa000;
-    self->mVertAccel = -0x4000;
-    self->mInitAngleY = 0;
+    this->mVertSpeed = 0xa000;
+    this->mVertAccel = -0x4000;
+    this->mInitAngleY = 0;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &self->mModelAnim, LOADED_FILE(data_ov081_02128da8), 0, 0x1000, 0);
+        &this->mModelAnim, LOADED_FILE(data_ov081_02128da8), 0, 0x1000, 0);
     return 1;
 }
 
-// @symbol func_ov081_02124b98
+// @symbol _ZN11daSnowman_c19func_ov081_02124b98Ev
 /* State "throw", execute: lets go on frame 10, aimed at the closest player. */
-extern "C" int func_ov081_02124b98(daSnowman_c *self)
+int daSnowman_c::func_ov081_02124b98()
 {
     Vector3 in, out, v[2];
     dActor_c *target;
     Player *player;
 
-    if (self->mSnowballID != 0) {
-        target = dActor_c::FindWithID(self->mSnowballID);
+    if (this->mSnowballID != 0) {
+        target = dActor_c::FindWithID(this->mSnowballID);
         if (target != 0) {
-            target->mPosX = self->mHandPos.x;
-            target->mPosY = self->mHandPos.y;
-            target->mPosZ = self->mHandPos.z;
-            if (self->mModelAnim.WillHitFrame(0xa) != 0) {
+            target->mPosX = this->mHandPos.x;
+            target->mPosY = this->mHandPos.y;
+            target->mPosZ = this->mHandPos.z;
+            if (this->mModelAnim.WillHitFrame(0xa) != 0) {
                 in.x = 0; in.y = 0; in.z = 0x1e000;
                 out.x = 0; out.y = 0; out.z = 0;
                 v[0].x = 0; v[0].y = 0; v[0].z = 0;
-                player = self->ClosestPlayer();
+                player = this->ClosestPlayer();
                 if (player != 0) {
                     int angle;
                     int *q = &player->mPosX;   /* one base pointer; see 0212423c */
                     v[1].x = q[0];
                     v[1].y = q[1];
                     v[1].z = q[2];
-                    v[0].x = v[1].x - self->mHandPos.x;
-                    v[0].y = v[1].y - self->mHandPos.y;
-                    v[0].z = v[1].z - self->mHandPos.z;
+                    v[0].x = v[1].x - this->mHandPos.x;
+                    v[0].y = v[1].y - this->mHandPos.y;
+                    v[0].z = v[1].z - this->mHandPos.z;
                     angle = _ZN4cstd5atan2E5Fix12IiES1_(v[0].x, v[0].z);
                     Matrix4x3_FromRotationY(&data_020a0e68, angle);
                     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68,
@@ -567,340 +540,340 @@ extern "C" int func_ov081_02124b98(daSnowman_c *self)
                 target->mVertSpeed = out.y;
                 target->unk_0ac = out.z;
                 target->mVertAccel = -0x2000;
-                self->mSnowballID = 0;
+                this->mSnowballID = 0;
             }
         }
     }
-    if (self->mModelAnim.Finished() != 0) {
-        func_ov081_02125488(self, &data_ov081_02128e14);
+    if (this->mModelAnim.Finished() != 0) {
+        func_ov081_02125488(&data_ov081_02128e14);
     }
     return 1;
 }
 
-// @symbol func_ov081_02124d14
+// @symbol _ZN11daSnowman_c19func_ov081_02124d14Ev
 /* State "throw", enter. */
-extern "C" int func_ov081_02124d14(daSnowman_c *self)
+int daSnowman_c::func_ov081_02124d14()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, LOADED_FILE(data_ov081_02128db8), 0x40000000, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, LOADED_FILE(data_ov081_02128db8), 0x40000000, 0x1000, 0);
     return 1;
 }
 
-// @symbol func_ov081_02124d50
+// @symbol _ZN11daSnowman_c19func_ov081_02124d50Ev
 /* State "make a snowball", execute. */
-extern "C" int func_ov081_02124d50(daSnowman_c *self)
+int daSnowman_c::func_ov081_02124d50()
 {
-    dActor_c *ball = dActor_c::FindWithID(self->mSnowballID);
+    dActor_c *ball = dActor_c::FindWithID(this->mSnowballID);
     if (ball != 0 && ball->mVertAccel == 0) {
-        func_ov081_0212423c(self, 1);
-        ball->mPosX = self->mHandPos.x;
-        ball->mPosY = self->mHandPos.y;
-        ball->mPosZ = self->mHandPos.z;
+        func_ov081_0212423c(1);
+        ball->mPosX = this->mHandPos.x;
+        ball->mPosY = this->mHandPos.y;
+        ball->mPosZ = this->mHandPos.z;
     }
 
-    if ((u16)self->mStateTimer == 0) {
-        func_ov081_02125488(self, &data_ov081_02128e44);
+    if ((u16)this->mStateTimer == 0) {
+        func_ov081_02125488(&data_ov081_02128e44);
         return 1;
     }
 
-    if (func_ov081_021245e8(self) > 0x320000) {
-        func_ov081_02125488(self, &data_ov081_02128e64);
+    if (func_ov081_021245e8() > 0x320000) {
+        func_ov081_02125488(&data_ov081_02128e64);
     }
     return 1;
 }
 
-// @symbol func_ov081_02124dfc
+// @symbol _ZN11daSnowman_c19func_ov081_02124dfcEv
 /* State "make a snowball", enter: spawns it in the hand. */
-extern "C" int func_ov081_02124dfc(daSnowman_c *self)
+int daSnowman_c::func_ov081_02124dfc()
 {
-    dActor_c *a = dActor_c::Spawn(kSnowballId, 0, self->mHandPos, 0, self->mAreaId, -1);
+    dActor_c *a = dActor_c::Spawn(kSnowballId, 0, this->mHandPos, 0, this->mAreaId, -1);
     if (a)
-        self->mSnowballID = a->uniqueID;
-    self->mStateTimer = 0x64;
-    self->mStep = 0;
+        this->mSnowballID = a->uniqueID;
+    this->mStateTimer = 0x64;
+    this->mStep = 0;
     return 1;
 }
 
-// @symbol func_ov081_02124e64
+// @symbol _ZN11daSnowman_c19func_ov081_02124e64Ev
 /* State "face the player", execute. */
-extern "C" int func_ov081_02124e64(daSnowman_c *self)
+int daSnowman_c::func_ov081_02124e64()
 {
-    func_ov081_0212423c(self, 0);
-    if ((u16)self->mStateTimer == 0)
-        func_ov081_02125488(self, &data_ov081_02128e34);
-    if (func_ov081_021245e8(self) > 0x320000)
-        func_ov081_02125488(self, &data_ov081_02128e64);
+    func_ov081_0212423c(0);
+    if ((u16)this->mStateTimer == 0)
+        func_ov081_02125488(&data_ov081_02128e34);
+    if (func_ov081_021245e8() > 0x320000)
+        func_ov081_02125488(&data_ov081_02128e64);
     return 1;
 }
 
-// @symbol func_ov081_02124ec0
+// @symbol _ZN11daSnowman_c19func_ov081_02124ec0Ev
 /* State "face the player", enter. */
-extern "C" int func_ov081_02124ec0(daSnowman_c *self)
+int daSnowman_c::func_ov081_02124ec0()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, LOADED_FILE(data_ov081_02128d98), 0, 0x1000, 0);
-    if (self->mType == 2)
-        self->mFlags = 0x18000002;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, LOADED_FILE(data_ov081_02128d98), 0, 0x1000, 0);
+    if (this->mType == 2)
+        this->mFlags = 0x18000002;
     else
-        self->mFlags = 0x10000002;
-    self->mStateTimer = 0x14;
+        this->mFlags = 0x10000002;
+    this->mStateTimer = 0x14;
     return 1;
 }
 
-// @symbol func_ov081_02124f20
+// @symbol _ZN11daSnowman_c19func_ov081_02124f20Ev
 /* State "rise", execute. */
-extern "C" int func_ov081_02124f20(daSnowman_c *self)
+int daSnowman_c::func_ov081_02124f20()
 {
-    if (self->mVertSpeed < 0) {
-        if (self->mHomePos.y > self->mPosY) {
-            self->mVertSpeed = 0;
-            self->mVertAccel = 0;
-            self->mPosY = self->mHomePos.y;
-            func_ov081_02125488(self, &data_ov081_02128e14);
+    if (this->mVertSpeed < 0) {
+        if (this->mHomePos.y > this->mPosY) {
+            this->mVertSpeed = 0;
+            this->mVertAccel = 0;
+            this->mPosY = this->mHomePos.y;
+            func_ov081_02125488(&data_ov081_02128e14);
         }
     }
-    func_ov081_0212423c(self, 0);
+    func_ov081_0212423c(0);
     return 1;
 }
 
-// @symbol func_ov081_02124f7c
+// @symbol _ZN11daSnowman_c19func_ov081_02124f7cEv
 /* State "rise", enter. */
-extern "C" int func_ov081_02124f7c(daSnowman_c *self)
+int daSnowman_c::func_ov081_02124f7c()
 {
     struct Vector3 pos;
 
-    self->mVertSpeed = 0x3c000;
-    self->mVertAccel = -0x4000;
-    func_02012694(0xdc, &self->mCamSpacePosX);
-    pos.x = self->mHomePos.x;
-    pos.y = self->mHomePos.y;
-    pos.z = self->mHomePos.z;
-    self->mParticleID1 =
+    this->mVertSpeed = 0x3c000;
+    this->mVertAccel = -0x4000;
+    func_02012694(0xdc, &this->mCamSpacePosX);
+    pos.x = this->mHomePos.x;
+    pos.y = this->mHomePos.y;
+    pos.z = this->mHomePos.z;
+    this->mParticleID1 =
         _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            self->mParticleID1, 0x11a, pos.x, pos.y, pos.z, 0,
+            this->mParticleID1, 0x11a, pos.x, pos.y, pos.z, 0,
             0);
     pos.y = pos.y + 0x1e000;
-    self->mParticleID2 =
+    this->mParticleID2 =
         _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            self->mParticleID2, 0x11b, pos.x, pos.y, pos.z, 0,
+            this->mParticleID2, 0x11b, pos.x, pos.y, pos.z, 0,
             0);
     return 1;
 }
 
-// @symbol func_ov081_02125038
+// @symbol _ZN11daSnowman_c19func_ov081_02125038Ev
 /* State "wait buried", execute: rise when a player comes near. */
-extern "C" int func_ov081_02125038(daSnowman_c *self)
+int daSnowman_c::func_ov081_02125038()
 {
-    if (func_ov081_021245e8(self) < 0x258000)
-        func_ov081_02125488(self, &data_ov081_02128ea4);
+    if (func_ov081_021245e8() < 0x258000)
+        func_ov081_02125488(&data_ov081_02128ea4);
     return 1;
 }
 
-// @symbol func_ov081_02125068
+// @symbol _ZN11daSnowman_c19func_ov081_02125068Ev
 /* State "wait buried", enter. */
-extern "C" int func_ov081_02125068(daSnowman_c *self)
+int daSnowman_c::func_ov081_02125068()
 {
-    int v = self->mType;
+    int v = this->mType;
     if (v != 2 && v != 3) {
-        self->mFlags = 3;
+        this->mFlags = 3;
     } else if (v == 2) {
-        self->mFlags = 0x8000002;
+        this->mFlags = 0x8000002;
     }
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, LOADED_FILE(data_ov081_02128d98), 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, LOADED_FILE(data_ov081_02128d98), 0, 0x1000, 0);
     return 1;
 }
 
-// @symbol func_ov081_021250c8
+// @symbol _ZN11daSnowman_c19func_ov081_021250c8Ev
 /* State "hop to a node", execute. */
-extern "C" int func_ov081_021250c8(daSnowman_c *self)
+int daSnowman_c::func_ov081_021250c8()
 {
     struct Vector3 node;
     struct Vector3 diff;
     struct Vector3 scaled;
     int len;
 
-    if (self->mWithMeshClsn.IsOnGround()) {
-        func_02012694(0xe5, &self->mCamSpacePosX);
-        func_ov081_02125488(self, &data_ov081_02128e54);
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, LOADED_FILE(data_ov081_02128da0), 0x40000000, 0x1000, 0);
+    if (this->mWithMeshClsn.IsOnGround()) {
+        func_02012694(0xe5, &this->mCamSpacePosX);
+        func_ov081_02125488(&data_ov081_02128e54);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, LOADED_FILE(data_ov081_02128da0), 0x40000000, 0x1000, 0);
         return 1;
     }
 
     PathPtr p;
-    p.FromID(self->mPathId);
-    p.GetNode(node, self->mPathNodeIndex);
-    node.y = self->mPosY;
-    Vec3_Sub(&diff, (struct Vector3 *)&self->mPosX, &node);
+    p.FromID(this->mPathId);
+    p.GetNode(node, this->mPathNodeIndex);
+    node.y = this->mPosY;
+    Vec3_Sub(&diff, (struct Vector3 *)&this->mPosX, &node);
     len = LenVec3(&diff);
-    ApproachAngle(&self->mPrevAngleY, Vec3_HorzAngle((struct Vector3 *)&self->mPosX, &node), 1, 0x1000, 0x500);
-    if (len == 0 || len <= self->mHopStep)
+    ApproachAngle(&this->mPrevAngleY, Vec3_HorzAngle((struct Vector3 *)&this->mPosX, &node), 1, 0x1000, 0x500);
+    if (len == 0 || len <= this->mHopStep)
         return 1;
     {
-        int q = cstd::fdiv(self->mHopStep, len);
+        int q = cstd::fdiv(this->mHopStep, len);
         Vec3_MulScalar(&scaled, &diff, q);
-        SubVec3((struct Vector3 *)&self->mPosX, &scaled, (struct Vector3 *)&self->mPosX);
+        SubVec3((struct Vector3 *)&this->mPosX, &scaled, (struct Vector3 *)&this->mPosX);
     }
     return 1;
 }
 
-// @symbol func_ov081_02125200
+// @symbol _ZN11daSnowman_c19func_ov081_02125200Ev
 /* State "hop to a node", enter: nothing to do. */
-extern "C" int func_ov081_02125200(void)
+int daSnowman_c::func_ov081_02125200()
 {
     return 1;
 }
 
-// @symbol func_ov081_02125208
+// @symbol _ZN11daSnowman_c19func_ov081_02125208Ev
 /* State "walk the path", execute. */
-extern "C" int func_ov081_02125208(daSnowman_c *self)
+int daSnowman_c::func_ov081_02125208()
 {
     struct Vector3 node;
 
-    if ((u16)self->mStateTimer == 0) {
-        if (self->mStep == 1) {
-            self->mVertSpeed = 0x14000;
-            self->mVertAccel = -0x4000;
-            self->mStep = 2;
-            func_02012694(0xdd, &self->mCamSpacePosX);
+    if ((u16)this->mStateTimer == 0) {
+        if (this->mStep == 1) {
+            this->mVertSpeed = 0x14000;
+            this->mVertAccel = -0x4000;
+            this->mStep = 2;
+            func_02012694(0xdd, &this->mCamSpacePosX);
         }
 
         PathPtr p;
-        p.FromID(self->mPathId);
-        p.GetNode(node, self->mPathNodeIndex);
-        ApproachAngle(&self->mPrevAngleY, Vec3_HorzAngle((struct Vector3 *)&self->mPosX, &node), 1, 0x1000, 0x500);
+        p.FromID(this->mPathId);
+        p.GetNode(node, this->mPathNodeIndex);
+        ApproachAngle(&this->mPrevAngleY, Vec3_HorzAngle((struct Vector3 *)&this->mPosX, &node), 1, 0x1000, 0x500);
 
-        if (AngleDiff(self->mPrevAngleY, Vec3_HorzAngle((struct Vector3 *)&self->mPosX, &node)) < 0x100
-            && self->mWithMeshClsn.IsOnGround()) {
-            int st = self->mStep;
+        if (AngleDiff(this->mPrevAngleY, Vec3_HorzAngle((struct Vector3 *)&this->mPosX, &node)) < 0x100
+            && this->mWithMeshClsn.IsOnGround()) {
+            int st = this->mStep;
             if (st != 0) {
                 if (st == 1)
-                    func_02012694(0xe5, &self->mCamSpacePosX);
-                self->mStep++;
-                if (self->mStep < 0xb)
+                    func_02012694(0xe5, &this->mCamSpacePosX);
+                this->mStep++;
+                if (this->mStep < 0xb)
                     return 1;
             }
-            self->mStep = 0;
-            self->mVertSpeed = 0x3a000;
-            self->mVertAccel = -0x4000;
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, LOADED_FILE(data_ov081_02128d88), 0x40000000, 0x1000, 0);
-            func_02012694(0xdd, &self->mCamSpacePosX);
-            func_ov081_02125488(self, &data_ov081_02128e74);
+            this->mStep = 0;
+            this->mVertSpeed = 0x3a000;
+            this->mVertAccel = -0x4000;
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, LOADED_FILE(data_ov081_02128d88), 0x40000000, 0x1000, 0);
+            func_02012694(0xdd, &this->mCamSpacePosX);
+            func_ov081_02125488(&data_ov081_02128e74);
         }
     }
     return 1;
 }
 
-// @symbol func_ov081_0212538c
+// @symbol _ZN11daSnowman_c19func_ov081_0212538cEv
 /* State "walk the path", enter: step onto the next node when close enough. */
-extern "C" int func_ov081_0212538c(daSnowman_c *self)
+int daSnowman_c::func_ov081_0212538c()
 {
     struct Vector3 node;
     struct Vector3 diff;
     int len;
 
     PathPtr pp;
-    pp.FromID(self->mPathId);
-    pp.GetNode(node, self->mPathNodeIndex);
-    node.y = self->mPosY;
-    Vec3_Sub(&diff, (struct Vector3 *)&self->mPosX, &node);
+    pp.FromID(this->mPathId);
+    pp.GetNode(node, this->mPathNodeIndex);
+    node.y = this->mPosY;
+    Vec3_Sub(&diff, (struct Vector3 *)&this->mPosX, &node);
     len = LenVec3(&diff);
-    self->mHopStep = 0xa000;
-    self->mStep = 0;
-    if (len == 0 || len <= self->mHopStep) {
-        self->mPosX = node.x;
-        self->mPosY = node.y;
-        self->mPosZ = node.z;
-        self->mPathNodeIndex++;
-        if (self->mPathNodeIndex >= self->mPathNodeCount)
-            self->mPathNodeIndex = 0;
-        self->mStep = 1;
+    this->mHopStep = 0xa000;
+    this->mStep = 0;
+    if (len == 0 || len <= this->mHopStep) {
+        this->mPosX = node.x;
+        this->mPosY = node.y;
+        this->mPosZ = node.z;
+        this->mPathNodeIndex++;
+        if (this->mPathNodeIndex >= this->mPathNodeCount)
+            this->mPathNodeIndex = 0;
+        this->mStep = 1;
     }
-    self->mStateTimer = 0xa;
+    this->mStateTimer = 0xa;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &self->mModelAnim, LOADED_FILE(data_ov081_02128d98), 0, 0x1000, 0);
+        &this->mModelAnim, LOADED_FILE(data_ov081_02128d98), 0, 0x1000, 0);
     return 1;
 }
 
-// @symbol func_ov081_02125488
+// @symbol _ZN11daSnowman_c19func_ov081_02125488EPNS_5StateE
 /* Enters a state: records it, then runs its enter handler if it has one. */
-extern "C" int func_ov081_02125488(daSnowman_c *self, daSnowman_c::State *state)
+int daSnowman_c::func_ov081_02125488(State *state)
 {
-    self->mState = state;
-    if (self->mState->enter == 0)
+    this->mState = state;
+    if (this->mState->enter == 0)
         return 1;
-    return (self->*self->mState->enter)();
+    return (this->*this->mState->enter)();
 }
 
-// @symbol func_ov081_021254d8
+// @symbol _ZN11daSnowman_c19func_ov081_021254d8Ev
 /* Poses the model, then carries the cap on bone 5 and the snowball on
    bone 3, and drops the shadow while standing on the path. */
-extern "C" void func_ov081_021254d8(daSnowman_c *self)
+void daSnowman_c::func_ov081_021254d8()
 {
     int src[3], dst[3];
     int t;
     dActor_c *actor;
 
-    self->mModelAnim.UpdateVerts();
+    this->mModelAnim.UpdateVerts();
 
-    src[0] = self->mPosX;
-    t = self->mPosY;
+    src[0] = this->mPosX;
+    t = this->mPosY;
     src[1] = t;
-    src[2] = self->mPosZ;
-    src[1] = t + self->mSinkOffsetY;
+    src[2] = this->mPosZ;
+    src[1] = t + this->mSinkOffsetY;
     Vec3_Asr(dst, src, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, dst[0], dst[1], dst[2]);
 
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
-        self->mAngleX, self->mAngleY, self->mAngleZ);
-    self->mModelAnim.mat4x3 = data_020a0e68;
+        this->mAngleX, this->mAngleY, this->mAngleZ);
+    this->mModelAnim.mat4x3 = data_020a0e68;
 
-    if (self->mCapUniqueID != 0) {
-        self->mCapPos.x = 0;
-        self->mCapPos.y = 0;
-        self->mCapPos.z = 0;
-        actor = dActor_c::FindWithID(self->mCapUniqueID);
+    if (this->mCapUniqueID != 0) {
+        this->mCapPos.x = 0;
+        this->mCapPos.y = 0;
+        this->mCapPos.z = 0;
+        actor = dActor_c::FindWithID(this->mCapUniqueID);
         if (actor != 0) {
-            MulMat4x3Mat4x3(&self->mModelAnim.data.transforms[5], &self->mModelAnim.mat4x3, &self->mCapMatrix);
+            MulMat4x3Mat4x3(&this->mModelAnim.data.transforms[5], &this->mModelAnim.mat4x3, &this->mCapMatrix);
 
-            self->mCapPos.x = data_020a0e68.m[9];
-            self->mCapPos.y = data_020a0e68.m[10];
-            self->mCapPos.z = data_020a0e68.m[11];
-            self->mCapPos.x <<= 3;
-            self->mCapPos.y <<= 3;
-            self->mCapPos.z <<= 3;
-            actor->mPosX = self->mCapPos.x;
-            actor->mPosY = self->mCapPos.y;
-            actor->mPosZ = self->mCapPos.z;
+            this->mCapPos.x = data_020a0e68.m[9];
+            this->mCapPos.y = data_020a0e68.m[10];
+            this->mCapPos.z = data_020a0e68.m[11];
+            this->mCapPos.x <<= 3;
+            this->mCapPos.y <<= 3;
+            this->mCapPos.z <<= 3;
+            actor->mPosX = this->mCapPos.x;
+            actor->mPosY = this->mCapPos.y;
+            actor->mPosZ = this->mCapPos.z;
 
             Matrix4x3_FromTranslation(&data_020a0e68, 0, 0x4000, 0);
             Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0, 0x2000, 0);
-            MulMat4x3Mat4x3(&data_020a0e68, &self->mCapMatrix, &self->mCapMatrix);
-            *(Matrix4x3 **)((char *)actor + 0xc8) = &self->mCapMatrix;   /* dActor_c pad */
+            MulMat4x3Mat4x3(&data_020a0e68, &this->mCapMatrix, &this->mCapMatrix);
+            *(Matrix4x3 **)((char *)actor + 0xc8) = &this->mCapMatrix;   /* dActor_c pad */
         }
     }
 
-    self->mHandPos.x = 0;
-    self->mHandPos.y = 0;
-    self->mHandPos.z = 0;
-    data_020a0e68 = self->mModelAnim.mat4x3;
-    MulMat4x3Mat4x3(&self->mModelAnim.data.transforms[3], &data_020a0e68, &data_020a0e68);
+    this->mHandPos.x = 0;
+    this->mHandPos.y = 0;
+    this->mHandPos.z = 0;
+    data_020a0e68 = this->mModelAnim.mat4x3;
+    MulMat4x3Mat4x3(&this->mModelAnim.data.transforms[3], &data_020a0e68, &data_020a0e68);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0xc000, -0x1000, 0);
 
-    self->mHandPos.x = data_020a0e68.m[9];
-    self->mHandPos.y = data_020a0e68.m[10];
-    self->mHandPos.z = data_020a0e68.m[11];
-    self->mHandPos.x <<= 3;
-    self->mHandPos.y <<= 3;
-    self->mHandPos.z <<= 3;
+    this->mHandPos.x = data_020a0e68.m[9];
+    this->mHandPos.y = data_020a0e68.m[10];
+    this->mHandPos.z = data_020a0e68.m[11];
+    this->mHandPos.x <<= 3;
+    this->mHandPos.y <<= 3;
+    this->mHandPos.z <<= 3;
 
-    if (self->mType != 0)
+    if (this->mType != 0)
         return;
 
     Matrix4x3_FromTranslation(&data_020a0e68,
-        self->mPosX >> 3,
-        (self->mPosY - 0xe000) >> 3,
-        self->mPosZ >> 3);
-    self->mShadowMatrix = data_020a0e68;
+        this->mPosX >> 3,
+        (this->mPosY - 0xe000) >> 3,
+        this->mPosZ >> 3);
+    this->mShadowMatrix = data_020a0e68;
     _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        self, &self->mShadowModel, &self->mShadowMatrix, 0x78000, 0xc8000, 0xf);
+        this, &this->mShadowModel, &this->mShadowMatrix, 0x78000, 0xc8000, 0xf);
 }
 
 // @symbol _ZN11daSnowman_c16CleanupResourcesEv
@@ -966,7 +939,7 @@ int daSnowman_c::Behavior()
             func_02012694(0x166, &mCamSpacePosX);
             mDeathSound = 0;
         }
-        func_ov081_021254d8(this);
+        func_ov081_021254d8();
         return 1;
     }
     if (mType == 2
@@ -996,12 +969,12 @@ int daSnowman_c::Behavior()
     UpdatePos(&mdCcAcPos_c);
     if (mType == 0)
         UpdateWMClsn(mWithMeshClsn, 0);
-    func_ov081_021254d8(this);
+    func_ov081_021254d8();
     if (mState != &data_ov081_02128e84
         && mState != &data_ov081_02128e64
         && mState != &data_ov081_02128e94
         && mState != &data_ov081_02128e24)
-        func_ov081_021243cc(this);
+        func_ov081_021243cc();
     mdCcAcPos_c.Clear();
     {
         p = ClosestPlayer();
@@ -1083,10 +1056,10 @@ int daSnowman_c::InitResources()
         mPathNodeIndex = 1;
         mVertAccel = -0x2000;
         mFlags = 0x10000000;
-        func_ov081_02125488(this, &data_ov081_02128e54);
+        func_ov081_02125488(&data_ov081_02128e54);
     } else {
         mPosY -= 0x118000;
-        func_ov081_02125488(this, &data_ov081_02128e84);
+        func_ov081_02125488(&data_ov081_02128e84);
         if (mType == 3) {
             unk_108 = 0;
             unk_10a = 0;

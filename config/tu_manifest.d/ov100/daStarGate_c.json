@@ -202,56 +202,56 @@
   ],
   "data": [
     {
-      "symbol": "@471",
+      "symbol": "@501",
       "address": "0x02148334",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_StayClosed_Main"
     },
     {
-      "symbol": "@469",
+      "symbol": "@499",
       "address": "0x0214833c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_OpenClose_Main"
     },
     {
-      "symbol": "@461",
+      "symbol": "@491",
       "address": "0x02148344",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_TalkingToPlayer_Main"
     },
     {
-      "symbol": "@463",
+      "symbol": "@493",
       "address": "0x0214834c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_Unlocking_Init"
     },
     {
-      "symbol": "@467",
+      "symbol": "@497",
       "address": "0x02148354",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_OpenClose_Init"
     },
     {
-      "symbol": "@465",
+      "symbol": "@495",
       "address": "0x0214835c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_Unlocking_Main"
     },
     {
-      "symbol": "@459",
+      "symbol": "@489",
       "address": "0x02148364",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_TalkingToPlayer_Init"
     },
     {
-      "symbol": "@457",
+      "symbol": "@487",
       "address": "0x0214836c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -298,7 +298,7 @@
       "evidence": "model resource handle constructed with file ID 0x4a1"
     },
     {
-      "symbol": "@455",
+      "symbol": "@485",
       "address": "0x0214893c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -390,55 +390,55 @@
       "evidence": "mwcc emits the constructor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@471",
+      "symbol": "@501",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_StayClosed_Main PTMF is a configured initializer relocation destination at 0x02148334"
     },
     {
-      "symbol": "@469",
+      "symbol": "@499",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_OpenClose_Main PTMF is a configured initializer relocation destination at 0x0214833c"
     },
     {
-      "symbol": "@461",
+      "symbol": "@491",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_TalkingToPlayer_Main PTMF is a configured initializer relocation destination at 0x02148344"
     },
     {
-      "symbol": "@463",
+      "symbol": "@493",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_Unlocking_Init PTMF is a configured initializer relocation destination at 0x0214834c"
     },
     {
-      "symbol": "@467",
+      "symbol": "@497",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_OpenClose_Init PTMF is a configured initializer relocation destination at 0x02148354"
     },
     {
-      "symbol": "@465",
+      "symbol": "@495",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_Unlocking_Main PTMF is a configured initializer relocation destination at 0x0214835c"
     },
     {
-      "symbol": "@459",
+      "symbol": "@489",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_TalkingToPlayer_Init PTMF is a configured initializer relocation destination at 0x02148364"
     },
     {
-      "symbol": "@457",
+      "symbol": "@487",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_Wait_Main PTMF is a configured initializer relocation destination at 0x0214836c"
     },
     {
-      "symbol": "@455",
+      "symbol": "@485",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0214893c"
@@ -940,7 +940,7 @@
       "source": "0x02147b84",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@455",
+      "symbol": "@485",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214893c"
@@ -960,7 +960,7 @@
       "source": "0x02147b8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@457",
+      "symbol": "@487",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214836c"
@@ -970,7 +970,7 @@
       "source": "0x02147b90",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@459",
+      "symbol": "@489",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148364"
@@ -980,7 +980,7 @@
       "source": "0x02147b94",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@461",
+      "symbol": "@491",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148344"
@@ -990,7 +990,7 @@
       "source": "0x02147b98",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@463",
+      "symbol": "@493",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214834c"
@@ -1000,7 +1000,7 @@
       "source": "0x02147b9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@465",
+      "symbol": "@495",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214835c"
@@ -1010,7 +1010,7 @@
       "source": "0x02147ba0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@467",
+      "symbol": "@497",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148354"
@@ -1020,7 +1020,7 @@
       "source": "0x02147ba4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@469",
+      "symbol": "@499",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214833c"
@@ -1030,7 +1030,7 @@
       "source": "0x02147ba8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@471",
+      "symbol": "@501",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148334"
@@ -1848,55 +1848,55 @@
             "evidence": "mwcc emits the constructor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
           },
           {
-            "symbol": "@442",
+            "symbol": "@458",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local St_StayClosed_Main PTMF is a configured initializer relocation destination at 0x02148334"
           },
           {
-            "symbol": "@440",
+            "symbol": "@456",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local St_OpenClose_Main PTMF is a configured initializer relocation destination at 0x0214833c"
           },
           {
-            "symbol": "@426",
+            "symbol": "@442",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local St_TalkingToPlayer_Main PTMF is a configured initializer relocation destination at 0x02148344"
           },
           {
-            "symbol": "@428",
+            "symbol": "@444",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local St_Unlocking_Init PTMF is a configured initializer relocation destination at 0x0214834c"
           },
           {
-            "symbol": "@438",
+            "symbol": "@454",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local St_OpenClose_Init PTMF is a configured initializer relocation destination at 0x02148354"
           },
           {
-            "symbol": "@436",
+            "symbol": "@452",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local St_Unlocking_Main PTMF is a configured initializer relocation destination at 0x0214835c"
           },
           {
-            "symbol": "@424",
+            "symbol": "@440",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local St_TalkingToPlayer_Init PTMF is a configured initializer relocation destination at 0x02148364"
           },
           {
-            "symbol": "@422",
+            "symbol": "@438",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local St_Wait_Main PTMF is a configured initializer relocation destination at 0x0214836c"
           },
           {
-            "symbol": "@420",
+            "symbol": "@436",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0214893c"
@@ -1929,55 +1929,55 @@
           },
           {
             "symbolIndex": 43,
-            "symbol": "@442",
+            "symbol": "@458",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
             "symbolIndex": 37,
-            "symbol": "@440",
+            "symbol": "@456",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
             "symbolIndex": 36,
-            "symbol": "@426",
+            "symbol": "@442",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
             "symbolIndex": 39,
-            "symbol": "@428",
+            "symbol": "@444",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
             "symbolIndex": 40,
-            "symbol": "@438",
+            "symbol": "@454",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
             "symbolIndex": 38,
-            "symbol": "@436",
+            "symbol": "@452",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
             "symbolIndex": 41,
-            "symbol": "@424",
+            "symbol": "@440",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
             "symbolIndex": 42,
-            "symbol": "@422",
+            "symbol": "@438",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
             "symbolIndex": 44,
-            "symbol": "@420",
+            "symbol": "@436",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           }
@@ -2128,15 +2128,15 @@
         ],
         "licensedSymbols": [
           ".p__sinit_daStarGate_c.cpp",
-          "@420",
-          "@422",
-          "@424",
-          "@426",
-          "@428",
           "@436",
           "@438",
           "@440",
           "@442",
+          "@444",
+          "@452",
+          "@454",
+          "@456",
+          "@458",
           "_ZN12daStarGate_c12ST_UNLOCKINGE",
           "_ZN12daStarGate_c13ST_OPEN_CLOSEE",
           "_ZN12daStarGate_c14ST_STAY_CLOSEDE",
@@ -3104,55 +3104,55 @@
             "evidence": "mwcc emits the constructor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
           },
           {
-            "symbol": "@442",
+            "symbol": "@458",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local St_StayClosed_Main PTMF is a configured initializer relocation destination at 0x02148334"
           },
           {
-            "symbol": "@440",
+            "symbol": "@456",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local St_OpenClose_Main PTMF is a configured initializer relocation destination at 0x0214833c"
           },
           {
-            "symbol": "@426",
+            "symbol": "@442",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local St_TalkingToPlayer_Main PTMF is a configured initializer relocation destination at 0x02148344"
           },
           {
-            "symbol": "@428",
+            "symbol": "@444",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local St_Unlocking_Init PTMF is a configured initializer relocation destination at 0x0214834c"
           },
           {
-            "symbol": "@438",
+            "symbol": "@454",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local St_OpenClose_Init PTMF is a configured initializer relocation destination at 0x02148354"
           },
           {
-            "symbol": "@436",
+            "symbol": "@452",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local St_Unlocking_Main PTMF is a configured initializer relocation destination at 0x0214835c"
           },
           {
-            "symbol": "@424",
+            "symbol": "@440",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local St_TalkingToPlayer_Init PTMF is a configured initializer relocation destination at 0x02148364"
           },
           {
-            "symbol": "@422",
+            "symbol": "@438",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local St_Wait_Main PTMF is a configured initializer relocation destination at 0x0214836c"
           },
           {
-            "symbol": "@420",
+            "symbol": "@436",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0214893c"
@@ -3185,55 +3185,55 @@
           },
           {
             "symbolIndex": 43,
-            "symbol": "@442",
+            "symbol": "@458",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
             "symbolIndex": 37,
-            "symbol": "@440",
+            "symbol": "@456",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
             "symbolIndex": 36,
-            "symbol": "@426",
+            "symbol": "@442",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
             "symbolIndex": 39,
-            "symbol": "@428",
+            "symbol": "@444",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
             "symbolIndex": 40,
-            "symbol": "@438",
+            "symbol": "@454",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
             "symbolIndex": 38,
-            "symbol": "@436",
+            "symbol": "@452",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
             "symbolIndex": 41,
-            "symbol": "@424",
+            "symbol": "@440",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
             "symbolIndex": 42,
-            "symbol": "@422",
+            "symbol": "@438",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
             "symbolIndex": 44,
-            "symbol": "@420",
+            "symbol": "@436",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           }
@@ -3384,15 +3384,15 @@
         ],
         "licensedSymbols": [
           ".p__sinit_daStarGate_c.cpp",
-          "@420",
-          "@422",
-          "@424",
-          "@426",
-          "@428",
           "@436",
           "@438",
           "@440",
           "@442",
+          "@444",
+          "@452",
+          "@454",
+          "@456",
+          "@458",
           "_ZN12daStarGate_c12ST_UNLOCKINGE",
           "_ZN12daStarGate_c13ST_OPEN_CLOSEE",
           "_ZN12daStarGate_c14ST_STAY_CLOSEDE",
@@ -4001,6 +4001,6 @@
       "strayOutputs": null,
       "scratch": "build/tu/ov100-daStarGate_c/link-partitioned (gitignored)"
     },
-    "sinitSpellingNote": "WHY THESE TWO BLOCKS SPELL THE INITIALISER __sinit_daStarGate_c.cpp WHILE THE ENTRY'S LIVE init/ctor/relocations CLAIMS SPELL IT __sinit_d_a_star_gate.cpp -- and why neither spelling is wrong. mwccarm derives the initialiser symbol from the SOURCE FILE NAME, so a recorded __sinit_ must equal '__sinit_' plus the basename of the file that round compiled. That rule was checked against every other manifest entry carrying a compiler-derived initialiser and holds on all of them: ov002/dPathLiftActor_c (source src_tu/actors/dPathLiftActor_c.cpp -> __sinit_dPathLiftActor_c.cpp), ov023/daObjFm_Battan_c (src/game/actors/d_a_obj_fm_battan.cpp -> __sinit_d_a_obj_fm_battan.cpp), ov044/daObjKb1Billboard_c (src/game/actors/d_a_obj_kb1_billboard.cpp -> __sinit_d_a_obj_kb1_billboard.cpp), and this entry's own live claims (src/game/actors/d_a_star_gate.cpp -> __sinit_d_a_star_gate.cpp). Applied to these two blocks the same rule ACQUITS them rather than convicting them: both record objectHashes.tuObjectPath ending in src_tu/actors/daStarGate_c.o, so the round they describe compiled the shadow source src_tu/actors/daStarGate_c.cpp, from which mwccarm could only have emitted __sinit_daStarGate_c.cpp and .p__sinit_daStarGate_c.cpp. The TU source was renamed to src/game/actors/d_a_star_gate.cpp at promotion; the live claims were rewritten against the new name, these dated blocks were not, and they should not be. The same dating applies to the compiler-numbered PTMF labels inside them (@436..@442 here against @452 in the live claims). NOTHING IS RE-RUN OR REWRITTEN HERE. Both blocks are records of a completed scratch run, kept verbatim with the ROM sha256 each observed; editing their symbol spellings to agree with today's file name would falsify a past measurement instead of correcting live configuration."
+    "sinitSpellingNote": "WHY THESE TWO BLOCKS SPELL THE INITIALISER __sinit_daStarGate_c.cpp WHILE THE ENTRY'S LIVE init/ctor/relocations CLAIMS SPELL IT __sinit_d_a_star_gate.cpp -- and why neither spelling is wrong. mwccarm derives the initialiser symbol from the SOURCE FILE NAME, so a recorded __sinit_ must equal '__sinit_' plus the basename of the file that round compiled. That rule was checked against every other manifest entry carrying a compiler-derived initialiser and holds on all of them: ov002/dPathLiftActor_c (source src_tu/actors/dPathLiftActor_c.cpp -> __sinit_dPathLiftActor_c.cpp), ov023/daObjFm_Battan_c (src/game/actors/d_a_obj_fm_battan.cpp -> __sinit_d_a_obj_fm_battan.cpp), ov044/daObjKb1Billboard_c (src/game/actors/d_a_obj_kb1_billboard.cpp -> __sinit_d_a_obj_kb1_billboard.cpp), and this entry's own live claims (src/game/actors/d_a_star_gate.cpp -> __sinit_d_a_star_gate.cpp). Applied to these two blocks the same rule ACQUITS them rather than convicting them: both record objectHashes.tuObjectPath ending in src_tu/actors/daStarGate_c.o, so the round they describe compiled the shadow source src_tu/actors/daStarGate_c.cpp, from which mwccarm could only have emitted __sinit_daStarGate_c.cpp and .p__sinit_daStarGate_c.cpp. The TU source was renamed to src/game/actors/d_a_star_gate.cpp at promotion; the live claims were rewritten against the new name, these dated blocks were not, and they should not be. The same dating applies to the compiler-numbered PTMF labels inside them (@452..@458 here against @468 in the live claims). NOTHING IS RE-RUN OR REWRITTEN HERE. Both blocks are records of a completed scratch run, kept verbatim with the ROM sha256 each observed; editing their symbol spellings to agree with today's file name would falsify a past measurement instead of correcting live configuration."
   }
 }
