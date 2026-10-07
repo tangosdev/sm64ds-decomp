@@ -3,7 +3,7 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * ADDS NO FIELDS. Its allocation is _Znwj(0x34) in func_ov006_02115b0c, and
+ * ADDS NO FIELDS. Its allocation is _Znwj(0x34) in dScMgSmartball_c::SpawnObjects, and
  * 0x34 is exactly the base's size: this class is three overrides and nothing
  * else. That is not an assumption from an empty field scan -- the literal
  * says so, and no code in the family touches an offset >= 0x34 through a
@@ -23,6 +23,10 @@ struct cMgSmartball_dokan_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 -- see the .cpp: a tail call */
+
+    /* Recovered helper: the ball-vs-pipe-mouth proximity test -- inside the
+       x band and the z window the mouth opens on. */
+    int  CheckBall(int *pos);
 };
 
 #ifndef SM64DS_PLATFORM_PC

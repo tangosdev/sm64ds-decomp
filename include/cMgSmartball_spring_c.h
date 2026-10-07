@@ -5,7 +5,7 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * SIZE 0x48, NOT FROM func_ov006_02115b0c.c LIKE EVERY OTHER SIBLING.
+ * SIZE 0x48, NOT FROM dScMgSmartball_c::SpawnObjects.c LIKE EVERY OTHER SIBLING.
  * spring's allocation site is inside dScMgSmartball_c::InitResources
  * (ov006 0x02118b70), which had no matched source when this class was
  * recovered. The literal was read straight off the ROM:
@@ -55,7 +55,7 @@
  * CONSTRUCTED BY func_ov006_0211157c, left a free function per the recipe
  * (this tree has migrated zero constructors), with only its vtable-symbol
  * reference renamed. Unlike every sibling, its only caller is
- * dScMgSmartball_c::InitResources -- func_ov006_02115b0c.c never allocates a
+ * dScMgSmartball_c::InitResources -- dScMgSmartball_c::SpawnObjects.c never allocates a
  * spring -- so this migration had fewer literal call sites to rename than
  * usual. It sets the base's mRadius to 0x20000, the per-child constant every
  * sibling constructor also writes; it does not touch anything from 0x34 to
