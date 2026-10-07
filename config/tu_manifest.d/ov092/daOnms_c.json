@@ -204,63 +204,63 @@
   ],
   "data": [
     {
-      "symbol": "@942",
+      "symbol": "@972",
       "address": "0x02132240",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous roll-neg-Z state descriptor; retail first word is 0x02131680"
     },
     {
-      "symbol": "@948",
+      "symbol": "@978",
       "address": "0x02132248",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous knocked state descriptor; retail first word is 0x021311b0"
     },
     {
-      "symbol": "@944",
+      "symbol": "@974",
       "address": "0x02132250",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous roll-neg-X state descriptor; retail first word is 0x02131650"
     },
     {
-      "symbol": "@940",
+      "symbol": "@970",
       "address": "0x02132258",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous roll-pos-Z state descriptor; retail first word is 0x021316b0"
     },
     {
-      "symbol": "@946",
+      "symbol": "@976",
       "address": "0x02132260",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous roll-pos-X state descriptor; retail first word is 0x02131620"
     },
     {
-      "symbol": "@936",
+      "symbol": "@966",
       "address": "0x02132268",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous land state descriptor; retail first word is 0x021315ac"
     },
     {
-      "symbol": "@951",
+      "symbol": "@981",
       "address": "0x02132270",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous sink state descriptor; retail first word is 0x02130fcc"
     },
     {
-      "symbol": "@949",
+      "symbol": "@979",
       "address": "0x02132278",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous bounce state descriptor; retail first word is 0x02131010"
     },
     {
-      "symbol": "@938",
+      "symbol": "@968",
       "address": "0x02132280",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -283,14 +283,14 @@
       "evidence": "collision resource handle constructed with file ID 0x3ca"
     },
     {
-      "symbol": "@934",
+      "symbol": "@964",
       "address": "0x02132550",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated collision resource destructor-registration node"
     },
     {
-      "symbol": "@933",
+      "symbol": "@963",
       "address": "0x0213255c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -783,67 +783,67 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@933",
+      "symbol": "@963",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local model registration node is a configured initializer relocation destination at 0x0213255c"
     },
     {
-      "symbol": "@934",
+      "symbol": "@964",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local collision registration node is a configured initializer relocation destination at 0x02132550"
     },
     {
-      "symbol": "@936",
+      "symbol": "@966",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local land descriptor is a configured initializer relocation destination at 0x02132268"
     },
     {
-      "symbol": "@938",
+      "symbol": "@968",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local wait descriptor is a configured initializer relocation destination at 0x02132280"
     },
     {
-      "symbol": "@940",
+      "symbol": "@970",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local roll-pos-Z descriptor is a configured initializer relocation destination at 0x02132258"
     },
     {
-      "symbol": "@942",
+      "symbol": "@972",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local roll-neg-Z descriptor is a configured initializer relocation destination at 0x02132240"
     },
     {
-      "symbol": "@944",
+      "symbol": "@974",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local roll-neg-X descriptor is a configured initializer relocation destination at 0x02132250"
     },
     {
-      "symbol": "@946",
+      "symbol": "@976",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local roll-pos-X descriptor is a configured initializer relocation destination at 0x02132260"
     },
     {
-      "symbol": "@948",
+      "symbol": "@978",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local knocked descriptor is a configured initializer relocation destination at 0x02132248"
     },
     {
-      "symbol": "@949",
+      "symbol": "@979",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local bounce descriptor is a configured initializer relocation destination at 0x02132278"
     },
     {
-      "symbol": "@951",
+      "symbol": "@981",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local sink descriptor is a configured initializer relocation destination at 0x02132270"
@@ -915,7 +915,7 @@
       "source": "0x021321d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@933",
+      "symbol": "@963",
       "addend": 0,
       "target_module": "ov092",
       "target_address": "0x0213255c"
@@ -945,7 +945,7 @@
       "source": "0x021321e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@934",
+      "symbol": "@964",
       "addend": 0,
       "target_module": "ov092",
       "target_address": "0x02132550"
@@ -955,7 +955,7 @@
       "source": "0x021321e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@936",
+      "symbol": "@966",
       "addend": 0,
       "target_module": "ov092",
       "target_address": "0x02132268"
@@ -965,7 +965,7 @@
       "source": "0x021321ec",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@938",
+      "symbol": "@968",
       "addend": 0,
       "target_module": "ov092",
       "target_address": "0x02132280"
@@ -975,7 +975,7 @@
       "source": "0x021321f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@940",
+      "symbol": "@970",
       "addend": 0,
       "target_module": "ov092",
       "target_address": "0x02132258"
@@ -985,7 +985,7 @@
       "source": "0x021321f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@942",
+      "symbol": "@972",
       "addend": 0,
       "target_module": "ov092",
       "target_address": "0x02132240"
@@ -995,7 +995,7 @@
       "source": "0x021321f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@944",
+      "symbol": "@974",
       "addend": 0,
       "target_module": "ov092",
       "target_address": "0x02132250"
@@ -1015,7 +1015,7 @@
       "source": "0x02132200",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@946",
+      "symbol": "@976",
       "addend": 0,
       "target_module": "ov092",
       "target_address": "0x02132260"
@@ -1025,7 +1025,7 @@
       "source": "0x02132204",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@948",
+      "symbol": "@978",
       "addend": 0,
       "target_module": "ov092",
       "target_address": "0x02132248"
@@ -1035,7 +1035,7 @@
       "source": "0x02132208",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@949",
+      "symbol": "@979",
       "addend": 0,
       "target_module": "ov092",
       "target_address": "0x02132278"
@@ -1045,7 +1045,7 @@
       "source": "0x0213220c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@951",
+      "symbol": "@981",
       "addend": 0,
       "target_module": "ov092",
       "target_address": "0x02132270"
