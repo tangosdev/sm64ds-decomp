@@ -112,6 +112,84 @@ struct dScMgSound_c : dScMgSingle3DBase_c {
     s32 InitResources();             /* slot 0 */
     s32 Behavior();                  /* slot 6 */
     s32 Render();                    /* slot 9 */
+
+    /* Scene helpers in ROM order: note/pop state handlers, sprite and
+       touch helpers, the deal/draw routines, and the phase dispatchers
+       that run the PMF state tables. */
+    void func_ov006_021199c0();
+    void func_ov006_02119a18();
+    void func_ov006_02119a88();
+    void func_ov006_02119aa8();
+    void func_ov006_02119b00();
+    void func_ov006_02119ba4();
+    void func_ov006_02119bc4();
+    void func_ov006_02119bdc();
+    void func_ov006_02119c74();
+    void func_ov006_02119d50(int slot);
+    void func_ov006_02119dc4(int slot);
+    void func_ov006_02119e5c(int slot);
+    void func_ov006_02119eec(int slot);
+    void func_ov006_02119f3c(int slot);
+    void func_ov006_02119fb0(int slot);
+    void func_ov006_0211a048(int slot);
+    void func_ov006_0211a0d8(int slot);
+    void func_ov006_0211a128(int slot);
+    void func_ov006_0211a19c(int slot);
+    void func_ov006_0211a234(int slot);
+    void func_ov006_0211a2c4(int slot);
+    void func_ov006_0211a314(int slot);
+    void func_ov006_0211a388(int slot);
+    void func_ov006_0211a420(int slot);
+    void func_ov006_0211a4b0(int slot);
+    void func_ov006_0211a500(int slot);
+    void func_ov006_0211a578(int slot);
+    void func_ov006_0211a5ec(int slot);
+    void func_ov006_0211a648(int slot);
+    void func_ov006_0211a698();
+    void func_ov006_0211a69c(int slot);
+    void func_ov006_0211a714(int slot);
+    void func_ov006_0211a7ac(int slot);
+    void func_ov006_0211a7fc(int slot);
+    void func_ov006_0211a910(int slot);
+    void func_ov006_0211a9fc(int slot);
+    void func_ov006_0211aa44(int slot);
+    void func_ov006_0211aa94(int slot);
+    void func_ov006_0211ab0c(int slot);
+    void func_ov006_0211ab80(int slot);
+    void func_ov006_0211abdc(int slot);
+    void func_ov006_0211ac2c();
+    void func_ov006_0211ac30(int slot);
+    void func_ov006_0211ad00(int slot);
+    void func_ov006_0211ad44(int slot);
+    void func_ov006_0211ad94(int slot);
+    void func_ov006_0211ae40(int slot);
+    void func_ov006_0211aed0(int slot);
+    void func_ov006_0211af60(int slot);
+    void func_ov006_0211afb0(int slot);
+    void func_ov006_0211b05c(int slot);
+    void func_ov006_0211b0ec(int slot);
+    void func_ov006_0211b17c(int slot);
+    void func_ov006_0211b1cc(int slot);
+    void func_ov006_0211b278(int slot);
+    void func_ov006_0211b308(int slot);
+    void func_ov006_0211b398(int slot);
+    void func_ov006_0211b3e8();
+    void func_ov006_0211b3ec(int slot);
+    void func_ov006_0211b4fc(int slot);
+    void func_ov006_0211b590(int slot);
+    void func_ov006_0211b5e0();
+    void func_ov006_0211b654(int n);
+    void func_ov006_0211b790();
+    void func_ov006_0211b80c();
+    void func_ov006_0211b954();
+    void func_ov006_0211b9c8();
+    void func_ov006_0211ba88(int slot);
+    void func_ov006_0211bbe0(int slot);
+    void func_ov006_0211bc68(int slot);
+    void func_ov006_0211bc8c(int idx);
+    void func_ov006_0211bf44(int slot);
+    void func_ov006_0211c080();
+    void func_ov006_0211c478();
 };
 
 #ifndef SM64DS_PLATFORM_PC

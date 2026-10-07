@@ -6,11 +6,10 @@
  * The compiler emits .text in reverse source order, so the functions run
  * here from the highest address down. Do not reorder.
  *
- * Leftover: func_ and data_ helpers are still the linker names.
  * Leftover: func_ov006_02119bdc reads mState as the raw word at 0x5608.
  *   The member spelling in the note draw loop grows it by 8 bytes.
  * Leftover: func_ov006_0211c080's deal loop reaches mPairUses and
- *   mPairNotes as q + 0x561a and q + 0x561f, with q = scene + pair.
+ *   mPairNotes as q + 0x561a and q + 0x561f, with q = this + pair.
  *   Indexing the members by pair grows the function by 8 bytes.
  * Leftover: InitResources passes raw + 0x4660, the camera that
  *   dScMgSingle3DBase_c.h still leaves as padding.
@@ -31,39 +30,11 @@ struct dMgSoundPopCur {
     dMgSoundPop_c pop;
 };
 
-/* C is incomplete and CFull is complete on purpose: the two pointer-to-member
-   types get different adjustments, and the dispatch tables need both. */
-struct C;
-typedef void (C::*PMF)(int);
-struct Entry { PMF pmf; };
+/* The state/phase dispatch tables hold pointer-to-member records: the
+   sinit copies {pmf, delta} descriptors into them. */
+typedef void (dScMgSound_c::*Pmf)(int);
+struct PmfEntry { Pmf pmf; };
 
-struct Elem {
-    unsigned char idx;
-    char pad[0x23];
-};
-struct CFull {
-    char pad[0x51d1];
-    Elem arr[1];
-};
-typedef void (CFull::*PMFFull)(int);
-struct EntryFull { PMFFull pmf; };
-
-/* func_ov006_0211b9c8 calls Virtual8C through the scene vtable. */
-struct SceneVt {
-    virtual void p00(); virtual void p01(); virtual void p02(); virtual void p03();
-    virtual void p04(); virtual void p05(); virtual void p06(); virtual void p07();
-    virtual void p08(); virtual void p09(); virtual void p10(); virtual void p11();
-    virtual void p12(); virtual void p13(); virtual void p14(); virtual void p15();
-    virtual void p16(); virtual void p17(); virtual void p18(); virtual void p19();
-    virtual void p20(); virtual void p21(); virtual void p22(); virtual void p23();
-    virtual void p24(); virtual void p25(); virtual void p26(); virtual void p27();
-    virtual void p28(); virtual void p29(); virtual void p30(); virtual void p31();
-    virtual void p32(); virtual void p33(); virtual void p34();
-    virtual int check();
-};
-
-/* --- the two RAW members' shared jump-table row --------------------------- */
-struct Ent { int a; int b; };
 
 namespace Sound {
     void PlayBank2_2D(unsigned int id);
@@ -97,39 +68,41 @@ extern const short data_02082214[];
 extern void* data_ov006_0213f6f0[];
 extern int data_ov006_0212ef30[];
 extern int data_ov006_0212ef0c[];
-extern "C" EntryFull data_ov006_02142db0[];
+extern PmfEntry data_ov006_02142db0[];
 extern int data_ov006_0212eeac[];
 extern int data_ov006_0212ee88[];
-extern "C" EntryFull data_ov006_02142d08[];
+extern PmfEntry data_ov006_02142d08[];
 extern int data_ov006_0212ee58[];
 extern int data_ov006_0212ee4c[];
-extern PMF data_ov006_02142cc0[];
+extern Pmf data_ov006_02142cc0[];
 extern int data_ov006_0212ee64[];
 extern int data_ov006_0212ef00[];
-extern "C" PMF data_ov006_02142d98[];
+extern Pmf data_ov006_02142d98[];
 extern int data_ov006_0212eedc[];
-extern "C" Entry data_ov006_02142d68[];
+extern PmfEntry data_ov006_02142d68[];
 extern int data_ov006_0212ee94[];
-extern "C" Entry data_ov006_02142d20[];
+extern PmfEntry data_ov006_02142d20[];
 extern u32 data_ov006_0212ee70[];
-extern "C" Entry data_ov006_02142cf0[];
+extern PmfEntry data_ov006_02142cf0[];
 extern int data_ov006_0212ee7c[];
-extern "C" Entry data_ov006_02142cd8[];
+extern PmfEntry data_ov006_02142cd8[];
 extern int data_ov006_0212ee40[];
-extern "C" Entry data_ov006_02142de0[];
+extern PmfEntry data_ov006_02142de0[];
 extern int data_ov006_0212ef18[];
 extern int data_ov006_0212ef24[];
-extern "C" Entry data_ov006_02142dc8[];
+extern PmfEntry data_ov006_02142dc8[];
 extern int data_ov006_0212eef4[];
 extern int data_ov006_0212eee8[];
-extern "C" Entry data_ov006_02142d80[];
+extern PmfEntry data_ov006_02142d80[];
 extern int data_ov006_0212eed0[];
 extern int data_ov006_0212eec4[];
-extern "C" Entry data_ov006_02142d50[];
+extern PmfEntry data_ov006_02142d50[];
 extern int data_ov006_0212eeb8[];
 extern int data_ov006_0212eea0[];
 extern unsigned char data_ov006_0212ee0c[];
-extern "C" PMF data_ov006_02142d38[];
+extern Pmf data_ov006_02142d38[];
+extern PmfEntry data_ov006_02142df8[];
+extern PmfEntry data_ov006_02142e20[];
 extern u8 data_ov006_0212ee30[];
 extern void func_02012790(int);
 extern void func_ov006_020c271c(void *c);
@@ -138,9 +111,7 @@ extern int data_ov006_0212ef7c[];
 extern int data_ov006_0212ef8c[];
 extern int data_ov006_0212ef5c[];
 extern int data_ov006_0212ef6c[];
-void func_ov006_0211ba88(dScMgSound_c *base, int idx);
 extern unsigned short data_ov006_0212ef4c[];
-void func_ov006_0211b654(dScMgSound_c *m, int n);
 void func_ov006_020c2300(char *p);
 void func_02012174(u32 bank, u32 id);
 extern u16 data_ov006_0212ef3c[];
@@ -161,8 +132,6 @@ extern int data_ov006_0212efb0[];
 extern u16 *data_ov006_0213f6fc[];
 extern void func_ov006_020c2924(char *c);
 extern void func_ov006_020c2594(void *c);
-extern void func_ov006_0211c478(char *base);
-extern void func_ov006_0211c080(char *o);
 extern "C" void func_ov004_020b1e34(void *c, int a, int b, int d);
 void FreeGfxSlotsById(int id);
 int LoadFile(int handle);
@@ -241,8 +210,8 @@ s32 dScMgSound_c::InitResources()
         return 0;
 
     mTable.mSuppressSound = 1;
-    func_ov006_0211c478((char *)this);
-    func_ov006_0211c080((char *)this);
+    func_ov006_0211c478();
+    func_ov006_0211c080();
     mTries = 3;
     mState = 1;
     mIntroTimer = 0x20;
@@ -279,14 +248,14 @@ s32 dScMgSound_c::Behavior()
                 }
             }
         }
-        func_ov006_0211b954(raw);
-        func_ov006_0211b80c(raw);
-        func_ov006_0211b5e0(raw);
-        func_ov006_0211b790(raw);
+        func_ov006_0211b954();
+        func_ov006_0211b80c();
+        func_ov006_0211b5e0();
+        func_ov006_0211b790();
         break;
     case 2:
-        func_ov006_0211b954(raw);
-        func_ov006_0211b5e0(raw);
+        func_ov006_0211b954();
+        func_ov006_0211b5e0();
         if (mResultTimer != 0) {
             (*(u16 *)(int)&mResultTimer)--;
             if (mResultTimer == 0) {
@@ -307,23 +276,23 @@ s32 dScMgSound_c::Behavior()
                     }
                     func_ov004_020adb1c(data_ov004_020beb68 != 0
                                             ? *(int *)((char *)data_ov004_020beb68 + 0xb4) : 0);
-                    func_ov006_02119ba4(raw);
-                    func_ov006_02119a88(raw);
+                    func_ov006_02119ba4();
+                    func_ov006_02119a88();
                     mPromptEnabled = 0;
                 } else {
                     mState = 3;
                     mResultTimer = 0x20;
-                    func_ov006_0211b9c8(raw);
+                    func_ov006_0211b9c8();
                 }
             }
         } else {
-            func_ov006_02119b00(raw);
-            func_ov006_02119a18(raw);
+            func_ov006_02119b00();
+            func_ov006_02119a18();
         }
         break;
     case 3:
-        func_ov006_0211b954(raw);
-        func_ov006_0211b5e0(raw);
+        func_ov006_0211b954();
+        func_ov006_0211b5e0();
         if (mResultTimer != 0) {
             (*(u16 *)(int)&mResultTimer)--;
             if (*(s16 *)&mResultTimer <= 0) {
@@ -348,11 +317,11 @@ s32 dScMgSound_c::Render()
     char *raw = (char *)this;
 
     func_ov004_020b1e34(raw, 0xe0, 0x14, 1);
-    func_ov006_02119c74(raw);
-    func_ov006_02119bdc(raw);
-    func_ov006_02119bc4(raw);
-    func_ov006_021199c0(raw);
-    func_ov006_02119aa8(raw);
+    func_ov006_02119c74();
+    func_ov006_02119bdc();
+    func_ov006_02119bc4();
+    func_ov006_021199c0();
+    func_ov006_02119aa8();
     func_ov006_020c29dc(&mTable);
     return 1;
 }
@@ -393,10 +362,10 @@ void dScMgSound_c::OnYoshiTryEat(int mode)
     }
 
     mTable.mSuppressSound = 1;
-    func_ov006_0211c478(raw);
+    func_ov006_0211c478();
 
     mTries = 3;
-    func_ov006_0211c080(raw);
+    func_ov006_0211c080();
 
     mIntroTimer = 0x20;
     func_ov004_020b0cac(0xd, 0x80, 0xa8, 1, -1, 0xd);
@@ -412,15 +381,13 @@ void dScMgSound_c::Virtual50()
     func_ov006_020c2594((char *)&mTable);
 }
 
-// @symbol func_ov006_0211c478
-extern "C" {
-void func_ov006_0211c478(char *scene)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211c478Ev
+void dScMgSound_c::func_ov006_0211c478()
 {
-    dScMgSound_c *self = (dScMgSound_c *)scene;
-    int i;
+        int i;
     int cnt1;
     int cnt2;
-    char *b = scene;
+    char *b = (char *)this;
 
     for (cnt1 = 0; cnt1 < 10; cnt1++) {
         dMgSoundNoteCur *note = (dMgSoundNoteCur *)b;
@@ -436,11 +403,11 @@ void func_ov006_0211c478(char *scene)
     }
 
     for (cnt2 = 0; cnt2 < 5; cnt2++) {
-        self->mPairUses[cnt2] = 0;
-        self->mPairNotes[cnt2] = 0;
+        this->mPairUses[cnt2] = 0;
+        this->mPairNotes[cnt2] = 0;
     }
 
-    b = scene;
+    b = (char *)this;
     for (i = 0; i < 0x1e; i++) {
         dMgSoundPopCur *pop = (dMgSoundPopCur *)b;
         pop->pop.x = 0;
@@ -461,34 +428,31 @@ void func_ov006_0211c478(char *scene)
         b += 0x24;
     }
 
-    self->mSpriteB.active = 0;
-    self->mSpriteB.visible = 1;
-    self->mSpriteB.x = 0xbd000;
-    self->mSpriteB.y = 0x97000;
-    self->mSpriteB.frame = 0;
-    self->mSpriteA.active = 0;
-    self->mSpriteA.visible = 1;
-    self->mSpriteA.x = 0xa0000;
-    self->mSpriteA.y = 0x9d000;
-    self->mSpriteA.frame = 0;
+    this->mSpriteB.active = 0;
+    this->mSpriteB.visible = 1;
+    this->mSpriteB.x = 0xbd000;
+    this->mSpriteB.y = 0x97000;
+    this->mSpriteB.frame = 0;
+    this->mSpriteA.active = 0;
+    this->mSpriteA.visible = 1;
+    this->mSpriteA.x = 0xa0000;
+    this->mSpriteA.y = 0x9d000;
+    this->mSpriteA.frame = 0;
 
-    self->mQueue[1] = 0;
-    self->mQueue[0] = self->mQueue[1];
-    self->mQueueTimer = 0;
-    self->mQueueLen = 0;
-    self->mTouchCount = 0;
-    self->mResultTimer = 0;
+    this->mQueue[1] = 0;
+    this->mQueue[0] = this->mQueue[1];
+    this->mQueueTimer = 0;
+    this->mQueueLen = 0;
+    this->mTouchCount = 0;
+    this->mResultTimer = 0;
 
-    func_ov006_020c2924((char *)&self->mTable);
+    func_ov006_020c2924((char *)&this->mTable);
 }
-}
 
-// @symbol func_ov006_0211c080
-extern "C" {
-void func_ov006_0211c080(char *scene)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211c080Ev
+void dScMgSound_c::func_ov006_0211c080()
 {
-    dScMgSound_c *self = (dScMgSound_c *)scene;
-    int sel;
+        int sel;
     int k;
     int count;
     int n;
@@ -496,38 +460,38 @@ void func_ov006_0211c080(char *scene)
     int speed;
     int i;
 
-    sel = self->unk_0bc;
-    self->mPrevPattern = self->mPattern;
+    sel = this->unk_0bc;
+    this->mPrevPattern = this->mPattern;
     if (sel >= 5) {
         sel = (u32)(RND * 5) >> 15;
-        if (sel == self->mPrevPattern) {
+        if (sel == this->mPrevPattern) {
             sel += ((u32)(RND << 2) >> 15) + 1;
             if (sel >= 5)
                 sel -= 5;
         }
     }
-    self->mPattern = sel;
-    k = self->mPattern;
+    this->mPattern = sel;
+    k = this->mPattern;
     count = data_ov006_0212ee18[k];
     speed = data_ov006_0212ee10[k];
     if (k == 3) {
         int a = (u32)(RND << 2) >> 15;
         int b = (u32)(RND * 3) >> 15;
-        self->mPairNotes[0] = b;
-        self->mPairNotes[1] = self->mPairNotes[0] + 1;
-        if (self->mPairNotes[1] >= 3)
-            self->mPairNotes[1] -= 3;
-        self->mPairNotes[2] = self->mPairNotes[1] + 1;
-        if (self->mPairNotes[2] >= 3)
-            self->mPairNotes[2] -= 3;
-        self->mPairNotes[0] += a * 3;
-        self->mPairNotes[1] += a * 3;
-        self->mPairNotes[2] += a * 3;
+        this->mPairNotes[0] = b;
+        this->mPairNotes[1] = this->mPairNotes[0] + 1;
+        if (this->mPairNotes[1] >= 3)
+            this->mPairNotes[1] -= 3;
+        this->mPairNotes[2] = this->mPairNotes[1] + 1;
+        if (this->mPairNotes[2] >= 3)
+            this->mPairNotes[2] -= 3;
+        this->mPairNotes[0] += a * 3;
+        this->mPairNotes[1] += a * 3;
+        this->mPairNotes[2] += a * 3;
     } else {
         half = count >> 1;
         for (i = 0; i < half; i++) {
             int v = (u32)(RND * speed) >> 15;
-            self->mPairNotes[i] = v;
+            this->mPairNotes[i] = v;
             if (i != 0) {
                 int dup;
                 int j;
@@ -535,25 +499,25 @@ void func_ov006_0211c080(char *scene)
                     dup = 0;
                     j = 0;
                     for (; j < i; j++) {
-                        if (self->mPairNotes[i] == self->mPairNotes[j]) {
+                        if (this->mPairNotes[i] == this->mPairNotes[j]) {
                             dup = 1;
                             break;
                         }
                     }
                     if (dup == 0)
                         break;
-                    self->mPairNotes[i] = (u32)(RND * speed) >> 15;
+                    this->mPairNotes[i] = (u32)(RND * speed) >> 15;
                 }
             }
         }
     }
-    k = self->mPattern;
+    k = this->mPattern;
     if (k == 1 || k == 4) {
-        self->mBank = data_ov006_0212efb0[((u32)self->unk_0bc >> 2) & 3];
+        this->mBank = data_ov006_0212efb0[((u32)this->unk_0bc >> 2) & 3];
     }
     half = count >> 1;
     for (i = 0; i < half; i++) {
-        self->mPairNotes[i] += data_ov006_0212ef9c[self->mPattern];
+        this->mPairNotes[i] += data_ov006_0212ef9c[this->mPattern];
     }
     {
         int xi;
@@ -568,10 +532,10 @@ void func_ov006_0211c080(char *scene)
             return;
         zi = 1;
         xi = 0;
-        p = scene;
+        p = (char *)this;
         do {
             dMgSoundNoteCur *note = (dMgSoundNoteCur *)p;
-            t = data_ov006_0212ee20[self->mPattern];
+            t = data_ov006_0212ee20[this->mPattern];
             note->note.x = data_ov006_0213f6fc[t][xi] << 12;
             note->note.y = (*(u16 * volatile *)&data_ov006_0213f6fc[t])[zi] << 12;
             note->note.timer = 0;
@@ -581,7 +545,7 @@ void func_ov006_0211c080(char *scene)
             note->note.frame = 0;
             note->note.checked = 0;
             do {
-                q = scene + ((u32)(RND * half) >> 15);
+                q = (char *)this + ((u32)(RND * half) >> 15);
                 slot = (u8 *)LAUNDER(q + 0x561a);
             } while (*slot >= 2);
             note->note.note = *(u8 *)(q + 0x561f);
@@ -593,11 +557,9 @@ void func_ov006_0211c080(char *scene)
         } while (n < count);
     }
 }
-}
 
-// @symbol func_ov006_0211bf44
-extern "C" {
-void func_ov006_0211bf44(dScMgSound_c* scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211bf44Ei
+void dScMgSound_c::func_ov006_0211bf44(int slot)
 {
     u8 player;
     int offset;
@@ -605,10 +567,10 @@ void func_ov006_0211bf44(dScMgSound_c* scene, int slot)
     int dx;
     int dy;
 
-    if (scene->mState != 1) {
+    if (this->mState != 1) {
         return;
     }
-    if (scene->mTouchCount >= 2) {
+    if (this->mTouchCount >= 2) {
         return;
     }
 
@@ -624,8 +586,8 @@ void func_ov006_0211bf44(dScMgSound_c* scene, int slot)
         return;
     }
 
-    dx = data_020a0dea[player * 4] - (scene->mNotes[slot].x >> 12);
-    dy = data_020a0deb[player * 4] - (scene->mNotes[slot].y >> 12);
+    dx = data_020a0dea[player * 4] - (this->mNotes[slot].x >> 12);
+    dy = data_020a0deb[player * 4] - (this->mNotes[slot].y >> 12);
 
     if (dx > 0x18) {
         return;
@@ -640,49 +602,48 @@ void func_ov006_0211bf44(dScMgSound_c* scene, int slot)
         return;
     }
 
-    scene->mNotes[slot].state = 1;
-    scene->mNotes[slot].timer = 0;
-    scene->mNotes[slot].frame = 0;
-    scene->mTouchCount++;
+    this->mNotes[slot].state = 1;
+    this->mNotes[slot].timer = 0;
+    this->mNotes[slot].frame = 0;
+    this->mTouchCount++;
     Sound::PlayBank2_2D(0x201);
 }
-}
 
-// @symbol func_ov006_0211bc8c
+// @symbol _ZN12dScMgSound_c19func_ov006_0211bc8cEi
 /* Advances one note slot's animation. When the slot's last frame is
    reached its note goes on mQueue and is played; mPattern and Virtual8C
    choose between func_02012790, the bank handle mBank and
    Sound::PlayBank2_2D.
    func_ov006_0211b654 is passed `idx` even though it is already in r1:
    dropping it changes the register allocation of the queue block. */
-extern "C" void func_ov006_0211bc8c(dScMgSound_c *self, int idx)
+void dScMgSound_c::func_ov006_0211bc8c(int idx)
 {
     u8 note;
     u8 instrument;
 
-    self->mNotes[idx].timer = self->mNotes[idx].timer + 1;
-    if (self->mNotes[idx].timer < data_ov006_0212ef3c[self->mNotes[idx].frame]) return;
-    self->mNotes[idx].timer = 0;
-    self->mNotes[idx].frame = self->mNotes[idx].frame + 1;
-    if (self->mNotes[idx].frame <= 6) return;
-    self->mNotes[idx].frame = 6;
-    self->mNotes[idx].state = 2;
+    this->mNotes[idx].timer = this->mNotes[idx].timer + 1;
+    if (this->mNotes[idx].timer < data_ov006_0212ef3c[this->mNotes[idx].frame]) return;
+    this->mNotes[idx].timer = 0;
+    this->mNotes[idx].frame = this->mNotes[idx].frame + 1;
+    if (this->mNotes[idx].frame <= 6) return;
+    this->mNotes[idx].frame = 6;
+    this->mNotes[idx].state = 2;
 
-    self->mQueue[self->mQueueLen] = self->mNotes[idx].note + 1;
-    self->mQueue[self->mQueueLen] |= idx << 8;
-    self->mQueueLen++;
-    self->mQueueTimer = 0x20;
+    this->mQueue[this->mQueueLen] = this->mNotes[idx].note + 1;
+    this->mQueue[this->mQueueLen] |= idx << 8;
+    this->mQueueLen++;
+    this->mQueueTimer = 0x20;
 
-    func_ov006_0211b654(self, idx);
-    note = self->mNotes[idx].note;
+    func_ov006_0211b654(idx);
+    note = this->mNotes[idx].note;
 
-    if (self->Virtual8C()) {
-        instrument = self->mPattern;
+    if (this->Virtual8C()) {
+        instrument = this->mPattern;
         if (instrument == 0 || instrument == 2) {
             if (data_ov006_0213f794[note] == 2) {
                 func_02012790(data_ov006_0213f7e8[note]);
             } else {
-                func_02012174(self->mBank, data_ov006_0213f7e8[note]);
+                func_02012174(this->mBank, data_ov006_0213f7e8[note]);
             }
         } else if (instrument == 1) {
             int n = note - 0x1a;
@@ -693,68 +654,62 @@ extern "C" void func_ov006_0211bc8c(dScMgSound_c *self, int idx)
             Sound::PlayBank2_2D(data_ov006_0213f7e8[note]);
         }
     } else {
-        instrument = self->mPattern;
+        instrument = this->mPattern;
         if (instrument == 0 || instrument == 2) {
             func_02012790(data_ov006_0213f7e8[note]);
         } else if (instrument == 1) {
-            func_02012174(self->mBank, data_ov006_0213f7e8[note]);
+            func_02012174(this->mBank, data_ov006_0213f7e8[note]);
         } else if (instrument == 4) {
             if (data_ov006_0213f794[note] == 2) {
                 Sound::PlayBank2_2D(data_ov006_0213f7e8[note]);
             } else {
-                func_02012174(self->mBank, data_ov006_0213f7e8[note]);
+                func_02012174(this->mBank, data_ov006_0213f7e8[note]);
             }
         } else {
             Sound::PlayBank2_2D(data_ov006_0213f7e8[note]);
         }
     }
 
-    if (self->mTouchCount == 1) func_ov006_020c2300((char *)&self->mTable);
+    if (this->mTouchCount == 1) func_ov006_020c2300((char *)&this->mTable);
 }
 
-// @symbol func_ov006_0211bc68
-extern "C" {
-void func_ov006_0211bc68(char* scene, int slot) {
-    if (((dScMgSound_c *)scene)->mTouchCount == 0) {
-        ((dScMgSound_c *)scene)->mNotes[slot].state = 3;
+// @symbol _ZN12dScMgSound_c19func_ov006_0211bc68Ei
+void dScMgSound_c::func_ov006_0211bc68(int slot) {
+    if (this->mTouchCount == 0) {
+        this->mNotes[slot].state = 3;
     }
 }
-}
 
-// @symbol func_ov006_0211bbe0
-extern "C" {
-void func_ov006_0211bbe0(dScMgSound_c *scene, int slot){
+// @symbol _ZN12dScMgSound_c19func_ov006_0211bbe0Ei
+void dScMgSound_c::func_ov006_0211bbe0(int slot){
     unsigned char b;
-    scene->mNotes[slot].timer = (unsigned short)(scene->mNotes[slot].timer + 1);
-    b = scene->mNotes[slot].frame;
-    if (scene->mNotes[slot].timer < data_ov006_0212ef4c[b]) return;
-    scene->mNotes[slot].timer = 0;
-    scene->mNotes[slot].frame = (unsigned char)(scene->mNotes[slot].frame - 1);
-    if (scene->mNotes[slot].frame == 0) scene->mNotes[slot].state = 0;
-}
+    this->mNotes[slot].timer = (unsigned short)(this->mNotes[slot].timer + 1);
+    b = this->mNotes[slot].frame;
+    if (this->mNotes[slot].timer < data_ov006_0212ef4c[b]) return;
+    this->mNotes[slot].timer = 0;
+    this->mNotes[slot].frame = (unsigned char)(this->mNotes[slot].frame - 1);
+    if (this->mNotes[slot].frame == 0) this->mNotes[slot].state = 0;
 }
 
-// @symbol func_ov006_0211ba88
+// @symbol _ZN12dScMgSound_c19func_ov006_0211ba88Ei
 /* Scrolls one note slot left by 0x10 per call and clears it once it has
    gone off screen. Its column comes from the per-mode tables
-   data_ov006_0212ef5c and data_ov006_0212ef6c.
-   Two spellings are load-bearing: Virtual8C is asked through `this` in
-   C++, and the store at +0x0c is a byte. */
-void func_ov006_0211ba88(dScMgSound_c *scene, int slot)
+   data_ov006_0212ef5c and data_ov006_0212ef6c. */
+void dScMgSound_c::func_ov006_0211ba88(int slot)
 {
     int n;
     int i;
     int limit;
 
-    scene->mNotes[slot].x -= 0x10000;
+    this->mNotes[slot].x -= 0x10000;
 
-    if (scene->Virtual8C() != 0) {
-        limit = data_ov006_0212ef5c[scene->mPattern];
+    if (this->Virtual8C() != 0) {
+        limit = data_ov006_0212ef5c[this->mPattern];
     } else {
-        limit = data_ov006_0212ef6c[scene->mPattern];
+        limit = data_ov006_0212ef6c[this->mPattern];
     }
 
-    if (scene->mNotes[slot].checked == 0) {
+    if (this->mNotes[slot].checked == 0) {
         n = slot;
         if (slot >= limit) {
             do {
@@ -762,124 +717,106 @@ void func_ov006_0211ba88(dScMgSound_c *scene, int slot)
             } while (n >= limit);
         }
         if (n == 0) {
-            scene->mNotes[slot].checked = 1;
+            this->mNotes[slot].checked = 1;
             return;
         }
         for (i = 0; i < n; i++) {
             int prev = slot - i - 1;
-            if (scene->mNotes[prev].alive != 0) {
-                if ((scene->mNotes[slot].x - scene->mNotes[prev].x) >> 0xc <= 4) {
-                    scene->mNotes[slot].checked = 1;
-                    scene->mNotes[prev].state = 4;
+            if (this->mNotes[prev].alive != 0) {
+                if ((this->mNotes[slot].x - this->mNotes[prev].x) >> 0xc <= 4) {
+                    this->mNotes[slot].checked = 1;
+                    this->mNotes[prev].state = 4;
                 }
             }
         }
     }
 
-    if (scene->mNotes[slot].x >> 0xc > -0x18) return;
+    if (this->mNotes[slot].x >> 0xc > -0x18) return;
 
-    scene->mNotes[slot].alive = 0;
-    scene->mNotes[slot].shown = 0;
+    this->mNotes[slot].alive = 0;
+    this->mNotes[slot].shown = 0;
 }
 
-// @symbol func_ov006_0211b9c8
-extern "C" void func_ov006_0211b9c8(char *scene) {
-    SceneVt *obj = (SceneVt *)scene;
-    int lr;
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b9c8Ev
+void dScMgSound_c::func_ov006_0211b9c8() {
+        int lr;
     int ip;
     int found;
     int off;
-    if (obj->check()) {
-        lr = data_ov006_0212ef7c[((dScMgSound_c *)obj)->mPattern];
+    if (this->Virtual8C()) {
+        lr = data_ov006_0212ef7c[this->mPattern];
     } else {
-        lr = data_ov006_0212ef8c[((dScMgSound_c *)obj)->mPattern];
+        lr = data_ov006_0212ef8c[this->mPattern];
     }
     for (ip = 0, off = 0; ip < 2; ip++) {
         int sb;
         found = -1;
         for (sb = 0; sb < lr; sb++) {
             int e = sb + off;
-            if (((dScMgSound_c *)obj)->mNotes[e].alive != 0)
+            if (this->mNotes[e].alive != 0)
                 found = e;
         }
         if (found != -1) {
-            ((dScMgSound_c *)obj)->mNotes[found].state = 4;
+            this->mNotes[found].state = 4;
         }
         off += lr;
     }
 }
 
-// @symbol func_ov006_0211b954
-extern "C" {
-extern Ent data_ov006_02142df8[];
-void func_ov006_0211b954(char* scene){
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b954Ev
+void dScMgSound_c::func_ov006_0211b954(){
   int i=0;
-  char* r5=scene;
+  char *r5 = (char *)this;
   do{
     dMgSoundNoteCur *note = (dMgSoundNoteCur *)r5;
     if(note->note.alive != 0){
       int idx=note->note.state;
-      Ent* e=&data_ov006_02142df8[idx];
-      int adj=e->b;
-      char* obj=scene+(adj>>1);
-      int fn;
-      if(adj&1){
-        fn=*(int*)(*(int*)obj + e->a);
-      } else {
-        fn=e->a;
-      }
-      ((void(*)(void*,int))fn)(obj,i);
+      (this->*data_ov006_02142df8[idx].pmf)(i);
     }
     i++;
     r5+=0x14;
   }while(i<10);
 }
-}
 
-// @symbol func_ov006_0211b80c
-extern "C" {
-void func_ov006_0211b80c(char *scene){
-  dScMgSound_c *self = (dScMgSound_c *)scene;
-  if(self->mQueueLen < 2) return;
-  if(self->mQueueTimer != 0){
-    self->mQueueTimer -= 1;
-    if((short)self->mQueueTimer <= 0) self->mQueueTimer = 0;
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b80cEv
+void dScMgSound_c::func_ov006_0211b80c(){
+    if(this->mQueueLen < 2) return;
+  if(this->mQueueTimer != 0){
+    this->mQueueTimer -= 1;
+    if((short)this->mQueueTimer <= 0) this->mQueueTimer = 0;
     return;
   }
-  if((self->mQueue[0] & 0xff) == (self->mQueue[1] & 0xff)){
-    self->mNotes[self->mQueue[0] >> 8].alive = 0;
-    self->mNotes[self->mQueue[1] >> 8].alive = 0;
+  if((this->mQueue[0] & 0xff) == (this->mQueue[1] & 0xff)){
+    this->mNotes[this->mQueue[0] >> 8].alive = 0;
+    this->mNotes[this->mQueue[1] >> 8].alive = 0;
     func_02012790(0x26);
-    func_ov006_020c271c(&self->mTable);
+    func_ov006_020c271c(&this->mTable);
   } else {
-    self->mNotes[self->mQueue[0] >> 8].state = 3;
-    self->mNotes[self->mQueue[1] >> 8].state = 3;
+    this->mNotes[this->mQueue[0] >> 8].state = 3;
+    this->mNotes[this->mQueue[1] >> 8].state = 3;
     func_02012790(0xe);
-    self->mTries--;
+    this->mTries--;
     func_02012790(0x12f);
-    func_ov006_020c2664((char *)&self->mTable);
+    func_ov006_020c2664((char *)&this->mTable);
   }
-  self->mQueue[1] = 0;
-  self->mQueue[0] = self->mQueue[1];
-  self->mQueueLen = 0;
-  self->mTouchCount = 0;
-}
+  this->mQueue[1] = 0;
+  this->mQueue[0] = this->mQueue[1];
+  this->mQueueLen = 0;
+  this->mTouchCount = 0;
 }
 
-// @symbol func_ov006_0211b790
-extern "C" {
-void func_ov006_0211b790(char* scene)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b790Ev
+void dScMgSound_c::func_ov006_0211b790()
 {
-    dScMgSound_c *self = (dScMgSound_c *)scene;
-    if (self->mTries == 0) {
-        self->mState = 2;
-        self->mResultTimer = 0x50;
+        if (this->mTries == 0) {
+        this->mState = 2;
+        this->mResultTimer = 0x50;
         return;
     }
     {
         int count = 0;
         int i = 0;
-        char* p = scene;
+        char *p = (char *)this;
         do {
             if (((dMgSoundNoteCur *)p)->note.alive != 0) {
                 count++;
@@ -889,15 +826,13 @@ void func_ov006_0211b790(char* scene)
             p += 0x14;
         } while (i < 0xa);
         if (count != 0) return;
-        self->mResultTimer = 0x50;
-        self->mState = 2;
+        this->mResultTimer = 0x50;
+        this->mState = 2;
     }
 }
-}
 
-// @symbol func_ov006_0211b654
-extern "C" {
-void func_ov006_0211b654(dScMgSound_c *scene, int n)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b654Ei
+void dScMgSound_c::func_ov006_0211b654(int n)
 {
     int k;
     int i;
@@ -905,727 +840,635 @@ void func_ov006_0211b654(dScMgSound_c *scene, int n)
 
     for (k = 0; k < 3; g++, k++) {
         for (i = 0; i < 30; i++) {
-            if (scene->mPops[i].active == 0) {
-                scene->mPops[i].active = 1;
-                scene->mPops[i].x = scene->mNotes[n].x;
-                scene->mPops[i].y = scene->mNotes[n].y - 0x8000;
-                scene->mPops[i].startY = scene->mPops[i].y;
-                scene->mPops[i].sprite = *g;
-                scene->mPops[i].kind = *g;
-                scene->mPops[i].timer = 0;
-                if (scene->mNotes[n].note == 7) {
-                    if (k >= 3) { scene->mPops[i].timer = 0x10; }
-                    else { scene->mPops[i].timer = 8; }
+            if (this->mPops[i].active == 0) {
+                this->mPops[i].active = 1;
+                this->mPops[i].x = this->mNotes[n].x;
+                this->mPops[i].y = this->mNotes[n].y - 0x8000;
+                this->mPops[i].startY = this->mPops[i].y;
+                this->mPops[i].sprite = *g;
+                this->mPops[i].kind = *g;
+                this->mPops[i].timer = 0;
+                if (this->mNotes[n].note == 7) {
+                    if (k >= 3) { this->mPops[i].timer = 0x10; }
+                    else { this->mPops[i].timer = 8; }
                 }
-                scene->mPops[i].scale = 0x1000;
-                scene->mPops[i].velX = 0;
-                scene->mPops[i].velY = 0;
-                scene->mPops[i].state = 0;
-                scene->mPops[i].phase = 0;
+                this->mPops[i].scale = 0x1000;
+                this->mPops[i].velX = 0;
+                this->mPops[i].velY = 0;
+                this->mPops[i].state = 0;
+                this->mPops[i].phase = 0;
                 break;
             }
         }
     }
 }
-}
 
-// @symbol func_ov006_0211b5e0
-extern "C" {
-extern Ent data_ov006_02142e20[];
-void func_ov006_0211b5e0(char* scene){
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b5e0Ev
+void dScMgSound_c::func_ov006_0211b5e0(){
   int i=0;
-  char* r5=scene;
+  char *r5 = (char *)this;
   do{
     dMgSoundPopCur *pop = (dMgSoundPopCur *)r5;
     if(pop->pop.active != 0){
       int idx=pop->pop.state;
-      Ent* e=&data_ov006_02142e20[idx];
-      int adj=e->b;
-      char* obj=scene+(adj>>1);
-      int fn;
-      if(adj&1){
-        fn=*(int*)(*(int*)obj + e->a);
-      } else {
-        fn=e->a;
-      }
-      ((void(*)(void*,int))fn)(obj,i);
+      (this->*data_ov006_02142e20[idx].pmf)(i);
     }
     i++;
     r5+=0x24;
   }while(i<30);
 }
-}
 
-// @symbol func_ov006_0211b590
-extern "C" void func_ov006_0211b590(char *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b590Ei
+void dScMgSound_c::func_ov006_0211b590(int slot)
 {
-    unsigned char idx = ((dScMgSound_c *)scene)->mPops[slot].phase;
-    (((C *)scene)->*data_ov006_02142d38[idx])(slot);
+    unsigned char idx = this->mPops[slot].phase;
+    (this->*data_ov006_02142d38[idx])(slot);
 }
 
-// @symbol func_ov006_0211b4fc
-extern "C" {
-void func_ov006_0211b4fc(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b4fcEi
+void dScMgSound_c::func_ov006_0211b4fc(int slot)
 {
-    scene->mPops[slot].visible = 1;
-    scene->mPops[slot].x += data_ov006_0212eeb8[scene->mPops[slot].kind];
-    scene->mPops[slot].velY = 0;
-    scene->mPops[slot].velX = data_ov006_0212eea0[scene->mPops[slot].kind];
-    scene->mPops[slot].dir = data_ov006_0212ee0c[scene->mPops[slot].kind];
-    scene->mPops[slot].phase = 1;
-}
+    this->mPops[slot].visible = 1;
+    this->mPops[slot].x += data_ov006_0212eeb8[this->mPops[slot].kind];
+    this->mPops[slot].velY = 0;
+    this->mPops[slot].velX = data_ov006_0212eea0[this->mPops[slot].kind];
+    this->mPops[slot].dir = data_ov006_0212ee0c[this->mPops[slot].kind];
+    this->mPops[slot].phase = 1;
 }
 
-// @symbol func_ov006_0211b3ec
-extern "C" {
-void func_ov006_0211b3ec(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b3ecEi
+void dScMgSound_c::func_ov006_0211b3ec(int slot)
 {
     int dir;
 
-    scene->mPops[slot].x += scene->mPops[slot].velX;
+    this->mPops[slot].x += this->mPops[slot].velX;
 
-    dir = scene->mPops[slot].dir;
+    dir = this->mPops[slot].dir;
     if (dir == 0) {
-        scene->mPops[slot].velX -= 0x100;
-        if (scene->mPops[slot].velX < -0xc00) {
-            scene->mPops[slot].velX = -0xc00;
-            scene->mPops[slot].dir = 1;
+        this->mPops[slot].velX -= 0x100;
+        if (this->mPops[slot].velX < -0xc00) {
+            this->mPops[slot].velX = -0xc00;
+            this->mPops[slot].dir = 1;
         }
     } else if (dir != 0) {
-        scene->mPops[slot].velX += 0x100;
-        if (scene->mPops[slot].velX > 0xc00) {
-            scene->mPops[slot].velX = 0xc00;
-            scene->mPops[slot].dir = 0;
+        this->mPops[slot].velX += 0x100;
+        if (this->mPops[slot].velX > 0xc00) {
+            this->mPops[slot].velX = 0xc00;
+            this->mPops[slot].dir = 0;
         }
     }
 
-    scene->mPops[slot].y += scene->mPops[slot].velY;
-    scene->mPops[slot].velY -= 0xc0;
+    this->mPops[slot].y += this->mPops[slot].velY;
+    this->mPops[slot].velY -= 0xc0;
 
-    if ((scene->mPops[slot].startY - scene->mPops[slot].y) >> 12 >= 0x40) {
-        scene->mPops[slot].active = 0;
-        scene->mPops[slot].visible = 0;
+    if ((this->mPops[slot].startY - this->mPops[slot].y) >> 12 >= 0x40) {
+        this->mPops[slot].active = 0;
+        this->mPops[slot].visible = 0;
     }
 }
-}
 
-// @symbol func_ov006_0211b3e8
-extern "C" {
-void func_ov006_0211b3e8(void)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b3e8Ev
+void dScMgSound_c::func_ov006_0211b3e8()
 {
 }
-}
 
-// @symbol func_ov006_0211b398
-extern "C" void func_ov006_0211b398(char *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b398Ei
+void dScMgSound_c::func_ov006_0211b398(int slot)
 {
-    unsigned char state = ((dScMgSound_c *)scene)->mPops[slot].phase;
-    (((C*)scene)->*data_ov006_02142d50[state].pmf)(slot);
+    unsigned char state = this->mPops[slot].phase;
+    (this->*data_ov006_02142d50[state].pmf)(slot);
 }
 
-// @symbol func_ov006_0211b308
-extern "C" {
-void func_ov006_0211b308(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b308Ei
+void dScMgSound_c::func_ov006_0211b308(int slot)
 {
-  scene->mPops[slot].visible = 1;
-  scene->mPops[slot].x += data_ov006_0212eed0[scene->mPops[slot].kind];
-  scene->mPops[slot].velY = -0x2800;
-  scene->mPops[slot].velX = data_ov006_0212eec4[scene->mPops[slot].kind];
-  scene->mPops[slot].timer = 0;
-  scene->mPops[slot].phase = 1;
-}
+  this->mPops[slot].visible = 1;
+  this->mPops[slot].x += data_ov006_0212eed0[this->mPops[slot].kind];
+  this->mPops[slot].velY = -0x2800;
+  this->mPops[slot].velX = data_ov006_0212eec4[this->mPops[slot].kind];
+  this->mPops[slot].timer = 0;
+  this->mPops[slot].phase = 1;
 }
 
-// @symbol func_ov006_0211b278
-extern "C" {
-void func_ov006_0211b278(dScMgSound_c *scene, int slot){
-    scene->mPops[slot].x += scene->mPops[slot].velX;
-    scene->mPops[slot].y += scene->mPops[slot].velY;
-    scene->mPops[slot].velY += 0x200;
-    if (scene->mPops[slot].velY > 0) {
-        scene->mPops[slot].velY = 0;
-        scene->mPops[slot].phase = 2;
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b278Ei
+void dScMgSound_c::func_ov006_0211b278(int slot){
+    this->mPops[slot].x += this->mPops[slot].velX;
+    this->mPops[slot].y += this->mPops[slot].velY;
+    this->mPops[slot].velY += 0x200;
+    if (this->mPops[slot].velY > 0) {
+        this->mPops[slot].velY = 0;
+        this->mPops[slot].phase = 2;
     }
 }
-}
 
-// @symbol func_ov006_0211b1cc
-extern "C" {
-void func_ov006_0211b1cc(dScMgSound_c *scene, int slot){
-  scene->mPops[slot].x += scene->mPops[slot].velX;
-  scene->mPops[slot].y += scene->mPops[slot].velY;
-  scene->mPops[slot].velY += 0x100;
-  if (((scene->mPops[slot].startY - scene->mPops[slot].y) >> 0xc) > 0x18)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b1ccEi
+void dScMgSound_c::func_ov006_0211b1cc(int slot){
+  this->mPops[slot].x += this->mPops[slot].velX;
+  this->mPops[slot].y += this->mPops[slot].velY;
+  this->mPops[slot].velY += 0x100;
+  if (((this->mPops[slot].startY - this->mPops[slot].y) >> 0xc) > 0x18)
     return;
-  if (scene->mPops[slot].velY > 0) {
-    scene->mPops[slot].active = 0;
-    scene->mPops[slot].visible = 0;
+  if (this->mPops[slot].velY > 0) {
+    this->mPops[slot].active = 0;
+    this->mPops[slot].visible = 0;
   }
 }
+
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b17cEi
+void dScMgSound_c::func_ov006_0211b17c(int slot) {
+    unsigned char state = this->mPops[slot].phase;
+    (this->*data_ov006_02142d80[state].pmf)(slot);
 }
 
-// @symbol func_ov006_0211b17c
-extern "C" void func_ov006_0211b17c(char *scene, int slot) {
-    unsigned char state = ((dScMgSound_c *)scene)->mPops[slot].phase;
-    (((C*)scene)->*data_ov006_02142d80[state].pmf)(slot);
-}
-
-// @symbol func_ov006_0211b0ec
-extern "C" {
-void func_ov006_0211b0ec(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b0ecEi
+void dScMgSound_c::func_ov006_0211b0ec(int slot)
 {
-    scene->mPops[slot].visible = 1;
-    scene->mPops[slot].x += data_ov006_0212eef4[scene->mPops[slot].kind];
-    scene->mPops[slot].velY = -0x2000;
-    scene->mPops[slot].velX = data_ov006_0212eee8[scene->mPops[slot].kind];
-    scene->mPops[slot].timer = 0;
-    scene->mPops[slot].phase = 1;
-}
+    this->mPops[slot].visible = 1;
+    this->mPops[slot].x += data_ov006_0212eef4[this->mPops[slot].kind];
+    this->mPops[slot].velY = -0x2000;
+    this->mPops[slot].velX = data_ov006_0212eee8[this->mPops[slot].kind];
+    this->mPops[slot].timer = 0;
+    this->mPops[slot].phase = 1;
 }
 
-// @symbol func_ov006_0211b05c
-extern "C" {
-void func_ov006_0211b05c(dScMgSound_c *scene, int slot){
-    scene->mPops[slot].x += scene->mPops[slot].velX;
-    scene->mPops[slot].y += scene->mPops[slot].velY;
-    scene->mPops[slot].velY += 0x100;
-    if (scene->mPops[slot].velY > 0) {
-        scene->mPops[slot].velY = 0;
-        scene->mPops[slot].phase = 2;
+// @symbol _ZN12dScMgSound_c19func_ov006_0211b05cEi
+void dScMgSound_c::func_ov006_0211b05c(int slot){
+    this->mPops[slot].x += this->mPops[slot].velX;
+    this->mPops[slot].y += this->mPops[slot].velY;
+    this->mPops[slot].velY += 0x100;
+    if (this->mPops[slot].velY > 0) {
+        this->mPops[slot].velY = 0;
+        this->mPops[slot].phase = 2;
     }
 }
-}
 
-// @symbol func_ov006_0211afb0
-extern "C" {
-void func_ov006_0211afb0(dScMgSound_c *scene, int slot){
-  scene->mPops[slot].x += scene->mPops[slot].velX;
-  scene->mPops[slot].y += scene->mPops[slot].velY;
-  scene->mPops[slot].velY += 0x100;
-  if (((scene->mPops[slot].startY - scene->mPops[slot].y) >> 0xc) > 0x10)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211afb0Ei
+void dScMgSound_c::func_ov006_0211afb0(int slot){
+  this->mPops[slot].x += this->mPops[slot].velX;
+  this->mPops[slot].y += this->mPops[slot].velY;
+  this->mPops[slot].velY += 0x100;
+  if (((this->mPops[slot].startY - this->mPops[slot].y) >> 0xc) > 0x10)
     return;
-  if (scene->mPops[slot].velY > 0) {
-    scene->mPops[slot].active = 0;
-    scene->mPops[slot].visible = 0;
+  if (this->mPops[slot].velY > 0) {
+    this->mPops[slot].active = 0;
+    this->mPops[slot].visible = 0;
   }
 }
+
+// @symbol _ZN12dScMgSound_c19func_ov006_0211af60Ei
+void dScMgSound_c::func_ov006_0211af60(int slot) {
+    unsigned char state = this->mPops[slot].phase;
+    (this->*data_ov006_02142dc8[state].pmf)(slot);
 }
 
-// @symbol func_ov006_0211af60
-extern "C" void func_ov006_0211af60(char *scene, int slot) {
-    unsigned char state = ((dScMgSound_c *)scene)->mPops[slot].phase;
-    (((C*)scene)->*data_ov006_02142dc8[state].pmf)(slot);
-}
-
-// @symbol func_ov006_0211aed0
-extern "C" {
-void func_ov006_0211aed0(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211aed0Ei
+void dScMgSound_c::func_ov006_0211aed0(int slot)
 {
-  scene->mPops[slot].visible = 1;
-  scene->mPops[slot].x += data_ov006_0212ef18[scene->mPops[slot].kind];
-  scene->mPops[slot].velY = -0x4800;
-  scene->mPops[slot].velX = data_ov006_0212ef24[scene->mPops[slot].kind];
-  scene->mPops[slot].timer = 0;
-  scene->mPops[slot].phase = 1;
-}
+  this->mPops[slot].visible = 1;
+  this->mPops[slot].x += data_ov006_0212ef18[this->mPops[slot].kind];
+  this->mPops[slot].velY = -0x4800;
+  this->mPops[slot].velX = data_ov006_0212ef24[this->mPops[slot].kind];
+  this->mPops[slot].timer = 0;
+  this->mPops[slot].phase = 1;
 }
 
-// @symbol func_ov006_0211ae40
-extern "C" {
-void func_ov006_0211ae40(dScMgSound_c *scene, int slot){
-    scene->mPops[slot].x += scene->mPops[slot].velX;
-    scene->mPops[slot].y += scene->mPops[slot].velY;
-    scene->mPops[slot].velY += 0x400;
-    if (scene->mPops[slot].velY > 0) {
-        scene->mPops[slot].velY = 0;
-        scene->mPops[slot].phase = 2;
+// @symbol _ZN12dScMgSound_c19func_ov006_0211ae40Ei
+void dScMgSound_c::func_ov006_0211ae40(int slot){
+    this->mPops[slot].x += this->mPops[slot].velX;
+    this->mPops[slot].y += this->mPops[slot].velY;
+    this->mPops[slot].velY += 0x400;
+    if (this->mPops[slot].velY > 0) {
+        this->mPops[slot].velY = 0;
+        this->mPops[slot].phase = 2;
     }
 }
-}
 
-// @symbol func_ov006_0211ad94
-extern "C" {
-void func_ov006_0211ad94(dScMgSound_c *scene, int slot){
-  scene->mPops[slot].x += scene->mPops[slot].velX;
-  scene->mPops[slot].y += scene->mPops[slot].velY;
-  scene->mPops[slot].velY += 0x200;
-  if (((scene->mPops[slot].startY - scene->mPops[slot].y) >> 0xc) > 0x20)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211ad94Ei
+void dScMgSound_c::func_ov006_0211ad94(int slot){
+  this->mPops[slot].x += this->mPops[slot].velX;
+  this->mPops[slot].y += this->mPops[slot].velY;
+  this->mPops[slot].velY += 0x200;
+  if (((this->mPops[slot].startY - this->mPops[slot].y) >> 0xc) > 0x20)
     return;
-  if (scene->mPops[slot].velY > 0) {
-    scene->mPops[slot].active = 0;
-    scene->mPops[slot].visible = 0;
+  if (this->mPops[slot].velY > 0) {
+    this->mPops[slot].active = 0;
+    this->mPops[slot].visible = 0;
   }
 }
+
+// @symbol _ZN12dScMgSound_c19func_ov006_0211ad44Ei
+void dScMgSound_c::func_ov006_0211ad44(int slot) {
+    unsigned char state = this->mPops[slot].phase;
+    (this->*data_ov006_02142de0[state].pmf)(slot);
 }
 
-// @symbol func_ov006_0211ad44
-extern "C" void func_ov006_0211ad44(char *scene, int slot) {
-    unsigned char state = ((dScMgSound_c *)scene)->mPops[slot].phase;
-    (((C*)scene)->*data_ov006_02142de0[state].pmf)(slot);
+// @symbol _ZN12dScMgSound_c19func_ov006_0211ad00Ei
+void dScMgSound_c::func_ov006_0211ad00(int slot) {
+    this->mPops[slot].scale = 0x3000;
+    this->mPops[slot].visible = 1;
+    this->mPops[slot].velY = -0x1000;
+    this->mPops[slot].velX = data_ov006_0212ee40[this->mPops[slot].kind];
+    this->mPops[slot].phase = 1;
 }
 
-// @symbol func_ov006_0211ad00
-extern "C" {
-void func_ov006_0211ad00(dScMgSound_c *scene, int slot) {
-    scene->mPops[slot].scale = 0x3000;
-    scene->mPops[slot].visible = 1;
-    scene->mPops[slot].velY = -0x1000;
-    scene->mPops[slot].velX = data_ov006_0212ee40[scene->mPops[slot].kind];
-    scene->mPops[slot].phase = 1;
-}
-}
-
-// @symbol func_ov006_0211ac30
-extern "C" {
-void func_ov006_0211ac30(dScMgSound_c *self, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211ac30Ei
+void dScMgSound_c::func_ov006_0211ac30(int slot)
 {
-    self->mPops[slot].x += self->mPops[slot].velX;
-    self->mPops[slot].y += self->mPops[slot].velY;
-    if (self->mPops[slot].scale > 0x800) {
-        self->mPops[slot].scale -= 0x100;
-        if (self->mPops[slot].scale < 0x800)
-            self->mPops[slot].scale = 0x800;
+    this->mPops[slot].x += this->mPops[slot].velX;
+    this->mPops[slot].y += this->mPops[slot].velY;
+    if (this->mPops[slot].scale > 0x800) {
+        this->mPops[slot].scale -= 0x100;
+        if (this->mPops[slot].scale < 0x800)
+            this->mPops[slot].scale = 0x800;
     }
-    self->mPops[slot].velY -= 0x20;
+    this->mPops[slot].velY -= 0x20;
     {
-        int d = (self->mPops[slot].startY - self->mPops[slot].y) >> 12;
+        int d = (this->mPops[slot].startY - this->mPops[slot].y) >> 12;
         if (d >= 0x38) {
-            self->mPops[slot].active = 0;
-            self->mPops[slot].visible = 0;
+            this->mPops[slot].active = 0;
+            this->mPops[slot].visible = 0;
         }
     }
 }
-}
 
-// @symbol func_ov006_0211ac2c
-extern "C" {
-void func_ov006_0211ac2c(void)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211ac2cEv
+void dScMgSound_c::func_ov006_0211ac2c()
 {
 }
+
+// @symbol _ZN12dScMgSound_c19func_ov006_0211abdcEi
+void dScMgSound_c::func_ov006_0211abdc(int slot) {
+    unsigned char state = this->mPops[slot].phase;
+    (this->*data_ov006_02142cd8[state].pmf)(slot);
 }
 
-// @symbol func_ov006_0211abdc
-extern "C" void func_ov006_0211abdc(char *scene, int slot) {
-    unsigned char state = ((dScMgSound_c *)scene)->mPops[slot].phase;
-    (((C*)scene)->*data_ov006_02142cd8[state].pmf)(slot);
-}
-
-// @symbol func_ov006_0211ab80
-extern "C" {
-void func_ov006_0211ab80(dScMgSound_c *scene, int slot) {
+// @symbol _ZN12dScMgSound_c19func_ov006_0211ab80Ei
+void dScMgSound_c::func_ov006_0211ab80(int slot) {
     unsigned char k;
-    scene->mPops[slot].visible = 1;
-    k = scene->mPops[slot].kind;
-    scene->mPops[slot].x += data_ov006_0212ee7c[k];
-    scene->mPops[slot].velY = -0x4000;
-    scene->mPops[slot].phase = 1;
-}
+    this->mPops[slot].visible = 1;
+    k = this->mPops[slot].kind;
+    this->mPops[slot].x += data_ov006_0212ee7c[k];
+    this->mPops[slot].velY = -0x4000;
+    this->mPops[slot].phase = 1;
 }
 
-// @symbol func_ov006_0211ab0c
-extern "C" {
-void func_ov006_0211ab0c(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211ab0cEi
+void dScMgSound_c::func_ov006_0211ab0c(int slot)
 {
-    scene->mPops[slot].y += scene->mPops[slot].velY;
-    scene->mPops[slot].velY += 0x400;
-    if (scene->mPops[slot].velY > 0) {
-        scene->mPops[slot].velY = 0;
-        scene->mPops[slot].phase = 2;
+    this->mPops[slot].y += this->mPops[slot].velY;
+    this->mPops[slot].velY += 0x400;
+    if (this->mPops[slot].velY > 0) {
+        this->mPops[slot].velY = 0;
+        this->mPops[slot].phase = 2;
     }
 }
-}
 
-// @symbol func_ov006_0211aa94
-extern "C" {
-void func_ov006_0211aa94(dScMgSound_c *self, int slot) {
-    self->mPops[slot].y += self->mPops[slot].velY;
-    self->mPops[slot].velY += 0x100;
-    if (((self->mPops[slot].startY - self->mPops[slot].y) >> 12) <= 0x18) {
-        self->mPops[slot].active = 0;
-        self->mPops[slot].visible = 0;
+// @symbol _ZN12dScMgSound_c19func_ov006_0211aa94Ei
+void dScMgSound_c::func_ov006_0211aa94(int slot) {
+    this->mPops[slot].y += this->mPops[slot].velY;
+    this->mPops[slot].velY += 0x100;
+    if (((this->mPops[slot].startY - this->mPops[slot].y) >> 12) <= 0x18) {
+        this->mPops[slot].active = 0;
+        this->mPops[slot].visible = 0;
     }
 }
+
+// @symbol _ZN12dScMgSound_c19func_ov006_0211aa44Ei
+void dScMgSound_c::func_ov006_0211aa44(int slot) {
+    unsigned char state = this->mPops[slot].phase;
+    (this->*data_ov006_02142cf0[state].pmf)(slot);
 }
 
-// @symbol func_ov006_0211aa44
-extern "C" void func_ov006_0211aa44(char *scene, int slot) {
-    unsigned char state = ((dScMgSound_c *)scene)->mPops[slot].phase;
-    (((C*)scene)->*data_ov006_02142cf0[state].pmf)(slot);
-}
-
-// @symbol func_ov006_0211a9fc
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a9fcEi
 /* Arms one pop: visible, no vertical speed, horizontal speed from its kind. */
-extern "C" {
-void func_ov006_0211a9fc(dScMgSound_c *self, int slot)
+void dScMgSound_c::func_ov006_0211a9fc(int slot)
 {
-    self->mPops[slot].visible = 1;
-    self->mPops[slot].velY = 0;
-    self->mPops[slot].velX = data_ov006_0212ee70[self->mPops[slot].kind];
-    self->mPops[slot].phase = 1;
-    self->mPops[slot].timer = 0;
-}
+    this->mPops[slot].visible = 1;
+    this->mPops[slot].velY = 0;
+    this->mPops[slot].velX = data_ov006_0212ee70[this->mPops[slot].kind];
+    this->mPops[slot].phase = 1;
+    this->mPops[slot].timer = 0;
 }
 
-// @symbol func_ov006_0211a910
-extern "C" {
-void func_ov006_0211a910(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a910Ei
+void dScMgSound_c::func_ov006_0211a910(int slot)
 {
     int v;
-    scene->mPops[slot].x += scene->mPops[slot].velX;
-    scene->mPops[slot].y += scene->mPops[slot].velY;
-    v = scene->mPops[slot].velX;
+    this->mPops[slot].x += this->mPops[slot].velX;
+    this->mPops[slot].y += this->mPops[slot].velY;
+    v = this->mPops[slot].velX;
     if (v > 0x20) {
-        scene->mPops[slot].velX = v - 0x20;
+        this->mPops[slot].velX = v - 0x20;
     } else if (v < -0x20) {
-        scene->mPops[slot].velX = v + 0x20;
+        this->mPops[slot].velX = v + 0x20;
     }
-    scene->mPops[slot].velY -= 0x40;
-    scene->mPops[slot].timer += 1;
-    if (scene->mPops[slot].timer >= 0x28) {
-        scene->mPops[slot].timer = 0;
-        scene->mPops[slot].phase = 2;
-        scene->mPops[slot].dir = 0;
-        scene->mPops[slot].velX = 0xc00;
+    this->mPops[slot].velY -= 0x40;
+    this->mPops[slot].timer += 1;
+    if (this->mPops[slot].timer >= 0x28) {
+        this->mPops[slot].timer = 0;
+        this->mPops[slot].phase = 2;
+        this->mPops[slot].dir = 0;
+        this->mPops[slot].velX = 0xc00;
     }
-}
 }
 
-// @symbol func_ov006_0211a7fc
-extern "C" {
-void func_ov006_0211a7fc(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a7fcEi
+void dScMgSound_c::func_ov006_0211a7fc(int slot)
 {
     int f;
-    scene->mPops[slot].x += scene->mPops[slot].velX;
-    scene->mPops[slot].y += scene->mPops[slot].velY;
-    scene->mPops[slot].velY -= 0x40;
-    f = scene->mPops[slot].dir;
+    this->mPops[slot].x += this->mPops[slot].velX;
+    this->mPops[slot].y += this->mPops[slot].velY;
+    this->mPops[slot].velY -= 0x40;
+    f = this->mPops[slot].dir;
     if (f == 0) {
-        scene->mPops[slot].velX -= 0x100;
-        if (scene->mPops[slot].velX < -0xc00) {
-            scene->mPops[slot].velX = -0xc00;
-            scene->mPops[slot].dir = 1;
+        this->mPops[slot].velX -= 0x100;
+        if (this->mPops[slot].velX < -0xc00) {
+            this->mPops[slot].velX = -0xc00;
+            this->mPops[slot].dir = 1;
         }
     } else if (f != 0) {
-        scene->mPops[slot].velX += 0x100;
-        if (scene->mPops[slot].velX > 0xc00) {
-            scene->mPops[slot].velX = 0xc00;
-            scene->mPops[slot].dir = 0;
+        this->mPops[slot].velX += 0x100;
+        if (this->mPops[slot].velX > 0xc00) {
+            this->mPops[slot].velX = 0xc00;
+            this->mPops[slot].dir = 0;
         }
     }
-    if ((scene->mPops[slot].startY - scene->mPops[slot].y) >> 12 >= 0x30) {
-        scene->mPops[slot].active = 0;
-        scene->mPops[slot].visible = 0;
+    if ((this->mPops[slot].startY - this->mPops[slot].y) >> 12 >= 0x30) {
+        this->mPops[slot].active = 0;
+        this->mPops[slot].visible = 0;
     }
 }
+
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a7acEi
+void dScMgSound_c::func_ov006_0211a7ac(int slot) {
+    unsigned char state = this->mPops[slot].phase;
+    (this->*data_ov006_02142d20[state].pmf)(slot);
 }
 
-// @symbol func_ov006_0211a7ac
-extern "C" void func_ov006_0211a7ac(char *scene, int slot) {
-    unsigned char state = ((dScMgSound_c *)scene)->mPops[slot].phase;
-    (((C*)scene)->*data_ov006_02142d20[state].pmf)(slot);
-}
-
-// @symbol func_ov006_0211a714
-extern "C" {
-void func_ov006_0211a714(dScMgSound_c *scene, int slot) {
-  unsigned short v = scene->mPops[slot].timer;
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a714Ei
+void dScMgSound_c::func_ov006_0211a714(int slot) {
+  unsigned short v = this->mPops[slot].timer;
   if (v != 0) {
-    scene->mPops[slot].timer = v - 1;
-    if (*(short *)&scene->mPops[slot].timer < 0)
-      scene->mPops[slot].timer = 0;
+    this->mPops[slot].timer = v - 1;
+    if (*(short *)&this->mPops[slot].timer < 0)
+      this->mPops[slot].timer = 0;
     return;
   }
-  scene->mPops[slot].visible = 1;
-  scene->mPops[slot].x += data_ov006_0212ee94[scene->mPops[slot].kind];
-  scene->mPops[slot].velY = -0x4000;
-  scene->mPops[slot].phase = 1;
-}
+  this->mPops[slot].visible = 1;
+  this->mPops[slot].x += data_ov006_0212ee94[this->mPops[slot].kind];
+  this->mPops[slot].velY = -0x4000;
+  this->mPops[slot].phase = 1;
 }
 
-// @symbol func_ov006_0211a69c
-extern "C" {
-void func_ov006_0211a69c(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a69cEi
+void dScMgSound_c::func_ov006_0211a69c(int slot)
 {
-    int a = scene->mPops[slot].velY;
-    int b = scene->mPops[slot].y;
-    scene->mPops[slot].y = b + a;
-    a = scene->mPops[slot].velY;
-    scene->mPops[slot].velY = a + 0x400;
+    int a = this->mPops[slot].velY;
+    int b = this->mPops[slot].y;
+    this->mPops[slot].y = b + a;
+    a = this->mPops[slot].velY;
+    this->mPops[slot].velY = a + 0x400;
     {
-        int d = scene->mPops[slot].startY - scene->mPops[slot].y;
+        int d = this->mPops[slot].startY - this->mPops[slot].y;
         d >>= 12;
         if (d >= 0x20) {
-            scene->mPops[slot].active = 0;
-            scene->mPops[slot].visible = 0;
+            this->mPops[slot].active = 0;
+            this->mPops[slot].visible = 0;
         }
     }
 }
-}
 
-// @symbol func_ov006_0211a698
-extern "C" {
-void func_ov006_0211a698(void)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a698Ev
+void dScMgSound_c::func_ov006_0211a698()
 {
 }
+
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a648Ei
+void dScMgSound_c::func_ov006_0211a648(int slot) {
+    unsigned char state = this->mPops[slot].phase;
+    (this->*data_ov006_02142d68[state].pmf)(slot);
 }
 
-// @symbol func_ov006_0211a648
-extern "C" void func_ov006_0211a648(char *scene, int slot) {
-    unsigned char state = ((dScMgSound_c *)scene)->mPops[slot].phase;
-    (((C*)scene)->*data_ov006_02142d68[state].pmf)(slot);
-}
-
-// @symbol func_ov006_0211a5ec
-extern "C" {
-void func_ov006_0211a5ec(dScMgSound_c *scene, int slot) {
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a5ecEi
+void dScMgSound_c::func_ov006_0211a5ec(int slot) {
     unsigned char k;
-    scene->mPops[slot].visible = 1;
-    k = scene->mPops[slot].kind;
-    scene->mPops[slot].x += data_ov006_0212eedc[k];
-    scene->mPops[slot].velY = -0x4000;
-    scene->mPops[slot].phase = 1;
-}
+    this->mPops[slot].visible = 1;
+    k = this->mPops[slot].kind;
+    this->mPops[slot].x += data_ov006_0212eedc[k];
+    this->mPops[slot].velY = -0x4000;
+    this->mPops[slot].phase = 1;
 }
 
-// @symbol func_ov006_0211a578
-extern "C" {
-void func_ov006_0211a578(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a578Ei
+void dScMgSound_c::func_ov006_0211a578(int slot)
 {
-    scene->mPops[slot].y += scene->mPops[slot].velY;
-    scene->mPops[slot].velY += 0x400;
-    if (scene->mPops[slot].velY > 0) {
-        scene->mPops[slot].velY = 0;
-        scene->mPops[slot].phase = 2;
+    this->mPops[slot].y += this->mPops[slot].velY;
+    this->mPops[slot].velY += 0x400;
+    if (this->mPops[slot].velY > 0) {
+        this->mPops[slot].velY = 0;
+        this->mPops[slot].phase = 2;
     }
 }
-}
 
-// @symbol func_ov006_0211a500
-extern "C" {
-void func_ov006_0211a500(dScMgSound_c *self, int slot) {
-    self->mPops[slot].y += self->mPops[slot].velY;
-    self->mPops[slot].velY -= 0x60;
-    if ((self->mPops[slot].startY - self->mPops[slot].y) >> 0xc >= 0x3c) {
-        self->mPops[slot].active = 0;
-        self->mPops[slot].visible = 0;
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a500Ei
+void dScMgSound_c::func_ov006_0211a500(int slot) {
+    this->mPops[slot].y += this->mPops[slot].velY;
+    this->mPops[slot].velY -= 0x60;
+    if ((this->mPops[slot].startY - this->mPops[slot].y) >> 0xc >= 0x3c) {
+        this->mPops[slot].active = 0;
+        this->mPops[slot].visible = 0;
     }
 }
-}
 
-// @symbol func_ov006_0211a4b0
-extern "C" void func_ov006_0211a4b0(char *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a4b0Ei
+void dScMgSound_c::func_ov006_0211a4b0(int slot)
 {
-    unsigned char idx = ((dScMgSound_c *)scene)->mPops[slot].phase;
-    (((C *)scene)->*data_ov006_02142d98[idx])(slot);
+    unsigned char idx = this->mPops[slot].phase;
+    (this->*data_ov006_02142d98[idx])(slot);
 }
 
-// @symbol func_ov006_0211a420
-extern "C" {
-void func_ov006_0211a420(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a420Ei
+void dScMgSound_c::func_ov006_0211a420(int slot)
 {
   unsigned char idx;
-  scene->mPops[slot].visible = 1;
-  idx = scene->mPops[slot].kind;
-  scene->mPops[slot].x += data_ov006_0212ee64[idx];
-  scene->mPops[slot].velY = -0x3800;
-  scene->mPops[slot].velX = data_ov006_0212ef00[scene->mPops[slot].kind];
-  scene->mPops[slot].timer = 0;
-  scene->mPops[slot].phase = 1;
-}
-}
-
-// @symbol func_ov006_0211a388
-extern "C" {
-void func_ov006_0211a388(dScMgSound_c *scene, int slot) {
-  scene->mPops[slot].x += scene->mPops[slot].velX;
-  scene->mPops[slot].y += scene->mPops[slot].velY;
-  scene->mPops[slot].velY += 0x200;
-  if (scene->mPops[slot].velY <= 0) return;
-  scene->mPops[slot].velY = 0;
-  scene->mPops[slot].phase = 2;
-  scene->mPops[slot].timer = 0;
-}
+  this->mPops[slot].visible = 1;
+  idx = this->mPops[slot].kind;
+  this->mPops[slot].x += data_ov006_0212ee64[idx];
+  this->mPops[slot].velY = -0x3800;
+  this->mPops[slot].velX = data_ov006_0212ef00[this->mPops[slot].kind];
+  this->mPops[slot].timer = 0;
+  this->mPops[slot].phase = 1;
 }
 
-// @symbol func_ov006_0211a314
-extern "C" {
-void func_ov006_0211a314(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a388Ei
+void dScMgSound_c::func_ov006_0211a388(int slot) {
+  this->mPops[slot].x += this->mPops[slot].velX;
+  this->mPops[slot].y += this->mPops[slot].velY;
+  this->mPops[slot].velY += 0x200;
+  if (this->mPops[slot].velY <= 0) return;
+  this->mPops[slot].velY = 0;
+  this->mPops[slot].phase = 2;
+  this->mPops[slot].timer = 0;
+}
+
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a314Ei
+void dScMgSound_c::func_ov006_0211a314(int slot)
 {
-    int v = scene->mPops[slot].scale;
+    int v = this->mPops[slot].scale;
     if (v > 0x800) {
-        scene->mPops[slot].scale = v - 0x60;
-        if (scene->mPops[slot].scale < 0x800)
-            scene->mPops[slot].scale = 0x800;
+        this->mPops[slot].scale = v - 0x60;
+        if (this->mPops[slot].scale < 0x800)
+            this->mPops[slot].scale = 0x800;
     }
-    scene->mPops[slot].timer += 1;
-    if (scene->mPops[slot].timer >= 0x20) {
-        scene->mPops[slot].active = 0;
-        scene->mPops[slot].visible = 0;
+    this->mPops[slot].timer += 1;
+    if (this->mPops[slot].timer >= 0x20) {
+        this->mPops[slot].active = 0;
+        this->mPops[slot].visible = 0;
     }
-}
 }
 
-// @symbol func_ov006_0211a2c4
-extern "C" void func_ov006_0211a2c4(C* scene, int slot){
-  unsigned char sel = ((dScMgSound_c *)scene)->mPops[slot].phase;
-  (scene->*data_ov006_02142cc0[sel])(slot);
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a2c4Ei
+void dScMgSound_c::func_ov006_0211a2c4(int slot){
+  unsigned char sel = this->mPops[slot].phase;
+  (this->*data_ov006_02142cc0[sel])(slot);
 }
 
-// @symbol func_ov006_0211a234
-extern "C" {
-void func_ov006_0211a234(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a234Ei
+void dScMgSound_c::func_ov006_0211a234(int slot)
 {
   unsigned char idx;
-  scene->mPops[slot].visible = 1;
-  idx = scene->mPops[slot].kind;
-  scene->mPops[slot].x += data_ov006_0212ee58[idx];
-  scene->mPops[slot].velY = -0x3200;
-  scene->mPops[slot].velX = data_ov006_0212ee4c[scene->mPops[slot].kind];
-  scene->mPops[slot].timer = 0;
-  scene->mPops[slot].phase = 1;
-}
-}
-
-// @symbol func_ov006_0211a19c
-extern "C" {
-void func_ov006_0211a19c(dScMgSound_c *scene, int slot) {
-  scene->mPops[slot].x += scene->mPops[slot].velX;
-  scene->mPops[slot].y += scene->mPops[slot].velY;
-  scene->mPops[slot].velY += 0x200;
-  if (scene->mPops[slot].velY <= 0) return;
-  scene->mPops[slot].velY = 0;
-  scene->mPops[slot].phase = 2;
-  scene->mPops[slot].timer = 0;
-}
+  this->mPops[slot].visible = 1;
+  idx = this->mPops[slot].kind;
+  this->mPops[slot].x += data_ov006_0212ee58[idx];
+  this->mPops[slot].velY = -0x3200;
+  this->mPops[slot].velX = data_ov006_0212ee4c[this->mPops[slot].kind];
+  this->mPops[slot].timer = 0;
+  this->mPops[slot].phase = 1;
 }
 
-// @symbol func_ov006_0211a128
-extern "C" {
-void func_ov006_0211a128(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a19cEi
+void dScMgSound_c::func_ov006_0211a19c(int slot) {
+  this->mPops[slot].x += this->mPops[slot].velX;
+  this->mPops[slot].y += this->mPops[slot].velY;
+  this->mPops[slot].velY += 0x200;
+  if (this->mPops[slot].velY <= 0) return;
+  this->mPops[slot].velY = 0;
+  this->mPops[slot].phase = 2;
+  this->mPops[slot].timer = 0;
+}
+
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a128Ei
+void dScMgSound_c::func_ov006_0211a128(int slot)
 {
-    int v = scene->mPops[slot].scale;
+    int v = this->mPops[slot].scale;
     if (v > 0x800) {
-        scene->mPops[slot].scale = v - 0x70;
-        if (scene->mPops[slot].scale < 0x800)
-            scene->mPops[slot].scale = 0x800;
+        this->mPops[slot].scale = v - 0x70;
+        if (this->mPops[slot].scale < 0x800)
+            this->mPops[slot].scale = 0x800;
     }
-    scene->mPops[slot].timer += 1;
-    if (scene->mPops[slot].timer >= 0x20) {
-        scene->mPops[slot].active = 0;
-        scene->mPops[slot].visible = 0;
+    this->mPops[slot].timer += 1;
+    if (this->mPops[slot].timer >= 0x20) {
+        this->mPops[slot].active = 0;
+        this->mPops[slot].visible = 0;
     }
 }
+
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a0d8Ei
+void dScMgSound_c::func_ov006_0211a0d8(int slot){
+  unsigned char phase = this->mPops[slot].phase;
+  (this->*(data_ov006_02142d08[phase].pmf))(slot);
 }
 
-// @symbol func_ov006_0211a0d8
-extern "C" void func_ov006_0211a0d8(CFull* scene, int slot){
-  unsigned char phase = ((dScMgSound_c *)scene)->mPops[slot].phase;
-  (scene->*(data_ov006_02142d08[phase].pmf))(slot);
-}
-
-// @symbol func_ov006_0211a048
-extern "C" {
-void func_ov006_0211a048(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_0211a048Ei
+void dScMgSound_c::func_ov006_0211a048(int slot)
 {
-  scene->mPops[slot].visible = 1;
-  scene->mPops[slot].x += data_ov006_0212eeac[scene->mPops[slot].kind];
-  scene->mPops[slot].velY = -0x2800;
-  scene->mPops[slot].velX = data_ov006_0212ee88[scene->mPops[slot].kind];
-  scene->mPops[slot].timer = 0;
-  scene->mPops[slot].phase = 1;
-}
-}
-
-// @symbol func_ov006_02119fb0
-extern "C" {
-void func_ov006_02119fb0(dScMgSound_c *scene, int slot) {
-  scene->mPops[slot].x += scene->mPops[slot].velX;
-  scene->mPops[slot].y += scene->mPops[slot].velY;
-  scene->mPops[slot].velY += 0x200;
-  if (scene->mPops[slot].velY <= 0) return;
-  scene->mPops[slot].velY = 0;
-  scene->mPops[slot].phase = 2;
-  scene->mPops[slot].timer = 0;
-}
+  this->mPops[slot].visible = 1;
+  this->mPops[slot].x += data_ov006_0212eeac[this->mPops[slot].kind];
+  this->mPops[slot].velY = -0x2800;
+  this->mPops[slot].velX = data_ov006_0212ee88[this->mPops[slot].kind];
+  this->mPops[slot].timer = 0;
+  this->mPops[slot].phase = 1;
 }
 
-// @symbol func_ov006_02119f3c
-extern "C" {
-void func_ov006_02119f3c(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_02119fb0Ei
+void dScMgSound_c::func_ov006_02119fb0(int slot) {
+  this->mPops[slot].x += this->mPops[slot].velX;
+  this->mPops[slot].y += this->mPops[slot].velY;
+  this->mPops[slot].velY += 0x200;
+  if (this->mPops[slot].velY <= 0) return;
+  this->mPops[slot].velY = 0;
+  this->mPops[slot].phase = 2;
+  this->mPops[slot].timer = 0;
+}
+
+// @symbol _ZN12dScMgSound_c19func_ov006_02119f3cEi
+void dScMgSound_c::func_ov006_02119f3c(int slot)
 {
-    int v = scene->mPops[slot].scale;
+    int v = this->mPops[slot].scale;
     if (v > 0xa80) {
-        scene->mPops[slot].scale = v - 0x60;
-        if (scene->mPops[slot].scale < 0xa80)
-            scene->mPops[slot].scale = 0xa80;
+        this->mPops[slot].scale = v - 0x60;
+        if (this->mPops[slot].scale < 0xa80)
+            this->mPops[slot].scale = 0xa80;
     }
-    scene->mPops[slot].timer += 1;
-    if (scene->mPops[slot].timer >= 0x18) {
-        scene->mPops[slot].active = 0;
-        scene->mPops[slot].visible = 0;
+    this->mPops[slot].timer += 1;
+    if (this->mPops[slot].timer >= 0x18) {
+        this->mPops[slot].active = 0;
+        this->mPops[slot].visible = 0;
     }
-}
 }
 
-// @symbol func_ov006_02119eec
-extern "C" void func_ov006_02119eec(CFull* scene, int slot){
-  unsigned char phase = ((dScMgSound_c *)scene)->mPops[slot].phase;
-  (scene->*(data_ov006_02142db0[phase].pmf))(slot);
+// @symbol _ZN12dScMgSound_c19func_ov006_02119eecEi
+void dScMgSound_c::func_ov006_02119eec(int slot){
+  unsigned char phase = this->mPops[slot].phase;
+  (this->*(data_ov006_02142db0[phase].pmf))(slot);
 }
 
-// @symbol func_ov006_02119e5c
-extern "C" {
-void func_ov006_02119e5c(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_02119e5cEi
+void dScMgSound_c::func_ov006_02119e5c(int slot)
 {
   unsigned char idx;
-  scene->mPops[slot].visible = 1;
-  idx = scene->mPops[slot].kind;
-  scene->mPops[slot].x += data_ov006_0212ef30[idx];
-  scene->mPops[slot].velY = -0x2400;
-  scene->mPops[slot].velX = data_ov006_0212ef0c[scene->mPops[slot].kind];
-  scene->mPops[slot].timer = 0;
-  scene->mPops[slot].phase = 1;
-}
-}
-
-// @symbol func_ov006_02119dc4
-extern "C" {
-void func_ov006_02119dc4(dScMgSound_c *scene, int slot) {
-  scene->mPops[slot].x += scene->mPops[slot].velX;
-  scene->mPops[slot].y += scene->mPops[slot].velY;
-  scene->mPops[slot].velY += 0x200;
-  if (scene->mPops[slot].velY <= 0) return;
-  scene->mPops[slot].velY = 0;
-  scene->mPops[slot].phase = 2;
-  scene->mPops[slot].timer = 0;
-}
+  this->mPops[slot].visible = 1;
+  idx = this->mPops[slot].kind;
+  this->mPops[slot].x += data_ov006_0212ef30[idx];
+  this->mPops[slot].velY = -0x2400;
+  this->mPops[slot].velX = data_ov006_0212ef0c[this->mPops[slot].kind];
+  this->mPops[slot].timer = 0;
+  this->mPops[slot].phase = 1;
 }
 
-// @symbol func_ov006_02119d50
-extern "C" {
-void func_ov006_02119d50(dScMgSound_c *scene, int slot)
+// @symbol _ZN12dScMgSound_c19func_ov006_02119dc4Ei
+void dScMgSound_c::func_ov006_02119dc4(int slot) {
+  this->mPops[slot].x += this->mPops[slot].velX;
+  this->mPops[slot].y += this->mPops[slot].velY;
+  this->mPops[slot].velY += 0x200;
+  if (this->mPops[slot].velY <= 0) return;
+  this->mPops[slot].velY = 0;
+  this->mPops[slot].phase = 2;
+  this->mPops[slot].timer = 0;
+}
+
+// @symbol _ZN12dScMgSound_c19func_ov006_02119d50Ei
+void dScMgSound_c::func_ov006_02119d50(int slot)
 {
-    int v = scene->mPops[slot].scale;
+    int v = this->mPops[slot].scale;
     if (v > 0xd80) {
-        scene->mPops[slot].scale = v - 0x60;
-        if (scene->mPops[slot].scale < 0xd80)
-            scene->mPops[slot].scale = 0xd80;
+        this->mPops[slot].scale = v - 0x60;
+        if (this->mPops[slot].scale < 0xd80)
+            this->mPops[slot].scale = 0xd80;
     }
-    scene->mPops[slot].timer += 1;
-    if (scene->mPops[slot].timer >= 0x18) {
-        scene->mPops[slot].active = 0;
-        scene->mPops[slot].visible = 0;
+    this->mPops[slot].timer += 1;
+    if (this->mPops[slot].timer >= 0x18) {
+        this->mPops[slot].active = 0;
+        this->mPops[slot].visible = 0;
     }
 }
-}
 
-// @symbol func_ov006_02119c74
-extern "C" {
-void func_ov004_020b023c(void* a0, int a1, int a2, int a3, void* a4);
+// @symbol _ZN12dScMgSound_c19func_ov006_02119c74Ev
+extern "C" void func_ov004_020b023c(void* a0, int a1, int a2, int a3, void* a4);
 
-void func_ov006_02119c74(void* scene)
+void dScMgSound_c::func_ov006_02119c74()
 {
-    char* p=(char*)scene;
+    char *p = (char *)this;
     int i;
     int tb = data_02082214[0];
     long long ta = data_02082214[1];
@@ -1650,13 +1493,11 @@ void func_ov006_02119c74(void* scene)
         p += 0x24;
     }
 }
-}
 
-// @symbol func_ov006_02119bdc
-extern "C" {
+// @symbol _ZN12dScMgSound_c19func_ov006_02119bdcEv
 extern void* data_ov006_0213f730[];
-void func_ov006_02119bdc(void* scene) {
-  char* c=(char*)scene;
+void dScMgSound_c::func_ov006_02119bdc() {
+  char *c = (char *)this;
   int i;
   char* o = c;
   for (i = 0; i < 10; i++) {
@@ -1672,87 +1513,66 @@ void func_ov006_02119bdc(void* scene) {
     o += 0x14;
   }
 }
+
+// @symbol _ZN12dScMgSound_c19func_ov006_02119bc4Ev
+void dScMgSound_c::func_ov006_02119bc4()
+{
+    func_ov004_020b2574(this->mTries, 1);
 }
 
-// @symbol func_ov006_02119bc4
-extern "C" {
-void func_ov006_02119bc4(void *scene)
+// @symbol _ZN12dScMgSound_c19func_ov006_02119ba4Ev
+void dScMgSound_c::func_ov006_02119ba4()
 {
-    func_ov004_020b2574(((dScMgSound_c *)scene)->mTries, 1);
-}
+        this->mSpriteA.active = 1;
+    this->mSpriteA.timer = 0;
+    this->mSpriteA.frame = 0;
 }
 
-// @symbol func_ov006_02119ba4
-extern "C" {
-void func_ov006_02119ba4(char *scene)
+// @symbol _ZN12dScMgSound_c19func_ov006_02119b00Ev
+void dScMgSound_c::func_ov006_02119b00()
 {
-    dScMgSound_c *self = (dScMgSound_c *)scene;
-    self->mSpriteA.active = 1;
-    self->mSpriteA.timer = 0;
-    self->mSpriteA.frame = 0;
-}
-}
-
-// @symbol func_ov006_02119b00
-extern "C" {
-void func_ov006_02119b00(char *scene)
-{
-    dScMgSound_c *self = (dScMgSound_c *)scene;
-    if (self->mSpriteA.active == 0)
+        if (this->mSpriteA.active == 0)
         return;
-    if (self->mSpriteA.frame >= 2)
+    if (this->mSpriteA.frame >= 2)
         return;
-    (*(u16 *)(int)&self->mSpriteA.timer)++;
-    if (self->mSpriteA.timer < data_ov006_0212ee28[self->mSpriteA.frame])
+    (*(u16 *)(int)&this->mSpriteA.timer)++;
+    if (this->mSpriteA.timer < data_ov006_0212ee28[this->mSpriteA.frame])
         return;
-    self->mSpriteA.timer = 0;
-    (*(u8 *)(int)&self->mSpriteA.frame)++;
-}
-}
-
-// @symbol func_ov006_02119aa8
-extern "C" {
-void func_ov006_02119aa8(void *scene){
-  dScMgSound_c *self = (dScMgSound_c *)scene;
-  if (self->mSpriteA.visible == 0) return;
-  Hud_RenderSprite(data_ov006_02138d28[self->mSpriteA.frame],
-    self->mSpriteA.x >> 0xc, self->mSpriteA.y >> 0xc, -1, -1);
-}
+    this->mSpriteA.timer = 0;
+    (*(u8 *)(int)&this->mSpriteA.frame)++;
 }
 
-// @symbol func_ov006_02119a88
-extern "C" {
-void func_ov006_02119a88(char *scene)
+// @symbol _ZN12dScMgSound_c19func_ov006_02119aa8Ev
+void dScMgSound_c::func_ov006_02119aa8(){
+    if (this->mSpriteA.visible == 0) return;
+  Hud_RenderSprite(data_ov006_02138d28[this->mSpriteA.frame],
+    this->mSpriteA.x >> 0xc, this->mSpriteA.y >> 0xc, -1, -1);
+}
+
+// @symbol _ZN12dScMgSound_c19func_ov006_02119a88Ev
+void dScMgSound_c::func_ov006_02119a88()
 {
-    dScMgSound_c *self = (dScMgSound_c *)scene;
-    self->mSpriteB.active = 1;
-    self->mSpriteB.timer = 0;
-    self->mSpriteB.frame = 0;
-}
+        this->mSpriteB.active = 1;
+    this->mSpriteB.timer = 0;
+    this->mSpriteB.frame = 0;
 }
 
-// @symbol func_ov006_02119a18
-extern "C" {
-void func_ov006_02119a18(char *scene)
+// @symbol _ZN12dScMgSound_c19func_ov006_02119a18Ev
+void dScMgSound_c::func_ov006_02119a18()
 {
-    dScMgSound_c *self = (dScMgSound_c *)scene;
-    if (self->mSpriteB.active == 0) return;
-    if (self->mSpriteB.frame >= 3) return;
-    (*(u16 *)(int)&self->mSpriteB.timer) += 1;
-    if (self->mSpriteB.timer < data_ov006_0212ee38[self->mSpriteB.frame]) return;
-    self->mSpriteB.timer = 0;
-    (*(u8 *)(int)&self->mSpriteB.frame) += 1;
-}
+        if (this->mSpriteB.active == 0) return;
+    if (this->mSpriteB.frame >= 3) return;
+    (*(u16 *)(int)&this->mSpriteB.timer) += 1;
+    if (this->mSpriteB.timer < data_ov006_0212ee38[this->mSpriteB.frame]) return;
+    this->mSpriteB.timer = 0;
+    (*(u8 *)(int)&this->mSpriteB.frame) += 1;
 }
 
-// @symbol func_ov006_021199c0
-extern "C" {
-void func_ov006_021199c0(void *scene){
-  dScMgSound_c *self = (dScMgSound_c *)scene;
-  if (self->mSpriteB.visible == 0) return;
-  Hud_RenderSprite(data_ov006_02137ae8[self->mSpriteB.frame],
-    self->mSpriteB.x >> 0xc, self->mSpriteB.y >> 0xc, -1, -1);
-}
+// @symbol _ZN12dScMgSound_c19func_ov006_021199c0Ev
+void dScMgSound_c::func_ov006_021199c0(){
+    if (this->mSpriteB.visible == 0) return;
+  Hud_RenderSprite(data_ov006_02137ae8[this->mSpriteB.frame],
+    this->mSpriteB.x >> 0xc, this->mSpriteB.y >> 0xc, -1, -1);
 }
 
 // @symbol _ZN12dScMgSound_cD1Ev
