@@ -1,3 +1,4 @@
+#include "PlayerInput.h"
 // @symbol func_ov002_020d3b9c
 /* recovered: Player walk state helper (between St_Walk_Main and St_Walk_Init): steering and turn approach. */
 // NONMATCHING: div 50 of 360 words. mwccarm 2004/b56, --module ov002,
@@ -30,7 +31,6 @@ extern void func_ov002_020d4540(void *c);
 extern void func_ov002_020d454c(void *c);
 extern int func_ov002_020d4d88(void *c, int a, int b);
 extern void func_ov002_020c18b0(void *c, int a);
-extern unsigned char data_020a0e40;
 extern short data_0209f4a0[];
 extern char data_0209f49c[];
 extern unsigned char data_0209f4ac[];
@@ -45,7 +45,7 @@ int func_ov002_020d3b9c(char *c)
   s16 targ;
   int diff;
   acc = 0;
-  idx = data_020a0e40 * 0x18;
+  idx = gActivePlayerSlot * 0x18;
   stick = *((s16 *) (((char *) data_0209f4a0) + idx));
   spd = acc;
   if ((stick != 0) && (((u16) ((*((u16 *) (c + 0x6ce))) & 0xc)) == 0))
@@ -55,7 +55,7 @@ int func_ov002_020d3b9c(char *c)
     {
       spd = Player_ScaleByCharFactor(c, 0x14000);
       acc = 0x1000;
-      if (((*((u16 *) (data_0209f49c + (data_020a0e40 * 0x18)))) & 0x800) == 0)
+      if (((*((u16 *) (data_0209f49c + (gActivePlayerSlot * 0x18)))) & 0x800) == 0)
       {
         if ((*((u16 *) (c + 0x6a4))) != 0)
         {
@@ -92,14 +92,14 @@ int func_ov002_020d3b9c(char *c)
         spd = func_ov002_020bf224((int) c, a, b);
       }
       acc = 0x1000;
-      if ((*((s16 *) (((char *) data_0209f4a0) + (data_020a0e40 * 0x18)))) >= 0xf00)
+      if ((*((s16 *) (((char *) data_0209f4a0) + (gActivePlayerSlot * 0x18)))) >= 0xf00)
       {
         acc = 0x1000;
       }
     }
     if ((*((u8 *) (c + 0x6ed))) != 0)
     {
-      if (((*((u16 *) (data_0209f49c + (data_020a0e40 * 0x18)))) & 0x800) == 0)
+      if (((*((u16 *) (data_0209f49c + (gActivePlayerSlot * 0x18)))) & 0x800) == 0)
       {
         *((u8 *) (c + 0x6ed)) = 0;
       }
@@ -176,7 +176,7 @@ int func_ov002_020d3b9c(char *c)
       int step;
       int idx2;
       step = 0x800;
-      idx2 = data_020a0e40 * 0x18;
+      idx2 = gActivePlayerSlot * 0x18;
       dv = 4;
       if ((*((u8 *) (data_0209f4ac + idx2))) == 0)
       {

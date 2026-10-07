@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern u8 data_020a0e40;
+#include "PlayerInput.h"
 extern u16 data_0209f49c[];
 
 struct Player {
@@ -31,7 +31,7 @@ int func_ov002_020df840(struct Player *thiz, void *arg1, struct Vector3 *arg2)
 {
     if (thiz->field_703 != 0 || thiz->field_6fd != 0)
         return 0;
-    if ((*(u16*)((char*)data_0209f49c + (&data_020a0e40)[0] * 0x18) & 2) == 0)
+    if ((*(u16*)((char*)data_0209f49c + gActivePlayerSlot * 0x18) & 2) == 0)
         return 0;
     if (thiz->field_358 != 0)
         return 0;

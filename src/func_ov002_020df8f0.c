@@ -1,3 +1,4 @@
+#include "PlayerInput.h"
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned char u8;
@@ -7,7 +8,6 @@ typedef unsigned long long u64;
 
 extern int _ZN4cstd4sqrtEy(u64 v);
 extern void _Z15ApproachLinear2Rsss(s16* p, s16 target, s16 step);
-extern u8 data_020a0e40[];
 extern s16 data_0209f4a2[];
 extern s16 data_0209f4a4[];
 extern s16 data_02082214[];
@@ -24,7 +24,7 @@ void func_ov002_020df8f0(char* c)
     *(int*)(c + 0x640) = _ZN4cstd4sqrtEy((u64)sq) << 8;
 
     {
-        int idx = data_020a0e40[0] * 0x18;
+        int idx = gActivePlayerSlot * 0x18;
         s16 tval = *(s16*)((char*)data_0209f4a4 + idx);
         int div5 = *(int*)(c + 0x640) / 5;
         int v = (int)(((s64)(tval >> 6) * div5 + 0x800) >> 12);
@@ -55,7 +55,7 @@ void func_ov002_020df8f0(char* c)
     }
 
     {
-        int idx = data_020a0e40[0] * 0x18;
+        int idx = gActivePlayerSlot * 0x18;
         int u2 = *(int*)(c + 0x640);
         s16 tval2 = *(s16*)((char*)data_0209f4a2 + idx);
         int quarter = u2 / 4;

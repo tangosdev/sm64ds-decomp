@@ -1,9 +1,9 @@
+#include "PlayerInput.h"
 typedef unsigned char u8;
 typedef short s16;
 typedef unsigned int u32;
 typedef int s32;
 
-typedef struct Vector3 { int x, y, z; } Vector3;
 
 extern void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);
 extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
@@ -14,7 +14,6 @@ extern int func_02009138(int *thiz, int arg);
 extern void func_020089d8(void *p);
 
 extern s32 data_02086e90[3];
-extern unsigned char data_020a0e40[];
 extern short data_0209f4a2[];
 extern short data_0209f4a4[];
 
@@ -70,7 +69,7 @@ int func_02009aa8(char *self)
         *(s32 *)(self + 0x84) = tmp[1];
         *(s32 *)(self + 0x88) = tmp[2];
 
-        idx = data_020a0e40[0] * 0x18;
+        idx = gActivePlayerSlot * 0x18;
         t1 = *(s16 *)((char *)data_0209f4a2 + idx);
         *(s16 *)(((long long)(int)(self + 0x17c)) & ~0ULL) -= (int)(((long long)t1 * 0x200 + 0x800) >> 12);
 

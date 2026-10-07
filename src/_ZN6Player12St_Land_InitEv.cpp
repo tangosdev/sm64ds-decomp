@@ -1,6 +1,7 @@
 //cpp
 #include "Player.h"
 #include "types.h"
+#include "PlayerInput.h"
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
@@ -24,7 +25,6 @@ extern int data_ov002_02110724;
 extern int data_ov002_0211007c;
 extern int data_ov002_0211055c;
 extern int data_ov002_02110454;
-extern unsigned char data_020a0e40[1];
 extern char data_0209f4a0[];
 
 #pragma opt_common_subs off
@@ -69,7 +69,7 @@ int Player::St_Land_Init()
 
     _ZN6Player7SetAnimEji5Fix12IiEj(this, r1, 0x40000000, 0x1000, 0);
 
-    int idx = ((unsigned char*)&data_020a0e40)[0];
+    int idx = gActivePlayerSlot;
     short sval = *(short*)((char*)&data_0209f4a0 + idx * 0x18);
     if (sval == 0 && (IsAnim(0x2b) || IsAnim(0x4c))) {
         func_ov002_020e25d4(c);

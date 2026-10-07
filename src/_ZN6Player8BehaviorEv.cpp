@@ -5,6 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
+#include "PlayerInput.h"
 struct C3;
 typedef int (C3::*PMF)();
 struct G_ee90 {
@@ -38,7 +39,6 @@ extern s8 data_0209f2f8;
 extern s32 data_0209fc48;
 extern u8 data_0209fc5c[];
 extern s32 data_0209fc68;
-extern u8 data_020a0e40;
 extern G_ee90 data_0209ee90;
 
 extern Player::State data_ov002_0210ffec;
@@ -110,11 +110,11 @@ int Player::Behavior()
         else
             r0 = 0;
         if (r0 == 0) {
-            data_020a0e40 = 0;
+            gActivePlayerSlot = 0;
             goto after_player_slot;
         }
     }
-    data_020a0e40 = mPlayerNo;
+    gActivePlayerSlot = mPlayerNo;
 after_player_slot:
 
     if (func_ov002_020c4188() != 0)
@@ -163,7 +163,7 @@ after_player_slot:
         s16 ang = mDesiredAngleY;
         s32 stride = 0x18;
         mPrevDesiredAngleY = ang;
-        mDesiredAngleY = *(s16 *)((char *)&data_0209f4a6 + data_020a0e40 * stride);
+        mDesiredAngleY = *(s16 *)((char *)&data_0209f4a6 + gActivePlayerSlot * stride);
         if (data_0209fc68 == 0) {
             s16 add = GetAngleToCamera(0);
             s16 *p = (s16 *)LAU((char *)&mDesiredAngleY);
@@ -282,9 +282,9 @@ after_player_slot:
         _ZN5dCc_c6UpdateEv((char *)&mdCcAcPos_c);
 
     if (data_0209fc68 == 0)
-        data_020a0e40 = 0;
+        gActivePlayerSlot = 0;
     else
-        data_020a0e40 = data_0209f250;
+        gActivePlayerSlot = data_0209f250;
 
     func_ov002_020e4bb8(((char *)this));
 

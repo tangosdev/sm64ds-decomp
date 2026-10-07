@@ -52,8 +52,8 @@
 // spellings of the guard (the banner this replaces recorded those as "did not
 // compile" -- they compile and they tie); moving the `ty` read into the loop with
 // opt_loop_invariants re-enabled, which keeps SCHED==0 and scores 23; the callee
-// return-type and argument-type axis; the `data_020a0de9` respellings
-// (`data_020a0de8[idx][1]`, flat `[idx * 4]`, struct arrays). Two randomized product
+// return-type and argument-type axis; the `gTouchEdge` respellings
+// (`gTouchHeld[idx][1]` on a [][4] array, flat `gTouchEdge[idx * 4]`, struct arrays). Two randomized product
 // scans over declaration order x type names x spellings (1475 cells from the old shape,
 // 1359 from this one) never produce the ROM's `ldrb r7,[r6,#3]`, and neither does a
 // 45-minute permuter run on a plain-C base that compiles byte-identically to this file.
@@ -84,6 +84,7 @@
 #pragma opt_loop_invariants off
 #pragma opt_strength_reduction off
 #include "common.h"
+#include "PlayerInput.h"
 #include "dScStarSel_c.h"
 #include "decl_common.h"
 #include "Message.h"
@@ -108,9 +109,6 @@ extern s32 data_0208ee44;
 extern u16 data_0209f5e8[];
 extern u8 data_02092128;
 extern u8 data_0209caa0[];
-extern u8 data_020a0e40;
-extern u8 data_020a0de8[][4];
-extern u8 data_020a0de9[][4];
 extern u16 data_020a0e58[];
 extern u16 data_020a0e5a[];
 }
@@ -172,20 +170,20 @@ s32 dScStarSel_c::Behavior()
                 func_02012790(data_0209caa0[0x41] + 0x3c);
             }
         } else if (SublevelToLevel(data_02092110) <= 0xe) {
-            idx = data_020a0e40;
+            idx = gActivePlayerSlot;
             cur = FB(this, 0x115);
             found = 0;
-            touched = data_020a0de8[idx][0];
+            touched = gTouchHeld[idx * 4];
             if (touched != 0) {
                 n = FB(this, 0x114);
                 i = 0;
                 if (n > 0) {
-                    rec = data_020a0de8[idx];
+                    rec = &gTouchHeld[idx * 4];
                     tx = rec[2];
                     ty = rec[3];
                     do {
                     if ((u8)(tx - FB((u8 *)this + i, 0x11a) + 8) < 0x10 && ty < 0x28 && ((FB(this, 0x131) >> i) & 1)) {
-                        hit = (touched != 0 && data_020a0de9[idx][0] != 0);
+                        hit = (touched != 0 && gTouchEdge[idx * 4] != 0);
                         if (hit != 0 || cur != i) {
                             FB(this, 0x117) = data_0208ee44 * 3;
                         }
@@ -242,7 +240,7 @@ s32 dScStarSel_c::Behavior()
 
         if (SublevelToLevel(data_02092110) <= 0xe) {
             if (FB(this, 0x135) == 0) {
-                if (IsButtonInputValid() != 0 || (data_0209caa0[0x42] == 0 && (data_020a0e5a[data_020a0e40 * 2] & 0xf0))) {
+                if (IsButtonInputValid() != 0 || (data_0209caa0[0x42] == 0 && (data_020a0e5a[gActivePlayerSlot * 2] & 0xf0))) {
                     func_02012790(0x12e);
                     if (data_0209caa0[0x42] == 0 && (data_020a0e58[1] & 0x30)) {
                         FB(this, 0x135) = 1;

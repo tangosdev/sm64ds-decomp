@@ -22,6 +22,7 @@
 #include "types.h"
 #include "decl_common.h"
 #include "OamAttr.h"
+#include "PlayerInput.h"
 
 /* data_ov006_0213c094: swap count, then two speed-row nibbles.
    StateSetup reads byte [kind * 2]. df024 reads .lo / .hi. */
@@ -90,11 +91,6 @@ extern void func_ov006_020c2664(char *c);
 extern void func_ov006_020c2440(char *c);
 extern void func_02012790(int x);
 extern void func_ov004_020adb1c(int self);
-extern unsigned char data_020a0e40[];
-extern unsigned char data_020a0de8[];
-extern unsigned char data_020a0de9[];
-extern unsigned char data_020a0deb[];
-extern unsigned char data_020a0dea[];
 extern void FreeGfxSlotsById(int arg);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void func_ov006_020deaf0(char* p, int key, int a, int b);
@@ -508,16 +504,16 @@ void dScMgCup_c::StateSelect()
 {
     char *raw = (char *)this;
     int touched = 0;
-    unsigned int idx = data_020a0e40[0];
+    unsigned int idx = gActivePlayerSlot;
     int cup;
     unsigned char touchX;
     unsigned char touchY;
 
-    if (data_020a0de8[idx * 4] != 0 && data_020a0de9[idx * 4] != 0) touched = 1;
+    if (gTouchHeld[idx * 4] != 0 && gTouchEdge[idx * 4] != 0) touched = 1;
     if (touched == 0) return;
 
     {
-        unsigned char* touch = &data_020a0de8[idx * 4];
+        unsigned char* touch = &gTouchHeld[idx * 4];
         touchX = touch[2];
         touchY = touch[3];
     }
@@ -542,9 +538,9 @@ void dScMgCup_c::StateSelect()
         FreeGfxSlotsById(0x1d);
 
         {
-            unsigned int idx2 = data_020a0e40[0];
-            unsigned char a1 = *(volatile unsigned char*)&data_020a0deb[idx2 * 4];
-            unsigned char a2 = *(volatile unsigned char*)&data_020a0dea[idx2 * 4];
+            unsigned int idx2 = gActivePlayerSlot;
+            unsigned char a1 = *(volatile unsigned char*)&gTouchY[idx2 * 4];
+            unsigned char a2 = *(volatile unsigned char*)&gTouchX[idx2 * 4];
             mTouchLock = 1;
             mTouchX = a2;
             mTouchY = a1;

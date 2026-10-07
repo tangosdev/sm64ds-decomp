@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "PlayerInput.h"
 struct Struct6f0 {
     u8 unk0, unk1, unk2, unk3;
     u16 unk4;
@@ -15,7 +16,6 @@ extern u8 data_0209d6a0;
 extern u8 data_0209d684;
 extern u8 data_0209d670;
 extern u8 data_0209d68c;
-extern u8 data_020a0e40;
 extern u8 data_0209f4a2;
 extern u8 data_0209f4a4;
 extern int data_0209caa0[];
@@ -30,9 +30,6 @@ extern u8 data_ov002_0210c3a8;
 extern u8 data_ov002_0210c3a0;
 extern u8 data_ov002_0210c390;
 extern u8 data_ov002_0210c398;
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0deb[];
 extern s16 data_0209d6d8;
 extern s16 data_0209d6dc;
 extern u8 data_0209d66c;
@@ -96,7 +93,7 @@ void Message::Update()
             data_0209d670 = 1;
             return;
         }
-        t = *(s16*)(&data_0209f4a2 + data_020a0e40 * 0x18);
+        t = *(s16*)(&data_0209f4a2 + gActivePlayerSlot * 0x18);
         if (t > 0x80) {
             if (data_0209d68c == 0) {
                 func_02012790(0x96);
@@ -108,7 +105,7 @@ void Message::Update()
             }
             data_0209d68c = 0;
         } else if (*((u8*)data_0209caa0 + 0x42) == 0 &&
-                   (*(u16*)(&data_020a0e5a + data_020a0e40 * 4) & 0x30)) {
+                   (*(u16*)(&data_020a0e5a + gActivePlayerSlot * 4) & 0x30)) {
             data_0209d68c ^= 1;
             func_02012790(0x96);
         }
@@ -130,7 +127,7 @@ void Message::Update()
             data_0209d670 = 1;
             return;
         }
-        t = *(s16*)(&data_0209f4a4 + data_020a0e40 * 0x18);
+        t = *(s16*)(&data_0209f4a4 + gActivePlayerSlot * 0x18);
         if (t > 0x80) {
             if (data_0209d68c == 0) {
                 func_02012790(0x96);
@@ -142,7 +139,7 @@ void Message::Update()
             }
             data_0209d68c = 0;
         } else if (*((u8*)data_0209caa0 + 0x42) == 0 &&
-                   (*(u16*)(&data_020a0e5a + data_020a0e40 * 4) & 0xC0)) {
+                   (*(u16*)(&data_020a0e5a + gActivePlayerSlot * 4) & 0xC0)) {
             data_0209d68c ^= 1;
             func_02012790(0x96);
         }
@@ -166,19 +163,19 @@ void Message::Update()
             data_0209d670 = 1;
             return;
         }
-        idx = data_020a0e40;
+        idx = gActivePlayerSlot;
         hasf1 = 0;
-        f0 = data_020a0de8[idx * 4];
+        f0 = gTouchHeld[idx * 4];
         if (f0 != 0) {
-            if (data_020a0de9[idx * 4] != 0) {
+            if (gTouchEdge[idx * 4] != 0) {
                 hasf1 = 1;
             }
         }
         if (hasf1 != 0) {
-            data_0209d6d8 = ((u8 (*)[4])data_020a0deb)[idx][0];
+            data_0209d6d8 = ((u8 (*)[4])gTouchY)[idx][0];
             data_0209d6d8 -= (s16)(data_0209d68c * 8);
         } else if (f0 != 0) {
-            s16 debval = ((u8 (*)[4])data_020a0deb)[idx][0];
+            s16 debval = ((u8 (*)[4])gTouchY)[idx][0];
             data_0209d6dc = debval - data_0209d6d8;
             if (data_0209d6dc > 0x10) {
                 data_0209d6dc = 0x10;

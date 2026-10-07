@@ -1,4 +1,5 @@
 #include "types.h"
+#include "PlayerInput.h"
 extern int _ZN4cstd5atan2E5Fix12IiES1_(Fix12i a, int b);
 extern int AngleDiff(int a, int b);
 extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);
@@ -7,7 +8,6 @@ extern int _ZN6Player7IsStateERNS_5StateE(void* c, void* s);
 extern int Player_ScaleByCharFactor(void* c, int a);
 extern int func_ov002_020bf224(void* c, int a, int b);
 
-extern u8 data_020a0e40;
 extern s16 data_0209f4a0[];
 extern s16 data_02082214[];
 extern int data_ov002_0211055c[];
@@ -19,7 +19,7 @@ void func_ov002_020e28d4(char* c, int a, int b)
     if (*(int*)(c + 8) == 1)
         a <<= 1;
 
-    if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
+    if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
         if (*(u8*)(c + 0x6e9) & 2) {
             int t = _ZN4cstd5atan2E5Fix12IiES1_(*(int*)(c + 0x560), *(int*)(c + 0x568));
             if (AngleDiff((s16)(t + 0x8000), *(s16*)(c + 0x94)) < 0x2000) {

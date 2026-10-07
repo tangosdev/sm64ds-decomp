@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "PlayerInput.h"
 // @symbol _ZN6Player12St_Jump_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
@@ -14,7 +15,6 @@ extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32, void*);
 extern int Player_AdvanceAnims(void*);
 
 extern char data_ov002_02110424[];
-extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
 }
 
@@ -31,7 +31,7 @@ int Player::St_Jump_Main()
     _ZN6Player11ChangeStateERNS_5StateE(((void*)this), data_ov002_02110424);
   } else {
     {
-      int off = data_020a0e40 * 0x18;
+      int off = gActivePlayerSlot * 0x18;
       u8* p = (u8*)((char*)data_0209f4ab + off);
       if (*p != 0) {
         *p = 5;

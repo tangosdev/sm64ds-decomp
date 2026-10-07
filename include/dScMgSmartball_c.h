@@ -85,6 +85,35 @@ struct dScMgSmartball_c : dScMgBase_c {
     s32  Behavior();       /* slot  6 */
     s32  Render();         /* slot  9 */
 
+    /* Recovered helpers. The spark/dust pair renders the rolling-ball trail
+       and the collision poofs; the Count* counters feed the score popup the
+       emitter queue plays back; EmitScore is the 5-slot popup queue. */
+    int  SparksActive();
+    void EmitSparks(int *pair, int a3);
+    void RenderSparks();
+    void UpdateSparks();
+    void ResetSparks();
+    void EndRound();
+    void ServeNextBall();
+    void CountOut();
+    void CountAward(int i);
+    void CountDokan();
+    void CountAna();
+    void CountKinoko();
+    void CountBingo();
+    int  CountLine(int i);
+    void CountCell();
+    unsigned short GetTile(int *pos);
+    void UpdateDust();
+    void SpawnDust(int *origin);
+    void UpdateScores();
+    void EmitScore(int *src, int v2, int v3, int v5);
+    void KickGate(int idx);
+    int  IsTableAtRest();
+    void ResolveBallPair(int b, int c, u8 *d, u8 *e);
+    void CollideBalls();
+    void SpawnObjects();
+
     u8 pad_4660[0x168];   /* 0x4660 -- dScMgBase_c's data ends here; real matched
                               access inside, see file banner */
     u8 mArray1[0x28];     /* 0x47c8 -- 5 * 8,      elem dtor NullDestructor_0203d47c */

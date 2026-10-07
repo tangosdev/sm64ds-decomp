@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "PlayerInput.h"
 // @symbol _ZN6Player12St_Land_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
@@ -19,7 +20,6 @@ extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, 
 extern int _ZN6Player7IsStateERNS_5StateE(void* c, void* s);
 extern void Player_AdvanceAnims(void* c);
 
-extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
 extern u16 data_0209f49c[];
 extern s16 data_0209f4a0[];
@@ -39,11 +39,11 @@ int Player::St_Land_Main()
     u16 temp_r3 = mStateFlags;
 
     if ((u16)(temp_r3 & 0x40) == 0) {
-        if ((*(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18) & 2)
+        if ((*(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18) & 2)
             || (u16)(temp_r3 & 0x100) != 0) {
             *(u16*)((char*)&mStateFlags) &= ~0x100;
             if (func_ov002_020e3078(((char*)this), data_ov002_0211055c) != 0
-                && (*(u16*)((char*)data_0209f49c + data_020a0e40 * 0x18) & 0x400)
+                && (*(u16*)((char*)data_0209f49c + gActivePlayerSlot * 0x18) & 0x400)
                 && mHorzSpeed >= 0) {
                 _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211055c);
                 return 1;
@@ -61,7 +61,7 @@ int Player::St_Land_Main()
         if (func_ov002_020d5c6c(((char*)this)) != 0) {
             return 1;
         }
-        if (*(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18) & 1) {
+        if (*(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18) & 1) {
             return func_ov002_020dde74(((char*)this));
         }
     } else {
@@ -80,7 +80,7 @@ int Player::St_Land_Main()
         goto tail;
     }
 
-    if ((*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) != 0)
+    if ((*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0)
         || (_ZN6Player12FinishedAnimEv(((char*)this)) != 0)) {
         if (_ZN6Player6IsAnimEj(((char*)this), 0x1b) != 0) {
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x2e, 0x40000000, 0x1000, 0);
@@ -89,7 +89,7 @@ int Player::St_Land_Main()
         if (_ZN6Player6IsAnimEj(((char*)this), 0x4e) != 0) {
             mAngleY = (s16)(mAngleY + 0x8000);
         }
-        if ((*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) != 0)
+        if ((*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0)
             && AngleDiff(mAngleY, mPrevAngleY) >= 0x4000) {
             if (AngleDiff(mDesiredAngleY, mAngleY) >= 0x4000) {
                 mAngleY = mPrevAngleY;

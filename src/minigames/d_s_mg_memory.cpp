@@ -15,6 +15,7 @@
 #include "dScMgMemory_c.h"
 #include "common.h"
 #include "types.h"
+#include "PlayerInput.h"
 #include "decl_common.h"
 #include "Sound.h"
 
@@ -62,11 +63,6 @@ extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern u16 data_ov006_0213d168[];
 extern void *data_ov006_0214236c[];
 extern unsigned short data_ov006_0213d0a8[];
-extern u8 data_020a0e40;
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0dea[];
-extern u8 data_020a0deb[];
 extern void func_ov004_020ad79c(int a, int b);
 extern s16 data_02082214[];
 extern u16* data_ov006_0213d09c[];
@@ -451,11 +447,11 @@ void dScMgMemory_c::CardSelect(int card)
     {
         return;
     }
-    touchSample = data_020a0e40;
+    touchSample = gActivePlayerSlot;
     touchActive = 0;
-    if (data_020a0de8[data_020a0e40 * 4] != 0)
+    if (gTouchHeld[gActivePlayerSlot * 4] != 0)
     {
-        if (data_020a0de9[data_020a0e40 * 4] != 0)
+        if (gTouchEdge[gActivePlayerSlot * 4] != 0)
         {
             touchActive = 1;
         }
@@ -464,8 +460,8 @@ void dScMgMemory_c::CardSelect(int card)
     {
         return;
     }
-    touchDeltaX = data_020a0dea[touchSample * 4] - (mCards[card].x >> 12);
-    touchDeltaY = data_020a0deb[touchSample * 4] - (mCards[card].y >> 12);
+    touchDeltaX = gTouchX[touchSample * 4] - (mCards[card].x >> 12);
+    touchDeltaY = gTouchY[touchSample * 4] - (mCards[card].y >> 12);
     if (touchDeltaX < (-0x10))
     {
         return;
@@ -554,11 +550,11 @@ void dScMgMemory_c::ResultFinish()
         return;
     }
 
-    i = data_020a0e40;
+    i = gActivePlayerSlot;
     touched = 0;
-    if (data_020a0de8[i * 4] != 0)
+    if (gTouchHeld[i * 4] != 0)
     {
-        if (data_020a0de9[i * 4] != 0)
+        if (gTouchEdge[i * 4] != 0)
         {
             touched = 1;
         }

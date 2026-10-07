@@ -28,6 +28,7 @@
 #include "types.h"
 #include "common.h"
 #include "SharedFilePtr.h"
+#include "PlayerInput.h"
 
 struct Sound { static void PlayBank2_2D(unsigned int); };
 struct Model { int d; void HideMaterial(int, int); void ShowMaterial(int, int); void Render(const Vector3 *); };
@@ -904,10 +905,6 @@ int func_ov006_020c3050(char *c)
 // ---- func_ov006_020c2be8.c ----
 namespace s020c2be8 {
 extern "C" {
-extern "C" { extern u8 data_020a0e40; }
-extern u8 data_020a0de8[];
-extern u8 data_020a0dea[];
-extern u8 data_020a0deb[];
 
 #define COMPUTE(c, s, t) \
     { \
@@ -950,10 +947,10 @@ void func_ov006_020c2be8(char* c)
         return;
     }
     if (func_ov006_020c2994(c) != 0) {
-        int i = data_020a0e40;
-        if (data_020a0de8[i * 4] != 0) {
-            int s = data_020a0dea[i * 4];
-            int t = data_020a0deb[i * 4];
+        int i = gActivePlayerSlot;
+        if (gTouchHeld[i * 4] != 0) {
+            int s = gTouchX[i * 4];
+            int t = gTouchY[i * 4];
             COMPUTE(c, s, t);
             return;
         }
