@@ -942,7 +942,7 @@
     "src/_ZN6Player18St_Balloon_CleanupEv.cpp",
     "src/_ZN6Player20RegisterEggCoinCountEjbb.cpp",
     "src/_ZN6Player20St_InYoshiMouth_InitEv.cpp",
-    "src/_ZN6Player20St_LedgeHang_CleanupEv.cpp",
+    "src/actors/Player.cpp#_ZN6Player20St_LedgeHang_CleanupEv",
     "src/_ZN6Player21St_DizzyStars_CleanupEv.cpp",
     "src/_ZN6Player22St_CrazedCrate_CleanupEv.cpp",
     "src/_ZN6Player22St_GroundPound_CleanupEv.cpp",

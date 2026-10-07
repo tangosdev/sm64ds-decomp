@@ -6507,10 +6507,10 @@
       ]
     },
     "_ZN18NestedHeapIteratorC1Ej": {
-      "src/func_02051064.c": [
-        "param:#1 int",
-        "param:#2 int",
-        "return:int"
+      "include/decl_NestedHeapIterator.h": [
+        "param:#1 void *",
+        "param:#2 unsigned int",
+        "return:void"
       ]
     },
     "_ZN18SolidHeapAllocator10MemoryLeftEi": {
@@ -16318,28 +16318,25 @@
       ]
     },
     "data_ov002_02110154": {
-      "src/func_ov002_020bd06c.c": [
-        "return:char"
+      "src/_ZN6Player12St_Walk_InitEv.cpp": [
+        "return:int []"
       ],
-      "src/func_ov002_020d6790.cpp": [
-        "return:char"
+      "src/_ZN6Player22St_GrabBowserTail_MainEv.cpp": [
+        "return:int []"
       ]
     },
     "data_ov002_0211019c": {
-      "include/decl_common.h": [
-        "return:int []"
-      ],
       "src/_ZN6Player12St_Land_InitEv.cpp": [
         "return:int"
       ],
-      "src/func_ov002_020d36d8.c": [
-        "return:int"
+      "src/func_ov002_020d9298.cpp": [
+        "return:State"
+      ],
+      "src/func_ov002_020dde74.cpp": [
+        "return:State"
       ],
       "src/func_ov002_020e2664.c": [
         "return:int"
-      ],
-      "src/func_ov002_020e2ba8.cpp": [
-        "return:int []"
       ]
     },
     "data_ov002_021101b4": {
@@ -16521,11 +16518,11 @@
       ]
     },
     "data_ov002_02110574": {
-      "include/decl_common.h": [
-        "return:char"
-      ],
       "src/_ZN6Player7TryGrabER8dActor_c.cpp": [
         "return:Player::State"
+      ],
+      "src/func_ov002_020dde74.cpp": [
+        "return:State"
       ],
       "src/func_ov002_020e2664.c": [
         "return:int"
@@ -32766,6 +32763,14 @@
     "data_ov022_021145a8": {
       "src/actors/daObjFl_Seesaw_c.cpp": [
         "return:SharedFilePtr"
+      ]
+    },
+    "_ZN9dBgCh_Gnd10DetectClsnEv": {
+      "src/actors/dActor_c.cpp": [
+        "param:#1 RaycastGroundPod *"
+      ],
+      "src/actors/daObjPowerUpItem_c.cpp": [
+        "param:#1 RG *"
       ]
     }
   },
