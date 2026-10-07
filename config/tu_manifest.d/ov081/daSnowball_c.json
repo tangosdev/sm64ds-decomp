@@ -3,19 +3,41 @@
   "module": "ov081",
   "source": "src/actors/daSnowball_c.cpp",
   "promoted_source": "src/actors/daSnowball_c.cpp",
+  "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous run 0x02125f14..0x021264b4, 12 functions, each delink complete and abutting: D1, D0, five helpers, five virtuals",
     "ROM RTTI for vtable 0x02128abc is daSnowball_c: _ZTI12daSnowball_c at 0x02128a7c, string 12daSnowball_c at 0x02128a88",
     "The five helpers between D0 and CleanupResources are this class's: InitResources installs the state record handled by func_ov081_021261d4, Behavior calls func_ov081_02126224, and func_ov081_021260fc/02125fb8 read daSnowball_c fields (+0x380 spawn height, +0x388). The next function, daSnowball_c_classInit at 0x021264b4, was folded in by the 0930c classInit fold (below).",
-    "classInit fold (0930c): the SNOWBALL registry factory daSnowball_c_classInit (0x021264b4, 0x50) abuts the run's end 0x021264b4 with no gap and no other symbol between; tu_map left it in its own unlabelled unit because it cuts on symbol name. The widened range 0x02125f14..0x02126504 (13 functions) ends where the daGmch_c TU (src/actors/daGmch_c.cpp) begins."
+    "classInit fold (0930c): the SNOWBALL registry factory daSnowball_c_classInit (0x021264b4, 0x50) abuts the run's end 0x021264b4 with no gap and no other symbol between; tu_map left it in its own unlabelled unit because it cuts on symbol name. The widened range 0x02125f14..0x02126504 (13 functions) ends where the daGmch_c TU (src/actors/daGmch_c.cpp) begins.",
+    "the compiler-generated __sinit_daSnowball_c.cpp is byte-identical to retail __sinit_ov081_021284b4 (0x3c, three ABS32 relocations). It copies the two pointer-to-member descriptors at 0x02128a6c and 0x02128a74 into the state record at 0x02128eb4. The ctor word at 0x0212882c points at that initializer."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x02125f14",
       "end": "0x02126504"
+    },
+    {
+      "name": ".init",
+      "start": "0x021284b4",
+      "end": "0x021284f0"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x0212882c",
+      "end": "0x02128830"
+    },
+    {
+      "name": ".data",
+      "start": "0x02128a6c",
+      "end": "0x02128a7c"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02128eb4",
+      "end": "0x02128ec4"
     }
   ],
   "functions": [
@@ -41,14 +63,14 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov081_021260fc",
+      "symbol": "_ZN12daSnowball_c19func_ov081_021260fcEv",
       "address": "0x021260fc",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov081_021260fc.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov081_021261b8",
+      "symbol": "_ZN12daSnowball_c19func_ov081_021261b8Ev",
       "address": "0x021261b8",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov081_021261b8.c",
@@ -111,11 +133,142 @@
       "ordinal": 12
     }
   ],
-  "data": [],
-  "bss": [],
+  "init": [
+    {
+      "symbol": "__sinit_daSnowball_c.cpp",
+      "address": "0x021284b4",
+      "size": "0x3c",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov081_021284b4 and carries the same three relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_daSnowball_c.cpp",
+      "address": "0x0212882c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "data": [
+    {
+      "symbol": "@673",
+      "address": "0x02128a6c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary for the state record's enter pointer-to-member; retail first word is 0x021261b8"
+    },
+    {
+      "symbol": "@675",
+      "address": "0x02128a74",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary for the state record's update pointer-to-member; retail first word is 0x021260fc"
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "data_ov081_02128eb4",
+      "address": "0x02128eb4",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "the state record InitResources installs; the initializer copies the two descriptors into it"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_daSnowball_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_daSnowball_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@673",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local enter descriptor is a configured initializer relocation destination at 0x02128a6c"
+    },
+    {
+      "symbol": "@675",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local update descriptor is a configured initializer relocation destination at 0x02128a74"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x021284e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@673",
+      "addend": 0,
+      "target_module": "ov081",
+      "target_address": "0x02128a6c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021284e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@675",
+      "addend": 0,
+      "target_module": "ov081",
+      "target_address": "0x02128a74"
+    },
+    {
+      "section": ".init",
+      "source": "0x021284ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov081_02128eb4",
+      "addend": 0,
+      "target_module": "ov081",
+      "target_address": "0x02128eb4"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x0212882c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_daSnowball_c.cpp",
+      "addend": 0,
+      "target_module": "ov081",
+      "target_address": "0x021284b4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02128a6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daSnowball_c19func_ov081_021261b8Ev",
+      "addend": 0,
+      "target_module": "ov081",
+      "target_address": "0x021261b8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02128a74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daSnowball_c19func_ov081_021260fcEv",
+      "addend": 0,
+      "target_module": "ov081",
+      "target_address": "0x021260fc"
+    }
+  ],
   "notes": [
     "Widened to the full unit 0x02125f14..0x021264b4 (the destructor pair and the five helpers folded in front of the five virtuals). The factory daSnowball_c_classInit at 0x021264b4 was folded in afterwards by the 0930c classInit fold (below).",
-    "classInit fold (0930c): daSnowball_c_classInit is folded in last, in ROM order, under the file's `#pragma defer_codegen off`, as `return new daSnowball_c();`. The retired one-function source hand-called fBase_c::operator new(908 = 0x38c), dEnemyBase_c's C2 constructor, this class's vtable store and the four member C1 constructors (dCcAc_c 0x110, dBgCh_Actr 0x144, Model 0x300, dExtShadowModel_c 0x350); daSnowball_c has no user-declared constructor, so the synthesized one emits the identical sequence and no new compiler-only output. tubuild verify: 13/13 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED. Retired src/d_a_snowball.c; its credit carries in attribution.json as a path#symbol override."
+    "classInit fold (0930c): daSnowball_c_classInit is folded in last, in ROM order, under the file's `#pragma defer_codegen off`, as `return new daSnowball_c();`. The retired one-function source hand-called fBase_c::operator new(908 = 0x38c), dEnemyBase_c's C2 constructor, this class's vtable store and the four member C1 constructors (dCcAc_c 0x110, dBgCh_Actr 0x144, Model 0x300, dExtShadowModel_c 0x350); daSnowball_c has no user-declared constructor, so the synthesized one emits the identical sequence and no new compiler-only output. tubuild verify: 13/13 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED. Retired src/d_a_snowball.c; its credit carries in attribution.json as a path#symbol override.",
+    "The file-scope state record data_ov081_02128eb4 is defined in this TU. mwcc emits __sinit_daSnowball_c.cpp, the ctor word, and the two anonymous pointer-to-member descriptors. Class RTTI and the vtable stay externalized; this claim stops at 0x02128a7c, where _ZTI12daSnowball_c begins. The handwritten src/__sinit_ov081_021284b4.c is retired.",
+    "Local scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this machine's stock control. The recorded rom.sha256 is the fleet SHA every other intact entry shares. Module set, symbol inventory, and the five owned ranges matched."
   ],
   "compiler_only_output": [
     {
@@ -283,7 +436,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov081-daSnowball_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -296,7 +449,7 @@
       },
       "tuRange": {
         "start": "0x02125f14",
-        "end": "0x021264b4",
+        "end": "0x02126504",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -304,21 +457,87 @@
         {
           "section": ".text",
           "start": "0x02125f14",
-          "end": "0x021264b4",
+          "end": "0x02126504",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x021284b4",
+          "end": "0x021284f0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x0212882c",
+          "end": "0x02128830",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02128a6c",
+          "end": "0x02128a7c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02128eb4",
+          "end": "0x02128ec4",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 12
+          "LICENSED": 18
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              54
+            ],
+            "desired": [
+              54
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              52
+            ],
+            "desired": [
+              52
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              30,
+              32
+            ],
+            "desired": [
+              30,
+              32
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              34
+            ],
+            "desired": [
+              34
+            ]
+          }
+        ],
         "objisolate": null,
         "errors": null
       },

@@ -31,12 +31,11 @@
  * it burst without Hurt; a vanished player is ignored (no burst).
  *
  * Leftover / known limits:
- * - The five helpers keep their func_ov081_* names and C linkage, as the
- *   loose files had them. None has a recovered name. They now take the class
- *   pointer and read named members, but they are still free functions: the
- *   two state-record functions are reached through the record the static
- *   initialiser __sinit_ov081_021284b4 copies in, by address, so they are
- *   not yet methods.
+ * - func_ov081_02125fb8, func_ov081_021261d4 and func_ov081_02126224 stay
+ *   free functions under those address names. None has a recovered name.
+ *   The state-record targets are methods under the same addresses. The
+ *   file-scope record data_ov081_02128eb4 is what the compiler's
+ *   __sinit_daSnowball_c.cpp copies the two pointer-to-member descriptors into.
  * - Both Init calls stay on their mangled names (see InitResources).
  * - func_02012694's sound id 0x3c and the particle id 0x11c are bare numbers;
  *   the SND3_/PTCL_ enum names only say where they are used.
@@ -56,6 +55,7 @@
 #include "SharedFilePtr.h"
 
 extern SharedFilePtr data_ov081_02128d90;
+extern daSnowball_StateRec data_ov081_02128eb4;
 
 extern "C" {
 unsigned short DecIfAbove0_Short(unsigned short *p);
@@ -179,10 +179,9 @@ extern "C" void func_ov081_02125fb8(daSnowball_c *self)
     }
 }
 
-// @symbol func_ov081_021260fc
-/* The state record's update function (offset +8 of data_ov081_02128eb4; the
- * __sinit copies it from data_ov081_02128a74, whose first word is this
- * function's address). Behavior calls it once per frame.
+// @symbol _ZN12daSnowball_c19func_ov081_021260fcEv
+/* The state record's update function (offset +8 of data_ov081_02128eb4).
+ * Behavior calls it once per frame.
  *
  * 1. While mReachedSpawnY is still 0 and mTerminalVelocity still holds the
  *    -0x3c000 (-60 units/frame) InitResources set: the first frame the snowball
@@ -194,37 +193,36 @@ extern "C" void func_ov081_02125fb8(daSnowball_c *self)
  *    destruction; this function carries on to step 3 afterwards.
  * 3. If either x/z velocity word at 0x0a4/0x0ac is non-zero, run the contact handler.
  * Always returns 1. */
-extern "C" int func_ov081_021260fc(daSnowball_c *thiz)
+int daSnowball_c::func_ov081_021260fc()
 {
-    if (thiz->mReachedSpawnY == 0 && thiz->mTerminalVelocity == -0x3c000) {
-        if (thiz->mSpawnPosY > thiz->mPosY) {
-            thiz->mVertSpeed = 0;
-            thiz->mVertAccel = 0;
-            thiz->mReachedSpawnY = 1;
+    if (this->mReachedSpawnY == 0 && this->mTerminalVelocity == -0x3c000) {
+        if (this->mSpawnPosY > this->mPosY) {
+            this->mVertSpeed = 0;
+            this->mVertAccel = 0;
+            this->mReachedSpawnY = 1;
         }
     }
-    if ((unsigned short)thiz->mStateTimer == 0 ||
-        _ZNK10dBgCh_Actr10IsOnGroundEv(&thiz->mWithMeshClsn) != 0) {
-        func_02012694(SND3_SNOWBALL_BURST, &thiz->mCamSpacePosX);
+    if ((unsigned short)this->mStateTimer == 0 ||
+        _ZNK10dBgCh_Actr10IsOnGroundEv(&this->mWithMeshClsn) != 0) {
+        func_02012694(SND3_SNOWBALL_BURST, &this->mCamSpacePosX);
         _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-            PTCL_SNOWBALL_BURST, thiz->mPosX, thiz->mPosY, thiz->mPosZ);
-        _ZN7fBase_c18MarkForDestructionEv(thiz);
+            PTCL_SNOWBALL_BURST, this->mPosX, this->mPosY, this->mPosZ);
+        _ZN7fBase_c18MarkForDestructionEv(this);
     }
-    if (thiz->unk_0a4 != 0 || thiz->unk_0ac != 0) {
-        func_ov081_02125fb8(thiz);
+    if (this->unk_0a4 != 0 || this->unk_0ac != 0) {
+        func_ov081_02125fb8(this);
     }
     return 1;
 }
 
-// @symbol func_ov081_021261b8
-/* The state record's enter function (offset +0 of data_ov081_02128eb4, copied
- * from data_ov081_02128a6c, whose first word is this function's address;
- * func_ov081_021261d4 runs it): clear mReachedSpawnY and arm mStateTimer with
+// @symbol _ZN12daSnowball_c19func_ov081_021261b8Ev
+/* The state record's enter function (offset +0 of data_ov081_02128eb4).
+ * func_ov081_021261d4 runs it: clear mReachedSpawnY and arm mStateTimer with
  * 200 frames. */
-extern "C" int func_ov081_021261b8(daSnowball_c *p)
+int daSnowball_c::func_ov081_021261b8()
 {
-    p->mReachedSpawnY = 0;
-    p->mStateTimer = 200;
+    this->mReachedSpawnY = 0;
+    this->mStateTimer = 200;
     return 1;
 }
 
@@ -357,3 +355,11 @@ extern "C" daSnowball_c *daSnowball_c_classInit()
 {
     return new daSnowball_c();
 }
+
+/* The record InitResources installs. Its two pointer-to-member descriptors
+ * are anonymous compiler objects; this definition is what makes mwcc emit
+ * __sinit_daSnowball_c.cpp. */
+daSnowball_StateRec data_ov081_02128eb4 = {
+    &daSnowball_c::func_ov081_021261b8,
+    &daSnowball_c::func_ov081_021260fc,
+};

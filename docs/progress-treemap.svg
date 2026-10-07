@@ -41369,11 +41369,11 @@ matched: yes</title></rect><rect x="1206.47" y="777.70" width="5.87" height="25.
 module: ov081
 addr: 0x02125fb8
 size: 324 bytes
-matched: yes</title></rect><rect x="1206.47" y="803.35" width="5.87" height="14.88" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_021260fc
+matched: yes</title></rect><rect x="1206.47" y="803.35" width="5.87" height="14.88" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daSnowball_c19func_ov081_021260fcEv
 module: ov081
 addr: 0x021260fc
 size: 188 bytes
-matched: yes</title></rect><rect x="1206.47" y="818.23" width="5.87" height="2.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_021261b8
+matched: yes</title></rect><rect x="1206.47" y="818.23" width="5.87" height="2.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daSnowball_c19func_ov081_021261b8Ev
 module: ov081
 addr: 0x021261b8
 size: 28 bytes
@@ -41605,7 +41605,7 @@ matched: yes</title></rect><rect x="1251.81" y="806.97" width="25.43" height="15
 module: ov081
 addr: 0x02128154
 size: 864 bytes
-matched: yes</title></rect><rect x="1251.81" y="822.74" width="1.73" height="16.07" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_ov081_021284b4
+matched: yes</title></rect><rect x="1251.81" y="822.74" width="1.73" height="16.07" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_daSnowball_c.cpp
 module: ov081
 addr: 0x021284b4
 size: 60 bytes
