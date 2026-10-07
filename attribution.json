@@ -5252,7 +5252,7 @@
     "src/actors/daObjSm_Lift_c.cpp#_ZN14daObjSm_Lift_cD1Ev": "andrewboudreau",
     "src/actors/daObjSm_Lift_c.cpp#_ZN14daObjSm_Lift_cD0Ev": "tangosdev",
     "src/actors/daObjSm_Lift_c.cpp#_ZN14daObjSm_Lift_c15OnHitByMegaCharER6Player": "tangosdev",
-    "src/actors/daObjSm_Lift_c.cpp#func_ov018_02111278": "tangosdev",
+    "src/actors/daObjSm_Lift_c.cpp#_ZN14daObjSm_Lift_c19func_ov018_02111278Ev": "tangosdev",
     "src/actors/daObjSm_Lift_c.cpp#_ZN14daObjSm_Lift_c16CleanupResourcesEv": "tangosdev",
     "src/actors/daObjSm_Lift_c.cpp#_ZN14daObjSm_Lift_c6RenderEv": "tangosdev",
     "src/actors/daObjSm_Lift_c.cpp#_ZN14daObjSm_Lift_c8BehaviorEv": "lunavyqo",

@@ -1,7 +1,7 @@
 _ZN14daObjSm_Lift_cD1Ev kind:function(arm,size=0x44) addr:0x021111a0
 _ZN14daObjSm_Lift_cD0Ev kind:function(arm,size=0x58) addr:0x021111e4
 _ZN14daObjSm_Lift_c15OnHitByMegaCharER6Player kind:function(arm,size=0x3c) addr:0x0211123c
-func_ov018_02111278 kind:function(arm,size=0x84) addr:0x02111278
+_ZN14daObjSm_Lift_c19func_ov018_02111278Ev kind:function(arm,size=0x84) addr:0x02111278
 _ZN14daObjSm_Lift_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021112fc
 _ZN14daObjSm_Lift_c6RenderEv kind:function(arm,size=0x28) addr:0x02111340
 _ZN14daObjSm_Lift_c8BehaviorEv kind:function(arm,size=0x34c) addr:0x02111368
