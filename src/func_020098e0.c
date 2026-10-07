@@ -1,4 +1,5 @@
 #include "types.h"
+#include "PlayerInput.h"
 #define LP(p) (p)
 
 extern void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);
@@ -8,7 +9,6 @@ extern int func_02009138(int *thiz, int arg);
 extern void func_020089d8(void *p);
 
 extern int data_02086e9c[3];
-extern unsigned char data_020a0e40;
 extern short data_0209f4a2[];
 extern short data_0209f4a4[];
 
@@ -33,7 +33,7 @@ int func_020098e0(char *self)
         }
     } else {
         s16 *p17c = (s16*)(int)LP(self + 0x17c);
-        int idx = data_020a0e40;
+        int idx = gActivePlayerSlot;
         int off = idx * 0x18;
         s16 t1 = *(short*)((char*)data_0209f4a2 + off);
         int scaled1 = (int)((((s64)t1 * 0x200) + 0x800) >> 12);

@@ -31,6 +31,7 @@
 #include "decl_common.h"
 #include "Sound.h"
 #include "G2x.h"
+#include "PlayerInput.h"
 
 #pragma defer_codegen off
 #pragma opt_strength_reduction off
@@ -87,11 +88,6 @@ char pad[0x18];
 void Vec2_Sub(V2 *out, V2 *a, V2 *b);
 int Vec2_Len(V2 *p);
 void FreeGfxSlotsById(int a);
-extern u8 data_020a0e40[];
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0dea[];
-extern u8 data_020a0deb[];
 void *func_ov004_020adc74(void *arg);
 void DecompressLZ16(int src, void *dst);
 void Ov004_Deallocate(void *ptr);
@@ -370,10 +366,10 @@ s32 dScMgFlower_c::Behavior()
     case 0:
         self->mPrevCursorX = self->mCursorX;
         self->mPrevCursorY = self->mCursorY;
-        k = data_020a0e40[0];
-        if (data_020a0de8[k * 4] != 0) {
-            int b = data_020a0deb[k * 4];
-            int a = data_020a0dea[k * 4];
+        k = gActivePlayerSlot;
+        if (gTouchHeld[k * 4] != 0) {
+            int b = gTouchY[k * 4];
+            int a = gTouchX[k * 4];
             self->mCursorX = (b ? a : a) << 12;
             self->mCursorY = b << 12;
         }
@@ -389,7 +385,7 @@ s32 dScMgFlower_c::Behavior()
             }
         } else if (self->mHeldPetal < 0) {
             int t;
-            if (data_020a0de8[k * 4] != 0 && data_020a0de9[k * 4] != 0)
+            if (gTouchHeld[k * 4] != 0 && gTouchEdge[k * 4] != 0)
                 t = 1;
             else
                 t = 0;
@@ -443,7 +439,7 @@ s32 dScMgFlower_c::Behavior()
             }
         } else {
             t = 0;
-            if (data_020a0de8[k * 4] != 0) {
+            if (gTouchHeld[k * 4] != 0) {
                 Cell *cells;
                 int j;
                 Vec2_Sub(&drag, (V2 *)(c + 0x5fb8), (V2 *)(c + 0x5fc0));

@@ -15,6 +15,7 @@
 #include "decl_common.h"
 #include "private/ov006_slotgrid.h"
 #include "types.h"
+#include "PlayerInput.h"
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which is why its
@@ -51,10 +52,6 @@ void func_ov004_020b1ba0(void* c, int delta);
 void func_ov004_020b1b78(void* c, int val);
 extern unsigned int func_02012790(unsigned int arg);
 extern void func_ov004_020adb1c(int self);
-extern u8 data_020a0e40[];
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0deb[];
 extern int data_ov006_0213e948[];
 extern void func_ov006_0210ab08(char *c, int i);
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int id);
@@ -378,20 +375,20 @@ void func_ov006_0210af64(char *c)
   int i;
   int new_var;
   int *tab;
-  idx = data_020a0e40[0];
+  idx = gActivePlayerSlot;
   ok = 0;
   off = idx * 4;
   new_var = 1;
-  if (data_020a0de8[idx * 4])
+  if (gTouchHeld[idx * 4])
   {
-    if (data_020a0de9[off])
+    if (gTouchEdge[off])
     {
       ok = 1;
     }
   }
   if (ok != 0)
   {
-    unsigned int v = data_020a0deb[idx * 4];
+    unsigned int v = gTouchY[idx * 4];
     if ((v >= 0x40) && (v < 0x58))
     {
       if ((*((u8 *) (c + 0x502b))) == new_var)

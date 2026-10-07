@@ -28,6 +28,7 @@
 #include "dScMgLuigi_c.h"
 #include "Sound.h"
 #include "IRQ.h"
+#include "PlayerInput.h"
 
 typedef void (dScMgLuigi_c::*LuigiSlotHandler)(int);
 typedef void (dScMgLuigi_c::*LuigiStateHandler)();
@@ -1141,26 +1142,21 @@ void dScMgLuigi_c::BeginCatch(int p1)
 // @symbol _ZN12dScMgLuigi_c10CheckTouchEv
 void dScMgLuigi_c::CheckTouch()
 {
-    extern unsigned char data_020a0e40;
-    extern unsigned char data_020a0de8[][4];
-    extern unsigned char data_020a0de9[][4];
-    extern unsigned char data_020a0dea[][4];
-    extern unsigned char data_020a0deb[][4];
     extern unsigned short data_ov006_0212e848[];
-    int idx = data_020a0e40;
+    int idx = gActivePlayerSlot;
     int flag = 0;
     int cur;
     int i;
 
-    if (data_020a0de8[idx][0] != 0) {
-        if (data_020a0de9[idx][0] != 0) flag = 1;
+    if (gTouchHeld[idx * 4] != 0) {
+        if (gTouchEdge[idx * 4] != 0) flag = 1;
     }
     if (flag == 0) return;
 
     cur = mTarget;
     {
-        int dx = data_020a0dea[idx][0] - (mPosX[cur - 1] >> 12);
-        int dy = data_020a0deb[idx][0] - (mPosY[cur - 1] >> 12);
+        int dx = gTouchX[idx * 4] - (mPosX[cur - 1] >> 12);
+        int dy = gTouchY[idx * 4] - (mPosY[cur - 1] >> 12);
         if (dx <= 0x10 && dx >= -0x10 && dy <= 0x10 && dy >= -0x10) {
             int lvl, cat;
 
@@ -1185,8 +1181,8 @@ void dScMgLuigi_c::CheckTouch()
     for (i = 0; i < 0x78; i++) {
         if (mActive[i] == 1) {
             if (mKind[i] != 9) {
-                int dx2 = data_020a0de8[idx][2] - (mPosX[i] >> 12);
-                int dy2 = data_020a0de8[idx][3] - (mPosY[i] >> 12);
+                int dx2 = gTouchHeld[idx * 4 + 2] - (mPosX[i] >> 12);
+                int dy2 = gTouchHeld[idx * 4 + 3] - (mPosY[i] >> 12);
                 if (dx2 <= 0x10 && dx2 >= -0x10 && dy2 <= 0x10 && dy2 >= -0x10) {
                     AddPenalty(i);
                     mFound = 0;
