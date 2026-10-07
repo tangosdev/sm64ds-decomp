@@ -50,7 +50,6 @@
 #include "types.h"
 #include "decl_common.h"
 #include "dScMgAmida_c.h"
-#include "PlayerInput.h"
 
 
 extern "C" {
@@ -89,6 +88,16 @@ extern void *dScMgAmida_c_classInit(void);
 extern s16 data_02082214[];
 extern u8  data_0209d45c;
 extern u8  data_0209d454;
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8  gActivePlayerSlot;
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8  gTouchHeld[];
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8  gTouchEdge[];
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8  gTouchX[][4];
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8  gTouchY[][4];
 extern int data_ov006_0212e1c0[];
 extern s32 data_0208ee44;
 extern char data_ov006_0212e1a8[];
@@ -498,8 +507,8 @@ void dScMgAmida_c::CheckHurryButton()
         if (gTouchEdge[off] != 0) i = 1;
     }
     if (i == 0) return;
-    int v1 = gTouchX[b3 * 4];
-    int v0 = gTouchY[b3 * 4];
+    int v1 = gTouchX[b3][0];
+    int v0 = gTouchY[b3][0];
     if (v1 < 0x60) return;
     if (v1 >= 0xa0) return;
     if (v0 < 0xa0) return;
@@ -529,8 +538,8 @@ void dScMgAmida_c::CheckEdgeBoost()
     }
     idx = gActivePlayerSlot;
     if (gTouchHeld[idx * 4] != 0) {
-        a = gTouchX[idx * 4];
-        b = gTouchY[idx * 4];
+        a = gTouchX[idx][0];
+        b = gTouchY[idx][0];
         if ((a >= 0 && a < 0x10 && b >= 0x40 && b < 0x80) ||
             (a >= 0xf0 && a < 0x100 && b >= 0x40 && b < 0x80)) {
             if (mEdgeBoostCount >= 5) {
@@ -568,8 +577,8 @@ void dScMgAmida_c::HandlePen()
     oldY = this->mPen.y;
 
     if (gTouchHeld[gActivePlayerSlot * 4] != 0) {
-        int newX = gTouchX[gActivePlayerSlot * 4];
-        int newY = gTouchY[gActivePlayerSlot * 4];
+        int newX = gTouchX[gActivePlayerSlot][0];
+        int newY = gTouchY[gActivePlayerSlot][0];
         if (newX < 0) return;
         if (newX >= 0x100) return;
         if (newY < 0) return;

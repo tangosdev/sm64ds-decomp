@@ -32,7 +32,6 @@
 
 #include "types.h"
 #include "dScMgPachinko_c.h"
-#include "PlayerInput.h"
 
 /* Two helpers dispatch through the ov006 pointer-to-member tables, each on
    its own view of the scene. Both pointer-to-member types are formed while
@@ -173,6 +172,16 @@ extern int   data_0209d4b8;
 extern unsigned char data_0209d45c;
 extern u8    data_0209d454;
 extern s16   data_02082214[];
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8    gActivePlayerSlot;
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8    gTouchHeld[][4];
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8    gTouchEdge[][4];
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8    gTouchX[][4];
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8    gTouchY[][4];
 extern void *data_ov006_0213ac24;
 extern unsigned char data_ov006_0212eb0c[];
 extern unsigned char data_ov006_0212eb10[];
@@ -2226,13 +2235,13 @@ void func_ov006_020fe2e4(char *self, int i)
     char *p;
     int dx, dy;
 
-    if (gTouchHeld[idx * 4] != 0) {
-        flag = gTouchEdge[idx * 4] != 0;
+    if (gTouchHeld[idx][0] != 0) {
+        flag = gTouchEdge[idx][0] != 0;
     }
     if (flag != 0) {
         p = self + i * 0x38;
-        dx = ((*(s32 *)(p + 0x4ed8)) >> 12) - gTouchX[idx * 4];
-        dy = ((*(s32 *)(p + 0x4edc)) >> 12) - gTouchY[idx * 4];
+        dx = ((*(s32 *)(p + 0x4ed8)) >> 12) - gTouchX[idx][0];
+        dy = ((*(s32 *)(p + 0x4edc)) >> 12) - gTouchY[idx][0];
         *(unsigned char *)(p + 0x4f0d) = 1;
         *(s32 *)(p + 0x4ee8) = dx << 12;
         *(s32 *)(p + 0x4eec) = dy << 12;
@@ -2271,12 +2280,12 @@ void func_ov006_020fe394(dScMgPachinko_c *self, int i)
     s32 cy;
     u32 idx = gActivePlayerSlot;
 
-    if (gTouchHeld[idx * 4] != 0) {
+    if (gTouchHeld[idx][0] != 0) {
         int off = i * 0x38;
         s32 vy, vx;
 
-        cx = gTouchX[idx * 4];
-        cy = gTouchY[idx * 4];
+        cx = gTouchX[idx][0];
+        cy = gTouchY[idx][0];
         *(s32 *)(c + 0x4ed8 + off) = (cx << 12) + *(s32 *)(c + 0x4ee8 + off);
         *(s32 *)(c + 0x4edc + off) = (cy << 12) + *(s32 *)(c + 0x4eec + off);
 
@@ -2293,8 +2302,8 @@ void func_ov006_020fe394(dScMgPachinko_c *self, int i)
             *py = 0x8000;
 
         {
-            s32 nx = (*(s32 *)(c + 0x4ed8 + off) >> 12) - gTouchX[gActivePlayerSlot * 4];
-            s32 ny = (*(s32 *)(c + 0x4edc + off) >> 12) - gTouchY[gActivePlayerSlot * 4];
+            s32 nx = (*(s32 *)(c + 0x4ed8 + off) >> 12) - gTouchX[gActivePlayerSlot][0];
+            s32 ny = (*(s32 *)(c + 0x4edc + off) >> 12) - gTouchY[gActivePlayerSlot][0];
 
             *(s32 *)(c + 0x4ee8 + off) = nx << 12;
             *(s32 *)(c + 0x4eec + off) = ny << 12;

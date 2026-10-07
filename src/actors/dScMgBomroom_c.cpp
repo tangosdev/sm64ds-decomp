@@ -36,7 +36,6 @@
 #include "decl_common.h"
 #include "Sound.h"
 #include "G2x.h"
-#include "PlayerInput.h"
 
 extern "C" {
 extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
@@ -66,6 +65,10 @@ extern void *data_ov006_02133a70[];
 extern int data_ov006_0212e2c0[];
 extern int func_ov004_020adbc0(void);
 extern int RandomIntInternal(int *seed);
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8 gTouchX[];
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8 gTouchY[];
 extern u16 data_ov006_0212e2e8[];
 extern int data_ov006_021416a0[];
 extern void func_ov006_020d8904(char *p);
@@ -1052,20 +1055,24 @@ void func_ov006_020d6c90(char *raw, int index)
 extern "C" {
 
 typedef struct { u8 f0, f1, f2, f3; } Tab;
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8 gActivePlayerSlot;
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern Tab gTouchHeld[];
 
 void func_ov006_020d6d7c(char *raw, int index) {
     u8 touch = gActivePlayerSlot;
     int touching = 0;
     char *bomb;
     int dx, dy;
-    if (((Tab *)gTouchHeld)[touch].f0 != 0) {
-        if (((Tab *)gTouchHeld)[touch].f1 != 0) touching = 1;
+    if (gTouchHeld[touch].f0 != 0) {
+        if (gTouchHeld[touch].f1 != 0) touching = 1;
     }
     if (touching == 0) return;
     if (*(u8*)(raw + 0x62f6) != 0xff) return;
     bomb = raw + index * 0x40;
-    dx = ((Tab *)gTouchHeld)[touch].f2 - (((Bomb *)(bomb + 0x4660))->x >> 0xc);
-    dy = ((Tab *)gTouchHeld)[touch].f3 - (((Bomb *)(bomb + 0x4660))->y >> 0xc);
+    dx = gTouchHeld[touch].f2 - (((Bomb *)(bomb + 0x4660))->x >> 0xc);
+    dy = gTouchHeld[touch].f3 - (((Bomb *)(bomb + 0x4660))->y >> 0xc);
     if (dx > 0xc) return;
     if (dx < -0xc) return;
     if (dy > 0xf) return;

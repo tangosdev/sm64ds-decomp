@@ -62,7 +62,6 @@
 #include "OAM.h"
 #include "decl_Scene.h"
 #include "decl_common.h"
-#include "PlayerInput.h"
 
 
 struct MinigameSaveData;
@@ -118,6 +117,16 @@ extern TouchOwner *data_0209f5bc;
 extern u8 data_0209f5f8;
 extern dWipe_c data_0209f61c;
 extern int data_0208ee44;
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern TouchRec gTouchHeld[];
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8 gTouchEdge[];
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8 gTouchX[];
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8 gTouchY[];
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+extern u8 gActivePlayerSlot;
 extern unsigned short data_020a0e5a[];
 
 /* ---- ov005 statics ---- */
@@ -999,22 +1008,22 @@ void dScMiniGm_c::func_ov005_020c0378()
 
     sel = -1;
     ok = 0;
-    if (((TouchRec *)gTouchHeld)[gActivePlayerSlot].pressed != 0) {
-        if (((TouchRec *)gTouchHeld)[gActivePlayerSlot].held != 0) ok = 1;
+    if (gTouchHeld[gActivePlayerSlot].pressed != 0) {
+        if (gTouchHeld[gActivePlayerSlot].held != 0) ok = 1;
     }
     if (ok != 0) {
         if (data_0209b304 == 0) {
             for (row = 0; row < 2; row++) {
                 for (int col = 0; col < 3; col++) {
-                    if (((TouchRec *)gTouchHeld)[gActivePlayerSlot].x >= 0x40 + col * 0x30 && ((TouchRec *)gTouchHeld)[gActivePlayerSlot].x < 0x70 + col * 0x30 &&
-                        ((TouchRec *)gTouchHeld)[gActivePlayerSlot].y >= 0x18 + row * 0x48 && ((TouchRec *)gTouchHeld)[gActivePlayerSlot].y < 0x60 + row * 0x48)
+                    if (gTouchHeld[gActivePlayerSlot].x >= 0x40 + col * 0x30 && gTouchHeld[gActivePlayerSlot].x < 0x70 + col * 0x30 &&
+                        gTouchHeld[gActivePlayerSlot].y >= 0x18 + row * 0x48 && gTouchHeld[gActivePlayerSlot].y < 0x60 + row * 0x48)
                         sel = data_0208a170 + (row * 0xc + col * 4);
                 }
             }
         } else {
             for (int col = 0; col < 3; col++) {
-                if (((TouchRec *)gTouchHeld)[gActivePlayerSlot].x >= 0x60 + col * 0x30 && ((TouchRec *)gTouchHeld)[gActivePlayerSlot].x < 0x90 + col * 0x30 &&
-                    ((TouchRec *)gTouchHeld)[gActivePlayerSlot].y >= 0x38 && ((TouchRec *)gTouchHeld)[gActivePlayerSlot].y < 0x80)
+                if (gTouchHeld[gActivePlayerSlot].x >= 0x60 + col * 0x30 && gTouchHeld[gActivePlayerSlot].x < 0x90 + col * 0x30 &&
+                    gTouchHeld[gActivePlayerSlot].y >= 0x38 && gTouchHeld[gActivePlayerSlot].y < 0x80)
                     sel = data_0208a170 + (0x18 + col * 4);
             }
         }
@@ -1061,14 +1070,14 @@ void func_ov005_020c0250(char *self) {
     if (*(int*)(self+0x98) > 0) return;
     unsigned int i = gActivePlayerSlot;
     bool ok = false;
-    if (((TouchRec *)gTouchHeld)[i].pressed != 0) {
-        if (((TouchRec *)gTouchHeld)[i].held != 0) ok = true;
+    if (gTouchHeld[i].pressed != 0) {
+        if (gTouchHeld[i].held != 0) ok = true;
     }
     if (!ok) return;
-    unsigned char x = ((TouchRec *)gTouchHeld)[i].x;
+    unsigned char x = gTouchHeld[i].x;
     if (x < 0xd8) return;
     if (x > 0xf8) return;
-    unsigned char y = ((TouchRec *)gTouchHeld)[i].y;
+    unsigned char y = gTouchHeld[i].y;
     if (y < 0x90) return;
     if (y > 0xb0) return;
     func_02012790(0x63);

@@ -42,7 +42,6 @@
 #include "private/ov006_m8c.h"
 
 #include "Sound.h"
-#include "PlayerInput.h"
 
 /* BG2 offset on both screens. func_ov006_02104580 runs it: phase 0 shakes
    x by +-2.0 for 0x3c frames and drops particles (func_ov006_0210446c) at
@@ -955,6 +954,10 @@ typedef struct WarpEntry_730 {
 void func_ov006_02105730(char *c)
 {
     dScMgPanel_c *s = (dScMgPanel_c *)c;
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+    extern u8 gActivePlayerSlot;
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+    extern WarpEntry_730 gTouchHeld[];
     u8 idx;
     s32 b;
     s32 dx;
@@ -965,14 +968,14 @@ void func_ov006_02105730(char *c)
     }
     idx = gActivePlayerSlot;
     b = 0;
-    if (((WarpEntry_730 *)gTouchHeld)[idx].a != 0) {
-        b = (((WarpEntry_730 *)gTouchHeld)[idx].b != 0);
+    if (gTouchHeld[idx].a != 0) {
+        b = (gTouchHeld[idx].b != 0);
     }
     if (b == 0) {
         return;
     }
-    dx = ((WarpEntry_730 *)gTouchHeld)[idx].c - 0xe8;
-    dy = ((WarpEntry_730 *)gTouchHeld)[idx].d - 0x10;
+    dx = gTouchHeld[idx].c - 0xe8;
+    dy = gTouchHeld[idx].d - 0x10;
     if (dx < -15) {
         return;
     }
@@ -1257,6 +1260,12 @@ typedef struct PanelObj_de4 {
 
 void func_ov006_02105de4(char *scene)
 {
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+    extern u8 gActivePlayerSlot;
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+    extern u8 gTouchHeld[];
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+    extern u8 gTouchEdge[];
     extern void func_ov006_02104e80(char *);
     u8 lvl;
     int n;
@@ -1864,6 +1873,12 @@ typedef void (PanelC_ca4::*PanelPmf_ca4)(int);
 void func_ov006_02106ca4(char *scene)
 {
     extern PanelPmf_ca4 data_ov006_02142840[];
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+    extern u8 gActivePlayerSlot;
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+    extern u8 gTouchHeld[];
+// local extern: the file's original spelling of this table; the shared flat declaration in PlayerInput.h does not reproduce its codegen.
+    extern u8 gTouchEdge[];
     void func_ov006_021050bc(void *scene);
     void func_ov006_02104580(void *scene);
     void func_ov006_02104870(void *scene);
