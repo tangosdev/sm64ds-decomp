@@ -5148,7 +5148,7 @@
     "src/actors/daDpLift_c.cpp#_ZN10daDpLift_c13InitResourcesEv": "lunavyqo",
     "src/actors/daObjKi_Hasira_c.cpp#_ZN16daObjKi_Hasira_cD1Ev": "tangosdev",
     "src/actors/daObjKi_Hasira_c.cpp#_ZN16daObjKi_Hasira_cD0Ev": "tangosdev",
-    "src/actors/daObjKi_Hasira_c.cpp#func_ov016_02112a9c": "tangosdev",
+    "src/actors/daObjKi_Hasira_c.cpp#_ZN16daObjKi_Hasira_c19func_ov016_02112a9cEv": "tangosdev",
     "src/actors/daObjKi_Hasira_c.cpp#_ZN16daObjKi_Hasira_c16CleanupResourcesEv": "tangosdev",
     "src/actors/daObjKi_Hasira_c.cpp#_ZN16daObjKi_Hasira_c6RenderEv": "tangosdev",
     "src/actors/daObjKi_Hasira_c.cpp#_ZN16daObjKi_Hasira_c8BehaviorEv": "lunavyqo",
