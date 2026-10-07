@@ -36,24 +36,28 @@
  * this TU emits the whole chain's vtable and typeinfo as vague-linkage
  * passengers -- see the manifest's compiler_only_output block.
  *
- * BLOCK-SCOPE `extern` DECLARATIONS INSIDE THE MEMBER BODIES KEEP C LINKAGE.
- * mwccarm 2004/b56 gives a block-scope declaration C linkage (measured on
- * ov002/Player, 301 members), so contradictory recovered views of one ROM
- * symbol coexist without a call site being rewritten. The callee
- * spellings that remain in bodies are the free ones: Sound::PlayBank3
- * keeps three parameter views (`Vector3 *`, `void *`, `const void *` after
- * the id) and the kept-free func_ov002_020aefa4 shows three
- * (`void *`, `da1up_c *`, `void *` again at the int-returning caller).
- * The member callees need no such views: the class declaration in
- * da1up_c.h is the one spelling of each. External DATA declarations stay
- * in the bodies too: mwccarm leaves a file-scope variable's name
- * unmangled in C++.
+ * THE MEMBER BODIES CANNOT HOLD THE LOCAL `extern` VIEWS. mwccarm 2004/b56
+ * gives a block-scope declaration inside a member body C++ linkage and
+ * rejects `extern "C"` at block scope outright, so the recovered
+ * per-callsite spellings each shard declared inside its (then `extern
+ * "C"`) free function cannot stay -- a bare `extern` there mangles the
+ * reference and the ROM link fails. The external FUNCTION declarations
+ * the members call are hoisted to the file-scope `extern "C"` region
+ * above the destructor instead, one spelling per symbol; the views
+ * differed only in pointer types, so marshalling and bytes are unchanged.
+ * func_ov002_020aefa4's int-returning view is the exception: a file-scope
+ * `int` declaration is `illegal function overloading` against its `void`
+ * definition, so func_ov002_020af218 tail-returns it through a
+ * function-pointer cast, `((int (*)(void *))func_ov002_020aefa4)(...)`,
+ * which mwccarm folds to the same direct `bl`. External DATA declarations
+ * stay in the bodies: mwccarm leaves a variable's name unmangled in C++.
  *
- * `decl_common.h` IS DELIBERATELY NOT INCLUDED. Its only remaining claim
- * on this TU is `func_ov002_020aefa4(char *)`, and the bodies' block-scope
- * views spell the parameter `da1up_c *` / `void *`; pulling the header in
- * makes each an `illegal function overloading` error against a
- * byte-matched body. ov002/Player and ov006/dScMgPanel_c, the two largest
+ * `decl_common.h` IS DELIBERATELY NOT INCLUDED. Its claims on this TU
+ * reduce to `func_ov002_020aefa4(char *)` -- redundant with this file's
+ * own definition -- and `func_ov002_020d0d2c(void *)` and `Vec3_Asr`,
+ * both already in the decl region above; the header's other ~1900
+ * catch-all spellings would only add overloading-conflict surface
+ * against them. ov002/Player and ov006/dScMgPanel_c, the two largest
  * promoted TUs, exclude it for the same reason.
  *
  * 35 OF THE 38 SYMBOLS ARE MEMBERS, written as 34 `da1up_c::` definitions
@@ -82,7 +86,8 @@
  * deslop leftovers:
  * - func_ov002_020aefa4 stays a free `void` function: MEASURED, declaring
  *   it `int` so func_ov002_020af218 could tail-return it costs four of its
- *   five words; af218 instead keeps a block-scope `int` view of it.
+ *   five words; af218 instead tail-returns it through an
+ *   `int (*)(void *)` cast of its name (folds to the same `bl`).
  * - dBgCh_Actr::Init / dCcAc_c::Init / DropShadowRadHeight / ReflectAngle 6az
  *   (Fix12i mangles as i; ROM is Fix12<int> -- method form Undefined)
  * - Particle::System::New / NewSimple: no method declaration in include/
@@ -92,8 +97,8 @@
  * - func_ov002_020af0c0: reading the player's position directly instead of
  *   through the laundered int* changes the bytes, so the launder stays.
  * - SharedFilePtr has no recovered fields; handles stay data_ov002_*
- * - decl_common.h stays out (the one surviving declaration disagrees with
- *   the bodies' block-scope views)
+ * - decl_common.h stays out (its surviving claims are redundant with the
+ *   decl region and this file's own definition)
  *
  * Readability pass: the da1up_c fields at 0x378..0x394 are named, the mushroom
  * types are the da1up_MushroomType enum, and actor, sound, cylinder-flag and
@@ -109,7 +114,10 @@
  * - The vulnFlags/hitFlags bit names come from the best-effort table in
  *   include/dCc_c.h.
  * - The PlayBank3 / IsPlayerInRange / ReflectAngle / DropShadowRadHeight /
- *   Fix12 externs keep their per-site spellings (see the walls above).
+ *   Vec3_* / Matrix4x3_* / cstd / Particle::System::New externs are the
+ *   spelled-out declarations in the file-scope `extern "C"` region (the
+ *   Fix12/undeclared walls above are why real method/header forms are not
+ *   used); member bodies cannot carry per-site views.
  */
 
 #pragma defer_codegen off
@@ -170,6 +178,29 @@ enum {
    (0x020af908) calls ordinal 19 (0x020af924). Both spellings are the
    definitions' own, so nothing below has to be adapted to them. */
 
+/* File-scope extern "C" region covering the external functions the member
+   bodies below call. mwccarm 2004/b56 gives a block-scope `extern` declaration
+   inside a member body C++ linkage (and rejects `extern "C"` at block scope
+   outright), so the recovered per-callsite views these shards each declared
+   locally cannot stay where they were; one spelling per symbol is hoisted here.
+   The views differed only in pointer types, so marshalling -- and the emitted
+   bytes -- are unchanged. func_ov002_020aefa4 needs no entry: its definition
+   below is already file-scope C linkage. */
+struct Vec3;
+extern "C" {
+int Vec3_HorzLen(const Vector3*);
+short Vec3_HorzAngle(const Vector3*, const Vector3*);
+int func_ov002_020d0d2c(void*);
+void Vec3_Asr(struct Vec3*, struct Vec3*, int);
+void Matrix4x3_FromRotationY(void*, int);
+void Matrix4x3_FromTranslation(void*, int, int, int);
+void GiveCoins(int, int);
+short _ZN4cstd5atan2E5Fix12IiES1_(int, int);
+int _ZN4cstd4fdivEii(int, int);
+short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void*, int, int, short);
+void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(void*, void*, void*, int, int, unsigned char);
+int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int, unsigned int, int, int, int, const struct Vec3*, void*);
+}
 /*                         _ZN7da1up_cD0Ev, 0x020aee88, size 0x5c              */
 // @symbol _ZN7da1up_cD1Ev
 // @symbol _ZN7da1up_cD0Ev
@@ -196,9 +227,6 @@ da1up_c::~da1up_c()
    the actor is off screen (mFlags bit 3) it only runs when CURRENT_GAMEMODE
    (data_0209f2d8) is 1. */
 void da1up_c::func_ov002_020aeee4() {
-    extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        unsigned int uniqueID, unsigned int effectID,
-        int x, int y, int z, const void* dir, void* callback);
     extern unsigned char data_0209f2d8;
 
     int t1 = (actorID == ACTOR_SCALEUP_KINOKO);
@@ -227,10 +255,11 @@ void da1up_c::func_ov002_020aeee4() {
    table in include/dCc_c.h (a best-effort reading there) -- so the mushroom can
    be eaten. func_ov002_020af218 calls it while the player is in range.
    MEASURED: this definition must stay `void`. Declaring it `int` -- so that
-   ordinal 7's `return func_ov002_020aefa4(c);` would type-check against a
-   file-scope declaration -- costs four of this function's five words. Ordinal 7
-   keeps its own `int` view at block scope instead, which is exactly the C
-   linkage the enclosing `extern "C"` region gives it. */
+   ordinal 7's tail-return would type-check against a file-scope declaration
+   -- costs four of this function's five words, and a file-scope `int`
+   declaration beside this `void` definition is illegal function overloading
+   anyway, so ordinal 7 tail-returns it through an `int (*)(void *)` cast of
+   its name instead. */
 extern "C" {
 void func_ov002_020aefa4(char *raw)
 {
@@ -259,8 +288,6 @@ void func_ov002_020aefa4(char *raw)
    experiment changed the bytes. This bridge remains pending further
    signature/codegen work. */
 void da1up_c::func_ov002_020aefb8() {
-    extern short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void *, int, int, short);
-    extern int Vec3_HorzLen(void*);
 
     UpdatePosWithHorzSpeedAndAng();
     if (mWithMeshClsn.IsOnGround()) {
@@ -271,8 +298,8 @@ void da1up_c::func_ov002_020aefb8() {
         } else {
             mVertSpeed = 0;
         }
-        if (Vec3_HorzLen(&unk_0a4) > mHorzSpeed) {
-            mHorzSpeed = Vec3_HorzLen(&unk_0a4);
+        if (Vec3_HorzLen((Vector3*)&unk_0a4) > mHorzSpeed) {
+            mHorzSpeed = Vec3_HorzLen((Vector3*)&unk_0a4);
             if (mHorzSpeed >= 0xf000) mHorzSpeed = 0xf000;
         }
     }
@@ -297,10 +324,6 @@ void da1up_c::func_ov002_020aefb8() {
    func_ov002_020af3a8. */
 void da1up_c::func_ov002_020af0c0() {
     extern short data_02082214[];
-    extern int func_ov002_020d0d2c(void*);
-    extern int Vec3_HorzLen(const Vector3*);
-    extern short _ZN4cstd5atan2E5Fix12IiES1_(int, int);
-    extern short Vec3_HorzAngle(const Vector3*, const Vector3*);
     /* Forward: ordinal 11 sits above this one in ROM order. */
 
     Player* p = ClosestPlayer();
@@ -357,19 +380,16 @@ int da1up_c::func_ov002_020af1dc() {
    The second parameter is FORWARDED, not merely declared. The callers
    below pass 0xbb8 in r1 and this body hands that same word to
    _ZN8dActor_c15IsPlayerInRangeEi, whose ROM name mangles as
-   dActor_c::IsPlayerInRange(int): `this` in r0 and one `int` in r1, exactly as
-   include/decl_Actor.h declares it and as the other four call sites in this
-   file already spell it. The ROM emits no `mov` before the `bl` because r1
-   still holds the incoming range, so naming the argument is byte-neutral here
-   and stops the call from handing the callee whatever r1 happens to hold on a
-   host ABI. */
+   dActor_c::IsPlayerInRange(int): `this` in r0 and one `int` in r1, which is
+   exactly the member call below. The ROM emits no `mov` before the `bl`
+   because r1 still holds the incoming range, so naming the argument is
+   byte-neutral here and stops the call from handing the callee whatever r1
+   happens to hold on a host ABI. */
 int da1up_c::func_ov002_020af218(int range) {
-  extern int _ZN8dActor_c15IsPlayerInRangeEi(void*, int);
-  extern int func_ov002_020aefa4(void*);
-  mShown=(char)_ZN8dActor_c15IsPlayerInRangeEi(this, range);
+  mShown=(char)IsPlayerInRange(range);
   unsigned char v=mShown;
   if(v==0) return v;
-  return func_ov002_020aefa4((void*)this);
+  return ((int (*)(void*))func_ov002_020aefa4)((void*)this);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -456,7 +476,6 @@ s32 da1up_c::OnYoshiTryEat()
    0x6e, gives one life and spawns the 1UP logo actor (331) 180 units (0xb4000)
    above itself; either way the mushroom then removes itself. */
 void da1up_c::func_ov002_020af3a8() {
-    extern void _ZN5Sound9PlayBank3EjRK7Vector3(u32 id, struct Vector3* v);
 
     Player* r = (Player*)func_ov002_020af1dc();
     if (r == 0)
@@ -470,7 +489,7 @@ void da1up_c::func_ov002_020af3a8() {
         unsigned is114 = (h == ACTOR_ONEUPKINOKO);
         if (is114) {
             struct Vector3 vec;
-            _ZN5Sound9PlayBank3EjRK7Vector3(SND3_GIVE_LIFE, (struct Vector3*)&mCamSpacePosX);
+            Sound::PlayBank3(SND3_GIVE_LIFE, *(Vector3*)&mCamSpacePosX);
             GiveLives(1);
             vec.x = mPosX;
             vec.y = mPosY;
@@ -530,10 +549,6 @@ void da1up_c::func_ov002_020af474() {
                       10 units at least, and then depth += 60 units (0x3c000);
      on the ground:   depth = 60 units, radius = twice (cylinder radius - 10 units). */
 void da1up_c::func_ov002_020af4ec() {
-    extern void Matrix4x3_FromRotationY(void* m, int angle);
-    extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
-    extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
-    extern void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(void* thiz, void* shadow, void* mtx, int radius, int depth, unsigned int x);
 
     int depth;
     int radius;
@@ -546,7 +561,7 @@ void da1up_c::func_ov002_020af4ec() {
         mModel.mat4x3.m[10] = mPosY >> 3;
         mModel.mat4x3.m[11] = mPosZ >> 3;
     } else {
-        Vec3_Asr(&v1, (struct Vector3*)&mPosX, 3);
+        Vec3_Asr((struct Vec3*)&v1, (struct Vec3*)&mPosX, 3);
         Matrix4x3_FromTranslation(&mModel.mat4x3, v1.x, v1.y, v1.z);
     }
 
@@ -598,14 +613,6 @@ void da1up_c::func_ov002_020af4ec() {
    same calls and sounds dActor_c::GivePlayerCoins makes for a single coin.
    Always ends by removing the mushroom. */
 void da1up_c::func_ov002_020af684(int target, Player* player) {
-    /* dActor_c is the real class from the includes above. A block-scope
-       `struct dActor_c;` here would declare a LOCAL class instead, and C++
-       gives a local class no linkage, so the extern below would be
-       ill-formed (MSVC C2624). The declaration is dropped; the pointer
-       arithmetic under it is unchanged and so is the object. */
-    extern void GiveCoins(int idx, int amount);
-    extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void* pos);
-
     Player* p = player;
     dActor_c* found = 0;
     for (;;) {
@@ -621,9 +628,9 @@ void da1up_c::func_ov002_020af684(int target, Player* player) {
         GiveCoins(p->mPlayerNo, 1);
         p->Heal(0x100);
         if (p->mIsUnderwater)
-            _ZN5Sound9PlayBank3EjRK7Vector3(SND3_COIN_UNDERWATER, &mCamSpacePosX);
+            Sound::PlayBank3(SND3_COIN_UNDERWATER, *(Vector3*)&mCamSpacePosX);
         else
-            _ZN5Sound9PlayBank3EjRK7Vector3(SND3_COIN, &mCamSpacePosX);
+            Sound::PlayBank3(SND3_COIN, *(Vector3*)&mCamSpacePosX);
     }
     KillAndTrackInDeathTable();
 }
@@ -636,12 +643,11 @@ void da1up_c::func_ov002_020af684(int target, Player* player) {
    (clears bit 0 of its flags, which disables it while set) and moves on; state 2
    runs the touch check. Then the range check (3000 units) and the trail effect. */
 void da1up_c::func_ov002_020af724() {
-    extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, struct Vector3 *v);
 
     func_ov002_020aefb8();
     switch (mState) {
     case 0:
-        _ZN5Sound9PlayBank3EjRK7Vector3(SND3_UNK_69, (struct Vector3 *)&mCamSpacePosX);
+        Sound::PlayBank3(SND3_UNK_69, *(Vector3*)&mCamSpacePosX);
         mState += 1;
         break;
     case 1:
@@ -738,8 +744,6 @@ void da1up_c::func_ov002_020af924() {
    mVertAccel to 0 and mHorzSpeed to 10 units (0xa000). State 1 steers toward the
    player (func_ov002_020af0c0) under physics. */
 void da1up_c::func_ov002_020af950() {
-  extern void func_ov002_020aefa4(da1up_c *thiz);
-  extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int, const void *);
 
   switch (mState)
   {
@@ -751,8 +755,8 @@ void da1up_c::func_ov002_020af950() {
       mVertSpeed = 0x28000;
       mState = 3;
       mShown = 1;
-      func_ov002_020aefa4(this);
-      _ZN5Sound9PlayBank3EjRK7Vector3(SND3_LAUNCH, &mCamSpacePosX);
+      func_ov002_020aefa4((char*)this);
+      Sound::PlayBank3(SND3_LAUNCH, *(Vector3*)&mCamSpacePosX);
       mFlags &= ~ACTOR_FLAG_CLIP_TEST;
       return;
 
@@ -808,8 +812,6 @@ void da1up_c::func_ov002_020afa6c() {
    effect; state 2 is physics, the touch check and the expiry countdown (30 frames, then 40 blinking, then removed)
    (func_ov002_020af248). */
 void da1up_c::func_ov002_020afa98() {
-    extern void _ZN5Sound9PlayBank3EjRK7Vector3(u32 id, struct Vector3 *v);
-    extern void func_ov002_020aefa4(da1up_c *thiz);
 
     switch (mState) {
     case 0:
@@ -819,8 +821,8 @@ void da1up_c::func_ov002_020afa98() {
         mVertSpeed = 0x28000;
         mState = 3;
         mShown = 1;
-        func_ov002_020aefa4(this);
-        _ZN5Sound9PlayBank3EjRK7Vector3(SND3_LAUNCH, (struct Vector3 *)&mCamSpacePosX);
+        func_ov002_020aefa4((char*)this);
+        Sound::PlayBank3(SND3_LAUNCH, *(Vector3*)&mCamSpacePosX);
         mFlags &= ~ACTOR_FLAG_CLIP_TEST;
         return;
     case 1:
@@ -856,15 +858,13 @@ void da1up_c::func_ov002_020afa98() {
    (func_ov002_020afde4) with the trail effect; unlike types 1 and 5 it sets no
    horizontal speed here; state 2 is the touch check plus
    the expiry countdown (30 frames, then 40 blinking, then removed). The 3000-unit range check runs every frame. The two
-   `func_ov002_020aefb8()` calls really do pass
-   no argument -- r0 already carries the object -- so this member keeps its own
-   nullary view of that symbol at block scope. */
+   `func_ov002_020aefb8()` calls really do read as
+   no-argument calls -- as member calls r0 already carries `this`. */
 void da1up_c::func_ov002_020afbb4() {
-    extern int _ZN8dActor_c15IsPlayerInRangeEi(da1up_c* thiz, int r);
 
     switch (mState) {
     case 0:
-        if (_ZN8dActor_c15IsPlayerInRangeEi(this, 0x3e8)) {
+        if (IsPlayerInRange(0x3e8)) {
             mVertSpeed = 0x28000;
             mState = 1;
         }
@@ -900,8 +900,6 @@ int da1up_c::func_ov002_020afc44() {
    cstd::fdiv(t, 0x1000). mHorzSpeed is capped at 40 units (0x28000). When the
    player is not within 5000 units (0x1388) it goes to state 2. */
 void da1up_c::func_ov002_020afc68() {
-    extern int _ZN4cstd4fdivEii(int a, int b);
-    extern int _ZN8dActor_c15IsPlayerInRangeEi(void *thiz, int r);
 
     if (mWithMeshClsn.IsOnGround() != 0) {
         mHorzSpeed += 0x19000;
@@ -913,7 +911,7 @@ void da1up_c::func_ov002_020afc68() {
     if (mHorzSpeed > 0x28000) {
         mHorzSpeed = 0x28000;
     }
-    if (_ZN8dActor_c15IsPlayerInRangeEi(this, 0x1388) == 0) {
+    if (IsPlayerInRange(0x1388) == 0) {
         mState = 2;
     }
 }
@@ -927,7 +925,6 @@ void da1up_c::func_ov002_020afc68() {
    (-0x4000) and goes to state 1. State 1: func_ov002_020afc68. State 2: the
    expiry countdown (30 frames, then 40 blinking, then removed). Every frame ends with the touch check and the trail effect. */
 void da1up_c::func_ov002_020afd10() {
-    extern int _ZN8dActor_c15IsPlayerInRangeEi(da1up_c* thiz, int r);
 
     volatile Fix12i v[3];
 
@@ -943,7 +940,7 @@ void da1up_c::func_ov002_020afd10() {
     switch (mState) {
     case 0:
         func_ov002_020af218(0xbb8);
-        if (_ZN8dActor_c15IsPlayerInRangeEi(this, 0x3e8)) {
+        if (IsPlayerInRange(0x3e8)) {
             mVertAccel = -0x4000;
             mState = 1;
         }
@@ -967,15 +964,13 @@ void da1up_c::func_ov002_020afd10() {
    a turn (0x8000), runs the touch check, and goes to state 2 when the floor
    collision reports a wall or the player is not within 3000 units. */
 void da1up_c::func_ov002_020afde4() {
-  extern short Vec3_HorzAngle(void*, void*);
-  extern int _ZN8dActor_c15IsPlayerInRangeEi(da1up_c*, int);
   Player* p = ClosestPlayer();
   if(p){
-    mPrevAngleY = Vec3_HorzAngle(&mPosX, &p->mPosX) + 0x8000;
+    mPrevAngleY = Vec3_HorzAngle((Vector3*)&mPosX, (Vector3*)&p->mPosX) + 0x8000;
   }
   func_ov002_020af3a8();
   if(mWithMeshClsn.IsOnWall()) mState=2;
-  if(_ZN8dActor_c15IsPlayerInRangeEi(this, 0xbb8)==0) mState=2;
+  if(IsPlayerInRange(0xbb8)==0) mState=2;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -987,13 +982,12 @@ void da1up_c::func_ov002_020afde4() {
    expiry countdown (30 frames, then 40 blinking, then removed) and the touch check. Every frame ends with the range check
    and the trail effect. */
 void da1up_c::func_ov002_020afe4c() {
-    extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned a, void* v);
 
     func_ov002_020aefb8();
     switch (mState) {
     case 0:
         if (*(unsigned short*)&mStateTimer == 0) {
-            _ZN5Sound9PlayBank3EjRK7Vector3(SND3_LAUNCH, &mCamSpacePosX);
+            Sound::PlayBank3(SND3_LAUNCH, *(Vector3*)&mCamSpacePosX);
         }
         func_ov002_020af474();
         if (*(unsigned short*)&mStateTimer == 0x25) {
@@ -1023,12 +1017,11 @@ void da1up_c::func_ov002_020afe4c() {
    state 2 once mStateTimer exceeds 300 (0x12c). State 2: the expiry countdown
    (30 frames, then 40 blinking, then removed) and the touch check. Every frame ends with the range check and the trail effect. */
 void da1up_c::func_ov002_020aff10() {
-  extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, void* v);
 
   func_ov002_020aefb8();
   switch(mState){
   case 0:
-    if(*(unsigned short*)&mStateTimer == 0) _ZN5Sound9PlayBank3EjRK7Vector3(SND3_LAUNCH, &mCamSpacePosX);
+    if(*(unsigned short*)&mStateTimer == 0) Sound::PlayBank3(SND3_LAUNCH, *(Vector3*)&mCamSpacePosX);
     func_ov002_020af474();
     if(*(unsigned short*)&mStateTimer != 0x25) break;
     mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
