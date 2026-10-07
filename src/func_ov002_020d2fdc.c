@@ -1,7 +1,7 @@
 #include "types.h"
+#include "PlayerInput.h"
 typedef struct { u16 flags; char pad[22]; } Entry24;
 
-extern u8 data_020a0e40;
 extern Entry24 data_0209f49c[];
 extern u8 data_0209f2d8;
 extern char data_0209f2f8;
@@ -28,7 +28,7 @@ int func_ov002_020d2fdc(char *self)
         return 1;
     }
 
-    if (data_0209f49c[data_020a0e40].flags & 0x800) {
+    if (data_0209f49c[gActivePlayerSlot].flags & 0x800) {
         if (*(u8 *)(self + 0x6e5) < 0x1e) {
             *(u8 *)(((int)self + 0x6e5)) += 1;
             r5 = *(u8 *)(self + 0x6e5) * 0x111 + 0x1000;

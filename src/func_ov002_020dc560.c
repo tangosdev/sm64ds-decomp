@@ -1,3 +1,4 @@
+#include "PlayerInput.h"
 extern void _Z14ApproachLinearRiii(int *ref, int a, int b);
 extern int func_01ffa344(int a, int b);
 extern int AngleDiff(int a, int b);
@@ -5,7 +6,6 @@ extern void ApproachAngle(short *cur, short target, int divisor, int band, int m
 extern int func_01ffa4bc(int a);
 extern int func_01ff99a4(int a, int b);
 extern int func_01ff98f4(int a, int b);
-extern unsigned char data_020a0e40;
 extern char data_0209f4a0[];
 extern short data_02082214[];
 
@@ -16,7 +16,7 @@ void func_ov002_020dc560(char *self)
     _Z14ApproachLinearRiii((int *)(self + 0x98), 0, 0x599);
 
     {
-        int tblval = *(short *)(data_0209f4a0 + data_020a0e40 * 0x18);
+        int tblval = *(short *)(data_0209f4a0 + gActivePlayerSlot * 0x18);
         if (tblval != 0) {
             short diff = (short)(*(short *)(self + 0x6d2) - *(short *)(self + 0x94));
             int idx2 = ((unsigned short)diff >> 4) * 2;
@@ -29,7 +29,7 @@ void func_ov002_020dc560(char *self)
             {
                 short *p94 = (short *)ADDR(self + 0x94);
                 int cosv = data_02082214[idx2];
-                int tblval2 = *(short *)(data_0209f4a0 + data_020a0e40 * 0x18);
+                int tblval2 = *(short *)(data_0209f4a0 + gActivePlayerSlot * 0x18);
                 int scaled2 = (int)(((long long)cosv * 0x200 + 0x800) >> 12);
                 int combined2 = (int)(((long long)scaled2 * tblval2 + 0x800) >> 12);
                 *p94 = (short)(*p94 + combined2);

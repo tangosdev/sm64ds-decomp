@@ -1,4 +1,5 @@
 #include "types.h"
+#include "PlayerInput.h"
 extern int func_0203d974(void);
 extern u8 func_020202dc(void);
 extern u8 func_02020168(void);
@@ -19,7 +20,6 @@ extern u8 data_0209b2e4;
 extern u8 data_ov075_0211d7b0[];
 extern u8 data_ov075_0211d798[];
 extern u8 data_ov075_0211d7f8[];
-extern u8 data_020a0e40;
 extern u16 data_020a0e5a[];
 
 void func_ov075_02118d1c(char* c){
@@ -76,10 +76,10 @@ void func_ov075_02118d1c(char* c){
                 func_02020078(0);
                 func_02020124();
             } else {
-                if(data_020a0e5a[data_020a0e40*2]&4){
+                if(data_020a0e5a[gActivePlayerSlot*2]&4){
                     func_02020078(1);
                     func_02020124();
-                } else if(data_020a0e5a[data_020a0e40*2]&8){
+                } else if(data_020a0e5a[gActivePlayerSlot*2]&8){
                     func_02020078(2);
                     func_02020124();
                 }

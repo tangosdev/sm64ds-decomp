@@ -1,7 +1,7 @@
 #include "types.h"
+#include "PlayerInput.h"
 typedef struct { u8 pad[0x18]; } Rec18;
 
-extern u8 data_020a0e40;
 extern Rec18 data_0209f4ac[];
 extern Rec18 data_0209f49c[];
 extern Rec18 data_0209f4a0[];
@@ -25,7 +25,7 @@ void func_ov002_020d1f78(void *selfPtr, u32 param)
     int state;
     int target;
 
-    idx = data_020a0e40;
+    idx = gActivePlayerSlot;
     flag = 0;
     if (*(u8 *)&data_0209f4ac[idx] == 0) {
         if ((*(u16 *)&data_0209f49c[idx] & 0x800) == 0)

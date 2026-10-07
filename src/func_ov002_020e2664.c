@@ -1,4 +1,5 @@
 #include "types.h"
+#include "PlayerInput.h"
 enum { false, true };
 
 extern int func_ov002_020d5c6c(char* c);
@@ -7,7 +8,6 @@ extern int func_ov002_020d674c(char* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char* self, void* st);
 extern int func_ov002_020dde74(char* thiz);
 
-extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
 
 extern int data_ov002_021101e4;
@@ -34,7 +34,7 @@ int func_ov002_020e2664(char* self)
 
     if (func_ov002_020d5c6c(self)) return 1;
 
-    flags = *(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18);
+    flags = *(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18);
     if (flags & 0x400) {
         if (_ZN6Player7IsStateERNS_5StateE(self, &data_ov002_021101e4)) {
             *(s16*)(self + 0x8e) = *(s16*)(self + 0x8e) + 0x8000;

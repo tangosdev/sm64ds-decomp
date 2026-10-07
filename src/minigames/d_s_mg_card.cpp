@@ -16,6 +16,18 @@
 #include "types.h"
 #include "decl_common.h"
 #include "Sound.h"
+extern "C" {
+// local extern: PlayerInput.h cannot be included here, its flat gTouchX/gTouchY spelling does not reproduce dMgCardObj_c::Update.
+extern unsigned char gActivePlayerSlot;
+// local extern: see gActivePlayerSlot above.
+extern unsigned char gTouchHeld[];
+// local extern: see gActivePlayerSlot above.
+extern unsigned char gTouchEdge[];
+// local extern: 4-byte-record view of the lane; the ROM scales the slot in the addressing mode.
+extern unsigned char gTouchX[][4];
+// local extern: 4-byte-record view of the lane; the ROM scales the slot in the addressing mode.
+extern unsigned char gTouchY[][4];
+}
 
 /* By-value five-card ordering table. */
 typedef struct 
@@ -45,11 +57,6 @@ unsigned int func_02012790(unsigned int a);
 extern int data_ov006_02141768;
 extern int data_ov006_0214176c;
 extern int data_ov006_02141770;
-extern unsigned char data_020a0e40;
-extern unsigned char data_020a0de8[];
-extern unsigned char data_020a0de9[];
-extern unsigned char data_020a0dea[][4];
-extern unsigned char data_020a0deb[][4];
 extern "C" void Vec2_Sub(int* o, int* a, int* b);
 extern "C" void func_0203d680(int* out, int* in, int scale);
 extern const Five data_ov006_0213bcd8;
@@ -452,12 +459,12 @@ void dScMgCard_c::UpdateState()
         break;
     case 4:
         ok = 0;
-        idx = data_020a0e40 * 4;
-        if (data_020a0de8[idx] != 0 && data_020a0de9[idx] != 0)
+        idx = gActivePlayerSlot * 4;
+        if (gTouchHeld[idx] != 0 && gTouchEdge[idx] != 0)
             ok = 1;
         if (ok != 0 && dScMgCard_c::AllLifted((const dMgCardObj_c *)mArray1) != 0 && data_ov006_02141768 == 0) {
-            v5 = data_020a0dea[data_020a0e40][0];
-            v4 = data_020a0deb[data_020a0e40][0];
+            v5 = gTouchX[gActivePlayerSlot][0];
+            v4 = gTouchY[gActivePlayerSlot][0];
             if (dScMgCard_c::AllInState((const dMgCardObj_c *)mArray1, 2) != 0) {
                 r = v5 - 0x80;
                 if (r < 0)
@@ -1470,11 +1477,11 @@ void dMgCardObj_c::Update()
         return;
 
     {
-        int touchIndex = data_020a0e40;
+        int touchIndex = gActivePlayerSlot;
         unsigned char touchHeld;
         int touchActive = 0;
-        touchHeld = data_020a0de8[touchIndex * 4];
-        if (touchHeld != 0 && data_020a0de9[touchIndex * 4] != 0)
+        touchHeld = gTouchHeld[touchIndex * 4];
+        if (touchHeld != 0 && gTouchEdge[touchIndex * 4] != 0)
             touchActive = 1;
         if (touchActive == 0)
             return;
@@ -1485,8 +1492,8 @@ void dMgCardObj_c::Update()
             if (mLift != 0x4000)
                 return;
             {
-                int touchDeltaX = (int)data_020a0dea[touchIndex][0] - (mX >> 12);
-                int touchDeltaY = (int)data_020a0deb[touchIndex][0] - (mY >> 12);
+                int touchDeltaX = (int)gTouchX[touchIndex][0] - (mX >> 12);
+                int touchDeltaY = (int)gTouchY[touchIndex][0] - (mY >> 12);
                 if (touchDeltaX <= 7)
                     return;
                 if (touchDeltaX >= 0x29)

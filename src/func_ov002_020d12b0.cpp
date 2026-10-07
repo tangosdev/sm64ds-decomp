@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
+#include "PlayerInput.h"
 struct State;
-extern u8 data_020a0e40;
 extern u8 data_0209f49e[];
 extern State data_ov002_02110574;
 extern State data_ov002_02110634;
@@ -11,7 +11,7 @@ extern "C" int Player_ScaleByCharFactor(void *c, int a);
 
 extern "C" int func_ov002_020d12b0(u8 *self)
 {
-    if ((*(u16 *)(data_0209f49e + data_020a0e40 * 0x18) & 1) == 0) goto ret0;
+    if ((*(u16 *)(data_0209f49e + gActivePlayerSlot * 0x18) & 1) == 0) goto ret0;
     if (self[0x703] != 0) {
         self[0x6e2] = 2;
         _ZN6Player11ChangeStateERNS_5StateE(self, data_ov002_02110574);

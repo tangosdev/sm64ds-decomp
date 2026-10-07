@@ -1,4 +1,5 @@
 #include "types.h"
+#include "PlayerInput.h"
 
 extern int func_0203da9c(void);
 extern int func_02020168(void);
@@ -15,7 +16,6 @@ extern void func_02020768(char *thiz);
 extern int data_ov075_0211d810;
 extern u8 data_0209fc5c[];
 extern u8 data_020a0e58[];
-extern u8 data_020a0de8[];
 extern int data_0208ee44;
 extern u16 data_020a0e5a[];
 extern u8 data_0209b2f0[];
@@ -52,10 +52,10 @@ void func_ov075_0211867c(char *self)
                     bit = *p;
                     if (bit != 0) {
                         acc |= *(u16 *)(data_020a0e58 + (i << 2) + 2) & 0xc;
-                        bit = data_020a0de8[i << 2];
+                        bit = gTouchHeld[i << 2];
                         if (bit == 0)
                             goto set0;
-                        bit = (data_020a0de8 + (i << 2))[1];
+                        bit = (gTouchHeld + (i << 2))[1];
                         if (bit != 0) {
                             bit = one;
                             goto orr;

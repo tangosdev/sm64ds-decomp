@@ -17,6 +17,7 @@
 #include "dScMgCard_c.h"
 #include "types.h"
 #include "decl_common.h"
+#include "PlayerInput.h"
 
 /* data_ov006_0214257c is the head of the live card list and _02142568 its
  * tail (SetupBoard builds it); _0214256c heads the list of cleared cards,
@@ -44,11 +45,6 @@ extern int data_0209e650[];
 extern int data_020a0db0;
 extern unsigned char data_0209d454;
 extern unsigned char data_0209d45c;
-extern u8 data_020a0e40[];
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0dea[];
-extern u8 data_020a0deb[];
 
 int  RandomIntInternal(void* seed);
 int  RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
@@ -173,12 +169,12 @@ int dScMgMCarlo2_c::OnTurnIntoEgg(int /* mode */)
         }
         break;
     case 5: {
-        unsigned char idx = data_020a0e40[0];
+        unsigned char idx = gActivePlayerSlot;
         /* Nested on purpose: `found = A && B` lets the compiler drop the
          * variable, and the ROM keeps it. */
         int found = 0;
-        if (data_020a0de8[idx * 4] != 0) {
-            found = data_020a0de9[idx * 4] != 0;
+        if (gTouchHeld[idx * 4] != 0) {
+            found = gTouchEdge[idx * 4] != 0;
         }
         if (found != 0) {
             short *p;
@@ -436,16 +432,16 @@ int dMgMCarlo2CardObj_c::HitTest()
     if (data_ov006_0213d6fc == 0) return 0;
     if (dScMgMCarlo2_c::BoardBusy() != 0) goto fail;
 
-    idx = data_020a0e40[0];
+    idx = gActivePlayerSlot;
     off = idx * 4;
     touching = 0;
-    if (data_020a0de8[off]) {
-        if (data_020a0de9[off]) touching = 1;
+    if (gTouchHeld[off]) {
+        if (gTouchEdge[off]) touching = 1;
     }
     if (touching == 0) goto fail;
 
-    dx = data_020a0dea[idx * 4] - (mX >> 12);
-    dy = data_020a0deb[idx * 4] - (mY >> 12);
+    dx = gTouchX[idx * 4] - (mX >> 12);
+    dy = gTouchY[idx * 4] - (mY >> 12);
     if (dx > 7 && dx < 0x28 && dy > 0 && dy < 0x31) return 1;
 fail:
     return 0;

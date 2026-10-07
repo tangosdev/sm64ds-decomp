@@ -17,6 +17,7 @@
 #include "types.h"
 #include "decl_common.h"
 #include "dScMgCard_c.h"
+#include "PlayerInput.h"
 
 /* The TUBUILD CONFLICT notes below are the merged legacy files' own
  * spellings of the card and scene structs; the manifest records them, so
@@ -100,11 +101,6 @@ extern int data_ov006_0213d5e0[8]; /* the eight face weights */
 extern int data_020a0db0;
 extern unsigned short data_ov006_0213d600[];
 extern int data_ov006_0214250c[];
-extern u8 data_020a0e40[];
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0dea[];
-extern u8 data_020a0deb[];
 extern void Vec2_Sub(int* o, int* a, int* b);
 extern void func_0203d630(int *p, int m);
 extern int data_ov004_020bf9ec;
@@ -594,16 +590,16 @@ int dMgMCarloCardObj_c::HitTest(void)
     if (data_ov006_0213d564 == 0) return 0;
     if (dScMgMCarlo_c::BoardBusy() != 0) goto fail;
 
-    idx = data_020a0e40[0];
+    idx = gActivePlayerSlot;
     off = idx * 4;
     has = 0;
-    if (data_020a0de8[off]) {
-        if (data_020a0de9[off]) has = 1;
+    if (gTouchHeld[off]) {
+        if (gTouchEdge[off]) has = 1;
     }
     if (has == 0) goto fail;
 
-    dx = data_020a0dea[idx * 4] - (mX >> 12);
-    dy = data_020a0deb[idx * 4] - (mY >> 12);
+    dx = gTouchX[idx * 4] - (mX >> 12);
+    dy = gTouchY[idx * 4] - (mY >> 12);
     if (dx > 7 && dx < 0x28 && dy > 0 && dy < 0x31) return 1;
 fail:
     return 0;
