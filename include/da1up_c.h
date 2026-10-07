@@ -140,6 +140,37 @@ struct da1up_c : dEnemyBase_c {
     virtual s32   OnYoshiTryEat();               /* slot 18 */
     virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
 
+    /* The fourteen mMushroomType handlers Behavior dispatches through the
+       pointer-to-member table data_ov002_0210dc00 (indices in comments) plus
+       the shared helpers they call. func_ov002_020aefa4 stays a free function:
+       its void return is load-bearing (see the file's header comment). */
+    void func_ov002_020aeee4();
+    void func_ov002_020aefb8();
+    void func_ov002_020af0c0();
+    int  func_ov002_020af1dc();
+    int  func_ov002_020af218(int range);
+    int  func_ov002_020af248(int n);
+    void func_ov002_020af3a8();
+    void func_ov002_020af474();
+    void func_ov002_020af4ec();
+    void func_ov002_020af684(int target, Player *player);
+    void func_ov002_020af724();   /* dispatch 13 */
+    void func_ov002_020af7cc();   /* dispatch 10 */
+    void func_ov002_020af838();   /* dispatch  9 */
+    void func_ov002_020af908();   /* dispatch 12 */
+    void func_ov002_020af924();   /* dispatch  8 */
+    void func_ov002_020af950();   /* dispatch  7 */
+    void func_ov002_020afa50();   /* dispatch 11 */
+    void func_ov002_020afa6c();   /* dispatch  6 */
+    void func_ov002_020afa98();   /* dispatch  5 */
+    void func_ov002_020afbb4();   /* dispatch  4 */
+    int  func_ov002_020afc44();   /* dispatch  3 */
+    void func_ov002_020afc68();
+    void func_ov002_020afd10();   /* dispatch  2 */
+    void func_ov002_020afde4();
+    void func_ov002_020afe4c();   /* dispatch  1 */
+    void func_ov002_020aff10();   /* dispatch  0 */
+
     /* Leaf allocator until fBase_c::operator new is a real method (#2570).
        unsigned long, not unsigned int: that is the C++ new signature mwccarm
        2004/b56 emits for `new da1up_c()`. */
