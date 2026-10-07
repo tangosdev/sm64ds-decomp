@@ -5,6 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
+#include "PlayerInput.h"
 extern "C" {
 extern void func_ov002_020c06fc(char* c, u32 a);
 extern int func_ov002_020dd2f4(char* c);
@@ -18,7 +19,6 @@ extern void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, u32 anim, int a, Fix12i b, 
 extern int _ZN6Player12FinishedAnimEv(char* c);
 extern void Player_AdvanceAnims(char* c);
 
-extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
 extern int data_ov002_021101b4[];
 extern int data_ov002_0211013c[];
@@ -50,7 +50,7 @@ int Player::St_ButtSlide_Main()
             mSlideStoppedTimer = 0;
         }
         if (func_ov002_020c0688() != 0) {
-            if ((*(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18) & 2) != 0
+            if ((*(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18) & 2) != 0
                 && mStateWaitTimer == 0) {
                 mJumpComboStage = 0;
                 _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211019c);

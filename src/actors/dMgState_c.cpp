@@ -97,6 +97,7 @@
 #include "dMgState_c.h"
 #include "dScene_c.h"
 #include "dWipe_c.h"
+#include "PlayerInput.h"
 
 extern int ApproachLinear(s32 &value, s32 target, s32 step);
 
@@ -149,9 +150,6 @@ extern void func_ov004_020b67e8(int);
 extern W2 data_02086b58;
 extern Obj* data_0209f5bc;
 extern dWipe_c data_0209f61c;
-extern unsigned char data_020a0e40;
-extern unsigned char data_020a0de8[];
-extern unsigned char data_020a0de9[];
 extern Base* data_ov004_020beb68;
 extern int data_ov004_020beb6c;
 extern int data_ov004_020bc150;
@@ -849,11 +847,11 @@ void dMgState_c::func_ov004_020b6f88() {
   unsigned char idx;
   int i;
   if (mTimer != 0) return;
-  idx = data_020a0e40;
+  idx = gActivePlayerSlot;
   ok = 0;
   i = idx * 4;
-  if (data_020a0de8[i] != 0) {
-    if (data_020a0de9[i] != 0) ok = 1;
+  if (gTouchHeld[i] != 0) {
+    if (gTouchEdge[i] != 0) ok = 1;
   }
   if (ok == 0) return;
   func_02012790(0x62);
@@ -881,10 +879,10 @@ void dMgState_c::func_ov004_020b6ddc() {
     int r4;
 
     if (mTimer == 0) {
-        idx = data_020a0e40;
+        idx = gActivePlayerSlot;
         flag = 0;
-        if (data_020a0de8[idx * 4] != 0) {
-            if (data_020a0de9[idx * 4] != 0)
+        if (gTouchHeld[idx * 4] != 0) {
+            if (gTouchEdge[idx * 4] != 0)
                 flag = 1;
         }
         if (flag != 0) {
@@ -931,11 +929,11 @@ void dMgState_c::func_ov004_020b6c9c() {
     int x = mTimer;
     Base *g = data_ov004_020beb68;
     if (x != 0) {
-        unsigned char idx = data_020a0e40;
+        unsigned char idx = gActivePlayerSlot;
         int off = idx * 4;
         int ok = 0;
-        if (data_020a0de8[off]) {
-            if (data_020a0de9[off]) ok = 1;
+        if (gTouchHeld[off]) {
+            if (gTouchEdge[off]) ok = 1;
         }
         if (ok == 0)
             return;
@@ -968,11 +966,11 @@ void dMgState_c::func_ov004_020b6b40() {
     int x = mTimer;
     Base *g = data_ov004_020beb68;
     if (x != 0) {
-        unsigned char idx = data_020a0e40;
+        unsigned char idx = gActivePlayerSlot;
         int off = idx * 4;
         int ok = 0;
-        if (data_020a0de8[off]) {
-            if (data_020a0de9[off]) ok = 1;
+        if (gTouchHeld[off]) {
+            if (gTouchEdge[off]) ok = 1;
         }
         if (ok == 0)
             return;

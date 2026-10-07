@@ -5,6 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
+#include "PlayerInput.h"
 extern "C" {
 extern void func_ov002_020c06fc(void* c, u32 flag);
 extern int func_ov002_020dd2f4(void* c);
@@ -18,7 +19,6 @@ extern void _ZN5dCc_c6UpdateEv(void* c);
 extern void Player_AdvanceAnims(void* c);
 
 extern int data_ov002_021104e4[];
-extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
 extern int data_ov002_021101b4[];
 }
@@ -67,7 +67,7 @@ La8:
     }
 
     {
-        u16 r1 = *(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18);
+        u16 r1 = *(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18);
         if ((r1 & 1) || (r1 & 2)) {
             if (mSlideType == 0) {
                 _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021101fc);

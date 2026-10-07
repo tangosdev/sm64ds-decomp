@@ -6,6 +6,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
+#include "PlayerInput.h"
 extern "C" {
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern void func_ov002_020c0364(void* c, u32 arg);
@@ -22,7 +23,6 @@ extern void func_ov002_020d4d88(void* c, int a, int b);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
 extern void Player_AdvanceAnims(void* c);
 
-extern u8 data_020a0e40;
 extern s16 data_0209f4a0[];
 extern u8 data_0209f4ac[];
 extern u16 data_0209f49c[];
@@ -80,7 +80,7 @@ int Player::St_HoldLight_Main()
     }
 
     int var_r4 = 0;
-    if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
+    if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
         s16 t = mDesiredAngleY;
         if (mStateArg != 0) {
             mPrevAngleY = t;
@@ -90,8 +90,8 @@ int Player::St_HoldLight_Main()
         var_r4 = data_ov002_020ff1c0[param1];
     }
 
-    if (*((u8*)data_0209f4ac + data_020a0e40 * 0x18) == 0) {
-        if (!(*(u16*)((char*)data_0209f49c + data_020a0e40 * 0x18) & 0x800)) {
+    if (*((u8*)data_0209f4ac + gActivePlayerSlot * 0x18) == 0) {
+        if (!(*(u16*)((char*)data_0209f49c + gActivePlayerSlot * 0x18) & 0x800)) {
             var_r4 = (s32)(((s64)var_r4 * 0xa00 + 0x800) >> 0xc);
         }
     } else {
@@ -109,7 +109,7 @@ int Player::St_HoldLight_Main()
     func_ov002_020d4d88(((char*)this), var_r4, 0x1000);
 
     {
-        u16 flags = *(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18);
+        u16 flags = *(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18);
         if (flags & 1) {
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021105d4);
             return 1;
