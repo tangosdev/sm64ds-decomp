@@ -2448,10 +2448,8 @@ extern void func_ov100_021435e8(void*);
 extern void func_ov100_021437d4(void*);
 extern void func_ov100_02143b68(char*);
 extern void func_ov100_02145070(int);
-extern void func_ov100_02145170(char*, char*, struct Vector3*, struct Vector3*);
 /* Returns int -- the tree's own definition (in src/actors/daDoor_c.cpp)
    defines it `extern "C" int`, and its early-out is `return 1`. */
-extern int func_ov100_021453d8(char*, void*, int);
 extern void func_ov100_02146e70(void*);
 extern void func_ov102_0214ad14(void*);
 extern void func_ov102_0214ae1c(void*);
