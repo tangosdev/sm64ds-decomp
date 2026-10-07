@@ -1914,12 +1914,7 @@ extern void func_ov002_020b363c(char*);
 extern void func_ov002_020b41b8(int*, char*);
 extern void func_ov002_020b4714(void*);
 extern void func_ov002_020b47ec(void*);
-extern void func_ov002_020b9450(char*);
-extern void func_ov002_020b9704(char*, int);
-extern void func_ov002_020b9750(char*);
-extern void func_ov002_020b979c(char*);
-extern int func_ov002_020b993c(char*);
-extern void func_ov002_020b9a1c(char*);
+
 extern void func_ov002_020bc488(char*);
 extern void func_ov002_020bc664(void*);
 extern void func_ov002_020bcdf0(void*);

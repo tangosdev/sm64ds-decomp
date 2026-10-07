@@ -5276,3 +5276,14 @@ ov006	0x0212a224	func_ov006_0212a224	_ZN15dScMgSnowball_c19func_ov006_0212a224Ei
 ov006	0x0212a274	func_ov006_0212a274	_ZN15dScMgSnowball_c19func_ov006_0212a274Ei	object-as-this
 ov006	0x0212a2e0	func_ov006_0212a2e0	_ZN15dScMgSnowball_c19func_ov006_0212a2e0Ev	object-as-this
 ov006	0x0212a3c0	func_ov006_0212a3c0	_ZN15dScMgSnowball_c19func_ov006_0212a3c0Ev	object-as-this
+ov002	0x020b91fc	func_ov002_020b91fc	_ZN18daObjPowerUpItem_c12StateRestingEv	coined: ROM symbol is address-only; resting-state update in the PMF table data_ov002_021097bc
+ov002	0x020b92b8	func_ov002_020b92b8	_ZN18daObjPowerUpItem_c12BeginRestingEv	coined: ROM symbol is address-only; resting-state enter in the PMF table data_ov002_021097bc
+ov002	0x020b92c4	func_ov002_020b92c4	_ZN18daObjPowerUpItem_c12StateOpeningEv	coined: ROM symbol is address-only; opening-state update in the PMF table data_ov002_021097bc
+ov002	0x020b9450	func_ov002_020b9450	_ZN18daObjPowerUpItem_c12BeginOpeningEv	coined: ROM symbol is address-only; opening-state enter in the PMF table data_ov002_021097bc
+ov002	0x020b94c4	func_ov002_020b94c4	_ZN18daObjPowerUpItem_c13StateLaunchedEv	coined: ROM symbol is address-only; launched-state update in the PMF table data_ov002_021097bc
+ov002	0x020b96c0	func_ov002_020b96c0	_ZN18daObjPowerUpItem_c13BeginLaunchedEv	coined: ROM symbol is address-only; launched-state enter in the PMF table data_ov002_021097bc
+ov002	0x020b9704	func_ov002_020b9704	_ZN18daObjPowerUpItem_c8SetStateEi	coined: ROM symbol is address-only; state switcher over the PMF table data_ov002_021097bc
+ov002	0x020b9750	func_ov002_020b9750	_ZN18daObjPowerUpItem_c11UpdateStateEv	coined: ROM symbol is address-only; state-update dispatcher over the PMF table data_ov002_021097bc
+ov002	0x020b979c	func_ov002_020b979c	_ZN18daObjPowerUpItem_c11CheckPickupEv	coined: ROM symbol is address-only; pickup check against the flower collider
+ov002	0x020b993c	func_ov002_020b993c	_ZN18daObjPowerUpItem_c10DropShadowEv	coined: ROM symbol is address-only; drop-shadow helper over dActor_c::DropShadowRadHeight
+ov002	0x020b9a1c	func_ov002_020b9a1c	_ZN18daObjPowerUpItem_c14UpdateMatricesEv	coined: ROM symbol is address-only; model-matrix updater
