@@ -41,7 +41,7 @@ def collision_classes(results):
     has to be rewritten in the same change -- out of scope for batch 1."""
     names = {r["cls"] for r in results}
     hit = set()
-    for p in pathlib.Path("src").glob("*.c*"):
+    for p in pathlib.Path("src").rglob("*.c*"):
         t = p.read_text(errors="replace")
         if not LOCAL_DEF.search(t):
             continue

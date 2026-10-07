@@ -19,9 +19,12 @@ Checks
   L1  stale path    a delinks.txt names src/X but no file is there      ERROR
   L2  ambiguous     two source files share a stem                       ERROR
   L3  misfiled      src/unnamed/<mod>/ holds a symbol that is not an
-                    address-named symbol of <mod>                       ERROR
+                    address-named symbol of <mod>, or (for a sharded
+                    module such as arm9) sits in the wrong address shard ERROR
   L4  split class   one class occupies two or more subdirectories       ERROR
   L5  unenrolled    a source file no delinks.txt mentions               INFO
+  L6  misfiled      named/<mod>/ holds an address-named symbol, or
+                    one symbols.txt places in a different module        ERROR
 
 L5 is informational on purpose: a matched function can be legitimately un-enrolled (thumb,
 misaligned stub, on the exclude list), and `enroll` already reports those with reasons.
@@ -106,7 +109,8 @@ def check(config=None, known=None):
         if len(paths) > 1:
             findings["L2"].append({"key": stem, "paths": sorted(paths)})
 
-    # L3 -- src/unnamed/<mod>/ is a module bucket; anything else in it is misfiled.
+    # L3 -- src/unnamed/<mod>[/<shard>]/ is an address bucket; anything else in it, or in
+    # the wrong shard, is misfiled.
     unnamed_root = SP.SRC / SP.UNNAMED_DIR
     for p in sources:
         try:
@@ -123,6 +127,34 @@ def check(config=None, known=None):
         elif mod != bucket:
             findings["L3"].append({"key": p.relative_to(SP.REPO).as_posix(),
                                    "bucket": bucket, "why": f"symbol belongs to {mod}"})
+        elif SP.unnamed_dir_for(p.stem) != p.parent:
+            want = SP.unnamed_dir_for(p.stem).relative_to(SP.SRC).as_posix()
+            findings["L3"].append({"key": p.relative_to(SP.REPO).as_posix(),
+                                   "bucket": bucket, "why": f"belongs in {want}/"})
+
+    # L6 -- named/<mod>/ is a module bucket for symbols that carry a name. An address
+    # name in it is misfiled, and so is a symbol whose symbols.txt row says another module.
+    named_root = SP.SRC / SP.NAMED_DIR
+    for p in sources:
+        try:
+            rest = p.relative_to(named_root)
+        except ValueError:
+            continue
+        if len(rest.parts) != 2:
+            if len(rest.parts) > 2 or len(rest.parts) < 1:
+                findings["L6"].append({"key": p.relative_to(SP.REPO).as_posix(),
+                                       "bucket": rest.parts[0] if rest.parts else "",
+                                       "why": "named/ buckets are one level deep"})
+            continue
+        bucket = rest.parts[0]
+        if SP.module_of(p.stem) is not None:
+            findings["L6"].append({"key": p.relative_to(SP.REPO).as_posix(),
+                                   "bucket": bucket, "why": "symbol carries an address, not a name"})
+            continue
+        mod = SP.named_module_of(p.stem)
+        if mod is not None and mod != bucket:
+            findings["L6"].append({"key": p.relative_to(SP.REPO).as_posix(),
+                                   "bucket": bucket, "why": f"symbols.txt puts it in {mod}"})
 
     # L4 -- two homes for one class is what makes placement_for give up.
     dirs = collections.defaultdict(set)
@@ -153,13 +185,14 @@ def check(config=None, known=None):
     return out
 
 
-ERRORS = ("L1", "L2", "L3", "L4")
+ERRORS = ("L1", "L2", "L3", "L4", "L6")
 LABEL = {
     "L1": "delinks names a path with no file there (function silently falls back to ROM bytes)",
     "L2": "two source files share a symbol",
     "L3": "misfiled under src/unnamed/",
     "L4": "one class split across two directories (disables placement for it)",
     "L5": "source file not enrolled in any delinks.txt",
+    "L6": "misfiled under named/",
 }
 
 

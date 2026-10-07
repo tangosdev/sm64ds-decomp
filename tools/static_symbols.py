@@ -89,7 +89,7 @@ def main():
     args = ap.parse_args()
     root = pathlib.Path(args.root).resolve()
 
-    srcs = {p.stem: p for p in (root / "src").glob("*.c*")}
+    srcs = {p.stem: p for p in (root / "src").rglob("*.c*")}
     verdicts, detail, r = {}, {}, collections.Counter()
     for st in (root / "config" / "arm9").rglob("symbols.txt"):
         for line in st.read_text(errors="replace").splitlines():

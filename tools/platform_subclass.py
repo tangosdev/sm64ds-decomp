@@ -253,7 +253,7 @@ def patch_source(text, oldmap, names, types=None, itypes=None):
 
 def sources_for(cls):
     inc = f'#include "{cls}.h"'
-    return sorted(p for p in list((REPO / "src").glob("*.c")) + list((REPO / "src").glob("*.cpp"))
+    return sorted(p for p in list((REPO / "src").rglob("*.c")) + list((REPO / "src").rglob("*.cpp"))
                   if inc in p.read_text(errors="replace"))
 
 

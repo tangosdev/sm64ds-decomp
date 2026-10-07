@@ -80,10 +80,24 @@ SOURCE_SUFFIXES = (".c", ".cpp")
 # class, only an address. Spelled once, here, so the convention is one edit to revisit.
 UNNAMED_DIR = "unnamed"
 
-_UNNAMED_RE = re.compile(r"^(?:func|FUN|__sinit)_(?:(ov\d+)_)?[0-9a-fA-F]{8}$")
+# named/<module>/ -- the sibling bucket for symbols that DO carry a name (a class
+# method, a free function) and have no class directory of their own yet. Introduced so no
+# directory has to hold thousands of files: GitHub truncates a directory listing at 1,000
+# entries, and a flat `src/` held 3,454.
+NAMED_DIR = "named"
+
+# Modules whose address-named bucket is itself too big for one directory are split on the
+# high half of the ROM address: `unnamed/arm9/0204/<symbol>.c` under src. The value is the
+# right-shift that turns an address into the shard key, so 16 keeps four hex digits.
+# Deterministic on purpose -- the shard is a pure function of the symbol, so placement
+# never needs judgement and two agents always agree.
+UNNAMED_SHARD_SHIFT = {"arm9": 16}
+
+_UNNAMED_RE = re.compile(r"^(?:func|FUN|__sinit)_(?:(ov\d+)_)?([0-9a-fA-F]{8})$")
 _SPAWN_RE = re.compile(r"^(\w+)_Spawn$")
 
 _scan_cache = None
+_symbol_module_cache = None
 _cohort_cache = None
 _enrolment_cache = None
 _definition_ownership_cache = None
@@ -118,8 +132,9 @@ def invalidate():
     The enrolment index is dropped too: `enroll` and `tubuild promote` both rewrite
     delinks.txt, and a stale index would keep answering with the file they replaced."""
     global _scan_cache, _cohort_cache, _enrolment_cache, _definition_ownership_cache
-    global _range_cache
+    global _range_cache, _symbol_module_cache
     _scan_cache = None
+    _symbol_module_cache = None
     _cohort_cache = None
     _enrolment_cache = None
     _definition_ownership_cache = None
@@ -349,6 +364,59 @@ def module_of(symbol):
     return (m.group(1) or "arm9") if m else None
 
 
+def unnamed_dir_for(symbol):
+    """The ``src/unnamed/...`` directory an address-named ``symbol`` belongs in, or None.
+
+    ``src/unnamed/<module>/``, plus a ``<addr>>>shift`` shard for the modules in
+    ``UNNAMED_SHARD_SHIFT``. Pure function of the name: it does not check that the
+    directory exists (``placement_for`` does, because creating the bucket is the
+    migration's opt-in)."""
+    m = _UNNAMED_RE.match(symbol)
+    if not m:
+        return None
+    mod = m.group(1) or "arm9"
+    d = SRC / UNNAMED_DIR / mod
+    shift = UNNAMED_SHARD_SHIFT.get(mod)
+    if shift is not None:
+        d = d / f"{int(m.group(2), 16) >> shift:04x}"
+    return d
+
+
+def _symbol_modules():
+    """symbol -> module label, off every module's symbols.txt (first module wins).
+
+    Lets a NAMED symbol find its module before it is enrolled anywhere: renaming a
+    `func_ov006_*` to `_ZN7daTrs_c6RenderEv` rewrites the symbols.txt row, and that row
+    is what says the symbol still lives in ov006."""
+    global _symbol_module_cache
+    if _symbol_module_cache is None:
+        out = {}
+        for symbols_path, label in relocs.module_universe(repo=REPO):
+            try:
+                text = symbols_path.read_text(encoding="utf-8", errors="ignore")
+            except OSError:
+                continue
+            for line in text.splitlines():
+                m = _SYMBOL_FUNC_RE.match(line.strip())
+                if m:
+                    # `itcm` is a region of the arm9 binary, not a module of its own, and
+                    # the address-named buckets already file its symbols under `arm9`.
+                    out.setdefault(m.group(1), label if label.startswith("ov") else "arm9")
+        _symbol_module_cache = out
+    return _symbol_module_cache
+
+
+def named_module_of(symbol):
+    """The module a NAMED (non-address) symbol lives in, per symbols.txt, else None."""
+    return _symbol_modules().get(symbol)
+
+
+def named_dir_for(symbol):
+    """``named/<module>/`` for a named symbol with a known module, else None."""
+    mod = named_module_of(symbol)
+    return SRC / NAMED_DIR / mod if mod else None
+
+
 def class_of(symbol):
     """The class an Itanium-mangled or `<Class>_Spawn` symbol belongs to, else None.
 
@@ -392,8 +460,9 @@ def placement_for(symbol):
     nobody has moved this symbol's neighbours yet, so the root is still where they are."""
     mod = module_of(symbol)
     if mod is not None:
-        d = SRC / UNNAMED_DIR / mod
-        return d if d.is_dir() else None
+        if not (SRC / UNNAMED_DIR / mod).is_dir():
+            return None
+        return unnamed_dir_for(symbol)
     cls = class_of(symbol)
     if cls:
         # Flat siblings do not vote. The root is the unmigrated default, not a rival
@@ -402,19 +471,32 @@ def placement_for(symbol):
         nested = {d for d in _cohort_index().get(cls, ()) if d != SRC}
         if len(nested) == 1:
             return nested.pop()
+    # A named symbol with no class home yet: the `named/<module>/` bucket, once the
+    # migration has created it. Same opt-in rule as `unnamed/`.
+    d = named_dir_for(symbol)
+    if d is not None and d.is_dir():
+        return d
     return None
 
 
 def _fits(directory, symbol):
     """Is ``directory`` a legal home for ``symbol``?
 
-    Only the unnamed buckets have a rule strict enough to answer. Every other directory
-    is a human's deliberate choice, so the honest answer there is yes -- leave it be."""
+    The unnamed and named buckets have a rule strict enough to answer. Every other
+    directory is a human's deliberate choice, so the honest answer there is yes -- leave
+    it be."""
     try:
         rest = directory.relative_to(SRC / UNNAMED_DIR)
     except ValueError:
+        pass
+    else:
+        want = unnamed_dir_for(symbol)
+        return want is not None and want == directory and bool(rest.parts)
+    try:
+        rest = directory.relative_to(SRC / NAMED_DIR)
+    except ValueError:
         return True
-    return bool(rest.parts) and module_of(symbol) == rest.parts[0]
+    return bool(rest.parts) and named_module_of(symbol) == rest.parts[0]
 
 
 def rename_target(path, new_symbol):
