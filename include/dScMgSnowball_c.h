@@ -106,6 +106,39 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     virtual int  OnKicked();                           /* slot 24 */
     virtual int  OnPushed();                           /* slot 25 */
 
+    /* scene helpers */
+    void func_ov006_02125804();           /* render live mArray3 chunks */
+    void func_ov006_02125890();           /* step live mArray3 chunks */
+    void func_ov006_02125994();           /* clear the mArray3 chunk records */
+    int  func_ov006_021259d8(int *point); /* point vs walkable corridor */
+    int  func_ov006_02125bbc(int *point); /* point vs pickup row */
+    int  func_ov006_02125cdc(int *point); /* point vs solid tile ring */
+    void func_ov006_02125f68();           /* collision ring probes + push-out */
+    void func_ov006_02126a98();           /* per-tick flag/sound bookkeeping */
+    void func_ov006_02126b4c(int col, int flag); /* tile flag at (x,z) */
+    void func_ov006_02126ee4();           /* generate the course tilemap */
+    void func_ov006_021279b0();           /* seed the course + sprite tables */
+
+    /* mArray4 records: the 50 on-course objects, dispatched by the four
+       sinit-built PMF tables at data_ov006_02143020/38/50/70 */
+    void func_ov006_02129690();           /* render live mArray4 records */
+    void func_ov006_0212972c(int idx);    /* table 02143020 entry 2: cooldown tick */
+    void func_ov006_021297c0(int idx);    /* table 02143020 entry 1 */
+    void func_ov006_02129894(int i);      /* table 02143020 entry 0 */
+    void func_ov006_0212992c(int idx);    /* table 02143070 entry 3 */
+    void func_ov006_02129a34(int i);      /* table 02143070 entry 2 */
+    void func_ov006_02129b74(int index);  /* table 02143070 entry 1 */
+    void func_ov006_02129cb0(int i);      /* table 02143070 entry 0 */
+    void func_ov006_02129d94(int i);      /* table 02143038 entry 2: dispatches 02143070 + 02143020 on elem i */
+    void func_ov006_02129e28(int i);      /* table 02143050 entry 3 */
+    void func_ov006_02129eec(int idx);    /* table 02143050 entry 2 */
+    void func_ov006_0212a000(int index);  /* table 02143050 entry 1 */
+    void func_ov006_0212a110(int idx);    /* table 02143050 entry 0 */
+    void func_ov006_0212a224(int idx);    /* table 02143038 entry 1: dispatches 02143050 on state */
+    void func_ov006_0212a274(int idx);    /* table 02143038 entry 0 */
+    void func_ov006_0212a2e0();           /* walk mArray4, dispatch table 02143038 */
+    void func_ov006_0212a3c0();           /* reset the mArray4 records */
+
     /* 0x4f38 -- the generated course, 0x10 lanes of 0x2e0 rows. The stride
        is the lane's: func_ov006_02126ee4 writes every tile as
        `this + 0x4f38 + lane * 0x5c0 + row * 2`, so the lane index carries

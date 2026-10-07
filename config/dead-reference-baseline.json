@@ -162,6 +162,10 @@
    "ref": "src/func_ov006_020e7f5c.cpp"
   },
   {
+   "file": "notes/agents/handoffs/pr-2708-source-review-fixes.md",
+   "ref": "src/func_0201267c.cpp"
+  },
+  {
    "file": "notes/agents/handoffs/pr2231-rescue-ov022-ov013-batch2.md",
    "ref": "src_tu/actors/daObj_volcanoCannon_c.cpp"
   },
@@ -208,6 +212,10 @@
   {
    "file": "notes/agents/handoffs/readable-ov071-casket-0925.md",
    "ref": "src/func_020393d4.c"
+  },
+  {
+   "file": "notes/agents/handoffs/readable-ov089-objkey-0925.md",
+   "ref": "src/func_02012694.cpp"
   },
   {
    "file": "notes/agents/handoffs/readable-ov092-onms-0925b.md",

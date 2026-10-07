@@ -325,7 +325,7 @@ extern PmfEnt data_ov060_0211aeb4[];
 int _ZN8dActor_c14GetSubtractionEss(void* self, short a, short b);
 extern dActor_c *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int _ZN10dBgCh_Actr15ClearGroundFlagEv(char *c);
-/* func_02012694 takes (soundId, position) -- see src/func_02012694.cpp, whose
+/* func_02012694 takes (soundId, position) -- see src/engine/sound/Sound.cpp, whose
  * body is a single Sound::Play(3, id, pos) forward. Two shards here passed a
  * third argument the callee does not take (a counter byte, and a value stored
  * on the line above); dropped here rather than widening the signature. */

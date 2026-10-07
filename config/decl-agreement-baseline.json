@@ -2380,28 +2380,6 @@
         "return:int"
       ]
     },
-    "Player_PlaySoundEffect": {
-      "src/_ZN5Sound4PlayEjjRK7Vector3.cpp": [
-        "param:#2 unsigned int",
-        "param:#3 unsigned int",
-        "return:void"
-      ],
-      "src/_ZN5Sound6Play2DEjj.cpp": [
-        "param:#2 unsigned int",
-        "param:#3 unsigned int",
-        "return:void"
-      ],
-      "src/func_0201251c.c": [
-        "param:#1 void *"
-      ],
-      "src/func_020127a4.c": [
-        "param:#1 void *"
-      ],
-      "src/func_020127ec.c": [
-        "param:#1 void *",
-        "return:void"
-      ]
-    },
     "Player_ReleaseHeldActor": {
       "src/_ZN6Player11St_Fly_InitEv.cpp": [
         "return:void"
@@ -5056,9 +5034,6 @@
         "return:int"
       ],
       "src/actors/unit020cd744.cpp": [
-        "return:int"
-      ],
-      "src/func_02012d64.c": [
         "return:int"
       ],
       "src/func_ov002_020d4d88.c": [
@@ -8444,15 +8419,6 @@
       ]
     },
     "_ZN5Sound4PlayEjjRK7Vector3": {
-      "src/_ZN5Sound13PlayCharVoiceEjjRK7Vector3.cpp": [
-        "return:unsigned int"
-      ],
-      "src/func_0201267c.cpp": [
-        "param:#3 const Vector3 *"
-      ],
-      "src/func_02012694.cpp": [
-        "param:#3 const Vector3 *"
-      ],
       "src/actors/daKpa_c.cpp": [
         "param:#3 void *"
       ],
@@ -8462,13 +8428,7 @@
       ]
     },
     "_ZN5Sound6Play2DEjj": {
-      "src/func_02012174.c": [
-        "return:unsigned int"
-      ],
-      "src/func_0201277c.c": [
-        "return:unsigned int"
-      ],
-      "src/func_02012790.c": [
+      "src/engine/sound/Sound.cpp": [
         "return:unsigned int"
       ]
     },
@@ -8476,16 +8436,10 @@
       "include/decl_common.h": [
         "return:void"
       ],
-      "src/DisableSoundPlayersForCredits.c": [
-        "return:void"
-      ],
       "src/_ZN10dScStage_c13InitResourcesEv.cpp": [
         "return:void"
       ],
       "src/_ZN10dScStage_c16CleanupResourcesEv.cpp": [
-        "return:void"
-      ],
-      "src/func_02011c8c.c": [
         "return:void"
       ],
       "src/func_02048e74.c": [
@@ -8621,11 +8575,6 @@
       "src/actors/daYegg_c.cpp": [
         "param:#4 void *",
         "param:#5 unsigned int"
-      ],
-      "src/func_02012120.c": [
-        "param:#4 const Vector3 *",
-        "param:#5 unsigned int",
-        "return:void"
       ],
       "src/func_ov002_020dec70.cpp": [
         "param:#4 Vector3 *",
@@ -12405,21 +12354,6 @@
         "return:char"
       ]
     },
-    "data_0208e428": {
-      "src/_ZN5Sound19LoadGroupAndSetBankEii.cpp": [
-        "return:unsigned char"
-      ]
-    },
-    "data_0208e42c": {
-      "src/func_02011b7c.c": [
-        "return:unsigned char"
-      ]
-    },
-    "data_0208e444": {
-      "src/_ZN5Sound22LoadAndSetMusic_Layer3Ej.cpp": [
-        "return:unsigned int"
-      ]
-    },
     "data_0208e4b8": {
       "src/actors/dEntObj_c.cpp": [
         "return:void *"
@@ -12745,21 +12679,6 @@
         "return:int []"
       ]
     },
-    "data_0209b470": {
-      "src/func_02011b7c.c": [
-        "return:unsigned char"
-      ]
-    },
-    "data_0209b484": {
-      "src/func_02011f7c.c": [
-        "return:void *"
-      ]
-    },
-    "data_0209b488": {
-      "src/func_02011f7c.c": [
-        "return:int"
-      ]
-    },
     "data_0209b490": {
       "src/actors/daTrs_c.cpp": [
         "return:int []"
@@ -12768,72 +12687,9 @@
         "return:int []"
       ]
     },
-    "data_0209b498": {
-      "src/func_02011e94.c": [
-        "return:int []"
-      ],
-      "src/func_02011ee4.c": [
-        "return:int []"
-      ],
-      "src/func_02011f7c.c": [
-        "return:void *"
-      ]
-    },
     "data_0209b49c": {
       "src/actors/daDoor_c.cpp": [
         "return:int []"
-      ]
-    },
-    "data_0209b4a0": {
-      "src/func_02012d64.c": [
-        "return:void *"
-      ],
-      "src/func_020132d8.cpp": [
-        "return:int"
-      ],
-      "src/func_020133bc.c": [
-        "return:int"
-      ]
-    },
-    "data_0209b4a4": {
-      "src/func_0201251c.c": [
-        "return:char"
-      ],
-      "src/func_020127ec.c": [
-        "return:int"
-      ],
-      "src/func_020133bc.c": [
-        "return:int"
-      ]
-    },
-    "data_0209b4ac": {
-      "src/_ZN5Sound22StopLoadedMusic_Layer1Ej.cpp": [
-        "return:unsigned int"
-      ]
-    },
-    "data_0209b4b0": {
-      "src/_ZN5Sound22LoadAndSetMusic_Layer1Ei.cpp": [
-        "return:int []"
-      ],
-      "src/_ZN5Sound7PlaySubEjjj5Fix12IiEb.cpp": [
-        "return:unsigned int []"
-      ],
-      "src/func_02011b7c.c": [
-        "return:char []"
-      ]
-    },
-    "data_0209b53c": {
-      "src/Sound_PlayIfNotActive.c": [
-        "return:char"
-      ],
-      "src/_ZN5Sound8PlayLongEjjjRK7Vector3s.cpp": [
-        "return:int []"
-      ],
-      "src/func_02012468.c": [
-        "return:char"
-      ],
-      "src/func_020132d8.cpp": [
-        "return:int"
       ]
     },
     "data_0209caa0": {
@@ -13189,9 +13045,6 @@
     },
     "data_0209d574": {
       "src/__sinit_02074e0c.c": [
-        "return:int []"
-      ],
-      "src/func_020134d8.c": [
         "return:int []"
       ],
       "src/func_ov000_020aa420.c": [
@@ -21951,59 +21804,6 @@
         "return:short"
       ]
     },
-    "func_02011654": {
-      "src/func_02011974.c": [
-        "param:#1 Base *",
-        "param:#2 Entry *"
-      ],
-      "src/func_020119c8.c": [
-        "param:#1 Base *",
-        "param:#2 Entry *"
-      ]
-    },
-    "func_0201179c": {
-      "src/_ZN5Sound8PlayLongEjjjRK7Vector3s.cpp": [
-        "param:#1 int *",
-        "param:#2 unsigned int",
-        "param:#3 unsigned int",
-        "param:#4 const Vector3 &"
-      ]
-    },
-    "func_0201186c": {
-      "src/Sound_PlayIfNotActive.c": [
-        "param:#4 int"
-      ]
-    },
-    "func_02011934": {
-      "src/Sound_PlayIfNotActive.c": [
-        "return:Obj125 *"
-      ],
-      "src/_ZN5Sound8PlayLongEjjjRK7Vector3s.cpp": [
-        "param:#1 int *",
-        "param:#2 unsigned int"
-      ],
-      "src/func_02012468.c": [
-        "return:char *"
-      ]
-    },
-    "func_02011aa0": {
-      "src/func_02011654.c": [
-        "return:int"
-      ]
-    },
-    "func_02011b38": {
-      "src/func_02011ac4.c": [
-        "return:int"
-      ],
-      "src/func_02011af8.c": [
-        "return:int"
-      ]
-    },
-    "func_02011c54": {
-      "src/func_02011c24.c": [
-        "return:int"
-      ]
-    },
     "func_02011d14": {
       "src/actors/daTrs_c.cpp": [
         "return:unsigned short"
@@ -22015,33 +21815,6 @@
       ],
       "src/actors/daKpa_c.cpp": [
         "arity:1"
-      ]
-    },
-    "func_02011dcc": {
-      "src/_ZN5Sound22LoadAndSetMusic_Layer1Ei.cpp": [
-        "return:void"
-      ],
-      "src/_ZN5Sound22LoadAndSetMusic_Layer2Ej.cpp": [
-        "return:void"
-      ],
-      "src/_ZN5Sound22LoadAndSetMusic_Layer3Ej.cpp": [
-        "param:#1 int",
-        "param:#2 unsigned int",
-        "return:void"
-      ],
-      "src/_ZN5Sound22StopLoadedMusic_Layer2Ev.cpp": [
-        "return:void"
-      ],
-      "src/_ZN5Sound22StopLoadedMusic_Layer3Ev.cpp": [
-        "return:void"
-      ],
-      "src/_ZN5Sound7PlaySubEjjj5Fix12IiEb.cpp": [
-        "param:#1 unsigned int *",
-        "param:#2 unsigned int",
-        "return:void"
-      ],
-      "src/_ZN5Sound8EndMusicEjj.cpp": [
-        "return:void"
       ]
     },
     "func_02011e94": {
@@ -22087,17 +21860,6 @@
       "src/_ZN6Player17St_ButtSlide_MainEv.cpp": [
         "param:#4 char *",
         "param:#6 int"
-      ]
-    },
-    "func_020123c8": {
-      "src/_ZN5Sound8PlayLongEjjjRK7Vector3s.cpp": [
-        "param:#1 char *",
-        "param:#2 unsigned int",
-        "param:#3 unsigned int",
-        "param:#4 const Vector3 &"
-      ],
-      "src/func_02011af8.c": [
-        "return:int"
       ]
     },
     "func_02012468": {
@@ -22537,11 +22299,6 @@
         "return:void"
       ]
     },
-    "func_020127ec": {
-      "src/func_020126ac.c": [
-        "return:int"
-      ]
-    },
     "func_02012dd0": {
       "src/minigames/d_s_mg_base.cpp": [
         "param:#1 int"
@@ -22550,37 +22307,6 @@
     "func_02012e1c": {
       "src/minigames/d_s_mg_base.cpp": [
         "arity:1"
-      ]
-    },
-    "func_02013078": {
-      "src/func_02011dcc.c": [
-        "return:void"
-      ]
-    },
-    "func_020133bc": {
-      "src/func_020134c8.c": [
-        "arity:1"
-      ]
-    },
-    "func_020134d8": {
-      "src/_ZN5Sound19LoadGroupAndSetBankEii.cpp": [
-        "param:#1 int",
-        "param:#2 int"
-      ],
-      "src/func_020133bc.c": [
-        "param:#1 int",
-        "param:#2 int"
-      ]
-    },
-    "func_02013524": {
-      "src/_ZN5Sound22LoadAndSetMusic_Layer1Ei.cpp": [
-        "param:#1 int *"
-      ],
-      "src/func_02012d64.c": [
-        "param:#1 void *"
-      ],
-      "src/func_020132d8.cpp": [
-        "param:#1 int *"
       ]
     },
     "func_02013580": {
@@ -24783,9 +24509,6 @@
       ]
     },
     "func_0201a96c": {
-      "src/func_020134d8.c": [
-        "return:int"
-      ],
       "src/func_0201fec8.c": [
         "param:#1 char *",
         "param:#2 int",
@@ -24798,12 +24521,14 @@
         "param:#1 int *",
         "param:#2 int",
         "return:int"
+      ],
+      "src/engine/sound/Sound.cpp": [
+        "param:#1 int *",
+        "param:#2 int",
+        "return:void"
       ]
     },
     "func_0201a9ec": {
-      "src/func_020134d8.c": [
-        "return:int"
-      ],
       "src/func_020199a4.c": [
         "return:void"
       ],
@@ -24812,12 +24537,12 @@
       ],
       "src/func_ov000_020aa420.c": [
         "return:int"
+      ],
+      "src/engine/sound/Sound.cpp": [
+        "return:int"
       ]
     },
     "func_0201a9fc": {
-      "src/func_020134d8.c": [
-        "return:int"
-      ],
       "src/func_ov000_020aa420.c": [
         "param:#1 int *",
         "return:int"
@@ -26187,19 +25912,19 @@
       ]
     },
     "func_02048528": {
-      "src/func_020123c8.c": [
+      "src/engine/sound/Sound.cpp": [
         "param:#1 int",
         "param:#2 int"
       ]
     },
     "func_020485f0": {
-      "src/func_020123c8.c": [
+      "src/engine/sound/Sound.cpp": [
         "param:#1 int",
         "param:#2 int"
       ]
     },
     "func_02048720": {
-      "src/_ZN5Sound4PlayEjjRK7Vector3.cpp": [
+      "src/engine/sound/Sound.cpp": [
         "param:#1 const Vector3 *",
         "param:#2 unsigned int",
         "param:#3 unsigned int",
@@ -26207,52 +25932,29 @@
       ]
     },
     "func_02048908": {
-      "src/_ZN5Sound4PlayEjjRK7Vector3.cpp": [
+      "src/engine/sound/Sound.cpp": [
         "param:#1 int",
         "param:#2 const Vector3 *"
       ]
     },
     "func_02048a18": {
-      "src/func_0201251c.c": [
+      "src/engine/sound/Sound.cpp": [
         "arity:2",
         "return:int"
       ]
     },
-    "func_02048a1c": {
-      "src/_ZN5Sound4PlayEjjRK7Vector3.cpp": [
-        "param:#1 const Vector3 *",
-        "param:#2 unsigned int",
-        "param:#3 unsigned int"
-      ],
-      "src/_ZN5Sound8PlayLongEjjjRK7Vector3s.cpp": [
-        "param:#1 const Vector3 &"
-      ],
-      "src/func_0201251c.c": [
-        "param:#1 int"
-      ]
-    },
     "func_02048af4": {
-      "src/func_0201251c.c": [
-        "param:#2 int",
-        "return:int"
+      "src/engine/sound/Sound.cpp": [
+        "param:#2 int"
       ]
     },
     "func_02048c30": {
-      "src/func_02011ac4.c": [
-        "return:int"
-      ]
-    },
-    "func_02048d80": {
-      "src/_ZN5Sound4PlayEjjRK7Vector3.cpp": [
-        "param:#2 const Vector3 *"
-      ],
-      "src/func_020123c8.c": [
-        "param:#1 int",
+      "src/engine/sound/Sound.cpp": [
         "param:#2 int"
       ]
     },
     "func_02048e94": {
-      "src/func_02011d5c.c": [
+      "src/engine/sound/Sound.cpp": [
         "return:void"
       ]
     },
@@ -26294,7 +25996,7 @@
       ]
     },
     "func_02049cd8": {
-      "src/func_020133bc.c": [
+      "src/engine/sound/Sound.cpp": [
         "param:#2 int"
       ]
     },
@@ -26460,7 +26162,7 @@
       ]
     },
     "func_0204efe0": {
-      "src/func_02011db4.c": [
+      "src/engine/sound/Sound.cpp": [
         "arity:0"
       ]
     },
@@ -26543,11 +26245,6 @@
         "param:#1 char *"
       ]
     },
-    "func_0204f7cc": {
-      "src/func_020127a4.c": [
-        "return:int"
-      ]
-    },
     "func_0204f7fc": {
       "src/func_ov007_020bda38.c": [
         "param:#1 char *"
@@ -26576,7 +26273,7 @@
       ]
     },
     "func_0204f8cc": {
-      "src/func_02013524.c": [
+      "src/engine/sound/Sound.cpp": [
         "param:#1 int"
       ]
     },
@@ -26606,46 +26303,7 @@
         "param:#1 char *"
       ]
     },
-    "func_0204f958": {
-      "src/_ZN5Sound10PauseMusicEv.cpp": [
-        "return:int"
-      ],
-      "src/func_02011c24.c": [
-        "return:int"
-      ]
-    },
-    "func_0204f9c4": {
-      "src/_ZN5Sound10PauseMusicEv.cpp": [
-        "return:int"
-      ],
-      "src/func_02011c54.c": [
-        "return:int"
-      ],
-      "src/func_02012dd0.c": [
-        "return:int"
-      ]
-    },
     "func_0204fa2c": {
-      "src/_ZN5Sound22LoadAndSetMusic_Layer1Ei.cpp": [
-        "return:void"
-      ],
-      "src/_ZN5Sound22StopLoadedMusic_Layer1Ej.cpp": [
-        "param:#1 int",
-        "param:#2 unsigned int",
-        "return:void"
-      ],
-      "src/_ZN5Sound22StopLoadedMusic_Layer2Ev.cpp": [
-        "return:void"
-      ],
-      "src/_ZN5Sound22StopLoadedMusic_Layer3Ev.cpp": [
-        "return:void"
-      ],
-      "src/_ZN5Sound8EndMusicEjj.cpp": [
-        "return:void"
-      ],
-      "src/func_020132d8.cpp": [
-        "return:void"
-      ],
       "src/func_02048af4.c": [
         "return:void"
       ],
@@ -26660,6 +26318,9 @@
       ],
       "src/func_ov007_020bdf60.c": [
         "param:#1 char *",
+        "return:void"
+      ],
+      "src/engine/sound/Sound.cpp": [
         "return:void"
       ]
     },
@@ -26757,11 +26418,6 @@
         "return:int *"
       ]
     },
-    "func_02050cdc": {
-      "src/_ZN5Sound4PlayEjjRK7Vector3.cpp": [
-        "return:char *"
-      ]
-    },
     "func_02050d54": {
       "src/func_02050f34.c": [
         "param:#2 int",
@@ -26783,37 +26439,34 @@
       ]
     },
     "func_02051074": {
-      "src/func_02011e94.c": [
+      "src/engine/sound/Sound.cpp": [
+        "param:#1 int",
         "return:int"
       ]
     },
     "func_020510a4": {
-      "src/_ZN5Sound19LoadGroupAndSetBankEii.cpp": [
-        "param:#1 int"
-      ],
-      "src/_ZN5Sound21ResetPlayerVoiceGroupEv.cpp": [
+      "src/engine/sound/Sound.cpp": [
         "param:#1 int",
         "return:int"
-      ],
-      "src/func_02011ee4.c": [
-        "return:int"
-      ],
-      "src/func_02011f7c.c": [
-        "param:#2 void *"
       ]
     },
     "func_0205117c": {
-      "src/_ZN5Sound19LoadGroupAndSetBankEii.cpp": [
+      "src/engine/sound/Sound.cpp": [
         "param:#1 int"
       ]
     },
     "func_020511d4": {
-      "src/func_02011e94.c": [
-        "return:int"
-      ],
       "src/func_02050d54.c": [
         "param:#3 void *",
         "param:#4 void *"
+      ],
+      "src/engine/sound/Sound.cpp": [
+        "param:#1 int",
+        "param:#2 int",
+        "param:#3 int",
+        "param:#4 int",
+        "param:#5 int",
+        "return:int"
       ]
     },
     "func_020513a8": {
@@ -26913,27 +26566,13 @@
       ]
     },
     "func_02051e60": {
-      "src/Player_PlaySoundEffect.c": [
+      "src/engine/sound/Sound.cpp": [
         "param:#5 int"
       ]
     },
     "func_02051f1c": {
-      "src/Player_PlaySoundEffect.c": [
-        "param:#1 int",
-        "param:#2 int"
-      ],
       "src/func_ov007_020be098.c": [
         "param:#2 int",
-        "return:void"
-      ]
-    },
-    "func_02051fb4": {
-      "src/func_02011dcc.c": [
-        "param:#2 int"
-      ]
-    },
-    "func_02052008": {
-      "src/func_020133bc.c": [
         "return:void"
       ]
     },

@@ -120,7 +120,7 @@ extern int data_0209e650[];
 extern int Vec3_Dist(const Vector3 *, const Vector3 *);
 
 /* daDkk_c.cpp's spelling, whose void return the enrolled definition at
- * src/func_0201267c.cpp confirms. */
+ * src/engine/sound/Sound.cpp confirms. */
 extern void func_0201267c(int id, void *pos);
 
 /* Fix12<int> BY VALUE (6az): the header member form would home the argument
