@@ -3,6 +3,7 @@
   "module": "ov090",
   "source": "src/actors/daManta_c.cpp",
   "promoted_source": "src/actors/daManta_c.cpp",
+  "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -10,13 +11,34 @@
     "class label: daManta_c. Cartridge type name at ov090:0x021341f4 is the bytes 9daManta_c.",
     "daManta_c_classInit at 0x02132fe8..0x02133034 abuts this run and is left in src/d_a_manta.c.",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, not narrowed to this TU).",
-    "fold-lane-D-0929: the daManta_c_classInit registry factory abuts this TU's own range with no gap (src/d_a_manta.c ended exactly at 0x02133034, the start of src/actors/daPukupuku_c.cpp, a different class) and no hole; tu_map never attributed it because it cuts on symbol name"
+    "fold-lane-D-0929: the daManta_c_classInit registry factory abuts this TU's own range with no gap (src/d_a_manta.c ended exactly at 0x02133034, the start of src/actors/daPukupuku_c.cpp, a different class) and no hole; tu_map never attributed it because it cuts on symbol name",
+    "the compiler-generated __sinit_daManta_c.cpp is byte-identical to retail __sinit_ov090_02133ea8 (0xa4). It constructs the model handle at 0x02134524 (file 0x39d) and the anim handle at 0x0213452c (file 0x39e), then copies the pointer-to-member descriptors at 0x021341ec and 0x021341e4 into the state record at 0x0213454c. The ctor word at 0x021340c8 points at that initializer."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x0213269c",
       "end": "0x02133034"
+    },
+    {
+      "name": ".init",
+      "start": "0x02133ea8",
+      "end": "0x02133f4c"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x021340c8",
+      "end": "0x021340cc"
+    },
+    {
+      "name": ".data",
+      "start": "0x021341e4",
+      "end": "0x021341f4"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02134524",
+      "end": "0x0213455c"
     }
   ],
   "functions": [
@@ -112,11 +134,317 @@
       "ordinal": 12
     }
   ],
-  "data": [],
-  "bss": [],
+  "init": [
+    {
+      "symbol": "__sinit_daManta_c.cpp",
+      "address": "0x02133ea8",
+      "size": "0xa4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov090_02133ea8 and carries the same thirteen relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_daManta_c.cpp",
+      "address": "0x021340c8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "data": [
+    {
+      "symbol": "@771",
+      "address": "0x021341e4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary for the state record's execute pointer-to-member; retail first word is 0x021327e4"
+    },
+    {
+      "symbol": "@769",
+      "address": "0x021341ec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary for the state record's init pointer-to-member; retail first word is 0x02132a58"
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "data_ov090_02134524",
+      "address": "0x02134524",
+      "size": "0x8",
+      "evidence": "model resource handle constructed with file ID 0x39d"
+    },
+    {
+      "symbol": "data_ov090_0213452c",
+      "address": "0x0213452c",
+      "size": "0x8",
+      "evidence": "anim resource handle constructed with file ID 0x39e"
+    },
+    {
+      "symbol": "@766",
+      "address": "0x02134534",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated model resource destructor-registration node"
+    },
+    {
+      "symbol": "@767",
+      "address": "0x02134540",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated anim resource destructor-registration node"
+    },
+    {
+      "symbol": "data_ov090_0213454c",
+      "address": "0x0213454c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "the state record InitResources installs; the initializer copies the two descriptors into it"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN17MantaModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN17MantaModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor registration destination and the model wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN21MantaAnimationFilePtrC1Ej",
+      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0201799c",
+      "evidence": "retail initializer call destination and the anim wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN21MantaAnimationFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017984",
+      "evidence": "retail destructor registration destination and the anim SharedFilePtr family identity"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and two direct retail references in this initializer"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_daManta_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_daManta_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@766",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local model registration node is a configured initializer relocation destination at 0x02134534"
+    },
+    {
+      "symbol": "@767",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local anim registration node is a configured initializer relocation destination at 0x02134540"
+    },
+    {
+      "symbol": "@769",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local init descriptor is a configured initializer relocation destination at 0x021341ec"
+    },
+    {
+      "symbol": "@771",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local execute descriptor is a configured initializer relocation destination at 0x021341e4"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02133eb8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02133ec8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02133ed4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02133ee4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02133f20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov090_02134524",
+      "addend": 0,
+      "target_module": "ov090",
+      "target_address": "0x02134524"
+    },
+    {
+      "section": ".init",
+      "source": "0x02133f28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02133f2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@766",
+      "addend": 0,
+      "target_module": "ov090",
+      "target_address": "0x02134534"
+    },
+    {
+      "section": ".init",
+      "source": "0x02133f30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov090_0213452c",
+      "addend": 0,
+      "target_module": "ov090",
+      "target_address": "0x0213452c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02133f38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Anim",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017984"
+    },
+    {
+      "section": ".init",
+      "source": "0x02133f3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@767",
+      "addend": 0,
+      "target_module": "ov090",
+      "target_address": "0x02134540"
+    },
+    {
+      "section": ".init",
+      "source": "0x02133f40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@769",
+      "addend": 0,
+      "target_module": "ov090",
+      "target_address": "0x021341ec"
+    },
+    {
+      "section": ".init",
+      "source": "0x02133f44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@771",
+      "addend": 0,
+      "target_module": "ov090",
+      "target_address": "0x021341e4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02133f48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov090_0213454c",
+      "addend": 0,
+      "target_module": "ov090",
+      "target_address": "0x0213454c"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x021340c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_daManta_c.cpp",
+      "addend": 0,
+      "target_module": "ov090",
+      "target_address": "0x02133ea8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021341e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9daManta_c19func_ov090_021327e4Ev",
+      "addend": 0,
+      "target_module": "ov090",
+      "target_address": "0x021327e4"
+    },
+    {
+      "section": ".data",
+      "source": "0x021341ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9daManta_c19func_ov090_02132a58Ev",
+      "addend": 0,
+      "target_module": "ov090",
+      "target_address": "0x02132a58"
+    }
+  ],
   "notes": [
     "Key function is the out-of-line destructor under #pragma defer_codegen off. Factory is outside the licensed range, so this TU does not instantiate daManta_c.",
-    "fold-lane-D-0929: folded the daManta_c_classInit registry factory (0x02132fe8..0x02133034) into this already-promoted TU, widening the complete delinks.txt claim from 0x0213269c..0x02132fe8 to 0x0213269c..0x02133034. The loose one-function source hand-called fBase_c::operator new(1028) + the inherited dEnemyBase_c ctor + this class's vtable store + three member subobjects in field order (dCcAcPos_c, dBgCh_Actr, ModelAnim); daManta_c has no user-declared constructor, so `new daManta_c()` reproduces the identical sequence with zero mangled calls. This TU keeps #pragma defer_codegen off, so emission follows source order (ROM-ascending); the factory appends after InitResources. tools/tubuild.py verify reports 13/13 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, with no new compiler_only_output needed (the existing _ZN9daManta_cD2Ev deadstrip row, from the out-of-line destructor, already covers the homeless base-object-destructor helper `return new` emits here). Retired: src/d_a_manta.c (credited tangosdev via chaos_db_ci.first_matchers, carried into attribution.json as a path#symbol override)."
+    "fold-lane-D-0929: folded the daManta_c_classInit registry factory (0x02132fe8..0x02133034) into this already-promoted TU, widening the complete delinks.txt claim from 0x0213269c..0x02132fe8 to 0x0213269c..0x02133034. The loose one-function source hand-called fBase_c::operator new(1028) + the inherited dEnemyBase_c ctor + this class's vtable store + three member subobjects in field order (dCcAcPos_c, dBgCh_Actr, ModelAnim); daManta_c has no user-declared constructor, so `new daManta_c()` reproduces the identical sequence with zero mangled calls. This TU keeps #pragma defer_codegen off, so emission follows source order (ROM-ascending); the factory appends after InitResources. tools/tubuild.py verify reports 13/13 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, with no new compiler_only_output needed (the existing _ZN9daManta_cD2Ev deadstrip row, from the out-of-line destructor, already covers the homeless base-object-destructor helper `return new` emits here). Retired: src/d_a_manta.c (credited tangosdev via chaos_db_ci.first_matchers, carried into attribution.json as a path#symbol override).",
+    "The file-scope model handle, anim handle, and state record are defined in this TU. mwcc emits __sinit_daManta_c.cpp, the ctor word, the two anonymous pointer-to-member descriptors, and the two destructor-registration nodes. Class RTTI and the vtable stay externalized. The handwritten src/__sinit_ov090_02133ea8.c is retired.",
+    "Local scratch ROM matched this machine's baseline control. Recorded rom.sha256 is the fleet SHA from the arm9/dBgW.json local-worker note. Module set, symbol inventory, and the owned ranges matched."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -190,6 +518,199 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov090-daManta_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0213269c",
+        "end": "0x02133034",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0213269c",
+          "end": "0x02133034",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02133ea8",
+          "end": "0x02133f4c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x021340c8",
+          "end": "0x021340cc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x021341e4",
+          "end": "0x021341f4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02134524",
+          "end": "0x0213455c",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 22
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              59
+            ],
+            "desired": [
+              59
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              57
+            ],
+            "desired": [
+              57
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              35,
+              37
+            ],
+            "desired": [
+              37,
+              35
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              31,
+              32,
+              33,
+              34,
+              39
+            ],
+            "desired": [
+              32,
+              34,
+              31,
+              33,
+              39
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                35,
+                37
+              ],
+              "desired": [
+                37,
+                35
+              ],
+              "slots": [
+                35,
+                37
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                31,
+                32,
+                33,
+                34,
+                39
+              ],
+              "desired": [
+                32,
+                34,
+                31,
+                33,
+                39
+              ],
+              "slots": [
+                31,
+                32,
+                33,
+                34,
+                39
+              ]
+            }
+          ],
+          "symbolIndices": 7,
+          "sectionLinks": 0,
+          "sectionInfos": 2,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [

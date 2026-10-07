@@ -105,7 +105,7 @@ Overlay 80 has three initializers and three `.ctor` entries. The text units and
 initializer order agree exactly:
 
 1. `daChoropu_c+daChoro_Rock_c` / [__sinit_ov080_021278c0](../src/__sinit_ov080_021278c0.c);
-2. `CrazedCrate` / [__sinit_ov080_02127a60](../src/__sinit_ov080_02127a60.c);
+2. `CrazedCrate` / [__sinit_ov080_02127a60](../src/actors/daBttBk_c.cpp);
 3. `daPicGate_c` / [__sinit_ov080_02127b2c](../src/__sinit_ov080_02127b2c.c).
 
 The daPicGate_c entry is [.p__sinit_ov080_02127b2c](../config/arm9/overlays/ov080/symbols.txt) at `0x02127f68`, relocating to
