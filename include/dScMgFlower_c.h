@@ -132,6 +132,10 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
     s32 Behavior();        /* slot  6 */
     s32 Render();          /* slot  9 */
 
+    /* scene helpers */
+    void func_ov006_0212a654();           /* per-frame petal update */
+    void func_ov006_0212a764();           /* round setup / restart */
+
     u8  mArray[0x2c0];     /* 0x4f38 -- 0x16 * 0x20, elem dtor func_ov006_0212a650.
                               One 0x20-byte petal record, as func_ov006_0212a764
                               (the round setup) and Behavior read it:

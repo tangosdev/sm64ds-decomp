@@ -716,6 +716,8 @@ ov006	0x021255f8	MgLuckyStars_Spawn	dScMgBSC_c_classInit	reconstructed classInit
 ov006	0x0212a520	func_ov006_0212a520	MgSnowballSlalom_Spawn	spawnfunc
 ov006	0x0212a520	MgSnowballSlalom_Spawn	dScMgSnowball_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0212b7f8	func_ov006_0212b7f8	dScMgFlower_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0212a654	func_ov006_0212a654	_ZN13dScMgFlower_c19func_ov006_0212a654Ev	object-as-this; receiver is the scene object, called with this in r0
+ov006	0x0212a764	func_ov006_0212a764	_ZN13dScMgFlower_c19func_ov006_0212a764Ev	object-as-this; receiver is the scene object, called with this in r0
 ov006	0x0213b814	data_ov006_0213b814	g_profile_MG_AMIDA	reconstructed profile global; literal ROM ID MG_AMIDA+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213badc	data_ov006_0213badc	MgSortOrSplode_SpawnInfo	spawninfo
 ov006	0x0213badc	MgSortOrSplode_SpawnInfo	g_profile_MG_BOMROOM	reconstructed profile global; literal ROM ID MG_BOMROOM+registry role+later EAD lineage; exact SM64DS spelling not preserved
