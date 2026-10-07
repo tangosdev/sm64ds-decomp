@@ -3257,10 +3257,15 @@ ov091	0x02131bdc	func_ov091_02131bdc	RotatingUpDownPlatform_Spawn	spawnfunc
 ov091	0x02131bdc	RotatingUpDownPlatform_Spawn	daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov091	0x02131c14	func_ov091_02131c14	_ZN13daLinelift2_cD1Ev	vtable slot 16
 ov091	0x02131c58	func_ov091_02131c58	_ZN13daLinelift2_cD0Ev	vtable slot 17
+ov091	0x02131db8	func_ov091_02131db8	_ZN13daLinelift2_c19func_ov091_02131db8Ev	daLinelift2_c method. The first argument is the lift, so the function is a member and the parameter is this. The address is kept as the method name.
+ov091	0x02131ef0	func_ov091_02131ef0	_ZN13daLinelift2_c19func_ov091_02131ef0Ev	daLinelift2_c method; state-2 body of the pointer-to-member table the sinit fills (record at ov091 0x02134e4c). The address is kept as the method name.
+ov091	0x02131f9c	func_ov091_02131f9c	_ZN13daLinelift2_c19func_ov091_02131f9cEv	daLinelift2_c method; state-1 body of the pointer-to-member table the sinit fills (record at ov091 0x02134e44). The address is kept as the method name.
+ov091	0x02132000	func_ov091_02132000	_ZN13daLinelift2_c19func_ov091_02132000Ev	daLinelift2_c method; state-0 body of the pointer-to-member table the sinit fills (record at ov091 0x02134e54). The address is kept as the method name.
 ov091	0x0213209c	func_ov091_0213209c	_ZN13daLinelift2_c16CleanupResourcesEv	vtable slot 3
 ov091	0x021320e0	func_ov091_021320e0	_ZN13daLinelift2_c6RenderEv	vtable slot 9
 ov091	0x02132108	func_ov091_02132108	_ZN13daLinelift2_c8BehaviorEv	vtable slot 6
 ov091	0x0213220c	func_ov091_0213220c	_ZN13daLinelift2_c13InitResourcesEv	vtable slot 0
+ov091	0x02132360	func_ov091_02132360	_ZN13daLinelift2_c19func_ov091_02132360EP8dActor_c	daLinelift2_c method; the dBgW collider callback word func_ov091_02132380 forwards to it. The address is kept as the method name.
 ov091	0x02132394	func_ov091_02132394	SquareMetalNetLift_Spawn	spawnfunc
 ov091	0x02132394	SquareMetalNetLift_Spawn	daLinelift2_c_classInit_KM2_SUSUMU	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov091	0x021323cc	func_ov091_021323cc	ArrowPathLift_Spawn	spawnfunc

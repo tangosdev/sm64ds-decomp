@@ -18,20 +18,21 @@
  * section per function in the reverse of source order.
  *
  * Known limits:
- * - The three state functions keep C linkage and placeholder names. They
- *   are pointer-to-members on the real class (ov091's static initializer
- *   copies them into data_ov091_021354e0, which Behavior calls through),
- *   but no ROM spelling survives.
- * - func_ov091_02132360 / 02132380 are the collider callback pair; 02132380
- *   is stored as a dBgW callback word, so it cannot be a non-static member.
+ * - The three state functions, the path stepper and the mesh callback's
+ *   target are members retaining their linker addresses as names; no ROM
+ *   spelling survives. The state table's pointer-to-member records are the
+ *   sinit's .data words, resolved through symbols.txt.
+ * - func_ov091_02132380 stays free: it is stored as a dBgW callback word,
+ *   so it cannot be a non-static member.
  * - dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange stay mangled:
  *   both take Fix12<int> by value (notes/mwccarm-codegen.md 6az).
  * - func_020393d4 / func_020393c4 install dBgW's two callback words;
  *   dBgW carries no setter for them.
  * - (Vector3 *)&mPosX / &mTargetPosX / &unk_0a4: dActor_c and this class
  *   store the triples as scalars.
- * - func_ov091_02131cb0 writes the velocity through dActor_c's unk_0a4 /
- *   unk_0ac, which the shared header has not named yet.
+ * - func_ov091_02131cb0 stays free: it is typed on dActor_c and its body
+ *   only touches the base's velocity triples (unk_0a4 / unk_0ac), which the
+ *   shared header has not named yet.
  * - Behavior lowers mPosY by the sink offset and restores it before the
  *   model update, which the cartridge does too; the dead store is its own.
  */
@@ -70,11 +71,6 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     s16 angleY, CLPS_Block *clps);
 
 void func_ov091_02131cb0(dActor_c *self, const Vector3 *to, const Vector3 *from);
-int func_ov091_02131db8(daLinelift2_c *self);
-void func_ov091_02131ef0(daLinelift2_c *self);
-void func_ov091_02131f9c(daLinelift2_c *self);
-void func_ov091_02132000(daLinelift2_c *self);
-void func_ov091_02132360(daLinelift2_c *self, dActor_c *other);
 void func_ov091_02132380(void *a, void *b, void *c);
 }
 
@@ -107,16 +103,16 @@ extern "C" daLinelift2_c *daLinelift2_c_classInit_KM2_SUSUMU()
 #pragma long_calls on
 extern "C" void func_ov091_02132380(void *a, void *b, void *c)
 {
-    func_ov091_02132360((daLinelift2_c *)b, (dActor_c *)c);
+    ((daLinelift2_c *)b)->func_ov091_02132360((dActor_c *)c);
 }
 #pragma long_calls off
 
-// @symbol func_ov091_02132360
-extern "C" void func_ov091_02132360(daLinelift2_c *self, dActor_c *other)
+// @symbol _ZN13daLinelift2_c19func_ov091_02132360EP8dActor_c
+void daLinelift2_c::func_ov091_02132360(dActor_c *other)
 {
     unsigned char isPlayer = other->actorID == kPlayerActorID;
     if (isPlayer)
-        self->mIsPressed = 1;
+        mIsPressed = 1;
 }
 
 // @symbol _ZN13daLinelift2_c13InitResourcesEv
@@ -197,113 +193,113 @@ int daLinelift2_c::CleanupResources()
     return 1;
 }
 
-// @symbol func_ov091_02132000
+// @symbol _ZN13daLinelift2_c19func_ov091_02132000Ev
 /* State 0: wait at the first node until something has stood on the lift
    for 20 frames, then set off along the path at 10.0 a frame. */
-extern "C" void func_ov091_02132000(daLinelift2_c *self)
+void daLinelift2_c::func_ov091_02132000()
 {
-    if (self->mIsPressed != 0) {
-        if (self->mStateTimer <= kWaitFrames)
+    if (mIsPressed != 0) {
+        if (mStateTimer <= kWaitFrames)
             return;
-        self->mState = 1;
-        self->mHorzSpeed = kRideSpeed;
+        mState = 1;
+        mHorzSpeed = kRideSpeed;
         Vector3 target, base;
-        target.x = self->mTargetPosX;
-        target.y = self->mTargetPosY;
-        target.z = self->mTargetPosZ;
-        base.x = self->mBasePosX;
-        base.y = self->mBasePosY;
-        base.z = self->mBasePosZ;
-        func_ov091_02131cb0(self, &target, &base);
+        target.x = mTargetPosX;
+        target.y = mTargetPosY;
+        target.z = mTargetPosZ;
+        base.x = mBasePosX;
+        base.y = mBasePosY;
+        base.z = mBasePosZ;
+        func_ov091_02131cb0(this, &target, &base);
         return;
     }
-    self->mStateTimer = 0;
+    mStateTimer = 0;
 }
 
-// @symbol func_ov091_02131f9c
+// @symbol _ZN13daLinelift2_c19func_ov091_02131f9cEv
 /* State 1: run forward; at the path's end, turn round (state 2). */
-extern "C" void func_ov091_02131f9c(daLinelift2_c *self)
+void daLinelift2_c::func_ov091_02131f9c()
 {
-    if (func_ov091_02131db8(self) == -1) {
-        self->mState = 2;
+    if (func_ov091_02131db8() == -1) {
+        mState = 2;
     }
-    s16 old = self->mAngleY;
-    self->mAngleY = self->mBaseAngleY;
-    if (old != self->mAngleY) {
-        func_020393d4((int *)&self->mMeshCollider, 0);
+    s16 old = mAngleY;
+    mAngleY = mBaseAngleY;
+    if (old != mAngleY) {
+        func_020393d4((int *)&mMeshCollider, 0);
     } else {
-        func_020393d4((int *)&self->mMeshCollider, (int)&dBgW::UpdatePosWithVelocity);
+        func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithVelocity);
     }
 }
 
-// @symbol func_ov091_02131ef0
+// @symbol _ZN13daLinelift2_c19func_ov091_02131ef0Ev
 /* State 2: run back facing the other way. Resource set 0 pauses 20 frames
    first and settles in state 0 at the start; the other set loops. */
-extern "C" void func_ov091_02131ef0(daLinelift2_c *self)
+void daLinelift2_c::func_ov091_02131ef0()
 {
-    s16 old = self->mAngleY;
-    self->mAngleY = self->mBaseAngleY + 0x8000;
-    if (old != self->mAngleY) {
-        func_020393d4((int *)&self->mMeshCollider, 0);
+    s16 old = mAngleY;
+    mAngleY = mBaseAngleY + 0x8000;
+    if (old != mAngleY) {
+        func_020393d4((int *)&mMeshCollider, 0);
     } else {
-        func_020393d4((int *)&self->mMeshCollider, (int)&dBgW::UpdatePosWithVelocity);
+        func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithVelocity);
     }
-    if (self->mVariant == 0 && self->mStateTimer < kWaitFrames)
+    if (mVariant == 0 && mStateTimer < kWaitFrames)
         return;
-    if (func_ov091_02131db8(self) != -1)
+    if (func_ov091_02131db8() != -1)
         return;
-    if (self->mVariant != 0) {
-        self->mState = 1;
+    if (mVariant != 0) {
+        mState = 1;
         return;
     }
-    self->mState = 0;
-    self->mAngleY = self->mBaseAngleY;
+    mState = 0;
+    mAngleY = mBaseAngleY;
 }
 
-// @symbol func_ov091_02131db8
+// @symbol _ZN13daLinelift2_c19func_ov091_02131db8Ev
 /* One step along the path. Moves by the velocity; within half a step of the
    target node, snaps onto it, picks the next node in the direction of travel
    (mState 1 forward, otherwise back) and re-aims. Returns -1 when that runs
    off either end of the path, 1 on reaching a node, 0 in between. */
-extern "C" int func_ov091_02131db8(daLinelift2_c *self)
+int daLinelift2_c::func_ov091_02131db8()
 {
     int result;
-    AddVec3((Vec3 *)&self->mPosX, (Vec3 *)&self->unk_0a4, (Vec3 *)&self->mPosX);
-    if (Vec3_Dist((const Vector3 *)&self->mPosX, (const Vector3 *)&self->mTargetPosX) < (self->mHorzSpeed >> 1)) {
+    AddVec3((Vec3 *)&mPosX, (Vec3 *)&unk_0a4, (Vec3 *)&mPosX);
+    if (Vec3_Dist((const Vector3 *)&mPosX, (const Vector3 *)&mTargetPosX) < (mHorzSpeed >> 1)) {
         result = 1;
-        self->mBasePosX = self->mTargetPosX;
-        self->mBasePosY = self->mTargetPosY;
-        self->mBasePosZ = self->mTargetPosZ;
-        self->mPosX = self->mBasePosX;
-        self->mPosY = self->mBasePosY;
-        self->mPosZ = self->mBasePosZ;
-        if (self->mState == 1) {
-            self->mNodeIndex++;
-            if (self->mNodeIndex >= self->mNodeCount) {
-                self->mNodeIndex = self->mNodeCount - 2;
+        mBasePosX = mTargetPosX;
+        mBasePosY = mTargetPosY;
+        mBasePosZ = mTargetPosZ;
+        mPosX = mBasePosX;
+        mPosY = mBasePosY;
+        mPosZ = mBasePosZ;
+        if (mState == 1) {
+            mNodeIndex++;
+            if (mNodeIndex >= mNodeCount) {
+                mNodeIndex = mNodeCount - 2;
                 result = -1;
             }
         } else {
-            self->mNodeIndex--;
-            if (self->mNodeIndex < 0) {
-                self->mNodeIndex = result;
+            mNodeIndex--;
+            if (mNodeIndex < 0) {
+                mNodeIndex = result;
                 result = -1;
             }
         }
-        self->mPathPtr.GetNode(*(Vector3 *)&self->mTargetPosX, (unsigned int)self->mNodeIndex);
+        mPathPtr.GetNode(*(Vector3 *)&mTargetPosX, (unsigned int)mNodeIndex);
         {
             Vector3 target, base;
-            target.x = self->mTargetPosX;
-            target.y = self->mTargetPosY;
-            target.z = self->mTargetPosZ;
-            base.x = self->mBasePosX;
-            base.y = self->mBasePosY;
-            base.z = self->mBasePosZ;
-            func_ov091_02131cb0(self, &target, &base);
+            target.x = mTargetPosX;
+            target.y = mTargetPosY;
+            target.z = mTargetPosZ;
+            base.x = mBasePosX;
+            base.y = mBasePosY;
+            base.z = mBasePosZ;
+            func_ov091_02131cb0(this, &target, &base);
         }
         return result;
     }
-    func_02010da4(self);
+    func_02010da4(this);
     return 0;
 }
 
