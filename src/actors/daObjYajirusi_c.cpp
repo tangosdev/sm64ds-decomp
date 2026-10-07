@@ -30,7 +30,7 @@
  *   and +0x0c (0xc0000 / 0xe0000, the profile ranges). Those names belong
  *   to dBgW.
  * Leftover: func_02012694 is Sound::Play of bank 3 at a pointer
- *   (src/func_02012694.cpp). OnHitByMegaChar passes &mCamSpacePosX. It is
+ *   (src/engine/sound/Sound.cpp). OnHitByMegaChar passes &mCamSpacePosX. It is
  *   not Sound::PlayBank3 at 0x02012664.
  * Leftover: OnAttacked1 and OnHitByMegaChar take coined references. A
  *   reference and a pointer mangle differently and generate the same ARM

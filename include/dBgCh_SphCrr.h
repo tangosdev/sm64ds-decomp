@@ -1,19 +1,15 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class dBgCh_SphCrr: 4 matched functions, 16 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen.
+/* Sphere collision query: a dM3dGSph probe sphere swept against the KCL
+ * collider registry, keeping a dBgPi best-hit record and three result slots
+ * (floor / wall / underneath). The ROM's __vmi_class_type_info states the
+ * base list outright:
  *
- * PROMOTED 2026-08-23 to a real MI declaration (notes/ctor-migration.md item
- * 2). The ROM's own RTTI record states the base list outright:
- *
- *     dBgCh    @ 0x00   polymorphic   (vptr store at +0)
+ *     dBgCh    @ 0x00   polymorphic
  *     dBgPi    @ 0x10   polymorphic   (secondary block VTable_dBgPi_dBgCh_SphCrrThunk)
  *     dM3dGSph @ 0x38   polymorphic   (secondary block VTable_dM3dGSph_dBgCh_SphCrrThunk;
  *                                     this IS the query sphere below)
  *
- * The C++ branch declares exactly that; the C branch below stays field-for-
- * field IDENTICAL to what this header carried before promotion, because .c
- * translation units reach into these interiors by the old member names.
+ * The C branch below stays field-for-field identical to the C++ layout:
+ * .c translation units reach into these interiors by the old member names.
  */
 #ifndef DBGCH_SPHCRR_H
 #define DBGCH_SPHCRR_H
@@ -42,7 +38,11 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
        words (their Actr +0x6c) as a Vector3 and feed them to the movement
        helpers; named when Actr's flat blob was typed out. */
     Vector3 disp;           /* 0x04c */
-    u8  pad_058[0x18];      /* through 0x06f */
+    /* Broad-phase box the query methods maintain: func_02037a04 reads both
+       vectors out, func_02037a6c unions two points in, func_02037b1c clears
+       all six words, and func_02037a38 sums them into disp. */
+    Vector3 aabbMin;        /* 0x058 */
+    Vector3 aabbMax;        /* 0x064 */
     /* Result flags, read and OR-ed a bit at a time by the same function:
        1 = any hit, 4 = floor, 8 = wall, 0x10 = from underneath. Each bit gates
        copying the matching dBgPi below it. */
@@ -60,7 +60,9 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
        a payload that starts at 0x0fc. What the payload is is not settled here. */
     s32 unk_0fc;            /* 0x0fc */
     s32 unk_100;            /* 0x100 */
-    u8  pad_104[0x4];       /* through 0x10b */
+    s32 unk_104;            /* 0x104 - third payload word: func_0203794c writes
+                               0x0fc..0x104 as one three-word copy and
+                               func_02037b5c clears it */
     s32 mScale;            /* 0x108 - dBgCh_Actr's Update* copy its tail word
                                (Actr +0x128) here each update */
     s32 unk_10c;            /* 0x10c - named 2026-08-24 when the size pin
@@ -76,8 +78,8 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
      * binds its vptr references to the ROM's existing tables. */
     virtual ~dBgCh_SphCrr();
 
-    /* DECLARED, defined out of line in src/_ZN12dBgCh_SphCrrC1Ev.cpp as real
-     * C++ -- complete-object context for every ROM caller, hence C1.
+    /* DECLARED, defined out of line in src/engine/collision/dBgCh_SphCrr.cpp as
+     * real C++ -- complete-object context for every ROM caller, hence C1.
      */
     dBgCh_SphCrr();
 
@@ -95,6 +97,37 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
     /* methods */
     void SetFloorResult(const dBgPi & src_);
     void SetObjAndSphere(const Vector3 &pos, Fix12<int> radius, dActor_c *actor);
+    int  DetectClsn();
+
+    /* Result-slot accessors. mClsnResult1/2/3 are the floor / wall /
+       underneath hit records: dBgCh_Actr::GetFloorResult and
+       ::GetWallResult return through func_02037938 / func_020378dc, and the
+       dBgW_KcMbg DetectClsn merges into the same slots behind flag bits
+       4 / 8 / 0x10. */
+    dBgPi *GetFloorResult();
+    dBgPi *GetWallResult();
+    dBgPi *GetUnderResult();
+    void SetWallResult(const dBgPi &src_);
+    void SetUnderResult(const dBgPi &src_);
+
+    /* Members the ROM keeps unnamed; each takes the SphCrr object as its
+       first argument in the cartridge call graph and drives the evidenced
+       fields above. */
+    void func_02037940(u8 flags_);
+    void func_0203794c(const s32 *payload);
+    void func_02037968(int i, int clsnID, dActor_c *owner, dBgW *collider);
+    void func_0203798c(int triID, void *src);
+    void func_0203799c(int i, int clsnID, dActor_c *owner, dBgW *collider);
+    void func_020379c0(int triID, void *src);
+    void func_020379d0(int i, int clsnID, dActor_c *owner, dBgW *collider);
+    void func_020379f4(int triID, void *src);
+    void func_02037a04(Vector3 *outMin, Vector3 *outMax);
+    void func_02037a38();
+    void func_02037a6c(s32 minX, s32 minY, s32 minZ, s32 maxX, s32 maxY, s32 maxZ);
+    void func_02037b1c();
+    void func_02037b5c();
+    int  func_02038824();
+    int  func_02038a38();
 };
 
 /* SIZE PINNED AT 0x110 by dBgW_KcMbg::DetectClsn(dBgCh_SphCrr&): the ROM gives
@@ -118,7 +151,9 @@ struct dBgCh_SphCrr {
     u8  pad_039[0x3];
     Vector3 pos;            /* 0x03c */
     Fix12i radius;          /* 0x048 */
-    u8  pad_04c[0x24];
+    Vector3 disp;           /* 0x04c */
+    Vector3 aabbMin;        /* 0x058 */
+    Vector3 aabbMax;        /* 0x064 */
     u8  flags;              /* 0x070 - see the C++ branch; Actr's accessors
                                call this byte their mClsnFlags home */
     u8  pad_071[0x3];
@@ -129,7 +164,7 @@ struct dBgCh_SphCrr {
     u8  pad_0f0[0xc];
     s32 unk_0fc;            /* 0x0fc */
     s32 unk_100;            /* 0x100 */
-    u8  pad_104[0x4];
+    s32 unk_104;            /* 0x104 */
     s32 mScale;            /* 0x108 */
     s32 unk_10c;            /* 0x10c - see the C++ branch: Init's Vector3_16 * */
 };

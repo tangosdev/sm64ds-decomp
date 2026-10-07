@@ -32,24 +32,13 @@ int  func_0203553c(int *p);   /* mFlags & 0x4000 -- the water-tracking bit */
 
 /* Checker-family helpers shared across the collision TUs, spelled as
    defined. */
-void func_0203782c(char *dst, const char *src);
-void func_02037888(char *dst, const char *src);
-int  func_02037880(int p);
-int  func_020378dc(int p);   /* &mSphereClsn.mClsnResult2 -- the wall result */
-int  func_02037938(int p);   /* &mSphereClsn.mClsnResult1 -- the floor result */
-void func_02037b5c(char *c);
 int  func_02037dc4(int p);   /* SurfaceInfo * -> Vector3 * (the hit normal) */
 void func_02038234(int a, int b);
 void func_02038324(void *arg, int b, int c, int d);
 int  func_0203842c(char *self);
 int  func_0203859c(void *obj);
-int  func_02038824(char *self);
-int  func_02038a38(void *arg0);
 int  func_02039794(int x);
 int  SurfaceInfo_TestFlag0x20(int *p);
-/* local extern: a real dBgCh_SphCrr member symbol the header does not
-   declare yet; called with &mSphereClsn. */
-int  _ZN12dBgCh_SphCrr10DetectClsnEv(dBgCh_SphCrr *self);
 /* local extern: the radius travels by value inside the mangled name
    (wall 6az), so the call spells the symbol with Fix12i rather than going
    through the member. */
@@ -210,7 +199,7 @@ void dBgCh_Actr::UpdateDiscreteNoLava()
 
     if (IsOnGround() && func_020355a0((int *)this)
         && ShouldUpdatePos()) {
-        func_02038324((void *)func_02037938((int)((char *)&mSphereClsn)), (int)src,
+        func_02038324((void *)mSphereClsn.GetFloorResult(), (int)src,
                       mSphereClsn.unk_10c, unk_130);
     }
     onGround = IsOnGround();
@@ -226,7 +215,7 @@ void dBgCh_Actr::UpdateDiscreteNoLava()
     if (src->y - p68->y > 0) {
         *(unsigned char *)((char *)&mSphereClsn.flags) |= 0x20;
     }
-    if (_ZN12dBgCh_SphCrr10DetectClsnEv(&mSphereClsn)) {
+    if (mSphereClsn.DetectClsn()) {
         p6c = (struct Vector3 *)((char *)&mSphereClsn.disp);
         if (mSphereClsn.flags & 4) {
             func_020371b0(this, onGround);
@@ -269,7 +258,7 @@ void dBgCh_Actr::UpdateDiscreteNoLava_2()
     if (src->y - *(int *)(obj + 0x6c) > 0) {
         *(unsigned char *)((char *)&mSphereClsn.flags) |= 0x20;
     }
-    if (func_02038a38((char *)&mSphereClsn)) {
+    if (mSphereClsn.func_02038a38()) {
         p6c = (struct Vector3 *)((char *)&mSphereClsn.disp);
         if (mSphereClsn.flags & 4) {
             func_020371b0(this, onGround);
@@ -321,7 +310,7 @@ extern "C" void func_02036acc(char *c)
     prev = (int*)(a + 0x68);
 
     if (self->IsOnGround() && func_020355a0((int*)c) && self->ShouldUpdatePos())
-        func_02038324((void*)func_02037938((int)(c + 0x20)), (int)pos,
+        func_02038324((void*)((dBgCh_SphCrr *)(c + 0x20))->GetFloorResult(), (int)pos,
                       *(int*)(c + 0x12c), *(int*)(c + 0x130));
 
     floorFlag = 0;
@@ -410,11 +399,11 @@ extern "C" void func_02036acc(char *c)
     }
     if (wallFlag != 0) {
         *(u8*)((char*)c + 0x90) |= 8;
-        func_02037888(c + 0x20, (const char*)&res1);
+        ((dBgCh_SphCrr *)(c + 0x20))->SetWallResult(*(const dBgPi *)&res1);
         *(u8*)((char*)c + 0x90) |= 1;
         *(dBgPi *)(c + 0x30) = *(const dBgPi *)&res1;
     }
-    if (func_02038824(c + 0x20)) {
+    if (((dBgCh_SphCrr *)(c + 0x20))->func_02038824()) {
         prev = (int*)(c + 0x6c);
         if ((*(u8*)((char*)c + 0x90) & 4) && handled == 0)
             func_020371b0(self, onGround);
@@ -459,7 +448,7 @@ void dBgCh_Actr::UpdateContinuous()
     prev = (int*)(a + 0x68);
 
     if (IsOnGround() && func_020355a0((int*)this) && ShouldUpdatePos())
-        func_02038324((void *)func_02037938((int)((char *)&mSphereClsn)), (int)pos,
+        func_02038324((void *)mSphereClsn.GetFloorResult(), (int)pos,
                       mSphereClsn.unk_10c, unk_130);
 
     floorFlag = 0;
@@ -548,11 +537,11 @@ void dBgCh_Actr::UpdateContinuous()
     }
     if (wallFlag != 0) {
         *(u8*)(((char*)this) + 0x90) |= 8;
-        func_02037888(((char*)this) + 0x20, (const char*)&res1);
+        ((dBgCh_SphCrr *)(((char*)this) + 0x20))->SetWallResult(*(const dBgPi *)&res1);
         *(u8*)(((char*)this) + 0x90) |= 1;
         *(dBgPi *)(((char*)this) + 0x30) = *(const dBgPi *)&res1;
     }
-    if (_ZN12dBgCh_SphCrr10DetectClsnEv((dBgCh_SphCrr *)(char*)&mSphereClsn)) {
+    if (mSphereClsn.DetectClsn()) {
         prev = (int*)((char*)&mSphereClsn.disp);
         if ((mSphereClsn.flags & 4) && handled == 0)
             func_020371b0(this, onGround);
@@ -678,11 +667,11 @@ void dBgCh_Actr::UpdateContinuousNoLava()
     }
     if (wallFlag != 0) {
         *(u8*)(((char*)this) + 0x90) |= 8;
-        func_02037888(((char*)this) + 0x20, (const char*)&res1);
+        ((dBgCh_SphCrr *)(((char*)this) + 0x20))->SetWallResult(*(const dBgPi *)&res1);
         *(u8*)(((char*)this) + 0x90) |= 1;
         *(dBgPi *)(((char*)this) + 0x30) = *(const dBgPi *)&res1;
     }
-    if (func_02038a38((char*)&mSphereClsn)) {
+    if (mSphereClsn.func_02038a38()) {
         prev = (int*)((char*)&mSphereClsn.disp);
         if ((mSphereClsn.flags & 4) && handled == 0)
             func_020371b0(this, onGround);
@@ -723,7 +712,7 @@ void dBgCh_Actr::UpdateExtraContinous()
     prev = (Vector3 *)(ac + 0x68);
 
     if (IsOnGround() && func_020355a0((int*)t))
-        func_02038324((void *)func_02037938((int)(t + 0x20)), (int)pos,
+        func_02038324((void *)((dBgCh_SphCrr *)(t + 0x20))->GetFloorResult(), (int)pos,
                       *(int*)(t + 0x12c), *(int*)(t + 0x130));
 
     {
@@ -894,19 +883,19 @@ void dBgCh_Actr::UpdateExtraContinous()
         if (f1)
         {
             *(u8 *)(t + 0x90) |= 8;
-            func_02037888(t + 0x20, (const char*)&res1);
+            ((dBgCh_SphCrr *)(t + 0x20))->SetWallResult(*(const dBgPi *)&res1);
             *(u8 *)(t + 0x90) |= 1;
             _ZN5dBgPiaSERKS_((dBgPi *)(t + 0x30), *(const dBgPi *)&res1);
         }
         if (f2)
         {
             *(u8 *)(t + 0x90) |= 0x10;
-            func_0203782c(t + 0x20, (const char*)&res2);
+            ((dBgCh_SphCrr *)(t + 0x20))->SetUnderResult(*(const dBgPi *)&res2);
             *(u8 *)(t + 0x90) |= 1;
             _ZN5dBgPiaSERKS_((dBgPi *)(t + 0x30), *(const dBgPi *)&res2);
         }
 
-        if (_ZN12dBgCh_SphCrr10DetectClsnEv((dBgCh_SphCrr *)(t + 0x20)))
+        if (((dBgCh_SphCrr *)(t + 0x20))->DetectClsn())
         {
             Vector3 *pb = (Vector3 *)(t + 0x6c);
             if ((*(u8 *)(t + 0x90) & 4) && didHit == 0)
@@ -943,7 +932,7 @@ void dBgCh_Actr::UpdateExtraContinous()
             if (!(fl & 4) && (fl & 8))
             {
                 dBgPiLoc tmp;
-                dBgPiLoc *src = (dBgPiLoc *)func_020378dc((int)(t + 0x20));
+                dBgPiLoc *src = (dBgPiLoc *)(int)((dBgCh_SphCrr *)(t + 0x20))->GetWallResult();
                 SurfaceInfo *dsi = &tmp.si;
                 {
                     s32 c0, c1;
@@ -984,7 +973,7 @@ void dBgCh_Actr::UpdateExtraContinous()
                         {
                             dBgPi *lr = (dBgPi *)(t + 0x144);
                             *(u8 *)(t + 0x90) |= 8;
-                            func_02037888(t + 0x20, (const char*)lr);
+                            ((dBgCh_SphCrr *)(t + 0x20))->SetWallResult(*(const dBgPi *)lr);
                             *(u8 *)(t + 0x90) |= 1;
                             _ZN5dBgPiaSERKS_((dBgPi *)(t + 0x30), *lr);
                         }
@@ -1003,7 +992,7 @@ void dBgCh_Actr::UpdateExtraContinous()
                         {
                             dBgPi *lr = (dBgPi *)(t + 0x144);
                             *(u8 *)(t + 0x90) |= 0x10;
-                            func_0203782c(t + 0x20, (const char*)lr);
+                            ((dBgCh_SphCrr *)(t + 0x20))->SetUnderResult(*(const dBgPi *)lr);
                             *(u8 *)(t + 0x90) |= 1;
                             _ZN5dBgPiaSERKS_((dBgPi *)(t + 0x30), *lr);
                         }
@@ -1066,7 +1055,7 @@ void dBgCh_Actr::UpdateExtraContinous()
 // @symbol _ZN10dBgCh_Actr12Unk_0203589cEv
 void dBgCh_Actr::Unk_0203589c()
 {
-    func_02037b5c((char *)&mSphereClsn);
+    mSphereClsn.func_02037b5c();
 }
 
 // @symbol func_02035860
@@ -1249,19 +1238,19 @@ extern "C" int func_0203567c(int p)
 // @symbol _ZNK10dBgCh_Actr14GetFloorResultEv
 void *dBgCh_Actr::GetFloorResult() const
 {
-    return (void *)func_02037938((int)&mSphereClsn);
+    return (void *)const_cast<dBgCh_SphCrr &>(mSphereClsn).GetFloorResult();
 }
 
 // @symbol _ZNK10dBgCh_Actr13GetWallResultEv
 void *dBgCh_Actr::GetWallResult() const
 {
-    return (void *)func_020378dc((int)&mSphereClsn);
+    return (void *)(int)const_cast<dBgCh_SphCrr &>(mSphereClsn).GetWallResult();
 }
 
 // @symbol func_0203564c
 extern "C" int func_0203564c(int p)
 {
-    return func_02037880(p + 0x20);
+    return (int)((dBgCh_SphCrr *)(p + 0x20))->GetUnderResult();
 }
 
 // @symbol func_02035644

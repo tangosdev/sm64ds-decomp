@@ -48,12 +48,9 @@ void func_020396d0(int *p, int v);
 
 /* Collision-query plumbing shared with the SphCrr/Gnd/Lin checkers. */
 void func_02035394(void *dst, void *src);
-void func_02037940(void *p, int v);
-void func_02037a04(void *o, void *d1, void *d2);
-void func_02037a6c(void *b, int x1, int y1, int z1, int x2, int y2, int z2);
-void func_0203794c(void *d, void *s);
-void func_02037888(char *dst, const char *src);
-void func_0203782c(char *dst, const char *src);
+/* local extern: the radius travels by value inside the mangled name
+   (wall 6az), so the call spells the symbol rather than going through the
+   member. */
 void _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(
     dBgCh_SphCrr *sphere, const Vector3 *pos, Fix12i radius, dActor_c *actor);
 
@@ -313,18 +310,18 @@ int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr &sphere)
     _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(&loc, &pos,
         FMUL(sphere.radius, invScale), 0);
     loc.unk_0ec = FMUL(sphere.unk_0ec, invScale);
-    func_02037940(&loc, sphere.flags);
+    loc.func_02037940(sphere.flags);
     func_02035394(&loc, &sphere);
     r = dBgW_Kc::DetectClsn(loc);
     if (r) {
-        func_02037a04(&loc, d, d + 3);
+        loc.func_02037a04((Vector3 *)d, (Vector3 *)(d + 3));
         d[6] = FMUL(d[0], scale);
         d[7] = FMUL(d[1], scale);
         d[8] = FMUL(d[2], scale);
         d[9] = FMUL(d[3], scale);
         d[10] = FMUL(d[4], scale);
         d[11] = FMUL(d[5], scale);
-        func_02037a6c(&sphere, d[6], d[7], d[8], d[9], d[10], d[11]);
+        sphere.func_02037a6c(d[6], d[7], d[8], d[9], d[10], d[11]);
         (dBgPi &)sphere = (dBgPi &)loc;
         sphere.flags |= 1;
         if (loc.flags & 4) {
@@ -335,15 +332,15 @@ int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr &sphere)
             }
             sphere.flags |= 4;
             if (sphere.unk_100 < loc.unk_100) {
-                func_0203794c(&sphere, &loc.unk_0fc);
+                sphere.func_0203794c(&loc.unk_0fc);
             }
         }
         if (loc.flags & 8) {
-            func_02037888((char *)&sphere, (const char *)&loc.mClsnResult2);
+            sphere.SetWallResult(loc.mClsnResult2);
             sphere.flags |= 8;
         }
         if (loc.flags & 0x10) {
-            func_0203782c((char *)&sphere, (const char *)&loc.mClsnResult3);
+            sphere.SetUnderResult(loc.mClsnResult3);
             sphere.flags |= 0x10;
         }
     }

@@ -75,23 +75,39 @@ struct daDemo_c : dActor_c {
        members are read at raw offsets in the destructor bodies. */
     struct param_c {
         Vector3 mScale[1];
+
+        void *func_ov002_020f6a50();
     };
 
     struct anmModel_c : param_c, dExtAnmModel_c {
+        void func_ov002_020f64ac(char *r4);
+        void func_ov002_020f6514(void *tbl, unsigned char arg);
+        void func_ov002_020f65b8();
+        int func_ov002_020f65ec();
+        int func_ov002_020f6618(SharedFilePtr *mdl, int nAnims,
+                                SharedFilePtr **anims, int arg5,
+                                unsigned char texByte, SharedFilePtr **texs,
+                                int tsData);
         virtual ~anmModel_c();
         void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
     };
 
     struct simpleModel_c : param_c, dExtSimpleModel_c {
+        int func_ov002_020f6960(SharedFilePtr *fp, int n);
         virtual ~simpleModel_c();
         void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
     };
 
-    u8 pad_0d0[8];         /* 0x0d0 */
+    u8 pad_0d0[4];          /* 0x0d0 */
+    void *unk_0d4;          /* 0x0d4 - 0x36-byte scroll-state block (func_ov002_020f2630) */
     void *unk_0d8;          /* 0x0d8 - heap block freed by func_ov002_020f63a0 */
     Model *mModel;          /* 0x0dc */
     ModelAnim *mModelAnim;  /* 0x0e0 */
-    u8 pad_0e4[0x1e];      /* 0x0e4 */
+    u8 pad_0e4[0x10];       /* 0x0e4 */
+    s32 unk_0f4;            /* 0x0f4 - fix12 height/amplitude the handlers scale by */
+    u8 pad_0f8[8];          /* 0x0f8 */
+    u8 unk_100;             /* 0x100 - scroll-mode byte the PMF3 handlers write */
+    u8 pad_101;             /* 0x101 */
     u8 mOpacity;            /* 0x102 */
     u8 unk_103;             /* 0x103 */
 
@@ -103,6 +119,41 @@ struct daDemo_c : dActor_c {
     virtual int Behavior();
     virtual int Render();
     virtual void OnPendingDestroy();
+
+    void func_ov002_020f1fcc();
+    void func_ov002_020f20f4();
+    void func_ov002_020f2210();
+    void func_ov002_020f2340();
+    void func_ov002_020f237c();
+    int func_ov002_020f23d0();
+    int func_ov002_020f23f0();
+    int func_ov002_020f26c4(unsigned char *src);
+    int func_ov002_020f63a0();
+    int func_ov002_020f63d4();
+    int func_ov002_020f63f8(unsigned char *src);
+    int func_ov002_020f6424();
+    int func_ov002_020f6448(unsigned char *arg1);
+    int func_ov002_020f6a9c();
+    int func_ov002_020f6ab8(unsigned char *p);
+    int func_ov002_020f6ae4(unsigned char *p);
+    int func_ov002_020f6b28(unsigned char *p);
+    int func_ov002_020f6b4c(unsigned char *p);
+    s32 func_ov002_020f6bc0(unsigned char *data);
+    int func_ov002_020f6c24(unsigned char *src);
+    int func_ov002_020f6c34(unsigned char *src);
+    int func_ov002_020f6c60(void *arg1, int arg2, int arg3);
+    int func_ov002_020f6e48(unsigned char *p);
+    void func_ov002_020f6f48(Vector3 *v, int amt);
+    int func_ov002_020f7020();
+    int func_ov002_020f7038(int a, int arg);
+    int func_ov002_020f71c4(int a, int arg);
+    int func_ov002_020f72bc();
+    int func_ov002_020f7384(unsigned char *flag, int val);
+    int func_ov002_020f7410(unsigned char *in, int sel);
+    int func_ov002_020f7538(unsigned char *arg1, int arg2);
+    int func_ov002_020f7780(void *unused, int mode);
+    int func_ov002_020f79c0(void *unused, int mode);
+    int func_ov002_020f7bb8(unsigned char *p, u16 id);
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -165,7 +165,6 @@ void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, Fix12i x, Fix12i y, 
 void* _ZN8dActor_c15FindWithActorIDEjPS_(u32 id, void* prev);
 int _ZN8SaveData19IsCharacterUnlockedEj(u32 c);
 extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern int func_ov060_02111c68(char *c);
 /* local extern: the call passes an untyped this, so it cannot use the header method. */
 extern int _ZNK15dExtFrameCtrl_c13GetFrameCountEv(void *anim);
 extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, void *pos, u32 d);
@@ -420,7 +419,7 @@ void func_ov060_0211747c(daKpaFire_c *self)
     if (o->mState != 0xf)
         return;
 
-    n = func_ov060_02111c68((char *)o);
+    n = o->func_ov060_02111c68();
     if (n < 0)
         return;
 

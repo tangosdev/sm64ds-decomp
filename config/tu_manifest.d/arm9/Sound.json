@@ -1,0 +1,680 @@
+{
+  "id": "arm9/Sound",
+  "module": "arm9",
+  "source": "src/engine/sound/Sound.cpp",
+  "promoted_source": "src/engine/sound/Sound.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x02011654..0x02013548, 89 function(s), gapless in config/arm9/delinks.txt, every entry complete.",
+    "The run is one module: the Sound namespace public API (Play/Play2D/PlayBank*/PlayLong/PlayCharVoice/PlaySub, the music-layer Set/End/LoadAndSet/StopLoadedMusic/Pause/Unpause group, the voice-group Load/Reset/Unset calls) plus the sound-object registry it all drives (the 16-bucket table at data_0209b53c: find func_02011934, allocs func_020116c4/func_0201179c/func_0201186c, link func_02011698, unlink func_02011654, sweeps func_02011974/func_020119c8, init func_02011a28/func_02011a5c), the per-frame update func_020132d8, and the boot init func_020133bc/func_020134c8.",
+    "Every public member is a Sound:: mangled name; the func_ helpers are TU-local extern \"C\" statics called only from inside the run plus a handful of tail-call veneers into the separate sound-engine TU at 0x02048xxx.",
+    "Bounded on the left by the dActor_c lifecycle/Vector3s destructor run ending at 0x02011654 and on the right by GetLevelPart/SublevelToLevel (level utilities) starting at 0x02013548, so the run is bounded by other TUs on both sides.",
+    "module sinit corroboration: arm9 is one under-segmented unit, so sinit attribution does not narrow this TU."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02011654",
+      "end": "0x02013548"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_02011654",
+      "address": "0x02011654",
+      "legacy_source": "src/func_02011654.c",
+      "size": "0x00000044",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_02011698",
+      "address": "0x02011698",
+      "legacy_source": "src/func_02011698.c",
+      "size": "0x0000002c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_020116c4",
+      "address": "0x020116c4",
+      "legacy_source": "src/func_020116c4.c",
+      "size": "0x000000d8",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_0201179c",
+      "address": "0x0201179c",
+      "legacy_source": "src/func_0201179c.c",
+      "size": "0x000000d0",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_0201186c",
+      "address": "0x0201186c",
+      "legacy_source": "src/func_0201186c.c",
+      "size": "0x000000c8",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_02011934",
+      "address": "0x02011934",
+      "legacy_source": "src/func_02011934.c",
+      "size": "0x00000040",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_02011974",
+      "address": "0x02011974",
+      "legacy_source": "src/func_02011974.c",
+      "size": "0x00000054",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_020119c8",
+      "address": "0x020119c8",
+      "legacy_source": "src/func_020119c8.c",
+      "size": "0x00000060",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_02011a28",
+      "address": "0x02011a28",
+      "legacy_source": "src/func_02011a28.c",
+      "size": "0x00000034",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_02011a5c",
+      "address": "0x02011a5c",
+      "legacy_source": "src/func_02011a5c.c",
+      "size": "0x00000044",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_02011aa0",
+      "address": "0x02011aa0",
+      "legacy_source": "src/func_02011aa0.c",
+      "size": "0x00000024",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_02011ac4",
+      "address": "0x02011ac4",
+      "legacy_source": "src/func_02011ac4.c",
+      "size": "0x00000034",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_02011af8",
+      "address": "0x02011af8",
+      "legacy_source": "src/func_02011af8.c",
+      "size": "0x00000040",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_02011b38",
+      "address": "0x02011b38",
+      "legacy_source": "src/func_02011b38.c",
+      "size": "0x00000044",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_02011b7c",
+      "address": "0x02011b7c",
+      "legacy_source": "src/func_02011b7c.c",
+      "size": "0x000000a8",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_02011c24",
+      "address": "0x02011c24",
+      "legacy_source": "src/func_02011c24.c",
+      "size": "0x00000030",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_02011c54",
+      "address": "0x02011c54",
+      "legacy_source": "src/func_02011c54.c",
+      "size": "0x00000038",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_02011c8c",
+      "address": "0x02011c8c",
+      "legacy_source": "src/func_02011c8c.c",
+      "size": "0x0000003c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "DisableSoundPlayersForCredits",
+      "address": "0x02011cc8",
+      "legacy_source": "src/DisableSoundPlayersForCredits.c",
+      "size": "0x00000034",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_02011cfc",
+      "address": "0x02011cfc",
+      "legacy_source": "src/func_02011cfc.c",
+      "size": "0x0000000c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_02011d08",
+      "address": "0x02011d08",
+      "legacy_source": "src/func_02011d08.c",
+      "size": "0x0000000c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_02011d14",
+      "address": "0x02011d14",
+      "legacy_source": "src/func_02011d14.c",
+      "size": "0x0000000c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_02011d20",
+      "address": "0x02011d20",
+      "legacy_source": "src/func_02011d20.c",
+      "size": "0x0000000c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_02011d2c",
+      "address": "0x02011d2c",
+      "legacy_source": "src/func_02011d2c.c",
+      "size": "0x0000000c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_02011d38",
+      "address": "0x02011d38",
+      "legacy_source": "src/func_02011d38.c",
+      "size": "0x0000000c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_02011d44",
+      "address": "0x02011d44",
+      "legacy_source": "src/func_02011d44.c",
+      "size": "0x0000000c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_02011d50",
+      "address": "0x02011d50",
+      "legacy_source": "src/func_02011d50.c",
+      "size": "0x0000000c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_02011d5c",
+      "address": "0x02011d5c",
+      "legacy_source": "src/func_02011d5c.c",
+      "size": "0x00000058",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_02011db4",
+      "address": "0x02011db4",
+      "legacy_source": "src/func_02011db4.c",
+      "size": "0x0000000c",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_02011dc0",
+      "address": "0x02011dc0",
+      "legacy_source": "src/func_02011dc0.c",
+      "size": "0x0000000c",
+      "ordinal": 29
+    },
+    {
+      "symbol": "func_02011dcc",
+      "address": "0x02011dcc",
+      "legacy_source": "src/func_02011dcc.c",
+      "size": "0x0000005c",
+      "ordinal": 30
+    },
+    {
+      "symbol": "Player_PlaySoundEffect",
+      "address": "0x02011e28",
+      "legacy_source": "src/Player_PlaySoundEffect.c",
+      "size": "0x0000006c",
+      "ordinal": 31
+    },
+    {
+      "symbol": "func_02011e94",
+      "address": "0x02011e94",
+      "legacy_source": "src/func_02011e94.c",
+      "size": "0x00000050",
+      "ordinal": 32
+    },
+    {
+      "symbol": "func_02011ee4",
+      "address": "0x02011ee4",
+      "legacy_source": "src/func_02011ee4.c",
+      "size": "0x0000004c",
+      "ordinal": 33
+    },
+    {
+      "symbol": "_ZN5Sound21ResetPlayerVoiceGroupEv",
+      "address": "0x02011f30",
+      "legacy_source": "src/_ZN5Sound21ResetPlayerVoiceGroupEv.cpp",
+      "size": "0x0000004c",
+      "ordinal": 34
+    },
+    {
+      "symbol": "func_02011f7c",
+      "address": "0x02011f7c",
+      "legacy_source": "src/func_02011f7c.c",
+      "size": "0x0000006c",
+      "ordinal": 35
+    },
+    {
+      "symbol": "_ZN5Sound21UnsetPlayerVoiceGroupEv",
+      "address": "0x02011fe8",
+      "legacy_source": "src/_ZN5Sound21UnsetPlayerVoiceGroupEv.cpp",
+      "size": "0x00000014",
+      "ordinal": 36
+    },
+    {
+      "symbol": "_ZN5Sound16LoadInitialGroupEi",
+      "address": "0x02011ffc",
+      "legacy_source": "src/_ZN5Sound16LoadInitialGroupEi.cpp",
+      "size": "0x00000010",
+      "ordinal": 37
+    },
+    {
+      "symbol": "_ZN5Sound19LoadGroupAndSetBankEii",
+      "address": "0x0201200c",
+      "legacy_source": "src/_ZN5Sound19LoadGroupAndSetBankEii.cpp",
+      "size": "0x00000114",
+      "ordinal": 38
+    },
+    {
+      "symbol": "func_02012120",
+      "address": "0x02012120",
+      "legacy_source": "src/func_02012120.c",
+      "size": "0x00000034",
+      "ordinal": 39
+    },
+    {
+      "symbol": "_ZN5Sound13PlayCharVoiceEjjRK7Vector3",
+      "address": "0x02012154",
+      "legacy_source": "src/_ZN5Sound13PlayCharVoiceEjjRK7Vector3.cpp",
+      "size": "0x00000020",
+      "ordinal": 40
+    },
+    {
+      "symbol": "func_02012174",
+      "address": "0x02012174",
+      "legacy_source": "src/func_02012174.c",
+      "size": "0x00000020",
+      "ordinal": 41
+    },
+    {
+      "symbol": "func_02012194",
+      "address": "0x02012194",
+      "legacy_source": "src/func_02012194.c",
+      "size": "0x000000d8",
+      "ordinal": 42
+    },
+    {
+      "symbol": "func_0201226c",
+      "address": "0x0201226c",
+      "legacy_source": "src/func_0201226c.c",
+      "size": "0x000000a4",
+      "ordinal": 43
+    },
+    {
+      "symbol": "func_02012310",
+      "address": "0x02012310",
+      "legacy_source": "src/func_02012310.c",
+      "size": "0x00000018",
+      "ordinal": 44
+    },
+    {
+      "symbol": "_ZN5Sound8PlayLongEjjjRK7Vector3s",
+      "address": "0x02012328",
+      "legacy_source": "src/_ZN5Sound8PlayLongEjjjRK7Vector3s.cpp",
+      "size": "0x000000a0",
+      "ordinal": 45
+    },
+    {
+      "symbol": "func_020123c8",
+      "address": "0x020123c8",
+      "legacy_source": "src/func_020123c8.c",
+      "size": "0x000000a0",
+      "ordinal": 46
+    },
+    {
+      "symbol": "func_02012468",
+      "address": "0x02012468",
+      "legacy_source": "src/func_02012468.c",
+      "size": "0x0000005c",
+      "ordinal": 47
+    },
+    {
+      "symbol": "Sound_PlayIfNotActive",
+      "address": "0x020124c4",
+      "legacy_source": "src/Sound_PlayIfNotActive.c",
+      "size": "0x00000058",
+      "ordinal": 48
+    },
+    {
+      "symbol": "func_0201251c",
+      "address": "0x0201251c",
+      "legacy_source": "src/func_0201251c.c",
+      "size": "0x00000074",
+      "ordinal": 49
+    },
+    {
+      "symbol": "_ZN5Sound4PlayEjjRK7Vector3",
+      "address": "0x02012590",
+      "legacy_source": "src/_ZN5Sound4PlayEjjRK7Vector3.cpp",
+      "size": "0x000000bc",
+      "ordinal": 50
+    },
+    {
+      "symbol": "_ZN5Sound9PlayBank0EjRK7Vector3",
+      "address": "0x0201264c",
+      "legacy_source": "src/_ZN5Sound9PlayBank0EjRK7Vector3.cpp",
+      "size": "0x00000018",
+      "ordinal": 51
+    },
+    {
+      "symbol": "_ZN5Sound9PlayBank3EjRK7Vector3",
+      "address": "0x02012664",
+      "legacy_source": "src/_ZN5Sound9PlayBank3EjRK7Vector3.cpp",
+      "size": "0x00000018",
+      "ordinal": 52
+    },
+    {
+      "symbol": "func_0201267c",
+      "address": "0x0201267c",
+      "legacy_source": "src/func_0201267c.cpp",
+      "size": "0x00000018",
+      "ordinal": 53
+    },
+    {
+      "symbol": "func_02012694",
+      "address": "0x02012694",
+      "legacy_source": "src/func_02012694.cpp",
+      "size": "0x00000018",
+      "ordinal": 54
+    },
+    {
+      "symbol": "func_020126ac",
+      "address": "0x020126ac",
+      "legacy_source": "src/func_020126ac.c",
+      "size": "0x0000003c",
+      "ordinal": 55
+    },
+    {
+      "symbol": "func_020126e8",
+      "address": "0x020126e8",
+      "legacy_source": "src/func_020126e8.c",
+      "size": "0x00000030",
+      "ordinal": 56
+    },
+    {
+      "symbol": "func_02012718",
+      "address": "0x02012718",
+      "legacy_source": "src/func_02012718.c",
+      "size": "0x0000003c",
+      "ordinal": 57
+    },
+    {
+      "symbol": "_ZN5Sound12PlayBank2_2DEj",
+      "address": "0x02012754",
+      "legacy_source": "src/_ZN5Sound12PlayBank2_2DEj.cpp",
+      "size": "0x00000014",
+      "ordinal": 58
+    },
+    {
+      "symbol": "_ZN5Sound12PlayBank3_2DEj",
+      "address": "0x02012768",
+      "legacy_source": "src/_ZN5Sound12PlayBank3_2DEj.cpp",
+      "size": "0x00000014",
+      "ordinal": 59
+    },
+    {
+      "symbol": "func_0201277c",
+      "address": "0x0201277c",
+      "legacy_source": "src/func_0201277c.c",
+      "size": "0x00000014",
+      "ordinal": 60
+    },
+    {
+      "symbol": "func_02012790",
+      "address": "0x02012790",
+      "legacy_source": "src/func_02012790.c",
+      "size": "0x00000014",
+      "ordinal": 61
+    },
+    {
+      "symbol": "func_020127a4",
+      "address": "0x020127a4",
+      "legacy_source": "src/func_020127a4.c",
+      "size": "0x00000048",
+      "ordinal": 62
+    },
+    {
+      "symbol": "func_020127ec",
+      "address": "0x020127ec",
+      "legacy_source": "src/func_020127ec.c",
+      "size": "0x00000054",
+      "ordinal": 63
+    },
+    {
+      "symbol": "_ZN5Sound6Play2DEjj",
+      "address": "0x02012840",
+      "legacy_source": "src/_ZN5Sound6Play2DEjj.cpp",
+      "size": "0x00000020",
+      "ordinal": 64
+    },
+    {
+      "symbol": "func_02012860",
+      "address": "0x02012860",
+      "legacy_source": "src/func_02012860.c",
+      "size": "0x00000064",
+      "ordinal": 65
+    },
+    {
+      "symbol": "_ZN5Sound22StopLoadedMusic_Layer2Ev",
+      "address": "0x020128c4",
+      "legacy_source": "src/_ZN5Sound22StopLoadedMusic_Layer2Ev.cpp",
+      "size": "0x0000007c",
+      "ordinal": 66
+    },
+    {
+      "symbol": "_ZN5Sound22LoadAndSetMusic_Layer2Ej",
+      "address": "0x02012940",
+      "legacy_source": "src/_ZN5Sound22LoadAndSetMusic_Layer2Ej.cpp",
+      "size": "0x00000058",
+      "ordinal": 67
+    },
+    {
+      "symbol": "_ZN5Sound8EndMusicEjj",
+      "address": "0x02012998",
+      "legacy_source": "src/_ZN5Sound8EndMusicEjj.cpp",
+      "size": "0x000000d0",
+      "ordinal": 68
+    },
+    {
+      "symbol": "_ZN5Sound8SetMusicEjj",
+      "address": "0x02012a68",
+      "legacy_source": "src/_ZN5Sound8SetMusicEjj.cpp",
+      "size": "0x00000090",
+      "ordinal": 69
+    },
+    {
+      "symbol": "_ZN5Sound22StopLoadedMusic_Layer3Ev",
+      "address": "0x02012af8",
+      "legacy_source": "src/_ZN5Sound22StopLoadedMusic_Layer3Ev.cpp",
+      "size": "0x000000c4",
+      "ordinal": 70
+    },
+    {
+      "symbol": "_ZN5Sound22LoadAndSetMusic_Layer3Ej",
+      "address": "0x02012bbc",
+      "legacy_source": "src/_ZN5Sound22LoadAndSetMusic_Layer3Ej.cpp",
+      "size": "0x00000024",
+      "ordinal": 71
+    },
+    {
+      "symbol": "_ZN5Sound7PlaySubEjjj5Fix12IiEb",
+      "address": "0x02012be0",
+      "legacy_source": "src/_ZN5Sound7PlaySubEjjj5Fix12IiEb.cpp",
+      "size": "0x0000014c",
+      "ordinal": 72
+    },
+    {
+      "symbol": "_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE",
+      "address": "0x02012d2c",
+      "legacy_source": "src/_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE.c",
+      "size": "0x00000038",
+      "ordinal": 73
+    },
+    {
+      "symbol": "func_02012d64",
+      "address": "0x02012d64",
+      "legacy_source": "src/func_02012d64.c",
+      "size": "0x00000058",
+      "ordinal": 74
+    },
+    {
+      "symbol": "func_02012dbc",
+      "address": "0x02012dbc",
+      "legacy_source": "src/func_02012dbc.c",
+      "size": "0x00000014",
+      "ordinal": 75
+    },
+    {
+      "symbol": "func_02012dd0",
+      "address": "0x02012dd0",
+      "legacy_source": "src/func_02012dd0.c",
+      "size": "0x0000004c",
+      "ordinal": 76
+    },
+    {
+      "symbol": "func_02012e1c",
+      "address": "0x02012e1c",
+      "legacy_source": "src/func_02012e1c.c",
+      "size": "0x0000005c",
+      "ordinal": 77
+    },
+    {
+      "symbol": "func_02012e78",
+      "address": "0x02012e78",
+      "legacy_source": "src/func_02012e78.c",
+      "size": "0x0000006c",
+      "ordinal": 78
+    },
+    {
+      "symbol": "_ZN5Sound12UnpauseMusicEv",
+      "address": "0x02012ee4",
+      "legacy_source": "src/_ZN5Sound12UnpauseMusicEv.cpp",
+      "size": "0x000000ac",
+      "ordinal": 79
+    },
+    {
+      "symbol": "_ZN5Sound10PauseMusicEv",
+      "address": "0x02012f90",
+      "legacy_source": "src/_ZN5Sound10PauseMusicEv.cpp",
+      "size": "0x000000c0",
+      "ordinal": 80
+    },
+    {
+      "symbol": "_ZN5Sound22StopLoadedMusic_Layer1Ej",
+      "address": "0x02013050",
+      "legacy_source": "src/_ZN5Sound22StopLoadedMusic_Layer1Ej.cpp",
+      "size": "0x00000028",
+      "ordinal": 81
+    },
+    {
+      "symbol": "func_02013078",
+      "address": "0x02013078",
+      "legacy_source": "src/func_02013078.c",
+      "size": "0x00000194",
+      "ordinal": 82
+    },
+    {
+      "symbol": "_ZN5Sound22LoadAndSetMusic_Layer1Ei",
+      "address": "0x0201320c",
+      "legacy_source": "src/_ZN5Sound22LoadAndSetMusic_Layer1Ei.cpp",
+      "size": "0x000000cc",
+      "ordinal": 83
+    },
+    {
+      "symbol": "func_020132d8",
+      "address": "0x020132d8",
+      "legacy_source": "src/func_020132d8.cpp",
+      "size": "0x000000e4",
+      "ordinal": 84
+    },
+    {
+      "symbol": "func_020133bc",
+      "address": "0x020133bc",
+      "legacy_source": "src/func_020133bc.c",
+      "size": "0x0000010c",
+      "ordinal": 85
+    },
+    {
+      "symbol": "func_020134c8",
+      "address": "0x020134c8",
+      "legacy_source": "src/func_020134c8.c",
+      "size": "0x00000010",
+      "ordinal": 86
+    },
+    {
+      "symbol": "func_020134d8",
+      "address": "0x020134d8",
+      "legacy_source": "src/func_020134d8.c",
+      "size": "0x0000004c",
+      "ordinal": 87
+    },
+    {
+      "symbol": "func_02013524",
+      "address": "0x02013524",
+      "legacy_source": "src/func_02013524.c",
+      "size": "0x00000024",
+      "ordinal": 88
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [],
+  "notes": [
+    "Text-only. The module state (data_0208e420..data_0208e498, data_0209b470..data_0209baa0, data_0209d574, data_0209f250/2f8/394, data_02092120) is all .bss: no initialized bytes exist for this TU to own, so data and bss claims stay empty and the entry promotes as text-only like the other namespace-module TUs.",
+    "Sound::Play and Sound::Play2D are defined void, matching the plurality of the tree. Callers that consume r0 (PlayCharVoice, PlayBank2_2D/PlayBank3_2D, func_02012174/func_0201277c/func_02012790) keep the extern \"C\" mangled spelling -- the same return-split the shard files already carried, banked in decl-agreement-baseline.json.",
+    "Sound::PlaySub and Sound::ChangeMusicVolume keep their literal mangled names: the `5Fix12IiE` encoding cannot be produced by any type this tree defines (the Fix12 wall, see include/Sound.h).",
+    "func_020133bc keeps its shard's opt_propagation-off pragma (load-bearing); the pragma is file-global under deferred codegen, so func_020132d8 and func_020133bc sit inside defer_codegen brackets -- func_020132d8 flushes the deferred queue under on and func_020133bc alone binds off. func_02012468 keeps the u64-mask launder that pins its register birth order.",
+    "Sound::Player::SetPlayableSeqCount (0x0204fadc), Sound::Func_02048e* (0x02048eb4..) and the rest of the sound-engine internals at 0x0204xxxx/0x0205xxxx are other TUs and are not claimed here."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-Sound/Sound.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 89,
+    "functions_declared": 89,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "production_mode": "text-only"
+}

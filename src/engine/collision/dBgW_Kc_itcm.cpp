@@ -39,15 +39,7 @@ int func_02039794(int x);   /* slope-band classify */
 
 /* Hit-record writers into the query's embedded dBgPi. */
 /* local extern: dBgPi::RecordHit by its mangled name -- the Lin query's call shape (int* res/info) is byte-required, so dBgPi.h's member spelling is not used here. */
-void _ZN5dBgPi9RecordHitEsP11SurfaceInfo(void *res, short triIdx, void *info);
-void func_020379f4(void *self, int triID, void *info);
-void func_020379c0(void *self, int triID, void *info);
-void func_0203798c(void *self, int triID, void *info);
-void func_0203794c(int *d, int *s);
-
-
-/* The sphere query's AABB expander (0x02037a6c). */
-void func_02037a6c(void *b, s32 x1, s32 y1, s32 z1, s32 x2, s32 y2, s32 z2);
+void _ZN5dBgPi9RecordHitEsP11SurfaceInfo(void *res, int triIdx, void *info);
 
 /* CLPS helpers. */
 void func_020381cc(void *block, int idx, void **out);   /* entry lookup */
@@ -934,17 +926,17 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 
                         if (cls == 0) {
                             if (!(sphere.flags & 4)) {
-                                func_020379f4(&sphere, triID, &data_020a0cec);
+                                sphere.func_020379f4(triID, &data_020a0cec);
                                 hitFlags |= 1;
                             }
                             hitFlags2 = k1;
                             sphere.flags |= 4;
                             v = (s32)(((s64)depth * sn.y) >> 14) >> 2;
                             if (v > hiPY) hiPY = v; else if (v < loPY) loPY = v;
-                            if (sn.y > sphere.unk_100) func_0203794c((int *)&sphere, (int *)&sn);
+                            if (sn.y > sphere.unk_100) sphere.func_0203794c((const s32 *)&sn);
                         } else if (cls == 1) {
                             sphere.flags |= 8;
-                            func_020379c0(&sphere, triID, &data_020a0cec);
+                            sphere.func_020379c0(triID, &data_020a0cec);
                             hitFlags |= 2;
                             if (contactKind == 1) {
                                 v = (s32)(((s64)depth * sn.x) >> 14) >> 2;
@@ -961,7 +953,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             }
                         } else {
                             sphere.flags |= 0x10;
-                            func_0203798c(&sphere, triID, &data_020a0cec);
+                            sphere.func_0203798c(triID, &data_020a0cec);
                             hitFlags |= 4;
                             v = (s32)(((s64)depth * sn.x) >> 14) >> 2;
                             if (v > hiPX) hiPX = v; else if (v < loPX) loPX = v;
@@ -984,7 +976,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     /* The accumulated extent goes back as two corners; the flags word is the
        return value. func_02037a6c (0x02037a6c, 0xb0) is still unnamed. */
     if (!hitFlags && !hitFlags2) goto ret0;
-    func_02037a6c(&sphere, loPX, loPY, loPZ, hiPX, hiPY, hiPZ);
+    sphere.func_02037a6c(loPX, loPY, loPZ, hiPX, hiPY, hiPZ);
     return hitFlags;
 ret0:
     return 0;

@@ -105,15 +105,12 @@ extern s32 data_ov002_02100320[];
 extern s32 data_ov002_02100334[];
 extern s32 data_ov002_02100348[];
 extern Matrix4x3 data_020a0e68;
-void func_ov002_020f8b24(void* self);
 int func_ov002_020ad660(void* cc, void* pp, void* r5p, int flags);
 s16 Vec3_HorzAngle(const void* a, const void* b);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, s32 x, s32 y, s32 z);
 void func_02012694(u32 id, const void* v);
 void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 int _ZNK10dBgCh_Actr12TouchesWaterEv(void* self);
-void func_ov002_020f897c(void* self);
-void func_ov002_020f88ec(char* self);
 extern s16 data_02082214[];
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* actor, int fix12, int t, unsigned int a, unsigned int b);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, int fix12, int t, void* vec, int last);
@@ -128,40 +125,35 @@ daFPknBall_c::~daFPknBall_c()
 {
 }
 
-// @symbol func_ov002_020f88ec
+// @symbol _ZN12daFPknBall_c19func_ov002_020f88ecEv
 /* Roll 0..9; on 0..3 spawn a coin (actor 288) at the ball's position and zero
  * its velocity words. Called when a variant-4 ball ends by range or water. */
-extern "C" {
-void func_ov002_020f88ec(char* self)
+void daFPknBall_c::func_ov002_020f88ec()
 {
-    daFPknBall_c* ball = (daFPknBall_c*)self;
     dActor_c* coin;
     if (((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) % 10 >= 4) return;
-    coin = dActor_c::Spawn(ACTOR_COIN, 0, *(Vector3*)&ball->mPosX, 0, ball->mAreaId, -1);
+    coin = dActor_c::Spawn(ACTOR_COIN, 0, *(Vector3*)&mPosX, 0, mAreaId, -1);
     if (coin != 0) {
         coin->unk_0a4 = 0;
         coin->mVertSpeed = 0;
         coin->unk_0ac = 0;
     }
 }
-}
 
-// @symbol func_ov002_020f897c
+// @symbol _ZN12daFPknBall_c19func_ov002_020f897cEv
 /* Death drop of a variant-0 ball. Rolls 0..9. On 4..9, gives up if any
  * FPAKUN_BALL already exists. Otherwise, if the closest player's param1 is 3
  * and the actor 279 has not yet handed one out, spawns a cap (actor 269) for a
  * random unlocked character 0..2 and marks actor 279's byte at +0x42b. If none
  * of that happens, a roll below 4 spawns a coin as func_ov002_020f88ec does. */
-extern "C" {
-void func_ov002_020f897c(void* self)
+void daFPknBall_c::func_ov002_020f897c()
 {
-    daFPknBall_c* ball = (daFPknBall_c*)self;
     u8 roll = (u8)(((u32)RandomIntInternal(&data_0209e650) >> 0x10) % 10);
     if (roll >= 4) {
-        if (ball->ClosestWithActorID(ACTOR_FPAKUN_BALL) != 0) return;
+        if (ClosestWithActorID(ACTOR_FPAKUN_BALL) != 0) return;
     }
     {
-        Player* player = ball->ClosestPlayer();
+        Player* player = ClosestPlayer();
         char* koopa;
         if (player != 0 && player->param1 == 3 &&
             (koopa = (char*)dActor_c::FindWithActorID(ACTOR_KOOPA, 0)) != 0 &&
@@ -178,8 +170,8 @@ void func_ov002_020f897c(void* self)
                 idx = ((u32)RandomIntInternal(&data_0209e650) >> 0x10) % 3;
             } while ((unlocked & (1 << idx)) == 0);
             if (dActor_c::Spawn(ACTOR_OBJ_MARIO_CAP, (idx << 8) | 0xb,
-                    *(Vector3*)&ball->mPosX, (Vector3_16*)&ball->mAngleX,
-                    ball->mAreaId, -1) != 0) {
+                    *(Vector3*)&mPosX, (Vector3_16*)&mAngleX,
+                    mAreaId, -1) != 0) {
                 *(u8*)(koopa + 0x42b) = 1;
                 return;
             }
@@ -188,7 +180,7 @@ void func_ov002_020f897c(void* self)
     if (roll >= 4) return;
     {
         dActor_c* coin = dActor_c::Spawn(ACTOR_COIN, 0,
-            *(Vector3*)&ball->mPosX, 0, ball->mAreaId, -1);
+            *(Vector3*)&mPosX, 0, mAreaId, -1);
         if (coin != 0) {
             coin->unk_0a4 = 0;
             coin->mVertSpeed = 0;
@@ -196,49 +188,45 @@ void func_ov002_020f897c(void* self)
         }
     }
 }
-}
 
-// @symbol func_ov002_020f8b24
+// @symbol _ZN12daFPknBall_c19func_ov002_020f8b24Ev
 /* Per-frame visuals: refresh the two trail particles at the ball's position
  * (x mirrored when mMirrored is set), move the shadow matrix to that
  * position >> 3, and draw the drop shadow. */
-extern "C" {
-void func_ov002_020f8b24(void* arg0)
+void daFPknBall_c::func_ov002_020f8b24()
 {
-    daFPknBall_c* ball = (daFPknBall_c*)arg0;
     Vec3 pos;
     Vec3 shadowPos;
 
     {
-        s32 x = ball->mPosX;
+        s32 x = mPosX;
         pos.x = x;
-        pos.y = ball->mPosY;
-        pos.z = ball->mPosZ;
-        if (ball->mMirrored != 0)
+        pos.y = mPosY;
+        pos.z = mPosZ;
+        if (mMirrored != 0)
             pos.x = x * (u32)-1;
     }
-    pos.y = pos.y + data_ov002_02100320[ball->mVariant];
+    pos.y = pos.y + data_ov002_02100320[mVariant];
 
-    ball->mTrailEffect = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-        ball->mTrailEffect, data_ov002_02100334[ball->mVariant], pos.x, pos.y, pos.z, 0);
+    mTrailEffect = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+        mTrailEffect, data_ov002_02100334[mVariant], pos.x, pos.y, pos.z, 0);
 
-    ball->mSparkEffect = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        (u32)ball->mSparkEffect, data_ov002_02100348[ball->mVariant], pos.x, pos.y, pos.z, 0, 0);
+    mSparkEffect = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        (u32)mSparkEffect, data_ov002_02100348[mVariant], pos.x, pos.y, pos.z, 0, 0);
 
     {
-        s32 x = ball->mPosX;
+        s32 x = mPosX;
         pos.x = x;
-        pos.y = ball->mPosY;
-        pos.z = ball->mPosZ;
-        if (ball->mMirrored != 0)
+        pos.y = mPosY;
+        pos.z = mPosZ;
+        if (mMirrored != 0)
             pos.x = x * (u32)-1;
     }
     Vec3_Asr(&shadowPos, &pos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, shadowPos.x, shadowPos.y, shadowPos.z);
-    ball->mShadowMat = data_020a0e68;
+    mShadowMat = data_020a0e68;
     _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
-        ball, &ball->mShadowModel, &ball->mShadowMat, 0x28000, 0x64000, 0xf);
-}
+        this, &mShadowModel, &mShadowMat, 0x28000, 0x64000, 0xf);
 }
 
 // @symbol _ZN12daFPknBall_c6RenderEv
@@ -275,7 +263,7 @@ int daFPknBall_c::Behavior() {
     {
         enum Bool b = (enum Bool)((flags & MFLAG_YOSHI_MOUTH_A) != 0);
         if (b != FALSE) {
-            func_ov002_020f8b24(this);
+            func_ov002_020f8b24();
             return 1;
         }
     }
@@ -301,7 +289,7 @@ int daFPknBall_c::Behavior() {
             ((int*)&dustArg1)[2] = ((int*)&dustPos1)[2];
             DisappearPoofDustAt(*(Vector3*)&dustArg1);
         } else {
-            func_ov002_020f8b24(this);
+            func_ov002_020f8b24();
         }
         return 1;
     }
@@ -346,7 +334,7 @@ int daFPknBall_c::Behavior() {
                         _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x43, px, py, pz);
                     }
                     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x44, sparkPos.x, sparkPos.y, sparkPos.z);
-                    func_ov002_020f8b24(this);
+                    func_ov002_020f8b24();
                     mdCcAc_c.Clear();
                     return 1;
                 }
@@ -403,9 +391,9 @@ int daFPknBall_c::Behavior() {
         || _ZNK10dBgCh_Actr12TouchesWaterEv(&mWithMeshClsn) != 0) {
         u8 variant = mVariant;
         if (variant == VARIANT_DROPS_ITEM) {
-            func_ov002_020f897c(this);
+            func_ov002_020f897c();
         } else if (variant == VARIANT_COIN_DROP && mWithMeshClsn.IsOnWall() == 0) {
-            func_ov002_020f88ec((char*)this);
+            func_ov002_020f88ec();
         }
         {
             int x = mPosX;
@@ -427,7 +415,7 @@ int daFPknBall_c::Behavior() {
 
     /* The ROM loads this halfword unsigned, so not the s16 mStateTimer += 1. */
     *(u16*)&mStateTimer += 1;
-    func_ov002_020f8b24(this);
+    func_ov002_020f8b24();
     return 1;
 }
 

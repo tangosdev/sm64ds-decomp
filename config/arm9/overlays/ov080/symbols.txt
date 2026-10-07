@@ -94,10 +94,10 @@ data_ov080_021277a8 kind:data(any) addr:0x021277a8
 data_ov080_02127834 kind:data(any) addr:0x02127834
 data_ov080_02127848 kind:data(any) addr:0x02127848 ambiguous
 __sinit_ov080_021278c0 kind:function(arm,size=0x1a0) addr:0x021278c0
-__sinit_ov080_02127a60 kind:function(arm,size=0xcc) addr:0x02127a60
+__sinit_daBttBk_c.cpp kind:function(arm,size=0xcc) addr:0x02127a60
 __sinit_ov080_02127b2c kind:function(arm,size=0x434) addr:0x02127b2c
 .p__sinit_ov080_021278c0 kind:data(word) addr:0x02127f60
-.p__sinit_ov080_02127a60 kind:data(word) addr:0x02127f64
+.p__sinit_daBttBk_c.cpp kind:data(word) addr:0x02127f64
 .p__sinit_ov080_02127b2c kind:data(word) addr:0x02127f68
 data_ov080_02127f80 kind:data(any) addr:0x02127f80
 data_ov080_02127f88 kind:data(any) addr:0x02127f88
@@ -116,12 +116,12 @@ _ZTV14daChoro_Rock_c kind:data(any) addr:0x0212802c
 data_ov080_02128070 kind:data(any) addr:0x02128070 ambiguous
 data_ov080_0212808c kind:data(any) addr:0x0212808c ambiguous
 _ZTV11daChoropu_c kind:data(any) addr:0x021280b0
-data_ov080_0212812c kind:data(any) addr:0x0212812c
-data_ov080_02128134 kind:data(any) addr:0x02128134
-data_ov080_0212813c kind:data(any) addr:0x0212813c
-data_ov080_02128144 kind:data(any) addr:0x02128144
-data_ov080_0212814c kind:data(any) addr:0x0212814c
-data_ov080_02128154 kind:data(any) addr:0x02128154
+@858 kind:data(any) addr:0x0212812c
+@860 kind:data(any) addr:0x02128134
+@854 kind:data(any) addr:0x0212813c
+@852 kind:data(any) addr:0x02128144
+@850 kind:data(any) addr:0x0212814c
+@856 kind:data(any) addr:0x02128154
 _ZTS9daBttBk_c kind:data(any) addr:0x0212815c
 _ZTI9daBttBk_c kind:data(any) addr:0x02128168
 g_profile_BATTA_BLOCK kind:data(any) addr:0x02128174 ambiguous
@@ -157,7 +157,7 @@ data_ov080_02128420 kind:bss addr:0x02128420
 data_ov080_0212842c kind:bss addr:0x0212842c
 data_ov080_02128438 kind:bss addr:0x02128438
 data_ov080_02128468 kind:bss addr:0x02128468
-data_ov080_02128470 kind:bss addr:0x02128470
+@848 kind:bss addr:0x02128470
 data_ov080_0212847c kind:bss addr:0x0212847c
 data_ov080_021284ac kind:bss addr:0x021284ac
 data_ov080_021284b4 kind:bss addr:0x021284b4

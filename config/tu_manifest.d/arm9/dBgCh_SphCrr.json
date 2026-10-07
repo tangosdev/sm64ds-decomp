@@ -1,0 +1,773 @@
+{
+  "id": "arm9/dBgCh_SphCrr",
+  "module": "arm9",
+  "source": "src/engine/collision/dBgCh_SphCrr.cpp",
+  "promoted_source": "src/engine/collision/dBgCh_SphCrr.cpp",
+  "status": "promoted",
+  "production_mode": "intact-object",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "CONTIGUOUS AND EXHAUSTIVE: 0x0203782c..0x02037dc4 is covered by exactly 27 config/arm9/symbols.txt function symbols with no gap and no overlap, all carrying `complete` in config/arm9/delinks.txt with a .text section and nothing else. The run opens right after dBgCh_Lin's thunk tail and stops where func_02037dc4 begins a generic accessor shared by Player/dActor_c.",
+    "CLASS IDENTITY FROM ROM RTTI: _ZTS12dBgCh_SphCrr sits at arm9 0x020992f8, _ZTI12dBgCh_SphCrr at 0x02099308, and the primary vtable _ZTV12dBgCh_SphCrr at 0x02099338, with the dBgPi and dM3dGSph secondary thunk blocks at 0x02099348/0x02099358 -- the RTTI edges list dBgCh @+0x00, dBgPi @+0x10, dM3dGSph @+0x38, matching the _ZThn16_ and _ZThn56_ destructor thunks this run emits.",
+    "HELPERS ARE THIS TU'S OWN: every func_* in the run takes the SphCrr object as first argument and drives its evidenced fields -- the three result-record setters/getters (this+0x74/+0x9c/+0xc4, the floor/wall/underneath dBgPi records), the flag word at +0x70, the broad-phase box at +0x58..0x6c, the +0xfc payload triplet. External callers (dBgW_Kc*/dBgCh_Actr SphCrr queries) always pass a dBgCh_SphCrr.",
+    "NEIGHBOURS ARE OTHER SUBJECTS: below, func_0203782c's run opens the class's contiguous emission; above, func_02037dc4 (p+8) is called by Player.cpp and dActor_c::DetectRaycastClsn on non-SphCrr objects. The query half (DetectClsn + two registry scans at 0x02038824..0x02038ea4) lives in src/engine/collision/dBgCh_SphCrr_query.cpp.",
+    "EMISSION ORDER: mwccarm 2004/b56 emits a TU's plain members in reverse source order and the lifecycle group in its fixed order at the tail -- the ROM holds D0 (0x02037c40), D1 (0x02037cb0), C1 (0x02037d18), then the four secondary-base dtor thunks, exactly that layout from one dtor and one ctor definition at the head of the file."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0203782c",
+      "end": "0x02037dc4"
+    },
+    {
+      "name": ".data",
+      "start": "0x020992f8",
+      "end": "0x02099360"
+    }
+  ],
+  "data": [
+    {
+      "symbol": "_ZTS12dBgCh_SphCrr",
+      "address": "0x020992f8",
+      "size": "0xf",
+      "evidence": "compiler-emitted ROM-proven class type-name string; the cartridge's own dBgCh_SphCrr spelling"
+    },
+    {
+      "symbol": "_ZTI12dBgCh_SphCrr",
+      "address": "0x02099308",
+      "size": "0x28",
+      "evidence": "compiler-emitted __vmi_class_type_info record naming dBgCh, dBgPi and dM3dGSph at base records 0, 1 and 2, matching the cartridge's multiple-inheritance layout"
+    },
+    {
+      "symbol": "_ZTV12dBgCh_SphCrr",
+      "address": "0x02099338",
+      "emitted_storage_address": "0x02099330",
+      "address_point_bias": "0x8",
+      "size": "0x30",
+      "partition_symbols": [
+        {
+          "symbol": "VTable_dBgPi_dBgCh_SphCrrThunk",
+          "address": "0x02099348",
+          "size": "0x10",
+          "binding": "STB_GLOBAL",
+          "type": "STT_OBJECT",
+          "visibility": "STV_DEFAULT",
+          "reuse_policy_symbol": "_ZN12dBgCh_SphCrrD2Ev"
+        },
+        {
+          "symbol": "VTable_dM3dGSph_dBgCh_SphCrrThunk",
+          "address": "0x02099358",
+          "size": "0x8",
+          "binding": "STB_GLOBAL",
+          "type": "STT_OBJECT",
+          "visibility": "STV_DEFAULT",
+          "reuse_policy_symbol": "_ZN12dBgCh_SphCrrC2Ev"
+        }
+      ],
+      "evidence": "compiler storage includes the two-word ABI preamble at 0x02099330; the configured public address point is eight bytes later. The dBgPi and dM3dGSph sub-vtables occupy the tail: the dBgPi preamble sits at 0x02099340 inside the public segment, the dM3dGSph preamble at 0x02099350 lies inside VTable_dBgPi_dBgCh_SphCrrThunk's configured extent, and the thunk slots are the separately configured VTable_*_Thunk partitions"
+    }
+  ],
+  "bss": [],
+  "notes": [
+    "Intact-object: this TU owns the class's RTTI+vtable band 0x020992f8..0x02099360 (ZTS, the __vmi _ZTI with its three base records, and the _ZTV carrying the dBgPi/dM3dGSph secondary thunk partitions). The eight inherited base-class RTTI copies emit as vague linkage and are externalized to their canonical cartridge homes.",
+    "func_02038ea4 (0x02038ea4..0x02038f44) is NOT part of this fold: its only caller (daMky_c) passes a dBgCh_Gnd local and it only touches the shared dBgPi base offset -- Gnd-family evidence, left as its own shard for the Gnd fold.",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN12dBgCh_SphCrr14SetUnderResultERK5dBgPi",
+      "address": "0x0203782c",
+      "size": "0x00000054",
+      "legacy_source": "src/func_0203782c.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr14GetUnderResultEv",
+      "address": "0x02037880",
+      "size": "0x00000008",
+      "legacy_source": "src/func_02037880.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13SetWallResultERK5dBgPi",
+      "address": "0x02037888",
+      "size": "0x00000054",
+      "legacy_source": "src/func_02037888.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13GetWallResultEv",
+      "address": "0x020378dc",
+      "size": "0x00000008",
+      "legacy_source": "src/func_020378dc.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi",
+      "address": "0x020378e4",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr14GetFloorResultEv",
+      "address": "0x02037938",
+      "size": "0x00000008",
+      "legacy_source": "src/func_02037938.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13func_02037940Eh",
+      "address": "0x02037940",
+      "size": "0x0000000c",
+      "legacy_source": "src/func_02037940.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13func_0203794cEPKi",
+      "address": "0x0203794c",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_0203794c.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13func_02037968EiiP8dActor_cP4dBgW",
+      "address": "0x02037968",
+      "size": "0x00000024",
+      "legacy_source": "src/func_02037968.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13func_0203798cEiPv",
+      "address": "0x0203798c",
+      "size": "0x00000010",
+      "legacy_source": "src/func_0203798c.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13func_0203799cEiiP8dActor_cP4dBgW",
+      "address": "0x0203799c",
+      "size": "0x00000024",
+      "legacy_source": "src/func_0203799c.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13func_020379c0EiPv",
+      "address": "0x020379c0",
+      "size": "0x00000010",
+      "legacy_source": "src/func_020379c0.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13func_020379d0EiiP8dActor_cP4dBgW",
+      "address": "0x020379d0",
+      "size": "0x00000024",
+      "legacy_source": "src/func_020379d0.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13func_020379f4EiPv",
+      "address": "0x020379f4",
+      "size": "0x00000010",
+      "legacy_source": "src/func_020379f4.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13func_02037a04EP7Vector3S1_",
+      "address": "0x02037a04",
+      "size": "0x00000034",
+      "legacy_source": "src/func_02037a04.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13func_02037a38Ev",
+      "address": "0x02037a38",
+      "size": "0x00000034",
+      "legacy_source": "src/func_02037a38.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13func_02037a6cEiiiiii",
+      "address": "0x02037a6c",
+      "size": "0x000000b0",
+      "legacy_source": "src/func_02037a6c.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13func_02037b1cEv",
+      "address": "0x02037b1c",
+      "size": "0x00000040",
+      "legacy_source": "src/func_02037b1c.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr13func_02037b5cEv",
+      "address": "0x02037b5c",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_02037b5c.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c",
+      "address": "0x02037c00",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrrD0Ev",
+      "address": "0x02037c40",
+      "size": "0x00000070",
+      "legacy_source": "src/_ZN12dBgCh_SphCrrD0Ev.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrrD1Ev",
+      "address": "0x02037cb0",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN12dBgCh_SphCrrD1Ev.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrrC1Ev",
+      "address": "0x02037d18",
+      "size": "0x0000006c",
+      "legacy_source": "src/_ZN12dBgCh_SphCrrC1Ev.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZThn16_N12dBgCh_SphCrrD0Ev",
+      "address": "0x02037d84",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZThn16_N12dBgCh_SphCrrD0Ev.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZThn16_N12dBgCh_SphCrrD1Ev",
+      "address": "0x02037d94",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZThn16_N12dBgCh_SphCrrD1Ev.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZThn56_N12dBgCh_SphCrrD0Ev",
+      "address": "0x02037da4",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZThn56_N12dBgCh_SphCrrD0Ev.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZThn56_N12dBgCh_SphCrrD1Ev",
+      "address": "0x02037db4",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZThn56_N12dBgCh_SphCrrD1Ev.cpp",
+      "ordinal": 26
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-dBgCh_SphCrr/dBgCh_SphCrr.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 27,
+    "functions_declared": 27,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN12dBgCh_SphCrrD2Ev",
+        "_ZN12dBgCh_SphCrrC2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN12dBgCh_SphCrrC2Ev",
+        "_ZN12dBgCh_SphCrrD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        50,
+        51,
+        58,
+        59,
+        60
+      ],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 8 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/arm9-dBgCh_SphCrr/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0203782c",
+        "end": "0x02037dc4",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0203782c",
+          "end": "0x02037dc4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x020992f8",
+          "end": "0x02099360",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 32
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              17,
+              18,
+              20
+            ],
+            "desired": [
+              17,
+              18,
+              20
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": {
+        "ok": true,
+        "rows": [
+          {
+            "vtable": "_ZTV12dBgCh_SphCrr",
+            "vtableMetadata": {
+              "address": 34181944,
+              "size": 16,
+              "binding": "STB_GLOBAL",
+              "type": "STT_OBJECT",
+              "visibility": "STV_DEFAULT",
+              "sectionIndex": 4,
+              "section": "ARM9"
+            },
+            "splitSymbols": {
+              "VTable_dBgPi_dBgCh_SphCrrThunk": {
+                "address": 34181960,
+                "size": 16,
+                "binding": "STB_GLOBAL",
+                "type": "STT_OBJECT",
+                "visibility": "STV_DEFAULT",
+                "sectionIndex": 4,
+                "section": "ARM9"
+              },
+              "VTable_dM3dGSph_dBgCh_SphCrrThunk": {
+                "address": 34181976,
+                "size": 8,
+                "binding": "STB_GLOBAL",
+                "type": "STT_OBJECT",
+                "visibility": "STV_DEFAULT",
+                "sectionIndex": 4,
+                "section": "ARM9"
+              }
+            },
+            "baselineElfSha256": "5b594f0abc57257a376a20790affc18ad48403728f3135b3031da8d634b4cb7b",
+            "exact": true
+          }
+        ],
+        "errors": []
+      },
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN12dBgCh_SphCrrD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-subobject destructor variant; nothing derives from dBgCh_SphCrr so the cartridge never kept it. mwcc emits it from the one ~dBgCh_SphCrr definition regardless."
+    },
+    {
+      "symbol": "_ZN12dBgCh_SphCrrC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-subobject constructor variant, emitted from the one dBgCh_SphCrr() definition; no derived class exists to call it, so it deadstrips."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vague-linkage copy of Vector3's trivial destructor, emitted because the Vector3 members are struct-copied. The canonical cartridge copy is arm9:0x020072c0; isolation discards this one."
+    }
+  ],
+  "externalized_output": [
+    {
+      "symbol": "_ZTS5dBgCh",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x7",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020991c0",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is the cartridge's arm9:0x020991c0 record",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTI5dBgCh",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x8",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020991c8",
+      "reason": "inherited vague-linkage RTTI copy, pulled in as this class's primary base record; canonical definition is arm9:0x020991c8",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi17__class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a774"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS5dBgCh",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x020991c0"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTS5dBgPc",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x7",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02099214",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is arm9:0x02099214",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTI5dBgPc",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x8",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0209921c",
+      "reason": "inherited vague-linkage RTTI copy, pulled in through dBgPi's own base record; canonical definition is arm9:0x0209921c",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi17__class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a774"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS5dBgPc",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02099214"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTS5dBgPi",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x7",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0209920c",
+      "reason": "inherited vague-linkage RTTI copy; the cartridge's canonical dBgPi type-name lives at arm9:0x0209920c, outside this TU's claimed band",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTI5dBgPi",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02099230",
+      "reason": "inherited vague-linkage RTTI copy, pulled in as this class's second base record; canonical definition is arm9:0x02099230",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS5dBgPi",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x0209920c"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI5dBgPc",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x0209921c"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTS8dM3dGSph",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xa",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020992ec",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is arm9:0x020992ec",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTI8dM3dGSph",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x8",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020992e4",
+      "reason": "inherited vague-linkage RTTI copy, pulled in as this class's third base record; canonical definition is arm9:0x020992e4",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi17__class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a774"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS8dM3dGSph",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x020992ec"
+        }
+      ]
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02099334",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI12dBgCh_SphCrr",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02099308"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099338",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12dBgCh_SphCrrD1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02037cb0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0209933c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12dBgCh_SphCrrD0Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02037c40"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099344",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI12dBgCh_SphCrr",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02099308"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099348",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZThn16_N12dBgCh_SphCrrD1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02037d94"
+    },
+    {
+      "section": ".data",
+      "source": "0x0209934c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZThn16_N12dBgCh_SphCrrD0Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02037d84"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099354",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI12dBgCh_SphCrr",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02099308"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099358",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZThn56_N12dBgCh_SphCrrD1Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02037db4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0209935c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZThn56_N12dBgCh_SphCrrD0Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02037da4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099308",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi21__vmi_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a754"
+    },
+    {
+      "section": ".data",
+      "source": "0x0209930c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS12dBgCh_SphCrr",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020992f8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099318",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI5dBgCh",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020991c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099320",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI5dBgPi",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02099230"
+    },
+    {
+      "section": ".data",
+      "source": "0x02099328",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8dM3dGSph",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020992e4"
+    }
+  ]
+}

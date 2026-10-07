@@ -11,10 +11,30 @@
  * breaks five functions and the section order. The six bracketed optimizer
  * pragmas are needed too, and so is the include order (see below).
  *
- * Blocked: the helpers are unnamed in symbols.txt. Some calls stay mangled:
+ * The helpers whose first parameter was the scene are now members of
+ * dScMgSnowball_c, including the 17 per-element helpers dispatched through
+ * the PMF tables data_ov006_02143020/38/50/70 (8-byte {adjustor,pmf}
+ * records built by __sinit_ov006_021333e0.c). Some calls stay mangled:
  * cstd::atan2 and Particle::System take Fix12 or reference
  * arguments, and decl_common.h declares a global named G2, so no
  * `namespace G2` can be opened here.
+ *
+ * comment leftovers:
+ *  - func_ov006_02126948 stays a free function. Inside its
+ *    `opt_lifetimes off` window the member spelling reserves six extra
+ *    stack slots (frame 0x10 -> 0x28, v leaves sp+0) under every alias
+ *    shape tried, so it keeps its char* parameter and C linkage.
+ *  - func_ov006_02125800 (empty element destructor) and
+ *    func_ov006_0212968c (empty element constructor) stay free: they are
+ *    ctor/dtor slots in the __cxa_vec_ctor call for the mArray3/mArray4
+ *    records, not dispatch targets on the scene.
+ *  - func_ov006_021295ac stays free: it is the C2 construction body
+ *    called by dScMgSnowball_c_classInit in src/d_s_mg_snowball.cpp after
+ *    allocation; writing it as a real ctor changes codegen.
+ *  - The raw-pointer and view-struct puns (C_0212a224, C_02129d94, Obj_02129690,
+ *    the H()/I()/B()/AT() macros) are load-bearing: the 0xa000..0xc000
+ *    field offsets exceed the +/-0xfff store immediate, so the compiler's
+ *    own pointer arithmetic has to stand in for them.
  */
 #pragma defer_codegen off
 
@@ -111,9 +131,6 @@ extern "C" {
 extern void RenderOamBothScreens(int a, int b, int c, int d, int e, int f);
 extern int data_ov006_02139c6c[];
 extern void AddVec3(Vec3 *a, Vec3 *b, Vec3 *dst);
-extern int func_ov006_021259d8(char *o, int *p);
-extern int func_ov006_02125cdc(int c, int *p);
-extern int func_ov006_02125bbc(char *o, int *p);
 extern void func_0203d388(int *p, int angle);
 extern int func_0203d434(int *p);
 extern int Vec2_Len(int *p);
@@ -129,7 +146,6 @@ extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
 extern struct Matrix4x3 data_020a0e68;
-extern void func_ov006_02126b4c(char *c, int a, int b);
 extern char *_ZN2G212GetBG2ScrPtrEv(void);
 extern void MultiStore16(int val, char *dst, int n);
 extern u16 data_ov006_0212f3bc[];
@@ -143,16 +159,12 @@ extern void SetSubBg3Offset(int, int);
 extern void func_020731dc(void *, void *, void **);
 extern void Quaternion_Normalize(s32 *);
 extern void *_ZN7Vector3D1Ev(void *object);
-extern void func_ov006_02126948(char *);
-extern void func_ov006_0212a3c0(char *);
-extern void func_ov006_02125994(char *);
 extern u32 data_ov006_02143004;
 extern void *data_ov006_02143008;
 extern s32 data_ov006_02143014[3];
 extern s32 data_02092768[4];
 void func_ov004_020afdd0(void* a0, int a1, int a2, int a3, int a4);
 void func_0203cd80(int *m, short angle);
-void func_ov006_02126a98(char *c);
 void func_ov004_020b2220(int a1, int a2, int a3, int a4, int a5, int a6, int a7);
 s32  GetGameLanguage(void);
 void func_02012790(int a);
@@ -193,16 +205,16 @@ dScMgSnowball_c::~dScMgSnowball_c()
    it from the definition above. */
 
 // @symbol func_ov006_02125800
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov006_02125800(void)
 {
 }
 }
 
-// @symbol func_ov006_02125804
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02125804(char *scene)
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02125804Ev
+void dScMgSnowball_c::func_ov006_02125804()
 {
+    char *scene = (char *)this;
     dScMgSnowball_c *self = (dScMgSnowball_c *)scene;
     int i;
     char *p = scene;
@@ -217,12 +229,11 @@ void func_ov006_02125804(char *scene)
         p += 0x24;
     }
 }
-}
 
-// @symbol func_ov006_02125890
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02125890(char *scene)
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02125890Ev
+void dScMgSnowball_c::func_ov006_02125890()
 {
+    char *scene = (char *)this;
     int i;
     char *rec = scene;
     char *pos = scene + 0xba14;
@@ -245,11 +256,10 @@ void func_ov006_02125890(char *scene)
         }
     }
 }
-}
 
-// @symbol func_ov006_02125994
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02125994(char *rec) {
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02125994Ev
+void dScMgSnowball_c::func_ov006_02125994() {
+    char *rec = (char *)this;
     int i;
     for (i = 0; i < 0x20; i++) {
         *(int*)(rec + 0xba14) = 0;
@@ -264,11 +274,10 @@ void func_ov006_02125994(char *rec) {
         rec += 0x24;
     }
 }
-}
 
-// @symbol func_ov006_021259d8
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_021259d8(char *scene, int *point) {
+// @symbol _ZN15dScMgSnowball_c19func_ov006_021259d8EPi
+int dScMgSnowball_c::func_ov006_021259d8(int *point) {
+    char *scene = (char *)this;
     int x = point[0];
     int y;
     int fa;
@@ -352,13 +361,12 @@ int func_ov006_021259d8(char *scene, int *point) {
         return 0;
     }
 }
-}
 
 #pragma opt_strength_reduction off
-// @symbol func_ov006_02125bbc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_02125bbc(char *scene, int *point)
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02125bbcEPi
+int dScMgSnowball_c::func_ov006_02125bbc(int *point)
 {
+    char *scene = (char *)this;
     int i;
     for (i = 0; i < 0x80; i++) {
         if (*(u8 *)(scene + i + 0xac58) == 1) {
@@ -387,14 +395,13 @@ int func_ov006_02125bbc(char *scene, int *point)
     }
     return 0;
 }
-}
 #pragma opt_strength_reduction on
 
 #pragma opt_common_subs off
-// @symbol func_ov006_02125cdc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_02125cdc(int raw, int *point)
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02125cdcEPi
+int dScMgSnowball_c::func_ov006_02125cdc(int *point)
 {
+    int raw = (int)this;
     char *scene = (char *)raw;
     int z = point[1];
     int x;
@@ -441,10 +448,9 @@ int func_ov006_02125cdc(int raw, int *point)
     default: return 0;
     }
 }
-}
 #pragma opt_common_subs on
 
-// @symbol func_ov006_02125f68
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02125f68Ev
 /* The collision ring.
  * Once a tick the snowball fires 32 probes around itself, one every 0x800 of
  * angle at the current ball radius. Each probe records three flags -- solid,
@@ -476,8 +482,9 @@ int func_ov006_02125cdc(int raw, int *point)
  * store the cartridge makes. The push loop divides its own `k * 0x10000`
  * rather than carrying an angle accumulator, which is what stops mwccarm
  * strength-reducing the /32 into a second induction variable. */
-extern "C" void func_ov006_02125f68(char *p_)
+void dScMgSnowball_c::func_ov006_02125f68()
 {
+    char *p_ = (char *)this;
     dScMgSnowball_c *self = (dScMgSnowball_c *)p_;
     int i;
     int k;
@@ -529,7 +536,7 @@ extern "C" void func_ov006_02125f68(char *p_)
 
     initPt[0] = self->mPosX;
     initPt[1] = self->mPosY;
-    initInside = func_ov006_021259d8((char *)self, initPt);
+    initInside = func_ov006_021259d8(initPt);
 
     iter = 0;
     zDry = 0;
@@ -553,7 +560,7 @@ extern "C" void func_ov006_02125f68(char *p_)
             sample[1] += self->mPosY;
             cdcCopy[0] = sample[0];
             cdcCopy[1] = sample[1];
-            if (func_ov006_02125cdc((int)self, cdcCopy) != 0) {
+            if (func_ov006_02125cdc(cdcCopy) != 0) {
                 self->mProbeHit[j] = 1;
                 self->mProbePush[j] = 1;
                 anyHit = 1;
@@ -564,7 +571,7 @@ extern "C" void func_ov006_02125f68(char *p_)
             } else {
                 bbcCopy[0] = sample[0];
                 bbcCopy[1] = sample[1];
-                if (func_ov006_02125bbc((char *)self, bbcCopy) != 0) {
+                if (func_ov006_02125bbc(bbcCopy) != 0) {
                     self->mProbeHit[j] = 1;
                     anyHit = 1;
                     self->mProbePush[j] = 1;
@@ -575,7 +582,7 @@ extern "C" void func_ov006_02125f68(char *p_)
             }
             waterCopy[0] = sample[0];
             waterCopy[1] = sample[1];
-            if (func_ov006_021259d8((char *)self, waterCopy) != 0)
+            if (func_ov006_021259d8(waterCopy) != 0)
                 self->mProbeWater[j] = 1;
             else
                 self->mProbeWater[j] = zDry;
@@ -705,7 +712,7 @@ extern "C" void func_ov006_02125f68(char *p_)
 
 #pragma opt_lifetimes off
 // @symbol func_ov006_02126948
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov006_02126948(char *scene) {
     dScMgSnowball_c *self = (dScMgSnowball_c *)scene;
     int t = cstd::fdiv(0xc0000, data_02082314);
@@ -742,17 +749,17 @@ void func_ov006_02126948(char *scene) {
 }
 #pragma opt_lifetimes on
 
-// @symbol func_ov006_02126a98
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02126a98(char *scene)
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02126a98Ev
+void dScMgSnowball_c::func_ov006_02126a98()
 {
+    char *scene = (char *)this;
     dScMgSnowball_c *self = (dScMgSnowball_c *)scene;
     int flag = 1;
     int val = (self->mScrollY >> 12) / 16 - 2;
     int i;
     if (val < 0) val = 0;
     for (i = 0; i < 0x10; i++) {
-        func_ov006_02126b4c(scene, val, flag);
+        func_ov006_02126b4c(val, flag);
         val++;
     }
     {
@@ -761,15 +768,14 @@ void func_ov006_02126a98(char *scene)
         int r8 = ((self->mScrollY >> 12) + 0x110) / 16 - 2;
         for (; flag2 < 0x10; flag2++) {
             if (r8 >= self->mScrollLimit) return;
-            func_ov006_02126b4c(scene, r8, k);
+            func_ov006_02126b4c(r8, k);
             r8++;
         }
     }
 }
-}
 
 #pragma opt_strength_reduction off
-// @symbol func_ov006_02126b4c
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02126b4cEii
 /* BG2 tile-column writer.
  *
  * Copies one 16-row column of 2x2 BG tiles into the BG2 screen of both the
@@ -787,9 +793,9 @@ void func_ov006_02126a98(char *scene)
  * volatile u16 locals are the ROM's real stack traffic (each tile is stored
  * and reloaded around the screen-pointer call).
  */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02126b4c(char *scene, int col, int flag)
+void dScMgSnowball_c::func_ov006_02126b4c(int col, int flag)
 {
+    char *scene = (char *)this;
     volatile u16 v0, v1, v2, v3, v4, v5, v6, v7;
     volatile u16 w0, w1, w2, w3, w4, w5, w6, w7;
     int n;
@@ -913,10 +919,9 @@ void func_ov006_02126b4c(char *scene, int col, int flag)
         i += 1;
     } while (i < 0x10);
 }
-}
 #pragma opt_strength_reduction on
 
-// @symbol func_ov006_02126ee4
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02126ee4Ev
 /* The course generator.
  * Paints mTileMap row by row from the bottom of the course upwards, carving a
  * corridor between a left and a right edge cursor that random-walk one lane at
@@ -952,8 +957,9 @@ void func_ov006_02126b4c(char *scene, int col, int flag)
  * The run of literal stores at sp+0x2c..0xc4 is not a table: it is mwccarm
  * hoisting one value per textual constant out of the row loop and spilling
  * all of them, which falls out of writing the constants inline. */
-extern "C" void func_ov006_02126ee4(void *p_)
+void dScMgSnowball_c::func_ov006_02126ee4()
 {
+    void *p_ = (void *)this;
     dScMgSnowball_c *self = (dScMgSnowball_c *)p_;
     int k;
     int i;
@@ -1252,9 +1258,10 @@ extern "C" void func_ov006_02126ee4(void *p_)
     }
 }
 
-// @symbol func_ov006_021279b0
-extern "C" void func_ov006_021279b0(void *p_)
+// @symbol _ZN15dScMgSnowball_c19func_ov006_021279b0Ev
+void dScMgSnowball_c::func_ov006_021279b0()
 {
+    void *p_ = (void *)this;
     char *c = (char *)p_;
     s32 tmp[3];
     int i;
@@ -1351,8 +1358,8 @@ extern "C" void func_ov006_021279b0(void *p_)
     I(0xab58) = 0;
     I(0xb9f0) = 0;
 
-    func_ov006_0212a3c0(c);
-    func_ov006_02125994(c);
+    func_ov006_0212a3c0();
+    func_ov006_02125994();
 
     I(0xb9fc) = 0xf1;
     I(0xba0c) = 0;
@@ -1409,7 +1416,7 @@ s32 dScMgSnowball_c::Render()
         }
     }
 
-    func_ov006_02126a98(c);
+    func_ov006_02126a98();
 
     for (int i1 = 0; i1 < 0x80; i1++) {
         char *p = c + i1;
@@ -1513,8 +1520,8 @@ s32 dScMgSnowball_c::Render()
         }
     }
 
-    func_ov006_02129690(c);
-    func_ov006_02125804(c);
+    func_ov006_02129690();
+    func_ov006_02125804();
     return 1;
 }
 #pragma opt_common_subs on
@@ -1616,7 +1623,7 @@ s32 dScMgSnowball_c::Behavior()
             if (Vec2_Len((int*)AT(c,0xab60)) >= 0x8000 && func_0203d434((int*)ATS(0xab60)) != 0)
                 func_0203d630((int*)ATI(0xab60), 0x8000);
         }
-        func_ov006_02125f68(c);
+        func_ov006_02125f68();
 
         IA(0xab38) += I(0xab60);
         IA(0xab3c) += I(0xab64);
@@ -1711,7 +1718,7 @@ s32 dScMgSnowball_c::Behavior()
             r7 = (data_020a0de9[j] != 0);
         if (r7 != 0)
             I(0xba10) = 0;
-        func_ov006_02125f68(c);
+        func_ov006_02125f68();
 
         if (I(0xab60) != 0 || I(0xab64) != 0) {
             r7 = Vec2_Len((int*)AT(c,0xab60));
@@ -1813,18 +1820,15 @@ s32 dScMgSnowball_c::Behavior()
         break;
     }
 
-    func_ov006_0212a2e0(c);
-    func_ov006_02125890(c);
+    func_ov006_0212a2e0();
+    func_ov006_02125890();
     func_ov006_02126948(c);
     return 1;
 }
 
 // @symbol _ZN15dScMgSnowball_c8OnKickedEv
-/* OnKicked keeps its own `extern "C"` block and the one-letter `V` scroll
-   macro, which is #undef'd at the end of the block. */
-
-extern "C" {
-/* dScMgSnowball_c::OnKicked, from its vtable slot. */
+/* dScMgSnowball_c::OnKicked, from its vtable slot. The one-letter `V`
+   scroll macro is #undef'd at the end of the function. */
 
 #define V (self->mScrollY >> 12)
 
@@ -1857,7 +1861,6 @@ int dScMgSnowball_c::OnKicked()
         }
     }
     return ((dScMgBase_c *)c)->dScMgBase_c::OnKicked() != 0;
-}
 }
 #undef V
 
@@ -1892,10 +1895,10 @@ void dScMgSnowball_c::OnYoshiTryEat(int i)
     void *c = (void *)this;
 
   func_ov004_020adb1c(0);
-  func_ov006_021279b0(c);
+  func_ov006_021279b0();
   if(i != 0x13) return;
-  func_ov006_02126ee4(c);
-  func_ov006_02126a98((char *)c);
+  func_ov006_02126ee4();
+  func_ov006_02126a98();
 }
 
 // @symbol _ZN15dScMgSnowball_c13InitResourcesEv
@@ -1972,9 +1975,9 @@ s32 dScMgSnowball_c::InitResources()
     *(vu16 *)0x4000008 = (*(vu16 *)0x4000008 & ~3) | 1;
     data_0209d45c |= 1;
 
-    func_ov006_021279b0(arg0);
-    func_ov006_02126ee4(arg0);
-    func_ov006_02126a98((char *)arg0);
+    func_ov006_021279b0();
+    func_ov006_02126ee4();
+    func_ov006_02126a98();
     return 1;
 }
 
@@ -2010,14 +2013,14 @@ extern "C" void *func_ov006_021295ac(char *t)
 }
 
 // @symbol func_ov006_0212968c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov006_0212968c(void)
 {
 }
 }
 
-// @symbol func_ov006_02129690
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02129690Ev
+extern "C" {
 extern void func_ov004_020af948(void* a, int b, int c, void* m);
 extern void DrawOamSprite(void* a, int b, int c, void* m);
 
@@ -2038,8 +2041,10 @@ typedef struct {
     Elem_02129690 arr[50];               /* 0xbe94 */
 } Obj_02129690;
 
-void func_ov006_02129690(void* self)
+}
+void dScMgSnowball_c::func_ov006_02129690()
 {
+    void *self = (void *)this;
     Obj_02129690* a = (Obj_02129690*)self;
     int i;
     for (i = 0; i < 50; i++) {
@@ -2051,11 +2056,10 @@ void func_ov006_02129690(void* self)
         }
     }
 }
-}
 
-// @symbol func_ov006_0212972c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0212972c(char* c, int idx){
+// @symbol _ZN15dScMgSnowball_c19func_ov006_0212972cEi
+void dScMgSnowball_c::func_ov006_0212972c(int idx){
+    char *c = (char *)this;
   int off = idx * 0x24;
   short* h = (short*)(c + 0xbeac + off);
   if (*(unsigned short*)h != 0) {
@@ -2073,15 +2077,16 @@ void func_ov006_0212972c(char* c, int idx){
   }
   *(unsigned char*)(c + 0xb000 + off + 0xeb1) = 0;
 }
-}
 
-// @symbol func_ov006_021297c0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol _ZN15dScMgSnowball_c19func_ov006_021297c0Ei
+extern "C" {
 extern int RandomIntInternal(int* seed);
 extern int data_0209d4b8;
 
-void func_ov006_021297c0(unsigned char* base, int idx)
+}
+void dScMgSnowball_c::func_ov006_021297c0(int idx)
 {
+    unsigned char *base = (unsigned char *)this;
     int off = idx * 0x24;
     int* pa = (int*)(base + 0xbea0 + off);
     int* pb = (int*)(base + 0xbea4 + off);
@@ -2102,13 +2107,14 @@ void func_ov006_021297c0(unsigned char* base, int idx)
         *cnt = (unsigned char)(((32 * (((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)) >> 15) + 0x20);
     }
 }
-}
 
-// @symbol func_ov006_02129894
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02129894Ei
 extern "C" {
 extern int RandomIntInternal(int* seed);
 extern int data_0209d4b8;
-void func_ov006_02129894(char* c, int i) {
+}
+void dScMgSnowball_c::func_ov006_02129894(int i) {
+    char *c = (char *)this;
   int idx = i * 0x24;
   unsigned int r;
   *(int*)(c + 0xbea0 + idx) = 0;
@@ -2119,12 +2125,11 @@ void func_ov006_02129894(char* c, int i) {
   r = ((r << 5) >> 15) + 0x20;
   *(short*)(c + 0xbeac + idx) = (unsigned char)r;
 }
-}
 
-// @symbol func_ov006_0212992c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0212992c(char *self, int idx)
+// @symbol _ZN15dScMgSnowball_c19func_ov006_0212992cEi
+void dScMgSnowball_c::func_ov006_0212992c(int idx)
 {
+    char *self = (char *)this;
     int off = idx * 0x24;
     int *be94 = (int*)(self + 0xbe94 + off);
     int *be9c = (int*)(self + 0xbe9c + off);
@@ -2149,15 +2154,16 @@ void func_ov006_0212992c(char *self, int idx)
     }
     *(unsigned char*)(self + 0xbeb0 + off) = 0;
 }
-}
 
-// @symbol func_ov006_02129a34
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02129a34Ei
+extern "C" {
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 
-void func_ov006_02129a34(char *base, int i)
+}
+void dScMgSnowball_c::func_ov006_02129a34(int i)
 {
+    char *base = (char *)this;
     int o = i * 0x24;
     unsigned short *aa8;
 
@@ -2190,15 +2196,16 @@ void func_ov006_02129a34(char *base, int i)
         *aaa = (short)(((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) + 0x20) & 0xff);
     }
 }
-}
 
-// @symbol func_ov006_02129b74
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02129b74Ei
+extern "C" {
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 
-void func_ov006_02129b74(char *base, int index)
+}
+void dScMgSnowball_c::func_ov006_02129b74(int index)
 {
+    char *base = (char *)this;
     int i = index * 0x24;
     unsigned short v;
 
@@ -2230,16 +2237,17 @@ void func_ov006_02129b74(char *base, int index)
     *(char *)(base + 0xbeb0 + i) = 3;
     *(short *)(base + 0xbeaa + i) = (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) + 0x20 & 0xff;
 }
-}
 
-// @symbol func_ov006_02129cb0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02129cb0Ei
+extern "C" {
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 extern unsigned char data_ov006_0212f3b0[];
 
-void func_ov006_02129cb0(char *o, int i)
+}
+void dScMgSnowball_c::func_ov006_02129cb0(int i)
 {
+    char *o = (char *)this;
     int n = i * 0x24;
     if (*(unsigned short *)(o + 0xbea8 + n) != 0) {
         *(unsigned short *)(o + 0xbea8 + n) = *(unsigned short *)(o + 0xbea8 + n) - 1;
@@ -2251,25 +2259,25 @@ void func_ov006_02129cb0(char *o, int i)
     *(unsigned short *)(o + 0xbea8 + n) = (short)(unsigned char)((0x10 * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)) >> 0xf);
     *(unsigned short *)(o + 0xbeaa + n) = (short)(unsigned char)(((0x40 * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)) >> 0xf) + 0x60);
 }
-}
 
-// @symbol func_ov006_02129d94
-struct C_02129d94; typedef void (C_02129d94::*PMF_02129d94)(int);
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02129d94Ei
+struct C_02129d94; typedef void (dScMgSnowball_c::*PMF_02129d94)(int);
 struct Entry_02129d94 { PMF_02129d94 pmf; };
 extern Entry_02129d94 data_ov006_02143070[];
 extern Entry_02129d94 data_ov006_02143020[];
 struct Elem_02129d94 { unsigned char a; unsigned char b; char pad[0x22]; };
-struct C_02129d94 { char head[0xbeb0]; Elem_02129d94 arr[1]; };
-extern "C" void func_ov006_02129d94(C_02129d94* c, int i) {
+struct C_02129d94 { char head[0xbeb0]; Elem_02129d94 arr[1]; }; /* pun view over the scene; PMF receiver is the class */
+void dScMgSnowball_c::func_ov006_02129d94(int i) {
+    C_02129d94 *c = (C_02129d94 *)this;
   int idx0 = c->arr[i].a;
-  (c->*data_ov006_02143070[idx0].pmf)(i);
+  (this->*data_ov006_02143070[idx0].pmf)(i);
   int idx1 = c->arr[i].b;
-  (c->*data_ov006_02143020[idx1].pmf)(i);
+  (this->*data_ov006_02143020[idx1].pmf)(i);
 }
 
-// @symbol func_ov006_02129e28
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02129e28(char *c, int i){
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02129e28Ei
+void dScMgSnowball_c::func_ov006_02129e28(int i){
+    char *c = (char *)this;
   int o = i*0x24;
   char *b9c = c + 0xbe9c;
   char *b94 = c + 0xbe94;
@@ -2293,12 +2301,11 @@ void func_ov006_02129e28(char *c, int i){
     *(unsigned char*)(c + o + 0xbeb0) = 0;
   }
 }
-}
 
-// @symbol func_ov006_02129eec
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02129eec(char *c, int idx)
+// @symbol _ZN15dScMgSnowball_c19func_ov006_02129eecEi
+void dScMgSnowball_c::func_ov006_02129eec(int idx)
 {
+    char *c = (char *)this;
     int n = idx * 0x24;
     unsigned short d;
     short r;
@@ -2324,12 +2331,11 @@ void func_ov006_02129eec(char *c, int idx)
     }
     *(unsigned char *)(c + 0xbeb0 + n) = 3;
 }
-}
 
-// @symbol func_ov006_0212a000
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0212a000(char *base, int index)
+// @symbol _ZN15dScMgSnowball_c19func_ov006_0212a000Ei
+void dScMgSnowball_c::func_ov006_0212a000(int index)
 {
+    char *base = (char *)this;
     int n;
 
     *(int *)(base + 0xbe94 + index * 0x24) += *(int *)(base + 0xbe9c + index * 0x24);
@@ -2359,16 +2365,17 @@ void func_ov006_0212a000(char *base, int index)
 
     *(unsigned char *)(base + 0xbeb0 + index * 0x24) = 3;
 }
-}
 
-// @symbol func_ov006_0212a110
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol _ZN15dScMgSnowball_c19func_ov006_0212a110Ei
+extern "C" {
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 extern unsigned char data_ov006_0212f3ac[];
 
-void func_ov006_0212a110(char *c, int idx)
+}
+void dScMgSnowball_c::func_ov006_0212a110(int idx)
 {
+    char *c = (char *)this;
     int n = idx * 0x24;
     unsigned short d;
     short r;
@@ -2390,27 +2397,29 @@ void func_ov006_0212a110(char *c, int idx)
     v = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
     *(short *)(c + 0xbeaa + n) = (unsigned char)(((v * 0x30) >> 15) + 0x30);
 }
-}
 
-// @symbol func_ov006_0212a224
-struct C_0212a224;
-typedef void (C_0212a224::*PMF_0212a224)(int);
+// @symbol _ZN15dScMgSnowball_c19func_ov006_0212a224Ei
+
+typedef void (dScMgSnowball_c::*PMF_0212a224)(int);
 extern "C" PMF_0212a224 data_ov006_02143050[];
 
-extern "C" void func_ov006_0212a224(char *base, int idx)
+void dScMgSnowball_c::func_ov006_0212a224(int idx)
 {
+    char *base = (char *)this;
     unsigned char state = *(unsigned char *)(base + idx * 0x24 + 0xbeb0);
-    (((C_0212a224 *)base)->*data_ov006_02143050[state])(idx);
+    (this->*data_ov006_02143050[state])(idx);
 }
 
-// @symbol func_ov006_0212a274
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol _ZN15dScMgSnowball_c19func_ov006_0212a274Ei
+extern "C" {
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 extern int data_ov006_0212f3b4[];
 
-void func_ov006_0212a274(char *self, int idx)
+}
+void dScMgSnowball_c::func_ov006_0212a274(int idx)
 {
+    char *self = (char *)this;
     unsigned int v = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16 & 0x7fff) << 3 >> 0xf;
     int b = 0;
     if (v == 5)
@@ -2418,18 +2427,18 @@ void func_ov006_0212a274(char *self, int idx)
     *(unsigned char *)(self + idx * 0x24 + 0xbeaf) = data_ov006_0212f3b4[b];
     *(unsigned char *)(self + idx * 0x24 + 0xbeb0) = 0;
 }
-}
 
-// @symbol func_ov006_0212a2e0
-class C_0212a2e0 { public: int dummy; };
-typedef void (C_0212a2e0::*PMF_0212a2e0)(int);
+// @symbol _ZN15dScMgSnowball_c19func_ov006_0212a2e0Ev
+
+typedef void (dScMgSnowball_c::*PMF_0212a2e0)(int);
 
 extern "C" PMF_0212a2e0 data_ov006_02143038[];
 extern "C" int RandomIntInternal(int *seed);
 extern "C" int data_0209d4b8;
 
-extern "C" void func_ov006_0212a2e0(char *o)
+void dScMgSnowball_c::func_ov006_0212a2e0()
 {
+    char *o = (char *)this;
     int i;
     char *q;
     int mask;
@@ -2440,7 +2449,7 @@ extern "C" void func_ov006_0212a2e0(char *o)
     do {
         if (*(u8 *)(q + 0xbeae) != 0) {
             u8 fidx = *(u8 *)(q + 0xbeaf);
-            (((C_0212a2e0 *)o)->*data_ov006_02143038[fidx])(i);
+            (this->*data_ov006_02143038[fidx])(i);
             if ((*(int *)(q + 0xbe98) - *(int *)(o + 0xab6c)) >> 12 >= 0xc8) {
                 u32 rnd = ((u32)RandomIntInternal(&data_0209d4b8) >> 16) & mask;
                 rnd = (rnd << 5) >> 0xf;
@@ -2456,13 +2465,15 @@ extern "C" void func_ov006_0212a2e0(char *o)
     } while (i < 0x32);
 }
 
-// @symbol func_ov006_0212a3c0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol _ZN15dScMgSnowball_c19func_ov006_0212a3c0Ev
+extern "C" {
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 
-void func_ov006_0212a3c0(char *c)
+}
+void dScMgSnowball_c::func_ov006_0212a3c0()
 {
+    char *c = (char *)this;
     int i;
     char *p;
     unsigned int r;
@@ -2519,5 +2530,4 @@ void func_ov006_0212a3c0(char *c)
         *(short *)(p + 0xbe00 + 0xa8) = 0;
         p += 0x24;
     }
-}
 }

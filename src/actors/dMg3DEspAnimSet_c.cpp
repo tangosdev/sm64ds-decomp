@@ -7,9 +7,9 @@
  * the header declares first and out of line, so this file owns the key
  * function and emits the vtable and the RTTI chain. Then come
  * dMg3DEspAnimSet_c (three animated models), dMg3DEspModel_c (an animated
- * model that dispatches through a member-function state), the unnamed
- * helpers and round states, and it closes with dScMg3DEsp_c's own
- * members, Virtual50 through InitResources.
+ * model that dispatches through a member-function state), the scene's
+ * slot, row and card state handlers and its round phases, and it closes
+ * with dScMg3DEsp_c's own members, Virtual50 through InitResources.
  * dScMg3DEsp_c_classInit, the factory just above, stays in
  * src/d_s_mg3_d_esp.cpp. Functions run in ROM order under
  * `#pragma defer_codegen off`; do not reorder.
@@ -20,6 +20,20 @@
  * SetFile and SetAnim take Fix12<int> by value in their real signatures;
  * calling them through the headers adds bytes, so their calls stay mangled
  * with a scalar speed.
+ *
+ * deslop leftovers:
+ * - The scene's slot, row and card elements (stride 0x20/0x18 records at
+ *   this+0x52xx..0x55xx) are only partially recovered: Row_8a44, Ent_8e10,
+ *   P_8e10 and E_968c stand in for their element types, and the handlers
+ *   index them through a char* alias of this. Member-array indexing needs
+ *   the header layout recovered first and re-verifies differently, so the
+ *   raw forms stay.
+ * - Obj_777c is a vtable shim so AnimSet::Render can virtual-call the
+ *   ModelAnim method that takes a void* argument; naming the real slot
+ *   needs the ModelAnim vtable recovered.
+ * - mRoundState/mTimer are named; the remaining unk_ fields on the scene
+ *   and both helper classes are written-but-unread or have no proven
+ *   semantics yet.
  */
 
 #pragma defer_codegen off
@@ -76,7 +90,7 @@ void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(uns
 void func_02046208(char* a, int b, int c);
 int func_020179b4(void* r0, void* r1, int r2);
 /* The last four parameters are unsigned short in the real signature;
-   func_ov006_020e8bd0 passes 0x10 - n, which must not be truncated. */
+   RowFade passes 0x10 - n, which must not be truncated. */
 void _ZN3G2x13SetBlendAlphaEPVttttj(volatile unsigned short *p, int a, int b, int c, int d);
 s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
 int RandomIntInternal(int *seed);
@@ -105,6 +119,8 @@ void func_02056374(const void*, u32, u32);
 extern int data_ov006_0213c7f4;
 extern int data_ov006_0213c744[];
 extern dMg3DEspModel_c::State data_ov006_0213c704;
+extern dMg3DEspModel_c::State data_ov006_0213c754;
+extern dMg3DEspModel_c::State data_ov006_0213c764;
 extern dMg3DEspModel_c::State data_ov006_0213c76c;
 extern dMg3DEspModel_c::State data_ov006_0213c774;
 extern void *data_ov006_0213c844;
@@ -226,30 +242,28 @@ void dMg3DEspAnimSet_c::Behavior()
 // @symbol _ZN17dMg3DEspAnimSet_c5ResetEv
 void dMg3DEspAnimSet_c::Reset()
 {
-    unk_178 = 0;
-    unk_17c = 30;
-    unk_17a = 0;
+    mRepeats = 0;
+    mPeriod = 30;
+    mPhase = 0;
 }
 
-extern "C" {
-// @symbol func_ov006_020e792c
-void func_ov006_020e792c(char* c, short v)
+// @symbol _ZN17dMg3DEspAnimSet_c10SetRepeatsEs
+void dMg3DEspAnimSet_c::SetRepeats(s16 v)
 {
-    *(short*)(c + 0x178) = v;
-    *(short*)(c + 0x17a) = 0;
+    mRepeats = v;
+    mPhase = 0;
 }
 
-// @symbol func_ov006_020e7940
-void func_ov006_020e7940(char *p, short v)
+// @symbol _ZN17dMg3DEspAnimSet_c9SetPeriodEs
+void dMg3DEspAnimSet_c::SetPeriod(s16 v)
 {
-    *(short *)(p + 0x17c) = v;
+    mPeriod = v;
 }
 
-// @symbol func_ov006_020e794c
-void func_ov006_020e794c(int *p, int v)
+// @symbol _ZN17dMg3DEspAnimSet_c8SetSpeedEi
+void dMg3DEspAnimSet_c::SetSpeed(s32 v)
 {
-    p[93] = v;
-}
+    mSpeed = v;
 }
 
 // @symbol _ZN17dMg3DEspAnimSet_c13InitResourcesEv
@@ -345,84 +359,75 @@ void dMg3DEspModel_c::Behavior()
     mModelAnim.Advance();
     mAnimSet.Behavior();
 
-    if (unk_208 == 0) return;
+    if (mShowSparks == 0) return;
 
-    unk_204 = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        unk_204, 0xec, 0x48c000, 0x140000, 0x200000, 0, 0);
+    mParticleSys = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        mParticleSys, 0xec, 0x48c000, 0x140000, 0x200000, 0, 0);
 }
 
-extern "C" void func_ov006_020e7f5c(dMg3DEspModel_c* model);
-
-// @symbol func_ov006_020e7cc0
-extern "C" void func_ov006_020e7cc0(char *thiz)
+// @symbol _ZN15dMg3DEspModel_c3HitEv
+void dMg3DEspModel_c::Hit()
 {
+    char *thiz = (char*)this;
     if (((dExtFrameCtrl_c*)(thiz + 0x5c))->Finished() != 0 &&
         *(void**)(thiz + 0x6c) == ((void**)&data_ov006_02141e8c)[1]) {
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)(thiz + 0xc), ((BCA_File**)&data_ov006_02141e84)[1], 0, 0x800, 0);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, ((BCA_File**)&data_ov006_02141e84)[1], 0, 0x800, 0);
         return;
     }
     if (((dExtFrameCtrl_c*)(thiz + 0x5c))->WillHitFrame(0x10) == 0 &&
         ((dExtFrameCtrl_c*)(thiz + 0x5c))->WillHitFrame(0x50) == 0)
         return;
-    if (*(int*)(thiz + 0x20c) != 0)
+    if (mMuted != 0)
         return;
     Sound::PlayBank2_2D(0x18f);
 }
 
-extern "C" {
-struct G2_7d7c { int w[2]; };
-extern struct G2_7d7c data_ov006_0213c754;
-
-// @symbol func_ov006_020e7d7c
-void func_ov006_020e7d7c(char *c)
+// @symbol _ZN15dMg3DEspModel_c8StartHitEv
+void dMg3DEspModel_c::StartHit()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)(c + 0xc), *(BCA_File**)((char*)&data_ov006_02141e8c + 4), 0x40000000, 0x800, 0);
-    if (*(int*)(c + 0x20c) == 0)
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(BCA_File**)((char*)&data_ov006_02141e8c + 4), 0x40000000, 0x800, 0);
+    if (mMuted == 0)
         Sound::PlayBank2_2D(0x191);
-    *(struct G2_7d7c*)(c + 0x210) = data_ov006_0213c754;
+    mState = data_ov006_0213c754;
 }
 
-// @symbol func_ov006_020e7de8
-void func_ov006_020e7de8(char *c)
+// @symbol _ZN15dMg3DEspModel_c5IntroEv
+void dMg3DEspModel_c::Intro()
 {
+    char *c = (char*)this;
     if (_ZN15dExtFrameCtrl_c8FinishedEv(c + 0x5c)) {
-        if (*(int *)(c + 0x20c) == 0)
+        if (mMuted == 0)
             Sound::PlayBank2_2D(0x18f);
-        func_ov006_020e7f5c((dMg3DEspModel_c *)c);
+        StartWait();
         return;
     }
     if (_ZNK15dExtFrameCtrl_c12WillHitFrameEi(c + 0x5c, 0x1e) == 0)
         return;
-    func_ov006_020e7940((char *)(c + 0x84), 0x1e);
-    func_ov006_020e794c((int *)(c + 0x84), 0x800);
-    func_ov006_020e792c((char *)(c + 0x84), -1);
-    *(int *)(c + 0x208) = 1;
+    mAnimSet.SetPeriod(0x1e);
+    mAnimSet.SetSpeed(0x800);
+    mAnimSet.SetRepeats(-1);
+    mShowSparks = 1;
 }
 
-struct G2_7e74 { int w[2]; };
-extern struct G2_7e74 data_ov006_0213c764;
-
-// @symbol func_ov006_020e7e74
-void func_ov006_020e7e74(char *c)
+// @symbol _ZN15dMg3DEspModel_c10StartIntroEv
+void dMg3DEspModel_c::StartIntro()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)(c + 0xc), *(BCA_File**)((char*)&data_ov006_02141e5c + 4), 0x40000000, 0x800, 0);
-    func_ov006_020e7940(c + 0x84, 0xf);
-    func_ov006_020e794c((int*)(c + 0x84), 0x1000);
-    func_ov006_020e792c(c + 0x84, 3);
-    if (*(int*)(c + 0x20c) == 0)
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(BCA_File**)((char*)&data_ov006_02141e5c + 4), 0x40000000, 0x800, 0);
+    mAnimSet.SetPeriod(0xf);
+    mAnimSet.SetSpeed(0x1000);
+    mAnimSet.SetRepeats(3);
+    if (mMuted == 0)
         Sound::PlayBank2_2D(0x18e);
-    *(struct G2_7e74*)(c + 0x210) = data_ov006_0213c764;
-}
+    mState = data_ov006_0213c764;
 }
 
-// @symbol func_ov006_020e7f04
-extern "C" void func_ov006_020e7f04(char* self)
+// @symbol _ZN15dMg3DEspModel_c4WaitEv
+void dMg3DEspModel_c::Wait()
 {
-    dMg3DEspModel_c* model = (dMg3DEspModel_c*)self;
-    if (model->unk_20c)
+    if (mMuted)
         return;
-    if (!model->mModelAnim.WillHitFrame(0)) {
-        if (!model->mModelAnim.WillHitFrame(0x39))
+    if (!mModelAnim.WillHitFrame(0)) {
+        if (!mModelAnim.WillHitFrame(0x39))
             return;
     }
     Sound::PlayBank2_2D(0x18f);
@@ -431,16 +436,16 @@ extern "C" void func_ov006_020e7f04(char* self)
 /* Keep the scalar-speed boundary used by the existing SetAnim definition.
    The measured native Fix12-by-value call grows this function by eight
    bytes. */
-// @symbol func_ov006_020e7f5c
-extern "C" void func_ov006_020e7f5c(dMg3DEspModel_c* model)
+// @symbol _ZN15dMg3DEspModel_c9StartWaitEv
+void dMg3DEspModel_c::StartWait()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&model->mModelAnim,
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim,
         ((BCA_File**)&data_ov006_02141e7c)[1], 0, 0x800, 0);
-    model->mState = data_ov006_0213c76c;
+    mState = data_ov006_0213c76c;
 }
 
-// @symbol func_ov006_020e7fac
-extern "C" void func_ov006_020e7fac(void)
+// @symbol _ZN15dMg3DEspModel_c4IdleEv
+void dMg3DEspModel_c::Idle()
 {
 }
 
@@ -448,7 +453,7 @@ extern "C" void func_ov006_020e7fac(void)
 void dMg3DEspModel_c::Reset()
 {
     mAnimSet.Reset();
-    unk_208 = 0;
+    mShowSparks = 0;
     mState = data_ov006_0213c774;
 }
 
@@ -470,7 +475,7 @@ int dMg3DEspModel_c::InitResources()
     mAnimSet.InitResources();
     ResetTransform();
     Reset();
-    unk_208 = 0;
+    mShowSparks = 0;
     return 1;
 }
 
@@ -490,7 +495,7 @@ dMg3DEspModel_c::dMg3DEspModel_c()
     : unk_000(0x8c000),
       unk_004(0x8c000),
       unk_008(0),
-      unk_20c(0),
+      mMuted(0),
       mTextureFrame(0),
       mPolygonID(0x1f)
 {
@@ -498,29 +503,45 @@ dMg3DEspModel_c::dMg3DEspModel_c()
 
 /* ---- the round: helpers and states ------------------------------------- */
 
-extern "C" {
-// @symbol func_ov006_020e81a4
-void func_ov006_020e81a4(char *c)
+/* The scene keeps its state machines in pointer-to-member tables the static
+   init copies into data_ov006_02141fxx: the three round states for
+   Behavior, four play phases for Play, five card states, three row states,
+   two slot states, four slot type handlers and three flash modes. */
+typedef void (dScMg3DEsp_c::*dScMg3DEsp_cState)();
+typedef void (dScMg3DEsp_c::*dScMg3DEsp_cObjState)(int);
+extern "C" dScMg3DEsp_cState data_ov006_02141f2c[];
+extern "C" dScMg3DEsp_cState data_ov006_02141fac[];
+extern "C" dScMg3DEsp_cState data_ov006_02141f44[];
+extern "C" dScMg3DEsp_cObjState data_ov006_02141f1c[];
+extern "C" dScMg3DEsp_cObjState data_ov006_02141f5c[];
+extern "C" dScMg3DEsp_cObjState data_ov006_02141f74[];
+extern "C" dScMg3DEsp_cObjState data_ov006_02141f8c[];
+
+// @symbol _ZN12dScMg3DEsp_c10DrawBannerEv
+void dScMg3DEsp_c::DrawBanner()
 {
+    char *c = (char*)this;
     if (*(unsigned char *)(c + 0x5555) != 0)
         func_ov004_020b1e34(c, 0xe0, 0x14, 1);
 }
 
-/* Early-out if the byte flag at self+0x5553 is set; otherwise set
-   self+0x51f2 to 0x1e and increment the byte at self+0x5553. The check and
+/* Early-out if the byte flag at mFlashStep is set; otherwise set
+   the embedded model's mPolygonID to 0x1e and step mFlashStep. The check and
    store share the self+0x5000 base (add r2); the laundered increment
    pool-loads the 0x5553 offset. */
-// @symbol func_ov006_020e81e0
-void func_ov006_020e81e0(char *self)
+// @symbol _ZN12dScMg3DEsp_c10FlashQuickEv
+void dScMg3DEsp_c::FlashQuick()
 {
+    char *self = (char*)this;
     if (*(unsigned char *)(self + 0x5553)) return;
     *(unsigned char *)(self + 0x51f2) = 0x1e;
     *(unsigned char *)(self + 0x5553) += 1;
 }
 
-// @symbol func_ov006_020e8214
-void func_ov006_020e8214(char* c)
+// @symbol _ZN12dScMg3DEsp_c9FlashSyncEv
+void dScMg3DEsp_c::FlashSync()
 {
+    char* c = (char*)this;
     u8 state = *(u8*)(c + 0x5553);
     if (state == 0) {
         u8* p = (u8*)(c + 0x5553);
@@ -543,9 +564,10 @@ void func_ov006_020e8214(char* c)
     *(u8*)(c + 0x51f2) = 0x1f;
 }
 
-// @symbol func_ov006_020e82c8
-void func_ov006_020e82c8(unsigned char *c)
+// @symbol _ZN12dScMg3DEsp_c9FlashOnceEv
+void dScMg3DEsp_c::FlashOnce()
 {
+    unsigned char *c = (unsigned char*)this;
     unsigned char *r2;
     unsigned char *p;
     unsigned char k;
@@ -561,24 +583,13 @@ void func_ov006_020e82c8(unsigned char *c)
     r2[0x1f2] = k;
 }
 
-struct Ent_82fc { int a; int b; };
-extern Ent_82fc data_ov006_02141f44[];
-
-// @symbol func_ov006_020e82fc
-void func_ov006_020e82fc(char* c)
+// @symbol _ZN12dScMg3DEsp_c11UpdateFlashEv
+void dScMg3DEsp_c::UpdateFlash()
 {
+    char* c = (char*)this;
     unsigned char idx = *(unsigned char*)(c + 0x5000 + 0x552);
     if (idx >= 3) return;
-    Ent_82fc* e = &data_ov006_02141f44[idx];
-    int adj = e->b;
-    char* obj = c + (adj >> 1);
-    int fn;
-    if (adj & 1) {
-        fn = *(int*)(*(int*)obj + e->a);
-    } else {
-        fn = e->a;
-    }
-    ((void(*)(void*))fn)(obj);
+    (this->*data_ov006_02141f44[idx])();
 }
 
 extern void* data_ov006_02133a3c[];
@@ -597,9 +608,10 @@ typedef struct {
     Slot_8354 slots[20];
 } Outer_8354;
 
-// @symbol func_ov006_020e8354
-void func_ov006_020e8354(Outer_8354* a)
+// @symbol _ZN12dScMg3DEsp_c11RenderSlotsEv
+void dScMg3DEsp_c::RenderSlots()
 {
+    Outer_8354* a = (Outer_8354*)this;
     int i;
     for (i = 0; i < 20; i++) {
         if (a->slots[i].enable) {
@@ -609,9 +621,10 @@ void func_ov006_020e8354(Outer_8354* a)
     }
 }
 
-// @symbol func_ov006_020e83bc
-void func_ov006_020e83bc(char *c, int i)
+// @symbol _ZN12dScMg3DEsp_c10SlotDampenEi
+void dScMg3DEsp_c::SlotDampen(int i)
 {
+  char *c = (char*)this;
   unsigned long new_var;
   char *b = c + (i * 32);
   char *q = c + 0x52bc;
@@ -646,9 +659,10 @@ void func_ov006_020e83bc(char *c, int i)
 #pragma push
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
-// @symbol func_ov006_020e84b8
-void func_ov006_020e84b8(char *c, int i)
+// @symbol _ZN12dScMg3DEsp_c8SlotKickEi
+void dScMg3DEsp_c::SlotKick(int i)
 {
+    char *c = (char*)this;
     *(int *)(c + 0x52bc + i * 32) += *(int *)(c + i * 32 + 0x52c4);
     *(int *)(c + 0x52c0 + i * 32) += *(int *)(c + i * 32 + 0x52c8);
     if (*(unsigned short *)(c + i * 32 + 0x52ce) != 0) {
@@ -677,9 +691,10 @@ void func_ov006_020e84b8(char *c, int i)
 
 #pragma push
 #pragma opt_common_subs off
-// @symbol func_ov006_020e85f0
-void func_ov006_020e85f0(char *c, int i)
+// @symbol _ZN12dScMg3DEsp_c8SlotRiseEi
+void dScMg3DEsp_c::SlotRise(int i)
 {
+    char *c = (char*)this;
     *(int*)(c + 0x52bc + i * 0x20) += *(int*)(c + i * 0x20 + 0x5000 + 0x2c4);
     *(int*)(c + 0x52c0 + i * 0x20) += *(int*)(c + i * 0x20 + 0x5000 + 0x2c8);
 
@@ -730,9 +745,10 @@ extern unsigned char data_ov006_0212e57c[];
 
 #pragma push
 #pragma opt_common_subs off
-// @symbol func_ov006_020e8728
-void func_ov006_020e8728(char *c, int idx)
+// @symbol _ZN12dScMg3DEsp_c9SlotSetupEi
+void dScMg3DEsp_c::SlotSetup(int idx)
 {
+    char *c = (char*)this;
     unsigned int r;
     *(int *)(c + (idx << 5) + 0x52c4) = 0;
     r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
@@ -749,27 +765,14 @@ void func_ov006_020e8728(char *c, int idx)
 }
 #pragma pop
 
-extern int data_ov006_02141f8c[];
-
-typedef void (*Fn_8830)(void*, int);
-
 #pragma push
 #pragma opt_common_subs off
-// @symbol func_ov006_020e8830
-void func_ov006_020e8830(char* base, int idx)
+// @symbol _ZN12dScMg3DEsp_c8SlotFallEi
+void dScMg3DEsp_c::SlotFall(int idx)
 {
+  char* base = (char*)this;
   unsigned char b = *(unsigned char*)(base + idx*0x20 + 0x52da);
-  int* ent = &data_ov006_02141f8c[b*2];
-  int adj = ent[1];
-  void* obj = base + (adj >> 1);
-  Fn_8830 fn;
-  if(adj & 1){
-    void* vt = *(void**)obj;
-    fn = *(Fn_8830*)((char*)vt + ent[0]);
-  }else{
-    fn = (Fn_8830)ent[0];
-  }
-  fn(obj, idx);
+  (this->*data_ov006_02141f8c[b])(idx);
 
   unsigned char c = *(unsigned char*)(base + idx*0x20 + 0x52d6);
   *(int*)(base + 0x52c8 + idx*0x20) -= (c<<3) + 0x10;
@@ -787,9 +790,10 @@ void func_ov006_020e8830(char* base, int idx)
 
 #pragma push
 #pragma opt_common_subs off
-// @symbol func_ov006_020e8928
-void func_ov006_020e8928(char *o, int idx)
+// @symbol _ZN12dScMg3DEsp_c8SlotWaitEi
+void dScMg3DEsp_c::SlotWait(int idx)
 {
+    char *o = (char*)this;
     if (*(u16 *)(o + idx * 0x20 + 0x52d2) != 0) {
         *(u16 *)((char *)(((int)o + 0x52d2)) + idx * 0x20) -= 1;
         if (*(short *)(o + idx * 0x20 + 0x52d2) < 0)
@@ -810,33 +814,27 @@ void func_ov006_020e8928(char *o, int idx)
     }
 }
 #pragma pop
-}
 
-class C_8a44;
-typedef void (C_8a44::*PMF_8a44)(int);
-class C_8a44 { public: int dummy; };
 struct Row_8a44 { u8 d[0x20]; };
 
-extern "C" PMF_8a44 data_ov006_02141f1c[];
-
-// @symbol func_ov006_020e8a44
-extern "C" void func_ov006_020e8a44(C_8a44 *self)
+// @symbol _ZN12dScMg3DEsp_c11UpdateSlotsEv
+void dScMg3DEsp_c::UpdateSlots()
 {
-    Row_8a44 *rows = (Row_8a44 *)self;
+    Row_8a44 *rows = (Row_8a44 *)this;
     for (int i = 0; i < 0x14; i++) {
         if (rows[i].d[0x52d4]) {
             u8 k = rows[i].d[0x52d9];
-            (self->*data_ov006_02141f1c[k])(i);
+            (this->*data_ov006_02141f1c[k])(i);
         }
     }
 }
 
-extern "C" {
 #pragma push
 #pragma opt_strength_reduction off
-// @symbol func_ov006_020e8aac
-void func_ov006_020e8aac(char *c)
+// @symbol _ZN12dScMg3DEsp_c10ResetSlotsEv
+void dScMg3DEsp_c::ResetSlots()
 {
+  char *c = (char*)this;
   int i;
   char *new_var;
   for (i = 0; i < 0x14; i++)
@@ -868,9 +866,10 @@ inline char *inline_fn_8b18(int *arg0)
   return (char *) arg0;
 }
 
-// @symbol func_ov006_020e8b18
-void func_ov006_020e8b18(char *thiz)
+// @symbol _ZN12dScMg3DEsp_c10RenderRowsEv
+void dScMg3DEsp_c::RenderRows()
 {
+  char *thiz = (char*)this;
   int *g;
   int i;
   for (i = 0; i < 3; i++)
@@ -890,11 +889,11 @@ void func_ov006_020e8b18(char *thiz)
   }
 
 }
-}
 
-// @symbol func_ov006_020e8bd0
-extern "C" void func_ov006_020e8bd0(char *c, int i)
+// @symbol _ZN12dScMg3DEsp_c7RowFadeEi
+void dScMg3DEsp_c::RowFade(int i)
 {
+    char *c = (char*)this;
     int off = i * 0x14;
     char *b = c + 0x5288;
     int x = *(int *)(b + off);
@@ -914,10 +913,10 @@ extern "C" void func_ov006_020e8bd0(char *c, int i)
     *(unsigned char *)(c + off + 0x5290) = 0;
 }
 
-extern "C" {
-// @symbol func_ov006_020e8c74
-void func_ov006_020e8c74(char* c, int i)
+// @symbol _ZN12dScMg3DEsp_c8RowDecayEi
+void dScMg3DEsp_c::RowDecay(int i)
 {
+  char* c = (char*)this;
   int off = i * 0x14;
   char* b = c + 0x5288;
   int x = *(int*)(b + off);
@@ -928,9 +927,10 @@ void func_ov006_020e8c74(char* c, int i)
   }
 }
 
-// @symbol func_ov006_020e8cb0
-void func_ov006_020e8cb0(char* c, int i)
+// @symbol _ZN12dScMg3DEsp_c7RowWaitEi
+void dScMg3DEsp_c::RowWait(int i)
 {
+  char* c = (char*)this;
   int idx = i*0x14;
   char* r2 = c + 0x528c;
   unsigned short* p = (unsigned short*)(r2 + idx);
@@ -943,34 +943,26 @@ void func_ov006_020e8cb0(char* c, int i)
   *(char*)(r0+0x5000+0x292)=1;
   *(char*)(r0+0x5000+0x291)=1;
 }
+
+// @symbol _ZN12dScMg3DEsp_c10UpdateRowsEv
+void dScMg3DEsp_c::UpdateRows()
+{
+    int i;
+    char* s = (char*)this;
+    for (i = 0; i < 3; i++) {
+        if (*(unsigned char*)(s + 0x5290)) {
+            (this->*data_ov006_02141f74[*(unsigned char*)(s + 0x5291)])(i);
+        }
+        s += 0x14;
+    }
 }
 
-struct C_8d08;
-typedef void (C_8d08::*PMF_8d08)(int);
-extern PMF_8d08 data_ov006_02141f74[];
-
-struct C_8d08 {
-    void run() {
-        int i;
-        char* s = (char*)this;
-        for (i = 0; i < 3; i++) {
-            if (*(unsigned char*)(s + 0x5290)) {
-                (this->*data_ov006_02141f74[*(unsigned char*)(s + 0x5291)])(i);
-            }
-            s += 0x14;
-        }
-    }
-};
-
-// @symbol func_ov006_020e8d08
-extern "C" void func_ov006_020e8d08(C_8d08* c) { c->run(); }
-
-extern "C" {
 extern unsigned short data_ov006_0212e58c[];
 
-// @symbol func_ov006_020e8d7c
-void func_ov006_020e8d7c(char *c, int idx)
+// @symbol _ZN12dScMg3DEsp_c9SpawnRowsEi
+void dScMg3DEsp_c::SpawnRows(int idx)
 {
+    char *c = (char*)this;
     int i;
     char *d = c;
     char *e = c + idx * 0x18;
@@ -987,7 +979,6 @@ void func_ov006_020e8d7c(char *c, int idx)
         *(int *)(d + 0x5288) = 0x1400;
         d += 0x14;
     }
-}
 }
 
 struct Ent_8e10 { u16 f0, f2, f4, f6; };
@@ -1008,9 +999,10 @@ struct P_8e10 {
 
 #define PP(base) ((P_8e10 *)((base) + 0x5000))
 
-// @symbol func_ov006_020e8e10
-extern "C" void func_ov006_020e8e10(char *c0)
+// @symbol _ZN12dScMg3DEsp_c11RenderCardsEv
+void dScMg3DEsp_c::RenderCards()
 {
+  char *c0 = (char*)this;
   int i;
   int x;
   int y;
@@ -1046,10 +1038,10 @@ extern "C" void func_ov006_020e8e10(char *c0)
 
 #undef PP
 
-extern "C" {
-// @symbol func_ov006_020e8f14
-void func_ov006_020e8f14(char *self, int i)
+// @symbol _ZN12dScMg3DEsp_c8CardSeekEi
+void dScMg3DEsp_c::CardSeek(int i)
 {
+    char *self = (char*)this;
     int n;
     u16 timer;
     s16 tv1;
@@ -1136,21 +1128,22 @@ void func_ov006_020e8f14(char *self, int i)
         }
     }
 
-    *(int *) (self + 0x553c) = 2;
-    *(int *) (self + 0x5540) = 0;
-    *(u16 *) (self + 0x5548) = 0x90;
+    mRoundState = 2;
+    mPhase = 0;
+    mTimer = 0x90;
     if (*(u8 *) (self + 0x5550) == 0)
     {
         u16 *p548 = (u16 *) (self + 0x5548);
         *p548 = *p548 + 0x40;
     }
 
-    func_ov006_020e7d7c(self + 0x4fd8);
+    ((dMg3DEspModel_c*)pad_4fd8)->StartHit();
 }
 
-// @symbol func_ov006_020e91a0
-void func_ov006_020e91a0(char* self, int idx)
+// @symbol _ZN12dScMg3DEsp_c9CardTouchEi
+void dScMg3DEsp_c::CardTouch(int idx)
 {
+    char* self = (char*)this;
     unsigned int i = data_020a0e40;
     int ok = 0;
     int n;
@@ -1184,13 +1177,14 @@ void func_ov006_020e91a0(char* self, int idx)
         0x30 - (*(int*)(self + 0x520c + n) >> 12),
         0x80 - (*(int*)(self + 0x5208 + n) >> 12));
 
-    func_ov006_020e8d7c(self, idx);
+    SpawnRows(idx);
     Sound::PlayBank2_2D(0x190);
 }
 
-// @symbol func_ov006_020e9318
-void func_ov006_020e9318(char* c, int i)
+// @symbol _ZN12dScMg3DEsp_c8CardExitEi
+void dScMg3DEsp_c::CardExit(int i)
 {
+    char* c = (char*)this;
     unsigned char st = *(unsigned char*)(c + 0x554e);
     if (st == 1) {
         unsigned char* p = (unsigned char*)(c + 0x521c + i * 0x18);
@@ -1200,35 +1194,27 @@ void func_ov006_020e9318(char* c, int i)
         *(unsigned char*)(c + i * 0x18 + 0x5219) = 1;
     }
 }
+
+// @symbol _ZN12dScMg3DEsp_c11UpdateCardsEv
+void dScMg3DEsp_c::UpdateCards()
+{
+    int i;
+    char* s = (char*)this;
+    for (i = 0; i < 5; i++) {
+        if (*(unsigned char*)(s + 0x5218)) {
+            (this->*data_ov006_02141f5c[*(unsigned char*)(s + 0x5219)])(i);
+        }
+        s += 0x18;
+    }
 }
 
-struct C_9374;
-typedef void (C_9374::*PMF_9374)(int);
-extern PMF_9374 data_ov006_02141f5c[];
-
-struct C_9374 {
-    void run() {
-        int i;
-        char* s = (char*)this;
-        for (i = 0; i < 5; i++) {
-            if (*(unsigned char*)(s + 0x5218)) {
-                (this->*data_ov006_02141f5c[*(unsigned char*)(s + 0x5219)])(i);
-            }
-            s += 0x18;
-        }
-    }
-};
-
-// @symbol func_ov006_020e9374
-extern "C" void func_ov006_020e9374(C_9374* c) { c->run(); }
-
-extern "C" {
 extern unsigned char data_ov006_0212e588[];
 extern int volatile data_ov006_0213c818[];
 
-// @symbol func_ov006_020e93e8
-void func_ov006_020e93e8(char *c)
+// @symbol _ZN12dScMg3DEsp_c9DealCardsEv
+void dScMg3DEsp_c::DealCards()
 {
+    char *c = (char*)this;
     int a[5];
     int b[5];
     int n;
@@ -1284,9 +1270,10 @@ void func_ov006_020e93e8(char *c)
     *(short *)(c + 0x51f0) = *(unsigned char *)(c + 0x5551);
 }
 
-// @symbol func_ov006_020e95a4
-void func_ov006_020e95a4(char* c)
+// @symbol _ZN12dScMg3DEsp_c10ClearCardsEv
+void dScMg3DEsp_c::ClearCards()
 {
+  char* c = (char*)this;
   int i;
   char* p = c;
   for (i = 0; i < 5; i++) {
@@ -1301,9 +1288,10 @@ void func_ov006_020e95a4(char* c)
   }
 }
 
-// @symbol func_ov006_020e95e4
-void func_ov006_020e95e4(char *c)
+// @symbol _ZN12dScMg3DEsp_c13SetDifficultyEv
+void dScMg3DEsp_c::SetDifficulty()
 {
+    char *c = (char*)this;
     int v = *(int *)(c + 0xbc);
     int mult = 2;
     if (v >= 0xf) {
@@ -1320,21 +1308,22 @@ void func_ov006_020e95e4(char *c)
         (unsigned char)((mult * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)) >> 0xf);
 }
 
-// @symbol func_ov006_020e9670
-void func_ov006_020e9670(void *t)
+// @symbol _ZN12dScMg3DEsp_c7ResolveEv
+void dScMg3DEsp_c::Resolve()
 {
-    func_ov006_020e8d08((C_8d08 *)t);
-    func_ov006_020e9374((C_9374 *)t);
+    UpdateRows();
+    UpdateCards();
 }
 
 struct E_968c { char pad[0x18]; };
 
-// @symbol func_ov006_020e968c
-void func_ov006_020e968c(char *c)
+// @symbol _ZN12dScMg3DEsp_c5AwaitEv
+void dScMg3DEsp_c::Await()
 {
+    char *c = (char*)this;
     int i;
     struct E_968c *arr;
-    func_ov006_020e9374((C_9374 *)c);
+    UpdateCards();
     if (*(unsigned char *)(c + 0x554f) == 0) return;
     *(int *)(c + 0x5540) = 3;
     arr = (struct E_968c *)c;
@@ -1348,11 +1337,11 @@ void func_ov006_020e968c(char *c)
         }
     }
 }
-}
 
-// @symbol func_ov006_020e96f4
-extern "C" void func_ov006_020e96f4(char *thiz)
+// @symbol _ZN12dScMg3DEsp_c4FadeEv
+void dScMg3DEsp_c::Fade()
 {
+    char *thiz = (char*)this;
     *(unsigned short*)(((int)thiz + 0x554a)) += 1;
     if (*(unsigned short*)(thiz + 0x554a) >= 4) {
         *(unsigned short*)(thiz + 0x554a) = 0;
@@ -1361,7 +1350,7 @@ extern "C" void func_ov006_020e96f4(char *thiz)
             (volatile unsigned short*)0x4001050, 0, 4,
             *(unsigned char*)(thiz + 0x554e), 0x10 - *(unsigned char*)(thiz + 0x554e));
     }
-    func_ov006_020e9374((C_9374 *)thiz);
+    UpdateCards();
     if (*(unsigned char*)(thiz + 0x554e) < 0x10)
         return;
     *(unsigned char*)(thiz + 0x554e) = 0;
@@ -1370,10 +1359,10 @@ extern "C" void func_ov006_020e96f4(char *thiz)
     *(unsigned short*)(thiz + 0x5548) = 0;
 }
 
-extern "C" {
-// @symbol func_ov006_020e97b0
-void func_ov006_020e97b0(char *c)
+// @symbol _ZN12dScMg3DEsp_c4DealEv
+void dScMg3DEsp_c::Deal()
 {
+    char *c = (char*)this;
     if (*(unsigned short*)(c + 0x5548) != 0) {
         unsigned short *d = (unsigned short*)((int)(c + 0x5548));
         *d = *d - 1;
@@ -1381,9 +1370,9 @@ void func_ov006_020e97b0(char *c)
             *(short*)(c + 0x5548) = 0;
         return;
     }
-    func_ov006_020e95e4(c);
-    func_ov006_020e7e74(c + 0x4fd8);
-    func_ov006_020e93e8(c);
+    SetDifficulty();
+    ((dMg3DEspModel_c*)pad_4fd8)->StartIntro();
+    DealCards();
     *(int*)(c + 0x5540) = 1;
     FreeGfxSlotsById(0x1d);
     if (*(unsigned char*)(c + 0xc4) == 0) {
@@ -1393,10 +1382,11 @@ void func_ov006_020e97b0(char *c)
     }
 }
 
-// @symbol func_ov006_020e984c
-void func_ov006_020e984c(char *c)
+// @symbol _ZN12dScMg3DEsp_c10ResetRoundEv
+void dScMg3DEsp_c::ResetRound()
 {
-    func_ov006_020e95a4(c);
+    char *c = (char*)this;
+    ClearCards();
     *(short*)(c + 0x5548) = 0;
     *(short*)(c + 0x554a) = 0;
     *(unsigned char*)(c + 0x554e) = 0;
@@ -1408,38 +1398,15 @@ void func_ov006_020e984c(char *c)
     *(unsigned char*)(c + 0x5554) = 0;
     *(unsigned char*)(c + 0x5555) = 1;
 }
-}
-
-struct C_989c {
-    virtual void v0();
-    virtual void v1();
-    virtual void v2();
-    virtual void v3();
-    virtual void v4();
-    virtual void v5();
-    virtual void v6();
-    virtual void v7();
-    virtual void v8();
-    virtual void v9();
-    virtual void v10();
-    virtual void v11();
-    virtual void v12();
-    virtual void v13();
-    virtual void v14();
-    virtual void v15();
-    virtual void v16();
-    virtual void v17();
-    virtual void v18(int);
-};
 
 extern "C" unsigned int data_ov006_0212e594[];
 
-// @symbol func_ov006_020e989c
-extern "C" void func_ov006_020e989c(C_989c *cc)
+// @symbol _ZN12dScMg3DEsp_c7ResultsEv
+void dScMg3DEsp_c::Results()
 {
-    char *c = (char *)cc;
+    char *c = (char *)this;
 
-    func_ov006_020e8d08((C_8d08 *)c);
+    UpdateRows();
     if (*(u16 *)(c + 0x5548) != 0) {
         (*(u16 *)(int)(((long long)(int)(c + 0x5548))))--;
         if (*(u16 *)(c + 0x5548) == 0x40) {
@@ -1484,7 +1451,7 @@ extern "C" void func_ov006_020e989c(C_989c *cc)
                 (*(int *)(int)(((long long)(int)(c + 0xbc))))++;
                 if (*(u32 *)(c + 0xbc) > 0x270e)
                     *(u32 *)(c + 0xbc) = 0x270e;
-                cc->v18(-1);
+                OnYoshiTryEat(-1);
             }
         } else {
             *(u16 *)(c + 0x554c) = 0;
@@ -1507,32 +1474,26 @@ extern "C" void func_ov006_020e989c(C_989c *cc)
                 b = 1;
         }
         if (b != 0)
-            func_ov006_020e95a4(c);
+            ClearCards();
         (*(u16 *)(int)(((long long)(int)(c + 0x554c))))++;
         if (*(u16 *)(c + 0x554c) == 0xb4)
-            func_ov006_020e95a4(c);
+            ClearCards();
         if (*(u16 *)(c + 0x554c) >= 0xb5)
             *(u16 *)(c + 0x554c) = 0xb5;
     }
 }
 
-struct C_9b70; typedef void (C_9b70::*PMF_9b70)();
-struct Entry_9b70 { PMF_9b70 pmf; };
-extern Entry_9b70 data_ov006_02141fac[];
-struct C_9b70 { char pad[0x5540]; int idx; };
-
-// @symbol func_ov006_020e9b70
-extern "C" void func_ov006_020e9b70(C_9b70* c)
+// @symbol _ZN12dScMg3DEsp_c4PlayEv
+void dScMg3DEsp_c::Play()
 {
-    int j = c->idx;
-    (c->*data_ov006_02141fac[j].pmf)();
-    func_ov006_020e82fc((char *)c);
+    (this->*data_ov006_02141fac[mPhase])();
+    UpdateFlash();
 }
 
-extern "C" {
-// @symbol func_ov006_020e9bbc
-void func_ov006_020e9bbc(char* c)
+// @symbol _ZN12dScMg3DEsp_c4WaitEv
+void dScMg3DEsp_c::Wait()
 {
+    char* c = (char*)this;
     char* r2 = c + 0x5500;
     if (*(unsigned short*)(r2 + 0x48) != 0) {
         unsigned short* p = (unsigned short*)(c + 0x5548);
@@ -1543,7 +1504,6 @@ void func_ov006_020e9bbc(char* c)
     }
     *(int*)(c + 0x5000 + 0x53c) = 1;
     *(unsigned short*)(r2 + 0x48) = 0x40;
-}
 }
 
 /* ---- dScMg3DEsp_c ------------------------------------------------------ */
@@ -1562,8 +1522,8 @@ void dScMg3DEsp_c::Virtual50()
 // @symbol _ZN12dScMg3DEsp_c13OnYoshiTryEatEi
 void dScMg3DEsp_c::OnYoshiTryEat(int a)
 {
-    func_ov006_020e984c((char *)this);
-    unk_553c = 0;
+    ResetRound();
+    mRoundState = 0;
     if (a == 0) {
         unk_0bc++;
         if (unk_0bc > 9998) unk_0bc = 9998;
@@ -1592,10 +1552,10 @@ s32 dScMg3DEsp_c::CleanupResources()
 // @symbol _ZN12dScMg3DEsp_c6RenderEv
 s32 dScMg3DEsp_c::Render()
 {
-    func_ov006_020e81a4((char *)this);
-    func_ov006_020e8e10((char *)this);
-    func_ov006_020e8b18((char *)this);
-    func_ov006_020e8354((Outer_8354 *)this);
+    DrawBanner();
+    RenderCards();
+    RenderRows();
+    RenderSlots();
     mCameraEyeX = 0;
     mCameraEyeY = 0xd0000;
     mCameraEyeZ = 0x40000;
@@ -1613,17 +1573,13 @@ s32 dScMg3DEsp_c::Render()
 }
 
 /* Vtable slot 6. Runs the current state from the member-function table,
-   indexed by unk_553c, then steps a helper, the texture animation and the
-   dMg3DEspModel_c block. The table's receiver is the complete class; an
-   incomplete receiver compiles to the same bytes here. */
-typedef void (dScMg3DEsp_c::*dScMg3DEsp_cState)();
-extern "C" dScMg3DEsp_cState data_ov006_02141f2c[];
-
+   indexed by mRoundState, then steps the slot table, the texture animation
+   and the dMg3DEspModel_c block. */
 // @symbol _ZN12dScMg3DEsp_c8BehaviorEv
 s32 dScMg3DEsp_c::Behavior()
 {
-    (this->*data_ov006_02141f2c[unk_553c])();
-    func_ov006_020e8a44((C_8a44 *)this);
+    (this->*data_ov006_02141f2c[mRoundState])();
+    UpdateSlots();
     ((TextureTransformer *)mTextureTransformer)->Advance();
     ((dMg3DEspModel_c*)pad_4fd8)->Behavior();
     return 1;
@@ -1701,13 +1657,13 @@ s32 dScMg3DEsp_c::InitResources()
 
     OnYoshiTryEat(-1);
 
-    *(unsigned short*)(pad_5540 + 0x8) = 0x40; /* 0x5548 */
+    mTimer = 0x40;
 
     unk_0a8 = 3;
     unk_0ac = unk_0a8;
-    unk_553c = 1;
+    mRoundState = 1;
 
-    func_ov006_020e8aac((char*)this);
+    ResetSlots();
 
     unk_0a4 = 1;
 

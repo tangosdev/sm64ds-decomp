@@ -38,49 +38,49 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov002_020f1fcc",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f1fccEv",
       "address": "0x020f1fcc",
       "size": "0x00000128",
       "legacy_source": "src/func_ov002_020f1fcc.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov002_020f20f4",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f20f4Ev",
       "address": "0x020f20f4",
       "size": "0x0000011c",
       "legacy_source": "src/func_ov002_020f20f4.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov002_020f2210",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f2210Ev",
       "address": "0x020f2210",
       "size": "0x00000130",
       "legacy_source": "src/func_ov002_020f2210.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov002_020f2340",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f2340Ev",
       "address": "0x020f2340",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov002_020f2340.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov002_020f237c",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f237cEv",
       "address": "0x020f237c",
       "size": "0x00000054",
       "legacy_source": "src/func_ov002_020f237c.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov002_020f23d0",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f23d0Ev",
       "address": "0x020f23d0",
       "size": "0x00000020",
       "legacy_source": "src/func_ov002_020f23d0.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov002_020f23f0",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f23f0Ev",
       "address": "0x020f23f0",
       "size": "0x00000240",
       "legacy_source": "src/func_ov002_020f23f0.c",
@@ -94,7 +94,7 @@
       "ordinal": 9
     },
     {
-      "symbol": "func_ov002_020f26c4",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f26c4EPh",
       "address": "0x020f26c4",
       "size": "0x00000010",
       "legacy_source": "src/func_ov002_020f26c4.c",
@@ -738,70 +738,70 @@
       "ordinal": 101
     },
     {
-      "symbol": "func_ov002_020f63a0",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f63a0Ev",
       "address": "0x020f63a0",
       "size": "0x00000034",
       "legacy_source": "src/func_ov002_020f63a0.c",
       "ordinal": 102
     },
     {
-      "symbol": "func_ov002_020f63d4",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f63d4Ev",
       "address": "0x020f63d4",
       "size": "0x00000024",
       "legacy_source": "src/func_ov002_020f63d4.c",
       "ordinal": 103
     },
     {
-      "symbol": "func_ov002_020f63f8",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f63f8EPh",
       "address": "0x020f63f8",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020f63f8.c",
       "ordinal": 104
     },
     {
-      "symbol": "func_ov002_020f6424",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6424Ev",
       "address": "0x020f6424",
       "size": "0x00000024",
       "legacy_source": "src/func_ov002_020f6424.c",
       "ordinal": 105
     },
     {
-      "symbol": "func_ov002_020f6448",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6448EPh",
       "address": "0x020f6448",
       "size": "0x00000064",
       "legacy_source": "src/func_ov002_020f6448.c",
       "ordinal": 106
     },
     {
-      "symbol": "func_ov002_020f64ac",
+      "symbol": "_ZN8daDemo_c10anmModel_c19func_ov002_020f64acEPc",
       "address": "0x020f64ac",
       "size": "0x00000068",
       "legacy_source": "src/func_ov002_020f64ac.c",
       "ordinal": 107
     },
     {
-      "symbol": "func_ov002_020f6514",
+      "symbol": "_ZN8daDemo_c10anmModel_c19func_ov002_020f6514EPvh",
       "address": "0x020f6514",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov002_020f6514.c",
       "ordinal": 108
     },
     {
-      "symbol": "func_ov002_020f65b8",
+      "symbol": "_ZN8daDemo_c10anmModel_c19func_ov002_020f65b8Ev",
       "address": "0x020f65b8",
       "size": "0x00000034",
       "legacy_source": "src/func_ov002_020f65b8.c",
       "ordinal": 109
     },
     {
-      "symbol": "func_ov002_020f65ec",
+      "symbol": "_ZN8daDemo_c10anmModel_c19func_ov002_020f65ecEv",
       "address": "0x020f65ec",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020f65ec.c",
       "ordinal": 110
     },
     {
-      "symbol": "func_ov002_020f6618",
+      "symbol": "_ZN8daDemo_c10anmModel_c19func_ov002_020f6618EP13SharedFilePtriPS2_ihS3_i",
       "address": "0x020f6618",
       "size": "0x00000160",
       "legacy_source": "src/func_ov002_020f6618.cpp",
@@ -822,7 +822,7 @@
       "ordinal": 113
     },
     {
-      "symbol": "func_ov002_020f6960",
+      "symbol": "_ZN8daDemo_c13simpleModel_c19func_ov002_020f6960EP13SharedFilePtri",
       "address": "0x020f6960",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020f6960.cpp",
@@ -843,154 +843,154 @@
       "ordinal": 116
     },
     {
-      "symbol": "func_ov002_020f6a50",
+      "symbol": "_ZN8daDemo_c7param_c19func_ov002_020f6a50Ev",
       "address": "0x020f6a50",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020f6a50.c",
       "ordinal": 117
     },
     {
-      "symbol": "func_ov002_020f6a9c",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6a9cEv",
       "address": "0x020f6a9c",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov002_020f6a9c.c",
       "ordinal": 118
     },
     {
-      "symbol": "func_ov002_020f6ab8",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6ab8EPh",
       "address": "0x020f6ab8",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020f6ab8.c",
       "ordinal": 119
     },
     {
-      "symbol": "func_ov002_020f6ae4",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6ae4EPh",
       "address": "0x020f6ae4",
       "size": "0x00000044",
       "legacy_source": "src/func_ov002_020f6ae4.c",
       "ordinal": 120
     },
     {
-      "symbol": "func_ov002_020f6b28",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6b28EPh",
       "address": "0x020f6b28",
       "size": "0x00000024",
       "legacy_source": "src/func_ov002_020f6b28.c",
       "ordinal": 121
     },
     {
-      "symbol": "func_ov002_020f6b4c",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6b4cEPh",
       "address": "0x020f6b4c",
       "size": "0x00000074",
       "legacy_source": "src/func_ov002_020f6b4c.c",
       "ordinal": 122
     },
     {
-      "symbol": "func_ov002_020f6bc0",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6bc0EPh",
       "address": "0x020f6bc0",
       "size": "0x00000064",
       "legacy_source": "src/func_ov002_020f6bc0.c",
       "ordinal": 123
     },
     {
-      "symbol": "func_ov002_020f6c24",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6c24EPh",
       "address": "0x020f6c24",
       "size": "0x00000010",
       "legacy_source": "src/func_ov002_020f6c24.c",
       "ordinal": 124
     },
     {
-      "symbol": "func_ov002_020f6c34",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6c34EPh",
       "address": "0x020f6c34",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020f6c34.c",
       "ordinal": 125
     },
     {
-      "symbol": "func_ov002_020f6c60",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6c60EPvii",
       "address": "0x020f6c60",
       "size": "0x000001e8",
       "legacy_source": "src/func_ov002_020f6c60.c",
       "ordinal": 126
     },
     {
-      "symbol": "func_ov002_020f6e48",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6e48EPh",
       "address": "0x020f6e48",
       "size": "0x00000100",
       "legacy_source": "src/func_ov002_020f6e48.c",
       "ordinal": 127
     },
     {
-      "symbol": "func_ov002_020f6f48",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6f48EP7Vector3i",
       "address": "0x020f6f48",
       "size": "0x000000d8",
       "legacy_source": "src/func_ov002_020f6f48.c",
       "ordinal": 128
     },
     {
-      "symbol": "func_ov002_020f7020",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f7020Ev",
       "address": "0x020f7020",
       "size": "0x00000018",
       "legacy_source": "src/func_ov002_020f7020.c",
       "ordinal": 129
     },
     {
-      "symbol": "func_ov002_020f7038",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f7038Eii",
       "address": "0x020f7038",
       "size": "0x0000018c",
       "legacy_source": "src/func_ov002_020f7038.c",
       "ordinal": 130
     },
     {
-      "symbol": "func_ov002_020f71c4",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f71c4Eii",
       "address": "0x020f71c4",
       "size": "0x000000f8",
       "legacy_source": "src/func_ov002_020f71c4.c",
       "ordinal": 131
     },
     {
-      "symbol": "func_ov002_020f72bc",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f72bcEv",
       "address": "0x020f72bc",
       "size": "0x000000c8",
       "legacy_source": "src/func_ov002_020f72bc.c",
       "ordinal": 132
     },
     {
-      "symbol": "func_ov002_020f7384",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f7384EPhi",
       "address": "0x020f7384",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov002_020f7384.c",
       "ordinal": 133
     },
     {
-      "symbol": "func_ov002_020f7410",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f7410EPhi",
       "address": "0x020f7410",
       "size": "0x00000128",
       "legacy_source": "src/func_ov002_020f7410.c",
       "ordinal": 134
     },
     {
-      "symbol": "func_ov002_020f7538",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f7538EPhi",
       "address": "0x020f7538",
       "size": "0x00000248",
       "legacy_source": "src/func_ov002_020f7538.c",
       "ordinal": 135
     },
     {
-      "symbol": "func_ov002_020f7780",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f7780EPvi",
       "address": "0x020f7780",
       "size": "0x00000240",
       "legacy_source": "src/func_ov002_020f7780.c",
       "ordinal": 136
     },
     {
-      "symbol": "func_ov002_020f79c0",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f79c0EPvi",
       "address": "0x020f79c0",
       "size": "0x000001f8",
       "legacy_source": "src/func_ov002_020f79c0.c",
       "ordinal": 137
     },
     {
-      "symbol": "func_ov002_020f7bb8",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f7bb8EPht",
       "address": "0x020f7bb8",
       "size": "0x000001bc",
       "legacy_source": "src/func_ov002_020f7bb8.c",

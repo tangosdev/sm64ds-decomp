@@ -317,6 +317,9 @@ ov002	0x020f8808	func_ov002_020f8808	CutsceneObject_Spawn	spawnfunc
 ov002	0x020f8808	CutsceneObject_Spawn	daDemo_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x020f8858	func_ov002_020f8858	_ZN12daFPknBall_cD1Ev	vtable slot 16
 ov002	0x020f8898	func_ov002_020f8898	_ZN12daFPknBall_cD0Ev	vtable slot 17
+ov002	0x020f88ec	func_ov002_020f88ec	_ZN12daFPknBall_c19func_ov002_020f88ecEv	daFPknBall_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov002	0x020f897c	func_ov002_020f897c	_ZN12daFPknBall_c19func_ov002_020f897cEv	daFPknBall_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov002	0x020f8b24	func_ov002_020f8b24	_ZN12daFPknBall_c19func_ov002_020f8b24Ev	daFPknBall_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
 ov002	0x020f8c8c	func_ov002_020f8c8c	_ZN12daFPknBall_c6RenderEv	vtable slot 9
 ov002	0x020f8c94	func_ov002_020f8c94	_ZN12daFPknBall_c8BehaviorEv	vtable slot 6
 ov002	0x020f9204	func_ov002_020f9204	_ZN12daFPknBall_c13InitResourcesEv	vtable slot 0
@@ -716,6 +719,8 @@ ov006	0x021255f8	MgLuckyStars_Spawn	dScMgBSC_c_classInit	reconstructed classInit
 ov006	0x0212a520	func_ov006_0212a520	MgSnowballSlalom_Spawn	spawnfunc
 ov006	0x0212a520	MgSnowballSlalom_Spawn	dScMgSnowball_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0212b7f8	func_ov006_0212b7f8	dScMgFlower_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0212a654	func_ov006_0212a654	_ZN13dScMgFlower_c19func_ov006_0212a654Ev	object-as-this; receiver is the scene object, called with this in r0
+ov006	0x0212a764	func_ov006_0212a764	_ZN13dScMgFlower_c19func_ov006_0212a764Ev	object-as-this; receiver is the scene object, called with this in r0
 ov006	0x0213b814	data_ov006_0213b814	g_profile_MG_AMIDA	reconstructed profile global; literal ROM ID MG_AMIDA+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213badc	data_ov006_0213badc	MgSortOrSplode_SpawnInfo	spawninfo
 ov006	0x0213badc	MgSortOrSplode_SpawnInfo	g_profile_MG_BOMROOM	reconstructed profile global; literal ROM ID MG_BOMROOM+registry role+later EAD lineage; exact SM64DS spelling not preserved
@@ -1928,6 +1933,17 @@ ov062	0x0211970c	func_ov062_0211970c	Koopa_Spawn	spawnfunc
 ov062	0x0211970c	Koopa_Spawn	daNknk_c_classInit_NOKONOKO	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov062	0x0211975c	func_ov062_0211975c	_ZN7daRNk_cD1Ev	vtable slot 16
 ov062	0x021197a4	func_ov062_021197a4	_ZN7daRNk_cD0Ev	vtable slot 17
+ov062	0x02119800	func_ov062_02119800	_ZN7daRNk_c19func_ov062_02119800Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x02119954	func_ov062_02119954	_ZN7daRNk_c19func_ov062_02119954Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x021199ac	func_ov062_021199ac	_ZN7daRNk_c19func_ov062_021199acEv	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x02119af0	func_ov062_02119af0	_ZN7daRNk_c19func_ov062_02119af0Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x02119be0	func_ov062_02119be0	_ZN7daRNk_c19func_ov062_02119be0Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x0211a0f0	func_ov062_0211a0f0	_ZN7daRNk_c19func_ov062_0211a0f0Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x0211a168	func_ov062_0211a168	_ZN7daRNk_c19func_ov062_0211a168Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x0211a1f4	func_ov062_0211a1f4	_ZN7daRNk_c19func_ov062_0211a1f4Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x0211a740	func_ov062_0211a740	_ZN7daRNk_c19func_ov062_0211a740Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x0211a9c4	func_ov062_0211a9c4	_ZN7daRNk_c19func_ov062_0211a9c4Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov062	0x0211aac0	func_ov062_0211aac0	_ZN7daRNk_c19func_ov062_0211aac0Ev	daRNk_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
 ov062	0x0211ab50	func_ov062_0211ab50	_ZN7daRNk_c6RenderEv	vtable slot 9
 ov062	0x0211ab88	func_ov062_0211ab88	_ZN7daRNk_c8BehaviorEv	vtable slot 6
 ov062	0x0211ac10	func_ov062_0211ac10	_ZN7daRNk_c16CleanupResourcesEv	vtable slot 3
@@ -2431,11 +2447,27 @@ ov070	0x021210ac	func_ov070_021210ac	Amp_Spawn	spawnfunc; evidence-bounded facto
 ov070	0x021210ac	Amp_Spawn	daBrq_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov070	0x02121118	func_ov070_02121118	_ZN8daKrpa_cD1Ev	vtable slot 16
 ov070	0x02121160	func_ov070_02121160	_ZN8daKrpa_cD0Ev	vtable slot 17
+ov070	0x021211c4	func_ov070_021211c4	_ZN8daKrpa_c19func_ov070_021211c4Ev	daKrpa_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov070	0x02121298	func_ov070_02121298	_ZN8daKrpa_c19func_ov070_02121298Ev	daKrpa_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov070	0x02121310	func_ov070_02121310	_ZN8daKrpa_c19func_ov070_02121310Ev	daKrpa_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov070	0x021213cc	func_ov070_021213cc	_ZN8daKrpa_c19func_ov070_021213ccEv	daKrpa_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov070	0x02121438	func_ov070_02121438	_ZN8daKrpa_c19func_ov070_02121438Ev	daKrpa_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov070	0x021214f8	func_ov070_021214f8	_ZN8daKrpa_c19func_ov070_021214f8Ev	daKrpa_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov070	0x02121548	func_ov070_02121548	_ZN8daKrpa_c19func_ov070_02121548Ev	daKrpa_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov070	0x0212156c	func_ov070_0212156c	_ZN8daKrpa_c19func_ov070_0212156cEv	daKrpa_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov070	0x021216b8	func_ov070_021216b8	_ZN8daKrpa_c19func_ov070_021216b8Ev	daKrpa_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov070	0x02121710	func_ov070_02121710	_ZN8daKrpa_c19func_ov070_02121710Ev	daKrpa_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov070	0x021217ac	func_ov070_021217ac	_ZN8daKrpa_c19func_ov070_021217acEv	daKrpa_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov070	0x0212180c	func_ov070_0212180c	_ZN8daKrpa_c19func_ov070_0212180cEv	daKrpa_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov070	0x02121848	func_ov070_02121848	_ZN8daKrpa_c19func_ov070_02121848Ev	daKrpa_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov070	0x02121880	func_ov070_02121880	_ZN8daKrpa_c19func_ov070_02121880Ei	daKrpa_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
 ov070	0x0212189c	func_ov070_0212189c	_ZN8daKrpa_c16CleanupResourcesEv	vtable slot 3
 ov070	0x021218c0	func_ov070_021218c0	_ZN8daKrpa_c16OnPendingDestroyEv	vtable slot 12
 ov070	0x021218c4	func_ov070_021218c4	_ZN8daKrpa_c6RenderEv	vtable slot 9
 ov070	0x021218f4	func_ov070_021218f4	_ZN8daKrpa_c8BehaviorEv	vtable slot 6
 ov070	0x02121914	func_ov070_02121914	_ZN8daKrpa_c13InitResourcesEv	vtable slot 0
+ov070	0x02121a64	func_ov070_02121a64	_ZN21daKrpaFrameController19func_ov070_02121a64Ev	daKrpaFrameController method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov070	0x02121ae0	func_ov070_02121ae0	_ZN21daKrpaFrameController19func_ov070_02121ae0EPjjj	daKrpaFrameController method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
 ov070	0x02121af8	func_ov070_02121af8	FlameChomp_Spawn	spawnfunc
 ov070	0x02121af8	FlameChomp_Spawn	daKrpa_c_Spawn	prior RTTI-anchored project alias; class identity proven, exact source spelling not preserved
 ov070	0x02121af8	daKrpa_c_Spawn	daKrpa_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
@@ -3946,6 +3978,62 @@ ov006	0x0213bccc	data_ov006_0213bccc	_ZTV12dMgCardObj_c	vtable alloc=0x30
 ov006	0x0213bcf4	data_ov006_0213bcf4	_ZTV17dMgDilarCardObj_c	vtable alloc=0x30
 ov006	0x020dbe14	func_ov006_020dbe14	_ZN17dMgDilarCardObj_cC1Ev	RTTI-named dealer-card C1 ABI callback; the factory wall prevents placement construction and the real derived constructor requires the base constructor inline, so the callback spelling preserves the exact two-vptr body and section order
 ov006	0x020dbe30	func_ov006_020dbe30	_ZN12dMgCardObj_cC1Ev	RTTI-named card-element C1 ABI callback; retained as the construction-array callback at the measured mwccarm factory wall
+ov006	0x020dbe9c	func_ov006_020dbe9c	_ZN11dScMgCoin_c19func_ov006_020dbe9cEv	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dbf7c	func_ov006_020dbf7c	_ZN11dScMgCoin_c19func_ov006_020dbf7cEi	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc154	func_ov006_020dc154	_ZN11dScMgCoin_c19func_ov006_020dc154Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc1c4	func_ov006_020dc1c4	_ZN11dScMgCoin_c19func_ov006_020dc1c4Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc26c	func_ov006_020dc26c	_ZN11dScMgCoin_c19func_ov006_020dc26cEv	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc294	func_ov006_020dc294	_ZN11dScMgCoin_c19func_ov006_020dc294Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc298	func_ov006_020dc298	_ZN11dScMgCoin_c19func_ov006_020dc298Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc2f8	func_ov006_020dc2f8	_ZN11dScMgCoin_c19func_ov006_020dc2f8Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc334	func_ov006_020dc334	_ZN11dScMgCoin_c19func_ov006_020dc334Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc348	func_ov006_020dc348	_ZN11dScMgCoin_c19func_ov006_020dc348Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc370	func_ov006_020dc370	_ZN11dScMgCoin_c19func_ov006_020dc370Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc3bc	func_ov006_020dc3bc	_ZN11dScMgCoin_c19func_ov006_020dc3bcEv	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc414	func_ov006_020dc414	_ZN11dScMgCoin_c19func_ov006_020dc414Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc4b0	func_ov006_020dc4b0	_ZN11dScMgCoin_c19func_ov006_020dc4b0Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc4c8	func_ov006_020dc4c8	_ZN11dScMgCoin_c19func_ov006_020dc4c8Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc5c4	func_ov006_020dc5c4	_ZN11dScMgCoin_c19func_ov006_020dc5c4Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc6d0	func_ov006_020dc6d0	_ZN11dScMgCoin_c19func_ov006_020dc6d0Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc754	func_ov006_020dc754	_ZN11dScMgCoin_c19func_ov006_020dc754Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc7b4	func_ov006_020dc7b4	_ZN11dScMgCoin_c19func_ov006_020dc7b4Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc7fc	func_ov006_020dc7fc	_ZN11dScMgCoin_c19func_ov006_020dc7fcEv	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc814	func_ov006_020dc814	_ZN11dScMgCoin_c19func_ov006_020dc814Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc870	func_ov006_020dc870	_ZN11dScMgCoin_c19func_ov006_020dc870Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc900	func_ov006_020dc900	_ZN11dScMgCoin_c19func_ov006_020dc900Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc960	func_ov006_020dc960	_ZN11dScMgCoin_c19func_ov006_020dc960Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dc99c	func_ov006_020dc99c	_ZN11dScMgCoin_c19func_ov006_020dc99cEv	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dca04	func_ov006_020dca04	_ZN11dScMgCoin_c19func_ov006_020dca04Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dcb1c	func_ov006_020dcb1c	_ZN11dScMgCoin_c19func_ov006_020dcb1cEi	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dcc48	func_ov006_020dcc48	_ZN11dScMgCoin_c19func_ov006_020dcc48Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dccb8	func_ov006_020dccb8	_ZN11dScMgCoin_c19func_ov006_020dccb8Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dcd74	func_ov006_020dcd74	_ZN11dScMgCoin_c19func_ov006_020dcd74Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dce3c	func_ov006_020dce3c	_ZN11dScMgCoin_c19func_ov006_020dce3cEv	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dcea8	func_ov006_020dcea8	_ZN11dScMgCoin_c19func_ov006_020dcea8Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dcffc	func_ov006_020dcffc	_ZN11dScMgCoin_c19func_ov006_020dcffcEv	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dd000	func_ov006_020dd000	_ZN11dScMgCoin_c19func_ov006_020dd000Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dd0e0	func_ov006_020dd0e0	_ZN11dScMgCoin_c19func_ov006_020dd0e0Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dd2cc	func_ov006_020dd2cc	_ZN11dScMgCoin_c19func_ov006_020dd2ccEv	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dd334	func_ov006_020dd334	_ZN11dScMgCoin_c19func_ov006_020dd334Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dd4b0	func_ov006_020dd4b0	_ZN11dScMgCoin_c19func_ov006_020dd4b0Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dd594	func_ov006_020dd594	_ZN11dScMgCoin_c19func_ov006_020dd594Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dd658	func_ov006_020dd658	_ZN11dScMgCoin_c19func_ov006_020dd658Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dd7bc	func_ov006_020dd7bc	_ZN11dScMgCoin_c19func_ov006_020dd7bcEv	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dd7c0	func_ov006_020dd7c0	_ZN11dScMgCoin_c19func_ov006_020dd7c0Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dd880	func_ov006_020dd880	_ZN11dScMgCoin_c19func_ov006_020dd880Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dda94	func_ov006_020dda94	_ZN11dScMgCoin_c19func_ov006_020dda94Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020ddca0	func_ov006_020ddca0	_ZN11dScMgCoin_c19func_ov006_020ddca0Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020ddcf8	func_ov006_020ddcf8	_ZN11dScMgCoin_c19func_ov006_020ddcf8Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020ddd6c	func_ov006_020ddd6c	_ZN11dScMgCoin_c19func_ov006_020ddd6cEv	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020dde28	func_ov006_020dde28	_ZN11dScMgCoin_c19func_ov006_020dde28Ei	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020ddeb0	func_ov006_020ddeb0	_ZN11dScMgCoin_c19func_ov006_020ddeb0Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020ddf9c	func_ov006_020ddf9c	_ZN11dScMgCoin_c19func_ov006_020ddf9cEv	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020de0e0	func_ov006_020de0e0	_ZN11dScMgCoin_c19func_ov006_020de0e0Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020de1d4	func_ov006_020de1d4	_ZN11dScMgCoin_c19func_ov006_020de1d4Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020de26c	func_ov006_020de26c	_ZN11dScMgCoin_c19func_ov006_020de26cEv	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020de440	func_ov006_020de440	_ZN11dScMgCoin_c19func_ov006_020de440Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020de584	func_ov006_020de584	_ZN11dScMgCoin_c19func_ov006_020de584Ev	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov006	0x020de5ac	func_ov006_020de5ac	_ZN11dScMgCoin_c19func_ov006_020de5acEv	dScMgCoin_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
 ov006	0x020f7730	func_ov006_020f7730	_ZN18dMgMCarloCardObj_cD1Ev	compiler-proven D1 for the RTTI-named card element; a real empty destructor reproduces the ROM body
 ov006	0x020f7740	func_ov006_020f7740	_ZN13dScMgMCarlo_c11UpdateBoardEv	coined: ROM symbol is address-only; named from what the function does
 ov006	0x020f7994	func_ov006_020f7994	_ZN13dScMgMCarlo_c14FlipDealtCardsEv	coined: ROM symbol is address-only; named from what the function does
@@ -5201,3 +5289,77 @@ ov006	0x021156f8	func_ov006_021156f8	_ZN16dScMgSmartball_c13IsTableAtRestEv	dScM
 ov006	0x02115830	func_ov006_02115830	_ZN16dScMgSmartball_c15ResolveBallPairEiiPhS0_	dScMgSmartball_c method. The first argument is the object, so the function is a member and the parameter is this. Named ResolveBallPair: ball-vs-ball collision resolver.
 ov006	0x02115a5c	func_ov006_02115a5c	_ZN16dScMgSmartball_c12CollideBallsEv	dScMgSmartball_c method. The first argument is the object, so the function is a member and the parameter is this. Named CollideBalls: walks the ball pairs and resolves contacts.
 ov006	0x02115b0c	func_ov006_02115b0c	_ZN16dScMgSmartball_c12SpawnObjectsEv	dScMgSmartball_c method. The first argument is the object, so the function is a member and the parameter is this. Named SpawnObjects: builds every table object.
+ov006	0x020e792c	func_ov006_020e792c	_ZN17dMg3DEspAnimSet_c10SetRepeatsEs	dMg3DEspAnimSet_c method. Called on the model's mAnimSet member; stores the repeat counts field. Named SetRepeats: writes both repeat counters.
+ov006	0x020e7940	func_ov006_020e7940	_ZN17dMg3DEspAnimSet_c9SetPeriodEs	dMg3DEspAnimSet_c method. Called on the model's mAnimSet member. Named SetPeriod: writes the animation period.
+ov006	0x020e794c	func_ov006_020e794c	_ZN17dMg3DEspAnimSet_c8SetSpeedEi	dMg3DEspAnimSet_c method. Called on the model's mAnimSet member. Named SetSpeed: writes the animation speed.
+ov006	0x020e7cc0	func_ov006_020e7cc0	_ZN15dMg3DEspModel_c3HitEv	dMg3DEspModel_c method; pointer-to-member record in data_ov006_0213c7xx. Named Hit: per-frame state while the esp is stunned.
+ov006	0x020e7d7c	func_ov006_020e7d7c	_ZN15dMg3DEspModel_c8StartHitEv	dMg3DEspModel_c method. Named StartHit: state setter that enters the hit state.
+ov006	0x020e7de8	func_ov006_020e7de8	_ZN15dMg3DEspModel_c5IntroEv	dMg3DEspModel_c method; pointer-to-member record in data_ov006_0213c7xx. Named Intro: per-frame state while the esp grows in.
+ov006	0x020e7e74	func_ov006_020e7e74	_ZN15dMg3DEspModel_c10StartIntroEv	dMg3DEspModel_c method. Named StartIntro: state setter that enters the intro state.
+ov006	0x020e7f04	func_ov006_020e7f04	_ZN15dMg3DEspModel_c4WaitEv	dMg3DEspModel_c method; pointer-to-member record in data_ov006_0213c7xx. Named Wait: per-frame state waiting between shots.
+ov006	0x020e7f5c	func_ov006_020e7f5c	_ZN15dMg3DEspModel_c9StartWaitEv	dMg3DEspModel_c method. Named StartWait: state setter that enters the wait state.
+ov006	0x020e7fac	func_ov006_020e7fac	_ZN15dMg3DEspModel_c4IdleEv	dMg3DEspModel_c method; the no-op record shared by three PMF tables. Named Idle: empty state body.
+ov006	0x020e81a4	func_ov006_020e81a4	_ZN12dScMg3DEsp_c10DrawBannerEv	dScMg3DEsp_c method; first argument is the object. Named DrawBanner: draws the touch-screen banner OAM sprite.
+ov006	0x020e81e0	func_ov006_020e81e0	_ZN12dScMg3DEsp_c10FlashQuickEv	dScMg3DEsp_c method; PMF record in the flash-mode table data_ov006_0213c784. Named FlashQuick: one quick flash step.
+ov006	0x020e8214	func_ov006_020e8214	_ZN12dScMg3DEsp_c9FlashSyncEv	dScMg3DEsp_c method; PMF record in the flash-mode table. Named FlashSync: synchronized flash step.
+ov006	0x020e82c8	func_ov006_020e82c8	_ZN12dScMg3DEsp_c9FlashOnceEv	dScMg3DEsp_c method; PMF record in the flash-mode table. Named FlashOnce: single flash step.
+ov006	0x020e82fc	func_ov006_020e82fc	_ZN12dScMg3DEsp_c11UpdateFlashEv	dScMg3DEsp_c method. Named UpdateFlash: dispatches through the flash-mode PMF table.
+ov006	0x020e8354	func_ov006_020e8354	_ZN12dScMg3DEsp_c11RenderSlotsEv	dScMg3DEsp_c method. Named RenderSlots: draws every slot sprite.
+ov006	0x020e83bc	func_ov006_020e83bc	_ZN12dScMg3DEsp_c10SlotDampenEi	dScMg3DEsp_c method; PMF record in the slot-state table. Named SlotDampen: slot state that eases the slot to rest.
+ov006	0x020e84b8	func_ov006_020e84b8	_ZN12dScMg3DEsp_c8SlotKickEi	dScMg3DEsp_c method; PMF record in the slot-state table. Named SlotKick: slot state giving the slot an impulse.
+ov006	0x020e85f0	func_ov006_020e85f0	_ZN12dScMg3DEsp_c8SlotRiseEi	dScMg3DEsp_c method; PMF record in the slot-state table. Named SlotRise: slot state rising to position.
+ov006	0x020e8728	func_ov006_020e8728	_ZN12dScMg3DEsp_c9SlotSetupEi	dScMg3DEsp_c method; PMF record in the slot-type handler table. Named SlotSetup: per-type handler that initializes a slot.
+ov006	0x020e8830	func_ov006_020e8830	_ZN12dScMg3DEsp_c8SlotFallEi	dScMg3DEsp_c method; PMF record in the slot-type handler table. Named SlotFall: per-type handler for a falling slot.
+ov006	0x020e8928	func_ov006_020e8928	_ZN12dScMg3DEsp_c8SlotWaitEi	dScMg3DEsp_c method; PMF record in the slot-type handler table. Named SlotWait: per-type handler for a waiting slot.
+ov006	0x020e8a44	func_ov006_020e8a44	_ZN12dScMg3DEsp_c11UpdateSlotsEv	dScMg3DEsp_c method. Named UpdateSlots: dispatches every slot through the slot-state PMF table.
+ov006	0x020e8aac	func_ov006_020e8aac	_ZN12dScMg3DEsp_c10ResetSlotsEv	dScMg3DEsp_c method. Named ResetSlots: clears all slot state for a round.
+ov006	0x020e8b18	func_ov006_020e8b18	_ZN12dScMg3DEsp_c10RenderRowsEv	dScMg3DEsp_c method. Named RenderRows: draws every row sprite.
+ov006	0x020e8bd0	func_ov006_020e8bd0	_ZN12dScMg3DEsp_c7RowFadeEi	dScMg3DEsp_c method; PMF record in the row-state table. Named RowFade: row state fading out.
+ov006	0x020e8c74	func_ov006_020e8c74	_ZN12dScMg3DEsp_c8RowDecayEi	dScMg3DEsp_c method; PMF record in the row-state table. Named RowDecay: row state decaying.
+ov006	0x020e8cb0	func_ov006_020e8cb0	_ZN12dScMg3DEsp_c7RowWaitEi	dScMg3DEsp_c method; PMF record in the row-state table. Named RowWait: row state waiting.
+ov006	0x020e8d08	func_ov006_020e8d08	_ZN12dScMg3DEsp_c10UpdateRowsEv	dScMg3DEsp_c method. Named UpdateRows: dispatches every row through the row-state PMF table.
+ov006	0x020e8d7c	func_ov006_020e8d7c	_ZN12dScMg3DEsp_c9SpawnRowsEi	dScMg3DEsp_c method. Named SpawnRows: spawns the row sprites for a round.
+ov006	0x020e8e10	func_ov006_020e8e10	_ZN12dScMg3DEsp_c11RenderCardsEv	dScMg3DEsp_c method. Named RenderCards: draws every card sprite.
+ov006	0x020e8f14	func_ov006_020e8f14	_ZN12dScMg3DEsp_c8CardSeekEi	dScMg3DEsp_c method; PMF record in the card-state table. Named CardSeek: card state seeking its target.
+ov006	0x020e91a0	func_ov006_020e91a0	_ZN12dScMg3DEsp_c9CardTouchEi	dScMg3DEsp_c method; PMF record in the card-state table. Named CardTouch: card state reacting to touch.
+ov006	0x020e9318	func_ov006_020e9318	_ZN12dScMg3DEsp_c8CardExitEi	dScMg3DEsp_c method; PMF record in the card-state table. Named CardExit: card state leaving play.
+ov006	0x020e9374	func_ov006_020e9374	_ZN12dScMg3DEsp_c11UpdateCardsEv	dScMg3DEsp_c method. Named UpdateCards: dispatches every card through the card-state PMF table.
+ov006	0x020e93e8	func_ov006_020e93e8	_ZN12dScMg3DEsp_c9DealCardsEv	dScMg3DEsp_c method. Named DealCards: lays out and initializes the hand.
+ov006	0x020e95a4	func_ov006_020e95a4	_ZN12dScMg3DEsp_c10ClearCardsEv	dScMg3DEsp_c method. Named ClearCards: clears the hand.
+ov006	0x020e95e4	func_ov006_020e95e4	_ZN12dScMg3DEsp_c13SetDifficultyEv	dScMg3DEsp_c method. Named SetDifficulty: scales round parameters by difficulty.
+ov006	0x020e9670	func_ov006_020e9670	_ZN12dScMg3DEsp_c7ResolveEv	dScMg3DEsp_c method; PMF record in the play-phase table. Named Resolve: phase that resolves the hand.
+ov006	0x020e968c	func_ov006_020e968c	_ZN12dScMg3DEsp_c5AwaitEv	dScMg3DEsp_c method; PMF record in the play-phase table. Named Await: phase waiting on the player.
+ov006	0x020e96f4	func_ov006_020e96f4	_ZN12dScMg3DEsp_c4FadeEv	dScMg3DEsp_c method; PMF record in the play-phase table. Named Fade: phase fading the round out.
+ov006	0x020e97b0	func_ov006_020e97b0	_ZN12dScMg3DEsp_c4DealEv	dScMg3DEsp_c method; PMF record in the round-state table. Named Deal: round state dealing cards.
+ov006	0x020e984c	func_ov006_020e984c	_ZN12dScMg3DEsp_c10ResetRoundEv	dScMg3DEsp_c method. Named ResetRound: resets round state for the next hand.
+ov006	0x020e989c	func_ov006_020e989c	_ZN12dScMg3DEsp_c7ResultsEv	dScMg3DEsp_c method; PMF record in the play-phase table. Named Results: phase showing the round result.
+ov006	0x020e9b70	func_ov006_020e9b70	_ZN12dScMg3DEsp_c4PlayEv	dScMg3DEsp_c method; PMF record in the round-state table. Named Play: round state dispatching the play phases.
+ov006	0x020e9bbc	func_ov006_020e9bbc	_ZN12dScMg3DEsp_c4WaitEv	dScMg3DEsp_c method; PMF record in the round-state table. Named Wait: round state idling between rounds.
+ov006	0x02125804	func_ov006_02125804	_ZN15dScMgSnowball_c19func_ov006_02125804Ev	object-as-this
+ov006	0x02125890	func_ov006_02125890	_ZN15dScMgSnowball_c19func_ov006_02125890Ev	object-as-this
+ov006	0x02125994	func_ov006_02125994	_ZN15dScMgSnowball_c19func_ov006_02125994Ev	object-as-this
+ov006	0x021259d8	func_ov006_021259d8	_ZN15dScMgSnowball_c19func_ov006_021259d8EPi	object-as-this
+ov006	0x02125bbc	func_ov006_02125bbc	_ZN15dScMgSnowball_c19func_ov006_02125bbcEPi	object-as-this
+ov006	0x02125cdc	func_ov006_02125cdc	_ZN15dScMgSnowball_c19func_ov006_02125cdcEPi	object-as-this
+ov006	0x02125f68	func_ov006_02125f68	_ZN15dScMgSnowball_c19func_ov006_02125f68Ev	object-as-this
+ov006	0x02126a98	func_ov006_02126a98	_ZN15dScMgSnowball_c19func_ov006_02126a98Ev	object-as-this
+ov006	0x02126b4c	func_ov006_02126b4c	_ZN15dScMgSnowball_c19func_ov006_02126b4cEii	object-as-this
+ov006	0x02126ee4	func_ov006_02126ee4	_ZN15dScMgSnowball_c19func_ov006_02126ee4Ev	object-as-this
+ov006	0x021279b0	func_ov006_021279b0	_ZN15dScMgSnowball_c19func_ov006_021279b0Ev	object-as-this
+ov006	0x02129690	func_ov006_02129690	_ZN15dScMgSnowball_c19func_ov006_02129690Ev	object-as-this
+ov006	0x0212972c	func_ov006_0212972c	_ZN15dScMgSnowball_c19func_ov006_0212972cEi	object-as-this
+ov006	0x021297c0	func_ov006_021297c0	_ZN15dScMgSnowball_c19func_ov006_021297c0Ei	object-as-this
+ov006	0x02129894	func_ov006_02129894	_ZN15dScMgSnowball_c19func_ov006_02129894Ei	object-as-this
+ov006	0x0212992c	func_ov006_0212992c	_ZN15dScMgSnowball_c19func_ov006_0212992cEi	object-as-this
+ov006	0x02129a34	func_ov006_02129a34	_ZN15dScMgSnowball_c19func_ov006_02129a34Ei	object-as-this
+ov006	0x02129b74	func_ov006_02129b74	_ZN15dScMgSnowball_c19func_ov006_02129b74Ei	object-as-this
+ov006	0x02129cb0	func_ov006_02129cb0	_ZN15dScMgSnowball_c19func_ov006_02129cb0Ei	object-as-this
+ov006	0x02129d94	func_ov006_02129d94	_ZN15dScMgSnowball_c19func_ov006_02129d94Ei	object-as-this
+ov006	0x02129e28	func_ov006_02129e28	_ZN15dScMgSnowball_c19func_ov006_02129e28Ei	object-as-this
+ov006	0x02129eec	func_ov006_02129eec	_ZN15dScMgSnowball_c19func_ov006_02129eecEi	object-as-this
+ov006	0x0212a000	func_ov006_0212a000	_ZN15dScMgSnowball_c19func_ov006_0212a000Ei	object-as-this
+ov006	0x0212a110	func_ov006_0212a110	_ZN15dScMgSnowball_c19func_ov006_0212a110Ei	object-as-this
+ov006	0x0212a224	func_ov006_0212a224	_ZN15dScMgSnowball_c19func_ov006_0212a224Ei	object-as-this
+ov006	0x0212a274	func_ov006_0212a274	_ZN15dScMgSnowball_c19func_ov006_0212a274Ei	object-as-this
+ov006	0x0212a2e0	func_ov006_0212a2e0	_ZN15dScMgSnowball_c19func_ov006_0212a2e0Ev	object-as-this
+ov006	0x0212a3c0	func_ov006_0212a3c0	_ZN15dScMgSnowball_c19func_ov006_0212a3c0Ev	object-as-this

@@ -49,8 +49,8 @@ daSnowman_c_classInit kind:function(arm,size=0x54) addr:0x02125ec0
 _ZN12daSnowball_cD1Ev kind:function(arm,size=0x48) addr:0x02125f14
 _ZN12daSnowball_cD0Ev kind:function(arm,size=0x5c) addr:0x02125f5c
 func_ov081_02125fb8 kind:function(arm,size=0x144) addr:0x02125fb8
-func_ov081_021260fc kind:function(arm,size=0xbc) addr:0x021260fc
-func_ov081_021261b8 kind:function(arm,size=0x1c) addr:0x021261b8
+_ZN12daSnowball_c19func_ov081_021260fcEv kind:function(arm,size=0xbc) addr:0x021260fc
+_ZN12daSnowball_c19func_ov081_021261b8Ev kind:function(arm,size=0x1c) addr:0x021261b8
 func_ov081_021261d4 kind:function(arm,size=0x50) addr:0x021261d4
 func_ov081_02126224 kind:function(arm,size=0x74) addr:0x02126224
 _ZN12daSnowball_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02126298
@@ -109,12 +109,12 @@ daObjIceBlock_c_classInit kind:function(arm,size=0x38) addr:0x021280a0
 data_ov081_021280d8 kind:data(any) addr:0x021280d8
 __sinit_ov081_021280e8 kind:function(arm,size=0x6c) addr:0x021280e8
 __sinit_ov081_02128154 kind:function(arm,size=0x360) addr:0x02128154
-__sinit_ov081_021284b4 kind:function(arm,size=0x3c) addr:0x021284b4
+__sinit_daSnowball_c.cpp kind:function(arm,size=0x3c) addr:0x021284b4
 __sinit_ov081_021284f0 kind:function(arm,size=0x2c8) addr:0x021284f0
 __sinit_ov081_021287b8 kind:function(arm,size=0x6c) addr:0x021287b8
 .p__sinit_ov081_021280e8 kind:data(word) addr:0x02128824
 .p__sinit_ov081_02128154 kind:data(word) addr:0x02128828
-.p__sinit_ov081_021284b4 kind:data(word) addr:0x0212882c
+.p__sinit_daSnowball_c.cpp kind:data(word) addr:0x0212882c
 .p__sinit_ov081_021284f0 kind:data(word) addr:0x02128830
 .p__sinit_ov081_021287b8 kind:data(word) addr:0x02128834
 _ZTS8daHuwa_c kind:data(any) addr:0x02128840
@@ -149,8 +149,8 @@ _ZTI11daSnowman_c kind:data(any) addr:0x021289b0
 _ZTS11daSnowman_c kind:data(any) addr:0x021289bc
 g_profile_SNOWMAN kind:data(any) addr:0x021289cc
 _ZTV11daSnowman_c kind:data(any) addr:0x021289f0
-data_ov081_02128a6c kind:data(any) addr:0x02128a6c
-data_ov081_02128a74 kind:data(any) addr:0x02128a74
+@701 kind:data(any) addr:0x02128a6c
+@703 kind:data(any) addr:0x02128a74
 _ZTI12daSnowball_c kind:data(any) addr:0x02128a7c
 _ZTS12daSnowball_c kind:data(any) addr:0x02128a88
 g_profile_SNOWBALL kind:data(any) addr:0x02128a98

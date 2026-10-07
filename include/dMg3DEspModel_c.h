@@ -20,15 +20,25 @@ struct dMg3DEspModel_c {
     void Reset();
     int InitResources();
 
+    /* The member-function states the data_ov006_0213c7xx records point at;
+       the setters play an animation and stash the next state. */
+    void Idle();
+    void Hit();
+    void StartHit();
+    void Intro();
+    void StartIntro();
+    void Wait();
+    void StartWait();
+
     s32 unk_000;                      /* 0x000 */
     s32 unk_004;                      /* 0x004 */
     s32 unk_008;                      /* 0x008 */
     ModelAnim mModelAnim;             /* 0x00c */
     TextureSequence mTextureSequence; /* 0x070 */
     dMg3DEspAnimSet_c mAnimSet;       /* 0x084 */
-    u32 unk_204;                      /* 0x204 */
-    s32 unk_208;                      /* 0x208 */
-    s32 unk_20c;                      /* 0x20c */
+    u32 mParticleSys;                 /* 0x204 */
+    s32 mShowSparks;                  /* 0x208 */
+    s32 mMuted;                       /* 0x20c */
     State mState;                     /* 0x210 */
     s16 mTextureFrame;                /* 0x218 */
     u8 mPolygonID;                    /* 0x21a */

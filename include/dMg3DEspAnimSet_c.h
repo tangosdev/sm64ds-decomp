@@ -19,13 +19,19 @@ struct dMg3DEspAnimSet_c {
     void Render();
     void InitResources();
 
+    /* The flash loop the model's states arm: mRepeats phase cycles of
+       mPeriod frames at mSpeed. */
+    void SetRepeats(s16 repeats);
+    void SetPeriod(s16 period);
+    void SetSpeed(s32 speed);
+
     ModelAnim mModels[3];                 /* 0x000 */
     MaterialChanger mMaterialChangers[3]; /* 0x12c */
-    s32 unk_168[3];                       /* 0x168 */
-    s32 unk_174;                          /* 0x174 */
-    s16 unk_178;                          /* 0x178 */
-    s16 unk_17a;                          /* 0x17a */
-    s16 unk_17c;                          /* 0x17c */
+    s32 mActive[3];                       /* 0x168 */
+    s32 mSpeed;                           /* 0x174 */
+    s16 mRepeats;                         /* 0x178 */
+    s16 mPhase;                           /* 0x17a */
+    s16 mPeriod;                          /* 0x17c */
     u8 pad_17e[0x02];                     /* 0x17e */
 };
 

@@ -69,6 +69,12 @@ struct daKpaTail_c : dActor_c {
     int Render();
     int Behavior();
     int InitResources();
+
+    /* state-table dispatcher and handlers, in ROM order */
+    void func_ov060_02115b84();
+    void func_ov060_02115c1c();
+    void func_ov060_02115d50();
+    void func_ov060_02115d68();
 };
 
 #ifndef SM64DS_PLATFORM_PC
