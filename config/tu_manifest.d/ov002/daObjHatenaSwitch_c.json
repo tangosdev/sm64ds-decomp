@@ -9,7 +9,8 @@
   "boundary_evidence": [
     "contiguous linker run: 0x020b4ed8..0x020b5734, 13 functions, ending immediately before daObjFire_c D1",
     "ROM class identity: _ZTI19daObjHatenaSwitch_c at 0x02108e14 and _ZTS19daObjHatenaSwitch_c at 0x02108e20",
-    "the deferred initializer, ctor word, CLPS blocks, and resource BSS remain separately enrolled and outside this class TU"
+    "compiler-generated __sinit_d_a_obj_hatena_switch.cpp is byte-identical to retail __sinit_ov002_02100ec4 and carries the same nineteen relocation sites",
+    "retail .ctor points at that initializer; four resource handles and four registration nodes occupy 0x0210dd50..0x0210dda0; CLPS blocks stay outside this TU"
   ],
   "sections": [
     {
@@ -21,6 +22,21 @@
       "name": ".data",
       "start": "0x02108e14",
       "end": "0x02108edc"
+    },
+    {
+      "name": ".init",
+      "start": "0x02100ec4",
+      "end": "0x02100f84"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x021080e8",
+      "end": "0x021080ec"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0210dd50",
+      "end": "0x0210dda0"
     }
   ],
   "functions": [
@@ -144,8 +160,168 @@
       "evidence": "compiler storage includes the two-word vtable preamble at 0x02108e54; the configured public address point is eight bytes later and all 32 slot relocations match"
     }
   ],
+  "init": [
+    {
+      "symbol": "__sinit_d_a_obj_hatena_switch.cpp",
+      "address": "0x02100ec4",
+      "size": "0xc0",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail and carries the same nineteen relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_obj_hatena_switch.cpp",
+      "address": "0x021080e8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
   "rodata": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov002_0210dd50",
+      "address": "0x0210dd50",
+      "size": "0x8",
+      "evidence": "collision resource handle constructed with file ID 1134"
+    },
+    {
+      "symbol": "data_ov002_0210dd58",
+      "address": "0x0210dd58",
+      "size": "0x8",
+      "evidence": "collision resource handle constructed with file ID 1135"
+    },
+    {
+      "symbol": "data_ov002_0210dd60",
+      "address": "0x0210dd60",
+      "size": "0x8",
+      "evidence": "model resource handle constructed with file ID 1133"
+    },
+    {
+      "symbol": "data_ov002_0210dd68",
+      "address": "0x0210dd68",
+      "size": "0x8",
+      "evidence": "animation resource handle constructed with file ID 1132"
+    },
+    {
+      "symbol": "@758",
+      "address": "0x0210dd70",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated collision resource destructor-registration node for file ID 1135"
+    },
+    {
+      "symbol": "@759",
+      "address": "0x0210dd7c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated collision resource destructor-registration node for file ID 1134"
+    },
+    {
+      "symbol": "@756",
+      "address": "0x0210dd88",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated model resource destructor-registration node"
+    },
+    {
+      "symbol": "@757",
+      "address": "0x0210dd94",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated animation resource destructor-registration node"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN18HatenaModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN18HatenaModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN22HatenaAnimationFilePtrC1Ej",
+      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0201799c",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN22HatenaAnimationFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017984",
+      "evidence": "retail destructor registration destination and the animation SharedFilePtr family identity"
+    },
+    {
+      "symbol": "_ZN22HatenaCollisionFilePtrC1Ej",
+      "canonical_symbol": "func_02017b4c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b4c",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN22HatenaCollisionFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b34",
+      "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and four direct retail references in this initializer"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_a_obj_hatena_switch.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_a_obj_hatena_switch.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@758",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local collision registration node is a configured initializer relocation destination at 0x0210dd70"
+    },
+    {
+      "symbol": "@759",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local collision registration node is a configured initializer relocation destination at 0x0210dd7c"
+    },
+    {
+      "symbol": "@756",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local model registration node is a configured initializer relocation destination at 0x0210dd88"
+    },
+    {
+      "symbol": "@757",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local animation registration node is a configured initializer relocation destination at 0x0210dd94"
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZN10dBgActor_cD2Ev",
@@ -160,8 +336,9 @@
     "CLEANUP. Factory is `return new daObjHatenaSwitch_c()`. The inline constructor chain emits homeless _ZN10dBgActor_cD2Ev; exact compiler-only policy deadstrips it.",
     "The intact-object proof licenses the compiler-owned class RTTI, type name, typed SpawnInfo, and complete vtable at their natural retail data addresses while externalizing only exact inherited vague-linkage RTTI copies.",
     "The owned-data verifier checks the raw _ZTVN3abi20__si_class_type_infoE + 8 RTTI relocation against the configured public address point, then separately checks its exact +0 post-rebias form. The ordinary intact-object link is scratch-data-verified with no manifest workaround or source hack.",
-    "The CLPS blocks, retained initializer at 0x02100ec4, ctor word, and resource BSS at 0x0210dd50..0x0210dda0 remain separately enrolled and are not claimed by this class TU.",
-    "Legacy per-function contribution comparison is inapplicable across this atomic class-identity correction because the old objects define coined QuestionSwitch mangles. Production readiness requires the ordinary intact-object scratch link, exact owned data, and dry-run promotion in addition to the already-proven 13/13 text and direct blind:0 checks."
+    "The initializer __sinit_d_a_obj_hatena_switch.cpp, its .ctor word, and the resource BSS at 0x0210dd50..0x0210dda0 are owned here. The CLPS blocks stay outside this TU.",
+    "Legacy per-function contribution comparison is inapplicable across this atomic class-identity correction because the old objects define coined QuestionSwitch mangles. Production readiness requires the ordinary intact-object scratch link, exact owned data, and dry-run promotion in addition to the already-proven 13/13 text and direct blind:0 checks.",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "relocations": [
     {
@@ -533,6 +710,206 @@
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ee55c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100ed4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100ee4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100ef0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100f00",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100f0c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017b4c",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100f1c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100f28",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017b4c",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100f38",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100f48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210dd60",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dd60"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100f50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100f54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@756",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dd88"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100f58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210dd68",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dd68"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100f60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Anim",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017984"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100f64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@757",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dd94"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100f68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210dd58",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dd58"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100f70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017b34"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100f74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@758",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dd70"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100f78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210dd50",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dd50"
+    },
+    {
+      "section": ".init",
+      "source": "0x02100f80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@759",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dd7c"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x021080e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_obj_hatena_switch.cpp",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02100ec4"
     }
   ],
   "externalized_output": [
@@ -790,16 +1167,139 @@
           "end": "0x02108edc",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02100ec4",
+          "end": "0x02100f84",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x021080e8",
+          "end": "0x021080ec",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0210dd50",
+          "end": "0x0210dda0",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 17
+          "LICENSED": 27
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              21,
+              27,
+              28,
+              30
+            ],
+            "desired": [
+              21,
+              27,
+              28,
+              30
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              59
+            ],
+            "desired": [
+              59
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              57
+            ],
+            "desired": [
+              57
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              7,
+              8,
+              9,
+              10,
+              16,
+              23,
+              24,
+              25
+            ],
+            "desired": [
+              10,
+              7,
+              8,
+              9,
+              23,
+              16,
+              25,
+              24
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                7,
+                8,
+                9,
+                10,
+                16,
+                23,
+                24,
+                25
+              ],
+              "desired": [
+                10,
+                7,
+                8,
+                9,
+                23,
+                16,
+                25,
+                24
+              ],
+              "slots": [
+                7,
+                8,
+                9,
+                10,
+                16,
+                23,
+                24,
+                25
+              ]
+            }
+          ],
+          "symbolIndices": 8,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
       "symbolCheckErrors": [
         "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",

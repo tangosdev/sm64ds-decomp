@@ -7,6 +7,24 @@
  * The virtual methods use the recovered class hierarchy. The remaining C ABI
  * helpers and local layout views retain the individually verified reconstruction;
  * consolidating this unit does not establish their original names or interfaces.
+ *
+comment leftovers:
+ * - func_ov006_02112ad8 (the ball per-frame physics) stays a free extern "C"
+ *   function. Compiled as C++ -- as a cMgSmartball_ball_c member or a plain
+ *   free function -- mwccarm folds `angle / 0x20` into a `+= 0x800` induction
+ *   accumulator in the two fan-response loops (53 words differ); the C front
+ *   end keeps the divide sequence. Its callers call it by name.
+ * - The twelve constructor-shaped helpers (func_ov006_0210e0d0,
+ *   func_ov006_0210e480, func_ov006_0210f9f8, func_ov006_021101bc,
+ *   func_ov006_02110874, func_ov006_02110bc0, func_ov006_02111220,
+ *   func_ov006_0211157c, func_ov006_02111774, func_ov006_02111b40,
+ *   func_ov006_02114548, func_ov006_0211474c) stay free: they placement-
+ *   construct objects they do not own. func_ov006_0210d894 and
+ *   func_ov006_02119900 are the manager array element destructor and the
+ *   empty final hook.
+ * - The shadow structs below (Obj, Mgr, State2, S, A, Owl, C, SBoard,
+ *   SArrays, ...) remain the TU-local measured reconstructions; none has a
+ *   proven field-to-member mapping against the class headers yet.
  */
 
 #include "dScMgSmartball_c.h"
@@ -447,72 +465,20 @@ extern int _ZTV19cMgSmartball_wing_c[];
 extern "C" {
 char *func_ov006_0210e0d0(char *self, int x, int y, struct V2ab *src);
 char *func_ov006_02111b40(char *self, int x, int y, struct V2ab *src);
-int func_ov006_0210d898(char* c);
-int func_ov006_0210dbb0(State* s, int* p);
-int func_ov006_0210e120(int *self);
-int func_ov006_0210e1fc(char* self, int* p);
 int func_ov006_0210e480(char* c, int b, int d, int* s);
-int func_ov006_0210e4c8(int (*c)[1]);
 int func_ov006_0210f9f8(char* c, int b, int d, int* s);
-int func_ov006_0210fa40(int (*c)[2]);
-int func_ov006_02110244(struct Owl *self, struct S *v);
 int func_ov006_02110874(char* c, int b, int d, int* s);
-int func_ov006_021108bc(int *a, int *b);
 int func_ov006_02110bc0(char* c, int b, int d, int* s);
-int func_ov006_02110c08(char *self, struct S *p);
 int func_ov006_02111220(char* c, int b, int d, int* s);
 int func_ov006_0211157c(char* c, int b, int d, int* s);
-int func_ov006_021115c4(unsigned char *p);
 int func_ov006_02111774(char* c, int b, int d, int* s);
-int func_ov006_02111d6c(unsigned char *p);
-int func_ov006_02111d74(char* c);
-int func_ov006_02111dcc(char *p, int val);
-int func_ov006_02111df4(char* c);
-int func_ov006_02111e90(char* c, int* src);
-int func_ov006_02111ee8(char* c, int* arg);
-int func_ov006_02112030(char* c, int* arg);
-int func_ov006_021120d4(char *a, struct S *r7);
-int func_ov006_02112190(char* sl, struct A* sb);
-int func_ov006_021122e0(char *self, struct S *arg);
-int func_ov006_0211248c(int *a, int *b);
-int func_ov006_02112504(unsigned char** obj, int* p);
-int func_ov006_021126b4(char *self, struct S *arg);
 int func_ov006_02114548(char* c, int b, int d, int* s);
-int func_ov006_021147d0(char *p);
-int func_ov006_021156f8(char *p);
-void func_ov006_0210d8bc(char *c);
-void func_ov006_0210d93c(struct C* c);
-void func_ov006_0210eca4(char *c, int idx, int *pos);
-void func_ov006_0210ef48(void* arg, int i);
-void func_ov006_0210fa6c(char *c);
-void func_ov006_0210fb04(char* self);
-void func_ov006_0210fb58(char *c);
-void func_ov006_02110e28(struct C2* c);
-void func_ov006_021115cc(char* c);
-void func_ov006_02111b90(char* self, int a1, int* vel);
-void func_ov006_02111d4c(char *p);
-void func_ov006_02111e48(int* o);
-void func_ov006_02111e7c(char* p);
-void func_ov006_021128fc(char *c);
+void CopyObjectVel(int *a, int *b);
+void CopyObjectPos(int *a, int *b);
 void func_ov006_02112ad8(Obj *self);
-void func_ov006_02113c14(struct Obj2 *c);
-void func_ov006_021146cc(int *a, int *b);
-void func_ov006_021146e0(int *a, int *b);
-void func_ov006_0211470c(int *a, int *b);
-void func_ov006_02114b10(char* self);
-void func_ov006_02114c04(char* o);
-void func_ov006_02114dd0(struct S24 *o);
-void func_ov006_02114f98(char *self);
-void func_ov006_02115150(char* self);
-void func_ov006_02115480(char *o);
-void func_ov006_02115830(int a, int b, int c, u8 *d, u8 *e);
-void func_ov006_02115a5c(char *p);
-void func_ov006_02115b0c(char *c);
 void* func_ov006_021101bc(char* c, int a1, int a2, int* src);
 }
 
-extern "C" int func_ov006_02111f8c(char* c, int* arg);
-extern "C" void func_ov006_02115598(SArrays* c, int* src, int v2, int v3, int v5);
 
 
 /* Declarations this TU still needs from the shared common header, which is
@@ -533,21 +499,8 @@ extern void func_ov004_020b0a54(int);
 
 
 extern "C" {
-void func_ov006_0210f998(void);
-int func_ov006_021146ac(struct S28 *p);
-void func_ov006_021146f4(void* a, char* b);
+void GetObjectDelta(void* a, char* b);
 void func_ov006_0211474c(char* c, int a1, int a2, int* a3);
-void func_ov006_02114dfc(char *c);
-void func_ov006_02114ec0(char *self);
-void func_ov006_02114fb4(char *p, int i);
-void func_ov006_02114fd0(char *p);
-void func_ov006_02114fec(char *p);
-void func_ov006_02115008(char *p);
-void func_ov006_02115024(char *p);
-int func_ov006_02115040(char *base, int i);
-void func_ov006_02115060(char *p);
-unsigned short func_ov006_0211507c(unsigned char* base, int* pos);
-void func_ov006_02115680(char *p, int idx);
 }
 
 #define LN(base, off) (*(int *)((((int)(base)) + (off))))
@@ -566,9 +519,6 @@ void func_ov006_02115680(char *p, int idx);
     ((int)(((s64)((a) * (u64)(s64)(b)) + 0x800) >> 12))
 
 extern "C" {
-int func_ov006_02114590(int a0, int* p, int* q0, int* q1, int* q2);
-void func_ov006_02114800(char *c, int *pair, int a3);
-void func_ov006_02115248(dScMgSmartball_c *self, int *origin);
 }
 
 /* ROM ordinal 1 -- _ZN16dScMgSmartball_cD0Ev, 0x0210d7e0, size 0xb4           */
@@ -610,23 +560,22 @@ void func_ov006_0210d894(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov006_0210d898, 0x0210d898, size 0x24 */
+/* ROM ordinal 3 -- _ZN19cMgSmartball_wing_c9IsSettledEv, 0x0210d898, size 0x24 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0210d898
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_0210d898(char* c) {
+// @symbol _ZN19cMgSmartball_wing_c9IsSettledEv
+int cMgSmartball_wing_c::IsSettled() {
+    char *c = (char *)this;
     if (*(int*)(c+0x40) == 0) return 1;
     return *(short*)(c+0x32) == 0x3000;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov006_0210d8bc, 0x0210d8bc, size 0x80 */
+/* ROM ordinal 4 -- _ZN19cMgSmartball_wing_c7TriggerEv, 0x0210d8bc, size 0x80 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0210d8bc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210d8bc(char *c)
+// @symbol _ZN19cMgSmartball_wing_c7TriggerEv
+void cMgSmartball_wing_c::Trigger()
 {
+    char *c = (char *)this;
     (*(int *)(((int)c + 0x40))) += 1;
     if (*(int *)(c + 0x40) == 1) {
         *(int *)(c + 0x34) = 0x14;
@@ -640,15 +589,14 @@ void func_ov006_0210d8bc(char *c)
     *(int *)(c + 0x38) = 0;
     _ZN5Sound12PlayBank2_2DEj(0x1a2);
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov006_0210d93c, 0x0210d93c, size 0x274 */
+/* ROM ordinal 5 -- _ZN19cMgSmartball_wing_c12RebuildVertsEv, 0x0210d93c, size 0x274 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0210d93c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210d93c(struct C* c)
+// @symbol _ZN19cMgSmartball_wing_c12RebuildVertsEv
+void cMgSmartball_wing_c::RebuildVerts()
 {
+    struct C *c = (struct C *)this;
     c->v[0].x = -0x4000;
     c->v[0].y = 0;
     c->v[1].x = 0x4000;
@@ -692,14 +640,13 @@ void func_ov006_0210d93c(struct C* c)
     *(int*)(((int)c + 0x80)) += c->dx + 0x10000;
     *(int*)(((int)c + 0x84)) += c->dy + 0x28000;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov006_0210dbb0, 0x0210dbb0, size 0x240 */
+/* ROM ordinal 6 -- _ZN19cMgSmartball_wing_c7HitTestEPi, 0x0210dbb0, size 0x240 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0210dbb0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_0210dbb0(State* s, int* p) {
+// @symbol _ZN19cMgSmartball_wing_c7HitTestEPi
+int cMgSmartball_wing_c::HitTest(int *p) {
+    State *s = (State *)this;
     int v[2];
     int b2p[2], b2q0[2], b2q1[2], b2q2[2];
     int b3p[2], b3q0[2], b3q1[2], b3q2[2];
@@ -719,26 +666,25 @@ int func_ov006_0210dbb0(State* s, int* p) {
     b2q0[0] = s->verts[0]; b2q0[1] = s->verts[1];
     b2q1[0] = s->verts[2]; b2q1[1] = s->verts[3];
     b2q2[0] = s->verts[4]; b2q2[1] = s->verts[5];
-    if (func_ov006_02114590((int)s, b2p, b2q0, b2q1, b2q2)) return 1;
+    if (PointInTriangle(b2p,  b2q0,  b2q1,  b2q2)) return 1;
 
     b3p[0] = p[0]; b3p[1] = p[1];
     b3q0[0] = s->verts[2]; b3q0[1] = s->verts[3];
     b3q1[0] = s->verts[4]; b3q1[1] = s->verts[5];
     b3q2[0] = s->verts[6]; b3q2[1] = s->verts[7];
-    if (func_ov006_02114590((int)s, b3p, b3q0, b3q1, b3q2)) return 1;
+    if (PointInTriangle(b3p,  b3q0,  b3q1,  b3q2)) return 1;
 
     b4p[0] = p[0]; b4p[1] = p[1];
     b4q0[0] = s->verts[8];  b4q0[1] = s->verts[9];
     b4q1[0] = s->verts[10]; b4q1[1] = s->verts[11];
     b4q2[0] = s->verts[12]; b4q2[1] = s->verts[13];
-    if (func_ov006_02114590((int)s, b4p, b4q0, b4q1, b4q2)) return 1;
+    if (PointInTriangle(b4p,  b4q0,  b4q1,  b4q2)) return 1;
 
     b5p[0] = p[0]; b5p[1] = p[1];
     b5q0[0] = s->verts[10]; b5q0[1] = s->verts[11];
     b5q1[0] = s->verts[12]; b5q1[1] = s->verts[13];
     b5q2[0] = s->verts[14]; b5q2[1] = s->verts[15];
-    return func_ov006_02114590((int)s, b5p, b5q0, b5q1, b5q2);
-}
+    return PointInTriangle(b5p,  b5q0,  b5q1,  b5q2);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -789,7 +735,7 @@ void cMgSmartball_wing_c::Update()
  * is 1 or mTriggerCount is not positive, eases the angle at offset 0x32 (see the
  * header -- it belongs to the BASE, not this class) toward
  * 0x3000 by steps of 0x200, clamping on overshoot in either direction.
- * Always tail-calls the shared helper func_ov006_0210d93c, which touches
+ * Always tail-calls the shared helper RebuildVerts, which touches
  * the unmodelled 0x48..0x87 tail (see the header). */
 void cMgSmartball_wing_c::SaveSnapshot()
 {
@@ -804,7 +750,7 @@ void cMgSmartball_wing_c::SaveSnapshot()
             if (*(s16 *)((char *)this + 0x32) < 0x3000) *(s16 *)((char *)this + 0x32) = 0x3000;
         }
     }
-    func_ov006_0210d93c((C *)this);
+    RebuildVerts();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -815,7 +761,7 @@ void cMgSmartball_wing_c::SaveSnapshot()
  * zeroes the pad-region angle at 0x32 (see the header) and every unk_
  * field this class adds, in the ROM's own (non-address-order) sequence --
  * 0x34, then 0x3c, then 0x38, then 0x40, then 0x44. Tail-calls the shared
- * helper func_ov006_0210d93c, same as SaveSnapshot. */
+ * helper RebuildVerts, same as SaveSnapshot. */
 void cMgSmartball_wing_c::RestoreInitial()
 {
     cMgSmartball_object_c::RestoreInitial();
@@ -825,7 +771,7 @@ void cMgSmartball_wing_c::RestoreInitial()
     unk_038 = 0;
     mTriggerCount = 0;
     mAngleSettled = 0;
-    func_ov006_0210d93c((C *)this);
+    RebuildVerts();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -846,23 +792,23 @@ char *func_ov006_0210e0d0(char *self, int x, int y, struct V2ab *src) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov006_0210e120, 0x0210e120, size 0xdc */
+/* ROM ordinal 11 -- _ZN25cMgSmartball_pushswitch_c10BallsClearEv, 0x0210e120, size 0xdc */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0210e120
-/* func_ov006_0210e120 at 0x0210e120
+// @symbol _ZN25cMgSmartball_pushswitch_c10BallsClearEv
+/* cMgSmartball_pushswitch_c::BallsClear at 0x0210e120
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
  */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_0210e120(int *self)
+int cMgSmartball_pushswitch_c::BallsClear()
 {
+    int *self = (int *)this;
     int i;
     Vec2 delta, pos;
     for (i = 0; i < *(int *)((char *)self[1] + 0x4668); i++) {
         int *o  = (i >= 13) ? 0 : ((int **)((char *)self[1] + 0x4688))[i];
         if (*(unsigned char *)((char *)o + 0x30) != 0) {
             int *o2 = (i >= 13) ? 0 : ((int **)((char *)self[1] + 0x4688))[i];
-            func_ov006_0211470c((int *)&pos, o2);
+            CopyObjectPos((int *)&pos, o2);
             delta = pos;
             delta.x -= self[2];
             delta.y -= self[3];
@@ -872,14 +818,13 @@ int func_ov006_0210e120(int *self)
     }
     return 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov006_0210e1fc, 0x0210e1fc, size 0x168 */
+/* ROM ordinal 12 -- _ZN25cMgSmartball_pushswitch_c9CheckBallEPi, 0x0210e1fc, size 0x168 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0210e1fc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_0210e1fc(char* self, int* p) {
+// @symbol _ZN25cMgSmartball_pushswitch_c9CheckBallEPi
+int cMgSmartball_pushswitch_c::CheckBall(int *p) {
+    char *self = (char *)this;
     int d[2];
     d[0] = p[0];
     d[1] = p[1];
@@ -897,13 +842,12 @@ int func_ov006_0210e1fc(char* self, int* p) {
     }
     if (func_0203d5bc(d) >= 0x40000) return 0;
     if (p[0] >= *(int*)(self + 8) - 0x4000 && p[0] < *(int*)(self + 8) + 0x4000) {
-        func_ov006_0210fb04((char *)(*(void**)(*(char**)(self + 4) + 0x4778)));
+        ((cMgSmartball_slot_c *)((char *)(*(void**)(*(char**)(self + 4) + 0x4778))))->StartSpin();
         *(unsigned char*)(self + 0x31) = 1;
         *(int*)(self + 0x34) = 0xa;
         _ZN5Sound12PlayBank2_2DEj(0x1a4);
     }
     return 1;
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -933,7 +877,7 @@ void cMgSmartball_pushswitch_c::Update()
  * rather than called -- same pattern as every sibling in this family. Then
  * decrements this class's own countdown (mReleaseDelay) while it is positive.
  * While the base's unk_031 flag is set, calls the out-of-scope helper
- * func_ov006_0210e120 (an escape/proximity check over the actor list): if
+ * cMgSmartball_pushswitch_c::BallsClear (an escape/proximity check over the actor list): if
  * it reports clear and the countdown has drained to zero, unk_031 is
  * cleared; otherwise the countdown is reloaded to 0xa. */
 void cMgSmartball_pushswitch_c::SaveSnapshot()
@@ -944,7 +888,7 @@ void cMgSmartball_pushswitch_c::SaveSnapshot()
         mReleaseDelay -= 1;
     }
     if (unk_031 != 1) return;
-    if (func_ov006_0210e120((int *)this)) {
+    if (BallsClear()) {
         if (mReleaseDelay == 0) unk_031 = 0;
     } else {
         mReleaseDelay = 0xa;
@@ -981,19 +925,18 @@ int func_ov006_0210e480(char* c, int b, int d, int* s){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- func_ov006_0210e4c8, 0x0210e4c8, size 0x2c */
+/* ROM ordinal 17 -- _ZN20cMgSmartball_board_c13AnyLineActiveEv, 0x0210e4c8, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0210e4c8
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_0210e4c8(int (*c)[1])
+// @symbol _ZN20cMgSmartball_board_c13AnyLineActiveEv
+int cMgSmartball_board_c::AnyLineActive()
 {
+    int (*c)[1] = (int (*)[1])this;
     int i;
     for (i = 0; i < 8; i++) {
         if (c[i][0x1b] > 0x168)
             return 1;
     }
     return 0;
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1135,12 +1078,12 @@ void cMgSmartball_board_c::Update()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- func_ov006_0210eca4, 0x0210eca4, size 0x2a4 */
+/* ROM ordinal 19 -- _ZN20cMgSmartball_board_c9PaintCellEiPi, 0x0210eca4, size 0x2a4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0210eca4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210eca4(char *c, int idx, int *pos)
+// @symbol _ZN20cMgSmartball_board_c9PaintCellEiPi
+void cMgSmartball_board_c::PaintCell(int idx, int *pos)
 {
+    char *c = (char *)this;
     int cx;
     int cy;
     int base;
@@ -1241,14 +1184,12 @@ void func_ov006_0210eca4(char *c, int idx, int *pos)
         }
     }
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- func_ov006_0210ef48, 0x0210ef48, size 0x61c */
+/* ROM ordinal 20 -- _ZN20cMgSmartball_board_c9ClaimCellEi, 0x0210ef48, size 0x61c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0210ef48
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210ef48(void* arg, int i)
+// @symbol _ZN20cMgSmartball_board_c9ClaimCellEi
+void cMgSmartball_board_c::ClaimCell(int i)
 {
     int count;
     int bingo;
@@ -1262,7 +1203,7 @@ void func_ov006_0210ef48(void* arg, int i)
     int d[2];
     int e[2];
 
-    c = (SBoard*)arg;
+    c = (SBoard*)this;
     slot = data_ov006_02142c1c[i];
     if (c->cells[slot] == 1)
         return;
@@ -1270,11 +1211,11 @@ void func_ov006_0210ef48(void* arg, int i)
     v = i * 0x18000 + 0x10000;
     a[0] = v;
     a[1] = 0x78000;
-    func_ov006_02115598((SArrays *)c->f4, (int *)a, 0x64, 0, 1);
-    func_ov006_02115060((char *)c->f4);
+    ((dScMgSmartball_c *)((SArrays *)c->f4))->EmitScore((int *)a,  0x64,  0,  1);
+    ((dScMgSmartball_c *)((char *)c->f4))->CountCell();
     b[0] = v;
     b[1] = 0x78000;
-    func_ov006_0210eca4((char *)c, i, (int *)b);
+    ((cMgSmartball_board_c *)((char *)c))->PaintCell(i,  (int *)b);
     _ZN5Sound12PlayBank2_2DEj(0x173);
     count = 0;
     if (slot < 3) {
@@ -1402,8 +1343,8 @@ void func_ov006_0210ef48(void* arg, int i)
         do {
             d[0] = c->f8;
             d[1] = c->fc;
-            func_ov006_02115598((SArrays*)c->f4, (int*)d, (int)tmp, (int)0, (int)1);
-            func_ov006_02115040((char *)c->f4, 1);
+            ((dScMgSmartball_c *)((SArrays*)c->f4))->EmitScore((int*)d,  (int)tmp,  (int)0,  (int)1);
+            ((dScMgSmartball_c *)((char *)c->f4))->CountLine(1);
             m++;
         } while (m < count);
     }
@@ -1411,11 +1352,10 @@ void func_ov006_0210ef48(void* arg, int i)
         return;
     e[0] = c->f8;
     e[1] = c->fc;
-    func_ov006_02115598((SArrays *)c->f4, (int *)e, 0x2710, 0x3c, 1);
-    func_ov006_02115024((char *)c->f4);
-    func_ov006_02114dfc((char *)c->f4);
+    ((dScMgSmartball_c *)((SArrays *)c->f4))->EmitScore((int *)e,  0x2710,  0x3c,  1);
+    ((dScMgSmartball_c *)((char *)c->f4))->CountBingo();
+    ((dScMgSmartball_c *)((char *)c->f4))->EndRound();
     _ZN5Sound12PlayBank2_2DEj(0x174);
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1497,7 +1437,7 @@ void cMgSmartball_board_c::SaveSnapshot()
             break;
         if (GetObjBoard((char *)mpManager, n)[0x30] == 0)
             continue;
-        func_ov006_0211470c((int *)&t, (int *)GetObjBoard((char *)mpManager, n));
+        CopyObjectPos((int *)&t, (int *)GetObjBoard((char *)mpManager, n));
         /* COMPILER STEER, and the only one in this file. `v = t;` is what the
            ROM does and it is what the pre-migration C said -- but mwcc
            scalarizes a whole-struct assignment in C++ where it kept it in
@@ -1517,20 +1457,20 @@ void cMgSmartball_board_c::SaveSnapshot()
         for (j = 0, lo = 0xc000, hi = 0x14000; j < 9; j++) {
             int slot = data_ov006_02142c1c[j];
             if (v.x >= lo && v.x < hi) {
-                if (func_ov006_02111dcc((char *)GetObjBoard((char *)mpManager, n), 0x14)) {
+                if (((cMgSmartball_ball_c *)((char *)GetObjBoard((char *)mpManager, n)))->ArmExpire(0x14)) {
                     if ((&unk_031)[slot] == 0) {
                         SetV2(&a, mCurrent0 + ((data_ov006_02142c1c[j] % 3 - 1) * 0x18 << 12),
                               mCurrent1 + ((data_ov006_02142c1c[j] / 3 - 1) * 0x18 << 12));
-                        func_ov006_02114800((char *)mpManager, (int *)&a, 0);
+                        ((dScMgSmartball_c *)((char *)mpManager))->EmitSparks((int *)&a,  0);
                         SetV2(&b, (j * 0x18 + 0x10) << 12, 0x78000);
-                        func_ov006_02114800((char *)mpManager, (int *)&b, 0);
+                        ((dScMgSmartball_c *)((char *)mpManager))->EmitSparks((int *)&b,  0);
                         func_02012718(0x1be, j * 0x18000 + 0x10000);
                     } else {
                         SetV2(&d, (j * 0x18 + 0x10) << 12, 0x78000);
-                        func_ov006_02114800((char *)mpManager, (int *)&d, 1);
+                        ((dScMgSmartball_c *)((char *)mpManager))->EmitSparks((int *)&d,  1);
                         func_02012718(0x17a, j * 0x18000 + 0x10000);
                     }
-                    func_ov006_0210ef48(this, j);
+                    ClaimCell(j);
                     break;
                 }
             }
@@ -1560,7 +1500,7 @@ void cMgSmartball_board_c::SaveSnapshot()
  * recurse.
  *
  * After that it refills the shared shuffle table data_ov006_02142c1c with the
- * identity 0..8, reshuffles it via func_ov006_0210f998, and then zeroes every
+ * identity 0..8, reshuffles it via ShuffleCells, and then zeroes every
  * field this class owns. That zero pass is exhaustive and in address order,
  * which is why it -- not a union of the "obvious" accesses in the other two
  * slots -- is the authority for the layout in cMgSmartball_board_c.h.
@@ -1578,7 +1518,7 @@ void cMgSmartball_board_c::RestoreInitial()
     cMgSmartball_object_c::RestoreInitial();
     for (i = 0; i < 9; i++)
         data_ov006_02142c1c[i] = i;
-    func_ov006_0210f998();
+    ShuffleCells();
     for (i = 0; i < 9; i++) {
         (&unk_031)[i] = 0;
         mCellFlipAngle[i] = 0;
@@ -1593,18 +1533,16 @@ void cMgSmartball_board_c::RestoreInitial()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- func_ov006_0210f998, 0x0210f998, size 0x60 */
+/* ROM ordinal 23 -- _ZN20cMgSmartball_board_c12ShuffleCellsEv, 0x0210f998, size 0x60 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0210f998
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210f998(void){
+// @symbol _ZN20cMgSmartball_board_c12ShuffleCellsEv
+void cMgSmartball_board_c::ShuffleCells(){
   struct W9 tmp;
   int i;
   tmp = data_ov006_0213eed0;
   for (i = 0; i < 9; i++) {
     data_ov006_02142c1c[i] = tmp.w[i] - 1;
   }
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1624,12 +1562,12 @@ int func_ov006_0210f9f8(char* c, int b, int d, int* s){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- func_ov006_0210fa40, 0x0210fa40, size 0x2c */
+/* ROM ordinal 25 -- _ZN19cMgSmartball_slot_c12ReelsStoppedEv, 0x0210fa40, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0210fa40
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_0210fa40(int (*c)[2])
+// @symbol _ZN19cMgSmartball_slot_c12ReelsStoppedEv
+int cMgSmartball_slot_c::ReelsStopped()
 {
+    int (*c)[2] = (int (*)[2])this;
     int i;
     for (i = 0; i < 3; i++) {
         if (c[i][0x14] > 0)
@@ -1637,15 +1575,14 @@ int func_ov006_0210fa40(int (*c)[2])
     }
     return 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- func_ov006_0210fa6c, 0x0210fa6c, size 0x98 */
+/* ROM ordinal 26 -- _ZN19cMgSmartball_slot_c9BeginStopEv, 0x0210fa6c, size 0x98 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0210fa6c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210fa6c(char *c)
+// @symbol _ZN19cMgSmartball_slot_c9BeginStopEv
+void cMgSmartball_slot_c::BeginStop()
 {
+    char *c = (char *)this;
   int i;
   unsigned char z;
   int *seed;
@@ -1666,15 +1603,14 @@ void func_ov006_0210fa6c(char *c)
   }
 
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 27 -- func_ov006_0210fb04, 0x0210fb04, size 0x54 */
+/* ROM ordinal 27 -- _ZN19cMgSmartball_slot_c9StartSpinEv, 0x0210fb04, size 0x54 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0210fb04
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210fb04(char* self)
+// @symbol _ZN19cMgSmartball_slot_c9StartSpinEv
+void cMgSmartball_slot_c::StartSpin()
 {
+    char *self = (char *)this;
     if (*(unsigned char*)(self + 0x73) != 0) {
         ++*(int*)(((int)self + 0x78));
         return;
@@ -1684,18 +1620,17 @@ void func_ov006_0210fb04(char* self)
     *(int*)(self + 0x80) = 0xb4;
     _ZN5Sound12PlayBank2_2DEj(0x160);
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 28 -- func_ov006_0210fb58, 0x0210fb58, size 0x3c4 */
+/* ROM ordinal 28 -- _ZN19cMgSmartball_slot_c10UpdateSpinEv, 0x0210fb58, size 0x3c4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0210fb58
+// @symbol _ZN19cMgSmartball_slot_c10UpdateSpinEv
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0210fb58(char *c)
+void cMgSmartball_slot_c::UpdateSpin()
 {
+    char *c = (char *)this;
     int ib, ic;
 
     if (*(u8 *)(c + 0x73) == 1) {
@@ -1751,14 +1686,14 @@ void func_ov006_0210fb58(char *c)
         if (*(int *)(c + ic * 8 + 0x38) >= 0x30000)
             LM(c + ic * 8, 0x38) -= 0x30000;
     }
-    if (func_ov006_0210fa40((int (*)[2])c) == 0) {
+    if (((cMgSmartball_slot_c *)((int (*)[2])c))->ReelsStopped() == 0) {
         *(int *)(c + 0x84) = Sound_PlayIfNotActive(*(int *)(c + 0x84), 2, 0x1a6, 0);
     } else {
         *(int *)(c + 0x84) = 0;
     }
     if (*(u8 *)(c + 0x75) != 1) return;
     if (*(u8 *)(c + 0x73) != 1) return;
-    if (func_ov006_0210fa40((int (*)[2])c) != 1) return;
+    if (((cMgSmartball_slot_c *)((int (*)[2])c))->ReelsStopped() != 1) return;
     *(u8 *)(c + 0x75) = 0;
     *(u8 *)(c + 0x73) = 0;
     {
@@ -1777,24 +1712,24 @@ void func_ov006_0210fb58(char *c)
                 V2 a;
                 a.x = *(int *)(c + 8);
                 a.y = *(int *)(c + 0xc);
-                func_ov006_02115598((SArrays *)(*(int *)(c + 4)), (int *)&a, 0x1388, 0, 1);
-                func_ov006_02114fb4((char *)(*(int *)(c + 4)), 0);
+                ((dScMgSmartball_c *)((SArrays *)(*(int *)(c + 4))))->EmitScore((int *)&a,  0x1388,  0,  1);
+                ((dScMgSmartball_c *)((char *)(*(int *)(c + 4))))->CountAward(0);
                 break;
             }
             case 0x10000: {
                 V2 b;
                 b.x = *(int *)(c + 8);
                 b.y = *(int *)(c + 0xc);
-                func_ov006_02115598((SArrays *)(*(int *)(c + 4)), (int *)&b, 0x1f40, 0, 1);
-                func_ov006_02114fb4((char *)(*(int *)(c + 4)), 1);
+                ((dScMgSmartball_c *)((SArrays *)(*(int *)(c + 4))))->EmitScore((int *)&b,  0x1f40,  0,  1);
+                ((dScMgSmartball_c *)((char *)(*(int *)(c + 4))))->CountAward(1);
                 break;
             }
             case 0x20000: {
                 V2 d;
                 d.x = *(int *)(c + 8);
                 d.y = *(int *)(c + 0xc);
-                func_ov006_02115598((SArrays *)(*(int *)(c + 4)), (int *)&d, 0x2710, 0, 1);
-                func_ov006_02114fb4((char *)(*(int *)(c + 4)), 2);
+                ((dScMgSmartball_c *)((SArrays *)(*(int *)(c + 4))))->EmitScore((int *)&d,  0x2710,  0,  1);
+                ((dScMgSmartball_c *)((char *)(*(int *)(c + 4))))->CountAward(2);
                 break;
             }
             }
@@ -1802,7 +1737,6 @@ void func_ov006_0210fb58(char *c)
         }
     }
     *(int *)(c + 0x7c) = 0x3c;
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1860,10 +1794,10 @@ second_loop:
  * rather than called -- same pattern as every sibling in this family (the
  * base's copy is out-of-line and there is no bl here). Then runs three
  * independent countdowns: mSpinCooldown always decrements while positive;
- * mSpinsQueued decrements and fires the spin-start helper func_ov006_0210fb04
+ * mSpinsQueued decrements and fires the spin-start helper StartSpin
  * once mIsSpinning is clear and mSpinCooldown has drained; mSpinTimer decrements and
- * fires func_ov006_0210fa6c when it reaches exactly 0. Always tail-calls
- * the shared per-frame helper func_ov006_0210fb58. */
+ * fires BeginStop when it reaches exactly 0. Always tail-calls
+ * the shared per-frame helper UpdateSpin. */
 void cMgSmartball_slot_c::SaveSnapshot()
 {
     mSnapshot0 = mCurrent0;
@@ -1873,14 +1807,14 @@ void cMgSmartball_slot_c::SaveSnapshot()
     }
     if (mIsSpinning == 0 && mSpinCooldown <= 0 && mSpinsQueued > 0) {
         mSpinsQueued -= 1;
-        func_ov006_0210fb04((char *)this);
+        StartSpin();
     }
     if (mSpinTimer > 0) {
         mSpinTimer -= 1;
         if (mSpinTimer == 0)
-            func_ov006_0210fa6c((char *)this);
+            BeginStop();
     }
-    func_ov006_0210fb58((char *)this);
+    UpdateSpin();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1932,15 +1866,16 @@ void* func_ov006_021101bc(char* c, int a1, int a2, int* src){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 33 -- func_ov006_02110244, 0x02110244, size 0x27c */
+/* ROM ordinal 33 -- _ZN21cMgSmartball_pakkun_c9CheckBallEPi, 0x02110244, size 0x27c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02110244
+// @symbol _ZN21cMgSmartball_pakkun_c9CheckBallEPi
 /* Smartball object collision helper. Offsets 0x08 and 0x0c hold the
  * object's fixed-point 2D coordinates, used here for distance checks.
  */
 /* Local layout: only what this function actually touches. */
-extern "C" {  /* local collision helper: C linkage */
-int func_ov006_02110244(struct Owl *self, struct S *v) {
+int cMgSmartball_pakkun_c::CheckBall(int *pos) {
+    struct Owl *self = (struct Owl *)this;
+    struct S *v = (struct S *)pos;
     struct S d;
     struct S p, t1, t2, t3;
     struct S p2, t4, t5, t6;
@@ -1980,7 +1915,7 @@ int func_ov006_02110244(struct Owl *self, struct S *v) {
                 xv = self->posX - 0xa000;
                 t3.a = xv;
                 t3.b = yv;
-                r = func_ov006_02114590((int)((char *)self), (int *)&p, (int *)&t1, (int *)&t2, (int *)&t3);
+                r = PointInTriangle((int *)&p,  (int *)&t1,  (int *)&t2,  (int *)&t3);
                 if (r == 0) goto in1;
                 return 0;
             in1:
@@ -2001,7 +1936,7 @@ int func_ov006_02110244(struct Owl *self, struct S *v) {
                 xv2 = self->posX + 0xa000;
                 t6.a = xv2;
                 t6.b = yv2;
-                r = func_ov006_02114590((int)((char *)self), (int *)&p2, (int *)&t4, (int *)&t5, (int *)&t6);
+                r = PointInTriangle((int *)&p2,  (int *)&t4,  (int *)&t5,  (int *)&t6);
                 if (r == 0) goto in2;
                 return 0;
             in2:
@@ -2014,7 +1949,6 @@ int func_ov006_02110244(struct Owl *self, struct S *v) {
     if (func_0203d5bc(&d.a) < 0x100000)
         return 0;
     return func_0203d5bc(&d.a) < 0x190000;
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2096,13 +2030,13 @@ void cMgSmartball_pakkun_c::SaveSnapshot()
         return;
     }
     for (i = 0; i < *(int *)((char *)mpManager + 0x4668); i++) {
-        func_ov006_0211470c(&s[0], GetObjPakkun((char *)mpManager, i));
+        CopyObjectPos(&s[0], GetObjPakkun((char *)mpManager, i));
         Vec2_Sub(&s[2], &mCurrent0, &s[0]);
         b = Vec2_Len((Vec2 *)&s[2]) < 0x4000;
         if (b) {
             mActionTimer = 0x61;
             unk_031 = 0;
-            func_ov006_0210d8bc(*(char **)((char *)mpManager + 0x4780));
+            ((cMgSmartball_wing_c *)(*(char **)((char *)mpManager + 0x4780)))->Trigger();
             *((char *)GetObjPakkun((char *)mpManager, i) + 0x30) = 0;
             func_02012718(0x1a0, mCurrent0);
             return;
@@ -2150,11 +2084,11 @@ int func_ov006_02110874(char* c, int b, int d, int* s){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 38 -- func_ov006_021108bc, 0x021108bc, size 0x6c */
+/* ROM ordinal 38 -- _ZN20cMgSmartball_dokan_c9CheckBallEPi, 0x021108bc, size 0x6c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_021108bc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_021108bc(int *a, int *b){
+// @symbol _ZN20cMgSmartball_dokan_c9CheckBallEPi
+int cMgSmartball_dokan_c::CheckBall(int *b){
+    int *a = (int *)this;
     int ax = a[2];
     int bx = b[0];
     if(bx >= ax-0xe000 && bx < ax+0xe000){
@@ -2166,7 +2100,6 @@ int func_ov006_021108bc(int *a, int *b){
         }
     }
     return 0;
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2216,7 +2149,7 @@ void cMgSmartball_dokan_c::SaveSnapshot()
             continue;
         if (GetObjDokan((char *)mpManager, i)[0x120] == 1)
             continue;
-        func_ov006_0211470c((int *)&s.v, (int *)GetObjDokan((char *)mpManager, i));
+        CopyObjectPos((int *)&s.v, (int *)GetObjDokan((char *)mpManager, i));
         s.d = s.v;
         s.d.x = s.d.x - mCurrent0;
         s.d.y = s.d.y - mCurrent1;
@@ -2230,8 +2163,8 @@ void cMgSmartball_dokan_c::SaveSnapshot()
             continue;
         s.e.x = mCurrent0;
         s.e.y = -0x40000;
-        func_ov006_02115598((SArrays *)(void *)mpManager, (int *)&s.e, 0xbb8, 0, 1);
-        func_ov006_02114fd0((char *)mpManager);
+        ((dScMgSmartball_c *)((SArrays *)(void *)mpManager))->EmitScore((int *)&s.e,  0xbb8,  0,  1);
+        ((dScMgSmartball_c *)((char *)mpManager))->CountDokan();
         GetObjDokan((char *)mpManager, i)[0x120] = 1;
         Sound::PlayBank2_2D(0x16);
     }
@@ -2273,11 +2206,12 @@ int func_ov006_02110bc0(char* c, int b, int d, int* s){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 43 -- func_ov006_02110c08, 0x02110c08, size 0x220 */
+/* ROM ordinal 43 -- _ZN24cMgSmartball_propeller_c7HitTestEPi, 0x02110c08, size 0x220 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02110c08
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_02110c08(char *self, struct S *p) {
+// @symbol _ZN24cMgSmartball_propeller_c7HitTestEPi
+int cMgSmartball_propeller_c::HitTest(int *pos) {
+    char *self = (char *)this;
+    struct S *p = (struct S *)pos;
     struct S d;
     struct S s0, s1, s2, s3;
     struct S t0, t1, t2, t3;
@@ -2294,35 +2228,34 @@ int func_ov006_02110c08(char *self, struct S *p) {
     s1.a = *(int *)(self + 0x38); s1.b = *(int *)(self + 0x3c);
     s2.a = *(int *)(self + 0x40); s2.b = *(int *)(self + 0x44);
     s3.a = *(int *)(self + 0x48); s3.b = *(int *)(self + 0x4c);
-    if (func_ov006_02114590((int)self, (int *)&s0, (int *)&s1, (int *)&s2, (int *)&s3)) return 1;
+    if (PointInTriangle((int *)&s0,  (int *)&s1,  (int *)&s2,  (int *)&s3)) return 1;
 
     t0.a = p->a; t0.b = p->b;
     t1.a = *(int *)(self + 0x50); t1.b = *(int *)(self + 0x54);
     t2.a = *(int *)(self + 0x40); t2.b = *(int *)(self + 0x44);
     t3.a = *(int *)(self + 0x48); t3.b = *(int *)(self + 0x4c);
-    if (func_ov006_02114590((int)self, (int *)&t0, (int *)&t1, (int *)&t2, (int *)&t3)) return 1;
+    if (PointInTriangle((int *)&t0,  (int *)&t1,  (int *)&t2,  (int *)&t3)) return 1;
 
     u0.a = p->a; u0.b = p->b;
     u1.a = *(int *)(self + 0x58); u1.b = *(int *)(self + 0x5c);
     u2.a = *(int *)(self + 0x60); u2.b = *(int *)(self + 0x64);
     u3.a = *(int *)(self + 0x68); u3.b = *(int *)(self + 0x6c);
-    if (func_ov006_02114590((int)self, (int *)&u0, (int *)&u1, (int *)&u2, (int *)&u3)) return 1;
+    if (PointInTriangle((int *)&u0,  (int *)&u1,  (int *)&u2,  (int *)&u3)) return 1;
 
     v0.a = p->a; v0.b = p->b;
     v1.a = *(int *)(self + 0x70); v1.b = *(int *)(self + 0x74);
     v2.a = *(int *)(self + 0x60); v2.b = *(int *)(self + 0x64);
     v3.a = *(int *)(self + 0x68); v3.b = *(int *)(self + 0x6c);
-    return func_ov006_02114590((int)self, (int *)&v0, (int *)&v1, (int *)&v2, (int *)&v3) != 0;
-}
+    return PointInTriangle((int *)&v0,  (int *)&v1,  (int *)&v2,  (int *)&v3) != 0;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 44 -- func_ov006_02110e28, 0x02110e28, size 0x204 */
+/* ROM ordinal 44 -- _ZN24cMgSmartball_propeller_c12RebuildVertsEv, 0x02110e28, size 0x204 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02110e28
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02110e28(struct C2* c)
+// @symbol _ZN24cMgSmartball_propeller_c12RebuildVertsEv
+void cMgSmartball_propeller_c::RebuildVerts()
 {
+    struct C2 *c = (struct C2 *)this;
     c->v[0].x = 0x20000;
     c->v[0].y = 0;
     c->v[1].x = 0;
@@ -2365,7 +2298,6 @@ void func_ov006_02110e28(struct C2* c)
     *(int*)(((int)c + 0x6c)) += c->dy;
     *(int*)(((int)c + 0x70)) += c->dx;
     *(int*)(((int)c + 0x74)) += c->dy;
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2439,7 +2371,7 @@ void cMgSmartball_propeller_c::SaveSnapshot()
         short* q = (short*)(((int)c + 0x32));
         *q = *q + *(short*)(c+0x36);
     }
-    func_ov006_02110e28((C2 *)c);
+    ((cMgSmartball_propeller_c *)((C2 *)c))->RebuildVerts();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2459,7 +2391,7 @@ void cMgSmartball_propeller_c::RestoreInitial()
     *(short*)((char*)this + 0x32) = 0;
     mSpinSpeedTarget = 0x40;
     mSpinSpeed = 0;
-    func_ov006_02110e28((struct C2*)this);
+    RebuildVerts();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2618,35 +2550,33 @@ int func_ov006_0211157c(char* c, int b, int d, int* s){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 53 -- func_ov006_021115c4, 0x021115c4, size 0x8 */
+/* ROM ordinal 53 -- _ZN18cMgSmartball_ana_c7HasBallEv, 0x021115c4, size 0x8 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_021115c4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_021115c4(unsigned char *p)
+// @symbol _ZN18cMgSmartball_ana_c7HasBallEv
+int cMgSmartball_ana_c::HasBall()
 {
+    unsigned char *p = (unsigned char *)this;
     return p[49];
-}
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 54 -- func_ov006_021115cc, 0x021115cc, size 0x88 */
+/* ROM ordinal 54 -- _ZN18cMgSmartball_ana_c7SwallowEv, 0x021115cc, size 0x88 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_021115cc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_021115cc(char* c){
+// @symbol _ZN18cMgSmartball_ana_c7SwallowEv
+void cMgSmartball_ana_c::Swallow(){
+    char *c = (char *)this;
     int tmp1[2];
     int tmp2[2];
     *(int*)(c + 0x34) = 0x3c;
     *(unsigned char*)(c + 0x31) = 1;
     tmp1[0] = *(int*)(c + 8);
     tmp1[1] = *(int*)(c + 0xc);
-    func_ov006_02114800((char *)(*(int*)(c + 4)), (int *)tmp1, 0);
+    ((dScMgSmartball_c *)((char *)(*(int*)(c + 4))))->EmitSparks((int *)tmp1,  0);
     tmp2[0] = *(int*)(c + 8);
     tmp2[1] = *(int*)(c + 0xc);
-    func_ov006_02115598((SArrays*)(*(int*)(c + 4)), (int*)tmp2, (int)0x7d0, (int)0, (int)1);
-    func_ov006_02114fec((char *)(*(int*)(c + 4)));
+    ((dScMgSmartball_c *)((SArrays*)(*(int*)(c + 4))))->EmitScore((int*)tmp2,  (int)0x7d0,  (int)0,  (int)1);
+    ((dScMgSmartball_c *)((char *)(*(int*)(c + 4))))->CountAna();
     func_02012718(0xe0, *(int*)(c + 8));
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2681,7 +2611,7 @@ void cMgSmartball_ana_c::Update()
  * rather than called -- same pattern as every sibling in this family (the
  * base's copy is out-of-line and there is no bl here). Then decrements this
  * class's own countdown (mRespawnTimer); when it reaches zero it calls the shared
- * helper func_ov006_02114ec0 and sets the BASE's unk_032 byte to 1 -- the
+ * helper ServeNextBall and sets the BASE's unk_032 byte to 1 -- the
  * low byte only. 0x031-0x033 is a three-byte region that three children read
  * three incompatible ways; this class's byte-wide view is one of them. See
  * cMgSmartball_object_c.h. */
@@ -2694,7 +2624,7 @@ void cMgSmartball_ana_c::SaveSnapshot()
     mRespawnTimer = mRespawnTimer - 1;
     if (mRespawnTimer > 0)
         return;
-    func_ov006_02114ec0((char *)(void *)mpManager);
+    ((dScMgSmartball_c *)((char *)(void *)mpManager))->ServeNextBall();
     unk_032 = 1;
 }
 
@@ -2800,8 +2730,8 @@ void cMgSmartball_kinoko_c::SaveSnapshot()
         if (mHitTimer == 0) {
             pair.x = mCurrent0;
             pair.y = mCurrent1;
-            func_ov006_02115598((SArrays*)(void *)mpManager, (int*)(int *)&pair, (int)0x12c, (int)0, (int)1);
-            func_ov006_02115008((char *)(void *)mpManager);
+            ((dScMgSmartball_c *)((SArrays*)(void *)mpManager))->EmitScore((int*)(int *)&pair,  (int)0x12c,  (int)0,  (int)1);
+            ((dScMgSmartball_c *)((char *)(void *)mpManager))->CountKinoko();
             func_02012718(0x19f, mCurrent0);
         }
         mWasHit = 0;
@@ -2820,7 +2750,7 @@ void cMgSmartball_kinoko_c::SaveSnapshot()
                     if (*(unsigned char *)((int)n + 0x30) != 0) {
                         void *m = (i >= 0xd) ? (void *)0 : *(void **)(obj + i * 4 + 0x4688);
                         int hit;
-                        func_ov006_0211470c((int *)&bufA, (int *)m);
+                        CopyObjectPos((int *)&bufA, (int *)m);
                         Vec2_Sub((int *)&bufB, &mCurrent0, (int *)&bufA);
                         hit = Vec2_Len((Vec2 *)(void *)&bufB) < 0x11000;
                         if (hit != 0) {
@@ -2886,11 +2816,11 @@ char *func_ov006_02111b40(char *self, int x, int y, struct V2ab *src) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 63 -- func_ov006_02111b90, 0x02111b90, size 0x1bc */
+/* ROM ordinal 63 -- _ZN19cMgSmartball_ball_c12PlayHitSoundEiPi, 0x02111b90, size 0x1bc */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02111b90
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02111b90(char* self, int a1, int* vel) {
+// @symbol _ZN19cMgSmartball_ball_c12PlayHitSoundEiPi
+void cMgSmartball_ball_c::PlayHitSound(int a1, int *vel) {
+    char *self = (char *)this;
     int spd;
 
     if (*(int*)(self + 0x124) > 0) {
@@ -2913,7 +2843,7 @@ void func_ov006_02111b90(char* self, int a1, int* vel) {
             int pos[2];
             pos[0] = *(int*)(self + 8);
             pos[1] = *(int*)(self + 0xc);
-            func_ov006_02115248((dScMgSmartball_c *)(*(int*)(self + 4)), (int *)pos);
+            ((dScMgSmartball_c *)((dScMgSmartball_c *)(*(int*)(self + 4))))->SpawnDust((int *)pos);
         }
         break;
     }
@@ -2938,39 +2868,36 @@ void func_ov006_02111b90(char* self, int a1, int* vel) {
     }
     *(int*)(self + 0x124) = 3;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 64 -- func_ov006_02111d4c, 0x02111d4c, size 0x20 */
+/* ROM ordinal 64 -- _ZN19cMgSmartball_ball_c6FreezeEv, 0x02111d4c, size 0x20 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02111d4c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02111d4c(char *p)
+// @symbol _ZN19cMgSmartball_ball_c6FreezeEv
+void cMgSmartball_ball_c::Freeze()
 {
+    char *p = (char *)this;
     *(int *)(p + 0x108) = *(int *)(p + 8);
     *(int *)(p + 0x10c) = *(int *)(p + 0xc);
     *(unsigned char *)(p + 0x110) = 1;
     *(unsigned char *)(p + 0x3b) = 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 65 -- func_ov006_02111d6c, 0x02111d6c, size 0x8 */
+/* ROM ordinal 65 -- _ZN19cMgSmartball_ball_c6HasHitEv, 0x02111d6c, size 0x8 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02111d6c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_02111d6c(unsigned char *p)
+// @symbol _ZN19cMgSmartball_ball_c6HasHitEv
+int cMgSmartball_ball_c::HasHit()
 {
+    unsigned char *p = (unsigned char *)this;
     return p[204];
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 66 -- func_ov006_02111d74, 0x02111d74, size 0x58 */
+/* ROM ordinal 66 -- _ZN19cMgSmartball_ball_c5IsOutEv, 0x02111d74, size 0x58 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02111d74
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_02111d74(char* c){
+// @symbol _ZN19cMgSmartball_ball_c5IsOutEv
+int cMgSmartball_ball_c::IsOut(){
+    char *c = (char *)this;
   if(*(unsigned char*)(c+0x30) == 0) return 1;
   if(*(unsigned char*)(c+0x3a) == 1) return 1;
   int v = *(int*)(c+0xc);
@@ -2980,27 +2907,25 @@ int func_ov006_02111d74(char* c){
   }
   return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 67 -- func_ov006_02111dcc, 0x02111dcc, size 0x28 */
+/* ROM ordinal 67 -- _ZN19cMgSmartball_ball_c9ArmExpireEi, 0x02111dcc, size 0x28 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02111dcc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_02111dcc(char *p, int val){
+// @symbol _ZN19cMgSmartball_ball_c9ArmExpireEi
+int cMgSmartball_ball_c::ArmExpire(int val){
+    char *p = (char *)this;
   if(*(unsigned char*)(p+0x30) == 0) return 0;
   if(*(int*)(p+0x40) > 0) return 0;
   *(int*)(p+0x40) = val;
   return 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 68 -- func_ov006_02111df4, 0x02111df4, size 0x54 */
+/* ROM ordinal 68 -- _ZN19cMgSmartball_ball_c10IsFinishedEv, 0x02111df4, size 0x54 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02111df4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_02111df4(char* c) {
+// @symbol _ZN19cMgSmartball_ball_c10IsFinishedEv
+int cMgSmartball_ball_c::IsFinished() {
+    char *c = (char *)this;
     if ((*(int*)(*(int*)(c + 4) + 8) & 0xff) != 0
         && *(int*)(c + 8) < 0xe0000
         && *(int*)(c + 0xc) >= 0x50000
@@ -3010,36 +2935,33 @@ int func_ov006_02111df4(char* c) {
     if (*(unsigned char*)(c + 0x121) == 0) return 1;
     return *(unsigned char*)(c + 0x3b);
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 69 -- func_ov006_02111e48, 0x02111e48, size 0x34 */
+/* ROM ordinal 69 -- _ZN19cMgSmartball_ball_c5BurstEv, 0x02111e48, size 0x34 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02111e48
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02111e48(int* o){
+// @symbol _ZN19cMgSmartball_ball_c5BurstEv
+void cMgSmartball_ball_c::Burst(){
+    int *o = (int *)this;
   int v[2];
   v[0] = o[2];
   v[1] = o[3];
-  func_ov006_02114800((char *)o[1], (int *)v, 0);
-}
+  ((dScMgSmartball_c *)((char *)o[1]))->EmitSparks((int *)v,  0);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 70 -- func_ov006_02111e7c, 0x02111e7c, size 0x14 */
+/* ROM ordinal 70 -- _ZN19cMgSmartball_ball_c9PutInPlayEv, 0x02111e7c, size 0x14 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02111e7c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02111e7c(char* p) {
+// @symbol _ZN19cMgSmartball_ball_c9PutInPlayEv
+void cMgSmartball_ball_c::PutInPlay() {
+    char *p = (char *)this;
     p[0x121] = 1;
-    func_ov006_02111e48((int *)p);
-}
+    ((cMgSmartball_ball_c *)((int *)p))->Burst();
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 71 -- func_ov006_02111e90, 0x02111e90, size 0x58 */
+/* ROM ordinal 71 -- _ZN19cMgSmartball_ball_c7HitWingEPi, 0x02111e90, size 0x58 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02111e90
+// @symbol _ZN19cMgSmartball_ball_c7HitWingEPi
 /* Both reads of +0x4780 use POINTER arithmetic on a `char*`, not integer arithmetic
  * cast to a pointer. Under 2004/b56 that choice decides the addressing mode: written
  * as `*(int*)(base + 0x4000 + 0x780)` b56 folds the constant, parks 0x4780 in the
@@ -3049,24 +2971,23 @@ void func_ov006_02111e7c(char* p) {
  * the pointer-arithmetic spelling is the one that lets b56 split it the ROM's way.
  * Both reads must use it -- respelling only one leaves the other sharing.
  */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_02111e90(char* c, int* src){
+int cMgSmartball_ball_c::HitWing(int *src){
+    char *c = (char *)this;
   int g = *(int*)((char*)*(int*)(c+4)+0x4780);
   if(g == 0) return 0;
   struct V2 v;
   v.x = src[0];
   v.y = src[1];
-  return func_ov006_0210dbb0((State *)(*(int*)((char*)*(int*)(c+4)+0x4780)), (int *)&v);
-}
+  return ((cMgSmartball_wing_c *)((State *)(*(int*)((char*)*(int*)(c+4)+0x4780))))->HitTest((int *)&v);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 72 -- func_ov006_02111ee8, 0x02111ee8, size 0xa4 */
+/* ROM ordinal 72 -- _ZN19cMgSmartball_ball_c11HitSwitchesEPi, 0x02111ee8, size 0xa4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02111ee8
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol _ZN19cMgSmartball_ball_c11HitSwitchesEPi
 
-int func_ov006_02111ee8(char* c, int* arg){
+int cMgSmartball_ball_c::HitSwitches(int *arg){
+    char *c = (char *)this;
     int buf[2];
     int i = 0;
     int* zero = 0;
@@ -3077,18 +2998,18 @@ int func_ov006_02111ee8(char* c, int* arg){
         buf[1] = arg[1];
         base = *(char**)(c+4);
         p = (i >= *(int*)(base + 0x4000 + 0x680)) ? zero : ((int**)(base + 0x4000 + 0x770))[i];
-        if (func_ov006_0210e1fc((char *)p, (int *)buf)) return 1;
+        if (((cMgSmartball_pushswitch_c *)((char *)p))->CheckBall((int *)buf)) return 1;
         i++;
     }
     return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 73 -- func_ov006_02111f8c, 0x02111f8c, size 0xa4 */
+/* ROM ordinal 73 -- _ZN19cMgSmartball_ball_c10HitPakkunsEPi, 0x02111f8c, size 0xa4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02111f8c
-extern "C" int func_ov006_02111f8c(char* c, int* arg){
+// @symbol _ZN19cMgSmartball_ball_c10HitPakkunsEPi
+extern "C" int cMgSmartball_ball_c::HitPakkuns(int *arg){
+    char *c = (char *)this;
     int buf[2];
     int i = 0;
     int* zero = 0;
@@ -3099,19 +3020,19 @@ extern "C" int func_ov006_02111f8c(char* c, int* arg){
         buf[1] = arg[1];
         base = *(char**)(c+4);
         p = (i >= *(int*)(base + 0x4000 + 0x67c)) ? zero : ((int**)(base + 0x4000 + 0x764))[i];
-        if (func_ov006_02110244((Owl *)p, (S *)buf)) return 1;
+        if (((cMgSmartball_pakkun_c *)((Owl *)p))->CheckBall((int *)(buf))) return 1;
         i++;
     }
     return 0;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 74 -- func_ov006_02112030, 0x02112030, size 0xa4 */
+/* ROM ordinal 74 -- _ZN19cMgSmartball_ball_c9HitDokansEPi, 0x02112030, size 0xa4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02112030
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol _ZN19cMgSmartball_ball_c9HitDokansEPi
 
-int func_ov006_02112030(char* c, int* arg){
+int cMgSmartball_ball_c::HitDokans(int *arg){
+    char *c = (char *)this;
     int buf[2];
     int i = 0;
     int* zero = 0;
@@ -3122,20 +3043,20 @@ int func_ov006_02112030(char* c, int* arg){
         buf[1] = arg[1];
         base = *(char**)(c+4);
         p = (i >= *(int*)(base + 0x4000 + 0x678)) ? zero : ((int**)(base + 0x4000 + 0x74c))[i];
-        if (func_ov006_021108bc(p, buf)) return 1;
+        if (((cMgSmartball_dokan_c *)(p))->CheckBall(buf)) return 1;
         i++;
     }
     return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 75 -- func_ov006_021120d4, 0x021120d4, size 0xbc */
+/* ROM ordinal 75 -- _ZN19cMgSmartball_ball_c13HitPropellersEPi, 0x021120d4, size 0xbc */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_021120d4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_021120d4(char *a, struct S *r7)
+// @symbol _ZN19cMgSmartball_ball_c13HitPropellersEPi
+int cMgSmartball_ball_c::HitPropellers(int *pos)
 {
+    char *a = (char *)this;
+    struct S *r7 = (struct S *)pos;
     struct S loc;
     int i;
     if (r7->b >= 0x90000) return 0;
@@ -3151,23 +3072,23 @@ int func_ov006_021120d4(char *a, struct S *r7)
                 x = 0;
             else
                 x = ((int *)(base + 0x4740))[i];
-            if (func_ov006_02110c08((char *)x, (struct S *)&loc) != 0) return 1;
+            if (((cMgSmartball_propeller_c *)((char *)x))->HitTest((int *)(&loc)) != 0) return 1;
             i++;
         } while (i < *(int *)(*(char **)(a + 4) + 0x4674));
     }
     return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 76 -- func_ov006_02112190, 0x02112190, size 0x150 */
+/* ROM ordinal 76 -- _ZN19cMgSmartball_ball_c10HitKinokosEPi, 0x02112190, size 0x150 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02112190
+// @symbol _ZN19cMgSmartball_ball_c10HitKinokosEPi
 #pragma push
 #pragma opt_strength_reduction off
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_02112190(char* sl, struct A* sb)
+int cMgSmartball_ball_c::HitKinokos(int *pos)
 {
+    char *sl = (char *)this;
+    struct A *sb = (struct A *)pos;
   int i;
   void* base;
   int n;
@@ -3181,12 +3102,12 @@ int func_ov006_02112190(char* sl, struct A* sb)
   if (n > 0) {
     do {
       if (*(unsigned char*)(sl + 0xce + i)) {
-        r7 = func_ov006_021146ac((S28 *)(i >= n
-            ? 0 : *(void**)((char*)base + i * 4 + 0x46bc)));
+        r7 = ((cMgSmartball_kinoko_c *)((S28 *)(i >= n
+            ? 0 : *(void**)((char*)base + i * 4 + 0x46bc))))->HitRadiusSq();
         if (r7 > 0) {
           delta[0] = sb->f0;
           delta[1] = sb->f4;
-          func_ov006_0211470c((int *)out, (int *)(i >= *(int*)((char*)*(void**)(sl + 4) + 0x4670)
+          CopyObjectPos((int *)out, (int *)(i >= *(int*)((char*)*(void**)(sl + 4) + 0x4670)
               ? 0 : *(void**)((char*)*(void**)(sl + 4) + i * 4 + 0x46bc)));
           delta[0] = delta[0] - out[0];
           delta[1] = delta[1] - out[1];
@@ -3205,36 +3126,36 @@ int func_ov006_02112190(char* sl, struct A* sb)
   }
   return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
 
 
 #pragma pop
 
-/* ROM ordinal 77 -- func_ov006_021122e0, 0x021122e0, size 0x1ac */
+/* ROM ordinal 77 -- _ZN19cMgSmartball_ball_c10CheckExitsEPi, 0x021122e0, size 0x1ac */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_021122e0
-/* func_ov006_021122e0 at 0x021122e0
+// @symbol _ZN19cMgSmartball_ball_c10CheckExitsEPi
+/* CheckExits at 0x021122e0
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
  */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_021122e0(char *self, struct S *arg) {
+int cMgSmartball_ball_c::CheckExits(int *pos) {
+    char *self = (char *)this;
+    struct S *arg = (struct S *)pos;
     struct S p, q0, q1, q2;
     struct S d, e, f, g;
     if (arg->b >= 0) return 0;
     if (arg->a >= 0x8000 && arg->a < 0x28000) {
         if (arg->b >= -0x90000 && arg->b < -0x88000) {
-            func_ov006_02115680((char *)(*(int *)(self + 4)), 0);
+            ((dScMgSmartball_c *)((char *)(*(int *)(self + 4))))->KickGate(0);
             return 1;
         }
         p.a = arg->a; p.b = arg->b;
         q0.a = 0x8000;  q0.b = -0x92000;
         q1.a = 0x8000;  q1.b = -0x90000;
         q2.a = 0x28000; q2.b = -0x90000;
-        if (func_ov006_02114590((int)self, (int *)&p, (int *)&q0, (int *)&q1, (int *)&q2)) {
-            func_ov006_02115680((char *)(*(int *)(self + 4)), 0);
+        if (PointInTriangle((int *)&p,  (int *)&q0,  (int *)&q1,  (int *)&q2)) {
+            ((dScMgSmartball_c *)((char *)(*(int *)(self + 4))))->KickGate(0);
             return 1;
         }
     }
@@ -3244,47 +3165,45 @@ int func_ov006_021122e0(char *self, struct S *arg) {
         e.a = 0xd8000; e.b = -0x80000;
         f.a = 0xf8000; f.b = -0x80000;
         g.a = 0xf8000; g.b = -0x88000;
-        if (func_ov006_02114590((int)self, (int *)&d, (int *)&e, (int *)&f, (int *)&g)) {
-            func_ov006_02115680((char *)(*(int *)(self + 4)), 1);
+        if (PointInTriangle((int *)&d,  (int *)&e,  (int *)&f,  (int *)&g)) {
+            ((dScMgSmartball_c *)((char *)(*(int *)(self + 4))))->KickGate(1);
             return 1;
         }
     }
     return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 78 -- func_ov006_0211248c, 0x0211248c, size 0x78 */
+/* ROM ordinal 78 -- _ZN19cMgSmartball_ball_c8AtSpringEPi, 0x0211248c, size 0x78 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0211248c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol _ZN19cMgSmartball_ball_c8AtSpringEPi
 
-int func_ov006_0211248c(int *a, int *b) {
+int cMgSmartball_ball_c::AtSpring(int *b) {
+    int *a = (int *)this;
     int local[2];
     char *base = (char*)a[1];
     if (a[0xb] != *(int*)(base + 0x4664)) return 0;
     if (b[0] >= 0xdc000) {
-        func_ov006_0211470c(local, *(int**)(base + 0x4684));
+        CopyObjectPos(local, *(int**)(base + 0x4684));
         if (b[1] >= local[1] - 0x20000) return 1;
     }
     return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 79 -- func_ov006_02112504, 0x02112504, size 0x1b0 */
+/* ROM ordinal 79 -- _ZN19cMgSmartball_ball_c7OnSlopeEPi, 0x02112504, size 0x1b0 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02112504
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_02112504(unsigned char** obj, int* p)
+// @symbol _ZN19cMgSmartball_ball_c7OnSlopeEPi
+int cMgSmartball_ball_c::OnSlope(int *p)
 {
+    unsigned char **obj = (unsigned char **)this;
     int local[2];
     unsigned short v;
     int x, z, diff;
 
     local[0] = p[0];
     local[1] = p[1];
-    v = func_ov006_0211507c(obj[1], local);
+    v = ((dScMgSmartball_c *)(obj[1]))->GetTile(local);
 
     if (v == 0x24d) {
         z = (p[1] >> 12) & 7;
@@ -3310,14 +3229,14 @@ int func_ov006_02112504(unsigned char** obj, int* p)
     }
     return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 80 -- func_ov006_021126b4, 0x021126b4, size 0x248 */
+/* ROM ordinal 80 -- _ZN19cMgSmartball_ball_c12NeedsRespawnEPi, 0x021126b4, size 0x248 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_021126b4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_021126b4(char *self, struct S *arg) {
+// @symbol _ZN19cMgSmartball_ball_c12NeedsRespawnEPi
+int cMgSmartball_ball_c::NeedsRespawn(int *pos) {
+    char *self = (char *)this;
+    struct S *arg = (struct S *)pos;
     int z, z2, x;
 
     if (*(unsigned char *)(self + 0x3a) == 1) {
@@ -3355,7 +3274,7 @@ L14c:
         q0.a = 0x8000;  q0.b = 0x98000;
         q1.a = 0x8000;  q1.b = 0xa2000;
         q2.a = 0xe0000; q2.b = 0xa2000;
-        if (func_ov006_02114590((int)self, (int *)&p, (int *)&q0, (int *)&q1, (int *)&q2)) return 1;
+        if (PointInTriangle((int *)&p,  (int *)&q0,  (int *)&q1,  (int *)&q2)) return 1;
     }
     if (arg->a < 0x8000) goto L238;
     if (arg->a >= 0xe0000) goto L238;
@@ -3373,15 +3292,14 @@ L1dc:
 L238:
     return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 81 -- func_ov006_021128fc, 0x021128fc, size 0x1dc */
+/* ROM ordinal 81 -- _ZN19cMgSmartball_ball_c11QueueBehindEv, 0x021128fc, size 0x1dc */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_021128fc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_021128fc(char *c)
+// @symbol _ZN19cMgSmartball_ball_c11QueueBehindEv
+void cMgSmartball_ball_c::QueueBehind()
 {
+    char *c = (char *)this;
     int cur;
     int val;
     char *mgr;
@@ -3415,7 +3333,7 @@ void func_ov006_021128fc(char *c)
 
 block1:
     p = (cur >= 0xd) ? (int *)0 : *(int **)(mgr + 0x4688 + (cur << 2));
-    func_ov006_0211470c(local1, p);
+    CopyObjectPos(local1, p);
     newpos = local1[0] - 0x10000;
     pos = *(int *)(c + 8);
     if (pos < newpos && pos < 0xc8000)
@@ -3436,7 +3354,7 @@ block1:
 
 block2:
     p = (vm1 >= 0xd) ? (int *)0 : *(int **)(mgr + 0x4688 + (vm1 << 2));
-    func_ov006_0211470c(local2, p);
+    CopyObjectPos(local2, p);
     *(int *)(c + 8) = local2[0] - 0x10000;
     *(int *)(c + 0x20) = 0;
     *(int *)(c + 0x24) = 0;
@@ -3449,7 +3367,6 @@ block2:
             (*(int *)(c + 0x2c) - *(int *)(*(char **)(c + 4) + 0x4664)) * 0xf;
     }
 }
-}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 82 -- func_ov006_02112ad8, 0x02112ad8, size 0x113c */
@@ -3459,6 +3376,7 @@ block2:
 #pragma opt_strength_reduction off
 /* The equal-arm owner selection below preserves mwccarm's address rematerialization. */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
+
 
 void func_ov006_02112ad8(Obj *self)
 {
@@ -3556,7 +3474,7 @@ void func_ov006_02112ad8(Obj *self)
                 dist.x = self->pos[0];
                 dist.z = self->pos[1];
                 mgr = self->mgr;
-                func_ov006_0211470c((int *)&pos0,
+                CopyObjectPos((int *)&pos0,
                     (int *)(probeIndex >= mgr->angleCount
                         ? (void *)0 : mgr->angles[probeIndex]));
                 dist.x -= pos0.x;
@@ -3598,7 +3516,7 @@ outer_loop:
                 work.z += self->pos[1];
                 if ((u8)self->mgr->flags08 == 0) {
                     pos1 = work;
-                    if (func_ov006_021126b4((char *)self, (S *)&pos1) != 0) {
+                    if (((cMgSmartball_ball_c *)self)->NeedsRespawn((int *)&pos1) != 0) {
                         self->hit[i] = 1;
                         self->hitA[i] = 1;
                         self->anyHit = 1;
@@ -3606,7 +3524,7 @@ outer_loop:
                         goto final_checks;
                     } else {
                         pos2 = work;
-                        if (func_ov006_02112504((unsigned char **)self, (int *)&pos2) != 0) {
+                        if (((cMgSmartball_ball_c *)self)->OnSlope((int *)&pos2) != 0) {
                             self->hit[i] = 1;
                             self->hitA[i] = 1;
                             self->anyHit = 1;
@@ -3614,7 +3532,7 @@ outer_loop:
                             blocked = 1;
                         } else {
                             pos3 = work;
-                            if (func_ov006_021122e0((char *)self, (S *)&pos3) != 0) {
+                            if (((cMgSmartball_ball_c *)self)->CheckExits((int *)&pos3) != 0) {
                                 self->hit[i] = 1;
                                 self->hitA[i] = 1;
                                 self->anyHit = 1;
@@ -3626,14 +3544,14 @@ outer_loop:
                     }
                 } else {
                     pos4 = work;
-                    if (func_ov006_021126b4((char *)self, (S *)&pos4) != 0) {
+                    if (((cMgSmartball_ball_c *)self)->NeedsRespawn((int *)&pos4) != 0) {
                         self->hit[i] = 1;
                         self->hitA[i] = 1;
                         self->anyHit = 1;
                         blocked = 1;
                     } else {
                         pos5 = work;
-                        if (func_ov006_021122e0((char *)self, (S *)&pos5) != 0) {
+                        if (((cMgSmartball_ball_c *)self)->CheckExits((int *)&pos5) != 0) {
                             self->hit[i] = 1;
                             self->hitA[i] = 1;
                             self->anyHit = 1;
@@ -3644,7 +3562,7 @@ outer_loop:
                         } else {
                             if (state.iteration == 1) {
                                 pos6 = work;
-                                if (func_ov006_02112190((char *)self, (A *)&pos6) != 0) {
+                                if (((cMgSmartball_ball_c *)self)->HitKinokos((int *)&pos6) != 0) {
                                     self->hit[i] = 1;
                                     self->hitA[i] = 1;
                                     self->anyHit = 1;
@@ -3655,28 +3573,28 @@ outer_loop:
                                 }
                             }
                             pos7 = work;
-                            if (func_ov006_02112030((char *)self, (int *)&pos7) != 0) {
+                            if (((cMgSmartball_ball_c *)self)->HitDokans((int *)&pos7) != 0) {
                                 self->hit[i] = 1;
                                 self->hitA[i] = 1;
                                 self->anyHit = 1;
                                 blocked = 1;
                             } else {
                                 pos8 = work;
-                                if (func_ov006_02111f8c((char *)self, (int *)&pos8) != 0) {
+                                if (((cMgSmartball_ball_c *)self)->HitPakkuns((int *)&pos8) != 0) {
                                     self->hit[i] = 1;
                                     self->hitA[i] = 1;
                                     self->anyHit = 1;
                                     blocked = 1;
                                 } else {
                                     pos9 = work;
-                                    if (func_ov006_02111ee8((char *)self, (int *)&pos9) != 0) {
+                                    if (((cMgSmartball_ball_c *)self)->HitSwitches((int *)&pos9) != 0) {
                                         self->hit[i] = 1;
                                         self->hitA[i] = 1;
                                         self->anyHit = 1;
                                         blocked = 1;
                                     } else {
                                         pos10 = work;
-                                        if (func_ov006_02111e90((char *)self, (int *)&pos10) != 0) {
+                                        if (((cMgSmartball_ball_c *)self)->HitWing((int *)&pos10) != 0) {
                                             self->hit[i] = 1;
                                             self->hitA[i] = 1;
                                             self->anyHit = 1;
@@ -3697,7 +3615,7 @@ outer_loop:
 final_checks:
             if (blocked == 0) {
                 pos11 = work;
-                if (func_ov006_0211248c((int *)self, (int *)&pos11) != 0) {
+                if (((cMgSmartball_ball_c *)self)->AtSpring((int *)&pos11) != 0) {
                     self->hit[i] = 1;
                     self->hitA[i] = 1;
                     self->anyHit = 1;
@@ -3706,7 +3624,7 @@ final_checks:
                         state.flags[5] = 1;
                 } else {
                     pos12 = work;
-                    if (func_ov006_021120d4((char *)self, (S *)&pos12) != 0) {
+                    if (((cMgSmartball_ball_c *)self)->HitPropellers((int *)&pos12) != 0) {
                         self->hit[i] = 1;
                         self->hitA[i] = 1;
                         self->anyHit = 1;
@@ -3733,7 +3651,7 @@ final_checks:
                                 other = entityLoopIndex >= 0xd
                                     ? (void *)state.null3c
                                     : self->mgr->entities[entityLoopIndex];
-                                func_ov006_0211470c((int *)&entityPos, (int *)other);
+                                CopyObjectPos((int *)&entityPos, (int *)other);
                                 Vec2_Sub((int *)&entityDelta, (int *)(V2xz *)self->pos,
                                     (int *)&entityPos);
                                 delta = entityDelta;
@@ -3742,7 +3660,7 @@ final_checks:
                                     mgr = self->mgr;
                                     other = entityLoopIndex >= 0xd ? (void *)angle
                                         : mgr->entities[entityLoopIndex];
-                                    func_ov006_0211470c((int *)&entityPos2, (int *)other);
+                                    CopyObjectPos((int *)&entityPos2, (int *)other);
                                     otherPos = entityPos2;
                                     if (self->pos[1] < 0x90000 ||
                                         self->pos[0] <= otherPos.x) {
@@ -3897,16 +3815,16 @@ final_checks:
         }
         if (self->pos[0] < 0xe8000)
             self->pos[0] = 0xe8000;
-        func_ov006_0211470c((int *)&specialPos, (int *)self->mgr->special);
+        CopyObjectPos((int *)&specialPos, (int *)self->mgr->special);
         self->pos[1] = specialPos.z - 0x20001 - self->radius;
-        func_ov006_021146f4((void *)&specialDelta0, (char *)self->mgr->special);
+        GetObjectDelta((void *)&specialDelta0, (char *)self->mgr->special);
         if (specialDelta0.z >= -0x1000)
             return;
-        func_ov006_021146f4((void *)&specialDelta1, (char *)self->mgr->special);
+        GetObjectDelta((void *)&specialDelta1, (char *)self->mgr->special);
         if (self->velZ < specialDelta1.z)
             return;
         self->velX = 0;
-        func_ov006_021146f4((void *)&specialDelta2, (char *)self->mgr->special);
+        GetObjectDelta((void *)&specialDelta2, (char *)self->mgr->special);
         self->velZ = specialDelta2.z;
         if (self->velZ < -0x6000)
             self->velZ = (self->velZ + 0x6000) / 4 - 0x6000;
@@ -3940,19 +3858,19 @@ final_checks:
     if (state.flags[0] == 1) {
         event0.x = savedVel.x;
         event0.z = savedVel.z;
-        func_ov006_02111b90((char *)self, 0x171, (int *)&event0);
+        ((cMgSmartball_ball_c *)self)->PlayHitSound(0x171, (int *)&event0);
     } else if (state.flags[1] == 1) {
         event1.x = savedVel.x;
         event1.z = savedVel.z;
-        func_ov006_02111b90((char *)self, 0x172, (int *)&event1);
+        ((cMgSmartball_ball_c *)self)->PlayHitSound(0x172, (int *)&event1);
     } else if (state.flags[2] == 1) {
         event2.x = savedVel.x;
         event2.z = savedVel.z;
-        func_ov006_02111b90((char *)self, 0x16f, (int *)&event2);
+        ((cMgSmartball_ball_c *)self)->PlayHitSound(0x16f, (int *)&event2);
     } else if (state.flags[4] == 1) {
         event3.x = savedVel.x;
         event3.z = savedVel.z;
-        func_ov006_02111b90((char *)self, 0x1a3, (int *)&event3);
+        ((cMgSmartball_ball_c *)self)->PlayHitSound(0x1a3, (int *)&event3);
     }
 
     dot = self->radius + 0x10000;
@@ -3962,11 +3880,11 @@ final_checks:
         return;
     do {
         other = i >= self->mgr->hazardCount ? (void *)0 : self->mgr->hazards[i];
-        if (func_ov006_021115c4((unsigned char *)other) == 0) {
+        if (((cMgSmartball_ana_c *)other)->HasBall() == 0) {
             hazardDelta.x = self->pos[0];
             hazardDelta.z = self->pos[1];
             other = i >= self->mgr->hazardCount ? (void *)0 : self->mgr->hazards[i];
-            func_ov006_0211470c((int *)&hazardPos, (int *)other);
+            CopyObjectPos((int *)&hazardPos, (int *)other);
             hazardDelta.x -= hazardPos.x;
             hazardDelta.z -= hazardPos.z;
             hazardDelta.z *= 2;
@@ -3974,12 +3892,12 @@ final_checks:
                 dot = self->radius + 0x10000 - Vec2_Len((Vec2 *)&hazardDelta);
                 if (self->radius < dot) {
                     other = i >= self->mgr->hazardCount ? (void *)0 : self->mgr->hazards[i];
-                    func_ov006_0211470c((int *)&hazardPos2, (int *)other);
+                    CopyObjectPos((int *)&hazardPos2, (int *)other);
                     self->hitX = hazardPos2.x;
                     self->hitZ = hazardPos2.z;
                     other = i >= self->mgr->hazardCount ? (void *)0 : self->mgr->hazards[i];
-                    func_ov006_021115cc((char *)other);
-                    func_ov006_02111dcc((char *)self, 0x80);
+                    ((cMgSmartball_ana_c *)other)->Swallow();
+                    ((cMgSmartball_ball_c *)self)->ArmExpire(0x80);
                     self->state3a = 1;
                     return;
                 }
@@ -4008,12 +3926,12 @@ final_checks:
 /* -------------------------------------------------------------------------- */
 #pragma pop
 
-/* ROM ordinal 83 -- func_ov006_02113c14, 0x02113c14, size 0x240 */
+/* ROM ordinal 83 -- _ZN19cMgSmartball_ball_c10DrawMarkerEv, 0x02113c14, size 0x240 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02113c14
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02113c14(struct Obj2 *c)
+// @symbol _ZN19cMgSmartball_ball_c10DrawMarkerEv
+void cMgSmartball_ball_c::DrawMarker()
 {
+    struct Obj2 *c = (struct Obj2 *)this;
     long long sq;
     int v;
     int i;
@@ -4032,11 +3950,11 @@ void func_ov006_02113c14(struct Obj2 *c)
         v = c->field28 + 0x15000;
         sq = (int)(((long long)v * v + 0x800) >> 12);
         for (i = 0; i < c->mgr->count; i++) {
-            if (func_ov006_021115c4((unsigned char *)((i >= c->mgr->count) ? 0 : c->mgr->arr[i])) == 0) {
+            if (((cMgSmartball_ana_c *)((unsigned char *)((i >= c->mgr->count) ? 0 : c->mgr->arr[i])))->HasBall() == 0) {
                 s[0] = c->x;
                 s[1] = c->y;
                 s[1] += 0x5000;
-                func_ov006_0211470c(&s[4], (i >= c->mgr->count) ? 0 : c->mgr->arr[i]);
+                CopyObjectPos(&s[4], (i >= c->mgr->count) ? 0 : c->mgr->arr[i]);
                 s[0] = s[0] - s[4];
                 s[1] = s[1] - s[5];
                 s[1] = s[1] * 2;
@@ -4049,7 +3967,6 @@ void func_ov006_02113c14(struct Obj2 *c)
         RenderOamBothScreens(data_ov006_021382e0[1], (c->x + 0x800) >> 12, ((c->y + 0x800) >> 12) + 5, -1, 2, 0);
     else
         RenderOamBothScreens(data_ov006_021382f8[1], (c->x + 0x800) >> 12, ((c->y + 0x800) >> 12) + 5, -1, 2, 0);
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -4135,8 +4052,8 @@ void cMgSmartball_ball_c::SaveSnapshot()
             mZoneDwell += 1;
         } else {
             state3b = 1;
-            if (func_ov006_02111dcc((char *)this, 1) != 0) {
-                func_ov006_02111e48((int *)(char *)this);
+            if (ArmExpire(1) != 0) {
+                Burst();
                 return;
             }
         }
@@ -4191,7 +4108,7 @@ after2:
         pc.z = 0x92000;
         pd.x = 0xe0000;
         pd.z = 0x96000;
-        if (func_ov006_02114590((int)(char *)this, (int *)&pa, (int *)&pb, (int *)&pc, (int *)&pd) != 0)
+        if (PointInTriangle((int *)&pa,  (int *)&pb,  (int *)&pc,  (int *)&pd) != 0)
             goto bounce;
         pe.x = mCurrent0;
         pe.z = mCurrent1;
@@ -4201,7 +4118,7 @@ after2:
         pg.z = 0x96000;
         ph.x = 0xe0000;
         ph.z = 0x9e000;
-        if (func_ov006_02114590((int)(char *)this, (int *)&pe, (int *)&pf, (int *)&pg, (int *)&ph) != 0) {
+        if (PointInTriangle((int *)&pe,  (int *)&pf,  (int *)&pg,  (int *)&ph) != 0) {
 bounce:
             mVel0 += 0x80;
             if (mVel0 >= 0x2000)
@@ -4221,7 +4138,7 @@ bounce:
     mCurrent0 += mVel0;
     mCurrent1 += mVel1;
     if (mIsWaiting == 1) {
-        func_ov006_021128fc((char *)this);
+        QueueBehind();
     } else {
         func_ov006_02112ad8((Obj *)(char *)this);
         if (mExitGateOpen == 0) {
@@ -4322,15 +4239,14 @@ int func_ov006_02114548(char* c, int b, int d, int* s){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 88 -- func_ov006_02114590, 0x02114590, size 0x11c */
+/* ROM ordinal 88 -- _ZN21cMgSmartball_object_c15PointInTriangleEPiS0_S0_S0_, 0x02114590, size 0x11c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02114590
-/* func_ov006_02114590 at 0x02114590
+// @symbol _ZN21cMgSmartball_object_c15PointInTriangleEPiS0_S0_S0_
+/* PointInTriangle at 0x02114590
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
  */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_02114590(int a0, int* p, int* q0, int* q1, int* q2){
+int cMgSmartball_object_c::PointInTriangle(int* p, int* q0, int* q1, int* q2){
   int v0[2], v1[2], v2[2];
   int t0[2], t1[2], t2[2];
   long long d0, d1, d2;
@@ -4345,56 +4261,53 @@ int func_ov006_02114590(int a0, int* p, int* q0, int* q1, int* q2){
   d2 = func_0203d4d0(p, v2, v0);
   return (d0 >= 0 && d1 >= 0 && d2 >= 0) || (d0 <= 0 && d1 <= 0 && d2 <= 0);
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 89 -- func_ov006_021146ac, 0x021146ac, size 0x20 */
+/* ROM ordinal 89 -- _ZN21cMgSmartball_kinoko_c11HitRadiusSqEv, 0x021146ac, size 0x20 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_021146ac
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_021146ac(struct S28 *p) {
+// @symbol _ZN21cMgSmartball_kinoko_c11HitRadiusSqEv
+int cMgSmartball_kinoko_c::HitRadiusSq() {
+    struct S28 *p = (struct S28 *)this;
     return (int)(((long long)p->field_0x28 * p->field_0x28 + 0x800) >> 12);
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 90 -- func_ov006_021146cc, 0x021146cc, size 0x14 */
+/* ROM ordinal 90 -- _ZN21cMgSmartball_object_c6SetVelEPi, 0x021146cc, size 0x14 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_021146cc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_021146cc(int *a, int *b)
+// @symbol _ZN21cMgSmartball_object_c6SetVelEPi
+void cMgSmartball_object_c::SetVel(int *b)
 {
+    int *a = (int *)this;
     a[8] = b[0]; a[9] = b[1];
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 91 -- func_ov006_021146e0, 0x021146e0, size 0x14 */
+/* ROM ordinal 91 -- CopyObjectVel, 0x021146e0, size 0x14 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_021146e0
+// @symbol CopyObjectVel
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_021146e0(int *a, int *b)
+void CopyObjectVel(int *a, int *b)
 {
     a[0] = b[8]; a[1] = b[9];
 }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 92 -- func_ov006_021146f4, 0x021146f4, size 0x18 */
+/* ROM ordinal 92 -- GetObjectDelta, 0x021146f4, size 0x18 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_021146f4
+// @symbol GetObjectDelta
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_021146f4(void* a, char* b) {
+void GetObjectDelta(void* a, char* b) {
     Vec2_Sub((int *)a, (int *)(b + 8), (int *)(b + 0x10));
 }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 93 -- func_ov006_0211470c, 0x0211470c, size 0x14 */
+/* ROM ordinal 93 -- CopyObjectPos, 0x0211470c, size 0x14 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0211470c
+// @symbol CopyObjectPos
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0211470c(int *a, int *b)
+void CopyObjectPos(int *a, int *b)
 {
     a[0] = b[2]; a[1] = b[3];
 }
@@ -4481,12 +4394,12 @@ int dScMgSmartball_c::OnPushed()
  return ((dScMgBase_c *)t)->dScMgBase_c::OnPushed() != 0; }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 99 -- func_ov006_021147d0, 0x021147d0, size 0x30 */
+/* ROM ordinal 99 -- _ZN16dScMgSmartball_c12SparksActiveEv, 0x021147d0, size 0x30 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_021147d0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_021147d0(char *p)
+// @symbol _ZN16dScMgSmartball_c12SparksActiveEv
+int dScMgSmartball_c::SparksActive()
 {
+    char *p = (char *)this;
     int i;
     for (i = 0; i < 0x40; i++) {
         if (*(unsigned char*)(p + 0x59bc) == 1)
@@ -4495,21 +4408,20 @@ int func_ov006_021147d0(char *p)
     }
     return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 100 -- func_ov006_02114800, 0x02114800, size 0x310 */
+/* ROM ordinal 100 -- _ZN16dScMgSmartball_c10EmitSparksEPii, 0x02114800, size 0x310 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02114800
+// @symbol _ZN16dScMgSmartball_c10EmitSparksEPii
 /* ov006 minigame: seeds up to 0x18 particle rows (0x24 bytes each, at c+0x599c)
  * with random headings, first over the free rows in order and then at random
  * rows until the count is reached. The random value is masked only after the
  * first store: the ROM stores the zero, then shifts. Masking before the store
  * lets the scheduler hoist the shift above the store and the second store
  * drifts past the next call's argument setup. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02114800(char *c, int *pair, int a3)
+void dScMgSmartball_c::EmitSparks(int *pair, int a3)
 {
+    char *c = (char *)this;
     register int count;
     register int i;
     char *p;
@@ -4596,15 +4508,14 @@ void func_ov006_02114800(char *c, int *pair, int a3)
         *(unsigned char *)(q + 0x59bd) = (unsigned char)a3;
     } while (count < 0x18);
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 101 -- func_ov006_02114b10, 0x02114b10, size 0xf4 */
+/* ROM ordinal 101 -- _ZN16dScMgSmartball_c12RenderSparksEv, 0x02114b10, size 0xf4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02114b10
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02114b10(char* self)
+// @symbol _ZN16dScMgSmartball_c12RenderSparksEv
+void dScMgSmartball_c::RenderSparks()
 {
+    char *self = (char *)this;
   int i; char* p = self;
   for (i = 0; i < 0x40; i++) {
     if (*(unsigned char*)(p + 0x5000 + 0x9bc) != 0) {
@@ -4627,15 +4538,14 @@ void func_ov006_02114b10(char* self)
     p += 0x24;
   }
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 102 -- func_ov006_02114c04, 0x02114c04, size 0x1cc */
+/* ROM ordinal 102 -- _ZN16dScMgSmartball_c12UpdateSparksEv, 0x02114c04, size 0x1cc */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02114c04
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02114c04(char* o)
+// @symbol _ZN16dScMgSmartball_c12UpdateSparksEv
+void dScMgSmartball_c::UpdateSparks()
 {
+    char *o = (char *)this;
     int i;
     char* b;
     char* v;
@@ -4678,15 +4588,14 @@ void func_ov006_02114c04(char* o)
         i++;
     } while (i < 0x40);
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 103 -- func_ov006_02114dd0, 0x02114dd0, size 0x2c */
+/* ROM ordinal 103 -- _ZN16dScMgSmartball_c11ResetSparksEv, 0x02114dd0, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02114dd0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02114dd0(struct S24 *o)
+// @symbol _ZN16dScMgSmartball_c11ResetSparksEv
+void dScMgSmartball_c::ResetSparks()
 {
+    struct S24 *o = (struct S24 *)this;
     int i;
     for (i = 0; i < 0x40; i++) {
         *(unsigned char*)((char*)o + 0x5000 + 0x9bc) = 0;
@@ -4695,14 +4604,13 @@ void func_ov006_02114dd0(struct S24 *o)
         o++;
     }
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 104 -- func_ov006_02114dfc, 0x02114dfc, size 0xc4 */
+/* ROM ordinal 104 -- _ZN16dScMgSmartball_c8EndRoundEv, 0x02114dfc, size 0xc4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02114dfc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02114dfc(char *c){
+// @symbol _ZN16dScMgSmartball_c8EndRoundEv
+void dScMgSmartball_c::EndRound(){
+    char *c = (char *)this;
   int i;
   *(int*)(c + 0x5958) = 0;
   *(unsigned char*)(c + 0x595c) = 1;
@@ -4711,140 +4619,130 @@ void func_ov006_02114dfc(char *c){
   func_ov004_020ae274(0);
   for(i = 0; i < *(int*)(c + 0x4668); i++){
     if(*(unsigned char*)(((i >= 0xd) ? 0 : ((char**)(c + 0x4688))[i]) + 0x30))
-      func_ov006_02111d4c((i >= 0xd) ? 0 : ((char**)(c + 0x4688))[i]);
+      ((cMgSmartball_ball_c *)((i >= 0xd) ? 0 : ((char**)(c + 0x4688))[i]))->Freeze();
   }
-}
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 105 -- func_ov006_02114ec0, 0x02114ec0, size 0xd8 */
+/* ROM ordinal 105 -- _ZN16dScMgSmartball_c13ServeNextBallEv, 0x02114ec0, size 0xd8 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02114ec0
-/* func_ov006_02114ec0 at 0x02114ec0
+// @symbol _ZN16dScMgSmartball_c13ServeNextBallEv
+/* ServeNextBall at 0x02114ec0
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
  */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 static inline int *get(char *self, int i){ return i >= 13 ? 0 : ((Arr*)(self + 0x4688))->p[i]; }
-void func_ov006_02114ec0(char *self){
+void dScMgSmartball_c::ServeNextBall(){
+    char *self = (char *)this;
     int t[3]; int n = *(int *)(self + 0x4668); int i;
     for (i = 0; i < n; i++) {
         if (*(unsigned char *)((char *)get(self, i) + 0x30) == 0) continue;
         if (*(unsigned char *)((char *)get(self, i) + 0x121) != 0) continue;
-        func_ov006_02111e7c((char *)get(self, i));
-        func_ov006_0211470c(t, get(self, i));
+        ((cMgSmartball_ball_c *)((char *)get(self, i)))->PutInPlay();
+        CopyObjectPos(t, get(self, i));
         func_02012718(0x1a5, t[0]); return;
     }
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 106 -- func_ov006_02114f98, 0x02114f98, size 0x1c */
+/* ROM ordinal 106 -- _ZN16dScMgSmartball_c8CountOutEv, 0x02114f98, size 0x1c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02114f98
+// @symbol _ZN16dScMgSmartball_c8CountOutEv
 // Increment the u32 counter at self+0x5994. The u64-mask launder forces the base to
 // materialize via a pool-loaded constant + add (ldr r1,[pc]; add r1,self,r1), matching
 // the ROM instead of splitting the large offset.
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02114f98(char *self)
+void dScMgSmartball_c::CountOut()
 {
+    char *self = (char *)this;
     *(unsigned int *)(self + 0x5994) += 1;
-}
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 107 -- func_ov006_02114fb4, 0x02114fb4, size 0x1c */
+/* ROM ordinal 107 -- _ZN16dScMgSmartball_c10CountAwardEi, 0x02114fb4, size 0x1c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02114fb4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02114fb4(char *p, int i)
+// @symbol _ZN16dScMgSmartball_c10CountAwardEi
+void dScMgSmartball_c::CountAward(int i)
 {
+    char *p = (char *)this;
     int *a = (int *)(p + 22920);
     a[i] = a[i] + 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 108 -- func_ov006_02114fd0, 0x02114fd0, size 0x1c */
+/* ROM ordinal 108 -- _ZN16dScMgSmartball_c10CountDokanEv, 0x02114fd0, size 0x1c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02114fd0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02114fd0(char *p)
+// @symbol _ZN16dScMgSmartball_c10CountDokanEv
+void dScMgSmartball_c::CountDokan()
 {
+    char *p = (char *)this;
     int *a = (int *)(p + 0x5984);
     *a = *a + 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 109 -- func_ov006_02114fec, 0x02114fec, size 0x1c */
+/* ROM ordinal 109 -- _ZN16dScMgSmartball_c8CountAnaEv, 0x02114fec, size 0x1c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02114fec
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02114fec(char *p)
+// @symbol _ZN16dScMgSmartball_c8CountAnaEv
+void dScMgSmartball_c::CountAna()
 {
+    char *p = (char *)this;
     int *a = (int *)(p + 0x5980);
     *a = *a + 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 110 -- func_ov006_02115008, 0x02115008, size 0x1c */
+/* ROM ordinal 110 -- _ZN16dScMgSmartball_c11CountKinokoEv, 0x02115008, size 0x1c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02115008
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02115008(char *p)
+// @symbol _ZN16dScMgSmartball_c11CountKinokoEv
+void dScMgSmartball_c::CountKinoko()
 {
+    char *p = (char *)this;
     int *a = (int *)(p + 0x597c);
     *a = *a + 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 111 -- func_ov006_02115024, 0x02115024, size 0x1c */
+/* ROM ordinal 111 -- _ZN16dScMgSmartball_c10CountBingoEv, 0x02115024, size 0x1c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02115024
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02115024(char *p)
+// @symbol _ZN16dScMgSmartball_c10CountBingoEv
+void dScMgSmartball_c::CountBingo()
 {
+    char *p = (char *)this;
     int *a = (int *)(p + 0x5978);
     *a = *a + 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 112 -- func_ov006_02115040, 0x02115040, size 0x20 */
+/* ROM ordinal 112 -- _ZN16dScMgSmartball_c9CountLineEi, 0x02115040, size 0x20 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02115040
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_02115040(char *base, int i)
+// @symbol _ZN16dScMgSmartball_c9CountLineEi
+int dScMgSmartball_c::CountLine(int i)
 {
+    char *base = (char *)this;
     int *arr = (int *)(base + 0x5968);
     int v = arr[i - 1] + 1;
     arr[i - 1] = v;
     return v;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 113 -- func_ov006_02115060, 0x02115060, size 0x1c */
+/* ROM ordinal 113 -- _ZN16dScMgSmartball_c9CountCellEv, 0x02115060, size 0x1c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02115060
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02115060(char *p)
+// @symbol _ZN16dScMgSmartball_c9CountCellEv
+void dScMgSmartball_c::CountCell()
 {
+    char *p = (char *)this;
     int *a = (int *)(p + 0x5964);
     *a = *a + 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 114 -- func_ov006_0211507c, 0x0211507c, size 0xd4 */
+/* ROM ordinal 114 -- _ZN16dScMgSmartball_c7GetTileEPi, 0x0211507c, size 0xd4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0211507c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-unsigned short func_ov006_0211507c(unsigned char* base, int* pos)
+// @symbol _ZN16dScMgSmartball_c7GetTileEPi
+unsigned short dScMgSmartball_c::GetTile(int *pos)
 {
+    unsigned char *base = (unsigned char *)this;
     int a = pos[1];
     if (a >= 0 && a < 0xc0000) {
         int b = pos[0];
@@ -4862,17 +4760,16 @@ unsigned short func_ov006_0211507c(unsigned char* base, int* pos)
     }
     return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 115 -- func_ov006_02115150, 0x02115150, size 0xf8 */
+/* ROM ordinal 115 -- _ZN16dScMgSmartball_c10UpdateDustEv, 0x02115150, size 0xf8 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02115150
+// @symbol _ZN16dScMgSmartball_c10UpdateDustEv
 #pragma push
 #pragma opt_strength_reduction off
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02115150(char* self)
+void dScMgSmartball_c::UpdateDust()
 {
+    char *self = (char *)this;
     int i;
     char* obj = self + 0x48d4;
     for (i = 0; i < 0x10; i++) {
@@ -4898,17 +4795,16 @@ void func_ov006_02115150(char* self)
         obj += 8;
     }
 }
-}
 
 /* -------------------------------------------------------------------------- */
 
 
 #pragma pop
 
-/* ROM ordinal 116 -- func_ov006_02115248, 0x02115248, size 0x238 */
+/* ROM ordinal 116 -- _ZN16dScMgSmartball_c9SpawnDustEPi, 0x02115248, size 0x238 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02115248
-/* func_ov006_02115248 -- dScMgSmartball_c, ov006 0x02115248, 0x238 bytes.
+// @symbol _ZN16dScMgSmartball_c9SpawnDustEPi
+/* SpawnDust -- dScMgSmartball_c, ov006 0x02115248, 0x238 bytes.
  *
  * Spawns up to four balls: for each of the four passes it takes the first free
  * slot of sixteen, draws two angles from the shared RNG, and fills that slot's
@@ -4939,9 +4835,9 @@ void func_ov006_02115150(char* self)
  * mArray3: a struct-array view of either one changes the frame and the loop's
  * addressing and does not reproduce.
  */
-extern "C" void func_ov006_02115248(dScMgSmartball_c *self, int *origin)
+extern "C" void dScMgSmartball_c::SpawnDust(int *origin)
 {
-    char *c = (char *)self;
+    char *c = (char *)this;
     int i;
     int j;
 
@@ -4980,15 +4876,15 @@ extern "C" void func_ov006_02115248(dScMgSmartball_c *self, int *origin)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 117 -- func_ov006_02115480, 0x02115480, size 0x118 */
+/* ROM ordinal 117 -- _ZN16dScMgSmartball_c12UpdateScoresEv, 0x02115480, size 0x118 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02115480
+// @symbol _ZN16dScMgSmartball_c12UpdateScoresEv
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02115480(char *o)
+void dScMgSmartball_c::UpdateScores()
 {
+    char *o = (char *)this;
     int i;
     for (i = 0; i < 5; i++) {
         int *A = (int *)(((int)(o + i * 4) + 0x478c));
@@ -5004,7 +4900,7 @@ void func_ov006_02115480(char *o)
                     int tmp[2];
                     tmp[0] = *D0;
                     tmp[1] = *D1;
-                    func_ov006_02115598((SArrays *)o, (int *)tmp, *A, 0, *B);
+                    ((dScMgSmartball_c *)((SArrays *)o))->EmitScore((int *)tmp,  *A,  0,  *B);
                     continue;
                 }
             }
@@ -5020,18 +4916,18 @@ void func_ov006_02115480(char *o)
         }
     }
 }
-}
 
 /* -------------------------------------------------------------------------- */
 
 
 #pragma pop
 
-/* ROM ordinal 118 -- func_ov006_02115598, 0x02115598, size 0xe8 */
+/* ROM ordinal 118 -- _ZN16dScMgSmartball_c9EmitScoreEPiiii, 0x02115598, size 0xe8 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02115598
-extern "C" void func_ov006_02115598(SArrays* c, int* src, int v2, int v3, int v5)
+// @symbol _ZN16dScMgSmartball_c9EmitScoreEPiiii
+extern "C" void dScMgSmartball_c::EmitScore(int* src, int v2, int v3, int v5)
 {
+    SArrays *c = (SArrays *)this;
     int i;
     for (i = 0; i < 5; i++) {
         if (c->A[i] > 0) continue;
@@ -5057,12 +4953,12 @@ extern "C" void func_ov006_02115598(SArrays* c, int* src, int v2, int v3, int v5
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 119 -- func_ov006_02115680, 0x02115680, size 0x78 */
+/* ROM ordinal 119 -- _ZN16dScMgSmartball_c8KickGateEi, 0x02115680, size 0x78 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02115680
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02115680(char *p, int idx)
+// @symbol _ZN16dScMgSmartball_c8KickGateEi
+void dScMgSmartball_c::KickGate(int idx)
 {
+    char *p = (char *)this;
     int i;
     if (*(int *)(p + idx * 4 + 0x4784) == 0)
     {
@@ -5084,21 +4980,20 @@ void func_ov006_02115680(char *p, int idx)
     idx = (int)(((long long)idx));
     *(int *)(p + idx * 4 + 0x4784) = 0x14;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 120 -- func_ov006_021156f8, 0x021156f8, size 0x138 */
+/* ROM ordinal 120 -- _ZN16dScMgSmartball_c13IsTableAtRestEv, 0x021156f8, size 0x138 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_021156f8
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_021156f8(char *p)
+// @symbol _ZN16dScMgSmartball_c13IsTableAtRestEv
+int dScMgSmartball_c::IsTableAtRest()
 {
+    char *p = (char *)this;
     int i;
     char *q;
 
     for (i = 0; i < *(int *)(p + 0x4668); i++) {
         if (*(u8 *)(((i >= 0xd) ? 0 : ((char **)(p + 0x4688))[i]) + 0x30) != 0) {
-            if (func_ov006_02111df4((i >= 0xd) ? 0 : ((char **)(p + 0x4688))[i]) == 0)
+            if (((cMgSmartball_ball_c *)((i >= 0xd) ? 0 : ((char **)(p + 0x4688))[i]))->IsFinished() == 0)
                 return 0;
         }
     }
@@ -5111,29 +5006,27 @@ int func_ov006_021156f8(char *p)
     }
     q = *(char **)(p + 0x477c);
     if (q != 0) {
-        if (func_ov006_0210e4c8((int (*)[1])q) != 0)
+        if (((cMgSmartball_board_c *)((int (*)[1])q))->AnyLineActive() != 0)
             return 0;
     }
     q = *(char **)(p + 0x4780);
     if (q != 0) {
-        if (func_ov006_0210d898(q) == 0)
+        if (((cMgSmartball_wing_c *)(q))->IsSettled() == 0)
             return 0;
         *(u8 *)(*(char **)(p + 0x4780) + 0x44) = 1;
     }
-    if (func_ov006_021147d0(p) != 0)
+    if (((dScMgSmartball_c *)(p))->SparksActive() != 0)
         return 0;
     return 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 121 -- func_ov006_02115830, 0x02115830, size 0x22c */
+/* ROM ordinal 121 -- _ZN16dScMgSmartball_c15ResolveBallPairEiiPhS0_, 0x02115830, size 0x22c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02115830
+// @symbol _ZN16dScMgSmartball_c15ResolveBallPairEiiPhS0_
 #pragma push
 #pragma opt_common_subs off
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02115830(int a, int b, int c, u8 *d, u8 *e)
+void dScMgSmartball_c::ResolveBallPair(int b, int c, u8 *d, u8 *e)
 {
     // Keep the intermediate pair materialized across the angle calculation.
     TVec2 delta;
@@ -5165,10 +5058,10 @@ void func_ov006_02115830(int a, int b, int c, u8 *d, u8 *e)
     if (*(u8 *)(d + 0x110) == 1 || *(u8 *)(e + 0x110) == 1) {
         z1.x = 0;
         z1.y = 0;
-        func_ov006_021146cc((int *)d, &z1.x);
+        ((cMgSmartball_object_c *)((int *)d))->SetVel(&z1.x);
         z2.x = 0;
         z2.y = 0;
-        func_ov006_021146cc((int *)e, &z2.x);
+        ((cMgSmartball_object_c *)((int *)e))->SetVel(&z2.x);
         *(u8 *)(d + 0x3b) = 1;
         *(u8 *)(e + 0x3b) = 1;
         return;
@@ -5180,24 +5073,24 @@ void func_ov006_02115830(int a, int b, int c, u8 *d, u8 *e)
     }
     *(int *)(d + 0xfc) = 3;
     *(int *)(e + 0xfc) = 3;
-    func_ov006_0211470c(&A.x, (int *)d);
-    func_ov006_0211470c(&B.x, (int *)e);
+    CopyObjectPos(&A.x, (int *)d);
+    CopyObjectPos(&B.x, (int *)e);
     Vec2_Sub((int *)&tmp, (int *)&A, (int *)&B);
     delta.x = tmp.x;
     delta.y = tmp.y;
     ang = _ZN4cstd5atan2E5Fix12IiES1_(delta.y, delta.x);
-    if (func_ov006_02111d6c(d) != 0) {
+    if (((cMgSmartball_ball_c *)(d))->HasHit() != 0) {
         vec1.x = 0;
         vec1.y = 0;
     } else {
-        func_ov006_021146e0((int *)&t1, (int *)d);
+        CopyObjectVel((int *)&t1, (int *)d);
         vec1 = t1;
     }
-    if (func_ov006_02111d6c(e) != 0) {
+    if (((cMgSmartball_ball_c *)(e))->HasHit() != 0) {
         vec2.x = 0;
         vec2.y = 0;
     } else {
-        func_ov006_021146e0((int *)&t2, (int *)e);
+        CopyObjectVel((int *)&t2, (int *)e);
         vec2 = t2;
     }
     neg = -ang;
@@ -5211,34 +5104,32 @@ void func_ov006_02115830(int a, int b, int c, u8 *d, u8 *e)
     func_0203d388(&vec1, ang);
     func_0203d388(&vec2, ang);
     c1 = vec1;
-    func_ov006_021146cc((int *)d, &c1.x);
+    ((cMgSmartball_object_c *)((int *)d))->SetVel(&c1.x);
     c2 = vec2;
-    func_ov006_021146cc((int *)e, &c2.x);
-}
+    ((cMgSmartball_object_c *)((int *)e))->SetVel(&c2.x);
 }
 
 /* -------------------------------------------------------------------------- */
 #pragma pop
-/* ROM ordinal 122 -- func_ov006_02115a5c, 0x02115a5c, size 0xb0 */
+/* ROM ordinal 122 -- _ZN16dScMgSmartball_c12CollideBallsEv, 0x02115a5c, size 0xb0 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02115a5c
+// @symbol _ZN16dScMgSmartball_c12CollideBallsEv
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02115a5c(char *p)
+void dScMgSmartball_c::CollideBalls()
 {
+    char *p = (char *)this;
     int n = *(int *)(p + 0x4668);
     int i, j;
     for (i = 0; i < n; i++) {
         for (j = 0; j < n; j++) {
             int a = (i >= 13) ? 0 : *(int *)(int)(p + i * 4 + 0x4688);
             int b = (j >= 13) ? 0 : *(int *)(p + j * 4 + 0x4688);
-            func_ov006_02115830((int)p, (int)i, (int)j, (u8 *)a, (u8 *)b);
+            ((dScMgSmartball_c *)((int)p))->ResolveBallPair((int)i,  (int)j,  (u8 *)a,  (u8 *)b);
             n = *(int *)(p + 0x4668);
         }
     }
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -5246,13 +5137,13 @@ void func_ov006_02115a5c(char *p)
 
 #pragma pop
 
-/* ROM ordinal 123 -- func_ov006_02115b0c, 0x02115b0c, size 0x18bc */
+/* ROM ordinal 123 -- _ZN16dScMgSmartball_c12SpawnObjectsEv, 0x02115b0c, size 0x18bc */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02115b0c
+// @symbol _ZN16dScMgSmartball_c12SpawnObjectsEv
 #pragma push
 #pragma opt_strength_reduction off
 // MATCHING (abverify MATCH, mwccarm 1.2/sp2p3, canonical flags)
-/* func_ov006_02115b0c at 0x02115b0c (ov006), size 0x18bc (6,332 bytes, 1583 insns)
+/* SpawnObjects at 0x02115b0c (ov006), size 0x18bc (6,332 bytes, 1583 insns)
  * Compiler mwccarm 1.2/sp2p3, flags:
  * -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  *
@@ -5299,9 +5190,9 @@ void func_ov006_02115a5c(char *p)
  *  - #pragma opt_strength_reduction off (as in the draft) keeps every loop
  *    un-strength-reduced; does not break the div/mod-by-32 shift idioms.
  */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02115b0c(char *c)
+void dScMgSmartball_c::SpawnObjects()
 {
+    char *c = (char *)this;
     V2 pos[25];
 
     func_ov004_020adb1c(0);
@@ -6009,9 +5900,8 @@ void func_ov006_02115b0c(char *c)
     *(int *)(c + 0x4000 + 0x660) = 0;
     *(int *)(c + 0x5000 + 0x998) = 0x100;
     SetSubBg0Offset(*(int *)(c + 0x5000 + 0x998), 0);
-    func_ov006_02114dd0((S24 *)c);
+    ((dScMgSmartball_c *)((S24 *)c))->ResetSparks();
     __cxa_vec_cleanup(pos, 0x19, 8, NullDestructor_0203d47c);
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -6227,7 +6117,7 @@ s32 dScMgSmartball_c::Render()
 
     /* merge */
     if ((I(8) & 0xff) != 0 || UC(0x595c) == 0)
-        func_ov006_02114b10(g);
+        ((dScMgSmartball_c *)(g))->RenderSparks();
 
     /* Section 2 */
     func_ov004_020b1a5c(func_ov004_020adbc0(), 6);
@@ -6373,11 +6263,11 @@ s32 dScMgSmartball_c::Render()
     {
         int k;
         for (k = 0; k < I(0x4668); k++)
-            func_ov006_02113c14((Obj2 *)*(void **)(g + k * 4 + 0x4688));
+            ((cMgSmartball_ball_c *)((Obj2 *)*(void **)(g + k * 4 + 0x4688)))->DrawMarker();
     }
 
     if ((I(8) & 0xff) == 0 && UC(0x595c) != 0)
-        func_ov006_02114b10(g);
+        ((dScMgSmartball_c *)(g))->RenderSparks();
 
     return 1;
 }
@@ -6477,11 +6367,11 @@ s32 dScMgSmartball_c::Behavior()
                 (**(VFunc**)o)(o);
             }
 
-            func_ov006_02115480(c);
-            func_ov006_02115150(c);
-            func_ov006_02115a5c(c);
+            ((dScMgSmartball_c *)(c))->UpdateScores();
+            ((dScMgSmartball_c *)(c))->UpdateDust();
+            ((dScMgSmartball_c *)(c))->CollideBalls();
 
-            if (func_ov006_021156f8(c) != 0) {
+            if (((dScMgSmartball_c *)(c))->IsTableAtRest() != 0) {
                 if (*(int*)(c + 0x5954) >= 0x3c) {
                     *(int*)(c + 0x4660) = 1;
                 } else {
@@ -6497,7 +6387,7 @@ s32 dScMgSmartball_c::Behavior()
                 if (next >= *(int*)(c + 0x4668)) {
                     next = 0;
                 }
-                if (func_ov006_02111d74(((char**)(c + 0x4688))[cur]) != 0) {
+                if (((cMgSmartball_ball_c *)(((char**)(c + 0x4688))[cur]))->IsOut() != 0) {
                     *(int*)(c + 0x4664) = next;
                 }
             }
@@ -6518,12 +6408,12 @@ s32 dScMgSmartball_c::Behavior()
                     for (i = 0; i < *(int*)(c + 0x4668); i++) {
                         o = (i >= 13) ? 0 : ((char**)(c + 0x4688))[i];
                         if (*(unsigned char*)(o + 0x30) != 0
-                            && func_ov006_02111dcc((i >= 13) ? 0 : ((char**)(c + 0x4688))[i], 1) != 0) {
-                            func_ov006_02111e48((int *)((i >= 13) ? 0 : ((char**)(c + 0x4688))[i]));
-                            func_ov006_0211470c(vec, (int *)((i >= 13) ? 0 : ((char**)(c + 0x4688))[i]));
-                            func_ov006_02115598((SArrays *)c, vec, 0x7d0, 0, 1);
+                            && ((cMgSmartball_ball_c *)((i >= 13) ? 0 : ((char**)(c + 0x4688))[i]))->ArmExpire(1) != 0) {
+                            ((cMgSmartball_ball_c *)((int *)((i >= 13) ? 0 : ((char**)(c + 0x4688))[i])))->Burst();
+                            CopyObjectPos(vec, (int *)((i >= 13) ? 0 : ((char**)(c + 0x4688))[i]));
+                            ((dScMgSmartball_c *)((SArrays *)c))->EmitScore(vec,  0x7d0,  0,  1);
                             _ZN5Sound12PlayBank2_2DEj(0x175);
-                            func_ov006_02114f98(c);
+                            ((dScMgSmartball_c *)(c))->CountOut();
                             found = 1;
                             break;
                         }
@@ -6537,7 +6427,7 @@ s32 dScMgSmartball_c::Behavior()
         }
         break;
     case 1:
-        func_ov006_02115480(c);
+        ((dScMgSmartball_c *)(c))->UpdateScores();
         c[0xc3] = 0;
         if (*(int*)(c + 0x5960) == 0) {
             data_0209d454[0] |= 1;
@@ -6569,7 +6459,7 @@ s32 dScMgSmartball_c::Behavior()
         }
         break;
     case 2:
-        func_ov006_02115480(c);
+        ((dScMgSmartball_c *)(c))->UpdateScores();
         break;
     }
 
@@ -6582,7 +6472,7 @@ s32 dScMgSmartball_c::Behavior()
         (*p)--;
     }
 
-    func_ov006_02114c04(c);
+    ((dScMgSmartball_c *)(c))->UpdateSparks();
     return 1;
 }
 
@@ -6604,7 +6494,7 @@ s32 dScMgSmartball_c::Behavior()
 extern "C" {
 void dScMgSmartball_c::OnYoshiTryEat(int /* arg */)
 {
-  func_ov006_02115b0c((char *)this);
+  SpawnObjects();
   G2x::SetBlendAlpha((volatile unsigned short *)0x4000050, 0, 0x18, 4, 0xa);
   G2x::SetBlendAlpha((volatile unsigned short *)0x4001050, 0, 0x18, 4, 0xa);
 }
@@ -6977,7 +6867,7 @@ s32 dScMgSmartball_c::InitResources()
     _p->attr2 = (u16) ((_p->attr2 & (~0xf000)) | (_n << 0xc));
   }
   while (0);
-  func_ov006_02115b0c(c);
+  ((dScMgSmartball_c *)(c))->SpawnObjects();
   return 1;
 }
 

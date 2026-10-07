@@ -171,6 +171,63 @@ struct Eyerok : dBgActor_c {
        by the vtable: _ZTV6Eyerok + 4*29 = 0x0211ad64 + 0x74 = 0x0211ade8;
        config/arm9/overlays/ov066/relocs.txt confirms 0x0211ade8 -> 0x0211a2dc. */
     int OnAimedAtWithEgg();  /* slot 29 */
+
+    /* The state handlers the descriptors' pointer-to-member pairs name
+       (enter at +0, run at +8), plus the helpers they call. The original
+       names are not recovered; the addresses stand in. */
+    int  func_ov066_0211603c();    /* hand hit check (hurt/defeat) */
+    void func_ov066_021162e8();    /* arm a hand's hit volume */
+    void func_ov066_0211632c();    /* disarm a hand's hit volume */
+    void func_ov066_02116390();    /* texture-pattern swap tick */
+    void func_ov066_021164ec();    /* arm hit volume once anim started */
+    void func_ov066_021165cc();    /* hand becomes vulnerable */
+    void func_ov066_021166c8();    /* common state cleanup on exit */
+    int  func_ov066_021168b0();    /* alive-hand mask query */
+    int  func_ov066_021168ec();    /* body's current phase */
+    int  func_ov066_02116a68();    /* closest-player X (arena-fixed) */
+    void func_ov066_02116ac4(int strength); /* landing dust + shake */
+    int  func_ov066_02116b78();    /* keep a hand inside the arena */
+    int  func_ov066_02116c6c();    /* defeat run */
+    int  func_ov066_02116d14();    /* defeat enter */
+    int  func_ov066_02116db0();    /* pattern 9 run */
+    int  func_ov066_02117190();    /* pattern 9 enter */
+    int  func_ov066_021171b0();    /* pattern 8 run */
+    int  func_ov066_021175bc();    /* pattern 8 enter */
+    int  func_ov066_021175e8();    /* pattern 7 run */
+    int  func_ov066_02117bd0();    /* pattern 7 enter */
+    int  func_ov066_02117bf0();    /* pattern 6 run */
+    int  func_ov066_02118168();    /* pattern 6 enter */
+    int  func_ov066_02118188();    /* pattern 5 run */
+    int  func_ov066_021184c0();    /* pattern 5 enter */
+    int  func_ov066_021184e0();    /* pattern 4 run */
+    int  func_ov066_021185e4();    /* pattern 4 enter */
+    int  func_ov066_02118604();    /* waiting run */
+    int  func_ov066_02118658();    /* waiting enter */
+    int  func_ov066_02118678();    /* rise run */
+    int  func_ov066_021187c8();    /* rise enter */
+    int  func_ov066_021188b0();    /* pattern-running run */
+    int  func_ov066_02118934();    /* pattern-running enter */
+    s32  func_ov066_02118954();    /* pattern 9 run (hand) */
+    int  func_ov066_021189a0();    /* pattern 9 enter (hand) */
+    int  func_ov066_021189c0();    /* pattern 8 run (hand) */
+    int  func_ov066_02118a30();    /* pattern 8 enter (hand) */
+    s32  func_ov066_02118a50();    /* pattern 7 run (hand) */
+    int  func_ov066_02118b08();    /* pattern 7 enter (hand) */
+    s32  func_ov066_02118b28();    /* pattern 6 run (hand) */
+    int  func_ov066_02118be0();    /* pattern 6 enter (hand) */
+    s32  func_ov066_02118c00();    /* pattern 5 run (hand) */
+    int  func_ov066_02118cb8();    /* pattern 5 enter (hand) */
+    int  func_ov066_02118cdc();    /* pattern 4 run (hand) */
+    int  func_ov066_02118de0();    /* pattern 4 enter (hand) */
+    int  func_ov066_02118e04();    /* decision run */
+    int  func_ov066_0211901c();    /* decision enter */
+    int  func_ov066_0211903c();    /* talk run */
+    int  func_ov066_02119348();    /* talk enter */
+    int  func_ov066_02119398();    /* dormant run */
+    int  func_ov066_0211944c();    /* dormant enter (does nothing) */
+    int  func_ov066_02119454(void *pv); /* install a state descriptor */
+    void func_ov066_021194a4();    /* refresh the collision matrix */
+    void func_ov066_021194fc();    /* refresh the model matrices */
 };
 
 #ifndef SM64DS_PLATFORM_PC

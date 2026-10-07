@@ -3,7 +3,7 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * ADDS TWO s32 FIELDS. Its allocation is _Znwj(0x3c) in func_ov006_02115b0c,
+ * ADDS TWO s32 FIELDS. Its allocation is _Znwj(0x3c) in dScMgSmartball_c::SpawnObjects,
  * 0x8 past the base's 0x34 -- exactly the two ints below. Both are read and
  * written only by this child's own SaveSnapshot/Update/RestoreInitial.
  *
@@ -42,6 +42,10 @@ struct cMgSmartball_pakkun_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+
+    /* Recovered helper: the ball-vs-mouth region test -- checks the two head
+       triangles and the swallow circle while the piranha's state allows. */
+    int  CheckBall(int *pos);
 
     s32 mIdleTimer;   /* 0x034 -- SaveSnapshot increments it once per scan
                           that finds no target; at 0x3c it wraps to 0 and

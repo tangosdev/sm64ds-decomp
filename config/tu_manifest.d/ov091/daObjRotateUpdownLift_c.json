@@ -34,7 +34,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov091_02130fac",
+      "symbol": "_ZN23daObjRotateUpdownLift_c19func_ov091_02130facEv",
       "address": "0x02130fac",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov091_02130fac.cpp",
@@ -55,14 +55,14 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_ov091_02131160",
+      "symbol": "_ZN23daObjRotateUpdownLift_c19func_ov091_02131160Ev",
       "address": "0x02131160",
       "size": "0x000001e0",
       "legacy_source": "src/func_ov091_02131160.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov091_02131340",
+      "symbol": "_ZN23daObjRotateUpdownLift_c19func_ov091_02131340Ev",
       "address": "0x02131340",
       "size": "0x00000048",
       "legacy_source": "src/func_ov091_02131340.c",

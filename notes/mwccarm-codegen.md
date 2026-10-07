@@ -7964,3 +7964,21 @@ parameter has in the draft: a struct wrapper or a local copy demotes the load to
 and pushes it behind every homing store in the scheduler's input. The 6cf census found no
 other function with the self-home zip, so this is the only instance in the game, but the
 "parameter web vs body web" distinction is general and cheap to test.
+
+### 6bo/6cb follow-up (2026-10-07, lane OV75-OAM): the schedule-exact shape is a pure 4-cycle rotation, and an inline setter does not move it
+
+`func_ov075_02116128` re-attacked from the ROM's own register-priority order rather than
+more declaration permutations. In the ROM the colouring is pal=r0, i=r1, p=r2, shifted
+value=r3, i.e. the four webs were coloured in the order pal, i, p, hi (hi, used only by the
+four singles and by the pal materialisation, comes LAST and so inherits r3). Every
+schedule-exact shape instead colours hi first: an inline `SetPal(u16 *, u32)` setter that
+shifts inside (`(pal << 0x1c) >> 0x10`), with `m` kept as its own int so `mla` is emitted,
+reproduces the ROM schedule word for word and lands as p=r3, hi=r0, pal=r1, i=r2 - every
+register one place round the 4-cycle (div 31). Crossed with it and measured: five setter
+spellings (shift inside / pre-shifted / u16 / int param / nested `Ent()`), four hi types,
+five pragma sets, random declaration order, for/while loops (~6,200 compiles: only the
+24/31/34/38/41 colourings), a named `pal` added AFTER, BEFORE or INSIDE the loop block in
+nine respellings (`hi/0x10000`, `(hi>>15)>>1`, u8/u16/int types ...; ~3,000 compiles, best
+29), and index-form loops (`p[i]`, `map[r][i]`), which do NOT strength-reduce and change
+the size - so the ROM's `p++` is right. Nothing lowers hi's colouring priority below
+pal/i/p. Still NONMATCHING at div 20.
