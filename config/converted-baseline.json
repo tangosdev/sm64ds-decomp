@@ -1480,7 +1480,7 @@
     "src/actors/Player.cpp#_ZN6Player7IsInAirEv",
     "src/actors/Player.cpp#_ZN6Player9GetHealthEv",
     "src/actors/Player.cpp#_ZN6Player9IsOnShellEv",
-    "src/actors/Scuttlebug.cpp#Scuttlebug_SetState",
+    "src/actors/Scuttlebug.cpp#_ZN10Scuttlebug8SetStateEi",
     "src/actors/Scuttlebug.cpp#_ZN10Scuttlebug13OnYoshiTryEatEv",
     "src/actors/Scuttlebug.cpp#_ZN10Scuttlebug16OnAimedAtWithEggEv",
     "src/actors/Scuttlebug.cpp#_ZN10Scuttlebug16OnPendingDestroyEv",
