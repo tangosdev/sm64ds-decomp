@@ -6,6 +6,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
+#include "PlayerInput.h"
 extern "C" {
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern int _ZN6Player6IsAnimEj(void* c, u32 anim);
@@ -20,7 +21,6 @@ extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, 
 extern void Player_AdvanceAnims(void* c);
 
 extern int data_ov002_0211013c[];
-extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
 extern int data_ov002_021105d4[];
 extern int data_ov002_021101b4[];
@@ -60,7 +60,7 @@ int Player::St_HoldHeavy_Main()
     }
 
     {
-        int off = data_020a0e40 * 0x18;
+        int off = gActivePlayerSlot * 0x18;
         u16 flags = *(u16*)((char*)data_0209f49e + off);
         if (flags & 1) {
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021105d4);
@@ -84,7 +84,7 @@ int Player::St_HoldHeavy_Main()
     }
 
     {
-        int off2 = data_020a0e40 * 0x18;
+        int off2 = gActivePlayerSlot * 0x18;
         if (*((u8*)data_0209f4ac + off2) == 0) {
             if (!(*(u16*)((char*)data_0209f49c + off2) & 0x800)) {
                 var_r1 >>= 1;

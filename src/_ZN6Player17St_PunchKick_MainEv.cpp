@@ -6,6 +6,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
+#include "PlayerInput.h"
 extern "C" {
 extern void func_ov002_020d8a50(void* c, u32 a);
 extern void _Z14ApproachLinearRiii(int* a, int b, int c);
@@ -16,7 +17,6 @@ extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
 extern void Player_AdvanceAnims(char* self);
 
-extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
 extern s16 data_0209f4a0[];
 extern int data_ov002_0211013c[];
@@ -32,7 +32,7 @@ int Player::St_PunchKick_Main()
         }
     } else {
         if (mPunchKickCooldown == 0) {
-            u8 idx = data_020a0e40;
+            u8 idx = gActivePlayerSlot;
             u16 flags = *(u16*)((char*)data_0209f49e + idx * 0x18);
             if ((flags & 1) != 0 && mPunchKickStep < 2) {
                 u8* p = (u8*)((char*)&mPunchKickStep);
@@ -74,7 +74,7 @@ int Player::St_PunchKick_Main()
             }
 
             {
-                u8 idx2 = data_020a0e40;
+                u8 idx2 = gActivePlayerSlot;
                 s16 val = *(s16*)((char*)data_0209f4a0 + idx2 * 0x18);
                 if (val == 0 && mPunchKickStep == 2) {
                     _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x52, 0x40000000, 0x1000, 0);

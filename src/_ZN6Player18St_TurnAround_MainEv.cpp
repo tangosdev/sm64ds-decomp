@@ -5,6 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
+#include "PlayerInput.h"
 extern "C" {
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);
@@ -17,7 +18,6 @@ extern int func_0201226c(int a0, int a1, int a2, int a3, int a4, s16 a5);
 extern void Player_AdvanceAnims(void* c);
 
 extern u16 data_0209f49e[];
-extern u8 data_020a0e40;
 extern s16 data_0209f4a0[];
 extern int data_ov002_021101b4[];
 extern int data_ov002_0211013c[];
@@ -32,7 +32,7 @@ int Player::St_TurnAround_Main()
     int tmp;
 
     raw = mDesiredAngleY;
-    if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
+    if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
         angle = (s16)(raw + 0x8000);
         sel = (mHorzSpeed < 0) ? 0x1800 : 0x8000;
         r5v = func_ov002_020bf56c(((char*)this), sel);
@@ -46,7 +46,7 @@ int Player::St_TurnAround_Main()
 
     ApproachAngle((s16*)((char*)&mAngleY), mPrevAngleY, 8, 0x2000, 0x800);
 
-    if ((*(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18) & 2) != 0) {
+    if ((*(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18) & 2) != 0) {
         _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021101e4);
     } else if (mIsAirborne != 0) {
         _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021101b4);
