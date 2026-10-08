@@ -57,11 +57,11 @@ data_ov009_02112428 kind:data(any) addr:0x02112428 ambiguous
 data_ov009_02112434 kind:data(any) addr:0x02112434 ambiguous
 data_ov009_02112438 kind:data(any) addr:0x02112438 ambiguous
 data_ov009_0211244c kind:data(any) addr:0x0211244c ambiguous
-__sinit_ov009_02112458 kind:function(arm,size=0xcc) addr:0x02112458
+__sinit_d_a_s_bird.cpp kind:function(arm,size=0xcc) addr:0x02112458
 __sinit_ov009_02112524 kind:function(arm,size=0x538) addr:0x02112524
 __sinit_ov009_02112a5c kind:function(arm,size=0x6c) addr:0x02112a5c
 __sinit_ov009_02112ac8 kind:function(arm,size=0x6c) addr:0x02112ac8
-.p__sinit_ov009_02112458 kind:data(word) addr:0x02112b34
+.p__sinit_d_a_s_bird.cpp kind:data(word) addr:0x02112b34
 .p__sinit_ov009_02112524 kind:data(word) addr:0x02112b38
 .p__sinit_ov009_02112a5c kind:data(word) addr:0x02112b3c
 .p__sinit_ov009_02112ac8 kind:data(word) addr:0x02112b40
@@ -140,9 +140,9 @@ data_ov009_021138c4 kind:data(any) addr:0x021138c4 ambiguous
 data_ov009_021138d8 kind:data(any) addr:0x021138d8 ambiguous
 data_ov009_021138f0 kind:data(any) addr:0x021138f0 ambiguous
 data_ov009_021138fc kind:data(any) addr:0x021138fc
-data_ov009_02113904 kind:data(any) addr:0x02113904
-data_ov009_0211390c kind:data(any) addr:0x0211390c
-data_ov009_02113914 kind:data(any) addr:0x02113914
+@267 kind:data(any) addr:0x02113904
+@265 kind:data(any) addr:0x0211390c
+@263 kind:data(any) addr:0x02113914
 _ZTS9daSBird_c kind:data(any) addr:0x0211391c
 _ZTI9daSBird_c kind:data(any) addr:0x02113928
 g_profile_SBIRD kind:data(any) addr:0x02113934 ambiguous
@@ -175,8 +175,8 @@ data_ov009_02113c08 kind:data(any) addr:0x02113c08 ambiguous
 data_ov009_02113c14 kind:data(any) addr:0x02113c14 ambiguous
 data_ov009_02113c20 kind:bss addr:0x02113c20
 data_ov009_02113c28 kind:bss addr:0x02113c28
-data_ov009_02113c30 kind:bss addr:0x02113c30
-data_ov009_02113c3c kind:bss addr:0x02113c3c
+@381 kind:bss addr:0x02113c30
+@382 kind:bss addr:0x02113c3c
 data_ov009_02113c48 kind:bss addr:0x02113c48
 data_ov009_02113c68 kind:bss addr:0x02113c68
 data_ov009_02113c70 kind:bss addr:0x02113c70

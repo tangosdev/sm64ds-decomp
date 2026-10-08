@@ -8,13 +8,34 @@
   "boundary_evidence": [
     "partial linker run after hatch hole: 0x021115d8..0x02111a70, 8 function(s). func_ov009_0211145c (0x0211145c, 0x17c) is an unenrolled draft; D1/D0 remain leftover enrolled files below that hole and 02111224/02111234 folded into src/game/actors/d_a_s_bird_head.cpp.",
     "class label(s): daSBird_c",
-    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "FOLDED: compiler-generated __sinit_d_a_s_bird.cpp is byte-identical to retail __sinit_ov009_02112458 (0xcc) and carries the same fifteen relocation sites; the .data claim 0x021138fc..0x0211391c tiles the four descriptors with no gaps, and .bss 0x02113c20..0x02113c68 tiles both handles, both registration nodes and the state table."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x021115d8",
       "end": "0x02111a70"
+    },
+    {
+      "name": ".init",
+      "start": "0x02112458",
+      "end": "0x02112524"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02112b34",
+      "end": "0x02112b38"
+    },
+    {
+      "name": ".data",
+      "start": "0x021138fc",
+      "end": "0x0211391c"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02113c20",
+      "end": "0x02113c68"
     }
   ],
   "functions": [
@@ -75,7 +96,36 @@
       "ordinal": 7
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov009_021138fc",
+      "address": "0x021138fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state 2 descriptor: function-pointer/PMF pair for the free hatch func_ov009_0211145c; retail first word is 0x0211145c"
+    },
+    {
+      "symbol": "@267",
+      "address": "0x02113904",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous state 3 descriptor for daSBird_c::func_ov009_02111234; retail first word is 0x02111234"
+    },
+    {
+      "symbol": "@265",
+      "address": "0x0211390c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous state 1 descriptor for daSBird_c::func_ov009_021115d8; retail first word is 0x021115d8"
+    },
+    {
+      "symbol": "@263",
+      "address": "0x02113914",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous state 0 descriptor for daSBird_c::func_ov009_021116ec; retail first word is 0x021116ec"
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZN7Vector3D1Ev",
@@ -85,11 +135,48 @@
       "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so every TU that destroys a Vector3 re-emits it as vague linkage -- here the stack Vector3 automatics in func_ov009_021115d8 / 021116ec pull it in. The cartridge keeps one copy at arm9:0x020072c0 and src/_ZN7Vector3D1Ev.cpp owns it; this object's copy is the identical 4-byte bx lr body."
     }
   ],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov009_02113c20",
+      "address": "0x02113c20",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model file handle constructed with file ID 1080"
+    },
+    {
+      "symbol": "data_ov009_02113c28",
+      "address": "0x02113c28",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "animation file handle constructed with file ID 1081"
+    },
+    {
+      "symbol": "@381",
+      "address": "0x02113c30",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-local model registration node; the initializer registers the model destructor here"
+    },
+    {
+      "symbol": "@382",
+      "address": "0x02113c3c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-local animation registration node; the initializer registers the animation destructor here"
+    },
+    {
+      "symbol": "data_ov009_02113c48",
+      "address": "0x02113c48",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "the 4-entry BirdState table Behavior indexes by mState; zero in the static image, filled by the initializer"
+    }
+  ],
   "notes": [
     "Renamed from coined Bird to ROM RTTI daSBird_c (tools/class_rename.py --with-derived) before promotion. _ZTS9daSBird_c 0x0211391c / _ZTI9daSBird_c 0x02113928 / _ZTV9daSBird_c 0x02113958. The coined _ZTV4Bird alias at the same address was deleted, not renamed onto the ROM name.",
     "PARTIAL PROMOTION. func_ov009_0211145c (0x0211145c, 0x17c) is a hand-written asm hatch that does not reproduce from C (five-word register-allocation miss). A delinks entry cannot skip a hole, so this TU licenses only the contiguous upper run 0x021115d8..0x02111a70 (8 functions). D1/D0 stay leftover enrolled files below the hole; 02111224/02111234 folded into src/game/actors/d_a_s_bird_head.cpp as daSBird_c members (manifest ov009/daSBird_c_head). The hatch stays src/unnamed/ov009/func_ov009_0211145c.c, not in delinks.",
-    "Factory is return new daSBird_c() via fBase_c::operator new(unsigned long). Destructor is out of line so this TU does not emit D1/D0. Key function is ~daSBird_c(); leftover D1/D0 files emit the class vtable and RTTI, not this TU. RandomIntInternal kept as unsigned."
+    "Factory is return new daSBird_c() via fBase_c::operator new(unsigned long). Destructor is out of line so this TU does not emit D1/D0. Key function is ~daSBird_c(); leftover D1/D0 files emit the class vtable and RTTI, not this TU. RandomIntInternal kept as unsigned.",
+    "The initializer __sinit_d_a_s_bird.cpp, its .ctor word, the four PMF descriptors, the two resource handles, their registration nodes and the state table are owned here. The handwritten __sinit_ov009_02112458.c is retired. State 2's descriptor names the free hatch func_ov009_0211145c (unenrolled draft); the other three name daSBird_c members. The class vtable/RTTI stay with the leftover D1/D0 files, g_profile_SBIRD stays outside."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -119,5 +206,307 @@
       "data": [],
       "dataExternalized": []
     }
-  }
+  },
+  "production_mode": "intact-object",
+  "init": [
+    {
+      "symbol": "__sinit_d_a_s_bird.cpp",
+      "address": "0x02112458",
+      "size": "0xcc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov009_02112458 and carries the same fifteen relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_s_bird.cpp",
+      "address": "0x02112b34",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN17SBirdModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN17SBirdModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN21SBirdAnimationFilePtrC1Ej",
+      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0201799c",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN21SBirdAnimationFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017984",
+      "evidence": "retail destructor registration destination and the animation SharedFilePtr family identity"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and the two direct retail references in this initializer"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_a_s_bird.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_a_s_bird.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@263",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local state 0 descriptor is a configured initializer relocation destination at 0x02113914"
+    },
+    {
+      "symbol": "@265",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local state 1 descriptor is a configured initializer relocation destination at 0x0211390c"
+    },
+    {
+      "symbol": "@267",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local state 3 descriptor is a configured initializer relocation destination at 0x02113904"
+    },
+    {
+      "symbol": "@381",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local model registration node is a configured initializer relocation destination at 0x02113c30"
+    },
+    {
+      "symbol": "@382",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local animation registration node is a configured initializer relocation destination at 0x02113c3c"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02112464",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112474",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112480",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112490",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021124f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113c20",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113c20"
+    },
+    {
+      "section": ".init",
+      "source": "0x021124f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x021124fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@381",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113c30"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112500",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113c28",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113c28"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112508",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Anim",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017984"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211250c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@382",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113c3c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112510",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@263",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113914"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112514",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@265",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x0211390c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112518",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_021138fc",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x021138fc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211251c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@267",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113904"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112520",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113c48",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113c48"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02112b34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_s_bird.cpp",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02112458"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113914",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9daSBird_c19func_ov009_021116ecEv",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x021116ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211390c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9daSBird_c19func_ov009_021115d8Ev",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x021115d8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021138fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_ov009_0211145c",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x0211145c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113904",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9daSBird_c19func_ov009_02111234Ev",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02111234"
+    }
+  ]
 }

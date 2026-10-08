@@ -47,18 +47,59 @@
 #include "common.h"
 #include "SharedFilePtr.h"
 
+/* Resource handles this TU's static initializer constructs. The wrapper
+ * spellings are reconstructed; constructor and destructor addresses, file
+ * IDs, widths, and BSS order are the ROM's. */
+struct SBirdModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    SBirdModelFilePtr(u32 fileID);
+    ~SBirdModelFilePtr();
+};
+
+struct SBirdAnimationFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    SBirdAnimationFilePtr(u32 fileID);
+    ~SBirdAnimationFilePtr();
+};
+
 bool ApproachLinear(short &value, short target, short step);
 
 typedef void (daSBird_c::*BirdState)();
+
+/* State 2's target is a free function, not a member, so its descriptor
+ * is a function-pointer/PMF pair. The first word carries the code
+ * relocation; the second is zero, like every other descriptor. */
+union SBirdFreeState {
+    void (*fn)(char *);
+    BirdState pmf;
+};
+
+extern "C" {
+extern SBirdFreeState data_ov009_021138fc;
+}
+
+struct SBirdStateTable {
+    BirdState slots[4];
+
+    SBirdStateTable()
+    {
+        slots[0] = &daSBird_c::func_ov009_021116ec;
+        slots[1] = &daSBird_c::func_ov009_021115d8;
+        slots[2] = data_ov009_021138fc.pmf;
+        slots[3] = &daSBird_c::func_ov009_02111234;
+    }
+};
 
 struct BirdMtx {
     int w[12];
 };
 
 extern "C" {
-extern SharedFilePtr data_ov009_02113c20;
-extern SharedFilePtr data_ov009_02113c28;
-extern BirdState data_ov009_02113c48[];
+extern SBirdModelFilePtr data_ov009_02113c20;
+extern SBirdAnimationFilePtr data_ov009_02113c28;
+extern SBirdStateTable data_ov009_02113c48;
 extern BirdMtx data_020a0e68;
 extern s16 data_02082214[];
 extern unsigned int RandomIntInternal(void *rng);
@@ -72,6 +113,10 @@ extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, s16 a);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 a);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
 extern int func_0201267c(unsigned int a, void *b);
+
+/* State 2 hatch: a free function in ROM (unenrolled draft
+ * src/unnamed/ov009/func_ov009_0211145c.c), called through the state table. */
+extern void func_ov009_0211145c(char *bird);
 
 /* ModelAnim::SetAnim -- wall 6az. */
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
@@ -119,7 +164,7 @@ s32 daSBird_c::InitResources()
 // @symbol _ZN9daSBird_c8BehaviorEv
 s32 daSBird_c::Behavior()
 {
-    (this->*data_ov009_02113c48[mState])();
+    (this->*data_ov009_02113c48.slots[mState])();
     int tmp[3];
     Vec3_Asr(tmp, &mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, tmp[0], tmp[1], tmp[2]);
@@ -216,3 +261,17 @@ void daSBird_c::func_ov009_021115d8()
     mState = 3;
     mFlags &= ~0x10000;
 }
+
+/* Static-resource ownership (was the retired 0xcc handwritten initializer).
+ * Definition order is the retail initializer's construction order: the
+ * model handle (file 1080), the animation handle (file 1081). Their
+ * registration nodes are compiler temporaries, like the PMF descriptors
+ * the table initializer below materializes. */
+SBirdModelFilePtr data_ov009_02113c20(1080);
+SBirdAnimationFilePtr data_ov009_02113c28(1081);
+
+/* PMF descriptors, in ROM address order. The table initializer above
+ * copies them into the BSS state table in slot order. */
+SBirdFreeState data_ov009_021138fc = { func_ov009_0211145c };
+
+SBirdStateTable data_ov009_02113c48;

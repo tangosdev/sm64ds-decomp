@@ -2677,9 +2677,6 @@
         "arity:0",
         "return:void"
       ],
-      "src/unnamed/ov009/__sinit_ov009_02112458.c": [
-        "kind:data"
-      ],
       "src/unnamed/ov009/__sinit_ov009_02112ac8.c": [
         "kind:data"
       ],
@@ -5881,9 +5878,6 @@
       "src/unnamed/ov006/__sinit_ov006_02130a08.c": [
         "param:#2 int",
         "return:int"
-      ],
-      "src/unnamed/ov009/__sinit_ov009_02112458.c": [
-        "return:void"
       ],
       "src/unnamed/ov009/__sinit_ov009_02112ac8.c": [
         "return:void"
@@ -17477,18 +17471,14 @@
     },
     "data_ov009_02113c20": {
       "src/game/actors/d_a_s_bird.cpp": [
+        "return:SBirdModelFilePtr",
         "return:SharedFilePtr"
-      ],
-      "src/unnamed/ov009/__sinit_ov009_02112458.c": [
-        "return:int []"
       ]
     },
     "data_ov009_02113c28": {
       "src/game/actors/d_a_s_bird.cpp": [
+        "return:SBirdAnimationFilePtr",
         "return:SharedFilePtr"
-      ],
-      "src/unnamed/ov009/__sinit_ov009_02112458.c": [
-        "return:int []"
       ]
     },
     "data_ov009_02113c68": {
@@ -21813,9 +21803,6 @@
         "arity:0",
         "return:void"
       ],
-      "src/unnamed/ov009/__sinit_ov009_02112458.c": [
-        "kind:data"
-      ],
       "src/unnamed/ov009/__sinit_ov009_02112524.c": [
         "kind:data"
       ],
@@ -22473,10 +22460,6 @@
         "return:void"
       ],
       "src/unnamed/ov006/__sinit_ov006_02130f00.c": [
-        "return:void"
-      ],
-      "src/unnamed/ov009/__sinit_ov009_02112458.c": [
-        "param:#2 int",
         "return:void"
       ],
       "src/unnamed/ov009/__sinit_ov009_02112524.c": [
