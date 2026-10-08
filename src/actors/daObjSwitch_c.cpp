@@ -3,7 +3,7 @@
 // Select the shared flat Matrix4x3 before the actor headers, as dBgActor_c.h requires.
 //
 // The 13 func_ov002_020b9xxx/020baxxx helpers are daObjSwitch_c members: each
-// takes the object as arg0 and recasts it, and the sinit .data records at
+// takes the object as arg0 and recasts it, and the .data records at
 // 0x0210987c.. store {init, exec} pointer-to-member pairs over them
 // (data_ov002_0210e00c). Reverse source order preserves the retail text order.
 //
@@ -23,17 +23,38 @@
 #include "Sound.h"
 #include "daStar_c.h"
 
-extern daObjSwitch_c::StateEntry data_ov002_0210e00c[];
-
 namespace cstd { Fix12i fdiv(Fix12i numerator, Fix12i denominator); }
 
 namespace Event { int ClearBit(unsigned int bit); void SetBit(unsigned int bit); }
+
+/* Model handles construct through func_02017acc and destroy through
+ * func_02017ab4; collision handles construct through func_02017b4c and destroy
+ * through SharedFilePtr_Destruct_Clsn. The manifest aliases those undefined
+ * members onto the ROM symbols. */
+struct SwitchModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    SwitchModelFilePtr(u32 fileID);
+    ~SwitchModelFilePtr();
+};
+
+struct SwitchClsnFileHandle : SharedFilePtr {
+    u32 words[2];
+
+    SwitchClsnFileHandle(u32 fileID);
+    ~SwitchClsnFileHandle();
+};
 
 extern "C" {
     extern int data_0209b454;
     extern signed char data_0209f2f8;
     extern SharedFilePtr data_ov002_0211092c;
     extern daObjSwitch_c::Resources data_ov002_021098e8[];
+    extern daObjSwitch_c::StateEntry data_ov002_0210e00c[];
+    extern SwitchModelFilePtr data_ov002_0210dfd4;
+    extern SwitchClsnFileHandle data_ov002_0210dfc4;
+    extern SwitchModelFilePtr data_ov002_0210dfcc;
+    extern SwitchClsnFileHandle data_ov002_0210dfbc;
     // local extern: Sound.h/dBgActor_c.h declare the members, but Fix12<int>
     // by value through the member call changes codegen under 2004/b56.
     int _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int id, int volume);
@@ -413,3 +434,22 @@ int daObjSwitch_c::func_ov002_020b9f00()
     }
     return 0;
 }
+
+/* The four file-scope handles, by Resources entry at data_ov002_021098e8:
+ *   dfd4/dfc4  entry 0's model and collision (files 0x45c, 0x45d)
+ *   dfcc/dfbc  entry 1's model and collision (files 0x48f, 0x490)
+ * Their constructors and the destructor registrations make mwcc emit this TU's
+ * static initializer; the five-entry state table adds the ten
+ * pointer-to-member copies it performs afterwards. */
+SwitchModelFilePtr data_ov002_0210dfd4(0x45c);
+SwitchClsnFileHandle  data_ov002_0210dfc4(0x45d);
+SwitchModelFilePtr data_ov002_0210dfcc(0x48f);
+SwitchClsnFileHandle  data_ov002_0210dfbc(0x490);
+
+daObjSwitch_c::StateEntry data_ov002_0210e00c[5] = {
+    {&daObjSwitch_c::func_ov002_020ba3fc, &daObjSwitch_c::func_ov002_020ba3a8},
+    {&daObjSwitch_c::func_ov002_020ba4c0, &daObjSwitch_c::func_ov002_020ba2d0},
+    {&daObjSwitch_c::func_ov002_020ba2ac, &daObjSwitch_c::func_ov002_020ba1ac},
+    {&daObjSwitch_c::func_ov002_020ba4c0, &daObjSwitch_c::func_ov002_020ba0f8},
+    {&daObjSwitch_c::func_ov002_020ba4c0, &daObjSwitch_c::func_ov002_020ba0bc},
+};

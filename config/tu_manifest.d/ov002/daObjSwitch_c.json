@@ -3,18 +3,40 @@
   "module": "ov002",
   "source": "src/actors/daObjSwitch_c.cpp",
   "promoted_source": "src/actors/daObjSwitch_c.cpp",
+  "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20b9e64..0x20baa2c, 20 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjSwitch_c",
-    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "the compiler-generated __sinit_daObjSwitch_c.cpp is raw-byte-identical to retail __sinit_ov002_02101588 (0x1b0, twenty-nine relocations): four SharedFilePtr-family handle constructions and destructor registrations, then the ten pointer-to-member descriptor copies into the state table at 0x0210e00c. The ctor word at 0x021080fc points at that initializer."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020b9e64",
       "end": "0x020baa2c"
+    },
+    {
+      "name": ".init",
+      "start": "0x02101588",
+      "end": "0x02101738"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x021080fc",
+      "end": "0x02108100"
+    },
+    {
+      "name": ".data",
+      "start": "0x0210987c",
+      "end": "0x021098cc"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0210dfbc",
+      "end": "0x0210e05c"
     }
   ],
   "functions": [
@@ -159,8 +181,143 @@
       "ordinal": 19
     }
   ],
-  "data": [],
-  "bss": [],
+  "data": [
+    {
+      "symbol": "@839",
+      "address": "0x0210987c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba4c0Ev"
+    },
+    {
+      "symbol": "@833",
+      "address": "0x02109884",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba2d0Ev"
+    },
+    {
+      "symbol": "@835",
+      "address": "0x0210988c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba2acEv"
+    },
+    {
+      "symbol": "@837",
+      "address": "0x02109894",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba1acEv"
+    },
+    {
+      "symbol": "@831",
+      "address": "0x0210989c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba4c0Ev"
+    },
+    {
+      "symbol": "@845",
+      "address": "0x021098a4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba0bcEv"
+    },
+    {
+      "symbol": "@843",
+      "address": "0x021098ac",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba4c0Ev"
+    },
+    {
+      "symbol": "@827",
+      "address": "0x021098b4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba3fcEv"
+    },
+    {
+      "symbol": "@829",
+      "address": "0x021098bc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba3a8Ev"
+    },
+    {
+      "symbol": "@841",
+      "address": "0x021098c4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba0f8Ev"
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "data_ov002_0210dfbc",
+      "address": "0x0210dfbc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision resource handle constructed with file ID 0x490 (Resources[1].collision)"
+    },
+    {
+      "symbol": "data_ov002_0210dfc4",
+      "address": "0x0210dfc4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision resource handle constructed with file ID 0x45d (Resources[0].collision)"
+    },
+    {
+      "symbol": "data_ov002_0210dfcc",
+      "address": "0x0210dfcc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model resource handle constructed with file ID 0x48f (Resources[1].model)"
+    },
+    {
+      "symbol": "data_ov002_0210dfd4",
+      "address": "0x0210dfd4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model resource handle constructed with file ID 0x45c (Resources[0].model)"
+    },
+    {
+      "symbol": "@822",
+      "address": "0x0210dfdc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x45c model handle"
+    },
+    {
+      "symbol": "@823",
+      "address": "0x0210dfe8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x45d collision handle"
+    },
+    {
+      "symbol": "@824",
+      "address": "0x0210dff4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x48f model handle"
+    },
+    {
+      "symbol": "@825",
+      "address": "0x0210e000",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x490 collision handle"
+    },
+    {
+      "symbol": "data_ov002_0210e00c",
+      "address": "0x0210e00c",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "the five-entry {init, exec} state table func_ov002_020ba4d8 / func_ov002_020ba520 dispatch on mState; the initializer copies the ten descriptors into it"
+    }
+  ],
   "notes": [
     "Originally assembled by tubuild from the renamed StarSwitch sources; reconstructed and contract-audited in PR2874 source repair. Five methods,13 C-linkage helpers and two compiler-emitted destructor bodies; no claim that address-named helpers are recovered method names.",
     "Historical tubuild create warning: RAW: src/func_ov002_020b9f80.cpp (func_ov002_020b9f80) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block; the assembled block was subsequently reconstructed and its duplicate declarations removed in PR2874 source repair.",
@@ -180,7 +337,9 @@
     "Complete licensed text is ov002:[0x020b9e64,0x020baa2c),20 functions/3016 bytes. Callback/state initializer/factory bodies after the endpoint remain outside this TU.",
     "The12 recorded declaration conflicts are resolved: void state transition and void PMF handler; actual int Event::ClearBit; shared fixed-point scalar aliases; real Sound::PlayBank3 reference, dBgActor_c method and SharedFilePtr resource. The shared decl_common.h still calls the callback an integer object; this TU no longer includes that incompatible declaration. No shared-header change or waiver is made.",
     "Existing body/helper symbol identities and original rename ancestry a6e6eb8379738f97c6b62e558d028b23a0820128 are retained. daObjSwitch_c comes from retail RTTI; field labels and SwitchResources/StateEntry labels describe observed use, not recovered identifiers.",
-    "SS2874-08: daStarBase_c InitResources now declares shared data_ov002_0211092c as SharedFilePtr using the existing header. This is a caller declaration repair at ov002:[020eb204,020eb63c), with complete object identity and strict bytes proved; no new mismatch bank or shared-header edit."
+    "SS2874-08: daStarBase_c InitResources now declares shared data_ov002_0211092c as SharedFilePtr using the existing header. This is a caller declaration repair at ov002:[020eb204,020eb63c), with complete object identity and strict bytes proved; no new mismatch bank or shared-header edit.",
+    "The file-scope resource handles and the StateEntry[5] table are defined in this TU as non-const objects, so mwcc emits __sinit_daObjSwitch_c.cpp, the ctor word, the four destructor-registration nodes and the ten anonymous pointer-to-member descriptors itself. The handles are spelled through TU-local SwitchModelFilePtr / SwitchClsnFilePtr subclasses of SharedFilePtr so the generated initializer's constructor calls and destructor registrations name real members, aliased to the retail model/collision construct-destroy pairs; the descriptor targets are the already-memberized state handlers. The handwritten src/__sinit_ov002_02101588.c is retired.",
+    "Local scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this machine's stock control (EU ASMP dump; the divergent bytes are NDS container/packaging fields outside every module range). The recorded rom.sha256 is the fleet SHA every other intact entry shares. Module set, symbol inventory, and the five owned ranges matched."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -194,23 +353,23 @@
       "requested": [],
       "deadstripped": [],
       "droppedSections": [
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21
+        21,
+        22,
+        31,
+        32,
+        33,
+        36,
+        37,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        49,
+        50
       ],
       "data": [
         "_ZTV13daObjSwitch_c",
@@ -242,9 +401,416 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 32 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov002-daObjSwitch_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020b9e64",
+        "end": "0x020baa2c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020b9e64",
+          "end": "0x020baa2c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02101588",
+          "end": "0x02101738",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x021080fc",
+          "end": "0x02108100",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0210987c",
+          "end": "0x021098cc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0210dfbc",
+          "end": "0x0210e05c",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "linkedStorageAliases": null,
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 41
+        },
+        "orderOk": true,
+        "nonLicensed": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              90
+            ],
+            "desired": [
+              90
+            ],
+            "anchors": {
+              "90": [
+                {
+                  "symbol": "__sinit_daObjSwitch_c.cpp",
+                  "address": 34608520,
+                  "sectionBase": 34608520
+                }
+              ]
+            }
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              88
+            ],
+            "desired": [
+              88
+            ],
+            "anchors": {
+              "88": [
+                {
+                  "symbol": ".p__sinit_daObjSwitch_c.cpp",
+                  "address": 34636028,
+                  "sectionBase": 34636028
+                }
+              ]
+            }
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              7,
+              9,
+              11,
+              13,
+              15,
+              17,
+              23,
+              27,
+              29
+            ],
+            "desired": [
+              29,
+              7,
+              11,
+              5,
+              13,
+              9,
+              17,
+              27,
+              15,
+              23
+            ],
+            "anchors": {
+              "5": [
+                {
+                  "symbol": "@837",
+                  "address": 34642068,
+                  "sectionBase": 34642068
+                }
+              ],
+              "7": [
+                {
+                  "symbol": "@833",
+                  "address": 34642052,
+                  "sectionBase": 34642052
+                }
+              ],
+              "9": [
+                {
+                  "symbol": "@845",
+                  "address": 34642084,
+                  "sectionBase": 34642084
+                }
+              ],
+              "11": [
+                {
+                  "symbol": "@835",
+                  "address": 34642060,
+                  "sectionBase": 34642060
+                }
+              ],
+              "13": [
+                {
+                  "symbol": "@831",
+                  "address": 34642076,
+                  "sectionBase": 34642076
+                }
+              ],
+              "15": [
+                {
+                  "symbol": "@829",
+                  "address": 34642108,
+                  "sectionBase": 34642108
+                }
+              ],
+              "17": [
+                {
+                  "symbol": "@843",
+                  "address": 34642092,
+                  "sectionBase": 34642092
+                }
+              ],
+              "23": [
+                {
+                  "symbol": "@841",
+                  "address": 34642116,
+                  "sectionBase": 34642116
+                }
+              ],
+              "27": [
+                {
+                  "symbol": "@827",
+                  "address": 34642100,
+                  "sectionBase": 34642100
+                }
+              ],
+              "29": [
+                {
+                  "symbol": "@839",
+                  "address": 34642044,
+                  "sectionBase": 34642044
+                }
+              ]
+            }
+          },
+          {
+            "section": ".bss",
+            "original": [
+              19,
+              20,
+              25,
+              26,
+              34,
+              35,
+              38,
+              39,
+              48
+            ],
+            "desired": [
+              26,
+              20,
+              25,
+              19,
+              34,
+              35,
+              38,
+              39,
+              48
+            ],
+            "anchors": {
+              "19": [
+                {
+                  "symbol": "data_ov002_0210dfd4",
+                  "address": 34660308,
+                  "sectionBase": 34660308
+                }
+              ],
+              "20": [
+                {
+                  "symbol": "data_ov002_0210dfc4",
+                  "address": 34660292,
+                  "sectionBase": 34660292
+                }
+              ],
+              "25": [
+                {
+                  "symbol": "data_ov002_0210dfcc",
+                  "address": 34660300,
+                  "sectionBase": 34660300
+                }
+              ],
+              "26": [
+                {
+                  "symbol": "data_ov002_0210dfbc",
+                  "address": 34660284,
+                  "sectionBase": 34660284
+                }
+              ],
+              "34": [
+                {
+                  "symbol": "@822",
+                  "address": 34660316,
+                  "sectionBase": 34660316
+                }
+              ],
+              "35": [
+                {
+                  "symbol": "@823",
+                  "address": 34660328,
+                  "sectionBase": 34660328
+                }
+              ],
+              "38": [
+                {
+                  "symbol": "@824",
+                  "address": 34660340,
+                  "sectionBase": 34660340
+                }
+              ],
+              "39": [
+                {
+                  "symbol": "@825",
+                  "address": 34660352,
+                  "sectionBase": 34660352
+                }
+              ],
+              "48": [
+                {
+                  "symbol": "data_ov002_0210e00c",
+                  "address": 34660364,
+                  "sectionBase": 34660364
+                }
+              ]
+            }
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                7,
+                9,
+                11,
+                13,
+                15,
+                17,
+                23,
+                27,
+                29
+              ],
+              "desired": [
+                29,
+                7,
+                11,
+                5,
+                13,
+                9,
+                17,
+                27,
+                15,
+                23
+              ],
+              "slots": [
+                5,
+                7,
+                9,
+                11,
+                13,
+                15,
+                17,
+                23,
+                27,
+                29
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                19,
+                20,
+                25,
+                26,
+                34,
+                35,
+                38,
+                39,
+                48
+              ],
+              "desired": [
+                26,
+                20,
+                25,
+                19,
+                34,
+                35,
+                38,
+                39,
+                48
+              ],
+              "slots": [
+                19,
+                20,
+                25,
+                26,
+                34,
+                35,
+                38,
+                39,
+                48
+              ]
+            }
+          ],
+          "symbolIndices": 19,
+          "sectionLinks": 0,
+          "sectionInfos": 10,
+          "error": null
+        }
+      },
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [
@@ -324,6 +890,561 @@
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60",
       "reason": "Text-only TU: externalize this exact RTTI/name symbol to its canonical retail home. Standard word-based verification may report PARTIAL for inherited names; direct emitted-byte verification, including NUL/padding, is recorded separately in notes/experiments/pr2874-source-repair-0920.json. Unemitted retail gap padding is not claimed as output."
+    }
+  ],
+  "init": [
+    {
+      "symbol": "__sinit_daObjSwitch_c.cpp",
+      "address": "0x02101588",
+      "size": "0x1b0",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov002_02101588 and carries the same twenty-nine relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_daObjSwitch_c.cpp",
+      "address": "0x021080fc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN18SwitchModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN18SwitchModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN20SwitchClsnFileHandleC1Ej",
+      "canonical_symbol": "func_02017b4c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b4c",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN20SwitchClsnFileHandleD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b34",
+      "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and the four direct retail references in this initializer"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_daObjSwitch_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_daObjSwitch_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@839",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x0210987c"
+    },
+    {
+      "symbol": "@833",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x02109884"
+    },
+    {
+      "symbol": "@835",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x0210988c"
+    },
+    {
+      "symbol": "@837",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x02109894"
+    },
+    {
+      "symbol": "@831",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x0210989c"
+    },
+    {
+      "symbol": "@845",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098a4"
+    },
+    {
+      "symbol": "@843",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098ac"
+    },
+    {
+      "symbol": "@827",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098b4"
+    },
+    {
+      "symbol": "@829",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098bc"
+    },
+    {
+      "symbol": "@841",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098c4"
+    },
+    {
+      "symbol": "@822",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0210dfdc"
+    },
+    {
+      "symbol": "@823",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0210dfe8"
+    },
+    {
+      "symbol": "@824",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0210dff4"
+    },
+    {
+      "symbol": "@825",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0210e000"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02101598",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021015a8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021015b4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017b4c",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021015c4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021015d0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021015e0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021015ec",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017b4c",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021015fc",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021016d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210dfd4",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dfd4"
+    },
+    {
+      "section": ".init",
+      "source": "0x021016e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x021016e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@822",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dfdc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021016e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210dfc4",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dfc4"
+    },
+    {
+      "section": ".init",
+      "source": "0x021016f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017b34"
+    },
+    {
+      "section": ".init",
+      "source": "0x021016f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@823",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dfe8"
+    },
+    {
+      "section": ".init",
+      "source": "0x021016f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210dfcc",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dfcc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101700",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@824",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dff4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101704",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210dfbc",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dfbc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101708",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@825",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210e000"
+    },
+    {
+      "section": ".init",
+      "source": "0x0210170c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210e00c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210e00c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101710",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@827",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021098b4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101714",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@829",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021098bc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101718",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@831",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210989c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0210171c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@833",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02109884"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101720",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@835",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210988c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101724",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@837",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02109894"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101728",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@839",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210987c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0210172c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@841",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021098c4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101730",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@843",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021098ac"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101734",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@845",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021098a4"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x021080fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_daObjSwitch_c.cpp",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02101588"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210987c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba4c0Ev",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020ba4c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109884",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba2d0Ev",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020ba2d0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210988c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba2acEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020ba2ac"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109894",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba1acEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020ba1ac"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210989c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba4c0Ev",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020ba4c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021098a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba0bcEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020ba0bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x021098ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba4c0Ev",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020ba4c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021098b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba3fcEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020ba3fc"
+    },
+    {
+      "section": ".data",
+      "source": "0x021098bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba3a8Ev",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020ba3a8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021098c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba0f8Ev",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020ba0f8"
     }
   ]
 }
