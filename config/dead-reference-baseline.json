@@ -968,6 +968,10 @@
   {
    "file": "notes/agents/handoffs/pr3199-subset-repair-0926.md",
    "ref": "src/__sinit_ov002_021071f4.c"
+  },
+  {
+   "file": "notes/tu-reconstruction-pilot-report.md",
+   "ref": "src/__sinit_ov045_02112214.c"
   }
  ]
 }

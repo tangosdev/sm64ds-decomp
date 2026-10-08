@@ -11,7 +11,10 @@ src/game/actors/d_a_obj_km2_agaru.cpp:
 src/game/actors/d_a_obj_km2_ami_bou.cpp:
     complete
     .text start:0x0211150c end:0x02111840
+    .init start:0x02112214 end:0x02112280
+    .ctor start:0x02112430 end:0x02112434
     .data start:0x02112d80 end:0x02112e3c
+    .bss start:0x021131a8 end:0x021131d0
 
 src/actors/daObjKm2_Nobiru_c.cpp:
     complete
@@ -33,10 +36,6 @@ src/game/actors/d_a_obj_km2_fall_block.cpp:
 src/unnamed/ov045/__sinit_ov045_021121a8.c:
     complete
     .init start:0x021121a8 end:0x02112214
-
-src/unnamed/ov045/__sinit_ov045_02112214.c:
-    complete
-    .init start:0x02112214 end:0x02112280
 
 src/unnamed/ov045/__sinit_ov045_02112280.c:
     complete

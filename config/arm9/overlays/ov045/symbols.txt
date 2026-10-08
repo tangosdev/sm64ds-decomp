@@ -56,13 +56,13 @@ data_ov045_02112158 kind:data(any) addr:0x02112158 ambiguous
 data_ov045_02112178 kind:data(any) addr:0x02112178 ambiguous
 data_ov045_02112198 kind:data(any) addr:0x02112198 ambiguous
 __sinit_ov045_021121a8 kind:function(arm,size=0x6c) addr:0x021121a8
-__sinit_ov045_02112214 kind:function(arm,size=0x6c) addr:0x02112214
+__sinit_d_a_obj_km2_ami_bou.cpp kind:function(arm,size=0x6c) addr:0x02112214
 __sinit_ov045_02112280 kind:function(arm,size=0x6c) addr:0x02112280
 __sinit_ov045_021122ec kind:function(arm,size=0x6c) addr:0x021122ec
 __sinit_ov045_02112358 kind:function(arm,size=0x68) addr:0x02112358
 __sinit_ov045_021123c0 kind:function(arm,size=0x6c) addr:0x021123c0
 .p__sinit_ov045_021121a8 kind:data(word) addr:0x0211242c
-.p__sinit_ov045_02112214 kind:data(word) addr:0x02112430
+.p__sinit_d_a_obj_km2_ami_bou.cpp kind:data(word) addr:0x02112430
 .p__sinit_ov045_02112280 kind:data(word) addr:0x02112434
 .p__sinit_ov045_021122ec kind:data(word) addr:0x02112438
 .p__sinit_ov045_02112358 kind:data(word) addr:0x0211243c
@@ -160,8 +160,8 @@ data_ov045_02113190 kind:bss addr:0x02113190
 data_ov045_0211319c kind:bss addr:0x0211319c
 data_ov045_021131a8 kind:bss addr:0x021131a8
 data_ov045_021131b0 kind:bss addr:0x021131b0
-data_ov045_021131b8 kind:bss addr:0x021131b8
-data_ov045_021131c4 kind:bss addr:0x021131c4
+@428 kind:bss addr:0x021131b8
+@427 kind:bss addr:0x021131c4
 data_ov045_021131d0 kind:bss addr:0x021131d0
 PoleLift_ClsnFile kind:bss addr:0x021131d0
 data_ov045_021131d8 kind:bss addr:0x021131d8

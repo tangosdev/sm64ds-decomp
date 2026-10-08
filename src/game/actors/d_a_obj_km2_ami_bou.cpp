@@ -13,9 +13,9 @@
  *   dBgActor_c::IsClsnInRangeOnScreen take Fix12<int> by value.
  *   Calling those methods with Fix12 locals grew InitResources from
  *   0xd0 to 0xf8 in this TU.
- * Leftover: data_ov045_021131a8 / 021131b0 are this overlay's KCL
- *   and BMD (Init LoadFile, Cleanup Release). data_ov045_02112510
- *   is the CLPS block handed to SetFile.
+ * Leftover: data_ov045_02112510 is the CLPS block handed to
+ *   SetFile and stays outside this TU. The KCL and BMD handles
+ *   are file-scope objects at the bottom of this file.
  * Leftover: data_02082214 is the sine table. Its name belongs with
  *   that table, not this actor.
  * Leftover: the phase step is *(s16 *)&mHeightAng += kPhaseStep.
@@ -44,9 +44,26 @@ enum {
     kOnScreenRange = 0x400000   /* 1024.0 */
 };
 
+/* Retail constructs these 8-byte handles in this order and registers
+ * their destructors. The wrapper names are local; the ctor/dtor
+ * addresses are the ROM resource-family functions. */
+struct AmiBouModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    AmiBouModelFilePtr(u32 fileID);
+    ~AmiBouModelFilePtr();
+};
+
+struct AmiBouCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    AmiBouCollisionFilePtr(u32 fileID);
+    ~AmiBouCollisionFilePtr();
+};
+
 extern "C" {
-extern SharedFilePtr data_ov045_021131a8; /* KCL */
-extern SharedFilePtr data_ov045_021131b0; /* BMD */
+extern AmiBouCollisionFilePtr data_ov045_021131a8; /* KCL */
+extern AmiBouModelFilePtr data_ov045_021131b0;     /* BMD */
 extern CLPS_Block data_ov045_02112510;
 extern s16 data_02082214[];
 }
@@ -135,3 +152,6 @@ s32 daObjKm2_Ami_Bou_c::CleanupResources()
 // @symbol _ZN18daObjKm2_Ami_Bou_cD1Ev
 // @symbol _ZN18daObjKm2_Ami_Bou_cD0Ev
 /* The inline destructor in the header emits D1 then D0, and no D2. */
+
+AmiBouModelFilePtr data_ov045_021131b0(1629);
+AmiBouCollisionFilePtr data_ov045_021131a8(1630);
