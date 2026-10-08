@@ -6,8 +6,10 @@
  * file, and g_profile_MENBO stays out of this one. One out-of-line destructor
  * is the key function: it emits D1 then D0 and anchors the vtable.
  *
- * __sinit_ov090_02133ce8 copies the eight-byte PMF pairs at 0x021340e0 into
- * the four state nodes. Entry is the first pair, update the second:
+ * This TU also emits its own __sinit: five file-handle globals (one model,
+ * four anims) are constructed and destructor-registered, then the eight
+ * pointer-to-member descriptors at 0x021340e0 are copied into the four
+ * state nodes. Entry is the first pair, update the second:
  *   data_ov090_021344e4  idle         02131608 / 02131584   anim 02134498
  *   data_ov090_02134514  patrol       02131a74 / 02131648   anim 02134480
  *   data_ov090_02134504  water rest   02131b94 / 02131ac4   anim 02134490
@@ -73,15 +75,29 @@ bool ApproachLinear(short &value, short target, short step);
 struct BMD_File;
 struct BCA_File;
 
-/* mState is void* on the class. The node it points at is two PMFs: the
- * entry Behavior does not call, then the update it does. */
-struct MenboState;
-typedef int (MenboState::*MenboStateFn)();
+/* mState is void* on the class. The node it points at is two PMFs on
+ * daMenbo_c: the entry Behavior does not call, then the update it does.
+ * MenboState is the pun the installer reads them through. */
+typedef int (daMenbo_c::*MenboStateFn)();
 struct MenboState { char pad[0x370]; MenboStateFn *mState; };
 
-class MenboSelf {};
-typedef void (MenboSelf::*MenboSelfFn)();
-struct MenboStateNode { char pad[8]; MenboSelfFn mRun; };
+/* 8-byte file handles: word[0] is the file id/refcount record, word[1] the
+ * loaded file pointer. The model constructs with func_02017acc and destroys
+ * with func_02017ab4; the anims use SharedFilePtr::Construct and
+ * SharedFilePtr_Destruct_Anim. Manifest aliases carry the spellings. */
+struct MenboModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    MenboModelFilePtr(u32 fileID);
+    ~MenboModelFilePtr();
+};
+
+struct MenboAnimationFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    MenboAnimationFilePtr(u32 fileID);
+    ~MenboAnimationFilePtr();
+};
 
 /* Fills pad_380 exactly: four ids, then the loop counter at 0x390. */
 struct MenboRipples {
@@ -148,30 +164,21 @@ extern signed char   data_0209f2f8;
 extern int           data_0209f32c;
 
 extern Vector3       data_ov090_0213412c;
-extern SharedFilePtr data_ov090_02134480; /* patrol anim, file 0x3a1 */
-extern SharedFilePtr data_ov090_02134488; /* water-chase anim, file 0x3a0 */
-extern SharedFilePtr data_ov090_02134490; /* water-rest anim, file 0x3a2 */
-extern SharedFilePtr data_ov090_02134498; /* idle anim, file 0x3a3 */
-extern SharedFilePtr data_ov090_021344a0; /* model, file 0x39f */
-/* decl_common.h already spells data_ov090_02134504 as char. The other three
- * nodes follow it; each call site casts to the PMF it actually is.
+extern MenboAnimationFilePtr data_ov090_02134480; /* patrol anim, file 0x3a1 */
+extern MenboAnimationFilePtr data_ov090_02134488; /* water-chase anim, file 0x3a0 */
+extern MenboAnimationFilePtr data_ov090_02134490; /* water-rest anim, file 0x3a2 */
+extern MenboAnimationFilePtr data_ov090_02134498; /* idle anim, file 0x3a3 */
+extern MenboModelFilePtr     data_ov090_021344a0; /* model, file 0x39f */
+/* Each node is the (entry, update) PMF pair the Behavior installs.
  * e4 idle, f4 water chase, 504 water rest, 514 patrol. */
-extern char          data_ov090_021344e4;
-extern char          data_ov090_021344f4;
-extern char          data_ov090_02134504;
-extern char          data_ov090_02134514;
+extern MenboStateFn  data_ov090_021344e4[2];
+extern MenboStateFn  data_ov090_021344f4[2];
+extern MenboStateFn  data_ov090_02134504[2];
+extern MenboStateFn  data_ov090_02134514[2];
 
 void func_ov090_021310b4(daMenbo_c *c);
 void func_ov090_02131378(daMenbo_c *c);
 int  func_ov090_021314a0(daMenbo_c *c);
-int  func_ov090_02131584(daMenbo_c *c);
-int  func_ov090_02131608(daMenbo_c *c);
-int  func_ov090_02131648(MenboState *c);
-int  func_ov090_02131a74(daMenbo_c *c);
-int  func_ov090_02131ac4(daMenbo_c *c);
-int  func_ov090_02131b94(daMenbo_c *c);
-int  func_ov090_02131c48(daMenbo_c *c);
-int  func_ov090_02131db0(daMenbo_c *c);
 int  func_ov090_02131e00(MenboState *c, MenboStateFn *p);
 void func_ov090_02131e50(daMenbo_c *c);
 
@@ -402,42 +409,42 @@ out:
     return 0;
 }
 
-// @symbol func_ov090_02131584
+// @symbol _ZN9daMenbo_c19func_ov090_02131584Ev
 /* Idle. Speed stays zero. After a few loops of the idle anim, or as soon
  * as a player is in range, start patrolling. On the water, rest instead. */
-int func_ov090_02131584(daMenbo_c *c)
+int daMenbo_c::func_ov090_02131584()
 {
     unsigned int v;
-    c->mHorzSpeed = 0;
-    v = ((unsigned int)static_cast<dExtFrameCtrl_c &>(c->mModelAnim).currFrame << 4) >> 0x10;
+    mHorzSpeed = 0;
+    v = ((unsigned int)static_cast<dExtFrameCtrl_c &>(mModelAnim).currFrame << 4) >> 0x10;
     if (v >= 0x3b)
-        *(int *)((int)c + 0x390) += 1;
-    if (MENBO_RIPPLES(c)->loops > 2 || func_ov090_021314a0(c) == 1)
-        func_ov090_02131e00((MenboState *)c, (MenboStateFn *)&data_ov090_02134514);
-    if (c->unk_39c == 1)
-        func_ov090_02131e00((MenboState *)c, (MenboStateFn *)&data_ov090_02134504);
+        *(int *)((int)this + 0x390) += 1;
+    if (MENBO_RIPPLES(this)->loops > 2 || func_ov090_021314a0(this) == 1)
+        func_ov090_02131e00((MenboState *)this, data_ov090_02134514);
+    if (unk_39c == 1)
+        func_ov090_02131e00((MenboState *)this, data_ov090_02134504);
     return 1;
 }
 
-// @symbol func_ov090_02131608
+// @symbol _ZN9daMenbo_c19func_ov090_02131608Ev
 /* Idle entry. */
-int func_ov090_02131608(daMenbo_c *c)
+int daMenbo_c::func_ov090_02131608()
 {
-    MENBO_RIPPLES(c)->loops = 0;
-    c->unk_3a4 = 0x1000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, MENBO_BCA(data_ov090_02134498), 0, 0x1000, 0);
+    MENBO_RIPPLES(this)->loops = 0;
+    unk_3a4 = 0x1000;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, MENBO_BCA(data_ov090_02134498), 0, 0x1000, 0);
     return 1;
 }
 
-// @symbol func_ov090_02131648
+// @symbol _ZN9daMenbo_c19func_ov090_02131648Ev
 /* Patrol. A line probe ahead, the distance back to the anchor, and a wall
  * each turn it around, and each latches so the turn only fires on the edge.
  * A turn reloads the three timers and snaps the position back to last
  * frame's. The heading then eases toward unk_39a. Close to a player, the
  * playback rate and the speed both double for a bit. */
-int func_ov090_02131648(MenboState *c)
+int daMenbo_c::func_ov090_02131648()
 {
-    daMenbo_c *self = (daMenbo_c *)c;
+    daMenbo_c *self = this;
     int dist;
     u32 rnd;
     int selfY;
@@ -565,119 +572,119 @@ int func_ov090_02131648(MenboState *c)
     }
 
     if (MENBO_RIPPLES(self)->loops > 0x1e && MENBO_LATCH(self)->far == 0) {
-        func_ov090_02131e00(c, (MenboStateFn *)&data_ov090_021344e4);
+        func_ov090_02131e00((MenboState *)self, data_ov090_021344e4);
     }
 
     if (self->unk_39c == 1) {
-        func_ov090_02131e00(c, (MenboStateFn *)&data_ov090_02134504);
+        func_ov090_02131e00((MenboState *)self, data_ov090_02134504);
     }
 
     return 1;
 }
 
-// @symbol func_ov090_02131a74
+// @symbol _ZN9daMenbo_c19func_ov090_02131a74Ev
 /* Patrol entry. */
-int func_ov090_02131a74(daMenbo_c *c)
+int daMenbo_c::func_ov090_02131a74()
 {
-    c->unk_3a4 = 0x1000;
-    c->unk_396 = 0;
-    c->unk_398 = 0x32;
-    MENBO_RIPPLES(c)->loops = 0;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, MENBO_BCA(data_ov090_02134480), 0, 0x1000, 0);
+    unk_3a4 = 0x1000;
+    unk_396 = 0;
+    unk_398 = 0x32;
+    MENBO_RIPPLES(this)->loops = 0;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, MENBO_BCA(data_ov090_02134480), 0, 0x1000, 0);
     return 1;
 }
 
-// @symbol func_ov090_02131ac4
+// @symbol _ZN9daMenbo_c19func_ov090_02131ac4Ev
 /* Water rest. Bleed the speed off. Once it is gone, and the skeeter is not
  * on the water, drop the anchor here, pick a random heading and go idle.
  * When the rest timer expires, start the water chase. The heading keeps
  * easing either way. */
-int func_ov090_02131ac4(daMenbo_c *c)
+int daMenbo_c::func_ov090_02131ac4()
 {
-    _Z14ApproachLinearRiii(c->mHorzSpeed, 0, 0x1000);
-    if (c->mHorzSpeed > 0) return 1;
-    if (c->unk_39c == 0) {
-        c->unk_374 = c->mPosX;
-        c->unk_378 = c->mPosY;
-        c->unk_37c = c->mPosZ;
-        c->unk_39a = (u16)(((unsigned int)RandomIntInternal(&data_0209e650) >> 8) << 0xd);
-        func_ov090_02131e00((MenboState *)c, (MenboStateFn *)&data_ov090_021344e4);
+    _Z14ApproachLinearRiii(mHorzSpeed, 0, 0x1000);
+    if (mHorzSpeed > 0) return 1;
+    if (unk_39c == 0) {
+        unk_374 = mPosX;
+        unk_378 = mPosY;
+        unk_37c = mPosZ;
+        unk_39a = (u16)(((unsigned int)RandomIntInternal(&data_0209e650) >> 8) << 0xd);
+        func_ov090_02131e00((MenboState *)this, data_ov090_021344e4);
     }
-    ApproachAngle(&c->mPrevAngleY, (s16)c->unk_39a, 1, 0x100, 0x100);
-    if (*(unsigned short *)&c->mStateTimer == 0)
-        func_ov090_02131e00((MenboState *)c, (MenboStateFn *)&data_ov090_021344f4);
+    ApproachAngle(&mPrevAngleY, (s16)unk_39a, 1, 0x100, 0x100);
+    if (*(unsigned short *)&mStateTimer == 0)
+        func_ov090_02131e00((MenboState *)this, data_ov090_021344f4);
     return 1;
 }
 
-// @symbol func_ov090_02131b94
+// @symbol _ZN9daMenbo_c19func_ov090_02131b94Ev
 /* Water-rest entry. Two random draws jitter the heading, a third sets how
  * long the rest lasts, then the rest anim starts. */
-int func_ov090_02131b94(daMenbo_c *c)
+int daMenbo_c::func_ov090_02131b94()
 {
     unsigned int r;
     short *s;
     r = (unsigned)RandomIntInternal(&data_0209e650);
-    s = (short *)((unsigned int)c + 0x39a);
+    s = (short *)((unsigned int)this + 0x39a);
     *s = (short)(*s + ((int)(((r >> 8) & 3) << 0x1e) >> 16));
     r = (unsigned)RandomIntInternal(&data_0209e650);
-    s = (short *)((char *)c + 0x39a);
+    s = (short *)((char *)this + 0x39a);
     *s = (short)(*s + ((int)(((r >> 8) & 7) << 0x1d) >> 16));
     r = (unsigned)RandomIntInternal(&data_0209e650);
-    c->mStateTimer = (short)(((r >> 8) & 0x1f) + 0x96);
-    c->unk_3a4 = 0x1000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, MENBO_BCA(data_ov090_02134490), 0, 0x1000, 0);
+    mStateTimer = (short)(((r >> 8) & 0x1f) + 0x96);
+    unk_3a4 = 0x1000;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, MENBO_BCA(data_ov090_02134490), 0, 0x1000, 0);
     return 1;
 }
 
-// @symbol func_ov090_02131c48
+// @symbol _ZN9daMenbo_c19func_ov090_02131c48Ev
 /* Water chase. Full speed after a few frames, and a wall close to the
  * heading kicks the target by a quarter turn. When the anim has looped
  * enough, go back to water rest. Off the water, drop the anchor and idle. */
-int func_ov090_02131c48(daMenbo_c *c)
+int daMenbo_c::func_ov090_02131c48()
 {
-    if ((((unsigned)static_cast<dExtFrameCtrl_c &>(c->mModelAnim).currFrame) << 4) >> 16 >= 4)
-        c->mHorzSpeed = 0x19000;
+    if ((((unsigned)static_cast<dExtFrameCtrl_c &>(mModelAnim).currFrame) << 4) >> 16 >= 4)
+        mHorzSpeed = 0x19000;
 
-    if ((((unsigned)static_cast<dExtFrameCtrl_c &>(c->mModelAnim).currFrame) << 4) >> 16 == 4)
-        func_02012694(0xfd, (const Vector3 *)&c->mCamSpacePosX);
+    if ((((unsigned)static_cast<dExtFrameCtrl_c &>(mModelAnim).currFrame) << 4) >> 16 == 4)
+        func_02012694(0xfd, (const Vector3 *)&mCamSpacePosX);
 
-    if (c->unk_394 == 0
-        && c->mWithMeshClsn.IsOnWall()
-        && AngleDiff(c->mPrevAngleY, (s16)c->unk_39a) < 0x200) {
-        s16 *p = (s16 *)&c->unk_39a;
+    if (unk_394 == 0
+        && mWithMeshClsn.IsOnWall()
+        && AngleDiff(mPrevAngleY, (s16)unk_39a) < 0x200) {
+        s16 *p = (s16 *)&unk_39a;
         *p = *p + 0x4000;
-        c->unk_394 = 8;
+        unk_394 = 8;
     }
 
-    if (c->unk_394 != 0) {
-        ApproachAngle(&c->mPrevAngleY, (s16)c->unk_39a, 1, 0x1000, 0x1000);
+    if (unk_394 != 0) {
+        ApproachAngle(&mPrevAngleY, (s16)unk_39a, 1, 0x1000, 0x1000);
     } else {
-        if (static_cast<dExtFrameCtrl_c &>(c->mModelAnim).Finished()) {
-            s32 *q = (s32 *)((int)c + 0x390);
+        if (static_cast<dExtFrameCtrl_c &>(mModelAnim).Finished()) {
+            s32 *q = (s32 *)((int)this + 0x390);
             *q = *q + 1;
-            if (MENBO_RIPPLES(c)->loops > 0x14)
-                func_ov090_02131e00((MenboState *)c, (MenboStateFn *)&data_ov090_02134504);
+            if (MENBO_RIPPLES(this)->loops > 0x14)
+                func_ov090_02131e00((MenboState *)this, data_ov090_02134504);
         }
     }
 
-    if (c->unk_39c == 0) {
-        c->unk_374 = c->mPosX;
-        c->unk_378 = c->mPosY;
-        c->unk_37c = c->mPosZ;
-        c->unk_39a = (u16)(((unsigned)RandomIntInternal(&data_0209e650) >> 8) << 13);
-        func_ov090_02131e00((MenboState *)c, (MenboStateFn *)&data_ov090_021344e4);
+    if (unk_39c == 0) {
+        unk_374 = mPosX;
+        unk_378 = mPosY;
+        unk_37c = mPosZ;
+        unk_39a = (u16)(((unsigned)RandomIntInternal(&data_0209e650) >> 8) << 13);
+        func_ov090_02131e00((MenboState *)this, data_ov090_021344e4);
     }
 
     return 1;
 }
 
-// @symbol func_ov090_02131db0
+// @symbol _ZN9daMenbo_c19func_ov090_02131db0Ev
 /* Water-chase entry. The 0x40000000 flag is passed straight through. */
-int func_ov090_02131db0(daMenbo_c *c)
+int daMenbo_c::func_ov090_02131db0()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, MENBO_BCA(data_ov090_02134488), 0x40000000, 0x1000, 0);
-    c->unk_3a4 = 0x1000;
-    MENBO_RIPPLES(c)->loops = 0;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, MENBO_BCA(data_ov090_02134488), 0x40000000, 0x1000, 0);
+    unk_3a4 = 0x1000;
+    MENBO_RIPPLES(this)->loops = 0;
     return 1;
 }
 
@@ -688,7 +695,7 @@ int func_ov090_02131e00(MenboState *c, MenboStateFn *p)
     c->mState = p;
     MenboStateFn *q = c->mState;
     if (*q == 0) return 1;
-    return (c->**q)();
+    return ((daMenbo_c *)c->**q)();
 }
 
 // @symbol func_ov090_02131e50
@@ -828,9 +835,9 @@ int daMenbo_c::Behavior()
     }
 
     {
-        MenboStateNode *n = (MenboStateNode *)mState;
-        if (n->mRun)
-            (((MenboSelf *)c)->*(n->mRun))();
+        MenboStateFn *n = (MenboStateFn *)mState;
+        if (n[1])
+            (this->*n[1])();
     }
     mAngleY = mPrevAngleY;
     static_cast<dExtFrameCtrl_c &>(mModelAnim).speed = unk_3a4;
@@ -894,7 +901,7 @@ int daMenbo_c::InitResources()
             unk_374 = mPosX;
             unk_378 = mPosY;
             unk_37c = mPosZ;
-            func_ov090_02131e00((MenboState *)this, (MenboStateFn *)&data_ov090_021344f4);
+            func_ov090_02131e00((MenboState *)this, data_ov090_021344f4);
             return 1;
         }
     }
@@ -930,7 +937,7 @@ int daMenbo_c::InitResources()
         unk_37c = mPosZ;
 
         if (unk_39c != 0) {
-            func_ov090_02131e00((MenboState *)this, (MenboStateFn *)&data_ov090_021344f4);
+            func_ov090_02131e00((MenboState *)this, data_ov090_021344f4);
             return 1;
         }
 
@@ -941,7 +948,7 @@ int daMenbo_c::InitResources()
             mPrevAngleY = *(short *)&unk_39a;
             mAngleY = mPrevAngleY;
         }
-        func_ov090_02131e00((MenboState *)this, (MenboStateFn *)&data_ov090_021344e4);
+        func_ov090_02131e00((MenboState *)this, data_ov090_021344e4);
     }
 
     return 1;
@@ -967,3 +974,28 @@ s32 daMenbo_c::OnYoshiTryEat()
 {
     return 4;
 }
+
+/* The five file handles and the four state nodes. mwccarm emits
+   __sinit_daMenbo_c.cpp from these definitions: construct+register for each
+   handle, then the eight PMF descriptor copies. */
+MenboModelFilePtr     data_ov090_021344a0(0x39f);
+MenboAnimationFilePtr data_ov090_02134488(0x3a0);
+MenboAnimationFilePtr data_ov090_02134480(0x3a1);
+MenboAnimationFilePtr data_ov090_02134490(0x3a2);
+MenboAnimationFilePtr data_ov090_02134498(0x3a3);
+MenboStateFn data_ov090_021344f4[2] = {
+    &daMenbo_c::func_ov090_02131db0,
+    &daMenbo_c::func_ov090_02131c48,
+};
+MenboStateFn data_ov090_02134504[2] = {
+    &daMenbo_c::func_ov090_02131b94,
+    &daMenbo_c::func_ov090_02131ac4,
+};
+MenboStateFn data_ov090_02134514[2] = {
+    &daMenbo_c::func_ov090_02131a74,
+    &daMenbo_c::func_ov090_02131648,
+};
+MenboStateFn data_ov090_021344e4[2] = {
+    &daMenbo_c::func_ov090_02131608,
+    &daMenbo_c::func_ov090_02131584,
+};
