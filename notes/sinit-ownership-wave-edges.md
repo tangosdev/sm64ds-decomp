@@ -5,7 +5,7 @@
 | Initializer | Classifier owner | Ownership verdict | Regeneration verdict |
 | --- | --- | --- | --- |
 | [__sinit_ov002_02107370](../src/unnamed/ov002/__sinit_ov002_02107370.c) | [ov002](../config/arm9/overlays/ov002/symbols.txt)/`CutsceneObject+daDemo_c` | **CONFIRMED HIGH for the combined original TU.** Do not narrow it to one class: the resource half is tied to `CutsceneObject`, while ten PMF tables and all 69 used PMF descriptors stay in the same 146-function multi-class TU. | **Structurally exact but not symbol-ready.** Ordinary global objects and PMF arrays generate the exact `0xc18` `.init` bytes and relocation shape, but stand-in type/member spellings are not licensed production symbols. |
-| [__sinit_ov080_02127b2c](../src/unnamed/ov080/__sinit_ov080_02127b2c.c) | [ov080](../config/arm9/overlays/ov080/symbols.txt)/`daPicGate_c` | **CONFIRMED HIGH and narrowable to `daPicGate_c`.** All 19 resource objects and the 12-entry PMF table are consumed within the 29-function daPicGate_c TU; all 12 descriptor targets are internal. | **Structurally exact but not symbol-ready.** Ordinary globals generate the exact `0x434` `.init` bytes and relocation shape; original resource-wrapper and unnamed member spellings remain to be recovered. |
+| [__sinit_ov080_02127b2c](../src/actors/daPicGate_c.cpp) | [ov080](../config/arm9/overlays/ov080/symbols.txt)/`daPicGate_c` | **CONFIRMED HIGH and narrowable to `daPicGate_c`.** All 19 resource objects and the 12-entry PMF table are consumed within the 29-function daPicGate_c TU; all 12 descriptor targets are internal. | **Structurally exact but not symbol-ready.** Ordinary globals generate the exact `0x434` `.init` bytes and relocation shape; original resource-wrapper and unnamed member spellings remain to be recovered. |
 
 Both committed C transcriptions independently pass strict byte and linked-ROM
 verification under pinned mwccarm 2004/b56. This audit confirms ownership; it
@@ -106,7 +106,7 @@ initializer order agree exactly:
 
 1. `daChoropu_c+daChoro_Rock_c` / [__sinit_ov080_021278c0](../src/unnamed/ov080/__sinit_ov080_021278c0.c);
 2. `CrazedCrate` / [__sinit_ov080_02127a60](../src/actors/daBttBk_c.cpp);
-3. `daPicGate_c` / [__sinit_ov080_02127b2c](../src/unnamed/ov080/__sinit_ov080_02127b2c.c).
+3. `daPicGate_c` / [__sinit_ov080_02127b2c](../src/actors/daPicGate_c.cpp).
 
 The daPicGate_c entry is [.p__sinit_ov080_02127b2c](../config/arm9/overlays/ov080/symbols.txt) at `0x02127f68`, relocating to
 `0x02127b2c`. This order is corroboration in addition to the direct global,
@@ -187,11 +187,11 @@ python tools/match.py --c src/unnamed/ov002/__sinit_ov002_02107370.c `
 python tools/linkcheck.py --name __sinit_ov002_02107370 `
   --c src/unnamed/ov002/__sinit_ov002_02107370.c --addr 0x02107370 --size 0xc18 --module ov002
 
-python tools/match.py --c src/unnamed/ov080/__sinit_ov080_02127b2c.c `
+python tools/match.py --c src/actors/daPicGate_c.cpp `
   --func __sinit_ov080_02127b2c --addr 0x02127b2c --size 0x434 `
   --version 2004/b56 --module ov080 --strict-relocs --brief
 python tools/linkcheck.py --name __sinit_ov080_02127b2c `
-  --c src/unnamed/ov080/__sinit_ov080_02127b2c.c --addr 0x02127b2c --size 0x434 --module ov080
+  --c src/actors/daPicGate_c.cpp --addr 0x02127b2c --size 0x434 --module ov080
 ```
 
 Observed for both: `MATCH`; linkcheck `VERIFIED`, `blind: 0`.
