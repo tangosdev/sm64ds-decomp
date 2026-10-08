@@ -32,9 +32,9 @@ data_ov012_02111994 kind:data(any) addr:0x02111994 ambiguous
 data_ov012_02111a4c kind:data(any) addr:0x02111a4c ambiguous
 data_ov012_02111a58 kind:data(any) addr:0x02111a58 ambiguous
 data_ov012_02111a78 kind:data(any) addr:0x02111a78 ambiguous
-__sinit_ov012_02111a88 kind:function(arm,size=0x6c) addr:0x02111a88
+__sinit_d_a_obj_c0_switch.cpp kind:function(arm,size=0x6c) addr:0x02111a88
 __sinit_ov012_02111af4 kind:function(arm,size=0x6c) addr:0x02111af4
-.p__sinit_ov012_02111a88 kind:data(word) addr:0x02111b60
+.p__sinit_d_a_obj_c0_switch.cpp kind:data(word) addr:0x02111b60
 .p__sinit_ov012_02111af4 kind:data(word) addr:0x02111b64
 data_ov012_02111b80 kind:data(any) addr:0x02111b80
 data_ov012_02111b84 kind:data(any) addr:0x02111b84
@@ -114,10 +114,8 @@ data_ov012_02112464 kind:data(any) addr:0x02112464 ambiguous
 data_ov012_02112494 kind:data(any) addr:0x02112494 ambiguous
 data_ov012_021124a0 kind:bss addr:0x021124a0
 data_ov012_021124a8 kind:bss addr:0x021124a8
-data_ov012_021124ac kind:bss addr:0x021124ac ambiguous
-data_ov012_021124b0 kind:bss addr:0x021124b0
-data_ov012_021124bc kind:bss addr:0x021124bc
-data_ov012_021124c4 kind:bss addr:0x021124c4 ambiguous
+@390 kind:bss addr:0x021124b0
+@389 kind:bss addr:0x021124bc
 data_ov012_021124c8 kind:bss addr:0x021124c8
 data_ov012_021124d0 kind:bss addr:0x021124d0
 data_ov012_021124d4 kind:bss addr:0x021124d4 ambiguous

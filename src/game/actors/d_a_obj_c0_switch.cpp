@@ -32,8 +32,8 @@
  * - dBgActor_c::IsClsnInRange 6az: Behavior's two by-value Fix12<int>
  *   parameters; the header method form is refused by the bytes
  *   (include/dBgActor_c.h).
- * - data_ov012_021124a8 / 021124a0 are this overlay's BMD/KCL handles
- *   (sinit-owned BSS). data_ov012_02111cd0 is the CLPS block this TU does
+ * - data_ov012_021124a8 / 021124a0 are this overlay's BMD/KCL handles,
+ *   defined here. data_ov012_02111cd0 is the CLPS block this TU does
  *   not own. data_0209caa0 is an arm9 shared-flags global.
  *
  * Consolidated from these legacy one-function sources (ROM address order):
@@ -52,9 +52,29 @@
 #include "daObjC0_Switch_c.h"
 #include "SharedFilePtr.h"
 
+/* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
+ * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
+ * are local; the manifest aliases the generated names to those ROM symbols. */
+struct C0SwitchModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    C0SwitchModelFilePtr(u32 fileID);
+    ~C0SwitchModelFilePtr();
+};
+
+struct C0SwitchCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    C0SwitchCollisionFilePtr(u32 fileID);
+    ~C0SwitchCollisionFilePtr();
+};
+
 extern "C" {
-extern SharedFilePtr data_ov012_021124a8;
-extern SharedFilePtr data_ov012_021124a0;
+/* This TU's two file handles: the switch model and its collision file.
+ * InitResources loads both, CleanupResources releases them. Defined at the
+ * end of this file so the constructors do not enter .text. */
+extern C0SwitchModelFilePtr data_ov012_021124a8;
+extern C0SwitchCollisionFilePtr data_ov012_021124a0;
 extern int data_ov012_02111cd0[];
 extern int data_0209caa0[];
 
@@ -193,3 +213,6 @@ check:
 /* vtable's home. The body is empty in the ROM too: D1 at 0x021111a0 stores     */
 /* the vtable and tail-calls ~dBgActor_c, with no member teardown.              */
 /* -------------------------------------------------------------------------- */
+
+C0SwitchModelFilePtr data_ov012_021124a8(1449);
+C0SwitchCollisionFilePtr data_ov012_021124a0(1450);
