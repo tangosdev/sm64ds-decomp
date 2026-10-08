@@ -991,7 +991,6 @@ extern int data_ov035_021121d8[];
 extern int data_ov036_02112b48[];
 extern int data_ov036_02114084[];
 extern int data_ov036_0211408c[];
-extern int data_ov039_021118e4[];
 extern int data_ov041_021118e0;
 extern int data_ov043_02111c00[];
 extern int data_ov045_02112510[];

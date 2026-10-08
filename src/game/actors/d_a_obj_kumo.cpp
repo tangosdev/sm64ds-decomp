@@ -15,9 +15,6 @@
  * the highest-address ROM function is written FIRST here. Do not reorder.
  *
  * deslop
- * Leftover: data_ov039_021118e4 is this overlay's BMD SharedFilePtr handle
- *   and data_ov039_021118e0 is the load-count the sinit-owned BSS keeps.
- *   This TU is text-only, so they stay externs.
  * Leftover: g_profile_OBJ_KUMO lives outside this TU (S14).
  * Leftover: func_ov039_02111214 keeps its C-ABI cartridge name; it is not
  *   a vtable slot.
@@ -26,14 +23,34 @@
  * Leftover: `#pragma opt_propagation off` is file-global last-wins;
  *   Behavior size-DIFFs without it.
  * Leftover: inline destructor (out-of-line emits D0 before D1).
+ * Leftover: data_ov039_021118e0 is this TU's own load-count int, kept as a
+ *   plain definition below; data_ov039_021118e4 is the model handle the
+ *   compiler constructs at load (file ID 1141), so it is a
+ *   SharedFilePtr-derived object, not an extern array. Its constructor and
+ *   destructor are the ROM's SharedFilePtr pair (func_02017acc /
+ *   func_02017ab4); this TU declares but never defines them, and the
+ *   manifest aliases those two undefined members onto the ROM symbols.
+ *   data_ov039_021118f8 pads the .bss claim to the section end; see the
+ *   definition below for the measurement.
  */
 
 #include "daObjKumo_c.h"
 #include "SharedFilePtr.h"
 
+/* Model-file handle. The derived constructor and destructor are the retail
+ * SharedFilePtr pair (func_02017acc / func_02017ab4); this TU declares but
+ * never defines them. The words[2] tail sizes the object to the 8 bytes the
+ * cartridge keeps between 0x021118e4 and 0x021118ec. */
+struct KumoModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    KumoModelFilePtr(u32 fileID);
+    ~KumoModelFilePtr();
+};
+
 extern "C" {
 extern void Matrix4x3_FromRotationY(void *, int);
-extern SharedFilePtr data_ov039_021118e4;
+extern KumoModelFilePtr data_ov039_021118e4;
 extern int Vec3_Dist(const Vector3* a, const Vector3* b);
 void func_ov039_02111214(daObjKumo_c *t);
 extern int data_ov039_021118e0;
@@ -136,3 +153,23 @@ void func_ov039_02111214(daObjKumo_c *t)
    the direct-base chain the RTTI states. D0's trailing deallocation is the
    inline `operator delete` it inherits, which is why nothing here names a
    heap. */
+
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/* The load-count InitResources bumps, then the model file handle. Defining
+ * the handle here lets the compiler emit __sinit_d_a_obj_kumo.cpp: it
+ * constructs the handle with file ID 1141 and registers its destructor,
+ * exactly the two calls the retired handwritten sinit transcribed. */
+int data_ov039_021118e0;
+KumoModelFilePtr data_ov039_021118e4(1141);
+
+/* Trailing .bss the module reserves but no relocation names. MEASURED: the
+ * overlay header keeps 0x20 .bss bytes (0x021118e0..0x02111900) while the
+ * counter (4), the handle (8) and the compiler's destructor record (0xc)
+ * cover only 0x18; no relocation in the module references 0x021118f8, so
+ * the 8 bytes carry no recoverable name or type. dsd sizes a trailing
+ * symbol to the section end and the intact-object isolate refuses a claim
+ * the emissions do not tile, so the retail TU necessarily emitted these 8
+ * bytes from an anonymous global of its own. This word pair reproduces
+ * that layout and nothing else. */
+int data_ov039_021118f8[2];
