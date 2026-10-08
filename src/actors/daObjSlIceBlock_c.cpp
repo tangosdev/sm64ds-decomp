@@ -33,8 +33,6 @@
 struct V3 { int x,y,z; };
 
 extern "C" {
-extern char data_ov027_02113be8[];
-extern char data_ov027_02113be0[];
 extern int DecIfAbove0_Short(void*);
 extern int DecIfAbove0_Byte(void*);
 extern int _Z14ApproachLinearRiii(int*, int, int);
@@ -42,10 +40,30 @@ extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int, unsigned int, unsigne
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
 void *, int, void *, int, int, void *);
 void func_020393d4(int *p, int v);
-/* data_ov027_02113be8 is already declared above as char[]; keeping that FIRST
- * declaration and casting where a word is read. */
 extern char data_ov027_02113108[];
 }
+
+/* Model handles construct through func_02017acc and destroy through
+ * func_02017ab4; collision handles construct through func_02017b4c and destroy
+ * through SharedFilePtr_Destruct_Clsn. The manifest aliases those undefined
+ * member spellings onto the real ROM functions; each handle is the base plus
+ * the two words that family actually stores. */
+struct SlIceBlockModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    SlIceBlockModelFilePtr(u32 fileID);
+    ~SlIceBlockModelFilePtr();
+};
+
+struct SlIceBlockClsnFileHandle : SharedFilePtr {
+    u32 words[2];
+
+    SlIceBlockClsnFileHandle(u32 fileID);
+    ~SlIceBlockClsnFileHandle();
+};
+
+extern SlIceBlockModelFilePtr data_ov027_02113be8;
+extern SlIceBlockClsnFileHandle data_ov027_02113be0;
 
 /* Emission order is ROM order: the destructor pair must stay first.
  * Do not reorder. */
@@ -75,8 +93,8 @@ int daObjSlIceBlock_c::CleanupResources()
 {
   unsigned char ok = (actorID==0x5d);
   if(ok){ mMeshCollider.Disable(); }
-  ((SharedFilePtr *)(data_ov027_02113be8))->Release();
-  ((SharedFilePtr *)(data_ov027_02113be0))->Release();
+  data_ov027_02113be8.Release();
+  data_ov027_02113be0.Release();
   return 1;
 }
 
@@ -129,17 +147,17 @@ int daObjSlIceBlock_c::Behavior()
 // @symbol _ZN17daObjSlIceBlock_c13InitResourcesEv
 int daObjSlIceBlock_c::InitResources()
 {
-    Model::LoadFile(*(SharedFilePtr *)data_ov027_02113be8);
-    dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov027_02113be0);
+    Model::LoadFile(data_ov027_02113be8);
+    dBgW_Kc::LoadFile(data_ov027_02113be0);
 
     int on = (actorID == 0x5d);
     if (on) {
-        if (mModel.SetFile(((BMD_File **)data_ov027_02113be8)[1], 1, -1) == 0)
+        if (mModel.SetFile((BMD_File *)data_ov027_02113be8.words[1], 1, -1) == 0)
             return 0;
         UpdateModelPosAndRotY();
         UpdateClsnPosAndRot();
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            &mMeshCollider, *(int *)(data_ov027_02113be0 + 4), &mClsnMat,
+            &mMeshCollider, *(int *)&data_ov027_02113be0.words[1], &mClsnMat,
             0x1000, mAngleY, data_ov027_02113108);
         func_020393d4((int *)&mMeshCollider,
             (int)&dBgW::UpdatePosWithVelocity);
@@ -175,3 +193,9 @@ extern "C" daObjSlIceBlock_c *daObjSlIceBlock_c_classInit_SL_ICEBLOCK()
 {
     return new daObjSlIceBlock_c();
 }
+
+/* The ice block's shared file handles: the model, then the collision map.
+ * Their constructors and the destructor registrations make mwcc emit this
+ * TU's __sinit. */
+SlIceBlockModelFilePtr data_ov027_02113be8(1713);
+SlIceBlockClsnFileHandle data_ov027_02113be0(1714);

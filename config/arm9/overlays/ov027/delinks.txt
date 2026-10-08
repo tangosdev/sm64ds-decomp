@@ -7,6 +7,9 @@
 src/actors/daObjSlIceBlock_c.cpp:
     complete
     .text start:0x021111a0 end:0x021115c4
+    .init start:0x02112cb0 end:0x02112d1c
+    .ctor start:0x02112fc4 end:0x02112fc8
+    .bss start:0x02113be0 end:0x02113c08
 
 src/game/actors/d_a_i_donketu.cpp:
     complete
@@ -19,10 +22,6 @@ src/actors/daPgDfdr_c.cpp:
 src/actors/daSnmBth_c.cpp:
     complete
     .text start:0x021120c4 end:0x02112b14
-
-src/unnamed/ov027/__sinit_ov027_02112cb0.c:
-    complete
-    .init start:0x02112cb0 end:0x02112d1c
 
 src/unnamed/ov027/__sinit_ov027_02112d1c.c:
     complete
