@@ -107,6 +107,9 @@ src/actors/dMg3DEspAnimSet_c.cpp:
 src/actors/dScMgHanachan_c.cpp:
     complete
     .text start:0x020ea280 end:0x020ede18
+    .init start:0x02130df8 end:0x02130e9c
+    .ctor start:0x021335a0 end:0x021335a4
+    .bss start:0x02142018 end:0x02142044
 
 src/minigames/d_s_mg_hanachan.cpp:
     complete
@@ -285,10 +288,6 @@ src/unnamed/ov006/__sinit_ov006_02130a04.c:
 src/unnamed/ov006/__sinit_ov006_02130a08.c:
     complete
     .init start:0x02130a08 end:0x02130df8
-
-src/unnamed/ov006/__sinit_ov006_02130df8.c:
-    complete
-    .init start:0x02130df8 end:0x02130e9c
 
 src/unnamed/ov006/__sinit_ov006_02130e9c.c:
     complete

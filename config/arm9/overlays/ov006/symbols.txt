@@ -2177,7 +2177,7 @@ __sinit_ov006_021304ac kind:function(arm,size=0x2ac) addr:0x021304ac
 __sinit_ov006_02130758 kind:function(arm,size=0x2ac) addr:0x02130758
 __sinit_ov006_02130a04 kind:function(arm,size=0x4) addr:0x02130a04
 __sinit_ov006_02130a08 kind:function(arm,size=0x3f0) addr:0x02130a08
-__sinit_ov006_02130df8 kind:function(arm,size=0xa4) addr:0x02130df8
+__sinit_dScMgHanachan_c.cpp kind:function(arm,size=0xa4) addr:0x02130df8
 __sinit_ov006_02130e9c kind:function(arm,size=0x64) addr:0x02130e9c
 __sinit_ov006_02130f00 kind:function(arm,size=0x64) addr:0x02130f00
 __sinit_ov006_02130f64 kind:function(arm,size=0x264) addr:0x02130f64
@@ -2208,7 +2208,7 @@ __sinit_ov006_021333e0 kind:function(arm,size=0x18c) addr:0x021333e0
 .p__sinit_ov006_02130758 kind:data(word) addr:0x02133594
 .p__sinit_ov006_02130a04 kind:data(word) addr:0x02133598
 .p__sinit_ov006_02130a08 kind:data(word) addr:0x0213359c
-.p__sinit_ov006_02130df8 kind:data(word) addr:0x021335a0
+.p__sinit_dScMgHanachan_c.cpp kind:data(word) addr:0x021335a0
 .p__sinit_ov006_02130e9c kind:data(word) addr:0x021335a4
 .p__sinit_ov006_02130f00 kind:data(word) addr:0x021335a8
 .p__sinit_ov006_02130f64 kind:data(word) addr:0x021335ac

@@ -2419,5 +2419,24 @@ void func_ov006_020edcb0(void){
   Deallocate(r5);
   Deallocate(r4);
 }
+
+/* The OamAttr* table OAM::Render indexes: the five scalar attributes, the
+ * two data_ov006_021375dc entries, then every third pointer out of the
+ * vu32* ring data_ov006_02137560. Non-constant initializers, so the
+ * compiler emits __sinit_dScMgHanachan_c.cpp to copy them at load. */
+extern void* data_ov006_021374b8;
+extern void* data_ov006_021374c4;
+extern void* data_ov006_021374ac;
+extern void* data_ov006_021374e8;
+extern void* data_ov006_021374f4;
+extern void* data_ov006_021375dc[];
+
+void* data_ov006_02142018[11] = {
+    data_ov006_021374b8, data_ov006_021374c4, data_ov006_021374ac,
+    data_ov006_021374e8, data_ov006_021374f4,
+    data_ov006_021375dc[0], data_ov006_021375dc[1],
+    (void*)data_ov006_02137560[0], (void*)data_ov006_02137560[3],
+    (void*)data_ov006_02137560[6], (void*)data_ov006_02137560[9],
+};
 }
 
