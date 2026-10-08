@@ -11,9 +11,6 @@
  * that spelling.
  *
  * deslop
- * Leftover: data_ov015_02114960 is this overlay's BMD SharedFilePtr
- *   handle (sinit constructs file ID 1416). This TU is text-only, so
- *   it stays an extern.
  * Leftover: g_profile_BK_BILLBOARD lives outside this TU (S14).
  * Leftover: func_ov015_02111214 keeps its C-ABI cartridge name; it is
  *   not a vtable slot.
@@ -26,9 +23,18 @@
 #include "daObjBkBillboard_c.h"
 #include "SharedFilePtr.h"
 
+/* SharedFilePtr has no fields; the two words are the handle's 8 bytes. The
+ * constructor and destructor are the ROM veneers, aliased in the manifest. */
+struct BkBillboardModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    BkBillboardModelFilePtr(u32 fileID);
+    ~BkBillboardModelFilePtr();
+};
+
 extern "C" {
 extern void Matrix4x3_FromRotationY(void *, int);
-extern SharedFilePtr data_ov015_02114960;
+extern BkBillboardModelFilePtr data_ov015_02114960;
 void func_ov015_02111214(daObjBkBillboard_c *t);
 }
 
@@ -82,3 +88,8 @@ extern "C" void func_ov015_02111214(daObjBkBillboard_c *t)
    the direct-base chain the RTTI states. D0's trailing deallocation is the
    inline `operator delete` it inherits, which is why nothing here names a
    heap. */
+
+/* The ROM's initializer constructs the BMD handle with file ID 1416, then
+ * registers its destructor with the node that follows it in .bss. mwcc
+ * emits __sinit_d_a_obj_bk_billboard.cpp from this definition. */
+BkBillboardModelFilePtr data_ov015_02114960(1416);

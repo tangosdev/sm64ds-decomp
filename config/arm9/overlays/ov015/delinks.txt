@@ -7,6 +7,9 @@
 src/game/actors/d_a_obj_bk_billboard.cpp:
     complete
     .text start:0x021111a0 end:0x02111314
+    .init start:0x02112f9c end:0x02112fdc
+    .ctor start:0x02113410 end:0x02113414
+    .bss start:0x02114960 end:0x02114974
 
 src/actors/daObjBk_Botaosi_c.cpp:
     complete
@@ -31,10 +34,6 @@ src/game/actors/d_a_obj_bk_ukisima.cpp:
 src/game/actors/d_a_obj_bk_fall_block.cpp:
     complete
     .text start:0x02112cf4 end:0x02112e0c
-
-src/unnamed/ov015/__sinit_ov015_02112f9c.c:
-    complete
-    .init start:0x02112f9c end:0x02112fdc
 
 src/unnamed/ov015/__sinit_ov015_02112fdc.c:
     complete
