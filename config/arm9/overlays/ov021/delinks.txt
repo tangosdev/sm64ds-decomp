@@ -11,6 +11,9 @@ src/actors/daObjCvNewsLift_c.cpp:
 src/actors/daGrock_c.cpp:
     complete
     .text start:0x021121e8 end:0x02112db4
+    .init start:0x02113688 end:0x021136c8
+    .ctor start:0x02113738 end:0x0211373c
+    .bss start:0x02114a50 end:0x02114a64
 
 src/game/actors/d_a_obj_cv_shutter.cpp:
     complete
@@ -19,10 +22,6 @@ src/game/actors/d_a_obj_cv_shutter.cpp:
 src/unnamed/ov021/__sinit_ov021_02113500.c:
     complete
     .init start:0x02113500 end:0x02113688
-
-src/unnamed/ov021/__sinit_ov021_02113688.c:
-    complete
-    .init start:0x02113688 end:0x021136c8
 
 src/unnamed/ov021/__sinit_ov021_021136c8.c:
     complete

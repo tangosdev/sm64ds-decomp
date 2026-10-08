@@ -75,6 +75,15 @@ struct SharedFilePtr {
     void Release();
 };
 
+/* The GORO_ROCK model handle, constructed with file ID 1492 by the
+ * compiler's __sinit_daGrock_c.cpp at overlay load. The wrapper name is
+ * local; the constructor and destructor are the ROM resource-family
+ * functions func_02017acc / func_02017ab4, aliased in the manifest. */
+struct GrockModelFilePtr : SharedFilePtr {
+    GrockModelFilePtr(u32 fileID);
+    ~GrockModelFilePtr();
+};
+
 /* 02112544 copies three words as a value. The empty constructor and
  * destructor are why that copy matches; a POD Vec3 changes the function.
  * InitResources keeps its own POD Vec3 inside the function. */
@@ -132,7 +141,7 @@ extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     void *clsn, void *actor, void *offset, int radius, int height, u32 flags, u32 vuln);
-extern SharedFilePtr data_ov021_02114a50;
+extern GrockModelFilePtr data_ov021_02114a50;
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
     void *player, struct Vector3 *pos, u32 kind, int knockback, u32 a, u32 b, u32 c);
 }
@@ -497,3 +506,8 @@ extern "C" daGrock_c *daGrock_c_classInit()
 {
     return new daGrock_c();
 }
+
+/* File-scope model handle. __sinit_daGrock_c.cpp emits the construction
+ * and registers the destructor; the registration node is a compiler
+ * temporary. */
+GrockModelFilePtr data_ov021_02114a50(1492);
