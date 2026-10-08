@@ -7,6 +7,9 @@
 src/actors/daObjSm_Lift_c.cpp:
     complete
     .text start:0x021111a0 end:0x021117e8
+    .init start:0x02112c14 end:0x02112c80
+    .ctor start:0x02112e6c end:0x02112e70
+    .bss start:0x02113bc0 end:0x02113be8
 
 src/unnamed/ov018/func_ov018_021117e8.cpp:
     complete
@@ -31,10 +34,6 @@ src/game/actors/d_a_s_cre.cpp:
 src/game/actors/d_a_obj_ice_board.cpp:
     complete
     .text start:0x021127bc end:0x02112a74
-
-src/unnamed/ov018/__sinit_ov018_02112c14.c:
-    complete
-    .init start:0x02112c14 end:0x02112c80
 
 src/unnamed/ov018/__sinit_ov018_02112c80.cpp:
     complete
