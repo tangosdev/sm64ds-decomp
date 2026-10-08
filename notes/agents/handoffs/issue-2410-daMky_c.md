@@ -135,8 +135,7 @@ Recorded separately, not combined into one score.
   non-text section, so `_ZTV7daMky_c`, `_ZTI7daMky_c`, `_ZTS7daMky_c` and the four
   inherited base RTTI records are all externalized — the ROM supplies them. This
   is the text-only promoted shape, shared by 107 of the tree's 124 promoted TUs.
-  The branch also touches [src/unnamed/ov029/__sinit_ov029_02112c10.c](../../../src/unnamed/ov029/__sinit_ov029_02112c10.c), a cross-overlay static
-  initializer in [ov029](../../../config/arm9/overlays/ov029/symbols.txt); it is covered by the full-ROM build below, which is green.
+  The ov029 static initializer at 02112c10 now lives in [src/game/actors/d_a_obj_wc_obj03.cpp](../../../src/game/actors/d_a_obj_wc_obj03.cpp).
 - Attribution preserved through each move/rename:
   `attribution.json` carries the 44-shard fold's `path#symbol` overrides; that was
   the input commit's own last change. `tools/port_refcheck.py` reports 402

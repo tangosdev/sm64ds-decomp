@@ -979,7 +979,6 @@ extern int data_ov029_02112b2c[];
 extern int data_ov029_0211306c[];
 extern struct daObjFloatBoard_c_Resources data_ov029_02113be8;
 extern struct daObjFloatBoard_c_Resources data_ov029_02113f00;
-extern int data_ov029_02114270[];
 extern int data_ov029_02114284[];
 extern int data_ov029_0211428c[];
 extern int data_ov032_02112f98[];

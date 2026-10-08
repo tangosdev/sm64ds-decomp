@@ -22,8 +22,8 @@
  * Leftover:
  * - dCcAc_c::Init stays the scalar mangled ABI (InitResources). A real member
  *   call homes Fix12<int> by value onto the stack (notes/mwccarm-codegen.md 6az).
- * - data_ov029_02114270 is the model SharedFilePtr; symbols.txt has no recovered
- *   name, so it is not coined.
+ * - data_ov029_02114270 is the model SharedFilePtr, defined here; symbols.txt
+ *   has no recovered name, so it is not coined.
  * - Matrix4x3_FromRotationY stays an extern "C" free function
  *   (UpdateModelTransform).
  * - Address-valued `&mAngleY` in Behavior: a named increment CSEs the field
@@ -60,7 +60,21 @@ extern "C" {
 void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
     void *, dActor_c *, Fix12i, Fix12i, u32, u32);
 void Matrix4x3_FromRotationY(Matrix4x3 *, int);
-extern SharedFilePtr data_ov029_02114270;
+
+/* 8-byte file handle. The model uses func_02017acc / func_02017ab4. The
+ * spelling is local; the manifest aliases the generated names to those ROM
+ * symbols. */
+struct WcObj03ModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    WcObj03ModelFilePtr(u32 fileID);
+    ~WcObj03ModelFilePtr();
+};
+
+/* This TU's file handle: the water-diamond model, file 0x6d0. InitResources
+ * loads it, CleanupResources releases it. Defined at the end of this file so
+ * the constructor does not enter .text. */
+extern WcObj03ModelFilePtr data_ov029_02114270;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -227,3 +241,5 @@ void daObjWc_Obj03_c::CheckClsnWithPlayer()
  * construction order, then chain to dActor_c. D0 then returns the object to
  * the actor heap through dActor_c's inline operator delete.
  */
+
+WcObj03ModelFilePtr data_ov029_02114270(0x6d0);

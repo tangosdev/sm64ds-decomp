@@ -1,9 +1,0 @@
-extern int func_02017acc();
-extern void func_020731dc();
-extern int data_ov029_02114270[];
-extern int func_02017ab4();
-extern int data_ov029_02114278;
-void __sinit_ov029_02112c10(void){
-  func_02017acc(data_ov029_02114270, 0x6d0);
-  func_020731dc(data_ov029_02114270, func_02017ab4, &data_ov029_02114278);
-}
