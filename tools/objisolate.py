@@ -63,6 +63,20 @@ def rename_undefined_symbols(raw, aliases):
     than the original and no other symbol points into that string.  Relocations,
     section contents, symbol values/bindings/types, and table indices are unchanged.
     """
+    return rename_symbols(raw, aliases, defined=False)
+
+
+def rename_defined_symbols(raw, aliases):
+    """Renumber exact compiler-local definitions in place under the same string-table rules.
+
+    mwcc numbers anonymous data (``@NNN``) per translation unit, so two TUs can each
+    define the same name as a global and collide in the scratch link. The caller's
+    manifest licenses a fleet-unique replacement; only that symbol's name bytes change.
+    """
+    return rename_symbols(raw, aliases, defined=True)
+
+
+def rename_symbols(raw, aliases, defined):
     requested = dict(aliases or {})
     if not requested:
         return bytes(raw), {"renamed": [], "error": None}
@@ -87,17 +101,19 @@ def rename_undefined_symbols(raw, aliases):
     out = bytearray(raw)
     offsets = [int(sym.entry["st_name"]) for sym in syms]
     for old, new in requested.items():
+        kind = "defined rename source" if defined else "undefined alias source"
         matches = [(index, sym) for index, sym in enumerate(syms) if sym.name == old]
         if len(matches) != 1:
             return None, {"renamed": rows, "error":
-                          f"undefined alias source {old} has {len(matches)} symbols"}
+                          f"{kind} {old} has {len(matches)} symbols"}
         index, sym = matches[0]
-        if sym["st_shndx"] != "SHN_UNDEF":
+        if (sym["st_shndx"] == "SHN_UNDEF") == defined:
             return None, {"renamed": rows, "error":
-                          f"undefined alias source {old} is a definition"}
+                          f"{kind} {old} is {'undefined' if defined else 'a definition'}"}
         if new in names and new not in requested:
             return None, {"renamed": rows, "error":
-                          f"canonical alias destination {new} already exists in object"}
+                          f"{'rename' if defined else 'canonical alias'} destination "
+                          f"{new} already exists in object"}
         old_bytes, new_bytes = old.encode("utf-8"), new.encode("utf-8")
         if len(new_bytes) > len(old_bytes):
             return None, {"renamed": rows, "error":
@@ -146,8 +162,10 @@ def rewrite_symbol_bindings(raw, policies):
                           f"invalid binding policy for {name}: {policy!r}"}
         matches = [(index, sym) for index, sym in enumerate(syms) if sym.name == name]
         if len(matches) != 1:
+            present = sorted(sym.name for sym in syms if sym.name.startswith("@"))
             return None, {"rewritten": rows, "error":
-                          f"binding rewrite symbol {name} has {len(matches)} entries"}
+                          f"binding rewrite symbol {name} has {len(matches)} entries"
+                          f" (object @ symbols: {', '.join(present) or 'none'})"}
         index, sym = matches[0]
         if sym["st_shndx"] == "SHN_UNDEF" or sym["st_info"]["bind"] != policy[0]:
             return None, {"rewritten": rows, "error":
