@@ -29,9 +29,9 @@ data_ov035_02111cc8 kind:data(any) addr:0x02111cc8 ambiguous
 data_ov035_02111d84 kind:data(any) addr:0x02111d84
 data_ov035_02111ef0 kind:data(any) addr:0x02111ef0
 data_ov035_02111ef4 kind:data(any) addr:0x02111ef4
-__sinit_ov035_02111f04 kind:function(arm,size=0xbc) addr:0x02111f04
+__sinit_daObjCtMecha10_c.cpp kind:function(arm,size=0xbc) addr:0x02111f04
 __sinit_ov035_02111fc0 kind:function(arm,size=0x68) addr:0x02111fc0
-.p__sinit_ov035_02111f04 kind:data(word) addr:0x02112028
+.p__sinit_daObjCtMecha10_c.cpp kind:data(word) addr:0x02112028
 .p__sinit_ov035_02111fc0 kind:data(word) addr:0x0211202c
 data_ov035_02112040 kind:data(any) addr:0x02112040
 data_ov035_02112044 kind:data(any) addr:0x02112044
@@ -123,12 +123,10 @@ data_ov035_02112c60 kind:bss addr:0x02112c60
 data_ov035_02112c68 kind:bss addr:0x02112c68
 data_ov035_02112c70 kind:bss addr:0x02112c70
 data_ov035_02112c78 kind:bss addr:0x02112c78
-data_ov035_02112c80 kind:bss addr:0x02112c80
-data_ov035_02112c88 kind:bss addr:0x02112c88 ambiguous
-data_ov035_02112c8c kind:bss addr:0x02112c8c
-data_ov035_02112c98 kind:bss addr:0x02112c98
-data_ov035_02112ca4 kind:bss addr:0x02112ca4
-data_ov035_02112ca8 kind:bss addr:0x02112ca8 ambiguous
+@419 kind:bss addr:0x02112c80
+@422 kind:bss addr:0x02112c8c
+@421 kind:bss addr:0x02112c98
+@420 kind:bss addr:0x02112ca4
 data_ov035_02112cb0 kind:bss addr:0x02112cb0
 RotatingClockHand_ModelFile kind:bss addr:0x02112cb0
 data_ov035_02112cb8 kind:bss addr:0x02112cb8

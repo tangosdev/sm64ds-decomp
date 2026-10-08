@@ -35,7 +35,7 @@
  * mShadowModel was mistyped `u8` at 0x174 in the generated header --
  * daObjPowerUpItem_c_classInit calls _ZN17dExtShadowModel_cC1Ev at that offset, so it is the
  * real 0x28-byte member (0x174..0x19c). The 0x30 bytes at 0x19c..0x1cc are
- * the shadow matrix: func_ov002_020b993c copies mOpenModel's matrix there and
+ * the shadow matrix: DropShadow copies mOpenModel's matrix there and
  * overwrites its Y translation with mGroundY >> 3.
  *
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. daObjPowerUpItem_c
@@ -82,7 +82,7 @@ struct daObjPowerUpItem_c : dActor_c {
        its last 45 frames -- the standard "about to disappear" tell.
        [_ZN18daObjPowerUpItem_c13InitResourcesEv, _ZN18daObjPowerUpItem_c6RenderEv, now in src/actors/daObjPowerUpItem_c.cpp] */
     u8  mLifeTimer;            /* 0x3ca */
-    /* Set to 0x1b when the pop starts; func_ov002_020b92c4 counts it down. */
+    /* Set to 0x1b when the pop starts; StateOpening counts it down. */
     u8  mWobbleTimer;            /* 0x3cb */
 
     virtual ~daObjPowerUpItem_c();            /* slots 16 (D1), 17 (D0) */
@@ -92,6 +92,25 @@ struct daObjPowerUpItem_c : dActor_c {
     virtual s32  Behavior();         /* slot  6 */
     virtual s32  Render();           /* slot  9 */
     virtual s32  OnYoshiTryEat();         /* slot 18 */
+
+    /* The three-state machine mState 0..2 drives: each state has an enter
+       action (Begin*) and a per-frame update (State*), dispatched through the
+       runtime-filled PMF table data_ov002_021097bc. SetState writes mState and
+       runs the enter action; UpdateState runs the current update. */
+    void BeginLaunched();
+    void StateLaunched();
+    void BeginOpening();
+    void StateOpening();
+    void BeginResting();
+    void StateResting();
+    void SetState(int i);
+    void UpdateState();
+
+    /* Behavior's per-frame helpers: the pickup check against the flower's
+       collider, the drop shadow, and the open/close model matrices. */
+    void CheckPickup();
+    int  DropShadow();
+    void UpdateMatrices();
 };
 
 #ifndef SM64DS_PLATFORM_PC

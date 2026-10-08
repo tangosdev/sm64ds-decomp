@@ -20,11 +20,11 @@ src/actors/daDpLift_c.cpp:
     complete
     .text start:0x021120e4 end:0x021125bc
 
-src/func_ov025_021125bc.cpp:
+src/unnamed/ov025/func_ov025_021125bc.cpp:
     complete
     .text start:0x021125bc end:0x021125dc
 
-src/func_ov025_021125dc.c:
+src/unnamed/ov025/func_ov025_021125dc.c:
     complete
     .text start:0x021125dc end:0x021125f0
 
@@ -32,18 +32,18 @@ src/d_a_dp_lift.cpp:
     complete
     .text start:0x021125f0 end:0x02112654
 
-src/__sinit_ov025_02112970.c:
+src/unnamed/ov025/__sinit_ov025_02112970.c:
     complete
     .init start:0x02112970 end:0x021129dc
 
-src/__sinit_ov025_021129dc.c:
+src/unnamed/ov025/__sinit_ov025_021129dc.c:
     complete
     .init start:0x021129dc end:0x02112a44
 
-src/__sinit_ov025_02112a44.c:
+src/unnamed/ov025/__sinit_ov025_02112a44.c:
     complete
     .init start:0x02112a44 end:0x02112aac
 
-src/__sinit_ov025_02112aac.c:
+src/unnamed/ov025/__sinit_ov025_02112aac.c:
     complete
     .init start:0x02112aac end:0x02112b18

@@ -4,7 +4,7 @@
 
 ov009 `daSBird_c` head run. The class linker unit is 0x021111a0..0x02111a70,
 split by the `func_ov009_0211145c` hatch (proven mwccarm 1.2/2004/b56 register-
-allocation wall; stays `src/func_ov009_0211145c.c`, unenrolled, not in delinks).
+allocation wall; stays `src/unnamed/ov009/func_ov009_0211145c.c`, unenrolled, not in delinks).
 The upper run was already promoted (`src/game/actors/d_a_s_bird.cpp`,
 manifest `ov009/daSBird_c`, 0x021115d8..0x02111a70). This change folds the
 two scattered shards below the hatch and finishes the class's member
@@ -26,7 +26,7 @@ conversion.
 - `include/daSBird_c.h`: four member declarations under the virtuals.
   Helper names are not recovered, so members keep their addresses (S33):
   `_ZN9daSBird_c19func_ov009_0211xxxx*`.
-- `src/func_ov009_0211145c.c` (the hatch): the `func_ov009_02111224` extern
+- `src/unnamed/ov009/func_ov009_0211145c.c` (the hatch): the `func_ov009_02111224` extern
   respelled to the mangled member name -- it is .c and cannot member-call.
 - `delinks.txt`: the two shard blocks consolidated into one
   `d_a_s_bird_head.cpp` block. D1/D0 shards untouched -- they emit the

@@ -19,6 +19,17 @@
 #include "dScMgCard_c.h"
 #include "PlayerInput.h"
 
+/* Coined from the card transitions in DealIn and Update. The byte-sized
+ * mState field retains its existing layout. */
+enum CardState {
+    CARD_WAITING = 0,
+    CARD_ENTERING = 1,
+    CARD_IDLE = 2,
+    CARD_SELECTED = 3,
+    CARD_MOVING = 4,
+    CARD_LEAVING = 5
+};
+
 /* The TUBUILD CONFLICT notes below are the merged legacy files' own
  * spellings of the card and scene structs; the manifest records them, so
  * they stay. The code uses dMgMCarloCardObj_c from the header. */
@@ -411,7 +422,7 @@ s32 dScMgMCarlo_c::Behavior()
 
 // @symbol _ZN13dScMgMCarlo_c6RenderEv
 /* Slot 9. The board draws in two passes over the same tail-to-head walk:
- * cards still rising (nonzero mYStep) first, then the settled ones. */
+ * cards still rising (positive mYStep) first, then the settled ones. */
 s32 dScMgMCarlo_c::Render()
 {
     func_ov006_020c0aa8(pad_4660);
@@ -461,45 +472,35 @@ void dScMgMCarlo_c::RenderHud(void)
 }
 
 // @symbol _ZN18dMgMCarloCardObj_c4InitEi
-/* Reset one card to its factory state and assign
- * it slot n: the slot index, the deal stagger ((n%5)*2+1 for the board's
- * first twenty, plain 1 for the spares behind), lift down, steps cleared,
- * state 0 (waiting to be dealt), visible, and unlinked from the board list
- * (mPrev = mNext = 0; SetupBoard threads the list). Card 0x13 becoming the
- * tail marker is part of the factory reset. SetupBoard's 0x50 loop runs this
- * down the whole array. */
-void dMgMCarloCardObj_c::Init(int n) {
-  mSlot = (short)n;
-  if (n >= 0x14) {
+/* Reset an unlinked card. The first twenty slots stagger the deal by
+ * column; reserve cards wait one frame. Slot 19 marks the last visible card. */
+void dMgMCarloCardObj_c::Init(int slot) {
+  mSlot = (short)slot;
+  if (slot >= 0x14) {
     mDealDelay = 1;
   } else {
-    mDealDelay = (short)((n % 5) * 2 + 1);
+    mDealDelay = (short)((slot % 5) * 2 + 1);
   }
   mLift = 0;
-  if (n == 0x13) data_ov006_02142504 = this;
+  if (slot == 0x13) data_ov006_02142504 = this;
   mVisible = 1;
   mXStep = 0;
   mYStep = 0;
-  mState = 0;
+  mState = CARD_WAITING;
   mNext = 0;
   mPrev = mNext;
 }
 
 // @symbol _ZN18dMgMCarloCardObj_c6DealInEi
-/* Send this card flying to board slot m.
- * Slots past 0x13 are the spare pile behind the board: those start from the
- * same off-screen x and a y above the board, become the tail marker (state
- * 1), and stop. A card still waiting (state 0) or a spare rising from the
- * pile both fly in from off-screen as state 4, and the flying-in counter
- * data_ov006_021424f4 tracks how many are in the air. The slot's target is
- * col*32+0x30 / row*0x30 in 1:4096 fixed point, and the fly-in step pair is
- * the scaled target-minus-position vector clamped by abs -- the step pair
- * ApproachLinear consumes. */
-void dMgMCarloCardObj_c::DealIn(int m)
+/* Move toward a board slot. Cards coming from reserve start above the
+ * board and become the last visible card; waiting cards use the same start.
+ * Other cards move from their current position. The target is the slot's
+ * column and row, and the absolute scaled delta supplies the movement step. */
+void dMgMCarloCardObj_c::DealIn(int slot)
 {
-    int tmp[3];
+    int delta[3];
 
-    if (m >= 0x14) {
+    if (slot >= 0x14) {
         return;
     }
 
@@ -507,24 +508,24 @@ void dMgMCarloCardObj_c::DealIn(int m)
         mX = (0x70 - ((data_ov006_0213d56c >> 2) << 1)) << 12;
         mY = -0x30000;
         data_ov006_02142504 = this;
-        mState = 1;
-    } else if (mState == 0) {
+        mState = CARD_ENTERING;
+    } else if (mState == CARD_WAITING) {
         mX = (0x70 - ((data_ov006_0213d56c >> 2) << 1)) << 12;
         mY = -0x30000;
-        mState = 4;
+        mState = CARD_MOVING;
         data_ov006_021424f4++;
     } else {
-        mState = 4;
+        mState = CARD_MOVING;
         data_ov006_021424f4++;
     }
 
-    mTargetX = ((m % 5) * 32 + 0x30) << 12;
-    mTargetY = ((m / 5) * 0x30) << 12;
-    mSlot = (short)m;
+    mTargetX = ((slot % 5) * 32 + 0x30) << 12;
+    mTargetY = ((slot / 5) * 0x30) << 12;
+    mSlot = (short)slot;
 
-    Vec2_Sub(tmp, &mTargetX, &mX);
-    mXStep = tmp[0];
-    mYStep = tmp[1];
+    Vec2_Sub(delta, &mTargetX, &mX);
+    mXStep = delta[0];
+    mYStep = delta[1];
     func_0203d630(&mXStep, 0x124);
 
     if (mXStep < 0) {
@@ -536,13 +537,10 @@ void dMgMCarloCardObj_c::DealIn(int m)
 }
 
 // @symbol _ZN18dMgMCarloCardObj_c8FlipAwayEi
-/* Queue card n for the flip-out: the flip
- * stagger is the mirror of the deal stagger ((4 - n%5)*2, where Init seeded
- * (n%5)*2+1), and state 5 is the flipping-away state the per-card Update
- * consumes. Called down the whole board by FlipDealtCards between rounds. */
-void dMgMCarloCardObj_c::FlipAway(int n) {
-    mDealDelay = (short)((4 - n % 5) * 2);
-    mState = 5;
+/* Leave in reverse column order after the round ends. */
+void dMgMCarloCardObj_c::FlipAway(int slot) {
+    mDealDelay = (short)((4 - slot % 5) * 2);
+    mState = CARD_LEAVING;
 }
 
 // @symbol _ZN18dMgMCarloCardObj_c10IsPairWithEPS_
@@ -553,20 +551,20 @@ void dMgMCarloCardObj_c::FlipAway(int n) {
  * and across the whole board by HasRemovablePair. */
 int dMgMCarloCardObj_c::IsPairWith(dMgMCarloCardObj_c *other)
 {
-    int mine, theirs, dcol, drow;
+    int slot, otherSlot, columnDistance, rowDistance;
     if (other->mFace != mFace)
         goto fail;
-    theirs = other->mSlot;
-    mine = mSlot;
-    dcol = mine % 5 - theirs % 5;
-    drow = mine / 5 - theirs / 5;
-    if (dcol < 0)
-        dcol = -dcol;
-    if (dcol >= 2)
+    otherSlot = other->mSlot;
+    slot = mSlot;
+    columnDistance = slot % 5 - otherSlot % 5;
+    rowDistance = slot / 5 - otherSlot / 5;
+    if (columnDistance < 0)
+        columnDistance = -columnDistance;
+    if (columnDistance >= 2)
         goto fail;
-    if (drow < 0)
-        drow = -drow;
-    if (drow >= 2)
+    if (rowDistance < 0)
+        rowDistance = -rowDistance;
+    if (rowDistance >= 2)
         goto fail;
     return 1;
 fail:
@@ -582,76 +580,63 @@ fail:
  * point -- the same 32x48 slot grid DealIn lays the board out on. */
 int dMgMCarloCardObj_c::HitTest(void)
 {
-    u8 idx;
-    int off;
-    int has;
-    int dx, dy;
+    u8 touchSlot;
+    int touchOffset;
+    int touching;
+    int touchXOffset, touchYOffset;
 
     if (data_ov006_0213d564 == 0) return 0;
     if (dScMgMCarlo_c::BoardBusy() != 0) goto fail;
 
-    idx = gActivePlayerSlot;
-    off = idx * 4;
-    has = 0;
-    if (gTouchHeld[off]) {
-        if (gTouchEdge[off]) has = 1;
+    touchSlot = gActivePlayerSlot;
+    touchOffset = touchSlot * 4;
+    touching = 0;
+    if (gTouchHeld[touchOffset]) {
+        if (gTouchEdge[touchOffset]) touching = 1;
     }
-    if (has == 0) goto fail;
+    if (touching == 0) goto fail;
 
-    dx = gTouchX[idx * 4] - (mX >> 12);
-    dy = gTouchY[idx * 4] - (mY >> 12);
-    if (dx > 7 && dx < 0x28 && dy > 0 && dy < 0x31) return 1;
+    touchXOffset = gTouchX[touchSlot * 4] - (mX >> 12);
+    touchYOffset = gTouchY[touchSlot * 4] - (mY >> 12);
+    if (touchXOffset > 7 && touchXOffset < 0x28 && touchYOffset > 0 && touchYOffset < 0x31) return 1;
 fail:
     return 0;
 }
 
 // @symbol _ZN18dMgMCarloCardObj_c6UpdateEi
-/* The card's own state machine, slot 1 of the
- * element vtable; UpdateBoard drives it once per settled card with the
- * round's event, the slot number the current deal is flying toward. State 0
- * waits out the deal stagger one frame at a time (mDealDelay, draining the
- * deck's data_ov006_0213d56c counter) and then deals itself in. State 2 is
- * idle on the board: a slot-mismatched event re-aims the card (DealIn), a
- * stylus touch picks it (HitTest) -- the first pick is remembered in
- * data_ov006_021424fc, a matching second pick (IsPairWith) locks the pair
- * window (data_ov006_021424ec = 0x20) and remembers it in
- * data_ov006_02142508, and a mismatch buzzes (func_02012790) and demotes
- * the first pick back to idle. State 3 is picked: lifting the stylus off
- * the card demotes it, and a lone first pick is cleared. States 1 and 4
- * fly the card onto the board -- ApproachLinear walks x/y toward the slot
- * target on the step pair DealIn computed and lifts the card (mLift toward
- * 0x4000) -- settling to idle only when position reaches target, lift is
- * full, and the fly-in counter drains. State 5 flips away: ApproachLinear2
- * counts the flip stagger down while the card flies up off the board
- * toward -0x30000, and stops when the stagger runs out. */
-void dMgMCarloCardObj_c::Update(int event)
+/* Advance the card toward its current board slot. Touching an idle card
+ * selects it; touching a selected card deselects it. A matching second pick
+ * starts the pair's removal delay. Incoming cards settle when their position
+ * and lift reach the targets. Leaving cards wait out their stagger, then
+ * slide left off the board. */
+void dMgMCarloCardObj_c::Update(int slot)
 {
     switch (mState) {
-    case 0:
+    case CARD_WAITING:
         mDealDelay -= 1;
         if (mDealDelay != 0)
             return;
         data_ov006_0213d56c--;
-        DealIn(event);
+        DealIn(slot);
         return;
 
-    case 2:
-        if (mSlot != event) {
-            DealIn(event);
+    case CARD_IDLE:
+        if (mSlot != slot) {
+            DealIn(slot);
             return;
         }
         if (HitTest() == 0)
             return;
         if (data_ov006_021424fc == 0) {
             data_ov006_021424fc = this;
-            mState = 3;
+            mState = CARD_SELECTED;
             Sound::PlayBank2_2D(0x153);
             return;
         }
         if (IsPairWith(data_ov006_021424fc) != 0) {
             data_ov006_02142508 = this;
             data_ov006_021424ec = 0x20;
-            mState = 3;
+            mState = CARD_SELECTED;
             Sound::PlayBank2_2D(0x154);
             if (data_ov004_020bf9ec == 0)
                 data_ov004_020bf9ec = 1;
@@ -660,15 +645,15 @@ void dMgMCarloCardObj_c::Update(int event)
         func_02012790(0xe);
         {
             dMgMCarloCardObj_c *first = data_ov006_021424fc;
-            first->mState = 2;
+            first->mState = CARD_IDLE;
         }
         data_ov006_021424fc = 0;
         return;
 
-    case 3:
+    case CARD_SELECTED:
         if (HitTest() == 0)
             return;
-        mState = 2;
+        mState = CARD_IDLE;
         if (data_ov006_021424fc != this)
             return;
         if (data_ov006_02142508 != 0)
@@ -677,8 +662,8 @@ void dMgMCarloCardObj_c::Update(int event)
         data_ov006_021424fc = 0;
         return;
 
-    case 1:
-    case 4:
+    case CARD_ENTERING:
+    case CARD_MOVING:
         ApproachLinear(mX, mTargetX, mXStep);
         ApproachLinear(mY, mTargetY, mYStep);
         ApproachLinear(mLift, 0x4000, 0x300);
@@ -686,13 +671,13 @@ void dMgMCarloCardObj_c::Update(int event)
             return;
         if (mLift != 0x4000)
             return;
-        mState = 2;
+        mState = CARD_IDLE;
         ApproachLinear(data_ov006_021424f4, 0, 1);
         mXStep = 0;
         mYStep = 0;
         return;
 
-    case 5:
+    case CARD_LEAVING:
         if (ApproachLinear2(mDealDelay, 0, 1) == 0)
             return;
         ApproachLinear(mX, -0x30000, 0x10000);
@@ -706,8 +691,8 @@ void dMgMCarloCardObj_c::Update(int event)
 // @symbol _ZN18dMgMCarloCardObj_c6RenderEv
 /* Draw this card through the dMeter_c sprite bank.
  * Hidden cards (mVisible 0) and ones still waiting to be dealt (mState 0)
- * draw nothing, and a picked card (state 3) hides while the touch state's
- * bit 8 is down. The bank index is the face's bank (mFace + 1) of five flip
+ * draw nothing, and a selected card blinks according to bit 8 of
+ * data_020a0db0. The bank index is the face's bank (mFace + 1) of five flip
  * frames -- (mLift >> 12), 0x4000 fully raised = frame 4 -- and the card
  * sits at its fixed-point position shifted to pixels plus a 24-pixel screen
  * offset. Slot 0 of the element vtable; Render is the class's key function,
@@ -717,8 +702,8 @@ void dMgMCarloCardObj_c::Render(void)
     unsigned char state;
     if (mVisible == 0) return;
     state = mState;
-    if (state == 0) return;
-    if (state == 3) {
+    if (state == CARD_WAITING) return;
+    if (state == CARD_SELECTED) {
         if ((data_020a0db0 & 8) != 0) return;
     }
     {
@@ -751,13 +736,13 @@ void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards)
 {
     int stars;
     dScMgBase_c *active;
-    short i;
-    short j;
-    short off;
-    dMgMCarloCardObj_c *p;
-    dMgMCarloCardObj_c *q;
-    dMgMCarloCardObj_c *n2;
-    dMgMCarloCardObj_c *nx;
+    short face;
+    short cardIndex;
+    short slot;
+    dMgMCarloCardObj_c *card;
+    dMgMCarloCardObj_c *previous;
+    dMgMCarloCardObj_c *linkTail;
+    dMgMCarloCardObj_c *savedNext;
 
     active = (dScMgBase_c *)data_ov004_020beb68;
     stars = (active != 0) ? active->mHudScore : 0;
@@ -781,27 +766,27 @@ void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards)
 
     do
     {
-        for (i = 0; i < 8; i++)
+        for (face = 0; face < 8; face++)
         {
-            if (i < data_ov006_021424f0)
-                data_ov006_0213d5e0[i] = data_ov006_021424f8;
+            if (face < data_ov006_021424f0)
+                data_ov006_0213d5e0[face] = data_ov006_021424f8;
             else
-                data_ov006_0213d5e0[i] = 0;
+                data_ov006_0213d5e0[face] = 0;
         }
 
-        j = 0;
-        p = cards;
-        for (; j < 0x50; j++)
+        cardIndex = 0;
+        card = cards;
+        for (; cardIndex < 0x50; cardIndex++)
         {
-            p->Init(j);
-            if (j < data_ov006_0213d570)
+            card->Init(cardIndex);
+            if (cardIndex < data_ov006_0213d570)
             {
-                p->mFace = (unsigned char)dScMgMCarlo_c::DrawCardValue();
+                card->mFace = (unsigned char)dScMgMCarlo_c::DrawCardValue();
             }
-            p++;
+            card++;
         }
 
-        off = 0;
+        slot = 0;
         data_ov006_021424fc = 0;
         data_ov006_02142508 = 0;
         data_ov006_021424ec = 0;
@@ -811,21 +796,21 @@ void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards)
 
         if (data_ov006_0213d570 - 1 > 0)
         {
-            q = cards;
+            previous = cards;
             do
             {
-                n2 = &cards[off + 1];
-                nx = q->mNext;
-                q->mNext = n2;
-                n2->mPrev = q;
-                while (n2->mNext != 0)
+                linkTail = &cards[slot + 1];
+                savedNext = previous->mNext;
+                previous->mNext = linkTail;
+                linkTail->mPrev = previous;
+                while (linkTail->mNext != 0)
                 {
-                    n2 = n2->mNext;
+                    linkTail = linkTail->mNext;
                 }
-                n2->mNext = nx;
-                q++;
-                off++;
-            } while (off < data_ov006_0213d570 - 1);
+                linkTail->mNext = savedNext;
+                previous++;
+                slot++;
+            } while (slot < data_ov006_0213d570 - 1);
         }
     } while (dScMgMCarlo_c::HasRemovablePair() == 0);
 }
@@ -839,28 +824,25 @@ void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards)
  * at least one removable pair; Behavior uses it to catch a stuck board. */
 int dScMgMCarlo_c::HasRemovablePair(void)
 {
-    dMgMCarloCardObj_c *p, *q;
-    p = data_ov006_02142500;
-    while (p != 0 && p->mSlot < 0x14) {
-        q = p->mNext;
-        while (q != 0 && q->mSlot < 0x14) {
-            if (p->IsPairWith(q) != 0) return 1;
-            q = q->mNext;
+    dMgMCarloCardObj_c *first, *second;
+    first = data_ov006_02142500;
+    while (first != 0 && first->mSlot < 0x14) {
+        second = first->mNext;
+        while (second != 0 && second->mSlot < 0x14) {
+            if (first->IsPairWith(second) != 0) return 1;
+            second = second->mNext;
         }
-        p = p->mNext;
+        first = first->mNext;
     }
     return 0;
 }
 
 // @symbol _ZN13dScMgMCarlo_c9BoardBusyEv
-/* The board is mid-deal (the negation of
- * BoardReady below, spelled out rather than !BoardReady() because the ROM
- * carries the two bodies separately). Busy while the dealt count is still
- * short of the board size, or a card is still flying in, or either pick
- * slot is held. */
+/* Busy while the deal count is changing, a card is moving, or both
+ * picks are waiting for removal. A single selected card does not block input. */
 int dScMgMCarlo_c::BoardBusy(void)
 {
-    int ret = 1;
+    int busy = 1;
     short target;
     short shown;
     shown = (short)(data_ov006_0213d574 >> 12);
@@ -872,19 +854,18 @@ int dScMgMCarlo_c::BoardBusy(void)
         if (data_ov006_021424f4 == 0)
         {
             if (data_ov006_021424fc == 0 || data_ov006_02142508 == 0)
-                ret = 0;
+                busy = 0;
         }
     }
-    return ret;
+    return busy;
 }
 
 // @symbol _ZN13dScMgMCarlo_c10BoardReadyEv
-/* The dealt count has reached the board
- * size, no card is still flying in, and both pick slots are clear. Behavior
- * polls this between rounds. */
+/* Ready once the visible count reaches the board size, movement has
+ * stopped, and no selected pair is waiting for removal. */
 int dScMgMCarlo_c::BoardReady(void)
 {
-    int ret = 0;
+    int ready = 0;
     short target;
     short shown;
     shown = (short)(data_ov006_0213d574 >> 12);
@@ -896,10 +877,10 @@ int dScMgMCarlo_c::BoardReady(void)
         if (data_ov006_021424f4 == 0)
         {
             if (data_ov006_021424fc == 0 || data_ov006_02142508 == 0)
-                ret = 1;
+                ready = 1;
         }
     }
-    return ret;
+    return ready;
 }
 
 // @symbol _ZN13dScMgMCarlo_c13DrawCardValueEv
@@ -907,26 +888,27 @@ int dScMgMCarlo_c::BoardReady(void)
  * eight-face deck. Roll the seeded RNG scaled by the weight total, then walk
  * the weights subtracting until the running total goes negative -- that face
  * is the draw, and its weight is spent. The same routine dScMgCard_c runs on
- * its six-face deck (src/actors/dScMgCard_c.cpp); the weights themselves
+ * its six-face deck (src/minigames/d_s_mg_card.cpp); the weights themselves
  * live in this overlay's data and SetupBoard refills them per board size. */
 int dScMgMCarlo_c::DrawCardValue(void)
 {
-    unsigned char pick = 0;
+    unsigned char drawnFace = 0;
     int total = 0;
-    int i;
+    int face;
     int roll;
-    for(i=0;i<8;i++) total += data_ov006_0213d5e0[i];
+    for (face = 0; face < 8; face++)
+        total += data_ov006_0213d5e0[face];
     roll = (int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13);
     total = (total * roll) >> 0xc;
-    for(i=0;i<8;i++){
-        total -= data_ov006_0213d5e0[i];
-        if(total < 0){
-            pick = (unsigned char)i;
-            data_ov006_0213d5e0[i]--;
+    for (face = 0; face < 8; face++) {
+        total -= data_ov006_0213d5e0[face];
+        if (total < 0) {
+            drawnFace = (unsigned char)face;
+            data_ov006_0213d5e0[face]--;
             break;
         }
     }
-    return pick;
+    return drawnFace;
 }
 
 // @symbol _ZN13dScMgMCarlo_c14FlipDealtCardsEv
@@ -947,19 +929,14 @@ void dScMgMCarlo_c::FlipDealtCards(void) {
 }
 
 // @symbol _ZN13dScMgMCarlo_c11UpdateBoardEv
-/* Advance the board one frame. When
- * both picks are held, count the settle timer down; on zero, compare the two
- * picks' board slots, aim the board camera at the smaller slot's column,
- * unlink both picked cards from the board list (each picked card's unlinks
- * are guarded so removing the first does not corrupt the second's links),
- * drop the picks, and set the board size shrinking. Then walk the list from
- * the head telling every still-flying card (state 1) to update. With no pick
- * held, grow the board-size counter toward the dealt target and walk the
- * whole board instead. */
+/* Resolve a selected pair after its delay, unlink both cards, and restart
+ * the deal count at the earlier slot so the remaining cards close the gap.
+ * While a pair is selected, update only cards entering from reserve. Otherwise
+ * advance the visible-card count and update every card in that prefix. */
 void dScMgMCarlo_c::UpdateBoard(void) {
     dMgMCarloCardObj_c* head = data_ov006_02142500;
-    dMgMCarloCardObj_c* n;
-    short i;
+    dMgMCarloCardObj_c* card;
+    short slot;
 
     if (data_ov006_021424fc != 0) {
         if (data_ov006_02142508 != 0) {
@@ -970,33 +947,33 @@ void dScMgMCarlo_c::UpdateBoard(void) {
                     data_ov006_0213d574 = data_ov006_021424fc->mSlot << 12;
 
                 {
-                    dMgMCarloCardObj_c* n1 = data_ov006_021424fc;
-                    if (data_ov006_02142500 == n1) data_ov006_02142500 = n1->mNext;
-                    if (data_ov006_02142504 == n1) data_ov006_02142504 = n1->mPrev;
-                    if (n1->mPrev != 0) n1->mPrev->mNext = n1->mNext;
-                    if (n1->mNext != 0) n1->mNext->mPrev = n1->mPrev;
-                    n1->mNext = 0;
-                    n1->mPrev = n1->mNext;
+                    dMgMCarloCardObj_c* first = data_ov006_021424fc;
+                    if (data_ov006_02142500 == first) data_ov006_02142500 = first->mNext;
+                    if (data_ov006_02142504 == first) data_ov006_02142504 = first->mPrev;
+                    if (first->mPrev != 0) first->mPrev->mNext = first->mNext;
+                    if (first->mNext != 0) first->mNext->mPrev = first->mPrev;
+                    first->mNext = 0;
+                    first->mPrev = first->mNext;
                 }
                 {
-                    dMgMCarloCardObj_c* n2 = data_ov006_02142508;
-                    if (data_ov006_02142500 == n2) data_ov006_02142500 = n2->mNext;
-                    if (data_ov006_02142504 == n2) data_ov006_02142504 = n2->mPrev;
-                    if (n2->mPrev != 0) n2->mPrev->mNext = n2->mNext;
-                    if (n2->mNext != 0) n2->mNext->mPrev = n2->mPrev;
-                    n2->mNext = 0;
-                    n2->mPrev = n2->mNext;
+                    dMgMCarloCardObj_c* second = data_ov006_02142508;
+                    if (data_ov006_02142500 == second) data_ov006_02142500 = second->mNext;
+                    if (data_ov006_02142504 == second) data_ov006_02142504 = second->mPrev;
+                    if (second->mPrev != 0) second->mPrev->mNext = second->mNext;
+                    if (second->mNext != 0) second->mNext->mPrev = second->mPrev;
+                    second->mNext = 0;
+                    second->mPrev = second->mNext;
                 }
 
                 data_ov006_02142508 = 0;
                 data_ov006_021424fc = 0;
                 ApproachLinear(data_ov006_0213d570, 0, 2);
             }
-            n = head;
-            for (i = 0; i < (data_ov006_0213d574 >> 12); i++) {
-                if (n == 0) return;
-                if (n->mState == 1) n->Update(i);
-                n = n->mNext;
+            card = head;
+            for (slot = 0; slot < (data_ov006_0213d574 >> 12); slot++) {
+                if (card == 0) return;
+                if (card->mState == CARD_ENTERING) card->Update(slot);
+                card = card->mNext;
             }
             return;
         }
@@ -1007,11 +984,11 @@ void dScMgMCarlo_c::UpdateBoard(void) {
         if (target > 0x14) target = 0x14;
         ApproachLinear(data_ov006_0213d574, target << 12, 0x800);
     }
-    n = head;
-    for (i = 0; i < (data_ov006_0213d574 >> 12); i++) {
-        if (n == 0) return;
-        n->Update(i);
-        n = n->mNext;
+    card = head;
+    for (slot = 0; slot < (data_ov006_0213d574 >> 12); slot++) {
+        if (card == 0) return;
+        card->Update(slot);
+        card = card->mNext;
     }
 }
 

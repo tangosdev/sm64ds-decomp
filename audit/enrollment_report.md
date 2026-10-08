@@ -180,7 +180,7 @@ in the source and `(char*, void*)` at `decl_common.h:2744`). These files are pla
 correct decompilations that stopped compiling when `decl_common.h` grew; the byte gate
 cannot say, because nothing gets as far as codegen.
 
-The one broken draft is `src/func_ov007_020ba05c.c`, which is the file lane PC1 named.
+The one broken draft is `src/unnamed/ov007/func_ov007_020ba05c.c`, which is the file lane PC1 named.
 Independently confirmed here: it fails with `'array28' is not a member of class 'struct
 StructObj20'`, plus `array24` and `f2C`, and it carries the comment
 `bHolder->b->f2C = 0; // or bHolder->f2C? wait`. It has never been compiled by any gate
@@ -324,11 +324,11 @@ file at this ref.
 | itcm | 0x01ffabe4 | 0 | `src/_s32_div_f.c` | ruspecial | zero-size alias of `__aeabi_idiv` (524 bytes, unmatched) |
 | itcm | 0x01ffadf0 | 0 | `src/_u32_div_f.c` | ruspecial | zero-size alias of `__aeabi_uidiv` (484 bytes, unmatched) |
 | ov002 | 0x020cfbdc | 424 | `src/func_ov002_020cfbdc.cpp` | ruspecial | line 24: illegal function overloading |
-| ov002 | 0x020e3e00 | 400 | `src/func_ov002_020e3e00.cpp` | ruspecial | line 14: illegal function overloading |
+| ov002 | 0x020e3e00 | 400 | `src/unnamed/ov002/func_ov002_020e3e00.cpp` | ruspecial | line 14: illegal function overloading |
 | ov004 | 0x020aeed8 | 372 | `src/func_ov004_020aeed8.cpp` | tangosdev | line 50: illegal function overloading |
 | ov004 | 0x020af094 | 488 | `src/func_ov004_020af094.cpp` | andrewboudreau | line 56: illegal function overloading |
 | ov006 | 0x020e6e78 | 232 | `src/func_ov006_020e6e78.cpp` | tangosdev | line 14: illegal function overloading |
-| ov007 | 0x020ba05c | 644 | `src/func_ov007_020ba05c.c` | mitch030504 | line 114: `'array28' is not a member of class 'struct StructObj20'` |
+| ov007 | 0x020ba05c | 644 | `src/unnamed/ov007/func_ov007_020ba05c.c` | mitch030504 | line 114: `'array28' is not a member of class 'struct StructObj20'` |
 | ov064 | 0x02119afc | 356 | `src/func_ov064_02119afc.cpp` | tangosdev | line 15: illegal function overloading |
 | ov065 | 0x02119c38 | 644 | `src/_ZN15TtcRotatingCube13InitResourcesEv.cpp` | tangosdev | line 20: illegal function overloading |
 | ov071 | 0x02121ba4 | 200 | `src/func_ov071_02121ba4.cpp` | tangosdev | line 12: illegal function overloading |

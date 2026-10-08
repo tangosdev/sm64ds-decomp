@@ -331,7 +331,7 @@ Breaking the 135 down by how the caller pins its callee:
 | raw address literal | 0 |
 
 Of the 60 safe ones, 57 are `0x020aed98 →` [ov002](../config/arm9/overlays/ov002/symbols.txt) `_ZN5EnemyC2Ev` (`Enemy::Enemy()`,
-size 0x24). The rival at that address is [func_ov007_020aed98](../src/func_ov007_020aed98.cpp), size 0x1e0 — a
+size 0x24). The rival at that address is [func_ov007_020aed98](../src/unnamed/ov007/func_ov007_020aed98.cpp), size 0x1e0 — a
 480-byte function, obviously not a base constructor. **The top ambiguity is settled:
 [overlay 2](../config/arm9/overlays/ov002/symbols.txt), for all 57.** That is consistent with the bounded enemy-subclass family in
 `[[enemy-subclass-census]]`.
@@ -344,7 +344,7 @@ extern void *func_020adc74(void *p);
 ```
 
 There is no `func_020adc74` in any `symbols.txt`. The real symbols at that address are
-[func_ov003_020adc74](../src/func_ov003_020adc74.cpp) and [func_ov004_020adc74](../src/minigames/d_s_mg_base.cpp). The author could not tell which overlay owned the target, so they wrote a **module-less placeholder** — which resolves to
+[func_ov003_020adc74](../src/unnamed/ov003/func_ov003_020adc74.cpp) and [func_ov004_020adc74](../src/minigames/d_s_mg_base.cpp). The author could not tell which overlay owned the target, so they wrote a **module-less placeholder** — which resolves to
 nothing. Checking the ten ambiguous call targets against
 `config/unresolved-baseline.json`: **nine of ten are present as module-less phantom
 names** (all but `func_020aed98`, which is the one already correctly named).
@@ -531,7 +531,7 @@ analyzeHeadless C:\tools\ghidra_proj sm64ds -process sm64.nds -noanalysis `
 **G9.1 — The sync is essentially complete.** [high] `ListBlocks` reports **486 memory
 blocks** and **11,382 functions** against the 11,394 `kind:function` symbols in the dsd
 config — a 99.9% import. Overlays land in their own address spaces, and the ambiguity of
-§5 is directly visible in the memory map: `arm9_ov002::`[020ad660](../src/func_ov002_020ad660.cpp) and
+§5 is directly visible in the memory map: `arm9_ov002::`[020ad660](../src/unnamed/ov002/func_ov002_020ad660.cpp) and
 `arm9_ov003::`[020ad660](../config/arm9/overlays/ov003/symbols.txt) both exist.
 
 **G9.2 — Names: transformed. Zero `FUN_xxxxxxxx` in any of the three drafts.** [high]
@@ -540,7 +540,7 @@ extension links `cpp_demangle`):
 
 | function | callees in the draft |
 |---|---|
-| [func_ov102_0214b53c](../src/actors/daBmb_c.cpp) | `Matrix4x3_FromRotationY`, `MulMat4x3Mat4x3`, `Vec3_Lsl`, `Vec3_LslInPlace`, `IsFrontSliding`, `LostGrabbedObject`, `UpdateCarry`, [func_ov002_020e496c](../src/func_ov002_020e496c.c) |
+| [func_ov102_0214b53c](../src/actors/daBmb_c.cpp) | `Matrix4x3_FromRotationY`, `MulMat4x3Mat4x3`, `Vec3_Lsl`, `Vec3_LslInPlace`, `IsFrontSliding`, `LostGrabbedObject`, `UpdateCarry`, [func_ov002_020e496c](../src/unnamed/ov002/func_ov002_020e496c.c) |
 | `OAM::Render` | `GetObjWidth`, `GetObjHeight`, `LoadAffineParams`, `fdiv` — and the function itself comes back as `OAM::Render(...)` with 10 parameters, not `FUN_02020994` |
 | [func_ov006_020dbe9c](../src/actors/dScMgCoin_c.cpp) | [func_ov004_020b023c](../src/minigames/d_s_mg_base.cpp) — **correctly attributed to [ov004](../config/arm9/overlays/ov004/symbols.txt)** |
 

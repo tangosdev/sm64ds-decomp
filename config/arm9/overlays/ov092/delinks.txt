@@ -7,7 +7,7 @@
 src/actors/daOnms_c.cpp:
     complete
     .text start:0x02130f00 end:0x02132074
-
-src/__sinit_ov092_021320cc.c:
-    complete
     .init start:0x021320cc end:0x02132210
+    .ctor start:0x02132210 end:0x02132214
+    .data start:0x02132240 end:0x02132288
+    .bss start:0x02132540 end:0x021325b0

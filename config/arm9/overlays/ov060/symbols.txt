@@ -170,13 +170,13 @@ __sinit_ov060_021195dc kind:function(arm,size=0x814) addr:0x021195dc
 __sinit_ov060_02119df0 kind:function(arm,size=0x1a4) addr:0x02119df0
 __sinit_ov060_02119f94 kind:function(arm,size=0x6c) addr:0x02119f94
 __sinit_ov060_0211a000 kind:function(arm,size=0x388) addr:0x0211a000
-__sinit_ov060_0211a388 kind:function(arm,size=0xa0) addr:0x0211a388
+__sinit_daKirai_c.cpp kind:function(arm,size=0xa0) addr:0x0211a388
 __sinit_ov060_0211a428 kind:function(arm,size=0x94) addr:0x0211a428
 .p__sinit_ov060_021195dc kind:data(word) addr:0x0211a4bc
 .p__sinit_ov060_02119df0 kind:data(word) addr:0x0211a4c0
 .p__sinit_ov060_02119f94 kind:data(word) addr:0x0211a4c4
 .p__sinit_ov060_0211a000 kind:data(word) addr:0x0211a4c8
-.p__sinit_ov060_0211a388 kind:data(word) addr:0x0211a4cc
+.p__sinit_daKirai_c.cpp kind:data(word) addr:0x0211a4cc
 .p__sinit_ov060_0211a428 kind:data(word) addr:0x0211a4d0
 data_ov060_0211a4e0 kind:data(any) addr:0x0211a4e0
 data_ov060_0211a4e8 kind:data(any) addr:0x0211a4e8
@@ -246,10 +246,10 @@ _ZTS10daKpa3Bg_c kind:data(any) addr:0x0211a954
 g_profile_KOOPA3BG kind:data(any) addr:0x0211a964 ambiguous
 data_ov060_0211a980 kind:data(any) addr:0x0211a980
 _ZTV10daKpa3Bg_c kind:data(any) addr:0x0211a9b0
-data_ov060_0211aa30 kind:data(any) addr:0x0211aa30
-data_ov060_0211aa38 kind:data(any) addr:0x0211aa38
-data_ov060_0211aa40 kind:data(any) addr:0x0211aa40
-data_ov060_0211aa48 kind:data(any) addr:0x0211aa48
+@707 kind:data(any) addr:0x0211aa30
+@713 kind:data(any) addr:0x0211aa38
+@711 kind:data(any) addr:0x0211aa40
+@709 kind:data(any) addr:0x0211aa48
 _ZTS9daKirai_c kind:data(any) addr:0x0211aa50
 _ZTI9daKirai_c kind:data(any) addr:0x0211aa5c
 g_profile_KIRAI kind:data(any) addr:0x0211aa68
@@ -382,7 +382,7 @@ data_ov060_0211b194 kind:bss addr:0x0211b194
 data_ov060_0211b1a0 kind:bss addr:0x0211b1a0
 data_ov060_0211b1ac kind:bss addr:0x0211b1ac
 data_ov060_0211b1c4 kind:bss addr:0x0211b1c4
-data_ov060_0211b1cc kind:bss addr:0x0211b1cc
+@705 kind:bss addr:0x0211b1cc
 data_ov060_0211b1d8 kind:bss addr:0x0211b1d8
 data_ov060_0211b1f8 kind:bss addr:0x0211b1f8
 data_ov060_0211b200 kind:bss addr:0x0211b200

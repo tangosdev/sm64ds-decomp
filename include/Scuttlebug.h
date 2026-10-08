@@ -78,6 +78,35 @@ struct Scuttlebug : dActor_c {
     int InitResources();
     void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
     int Render();
+
+    /* State machine. mStateRow points at a {enter, run} pointer-to-member
+       pair; the two trampolines call through it. */
+    void SetState(int idx);
+    void func_ov071_021202b4();
+    void func_ov071_02120278();
+    int  func_ov071_02120200();
+    int  func_ov071_021201b4();
+    int  func_ov071_02120130();
+    int  func_ov071_02120028();
+    int  func_ov071_0211ff84();
+    int  func_ov071_0211fee4();
+    int  func_ov071_0211fe38();
+    int  func_ov071_0211fd58();
+    int  func_ov071_0211fcd4();
+    int  func_ov071_0211fc60();
+    int  func_ov071_0211fbf4();
+    int  func_ov071_0211fb24();
+    int  func_ov071_0211fb0c();
+    int  func_ov071_0211fa54();
+    int  func_ov071_0211f8d0();
+    int  func_ov071_0211f7d4();
+    int  func_ov071_0211f6f8();
+    int  func_ov071_0211f694();
+    void func_ov071_0211f524();
+    void func_ov071_0211f498();
+    void func_ov071_0211f29c();
+    void func_ov071_0211f148(dBgCh_Actr *w);
+    void func_ov071_0211f0b4();
 };
 
 #ifndef SM64DS_PLATFORM_PC

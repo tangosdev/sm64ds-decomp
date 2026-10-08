@@ -73,7 +73,7 @@ obvious unseen case; refusing costs one function, guessing corrupts a module.
 (The other 6 local references are ordinary PC-relative branches carrying ARM's
 standard `-8` pipeline addend. Those need nothing.)
 
-**4. Isolation applied where it is unsound.** [func_ov002_020bd664](../src/func_ov002_020bd664.cpp) has a
+**4. Isolation applied where it is unsound.** [func_ov002_020bd664](../src/unnamed/ov002/func_ov002_020bd664.cpp) has a
 function-local static — `table$8` and its guard `_ZGVtable$8`, both **STB_LOCAL** in
 `.bss`, both addressed by the kept function. Zeroing the section while leaving them
 defined pointed those loads at offset 0 of an empty section, which the lcf still

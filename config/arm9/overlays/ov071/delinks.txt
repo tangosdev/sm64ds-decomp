@@ -28,18 +28,18 @@ src/actors/daObjCasket_c.cpp:
     complete
     .text start:0x02121fe4 end:0x021226a0
 
-src/__sinit_ov071_021226ac.c:
+src/unnamed/ov071/__sinit_ov071_021226ac.c:
     complete
     .init start:0x021226ac end:0x021228c8
 
-src/__sinit_ov071_021228c8.c:
+src/unnamed/ov071/__sinit_ov071_021228c8.c:
     complete
     .init start:0x021228c8 end:0x02122a1c
 
-src/__sinit_ov071_02122a1c.c:
+src/unnamed/ov071/__sinit_ov071_02122a1c.c:
     complete
     .init start:0x02122a1c end:0x02122a64
 
-src/__sinit_ov071_02122a64.c:
+src/unnamed/ov071/__sinit_ov071_02122a64.c:
     complete
     .init start:0x02122a64 end:0x02122b30

@@ -6,8 +6,8 @@
  *
  * Behavior dispatches mStateIndex through a table of member pointers at
  * data_ov060_0211b1d8, filled at static-init time from {fn, 0} records in
- * .data: armed (func_ov060_02118970), exploding (func_ov060_02118834), a
- * second swell (func_ov060_021188e8), spent (func_ov060_02118728).
+ * .data: armed (func_ov060_02118970), swelling (func_ov060_021188e8),
+ * exploding (func_ov060_02118834), spent (func_ov060_02118728).
  * daKirai_c_classInit stays out of this TU.
  */
 
@@ -21,6 +21,16 @@
 #pragma defer_codegen off
 
 typedef void (daKirai_c::*KiraiState)();
+
+/* The model file handle constructs through func_02017acc and destroys through
+ * func_02017ab4; the manifest aliases the wrapper's undefined members onto
+ * those ROM symbols. */
+struct KiraiModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    KiraiModelFilePtr(u32 fileID);
+    ~KiraiModelFilePtr();
+};
 
 extern "C" {
 extern void ClearSpikeBomb(int idx);
@@ -42,12 +52,8 @@ extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, Vector3 *v, unsi
    temporaries grow the frame by 8 and InitResources by 0x10. */
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     dCcAcPos_c *self, dActor_c *actor, const Vector3 &v, int radius, int height, unsigned flags, unsigned vulnFlags);
-/* local extern: the model file and the state table keep the spellings
-   include/decl_common.h and the ov060 sinit already give them (a byte, and a
-   word array); retyping either here opens a new declaration-agreement
-   disagreement, so each is cast at its one use instead. */
-extern char data_ov060_0211b1c4;
-extern int data_ov060_0211b1d8[];
+extern KiraiModelFilePtr data_ov060_0211b1c4;
+extern KiraiState data_ov060_0211b1d8[4];
 }
 
 // @symbol _ZN9daKirai_cD1Ev
@@ -258,7 +264,7 @@ void daKirai_c::func_ov060_02118970()
 // @symbol _ZN9daKirai_c16CleanupResourcesEv
 int daKirai_c::CleanupResources()
 {
-    ((SharedFilePtr *)&data_ov060_0211b1c4)->Release();
+    data_ov060_0211b1c4.Release();
     return 1;
 }
 
@@ -274,7 +280,7 @@ int daKirai_c::Render()
 // @symbol _ZN9daKirai_c8BehaviorEv
 int daKirai_c::Behavior()
 {
-    (this->*((KiraiState *)data_ov060_0211b1d8)[mStateIndex])();
+    (this->*data_ov060_0211b1d8[mStateIndex])();
     func_ov060_02118690();
     mdCcAcPos_c.Clear();
     Vector3 v;
@@ -292,7 +298,7 @@ int daKirai_c::InitResources()
     Vector3 v;
     Vector3 z;
 
-    mModel.SetFile((BMD_File *)Model::LoadFile(*(SharedFilePtr *)&data_ov060_0211b1c4), 1, -1);
+    mModel.SetFile((BMD_File *)Model::LoadFile(data_ov060_0211b1c4), 1, -1);
     v.x = 0;
     v.y = -0x96000;
     v.z = 0;
@@ -316,3 +322,15 @@ int daKirai_c::InitResources()
     mSlotIndex = AddSpikeBomb(this);
     return 1;
 }
+
+/* The model handle and the state table are this TU's static-init globals:
+ * mwcc emits the initializer that constructs the handle (file 0x382),
+ * registers its destructor, and copies the four pointer-to-member records. */
+KiraiModelFilePtr data_ov060_0211b1c4(0x382);
+
+KiraiState data_ov060_0211b1d8[4] = {
+    &daKirai_c::func_ov060_02118970,
+    &daKirai_c::func_ov060_021188e8,
+    &daKirai_c::func_ov060_02118834,
+    &daKirai_c::func_ov060_02118728,
+};

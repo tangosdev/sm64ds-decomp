@@ -10,9 +10,7 @@
  * dScMgTeresa_c_classInit in src/d_s_mg_teresa.cpp, which stays its own
  * file.
  *
- * The upper 33 functions were folded in from their own files, one per
- * function. func_ov006_0211e72c, which draws the 16 Boos, was the last of
- * them to match. Nothing in the ROM names the helpers, so they keep their
+ * Nothing in the ROM names the helpers, so the members keep their
  * func_ov006_ names. InitResources, Behavior, Render and OnYoshiTryEat were
  * named from their vtable slots; Virtual50 and Virtual88 are placeholders
  * (see dScMgBase_c.h).
@@ -26,14 +24,24 @@
  * the key function and this file emits the vtable and RTTI for the whole
  * base chain.
  *
- * OAM::Render takes Fix12<int> by value, so that call stays mangled. The
- * pointer-to-member receivers stay incomplete or empty on purpose.
+ * The four PMF state tables dispatch on this class: the big Boo's flight
+ * at data_ov006_02142f18 (9 states by Boo::state), the reveal pair at
+ * data_ov006_02142e88 (5 states by SlotElem::state), the 16-Boo rows at
+ * data_ov006_02142ed8 (8 states), and the scene table data_ov006_02142eb0
+ * (5 no-argument states by unk_4be8). __sinit_ov006_02132f68 fills them
+ * from the .data descriptor records at data_ov006_0213f8xx.
  *
- * Leftover: dScMgTeresa_c.h leaves 0x4660..0x4be8 as padding, so the 16
- * 0x24-byte Boo rows at 0x4660, the 0x20-stride pair at 0x4bac, the HUD
- * sprites at 0x4960, and the bytes at 0x4c1b and 0x4c1f are still reached
- * through local views or raw offsets. Naming them in the header is what
- * would unblock typed access.
+ * OAM::Render takes Fix12<int> by value, so that call stays mangled.
+ *
+ * comment leftovers:
+ *  - dScMgTeresa_c.h leaves 0x4660..0x4be8 as padding, so the 16
+ *    0x24-byte Boo rows at 0x4660, the 0x20-stride pair at 0x4bac, the HUD
+ *    sprites at 0x4960, and the bytes at 0x4c1b and 0x4c1f are still reached
+ *    through the local views below or raw offsets on `this`. Naming them in
+ *    the header is what would unblock typed access -- but each function's
+ *    base choice (fresh cast per access vs one saved pointer) is what
+ *    mwccarm's addressing actually follows, so the conversion has to be
+ *    measured one function at a time.
  */
 
 #pragma defer_codegen off
@@ -45,9 +53,9 @@
 #include "G2x.h"
 #include "PlayerInput.h"
 
-/* Local views of object ranges the header does not type yet. Three of the
- * merged files each had their own `struct C` and they disagree offset for
- * offset, so they are kept apart. */
+/* Local views of object ranges the header does not type yet. The layouts
+ * disagree offset for offset (the second 0x20-stride element at 0x4bcc
+ * overlaps the big Boo record), so they are kept apart. */
 
 /* One Boo, 0x1c bytes, at 0x4bcc. The flight functions are called with an
  * index and step one record. x/y are the sprite's screen position (20.12).
@@ -84,29 +92,6 @@ typedef char Boo_size_must_be_0x1c[sizeof(struct Boo) == 0x1c ? 1 : -1];
  * not match. */
 #define BOO_FIELD(p, member) ((p) + (0x4bcc + (int)&((struct Boo *)0)->member))
 
-/* func_ov006_0211d5a8's `struct C`: the flag at +0x4be0 and the state index at
-   +0x4be1, called through the PMF table data_ov006_02142f18. */
-struct TeresaPmfA;
-typedef void (TeresaPmfA::*PmfA)(int);
-struct TeresaPmfA { char pad[0x4be0]; unsigned char g; unsigned char idx; };
-
-/* func_ov006_0211dd0c's `struct C`: a DIFFERENT pair -- index at +0x4bba and
-   flag at +0x4bbc -- driving a second PMF table, data_ov006_02142e88. */
-struct TeresaPmfB;
-typedef void (TeresaPmfB::*PmfB)(int);
-struct TeresaPmfB { char pad[0x4bba]; unsigned char idx; char gap; unsigned char g; };
-
-/* func_ov006_0211f6fc's receiver: the per-Boo state handlers in
-   data_ov006_02142ed8, one call per live 0x24-byte row. */
-struct TeresaPmfC;
-typedef void (TeresaPmfC::*PmfC)(int);
-struct TeresaPmfC { };
-
-/* Behavior's receiver: the scene-state handlers in data_ov006_02142eb0,
-   indexed by unk_4be8. */
-struct TeresaPmfD;
-typedef void (TeresaPmfD::*PmfD)();
-struct TeresaPmfDEntry { PmfD pmf; };
 
 /* func_ov006_0211fd44's view of the ov004 score block at data_ov004_020beb68
    (dScMgBase_c.h declares it void *): the current score at +0xb4 and the best
@@ -117,7 +102,8 @@ struct ScoreView { unsigned char pad[0xb4]; int b4; int b8; };
 struct Row { char pad[0x24]; };
 struct RowArray { struct Row rows[1]; };
 
-/* func_ov006_0211dad0's view of the 0x20-stride element pair at +0x4bac. */
+/* The 0x20-stride element pair at +0x4bac; element 0 also drives the
+   data_ov006_02142e88 PMF table via its `state`/`active` bytes. */
 typedef struct SlotElem {
     int word0;
     short pad04;
@@ -126,9 +112,9 @@ typedef struct SlotElem {
     short pad0a;
     unsigned char b0c;
     unsigned char pad0d;
-    unsigned char b0e;
+    unsigned char state;   /* +0x0e -- PMF index into data_ov006_02142e88 */
     unsigned char pad0f;
-    unsigned char pad10;
+    unsigned char active;  /* +0x10 -- dispatch runs only while set */
     unsigned char b11;
     unsigned char pad12[0xe];
 } SlotElem;
@@ -166,9 +152,7 @@ typedef struct {
     u8 latch;    /* +0x4c20 */
 } Work;
 
-/* Everything this file calls or reads that decl_common.h does not declare.
- * Repeating one of its declarations with other types is an error, so the
- * definitions below that it declares use its parameter types. */
+/* Everything this file calls or reads that decl_common.h does not declare. */
 extern "C" {
 
 extern void  RenderOamMainScreen(void*, int, int, int, int);
@@ -224,74 +208,16 @@ extern int            data_ov006_0213f9e4[];
 extern short          data_02082214[];
 extern int            data_ov004_020beb6c;
 
-/* The four pointer-to-member tables, each typed to its own view of the object. */
-extern PmfA data_ov006_02142f18[];
-extern PmfB data_ov006_02142e88[];
-extern PmfC data_ov006_02142ed8[];
-extern struct TeresaPmfDEntry data_ov006_02142eb0[];
+/* The four pointer-to-member state tables. Pmf handlers take the Boo/slot
+   index; the scene table in data_ov006_02142eb0 takes none. */
+typedef void (dScMgTeresa_c::*Pmf)(int);
+typedef void (dScMgTeresa_c::*Pmf0)();
+struct PmfEntry { Pmf0 pmf; };
 
-/* Defined below. The ones decl_common.h declares are left out. */
-extern void func_ov006_0211cc2c(unsigned char *self);
-extern void func_ov006_0211cc90(unsigned char *base);
-extern void func_ov006_0211cd24(void *self, int idx);
-extern void func_ov006_0211ce90(void);
-extern void func_ov006_0211ce94(struct BooWalk *base, int index);
-extern void func_ov006_0211cef4(char *c, int i);
-extern void func_ov006_0211d018(char *base, int idx);
-extern void func_ov006_0211d0f8(char *base, int i);
-extern void func_ov006_0211d224(char *c, int i);
-extern void func_ov006_0211d368(char *obj, int i);
-extern void func_ov006_0211d4e8(char *c, int i);
-extern void func_ov006_0211d5a8(TeresaPmfA *c);
-extern void func_ov006_0211d608(char *c);
-extern void func_ov006_0211d688(char *p);
-extern void func_ov006_0211d69c(char *obj);
-extern void func_ov006_0211d7b0(void *unused);
-extern void func_ov006_0211d7d8(char *p);
-extern void func_ov006_0211d86c(char *thiz, int idx);
-extern void func_ov006_0211d924(char *p, int i);
-extern void func_ov006_0211dad0(S *s, int i);
-extern void func_ov006_0211db7c(char *c, int i);
-extern void func_ov006_0211dce0(char *base, int i);
-extern void func_ov006_0211dd0c(TeresaPmfB *c);
-extern void func_ov006_0211ddb8(char *p);
-extern void func_ov006_0211de54(char *p);
-extern int  func_ov006_0211de7c(char *c);
-extern void func_ov006_0211dec0(void *arg);
-extern void func_ov006_0211e020(char *c, int i);
-extern void func_ov006_0211e0c8(RowArray *c);
-extern void func_ov006_0211e184(char *base);
-extern void func_ov006_0211e220(unsigned char *c, int param);
-extern void func_ov006_0211e318(char *c);
-extern void func_ov006_0211e3e0(char *c);
-extern void func_ov006_0211e4e0(char *base);
-extern void func_ov006_0211e55c(char *c, int idx);
-extern void func_ov006_0211e5cc(char *c);
-extern void func_ov006_0211e658(unsigned char *base);
-extern void func_ov006_0211e7d8(char *self);
-extern void func_ov006_0211e8a8(char *c, int idx);
-extern void func_ov006_0211ea70(char *self, int idx);
-extern void func_ov006_0211eb90(char *c, int i);
-extern void func_ov006_0211ebdc(char *c, int i);
-extern void func_ov006_0211ee34(char *c, int i);
-extern void func_ov006_0211f040(char *c, int idx);
-extern void func_ov006_0211f0d0(unsigned char *base, int idx);
-extern void func_ov006_0211f1a4(char *c, int i);
-extern void func_ov006_0211f224(char *c, int i);
-extern void func_ov006_0211f34c(char *o, int i);
-extern void func_ov006_0211f454(char *c, int i);
-extern void func_ov006_0211f51c(char *c);
-extern void func_ov006_0211f554(char *c, int i);
-extern void func_ov006_0211f5d4(char *c, int idx);
-extern void func_ov006_0211f664(char *c, int i);
-extern void func_ov006_0211f6fc(TeresaPmfC *c);
-extern void func_ov006_0211f9fc(int self);
-extern void func_ov006_0211fb1c(char *c);
-extern void func_ov006_0211fd44(char *c);
-extern void func_ov006_0211fe78(char *c);
-extern void func_ov006_02120008(char *c);
-extern void func_ov006_021200a8(void *c);
-extern void func_ov006_021200cc(char *p);
+extern Pmf data_ov006_02142f18[];   /* big Boo flight states, by Boo::state */
+extern Pmf data_ov006_02142e88[];   /* reveal-pair states, by SlotElem::state */
+extern Pmf data_ov006_02142ed8[];   /* per-Boo states, one call per live row */
+extern PmfEntry data_ov006_02142eb0[]; /* scene states, by unk_4be8 */
 
 }  /* extern "C" */
 
@@ -320,8 +246,10 @@ dScMgTeresa_c::~dScMgTeresa_c()
 }
 
 
-// @symbol func_ov006_0211cc2c
-extern "C" void func_ov006_0211cc2c(unsigned char *raw) {
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211cc2cEv
+void dScMgTeresa_c::func_ov006_0211cc2c()
+{
+    unsigned char *raw = (unsigned char *)this;
     if (raw[0x4c1f]) {
         BOO(raw)->frame = 3;
     } else {
@@ -338,8 +266,10 @@ extern "C" void func_ov006_0211cc2c(unsigned char *raw) {
 }
 
 
-// @symbol func_ov006_0211cc90
-extern "C" void func_ov006_0211cc90(unsigned char *base) {
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211cc90Ev
+void dScMgTeresa_c::func_ov006_0211cc90()
+{
+    unsigned char *base = (unsigned char *)this;
     base += 0x4000;
     if (base[0xbe0] != 0) {
         base[0xbe5] = 1;
@@ -347,9 +277,11 @@ extern "C" void func_ov006_0211cc90(unsigned char *base) {
 }
 
 
-// @symbol func_ov006_0211cca8
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211cca8Ev
 /* decl_common.h declares this one with a `void *` parameter. */
-extern "C" void func_ov006_0211cca8(void *arg){
+void dScMgTeresa_c::func_ov006_0211cca8()
+{
+    void *arg = this;
   unsigned char *raw = (unsigned char *)arg;
   int idx,v,p,q;
   if(BOO(raw)->shown==0) return;
@@ -364,8 +296,10 @@ extern "C" void func_ov006_0211cca8(void *arg){
 
 
 #define FLAG  (*(u8*)((char*)raw + 0x4c1f))
-// @symbol func_ov006_0211cd24
-extern "C" void func_ov006_0211cd24(void* raw, int idx) {
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211cd24Ei
+void dScMgTeresa_c::func_ov006_0211cd24(int idx)
+{
+    void *raw = this;
     struct BooWalk *w = (struct BooWalk *)raw;
 
     if ((w->boo[idx].y >> 12) == 0xc0) {
@@ -395,14 +329,16 @@ extern "C" void func_ov006_0211cd24(void* raw, int idx) {
 #undef FLAG
 
 
-// @symbol func_ov006_0211ce90
-extern "C" void func_ov006_0211ce90(void)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211ce90Ev
+void dScMgTeresa_c::func_ov006_0211ce90()
 {
 }
 
 
-// @symbol func_ov006_0211ce94
-extern "C" void func_ov006_0211ce94(struct BooWalk *base, int index) {
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211ce94Ei
+void dScMgTeresa_c::func_ov006_0211ce94(int index)
+{
+    struct BooWalk *base = (struct BooWalk *)this;
     void *data;
     base->boo[index].xVel = 0;
     base->boo[index].yVel = 0;
@@ -414,9 +350,10 @@ extern "C" void func_ov006_0211ce94(struct BooWalk *base, int index) {
 }
 
 
-// @symbol func_ov006_0211cef4
-extern "C" void func_ov006_0211cef4(char *c, int i)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211cef4Ei
+void dScMgTeresa_c::func_ov006_0211cef4(int i)
 {
+    char *c = (char *)this;
     struct BooWalk *w = (struct BooWalk *)c;
     unsigned short *p16 = &w->boo[i].frameTimer;
     int *sum;
@@ -451,9 +388,10 @@ extern "C" void func_ov006_0211cef4(char *c, int i)
 }
 
 
-// @symbol func_ov006_0211d018
-extern "C" void func_ov006_0211d018(char *raw, int idx)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211d018Ei
+void dScMgTeresa_c::func_ov006_0211d018(int idx)
 {
+    char *raw = (char *)this;
   struct BooWalk *w = (struct BooWalk *)raw;
   int off = idx * 0x1c;
   if (w->boo[idx].done != 0)
@@ -483,9 +421,10 @@ extern "C" void func_ov006_0211d018(char *raw, int idx)
 }
 
 
-// @symbol func_ov006_0211d0f8
-extern "C" void func_ov006_0211d0f8(char* raw, int i)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211d0f8Ei
+void dScMgTeresa_c::func_ov006_0211d0f8(int i)
 {
+    char *raw = (char *)this;
     struct BooWalk *w = (struct BooWalk *)raw;
     int v;
     w->boo[i].frameTimer++;
@@ -516,8 +455,10 @@ extern "C" void func_ov006_0211d0f8(char* raw, int i)
 }
 
 
-// @symbol func_ov006_0211d224
-extern "C" void func_ov006_0211d224(char* raw, int i) {
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211d224Ei
+void dScMgTeresa_c::func_ov006_0211d224(int i)
+{
+    char *raw = (char *)this;
     struct BooWalk *w = (struct BooWalk *)raw;
     int t;
 
@@ -555,9 +496,10 @@ extern "C" void func_ov006_0211d224(char* raw, int i) {
 }
 
 
-// @symbol func_ov006_0211d368
-extern "C" void func_ov006_0211d368(char *raw, int i)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211d368Ei
+void dScMgTeresa_c::func_ov006_0211d368(int i)
 {
+    char *raw = (char *)this;
     struct BooWalk *w = (struct BooWalk *)raw;
     unsigned char state = w->boo[i].frame;
     if ((unsigned char)(state - 8) < 2)
@@ -602,8 +544,10 @@ extern "C" void func_ov006_0211d368(char *raw, int i)
 }
 
 
-// @symbol func_ov006_0211d4e8
-extern "C" void func_ov006_0211d4e8(char* raw, int i) {
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211d4e8Ei
+void dScMgTeresa_c::func_ov006_0211d4e8(int i)
+{
+    char *raw = (char *)this;
     int off = i * 0x1c;
     struct BooWalk *w = (struct BooWalk *)raw;
     int *y = (int *)BOO_FIELD(raw, y);
@@ -621,16 +565,19 @@ extern "C" void func_ov006_0211d4e8(char* raw, int i) {
 }
 
 
-// @symbol func_ov006_0211d5a8
-extern "C" void func_ov006_0211d5a8(TeresaPmfA *c){
-  if (c->g == 0) return;
-  (c->*data_ov006_02142f18[c->idx])(0);
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211d5a8Ev
+void dScMgTeresa_c::func_ov006_0211d5a8()
+{
+    unsigned char *raw = (unsigned char *)this;
+    if (BOO(raw)->active == 0) return;
+    (this->*data_ov006_02142f18[BOO(raw)->state])(0);
 }
 
 
-// @symbol func_ov006_0211d608
-extern "C" void func_ov006_0211d608(char *raw)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211d608Ev
+void dScMgTeresa_c::func_ov006_0211d608()
 {
+    char *raw = (char *)this;
     BOO(raw)->active = 1;
     BOO(raw)->x = 0x80000;
     BOO(raw)->y = 0x100000;
@@ -646,17 +593,19 @@ extern "C" void func_ov006_0211d608(char *raw)
 }
 
 
-// @symbol func_ov006_0211d688
-extern "C" void func_ov006_0211d688(char *raw)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211d688Ev
+void dScMgTeresa_c::func_ov006_0211d688()
 {
+    char *raw = (char *)this;
     BOO(raw)->active = 0;
     BOO(raw)->shown = 0;
 }
 
 
-// @symbol func_ov006_0211d69c
-extern "C" void func_ov006_0211d69c(char *raw)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211d69cEv
+void dScMgTeresa_c::func_ov006_0211d69c()
 {
+    char *raw = (char *)this;
     if (*(unsigned char *)(raw + 0x4c24) >= 8)
     {
         return;
@@ -682,9 +631,11 @@ extern "C" void func_ov006_0211d69c(char *raw)
 }
 
 
-// @symbol func_ov006_0211d75c
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211d75cEv
 /* decl_common.h declares this one with a `void *` parameter. */
-extern "C" void func_ov006_0211d75c(void* arg){
+void dScMgTeresa_c::func_ov006_0211d75c()
+{
+    void *arg = this;
   char* raw = (char*)arg;
   if(*(unsigned char*)(raw + 0x4bc9)==0) return;
   RenderOamMainScreen(data_ov006_0213a5f4,
@@ -694,16 +645,17 @@ extern "C" void func_ov006_0211d75c(void* arg){
 }
 
 
-// @symbol func_ov006_0211d7b0
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211d7b0Ev
 /* Empty. func_ov006_021200a8 calls it with the object. */
-extern "C" void func_ov006_0211d7b0(void *unused)
+void dScMgTeresa_c::func_ov006_0211d7b0()
 {
 }
 
 
-// @symbol func_ov006_0211d7b4
-extern "C" void func_ov006_0211d7b4(char *raw)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211d7b4Ev
+void dScMgTeresa_c::func_ov006_0211d7b4()
 {
+    char *raw = (char *)this;
     *(int *)(raw + 0x4bc0) = 327680;
     *(int *)(raw + 0x4bc4) = 262144;
     *(char *)(raw + 0x4bc8) = 1;
@@ -711,18 +663,20 @@ extern "C" void func_ov006_0211d7b4(char *raw)
 }
 
 
-// @symbol func_ov006_0211d7d8
-extern "C" void func_ov006_0211d7d8(char *raw)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211d7d8Ev
+void dScMgTeresa_c::func_ov006_0211d7d8()
 {
+    char *raw = (char *)this;
     *(char *)(raw + 0x4bc8) = 0;
     *(char *)(raw + 0x4bc9) = 0;
 }
 
 
-// @symbol func_ov006_0211d7ec
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211d7ecEv
 /* decl_common.h declares this one with a `void *` parameter. */
-extern "C" void func_ov006_0211d7ec(void *arg)
+void dScMgTeresa_c::func_ov006_0211d7ec()
 {
+    void *arg = this;
     char *raw = (char *)arg;
     if (*(unsigned char *)(raw + 0x4bb9) == 0) return;
     _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
@@ -736,9 +690,10 @@ extern "C" void func_ov006_0211d7ec(void *arg)
 }
 
 
-// @symbol func_ov006_0211d86c
-extern "C" void func_ov006_0211d86c(char *raw, int idx)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211d86cEi
+void dScMgTeresa_c::func_ov006_0211d86c(int idx)
 {
+    char *raw = (char *)this;
     char *base = raw + (idx << 5);
     if (*(unsigned short*)(base + 0x4bb4) != 0) {
         *(unsigned short*)(raw + 0x4bb4 + (idx << 5)) =
@@ -747,13 +702,13 @@ extern "C" void func_ov006_0211d86c(char *raw, int idx)
     }
     *(unsigned char*)(base + 0x4bb9) = 0;
     *(unsigned char*)(base + 0x4bbc) = 0;
-    func_ov006_0211d7d8(raw);
+    func_ov006_0211d7d8();
     data_0209d45c |= 4;
     data_0209d454 |= 1;
     Sound::PlayBank2_2D(0x1f6);
     *(int*)(raw + 0x4be8) = 2;
-    func_ov006_0211f51c(raw);
-    func_ov006_0211d608(raw);
+    func_ov006_0211f51c();
+    func_ov006_0211d608();
     Sound::PlayBank2_2D(0x1f5);
 }
 
@@ -761,9 +716,10 @@ extern "C" void func_ov006_0211d86c(char *raw, int idx)
 #pragma push
 #pragma opt_common_subs off
 #define AT(p,off) ((void*)(int)((char*)(p)+(off)))
-// @symbol func_ov006_0211d924
-extern "C" void func_ov006_0211d924(char* raw, int i)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211d924Ei
+void dScMgTeresa_c::func_ov006_0211d924(int i)
 {
+    char *raw = (char *)this;
     u8 flag;
 
     flag = *(u8*)(raw + 0x4000 + (i << 5) + 0xbbe);
@@ -798,8 +754,10 @@ extern "C" void func_ov006_0211d924(char* raw, int i)
 #pragma pop
 
 
-// @symbol func_ov006_0211dad0
-extern "C" void func_ov006_0211dad0(S *s, int i) {
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211dad0Ei
+void dScMgTeresa_c::func_ov006_0211dad0(int i)
+{
+    S *s = (S *)this;
     s->arr[i].cnt++;
     if (s->arr[i].cnt < 8) return;
     s->arr[i].cnt = 0;
@@ -807,7 +765,7 @@ extern "C" void func_ov006_0211dad0(S *s, int i) {
     if (s->arr[i].b11 >= 8) {
         s->arr[i].b11 = 0;
         s->arr[i].b0c = 0;
-        s->arr[i].b0e = 3;
+        s->arr[i].state = 3;
         s->arr[i].h08 = 0;
         s->arr[i].word0 = 0x1000;
         Sound::PlayBank2_2D(0x1f9);
@@ -825,9 +783,10 @@ extern "C" void func_ov006_0211dad0(S *s, int i) {
 #define B16(off) (*(unsigned short *)(raw + i * 32 + (off)))
 #define B8(off)  (*(unsigned char  *)(raw + i * 32 + (off)))
 #define B32(off) (*(int            *)(raw + i * 32 + (off)))
-// @symbol func_ov006_0211db7c
-extern "C" void func_ov006_0211db7c(char *raw, int i)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211db7cEi
+void dScMgTeresa_c::func_ov006_0211db7c(int i)
 {
+    char *raw = (char *)this;
     A16(0x4bb2) += 1;
     if (B16(0x4bb2) >= 8) {
         B16(0x4bb2) = 0;
@@ -863,9 +822,10 @@ extern "C" void func_ov006_0211db7c(char *raw, int i)
 #pragma pop
 
 
-// @symbol func_ov006_0211dce0
-extern "C" void func_ov006_0211dce0(char *raw, int i)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211dce0Ei
+void dScMgTeresa_c::func_ov006_0211dce0(int i)
 {
+    char *raw = (char *)this;
   char *p = raw + (i << 5);
   *((raw + (i << 5)) + 0x4bba) = 1;
   *((short *) ((raw + (i << 5)) + 0x4bb4)) = 0x40;
@@ -873,16 +833,19 @@ extern "C" void func_ov006_0211dce0(char *raw, int i)
 }
 
 
-// @symbol func_ov006_0211dd0c
-extern "C" void func_ov006_0211dd0c(TeresaPmfB *c){
-  if (c->g == 0) return;
-  (c->*data_ov006_02142e88[c->idx])(0);
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211dd0cEv
+void dScMgTeresa_c::func_ov006_0211dd0c()
+{
+    S *s = (S *)this;
+    if (s->arr[0].active == 0) return;
+    (this->*data_ov006_02142e88[s->arr[0].state])(0);
 }
 
 
-// @symbol func_ov006_0211dd6c
-extern "C" void func_ov006_0211dd6c(char *raw)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211dd6cEv
+void dScMgTeresa_c::func_ov006_0211dd6c()
 {
+    char *raw = (char *)this;
     *(int *)(raw + 0x4ba0) = 655360;
     *(int *)(raw + 0x4ba4) = 393216;
     *(char *)(raw + 0x4bbc) = 1;
@@ -898,18 +861,21 @@ extern "C" void func_ov006_0211dd6c(char *raw)
 }
 
 
-// @symbol func_ov006_0211ddb8
-extern "C" void func_ov006_0211ddb8(char *raw)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211ddb8Ev
+void dScMgTeresa_c::func_ov006_0211ddb8()
 {
+    char *raw = (char *)this;
     *(char *)(raw + 0x4bb9) = 0;
     *(char *)(raw + 0x4bbc) = 0;
 }
 
 
-// @symbol func_ov006_0211ddcc
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211ddccEv
 /* decl_common.h declares this one with a `void *` parameter, and
    func_ov004_020af948 as `(void *, int, int, void *)`. */
-extern "C" void func_ov006_0211ddcc(void *c_){
+void dScMgTeresa_c::func_ov006_0211ddcc()
+{
+    void *c_ = this;
     char *c = (char *)c_;
     int i;
     for (i = 0; i < 0x10; i++) {
@@ -925,9 +891,10 @@ extern "C" void func_ov006_0211ddcc(void *c_){
 }
 
 
-// @symbol func_ov006_0211de54
-extern "C" void func_ov006_0211de54(char *p)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211de54Ev
+void dScMgTeresa_c::func_ov006_0211de54()
 {
+    char *p = (char *)this;
     int i;
     for (i = 0; i < 0x10; i++) {
         *(unsigned char *)(p + 0x4a70) = 0;
@@ -937,8 +904,10 @@ extern "C" void func_ov006_0211de54(char *p)
 }
 
 
-// @symbol func_ov006_0211de7c
-extern "C" int func_ov006_0211de7c(char *c) {
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211de7cEv
+int dScMgTeresa_c::func_ov006_0211de7c()
+{
+    char *c = (char *)this;
     int cnt = 0;
     int i;
     for (i = 0; i < 0x10; i++) {
@@ -951,8 +920,10 @@ extern "C" int func_ov006_0211de7c(char *c) {
 }
 
 
-// @symbol func_ov006_0211dec0
-extern "C" void func_ov006_0211dec0(void *arg) {
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211dec0Ev
+void dScMgTeresa_c::func_ov006_0211dec0()
+{
+    void *arg = this;
     int i;
     char *p = (char *)arg;
     for (i = 0; i < 16; i++, p += 0x14) {
@@ -991,9 +962,10 @@ extern "C" void func_ov006_0211dec0(void *arg) {
 }
 
 
-// @symbol func_ov006_0211e020
-extern "C" void func_ov006_0211e020(char *raw, int i)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211e020Ei
+void dScMgTeresa_c::func_ov006_0211e020(int i)
 {
+    char *raw = (char *)this;
   int n;
   char *p = raw;
   for (n = 0; n < 0x10; n++)
@@ -1018,23 +990,27 @@ extern "C" void func_ov006_0211e020(char *raw, int i)
 }
 
 
-// @symbol func_ov006_0211e0c8
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211e0c8Ev
 /* The call to func_ov006_0211e020 is cast because that function takes
    `char *`. */
-extern "C" void func_ov006_0211e0c8(RowArray* c) {
+void dScMgTeresa_c::func_ov006_0211e0c8()
+{
+    RowArray *c = (RowArray *)this;
     int i;
     struct Row* r = c->rows;
     for (i = 0; i < 0x10; i++) {
         if (((unsigned char*)r + 0x4000)[0x677] != 0 && ((unsigned char*)r + 0x4000)[0x678] == 5)
-            func_ov006_0211e020((char*)c, i);
+            func_ov006_0211e020(i);
         r++;
     }
 }
 
 
-// @symbol func_ov006_0211e118
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211e118Ev
 /* decl_common.h declares this one with a `void *` parameter. */
-extern "C" void func_ov006_0211e118(void* a0_) {
+void dScMgTeresa_c::func_ov006_0211e118()
+{
+    void *a0_ = this;
     struct HudArray* a0 = (struct HudArray*)a0_;
     int i;
     for (i = 0; i < 16; i++) {
@@ -1047,9 +1023,10 @@ extern "C" void func_ov006_0211e118(void* a0_) {
 
 #define LI(i) ((int)((long long)(i)) * 0x10)
 #define A(p) ((int)(p))
-// @symbol func_ov006_0211e184
-extern "C" void func_ov006_0211e184(char *raw)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211e184Ev
+void dScMgTeresa_c::func_ov006_0211e184()
 {
+    char *raw = (char *)this;
     int i;
 
     for (i = 0; i < 0x10; i++) {
@@ -1076,8 +1053,10 @@ extern "C" void func_ov006_0211e184(char *raw)
 
 #pragma push
 #pragma opt_strength_reduction off
-// @symbol func_ov006_0211e220
-extern "C" void func_ov006_0211e220(unsigned char* raw,int param){
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211e220Ei
+void dScMgTeresa_c::func_ov006_0211e220(int param)
+{
+    unsigned char *raw = (unsigned char *)this;
   struct E29* a=(struct E29*)raw;
   int i;
   for(i=0;i<16;i++){
@@ -1103,9 +1082,11 @@ extern "C" void func_ov006_0211e220(unsigned char* raw,int param){
 #pragma pop
 
 
-// @symbol func_ov006_0211e29c
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211e29cEv
 /* decl_common.h declares this one with a `void *` parameter. */
-extern "C" void func_ov006_0211e29c(void* arg){
+void dScMgTeresa_c::func_ov006_0211e29c()
+{
+    void *arg = this;
   unsigned char* raw = (unsigned char*)arg;
   if(*(unsigned char*)(raw+0x4c1b)==0) return;
   func_ov004_020b2220(0x80,0x60,*(unsigned short*)(raw+0x4c14),1,0,0x800,0);
@@ -1113,8 +1094,10 @@ extern "C" void func_ov006_0211e29c(void* arg){
 }
 
 
-// @symbol func_ov006_0211e318
-extern "C" void func_ov006_0211e318(char *raw){
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211e318Ev
+void dScMgTeresa_c::func_ov006_0211e318()
+{
+    char *raw = (char *)this;
   if (*(unsigned char*)(raw + 0x4c1c) == 0) return;
   if (*(unsigned short*)(raw + 0x4c14) == 0) return;
   *(unsigned char*)(((int)raw + 0x4c1a)) = *(unsigned char*)(((int)raw + 0x4c1a)) + 1;
@@ -1134,9 +1117,10 @@ extern "C" void func_ov006_0211e318(char *raw){
 }
 
 
-// @symbol func_ov006_0211e3e0
-extern "C" void func_ov006_0211e3e0(char *raw)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211e3e0Ev
+void dScMgTeresa_c::func_ov006_0211e3e0()
 {
+    char *raw = (char *)this;
     if (*(unsigned char *)(raw + 0x4c20) == 0) return;
     if (*(unsigned char *)(raw + 0x4c1c) != 0) return;
     if (*(unsigned int *)(raw + 0xbc) >= 0xf)
@@ -1150,10 +1134,11 @@ extern "C" void func_ov006_0211e3e0(char *raw)
 }
 
 
-// @symbol func_ov006_0211e460
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211e460Ev
 /* decl_common.h declares this one with a `void *` parameter. */
-extern "C" void func_ov006_0211e460(void *c_)
+void dScMgTeresa_c::func_ov006_0211e460()
 {
+    void *c_ = this;
     char *c = (char *)c_;
     int i;
     for (i = 0; i < 0x10; i++) {
@@ -1170,9 +1155,10 @@ extern "C" void func_ov006_0211e460(void *c_)
 
 
 #define A(p) ((unsigned char *)(int)(p))
-// @symbol func_ov006_0211e4e0
-extern "C" void func_ov006_0211e4e0(char *base)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211e4e0Ev
+void dScMgTeresa_c::func_ov006_0211e4e0()
 {
+    char *base = (char *)this;
     int i;
 
     for (i = 0; i < 0x10; i++) {
@@ -1195,8 +1181,10 @@ extern "C" void func_ov006_0211e4e0(char *base)
 #undef A
 
 
-// @symbol func_ov006_0211e55c
-extern "C" void func_ov006_0211e55c(char* raw, int idx) {
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211e55cEi
+void dScMgTeresa_c::func_ov006_0211e55c(int idx)
+{
+    char *raw = (char *)this;
     int i;
     char* slot = raw;
     for (i = 0; i < 0x10; i++) {
@@ -1213,9 +1201,10 @@ extern "C" void func_ov006_0211e55c(char* raw, int idx) {
 }
 
 
-// @symbol func_ov006_0211e5cc
-extern "C" void func_ov006_0211e5cc(char* raw)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211e5ccEv
+void dScMgTeresa_c::func_ov006_0211e5cc()
 {
+    char *raw = (char *)this;
     int found;
     int i;
     char* p;
@@ -1237,14 +1226,15 @@ extern "C" void func_ov006_0211e5cc(char* raw)
 }
 
 
-// @symbol func_ov006_0211e658
-extern "C" void func_ov006_0211e658(unsigned char* raw)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211e658Ev
+void dScMgTeresa_c::func_ov006_0211e658()
 {
+    unsigned char *raw = (unsigned char *)this;
     if (*(unsigned short*)(raw + 0x4c14) == 0 && *(unsigned char*)(raw + 0x4c20) != 0) {
         *(unsigned char*)(raw + 0x4c1f) = 0;
         *(int*)(raw + 0x4be8) = 3;
         *(unsigned short*)(raw + 0x4c0c) = 0x60;
-        func_ov006_0211cc90(raw);
+        func_ov006_0211cc90();
         *(unsigned char*)(raw + 0x4c27) = 1;
         return;
     }
@@ -1266,13 +1256,13 @@ extern "C" void func_ov006_0211e658(unsigned char* raw)
             return;
         *(int*)(raw + 0x4be8) = 3;
         *(unsigned short*)(raw + 0x4c0c) = 0x60;
-        func_ov006_0211cc90(raw);
+        func_ov006_0211cc90();
         *(unsigned char*)(raw + 0x4c1f) = 1;
     }
 }
 
 
-// @symbol func_ov006_0211e72c
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211e72cEv
 /* Draws the 16 Boo sprites. Each 0x24-byte slot at +0x4660 holds a position
  * (x, y in 20.12), a translucency flag, a visible flag, an OAM priority and an
  * animation/frame pair that picks the sprite's attribute block from a table of
@@ -1281,8 +1271,9 @@ extern "C" void func_ov006_0211e658(unsigned char* raw)
  * attribute's own mode (-1) otherwise. The mode is declared between the frame
  * index and the y read on purpose: that is what puts the -1 where the ROM
  * keeps it. decl_common.h declares this one with a `void *` parameter. */
-extern "C" void func_ov006_0211e72c(void *arg)
+void dScMgTeresa_c::func_ov006_0211e72c()
 {
+    void *arg = this;
     char *row = (char *)arg;
     int i;
 
@@ -1308,9 +1299,10 @@ extern "C" void func_ov006_0211e72c(void *arg)
 }
 
 
-// @symbol func_ov006_0211e7d8
-extern "C" void func_ov006_0211e7d8(char *self)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211e7d8Ev
+void dScMgTeresa_c::func_ov006_0211e7d8()
 {
+    char *self = (char *)this;
     int found = 0;
     int i = 0;
     char *p = self;
@@ -1342,9 +1334,10 @@ extern "C" void func_ov006_0211e7d8(char *self)
 
 
 #define A(a) (*(u8*)(a))
-// @symbol func_ov006_0211e8a8
-extern "C" void func_ov006_0211e8a8(char* c, int idx)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211e8a8Ei
+void dScMgTeresa_c::func_ov006_0211e8a8(int idx)
 {
+    char *c = (char *)this;
     int x;
     int y;
     int count;
@@ -1383,7 +1376,7 @@ extern "C" void func_ov006_0211e8a8(char* c, int idx)
     *(u8*)&((char (*)[0x24])c)[idx][0x4680] = *(u8*)(c + 0x4c21);
     *(s16*)&((char (*)[0x24])c)[idx][0x466e] = 0x40;
     A(c + 0x4c21)++;
-    func_ov006_0211e55c(c, idx);
+    func_ov006_0211e55c(idx);
     func_02012718(0x1f0, *(int*)(c + off + 0x4660));
     if (*(u8*)(c + 0x4c26) == 0xff)
         *(u8*)(c + 0x4c26) = (u8)idx;
@@ -1393,9 +1386,10 @@ extern "C" void func_ov006_0211e8a8(char* c, int idx)
 
 #pragma push
 #pragma opt_common_subs off
-// @symbol func_ov006_0211ea70
-extern "C" void func_ov006_0211ea70(char *self, int idx)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211ea70Ei
+void dScMgTeresa_c::func_ov006_0211ea70(int idx)
 {
+    char *self = (char *)this;
     int gx, gy;
     int cnt;
     int y;
@@ -1435,19 +1429,22 @@ extern "C" void func_ov006_0211ea70(char *self, int idx)
 #pragma pop
 
 
-// @symbol func_ov006_0211eb90
-extern "C" void func_ov006_0211eb90(char *c, int i) {
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211eb90Ei
+void dScMgTeresa_c::func_ov006_0211eb90(int i)
+{
+    char *c = (char *)this;
     if (*(unsigned char *)(c + i * 0x24 + 0x467f) == 0) {
         return;
     }
-    func_ov006_0211f454(c, i);
-    func_ov006_0211f34c(c, i);
+    func_ov006_0211f454(i);
+    func_ov006_0211f34c(i);
 }
 
 
-// @symbol func_ov006_0211ebdc
-extern "C" void func_ov006_0211ebdc(char *c, int i)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211ebdcEi
+void dScMgTeresa_c::func_ov006_0211ebdc(int i)
 {
+    char *c = (char *)this;
     u8 *s;
     int o = i * 0x24;
     u8 *fade;
@@ -1470,8 +1467,8 @@ extern "C" void func_ov006_0211ebdc(char *c, int i)
         }
     }
 
-    func_ov006_0211f454(c, i);
-    func_ov006_0211f34c(c, i);
+    func_ov006_0211f454(i);
+    func_ov006_0211f34c(i);
 
     {
         char *row = c + o;
@@ -1513,9 +1510,10 @@ extern "C" void func_ov006_0211ebdc(char *c, int i)
 }
 
 
-// @symbol func_ov006_0211ee34
-extern "C" void func_ov006_0211ee34(char *c, int i)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211ee34Ei
+void dScMgTeresa_c::func_ov006_0211ee34(int i)
 {
+    char *c = (char *)this;
     int k = i * 0x24;
 
     if (*(u16 *)(c + 0x4674 + k) != 0) {
@@ -1534,8 +1532,8 @@ extern "C" void func_ov006_0211ee34(char *c, int i)
             *(u8 *)(c + 0x467d + k) = 3;
     }
 
-    func_ov006_0211f454(c, i);
-    func_ov006_0211f34c(c, i);
+    func_ov006_0211f454(i);
+    func_ov006_0211f34c(i);
 
     if (data_02082214[2 * (*(u16 *)(c + 0x466c + k) >> 4) + 1] >= 0)
         *(u8 *)(c + 0x467e + k) = 1;
@@ -1568,9 +1566,10 @@ extern "C" void func_ov006_0211ee34(char *c, int i)
 }
 
 
-// @symbol func_ov006_0211f040
-extern "C" void func_ov006_0211f040(char *c, int idx)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211f040Ei
+void dScMgTeresa_c::func_ov006_0211f040(int idx)
 {
+    char *c = (char *)this;
     int off;
     if (*(int *)(c + 0x4000 + 0xbe8) != 4)
         return;
@@ -1579,7 +1578,7 @@ extern "C" void func_ov006_0211f040(char *c, int idx)
         *(unsigned short *)(c + 0x466e + off) = *(unsigned short *)(c + 0x466e + off) - 1;
         return;
     }
-    func_ov006_0211e220((unsigned char *)c, idx);
+    func_ov006_0211e220(idx);
     *(unsigned char *)(c + off + 0x4000 + 0x67a) = 0;
     *(unsigned char *)(c + off + 0x4000 + 0x677) = 0;
     if (*(unsigned char *)(c + 0x4000 + 0xc26) != idx)
@@ -1588,9 +1587,10 @@ extern "C" void func_ov006_0211f040(char *c, int idx)
 }
 
 
-// @symbol func_ov006_0211f0d0
-extern "C" void func_ov006_0211f0d0(unsigned char* base, int idx)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211f0d0Ei
+void dScMgTeresa_c::func_ov006_0211f0d0(int idx)
 {
+    unsigned char *base = (unsigned char *)this;
     int off = idx * 0x24;
     unsigned short* cnt = (unsigned short*)((unsigned char*)(base + 0x466e) + off);
     if (*cnt != 0) {
@@ -1601,8 +1601,8 @@ extern "C" void func_ov006_0211f0d0(unsigned char* base, int idx)
             return;
         }
     }
-    func_ov006_0211f454((char *)base, idx);
-    func_ov006_0211f34c((char *)base, idx);
+    func_ov006_0211f454(idx);
+    func_ov006_0211f34c(idx);
     {
         int v = *(unsigned short*)((unsigned char*)(base + 0x466c) + off);
         short look = data_02082214[(v >> 4) * 2 + 1];
@@ -1611,18 +1611,19 @@ extern "C" void func_ov006_0211f0d0(unsigned char* base, int idx)
         else
             *(unsigned char*)((unsigned char*)(base + 0x467e) + off) = 0;
     }
-    func_ov006_0211e8a8((char *)base, idx);
+    func_ov006_0211e8a8(idx);
 }
 
 
-// @symbol func_ov006_0211f1a4
-extern "C" void func_ov006_0211f1a4(char *c, int i)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211f1a4Ei
+void dScMgTeresa_c::func_ov006_0211f1a4(int i)
 {
+    char *c = (char *)this;
     char *e;
     int v;
-    func_ov006_0211eb90(c, i);
-    func_ov006_0211ea70(c, i);
-    func_ov006_0211e8a8(c, i);
+    func_ov006_0211eb90(i);
+    func_ov006_0211ea70(i);
+    func_ov006_0211e8a8(i);
     e = c + i * 0x24;
     v = data_02082214[(*(unsigned short *)(e + 0x466c) >> 4) * 2 + 1];
     if (v >= 0)
@@ -1632,12 +1633,13 @@ extern "C" void func_ov006_0211f1a4(char *c, int i)
 }
 
 
-// @symbol func_ov006_0211f224
-extern "C" void func_ov006_0211f224(char *c, int i)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211f224Ei
+void dScMgTeresa_c::func_ov006_0211f224(int i)
 {
+    char *c = (char *)this;
     int k;
-    func_ov006_0211f454(c, i);
-    func_ov006_0211f34c(c, i);
+    func_ov006_0211f454(i);
+    func_ov006_0211f34c(i);
     k = i * 0x24;
     if (data_02082214[2 * (*(unsigned short *)(c + 0x466c + k) >> 4) + 1] >= 0)
         *(unsigned char *)(c + 0x467e + k) = 1;
@@ -1659,9 +1661,10 @@ extern "C" void func_ov006_0211f224(char *c, int i)
 }
 
 
-// @symbol func_ov006_0211f34c
-extern "C" void func_ov006_0211f34c(char *o, int i)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211f34cEi
+void dScMgTeresa_c::func_ov006_0211f34c(int i)
 {
+    char *o = (char *)this;
     int m = i * 0x24;
     int xt = *(int *)((char *)(((int)o + 0x4660)) + m) >> 12;
     int yt = *(int *)((char *)(((int)o + 0x4664)) + m) >> 12;
@@ -1686,9 +1689,10 @@ extern "C" void func_ov006_0211f34c(char *o, int i)
 }
 
 
-// @symbol func_ov006_0211f454
-extern "C" void func_ov006_0211f454(char *c, int i)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211f454Ei
+void dScMgTeresa_c::func_ov006_0211f454(int i)
 {
+    char *c = (char *)this;
   int n = i * 0x24;
   char *pm = c + 0x4668;
   char *pa = c + 0x466c;
@@ -1709,8 +1713,10 @@ extern "C" void func_ov006_0211f454(char *c, int i)
 }
 
 
-// @symbol func_ov006_0211f51c
-extern "C" void func_ov006_0211f51c(char *c) {
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211f51cEv
+void dScMgTeresa_c::func_ov006_0211f51c()
+{
+    char *c = (char *)this;
     int i;
     for (i = 0; i < 0x10; i++) {
         if (*(unsigned char*)(c + 0x4677) != 0 && *(unsigned char*)(c + 0x4678) == 1) {
@@ -1721,9 +1727,10 @@ extern "C" void func_ov006_0211f51c(char *c) {
 }
 
 
-// @symbol func_ov006_0211f554
-extern "C" void func_ov006_0211f554(char *c, int i)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211f554Ei
+void dScMgTeresa_c::func_ov006_0211f554(int i)
 {
+    char *c = (char *)this;
     int off;
     char *e;
     int v;
@@ -1735,8 +1742,8 @@ extern "C" void func_ov006_0211f554(char *c, int i)
     e = c;
     e += off;
     *(unsigned short *)(e + 0x466e) = 0;
-    func_ov006_0211f454(c, i);
-    func_ov006_0211f34c(c, i);
+    func_ov006_0211f454(i);
+    func_ov006_0211f34c(i);
     e = c;
     e += off;
     h = *(unsigned short *)(e + 0x466c);
@@ -1750,9 +1757,10 @@ extern "C" void func_ov006_0211f554(char *c, int i)
 }
 
 
-// @symbol func_ov006_0211f5d4
-extern "C" void func_ov006_0211f5d4(char *c, int idx)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211f5d4Ei
+void dScMgTeresa_c::func_ov006_0211f5d4(int idx)
 {
+    char *c = (char *)this;
     int off = idx * 0x24;
     char *e = c + off;
     unsigned char t;
@@ -1771,8 +1779,10 @@ extern "C" void func_ov006_0211f5d4(char *c, int idx)
 }
 
 
-// @symbol func_ov006_0211f664
-extern "C" void func_ov006_0211f664(char* c, int i) {
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211f664Ei
+void dScMgTeresa_c::func_ov006_0211f664(int i)
+{
+    char *c = (char *)this;
   int idx = i * 0x24;
   if (*(unsigned char*)(c + 0x4678 + idx) >= 6) return;
   *(short*)(c + 0x4670 + idx) = *(unsigned short*)(c + 0x4670 + idx) + 1;
@@ -1784,22 +1794,24 @@ extern "C" void func_ov006_0211f664(char* c, int i) {
 }
 
 
-// @symbol func_ov006_0211f6fc
-extern "C" void func_ov006_0211f6fc(TeresaPmfC *c) {
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211f6fcEv
+void dScMgTeresa_c::func_ov006_0211f6fc()
+{
     int i;
-    char *e = (char*)c;
+    char *e = (char*)this;
     for (i = 0; i < 0x10; i++, e += 0x24) {
         if (*(unsigned char*)(e + 0x4677)) {
-            (c->*data_ov006_02142ed8[*(unsigned char*)(e + 0x4678)])(i);
-            func_ov006_0211f664((char *)c, i);
+            (this->*data_ov006_02142ed8[*(unsigned char*)(e + 0x4678)])(i);
+            func_ov006_0211f664(i);
         }
     }
 }
 
 
-// @symbol func_ov006_0211f77c
-extern "C" void func_ov006_0211f77c(char *c)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211f77cEv
+void dScMgTeresa_c::func_ov006_0211f77c()
 {
+    char *c = (char *)this;
     int sel;
     int count;
     unsigned short phase;
@@ -1881,9 +1893,10 @@ extern "C" void func_ov006_0211f77c(char *c)
 
 #pragma push
 #pragma opt_common_subs off
-// @symbol func_ov006_0211f9fc
-extern "C" void func_ov006_0211f9fc(int self)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211f9fcEv
+void dScMgTeresa_c::func_ov006_0211f9fc()
 {
+    int self = (int)this;
     int close;
 
     if (((u8 *)self + 0x4000)[0xC20] == 0)
@@ -1892,7 +1905,7 @@ extern "C" void func_ov006_0211f9fc(int self)
         return;
 
     close = 0;
-    func_ov006_0211fb1c((char *)self);
+    func_ov006_0211fb1c();
 
     if (((u8 *)self + 0x4000)[0xC1D] != 0) {
         /* Not Vector3: its C++ destructor changes this frame. */
@@ -1936,8 +1949,10 @@ extern "C" void func_ov006_0211f9fc(int self)
 
 
 #define AT(p, off) ((void*)(int)((char*)(p) + (off)))
-// @symbol func_ov006_0211fb1c
-extern "C" void func_ov006_0211fb1c(char* c) {
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211fb1cEv
+void dScMgTeresa_c::func_ov006_0211fb1c()
+{
+    char *c = (char *)this;
     int i = gActivePlayerSlot;
     if (gTouchHeld[(unsigned int)i * 4] != 0 && *(u8*)(c + 0x4c1d) == 0) {
         *(int*)(c + 0x4bec) = gTouchX[i * 4];
@@ -1958,9 +1973,10 @@ extern "C" void func_ov006_0211fb1c(char* c) {
 
 #pragma push
 #pragma opt_strength_reduction off
-// @symbol func_ov006_0211fbf8
-extern "C" void func_ov006_0211fbf8(char *p)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211fbf8Ev
+void dScMgTeresa_c::func_ov006_0211fbf8()
 {
+    char *p = (char *)this;
   int v;
   int i;
   char *new_var;
@@ -2028,11 +2044,11 @@ extern "C" void func_ov006_0211fbf8(char *p)
   *((char *) (p + 0x4c1b)) = i;
   *((char *) (p + 0x4c1c)) = i;
   *((char *) (p + 0x4c21)) = i;
-  func_ov006_0211ddb8(p);
-  func_ov006_0211d7d8(p);
+  func_ov006_0211ddb8();
+  func_ov006_0211d7d8();
   *((short *) (p + 0x4c18)) = i;
   *((char *) (p + 0x4c24)) = i;
-  func_ov006_0211d688(p);
+  func_ov006_0211d688();
   *((int *) (p + 0x4c08)) = i;
   *((unsigned char *) (p + 0x4c26)) = 0xff;
   *((char *) (p + 0x4c27)) = i;
@@ -2040,12 +2056,13 @@ extern "C" void func_ov006_0211fbf8(char *p)
 #pragma pop
 
 
-// @symbol func_ov006_0211fd44
-extern "C" void func_ov006_0211fd44(char *c)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211fd44Ev
+void dScMgTeresa_c::func_ov006_0211fd44()
 {
-    func_ov006_0211d5a8((TeresaPmfA *)c);
-    func_ov006_0211f6fc((TeresaPmfC *)c);
-    func_ov006_0211e184(c);
+    char *c = (char *)this;
+    func_ov006_0211d5a8();
+    func_ov006_0211f6fc();
+    func_ov006_0211e184();
     if (*(unsigned short *)(c + 0x4c0c) == 0) return;
     *(unsigned short *)(((int)c + 0x4c0c)) -= 1;
     if (*(short *)(c + 0x4c0c) > 0) return;
@@ -2074,11 +2091,12 @@ extern "C" void func_ov006_0211fd44(char *c)
 }
 
 
-// @symbol func_ov006_0211fe78
-extern "C" void func_ov006_0211fe78(char *c)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_0211fe78Ev
+void dScMgTeresa_c::func_ov006_0211fe78()
 {
-    func_ov006_0211d5a8((TeresaPmfA *)c);
-    func_ov006_0211f9fc((int)c);
+    char *c = (char *)this;
+    func_ov006_0211d5a8();
+    func_ov006_0211f9fc();
     if (*(u16 *)(c + 0x4c0c) != 0) {
         {
             u16 *p = (u16 *)((int)c + 0x4c0c);
@@ -2087,21 +2105,21 @@ extern "C" void func_ov006_0211fe78(char *c)
         if (*(s16 *)(c + 0x4c0c) > 0)
             return;
         if (*(u8 *)(c + 0x4c1f) != 0) {
-            func_ov006_0211e0c8((RowArray *)c);
+            func_ov006_0211e0c8();
             *(s16 *)(c + 0x4c0e) = 0x60;
             return;
         }
-        func_ov006_0211e0c8((RowArray *)c);
-        func_ov006_0211e7d8(c);
+        func_ov006_0211e0c8();
+        func_ov006_0211e7d8();
         *(s16 *)(c + 0x4c0e) = 0x60;
         return;
     }
-    func_ov006_0211dec0(c);
-    func_ov006_0211f6fc((TeresaPmfC *)c);
-    if (func_ov006_0211de7c(c) != 0)
+    func_ov006_0211dec0();
+    func_ov006_0211f6fc();
+    if (func_ov006_0211de7c() != 0)
         return;
     if (*(u16 *)(c + 0x4c0e) != 0) {
-        func_ov006_0211d69c(c);
+        func_ov006_0211d69c();
         {
             u16 *q = (u16 *)((int)c + 0x4c0e);
             *q = *q - 1;
@@ -2110,22 +2128,23 @@ extern "C" void func_ov006_0211fe78(char *c)
             *(s16 *)(c + 0x4c0e) = 0;
         return;
     }
-    func_ov006_0211de54(c);
+    func_ov006_0211de54();
     *(int *)(c + 0x4be8) = 4;
     *(s16 *)(c + 0x4c0c) = 0x60;
     *(int *)0x4001000 = *(int *)0x4001000 & ~0xe000;
     data_0209d454 = data_0209d454 & ~1;
     Sound::PlayBank2_2D(0x1f7);
-    func_ov006_0211cc2c((unsigned char *)c);
+    func_ov006_0211cc2c();
     if (*(u8 *)(c + 0x4c1f) == 0)
         return;
     Sound::PlayBank2_2D(0x1f2);
 }
 
 
-// @symbol func_ov006_02120008
-extern "C" void func_ov006_02120008(char *c)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_02120008Ev
+void dScMgTeresa_c::func_ov006_02120008()
 {
+    char *c = (char *)this;
   unsigned short *g = (unsigned short *) (c + 0x4c00);
   int new_var;
   if (g[0xb] != 0)
@@ -2143,27 +2162,29 @@ extern "C" void func_ov006_02120008(char *c)
       }
     }
   }
-  func_ov006_0211e318(c);
-  func_ov006_0211f9fc((int)c);
-  func_ov006_0211f6fc((TeresaPmfC *)c);
-  func_ov006_0211e5cc(c);
-  func_ov006_0211e3e0(c);
-  func_ov006_0211d5a8((TeresaPmfA *)c);
-  func_ov006_0211e658((unsigned char *)c);
+  func_ov006_0211e318();
+  func_ov006_0211f9fc();
+  func_ov006_0211f6fc();
+  func_ov006_0211e5cc();
+  func_ov006_0211e3e0();
+  func_ov006_0211d5a8();
+  func_ov006_0211e658();
 }
 
 
-// @symbol func_ov006_021200a8
-extern "C" void func_ov006_021200a8(void* c) {
-    func_ov006_0211dd0c((TeresaPmfB *)c);
-    func_ov006_0211d7b0(c);
-    func_ov006_0211f6fc((TeresaPmfC *)c);
-}
-
-
-// @symbol func_ov006_021200cc
-extern "C" void func_ov006_021200cc(char *p)
+// @symbol _ZN13dScMgTeresa_c19func_ov006_021200a8Ev
+void dScMgTeresa_c::func_ov006_021200a8()
 {
+    func_ov006_0211dd0c();
+    func_ov006_0211d7b0();
+    func_ov006_0211f6fc();
+}
+
+
+// @symbol _ZN13dScMgTeresa_c19func_ov006_021200ccEv
+void dScMgTeresa_c::func_ov006_021200cc()
+{
+    char *p = (char *)this;
     *(int *)(p + 0x4be8) = 1;
 }
 
@@ -2253,10 +2274,10 @@ void dScMgTeresa_c::OnYoshiTryEat(int reset)
         if (*(unsigned int*)(self + 0xbc) > 0x270e)
             *(unsigned int*)(self + 0xbc) = 0x270e;
     }
-    func_ov006_0211fbf8(self);
-    func_ov006_0211dd6c(self);
-    func_ov006_0211d7b4(self);
-    func_ov006_0211f77c(self);
+    func_ov006_0211fbf8();
+    func_ov006_0211dd6c();
+    func_ov006_0211d7b4();
+    func_ov006_0211f77c();
     char* dst = (char *)G2S::GetBG0CharPtr();
     val = 0x1111;
     MultiStore16(val, dst, 0x6000);
@@ -2275,14 +2296,14 @@ void dScMgTeresa_c::OnYoshiTryEat(int reset)
 s32 dScMgTeresa_c::Render()
 {
     func_ov004_020b1e34(this, 0xe0, 0x14, 1);
-    func_ov006_0211ddcc(this);
-    func_ov006_0211e29c(this);
-    func_ov006_0211e460(this);
-    func_ov006_0211e118(this);
-    func_ov006_0211e72c(this);
-    func_ov006_0211d7ec(this);
-    func_ov006_0211d75c(this);
-    func_ov006_0211cca8(this);
+    func_ov006_0211ddcc();
+    func_ov006_0211e29c();
+    func_ov006_0211e460();
+    func_ov006_0211e118();
+    func_ov006_0211e72c();
+    func_ov006_0211d7ec();
+    func_ov006_0211d75c();
+    func_ov006_0211cca8();
     return 1;
 }
 
@@ -2292,8 +2313,8 @@ s32 dScMgTeresa_c::Render()
    table data_ov006_02142eb0, indexed by unk_4be8. */
 s32 dScMgTeresa_c::Behavior()
 {
-    (((TeresaPmfD *)this)->*data_ov006_02142eb0[unk_4be8].pmf)();
-    func_ov006_0211e4e0((char *)this);
+    (this->*data_ov006_02142eb0[unk_4be8].pmf)();
+    func_ov006_0211e4e0();
     return 1;
 }
 
@@ -2373,11 +2394,11 @@ s32 dScMgTeresa_c::InitResources()
     Deallocate(f1);
     Deallocate(f2);
     func_ov004_020b04d0(0x20);
-    func_ov006_0211fbf8(self);
+    func_ov006_0211fbf8();
     *((u8 *) (self + 0x4c23)) = 0xff;
-    func_ov006_0211d7b4(self);
-    func_ov006_0211dd6c(self);
-    func_ov006_0211f77c(self);
+    func_ov006_0211d7b4();
+    func_ov006_0211dd6c();
+    func_ov006_0211f77c();
     *((int *) (self + 0x4be8)) = 1;
     *((u16 *) (self + 0x4c16)) = 0x20;
     func_ov004_020b0cac(0xd, 0x80, 0xa8, 1, -1, 0xd);

@@ -65,15 +65,15 @@ assignments are:
 | Recovered TU / sampled profiles | Initializer | Ownership confidence |
 |---|---|---|
 | under-segmented [arm9](../config/arm9/symbols.txt) / `BOOT`, `STAGE` | 16 initializers from `0x02073a24` through `0x02075154` | medium; cannot distinguish the two sampled classes |
-| [ov002](../config/arm9/overlays/ov002/symbols.txt) Cannon Shutter | [__sinit_ov002_02101968](../src/__sinit_ov002_02101968.c) | high |
-| [ov010](../config/arm9/overlays/ov010/symbols.txt) C1 Trap | [__sinit_ov010_0211203c](../src/__sinit_ov010_0211203c.c) | high |
-| [ov084](../config/arm9/overlays/ov084/symbols.txt) Kuribo | [__sinit_ov084_0213035c](../src/__sinit_ov084_0213035c.c) | medium |
+| [ov002](../config/arm9/overlays/ov002/symbols.txt) Cannon Shutter | [__sinit_ov002_02101968](../src/unnamed/ov002/__sinit_ov002_02101968.c) | high |
+| [ov010](../config/arm9/overlays/ov010/symbols.txt) C1 Trap | [__sinit_ov010_0211203c](../src/unnamed/ov010/__sinit_ov010_0211203c.c) | high |
+| [ov084](../config/arm9/overlays/ov084/symbols.txt) Kuribo | [__sinit_ov084_0213035c](../src/unnamed/ov084/__sinit_ov084_0213035c.c) | medium |
 | [ov063](../config/arm9/overlays/ov063/symbols.txt) Teresa / Boss Teresa | [__sinit_ov063_0211e29c](../src/unnamed/ov063/__sinit_ov063_0211e29c.c) | high; shared multi-profile TU |
-| [ov014](../config/arm9/overlays/ov014/symbols.txt) Wanwan | [__sinit_ov014_02113118](../src/__sinit_ov014_02113118.c) | high |
-| [ov085](../config/arm9/overlays/ov085/symbols.txt) Mip Key | [__sinit_ov085_0212f9bc](../src/__sinit_ov085_0212f9bc.c) | high |
-| [ov070](../config/arm9/overlays/ov070/symbols.txt) Propeller Heyho | [__sinit_ov070_02122afc](../src/__sinit_ov070_02122afc.c) | high |
+| [ov014](../config/arm9/overlays/ov014/symbols.txt) Wanwan | [__sinit_ov014_02113118](../src/unnamed/ov014/__sinit_ov014_02113118.c) | high |
+| [ov085](../config/arm9/overlays/ov085/symbols.txt) Mip Key | [__sinit_ov085_0212f9bc](../src/unnamed/ov085/__sinit_ov085_0212f9bc.c) | high |
+| [ov070](../config/arm9/overlays/ov070/symbols.txt) Propeller Heyho | [__sinit_ov070_02122afc](../src/unnamed/ov070/__sinit_ov070_02122afc.c) | high |
 | [ov020](../config/arm9/overlays/ov020/symbols.txt) Book / Book Generator | [__sinit_ov020_02113674](../src/__sinit_ov020_02113674.c) | high; shared multi-class TU |
-| [ov006](../config/arm9/overlays/ov006/symbols.txt) MG Curling | [__sinit_ov006_021304ac](../src/__sinit_ov006_021304ac.c) | medium |
+| [ov006](../config/arm9/overlays/ov006/symbols.txt) MG Curling | [__sinit_ov006_021304ac](../src/unnamed/ov006/__sinit_ov006_021304ac.c) | medium |
 
 No initializer is assigned to the other sampled intervals.  That absence is
 recorded as unknown, not proof that the historical source performed no static

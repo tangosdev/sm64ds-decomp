@@ -44,10 +44,10 @@ src/game/actors/d_a_obj_maruta.cpp:
     complete
     .text start:0x02127058 end:0x0212766c
 
-src/__sinit_ov080_021278c0.c:
+src/unnamed/ov080/__sinit_ov080_021278c0.c:
     complete
     .init start:0x021278c0 end:0x02127a60
 
-src/__sinit_ov080_02127b2c.c:
+src/unnamed/ov080/__sinit_ov080_02127b2c.c:
     complete
     .init start:0x02127b2c end:0x02127f60

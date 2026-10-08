@@ -11,11 +11,11 @@ src/actors/dCapIcon_c.cpp:
     complete
     .text start:0x020ab110 end:0x020ab3f0
 
-src/func_ov001_020ab3f0.c:
+src/unnamed/ov001/func_ov001_020ab3f0.c:
     complete
     .text start:0x020ab3f0 end:0x020ab41c
 
-src/func_ov001_020ab41c.c:
+src/unnamed/ov001/func_ov001_020ab41c.c:
     complete
     .text start:0x020ab41c end:0x020ab450
 
@@ -27,6 +27,6 @@ src/actors/dThIcon_c.cpp:
     complete
     .text start:0x020ab54c end:0x020ab5b0
 
-src/func_ov001_020ab5b0.c:
+src/unnamed/ov001/func_ov001_020ab5b0.c:
     complete
     .text start:0x020ab5b0 end:0x020ab5f8

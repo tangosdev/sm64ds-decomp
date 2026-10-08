@@ -77,7 +77,7 @@ functions, all inside this class's own address range:
 | --- | --- | --- |
 | 0x09c | `mVertAccel` | `dActor_c`'s offset; `daTor_c::InitResources` sets -0x1000. |
 | 0x0a0 | `mTerminalVelocity` | `dActor_c`'s offset; InitResources sets -0x1e000. |
-| 0x33c | `mCaughtActor` | `daTor_c::Behavior` resolves `mdCcAc_c.otherOwner` to an actor and stores it here once [func_ov002_020de33c](../src/func_ov002_020de33c.c) approves. State 1 re-tests it through [func_ov002_020de328](../src/func_ov002_020de328.c); state 2 clears it. |
+| 0x33c | `mCaughtActor` | `daTor_c::Behavior` resolves `mdCcAc_c.otherOwner` to an actor and stores it here once [func_ov002_020de33c](../src/unnamed/ov002/func_ov002_020de33c.c) approves. State 1 re-tests it through [func_ov002_020de328](../src/unnamed/ov002/func_ov002_020de328.c); state 2 clears it. |
 | 0x340/0x344/0x348 | `mHomePosX/Y/Z` | InitResources copies `mPos` here. State 0 snaps `mPos` back to it; states 1 and 2 measure every distance from it rather than from where the tornado is. |
 | 0x34c | `mChaseRange` | InitResources builds it from `mParam & 0xff`: `byte * 0x64000`, or 0x5dc000 when the byte is 0xff. State 1 chases only while the player is within it of `mHomePos`. |
 | 0x350 | `mStateTimer` | Behavior counts it up every frame and zeroes it when `mState` changed. State 0 spins up over its first 0x3c, state 2 shrinks over its own 0x3c and gives up at 0x168. |
@@ -85,7 +85,7 @@ functions, all inside this class's own address range:
 | 0x356 | `mAngleToHome` | State 1 sets it to `Vec3_HorzAngle(mPos, mHomePos)` every frame and steers toward it when not chasing. |
 | 0x358 | `mAngleToPlayer` | The same angle to the closest player, steered toward while chasing. |
 | 0x35c | `mState` | The switch in Behavior. |
-| 0x360 | `mTriggerCount` | An event counter both live states use as a latch, zeroed by Behavior on any state change. State 0 bumps it when a player comes within 0x5dc000 and only spins up while it is non-zero; state 1 bumps it when `mCaughtActor` satisfies [func_ov002_020de328](../src/func_ov002_020de328.c) and stops chasing once it is non-zero. |
+| 0x360 | `mTriggerCount` | An event counter both live states use as a latch, zeroed by Behavior on any state change. State 0 bumps it when a player comes within 0x5dc000 and only spins up while it is non-zero; state 1 bumps it when `mCaughtActor` satisfies [func_ov002_020de328](../src/unnamed/ov002/func_ov002_020de328.c) and stops chasing once it is non-zero. |
 | 0x364 | `mParticleHandle0` | `Particle::System::New`'s return for effect 0x11f, fed back in as its own first argument by state 1. |
 | 0x368 | `mParticleHandle1` | The same for effect 0x120. |
 | 0x36c | `mSoundHandle` | `Sound::PlayLong`'s return for sound 0x85, fed back the same way by states 0 and 1. Was the header's trailing pad; `Tornado_Spawn` allocates 0x370, so it is the last word. |

@@ -231,7 +231,7 @@ name to bank the record as `deadstrip-data`. It is now
 `_ZTS16daObjRcBuranko_c` in [config/arm9/overlays/ov036/symbols.txt](../config/arm9/overlays/ov036/symbols.txt).
 
 For some of the rest, deferral is more than procedural -- renaming would assert
-something false. `0x0211396c` exists in **both** [ov018](../config/arm9/overlays/ov018/symbols.txt) and [ov032](../config/arm9/overlays/ov032/symbols.txt). The file [src/__sinit_ov018_02112c80.cpp](../src/__sinit_ov018_02112c80.cpp) -- an [ov018](../config/arm9/overlays/ov018/symbols.txt) file -- refers to it by [ov032](../config/arm9/overlays/ov032/symbols.txt)'s spelling,
+something false. `0x0211396c` exists in **both** [ov018](../config/arm9/overlays/ov018/symbols.txt) and [ov032](../config/arm9/overlays/ov032/symbols.txt). The file [src/unnamed/ov018/__sinit_ov018_02112c80.cpp](../src/unnamed/ov018/__sinit_ov018_02112c80.cpp) -- an [ov018](../config/arm9/overlays/ov018/symbols.txt) file -- refers to it by [ov032](../config/arm9/overlays/ov032/symbols.txt)'s spelling,
 [data_ov032_0211396c](../config/arm9/overlays/ov032/symbols.txt). Renaming that to `_ZTS14daObjTdWater_c` would state that an [ov018](../config/arm9/overlays/ov018/symbols.txt) reference points at [ov032](../config/arm9/overlays/ov032/symbols.txt)'s typeinfo string. It may; nothing here proves it. This is [notes/overlay-ambiguous-references.md](../notes/overlay-ambiguous-references.md) territory and wants [tools/overlay_residency.py](../tools/overlay_residency.py), one address at a time.
 
 |Adresss|Overlay|Symbol|Note|

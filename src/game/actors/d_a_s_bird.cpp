@@ -28,7 +28,7 @@
  *   021116ec, 021115d8, 0211145c, 02111234); 02111224 is the follower-
  *   attach the two spawn loops call. 0211145c is the unmatched hatch.
  * - func_ov009_0211145c is a proven mwccarm 1.2/2004/b56 register-
- *   allocation wall. It lives in src/func_ov009_0211145c.c as an
+ *   allocation wall. It lives in src/unnamed/ov009/func_ov009_0211145c.c as an
  *   unenrolled draft (not in this TU's delinks span).
  *   D1/D0 stay as leftover enrolled files below that hole;
  *   02111224/02111234 folded into d_a_s_bird_head.cpp as daSBird_c

@@ -92,7 +92,7 @@ From `build/tu_map.json`, unchanged and not regenerated:
   above and one class label, `daObjKm2_Ami_Bou_c`.
 - Neighbours differ: `FireSeaElevator_Spawn` ends at `0x0211150c`,
   `_ZN17ExtendingPlatformD1Ev` begins at `0x02111840`.
-- Added here: of [ov045](../config/arm9/overlays/ov045/symbols.txt)'s six static initialisers, [__sinit_ov045_02112214](../src/__sinit_ov045_02112214.c) is the
+- Added here: of [ov045](../config/arm9/overlays/ov045/symbols.txt)'s six static initialisers, [__sinit_ov045_02112214](../src/unnamed/ov045/__sinit_ov045_02112214.c) is the
   only one that references this TU's two `.bss` `SharedFilePtr` statics
   (`0x021131a8`, `0x021131b0`), which pins the sixth corroborating initialiser to
   this specific unit rather than to the module in aggregate.

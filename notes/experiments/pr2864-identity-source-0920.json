@@ -1562,7 +1562,7 @@
     "base": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
     "files": [
       {"path": "src/_ZN6Player12St_Walk_InitEv.cpp", "same_non_line_ending_text": true},
-      {"path": "src/__sinit_ov090_02133f4c.c", "same_non_line_ending_text": true},
+      {"path": "src/unnamed/ov090/__sinit_ov090_02133f4c.c", "same_non_line_ending_text": true},
       {"path": "src/actors/Eyerok.cpp", "same_non_line_ending_text": true},
       {"path": "src/actors/daPukupuku_c.cpp", "same_non_line_ending_text": true},
       {"path": "src/func_ov002_020e8ef0.cpp", "same_non_line_ending_text": true},
@@ -1693,7 +1693,7 @@
       {
         "symbol": "data_ov090_0213455c",
         "kind": "return",
-        "file": "src/__sinit_ov090_02133f4c.c",
+        "file": "src/unnamed/ov090/__sinit_ov090_02133f4c.c",
         "line": 9,
         "decl": "int []",
         "got": "int []",
@@ -1706,7 +1706,7 @@
       {
         "symbol": "data_ov090_02134564",
         "kind": "return",
-        "file": "src/__sinit_ov090_02133f4c.c",
+        "file": "src/unnamed/ov090/__sinit_ov090_02133f4c.c",
         "line": 7,
         "decl": "int []",
         "got": "int []",
@@ -1838,7 +1838,7 @@
       {
         "symbol": "data_ov090_0213455c",
         "kind": "return",
-        "file": "src/__sinit_ov090_02133f4c.c",
+        "file": "src/unnamed/ov090/__sinit_ov090_02133f4c.c",
         "line": 9,
         "decl": "int []",
         "got": "int []",
@@ -1851,7 +1851,7 @@
       {
         "symbol": "data_ov090_02134564",
         "kind": "return",
-        "file": "src/__sinit_ov090_02133f4c.c",
+        "file": "src/unnamed/ov090/__sinit_ov090_02133f4c.c",
         "line": 7,
         "decl": "int []",
         "got": "int []",

@@ -300,7 +300,7 @@ the sole reference is:
  231  sole reference is an ordinary function file  (124 files)
 ```
 
-A [__sinit_ov002_02100560.c](../src/__sinit_ov002_02100560.c) names dozens of bss symbols because it *constructs* them
+A [__sinit_ov002_02100560.c](../src/unnamed/ov002/__sinit_ov002_02100560.c) names dozens of bss symbols because it *constructs* them
 — it is the compiler-synthesised static-initialiser TU, not the TU that **defined**
 them. "Referenced by exactly one file" is a proxy for ownership and for 91% of the set
 it is the *wrong* proxy. Those 2,421 must be excluded.
@@ -325,7 +325,7 @@ Examples:
 | [data_ov016_02114d4c](../config/arm9/overlays/ov016/symbols.txt) | 0x02114d4c | 0x0c | `src/actors/daMoray_c.cpp` |
 | [data_ov026_02113f4c](../config/arm9/overlays/ov026/symbols.txt) | 0x02113f4c | 0x0c | `src/actors/daWater_Suikomi_c.cpp` |
 | [data_ov006_02140518](../config/arm9/overlays/ov006/symbols.txt) | 0x02140518 | 0x20 | `src/actors/unit020c8a30.cpp` (func_ov006_020c8a30) |
-| [data_ov007_02103f98](../config/arm9/overlays/ov007/symbols.txt) | 0x02103f98 | 0x600 | [src/func_ov007_020b8548.c](../src/func_ov007_020b8548.c) |
+| [data_ov007_02103f98](../config/arm9/overlays/ov007/symbols.txt) | 0x02103f98 | 0x600 | [src/unnamed/ov007/func_ov007_020b8548.c](../src/unnamed/ov007/func_ov007_020b8548.c) |
 
 
 Every one is named `data_<module>_<addr>`; **zero** carry a recovered name. So the
