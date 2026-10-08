@@ -25,8 +25,19 @@
 
 bool ApproachLinear(short &value, short target, short step);
 
-/* The sign model's shared file; Cleanup releases it, Init loads it. */
-extern SharedFilePtr data_ov085_02130858;
+/* 8-byte file handle. The model uses func_02017acc / func_02017ab4. The
+ * spelling is local; the manifest aliases the generated names to those ROM
+ * symbols. */
+struct KanbanModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    KanbanModelFilePtr(u32 fileID);
+    ~KanbanModelFilePtr();
+};
+
+/* The sign model's shared file; Cleanup releases it, Init loads it. Defined
+ * at the end of this file so the constructor does not enter .text. */
+extern KanbanModelFilePtr data_ov085_02130858;
 
 extern "C" {
 
@@ -190,3 +201,5 @@ extern "C" daObjKanban_c *daObjKanban_c_classInit(void)
 {
     return new daObjKanban_c();
 }
+
+KanbanModelFilePtr data_ov085_02130858(1140);

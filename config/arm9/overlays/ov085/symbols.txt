@@ -133,13 +133,13 @@ __sinit_ov085_0212f3a0 kind:function(arm,size=0x24c) addr:0x0212f3a0
 __sinit_ov085_0212f5ec kind:function(arm,size=0x3d0) addr:0x0212f5ec
 __sinit_ov085_0212f9bc kind:function(arm,size=0x84) addr:0x0212f9bc
 __sinit_ov085_0212fa40 kind:function(arm,size=0x370) addr:0x0212fa40
-__sinit_ov085_0212fdb0 kind:function(arm,size=0x40) addr:0x0212fdb0
+__sinit_daObjKanban_c.cpp kind:function(arm,size=0x40) addr:0x0212fdb0
 .p__sinit_ov085_0212f2a8 kind:data(word) addr:0x0212fdf0
 .p__sinit_ov085_0212f3a0 kind:data(word) addr:0x0212fdf4
 .p__sinit_ov085_0212f5ec kind:data(word) addr:0x0212fdf8
 .p__sinit_ov085_0212f9bc kind:data(word) addr:0x0212fdfc
 .p__sinit_ov085_0212fa40 kind:data(word) addr:0x0212fe00
-.p__sinit_ov085_0212fdb0 kind:data(word) addr:0x0212fe04
+.p__sinit_daObjKanban_c.cpp kind:data(word) addr:0x0212fe04
 data_ov085_0212fe20 kind:data(any) addr:0x0212fe20
 data_ov085_0212fe28 kind:data(any) addr:0x0212fe28
 data_ov085_0212fe30 kind:data(any) addr:0x0212fe30
@@ -304,4 +304,5 @@ data_ov085_02130830 kind:bss addr:0x02130830
 data_ov085_02130840 kind:bss addr:0x02130840
 data_ov085_0213084c kind:bss addr:0x0213084c
 data_ov085_02130858 kind:bss addr:0x02130858
-data_ov085_02130860 kind:bss addr:0x02130860
+@696 kind:bss addr:0x02130860
+data_ov085_0213086c kind:bss addr:0x0213086c ambiguous

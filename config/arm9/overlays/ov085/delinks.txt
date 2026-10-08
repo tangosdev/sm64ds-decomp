@@ -27,6 +27,9 @@ src/actors/daC_Jugem_c.cpp:
 src/actors/daObjKanban_c.cpp:
     complete
     .text start:0x0212edac end:0x0212f27c
+    .init start:0x0212fdb0 end:0x0212fdf0
+    .ctor start:0x0212fe04 end:0x0212fe08
+    .bss start:0x02130858 end:0x0213086c
 
 src/unnamed/ov085/__sinit_ov085_0212f2a8.c:
     complete
@@ -48,6 +51,3 @@ src/unnamed/ov085/__sinit_ov085_0212fa40.c:
     complete
     .init start:0x0212fa40 end:0x0212fdb0
 
-src/unnamed/ov085/__sinit_ov085_0212fdb0.c:
-    complete
-    .init start:0x0212fdb0 end:0x0212fdf0

@@ -4540,6 +4540,7 @@
     "src/actors/daObjKanban_c.cpp#_ZN13daObjKanban_c8BehaviorEv": "lunavyqo",
     "src/actors/daObjKanban_c.cpp#_ZN13daObjKanban_c13InitResourcesEv": "tangosdev",
     "src/actors/daObjKanban_c.cpp#daObjKanban_c_classInit": "tangosdev",
+    "src/actors/daObjKanban_c.cpp#__sinit_daObjKanban_c.cpp": "tangosdev",
     "src/stage/LevelObjects.cpp#_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc": "ruspecial",
     "src/stage/LevelObjects.cpp#_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij": "tangosdev",
     "src/stage/LevelObjects.cpp#_Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij": "tangosdev",
