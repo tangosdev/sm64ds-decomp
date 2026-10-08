@@ -17,8 +17,9 @@
  * as the stride. Vertex::color is the packed GX normal, not a color: the
  * strip writer stores it at 0x04000484.
  *
- * The five handlers keep func_ov080_* names: the state-table descriptors
- * relocate to those symbols. #pragma defer_codegen off keeps .text in
+ * The five handlers are daPicGate_c members bound through the four
+ * data_ov080_02128628 state rows; they keep func_ov080_* address-label
+ * names. #pragma defer_codegen off keeps .text in
  * source order. The destructor pair and g_profile_PICTURE_GATE are outside
  * this run. The abutting registry factory daPicGate_c_classInit
  * (0x02126f8c) is written last, built by hand (see the note above it).
@@ -41,6 +42,7 @@
 #pragma defer_codegen off
 
 #include "daPicGate_c.h"
+#include "SharedFilePtr.h"
 #include "common.h"
 
 /* Geometry command ports. Plain stores, not volatile: a volatile port
@@ -120,6 +122,18 @@ namespace Memory { void *operator_new2(unsigned int size); }
 extern daPicGate_c::State data_ov080_02128628[];
 int ApproachLinear(int &ref, int target, int step);
 
+/* A picture's texture/collision handle. The nineteen instances below are
+   constructed by __sinit_daPicGate_c.cpp and reached through the rodata
+   pointer table data_ov080_0212775c, indexed by picture id. The declared
+   ctor/dtor stand for the cartridge's func_020178cc/func_020178b4 pair;
+   words[] is the two words the ROM object carries. */
+struct PicGateFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    PicGateFilePtr(u32 fileID);
+    ~PicGateFilePtr();
+};
+
 /* Rows for widths 3, 4, 5, 6, 7, 8 and 16: 13, 14, 16, 20, 20, 25, 30. */
 #define kGridRows data_ov080_02127714
 
@@ -137,86 +151,81 @@ int ApproachLinear(int &ref, int target, int step);
     G3_VTX_16 = (u16)s0 | ((u16)s1 << 16); \
     G3_VTX_16 = (u16)s2
 
-// @symbol func_ov080_021264ec
+// @symbol _ZN11daPicGate_c19func_ov080_021264ecEv
 /* State 1 behavior. Picture 7 slides open; every picture then ripples. */
-extern "C" {
-void func_ov080_021264ec(daPicGate_c *self)
+void daPicGate_c::func_ov080_021264ec()
 {
-    if ((u8)((self->param1 >> 8) & 0x1f) == kPicSlide &&
+    if ((u8)((this->param1 >> 8) & 0x1f) == kPicSlide &&
         !(kSave[2] & kOpened) &&
         IsStarCollectedInLevel(kGateLevel, kGateStar)) {
-        if (ApproachLinear(self->mPosX, self->mClosedPosX + kSlide, kSlideStep))
+        if (ApproachLinear(this->mPosX, this->mClosedPosX + kSlide, kSlideStep))
             kSave[2] |= kOpened;
-        self->BuildGateMatrix();
+        this->BuildGateMatrix();
     }
-    self->HitTest();
+    this->HitTest();
     int i;
-    for (i = 0; i < self->mNumCells; i++) {
-        daPicGate_c::Vertex *v = &self->mCells[i];
-        v->z = self->RippleHeight(v->dist);
+    for (i = 0; i < this->mNumCells; i++) {
+        daPicGate_c::Vertex *v = &this->mCells[i];
+        v->z = this->RippleHeight(v->dist);
     }
-    self->BuildNormals();
-    self->FlattenFrame();
-    self->mWavePhase = self->mWavePhase + self->mWaveParams->phaseStep;
-}
+    this->BuildNormals();
+    this->FlattenFrame();
+    this->mWavePhase = this->mWavePhase + this->mWaveParams->phaseStep;
 }
 
-// @symbol func_ov080_021265ec
+// @symbol _ZN11daPicGate_c19func_ov080_021265ecEv
 /* State 1 init. Even grid, flat +Z normal, then a wave at the centre. */
-extern "C" {
-void func_ov080_021265ec(daPicGate_c *self)
+void daPicGate_c::func_ov080_021265ec()
 {
     int x = 0, y = 0, row = 0, z = 0;
-    int n = self->mRows;
+    int n = this->mRows;
     int rows;
     if (n > 0) {
         int color = kFlatNormal;
         do {
             int col = 0;
-            int m = self->mCols;
+            int m = this->mCols;
             if (m > 0) {
                 do {
-                    daPicGate_c::Vertex *v = &self->mCells[row * self->mRows + col];
+                    daPicGate_c::Vertex *v = &this->mCells[row * this->mRows + col];
                     int cols;
                     v->x = x; v->y = y; v->z = z; v->color = color;
-                    cols = self->mCols;
-                    if (col == cols - 2) x = ((u8)(self->param1 & 0xf) + 1) * kCell;
-                    else x += ((u8)(self->param1 & 0xf) + 1) * kCell / (cols - 1);
+                    cols = this->mCols;
+                    if (col == cols - 2) x = ((u8)(this->param1 & 0xf) + 1) * kCell;
+                    else x += ((u8)(this->param1 & 0xf) + 1) * kCell / (cols - 1);
                     col++;
-                } while (col < self->mCols);
+                } while (col < this->mCols);
             }
-            rows = self->mRows;
+            rows = this->mRows;
             x = 0;
-            if (row == rows - 2) y = ((u8)((self->param1 >> 4) & 0xf) + 1) * kCell;
-            else y += ((u8)((self->param1 >> 4) & 0xf) + 1) * kCell / (rows - 1);
+            if (row == rows - 2) y = ((u8)((this->param1 >> 4) & 0xf) + 1) * kCell;
+            else y += ((u8)((this->param1 >> 4) & 0xf) + 1) * kCell / (rows - 1);
             row++;
         } while (row < rows);
     }
-    self->PlaceCorners();
+    this->PlaceCorners();
     {
-        int width = ((u8)(self->param1 & 0xf) + 1) * kCell;
-        int height = ((u8)((self->param1 >> 4) & 0xf) + 1) * kCell;
-        self->BeginWave(width / 2, height / 2, 0);
+        int width = ((u8)(this->param1 & 0xf) + 1) * kCell;
+        int height = ((u8)((this->param1 >> 4) & 0xf) + 1) * kCell;
+        this->BeginWave(width / 2, height / 2, 0);
     }
 }
-}
 
-// @symbol func_ov080_0212677c
+// @symbol _ZN11daPicGate_c19func_ov080_0212677cEv
 /* State 0 render. A dead wave draws the flat quad; otherwise a strip per column. */
-extern "C" {
-void func_ov080_0212677c(daPicGate_c *self)
+void daPicGate_c::func_ov080_0212677c()
 {
     int tmp[12];
     int i, j, n;
     int z = 0;
 
-    if (self->mWaveTimer == 0) {
-        self->DrawFlat();
+    if (this->mWaveTimer == 0) {
+        this->DrawFlat();
         return;
     }
 
     G3_MTX_PUSH = z;
-    MulMat4x3Mat4x3(self->mMtx, data_0209b3ec.m, tmp);
+    MulMat4x3Mat4x3(this->mMtx, data_0209b3ec.m, tmp);
     G3_MTX_MODE = kMtxPosVec;
     LoadMtx43(tmp);
     G3_MTX_MODE = kMtxPos;
@@ -224,23 +233,23 @@ void func_ov080_0212677c(daPicGate_c *self)
 
     G3_LIGHT_VECTOR = 0xe0000000;
     G3_LIGHT_COLOR = 0xc0007fff;
-    self->LoadMaterial();
+    this->LoadMaterial();
 
     G3_MTX_SCALE = kScale;
     G3_MTX_SCALE = kScale;
     G3_MTX_SCALE = kScale;
 
-    n = (int)self->mCols;
+    n = (int)this->mCols;
     i = z; /* zero the column before subtracting, so the sub consumes n */
     n = n - 1;
     if (n > 0) {
         do {
             G3_BEGIN = kTriStrip;
             j = z;
-            if ((int)self->mRows > 0) {
+            if ((int)this->mRows > 0) {
                 do {
-                    daPicGate_c::Vertex *base = self->mCells;
-                    int rows = (int)self->mRows;
+                    daPicGate_c::Vertex *base = this->mCells;
+                    int rows = (int)this->mRows;
                     daPicGate_c::Vertex *v1 = &base[i + j * rows];
                     daPicGate_c::Vertex *v2 = &base[(i + 1) + j * rows];
                     int vx, vy, vz;
@@ -250,43 +259,39 @@ void func_ov080_0212677c(daPicGate_c *self)
                     EMIT_VTX(v2);
 
                     j++;
-                } while (j < (int)self->mRows);
+                } while (j < (int)this->mRows);
             }
             G3_END = z;
             i++;
-        } while (i < (int)self->mCols - 1);
+        } while (i < (int)this->mCols - 1);
     }
     G3_MTX_POP = 1;
 }
-}
 
-// @symbol func_ov080_021269b8
+// @symbol _ZN11daPicGate_c19func_ov080_021269b8Ev
 /* State 0 behavior. Ripples only while mWaveTimer is still counting. */
-extern "C" {
-void func_ov080_021269b8(daPicGate_c *self)
+void daPicGate_c::func_ov080_021269b8()
 {
     int i;
     daPicGate_c::Vertex *v;
 
-    self->HitTest();
-    if (DecIfAbove0_Short(&self->mWaveTimer) == 0) return;
+    this->HitTest();
+    if (DecIfAbove0_Short(&this->mWaveTimer) == 0) return;
 
-    for (i = 0; i < self->mNumCells; i++) {
-        v = &self->mCells[i];
-        v->z = self->RippleHeight(v->dist);
+    for (i = 0; i < this->mNumCells; i++) {
+        v = &this->mCells[i];
+        v->z = this->RippleHeight(v->dist);
     }
 
-    self->BuildNormals();
-    self->FlattenFrame();
+    this->BuildNormals();
+    this->FlattenFrame();
 
-    self->mWavePhase = self->mWavePhase + self->mWaveParams->phaseStep;
-}
+    this->mWavePhase = this->mWavePhase + this->mWaveParams->phaseStep;
 }
 
-// @symbol func_ov080_02126a54
+// @symbol _ZN11daPicGate_c19func_ov080_02126a54Ev
 /* State 0 init. Same grid as state 1, plus a texcoord, and no wave yet. */
-extern "C" {
-void func_ov080_02126a54(daPicGate_c *self)
+void daPicGate_c::func_ov080_02126a54()
 {
     int x;
     int y;
@@ -296,40 +301,39 @@ void func_ov080_02126a54(daPicGate_c *self)
     x = 0;
     y = 0;
     row = 0;
-    if ((int)self->mRows > 0) {
+    if ((int)this->mRows > 0) {
         do {
             col = 0;
-            if ((int)self->mCols > 0) {
+            if ((int)this->mCols > 0) {
                 do {
-                    daPicGate_c::Vertex *v = &self->mCells[row * (int)self->mRows + col];
+                    daPicGate_c::Vertex *v = &this->mCells[row * (int)this->mRows + col];
                     v->x = x;
                     v->y = y;
                     v->z = 0;
                     v->color = kFlatNormal;
-                    int du = kTexSpan / ((int)self->mCols - 1);
-                    int dv = kTexSpan / ((int)self->mRows - 1);
+                    int du = kTexSpan / ((int)this->mCols - 1);
+                    int dv = kTexSpan / ((int)this->mRows - 1);
                     int s = du * col;
                     int t = kTexSpan - dv * row;
                     v->texCoord = (u16)(s16)(s >> 8) | (((u16)(s16)(t >> 8) << 1) << 15);
-                    n = (int)self->mCols;
+                    n = (int)this->mCols;
                     if (col == n - 2)
-                        x = (u8)(self->param1 & 0xf) * kCell + kCell;
+                        x = (u8)(this->param1 & 0xf) * kCell + kCell;
                     else
-                        x += ((u8)(self->param1 & 0xf) * kCell + kCell) / (n - 1);
+                        x += ((u8)(this->param1 & 0xf) * kCell + kCell) / (n - 1);
                     col++;
                 } while (col < n);
             }
-            n = (int)self->mRows;
+            n = (int)this->mRows;
             x = 0;
             if (row == n - 2)
-                y = (u8)((self->param1 >> 4) & 0xf) * kCell + kCell;
+                y = (u8)((this->param1 >> 4) & 0xf) * kCell + kCell;
             else
-                y += ((u8)((self->param1 >> 4) & 0xf) * kCell + kCell) / (n - 1);
+                y += ((u8)((this->param1 >> 4) & 0xf) * kCell + kCell) / (n - 1);
             row++;
         } while (row < n);
     }
-    self->PlaceCorners();
-}
+    this->PlaceCorners();
 }
 
 // @symbol _ZN11daPicGate_c16CleanupResourcesEv
@@ -453,3 +457,39 @@ extern "C" daPicGate_c *daPicGate_c_classInit()
     }
     return (daPicGate_c *)p;
 }
+
+/* Source order is construction order: the nineteen picture file handles
+ * first (data_ov080_0212775c indexes them by picture id), then the four
+ * state rows. __sinit_daPicGate_c.cpp emits the constructions, the
+ * destructor registrations and the record copies; the registration nodes
+ * are compiler temporaries. */
+PicGateFilePtr data_ov080_0212851c(0x4ab);
+PicGateFilePtr data_ov080_02128524(0x4ac);
+PicGateFilePtr data_ov080_021284ac(0x4b6);
+PicGateFilePtr data_ov080_021284fc(0x4b8);
+PicGateFilePtr data_ov080_0212850c(0x4ae);
+PicGateFilePtr data_ov080_021284cc(0x4b3);
+PicGateFilePtr data_ov080_021284b4(0x4af);
+PicGateFilePtr data_ov080_02128514(0x4bd);
+PicGateFilePtr data_ov080_021284f4(0x4b7);
+PicGateFilePtr data_ov080_0212852c(0x4bc);
+PicGateFilePtr data_ov080_021284dc(0x4b4);
+PicGateFilePtr data_ov080_021284e4(0x4b5);
+PicGateFilePtr data_ov080_021284ec(0x4b9);
+PicGateFilePtr data_ov080_021284bc(0x4ad);
+PicGateFilePtr data_ov080_02128504(0x4b1);
+PicGateFilePtr data_ov080_0212853c(0x4b0);
+PicGateFilePtr data_ov080_021284d4(0x4b2);
+PicGateFilePtr data_ov080_02128534(0x4ba);
+PicGateFilePtr data_ov080_021284c4(0x4bb);
+
+daPicGate_c::State data_ov080_02128628[4] = {
+    { &daPicGate_c::func_ov080_02126a54, &daPicGate_c::func_ov080_021269b8,
+      &daPicGate_c::func_ov080_0212677c },
+    { &daPicGate_c::func_ov080_021265ec, &daPicGate_c::func_ov080_021264ec,
+      &daPicGate_c::func_ov080_021261f4 },
+    { &daPicGate_c::func_ov080_02126124, &daPicGate_c::func_ov080_02126120,
+      &daPicGate_c::func_ov080_02125fd0 },
+    { &daPicGate_c::func_ov080_02125f00, &daPicGate_c::func_ov080_02126120,
+      &daPicGate_c::func_ov080_02125fd0 },
+};

@@ -90,6 +90,14 @@ struct daPicGate_c : dActor_c {
     void  func_ov080_02126120();
     void  func_ov080_02126124();                      /* PlaceCorners */
     void  func_ov080_021261f4();                      /* wave-mesh render */
+
+    /* The five state handlers, bound through the State rows in
+       data_ov080_02128628. Same address-label naming as the helpers. */
+    void  func_ov080_021264ec();                      /* state 1 behavior */
+    void  func_ov080_021265ec();                      /* state 1 init */
+    void  func_ov080_0212677c();                      /* state 0 render */
+    void  func_ov080_021269b8();                      /* state 0 behavior */
+    void  func_ov080_02126a54();                      /* state 0 init */
 };
 
 #ifndef SM64DS_PLATFORM_PC
