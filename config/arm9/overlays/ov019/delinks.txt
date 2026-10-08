@@ -11,11 +11,10 @@ src/game/actors/d_a_pg_rcer.cpp:
 src/game/actors/d_a_sld_mng.cpp:
     complete
     .text start:0x0211261c end:0x0211277c
+    .init start:0x02112b14 end:0x02112b64
+    .ctor start:0x02112b68 end:0x02112b6c
+    .bss start:0x021135cc end:0x021135e4
 
 src/unnamed/ov019/__sinit_ov019_021127a4.c:
     complete
     .init start:0x021127a4 end:0x02112b14
-
-src/unnamed/ov019/__sinit_ov019_02112b14.c:
-    complete
-    .init start:0x02112b14 end:0x02112b64

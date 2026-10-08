@@ -12,8 +12,8 @@
  * deslop
  * Leftover: Sound::PlaySub stays mangled (Fix12<int> by value, wall 6az;
  *   this TU's Behavior measured 0xa4 -> 0xb4 in method form).
- * Leftover: data_ov019_021135d8 keeps its ROM-address name (sinit-owned
- *   Vector3 spawn position; nothing in the ROM names it).
+ * Leftover: data_ov019_021135d8 keeps its ROM-address name (the Vector3
+ *   spawn position; nothing in the ROM names it).
  * Leftover: g_profile_SLIDER_MANAGER (ov019 0x021133a8) stays outside this
  *   TU (S14) -- defining it here would emit .data this entry is not
  *   licensed to own.
@@ -33,8 +33,17 @@ extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(
     u32 soundID, u32 volume, u32 pan, Fix12i distance, bool loop);
 }
 
-/* The spawn position, ov019 0x021135d8. Nothing in the ROM names it. */
-extern Vector3 data_ov019_021135d8;
+/* The spawn position, ov019 0x021135d8. Nothing in the ROM names it.
+ * The cartridge's initializer stores the three fields and registers
+ * _ZN7Vector3D1Ev, so the object sits in .bss and mwcc's
+ * __sinit_d_a_sld_mng.cpp emits the stores. The wrapper is local; the
+ * manifest aliases its destructor to the ROM's _ZN7Vector3D1Ev. */
+struct SldMngVec3 : Vector3 {
+    SldMngVec3(Fix12i a, Fix12i b, Fix12i c) { x = a; y = b; z = c; }
+    ~SldMngVec3();
+};
+
+SldMngVec3 data_ov019_021135d8(-0x12a0000, 0x700000, -0x200000);
 
 /* Reconstructed source-style name. SM64DS proves daSldMng_c through RTTI,
  * allocation size, vtable identity, and the SLIDER_MANAGER registry profile;
