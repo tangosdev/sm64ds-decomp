@@ -17642,14 +17642,6 @@
         "return:ResourceDescriptor"
       ]
     },
-    "data_ov015_02114960": {
-      "src/game/actors/d_a_obj_bk_billboard.cpp": [
-        "return:SharedFilePtr"
-      ],
-      "src/unnamed/ov015/__sinit_ov015_02112f9c.c": [
-        "return:int []"
-      ]
-    },
     "data_ov015_02114974": {
       "src/actors/daObjBk_Botaosi_c.cpp": [
         "return:SharedFilePtr"
@@ -21861,9 +21853,6 @@
       "src/unnamed/ov014/__sinit_ov014_021132fc.c": [
         "kind:data"
       ],
-      "src/unnamed/ov015/__sinit_ov015_02112f9c.c": [
-        "kind:data"
-      ],
       "src/unnamed/ov015/__sinit_ov015_02112fdc.c": [
         "kind:data"
       ],
@@ -22525,9 +22514,6 @@
         "return:void"
       ],
       "src/unnamed/ov014/__sinit_ov014_021132fc.c": [
-        "return:void"
-      ],
-      "src/unnamed/ov015/__sinit_ov015_02112f9c.c": [
         "return:void"
       ],
       "src/unnamed/ov015/__sinit_ov015_02112fdc.c": [

@@ -9,7 +9,7 @@ This lane independently audits three rows ranked `high` by
 | Initializer | Candidate owner | Ownership verdict | Regeneration readiness |
 | --- | --- | --- | --- |
 | [__sinit_ov009_02112458](../src/unnamed/ov009/__sinit_ov009_02112458.c) | [ov009](../config/arm9/overlays/ov009/symbols.txt)/`daSBird_c` | **CONFIRMED** | Not promotion-ready: resource-family symbol names, four original PMF member names, and unlicensed vtable/RTTI output remain |
-| [__sinit_ov015_02112f9c](../src/unnamed/ov015/__sinit_ov015_02112f9c.c) | [ov015](../config/arm9/overlays/ov015/symbols.txt)/`daObjBkBillboard_c` | **CONFIRMED** | Structurally straightforward, but no shadow manifest exists and vtable/RTTI/data ranges are unlicensed |
+| [__sinit_ov015_02112f9c](../src/game/actors/d_a_obj_bk_billboard.cpp) | [ov015](../config/arm9/overlays/ov015/symbols.txt)/`daObjBkBillboard_c` | **CONFIRMED**, folded | Folded into the TU as an intact-object initializer (`__sinit_d_a_obj_bk_billboard.cpp`); manifest is `config/tu_manifest.d/ov015/daObjBkBillboard_c.json` |
 | [__sinit_ov002_02101064](../src/unnamed/ov002/__sinit_ov002_02101064.c) | [ov002](../config/arm9/overlays/ov002/symbols.txt)/`daObjMarioCap_c` | **CONFIRMED** | Not promotion-ready: `InitResources` is not a matching source, the PMF member names remain unknown, and [ov002](../config/arm9/overlays/ov002/symbols.txt) cannot be ordinal-partitioned |
 
 All three committed initializer transcriptions pass strict matching and linked
@@ -243,14 +243,13 @@ parameters:
 python tools/match.py --c src/unnamed/ov009/__sinit_ov009_02112458.c --func __sinit_ov009_02112458 --addr 0x02112458 --size 0xcc --version 2004/b56 --module ov009 --strict-relocs --brief
 python tools/linkcheck.py --c src/unnamed/ov009/__sinit_ov009_02112458.c --name __sinit_ov009_02112458 --addr 0x02112458 --size 0xcc --module ov009
 
-python tools/match.py --c src/unnamed/ov015/__sinit_ov015_02112f9c.c --func __sinit_ov015_02112f9c --addr 0x02112f9c --size 0x40 --version 2004/b56 --module ov015 --strict-relocs --brief
-python tools/linkcheck.py --c src/unnamed/ov015/__sinit_ov015_02112f9c.c --name __sinit_ov015_02112f9c --addr 0x02112f9c --size 0x40 --module ov015
+# __sinit_ov015_02112f9c is folded into daObjBkBillboard_c's TU; no standalone transcription remains.
 
 python tools/match.py --c src/unnamed/ov002/__sinit_ov002_02101064.c --func __sinit_ov002_02101064 --addr 0x02101064 --size 0x414 --version 2004/b56 --module ov002 --strict-relocs --brief
 python tools/linkcheck.py --c src/unnamed/ov002/__sinit_ov002_02101064.c --name __sinit_ov002_02101064 --addr 0x02101064 --size 0x414 --module ov002
 ```
 
-Observed: all three `MATCH`; all three `VERIFIED`, `blind: 0`.
+Observed when the transcriptions existed: all three `MATCH`; all three `VERIFIED`, `blind: 0`.
 
 The probes were compiled with pinned production C++ flags plus
 `-DSINIT_OWNERSHIP_PROBE`. Comparing the generated initializer against each
