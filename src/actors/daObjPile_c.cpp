@@ -33,11 +33,15 @@
  *   the callee compares the full register, and the caller materializes 0
  *   then optionally 1. func_02012694 plays bank 3 at mCamSpacePos. It is not
  *   Sound::PlayBank3 (that body is 0x02012664).
- * - Shared file handles stay the decl_common int[] casts. Do not name mPos.
+ * - Do not name mPos.
  * - func_ov091_02133498 and func_ov091_021334b8 are members. The address is
  *   the method name. A local `daObjPile_c *self = this` is not used:
  *   func_ov091_02133498 is a leaf, and saving this in another register
  *   would add a push.
+ * - The two file handles live at the bottom of this file; the compiler's
+ *   __sinit_daObjPile_c.cpp constructs them at overlay load. Their wrapper
+ *   names are local -- the constructors are the ROM resource-family
+ *   functions, recorded as aliases in the manifest.
  */
 
 #include "decl_common.h"
@@ -56,6 +60,23 @@ struct V3 {
     ~V3() {}
 };
 
+/* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
+ * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
+ * are local; the manifest aliases the generated names to those ROM symbols. */
+struct PileModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    PileModelFilePtr(u32 fileID);
+    ~PileModelFilePtr();
+};
+
+struct PileCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    PileCollisionFilePtr(u32 fileID);
+    ~PileCollisionFilePtr();
+};
+
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *c, int a, int b);
@@ -63,6 +84,12 @@ extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *c, V3 v, unsign
 extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 extern int func_02012694(int a, void *b);
+
+/* This TU's two file handles: the pile model and its collision file.
+ * InitResources loads both, CleanupResources releases them. Defined at the
+ * end of this file so the constructors do not enter .text. */
+extern PileModelFilePtr data_ov091_02135654;
+extern PileCollisionFilePtr data_ov091_0213564c;
 }
 
 /* ROM order. The out-of-line destructor is the key function, so it stays
@@ -173,8 +200,8 @@ s32 daObjPile_c::CleanupResources()
 {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    ((SharedFilePtr *)data_ov091_02135654)->Release();
-    ((SharedFilePtr *)data_ov091_0213564c)->Release();
+    data_ov091_02135654.Release();
+    data_ov091_0213564c.Release();
     return 1;
 }
 
@@ -235,11 +262,11 @@ s32 daObjPile_c::Behavior()
 // @symbol _ZN11daObjPile_c13InitResourcesEv
 s32 daObjPile_c::InitResources()
 {
-    void *m = Model::LoadFile(*(SharedFilePtr *)data_ov091_02135654);
+    void *m = Model::LoadFile(data_ov091_02135654);
     mModel.SetFile((BMD_File *)m, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    void *k = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov091_0213564c);
+    void *k = dBgW_Kc::LoadFile(data_ov091_0213564c);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, k, &mClsnMat, 0x199, mAngleY, data_ov002_0210d874);
     mStepsLeft = 3;
@@ -251,3 +278,9 @@ extern "C" daObjPile_c *daObjPile_c_classInit()
 {
     return new daObjPile_c();
 }
+
+/* Source order is construction order: model file 1153, collision file 1154.
+ * __sinit_daObjPile_c.cpp emits both constructions and registers the
+ * destructors; the registration nodes are compiler temporaries. */
+PileModelFilePtr data_ov091_02135654(1153);
+PileCollisionFilePtr data_ov091_0213564c(1154);
