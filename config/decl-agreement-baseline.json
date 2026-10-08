@@ -11666,8 +11666,29 @@
       ]
     },
     "_ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c": {
+      "src/_ZN6Player13InitResourcesEv.cpp": [
+        "param:#2 void *"
+      ],
+      "src/_ZN6Player19St_TornadoSpin_MainEv.cpp": [
+        "param:#2 const Vector3 *"
+      ],
+      "src/actors/dActor_c.cpp": [
+        "param:#2 const Vector3 *"
+      ],
+      "src/actors/daObjPowerUpItem_c.cpp": [
+        "param:#2 const Vector3 *"
+      ],
       "src/actors/daStar_c.cpp": [
         "param:#2 Vector3 *"
+      ],
+      "src/func_0200b590.c": [
+        "param:#2 const Vector3 *"
+      ],
+      "src/func_0200b798.c": [
+        "param:#2 const Vector3 *"
+      ],
+      "src/func_ov002_020cfea4.cpp": [
+        "param:#2 const Vector3 *"
       ],
       "src/func_ov002_020d0178.c": [
         "param:#2 Vec3 *"
@@ -11680,6 +11701,9 @@
       ],
       "src/engine/view/dCamera_c.cpp": [
         "param:#2 const void *"
+      ],
+      "src/game/actors/d_a_shl.cpp": [
+        "param:#2 const Vector3 *"
       ]
     },
     "_ZN9dBgCh_Lin10GetClsnPosEv": {
