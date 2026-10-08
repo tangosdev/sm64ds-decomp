@@ -23,6 +23,9 @@ src/game/actors/d_a_obj_ki_ita.cpp:
 src/actors/daSlide_Box_c.cpp:
     complete
     .text start:0x02112ff8 end:0x0211354c
+    .init start:0x02113a50 end:0x02113abc
+    .ctor start:0x02113acc end:0x02113ad0
+    .bss start:0x02114e6c end:0x02114e94
 
 src/unnamed/ov016/__sinit_ov016_021136ec.c:
     complete
@@ -39,7 +42,3 @@ src/unnamed/ov016/__sinit_ov016_02113978.c:
 src/unnamed/ov016/__sinit_ov016_021139e4.c:
     complete
     .init start:0x021139e4 end:0x02113a50
-
-src/unnamed/ov016/__sinit_ov016_02113a50.c:
-    complete
-    .init start:0x02113a50 end:0x02113abc

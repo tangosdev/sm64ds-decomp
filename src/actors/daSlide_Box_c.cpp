@@ -51,11 +51,27 @@
 
 namespace cstd { int fdiv(int a, int b); }
 
-/* __sinit_ov016_02113a50 constructs these. 02114e74 is the model
- * (file 1605, destructor func_02017ab4). 02114e6c is the collision
- * (file 1606, destructor SharedFilePtr_Destruct_Clsn). 02113bac is
- * the CLPS block SetFile takes. decl_common and the sinit both spell
- * them int[], so this TU keeps that and casts at the use. */
+/* File 1605 / 1606 resource handles. The static initializer registers
+ * their destructors; the spellings are this TU's, mapped onto
+ * func_02017acc / func_02017ab4 and func_02017b4c /
+ * SharedFilePtr_Destruct_Clsn. 02113bac is the CLPS block SetFile takes. */
+struct SlideBoxModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    SlideBoxModelFilePtr(u32 fileID);
+    ~SlideBoxModelFilePtr();
+};
+
+struct SlideBoxClsnFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    SlideBoxClsnFilePtr(u32 fileID);
+    ~SlideBoxClsnFilePtr();
+};
+
+extern "C" SlideBoxModelFilePtr data_ov016_02114e74;
+extern "C" SlideBoxClsnFilePtr data_ov016_02114e6c;
+
 extern "C" {
 /* dBgCh_Actr::Init's header takes Fix12i (= s32), so the method form
    mangles the two radii as `i` and names
@@ -63,8 +79,6 @@ extern "C" {
    defines. The ROM's is ..._5Fix12IiES3_P10Vector3_16S5_. */
 void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     dBgCh_Actr *self, int actor, Fix12i radius, Fix12i height, int a, int b);
-extern int data_ov016_02114e74[];
-extern int data_ov016_02114e6c[];
 extern int data_ov016_02113bac[];
 extern short data_02082214[];
 extern void Matrix4x3_FromRotationXYZExt(void *mtx, int angleX, int angleY, int angleZ);
@@ -125,8 +139,8 @@ enum {
 #define Cosine(angle) (data_02082214[((u16)(angle) >> 4) * 2 + 1])
 #define FixMul(a, b) ((int)(((long long)(a) * (b) + kFixRound) >> 12))
 
-#define ModelFile (*(SharedFilePtr *)data_ov016_02114e74)
-#define ClsnFile (*(SharedFilePtr *)data_ov016_02114e6c)
+#define ModelFile data_ov016_02114e74
+#define ClsnFile data_ov016_02114e6c
 
 #pragma defer_codegen off
 
@@ -269,3 +283,9 @@ extern "C" daSlide_Box_c *daSlide_Box_c_classInit()
 {
     return new daSlide_Box_c();
 }
+
+/* Definitions stay after the last .text function so they do not insert
+ * a function into the ROM-ascending run. Construction order is the model
+ * handle, then the collision handle. */
+SlideBoxModelFilePtr data_ov016_02114e74(1605);
+SlideBoxClsnFilePtr data_ov016_02114e6c(1606);

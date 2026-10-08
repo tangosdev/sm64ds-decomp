@@ -3,19 +3,36 @@
   "module": "ov016",
   "source": "src/actors/daSlide_Box_c.cpp",
   "promoted_source": "src/actors/daSlide_Box_c.cpp",
+  "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x2112ff8..0x2113510, 7 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daSlide_Box_c",
     "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "fold-lane-c-0929: daSlide_Box_c_classInit (0x02113510..0x0211354c) abuts this TU's own range with no gap (0x0211354c is the end of ov016's own .text section) and tu_map never attributed it because it cuts on symbol name. The retired loose file's own comment claimed `return new daSlide_Box_c()` hit a 'measured C/ABI wall' where the allocator relocated to global _Znwm instead of fBase_c::operator new; re-measured here and that claim did not reproduce -- tools/tubuild.py verify reports 8/8 MATCH with objisolate and reloc-destinations both clean, so the allocator call resolves to fBase_c::operator new exactly as every other classInit fold in this lane does. Recorded as a deliberate divergence from that stale comment, not a re-derivation of it."
+    "fold-lane-c-0929: daSlide_Box_c_classInit (0x02113510..0x0211354c) abuts this TU's own range with no gap (0x0211354c is the end of ov016's own .text section) and tu_map never attributed it because it cuts on symbol name. The retired loose file's own comment claimed `return new daSlide_Box_c()` hit a 'measured C/ABI wall' where the allocator relocated to global _Znwm instead of fBase_c::operator new; re-measured here and that claim did not reproduce -- tools/tubuild.py verify reports 8/8 MATCH with objisolate and reloc-destinations both clean, so the allocator call resolves to fBase_c::operator new exactly as every other classInit fold in this lane does. Recorded as a deliberate divergence from that stale comment, not a re-derivation of it.",
+    "the compiler-generated __sinit_daSlide_Box_c.cpp is byte-identical to retail __sinit_ov016_02113a50 (0x6c, four calls and six ABS32 loads). It constructs the model handle at 0x02114e74 with file 1605 and the collision handle at 0x02114e6c with file 1606, and registers @579 and @580. The ctor word at 0x02113acc points at that initializer. Class RTTI, profile, and vtable stay externalized."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x02112ff8",
       "end": "0x0211354c"
+    },
+    {
+      "name": ".init",
+      "start": "0x02113a50",
+      "end": "0x02113abc"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02113acc",
+      "end": "0x02113ad0"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02114e6c",
+      "end": "0x02114e94"
     }
   ],
   "functions": [
@@ -76,12 +93,234 @@
       "ordinal": 7
     }
   ],
+  "init": [
+    {
+      "symbol": "__sinit_daSlide_Box_c.cpp",
+      "address": "0x02113a50",
+      "size": "0x6c",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov016_02113a50 and carries the same ten relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_daSlide_Box_c.cpp",
+      "address": "0x02113acc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov016_02114e6c",
+      "address": "0x02114e6c",
+      "size": "0x8",
+      "evidence": "collision resource handle constructed with file ID 1606"
+    },
+    {
+      "symbol": "data_ov016_02114e74",
+      "address": "0x02114e74",
+      "size": "0x8",
+      "evidence": "model resource handle constructed with file ID 1605"
+    },
+    {
+      "symbol": "@580",
+      "address": "0x02114e7c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated collision resource destructor-registration node"
+    },
+    {
+      "symbol": "@579",
+      "address": "0x02114e88",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated model resource destructor-registration node"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN20SlideBoxModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN20SlideBoxModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN19SlideBoxClsnFilePtrC1Ej",
+      "canonical_symbol": "func_02017b4c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b4c",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN19SlideBoxClsnFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b34",
+      "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and the two direct retail references in this initializer"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_daSlide_Box_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_daSlide_Box_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@580",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local collision registration node is a configured initializer relocation destination at 0x02114e7c"
+    },
+    {
+      "symbol": "@579",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local model registration node is a configured initializer relocation destination at 0x02114e88"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02113a60",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02113a70",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02113a7c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017b4c",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02113a8c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02113a9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov016_02114e74",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02114e74"
+    },
+    {
+      "section": ".init",
+      "source": "0x02113aa4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02113aa8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@579",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02114e88"
+    },
+    {
+      "section": ".init",
+      "source": "0x02113aac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov016_02114e6c",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02114e6c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02113ab4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017b34"
+    },
+    {
+      "section": ".init",
+      "source": "0x02113ab8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@580",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02114e7c"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02113acc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_daSlide_Box_c.cpp",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02113a50"
+    }
+  ],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "Fold verified text-only: 7/7 MATCH, objisolate clean, reloc-destinations clean. 13 unlicensed output(s) reported by verify: 2 .text (_ZN13daSlide_Box_cD2Ev, _ZN7Vector3D1Ev) and 11 .data (_ZTV/_ZTI/_ZTS for daSlide_Box_c and its dBgActor_c/dActor_c/dBase_c/fBase_c ancestor chain). This TU is the class's key-function TU, so the vtable/RTTI emission is expected; .data licensing is separate, sequenced work and was NOT attempted on this fold branch. Two hand fixes to tubuild create's output: the duplicated D0 destructor body was removed, and the local extern \"C\" redeclaration of Matrix4x3_FromRotationXYZExt (as Matrix4x3*) was dropped in favour of decl_common.h's earlier (void*,int,int,int) declaration, with a cast at the single use site -- byte-neutral.",
-    "fold-lane-c-0929: folded the daSlide_Box_c_classInit registry factory (0x02113510..0x0211354c) into this already-promoted TU, widening the complete delinks.txt claim from 0x02112ff8..0x02113510 to 0x02112ff8..0x0211354c. The loose one-function source hand-called fBase_c::operator new(1272), dBgActor_c::dBgActor_c(), stored _ZTV13daSlide_Box_c, then dBgCh_Actr::dBgCh_Actr() at +0x324; daSlide_Box_c declares no constructor of its own, so the compiler-synthesized default constructor emits exactly that sequence, and the factory is now written as the real `return new daSlide_Box_c();`. This TU keeps `#pragma defer_codegen off`, so emission is source order; the factory appends after InitResources. `return new` emits a second homeless base-object-destructor helper, _ZN10dBgActor_cD2Ev, alongside the pre-existing _ZN13daSlide_Box_cD2Ev; both are licensed compiler_only_output deadstrip rows now."
+    "fold-lane-c-0929: folded the daSlide_Box_c_classInit registry factory (0x02113510..0x0211354c) into this already-promoted TU, widening the complete delinks.txt claim from 0x02112ff8..0x02113510 to 0x02112ff8..0x0211354c. The loose one-function source hand-called fBase_c::operator new(1272), dBgActor_c::dBgActor_c(), stored _ZTV13daSlide_Box_c, then dBgCh_Actr::dBgCh_Actr() at +0x324; daSlide_Box_c declares no constructor of its own, so the compiler-synthesized default constructor emits exactly that sequence, and the factory is now written as the real `return new daSlide_Box_c();`. This TU keeps `#pragma defer_codegen off`, so emission is source order; the factory appends after InitResources. `return new` emits a second homeless base-object-destructor helper, _ZN10dBgActor_cD2Ev, alongside the pre-existing _ZN13daSlide_Box_cD2Ev; both are licensed compiler_only_output deadstrip rows now.",
+    "The file-scope handles data_ov016_02114e74 and data_ov016_02114e6c are defined in this TU. mwcc emits __sinit_daSlide_Box_c.cpp, the ctor word, and registration nodes @579 and @580. Class RTTI and the vtable stay externalized. The handwritten __sinit_ov016_02113a50 shard is retired.",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build and to the strict baseline control -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -159,6 +398,161 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov016-daSlide_Box_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02112ff8",
+        "end": "0x0211354c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02112ff8",
+          "end": "0x0211354c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02113a50",
+          "end": "0x02113abc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02113acc",
+          "end": "0x02113ad0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02114e6c",
+          "end": "0x02114e94",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 14
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              48
+            ],
+            "desired": [
+              48
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              46
+            ],
+            "desired": [
+              46
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              25,
+              26,
+              27,
+              28
+            ],
+            "desired": [
+              28,
+              26,
+              27,
+              25
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                25,
+                26,
+                27,
+                28
+              ],
+              "desired": [
+                28,
+                26,
+                27,
+                25
+              ],
+              "slots": [
+                25,
+                26,
+                27,
+                28
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [
