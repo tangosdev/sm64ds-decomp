@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 extern Matrix4x3 data_ov021_02113a60, data_ov021_02113a80;
-extern Vector3 data_ov002_0210af00;
+extern s32 data_ov002_0210af00[3];
 extern Vector3 data_ov006_0212b890;
 extern Vector3 data_ov006_0213af98;
 extern Vector3 data_ov009_02113d8c[];

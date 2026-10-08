@@ -7,10 +7,10 @@
  * in their legacy sources; their inline copies here are byte-checked duplicates.
  * This contiguous range is packaging evidence, not proof of the original TU.
  *
- * The state table at 0x0210af2c and its initializer at 0x021071f4 retain their
- * existing ROM/data and source owners. The scale vector uses its configured
- * identity data_ov002_0210af00. Compiler-emitted class metadata is separately
- * measured against its configured ROM homes and discarded from this text slice.
+ * The state table at 0x0210af2c is the file-scope PathLiftState array defined
+ * at the bottom of this file; mwcc emits __sinit_dPathLiftActor_c.cpp to copy
+ * its six pointer-to-member descriptors. The scale triple data_ov002_0210af00
+ * and the class metadata emit with it.
  *
  * Function order is the REVERSE of the ROM's: mwccarm 2004/b56 emits one .text
  * section per function and lays them out in reverse source order, so the
@@ -18,8 +18,8 @@
  * "// address (size)" line above each definition is its ROM location.
  *
  * Known limits:
- * - Completing lifecycle and state-data ownership (the two destructors, the
- *   state table and its initializer) is deferred; they keep their legacy sources.
+ * - Completing lifecycle ownership (the two destructors) is deferred; they keep
+ *   their legacy sources.
  * - Several helpers keep their mangled extern "C" spellings, and a few of those
  *   declarations are vaguer than the definitions they name (banked in
  *   config/decl-agreement-baseline.json). Tightening one changes its call sites,
@@ -61,7 +61,7 @@ extern void SubVec3(void *a, void *b, void *c);
 void func_02012694(int a, void *p);
 }
 
-extern "C" PathLiftState data_ov002_0210af2c[];
+extern PathLiftState data_ov002_0210af2c[];
 
 // 0x020eff90 (0x28)
 // @symbol func_ov002_020eff90
@@ -481,3 +481,24 @@ void dPathLiftActor_c::StateWaitInit()
 void dPathLiftActor_c::StateWait()
 {
 }
+
+/* The path-follow scale applied to the path models. Spelled as three s32s:
+ * the repo's Vector3 declares an empty destructor, and a real Vector3 global
+ * would make __sinit register it with __register_global_object, growing the
+ * initializer past its retail 0xa4. */
+s32 data_ov002_0210af00[3] = { 0x2000, 0x2000, 0x2000 };
+
+/* The state names sit in 8-byte slots ahead of the pointer-to-member
+ * descriptors. */
+static char s_waitName[8] = "WAIT";
+static char s_pathName[8] = "PATH";
+static char s_fallName[8] = "FALL";
+
+/* The state table SetState and BaseBehavior index by mState. Its six
+ * pointer-to-member descriptors are anonymous compiler objects; this
+ * definition is what makes mwcc emit __sinit_dPathLiftActor_c.cpp. */
+PathLiftState data_ov002_0210af2c[3] = {
+    { &dPathLiftActor_c::StateWaitInit, &dPathLiftActor_c::StateWait, s_waitName },
+    { &dPathLiftActor_c::StatePathInit, &dPathLiftActor_c::StatePath, s_pathName },
+    { &dPathLiftActor_c::StateFallInit, &dPathLiftActor_c::StateFall, s_fallName },
+};

@@ -964,6 +964,10 @@
   {
    "file": "notes/agents/handoffs/readable-ov055-luigi-0925.md",
    "ref": "src/__sinit_ov055_021118d4.c"
+  },
+  {
+   "file": "notes/agents/handoffs/pr3199-subset-repair-0926.md",
+   "ref": "src/__sinit_ov002_021071f4.c"
   }
  ]
 }
