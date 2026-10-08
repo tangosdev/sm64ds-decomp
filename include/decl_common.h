@@ -81,8 +81,6 @@ extern char data_ov002_0210df44;
 extern char data_ov002_0210df64;
 extern char data_ov002_0210df74;
 extern char data_ov002_0210df84;
-extern char data_ov002_0210e05c;
-extern char data_ov002_0210e064;
 extern char data_ov002_0210e1c8[];
 extern char data_ov002_0210e1d0[];
 extern char data_ov002_0210e1e0[];
