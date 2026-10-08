@@ -226,6 +226,10 @@
    "ref": "include/BookShot.h"
   },
   {
+   "file": "notes/agents/handoffs/pr3199-subset-repair-0926.md",
+   "ref": "src/__sinit_ov002_021071f4.c"
+  },
+  {
    "file": "notes/agents/handoffs/prod-dossunbar-0907-daObjBk_Dossunbar_c.md",
    "ref": "tools/check_src_tu_compiles.py"
   },
@@ -243,11 +247,11 @@
   },
   {
    "file": "notes/agents/handoffs/promote-ov055-luigi-0923.md",
-   "ref": "src/unnamed/ov055/__sinit_ov055_021118d4.c"
+   "ref": "src/d_a_luigi.cpp"
   },
   {
    "file": "notes/agents/handoffs/promote-ov055-luigi-0923.md",
-   "ref": "src/d_a_luigi.cpp"
+   "ref": "src/unnamed/ov055/__sinit_ov055_021118d4.c"
   },
   {
    "file": "notes/agents/handoffs/promote-ov071-casket-0924.md",
@@ -299,11 +303,11 @@
   },
   {
    "file": "notes/agents/handoffs/readable-ov055-luigi-0925.md",
-   "ref": "src/unnamed/ov055/__sinit_ov055_021118d4.c"
+   "ref": "src/d_a_luigi.cpp"
   },
   {
    "file": "notes/agents/handoffs/readable-ov055-luigi-0925.md",
-   "ref": "src/d_a_luigi.cpp"
+   "ref": "src/unnamed/ov055/__sinit_ov055_021118d4.c"
   },
   {
    "file": "notes/agents/handoffs/readable-ov055-luigi-0925.md",
@@ -762,6 +766,14 @@
    "ref": "tools/deepen_rtti.py"
   },
   {
+   "file": "notes/sinit-ownership-pilot-ov002.md",
+   "ref": "src/unnamed/ov002/__sinit_ov002_02100938.c"
+  },
+  {
+   "file": "notes/sinit-ownership-wave-resource-handles.md",
+   "ref": "src/unnamed/ov009/__sinit_ov009_02112458.c"
+  },
+  {
    "file": "notes/sinit-ownership-wave-resource-handles.md",
    "ref": "tools/tu_config.py"
   },
@@ -784,6 +796,10 @@
   {
    "file": "notes/tu-filename-reconstruction-pilot.md",
    "ref": "src/ChainChomp_Spawn.cpp"
+  },
+  {
+   "file": "notes/tu-filename-reconstruction-pilot.md",
+   "ref": "src/__sinit_ov014_02113118.c"
   },
   {
    "file": "notes/tu-filename-reconstruction-pilot.md",
@@ -1060,22 +1076,6 @@
   {
    "file": "tools/tubuild.py",
    "ref": "symbols/sections"
-  },
-  {
-   "file": "notes/tu-filename-reconstruction-pilot.md",
-   "ref": "src/__sinit_ov014_02113118.c"
-  },
-  {
-   "file": "notes/sinit-ownership-wave-resource-handles.md",
-   "ref": "src/unnamed/ov009/__sinit_ov009_02112458.c"
-  },
-  {
-   "file": "notes/sinit-ownership-pilot-ov002.md",
-   "ref": "src/unnamed/ov002/__sinit_ov002_02100938.c"
-  },
-  {
-   "file": "notes/agents/handoffs/pr3199-subset-repair-0926.md",
-   "ref": "src/__sinit_ov002_021071f4.c"
   }
  ]
 }

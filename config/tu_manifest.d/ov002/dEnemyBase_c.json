@@ -309,28 +309,28 @@
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN6Aea30C19func_ov002_020ae80cEP8dActor_cP10dBgCh_Actr"
     },
     {
-      "symbol": "@970",
+      "symbol": "@2151",
       "address": "0x02108178",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020aea24ER10dBgCh_Actr"
     },
     {
-      "symbol": "@968",
+      "symbol": "@2152",
       "address": "0x02108180",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020ae454ER10dBgCh_Actr"
     },
     {
-      "symbol": "@966",
+      "symbol": "@2153",
       "address": "0x02108188",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr"
     },
     {
-      "symbol": "@964",
+      "symbol": "@2154",
       "address": "0x02108190",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -738,28 +738,28 @@
               ],
               "23": [
                 {
-                  "symbol": "@970",
+                  "symbol": "@2151",
                   "address": 34636152,
                   "sectionBase": 34636152
                 }
               ],
               "25": [
                 {
-                  "symbol": "@968",
+                  "symbol": "@2152",
                   "address": 34636160,
                   "sectionBase": 34636160
                 }
               ],
               "27": [
                 {
-                  "symbol": "@966",
+                  "symbol": "@2153",
                   "address": 34636168,
                   "sectionBase": 34636168
                 }
               ],
               "29": [
                 {
-                  "symbol": "@964",
+                  "symbol": "@2154",
                   "address": 34636176,
                   "sectionBase": 34636176
                 }
@@ -954,6 +954,28 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
+  "defined_symbol_renames": [
+    {
+      "from": "@970",
+      "to": "@2151",
+      "evidence": "mwcc numbers this descriptor @970 per TU and ov092 already defines a global @970, so the scratch link would multiply-define it"
+    },
+    {
+      "from": "@968",
+      "to": "@2152",
+      "evidence": "mwcc numbers this descriptor @968 per TU and ov092 already defines a global @968, so the scratch link would multiply-define it"
+    },
+    {
+      "from": "@966",
+      "to": "@2153",
+      "evidence": "mwcc numbers this descriptor @966 per TU and ov092 already defines a global @966, so the scratch link would multiply-define it"
+    },
+    {
+      "from": "@964",
+      "to": "@2154",
+      "evidence": "mwcc numbers this descriptor @964 per TU and ov092 already defines a global @964, so the scratch link would multiply-define it"
+    }
+  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_dEnemyBase_c.cpp",
@@ -1010,25 +1032,25 @@
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x02108170"
     },
     {
-      "symbol": "@970",
+      "symbol": "@2151",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x02108178"
     },
     {
-      "symbol": "@968",
+      "symbol": "@2152",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x02108180"
     },
     {
-      "symbol": "@966",
+      "symbol": "@2153",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x02108188"
     },
     {
-      "symbol": "@964",
+      "symbol": "@2154",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x02108190"
@@ -1190,7 +1212,7 @@
       "source": "0x02100ac4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@964",
+      "symbol": "@2154",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02108190"
@@ -1200,7 +1222,7 @@
       "source": "0x02100ac8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@966",
+      "symbol": "@2153",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02108188"
@@ -1210,7 +1232,7 @@
       "source": "0x02100acc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@968",
+      "symbol": "@2152",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02108180"
@@ -1220,7 +1242,7 @@
       "source": "0x02100ad0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@970",
+      "symbol": "@2151",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02108178"

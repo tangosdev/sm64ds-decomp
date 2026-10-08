@@ -474,7 +474,7 @@
       "evidence": "anonymous state-table update descriptor for daKuriKing_c::func_ov074_0211fc38; retail first word is 0x0211fc38"
     },
     {
-      "symbol": "@672",
+      "symbol": "@2172",
       "address": "0x02122db4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -558,7 +558,7 @@
       "evidence": "state 1 enter descriptor: function-pointer/PMF pair for the free stub func_ov074_021201ec; retail first word is 0x021201ec"
     },
     {
-      "symbol": "@671",
+      "symbol": "@2173",
       "address": "0x02122e14",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -777,6 +777,18 @@
       "evidence": "the nine-entry state record func_ov074_021203e4/0212042c dispatch through, plus 0x18 of section-alignment fill to 0x021231a0; zero in the static image, entries filled by the initializer"
     }
   ],
+  "defined_symbol_renames": [
+    {
+      "from": "@672",
+      "to": "@2172",
+      "evidence": "mwcc numbers this descriptor @672 per TU and ov027 already defines a global @672, so the scratch link would multiply-define it"
+    },
+    {
+      "from": "@671",
+      "to": "@2173",
+      "evidence": "mwcc numbers this descriptor @671 per TU and ov027 already defines a global @671, so the scratch link would multiply-define it"
+    }
+  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_daKuriKing_c.cpp",
@@ -821,7 +833,7 @@
       "evidence": "compiler-local member descriptor is a configured initializer relocation destination at 0x02122dac"
     },
     {
-      "symbol": "@672",
+      "symbol": "@2172",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local member descriptor is a configured initializer relocation destination at 0x02122db4"
@@ -869,7 +881,7 @@
       "evidence": "compiler-local member descriptor is a configured initializer relocation destination at 0x02122df4"
     },
     {
-      "symbol": "@671",
+      "symbol": "@2173",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local member descriptor is a configured initializer relocation destination at 0x02122e14"
@@ -1701,7 +1713,7 @@
       "source": "0x02122d5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@671",
+      "symbol": "@2173",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02122e14"
@@ -1711,7 +1723,7 @@
       "source": "0x02122d60",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@672",
+      "symbol": "@2172",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02122db4"

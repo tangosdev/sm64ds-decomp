@@ -219,7 +219,7 @@
       "evidence": "compiler temporary for the WAIT record's init pointer-to-member; retail first word is 0x020ef3f0"
     },
     {
-      "symbol": "@651",
+      "symbol": "@2162",
       "address": "0x0210aed8",
       "size": "0x8",
       "evidence": "compiler temporary for the PATH record's init pointer-to-member; retail first word is 0x020efa44"
@@ -237,13 +237,13 @@
       "evidence": "compiler temporary for the WAIT record's execute pointer-to-member; retail first word is 0x020ef3ec"
     },
     {
-      "symbol": "@655",
+      "symbol": "@2163",
       "address": "0x0210aef0",
       "size": "0x8",
       "evidence": "compiler temporary for the FALL record's init pointer-to-member; retail first word is 0x020ef57c"
     },
     {
-      "symbol": "@653",
+      "symbol": "@2164",
       "address": "0x0210aef8",
       "size": "0x8",
       "evidence": "compiler temporary for the PATH record's execute pointer-to-member; retail first word is 0x020ef670"
@@ -274,6 +274,23 @@
     }
   ],
   "bss": [],
+  "defined_symbol_renames": [
+    {
+      "from": "@651",
+      "to": "@2162",
+      "evidence": "mwcc numbers this descriptor @651 per TU and ov002 already defines a global @651, so the scratch link would multiply-define it"
+    },
+    {
+      "from": "@655",
+      "to": "@2163",
+      "evidence": "mwcc numbers this descriptor @655 per TU and ov079 already defines a global @655, so the scratch link would multiply-define it"
+    },
+    {
+      "from": "@653",
+      "to": "@2164",
+      "evidence": "mwcc numbers this descriptor @653 per TU and ov079 already defines a global @653, so the scratch link would multiply-define it"
+    }
+  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_dPathLiftActor_c.cpp",
@@ -312,7 +329,7 @@
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination at 0x0210aed0"
     },
     {
-      "symbol": "@651",
+      "symbol": "@2162",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination at 0x0210aed8"
@@ -330,13 +347,13 @@
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination at 0x0210aee8"
     },
     {
-      "symbol": "@655",
+      "symbol": "@2163",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination at 0x0210aef0"
     },
     {
-      "symbol": "@653",
+      "symbol": "@2164",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination at 0x0210aef8"
@@ -368,7 +385,7 @@
       "source": "0x02107284",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@651",
+      "symbol": "@2162",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210aed8"
@@ -378,7 +395,7 @@
       "source": "0x02107288",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@653",
+      "symbol": "@2164",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210aef8"
@@ -388,7 +405,7 @@
       "source": "0x0210728c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@655",
+      "symbol": "@2163",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210aef0"
