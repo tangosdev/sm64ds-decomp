@@ -14,25 +14,25 @@
  *   0x0211c684  func_ov063_0211c684  model matrix from position and angles
  *   0x0211c6f8  func_ov063_0211c6f8  collision matrix, and the mesh Transform
  *   0x0211c770  func_ov063_0211c770  staircase settle step (per-frame table)
- *   0x0211c7b0  func_ov063_0211c7b0  merry-go-round state
+ *   0x0211c7b0  func_ov063_0211c7b0  merry-go-round state  (mIndex 3)
  *   0x0211c82c  func_ov063_0211c82c  merry-go-round occupancy
- *   0x0211c89c  func_ov063_0211c89c  bookshelf state
+ *   0x0211c89c  func_ov063_0211c89c  bookshelf state       (mIndex 2)
  *   0x0211cae8  func_ov063_0211cae8  book-switch callback (ORs mBookFlags)
- *   0x0211cb54  func_ov063_0211cb54  trapdoor state
- *   0x0211cc18  func_ov063_0211cc18  staircase rise state
+ *   0x0211cb54  func_ov063_0211cb54  trapdoor state       (mIndex 1)
+ *   0x0211cc18  func_ov063_0211cc18  staircase rise state (mIndex 0)
  *   0x0211cdec  CleanupResources, OnPendingDestroy, Render, Behavior,
  *               InitResources
  * Below it, daTrs_c's TU ends at 0x0211c600. Above it, the collision-callback
  * pair at 0x0211d270 opens the factory unit (d_a_trs_trap_classinits.cpp).
- * The four state bodies are reached through the dispatch records at
- * 0x0211e9ac (merry-go-round, staircase, trapdoor, bookshelf), which the
- * module sinit copies into the .bss table data_ov063_0211ef38.
+ * The four state bodies are daTrsTrap_c members; the .bss dispatch table
+ * data_ov063_0211ef38 at the bottom of this file binds them.
  *
- * TEXT ONLY. The vtable, the RTTI records, the four SharedFilePtr pairs, the
- * CLPS blocks and the .bss dispatch table are declared here and defined
- * nowhere -- the overlay blob owns every .data/.bss word. Defining the
- * destructor out of line makes this TU emit the vtable and the RTTI chain;
- * the manifest licenses them as deadstrip-data at their ROM homes.
+ * The statics live here too: the eight file handles (four model, four
+ * collision) and the dispatch table are defined at the bottom of this file,
+ * so mwcc emits __sinit_d_a_trs_trap.cpp (the ROM's 0x0211e3cc initializer)
+ * and its .ctor entry. Defining the destructor out of line makes this TU
+ * emit the vtable and the RTTI chain; the manifest licenses them as
+ * deadstrip-data at their ROM homes.
  *
  * `#pragma defer_codegen off` makes source order the emission order, so the
  * file runs in ROM order, destructor first.
@@ -50,11 +50,11 @@
  *   that a polymorphic receiver changes the {ptr, adj} record shape; that is
  *   false here -- under 2004/b56 the real class gives byte-identical bodies
  *   and relocation records.
- * - The state bodies keep C linkage and their func_ov063_* names: nothing in
- *   the ROM names them. The trapdoor and staircase states read daTrsTrap_c
- *   fields; the matrix refreshes, the settle step, the merry-go-round state
- *   and occupancy test, the bookshelf state and the book-switch callback keep
- *   the byte-matching char-offset bodies they matched with as separate files.
+ * - The four state bodies are members under their func_ov063_* names (the
+ *   dispatch table's PMF records need member functions); the matrix refreshes,
+ *   the settle step, the merry-go-round occupancy test and the book-switch
+ *   callback keep C linkage and the byte-matching char-offset bodies they
+ *   matched with as separate files.
  * - Behavior names mStateTimer directly at both sites (TRAP-2709
  *   experiment: unified spelling matches).
  * - +0x418 on the spawned BOOK_SWITCH is daBookGen_c's, which has no header;
@@ -82,9 +82,27 @@ extern SharedFilePtr *data_ov063_0211e28c[];
 extern CLPS_Block *data_ov063_0211e9e8[];
 extern s32 data_ov063_0211e9f8[];
 
-/* The four dispatch records, bound to this trap's own class (see above). */
+/* The four dispatch records, bound to this trap's own class (see above).
+   Defined at the bottom of this file. */
 typedef void (daTrsTrap_c::*PMF)();
 extern PMF data_ov063_0211ef38[];
+
+/* 8-byte file handles. The models use func_02017acc / func_02017ab4 and the
+ * collision files func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
+ * are local; the manifest aliases the generated names to those ROM symbols. */
+struct TrsTrapModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    TrsTrapModelFilePtr(u32 fileID);
+    ~TrsTrapModelFilePtr();
+};
+
+struct TrsTrapCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    TrsTrapCollisionFilePtr(u32 fileID);
+    ~TrsTrapCollisionFilePtr();
+};
 
 /* --------------------------------------------------------------------------
  * The one file-scope extern "C" region.
@@ -168,19 +186,19 @@ extern "C" int func_ov063_0211c770(unsigned char *c, int idx)
 
 /* Merry-go-round state: spins by mAngVelY while mState is 0, keeps the
    occupancy flag and the looping sound going. */
-// @symbol func_ov063_0211c7b0
-extern "C" void func_ov063_0211c7b0(char *c)
+// @symbol _ZN11daTrsTrap_c19func_ov063_0211c7b0Ev
+void daTrsTrap_c::func_ov063_0211c7b0()
 {
     short *t;
-    if (*(unsigned char *)(c + 0x150) != 0) {
-        *(short *)(c + 0x100 + 0x3a) = 0;
+    if (mState != 0) {
+        mAngVelY = 0;
         return;
     }
-    *(short *)(c + 0x100 + 0x3a) = 0x80;
-    t = (short *)(((int)c + 0x8e));
-    *t = (short)(*t + *(short *)(c + 0x100 + 0x3a));
-    func_ov063_0211c82c(c);
-    *(unsigned int *)(c + 0x148) = Sound::PlayLong(*(unsigned int *)(c + 0x148), 3, 0x8f, *(Vector3 *)(c + 0x74), 0);
+    mAngVelY = 0x80;
+    t = &mAngleY;
+    *t = (short)(*t + mAngVelY);
+    func_ov063_0211c82c((char *)this);
+    mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8f, *(Vector3 *)&mCamSpacePosX, 0);
 }
 
 /* Merry-go-round occupancy. The first call only latches mInitLatch; after
@@ -203,19 +221,19 @@ extern "C" void func_ov063_0211c82c(char *c)
 /* Bookshelf state. Hidden (mVisible clear) once the player is past the
    wall; state 0 waits for all three book-switches, 1 plays the secret chime,
    2 slides the shelf, 3 finishes the chime and removes the shelf. */
-// @symbol func_ov063_0211c89c
-extern "C" void func_ov063_0211c89c(char *c)
+// @symbol _ZN11daTrsTrap_c19func_ov063_0211c89cEv
+void daTrsTrap_c::func_ov063_0211c89c()
 {
     Vector3 pp;
     char *p;
 
-    *(char *)(c + 0xcc) = ~0;
-    if (IsAreaShowing(*(signed char *)(c + 0x100 + 0x58)) == 0) {
-        *(u8 *)(c + 0x157) = 0;
-        *(char *)(c + 0xcc) = *(signed char *)(c + 0x100 + 0x58);
+    mAreaId = ~0;
+    if (IsAreaShowing(mSavedAreaId) == 0) {
+        mBookFlags = 0;
+        mAreaId = mSavedAreaId;
         return;
     }
-    p = (char *)((dActor_c *)c)->ClosestPlayer();
+    p = (char *)ClosestPlayer();
     {
         int *q = (int *)(p + 0x5c);
         pp.x = q[0];
@@ -223,51 +241,51 @@ extern "C" void func_ov063_0211c89c(char *c)
         pp.z = q[2];
     }
     if (pp.x >= (int)0xffa24000)
-        *(u8 *)(c + 0x156) = 0;
+        mVisible = 0;
     else
-        *(u8 *)(c + 0x156) = 1;
+        mVisible = 1;
 
-    switch (*(u8 *)(c + 0x150)) {
+    switch (mState) {
     case 0:
-        if ((*(u8 *)(c + 0x157) & 8) == 0 &&
-            Vec3_Dist((Vector3 *)(c + 0x5c), &pp) < 0x320000) {
-            short a = Vec3_HorzAngle((Vector3 *)(c + 0x5c), &pp);
+        if ((mBookFlags & 8) == 0 &&
+            Vec3_Dist((Vector3 *)&mPosX, &pp) < 0x320000) {
+            short a = Vec3_HorzAngle((Vector3 *)&mPosX, &pp);
             if (a <= -0x7000 || a >= 0x7000)
-                *(u8 *)(c + 0x157) |= 8;
+                mBookFlags |= 8;
         }
         {
-            u8 m = *(u8 *)(c + 0x157) & 7;
+            u8 m = mBookFlags & 7;
             if (m == 7) {
-                *(u8 *)(c + 0x150) = 1;
+                mState = 1;
                 return;
             }
             if (m == 1) return;
             if (m == 3) return;
-            *(u8 *)(c + 0x157) &= 8;
+            mBookFlags &= 8;
         }
         return;
     case 1:
         {
-            u16 t = *(u16 *)(c + 0x100 + 0x4c);
+            u16 t = mStateTimer;
             if (t > 0x64) {
-                *(u8 *)(c + 0x150) = 2;
+                mState = 2;
                 return;
             }
             if (t < 0x1e) return;
-            Sound::PlaySecretSound((dActor_c *)c, (u16 *)(c + 0x14e));
+            Sound::PlaySecretSound(this, &mSoundTimer);
         }
         return;
     case 2:
-        *(int *)(c + 0x5c) += 0x5000;
-        *(int *)(c + 0x148) = Sound::PlayLong(*(unsigned int *)(c + 0x148), 3, 0x8d, *(Vector3 *)(c + 0x74), 0);
-        Sound::PlaySecretSound((dActor_c *)c, (u16 *)(c + 0x14e));
-        if (*(u16 *)(c + 0x100 + 0x4c) > 0x65)
-            *(u8 *)(c + 0x150) = 3;
+        mPosX += 0x5000;
+        mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8d, *(Vector3 *)&mCamSpacePosX, 0);
+        Sound::PlaySecretSound(this, &mSoundTimer);
+        if (mStateTimer > 0x65)
+            mState = 3;
         return;
     case 3:
-        if (Sound::PlaySecretSound((dActor_c *)c, (u16 *)(c + 0x14e)) == 0)
+        if (Sound::PlaySecretSound(this, &mSoundTimer) == 0)
             return;
-        ((fBase_c *)c)->MarkForDestruction();
+        MarkForDestruction();
         return;
     }
 }
@@ -290,36 +308,36 @@ extern "C" void func_ov063_0211cae8(unsigned char *c, int m)
 /* Trapdoor state. While an actor stands on it, mAngVelX tilts toward the
    rider's z offset; with nobody on it the door swings back and stops at
    level. The tilt is applied twice in the standing case, as in the ROM. */
-// @symbol func_ov063_0211cb54
-extern "C" void func_ov063_0211cb54(daTrsTrap_c *self)
+// @symbol _ZN11daTrsTrap_c19func_ov063_0211cb54Ev
+void daTrsTrap_c::func_ov063_0211cb54()
 {
-    if (self->mStandingActor != 0) {
-        self->mAngVelX = (s16)((self->mStandingActor->mPosZ - self->mPosZ) >> 0xc);
-        *(s16 *)((int)self + 0x8c) = *(s16 *)((int)self + 0x8c) + self->mAngVelX;
+    if (mStandingActor != 0) {
+        mAngVelX = (s16)((mStandingActor->mPosZ - mPosZ) >> 0xc);
+        *(s16 *)((int)this + 0x8c) = *(s16 *)((int)this + 0x8c) + mAngVelX;
     } else {
-        int a = self->mAngleX;
+        int a = mAngleX;
         if (a < 0) a = -a;
-        if (a < 0xbb8 || self->mStateTimer > 0xf) {
+        if (a < 0xbb8 || mStateTimer > 0xf) {
             int v;
-            self->mAngVelX = 0;
-            v = self->mAngleX;
+            mAngVelX = 0;
+            v = mAngleX;
             if (v > 0) {
-                if (v < 0xc8) self->mAngleX = 0;
-                else self->mAngVelX = -0xc8;
+                if (v < 0xc8) mAngleX = 0;
+                else mAngVelX = -0xc8;
             } else {
-                if (v > -0xc8) self->mAngleX = 0;
-                else self->mAngVelX = 0xc8;
+                if (v > -0xc8) mAngleX = 0;
+                else mAngVelX = 0xc8;
             }
         }
     }
-    *(s16 *)((int)self + 0x8c) = *(s16 *)((int)self + 0x8c) + self->mAngVelX;
+    *(s16 *)((int)this + 0x8c) = *(s16 *)((int)this + 0x8c) + mAngVelX;
 }
 
 /* Staircase rise state. Waits until the master step (or this one, for the
    master) is released; then rises 8 per frame to this step's limit, settles
    through func_ov063_0211c770, and the last step plays the secret chime. */
-// @symbol func_ov063_0211cc18
-extern "C" void func_ov063_0211cc18(daTrsTrap_c *a)
+// @symbol _ZN11daTrsTrap_c19func_ov063_0211cc18Ev
+void daTrsTrap_c::func_ov063_0211cc18()
 {
     int limit;
     daTrsTrap_c *other;
@@ -327,54 +345,54 @@ extern "C" void func_ov063_0211cc18(daTrsTrap_c *a)
     int *p60;
     int *p144;
 
-    limit = data_ov063_0211e270[a->mStepIndex];
-    other = (daTrsTrap_c *)dActor_c::FindWithID(a->mParentUniqueID);
+    limit = data_ov063_0211e270[mStepIndex];
+    other = (daTrsTrap_c *)dActor_c::FindWithID(mParentUniqueID);
     if (other != 0) {
         if (other->mTriggered == 0)
             return;
-        a->mVisible = 1;
+        mVisible = 1;
     } else {
-        if (a->mTriggered == 0)
+        if (mTriggered == 0)
             return;
-        a->mVisible = 1;
+        mVisible = 1;
     }
 
-    switch (a->mState) {
+    switch (mState) {
     case 0:
-        a->mPosY = a->mHomePosY;
-        a->mRiseProgress = 0;
-        pst = (unsigned char *)(int)((char *)a + 0x150);
+        mPosY = mHomePosY;
+        mRiseProgress = 0;
+        pst = &mState;
         *pst = (unsigned char)(*pst + 1);
         /* fallthrough */
     case 1:
-        p60 = (int *)(int)((char *)a + 0x60);
-        p144 = (int *)(int)((char *)a + 0x144);
+        p60 = &mPosY;
+        p144 = &mRiseProgress;
         *p60 = *p60 + 0x8000;
         *p144 = *p144 + 8;
-        a->mSoundHandle = Sound::PlayLong(a->mSoundHandle, 3, 0x82, *(Vector3 *)&a->mCamSpacePosX, 0);
-        if (a->mRiseProgress <= limit)
+        mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x82, *(Vector3 *)&mCamSpacePosX, 0);
+        if (mRiseProgress <= limit)
             return;
-        a->mRiseProgress = limit;
-        a->mPosY = a->mHomePosY + (limit << 12);
-        pst = (unsigned char *)(int)((char *)a + 0x150);
+        mRiseProgress = limit;
+        mPosY = mHomePosY + (limit << 12);
+        pst = &mState;
         *pst = (unsigned char)(*pst + 1);
         return;
     case 2:
-        if (a->mStateTimer == 0)
-            Sound::PlayBank3(0x3d, *(Vector3 *)&a->mCamSpacePosX);
-        if (func_ov063_0211c770((unsigned char *)a, a->mStateTimer) != 0) {
-            pst = (unsigned char *)(int)((char *)a + 0x150);
+        if (mStateTimer == 0)
+            Sound::PlayBank3(0x3d, *(Vector3 *)&mCamSpacePosX);
+        if (func_ov063_0211c770((unsigned char *)this, mStateTimer) != 0) {
+            pst = &mState;
             *pst = (unsigned char)(*pst + 1);
         }
         return;
     case 3:
-        if (a->mStepIndex == 2) {
-            if (Sound::PlaySecretSound(a, &a->mSoundTimer) != 0) {
-                pst = (unsigned char *)(int)((char *)a + 0x150);
+        if (mStepIndex == 2) {
+            if (Sound::PlaySecretSound(this, &mSoundTimer) != 0) {
+                pst = &mState;
                 *pst = (unsigned char)(*pst + 1);
             }
         } else {
-            pst = (unsigned char *)(int)((char *)a + 0x150);
+            pst = &mState;
             *pst = (unsigned char)(*pst + 1);
         }
         return;
@@ -567,3 +585,24 @@ int daTrsTrap_c::InitResources()
     mAngVelZ = 0;
     return 1;
 }
+
+/* Source order is construction order: the eight file handles first (the two
+ * resource tables data_ov063_0211e27c/e28c index them per variant), then the
+ * dispatch records. __sinit_d_a_trs_trap.cpp emits the constructions, the
+ * destructor registrations and the record copies; the registration nodes are
+ * compiler temporaries. */
+TrsTrapModelFilePtr data_ov063_0211eeb8(0x6bb);
+TrsTrapModelFilePtr data_ov063_0211eeb0(0x6bd);
+TrsTrapModelFilePtr data_ov063_0211ee98(0x6c1);
+TrsTrapModelFilePtr data_ov063_0211eea8(0x6c3);
+TrsTrapCollisionFilePtr data_ov063_0211eec0(0x6bc);
+TrsTrapCollisionFilePtr data_ov063_0211eea0(0x6be);
+TrsTrapCollisionFilePtr data_ov063_0211eec8(0x6c2);
+TrsTrapCollisionFilePtr data_ov063_0211eed0(0x6c4);
+
+PMF data_ov063_0211ef38[] = {
+    &daTrsTrap_c::func_ov063_0211cc18,
+    &daTrsTrap_c::func_ov063_0211cb54,
+    &daTrsTrap_c::func_ov063_0211c89c,
+    &daTrsTrap_c::func_ov063_0211c7b0,
+};

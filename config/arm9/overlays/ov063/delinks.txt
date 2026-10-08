@@ -11,6 +11,10 @@ src/actors/daTrs_c.cpp:
 src/game/actors/daTrsTrap_c/d_a_trs_trap.cpp:
     complete
     .text start:0x0211c600 end:0x0211d270
+    .init start:0x0211e3cc end:0x0211e590
+    .ctor start:0x0211e700 end:0x0211e704
+    .data start:0x0211e9ac end:0x0211e9cc
+    .bss start:0x0211ee98 end:0x0211ef58
 
 src/game/actors/daTrsTrap_c/d_a_trs_trap_classinits.cpp:
     complete
@@ -27,10 +31,6 @@ src/game/actors/daPiano_c/d_a_piano.cpp:
 src/unnamed/ov063/__sinit_ov063_0211e29c.c:
     complete
     .init start:0x0211e29c end:0x0211e3cc
-
-src/unnamed/ov063/__sinit_ov063_0211e3cc.c:
-    complete
-    .init start:0x0211e3cc end:0x0211e590
 
 src/unnamed/ov063/__sinit_ov063_0211e590.c:
     complete

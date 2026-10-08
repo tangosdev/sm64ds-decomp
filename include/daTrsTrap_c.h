@@ -74,6 +74,14 @@ struct daTrsTrap_c : dActor_c {
     virtual s32 Render();            /* slot  9 -- ov063:0x0211ce34 */
     virtual void OnPendingDestroy(); /* slot 12 -- ov063:0x0211ce30 */
 
+    /* The four per-variant state bodies, indexed by mIndex through the .bss
+       dispatch table data_ov063_0211ef38. Nothing in the ROM names them, so
+       they keep their func_ov063_* addresses as names. */
+    void func_ov063_0211cc18(); /* 0 KAIDAN    -- staircase rise, 0x0211cc18 */
+    void func_ov063_0211cb54(); /* 1 TERESAPIT -- trapdoor tilt,  0x0211cb54 */
+    void func_ov063_0211c89c(); /* 2 BOOKSHELF -- shelf slide,   0x0211c89c */
+    void func_ov063_0211c7b0(); /* 3 MERRYGOROUND -- spin,       0x0211c7b0 */
+
     /* Leaf adapter until fBase_c::operator new(unsigned long) lands (#2570).
        `return new daTrsTrap_c()` then routes through the retail allocator. */
     static void *operator new(unsigned long size) {

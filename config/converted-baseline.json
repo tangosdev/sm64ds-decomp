@@ -2646,7 +2646,6 @@
     "src/minigames/d_s_mg_trampoline2.cpp#_ZN18dScMgTrampoline2_cD1Ev",
     "src/nds_print.c",
     "src/nds_printf.c",
-    "src/unnamed/ov063/__sinit_ov063_0211e3cc.c",
     "src/unnamed/ov063/__sinit_ov063_0211e590.c",
     "src/actors/daObjHeart_c.cpp#_ZN12daObjHeart_c16CleanupResourcesEv",
     "src/actors/daObjHeart_c.cpp#_ZN12daObjHeart_c6RenderEv",
@@ -3565,5 +3564,5 @@
     "src/engine/sound/Sound.cpp#_ZN5Sound8PlayLongEjjjRK7Vector3s",
     "src/engine/sound/Sound.cpp#_ZN5Sound8SetMusicEjj"
   ],
-  "count": 3556
+  "count": 3555
 }
