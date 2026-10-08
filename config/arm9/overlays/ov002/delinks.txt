@@ -219,6 +219,10 @@ src/actors/daObjSwdoor_c.cpp:
 src/actors/daObjTatefuda_c.cpp:
     complete
     .text start:0x020badd0 end:0x020bc3c8
+    .init start:0x02101738 end:0x02101894
+    .ctor start:0x02108100 end:0x02108104
+    .data start:0x02109a64 end:0x02109ab4
+    .bss start:0x0210e05c end:0x0210e0d4
 
 src/d_a_obj_tatefuda.c:
     complete
@@ -1576,10 +1580,6 @@ src/unnamed/ov002/__sinit_ov002_02101478.c:
 src/unnamed/ov002/__sinit_ov002_021014e4.c:
     complete
     .init start:0x021014e4 end:0x02101588
-
-src/unnamed/ov002/__sinit_ov002_02101738.c:
-    complete
-    .init start:0x02101738 end:0x02101894
 
 src/unnamed/ov002/__sinit_ov002_02101894.c:
     complete
