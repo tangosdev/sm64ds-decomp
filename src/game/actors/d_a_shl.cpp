@@ -12,8 +12,8 @@
  * A small state machine drives it. mState points at one of four file-scope
  * records {enter, tick}, each a pointer-to-member; func_ov102_0214d1f8
  * switches state and runs `enter`, Behavior runs `tick` every frame. The
- * records are .bss. The definitions at the end of this file are what make
- * mwcc emit __sinit_d_a_shl.cpp, which copies the anonymous descriptors:
+ * records are .bss, filled by __sinit_ov102_0214dfac from the PMF
+ * constants at ov102:0x0214e5d4..0x0214e614:
  *
  *     data_ov102_0214ea68  idle     enter 0214d1b8  tick 0214d1b0
  *     data_ov102_0214ea48  ridden   enter 0214d0bc  tick 0214d044
@@ -35,10 +35,14 @@
  *   with the seven arguments its call sites pass.
  * - func_ov102_0214c84c's ground probe is a raw 0x50-byte dBgCh_Gnd
  *   buffer driven through its mangled entry points.
- * - data_ov102_0214d70c is this TU's .rodata pair of model-file handles.
- *   Those handles live in ov002; this sinit does not construct them.
+ * - data_ov102_0214d70c is this TU's .rodata pair of model-file handles
+ *   and the state records are .bss; this text-only TU claims neither.
  *
  * deslop leftovers:
+ * - The state records dispatch through pointer-to-member fields on the
+ *   non-virtual stand-in ShlStateHost: daShl_c is polymorphic, so a real
+ *   daShl_c::* is wider than the 8-byte {fn,delta} entries the sinit
+ *   copies from the ov102:0x0214e5d4 PMF constants.
  * - func_ov002_020ad660, func_ov002_020cc16c and func_020105cc are other
  *   TUs' helpers and stay free externs; the Fix12<int>-by-value callees
  *   listed above stay mangled (notes/mwccarm-codegen.md 6az).
@@ -55,9 +59,11 @@
 #include "daShl_c.h"
 #include "SharedFilePtr.h"
 
-/* Two 8-byte pointers-to-member. The second word is the this-adjustment;
-   retail stores 0 for every entry. */
-typedef int (daShl_c::*ShlStateFn)();
+/* A state record: two pointers-to-member, called on the actor itself.
+   daShl_c is polymorphic, so a real daShl_c::* is wider than the 8-byte
+   {fn,delta} entries -- the owner class stays an empty stand-in. */
+struct ShlStateHost {};
+typedef int (ShlStateHost::*ShlStateFn)();
 struct ShlState {
     ShlStateFn enter;  /* +0x0 */
     ShlStateFn tick;   /* +0x8 */
@@ -207,7 +213,7 @@ s32 daShl_c::Behavior()
         if (st->tick == 0)
             res = 1;
         else
-            res = (this->*st->tick)();
+            res = (((ShlStateHost *)this)->*st->tick)();
         if (res == 0)
             return 1;
     }
@@ -290,7 +296,7 @@ int daShl_c::func_ov102_0214d1f8(ShlState *state)
     ShlState *st = this->mState;
     if (st->enter == 0)
         return 1;
-    return (this->*st->enter)();
+    return (((ShlStateHost *)this)->*st->enter)();
 }
 
 // @symbol _ZN7daShl_c19func_ov102_0214d1b8Ev
@@ -648,23 +654,3 @@ void daShl_c::func_ov102_0214c7fc()
 // @symbol _ZN7daShl_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header
    emits D1 then D0 -- the cartridge's order -- and no D2. */
-
-/* These four records are what mwcc copies in __sinit_d_a_shl.cpp.
-   The pointer-to-member descriptors stay anonymous compiler objects.
-   Source order is the retail initializer order, not address order. */
-extern "C" ShlState data_ov102_0214ea68 = {
-    &daShl_c::func_ov102_0214d1b8,
-    &daShl_c::func_ov102_0214d1b0,
-};
-extern "C" ShlState data_ov102_0214ea78 = {
-    &daShl_c::func_ov102_0214d148,
-    &daShl_c::func_ov102_0214d114,
-};
-extern "C" ShlState data_ov102_0214ea48 = {
-    &daShl_c::func_ov102_0214d0bc,
-    &daShl_c::func_ov102_0214d044,
-};
-extern "C" ShlState data_ov102_0214ea58 = {
-    &daShl_c::func_ov102_0214d020,
-    &daShl_c::func_ov102_0214cfe4,
-};

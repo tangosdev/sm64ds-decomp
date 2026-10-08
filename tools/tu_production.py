@@ -49,8 +49,12 @@ def prepare_intact_object(raw, entry):
         TB.apply_externalized_output_policy(post_policy, entry)
     if reasons:
         _raise(f"{entry['id']} exact RTTI externalization", reasons)
+    renamed_obj, defined_renames, reasons = \
+        TB.apply_defined_symbol_rename_policy(externalized_obj, entry)
+    if reasons:
+        _raise(f"{entry['id']} defined symbol renames", reasons)
     aliased_obj, undefined_aliases, reasons = \
-        TB.apply_undefined_symbol_alias_policy(externalized_obj, entry)
+        TB.apply_undefined_symbol_alias_policy(renamed_obj, entry)
     if reasons:
         _raise(f"{entry['id']} undefined symbol aliases", reasons)
     bound_obj, symbol_bindings, reasons = \
@@ -91,6 +95,7 @@ def prepare_intact_object(raw, entry):
         _raise(f"{entry['id']} production object audit", audit_errors)
     return linked_obj, {
         "compilerOnly": compiler_only, "externalized": externalized,
+        "definedSymbolRenames": defined_renames,
         "undefinedAliases": undefined_aliases,
         "symbolBindings": symbol_bindings,
         "sectionOrder": section_order,
@@ -360,8 +365,12 @@ def _prepare_one(entry, config_root, work_root, jobs):
     if reasons:
         _raise(f"{entry['id']} exact RTTI externalization", reasons)
 
+    renamed_obj, defined_renames, reasons = \
+        TB.apply_defined_symbol_rename_policy(externalized_obj, entry)
+    if reasons:
+        _raise(f"{entry['id']} defined symbol renames", reasons)
     aliased_obj, undefined_aliases, reasons = \
-        TB.apply_undefined_symbol_alias_policy(externalized_obj, entry)
+        TB.apply_undefined_symbol_alias_policy(renamed_obj, entry)
     if reasons:
         _raise(f"{entry['id']} undefined symbol aliases", reasons)
 
