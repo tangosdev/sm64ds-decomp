@@ -5660,3 +5660,16 @@ ov004	0x020ae104	func_ov004_020ae104	_ZN11dScMgBase_c15graphCallback_cC1Ev	dScMg
 ov004	0x020b2c58	func_ov004_020b2c58	__arraydtor$314	compiler-generated array destructor thunk for the Ent record pool data_ov004_020bebe8; __sinit_d_s_mg_base.cpp registers it through __register_global_object.
 ov004	0x020b2c7c	func_ov004_020b2c7c	_ZN3EntD1Ev	Ent's trivial destructor, emitted for the data_ov004_020bebe8 record pool's __cxa_vec_ctor/__cxa_vec_cleanup calls.
 ov004	0x020b2c80	func_ov004_020b2c80	_ZN3EntC1Ev	Ent's trivial constructor, emitted for the data_ov004_020bebe8 record pool's __cxa_vec_ctor call.
+ov002	0x020ae9f8	func_ov002_020ae9f8	_ZN6Aea30C19func_ov002_020ae9f8EP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index
+ov002	0x020ae954	func_ov002_020ae954	_ZN6Aea30C19func_ov002_020ae954EP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index
+ov002	0x020ae890	func_ov002_020ae890	_ZN6Aea30C19func_ov002_020ae890EP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index
+ov002	0x020ae87c	func_ov002_020ae87c	_ZN6Aea30C19func_ov002_020ae87cEP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index
+ov002	0x020ae844	func_ov002_020ae844	_ZN6Aea30C19func_ov002_020ae844EP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index
+ov002	0x020ae80c	func_ov002_020ae80c	_ZN6Aea30C19func_ov002_020ae80cEP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index
+ov002	0x020ae73c	func_ov002_020ae73c	_ZN6Aea30C19func_ov002_020ae73cEP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index
+ov002	0x020aea2c	func_ov002_020aea2c	_ZN6Aea30C19func_ov002_020aea2cEP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index
+ov002	0x020ae64c	func_ov002_020ae64c	_ZN12dEnemyBase_c19func_ov002_020ae64cER10dBgCh_Actr	pointer-to-member target of data_ov002_0210dbc0, dispatched by UpdateDeath on mDeathState
+ov002	0x020ae608	func_ov002_020ae608	_ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr	pointer-to-member target of data_ov002_0210dbc0, dispatched by UpdateDeath on mDeathState
+ov002	0x020ae4cc	func_ov002_020ae4cc	_ZN12dEnemyBase_c19func_ov002_020ae4ccER10dBgCh_Actr	pointer-to-member target of data_ov002_0210dbc0, dispatched by UpdateDeath on mDeathState
+ov002	0x020ae454	func_ov002_020ae454	_ZN12dEnemyBase_c19func_ov002_020ae454ER10dBgCh_Actr	pointer-to-member target of data_ov002_0210dbc0, dispatched by UpdateDeath on mDeathState
+ov002	0x020aea24	func_ov002_020aea24	_ZN12dEnemyBase_c19func_ov002_020aea24ER10dBgCh_Actr	pointer-to-member target of data_ov002_0210dbc0, dispatched by UpdateDeath on mDeathState

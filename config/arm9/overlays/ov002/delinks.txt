@@ -11,6 +11,10 @@ src/unnamed/ov002/func_ov002_020ad660.cpp:
 src/actors/dEnemyBase_c.cpp:
     complete
     .text start:0x020ad838 end:0x020aedbc
+    .init start:0x02100938 end:0x02100adc
+    .ctor start:0x021080d4 end:0x021080d8
+    .data start:0x02108140 end:0x021081c0
+    .bss start:0x0210db80 end:0x0210dc00
 
 src/actors/dCapEnemy_c.cpp:
     complete
@@ -1540,10 +1544,6 @@ src/actors/daPropeller_Heyho_Fire_c.cpp:
 src/unnamed/ov002/__sinit_ov002_02100560.c:
     complete
     .init start:0x02100560 end:0x02100938
-
-src/unnamed/ov002/__sinit_ov002_02100938.c:
-    complete
-    .init start:0x02100938 end:0x02100adc
 
 src/unnamed/ov002/__sinit_ov002_02100adc.c:
     complete

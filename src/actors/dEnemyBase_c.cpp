@@ -15,12 +15,38 @@
  * The out-of-line destructor is the class's key function. It emits D2, D0
  * and D1 in cartridge order (0x020aed18, 0x020aed3c, 0x020aed74), so this
  * object carries _ZTV/_ZTI/_ZTS12dEnemyBase_c and the inherited RTTI. The
- * manifest's compiler_only_output licenses them, and the promotion claims
- * no data.
+ * manifest's compiler_only_output licenses them.
+ *
+ * This TU also owns the module's second static initializer: the two
+ * non-const PMF tables at the end of the file make mwcc emit
+ * __sinit_dEnemyBase_c.cpp, byte-identical to retail __sinit_ov002_02100938
+ * (0x1a4, eighteen relocations), plus the .ctor word and the sixteen
+ * pointer-to-member descriptors. See notes/sinit-ownership-pilot-ov002.md.
  *
  * The name is the cartridge's: ov002 holds _ZTI12dEnemyBase_c/
  * _ZTS12dEnemyBase_c at 0x021081c0/0x021081cc, and da1up_c's
  * __si_class_type_info reaches them through its +8 word.
+ *
+ * comment leftovers:
+ *   - Aea30C is a file-local shadow receiver for the first state table and
+ *     its dispatcher func_ov002_020aea30: the PMF representation was formed
+ *     on it, and retyping to the polymorphic dEnemyBase_c changes the
+ *     (c->*pmf) call sequence. Its padN/fNN fields are the raw offsets the
+ *     dispatcher touches.
+ *   - The memberized handlers keep `char *c = (char *)this` aliases and
+ *     c + 0xNNN puns: the header does not name every field they touch and
+ *     member access reschedules the address math.
+ *   - func_ov002_020ae5c8 stays a free `extern "C"` callee -- callers pass
+ *     its unused second argument; the one-argument form comes out 0x50
+ *     against the ROM's 0x5c (measured note in place).
+ *   - UpdateKillByInvincibleChar keeps its LAUNDER(&field) lvalue laundries,
+ *     the KbicVB vtable-slot-29 stand-in (real slot name unresolved) and the
+ *     KbicM48 48-byte matrix copy.
+ *   - Computed-spelling externs stay where a member form changes codegen:
+ *     _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s (Fix12<int> by value) and the
+ *     Particle::System::New wrapper, both noted at their declarations.
+ *   - Address-derived member names stand until the handlers' semantics are
+ *     recovered.
  */
 #include "dEnemyBase_c.h"
 #include "decl_dBgPi.h"
@@ -186,6 +212,17 @@ struct Aea30C {
   short f102;
   char pad3[8];
   int f10c;
+
+  /* The eight state-table targets. Member spellings are what let the table
+     below be written as real pointer-to-member initializers. */
+  void func_ov002_020ae9f8(dActor_c*, dBgCh_Actr*);
+  void func_ov002_020ae954(dActor_c*, dBgCh_Actr*);
+  void func_ov002_020ae890(dActor_c*, dBgCh_Actr*);
+  void func_ov002_020ae87c(dActor_c*, dBgCh_Actr*);
+  void func_ov002_020ae844(dActor_c*, dBgCh_Actr*);
+  void func_ov002_020ae80c(dActor_c*, dBgCh_Actr*);
+  void func_ov002_020ae73c(dActor_c*, dBgCh_Actr*);
+  void func_ov002_020aea2c(dActor_c*, dBgCh_Actr*);
 };
 extern "C" void func_ov002_020aea30(Aea30C* c, dActor_c* a, dBgCh_Actr* b) {
   if (c->f10c == 0) return;
@@ -196,22 +233,23 @@ extern "C" void func_ov002_020aea30(Aea30C* c, dActor_c* a, dBgCh_Actr* b) {
   (*(unsigned int*)((char*)c + 0xb0)) &= ~0x10000000;
 }
 
-// @symbol func_ov002_020aea2c
-extern "C" void func_ov002_020aea2c(void)
+// @symbol _ZN6Aea30C19func_ov002_020aea2cEP8dActor_cP10dBgCh_Actr
+void Aea30C::func_ov002_020aea2c(dActor_c*, dBgCh_Actr*)
 {
 }
 
-// @symbol func_ov002_020aea24
-extern "C" int func_ov002_020aea24(void)
+// @symbol _ZN12dEnemyBase_c19func_ov002_020aea24ER10dBgCh_Actr
+int dEnemyBase_c::func_ov002_020aea24(dBgCh_Actr&)
 {
     return 0;
 }
 
-// @symbol func_ov002_020ae9f8
+// @symbol _ZN6Aea30C19func_ov002_020ae9f8EP8dActor_cP10dBgCh_Actr
 /* Zero two u32 fields, set a u16 field to 0xf, then clear bit 0x1 in the u32 at
    self+0xb0. */
-extern "C" void func_ov002_020ae9f8(char *self)
+void Aea30C::func_ov002_020ae9f8(dActor_c*, dBgCh_Actr*)
 {
+    char *self = (char *)this;
     *(unsigned int *)(self + 0x98) = 0;
     *(unsigned int *)(self + 0xa8) = 0;
     *(unsigned short *)(self + 0x102) = 0xf;
@@ -240,7 +278,6 @@ extern "C" void func_ov002_020ae968(char* c, char* arg)
     _ZN5Sound9PlayBank0EjRK7Vector3(9, (void*)(c + 0x74));
 }
 
-// @symbol func_ov002_020ae954
 struct Unk954A
 {
     char pad[0x94];
@@ -253,10 +290,11 @@ struct Unk954B
     short unk8e;
 };
 
-extern "C" void func_ov002_020ae954(Unk954A *a, Unk954B *b)
+// @symbol _ZN6Aea30C19func_ov002_020ae954EP8dActor_cP10dBgCh_Actr
+void Aea30C::func_ov002_020ae954(dActor_c* a, dBgCh_Actr*)
 {
-    a->unk94 = b->unk8e;
-    func_ov002_020ae968((char *)a, (char *)b);
+    ((Unk954A *)this)->unk94 = ((Unk954B *)a)->unk8e;
+    func_ov002_020ae968((char *)this, (char *)a);
 }
 
 // @symbol func_ov002_020ae8b8
@@ -280,15 +318,14 @@ extern "C" void func_ov002_020ae8b8(char* c, char* arg)
     *(int *)(((int)c + 0xb0)) &= ~1;
 }
 
-// @symbol func_ov002_020ae890
-extern "C" int func_ov002_020ae890(void* c, void* a)
+// @symbol _ZN6Aea30C19func_ov002_020ae890EP8dActor_cP10dBgCh_Actr
+void Aea30C::func_ov002_020ae890(dActor_c* a, dBgCh_Actr*)
 {
-    *(short*)((char*)c+0x94) = *(short*)((char*)a+0x8e);
-    func_ov002_020ae8b8((char*)c, (char*)a);
-    return _ZN5Sound9PlayBank0EjRK7Vector3(0xa, (char*)c+0x74);
+    *(short*)((char*)this+0x94) = *(short*)((char*)a+0x8e);
+    func_ov002_020ae8b8((char*)this, (char*)a);
+    _ZN5Sound9PlayBank0EjRK7Vector3(0xa, (char*)this+0x74);
 }
 
-// @symbol func_ov002_020ae87c
 struct Unk87cA
 {
     char pad[0x94];
@@ -301,32 +338,35 @@ struct Unk87cB
     short unk8e;
 };
 
-extern "C" void func_ov002_020ae87c(Unk87cA *a, Unk87cB *b)
+// @symbol _ZN6Aea30C19func_ov002_020ae87cEP8dActor_cP10dBgCh_Actr
+void Aea30C::func_ov002_020ae87c(dActor_c* a, dBgCh_Actr*)
 {
-    a->unk94 = b->unk8e;
-    func_ov002_020ae8b8((char *)a, (char *)b);
+    ((Unk87cA *)this)->unk94 = ((Unk87cB *)a)->unk8e;
+    func_ov002_020ae8b8((char *)this, (char *)a);
 }
 
-// @symbol func_ov002_020ae844
 extern "C" s16 Vec3_HorzAngle(const void *v0, const void *v1);
 
-extern "C" void func_ov002_020ae844(void *c, void *a)
+// @symbol _ZN6Aea30C19func_ov002_020ae844EP8dActor_cP10dBgCh_Actr
+void Aea30C::func_ov002_020ae844(dActor_c* a, dBgCh_Actr*)
 {
-    s16 angle = Vec3_HorzAngle((char *)a + 0x5c, (char *)c + 0x5c);
-    *(short *)((char *)c + 0x94) = angle;
-    func_ov002_020ae968((char *)c, (char *)a);
+    s16 angle = Vec3_HorzAngle((char *)a + 0x5c, (char *)this + 0x5c);
+    *(short *)((char *)this + 0x94) = angle;
+    func_ov002_020ae968((char *)this, (char *)a);
 }
 
-// @symbol func_ov002_020ae80c
-extern "C" void func_ov002_020ae80c(void* c, void* a)
+// @symbol _ZN6Aea30C19func_ov002_020ae80cEP8dActor_cP10dBgCh_Actr
+void Aea30C::func_ov002_020ae80c(dActor_c* a, dBgCh_Actr*)
 {
-    *(short*)((char*)c+0x94) = Vec3_HorzAngle((char*)a+0x5c, (char*)c+0x5c);
-    func_ov002_020ae8b8((char*)c, (char*)a);
+    *(short*)((char*)this+0x94) = Vec3_HorzAngle((char*)a+0x5c, (char*)this+0x5c);
+    func_ov002_020ae8b8((char*)this, (char*)a);
 }
 
-// @symbol func_ov002_020ae73c
-extern "C" void func_ov002_020ae73c(char* c, char* arg)
+// @symbol _ZN6Aea30C19func_ov002_020ae73cEP8dActor_cP10dBgCh_Actr
+void Aea30C::func_ov002_020ae73c(dActor_c* a, dBgCh_Actr*)
 {
+    char* c = (char*)this;
+    char* arg = (char*)a;
     *(s16*)(c + 0x94) = Vec3_HorzAngle(arg + 0x5c, c + 0x5c);
     *(int*)(c + 0xa8) = 0xa000;
 
@@ -366,7 +406,6 @@ int dEnemyBase_c::UpdateDeath(dBgCh_Actr & clsn_)
     return ret;
 }
 
-// @symbol func_ov002_020ae64c
 /* Forward declaration, because func_ov002_020ae5c8 is written LOWER in this file (the whole
    TU runs highest ROM address first).
 
@@ -380,7 +419,10 @@ int dEnemyBase_c::UpdateDeath(dBgCh_Actr & clsn_)
    carries the parameter unused. */
 extern "C" int func_ov002_020ae5c8(void *c, int x);
 
-extern "C" int func_ov002_020ae64c(char* c, int x){
+// @symbol _ZN12dEnemyBase_c19func_ov002_020ae64cER10dBgCh_Actr
+int dEnemyBase_c::func_ov002_020ae64c(dBgCh_Actr& clsn){
+  char* c = (char*)this;
+  int x = (int)&clsn;
   if(*(unsigned short*)(c+0x102) >= 5){
     int v=*(int*)(c+0x84) - 0x23d;
     if(v < 0x4cc) v=0x4cc;
@@ -391,8 +433,10 @@ extern "C" int func_ov002_020ae64c(char* c, int x){
   return func_ov002_020ae5c8(c, x);
 }
 
-// @symbol func_ov002_020ae608
-extern "C" int func_ov002_020ae608(void* c, void* a){
+// @symbol _ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr
+int dEnemyBase_c::func_ov002_020ae608(dBgCh_Actr& clsn){
+  void* c = this;
+  void* a = &clsn;
   if(((dBgCh_Actr *)a)->IsOnGround()==0) return 0;
   ((dEnemyBase_c *)c)->SpawnCoin();
   ((dEnemyBase_c *)c)->KillAndTrackInDeathTable();
@@ -411,7 +455,6 @@ extern "C" int func_ov002_020ae5c8(void* c, int x){
   return 1;
 }
 
-// @symbol func_ov002_020ae4cc
 struct Vector3_16f;
 extern "C" {
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
@@ -420,7 +463,10 @@ extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_1
   u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, const Vector3_16f* dir);
 }
 
-extern "C" int func_ov002_020ae4cc(char* self, char* clsn){
+// @symbol _ZN12dEnemyBase_c19func_ov002_020ae4ccER10dBgCh_Actr
+int dEnemyBase_c::func_ov002_020ae4cc(dBgCh_Actr& clsn_){
+  char* self = (char*)this;
+  char* clsn = (char*)&clsn_;
   int v[3];
   int n = *(int*)(self+0x84);
   if (n == 0) {
@@ -451,8 +497,10 @@ extern "C" int func_ov002_020ae4cc(char* self, char* clsn){
   return 0;
 }
 
-// @symbol func_ov002_020ae454
-extern "C" int func_ov002_020ae454(char* c, void* a){
+// @symbol _ZN12dEnemyBase_c19func_ov002_020ae454ER10dBgCh_Actr
+int dEnemyBase_c::func_ov002_020ae454(dBgCh_Actr& clsn){
+  char* c = (char*)this;
+  void* a = &clsn;
   if(*(unsigned short*)(c+0x102)==0 || ((dBgCh_Actr *)a)->IsOnGround()!=0 || ((dBgCh_Actr *)a)->IsOnWall()!=0){
     ((dEnemyBase_c *)c)->SpawnCoin();
     ((dEnemyBase_c *)c)->KillAndTrackInDeathTable();
@@ -944,56 +992,28 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr & ww_, ModelAnim & mm_, 
     return 1;
 }
 
-/* Ownership pilot for __sinit_ov002_02100938.  This is excluded from the normal
-   shadow build: compile with -DSINIT_OWNERSHIP_PILOT to ask mwccarm to generate
-   the candidate TU's static initializer from ordinary non-const PMF arrays.
-   The current func_ov002_* placeholders do not expose the original member names,
-   so the probe methods stand in for symbol spelling; the PMF representation,
-   initializer bytes, section layout, relocation slots and addends are the claim
-   being tested.  There is intentionally no hand-written __sinit body. */
-#ifdef SINIT_OWNERSHIP_PILOT
-struct EnemySinitOwnerProbe {
-    void action0(int, int);
-    void action1(int, int);
-    void action2(int, int);
-    void action3(int, int);
-    void action4(int, int);
-    void action5(int, int);
-    void action6(int, int);
-    void action7(int, int);
-
-    int death0(dBgCh_Actr&);
-    int death1(dBgCh_Actr&);
-    int death2(dBgCh_Actr&);
-    int death3(dBgCh_Actr&);
-    int death4(dBgCh_Actr&);
-    int death5(dBgCh_Actr&);
-    int death6(dBgCh_Actr&);
-    int death7(dBgCh_Actr&);
+/* The two state-handler tables. func_ov002_020aea30 dispatches the first on
+   the f10c index; UpdateDeath dispatches the second on mDeathState. Non-const
+   pointer-to-member arrays live in .bss, so mwcc generates this TU's static
+   initializer to copy the descriptor records in at overlay load. */
+Aea30PMF data_ov002_0210db80[8] = {
+    &Aea30C::func_ov002_020ae9f8,
+    &Aea30C::func_ov002_020ae954,
+    &Aea30C::func_ov002_020ae890,
+    &Aea30C::func_ov002_020ae87c,
+    &Aea30C::func_ov002_020ae844,
+    &Aea30C::func_ov002_020ae80c,
+    &Aea30C::func_ov002_020ae73c,
+    &Aea30C::func_ov002_020aea2c,
 };
 
-typedef void (EnemySinitOwnerProbe::*EnemyActionPMF)(int, int);
-typedef int (EnemySinitOwnerProbe::*EnemyDeathPMF)(dBgCh_Actr&);
-
-EnemyActionPMF data_ov002_0210db80__sinit_pilot[8] = {
-    &EnemySinitOwnerProbe::action0,
-    &EnemySinitOwnerProbe::action1,
-    &EnemySinitOwnerProbe::action2,
-    &EnemySinitOwnerProbe::action3,
-    &EnemySinitOwnerProbe::action4,
-    &EnemySinitOwnerProbe::action5,
-    &EnemySinitOwnerProbe::action6,
-    &EnemySinitOwnerProbe::action7,
+int (dEnemyBase_c::*data_ov002_0210dbc0[8])(dBgCh_Actr&) = {
+    &dEnemyBase_c::func_ov002_020ae64c,
+    &dEnemyBase_c::func_ov002_020ae608,
+    &dEnemyBase_c::func_ov002_020ae608,
+    &dEnemyBase_c::func_ov002_020ae4cc,
+    &dEnemyBase_c::func_ov002_020ae608,
+    &dEnemyBase_c::func_ov002_020ae608,
+    &dEnemyBase_c::func_ov002_020ae454,
+    &dEnemyBase_c::func_ov002_020aea24,
 };
-
-EnemyDeathPMF data_ov002_0210dbc0__sinit_pilot[8] = {
-    &EnemySinitOwnerProbe::death0,
-    &EnemySinitOwnerProbe::death1,
-    &EnemySinitOwnerProbe::death2,
-    &EnemySinitOwnerProbe::death3,
-    &EnemySinitOwnerProbe::death4,
-    &EnemySinitOwnerProbe::death5,
-    &EnemySinitOwnerProbe::death6,
-    &EnemySinitOwnerProbe::death7,
-};
-#endif

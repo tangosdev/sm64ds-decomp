@@ -111,6 +111,14 @@ struct dEnemyBase_c : dActor_c {
     /* --- non-virtual --- */
     int AngleAwayFromWallOrCliff(dBgCh_Actr & clsn_, short & outAngle_);
     int UpdateDeath(dBgCh_Actr & clsn_);
+    /* The five death-state slots UpdateDeath dispatches through
+       data_ov002_0210dbc0; the TU's static initializer installs them.
+       The address is the method name. */
+    int func_ov002_020ae64c(dBgCh_Actr & clsn_);
+    int func_ov002_020ae608(dBgCh_Actr & clsn_);
+    int func_ov002_020ae4cc(dBgCh_Actr & clsn_);
+    int func_ov002_020ae454(dBgCh_Actr & clsn_);
+    int func_ov002_020aea24(dBgCh_Actr & clsn_);
     int UpdateYoshiEat(dBgCh_Actr & clsn_);
     void UpdateWMClsn(dBgCh_Actr & clsn_, unsigned int sel);
     /* Already a real method -- its own file builds _ZN12dEnemyBase_c9SpawnCoinEv from a
