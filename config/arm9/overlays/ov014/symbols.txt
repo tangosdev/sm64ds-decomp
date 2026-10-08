@@ -42,10 +42,10 @@ _ZN20daObjWanwanShutter_c8BehaviorEv kind:function(arm,size=0x3c) addr:0x02112fc
 _ZN20daObjWanwanShutter_c13InitResourcesEv kind:function(arm,size=0x80) addr:0x02112ffc
 daObjWanwanShutter_c_classInit kind:function(arm,size=0x30) addr:0x0211307c
 __sinit_ov014_021130ac kind:function(arm,size=0x6c) addr:0x021130ac
-__sinit_ov014_02113118 kind:function(arm,size=0x1e4) addr:0x02113118
+__sinit_d_a_wanwan.cpp kind:function(arm,size=0x1e4) addr:0x02113118
 __sinit_ov014_021132fc kind:function(arm,size=0x6c) addr:0x021132fc
 .p__sinit_ov014_021130ac kind:data(word) addr:0x02113368
-.p__sinit_ov014_02113118 kind:data(word) addr:0x0211336c
+.p__sinit_d_a_wanwan.cpp kind:data(word) addr:0x0211336c
 .p__sinit_ov014_021132fc kind:data(word) addr:0x02113370
 data_ov014_02113380 kind:data(any) addr:0x02113380
 data_ov014_02113384 kind:data(any) addr:0x02113384
@@ -185,7 +185,7 @@ _ZTS10daWanwan_c kind:data(any) addr:0x02114740
 g_profile_WANWAN kind:data(any) addr:0x02114750 ambiguous
 data_ov014_02114768 kind:data(any) addr:0x02114768 ambiguous
 data_ov014_0211476c kind:data(any) addr:0x0211476c
-data_ov014_021147c4 kind:data(any) addr:0x021147c4 ambiguous
+data_ov014_021147e4 kind:data(any) addr:0x021147e4 ambiguous
 _ZTV10daWanwan_c kind:data(any) addr:0x021147ec
 data_ov014_02114824 kind:data(any) addr:0x02114824 ambiguous
 data_ov014_02114860 kind:data(any) addr:0x02114860 ambiguous
@@ -207,10 +207,10 @@ data_ov014_02114968 kind:bss addr:0x02114968
 data_ov014_02114970 kind:bss addr:0x02114970
 data_ov014_02114978 kind:bss addr:0x02114978
 data_ov014_02114980 kind:bss addr:0x02114980
-data_ov014_02114988 kind:bss addr:0x02114988
-data_ov014_02114994 kind:bss addr:0x02114994
-data_ov014_021149a0 kind:bss addr:0x021149a0
-data_ov014_021149ac kind:bss addr:0x021149ac
+@1165 kind:bss addr:0x02114988
+@1166 kind:bss addr:0x02114994
+@1167 kind:bss addr:0x021149a0
+@1168 kind:bss addr:0x021149ac
 data_ov014_021149b8 kind:bss addr:0x021149b8
 data_ov014_021149c0 kind:bss addr:0x021149c0
 data_ov014_021149c8 kind:bss addr:0x021149c8

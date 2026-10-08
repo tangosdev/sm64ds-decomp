@@ -8,8 +8,10 @@
  * shadow placement copies twelve words of whichever one is already in scope.
  *
  * g_profile_WANWAN is not defined here. The func_ov014_* bodies stay free
- * functions: the sinit installs them as 8-byte PMFs in data_ov014_0211476c,
- * enter at +0 and update at +8, and this file does not own that table.
+ * functions: the state table data_ov014_0211476c installs them as 8-byte PMFs,
+ * enter at +0 and update at +8. This TU defines the table, the four resource
+ * handles and their destructor-registration nodes; mwcc emits
+ * __sinit_d_a_wanwan.cpp from those definitions at the bottom of the file.
  */
 
 #include "common.h"
@@ -34,24 +36,35 @@ enum {
     kChainMax = 0x64000        /* fully extended lunge */
 };
 
-/* Two words, from this TU's LoadFile / SetFile / SetAnim uses. SharedFilePtr
- * has no fields; +4 is the BMD or BCA the load just filled in.
+/* Model handles construct through func_02017acc and destroy through
+ * func_02017ab4; animation handles construct through SharedFilePtr::Construct
+ * and destroy through SharedFilePtr_Destruct_Anim. The manifest aliases those
+ * undefined members onto the ROM symbols. words[1] is the BMD or BCA the load
+ * just filled in; SharedFilePtr itself has no fields.
  *   02114968  body BMD   sinit 0x9c02, Model::LoadFile, mModelAnim
  *   02114978  link BMD   sinit 0x9c01, Model::LoadFile, mLinkModels
  *   02114980  idle BCA   sinit 0x9c04, dExtFrameCtrl_c::LoadFile
  *   02114970  lunge BCA  sinit 0x9c03, dExtFrameCtrl_c::LoadFile
  */
-struct Ov014Loaded {
-    u32 id;
-    void *file;
+struct WanwanModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    WanwanModelFilePtr(u32 fileID);
+    ~WanwanModelFilePtr();
 };
-#define ov014_loaded(handle) (((Ov014Loaded *)&(handle))->file)
+
+struct WanwanAnimationFileHandle : SharedFilePtr {
+    u32 words[2];
+
+    WanwanAnimationFileHandle(u32 fileID);
+    ~WanwanAnimationFileHandle();
+};
 
 extern "C" {
-extern SharedFilePtr data_ov014_02114968;
-extern SharedFilePtr data_ov014_02114978;
-extern SharedFilePtr data_ov014_02114980;
-extern SharedFilePtr data_ov014_02114970;
+extern WanwanModelFilePtr data_ov014_02114968;
+extern WanwanModelFilePtr data_ov014_02114978;
+extern WanwanAnimationFileHandle data_ov014_02114980;
+extern WanwanAnimationFileHandle data_ov014_02114970;
 extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
 extern Matrix4x3 data_020a0e68;
 extern const Matrix4x3 IDENTITY_MATRIX4X3;
@@ -133,7 +146,7 @@ extern "C" int func_0201267c(int id, void *pos, int unused);
    02111b70 0x138->0x140. The scalar extern stays. */
 #define SetChompAnim(self, bca) \
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj( \
-        &(self)->mModelAnim, ov014_loaded(bca), 0, 0x1000, 0)
+        &(self)->mModelAnim, (BCA_File *)(bca).words[1], 0, 0x1000, 0)
 
 // @symbol daWanwan_c_classInit
 /* Hand-rolled. The two Vector3[7] arrays are constructed by func_0203d384,
@@ -177,7 +190,7 @@ int daWanwan_c::InitResources()
         unsigned char *p = (unsigned char *)mLinkModels;
         do {
             ((Model *)p)->SetFile(
-                (BMD_File *)ov014_loaded(data_ov014_02114978), 1, 1);
+                (BMD_File *)data_ov014_02114978.words[1], 1, 1);
             i = i + 1;
             p = p + 0x50;
         } while (i < 7);
@@ -713,14 +726,17 @@ fail:
  * `20 - 8 - sizeof(PMF)` does not fit. The class is complete above, so both
  * compilers agree. mwccarm's object does not change either way.
  *
- * sinit copies six pairs into data_ov014_0211476c. Each pair is an 8-byte PMF
- * (function, adjustment 0) measured from the rodata at 021146a0:
- *   0  enter 02111e74  update 02111e14   scale back to 1.0
- *   1  enter 02111dc4  update 02111ca8   idle, face the player
- *   2  enter 02111b70  update 02111af0   lunge
- *   3  enter 02111a6c  update 021115ec   break the chain and the fence
- *   4  enter 021115c0  update 0211150c   knocked
- *   5  enter 021114d8  update 02111484   bite
+ * The state table data_ov014_0211476c: enter PMF at +0, update PMF at +8, name
+ * pointer at +0x10. The table is defined at the bottom of this file; the
+ * initializer copies each row's enter/update pair by value from twelve 8-byte
+ * PMF descriptors in .data at 021146a0..021146f8 (the name pointers are the
+ * only static part). Measured from those descriptors and the name pointers:
+ *   0  enter 02111e74  update 02111e14   scale back to 1.0     WAIT
+ *   1  enter 02111dc4  update 02111ca8   idle, face the player  WALK
+ *   2  enter 02111b70  update 02111af0   lunge                  ATTACK
+ *   3  enter 02111a6c  update 021115ec   break chain and fence  ESCAPE_DEMO
+ *   4  enter 021115c0  update 0211150c   knocked                BOMB_DAMAGE
+ *   5  enter 021114d8  update 02111484   bite                   GIANT_DAMAGE
  * 02111ebc reads the PMF at +0 (enter). 02111f08 reads the PMF at +8 (update).
  */
 struct WanwanState {
@@ -728,27 +744,44 @@ struct WanwanState {
     int mState;
 };
 typedef void (WanwanState::*WanwanPmf)();
-struct Entry {
-    char pad[8];
-    WanwanPmf pmf;
-    char tail[20 - 8 - sizeof(WanwanPmf)];
+
+/* The descriptor objects the initializer copies into the table. They stay
+ * ROM-supplied data; only their addresses are referenced here. */
+extern "C" WanwanPmf data_ov014_021146e0;
+extern "C" WanwanPmf data_ov014_021146b8;
+extern "C" WanwanPmf data_ov014_021146f0;
+extern "C" WanwanPmf data_ov014_021146c0;
+extern "C" WanwanPmf data_ov014_021146a8;
+extern "C" WanwanPmf data_ov014_021146a0;
+extern "C" WanwanPmf data_ov014_021146f8;
+extern "C" WanwanPmf data_ov014_021146b0;
+extern "C" WanwanPmf data_ov014_021146d8;
+extern "C" WanwanPmf data_ov014_021146c8;
+extern "C" WanwanPmf data_ov014_021146e8;
+extern "C" WanwanPmf data_ov014_021146d0;
+
+/* The state-name strings the table's name pointers reference. Also
+ * ROM-supplied .data. */
+extern "C" char data_ov014_02114690[]; /* WAIT */
+extern "C" char data_ov014_02114688[]; /* WALK */
+extern "C" char data_ov014_02114698[]; /* ATTACK */
+extern "C" char data_ov014_0211470c[]; /* ESCAPE_DEMO */
+extern "C" char data_ov014_02114724[]; /* BOMB_DAMAGE */
+extern "C" char data_ov014_02114730[]; /* GIANT_DAMAGE */
+
+struct WanwanStateRow {
+    WanwanPmf enter;
+    WanwanPmf update;
+    const char *name;
 };
-extern Entry data_ov014_0211476c[];
+extern "C" WanwanStateRow data_ov014_0211476c[6];
 
 // @symbol _ZN10daWanwan_c19func_ov014_02111f08Ev
 void daWanwan_c::func_ov014_02111f08()
 {
     WanwanState *c = (WanwanState *)this;
     int j = c->mState;
-    (c->*data_ov014_0211476c[j].pmf)();
-}
-
-namespace ent0 {
-struct Entry {
-    void (WanwanState::*pmf)();
-    char rest[12];
-};
-extern "C" Entry data_ov014_0211476c[];
+    (c->*data_ov014_0211476c[j].update)();
 }
 
 // @symbol _ZN10daWanwan_c19func_ov014_02111ebcEi
@@ -757,7 +790,7 @@ void daWanwan_c::func_ov014_02111ebc(int i)
     WanwanState *c = (WanwanState *)this;
     c->mState = i;
     int j = c->mState;
-    (c->*ent0::data_ov014_0211476c[j].pmf)();
+    (c->*data_ov014_0211476c[j].enter)();
 }
 
 // @symbol func_ov014_02111e74
@@ -980,7 +1013,7 @@ extern "C" void func_ov014_021115ec(u8 *raw)
         _Z14ApproachLinearRiii(&self->mReleaseSpeed, 0x1000, 0x400);
         if (self->mIsOnGround != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-                &self->mModelAnim, ov014_loaded(data_ov014_02114970), 0, 0x1000, 0);
+                &self->mModelAnim, (BCA_File *)data_ov014_02114970.words[1], 0, 0x1000, 0);
             self->mAngleY = Vec3_HorzAngle((Vector3 *)&self->mPosX, &partnerPos);
             self->mPrevAngleY = self->mAngleY;
             self->mVertSpeed = 0x14000;
@@ -1021,7 +1054,7 @@ extern "C" void func_ov014_021115ec(u8 *raw)
     case 7:
         if (self->mIsOnGround != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-                &self->mModelAnim, ov014_loaded(data_ov014_02114980), 0, 0x1000, 0);
+                &self->mModelAnim, (BCA_File *)data_ov014_02114980.words[1], 0, 0x1000, 0);
             self->mPrevAngleY = Vec3_HorzAngle((Vector3 *)&self->mPosX, &partnerPos);
             self->mActionTimer = 0x3c;
             self->mAngleY = self->mPrevAngleY;
@@ -1110,3 +1143,23 @@ extern "C" void func_ov014_02111484(char *raw)
 // @symbol _ZN10daWanwan_cD1Ev
 /* Both variants come from the inline destructor in daWanwan_c.h. Inline,
  * mwccarm emits D1 then D0 and no D2, which is the ROM order. */
+
+/* Order is the retail initializer: model 0x9c02, model 0x9c01, anim 0x9c04,
+ * anim 0x9c03, then the six state rows. The model constructors and both
+ * destructor families are the ROM veneers the manifest aliases; mwcc emits
+ * __sinit_d_a_wanwan.cpp from these definitions. The table's enter/update
+ * fields copy from the ROM PMF descriptors by value; the name pointers are
+ * the static part. */
+WanwanModelFilePtr data_ov014_02114968(0x9c02);
+WanwanModelFilePtr data_ov014_02114978(0x9c01);
+WanwanAnimationFileHandle data_ov014_02114980(0x9c04);
+WanwanAnimationFileHandle data_ov014_02114970(0x9c03);
+
+extern "C" WanwanStateRow data_ov014_0211476c[6] = {
+    { data_ov014_021146e0, data_ov014_021146b8, data_ov014_02114690 },
+    { data_ov014_021146f0, data_ov014_021146c0, data_ov014_02114688 },
+    { data_ov014_021146a8, data_ov014_021146a0, data_ov014_02114698 },
+    { data_ov014_021146f8, data_ov014_021146b0, data_ov014_0211470c },
+    { data_ov014_021146d8, data_ov014_021146c8, data_ov014_02114724 },
+    { data_ov014_021146e8, data_ov014_021146d0, data_ov014_02114730 },
+};
