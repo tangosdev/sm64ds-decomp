@@ -5757,7 +5757,6 @@
     "src/game/actors/d_a_shl.cpp#_ZN7daShl_c13InitResourcesEv": "tangosdev",
     "src/game/actors/d_a_shl.cpp#_ZN7daShl_c13OnYoshiTryEatEv": "andrewboudreau",
     "src/game/actors/d_a_shl.cpp#daShl_c_classInit": "tangosdev",
-    "src/game/actors/d_a_shl.cpp#__sinit_d_a_shl.cpp": "tangosdev",
     "src/game/actors/d_a_red_bombhei.cpp#_ZN14daRedBombhei_cD1Ev": "tangosdev",
     "src/game/actors/d_a_red_bombhei.cpp#_ZN14daRedBombhei_cD0Ev": "tangosdev",
     "src/game/actors/d_a_red_bombhei.cpp#_ZN14daRedBombhei_c19func_ov084_0212c1a0Ev": "ruspecial",

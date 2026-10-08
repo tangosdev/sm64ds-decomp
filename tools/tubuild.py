@@ -2788,6 +2788,45 @@ def apply_undefined_symbol_alias_policy(obj_bytes, entry, name_index=None):
                  "objisolate": plan}, []
 
 
+def apply_defined_symbol_rename_policy(obj_bytes, entry):
+    """Renumber manifest-licensed compiler-local definitions to fleet-unique names."""
+    raw = entry.get("defined_symbol_renames", [])
+    if raw is None:
+        raw = []
+    if not isinstance(raw, list):
+        return None, {"requested": [], "renamed": []}, \
+            ["defined_symbol_renames must be a list"]
+    owned = {row["symbol"] for _section, row in manifest_owned_symbol_rows(entry)}
+    mapping, requested, reasons = {}, [], []
+    for ordinal, row in enumerate(raw):
+        label = f"defined_symbol_renames[{ordinal}]"
+        if not isinstance(row, dict):
+            reasons.append(f"{label} is not an object")
+            continue
+        missing = [key for key in ("from", "to", "evidence") if not row.get(key)]
+        if missing:
+            reasons.append(f"{label} is missing {missing}")
+            continue
+        old, new = str(row["from"]), str(row["to"])
+        if new not in owned:
+            reasons.append(f"{label} renames to {new}, which the manifest does not own")
+            continue
+        if old in mapping:
+            reasons.append(f"duplicate defined symbol rename for {old}")
+            continue
+        mapping[old] = new
+        requested.append(dict(row))
+    if reasons:
+        return None, {"requested": requested, "renamed": []}, reasons
+    out, plan = OI.rename_defined_symbols(obj_bytes, mapping)
+    if out is None:
+        return None, {"requested": requested, "renamed": plan.get("renamed", []),
+                      "objisolate": plan}, \
+            [f"defined symbol rename refused: {plan.get('error')}"]
+    return out, {"requested": requested, "renamed": plan.get("renamed", []),
+                 "objisolate": plan}, []
+
+
 def apply_symbol_binding_policy(obj_bytes, entry):
     """Apply exact manifest-licensed binding rewrites to owned symbols."""
     raw = entry.get("symbol_binding_rewrites", [])
@@ -5128,6 +5167,24 @@ def cmd_linkcheck(args):
                 print(f"      externalized {externalized['externalized']} to exact "
                       "configured canonical homes")
 
+            renamed_tu, defined_renames, rename_reasons = \
+                apply_defined_symbol_rename_policy(linked_tu, entry)
+            report["definedSymbolRenames"] = defined_renames
+            if rename_reasons:
+                print("      REFUSED -- defined symbol rename policy:")
+                for reason in rename_reasons:
+                    print(f"        {reason}")
+                report["definedSymbolRenames"]["errors"] = rename_reasons
+                report["result"] = "defined-rename-refused"
+                _write_link_report(scratch, report)
+                _record_partitioned(data, entry, report)
+                return 1
+            if renamed_tu != linked_tu:
+                linked_tu = renamed_tu
+                scratch_rewrite = True
+                print(f"      renumbered {len(defined_renames['renamed'])} exact "
+                      "compiler-local definition(s) to fleet-unique names")
+
             aliased_tu, undefined_aliases, alias_reasons = \
                 apply_undefined_symbol_alias_policy(linked_tu, entry)
             report["undefinedSymbolAliases"] = undefined_aliases
@@ -5312,6 +5369,25 @@ def cmd_linkcheck(args):
             tu_obj.write_bytes(linked_tu)
             print(f"      externalized {externalized['externalized']} to their exact "
                   "configured canonical homes in the SCRATCH object only")
+
+        renamed_tu, defined_renames, rename_reasons = \
+            apply_defined_symbol_rename_policy(linked_tu, entry)
+        report["definedSymbolRenames"] = defined_renames
+        if rename_reasons:
+            print("      REFUSED -- defined symbol rename policy:")
+            for reason in rename_reasons:
+                print(f"        {reason}")
+            report["definedSymbolRenames"]["errors"] = rename_reasons
+            report["result"] = "defined-rename-refused"
+            _write_link_report(scratch, report)
+            _record_linkcheck(data, entry, report, baseline)
+            return 1
+        if renamed_tu != linked_tu:
+            linked_tu = renamed_tu
+            scratch_rewrite = True
+            tu_obj.write_bytes(linked_tu)
+            print(f"      renumbered {len(defined_renames['renamed'])} exact "
+                  "compiler-local definition(s) to fleet-unique names")
 
         aliased_tu, undefined_aliases, alias_reasons = \
             apply_undefined_symbol_alias_policy(linked_tu, entry)

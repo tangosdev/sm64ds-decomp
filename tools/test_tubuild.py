@@ -600,6 +600,31 @@ def test_symbol_binding_policy_only_promotes_exact_owned_local():
     assert rewritten["bind"] == "STB_GLOBAL"
 
 
+def test_defined_symbol_rename_policy_renumbers_only_licensed_definition():
+    if not _toolchain():
+        raise unittest.SkipTest("needs the pinned compiler")
+    obj = _compile_tu_fixture(
+        'static int local_word;\nextern "C" int *owner = &local_word;\n')
+    local = next(row for row in tubuild.elf_inventory(obj)["symbols"]
+                 if row["type"] == "STT_OBJECT" and row["bind"] == "STB_LOCAL")
+    entry = {
+        "data": [{"symbol": "@9999", "address": "0x2000", "size": "0x4"}],
+        "defined_symbol_renames": [{
+            "from": local["name"], "to": "@9999", "evidence": "fixture",
+        }],
+    }
+    out, report, reasons = tubuild.apply_defined_symbol_rename_policy(obj, entry)
+    assert reasons == [], reasons
+    assert report["renamed"][0]["from"] == local["name"]
+    names = {row["name"] for row in tubuild.elf_inventory(out)["symbols"]}
+    assert local["name"] not in names
+    assert "@9999" in names
+
+    entry["defined_symbol_renames"][0]["to"] = "@8888"
+    _, _, reasons = tubuild.apply_defined_symbol_rename_policy(obj, entry)
+    assert any("does not own" in reason for reason in reasons), reasons
+
+
 def _binding_rewrite_fixture():
     if not _toolchain():
         raise unittest.SkipTest("needs the pinned compiler")
