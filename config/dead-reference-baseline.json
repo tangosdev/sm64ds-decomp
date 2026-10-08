@@ -1072,6 +1072,10 @@
   {
    "file": "notes/sinit-ownership-pilot-ov002.md",
    "ref": "src/unnamed/ov002/__sinit_ov002_02100938.c"
+  },
+  {
+   "file": "notes/agents/handoffs/pr3199-subset-repair-0926.md",
+   "ref": "src/__sinit_ov002_021071f4.c"
   }
  ]
 }

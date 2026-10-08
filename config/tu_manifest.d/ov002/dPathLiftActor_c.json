@@ -3,6 +3,7 @@
   "module": "ov002",
   "source": "src/actors/dPathLiftActor_c.cpp",
   "promoted_source": "src/actors/dPathLiftActor_c.cpp",
+  "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -15,6 +16,21 @@
       "name": ".text",
       "start": "0x020ef3ec",
       "end": "0x020effb8"
+    },
+    {
+      "name": ".init",
+      "start": "0x021071f4",
+      "end": "0x02107298"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x0210811c",
+      "end": "0x02108120"
+    },
+    {
+      "name": ".data",
+      "start": "0x0210aeb8",
+      "end": "0x0210af68"
     }
   ],
   "functions": [
@@ -159,8 +175,383 @@
       "ordinal": 19
     }
   ],
-  "data": [],
+  "init": [
+    {
+      "symbol": "__sinit_dPathLiftActor_c.cpp",
+      "address": "0x021071f4",
+      "size": "0xa4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov002_021071f4 and carries the same seven relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_dPathLiftActor_c.cpp",
+      "address": "0x0210811c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "data": [
+    {
+      "symbol": "s_fallName",
+      "address": "0x0210aeb8",
+      "size": "0x8",
+      "evidence": "the FALL state-name slot the third state record points at; an 8-byte field holding a five-byte string"
+    },
+    {
+      "symbol": "s_waitName",
+      "address": "0x0210aec0",
+      "size": "0x8",
+      "evidence": "the WAIT state-name slot the first state record points at; an 8-byte field holding a five-byte string"
+    },
+    {
+      "symbol": "s_pathName",
+      "address": "0x0210aec8",
+      "size": "0x8",
+      "evidence": "the PATH state-name slot the second state record points at; an 8-byte field holding a five-byte string"
+    },
+    {
+      "symbol": "@647",
+      "address": "0x0210aed0",
+      "size": "0x8",
+      "evidence": "compiler temporary for the WAIT record's init pointer-to-member; retail first word is 0x020ef3f0"
+    },
+    {
+      "symbol": "@651",
+      "address": "0x0210aed8",
+      "size": "0x8",
+      "evidence": "compiler temporary for the PATH record's init pointer-to-member; retail first word is 0x020efa44"
+    },
+    {
+      "symbol": "@657",
+      "address": "0x0210aee0",
+      "size": "0x8",
+      "evidence": "compiler temporary for the FALL record's execute pointer-to-member; retail first word is 0x020ef408"
+    },
+    {
+      "symbol": "@649",
+      "address": "0x0210aee8",
+      "size": "0x8",
+      "evidence": "compiler temporary for the WAIT record's execute pointer-to-member; retail first word is 0x020ef3ec"
+    },
+    {
+      "symbol": "@655",
+      "address": "0x0210aef0",
+      "size": "0x8",
+      "evidence": "compiler temporary for the FALL record's init pointer-to-member; retail first word is 0x020ef57c"
+    },
+    {
+      "symbol": "@653",
+      "address": "0x0210aef8",
+      "size": "0x8",
+      "evidence": "compiler temporary for the PATH record's execute pointer-to-member; retail first word is 0x020ef670"
+    },
+    {
+      "symbol": "data_ov002_0210af00",
+      "address": "0x0210af00",
+      "size": "0xc",
+      "evidence": "the 0x2000-scale triple RenderPathModels applies to all three path models; retail bytes are three 0x2000 words"
+    },
+    {
+      "symbol": "_ZTI16dPathLiftActor_c",
+      "address": "0x0210af0c",
+      "size": "0xc",
+      "evidence": "this class's own RTTI record; slots relocate to the si_class_type_info vtable, _ZTS16dPathLiftActor_c, and base _ZTI10dBgActor_c"
+    },
+    {
+      "symbol": "_ZTS16dPathLiftActor_c",
+      "address": "0x0210af18",
+      "size": "0x13",
+      "evidence": "this class's own RTTI name string"
+    },
+    {
+      "symbol": "data_ov002_0210af2c",
+      "address": "0x0210af2c",
+      "size": "0x3c",
+      "evidence": "the three PathLiftState records SetState and BaseBehavior index; pointer-to-member slots are zero in ROM and filled by __sinit_dPathLiftActor_c.cpp, name slots link to the state-name slots"
+    }
+  ],
   "bss": [],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_dPathLiftActor_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_dPathLiftActor_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "s_fallName",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope state-name slot referenced by a configured table relocation at 0x0210aeb8"
+    },
+    {
+      "symbol": "s_waitName",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope state-name slot referenced by a configured table relocation at 0x0210aec0"
+    },
+    {
+      "symbol": "s_pathName",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope state-name slot referenced by a configured table relocation at 0x0210aec8"
+    },
+    {
+      "symbol": "@647",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination at 0x0210aed0"
+    },
+    {
+      "symbol": "@651",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination at 0x0210aed8"
+    },
+    {
+      "symbol": "@657",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination at 0x0210aee0"
+    },
+    {
+      "symbol": "@649",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination at 0x0210aee8"
+    },
+    {
+      "symbol": "@655",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination at 0x0210aef0"
+    },
+    {
+      "symbol": "@653",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination at 0x0210aef8"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x0210727c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@647",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210aed0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02107280",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@649",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210aee8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02107284",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@651",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210aed8"
+    },
+    {
+      "section": ".init",
+      "source": "0x02107288",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@653",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210aef8"
+    },
+    {
+      "section": ".init",
+      "source": "0x0210728c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@655",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210aef0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02107290",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@657",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210aee0"
+    },
+    {
+      "section": ".init",
+      "source": "0x02107294",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210af2c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210af2c"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x0210811c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_dPathLiftActor_c.cpp",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021071f4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210aed0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dPathLiftActor_c13StateWaitInitEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020ef3f0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210aed8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dPathLiftActor_c13StatePathInitEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020efa44"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210aee0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dPathLiftActor_c9StateFallEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020ef408"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210aee8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dPathLiftActor_c9StateWaitEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020ef3ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210aef0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dPathLiftActor_c13StateFallInitEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020ef57c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210aef8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dPathLiftActor_c9StatePathEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020ef670"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210af0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210af10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS16dPathLiftActor_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210af18"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210af14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI10dBgActor_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021089ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210af3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "s_waitName",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210aec0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210af50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "s_pathName",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210aec8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210af64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "s_fallName",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210aeb8"
+    }
+  ],
+  "notes": [
+    "Partial production promotion, not completion of the class/TU assignment.",
+    "Retain src/_ZN16dPathLiftActor_cD0Ev.cpp and src/_ZN16dPathLiftActor_cD1Ev.cpp as canonical destructor owners.",
+    "The state data data_ov002_0210af2c, the scale triple data_ov002_0210af00, the class metadata records and the __sinit_dPathLiftActor_c.cpp static initializer are this TU's own emission; the handwritten __sinit_ov002_021071f4 source is retired. Foreign-home compiler metadata duplicates are measured at configured ROM homes; no coined or unowned metadata waiver.",
+    "rom.sha256 records the stock ROM SHA-256 the other intact-object manifests share; this worktree's dump rebuilds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 with every compared range and all 106 modules byte-identical.",
+    "Follow-up: independently reconstruct the complete lifecycle and state-data TU boundary; current 20-function slice is the verified useful subset.",
+    "The 17 helper member names are inferred from matched bodies/state-table use; RTTI proves dPathLiftActor_c class identity, not original English member spellings. Const qualification on HasNonzeroAngleZ, Param10ModeIs1, Param12ModeIs1, Param08ModeIs2, Param08ModeIs1Or2 and IsUnk42cSet is inferred from read-only bodies; ARM bytes cannot distinguish the original qualification. SetState(int) uses an inferred int spelling for a word-sized argument."
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZN7Vector3D1Ev",
@@ -226,27 +617,6 @@
       "reason": "Compiler-emitted duplicate metadata with configured ROM home outside this text-only entry. Independently compare payload and relocated destinations against that home before discarding its duplicate storage; metadata ownership remains separate."
     },
     {
-      "symbol": "_ZTI16dPathLiftActor_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x210af0c",
-      "reason": "Compiler-emitted duplicate metadata with configured ROM home outside this text-only entry. Independently compare payload and relocated destinations against that home before discarding its duplicate storage; metadata ownership remains separate."
-    },
-    {
-      "symbol": "_ZTS16dPathLiftActor_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x210af18",
-      "reason": "Compiler-emitted duplicate metadata with configured ROM home outside this text-only entry. Independently compare payload and relocated destinations against that home before discarding its duplicate storage; metadata ownership remains separate."
-    },
-    {
-      "symbol": "_ZTV16dPathLiftActor_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x210af70",
-      "reason": "Compiler-emitted duplicate metadata with configured ROM home outside this text-only entry. Independently compare payload and relocated destinations against that home before discarding its duplicate storage; metadata ownership remains separate."
-    },
-    {
       "symbol": "_ZN16dPathLiftActor_cD0Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_module": "ov002",
@@ -259,16 +629,22 @@
       "canonical_module": "ov002",
       "canonical_address": "0x020ef390",
       "reason": "Preserved original legacy destructor owner supplies the retail body; proposed state-machine TU emits a byte-identical vague duplicate."
+    },
+    {
+      "symbol": "_ZTV16dPathLiftActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x210af70",
+      "reason": "Compiler-emitted own-class vtable with configured ROM home in this module. The .data claim stops at the state table so the configured address point data_ov002_0210af70 stays gap-served for subclass consumers; the emitted duplicate storage is measured against its canonical bytes and discarded."
     }
   ],
   "notes": [
     "Partial production promotion, not completion of the class/TU assignment.",
     "Retain src/_ZN16dPathLiftActor_cD0Ev.cpp and src/_ZN16dPathLiftActor_cD1Ev.cpp as canonical destructor owners.",
-    "Retain state data data_ov002_0210af2c and src/unnamed/ov002/__sinit_ov002_021071f4.c as existing owners. Compiler-only metadata is measured at configured ROM homes; no coined or unowned metadata waiver.",
+    "Retain state data data_ov002_0210af2c. The static initializer now lives in this TU. Compiler-only metadata is measured at configured ROM homes; no coined or unowned metadata waiver.",
     "Follow-up: independently reconstruct the complete lifecycle and state-data TU boundary; current 20-function slice is the verified useful subset.",
     "The 17 helper member names are inferred from matched bodies/state-table use; RTTI proves dPathLiftActor_c class identity, not original English member spellings. Const qualification on HasNonzeroAngleZ, Param10ModeIs1, Param12ModeIs1, Param08ModeIs2, Param08ModeIs1Or2 and IsUnk42cSet is inferred from read-only bodies; ARM bytes cannot distinguish the original qualification. SetState(int) uses an inferred int spelling for a word-sized argument."
-  ],
-  "verification": {
+  ],  "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
@@ -290,26 +666,23 @@
       "droppedSections": [
         5,
         6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
         22,
         23,
         24,
         25,
-        34
+        26,
+        27,
+        28,
+        30,
+        31,
+        34,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        52
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -320,18 +693,14 @@
         "_ZTI10dBgActor_c",
         "_ZTS10dBgActor_c",
         "_ZTI8dActor_c",
-        "_ZTI16dPathLiftActor_c",
-        "_ZTS16dPathLiftActor_c",
         "_ZTV16dPathLiftActor_c"
       ],
       "dataExternalized": [
         "_ZTI10dBgActor_c",
-        "_ZTI16dPathLiftActor_c",
         "_ZTI7dBase_c",
         "_ZTI7fBase_c",
         "_ZTI8dActor_c",
         "_ZTS10dBgActor_c",
-        "_ZTS16dPathLiftActor_c",
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
@@ -341,9 +710,210 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 27 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov002-dPathLiftActor_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020ef3ec",
+        "end": "0x020effb8",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020ef3ec",
+          "end": "0x020effb8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x021071f4",
+          "end": "0x02107298",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x0210811c",
+          "end": "0x02108120",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0210aeb8",
+          "end": "0x0210af68",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 35
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              77
+            ],
+            "desired": [
+              77
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              75
+            ],
+            "desired": [
+              75
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              7,
+              9,
+              11,
+              13,
+              15,
+              17,
+              18,
+              19,
+              21,
+              29,
+              32,
+              35,
+              36
+            ],
+            "desired": [
+              21,
+              18,
+              17,
+              19,
+              15,
+              11,
+              9,
+              7,
+              13,
+              29,
+              32,
+              35,
+              36
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                7,
+                9,
+                11,
+                13,
+                15,
+                17,
+                18,
+                19,
+                21,
+                29,
+                32,
+                35,
+                36
+              ],
+              "desired": [
+                21,
+                18,
+                17,
+                19,
+                15,
+                11,
+                9,
+                7,
+                13,
+                29,
+                32,
+                35,
+                36
+              ],
+              "slots": [
+                7,
+                9,
+                11,
+                13,
+                15,
+                17,
+                18,
+                19,
+                21,
+                29,
+                32,
+                35,
+                36
+              ]
+            }
+          ],
+          "symbolIndices": 13,
+          "sectionLinks": 0,
+          "sectionInfos": 8,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   }
 }

@@ -1442,6 +1442,9 @@ src/_ZN16dPathLiftActor_cD1Ev.cpp:
 src/actors/dPathLiftActor_c.cpp:
     complete
     .text start:0x020ef3ec end:0x020effb8
+    .init start:0x021071f4 end:0x02107298
+    .ctor start:0x0210811c end:0x02108120
+    .data start:0x0210aeb8 end:0x0210af68
 
 src/unnamed/ov002/func_ov002_020effb8.c:
     complete
@@ -1592,10 +1595,6 @@ src/unnamed/ov002/__sinit_ov002_02106e40.c:
 src/unnamed/ov002/__sinit_ov002_02107118.c:
     complete
     .init start:0x02107118 end:0x021071f4
-
-src/unnamed/ov002/__sinit_ov002_021071f4.c:
-    complete
-    .init start:0x021071f4 end:0x02107298
 
 src/unnamed/ov002/__sinit_ov002_02107298.c:
     complete
