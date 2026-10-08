@@ -38,8 +38,8 @@ _ZN7daKlr_cD1Ev kind:function(arm,size=0x50) addr:0x02126648
 _ZN7daKlr_cD0Ev kind:function(arm,size=0x64) addr:0x02126698
 _ZN7daKlr_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x021266fc
 func_ov079_02126704 kind:function(arm,size=0x90) addr:0x02126704
-func_ov079_02126794 kind:function(arm,size=0x98) addr:0x02126794
-func_ov079_0212682c kind:function(arm,size=0x1ec) addr:0x0212682c
+_ZN7daKlr_c19func_ov079_02126794Ev kind:function(arm,size=0x98) addr:0x02126794
+_ZN7daKlr_c19func_ov079_0212682cEv kind:function(arm,size=0x1ec) addr:0x0212682c
 _ZN7daKlr_c16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x02126a18
 _ZN7daKlr_c6RenderEv kind:function(arm,size=0x3c) addr:0x02126a48
 _ZN7daKlr_c8BehaviorEv kind:function(arm,size=0x1c0) addr:0x02126a84
@@ -69,11 +69,11 @@ data_ov079_021275e4 kind:data(any) addr:0x021275e4
 data_ov079_021275ec kind:data(any) addr:0x021275ec
 data_ov079_02127600 kind:data(any) addr:0x02127600
 __sinit_ov079_02127618 kind:function(arm,size=0x3bc) addr:0x02127618
-__sinit_ov079_021279d4 kind:function(arm,size=0x3c) addr:0x021279d4
+__sinit_d_a_klr.cpp kind:function(arm,size=0x3c) addr:0x021279d4
 __sinit_ov079_02127a10 kind:function(arm,size=0xbc) addr:0x02127a10
 __sinit_ov079_02127acc kind:function(arm,size=0xbc) addr:0x02127acc
 .p__sinit_ov079_02127618 kind:data(word) addr:0x02127b88
-.p__sinit_ov079_021279d4 kind:data(word) addr:0x02127b8c
+.p__sinit_d_a_klr.cpp kind:data(word) addr:0x02127b8c
 .p__sinit_ov079_02127a10 kind:data(word) addr:0x02127b90
 .p__sinit_ov079_02127acc kind:data(word) addr:0x02127b94
 data_ov079_02127ba0 kind:data(any) addr:0x02127ba0
@@ -97,8 +97,8 @@ g_profile_BATAN kind:data(any) addr:0x02127c5c ambiguous
 _ZTV7daBtn_c kind:data(any) addr:0x02127c80
 data_ov079_02127cfc kind:data(any) addr:0x02127cfc
 data_ov079_02127e7c kind:data(any) addr:0x02127e7c
-data_ov079_02127e9c kind:data(any) addr:0x02127e9c
-data_ov079_02127ea4 kind:data(any) addr:0x02127ea4
+@655 kind:data(any) addr:0x02127e9c
+@653 kind:data(any) addr:0x02127ea4
 _ZTS7daKlr_c kind:data(any) addr:0x02127eac
 _ZTI7daKlr_c kind:data(any) addr:0x02127eb8
 g_profile_KILLER kind:data(any) addr:0x02127ec4

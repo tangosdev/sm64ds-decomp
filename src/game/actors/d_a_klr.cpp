@@ -19,10 +19,9 @@
  * section per function in the reverse of source order.
  *
  * Known limits:
- * - The two state functions func_ov079_0212682c / func_ov079_02126794 are
- *   what the table at data_ov079_021282e0 points at; their member spellings
- *   are not recovered, so they stay free functions taking the actor.
- *   __sinit_ov079_021279d4 fills that table and is not claimed here.
+ * - func_ov079_0212682c and func_ov079_02126794 are the state-table methods.
+ *   This file defines data_ov079_021282e0; the compiler copies its two
+ *   pointer-to-member descriptors in at overlay load.
  * - Particle::System::New/NewSimple, dActor_c::DropShadowRadHeight,
  *   dCcAcPos_c::Init, dBgCh_Actr::Init and Player::Hurt take Fix12<int> by
  *   value, so they stay mangled (notes/mwccarm-codegen.md 6az).
@@ -67,17 +66,14 @@ int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
 void *_ZNK10dBgCh_Actr13GetWallResultEv(const dBgCh_Actr *self);
 
 void func_ov079_02126704(daKlr_c *self);
-void func_ov079_02126794(daKlr_c *self);
-void func_ov079_0212682c(daKlr_c *self);
 }
 
 bool ApproachLinear(short &value, short target, short step);
 
-/* The per-state tick table, indexed by mState: [0] func_ov079_0212682c,
-   [1] func_ov079_02126794. It lives in .bss and __sinit_ov079_021279d4
-   copies the two pointer-to-member constants into it at load. */
+/* Indexed by mState: [0] func_ov079_0212682c, [1] func_ov079_02126794.
+   Defined at the end of this file so it does not insert a function into .text. */
 typedef void (daKlr_c::*KlrStateFunc)();
-extern "C" KlrStateFunc data_ov079_021282e0[];
+extern KlrStateFunc data_ov079_021282e0[2];
 
 struct MatrixWords { s32 w[12]; };
 
@@ -207,45 +203,45 @@ s32 daKlr_c::CleanupResources()
     return 1;
 }
 
-// @symbol func_ov079_0212682c
+// @symbol _ZN7daKlr_c19func_ov079_0212682cEv
 /* State 0: wait in the barrel, shiver, then fly. */
-extern "C" void func_ov079_0212682c(daKlr_c *self)
+void daKlr_c::func_ov079_0212682c()
 {
     Vector3 nose;
-    u16 timer = self->mStateTimer;
+    u16 timer = this->mStateTimer;
     if (timer < 40) {
-        self->mHorzSpeed = 0x3000;
+        this->mHorzSpeed = 0x3000;
         return;
     }
     if (timer < 50) {
         if ((int)timer % 2)
-            self->mHorzSpeed = 0x3000;
+            this->mHorzSpeed = 0x3000;
         else
-            self->mHorzSpeed = -0x3000;
+            this->mHorzSpeed = -0x3000;
         return;
     }
-    self->UpdateWMClsn(self->mWallClsn, 0);
-    self->mHorzSpeed = -0x1e000;
-    self->UpdatePosWithHorzSpeedAndAng();
-    Vec3_Add(&nose, (Vector3 *)&self->mPosX, (Vector3 *)&self->unk_0a4);
-    self->mSmokeTrailID = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        self->mSmokeTrailID, kSmokeParticle, nose.x, nose.y, nose.z, 0, 0);
-    self->mHorzSpeed = 0x1e000;
-    if (self->DistToCPlayer() > 0x12c000)
-        ApproachLinear(self->mPrevAngleY, self->HorzAngleToCPlayer(), 0x200);
-    self->mAngleY = self->mPrevAngleY;
-    if ((u16)self->mStateTimer == 50) {
-        func_0201267c(0xd4, (Vector3 *)&self->mCamSpacePosX);
-        self->mCylClsn.flags &= ~1;
+    this->UpdateWMClsn(this->mWallClsn, 0);
+    this->mHorzSpeed = -0x1e000;
+    this->UpdatePosWithHorzSpeedAndAng();
+    Vec3_Add(&nose, (Vector3 *)&this->mPosX, (Vector3 *)&this->unk_0a4);
+    this->mSmokeTrailID = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        this->mSmokeTrailID, kSmokeParticle, nose.x, nose.y, nose.z, 0, 0);
+    this->mHorzSpeed = 0x1e000;
+    if (this->DistToCPlayer() > 0x12c000)
+        ApproachLinear(this->mPrevAngleY, this->HorzAngleToCPlayer(), 0x200);
+    this->mAngleY = this->mPrevAngleY;
+    if ((u16)this->mStateTimer == 50) {
+        func_0201267c(0xd4, (Vector3 *)&this->mCamSpacePosX);
+        this->mCylClsn.flags &= ~1;
     }
     {
         int hit = 0;
-        if ((u16)self->mStateTimer > 150)
+        if ((u16)this->mStateTimer > 150)
             hit = 1;
-        if (self->mWallClsn.IsOnWall() != 0) {
-            dBgPi *wall = (dBgPi *)_ZNK10dBgCh_Actr13GetWallResultEv(&self->mWallClsn);
+        if (this->mWallClsn.IsOnWall() != 0) {
+            dBgPi *wall = (dBgPi *)_ZNK10dBgCh_Actr13GetWallResultEv(&this->mWallClsn);
             if (wall->GetClsnID() != (u32)-1) {
-                if (dActor_c::FindWithID(wall->GetClsnID()) != self->mLauncher)
+                if (dActor_c::FindWithID(wall->GetClsnID()) != this->mLauncher)
                     hit = 1;
             } else {
                 hit = 1;
@@ -254,31 +250,31 @@ extern "C" void func_ov079_0212682c(daKlr_c *self)
         if (hit == 0)
             return;
     }
-    if ((u16)self->mStateTimer > 150) {
-        func_02012694(0x79, (Vector3 *)&self->mCamSpacePosX);
-        self->PoofDust();
+    if ((u16)this->mStateTimer > 150) {
+        func_02012694(0x79, (Vector3 *)&this->mCamSpacePosX);
+        this->PoofDust();
     } else {
-        func_02012694(0x78, (Vector3 *)&self->mCamSpacePosX);
+        func_02012694(0x78, (Vector3 *)&this->mCamSpacePosX);
         _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(kBurstParticle, nose.x, nose.y, nose.z);
     }
-    self->MarkForDestruction();
+    this->MarkForDestruction();
 }
 
-// @symbol func_ov079_02126794
+// @symbol _ZN7daKlr_c19func_ov079_02126794Ev
 /* State 1: shot down -- pitch over and climb, then burst after 90 frames. */
-extern "C" void func_ov079_02126794(daKlr_c *self)
+void daKlr_c::func_ov079_02126794()
 {
-    if ((u16)self->mStateTimer == 0) {
-        self->mHorzSpeed = -0x1e000;
-        self->mCylClsn.flags |= 1;
+    if ((u16)this->mStateTimer == 0) {
+        this->mHorzSpeed = -0x1e000;
+        this->mCylClsn.flags |= 1;
     }
-    self->mAngleX += 0x2000;
-    self->mPosY += 0x14000;
-    if ((u16)self->mStateTimer <= 90)
+    this->mAngleX += 0x2000;
+    this->mPosY += 0x14000;
+    if ((u16)this->mStateTimer <= 90)
         return;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(kBurstParticle, self->mPosX, self->mPosY, self->mPosZ);
-    func_02012694(0x78, (Vector3 *)&self->mCamSpacePosX);
-    self->MarkForDestruction();
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(kBurstParticle, this->mPosX, this->mPosY, this->mPosZ);
+    func_02012694(0x78, (Vector3 *)&this->mCamSpacePosX);
+    this->MarkForDestruction();
 }
 
 // @symbol func_ov079_02126704
@@ -306,3 +302,10 @@ int daKlr_c::OnAimedAtWithEgg()
 // @symbol _ZN7daKlr_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header
    emits D1 then D0 -- the cartridge's order -- and no D2. */
+
+/* Behavior indexes this by mState. The compiler copies the two
+   pointer-to-member descriptors into it at overlay load. */
+KlrStateFunc data_ov079_021282e0[2] = {
+    &daKlr_c::func_ov079_0212682c,
+    &daKlr_c::func_ov079_02126794,
+};

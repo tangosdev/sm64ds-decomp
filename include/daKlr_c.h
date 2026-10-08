@@ -49,6 +49,10 @@ struct daKlr_c : dEnemyBase_c {
     virtual s32 CleanupResources();
     virtual s32 Behavior();
     virtual s32 Render();
+
+    /* State-table targets. The address is the method name. */
+    void func_ov079_0212682c();
+    void func_ov079_02126794();
 };
 
 #ifndef SM64DS_PLATFORM_PC
