@@ -220,8 +220,6 @@ extern char data_ov006_02142ab4[];
 extern char data_ov006_02142ab8[];
 extern char data_ov009_02113c20[];
 extern char data_ov009_02113c28[];
-extern char data_ov014_02114968;
-extern char data_ov014_02114978;
 extern char data_ov015_02114538[];
 extern char data_ov015_02114880[];
 extern char data_ov016_02113cac[];

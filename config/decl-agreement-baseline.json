@@ -2683,9 +2683,6 @@
       "src/unnamed/ov009/__sinit_ov009_02112ac8.c": [
         "kind:data"
       ],
-      "src/unnamed/ov014/__sinit_ov014_02113118.c": [
-        "return:void"
-      ],
       "src/unnamed/ov016/__sinit_ov016_021136ec.c": [
         "return:void"
       ],
@@ -5896,9 +5893,6 @@
         "return:void"
       ],
       "src/unnamed/ov009/__sinit_ov009_02112ac8.c": [
-        "return:void"
-      ],
-      "src/unnamed/ov014/__sinit_ov014_02113118.c": [
         "return:void"
       ],
       "src/unnamed/ov016/__sinit_ov016_021136ec.c": [
@@ -17607,37 +17601,6 @@
         "return:int []"
       ]
     },
-    "data_ov014_0211476c": {
-      "src/unnamed/ov014/__sinit_ov014_02113118.c": [
-        "return:S20 []"
-      ]
-    },
-    "data_ov014_02114968": {
-      "src/game/actors/d_a_wanwan.cpp": [
-        "return:SharedFilePtr"
-      ],
-      "src/unnamed/ov014/__sinit_ov014_02113118.c": [
-        "return:S8"
-      ]
-    },
-    "data_ov014_02114970": {
-      "src/unnamed/ov014/__sinit_ov014_02113118.c": [
-        "return:S8"
-      ]
-    },
-    "data_ov014_02114978": {
-      "src/game/actors/d_a_wanwan.cpp": [
-        "return:SharedFilePtr"
-      ],
-      "src/unnamed/ov014/__sinit_ov014_02113118.c": [
-        "return:S8"
-      ]
-    },
-    "data_ov014_02114980": {
-      "src/unnamed/ov014/__sinit_ov014_02113118.c": [
-        "return:S8"
-      ]
-    },
     "data_ov014_021149b8": {
       "src/unnamed/ov014/__sinit_ov014_021132fc.c": [
         "return:int []"
@@ -21906,9 +21869,6 @@
       "src/unnamed/ov014/__sinit_ov014_021130ac.c": [
         "kind:data"
       ],
-      "src/unnamed/ov014/__sinit_ov014_02113118.c": [
-        "return:void"
-      ],
       "src/unnamed/ov014/__sinit_ov014_021132fc.c": [
         "kind:data"
       ],
@@ -22579,9 +22539,6 @@
         "return:void"
       ],
       "src/unnamed/ov014/__sinit_ov014_021130ac.c": [
-        "return:void"
-      ],
-      "src/unnamed/ov014/__sinit_ov014_02113118.c": [
         "return:void"
       ],
       "src/unnamed/ov014/__sinit_ov014_021132fc.c": [
