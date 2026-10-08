@@ -4,6 +4,7 @@
   "source": "src/game/actors/d_a_obj_cannon_shutter.cpp",
   "promoted_source": "src/game/actors/d_a_obj_cannon_shutter.cpp",
   "status": "promoted",
+  "production_mode": "intact-object",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20bc8f4..0x20bccfc, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -15,6 +16,21 @@
       "name": ".text",
       "start": "0x020bc8f4",
       "end": "0x020bccfc"
+    },
+    {
+      "name": ".init",
+      "start": "0x02101968",
+      "end": "0x021019d0"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x0210810c",
+      "end": "0x02108110"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0210e124",
+      "end": "0x0210e14c"
     }
   ],
   "functions": [
@@ -76,7 +92,229 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "init": [
+    {
+      "symbol": "__sinit_d_a_obj_cannon_shutter.cpp",
+      "address": "0x02101968",
+      "size": "0x68",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov002_02101968 and carries the same ten relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_obj_cannon_shutter.cpp",
+      "address": "0x0210810c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "data_ov002_0210e124",
+      "address": "0x0210e124",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "mesh-collision resource handle constructed with file ID 0x460"
+    },
+    {
+      "symbol": "data_ov002_0210e12c",
+      "address": "0x0210e12c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model resource handle constructed with file ID 0x45f"
+    },
+    {
+      "symbol": "@652",
+      "address": "0x0210e134",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x460 mesh-collision handle"
+    },
+    {
+      "symbol": "@651",
+      "address": "0x0210e140",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x45f model handle"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_a_obj_cannon_shutter.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_a_obj_cannon_shutter.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@651",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local registration node is a configured initializer relocation destination at 0x0210e140"
+    },
+    {
+      "symbol": "@652",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local registration node is a configured initializer relocation destination at 0x0210e134"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02101978",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "addend": -8,
+      "symbol": "func_02017acc",
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101988",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "addend": -8,
+      "symbol": "func_020731dc",
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101994",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "addend": -8,
+      "symbol": "func_02017b4c",
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021019a4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "addend": -8,
+      "symbol": "func_020731dc",
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021019b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov002_0210e12c",
+      "target_module": "ov002",
+      "target_address": "0x0210e12c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021019bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "func_02017ab4",
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x021019c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "@651",
+      "target_module": "ov002",
+      "target_address": "0x0210e140"
+    },
+    {
+      "section": ".init",
+      "source": "0x021019c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov002_0210e124",
+      "target_module": "ov002",
+      "target_address": "0x0210e124"
+    },
+    {
+      "section": ".init",
+      "source": "0x021019c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "target_module": "arm9",
+      "target_address": "0x02017b34"
+    },
+    {
+      "section": ".init",
+      "source": "0x021019cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "@652",
+      "target_module": "ov002",
+      "target_address": "0x0210e134"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x0210810c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "__sinit_d_a_obj_cannon_shutter.cpp",
+      "target_module": "ov002",
+      "target_address": "0x02101968"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN25CannonShutterModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN25CannonShutterModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN24CannonShutterClsnFilePtrC1Ej",
+      "canonical_symbol": "func_02017b4c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b4c",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN24CannonShutterClsnFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b34",
+      "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and two direct retail references in this initializer"
+    }
+  ],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "CORRECTED 2026-08-30, and the correction is the reason the compiler_only_output rows are deadstrip-data rather than plain deadstrip. The note this replaces claimed daObjCannonShutter_c's _ZTI/_ZTS were NOT data-verifiable because the ROM carried a COINED RTTI name -- it then gave the same spelling for both sides and called it a length mismatch, which is self-refuting. MEASURED by reading extracted/overlays/overlay_0002.bin directly (ov002 base 0x02004060): _ZTS20daObjCannonShutter_c at ov002:0x02109cfc is the byte string '20daObjCannonShutter_c' -- the genuine Itanium length-prefixed spelling of this class's own decomp name, not a coined one. _ZTI20daObjCannonShutter_c at ov002:0x02109cf0 reads [0x0209a764, 0x02109cfc, 0x021089ec]: the __si_class_type_info vtable+8, a pointer to that same _ZTS, and _ZTI10dBgActor_c -- so the cartridge itself states the direct base is dBgActor_c. _ZTV20daObjCannonShutter_c's symbols.txt address 0x02109d38 is the vtable's ADDRESS POINT; the two header words (offset-to-top 0, typeinfo 0x02109cf0) sit at 0x02109d30, which is why daObjCannonShutter_c_classInit stores (_ZTV20daObjCannonShutter_c + 2). Slot 0 is 0x020bcc20 (InitResources) and slot 3 is 0x020bc9b0 (CleanupResources), matching the header's slot comments. Because every one of these records has a real ROM home outside this entry's claimed .text range, they are deadstrip-data and romdata_check proves them word-by-word with relocations resolved.",
@@ -85,7 +323,8 @@
     "First pilot in this series whose immediate base is dBgActor_c (an ov002-local class, one level below dActor_c) rather than dActor_c directly -- 32 vtable slots inherited instead of 31, and dBgActor_c's own RTTI (_ZTI10dBgActor_c/_ZTS10dBgActor_c) lives in ov002's own symbols.txt, not arm9's, unlike every prior pilot's base-RTTI chain.",
     "PROMOTED AND ENROLLED 2026-08-30. config/arm9/overlays/ov002/delinks.txt now licenses the whole 0x020bc8f4..0x020bccfc run to src/game/actors/d_a_obj_cannon_shutter.cpp; the eight legacy per-function sources are deleted. MEASURED: python tools/rombuild.py -j 16 reports 106/106 exact, 0 mismatching of 11,088 reproducing functions, with the same invocation on origin/main @ ec8fe22d6 also 106/106. python tools/romdata_check.py over this TU and daObjFl_Fall_Block_c reports 9 VERIFIED / 7 PARTIAL / 0 DIFFERS.",
     "ONE ABI SEAM CANNOT BE WRITTEN AS A MEMBER CALL, and it is measured, not assumed. InitResources reaches dBgW_KcMbg::SetFile, whose third parameter is a by-value Fix12<int> -- a bare aggregate with no constructor (include/math/Fix12.h), so materialising one costs stack traffic the ROM does not spend. Written as mMeshCollider.SetFile(...), build/final_link.o.xMAP showed '020BCC20 000000B8 .text daObjCannonShutter_c::InitResources()' against the cartridge's 0xAC. Those 12 bytes pushed daObjCannonShutter_c_classInit to 0x020BCCD8 (ROM 0x020BCCCC) and overflowed this entry's own range end 0x020BCCFC; because ov002 is the overlay every later overlay loads behind, ov002 growing shifted 69 modules and module fidelity fell to 20/106. The call keeps the mangled spelling for that reason and that reason only. Same wall for dBgActor_c::IsClsnInRangeOnScreen(Fix12<int>, Fix12<int>), which src/game/actors/daObjPushblock_c.cpp already spells mangled for the identical cause.",
-    "Leftover cleanup folded daObjCannonShutter_c_classInit as return new daObjCannonShutter_c(); leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj. The factory instantiates the class and mwcc re-emits _ZN10dBgActor_cD2Ev as a compiler-only helper; licensed as deadstrip."
+    "Leftover cleanup folded daObjCannonShutter_c_classInit as return new daObjCannonShutter_c(); leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj. The factory instantiates the class and mwcc re-emits _ZN10dBgActor_cD2Ev as a compiler-only helper; licensed as deadstrip.",
+    "The TU owns its two resource handles outright: CannonShutterModelFilePtr data_ov002_0210e12c(0x45f) and CannonShutterClsnFilePtr data_ov002_0210e124(0x460) are defined at file end in retail initializer order, so mwcc emits __sinit_d_a_obj_cannon_shutter.cpp itself; the handwritten src/unnamed/ov002/__sinit_ov002_02101968.c is retired."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -98,7 +337,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS -- 14 unlicensed symbol(s) remain, and all 14 are banked in compiler_only_output: 12 deadstrip-data (g_profile_CANNON_SHUTTER, inherited and own _ZTI/_ZTS, and _ZTV20daObjCannonShutter_c), 1 deadstrip-duplicate (_ZN7Vector3D1Ev @ arm9:0x020072c0), and 1 deadstrip (_ZN10dBgActor_cD2Ev, emitted by return new daObjCannonShutter_c()). The compiler-generated _ZN20daObjCannonShutter_cD2Ev row that used to sit here stays deleted: the header's inline ~daObjCannonShutter_c() {} means mwcc never emits a derived D2, and rombuild refused the stale row with 'compiler-only symbol(s) not defined'.",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 20 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS -- the header's inline destructor makes mwcc emit D1 then D0, the cartridge's own order. The recorded PARTIAL ordinal pair (0, 1) was the out-of-line-destructor shape, which emits D0 before D1 and which objisolate refuses.",
       "relocation_destinations_verified": "PASS"
     },
@@ -112,28 +351,28 @@
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
-        5,
         6,
         7,
-        8,
         9,
         10,
         11,
         12,
         13,
-        14,
         15,
         16,
         17,
         18,
         19,
         20,
-        21,
         22,
         23,
-        36,
-        41,
-        42
+        24,
+        25,
+        26,
+        27,
+        40,
+        45,
+        46
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -163,6 +402,133 @@
         "_ZTV20daObjCannonShutter_c",
         "g_profile_CANNON_SHUTTER"
       ]
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov002-daObjCannonShutter_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020bc8f4",
+        "end": "0x020bccfc",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020bc8f4",
+          "end": "0x020bccfc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02101968",
+          "end": "0x021019d0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x0210810c",
+          "end": "0x02108110",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0210e124",
+          "end": "0x0210e14c",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 14
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              49
+            ],
+            "desired": [
+              49
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              47
+            ],
+            "desired": [
+              47
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              8,
+              14,
+              21
+            ],
+            "desired": [
+              5,
+              8,
+              14,
+              21
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "partial_isolation": {
@@ -314,199 +680,6 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "Behavior declares two Vector3 locals, so this TU re-emits Vector3's vague-linkage D1 alongside its own text. The cartridge keeps one copy at arm9:0x020072c0 and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
-    }
-  ],
-  "externalized_output": [
-    {
-      "symbol": "_ZTI7fBase_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0x8",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086d70",
-      "reason": "inherited base RTTI, fBase_c -- imported transitively via dBgActor_c's own base_type chain, not owned by this TU",
-      "relocations": [
-        {
-          "offset": 0,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTVN3abi17__class_type_infoE",
-          "addend": 8,
-          "target_module": "arm9",
-          "target_address": "0x0209a76c"
-        },
-        {
-          "offset": 4,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTS7fBase_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x02086e60"
-        }
-      ]
-    },
-    {
-      "symbol": "_ZTS7fBase_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0x9",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e60",
-      "reason": "inherited base RTTI class-name string, fBase_c -- imported transitively, not owned by this TU",
-      "relocations": []
-    },
-    {
-      "symbol": "_ZTS7dBase_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0x9",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e54",
-      "reason": "inherited base RTTI class-name string, dBase_c -- imported transitively, not owned by this TU",
-      "relocations": []
-    },
-    {
-      "symbol": "_ZTI7dBase_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0xc",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e78",
-      "reason": "inherited base RTTI, dBase_c -- imported transitively via dBgActor_c's own base_type chain, not owned by this TU",
-      "relocations": [
-        {
-          "offset": 0,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTVN3abi20__si_class_type_infoE",
-          "addend": 8,
-          "target_module": "arm9",
-          "target_address": "0x0209a75c"
-        },
-        {
-          "offset": 4,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTS7dBase_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x02086e54"
-        },
-        {
-          "offset": 8,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTI7fBase_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x02086d70"
-        }
-      ]
-    },
-    {
-      "symbol": "_ZTS8dActor_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0xa",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e384",
-      "reason": "inherited base RTTI class-name string, dActor_c -- imported transitively via dBgActor_c's own base_type chain, not owned by this TU",
-      "relocations": []
-    },
-    {
-      "symbol": "_ZTI8dActor_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0xc",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e390",
-      "reason": "inherited base RTTI, dActor_c -- imported transitively via dBgActor_c's own base_type chain, not owned by this TU",
-      "relocations": [
-        {
-          "offset": 0,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTVN3abi20__si_class_type_infoE",
-          "addend": 8,
-          "target_module": "arm9",
-          "target_address": "0x0209a75c"
-        },
-        {
-          "offset": 4,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTS8dActor_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x0208e384"
-        },
-        {
-          "offset": 8,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTI7dBase_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x02086e78"
-        }
-      ]
-    },
-    {
-      "symbol": "_ZTS10dBgActor_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0xd",
-      "canonical_module": "ov002",
-      "canonical_address": "0x02108a04",
-      "reason": "inherited base RTTI class-name string, dBgActor_c -- daObjCannonShutter_c's immediate base, imported not owned",
-      "relocations": []
-    },
-    {
-      "symbol": "_ZTI10dBgActor_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0xc",
-      "canonical_module": "ov002",
-      "canonical_address": "0x021089ec",
-      "reason": "inherited base RTTI, dBgActor_c -- daObjCannonShutter_c's immediate base, imported not owned",
-      "relocations": [
-        {
-          "offset": 0,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTVN3abi20__si_class_type_infoE",
-          "addend": 8,
-          "target_module": "arm9",
-          "target_address": "0x0209a75c"
-        },
-        {
-          "offset": 4,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTS10dBgActor_c",
-          "addend": 0,
-          "target_module": "ov002",
-          "target_address": "0x02108a04"
-        },
-        {
-          "offset": 8,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTI8dActor_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x0208e390"
-        }
-      ]
     }
   ]
 }

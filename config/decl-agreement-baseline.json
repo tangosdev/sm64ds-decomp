@@ -2931,10 +2931,6 @@
       "src/unnamed/ov002/__sinit_ov002_02101738.c": [
         "return:void"
       ],
-      "src/unnamed/ov002/__sinit_ov002_02101968.c": [
-        "arity:0",
-        "return:void"
-      ],
       "src/unnamed/ov002/__sinit_ov002_02107304.c": [
         "kind:data"
       ],
@@ -15142,16 +15138,6 @@
         "return:SharedFilePtr"
       ]
     },
-    "data_ov002_0210e124": {
-      "src/unnamed/ov002/__sinit_ov002_02101968.c": [
-        "return:char []"
-      ]
-    },
-    "data_ov002_0210e12c": {
-      "src/unnamed/ov002/__sinit_ov002_02101968.c": [
-        "return:char []"
-      ]
-    },
     "data_ov002_0210e160": {
       "src/_ZN6Player12St_Walk_InitEv.cpp": [
         "return:int []"
@@ -21787,10 +21773,6 @@
       "src/unnamed/ov002/__sinit_ov002_02101894.c": [
         "kind:data"
       ],
-      "src/unnamed/ov002/__sinit_ov002_02101968.c": [
-        "arity:0",
-        "return:void"
-      ],
       "src/unnamed/ov002/__sinit_ov002_021019d0.c": [
         "arity:0",
         "return:void"
@@ -22458,9 +22440,6 @@
       "src/unnamed/ov002/__sinit_ov002_02101894.c": [
         "return:void"
       ],
-      "src/unnamed/ov002/__sinit_ov002_02101968.c": [
-        "return:int"
-      ],
       "src/unnamed/ov002/__sinit_ov002_021019d0.c": [
         "param:#2 int",
         "return:int"
@@ -23097,9 +23076,6 @@
       ],
       "src/unnamed/ov002/__sinit_ov002_02101738.c": [
         "return:void"
-      ],
-      "src/unnamed/ov002/__sinit_ov002_02101968.c": [
-        "return:int"
       ],
       "src/unnamed/ov002/__sinit_ov002_02107304.c": [
         "return:void"

@@ -238,6 +238,9 @@ src/actors/daObjHeart_c.cpp:
 src/game/actors/d_a_obj_cannon_shutter.cpp:
     complete
     .text start:0x020bc8f4 end:0x020bccfc
+    .init start:0x02101968 end:0x021019d0
+    .ctor start:0x0210810c end:0x02108110
+    .bss start:0x0210e124 end:0x0210e14c
 
 src/unnamed/ov002/func_ov002_020bccfc.c:
     complete
@@ -1578,10 +1581,6 @@ src/unnamed/ov002/__sinit_ov002_02101738.c:
 src/unnamed/ov002/__sinit_ov002_02101894.c:
     complete
     .init start:0x02101894 end:0x02101900
-
-src/unnamed/ov002/__sinit_ov002_02101968.c:
-    complete
-    .init start:0x02101968 end:0x021019d0
 
 src/unnamed/ov002/__sinit_ov002_021019d0.c:
     complete

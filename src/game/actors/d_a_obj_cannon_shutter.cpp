@@ -20,9 +20,8 @@
  *   refused). No dBgCh::Init in this TU.
  * - (Vector3 *)&mPosX / mHomePosX: dActor_c stores the triples as scalars;
  *   grouping as Vector3 is a shared-header campaign.
- * - data_ov002_0210e12c / 0210e124 SharedFilePtr handles and
- *   data_ov002_0210d7f4 CLPS; this TU consumes them, overlay .data/.bss owns
- *   them. S14: g_profile_CANNON_SHUTTER stays outside the licensed .text.
+ * - data_ov002_0210d7f4 CLPS: this TU consumes it, overlay .data owns it.
+ *   S14: g_profile_CANNON_SHUTTER stays outside the licensed .text.
  * - func_ov002_020bc990: inbound from ov084 (daRedBombhei_c). No coined name.
  * - func_0201277c (sound 0x47); data_020a0e68 scratch matrix;
  *   data_0209f2f8 / data_0209f220 scene/level gates.
@@ -55,10 +54,29 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
 extern signed char   data_0209f2f8;
 extern unsigned char data_0209f220;
 
-extern SharedFilePtr data_ov002_0210e12c;   /* the BMD model */
-extern SharedFilePtr data_ov002_0210e124;   /* the KCL collision mesh */
 extern CLPS_Block    data_ov002_0210d7f4;
 }
+
+/* The model handle constructs through func_02017acc and destroys through
+ * func_02017ab4; the mesh-collision handle constructs through func_02017b4c
+ * and destroys through SharedFilePtr_Destruct_Clsn. The manifest aliases
+ * those undefined members onto the ROM symbols. */
+struct CannonShutterModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    CannonShutterModelFilePtr(u32 fileID);
+    ~CannonShutterModelFilePtr();
+};
+
+struct CannonShutterClsnFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    CannonShutterClsnFilePtr(u32 fileID);
+    ~CannonShutterClsnFilePtr();
+};
+
+extern "C" CannonShutterModelFilePtr data_ov002_0210e12c;   /* the BMD model */
+extern "C" CannonShutterClsnFilePtr data_ov002_0210e124;    /* the KCL collision mesh */
 
 /* Runtime actor/process profile descriptor at ov002:0x02109d14. The field
  * roles are established by the recovered fBase_c/dActor_c consumers; their
@@ -234,3 +252,8 @@ void daObjCannonShutter_c::func_ov002_020bc990()
 /* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjCannonShutter_c() {}` in the
    header is the whole source of both variants: from an inline body mwcc emits
    D1 and then D0 -- the cartridge's own order -- and no D2. */
+
+/* Order is the retail initializer: model 0x45f, mesh-collision 0x460. mwcc
+ * emits __sinit_d_a_obj_cannon_shutter.cpp from these two definitions. */
+CannonShutterModelFilePtr data_ov002_0210e12c(0x45f);
+CannonShutterClsnFilePtr data_ov002_0210e124(0x460);

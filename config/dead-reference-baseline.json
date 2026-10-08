@@ -948,6 +948,10 @@
   {
    "file": "notes/data/c-cpp-classification.tsv",
    "ref": "src/unnamed/ov027/__sinit_ov027_02112cb0.c"
+  },
+  {
+   "file": "notes/tu-filename-reconstruction-pilot.md",
+   "ref": "src/unnamed/ov002/__sinit_ov002_02101968.c"
   }
  ]
 }

@@ -1611,7 +1611,7 @@ __sinit_daObjSwitch_c.cpp kind:function(arm,size=0x1b0) addr:0x02101588
 __sinit_ov002_02101738 kind:function(arm,size=0x15c) addr:0x02101738
 __sinit_ov002_02101894 kind:function(arm,size=0x6c) addr:0x02101894
 __sinit_daObjHeart_c.cpp kind:function(arm,size=0x68) addr:0x02101900
-__sinit_ov002_02101968 kind:function(arm,size=0x68) addr:0x02101968
+__sinit_d_a_obj_cannon_shutter.cpp kind:function(arm,size=0x68) addr:0x02101968
 __sinit_ov002_021019d0 kind:function(arm,size=0x5470) addr:0x021019d0
 __sinit_ov002_02106e40 kind:function(arm,size=0x2d8) addr:0x02106e40
 __sinit_ov002_02107118 kind:function(arm,size=0xdc) addr:0x02107118
@@ -1637,7 +1637,7 @@ __sinit_ov002_02108094 kind:function(arm,size=0x3c) addr:0x02108094
 .p__sinit_ov002_02101738 kind:data(word) addr:0x02108100
 .p__sinit_ov002_02101894 kind:data(word) addr:0x02108104
 .p__sinit_daObjHeart_c.cpp kind:data(word) addr:0x02108108
-.p__sinit_ov002_02101968 kind:data(word) addr:0x0210810c
+.p__sinit_d_a_obj_cannon_shutter.cpp kind:data(word) addr:0x0210810c
 .p__sinit_ov002_021019d0 kind:data(word) addr:0x02108110
 .p__sinit_ov002_02106e40 kind:data(word) addr:0x02108114
 .p__sinit_ov002_02107118 kind:data(word) addr:0x02108118
@@ -2802,8 +2802,8 @@ data_ov002_0210e104 kind:bss addr:0x0210e104
 @561 kind:bss addr:0x0210e118
 data_ov002_0210e124 kind:bss addr:0x0210e124
 data_ov002_0210e12c kind:bss addr:0x0210e12c
-data_ov002_0210e134 kind:bss addr:0x0210e134
-data_ov002_0210e140 kind:bss addr:0x0210e140
+@652 kind:bss addr:0x0210e134
+@651 kind:bss addr:0x0210e140
 data_ov002_0210e14c kind:bss addr:0x0210e14c
 data_ov002_0210e150 kind:bss addr:0x0210e150
 data_ov002_0210e154 kind:bss addr:0x0210e154
