@@ -2662,10 +2662,6 @@
       "src/__sinit_ov002_02101894.c": [
         "kind:data"
       ],
-      "src/__sinit_ov002_02101900.c": [
-        "arity:0",
-        "return:void"
-      ],
       "src/__sinit_ov002_021019d0.c": [
         "arity:0",
         "return:void"
@@ -5927,9 +5923,6 @@
       ],
       "src/__sinit_ov002_02101894.c": [
         "return:void"
-      ],
-      "src/__sinit_ov002_02101900.c": [
-        "return:int"
       ],
       "src/__sinit_ov002_021019d0.c": [
         "param:#2 int",
@@ -15719,16 +15712,6 @@
         "return:SharedFilePtr"
       ]
     },
-    "data_ov002_0210e0fc": {
-      "src/__sinit_ov002_02101900.c": [
-        "return:char []"
-      ]
-    },
-    "data_ov002_0210e104": {
-      "src/__sinit_ov002_02101900.c": [
-        "return:char []"
-      ]
-    },
     "data_ov002_0210e124": {
       "src/game/actors/d_a_obj_cannon_shutter.cpp": [
         "return:SharedFilePtr"
@@ -22511,10 +22494,6 @@
       "src/__sinit_ov002_02101894.c": [
         "kind:data"
       ],
-      "src/__sinit_ov002_02101900.c": [
-        "arity:0",
-        "return:void"
-      ],
       "src/__sinit_ov002_02101968.c": [
         "arity:0",
         "return:void"
@@ -23225,9 +23204,6 @@
       ],
       "src/__sinit_ov002_02101894.c": [
         "return:void"
-      ],
-      "src/__sinit_ov002_02101900.c": [
-        "return:int"
       ],
       "src/__sinit_ov002_02101968.c": [
         "return:int"

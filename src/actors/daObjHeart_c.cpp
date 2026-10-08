@@ -20,13 +20,31 @@
 #include "SharedFilePtr.h"
 #include "Sound.h"
 
+/* The model handle constructs through func_02017acc and destroys through
+ * func_02017ab4; the animation handle constructs through
+ * SharedFilePtr::Construct and destroys through SharedFilePtr_Destruct_Anim.
+ * The manifest aliases those undefined members onto the ROM symbols. */
+struct HeartModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    HeartModelFilePtr(u32 fileID);
+    ~HeartModelFilePtr();
+};
+
+struct HeartAnimationFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    HeartAnimationFilePtr(u32 fileID);
+    ~HeartAnimationFilePtr();
+};
+
+extern "C" HeartModelFilePtr data_ov002_0210e104;
+extern "C" HeartAnimationFilePtr data_ov002_0210e0fc;
+
 extern "C" {
 void Matrix4x3_FromRotationY(void *m, int angleY);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 int Math_Function_0203b14c(int *ptr, int target, int rate, int limit, int step);
-
-extern SharedFilePtr data_ov002_0210e104;
-extern SharedFilePtr data_ov002_0210e0fc;
 
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
     ModelAnim *self, BCA_File *file, int flags, int speed, unsigned short start);
@@ -129,3 +147,8 @@ extern "C" daObjHeart_c *daObjHeart_c_classInit(void)
 {
     return new daObjHeart_c();
 }
+
+/* Retail initializer order: model 0x470, then animation 0x471. mwcc emits
+ * __sinit_daObjHeart_c.cpp from these two definitions. */
+HeartModelFilePtr data_ov002_0210e104(0x470);
+HeartAnimationFilePtr data_ov002_0210e0fc(0x471);

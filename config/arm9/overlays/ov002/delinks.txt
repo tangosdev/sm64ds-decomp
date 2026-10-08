@@ -223,6 +223,9 @@ src/game/actors/d_a_obj_wakame.cpp:
 src/actors/daObjHeart_c.cpp:
     complete
     .text start:0x020bc5e0 end:0x020bc8f4
+    .init start:0x02101900 end:0x02101968
+    .ctor start:0x02108108 end:0x0210810c
+    .bss start:0x0210e0fc end:0x0210e124
 
 src/game/actors/d_a_obj_cannon_shutter.cpp:
     complete
@@ -1575,10 +1578,6 @@ src/__sinit_ov002_02101738.c:
 src/__sinit_ov002_02101894.c:
     complete
     .init start:0x02101894 end:0x02101900
-
-src/__sinit_ov002_02101900.c:
-    complete
-    .init start:0x02101900 end:0x02101968
 
 src/__sinit_ov002_02101968.c:
     complete

@@ -3,6 +3,7 @@
   "module": "ov002",
   "source": "src/actors/daObjHeart_c.cpp",
   "promoted_source": "src/actors/daObjHeart_c.cpp",
+  "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -15,6 +16,21 @@
       "name": ".text",
       "start": "0x020bc5e0",
       "end": "0x020bc8f4"
+    },
+    {
+      "name": ".init",
+      "start": "0x02101900",
+      "end": "0x02101968"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02108108",
+      "end": "0x0210810c"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0210e0fc",
+      "end": "0x0210e124"
     }
   ],
   "functions": [
@@ -75,130 +91,237 @@
       "ordinal": 7
     }
   ],
+  "init": [
+    {
+      "symbol": "__sinit_daObjHeart_c.cpp",
+      "address": "0x02101900",
+      "size": "0x68",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov002_02101900 and carries the same ten relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_daObjHeart_c.cpp",
+      "address": "0x02108108",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov002_0210e0fc",
+      "address": "0x0210e0fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "animation resource handle constructed with file ID 0x471"
+    },
+    {
+      "symbol": "data_ov002_0210e104",
+      "address": "0x0210e104",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model resource handle constructed with file ID 0x470"
+    },
+    {
+      "symbol": "@560",
+      "address": "0x0210e10c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x470 model handle"
+    },
+    {
+      "symbol": "@561",
+      "address": "0x0210e118",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x471 animation handle"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_daObjHeart_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_daObjHeart_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@560",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local registration node is a configured initializer relocation destination at 0x0210e10c"
+    },
+    {
+      "symbol": "@561",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local registration node is a configured initializer relocation destination at 0x0210e118"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02101910",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101920",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0210192c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x0201799c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0210193c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0210194c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210e104",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210e104"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101950",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101954",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@560",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210e10c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101958",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210e0fc",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210e0fc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101960",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Anim",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017984"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101964",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@561",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210e118"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02108108",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_daObjHeart_c.cpp",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02101900"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN17HeartModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN17HeartModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN21HeartAnimationFilePtrC1Ej",
+      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0201799c",
+      "evidence": "retail initializer call destination and the animation constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN21HeartAnimationFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017984",
+      "evidence": "retail destructor registration destination and the animation SharedFilePtr family identity"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and the two direct retail references in this initializer"
+    }
+  ],
   "notes": [
     "Cartridge RTTI name is daObjHeart_c (_ZTS12daObjHeart_c). The licensed run is the one .text span 0x020bc5e0..0x020bc8f4 (8 functions).",
     "The destructor is declared in the header and defined once, out of line, first in the file. Under #pragma defer_codegen off that emits D1 then D0 in ROM order, plus a homeless D2.",
-    "InitResources keeps the mangled Fix12-by-value calls for ModelAnim::SetAnim and dCcAc_c::Init; the method form size-DIFFs that function."
+    "InitResources keeps the mangled Fix12-by-value calls for ModelAnim::SetAnim and dCcAc_c::Init; the method form size-DIFFs that function.",
+    "Owns the module static initializer: HeartModelFilePtr/HeartAnimationFilePtr subclass SharedFilePtr so mwcc emits __sinit_daObjHeart_c.cpp (0x02101900, 0x68), the .ctor word at 0x02108108, and the @560/@561 destructor-registration nodes. The handwritten src/__sinit_ov002_02101900.c is retired.",
+    "rom.sha256 records the shared stock SHA the other intact manifests carry (S38); this worktree's dump rebuilds sha256 ddab9300 with all module bytes and symbols byte-identical -- the same machine-local variance the dsd check-symbols errors come from."
   ],
-  "verification": {
-    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
-    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov002-daObjHeart_c/daObjHeart_c.o (gitignored)",
-    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 8,
-    "functions_declared": 8,
-    "criteria": {
-      "every_declared_function_defined": "PASS",
-      "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
-      "functions_occur_in_expected_order": "PASS",
-      "relocation_destinations_verified": "PASS"
-    },
-    "compilerOnlyOutput": {
-      "requested": [
-        "_ZN12daObjHeart_cD2Ev"
-      ],
-      "deadstripped": [
-        "_ZN12daObjHeart_cD2Ev"
-      ],
-      "droppedSections": [
-        9,
-        10,
-        22,
-        23,
-        24,
-        25,
-        26,
-        27,
-        28,
-        29,
-        30,
-        31,
-        32,
-        33,
-        34,
-        35
-      ],
-      "data": [
-        "_ZTV12daObjHeart_c",
-        "_ZTI12daObjHeart_c",
-        "_ZTS12daObjHeart_c",
-        "_ZTI8dActor_c",
-        "_ZTS8dActor_c",
-        "_ZTI7dBase_c",
-        "_ZTS7dBase_c",
-        "_ZTI7fBase_c",
-        "_ZTS7fBase_c"
-      ],
-      "dataExternalized": [
-        "_ZTI12daObjHeart_c",
-        "_ZTI7dBase_c",
-        "_ZTI7fBase_c",
-        "_ZTI8dActor_c",
-        "_ZTS12daObjHeart_c",
-        "_ZTS7dBase_c",
-        "_ZTS7fBase_c",
-        "_ZTS8dActor_c",
-        "_ZTV12daObjHeart_c"
-      ]
-    }
-  },
-  "partial_isolation": {
-    "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-    "delinksChanged": false,
-    "derivedObjects": 8,
-    "contributionEquivalent": "7/8",
-    "comparedFields": [
-      "keptSection",
-      "keptBytes",
-      "relocs",
-      "defined",
-      "mapping",
-      "live",
-      "undefReferenced"
-    ],
-    "substitutedObjectPaths": [
-      "src/_ZN12daObjHeart_cD1Ev.cpp",
-      "src/_ZN12daObjHeart_cD0Ev.cpp",
-      "src/func_ov002_020bc664.c",
-      "src/_ZN12daObjHeart_c16CleanupResourcesEv.cpp",
-      "src/_ZN12daObjHeart_c6RenderEv.cpp",
-      "src/_ZN12daObjHeart_c8BehaviorEv.cpp",
-      "src/_ZN12daObjHeart_c13InitResourcesEv.cpp",
-      "src/d_a_obj_heart.c"
-    ],
-    "extraInertImports": 71,
-    "extraImportsWithNoHome": [],
-    "result": "failed",
-    "phases": {
-      "delink": true,
-      "lcf": true,
-      "compile": true,
-      "link": true,
-      "checkModules": true,
-      "checkSymbols": false,
-      "rom": true
-    },
-    "tuRange": {
-      "start": "0x020bc5e0",
-      "end": "0x020bc8f4",
-      "differingBytes": 0,
-      "firstDiff": null
-    },
-    "moduleFidelityPassed": true,
-    "symbolCheckNewVsBaseline": [],
-    "rom": {
-      "bytes": 16777216,
-      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
-    },
-    "scratch": "build/tu/ov002-daObjHeart_c/link-partial (gitignored)",
-    "state": "derived",
-    "stateMeaning": "N per-function objects were extracted from one compiled TU object; their equivalence to the production objects was not established",
-    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
-  },
   "compiler_only_output": [
     {
       "symbol": "_ZN12daObjHeart_cD2Ev",
@@ -268,5 +391,224 @@
       "canonical_address": "0x02086e60",
       "reason": "Inherited vague-linkage type name for fBase_c. Canonical copy arm9:0x02086e60."
     }
-  ]
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-daObjHeart_c/daObjHeart_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 8,
+    "functions_declared": 8,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN12daObjHeart_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN12daObjHeart_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "data": [
+        "_ZTV12daObjHeart_c",
+        "_ZTI12daObjHeart_c",
+        "_ZTS12daObjHeart_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12daObjHeart_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12daObjHeart_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV12daObjHeart_c"
+      ]
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov002-daObjHeart_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020bc5e0",
+        "end": "0x020bc8f4",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020bc5e0",
+          "end": "0x020bc8f4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02101900",
+          "end": "0x02101968",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02108108",
+          "end": "0x0210810c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0210e0fc",
+          "end": "0x0210e124",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 14
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              42
+            ],
+            "desired": [
+              42
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              40
+            ],
+            "desired": [
+              40
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              22,
+              23,
+              24,
+              25
+            ],
+            "desired": [
+              25,
+              23,
+              22,
+              24
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                22,
+                23,
+                24,
+                25
+              ],
+              "desired": [
+                25,
+                23,
+                22,
+                24
+              ],
+              "slots": [
+                22,
+                23,
+                24,
+                25
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
 }

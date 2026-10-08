@@ -5251,6 +5251,7 @@
     "src/actors/daObjHeart_c.cpp#_ZN12daObjHeart_c8BehaviorEv": "tangosdev",
     "src/actors/daObjHeart_c.cpp#_ZN12daObjHeart_c13InitResourcesEv": "tangosdev",
     "src/actors/daObjHeart_c.cpp#daObjHeart_c_classInit": "tangosdev",
+    "src/actors/daObjHeart_c.cpp#__sinit_daObjHeart_c.cpp": "tangosdev",
     "src/actors/daObjSm_Lift_c.cpp#_ZN14daObjSm_Lift_cD1Ev": "andrewboudreau",
     "src/actors/daObjSm_Lift_c.cpp#_ZN14daObjSm_Lift_cD0Ev": "tangosdev",
     "src/actors/daObjSm_Lift_c.cpp#_ZN14daObjSm_Lift_c15OnHitByMegaCharER6Player": "tangosdev",
