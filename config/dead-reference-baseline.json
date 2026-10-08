@@ -6,6 +6,10 @@
    "ref": "mods/Player_ScaleByCharFactor.c"
   },
   {
+   "file": "CLAIMS.md",
+   "ref": "src/__sinit_ov060_0211a388.c"
+  },
+  {
    "file": "notes/actor-naming.md",
    "ref": "include/List/ActorList.h"
   },
