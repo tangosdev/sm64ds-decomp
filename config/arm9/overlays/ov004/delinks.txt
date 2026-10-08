@@ -6,19 +6,11 @@
     .bss        start:0x020beb60 end:0x020bfec0 kind:bss align:32
 src/minigames/d_s_mg_base.cpp:
     complete
-    .text start:0x020ad660 end:0x020b2c58
-
-src/unnamed/ov004/func_ov004_020b2c58.c:
-    complete
-    .text start:0x020b2c58 end:0x020b2c7c
-
-src/unnamed/ov004/func_ov004_020b2c7c.c:
-    complete
-    .text start:0x020b2c7c end:0x020b2c80
-
-src/unnamed/ov004/func_ov004_020b2c80.c:
-    complete
-    .text start:0x020b2c80 end:0x020b2c84
+    .text start:0x020ad660 end:0x020b2c84
+    .init start:0x020b948c end:0x020b955c
+    .ctor start:0x020b9de4 end:0x020b9de8
+    .data start:0x020bbf4c end:0x020bbf6c
+    .bss start:0x020beb74 end:0x020bf3e8
 
 src/actors/unit020b2c84.cpp:
     complete
@@ -38,10 +30,6 @@ src/actors/dMgPsOpt_c.cpp:
     complete
     .text start:0x020b8c18 end:0x020b944c
     .data start:0x020bca68 end:0x020bcaa0
-
-src/unnamed/ov004/__sinit_ov004_020b948c.c:
-    complete
-    .init start:0x020b948c end:0x020b955c
 
 src/unnamed/ov004/__sinit_ov004_020b955c.c:
     complete

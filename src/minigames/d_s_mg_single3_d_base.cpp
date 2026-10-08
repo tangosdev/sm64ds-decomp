@@ -48,6 +48,7 @@ extern u8 data_0209d454;
 extern u8 data_0209d45c;
 extern u32 data_020a0db0;
 extern int data_ov004_020beb6c;
+extern int data_ov004_020beb74[];
 extern int data_ov006_0213e42c[];
 extern int data_0208ee44;
 extern void **data_0209d4a8;

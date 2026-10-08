@@ -41,6 +41,7 @@ extern unsigned char data_0209f5f8;
 extern void *data_0209d4a8;
 extern unsigned int data_020a0db0;
 extern int data_0208ee44;
+extern int data_ov004_020beb74[];
 
 /* arm9 / ov004 helpers with no project header. */
 int   func_02053ea0(void);

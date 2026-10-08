@@ -947,6 +947,8 @@ class dScMgBase_c::graphCallback_c : public dGraph_c::callback_c {
 public:
     dScMgBase_c *mScene;                             /* 0x04 */
 
+    graphCallback_c();
+
     virtual int GraphCallback0();                            /* slot 0 */
     virtual int GraphCallback1();                            /* slot 1 */
     virtual int GraphCallback2();                            /* slot 2 */

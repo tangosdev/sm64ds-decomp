@@ -12137,6 +12137,9 @@
       ],
       "src/unnamed/arm9/0207/__sinit_02074fb8.c": [
         "return:int"
+      ],
+      "src/actors/dScDSMT_c.cpp": [
+        "return:int []"
       ]
     },
     "data_0208ee3c": {
