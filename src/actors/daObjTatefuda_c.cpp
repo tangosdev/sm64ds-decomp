@@ -55,8 +55,7 @@
  *   member form is the 6az wall).
  * - SignPost_ClsnFile / SignPost_ModelFile keep their coined BSS names
  *   (historical, like the Spawn aliases).
- * - data_ov002_0210e084 (the {enter, update} state table), the
- *   message/volume tables and g_profile_TATEFUDA are not this TU's data.
+ * - The message/volume tables and g_profile_TATEFUDA are not this TU's data.
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -104,6 +103,31 @@ struct BMD_File; struct KCL_File; struct dActor_c; struct Vector3; struct Matrix
 
 /* shadow struct 'CLPS_Block' */
 struct CLPS_Block; struct Vector3_16;
+
+/* The retail static initializer constructs these two 8-byte resource handles
+ * in source order (model 0x491, collision 0x492) and lets the C++ runtime
+ * register their destructors. The family spellings are reconstructed; the
+ * constructor/destructor addresses, file IDs, object widths, BSS order, and
+ * registration topology are direct ROM evidence. The intact-TU manifest maps
+ * their compiler-generated undefined member imports onto the existing
+ * evidence-bounded ROM symbols. */
+struct SignPostModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    SignPostModelFilePtr(u32 fileID);
+    ~SignPostModelFilePtr();
+};
+
+struct SignPostCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    SignPostCollisionFilePtr(u32 fileID);
+    ~SignPostCollisionFilePtr();
+};
+
+/* BMD (Model::LoadFile) and KCL (dBgW_Kc::LoadFile). Cleanup releases both. */
+extern "C" SignPostModelFilePtr SignPost_ModelFile;
+extern "C" SignPostCollisionFilePtr SignPost_ClsnFile;
 
 /* Actor IDs, as symbols/actor_debug_names.tsv lists them. */
 enum {
@@ -161,8 +185,6 @@ extern int _ZNK10dBgCh_Actr12TouchesWaterEv(void* p);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* thiz, void* v, unsigned a, int b, unsigned c, unsigned d, unsigned e);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
 extern int _ZN8dActor_c13DistToCPlayerEv(void* self);
-extern int SignPost_ClsnFile[];
-extern int SignPost_ModelFile[];
 extern "C" unsigned int data_0209b454;
 extern "C" void _ZN6Player9DropActorEv(void *self);
 extern "C" void AttachToHolder(struct daObjTatefuda_c *self);
@@ -218,7 +240,7 @@ extern "C" CLPS_Block data_ov002_0210d714;
    declares StartDetectingWater itself. */
 int daObjTatefuda_c::InitResources()
 {
-    void *mf = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210e064);
+    void *mf = _ZN5Model8LoadFileER13SharedFilePtr(&SignPost_ModelFile);
     mModel.SetFile((BMD_File*)mf, 1, -1);
     mShadowModel.InitCuboid();
 
@@ -236,7 +258,7 @@ int daObjTatefuda_c::InitResources()
     UpdateClsnPosAndRot();
     UpdateShadowMatrix();
 
-    void *kf = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov002_0210e05c);
+    void *kf = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&SignPost_ClsnFile);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, (KCL_File*)kf, mClsnMat, 0x199, mAngleY, data_ov002_0210d714);
 
@@ -440,8 +462,8 @@ int daObjTatefuda_c::CleanupResources()
     if (((dBgW *)&mMeshCollider)->IsEnabled()) {
         ((dBgW *)&mMeshCollider)->Disable();
     }
-    ((SharedFilePtr *)(SignPost_ModelFile))->Release();
-    ((SharedFilePtr *)(SignPost_ClsnFile))->Release();
+    SignPost_ModelFile.Release();
+    SignPost_ClsnFile.Release();
     return 1;
 }
 
@@ -1237,3 +1259,16 @@ void daObjTatefuda_c::Reset()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjTatefuda_cD1Ev
 /* The complete-object destructor comes from the key function (see D0). */
+
+/* __sinit_daObjTatefuda_c.cpp constructs the two file handles in retail
+ * order, then copies the ten anonymous pointer-to-member descriptors into
+ * the {enter, update} state table SetState and UpdateState index by mState. */
+SignPostModelFilePtr SignPost_ModelFile(0x491);
+SignPostCollisionFilePtr SignPost_ClsnFile(0x492);
+Entry data_ov002_0210e084[5] = {
+    { &daObjTatefuda_c::InitIdle,    &daObjTatefuda_c::Idle    },
+    { &daObjTatefuda_c::InitTalk,    &daObjTatefuda_c::Talk    },
+    { &daObjTatefuda_c::InitCarried, &daObjTatefuda_c::Carried },
+    { &daObjTatefuda_c::InitThrown,  &daObjTatefuda_c::Thrown  },
+    { &daObjTatefuda_c::InitDropped, &daObjTatefuda_c::Dropped },
+};

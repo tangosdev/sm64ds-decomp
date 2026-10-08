@@ -616,3 +616,4 @@
 {"path": "src/__sinit_ov079_021279d4.c", "reason": "handwritten file retired; class cpp emits the same bytes and relocations."}
 {"path": "src/unnamed/ov006/__sinit_ov006_02130df8.c", "reason": "The handwritten static initializer is retired. dScMgHanachan_c.cpp defines the eleven-entry OamAttr* table data_ov006_02142018, and mwcc emits __sinit_dScMgHanachan_c.cpp with the same 0xa4 bytes, the same eight .init relocations and the ctor word."}
 {"path": "src/unnamed/ov029/__sinit_ov029_02112c10.c", "reason": "The handwritten static initializer is retired. d_a_obj_wc_obj03.cpp defines the model file handle, and mwcc emits __sinit_d_a_obj_wc_obj03.cpp with the same 0x3c bytes and the same five relocations."}
+{"date": "2026-10-08", "path": "src/unnamed/ov002/__sinit_ov002_02101738.c", "reason": "Handwritten tatefuda sinit was folded into daObjTatefuda_c.cpp. The renamed shard path is not a converted file anymore."}
