@@ -98,7 +98,7 @@ This document describes this commit. The queue records its immutable output SHA.
   typeinfo word before the vtable address point 0x02122efc is 0x02122e94. The
   state table [data_ov071_02122ecc](../../../config/arm9/overlays/ov071/symbols.txt) holds two 20-byte { `init`, `exec`, `name` }
   entries whose name words point at "`WAIT`" (0x02122e64) and "`STANDUP`"
-  (0x02122e6c). [__sinit_ov071_02122a64](../../../src/__sinit_ov071_02122a64.c) fills the pointer-to-member words from
+  (0x02122e6c). [__sinit_ov071_02122a64](../../../src/unnamed/ov071/__sinit_ov071_02122a64.c) fills the pointer-to-member words from
   the constants at 0x02122e74..0x02122e90, so state 0 `WAIT` is { 0x021223b0,
   0x021221bc } and state 1 `STANDUP` is { 0x02122194, 0x021220c8 }.
 ---

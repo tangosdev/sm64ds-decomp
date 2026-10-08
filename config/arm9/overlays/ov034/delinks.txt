@@ -8,6 +8,6 @@ src/actors/daHanachan_c.cpp:
     complete
     .text start:0x021111a0 end:0x02113820
 
-src/__sinit_ov034_021138ec.c:
+src/unnamed/ov034/__sinit_ov034_021138ec.c:
     complete
     .init start:0x021138ec end:0x02114078

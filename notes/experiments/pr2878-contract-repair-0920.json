@@ -1224,7 +1224,7 @@
         "strict_count": 29
       },
       {
-        "path": "src/func_ov002_020e3e00.cpp",
+        "path": "src/unnamed/ov002/func_ov002_020e3e00.cpp",
         "git_blob": "ac14bc52107bfb0f09670fa05303038708b8cfe6",
         "normalized_source_sha256": "046e2f384b8c2673a712a37ace7234cd38248e872f8f9a1faa05762efc42ee8d",
         "probe_input_identical": true,
@@ -2385,7 +2385,7 @@
       "strict_checks": 29
     },
     {
-      "source": "src/func_ov002_020e3e00.cpp",
+      "source": "src/unnamed/ov002/func_ov002_020e3e00.cpp",
       "source_sha256": "e7cc5ffc796678ef60f5e6e7128dc4e566c7560ff6e7c1922a5e05ed65d19d40",
       "compiled_source_sha256": "046e2f384b8c2673a712a37ace7234cd38248e872f8f9a1faa05762efc42ee8d",
       "object_bytes": 1496,

@@ -6674,7 +6674,7 @@ reproduced in a 15-instruction toy, `_abwork/crkh/toyprobe.py`:
                                   (now in src/actors/dMg3DEspAnimSet_c.cpp)
   Both are the final `else` of an if / else-if / else chain, so the jumped-over arm is the
   else-if body and contains that arm's own test. The multi-predecessor precedents 6u names
-  (src/func_ov007_020b1f2c.c, src/func_ov002_020d85fc.cpp) are `&&` chains.
+  (src/unnamed/ov007/func_ov007_020b1f2c.c, src/unnamed/ov002/func_ov002_020d85fc.cpp) are `&&` chains.
   Found by disassembling every matched src/ file's ROM range and looking for a forward
   conditional branch into a <=7-instruction block ending in a return whose only predecessor is
   that branch: 16 hits in the whole corpus.
@@ -7087,7 +7087,7 @@ Wave 9 left it at 164 with the residue read as "the compiler sinks one read past
 store". It is not a spelling problem at all, and the method that proved that is reusable.
 
 **1. The emit spelling is settled, because a matched sibling already contains it.** The vertex
-block is `src/func_ov007_020ca86c.c`'s inline with shift 8, spelled exactly the way that
+block is `src/unnamed/ov007/func_ov007_020ca86c.c`'s inline with shift 8, spelled exactly the way that
 matched file spells it:
 
 ```c

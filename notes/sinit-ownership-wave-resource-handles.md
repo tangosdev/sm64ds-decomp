@@ -8,9 +8,9 @@ This lane independently audits three rows ranked `high` by
 
 | Initializer | Candidate owner | Ownership verdict | Regeneration readiness |
 | --- | --- | --- | --- |
-| [__sinit_ov009_02112458](../src/__sinit_ov009_02112458.c) | [ov009](../config/arm9/overlays/ov009/symbols.txt)/`daSBird_c` | **CONFIRMED** | Not promotion-ready: resource-family symbol names, four original PMF member names, and unlicensed vtable/RTTI output remain |
-| [__sinit_ov015_02112f9c](../src/__sinit_ov015_02112f9c.c) | [ov015](../config/arm9/overlays/ov015/symbols.txt)/`daObjBkBillboard_c` | **CONFIRMED** | Structurally straightforward, but no shadow manifest exists and vtable/RTTI/data ranges are unlicensed |
-| [__sinit_ov002_02101064](../src/__sinit_ov002_02101064.c) | [ov002](../config/arm9/overlays/ov002/symbols.txt)/`daObjMarioCap_c` | **CONFIRMED** | Not promotion-ready: `InitResources` is not a matching source, the PMF member names remain unknown, and [ov002](../config/arm9/overlays/ov002/symbols.txt) cannot be ordinal-partitioned |
+| [__sinit_ov009_02112458](../src/unnamed/ov009/__sinit_ov009_02112458.c) | [ov009](../config/arm9/overlays/ov009/symbols.txt)/`daSBird_c` | **CONFIRMED** | Not promotion-ready: resource-family symbol names, four original PMF member names, and unlicensed vtable/RTTI output remain |
+| [__sinit_ov015_02112f9c](../src/unnamed/ov015/__sinit_ov015_02112f9c.c) | [ov015](../config/arm9/overlays/ov015/symbols.txt)/`daObjBkBillboard_c` | **CONFIRMED** | Structurally straightforward, but no shadow manifest exists and vtable/RTTI/data ranges are unlicensed |
+| [__sinit_ov002_02101064](../src/unnamed/ov002/__sinit_ov002_02101064.c) | [ov002](../config/arm9/overlays/ov002/symbols.txt)/`daObjMarioCap_c` | **CONFIRMED** | Not promotion-ready: `InitResources` is not a matching source, the PMF member names remain unknown, and [ov002](../config/arm9/overlays/ov002/symbols.txt) cannot be ordinal-partitioned |
 
 All three committed initializer transcriptions pass strict matching and linked
 verification with `blind: 0`. More importantly, ordinary static C++ objects and
@@ -82,7 +82,7 @@ descriptors occupy exactly `0x021138fc..0x0211391c` (32 data bytes).
 
 This is initializer ordinal 0 of 4. [.p__sinit_ov009_02112458](../config/arm9/overlays/ov009/symbols.txt) at
 `0x02112b34` points to it; the next word points to
-[__sinit_ov009_02112524](../src/__sinit_ov009_02112524.c), independently owned by daObjMcWater_c. The parallel
+[__sinit_ov009_02112524](../src/unnamed/ov009/__sinit_ov009_02112524.c), independently owned by daObjMcWater_c. The parallel
 TU-shaped config attributes daSBird_c's exact `.text`, `.init`, `.ctor`, data, and
 BSS intervals and keeps them ordered before daObjMcWater_c.
 
@@ -122,7 +122,7 @@ The initializer constructs asset 1416 with `func_02017acc` and registers
 
 This is initializer ordinal 0 of 7. [.p__sinit_ov015_02112f9c](../config/arm9/overlays/ov015/symbols.txt) at
 `0x02113410` points to it; the next word points to
-[__sinit_ov015_02112fdc](../src/__sinit_ov015_02112fdc.c), independently owned by daObjBk_Botaosi_c. The parallel
+[__sinit_ov015_02112fdc](../src/unnamed/ov015/__sinit_ov015_02112fdc.c), independently owned by daObjBk_Botaosi_c. The parallel
 TU config attributes daObjBkBillboard_c's `.init` (`0x02112f9c..0x02112fdc`),
 `.ctor` word, and exact BSS interval to its first text TU.
 
@@ -210,8 +210,8 @@ The target data/BSS shape is exact and contiguous:
 ### Order and organic generation
 
 This is initializer ordinal 8 of 26. Its `.ctor` word at `0x021080f0` sits
-between the words for [__sinit_ov002_02100f84](../src/__sinit_ov002_02100f84.c) (`daObjKurumajiku_c`) and
-[__sinit_ov002_02101478](../src/__sinit_ov002_02101478.c) (`daObjPushblock_c`). This ordering is corroborating only:
+between the words for [__sinit_ov002_02100f84](../src/unnamed/ov002/__sinit_ov002_02100f84.c) (`daObjKurumajiku_c`) and
+[__sinit_ov002_02101478](../src/unnamed/ov002/__sinit_ov002_02101478.c) (`daObjPushblock_c`). This ordering is corroborating only:
 [ov002](../config/arm9/overlays/ov002/symbols.txt) has 26 initializers but 71 candidate text TUs, so the ordinal partition
 correctly refuses to attribute `.init`, `.ctor`, data, or BSS. Several TUs that
 need no static initializer occur between those named owners.
@@ -241,14 +241,14 @@ The committed initializer sources were checked with explicit module/address/size
 parameters:
 
 ```powershell
-python tools/match.py --c src/__sinit_ov009_02112458.c --func __sinit_ov009_02112458 --addr 0x02112458 --size 0xcc --version 2004/b56 --module ov009 --strict-relocs --brief
-python tools/linkcheck.py --c src/__sinit_ov009_02112458.c --name __sinit_ov009_02112458 --addr 0x02112458 --size 0xcc --module ov009
+python tools/match.py --c src/unnamed/ov009/__sinit_ov009_02112458.c --func __sinit_ov009_02112458 --addr 0x02112458 --size 0xcc --version 2004/b56 --module ov009 --strict-relocs --brief
+python tools/linkcheck.py --c src/unnamed/ov009/__sinit_ov009_02112458.c --name __sinit_ov009_02112458 --addr 0x02112458 --size 0xcc --module ov009
 
-python tools/match.py --c src/__sinit_ov015_02112f9c.c --func __sinit_ov015_02112f9c --addr 0x02112f9c --size 0x40 --version 2004/b56 --module ov015 --strict-relocs --brief
-python tools/linkcheck.py --c src/__sinit_ov015_02112f9c.c --name __sinit_ov015_02112f9c --addr 0x02112f9c --size 0x40 --module ov015
+python tools/match.py --c src/unnamed/ov015/__sinit_ov015_02112f9c.c --func __sinit_ov015_02112f9c --addr 0x02112f9c --size 0x40 --version 2004/b56 --module ov015 --strict-relocs --brief
+python tools/linkcheck.py --c src/unnamed/ov015/__sinit_ov015_02112f9c.c --name __sinit_ov015_02112f9c --addr 0x02112f9c --size 0x40 --module ov015
 
-python tools/match.py --c src/__sinit_ov002_02101064.c --func __sinit_ov002_02101064 --addr 0x02101064 --size 0x414 --version 2004/b56 --module ov002 --strict-relocs --brief
-python tools/linkcheck.py --c src/__sinit_ov002_02101064.c --name __sinit_ov002_02101064 --addr 0x02101064 --size 0x414 --module ov002
+python tools/match.py --c src/unnamed/ov002/__sinit_ov002_02101064.c --func __sinit_ov002_02101064 --addr 0x02101064 --size 0x414 --version 2004/b56 --module ov002 --strict-relocs --brief
+python tools/linkcheck.py --c src/unnamed/ov002/__sinit_ov002_02101064.c --name __sinit_ov002_02101064 --addr 0x02101064 --size 0x414 --module ov002
 ```
 
 Observed: all three `MATCH`; all three `VERIFIED`, `blind: 0`.

@@ -195,7 +195,7 @@ a documented contamination vector worth a policy note. *This was not verified �
 | `data_02082214` | `FX_SinCosTable_` — 0x1000 interleaved fx16 sin/cos pairs, 0x4000 bytes, ends 0x02086214 | *NitroSDK* standard |
 | [data_ov002_0210a59c](../../config/arm9/overlays/ov002/symbols.txt) | `sJumpVelocities` / `sPlayerJumpComboVelY` | rodata {42.0, 52.0, 69.0} |
 | [data_ov002_0210a5a8](../../config/arm9/overlays/ov002/symbols.txt) | jump-combo animation IDs | rodata {0x53, 0x4f, 0x4b} |
-| [func_ov002_020e28d4](../../src/func_ov002_020e28d4.c) | `Player::UpdateAirMovement` — cf. N64 `update_air_with_turn` (`mario_actions_airborne.c:186`) | long-jump drag special case + 16.0/2.0 backwards drag + `ApproachLinear` on `mHorzSpeed` |
+| [func_ov002_020e28d4](../../src/unnamed/ov002/func_ov002_020e28d4.c) | `Player::UpdateAirMovement` — cf. N64 `update_air_with_turn` (`mario_actions_airborne.c:186`) | long-jump drag special case + 16.0/2.0 backwards drag + `ApproachLinear` on `mHorzSpeed` |
 | [func_ov002_020bf2d8](../../src/actors/Player.cpp) (ROM ordinal 39 used to assemble `Player.cpp`) | `Player_SetVertSpeedByCharFactor` (sibling of `Player_ScaleByCharFactor` @0x020bf30c) | scales arg by per-char factor → `+0xa8` |
 | `func_02037e38` | `CLPS::GetType` | the only CLPS getter used in a jump-table dispatch ([ov098](../../config/arm9/overlays/ov098/symbols.txt) @0x02139264) |
 | 0x02037e14–0x02037e90 | eight more CLPS bitfield getters | 3-instruction accessors, bit extents recovered |
@@ -490,18 +490,18 @@ So **CLPS surface-type values 6-9 are the four quicksand types.** Corroborated o
 |---------|-------------|
 | [`0x02037e58`](../../src/func_02037e58.c) | `CLPS::GetSlipperiness` |
 | [`0x02037e38`](../../src/func_02037e38.c) | `CLPS::GetSurfaceType` |
-| [ov002](../../config/arm9/overlays/ov002/symbols.txt):[`0x020f02c8`](../../src/func_ov002_020f02c8.c) | `GetSlideAccelForClass` |
-| [`0x020f030c`](../../src/func_ov002_020f030c.c) | `GetSlideLossFactorForClass` |
-| [`0x020f035c`](../../src/func_ov002_020f035c.c) | `FloorIsSlope` |
+| [ov002](../../config/arm9/overlays/ov002/symbols.txt):[`0x020f02c8`](../../src/unnamed/ov002/func_ov002_020f02c8.c) | `GetSlideAccelForClass` |
+| [`0x020f030c`](../../src/unnamed/ov002/func_ov002_020f030c.c) | `GetSlideLossFactorForClass` |
+| [`0x020f035c`](../../src/unnamed/ov002/func_ov002_020f035c.c) | `FloorIsSlope` |
 | [`0x020c031c`](../../src/actors/Player.cpp) (ROM ordinal 55) | `Player::GetFloorClass` |
 | [`0x020c04e0`](../../src/actors/Player.cpp) (ROM ordinal 59; currently [`_ZN6Player19func_ov002_020c04e0Ev`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::ApplySlopeAccel` |
 | [`0x020c06fc`](../../src/actors/Player.cpp) (ROM ordinal 61) | `Player::UpdateSliding` |
 | [`0x020bf56c`](../../src/actors/Player.cpp) (ROM ordinal 46; currently [`func_ov002_020bf56c`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::GetSlopeDecelCoef` |
 | [`0x020c16ec`](../../src/actors/Player.cpp) (ROM ordinal 68) | `Player::SetFloorSurfaceInfo` |
-| [`0x020d4d88`](../../src/func_ov002_020d4d88.c) | `Player::UpdateGroundSpeed` |
-| [`0x020d3b9c`](../../src/func_ov002_020d3b9c.c) | `Player::UpdateWalkingSpeed` |
-| [`0x020d45c0`](../../src/func_ov002_020d45c0.c) | `Player::Walk_UpdateRunDustFx` |
-| [`0x020d413c`](../../src/func_ov002_020d413c.c) | `Player::Walk_UpdateBodyLean` |
+| [`0x020d4d88`](../../src/unnamed/ov002/func_ov002_020d4d88.c) | `Player::UpdateGroundSpeed` |
+| [`0x020d3b9c`](../../src/unnamed/ov002/func_ov002_020d3b9c.c) | `Player::UpdateWalkingSpeed` |
+| [`0x020d45c0`](../../src/unnamed/ov002/func_ov002_020d45c0.c) | `Player::Walk_UpdateRunDustFx` |
+| [`0x020d413c`](../../src/unnamed/ov002/func_ov002_020d413c.c) | `Player::Walk_UpdateBodyLean` |
 | [`0x020bf30c`](../../src/actors/Player.cpp) (ROM ordinal 40; currently [`Player_ScaleByCharFactor`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::ScaleSpeedByCharacter` |
 | [`0x020c29d4`](../../src/actors/Player.cpp) (ROM ordinal 81; currently [`_ZN6Player19func_ov002_020c29d4Ev`](../../config/tu_manifest.d/ov002/Player.json)) | `Player::UpdateQuicksandFlag` |
 | [ov098](../../config/arm9/overlays/ov098/symbols.txt):[`0x02139228`](../../src/actors/daObjBlockS_c.cpp) (ROM ordinal 25; currently [`func_ov098_02139228`](../../config/tu_manifest.d/ov098/daObjBlockS_c.json)) | `Crate::UpdateQuicksand` |

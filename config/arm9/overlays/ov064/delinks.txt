@@ -20,11 +20,11 @@ src/actors/daObjFl_Amilift_c.cpp:
     complete
     .text start:0x02117978 end:0x02117fb4
 
-src/func_ov064_02117fb4.cpp:
+src/unnamed/ov064/func_ov064_02117fb4.cpp:
     complete
     .text start:0x02117fb4 end:0x02117fd4
 
-src/func_ov064_02117fd4.c:
+src/unnamed/ov064/func_ov064_02117fd4.c:
     complete
     .text start:0x02117fd4 end:0x02117fe8
 
@@ -48,11 +48,11 @@ src/actors/daObjFl_Coin_c.cpp:
     complete
     .text start:0x02118b50 end:0x0211929c
 
-src/func_ov064_0211929c.cpp:
+src/unnamed/ov064/func_ov064_0211929c.cpp:
     complete
     .text start:0x0211929c end:0x021192bc
 
-src/func_ov064_021192bc.c:
+src/unnamed/ov064/func_ov064_021192bc.c:
     complete
     .text start:0x021192bc end:0x021192d0
 
@@ -80,46 +80,46 @@ src/actors/daObjShell_c.cpp:
     complete
     .text start:0x0211a930 end:0x0211adb0
 
-src/__sinit_ov064_0211ae00.c:
+src/unnamed/ov064/__sinit_ov064_0211ae00.c:
     complete
     .init start:0x0211ae00 end:0x0211aee0
 
-src/__sinit_ov064_0211aee0.c:
+src/unnamed/ov064/__sinit_ov064_0211aee0.c:
     complete
     .init start:0x0211aee0 end:0x0211afc0
 
-src/__sinit_ov064_0211afc0.c:
+src/unnamed/ov064/__sinit_ov064_0211afc0.c:
     complete
     .init start:0x0211afc0 end:0x0211b078
 
-src/__sinit_ov064_0211b078.c:
+src/unnamed/ov064/__sinit_ov064_0211b078.c:
     complete
     .init start:0x0211b078 end:0x0211b0e4
 
-src/__sinit_ov064_0211b0e4.c:
+src/unnamed/ov064/__sinit_ov064_0211b0e4.c:
     complete
     .init start:0x0211b0e4 end:0x0211b150
 
-src/__sinit_ov064_0211b150.c:
+src/unnamed/ov064/__sinit_ov064_0211b150.c:
     complete
     .init start:0x0211b150 end:0x0211b1d4
 
-src/__sinit_ov064_0211b1d4.c:
+src/unnamed/ov064/__sinit_ov064_0211b1d4.c:
     complete
     .init start:0x0211b1d4 end:0x0211b4dc
 
-src/__sinit_ov064_0211b4dc.c:
+src/unnamed/ov064/__sinit_ov064_0211b4dc.c:
     complete
     .init start:0x0211b4dc end:0x0211b518
 
-src/__sinit_ov064_0211b518.c:
+src/unnamed/ov064/__sinit_ov064_0211b518.c:
     complete
     .init start:0x0211b518 end:0x0211b59c
 
-src/__sinit_ov064_0211b59c.c:
+src/unnamed/ov064/__sinit_ov064_0211b59c.c:
     complete
     .init start:0x0211b59c end:0x0211b698
 
-src/__sinit_ov064_0211b698.c:
+src/unnamed/ov064/__sinit_ov064_0211b698.c:
     complete
     .init start:0x0211b698 end:0x0211b72c

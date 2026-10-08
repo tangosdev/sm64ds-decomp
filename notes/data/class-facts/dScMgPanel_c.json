@@ -452,7 +452,7 @@
     },
     "no_hole": "THE WHOLE RUN IS CLAIMABLE AS ONE .text BLOCK. All 71 addresses have a legacy src/ file AND a config/arm9/overlays/ov006/delinks.txt entry, every one of those entries is marked `complete`, and `python tools/tubuild.py inspect ov006/dScMgPanel_c` reports `functions without `complete` : none` and `functions with no legacy source : none`. It also reports `all functions verify under the build's pin: True` for all 71 under mwccarm 2004/b56. That is a statement about the 71 EXISTING per-shard objects, not about a merged TU - it is not a byte gate and does not pre-empt stage 4. This is the single biggest difference from dScMgTeresa_c, which could license only 48 of its 81 because a sourceless near-miss sat in the middle of its run.",
     "factory_is_excluded": "dScMgPanel_c_classInit at 0x02107858 (size 0x34, src/d_s_mg_panel.c) is NOT part of the run and should NOT be folded in. tools/tu_map.py splits it out as its own 1-function unattributed span 0x02107858..0x0210788c, and every promoted ov006 sibling follows the same convention: dScMgTeresa_c's run ends at 0x021207a8 where d_s_mg_teresa.c begins, and dScMgRoulette_c's landed manifest licenses 0x0210788c..0x0210a400 while its classInit at 0x0210a400 stays a separate shard. The `d_s_mg_*.c` files are a family: bomroom, curling, curling2, luigi, pachinko, pachinko2, panel, slot3, teresa.",
-    "sinit_is_excluded": "__sinit_ov006_02131fa4 (0x02131fa4, size 0x318, src/__sinit_ov006_02131fa4.c) is this TU's static-initializer function and lives in ov006's .init section. It has its own delinks.txt block and stays a separate shard - ov006's delinks.txt has 31 such .init blocks against 1239 .text blocks. See static_initializer below.",
+    "sinit_is_excluded": "__sinit_ov006_02131fa4 (0x02131fa4, size 0x318, src/unnamed/ov006/__sinit_ov006_02131fa4.c) is this TU's static-initializer function and lives in ov006's .init section. It has its own delinks.txt block and stays a separate shard - ov006's delinks.txt has 31 such .init blocks against 1239 .text blocks. See static_initializer below.",
     "functions": [
       {
         "ordinal": 0,
@@ -1522,7 +1522,7 @@
       "address": "0x02131fa4",
       "size": "0x318",
       "section": ".init",
-      "legacy_source": "src/__sinit_ov006_02131fa4.c",
+      "legacy_source": "src/unnamed/ov006/__sinit_ov006_02131fa4.c",
       "ctor_slot": "0x021335c8 (entry 23 of ov006's 31-entry .ctor table at 0x0213356c..0x021335e8)"
     },
     "what_it_does": "It copies groups of 8-byte {function pointer, 0} records out of .data into mutable .bss arrays: DstA at 0x021427d4, Dst8 at 0x02142888, Dst4 at 0x02142840 and 0x02142820, Dst5 at 0x02142860, Dst3 at 0x021427ec and 0x021427bc. In original source that is a set of file-scope tables whose initializers were not link-time constant.",
@@ -1537,7 +1537,7 @@
       "0x02142888"
     ],
     "adjacency_is_not_an_array": "CORRECTION to this file's first pass, which described the 27 as one 'data-table callback' block with a 'descriptor table'. They are 27 SEPARATE 8-byte objects, not one array. Three reads say so. (a) g_profile_MG_PANEL sits at 0x0213dc64, INSIDE the run, with a different shape ({classInit, 0x017c017c}) and a different owner; an array cannot have a foreign element spliced into it. (b) 0x0213dc94 holds {0x01fc00fc, 0xffff2099}, also not a function pointer. (c) __sinit_ov006_02131fa4 loads each object's ADDRESS individually, in scrambled order (0x0213dd0c, then 0x0213dc4c, then 0x0213dc5c, then 0x0213dc54, ...), never an index off a base. What clusters them is mwld laying .data out by ASCENDING OBJECT SIZE, which parks every 8-byte object in ov006 next to every other one. Do not reconstruct a 27-entry table from this.",
-    "what_the_writer_should_do": "Follow the landed convention: declare all of it `extern` and license only .text. config/tu_manifest.d/ov006/dScMgRoulette_c.json has `data: []`, `bss: []`, `externalized_output: []` and a source that declares ~15 data_ov006_* objects extern inside an extern \"C\" block. dScMgTeresa_c's manifest is the same shape. Leave src/__sinit_ov006_02131fa4.c alone as its own shard; it is not one of the 71."
+    "what_the_writer_should_do": "Follow the landed convention: declare all of it `extern` and license only .text. config/tu_manifest.d/ov006/dScMgRoulette_c.json has `data: []`, `bss: []`, `externalized_output: []` and a source that declares ~15 data_ov006_* objects extern inside an extern \"C\" block. dScMgTeresa_c's manifest is the same shape. Leave src/unnamed/ov006/__sinit_ov006_02131fa4.c alone as its own shard; it is not one of the 71."
   },
   "factory": {
     "symbol": "dScMgPanel_c_classInit",
@@ -2026,7 +2026,7 @@
       "field": "shard_count",
       "queue_says": "72",
       "measured": "71",
-      "why": "72 counts dScMgPanel_c_classInit / src/d_s_mg_panel.c. Every promoted ov006 sibling leaves the classInit out of the TU, so the promotion absorbs 71 shards, not 72. (Counting src/__sinit_ov006_02131fa4.c as well would make 73; it is also excluded.)"
+      "why": "72 counts dScMgPanel_c_classInit / src/d_s_mg_panel.c. Every promoted ov006 sibling leaves the classInit out of the TU, so the promotion absorbs 71 shards, not 72. (Counting src/unnamed/ov006/__sinit_ov006_02131fa4.c as well would make 73; it is also excluded.)"
     },
     {
       "field": "blockers.pragma",
@@ -2083,7 +2083,7 @@
   "unproven": [
     "The original identifiers of all 65 non-virtual func_ov006_* routines, and whether each was a class member, a file-local static, or a free function. Addresses, sizes, direct callers and the static objects that hold their addresses are proven; the names are not. Do not invent method names for them.",
     "Every English FIELD name. The offsets, access widths, signed-vs-unsigned load behaviour, array counts and strides are ROM facts; the names in include/dScMgPanel_c.h (unk_4cb8 'panel count', unk_4cc4 'panel x', unk_4efa 'panel kind', unk_4fae 'picked panel indices') are coined readings of what the code does, not recovered identifiers.",
-    "The source-level TYPE of the 27 eight-byte {function pointer, 0} statics and of the .bss arrays the sinit fills. The struct names in src/__sinit_ov006_02131fa4.c (Pair, Trip, DstA, Dst8, Dst4, Dst5, Dst3) are that shard's own inventions.",
+    "The source-level TYPE of the 27 eight-byte {function pointer, 0} statics and of the .bss arrays the sinit fills. The struct names in src/unnamed/ov006/__sinit_ov006_02131fa4.c (Pair, Trip, DstA, Dst8, Dst4, Dst5, Dst3) are that shard's own inventions.",
     "That the 71-function run was one original translation unit. tu_map's boundary confidence is medium on the right edge and ov006 is one of the modules tu_map.py reports as under-segmented, so 71 is a lower bound on what one file held, not a proven file boundary. The vtable corroborates that BOTH ENDS are this class's code, which is the strongest available check and is why the left edge reads high.",
     "That __sinit_ov006_02131fa4 belonged to the same original file as the 71 functions. It references only this class's functions and this class's statics and nothing else, and its .ctor slot sits adjacent to the run's link position, but mwld's .ctor ordering is not a proof of file identity.",
     "Whether a homeless _ZN12dScMgPanel_cD2Ev will actually be emitted. Predicted from dScMgTeresa_c's identical shape; only a stage-4 compile settles it.",

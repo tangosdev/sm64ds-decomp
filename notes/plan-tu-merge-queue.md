@@ -46,7 +46,7 @@ is `False` for all 173 because the census joined on the wrong key. The real key 
 `link-verified` over `.text 0x020fe190..0x020fea4c`. The regenerated map cuts that range
 into `@0x20fe190` (2 files, class `dScStage_c`) + `@0x20fe3cc` (17 files, no class,
 medium/medium), and extends the second *past* the verified end to `0x20fea84`, sweeping
-in [func_ov002_020fea4c.c](../src/func_ov002_020fea4c.c) and [func_ov002_020fea68.c](../src/func_ov002_020fea68.c).
+in [func_ov002_020fea4c.c](../src/unnamed/ov002/func_ov002_020fea4c.c) and [func_ov002_020fea68.c](../src/unnamed/ov002/func_ov002_020fea68.c).
 
 In the one place where ground truth exists to check it, a **medium/medium** boundary is
 wrong in both directions. That is direct empirical support for the high/high +

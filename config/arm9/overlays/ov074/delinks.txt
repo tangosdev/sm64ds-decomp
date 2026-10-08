@@ -16,6 +16,6 @@ src/d_a_kuri_king_kuriking.cpp:
     complete
     .text start:0x02122838 end:0x0212290c
 
-src/__sinit_ov074_02122978.c:
+src/unnamed/ov074/__sinit_ov074_02122978.c:
     complete
     .init start:0x02122978 end:0x02122d70

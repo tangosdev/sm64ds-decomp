@@ -88,7 +88,7 @@
   "bss": [],
   "notes": [
     "Renamed from coined Bird to ROM RTTI daSBird_c (tools/class_rename.py --with-derived) before promotion. _ZTS9daSBird_c 0x0211391c / _ZTI9daSBird_c 0x02113928 / _ZTV9daSBird_c 0x02113958. The coined _ZTV4Bird alias at the same address was deleted, not renamed onto the ROM name.",
-    "PARTIAL PROMOTION. func_ov009_0211145c (0x0211145c, 0x17c) is a hand-written asm hatch that does not reproduce from C (five-word register-allocation miss). A delinks entry cannot skip a hole, so this TU licenses only the contiguous upper run 0x021115d8..0x02111a70 (8 functions). D1/D0 stay leftover enrolled files below the hole; 02111224/02111234 folded into src/game/actors/d_a_s_bird_head.cpp as daSBird_c members (manifest ov009/daSBird_c_head). The hatch stays src/func_ov009_0211145c.c, not in delinks.",
+    "PARTIAL PROMOTION. func_ov009_0211145c (0x0211145c, 0x17c) is a hand-written asm hatch that does not reproduce from C (five-word register-allocation miss). A delinks entry cannot skip a hole, so this TU licenses only the contiguous upper run 0x021115d8..0x02111a70 (8 functions). D1/D0 stay leftover enrolled files below the hole; 02111224/02111234 folded into src/game/actors/d_a_s_bird_head.cpp as daSBird_c members (manifest ov009/daSBird_c_head). The hatch stays src/unnamed/ov009/func_ov009_0211145c.c, not in delinks.",
     "Factory is return new daSBird_c() via fBase_c::operator new(unsigned long). Destructor is out of line so this TU does not emit D1/D0. Key function is ~daSBird_c(); leftover D1/D0 files emit the class vtable and RTTI, not this TU. RandomIntInternal kept as unsigned."
   ],
   "verification": {

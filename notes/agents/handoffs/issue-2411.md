@@ -208,7 +208,7 @@ proof. The documentation corrections in this revision do not resolve them.
   `fBase_c::operator new` and store `_ZTV7da1up_c`; the vtable is 31 slots with
   nine own overrides (0, 3, 6, 9, 12, 16, 17, 18, 19); D1 (0x020aee40) precedes
   D0 (0x020aee88), no D2; fourteen `{fn, 0}` pointer-to-member records at
-  0x02108300 are copied by [__sinit_ov002_02100adc](../../../src/__sinit_ov002_02100adc.c) into a 14-element array
+  0x02108300 are copied by [__sinit_ov002_02100adc](../../../src/unnamed/ov002/__sinit_ov002_02100adc.c) into a 14-element array
   that only `Behavior` reads.
 - Lineage evidence or structural inference: base `dEnemyBase_c` from RTTI;
   member layout 0x110 dCcAc_c / 0x144 dBgCh_Actr / 0x300 Model / 0x350

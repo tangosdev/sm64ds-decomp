@@ -202,8 +202,8 @@ group, not loaders:
 
 | addr | function | what it does |
 | --- | --- | --- |
-| `0x020fea4c` | [func_ov002_020fea4c](../src/func_ov002_020fea4c.c) | copies a `Vector3` out of offset `0x0c` |
-| `0x020fea68` | [func_ov002_020fea68](../src/func_ov002_020fea68.c) | copies a `Vector3` out of offset `0x00` |
+| `0x020fea4c` | [func_ov002_020fea4c](../src/unnamed/ov002/func_ov002_020fea4c.c) | copies a `Vector3` out of offset `0x0c` |
+| `0x020fea68` | [func_ov002_020fea68](../src/unnamed/ov002/func_ov002_020fea68.c) | copies a `Vector3` out of offset `0x00` |
 | `0x020fea84` | `RaycastLine::Line::Set` | writes a `Vector3` **at** `0x00` and another **at** `0x0c` |
 | `0x020feab8` | `func_ov002_020feab8` | empty stub |
 

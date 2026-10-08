@@ -237,12 +237,12 @@
       {"address": "0x02130704", "what": "Vector3 {0x2b000, -0x2a000, 0x18000}"},
       {"address": "0x02130710", "what": "Vector3 {0x30000, -0xa000, 0x32000}"}
     ],
-    "state_record_shape": "Each of the eight is 16 bytes = two 8-byte pointer-to-member records: a state Init and a state Main. Behavior and the state functions compare this+0x364 by ADDRESS against these objects. src/__sinit_ov085_0212f5ec.c already models the pair as `struct { struct {int a,b;} a, b; }`.",
+    "state_record_shape": "Each of the eight is 16 bytes = two 8-byte pointer-to-member records: a state Init and a state Main. Behavior and the state functions compare this+0x364 by ADDRESS against these objects. src/unnamed/ov085/__sinit_ov085_0212f5ec.c already models the pair as `struct { struct {int a,b;} a, b; }`.",
     "declaration_order": "Static objects initialise in declaration order, and the sinit assigns the state records in the order 0x021306cc, 0x0213066c, 0x0213067c, 0x0213069c, 0x021306ac, 0x021306bc, 0x021306dc, 0x0213068c. That is the source declaration order; the .bss addresses are NOT in source order, so do not reorder the declarations to make the addresses ascend."
   },
 
   "static_initializer": {
-    "shard": "src/__sinit_ov085_0212f5ec.c",
+    "shard": "src/unnamed/ov085/__sinit_ov085_0212f5ec.c",
     "symbol": "__sinit_ov085_0212f5ec",
     "range": "0x0212f5ec - 0x0212f9bc",
     "section": ".init",

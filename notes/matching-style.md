@@ -420,7 +420,7 @@ your target before starting.**
   struct PVec { s32 x, y, z; ~PVec() {} };
   ```
   Probed and rejected as the cause first: 4-byte structs, non-POD classes, `Vector3`-by-value,
-  varargs, 7-arg models. It is not a struct-ABI effect. (`src/func_ov002_020d869c.cpp`)
+  varargs, 7-arg models. It is not a struct-ABI effect. (`src/unnamed/ov002/func_ov002_020d869c.cpp`)
 - Where the ROM keeps several apparently-dead stores to locals, wrap **all the locals in one
   enclosing struct whose address is taken**. That blocks SROA/register promotion for the whole
   aggregate so the dead stores survive, while store-to-load forwarding still supplies the registers.
@@ -437,12 +437,12 @@ offsets; block depth and scope-close order are irrelevant; and **compiler temps 
 all declared locals**. Therefore a ROM slot at the *top* of the frame that is used *first* cannot be
 a declared local -- it must be a temp, i.e. a C99 compound literal (`obj->v = (Vec3){0,0,0};`).
 Deriving the construct from a frame-layout contradiction beats permuting spellings.
-(`src/func_ov007_020ca010.c`)
+(`src/unnamed/ov007/func_ov007_020ca010.c`)
 
 **All-zero aggregate init triggers materialized-base stack zeroing.** `Vec3 v = {0,0,0};` gives
 `add rN,sp,#off; str r,[rN]; str r,[rN,#4]; str r,[rN,#8]`. Field assignments, a pointer local, an
 inlined `VecSet(&v,0,0,0)` and a `void*` helper all fold to `[sp,#off]`. A **non-zero** aggregate
-init instead emits a pool `ldm`/`stm` copy. (`src/func_ov007_020ca010.c`)
+init instead emits a pool `ldm`/`stm` copy. (`src/unnamed/ov007/func_ov007_020ca010.c`)
 
 **Pointer difference carries no conversion node.** To get a base-0 array stride offset into a
 register as an int, `(int)&((char(*)[0x24])0)[idx][0]` emits a surplus `add rX,rY,#0` that mwcc will
@@ -458,7 +458,7 @@ is not universal. A case written as a ternary poisoned the whole function's r1/r
 unrelated locals -- *despite* the ROM emitting the classic `moveq/movne` ternary shape. Rewriting it
 as `if/else` fixed a 20-instruction coloring residual far from the ternary itself. When a predicated
 pair is the only construct adjacent to a coloring residual, **try both forms**.
-(`src/func_ov007_020b5f64.c`)
+(`src/unnamed/ov007/func_ov007_020b5f64.c`)
 
 **Parallel loops want their own locals.** Six structurally identical zero-init loops sharing one
 `i`/`p` pair gave correct instruction shape with permuted registers; giving each loop its own counter

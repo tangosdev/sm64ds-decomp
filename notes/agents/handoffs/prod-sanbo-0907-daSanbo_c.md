@@ -23,7 +23,7 @@ revisions; they do not override these corrections.
 
 The integration review also corrects the table ownership described below.
 The twelve PMF constants at [ov096](../../../config/arm9/overlays/ov096/symbols.txt):`0x02137920..0x02137980` are read by
-[__sinit_ov096_0213770c](../../../src/__sinit_ov096_0213770c.c), which reorders them into six entry/update pairs in
+[__sinit_ov096_0213770c](../../../src/unnamed/ov096/__sinit_ov096_0213770c.c), which reorders them into six entry/update pairs in
 BSS at `0x02137b48..0x02137ba8`. Dispatch uses that BSS table. The initializer
 remains separately enrolled; an additional initializer is not an established
 consequence of every possible C++ table definition. The dated integration

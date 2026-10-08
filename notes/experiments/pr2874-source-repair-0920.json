@@ -3338,7 +3338,7 @@
         }
       },
       {
-        "path": "src/func_ov002_020baa98.c",
+        "path": "src/unnamed/ov002/func_ov002_020baa98.c",
         "strict": {
           "name": "func_ov002_020baa98",
           "module": "ov002",
@@ -3349,7 +3349,7 @@
         }
       },
       {
-        "path": "src/__sinit_ov002_02101588.c",
+        "path": "src/unnamed/ov002/__sinit_ov002_02101588.c",
         "strict": {
           "name": "__sinit_ov002_02101588",
           "module": "ov002",

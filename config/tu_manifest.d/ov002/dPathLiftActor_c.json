@@ -264,7 +264,7 @@
   "notes": [
     "Partial production promotion, not completion of the class/TU assignment.",
     "Retain src/_ZN16dPathLiftActor_cD0Ev.cpp and src/_ZN16dPathLiftActor_cD1Ev.cpp as canonical destructor owners.",
-    "Retain state data data_ov002_0210af2c and src/__sinit_ov002_021071f4.c as existing owners. Compiler-only metadata is measured at configured ROM homes; no coined or unowned metadata waiver.",
+    "Retain state data data_ov002_0210af2c and src/unnamed/ov002/__sinit_ov002_021071f4.c as existing owners. Compiler-only metadata is measured at configured ROM homes; no coined or unowned metadata waiver.",
     "Follow-up: independently reconstruct the complete lifecycle and state-data TU boundary; current 20-function slice is the verified useful subset.",
     "The 17 helper member names are inferred from matched bodies/state-table use; RTTI proves dPathLiftActor_c class identity, not original English member spellings. Const qualification on HasNonzeroAngleZ, Param10ModeIs1, Param12ModeIs1, Param08ModeIs2, Param08ModeIs1Or2 and IsUnk42cSet is inferred from read-only bodies; ARM bytes cannot distinguish the original qualification. SetState(int) uses an inferred int spelling for a word-sized argument."
   ],

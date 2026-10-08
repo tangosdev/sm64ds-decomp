@@ -650,7 +650,7 @@
         "address": "0x0214e9c0",
         "symbol": "data_ov102_0214e9c0",
         "what": "SharedFilePtr, file id 0x2b8",
-        "constructed_by": "__sinit_ov102_0214de70 (.ctor[2], src/__sinit_ov102_0214de70.c)",
+        "constructed_by": "__sinit_ov102_0214de70 (.ctor[2], src/unnamed/ov102/__sinit_ov102_0214de70.c)",
         "read_from": [
           "0x0214ad10",
           "0x0214b120",

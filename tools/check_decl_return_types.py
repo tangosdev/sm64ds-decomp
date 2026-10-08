@@ -431,7 +431,7 @@ def definition_index(root):
     405 of these rows have no src/<name>.c: they were folded into a consolidated
     translation unit that kept its own filename, so
 
-        src/func_ov002_020d4748.cpp   also defines func_ov002_020bf5e0
+        src/unnamed/ov002/func_ov002_020d4748.cpp   also defines func_ov002_020bf5e0
 
     and a name-based lookup calls 290 of those bodies missing. One pass over
     src/ costs about 1.6 seconds on this tree and is the difference between

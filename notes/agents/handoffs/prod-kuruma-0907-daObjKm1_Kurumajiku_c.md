@@ -194,7 +194,7 @@ functions reproducing, **0 mismatching**; ROM sha256
 | site | cartridge evidence | resolves to |
 |---|---|---|
 | `CleanupResources` tail call | literal at `0x021114bc` | `0x020b6ac8` = [func_ov002_020b6ac8](../../../config/tu_manifest.d/ov002/daObjKurumajiku_c.json)(ROM Ordinal 3 used to assemble `daObjKurumajiku_c`) |
-| `InitResources` tail call | literal at `0x021114d4` | `0x020b6c54` = [func_ov002_020b6c54](../../../src/func_ov002_020b6c54.c) |
+| `InitResources` tail call | literal at `0x021114d4` | `0x020b6c54` = [func_ov002_020b6c54](../../../src/unnamed/ov002/func_ov002_020b6c54.c) |
 | both resource methods, arg 1 | literals `0x021114c0` / `0x021114d8` | `0x02112344` = [data_ov043_02112344](../../../config/arm9/overlays/ov043/symbols.txt) |
 | `InitResources` arg 2 | `0x021114cc` = `mov r2, #0x88` | profile ID of `KM1_KURUMA`, the cart this axle drives |
 | `classInit` allocation | `0x021114e0` = `mov r0, #0x330` | class size, matching the RTTI-proven `0x330` |

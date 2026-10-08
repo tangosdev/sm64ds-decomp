@@ -167,7 +167,7 @@
     "bss_extent_evidence": "The next bss symbol in ov002 is at 0x0210dc70, so the array is exactly 0x70 = 14 * 8 bytes. The sinit's last store is `str r3, [r5, #0x6c]`, which writes the 14th record's second word.",
     "descriptor_band": {"start": "0x02108300", "end": "0x02108370", "bytes": "0x70", "records": 14, "stride": 8},
     "alignment_proof": "14 relocations, kind:load, at an exact 8-byte stride beginning at 0x02108300, each pointing at a function inside this run; the second word of every record is 0x00000000 (zero `this` adjustment). Reading the band 4 bytes off would place zero relocations on the record-start words, so the alignment is settled by the relocation stride itself, not by eyeballing.",
-    "static_initializer": {"symbol": "__sinit_ov002_02100adc", "address": "0x02100adc", "size": "0x174", "section": ".init", "shard": "src/__sinit_ov002_02100adc.c", "ctor_entry": "0x021080d8"},
+    "static_initializer": {"symbol": "__sinit_ov002_02100adc", "address": "0x02100adc", "size": "0x174", "section": ".init", "shard": "src/unnamed/ov002/__sinit_ov002_02100adc.c", "ctor_entry": "0x021080d8"},
     "consumer": "_ZN13OneUpMushroom8BehaviorEv (0x020b00e8..0x020b01c0) is the ONLY reader of 0x0210dc00 anywhere in the ROM besides the sinit itself. That one-consumer-inside-the-TU shape is exactly how notes/sinit-ownership-pilot-ov002.md established dEnemyBase_c's two PMF tables.",
     "ownership": "This TU owns the array, the 14 descriptors and the sinit. notes/sinit-ownership-pilot-ov002.md independently resolves __sinit_ov002_02100adc to `ov002/OneUpMushroom` high-confidence, and records the organic compiler proof: under pinned mwccarm 2004/b56 a non-const file-scope PMF array emits exactly one .init function, one 4-byte .ctor entry, and N separate 8-byte .data descriptors each with one R_ARM_ABS32 at offset 0 and a zero adjustment. That is byte-for-byte the shape measured here.",
     "index_map": [
@@ -186,7 +186,7 @@
       {"index": 12, "descriptor": "0x02108368", "member": "func_ov002_020af908", "size": "0x1c"},
       {"index": 13, "descriptor": "0x02108360", "member": "func_ov002_020af724", "size": "0xa8"}
     ],
-    "index_map_evidence": "Derived twice, independently, and the two agree exactly. (1) By hand, tracing register dataflow through the sinit's disassembly: each `ldr rX,[pc,#N]` literal resolves to a descriptor address, `ldr [rX]` / `ldr [rX,#4]` fetch the pair, and the `str [r5,#8*i]` / `str [r5,#8*i+4]` pair names the index. (2) The existing shard src/__sinit_ov002_02100adc.c already expresses the same 14 assignments. All 14 descriptors are used exactly once and all 14 targets are distinct.",
+    "index_map_evidence": "Derived twice, independently, and the two agree exactly. (1) By hand, tracing register dataflow through the sinit's disassembly: each `ldr rX,[pc,#N]` literal resolves to a descriptor address, `ldr [rX]` / `ldr [rX,#4]` fetch the pair, and the `str [r5,#8*i]` / `str [r5,#8*i+4]` pair names the index. (2) The existing shard src/unnamed/ov002/__sinit_ov002_02100adc.c already expresses the same 14 assignments. All 14 descriptors are used exactly once and all 14 targets are distinct.",
     "member_ness_is_proven": "A pointer-to-member-function descriptor can only designate a non-static member function, and every adjustment word here is 0, so all 14 are members of da1up_c with `this` at offset 0. Their INDEX in the table is also ROM-proven. Only the NAME of each is unknown."
   },
 
@@ -342,7 +342,7 @@
     {
       "severity": "HIGH",
       "title": "`promotion_route: text-only` is not the whole story -- this TU owns a static initializer.",
-      "detail": "Unlike the daBar_c oracle, this TU emits a .init function (__sinit_ov002_02100adc, 0x174 bytes), a 4-byte .ctor entry at 0x021080d8, 14 .data PMF descriptors, and a 0x70-byte .bss array. If the writer declares the PMF array in the TU, mwccarm will generate all of that (notes/sinit-ownership-pilot-ov002.md proves the shape reproduces organically under the pinned compiler); it then has to be handled as compiler-only output, and the sinit is CODE, so it is not a plain `deadstrip-data` row like daBar_c's ten. If the writer instead leaves the array extern, Behavior() keeps loading someone else's symbol and the 14 states never become members. Decide this deliberately, and note that `src/__sinit_ov002_02100adc.c` is a 39th shard outside the 36 the queue counts."
+      "detail": "Unlike the daBar_c oracle, this TU emits a .init function (__sinit_ov002_02100adc, 0x174 bytes), a 4-byte .ctor entry at 0x021080d8, 14 .data PMF descriptors, and a 0x70-byte .bss array. If the writer declares the PMF array in the TU, mwccarm will generate all of that (notes/sinit-ownership-pilot-ov002.md proves the shape reproduces organically under the pinned compiler); it then has to be handled as compiler-only output, and the sinit is CODE, so it is not a plain `deadstrip-data` row like daBar_c's ten. If the writer instead leaves the array extern, Behavior() keeps loading someone else's symbol and the 14 states never become members. Decide this deliberately, and note that `src/unnamed/ov002/__sinit_ov002_02100adc.c` is a 39th shard outside the 36 the queue counts."
     },
     {
       "severity": "MEDIUM",

@@ -8,15 +8,15 @@ src/minigames/d_s_mg_base.cpp:
     complete
     .text start:0x020ad660 end:0x020b2c58
 
-src/func_ov004_020b2c58.c:
+src/unnamed/ov004/func_ov004_020b2c58.c:
     complete
     .text start:0x020b2c58 end:0x020b2c7c
 
-src/func_ov004_020b2c7c.c:
+src/unnamed/ov004/func_ov004_020b2c7c.c:
     complete
     .text start:0x020b2c7c end:0x020b2c80
 
-src/func_ov004_020b2c80.c:
+src/unnamed/ov004/func_ov004_020b2c80.c:
     complete
     .text start:0x020b2c80 end:0x020b2c84
 
@@ -39,18 +39,18 @@ src/actors/dMgPsOpt_c.cpp:
     .text start:0x020b8c18 end:0x020b944c
     .data start:0x020bca68 end:0x020bcaa0
 
-src/__sinit_ov004_020b948c.c:
+src/unnamed/ov004/__sinit_ov004_020b948c.c:
     complete
     .init start:0x020b948c end:0x020b955c
 
-src/__sinit_ov004_020b955c.c:
+src/unnamed/ov004/__sinit_ov004_020b955c.c:
     complete
     .init start:0x020b955c end:0x020b9ad0
 
-src/__sinit_ov004_020b9ad0.c:
+src/unnamed/ov004/__sinit_ov004_020b9ad0.c:
     complete
     .init start:0x020b9ad0 end:0x020b9b24
 
-src/__sinit_ov004_020b9b24.c:
+src/unnamed/ov004/__sinit_ov004_020b9b24.c:
     complete
     .init start:0x020b9b24 end:0x020b9de4

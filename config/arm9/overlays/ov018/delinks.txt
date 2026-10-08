@@ -8,11 +8,11 @@ src/actors/daObjSm_Lift_c.cpp:
     complete
     .text start:0x021111a0 end:0x021117e8
 
-src/func_ov018_021117e8.cpp:
+src/unnamed/ov018/func_ov018_021117e8.cpp:
     complete
     .text start:0x021117e8 end:0x02111804
 
-src/func_ov018_02111804.c:
+src/unnamed/ov018/func_ov018_02111804.c:
     complete
     .text start:0x02111804 end:0x02111818
 
@@ -32,14 +32,14 @@ src/game/actors/d_a_obj_ice_board.cpp:
     complete
     .text start:0x021127bc end:0x02112a74
 
-src/__sinit_ov018_02112c14.c:
+src/unnamed/ov018/__sinit_ov018_02112c14.c:
     complete
     .init start:0x02112c14 end:0x02112c80
 
-src/__sinit_ov018_02112c80.cpp:
+src/unnamed/ov018/__sinit_ov018_02112c80.cpp:
     complete
     .init start:0x02112c80 end:0x02112e00
 
-src/__sinit_ov018_02112e00.c:
+src/unnamed/ov018/__sinit_ov018_02112e00.c:
     complete
     .init start:0x02112e00 end:0x02112e6c

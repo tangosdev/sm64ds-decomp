@@ -11,7 +11,7 @@
  *
  * Leftover: func_ov006_020e5450 (the stone-collision step StoneRest
  *   veneers to, and StoneSlide calls directly) is unmatched; a banked
- *   draft at 30 divergent words of 344 lives in src/func_ov006_020e5450.cpp.
+ *   draft at 30 divergent words of 344 lives in src/unnamed/ov006/func_ov006_020e5450.cpp.
  *   StoneRest and StoneSlide keep the extern "C" call so the bytes still
  *   veneer to it.
  * Leftover: StoneSpin, StoneSlide, NextStone, SeedStones, Play and

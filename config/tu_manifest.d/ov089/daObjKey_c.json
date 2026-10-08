@@ -7,7 +7,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "The unit is the whole ov089 .text, 0x02130f00..0x02132880: tu_map unit ov089/daObjKey_c (0x02130f00..0x021327d0, starting at D1) plus the two classInit factories at 0x021327d0 and 0x02132828 that end the overlay's code. All 20 functions are in this file and verify 20/20.",
-    "func_ov089_0213162c was the only hole. Its one unresolved relocation targets 0x02111b68, which fourteen overlays claim; the source names it data_ov055_02111b68, the unambiguous bss row, as src/func_ov002_020e3e00.cpp does for 0x02111b64 and 0x02111b6c."
+    "func_ov089_0213162c was the only hole. Its one unresolved relocation targets 0x02111b68, which fourteen overlays claim; the source names it data_ov055_02111b68, the unambiguous bss row, as src/unnamed/ov002/func_ov002_020e3e00.cpp does for 0x02111b64 and 0x02111b6c."
   ],
   "sections": [
     {
