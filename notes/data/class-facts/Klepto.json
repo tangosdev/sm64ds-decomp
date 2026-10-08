@@ -222,7 +222,7 @@
     "sinit": {
       "symbol": "__sinit_ov062_0211d6fc",
       "range": "0x0211d6fc..0x0211d8cc",
-      "delink_file": "src/__sinit_ov062_0211d6fc.c",
+      "delink_file": "src/unnamed/ov062/__sinit_ov062_0211d6fc.c",
       "ctor_slot": "0x0211d8dc (.p__sinit_ov062_0211d6fc, last of 5 .ctor entries)",
       "owns_bss": "0x0211e0fc..0x0211e19c",
       "evidence": "CARTRIDGE, by disjointness rather than by position. ov062 has 5 sinits and 5 .ctor entries. The literals of __sinit_ov062_0211d6fc resolve to 0x0211e0fc, 0x0211e104, 0x0211e10c, 0x0211e114, 0x0211e11c, 0x0211e128, 0x0211e134, 0x0211e140 plus the five state records at 0x0211e14c..0x0211e19c -- a contiguous band running to the end of .bss. The preceding sinit __sinit_ov062_0211d690 touches only 0x0211e0d4/0x0211e0dc/0x0211e0e4/0x0211e0f0, strictly below. The boundary at 0x0211e0fc is clean, so this sinit was not read by assuming 'last sinit = last TU'.",

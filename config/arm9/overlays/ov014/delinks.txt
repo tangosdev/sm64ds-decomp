@@ -15,14 +15,14 @@ src/game/actors/d_a_obj_wanwan_shutter.cpp:
     complete
     .text start:0x02112e0c end:0x021130ac
 
-src/__sinit_ov014_021130ac.c:
+src/unnamed/ov014/__sinit_ov014_021130ac.c:
     complete
     .init start:0x021130ac end:0x02113118
 
-src/__sinit_ov014_02113118.c:
+src/unnamed/ov014/__sinit_ov014_02113118.c:
     complete
     .init start:0x02113118 end:0x021132fc
 
-src/__sinit_ov014_021132fc.c:
+src/unnamed/ov014/__sinit_ov014_021132fc.c:
     complete
     .init start:0x021132fc end:0x02113368

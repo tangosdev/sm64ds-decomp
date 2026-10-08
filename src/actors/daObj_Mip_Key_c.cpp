@@ -12,7 +12,7 @@
  * Leftover: data_020a0e68 is shared arm9 matrix scratch.
  * Leftover: func_02012790 / func_02013868 are arm9 stubs.
  * Leftover: the file home is sinit-constructed
- *   (src/__sinit_ov085_0212f5ec.c); g_profile stays where the
+ *   (src/unnamed/ov085/__sinit_ov085_0212f5ec.c); g_profile stays where the
  *   registry owns it (S14).
  */
 

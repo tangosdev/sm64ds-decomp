@@ -8,11 +8,11 @@ src/actors/daObjFl_Ring_c.cpp:
     complete
     .text start:0x021111a0 end:0x02111558
 
-src/func_ov022_02111558.c:
+src/unnamed/ov022/func_ov022_02111558.c:
     complete
     .text start:0x02111558 end:0x02111564
 
-src/func_ov022_02111564.c:
+src/unnamed/ov022/func_ov022_02111564.c:
     complete
     .text start:0x02111564 end:0x02111578
 
@@ -32,11 +32,11 @@ src/actors/daObjFl_Block_c.cpp:
     complete
     .text start:0x021116c4 end:0x0211191c
 
-src/func_ov022_0211191c.cpp:
+src/unnamed/ov022/func_ov022_0211191c.cpp:
     complete
     .text start:0x0211191c end:0x0211193c
 
-src/func_ov022_0211193c.c:
+src/unnamed/ov022/func_ov022_0211193c.c:
     complete
     .text start:0x0211193c end:0x02111950
 
@@ -77,42 +77,42 @@ src/game/actors/d_a_obj_fl_maruta.cpp:
     complete
     .text start:0x02112498 end:0x02112950
 
-src/__sinit_ov022_02112ca8.c:
+src/unnamed/ov022/__sinit_ov022_02112ca8.c:
     complete
     .init start:0x02112ca8 end:0x02112d14
 
-src/__sinit_ov022_02112d14.c:
+src/unnamed/ov022/__sinit_ov022_02112d14.c:
     complete
     .init start:0x02112d14 end:0x02112d80
 
-src/__sinit_ov022_02112d80.c:
+src/unnamed/ov022/__sinit_ov022_02112d80.c:
     complete
     .init start:0x02112d80 end:0x02112dec
 
-src/__sinit_ov022_02112dec.c:
+src/unnamed/ov022/__sinit_ov022_02112dec.c:
     complete
     .init start:0x02112dec end:0x02112e58
 
-src/__sinit_ov022_02112e58.c:
+src/unnamed/ov022/__sinit_ov022_02112e58.c:
     complete
     .init start:0x02112e58 end:0x02112ec0
 
-src/__sinit_ov022_02112ec0.c:
+src/unnamed/ov022/__sinit_ov022_02112ec0.c:
     complete
     .init start:0x02112ec0 end:0x02112f78
 
-src/__sinit_ov022_02112f78.c:
+src/unnamed/ov022/__sinit_ov022_02112f78.c:
     complete
     .init start:0x02112f78 end:0x02112fe4
 
-src/__sinit_ov022_02112fe4.c:
+src/unnamed/ov022/__sinit_ov022_02112fe4.c:
     complete
     .init start:0x02112fe4 end:0x02113050
 
-src/__sinit_ov022_02113050.c:
+src/unnamed/ov022/__sinit_ov022_02113050.c:
     complete
     .init start:0x02113050 end:0x021130bc
 
-src/__sinit_ov022_021130bc.c:
+src/unnamed/ov022/__sinit_ov022_021130bc.c:
     complete
     .init start:0x021130bc end:0x021130f8

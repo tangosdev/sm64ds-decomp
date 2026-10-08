@@ -15,6 +15,6 @@ src/actors/daObjCtMecha11_c.cpp:
     complete
     .text start:0x021116ec end:0x02111bd0
 
-src/__sinit_ov035_02111fc0.c:
+src/unnamed/ov035/__sinit_ov035_02111fc0.c:
     complete
     .init start:0x02111fc0 end:0x02112028

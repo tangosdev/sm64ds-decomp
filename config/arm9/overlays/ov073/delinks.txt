@@ -11,11 +11,11 @@ src/actors/daObjEwbIce_c.cpp:
     complete
     .text start:0x02121f90 end:0x02122730
 
-src/func_ov073_02122730.c:
+src/unnamed/ov073/func_ov073_02122730.c:
     complete
     .text start:0x02122730 end:0x021227d0
 
-src/func_ov073_021227d0.c:
+src/unnamed/ov073/func_ov073_021227d0.c:
     complete
     .text start:0x021227d0 end:0x021227e4
 
@@ -31,10 +31,10 @@ src/d_a_obj_ewb_ice_ewb_ice_a.c:
     complete
     .text start:0x02122844 end:0x02122874
 
-src/__sinit_ov073_02122874.c:
+src/unnamed/ov073/__sinit_ov073_02122874.c:
     complete
     .init start:0x02122874 end:0x02122d48
 
-src/__sinit_ov073_02122d48.c:
+src/unnamed/ov073/__sinit_ov073_02122d48.c:
     complete
     .init start:0x02122d48 end:0x02122f34

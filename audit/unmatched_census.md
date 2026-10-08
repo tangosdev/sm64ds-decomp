@@ -104,14 +104,14 @@ changes: these stay unmatched, which is what unmatched is for.
 | arm9 | 0x02068398 | 120 | `func_02068398` | `src/func_02068398.c` |
 | arm9 | 0x02071644 | 80 | `func_02071644` | `src/func_02071644.c` |
 | ov003 | 0x020af038 | 2100 | `_ZN12dScStarSel_c8BehaviorEv` | `src/_ZN12dScStarSel_c8BehaviorEv.cpp` |
-| ov007 | 0x020bfd70 | 220 | `func_ov007_020bfd70` | `src/func_ov007_020bfd70.cpp` |
-| ov009 | 0x0211145c | 380 | `func_ov009_0211145c` | `src/func_ov009_0211145c.c` |
+| ov007 | 0x020bfd70 | 220 | `func_ov007_020bfd70` | `src/unnamed/ov007/func_ov007_020bfd70.cpp` |
+| ov009 | 0x0211145c | 380 | `func_ov009_0211145c` | `src/unnamed/ov009/func_ov009_0211145c.c` |
 | ov015 | 0x021114f0 | 380 | `func_ov015_021114f0` | `src/func_ov015_021114f0.c` |
 | ov071 | 0x02121734 | 664 | `_ZN3MrI13InitResourcesEv` | `src/_ZN3MrI13InitResourcesEv.cpp` |
 | ov074 | 0x02121380 | 884 | `func_ov074_02121380` | `src/func_ov074_02121380.c` |
-| ov075 | 0x02116128 | 244 | `func_ov075_02116128` | `src/func_ov075_02116128.cpp` |
-| ov075 | 0x0211621c | 916 | `func_ov075_0211621c` | `src/func_ov075_0211621c.c` |
-| ov075 | 0x0211afb0 | 540 | `func_ov075_0211afb0` | `src/func_ov075_0211afb0.c` |
+| ov075 | 0x02116128 | 244 | `func_ov075_02116128` | `src/unnamed/ov075/func_ov075_02116128.cpp` |
+| ov075 | 0x0211621c | 916 | `func_ov075_0211621c` | `src/unnamed/ov075/func_ov075_0211621c.c` |
+| ov075 | 0x0211afb0 | 540 | `func_ov075_0211afb0` | `src/unnamed/ov075/func_ov075_0211afb0.c` |
 
 ## Group (d): no source at all
 

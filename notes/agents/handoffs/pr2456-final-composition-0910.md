@@ -16,13 +16,13 @@ The class keeps its 23 licensed functions: ten native method symbols, twelve
 address-named helpers and one manual factory. The small neighboring
 `func_ov065_021177e4` (now in [src/actors/daBasabasa_c.cpp](../../../src/actors/daBasabasa_c.cpp)) provenance correction remains unchanged from accepted source.
 
-YUR-09 corrects the BSS explanation. [__sinit_ov065_0211c110](../../../src/__sinit_ov065_0211c110.c) initializes four
+YUR-09 corrects the BSS explanation. [__sinit_ov065_0211c110](../../../src/unnamed/ov065/__sinit_ov065_0211c110.c) initializes four
 shared-file handles and copies eight 8-byte PMF constants into four 16-byte State
 records at [ov065](../../../config/arm9/overlays/ov065/symbols.txt) `0x0211d650..0x0211d690`. The current `SharedFilePtr` header has no
 recovered fields or declared constructor, and State only contains two PMFs.
 Declaring storage does not universally imply an additional compiler initializer.
 This class TU leaves the BSS storage ROM-supplied and retains the initializer in
-its separately enrolled source file, [src/__sinit_ov065_0211c110.c](../../../src/__sinit_ov065_0211c110.c). Its complete
+its separately enrolled source file, [src/unnamed/ov065/__sinit_ov065_0211c110.c](../../../src/unnamed/ov065/__sinit_ov065_0211c110.c). Its complete
 `.init` entry covers `0x0211c110..0x0211c2a8`. No BSS layout or constructor claim
 is added.
 

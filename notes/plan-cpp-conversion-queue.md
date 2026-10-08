@@ -15,7 +15,7 @@ Planned 2026-08-25. No builds were run during planning.
 | census said | tree says | impact |
 |---|---|---|
 | 19 of the 330 already compile as C++ → **311** un-migrated | **15** active, 1 inert, 314 bare → **315** un-migrated. The 15 are all `func_ov006_*.c` files under `src/`; 19 `.c` files tree-wide carry an active marker but 4 are tier P3/P4, outside the 330 | stage sizing |
-| 3 inert-marker violators "in the positive pool" | only **1** (`src/_ZN7dWipe_c15SetBackwardTimeEj.c`) is in the 1,167. [src/func_0204322c.c](../src/func_0204322c.c) is WEAK-refs-only, [src/func_ov075_0211b1cc.c](../src/func_ov075_0211b1cc.c) is PURE-C | two are not this workstream's problem |
+| 3 inert-marker violators "in the positive pool" | only **1** (`src/_ZN7dWipe_c15SetBackwardTimeEj.c`) is in the 1,167. [src/func_0204322c.c](../src/func_0204322c.c) is WEAK-refs-only, [src/unnamed/ov075/func_ov075_0211b1cc.c](../src/unnamed/ov075/func_ov075_0211b1cc.c) is PURE-C | two are not this workstream's problem |
 | — | **262 of the 315** un-migrated direct files are in `build/eligible-names.txt`; **53 are not** | the 53 have no per-file byte gate → TU-work or nothing |
 | — | of the 55 safe-pool TUs containing a provably-C++ `.c`, **all 55 are direct-seeded. Zero purely-transitive safe TUs exist.** | the 837 transitive files split 203 (inside direct-seeded safe TUs) / 634 (blocked TUs). There is no "transitive-only merge" to schedule |
 | — | `config/rombuild-versions.txt` holds exactly **one** override (`_ZN11dScMgCard_c13InitResourcesEv → 1.2/base`) | `match.py`'s default `CANONICAL` == the build's pin for every file in this plan except that one. Grep before each batch |

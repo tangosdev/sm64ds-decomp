@@ -36,34 +36,34 @@ src/game/actors/d_a_obj_wc_obj04.cpp:
     complete
     .text start:0x02112630 end:0x0211299c
 
-src/__sinit_ov029_02112b38.c:
+src/unnamed/ov029/__sinit_ov029_02112b38.c:
     complete
     .init start:0x02112b38 end:0x02112ba4
 
-src/__sinit_ov029_02112ba4.c:
+src/unnamed/ov029/__sinit_ov029_02112ba4.c:
     complete
     .init start:0x02112ba4 end:0x02112c10
 
-src/__sinit_ov029_02112c10.c:
+src/unnamed/ov029/__sinit_ov029_02112c10.c:
     complete
     .init start:0x02112c10 end:0x02112c4c
 
-src/__sinit_ov029_02112c4c.c:
+src/unnamed/ov029/__sinit_ov029_02112c4c.c:
     complete
     .init start:0x02112c4c end:0x02112cb8
 
-src/__sinit_ov029_02112cb8.c:
+src/unnamed/ov029/__sinit_ov029_02112cb8.c:
     complete
     .init start:0x02112cb8 end:0x02112d24
 
-src/__sinit_ov029_02112d24.c:
+src/unnamed/ov029/__sinit_ov029_02112d24.c:
     complete
     .init start:0x02112d24 end:0x02112d90
 
-src/__sinit_ov029_02112d90.c:
+src/unnamed/ov029/__sinit_ov029_02112d90.c:
     complete
     .init start:0x02112d90 end:0x02112dfc
 
-src/__sinit_ov029_02112dfc.c:
+src/unnamed/ov029/__sinit_ov029_02112dfc.c:
     complete
     .init start:0x02112dfc end:0x02112e68

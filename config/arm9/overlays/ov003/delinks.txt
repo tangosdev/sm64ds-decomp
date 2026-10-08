@@ -7,11 +7,11 @@ src/actors/dScTitle_c.cpp:
     complete
     .text start:0x020ad660 end:0x020adc74
 
-src/func_ov003_020adc74.cpp:
+src/unnamed/ov003/func_ov003_020adc74.cpp:
     complete
     .text start:0x020adc74 end:0x020adcbc
 
-src/func_ov003_020adcbc.cpp:
+src/unnamed/ov003/func_ov003_020adcbc.cpp:
     complete
     .text start:0x020adcbc end:0x020addfc
 

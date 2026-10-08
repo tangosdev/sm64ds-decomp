@@ -17,14 +17,14 @@ src/game/actors/d_a_obj_td_water.cpp:
     complete
     .text start:0x02112698 end:0x021128f0
 
-src/__sinit_ov032_02112c10.c:
+src/unnamed/ov032/__sinit_ov032_02112c10.c:
     complete
     .init start:0x02112c10 end:0x02112dbc
 
-src/__sinit_ov032_02112dbc.c:
+src/unnamed/ov032/__sinit_ov032_02112dbc.c:
     complete
     .init start:0x02112dbc end:0x02112e28
 
-src/__sinit_ov032_02112e28.c:
+src/unnamed/ov032/__sinit_ov032_02112e28.c:
     complete
     .init start:0x02112e28 end:0x02112e94

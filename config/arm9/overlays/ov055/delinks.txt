@@ -7,6 +7,6 @@ src/actors/daLuigi_c.cpp:
     complete
     .text start:0x021111a0 end:0x021118d4
 
-src/__sinit_ov055_021118d4.c:
+src/unnamed/ov055/__sinit_ov055_021118d4.c:
     complete
     .init start:0x021118d4 end:0x02111910

@@ -19,7 +19,7 @@ FLOORS = [
 def batch_status():
     out = []
     entries = [
-        ("func_ov007_020bc3dc", "src/func_ov007_020bc3dc.c", "0x020bc3dc", "0x58",
+        ("func_ov007_020bc3dc", "src/unnamed/ov007/func_ov007_020bc3dc.c", "0x020bc3dc", "0x58",
          "extracted/dsd/arm9_overlays/ov007.bin", "0x020ad660"),
         ("func_0206e3dc", "src/func_0206e3dc.c", "0x0206e3dc", "0x74", None, None),
         ("func_ov002_020bf36c", "src/func_ov002_020bf36c.cpp", "0x020bf36c", "0xa0",

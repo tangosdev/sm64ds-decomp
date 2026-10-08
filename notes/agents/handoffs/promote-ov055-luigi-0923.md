@@ -36,7 +36,7 @@ This document describes this commit. The queue records its immutable output SHA.
   si record with a zero-offset `dActor_c` base. Its name string is at `0x02111aa4` and
   its vtable at `0x02111ae0`, the address the tree called `_ZTV11MirrorLuigi`.
   The state table at `0x02111a94` holds two words, which relocate to `0x021112bc` and
-  `0x02111288`.[ __sinit_ov055_021118d4](../../../src/__sinit_ov055_021118d4.c) copies it to `0x02111b70`, and `InitResources`
+  `0x02111288`.[ __sinit_ov055_021118d4](../../../src/unnamed/ov055/__sinit_ov055_021118d4.c) copies it to `0x02111b70`, and `InitResources`
   passes that copy to [func_ov055_021112c4](../../../config/tu_manifest.d/ov055/daLuigi_c.json)(current [_ZN9daLuigi_c8SetStateEP12daLuigiStateP6Player](../../../src/actors/daLuigi_c.cpp)). [ov063](../../../config/arm9/overlays/ov063/symbols.txt) calls [func_ov055_02111264](../../../src/actors/daLuigi_c.cpp).
 - Lineage evidence or structural inference: the state setter, the two-callback table and
   the mirror callback (it negates X and the Y angle) are inferred from the code.

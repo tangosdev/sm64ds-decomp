@@ -8,6 +8,6 @@ src/actors/daObjDlPyramid_c.cpp:
     complete
     .text start:0x021111a0 end:0x021118ac
 
-src/__sinit_ov024_02112808.c:
+src/unnamed/ov024/__sinit_ov024_02112808.c:
     complete
     .init start:0x02112808 end:0x02112874

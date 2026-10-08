@@ -761,7 +761,7 @@
       "__sinit_ov096_02137894 touches only daTor_c things: it constructs two static objects at 0x02137ba8 (arg 0x41d) and 0x02137bb0 (arg 0x41c) and registers their destructors with nodes at 0x02137bb8 and 0x02137bc4; those two objects are read by Tornado::InitResources and Tornado::CleanupResources only.",
       "Link order agrees: .ctor lists 0x0213770c first, and the daSanbo_c .text run (0x02135700..0x02136db0) precedes the daTor_c run (0x02136db0..0x0213770c)."
     ],
-    "sinit_for_this_class": "__sinit_ov096_0213770c, shard src/__sinit_ov096_0213770c.c, .init 0x0213770c..0x02137894",
+    "sinit_for_this_class": "__sinit_ov096_0213770c, shard src/unnamed/ov096/__sinit_ov096_0213770c.c, .init 0x0213770c..0x02137894",
     "tu_map_disagreement": "build/tu_map.json (regenerated at this revision with build/rtti_vtables.json present, so NOT the degraded run -- it reports 691 TUs / 333 with a class, the correct signature, not 692/332) segments ov096 into FOUR units, and two of them are wrong:\n  unit 0 0x02135700..0x02136d10 classes=[Pokey]   34 functions\n  unit 1 0x02136d10..0x02136db0 classes=[]         2 functions (daSanbo_c_classInit_SANBO_BODY, daSanbo_c_classInit_SANBO)\n  unit 2 0x02136db0..0x021376bc classes=[Tornado] 10 functions\n  unit 3 0x021376bc..0x0213770c classes=[]         1 function  (daTor_c_classInit)\nUnits 1 and 3 are artifacts: tu_map does not recognise '_classInit' as a factory spelling, so it cuts a boundary in front of every factory and leaves the resulting unit class-less. The cartridge disagrees on two independent counts -- the factories store this class vptr (0x021379d8) and inline this class constructor, and there are only 2 static initializers and 2 .ctor entries for what tu_map calls 4 TUs. The real segmentation is 2 TUs: units 0+1 are daSanbo_c, units 2+3 are daTor_c.\nThis is also the origin of the queue row shard_count 34: it inherits tu_map unit 0 and therefore omits the two factory shards."
   },
   "shards": {
@@ -796,7 +796,7 @@
   },
   "blockers_for_the_writer": [
     "THE VTABLE MUST NOT BE EMITTED BY THE PROMOTED TU. .data is unowned (see data_ownership), so _ZTV, _ZTI and _ZTS are carried from the cartridge. If the TU emits its own, the RTTI name string alone breaks the band: this class must be spelled `Pokey` in source (all 36 shards, all symbols.txt rows and the existing header already use _ZN5Pokey...), so mwccarm would emit _ZTS5Pokey = '5Pokey\\0' (7 bytes) where the ROM has '9daSanbo_c\\0' (11 bytes) -- a 4-byte shift that moves _ZTI, both profiles and both vtables. Because the TU emits no RTTI, the coined spelling costs nothing; but only while it emits none.",
-    "DO NOT DEFINE THE STATE TABLE IN THE TU. The 12 PMF records live in unowned .data and are written at runtime by __sinit_ov096_0213770c, which is its own delinked shard (src/__sinit_ov096_0213770c.c). A file-scope PMF array with a dynamic initializer in the promoted .cpp would make mwccarm generate a second __sinit and duplicate that shard.",
+    "DO NOT DEFINE THE STATE TABLE IN THE TU. The 12 PMF records live in unowned .data and are written at runtime by __sinit_ov096_0213770c, which is its own delinked shard (src/unnamed/ov096/__sinit_ov096_0213770c.c). A file-scope PMF array with a dynamic initializer in the promoted .cpp would make mwccarm generate a second __sinit and duplicate that shard.",
     "RENAMING ANY OF THE 12 PMF TARGETS IS A TWO-FILE EDIT. dsd resolves those .data records by symbol NAME; a renamed member whose new mangled name is not in ov096/symbols.txt in the same commit links as 0x00000000, and no stage-2 or stage-3 byte gate sees it.",
     "STAGE 3B CEILING IS NAME RECOVERY, NOT CODEGEN. 10 of the 36 members already carry mangled _ZN5Pokey names and convert as a pure codegen question. The other 26 (12 PMF handlers, 12 helpers, 2 factories) carry auto-generated names -- func_ov096_* and daSanbo_c_classInit_* -- so converting them means renaming, with the symbols.txt edit above. State that wall in the result rather than reporting a bare fraction.",
     "extern \"C\" REGION PLACEMENT. Any member kept as a free function must stay inside the one file-scope extern \"C\" region, and that region must sit after the last surviving func_* member, because a class member function cannot live inside it.",
@@ -851,7 +851,7 @@
       "states": 6,
       "pair_bytes": 16,
       "initialized_by": "__sinit_ov096_0213770c",
-      "initializer_source": "src/__sinit_ov096_0213770c.c",
+      "initializer_source": "src/unnamed/ov096/__sinit_ov096_0213770c.c",
       "initializer_source_sha256": "68137604b7694617aac2261156c1257bbddfc184518c41be1aec9c44e1dd6024",
       "evidence": "The relocated 392-byte initializer matches the ROM with zero unresolved relocations. Its twelve assignments read the constant records and write the runtime BSS array; they do not write the constant band."
     },
