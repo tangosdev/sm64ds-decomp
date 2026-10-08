@@ -18,8 +18,9 @@
  *   unrelated helper to this TU
  * - InitResources mAngleY uses (int)this+0x8e (named member CSE/size-DIFF)
  * - func_020393c4 stores dBgW+0x1c (no setter)
- * - data_ov010_02112d08 / 02112d00 SharedFilePtr handles; data_ov010_021122f8
- *   CLPS; data_ov010_02112d28 PMF table (sinit-owned)
+ * - data_ov010_02112d08 / 02112d00 are this file's resource handles;
+ *   data_ov010_02112d28 is the state record the compiler copies into .bss;
+ *   data_ov010_021122f8 is CLPS
  * - common.h first via dBgActor_c.h (Matrix4x3 copies in UpdateModel/Collision)
  * - func_ov010_02111984 three-argument C ABI collider adapter
  */
@@ -53,6 +54,30 @@ typedef char TrapSpawnInfo_size_must_be_0x1c[
 
 typedef void (daObjC1_Trap_c::*TrapState)();
 
+struct TrapStateRec {
+    TrapState state0;
+    TrapState state1;
+    TrapState state2;
+    TrapState state3;
+    TrapState state4;
+};
+
+/* 8-byte resource handles. The ctor/dtor bodies are the ROM functions the
+ * initializer calls; this TU only names them. */
+struct TrapModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    TrapModelFilePtr(u32 fileID);
+    ~TrapModelFilePtr();
+};
+
+struct TrapCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    TrapCollisionFilePtr(u32 fileID);
+    ~TrapCollisionFilePtr();
+};
+
 /* Fix12-by-value SetFile and the TrapVector3 POD seam are measured ABI walls.
  * The remaining declarations are genuine free functions or ROM-address
  * globals. */
@@ -73,14 +98,15 @@ extern s32 Vec3_HorzDist(const TrapVector3 *from, const TrapVector3 *to);
 
 extern Matrix4x3 data_020a0e68;
 extern s16 data_02082214[];
-extern SharedFilePtr data_ov010_02112d08;
-extern SharedFilePtr data_ov010_02112d00;
 extern CLPS_Block data_ov010_021122f8;
-extern TrapState data_ov010_02112d28[];
+extern TrapModelFilePtr data_ov010_02112d08;
+extern TrapCollisionFilePtr data_ov010_02112d00;
 
 void func_ov010_02111984(
     int unused, daObjC1_Trap_c *trap, dActor_c *other);
 }
+
+extern TrapStateRec data_ov010_02112d28;
 
 
 /* Reconstructed source-style name: SM64DS proves daObjC1_Trap_c through RTTI,
@@ -250,7 +276,7 @@ int daObjC1_Trap_c::Behavior()
         return 1;
     }
 
-    TrapState *states = data_ov010_02112d28;
+    TrapState *states = (TrapState *)&data_ov010_02112d28;
     (this->*states[mState])();
     UpdateModelTransform();
     UpdateCollisionTransform();
@@ -397,3 +423,14 @@ void daObjC1_Trap_c::State4()
 // @symbol _ZN14daObjC1_Trap_cD0Ev
 /* ROM ordinals 1 and 0 are emitted from the inline destructor and the
  * InitResources-owned vtable: D1 at 0x021111a0, D0 at 0x021111ec. */
+
+/* mwcc copies these descriptors in __sinit_d_a_obj_c1_trap.cpp. */
+TrapModelFilePtr data_ov010_02112d08(0x5af);
+TrapCollisionFilePtr data_ov010_02112d00(0x5b0);
+TrapStateRec data_ov010_02112d28 = {
+    &daObjC1_Trap_c::State0,
+    &daObjC1_Trap_c::State1,
+    &daObjC1_Trap_c::State2,
+    &daObjC1_Trap_c::State3,
+    &daObjC1_Trap_c::State4,
+};

@@ -31,10 +31,10 @@ _ZN14daObjC1Peach_c6RenderEv kind:function(arm,size=0x40) addr:0x02111ee8
 _ZN14daObjC1Peach_c8BehaviorEv kind:function(arm,size=0x98) addr:0x02111f28
 _ZN14daObjC1Peach_c13InitResourcesEv kind:function(arm,size=0x44) addr:0x02111fc0
 daObjC1Peach_c_classInit kind:function(arm,size=0x38) addr:0x02112004
-__sinit_ov010_0211203c kind:function(arm,size=0xe0) addr:0x0211203c
+__sinit_d_a_obj_c1_trap.cpp kind:function(arm,size=0xe0) addr:0x0211203c
 __sinit_ov010_0211211c kind:function(arm,size=0x40) addr:0x0211211c
 __sinit_ov010_0211215c kind:function(arm,size=0x40) addr:0x0211215c
-.p__sinit_ov010_0211203c kind:data(word) addr:0x0211219c
+.p__sinit_d_a_obj_c1_trap.cpp kind:data(word) addr:0x0211219c
 .p__sinit_ov010_0211211c kind:data(word) addr:0x021121a0
 .p__sinit_ov010_0211215c kind:data(word) addr:0x021121a4
 data_ov010_021121c0 kind:data(any) addr:0x021121c0
@@ -107,11 +107,11 @@ data_ov010_02112948 kind:data(any) addr:0x02112948
 data_ov010_02112968 kind:data(any) addr:0x02112968 ambiguous
 data_ov010_021129b4 kind:data(any) addr:0x021129b4 ambiguous
 data_ov010_02112a6c kind:data(any) addr:0x02112a6c ambiguous
-data_ov010_02112a78 kind:data(any) addr:0x02112a78
-data_ov010_02112a80 kind:data(any) addr:0x02112a80
-data_ov010_02112a88 kind:data(any) addr:0x02112a88
-data_ov010_02112a90 kind:data(any) addr:0x02112a90
-data_ov010_02112a98 kind:data(any) addr:0x02112a98
+@747 kind:data(any) addr:0x02112a78
+@751 kind:data(any) addr:0x02112a80
+@749 kind:data(any) addr:0x02112a88
+@755 kind:data(any) addr:0x02112a90
+@753 kind:data(any) addr:0x02112a98
 _ZTI14daObjC1_Trap_c kind:data(any) addr:0x02112aa0
 data_ov010_02112aa4 kind:data(any) addr:0x02112aa4 ambiguous
 data_ov010_02112aa8 kind:data(any) addr:0x02112aa8 ambiguous
@@ -140,10 +140,9 @@ data_ov010_02112cc8 kind:data(any) addr:0x02112cc8 ambiguous
 data_ov010_02112cd0 kind:data(any) addr:0x02112cd0 ambiguous
 data_ov010_02112d00 kind:bss addr:0x02112d00
 data_ov010_02112d08 kind:bss addr:0x02112d08
-data_ov010_02112d10 kind:bss addr:0x02112d10
-data_ov010_02112d1c kind:bss addr:0x02112d1c
+@744 kind:bss addr:0x02112d10
+@745 kind:bss addr:0x02112d1c
 data_ov010_02112d28 kind:bss addr:0x02112d28
-data_ov010_02112d48 kind:bss addr:0x02112d48 ambiguous
 data_ov010_02112d50 kind:bss addr:0x02112d50
 data_ov010_02112d58 kind:bss addr:0x02112d58
 data_ov010_02112d64 kind:bss addr:0x02112d64

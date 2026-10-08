@@ -6,6 +6,10 @@
 src/game/actors/d_a_obj_c1_trap.cpp:
     complete
     .text start:0x021111a0 end:0x021119d0
+    .init start:0x0211203c end:0x0211211c
+    .ctor start:0x0211219c end:0x021121a0
+    .data start:0x02112a78 end:0x02112aa0
+    .bss start:0x02112d00 end:0x02112d50
 
 src/game/actors/d_a_obj_c1_hikari.cpp:
     complete
@@ -14,10 +18,6 @@ src/game/actors/d_a_obj_c1_hikari.cpp:
 src/actors/daObjC1Peach_c.cpp:
     complete
     .text start:0x02111e10 end:0x0211203c
-
-src/unnamed/ov010/__sinit_ov010_0211203c.c:
-    complete
-    .init start:0x0211203c end:0x0211211c
 
 src/unnamed/ov010/__sinit_ov010_0211211c.c:
     complete
