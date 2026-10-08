@@ -83,9 +83,10 @@ int ApproachLinear(int &value, int target, int step);
 extern "C" {
 /* Reflection state in this overlay. b68 is the request: bit 0 resets, bit 1
  * fades in. b6c is the fade, 0 (hidden) to kFadeFull. kHideBit of b64 skips
- * the draw. b70 is the one state, filled by __sinit_ov055_021118d4 from the
- * static table. a90 is written full on reset and b60 is cleared; neither has
- * a matched reader. func_ov002_020e3e00 reads b6c and b64. */
+ * the draw. b70 is the one state record this file defines; the compiler
+ * copies its two pointer-to-member descriptors into it at overlay load.
+ * a90 is written full on reset and b60 is cleared; neither has a matched
+ * reader. func_ov002_020e3e00 reads b6c and b64. */
 extern int data_ov055_02111a90;
 extern int data_ov055_02111b60;
 extern int data_ov055_02111b64;
@@ -306,3 +307,10 @@ extern "C" void func_ov055_02111264(void)
     data_ov055_02111b68 = kReqFade;
     func_0201277c(kAppearSound);
 }
+
+/* This file defines the record. The compiler copies the two
+ * pointer-to-member descriptors into it at overlay load. */
+daLuigiState data_ov055_02111b70 = {
+    &daLuigi_c::EnterMirror,
+    &daLuigi_c::ExecuteMirror,
+};

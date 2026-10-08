@@ -10,8 +10,8 @@ _ZN9daLuigi_c6RenderEv kind:function(arm,size=0x1b0) addr:0x02111358
 _ZN9daLuigi_c8BehaviorEv kind:function(arm,size=0x16c) addr:0x02111508
 _ZN9daLuigi_c13InitResourcesEv kind:function(arm,size=0x1ec) addr:0x02111674
 daLuigi_c_classInit kind:function(arm,size=0x74) addr:0x02111860
-__sinit_ov055_021118d4 kind:function(arm,size=0x3c) addr:0x021118d4
-.p__sinit_ov055_021118d4 kind:data(word) addr:0x02111910
+__sinit_daLuigi_c.cpp kind:function(arm,size=0x3c) addr:0x021118d4
+.p__sinit_daLuigi_c.cpp kind:data(word) addr:0x02111910
 data_ov055_02111920 kind:data(any) addr:0x02111920
 data_ov055_02111924 kind:data(any) addr:0x02111924
 data_ov055_02111928 kind:data(any) addr:0x02111928
@@ -34,8 +34,8 @@ data_ov055_02111a4c kind:data(any) addr:0x02111a4c ambiguous
 data_ov055_02111a58 kind:data(any) addr:0x02111a58 ambiguous
 data_ov055_02111a78 kind:data(any) addr:0x02111a78 ambiguous
 data_ov055_02111a90 kind:data(any) addr:0x02111a90
-data_ov055_02111a94 kind:data(any) addr:0x02111a94
-data_ov055_02111a9c kind:data(any) addr:0x02111a9c
+@581 kind:data(any) addr:0x02111a94
+@583 kind:data(any) addr:0x02111a9c
 _ZTS9daLuigi_c kind:data(any) addr:0x02111aa4
 _ZTI9daLuigi_c kind:data(any) addr:0x02111ab0
 g_profile_LUIGI kind:data(any) addr:0x02111abc ambiguous
@@ -50,4 +50,3 @@ data_ov055_02111b64 kind:bss addr:0x02111b64
 data_ov055_02111b68 kind:bss addr:0x02111b68
 data_ov055_02111b6c kind:bss addr:0x02111b6c
 data_ov055_02111b70 kind:bss addr:0x02111b70
-data_ov055_02111b74 kind:bss addr:0x02111b74 ambiguous

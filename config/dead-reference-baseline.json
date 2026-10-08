@@ -956,6 +956,14 @@
   {
    "file": "CLAIMS.md",
    "ref": "src/unnamed/ov004/__sinit_ov004_020b948c.c"
+  },
+  {
+   "file": "notes/agents/handoffs/promote-ov055-luigi-0923.md",
+   "ref": "src/__sinit_ov055_021118d4.c"
+  },
+  {
+   "file": "notes/agents/handoffs/readable-ov055-luigi-0925.md",
+   "ref": "src/__sinit_ov055_021118d4.c"
   }
  ]
 }

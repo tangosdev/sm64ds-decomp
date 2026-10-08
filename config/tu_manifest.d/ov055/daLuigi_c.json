@@ -3,19 +3,41 @@
   "module": "ov055",
   "source": "src/actors/daLuigi_c.cpp",
   "promoted_source": "src/actors/daLuigi_c.cpp",
+  "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x21111a0..0x2111860, 11 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daLuigi_c",
     "module sinit corroboration: 1 sinit(s) / 1 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit fold: the daLuigi_c_classInit registry factory (profile LUIGI, historical alias MirrorLuigi_Spawn), 0x02111860..0x021118d4, abuts this TU's InitResources with no gap; tu_map leaves it unlabelled because it cuts on symbol name. Folded as `return new daLuigi_c();` at the top of the file (default deferred codegen emits .text in reverse source order, so first in source is last in .text); the synthesized constructor reproduces the loose file's operator new(0x20c) + dActor_c C2 + vtable store + ModelAnim/Model/dExtShadowModel_c C1 + __cxa_vec_ctor over the two TextureSequence members. The unit is now 0x021111a0..0x021118d4, 12 functions, bounded above by the end of ov055 .text at 0x021118d4 (.init starts there). g_profile_LUIGI (ov055 .data 0x02111abc) was never in the factory's file and is not delinked."
+    "classInit fold: the daLuigi_c_classInit registry factory (profile LUIGI, historical alias MirrorLuigi_Spawn), 0x02111860..0x021118d4, abuts this TU's InitResources with no gap; tu_map leaves it unlabelled because it cuts on symbol name. Folded as `return new daLuigi_c();` at the top of the file (default deferred codegen emits .text in reverse source order, so first in source is last in .text); the synthesized constructor reproduces the loose file's operator new(0x20c) + dActor_c C2 + vtable store + ModelAnim/Model/dExtShadowModel_c C1 + __cxa_vec_ctor over the two TextureSequence members. The unit is now 0x021111a0..0x021118d4, 12 functions, bounded above by the end of ov055 .text at 0x021118d4 (.init starts there). g_profile_LUIGI (ov055 .data 0x02111abc) was never in the factory's file and is not delinked.",
+    "the compiler-generated __sinit_daLuigi_c.cpp is byte-identical to retail __sinit_ov055_021118d4 (0x3c, three ABS32 relocations). It copies the two pointer-to-member descriptors at 0x02111a94 and 0x02111a9c into the state record at 0x02111b70. The ctor word at 0x02111910 points at that initializer."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x021111a0",
       "end": "0x021118d4"
+    },
+    {
+      "name": ".init",
+      "start": "0x021118d4",
+      "end": "0x02111910"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02111910",
+      "end": "0x02111914"
+    },
+    {
+      "name": ".data",
+      "start": "0x02111a94",
+      "end": "0x02111aa4"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02111b70",
+      "end": "0x02111b80"
     }
   ],
   "functions": [
@@ -104,8 +126,137 @@
       "ordinal": 11
     }
   ],
-  "data": [],
-  "bss": [],
+  "init": [
+    {
+      "symbol": "__sinit_daLuigi_c.cpp",
+      "address": "0x021118d4",
+      "size": "0x3c",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov055_021118d4 and carries the same three relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_daLuigi_c.cpp",
+      "address": "0x02111910",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "data": [
+    {
+      "symbol": "@581",
+      "address": "0x02111a94",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary for the state record's enter pointer-to-member; retail first word is EnterMirror at 0x021112bc"
+    },
+    {
+      "symbol": "@583",
+      "address": "0x02111a9c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary for the state record's execute pointer-to-member; retail first word is ExecuteMirror at 0x02111288"
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "data_ov055_02111b70",
+      "address": "0x02111b70",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "the state record InitResources installs; the initializer copies the two descriptors into it"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_daLuigi_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_daLuigi_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@581",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local enter descriptor is a configured initializer relocation destination at 0x02111a94"
+    },
+    {
+      "symbol": "@583",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local execute descriptor is a configured initializer relocation destination at 0x02111a9c"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02111904",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@581",
+      "addend": 0,
+      "target_module": "ov055",
+      "target_address": "0x02111a94"
+    },
+    {
+      "section": ".init",
+      "source": "0x02111908",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@583",
+      "addend": 0,
+      "target_module": "ov055",
+      "target_address": "0x02111a9c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211190c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov055_02111b70",
+      "addend": 0,
+      "target_module": "ov055",
+      "target_address": "0x02111b70"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02111910",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_daLuigi_c.cpp",
+      "addend": 0,
+      "target_module": "ov055",
+      "target_address": "0x021118d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02111a94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9daLuigi_c11EnterMirrorEP6Player",
+      "addend": 0,
+      "target_module": "ov055",
+      "target_address": "0x021112bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02111a9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9daLuigi_c13ExecuteMirrorEP6Player",
+      "addend": 0,
+      "target_module": "ov055",
+      "target_address": "0x02111288"
+    }
+  ],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromTranslation' differs between the legacy file that used to hold _ZN9daLuigi_c8BehaviorEv and the one that held _ZN9daLuigi_c13InitResourcesEv; kept the first, the other is commented out for review",
@@ -114,7 +265,9 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold _ZN9daLuigi_c6RenderEv and the one that held _ZN9daLuigi_c13InitResourcesEv; kept the first, the other is commented out for review",
     "The four extern conflicts above are resolved: the promoted TU carries one declaration of each, matching the definition side where one exists; Matrix4x3_FromTranslation takes a pointer, the five ov002 file handles are SharedFilePtr, and data_020a0e68 is a Matrix4x3.",
     "Promoted after renaming the tree's coined MirrorLuigi to the cartridge RTTI spelling daLuigi_c (_ZTS9daLuigi_c ov055 0x02111aa4, _ZTI9daLuigi_c 0x02111ab0, vtable address point 0x02111ae0). The destructor is inline and empty in include/daLuigi_c.h: that emits D1 then D0 in ROM order with no D2, and makes InitResources the key function, so the vtable and the fBase_c, dBase_c, dActor_c, daLuigi_c RTTI chain are emitted here and licensed as deadstrip-data at their canonical homes; romdata_check verifies _ZTV9daLuigi_c (124 bytes) and all four _ZTI records word for word, and the four _ZTS strings read PARTIAL only because the ROM pads them.",
-    "Coined, not ROM names: daLuigiState and daLuigiStateFn (include/daLuigi_c.h) describe the two-member state table at ov055 0x02111a94, and the members SetState (0x021112c4), EnterMirror (0x021112bc) and ExecuteMirror (0x02111288) carry coined mangled names; their ov055 symbols.txt rows were renamed in place, and the table and the InitResources call reach them by relocation address. func_ov055_02111264 keeps its linker name and C linkage. The factory daLuigi_c_classInit (0x02111860) is folded in and closes the unit and ov055's .text (see boundary_evidence)."
+    "Coined, not ROM names: daLuigiState and daLuigiStateFn (include/daLuigi_c.h) describe the two-member state table at ov055 0x02111a94, and the members SetState (0x021112c4), EnterMirror (0x021112bc) and ExecuteMirror (0x02111288) carry coined mangled names; their ov055 symbols.txt rows were renamed in place, and the table and the InitResources call reach them by relocation address. func_ov055_02111264 keeps its linker name and C linkage. The factory daLuigi_c_classInit (0x02111860) is folded in and closes the unit and ov055's .text (see boundary_evidence).",
+    "The file-scope state record data_ov055_02111b70 is defined in this TU. mwcc emits __sinit_daLuigi_c.cpp, the ctor word, and the two anonymous pointer-to-member descriptors. Class RTTI and the vtable stay externalized; this claim stops at 0x02111aa4, where _ZTS9daLuigi_c begins. The handwritten src/__sinit_ov055_021118d4.c is retired.",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -177,6 +330,145 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov055-daLuigi_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x021111a0",
+        "end": "0x021118d4",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x021111a0",
+          "end": "0x021118d4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x021118d4",
+          "end": "0x02111910",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02111910",
+          "end": "0x02111914",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02111a94",
+          "end": "0x02111aa4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02111b70",
+          "end": "0x02111b80",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 17
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              47
+            ],
+            "desired": [
+              47
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              45
+            ],
+            "desired": [
+              45
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              7,
+              9
+            ],
+            "desired": [
+              7,
+              9
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              21
+            ],
+            "desired": [
+              21
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [

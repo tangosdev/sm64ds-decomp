@@ -69,10 +69,9 @@ typedef char daLuigi_c_size_must_be_0x20c[
 #endif
 
 /* One state: two members called with the player, `enter` once by SetState
- * and `execute` every frame by Behavior. The one table in the ROM (ov055
- * 0x02111a94, copied to 0x02111b70 by the static initializer) pairs
- * EnterMirror with ExecuteMirror. daLuigiState and daLuigiStateFn are
- * coined names. */
+ * and `execute` every frame by Behavior. daLuigi_c.cpp defines the record;
+ * the compiler copies the two pointer-to-member descriptors into it at
+ * overlay load. daLuigiState and daLuigiStateFn are coined names. */
 typedef int (daLuigi_c::*daLuigiStateFn)(Player *player);
 struct daLuigiState {
     daLuigiStateFn enter;
