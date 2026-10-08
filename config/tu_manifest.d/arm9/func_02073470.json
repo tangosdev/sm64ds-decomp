@@ -1,8 +1,8 @@
 {
   "id": "arm9/func_02073470",
   "module": "arm9",
-  "source": "src/func_02073470.cpp",
-  "promoted_source": "src/func_02073470.cpp",
+  "source": "src/unnamed/arm9/0207/func_02073470.cpp",
+  "promoted_source": "src/unnamed/arm9/0207/func_02073470.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -59,7 +59,7 @@
   "compiler_only_output": [],
   "notes": [
     "PRODUCTION MODE IS DELIBERATELY ABSENT, and that is the honest state of this entry. tools/rombuild.py intact_tu_policies admits an intact-object TU only on a scratch-data-verified ordinary link that proves every claimed range, all modules and the full ROM. That proof cannot be produced anywhere the dsd delink step aborts, which is every worktree tried so far ('function Div could not be analyzed: IllegalIns { address: 200407e, ins: Thumb(Ins { code: ede6, op: BlxI }) }'). Requesting the intact-object path without it is a hard BuildError, so this entry records the measured shape and does not request the path. config/arm9/delinks.txt therefore claims only the .text range, which is exactly what the build produces.",
-    "WHAT THE BUILD DOES TODAY. src/func_02073470.cpp is enrolled as an ordinary single-function source, so tools/objisolate.py takes the one selected symbol and drops the two unwind sections to size 0. The cartridge's copies of those bytes come from the dsd gap objects, as they did before this file existed. Nothing in this entry changes a ROM byte.",
+    "WHAT THE BUILD DOES TODAY. src/unnamed/arm9/0207/func_02073470.cpp is enrolled as an ordinary single-function source, so tools/objisolate.py takes the one selected symbol and drops the two unwind sections to size 0. The cartridge's copies of those bytes come from the dsd gap objects, as they did before this file existed. Nothing in this entry changes a ROM byte.",
     "THE FIFTH ARGUMENT IS ON THE STACK. Nine pushed registers plus the 0x1c frame put the first stacked argument at [fp,#0x40], which is where the landing pad reads the element destructor back from. That single load is the evidence for the arity, and calling this function with four arguments would leave the handler reading whatever the caller happened to leave there.",
     "This is the fourth entry in the manifest to claim any of arm9's 636 bytes of retail .exceptix, after arm9/__cxa_vec_cleanup, arm9/func_02073300 and arm9/func_02073534."
   ],

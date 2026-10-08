@@ -540,7 +540,7 @@
       "new_source": "//cpp\n// @symbol _ZN8dMeter_c15RenderTimeTimerEv\n/* recovered: named members + shared header, real C++ method, declarations from a shared header */\n#include \"Timer.h\"\n#include \"decl_common.h\"\n/* recovered: named members + shared header, real C++ method */\n#include \"dMeter_c.h\"\n// _ZN8dMeter_c15RenderTimeTimerEv at 0x020fb96c (ov002)\nstruct OamAttr;\n\nextern \"C\" {\n\nextern unsigned char data_ov002_02111184;\nextern Timer data_0209d4c8;\n\nextern struct OamAttr data_ov002_0210ce80;\nextern struct OamAttr _ZN3OAM4TIMEE;\nextern struct OamAttr _ZN3OAM7MINUTESE;\nextern struct OamAttr data_ov002_0210c6c0;\n/* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and\n * so can never be the module this reaches. Sits with OAM::TIME and OAM::MINUTES above. */\nextern struct OamAttr* _ZN3OAM7NUMBERSE[];\n\nextern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, struct OamAttr* attr, int x, int y, int a, int b, int sx, int sy, int c, int d);\nextern void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int sub, struct OamAttr* attr, int x, int y, int a, int b, void* m);\n}\n\nvoid dMeter_c::RenderTimeTimer()\n{\n    unsigned long long t;\n    unsigned long long min;\n    unsigned long long sec;\n    unsigned long long centi;\n\n    if (data_ov002_02111184 == 0)\n        return;\n\n    t = data_0209d4c8.GetTime() << 6;\n    sec = t / 33514000;\n    centi = t / 33514 % 1000 / 10;\n    min = sec / 60;\n    sec = sec % 60;\n\n    if (min >= 100) {\n        min = 99;\n        sec = 59;\n        centi = 99;\n    }\n\n    if (min / 10 != 0) {\n        if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        } else {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        }\n        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[min / 10], 0xb8, 0x16, -1, 1, 0);\n    } else {\n        if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        } else {\n            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);\n        }\n    }\n\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[min % 10], 0xc0, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM7MINUTESE, 0xc4, 0x1e, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[sec / 10], 0xcf, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[sec % 10], 0xd7, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &data_ov002_0210c6c0, 0xdb, 0x1e, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[centi / 10], 0xe8, 0x16, -1, 1, 0);\n    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[centi % 10], 0xf0, 0x16, -1, 1, 0);\n}\n"
     },
     {
-      "source": "src/__sinit_02074dc4.c",
+      "source": "src/unnamed/arm9/0207/__sinit_02074dc4.c",
       "symbol": "__sinit_02074dc4",
       "module": "arm9",
       "address": "0x2074dc4",
@@ -656,7 +656,7 @@
     },
     "formal_acceptance": false,
     "strict_relocations": {
-      "command": "python tools/prepush_linkcheck.py --files src/actors/daRNk_c.cpp src/_ZN8dMeter_c15RenderTimeTimerEv.cpp src/__sinit_02074dc4.c --json build/pr2859-final-links.json",
+      "command": "python tools/prepush_linkcheck.py --files src/actors/daRNk_c.cpp src/_ZN8dMeter_c15RenderTimeTimerEv.cpp src/unnamed/arm9/0207/__sinit_02074dc4.c --json build/pr2859-final-links.json",
       "exit": 0,
       "result": "20 VERIFIED, zero warnings or blockers; every blind=0 and diffs=[]"
     },
@@ -688,8 +688,8 @@
           "notes/agents/handoffs/pr2859-source-repair-0920.md",
           "notes/experiments/pr2859-source-repair-0920.json",
           "src/_ZN8dMeter_c15RenderTimeTimerEv.cpp",
-          "src/__sinit_02074dc4.c",
-          "src/actors/daRNk_c.cpp"
+          "src/actors/daRNk_c.cpp",
+          "src/unnamed/arm9/0207/__sinit_02074dc4.c"
         ],
         "baseline_stale_counts": {
           "shard_count": 39,
@@ -955,7 +955,7 @@
       "diffs": []
     },
     {
-      "file": "src/__sinit_02074dc4.c",
+      "file": "src/unnamed/arm9/0207/__sinit_02074dc4.c",
       "name": "__sinit_02074dc4",
       "module": "arm9",
       "addr": "0x2074dc4",
@@ -1447,7 +1447,7 @@
     },
     {
       "symbol": "func_0201964c",
-      "definition": "src/func_0201964c.c",
+      "definition": "src/unnamed/arm9/0201/func_0201964c.c",
       "contract": "struct Timer*(struct Timer*)"
     },
     {

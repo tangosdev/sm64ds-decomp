@@ -6,9 +6,9 @@
    with no arguments and it was decompiled as one, which is faithful to the
    ARM and wrong on every host with a stack calling convention: every caller
    in the image already passes the name and the length
-   (src/func_0205cc80.c, src/func_020423dc.c, src/func_020424c0.c,
-   src/func_02042254.c, src/func_0201a2f8.c, src/func_0205d714.c,
-   src/func_02067bfc.c), the callee dropped them, and the lookup then walked
+   (src/unnamed/arm9/0205/func_0205cc80.c, src/unnamed/arm9/0204/func_020423dc.c, src/unnamed/arm9/0204/func_020424c0.c,
+   src/unnamed/arm9/0204/func_02042254.c, src/func_0201a2f8.c, src/unnamed/arm9/0205/func_0205d714.c,
+   src/unnamed/arm9/0206/func_02067bfc.c), the callee dropped them, and the lookup then walked
    data_020a8048 for a key it had never been given and answered null. Spelling
    the parameters and forwarding them is byte-identical under the pinned
    compiler: tools/match.py reports 2004/b56 MATCH before and after. */

@@ -2,7 +2,7 @@
 /* recovered: MSL memset -- the thin wrapper over __fill_mem.
  *
  * The return type is `void *`, not `int`. func_0206e330, already recovered in
- * src/func_0206e330.c as the MSL byte-head / 32-byte-block / word-tail fill
+ * src/unnamed/arm9/0206/func_0206e330.c as the MSL byte-head / 32-byte-block / word-tail fill
  * loop, is __fill_mem(void *dst, int val, u32 n); this function forwards all
  * three arguments to it unchanged and returns its own first argument, which is
  * exactly memset's contract. The one caller in the tree, _ZN7fBase_cnwEj,

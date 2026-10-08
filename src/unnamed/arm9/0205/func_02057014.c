@@ -3,7 +3,7 @@
 // done under the asm-primitive policy - see notes/arm9-endgame.md.
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match. This is NitroSDK OS_UnLockCartridge,
 // the misspelled-name compatibility thunk for OS_UnlockCartridge (= func_02057178, matched
-// at src/func_02057178.c). Nintendo's own SDK source writes it as assembly:
+// at src/unnamed/arm9/0205/func_02057178.c). Nintendo's own SDK source writes it as assembly:
 // OS_spinLock.c carries `asm s32 OS_UnLockCartridge(u16 lockID) { ldr r1, =OS_UnlockCartridge;
 // bx r1 }`, which is this function instruction for instruction. The surrounding cluster is the
 // same TU: func_02057128 = OSi_AllocateCartridgeBus, func_02057228 = OSi_DoLockByWord,

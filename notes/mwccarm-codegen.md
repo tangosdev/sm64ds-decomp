@@ -1199,7 +1199,7 @@ Everything else follows from that. Corollaries, each verified with minimal toys:
 
 **The one matched precedent, and why it is not available here.** A corpus scan of all of arm9
 for the ROM shape `cmp rX,#0; beq #8; <single mov>` finds exactly TWO sites: `func_02068398`
-and `func_0205c048` -- and c048 is MATCHED. Its source (src/func_0205c048.c) buys the branch
+and `func_0205c048` -- and c048 is MATCHED. Its source (src/unnamed/arm9/0205/func_0205c048.c) buys the branch
 with a genuinely 2-condition guard, giving the assignment block two predecessors:
 ```c
 if (r8 != 0)      goto Lsep1;   /* pred 1: the goto      */
@@ -4494,7 +4494,7 @@ the lever should not be re-tried.
 **51 committed sources carry it right now** (`grep -rl '#pragma long_calls' src/`) -- 50 of
 them overlay files (19 in ov007, the rest spread over
 ov002/006/014/015/016/022/029/030/036/063/064/065/066/073/079/080/091/095/098) and exactly
-ONE arm9 file, `src/func_0205d4a0.c`. Most sit under a header comment that says the pragma
+ONE arm9 file, `src/unnamed/arm9/0205/func_0205d4a0.c`. Most sit under a header comment that says the pragma
 is what emits the pooled veneer. They all still byte-match, because the pragma is inert, but
 the comment is wrong and every one of those compiles now prints `warning: illegal #pragma`
 under the `-w illpragmas` in `DEFAULT_FLAGS`. Deleting the line from those files is a no-op
@@ -4675,7 +4675,7 @@ So the ROM's fabricated fourth word -- a zero that rides along in the store mult
 never in the load multiple -- has no C spelling. Combined with the leaf frame
 `stmdb sp!,{r4}` / `ldm sp!,{r4}` (mwccarm spends `push {r4,lr}` here because its block move
 needs `lr` as a scratch), this is a hand-written primitive and the existing HAND-ASM header on
-`src/func_02052514.c` is correct. Do not re-open it.
+`src/unnamed/arm9/0205/func_02052514.c` is correct. Do not re-open it.
 
 The transferable test: **an `ldm`/`stm` pair with different register counts, or an `stm` whose
 register list contains a value the matching `ldm` did not load, is hand-asm.** Equal widths
@@ -6669,7 +6669,7 @@ reproduced in a 15-instruction toy, `_abwork/crkh/toyprobe.py`:
   `if (x > 0x64) x = 0x64;` clamp four instructions earlier does not help it.
 * Two MATCHED precedents that 6u's corpus scan missed, both single-condition guards with a
   five-instruction return block that keeps its branch:
-      src/func_02062d10.cpp       `bne` over an arm containing `cmp r0,#0 / beq`
+      src/unnamed/arm9/0206/func_02062d10.cpp       `bne` over an arm containing `cmp r0,#0 / beq`
       func_ov006_020e83bc         `bge` over an arm containing `cmp r0,#0 / movgt / strgt`
                                   (now in src/actors/dMg3DEspAnimSet_c.cpp)
   Both are the final `else` of an if / else-if / else chain, so the jumped-over arm is the

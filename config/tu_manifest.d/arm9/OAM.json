@@ -6,7 +6,7 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "CONTIGUOUS AND EXHAUSTIVE: 0x02020884..0x02021a04 is covered by exactly the 12 config/arm9/delinks.txt complete entries listed below with no gap and no overlap; bounded below by src/func_02020820.c (ends 0x02020884) and above by Particle::SysTracker::Contents::Unlink (starts 0x02021a04).",
+    "CONTIGUOUS AND EXHAUSTIVE: 0x02020884..0x02021a04 is covered by exactly the 12 config/arm9/delinks.txt complete entries listed below with no gap and no overlap; bounded below by src/unnamed/arm9/0202/func_02020820.c (ends 0x02020884) and above by Particle::SysTracker::Contents::Unlink (starts 0x02021a04).",
     "SINGLE CLASS: every function in the range is an OAM member (include/OAM.h). OAM is not polymorphic -- no RTTI/vtable/ctor/dtor -- so no key-function partition applies."
   ],
   "sections": [

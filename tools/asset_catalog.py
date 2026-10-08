@@ -201,7 +201,7 @@ ROM_HEADER_FAT = 0x48
 # And the overlay half of the same header, at 0x50 arm9_ovt_offset, 0x54
 # arm9_ovt_size, 0x58 arm7_ovt_offset, 0x5c arm7_ovt_size.  The ROM mirrors
 # these two pairs at 0x027FFE50 and 0x027FFE58, which is where
-# src/func_02018c00.c, src/func_0205df40.c and src/func_020424c0.c read them
+# src/unnamed/arm9/0201/func_02018c00.c, src/unnamed/arm9/0205/func_0205df40.c and src/unnamed/arm9/0204/func_020424c0.c read them
 # when the overlay table has not been cached in RAM.  Unlike the FNT and FAT
 # pair a ZERO PAIR IS LEGAL and means "this processor has no overlays": SM64DS
 # has 103 ARM9 overlays and no ARM7 overlay at all, so 0x58 really does read
@@ -229,9 +229,9 @@ def write_nitrofs_tables(directory: pathlib.Path, rom: pathlib.Path) -> dict:
 
     THE OVERLAY HALF is here for the mirror rather than for the walker.  The
     DS copies the whole cartridge header to 0x027FFE00, and the ROM's overlay
-    reader (src/func_02018c00.c, src/func_0205df40.c) reads the ARM9 pair at
+    reader (src/unnamed/arm9/0201/func_02018c00.c, src/unnamed/arm9/0205/func_0205df40.c) reads the ARM9 pair at
     0x027FFE50 and the ARM7 pair at 0x027FFE58 whenever the overlay table has
-    not been cached into RAM by src/func_020423dc.c -- which, in single-cart
+    not been cached into RAM by src/unnamed/arm9/0204/func_020423dc.c -- which, in single-cart
     play, it never is.  The port's HAL writes those two pairs into the mirror
     from these four values, exactly the way it already writes the FNT and FAT
     pairs, so the ROM's own reader reads the cartridge's own words.
@@ -272,7 +272,7 @@ def write_nitrofs_tables(directory: pathlib.Path, rom: pathlib.Path) -> dict:
     # The two overlay tables go out beside them, verbatim and for the same
     # reason: the day hal/fs_names.cpp's port_nitrofs_read serves the overlay
     # spans the way it already serves the FNT and the FAT, the ROM's own
-    # src/func_02018c00.c reads its 32-byte OverlayInfo out of the cartridge's
+    # src/unnamed/arm9/0201/func_02018c00.c reads its 32-byte OverlayInfo out of the cartridge's
     # own bytes rather than out of anything this port reconstructed.  An empty
     # pair writes no file: there is nothing to copy.
     for name, off, size in (("ovt9", ovt9_off, ovt9_size),

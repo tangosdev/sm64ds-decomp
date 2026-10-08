@@ -24,18 +24,18 @@
 // and `_fsub_core` use to tie func_01ff9378 and func_01ffa594 together four rows down,
 // but without a config/arm9/itcm/symbols.txt row: those two labels sit in ranges no
 // src/ file is enrolled for, so a delinked gap object defines them, while 0x01ffa538 and
-// 0x01ffa558 sit inside src/func_01ffa4bc.c's enrolled range, where nothing would. A row
+// 0x01ffa558 sit inside src/unnamed/arm9/01ff/func_01ffa4bc.c's enrolled range, where nothing would. A row
 // there is reported by `dsd check symbols` as a symbol missing from the linked binary.
 //
 // For the same reason this file is deliberately not added to config/arm9/itcm/delinks.txt:
 // mwldarm cannot resolve either branch, so enrolling it fails the link outright. That
-// matches how src/func_01ff9378.c and src/func_01ffa594.c are already carried -- byte-
+// matches how src/unnamed/arm9/01ff/func_01ff9378.c and src/unnamed/arm9/01ff/func_01ffa594.c are already carried -- byte-
 // matched sources that the ROM build takes from the gap object.
 //
 // A symbols.txt row is not a way past `tools/eligible.py` either. Its rule 5 only asks
 // that every undefined reference name a symbol config/**/symbols.txt declares, so a row
 // would satisfy the rule while still naming nothing the LINK defines: mwccarm 2004/b56
-// cannot export a second symbol from one asm block, and it is src/func_01ffa4bc.c's
+// cannot export a second symbol from one asm block, and it is src/unnamed/arm9/01ff/func_01ffa4bc.c's
 // compiled object, not a gap object, that covers both addresses. `func_01ffa440` is
 // therefore listed in config/rombuild-exclude.txt, which is this tree's record of a
 // function that cannot be carved into its own delink object -- the compiler
@@ -45,7 +45,7 @@
 // words, so every byte of both targets is checked against the ROM:
 //
 //     tools/linkcheck.py --name func_01ffa440 --addr 0x01ffa440 --size 0x7c
-//         --module itcm --c src/func_01ffa440.c
+//         --module itcm --c src/unnamed/arm9/01ff/func_01ffa440.c
 //
 // addr/size/module are spelt out because the bare `--name` form reads them from
 // progress/matched.jsonl, which is gitignored -- on a fresh clone that form fails with

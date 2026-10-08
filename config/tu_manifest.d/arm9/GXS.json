@@ -8,7 +8,7 @@
   "boundary_evidence": [
     "contiguous linker run: 0x02055dec..0x02055fb4, 6 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start).",
     "TOP EDGE: src/engine/gx/G3i.cpp ends at 0x02055dec exactly where the run begins -- G3i's TU ends here (see G3i.json); that is a delinks-run boundary, not independent proof of where the GXS TU starts.",
-    "BOTTOM EDGE: func_02055fb4 (0x02055fb4) starts exactly where the run ends -- its own header (src/func_02055fb4.c) calls it \"likely _ZN3GXS11LoadBG3CharEPKvjj\", so the original TU may extend past this run; the run end is a delinks-run boundary, not proof of the original TU edge.",
+    "BOTTOM EDGE: func_02055fb4 (0x02055fb4) starts exactly where the run ends -- its own header (src/unnamed/arm9/0205/func_02055fb4.c) calls it \"likely _ZN3GXS11LoadBG3CharEPKvjj\", so the original TU may extend past this run; the run end is a delinks-run boundary, not proof of the original TU edge.",
     "GXS is a namespace (Nitro SDK sub-screen family), not a class: no this, no vtable, no layout -- plain static functions only."
   ],
   "sections": [

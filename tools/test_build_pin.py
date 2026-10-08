@@ -76,8 +76,8 @@ def test_missing_overrides_file_fails_closed(monkeypatch=None):
         BP.VERSIONS_FILE = REPO / "config" / "no-such-versions-file.txt"
         BP._pins = None
         assert BP.pins() is None
-        assert BP.version_for("src/func_02062428.c") is None
-        v, why = BP.compiler_for("src/func_02062428.c")
+        assert BP.version_for("src/unnamed/arm9/0206/func_02062428.c") is None
+        v, why = BP.compiler_for("src/unnamed/arm9/0206/func_02062428.c")
         assert v is None and "missing" in why
     finally:
         BP.VERSIONS_FILE, BP._pins = saved_file, saved_cache

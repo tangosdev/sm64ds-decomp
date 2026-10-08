@@ -27,7 +27,7 @@ Two distinct shapes, two fixes, both in this file:
     relocations into that nested function's own window before comparing.
 
 RealCompileFixtures compiles the REAL committed sources (src/_dmul.c,
-src/func_01ff97d8.c) with the pinned mwccarm and skips if it is absent, the same
+src/unnamed/arm9/01ff/func_01ff97d8.c) with the pinned mwccarm and skips if it is absent, the same
 convention tools/test_objisolate.py and tools/test_rombuild.py use: the whole
 subject is what a specific compiler emits, so a hand-built object would test this
 file's idea of mwcc rather than mwcc.
@@ -93,7 +93,7 @@ class RealCompileFixtures(unittest.TestCase):
         self.assertEqual(r["verdict"], "VERIFIED")
 
     def test_nested_entry_point_extracted_from_the_containing_object(self):
-        """src/func_01ff97d8.c compiles to ONE ELF symbol, "func_01ff97d8", 0xb6c
+        """src/unnamed/arm9/01ff/func_01ff97d8.c compiles to ONE ELF symbol, "func_01ff97d8", 0xb6c
         bytes -- confirmed directly: the object this source produces defines no
         symbol named func_01ff98f4 at all. That symbol's own config row (0x01ff98f4,
         size 0xb0) sits 0x11c bytes inside func_01ff97d8's compiled span. Asking

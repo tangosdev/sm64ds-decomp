@@ -1786,7 +1786,7 @@ extern void func_0201a428(void);
 extern void func_0201cd08(int);
 extern void func_0201cebc(int);
 extern void func_0201d418(int, int);
-/* Course/star index, 0..0x15. Matches the definition in src/func_0201d850.c, which
+/* Course/star index, 0..0x15. Matches the definition in src/unnamed/arm9/0201/func_0201d850.c, which
    compares it unsigned (`arg0 < 0xf`, `arg0 >= 0x15`) and uses it as an array index
    and a multiplier. Its two callers used to declare it locally and disagree -- `int
    func_0201d850(unsigned char)` in DisplayPauseText, `int func_0201d850(signed char)`

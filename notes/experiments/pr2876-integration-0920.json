@@ -66,7 +66,7 @@
       "id": "LUI2876-07",
       "kind": "correctness",
       "disposition": "fixed",
-      "location": "src/func_ov004_020adc74.c; src/func_020182bc.c; src/func_020182ec.c; src/Ov004_Deallocate.c; Luigi InitResources",
+      "location": "src/func_ov004_020adc74.c; src/unnamed/arm9/0201/func_020182bc.c; src/unnamed/arm9/0201/func_020182ec.c; src/Ov004_Deallocate.c; Luigi InitResources",
       "summary": "Inherited file-loader and deallocator source contracts discard real return/argument flow. Luigi caller usage must be preserved, not changed to agree with broken void definitions.",
       "families": [
         {
@@ -159,12 +159,12 @@
         "mirror": "C:\\tmp\\sm64ds-luigi2876-review0921\\build\\independent-luigi2876\\final-packet\\src\\actors\\dScMgFlower_c.cpp"
       },
       {
-        "path": "src/func_020182bc.c",
+        "path": "src/unnamed/arm9/0201/func_020182bc.c",
         "source_sha256": "867911cdc9b3999a5058b8634a899c47c916b2fd284fe9c176070b7fa1a47ee0",
         "mirror": "C:\\tmp\\sm64ds-luigi2876-review0921\\build\\independent-luigi2876\\final-packet\\src\\func_020182bc.c"
       },
       {
-        "path": "src/func_020182ec.c",
+        "path": "src/unnamed/arm9/0201/func_020182ec.c",
         "source_sha256": "f2429005db9b7f884540d299cc8f9639acc85d8ab40890cc10ba1d020a33b3d7",
         "mirror": "C:\\tmp\\sm64ds-luigi2876-review0921\\build\\independent-luigi2876\\final-packet\\src\\func_020182ec.c"
       },
@@ -799,7 +799,7 @@
         "failed": []
       },
       {
-        "path": "src/func_020182bc.c",
+        "path": "src/unnamed/arm9/0201/func_020182bc.c",
         "source": "struct V2 { int x, y; };\nextern int func_02018e3c(void *out_file_id, const char *path);\nextern int func_020182ec(struct V2 file, int flag, ...);\n\nvoid *func_020182bc(const char *path)\n{\n    struct V2 file;\n    func_02018e3c(&file, path);\n    return (void *)func_020182ec(file, 1);\n}\n",
         "object_sha256": "4878efc0970d92b454d955acfd14a5714d3348e68e68dbea3a08142f62eb5eea",
         "raw_object_identical": true,
@@ -813,7 +813,7 @@
         }
       },
       {
-        "path": "src/func_020182ec.c",
+        "path": "src/unnamed/arm9/0201/func_020182ec.c",
         "source": "struct V2 { int x, y; };\n\nextern void FS_InitFile(int *s);\nextern int func_02018dc4(int buf, struct V2 ab);\nextern void Crash(void);\nextern int func_0201834c(int *buf, int x);\n\nint func_020182ec(struct V2 file, int c, ...)\n{\n    int buf[0x11];\n    int r = 0;\n    FS_InitFile(buf);\n    if (func_02018dc4((int)buf, file) == 0)\n        Crash();\n    else\n        r = func_0201834c(buf, c);\n    return r;\n}\n",
         "object_sha256": "39a3b22efbd1c482447d7f7eb19ae8fd59afe76948b677b695978b378005beb4",
         "raw_object_identical": true,
@@ -2660,7 +2660,7 @@
       "compiler": "2004/b56",
       "rows": [
         {
-          "path": "src/func_020182bc.c",
+          "path": "src/unnamed/arm9/0201/func_020182bc.c",
           "raw_object_identical": false,
           "object_sha256": "2a9462d0ae6376f58ee7b7115566eaedac7d2a437b52b109f5828a6ba01399c0",
           "object_bytes": 664,
@@ -3315,7 +3315,7 @@
       "formal_acceptance": false,
       "variants": [
         {
-          "path": "src/func_020182bc.c",
+          "path": "src/unnamed/arm9/0201/func_020182bc.c",
           "source": "struct V2 { int x, y; };\nextern int func_02018e3c(void *out_file_id, const char *path);\nextern int func_020182ec(struct V2 file, int flag, ...);\n\nvoid *func_020182bc(const char *path)\n{\n    struct V2 file;\n    func_02018e3c(&file, path);\n    return (void *)func_020182ec(file, 1);\n}\n",
           "object_sha256": "4878efc0970d92b454d955acfd14a5714d3348e68e68dbea3a08142f62eb5eea",
           "raw_object_identical": true,
@@ -3329,7 +3329,7 @@
           }
         },
         {
-          "path": "src/func_020182ec.c",
+          "path": "src/unnamed/arm9/0201/func_020182ec.c",
           "source": "struct V2 { int x, y; };\n\nextern void FS_InitFile(int *s);\nextern int func_02018dc4(int buf, struct V2 ab);\nextern void Crash(void);\nextern int func_0201834c(int *buf, int x);\n\nint func_020182ec(struct V2 file, int c, ...)\n{\n    int buf[0x11];\n    int r = 0;\n    FS_InitFile(buf);\n    if (func_02018dc4((int)buf, file) == 0)\n        Crash();\n    else\n        r = func_0201834c(buf, c);\n    return r;\n}\n",
           "object_sha256": "39a3b22efbd1c482447d7f7eb19ae8fd59afe76948b677b695978b378005beb4",
           "raw_object_identical": true,
@@ -3595,19 +3595,19 @@
           "identical_source_offer_vs_current_target": true,
           "source_sha256": "94857b3cc4b1382e0a4b7577244e8e9b1aeebcb3821f3d0a07f46f86a6da09b7"
         },
-        "src/func_020182bc.c": {
+        "src/unnamed/arm9/0201/func_020182bc.c": {
           "identical_source_offer_vs_current_target": true,
           "source_sha256": "ebae04552c78b4466755d3774fa3754f11b476ec4176096885903d01f8fb3067"
         },
-        "src/func_020182ec.c": {
+        "src/unnamed/arm9/0201/func_020182ec.c": {
           "identical_source_offer_vs_current_target": true,
           "source_sha256": "58dbf6b47676be35ab97484381b98dc907d1c376d787f5c61bbc5141dfffc101"
         },
-        "src/func_0201834c.c": {
+        "src/unnamed/arm9/0201/func_0201834c.c": {
           "identical_source_offer_vs_current_target": true,
           "source_sha256": "5bab7a633bf6f591adb6f1389de1872f9de6fd4712f510ae950c53aa6312526c"
         },
-        "src/func_02018e3c.c": {
+        "src/unnamed/arm9/0201/func_02018e3c.c": {
           "identical_source_offer_vs_current_target": true,
           "source_sha256": "2169cf188f4439d56fae38063a2064ae3a9ad7d173ee604ad9d49a7e1a913d7b"
         },
@@ -4817,7 +4817,7 @@
       "diffs": []
     },
     {
-      "file": "src/func_020182bc.c",
+      "file": "src/unnamed/arm9/0201/func_020182bc.c",
       "name": "func_020182bc",
       "module": "arm9",
       "addr": "0x20182bc",
@@ -4826,7 +4826,7 @@
       "diffs": []
     },
     {
-      "file": "src/func_020182ec.c",
+      "file": "src/unnamed/arm9/0201/func_020182ec.c",
       "name": "func_020182ec",
       "module": "arm9",
       "addr": "0x20182ec",
@@ -14535,12 +14535,12 @@
           "lines": 837
         },
         {
-          "path": "src/func_020182bc.c",
+          "path": "src/unnamed/arm9/0201/func_020182bc.c",
           "sha256": "5d8fe389888834ea2f3adabb3b10591aa64249be076479272cfdd94918d046d6",
           "lines": 10
         },
         {
-          "path": "src/func_020182ec.c",
+          "path": "src/unnamed/arm9/0201/func_020182ec.c",
           "sha256": "dce680b4a07a77f165141744d85182d3ee05918777b9b15d83b52766dd86841a",
           "lines": 18
         },
@@ -14650,7 +14650,7 @@
         "id": "LUI2876-07",
         "kind": "correctness",
         "prior_summary": "Inherited file-loader and deallocator source contracts discard real return/argument flow. Luigi caller usage must be preserved, not changed to agree with broken void definitions.",
-        "prior_location": "src/func_ov004_020adc74.c; src/func_020182bc.c; src/func_020182ec.c; src/Ov004_Deallocate.c; Luigi InitResources",
+        "prior_location": "src/func_ov004_020adc74.c; src/unnamed/arm9/0201/func_020182bc.c; src/unnamed/arm9/0201/func_020182ec.c; src/Ov004_Deallocate.c; Luigi InitResources",
         "disposition": "fixed_in_six_source_packet_pending_final_expanded_consumer_proof",
         "reason": "Path and returned allocation flow through both wrappers. func_020182bc passes the two-word file ID by value to the consistent func_020182ec definition, retaining the variadic suffix without claiming original arity. Ov004_Deallocate forwards its void* to Deallocate. Luigi uses void* arc; eight Flower calls explicitly convert existing integer-held allocations. All six complete compiled objects match prior hashes, and all 71 function instances independently verify. Wider consumers remain final gates.",
         "formal_acceptance": false

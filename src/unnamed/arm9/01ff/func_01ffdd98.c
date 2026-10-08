@@ -10,11 +10,11 @@
  *                    Reached when the boot-info halfword is 2, i.e. this build refuses to
  *                    soft reset in that boot mode. src/func_02013f4c.c makes the same test
  *                    and routes the ==2 case to func_0205f958 instead of calling here.
- *   func_02059dd4    unnamed. src/func_02059dd4.c is IPCSend(0xc, param << 8, 0) retried
+ *   func_02059dd4    unnamed. src/unnamed/arm9/0205/func_02059dd4.c is IPCSend(0xc, param << 8, 0) retried
  *                    until it returns 0, so this is IPC command 0xc, subcommand 0x10.
  *   data_020a645c    bss symbol in config/arm9/symbols.txt; the `kind:load` reloc at
  *                    0x01ffddf8 in config/arm9/itcm/relocs.txt resolves this pool word to
- *                    it. Its only writer is src/func_02059e04.c, which sets it to 1 when an
+ *                    it. Its only writer is src/unnamed/arm9/0205/func_02059e04.c, which sets it to 1 when an
  *                    incoming IPC word carries subcommand 0x10 -- so it is the ARM7's ack
  *                    for the send above, and the spin below is waiting on that ack.
  *   func_01ffdd08    unnamed. Pools 0x027ffe20/28/2c and 0x027ffe30/38/3c -- the ROM offset,

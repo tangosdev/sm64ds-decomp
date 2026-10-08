@@ -4,7 +4,7 @@
 // status word, the accessor the soft-float block at 0x01ff8000 uses on every exceptional
 // path (see the `bl` sites inside the float/double converters at 0x01ffa344 and
 // 0x01ffa440). Returns the OLD word, so a plain `func_01ffb008(0, 0)` is a pure read --
-// which is exactly how src/func_0206de14.c calls it to recover its mode bits.
+// which is exactly how src/unnamed/arm9/0206/func_0206de14.c calls it to recover its mode bits.
 //
 //     old = *p;  *p = (old & ~mask) ^ value;  return old;
 //

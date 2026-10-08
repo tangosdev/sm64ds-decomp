@@ -66,7 +66,7 @@ def run_group(label, func, addr, size, bp, bb, flags, variants, out_path, wrap=N
 
 
 E3DC = {
-    "baseline": open(REPO / "src/func_0206e3dc.c", encoding="utf-8").read(),
+    "baseline": open(REPO / "src/unnamed/arm9/0206/func_0206e3dc.c", encoding="utf-8").read(),
     "manual_bytes": """extern void func_0206e450(void);
 extern unsigned int func_0206e4a4(void (*fn)(void), void *ctx);
 unsigned int func_0206e3dc(char *buf, unsigned int len) {
@@ -313,7 +313,7 @@ void func_ov007_020bc3dc(void *c, int i, int a2) {
 if __name__ == "__main__":
     ok = False
     ok |= run_group("e3dc", "func_0206e3dc", "0x0206e3dc", "0x74", None, None, FLAGS,
-                    E3DC, REPO / "src/func_0206e3dc.c")
+                    E3DC, REPO / "src/unnamed/arm9/0206/func_0206e3dc.c")
     ok |= run_group("bf36c", "func_ov002_020bf36c", "0x020bf36c", "0xa0",
                     "extracted/dsd/arm9_overlays/ov002.bin", "0x020ad660", FLAGS_CPP,
                     {k: (v if k == "baseline" else BF36C_WRAP(v)) for k, v in BF36C.items()},

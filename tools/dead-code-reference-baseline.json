@@ -1112,9 +1112,6 @@
    "src/func_ov027_02111d38.cpp",
    "src/func_ov027_02111d70.c"
   ],
-  "src/func_02059d8c.c": [
-   "notes/func_02059d8c-asm-origin.md"
-  ],
   "src/func_ov004_020ae5c4.cpp": [
    "src/actors/d_sc_mg_trampoline.cpp"
   ],
@@ -1987,6 +1984,9 @@
    "src/func_ov006_02124088.c",
    "src/func_ov006_02124228.c",
    "src/func_ov006_021245a8.c"
+  ],
+  "src/unnamed/arm9/0205/func_02059d8c.c": [
+   "notes/func_02059d8c-asm-origin.md"
   ],
   "tools/probes/discriminate.c": [
    "tools/probe_"

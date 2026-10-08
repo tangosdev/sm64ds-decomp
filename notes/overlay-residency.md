@@ -95,7 +95,7 @@ backwards, which is why `possible()` takes the referring function.
 single word `data_0208ee4c`, so **exactly one of {[ov002](../config/arm9/overlays/ov002/symbols.txt), [ov003](../config/arm9/overlays/ov003/symbols.txt), [ov005](../config/arm9/overlays/ov005/symbols.txt), [ov006](../config/arm9/overlays/ov006/symbols.txt), [ov007](../config/arm9/overlays/ov007/symbols.txt)}
 is resident**. Scene 6 additionally loads [ov075](../config/arm9/overlays/ov075/symbols.txt) once (file select).
 
-And `src/func_0201a798.c:8`:
+And `src/unnamed/arm9/0201/func_0201a798.c:8`:
 
 ```c
 if (id == (int)&overlay_6) LoadOverlay((int)&overlay_4);
@@ -201,9 +201,9 @@ ambiguity -- and it is now the biggest single block of work left.
 | `src/actors/daObjKey_c.cpp` (`daObjKey_c::StateStarJump`, was `func_ov089_0213162c`) | [ov089](../config/arm9/overlays/ov089/symbols.txt) | [ov089](../config/arm9/overlays/ov089/symbols.txt) is loaded by many levels. The source names `data_ov055_02111b68`, the one unambiguous `kind:bss` row at that address, following `src/unnamed/ov002/func_ov002_020e3e00.cpp` for its neighbours `0x02111b64`/`0x02111b6c`. |
 | `src/actors/daPropeller_Heyho_Fire_c.cpp` (`daPropeller_Heyho_Fire_c::InitResources`) | [ov002](../config/arm9/overlays/ov002/symbols.txt) | [ov065](../config/arm9/overlays/ov065/symbols.txt) vs [ov075](../config/arm9/overlays/ov075/symbols.txt) (see below). **Since settled:** the source names `data_ov065_0211d610`, the unflagged candidate, which CleanupResources already used. |
 | `src/_ZN8CapEnemy6AddCapEj.c` | [arm9](../config/arm9/symbols.txt) | [ov002](../config/arm9/overlays/ov002/symbols.txt) vs [ov007](../config/arm9/overlays/ov007/symbols.txt); arm9 spans both. |
-| `src/func_02008b4c.c` | [arm9](../config/arm9/symbols.txt) | [ov002](../config/arm9/overlays/ov002/symbols.txt) vs [ov006](../config/arm9/overlays/ov006/symbols.txt); both hold a real function. |
-| `src/func_02029408.c` | [arm9](../config/arm9/symbols.txt) | [ov002](../config/arm9/overlays/ov002/symbols.txt) `_ZN6Player8CanPauseEv` vs [ov004](../config/arm9/overlays/ov004/symbols.txt) (see below). |
-| `src/func_0201a458.c` | [arm9](../config/arm9/symbols.txt) | [ov062](../config/arm9/overlays/ov062/symbols.txt) vs [ov065](../config/arm9/overlays/ov065/symbols.txt), and [ov006](../config/arm9/overlays/ov006/symbols.txt) vs [ov100](../config/arm9/overlays/ov100/symbols.txt) (see below). |
+| `src/unnamed/arm9/0200/func_02008b4c.c` | [arm9](../config/arm9/symbols.txt) | [ov002](../config/arm9/overlays/ov002/symbols.txt) vs [ov006](../config/arm9/overlays/ov006/symbols.txt); both hold a real function. |
+| `src/unnamed/arm9/0202/func_02029408.c` | [arm9](../config/arm9/symbols.txt) | [ov002](../config/arm9/overlays/ov002/symbols.txt) `_ZN6Player8CanPauseEv` vs [ov004](../config/arm9/overlays/ov004/symbols.txt) (see below). |
+| `src/unnamed/arm9/0201/func_0201a458.c` | [arm9](../config/arm9/symbols.txt) | [ov062](../config/arm9/overlays/ov062/symbols.txt) vs [ov065](../config/arm9/overlays/ov065/symbols.txt), and [ov006](../config/arm9/overlays/ov006/symbols.txt) vs [ov100](../config/arm9/overlays/ov100/symbols.txt) (see below). |
 | `src/func_0201a2f8.c` | [arm9](../config/arm9/symbols.txt) | the one place [ov000](../config/arm9/overlays/ov000/symbols.txt) *is* the answer. The tool refuses instead of answering ov001, which is the point of passing the function; the source above settles it by inspection. |
 
 Four of these have a second, weaker line of evidence available. **dsd flags a symbol

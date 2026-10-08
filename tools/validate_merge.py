@@ -1223,7 +1223,7 @@ def classify_repartition(bf, hf):
     the gate as written makes the correction the one edit that cannot land, and holds the
     tree in a state where its own count is a fiction. PR #2360 is the live case:
     `func_020610fc` is declared 0x3c, the routine is 0x2c and ends in `b self`, and the
-    remaining 0x10 is a separate routine that `src/func_02019ebc.c` CALLS -- a call
+    remaining 0x10 is a separate routine that `src/unnamed/arm9/0201/func_02019ebc.c` CALLS -- a call
     `config/unresolved-baseline.json` records as missing because nothing defines it.
 
     That is the trap the WITHDRAWN carve-out below was written for: "treating both as

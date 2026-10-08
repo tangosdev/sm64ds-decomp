@@ -6,7 +6,7 @@
 //
 // It clears the status word func_0207322c points at, then the five-word table
 // func_02073238 points at plus its head. Those two accessors are the same pair the rest
-// of the runtime uses: src/func_0206de14.c takes its dispatch table from func_02073238()
+// of the runtime uses: src/unnamed/arm9/0206/func_0206de14.c takes its dispatch table from func_02073238()
 // and its mode bits from func_01ffb008(0, 0).
 //
 // Assembly in the original, like the whole runtime block it belongs to: it keeps r0 live

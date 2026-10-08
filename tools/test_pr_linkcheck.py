@@ -21,8 +21,8 @@ Measured directly against the real rows LINKCHK2's own PR text named (see
 out/LINKCHK2/pr.txt and out/PRLINKNEST/pr.txt in the run directory). Before
 this fix:
 
-    python tools/pr_linkcheck.py --files src/func_01ff97d8.c
-      NO-SYM src/func_01ff97d8.c  (6 slot(s))
+    python tools/pr_linkcheck.py --files src/unnamed/arm9/01ff/func_01ff97d8.c
+      NO-SYM src/unnamed/arm9/01ff/func_01ff97d8.c  (6 slot(s))
 
 Four of its six owned symbols -- every nested entry point with a nonzero own
 size (func_01ff98f4, func_01ff99a4, func_01ff9d40, func_01ff9e2c) -- read
@@ -31,7 +31,7 @@ alias _deq (which happened to self-heal through the `obj is None` fallback,
 since its own first-loop winning_object call always failed on the raw size
 and fell through to linkcheck()'s internal resolution) verified. After:
 
-    ok      src/func_01ff97d8.c  (6 slot(s))
+    ok      src/unnamed/arm9/01ff/func_01ff97d8.c  (6 slot(s))
 
 All six VERIFIED. A 34-file control sample of ordinary (non-alias,
 non-nested) src files -- spanning arm9, itcm and four overlays -- is

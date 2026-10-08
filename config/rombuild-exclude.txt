@@ -87,7 +87,7 @@ func_020313d8
 # unit: the literal pool at 0x01ffa580 that closes func_01ffa4bc's range holds 0x40000308,
 # the exception code only func_01ffa440's tail loads.
 #
-# Neither target has a symbol, and none can be given one. src/func_01ffa4bc.c is enrolled
+# Neither target has a symbol, and none can be given one. src/unnamed/arm9/01ff/func_01ffa4bc.c is enrolled
 # `complete`, so its compiled object - not a gap object - supplies 0x01ffa4bc..0x01ffa588,
 # and mwccarm 2004/b56 cannot export a second symbol from one asm block. Measured against
 # the pinned compiler, every spelling is rejected at the mnemonic:
@@ -107,7 +107,7 @@ func_020313d8
 # arithmetic. func_01ffa4bc therefore keeps its own enrollment - unlike the 0x0206d9dc
 # cluster, the target does NOT have to join the caller in the gap.
 #
-# src/func_01ffa440.c records the routine and declares the two targets as
-# func_01ffa538 / func_01ffa558, the same way src/func_0206cee0.c declares 0x0206d9dc and
+# src/unnamed/arm9/01ff/func_01ffa440.c records the routine and declares the two targets as
+# func_01ffa538 / func_01ffa558, the same way src/unnamed/arm9/0206/func_0206cee0.c declares 0x0206d9dc and
 # 0x0206da28 for the cluster above.
 func_01ffa440

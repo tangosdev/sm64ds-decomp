@@ -348,7 +348,7 @@ same subsystem -- neither fell to search:
 - `func_020316d8` was floored at **23 divergences after ~5600 compiles** of declaration-order,
   statement-order, type and pragma hill-climbing, and diagnosed as a pure allocator rotation. The
   supporting finding was even correct: decl order and `register`/type knobs have *zero* effect on
-  that function. It was not an allocator floor. The matched sibling `src/func_0201b100.c` contains
+  that function. It was not an allocator floor. The matched sibling `src/unnamed/arm9/0201/func_0201b100.c` contains
   the same blit loop and carries the load-bearing spellings directly -- a `(short)(int)` double cast
   to defeat the range-folder, the slow path as an `else` block with block-scoped locals, a char-cast
   third store that breaks an mla-coalesce. ~650 compiles from that start.

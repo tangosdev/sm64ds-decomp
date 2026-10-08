@@ -111,7 +111,7 @@
       ],
       [
         "Matrix4x3_FromTranslation",
-        "src/func_02009138.c",
+        "src/unnamed/arm9/0200/func_02009138.c",
         "param:#1 Matrix4x3 *"
       ],
       [
@@ -1137,7 +1137,7 @@
       ],
       [
         "Matrix4x3_FromTranslation",
-        "src/func_02009138.c",
+        "src/unnamed/arm9/0200/func_02009138.c",
         "param:#1 Matrix4x3 *"
       ],
       [
@@ -1785,7 +1785,7 @@
         {
           "symbol": "Matrix4x3_FromTranslation",
           "kind": "param",
-          "file": "src/func_02009138.c",
+          "file": "src/unnamed/arm9/0200/func_02009138.c",
           "line": 7,
           "decl": "void (Matrix4x3 *, int, int, int)",
           "got": "#1 Matrix4x3 *",

@@ -1143,7 +1143,7 @@
         "strict_count": 1
       },
       {
-        "path": "src/func_020461b4.c",
+        "path": "src/unnamed/arm9/0204/func_020461b4.c",
         "git_blob": "46acb92c7e5c457fa1b59fee729814fb69e95da1",
         "normalized_source_sha256": "1450fbe580a19eaa2a84c98c371da3442a1c8af2613aa1264c9bc8bb8b8af612",
         "probe_input_identical": true,
@@ -1441,7 +1441,7 @@
       "strict_checks": 1
     },
     {
-      "source": "src/func_020461b4.c",
+      "source": "src/unnamed/arm9/0204/func_020461b4.c",
       "source_sha256": "b058bdcd1605f496c0cbe05c050352ce0fa4565d88fcad3651ad0fd2fe816074",
       "compiled_source_sha256": "1450fbe580a19eaa2a84c98c371da3442a1c8af2613aa1264c9bc8bb8b8af612",
       "object_bytes": 664,

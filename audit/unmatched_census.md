@@ -29,25 +29,25 @@ that reproduces only under some other sweep member could not pass.
 
 | module | address | size | symbol | source | banner | classify | byte gate |
 |---|---|---:|---|---|---|---|---|
-| arm9 | 0x0200497c | 112 | `func_0200497c` | `src/func_0200497c.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x02052514 | 60 | `func_02052514` | `src/func_02052514.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x0205256c | 28 | `func_0205256c` | `src/func_0205256c.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x020527e8 | 22 | `func_020527e8` | `src/func_020527e8.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x02052800 | 30 | `func_02052800` | `src/func_02052800.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x02052820 | 26 | `func_02052820` | `src/func_02052820.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x0205283c | 26 | `func_0205283c` | `src/func_0205283c.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x02052ec8 | 44 | `func_02052ec8` | `src/func_02052ec8.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x020553c0 | 148 | `func_020553c0` | `src/func_020553c0.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x02057014 | 12 | `func_02057014` | `src/func_02057014.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x02057020 | 88 | `func_02057020` | `src/func_02057020.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x02057078 | 48 | `func_02057078` | `src/func_02057078.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x02058568 | 100 | `func_02058568` | `src/func_02058568.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x02059468 | 20 | `func_02059468` | `src/func_02059468.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x02059824 | 16 | `func_02059824` | `src/func_02059824.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x02059d98 | 60 | `func_02059d98` | `src/func_02059d98.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x0205a588 | 148 | `func_0205a588` | `src/func_0205a588.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x0200497c | 112 | `func_0200497c` | `src/unnamed/arm9/0200/func_0200497c.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x02052514 | 60 | `func_02052514` | `src/unnamed/arm9/0205/func_02052514.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x0205256c | 28 | `func_0205256c` | `src/unnamed/arm9/0205/func_0205256c.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x020527e8 | 22 | `func_020527e8` | `src/unnamed/arm9/0205/func_020527e8.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x02052800 | 30 | `func_02052800` | `src/unnamed/arm9/0205/func_02052800.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x02052820 | 26 | `func_02052820` | `src/unnamed/arm9/0205/func_02052820.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x0205283c | 26 | `func_0205283c` | `src/unnamed/arm9/0205/func_0205283c.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x02052ec8 | 44 | `func_02052ec8` | `src/unnamed/arm9/0205/func_02052ec8.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x020553c0 | 148 | `func_020553c0` | `src/unnamed/arm9/0205/func_020553c0.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x02057014 | 12 | `func_02057014` | `src/unnamed/arm9/0205/func_02057014.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x02057020 | 88 | `func_02057020` | `src/unnamed/arm9/0205/func_02057020.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x02057078 | 48 | `func_02057078` | `src/unnamed/arm9/0205/func_02057078.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x02058568 | 100 | `func_02058568` | `src/unnamed/arm9/0205/func_02058568.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x02059468 | 20 | `func_02059468` | `src/unnamed/arm9/0205/func_02059468.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x02059824 | 16 | `func_02059824` | `src/unnamed/arm9/0205/func_02059824.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x02059d98 | 60 | `func_02059d98` | `src/unnamed/arm9/0205/func_02059d98.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x0205a588 | 148 | `func_0205a588` | `src/unnamed/arm9/0205/func_0205a588.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
 | arm9 | 0x0205a61c | 304 | `CpuCopy8` | `src/CpuCopy8.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x02071790 | 48 | `func_02071790` | `src/func_02071790.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x02071790 | 48 | `func_02071790` | `src/unnamed/arm9/0207/func_02071790.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
 | arm9 | 0x020717c0 | 76 | `__rethrow` | `src/__rethrow.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
 
 ## Group (b): the ITCM vendor rows
@@ -94,15 +94,15 @@ changes: these stay unmatched, which is what unmatched is for.
 
 | module | address | size | symbol | source |
 |---|---|---:|---|---|
-| arm9 | 0x02009e70 | 4252 | `func_02009e70` | `src/func_02009e70.cpp` |
+| arm9 | 0x02009e70 | 4252 | `func_02009e70` | `src/unnamed/arm9/0200/func_02009e70.cpp` |
 | arm9 | 0x02020994 | 1680 | `_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii` | `src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii.cpp` |
 | arm9 | 0x0202cc0c | 2692 | `_ZN5Stage13InitResourcesEv` | `src/_ZN5Stage13InitResourcesEv.cpp` |
-| arm9 | 0x0202ffec | 472 | `func_0202ffec` | `src/func_0202ffec.c` |
+| arm9 | 0x0202ffec | 472 | `func_0202ffec` | `src/unnamed/arm9/0202/func_0202ffec.c` |
 | arm9 | 0x02045b58 | 184 | `_ZN5Model27LoadCompressedTextureToVramEPcjS0_` | `src/_ZN5Model27LoadCompressedTextureToVramEPcjS0_.cpp` |
-| arm9 | 0x02059d8c | 12 | `func_02059d8c` | `src/func_02059d8c.c` |
-| arm9 | 0x020610fc | 44 | `func_020610fc` | `src/func_020610fc.c` |
-| arm9 | 0x02068398 | 120 | `func_02068398` | `src/func_02068398.c` |
-| arm9 | 0x02071644 | 80 | `func_02071644` | `src/func_02071644.c` |
+| arm9 | 0x02059d8c | 12 | `func_02059d8c` | `src/unnamed/arm9/0205/func_02059d8c.c` |
+| arm9 | 0x020610fc | 44 | `func_020610fc` | `src/unnamed/arm9/0206/func_020610fc.c` |
+| arm9 | 0x02068398 | 120 | `func_02068398` | `src/unnamed/arm9/0206/func_02068398.c` |
+| arm9 | 0x02071644 | 80 | `func_02071644` | `src/unnamed/arm9/0207/func_02071644.c` |
 | ov003 | 0x020af038 | 2100 | `_ZN12dScStarSel_c8BehaviorEv` | `src/_ZN12dScStarSel_c8BehaviorEv.cpp` |
 | ov007 | 0x020bfd70 | 220 | `func_ov007_020bfd70` | `src/unnamed/ov007/func_ov007_020bfd70.cpp` |
 | ov009 | 0x0211145c | 380 | `func_ov009_0211145c` | `src/unnamed/ov009/func_ov009_0211145c.c` |

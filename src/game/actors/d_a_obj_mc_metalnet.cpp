@@ -11,7 +11,7 @@
  *
  * deslop
  * Leftover: NumStars is the shared coined star-count helper
- *   (src/func_0203128c.c); naming belongs at its definition.
+ *   (src/unnamed/arm9/0203/func_0203128c.c); naming belongs at its definition.
  */
 
 /* daObjMc_Metalnet_c.h FIRST: it pulls in dBgActor_c.h, which must reach

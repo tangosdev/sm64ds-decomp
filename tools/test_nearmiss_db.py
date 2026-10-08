@@ -541,7 +541,7 @@ class EvaluateFullResolverParityTests(unittest.TestCase):
     for the same reason: the WIRING is what these prove, and resolve_nested_slice's
     own offset arithmetic already has dedicated coverage there (shared code, not
     re-tested here). RealCompileFixtures below compiles the actual committed
-    src/_dmul.c and src/func_01ff97d8.c and skips if the canonical (2004/b56)
+    src/_dmul.c and src/unnamed/arm9/01ff/func_01ff97d8.c and skips if the canonical (2004/b56)
     compiler is absent, same as tools/test_linkcheck.py's RealCompileFixtures."""
 
     def _require_compile_stack(self):
@@ -675,7 +675,7 @@ class RealCompileResolverFixtures(unittest.TestCase):
         self.assertTrue(full["ok"])
 
     def test_nested_entry_point_scores_zero_from_the_containing_source(self):
-        """src/func_01ff97d8.c compiles to ONE ELF symbol, "func_01ff97d8", 0xb6c
+        """src/unnamed/arm9/01ff/func_01ff97d8.c compiles to ONE ELF symbol, "func_01ff97d8", 0xb6c
         bytes; func_01ff98f4 (config size 0xb0) has no symbol of its own anywhere in
         that object. Fed to evaluate_full as func_01ff98f4's own c_source (the
         nested shape: a stored near-miss draft that is really the whole containing
@@ -683,7 +683,7 @@ class RealCompileResolverFixtures(unittest.TestCase):
         address-resolved offset and read a byte-exact MATCH."""
         import match as M
         import reverify_corpus as RV
-        src = (TOOLS.parent / "src" / "func_01ff97d8.c").read_text(encoding="utf-8")
+        src = (TOOLS.parent / "src" / "unnamed" / "arm9" / "01ff" / "func_01ff97d8.c").read_text(encoding="utf-8")
         target = RV.rom_bytes("itcm", 0x01ff98f4, 0xb0)
         full = NDB.evaluate_full(src, "func_01ff98f4", target,
                                  module="itcm", addr=0x01ff98f4, size=0xb0)

@@ -3,13 +3,13 @@
 /* func_020610fc -- arm9 0x020610fc, 0x2c bytes.
  *
  * Retries IPCSend(0xd, 2, 0) until the ARM7 accepts the command, then hangs
- * forever. The same send loop as src/func_02019ff4.c with the same three
+ * forever. The same send loop as src/unnamed/arm9/0201/func_02019ff4.c with the same three
  * constants; that one returns through func_0201a028, this one never returns.
  * Its only caller (0x020610e4) treats it as a terminal path.
  *
  * The three arguments are hoisted into r6/r5/r4 outside the loop, which is
  * what naming them as locals in that declaration order produces (the same
- * shape src/func_02059dd4.c needed). The trailing `for (;;) ;` compiles to
+ * shape src/unnamed/arm9/0205/func_02059dd4.c needed). The trailing `for (;;) ;` compiles to
  * the bare `b .` with no epilogue, so the previous file's claim that mwccarm
  * will not emit a self-branch without an epilogue was wrong.
  */
