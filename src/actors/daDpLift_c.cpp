@@ -39,6 +39,10 @@
  *   func_020393d4 and func_020393c4 stay int* stores into the mesh
  *   callback slots. func_ov025_021125dc stays a call; its definition
  *   is not in this TU. data_02082214 stays the unnamed sine table.
+ * - The two file handles live at the bottom of this file; the compiler's
+ *   __sinit_daDpLift_c.cpp constructs them at overlay load. Their wrapper
+ *   names are local -- the constructors are the ROM resource-family
+ *   functions, recorded as aliases in the manifest.
  */
 
 #include "daDpLift_c.h"
@@ -46,11 +50,30 @@
 
 #pragma defer_codegen off
 
+/* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
+ * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
+ * are local; the manifest aliases the generated names to those ROM symbols. */
+struct DpLiftModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    DpLiftModelFilePtr(u32 fileID);
+    ~DpLiftModelFilePtr();
+};
+
+struct DpLiftCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    DpLiftCollisionFilePtr(u32 fileID);
+    ~DpLiftCollisionFilePtr();
+};
+
 extern "C" {
-/* Lift model, collision file (ov025 .bss) and marker model (ov002 .bss). */
-extern SharedFilePtr data_ov025_02113ae0;
+/* Lift model, collision file (ov025 .bss) and marker model (ov002 .bss).
+ * This TU's two handles are defined at the end of this file so the
+ * constructors do not enter .text. */
+extern DpLiftModelFilePtr data_ov025_02113ae0;
 extern SharedFilePtr data_ov002_0210d9f0;
-extern SharedFilePtr data_ov025_02113ad8;
+extern DpLiftCollisionFilePtr data_ov025_02113ad8;
 extern CLPS_Block data_ov025_02112d08;
 
 extern s16 data_02082214[];
@@ -192,3 +215,9 @@ s32 daDpLift_c::InitResources()
     return 1;
 }
 #pragma pop
+
+/* Source order is construction order: model file 1505, collision file 1506.
+ * __sinit_daDpLift_c.cpp emits both constructions and registers the
+ * destructors; the registration nodes are compiler temporaries. */
+DpLiftModelFilePtr data_ov025_02113ae0(1505);
+DpLiftCollisionFilePtr data_ov025_02113ad8(1506);

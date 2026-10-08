@@ -19,6 +19,9 @@ src/actors/daObjDpBrock_c.cpp:
 src/actors/daDpLift_c.cpp:
     complete
     .text start:0x021120e4 end:0x021125bc
+    .init start:0x02112aac end:0x02112b18
+    .ctor start:0x02112b24 end:0x02112b28
+    .bss start:0x02113ad8 end:0x02113b00
 
 src/unnamed/ov025/func_ov025_021125bc.cpp:
     complete
@@ -43,7 +46,3 @@ src/unnamed/ov025/__sinit_ov025_021129dc.c:
 src/unnamed/ov025/__sinit_ov025_02112a44.c:
     complete
     .init start:0x02112a44 end:0x02112aac
-
-src/unnamed/ov025/__sinit_ov025_02112aac.c:
-    complete
-    .init start:0x02112aac end:0x02112b18
