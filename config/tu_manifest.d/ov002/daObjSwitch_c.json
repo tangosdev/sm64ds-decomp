@@ -183,70 +183,70 @@
   ],
   "data": [
     {
-      "symbol": "@839",
+      "symbol": "@844",
       "address": "0x0210987c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba4c0Ev"
     },
     {
-      "symbol": "@833",
+      "symbol": "@838",
       "address": "0x02109884",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba2d0Ev"
     },
     {
-      "symbol": "@835",
+      "symbol": "@840",
       "address": "0x0210988c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba2acEv"
     },
     {
-      "symbol": "@837",
+      "symbol": "@842",
       "address": "0x02109894",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba1acEv"
     },
     {
-      "symbol": "@831",
+      "symbol": "@836",
       "address": "0x0210989c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba4c0Ev"
     },
     {
-      "symbol": "@845",
+      "symbol": "@117",
       "address": "0x021098a4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba0bcEv"
     },
     {
-      "symbol": "@843",
+      "symbol": "@118",
       "address": "0x021098ac",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba4c0Ev"
     },
     {
-      "symbol": "@827",
+      "symbol": "@832",
       "address": "0x021098b4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba3fcEv"
     },
     {
-      "symbol": "@829",
+      "symbol": "@834",
       "address": "0x021098bc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba3a8Ev"
     },
     {
-      "symbol": "@841",
+      "symbol": "@846",
       "address": "0x021098c4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -283,28 +283,28 @@
       "evidence": "model resource handle constructed with file ID 0x45c (Resources[0].model)"
     },
     {
-      "symbol": "@822",
+      "symbol": "@827",
       "address": "0x0210dfdc",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x45c model handle"
     },
     {
-      "symbol": "@823",
+      "symbol": "@828",
       "address": "0x0210dfe8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x45d collision handle"
     },
     {
-      "symbol": "@824",
+      "symbol": "@829",
       "address": "0x0210dff4",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x48f model handle"
     },
     {
-      "symbol": "@825",
+      "symbol": "@830",
       "address": "0x0210e000",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -536,70 +536,70 @@
             "anchors": {
               "5": [
                 {
-                  "symbol": "@837",
+                  "symbol": "@842",
                   "address": 34642068,
                   "sectionBase": 34642068
                 }
               ],
               "7": [
                 {
-                  "symbol": "@833",
+                  "symbol": "@838",
                   "address": 34642052,
                   "sectionBase": 34642052
                 }
               ],
               "9": [
                 {
-                  "symbol": "@845",
+                  "symbol": "@117",
                   "address": 34642084,
                   "sectionBase": 34642084
                 }
               ],
               "11": [
                 {
-                  "symbol": "@835",
+                  "symbol": "@840",
                   "address": 34642060,
                   "sectionBase": 34642060
                 }
               ],
               "13": [
                 {
-                  "symbol": "@831",
+                  "symbol": "@836",
                   "address": 34642076,
                   "sectionBase": 34642076
                 }
               ],
               "15": [
                 {
-                  "symbol": "@829",
+                  "symbol": "@834",
                   "address": 34642108,
                   "sectionBase": 34642108
                 }
               ],
               "17": [
                 {
-                  "symbol": "@843",
+                  "symbol": "@118",
                   "address": 34642092,
                   "sectionBase": 34642092
                 }
               ],
               "23": [
                 {
-                  "symbol": "@841",
+                  "symbol": "@846",
                   "address": 34642116,
                   "sectionBase": 34642116
                 }
               ],
               "27": [
                 {
-                  "symbol": "@827",
+                  "symbol": "@832",
                   "address": 34642100,
                   "sectionBase": 34642100
                 }
               ],
               "29": [
                 {
-                  "symbol": "@839",
+                  "symbol": "@844",
                   "address": 34642044,
                   "sectionBase": 34642044
                 }
@@ -661,28 +661,28 @@
               ],
               "34": [
                 {
-                  "symbol": "@822",
+                  "symbol": "@827",
                   "address": 34660316,
                   "sectionBase": 34660316
                 }
               ],
               "35": [
                 {
-                  "symbol": "@823",
+                  "symbol": "@828",
                   "address": 34660328,
                   "sectionBase": 34660328
                 }
               ],
               "38": [
                 {
-                  "symbol": "@824",
+                  "symbol": "@829",
                   "address": 34660340,
                   "sectionBase": 34660340
                 }
               ],
               "39": [
                 {
-                  "symbol": "@825",
+                  "symbol": "@830",
                   "address": 34660352,
                   "sectionBase": 34660352
                 }
@@ -947,6 +947,18 @@
       "evidence": "compiler-generated static initialization call shape and the four direct retail references in this initializer"
     }
   ],
+  "defined_symbol_renames": [
+    {
+      "from": "@850",
+      "to": "@117",
+      "evidence": "mwcc emits @850 for the temp at 0x021098a4, and that name is already published elsewhere, so the object is renamed to @117"
+    },
+    {
+      "from": "@848",
+      "to": "@118",
+      "evidence": "mwcc emits @848 for the temp at 0x021098ac, and that name is already published elsewhere, so the object is renamed to @118"
+    }
+  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_daObjSwitch_c.cpp",
@@ -961,85 +973,85 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@839",
+      "symbol": "@844",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x0210987c"
     },
     {
-      "symbol": "@833",
+      "symbol": "@838",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x02109884"
     },
     {
-      "symbol": "@835",
+      "symbol": "@840",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x0210988c"
     },
     {
-      "symbol": "@837",
+      "symbol": "@842",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x02109894"
     },
     {
-      "symbol": "@831",
+      "symbol": "@836",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x0210989c"
     },
     {
-      "symbol": "@845",
+      "symbol": "@117",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098a4"
     },
     {
-      "symbol": "@843",
+      "symbol": "@118",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098ac"
     },
     {
-      "symbol": "@827",
+      "symbol": "@832",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098b4"
     },
     {
-      "symbol": "@829",
+      "symbol": "@834",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098bc"
     },
     {
-      "symbol": "@841",
+      "symbol": "@846",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098c4"
     },
     {
-      "symbol": "@822",
+      "symbol": "@827",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0210dfdc"
     },
     {
-      "symbol": "@823",
+      "symbol": "@828",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0210dfe8"
     },
     {
-      "symbol": "@824",
+      "symbol": "@829",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0210dff4"
     },
     {
-      "symbol": "@825",
+      "symbol": "@830",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0210e000"
@@ -1151,7 +1163,7 @@
       "source": "0x021016e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@822",
+      "symbol": "@827",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210dfdc"
@@ -1181,7 +1193,7 @@
       "source": "0x021016f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@823",
+      "symbol": "@828",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210dfe8"
@@ -1201,7 +1213,7 @@
       "source": "0x02101700",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@824",
+      "symbol": "@829",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210dff4"
@@ -1221,7 +1233,7 @@
       "source": "0x02101708",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@825",
+      "symbol": "@830",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210e000"
@@ -1241,7 +1253,7 @@
       "source": "0x02101710",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@827",
+      "symbol": "@832",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x021098b4"
@@ -1251,7 +1263,7 @@
       "source": "0x02101714",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@829",
+      "symbol": "@834",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x021098bc"
@@ -1261,7 +1273,7 @@
       "source": "0x02101718",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@831",
+      "symbol": "@836",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210989c"
@@ -1271,7 +1283,7 @@
       "source": "0x0210171c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@833",
+      "symbol": "@838",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02109884"
@@ -1281,7 +1293,7 @@
       "source": "0x02101720",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@835",
+      "symbol": "@840",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210988c"
@@ -1291,7 +1303,7 @@
       "source": "0x02101724",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@837",
+      "symbol": "@842",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02109894"
@@ -1301,7 +1313,7 @@
       "source": "0x02101728",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@839",
+      "symbol": "@844",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210987c"
@@ -1311,7 +1323,7 @@
       "source": "0x0210172c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@841",
+      "symbol": "@846",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x021098c4"
@@ -1321,7 +1333,7 @@
       "source": "0x02101730",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@843",
+      "symbol": "@118",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x021098ac"
@@ -1331,7 +1343,7 @@
       "source": "0x02101734",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@845",
+      "symbol": "@117",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x021098a4"

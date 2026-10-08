@@ -229,56 +229,56 @@
   ],
   "data": [
     {
-      "symbol": "@1153",
+      "symbol": "@1158",
       "address": "0x021340e0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the patrol update pointer-to-member descriptor; retail first word is 0x02131648"
     },
     {
-      "symbol": "@1151",
+      "symbol": "@1156",
       "address": "0x021340e8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the patrol entry pointer-to-member descriptor; retail first word is 0x02131a74"
     },
     {
-      "symbol": "@1155",
+      "symbol": "@1160",
       "address": "0x021340f0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the idle entry pointer-to-member descriptor; retail first word is 0x02131608"
     },
     {
-      "symbol": "@1149",
+      "symbol": "@1154",
       "address": "0x021340f8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the water-rest update pointer-to-member descriptor; retail first word is 0x02131ac4"
     },
     {
-      "symbol": "@1157",
+      "symbol": "@1162",
       "address": "0x02134100",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the idle update pointer-to-member descriptor; retail first word is 0x02131584"
     },
     {
-      "symbol": "@1145",
+      "symbol": "@1150",
       "address": "0x02134108",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the water-chase update pointer-to-member descriptor; retail first word is 0x02131c48"
     },
     {
-      "symbol": "@1143",
+      "symbol": "@1148",
       "address": "0x02134110",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the water-chase entry pointer-to-member descriptor; retail first word is 0x02131db0"
     },
     {
-      "symbol": "@1147",
+      "symbol": "@1152",
       "address": "0x02134118",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -317,35 +317,35 @@
       "evidence": "model resource handle constructed with file ID 0x39f"
     },
     {
-      "symbol": "@1139",
+      "symbol": "@1144",
       "address": "0x021344a8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the patrol anim handle"
     },
     {
-      "symbol": "@1141",
+      "symbol": "@1146",
       "address": "0x021344b4",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the idle anim handle"
     },
     {
-      "symbol": "@1137",
+      "symbol": "@1142",
       "address": "0x021344c0",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the model handle"
     },
     {
-      "symbol": "@1140",
+      "symbol": "@1145",
       "address": "0x021344cc",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the water-rest anim handle"
     },
     {
-      "symbol": "@1138",
+      "symbol": "@1143",
       "address": "0x021344d8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -431,31 +431,7 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@1137",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
-    },
-    {
-      "symbol": "@1138",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
-    },
-    {
-      "symbol": "@1139",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
-    },
-    {
-      "symbol": "@1140",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
-    },
-    {
-      "symbol": "@1141",
+      "symbol": "@1142",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
@@ -464,46 +440,70 @@
       "symbol": "@1143",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
+    },
+    {
+      "symbol": "@1144",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
     },
     {
       "symbol": "@1145",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
     },
     {
-      "symbol": "@1147",
+      "symbol": "@1146",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
+    },
+    {
+      "symbol": "@1148",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
     },
     {
-      "symbol": "@1149",
+      "symbol": "@1150",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
     },
     {
-      "symbol": "@1151",
+      "symbol": "@1152",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
     },
     {
-      "symbol": "@1153",
+      "symbol": "@1154",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
     },
     {
-      "symbol": "@1155",
+      "symbol": "@1156",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
     },
     {
-      "symbol": "@1157",
+      "symbol": "@1158",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
+    },
+    {
+      "symbol": "@1160",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
+    },
+    {
+      "symbol": "@1162",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
@@ -635,7 +635,7 @@
       "source": "0x02133e44",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1137",
+      "symbol": "@1142",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021344c0"
@@ -665,7 +665,7 @@
       "source": "0x02133e50",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1138",
+      "symbol": "@1143",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021344d8"
@@ -685,7 +685,7 @@
       "source": "0x02133e5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1139",
+      "symbol": "@1144",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021344a8"
@@ -705,7 +705,7 @@
       "source": "0x02133e68",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1140",
+      "symbol": "@1145",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021344cc"
@@ -725,7 +725,7 @@
       "source": "0x02133e74",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1141",
+      "symbol": "@1146",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021344b4"
@@ -745,7 +745,7 @@
       "source": "0x02133e7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1143",
+      "symbol": "@1148",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x02134110"
@@ -755,7 +755,7 @@
       "source": "0x02133e80",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1145",
+      "symbol": "@1150",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x02134108"
@@ -775,7 +775,7 @@
       "source": "0x02133e88",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1147",
+      "symbol": "@1152",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x02134118"
@@ -785,7 +785,7 @@
       "source": "0x02133e8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1149",
+      "symbol": "@1154",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021340f8"
@@ -805,7 +805,7 @@
       "source": "0x02133e94",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1151",
+      "symbol": "@1156",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021340e8"
@@ -815,7 +815,7 @@
       "source": "0x02133e98",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1153",
+      "symbol": "@1158",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021340e0"
@@ -835,7 +835,7 @@
       "source": "0x02133ea0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1155",
+      "symbol": "@1160",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021340f0"
@@ -845,7 +845,7 @@
       "source": "0x02133ea4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1157",
+      "symbol": "@1162",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x02134100"

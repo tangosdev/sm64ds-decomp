@@ -179,21 +179,21 @@
   ],
   "data": [
     {
-      "symbol": "@2168",
+      "symbol": "@110",
       "address": "0x02112a78",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for State0; retail first word is 0x02111320"
     },
     {
-      "symbol": "@2169",
+      "symbol": "@111",
       "address": "0x02112a80",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for State2; retail first word is 0x02111284"
     },
     {
-      "symbol": "@2170",
+      "symbol": "@112",
       "address": "0x02112a88",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -237,7 +237,7 @@
       "evidence": "compiler-generated model resource destructor-registration node"
     },
     {
-      "symbol": "@2171",
+      "symbol": "@113",
       "address": "0x02112d1c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -291,23 +291,23 @@
   "defined_symbol_renames": [
     {
       "from": "@747",
-      "to": "@2168",
-      "evidence": "mwcc numbers this descriptor @747 per TU and ov026 already defines a global @747, so the scratch link would multiply-define it"
+      "to": "@110",
+      "evidence": "mwcc still emits @747 for the temp at 0x02112a78, and that name is already published elsewhere, so the object is renamed to @110"
     },
     {
       "from": "@751",
-      "to": "@2169",
-      "evidence": "mwcc numbers this descriptor @751 per TU and ov026 already defines a global @751, so the scratch link would multiply-define it"
+      "to": "@111",
+      "evidence": "mwcc still emits @751 for the temp at 0x02112a80, and that name is already published elsewhere, so the object is renamed to @111"
     },
     {
       "from": "@749",
-      "to": "@2170",
-      "evidence": "mwcc numbers this descriptor @749 per TU and ov026 already defines a global @749, so the scratch link would multiply-define it"
+      "to": "@112",
+      "evidence": "mwcc still emits @749 for the temp at 0x02112a88, and that name is already published elsewhere, so the object is renamed to @112"
     },
     {
       "from": "@745",
-      "to": "@2171",
-      "evidence": "mwcc numbers this descriptor @745 per TU and ov026 already defines a global @745, so the scratch link would multiply-define it"
+      "to": "@113",
+      "evidence": "mwcc still emits @745 for the temp at 0x02112d1c, and that name is already published elsewhere, so the object is renamed to @113"
     }
   ],
   "symbol_binding_rewrites": [
@@ -324,19 +324,19 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@2168",
+      "symbol": "@110",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local State0 descriptor is a configured initializer relocation destination at 0x02112a78"
     },
     {
-      "symbol": "@2169",
+      "symbol": "@111",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local State2 descriptor is a configured initializer relocation destination at 0x02112a80"
     },
     {
-      "symbol": "@2170",
+      "symbol": "@112",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local State1 descriptor is a configured initializer relocation destination at 0x02112a88"
@@ -360,7 +360,7 @@
       "evidence": "compiler-local model registration node is a configured initializer relocation destination at 0x02112d10"
     },
     {
-      "symbol": "@2171",
+      "symbol": "@113",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local collision registration node is a configured initializer relocation destination at 0x02112d1c"
@@ -462,7 +462,7 @@
       "source": "0x02112100",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2171",
+      "symbol": "@113",
       "addend": 0,
       "target_module": "ov010",
       "target_address": "0x02112d1c"
@@ -472,7 +472,7 @@
       "source": "0x02112104",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2168",
+      "symbol": "@110",
       "addend": 0,
       "target_module": "ov010",
       "target_address": "0x02112a78"
@@ -482,7 +482,7 @@
       "source": "0x02112108",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2170",
+      "symbol": "@112",
       "addend": 0,
       "target_module": "ov010",
       "target_address": "0x02112a88"
@@ -492,7 +492,7 @@
       "source": "0x0211210c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2169",
+      "symbol": "@111",
       "addend": 0,
       "target_module": "ov010",
       "target_address": "0x02112a80"

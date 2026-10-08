@@ -123,7 +123,7 @@ _ZN11dScMgBase_cD2Ev kind:function(arm,size=0x58) addr:0x020b29c0
 _ZN11dScMgBase_cD0Ev kind:function(arm,size=0x6c) addr:0x020b2a18
 _ZN11dScMgBase_cD1Ev kind:function(arm,size=0x58) addr:0x020b2a84
 _ZN11dScMgBase_cC2Ev kind:function(arm,size=0x17c) addr:0x020b2adc
-__arraydtor$314 kind:function(arm,size=0x24) addr:0x020b2c58
+__arraydtor$319 kind:function(arm,size=0x24) addr:0x020b2c58
 _ZN3EntD1Ev kind:function(arm,size=0x4) addr:0x020b2c7c
 _ZN3EntC1Ev kind:function(arm,size=0x4) addr:0x020b2c80
 func_ov004_020b2c84 kind:function(arm,size=0x34) addr:0x020b2c84
@@ -572,10 +572,10 @@ data_ov004_020bbd7c kind:data(any) addr:0x020bbd7c
 data_ov004_020bbdec kind:data(any) addr:0x020bbdec
 data_ov004_020bbe5c kind:data(any) addr:0x020bbe5c
 data_ov004_020bbecc kind:data(any) addr:0x020bbecc
-@317 kind:data(any) addr:0x020bbf4c
-@321 kind:data(any) addr:0x020bbf54
-@319 kind:data(any) addr:0x020bbf5c
-@323 kind:data(any) addr:0x020bbf64
+@322 kind:data(any) addr:0x020bbf4c
+@326 kind:data(any) addr:0x020bbf54
+@324 kind:data(any) addr:0x020bbf5c
+@328 kind:data(any) addr:0x020bbf64
 _ZTI11dScMgBase_c kind:data(any) addr:0x020bbf6c
 _ZTIN11dScMgBase_c15graphCallback_cE kind:data(any) addr:0x020bbf78
 _ZTS11dScMgBase_c kind:data(any) addr:0x020bbf84
@@ -805,7 +805,7 @@ data_ov004_020beb68 kind:bss addr:0x020beb68
 data_ov004_020beb6c kind:bss addr:0x020beb6c
 data_ov004_020beb70 kind:bss addr:0x020beb70
 data_ov004_020beb74 kind:bss addr:0x020beb74
-@315 kind:bss addr:0x020beb7c
+@320 kind:bss addr:0x020beb7c
 data_ov004_020beb88 kind:bss addr:0x020beb88
 data_ov004_020beb98 kind:bss addr:0x020beb98
 data_ov004_020beba8 kind:bss addr:0x020beba8

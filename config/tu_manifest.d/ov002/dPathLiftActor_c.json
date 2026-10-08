@@ -219,7 +219,7 @@
       "evidence": "compiler temporary for the WAIT record's init pointer-to-member; retail first word is 0x020ef3f0"
     },
     {
-      "symbol": "@2162",
+      "symbol": "@104",
       "address": "0x0210aed8",
       "size": "0x8",
       "evidence": "compiler temporary for the PATH record's init pointer-to-member; retail first word is 0x020efa44"
@@ -237,13 +237,13 @@
       "evidence": "compiler temporary for the WAIT record's execute pointer-to-member; retail first word is 0x020ef3ec"
     },
     {
-      "symbol": "@2163",
+      "symbol": "@105",
       "address": "0x0210aef0",
       "size": "0x8",
       "evidence": "compiler temporary for the FALL record's init pointer-to-member; retail first word is 0x020ef57c"
     },
     {
-      "symbol": "@2164",
+      "symbol": "@106",
       "address": "0x0210aef8",
       "size": "0x8",
       "evidence": "compiler temporary for the PATH record's execute pointer-to-member; retail first word is 0x020ef670"
@@ -277,18 +277,18 @@
   "defined_symbol_renames": [
     {
       "from": "@651",
-      "to": "@2162",
-      "evidence": "mwcc numbers this descriptor @651 per TU and ov002 already defines a global @651, so the scratch link would multiply-define it"
+      "to": "@104",
+      "evidence": "mwcc still emits @651 for the temp at 0x0210aed8, and that name is already published elsewhere, so the object is renamed to @104"
     },
     {
       "from": "@655",
-      "to": "@2163",
-      "evidence": "mwcc numbers this descriptor @655 per TU and ov079 already defines a global @655, so the scratch link would multiply-define it"
+      "to": "@105",
+      "evidence": "mwcc still emits @655 for the temp at 0x0210aef0, and that name is already published elsewhere, so the object is renamed to @105"
     },
     {
       "from": "@653",
-      "to": "@2164",
-      "evidence": "mwcc numbers this descriptor @653 per TU and ov079 already defines a global @653, so the scratch link would multiply-define it"
+      "to": "@106",
+      "evidence": "mwcc still emits @653 for the temp at 0x0210aef8, and that name is already published elsewhere, so the object is renamed to @106"
     }
   ],
   "symbol_binding_rewrites": [
@@ -329,7 +329,7 @@
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination at 0x0210aed0"
     },
     {
-      "symbol": "@2162",
+      "symbol": "@104",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination at 0x0210aed8"
@@ -347,13 +347,13 @@
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination at 0x0210aee8"
     },
     {
-      "symbol": "@2163",
+      "symbol": "@105",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination at 0x0210aef0"
     },
     {
-      "symbol": "@2164",
+      "symbol": "@106",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination at 0x0210aef8"
@@ -385,7 +385,7 @@
       "source": "0x02107284",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2162",
+      "symbol": "@104",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210aed8"
@@ -395,7 +395,7 @@
       "source": "0x02107288",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2164",
+      "symbol": "@106",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210aef8"
@@ -405,7 +405,7 @@
       "source": "0x0210728c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2163",
+      "symbol": "@105",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210aef0"
@@ -564,8 +564,7 @@
   "notes": [
     "Partial production promotion, not completion of the class/TU assignment.",
     "Retain src/_ZN16dPathLiftActor_cD0Ev.cpp and src/_ZN16dPathLiftActor_cD1Ev.cpp as canonical destructor owners.",
-    "The state data data_ov002_0210af2c, the scale triple data_ov002_0210af00, the class metadata records and the __sinit_dPathLiftActor_c.cpp static initializer are this TU's own emission; the handwritten __sinit_ov002_021071f4 source is retired. Foreign-home compiler metadata duplicates are measured at configured ROM homes; no coined or unowned metadata waiver.",
-    "rom.sha256 records the stock ROM SHA-256 the other intact-object manifests share; this worktree's dump rebuilds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 with every compared range and all 106 modules byte-identical.",
+    "Retain state data data_ov002_0210af2c. The static initializer now lives in this TU. Compiler-only metadata is measured at configured ROM homes; no coined or unowned metadata waiver.",
     "Follow-up: independently reconstruct the complete lifecycle and state-data TU boundary; current 20-function slice is the verified useful subset.",
     "The 17 helper member names are inferred from matched bodies/state-table use; RTTI proves dPathLiftActor_c class identity, not original English member spellings. Const qualification on HasNonzeroAngleZ, Param10ModeIs1, Param12ModeIs1, Param08ModeIs2, Param08ModeIs1Or2 and IsUnk42cSet is inferred from read-only bodies; ARM bytes cannot distinguish the original qualification. SetState(int) uses an inferred int spelling for a word-sized argument."
   ],
@@ -655,13 +654,7 @@
       "reason": "Compiler-emitted own-class vtable with configured ROM home in this module. The .data claim stops at the state table so the configured address point data_ov002_0210af70 stays gap-served for subclass consumers; the emitted duplicate storage is measured against its canonical bytes and discarded."
     }
   ],
-  "notes": [
-    "Partial production promotion, not completion of the class/TU assignment.",
-    "Retain src/_ZN16dPathLiftActor_cD0Ev.cpp and src/_ZN16dPathLiftActor_cD1Ev.cpp as canonical destructor owners.",
-    "Retain state data data_ov002_0210af2c. The static initializer now lives in this TU. Compiler-only metadata is measured at configured ROM homes; no coined or unowned metadata waiver.",
-    "Follow-up: independently reconstruct the complete lifecycle and state-data TU boundary; current 20-function slice is the verified useful subset.",
-    "The 17 helper member names are inferred from matched bodies/state-table use; RTTI proves dPathLiftActor_c class identity, not original English member spellings. Const qualification on HasNonzeroAngleZ, Param10ModeIs1, Param12ModeIs1, Param08ModeIs2, Param08ModeIs1Or2 and IsUnk42cSet is inferred from read-only bodies; ARM bytes cannot distinguish the original qualification. SetState(int) uses an inferred int spelling for a word-sized argument."
-  ],  "verification": {
+  "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",

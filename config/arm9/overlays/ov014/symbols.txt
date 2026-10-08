@@ -207,10 +207,10 @@ data_ov014_02114968 kind:bss addr:0x02114968
 data_ov014_02114970 kind:bss addr:0x02114970
 data_ov014_02114978 kind:bss addr:0x02114978
 data_ov014_02114980 kind:bss addr:0x02114980
-@1165 kind:bss addr:0x02114988
-@1166 kind:bss addr:0x02114994
-@1167 kind:bss addr:0x021149a0
-@1168 kind:bss addr:0x021149ac
+@1170 kind:bss addr:0x02114988
+@1171 kind:bss addr:0x02114994
+@1172 kind:bss addr:0x021149a0
+@1173 kind:bss addr:0x021149ac
 data_ov014_021149b8 kind:bss addr:0x021149b8
 data_ov014_021149c0 kind:bss addr:0x021149c0
 data_ov014_021149c8 kind:bss addr:0x021149c8

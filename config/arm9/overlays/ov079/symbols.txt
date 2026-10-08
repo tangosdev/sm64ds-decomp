@@ -97,8 +97,8 @@ g_profile_BATAN kind:data(any) addr:0x02127c5c ambiguous
 _ZTV7daBtn_c kind:data(any) addr:0x02127c80
 data_ov079_02127cfc kind:data(any) addr:0x02127cfc
 data_ov079_02127e7c kind:data(any) addr:0x02127e7c
-@655 kind:data(any) addr:0x02127e9c
-@653 kind:data(any) addr:0x02127ea4
+@660 kind:data(any) addr:0x02127e9c
+@658 kind:data(any) addr:0x02127ea4
 _ZTS7daKlr_c kind:data(any) addr:0x02127eac
 _ZTI7daKlr_c kind:data(any) addr:0x02127eb8
 g_profile_KILLER kind:data(any) addr:0x02127ec4

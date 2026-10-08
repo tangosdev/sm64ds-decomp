@@ -231,7 +231,7 @@ data_ov021_02114a2c kind:bss addr:0x02114a2c
 data_ov021_02114a38 kind:bss addr:0x02114a38
 data_ov021_02114a44 kind:bss addr:0x02114a44
 data_ov021_02114a50 kind:bss addr:0x02114a50
-@887 kind:bss addr:0x02114a58
+@892 kind:bss addr:0x02114a58
 data_ov021_02114a64 kind:bss addr:0x02114a64
 data_ov021_02114a6c kind:bss addr:0x02114a6c
 data_ov021_02114a74 kind:bss addr:0x02114a74

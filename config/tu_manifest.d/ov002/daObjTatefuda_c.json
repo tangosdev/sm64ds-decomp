@@ -251,7 +251,7 @@
       "evidence": "anonymous InitTalk state descriptor; retail first word is 0x020bb9f0"
     },
     {
-      "symbol": "@2155",
+      "symbol": "@1000",
       "address": "0x02109a74",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -265,42 +265,42 @@
       "evidence": "anonymous InitIdle state descriptor; retail first word is 0x020bba24"
     },
     {
-      "symbol": "@2156",
+      "symbol": "@1001",
       "address": "0x02109a84",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous Talk state descriptor; retail first word is 0x020bb614"
     },
     {
-      "symbol": "@2157",
+      "symbol": "@1002",
       "address": "0x02109a8c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous Dropped state descriptor; retail first word is 0x020bba28"
     },
     {
-      "symbol": "@2158",
+      "symbol": "@1003",
       "address": "0x02109a94",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous InitThrown state descriptor; retail first word is 0x020bbc78"
     },
     {
-      "symbol": "@2159",
+      "symbol": "@1004",
       "address": "0x02109a9c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous Thrown state descriptor; retail first word is 0x020bbb14"
     },
     {
-      "symbol": "@2160",
+      "symbol": "@1005",
       "address": "0x02109aa4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous InitDropped state descriptor; retail first word is 0x020bbac8"
     },
     {
-      "symbol": "@2161",
+      "symbol": "@1006",
       "address": "0x02109aac",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -402,38 +402,38 @@
   "defined_symbol_renames": [
     {
       "from": "@1139",
-      "to": "@2155",
-      "evidence": "mwcc numbers this descriptor @1139 per TU and ov090 already defines a global @1139, so the scratch link would multiply-define it"
+      "to": "@1000",
+      "evidence": "mwcc still emits @1139 for the temp at 0x02109a74, and that name is already published elsewhere, so the object is renamed to @1000"
     },
     {
       "from": "@1137",
-      "to": "@2156",
-      "evidence": "mwcc numbers this descriptor @1137 per TU and ov090 already defines a global @1137, so the scratch link would multiply-define it"
+      "to": "@1001",
+      "evidence": "mwcc still emits @1137 for the temp at 0x02109a84, and that name is already published elsewhere, so the object is renamed to @1001"
     },
     {
       "from": "@1149",
-      "to": "@2157",
-      "evidence": "mwcc numbers this descriptor @1149 per TU and ov090 already defines a global @1149, so the scratch link would multiply-define it"
+      "to": "@1002",
+      "evidence": "mwcc still emits @1149 for the temp at 0x02109a8c, and that name is already published elsewhere, so the object is renamed to @1002"
     },
     {
       "from": "@1143",
-      "to": "@2158",
-      "evidence": "mwcc numbers this descriptor @1143 per TU and ov090 already defines a global @1143, so the scratch link would multiply-define it"
+      "to": "@1003",
+      "evidence": "mwcc still emits @1143 for the temp at 0x02109a94, and that name is already published elsewhere, so the object is renamed to @1003"
     },
     {
       "from": "@1145",
-      "to": "@2159",
-      "evidence": "mwcc numbers this descriptor @1145 per TU and ov090 already defines a global @1145, so the scratch link would multiply-define it"
+      "to": "@1004",
+      "evidence": "mwcc still emits @1145 for the temp at 0x02109a9c, and that name is already published elsewhere, so the object is renamed to @1004"
     },
     {
       "from": "@1147",
-      "to": "@2160",
-      "evidence": "mwcc numbers this descriptor @1147 per TU and ov090 already defines a global @1147, so the scratch link would multiply-define it"
+      "to": "@1005",
+      "evidence": "mwcc still emits @1147 for the temp at 0x02109aa4, and that name is already published elsewhere, so the object is renamed to @1005"
     },
     {
       "from": "@1141",
-      "to": "@2161",
-      "evidence": "mwcc numbers this descriptor @1141 per TU and ov090 already defines a global @1141, so the scratch link would multiply-define it"
+      "to": "@1006",
+      "evidence": "mwcc still emits @1141 for the temp at 0x02109aac, and that name is already published elsewhere, so the object is renamed to @1006"
     }
   ],
   "symbol_binding_rewrites": [
@@ -480,43 +480,43 @@
       "evidence": "compiler-local InitTalk descriptor is a configured initializer relocation destination at 0x02109a6c"
     },
     {
-      "symbol": "@2156",
+      "symbol": "@1001",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local Talk descriptor is a configured initializer relocation destination at 0x02109a84"
     },
     {
-      "symbol": "@2155",
+      "symbol": "@1000",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local InitCarried descriptor is a configured initializer relocation destination at 0x02109a74"
     },
     {
-      "symbol": "@2161",
+      "symbol": "@1006",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local Carried descriptor is a configured initializer relocation destination at 0x02109aac"
     },
     {
-      "symbol": "@2158",
+      "symbol": "@1003",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local InitThrown descriptor is a configured initializer relocation destination at 0x02109a94"
     },
     {
-      "symbol": "@2159",
+      "symbol": "@1004",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local Thrown descriptor is a configured initializer relocation destination at 0x02109a9c"
     },
     {
-      "symbol": "@2160",
+      "symbol": "@1005",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local InitDropped descriptor is a configured initializer relocation destination at 0x02109aa4"
     },
     {
-      "symbol": "@2157",
+      "symbol": "@1002",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local Dropped descriptor is a configured initializer relocation destination at 0x02109a8c"
@@ -1053,7 +1053,7 @@
       "source": "0x02101874",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2156",
+      "symbol": "@1001",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02109a84"
@@ -1063,7 +1063,7 @@
       "source": "0x02101878",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2155",
+      "symbol": "@1000",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02109a74"
@@ -1083,7 +1083,7 @@
       "source": "0x02101880",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2161",
+      "symbol": "@1006",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02109aac"
@@ -1093,7 +1093,7 @@
       "source": "0x02101884",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2158",
+      "symbol": "@1003",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02109a94"
@@ -1103,7 +1103,7 @@
       "source": "0x02101888",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2159",
+      "symbol": "@1004",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02109a9c"
@@ -1113,7 +1113,7 @@
       "source": "0x0210188c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2160",
+      "symbol": "@1005",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02109aa4"
@@ -1123,7 +1123,7 @@
       "source": "0x02101890",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2157",
+      "symbol": "@1002",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02109a8c"

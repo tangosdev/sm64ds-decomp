@@ -293,28 +293,28 @@
       "evidence": "animation resource handle constructed with file ID 0x9c04"
     },
     {
-      "symbol": "@1165",
+      "symbol": "@1170",
       "address": "0x02114988",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x9c02 model handle"
     },
     {
-      "symbol": "@1166",
+      "symbol": "@1171",
       "address": "0x02114994",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x9c01 model handle"
     },
     {
-      "symbol": "@1167",
+      "symbol": "@1172",
       "address": "0x021149a0",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x9c04 animation handle"
     },
     {
-      "symbol": "@1168",
+      "symbol": "@1173",
       "address": "0x021149ac",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -372,25 +372,25 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@1165",
+      "symbol": "@1170",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local registration node is a configured initializer relocation destination at 0x02114988"
     },
     {
-      "symbol": "@1166",
+      "symbol": "@1171",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local registration node is a configured initializer relocation destination at 0x02114994"
     },
     {
-      "symbol": "@1167",
+      "symbol": "@1172",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local registration node is a configured initializer relocation destination at 0x021149a0"
     },
     {
-      "symbol": "@1168",
+      "symbol": "@1173",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local registration node is a configured initializer relocation destination at 0x021149ac"
@@ -502,7 +502,7 @@
       "source": "0x0211329c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1165",
+      "symbol": "@1170",
       "addend": 0,
       "target_module": "ov014",
       "target_address": "0x02114988"
@@ -522,7 +522,7 @@
       "source": "0x021132a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1166",
+      "symbol": "@1171",
       "addend": 0,
       "target_module": "ov014",
       "target_address": "0x02114994"
@@ -552,7 +552,7 @@
       "source": "0x021132b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1167",
+      "symbol": "@1172",
       "addend": 0,
       "target_module": "ov014",
       "target_address": "0x021149a0"
@@ -572,7 +572,7 @@
       "source": "0x021132c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1168",
+      "symbol": "@1173",
       "addend": 0,
       "target_module": "ov014",
       "target_address": "0x021149ac"

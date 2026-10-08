@@ -154,14 +154,14 @@
   ],
   "data": [
     {
-      "symbol": "@771",
+      "symbol": "@776",
       "address": "0x021341e4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the state record's execute pointer-to-member; retail first word is 0x021327e4"
     },
     {
-      "symbol": "@769",
+      "symbol": "@774",
       "address": "0x021341ec",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -182,14 +182,14 @@
       "evidence": "anim resource handle constructed with file ID 0x39e"
     },
     {
-      "symbol": "@766",
+      "symbol": "@771",
       "address": "0x02134534",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated model resource destructor-registration node"
     },
     {
-      "symbol": "@767",
+      "symbol": "@116",
       "address": "0x02134540",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -240,6 +240,13 @@
       "evidence": "compiler-generated static initialization call shape and two direct retail references in this initializer"
     }
   ],
+  "defined_symbol_renames": [
+    {
+      "from": "@772",
+      "to": "@116",
+      "evidence": "mwcc emits @772 for the temp at 0x02134540, and that name is already published elsewhere, so the object is renamed to @116"
+    }
+  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_daManta_c.cpp",
@@ -254,25 +261,25 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@766",
+      "symbol": "@771",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local model registration node is a configured initializer relocation destination at 0x02134534"
     },
     {
-      "symbol": "@767",
+      "symbol": "@116",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local anim registration node is a configured initializer relocation destination at 0x02134540"
     },
     {
-      "symbol": "@769",
+      "symbol": "@774",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local init descriptor is a configured initializer relocation destination at 0x021341ec"
     },
     {
-      "symbol": "@771",
+      "symbol": "@776",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local execute descriptor is a configured initializer relocation destination at 0x021341e4"
@@ -344,7 +351,7 @@
       "source": "0x02133f2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@766",
+      "symbol": "@771",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x02134534"
@@ -374,7 +381,7 @@
       "source": "0x02133f3c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@767",
+      "symbol": "@116",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x02134540"
@@ -384,7 +391,7 @@
       "source": "0x02133f40",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@769",
+      "symbol": "@774",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021341ec"
@@ -394,7 +401,7 @@
       "source": "0x02133f44",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@771",
+      "symbol": "@776",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021341e4"

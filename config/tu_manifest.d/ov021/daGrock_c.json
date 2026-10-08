@@ -156,7 +156,7 @@
       "evidence": "model file handle constructed with file ID 1492"
     },
     {
-      "symbol": "@887",
+      "symbol": "@892",
       "address": "0x02114a58",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -200,7 +200,7 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@887",
+      "symbol": "@892",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local model registration node is a configured initializer relocation destination at 0x02114a58"
@@ -252,7 +252,7 @@
       "source": "0x021136c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@887",
+      "symbol": "@892",
       "addend": 0,
       "target_module": "ov021",
       "target_address": "0x02114a58"

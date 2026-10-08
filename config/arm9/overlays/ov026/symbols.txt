@@ -192,10 +192,10 @@ g_profile_WL_SUBMARINE kind:data(any) addr:0x02113c48 ambiguous
 _ZTV18daObjWlSubmarine_c kind:data(any) addr:0x02113c6c
 data_ov026_02113ccc kind:data(any) addr:0x02113ccc ambiguous
 data_ov026_02113cd4 kind:data(any) addr:0x02113cd4 ambiguous
-@747 kind:data(any) addr:0x02113cec
-@749 kind:data(any) addr:0x02113cf4
-@751 kind:data(any) addr:0x02113cfc
-@745 kind:data(any) addr:0x02113d04
+@752 kind:data(any) addr:0x02113cec
+@754 kind:data(any) addr:0x02113cf4
+@119 kind:data(any) addr:0x02113cfc
+@750 kind:data(any) addr:0x02113d04
 _ZTI18daWater_Tatumaki_c kind:data(any) addr:0x02113d0c
 _ZTS18daWater_Tatumaki_c kind:data(any) addr:0x02113d18
 g_profile_WATER_TATUMAKI kind:data(any) addr:0x02113d30 ambiguous
@@ -228,8 +228,8 @@ data_ov026_02113eec kind:bss addr:0x02113eec
 data_ov026_02113ef8 kind:bss addr:0x02113ef8
 data_ov026_02113f04 kind:bss addr:0x02113f04
 data_ov026_02113f0c kind:bss addr:0x02113f0c
-@742 kind:bss addr:0x02113f14
-@743 kind:bss addr:0x02113f20
+@747 kind:bss addr:0x02113f14
+@748 kind:bss addr:0x02113f20
 data_ov026_02113f2c kind:bss addr:0x02113f2c
 data_ov026_02113f3c kind:bss addr:0x02113f3c
 data_ov026_02113f4c kind:bss addr:0x02113f4c

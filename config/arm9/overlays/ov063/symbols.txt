@@ -237,12 +237,12 @@ data_ov063_0211eec0 kind:bss addr:0x0211eec0
 data_ov063_0211eec8 kind:bss addr:0x0211eec8
 data_ov063_0211eed0 kind:bss addr:0x0211eed0
 @715 kind:bss addr:0x0211eed8
-@2165 kind:bss addr:0x0211eee4
+@107 kind:bss addr:0x0211eee4
 @718 kind:bss addr:0x0211eef0
 @719 kind:bss addr:0x0211eefc
 @712 kind:bss addr:0x0211ef08
-@2166 kind:bss addr:0x0211ef14
-@2167 kind:bss addr:0x0211ef20
+@108 kind:bss addr:0x0211ef14
+@109 kind:bss addr:0x0211ef20
 @714 kind:bss addr:0x0211ef2c
 data_ov063_0211ef38 kind:bss addr:0x0211ef38
 data_ov063_0211ef58 kind:bss addr:0x0211ef58

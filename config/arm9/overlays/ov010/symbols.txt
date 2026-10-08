@@ -107,9 +107,9 @@ data_ov010_02112948 kind:data(any) addr:0x02112948
 data_ov010_02112968 kind:data(any) addr:0x02112968 ambiguous
 data_ov010_021129b4 kind:data(any) addr:0x021129b4 ambiguous
 data_ov010_02112a6c kind:data(any) addr:0x02112a6c ambiguous
-@2168 kind:data(any) addr:0x02112a78
-@2169 kind:data(any) addr:0x02112a80
-@2170 kind:data(any) addr:0x02112a88
+@110 kind:data(any) addr:0x02112a78
+@111 kind:data(any) addr:0x02112a80
+@112 kind:data(any) addr:0x02112a88
 @755 kind:data(any) addr:0x02112a90
 @753 kind:data(any) addr:0x02112a98
 _ZTI14daObjC1_Trap_c kind:data(any) addr:0x02112aa0
@@ -141,7 +141,7 @@ data_ov010_02112cd0 kind:data(any) addr:0x02112cd0 ambiguous
 data_ov010_02112d00 kind:bss addr:0x02112d00
 data_ov010_02112d08 kind:bss addr:0x02112d08
 @744 kind:bss addr:0x02112d10
-@2171 kind:bss addr:0x02112d1c
+@113 kind:bss addr:0x02112d1c
 data_ov010_02112d28 kind:bss addr:0x02112d28
 data_ov010_02112d50 kind:bss addr:0x02112d50
 data_ov010_02112d58 kind:bss addr:0x02112d58
