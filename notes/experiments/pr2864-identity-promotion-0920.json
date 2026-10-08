@@ -116,7 +116,7 @@
       ],
       [
         "Matrix4x3_FromTranslation",
-        "src/func_ov002_020e444c.c",
+        "src/unnamed/ov002/func_ov002_020e444c.c",
         "param:#1 Matrix4x3 *"
       ],
       [
@@ -913,12 +913,12 @@
       ],
       [
         "data_ov090_0213455c",
-        "src/__sinit_ov090_02133f4c.c",
+        "src/unnamed/ov090/__sinit_ov090_02133f4c.c",
         "return:int []"
       ],
       [
         "data_ov090_02134564",
-        "src/__sinit_ov090_02133f4c.c",
+        "src/unnamed/ov090/__sinit_ov090_02133f4c.c",
         "return:int []"
       ]
     ],
@@ -1142,7 +1142,7 @@
       ],
       [
         "Matrix4x3_FromTranslation",
-        "src/func_ov002_020e444c.c",
+        "src/unnamed/ov002/func_ov002_020e444c.c",
         "param:#1 Matrix4x3 *"
       ],
       [
@@ -1798,7 +1798,7 @@
         {
           "symbol": "Matrix4x3_FromTranslation",
           "kind": "param",
-          "file": "src/func_ov002_020e444c.c",
+          "file": "src/unnamed/ov002/func_ov002_020e444c.c",
           "line": 8,
           "decl": "void (Matrix4x3 *, int, int, int)",
           "got": "#1 Matrix4x3 *",

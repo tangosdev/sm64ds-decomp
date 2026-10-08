@@ -1,6 +1,6 @@
 # daBrq static-initializer ownership and generation proof
 
-This is a production-boundary audit for [__sinit_ov070_02122d80](../src/__sinit_ov070_02122d80.cpp). It does not
+This is a production-boundary audit for [__sinit_ov070_02122d80](../src/unnamed/ov070/__sinit_ov070_02122d80.cpp). It does not
 change an enrolled source, linker configuration, or symbol name. The guarded
 probe in [notes/sinit-probes/dabrq.cpp](../notes/sinit-probes/dabrq.cpp) contains ordinary global C++ objects and
 no hand-written initializer.
@@ -12,7 +12,7 @@ It is a proof note. It was first written on a branch named
 regenerates the initializer from a "resource TU", and the production enrolment
 of the initializer was never changed. On `main` today:
 
-- [src/__sinit_ov070_02122d80.cpp](../src/__sinit_ov070_02122d80.cpp) is still the hand-transcribed, separately
+- [src/unnamed/ov070/__sinit_ov070_02122d80.cpp](../src/unnamed/ov070/__sinit_ov070_02122d80.cpp) is still the hand-transcribed, separately
   enrolled initializer, byte-identical to the version this audit was measured
   against;
 - [src/actors/daBrq_c.cpp](../src/actors/daBrq_c.cpp), described by
@@ -30,7 +30,7 @@ produced this initializer organically? It could, as shown below.
 
 ## Verdict
 
-[__sinit_ov070_02122d80](../src/__sinit_ov070_02122d80.cpp), its `.ctor` word, six PMF descriptors, and the BSS
+[__sinit_ov070_02122d80](../src/unnamed/ov070/__sinit_ov070_02122d80.cpp), its `.ctor` word, six PMF descriptors, and the BSS
 objects they initialize belong to the [ov070](../config/arm9/overlays/ov070/symbols.txt) [daBrq_c](../src/actors/daBrq_c.cpp) translation unit.
 CodeWarrior 2004/b56 organically reproduces the entire initializer from five
 resource objects, three state-handler pairs, and one `Vector3`-shaped object:
@@ -113,7 +113,7 @@ without a hand-written `extern "C"` initializer.
 Compile the guarded probe with the pinned production C++ flags (the
 `CPP_FLAGS` string in [tools/swarm.py](../tools/swarm.py), through `compile_c` in
 [tools/match.py](../tools/match.py)) plus `-DSINIT_OWNERSHIP_PROBE`. Comparing `__sinit_dabrq.cpp`
-in that object with [__sinit_ov070_02122d80](../src/__sinit_ov070_02122d80.cpp) from the committed exact
+in that object with [__sinit_ov070_02122d80](../src/unnamed/ov070/__sinit_ov070_02122d80.cpp) from the committed exact
 transcription gives:
 
 ```text

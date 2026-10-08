@@ -23,7 +23,7 @@
  *   (`mMaxPosY - 0xc8000 > mPosY`, `mMaxPosY < mPosY`) keeps Behavior
  *   at 0xa4 and changes its words. mPosY on the left matches.
  * Leftover: func_ov022_0211193c is not defined in this TU
- *   (src/func_ov022_0211193c.c). InitResources only stores it.
+ *   (src/unnamed/ov022/func_ov022_0211193c.c). InitResources only stores it.
  *   func_ov022_0211191c, which that callback calls, writes mHadClsn
  *   for actor 0xbf. The factory and g_profile_FL_BLOCK are outside too.
  * Leftover: data_ov022_02114558, data_ov022_02114550 and

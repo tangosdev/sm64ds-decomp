@@ -114,7 +114,7 @@ Three things fall out, and each one shapes the plan.
 
 **About 40% need individual reconciliation.** The compile failures are not the tool
 breaking — they are the disagreements finally being forced into the open. Every one is
-a real question that has to be answered by a person: does [func_ov007_020b7948](../src/func_ov007_020b7948.c) return `void` as its definition says, or `int` as its callers say?
+a real question that has to be answered by a person: does [func_ov007_020b7948](../src/unnamed/ov007/func_ov007_020b7948.c) return `void` as its definition says, or `int` as its callers say?
 
 **Declaration form can change codegen.** [func_ov002_020f2aec](../src/actors/daDemo_c.cpp) only matches with `int` as the last parameter of `_ZN3G2x13SetBlendAlphaEPVttttt`; the header's `u16`
 forces a truncation at the call site and the function grows `0x108 -> 0x110`. Rare —

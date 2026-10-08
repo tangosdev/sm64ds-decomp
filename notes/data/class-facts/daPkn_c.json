@@ -212,7 +212,7 @@
     },
     "static_initializer": {
       "function": "__sinit_ov084_02130654",
-      "shard": "src/__sinit_ov084_02130654.c",
+      "shard": "src/unnamed/ov084/__sinit_ov084_02130654.c",
       "ctor_entry": "0x02130868 in ov084 .ctor (3 words at 0x02130860..0x0213086c, one per sinit)",
       "what_it_does": "copies the nine .data PMF constants into data_ov084_02130e80[0..8], and also constructs the shared static objects at .bss 0x02130df4..0x02130e74"
     },

@@ -47,7 +47,7 @@ This document describes this commit. The queue records its immutable output SHA.
 - ROM observations: the RTTI record at [ov095](../../../config/arm9/overlays/ov095/symbols.txt) 0x021375b0 reads
   [__si_class_type_info+8, 0x021375bc, _ZTI10dBgActor_c]; 0x021375bc holds
   "10daUdlift_c"; the typeinfo word before the vtable address point 0x02137628
-  is 0x021375b0. [__sinit_ov095_0213722c](../../../src/__sinit_ov095_0213722c.c) fills the `.bss` state table at
+  is 0x021375b0. [__sinit_ov095_0213722c](../../../src/unnamed/ov095/__sinit_ov095_0213722c.c) fills the `.bss` state table at
   0x02137910 with five pointer-to-member constants whose relocations resolve
   state 0..4 to 0x02136368, 0x02136298, 0x02136178, 0x02136090 and 0x02136104.
 ---

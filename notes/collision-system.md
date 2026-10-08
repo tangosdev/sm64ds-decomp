@@ -365,9 +365,9 @@ concentrated in structure, status, and numbers.
 #### Retraction: `dBgCh_Lin` 0x54 is not misnamed
 
 A first pass of this survey reported that 0x54 should be `clsnPos`, not `lineEnd`. **That was
-wrong, and it rested on an inverted premise** — that [func_ov002_020fea4c](../src/func_ov002_020fea4c.c) is `GetStart`. Read
+wrong, and it rested on an inverted premise** — that [func_ov002_020fea4c](../src/unnamed/ov002/func_ov002_020fea4c.c) is `GetStart`. Read
 the body: `a[0..2] = b[3..5]` reads offset 0x44, the `dM3dGLin`'s *second* `Vector3`, so it is
-**GetEnd**; [func_ov002_020fea68](../src/func_ov002_020fea68.c) (`b[0..2]`) is GetStart.
+**GetEnd**; [func_ov002_020fea68](../src/unnamed/ov002/func_ov002_020fea68.c) (`b[0..2]`) is GetStart.
 
 So `func_02037608` seeds 0x54 from the line **end**, and `dBgW_KcMbg::DetectClsn`
 depends on that, transforming 0x38 and 0x54 as the two endpoints of the scratch segment. On a

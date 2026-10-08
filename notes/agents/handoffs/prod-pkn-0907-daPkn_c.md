@@ -132,7 +132,7 @@ This document describes this commit. The queue records its immutable output SHA.
   function and byte for byte.
 - Remaining agreed issue scope: **the nine pointer-to-member records are left
   name-resolved by address.** They live at 0x02130ba4..0x02130bec and
-  [__sinit_ov084_02130654](../../../src/__sinit_ov084_02130654.c) builds them into the state table in `.bss` at
+  [__sinit_ov084_02130654](../../../src/unnamed/ov084/__sinit_ov084_02130654.c) builds them into the state table in `.bss` at
   0x02130e80; `daPkn_c::Behavior` dispatches through it. `dsd` resolves those
   `.data` words by SYMBOL NAME, so renaming any target is a same-commit
   [ov084/symbols.txt](../../../config/arm9/overlays/ov084/symbols.txt) edit, and a mangled TU beside a stale name there links every

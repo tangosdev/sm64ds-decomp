@@ -602,7 +602,7 @@ class ReadsTheDefinitionAndNotADeclaration(unittest.TestCase):
             self.assertEqual(acct["compared"], 2)
             self.assertEqual([(r[0], r[4]) for r in rows],
                              [("func_ov002_020bf5e0",
-                               "src/func_ov002_020d4748.cpp")])
+                               "src/unnamed/ov002/func_ov002_020d4748.cpp")])
 
     def test_a_row_with_no_body_anywhere_is_counted_not_guessed(self):
         """One row on main is this: the body was renamed out of the family.

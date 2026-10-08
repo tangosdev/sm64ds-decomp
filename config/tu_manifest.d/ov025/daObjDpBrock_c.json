@@ -95,7 +95,7 @@
     "dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange stay mangled: each takes Fix12<int> by value (wall 6az). func_020393d4 stays an unnamed arm9 helper, declared (int *, int) to agree with its definition in src/func_020393d4.c.",
     "OPERATOR NEW: the class declares no operator new of its own. `new daObjDpBrock_c()` binds the inherited fBase_c::operator new(size_t), which include/fBase_c.h defines inline as the forward to _ZN7fBase_cnwEj; the object's undefined symbols are unchanged.",
     "STYLE ORACLE: src/actors/daDkk_c.cpp (same overlay, folded factory, inline destructor) and src/actors/daDpLift_c.cpp (same overlay, dBgActor_c leaf).",
-    "DECLARATION BASELINE: the five config/decl-agreement-baseline.json entries keyed to the retired src/_ZN14daObjDpBrock_c13InitResourcesEv.cpp are dropped, because the typed TU no longer carries those disagreements. Two are banked for this TU: it declares data_ov025_02113ab0 and data_ov025_02113ab8 as SharedFilePtr, which is what they are, against src/__sinit_ov025_02112a44.c's int [] spelling. Same pair shape as src/actors/daDpLift_c.cpp and src/__sinit_ov025_02112aac.c."
+    "DECLARATION BASELINE: the five config/decl-agreement-baseline.json entries keyed to the retired src/_ZN14daObjDpBrock_c13InitResourcesEv.cpp are dropped, because the typed TU no longer carries those disagreements. Two are banked for this TU: it declares data_ov025_02113ab0 and data_ov025_02113ab8 as SharedFilePtr, which is what they are, against src/unnamed/ov025/__sinit_ov025_02112a44.c's int [] spelling. Same pair shape as src/actors/daDpLift_c.cpp and src/unnamed/ov025/__sinit_ov025_02112aac.c."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

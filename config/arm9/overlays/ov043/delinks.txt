@@ -20,18 +20,18 @@ src/game/actors/d_a_obj_km1_dorifu.cpp:
     .text start:0x02111630 end:0x021117fc
     .data start:0x021124dc end:0x021125dc
 
-src/__sinit_ov043_021117fc.c:
+src/unnamed/ov043/__sinit_ov043_021117fc.c:
     complete
     .init start:0x021117fc end:0x02111868
 
-src/__sinit_ov043_02111868.c:
+src/unnamed/ov043/__sinit_ov043_02111868.c:
     complete
     .init start:0x02111868 end:0x021118d4
 
-src/__sinit_ov043_021118d4.c:
+src/unnamed/ov043/__sinit_ov043_021118d4.c:
     complete
     .init start:0x021118d4 end:0x02111940
 
-src/__sinit_ov043_02111940.c:
+src/unnamed/ov043/__sinit_ov043_02111940.c:
     complete
     .init start:0x02111940 end:0x02111ae8

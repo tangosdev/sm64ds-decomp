@@ -309,7 +309,7 @@ member names are descriptive inferences, not ROM-authenticated source spellings.
 
 It does **not** hold `dScEntry_c::graphCallback_c`; equal 0x2c sizes had made that an
 attractive but false inference. The RTTI-proven graph callback is instead the separate
-0x2c-byte global at [ov075](../config/arm9/overlays/ov075/symbols.txt):0x0211d71c. [__sinit_ov075_0211bb00](../src/__sinit_ov075_0211bb00.c) constructs it with
+0x2c-byte global at [ov075](../config/arm9/overlays/ov075/symbols.txt):0x0211d71c. [__sinit_ov075_0211bb00](../src/unnamed/ov075/__sinit_ov075_0211bb00.c) constructs it with
 `_ZN10dScEntry_c15graphCallback_cC1Ev`, which writes the dGraph base and derived vptrs
 and clears its first two fields.
 

@@ -196,7 +196,7 @@
     "note": "The queue's promotion_route for this row is text-only, so none of this is owned by the promoted TU. It is recorded so the writer need not rediscover the boundary, and so nobody mistakes an unowned neighbour for part of the class.",
     ".data": "0x02122b60..0x02122ca8 -- 18 PMF records (0x02122b60), _ZTS7daSpd_c (0x02122bf0), _ZTI7daSpd_c (0x02122bfc), g_profile_SPIDER (0x02122c08, marked `ambiguous` in symbols.txt), vtable storage (0x02122c24, address point 0x02122c2c), ending immediately before daEykn_c's band at 0x02122ca8. Same shape daEyBm_c's promoted manifest describes for its own band.",
     ".bss": "0x02122f80..0x02123038 -- five symbols: 0x02122f80, 0x02122f88, 0x02122f90, 0x02122f9c (resource handles; __sinit_ov071_021226ac pairs 0x02122f80/0x02122f9c with id 0x425 -> arm9 0x02017ab4, and 0x02122f88/0x02122f90 with id 0x426 -> arm9 0x02017984) and the 0x90-byte state array at 0x02122fa8.",
-    ".init": "__sinit_ov071_021226ac, 0x021226ac..0x021228c8, its own delinks shard (src/__sinit_ov071_021226ac.c). NOT one of the 37 text shards.",
+    ".init": "__sinit_ov071_021226ac, 0x021226ac..0x021228c8, its own delinks shard (src/unnamed/ov071/__sinit_ov071_021226ac.c). NOT one of the 37 text shards.",
     ".ctor": "the word at 0x02122b30 = 0x021226ac, first of ov071's four sinit slots. The other three (0x021228c8, 0x02122a1c, 0x02122a64) belong to the overlay's other classes; daEyBm_c's promoted manifest names __sinit_ov071_02122a1c as its own."
   },
 

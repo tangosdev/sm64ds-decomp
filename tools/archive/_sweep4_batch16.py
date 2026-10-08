@@ -271,7 +271,7 @@ DOSET = {
 }
 
 BC3DC = {
-    "baseline": open(REPO / "src/func_ov007_020bc3dc.c", encoding="utf-8").read(),
+    "baseline": open(REPO / "src/unnamed/ov007/func_ov007_020bc3dc.c", encoding="utf-8").read(),
     "ands_flag": """extern int func_ov007_020c9214();
 void func_ov007_020bc3dc(void *c, int i, int a2) {
     unsigned short **arr;
@@ -324,5 +324,5 @@ if __name__ == "__main__":
                     lambda s: DOSET_WRAP(s) if not s.startswith("//cpp") else s + "\n")
     ok |= run_group("bc3dc", "func_ov007_020bc3dc", "0x020bc3dc", "0x58",
                     "extracted/dsd/arm9_overlays/ov007.bin", "0x020ad660", FLAGS,
-                    BC3DC, REPO / "src/func_ov007_020bc3dc.c")
+                    BC3DC, REPO / "src/unnamed/ov007/func_ov007_020bc3dc.c")
     print("\nANY MATCH:", ok)

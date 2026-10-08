@@ -135,7 +135,7 @@ Recorded separately, not combined into one score.
   non-text section, so `_ZTV7daMky_c`, `_ZTI7daMky_c`, `_ZTS7daMky_c` and the four
   inherited base RTTI records are all externalized — the ROM supplies them. This
   is the text-only promoted shape, shared by 107 of the tree's 124 promoted TUs.
-  The branch also touches [src/__sinit_ov029_02112c10.c](../../../src/__sinit_ov029_02112c10.c), a cross-overlay static
+  The branch also touches [src/unnamed/ov029/__sinit_ov029_02112c10.c](../../../src/unnamed/ov029/__sinit_ov029_02112c10.c), a cross-overlay static
   initializer in [ov029](../../../config/arm9/overlays/ov029/symbols.txt); it is covered by the full-ROM build below, which is green.
 - Attribution preserved through each move/rename:
   `attribution.json` carries the 44-shard fold's `path#symbol` overrides; that was
