@@ -281,18 +281,22 @@ def rekey_json(orig_text, pattern, dest):
     new_text, n = rekey_text(orig_text, pattern, dest)
     if n == 0:
         return orig_text, 0, True
+    # A CRLF working copy (core.autocrlf) never round-trips through json.dumps, which
+    # emits bare LF: detect the layout on LF text and put the line endings back after.
+    crlf = "\r\n" in orig_text
+    lf_orig = orig_text.replace("\r\n", "\n") if crlf else orig_text
     try:
-        orig = json.loads(orig_text)
+        orig = json.loads(lf_orig)
         new = json.loads(new_text)
     except ValueError:
         return new_text, n, False
-    kw = _detect_json_format(orig, orig_text)
+    kw = _detect_json_format(orig, lf_orig)
     if kw is None:
         return new_text, n, False
     out = json.dumps(_resort(orig, new), **kw)
-    if orig_text.endswith("\n"):
+    if lf_orig.endswith("\n"):
         out += "\n"
-    return out, n, True
+    return (out.replace("\n", "\r\n") if crlf else out), n, True
 
 
 def _line_sorted(lines):

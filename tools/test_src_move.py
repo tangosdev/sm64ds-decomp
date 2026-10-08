@@ -72,6 +72,13 @@ class CanonicalJson(unittest.TestCase):
                           indent=2, sort_keys=True) + "\n"
         self.assertEqual(out, want)
 
+    def test_crlf_working_copy_is_still_canonical_and_stays_crlf(self):
+        lf = json.dumps({"src/a.c": 1, "src/m.c": 2}, indent=1, sort_keys=True) + "\n"
+        out, n, canonical = SM.rekey_json(lf.replace("\n", "\r\n"), self.pat, self.dest)
+        self.assertTrue(canonical)
+        want = json.dumps({"src/z/a.c": 1, "src/b/m.c": 2}, indent=1, sort_keys=True) + "\n"
+        self.assertEqual(out, want.replace("\n", "\r\n"))
+
     def test_unsorted_document_keeps_its_order(self):
         orig = json.dumps({"src/m.c": 1, "src/a.c": 2}, indent=2) + "\n"
         out, n, canonical = SM.rekey_json(orig, self.pat, self.dest)
