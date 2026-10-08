@@ -958,8 +958,6 @@ extern int data_ov021_021149c0[];
 extern int data_ov022_02112c9c[];
 extern int data_ov022_0211427c[];
 extern int data_ov024_021129f0[];
-extern int data_ov024_02113960[];
-extern int data_ov024_02113968[];
 extern int data_ov025_02112654(void*);
 extern int data_ov025_02113814[];
 extern int data_ov026_02113ea0[];

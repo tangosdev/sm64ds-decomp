@@ -24,8 +24,10 @@
  * Leftover: dBgW_KcMbg::SetFile, Model::LoadFile and dCcAc_c::Init keep
  *   their mangled extern-C spellings. SetFile takes Fix12<int> by value
  *   (Fix12 wall, notes/mwccarm-codegen.md 6az).
- * Leftover: data_ov024_02113960 / 02113968 / 021129f0 are the overlay's
- *   KCL/BMD handles and CLPS block, in .data this TU does not own.
+ * The two resource handles below (model data_ov024_02113968, collision
+ * data_ov024_02113960) are defined by this TU; mwcc builds
+ * __sinit_daObjDlPyramid_c.cpp from them. data_ov024_021129f0 is the
+ * collision CLPS block, overlay .data this TU does not own.
  */
 
 #include "daObjDlPyramid_c.h"
@@ -58,14 +60,39 @@ void func_020393d4(int *collider, int callback);
 
 extern s16 data_02082214[];         /* sine/cosine table, interleaved */
 extern int data_ov024_021129f0[];   /* the collision CLPS block */
-extern int data_ov024_02113960[];   /* SharedFilePtr: the collision file */
-extern int data_ov024_02113968[];   /* SharedFilePtr: the model file */
 
 void func_ov024_021112c0(daObjDlPyramid_c *self);
 void func_ov024_02111350(daObjDlPyramid_c *self);
 void func_ov024_02111480(daObjDlPyramid_c *self);
 void func_ov024_021114c4(daObjDlPyramid_c *self);
 }
+
+/* The retail static initializer constructs these two 8-byte resource handles
+ * in source order (model 1501, then collision 1502) and lets the C++ runtime
+ * register their destructors. InitResources loads the model through the first
+ * (Model::LoadFile) and the collision through the second (dBgW_Kc::LoadFile);
+ * CleanupResources releases both (S19/S31: typed from this TU's callees).
+ * The family spellings are reconstructed; the constructor/destructor
+ * addresses, file IDs, object widths, BSS order, and registration topology
+ * are direct ROM evidence. The intact-TU manifest maps their
+ * compiler-generated undefined member imports onto the existing
+ * evidence-bounded ROM symbols. */
+struct DlPyramidModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    DlPyramidModelFilePtr(u32 fileID);
+    ~DlPyramidModelFilePtr();
+};
+
+struct DlPyramidCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    DlPyramidCollisionFilePtr(u32 fileID);
+    ~DlPyramidCollisionFilePtr();
+};
+
+extern "C" DlPyramidModelFilePtr data_ov024_02113968;
+extern "C" DlPyramidCollisionFilePtr data_ov024_02113960;
 
 #pragma defer_codegen off
 
@@ -168,8 +195,8 @@ extern "C" void func_ov024_021114c4(daObjDlPyramid_c *self)
 int daObjDlPyramid_c::CleanupResources()
 {
     mMeshCollider.Disable();
-    ((SharedFilePtr *)data_ov024_02113968)->Release();
-    ((SharedFilePtr *)data_ov024_02113960)->Release();
+    data_ov024_02113968.Release();
+    data_ov024_02113960.Release();
     return 1;
 }
 
@@ -240,11 +267,11 @@ s32 daObjDlPyramidDummy_c::Behavior()
 // @symbol _ZN16daObjDlPyramid_c13InitResourcesEv
 int daObjDlPyramid_c::InitResources()
 {
-    BMD_File *bmd = (BMD_File *)Model::LoadFile(*(SharedFilePtr *)data_ov024_02113968);
+    BMD_File *bmd = (BMD_File *)Model::LoadFile(data_ov024_02113968);
     mTopModel.SetFile(bmd, 1, -1);
     func_ov024_021114c4(this);
     func_ov024_02111480(this);
-    void *kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov024_02113960);
+    void *kcl = dBgW_Kc::LoadFile(data_ov024_02113960);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, kcl, &mClsnMat2, 0x199, mAngleY, data_ov024_021129f0);
     func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosAndAngs);
@@ -295,3 +322,8 @@ extern "C" daObjDlPyramid_c *daObjDlPyramid_c_classInit()
 {
     return new daObjDlPyramid_c;
 }
+
+/* Retail construction order: model 1501, then collision 1502. mwcc emits
+ * __sinit_daObjDlPyramid_c.cpp from these two definitions. */
+DlPyramidModelFilePtr data_ov024_02113968(1501);
+DlPyramidCollisionFilePtr data_ov024_02113960(1502);

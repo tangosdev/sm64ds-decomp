@@ -3,18 +3,35 @@
   "module": "ov024",
   "source": "src/actors/daObjDlPyramid_c.cpp",
   "promoted_source": "src/actors/daObjDlPyramid_c.cpp",
+  "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x021111a0..0x021118ac, 16 function(s). Extended over the two zero-gap classInit factories at 0x0211183c and 0x02111874, which tu_map labels as their own unattributed unit because it cuts on symbol NAME; each is named <Class>_classInit for a class this entry already owns, and the next run starts exactly at 0x021118ac.",
     "class label(s): daObjDlPyramidDummy_c, daObjDlPyramid_c",
-    "module sinit corroboration: 1 sinit(s) / 1 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 1 sinit(s) / 1 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "the compiler-generated __sinit_daObjDlPyramid_c.cpp is byte-identical to retail __sinit_ov024_02112808 (0x6c). It constructs the model handle (1501) then the collision handle (1502) and registers their destructors. The ctor word at 0x02112874 points at that initializer."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x021111a0",
       "end": "0x021118ac"
+    },
+    {
+      "name": ".init",
+      "start": "0x02112808",
+      "end": "0x02112874"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02112874",
+      "end": "0x02112878"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02113960",
+      "end": "0x02113988"
     }
   ],
   "functions": [
@@ -131,11 +148,232 @@
       "ordinal": 15
     }
   ],
+  "init": [
+    {
+      "symbol": "__sinit_daObjDlPyramid_c.cpp",
+      "address": "0x02112808",
+      "size": "0x6c",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov024_02112808 and carries the same ten relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_daObjDlPyramid_c.cpp",
+      "address": "0x02112874",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov024_02113960",
+      "address": "0x02113960",
+      "size": "0x8",
+      "evidence": "collision resource handle constructed with file ID 1502"
+    },
+    {
+      "symbol": "data_ov024_02113968",
+      "address": "0x02113968",
+      "size": "0x8",
+      "evidence": "model resource handle constructed with file ID 1501"
+    },
+    {
+      "symbol": "@593",
+      "address": "0x02113970",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated model resource destructor-registration node"
+    },
+    {
+      "symbol": "@594",
+      "address": "0x0211397c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated collision resource destructor-registration node"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN21DlPyramidModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the wrapper constructor exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN21DlPyramidModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor registration destination and the wrapper destructor exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN25DlPyramidCollisionFilePtrC1Ej",
+      "canonical_symbol": "func_02017b4c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b4c",
+      "evidence": "retail initializer call destination and the wrapper constructor exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN25DlPyramidCollisionFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b34",
+      "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and the two direct retail references in this initializer"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_daObjDlPyramid_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_daObjDlPyramid_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@593",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local model registration node is a configured initializer relocation destination at 0x02113970"
+    },
+    {
+      "symbol": "@594",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local collision registration node is a configured initializer relocation destination at 0x0211397c"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02112818",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112828",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112834",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017b4c",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112844",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112854",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov024_02113968",
+      "addend": 0,
+      "target_module": "ov024",
+      "target_address": "0x02113968"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211285c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112860",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@593",
+      "addend": 0,
+      "target_module": "ov024",
+      "target_address": "0x02113970"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112864",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov024_02113960",
+      "addend": 0,
+      "target_module": "ov024",
+      "target_address": "0x02113960"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211286c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017b34"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112870",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@594",
+      "addend": 0,
+      "target_module": "ov024",
+      "target_address": "0x0211397c"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02112874",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_daObjDlPyramid_c.cpp",
+      "addend": 0,
+      "target_module": "ov024",
+      "target_address": "0x02112808"
+    }
+  ],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
-    "tubuild create warning: RAW: src/func_ov024_02111480.cpp (func_ov024_02111480) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block"
+    "tubuild create warning: RAW: src/func_ov024_02111480.cpp (func_ov024_02111480) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "This file defines the resource handles data_ov024_02113968 (model, 1501) and data_ov024_02113960 (collision, 1502). mwcc emits __sinit_daObjDlPyramid_c.cpp, the ctor word, and the two registration nodes @593/@594. Class RTTI/vtable and the CLPS block stay externalized. The handwritten src/__sinit_ov024_02112808.c is retired."
   ],
   "compiler_only_output": [
     {
@@ -268,7 +506,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov024-daObjDlPyramid_c/daObjDlPyramid_c.o (gitignored)",
+    "object": "build/tu/ov024-daObjDlPyramidDummy_c+daObjDlPyramid_c/daObjDlPyramid_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 16,
     "functions_declared": 16,
@@ -296,10 +534,6 @@
         41,
         42,
         43,
-        44,
-        45,
-        46,
-        47,
         48,
         49,
         50,
@@ -317,7 +551,11 @@
         62,
         63,
         64,
-        65
+        65,
+        66,
+        67,
+        68,
+        69
       ],
       "data": [
         "_ZTV16daObjDlPyramid_c",
@@ -355,14 +593,14 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 25 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
-      "scratch": "build/tu/ov024-daObjDlPyramid_c/link (gitignored)",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov024-daObjDlPyramidDummy_c+daObjDlPyramid_c/link (gitignored)",
       "phases": {
         "delink": true,
         "lcf": true,
@@ -374,7 +612,7 @@
       },
       "tuRange": {
         "start": "0x021111a0",
-        "end": "0x0211183c",
+        "end": "0x021118ac",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -382,22 +620,104 @@
         {
           "section": ".text",
           "start": "0x021111a0",
-          "end": "0x0211183c",
+          "end": "0x021118ac",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02112808",
+          "end": "0x02112874",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02112874",
+          "end": "0x02112878",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02113960",
+          "end": "0x02113988",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 14
+          "LICENSED": 22
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              72
+            ],
+            "desired": [
+              72
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              70
+            ],
+            "desired": [
+              70
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              44,
+              45,
+              46,
+              47
+            ],
+            "desired": [
+              47,
+              45,
+              44,
+              46
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                44,
+                45,
+                46,
+                47
+              ],
+              "desired": [
+                47,
+                45,
+                44,
+                46
+              ],
+              "slots": [
+                44,
+                45,
+                46,
+                47
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
