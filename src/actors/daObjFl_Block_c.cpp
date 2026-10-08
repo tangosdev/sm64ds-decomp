@@ -26,17 +26,40 @@
  *   (src/unnamed/ov022/func_ov022_0211193c.c). InitResources only stores it.
  *   func_ov022_0211191c, which that callback calls, writes mHadClsn
  *   for actor 0xbf. The factory and g_profile_FL_BLOCK are outside too.
- * Leftover: data_ov022_02114558, data_ov022_02114550 and
- *   data_ov064_0211bb0c are unnamed rows in their own modules.
+ * Leftover: data_ov064_0211bb0c is an unnamed row in its own module.
+ * The two file handles live at the bottom of this file; the compiler's
+ *   __sinit_daObjFl_Block_c.cpp constructs them at overlay load. Their
+ *   wrapper names are local -- the constructors are the ROM
+ *   resource-family functions, recorded as aliases in the manifest.
  */
 
 #include "daObjFl_Block_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 
+/* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
+ * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
+ * are local; the manifest aliases the generated names to those ROM symbols. */
+struct FlBlockModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    FlBlockModelFilePtr(u32 fileID);
+    ~FlBlockModelFilePtr();
+};
+
+struct FlBlockCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    FlBlockCollisionFilePtr(u32 fileID);
+    ~FlBlockCollisionFilePtr();
+};
+
 extern "C" {
-extern SharedFilePtr data_ov022_02114558;
-extern SharedFilePtr data_ov022_02114550;
+/* This TU's two file handles: the block model and its collision file.
+ * InitResources loads both, CleanupResources releases them. Defined at the
+ * end of this file so the constructors do not enter .text. */
+extern FlBlockModelFilePtr data_ov022_02114558;
+extern FlBlockCollisionFilePtr data_ov022_02114550;
 extern char data_ov064_0211bb0c[];
 
 /* Scalar ABI. The real members take Fix12<int> by value. */
@@ -111,3 +134,9 @@ s32 daObjFl_Block_c::CleanupResources()
     data_ov022_02114550.Release();
     return 1;
 }
+
+/* Source order is construction order: model file 1521, collision file 1522.
+ * __sinit_daObjFl_Block_c.cpp emits both constructions and registers the
+ * destructors; the registration nodes are compiler temporaries. */
+FlBlockModelFilePtr data_ov022_02114558(1521);
+FlBlockCollisionFilePtr data_ov022_02114550(1522);

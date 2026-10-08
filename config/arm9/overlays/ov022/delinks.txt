@@ -31,6 +31,9 @@ src/d_a_obj_fl_koma_d.c:
 src/actors/daObjFl_Block_c.cpp:
     complete
     .text start:0x021116c4 end:0x0211191c
+    .init start:0x02112d80 end:0x02112dec
+    .ctor start:0x02113100 end:0x02113104
+    .bss start:0x02114550 end:0x02114578
 
 src/unnamed/ov022/func_ov022_0211191c.cpp:
     complete
@@ -84,10 +87,6 @@ src/unnamed/ov022/__sinit_ov022_02112ca8.c:
 src/unnamed/ov022/__sinit_ov022_02112d14.c:
     complete
     .init start:0x02112d14 end:0x02112d80
-
-src/unnamed/ov022/__sinit_ov022_02112d80.c:
-    complete
-    .init start:0x02112d80 end:0x02112dec
 
 src/unnamed/ov022/__sinit_ov022_02112dec.c:
     complete
