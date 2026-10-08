@@ -1,6 +1,7 @@
 //cpp
 #include "Player.h"
 #include "types.h"
+#include "PlayerInput.h"
 struct State;
 
 /* Signature deliberately copied from the local declaration above: the
@@ -26,7 +27,6 @@ extern State data_ov002_0211004c;
 extern State data_ov002_021105a4;
 extern State data_ov002_021101b4;
 extern State data_ov002_021105bc;
-extern u8 data_020a0e40;
 extern u16 data_0209f49e;
 extern u16 data_0209f49c;
 extern s16 data_02082214[];
@@ -40,7 +40,7 @@ int Player::St_Fly_Main()
 {
     mPeakY = mPosY;
 
-    if ((*(u16 *)((char *)&data_0209f49e + (&data_020a0e40)[0] * 0x18) & 0x400) == 0) {
+    if ((*(u16 *)((char *)&data_0209f49e + gActivePlayerSlot * 0x18) & 0x400) == 0) {
         goto skip;
     }
     if (func_ov002_020d674c(c) != 0) {
@@ -67,7 +67,7 @@ skip:
         if (mVertSpeed > 0x20000) {
             mVertAccel = -0x3400;
             if (mVertSpeed >= 0) {
-                if ((*(u16 *)((char *)&data_0209f49c + (&data_020a0e40)[0] * 0x18) & 2) == 0) {
+                if ((*(u16 *)((char *)&data_0209f49c + gActivePlayerSlot * 0x18) & 2) == 0) {
                     mVertAccel = -0x8000;
                 }
             } else {

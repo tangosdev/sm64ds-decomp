@@ -141,11 +141,16 @@ extern OamAttr *data_ov006_02134d1c;
 extern Vector3 data_ov006_0212ddd0;
 extern char data_ov006_0212dddc[];
 
-extern u8 data_020a0e40;
-extern u8 data_020a0de8[][4];
-extern u8 data_020a0de9[][4];
-extern u8 data_020a0dea[][4];
-extern u8 data_020a0deb[][4];
+// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
+extern u8 gActivePlayerSlot;
+// local extern: see above.
+extern u8 gTouchHeld[][4];
+// local extern: see above.
+extern u8 gTouchEdge[][4];
+// local extern: see above.
+extern u8 gTouchX[][4];
+// local extern: see above.
+extern u8 gTouchY[][4];
 extern Matrix4x3 data_020a0e68;
 extern short data_02082214[];
 extern int data_0209e650;
@@ -483,21 +488,21 @@ void dMgJump3DMario_c::EnterDamp()
 // @symbol _ZN16dMgJump3DMario_c9StateHoldEv
 void dMgJump3DMario_c::StateHold()
 {
-    u32 idx = data_020a0e40;
+    u32 idx = gActivePlayerSlot;
     int flag = 0;
 
-    if (data_020a0de8[idx][0] != 0) {
-        if (data_020a0de9[idx][0] != 0) {
+    if (gTouchHeld[idx][0] != 0) {
+        if (gTouchEdge[idx][0] != 0) {
             flag = 1;
         }
     }
     if (flag != 0) {
         /* Keep reusing `flag` here: reading the table straight into `b`
            costs 5 words (notes/experiments/jump3d-2711-statehold-flag-reuse.md). */
-        flag = data_020a0deb[idx][0];
+        flag = gTouchY[idx][0];
         int b = flag;
         int x = mScreenY - 0x20;
-        int dz = mScreenX - data_020a0dea[idx][0];
+        int dz = mScreenX - gTouchX[idx][0];
         if (dz < 0) {
             dz = -dz;
         }
@@ -590,14 +595,14 @@ void dMgJump3DMario_c::StateMove()
 
     {
         int flag = 0;
-        u8 idx = data_020a0e40;
-        if (data_020a0de8[idx][0] != 0 && data_020a0de9[idx][0] != 0)
+        u8 idx = gActivePlayerSlot;
+        if (gTouchHeld[idx][0] != 0 && gTouchEdge[idx][0] != 0)
             flag = 1;
 
         if (flag != 0) {
             s16 y = mScreenY;
-            int ax = (int)data_020a0dea[idx][0];
-            int az = (int)data_020a0deb[idx][0];
+            int ax = (int)gTouchX[idx][0];
+            int az = (int)gTouchY[idx][0];
             int dx = (int)mScreenX - ax;
             int ym = (int)y - 0x20;
             int t = dx < 0 ? -dx : dx;

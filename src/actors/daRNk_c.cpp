@@ -24,8 +24,8 @@
  * Measured source-form constraints: notes/experiments/pr2859-source-repair-0920.json.
  *
  * Leftover:
- *  - the func_ov062_* helpers keep linker names; naming belongs at their
- *    definitions (the State enum gives each state handler its role).
+ *  - the helpers keep their addresses as method names; real naming belongs
+ *    at their definitions (the State enum gives each state handler its role).
  *  - the SetAnim, PlaySub and shadow calls still go through mangled C names
  *    carrying 5Fix12IiE; their scalar signatures are what the bytes need.
  *  - Player::Unk_020c4f40(0x5a), the 0x1f PlaySub pairs, sounds 0x4d and 0xec
@@ -120,8 +120,8 @@ enum {
 #define ANIM_BRAKE     (*(void **)(data_ov062_0211e01c + 4))   /* STATE_PULL_UP's last frame to a stop */
 
 /* Play a BCA on Koopa's ModelAnim at normal speed (0x1000 = 1.0), from frame 0. */
-#define SET_ANIM(self, bca, flags) \
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&(self)->mModelAnim, (bca), (flags), 0x1000, 0)
+#define SET_ANIM(this, bca, flags) \
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&(this)->mModelAnim, (bca), (flags), 0x1000, 0)
 
 bool ApproachLinear(short &value, short target, short step);
 int ApproachLinear(int &value, int target, int step);
@@ -141,19 +141,6 @@ enum {
 };
 
 extern "C" {
-/* STATE_RACE helpers */
-void func_ov062_02119800(daRNk_c *self);    /* footstep sound and dust on the foot-down frames */
-void func_ov062_02119954(daRNk_c *self);    /* start a jump */
-int func_ov062_021199ac(daRNk_c *self);     /* react to the rolling iron ball (BALL_*) */
-int func_ov062_02119af0(char *self);         /* follow the path (PATH_*); include/decl_common.h declares it char * */
-/* The six state handlers, in mState order (State). */
-void func_ov062_02119be0(daRNk_c *self);    /* STATE_POST_RACE_TALK */
-void func_ov062_0211a0f0(daRNk_c *self);    /* STATE_STOP */
-void func_ov062_0211a168(daRNk_c *self);    /* STATE_PULL_UP */
-void func_ov062_0211a1f4(daRNk_c *self);    /* STATE_RACE */
-void func_ov062_0211a740(daRNk_c *self);    /* STATE_OFFER_RACE */
-void func_ov062_0211a9c4(daRNk_c *self);    /* STATE_WAIT_FOR_PLAYER */
-void func_ov062_0211aac0(daRNk_c *self);    /* drop shadow, every frame */
 /* Table of six pointers-to-member, one per State, built by
    __sinit_ov062_0211d4a0. */
 extern int data_ov062_0211e0a4[];
@@ -307,7 +294,7 @@ int daRNk_c::Behavior()
   UpdateWMClsn(mWithMeshClsn, 0);
   mdCcAc_c.Clear();
   mdCcAc_c.Update();
-  func_ov062_0211aac0(this);
+  func_ov062_0211aac0();
   return 1;
 }
 
@@ -321,72 +308,67 @@ int daRNk_c::Render()
   return 1;
 }
 
-// @symbol func_ov062_0211aac0
+// @symbol _ZN7daRNk_c19func_ov062_0211aac0Ev
 /* Drop shadow: build a matrix from the position (divided by 8, as the shadow
    matrix expects) and heading in the scratch matrix, copy it into the model's matrix,
    and give DropShadowRadHeight a radius and height of 160 units. */
-extern "C" {
-void func_ov062_0211aac0(daRNk_c* self){
+void daRNk_c::func_ov062_0211aac0(){
   struct Vector3 v;
-  Vec3_Asr(&v, &self->mPosX, 3);
+  Vec3_Asr(&v, &this->mPosX, 3);
   Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-  Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->mAngleY);
+  Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngleY);
   { struct M43w { int w[12]; };  /* array-wrapper copy: keeps C's block copy under -lang c++ */
-    *(M43w*)&self->mModelAnim.mat4x3 = *(M43w*)&data_020a0e68; }
-  _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(self, &self->mShadowModel, &self->mModelAnim.mat4x3, 0xa0000, 0xa0000, 0xf);
-}
+    *(M43w*)&this->mModelAnim.mat4x3 = *(M43w*)&data_020a0e68; }
+  _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(this, &this->mShadowModel, &this->mModelAnim.mat4x3, 0xa0000, 0xa0000, 0xf);
 }
 
-// @symbol func_ov062_0211a9c4
+// @symbol _ZN7daRNk_c19func_ov062_0211a9c4Ev
 /* STATE_WAIT_FOR_PLAYER. Count mStateTimer down first (a declined offer sets
    it to 60 frames). Then look for the closest player; if there is one within
    200 units and Player::StartTalk accepts, find
    the race flag, remember its ID, arm it (mHasTouchedFlag = 0; the flag
    starts at 0xff, disarmed), turn
    toward the player and go to STATE_OFFER_RACE. */
-extern "C" {
-
-void func_ov062_0211a9c4(daRNk_c *self)
+void daRNk_c::func_ov062_0211a9c4()
 {
     unsigned short val;
     struct Vector3 v;
     daRFlag_c *flag;
     struct Vector3 *sp;
 
-    val = *(unsigned short *)&self->mStateTimer;
+    val = *(unsigned short *)&this->mStateTimer;
     if (val != 0) {
-        *(unsigned short *)&self->mStateTimer = val - 1;
+        *(unsigned short *)&this->mStateTimer = val - 1;
         return;
     }
 
-    self->mPlayer = self->ClosestPlayer();
-    if (self->mPlayer == 0)
+    this->mPlayer = this->ClosestPlayer();
+    if (this->mPlayer == 0)
         return;
 
-    sp = (struct Vector3 *)&self->mPlayer->mPosX;
+    sp = (struct Vector3 *)&this->mPlayer->mPosX;
     v.x = sp->x;
     v.y = sp->y;
     v.z = sp->z;
 
-    if (Vec3_Dist((struct Vector3 *)&self->mPosX, &v) >= kStartTalkDist)
+    if (Vec3_Dist((struct Vector3 *)&this->mPosX, &v) >= kStartTalkDist)
         return;
 
-    if (self->mPlayer->StartTalk(*self, true) == 0)
+    if (this->mPlayer->StartTalk(*this, true) == 0)
         return;
 
     flag = (daRFlag_c *)dActor_c::FindWithActorID(kRaceFlagActorId, 0);
     if (flag == 0)
         return;
 
-    self->mFlagID = flag->uniqueID;
+    this->mFlagID = flag->uniqueID;
     flag->mHasTouchedFlag = 0;
-    self->mState = daRNk_c::STATE_OFFER_RACE;
-    self->mTargetAngleY = Vec3_HorzAngle((struct Vector3 *)&self->mPosX, &v);
-    self->mStep = 0;
-}
+    this->mState = daRNk_c::STATE_OFFER_RACE;
+    this->mTargetAngleY = Vec3_HorzAngle((struct Vector3 *)&this->mPosX, &v);
+    this->mStep = 0;
 }
 
-// @symbol func_ov062_0211a740
+// @symbol _ZN7daRNk_c19func_ov062_0211a740Ev
 /* STATE_OFFER_RACE. Offer the race after the player finishes talking.
  *   step 0  turn toward the player (0x800 a frame, mAngleY following); once
  *           facing, switch to the talk animation, play the cue, and for Mario
@@ -401,28 +383,28 @@ void func_ov062_0211a9c4(daRNk_c *self)
  *           the idle animation. An answer other than 1 or 2 from Mario
  *           changes neither state nor animation. In every case step returns
  *           to 0, mHorzSpeed to 0, and the course timer is reset. */
-extern "C" void func_ov062_0211a740(daRNk_c *self)
+void daRNk_c::func_ov062_0211a740()
 {
-    switch (self->mStep) {
+    switch (this->mStep) {
     case 0:
-        if (ApproachLinear(self->mPrevAngleY, self->mTargetAngleY, kTurnStep) != 0) {
-            SET_ANIM(self, ANIM_TALK, kAnimLoop);
-            self->mStep += 1;
-            func_0201267c(kSfxTurnToTalk, &self->mCamSpacePosX);
-            if (self->mPlayer->param1 == 0) {
+        if (ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, kTurnStep) != 0) {
+            SET_ANIM(this, ANIM_TALK, kAnimLoop);
+            this->mStep += 1;
+            func_0201267c(kSfxTurnToTalk, &this->mCamSpacePosX);
+            if (this->mPlayer->param1 == 0) {
                 func_02012790(0xa);
-                self->mIsTalkingToMario = 1;
+                this->mIsTalkingToMario = 1;
             }
         }
-        self->mAngleY = self->mPrevAngleY;
+        this->mAngleY = this->mPrevAngleY;
         return;
     case 1:
-        if (self->mPlayer->GetTalkState() != 0)
+        if (this->mPlayer->GetTalkState() != 0)
             return;
         {
             unsigned int msg;
             Vector3 v;
-            if (self->mIsTalkingToMario == 0) {
+            if (this->mIsTalkingToMario == 0) {
                 msg = MSG_OFFER_NOT_MARIO;
             } else if (data_0209f2f8 == kAltLevelID) {
                 msg = MSG_OFFER_ALT_LEVEL;
@@ -431,42 +413,42 @@ extern "C" void func_ov062_0211a740(daRNk_c *self)
             }
 
             {
-                int z = self->mPosZ;
-                int y = self->mPosY + kMsgAnchorHeight;
-                int x = self->mPosX;
+                int z = this->mPosZ;
+                int y = this->mPosY + kMsgAnchorHeight;
+                int x = this->mPosX;
                 v.x = x;
                 v.y = y;
                 v.z = z;
             }
-            if (self->mPlayer->ShowMessage(*self, msg, &v, 1, 0) != 0)
-                self->mStep += 1;
+            if (this->mPlayer->ShowMessage(*this, msg, &v, 1, 0) != 0)
+                this->mStep += 1;
         }
         return;
     case 2:
-        if (self->mPlayer->GetTalkState() != 2)
+        if (this->mPlayer->GetTalkState() != 2)
             return;
-        if (self->mIsTalkingToMario != 0) {
+        if (this->mIsTalkingToMario != 0) {
             if (data_0209d684 == 1) {
-                self->mState = daRNk_c::STATE_RACE;
-                self->mStateTimer = 0x32;   /* 50 frames; nothing in STATE_RACE reads it */
-                SET_ANIM(self, ANIM_IDLE, kAnimLoop);
-                self->unk_3aa = 0;
-                self->mIsTalkingToMario = 0;
+                this->mState = daRNk_c::STATE_RACE;
+                this->mStateTimer = 0x32;   /* 50 frames; nothing in STATE_RACE reads it */
+                SET_ANIM(this, ANIM_IDLE, kAnimLoop);
+                this->unk_3aa = 0;
+                this->mIsTalkingToMario = 0;
             } else if (data_0209d684 == 2) {
-                self->mState = daRNk_c::STATE_WAIT_FOR_PLAYER;
-                self->mStateTimer = 0x3c;   /* 60 frames before he speaks again */
-                self->mPlayer->HasFinishedTalking();
-                SET_ANIM(self, ANIM_IDLE, kAnimLoop);
-                self->mIsTalkingToMario = 0;
+                this->mState = daRNk_c::STATE_WAIT_FOR_PLAYER;
+                this->mStateTimer = 0x3c;   /* 60 frames before he speaks again */
+                this->mPlayer->HasFinishedTalking();
+                SET_ANIM(this, ANIM_IDLE, kAnimLoop);
+                this->mIsTalkingToMario = 0;
             }
         } else {
-            self->mState = daRNk_c::STATE_WAIT_FOR_PLAYER;
-            self->mStateTimer = 0x3c;
-            self->mPlayer->HasFinishedTalking();
-            SET_ANIM(self, ANIM_IDLE, kAnimLoop);
+            this->mState = daRNk_c::STATE_WAIT_FOR_PLAYER;
+            this->mStateTimer = 0x3c;
+            this->mPlayer->HasFinishedTalking();
+            SET_ANIM(this, ANIM_IDLE, kAnimLoop);
         }
-        self->mStep = 0;
-        self->mHorzSpeed = 0;
+        this->mStep = 0;
+        this->mHorzSpeed = 0;
         data_0209d4c8.ResetTimer();
         return;
     default:
@@ -474,7 +456,7 @@ extern "C" void func_ov062_0211a740(daRNk_c *self)
     }
 }
 
-// @symbol func_ov062_0211a1f4
+// @symbol _ZN7daRNk_c19func_ov062_0211a1f4Ev
 /* STATE_RACE.
  *   step 0  wait for Player::Unk_020c4f40(0x5a) to report non-zero
  *   step 1  two PlaySub calls (arguments unidentified) bracket a wait for the
@@ -491,8 +473,7 @@ extern "C" void func_ov062_0211a740(daRNk_c *self)
  *   step 3  in the air: keep turning toward the path; land (back to step 2,
  *           landing dust) when the mesh collision says he is on the ground,
  *           or finish the race if the path ends mid-air */
-extern "C" {
-void func_ov062_0211a1f4(daRNk_c *self)
+void daRNk_c::func_ov062_0211a1f4()
 {
         int progress;
     int speedMul;
@@ -500,66 +481,66 @@ void func_ov062_0211a1f4(daRNk_c *self)
     int speedScale;
     volatile int tmp[3];
 
-    switch (self->mStep) {
+    switch (this->mStep) {
     case 0:
-        if (self->mPlayer->Unk_020c4f40(0x5a) != 0)
-            self->mStep++;
+        if (this->mPlayer->Unk_020c4f40(0x5a) != 0)
+            this->mStep++;
         return;
     case 1:
         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1f, 0x14, 0x7f, 0x6b000, 0);
-        if (self->mPlayer->GetTalkState() != -1)
+        if (this->mPlayer->GetTalkState() != -1)
             return;
         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1f, 0x7f, 0, 0x7f000, 0);
-        func_02012694(kSfx4D, &self->mCamSpacePosX);
+        func_02012694(kSfx4D, &this->mCamSpacePosX);
         _ZN5Sound22LoadAndSetMusic_Layer2Ej(kMusicRace);
-        self->mIsRacing = 1;
-        self->mStep++;
-        SET_ANIM(self, ANIM_RUN_START, kAnimPlayOnce);
+        this->mIsRacing = 1;
+        this->mStep++;
+        SET_ANIM(this, ANIM_RUN_START, kAnimPlayOnce);
         data_ov002_02111184 = 1;
         data_0209d4c8.StartTimer();
-        func_0201267c(kSfx4D, &self->mCamSpacePosX);
+        func_0201267c(kSfx4D, &this->mCamSpacePosX);
         return;
     case 2:
-        progress = func_ov062_02119af0((char *)self);
-        if (self->mModelAnim.file == (BCA_File *)ANIM_RUN)
-            func_ov062_02119800(self);
+        progress = func_ov062_02119af0();
+        if (this->mModelAnim.file == (BCA_File *)ANIM_RUN)
+            func_ov062_02119800();
         if (progress == PATH_DONE) {
             daRFlag_c *flag;
-            if (self->mFlagID == 0)
+            if (this->mFlagID == 0)
                 return;
-            flag = (daRFlag_c *)dActor_c::FindWithID(self->mFlagID);
+            flag = (daRFlag_c *)dActor_c::FindWithID(this->mFlagID);
             if (flag == 0)
                 return;
-            self->mState = daRNk_c::STATE_PULL_UP;
-            self->mStep = 0;
+            this->mState = daRNk_c::STATE_PULL_UP;
+            this->mStep = 0;
             data_0209d4c8.StopTimer();
-            self->mPlayerWon = (flag->mHasTouchedFlag != 0) ? 1 : 0;
+            this->mPlayerWon = (flag->mHasTouchedFlag != 0) ? 1 : 0;
             flag->mHasTouchedFlag = 1;
             return;
         }
-        status = func_ov062_021199ac(self);
+        status = func_ov062_021199ac();
         /* Uphill slowdown: when the angle between his heading and the way the
            floor tilts (atan2 of the floor normal's x and z) is at least 0x6000
            (135 degrees), scale by normalY * 7 - 6 (1.0 on level ground, less
            on a slope); otherwise full speed (1.0). */
-        if (self->GetSubtraction(self->mPrevAngleY,
-                _ZN4cstd5atan2E5Fix12IiES1_(self->mFloorNormalX, self->mFloorNormalZ)) >= 0x6000)
-            speedScale = self->mFloorNormalY * 7 - 0x6000;
+        if (this->GetSubtraction(this->mPrevAngleY,
+                _ZN4cstd5atan2E5Fix12IiES1_(this->mFloorNormalX, this->mFloorNormalZ)) >= 0x6000)
+            speedScale = this->mFloorNormalY * 7 - 0x6000;
         else
             speedScale = 0x1000;
-        if (self->mHasPlayerUsedCannon == 0)
-            self->mHasPlayerUsedCannon = self->mPlayer->IsBeingShotOutOfCannon();
+        if (this->mHasPlayerUsedCannon == 0)
+            this->mHasPlayerUsedCannon = this->mPlayer->IsBeingShotOutOfCannon();
         /* Target speed is speedMul * 6 units a frame: 24 normally, 36 in
            LEVEL_ID 0x18, 48 once the player has touched the flag and is
            more than 2000 units away. The 36 and 48 only apply while mFlagID
            is set and the flag is found; otherwise speedMul stays 4. */
         speedMul = 4;
-        if (self->mFlagID != 0) {
-            daRFlag_c *flag = (daRFlag_c *)dActor_c::FindWithID(self->mFlagID);
+        if (this->mFlagID != 0) {
+            daRFlag_c *flag = (daRFlag_c *)dActor_c::FindWithID(this->mFlagID);
             if (flag != 0) {
                 if (flag->mHasTouchedFlag != 0 &&
-                    Vec3_Dist((const Vector3 *)&self->mPosX,
-                              (const Vector3 *)&self->mPlayer->mPosX) > kCatchUpDist)
+                    Vec3_Dist((const Vector3 *)&this->mPosX,
+                              (const Vector3 *)&this->mPlayer->mPosX) > kCatchUpDist)
                     speedMul = 8;
                 else if (data_0209f2f8 == kAltLevelID)
                     speedMul = 6;
@@ -569,104 +550,99 @@ void func_ov062_0211a1f4(daRNk_c *self)
             /* target = speedMul * 6 units * speedScale (fix12 multiply, rounded);
                the step is speedMul * 0.1 units a frame. */
             int acc = speedMul * 0x6000;
-            ApproachLinear(self->mHorzSpeed,
+            ApproachLinear(this->mHorzSpeed,
                 (int)(((long long)acc * speedScale + 0x800) >> 12), speedMul * 0x19a);
         }
-        ApproachLinear(self->mPrevAngleY, self->mTargetAngleY, kTurnStep);
-        if (self->mModelAnim.file == (BCA_File *)ANIM_RUN) {
-            self->mModelAnim.speed = self->mHorzSpeed >> 3;
+        ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, kTurnStep);
+        if (this->mModelAnim.file == (BCA_File *)ANIM_RUN) {
+            this->mModelAnim.speed = this->mHorzSpeed >> 3;
         } else {
-            self->mModelAnim.speed = 0x1000;
-            if (self->mModelAnim.Finished() != 0 &&
-                (self->mModelAnim.file == (BCA_File *)ANIM_RUN_START || self->mModelAnim.file == (BCA_File *)ANIM_LAND))
-                SET_ANIM(self, ANIM_RUN, kAnimLoop);
+            this->mModelAnim.speed = 0x1000;
+            if (this->mModelAnim.Finished() != 0 &&
+                (this->mModelAnim.file == (BCA_File *)ANIM_RUN_START || this->mModelAnim.file == (BCA_File *)ANIM_LAND))
+                SET_ANIM(this, ANIM_RUN, kAnimLoop);
         }
-        if (progress == PATH_NODE_REACHED && (self->mCurPathPt == self->mPathPtToJumpAt1 || self->mCurPathPt == self->mPathPtToJumpAt2)) {
-            func_ov062_02119954(self);
+        if (progress == PATH_NODE_REACHED && (this->mCurPathPt == this->mPathPtToJumpAt1 || this->mCurPathPt == this->mPathPtToJumpAt2)) {
+            func_ov062_02119954();
             return;
         }
         if (status != 0) {
             if (status < 0)
-                self->mHorzSpeed = 0;
+                this->mHorzSpeed = 0;
             if (status == 0)
                 return;
-            func_ov062_02119954(self);
+            func_ov062_02119954();
             return;
         }
-        if (self->mWithMeshClsn.IsOnGround() != 0)
+        if (this->mWithMeshClsn.IsOnGround() != 0)
             return;
         /* Walked off an edge: kick up 10 units a frame, keep 0xd00/0x1000 (81%)
            of his speed, and go to the in-the-air step. */
-        SET_ANIM(self, ANIM_JUMP, kAnimPlayOnce);
-        self->mVertSpeed = 0xa000;
-        self->mHorzSpeed = (int)(((long long)self->mHorzSpeed * 0xd00 + 0x800) >> 12);
-        self->mStep = 3;
+        SET_ANIM(this, ANIM_JUMP, kAnimPlayOnce);
+        this->mVertSpeed = 0xa000;
+        this->mHorzSpeed = (int)(((long long)this->mHorzSpeed * 0xd00 + 0x800) >> 12);
+        this->mStep = 3;
         return;
     case 3:
-        if (func_ov062_02119af0((char *)self) == PATH_DONE) {
+        if (func_ov062_02119af0() == PATH_DONE) {
             daRFlag_c *flag;
-            self->mState = daRNk_c::STATE_PULL_UP;
-            self->mStep = 0;
+            this->mState = daRNk_c::STATE_PULL_UP;
+            this->mStep = 0;
             data_0209d4c8.StopTimer();
-            flag = (daRFlag_c *)dActor_c::FindWithID(self->mFlagID);
-            self->mPlayerWon = (flag->mHasTouchedFlag != 0) ? 1 : 0;
+            flag = (daRFlag_c *)dActor_c::FindWithID(this->mFlagID);
+            this->mPlayerWon = (flag->mHasTouchedFlag != 0) ? 1 : 0;
             flag->mHasTouchedFlag = 1;
-            SET_ANIM(self, ANIM_LAND, kAnimPlayOnce);
+            SET_ANIM(this, ANIM_LAND, kAnimPlayOnce);
             return;
         }
-        ApproachLinear(self->mPrevAngleY, self->mTargetAngleY, kTurnStep);
-        if (self->mWithMeshClsn.IsOnGround() == 0)
+        ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, kTurnStep);
+        if (this->mWithMeshClsn.IsOnGround() == 0)
             return;
-        self->mStep = 2;
-        self->mVertAccel = -0x2000;     /* InitResources' gravity again */
-        SET_ANIM(self, ANIM_LAND, kAnimPlayOnce);
-        self->mModelAnim.currFrame = 0;
-        tmp[0] = self->mPosX;
-        tmp[1] = self->mPosY;
-        tmp[2] = self->mPosZ;
-        tmp[1] = self->mPosY + kDustHeight;
-        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(kPtclLandingDust, self->mPosX,
-            self->mPosY + kDustHeight, self->mPosZ);
+        this->mStep = 2;
+        this->mVertAccel = -0x2000;     /* InitResources' gravity again */
+        SET_ANIM(this, ANIM_LAND, kAnimPlayOnce);
+        this->mModelAnim.currFrame = 0;
+        tmp[0] = this->mPosX;
+        tmp[1] = this->mPosY;
+        tmp[2] = this->mPosZ;
+        tmp[1] = this->mPosY + kDustHeight;
+        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(kPtclLandingDust, this->mPosX,
+            this->mPosY + kDustHeight, this->mPosZ);
         return;
     default:
         return;
     }
 }
-}
 
-// @symbol func_ov062_0211a168
+// @symbol _ZN7daRNk_c19func_ov062_0211a168Ev
 /* STATE_PULL_UP: ease the speed toward 3 units a frame (1 unit a frame
    step); when the current animation is about to hit its last frame, fix the
    speed at 3 units, play ANIM_BRAKE once and go to STATE_STOP. */
-extern "C" {
-void func_ov062_0211a168(daRNk_c* self){
-  ApproachLinear(self->mHorzSpeed, 0x3000, 0x1000);
-  if (self->mModelAnim.WillHitFrame(
-        (unsigned short)(self->mModelAnim.GetFrameCount() - 1)) == 0) return;
-  self->mState = daRNk_c::STATE_STOP;
-  self->mHorzSpeed = 0x3000;
-  self->mStep = 0;
-  SET_ANIM(self, ANIM_BRAKE, kAnimPlayOnce);
-}
+void daRNk_c::func_ov062_0211a168(){
+  ApproachLinear(this->mHorzSpeed, 0x3000, 0x1000);
+  if (this->mModelAnim.WillHitFrame(
+        (unsigned short)(this->mModelAnim.GetFrameCount() - 1)) == 0) return;
+  this->mState = daRNk_c::STATE_STOP;
+  this->mHorzSpeed = 0x3000;
+  this->mStep = 0;
+  SET_ANIM(this, ANIM_BRAKE, kAnimPlayOnce);
 }
 
-// @symbol func_ov062_0211a0f0
+// @symbol _ZN7daRNk_c19func_ov062_0211a0f0Ev
 /* STATE_STOP: brake to a standstill (4 units a frame step); when the brake
    animation finishes, go back to the idle animation and on to
    STATE_POST_RACE_TALK. */
-extern "C" {
-void func_ov062_0211a0f0(daRNk_c* self)
+void daRNk_c::func_ov062_0211a0f0()
 {
-    ApproachLinear(self->mHorzSpeed, 0, 0x4000);
-    if (!self->mModelAnim.Finished()) return;
-    SET_ANIM(self, ANIM_IDLE, kAnimLoop);
-    self->mState = daRNk_c::STATE_POST_RACE_TALK;
-    self->mStep = 0;
-    self->mStateTimer = 0;
-}
+    ApproachLinear(this->mHorzSpeed, 0, 0x4000);
+    if (!this->mModelAnim.Finished()) return;
+    SET_ANIM(this, ANIM_IDLE, kAnimLoop);
+    this->mState = daRNk_c::STATE_POST_RACE_TALK;
+    this->mStep = 0;
+    this->mStateTimer = 0;
 }
 
-// @symbol func_ov062_02119be0
+// @symbol _ZN7daRNk_c19func_ov062_02119be0Ev
 /* STATE_POST_RACE_TALK: the result talk, and then chatter forever. mStateTimer
  * counts down every frame and holds back step 0.
  *   step 0  once the timer is 0 and the player is within 400 units and agrees
@@ -683,8 +659,7 @@ void func_ov062_0211a0f0(daRNk_c* self)
  *           another talk, go on
  *   steps 5-8  turn to face the player, show a chatter message, and return
  *           to step 4 when it ends */
-extern "C" {
-void func_ov062_02119be0(daRNk_c* self)
+void daRNk_c::func_ov062_02119be0()
 {
     Vector3 playerPos;
     Vector3 msgPos;
@@ -696,49 +671,49 @@ void func_ov062_02119be0(daRNk_c* self)
     int y;
     int z;
 
-    tp = (unsigned short*)&self->mStateTimer;
+    tp = (unsigned short*)&this->mStateTimer;
     t = *tp;
     if (t != 0) {
         t--;
         *tp = t;
     }
 
-    switch (self->mStep) {
+    switch (this->mStep) {
     case 0:
-        if (*(unsigned short*)&self->mStateTimer != 0)
+        if (*(unsigned short*)&this->mStateTimer != 0)
             return;
         {
-            Vector3* pp = (Vector3 *)&self->mPlayer->mPosX;
+            Vector3* pp = (Vector3 *)&this->mPlayer->mPosX;
             playerPos.x = pp->x;
             playerPos.y = pp->y;
             playerPos.z = pp->z;
         }
-        if (Vec3_Dist((Vector3*)&self->mPosX, &playerPos) >= kChatDist)
+        if (Vec3_Dist((Vector3*)&this->mPosX, &playerPos) >= kChatDist)
             return;
-        if (self->mPlayer->StartTalk(*self, 1) == 0)
+        if (this->mPlayer->StartTalk(*this, 1) == 0)
             return;
-        self->mTargetAngleY = Vec3_HorzAngle((Vector3*)&self->mPosX, &playerPos);
-        self->mStep++;
-        SET_ANIM(self, ANIM_TALK, kAnimLoop);
-        if (self->mHasFinished == 0) {
+        this->mTargetAngleY = Vec3_HorzAngle((Vector3*)&this->mPosX, &playerPos);
+        this->mStep++;
+        SET_ANIM(this, ANIM_TALK, kAnimLoop);
+        if (this->mHasFinished == 0) {
             _ZN5Sound22StopLoadedMusic_Layer2Ev();
             func_0201277c(kSfx4D);
-            self->mIsRacing = 0;
-            self->mHasFinished = 1;
+            this->mIsRacing = 0;
+            this->mHasFinished = 1;
         }
-        self->mRestartTalk = 0;
+        this->mRestartTalk = 0;
         return;
     case 1:
-        if (ApproachLinear(self->mPrevAngleY, self->mTargetAngleY, kTurnStep) != 0)
-            self->mStep++;
-        self->mAngleY = self->mPrevAngleY;
+        if (ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, kTurnStep) != 0)
+            this->mStep++;
+        this->mAngleY = this->mPrevAngleY;
         return;
     case 2:
-        if (self->mPlayer->param1 == 0) {
-            if (self->mPlayerWon == 0) {
+        if (this->mPlayer->param1 == 0) {
+            if (this->mPlayerWon == 0) {
                 msg = MSG_RESULT_KOOPA_FIRST;
-            } else if (self->mHasPlayerUsedCannon != 0) {
-                self->mPlayerWon = 0;
+            } else if (this->mHasPlayerUsedCannon != 0) {
+                this->mPlayerWon = 0;
                 msg = MSG_RESULT_CANNON;
             } else if (data_0209f2f8 == kAltLevelID) {
                 msg = MSG_RESULT_ALT_LEVEL;
@@ -746,68 +721,68 @@ void func_ov062_02119be0(daRNk_c* self)
                 msg = MSG_RESULT_PLAYER_FIRST;
             }
         } else {
-            self->mPlayerWon = 0;
-            self->mRestartTalk = 1;
+            this->mPlayerWon = 0;
+            this->mRestartTalk = 1;
             msg = MSG_RESULT_NOT_MARIO;
         }
-        x = self->mPlayer->GetTalkState();
+        x = this->mPlayer->GetTalkState();
         if (x != 0)
             return;
-        x = self->mPosX;
-        z = self->mPosZ;
-        y = self->mPosY + kMsgAnchorHeight;
+        x = this->mPosX;
+        z = this->mPosZ;
+        y = this->mPosY + kMsgAnchorHeight;
         msgPos.x = x;
         msgPos.y = y;
         msgPos.z = z;
-        if (self->mPlayer->ShowMessage(*self, msg, &msgPos, 0, 0) != 0)
-            self->mStep++;
+        if (this->mPlayer->ShowMessage(*this, msg, &msgPos, 0, 0) != 0)
+            this->mStep++;
         return;
     case 3:
-        if (self->mPlayer->GetTalkState() != 0xFFFFFFFF)
+        if (this->mPlayer->GetTalkState() != 0xFFFFFFFF)
             return;
-        self->mStep++;
-        SET_ANIM(self, ANIM_IDLE, kAnimLoop);
-        self->mStateTimer = 0x3c;
-        if (self->mPlayerWon != 0) {
-            starPos.x = self->mPosX;
-            starPos.y = self->mPosY;
-            starPos.z = self->mPosZ;
+        this->mStep++;
+        SET_ANIM(this, ANIM_IDLE, kAnimLoop);
+        this->mStateTimer = 0x3c;
+        if (this->mPlayerWon != 0) {
+            starPos.x = this->mPosX;
+            starPos.y = this->mPosY;
+            starPos.z = this->mPosZ;
             starPos.y += kStarSpawnHeight;
-            self->UntrackAndSpawnStar(self->mTrackedStar, self->mStarID, starPos, 4);
+            this->UntrackAndSpawnStar(this->mTrackedStar, this->mStarID, starPos, 4);
             return;
         }
-        if (self->mRestartTalk == 1) {
-            self->mRestartTalk = 0;
-            self->mStep = 0;
+        if (this->mRestartTalk == 1) {
+            this->mRestartTalk = 0;
+            this->mStep = 0;
         }
         return;
     case 4:
         {
-            Vector3* pp = (Vector3 *)&self->mPlayer->mPosX;
+            Vector3* pp = (Vector3 *)&this->mPlayer->mPosX;
             playerPos.x = pp->x;
             playerPos.y = pp->y;
             playerPos.z = pp->z;
         }
-        if (Vec3_Dist((Vector3*)&self->mPosX, &playerPos) >= kChatDist)
+        if (Vec3_Dist((Vector3*)&this->mPosX, &playerPos) >= kChatDist)
             return;
-        if (self->mPlayer->StartTalk(*self, 0) != 0)
-            self->mStep++;
+        if (this->mPlayer->StartTalk(*this, 0) != 0)
+            this->mStep++;
         return;
     case 5:
-        if (self->mPlayer->GetTalkState() != 0)
+        if (this->mPlayer->GetTalkState() != 0)
             return;
-        self->mTargetAngleY = Vec3_HorzAngle((Vector3*)&self->mPosX, (Vector3*)&self->mPlayer->mPosX);
-        SET_ANIM(self, ANIM_TALK, kAnimLoop);
-        self->mStep++;
+        this->mTargetAngleY = Vec3_HorzAngle((Vector3*)&this->mPosX, (Vector3*)&this->mPlayer->mPosX);
+        SET_ANIM(this, ANIM_TALK, kAnimLoop);
+        this->mStep++;
         return;
     case 6:
-        if (ApproachLinear(self->mPrevAngleY, self->mTargetAngleY, kTurnStep) != 0)
-            self->mStep++;
-        self->mAngleY = self->mPrevAngleY;
+        if (ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, kTurnStep) != 0)
+            this->mStep++;
+        this->mAngleY = this->mPrevAngleY;
         return;
     case 7:
         {
-            Player* p = self->mPlayer;
+            Player* p = this->mPlayer;
             if (p->param1 == 0)
                 msg = MSG_CHAT_MARIO;
             else
@@ -816,26 +791,25 @@ void func_ov062_02119be0(daRNk_c* self)
             if (x != 0)
                 return;
         }
-        x = self->mPosX;
-        z = self->mPosZ;
-        y = self->mPosY + kMsgAnchorHeight;
+        x = this->mPosX;
+        z = this->mPosZ;
+        y = this->mPosY + kMsgAnchorHeight;
         msgPos.x = x;
         msgPos.y = y;
         msgPos.z = z;
-        if (self->mPlayer->ShowMessage(*self, msg, &msgPos, 0, 0) != 0)
-            self->mStep++;
+        if (this->mPlayer->ShowMessage(*this, msg, &msgPos, 0, 0) != 0)
+            this->mStep++;
         return;
     case 8:
-        if (self->mPlayer->GetTalkState() != 0xFFFFFFFF)
+        if (this->mPlayer->GetTalkState() != 0xFFFFFFFF)
             return;
-        self->mStep = 4;
-        SET_ANIM(self, ANIM_IDLE, kAnimLoop);
+        this->mStep = 4;
+        SET_ANIM(this, ANIM_IDLE, kAnimLoop);
         return;
     }
 }
-}
 
-// @symbol func_ov062_02119af0
+// @symbol _ZN7daRNk_c19func_ov062_02119af0Ev
 /* The path follower. Aims mTargetAngleY at mPathTarget (x and z only). Koopa
    has reached the node when he has run past it (the dot product of the vector
    from the previous node to the target with the vector from him to the target
@@ -843,8 +817,8 @@ void func_ov062_02119be0(daRNk_c* self)
    it; he then makes the target the previous node, steps to the next index
    (wrapping to 0 at the end of the path) and returns PATH_NODE_REACHED, or
    PATH_DONE when the index wrapped. Returns PATH_TRAVELLING otherwise. */
-extern "C" int func_ov062_02119af0(char *raw) {
-    daRNk_c *p = (daRNk_c *)raw;
+int daRNk_c::func_ov062_02119af0() {
+    daRNk_c *p = this;
     int dxc;
     int dzc;
     int dx;
@@ -886,7 +860,7 @@ extern "C" int func_ov062_02119af0(char *raw) {
     return PATH_TRAVELLING;
 }
 
-// @symbol func_ov062_021199ac
+// @symbol _ZN7daRNk_c19func_ov062_021199acEv
 /* React to the closest rolling iron ball, if it is kind 2 (a path follower;
    daIbl_c.h says kinds 2 and 4 follow paths, Koopa reacts to kind 2 only). With the angle from Koopa's heading to the ball (r) and
    the ball's speed along Koopa's heading (fixed1 = ball speed times the cosine
@@ -899,8 +873,7 @@ extern "C" int func_ov062_02119af0(char *raw) {
      inside 300 units:
        BALL_BEHIND_STOP_AND_JUMP if it is moving along his heading faster than
        he is; else BALL_NONE */
-extern "C" {
-int func_ov062_021199ac(daRNk_c *self)
+int daRNk_c::func_ov062_021199ac()
 {
     daIbl_c *other;
     s16 angle;
@@ -913,37 +886,37 @@ int func_ov062_021199ac(daRNk_c *self)
     s32 fixed1;
     s32 r;
 
-    other = (daIbl_c *)self->ClosestWithActorID(kIronBallActorId);
+    other = (daIbl_c *)this->ClosestWithActorID(kIronBallActorId);
     if (other == 0)
         goto ret0;
     if (other->mVariant != 2)
         goto ret0;
 
-    angle = Vec3_HorzAngle((const struct Vector3 *)&self->mPosX, (const struct Vector3 *)&other->mPosX);
-    dist = Vec3_Dist((const struct Vector3 *)&self->mPosX, (const struct Vector3 *)&other->mPosX);
-    selfAngle = self->mPrevAngleY;
+    angle = Vec3_HorzAngle((const struct Vector3 *)&this->mPosX, (const struct Vector3 *)&other->mPosX);
+    dist = Vec3_Dist((const struct Vector3 *)&this->mPosX, (const struct Vector3 *)&other->mPosX);
+    selfAngle = this->mPrevAngleY;
     otherAngle = other->mPrevAngleY;
     idx = (u16)(s16)(otherAngle - selfAngle);
     tableVal = data_02082214[(idx >> 4) * 2 + 1];
     otherK = other->mHorzSpeed;
     fixed1 = (s32)(((long long)otherK * tableVal + 0x800) >> 12);
 
-    r = self->GetSubtraction(selfAngle, angle);
+    r = this->GetSubtraction(selfAngle, angle);
     if (r < 0x4000) {
         s32 selfK;
         s32 fixed2;
         if (dist >= kBallAheadRange)
             goto ret0;
-        selfK = self->mHorzSpeed;
+        selfK = this->mHorzSpeed;
         fixed2 = (s32)(((long long)selfK * 0xb33 + 0x800) >> 12);
         if (fixed1 < fixed2)
             return BALL_AHEAD_JUMP;
-        self->mHorzSpeed -= 0x2000;
+        this->mHorzSpeed -= 0x2000;
         goto ret0;
     } else {
         if (dist >= kBallBehindRange)
             goto ret0;
-        if (fixed1 > self->mHorzSpeed)
+        if (fixed1 > this->mHorzSpeed)
             return BALL_BEHIND_STOP_AND_JUMP;
         goto ret0;
     }
@@ -951,31 +924,28 @@ int func_ov062_021199ac(daRNk_c *self)
 ret0:
     return BALL_NONE;
 }
-}
 
-// @symbol func_ov062_02119954
+// @symbol _ZN7daRNk_c19func_ov062_02119954Ev
 /* Start a jump: ANIM_JUMP, 45 units a frame up, gravity 4 units a frame
    squared (InitResources' is 2), and the in-the-air step of STATE_RACE. */
-extern "C" {
-void func_ov062_02119954(daRNk_c *self)
+void daRNk_c::func_ov062_02119954()
 {
-    SET_ANIM(self, ANIM_JUMP, kAnimPlayOnce);
-    self->mVertSpeed = 0x2d000;
-    self->mVertAccel = -0x4000;
-    self->mStep = 3;
-}
+    SET_ANIM(this, ANIM_JUMP, kAnimPlayOnce);
+    this->mVertSpeed = 0x2d000;
+    this->mVertAccel = -0x4000;
+    this->mStep = 3;
 }
 
-// @symbol func_ov062_02119800
+// @symbol _ZN7daRNk_c19func_ov062_02119800Ev
 /* Footsteps. The run animation's whole-frame number (currFrame >> 12) says
    which foot is down: on frames 2..8 and 19..25 play the footstep sound and
    a dust puff 30 units to one side (opposite sides in the two ranges) and 30
    units above his position, once; mFootstepDone holds the latch until the
    animation leaves both ranges. */
-extern "C" void func_ov062_02119800(daRNk_c *self)
+void daRNk_c::func_ov062_02119800()
 {
     volatile int stack[3];
-    unsigned int kind = ((unsigned int)(self->mModelAnim.currFrame << 4)) >> 16;
+    unsigned int kind = ((unsigned int)(this->mModelAnim.currFrame << 4)) >> 16;
     short ang;
     int x, y, z;
 
@@ -990,20 +960,20 @@ check_hi:
         goto reset;
 
 body:
-    if (self->mFootstepDone != 0)
+    if (this->mFootstepDone != 0)
         return;
-    func_0201267c(kSfxFootstep, &self->mCamSpacePosX);
-    self->mFootstepDone = 1;
+    func_0201267c(kSfxFootstep, &this->mCamSpacePosX);
+    this->mFootstepDone = 1;
 
-    ang = self->mAngleY;
-    x = self->mPosX;
+    ang = this->mAngleY;
+    x = this->mPosX;
     /* Keep the comparison at this load boundary: the direct assignment
        moves six instructions under 2004/b56 (see the pinned experiment). */
     stack[0] = (kind > 8) ? x : x;
-    y = self->mPosY;
+    y = this->mPosY;
     ang = (short)(ang + 0x4000);    /* a quarter turn: the sideways direction */
     stack[1] = y;
-    z = self->mPosZ;
+    z = this->mPosZ;
     stack[2] = z;
     stack[1] = y + 0x1e000;
 
@@ -1036,7 +1006,7 @@ do_new:
     return;
 
 reset:
-    self->mFootstepDone = 0;
+    this->mFootstepDone = 0;
 }
 
 /* D0 is the DELETING destructor: destroy through this class (dEnemyBase_c

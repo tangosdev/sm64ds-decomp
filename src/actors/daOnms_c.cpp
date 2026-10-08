@@ -12,8 +12,11 @@
  * constructor, so the inherited dBgActor_c ctor plus the vtable store plus
  * the member subobjects in field order (dBgCh_Actr, dCcAcPos_c, PathPtr)
  * come from the implicit default constructor with zero mangled calls.
- * func_ov092_021313b0, func_ov092_02131578 and func_ov092_02131a88 stay
+ * func_ov092_021313b0 and func_ov092_02131a88 stay
  * extern "C": include/decl_common.h declares them under those names.
+ * func_ov092_02131578 is the wait state, a daOnms_c member: the .data
+ * member-pointer record at 0x02132280 reaches it by address, so the free
+ * spelling cannot supply that descriptor.
  *
  * deslop leftovers:
  * - StateBounce: `return 0` for the tested zero, size 0x1a0 -> 0x1a8.
@@ -44,8 +47,9 @@
 #include "dBgW.h"
 #include "Sound.h"
 
-/* mMoveDir indexes the member-pointer table the ov092 static initializer
-   fills. State 1 is func_ov092_02131578; the rest are members. */
+/* mMoveDir indexes the member-pointer table this file defines below. The
+   compiler copies the nine pointer-to-member descriptors into it at
+   overlay load. */
 enum {
     kDirLand = 0,
     kDirWait = 1,
@@ -71,10 +75,31 @@ typedef struct { int x, y, z; } Vec3;
 #define ActorPos(actor) ((Vector3 *)&(actor)->mPosX)
 #define CamPos(actor)   ((const Vector3 *)&(actor)->mCamSpacePosX)
 
+/* The retail static initializer constructs these two 8-byte resource handles
+ * in source order (model 0x3c9, collision 0x3ca) and lets the C++ runtime
+ * register their destructors. The family spellings are reconstructed; the
+ * constructor/destructor addresses, file IDs, object widths, BSS order, and
+ * registration topology are direct ROM evidence. The intact-TU manifest maps
+ * their compiler-generated undefined member imports onto the existing
+ * evidence-bounded ROM symbols. */
+struct OnmsModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    OnmsModelFilePtr(u32 fileID);
+    ~OnmsModelFilePtr();
+};
+
+struct OnmsCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    OnmsCollisionFilePtr(u32 fileID);
+    ~OnmsCollisionFilePtr();
+};
+
 /* BMD (Model::LoadFile) and KCL (dBgW_Kc::LoadFile). Cleanup releases both. */
-extern daOnms_cStateEntry data_ov092_02132568[];
-extern SharedFilePtr data_ov092_02132540;
-extern SharedFilePtr data_ov092_02132548;
+extern "C" OnmsModelFilePtr data_ov092_02132540;
+extern "C" OnmsCollisionFilePtr data_ov092_02132548;
+extern "C" daOnms_cStateEntry data_ov092_02132568[9];
 
 extern "C" {
 int func_ov002_020de328(void *player);
@@ -309,16 +334,14 @@ void daOnms_c::NextMove()
     mOrientBits |= (mPrevAngleZ >> 0xa) & 0x30;
 }
 
-// @symbol func_ov092_02131578
+// @symbol _ZN8daOnms_c19func_ov092_02131578Ev
 /* State 1: sit still, take the next move after 0x14 frames, watch for a hit. */
-extern "C" void func_ov092_02131578(char *c)
+void daOnms_c::func_ov092_02131578()
 {
-    daOnms_c *self = (daOnms_c *)c;
-
-    self->mTumbling = 0;
-    if (self->mStateTimer == 0x14)
-        self->NextMove();
-    self->CheckPlayerHit();
+    mTumbling = 0;
+    if (mStateTimer == 0x14)
+        NextMove();
+    CheckPlayerHit();
 }
 
 // @symbol _ZN8daOnms_c9StateLandEv
@@ -334,7 +357,7 @@ void daOnms_c::StateLand()
         func_02012694(0x46, CamPos(this));
     }
     mPosY = mRestPos.y + 0x3000;
-    func_ov092_02131578((char *)this);
+    func_ov092_02131578();
 }
 
 // @symbol _ZN8daOnms_c13StateRollPosXEv
@@ -623,3 +646,21 @@ extern "C" daOnms_c *daOnms_c_classInit()
 {
     return new daOnms_c();
 }
+
+/* __sinit_daOnms_c.cpp constructs the two file handles in retail order,
+ * then copies the nine anonymous pointer-to-member descriptors into the
+ * state table Behavior indexes by mMoveDir. StateBounce returns int, so
+ * its descriptor needs the cast; the emitted pair is still {addr, 0}. */
+OnmsModelFilePtr data_ov092_02132540(0x3c9);
+OnmsCollisionFilePtr data_ov092_02132548(0x3ca);
+daOnms_cStateEntry data_ov092_02132568[9] = {
+    &daOnms_c::StateLand,
+    &daOnms_c::func_ov092_02131578,
+    &daOnms_c::StateRollPosZ,
+    &daOnms_c::StateRollNegZ,
+    &daOnms_c::StateRollNegX,
+    &daOnms_c::StateRollPosX,
+    &daOnms_c::StateKnocked,
+    reinterpret_cast<daOnms_cState>(&daOnms_c::StateBounce),
+    &daOnms_c::StateSink,
+};

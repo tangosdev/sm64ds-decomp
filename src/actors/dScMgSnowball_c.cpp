@@ -51,6 +51,7 @@
 #include "Sound.h"
 #include "dScMgBase_c.h"
 #include "Particle__System.h"
+#include "PlayerInput.h"
 
 bool ApproachLinear(short &value, short target, short step);
 
@@ -170,11 +171,6 @@ s32  GetGameLanguage(void);
 void func_02012790(int a);
 void FreeGfxSlotsById(int arg);
 void Vec2_Sub(int *o, int *a, int *b);
-extern unsigned char data_020a0e40[];
-extern unsigned char data_020a0de8[];
-extern unsigned char data_020a0de9[];
-extern unsigned char data_020a0dea[];
-extern unsigned char data_020a0deb[];
 extern "C" void Ov004_Deallocate(void *p);
 void *_ZN2G213GetBG2CharPtrEv(void);
 void *_ZN2G212GetBG3ScrPtrEv(void);
@@ -1581,22 +1577,22 @@ s32 dScMgSnowball_c::Behavior()
                 FreeGfxSlotsById(0xc);
         }
 
-        idx = data_020a0e40[0];
-        r3rec = data_020a0de8[idx * 4];
+        idx = gActivePlayerSlot;
+        r3rec = gTouchHeld[idx * 4];
         j = idx * 4;
         r7 = 0;
         if (r3rec != 0)
-            r7 = (data_020a0de9[j] != 0);
+            r7 = (gTouchEdge[j] != 0);
         if (r7 != 0) {
-            int vb = ((volatile unsigned char*)data_020a0deb)[(unsigned int)idx * 4];
-            int va = ((volatile unsigned char*)data_020a0dea)[(unsigned int)idx * 4];
+            int vb = ((volatile unsigned char*)gTouchY)[(unsigned int)idx * 4];
+            int va = ((volatile unsigned char*)gTouchX)[(unsigned int)idx * 4];
             I(0xab70) = va;
             I(0xab74) = vb;
         } else if (r3rec != 0) {
-            s.a[0] = ((data_020a0dea[(unsigned int)idx * 4] - I(0xab70)) << 12) / 296;
-            s.a[1] = ((data_020a0deb[(unsigned int)idx * 4] - I(0xab74)) << 12) / 296;
-            I(0xab70) = data_020a0dea[(unsigned int)idx * 4];
-            I(0xab74) = data_020a0deb[(unsigned int)idx * 4];
+            s.a[0] = ((gTouchX[(unsigned int)idx * 4] - I(0xab70)) << 12) / 296;
+            s.a[1] = ((gTouchY[(unsigned int)idx * 4] - I(0xab74)) << 12) / 296;
+            I(0xab70) = gTouchX[(unsigned int)idx * 4];
+            I(0xab74) = gTouchY[(unsigned int)idx * 4];
             if (Vec2_Len(s.a) >= 0x400) {
                 s.a[0] = 0;
                 s.a[1] = 0;
@@ -1710,12 +1706,12 @@ s32 dScMgSnowball_c::Behavior()
         B(0xc3) = 0;
         if (I(0xba10) > 0)
             IA(0xba10) -= 1;
-        idx = data_020a0e40[0];
-        r3rec = data_020a0de8[idx * 4];
+        idx = gActivePlayerSlot;
+        r3rec = gTouchHeld[idx * 4];
         j = idx * 4;
         r7 = 0;
         if (r3rec != 0)
-            r7 = (data_020a0de9[j] != 0);
+            r7 = (gTouchEdge[j] != 0);
         if (r7 != 0)
             I(0xba10) = 0;
         func_ov006_02125f68();

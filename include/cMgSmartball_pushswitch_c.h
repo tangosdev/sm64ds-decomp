@@ -5,15 +5,15 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * SIZE 0x38, from _Znwj(0x38) in func_ov006_02115b0c. Base ends at
+ * SIZE 0x38, from _Znwj(0x38) in dScMgSmartball_c::SpawnObjects. Base ends at
  * 0x34, so this class adds exactly one field: a 4-byte countdown at 0x34.
  *
  * mReleaseDelay is how long the switch stays down once nothing is holding it.
- * func_ov006_0210e1fc -- the ball-vs-switch proximity test -- is what presses
+ * CheckBall -- the ball-vs-switch proximity test -- is what presses
  * the switch: it sets the base's unk_031, arms this field with 0xa, starts the
- * slot machine (func_ov006_0210fb04 on mgr+0x4778) and plays sound 0x1a4.
+ * slot machine (StartSpin on mgr+0x4778) and plays sound 0x1a4.
  * SaveSnapshot then decrements it while positive and, only while unk_031 is
- * set, calls func_ov006_0210e120, which returns 1 exactly when NO active ball
+ * set, calls BallsClear, which returns 1 exactly when NO active ball
  * is within 0x12000 of the switch. Clear and drained to zero -> unk_031 is
  * cleared and the switch pops back out; a ball still near -> the field is
  * reloaded to 0xa, so the ten frames are counted from the last frame a ball
@@ -43,6 +43,13 @@ struct cMgSmartball_pushswitch_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+
+    /* Recovered helpers: BallsClear is the release check SaveSnapshot runs
+       (1 when no active ball is within 0x12000); CheckBall is the
+       ball-vs-switch proximity test that presses the switch and starts the
+       slot machine. */
+    int  BallsClear();
+    int  CheckBall(int *pos);
 
     s32 mReleaseDelay; /* 0x034 -- how long the switch stays down after the
                            last ball leaves it; see the header comment */

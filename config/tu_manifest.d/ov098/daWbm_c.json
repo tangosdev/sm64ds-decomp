@@ -43,7 +43,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov098_0213b584",
+      "symbol": "_ZN7daWbm_c19func_ov098_0213b584Ev",
       "address": "0x0213b584",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov098_0213b584.c",
@@ -57,7 +57,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_ov098_0213b6e0",
+      "symbol": "_ZN7daWbm_c19func_ov098_0213b6e0Ev",
       "address": "0x0213b6e0",
       "size": "0x00000108",
       "legacy_source": "src/func_ov098_0213b6e0.cpp",
@@ -124,7 +124,7 @@
   "bss": [],
   "notes": [
     "Hand-curated from the 14 legacy one-function sources: six C++ members, the C factory daWbm_c_classInit, and seven func_ov098_* free functions over the object (four in C++, three in C). tubuild create's mechanical output was replaced.",
-    "Five of the seven legacy free functions are members now, under coined names: the three states StateDrop, StateFall and StateBounce, which Behavior calls through the pointer-to-member table, and Land and Burst. Only the hit check func_ov098_0213b6e0 and the placement helper func_ov098_0213b584 keep their C-linkage names, over a daWbm_c pointer, because include/decl_common.h declares both by those names.",
+    "All seven legacy free functions are members now: the three states StateDrop, StateFall and StateBounce, which Behavior calls through the pointer-to-member table, Land and Burst under coined names, and the hit check func_ov098_0213b6e0 and the placement helper func_ov098_0213b584 under their address names.",
     "MEASURED: func_ov098_0213b6e0 tests actorID through an int flag before branching; spelled as a plain `if (actorID == 0xbf) ... else if (actorID == 0xce)` it is 0xf0 bytes against the ROM's 0x108, and as a switch 0xf4 (13/14 either way). _ZN7daWbm_c9StateDropEv keeps its arithmetic one step per statement; folding the lead computation shrinks it from 0x144 to 0x13c bytes (13/14).",
     "MEASURED: the TU includes common.h before the class header so the flat Matrix4x3 spelling wins; with math/Matrix.h's {Matrix3x3, Vector3} spelling the two matrix copies in func_ov098_0213b584 become memberwise and the function grows from 0xb8 to 0xec bytes.",
     "dCcAc_c::Init, dBgCh_Actr::Init, dActor_c::DropShadowRadHeight, Player::Hurt and Particle::System::NewSimple stay mangled: each takes Fix12<int> by value (wall 6az). MEASURED: passing Fix12<int> locals to mdCcAc_c.Init makes _ZN7daWbm_c13InitResourcesEv 0x21c bytes against the ROM's 0x1fc (13/14).",

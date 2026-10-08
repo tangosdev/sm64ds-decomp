@@ -13,8 +13,8 @@
  *   read the BMD/BTP at data_ov072_02122c48 / 02122c50 +4;
  *   SharedFilePtr.h has no fields.
  * - data_ov072_02122c40 / 02122c48 / 02122c50 model/BTP handles and
- *   data_ov072_02122c70 cylinder offset; this TU consumes them, overlay
- *   .bss owns them.
+ *   data_ov072_02122c70 cylinder offset are defined at the end of this file.
+ *   Their ctors are what emit __sinit_daBgSnwmn_c.cpp.
  * - InitResources ground probe stays a POD Position: a local Vector3
  *   emits unlicensed _ZN7Vector3D1Ev (empty dtor, size 0x4).
  * - func_ov072_021208d8 keeps its address label -- the ROM has no English
@@ -37,11 +37,38 @@ void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES
     void *self, dExtShadowModel_c *shadow, Matrix4x3 *matrix, int radius,
     int height, u32 flags);
 
-extern SharedFilePtr data_ov072_02122c40;
-extern SharedFilePtr data_ov072_02122c48;
-extern SharedFilePtr data_ov072_02122c50;
-extern const Vector3 data_ov072_02122c70;
 }
+
+/* Four file-scope objects. mwcc emits __sinit_daBgSnwmn_c.cpp from them.
+ * The two model handles share one veneer pair, the BTP handle is the texseq
+ * pair, and the cylinder offset's stores are inline. */
+struct SnwmnModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    SnwmnModelFilePtr(u32 fileID);
+    ~SnwmnModelFilePtr();
+};
+
+struct SnwmnTexSequenceFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    SnwmnTexSequenceFilePtr(u32 fileID);
+    ~SnwmnTexSequenceFilePtr();
+};
+
+struct SnwmnCylOffset : Vector3 {
+    SnwmnCylOffset(Fix12i x_, Fix12i y_, Fix12i z_) {
+        x = x_;
+        y = y_;
+        z = z_;
+    }
+    ~SnwmnCylOffset();
+};
+
+extern "C" SnwmnModelFilePtr data_ov072_02122c40;
+extern "C" SnwmnModelFilePtr data_ov072_02122c48;
+extern "C" SnwmnTexSequenceFilePtr data_ov072_02122c50;
+extern "C" SnwmnCylOffset data_ov072_02122c70;
 
 /* The typed 0x1c actor profile: fBase_c reads the halfwords at +4/+6 as
  * behavior/render priorities. dActor_c reads actor flags at +8 and passes
@@ -185,3 +212,8 @@ void daBgSnwmn_c::func_ov072_021208d8()
     _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
         this, &mShadow, &mModel2.mat4x3, 0xe6000, 0x12c000, 0xf);
 }
+
+SnwmnModelFilePtr data_ov072_02122c40(0x2ad);
+SnwmnModelFilePtr data_ov072_02122c48(0x2af);
+SnwmnTexSequenceFilePtr data_ov072_02122c50(0x2b0);
+SnwmnCylOffset data_ov072_02122c70(0, -0x50000, 0);

@@ -2,16 +2,16 @@
 /* The MG_3DESP minigame scene (scene 0x185): dScMg3DEsp_c and
  * the two helper classes it embeds, dMg3DEspModel_c and dMg3DEspAnimSet_c.
  *
- * This TU is the minigame's whole linker unit: 67 functions, .text
- * 0x020e7660..0x020ea1f0. It opens with dScMg3DEsp_c's destructor, which
+ * This TU is the minigame's whole linker unit: 68 functions, .text
+ * 0x020e7660..0x020ea280. It opens with dScMg3DEsp_c's destructor, which
  * the header declares first and out of line, so this file owns the key
  * function and emits the vtable and the RTTI chain. Then come
  * dMg3DEspAnimSet_c (three animated models), dMg3DEspModel_c (an animated
  * model that dispatches through a member-function state), the scene's
  * slot, row and card state handlers and its round phases, and it closes
  * with dScMg3DEsp_c's own members, Virtual50 through InitResources.
- * dScMg3DEsp_c_classInit, the factory just above, stays in
- * src/d_s_mg3_d_esp.cpp. Functions run in ROM order under
+ * dScMg3DEsp_c_classInit, the scene factory, follows at 0x020ea1f0..0x020ea280
+ * and ends the unit. Functions run in ROM order under
  * `#pragma defer_codegen off`; do not reorder.
  *
  * Each pragma bracket below carries the file-global pragma of the file
@@ -47,6 +47,7 @@
 #include "TextureTransformer.h"
 #include "TextureSequence.h"
 #include "Sound.h"
+#include "PlayerInput.h"
 
 struct BMD_File;
 struct BTP_File;
@@ -124,11 +125,6 @@ extern dMg3DEspModel_c::State data_ov006_0213c764;
 extern dMg3DEspModel_c::State data_ov006_0213c76c;
 extern dMg3DEspModel_c::State data_ov006_0213c774;
 extern void *data_ov006_0213c844;
-extern u8 data_020a0e40;
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0dea[];
-extern u8 data_020a0deb[];
 extern s16 data_02082214[];
 extern unsigned char data_0209d45c;
 extern unsigned char data_0209d454;
@@ -1144,21 +1140,21 @@ void dScMg3DEsp_c::CardSeek(int i)
 void dScMg3DEsp_c::CardTouch(int idx)
 {
     char* self = (char*)this;
-    unsigned int i = data_020a0e40;
+    unsigned int i = gActivePlayerSlot;
     int ok = 0;
     int n;
     int v, w;
 
-    if (data_020a0de8[i * 4] != 0) {
-        if (data_020a0de9[i * 4] != 0) {
+    if (gTouchHeld[i * 4] != 0) {
+        if (gTouchEdge[i * 4] != 0) {
             ok = 1;
         }
     }
     if (ok == 0) return;
 
     n = idx * 0x18;
-    v = data_020a0dea[data_020a0e40 * 4] - (*(int*)(self + 0x5208 + n) >> 12);
-    w = data_020a0deb[data_020a0e40 * 4] - (*(int*)(self + 0x520c + n) >> 12);
+    v = gTouchX[gActivePlayerSlot * 4] - (*(int*)(self + 0x5208 + n) >> 12);
+    w = gTouchY[gActivePlayerSlot * 4] - (*(int*)(self + 0x520c + n) >> 12);
 
     if (v < -0xa) return;
     if (v > 0xa) return;
@@ -1468,9 +1464,9 @@ void dScMg3DEsp_c::Results()
         if (*(u8 *)(c + 0x5550) != 0)
             return;
         b = 0;
-        i = data_020a0e40;
-        if (data_020a0de8[i * 4] != 0) {
-            if (data_020a0de9[i * 4] != 0)
+        i = gActivePlayerSlot;
+        if (gTouchHeld[i * 4] != 0) {
+            if (gTouchEdge[i * 4] != 0)
                 b = 1;
         }
         if (b != 0)
@@ -1675,4 +1671,35 @@ s32 dScMg3DEsp_c::InitResources()
     mHudScore = 0;
 
     return 1;
+}
+
+extern "C" {
+extern void *_ZN7fBase_cnwEj(unsigned int sz);
+extern void *_ZN11dScMgBase_cC2Ev(void *p);
+extern void _ZN8Particle10SysTrackerC1Ev(void *);
+extern void *_ZN5ModelC1Ev(void *);
+extern void *_ZN15dMg3DEspModel_cC1Ev(void *);
+extern void *_ZN18TextureTransformerC1Ev(void *);
+extern int _ZTV19dScMgSingle3DBase_c[];
+extern int _ZTV12dScMg3DEsp_c[];
+void *dScMg3DEsp_c_classInit(void);
+/* Reconstructed source-style name: SM64DS proves dScMg3DEsp_c through RTTI,
+ * allocation size, vtable identity, and the MG_3DESP registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgPsycheOut_Spawn. */
+// @symbol dScMg3DEsp_c_classInit
+void *dScMg3DEsp_c_classInit(void){
+    char *o = (char *)_ZN7fBase_cnwEj(0x5558);
+    if(o != 0){
+        _ZN11dScMgBase_cC2Ev(o);
+        *(int *)o = (int)_ZTV19dScMgSingle3DBase_c;
+        _ZN8Particle10SysTrackerC1Ev(o + 0x471c);
+        *(int *)o = (int)&_ZTV12dScMg3DEsp_c[2];
+        _ZN5ModelC1Ev(o + 0x4f38);
+        _ZN5ModelC1Ev(o + 0x4f88);
+        _ZN15dMg3DEspModel_cC1Ev(o + 0x4fd8);
+        _ZN18TextureTransformerC1Ev(o + 0x51f4);
+    }
+    return o;
+}
 }

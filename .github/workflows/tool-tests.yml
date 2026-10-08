@@ -234,6 +234,7 @@ jobs:
             tools.test_rombuild_check \
             tools.test_rombuild_profile \
             tools.test_sinit_owners \
+            tools.test_src_move \
             tools.test_srcpath \
             tools.test_stamp_provenance_verify \
             tools.test_submit_pr_validation \
@@ -295,6 +296,8 @@ jobs:
 #   test_layout                 (11)   layout_check.py -- the invariants that make src/
 #                                      trustworthy; L1 is the one the ROM build cannot
 #                                      catch.
+#   test_src_move               (19)   src_move.py -- the path rewrite that must not miss a
+#                                      reference, and the bucket each file is sent to.
 #   test_linkcheck               (14)   linkcheck.py -- the len-mismatch verdict one
 #                                      level under pgate.py/prepush_linkcheck.py's own
 #                                      resolution: a zero-size EABI alias record (a

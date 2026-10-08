@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "PlayerInput.h"
 // @symbol _ZN6Player14St_Cannon_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
@@ -18,7 +19,6 @@ extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern void Player_AdvanceAnims(void* c);
 extern int _ZN6Player12FinishedAnimEv(void* c);
 
-extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
 extern char* data_0209f318;
 extern short data_02082214[];
@@ -32,7 +32,7 @@ int Player::St_Cannon_Main()
     case 0:
         break;
     case 1: {
-        if ((*(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18) & 3) == 0)
+        if ((*(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18) & 3) == 0)
             break;
 
         char* p = data_0209f318;

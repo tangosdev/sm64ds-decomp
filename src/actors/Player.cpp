@@ -1,8 +1,8 @@
 //cpp
-/* Player -- ov002.  Reconstructed translation unit: ROM ordinals 0..300 of the
- * contiguous linker run 0x020bd828..0x020e6a08, i.e. 0x020bd828..0x020cfea4, 301 functions.
+/* Player -- ov002.  Reconstructed translation unit: ROM ordinals 0..343 of the
+ * contiguous linker run 0x020bd828..0x020e6a08, i.e. 0x020bd828..0x020d3b9c, 344 functions.
  *
- * Assembled from the 301 one-function legacy sources listed at the foot of the
+ * Assembled from the 344 one-function legacy sources listed at the foot of the
  * file.  Each member keeps its OWN declarations, inside its own body: mwccarm
  * 2004/b56 gives a block-scope declaration inside an `extern "C"` region C
  * linkage (measured), so 301 independently-recovered views of one ROM symbol
@@ -95,6 +95,7 @@
 #include "types.h"
 #include "common.h"
 #include "Player.h"
+#include "PlayerInput.h"
 #include "SharedFilePtr.h"
 #include "PathPtr.h"
 #include "Particle__System.h"
@@ -102,6 +103,8 @@
 #include "dBgCh_Gnd.h"
 #include "dBgCh_Lin.h"
 #include "dBgCh_Actr.h"
+#include "decl_Animation.h"
+#include "Sound.h"
 
 bool ApproachLinear(short &value, short target, short step);
 
@@ -1046,11 +1049,10 @@ void Player::func_ov002_020beabc()
 // @symbol _ZN6Player19func_ov002_020beb38Ev
 extern "C" {
 int Player::func_ov002_020beb38(){
-    extern unsigned char data_020a0e40;
     extern unsigned short data_0209f49e;
     extern unsigned short data_020a0e5a;
     extern int AngleDiff(int a, int b);
-  unsigned char idx = data_020a0e40;
+  unsigned char idx = gActivePlayerSlot;
   unsigned char count = 0;
   unsigned short f = *(unsigned short*)((char*)&data_0209f49e + idx*0x18);
   if (f & 1) count++;
@@ -1365,15 +1367,14 @@ void Player::func_ov002_020bf13c()
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020bf224
 /* func_ov002_020bf224 — scale b by an s16 factor from a 0x18-stride table
- * indexed by byte data_020a0e40 (fx12 rounded multiply), clamped below by c.
- * No callees; data: data_020a0e40 (u8 index), data_0209f4a0 (s16 table).
+ * indexed by byte gActivePlayerSlot (fx12 rounded multiply), clamped below by c.
+ * No callees; data: gActivePlayerSlot (u8 index), data_0209f4a0 (s16 table).
  */
 extern "C" {
 int func_ov002_020bf224(int a, int b, int c)
 {
-    extern u8 data_020a0e40;
     extern struct Entry18 data_0209f4a0[];
-    s64 p = (s64)b * data_0209f4a0[data_020a0e40].val;
+    s64 p = (s64)b * data_0209f4a0[gActivePlayerSlot].val;
     b = (int)((p + 0x800) >> 12);
     if (b < c)
         b = c;
@@ -2238,7 +2239,6 @@ int func_ov002_020c06fc(char *c, int arg)
     extern int _ZN9dBgCh_Lin10DetectClsnEv(void*);
     extern void _ZN9dBgCh_LinD1Ev(void*);
     extern void ApproachAngle(void*, short target, int divisor, int band, int maxStep);
-    extern unsigned char data_020a0e40;
     extern short data_0209f4a0[];
     extern char data_0209f4ac[];
     extern short data_02082214[];
@@ -2265,7 +2265,7 @@ int func_ov002_020c06fc(char *c, int arg)
 
     a = 0;
     b = a;
-    if (*(s16 *)((char *)data_0209f4a0 + data_020a0e40 * 0x18) >= 0x200) {
+    if (*(s16 *)((char *)data_0209f4a0 + gActivePlayerSlot * 0x18) >= 0x200) {
         s16 d = (s16)(*(s16 *)(c + 0x6d2) - *(s16 *)(c + 0x94));
         int j = ((u16)d >> 4) * 2;
         a = data_02082214[j + 1];
@@ -2273,7 +2273,7 @@ int func_ov002_020c06fc(char *c, int arg)
     }
 
     t = func_ov002_020f030c(func_ov002_020c031c(c));
-    t = t + FX(*(s16 *)((char *)data_0209f4a0 + data_020a0e40 * 0x18), FX(a, 0x52LL));
+    t = t + FX(*(s16 *)((char *)data_0209f4a0 + gActivePlayerSlot * 0x18), FX(a, 0x52LL));
 
     v = func_ov002_020f02c8(func_ov002_020c031c(c));
     {
@@ -2284,12 +2284,12 @@ int func_ov002_020c06fc(char *c, int arg)
     }
 
     if (*(u8 *)(c + 0x70e) != 0) {
-        if (*(u8 *)(data_0209f4ac + data_020a0e40 * 0x18) != 0) {
+        if (*(u8 *)(data_0209f4ac + gActivePlayerSlot * 0x18) != 0) {
             int m = (b < 0) ? -b : b;
             s16 s2;
             if (m < 0x100)
                 b = 0;
-            s2 = *(s16 *)((char *)data_0209f4a0 + data_020a0e40 * 0x18);
+            s2 = *(s16 *)((char *)data_0209f4a0 + gActivePlayerSlot * 0x18);
             if (s2 < 0x400)
                 *(u16 *)(c + 0x69c) = FX(b, 0x64LL);
             else if (s2 < 0x800)
@@ -2986,7 +2986,6 @@ int func_ov002_020c1ad8(char* self, int ang)
     extern void _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
     extern int data_ov002_0211013c;
     extern int data_ov002_0211043c;
-    extern u8 data_020a0e40;
     extern s16 data_0209f4a0[];
     int d;
     int a = ang;
@@ -3008,7 +3007,7 @@ int func_ov002_020c1ad8(char* self, int ang)
             if (_ZN6Player7IsStateERNS_5StateE(self, &data_ov002_0211043c)) {
                 if (*(u8*)(self + 0x6e3) == 2) return 0;
             }
-            if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) == 0) return 0;
+            if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) == 0) return 0;
             *(u8*)(self + 0x6e3) = 2;
         } else {
             if (_ZN6Player7IsStateERNS_5StateE(self, &data_ov002_0211043c)) {
@@ -5115,7 +5114,6 @@ int Player::StartTalk(fBase_c & actor_, bool b_)
     extern Player::State data_ov002_02110424;
     extern Player::State data_ov002_021105a4;
     extern Player::State data_ov002_0211043c;
-    extern u8 data_020a0e40;
     extern u8 data_0209f49e[];
     fBase_c *actor = &actor_;
     if (IsState(data_ov002_0211046c)) {
@@ -5128,7 +5126,7 @@ int Player::StartTalk(fBase_c & actor_, bool b_)
         return 0;
 
     if (b_ == 0) {
-        if (!(*(u16 *)(data_0209f49e + (u8)data_020a0e40 * 0x18) & 3))
+        if (!(*(u16 *)(data_0209f49e + (u8)gActivePlayerSlot * 0x18) & 3))
             goto ret0;
 
         if (!((IsState(data_ov002_0211013c) && mHorzSpeed < 0x8000) || IsState(data_ov002_0211043c) || IsState(data_ov002_02110154)))
@@ -5217,7 +5215,6 @@ int Player::St_StuckInGround_Main()
     extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, void*);
     extern void _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
     extern void Player_AdvanceAnims(void*);
-    extern u8 data_020a0e40;
     extern u16 data_0209f49e[];
     extern int data_ov002_0211013c[];
     extern u32 data_ov002_0210a578[];
@@ -5235,7 +5232,7 @@ int Player::St_StuckInGround_Main()
         break;
     case 1:
         if (_ZN6Player12FinishedAnimEv(((char*)this)) == 0) {
-            if ((*(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18) & 2) == 0)
+            if ((*(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18) & 2) == 0)
                 break;
         }
         _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), data_ov002_0210a584[mStateStep], 0x40000000, 0x1000, 0);
@@ -8986,7 +8983,6 @@ int Player::St_DebugFly_Main()
     extern int func_ov002_020bf224(int a, int b, int c);
     extern void _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
     extern void Player_AdvanceAnims(void*);
-    extern u8 data_020a0e40;
     extern char data_0209f4a0[];
     extern char data_0209f49c[];
     extern char data_020a0e5a[];
@@ -8998,12 +8994,12 @@ int Player::St_DebugFly_Main()
     mVertSpeed = 0;
     mClsnFlags = 0;
 
-    if (*(s16 *)(data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
+    if (*(s16 *)(data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
         mPrevAngleY = mDesiredAngleY;
         mHorzSpeed = func_ov002_020bf224((int)((char *)this), 0x50000, 0);
     }
 
-    idx = data_020a0e40;
+    idx = gActivePlayerSlot;
     flags = *(u16 *)(data_0209f49c + idx * 0x18);
     if (flags & 2) {
         *(int *)((char *)&mPosY) += 0x28000;
@@ -9063,7 +9059,6 @@ void func_ov002_020ca940(char* self)
     Player *player = (Player *)self;
     extern u8 data_0209f2d8;
     extern int data_0209caa0[];
-    extern u8 data_020a0e40;
     extern u8 data_0209f49e[];
     extern int data_0209f318;
     extern char data_ov002_0211013c;
@@ -9088,7 +9083,7 @@ void func_ov002_020ca940(char* self)
         if (!(data_0209caa0[2] & 0x80)) return;
     }
 
-    if (*(u16*)(data_0209f49e + (u8)data_020a0e40 * 0x18) & 0x8000) {
+    if (*(u16*)(data_0209f49e + (u8)gActivePlayerSlot * 0x18) & 0x8000) {
         old = player->mUseFarCamera;
         h = data_0209f318;
         (*(u8*)((int)self + 0x715))++;
@@ -9284,7 +9279,6 @@ int Player::St_CameraZoom_Main()
     extern void Player_AdvanceAnims(void*);
     extern signed char data_02092110;
     extern Player::State data_ov002_0211013c;
-    extern unsigned char data_020a0e40;
     extern unsigned short data_0209f49e;
     if (data_02092110 < 0) {
         if ((unsigned short)(mStateFlags & 4) == 0) {
@@ -9300,7 +9294,7 @@ int Player::St_CameraZoom_Main()
             mStateFlags &= ~4;
         }
         func_ov002_020cae10(this);
-        if (*(unsigned short*)((char*)&data_0209f49e + data_020a0e40 * 0x18) & 0x8f03) {
+        if (*(unsigned short*)((char*)&data_0209f49e + gActivePlayerSlot * 0x18) & 0x8f03) {
             mStateFlags &= ~4;
         }
         func_ov002_020cac60(this);
@@ -9453,7 +9447,6 @@ int Player::St_Headstand_Main()
     extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*, unsigned int a, int b, int d, unsigned int e);
     extern void _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
     extern void Player_AdvanceAnims(void*);
-    extern u8 data_020a0e40;
     extern u16 data_0209f49c[];
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a4[];
@@ -9475,7 +9468,7 @@ int Player::St_Headstand_Main()
         }
         break;
     case 3: {
-        int idx = data_020a0e40 * 0x18;
+        int idx = gActivePlayerSlot * 0x18;
         s16 val = *(s16*)((char*)data_0209f4a4 + idx);
         u16 mag = *(u16*)((char*)data_0209f49c + idx);
         if (val > 0x200) {
@@ -9487,7 +9480,7 @@ int Player::St_Headstand_Main()
             s16* p = (s16*)((char*)&mAngleY);
             *p = *p + mAngleYSpeed;
         }
-        if (*(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18) & 2) {
+        if (*(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18) & 2) {
             mPrevAngleY = mAngleY;
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_02110724);
             return 1;
@@ -9682,7 +9675,6 @@ int Player::St_Climb_Main()
     extern int func_ov002_020cbea8(void*);
     extern void Player_AdvanceAnims(void*);
     extern void* data_0209f318;
-    extern u8 data_020a0e40;
     extern u16 data_0209f49e[];
     extern u16 data_0209f49c[];
     extern s16 data_02082214[];
@@ -9741,7 +9733,7 @@ int Player::St_Climb_Main()
 
     case 1: {
         s16 v;
-        u32 idx = (u32)data_020a0e40 * 0x18;
+        u32 idx = (u32)gActivePlayerSlot * 0x18;
         u16 flagsE = *(u16*)((char*)data_0209f49e + idx);
         u16 flagsC = *(u16*)((char*)data_0209f49c + idx);
         if (flagsE & 0x400) {
@@ -9763,13 +9755,13 @@ int Player::St_Climb_Main()
                 mAngleYSpeed = 0;
                 ApproachLinear(*(short *)(c + 0x8e), GetAngleToCamera(mPlayerNo), 0x200);
                 if (*(s32*)(*(char**)(c + 0x37c) + 8) <= mAttachOffsetY) {
-                    if ((*(u32*)(*(char**)(c + 0x37c) + 0x18) & 0x2000000) && mVertSpeed == 0 && (s32)(*(s16*)((char*)data_0209f4a4 + (u32)data_020a0e40 * 0x18)) < -0xc00 && mStateWork == 1) {
+                    if ((*(u32*)(*(char**)(c + 0x37c) + 0x18) & 0x2000000) && mVertSpeed == 0 && (s32)(*(s16*)((char*)data_0209f4a4 + (u32)gActivePlayerSlot * 0x18)) < -0xc00 && mStateWork == 1) {
                         _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_021106f4);
                     }
                     mAttachOffsetY = *(s32*)(*(char**)(c + 0x37c) + 8);
                     mVertSpeed = 0;
                 } else {
-                    u32 idx2 = (u32)data_020a0e40 * 0x18;
+                    u32 idx2 = (u32)gActivePlayerSlot * 0x18;
                     s32 mag;
                     if (*((u8*)data_0209f4ac + idx2) == 0) {
                         mag = (*(u16*)((char*)data_0209f49c + idx2) & 0x800) ? 0xc000 : 0x6660;
@@ -9795,7 +9787,7 @@ int Player::St_Climb_Main()
                 func_ov002_020cb400(c);
                 *(s16*)(c + 0x6a4) = 0x1e;
                 {
-                    u32 idx3 = (u32)data_020a0e40 * 0x18;
+                    u32 idx3 = (u32)gActivePlayerSlot * 0x18;
                     s32 mag;
                     if (*((u8*)data_0209f4ac + idx3) == 0) {
                         mag = (*(u16*)((char*)data_0209f49c + idx3) & 0x800) ? 0x1e000 : 0xfff0;
@@ -9808,7 +9800,7 @@ int Player::St_Climb_Main()
                 }
                 mAngleYSpeed -= 0x40;
                 {
-                    u32 idx4 = (u32)data_020a0e40 * 0x18;
+                    u32 idx4 = (u32)gActivePlayerSlot * 0x18;
                     s16 av = *(s16*)((char*)data_0209f4a4 + idx4);
                     if (av < 0) av = -av;
                     if (mAngleYSpeed <= av) av = mAngleYSpeed;
@@ -9843,7 +9835,7 @@ end:
         _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211013c);
         return 1;
     }
-    if (*(u16*)((char*)data_0209f49e + (u32)data_020a0e40 * 0x18) & 2) {
+    if (*(u16*)((char*)data_0209f49e + (u32)gActivePlayerSlot * 0x18) & 2) {
         mPrevAngleY = mAngleY;
         _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211070c);
         return 1;
@@ -9886,7 +9878,7 @@ tail:
         s32* p4 = (*(GroundPosFn*)(*(char**)gr + 8))(gr);
         mPosY = mAttachOffsetY + p4[1];
     }
-    if (*(s16*)((char*)data_0209f4a4 + (u32)data_020a0e40 * 0x18) == 0) {
+    if (*(s16*)((char*)data_0209f4a4 + (u32)gActivePlayerSlot * 0x18) == 0) {
         mStateWork = 1;
     }
     Player_AdvanceAnims(c);
@@ -10029,10 +10021,9 @@ extern "C" {
 void func_ov002_020cc05c(char *self)
 {
     Player *player = (Player *)self;
-    extern u8 data_020a0e40;
     extern s16 data_0209f4a2[];
     extern void func_ov002_020cc05c(void*, unsigned short);
-    int idx = data_020a0e40 * 0x18;
+    int idx = gActivePlayerSlot * 0x18;
     s16 curval = *(s16*)((int)self + 0x69c);
     *(s16*)((int)self + 0x69c) = curval + (s16)(int)(((s64)*(s16*)((char*)data_0209f4a2 + idx) * 0x80 + 0x800) >> 12);
     {
@@ -10155,7 +10146,6 @@ int Player::St_Shell_Main()
     extern int _ZN6Player6IsAnimEj(void*, u32 anim);
     extern void _ZN6Player7SetAnimEji5Fix12IiEj(void*, u32 anim, int a, Fix12i b, u32 d);
     extern void Player_AdvanceAnims(void*);
-    extern u8 data_020a0e40;
     extern s16 data_0209f4a0[];
     extern u16 data_0209f49e[];
     extern u16 data_0209f49c[];
@@ -10204,7 +10194,7 @@ int Player::St_Shell_Main()
     if (mStateStep == 0) {
         s16 target;
         int accel;
-        if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
+        if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
             target = mDesiredAngleY;
             accel = 0x40000;
         } else {
@@ -10228,7 +10218,7 @@ int Player::St_Shell_Main()
             mLandSoundPlayed = 0;
         }
         {
-            int off = data_020a0e40 * 0x18;
+            int off = gActivePlayerSlot * 0x18;
             if (*(u16*)((char*)data_0209f49e + off) & 2) {
                 (*(u8*)((char*)&mStateStep))++;
                 mVertSpeed = (mHorzSpeed >> 2) + 0x2a000;
@@ -10259,11 +10249,11 @@ int Player::St_Shell_Main()
             mTerminalVelocity = -0x4b000;
             if (mVertSpeed >= 0) {
                 mVertAccel = -0x8000;
-                if (*(u16*)((char*)data_0209f49c + data_020a0e40 * 0x18) & 2) {
+                if (*(u16*)((char*)data_0209f49c + gActivePlayerSlot * 0x18) & 2) {
                     mVertAccel = -0x3400;
                 }
             } else {
-                if ((*(u16*)((char*)data_0209f49c + data_020a0e40 * 0x18) & 2) && mHasWings != 0) {
+                if ((*(u16*)((char*)data_0209f49c + gActivePlayerSlot * 0x18) & 2) && mHasWings != 0) {
                     mVertAccel = -0x2000;
                     mTerminalVelocity = -0x25800;
                 }
@@ -10438,7 +10428,6 @@ int Player::St_MetalWaterWater_Main()
     extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, int x, int y, int z);
     extern void _ZN6Player7SetAnimEji5Fix12IiEj(void*, u32 a, int b, int d, u32 e);
     extern void Player_AdvanceAnims(void*);
-    extern u8 data_020a0e40;
     extern struct S18b2 data_0209f4a0[];
     extern int data_0209f32c;
     extern int data_ov002_0211067c;
@@ -10461,7 +10450,7 @@ int Player::St_MetalWaterWater_Main()
 
     if (mStateWork == 0) {
         v = 0;
-        if (data_0209f4a0[data_020a0e40].a != 0) {
+        if (data_0209f4a0[gActivePlayerSlot].a != 0) {
             v = func_ov002_020bf224(this, 0x14000, 0x1000);
             ApproachAngle(&mPrevAngleY, mDesiredAngleY, 0x20, 0x1000, 0x10);
         }
@@ -10494,7 +10483,7 @@ int Player::St_MetalWaterWater_Main()
                 pos.y = py2;
                 _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd7, px, py2, pz);
             }
-            if (data_0209f4a0[data_020a0e40].a != 0) {
+            if (data_0209f4a0[gActivePlayerSlot].a != 0) {
                 _ZN6Player11ChangeStateERNS_5StateE(this, &data_ov002_021106ac);
             } else {
                 mHorzSpeed = 0;
@@ -10565,7 +10554,6 @@ int Player::St_MetalWaterGround_Main()
     extern void Player_AdvanceAnims(void*);
     extern int data_0209f32c;
     extern unsigned char data_0209f49e;
-    extern unsigned char data_020a0e40;
     extern short data_0209f4a0;
     extern int data_ov002_0211013c[];
     extern int data_ov002_0211067c[];
@@ -10579,7 +10567,7 @@ int Player::St_MetalWaterGround_Main()
         _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
         return 1;
     }
-    if(*(unsigned short*)((char*)&data_0209f49e + data_020a0e40 * 0x18) & 2){
+    if(*(unsigned short*)((char*)&data_0209f49e + gActivePlayerSlot * 0x18) & 2){
         mStateStep = 0;
         _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021106c4);
         return 1;
@@ -10595,7 +10583,7 @@ int Player::St_MetalWaterGround_Main()
     }
     func_ov002_020cd190(((char*)this));
     int approach = 0;
-    if(*(short*)((char*)&data_0209f4a0 + data_020a0e40 * 0x18) != 0){
+    if(*(short*)((char*)&data_0209f4a0 + gActivePlayerSlot * 0x18) != 0){
         ApproachAngle((short*)((char*)&mPrevAngleY), mDesiredAngleY, 8, 0x1000, 0x80);
         approach = func_ov002_020bf224(((char*)this), 0x14000, 0x1000);
     }
@@ -10608,10 +10596,10 @@ int Player::St_MetalWaterGround_Main()
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x9f, 0x40000000, 0x1000, 0);
         }else if(_ZN6Player6IsAnimEj(((char*)this), 0x9f) != 0){
             if(_ZN6Player12FinishedAnimEv(((char*)this)) != 0){
-                _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x9e, 0, *(short*)((char*)&data_0209f4a0 + data_020a0e40 * 0x18) * 2, 0);
+                _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x9e, 0, *(short*)((char*)&data_0209f4a0 + gActivePlayerSlot * 0x18) * 2, 0);
             }
         }else if(_ZN6Player6IsAnimEj(((char*)this), 0x9f) == 0){
-            int v = *(short*)((char*)&data_0209f4a0 + data_020a0e40 * 0x18);
+            int v = *(short*)((char*)&data_0209f4a0 + gActivePlayerSlot * 0x18);
             if(v != 0){
                 _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x9e, 0, v * 2, 0);
                 func_ov002_020bf5e0();
@@ -10820,7 +10808,6 @@ void func_ov002_020cd448(char* self) {
     Player *player = (Player *)self;
     extern int func_ov002_020c18b0(void*, int x);
     extern void _Z15ApproachLinear2Rsss(short&, short, short);
-    extern unsigned char data_020a0e40;
     extern short data_0209f4a4;
     extern void func_ov002_020cd448(void*);
     unsigned char fl;
@@ -10836,7 +10823,7 @@ void func_ov002_020cd448(char* self) {
         goto tail;
     }
     if (fl & 2) {
-        if (*(short*)((char*)&data_0209f4a4 + data_020a0e40 * 0x18) != 0) goto tail;
+        if (*(short*)((char*)&data_0209f4a4 + gActivePlayerSlot * 0x18) != 0) goto tail;
         if (*(short*)(self + 0x92) > 0) {
             short* q = (short*)(((int)self + 0x92));
             *q += 0x200;
@@ -10864,7 +10851,6 @@ extern "C" {
 void func_ov002_020cd550(char* c)
 {
     Player *self = (Player *)c;
-    extern u8 data_020a0e40;
     extern struct S18a data_0209f4a4[];
     extern short data_02082214[];
     extern void func_ov002_020cd448(void*);
@@ -10872,7 +10858,7 @@ void func_ov002_020cd550(char* c)
     short lim, v, w, a;
     int step, idx;
 
-    lim = (short)(int)((((long long)data_0209f4a4[data_020a0e40].f0 * -0x3f00LL) + 0x800) >> 12);
+    lim = (short)(int)((((long long)data_0209f4a4[gActivePlayerSlot].f0 * -0x3f00LL) + 0x800) >> 12);
     lim &= 0xfff0;
 
     step = *(short*)(c + 0x92) > 0 ? 0x100 : 0x200;
@@ -10914,7 +10900,6 @@ void func_ov002_020cd71c(char *self)
     Player *player = (Player *)self;
     typedef short s16;
     extern int data_ov002_020ff1f0[];
-    extern unsigned char data_020a0e40[];
     extern short data_0209f4a2[];
     extern void _Z15ApproachLinear2Rsss(void*, short t, short s);
     extern void func_ov002_020cd71c(void*);
@@ -10923,7 +10908,7 @@ void func_ov002_020cd71c(char *self)
     int c = (int)((((long long)ip << 7) + 0x800) >> 12);
     s16 step = (s16)((((long long)ip << 5) + 0x800) >> 12);
     int b = (int)(((long long)ip * 0x240 + 0x800) >> 12);
-    int e = *(short *)((char *)data_0209f4a2 + data_020a0e40[0] * 0x18);
+    int e = *(short *)((char *)data_0209f4a2 + gActivePlayerSlot * 0x18);
     s16 target = (s16)(((long long)(-b) * e + 0x800) >> 12);
 
     if (player->mPrevVertSpeed == 0) {
@@ -11017,7 +11002,6 @@ int Player::St_Swim_Main()
     extern void Player_AdvanceAnims(void*);
     extern char data_ov002_021106ac[];
     extern char data_ov002_021101b4[];
-    extern unsigned char data_020a0e40;
     extern unsigned short data_0209f49c;
     extern unsigned short data_0209f49e;
     extern char data_0209ee90[];
@@ -11054,7 +11038,7 @@ int Player::St_Swim_Main()
     mPeakY = mPosY;
     if (func_ov002_020cec2c(this) != 0) return 1;
 
-    t4 = (*(unsigned short*)((char*)&data_0209f49c + data_020a0e40 * 0x18)) & 0x802;
+    t4 = (*(unsigned short*)((char*)&data_0209f49c + gActivePlayerSlot * 0x18)) & 0x802;
     unk_69e = mAngleZ;
     func_ov002_020cd71c(this);
     func_ov002_020cd550(this);
@@ -11136,7 +11120,7 @@ int Player::St_Swim_Main()
             }
         }
         if (func_ov002_020ce324(this) != 0) return 1;
-        if ((*(unsigned short*)((char*)&data_0209f49e + data_020a0e40 * 0x18)) & 1) {
+        if ((*(unsigned short*)((char*)&data_0209f49e + gActivePlayerSlot * 0x18)) & 1) {
             func_ov002_020cd364(this);
         } else if (t4 != 0) {
             func_ov002_020cd3e0(this);
@@ -11226,7 +11210,7 @@ int Player::St_Swim_Main()
         break;
     case 8:
         _Z14ApproachLinearRiii((int*)(&mPrevVertSpeed), func_ov002_020cedb0(this, 0x1e000), 0x400);
-        if ((*(unsigned short*)((char*)&data_0209f49e + data_020a0e40 * 0x18)) & 1) {
+        if ((*(unsigned short*)((char*)&data_0209f49e + gActivePlayerSlot * 0x18)) & 1) {
             _ZN6Player7SetAnimEji5Fix12IiEj(this, 0xb1, 0x40000000, 0x1000, 0);
             mStateStep = 9;
             func_ov002_020bd8c0(this, 0x33);
@@ -11278,7 +11262,6 @@ int func_ov002_020ce324(char* c)
     typedef unsigned short u16;
     typedef struct Vec3i { int x, y, z; } Vec3i;
     typedef struct dActor_c dActor_c;
-    extern u8 data_020a0e40;
     extern struct S18b data_0209f49e[];
     extern struct S18a data_0209f4a4[];
     extern short data_02082214[];
@@ -11297,7 +11280,7 @@ int func_ov002_020ce324(char* c)
     char rl1[0x78];
     int ok;
 
-    if (!(data_0209f49e[data_020a0e40].f0 & 2)) return 0;
+    if (!(data_0209f49e[gActivePlayerSlot].f0 & 2)) return 0;
     if (func_ov002_020ceb54(c)) return 0;
 
     _ZN9dBgCh_LinC1Ev(rl1);
@@ -11316,7 +11299,7 @@ int func_ov002_020ce324(char* c)
     }
 
     ok = 0;
-    if (data_0209f4a4[data_020a0e40].f0 >= 0xa00) {
+    if (data_0209f4a4[gActivePlayerSlot].f0 >= 0xa00) {
         ok = 1;
     } else {
         char rl2[0x78];
@@ -11951,10 +11934,9 @@ void func_ov002_020cf2f8(void* c) {
     extern int _Z14ApproachLinearRiii(void*, int, int);
     extern int ApproachAngle(void*, int, int, int, int);
     extern int func_ov002_020bf224(void*, int, int);
-    extern unsigned char data_020a0e40[];
     extern short data_0209f4a0[];
     extern void func_ov002_020cf2f8(void*);
-  if (*(short*)((char*)data_0209f4a0 + data_020a0e40[0]*0x18) == 0) return;
+  if (*(short*)((char*)data_0209f4a0 + gActivePlayerSlot*0x18) == 0) return;
   _Z14ApproachLinearRiii((char*)c+0x98, func_ov002_020bf224(c, 0x8000, 0x2000), 0x1000);
   ApproachAngle((char*)c+0x94, *(short*)((char*)c+0x6d2), 0x10, 0x1000, 0x200);
   *(short*)((char*)c+0x8e) = *(short*)((char*)c+0x94);
@@ -11990,7 +11972,6 @@ int Player::St_CeilingGrate_Main()
     extern int _ZNK6Player14GetBodyModelIDEjb(void*, u32 a, int b);
     extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, void*);
     extern void Player_AdvanceAnims(void*);
-    extern u8 data_020a0e40;
     extern u16 data_0209f49c[];
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
@@ -12015,7 +11996,7 @@ int Player::St_CeilingGrate_Main()
     }
 
     {
-        int idx = data_020a0e40 * 0x18;
+        int idx = gActivePlayerSlot * 0x18;
         if ((*(u16*)((char*)data_0209f49c + idx) & 2) == 0) {
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), &data_ov002_0211013c);
             return 1;
@@ -12048,7 +12029,7 @@ int Player::St_CeilingGrate_Main()
         }
     case 1:
         func_ov002_020cf384(((char*)this));
-        if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
+        if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
             mStateWork ^= 1;
             mStateStep = 2;
             spd = mHorzSpeed >> 3;
@@ -12068,7 +12049,7 @@ int Player::St_CeilingGrate_Main()
         }
         if (_ZN6Player12FinishedAnimEv(((char*)this)) != 0) {
             _ZN5Sound9PlayBank0EjRK7Vector3(0xb2, ((char*)this) + 0x74);
-            if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
+            if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
                 mStateWork ^= 1;
                 _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), data_ov002_0210a60c[(mStateWork & 1) + 2], 0x40000000, 0x1000, 0);
             } else {
@@ -12136,7 +12117,6 @@ int Player::St_OnWall_Main()
     extern void _ZN6Player7SetAnimEji5Fix12IiEj(void*, u32 anim, int a, Fix12i b, u32 d);
     extern int func_ov002_020d4d88(void*, int a, int b);
     extern void Player_AdvanceAnims(void*);
-    extern u8 data_020a0e40;
     extern s16 data_0209f4a0[];
     extern int data_ov002_0211013c[];
     extern int AngleDiff(int, int);
@@ -12164,7 +12144,7 @@ int Player::St_OnWall_Main()
         return 1;
     }
     if (mStateStep == 2) {
-        if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) == 0) {
+        if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) == 0) {
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
             return 1;
         }
@@ -12186,7 +12166,7 @@ int Player::St_OnWall_Main()
         mHorzSpeed = func_ov002_020bf224(((char*)this), 0xa000, 0x2000);
         func_ov002_020eee3c(((char*)this) + 0x380, ((char*)this));
     } else {
-        if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
+        if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
             int ang = _ZN4cstd5atan2E5Fix12IiES1_(mWallNormalX, mWallNormalZ);
             int d = AngleDiff((s16)(ang + 0x8000), mDesiredAngleY);
             if (d >= 0x4000) {
@@ -12379,6 +12359,2507 @@ int func_ov002_020cfd84(void* actor, void* a, void* b) {
         }
     }
     return 0;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 301 -- func_ov002_020cfea4, 0x020cfea4, size 0x2d4 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020cfea4
+/* recovered: Player ground/edge probe used while carrying or standing on
+ * another actor.
+ *
+ * With no timer at self+0x6a6 and bit 1 of self+0x6e9 set, the player first
+ * asks its dBgCh_Actr (self+0x380) whether it stands on, or presses against, a
+ * collider that belongs to another actor: standing on one that faces more
+ * than 90 degrees away, or touching one as a wall, ends the probe with 1.
+ * Otherwise a dBgCh_Gnd is built 32 units ahead of the player along its
+ * facing angle (sin/cos from data_02082214, 1.19.12 units shifted up by 5)
+ * and 0x14000 above it; ground within 0x50000 below the player's own height
+ * ends the probe with 1. The remaining two checks hand func_ov002_020cfd84 a
+ * pair of points 0xa000 below that probe: the point itself, and the point
+ * moved 60 units to the player's right (angle + 0x4000), then 60 units to
+ * its left. pts[] holds the eight Vector3 slots of the ROM's frame: pts[1]
+ * is the ground probe, pts[2]/pts[3] the base pair, pts[4]/pts[5] and
+ * pts[6]/pts[7] the copies handed to each call.
+ *
+ * Two spellings are load-bearing for the register colouring of the tail
+ * (the 6bs/6ct receiver lever): the sideways offsets are kept in `dx`/`dz`,
+ * the locals that already cross the first func_ov002_020cfd84 guard, as the
+ * finished products tbl[t] * 60 (the ROM keeps exactly those products live
+ * across the call); and the lowered y is computed before pts[1].x/.z are
+ * reloaded, with the second lowered y computed after the two products. With
+ * both in place 2004/b56 gives pts[1].x ip, pts[1].z r3, the lowered y lr,
+ * the two sums r8/r7 and the second lowered y sb, which is the ROM's tail.
+ */
+extern "C" {
+int func_ov002_020cfea4(char *self)
+{
+    struct Vector3 { int x, y, z; };
+    extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
+    extern void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
+    extern int _ZNK5dBgPi9GetClsnIDEv(void *self);
+    extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
+    extern int AngleDiff(int a, int b);
+    extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
+    extern void *_ZNK10dBgCh_Actr13GetWallResultEv(void *self);
+    extern void *_ZN9dBgCh_GndC1Ev(void *self);
+    extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, const Vector3 *pos, void *actor);
+    extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
+    extern void _ZN9dBgCh_GndD1Ev(void *self);
+    extern int func_ov002_020cfd84(void *actor, const Vector3 *a, const Vector3 *b);
+    extern short data_02082214[];
+
+    Vector3 pts[8];
+    char rg[0x54];
+    void *fr;
+    void *other;
+    int idx, dx, dz;
+    if (*(unsigned short *)(self + 0x6a6) == 0 && (*(unsigned char *)(self + 0x6e9) & 2) != 0) {
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x380) != 0) {
+            fr = _ZNK10dBgCh_Actr14GetFloorResultEv(self + 0x380);
+            if (_ZNK5dBgPi9GetClsnIDEv(fr) != -1) {
+                other = _ZN8dActor_c10FindWithIDEj((unsigned int)_ZNK5dBgPi9GetClsnIDEv(fr));
+                if (other != 0) {
+                    if (AngleDiff(*(short *)(self + 0x8e), *(short *)((char *)other + 0x8e)) >= 0x4000)
+                        return 1;
+                }
+            }
+        }
+        if (_ZNK10dBgCh_Actr8IsOnWallEv(self + 0x380) != 0) {
+            fr = _ZNK10dBgCh_Actr13GetWallResultEv(self + 0x380);
+            if (_ZNK5dBgPi9GetClsnIDEv(fr) != -1) {
+                other = _ZN8dActor_c10FindWithIDEj((unsigned int)_ZNK5dBgPi9GetClsnIDEv(fr));
+                if (other != 0)
+                    return 1;
+            }
+        }
+    }
+    _ZN9dBgCh_GndC1Ev(rg);
+    {
+        int y;
+        short *tbl;
+        int ang = *(short *)(self + 0x8e);
+        tbl = data_02082214;
+        y = *(int *)(self + 0x60);
+        idx = (unsigned short)(short)(ang + 0x8000) >> 4;
+        dz = tbl[(idx << 1) + 1];
+        dx = tbl[idx << 1];
+        {
+            int z = *(int *)(self + 0x64);
+            int x = *(int *)(self + 0x5c);
+            int pz = z + (dz << 5);
+            int px = x + (dx << 5);
+            int py = y + 0x14000;
+            pts[1].x = px;
+            pts[1].y = py;
+            pts[1].z = pz;
+        }
+    }
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, &pts[1], self);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(rg) != 0) {
+        if (*(int *)(rg + 0x44) >= *(int *)(self + 0x60) - 0x50000) {
+            _ZN9dBgCh_GndD1Ev(rg);
+            return 1;
+        }
+    }
+    {
+        int y = *(int *)(self + 0x60);
+        int yl = y - 0xa000;
+        int px = pts[1].x;
+        int pz = pts[1].z;
+        pts[2].x = px;
+        pts[2].y = yl;
+        pts[2].z = pz;
+        {
+            short *tbl;
+            int y2;
+            int ang = *(short *)(self + 0x8e);
+            y2 = *(int *)(self + 0x60);
+            tbl = data_02082214;
+            idx = (unsigned short)(short)(ang + 0x4000) >> 4;
+            {
+                int t = idx << 1;
+                int yl2;
+                dx = tbl[t] * 60;
+                dz = tbl[t + 1] * 60;
+                yl2 = y2 - 0xa000;
+                pts[3].x = px + dx;
+                pts[3].y = yl2;
+                pts[3].z = pz + dz;
+            }
+        }
+    }
+    pts[4] = pts[2];
+    pts[5] = pts[3];
+    if (func_ov002_020cfd84(self, &pts[4], &pts[5]) != 0) {
+        _ZN9dBgCh_GndD1Ev(rg);
+        return 1;
+    }
+    pts[3].x = pts[1].x - dx;
+    pts[3].z = pts[1].z - dz;
+    pts[6] = pts[2];
+    pts[7] = pts[3];
+    if (func_ov002_020cfd84(self, &pts[6], &pts[7]) != 0) {
+        _ZN9dBgCh_GndD1Ev(rg);
+        return 1;
+    }
+    _ZN9dBgCh_GndD1Ev(rg);
+    return 0;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 302 -- func_ov002_020d0178, 0x020d0178, size 0x408 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d0178
+extern "C" {
+int func_ov002_020d0178(char* c, int arg1, int flag)
+{
+    typedef struct Vec3 { int x, y, z; } Vec3;
+    typedef struct dBgCh_Lin { char pad[0x78]; } dBgCh_Lin;
+    extern void *_ZN9dBgCh_GndC1Ev(void* self);
+    extern void _ZN9dBgCh_GndD1Ev(void* self);
+    extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void* self, Vec3* pos, void* actor);
+    extern int _ZN9dBgCh_Gnd10DetectClsnEv(void* self);
+    extern void *_ZN9dBgCh_LinC1Ev(dBgCh_Lin* self);
+    extern void _ZN9dBgCh_LinD1Ev(void* self);
+    extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, Vec3* a, Vec3* b, void* actor);
+    extern int _ZN9dBgCh_Lin10DetectClsnEv(void* self);
+    extern void _ZN9dBgCh_Lin10GetClsnPosEv(Vec3* out, void* self);
+    extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vec3* out);
+    extern int _ZN4cstd5atan2E5Fix12IiES1_(int x, int z);
+    extern int AngleDiff(int a, int b);
+    extern s16 data_02082214[];
+
+    Vec3 normal;
+    Vec3 pos1;
+    Vec3 lineStart;
+    Vec3 clsnPos;
+    Vec3 line2;
+    char rg[0x50];
+    char rl[0x78];
+    int ang;
+    int gy;
+    int res;
+
+    _ZN9dBgCh_GndC1Ev(rg);
+    if (flag != 0)
+        ang = (s16)(*(s16*)(c + 0x8e) + 0x8000);
+    else
+        ang = *(s16*)(c + 0x8e);
+    {
+        u8 b7 = *(u8*)(c + 0x703);
+        int d = 0x40;
+        int i;
+        int s, csn;
+        int xoff, zoff;
+        int h;
+        if (b7 != 0)
+            d = 0xd0;
+        i = (((u16)ang) >> 4) * 2;
+        d <<= 12;
+        s = data_02082214[i];
+        csn = data_02082214[i + 1];
+        xoff = (int)(((long long)d * s + 0x800) >> 12);
+        zoff = (int)(((long long)d * csn + 0x800) >> 12);
+        h = 0xc8;
+        if (b7 != 0)
+            h = 0x1f4;
+        {
+            int tz = *(int*)(c + 0x64) + zoff;
+            int ty = *(int*)(c + 0x60) + (h << 12);
+            int tx = *(int*)(c + 0x5c) + xoff;
+            pos1.x = tx;
+            pos1.y = ty;
+            pos1.z = tz;
+        }
+    }
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, &pos1, c);
+    if (!_ZN9dBgCh_Gnd10DetectClsnEv(rg)) {
+        _ZN9dBgCh_GndD1Ev(rg);
+        return 0;
+    }
+    gy = *(int*)(rg + 0x44);
+    if (flag != 0) {
+        if (gy > *(int*)(c + 0x60) + 0x64000 || gy < *(int*)(c + 0x60)) {
+            _ZN9dBgCh_GndD1Ev(rg);
+            return 0;
+        }
+    } else {
+        int lo = 0x64;
+        if (*(u8*)(c + 0x703) != 0)
+            lo = 0x190;
+        if (gy > *(int*)(c + 0x60) + ((lo + 0x64) << 12) || gy < *(int*)(c + 0x60) + (lo << 12)) {
+            _ZN9dBgCh_GndD1Ev(rg);
+            return 0;
+        }
+    }
+    _ZNK11SurfaceInfo12CopyNormalToER7Vector3(rg + 0x14, &normal);
+    if (normal.y < 0xf04) {
+        _ZN9dBgCh_GndD1Ev(rg);
+        return 0;
+    }
+    _ZN9dBgCh_LinC1Ev((dBgCh_Lin*)rl);
+    pos1.y = gy;
+    {
+        int tz = *(int*)(c + 0x64);
+        int tx = *(int*)(c + 0x5c);
+        lineStart.x = tx;
+        lineStart.y = arg1;
+        lineStart.z = tz;
+    }
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &lineStart, &pos1, c);
+    if (!_ZN9dBgCh_Lin10DetectClsnEv(rl)) {
+        _ZN9dBgCh_LinD1Ev(rl);
+        _ZN9dBgCh_GndD1Ev(rg);
+        return 0;
+    }
+    _ZNK11SurfaceInfo12CopyNormalToER7Vector3(rl + 0x14, &normal);
+    if (normal.y >= 0x2c7) {
+        _ZN9dBgCh_LinD1Ev(rl);
+        _ZN9dBgCh_GndD1Ev(rg);
+        return 0;
+    }
+    res = _ZN4cstd5atan2E5Fix12IiES1_(normal.x, normal.z);
+    {
+        int diff = AngleDiff(res, *(s16*)(c + 0x8e));
+        if (flag != 0) {
+            if (diff < 0)
+                diff = -diff;
+            if (diff > 0x4000) {
+                _ZN9dBgCh_LinD1Ev(rl);
+                _ZN9dBgCh_GndD1Ev(rg);
+                return 0;
+            }
+        } else {
+            if (diff < 0)
+                diff = -diff;
+            if (diff < 0x4000) {
+                _ZN9dBgCh_LinD1Ev(rl);
+                _ZN9dBgCh_GndD1Ev(rg);
+                return 0;
+            }
+        }
+    }
+    _ZN9dBgCh_Lin10GetClsnPosEv(&clsnPos, rl);
+    lineStart.y += 0x64000;
+    pos1.y += 0x64000;
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &lineStart, &pos1, c);
+    if (_ZN9dBgCh_Lin10DetectClsnEv(rl)) {
+        _ZN9dBgCh_LinD1Ev(rl);
+        _ZN9dBgCh_GndD1Ev(rg);
+        return 0;
+    }
+    lineStart.y = *(int*)(c + 0x60);
+    line2.x = *(int*)(c + 0x5c);
+    line2.y = *(int*)(c + 0x60);
+    line2.z = *(int*)(c + 0x64);
+    line2.y = gy + 0xa000;
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &lineStart, &line2, c);
+    if (_ZN9dBgCh_Lin10DetectClsnEv(rl)) {
+        _ZN9dBgCh_LinD1Ev(rl);
+        _ZN9dBgCh_GndD1Ev(rg);
+        return 0;
+    }
+    *(int*)(c + 0x5c) = clsnPos.x - normal.x;
+    *(int*)(c + 0x64) = clsnPos.z - normal.z;
+    *(int*)(c + 0x60) = gy;
+    *(s16*)(c + 0x8e) = (u16)(res + 0x8000);
+    _ZN9dBgCh_LinD1Ev(rl);
+    _ZN9dBgCh_GndD1Ev(rg);
+    return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 303 -- func_ov002_020d0580, 0x020d0580, size 0x140 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d0580
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" {
+int func_ov002_020d0580(Player *p)
+{
+    extern Player::State data_ov002_021105a4;
+    extern Player::State data_ov002_0210ffec;
+    extern int _ZN6Player7IsStateERNS_5StateE(void *, Player::State &);
+    extern int _ZN6Player11ChangeStateERNS_5StateE(void *, Player::State &);
+    extern int func_ov002_020d0d2c(void *c);
+
+    int b354, b358;
+
+    if (p->GetHealth() != 0 &&
+        *(unsigned char *)((char *)p + 0x709) == 0 &&
+        *(unsigned char *)((char *)p + 0x706) == 0)
+    {
+        b354 = (*(int *)((char *)p + 0x354) != 0);
+        if (b354 == 0 &&
+            *(int *)((char *)p + 0x37c) == 0)
+        {
+            b358 = (*(int *)((char *)p + 0x358) != 0);
+            if (b358 == 0 &&
+                *(unsigned char *)((char *)p + 0x708) == 0 &&
+                *(unsigned char *)((char *)p + 0x6fd) == 0 &&
+                p->IsInAir() != 0 &&
+                func_ov002_020d0d2c(p) == 0)
+            {
+                goto cont;
+            }
+        }
+    }
+    return 0;
+
+cont:
+    if (_ZN6Player7IsStateERNS_5StateE(p, data_ov002_021105a4)) {
+        if (*(unsigned char *)((char *)p + 0x6e3) != 0)
+            return 0;
+    }
+    if (*(unsigned char *)((char *)p + 0x6de) == 0 ||
+        *(int *)((char *)p + 0xa8) > 0)
+        return 0;
+    if (func_ov002_020d0178((char *)p, *(int *)((char *)p + 0x60), 0) == 0)
+        return 0;
+    *(unsigned char *)((char *)p + 0x6e3) = 1;
+    _ZN6Player11ChangeStateERNS_5StateE(p, data_ov002_0210ffec);
+    return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 304 -- func_ov002_020d06c0, 0x020d06c0, size 0x164 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d06c0
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" {
+int func_ov002_020d06c0(Player *p)
+{
+    extern Player::State data_ov002_021101b4;
+    extern Player::State data_ov002_0211001c;
+    extern Player::State data_ov002_0210ffec;
+    extern int _ZN6Player7IsStateERNS_5StateE(void *, Player::State &);
+    extern int _ZN6Player11ChangeStateERNS_5StateE(void *, Player::State &);
+
+    int thresh, b354, b358;
+
+    if (!_ZN6Player7IsStateERNS_5StateE(p, data_ov002_021101b4))
+        return 0;
+
+    if (p->GetHealth() != 0 &&
+        *(unsigned short *)((char *)p + 0x6b4) == 0 &&
+        *(unsigned char *)((char *)p + 0x706) == 0)
+    {
+        b354 = (*(int *)((char *)p + 0x354) != 0);
+        if (b354 == 0 &&
+            *(int *)((char *)p + 0x37c) == 0)
+        {
+            b358 = (*(int *)((char *)p + 0x358) != 0);
+            if (b358 == 0 &&
+                *(unsigned char *)((char *)p + 0x708) == 0 &&
+                *(unsigned char *)((char *)p + 0x6fd) == 0 &&
+                _ZN6Player7IsStateERNS_5StateE(p, data_ov002_0211001c) == 0 &&
+                *(unsigned char *)((char *)p + 0x6de) != 0)
+            {
+                goto cont;
+            }
+        }
+    }
+    return 0;
+
+cont:
+    if (*(int *)((char *)p + 0x98) > Player_ScaleByCharFactor((void *)p, 0x14000))
+        return 0;
+
+    thresh = 0xa0;
+    if (*(unsigned char *)((char *)p + 0x703) != 0)
+        thresh = 0x1c2;
+
+    if (*(int *)((char *)p + 0x644) >
+        *(int *)((char *)p + 0x60) - thresh * 0x1000)
+        return 0;
+
+    if (func_ov002_020d0178((char *)p, *(int *)((char *)p + 0x60), 1) == 0)
+        return 0;
+
+    *(unsigned char *)((char *)p + 0x6e3) = 0;
+    _ZN6Player11ChangeStateERNS_5StateE(p, data_ov002_0210ffec);
+    return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 305 -- _ZN6Player17St_LedgeGrab_MainEv, 0x020d0824, size 0x8c */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player17St_LedgeGrab_MainEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_LedgeGrab_Main()
+{
+    extern int _ZN6Player12FinishedAnimEv(void*);
+    extern void _ZN6Player11ChangeStateERNS_5StateE(void*,void*);
+    extern int _ZN6Player6IsAnimEj(void*,unsigned);
+    extern int _ZNK6Player14GetBodyModelIDEjb(void*,unsigned,int);
+    extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned,void*);
+    extern int Player_AdvanceAnims(void*);
+    extern int data_ov002_0211013c[];
+
+  if(_ZN6Player12FinishedAnimEv(((char*)this)))
+    _ZN6Player11ChangeStateERNS_5StateE(((char*)this),data_ov002_0211013c);
+  if(_ZN6Player6IsAnimEj(((char*)this),0x20)){
+    int id=_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0);
+    void* anim=*(void**)(((char*)this)+(id<<2)+0xdc);
+    if(_ZNK15dExtFrameCtrl_c12WillHitFrameEi((char*)anim+0x50,0x1e))
+      _ZN5Sound9PlayBank0EjRK7Vector3(mGroundSoundType+0x40,((char*)this)+0x74);
+  }
+  Player_AdvanceAnims(((char*)this));
+  return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 306 -- _ZN6Player17St_LedgeGrab_InitEv, 0x020d08b0, size 0x7c */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player17St_LedgeGrab_InitEv
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_LedgeGrab_Init()
+{
+    extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
+
+  if(mStateStep){
+    _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x20,0x40000000,0x1000,0);
+    Sound::PlayCharVoice(mCharacter, 0x1a, *(const Vector3 *)(((char*)&mCamSpacePosX)));
+  } else {
+    _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x23,0x40000000,0x1000,0);
+    Sound::PlayCharVoice(mCharacter, 0x17, *(const Vector3 *)(((char*)&mCamSpacePosX)));
+  }
+  return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 307 -- _ZN6Player20St_LedgeHang_CleanupEv, 0x020d092c, size 0x1c */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player20St_LedgeHang_CleanupEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_LedgeHang_Cleanup()
+{
+    extern void func_ov002_020e63a4(void*);
+
+    func_ov002_020e63a4(((void *)this));
+    return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 308 -- func_ov002_020d0948, 0x020d0948, size 0xfc */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d0948
+extern "C" {
+void func_ov002_020d0948(char* self)
+{
+    extern short data_02082214[];
+    extern int data_ov002_021101b4[];
+    extern void _ZN6Player11ChangeStateERNS_5StateE(char* self, int state);
+
+    /* The two header reads go through a byte pointer: with the int-typed
+       self, mwcc materializes the +0x703 offset from the literal pool
+       (ldr r1,[pc] / ldrb r2,[r0,r1]) instead of folding it into the ldrb. */
+    char* s = (char*)self;
+    int base = (short)(*(short*)(s + 0x8e) + 0x8000);
+    if (*(unsigned char*)(s + 0x703) != 0) {
+        int idx = (unsigned short)base >> 4;
+        int* p0 = (int*)(((long long)(int)(self + 0x5c)));
+        int* p1 = (int*)(((long long)(int)(self + 0x60)));
+        int* p2 = (int*)(((long long)(int)(self + 0x64)));
+        *p0 = data_02082214[idx * 2] * 0x110 + *p0;
+        *p1 = *p1 - 0x12c000;
+        *p2 = data_02082214[idx * 2 + 1] * 0x110 + *p2;
+    } else {
+        int idx = (unsigned short)base >> 4;
+        int* p0 = (int*)(((long long)(int)(self + 0x5c)));
+        int* p1 = (int*)(((long long)(int)(self + 0x60)));
+        int* p2 = (int*)(((long long)(int)(self + 0x64)));
+        *p0 = *p0 + (data_02082214[idx * 2] << 6);
+        *p1 = *p1 - 0x64000;
+        *p2 = *p2 + (data_02082214[idx * 2 + 1] << 6);
+    }
+    *(int*)(self + 0x98) = -0x8000;
+    _ZN6Player11ChangeStateERNS_5StateE(self, (int)data_ov002_021101b4);
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 309 -- _ZN6Player17St_LedgeHang_MainEv, 0x020d0a44, size 0x210 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player17St_LedgeHang_MainEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_LedgeHang_Main()
+{
+    extern int data_ov002_02110004[];
+    extern int AngleDiff(int, int);
+    extern int _ZN6Player12FinishedAnimEv(void* c);
+    extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
+    extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
+    extern void Player_AdvanceAnims(void* c);
+    extern u16 data_0209f49e[];
+    extern s16 data_0209f4a0[];
+
+    int v = mGroundY;
+    if (v != (int)0x80000000) {
+        int d = v - mPosY;
+        if (d < 0) d = -d;
+        if (d < 0x28000) {
+            mPosY = v;
+            mIsAirborne = 0;
+            if (mFloorNormalY < 0xddb) {
+                func_ov002_020d0948(((char*)this));
+                return 1;
+            }
+        }
+    }
+
+    if (mIsAirborne != 0) {
+        func_ov002_020d0948(((char*)this));
+        return 1;
+    }
+
+    if (mStateStep == 0) {
+        if (_ZN6Player12FinishedAnimEv(((char*)this))) {
+            _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x21, 0, 0x1000, 0);
+            *(u8*)(((int)((char*)this) + 0x6e3)) =
+                *(u8*)(((int)((char*)this) + 0x6e3)) + 1;
+        }
+    } else {
+        if ((!func_ov002_020cfaf0(((char*)this))
+             && (*(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18) & 2))
+            || func_ov002_020cfea4(((char*)this))) {
+            mStateStep = 1;
+            _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_02110004);
+        } else {
+            if (func_ov002_020cfbdc(((char*)this)))
+                return 1;
+            if (*(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18) & 0x400) {
+                func_ov002_020d0948(((char*)this));
+                return 1;
+            }
+            {
+                if (mStateTimer == 0
+                    && *(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
+                    if (AngleDiff(mDesiredAngleY, mAngleY) >= 0x4000) {
+                        func_ov002_020d0948(((char*)this));
+                    } else if (!func_ov002_020cfaf0(((char*)this))) {
+                        mStateStep = 0;
+                        _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_02110004);
+                    }
+                }
+            }
+        }
+    }
+
+    Player_AdvanceAnims(((char*)this));
+    return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 310 -- _ZN6Player17St_LedgeHang_InitEv, 0x020d0c54, size 0xd8 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player17St_LedgeHang_InitEv
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_LedgeHang_Init()
+{
+    struct Vec3 { int x, y, z; };
+    extern void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, unsigned int anim, int a, int fix, unsigned int z);
+    extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, void* v);
+    extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(char* o, struct Vec3* p);
+
+  *(unsigned short*)(((char*)this)+0x600+0xa6) = 0;
+  if(mStateStep == 0){
+    _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x22, 0x40000000, 0x1000, 0);
+  }else{
+    _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x21, 0, 0x1000, 0);
+  }
+  *(unsigned short*)(((char*)this)+0x600+0xa6) = 2;
+  mPrevAngleY = mAngleY;
+  mVertSpeed = 0;
+  mHorzSpeed = 0;
+  mIsAirborne = 0;
+  _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x16, ((char*)this)+0x74);
+  {
+    struct Vec3 z3 = {0, 0, 0};
+    struct Vec3 off;
+    z3.y = -0x64000;
+    off.x = z3.x;
+    off.y = z3.y;
+    off.z = z3.z;
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char*)this)+0x2d4, &off);
+  }
+  mStatePhase = 0;
+  return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 311 -- func_ov002_020d0d2c, 0x020d0d2c, size 0x4c */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d0d2c
+extern "C" {
+int func_ov002_020d0d2c(void* c)
+{
+    struct State;
+    extern State data_ov002_0210ffec;
+    extern State data_ov002_02110004;
+    extern int _ZN6Player7IsStateERNS_5StateE(void* c, State* st);
+
+  if(_ZN6Player7IsStateERNS_5StateE(c, &data_ov002_0210ffec) || _ZN6Player7IsStateERNS_5StateE(c, &data_ov002_02110004)) return 1;
+  return 0;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 312 -- _ZN6Player17St_WallSlide_MainEv, 0x020d0d78, size 0x114 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player17St_WallSlide_MainEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_WallSlide_Main()
+{
+    extern void func_02022b04(Fix12i, Fix12i, Fix12i);
+    extern char data_ov002_021103dc;
+    typedef int Fix12i;
+    extern void func_ov002_020c2f64(void *c);
+    extern void _ZN6Player11ChangeStateERNS_5StateE(void *p, void *st);
+    extern void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(Fix12i x, Fix12i y, Fix12i z);
+    extern int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5);
+    extern void Player_AdvanceAnims(void *p);
+    extern unsigned char data_0209f49e[];
+    extern char data_ov002_0211013c;
+    extern char data_ov002_021101b4;
+
+  *((int *) ((char *)&mPeakY)) = *((int *) ((char *)&mPosY));
+  if ((*((unsigned char *) ((char *)&mIsAirborne))) == 0)
+  {
+    func_ov002_020c2f64(((char *)this));
+    _ZN6Player11ChangeStateERNS_5StateE(((char *)this), &data_ov002_0211013c);
+  }
+  else
+  {
+    if ((*((unsigned char *) ((char *)&mIsMega))) != 0)
+    {
+      func_02022b04(*((int *) ((char *)&mPosX)), *((int *) ((char *)&mPosY)), *((int *) ((char *)&mPosZ)));
+    }
+    else
+    {
+      _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(*((int *) ((char *)&mPosX)), *((int *) ((char *)&mPosY)), *((int *) ((char *)&mPosZ)));
+    }
+    *((int *) ((char *)&mLoopingSoundHandle)) = func_0201226c(*((int *) ((char *)&mLoopingSoundHandle)), 0, (*((int *) ((char *)&mGroundSoundType))) + 0xe2, (int) ((char *)&mCamSpacePosX), *((int *) ((char *)&mHorzSpeed)), 0);
+    if ((*((unsigned short *) (&data_0209f49e[gActivePlayerSlot * 0x18]))) & 2)
+    {
+      char *p = ((char *)this) + 0x600;
+      if (*((unsigned short *) (p + 0xa4)))
+      {
+        mAngleY = mAngleYSpeed;
+      }
+      _ZN6Player11ChangeStateERNS_5StateE(((char *)this), &data_ov002_021103dc);
+    }
+    else
+    {
+      if ((*((unsigned char *) ((char *)&mClsnFlags))) & 2)
+      {
+        goto end;
+      }
+      _ZN6Player11ChangeStateERNS_5StateE(((char *)this), &data_ov002_021101b4);
+    }
+  }
+  end:
+  Player_AdvanceAnims(((char *)this));
+  return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 313 -- _ZN6Player17St_WallSlide_InitEv, 0x020d0e8c, size 0x54 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player17St_WallSlide_InitEv
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_WallSlide_Init()
+{
+    extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
+
+  _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x29,0x40000000,0x1000,0);
+  mHorzSpeed=0;
+  if(mVertSpeed >= 0) mVertSpeed=0;
+  mStateTimer=7;
+  return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 314 -- _ZN6Player13St_Crawl_MainEv, 0x020d0ee0, size 0x24c */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player13St_Crawl_MainEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_Crawl_Main()
+{
+    extern int func_ov002_020d1164(void*);
+    extern int _ZN6Player12FinishedAnimEv(void* c);
+    extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
+    extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);
+    extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 a, void* v);
+    extern int func_ov002_020d36d8(void* c, int arg);
+    extern int Player_ScaleByCharFactor(void* c, int a);
+    extern int func_ov002_020bf224(void* c, int a, int b);
+    extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);
+    extern void func_ov002_020c18b0(void* c, int a);
+    extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
+    extern int func_ov002_020d4d88(void* c, int a, int b);
+    extern void Player_AdvanceAnims(void* c);
+    extern s16 data_0209f4a0[];
+    extern u16 data_0209f49c[];
+    extern int data_ov002_021104e4;
+
+    int a = 0;
+    int b = 0;
+
+    switch (mStateStep) {
+    case 3:
+        if (_ZN6Player12FinishedAnimEv(((char*)this))) {
+            mStateStep = 4;
+            _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x63, 0, 0x1000, 0);
+        }
+        break;
+    case 4: {
+        u8 idx = gActivePlayerSlot;
+        int off = idx * 0x18;
+        s16 val1 = *(s16*)((char*)data_0209f4a0 + off);
+        if (val1 >= 0x200 && ((*(u16*)((char*)data_0209f49c + off) & 0x400) != 0 || func_ov002_020d1164(((char*)this)) != 0)) {
+            int id = _ZNK6Player14GetBodyModelIDEjb(((char*)this), param1 & 0xff, 0);
+            char* anim = (char*)mBodyModels[id] + 0x50;
+            if (_ZNK15dExtFrameCtrl_c12WillHitFrameEi(anim, 0xe) ||
+                _ZNK15dExtFrameCtrl_c12WillHitFrameEi((char*)mBodyModels[_ZNK6Player14GetBodyModelIDEjb(((char*)this), param1 & 0xff, 0)] + 0x50, 0x1c)) {
+                _ZN5Sound9PlayBank0EjRK7Vector3(mGroundSoundType + 0xc0, ((char*)this) + 0x74);
+            }
+            int shifted = mHorzSpeed >> 2;
+            int id3 = _ZNK6Player14GetBodyModelIDEjb(((char*)this), param1 & 0xff, 0);
+            char* anim3 = (char*)(((long long)(int)((char*)mBodyModels[id3] + 0x50)));
+            *(int*)(anim3 + 0xc) = shifted;
+            if (func_ov002_020d36d8(((char*)this), 1))
+                return 1;
+            int r4v = Player_ScaleByCharFactor(((char*)this), 0x8000);
+            int r2v = Player_ScaleByCharFactor(((char*)this), 0x1000);
+            a = func_ov002_020bf224(((char*)this), r4v, r2v);
+            b = 0x1000;
+            ApproachAngle((s16*)((char*)&mPrevAngleY), mDesiredAngleY, 0x10, 0x2000, 0x100);
+            mAngleY = mPrevAngleY;
+            func_ov002_020c18b0(((char*)this), 0);
+        } else {
+            mHorzSpeed = 0;
+            mStateStep = 5;
+            _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x62, 0x40000000, 0x1000, 0);
+        }
+        break;
+    }
+    case 5:
+        if (_ZN6Player12FinishedAnimEv(((char*)this))) {
+            mStateStep = 1;
+            _ZN6Player11ChangeStateERNS_5StateE(((char*)this), &data_ov002_021104e4);
+        }
+        break;
+    }
+
+    func_ov002_020d4d88(((char*)this), a, b);
+    Player_AdvanceAnims(((char*)this));
+    return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 315 -- _ZN6Player13St_Crawl_InitEv, 0x020d112c, size 0x38 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player13St_Crawl_InitEv
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_Crawl_Init()
+{
+    extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
+
+  mStateStep=3;
+  _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x64,0x40000000,0x1000,0);
+  return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 316 -- func_ov002_020d1164, 0x020d1164, size 0xa0 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d1164
+// func_ov002_020d1164 at 0x020d1164
+// Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
+extern "C" {
+int func_ov002_020d1164(char* c)
+{
+
+    dBgCh_Lin line;
+    Vector3 v1;
+    Vector3 v2;
+    int y;
+    v1.x = *(int*)(c+0x5c);
+    v1.y = *(int*)(c+0x60);
+    v1.z = *(int*)(c+0x64);
+    v2.x = *(int*)(c+0x5c);
+    y = *(int*)(c+0x60);
+    v2.y = y;
+    v2.z = *(int*)(c+0x64);
+    v2.y = y + 0x96000;
+    line.SetObjAndLine(v1, v2, (dActor_c*)c);
+    if (line.DetectClsn()) {
+        return 1;
+    }
+    return 0;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 317 -- func_ov002_020d1204, 0x020d1204, size 0xac */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d1204
+extern "C" {
+int func_ov002_020d1204(void* thisptr)
+{
+    struct State;
+    extern void _ZN6Player11ChangeStateERNS_5StateE(void*, State&);
+    extern unsigned char data_0209f49e[];
+    extern State data_ov002_0211052c;
+    extern State data_ov002_0211055c;
+    extern State data_ov002_0211019c;
+
+    unsigned char* p = (unsigned char*)thisptr;
+    if (*(unsigned short*)(data_0209f49e + gActivePlayerSlot * 0x18) & 2) {
+        int v = *(int*)(p + 0x98);
+        if (v == 0) {
+            _ZN6Player11ChangeStateERNS_5StateE(thisptr, data_ov002_0211052c);
+        } else if (*(unsigned short*)(p + 0x600 + 0xa4) != 0 && v > 0xa000) {
+            _ZN6Player11ChangeStateERNS_5StateE(thisptr, data_ov002_0211055c);
+            return 1;
+        } else {
+            _ZN6Player11ChangeStateERNS_5StateE(thisptr, data_ov002_0211019c);
+        }
+        return 1;
+    }
+    return 0;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 318 -- func_ov002_020d12b0, 0x020d12b0, size 0xa4 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d12b0
+extern "C" {
+int func_ov002_020d12b0(u8 *self)
+{
+    struct State;
+    extern u8 data_0209f49e[];
+    extern State data_ov002_02110574;
+    extern State data_ov002_02110634;
+    extern State data_ov002_0211061c;
+    extern void _ZN6Player11ChangeStateERNS_5StateE(void *self, State &s);
+    extern int Player_ScaleByCharFactor(void *c, int a);
+
+    if ((*(u16 *)(data_0209f49e + gActivePlayerSlot * 0x18) & 1) == 0) goto ret0;
+    if (self[0x703] != 0) {
+        self[0x6e2] = 2;
+        _ZN6Player11ChangeStateERNS_5StateE(self, data_ov002_02110574);
+    } else {
+        if (*(int *)(self + 0x98) >= Player_ScaleByCharFactor(self, 0xa000)) {
+            _ZN6Player11ChangeStateERNS_5StateE(self, data_ov002_02110634);
+        } else {
+            _ZN6Player11ChangeStateERNS_5StateE(self, data_ov002_0211061c);
+        }
+    }
+    return 1;
+ret0:
+    return 0;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 319 -- _ZN6Player14St_Crouch_MainEv, 0x020d1354, size 0x28c */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player14St_Crouch_MainEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_Crouch_Main()
+{
+    extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
+    extern int _ZN6Player6IsAnimEj(void* c, u32 a);
+    extern int _ZN6Player12FinishedAnimEv(void* c);
+    extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
+    extern void func_ov002_020c06fc(void* c, u32 a);
+    extern int func_ov002_020dd2f4(void* c);
+    extern void func_ov002_020c0364(void* c, u32 a);
+    extern void Player_AdvanceAnims(void* c);
+    extern u16 data_0209f49c[];
+    extern s16 data_0209f4a0[];
+    extern int data_ov002_021101b4[];
+    extern int data_ov002_02110514[];
+    extern int data_ov002_0211013c[];
+
+    func_ov002_020bf90c();
+
+    if (mIsAirborne != 0) {
+        int d = mPosY - mGroundY;
+        if (d >= 0x32000) {
+            _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021101b4);
+            return 1;
+        }
+    }
+
+    switch (mStateStep) {
+    case 0:
+        if (_ZN6Player6IsAnimEj(((char*)this), 0x2d) && _ZN6Player12FinishedAnimEv(((char*)this))) {
+            _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x2c, 0, 0x1000, 0);
+            mStateStep = 1;
+        }
+        if (func_ov002_020d12b0(((u8*)this)))
+            return 1;
+        func_ov002_020d1204(((char*)this));
+        break;
+    case 1:
+        if ((*(u16*)((char*)data_0209f49c + gActivePlayerSlot * 0x18) & 0x400) != 0
+            || mHorzSpeed != 0
+            || func_ov002_020d1164(((char*)this)) != 0) {
+            if (mHorzSpeed != 0) {
+                func_ov002_020c06fc(((char*)this), 0x4000);
+                func_ov002_020dd2f4(((char*)this));
+            } else {
+                if (mIsMega == 0) {
+                    if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) >= 0x200) {
+                        _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_02110514);
+                        return 1;
+                    }
+                }
+            }
+            u16 bit = mStateFlags & 1;
+            if (bit != 0) {
+                func_ov002_020c0364(((char*)this), 1);
+                return 1;
+            }
+        } else {
+            _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x2e, 0x40000000, 0x1000, 0);
+            mStateStep = 2;
+        }
+        if (func_ov002_020d12b0(((u8*)this)))
+            return 1;
+        if (func_ov002_020d1204(((char*)this)) != 0)
+            return 1;
+        break;
+    case 2:
+        if (_ZN6Player6IsAnimEj(((char*)this), 0x2e) && _ZN6Player12FinishedAnimEv(((char*)this))) {
+            _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
+            mCrouchTimer = 0xa;
+        } else {
+            func_ov002_020d1204(((char*)this));
+        }
+        break;
+    }
+
+    Player_AdvanceAnims(((char*)this));
+    return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 320 -- _ZN6Player14St_Crouch_InitEv, 0x020d15e0, size 0xdc */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player14St_Crouch_InitEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_Crouch_Init()
+{
+    extern unsigned char data_0209f49c[];
+    extern int _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int,unsigned int,struct Vector3*);
+    extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
+
+  if(unk_6ed){
+    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter,0x2e,(struct Vector3*)((char*)&mCamSpacePosX));
+  }
+  mStateTimer=0x1e;
+  if(*(unsigned short*)(data_0209f49c + gActivePlayerSlot*0x18) & 2){
+    if(func_ov002_020d1204(((char*)this))) return 1;
+  }
+  if(mStateStep==0){
+    _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x2d,0x40000000,0x1000,0);
+    mPrevAngleY=mAngleY;
+  } else if(mStateStep==1){
+    _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x2c,0,0x1000,0);
+  }
+  return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 321 -- _ZN6Player17St_HoldHeavy_MainEv, 0x020d16bc, size 0x2ec */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player17St_HoldHeavy_MainEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_HoldHeavy_Main()
+{
+    extern void func_ov002_020d1f78(void*, u32);
+    extern int data_ov002_020ff254[];
+    extern int data_ov002_020ff1d0[];
+    extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
+    extern int _ZN6Player6IsAnimEj(void* c, u32 anim);
+    extern int _ZN6Player12FinishedAnimEv(void* c);
+    extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);
+    extern void _Z14ApproachLinearRiii(int* a, int b, int c);
+    extern void func_ov002_020da9d4(void* c);
+    extern void ApproachAngle(short* cur, short target, int divisor, int band, int maxStep);
+    extern int func_ov002_020bf224(void* c, int a, int b);
+    extern void func_ov002_020d4d88(void* c, int a, int b);
+    extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
+    extern void Player_AdvanceAnims(void* c);
+    extern int data_ov002_0211013c[];
+    extern u16 data_0209f49e[];
+    extern int data_ov002_021105d4[];
+    extern int data_ov002_021101b4[];
+    extern s16 data_0209f4a0[];
+    extern u8 data_0209f4ac[];
+    extern u16 data_0209f49c[];
+
+    int var_r1 = 0;
+
+    if (mHeldObj == 0) {
+        _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
+        return 1;
+    }
+
+    if (mStateStep == 0) {
+        u32 anim = data_ov002_020ff254[mStateWork];
+        if (_ZN6Player6IsAnimEj(((char*)this), anim)) {
+            if (_ZN6Player12FinishedAnimEv(((char*)this))) {
+                mStateStep = 1;
+            } else {
+                u32 arg = (u8)param1;
+                int modelIdx = _ZNK6Player14GetBodyModelIDEjb(((char*)this), arg, 0);
+                char* animPtr = *(char**)(((char*)this) + modelIdx * 4 + 0xdc) + 0x50;
+                if (_ZNK15dExtFrameCtrl_c12WillHitFrameEi(animPtr, 6)) {
+                    int* heavy = *(int**)((char*)&mHeldObj);
+                    if (heavy != 0) {
+                        *(int*)((char*)heavy + 0xb0) |= 0x4000;
+                    }
+                }
+            }
+        }
+        _Z14ApproachLinearRiii((int*)((char*)&mHorzSpeed), 0, 0x1000);
+        goto end;
+    }
+
+    {
+        int off = gActivePlayerSlot * 0x18;
+        u16 flags = *(u16*)((char*)data_0209f49e + off);
+        if (flags & 1) {
+            _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021105d4);
+            return 1;
+        }
+
+        if (mIsAirborne != 0) {
+            func_ov002_020da9d4(((char*)this));
+            _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021101b4);
+            mHoldHeavyTimer = 0xa;
+            return 1;
+        }
+
+        {
+            s16 t = *(s16*)((char*)data_0209f4a0 + off);
+            if (t != 0) {
+                ApproachAngle((short*)((char*)&mPrevAngleY), mDesiredAngleY, 8, 0x1000, 0x400);
+                var_r1 = data_ov002_020ff1d0[param1];
+            }
+        }
+    }
+
+    {
+        int off2 = gActivePlayerSlot * 0x18;
+        if (*((u8*)data_0209f4ac + off2) == 0) {
+            if (!(*(u16*)((char*)data_0209f49c + off2) & 0x800)) {
+                var_r1 >>= 1;
+            }
+        } else {
+            var_r1 = func_ov002_020bf224(((char*)this), var_r1, 0);
+        }
+        func_ov002_020d4d88(((char*)this), var_r1, 0x1000);
+    }
+
+    if (mHorzSpeed == 0) {
+        mAngleY = mPrevAngleY;
+    } else if (param1 == 1) {
+        ApproachAngle((short*)((char*)&mAngleY), mPrevAngleY, 0x10, 0x1000, 0x100);
+    } else {
+        ApproachAngle((short*)((char*)&mAngleY), mPrevAngleY, 8, 0x2000, 0x400);
+    }
+
+    if (mHorzSpeed == 0) {
+        if (_ZN6Player12FinishedAnimEv(((char*)this)) ||
+            !_ZN15dExtFrameCtrl_c8GetFlagsEv(
+                *(char**)(((char*)this) + _ZNK6Player14GetBodyModelIDEjb(((char*)this), (u8)param1, 0) * 4 + 0xdc) + 0x50)) {
+            _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), data_ov002_020ff254[mStateWork + 2], 0, 0x1000, 0);
+        }
+    } else {
+        func_ov002_020d1f78(((char*)this), data_ov002_020ff254[mStateWork + 4]);
+    }
+
+end:
+    Player_AdvanceAnims(((char*)this));
+    return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 322 -- _ZN6Player17St_HoldHeavy_InitEv, 0x020d19a8, size 0x54 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player17St_HoldHeavy_InitEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_HoldHeavy_Init()
+{
+    extern int data_ov002_020ff254[];
+    extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
+
+  mStateWork=0;
+  _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), data_ov002_020ff254[mStateWork], 0x40000000, 0x1000, 0);
+  Sound::PlayCharVoice(mCharacter, 0x12, *(const Vector3 *)(((char*)&mCamSpacePosX)));
+  return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 323 -- _ZN6Player20St_HoldLight_CleanupEv, 0x020d19fc, size 0x20 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player20St_HoldLight_CleanupEv
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_HoldLight_Cleanup()
+{
+
+  char* p = *(char**)((char*)&mHeldObj);
+  if (p) {
+    *(unsigned int*)(p + 0xb0) |= 0x4000;
+  }
+  return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 324 -- _ZN6Player17St_HoldLight_MainEv, 0x020d1a1c, size 0x484 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player17St_HoldLight_MainEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_HoldLight_Main()
+{
+    extern int data_ov002_020ff1c0[];
+    extern int data_ov002_0211019c[];
+    extern int func_ov002_020d9dcc(void*);
+    extern void func_ov002_020d1f78(void*, u32);
+    extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
+    extern void func_ov002_020c0364(void* c, u32 arg);
+    extern void _Z14ApproachLinearRiii(int* a, int b, int c);
+    extern int _ZN6Player6IsAnimEj(void* c, u32 anim);
+    extern int _ZN6Player12FinishedAnimEv(void* c);
+    extern int func_ov002_020e0ccc(void* c, short* st);
+    extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);
+    extern int func_ov002_020c5244(void* c);
+    extern int Player_ReleaseHeldActor(void* c);
+    extern void ApproachAngle(short* cur, short target, int divisor, int band, int maxStep);
+    extern int func_ov002_020bf224(void* c, int a, int b);
+    extern void func_ov002_020d4d88(void* c, int a, int b);
+    extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
+    extern void Player_AdvanceAnims(void* c);
+    extern s16 data_0209f4a0[];
+    extern u8 data_0209f4ac[];
+    extern u16 data_0209f49c[];
+    extern u16 data_0209f49e[];
+    extern int data_ov002_0211013c[];
+    extern int data_ov002_021105d4[];
+    extern int data_ov002_021101b4[];
+
+    if (mHeldObj == 0) {
+        _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
+        return 1;
+    }
+    if (func_ov002_020c0434()) {
+        func_ov002_020c0364(((char*)this), 3);
+        return 1;
+    }
+
+    if (mStateStep == 0) {
+        _Z14ApproachLinearRiii((int*)((char*)&mHorzSpeed), 0, 0x800);
+        if (_ZN6Player6IsAnimEj(((char*)this), 0x2f) || _ZN6Player6IsAnimEj(((char*)this), 0x86)) {
+            if (_ZN6Player12FinishedAnimEv(((char*)this))) {
+                if (func_ov002_020e0ccc(((char*)this), *(short**)((char*)&mHeldObj))) {
+                    return 1;
+                }
+                mPrevAngleY = mAngleY;
+                mHorzSpeed = 0;
+                mStateStep = 1;
+            } else {
+                u32 arg = (u8)param1;
+                int modelIdx = _ZNK6Player14GetBodyModelIDEjb(((char*)this), arg, 0);
+                char* anim = *(char**)(((char*)this) + modelIdx * 4 + 0xdc) + 0x50;
+                if (_ZNK15dExtFrameCtrl_c12WillHitFrameEi(anim, 6)) {
+                    int* light = *(int**)((char*)&mHeldObj);
+                    if (light != 0) {
+                        int* p = (int*)((char*)light + 0xb0);
+                        *p |= 0x4000;
+                    }
+                }
+            }
+        }
+        goto end;
+    }
+
+    if (func_ov002_020c5244(((char*)this))) {
+        return 1;
+    }
+
+    if (mSinkDepth > 0x19000) {
+        Player_ReleaseHeldActor(((char*)this));
+        _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
+        return 1;
+    }
+
+    int var_r4 = 0;
+    if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
+        s16 t = mDesiredAngleY;
+        if (mStateArg != 0) {
+            mPrevAngleY = t;
+            mStateArg = 0;
+        }
+        ApproachAngle((short*)((char*)&mPrevAngleY), t, 4, 0x2000, 0x800);
+        var_r4 = data_ov002_020ff1c0[param1];
+    }
+
+    if (*((u8*)data_0209f4ac + gActivePlayerSlot * 0x18) == 0) {
+        if (!(*(u16*)((char*)data_0209f49c + gActivePlayerSlot * 0x18) & 0x800)) {
+            var_r4 = (s32)(((s64)var_r4 * 0xa00 + 0x800) >> 0xc);
+        }
+    } else {
+        var_r4 = func_ov002_020bf224(((char*)this), var_r4, 0);
+    }
+
+    mStateArg = 0;
+    if (mHorzSpeed == 0) {
+        mStateArg = 1;
+        mAngleY = mPrevAngleY;
+    } else {
+        ApproachAngle((short*)((char*)&mAngleY), mPrevAngleY, 8, 0x2000, 0x800);
+    }
+
+    func_ov002_020d4d88(((char*)this), var_r4, 0x1000);
+
+    {
+        u16 flags = *(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18);
+        if (flags & 1) {
+            _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021105d4);
+            return 1;
+        }
+        if (flags & 2) {
+            mJumpComboTimer = 0;
+            _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211019c);
+            return 1;
+        }
+        if (flags & 0x400) {
+            if (Player_ReleaseHeldActor(((char*)this))) {
+                _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
+            }
+            return 1;
+        }
+    }
+
+    if (mIsAirborne != 0) {
+        _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021101b4);
+        return 1;
+    }
+    if (func_ov002_020d9dcc(((char*)this))) {
+        return 1;
+    }
+
+    if (mHorzSpeed == 0) {
+        if (_ZN6Player12FinishedAnimEv(((char*)this)) ||
+            !_ZN15dExtFrameCtrl_c8GetFlagsEv(
+                *(char**)(((char*)this) + _ZNK6Player14GetBodyModelIDEjb(((char*)this), (u8)param1, 0) * 4 + 0xdc) + 0x50)) {
+            int* light = *(int**)((char*)&mHeldObj);
+            u32 animId = 0x33;
+            if (light != 0) {
+                int b = (*(int*)((char*)light + 0xb0) & 0x8000) != 0;
+                if (b) {
+                    animId = 0x87;
+                    if (param1 == 2) {
+                        int b2 = (*(u16*)((char*)light + 0xc) == 0xce);
+                        if (b2) {
+                            animId = 0x33;
+                        }
+                    }
+                }
+            }
+            _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), animId, 0, 0x1000, 0);
+        }
+    } else {
+        func_ov002_020d1f78(((char*)this), 0x48);
+    }
+
+end:
+    Player_AdvanceAnims(((char*)this));
+    return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 325 -- _ZN6Player17St_HoldLight_InitEv, 0x020d1ea0, size 0xd8 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player17St_HoldLight_InitEv
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_HoldLight_Init()
+{
+    extern int Player_ScaleByCharFactor(char* c, int a);
+    extern void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, unsigned int anim, int a, int fix, unsigned int z);
+    extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, void* v);
+
+  if(mHorzSpeed >= Player_ScaleByCharFactor(((char*)this), 0x1c000)){
+    mHorzSpeed = Player_ScaleByCharFactor(((char*)this), 0x1c000);
+  }
+  if(mStateStep == 0){
+    char* o = *(char**)((char*)&mHeldObj);
+    unsigned int anim = 0x2f;
+    if(o != 0){
+      int b = (int)((*(int*)(o+0xb0) & 0x8000) != 0);
+      if(b != 0){
+        anim = 0x86;
+        if(param1 == 2){
+          if((int)(*(unsigned short*)(o+0xc) == 0xce) != 0) anim = 0x2f;
+        }
+      }
+    }
+    _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), anim, 0x40000000, 0x1000, 0);
+    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x12, ((char*)this)+0x74);
+  }
+  mStateWork = 0;
+  *(unsigned short*)(((char*)this)+0x600+0x9c) = 0;
+  mStateArg = 0;
+  return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 326 -- func_ov002_020d1f78, 0x020d1f78, size 0x20c */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d1f78
+extern "C" {
+void func_ov002_020d1f78(void *selfPtr, u32 param)
+{
+    typedef struct { u8 pad[0x18]; } Rec18;
+    extern Rec18 data_0209f4ac[];
+    extern Rec18 data_0209f49c[];
+    extern Rec18 data_0209f4a0[];
+    extern int data_0209f32c;
+    extern int _ZNK6Player14GetBodyModelIDEjb(void *self, unsigned int a, int b);
+    extern void _ZN6Player7SetAnimEji5Fix12IiEj(void *self, unsigned int a, int b, Fix12i c, unsigned int d);
+    extern int _ZNK15dExtFrameCtrl_c12WillHitFrameEi(void *anim, int frame);
+    extern u32 func_02022d00(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir);
+    extern void func_0201251c(int a, int b, int c, int d);
+    extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i a, Fix12i b, Fix12i c);
+
+    char *self = (char *)selfPtr;
+    int idx;
+    int flag;
+    int id;
+    char *anim;
+    u32 w;
+    int state;
+    int target;
+
+    idx = gActivePlayerSlot;
+    flag = 0;
+    if (*(u8 *)&data_0209f4ac[idx] == 0) {
+        if ((*(u16 *)&data_0209f49c[idx] & 0x800) == 0)
+            flag = 1;
+    } else {
+        if (*(s16 *)&data_0209f4a0[idx] < 0xb33)
+            flag = 1;
+    }
+
+    if (*(int *)(self + 8) == 2 && flag == 0) {
+        id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0);
+        anim = (char *)((long long)(((int *)(self + 0xdc))[id] + 0x50));
+        w = *(u32 *)(anim + 8);
+        _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x3f, 0, 0x2800, (w << 4) >> 16);
+    } else {
+        int v = *(int *)(self + 0x98);
+        int shift = v >> 3;
+        if (shift < 0x400)
+            shift = 0x400;
+        _ZN6Player7SetAnimEji5Fix12IiEj(self, param, 0, shift, 0);
+    }
+
+    id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0);
+    anim = (char *)((int *)(self + 0xdc))[id] + 0x50;
+    if (!_ZNK15dExtFrameCtrl_c12WillHitFrameEi(anim, 4)) {
+        id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0);
+        anim = (char *)((int *)(self + 0xdc))[id] + 0x50;
+        if (!_ZNK15dExtFrameCtrl_c12WillHitFrameEi(anim, 0x13))
+            return;
+    }
+
+    if (*(u8 *)(self + 0x707) != 0) {
+        u32 newId = func_02022d00(*(u32 *)(self + 0x628), 0xde, *(int *)(self + 0x5c), data_0209f32c, *(int *)(self + 0x64), 0);
+        *(u32 *)(self + 0x628) = newId;
+        return;
+    }
+
+    func_0201251c(0, *(int *)(self + 0x66c) + 0x20, (int)(self + 0x74), *(int *)(self + 0x98));
+
+    state = *(int *)(self + 0x66c);
+    target = -1;
+    if (state == 6)
+        goto state_case6;
+    if (state == 8)
+        goto state_case8;
+    if (state == 9) {
+        target = 0xe6;
+    }
+    goto state_merge;
+state_case8:
+    target = 0xe4;
+    goto state_merge;
+state_case6:
+    target = 0xe5;
+state_merge:
+    if (target == -1)
+        return;
+
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(target, *(int *)(self + 0x5c), *(int *)(self + 0x60), *(int *)(self + 0x64));
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 327 -- _ZN6Player21St_WaitQuicksand_MainEv, 0x020d2184, size 0xa0 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player21St_WaitQuicksand_MainEv
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_WaitQuicksand_Main()
+{
+    extern int _ZN6Player11ChangeStateERNS_5StateE(void*,void*);
+    extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
+    extern int func_ov002_020c5dec(void*,int);
+    extern int func_ov002_020d22ec(void*,int);
+    extern int Player_AdvanceAnims(void*);
+
+  int v=mSinkDepth;
+  if(v<0x1e000){
+    _ZN6Player11ChangeStateERNS_5StateE(((char*)this),&ST_WAIT);
+    return 1;
+  }
+  if(v>=0x46000){
+    _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x82,0,0x1000,0);
+  }
+  if(mSinkDepth>=0xb4000){
+    if(func_ov002_020c5dec(((char*)this),3)) return 1;
+  }
+  func_ov002_020d22ec(((char*)this),0);
+  Player_AdvanceAnims(((char*)this));
+  return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 328 -- _ZN6Player21St_WaitQuicksand_InitEv, 0x020d2224, size 0x38 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player21St_WaitQuicksand_InitEv
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_WaitQuicksand_Init()
+{
+    extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
+
+  _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x47,0,0x1000,0);
+  mStateWork=0;
+  return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 329 -- func_ov002_020d225c, 0x020d225c, size 0x30 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d225c
+extern "C" {
+int func_ov002_020d225c(char *o)
+{
+
+    if (*(int*)(o + 8) == 3 && *(unsigned char*)(o + 0x721) == 2 && *(unsigned char*)(o + 0x6e6) == 0)
+        return 1;
+    return 0;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 330 -- func_ov002_020d228c, 0x020d228c, size 0x60 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d228c
+extern "C" {
+void func_ov002_020d228c(char* c)
+{
+    extern int data_ov002_02110154[];
+    extern void _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
+    extern int _ZN6Player7SetAnimEji5Fix12IiEj(void* c, unsigned int a, int b, int f, unsigned int g);
+
+  _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_02110154);
+  _ZN6Player7SetAnimEji5Fix12IiEj(c, 9, 0, 0x1000, 0);
+  *(unsigned char*)(c+0x6e3)=4;
+  *(int*)(c+0x56c)=0;
+  *(int*)(c+0x570)=0;
+  *(int*)(c+0x574)=0;
+  *(unsigned char*)(c+0x721)=2;
+  *(unsigned char*)(c+0x70c)=0;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 331 -- func_ov002_020d22ec, 0x020d22ec, size 0x8c */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d22ec
+extern "C" {
+int func_ov002_020d22ec(char* c, int arg)
+{
+    extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* st);
+    extern void func_ov002_020cabe0(char* c);
+    extern int func_ov002_020d36d8(char* c, int x);
+    extern char data_0209f4a0[];
+    extern int data_ov002_0211013c;
+
+    if (*(short*)(data_0209f4a0 + gActivePlayerSlot * 0x18) > arg) {
+        _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_0211013c);
+        return 1;
+    }
+    if ((unsigned short)(*(unsigned short*)(c + 0x6ce) & 4)) {
+        func_ov002_020cabe0(c);
+        return 1;
+    }
+    return func_ov002_020d36d8(c, 0);
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 332 -- _ZN6Player15St_Wait_CleanupEv, 0x020d2378, size 0x8c */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player15St_Wait_CleanupEv
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_Wait_Cleanup()
+{
+    extern unsigned char data_0209f2d8;
+    extern void* data_0209f318;
+    extern int data_0209caa0[];
+
+    void* r4 = data_0209f318;
+    (*(unsigned int*)(((int)r4 + 0x154))) &= ~0x2000;
+    mSleepStage = 0;
+    do {
+        unsigned char v = data_0209f2d8;
+        int b0 = (v == 1);
+        if (b0 == 0) {
+            if ((data_0209caa0[2] & 0x80) != 0) {
+                int b1 = (v == 2);
+                if (b1 == 0) break;
+            }
+            if (unk_727 == 0xf) unk_743 = 0;
+            unk_727 = 0;
+            unk_728 = 0;
+        }
+    } while (0);
+    return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 333 -- _ZN6Player12St_Wait_MainEv, 0x020d2404, size 0x99c */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player12St_Wait_MainEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_Wait_Main()
+{
+    extern int data_ov002_0211049c[];
+    extern void func_ov002_020bcdf0(void*);
+    extern int func_ov002_020d2fdc(void*);
+    extern int data_ov002_0211019c[];
+    extern int func_ov002_020d2da0(void*);
+    extern void func_ov002_020d2f24(void*);
+    extern void func_ov002_020d2e74(void*);
+    extern void func_ov002_020c0364(char* c, unsigned int arg);
+    extern int func_ov002_020c5244(void);
+    extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* state);
+    extern int _ZNK6Player14GetBodyModelIDEjb(void* c, unsigned int a, int b);
+    extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, void* v);
+    extern int func_ov002_020d22ec(char* c, int arg);
+    extern int _ZN6Player7SetAnimEji5Fix12IiEj(void* c, unsigned int a, int b, int d, unsigned int e);
+    extern int _ZN6Player12FinishedAnimEv(void* c);
+    extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int a, void* v);
+    extern void func_ov002_020cabe0(void* c);
+    extern void Player_AdvanceAnims(void* c);
+    extern void* data_0209f318;
+    extern unsigned char data_0209f49c[];
+    extern char data_0209f4a0[];
+    extern unsigned char data_0209f4ae[];
+    extern unsigned char data_0209f2d8;
+    extern int data_0209caa0[];
+    extern unsigned char data_0209f49e[];
+    extern int data_ov002_0211013c[];
+
+    if ((unsigned short)(mStateFlags & 1)) {
+        func_ov002_020c0364(((char*)this), 3);
+        return 1;
+    }
+    if (func_ov002_020c5244()) {
+        return 1;
+    }
+    if (func_ov002_020c6adc()) {
+        return 1;
+    }
+    if (mSinkDepth >= 0x1e000) {
+        _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211049c);
+        return 1;
+    }
+
+    {
+    unsigned char st = mStateStep;
+    void* r4 = data_0209f318;
+    switch (st) {
+    default:
+        break;
+
+    case 8: {
+        if (!(*(unsigned short*)(data_0209f49c+gActivePlayerSlot*0x18) & 0x800) &&
+            _ZNK15dExtFrameCtrl_c12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0)<<2)+0xdc))+0x50, 0)) {
+            _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2c, ((char*)this)+0x74);
+        }
+    }
+    case 0: {
+        unsigned char f2d8_0 = data_0209f2d8;
+        int b0 = (f2d8_0 == 1);
+        if (b0 == 0) {
+            if (data_0209caa0[2] & 0x80) {
+                int b1 = (f2d8_0 == 2);
+                if (b1) goto blk0_34;
+                goto blk0_35;
+            }
+            blk0_34:
+            func_ov002_020bcdf0(((char*)this));
+            goto blk0_36;
+        }
+        blk0_35:
+        if (func_ov002_020d2fdc(((char*)this)) == 0) {
+            blk0_36:
+            {
+                int idx0 = gActivePlayerSlot * 0x18;
+                short lvl0 = *(short*)(data_0209f4a0+idx0);
+                if (lvl0 != 0) {
+                    int thr0 = (*(unsigned char*)(data_0209f4ae+idx0)!=2) ? 0x471 : 0x555;
+                    if (lvl0 < thr0) {
+                        mPrevAngleY = mDesiredAngleY;
+                        mAngleY = mPrevAngleY;
+                    }
+                }
+                {
+                    int thr0b = (*(unsigned char*)(data_0209f4ae+idx0)!=2) ? 0x471 : 0x555;
+                    func_ov002_020d22ec(((char*)this), thr0b);
+                }
+            }
+        }
+        break;
+    }
+
+    case 10: {
+        if (mIsMetal!=0 || mIsVanish!=0) {
+            mStateStep = 0;
+            _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x47, 0, 0x1000, 0);
+            mStateTimer = 0x384;
+        }
+        {
+            int idx10 = gActivePlayerSlot * 0x18;
+            short lvl10 = *(short*)(data_0209f4a0+idx10);
+            if (lvl10 != 0) {
+                int thr10 = (*(unsigned char*)(data_0209f4ae+idx10)!=2) ? 0x471 : 0x555;
+                if (lvl10 < thr10) {
+                    mPrevAngleY = mDesiredAngleY;
+                    mAngleY = mPrevAngleY;
+                }
+            }
+            {
+                int thr10b = (*(unsigned char*)(data_0209f4ae+idx10)!=2) ? 0x471 : 0x555;
+                func_ov002_020d22ec(((char*)this), thr10b);
+            }
+        }
+        break;
+    }
+
+    case 1: {
+        if (_ZN6Player12FinishedAnimEv(((char*)this))) {
+            _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0xc, 0, 0x1000, 0);
+            mStateStep = 2;
+        }
+        {
+        unsigned int x1 = param1;
+        switch (x1) {
+        default:
+            break;
+        case 0: {
+            int idA = _ZNK6Player14GetBodyModelIDEjb(((char*)this), x1&0xff, 0);
+            void* animA = *(void**)(((char*)this)+(idA<<2)+0xdc);
+            if (_ZNK15dExtFrameCtrl_c12WillHitFrameEi((char*)animA+0x50, 0x5a)) {
+                _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2d, ((char*)this)+0x74);
+            } else if (_ZNK15dExtFrameCtrl_c12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0)<<2)+0xdc))+0x50, 0x3a)
+                    || _ZNK15dExtFrameCtrl_c12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0)<<2)+0xdc))+0x50, 0x44)) {
+                _ZN5Sound9PlayBank0EjRK7Vector3(4, ((char*)this)+0x74);
+            }
+            break;
+        }
+        case 1: {
+            int idD = _ZNK6Player14GetBodyModelIDEjb(((char*)this), x1&0xff, 0);
+            void* animD = *(void**)(((char*)this)+(idD<<2)+0xdc);
+            if (_ZNK15dExtFrameCtrl_c12WillHitFrameEi((char*)animD+0x50, 0x6e)) {
+                _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2d, ((char*)this)+0x74);
+            } else {
+                int idE = _ZNK6Player14GetBodyModelIDEjb(((char*)this), param1&0xff, 0);
+                void* animE = *(void**)(((char*)this)+(idE<<2)+0xdc);
+                if (_ZNK15dExtFrameCtrl_c12WillHitFrameEi((char*)animE+0x50, 0x32)) {
+                    _ZN5Sound9PlayBank0EjRK7Vector3(0xb1, ((char*)this)+0x74);
+                }
+            }
+            break;
+        }
+        case 2: {
+            int idF = _ZNK6Player14GetBodyModelIDEjb(((char*)this), x1&0xff, 0);
+            void* animF = *(void**)(((char*)this)+(idF<<2)+0xdc);
+            if (_ZNK15dExtFrameCtrl_c12WillHitFrameEi((char*)animF+0x50, 0x20)) {
+                _ZN5Sound9PlayBank0EjRK7Vector3(2, ((char*)this)+0x74);
+            } else if (_ZNK15dExtFrameCtrl_c12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0)<<2)+0xdc))+0x50, 0x47)
+                    || _ZNK15dExtFrameCtrl_c12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0)<<2)+0xdc))+0x50, 0x60)) {
+                _ZN5Sound9PlayBank0EjRK7Vector3(3, ((char*)this)+0x74);
+            }
+            break;
+        }
+        case 3: {
+            int idI = _ZNK6Player14GetBodyModelIDEjb(((char*)this), x1&0xff, 0);
+            void* animI = *(void**)(((char*)this)+(idI<<2)+0xdc);
+            if (_ZNK15dExtFrameCtrl_c12WillHitFrameEi((char*)animI+0x50, 0xad)) {
+                _ZN5Sound9PlayBank0EjRK7Vector3(0x50, ((char*)this)+0x74);
+            }
+            break;
+        }
+        }
+        }
+        if (func_ov002_020d22ec(((char*)this), 0)) {
+            (*(unsigned int*)(((int)r4 + 0x154))) &= ~0x2000;
+            _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2e, ((char*)this)+0x74);
+        }
+        break;
+    }
+
+    case 2: {
+        if (unk_723==0 &&
+            _ZNK15dExtFrameCtrl_c12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0)<<2)+0xdc))+0x50, 1)) {
+            _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2a, ((char*)this)+0x74);
+        }
+        {
+            unsigned char f2d8_2 = data_0209f2d8;
+            int b2a = (f2d8_2 == 1);
+            if (b2a == 0) {
+                if ((data_0209caa0[2] & 0x80) == 0) break;
+                int b2b = (f2d8_2 == 2);
+                if (b2b != false) break;
+            }
+        }
+        if (mStateTimer == 0) {
+            _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2e, ((char*)this)+0x74);
+            _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0xa, 0x40000000, 0x1000, 0);
+            mStateStep = 3;
+            mSleepStage = 1;
+        }
+        if (*(unsigned short*)(data_0209f49e+gActivePlayerSlot*0x18) & 2) {
+            _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211019c);
+            (*(unsigned int*)(((int)r4 + 0x154))) &= ~0x2000;
+            _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2e, ((char*)this)+0x74);
+            return 1;
+        }
+        if (func_ov002_020d2da0(((char*)this))==1 || (unsigned short)(mStateFlags&4)!=0) {
+            _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0xb, 0x40000000, 0x1000, 0);
+            mStateStep = 9;
+        }
+        break;
+    }
+
+    case 3: {
+        if (_ZN6Player12FinishedAnimEv(((char*)this))) {
+            _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 9, 0, 0x1000, 0);
+            mStateStep = 4;
+            unk_56c = 0;
+            unk_570 = 0;
+            unk_574 = 0;
+            mSleepStage = 2;
+            mStateArg = 1;
+        }
+        if ((unsigned short)(mStateFlags&4) != 0) {
+            func_ov002_020cabe0(((char*)this));
+            return 1;
+        }
+        break;
+    }
+
+    case 5: {
+        if (_ZN6Player12FinishedAnimEv(((char*)this))) {
+            mStateStep = 6;
+            _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x96, 0, 0x1000, 0);
+        }
+        func_ov002_020d22ec(((char*)this), 0);
+        break;
+    }
+
+    case 4: {
+        if (mStatePhase == 0) {
+            func_ov002_020d2f24(((char*)this));
+            if (unk_723==0 &&
+                _ZNK15dExtFrameCtrl_c12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0)<<2)+0xdc))+0x50, 0xd)) {
+                _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2b, ((char*)this)+0x74);
+            }
+        }
+        {
+            unsigned char f2d8_4 = data_0209f2d8;
+            int b4a = (f2d8_4 == 1);
+            if (b4a == 0) {
+                if ((data_0209caa0[2] & 0x80) == 0) break;
+                int b4b = (f2d8_4 == 2);
+                if (b4b != false) break;
+            }
+            if (func_ov002_020d2da0(((char*)this))==1 || unk_56c >= 0x3000 || mIsInShallowWater!=0 ||
+                (unsigned short)(mStateFlags&4)) {
+                func_ov002_020d2e74(((char*)this));
+                mSleepStage = 0;
+                _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 8, 0x40000000, 0x1000, 0);
+                mStateStep = 9;
+            }
+        }
+        break;
+    }
+
+    case 6: {
+        if (func_ov002_020d2da0(((char*)this)) == 1) {
+            _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x97, 0x40000000, 0x1000, 0);
+            mStateStep = 9;
+        }
+        break;
+    }
+
+    case 7: {
+        if (_ZN6Player12FinishedAnimEv(((char*)this))) {
+            _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0xf, 0, 0x1000, 0);
+            mStateStep = 8;
+        }
+        if ((unsigned short)(mStateFlags&0x800) == 0) {
+            func_ov002_020d22ec(((char*)this), 0);
+        }
+        break;
+    }
+
+    case 9: {
+        if (_ZN6Player12FinishedAnimEv(((char*)this))) {
+            _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
+        }
+        break;
+    }
+    }
+    }
+
+    Player_AdvanceAnims(((char*)this));
+    return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 334 -- func_ov002_020d2da0, 0x020d2da0, size 0xd4 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d2da0
+extern "C" {
+int func_ov002_020d2da0(char* c)
+{
+    struct E18 { short v; char pad[0x16]; };
+    extern struct E18 data_0209f4a0[];
+    extern struct E18 data_0209f49e[];
+    extern char* data_0209f318;
+    extern char data_ov002_021101b4;
+    extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, void* v);
+    extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* s);
+
+  unsigned char idx = gActivePlayerSlot;
+  char* p = data_0209f318;
+  int cond = (int)(data_0209f4a0[idx].v >= 0x200);
+  if(cond | (((unsigned short)data_0209f49e[idx].v) & 0xc03)){
+    *(int*)((int)p + 0x154) &= ~0x2000;
+    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(*(unsigned char*)(c+0x6d9), 0x2e, c+0x74);
+    return 1;
+  }
+  if(*(unsigned char*)(c+0x6de) == 0) return 0;
+  *(int*)((int)p + 0x154) &= ~0x2000;
+  _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_021101b4);
+  return 2;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 335 -- func_ov002_020d2e74, 0x020d2e74, size 0xb0 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d2e74
+/* recovered: shared common types */
+extern "C" {
+void func_ov002_020d2e74(Player *p)
+{
+    struct PlayerView {
+        char pad8[8];
+        int field_8;             /* 0x8 */
+        char pad1[0x5c - 0xc];
+        struct Vector3 field_5c; /* 0x5c */
+        char pad2[0x74 - 0x68];
+        struct Vector3 field_74; /* 0x74 */
+        char pad3[0x8e - 0x80];
+        s16 field_8e;            /* 0x8e */
+        char pad4[0x6d9 - 0x90];
+        u8 field_6d9;            /* 0x6d9 */
+        char pad5[0x707 - 0x6da];
+        u8 field_707;            /* 0x707 */
+    };
+    extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 a, const struct Vector3 &v);
+    extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, const struct Vector3 &v);
+    extern void Vec3_RotateYAndTranslate(struct Vector3 *out, const struct Vector3 *base, s16 ang, const struct Vector3 *off);
+    extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 a, int b, int c, int d);
+
+    PlayerView *thiz = (PlayerView *)p;
+    struct Vector3 v;
+    struct Vector3 off;
+    if (thiz->field_707 != 0)
+        return;
+    if (thiz->field_8 != 3)
+        return;
+    _ZN5Sound9PlayBank0EjRK7Vector3(0xbc, thiz->field_74);
+    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(thiz->field_6d9, 0x2f, thiz->field_74);
+    off.x = 0;
+    off.y = 0x1e000;
+    off.z = 0x64000;
+    Vec3_RotateYAndTranslate(&v, &thiz->field_5c, thiz->field_8e, &off);
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xfe, v.x, v.y, v.z);
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xff, v.x, v.y, v.z);
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 336 -- func_ov002_020d2f24, 0x020d2f24, size 0xb8 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d2f24
+extern "C" {
+void func_ov002_020d2f24(char* thiz)
+{
+    extern int _ZNK6Player14GetBodyModelIDEjb(void* thiz, u32 a, int b);
+
+    int v;
+    int r4;
+    u32 id;
+
+    id = *(u32*)(thiz + 8);
+    if (id != 3) return;
+
+    r4 = *(int*)(thiz + 0x56c);
+    id = _ZNK6Player14GetBodyModelIDEjb(thiz, id & 0xff, 0);
+    {
+        int* q = (int*)(*(int*)(thiz + id * 4 + 0xdc) + 0x50);
+        v = (u32)(q[2] << 4) >> 0x10;
+    }
+
+    if (v >= 6) {
+        if (v <= 0x1c) {
+            r4 -= 0x180;
+            goto store;
+        }
+    }
+    if (v >= 0x24 && v <= 0x3a) {
+        if (r4 < 0x2800) r4 += 0x180;
+        else r4 += 0x300;
+        goto store;
+    }
+    if (v == 0x3b) {
+        if (*(u8*)(thiz + 0x70c) != 0) r4 += 0x10;
+    }
+
+store:
+    if (r4 < 0x400) r4 = 0x400;
+    if (r4 > 0x4000) r4 = 0x4000;
+    *(int*)(thiz + 0x56c) = r4;
+    *(int*)(thiz + 0x570) = r4;
+    *(int*)(thiz + 0x574) = r4;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 337 -- func_ov002_020d2fdc, 0x020d2fdc, size 0x2e0 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d2fdc
+extern "C" {
+int func_ov002_020d2fdc(char *self)
+{
+    typedef struct { u16 flags; char pad[22]; } Entry24;
+    extern Entry24 data_0209f49c[];
+    extern u8 data_0209f2d8;
+    extern char data_0209f2f8;
+    extern void *data_0209f318;
+    extern void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int x, int y, int z);
+    extern void _ZN6Player7SetAnimEji5Fix12IiEj(void *thiz, unsigned int id, int flags, int speed, unsigned int extra);
+    extern int _ZNK6Player14GetBodyModelIDEjb(void *thiz, unsigned int a, int b);
+    extern int _ZNK15dExtFrameCtrl_c12WillHitFrameEi(void *thiz, int f);
+    extern void func_ov002_020d4c30(void *self);
+
+    int r5;
+    int id;
+    char *anim;
+
+    *(u8 *)(self + 0x6ed) = 0;
+    if (*(u8 *)(self + 0x703) != 0) {
+        return 0;
+    }
+
+    if ((unsigned short)((*(u16 *)(self + 0x6ce)) & 0x800)) {
+        return 1;
+    }
+
+    if (data_0209f49c[gActivePlayerSlot].flags & 0x800) {
+        if (*(u8 *)(self + 0x6e5) < 0x1e) {
+            *(u8 *)(((int)self + 0x6e5)) += 1;
+            r5 = *(u8 *)(self + 0x6e5) * 0x111 + 0x1000;
+        } else {
+            *(u8 *)(self + 0x6ed) = 0x1e;
+            r5 = 0x3000;
+            if (*(u8 *)(self + 0x707) == 0) {
+                _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(*(int *)(self + 0x5c), *(int *)(self + 0x60), *(int *)(self + 0x64));
+            }
+        }
+
+        _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x3f, 0, r5, 0);
+
+        id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0);
+        anim = (char *)((int *)(self + 0xdc))[id] + 0x50;
+        if (_ZNK15dExtFrameCtrl_c12WillHitFrameEi(anim, 4) ||
+            (id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0),
+             anim = (char *)((int *)(self + 0xdc))[id] + 0x50,
+             _ZNK15dExtFrameCtrl_c12WillHitFrameEi(anim, 0x13))) {
+            func_ov002_020d4c30(self);
+        }
+        return 0;
+    }
+
+    *(u8 *)(self + 0x6e5) = 0;
+    {
+        int flag = 0;
+        if (data_0209f2d8 == 1) flag = 1;
+        if (flag != 0) {
+            _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x47, 0, 0x1000, 0);
+            return 0;
+        }
+    }
+
+    if (*(int *)(self + 0x68c) > 0x32000) {
+        _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x7d, 0, 0x1000, 0);
+        return 0;
+    }
+
+    if (*(u8 *)(self + 0x6e3) == 0) {
+        _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x47, 0, 0x1000, 0);
+        if (*(u16 *)(self + 0x6a4) == 0) {
+            char v = data_0209f2f8;
+            if (v == 0x13 || v == 0xa || (unsigned)(v - 0x30) <= 1) {
+                _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x95, 0x40000000, 0x1000, 0);
+                *(u8 *)(self + 0x6e3) = 5;
+            } else {
+                *(u16 *)(self + 0x6a4) = 0x708;
+                _ZN6Player7SetAnimEji5Fix12IiEj(self, 0xd, 0x40000000, 0x1000, 0);
+                *(u8 *)(self + 0x6e3) = 1;
+            }
+            *(int *)(((int)(char *)data_0209f318 + 0x154)) |= 0x2000;
+        }
+    } else {
+        _ZN6Player7SetAnimEji5Fix12IiEj(self, 0xf, 0, 0x1000, 0);
+    }
+    return 0;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 338 -- _ZN6Player12St_Wait_InitEv, 0x020d32bc, size 0x1dc */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player12St_Wait_InitEv
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_Wait_Init()
+{
+    extern int _ZN6Player7SetAnimEji5Fix12IiEj(void* c, unsigned int a, int b, int d, unsigned int e);
+    extern int _ZN6Player9GetHealthEv(void* c);
+    extern unsigned char data_0209f2d8;
+    extern int data_0209caa0[];
+
+    unsigned char f2d8;
+    int b0;
+
+    mStatePhase = 0;
+    f2d8 = data_0209f2d8;
+    b0 = (f2d8 == 1);
+    if (b0 != 0) goto L80;
+    if ((data_0209caa0[2] & 0x80) == 0) goto L50;
+    {
+        int b1 = (f2d8 == 2);
+        if (b1 == 0) goto L80;
+    }
+L50:
+    _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0xb3, 0, 0x1000, 0);
+    mStateStep = 0;
+    return 1;
+
+L80:
+    if (mIsMega == 0) goto Ld8;
+    if (b0 != 0) goto Lbc;
+    if (data_0209caa0[2] & 0x80) goto Lbc;
+    _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0xa0, 0, 0x1000, 0);
+Lbc:
+    mStateTimer = 0x384;
+    return 1;
+
+Ld8:
+    if (unk_650 == 0x80000000) goto L13c;
+    if (mPosY >= unk_650 - 0x64000) goto L13c;
+    if (mIsMetal != 0) goto L13c;
+    if (mIsVanish != 0) goto L13c;
+    mStateStep = 0xa;
+    _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 5, 0, 0x1000, 0);
+    return 1;
+
+L13c:
+    mStateStep = 0;
+    if (mSinkDepth > 0x32000) {
+        _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x7d, 0, 0x1000, 0);
+    } else if (_ZN6Player9GetHealthEv(((char*)this)) <= 2) {
+        mStateStep = 7;
+        _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0xe, 0x40000000, 0x1000, 0);
+    } else {
+        _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x47, 0, 0x1000, 0);
+    }
+    mStateTimer = 0x384;
+    return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 339 -- func_ov002_020d3498, 0x020d3498, size 0x24 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d3498
+extern "C" {
+void func_ov002_020d3498(char* c)
+{
+
+    *(int*)(c + 0x98) = -*(int*)(c + 0x98);
+    *(short*)(c + 0x8e) = *(short*)(c + 0x8e) + 0x8000;
+    *(short*)(c + 0x94) = *(short*)(c + 0x8e);
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 340 -- _ZN6Player18St_TurnAround_MainEv, 0x020d34bc, size 0x1e0 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player18St_TurnAround_MainEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_TurnAround_Main()
+{
+    extern int data_ov002_021101e4[];
+    extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
+    extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);
+    extern Fix12i Player_ScaleByCharFactor(void* c, Fix12i a);
+    extern void _Z14ApproachLinearRiii(int* a, int b, int c);
+    extern int _ZN6Player6IsAnimEj(void* c, u32 a);
+    extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
+    extern int _ZN6Player12FinishedAnimEv(void* c);
+    extern int func_0201226c(int a0, int a1, int a2, int a3, int a4, s16 a5);
+    extern void Player_AdvanceAnims(void* c);
+    extern u16 data_0209f49e[];
+    extern s16 data_0209f4a0[];
+    extern int data_ov002_021101b4[];
+    extern int data_ov002_0211013c[];
+
+    int r5v;
+    s16 angle;
+    int sel;
+    int raw;
+    int tmp;
+
+    raw = mDesiredAngleY;
+    if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
+        angle = (s16)(raw + 0x8000);
+        sel = (mHorzSpeed < 0) ? 0x1800 : 0x8000;
+        r5v = func_ov002_020bf56c(((char*)this), sel);
+        ApproachAngle((s16*)((char*)&mPrevAngleY), angle, 0x10, 0x1000, 0x200);
+        tmp = Player_ScaleByCharFactor(((char*)this), 0x28000);
+        _Z14ApproachLinearRiii((int*)((char*)&mHorzSpeed), -tmp, r5v);
+    } else {
+        _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
+        return 1;
+    }
+
+    ApproachAngle((s16*)((char*)&mAngleY), mPrevAngleY, 8, 0x2000, 0x800);
+
+    if ((*(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18) & 2) != 0) {
+        _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021101e4);
+    } else if (mIsAirborne != 0) {
+        _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021101b4);
+    } else if (mHorzSpeed <= 0x12000) {
+        if (!_ZN6Player6IsAnimEj(((char*)this), 0x45))
+            _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x45, 0x40000000, 0x1000, 0);
+        if (_ZN6Player12FinishedAnimEv(((char*)this))) {
+            func_ov002_020d3498(((char*)this));
+            _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
+        }
+    } else {
+        func_ov002_020bf88c();
+        mLoopingSoundHandle = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2, (int)((char*)&mCamSpacePosX), mHorzSpeed, 0);
+    }
+
+    Player_AdvanceAnims(((char*)this));
+    return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 341 -- _ZN6Player18St_TurnAround_InitEv, 0x020d369c, size 0x3c */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player18St_TurnAround_InitEv
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_TurnAround_Init()
+{
+    extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
+
+  _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x46,0x40000000,0x1000,0);
+  mStateStep=0;
+  return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 342 -- func_ov002_020d36d8, 0x020d36d8, size 0x1e8 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov002_020d36d8
+extern "C" {
+int func_ov002_020d36d8(char* c, int arg)
+{
+    extern int _ZN6Player19func_ov002_020c0434Ev(char* c);
+    extern void func_ov002_020c0364(char* c, unsigned int arg);
+    extern int func_ov002_020dd824(char* c);
+    extern int func_ov002_020d5c6c(char* c);
+    extern int func_ov002_020dde74(char* c);
+    extern int func_ov002_020d674c(char* c);
+    extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* st);
+    extern int func_ov002_020d1204(char* c);
+    extern unsigned char data_0209f49e[];
+    extern unsigned char data_0209f49c[];
+    extern int data_ov002_0211004c;
+    extern int data_ov002_021104e4;
+    extern int data_ov002_0211019c;
+    extern int data_ov002_021101b4;
+
+    if ((unsigned short)(*(unsigned short*)(c + 0x6ce) & 0x40)) return 0;
+
+    if (_ZN6Player19func_ov002_020c0434Ev(c) != 0) {
+        func_ov002_020c0364(c, 3);
+        return 1;
+    }
+    if (func_ov002_020dd824(c) != 0) return 1;
+    if (func_ov002_020d5c6c(c) != 0) return 1;
+
+    {
+        int idx = gActivePlayerSlot * 0x18;
+        unsigned short f49e = *(unsigned short*)(data_0209f49e + idx);
+        if (f49e & 1) {
+            return func_ov002_020dde74(c) != 0;
+        }
+        if ((*(unsigned short*)(data_0209f49c + idx) & 0x400) && (arg & 1) == 0) {
+            if (func_ov002_020d674c(c) != 0) {
+                _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_0211004c);
+            } else {
+                *(unsigned char*)(c + 0x6e3) = 0;
+                _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_021104e4);
+            }
+            return 1;
+        }
+        if (f49e & 2) {
+            if (*(unsigned short*)(c + 0x6b0) == 0) {
+                _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_0211019c);
+                return 1;
+            }
+            if (func_ov002_020d1204(c) != 0) return 1;
+        }
+    }
+
+    if (*(unsigned char*)(c + 0x6de) != 0) {
+        if (*(int*)(c + 0x60) - *(int*)(c + 0x644) >= 0x28000) {
+            _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_021101b4);
+            return 1;
+        }
+    }
+    return 0;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 343 -- _ZN6Player12St_Walk_MainEv, 0x020d38c0, size 0x2dc */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN6Player12St_Walk_MainEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* recovered: named members + shared header, real C++ method */
+extern "C" {
+int Player::St_Walk_Main()
+{
+    extern void func_ov002_020d45c0(void*);
+    extern int func_ov002_020d3b9c(void*);
+    extern void func_ov002_020d413c(void*, short);
+    extern void func_ov002_020d4748(void*);
+    extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
+    extern int func_ov002_020c5244(void);
+    extern int func_ov002_020d36d8(void* c, int a);
+    extern void ApproachAngle(short* cur, short target, int divisor, int band, int maxStep);
+    extern int _ZN6Player6IsAnimEj(void* c, u32 anim);
+    extern int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5);
+    extern int _ZN6Player12FinishedAnimEv(void* c);
+    extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
+    extern void func_ov002_020d4540(void* c);
+    extern void func_ov002_020cabe0(void* c);
+    extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);
+    extern void Player_AdvanceAnims(void* c);
+    extern u8 data_0209f4ae[];
+    extern s16 data_0209f4a0[];
+    extern int data_ov002_02110154[];
+
+    if ((u16)(mStateFlags & 0x800)) {
+        _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_02110154);
+        return 1;
+    }
+    if (func_ov002_020c5244()) return 1;
+    if (func_ov002_020d36d8(((char*)this), 0)) return 1;
+
+    func_ov002_020d45c0(((char*)this));
+    short r5 = mPrevAngleY;
+    if (func_ov002_020d3b9c(((char*)this))) return 1;
+
+    func_ov002_020d413c(((char*)this), r5);
+
+    if (mHorzSpeed == 0) {
+        mAngleY = mPrevAngleY;
+    } else {
+        ApproachAngle((short*)((char*)&mAngleY), mPrevAngleY, 4, 0x2000, 0x800);
+    }
+
+    if (unk_6e0 != 0) {
+        if (!_ZN6Player6IsAnimEj(((char*)this), 0x37)) {
+            int result = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2, (int)((char*)&mCamSpacePosX), mHorzSpeed, 0);
+            mLoopingSoundHandle = result;
+        }
+        if (_ZN6Player12FinishedAnimEv(((char*)this))) {
+            if (_ZN6Player6IsAnimEj(((char*)this), 0x36)) {
+                if (mHorzSpeed == 0) {
+                    _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x37, 0x40000000, 0x1000, 0);
+                }
+            } else {
+                if (_ZN6Player6IsAnimEj(((char*)this), 0x37)) {
+                    func_ov002_020d4540(((char*)this));
+                }
+            }
+        }
+        goto end;
+    }
+
+    if (mHorzSpeed != 0) goto label_29c;
+
+    {
+        u8 idx = gActivePlayerSlot;
+        int off = idx * 0x18;
+        u8 b = data_0209f4ae[off];
+        int thresh = (b != 2) ? 0x471 : 0x555;
+        u8 v710 = unk_710;
+        int rhs = thresh - (v710 << 7);
+        short lhs = *(s16*)((char*)data_0209f4a0 + off);
+        if (lhs < rhs) goto label_1f0;
+        if ((u16)(mStateFlags & 0xc) == 0) goto label_29c;
+    }
+
+label_1f0:
+    if (mIsMega != 0) {
+        if (_ZN6Player12FinishedAnimEv(((char*)this)) && _ZN6Player6IsAnimEj(((char*)this), 0x9d)) {
+            _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_02110154);
+            mStateWork = 1;
+            func_ov002_020cabe0(((char*)this));
+        }
+        goto end;
+    }
+
+    if (_ZN6Player12FinishedAnimEv(((char*)this))) goto label_27c;
+
+    {
+        u32 arg = (u8)param1;
+        int modelIdx = _ZNK6Player14GetBodyModelIDEjb(((char*)this), arg, 0);
+        char* anim = *(char**)(((char*)this) + modelIdx * 4 + 0xdc) + 0x50;
+        if (_ZN15dExtFrameCtrl_c8GetFlagsEv(anim)) goto end;
+    }
+
+label_27c:
+    _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_02110154);
+    mStateWork = 1;
+    func_ov002_020cabe0(((char*)this));
+    goto end;
+
+label_29c:
+    func_ov002_020d4748(((char*)this));
+    mStateWork = 1;
+
+end:
+    Player_AdvanceAnims(((char*)this));
+    return 1;
 }
 }
 
@@ -12684,4 +15165,48 @@ int func_ov002_020cfd84(void* actor, void* a, void* b) {
  *   [298] 0x020cfaf0  src/func_ov002_020cfaf0.cpp
  *   [299] 0x020cfbdc  src/func_ov002_020cfbdc.cpp
  *   [300] 0x020cfd84  src/func_ov002_020cfd84.cpp
+ 
+ *   [301] 0x020cfea4  func_ov002_020cfea4
+ *   [302] 0x020d0178  func_ov002_020d0178
+ *   [303] 0x020d0580  func_ov002_020d0580
+ *   [304] 0x020d06c0  func_ov002_020d06c0
+ *   [305] 0x020d0824  _ZN6Player17St_LedgeGrab_MainEv
+ *   [306] 0x020d08b0  _ZN6Player17St_LedgeGrab_InitEv
+ *   [307] 0x020d092c  _ZN6Player20St_LedgeHang_CleanupEv
+ *   [308] 0x020d0948  func_ov002_020d0948
+ *   [309] 0x020d0a44  _ZN6Player17St_LedgeHang_MainEv
+ *   [310] 0x020d0c54  _ZN6Player17St_LedgeHang_InitEv
+ *   [311] 0x020d0d2c  func_ov002_020d0d2c
+ *   [312] 0x020d0d78  _ZN6Player17St_WallSlide_MainEv
+ *   [313] 0x020d0e8c  _ZN6Player17St_WallSlide_InitEv
+ *   [314] 0x020d0ee0  _ZN6Player13St_Crawl_MainEv
+ *   [315] 0x020d112c  _ZN6Player13St_Crawl_InitEv
+ *   [316] 0x020d1164  func_ov002_020d1164
+ *   [317] 0x020d1204  func_ov002_020d1204
+ *   [318] 0x020d12b0  func_ov002_020d12b0
+ *   [319] 0x020d1354  _ZN6Player14St_Crouch_MainEv
+ *   [320] 0x020d15e0  _ZN6Player14St_Crouch_InitEv
+ *   [321] 0x020d16bc  _ZN6Player17St_HoldHeavy_MainEv
+ *   [322] 0x020d19a8  _ZN6Player17St_HoldHeavy_InitEv
+ *   [323] 0x020d19fc  _ZN6Player20St_HoldLight_CleanupEv
+ *   [324] 0x020d1a1c  _ZN6Player17St_HoldLight_MainEv
+ *   [325] 0x020d1ea0  _ZN6Player17St_HoldLight_InitEv
+ *   [326] 0x020d1f78  func_ov002_020d1f78
+ *   [327] 0x020d2184  _ZN6Player21St_WaitQuicksand_MainEv
+ *   [328] 0x020d2224  _ZN6Player21St_WaitQuicksand_InitEv
+ *   [329] 0x020d225c  func_ov002_020d225c
+ *   [330] 0x020d228c  func_ov002_020d228c
+ *   [331] 0x020d22ec  func_ov002_020d22ec
+ *   [332] 0x020d2378  _ZN6Player15St_Wait_CleanupEv
+ *   [333] 0x020d2404  _ZN6Player12St_Wait_MainEv
+ *   [334] 0x020d2da0  func_ov002_020d2da0
+ *   [335] 0x020d2e74  func_ov002_020d2e74
+ *   [336] 0x020d2f24  func_ov002_020d2f24
+ *   [337] 0x020d2fdc  func_ov002_020d2fdc
+ *   [338] 0x020d32bc  _ZN6Player12St_Wait_InitEv
+ *   [339] 0x020d3498  func_ov002_020d3498
+ *   [340] 0x020d34bc  _ZN6Player18St_TurnAround_MainEv
+ *   [341] 0x020d369c  _ZN6Player18St_TurnAround_InitEv
+ *   [342] 0x020d36d8  func_ov002_020d36d8
+ *   [343] 0x020d38c0  _ZN6Player12St_Walk_MainEv
  */

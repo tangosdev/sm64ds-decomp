@@ -16,6 +16,14 @@
  * dScMgFlower_c.h (mArray is a plain byte array), so the functions here
  * reach it by offset or through the local Petal view below. Several of those offset
  * spellings are codegen levers, noted where they occur.
+ *
+ * comment leftovers:
+ *  - func_ov006_0212a650 stays a free function: it is the empty element
+ *    destructor handed to __cxa_vec_cleanup for the petal records, not a
+ *    scene method.
+ *  - The petal-table reads stay raw: PetalView, the B1/W1/A1/A2/LA/LB
+ *    launders and the `(unsigned int)(c + i * 0x20) + off` spellings are
+ *    measured codegen levers (each function's doc comment says which).
  */
 
 #include "dScMgFlower_c.h"
@@ -23,6 +31,7 @@
 #include "decl_common.h"
 #include "Sound.h"
 #include "G2x.h"
+#include "PlayerInput.h"
 
 #pragma defer_codegen off
 #pragma opt_strength_reduction off
@@ -79,11 +88,6 @@ char pad[0x18];
 void Vec2_Sub(V2 *out, V2 *a, V2 *b);
 int Vec2_Len(V2 *p);
 void FreeGfxSlotsById(int a);
-extern u8 data_020a0e40[];
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
-extern u8 data_020a0dea[];
-extern u8 data_020a0deb[];
 void *func_ov004_020adc74(void *arg);
 void DecompressLZ16(int src, void *dst);
 void Ov004_Deallocate(void *ptr);
@@ -116,14 +120,13 @@ void func_ov006_0212a650(void)
 }
 }
 
-// @symbol func_ov006_0212a654
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol _ZN13dScMgFlower_c19func_ov006_0212a654Ev
 /* Per-frame petal update: released petals drift and fall, speeding up to
  * 0x4000, and go inactive once below the screen. `settled` stays 1 only if
  * no petal is still on the flower, held, or falling. */
-void func_ov006_0212a654(char *p)
+void dScMgFlower_c::func_ov006_0212a654()
 {
-    PetalView *self = (PetalView *)p;
+    PetalView *self = (PetalView *)this;
     int i;
 
     self->settled = 1;
@@ -140,9 +143,8 @@ void func_ov006_0212a654(char *p)
         else self->settled = 0;
     }
 }
-}
 
-// @symbol func_ov006_0212a764
+// @symbol _ZN13dScMgFlower_c19func_ov006_0212a764Ev
 /* Round setup, called by InitResources and by OnYoshiTryEat when a round
  * restarts. Clears the cursor, wipes all 0x16 petal records and rolls the
  * petal count (1-2 when the hold counter reads exactly 0x14, else a 1-in-10
@@ -157,9 +159,9 @@ void func_ov006_0212a654(char *p)
  * change the loop. pAngle and pX must stay block locals with pX declared
  * after the angle store, and the swap temp must be a Vec2 (its empty
  * destructor keeps its stack slot). */
-extern "C" void func_ov006_0212a764(void *p)
+void dScMgFlower_c::func_ov006_0212a764()
 {
-    dScMgFlower_c *self = (dScMgFlower_c *)p;
+    dScMgFlower_c *self = this;
     char *c = (char *)self;
     unsigned int roll;
     int j;
@@ -273,7 +275,7 @@ void dScMgFlower_c::OnYoshiTryEat(int /* arg */)
         mHoldTimer = 0;
     }
     func_ov006_020c3bc8(raw + 0x51f8);
-    func_ov006_0212a764(raw);
+    func_ov006_0212a764();
 }
 
 // @symbol _ZN13dScMgFlower_c6RenderEv
@@ -364,10 +366,10 @@ s32 dScMgFlower_c::Behavior()
     case 0:
         self->mPrevCursorX = self->mCursorX;
         self->mPrevCursorY = self->mCursorY;
-        k = data_020a0e40[0];
-        if (data_020a0de8[k * 4] != 0) {
-            int b = data_020a0deb[k * 4];
-            int a = data_020a0dea[k * 4];
+        k = gActivePlayerSlot;
+        if (gTouchHeld[k * 4] != 0) {
+            int b = gTouchY[k * 4];
+            int a = gTouchX[k * 4];
             self->mCursorX = (b ? a : a) << 12;
             self->mCursorY = b << 12;
         }
@@ -383,7 +385,7 @@ s32 dScMgFlower_c::Behavior()
             }
         } else if (self->mHeldPetal < 0) {
             int t;
-            if (data_020a0de8[k * 4] != 0 && data_020a0de9[k * 4] != 0)
+            if (gTouchHeld[k * 4] != 0 && gTouchEdge[k * 4] != 0)
                 t = 1;
             else
                 t = 0;
@@ -437,7 +439,7 @@ s32 dScMgFlower_c::Behavior()
             }
         } else {
             t = 0;
-            if (data_020a0de8[k * 4] != 0) {
+            if (gTouchHeld[k * 4] != 0) {
                 Cell *cells;
                 int j;
                 Vec2_Sub(&drag, (V2 *)(c + 0x5fb8), (V2 *)(c + 0x5fc0));
@@ -534,7 +536,7 @@ s32 dScMgFlower_c::Behavior()
                 }
             }
         }
-        func_ov006_0212a654(c);
+        func_ov006_0212a654();
         break;
     case 1:
         if (func_ov006_020c3b80(c + 0x51f8) != 0) {
@@ -544,7 +546,7 @@ s32 dScMgFlower_c::Behavior()
                 func_ov006_020c38b0(c + 0x51f8);
         }
         self->mPromptEnabled = 0;
-        func_ov006_0212a654(c);
+        func_ov006_0212a654();
         break;
     default:
         break;
@@ -635,7 +637,7 @@ s32 dScMgFlower_c::InitResources()
     mWinStreak = 0;
     mLoseStreak = 0;
     mHoldTimer = 0;
-    func_ov006_0212a764(raw);
+    func_ov006_0212a764();
 
     data_0209d45c |= 1;
     *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & ~3) | 1;

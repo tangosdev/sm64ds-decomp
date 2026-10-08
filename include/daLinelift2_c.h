@@ -46,6 +46,14 @@ struct daLinelift2_c : dBgActor_c {
     virtual int CleanupResources();
     virtual int Behavior();
     virtual int Render();
+
+    /* The three state bodies data_ov091_021354e0 dispatches, the path
+       stepper, and the collider callback's target. */
+    int  func_ov091_02131db8();
+    void func_ov091_02131ef0();
+    void func_ov091_02131f9c();
+    void func_ov091_02132000();
+    void func_ov091_02132360(dActor_c *other);
 };
 
 #ifndef SM64DS_PLATFORM_PC

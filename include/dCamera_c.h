@@ -50,7 +50,7 @@ struct dCamera_c : dView_c {
     u8  pad_158[0x24];
     /* The camera's horizontal facing angle. Width is observed, not assumed:
      * every reader in the tree loads it with a 16-bit access --
-     * daMugenBGM_c::Behavior and func_ov002_020b9450 read it plain,
+     * daMugenBGM_c::Behavior and daObjPowerUpItem_c::BeginOpening read it plain,
      * WingFeather::Behavior and func_ov102_021492d4 add 0x4000 to turn it
      * into a billboard facing, and daTree_c::Render feeds it straight to
      * Matrix4x3_FromRotationY. Nothing in the tree touches 0x17e, so only

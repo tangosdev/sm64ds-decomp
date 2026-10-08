@@ -1,7 +1,11 @@
 //cpp
 #include "dScStage_c.h"
 #include "types.h"
-struct TouchData { u8 touched; u8 tapped; u8 x; u8 y; };
+#include "PlayerInput.h"
+struct TouchData { u8 held; u8 edge; u8 x; u8 y; };
+// The ROM reads this record table through one base pointer (gTouchHeld) plus
+// field offsets, not through the per-lane gTouchX/gTouchY/gTouchEdge symbols.
+#define TOUCH_DATA ((struct TouchData *)gTouchHeld)
 struct PadData { u16 held; u16 pressed; };
 struct Ctrl {
     s16 dx;      /* 0x00 */
@@ -35,7 +39,6 @@ extern int data_0209fc48;
 extern u8 data_0209f21c;
 extern u8 data_0209f350[];
 extern struct Ctrl data_0209f498[];
-extern struct TouchData data_020a0de8[];
 extern struct PadData data_020a0e58[];
 extern s16 data_020756b0[];
 extern s16 data_02082214[];
@@ -88,16 +91,16 @@ main_part:
         do {
             u32 held = data_020a0e58[i].held;
             u32 pressed = data_020a0e58[i].pressed;
-            u8 touched = data_020a0de8[i].touched;
+            u8 touched = TOUCH_DATA[i].held;
             if ((touched != 0 && data_0209d660 != 0) || (*st != 1 && touched != 0)) {
                 p->touching = 1;
                 DecIfAbove0_Byte(&p->cnt);
                 {
-                    int b = (data_020a0de8[i].touched != 0 && data_020a0de8[i].tapped != 0);
+                    int b = (TOUCH_DATA[i].held != 0 && TOUCH_DATA[i].edge != 0);
                     if (b != false) {
                         if (p->cnt != 0) {
-                            int ty2 = data_020a0de8[i].y - p->dy;
-                            int tx2 = data_020a0de8[i].x - p->dx;
+                            int ty2 = TOUCH_DATA[i].y - p->dy;
+                            int tx2 = TOUCH_DATA[i].x - p->dx;
                             if (tx2 < 0) tx2 = 0;
                             else if (tx2 > 0xff) tx2 = 0xff;
                             if (ty2 < 0) ty2 = 0;
@@ -110,8 +113,8 @@ main_part:
                     }
                 }
                 if (DecIfAbove0_Byte(&p->delay) != 0) {
-                    p->tx = data_020a0de8[i].x;
-                    p->ty = data_020a0de8[i].y;
+                    p->tx = TOUCH_DATA[i].x;
+                    p->ty = TOUCH_DATA[i].y;
                     p->mag = 0;
                     p->nx = 0;
                     p->ny = 0;
@@ -121,8 +124,8 @@ main_part:
                     int dy;
                     int len;
                     int max;
-                    newx = data_020a0de8[i].x;
-                    newy = data_020a0de8[i].y;
+                    newx = TOUCH_DATA[i].x;
+                    newy = TOUCH_DATA[i].y;
                     dx = newx - p->tx;
                     dy = newy - p->ty;
                     p->dx = dx;
@@ -152,7 +155,7 @@ main_part:
             } else {
                 int b2;
                 int dirs;
-                b2 = (touched == 0 && data_020a0de8[i].tapped != 0);
+                b2 = (touched == 0 && TOUCH_DATA[i].edge != 0);
                 if (b2 != false) p->cnt = 5;
                 DecIfAbove0_Byte(&p->cnt);
                 p->touching = 0;

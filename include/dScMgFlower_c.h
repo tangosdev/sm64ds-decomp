@@ -132,6 +132,10 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
     s32 Behavior();        /* slot  6 */
     s32 Render();          /* slot  9 */
 
+    /* scene helpers */
+    void func_ov006_0212a654();           /* per-frame petal update */
+    void func_ov006_0212a764();           /* round setup / restart */
+
     u8  mArray[0x2c0];     /* 0x4f38 -- 0x16 * 0x20, elem dtor func_ov006_0212a650.
                               One 0x20-byte petal record, as func_ov006_0212a764
                               (the round setup) and Behavior read it:
@@ -146,7 +150,7 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
                               make the compiler add a second, implicit pass. */
     u8  pad_51f8[0xdc0];   /* 0x51f8 -- opaque object, see file banner */
     s32 mCursorX;          /* 0x5fb8 -- Fix12 stylus position, from the touch
-                              sample data_020a0dea/deb << 12 */
+                              sample gTouchX/gTouchY << 12 */
     s32 mCursorY;          /* 0x5fbc */
     s32 mPrevCursorX;      /* 0x5fc0 -- last tick's mCursor; the drag delta */
     s32 mPrevCursorY;      /* 0x5fc4 */

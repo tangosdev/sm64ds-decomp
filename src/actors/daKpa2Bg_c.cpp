@@ -13,8 +13,7 @@
  *   one guard; the two matrix helpers whole-struct-assign the flat s32 m[12]
  *   form, and the class header alone reaches the .r/.t spelling, which
  *   inflates func_ov060_02117a64 and func_ov060_02117ae0.
- * - The three helpers keep their ROM-address names and take a char *self;
- *   making them members would rename their symbols, which is not done here.
+ * - The three helpers keep their ROM-address names as member names.
  * - Behavior keeps the rematerialised angle pointers, see the comment there.
  * - dBgW_KcMbg::SetFile stays a mangled bridge.
  */
@@ -44,10 +43,6 @@ void Vec3_Asr(void *dst, void *src, int shift);
 int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, void *, void *, int, short, void *);
 int func_020393d4(void *, void *);
 
-void func_ov060_02117a3c(char *self);
-void func_ov060_02117a64(char *self);
-void func_ov060_02117ae0(char *self);
-
 }
 
 // @symbol _ZN10daKpa2Bg_cD1Ev
@@ -55,45 +50,38 @@ daKpa2Bg_c::~daKpa2Bg_c()
 {
 }
 
-extern "C" {
-
 /* Plays sound 0x95 through the handle kept in mSoundHandle. */
-// @symbol func_ov060_02117a3c
-void func_ov060_02117a3c(char *self)
+// @symbol _ZN10daKpa2Bg_c19func_ov060_02117a3cEv
+void daKpa2Bg_c::func_ov060_02117a3c()
 {
-    daKpa2Bg_c *bg = (daKpa2Bg_c *)self;
-    bg->mSoundHandle = Sound_PlayIfNotActive(bg->mSoundHandle, 3, 0x95, 0);
+    mSoundHandle = Sound_PlayIfNotActive(mSoundHandle, 3, 0x95, 0);
 }
 
 /* Rebuilds the collision matrix from the position and the X and Z angles,
    then moves the moving mesh collider to it with the Y angle. */
-// @symbol func_ov060_02117a64
-void func_ov060_02117a64(char *self)
+// @symbol _ZN10daKpa2Bg_c19func_ov060_02117a64Ev
+void daKpa2Bg_c::func_ov060_02117a64()
 {
-    daKpa2Bg_c *bg = (daKpa2Bg_c *)self;
     Matrix4x3_FromTranslation(&data_020a0e68,
-                              bg->mPosX, bg->mPosY, bg->mPosZ);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, bg->mAngleX);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, bg->mAngleZ);
-    bg->mClsnMat = data_020a0e68;
-    bg->mMovingMeshCollider2.Transform(bg->mClsnMat, bg->mAngleY);
+                              mPosX, mPosY, mPosZ);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
+    mClsnMat = data_020a0e68;
+    mMovingMeshCollider2.Transform(mClsnMat, mAngleY);
 }
 
 /* Rebuilds the model matrix the same way from the position shifted down by 3
    bits. The Y angle is not part of this matrix build. */
-// @symbol func_ov060_02117ae0
-void func_ov060_02117ae0(char *self)
+// @symbol _ZN10daKpa2Bg_c19func_ov060_02117ae0Ev
+void daKpa2Bg_c::func_ov060_02117ae0()
 {
-    daKpa2Bg_c *bg = (daKpa2Bg_c *)self;
     int pos[4];
-    Vec3_Asr(&pos, &bg->mPosX, 3);
+    Vec3_Asr(&pos, &mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos[0], pos[1],
                               pos[2]);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, bg->mAngleX);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, bg->mAngleZ);
-    bg->mModel2.mat4x3 = data_020a0e68;
-}
-
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
+    mModel2.mat4x3 = data_020a0e68;
 }
 
 // @symbol _ZN10daKpa2Bg_c16CleanupResourcesEv
@@ -132,8 +120,8 @@ s32 daKpa2Bg_c::Behavior()
         *angZ = *angZ + mAngleZSpeed;
     }
 
-    func_ov060_02117ae0((char *)this);
-    func_ov060_02117a64((char *)this);
+    func_ov060_02117ae0();
+    func_ov060_02117a64();
     return 1;
 }
 
@@ -141,7 +129,7 @@ s32 daKpa2Bg_c::Behavior()
 int daKpa2Bg_c::InitResources()
 {
     mModel2.SetFile((BMD_File *)Model::LoadFile(daKpa2Bg_c_ModelFile), 1, -1);
-    func_ov060_02117a64((char *)this);
+    func_ov060_02117a64();
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMovingMeshCollider2,
         (KCL_File *)dBgW_Kc::LoadFile(daKpa2Bg_c_ClsnFile), &mClsnMat, 0x1000,

@@ -66,6 +66,10 @@ struct daFPknBall_c : dEnemyBase_c {
     int Behavior();
     int InitResources();
     int Render();
+
+    void func_ov002_020f88ec();
+    void func_ov002_020f897c();
+    void func_ov002_020f8b24();
 };
 
 #ifndef SM64DS_PLATFORM_PC

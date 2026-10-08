@@ -7,14 +7,13 @@
 src/actors/daObjCtMecha10_c.cpp:
     complete
     .text start:0x021111a0 end:0x021116ec
+    .init start:0x02111f04 end:0x02111fc0
+    .ctor start:0x02112028 end:0x0211202c
+    .bss start:0x02112c60 end:0x02112cb0
 
 src/actors/daObjCtMecha11_c.cpp:
     complete
     .text start:0x021116ec end:0x02111bd0
-
-src/__sinit_ov035_02111f04.c:
-    complete
-    .init start:0x02111f04 end:0x02111fc0
 
 src/__sinit_ov035_02111fc0.c:
     complete

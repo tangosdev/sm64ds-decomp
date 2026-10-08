@@ -13,12 +13,10 @@
  * classInit allocates 0x404. The tail through 0x400 is the ring challenge
  * (see src/actors/daManta_c.cpp); nothing past 0x400 is read.
  *
- * mState points at a two-pointer-to-member record. __sinit_ov090_02133ea8
- * copies the init PMF (func_ov090_02132a58) and the execute PMF
- * (func_ov090_021327e4) into data_ov090_0213454c. Behavior calls execute.
- * The record type is completed in the TU. Those two functions are methods;
- * the sinit copies the PMF words from data outside this TU, so this file
- * does not emit a state-table symbol.
+ * mState points at a two-pointer-to-member record. daManta_c.cpp defines
+ * data_ov090_0213454c; the compiler copies the init PMF
+ * (func_ov090_02132a58) and the execute PMF (func_ov090_021327e4) into it.
+ * Behavior calls execute. The record type is completed in the TU.
  */
 
 #include "dEnemyBase_c.h"

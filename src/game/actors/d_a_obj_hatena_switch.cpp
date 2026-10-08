@@ -26,9 +26,7 @@
  * Leftover: HatenaMatrixWords 12-word copies -- structured Matrix4x3
  *   assignment scalarizes; common.h-first would drop mClsnMat.t used in
  *   UpdateClsnTransform.
- * Leftover: data_ov002_0210dd60/dd68/dd58/dd50 are this overlay's BMD/BCA/KCL
- *   handles (sinit-owned BSS). data_ov002_0210d8b4 / 0210d774 are CLPS
- *   blocks this TU does not own.
+ * Leftover: data_ov002_0210d8b4 / 0210d774 are CLPS blocks this TU does not own.
  * Leftover: data_0209caa0 / data_0209d684 / data_0209d660 / data_020a0e68
  *   are arm9 scratch/save globals.
  */
@@ -82,10 +80,34 @@ extern void Matrix4x3_ApplyInPlaceToRotationY(
     Matrix4x3 *matrix, s16 angleY);
 }
 
-extern SharedFilePtr data_ov002_0210dd60;
-extern SharedFilePtr data_ov002_0210dd68;
-extern SharedFilePtr data_ov002_0210dd58;
-extern SharedFilePtr data_ov002_0210dd50;
+/* Retail static init constructs these 8-byte handles and registers their
+ * destructors. Wrapper spellings are reconstructed; ctor/dtor addresses,
+ * file IDs, widths, and BSS order are ROM evidence. */
+struct HatenaModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    HatenaModelFilePtr(u32 fileID);
+    ~HatenaModelFilePtr();
+};
+
+struct HatenaAnimationFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    HatenaAnimationFilePtr(u32 fileID);
+    ~HatenaAnimationFilePtr();
+};
+
+struct HatenaCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    HatenaCollisionFilePtr(u32 fileID);
+    ~HatenaCollisionFilePtr();
+};
+
+extern "C" HatenaModelFilePtr data_ov002_0210dd60;
+extern "C" HatenaAnimationFilePtr data_ov002_0210dd68;
+extern "C" HatenaCollisionFilePtr data_ov002_0210dd58;
+extern "C" HatenaCollisionFilePtr data_ov002_0210dd50;
 extern CLPS_Block data_ov002_0210d8b4;
 extern CLPS_Block data_ov002_0210d774;
 extern Matrix4x3 data_020a0e68;
@@ -364,3 +386,8 @@ void daObjHatenaSwitch_c::OnGroundPounded(dActor_c &other)
 // @symbol _ZN19daObjHatenaSwitch_cD0Ev
 /* ROM ordinals 0/1 -- D1 at 0x020b4ed8 and D0 at 0x020b4f44 are emitted
  * naturally by the inline destructor and InitResources vtable instantiation. */
+
+HatenaModelFilePtr data_ov002_0210dd60(1133);
+HatenaAnimationFilePtr data_ov002_0210dd68(1132);
+HatenaCollisionFilePtr data_ov002_0210dd58(1135);
+HatenaCollisionFilePtr data_ov002_0210dd50(1134);

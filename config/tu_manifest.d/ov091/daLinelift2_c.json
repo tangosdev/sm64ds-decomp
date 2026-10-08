@@ -40,28 +40,28 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov091_02131db8",
+      "symbol": "_ZN13daLinelift2_c19func_ov091_02131db8Ev",
       "address": "0x02131db8",
       "size": "0x00000138",
       "legacy_source": "src/func_ov091_02131db8.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov091_02131ef0",
+      "symbol": "_ZN13daLinelift2_c19func_ov091_02131ef0Ev",
       "address": "0x02131ef0",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov091_02131ef0.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov091_02131f9c",
+      "symbol": "_ZN13daLinelift2_c19func_ov091_02131f9cEv",
       "address": "0x02131f9c",
       "size": "0x00000064",
       "legacy_source": "src/func_ov091_02131f9c.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov091_02132000",
+      "symbol": "_ZN13daLinelift2_c19func_ov091_02132000Ev",
       "address": "0x02132000",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov091_02132000.c",
@@ -96,7 +96,7 @@
       "ordinal": 10
     },
     {
-      "symbol": "func_ov091_02132360",
+      "symbol": "_ZN13daLinelift2_c19func_ov091_02132360EP8dActor_c",
       "address": "0x02132360",
       "size": "0x00000020",
       "legacy_source": "src/func_ov091_02132360.cpp",
@@ -133,7 +133,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov091-daLinelift2_c/daLinelift2_c.o (gitignored)",
+    "object": "build/tu/ov091-daLinelift2_c/d_a_linelift2.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 15,
     "functions_declared": 15,

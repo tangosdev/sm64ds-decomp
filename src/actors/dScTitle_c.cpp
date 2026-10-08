@@ -47,6 +47,7 @@
 #include "dScTitle_c.h"
 #include "decl_common.h"
 #include "Sound.h"
+#include "PlayerInput.h"
 
 /* The active scene at data_0209f5bc, which gates Behavior. Only its call
  * shape is proven -- a virtual call through slot 5 taking itself as the
@@ -109,9 +110,6 @@ extern "C" {
 extern u32 data_0209b2f4;
 extern char data_0209e674[];
 extern VObj *data_0209f5bc;
-extern u8 data_020a0e40;
-extern u8 data_020a0de8[];
-extern u8 data_020a0de9[];
 extern u16 data_020a0e58[];
 extern u8 data_0209f2d8;
 extern u16 data_0209f5e8[];
@@ -210,9 +208,9 @@ s32 dScTitle_c::Behavior()
 {
     if (data_0209f5bc->v5()) {
         int r3 = 0;
-        u8 idx = data_020a0e40;
-        if (data_020a0de8[idx * 4] != 0)
-            r3 = data_020a0de9[idx * 4] != 0;
+        u8 idx = gActivePlayerSlot;
+        if (gTouchHeld[idx * 4] != 0)
+            r3 = gTouchEdge[idx * 4] != 0;
         if (((data_020a0e58[1] & 9) | r3) == 0)
             goto buttons;
         {
@@ -226,9 +224,9 @@ s32 dScTitle_c::Behavior()
                 goto fade5;
             f = 0;
             {
-                u8 j = data_020a0e40;
-                if (data_020a0de8[j * 4] != 0)
-                    f = data_020a0de9[j * 4] != 0;
+                u8 j = gActivePlayerSlot;
+                if (gTouchHeld[j * 4] != 0)
+                    f = gTouchEdge[j * 4] != 0;
             }
             if (f == 0)
                 goto chk;

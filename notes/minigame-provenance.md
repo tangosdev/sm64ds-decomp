@@ -445,7 +445,7 @@ the previous header held as four pads, and a run/dMeter_c block at 0xb9d8.
 | 0xab60 | `mVelX` / `mVelY` (0xab64) | `Vec2_Len` of the pair is the speed, `atan2` of it is the heading, and it is added into `mPos` each tick. Capped at 0x8000. |
 | 0xab68 | `mScrollX` | Subtracted from every world X before drawing; [func_ov006_021279b0](../src/actors/dScMgSnowball_c.cpp) zeroes it. |
 | 0xab6c | `mScrollY` | `mPosY - 0x190000`, clamped to `[0, mScrollLimit]`; drives all four `SetBg*Offset` calls and the four hardware scroll registers in [_ZN15dScMgSnowball_c8OnKickedEv](../src/actors/dScMgSnowball_c.cpp). |
-| 0xab70 | `mTouchX` / `mTouchY` (0xab74) | Behavior stores the raw touch sample ([data_020a0dea](../config/arm9/symbols.txt) / [data_020a0deb](../config/arm9/symbols.txt)) here and steers off the difference from the previous one. |
+| 0xab70 | `mTouchX` / `mTouchY` (0xab74) | Behavior stores the raw touch sample ([gTouchX](../config/arm9/symbols.txt) / [gTouchY](../config/arm9/symbols.txt)) here and steers off the difference from the previous one. |
 | 0xab78 | `mRollAngle` | u16. `+= speed * 0x2710 / mBallSize` -- an angle that advances faster the smaller the ball. |
 | 0xab7c | `mHeadingAngle` | u16. `atan2(mVelX, mVelY)`, approached linearly while rolling and set outright while crashing. |
 | 0xab7e | `mPrevRollAngle` / `mPrevHeadingAngle` (0xab82) | Behavior's prologue copies 0xab78..0xab7c into 0xab7e..0xab82 verbatim. |
@@ -504,7 +504,7 @@ into it by raw offset).
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x5fb8 | `mCursorX` / `mCursorY` (0x5fbc) | Behavior loads the touch sample [data_020a0dea](../config/arm9/symbols.txt) / [data_020a0deb](../config/arm9/symbols.txt) and shifts it left 12; the nearest-petal test is `Vec2_Len` of the difference against this pair. |
+| 0x5fb8 | `mCursorX` / `mCursorY` (0x5fbc) | Behavior loads the touch sample [gTouchX](../config/arm9/symbols.txt) / [gTouchY](../config/arm9/symbols.txt) and shifts it left 12; the nearest-petal test is `Vec2_Len` of the difference against this pair. |
 | 0x5fc0 | `mPrevCursorX` / `mPrevCursorY` (0x5fc4) | Copied from the pair above at the top of state 0; the drag applied to the held petal is the difference between the two. |
 | 0x5fc8 | `mHeldPetal` | The `mArray` index the search loops store on a hit and read back to move that element; -1 means nothing is held, and the drop path restores it to -1. |
 | 0x5fcc | `mPetalToggle` | u8, flipped on every completed pull. One value plays sound 0x103 with banner 0x10, the other 0x104 with banner 0x13 -- the "loves me / loves me not" alternation. |
@@ -544,7 +544,7 @@ address-only, so the exact original source names remain unknown.
 | 0x5da0 | `mScrollOffsetY` | Added to `mScrollY` at every one of its uses, and zeroed once the scroll settles. |
 | 0x5da4 | `mArrow1X` / `mArrow2X` (0x5da8) | `dScMgTrampoline_c::StatePlay` drives the pair in opposition (`ApproachLinear` one toward 0 while the other goes toward 0x20); Render draws sprite [data_ov006_02134f08](../config/arm9/overlays/ov006/symbols.txt) at `n + 0xf0` for each. |
 | 0x5dac | `mDragSoundHandle` | `UpdateTouchInput` passes the previous word to `func_02012468`, stores its returned handle, and zeroes it when a new drag begins; the intro interpolation uses the same positional-sound update path. |
-| 0x5db0 | `mTouchX` / `mTouchY` (0x5db2) | `dScMgTrampoline_c::UpdateTouchInput` refreshes them from the touch sample [data_020a0dea](../config/arm9/symbols.txt) / [data_020a0deb](../config/arm9/symbols.txt) every tick a drag is live, and draws the drag segment from them. |
+| 0x5db0 | `mTouchX` / `mTouchY` (0x5db2) | `dScMgTrampoline_c::UpdateTouchInput` refreshes them from the touch sample [gTouchX](../config/arm9/symbols.txt) / [gTouchY](../config/arm9/symbols.txt) every tick a drag is live, and draws the drag segment from them. |
 | 0x5db4 | `mTouchStartX` / `mTouchStartY` (0x5db6) | Copied from the pair above on the press edge and then left alone; `OnAttacked2` measures the swipe as start-to-current and only accepts it if the two ends sit on opposite sides of the screen. |
 | 0x5db8 | `mInputEnabled` | s16. `UpdateTouchInput` clears `mTouching` and returns immediately while it is 0. |
 | 0x5dc4 | `mTouching` | u8, set on the press edge and cleared when input is disabled; the drag body runs only while it is 1. |

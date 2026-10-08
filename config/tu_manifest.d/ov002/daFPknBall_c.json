@@ -34,21 +34,21 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov002_020f88ec",
+      "symbol": "_ZN12daFPknBall_c19func_ov002_020f88ecEv",
       "address": "0x020f88ec",
       "size": "0x00000090",
       "legacy_source": "src/func_ov002_020f88ec.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov002_020f897c",
+      "symbol": "_ZN12daFPknBall_c19func_ov002_020f897cEv",
       "address": "0x020f897c",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov002_020f897c.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov002_020f8b24",
+      "symbol": "_ZN12daFPknBall_c19func_ov002_020f8b24Ev",
       "address": "0x020f8b24",
       "size": "0x00000168",
       "legacy_source": "src/func_ov002_020f8b24.c",

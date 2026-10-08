@@ -69,11 +69,27 @@ enum {
     CLOCK_SETTING_STOPPED = 3
 };
 
+/* Resource handles constructed by this TU's static initializer. The
+ * constructor and destructor bodies stay out of line; mwcc registers them. */
+struct Mecha10ModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    Mecha10ModelFilePtr(u32 fileID);
+    ~Mecha10ModelFilePtr();
+};
+
+struct Mecha10ClsnFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    Mecha10ClsnFilePtr(u32 fileID);
+    ~Mecha10ClsnFilePtr();
+};
+
 extern "C" {
-extern SharedFilePtr data_ov035_02112c60;   /* model of the fall-through profile (CT_MECHA12S) */
-extern SharedFilePtr data_ov035_02112c68;   /* collision KCL of the id 0x77 cog */
-extern SharedFilePtr data_ov035_02112c70;   /* model of id 0x79 (CT_MECHA12L) */
-extern SharedFilePtr data_ov035_02112c78;   /* model of id 0x77 (CT_MECHA10) */
+extern Mecha10ModelFilePtr data_ov035_02112c60;   /* model of the fall-through profile (CT_MECHA12S) */
+extern Mecha10ClsnFilePtr data_ov035_02112c68;    /* collision KCL of the id 0x77 cog */
+extern Mecha10ModelFilePtr data_ov035_02112c70;   /* model of id 0x79 (CT_MECHA12L) */
+extern Mecha10ModelFilePtr data_ov035_02112c78;   /* model of id 0x77 (CT_MECHA10) */
 extern CLPS_Block    data_ov035_021121d8;
 extern s16 data_ov035_02111ef0[];           /* |angle step| by rotation state */
 extern s16 data_ov035_02111ef4[][4];        /* dwell by state, by clock setting */
@@ -223,3 +239,9 @@ int daObjCtMecha10_c::CleanupResources()
     }
     return 1;
 }
+
+/* Construction order. The three model handles share one destructor literal. */
+Mecha10ModelFilePtr data_ov035_02112c78(1486);
+Mecha10ClsnFilePtr data_ov035_02112c68(1487);
+Mecha10ModelFilePtr data_ov035_02112c60(1491);
+Mecha10ModelFilePtr data_ov035_02112c70(1490);

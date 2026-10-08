@@ -127,9 +127,6 @@ void func_02012694(unsigned int id, const Vector3 *pos);
 void func_020393a4(int *collider, int range);
 void func_02039394(int *collider, int range);
 void func_020393d4(int *collider, void *callback);
-void func_ov091_02130fac(daObjRotateUpdownLift_c *lift);
-int func_ov091_02131160(daObjRotateUpdownLift_c *lift);
-void func_ov091_02131340(daObjRotateUpdownLift_c *lift);
 
 void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void *self, int a, int b, int c, int d);
@@ -160,25 +157,25 @@ extern "C" daObjRotateUpdownLift_c *_ZN23daObjRotateUpdownLift_cD0Ev(daObjRotate
 // 0x02130fac (0xc4)
 // @symbol func_ov091_02130fac
 /* Put a killed lift back on its spawn node. The watcher calls this. */
-extern "C" void func_ov091_02130fac(daObjRotateUpdownLift_c *lift)
+void daObjRotateUpdownLift_c::func_ov091_02130fac()
 {
     PodVec3 tmp[2];
 
-    lift->mIsDead = 0;
-    lift->mAngleX = lift->mSpawnAngleX;
-    lift->mAngleY = lift->mSpawnAngleY;
-    lift->mAngleZ = lift->mSpawnAngleZ;
-    lift->mPosX = lift->mBasePosX;
-    lift->mPosY = lift->mBasePosY;
-    lift->mPosZ = lift->mBasePosZ;
-    lift->mWaypointIndex = (u8)(lift->param1 & 0xf);
-    Matrix4x3_FromRotationY(&data_020a0e68, lift->mAngleY);
-    MulVec3Mat4x3(&data_ov091_02134cdc[lift->mVariant].node[lift->mWaypointIndex],
+    mIsDead = 0;
+    mAngleX = mSpawnAngleX;
+    mAngleY = mSpawnAngleY;
+    mAngleZ = mSpawnAngleZ;
+    mPosX = mBasePosX;
+    mPosY = mBasePosY;
+    mPosZ = mBasePosZ;
+    mWaypointIndex = (u8)(param1 & 0xf);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    MulVec3Mat4x3(&data_ov091_02134cdc[mVariant].node[mWaypointIndex],
                   &data_020a0e68, &tmp[0]);
-    Vec3_Add(&tmp[1], &lift->mBasePosX, &tmp[0]);
-    lift->mPosX = tmp[1].x;
-    lift->mPosY = tmp[1].y;
-    lift->mPosZ = tmp[1].z;
+    Vec3_Add(&tmp[1], &mBasePosX, &tmp[0]);
+    mPosX = tmp[1].x;
+    mPosY = tmp[1].y;
+    mPosZ = tmp[1].z;
 }
 
 // 0x02131070 (0x8c)
@@ -215,44 +212,44 @@ void daObjRotateUpdownLift_c::OnHitByMegaChar(Player &player)
 // @symbol func_ov091_02131160
 /* Aim the cuboid shadow and the clip volume. Called every frame except
    for HS_UPDOWN_LIFT. */
-extern "C" int func_ov091_02131160(daObjRotateUpdownLift_c *lift)
+int daObjRotateUpdownLift_c::func_ov091_02131160()
 {
     /* The shadow matrix is the 0x30 bytes at 0x348 (pad_348). Holding that
        as a Matrix4x3 * steals r4 from `this` and the function grows. The
        three translation words are stored from `this`, not from that pointer. */
-    char *c = (char *)lift;
+    char *c = (char *)this;
     VariantWords shadowBaseY = data_ov091_02134bac;
     VariantWords shadowSizeX = data_ov091_02134bd0;
     VariantWords shadowSizeZ = data_ov091_02134bb8;
     VariantWords clipCap = data_ov091_02134ba0;
 
-    Matrix4x3_FromRotationY((Matrix4x3 *)(c + 0x348), lift->mAngleY);
-    *(int *)(c + 0x36c) = lift->mPosX >> 3;
+    Matrix4x3_FromRotationY((Matrix4x3 *)(c + 0x348), mAngleY);
+    *(int *)(c + 0x36c) = mPosX >> 3;
 
-    int sinIdx = (u16)lift->mAngleX >> 4;
+    int sinIdx = (u16)mAngleX >> 4;
     int sine = data_02082214[sinIdx << 1];
     int sineAbs = sine < 0 ? -sine : sine;
     int scaled = (int)(((long long)sineAbs * 0xa0000 + 0x800) >> 12);
-    int variantA = lift->mVariant;
+    int variantA = mVariant;
     int base = shadowBaseY.v[variantA];
     int sum = base + scaled;
-    int py = lift->mPosY;
+    int py = mPosY;
     *(int *)(c + 0x370) = (py - sum) >> 3;
-    *(int *)(c + 0x374) = lift->mPosZ >> 3;
+    *(int *)(c + 0x374) = mPosZ >> 3;
 
-    int variantB = lift->mVariant;
-    int h = lift->mPosY - lift->mGroundY;
+    int variantB = mVariant;
+    int h = mPosY - mGroundY;
     if (h <= 0x1000)
         h = 0x1000;
     int cap = clipCap.v[variantB];
     if (h + 0x100000 >= cap)
         cap = h + 0x100000;
-    lift->mClipOffsetY = -((int)(h + ((unsigned)h >> 31)) >> 1);
-    lift->mClipRadius = (int)(cap + ((unsigned)cap >> 31)) >> 4;
+    mClipOffsetY = -((int)(h + ((unsigned)h >> 31)) >> 1);
+    mClipRadius = (int)(cap + ((unsigned)cap >> 31)) >> 4;
 
     int shr = (int)(((long long)h * 32 + 0x800) >> 12);
-    int cosIdx = (u16)lift->mAngleX >> 4;
-    int variantC = lift->mVariant;
+    int cosIdx = (u16)mAngleX >> 4;
+    int variantC = mVariant;
     int sx = shadowSizeX.v[variantC] - shr;
     int cosine = data_02082214[(cosIdx << 1) + 1];
     int fac = 0xa0000 - shr;
@@ -266,13 +263,13 @@ extern "C" int func_ov091_02131160(daObjRotateUpdownLift_c *lift)
 // 0x02131340 (0x48)
 // @symbol func_ov091_02131340
 /* Write the model matrix: full rotation, translation at 1/8 of position. */
-extern "C" void func_ov091_02131340(daObjRotateUpdownLift_c *lift)
+void daObjRotateUpdownLift_c::func_ov091_02131340()
 {
-    Matrix4x3_FromRotationXYZExt(&lift->mModel.mat4x3,
-                                 lift->mAngleX, lift->mAngleY, lift->mAngleZ);
-    lift->mModel.mat4x3.t.x = lift->mPosX >> 3;
-    lift->mModel.mat4x3.t.y = lift->mPosY >> 3;
-    lift->mModel.mat4x3.t.z = lift->mPosZ >> 3;
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3,
+                                 mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3.t.x = mPosX >> 3;
+    mModel.mat4x3.t.y = mPosY >> 3;
+    mModel.mat4x3.t.z = mPosZ >> 3;
 }
 
 // 0x02131388 (0x80)
@@ -361,10 +358,10 @@ int daObjRotateUpdownLift_c::Behavior()
                         if (DistToCPlayer() > 0x7d0000) {
                             platform0 = (daObjRotateUpdownLift_c *)mPlatform0;
                             if (platform0->mIsDead != 0)
-                                func_ov091_02130fac(platform0);
+                                platform0->func_ov091_02130fac();
                             platform1 = (daObjRotateUpdownLift_c *)mPlatform1;
                             if (platform1->mIsDead != 0)
-                                func_ov091_02130fac(platform1);
+                                platform1->func_ov091_02130fac();
                         }
                     }
                 }
@@ -444,13 +441,13 @@ int daObjRotateUpdownLift_c::Behavior()
             mPitchStep = 0;
     }
 
-    func_ov091_02131340(this);
+    func_ov091_02131340();
 
     {
         int isHs = actorID;
         isHs = (isHs == 0x1e);
         if (isHs == 0) {
-            func_ov091_02131160(this);
+            func_ov091_02131160();
             func_020393a4((int *)&mMeshCollider, 0x150000);
             func_02039394((int *)&mMeshCollider, 0x1000);
             if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0x150000, 0x1000) != 0)
@@ -522,7 +519,7 @@ int daObjRotateUpdownLift_c::InitResources()
     bmd = Model::LoadFile(*data_ov091_02134c30[variant].file);
     mModel.SetFile((BMD_File *)bmd, 1, -1);
 
-    func_ov091_02131340(this);
+    func_ov091_02131340();
     UpdateClsnPosAndRot();
 
     variant = mVariant;
