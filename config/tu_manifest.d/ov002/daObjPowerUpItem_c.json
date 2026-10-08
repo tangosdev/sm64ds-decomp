@@ -34,77 +34,77 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov002_020b91fc",
+      "symbol": "_ZN18daObjPowerUpItem_c12StateRestingEv",
       "address": "0x020b91fc",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov002_020b91fc.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov002_020b92b8",
+      "symbol": "_ZN18daObjPowerUpItem_c12BeginRestingEv",
       "address": "0x020b92b8",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov002_020b92b8.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov002_020b92c4",
+      "symbol": "_ZN18daObjPowerUpItem_c12StateOpeningEv",
       "address": "0x020b92c4",
       "size": "0x0000018c",
       "legacy_source": "src/func_ov002_020b92c4.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov002_020b9450",
+      "symbol": "_ZN18daObjPowerUpItem_c12BeginOpeningEv",
       "address": "0x020b9450",
       "size": "0x00000074",
       "legacy_source": "src/func_ov002_020b9450.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov002_020b94c4",
+      "symbol": "_ZN18daObjPowerUpItem_c13StateLaunchedEv",
       "address": "0x020b94c4",
       "size": "0x000001fc",
       "legacy_source": "src/func_ov002_020b94c4.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov002_020b96c0",
+      "symbol": "_ZN18daObjPowerUpItem_c13BeginLaunchedEv",
       "address": "0x020b96c0",
       "size": "0x00000044",
       "legacy_source": "src/func_ov002_020b96c0.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov002_020b9704",
+      "symbol": "_ZN18daObjPowerUpItem_c8SetStateEi",
       "address": "0x020b9704",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020b9704.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov002_020b9750",
+      "symbol": "_ZN18daObjPowerUpItem_c11UpdateStateEv",
       "address": "0x020b9750",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020b9750.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov002_020b979c",
+      "symbol": "_ZN18daObjPowerUpItem_c11CheckPickupEv",
       "address": "0x020b979c",
       "size": "0x000001a0",
       "legacy_source": "src/func_ov002_020b979c.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov002_020b993c",
+      "symbol": "_ZN18daObjPowerUpItem_c10DropShadowEv",
       "address": "0x020b993c",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov002_020b993c.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov002_020b9a1c",
+      "symbol": "_ZN18daObjPowerUpItem_c14UpdateMatricesEv",
       "address": "0x020b9a1c",
       "size": "0x00000060",
       "legacy_source": "src/func_ov002_020b9a1c.c",
