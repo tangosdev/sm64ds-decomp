@@ -58,6 +58,40 @@ struct LoadedSharedFile {
 };
 #define FileOf(handle) ((LoadedSharedFile *)&(handle))->filePtr
 
+/* Resource handles this TU's static initializer constructs. The wrapper
+ * spellings are reconstructed; constructor and destructor addresses, file
+ * IDs, widths, and BSS order are the ROM's. */
+struct KuriKingModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    KuriKingModelFilePtr(u32 fileID);
+    ~KuriKingModelFilePtr();
+};
+
+struct KuriKingTexSeqFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    KuriKingTexSeqFilePtr(u32 fileID);
+    ~KuriKingTexSeqFilePtr();
+};
+
+struct KuriKingAnimationFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    KuriKingAnimationFilePtr(u32 fileID);
+    ~KuriKingAnimationFilePtr();
+};
+
+typedef void (daKuriKing_c::*KuriKingStateFn)();
+
+/* Three state slots target free (void) stubs, not members, so those
+ * descriptors are function-pointer/PMF pairs. The first word carries the
+ * code relocation; the second is zero, like every other descriptor. */
+union KuriKingFreeState {
+    void (*fn)();
+    KuriKingStateFn pmf;
+};
+
 extern "C" void Matrix4x3_FromRotationY(void* m, short ang);
 extern "C" void MulVec3Mat4x3(void* a, void* m, void* b);
 extern "C" char* data_0209f318;
@@ -133,9 +167,9 @@ extern SharedFilePtr data_ov002_0210da30;
 extern SharedFilePtr data_ov084_02130cf8;
 extern SharedFilePtr data_ov084_0213089c;
 extern SharedFilePtr data_ov084_02130cc8;
-extern SharedFilePtr data_ov074_02123000;
-extern SharedFilePtr data_ov074_02123040;
-extern void *data_ov074_02123030;
+extern KuriKingModelFilePtr data_ov074_02123000;
+extern KuriKingTexSeqFilePtr data_ov074_02123040;
+extern KuriKingAnimationFilePtr data_ov074_02123030;
 extern SharedFilePtr *data_ov074_0212292c[];
 extern SharedFilePtr *data_ov074_02122948[];
 
@@ -153,7 +187,50 @@ extern "C" void func_ov074_02121a4c(char* c, int idx);
 struct KuriKingPmf;
 typedef void (KuriKingPmf::*KuriKingPMF)();
 struct KuriKingPmfEntry { KuriKingPMF pmf[2]; };
-extern KuriKingPmfEntry data_ov074_021230f8[];
+
+extern KuriKingFreeState data_ov074_02122d9c;
+extern KuriKingFreeState data_ov074_02122dbc;
+extern KuriKingFreeState data_ov074_02122e0c;
+
+/* The state table this TU's static initializer fills. Nine entries of two
+ * PMFs, copied in slot order. The constructor is defined inline so it
+ * expands directly into the initializer, like the descriptors it
+ * materializes; an out-of-line copy leaves a call the ROM does not have.
+ * Fifteen slots target daKuriKing_c members (named inline, the compiler
+ * materializes those as temporaries); three target free stubs and stay
+ * named below. */
+struct KuriKingStateTable {
+    KuriKingPmfEntry entries[9];
+    /* Section-alignment fill: retail BSS runs 0x18 bytes past the ninth
+     * entry to the section end at 0x021231a0. The initializer never touches
+     * them; they are zeros. The intact claim has to span them because dsd
+     * sizes the trailing symbol to the section end. */
+    u8 tailFill[0x18];
+
+    KuriKingStateTable()
+    {
+        entries[0].pmf[0] = reinterpret_cast<KuriKingPMF>(data_ov074_02122dbc.pmf);
+        entries[0].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_021201f0);
+        entries[1].pmf[0] = reinterpret_cast<KuriKingPMF>(data_ov074_02122e0c.pmf);
+        entries[1].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0212018c);
+        entries[2].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211ffac);
+        entries[2].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211fd74);
+        entries[3].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0212016c);
+        entries[3].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_02120080);
+        entries[4].pmf[0] = reinterpret_cast<KuriKingPMF>(data_ov074_02122d9c.pmf);
+        entries[4].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211ffcc);
+        entries[5].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211fd48);
+        entries[5].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211fc38);
+        entries[6].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211fb84);
+        entries[6].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211fa74);
+        entries[7].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211fa08);
+        entries[7].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211f5b8);
+        entries[8].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211fc34);
+        entries[8].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211fbd0);
+    }
+};
+
+extern KuriKingStateTable data_ov074_021230f8;
 struct KuriKingPmf { char pad[0x5cc]; s32 mState; };
 
 #pragma defer_codegen off
@@ -761,14 +838,14 @@ int daKuriKing_c::func_ov074_021203e4(int i) {
     mState = i;
     int j = mState;
     KuriKingPmf *c = (KuriKingPmf *)this;
-    (c->*data_ov074_021230f8[j].pmf[0])();
+    (c->*data_ov074_021230f8.entries[j].pmf[0])();
 }
 
 // @symbol _ZN12daKuriKing_c19func_ov074_0212042cEv
 void daKuriKing_c::func_ov074_0212042c() {
     KuriKingPmf *c = (KuriKingPmf *)this;
     int j = mState;
-    (c->*data_ov074_021230f8[j].pmf[1])();
+    (c->*data_ov074_021230f8.entries[j].pmf[1])();
 }
 
 // @symbol _ZN12daKuriKing_c19func_ov074_02120474Ev
@@ -1840,3 +1917,40 @@ int daKuriKing_c::func_ov074_02122634()
 
     return 1;
 }
+
+/* Static-resource ownership (was the handwritten __sinit_ov074_02122978 shard,
+ * 0x3f8). Definition order is the retail initializer's construction order:
+ * the model handle (file 0x395), the texture-sequence handle (file 0x390),
+ * then the twelve animation handles. Their registration nodes are compiler
+ * temporaries, like the PMF descriptors the table initializer below
+ * materializes. */
+KuriKingModelFilePtr data_ov074_02123000(0x395);
+KuriKingTexSeqFilePtr data_ov074_02123040(0x390);
+KuriKingAnimationFilePtr data_ov074_02123038(0x38f);
+KuriKingAnimationFilePtr data_ov074_02123008(0x391);
+KuriKingAnimationFilePtr data_ov074_02123018(0x392);
+KuriKingAnimationFilePtr data_ov074_02122ff0(0x394);
+KuriKingAnimationFilePtr data_ov074_02123048(0x393);
+KuriKingAnimationFilePtr data_ov074_02122ff8(0x396);
+KuriKingAnimationFilePtr data_ov074_02123028(0x398);
+KuriKingAnimationFilePtr data_ov074_02123030(0x399);
+KuriKingAnimationFilePtr data_ov074_02123020(0x39a);
+KuriKingAnimationFilePtr data_ov074_02122fe0(0x39b);
+KuriKingAnimationFilePtr data_ov074_02122fe8(0x39c);
+KuriKingAnimationFilePtr data_ov074_02123010(0x397);
+
+/* The three descriptors that target free stubs, not members, stay named
+ * here in ROM address order. The fifteen member descriptors are named
+ * inline in the table initializer above; the compiler materializes those
+ * as temporaries (a same-TU member PMF is not a static initializer). */
+KuriKingFreeState data_ov074_02122d9c = { (void (*)())func_ov074_0212007c };
+KuriKingFreeState data_ov074_02122dbc = { (void (*)())func_ov074_021203e0 };
+
+/* Size-indexed material parameters, in ROM order. Retail words are
+ * 0x00d00000/0x00500080 here and 0x003c0059/0x0001001e below. */
+extern "C" unsigned short data_ov074_02122dfc[4] = { 0x0000, 0x00d0, 0x0080, 0x0050 };
+extern "C" unsigned short data_ov074_02122e04[4] = { 0x0059, 0x003c, 0x001e, 0x0001 };
+
+KuriKingFreeState data_ov074_02122e0c = { (void (*)())func_ov074_021201ec };
+
+KuriKingStateTable data_ov074_021230f8;

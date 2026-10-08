@@ -7,6 +7,10 @@
 src/actors/daKuriKing_c.cpp:
     complete
     .text start:0x0211f000 end:0x02122764
+    .init start:0x02122978 end:0x02122d70
+    .ctor start:0x02122d70 end:0x02122d74
+    .data start:0x02122d84 end:0x02122e24
+    .bss start:0x02122fe0 end:0x021231a0
 
 src/d_a_kuri_king_kuriking_vanish.cpp:
     complete
@@ -15,7 +19,3 @@ src/d_a_kuri_king_kuriking_vanish.cpp:
 src/d_a_kuri_king_kuriking.cpp:
     complete
     .text start:0x02122838 end:0x0212290c
-
-src/unnamed/ov074/__sinit_ov074_02122978.c:
-    complete
-    .init start:0x02122978 end:0x02122d70

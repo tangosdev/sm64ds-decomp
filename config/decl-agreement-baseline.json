@@ -2610,10 +2610,6 @@
       "src/unnamed/ov072/__sinit_ov072_021221f8.c": [
         "return:void"
       ],
-      "src/unnamed/ov074/__sinit_ov074_02122978.c": [
-        "param:#2 int",
-        "return:int"
-      ],
       "src/unnamed/ov075/__sinit_ov075_0211b5e0.c": [
         "param:#2 int",
         "return:int"
@@ -2791,10 +2787,6 @@
         "return:void"
       ],
       "src/unnamed/ov073/__sinit_ov073_02122874.c": [
-        "arity:0",
-        "return:void"
-      ],
-      "src/unnamed/ov074/__sinit_ov074_02122978.c": [
         "arity:0",
         "return:void"
       ],
@@ -3328,10 +3320,6 @@
       ],
       "src/unnamed/ov072/__sinit_ov072_021221f8.c": [
         "kind:data"
-      ],
-      "src/unnamed/ov074/__sinit_ov074_02122978.c": [
-        "arity:0",
-        "return:void"
       ],
       "src/unnamed/ov075/__sinit_ov075_0211b5e0.c": [
         "arity:0",
@@ -5977,10 +5965,6 @@
         "return:int"
       ],
       "src/unnamed/ov073/__sinit_ov073_02122874.c": [
-        "param:#2 int",
-        "return:int"
-      ],
-      "src/unnamed/ov074/__sinit_ov074_02122978.c": [
         "param:#2 int",
         "return:int"
       ],
@@ -19497,16 +19481,6 @@
         "return:int"
       ]
     },
-    "data_ov074_02123000": {
-      "src/unnamed/ov074/__sinit_ov074_02122978.c": [
-        "return:void *"
-      ]
-    },
-    "data_ov074_02123040": {
-      "src/unnamed/ov074/__sinit_ov074_02122978.c": [
-        "return:void *"
-      ]
-    },
     "data_ov075_0211d384": {
       "src/unnamed/ov075/__sinit_ov075_0211b5e0.c": [
         "return:void *"
@@ -22240,10 +22214,6 @@
         "arity:0",
         "return:void"
       ],
-      "src/unnamed/ov074/__sinit_ov074_02122978.c": [
-        "arity:0",
-        "return:void"
-      ],
       "src/unnamed/ov075/__sinit_ov075_0211b5e0.c": [
         "arity:0",
         "return:void"
@@ -22891,10 +22861,6 @@
         "return:int"
       ],
       "src/unnamed/ov073/__sinit_ov073_02122d48.c": [
-        "return:int"
-      ],
-      "src/unnamed/ov074/__sinit_ov074_02122978.c": [
-        "param:#2 int",
         "return:int"
       ],
       "src/unnamed/ov075/__sinit_ov075_0211b5e0.c": [
@@ -31141,6 +31107,12 @@
       "src/ShowCrashScreen.c": [
         "param:#2 const char *",
         "param:#3 unsigned int"
+      ]
+    },
+    "data_ov074_02123030": {
+      "src/actors/daKuriKing_c.cpp": [
+        "return:KuriKingAnimationFilePtr",
+        "return:void *"
       ]
     }
   },
