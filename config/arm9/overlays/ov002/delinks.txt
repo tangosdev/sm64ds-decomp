@@ -103,17 +103,9 @@ src/actors/daObjKuruma_c.cpp:
     complete
     .text start:0x020b6814 end:0x020b69e4
 
-src/_ZN17daObjKurumajiku_cD0Ev.cpp:
-    complete
-    .text start:0x020b69e4 end:0x020b6a3c
-
-src/_ZN17daObjKurumajiku_cD1Ev.cpp:
-    complete
-    .text start:0x020b6a3c end:0x020b6a80
-
 src/actors/daObjKurumajiku_c.cpp:
     complete
-    .text start:0x020b6a80 end:0x020b6c54
+    .text start:0x020b69e4 end:0x020b6c54
 
 src/unnamed/ov002/func_ov002_020b6c54.c:
     complete

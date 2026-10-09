@@ -94,7 +94,7 @@ at `0x02112368` holds `0x021114dc` in its first word.
 
 ### The name trap, resolved from the ROM
 
-`src/_ZN17daObjKurumajiku_cD1Ev.cpp` is a **different class and a different
+The `daObjKurumajiku_c` D1 shard (since folded into `src/actors/daObjKurumajiku_c.cpp`) is a **different class and a different
 overlay**. [config/arm9/overlays/ov002/symbols.txt](../../../config/arm9/overlays/ov002/symbols.txt) puts
 `_ZN17daObjKurumajiku_cD1Ev` at `0x020b6a3c` and [ov002/delinks.txt](../../../config/arm9/overlays/ov002/delinks.txt) owns its
 run; nothing of it lies in `0x021113fc..0x02111518`. It was not folded in.

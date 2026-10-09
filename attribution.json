@@ -4595,6 +4595,8 @@
     "src/game/actors/d_a_nknk.cpp#_ZN8daNknk_c13OnYoshiTryEatEv": "andrewboudreau",
     "src/game/actors/d_a_nknk.cpp#daNknk_c_classInit_NOKONOKO_S": "tangosdev",
     "src/game/actors/d_a_nknk.cpp#daNknk_c_classInit_NOKONOKO": "tangosdev",
+    "src/actors/daObjKurumajiku_c.cpp#_ZN17daObjKurumajiku_cD0Ev": "tangosdev",
+    "src/actors/daObjKurumajiku_c.cpp#_ZN17daObjKurumajiku_cD1Ev": "tangosdev",
     "src/actors/daObjKurumajiku_c.cpp#func_ov002_020b6a80": "tangosdev",
     "src/actors/daObjKurumajiku_c.cpp#func_ov002_020b6ac8": "tangosdev",
     "src/actors/daObjKurumajiku_c.cpp#_ZN17daObjKurumajiku_c6RenderEv": "tangosdev",
