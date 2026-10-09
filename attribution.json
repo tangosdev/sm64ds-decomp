@@ -483,6 +483,8 @@
     "src/_ZN16daObjFallBlock_c15OnHitByMegaCharER6Player.cpp": "tangosdev",
     "src/_ZN16daObjFallBlock_c6RenderEv.c": "tangosdev",
     "src/_ZN16daObjFallBlock_c6RenderEv.cpp": "tangosdev",
+    "src/actors/daObjFallBlock_c.cpp#_ZN16daObjFallBlock_cD0Ev": "tangosdev",
+    "src/actors/daObjFallBlock_c.cpp#_ZN16daObjFallBlock_cD1Ev": "tangosdev",
     "src/actors/daObjFallBlock_c.cpp#daObjFallBlock_c_InitResources": "lunavyqo",
     "src/actors/daObjFallBlock_c.cpp#daObjFallBlock_c_RequestShake": "tangosdev",
     "src/actors/daObjFallBlock_c.cpp#daObjFallBlock_c_OnStoodOn": "ruspecial",

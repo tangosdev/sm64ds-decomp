@@ -33,9 +33,12 @@
  *   Case 1 keeps `(long long)sinv * 0x19000`.
  * Leftover: Kill materialises `(actorID == KM2_KUZURE)` into an int
  *   before the branch. Folding the test changes the compare.
- * Leftover: the inline destructor emits D1 then D0; the ROM has D0
- *   below D1, so the pair stays in its own shards.
+ * The file is in ROM order under `#pragma defer_codegen off`, with the two
+ * destructors first (D0 0x02139f70, D1 0x02139fc8): the inline destructor
+ * emits D1 then D0 under deferred codegen, and the ROM has D0 below D1.
  */
+
+#pragma defer_codegen off
 
 #include "common.h"
 #include "daObjFallBlock_c.h"
@@ -96,77 +99,200 @@ extern signed char data_0209f2f8; /* current level id */
 #define dBgActor_c_IsClsnInRange _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_
 #define Particle_System_NewSimple _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_
 
-// @symbol daObjFallBlock_c_OnStoodOn
-/* dBgW+0x1c callback veneer. Drops the collider and forwards the actor into
-   RequestShake. long_calls is the ROM's pooled absolute tail-call. */
-extern "C" {
-#pragma long_calls on
-int daObjFallBlock_c_OnStoodOn(void *collider, daObjFallBlock_c *block, void *unused)
+// @symbol _ZN16daObjFallBlock_cD0Ev
+// @symbol _ZN16daObjFallBlock_cD1Ev
+/* ROM ordinals 0 and 1 -- ov098 0x02139f70 (D0, 0x58) and 0x02139fc8 (D1,
+ * 0x44). No source here: both destructor variants come from the ONE
+ * inline body in include/daObjFallBlock_c.h, which the class's descendants need
+ * visible to inline its vptr store.
+ *
+ * The two calls below are never executed. Under `#pragma defer_codegen off`
+ * the compiler emits ordinary functions at parse time in source order, so the
+ * delete-expression pulls the deleting variant out of line first and the
+ * explicit destructor call pulls the complete-object variant out second --
+ * the cartridge's D0-then-D1 order, which no deferred form reaches without a
+ * D2 the image does not contain. A delete-expression for D0 because
+ * dBgActor_c declares Kill, a key function reachable from this class. */
+
+/* Not called. Forces the out-of-line copy of the deleting destructor. */
+void daObjFallBlock_c_EmitDeletingDestructor(daObjFallBlock_c *p)
 {
-    return daObjFallBlock_c_RequestShake(block, unused);
-}
-#pragma long_calls off
+    delete p;
 }
 
-// @symbol daObjFallBlock_c_RequestShake
-/* Sets mShakeRequested so Behavior case 0 starts the shake. Second parameter
-   is the veneer's extra forwarded register -- a 1-arg callee drops mov r1,r2. */
-extern "C" {
-int daObjFallBlock_c_RequestShake(daObjFallBlock_c *block, void *unused)
+/* Not called. Forces the out-of-line copy of the inline destructor. */
+void daObjFallBlock_c_EmitDestructor(daObjFallBlock_c *p)
 {
-    block->mShakeRequested = 1;
-}
+    p->~daObjFallBlock_c();
 }
 
-// @symbol daObjFallBlock_c_InitResources
-/* Shared InitResources body for the four leaves. Slot 0 is Model::LoadFile,
-   slot 1 is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile. Ground-raycasts
-   mKillY, copies mRestPos, and arms the OnStoodOn mesh callback. */
-extern "C" {
-int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *fp)
+// @symbol daObjFallBlock_c_LinkGroup
+/* Once (unk_341). Same-id neighbours closer than 0x96000 become
+   mNextInGroup when they sit within a quarter-turn of mAngleY, and
+   mPrevInGroup otherwise. Vec3_HorzAngle / Vec3_Dist / AngleDiff. */
+void daObjFallBlock_c_LinkGroup(daObjFallBlock_c *c)
 {
-    Vector3 v;
-    int on;
-    int y;
-
-    self->mModel.SetFile((BMD_File *)Model::LoadFile(*fp->model), 1, -1);
-    self->UpdateModelPosAndRotY();
-    self->UpdateClsnPosAndRot();
-    dBgW_KcMbg_SetFile(
-        &self->mMeshCollider,
-        dBgW_Kc::LoadFile(*fp->collision),
-        &self->mClsnMat,
-        0x199,
-        self->mAngleY,
-        fp->clps);
-    func_020393c4((int *)&self->mMeshCollider, (int)&daObjFallBlock_c_OnStoodOn);
-    v.x = self->mPosX;
-    y = self->mPosY;
-    v.y = y;
-    v.z = self->mPosZ;
-    v.y = y - 0x64000;
-    {
-        dBgCh_Gnd rc;
-        rc.SetObjAndPos(v, 0);
-        self->mKillY = v.y;
-        if (rc.DetectClsn())
-            self->mKillY = rc.clsnY;
-        self->mVertAccel = -0x4000;
-        self->mTerminalVelocity = -0xc8000;
-        on = 1;
-        self->mStateTimer = 4;
-        self->mReady = on;
-        self->mRestPos.x = self->mPosX;
-        self->mRestPos.y = self->mPosY;
-        self->mRestPos.z = self->mPosZ;
-        self->mLinkedStarID = 0;
-        if (self->actorID != ACTOR_FL_KUZURE)
-            on = 0;
-        if (on != 0)
-            self->mSuppressed = 1;
+    if (c->unk_341 != 0) return;
+    dActor_c *r = dActor_c::FindWithActorID(c->actorID, 0);
+    while (r) {
+        if (r != (dActor_c *)c) {
+            Vector3 *b = (Vector3 *)&r->mPosX;
+            Vector3 *a = (Vector3 *)&c->mPosX;
+            int ang = Vec3_HorzAngle(a, b);
+            if (Vec3_Dist(a, b) < 0x96000) {
+                if (AngleDiff(ang, c->mAngleY) < 0x4000)
+                    c->mNextInGroup = (daObjFallBlock_c *)r;
+                else
+                    c->mPrevInGroup = (daObjFallBlock_c *)r;
+            }
+        }
+        r = dActor_c::FindWithActorID(c->actorID, r);
     }
+    c->unk_341 = 1;
+}
+
+// @symbol daObjFallBlock_c_PollLinkedStar
+/* unk_440 is daStar_c's state index into data_ov002_021109d8.
+   Slot 4 is func_ov002_020ea420. Reaching it clears mSuppressed so
+   this FL_KUZURE block renders and runs. A missing star destroys it. */
+extern "C" {
+void daObjFallBlock_c_PollLinkedStar(daObjFallBlock_c *c)
+{
+    dActor_c *a = dActor_c::FindWithID((unsigned int)c->mLinkedStarID);
+    if (a == 0) {
+        c->MarkForDestruction();
+        return;
+    }
+    if (static_cast<daStar_c *>(a)->unk_440 == 4)
+        c->mSuppressed = 0;
+}
+}
+
+// @symbol daObjFallBlock_c_FindLinkedStar
+/* STAR whose unk_49d equals param1's low nibble. AddStarMarker passes
+   that byte to IsStarCollectedInCurLevel, so it is the star index. */
+extern "C" {
+void daObjFallBlock_c_FindLinkedStar(daObjFallBlock_c *self)
+{
+    dActor_c *star;
+    star = dActor_c::FindWithActorID(ACTOR_STAR, 0);
+    while (star) {
+        if (static_cast<daStar_c *>(star)->unk_49d == (self->param1 & 0xf)) {
+            self->mLinkedStarID = (s32)star->uniqueID;
+        }
+        star = dActor_c::FindWithActorID(ACTOR_STAR, star);
+    }
+}
+}
+
+// @symbol daObjFallBlock_c_ResetMotion
+/* Group re-arm. Clears the shake and the fall, and gives case 0 four
+   frames before it will accept another stand. */
+extern "C" {
+void daObjFallBlock_c_ResetMotion(daObjFallBlock_c *c)
+{
+    c->mState = 0;
+    c->mAngleX = 0;
+    c->mAngleZ = 0;
+    c->mShakeX = 0;
+    c->mTiltVelZ = 0;
+    c->unk_0a4 = 0;
+    c->mVertSpeed = 0;
+    c->unk_0ac = 0;
+    c->mStateTimer = 4;
+}
+}
+
+// @symbol _ZN16daObjFallBlock_c4KillEv
+/* daObjFallBlock_c::Kill() at ov098 0x0213a17c, 0xc0 bytes -- vtable slot 31.
+ *
+ * The block plays its poof where it stands, 0x32000 -- fifty 20.12 units --
+ * above itself, then does NOT destroy itself: it teleports back to mRestPos,
+ * clears mReady and sets mStateTimer to 0x1e. That is the respawn.
+ *
+ * dActor_c id 0x8b (FALL_BLOCK_BFS) gets particle 0x49 instead of 0x48.
+ *
+ * The second Vector3 is memberwise on purpose: Vector3 declares a destructor
+ * (types.h), so a whole-object assignment compiles to an ldm/stm pair, four
+ * instructions where the ROM has six. Particle::System::NewSimple stays
+ * mangled -- notes/mwccarm-codegen.md 6az. */
+void daObjFallBlock_c::Kill()
+{
+    Vector3 pos;
+    Vector3 dustPos;
+    pos.x = mPosX;
+    pos.y = mPosY;
+    pos.z = mPosZ;
+    pos.y += 0x32000;
+    u32 id = 0x48;
+    /* THE INTERMEDIATE IS LOAD-BEARING. `if (actorID == 0x8b)` folds the test
+       into the conditional move -- `cmp r1,#0x8b; moveq r0,#0x49`, two
+       instructions. The ROM materialises the comparison into a register first
+       and then tests THAT: cmp/moveq #1/movne #0/cmp #0/movne, five. Writing
+       the int is what asks for the second shape. */
+    int isFallBlockBfs = (actorID == ACTOR_KM2_KUZURE);
+    if (isFallBlockBfs) {
+        id = 0x49;
+    }
+    Particle_System_NewSimple(id, pos.x, pos.y, pos.z);
+    dustPos.x = pos.x;
+    dustPos.y = pos.y;
+    dustPos.z = pos.z;
+    PoofDustAt(dustPos);
+    Sound::PlayBank3(0x41, *(Vector3 *)&mCamSpacePosX);
+    mStateTimer = 0x1e;
+    mPosX = mRestPos.x;
+    mPosY = mRestPos.y;
+    mPosZ = mRestPos.z;
+    mReady = 0;
+}
+
+// @symbol daObjFallBlock_c_ApplyModelXyz
+/* Full XYZ model matrix. Translation is model space, position >> 3,
+   same row UpdateModelPosAndRotY writes for yaw alone. */
+extern "C" {
+void daObjFallBlock_c_ApplyModelXyz(daObjFallBlock_c *t)
+{
+    Matrix4x3_FromRotationXYZExt(&t->mModel.mat4x3, t->mAngleX, t->mAngleY, t->mAngleZ);
+    t->mModel.mat4x3.m[9] = t->mPosX >> 3;
+    t->mModel.mat4x3.m[10] = t->mPosY >> 3;
+    t->mModel.mat4x3.m[11] = t->mPosZ >> 3;
+}
+}
+
+// @symbol _ZN16daObjFallBlock_c15OnHitByMegaCharER6Player
+/* `player` is never read, matching the ROM body, which only ever takes the
+   one (`this`) argument. */
+void daObjFallBlock_c::OnHitByMegaChar(Player &player)
+{
+    if (mRespawnDelay != 0) return;
+    Kill();
+    mRespawnDelay = 0xa;
+    mState = 3;
+    mStateTimer = 0x3c;
+}
+
+// @symbol func_ov098_0213a2cc
+/* Shared CleanupResources. Linker name stays: the four leaves import it.
+   Slot 0 is the model SharedFilePtr, slot 1 the collision file. */
+extern "C" {
+int func_ov098_0213a2cc(daObjFallBlock_c *t, ResourceDescriptor *files)
+{
+    if (t->mMeshCollider.IsEnabled())
+        t->mMeshCollider.Disable();
+    files->model->Release();
+    files->collision->Release();
     return 1;
 }
+}
+
+// @symbol _ZN16daObjFallBlock_c6RenderEv
+s32 daObjFallBlock_c::Render()
+{
+    if (mSuppressed) return 1;
+    if (mState == 3) return 1;
+    mModel.Render(0);
+    return 1;
 }
 
 // @symbol _ZN16daObjFallBlock_c8BehaviorEv
@@ -341,183 +467,75 @@ s32 daObjFallBlock_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN16daObjFallBlock_c6RenderEv
-s32 daObjFallBlock_c::Render()
+// @symbol daObjFallBlock_c_InitResources
+/* Shared InitResources body for the four leaves. Slot 0 is Model::LoadFile,
+   slot 1 is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile. Ground-raycasts
+   mKillY, copies mRestPos, and arms the OnStoodOn mesh callback. */
+extern "C" {
+int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *fp)
 {
-    if (mSuppressed) return 1;
-    if (mState == 3) return 1;
-    mModel.Render(0);
+    Vector3 v;
+    int on;
+    int y;
+
+    self->mModel.SetFile((BMD_File *)Model::LoadFile(*fp->model), 1, -1);
+    self->UpdateModelPosAndRotY();
+    self->UpdateClsnPosAndRot();
+    dBgW_KcMbg_SetFile(
+        &self->mMeshCollider,
+        dBgW_Kc::LoadFile(*fp->collision),
+        &self->mClsnMat,
+        0x199,
+        self->mAngleY,
+        fp->clps);
+    func_020393c4((int *)&self->mMeshCollider, (int)&daObjFallBlock_c_OnStoodOn);
+    v.x = self->mPosX;
+    y = self->mPosY;
+    v.y = y;
+    v.z = self->mPosZ;
+    v.y = y - 0x64000;
+    {
+        dBgCh_Gnd rc;
+        rc.SetObjAndPos(v, 0);
+        self->mKillY = v.y;
+        if (rc.DetectClsn())
+            self->mKillY = rc.clsnY;
+        self->mVertAccel = -0x4000;
+        self->mTerminalVelocity = -0xc8000;
+        on = 1;
+        self->mStateTimer = 4;
+        self->mReady = on;
+        self->mRestPos.x = self->mPosX;
+        self->mRestPos.y = self->mPosY;
+        self->mRestPos.z = self->mPosZ;
+        self->mLinkedStarID = 0;
+        if (self->actorID != ACTOR_FL_KUZURE)
+            on = 0;
+        if (on != 0)
+            self->mSuppressed = 1;
+    }
     return 1;
 }
+}
 
-// @symbol func_ov098_0213a2cc
-/* Shared CleanupResources. Linker name stays: the four leaves import it.
-   Slot 0 is the model SharedFilePtr, slot 1 the collision file. */
+// @symbol daObjFallBlock_c_RequestShake
+/* Sets mShakeRequested so Behavior case 0 starts the shake. Second parameter
+   is the veneer's extra forwarded register -- a 1-arg callee drops mov r1,r2. */
 extern "C" {
-int func_ov098_0213a2cc(daObjFallBlock_c *t, ResourceDescriptor *files)
+int daObjFallBlock_c_RequestShake(daObjFallBlock_c *block, void *unused)
 {
-    if (t->mMeshCollider.IsEnabled())
-        t->mMeshCollider.Disable();
-    files->model->Release();
-    files->collision->Release();
-    return 1;
+    block->mShakeRequested = 1;
 }
 }
 
-// @symbol _ZN16daObjFallBlock_c15OnHitByMegaCharER6Player
-/* `player` is never read, matching the ROM body, which only ever takes the
-   one (`this`) argument. */
-void daObjFallBlock_c::OnHitByMegaChar(Player &player)
-{
-    if (mRespawnDelay != 0) return;
-    Kill();
-    mRespawnDelay = 0xa;
-    mState = 3;
-    mStateTimer = 0x3c;
-}
-
-// @symbol daObjFallBlock_c_ApplyModelXyz
-/* Full XYZ model matrix. Translation is model space, position >> 3,
-   same row UpdateModelPosAndRotY writes for yaw alone. */
+// @symbol daObjFallBlock_c_OnStoodOn
+/* dBgW+0x1c callback veneer. Drops the collider and forwards the actor into
+   RequestShake. long_calls is the ROM's pooled absolute tail-call. */
 extern "C" {
-void daObjFallBlock_c_ApplyModelXyz(daObjFallBlock_c *t)
+#pragma long_calls on
+int daObjFallBlock_c_OnStoodOn(void *collider, daObjFallBlock_c *block, void *unused)
 {
-    Matrix4x3_FromRotationXYZExt(&t->mModel.mat4x3, t->mAngleX, t->mAngleY, t->mAngleZ);
-    t->mModel.mat4x3.m[9] = t->mPosX >> 3;
-    t->mModel.mat4x3.m[10] = t->mPosY >> 3;
-    t->mModel.mat4x3.m[11] = t->mPosZ >> 3;
+    return daObjFallBlock_c_RequestShake(block, unused);
 }
+#pragma long_calls off
 }
-
-// @symbol _ZN16daObjFallBlock_c4KillEv
-/* daObjFallBlock_c::Kill() at ov098 0x0213a17c, 0xc0 bytes -- vtable slot 31.
- *
- * The block plays its poof where it stands, 0x32000 -- fifty 20.12 units --
- * above itself, then does NOT destroy itself: it teleports back to mRestPos,
- * clears mReady and sets mStateTimer to 0x1e. That is the respawn.
- *
- * dActor_c id 0x8b (FALL_BLOCK_BFS) gets particle 0x49 instead of 0x48.
- *
- * The second Vector3 is memberwise on purpose: Vector3 declares a destructor
- * (types.h), so a whole-object assignment compiles to an ldm/stm pair, four
- * instructions where the ROM has six. Particle::System::NewSimple stays
- * mangled -- notes/mwccarm-codegen.md 6az. */
-void daObjFallBlock_c::Kill()
-{
-    Vector3 pos;
-    Vector3 dustPos;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
-    pos.y += 0x32000;
-    u32 id = 0x48;
-    /* THE INTERMEDIATE IS LOAD-BEARING. `if (actorID == 0x8b)` folds the test
-       into the conditional move -- `cmp r1,#0x8b; moveq r0,#0x49`, two
-       instructions. The ROM materialises the comparison into a register first
-       and then tests THAT: cmp/moveq #1/movne #0/cmp #0/movne, five. Writing
-       the int is what asks for the second shape. */
-    int isFallBlockBfs = (actorID == ACTOR_KM2_KUZURE);
-    if (isFallBlockBfs) {
-        id = 0x49;
-    }
-    Particle_System_NewSimple(id, pos.x, pos.y, pos.z);
-    dustPos.x = pos.x;
-    dustPos.y = pos.y;
-    dustPos.z = pos.z;
-    PoofDustAt(dustPos);
-    Sound::PlayBank3(0x41, *(Vector3 *)&mCamSpacePosX);
-    mStateTimer = 0x1e;
-    mPosX = mRestPos.x;
-    mPosY = mRestPos.y;
-    mPosZ = mRestPos.z;
-    mReady = 0;
-}
-
-// @symbol daObjFallBlock_c_ResetMotion
-/* Group re-arm. Clears the shake and the fall, and gives case 0 four
-   frames before it will accept another stand. */
-extern "C" {
-void daObjFallBlock_c_ResetMotion(daObjFallBlock_c *c)
-{
-    c->mState = 0;
-    c->mAngleX = 0;
-    c->mAngleZ = 0;
-    c->mShakeX = 0;
-    c->mTiltVelZ = 0;
-    c->unk_0a4 = 0;
-    c->mVertSpeed = 0;
-    c->unk_0ac = 0;
-    c->mStateTimer = 4;
-}
-}
-
-// @symbol daObjFallBlock_c_FindLinkedStar
-/* STAR whose unk_49d equals param1's low nibble. AddStarMarker passes
-   that byte to IsStarCollectedInCurLevel, so it is the star index. */
-extern "C" {
-void daObjFallBlock_c_FindLinkedStar(daObjFallBlock_c *self)
-{
-    dActor_c *star;
-    star = dActor_c::FindWithActorID(ACTOR_STAR, 0);
-    while (star) {
-        if (static_cast<daStar_c *>(star)->unk_49d == (self->param1 & 0xf)) {
-            self->mLinkedStarID = (s32)star->uniqueID;
-        }
-        star = dActor_c::FindWithActorID(ACTOR_STAR, star);
-    }
-}
-}
-
-// @symbol daObjFallBlock_c_PollLinkedStar
-/* unk_440 is daStar_c's state index into data_ov002_021109d8.
-   Slot 4 is func_ov002_020ea420. Reaching it clears mSuppressed so
-   this FL_KUZURE block renders and runs. A missing star destroys it. */
-extern "C" {
-void daObjFallBlock_c_PollLinkedStar(daObjFallBlock_c *c)
-{
-    dActor_c *a = dActor_c::FindWithID((unsigned int)c->mLinkedStarID);
-    if (a == 0) {
-        c->MarkForDestruction();
-        return;
-    }
-    if (static_cast<daStar_c *>(a)->unk_440 == 4)
-        c->mSuppressed = 0;
-}
-}
-
-// @symbol daObjFallBlock_c_LinkGroup
-/* Once (unk_341). Same-id neighbours closer than 0x96000 become
-   mNextInGroup when they sit within a quarter-turn of mAngleY, and
-   mPrevInGroup otherwise. Vec3_HorzAngle / Vec3_Dist / AngleDiff. */
-void daObjFallBlock_c_LinkGroup(daObjFallBlock_c *c)
-{
-    if (c->unk_341 != 0) return;
-    dActor_c *r = dActor_c::FindWithActorID(c->actorID, 0);
-    while (r) {
-        if (r != (dActor_c *)c) {
-            Vector3 *b = (Vector3 *)&r->mPosX;
-            Vector3 *a = (Vector3 *)&c->mPosX;
-            int ang = Vec3_HorzAngle(a, b);
-            if (Vec3_Dist(a, b) < 0x96000) {
-                if (AngleDiff(ang, c->mAngleY) < 0x4000)
-                    c->mNextInGroup = (daObjFallBlock_c *)r;
-                else
-                    c->mPrevInGroup = (daObjFallBlock_c *)r;
-            }
-        }
-        r = dActor_c::FindWithActorID(c->actorID, r);
-    }
-    c->unk_341 = 1;
-}
-
-// @symbol _ZN16daObjFallBlock_cD1Ev
-// @symbol _ZN16daObjFallBlock_cD0Ev
-/* The real C++ destructor pair -- NO SOURCE TEXT OF THEIR OWN.
- *
- * daObjFallBlock_c.h defines `~daObjFallBlock_c() {}` in the class body, and
- * the ROM carries the out-of-line D1 (0x02139fc8) and D0 (0x02139f70) anyway
- * because THIS TU owns the key function. The destructor is inline, so the key
- * function is the first non-inline, non-pure virtual -- Kill(), ROM ordinal 6
- * above -- and the TU that defines it emits _ZTV16daObjFallBlock_c together
- * with both destructor variants. The pair is held out of the licensed run:
- * the ROM orders D0 below D1, and the in-class body emits D1 then D0. */
