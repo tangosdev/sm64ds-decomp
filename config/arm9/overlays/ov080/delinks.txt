@@ -16,11 +16,11 @@ src/actors/daBttBk_c.cpp:
     .data start:0x0212812c end:0x0212815c
     .bss start:0x02128468 end:0x021284ac
 
-src/_ZN11daPicGate_cD1Ev.cpp:
+src/named/ov080/_ZN11daPicGate_cD1Ev.cpp:
     complete
     .text start:0x02125404 end:0x02125428
 
-src/_ZN11daPicGate_cD0Ev.cpp:
+src/named/ov080/_ZN11daPicGate_cD0Ev.cpp:
     complete
     .text start:0x02125428 end:0x02125460
 
@@ -36,11 +36,11 @@ src/actors/daPicGate_c.cpp:
     .data start:0x02128214 end:0x02128274
     .bss start:0x021284ac end:0x02128688
 
-src/_ZN13daObjMaruta_cD0Ev.cpp:
+src/named/ov080/_ZN13daObjMaruta_cD0Ev.cpp:
     complete
     .text start:0x02126fbc end:0x02127014
 
-src/_ZN13daObjMaruta_cD1Ev.cpp:
+src/named/ov080/_ZN13daObjMaruta_cD1Ev.cpp:
     complete
     .text start:0x02127014 end:0x02127058
 

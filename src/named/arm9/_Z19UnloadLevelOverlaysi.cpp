@@ -3,7 +3,7 @@
 //
 // Language-mode flip only: the compiler mangles UnloadLevelOverlays(int), it is
 // no longer spelled by hand. Body preserved; free function (not a method).
-// Sibling: src/_Z17LoadLevelOverlaysi.cpp.
+// Sibling: src/named/arm9/_Z17LoadLevelOverlaysi.cpp.
 /* UnloadLevelOverlays(int levelID) at 0x0202de64 (72 bytes)
  * Unloads the per-level overlay (if any) then the object overlays. */
 

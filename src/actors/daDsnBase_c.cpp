@@ -109,7 +109,7 @@ extern "C" {
 
 /* No header declares these (checked include/decl_common.h and its decl_Actor
  * siblings at promotion).
- * DecIfAbove0_Byte is spelled from its definition at src/DecIfAbove0_Byte.c --
+ * DecIfAbove0_Byte is spelled from its definition at src/named/arm9/DecIfAbove0_Byte.c --
  * unsigned char in, unsigned char out. A call site cannot evidence either: the
  * casts and the int temporaries below are the caller's, not the callee's
  * interface. RandomIntInternal's sites pass the RNG state. */

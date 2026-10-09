@@ -24,7 +24,7 @@
         "reference": "2f526b3468a1f888c18df276b544e40961330e6f",
         "sha256_lf": "5596a27d666cc516f3f7b66fc48800f981ed6d684db435f3b67809aeb7c7417c"
       },
-      "src/_ZN17daObjKurumajiku_cD1Ev.cpp": {
+      "src/named/ov002/_ZN17daObjKurumajiku_cD1Ev.cpp": {
         "reference": "2f526b3468a1f888c18df276b544e40961330e6f",
         "sha256_lf": "34607fdaa22234ebd67ba9a4af5b61b19c06c8f5711407a0865a1b7e933e24ee"
       },
@@ -72,7 +72,7 @@
         "reference": "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
         "sha256_lf": "75b741d08be1529fca1347685da44ff6bad598c5cdffa69b49d9010849d92555"
       },
-      "src/_ZN17daObjKurumajiku_cD0Ev.cpp": {
+      "src/named/ov002/_ZN17daObjKurumajiku_cD0Ev.cpp": {
         "reference": "5ff95cd1ec5f05f3bd56c28edcfeb29e839f2a6a",
         "sha256_lf": "755024d41a522e95afb9050c2b9d0654a43c335c6e24a69d268029b9839b7943"
       }
@@ -93,7 +93,7 @@
         "after_sha256": "d28ab75ef646e171445eb335d68afec268984a055f64c6b6d84aae56d4eb056a",
         "base_sha256_lf": "44c87dd2fb23e81cfdc9739ed0dad2c2f43fe8a071e4d8e25436052e3e724043",
         "after_sha256_lf": "4eb9f80490d1efe0e7f952a02a2d52fbebec69fd05fcef0adbf07a8bed268911",
-        "diff_against_main": "--- main/config/decl-agreement-baseline.json\n+++ candidate/config/decl-agreement-baseline.json\n@@ -770,7 +770,7 @@\n    \"src/_ZN19daObjFlamethrower_c8BehaviorEv.cpp\": [\"param:#1 int *\", \"param:#3 int *\"],\n    \"src/_ZN12WorkElevator8BehaviorEv.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const Matrix4x3 *\"],\n    \"src/_ZN10daSnmBth_c15IsPlayerInRangeEv.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const Matrix4x3 *\"],\n-   \"src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const void *\"],\n+   \"src/actors/daObjKurumajiku_c.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const void *\"],\n    \"src/_ZN23daObjRotateUpdownLift_c13InitResourcesEv.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const Matrix4x3 *\"],\n    \"src/_ZN5dPa_c7level_c14clipCallback_c8OnUpdateERN8Particle6SystemEb.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const Matrix4x3 *\"],\n    \"src/_ZN6Coffin13InitResourcesEv.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const void *\"],\n@@ -1544,7 +1544,7 @@\n    \"src/_ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16.cpp\": [\"param:#1 Vector3 *\", \"param:#2 Vector3 *\", \"param:#3 const Vector3 *\"],\n    \"src/_ZN19daObjFlamethrower_c8BehaviorEv.cpp\": [\"param:#1 int *\", \"param:#2 int *\", \"param:#3 int *\"],\n    \"src/_ZN14KnockDownPlank13InitResourcesEv.cpp\": [\"param:#1 Vector3 *\", \"param:#2 Vector3 *\", \"param:#3 Vector3 *\"],\n-   \"src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp\": [\"param:#1 Vector3 *\", \"param:#2 const Vector3 *\", \"param:#3 const Vector3 *\"],\n+   \"src/actors/daObjKurumajiku_c.cpp\": [\"param:#1 Vector3 *\", \"param:#2 const Vector3 *\", \"param:#3 const Vector3 *\"],\n    \"src/_ZN23daObjRotateUpdownLift_c13InitResourcesEv.cpp\": [\"param:#1 Vector3 *\", \"param:#2 Vector3 *\", \"param:#3 Vector3 *\"],\n    \"src/_ZN23daObjRotateUpdownLift_c8BehaviorEv.cpp\": [\"param:#1 Vector3 *\", \"param:#2 Vector3 *\", \"param:#3 Vector3 *\"],\n    \"src/_ZN6Coffin13InitResourcesEv.cpp\": [\"param:#1 Vector3 *\", \"param:#2 Vector3 *\", \"param:#3 Vector3 *\"],\n@@ -8244,7 +8244,7 @@\n    \"src/_ZN15RotatingFirebar8BehaviorEv.cpp\": [\"return:int []\"],\n    \"src/_ZN15TtcRotatingCube13InitResourcesEv.cpp\": [\"return:int []\"],\n    \"src/_ZN16daKing_Donketu_c8BehaviorEv.cpp\": [\"return:Mat4x3\"],\n-   \"src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp\": [\"return:char []\"],\n+   \"src/actors/daObjKurumajiku_c.cpp\": [\"return:char []\"],\n    \"src/_ZN23daObjRotateUpdownLift_c8BehaviorEv.cpp\": [\"return:char []\"],\n    \"src/_ZN3Key8BehaviorEv.cpp\": [\"return:char\"],\n    \"src/_ZN6Coffin13InitResourcesEv.cpp\": [\"return:char\"],\n@@ -8979,7 +8979,7 @@\n    \"src/game/actors/d_a_obj_hatena_switch.cpp\": [\"return:SharedFilePtr\"]\n   },\n   \"data_ov002_0210ddd0\": {\n-   \"src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp\": [\"return:Vector3 []\"]\n+   \"src/actors/daObjKurumajiku_c.cpp\": [\"return:Vector3 []\"]\n   },\n   \"data_ov002_0210de00\": {\n    \"src/_ZN15daObjMarioCap_c13InitResourcesEv.cpp\": [\"return:char\"]\n@@ -17063,7 +17063,8 @@\n    \"include/decl_common.h\": [\"kind:data\"]\n   },\n   \"func_ov002_020b6a80\": {\n-   \"src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp\": [\"param:#1 daObjKurumajiku_c *\"]\n+  },\n+  \"func_ov002_020b6ac8\": {\n   },\n   \"func_ov002_020b6c54\": {\n    \"src/game/actors/d_a_obj_km1_kurumajiku.cpp\": [\"param:#1 daObjKm1_Kurumajiku_c *\", \"param:#2 ResourceDescriptor *\"],\n",
+        "diff_against_main": "--- main/config/decl-agreement-baseline.json\n+++ candidate/config/decl-agreement-baseline.json\n@@ -770,7 +770,7 @@\n    \"src/_ZN19daObjFlamethrower_c8BehaviorEv.cpp\": [\"param:#1 int *\", \"param:#3 int *\"],\n    \"src/_ZN12WorkElevator8BehaviorEv.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const Matrix4x3 *\"],\n    \"src/_ZN10daSnmBth_c15IsPlayerInRangeEv.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const Matrix4x3 *\"],\n-   \"src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const void *\"],\n+   \"src/actors/daObjKurumajiku_c.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const void *\"],\n    \"src/_ZN23daObjRotateUpdownLift_c13InitResourcesEv.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const Matrix4x3 *\"],\n    \"src/named/arm9/_ZN5dPa_c7level_c14clipCallback_c8OnUpdateERN8Particle6SystemEb.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const Matrix4x3 *\"],\n    \"src/_ZN6Coffin13InitResourcesEv.cpp\": [\"param:#1 const Vector3 *\", \"param:#2 const void *\"],\n@@ -1544,7 +1544,7 @@\n    \"src/_ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16.cpp\": [\"param:#1 Vector3 *\", \"param:#2 Vector3 *\", \"param:#3 const Vector3 *\"],\n    \"src/_ZN19daObjFlamethrower_c8BehaviorEv.cpp\": [\"param:#1 int *\", \"param:#2 int *\", \"param:#3 int *\"],\n    \"src/_ZN14KnockDownPlank13InitResourcesEv.cpp\": [\"param:#1 Vector3 *\", \"param:#2 Vector3 *\", \"param:#3 Vector3 *\"],\n-   \"src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp\": [\"param:#1 Vector3 *\", \"param:#2 const Vector3 *\", \"param:#3 const Vector3 *\"],\n+   \"src/actors/daObjKurumajiku_c.cpp\": [\"param:#1 Vector3 *\", \"param:#2 const Vector3 *\", \"param:#3 const Vector3 *\"],\n    \"src/_ZN23daObjRotateUpdownLift_c13InitResourcesEv.cpp\": [\"param:#1 Vector3 *\", \"param:#2 Vector3 *\", \"param:#3 Vector3 *\"],\n    \"src/_ZN23daObjRotateUpdownLift_c8BehaviorEv.cpp\": [\"param:#1 Vector3 *\", \"param:#2 Vector3 *\", \"param:#3 Vector3 *\"],\n    \"src/_ZN6Coffin13InitResourcesEv.cpp\": [\"param:#1 Vector3 *\", \"param:#2 Vector3 *\", \"param:#3 Vector3 *\"],\n@@ -8244,7 +8244,7 @@\n    \"src/_ZN15RotatingFirebar8BehaviorEv.cpp\": [\"return:int []\"],\n    \"src/_ZN15TtcRotatingCube13InitResourcesEv.cpp\": [\"return:int []\"],\n    \"src/_ZN16daKing_Donketu_c8BehaviorEv.cpp\": [\"return:Mat4x3\"],\n-   \"src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp\": [\"return:char []\"],\n+   \"src/actors/daObjKurumajiku_c.cpp\": [\"return:char []\"],\n    \"src/_ZN23daObjRotateUpdownLift_c8BehaviorEv.cpp\": [\"return:char []\"],\n    \"src/_ZN3Key8BehaviorEv.cpp\": [\"return:char\"],\n    \"src/_ZN6Coffin13InitResourcesEv.cpp\": [\"return:char\"],\n@@ -8979,7 +8979,7 @@\n    \"src/game/actors/d_a_obj_hatena_switch.cpp\": [\"return:SharedFilePtr\"]\n   },\n   \"data_ov002_0210ddd0\": {\n-   \"src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp\": [\"return:Vector3 []\"]\n+   \"src/actors/daObjKurumajiku_c.cpp\": [\"return:Vector3 []\"]\n   },\n   \"data_ov002_0210de00\": {\n    \"src/_ZN15daObjMarioCap_c13InitResourcesEv.cpp\": [\"return:char\"]\n@@ -17063,7 +17063,8 @@\n    \"include/decl_common.h\": [\"kind:data\"]\n   },\n   \"func_ov002_020b6a80\": {\n-   \"src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp\": [\"param:#1 daObjKurumajiku_c *\"]\n+  },\n+  \"func_ov002_020b6ac8\": {\n   },\n   \"func_ov002_020b6c54\": {\n    \"src/game/actors/d_a_obj_km1_kurumajiku.cpp\": [\"param:#1 daObjKm1_Kurumajiku_c *\", \"param:#2 ResourceDescriptor *\"],\n",
         "diff_against_worktree": "--- before/config/decl-agreement-baseline.json\n+++ after/config/decl-agreement-baseline.json\n@@ -17065,8 +17065,6 @@\n   \"func_ov002_020b6a80\": {\n   },\n   \"func_ov002_020b6ac8\": {\n-   \"src/game/actors/d_a_obj_km1_kurumajiku.cpp\": [\"param:#1 daObjKm1_Kurumajiku_c *\"],\n-   \"src/game/actors/d_a_obj_km3_kurumajiku.cpp\": [\"param:#1 daObjKm3_Kurumajiku_c *\"]\n   },\n   \"func_ov002_020b6c54\": {\n    \"src/game/actors/d_a_obj_km1_kurumajiku.cpp\": [\"param:#1 daObjKm1_Kurumajiku_c *\", \"param:#2 ResourceDescriptor *\"],\n"
       },
       "config/converted-baseline.json": {
@@ -114,7 +114,7 @@
         "after_sha256": "3f3bf9175a54620113641dbaccf0ceb51666b70cd163d57f5d1a1da042a24d83",
         "base_sha256_lf": "f7b05c0c4fb917ce322cf5c056f1b4f468de7f3f309344512939165eb0aac79d",
         "after_sha256_lf": "df0aa13d1d3831a16e0656f0c6e01b2aad559a42a06d4b2cb0b1b48fb88ac2e9",
-        "diff_against_main": "--- main/config/converted-baseline.json\n+++ candidate/config/converted-baseline.json\n@@ -784,7 +784,7 @@\n     \"src/_ZN17dMg3DEspAnimSet_cD1Ev.cpp\",\n     \"src/_ZN17daObjFloatBoard_cD0Ev.cpp\",\n     \"src/_ZN17daObjFloatBoard_cD1Ev.cpp\",\n-    \"src/_ZN17daObjKurumajiku_c6RenderEv.cpp\",\n+    \"src/actors/daObjKurumajiku_c.cpp#_ZN17daObjKurumajiku_c6RenderEv\",\n     \"src/_ZN17daObjKurumajiku_cD0Ev.cpp\",\n     \"src/_ZN17daObjKurumajiku_cD1Ev.cpp\",\n     \"src/_ZN18NestedHeapIterator4InitEP13HeapAllocator.cpp\",\n",
+        "diff_against_main": "--- main/config/converted-baseline.json\n+++ candidate/config/converted-baseline.json\n@@ -784,7 +784,7 @@\n     \"src/_ZN17dMg3DEspAnimSet_cD1Ev.cpp\",\n     \"src/named/ov002/_ZN17daObjFloatBoard_cD0Ev.cpp\",\n     \"src/named/ov002/_ZN17daObjFloatBoard_cD1Ev.cpp\",\n-    \"src/_ZN17daObjKurumajiku_c6RenderEv.cpp\",\n+    \"src/actors/daObjKurumajiku_c.cpp#_ZN17daObjKurumajiku_c6RenderEv\",\n     \"src/named/ov002/_ZN17daObjKurumajiku_cD0Ev.cpp\",\n     \"src/named/ov002/_ZN17daObjKurumajiku_cD1Ev.cpp\",\n     \"src/_ZN18NestedHeapIterator4InitEP13HeapAllocator.cpp\",\n",
         "diff_against_worktree": ""
       },
       "attribution.json": {
@@ -159,9 +159,9 @@
           "before": "daObjKurumajiku_c\t6\t168\tov002\tyes\tno\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only",
           "after": "daObjKurumajiku_c\t3\t171\tov002\tyes\tyes\tcompiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)\tdaBar_c\ttext-only",
           "source_counts": {
-            "src/_ZN17daObjKurumajiku_cD0Ev.cpp": 29,
-            "src/_ZN17daObjKurumajiku_cD1Ev.cpp": 33,
-            "src/actors/daObjKurumajiku_c.cpp": 109
+            "src/actors/daObjKurumajiku_c.cpp": 109,
+            "src/named/ov002/_ZN17daObjKurumajiku_cD0Ev.cpp": 29,
+            "src/named/ov002/_ZN17daObjKurumajiku_cD1Ev.cpp": 33
           },
           "total_lines": 171
         },
@@ -589,7 +589,7 @@
     },
     "consumers": [
       {
-        "path": "src/_ZN17daObjKurumajiku_cD0Ev.cpp",
+        "path": "src/named/ov002/_ZN17daObjKurumajiku_cD0Ev.cpp",
         "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
         "before_sha256": "a708e68d7859c592cc5cfbc96de15c29767c4deb3e9309ea6de21d454b7d33a5",
         "after_sha256": "a708e68d7859c592cc5cfbc96de15c29767c4deb3e9309ea6de21d454b7d33a5",
@@ -597,7 +597,7 @@
         "whole_object_identical": true
       },
       {
-        "path": "src/_ZN17daObjKurumajiku_cD1Ev.cpp",
+        "path": "src/named/ov002/_ZN17daObjKurumajiku_cD1Ev.cpp",
         "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
         "before_sha256": "853a7d9253e4395b8ed5fa24e284312dc64b4516aea9de1856533aca422ec0dc",
         "after_sha256": "853a7d9253e4395b8ed5fa24e284312dc64b4516aea9de1856533aca422ec0dc",
@@ -729,14 +729,14 @@
       "totalRecords": 6182,
       "differing": [
         {
-          "src": "src/_ZN10dCcAcPos_cD0Ev.cpp",
+          "src": "src/named/arm9/_ZN10dCcAcPos_cD0Ev.cpp",
           "symbol": "_ZTV10dCcAcPos_c",
           "module": "arm9",
           "addr": 34137860,
           "differingBytes": 4
         },
         {
-          "src": "src/_ZN10dCcAcPos_cD1Ev.cpp",
+          "src": "src/named/arm9/_ZN10dCcAcPos_cD1Ev.cpp",
           "symbol": "_ZTV10dCcAcPos_c",
           "module": "arm9",
           "addr": 34137860,
@@ -771,14 +771,14 @@
           "differingBytes": 8
         },
         {
-          "src": "src/_ZThn80_N8daDemo_c10anmModel_cD0Ev.cpp",
+          "src": "src/named/ov002/_ZThn80_N8daDemo_c10anmModel_cD0Ev.cpp",
           "symbol": "_ZTIN8daDemo_c10anmModel_cE",
           "module": "ov002",
           "addr": 34650812,
           "differingBytes": 8
         },
         {
-          "src": "src/_ZThn80_N8daDemo_c10anmModel_cD1Ev.cpp",
+          "src": "src/named/ov002/_ZThn80_N8daDemo_c10anmModel_cD1Ev.cpp",
           "symbol": "_ZTIN8daDemo_c10anmModel_cE",
           "module": "ov002",
           "addr": 34650812,

@@ -246,7 +246,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so every TU that destroys a Vector3 re-emits it as vague linkage -- here the Vector3 automatic in InitResources (starPos) and the one in func_ov030_0211124c pull it in. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by src/_ZN7Vector3D1Ev.cpp; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so every TU that destroys a Vector3 re-emits it as vague linkage -- here the Vector3 automatic in InitResources (starPos) and the one in func_ov030_0211124c pull it in. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by src/named/arm9/_ZN7Vector3D1Ev.cpp; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
     },
     {
       "symbol": "_ZTI7fBase_c",

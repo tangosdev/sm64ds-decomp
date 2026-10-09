@@ -319,7 +319,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "The Vector3 automatics in func_ov072_02120d04, func_ov072_02120f14, func_ov072_021210c4, func_ov072_02121368 and func_ov072_021217ac re-emit Vector3's empty destructor. The cartridge keeps one copy at arm9:0x020072c0, owned by src/_ZN7Vector3D1Ev.cpp."
+      "reason": "The Vector3 automatics in func_ov072_02120d04, func_ov072_02120f14, func_ov072_021210c4, func_ov072_02121368 and func_ov072_021217ac re-emit Vector3's empty destructor. The cartridge keeps one copy at arm9:0x020072c0, owned by src/named/arm9/_ZN7Vector3D1Ev.cpp."
     },
     {
       "symbol": "_ZTI7fBase_c",

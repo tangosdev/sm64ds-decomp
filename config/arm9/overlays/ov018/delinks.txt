@@ -19,7 +19,7 @@ src/unnamed/ov018/func_ov018_02111804.c:
     complete
     .text start:0x02111804 end:0x02111818
 
-src/d_a_obj_sm_lift.c:
+src/named/ov018/d_a_obj_sm_lift.c:
     complete
     .text start:0x02111818 end:0x02111848
 

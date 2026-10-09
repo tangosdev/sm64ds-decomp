@@ -463,8 +463,8 @@ class RomBuildEnrollment(unittest.TestCase):
         entry = {
             "id": "arm9/__destroy_arr", "status": "promoted",
             "production_mode": "intact-object",
-            "source": "src/__cxa_vec_cleanup.cpp",
-            "promoted_source": "src/__cxa_vec_cleanup.cpp",
+            "source": "src/named/arm9/__cxa_vec_cleanup.cpp",
+            "promoted_source": "src/named/arm9/__cxa_vec_cleanup.cpp",
             "sections": [
                 {"name": row["section"], "start": row["start"], "end": row["end"]}
                 for row in ranges
@@ -481,8 +481,8 @@ class RomBuildEnrollment(unittest.TestCase):
             }},
         }
         self.assertEqual(RB.intact_tu_policies(
-            {"src/__cxa_vec_cleanup.cpp"}, manifest={"entries": [entry]}),
-            {"src/__cxa_vec_cleanup.cpp": entry})
+            {"src/named/arm9/__cxa_vec_cleanup.cpp"}, manifest={"entries": [entry]}),
+            {"src/named/arm9/__cxa_vec_cleanup.cpp": entry})
 
         # The storage-alias refusal covers the two new owned fields too; leaving them
         # out of `owned_fields` would let an unproven alias through the one path the
@@ -490,7 +490,7 @@ class RomBuildEnrollment(unittest.TestCase):
         entry["exception"] = [{"symbol": "@ET@__destroy_arr", "storage_alias": {
             "symbol": "data_0207372c", "address": "0x207372c", "size": "0x14"}}]
         with self.assertRaises(RB.BuildError) as raised:
-            RB.intact_tu_policies({"src/__cxa_vec_cleanup.cpp"},
+            RB.intact_tu_policies({"src/named/arm9/__cxa_vec_cleanup.cpp"},
                                   manifest={"entries": [entry]})
         self.assertIn("baseline bootstrapping is non-circular", raised.exception.output)
         entry.pop("exception")
@@ -498,7 +498,7 @@ class RomBuildEnrollment(unittest.TestCase):
         entry["exceptix"] = [{"symbol": "@EX@__destroy_arr", "storage_alias": {
             "symbol": "data_02073988", "address": "0x2073988", "size": "0xc"}}]
         with self.assertRaises(RB.BuildError) as raised:
-            RB.intact_tu_policies({"src/__cxa_vec_cleanup.cpp"},
+            RB.intact_tu_policies({"src/named/arm9/__cxa_vec_cleanup.cpp"},
                                   manifest={"entries": [entry]})
         self.assertIn("baseline bootstrapping is non-circular", raised.exception.output)
 

@@ -34,7 +34,7 @@ This document describes this commit. The queue records its immutable output SHA.
   - `REG_DISPCNT` and `REG_DISPCNT_SUB` from `include/nitro/hw/registers.h` in `Virtual84`: identical object.
   - `REG_DISPCNT &= ~0x300010u` for `&= 0xffcfffefu`: identical object.
   - `vu32` and `vu16` for `volatile int`, `volatile u16*` and `volatile u32*` in `AfterCleanupResources` and [func_ov006_0210a534](../../../src/minigames/d_s_mg_single3_d_base.cpp)(ROM Ordinal 2): identical object.
-  - `void *LoadFile(int)` without the casts, as `dScMgCard_c` spells it: identical object, but `check_decl_agreement.py --symbol LoadFile` then lists this file against `int LoadFile(int)` in `src/LoadFile.c`, a new disagreement. Reverted.
+  - `void *LoadFile(int)` without the casts, as `dScMgCard_c` spells it: identical object, but `check_decl_agreement.py --symbol LoadFile` then lists this file against `int LoadFile(int)` in `src/named/arm9/LoadFile.c`, a new disagreement. Reverted.
   - The comment-only header edits: identical object.
 
 ## Findings

@@ -758,7 +758,7 @@ The earlier note's "compares it against the squared radius" is the wrong operati
 
 Four sites (`0x1ffc2d8`, `0x1ffc448`, `0x1ffc5b8`, `0x1ffca78`) inline the DS hardware sqrt:
 save IME, `SQRTCNT = 1`, 64-bit `SQRT_PARAM`, restore IME, spin on `SQRTCNT & 0x8000`, read
-`SQRT_RESULT`. But `cstd::sqrt(u64)` at `0x0203d744` (matched, `src/_ZN4cstd4sqrtEy.cpp`)
+`SQRT_RESULT`. But `cstd::sqrt(u64)` at `0x0203d744` (matched, `src/named/arm9/_ZN4cstd4sqrtEy.cpp`)
 pre-shifts `x << 2` and rounds its result `(r + 1) >> 1`. **Neither appears here.** So this
 is a separate raw inline helper, not that function -- and the `0` and `1` it writes come from
 frame slots `sp+0x118` and `sp+0x10c` rather than immediates, which is what four expansions

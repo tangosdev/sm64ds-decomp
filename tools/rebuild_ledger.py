@@ -48,7 +48,7 @@ def main():
                 continue
             name, size, addr = m.group(1), int(m.group(2), 16), int(m.group(3), 16)
             # Same rule the published count uses: a zero-size record sharing its address
-            # with a sized one is a second name, not a function. src/_dmul.c is a real
+            # with a sized one is a second name, not a function. src/named/arm9/_dmul.c is a real
             # match, but it is a match of func_01ff8708, which sits at the same address
             # and is the record that should carry it. Banking the alias put a row in the
             # local ledger that the published number does not have, so the plain

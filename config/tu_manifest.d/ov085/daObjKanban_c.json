@@ -472,7 +472,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "This TU declares five Vector3 locals: `mine`, `pos` and `tpos` at the top of Behavior, `opos` in Behavior's no-target branch, and `v` in InitResources, which copies data_ov085_0212f29c out before handing it to dCcAcPos_c::Init. Each is a class-type automatic, so mwccarm re-emits Vector3's vague-linkage complete destructor alongside this TU's own text. The cartridge keeps exactly one copy, the four-byte `bx lr` (1e ff 2f e1) at arm9:0x020072c0, and the enrolled complete entry src/_ZN7Vector3D1Ev.cpp already owns those bytes; rombuild byte-compares this object's body against the cartridge and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+      "reason": "This TU declares five Vector3 locals: `mine`, `pos` and `tpos` at the top of Behavior, `opos` in Behavior's no-target branch, and `v` in InitResources, which copies data_ov085_0212f29c out before handing it to dCcAcPos_c::Init. Each is a class-type automatic, so mwccarm re-emits Vector3's vague-linkage complete destructor alongside this TU's own text. The cartridge keeps exactly one copy, the four-byte `bx lr` (1e ff 2f e1) at arm9:0x020072c0, and the enrolled complete entry src/named/arm9/_ZN7Vector3D1Ev.cpp already owns those bytes; rombuild byte-compares this object's body against the cartridge and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
     },
     {
       "symbol": "_ZTV13daObjKanban_c",

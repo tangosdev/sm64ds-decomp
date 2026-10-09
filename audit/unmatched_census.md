@@ -46,9 +46,9 @@ that reproduces only under some other sweep member could not pass.
 | arm9 | 0x02059824 | 16 | `func_02059824` | `src/unnamed/arm9/0205/func_02059824.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
 | arm9 | 0x02059d98 | 60 | `func_02059d98` | `src/unnamed/arm9/0205/func_02059d98.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
 | arm9 | 0x0205a588 | 148 | `func_0205a588` | `src/unnamed/arm9/0205/func_0205a588.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x0205a61c | 304 | `CpuCopy8` | `src/CpuCopy8.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x0205a61c | 304 | `CpuCopy8` | `src/named/arm9/CpuCopy8.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
 | arm9 | 0x02071790 | 48 | `func_02071790` | `src/unnamed/arm9/0207/func_02071790.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
-| arm9 | 0x020717c0 | 76 | `__rethrow` | `src/__rethrow.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
+| arm9 | 0x020717c0 | 76 | `__rethrow` | `src/named/arm9/__rethrow.c` | HAND-ASM PRIMITIVE + NONMATCHING | None | PASS 2004/b56 |
 
 ## Group (b): the ITCM vendor rows
 
@@ -61,7 +61,7 @@ were C in the original, and they belong with group (d).
 
 Four of the eleven DO have a byte-exact source in this tree, filed under the name
 their author knew the routine by: config gives each of those addresses a second,
-zero-size symbol, and the source is named after that one. `src/_dmul.c` decompiles
+zero-size symbol, and the source is named after that one. `src/named/arm9/_dmul.c` decompiles
 the 1,776 bytes the symbol table calls `func_01ff8708`. Looked up by the sized
 record's own name, srcpath finds nothing at all, so they read as never attempted.
 
@@ -73,16 +73,16 @@ rule again now that the difference is measured rather than assumed.
 | address | size | symbol | alias | source | byte gate | counts |
 |---|---:|---|---|---|---|---|
 | 0x01ff8000 | 1436 | `func_01ff8000` | `_dadd` | none | not run | no |
-| 0x01ff8708 | 1776 | `func_01ff8708` | `_dmul` | `src/_dmul.c` | PASS 2004/b56 | yes |
+| 0x01ff8708 | 1776 | `func_01ff8708` | `_dmul` | `src/named/arm9/_dmul.c` | PASS 2004/b56 | yes |
 | 0x01ff8e10 | 1384 | `func_01ff8e10` |  | none | not run | no |
 | 0x01ff9378 | 1120 | `func_01ff9378` |  | none | not run | no |
 | 0x01ffa440 | 124 | `func_01ffa440` |  | none | not run | no |
 | 0x01ffa594 | 1096 | `func_01ffa594` |  | none | not run | no |
 | 0x01ffa9dc | 12 | `__aeabi_uldiv` | `_ll_udiv` | none | not run | no |
 | 0x01ffa9e8 | 76 | `__aeabi_ulmod` | `_ull_mod` | none | not run | no |
-| 0x01ffaa34 | 432 | `func_01ffaa34` | `_ll_sdiv` | `src/_ll_sdiv.c` | PASS 2004/b56 | yes |
-| 0x01ffabe4 | 524 | `__aeabi_idiv` | `_s32_div_f` | `src/_s32_div_f.c` | PASS 2004/b56 | yes |
-| 0x01ffadf0 | 484 | `__aeabi_uidiv` | `_u32_div_f` | `src/_u32_div_f.c` | PASS 2004/b56 | yes |
+| 0x01ffaa34 | 432 | `func_01ffaa34` | `_ll_sdiv` | `src/named/arm9/_ll_sdiv.c` | PASS 2004/b56 | yes |
+| 0x01ffabe4 | 524 | `__aeabi_idiv` | `_s32_div_f` | `src/named/arm9/_s32_div_f.c` | PASS 2004/b56 | yes |
+| 0x01ffadf0 | 484 | `__aeabi_uidiv` | `_u32_div_f` | `src/named/arm9/_u32_div_f.c` | PASS 2004/b56 | yes |
 | 0x01ffb0fc | 1844 | `_ZN7dBgW_Kc10DetectClsnER9dBgCh_Lin` |  | none | not run | no |
 | 0x01ffd97c | 88 | `_ZN3IRQ20UserInterruptHandlerEv` |  | none | not run | no |
 
@@ -103,7 +103,7 @@ changes: these stay unmatched, which is what unmatched is for.
 | arm9 | 0x020610fc | 44 | `func_020610fc` | `src/unnamed/arm9/0206/func_020610fc.c` |
 | arm9 | 0x02068398 | 120 | `func_02068398` | `src/unnamed/arm9/0206/func_02068398.c` |
 | arm9 | 0x02071644 | 80 | `func_02071644` | `src/unnamed/arm9/0207/func_02071644.c` |
-| ov003 | 0x020af038 | 2100 | `_ZN12dScStarSel_c8BehaviorEv` | `src/_ZN12dScStarSel_c8BehaviorEv.cpp` |
+| ov003 | 0x020af038 | 2100 | `_ZN12dScStarSel_c8BehaviorEv` | `src/named/ov003/_ZN12dScStarSel_c8BehaviorEv.cpp` |
 | ov007 | 0x020bfd70 | 220 | `func_ov007_020bfd70` | `src/unnamed/ov007/func_ov007_020bfd70.cpp` |
 | ov009 | 0x0211145c | 380 | `func_ov009_0211145c` | `src/unnamed/ov009/func_ov009_0211145c.c` |
 | ov015 | 0x021114f0 | 380 | `func_ov015_021114f0` | `src/func_ov015_021114f0.c` |

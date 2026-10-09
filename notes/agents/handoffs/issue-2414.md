@@ -108,7 +108,7 @@ This document describes this commit. The queue records its immutable output SHA.
   document, and the immutable commit message of `5b683a9bd`, both assert that a
   natural `new daMip_c()` would select "the global `operator new`, which this
   image does not contain". That is false. `_Znwj` is present at arm9
-  `0x0203cbe4` in `config/arm9/symbols.txt`, and `src/_Znwj.cpp` defines it as a
+  `0x0203cbe4` in `config/arm9/symbols.txt`, and `src/named/arm9/_Znwj.cpp` defines it as a
   tail-call veneer to `func_0203cc0c`. The commit message cannot be edited, so
   the error stays in this branch's history; this paragraph is the correction.
   The real, measured barrier is the one `src/actors/Scuttlebug.cpp` states for

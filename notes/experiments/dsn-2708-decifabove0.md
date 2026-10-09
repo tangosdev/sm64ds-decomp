@@ -4,7 +4,7 @@
 - compiler: mwccarm 2004/b56 (tools/mwccarm/2004/b56/mwccarm.exe)
 - claim: `src/actors/daDsnBase_c.cpp:94` spells
   DecIfAbove0_Byte from its definition (`u8 DecIfAbove0_Byte(u8 *)` at
-  src/DecIfAbove0_Byte.c), not its call sites; fixed on this branch by
+  src/named/arm9/DecIfAbove0_Byte.c), not its call sites; fixed on this branch by
   3fab96894. No attempted_change; baseline verification only.
 - attempted_change: N/A (already fixed -- baseline match only).
 

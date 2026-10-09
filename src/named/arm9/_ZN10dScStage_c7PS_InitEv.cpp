@@ -3,12 +3,12 @@
 // @symbol _ZN10dScStage_c7PS_InitEv
 /* recovered: real C++ method -- named members, local shadow class
  *
- * Called as a bare `PS_Init()` from dScStage_c::Behavior (src/_ZN10dScStage_c8BehaviorEv.cpp),
+ * Called as a bare `PS_Init()` from dScStage_c::Behavior (src/named/arm9/_ZN10dScStage_c8BehaviorEv.cpp),
  * with no `this` placed in r0 at the call site -- static, matching every other
  * member of the pause-screen/menu family dScStage_c.h already declares static.
  *
  * NOT declared in the real dScStage_c.h on purpose. include/dScStage_c.h documents why:
- * there is an untracked second file for this same symbol, src/_ZN10dScStage_c7PS_InitEv.cpp,
+ * there is an untracked second file for this same symbol, src/named/arm9/_ZN10dScStage_c7PS_InitEv.cpp,
  * that delinks.txt never named and nothing has ever compiled, whose private
  * `struct G2x` mangles SetBlendBrightness's middle parameter as `int` instead of
  * the real `...EPVtts` and resolves to nothing. This file avoids that landmine by

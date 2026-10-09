@@ -1134,7 +1134,7 @@
     "review_role": "independent",
     "source_binding": [
       {
-        "path": "src/_ZN9ModelBase12ApplyOpacityEjj.cpp",
+        "path": "src/named/arm9/_ZN9ModelBase12ApplyOpacityEjj.cpp",
         "git_blob": "15ba6c426b3e75ca6da8f6dce9edd62a4e5de58e",
         "normalized_source_sha256": "e1ec73a6ff888b499c1f49cad9f6cc0513937033e3dfe9ba567de85409f6a84f",
         "probe_input_identical": true,
@@ -1179,7 +1179,7 @@
         "strict_count": 1
       },
       {
-        "path": "src/_ZN6Player6RenderEv.cpp",
+        "path": "src/named/ov002/_ZN6Player6RenderEv.cpp",
         "git_blob": "c5a39904688a4e79b5d857508d47639fbe4ce40c",
         "normalized_source_sha256": "46d539885aa43fbacbc4afb5626e2a592787f036c62b7a9ef29816958722cc61",
         "probe_input_identical": true,
@@ -1423,7 +1423,7 @@
   "all_headers_identical_to_independent_mirror": 504,
   "object_comparisons": [
     {
-      "source": "src/_ZN9ModelBase12ApplyOpacityEjj.cpp",
+      "source": "src/named/arm9/_ZN9ModelBase12ApplyOpacityEjj.cpp",
       "source_sha256": "01cb344f4fc4bb1e2e9a5eda15ba8c9dc9d60ffdc357350398eb8238f0779f77",
       "compiled_source_sha256": "e1ec73a6ff888b499c1f49cad9f6cc0513937033e3dfe9ba567de85409f6a84f",
       "object_bytes": 632,
@@ -1513,7 +1513,7 @@
       "strict_checks": 1
     },
     {
-      "source": "src/_ZN6Player6RenderEv.cpp",
+      "source": "src/named/ov002/_ZN6Player6RenderEv.cpp",
       "source_sha256": "1bcda357776e8b47c13622c909ef5b778daf09404257e134f59e68c2243ae27f",
       "compiled_source_sha256": "46d539885aa43fbacbc4afb5626e2a592787f036c62b7a9ef29816958722cc61",
       "object_bytes": 2504,
@@ -6039,16 +6039,16 @@
       "log": "build/pr2878-production/layout.log",
       "log_sha256": "3de0ffc4ddfcbef17e355a47148c173376e91b63ba3a5e2d44ce1816ffce3efe",
       "log_tail": [
-        "         {\"key\": \"src/BitUnPack.c\"}",
-        "         {\"key\": \"src/CleanCommonModelDataArr.c\"}",
-        "         {\"key\": \"src/CpuCopy8.c\"}",
-        "         {\"key\": \"src/CpuFastSet.c\"}",
-        "         {\"key\": \"src/CpuSet.c\"}",
-        "         {\"key\": \"src/Div.c\"}",
-        "         {\"key\": \"src/GetCRC16.c\"}",
-        "         {\"key\": \"src/Halt.c\"}",
-        "         {\"key\": \"src/HuffUnCompReadByCallback.c\"}",
-        "         {\"key\": \"src/IntrWait.c\"}",
+        "         {\"key\": \"src/named/arm9/BitUnPack.c\"}",
+        "         {\"key\": \"src/named/arm9/CleanCommonModelDataArr.c\"}",
+        "         {\"key\": \"src/named/arm9/CpuCopy8.c\"}",
+        "         {\"key\": \"src/named/arm9/CpuFastSet.c\"}",
+        "         {\"key\": \"src/named/arm9/CpuSet.c\"}",
+        "         {\"key\": \"src/named/arm9/Div.c\"}",
+        "         {\"key\": \"src/named/arm9/GetCRC16.c\"}",
+        "         {\"key\": \"src/named/arm9/Halt.c\"}",
+        "         {\"key\": \"src/named/arm9/HuffUnCompReadByCallback.c\"}",
+        "         {\"key\": \"src/named/arm9/IntrWait.c\"}",
         "         ... and 91 more",
         "layout-check: clean"
       ]

@@ -20,7 +20,7 @@ checks performed afterward belong in separately published evidence.
 
 ## Contract and source reasoning
 
-`src/AddVec3.c` defines three `Vec3 *` parameters, reads the first two vectors,
+`src/named/arm9/AddVec3.c` defines three `Vec3 *` parameters, reads the first two vectors,
 and writes the third. LineLift's old declaration instead described an
 output-first Vector3 operation with const second and third parameters.
 The local import now uses the definition's Vec3 tag and parameter contract.

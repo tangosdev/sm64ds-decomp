@@ -8,11 +8,11 @@ src/actors/daKpa_c.cpp:
     complete
     .text start:0x02111900 end:0x021163f0
 
-src/d_a_kpa_tail.c:
+src/named/ov060/d_a_kpa_tail.c:
     complete
     .text start:0x021163f0 end:0x02116428
 
-src/d_a_kpa.c:
+src/named/ov060/d_a_kpa.c:
     complete
     .text start:0x02116428 end:0x02116484
 
@@ -20,7 +20,7 @@ src/actors/daKpaFire_c.cpp:
     complete
     .text start:0x02116484 end:0x02117938
 
-src/d_a_kpa_fire.c:
+src/named/ov060/d_a_kpa_fire.c:
     complete
     .text start:0x02117938 end:0x02117980
 
@@ -28,7 +28,7 @@ src/actors/daKpa2Bg_c.cpp:
     complete
     .text start:0x02117980 end:0x02117cdc
 
-src/d_a_kpa2_bg.c:
+src/named/ov060/d_a_kpa2_bg.c:
     complete
     .text start:0x02117cdc end:0x02117d1c
 
@@ -44,7 +44,7 @@ src/unnamed/ov060/func_ov060_021183f4.c:
     complete
     .text start:0x021183f4 end:0x02118408
 
-src/d_a_kpa3_bg.c:
+src/named/ov060/d_a_kpa3_bg.c:
     complete
     .text start:0x02118408 end:0x02118438
 
@@ -56,7 +56,7 @@ src/actors/daKirai_c.cpp:
     .data start:0x0211aa30 end:0x0211aa50
     .bss start:0x0211b1c4 end:0x0211b1f8
 
-src/d_a_kirai.c:
+src/named/ov060/d_a_kirai.c:
     complete
     .text start:0x02118cbc end:0x02118cfc
 
@@ -64,7 +64,7 @@ src/actors/daFRing_c.cpp:
     complete
     .text start:0x02118cfc end:0x021191f4
 
-src/d_a_f_ring.c:
+src/named/ov060/d_a_f_ring.c:
     complete
     .text start:0x021191f4 end:0x02119264
 

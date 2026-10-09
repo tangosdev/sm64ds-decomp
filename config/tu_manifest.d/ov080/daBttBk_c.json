@@ -10,7 +10,7 @@
     "contiguous linker run: 0x2124a20..0x21253b4, 20 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daBttBk_c",
     "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit fold (0930c): the BATTA_BLOCK registry factory daBttBk_c_classInit (0x021253b4, 0x50) abuts the run's end 0x021253b4 with no gap and no other symbol between; tu_map left it in its own unlabelled unit because it cuts on symbol name. The widened range 0x02124a20..0x02125404 (21 functions) ends where the next delinks entry, src/_ZN11daPicGate_cD1Ev.cpp, begins.",
+    "classInit fold (0930c): the BATTA_BLOCK registry factory daBttBk_c_classInit (0x021253b4, 0x50) abuts the run's end 0x021253b4 with no gap and no other symbol between; tu_map left it in its own unlabelled unit because it cuts on symbol name. The widened range 0x02124a20..0x02125404 (21 functions) ends where the next delinks entry, src/named/ov080/_ZN11daPicGate_cD1Ev.cpp, begins.",
     "the compiler-generated __sinit_daBttBk_c.cpp is byte-identical to retail __sinit_ov080_02127a60 (0xcc). It constructs the model handle at 0x02128468 and copies six pointer-to-member descriptors into the state table at 0x0212847c. The ctor word at 0x02127f64 points at that initializer. Class RTTI, profile, and vtable stay externalized."
   ],
   "sections": [

@@ -10,7 +10,7 @@
  *     other functions instead.
  * The destructor is defined out of line so D1 and D0 come out in cartridge
  * order; the extra D2 is dropped at link. The factory is in
- * src/d_s_mg_flower.cpp.
+ * src/named/ov006/d_s_mg_flower.cpp.
  *
  * Blocked: the 0x16-entry petal table at 0x4f38 is not typed in
  * dScMgFlower_c.h (mArray is a plain byte array), so the functions here

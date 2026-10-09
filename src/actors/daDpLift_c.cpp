@@ -8,7 +8,7 @@
  * ov025 0x021139a0 is "10daDpLift_c". mHadClsn is written by
  * func_ov025_021125dc, defined in its own TU and installed here as the
  * mesh callback. The factory daDpLift_c_classInit stays in
- * src/d_a_dp_lift.cpp.
+ * src/named/ov025/d_a_dp_lift.cpp.
  *
  * `#pragma defer_codegen off` is file-level and load-bearing. It emits
  * each function as it is parsed, so the out-of-line destructor comes

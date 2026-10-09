@@ -66,14 +66,14 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "ov002",
       "canonical_address": "0x020bab64",
-      "reason": "Vague-linkage copy of the class's complete-object destructor, emitted here because this TU owns the key function while ~daObjSwdoor_c is defined inline in include/daObjSwdoor_c.h. The cartridge owns it at ov002:0x020bab64 and src/_ZN13daObjSwdoor_cD1Ev.cpp still holds that delinks entry, so this object's copy is a byte-identical duplicate that production isolation discards. It is outside this entry's licensed range (.text 0x020baba8-0x020badd0)."
+      "reason": "Vague-linkage copy of the class's complete-object destructor, emitted here because this TU owns the key function while ~daObjSwdoor_c is defined inline in include/daObjSwdoor_c.h. The cartridge owns it at ov002:0x020bab64 and src/named/ov002/_ZN13daObjSwdoor_cD1Ev.cpp still holds that delinks entry, so this object's copy is a byte-identical duplicate that production isolation discards. It is outside this entry's licensed range (.text 0x020baba8-0x020badd0)."
     },
     {
       "symbol": "_ZN13daObjSwdoor_cD0Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_module": "ov002",
       "canonical_address": "0x020bab0c",
-      "reason": "Vague-linkage copy of the class's deleting destructor, same cause. The cartridge owns it at ov002:0x020bab0c, BELOW D1 -- see this entry's boundary_evidence for the full 2x2 lever grid measured against that order and for why the two cells that do emit D0 before D1 are refuted by the cartridge. src/_ZN13daObjSwdoor_cD0Ev.cpp keeps that delinks entry and this object's byte-identical copy is discarded."
+      "reason": "Vague-linkage copy of the class's deleting destructor, same cause. The cartridge owns it at ov002:0x020bab0c, BELOW D1 -- see this entry's boundary_evidence for the full 2x2 lever grid measured against that order and for why the two cells that do emit D0 before D1 are refuted by the cartridge. src/named/ov002/_ZN13daObjSwdoor_cD0Ev.cpp keeps that delinks entry and this object's byte-identical copy is discarded."
     },
     {
       "symbol": "_ZTV13daObjSwdoor_c",
@@ -155,7 +155,7 @@
   ],
   "notes": [
     "Cut by hand, not seeded by tools/tubuild.py create: build/tu_map.json's span for this class stops at Render's end because the two functions above it carry no mangled name and no vtable slot. See boundary_evidence for the target-module-filtered call-site census that moves the run's right edge out to 0x020badd0, for the base-rate control that makes it discriminating, and for the destructor pair's exclusion from the licensed range.",
-    "NO FORCING FUNCTION AND NO PRAGMA IN THE FOLDED TU. The two legacy destructor shards each carry a scaffold (`delete p`, `p->~daObjSwdoor_c()`) whose only job is to drag an out-of-line copy into a one-function object. This TU owns the key function, so _ZTV13daObjSwdoor_c is emitted here and its slots 16 and 17 odr-use D1 and D0 with nothing added to the source; src/_ZN13daObjSwdoor_cD0Ev.cpp and src/_ZN13daObjSwdoor_cD1Ev.cpp keep their own per-function delinks entries and this object's copies are licensed as deadstrip-duplicate against those ROM homes.",
+    "NO FORCING FUNCTION AND NO PRAGMA IN THE FOLDED TU. The two legacy destructor shards each carry a scaffold (`delete p`, `p->~daObjSwdoor_c()`) whose only job is to drag an out-of-line copy into a one-function object. This TU owns the key function, so _ZTV13daObjSwdoor_c is emitted here and its slots 16 and 17 odr-use D1 and D0 with nothing added to the source; src/named/ov002/_ZN13daObjSwdoor_cD0Ev.cpp and src/named/ov002/_ZN13daObjSwdoor_cD1Ev.cpp keep their own per-function delinks entries and this object's copies are licensed as deadstrip-duplicate against those ROM homes.",
     "THE KEY FUNCTION MOVED, AND THAT IS THE ONE BEHAVIOURAL CHANGE THIS FOLD MAKES. Before this promotion daObjSwdoor_c had no out-of-line virtual at all, so the two destructor shards' scaffolds were what anchored _ZTV13daObjSwdoor_c and _ZTI13daObjSwdoor_c as vague-linkage data in their own objects. Render is now declared out of line and defined here, so this TU is the key-function TU and carries that data instead. Both shards' banners are updated to say so; neither emits the vtable any more, and both still byte-match their ROM homes.",
     "TWO PREVIOUSLY UNATTRIBUTED FUNCTIONS ARE FOLDED IN BEYOND THE CANDIDATE SPAN. func_ov002_020bac18 is this class's per-frame shutter step and func_ov002_020bad10 its resource setup, reached by an ordinary call or a literal-pool load from each of the two leaves rather than through a vtable slot, because the class is abstract in slots 0, 3 and 6. build/tu_map.json cannot see either: neither carries a mangled name or a vtable slot, so no label bounds the run on the right.",
     "func_ov002_020baba8, func_ov002_020bac18 and func_ov002_020bad10 keep their address-derived names. None occupies a vtable slot in any class in the image and nothing in the ROM names any of them, so a coined English name would be invention, not recovery.",

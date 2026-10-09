@@ -52,7 +52,7 @@ header, compiler configuration, manifest, delink or baseline was changed.
 one newly reported return mismatch in `func_ov077_02125a54.c`. Its corrected
 `int _Z14ApproachLinearRsss(short*, short, short)` declaration agrees with the
 actual native `int ApproachLinear(short&, short, short)` definition in
-`src/_Z14ApproachLinearRsss.cpp`. That definition compiles to the exact linker
+`src/named/arm9/_Z14ApproachLinearRsss.cpp`. That definition compiles to the exact linker
 symbol and independently passes strict comparison at `arm9:0x0203adec`, 108 bytes.
 The checker does not associate the unmarked native definition with its mangled
 name, so it instead votes among older declarations and chooses void.

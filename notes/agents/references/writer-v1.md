@@ -290,7 +290,7 @@ steps the dry-run does not print:
    `config/converted-baseline.json`, look for rows in your class's address range,
    and if there are none the promotion is **ratchet-neutral and there is nothing
    to bank**. `dScMgBomroom_c` had 0 of 41 shards in the set; running `--update`
-   anyway banked an unrelated `+1` for `src/_ZN12dScStarSel_c8BehaviorEv.cpp`,
+   anyway banked an unrelated `+1` for `src/named/ov003/_ZN12dScStarSel_c8BehaviorEv.cpp`,
    pre-existing drift on `main` that has nothing to do with the class. Two
    separate writers hit that same stray row on the same day. `--update`
    re-derives the whole set, so it sweeps up any drift sitting on your base, and

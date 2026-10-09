@@ -6,7 +6,7 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "contiguous linker run: 0x21443f4..0x214589c, 31 function(s), from build/tu_map.json (tools/tu_map.py) -- the whole unit. daWanwan2_c_classInit (src/d_a_wanwan2.cpp) ends exactly at 0x021443f4 below it.",
+    "contiguous linker run: 0x21443f4..0x214589c, 31 function(s), from build/tu_map.json (tools/tu_map.py) -- the whole unit. daWanwan2_c_classInit (src/named/ov100/d_a_wanwan2.cpp) ends exactly at 0x021443f4 below it.",
     "class label(s): daDoor_c",
     "module sinit corroboration: 7 sinit(s) / 7 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
     "classInit tail fold: daDoor_c_classInit (0x0214589c..0x021458d4) abuts the unit with no gap and is now inside it; tu_map cuts on symbol name and left it out. The unit is 0x021443f4..0x021458d4, bounded above by daStarGate_c's first function (src/game/actors/d_a_star_gate.cpp) at 0x021458d4."

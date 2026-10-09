@@ -585,7 +585,7 @@
       "address": "0x0210c9e0",
       "size": "0x81c",
       "status": "nonmatching-existing",
-      "source": "src/_ZN12dScMgSlot1_c8BehaviorEv.cpp",
+      "source": "src/named/ov006/_ZN12dScMgSlot1_c8BehaviorEv.cpp",
       "evidence": "notes/mwccarm-codegen.md section 6cm; full combined probe 19 word differences at +0x264..+0x2c4",
       "next_action": "Resolve the touch-index materialization and register-lifetime source shape, then extend this unit through InitResources and the factory at 0x0210d740."
     }

@@ -52,7 +52,7 @@ header, compiler configuration, manifest, delink or baseline was changed.
 one newly reported return mismatch in `func_ov077_02125a54.c`. Its corrected
 `int _Z14ApproachLinearRsss(short*, short, short)` declaration agrees with the
 actual native `int ApproachLinear(short&, short, short)` definition in
-`src/_Z14ApproachLinearRsss.cpp`. That definition compiles to the exact linker
+`src/named/arm9/_Z14ApproachLinearRsss.cpp`. That definition compiles to the exact linker
 symbol and independently passes strict comparison at `arm9:0x0203adec`, 108 bytes.
 The checker does not associate the unmarked native definition with its mangled
 name, so it instead votes among older declarations and chooses void.
@@ -84,7 +84,7 @@ Backport the star-ID argument correction from shadow PR #2829 into
 `daKinopio_c::St_Talk_Main`, then in its own file and now in
 `src/game/actors/d_a_kinopio.cpp`. Both the declaration and call now say
 that `IsStarCollectedInCurLevel` receives `int starID`, agreeing with its actual
-production definition in `src/IsStarCollectedInCurLevel.c` and the existing
+production definition in `src/named/arm9/IsStarCollectedInCurLevel.c` and the existing
 `daKinopio_c::InitResources` caller.
 
 The old zero-argument declaration happened to reproduce the retail instructions

@@ -291,7 +291,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "Three members declare Vector3 locals (St_Talk_Main's playerPos/messagePos/starPos, Behavior's two copies, InitResources' objPos), so this TU re-emits Vector3's vague-linkage D1 alongside its own text. The cartridge keeps one copy at arm9:0x020072c0, and src/_ZN7Vector3D1Ev.cpp already owns it as a complete .text 0x020072c0..0x020072c4 range; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+      "reason": "Three members declare Vector3 locals (St_Talk_Main's playerPos/messagePos/starPos, Behavior's two copies, InitResources' objPos), so this TU re-emits Vector3's vague-linkage D1 alongside its own text. The cartridge keeps one copy at arm9:0x020072c0, and src/named/arm9/_ZN7Vector3D1Ev.cpp already owns it as a complete .text 0x020072c0..0x020072c4 range; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
     },
     {
       "symbol": "_ZTV11daKinopio_c",

@@ -248,43 +248,43 @@ src/unnamed/ov075/func_ov075_0211a194.cpp:
     complete
     .text start:0x0211a194 end:0x0211a210
 
-src/_ZN10dScEntry_c16CleanupResourcesEv.cpp:
+src/named/ov075/_ZN10dScEntry_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211a210 end:0x0211a268
 
-src/_ZN10dScEntry_c16OnPendingDestroyEv.cpp:
+src/named/ov075/_ZN10dScEntry_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0211a268 end:0x0211a26c
 
-src/_ZN10dScEntry_c6RenderEv.cpp:
+src/named/ov075/_ZN10dScEntry_c6RenderEv.cpp:
     complete
     .text start:0x0211a26c end:0x0211a2b8
 
-src/_ZN10dScEntry_c8BehaviorEv.cpp:
+src/named/ov075/_ZN10dScEntry_c8BehaviorEv.cpp:
     complete
     .text start:0x0211a2b8 end:0x0211a410
 
-src/_ZN10dScEntry_c13InitResourcesEv.cpp:
+src/named/ov075/_ZN10dScEntry_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211a410 end:0x0211a734
 
-src/_ZN10dScEntry_c19BeforeInitResourcesEv.cpp:
+src/named/ov075/_ZN10dScEntry_c19BeforeInitResourcesEv.cpp:
     complete
     .text start:0x0211a734 end:0x0211a740
 
-src/d_s_entry_result.cpp:
+src/named/ov075/d_s_entry_result.cpp:
     complete
     .text start:0x0211a740 end:0x0211a834
 
-src/_ZN12OamAnimationC1Ev.cpp:
+src/named/ov075/_ZN12OamAnimationC1Ev.cpp:
     complete
     .text start:0x0211a834 end:0x0211a838
 
-src/_ZN10dScEntry_c6icon_cC1Ev.cpp:
+src/named/ov075/_ZN10dScEntry_c6icon_cC1Ev.cpp:
     complete
     .text start:0x0211a838 end:0x0211a854
 
-src/d_s_entry_entry.cpp:
+src/named/ov075/d_s_entry_entry.cpp:
     complete
     .text start:0x0211a854 end:0x0211a948
 

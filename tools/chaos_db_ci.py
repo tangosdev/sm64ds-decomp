@@ -80,7 +80,7 @@ def alias_collision_addresses():
     __aeabi_uidiv, and _dadd, _deq, _ll_udiv, _ull_mod likewise); config/arm9/symbols.txt
     declared two more until the two MSL array helpers took the compiler's own spelling as
     their primary name and the zero-size halves went away (__cxa_vec_cleanup at 0x0207328c,
-    __cxa_vec_ctor at 0x020733a8). srcpath resolves src/_dmul.c -- a real HAND-ASM PRIMITIVE match --
+    __cxa_vec_ctor at 0x020733a8). srcpath resolves src/named/arm9/_dmul.c -- a real HAND-ASM PRIMITIVE match --
     onto the ZERO-SIZE record, so the same 1,776-byte body read as matched at 0 bytes
     under the alias and unmatched at full size under the primary. linkcheck reports those
     NO-SYM (len-mismatch), which is the byte gate declining to compare a real function
@@ -331,7 +331,7 @@ def main():
             f = SP.path_for(name)
             if f is None:
                 # An aliased address files its source under whichever name the author
-                # knew the function by, which in this tree is the ALIAS: src/_dmul.c
+                # knew the function by, which in this tree is the ALIAS: src/named/arm9/_dmul.c
                 # decompiles the bytes the symbol table calls func_01ff8708. Asked only
                 # about the sized record's own name, the lookup finds nothing and four
                 # byte-exact ITCM primitives read as never attempted. The zero-size

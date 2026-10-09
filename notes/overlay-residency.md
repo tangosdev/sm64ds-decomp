@@ -12,7 +12,7 @@ genuinely overlay-ambiguous are now settled.**
 
 ## 1. The premise the whole thing rests on
 
-`LoadOverlay` (`src/LoadOverlay.c`) keeps a 12-entry table of resident overlays and
+`LoadOverlay` (`src/named/arm9/LoadOverlay.c`) keeps a 12-entry table of resident overlays and
 refuses to create an overlap:
 
 ```c
@@ -81,7 +81,7 @@ backwards, which is why `possible()` takes the referring function.
 
 ## 4. The scene slot (**E3**, **E4**)
 
-`GetSceneOverlayID` (`src/GetSceneOverlayID.c`) is the scene -> overlay map:
+`GetSceneOverlayID` (`src/named/arm9/GetSceneOverlayID.c`) is the scene -> overlay map:
 
 | scene | overlay |
 |---|---|

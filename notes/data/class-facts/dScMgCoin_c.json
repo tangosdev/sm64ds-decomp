@@ -1066,7 +1066,7 @@
   },
   "promotion_inventory": {
     "queue_row": "dScMgCoin_c | 61 | 1576 lines | ov006 | has_header yes | already_promoted no | blockers no-legacy-source:2;pragma:2;compiler-only:>=11 | sibling_oracle dScMgSingle3DBase_c | route text-only (read as of origin/main e2b7ec2c2)",
-    "what_the_61_counts": "The queue's shard_count of 61 is a FLOOR, and it counts delink SECTIONS, not functions. The run holds 63 functions; two are undelinked (the no-legacy-source:2 blocker), leaving 61 sections, of which 60 are one-function shard files in src/ and the 61st is the factory, which already lives in src/d_s_mg_coin.cpp.",
+    "what_the_61_counts": "The queue's shard_count of 61 is a FLOOR, and it counts delink SECTIONS, not functions. The run holds 63 functions; two are undelinked (the no-legacy-source:2 blocker), leaving 61 sections, of which 60 are one-function shard files in src/ and the 61st is the factory, which already lives in src/named/ov006/d_s_mg_coin.cpp.",
     "functions_in_run": 63,
     "delink_sections_in_run": 61,
     "one_function_shards": 60,
@@ -1557,7 +1557,7 @@
         "address": "0x020de940",
         "size": "0x48",
         "symbol": "dScMgCoin_c_classInit",
-        "file": "src/d_s_mg_coin.cpp",
+        "file": "src/named/ov006/d_s_mg_coin.cpp",
         "lang": "cpp"
       }
     ],
@@ -1622,7 +1622,7 @@
       "one_claim_in_it_is_wrong": "Its comment says the tree-wide OnYoshiTryEat mislabel landed on slot 17/D0 instead of slot 18. The cartridge does not support that framing: slot 18 (0x020de5b0) IS _ZN11dScMgCoin_c13OnYoshiTryEatEi in ov006 symbols.txt, and slot 17 (0x020dbe64) is the D0 body. src/_ZN11dScMgCoin_cD0Ev.cpp repeats the same sentence. It describes an old mislabel that has since been corrected on both files, but now reads as if the vtable itself were mislabelled, which it is not. Harmless to bytes; do not carry the sentence forward."
     },
     "factory_file": {
-      "path": "src/d_s_mg_coin.cpp",
+      "path": "src/named/ov006/d_s_mg_coin.cpp",
       "owns_delink_section": "0x020de940..0x020de988",
       "note": "Already holds dScMgCoin_c_classInit in extern C form and already references the vtable as extern int data_ov006_0213bf50[]. It is the 61st section; a merge that forgets it leaves the factory behind."
     },
@@ -1648,7 +1648,7 @@
   },
   "data_ownership": {
     "finding": "ov006 entire .data segment, 0x02133600..0x021402e0, is ONE delink section owned by no file. The class _ZTV, _ZTI, _ZTS, its 25 eight-byte callback records and g_profile_MG_COIN all live in it.",
-    "consequence": "The promoted TU cannot own its own vtable and must not try to emit one -- naming a vtable also raises the file's language mode. It references the table the way src/d_s_mg_coin.cpp already does, as extern int data_ov006_0213bf50[]. Same for the callback table: the 25 records stay in undelinked .data, so the TU emits none of them even though 25 of its functions are their targets.",
+    "consequence": "The promoted TU cannot own its own vtable and must not try to emit one -- naming a vtable also raises the file's language mode. It references the table the way src/named/ov006/d_s_mg_coin.cpp already does, as extern int data_ov006_0213bf50[]. Same for the callback table: the 25 records stay in undelinked .data, so the TU emits none of them even though 25 of its functions are their targets.",
     "callback_records_are_individually_symbolised": "config/arm9/overlays/ov006/symbols.txt names each record data_ov006_<addr> at an 8-byte stride from 0x0213be44, with g_profile_MG_COIN at 0x0213bedc sitting between the 19-record run and the 5-record run.",
     "this_is_what_forces_text_only": "The intact-object route requires the TU to own its _ZTV/_ZTI/_ZTS at their natural address. Those three symbols are inside the one undelinked ov006 .data section, so that route is unavailable and text-only is the only one left. Worth stating because promotion_route is a hand-maintained estimate in the queue -- no tool derives it; tools/queue_audit.py only reads it back to pick the compiler-only floor."
   },

@@ -57,7 +57,7 @@
       "disposition": "fixed",
       "location": "src/actors/dScMgLuigi_c.cpp:224,237",
       "summary": "IrisStop retains a void declaration for actual u32 IRQ::DisableIRQs(u32).",
-      "evidence": "include/IRQ.h and src/_ZN3IRQ11DisableIRQsEj.cpp:14 agree on the returned previous mask; no pointer/width ambiguity. Existing IRQ.h is already included.",
+      "evidence": "include/IRQ.h and src/named/arm9/_ZN3IRQ11DisableIRQsEj.cpp:14 agree on the returned previous mask; no pointer/width ambiguity. Existing IRQ.h is already included.",
       "required_action": "Use genuine IRQ::DisableIRQs and IRQ::SetIRQHandler, removing both hand-mangled local declarations.",
       "measured_proof": "pr2876-independent-irq-probe.json: complete36744-byte object remains10ea9208; all58 strict VERIFIED/zero differences/blind.",
       "reason": "Both IRQ calls now use the genuine existing namespace interfaces with their actual return types."
@@ -3615,7 +3615,7 @@
           "identical_source_offer_vs_current_target": true,
           "source_sha256": "72fc06a99e7f5824c652e582cb53f6f2b2331ae60ff9cccb03653816d0247eb2"
         },
-        "src/Deallocate.c": {
+        "src/named/arm9/Deallocate.c": {
           "identical_source_offer_vs_current_target": true,
           "source_sha256": "f4c493c369604e82a48179e9c6efebe73c44dee6b1bfbe8eeb0bbb7f4d849ba2"
         }
@@ -3887,16 +3887,16 @@
       "log": "build/pr2876-production/layout.log",
       "log_sha256": "3de0ffc4ddfcbef17e355a47148c173376e91b63ba3a5e2d44ce1816ffce3efe",
       "log_tail": [
-        "         {\"key\": \"src/BitUnPack.c\"}",
-        "         {\"key\": \"src/CleanCommonModelDataArr.c\"}",
-        "         {\"key\": \"src/CpuCopy8.c\"}",
-        "         {\"key\": \"src/CpuFastSet.c\"}",
-        "         {\"key\": \"src/CpuSet.c\"}",
-        "         {\"key\": \"src/Div.c\"}",
-        "         {\"key\": \"src/GetCRC16.c\"}",
-        "         {\"key\": \"src/Halt.c\"}",
-        "         {\"key\": \"src/HuffUnCompReadByCallback.c\"}",
-        "         {\"key\": \"src/IntrWait.c\"}",
+        "         {\"key\": \"src/named/arm9/BitUnPack.c\"}",
+        "         {\"key\": \"src/named/arm9/CleanCommonModelDataArr.c\"}",
+        "         {\"key\": \"src/named/arm9/CpuCopy8.c\"}",
+        "         {\"key\": \"src/named/arm9/CpuFastSet.c\"}",
+        "         {\"key\": \"src/named/arm9/CpuSet.c\"}",
+        "         {\"key\": \"src/named/arm9/Div.c\"}",
+        "         {\"key\": \"src/named/arm9/GetCRC16.c\"}",
+        "         {\"key\": \"src/named/arm9/Halt.c\"}",
+        "         {\"key\": \"src/named/arm9/HuffUnCompReadByCallback.c\"}",
+        "         {\"key\": \"src/named/arm9/IntrWait.c\"}",
         "         ... and 91 more",
         "layout-check: clean"
       ]

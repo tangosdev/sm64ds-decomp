@@ -1561,7 +1561,7 @@
   "inherited_declaration_control": {
     "base": "2705c624d2554ee8d21a56641275a2b85cce3a8b",
     "files": [
-      {"path": "src/_ZN6Player12St_Walk_InitEv.cpp", "same_non_line_ending_text": true},
+      {"path": "src/named/ov002/_ZN6Player12St_Walk_InitEv.cpp", "same_non_line_ending_text": true},
       {"path": "src/unnamed/ov090/__sinit_ov090_02133f4c.c", "same_non_line_ending_text": true},
       {"path": "src/actors/Eyerok.cpp", "same_non_line_ending_text": true},
       {"path": "src/actors/daPukupuku_c.cpp", "same_non_line_ending_text": true},
@@ -1576,7 +1576,7 @@
       {
         "symbol": "_ZN6Player17SetNoControlStateEhih",
         "kind": "return",
-        "file": "src/_ZN6Player12St_Walk_InitEv.cpp",
+        "file": "src/named/ov002/_ZN6Player12St_Walk_InitEv.cpp",
         "line": 17,
         "decl": "void (void *, unsigned char, int, unsigned char)",
         "got": "void",
@@ -1721,7 +1721,7 @@
       {
         "symbol": "_ZN6Player17SetNoControlStateEhih",
         "kind": "return",
-        "file": "src/_ZN6Player12St_Walk_InitEv.cpp",
+        "file": "src/named/ov002/_ZN6Player12St_Walk_InitEv.cpp",
         "line": 17,
         "decl": "void (void *, unsigned char, int, unsigned char)",
         "got": "void",

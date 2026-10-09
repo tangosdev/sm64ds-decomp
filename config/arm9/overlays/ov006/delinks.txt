@@ -56,7 +56,7 @@ src/actors/dScMgBomroom_c.cpp:
     complete
     .text start:0x020d5a54 end:0x020d9574
 
-src/d_s_mg_bomroom.cpp:
+src/named/ov006/d_s_mg_bomroom.cpp:
     complete
     .text start:0x020d9574 end:0x020d95a4
 
@@ -68,7 +68,7 @@ src/actors/dScMgCoin_c.cpp:
     complete
     .text start:0x020dbe40 end:0x020de940
 
-src/d_s_mg_coin.cpp:
+src/named/ov006/d_s_mg_coin.cpp:
     complete
     .text start:0x020de940 end:0x020de988
 
@@ -80,7 +80,7 @@ src/actors/dScMgCurling_c.cpp:
     complete
     .text start:0x020e0638 end:0x020e3820
 
-src/d_s_mg_curling.cpp:
+src/named/ov006/d_s_mg_curling.cpp:
     complete
     .text start:0x020e3820 end:0x020e3854
 
@@ -92,7 +92,7 @@ src/actors/dScMgCurling2_c_upper.cpp:
     complete
     .text start:0x020e59b0 end:0x020e6bf4
 
-src/d_s_mg_curling2.cpp:
+src/named/ov006/d_s_mg_curling2.cpp:
     complete
     .text start:0x020e6bf4 end:0x020e6c28
 
@@ -119,7 +119,7 @@ src/actors/dScMgJump_c.cpp:
     complete
     .text start:0x020edec0 end:0x020ee994
 
-src/d_s_mg_jump.cpp:
+src/named/ov006/d_s_mg_jump.cpp:
     complete
     .text start:0x020eeafc end:0x020eebe8
 
@@ -155,7 +155,7 @@ src/actors/dScMgPachinko_c.cpp:
     complete
     .text start:0x020fa75c end:0x020ff3ec
 
-src/d_s_mg_pachinko.cpp:
+src/named/ov006/d_s_mg_pachinko.cpp:
     complete
     .text start:0x020ff3ec end:0x020ff420
 
@@ -167,7 +167,7 @@ src/actors/dScMgPanel_c.cpp:
     complete
     .text start:0x0210428c end:0x02107858
 
-src/d_s_mg_panel.cpp:
+src/named/ov006/d_s_mg_panel.cpp:
     complete
     .text start:0x02107858 end:0x0210788c
 
@@ -203,7 +203,7 @@ src/actors/dScMgTeresa_c.cpp:
     complete
     .text start:0x0211cbd0 end:0x021207a8
 
-src/d_s_mg_teresa.cpp:
+src/named/ov006/d_s_mg_teresa.cpp:
     complete
     .text start:0x021207a8 end:0x021207dc
 
@@ -225,7 +225,7 @@ src/actors/dScMgSnowball_c.cpp:
     complete
     .text start:0x0212568c end:0x0212a520
 
-src/d_s_mg_snowball.cpp:
+src/named/ov006/d_s_mg_snowball.cpp:
     complete
     .text start:0x0212a520 end:0x0212a554
 
@@ -233,7 +233,7 @@ src/actors/dScMgFlower_c.cpp:
     complete
     .text start:0x0212a554 end:0x0212b7f8
 
-src/d_s_mg_flower.cpp:
+src/named/ov006/d_s_mg_flower.cpp:
     complete
     .text start:0x0212b7f8 end:0x0212b890
 

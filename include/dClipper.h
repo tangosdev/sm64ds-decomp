@@ -52,7 +52,7 @@ struct dClipper {
        the image because nothing derives from dClipper. */
     virtual ~dClipper();     /* slots 0 (D1), 1 (D0) */
 
-    /* DECLARED, never defined as a method here -- src/_ZN8dClipperC1Ev.cpp owns
+    /* DECLARED, never defined as a method here -- src/named/arm9/_ZN8dClipperC1Ev.cpp owns
        C1 (notes/ctor-migration.md section 2). */
     dClipper();
 

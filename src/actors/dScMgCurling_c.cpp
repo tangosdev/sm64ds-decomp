@@ -4,7 +4,7 @@
  * destructor is out of line and comes first, which makes this file the key
  * function's home, so the vtable and RTTI are emitted here too.
  * dScMgCurling_c_classInit, just above at 0x020e3820, is still its own
- * file (src/d_s_mg_curling.cpp).
+ * file (src/named/ov006/d_s_mg_curling.cpp).
  *
  * Functions run in ROM order under `#pragma defer_codegen off`; do not
  * reorder. The helpers are all dScMgCurling_c members: the state tables

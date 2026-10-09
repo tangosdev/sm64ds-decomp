@@ -254,7 +254,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "StateDrop, Behavior and InitResources declare local Vector3s, so this TU odr-uses inline ~Vector3. The cartridge's copy lives at arm9:0x020072c0, owned by src/_ZN7Vector3D1Ev.cpp; rombuild compares this object copy against those cartridge bytes before dropping it."
+      "reason": "StateDrop, Behavior and InitResources declare local Vector3s, so this TU odr-uses inline ~Vector3. The cartridge's copy lives at arm9:0x020072c0, owned by src/named/arm9/_ZN7Vector3D1Ev.cpp; rombuild compares this object copy against those cartridge bytes before dropping it."
     }
   ],
   "verification": {

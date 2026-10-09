@@ -5,7 +5,7 @@
  * func_ov009_0211145c hatch at 0x0211145c. This file owns
  * 0x02111224..0x0211145c; the upper half lives in d_a_s_bird.cpp.
  *
- * D1/D0 stay enrolled as their own files (src/_ZN9daSBird_cD1Ev.cpp /
+ * D1/D0 stay enrolled as their own files (src/named/ov009/_ZN9daSBird_cD1Ev.cpp /
  * D0Ev.cpp) -- the destructor is out of line and those files emit the
  * class vtable and RTTI. This TU does not.
  *

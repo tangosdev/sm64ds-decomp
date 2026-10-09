@@ -14,7 +14,7 @@
  * emits the vtable and the RTTI chain. Then come the unnamed helpers and
  * round states, and it closes with OnYoshiTryEat, Render, Behavior and
  * InitResources. dScMgBomroom_c_classInit, the factory just above, stays
- * in src/d_s_mg_bomroom.cpp. Functions run in ROM order under
+ * in src/named/ov006/d_s_mg_bomroom.cpp. Functions run in ROM order under
  * `#pragma defer_codegen off`; do not reorder. cstd::atan2 takes Fix12 by
  * value, so its call stays mangled.
  *

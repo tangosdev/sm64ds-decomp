@@ -19,15 +19,15 @@ src/unnamed/ov073/func_ov073_021227d0.c:
     complete
     .text start:0x021227d0 end:0x021227e4
 
-src/d_a_obj_ewb_ice_ewb_ice_c.c:
+src/named/ov073/d_a_obj_ewb_ice_ewb_ice_c.c:
     complete
     .text start:0x021227e4 end:0x02122814
 
-src/d_a_obj_ewb_ice_ewb_ice_b.c:
+src/named/ov073/d_a_obj_ewb_ice_ewb_ice_b.c:
     complete
     .text start:0x02122814 end:0x02122844
 
-src/d_a_obj_ewb_ice_ewb_ice_a.c:
+src/named/ov073/d_a_obj_ewb_ice_ewb_ice_a.c:
     complete
     .text start:0x02122844 end:0x02122874
 

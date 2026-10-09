@@ -238,7 +238,7 @@ def _looks_like_declaration(text, start, inner):
 def _is_member_call(text, i):
     """True when the identifier at offset i is reached through `.`, `->`, `::` or `~`.
 
-    `ptr.LoadFile()` is a method on a class, not the free function src/LoadFile.c
+    `ptr.LoadFile()` is a method on a class, not the free function src/named/arm9/LoadFile.c
     defines, and scoring one against the other produced 40 rows of nonsense.
     """
     j = i - 1

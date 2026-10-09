@@ -7,7 +7,7 @@
  * reveal sprites, the 16 hiding Boos (spawn, flight, wall bounce, fade and
  * the touch test against the rubbed-out BG0 tiles), the scene states, and
  * the class's own overrides. Below it is dScMgSound_c; above it is
- * dScMgTeresa_c_classInit in src/d_s_mg_teresa.cpp, which stays its own
+ * dScMgTeresa_c_classInit in src/named/ov006/d_s_mg_teresa.cpp, which stays its own
  * file.
  *
  * Nothing in the ROM names the helpers, so the members keep their

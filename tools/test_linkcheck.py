@@ -26,7 +26,7 @@ Two distinct shapes, two fixes, both in this file:
     reports the offset; linkcheck() slices the code and rebases+filters the
     relocations into that nested function's own window before comparing.
 
-RealCompileFixtures compiles the REAL committed sources (src/_dmul.c,
+RealCompileFixtures compiles the REAL committed sources (src/named/arm9/_dmul.c,
 src/unnamed/arm9/01ff/func_01ff97d8.c) with the pinned mwccarm and skips if it is absent, the same
 convention tools/test_objisolate.py and tools/test_rombuild.py use: the whole
 subject is what a specific compiler emits, so a hand-built object would test this
@@ -82,7 +82,7 @@ class RealCompileFixtures(unittest.TestCase):
     """Real compiles of the two committed sources these fixes were written for."""
 
     def test_alias_zero_size_record_verifies_against_its_sized_twin(self):
-        """src/_dmul.c compiles under the name "_dmul"; config records _dmul at
+        """src/named/arm9/_dmul.c compiles under the name "_dmul"; config records _dmul at
         0x01ff8708 size 0 and func_01ff8708 at the same address size 0x6f0. Asking
         linkcheck for "_dmul" with its own (zero) recorded size used to read NO-SYM
         with reason "len-mismatch" unconditionally -- 0x6f0 compiled bytes can never

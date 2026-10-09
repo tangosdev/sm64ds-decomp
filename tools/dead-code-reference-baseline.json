@@ -350,9 +350,6 @@
   "port/ntr/lz77.cpp": [
    "src/dst"
   ],
-  "src/CpuCopy8.c": [
-   "src/dst"
-  ],
   "src/_ZN10dMgPsOpt_c11TouchIcon_c6RenderEv.cpp": [
    "src/func_ov004_020b8c18.c"
   ],
@@ -386,33 +383,8 @@
   "src/_ZN13daObjDorifu_cD1Ev.cpp": [
    "src/func_ov002_020b4af8.c"
   ],
-  "src/_ZN13daObjKuruma_cD0Ev.cpp": [
-   "src/_ZN10dBgActor_cD0Ev.cpp"
-  ],
-  "src/_ZN13daObjSwdoor_cD0Ev.cpp": [
-   "src/_ZN10dBgActor_cD0Ev.cpp"
-  ],
   "src/_ZN14ArrowSignRight4KillEv.cpp": [
    "src/_ZN10dBgActor_c4KillEv.cpp"
-  ],
-  "src/_ZN14daObjUkiyuka_cD0Ev.cpp": [
-   "src/_ZN10dBgActor_cD0Ev.cpp"
-  ],
-  "src/_ZN15daObjGuragura_cD0Ev.cpp": [
-   "src/_ZN10dBgActor_cD0Ev.cpp"
-  ],
-  "src/_ZN16daObjKaitendai_cD0Ev.cpp": [
-   "src/_ZN10dBgActor_cD0Ev.cpp"
-  ],
-  "src/_ZN17daObjFloatBoard_cD0Ev.cpp": [
-   "src/_ZN10dBgActor_cD0Ev.cpp",
-   "src/_ZN17daObjFloatBoard_c8BehaviorEv.cpp"
-  ],
-  "src/_ZN17daObjFloatBoard_cD1Ev.cpp": [
-   "src/_ZN17daObjFloatBoard_c8BehaviorEv.cpp"
-  ],
-  "src/_ZN17daObjKurumajiku_cD0Ev.cpp": [
-   "src/_ZN10dBgActor_cD0Ev.cpp"
   ],
   "src/_ZN4Door13InitResourcesEv.c": [
    "include/daDoor_c.h"
@@ -1984,6 +1956,34 @@
    "src/func_ov006_02124088.c",
    "src/func_ov006_02124228.c",
    "src/func_ov006_021245a8.c"
+  ],
+  "src/named/arm9/CpuCopy8.c": [
+   "src/dst"
+  ],
+  "src/named/ov002/_ZN13daObjKuruma_cD0Ev.cpp": [
+   "src/_ZN10dBgActor_cD0Ev.cpp"
+  ],
+  "src/named/ov002/_ZN13daObjSwdoor_cD0Ev.cpp": [
+   "src/_ZN10dBgActor_cD0Ev.cpp"
+  ],
+  "src/named/ov002/_ZN14daObjUkiyuka_cD0Ev.cpp": [
+   "src/_ZN10dBgActor_cD0Ev.cpp"
+  ],
+  "src/named/ov002/_ZN15daObjGuragura_cD0Ev.cpp": [
+   "src/_ZN10dBgActor_cD0Ev.cpp"
+  ],
+  "src/named/ov002/_ZN16daObjKaitendai_cD0Ev.cpp": [
+   "src/_ZN10dBgActor_cD0Ev.cpp"
+  ],
+  "src/named/ov002/_ZN17daObjFloatBoard_cD0Ev.cpp": [
+   "src/_ZN10dBgActor_cD0Ev.cpp",
+   "src/_ZN17daObjFloatBoard_c8BehaviorEv.cpp"
+  ],
+  "src/named/ov002/_ZN17daObjFloatBoard_cD1Ev.cpp": [
+   "src/_ZN17daObjFloatBoard_c8BehaviorEv.cpp"
+  ],
+  "src/named/ov002/_ZN17daObjKurumajiku_cD0Ev.cpp": [
+   "src/_ZN10dBgActor_cD0Ev.cpp"
   ],
   "src/unnamed/arm9/0205/func_02059d8c.c": [
    "notes/func_02059d8c-asm-origin.md"

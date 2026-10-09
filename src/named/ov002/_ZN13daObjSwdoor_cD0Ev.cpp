@@ -18,7 +18,7 @@
  *
  * THIS TU NO LONGER DEFINES _ZTV13daObjSwdoor_c OR _ZTI13daObjSwdoor_c. It
  * did while the class had no out-of-line virtual anywhere -- see
- * src/_ZN13daObjSwdoor_cD1Ev.cpp. Render (slot 9) is now defined in
+ * src/named/ov002/_ZN13daObjSwdoor_cD1Ev.cpp. Render (slot 9) is now defined in
  * src/actors/daObjSwdoor_c.cpp, which is therefore the key-function TU and
  * carries that data; objisolate reduces this object to the declared D0
  * function before eligible.py and rombuild.py judge it.

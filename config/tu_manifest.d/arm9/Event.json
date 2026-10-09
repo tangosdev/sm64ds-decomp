@@ -1,8 +1,8 @@
 {
   "id": "arm9/Event",
   "module": "arm9",
-  "source": "src/Event.cpp",
-  "promoted_source": "src/Event.cpp",
+  "source": "src/named/arm9/Event.cpp",
+  "promoted_source": "src/named/arm9/Event.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

@@ -127,7 +127,7 @@
           ],
           "source_contract": "File-scope int-reference overload is declared void; a block overrides it to int. Short-reference overload is redeclared with int-width arguments in func02111ee0.",
           "actual_contract": "Both return int; int&/int/int and short&/short/short respectively.",
-          "definition": "src/_Z14ApproachLinearRiii.cpp:2; src/_Z14ApproachLinearRsss.cpp:2",
+          "definition": "src/_Z14ApproachLinearRiii.cpp:2; src/named/arm9/_Z14ApproachLinearRsss.cpp:2",
           "repair": "Use consistent actual return and scalar widths. Pointer/reference bridges may be needed for the existing source representation but do not justify int-width shorts."
         },
         {
@@ -158,7 +158,7 @@
           ],
           "source_contract": "Block changes atan2 from short return to int, and GetSubtraction from int(short,short) to short(short,int).",
           "actual_contract": "At this exact9022/47ee pin atan2 returns s16(s32,s32), and GetSubtraction is int dActor_c::GetSubtraction(short,short).",
-          "definition": "src/_ZN4cstd5atan2E5Fix12IiES1_.c:13; src/_ZN8dActor_c14GetSubtractionEss.cpp:6",
+          "definition": "src/named/arm9/_ZN4cstd5atan2E5Fix12IiES1_.c:13; src/_ZN8dActor_c14GetSubtractionEss.cpp:6",
           "repair": "Correct the pair together, measure all affected functions. Do not import a later branch atan2 contract into this pinned tree."
         },
         {
@@ -202,7 +202,7 @@
           ],
           "source_contract": "Bounce returns int. Hurt final three parameters are u32.",
           "actual_contract": "Current scalar Bounce definition returns void(Player*,int); Hurt returns int with final three u8 parameters.",
-          "definition": "src/_ZN6Player6BounceE5Fix12IiE.cpp:14; src/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp:21",
+          "definition": "src/named/ov002/_ZN6Player6BounceE5Fix12IiE.cpp:14; src/named/ov002/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp:21",
           "repair": "Correct the existing scalar contracts, keeping any genuine member/Fix12 experiments separate."
         },
         {

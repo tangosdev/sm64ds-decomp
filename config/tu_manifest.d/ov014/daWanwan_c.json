@@ -1130,7 +1130,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h defines ~Vector3() {} in-class -- deliberately, because the ROM's __destroy_arr over Vector3 arrays proves the element type has a destructor -- so every TU holding a Vector3 emits this 4-byte vague-linkage bx lr. This one holds fourteen (two Vector3[7]). It is not compiler-only: it has a ROM home at arm9:0x020072c0 owned by src/_ZN7Vector3D1Ev.cpp, so the disposition is deadstrip-duplicate, whose precondition is the opposite of deadstrip's -- the body must be proved to be the cartridge's own at that address before it may be discarded. objisolate checks STB_LOPROC and compares the words no relocation covers; rombuild._duplicate_body_reasons links the body against arm9:0x020072c0 and compares the words objisolate had to mask. Both run before anything is discarded."
+      "reason": "include/types.h defines ~Vector3() {} in-class -- deliberately, because the ROM's __destroy_arr over Vector3 arrays proves the element type has a destructor -- so every TU holding a Vector3 emits this 4-byte vague-linkage bx lr. This one holds fourteen (two Vector3[7]). It is not compiler-only: it has a ROM home at arm9:0x020072c0 owned by src/named/arm9/_ZN7Vector3D1Ev.cpp, so the disposition is deadstrip-duplicate, whose precondition is the opposite of deadstrip's -- the body must be proved to be the cartridge's own at that address before it may be discarded. objisolate checks STB_LOPROC and compares the words no relocation covers; rombuild._duplicate_body_reasons links the body against arm9:0x020072c0 and compares the words objisolate had to mask. Both run before anything is discarded."
     }
   ],
   "data": [

@@ -32,7 +32,7 @@
       "symbol": "_ZN15daObjFlMaruta_cD0Ev",
       "address": "0x021124e8",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN15daObjFlMaruta_cD0Ev.cpp",
+      "legacy_source": "src/named/ov022/_ZN15daObjFlMaruta_cD0Ev.cpp",
       "ordinal": 1
     },
     {

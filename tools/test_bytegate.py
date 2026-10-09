@@ -177,8 +177,8 @@ class RealManifest(unittest.TestCase):
     def test_the_manifest_does_not_list_a_zero_size_alias(self):
         """The two halves must stay disjoint, or the CI line double-counts them."""
         rows = {r["src"] for r in BG.manifest_rows()}
-        for name in ("src/_dmul.c", "src/_ll_sdiv.c", "src/_s32_div_f.c",
-                     "src/_u32_div_f.c"):
+        for name in ("src/named/arm9/_dmul.c", "src/named/arm9/_ll_sdiv.c", "src/named/arm9/_s32_div_f.c",
+                     "src/named/arm9/_u32_div_f.c"):
             self.assertNotIn(name, rows, "handled by the derived half, not the manifest")
 
 
@@ -218,7 +218,7 @@ class AliasNames(unittest.TestCase):
     """The names an aliased address carries, not just the address.
 
     A source file is filed under the name its author knew the function by, and for
-    every aliased address in this tree that is the ALIAS -- src/_dmul.c holds the
+    every aliased address in this tree that is the ALIAS -- src/named/arm9/_dmul.c holds the
     1,776 bytes the symbol table calls func_01ff8708. Asked only about the sized
     record's own name, srcpath finds nothing and four byte-exact ITCM primitives read
     as never attempted."""
@@ -606,7 +606,7 @@ class HandAsmCounting(unittest.TestCase):
 class AliasSourceFallback(unittest.TestCase):
     """A sized record whose source is filed under its ALIAS still finds it.
 
-    src/_dmul.c decompiles the 1,776 bytes the symbol table calls func_01ff8708, and a
+    src/named/arm9/_dmul.c decompiles the 1,776 bytes the symbol table calls func_01ff8708, and a
     lookup by the sized record's own name finds nothing at all. Four byte-exact ITCM
     primitives read as never attempted for that reason alone."""
 

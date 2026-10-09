@@ -5,7 +5,7 @@
 // never an allocator preference: GetSoundGroupID takes TWO arguments and this file
 // declared it with one. The callee (0x0202de24) reads r1 before it ever writes it --
 // `cmp r1,#1`, `cmp r1,#4`, `cmp r1,#2` -- so the second argument is real, and
-// src/GetSoundGroupID.c already defines it as `(int group, int sub)`. A `bl` is
+// src/named/arm9/GetSoundGroupID.c already defines it as `(int group, int sub)`. A `bl` is
 // byte-identical whether or not an argument is passed, so no byte gate, linkcheck or
 // fdiff run could see the error.
 //

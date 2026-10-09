@@ -714,7 +714,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h gives Vector3 an empty inline destructor, so this TU re-emits it with vague linkage for the Vector3 temporary in func_ov006_020c3bf4. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by the enrolled `complete` source src/_ZN7Vector3D1Ev.cpp. This object's copy is the identical 4-byte `bx lr` body (1e ff 2f e1) with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+      "reason": "include/types.h gives Vector3 an empty inline destructor, so this TU re-emits it with vague linkage for the Vector3 temporary in func_ov006_020c3bf4. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by the enrolled `complete` source src/named/arm9/_ZN7Vector3D1Ev.cpp. This object's copy is the identical 4-byte `bx lr` body (1e ff 2f e1) with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
     }
   ]
 }

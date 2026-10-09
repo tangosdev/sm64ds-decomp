@@ -19,7 +19,7 @@
  * that address genuinely is Render (confirmed by vtable slot identity and
  * by matching every sibling's Render shape).
  *
- * Behavior has a NONMATCHING draft at src/_ZN12dScMgSlot1_c8BehaviorEv.cpp.
+ * Behavior has a NONMATCHING draft at src/named/ov006/_ZN12dScMgSlot1_c8BehaviorEv.cpp.
  * Its 0x81c-byte range, ov006:0x0210c9e0..0x0210d1fc, remains supplied by
  * the retail gap object. The touch-coordinate block still differs by 19 words;
  * notes/mwccarm-codegen.md section 6cm records the matching investigation.

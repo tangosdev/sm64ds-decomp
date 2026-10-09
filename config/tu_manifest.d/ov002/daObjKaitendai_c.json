@@ -64,14 +64,14 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "ov002",
       "canonical_address": "0x020b6664",
-      "reason": "Vague-linkage copy of the class's complete-object destructor, emitted here because this TU owns the key function while ~daObjKaitendai_c is defined inline in include/daObjKaitendai_c.h. The cartridge owns it at ov002:0x020b6664 and src/_ZN16daObjKaitendai_cD1Ev.cpp still holds that delinks entry, so this object's copy is a byte-identical duplicate that production isolation discards. It is outside this entry's licensed range (.text 0x020b66a8-0x020b6814)."
+      "reason": "Vague-linkage copy of the class's complete-object destructor, emitted here because this TU owns the key function while ~daObjKaitendai_c is defined inline in include/daObjKaitendai_c.h. The cartridge owns it at ov002:0x020b6664 and src/named/ov002/_ZN16daObjKaitendai_cD1Ev.cpp still holds that delinks entry, so this object's copy is a byte-identical duplicate that production isolation discards. It is outside this entry's licensed range (.text 0x020b66a8-0x020b6814)."
     },
     {
       "symbol": "_ZN16daObjKaitendai_cD0Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_module": "ov002",
       "canonical_address": "0x020b660c",
-      "reason": "Vague-linkage copy of the class's deleting destructor, same cause. The cartridge owns it at ov002:0x020b660c, BELOW D1 -- see this entry's boundary_evidence for the four source forms measured against that order and for why the one form that emits D0 first is refuted by the cartridge. src/_ZN16daObjKaitendai_cD0Ev.cpp keeps that delinks entry and this object's byte-identical copy is discarded."
+      "reason": "Vague-linkage copy of the class's deleting destructor, same cause. The cartridge owns it at ov002:0x020b660c, BELOW D1 -- see this entry's boundary_evidence for the four source forms measured against that order and for why the one form that emits D0 first is refuted by the cartridge. src/named/ov002/_ZN16daObjKaitendai_cD0Ev.cpp keeps that delinks entry and this object's byte-identical copy is discarded."
     },
     {
       "symbol": "_ZTV16daObjKaitendai_c",
@@ -153,7 +153,7 @@
   ],
   "notes": [
     "Seeded by tools/tubuild.py create (5 members, the tu_map span) and then re-cut by hand. See boundary_evidence for the call-site census that moves the run's right edge out to 0x020b6814, rules out 0x020b6584 on the left, and excludes the destructor pair from the licensed range.",
-    "NO FORCING FUNCTION AND NO PRAGMA. The two legacy destructor shards each carried a scaffold (`delete p`, `p->~daObjKaitendai_c()`) whose only job was to drag an out-of-line copy into a one-function object. This TU owns the key function, so _ZTV16daObjKaitendai_c is emitted here and its slots 16 and 17 odr-use D1 and D0 with nothing added to the source; src/_ZN16daObjKaitendai_cD0Ev.cpp and src/_ZN16daObjKaitendai_cD1Ev.cpp keep their own per-function delinks entries and this object's copies are licensed as deadstrip-duplicate against those ROM homes.",
+    "NO FORCING FUNCTION AND NO PRAGMA. The two legacy destructor shards each carried a scaffold (`delete p`, `p->~daObjKaitendai_c()`) whose only job was to drag an out-of-line copy into a one-function object. This TU owns the key function, so _ZTV16daObjKaitendai_c is emitted here and its slots 16 and 17 odr-use D1 and D0 with nothing added to the source; src/named/ov002/_ZN16daObjKaitendai_cD0Ev.cpp and src/named/ov002/_ZN16daObjKaitendai_cD1Ev.cpp keep their own per-function delinks entries and this object's copies are licensed as deadstrip-duplicate against those ROM homes.",
     "TWO PREVIOUSLY UNATTRIBUTED FUNCTIONS ARE FOLDED IN. func_ov002_020b66a8 and func_ov002_020b676c are this class's shared cleanup and setup halves, reached by an ordinary call from each of the five leaves rather than through a vtable slot, because the class is abstract in slots 0 and 3. build/tu_map.json cannot see the second one: it carries no mangled name and no vtable slot, so no label bounds the run on the right.",
     "The class is ABSTRACT: vtable slots 0 (InitResources) and 3 (CleanupResources) are bare zero words with no relocation, and each of the five leaves supplies its own. There is no factory and no g_profile row, which is why the entry claims no data, no ctor and no BSS.",
     "func_ov002_020b66a8 and func_ov002_020b676c keep their address-derived names. Neither occupies a vtable slot in any class in the image and nothing in the ROM names either, so a coined English name would be invention, not recovery.",

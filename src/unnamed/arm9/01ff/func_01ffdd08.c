@@ -20,7 +20,7 @@
  *
  * func_02057020 / func_0205710c keep their func_ names from config/arm9/symbols.txt.
  * The low-halfword truncation of func_02057020's result is the same idiom already in
- * src/unnamed/arm9/0205/func_02058690.c and src/_ZN8SaveData16ReadDataFromCartEPcjj.cpp.
+ * src/unnamed/arm9/0205/func_02058690.c and src/named/arm9/_ZN8SaveData16ReadDataFromCartEPcjj.cpp.
  */
 #include "types.h"
 

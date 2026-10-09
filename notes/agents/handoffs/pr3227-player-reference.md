@@ -29,7 +29,7 @@ linked-byte probe before application: VERIFIED, diffs [], blind 0 for each:
 
 - [ov002](../../../config/arm9/overlays/ov002/symbols.txt) [func_ov002_020d6790](../../../src/unnamed/ov002/func_ov002_020d6790.cpp): 0x020d6790, size 0x208.
 - [ov002](../../../config/arm9/overlays/ov002/symbols.txt) [func_ov002_020d7430](../../../src/unnamed/ov002/func_ov002_020d7430.cpp): 0x020d7430, size 0xd4.
-- [ov002](../../../config/arm9/overlays/ov002/symbols.txt) [Player::St_YoshiPower_Main](../../../src/_ZN6Player18St_YoshiPower_MainEv.cpp): 0x020d7504, size 0x9cc.
+- [ov002](../../../config/arm9/overlays/ov002/symbols.txt) [Player::St_YoshiPower_Main](../../../src/named/ov002/_ZN6Player18St_YoshiPower_MainEv.cpp): 0x020d7504, size 0x9cc.
 
 Applied production declaration check:
 `python tools/check_decl_agreement.py --changed dbd94c7c483db1b6c5603c7ec2a680b46461643e`

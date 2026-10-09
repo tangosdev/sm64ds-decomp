@@ -31,7 +31,7 @@ src/unnamed/ov025/func_ov025_021125dc.c:
     complete
     .text start:0x021125dc end:0x021125f0
 
-src/d_a_dp_lift.cpp:
+src/named/ov025/d_a_dp_lift.cpp:
     complete
     .text start:0x021125f0 end:0x02112654
 

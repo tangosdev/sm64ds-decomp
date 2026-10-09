@@ -55,7 +55,7 @@
  * - func_ov060_02116740 and func_ov060_021172c8 stay free: decl_common.h
  *   declares them for other users.
  * - daKpaFire_c_classInit (0x02117938) abuts this run and stays a
- *   one-function C source (src/d_a_kpa_fire.c).
+ *   one-function C source (src/named/ov060/d_a_kpa_fire.c).
  * - dCcAc_c::Init, dBgCh_Actr::Init, DropShadowRadHeight, Particle::New
  *   and SaveData helpers stay mangled scalar externs (Fix12-by-value
  *   member form is the 6az wall).

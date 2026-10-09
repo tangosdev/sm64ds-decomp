@@ -161,7 +161,7 @@ a documented contamination vector worth a policy note. *This was not verified �
 
 ## 5. Defects found along the way (actionable)
 
-1. **[src/_ZN6Player16St_WallJump_InitEv.cpp](../../src/_ZN6Player16St_WallJump_InitEv.cpp) is misattributed.** Its own banner admits it is
+1. **[src/named/ov002/_ZN6Player16St_WallJump_InitEv.cpp](../../src/named/ov002/_ZN6Player16St_WallJump_InitEv.cpp) is misattributed.** Its own banner admits it is
    *"NOT a Player method"*; it dereferences `this+0x4eb0`, `+0x4eb4`, `+0x4ee5` — ~0x4700 bytes
    past the end of a 0x768-byte `Player`. The real `St_WallJump_Main` is in [ov002](../../config/arm9/overlays/ov002/symbols.txt); this one is in
    [ov006](../../config/arm9/overlays/ov006/symbols.txt). **The bad assumption has already leaked into `include/Player.h:536-540`** as a footnote
@@ -177,10 +177,10 @@ a documented contamination vector worth a policy note. *This was not verified �
    [SURFACE_VANISH_CAP_WALLS = `0x7B`](https://github.com/n64decomp/sm64/blob/master/include/surface_terrains.h#L62) — unrepresentable in 5 bits. With a 5-bit field and ~9 observed
    values, collision with some low N64 ID is near-certain.
 
-4. **[src/AngleDiff.c](../../src/AngleDiff.c)** has no header comment, no `@symbol` line, no matching claim — unlike every
+4. **[src/named/arm9/AngleDiff.c](../../src/named/arm9/AngleDiff.c)** has no header comment, no `@symbol` line, no matching claim — unlike every
    neighbour in the math set. Lowest-confidence file in that group.
 
-5. **[src/_ZN6Player11ChangeStateERNS_5StateE.cpp](../../src/_ZN6Player11ChangeStateERNS_5StateE.cpp)** declares a local `struct State` and a
+5. **[src/named/ov002/_ZN6Player11ChangeStateERNS_5StateE.cpp](../../src/named/ov002/_ZN6Player11ChangeStateERNS_5StateE.cpp)** declares a local `struct State` and a
    `struct C3;` inside the .cpp, and writes fields through `*(State**)((char*)&self->unk_378)`
    casts. The ROM confirms the 0x18/3-PMF layout, so the *shape* is right — but this is an
    un-recovered type re-declared per-file instead of living in a header.

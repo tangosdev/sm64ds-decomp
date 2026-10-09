@@ -6076,7 +6076,7 @@ body one word from exact.
 
 **Addendum (2026-09-13, run link100 wave 12 lane W12-6).** The missing copy on
 `_ZN10dScStage_c13InitResourcesEv` was not a coalesce the cartridge's compiler declined. r1 had not
-died at +0x520: `GetSoundGroupID` takes two arguments (src/GetSoundGroupID.c) and the ROM passes
+died at +0x520: `GetSoundGroupID` takes two arguments (src/named/arm9/GetSoundGroupID.c) and the ROM passes
 the area byte still in r1 as the second one, which the draft's one-argument declaration had
 dropped. With the honest declaration the bank default takes r2 and the join copy `mov r1,r2`
 appears by itself: MATCHED, 6cy. The `opt_dead_assignments off` probe still identifies the pass
@@ -7705,7 +7705,7 @@ coalesced the web straight into r1 and no copy existed. 6ch named the pass
 coalesce a build delta.
 
 It was a declaration. The draft carried `int GetSoundGroupID(int level);` while
-src/GetSoundGroupID.c defines `int GetSoundGroupID(int group, int sub)` (sub is read for group 6,
+src/named/arm9/GetSoundGroupID.c defines `int GetSoundGroupID(int group, int sub)` (sub is read for group 6,
 the castle, to pick the area's music). The ROM's caller passes the area byte data_0209f220, the
 value it has just tested against 2, as the second argument:
 

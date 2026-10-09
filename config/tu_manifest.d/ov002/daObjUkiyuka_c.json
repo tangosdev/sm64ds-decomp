@@ -62,7 +62,7 @@
   "bss": [],
   "notes": [
     "Seeded by tools/tubuild.py create (5 members, the tu_map span) and then re-cut by hand. See boundary_evidence for the call-site census that moves the run's right edge out to 0x020b660c, refutes func_ov002_020b62cc and func_ov002_020b6374 on the left, and excludes the destructor pair from the licensed range.",
-    "NO FORCING FUNCTION AND NO PRAGMA. The two legacy destructor shards each carry a scaffold (a delete-expression, an explicit destructor call) whose only job is to drag an out-of-line copy into a one-function object. This TU owns the key function, so _ZTV14daObjUkiyuka_c is emitted here and its slots 16 and 17 odr-use D1 and D0 with nothing added to the source; src/_ZN14daObjUkiyuka_cD0Ev.cpp and src/_ZN14daObjUkiyuka_cD1Ev.cpp keep their own per-function delinks entries and this object's copies are licensed as deadstrip-duplicate against those ROM homes.",
+    "NO FORCING FUNCTION AND NO PRAGMA. The two legacy destructor shards each carry a scaffold (a delete-expression, an explicit destructor call) whose only job is to drag an out-of-line copy into a one-function object. This TU owns the key function, so _ZTV14daObjUkiyuka_c is emitted here and its slots 16 and 17 odr-use D1 and D0 with nothing added to the source; src/named/ov002/_ZN14daObjUkiyuka_cD0Ev.cpp and src/named/ov002/_ZN14daObjUkiyuka_cD1Ev.cpp keep their own per-function delinks entries and this object's copies are licensed as deadstrip-duplicate against those ROM homes.",
     "TWO PREVIOUSLY UNATTRIBUTED FUNCTIONS ARE FOLDED IN. func_ov002_020b6424 and func_ov002_020b6584 are this class's shared teardown and setup halves, reached by an ordinary call from each of the two leaves rather than through a vtable slot, because the class is abstract in slots 0 and 3. build/tu_map.json cannot see the second one: it carries no mangled name and no vtable slot, so no label bounds the run on the right.",
     "The class is ABSTRACT: vtable slots 0 (InitResources) and 3 (CleanupResources) are bare zero words with no relocation, and each of the two leaves supplies its own. There is no factory and no g_profile row -- both leaves' factories live in their own overlays (daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L / _FL_UKIYUKA at ov022 0x021120b8 and 0x021120f4, daObjKm2_Ukishima_c_classInit at ov045 0x02111bf4) and neither abuts this run -- which is why the entry claims no data, no ctor and no BSS.",
     "func_ov002_020b6424 and func_ov002_020b6584 keep their address-derived names. Neither occupies a vtable slot in any class in the image and nothing in the ROM names either, so a coined English name would be invention, not recovery.",
@@ -223,14 +223,14 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "ov002",
       "canonical_address": "0x020b63e0",
-      "reason": "Vague-linkage copy of the class's complete-object destructor, emitted here because this TU owns the key function while ~daObjUkiyuka_c is defined inline in include/daObjUkiyuka_c.h. The cartridge owns it at ov002:0x020b63e0 and src/_ZN14daObjUkiyuka_cD1Ev.cpp still holds that delinks entry, so this object's copy is a duplicate -- byte-identical outside its relocated words, measured -- that production isolation discards. It is outside this entry's licensed range (.text 0x020b6424-0x020b660c)."
+      "reason": "Vague-linkage copy of the class's complete-object destructor, emitted here because this TU owns the key function while ~daObjUkiyuka_c is defined inline in include/daObjUkiyuka_c.h. The cartridge owns it at ov002:0x020b63e0 and src/named/ov002/_ZN14daObjUkiyuka_cD1Ev.cpp still holds that delinks entry, so this object's copy is a duplicate -- byte-identical outside its relocated words, measured -- that production isolation discards. It is outside this entry's licensed range (.text 0x020b6424-0x020b660c)."
     },
     {
       "symbol": "_ZN14daObjUkiyuka_cD0Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_module": "ov002",
       "canonical_address": "0x020b6388",
-      "reason": "Vague-linkage copy of the class's deleting destructor, same cause. The cartridge owns it at ov002:0x020b6388, BELOW D1 -- see this entry's boundary_evidence for the six source forms measured against that order and for why every form that emits D0 first also emits a D2 the ROM does not contain. src/_ZN14daObjUkiyuka_cD0Ev.cpp keeps that delinks entry and this object's copy is discarded."
+      "reason": "Vague-linkage copy of the class's deleting destructor, same cause. The cartridge owns it at ov002:0x020b6388, BELOW D1 -- see this entry's boundary_evidence for the six source forms measured against that order and for why every form that emits D0 first also emits a D2 the ROM does not contain. src/named/ov002/_ZN14daObjUkiyuka_cD0Ev.cpp keeps that delinks entry and this object's copy is discarded."
     },
     {
       "symbol": "_ZTV14daObjUkiyuka_c",

@@ -121,7 +121,7 @@
       "symbol": "MultiStore16",
       "caller": "src/actors/dScMgLuigi_c.cpp:204,2300,1965,2449,2482",
       "declared": "void(u16,char*,int)",
-      "definition": "src/MultiStore16.c:1",
+      "definition": "src/named/arm9/MultiStore16.c:1",
       "defined": "void(short,char*,int)",
       "context": "Only low16bits are stored by actual callee; signedness contradiction is inherited. Coordinate actual typed contract/measure wrappers before claiming full interface agreement."
     }

@@ -541,7 +541,7 @@ class EvaluateFullResolverParityTests(unittest.TestCase):
     for the same reason: the WIRING is what these prove, and resolve_nested_slice's
     own offset arithmetic already has dedicated coverage there (shared code, not
     re-tested here). RealCompileFixtures below compiles the actual committed
-    src/_dmul.c and src/unnamed/arm9/01ff/func_01ff97d8.c and skips if the canonical (2004/b56)
+    src/named/arm9/_dmul.c and src/unnamed/arm9/01ff/func_01ff97d8.c and skips if the canonical (2004/b56)
     compiler is absent, same as tools/test_linkcheck.py's RealCompileFixtures."""
 
     def _require_compile_stack(self):
@@ -664,12 +664,12 @@ class RealCompileResolverFixtures(unittest.TestCase):
     both shapes using the SAME committed source, not just on mocked wiring."""
 
     def test_dmul_scores_zero_when_evaluated_under_its_alias_row_shape(self):
-        """src/_dmul.c, fed to evaluate_full as if it were a near-miss row's own
+        """src/named/arm9/_dmul.c, fed to evaluate_full as if it were a near-miss row's own
         c_source with the row's zero-declared size (the alias shape), must resolve
         to the sized twin's real length and read a byte-exact MATCH -- divergences 0,
         ok True -- the number reeval treats as bankable."""
         import match as M
-        src = (TOOLS.parent / "src" / "_dmul.c").read_text(encoding="utf-8")
+        src = (TOOLS.parent / "src" / "named" / "arm9" / "_dmul.c").read_text(encoding="utf-8")
         full = NDB.evaluate_full(src, "_dmul", b"", module="itcm", addr=0x01ff8708, size=0)
         self.assertEqual(full["divergences"], 0)
         self.assertTrue(full["ok"])

@@ -6,7 +6,7 @@
  * fresh copy off the card, so the code driving that cannot itself be running from main RAM.
  *
  * Names, and where each one comes from:
- *   Crash            0x02019740, already named in config/arm9/symbols.txt (src/Crash.c).
+ *   Crash            0x02019740, already named in config/arm9/symbols.txt (src/named/arm9/Crash.c).
  *                    Reached when the boot-info halfword is 2, i.e. this build refuses to
  *                    soft reset in that boot mode. src/func_02013f4c.c makes the same test
  *                    and routes the ==2 case to func_0205f958 instead of calling here.

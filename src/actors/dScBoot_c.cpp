@@ -8,7 +8,7 @@
  * This TU is the class's scene methods: the button-row redraw helper
  * func_02005348, the slot-6 state machine Behavior and the slot-0
  * InitResources, .text 0x02005348..0x02005d94. The destructor pair and the
- * dScBoot_c_classInit factory live in the second TU, src/d_s_boot.cpp.
+ * dScBoot_c_classInit factory live in the second TU, src/named/arm9/d_s_boot.cpp.
  * Source order is the reverse of the ROM's -- mwccarm emits .text in
  * reverse source order. Do not reorder.
  *

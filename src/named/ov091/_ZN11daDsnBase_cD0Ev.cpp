@@ -7,7 +7,7 @@
  * mwcc emits D0 (destroy through the class and its bases, then hand the object
  * to the inherited operator delete), and objisolate keeps it while dropping
  * this forcing function's own .text. The D1 half is forced the same way in
- * src/_ZN11daDsnBase_cD1Ev.cpp. */
+ * src/named/ov091/_ZN11daDsnBase_cD1Ev.cpp. */
 #include "daDsnBase_c.h"
 
 void daDsnBase_c_EmitDeletingDestructor(daDsnBase_c *p)

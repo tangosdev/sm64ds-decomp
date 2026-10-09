@@ -127,7 +127,7 @@ def synced_from_src():
             f = SP.path_for(name)
             if f is None:
                 # The source for an aliased address is filed under the name its author
-                # used, which here is the alias: src/_dmul.c holds the bytes the symbol
+                # used, which here is the alias: src/named/arm9/_dmul.c holds the bytes the symbol
                 # table calls func_01ff8708. Same fallback as chaos_db_ci, so the two
                 # generators keep answering with the same number.
                 for alt in alias_srcnames.get((_label, addr), ()):

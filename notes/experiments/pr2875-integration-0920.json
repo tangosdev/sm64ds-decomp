@@ -4178,7 +4178,7 @@
         "blob_unchanged_from_prior95_function_current_base_proof": true
       },
       {
-        "path": "src/MultiStore16.c",
+        "path": "src/named/arm9/MultiStore16.c",
         "blob_unchanged_from_prior95_function_current_base_proof": true
       }
     ],
@@ -4399,16 +4399,16 @@
       "log": "build/pr2875-production/layout.log",
       "log_sha256": "3de0ffc4ddfcbef17e355a47148c173376e91b63ba3a5e2d44ce1816ffce3efe",
       "log_tail": [
-        "         {\"key\": \"src/BitUnPack.c\"}",
-        "         {\"key\": \"src/CleanCommonModelDataArr.c\"}",
-        "         {\"key\": \"src/CpuCopy8.c\"}",
-        "         {\"key\": \"src/CpuFastSet.c\"}",
-        "         {\"key\": \"src/CpuSet.c\"}",
-        "         {\"key\": \"src/Div.c\"}",
-        "         {\"key\": \"src/GetCRC16.c\"}",
-        "         {\"key\": \"src/Halt.c\"}",
-        "         {\"key\": \"src/HuffUnCompReadByCallback.c\"}",
-        "         {\"key\": \"src/IntrWait.c\"}",
+        "         {\"key\": \"src/named/arm9/BitUnPack.c\"}",
+        "         {\"key\": \"src/named/arm9/CleanCommonModelDataArr.c\"}",
+        "         {\"key\": \"src/named/arm9/CpuCopy8.c\"}",
+        "         {\"key\": \"src/named/arm9/CpuFastSet.c\"}",
+        "         {\"key\": \"src/named/arm9/CpuSet.c\"}",
+        "         {\"key\": \"src/named/arm9/Div.c\"}",
+        "         {\"key\": \"src/named/arm9/GetCRC16.c\"}",
+        "         {\"key\": \"src/named/arm9/Halt.c\"}",
+        "         {\"key\": \"src/named/arm9/HuffUnCompReadByCallback.c\"}",
+        "         {\"key\": \"src/named/arm9/IntrWait.c\"}",
         "         ... and 91 more",
         "layout-check: clean"
       ]
@@ -4717,7 +4717,7 @@
   ],
   "strict_production": [
     {
-      "file": "src/MultiStore16.c",
+      "file": "src/named/arm9/MultiStore16.c",
       "name": "MultiStore16",
       "module": "arm9",
       "addr": "0x205a448",
@@ -10673,7 +10673,7 @@
         "raw_object_identical": true
       },
       {
-        "path": "src/MultiStore16.c",
+        "path": "src/named/arm9/MultiStore16.c",
         "versions": {
           "input": {
             "source_sha256": "7fb3469b9fcfbe1c6462f359268fdeaab8c221327ba18afd25163534dccb6514",
@@ -10814,7 +10814,7 @@
         "files": [
           "src/actors/dScMgRoulette_c.cpp",
           "src/actors/dScMgSnowball_c.cpp",
-          "src/MultiStore16.c",
+          "src/named/arm9/MultiStore16.c",
           "src/_ZN12dScMg3DEsp_c13InitResourcesEv.cpp",
           "src/_ZN12dScMg3DEsp_c13OnYoshiTryEatEi.cpp",
           "src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp",
@@ -10834,7 +10834,7 @@
           "--files",
           "src/actors/dScMgRoulette_c.cpp",
           "src/actors/dScMgSnowball_c.cpp",
-          "src/MultiStore16.c",
+          "src/named/arm9/MultiStore16.c",
           "src/_ZN12dScMg3DEsp_c13InitResourcesEv.cpp",
           "src/_ZN12dScMg3DEsp_c13OnYoshiTryEatEi.cpp",
           "src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp",

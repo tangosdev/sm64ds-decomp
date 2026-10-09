@@ -12,7 +12,7 @@
  * (0x02118d64), then a D2 the cartridge has no home for (manifest: deadstrip);
  * the same pragma lays .text down in source order, so this file is
  * ROM-ascending. The factory daFRing_c_classInit (0x021191f4) stays in its own
- * source, src/d_a_f_ring.c.
+ * source, src/named/ov060/d_a_f_ring.c.
  */
 
 #pragma defer_codegen off

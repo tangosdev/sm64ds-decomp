@@ -155,7 +155,7 @@ class AssetCatalogTests(unittest.TestCase):
             ("QuestionSwitch", "mangled-resource-method"),
         )
         self.assertIsNone(
-            AC.resource_owner_from_source("src/_ZN7Message11DisplayTextEt.cpp")
+            AC.resource_owner_from_source("src/named/arm9/_ZN7Message11DisplayTextEt.cpp")
         )
 
     def test_resolve_reads_literals_as_handles_not_file_ids(self):

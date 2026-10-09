@@ -16,7 +16,7 @@ src/actors/daWanwan2_c.cpp:
     complete
     .text start:0x021431c4 end:0x021442dc
 
-src/d_a_wanwan2.cpp:
+src/named/ov100/d_a_wanwan2.cpp:
     complete
     .text start:0x021442dc end:0x021443f4
 

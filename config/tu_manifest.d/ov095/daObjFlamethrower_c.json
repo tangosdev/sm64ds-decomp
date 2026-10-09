@@ -138,7 +138,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 array re-emits it with vague linkage; this TU's array destruction path drags it in. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), whose enrolled owner is src/_ZN7Vector3D1Ev.cpp. ROM copy retained, TU copy deadstripped."
+      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 array re-emits it with vague linkage; this TU's array destruction path drags it in. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), whose enrolled owner is src/named/arm9/_ZN7Vector3D1Ev.cpp. ROM copy retained, TU copy deadstripped."
     }
   ],
   "verification": {

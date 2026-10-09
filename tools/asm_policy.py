@@ -31,7 +31,7 @@ game -- so this textual gate is the honesty mechanism.
   "unbannered-asm"  -- the file has an asm body (mnemonics, no dcd) and no banner.
                        WARN only: real C with an embedded asm hatch (CP15
                        intrinsics inside a C function, e.g.
-                       src/_ZN6Player13InitResourcesEv.cpp) lives in this gray
+                       src/named/ov002/_ZN6Player13InitResourcesEv.cpp) lives in this gray
                        zone, so demoting it wholesale would rescind legitimate
                        matches. These are surfaced for a human to banner or
                        reclassify deliberately.

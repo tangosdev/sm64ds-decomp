@@ -9,7 +9,7 @@
     "contiguous linker run: 0x21431c4..0x21442dc, 16 function(s), from build/tu_map.json (tools/tu_map.py) -- the whole unit. daIbl_c_classInit (src/actors/daIbl_c.cpp) ends exactly at 0x021431c4 below it.",
     "class label(s): daWanwan2_c (tu_map also tags daIbl_c, read from three words past daIbl_c's 31-slot vtable that are really this class's state-table pointer-to-member constants)",
     "module sinit corroboration: 7 sinit(s) / 7 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "upper edge: daWanwan2_c_classInit (src/d_a_wanwan2.cpp, 0x021442dc..0x021443f4) abuts this unit with no gap and stays a separate source: `return new daWanwan2_c;` omits its three __cxa_vec_ctor calls over the Vector3/Vector3s arrays (0xa4 bytes for 0x118). daDoor_c's D1 starts exactly at 0x021443f4 above it."
+    "upper edge: daWanwan2_c_classInit (src/named/ov100/d_a_wanwan2.cpp, 0x021442dc..0x021443f4) abuts this unit with no gap and stays a separate source: `return new daWanwan2_c;` omits its three __cxa_vec_ctor calls over the Vector3/Vector3s arrays (0xa4 bytes for 0x118). daDoor_c's D1 starts exactly at 0x021443f4 above it."
   ],
   "sections": [
     {
@@ -142,7 +142,7 @@
     "func_ov100_02143b68 copies the identity matrix through a twelve-word array struct; the C++ Matrix4x3 copy is the struct-copy DIFF described in notes/cpp-class-form.md (0x184 bytes for 0x148 inside this TU).",
     "func_ov100_02143b18 and Behavior share one pointer-to-member pair type (ChompState: enter, execute) over a non-polymorphic stand-in class; the two legacy shards each spelled their own.",
     "func_ov100_02143aa4 is the execute member of the only state (pointer-to-member constant data_ov100_02147ff8, copied by the module's static initializer into data_ov100_021486f4), with func_ov100_02143ae0 as its enter (data_ov100_02148000). Those constants follow daIbl_c's 31-slot vtable directly, which is where tu_map's daIbl_c tag and the old 'RollingIronBall_Kill' label came from.",
-    "daWanwan2_c_classInit (0x021442dc..0x021443f4) is not folded: `return new daWanwan2_c;` emits 0xa4 bytes for 0x118, without the three __cxa_vec_ctor calls (func_0203d384 over the two Vector3 arrays, func_0203d73c over the Vector3s array), because types.h's Vector3 and Vector3s declare no constructor. src/d_a_wanwan2.cpp keeps it."
+    "daWanwan2_c_classInit (0x021442dc..0x021443f4) is not folded: `return new daWanwan2_c;` emits 0xa4 bytes for 0x118, without the three __cxa_vec_ctor calls (func_0203d384 over the two Vector3 arrays, func_0203d73c over the Vector3s array), because types.h's Vector3 and Vector3s declare no constructor. src/named/ov100/d_a_wanwan2.cpp keeps it."
   ],
   "compiler_only_output": [
     {
@@ -153,14 +153,14 @@
     {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
-      "reason": "include/types.h defines Vector3::~Vector3() inline and empty. The floor probe and Behavior take Vector3 locals and D1 tears down the two Vector3 arrays, so this TU emits that four-byte body once as vague linkage. The cartridge's copy is arm9:0x020072c0 (src/_ZN7Vector3D1Ev.cpp); this object is not its home.",
+      "reason": "include/types.h defines Vector3::~Vector3() inline and empty. The floor probe and Behavior take Vector3 locals and D1 tears down the two Vector3 arrays, so this TU emits that four-byte body once as vague linkage. The cartridge's copy is arm9:0x020072c0 (src/named/arm9/_ZN7Vector3D1Ev.cpp); this object is not its home.",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0"
     },
     {
       "symbol": "_ZN8Vector3sD1Ev",
       "disposition": "deadstrip-duplicate",
-      "reason": "The same vague-linkage case for Vector3s, whose empty inline destructor is declared in include/types.h: D1 tears down mUnk_768 through __cxa_vec_cleanup with it. The cartridge keeps exactly one copy at arm9:0x02011508 (src/_ZN8Vector3sD1Ev.cpp); this object's four-byte `bx lr` copy is not its home.",
+      "reason": "The same vague-linkage case for Vector3s, whose empty inline destructor is declared in include/types.h: D1 tears down mUnk_768 through __cxa_vec_cleanup with it. The cartridge keeps exactly one copy at arm9:0x02011508 (src/named/arm9/_ZN8Vector3sD1Ev.cpp); this object's four-byte `bx lr` copy is not its home.",
       "canonical_module": "arm9",
       "canonical_address": "0x02011508"
     },

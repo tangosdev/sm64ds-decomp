@@ -75,7 +75,7 @@ def alias_names(module_universe=None) -> dict[tuple[str, int], list[str]]:
 
     The names, not just the addresses, because the source file for an aliased
     function is filed under whichever name its author knew it by, and in this tree
-    that is usually the ALIAS. ``src/_dmul.c`` decompiles the 1,776 bytes at
+    that is usually the ALIAS. ``src/named/arm9/_dmul.c`` decompiles the 1,776 bytes at
     0x01ff8708; the sized symbol record on that address is called ``func_01ff8708``,
     and a lookup by that name finds nothing. Four ITCM primitives sat unmatched for
     that reason alone, each with a byte-exact source in the tree. See
@@ -137,7 +137,7 @@ def alias_target_size(module: str, addr: int, module_universe=None) -> int | Non
 
     ``is_zero_size_alias`` answers "should this record count", for the two counting
     generators. A VERIFICATION gate needs a different answer: tools/linkcheck.py,
-    checking that ``src/_dmul.c`` reproduces the bytes at the address it shares with
+    checking that ``src/named/arm9/_dmul.c`` reproduces the bytes at the address it shares with
     ``func_01ff8708``, cannot byte-compare against the alias's own recorded size (0,
     by construction -- nothing compiles to 0 bytes), and used to read that 0 straight
     through and report every alias NO-SYM regardless of how correct its source was.

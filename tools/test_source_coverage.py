@@ -44,7 +44,7 @@ BASE_DELINKS = """\
     .text       start:0x02004000 end:0x02010000 kind:code align:32
     .rodata     start:0x02010000 end:0x02011000 kind:rodata align:4
 
-src/Entry.c:
+src/named/arm9/Entry.c:
     complete
     .text start:0x02004800 end:0x02004900
 
@@ -144,14 +144,14 @@ class ParsingTests(unittest.TestCase):
         """
         entries = SC.parse_delinks(BASE_DELINKS, "config/arm9/delinks.txt")
         self.assertEqual([e.path for e in entries],
-                         ["src/Entry.c", "src/func_02004900.c",
+                         ["src/named/arm9/Entry.c", "src/func_02004900.c",
                           "src/func_02004a00.c", "src/placeholder.c"])
 
     def test_an_entry_without_complete_is_not_source_built(self):
         """No `complete` means dsd supplies the object -- see tools/enroll.py."""
         entries = SC.parse_delinks(BASE_DELINKS, "config/arm9/delinks.txt")
         by = {e.path: e for e in entries}
-        self.assertTrue(by["src/Entry.c"].complete)
+        self.assertTrue(by["src/named/arm9/Entry.c"].complete)
         self.assertFalse(by["src/placeholder.c"].complete)
         exists = {e.path for e in entries}
         built = SC.built_ranges(entries, exists)
@@ -209,7 +209,7 @@ class NoFalseAlarmTests(SandboxCase):
         end) tuples would call it 3 removals and 1 addition; comparing the covered BYTE
         SET correctly calls it nothing at all.
         """
-        self.sb.delinks(BASE_DELINKS.split("src/Entry.c:")[0] + """\
+        self.sb.delinks(BASE_DELINKS.split("src/named/arm9/Entry.c:")[0] + """\
 src/Merged.cpp:
     complete
     .text start:0x02004800 end:0x02004c00
@@ -284,7 +284,7 @@ class DowngradeTests(SandboxCase):
         """
         os.remove(self.sb.root / "src" / "Entry.c")
         code, out = self.check()
-        self.assertRegressed(out, code, addr="0x02004800", path="src/Entry.c",
+        self.assertRegressed(out, code, addr="0x02004800", path="src/named/arm9/Entry.c",
                              why="no file is there")
 
     def test_narrowing_a_range_is_a_regression(self):
@@ -303,11 +303,11 @@ class DowngradeTests(SandboxCase):
         has to not fall is satisfied by wrecking one range while adding a bigger one.
         """
         self.sb.delinks(BASE_DELINKS
-                        .replace("src/Entry.c:\n    complete\n", "src/Entry.c:\n", 1)
+                        .replace("src/named/arm9/Entry.c:\n    complete\n", "src/named/arm9/Entry.c:\n", 1)
                         .replace("src/placeholder.c:\n    .text",
                                  "src/placeholder.c:\n    complete\n    .text"))
         code, out = self.check()
-        self.assertRegressed(out, code, addr="0x02004800", path="src/Entry.c",
+        self.assertRegressed(out, code, addr="0x02004800", path="src/named/arm9/Entry.c",
                              why="`complete` removed")
 
     def test_json_mode_also_reports_the_regression(self):

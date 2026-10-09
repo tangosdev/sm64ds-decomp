@@ -536,7 +536,7 @@
             ],
             "source_contract": "void (u32,int,int,int)",
             "actual_definition": "void* (u32,int,int,int)",
-            "reference": "src/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c:9",
+            "reference": "src/named/arm9/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c:9",
             "used_by": [
               "func_ov077_02125bb4",
               "func_ov077_02125550",
@@ -551,7 +551,7 @@
             ],
             "source_contract": "void (short*,short,short)",
             "actual_definition": "int ApproachLinear(short&,short,short)",
-            "reference": "src/_Z14ApproachLinearRsss.cpp:2",
+            "reference": "src/named/arm9/_Z14ApproachLinearRsss.cpp:2",
             "used_by": [
               "func_ov077_02125a54"
             ],
@@ -591,7 +591,7 @@
             ],
             "source_contract": "void return; last three flags unsigned int",
             "actual_definition": "int return; last three flags u8",
-            "reference": "src/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp:21",
+            "reference": "src/named/ov002/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp:21",
             "used_by": [
               "func_ov077_021250a8",
               "func_ov077_02124eb0"
@@ -657,7 +657,7 @@
         ],
         "source_contract": "void (u32,int,int,int)",
         "actual_definition": "void* (u32,int,int,int)",
-        "reference": "src/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c:9",
+        "reference": "src/named/arm9/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c:9",
         "used_by": [
           "func_ov077_02125bb4",
           "func_ov077_02125550",
@@ -672,7 +672,7 @@
         ],
         "source_contract": "void (short*,short,short)",
         "actual_definition": "int ApproachLinear(short&,short,short)",
-        "reference": "src/_Z14ApproachLinearRsss.cpp:2",
+        "reference": "src/named/arm9/_Z14ApproachLinearRsss.cpp:2",
         "used_by": [
           "func_ov077_02125a54"
         ],
@@ -712,7 +712,7 @@
         ],
         "source_contract": "void return; last three flags unsigned int",
         "actual_definition": "int return; last three flags u8",
-        "reference": "src/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp:21",
+        "reference": "src/named/ov002/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp:21",
         "used_by": [
           "func_ov077_021250a8",
           "func_ov077_02124eb0"

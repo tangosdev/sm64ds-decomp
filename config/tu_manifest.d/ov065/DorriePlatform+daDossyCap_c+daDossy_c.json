@@ -411,7 +411,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x02011508",
-      "reason": "The same vague-linkage case for Vector3s, whose empty inline destructor is declared in include/types.h; func_ov065_02118838 builds the per-platform Vector3s rotation temporary that pulls it in. The cartridge keeps exactly one copy at arm9:0x02011508, kind:function(arm,size=0x4), owned by the enrolled source src/_ZN8Vector3sD1Ev.cpp. This object's copy is the identical 4-byte `bx lr` body with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+      "reason": "The same vague-linkage case for Vector3s, whose empty inline destructor is declared in include/types.h; func_ov065_02118838 builds the per-platform Vector3s rotation temporary that pulls it in. The cartridge keeps exactly one copy at arm9:0x02011508, kind:function(arm,size=0x4), owned by the enrolled source src/named/arm9/_ZN8Vector3sD1Ev.cpp. This object's copy is the identical 4-byte `bx lr` body with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
     },
     {
       "symbol": "_ZTI7fBase_c",

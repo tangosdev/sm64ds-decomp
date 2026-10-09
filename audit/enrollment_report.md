@@ -104,7 +104,7 @@ no-block set and a reader should know they exist.
 
 `config/arm9/itcm/symbols.txt` declares each of these twice, once as a sized function
 and once as a zero-size alias at the identical address. `srcpath` resolves
-`src/_dmul.c`, which carries a `HAND-ASM PRIMITIVE` banner and is a real accepted
+`src/named/arm9/_dmul.c`, which carries a `HAND-ASM PRIMITIVE` banner and is a real accepted
 match, onto the **zero-size** record. So the same body is simultaneously counted as
 matched (as the alias, worth 0 bytes) and unmatched (as the primary, worth its real
 size).
@@ -318,11 +318,11 @@ file at this ref.
 
 | module | addr | size | file | credited to | first error |
 | --- | --- | --- | --- | --- | --- |
-| arm9 | 0x02022f40 | 428 | `src/_ZN8Particle10SysTracker10InitialiseEv.cpp` | tangosdev | line 20: illegal function overloading |
-| itcm | 0x01ff8708 | 0 | `src/_dmul.c` | ruspecial | zero-size alias of `func_01ff8708` (1,776 bytes, unmatched) |
-| itcm | 0x01ffaa34 | 0 | `src/_ll_sdiv.c` | ruspecial | zero-size alias of `func_01ffaa34` (432 bytes, unmatched) |
-| itcm | 0x01ffabe4 | 0 | `src/_s32_div_f.c` | ruspecial | zero-size alias of `__aeabi_idiv` (524 bytes, unmatched) |
-| itcm | 0x01ffadf0 | 0 | `src/_u32_div_f.c` | ruspecial | zero-size alias of `__aeabi_uidiv` (484 bytes, unmatched) |
+| arm9 | 0x02022f40 | 428 | `src/named/arm9/_ZN8Particle10SysTracker10InitialiseEv.cpp` | tangosdev | line 20: illegal function overloading |
+| itcm | 0x01ff8708 | 0 | `src/named/arm9/_dmul.c` | ruspecial | zero-size alias of `func_01ff8708` (1,776 bytes, unmatched) |
+| itcm | 0x01ffaa34 | 0 | `src/named/arm9/_ll_sdiv.c` | ruspecial | zero-size alias of `func_01ffaa34` (432 bytes, unmatched) |
+| itcm | 0x01ffabe4 | 0 | `src/named/arm9/_s32_div_f.c` | ruspecial | zero-size alias of `__aeabi_idiv` (524 bytes, unmatched) |
+| itcm | 0x01ffadf0 | 0 | `src/named/arm9/_u32_div_f.c` | ruspecial | zero-size alias of `__aeabi_uidiv` (484 bytes, unmatched) |
 | ov002 | 0x020cfbdc | 424 | `src/func_ov002_020cfbdc.cpp` | ruspecial | line 24: illegal function overloading |
 | ov002 | 0x020e3e00 | 400 | `src/unnamed/ov002/func_ov002_020e3e00.cpp` | ruspecial | line 14: illegal function overloading |
 | ov004 | 0x020aeed8 | 372 | `src/func_ov004_020aeed8.cpp` | tangosdev | line 50: illegal function overloading |

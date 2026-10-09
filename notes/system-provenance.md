@@ -45,9 +45,9 @@ subobject. Three call sites give both halves a role:
 
 | ID slot | Callback | Effect | Proving file |
 | --- | --- | --- | --- |
-| 0x750 `mRunningSlidingDustSystemID` | 0x754 `mRunningSlidingDustCallback` | 0xda | `src/_ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_.c` |
-| 0x768 `mBigSplashSystemID` | 0x76c `mBigSplashCallback` | 0xdd | `src/_ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_.c` |
-| 0x78c `mRippleSystemID` | 0x790 `mRippleCallback` | 0x109 | `src/_ZN8Particle6System9NewRippleE5Fix12IiES2_S2_.c` |
+| 0x750 `mRunningSlidingDustSystemID` | 0x754 `mRunningSlidingDustCallback` | 0xda | `src/named/arm9/_ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_.c` |
+| 0x768 `mBigSplashSystemID` | 0x76c `mBigSplashCallback` | 0xdd | `src/named/arm9/_ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_.c` |
+| 0x78c `mRippleSystemID` | 0x790 `mRippleCallback` | 0x109 | `src/named/arm9/_ZN8Particle6System9NewRippleE5Fix12IiES2_S2_.c` |
 
 Two more callbacks are named without an ID slot, because their `New*` wrapper
 takes the unique ID from the caller instead:
@@ -101,7 +101,7 @@ byte-identical. The one-time exception was the simple callback's
 `SpawnParticles`, which opened `namespace Particle { ... }` — including
 `Particle.h` there made the struct name and the namespace name collide, so it
 kept a local shadow. That no longer holds: the function is now
-`src/_ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE.cpp`,
+`src/named/arm9/_ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE.cpp`,
 a real `dPa_c::level_c::simpleCallback_c` method that opens no namespace,
 includes `Particle__System.h`, and reaches `data_0209ee74->mManager` by name.
 
@@ -114,8 +114,8 @@ constructor variants are now generated from the real nested C++ class.
 ### The third shadow — collapsed onto the real names
 
 `include/Particle__SysTracker.h` is a *third* declaration of this class, and it
-is what `src/_ZN8Particle10SysTracker10InitialiseEv.cpp` and
-`src/_ZN8Particle10SysTracker6UpdateEv.cpp` include. A later pass that owned the
+is what `src/named/arm9/_ZN8Particle10SysTracker10InitialiseEv.cpp` and
+`src/named/arm9/_ZN8Particle10SysTracker6UpdateEv.cpp` include. A later pass that owned the
 file finished it: its three fields now read `mResourceFile` / `mManager` /
 `mContents`, with the same types `include/Particle.h` carries, so all three
 declarations of the class spell the head identically.

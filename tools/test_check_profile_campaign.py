@@ -274,7 +274,7 @@ class RegistryScan(Fixture):
             ("daObjSwitch_c_classInit_HANSWITCH", "0x020baadc", "function(arm,size=0x30)"),
             ("g_profile_HANSWITCH", "0x02109900", "data(any)"),
         ])
-        self.delinks("ov002", [("src/d_a_obj_switch_hanswitch.c", "0x020baadc", "0x020bab0c")])
+        self.delinks("ov002", [("src/named/ov002/d_a_obj_switch_hanswitch.c", "0x020baadc", "0x020bab0c")])
         self.ledger([])
 
     def _row(self, **kw):

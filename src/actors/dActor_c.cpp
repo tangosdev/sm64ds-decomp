@@ -16,7 +16,7 @@
  * that defines it out-of-line emits D0, D1 and D2 together in emission order --
  * but the ROM runs D2, then D0, then D1, which no source form produces. The
  * three destructor variants therefore keep their own files
- * (src/_ZN8dActor_cD2Ev.cpp, _ZN8dActor_cD0Ev.cpp, _ZN8dActor_cD1Ev.cpp); each
+ * (src/named/arm9/_ZN8dActor_cD2Ev.cpp, _ZN8dActor_cD0Ev.cpp, _ZN8dActor_cD1Ev.cpp); each
  * carries the one member definition, and their objects are what emit
  * _ZTV8dActor_c, _ZTI8dActor_c and _ZTS8dActor_c. The functions ABOVE the dtor
  * span are likewise their own sources: _ZN8dActor_cC1Ev.cpp, _ZN8Vector3sD1Ev.cpp

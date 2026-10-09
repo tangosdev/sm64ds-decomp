@@ -66,7 +66,7 @@ The private real controls used the unchanged base above and separate source
 producer commit `9f6508003f92787fb5a530c38e62aa0d92eb829f`:
 
 - Unchanged base Jump fails compilation, returns `NO-SYM / compile-failed`, and
-  actual `pr_linkcheck --files src/_ZN11dScMgJump_c13OnYoshiTryEatEi.cpp --fail -j1`
+  actual `pr_linkcheck --files src/named/ov006/_ZN11dScMgJump_c13OnYoshiTryEatEi.cpp --fail -j1`
   exits **1**, despite its `NONMATCHING` banner.
 - The source producer's scalar header correction emits the requested function at
   **356 bytes against 360** with pinned `2004/b56` and actual build flags. The

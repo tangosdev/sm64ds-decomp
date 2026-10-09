@@ -7554,7 +7554,7 @@ int Player::func_ov002_020c897c()
    `SetAnim(unsigned, int, int, unsigned)` mangles to _ZN6Player7SetAnimEjiij,
    which exists in no module -- invisible to the byte gate, because relocated
    words compare as wildcards. Same extern "C" idiom the rest of the tree uses
-   for this symbol (src/_ZN6Player12St_Hurt_InitEv.cpp). */
+   for this symbol (src/named/ov002/_ZN6Player12St_Hurt_InitEv.cpp). */
 /* extern "C": this is the ROM symbol's own name. A bare `extern` in a //cpp file
    makes the compiler mangle it AGAIN, into _Z15_ZN7Vector3D1Evv, which exists
    nowhere -- and the byte gate cannot see it, because relocated words are

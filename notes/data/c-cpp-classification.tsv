@@ -1,20 +1,20 @@
 path	tier	module	rtti_class	class_names	evidence	funcs_in_file	cpp_marker	has_header	extern_ZTV	blockers
-src/ARMMathLoadState.c	PURE-C	arm9				1		None		-
-src/ARMMathSaveState.c	PURE-C	arm9				1		None		-
-src/ARMProcessorMode.c	PURE-C	arm9				1		None		-
-src/ARMRestoreContext.c	PURE-C	arm9				1		None		-
-src/ARMSaveContext.c	PURE-C	arm9				1		None		-
-src/AddSpikeBomb.c	PURE-C	arm9				1		None		-
-src/AddVec3.c	PURE-C	arm9				1		None		-
+src/named/arm9/ARMMathLoadState.c	PURE-C	arm9				1		None		-
+src/named/arm9/ARMMathSaveState.c	PURE-C	arm9				1		None		-
+src/named/arm9/ARMProcessorMode.c	PURE-C	arm9				1		None		-
+src/named/arm9/ARMRestoreContext.c	PURE-C	arm9				1		None		-
+src/named/arm9/ARMSaveContext.c	PURE-C	arm9				1		None		-
+src/named/arm9/AddSpikeBomb.c	PURE-C	arm9				1		None		-
+src/named/arm9/AddVec3.c	PURE-C	arm9				1		None		-
 src/daSetSE_c_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_brq.c	WEAK-refs-only	ov070				1		None		-
-src/AngleDiff.c	PURE-C	arm9				1		None		-
-src/ApproachAngle.c	PURE-C	arm9				1		None		-
+src/named/arm9/AngleDiff.c	PURE-C	arm9				1		None		-
+src/named/arm9/ApproachAngle.c	PURE-C	arm9				1		None		-
 src/daObjWc_Obj02_c_classInit.c	WEAK-refs-only	ov029				1		None		-
 src/d_a_linelift2_km3_lift.c	WEAK-refs-only	ov091				1		None		-
 src/d_a_obj_yajirusi_yajirusi_l.c	WEAK-refs-only	ov098				1		None		-
 src/d_a_obj_yajirusi_yajirusi_r.c	WEAK-refs-only	ov098				1		None		-
-src/AutoloadCallback.c	PURE-C	arm9				1		None		-
+src/named/arm9/AutoloadCallback.c	PURE-C	arm9				1		None		-
 src/d_a_pg_bby.c	WEAK-refs-only	ov072				1		None		-
 src/d_a_obj_c0_water.c	WEAK-refs-only	ov012				1		None		-
 src/d_a_obj_block_l_dp_block_l.c	WEAK-refs-only	ov002				1		None		-
@@ -23,7 +23,7 @@ src/d_a_obj_ewm_ice_block.c	WEAK-refs-only	ov056				1		None		-
 src/daEykn_c_classInit_EYEKUN_BOSS.c	WEAK-refs-only	ov071				1		None		-
 src/d_a_obj_bk_killerdai.c	S1-stores-rom-vptr	ov079			stores _ZTV11BillBlaster	1		None	_ZTV11BillBlaster	-
 src/d_a_s_bird.c	WEAK-refs-only	ov009				1		None		-
-src/BitUnPack.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/BitUnPack.c	PURE-C					0		None		not-in-delinks
 src/d_a_obj_block_l_block_ll.c	WEAK-refs-only	ov002				1		None		-
 src/daObjBC_Switch_c_classInit.c	S1-stores-rom-vptr	ov002			stores _ZTV16daObjBC_Switch_c	1		None	_ZTV16daObjBC_Switch_c	-
 src/d_a_coin_blue_coin.c	WEAK-refs-only	ov002				1		None		-
@@ -34,15 +34,15 @@ src/d_a_book_gen.c	WEAK-refs-only	ov020				1		None		-
 src/d_a_book_shoot_book.c	WEAK-refs-only	ov020				1		None		-
 src/BookSwitch_Spawn.c	PURE-C	ov016				1		None		-
 src/d_a_book_killer_book.c	WEAK-refs-only	ov020				1		None		-
-src/d_a_kpa2_bg.c	WEAK-refs-only	ov060				1		None		-
-src/d_a_kpa_fire.c	WEAK-refs-only	ov060				1		None		-
-src/d_a_obj_fl_coin.c	S1-stores-rom-vptr	ov064			stores _ZTV14daObjFl_Coin_c	1		None	_ZTV14daObjFl_Coin_c	-
-src/d_a_obj_fl_puzzle.c	WEAK-refs-only	ov064				1		None		-
-src/d_a_f_ring.c	WEAK-refs-only	ov060				1		None		-
+src/named/ov060/d_a_kpa2_bg.c	WEAK-refs-only	ov060				1		None		-
+src/named/ov060/d_a_kpa_fire.c	WEAK-refs-only	ov060				1		None		-
+src/named/ov064/d_a_obj_fl_coin.c	S1-stores-rom-vptr	ov064			stores _ZTV14daObjFl_Coin_c	1		None	_ZTV14daObjFl_Coin_c	-
+src/named/ov064/d_a_obj_fl_puzzle.c	WEAK-refs-only	ov064				1		None		-
+src/named/ov060/d_a_f_ring.c	WEAK-refs-only	ov060				1		None		-
 src/d_a_obj_wl_koopa_shutter.c	S1-stores-rom-vptr	ov026			stores _ZTV21daObjWlKoopaShutter_c	1		None	_ZTV21daObjWlKoopaShutter_c	-
-src/d_a_kpa3_bg.c	S1-stores-rom-vptr	ov060			stores _ZTV10daKpa3Bg_c	1		None	_ZTV10daKpa3Bg_c	-
-src/d_a_kpa_tail.c	WEAK-refs-only	ov060				1		None		-
-src/d_a_kpa.c	WEAK-refs-only	ov060				1		None		-
+src/named/ov060/d_a_kpa3_bg.c	S1-stores-rom-vptr	ov060			stores _ZTV10daKpa3Bg_c	1		None	_ZTV10daKpa3Bg_c	-
+src/named/ov060/d_a_kpa_tail.c	WEAK-refs-only	ov060				1		None		-
+src/named/ov060/d_a_kpa.c	WEAK-refs-only	ov060				1		None		-
 src/d_a_obj_block_l_sw_block_l.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_obj_block_l_block_l.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_klr.c	WEAK-refs-only	ov079				1		None		-
@@ -63,69 +63,69 @@ src/daObjEwbIce_c_classInit_EWB_ICE_B.c	WEAK-refs-only	ov073				1		None		-
 src/daObjEwbIce_c_classInit_EWB_ICE_C.c	WEAK-refs-only	ov073				1		None		-
 src/d_a_obj_simple_bg_mc_dodai.c	WEAK-refs-only	ov102				1		None		-
 src/daObjWanwanShutter_c_classInit.c	WEAK-refs-only	ov014				1		None		-
-src/ChangeArea.c	PURE-C	arm9				1		None		-
+src/named/arm9/ChangeArea.c	PURE-C	arm9				1		None		-
 src/d_a_pukupuku.c	WEAK-refs-only	ov090				1		None		-
 src/daIDonketu_c_Spawn.c	WEAK-refs-only	ov027				1		None		-
 src/d_a_holhei.c	WEAK-refs-only	ov062				1		None		-
-src/CleanCommonModelDataArr.c	WEAK-refs-only					0		None		not-in-delinks
-src/ClearSpikeBomb.c	PURE-C	arm9				1		None		-
+src/named/arm9/CleanCommonModelDataArr.c	WEAK-refs-only					0		None		not-in-delinks
+src/named/arm9/ClearSpikeBomb.c	PURE-C	arm9				1		None		-
 src/d_a_obj_clock_clock_long.c	WEAK-refs-only	ov013				1		None		-
 src/daObjClockHuriko_c_Spawn.c	S1-stores-rom-vptr	ov013			stores _ZTV18daObjClockHuriko_c	1		None	_ZTV18daObjClockHuriko_c	-
 src/d_a_obj_casket.c	WEAK-refs-only	ov071				1		None		-
 src/d_a_coin_coin.c	WEAK-refs-only	ov002				1		None		-
-src/CollectStar.c	PURE-C	arm9				1		None		-
-src/CollectStarInCurLevel.c	PURE-C	arm9				1		None		-
-src/CollectStarInLevel.c	PURE-C	arm9				1		None		-
-src/Color_Interp.c	PURE-C	ov002				1		None		-
+src/named/arm9/CollectStar.c	PURE-C	arm9				1		None		-
+src/named/arm9/CollectStarInCurLevel.c	PURE-C	arm9				1		None		-
+src/named/arm9/CollectStarInLevel.c	PURE-C	arm9				1		None		-
+src/named/ov002/Color_Interp.c	PURE-C	ov002				1		None		-
 src/ContinueKuppaScriptIfNecessary.c	WEAK-refs-only	arm9				1		None		-
-src/Copy32Bytes.c	PURE-C	arm9				1		None		-
-src/Copy36Bytes.c	PURE-C	arm9				1		None		-
-src/Copy48Bytes.c	PURE-C	arm9				1		None		-
-src/Copy48BytesFixed.c	PURE-C	arm9				1		None		-
-src/CopyTexPalFromLevelModel.c	WEAK-refs-only	arm9				1		None		-
-src/CountStarsCollectedInLevelToDisplay.c	WEAK-refs-only	arm9				1		None		-
-src/CpuCopy8.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
-src/CpuFastSet.c	PURE-C					0		None		not-in-delinks
-src/CpuSet.c	PURE-C					0		None		not-in-delinks
-src/Crash.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/Copy32Bytes.c	PURE-C	arm9				1		None		-
+src/named/arm9/Copy36Bytes.c	PURE-C	arm9				1		None		-
+src/named/arm9/Copy48Bytes.c	PURE-C	arm9				1		None		-
+src/named/arm9/Copy48BytesFixed.c	PURE-C	arm9				1		None		-
+src/named/arm9/CopyTexPalFromLevelModel.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/CountStarsCollectedInLevelToDisplay.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/CpuCopy8.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
+src/named/arm9/CpuFastSet.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/CpuSet.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/Crash.c	WEAK-refs-only	arm9				1		None		-
 src/daBttBk_c_classInit.c	WEAK-refs-only	ov080				1		None		-
 src/CrossVec3.c	PURE-C	arm9				1		None		-
-src/d_a_demo.c	WEAK-refs-only	ov002				1		None		-
-src/DMAStartTransfer.c	WEAK-refs-only					0		None		not-in-delinks
-src/DMAStartTransferFB.c	WEAK-refs-only					0		None		not-in-delinks
-src/DMASyncFillTransfer.c	PURE-C	arm9				1		None		-
-src/DMASyncHalfTransfer.c	PURE-C	arm9				1		None		-
+src/named/ov002/d_a_demo.c	WEAK-refs-only	ov002				1		None		-
+src/named/arm9/DMAStartTransfer.c	WEAK-refs-only					0		None		not-in-delinks
+src/named/arm9/DMAStartTransferFB.c	WEAK-refs-only					0		None		not-in-delinks
+src/named/arm9/DMASyncFillTransfer.c	PURE-C	arm9				1		None		-
+src/named/arm9/DMASyncHalfTransfer.c	PURE-C	arm9				1		None		-
 src/DMASyncWordTransfer.c	PURE-C	arm9				1		None		-
-src/Deallocate.c	WEAK-refs-only	arm9				1		None		-
-src/DeathTable_ClearBit.c	PURE-C	arm9				1		None		-
-src/DeathTable_GetBit.c	PURE-C	arm9				1		None		-
-src/DeathTable_SetBit.c	PURE-C	arm9				1		None		-
-src/DecIfAbove0_Byte.c	PURE-C	arm9				1		None		-
-src/DecIfAbove0_Short.c	PURE-C	arm9				1		None		-
-src/DecompressLZ16.c	PURE-C	arm9				1		None		-
+src/named/arm9/Deallocate.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/DeathTable_ClearBit.c	PURE-C	arm9				1		None		-
+src/named/arm9/DeathTable_GetBit.c	PURE-C	arm9				1		None		-
+src/named/arm9/DeathTable_SetBit.c	PURE-C	arm9				1		None		-
+src/named/arm9/DecIfAbove0_Byte.c	PURE-C	arm9				1		None		-
+src/named/arm9/DecIfAbove0_Short.c	PURE-C	arm9				1		None		-
+src/named/arm9/DecompressLZ16.c	PURE-C	arm9				1		None		-
 src/DisableSoundPlayersForCredits.c	WEAK-refs-only	arm9				1		None		-
-src/DisableVramBanks.c	PURE-C	arm9				1		None		-
-src/Div.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/DisableVramBanks.c	PURE-C	arm9				1		None		-
+src/named/arm9/Div.c	PURE-C					0		None		not-in-delinks
 src/d_a_obj_rc_tikuwa.c	WEAK-refs-only	ov036				1		None		-
 src/d_a_door.c	S1-stores-rom-vptr	ov100			stores _ZTV8daDoor_c	1		None	_ZTV8daDoor_c	-
 src/daDossyCap_c_classInit.c	WEAK-refs-only	ov065				1		None		-
 src/DotVec3.c	PURE-C	arm9				1		None		-
-src/Enable3dEngines.c	PURE-C	arm9				1		None		-
+src/named/arm9/Enable3dEngines.c	PURE-C	arm9				1		None		-
 src/d_a_e_create.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_e_switch.c	WEAK-refs-only	ov002				1		None		-
-src/EnterBigBoosHaunt.c	PURE-C	arm9				1		None		-
-src/Entry.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/EnterBigBoosHaunt.c	PURE-C	arm9				1		None		-
+src/named/arm9/Entry.c	WEAK-refs-only	arm9				1		None		-
 src/d_a_obj_hatena_block_vs_item_block.c	WEAK-refs-only	ov102				1		None		-
 src/d_a_obj_hatena_block_item_block.c	WEAK-refs-only	ov102				1		None		-
-src/d_a_obj_switch_hanswitch.c	WEAK-refs-only	ov002				1		None		-
-src/ExitLevel.c	PURE-C	arm9				1		None		-
-src/ExitMinigameMenu.c	WEAK-refs-only	arm9				1		None		-
+src/named/ov002/d_a_obj_switch_hanswitch.c	WEAK-refs-only	ov002				1		None		-
+src/named/arm9/ExitLevel.c	PURE-C	arm9				1		None		-
+src/named/arm9/ExitMinigameMenu.c	WEAK-refs-only	arm9				1		None		-
 src/daChScene_c_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_obj_km2_nobiru.c	WEAK-refs-only	ov045				1		None		-
-src/FS_CloseFile.c	PURE-C	arm9				1		None		-
-src/FS_InitFile.c	PURE-C	arm9				1		None		-
-src/FS_LoadOverlay.c	PURE-C	arm9				1		None		-
-src/FS_ReadFile.c	PURE-C	arm9				1		None		-
+src/named/arm9/FS_CloseFile.c	PURE-C	arm9				1		None		-
+src/named/arm9/FS_InitFile.c	PURE-C	arm9				1		None		-
+src/named/arm9/FS_LoadOverlay.c	PURE-C	arm9				1		None		-
+src/named/arm9/FS_ReadFile.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0202/FUN_02029a68.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0202/FUN_02029ab0.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0202/FUN_0202a130.c	PURE-C	arm9				1		None		-
@@ -139,13 +139,13 @@ src/d_a_f_pkn_ball.c	WEAK-refs-only	ov002				1		None		-
 src/daMcFlag_c_Spawn.c	WEAK-refs-only	ov009				1		None		-
 src/FlameChompFire_Spawn.c	WEAK-refs-only	ov070				1		None		-
 src/FlameChomp_Spawn.c	WEAK-refs-only	ov070				1		None		-
-src/d_a_obj_fl_block.c	WEAK-refs-only	ov022				1		None		-
+src/named/ov022/d_a_obj_fl_block.c	WEAK-refs-only	ov022				1		None		-
 src/daObjKi_Ita_c_classInit.c	S1-stores-rom-vptr	ov016			stores _ZTV17daObjFloatBoard_c	1		None	_ZTV17daObjFloatBoard_c/_ZTV23FloatOnWaterPlatformJrb	-
 src/game/actors/d_a_obj_wc_obj06.cpp	S1-stores-rom-vptr	ov029			stores _ZTV17daObjFloatBoard_c	1		None	_ZTV17daObjFloatBoard_c/_ZTV14daObjWcObj06_c	-
 src/game/actors/d_a_obj_wc_obj01.cpp	S1-stores-rom-vptr	ov029			stores _ZTV17daObjFloatBoard_c	1		None	_ZTV17daObjFloatBoard_c/_ZTV14daObjWcObj01_c	-
 src/FloatingFloorBfs_Spawn.c	S1-stores-rom-vptr	ov045			stores _ZTV14daObjUkiyuka_c	1		None	_ZTV14daObjUkiyuka_c/_ZTV16FloatingFloorBfs	-
-src/d_a_obj_fl_ukiyuka_fl_ukiyuka.c	S1-stores-rom-vptr	ov022			stores _ZTV14daObjUkiyuka_c	1		None	_ZTV14daObjUkiyuka_c/_ZTV17daObjFl_Ukiyuka_c	-
-src/d_a_obj_fl_ukiyuka_fl_ukiyuka_l.c	S1-stores-rom-vptr	ov022			stores _ZTV14daObjUkiyuka_c	1		None	_ZTV14daObjUkiyuka_c/_ZTV17daObjFl_Ukiyuka_c	-
+src/named/ov022/d_a_obj_fl_ukiyuka_fl_ukiyuka.c	S1-stores-rom-vptr	ov022			stores _ZTV14daObjUkiyuka_c	1		None	_ZTV14daObjUkiyuka_c/_ZTV17daObjFl_Ukiyuka_c	-
+src/named/ov022/d_a_obj_fl_ukiyuka_fl_ukiyuka_l.c	S1-stores-rom-vptr	ov022			stores _ZTV14daObjUkiyuka_c	1		None	_ZTV14daObjUkiyuka_c/_ZTV17daObjFl_Ukiyuka_c	-
 src/daPropeller_Heyho_c_classInit.c	WEAK-refs-only	ov070				1		None		-
 src/d_a_obj_block_l_bk_futa.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_obj_simple_bg_bk_tower.c	WEAK-refs-only	ov102				1		None		-
@@ -154,64 +154,64 @@ src/daObjBk_Kabe_c_classInit_BK_KABE01.c	WEAK-refs-only	ov079				1		None		-
 src/FreeGfxSlotsById.c	PURE-C	ov004				1		None		-
 src/d_a_hyuhyu.c	WEAK-refs-only	ov091				1		None		-
 src/Geometry_MatrixMultiply3x3.c	PURE-C	arm9				1		None		-
-src/GetAngleToCamera.c	PURE-C	arm9				1		None		-
-src/GetCRC16.c	PURE-C					0		None		not-in-delinks
-src/GetControllerMode.c	PURE-C	arm9				1		None		-
+src/named/arm9/GetAngleToCamera.c	PURE-C	arm9				1		None		-
+src/named/arm9/GetCRC16.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/GetControllerMode.c	PURE-C	arm9				1		None		-
 src/GetGameLanguage.c	PURE-C	ov004				1		None		-
-src/GetLevelPart.c	PURE-C	arm9				1		None		-
-src/GetMinimapID.c	PURE-C	arm9				1		None		-
-src/GetMinimapScale.c	PURE-C	arm9				1		None		-
-src/GetOwnerLanguage.c	PURE-C	arm9				1		None		-
-src/GetPlayerFlagByte.c	PURE-C	arm9				1		None		-
-src/GetSceneOverlayID.c	PURE-C	arm9				1		None		-
-src/GetSoundGroupID.c	PURE-C	arm9				1		None		-
-src/GetSoundMode.c	PURE-C	arm9				1		None		-
-src/GetStarCameraSetting.c	PURE-C	arm9				1		None		-
-src/GetTeleportDestObj.c	PURE-C	arm9				1		None		-
-src/GetViewObj.c	PURE-C	arm9				1		None		-
-src/GiveCoins.c	PURE-C	arm9				1		None		-
-src/GiveHealth.c	PURE-C	arm9				1		None		-
-src/GiveLives.c	PURE-C	arm9				1		None		-
-src/GiveRedCoins.c	PURE-C	arm9				1		None		-
-src/GiveVsStars.c	PURE-C	arm9				1		None		-
+src/named/arm9/GetLevelPart.c	PURE-C	arm9				1		None		-
+src/named/arm9/GetMinimapID.c	PURE-C	arm9				1		None		-
+src/named/arm9/GetMinimapScale.c	PURE-C	arm9				1		None		-
+src/named/arm9/GetOwnerLanguage.c	PURE-C	arm9				1		None		-
+src/named/arm9/GetPlayerFlagByte.c	PURE-C	arm9				1		None		-
+src/named/arm9/GetSceneOverlayID.c	PURE-C	arm9				1		None		-
+src/named/arm9/GetSoundGroupID.c	PURE-C	arm9				1		None		-
+src/named/arm9/GetSoundMode.c	PURE-C	arm9				1		None		-
+src/named/arm9/GetStarCameraSetting.c	PURE-C	arm9				1		None		-
+src/named/arm9/GetTeleportDestObj.c	PURE-C	arm9				1		None		-
+src/named/arm9/GetViewObj.c	PURE-C	arm9				1		None		-
+src/named/arm9/GiveCoins.c	PURE-C	arm9				1		None		-
+src/named/arm9/GiveHealth.c	PURE-C	arm9				1		None		-
+src/named/arm9/GiveLives.c	PURE-C	arm9				1		None		-
+src/named/arm9/GiveRedCoins.c	PURE-C	arm9				1		None		-
+src/named/arm9/GiveVsStars.c	PURE-C	arm9				1		None		-
 src/d_a_krb_kuribo_l.c	WEAK-refs-only	ov084				1		None		-
 src/d_a_krb_kuribo_s.c	WEAK-refs-only	ov084				1		None		-
 src/d_a_krb_kuribo.c	WEAK-refs-only	ov084				1		None		-
 src/d_a_obj_block_item_tag_blk_gnshell_tag.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_dkk.c	S1-stores-rom-vptr	ov025			stores _ZTV11daDsnBase_c	1		None	_ZTV11daDsnBase_c/_ZTV7daDkk_c	-
-src/Halt.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/Halt.c	PURE-C					0		None		not-in-delinks
 src/d_a_chair.c	WEAK-refs-only	ov020				1		None		-
 src/d_a_obj_heart.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_popoi.c	WEAK-refs-only	ov077				1		None		-
-src/HideArea.c	PURE-C	arm9				1		None		-
-src/HitDeathPlane.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/HideArea.c	PURE-C	arm9				1		None		-
+src/named/arm9/HitDeathPlane.c	WEAK-refs-only	arm9				1		None		-
 src/d_a_owl.c	WEAK-refs-only	ov094				1		None		-
-src/HuffUnCompReadByCallback.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/HuffUnCompReadByCallback.c	PURE-C					0		None		not-in-delinks
 src/IPCSend.c	WEAK-refs-only	arm9				1		None		-
 src/d_a_obj_ice_block.c	WEAK-refs-only	ov081				1		None		-
 src/daObjIceBoard_c_classInit.c	WEAK-refs-only	ov018				1		None		-
 src/IceSlideManager_Spawn.c	WEAK-refs-only	ov019				1		None		-
-src/InitControllerMode.c	PURE-C	arm9				1		None		-
-src/InitCrashScreen.c	WEAK-refs-only	arm9				1		None		-
-src/InitialiseVramGlobals.c	PURE-C	arm9				1		None		-
-src/IntrWait.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/InitControllerMode.c	PURE-C	arm9				1		None		-
+src/named/arm9/InitCrashScreen.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/InitialiseVramGlobals.c	PURE-C	arm9				1		None		-
+src/named/arm9/IntrWait.c	PURE-C					0		None		not-in-delinks
 src/InvMat4x3.c	WEAK-refs-only	arm9				1		None		-
-src/IsAreaShowing.c	PURE-C	arm9				1		None		-
-src/IsButtonInputValid.c	PURE-C	arm9				1		None		-
-src/IsCannonOpen.c	PURE-C	arm9				1		None		-
-src/IsCannonOpenInCurLevel.c	PURE-C	arm9				1		None		-
-src/IsCannonOpenInLevel.c	PURE-C	arm9				1		None		-
-src/IsDebugger.c	PURE-C					0		None		not-in-delinks
-src/IsLevelInsideCastle.c	PURE-C	arm9				1		None		-
-src/IsLevelTinyHugeIslandOutside.c	PURE-C	arm9				1		None		-
-src/IsMinigameActorID.c	PURE-C	arm9				1		None		-
-src/IsPlayerWarping.c	PURE-C	arm9				1		None		-
-src/IsStarCollected.c	PURE-C	arm9				1		None		-
-src/IsStarCollectedInCurLevel.c	PURE-C	arm9				1		None		-
-src/IsStarCollectedInLevel.c	PURE-C	arm9				1		None		-
+src/named/arm9/IsAreaShowing.c	PURE-C	arm9				1		None		-
+src/named/arm9/IsButtonInputValid.c	PURE-C	arm9				1		None		-
+src/named/arm9/IsCannonOpen.c	PURE-C	arm9				1		None		-
+src/named/arm9/IsCannonOpenInCurLevel.c	PURE-C	arm9				1		None		-
+src/named/arm9/IsCannonOpenInLevel.c	PURE-C	arm9				1		None		-
+src/named/arm9/IsDebugger.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/IsLevelInsideCastle.c	PURE-C	arm9				1		None		-
+src/named/arm9/IsLevelTinyHugeIslandOutside.c	PURE-C	arm9				1		None		-
+src/named/arm9/IsMinigameActorID.c	PURE-C	arm9				1		None		-
+src/named/arm9/IsPlayerWarping.c	PURE-C	arm9				1		None		-
+src/named/arm9/IsStarCollected.c	PURE-C	arm9				1		None		-
+src/named/arm9/IsStarCollectedInCurLevel.c	PURE-C	arm9				1		None		-
+src/named/arm9/IsStarCollectedInLevel.c	PURE-C	arm9				1		None		-
 src/daWater_Hakidasi_c_classInit.c	WEAK-refs-only	ov064				1		None		-
 src/d_a_obj_key_obj_key.c	WEAK-refs-only	ov089				1		None		-
-src/KillPlayer.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/KillPlayer.c	WEAK-refs-only	arm9				1		None		-
 src/d_a_bombking.c	WEAK-refs-only	ov078				1		None		-
 src/d_a_jango.c	WEAK-refs-only	ov062				1		None		-
 src/d_a_obj_bk_botaosi.c	WEAK-refs-only	ov015				1		None		-
@@ -220,8 +220,8 @@ src/d_a_shl.c	WEAK-refs-only	ov102				1		None		-
 src/d_a_nknk_nokonoko_s.c	WEAK-refs-only	ov062				1		None		-
 src/d_a_r_nk.c	WEAK-refs-only	ov062				1		None		-
 src/d_a_nknk_nokonoko.c	WEAK-refs-only	ov062				1		None		-
-src/LZ77UnCompReadByCallbackWrite16bit.c	PURE-C					0		None		not-in-delinks
-src/LZ77UnCompReadNormalWrite8bit.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/LZ77UnCompReadByCallbackWrite16bit.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/LZ77UnCompReadNormalWrite8bit.c	PURE-C					0		None		not-in-delinks
 src/d_a_c_jugem.c	WEAK-refs-only	ov085				1		None		-
 src/d_a_jgm.c	WEAK-refs-only	ov077				1		None		-
 src/d_a_obj_key_last_star.c	WEAK-refs-only	ov089				1		None		-
@@ -232,45 +232,45 @@ src/d_a_obj_fl_seesaw.c	S1-stores-rom-vptr	ov022			stores _ZTV10LavaSeesaw	1		No
 src/LenVec3.c	PURE-C	arm9				1		None		-
 src/d_a_obj_c1_hikari.c	WEAK-refs-only	ov010				1		None		-
 src/LinkSilverStarAndStarMarker.c	PURE-C	ov002				1		None		-
-src/LoadArchive.c	PURE-C	arm9				1		None		-
+src/named/arm9/LoadArchive.c	PURE-C	arm9				1		None		-
 src/LoadBlueCoinModel.c	WEAK-refs-only	arm9				1		None		-
-src/LoadCompressedFileAt.c	PURE-C	arm9				1		None		-
-src/LoadControllerModeText.c	WEAK-refs-only	arm9				1		None		-
-src/LoadDebugFont.c	WEAK-refs-only	arm9				1		None		-
-src/LoadFile.c	PURE-C	arm9				1		None		-
-src/LoadFileAt.c	PURE-C	arm9				1		None		-
-src/LoadFont3D.c	WEAK-refs-only	arm9				1		None		-
-src/LoadLevel.c	WEAK-refs-only	arm9				1		None		-
-src/LoadLevelNoReturn.c	PURE-C	arm9				1		None		-
-src/LoadOverlay.c	PURE-C	arm9				1		None		-
+src/named/arm9/LoadCompressedFileAt.c	PURE-C	arm9				1		None		-
+src/named/arm9/LoadControllerModeText.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/LoadDebugFont.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/LoadFile.c	PURE-C	arm9				1		None		-
+src/named/arm9/LoadFileAt.c	PURE-C	arm9				1		None		-
+src/named/arm9/LoadFont3D.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/LoadLevel.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/LoadLevelNoReturn.c	PURE-C	arm9				1		None		-
+src/named/arm9/LoadOverlay.c	PURE-C	arm9				1		None		-
 src/LoadSilverStarAndNumber.c	WEAK-refs-only	ov002				1		None		-
-src/LoadTextNarcs.c	PURE-C	arm9				1		None		-
+src/named/arm9/LoadTextNarcs.c	PURE-C	arm9				1		None		-
 src/d_a_manta.c	WEAK-refs-only	ov090				1		None		-
-src/Math_Function_0203b0fc.c	PURE-C	arm9				1		None		-
-src/Math_Function_0203b14c.c	PURE-C	arm9				1		None		-
+src/named/arm9/Math_Function_0203b0fc.c	PURE-C	arm9				1		None		-
+src/named/arm9/Math_Function_0203b14c.c	PURE-C	arm9				1		None		-
 src/Matrix3x3_FromQuaternion.c	PURE-C	arm9				1		None		-
-src/Matrix3x3_LoadIdentity.c	PURE-C	arm9				1		None		-
-src/Matrix3x3_SetRotationZ.c	PURE-C					0		None		not-in-delinks
-src/Matrix4x3_ApplyInPlaceToRotationX.c	PURE-C	arm9				1		None		-
-src/Matrix4x3_ApplyInPlaceToRotationXYZExt.c	PURE-C	arm9				1		None		-
-src/Matrix4x3_ApplyInPlaceToRotationY.c	PURE-C	arm9				1		None		-
-src/Matrix4x3_ApplyInPlaceToRotationZ.c	PURE-C	arm9				1		None		-
-src/Matrix4x3_ApplyInPlaceToRotationZXYExt.c	PURE-C	arm9				1		None		-
-src/Matrix4x3_ApplyInPlaceToScale.c	PURE-C	arm9				1		None		-
-src/Matrix4x3_ApplyInPlaceToTranslation.c	PURE-C	arm9				1		None		-
-src/Matrix4x3_FromQuaternion.c	PURE-C	arm9				1		None		-
-src/Matrix4x3_FromRotationX.c	PURE-C	arm9				1		None		-
-src/Matrix4x3_FromRotationXYZExt.c	PURE-C	arm9				1		None		-
+src/named/arm9/Matrix3x3_LoadIdentity.c	PURE-C	arm9				1		None		-
+src/named/arm9/Matrix3x3_SetRotationZ.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/Matrix4x3_ApplyInPlaceToRotationX.c	PURE-C	arm9				1		None		-
+src/named/arm9/Matrix4x3_ApplyInPlaceToRotationXYZExt.c	PURE-C	arm9				1		None		-
+src/named/arm9/Matrix4x3_ApplyInPlaceToRotationY.c	PURE-C	arm9				1		None		-
+src/named/arm9/Matrix4x3_ApplyInPlaceToRotationZ.c	PURE-C	arm9				1		None		-
+src/named/arm9/Matrix4x3_ApplyInPlaceToRotationZXYExt.c	PURE-C	arm9				1		None		-
+src/named/arm9/Matrix4x3_ApplyInPlaceToScale.c	PURE-C	arm9				1		None		-
+src/named/arm9/Matrix4x3_ApplyInPlaceToTranslation.c	PURE-C	arm9				1		None		-
+src/named/arm9/Matrix4x3_FromQuaternion.c	PURE-C	arm9				1		None		-
+src/named/arm9/Matrix4x3_FromRotationX.c	PURE-C	arm9				1		None		-
+src/named/arm9/Matrix4x3_FromRotationXYZExt.c	PURE-C	arm9				1		None		-
 src/Matrix4x3_FromRotationY.c	PURE-C	arm9				1		None		-
-src/Matrix4x3_FromRotationZ.c	PURE-C	arm9				1		None		-
-src/Matrix4x3_FromRotationZXYExt.c	PURE-C	arm9				1		None		-
-src/Matrix4x3_FromTranslation.c	PURE-C	arm9				1		None		-
-src/Matrix4x3_LoadIdentity.c	PURE-C	arm9				1		None		-
+src/named/arm9/Matrix4x3_FromRotationZ.c	PURE-C	arm9				1		None		-
+src/named/arm9/Matrix4x3_FromRotationZXYExt.c	PURE-C	arm9				1		None		-
+src/named/arm9/Matrix4x3_FromTranslation.c	PURE-C	arm9				1		None		-
+src/named/arm9/Matrix4x3_LoadIdentity.c	PURE-C	arm9				1		None		-
 src/d_a_obj_block_item_tag_blk_skinoko_tag.c	WEAK-refs-only	ov002				1		None		-
 src/MegaMushroomCreateTag_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_1up_scaleup_kinoko.c	WEAK-refs-only	ov002				1		None		-
-src/Message_DrawCenteredLine.c	WEAK-refs-only	arm9				1		None		-
-src/d_a_obj_fl_amilift.c	S1-stores-rom-vptr	ov064			stores _ZTV17daObjFl_Amilift_c	1		None	_ZTV17daObjFl_Amilift_c	-
+src/named/arm9/Message_DrawCenteredLine.c	WEAK-refs-only	arm9				1		None		-
+src/named/ov064/d_a_obj_fl_amilift.c	S1-stores-rom-vptr	ov064			stores _ZTV17daObjFl_Amilift_c	1		None	_ZTV17daObjFl_Amilift_c	-
 src/daObjMc_Metalnet_c_classInit.c	WEAK-refs-only	ov009				1		None		-
 src/d_s_mg_pachinko.c	WEAK-refs-only	ov006				1		None		-
 src/d_s_mg_teresa.c	WEAK-refs-only	ov006				1		None		-
@@ -280,7 +280,7 @@ src/d_s_mg_panel.c	WEAK-refs-only	ov006				1		None		-
 src/d_s_mg_curling.c	WEAK-refs-only	ov006				1		None		-
 src/d_s_mg_bomroom.c	WEAK-refs-only	ov006				1		None		-
 src/d_s_mg_luigi.c	WEAK-refs-only	ov006				1		None		-
-src/Mod.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/Mod.c	PURE-C					0		None		not-in-delinks
 src/d_a_gmch.c	WEAK-refs-only	ov081				1		None		-
 src/d_a_choro_rock.c	WEAK-refs-only	ov080				1		None		-
 src/d_a_choropu.c	WEAK-refs-only	ov080				1		None		-
@@ -291,34 +291,34 @@ src/daEykn_c_classInit_EYEKUN.c	WEAK-refs-only	ov071				1		None		-
 src/d_a_mugen_bgm.c	WEAK-refs-only	ov002				1		None		-
 src/MulMat3x3Mat3x3.c	PURE-C	arm9				1		None		-
 src/MulMat4x3Mat4x3.c	PURE-C	arm9				1		None		-
-src/MulVec3Mat3x3.c	PURE-C	arm9				1		None		-
+src/named/arm9/MulVec3Mat3x3.c	PURE-C	arm9				1		None		-
 src/MulVec3Mat4x3.c	PURE-C	arm9				1		None		-
-src/MultiCopy32Bytes.c	PURE-C	arm9				1		None		-
-src/MultiCopyHalf.c	PURE-C	arm9				1		None		-
-src/MultiCopy_Int.c	PURE-C	arm9				1		None		-
-src/MultiStore16.c	PURE-C	arm9				1		None		-
-src/MultiStore32Bytes.c	PURE-C	arm9				1		None		-
-src/MultiStore_Int.c	PURE-C	arm9				1		None		-
-src/NoOpDestructor.c	PURE-C	arm9				1		None		-
-src/NormalizeVec3.c	PURE-C	arm9				1		None		-
-src/NormalizeVec3IfNonZero.c	PURE-C	arm9				1		None		-
-src/NullDestructor_0203d47c.c	PURE-C	arm9				1		None		-
-src/NumCoins.c	PURE-C	arm9				1		None		-
-src/NumRedCoins.c	PURE-C	arm9				1		None		-
-src/NumStars.c	PURE-C	arm9				1		None		-
-src/NumVsStarsObtained.c	PURE-C	arm9				1		None		-
+src/named/arm9/MultiCopy32Bytes.c	PURE-C	arm9				1		None		-
+src/named/arm9/MultiCopyHalf.c	PURE-C	arm9				1		None		-
+src/named/arm9/MultiCopy_Int.c	PURE-C	arm9				1		None		-
+src/named/arm9/MultiStore16.c	PURE-C	arm9				1		None		-
+src/named/arm9/MultiStore32Bytes.c	PURE-C	arm9				1		None		-
+src/named/arm9/MultiStore_Int.c	PURE-C	arm9				1		None		-
+src/named/arm9/NoOpDestructor.c	PURE-C	arm9				1		None		-
+src/named/arm9/NormalizeVec3.c	PURE-C	arm9				1		None		-
+src/named/arm9/NormalizeVec3IfNonZero.c	PURE-C	arm9				1		None		-
+src/named/arm9/NullDestructor_0203d47c.c	PURE-C	arm9				1		None		-
+src/named/arm9/NumCoins.c	PURE-C	arm9				1		None		-
+src/named/arm9/NumRedCoins.c	PURE-C	arm9				1		None		-
+src/named/arm9/NumStars.c	PURE-C	arm9				1		None		-
+src/named/arm9/NumVsStarsObtained.c	PURE-C	arm9				1		None		-
 src/d_a_obj_number.c	WEAK-refs-only	ov002				1		None		-
-src/OSReadROMArea.c	PURE-C					0		None		not-in-delinks
-src/OS_GetInitArenaLo.c	PURE-C	arm9				1		None		-
-src/OS_SleepThread.c	WEAK-refs-only	arm9				1		None		-
-src/OS_WakeupThread.c	WEAK-refs-only	arm9				1		None		-
-src/ObjectMessageIDToActualMessageID.c	PURE-C	arm9				1		None		-
+src/named/arm9/OSReadROMArea.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/OS_GetInitArenaLo.c	PURE-C	arm9				1		None		-
+src/named/arm9/OS_SleepThread.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/OS_WakeupThread.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/ObjectMessageIDToActualMessageID.c	PURE-C	arm9				1		None		-
 src/d_a_obj1_up_logo.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_obj_block_item_tag_blk_okinoko_tag.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_1up_oneupkinoko.c	WEAK-refs-only	ov002				1		None		-
-src/OpenCannon.c	PURE-C	arm9				1		None		-
-src/OpenCannonInCurLevel.c	PURE-C	arm9				1		None		-
-src/OpenCannonInLevel.c	PURE-C	arm9				1		None		-
+src/named/arm9/OpenCannon.c	PURE-C	arm9				1		None		-
+src/named/arm9/OpenCannonInCurLevel.c	PURE-C	arm9				1		None		-
+src/named/arm9/OpenCannonInLevel.c	PURE-C	arm9				1		None		-
 src/OrangeBallBillboard_Spawn.c	WEAK-refs-only	ov044				1		None		-
 src/Ov004_Deallocate.c	PURE-C	ov004				1		None		-
 src/d_a_pic_gate.c	S1-stores-rom-vptr	ov080			stores _ZTV11daPicGate_c	1		None	_ZTV11daPicGate_c	-
@@ -326,7 +326,7 @@ src/d_a_obj_c1_peach.c	WEAK-refs-only	ov010				1		None		-
 src/d_a_pkn.c	WEAK-refs-only	ov084				1		None		-
 src/Player_DisableInteraction.c	PURE-C	ov002				1		None		-
 src/Player_PlaySoundEffect.c	PURE-C	arm9				1		None		-
-src/Player_ReleaseHeldActor.c	PURE-C	ov002				1		None		-
+src/named/ov002/Player_ReleaseHeldActor.c	PURE-C	ov002				1		None		-
 src/Player_ScaleByCharFactor.c	PURE-C					0		None		not-in-delinks
 src/d_a_sanbo_sanbo_body.c	WEAK-refs-only	ov096				1		None		-
 src/d_a_sanbo_sanbo.c	WEAK-refs-only	ov096				1		None		-
@@ -334,33 +334,33 @@ src/d_a_obj_km2_ami_bou.c	WEAK-refs-only	ov045				1		None		-
 src/d_a_obj_lava.c	S1-stores-rom-vptr	ov002			stores _ZTV11daObjLava_c	1		None	_ZTV11daObjLava_c	-
 src/d_a_obj_power_up_item.c	WEAK-refs-only	ov002				1		None		-
 src/daSCre_c_Spawn.c	S1-stores-rom-vptr	ov018			stores _ZTV8daSCre_c	1		None	_ZTV8daSCre_c	-
-src/d_a_star_star.c	WEAK-refs-only	ov002				1		None		-
-src/PrepareVsMode.c	WEAK-refs-only	arm9				1		None		-
+src/named/ov002/d_a_star_star.c	WEAK-refs-only	ov002				1		None		-
+src/named/arm9/PrepareVsMode.c	WEAK-refs-only	arm9				1		None		-
 src/d_a_peach.c	WEAK-refs-only	ov085				1		None		-
 src/d_a_obj_pushblock.cpp	S1-stores-rom-vptr	ov002			stores _ZTV16daObjPushblock_c	1		None	_ZTV16daObjPushblock_c	-
 src/d_a_obj_dp_brock.c	WEAK-refs-only	ov025				1		None		-
 src/d_a_obj_dl_pyramid_dummy.c	WEAK-refs-only	ov024				1		None		-
 src/d_a_obj_dl_pyramid.c	WEAK-refs-only	ov024				1		None		-
-src/Quaternion_FromVector3.c	WEAK-refs-only	arm9				1		None		-
-src/Quaternion_Normalize.c	PURE-C	arm9				1		None		-
-src/Quaternion_SLerp.c	PURE-C	arm9				1		None		-
+src/named/arm9/Quaternion_FromVector3.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/Quaternion_Normalize.c	PURE-C	arm9				1		None		-
+src/named/arm9/Quaternion_SLerp.c	PURE-C	arm9				1		None		-
 src/d_a_obj_hatena_block_hatena_block.c	WEAK-refs-only	ov102				1		None		-
-src/RLUnCompReadByCallbackWrite16bit.c	PURE-C					0		None		not-in-delinks
-src/RLUnCompReadNormalWrite8bit.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/RLUnCompReadByCallbackWrite16bit.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/RLUnCompReadNormalWrite8bit.c	PURE-C					0		None		not-in-delinks
 src/d_a_obj_mip_key.c	WEAK-refs-only	ov085				1		None		-
 src/d_a_mip.c	WEAK-refs-only	ov085				1		None		-
 src/d_a_pg_rcer.c	WEAK-refs-only	ov019				1		None		-
-src/RandomIntInternal.c	PURE-C	arm9				1		None		-
-src/ReadSignedVarInt.c	PURE-C	arm9				1		None		-
-src/ReadUnalignedInt.c	PURE-C	arm9				1		None		-
-src/ReadUnalignedShort.c	PURE-C	arm9				1		None		-
-src/ReadUnalignedUshort.c	PURE-C	arm9				1		None		-
+src/named/arm9/RandomIntInternal.c	PURE-C	arm9				1		None		-
+src/named/arm9/ReadSignedVarInt.c	PURE-C	arm9				1		None		-
+src/named/arm9/ReadUnalignedInt.c	PURE-C	arm9				1		None		-
+src/named/arm9/ReadUnalignedShort.c	PURE-C	arm9				1		None		-
+src/named/arm9/ReadUnalignedUshort.c	PURE-C	arm9				1		None		-
 src/d_a_coin_red_coin.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_obj_fire_obj_red_fire.c	WEAK-refs-only	ov002				1		None		-
-src/RequestScreenFade.c	PURE-C	ov007				1		None		-
-src/ResetCrashScreen.c	WEAK-refs-only	arm9				1		None		-
-src/ResetInput.c	PURE-C	arm9				1		None		-
-src/ResetKuppaScript.c	PURE-C	arm9				1		None		-
+src/named/ov007/RequestScreenFade.c	PURE-C	ov007				1		None		-
+src/named/arm9/ResetCrashScreen.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/ResetInput.c	PURE-C	arm9				1		None		-
+src/named/arm9/ResetKuppaScript.c	PURE-C	arm9				1		None		-
 src/d_a_obj_km1_kurumajiku.c	S1-stores-rom-vptr	ov043			stores _ZTV11RickshawBdw	1		None	_ZTV11RickshawBdw/_ZTV17daObjKurumajiku_c	-
 src/game/actors/d_a_obj_km3_kurumajiku.cpp	S1-stores-rom-vptr	ov047			stores _ZTV17daObjKurumajiku_c	1		None	_ZTV17daObjKurumajiku_c/_ZTV21daObjKm3_Kurumajiku_c	-
 src/daObjKm1_Kuruma_c_classInit.c	S1-stores-rom-vptr	ov043			stores _ZTV13daObjKuruma_c	1		None	_ZTV13daObjKuruma_c/_ZTV17daObjKm1_Kuruma_c	-
@@ -374,11 +374,11 @@ src/d_a_grock.c	S1-stores-rom-vptr	ov021			stores _ZTV11RollingRock	1		None	_ZTV
 src/d_a_obj_simple_bg_mc_hazad.c	WEAK-refs-only	ov102				1		None		-
 src/d_a_obj_ct_mecha10_ct_mecha10.c	WEAK-refs-only	ov035				1		None		-
 src/d_a_obj_ct_mecha10_ct_mecha12s.c	WEAK-refs-only	ov035				1		None		-
-src/d_a_obj_fl_koma_d.c	S1-stores-rom-vptr	ov022			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV16daObjFl_Koma_D_c	-
+src/named/ov022/d_a_obj_fl_koma_d.c	S1-stores-rom-vptr	ov022			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV16daObjFl_Koma_D_c	-
 src/game/actors/d_a_obj_wc_obj07.cpp	S1-stores-rom-vptr	ov029			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV19RotatingPlatformWdw	-
 src/d_a_obj_rotate_updown_lift_hs_updown_lift.c	WEAK-refs-only	ov091				1		None		-
 src/d_a_obj_rotate_updown_lift_updown_lift.c	WEAK-refs-only	ov091				1		None		-
-src/RunKuppaScript.c	PURE-C	arm9				1		None		-
+src/named/arm9/RunKuppaScript.c	PURE-C	arm9				1		None		-
 src/Scuttlebug_SetState.c	PURE-C	ov071				1		None		-
 src/daSpd_c_classInit.c	WEAK-refs-only	ov071				1		None		-
 src/daObjWakame_c_Spawn.c	S1-stores-rom-vptr	ov002			stores _ZTV13daObjWakame_c	1		None	_ZTV13daObjWakame_c	-
@@ -389,38 +389,38 @@ src/d_a_obj_seesaw_km3_seesaw.c	WEAK-refs-only	ov095				1		None		-
 src/d_a_obj_seesaw_km3_yokoseesaw.c	WEAK-refs-only	ov095				1		None		-
 src/d_a_obj_seesaw_rc_seesaw.c	WEAK-refs-only	ov095				1		None		-
 src/d_a_obj_seesaw_seesaw.c	WEAK-refs-only	ov095				1		None		-
-src/SetBg0Offset.c	PURE-C	arm9				1		None		-
-src/SetBg1Offset.c	PURE-C	arm9				1		None		-
-src/SetBg2Offset.c	PURE-C	arm9				1		None		-
-src/SetBg3Offset.c	PURE-C	arm9				1		None		-
-src/SetControllerMode.c	PURE-C	arm9				1		None		-
-src/SetNextLevel.c	PURE-C	arm9				1		None		-
-src/SetNextStar.c	PURE-C	arm9				1		None		-
-src/SetNumPlayers.c	PURE-C	arm9				1		None		-
-src/SetPlayerGlobals.c	PURE-C	arm9				1		None		-
-src/SetSoundMode.c	PURE-C	arm9				1		None		-
-src/SetStarMarker.c	PURE-C	arm9				1		None		-
-src/SetSubBg0Offset.c	PURE-C	arm9				1		None		-
-src/SetSubBg1Offset.c	PURE-C	arm9				1		None		-
-src/SetSubBg2Offset.c	PURE-C	arm9				1		None		-
-src/SetSubBg3Offset.c	PURE-C	arm9				1		None		-
-src/SetTouchScreenDelay.c	PURE-C	arm9				1		None		-
-src/SharedFilePtr_Construct_TexSeq.c	PURE-C	arm9				1		None		-
-src/SharedFilePtr_Destruct_Anim.c	PURE-C	arm9				1		None		-
-src/SharedFilePtr_Destruct_Clsn.c	PURE-C	arm9				1		None		-
-src/SharedFilePtr_Destruct_TexSeq.c	PURE-C	arm9				1		None		-
+src/named/arm9/SetBg0Offset.c	PURE-C	arm9				1		None		-
+src/named/arm9/SetBg1Offset.c	PURE-C	arm9				1		None		-
+src/named/arm9/SetBg2Offset.c	PURE-C	arm9				1		None		-
+src/named/arm9/SetBg3Offset.c	PURE-C	arm9				1		None		-
+src/named/arm9/SetControllerMode.c	PURE-C	arm9				1		None		-
+src/named/arm9/SetNextLevel.c	PURE-C	arm9				1		None		-
+src/named/arm9/SetNextStar.c	PURE-C	arm9				1		None		-
+src/named/arm9/SetNumPlayers.c	PURE-C	arm9				1		None		-
+src/named/arm9/SetPlayerGlobals.c	PURE-C	arm9				1		None		-
+src/named/arm9/SetSoundMode.c	PURE-C	arm9				1		None		-
+src/named/arm9/SetStarMarker.c	PURE-C	arm9				1		None		-
+src/named/arm9/SetSubBg0Offset.c	PURE-C	arm9				1		None		-
+src/named/arm9/SetSubBg1Offset.c	PURE-C	arm9				1		None		-
+src/named/arm9/SetSubBg2Offset.c	PURE-C	arm9				1		None		-
+src/named/arm9/SetSubBg3Offset.c	PURE-C	arm9				1		None		-
+src/named/arm9/SetTouchScreenDelay.c	PURE-C	arm9				1		None		-
+src/named/arm9/SharedFilePtr_Construct_TexSeq.c	PURE-C	arm9				1		None		-
+src/named/arm9/SharedFilePtr_Destruct_Anim.c	PURE-C	arm9				1		None		-
+src/named/arm9/SharedFilePtr_Destruct_Clsn.c	PURE-C	arm9				1		None		-
+src/named/arm9/SharedFilePtr_Destruct_TexSeq.c	PURE-C	arm9				1		None		-
 src/d_a_shark.c	WEAK-refs-only	ov090				1		None		-
 src/d_a_obj_ki_fune_ki_fune.c	WEAK-refs-only	ov016				1		None		-
 src/d_a_obj_ki_fune_ki_fune_up.c	WEAK-refs-only	ov016				1		None		-
 src/daObjKsWater_c_classInit.c	WEAK-refs-only	ov017				1		None		-
-src/ShowArea.c	PURE-C	arm9				1		None		-
-src/ShowCrashScreen.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/ShowArea.c	PURE-C	arm9				1		None		-
+src/named/arm9/ShowCrashScreen.c	WEAK-refs-only	arm9				1		None		-
 src/daObjBSwdoor_c_classInit.c	S1-stores-rom-vptr	ov014			stores _ZTV10ShutterBob	1		None	_ZTV10ShutterBob/_ZTV13daObjSwdoor_c	-
-src/d_a_obj_tatefuda.c	WEAK-refs-only	ov002				1		None		-
+src/named/ov002/d_a_obj_tatefuda.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_obj_block_item_tag_blk_slvstar_tag.c	WEAK-refs-only	ov002				1		None		-
-src/d_a_star_silver_star.c	WEAK-refs-only	ov002				1		None		-
-src/d_a_menbo.c	S1-stores-rom-vptr	ov090			stores _ZTV9daMenbo_c	1		None	_ZTV9daMenbo_c	-
-src/d_a_obj_sm_lift.c	S1-stores-rom-vptr	ov018			stores _ZTV7SkiLift	1		None	_ZTV7SkiLift	-
+src/named/ov002/d_a_star_silver_star.c	WEAK-refs-only	ov002				1		None		-
+src/named/ov090/d_a_menbo.c	S1-stores-rom-vptr	ov090			stores _ZTV9daMenbo_c	1		None	_ZTV9daMenbo_c	-
+src/named/ov018/d_a_obj_sm_lift.c	S1-stores-rom-vptr	ov018			stores _ZTV7SkiLift	1		None	_ZTV7SkiLift	-
 src/d_a_obj_hs_billboard_hs_b_star.c	WEAK-refs-only	ov031				1		None		-
 src/d_a_obj_hs_billboard_hs_y_star.c	WEAK-refs-only	ov031				1		None		-
 src/d_a_obj_hs_billboard_hs_moon.c	WEAK-refs-only	ov031				1		None		-
@@ -440,30 +440,30 @@ src/d_a_snowball.c	WEAK-refs-only	ov081				1		None		-
 src/d_a_bg_snm_bdy.c	WEAK-refs-only	ov072				1		None		-
 src/d_a_bg_snm_hed.c	WEAK-refs-only	ov072				1		None		-
 src/daYurei_Mucho_c_classInit.c	WEAK-refs-only	ov065				1		None		-
-src/SoftReset.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/SoftReset.c	PURE-C					0		None		not-in-delinks
 src/daSoundObj_c_Spawn.c	S1-stores-rom-vptr	ov002			stores _ZTV12daSoundObj_c	1		None	_ZTV12daSoundObj_c	-
 src/Sound_PlayIfNotActive.c	PURE-C	arm9				1		None		-
-src/d_a_kirai.c	WEAK-refs-only	ov060				1		None		-
+src/named/ov060/d_a_kirai.c	WEAK-refs-only	ov060				1		None		-
 src/d_a_huwa.c	WEAK-refs-only	ov081				1		None		-
 src/d_a_obj_ct_mecha11.c	WEAK-refs-only	ov035				1		None		-
 src/d_a_tgz.c	WEAK-refs-only	ov077				1		None		-
-src/Sprite_SetAnimation.c	PURE-C	ov007				1		None		-
-src/Sqrt.c	PURE-C					0		None		not-in-delinks
+src/named/ov007/Sprite_SetAnimation.c	PURE-C	ov007				1		None		-
+src/named/arm9/Sqrt.c	PURE-C					0		None		not-in-delinks
 src/d_a_linelift2_km2_susumu.c	WEAK-refs-only	ov091				1		None		-
 src/d_a_obj_emm_yuka.c	WEAK-refs-only	ov052				1		None		-
 src/Squasher_Spawn.c	WEAK-refs-only	ov023				1		None		-
 src/d_a_star_gate.c	WEAK-refs-only	ov100				1		None		-
-src/d_a_star_base.c	WEAK-refs-only	ov002				1		None		-
-src/d_a_obj_switch_star_switch.c	WEAK-refs-only	ov002				1		None		-
-src/StartExitCharacterWipe.c	PURE-C	arm9				1		None		-
-src/StartFile.c	WEAK-refs-only	arm9				1		None		-
-src/StartIntroCutscene.c	WEAK-refs-only	arm9				1		None		-
-src/StartMinigameMenu.c	WEAK-refs-only	arm9				1		None		-
-src/StartWithFarCamera.c	PURE-C	arm9				1		None		-
+src/named/ov002/d_a_star_base.c	WEAK-refs-only	ov002				1		None		-
+src/named/ov002/d_a_obj_switch_star_switch.c	WEAK-refs-only	ov002				1		None		-
+src/named/arm9/StartExitCharacterWipe.c	PURE-C	arm9				1		None		-
+src/named/arm9/StartFile.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/StartIntroCutscene.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/StartMinigameMenu.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/StartWithFarCamera.c	PURE-C	arm9				1		None		-
 src/d_a_obj_simple_bg_ki_iwa.c	WEAK-refs-only	ov102				1		None		-
 src/d_a_obj_pile.c	S1-stores-rom-vptr	ov091			stores _ZTV5Stump	1		None	_ZTV5Stump	-
-src/SubVec3.c	PURE-C	arm9				1		None		-
-src/SublevelToLevel.c	PURE-C	arm9				1		None		-
+src/named/arm9/SubVec3.c	PURE-C	arm9				1		None		-
+src/named/arm9/SublevelToLevel.c	PURE-C	arm9				1		None		-
 src/d_a_obj_wl_submarine.c	S1-stores-rom-vptr	ov026			stores _ZTV18daObjWlSubmarine_c	1		None	_ZTV18daObjWlSubmarine_c	-
 src/SurfaceInfo_TestFlag0x20.c	PURE-C	arm9				1		None		-
 src/daObjWc_Obj04_c_classInit.c	WEAK-refs-only	ov029				1		None		-
@@ -478,7 +478,7 @@ src/d_a_obj_tt_futa.c	S1-stores-rom-vptr	ov033			stores _ZTV13daObjTtFuta_c	1		N
 src/d_a_obj_tt_water.c	WEAK-refs-only	ov033				1		None		-
 src/d_a_kinopio.c	WEAK-refs-only	ov085				1		None		-
 src/d_a_tor.c	WEAK-refs-only	ov096				1		None		-
-src/TouchArea_Update.c	PURE-C	ov001				1		None		-
+src/named/ov001/TouchArea_Update.c	PURE-C	ov001				1		None		-
 src/d_a_obj_bk_lift.c	WEAK-refs-only	ov015				1		None		-
 src/Trap_Spawn.c	S1-stores-rom-vptr	ov010			stores _ZTV14daObjC1_Trap_c	1		None	_ZTV14daObjC1_Trap_c	-
 src/d_a_obj_tbox.c	WEAK-refs-only	ov064				1		None		-
@@ -490,54 +490,54 @@ src/daObjCtRotateBlock_c_classInit_CT_MECHA01.c	WEAK-refs-only	ov065				1		None	
 src/daObjCtKaitendai_c_classInit_CT_MECHA06.c	WEAK-refs-only	ov065				1		None		-
 src/daObjCtRotateBlock_c_classInit_CT_MECHA02.c	WEAK-refs-only	ov065				1		None		-
 src/daObjCtKaitendai_c_classInit_CT_MECHA07.c	WEAK-refs-only	ov065				1		None		-
-src/TurnBacklightOff.c	PURE-C	arm9				1		None		-
-src/TurnBacklightOn.c	PURE-C	arm9				1		None		-
+src/named/arm9/TurnBacklightOff.c	PURE-C	arm9				1		None		-
+src/named/arm9/TurnBacklightOn.c	PURE-C	arm9				1		None		-
 src/d_a_obj_hm_bskt.c	S1-stores-rom-vptr	ov030			stores _ZTV13daObjHmBskt_c	1		None	_ZTV13daObjHmBskt_c	-
 src/d_a_mky_monkey_star.c	WEAK-refs-only	ov030				1		None		-
 src/d_a_mky_monkey_thief.c	WEAK-refs-only	ov030				1		None		-
 src/d_a_moray.c	S1-stores-rom-vptr	ov016			stores _ZTV9daMoray_c	1		None	_ZTV9daMoray_c	-
-src/UnloadArchive.c	PURE-C	arm9				1		None		-
-src/UnloadArchives.c	PURE-C	arm9				1		None		-
+src/named/arm9/UnloadArchive.c	PURE-C	arm9				1		None		-
+src/named/arm9/UnloadArchives.c	PURE-C	arm9				1		None		-
 src/UnloadBlueCoinModel.c	WEAK-refs-only	arm9				1		None		-
-src/UnloadOverlay.c	PURE-C	arm9				1		None		-
+src/named/arm9/UnloadOverlay.c	PURE-C	arm9				1		None		-
 src/UnloadSilverStarAndNumber.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_udlift_udlift_teresa.c	WEAK-refs-only	ov095				1		None		-
 src/d_a_udlift_udlift.c	WEAK-refs-only	ov095				1		None		-
 src/d_a_udlift_rc_rift02.c	WEAK-refs-only	ov095				1		None		-
-src/UpdateMinimap.c	PURE-C	arm9				1		None		-
+src/named/arm9/UpdateMinimap.c	PURE-C	arm9				1		None		-
 src/VBlankIntrWait.c	PURE-C					0		None		not-in-delinks
-src/Vec2_Len.c	WEAK-refs-only	arm9				1		None		-
-src/Vec2_Sub.c	PURE-C	arm9				1		None		-
-src/Vec3_Add.c	PURE-C	arm9				1		None		-
-src/Vec3_ApproachHorz.c	WEAK-refs-only	arm9				1		None		-
-src/Vec3_Asr.c	PURE-C	arm9				1		None		-
-src/Vec3_AsrInPlace.c	PURE-C	arm9				1		None		-
+src/named/arm9/Vec2_Len.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/Vec2_Sub.c	PURE-C	arm9				1		None		-
+src/named/arm9/Vec3_Add.c	PURE-C	arm9				1		None		-
+src/named/arm9/Vec3_ApproachHorz.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/Vec3_Asr.c	PURE-C	arm9				1		None		-
+src/named/arm9/Vec3_AsrInPlace.c	PURE-C	arm9				1		None		-
 src/Vec3_Dist.c	WEAK-refs-only	arm9				1		None		-
-src/Vec3_DivScalarInPlace.c	WEAK-refs-only	arm9				1		None		-
-src/Vec3_Equal.c	PURE-C	arm9				1		None		-
-src/Vec3_HorzAngle.c	WEAK-refs-only	arm9				1		None		-
-src/Vec3_HorzDist.c	WEAK-refs-only	arm9				1		None		-
-src/Vec3_HorzLen.c	WEAK-refs-only	arm9				1		None		-
-src/Vec3_Lsl.c	PURE-C	arm9				1		None		-
-src/Vec3_LslInPlace.c	PURE-C	arm9				1		None		-
-src/Vec3_MulScalar.c	PURE-C	arm9				1		None		-
-src/Vec3_MulScalarInPlace.c	PURE-C	arm9				1		None		-
-src/Vec3_RotateYAndTranslate.c	PURE-C	arm9				1		None		-
-src/Vec3_Sub.c	PURE-C	arm9				1		None		-
-src/Vec3_VertAngle.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/Vec3_DivScalarInPlace.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/Vec3_Equal.c	PURE-C	arm9				1		None		-
+src/named/arm9/Vec3_HorzAngle.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/Vec3_HorzDist.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/Vec3_HorzLen.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/Vec3_Lsl.c	PURE-C	arm9				1		None		-
+src/named/arm9/Vec3_LslInPlace.c	PURE-C	arm9				1		None		-
+src/named/arm9/Vec3_MulScalar.c	PURE-C	arm9				1		None		-
+src/named/arm9/Vec3_MulScalarInPlace.c	PURE-C	arm9				1		None		-
+src/named/arm9/Vec3_RotateYAndTranslate.c	PURE-C	arm9				1		None		-
+src/named/arm9/Vec3_Sub.c	PURE-C	arm9				1		None		-
+src/named/arm9/Vec3_VertAngle.c	WEAK-refs-only	arm9				1		None		-
 src/daChRoom_c_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/d_a_obj_volcano_cannon.c	WEAK-refs-only	ov022				1		None		-
-src/d_a_obj_fl_ring.c	S1-stores-rom-vptr	ov022			stores _ZTV14daObjFl_Ring_c	1		None	_ZTV14daObjFl_Ring_c	-
-src/Vram__Map.c	PURE-C	arm9				1		None		-
+src/named/ov022/d_a_obj_fl_ring.c	S1-stores-rom-vptr	ov022			stores _ZTV14daObjFl_Ring_c	1		None	_ZTV14daObjFl_Ring_c	-
+src/named/arm9/Vram__Map.c	PURE-C	arm9				1		None		-
 src/daObjWc_Mizu_c_classInit.c	WEAK-refs-only	ov029				1		None		-
-src/WM_CheckStateEx.c	WEAK-refs-only	arm9				1		None		-
-src/WM_GetSystemWork.c	PURE-C	arm9				1		None		-
-src/WM_SendCommand.c	WEAK-refs-only	arm9				1		None		-
-src/WM_SetCallbackTable.c	PURE-C	arm9				1		None		-
-src/WaitByLoop.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/WM_CheckStateEx.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/WM_GetSystemWork.c	PURE-C	arm9				1		None		-
+src/named/arm9/WM_SendCommand.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/WM_SetCallbackTable.c	PURE-C	arm9				1		None		-
+src/named/arm9/WaitByLoop.c	PURE-C					0		None		not-in-delinks
 src/d_a_obj_kanban.c	WEAK-refs-only	ov085				1		None		-
 src/d_a_obj_simple_bg_dokan.c	WEAK-refs-only	ov102				1		None		-
-src/WarpPlayer.c	PURE-C	arm9				1		None		-
+src/named/arm9/WarpPlayer.c	PURE-C	arm9				1		None		-
 src/daWarpkun_c_Spawn.c	S1-stores-rom-vptr	ov002			stores _ZTV11daWarpkun_c	1		None	_ZTV11daWarpkun_c	-
 src/d_a_wbm.c	WEAK-refs-only	ov098				1		None		-
 src/daObjWc_Obj03_c_classInit.c	WEAK-refs-only	ov029				1		None		-
@@ -549,12 +549,12 @@ src/d_a_btn_batanking.c	S1-stores-rom-vptr	ov079			stores _ZTV7daBtn_c	1		None	_
 src/d_a_btn_batan.c	S1-stores-rom-vptr	ov079			stores _ZTV7daBtn_c	1		None	_ZTV7daBtn_c	-
 src/d_a_hanachan.c	S1-stores-rom-vptr	ov034			stores _ZTV7Wiggler	1		None	_ZTV7Wiggler	-
 src/game/actors/daFeather_c/d_a_feather.c	WEAK-refs-only	ov002				1		None		-
-src/Wireless_Reset.c	PURE-C	arm9				1		None		-
+src/named/arm9/Wireless_Reset.c	PURE-C	arm9				1		None		-
 src/WithMeshClsn_UpdateContinuous_Veneer.c	WEAK-refs-only	arm9				1		None		-
 src/WithMeshClsn_UpdateDiscreteNoLava_veneer.c	WEAK-refs-only	arm9				1		None		-
 src/d_a_yegg.c	WEAK-refs-only	ov002				1		None		-
 src/_Z19UnloadLevelOverlaysi.c	P4-mangled-freefn	arm9			_Z19UnloadLevelOverlaysi	1	active	None		-
-src/_Z23LoadMinimapChangeObjecti5Fix12IiEh.c	P4-mangled-freefn	arm9			_Z23LoadMinimapChangeObjecti5Fix12IiEh	1		None		by-value-class-param
+src/named/arm9/_Z23LoadMinimapChangeObjecti5Fix12IiEh.c	P4-mangled-freefn	arm9			_Z23LoadMinimapChangeObjecti5Fix12IiEh	1		None		by-value-class-param
 src/_ZN19daObjBlockItemTag_cD0Ev.c	DTOR-ONLY	ov002	daObjBlockItemTag_c	daObjBlockItemTag_c/daObjBlockItemTag_c	_ZN19daObjBlockItemTag_cD0Ev	1		True	_ZTV19daObjBlockItemTag_c	-
 src/_ZN12daIDonketu_cD0Ev.c	DTOR-ONLY	ov027	daIDonketu_c	daIDonketu_c/daIDonketu_c	_ZN12daIDonketu_cD0Ev	1		True	_ZTV12daIDonketu_c/_ZTV7daOts_c	-
 src/_ZN10ClsnResultC1Ev.c	P3-mangled-method-only	arm9		ClsnResult	_ZN10ClsnResultC1Ev	1		True		-
@@ -568,7 +568,7 @@ src/_ZN10FlameChomp16OnPendingDestroyEv.c	P1-vtable+mangled	ov070	daKrpa_c	Flame
 src/_ZN10FlameChompD0Ev.c	DTOR-ONLY	ov070	daKrpa_c	FlameChomp/daKrpa_c	_ZN10FlameChompD0Ev	1		True		-
 src/_ZN16daObjFl_London_cD0Ev.c	DTOR-ONLY	ov022	daObjFl_London_c	daObjFl_London_c/daObjFl_London_c	_ZN16daObjFl_London_cD0Ev	1		True	_ZTV16daObjFl_London_c/_ZTV10dBgActor_c	-
 src/_ZN10LavaSeesawD0Ev.c	DTOR-ONLY	ov022	daObjFl_Seesaw_c	LavaSeesaw/daObjFl_Seesaw_c	_ZN10LavaSeesawD0Ev	1		True	_ZTV10LavaSeesaw/_ZTV10dBgActor_c	-
-src/_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt.c	P3-mangled-method-only	arm9		ModelAnim2	_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt	1		True		by-value-class-param
+src/named/arm9/_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt.c	P3-mangled-method-only	arm9		ModelAnim2	_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt	1		True		by-value-class-param
 src/_ZN10ModelAnim2C1Ev.c	P3-mangled-method-only	arm9		ModelAnim2	_ZN10ModelAnim2C1Ev	1		True	_ZTV10ModelAnim2	-
 src/_ZN21daObjDlPyramidDummy_cD0Ev.c	DTOR-ONLY	ov024	daObjDlPyramidDummy_c	daObjDlPyramidDummy_c/daObjDlPyramidDummy_c	_ZN21daObjDlPyramidDummy_cD0Ev	1		True		-
 src/_ZN10RockPillarD0Ev.c	DTOR-ONLY	ov016	daObjKi_Hasira_c	RockPillar/daObjKi_Hasira_c	_ZN10RockPillarD0Ev	1		True	_ZTV10RockPillar/_ZTV10dBgActor_c	-
@@ -655,7 +655,7 @@ src/_ZN11daBgSnwmn_c16CleanupResourcesEv.c	P1-vtable+mangled	ov072	daBgSnwmn_c	d
 src/_ZN11daBgSnwmn_c16OnPendingDestroyEv.c	P1-vtable+mangled	ov072	daBgSnwmn_c	daBgSnwmn_c	vtable daBgSnwmn_c slot 12 @0x21209bc | _ZN11daBgSnwmn_c16OnPendingDestroyEv	1		True		-
 src/_ZN11daBgSnwmn_cD0Ev.c	DTOR-ONLY	ov072	daBgSnwmn_c	daBgSnwmn_c	_ZN11daBgSnwmn_cD0Ev	1		True		-
 src/_ZN11daBgSnwmn_cD1Ev.c	DTOR-ONLY	ov072	daBgSnwmn_c	daBgSnwmn_c	_ZN11daBgSnwmn_cD1Ev	1		True		-
-src/_ZN11daDsnBase_cD0Ev.cpp	DTOR-ONLY	ov091	daDsn_c	daDsnBase_c/daDsn_c	_ZN11daDsnBase_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV11daDsnBase_c	-
+src/named/ov091/_ZN11daDsnBase_cD0Ev.cpp	DTOR-ONLY	ov091	daDsn_c	daDsnBase_c/daDsn_c	_ZN11daDsnBase_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV11daDsnBase_c	-
 src/_ZN11daDsnBase_cD1Ev.c	DTOR-ONLY	ov091	daDsn_c	daDsnBase_c/daDsn_c	_ZN11daDsnBase_cD1Ev	1		True	_ZTV10dBgActor_c/_ZTV11daDsnBase_c	-
 src/_ZN12CylinderClsnD0Ev.c	DTOR-ONLY	arm9	dCc_c	CylinderClsn/dCc_c	_ZN12CylinderClsnD0Ev	1		True		-
 src/_ZN12CylinderClsnD1Ev.c	DTOR-ONLY	arm9	dCc_c	CylinderClsn/dCc_c	_ZN12CylinderClsnD1Ev	1		True		-
@@ -899,9 +899,9 @@ src/_ZN4View6RenderEv.c	P1-vtable+mangled	arm9	dView_c	View/dView_c	vtable dView
 src/_ZN4ViewD0Ev.cpp	DTOR-ONLY	arm9	dView_c	View/dView_c	_ZN4ViewD0Ev	1		False	_ZTV4View	no-header:View/dView_c
 src/_ZN4ViewD1Ev.cpp	DTOR-ONLY	arm9	dView_c	View/dView_c	_ZN4ViewD1Ev	1		False	_ZTV4View	no-header:View/dView_c
 src/_ZN11daWarpkun_cD0Ev.c	DTOR-ONLY	ov002	daWarpkun_c	daWarpkun_c/daWarpkun_c	_ZN11daWarpkun_cD0Ev	1		True	_ZTV11daWarpkun_c	-
-src/_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE.c	P3-mangled-method-only	arm9		cstd	_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE	1		False		by-value-class-param;no-header:cstd
-src/_ZN4cstd16reciprocal_asyncE5Fix12IiE.c	P3-mangled-method-only	arm9		cstd	_ZN4cstd16reciprocal_asyncE5Fix12IiE	1		False		by-value-class-param;no-header:cstd
-src/_ZN4cstd5atan2E5Fix12IiES1_.c	P3-mangled-method-only	arm9		cstd	_ZN4cstd5atan2E5Fix12IiES1_	1		False		by-value-class-param;no-header:cstd
+src/named/arm9/_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE.c	P3-mangled-method-only	arm9		cstd	_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE	1		False		by-value-class-param;no-header:cstd
+src/named/arm9/_ZN4cstd16reciprocal_asyncE5Fix12IiE.c	P3-mangled-method-only	arm9		cstd	_ZN4cstd16reciprocal_asyncE5Fix12IiE	1		False		by-value-class-param;no-header:cstd
+src/named/arm9/_ZN4cstd5atan2E5Fix12IiES1_.c	P3-mangled-method-only	arm9		cstd	_ZN4cstd5atan2E5Fix12IiES1_	1		False		by-value-class-param;no-header:cstd
 src/_ZN11daDonketu_cD0Ev.c	DTOR-ONLY	ov064	daDonketu_c	daDonketu_c/daDonketu_c	_ZN11daDonketu_cD0Ev	1		True	_ZTV11daDonketu_c	-
 src/_ZN11daObjKumo_cD0Ev.c	DTOR-ONLY	ov039	daObjKumo_c	daObjKumo_c/daObjKumo_c	_ZN11daObjKumo_cD0Ev	1		True		-
 src/_ZN5Crate13OnTurnIntoEggER6Player.c	P1-vtable+mangled	ov098	daObjBlockS_c	Crate/daObjBlockS_c	vtable daObjBlockS_c slot 19 @0x2139e78 | _ZN5Crate13OnTurnIntoEggER6Player	1		True		-
@@ -925,8 +925,8 @@ src/_ZN5Ukiki16CleanupResourcesEv.c	P1-vtable+mangled	ov030	daMky_c	Ukiki/daMky_
 src/_ZN5Ukiki16OnPendingDestroyEv.c	P1-vtable+mangled	ov030	daMky_c	Ukiki/daMky_c	vtable daMky_c slot 12 @0x211422c | _ZN5Ukiki16OnPendingDestroyEv	1		True		-
 src/_ZN5UkikiD0Ev.c	DTOR-ONLY	ov030	daMky_c	Ukiki/daMky_c	_ZN5UkikiD0Ev	1		True		-
 src/_ZN9dCamera_cC1Ev.c	P3-mangled-method-only	arm9		dCamera_c	_ZN9dCamera_cC1Ev	1		True	_ZTV4View/_ZTV9dCamera_c	-
-src/_ZN9dCamera_cD0Ev.cpp	DTOR-ONLY	arm9	dCamera_c	dCamera_c/dCamera_c	_ZN9dCamera_cD0Ev	1		True	_ZTV4View/_ZTV9dCamera_c	-
-src/_ZN9dCamera_cD1Ev.cpp	DTOR-ONLY	arm9	dCamera_c	dCamera_c/dCamera_c	_ZN9dCamera_cD1Ev	1		True	_ZTV4View/_ZTV9dCamera_c	-
+src/named/arm9/_ZN9dCamera_cD0Ev.cpp	DTOR-ONLY	arm9	dCamera_c	dCamera_c/dCamera_c	_ZN9dCamera_cD0Ev	1		True	_ZTV4View/_ZTV9dCamera_c	-
+src/named/arm9/_ZN9dCamera_cD1Ev.cpp	DTOR-ONLY	arm9	dCamera_c	dCamera_c/dCamera_c	_ZN9dCamera_cD1Ev	1		True	_ZTV4View/_ZTV9dCamera_c	-
 src/_ZN7daCnn_c16CleanupResourcesEv.c	P1-vtable+mangled	ov098	daCnn_c	daCnn_c/daCnn_c	vtable daCnn_c slot 3 @0x213b1d8 | _ZN7daCnn_c16CleanupResourcesEv	1		True		-
 src/_ZN7daCnn_cD0Ev.cpp	DTOR-ONLY	ov098	daCnn_c	daCnn_c/daCnn_c	_ZN7daCnn_cD0Ev	1		True		-
 src/_ZN6CoffinD0Ev.c	DTOR-ONLY	ov071	daObjCasket_c	Coffin/daObjCasket_c	_ZN6CoffinD0Ev	1		True	_ZTV10dBgActor_c/_ZTV6Coffin	-
@@ -996,17 +996,17 @@ src/_ZN8Particle13ScaleCallback14SpawnParticlesERNS_6SystemE.c	P1-vtable+mangled
 src/_ZN8Particle13ScaleCallback8OnUpdateERNS_6SystemEb.c	P1-vtable+mangled	arm9	dPa_c::level_c::scaleCallback_c	ScaleCallback/dPa_c	vtable dPa_c::level_c::scaleCallback_c slot 1 @0x20225a8 | _ZN8Particle13ScaleCallback8OnUpdateERNS_6SystemEb	1		False		no-header:ScaleCallback/dPa_c
 src/_ZN8Particle17CheckLavaCallback8OnUpdateERNS_6SystemEb.c	P1-vtable+mangled	arm9	dPa_c::level_c::checkYoganCallback_c	CheckLavaCallback/dPa_c	vtable dPa_c::level_c::checkYoganCallback_c slot 1 @0x20222f0 | _ZN8Particle17CheckLavaCallback8OnUpdateERNS_6SystemEb	1		False		no-header:CheckLavaCallback/dPa_c
 src/_ZN8Particle19SetSelfDestructFlagEj.c	P3-mangled-method-only	arm9		Particle	_ZN8Particle19SetSelfDestructFlagEj	1		True		-
-src/_ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_.c	P3-mangled-method-only	arm9		Particle	_ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_	1		True		by-value-class-param
+src/named/arm9/_ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_.c	P3-mangled-method-only	arm9		Particle	_ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_	1		True		by-value-class-param
 src/_ZN8Particle22FitWaterSimpleCallback8OnUpdateERNS_6SystemEb.c	P1-vtable+mangled	arm9	dPa_c::level_c::fitWaterSimpleCallback_c	FitWaterSimpleCallback/dPa_c	vtable dPa_c::level_c::fitWaterSimpleCallback_c slot 1 @0x2022418 | _ZN8Particle22FitWaterSimpleCallback8OnUpdateERNS_6SystemEb	1		False		no-header:FitWaterSimpleCallback/dPa_c
 src/_ZN8Particle25EndingStarGlitterCallback14SpawnParticlesERNS_6SystemE.c	P1-vtable+mangled	arm9	dPa_c::level_c::edStarKiraCallback_c	EndingStarGlitterCallback/dPa_c	vtable dPa_c::level_c::edStarKiraCallback_c slot 0 @0x202222c | _ZN8Particle25EndingStarGlitterCallback14SpawnParticlesERNS_6SystemE	1		False		no-header:EndingStarGlitterCallback/dPa_c
 src/_ZN8Particle25EndingStarGlitterCallback8OnUpdateERNS_6SystemEb.c	P1-vtable+mangled	arm9	dPa_c::level_c::edStarKiraCallback_c	EndingStarGlitterCallback/dPa_c	vtable dPa_c::level_c::edStarKiraCallback_c slot 1 @0x20221dc | _ZN8Particle25EndingStarGlitterCallback8OnUpdateERNS_6SystemEb	1		False		no-header:EndingStarGlitterCallback/dPa_c
-src/_ZN8Particle6System10NewWeatherEjj5Fix12IiES2_S2_PK11Vector3_16fj.c	P3-mangled-method-only	arm9		System	_ZN8Particle6System10NewWeatherEjj5Fix12IiES2_S2_PK11Vector3_16fj	1		False		by-value-class-param;no-header:System
+src/named/arm9/_ZN8Particle6System10NewWeatherEjj5Fix12IiES2_S2_PK11Vector3_16fj.c	P3-mangled-method-only	arm9		System	_ZN8Particle6System10NewWeatherEjj5Fix12IiES2_S2_PK11Vector3_16fj	1		False		by-value-class-param;no-header:System
 src/_ZN8Particle6System12FromUniqueIDEj.c	P3-mangled-method-only	arm9		System	_ZN8Particle6System12FromUniqueIDEj	1		False		no-header:System
-src/_ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_.c	P3-mangled-method-only	arm9		System	_ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_	1		False		by-value-class-param;no-header:System
-src/_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f.c	P3-mangled-method-only	arm9		System	_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f	1		False		by-value-class-param;no-header:System
-src/_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE.c	P3-mangled-method-only	arm9		System	_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE	1		False		by-value-class-param;no-header:System
-src/_ZN8Particle6System9NewRippleE5Fix12IiES2_S2_.c	P3-mangled-method-only	arm9		System	_ZN8Particle6System9NewRippleE5Fix12IiES2_S2_	1		False		by-value-class-param;no-header:System
-src/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c	P3-mangled-method-only	arm9		System	_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_	1		False		by-value-class-param;no-header:System
+src/named/arm9/_ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_.c	P3-mangled-method-only	arm9		System	_ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_	1		False		by-value-class-param;no-header:System
+src/named/arm9/_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f.c	P3-mangled-method-only	arm9		System	_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f	1		False		by-value-class-param;no-header:System
+src/named/arm9/_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE.c	P3-mangled-method-only	arm9		System	_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE	1		False		by-value-class-param;no-header:System
+src/named/arm9/_ZN8Particle6System9NewRippleE5Fix12IiES2_S2_.c	P3-mangled-method-only	arm9		System	_ZN8Particle6System9NewRippleE5Fix12IiES2_S2_	1		False		by-value-class-param;no-header:System
+src/named/arm9/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c	P3-mangled-method-only	arm9		System	_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_	1		False		by-value-class-param;no-header:System
 src/_ZN8Particle7Manager9AddSystemEiR7Vector3.c	P3-mangled-method-only	arm9		Manager	_ZN8Particle7Manager9AddSystemEiR7Vector3	1		False		no-header:Manager
 src/_ZN8Particle7Texture12AllocPalVramEjb.c	P3-mangled-method-only	arm9		Texture	_ZN8Particle7Texture12AllocPalVramEjb	1		False		no-header:Texture
 src/_ZN8Particle7Texture12AllocTexVramEjb.c	P3-mangled-method-only	arm9		Texture	_ZN8Particle7Texture12AllocTexVramEjb	1		False		no-header:Texture
@@ -1021,7 +1021,7 @@ src/_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.c	P3-mangl
 src/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.c	P3-mangled-method-only	arm9		dActor_c	_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i	1		True		by-value-class-param
 src/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.c	P3-mangled-method-only	arm9		dActor_c	_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j	1		True		by-value-class-param
 src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c	P3-mangled-method-only	arm9		dActor_c	_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j	1		True		by-value-class-param
-src/_ZN8dActor_cD0Ev.cpp	DTOR-ONLY	arm9	dActor_c	dActor_c	_ZN8dActor_cD0Ev	1		True	_ZTV7dBase_c/_ZTV8dActor_c	-
+src/named/arm9/_ZN8dActor_cD0Ev.cpp	DTOR-ONLY	arm9	dActor_c	dActor_c	_ZN8dActor_cD0Ev	1		True	_ZTV7dBase_c/_ZTV8dActor_c	-
 src/_ZN8dM3dGSphD2Ev.cpp	DTOR-ONLY	arm9		dM3dGSph	_ZN8dM3dGSphD2Ev	1		False		no-header:dM3dGSph
 src/_ZN9AnimationD0Ev.cpp	DTOR-ONLY	arm9	dExtFrameCtrl_c	Animation/dExtFrameCtrl_c	_ZN9AnimationD0Ev	1		True	_ZTV9Animation	-
 src/_ZN9AnimationD1Ev.cpp	DTOR-ONLY	arm9	dExtFrameCtrl_c	Animation/dExtFrameCtrl_c	_ZN9AnimationD1Ev	1		True	_ZTV9Animation	-
@@ -1047,11 +1047,11 @@ src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c	P3-mangled-method-only	arm9		M
 src/_ZN9ModelAnimC1Ev.c	P3-mangled-method-only	arm9		ModelAnim	_ZN9ModelAnimC1Ev	1		True	_ZTV9ModelAnim	-
 src/_ZN9ModelAnimC2Ev.c	P3-mangled-method-only	arm9		ModelAnim	_ZN9ModelAnimC2Ev	1		True	_ZTV9ModelAnim	-
 src/_ZN9ModelAnimD0Ev.c	DTOR-ONLY	arm9	dExtAnmModel_c	ModelAnim/dExtAnmModel_c	_ZN9ModelAnimD0Ev	1		True	_ZTV9ModelAnim	-
-src/_ZN9ModelAnimD2Ev.cpp	DTOR-ONLY	arm9		ModelAnim	_ZN9ModelAnimD2Ev	1		True	_ZTV9ModelAnim	-
+src/named/arm9/_ZN9ModelAnimD2Ev.cpp	DTOR-ONLY	arm9		ModelAnim	_ZN9ModelAnimD2Ev	1		True	_ZTV9ModelAnim	-
 src/_ZN9ModelBaseC1Ev.c	P3-mangled-method-only	arm9		ModelBase	_ZN9ModelBaseC1Ev	1		True		-
-src/_ZN9ModelBaseD0Ev.cpp	DTOR-ONLY	arm9	dExtModel_c	ModelBase/dExtModel_c	_ZN9ModelBaseD0Ev	1		True		-
-src/_ZN9ModelBaseD1Ev.cpp	DTOR-ONLY	arm9	dExtModel_c	ModelBase/dExtModel_c	_ZN9ModelBaseD1Ev	1		True		-
-src/_ZN9ModelBaseD2Ev.cpp	DTOR-ONLY	arm9		ModelBase	_ZN9ModelBaseD2Ev	1		True		-
+src/named/arm9/_ZN9ModelBaseD0Ev.cpp	DTOR-ONLY	arm9	dExtModel_c	ModelBase/dExtModel_c	_ZN9ModelBaseD0Ev	1		True		-
+src/named/arm9/_ZN9ModelBaseD1Ev.cpp	DTOR-ONLY	arm9	dExtModel_c	ModelBase/dExtModel_c	_ZN9ModelBaseD1Ev	1		True		-
+src/named/arm9/_ZN9ModelBaseD2Ev.cpp	DTOR-ONLY	arm9		ModelBase	_ZN9ModelBaseD2Ev	1		True		-
 src/_ZN11daChoropu_c16CleanupResourcesEv.c	P1-vtable+mangled	ov080	daChoropu_c	daChoropu_c/daChoropu_c	vtable daChoropu_c slot 3 @0x2124458 | _ZN11daChoropu_c16CleanupResourcesEv	1		True		-
 src/_ZN11daChoropu_cD0Ev.c	DTOR-ONLY	ov080	daChoropu_c	daChoropu_c/daChoropu_c	_ZN11daChoropu_cD0Ev	1		True		-
 src/_ZN16daObjPushblock_c16CleanupResourcesEv.c	P1-vtable+mangled	ov002	daObjPushblock_c	daObjPushblock_c/daObjPushblock_c	vtable daObjPushblock_c slot 3 @0x20b8d68 | _ZN16daObjPushblock_c16CleanupResourcesEv	1		True		-
@@ -1059,7 +1059,7 @@ src/_ZN16daObjPushblock_c8BehaviorEv.c	P1-vtable+mangled	ov002	daObjPushblock_c	
 src/_ZN16daObjPushblock_c8OnPushedER8dActor_c.c	P1-vtable+mangled	ov002	daObjPushblock_c	daObjPushblock_c/daObjPushblock_c	vtable daObjPushblock_c slot 25 @0x20b8d3c | _ZN16daObjPushblock_c8OnPushedER8dActor_c	1		True		-
 src/_ZN14daObjKsWater_c13InitResourcesEv.c	P1-vtable+mangled	ov017	daObjKsWater_c	daObjKsWater_c/daObjKsWater_c	vtable daObjKsWater_c slot 0 @0x21113c0 | _ZN14daObjKsWater_c13InitResourcesEv	1		True		-
 src/_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator.c	P3-mangled-method-only	arm9		SolidHeap	_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator	1		True	_ZTV9SolidHeap	-
-src/_ZN9SolidHeapD1Ev.cpp	DTOR-ONLY	arm9	mHeap::SolidHeap_t	SolidHeap/mHeap	_ZN9SolidHeapD1Ev	1		True	_ZTV9SolidHeap	-
+src/named/arm9/_ZN9SolidHeapD1Ev.cpp	DTOR-ONLY	arm9	mHeap::SolidHeap_t	SolidHeap/mHeap	_ZN9SolidHeapD1Ev	1		True	_ZTV9SolidHeap	-
 src/_ZN9SpindriftD0Ev.c	DTOR-ONLY	ov081	daHuwa_c	Spindrift/daHuwa_c	_ZN9SpindriftD0Ev	1		True		-
 src/_ZN18daObjWlSubmarine_cD0Ev.c	DTOR-ONLY	ov026	daObjWlSubmarine_c	daObjWlSubmarine_c/daObjWlSubmarine_c	_ZN18daObjWlSubmarine_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV18daObjWlSubmarine_c	-
 src/_ZN13daObjTtFuta_cD0Ev.c	DTOR-ONLY	ov033	daObjTtFuta_c	daObjTtFuta_c/daObjTtFuta_c	_ZN13daObjTtFuta_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV13daObjTtFuta_c	-
@@ -1376,10 +1376,10 @@ src/unnamed/ov102/__sinit_ov102_0214d714.c	PURE-C	ov102				0		None		extra-sectio
 src/unnamed/ov102/__sinit_ov102_0214d908.c	WEAK-refs-only	ov102				0		None		extra-sections:init
 src/unnamed/ov102/__sinit_ov102_0214de70.c	WEAK-refs-only	ov102				0		None		extra-sections:init
 src/unnamed/ov102/__sinit_ov102_0214dfac.c	PURE-C	ov102				0		None		extra-sections:init
-src/_dmul.c	PURE-C					0		None		not-in-delinks
-src/_ll_sdiv.c	PURE-C					0		None		not-in-delinks
-src/_s32_div_f.c	PURE-C					0		None		not-in-delinks
-src/_u32_div_f.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/_dmul.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/_ll_sdiv.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/_s32_div_f.c	PURE-C					0		None		not-in-delinks
+src/named/arm9/_u32_div_f.c	PURE-C					0		None		not-in-delinks
 src/actors/BigBooIcon/daTrsIcon_c_classInit.c	WEAK-refs-only	ov063				1		None		-
 src/actors/Boo/_ZN3Boo13InitResourcesEv.c	P1-vtable+mangled	ov063	daTrs_c	Boo/daTrs_c	vtable daTrs_c slot 0 @0x211b9bc | _ZN3Boo13InitResourcesEv	1		True		-
 src/actors/Boo/_ZN3Boo16OnPendingDestroyEv.c	P1-vtable+mangled	ov063	daTrs_c	Boo/daTrs_c	vtable daTrs_c slot 12 @0x211af6c | _ZN3Boo16OnPendingDestroyEv	1		True		-
@@ -3235,7 +3235,7 @@ src/unnamed/arm9/0207/func_02073244.c	PURE-C	arm9				1		None		-
 src/func_020732e8.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
 src/func_02073300.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
 src/func_0207335c.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
-src/__cxa_vec_ctor.cpp	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
+src/named/arm9/__cxa_vec_ctor.cpp	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
 src/func_02073470.c	WEAK-refs-only					0		None		NONMATCHING-draft;not-in-delinks
 src/func_02073534.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
 src/func_02073584.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
@@ -6983,10 +6983,10 @@ src/func_ov102_0214d020.c	PURE-C	ov102				1		None		-
 src/func_ov102_0214d114.c	WEAK-refs-only	ov102				1		None		-
 src/func_ov102_0214d1b0.c	PURE-C	ov102				1		None		-
 src/func_ov102_0214d1b8.c	PURE-C	ov102				1		None		-
-src/main.c	WEAK-refs-only	arm9				1		None		-
-src/nds_print.c	PURE-C	arm9				1		None		-
-src/nds_printf.c	PURE-C	arm9				1		None		-
-src/nds_printt.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/main.c	WEAK-refs-only	arm9				1		None		-
+src/named/arm9/nds_print.c	PURE-C	arm9				1		None		-
+src/named/arm9/nds_printf.c	PURE-C	arm9				1		None		-
+src/named/arm9/nds_printt.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/ov063/__sinit_ov063_0211e29c.c	WEAK-refs-only	ov063				0		None		extra-sections:init
 src/unnamed/ov063/__sinit_ov063_0211e3cc.c	PURE-C	ov063				0		None		extra-sections:init
 src/unnamed/ov063/__sinit_ov063_0211e590.c	PURE-C	ov063				0		None		extra-sections:init

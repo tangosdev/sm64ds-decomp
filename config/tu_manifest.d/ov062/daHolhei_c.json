@@ -388,7 +388,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so func_ov062_02115f84 and func_ov062_021163b0 re-emit it as vague linkage. The cartridge keeps one copy at arm9:0x020072c0 and src/_ZN7Vector3D1Ev.cpp owns it; this object's copy is the identical 4-byte bx lr body. deadstrip-duplicate makes rombuild prove this body against the ROM before discarding it."
+      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so func_ov062_02115f84 and func_ov062_021163b0 re-emit it as vague linkage. The cartridge keeps one copy at arm9:0x020072c0 and src/named/arm9/_ZN7Vector3D1Ev.cpp owns it; this object's copy is the identical 4-byte bx lr body. deadstrip-duplicate makes rombuild prove this body against the ROM before discarding it."
     },
     {
       "symbol": "_ZTV10daHolhei_c",

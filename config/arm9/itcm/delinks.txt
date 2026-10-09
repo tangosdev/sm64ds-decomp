@@ -32,7 +32,7 @@ src/engine/collision/dBgW_Kc_itcm.cpp:
     complete
     .text start:0x01ffb07c end:0x01ffd97c
 
-src/_ZN3IRQ20UserInterruptHandlerEv.cpp:
+src/named/arm9/_ZN3IRQ20UserInterruptHandlerEv.cpp:
     complete
     .text start:0x01ffd97c end:0x01ffd9d4
 
@@ -44,7 +44,7 @@ src/unnamed/arm9/01ff/func_01ffdb28.c:
     complete
     .text start:0x01ffdb28 end:0x01ffdbd8
 
-src/OSReadROMArea.c:
+src/named/arm9/OSReadROMArea.c:
     complete
     .text start:0x01ffdbd8 end:0x01ffdd08
 
@@ -56,11 +56,11 @@ src/unnamed/arm9/01ff/func_01ffdd98.c:
     complete
     .text start:0x01ffdd98 end:0x01ffde00
 
-src/DMAStartTransferFB.c:
+src/named/arm9/DMAStartTransferFB.c:
     complete
     .text start:0x01ffde00 end:0x01ffde50
 
-src/DMAStartTransfer.c:
+src/named/arm9/DMAStartTransfer.c:
     complete
     .text start:0x01ffde50 end:0x01ffde98
 

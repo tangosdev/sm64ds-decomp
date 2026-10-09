@@ -1,8 +1,8 @@
 {
   "id": "arm9/dScBoot_c_classInit",
   "module": "arm9",
-  "source": "src/d_s_boot.cpp",
-  "promoted_source": "src/d_s_boot.cpp",
+  "source": "src/named/arm9/d_s_boot.cpp",
+  "promoted_source": "src/named/arm9/d_s_boot.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [

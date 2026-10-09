@@ -1,8 +1,8 @@
 {
   "id": "arm9/typeinfo",
   "module": "arm9",
-  "source": "src/typeinfo.cpp",
-  "promoted_source": "src/typeinfo.cpp",
+  "source": "src/named/arm9/typeinfo.cpp",
+  "promoted_source": "src/named/arm9/typeinfo.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

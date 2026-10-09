@@ -260,7 +260,7 @@ def _reader_name(path, text):
     That is done with the repo's demangler rather than by matching `Class::Method(`
     in the body, because the text search was tried first and is wrong four ways:
     it finds a DEPENDENCY's stub or a bare forward declaration instead of the file's
-    own function (src/_ZN10dScStage_c13UpdateMessageEv.cpp reported `Message::UpdateWindow`;
+    own function (src/named/arm9/_ZN10dScStage_c13UpdateMessageEv.cpp reported `Message::UpdateWindow`;
     the old Coffin::InitResources shard, now daObjCasket_c::InitResources in the
     promoted daObjCasket_c TU, matched a `MeshCollider::LoadFile` prototype),
     it lets an unrelated call override a genuinely-unidentified `func_ov*` filename,

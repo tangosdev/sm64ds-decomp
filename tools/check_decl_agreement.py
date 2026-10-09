@@ -1116,7 +1116,7 @@ def scan_targets(root=REPO):
 def local_typedefs(code, aliases):
     """A file's OWN scalar and function-pointer typedefs, resolved against `aliases`.
 
-    Without this, `src/__cxa_vec_ctor.cpp` declaring its fourth parameter `ctor_t`
+    Without this, `src/named/arm9/__cxa_vec_ctor.cpp` declaring its fourth parameter `ctor_t`
     and 52 other files declaring it `void *` produce a finding that reads
     "expected ctor_t", which tells a reader nothing about what actually differs.
     With it the same finding reads "expected void (*)(void *)", which is the fact.

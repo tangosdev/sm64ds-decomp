@@ -3,7 +3,7 @@
  * (.text 0x0212568c..0x0212a520), the destructor, eight virtual overrides, the
  * constructor and the helpers they call, including the per-element helpers for
  * the 0x32-element array at this+0xbe94. dScMgSnowball_c_classInit, which
- * follows at 0x0212a520, is its own TU (src/d_s_mg_snowball.cpp).
+ * follows at 0x0212a520, is its own TU (src/named/ov006/d_s_mg_snowball.cpp).
  * The constructor (0x021295ac) and the 18 functions after it were separate
  * one-function files (func_ov006_021295ac through func_ov006_0212a3c0).
  *
@@ -29,7 +29,7 @@
  *    ctor/dtor slots in the __cxa_vec_ctor call for the mArray3/mArray4
  *    records, not dispatch targets on the scene.
  *  - func_ov006_021295ac stays free: it is the C2 construction body
- *    called by dScMgSnowball_c_classInit in src/d_s_mg_snowball.cpp after
+ *    called by dScMgSnowball_c_classInit in src/named/ov006/d_s_mg_snowball.cpp after
  *    allocation; writing it as a real ctor changes codegen.
  *  - The raw-pointer and view-struct puns (C_0212a224, C_02129d94, Obj_02129690,
  *    the H()/I()/B()/AT() macros) are load-bearing: the 0xa000..0xc000

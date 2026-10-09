@@ -40,7 +40,7 @@
     {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
-      "reason": "LookAt_ declares three stack Vector3s; types.h gives Vector3 a non-trivial (empty) destructor, so the front end emits D1 in this TU but elides every call site. The cartridge body (four bytes, bx lr) has a configured home at 0x020072c0 owned by src/_ZN7Vector3D1Ev.cpp, so this emitted copy deadstrips as a duplicate."
+      "reason": "LookAt_ declares three stack Vector3s; types.h gives Vector3 a non-trivial (empty) destructor, so the front end emits D1 in this TU but elides every call site. The cartridge body (four bytes, bx lr) has a configured home at 0x020072c0 owned by src/named/arm9/_ZN7Vector3D1Ev.cpp, so this emitted copy deadstrips as a duplicate."
     }
   ],
   "notes": [

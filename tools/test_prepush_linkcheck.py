@@ -125,8 +125,8 @@ class Verify(unittest.TestCase):
         with mock.patch.object(PL.srcpath, "symbols_for", return_value=["OSReadROMArea"]), \
              mock.patch.object(PL, "_run_linkcheck",
                                _linkcheck_table({"OSReadROMArea": ("VERIFIED", 0, [])})):
-            rows = PL.verify("src/OSReadROMArea.c")
-        self.assertEqual(rows, [{"file": "src/OSReadROMArea.c", "name": "OSReadROMArea",
+            rows = PL.verify("src/named/arm9/OSReadROMArea.c")
+        self.assertEqual(rows, [{"file": "src/named/arm9/OSReadROMArea.c", "name": "OSReadROMArea",
                                   "module": "itcm", "addr": "0x1ffdbd8",
                                   "verdict": "VERIFIED", "blind": 0, "diffs": []}])
 

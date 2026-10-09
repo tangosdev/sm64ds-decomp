@@ -89,7 +89,7 @@
     "The four func_ov080_ members keep their placeholder names. They are the class non-virtual shared implementation and both leaves call them by these exact symbols from other overlays, so they keep C linkage; there is no ROM-proven English spelling for any of them. Their bodies still walk a char cursor because the fields they touch, all above 0x320, are the LEAVES fields -- include/daObjMaruta_c.h declares no members of its own and says why.",
     "RECONCILED, five declaration conflicts tubuild create flagged, all between the legacy files for func_ov080_0212714c and func_ov080_021274ac: func_ov080_02127094, _ZN10dBgActor_c19UpdateClsnPosAndRotEv, Vec3_Sub, LenVec3 and Vec3_HorzAngle. Each pair differed only in spelling the same pointer as void* or as a struct Vector3* / char*; the merged TU declares each once with the void* spelling and the call sites stand verbatim. Byte-neutral: 8/8 MATCH. The alternate markers were deleted from the merged source.",
     "RECONCILED: func_ov080_02127658 was declared int in the legacy file of its caller and defined void in its own, which one TU cannot hold. It is a tail-call veneer whose only use is as an address handed to func_020393c4, so it is spelled void once. Bytes unchanged. Its long_calls pragma is carried verbatim and bracketed off immediately after, because long_calls is positional.",
-    "The two destructor shards src/_ZN13daObjMaruta_cD0Ev.cpp and src/_ZN13daObjMaruta_cD1Ev.cpp are untouched and stay enrolled, with their forcing scaffolds. They remain the canonical source for 0x02126fbc..0x02127058; see boundary_evidence for the measurement that keeps them there."
+    "The two destructor shards src/named/ov080/_ZN13daObjMaruta_cD0Ev.cpp and src/named/ov080/_ZN13daObjMaruta_cD1Ev.cpp are untouched and stay enrolled, with their forcing scaffolds. They remain the canonical source for 0x02126fbc..0x02127058; see boundary_evidence for the measurement that keeps them there."
   ],
   "compiler_only_output": [
     {
@@ -174,14 +174,14 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "ov080",
       "canonical_address": "0x02127014",
-      "reason": "The class D1, emitted here because owning the key function drags both destructor variants in. Its bytes MATCH the cartridge, but the cartridge orders D0 below D1 and no admissible source form reproduces that order, so it is deliberately left OUT of the licensed run and its enrolled shard src/_ZN13daObjMaruta_cD1Ev.cpp stays canonical. This object copy is therefore a duplicate that production isolation discards. See boundary_evidence."
+      "reason": "The class D1, emitted here because owning the key function drags both destructor variants in. Its bytes MATCH the cartridge, but the cartridge orders D0 below D1 and no admissible source form reproduces that order, so it is deliberately left OUT of the licensed run and its enrolled shard src/named/ov080/_ZN13daObjMaruta_cD1Ev.cpp stays canonical. This object copy is therefore a duplicate that production isolation discards. See boundary_evidence."
     },
     {
       "symbol": "_ZN13daObjMaruta_cD0Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_module": "ov080",
       "canonical_address": "0x02126fbc",
-      "reason": "The class D0, the deleting destructor, emitted here for the same reason as D1 and left out of the licensed run for the same reason. Its bytes MATCH the cartridge; src/_ZN13daObjMaruta_cD0Ev.cpp stays the canonical enrolled source and this object copy is a duplicate that production isolation discards."
+      "reason": "The class D0, the deleting destructor, emitted here for the same reason as D1 and left out of the licensed run for the same reason. Its bytes MATCH the cartridge; src/named/ov080/_ZN13daObjMaruta_cD0Ev.cpp stays the canonical enrolled source and this object copy is a duplicate that production isolation discards."
     },
     {
       "symbol": "_ZN7Vector3D1Ev",

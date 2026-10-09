@@ -1,6 +1,6 @@
 /* class daObjEwbIce_c : dBgActor_c. Real C++ form.
  *
- * Base and size from the factory (src/d_a_obj_ewb_ice_ewb_ice_a.c):
+ * Base and size from the factory (src/named/ov073/d_a_obj_ewb_ice_ewb_ice_a.c):
  * fBase_c::operator new(828) -- 0x33c -- then dBgActor_c::dBgActor_c(),
  * then stores _ZTV13daObjEwbIce_c. No intermediate: the destructor stores only
  * its own vptr and dBgActor_c's, with zero extra member-destructor calls

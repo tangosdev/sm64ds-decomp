@@ -18,7 +18,7 @@ and again after each raw-offset collapse.
 Current evidence: the twenty-function production TU
 [`src/actors/daObjSwitch_c.cpp`](../src/actors/daObjSwitch_c.cpp), its genuine
 class header, and the separately enrolled factory
-`src/d_a_obj_switch_star_switch.c`. The names describe observed use; retail RTTI
+`src/named/ov002/d_a_obj_switch_star_switch.c`. The names describe observed use; retail RTTI
 supplies the class identity, not the English field names. The original
 StarSwitch source and intermediate rename history remain recorded in the
 [source experiment](experiments/pr2874-source-repair-0920.json).

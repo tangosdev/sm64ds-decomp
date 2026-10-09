@@ -124,7 +124,7 @@ class ReturnMismatchTests(unittest.TestCase):
     """Fixture 1: a caller declares `int` where the definition returns `void`."""
 
     def _tree(self, t):
-        t.write("src/__cxa_vec_ctor.cpp",
+        t.write("src/named/arm9/__cxa_vec_ctor.cpp",
                 '//cpp\n'
                 'extern "C" void __cxa_vec_ctor(void *base, unsigned int n,\n'
                 '                               unsigned int size)\n'
@@ -146,7 +146,7 @@ class ReturnMismatchTests(unittest.TestCase):
         f = findings[0]
         self.assertEqual(f["file"], "src/d_a_hanachan.c")
         self.assertEqual(f["line"], 1)
-        self.assertEqual(f["ref_file"], "src/__cxa_vec_ctor.cpp")
+        self.assertEqual(f["ref_file"], "src/named/arm9/__cxa_vec_ctor.cpp")
         self.assertEqual(f["ref_line"], 2)
         self.assertEqual(f["basis"], "definition")
 
@@ -408,7 +408,7 @@ class MovedDefinitionTests(unittest.TestCase):
     def test_declarations_of_a_renamed_symbol_fall_back_to_the_plurality(self):
         def tree(t):
             # The definition moved from `func_020733a8` to `__cxa_vec_ctor`.
-            t.write("src/__cxa_vec_ctor.cpp",
+            t.write("src/named/arm9/__cxa_vec_ctor.cpp",
                     'extern "C" void __cxa_vec_ctor(void *p)\n{\n    (void)p;\n}\n')
             t.write("src/a.c", "extern void func_020733a8(void *p);\n")
             t.write("src/b.c", "extern void func_020733a8(void *p);\n")
@@ -960,7 +960,7 @@ class HistoricalArrayConstructorTests(unittest.TestCase):
     """Keep the original bad imports as fixtures so real callers can be repaired."""
 
     HISTORICAL_DECLARATIONS = (
-        ("src/d_a_dp_lift.cpp", "int",
+        ("src/named/ov025/d_a_dp_lift.cpp", "int",
          "extern int __cxa_vec_ctor(void*,int,int,void*,void*);"),
         ("src/d_a_hanachan.c", "int",
          "extern int __cxa_vec_ctor(void *p, int a, int b, void *ctor, void *dtor);"),
@@ -977,7 +977,7 @@ class HistoricalArrayConstructorTests(unittest.TestCase):
 
     def _runtime(self, tree):
         tree.symbols(["__cxa_vec_ctor"])
-        tree.write("src/__cxa_vec_ctor.cpp",
+        tree.write("src/named/arm9/__cxa_vec_ctor.cpp",
                    "typedef void (*ctor_t)(void *);\n"
                    "typedef void (*dtor_t)(void *);\n"
                    'extern "C" void __cxa_vec_ctor(void *base, unsigned int count,\n'
@@ -1001,7 +1001,7 @@ class HistoricalArrayConstructorTests(unittest.TestCase):
         for row in returns:
             self.assertEqual(row["symbol"], "__cxa_vec_ctor")
             self.assertEqual(row["basis"], "definition")
-            self.assertEqual(row["ref_file"], "src/__cxa_vec_ctor.cpp")
+            self.assertEqual(row["ref_file"], "src/named/arm9/__cxa_vec_ctor.cpp")
 
     def test_fully_corrected_imports_are_silent_at_the_same_paths(self):
         def fixture(tree):
@@ -1030,11 +1030,11 @@ class RealTreeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         if not (REPO / "src" / "__cxa_vec_ctor.cpp").exists():
-            raise unittest.SkipTest("src/__cxa_vec_ctor.cpp not in this tree")
+            raise unittest.SkipTest("src/named/arm9/__cxa_vec_ctor.cpp not in this tree")
         cls.aliases = CDA.scalar_typedefs(REPO)
 
     def test_the_definition_of_cxa_vec_ctor_parses(self):
-        rel = "src/__cxa_vec_ctor.cpp"
+        rel = "src/named/arm9/__cxa_vec_ctor.cpp"
         text = (REPO / rel).read_text(encoding="utf-8", errors="replace")
         _decls, defs, _u = CDA.parse_file(rel, text, self.aliases)
         found = [d for d in defs if d.symbol == "__cxa_vec_ctor"]
@@ -2247,7 +2247,7 @@ class NativeFreeOverloadTests(unittest.TestCase):
             bodies = [
                 ("src/_Z14ApproachLinearRiii.cpp",
                  "int ApproachLinear(int &x, int target, int step) { return 0; }\n"),
-                ("src/_Z14ApproachLinearRsss.cpp",
+                ("src/named/arm9/_Z14ApproachLinearRsss.cpp",
                  "int ApproachLinear(short &x, short target, short step) { return 1; }\n"),
             ]
             for path, body in bodies:
@@ -2277,7 +2277,7 @@ class NativeFreeOverloadTests(unittest.TestCase):
         self.assertEqual([(f["kind"], f["got"], f["want"]) for f in findings],
                          [("return", "void", "int")])
         self.assertEqual(findings[0]["ref_file"],
-                         "src/_Z14ApproachLinearRsss.cpp")
+                         "src/named/arm9/_Z14ApproachLinearRsss.cpp")
 
     def test_unmatched_parameter_types_still_report(self):
         findings, _, _, _ = self.fixture(
@@ -2640,7 +2640,7 @@ class NativeConstructorAndWrapperTests(unittest.TestCase):
 
     def test_real_constructor_and_force_wrapper_fixtures(self):
         examples = (("src/engine/model/Model.cpp", "_ZN5ModelC1Ev", "Model"),
-                    ("src/_ZN10dScEntry_c6icon_cC1Ev.cpp", "_ZN10dScEntry_c6icon_cC1Ev", "dScEntry_c::icon_c"))
+                    ("src/named/ov075/_ZN10dScEntry_c6icon_cC1Ev.cpp", "_ZN10dScEntry_c6icon_cC1Ev", "dScEntry_c::icon_c"))
         for rel, symbol, owner in examples:
             with self.subTest(path=rel):
                 text = (REPO / rel).read_text(encoding="utf-8")
@@ -2930,7 +2930,7 @@ class IncludedInlineDestructorTests(unittest.TestCase):
         self.assertEqual(self.inspect(header)[2], [])
 
     def test_real_vector_carriers_reference_inline_header_bodies(self):
-        targets=['src/_ZN7Vector3D1Ev.cpp', 'src/_ZN8Vector3sD1Ev.cpp']
+        targets=['src/named/arm9/_ZN7Vector3D1Ev.cpp', 'src/named/arm9/_ZN8Vector3sD1Ev.cpp']
         _, _, defs, _=CDA.collect(REPO, targets)
         for owner, line in (('Vector3', 61), ('Vector3s', 81)):
             symbol='_ZN%d%sD1Ev' % (len(owner), owner)

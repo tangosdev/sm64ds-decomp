@@ -155,14 +155,14 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 temporary re-emits it with vague linkage; the loaders here build Vector3 temporaries and five of the seventeen legacy one-function objects already emit their own copy today. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp is its enrolled `complete` owner of that 0x020072c0..0x020072c4 range. This object's copy is the identical 4-byte `bx lr` body (1e ff 2f e1) with no relocations, and no surviving section in this TU references it; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 temporary re-emits it with vague linkage; the loaders here build Vector3 temporaries and five of the seventeen legacy one-function objects already emit their own copy today. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/named/arm9/_ZN7Vector3D1Ev.cpp is its enrolled `complete` owner of that 0x020072c0..0x020072c4 range. This object's copy is the identical 4-byte `bx lr` body (1e ff 2f e1) with no relocations, and no surviving section in this TU references it; rombuild compares the body against those cartridge bytes before discarding the duplicate."
     },
     {
       "symbol": "_ZN8Vector3sD1Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x02011508",
-      "reason": "The same vague-linkage case for Vector3s, whose empty inline destructor is also declared in include/types.h; LoadExitObjects builds the Vector3s temporary that pulls it in, and that one legacy object emits its own copy today. The cartridge keeps exactly one copy at arm9:0x02011508, kind:function(arm,size=0x4), owned by the enrolled `complete` source src/_ZN8Vector3sD1Ev.cpp over 0x02011508..0x0201150c. This object's copy is the identical 4-byte `bx lr` body (1e ff 2f e1) with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+      "reason": "The same vague-linkage case for Vector3s, whose empty inline destructor is also declared in include/types.h; LoadExitObjects builds the Vector3s temporary that pulls it in, and that one legacy object emits its own copy today. The cartridge keeps exactly one copy at arm9:0x02011508, kind:function(arm,size=0x4), owned by the enrolled `complete` source src/named/arm9/_ZN8Vector3sD1Ev.cpp over 0x02011508..0x0201150c. This object's copy is the identical 4-byte `bx lr` body (1e ff 2f e1) with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
     }
   ],
   "verification": {
@@ -294,7 +294,7 @@
         "size": "0x4",
         "binding": "STB_LOPROC",
         "in_rom": true,
-        "note": "vague-linkage out-of-line copy of the inline ~Vector3 declared in include/types.h, emitted because the loaders build Vector3 temporaries. Emitted today by five of the seventeen legacy objects on their own. CORRECTED: the original record said in_rom false, which was already wrong when it was written -- config/arm9/symbols.txt has carried `_ZN7Vector3D1Ev kind:function(arm,size=0x4) addr:0x020072c0` since the commit that gave Vector3 its destructor, and src/_ZN7Vector3D1Ev.cpp owns that range `complete`.",
+        "note": "vague-linkage out-of-line copy of the inline ~Vector3 declared in include/types.h, emitted because the loaders build Vector3 temporaries. Emitted today by five of the seventeen legacy objects on their own. CORRECTED: the original record said in_rom false, which was already wrong when it was written -- config/arm9/symbols.txt has carried `_ZN7Vector3D1Ev kind:function(arm,size=0x4) addr:0x020072c0` since the commit that gave Vector3 its destructor, and src/named/arm9/_ZN7Vector3D1Ev.cpp owns that range `complete`.",
         "rom_home": "arm9:0x020072c0"
       },
       {
@@ -302,7 +302,7 @@
         "size": "0x4",
         "binding": "STB_LOPROC",
         "in_rom": true,
-        "note": "same, for Vector3s; emitted today by the LoadExitObjects legacy object on its own. CORRECTED for the same reason: config/arm9/symbols.txt carries `_ZN8Vector3sD1Ev kind:function(arm,size=0x4) addr:0x02011508`, owned `complete` by src/_ZN8Vector3sD1Ev.cpp.",
+        "note": "same, for Vector3s; emitted today by the LoadExitObjects legacy object on its own. CORRECTED for the same reason: config/arm9/symbols.txt carries `_ZN8Vector3sD1Ev kind:function(arm,size=0x4) addr:0x02011508`, owned `complete` by src/named/arm9/_ZN8Vector3sD1Ev.cpp.",
         "rom_home": "arm9:0x02011508"
       }
     ],

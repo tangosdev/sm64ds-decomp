@@ -19,7 +19,7 @@ src/unnamed/ov001/func_ov001_020ab41c.c:
     complete
     .text start:0x020ab41c end:0x020ab450
 
-src/TouchArea_Update.c:
+src/named/ov001/TouchArea_Update.c:
     complete
     .text start:0x020ab450 end:0x020ab54c
 

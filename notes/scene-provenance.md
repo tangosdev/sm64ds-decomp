@@ -167,9 +167,9 @@ not the same as the last field the object has. The trailing `pad_9c0[0x8]` and t
 
 **`Particle::SysTracker`, embedded at `dScStage_c+0x50`.** Not its own header yet:
 `include/Particle.h` and `include/Particle__SysTracker.h` are two *separate*
-`gen_header.py` shadows of this same class. `src/_ZN8Particle10SysTrackerC1Ev.cpp` writes
+`gen_header.py` shadows of this same class. `src/named/arm9/_ZN8Particle10SysTrackerC1Ev.cpp` writes
 fields through `struct Particle *self` up to `unk_818`, while
-`src/_ZN8Particle10SysTracker10InitialiseEv.cpp` and `6UpdateEv.c` read `mManager`/`mContents`
+`src/named/arm9/_ZN8Particle10SysTracker10InitialiseEv.cpp` and `6UpdateEv.c` read `mManager`/`mContents`
 through `struct Particle__SysTracker *self` — the same offsets `Particle.h` also
 carries. Their union is what `dScStage_c.h` declares locally: `Particle.h`'s full 34-field
 layout, last field `unk_818` (1 byte, ends 0x819), padded to 0x81c for 4-byte
@@ -178,7 +178,7 @@ second independent check on the same number. Declared locally rather than mergin
 two real headers because neither `dScStage_c` source file includes them and a merge has its
 own blast radius across every file that already casts through one shadow or the other.
 
-Its destructor is declared, never defined: `src/_ZN8Particle10SysTrackerD1Ev.cpp`
+Its destructor is declared, never defined: `src/named/arm9/_ZN8Particle10SysTrackerD1Ev.cpp`
 already supplies `_ZN8Particle10SysTrackerD1Ev` as an `extern "C"` free function; the
 declaration only lets `dScStage_c`'s implicit destructor find it by name. Not virtual —
 `dtor_variant_audit.py` established `Particle::SysTracker` has no RTTI record and no
@@ -204,9 +204,9 @@ object and no other argument; `GraphCallback2` reads its fields (fixed-point mat
 emitting a vtable the delink ranges do not own.
 
 **`PS_Init` is deliberately not declared in the header**, even though
-`src/_ZN10dScStage_c7PS_InitEv.cpp` defines `dScStage_c::PS_Init()` and is byte-verified and
+`src/named/arm9/_ZN10dScStage_c7PS_InitEv.cpp` defines `dScStage_c::PS_Init()` and is byte-verified and
 enrolled. It uses its own local shadow `class dScStage_c` (the same pattern
-`src/_ZN10dScStage_c8BehaviorEv.cpp` uses) on purpose: a real landmine lived at that exact
+`src/named/arm9/_ZN10dScStage_c8BehaviorEv.cpp` uses) on purpose: a real landmine lived at that exact
 filename — an untracked, un-enrolled second `.cpp` for the symbol whose private
 `struct G2x` declared `SetBlendBrightness`'s middle parameter as `int`, mangling to
 `_ZN3G2x18SetBlendBrightnessEPVtis`, which resolves to nothing and would silently *not*
@@ -241,7 +241,7 @@ at 0x02091528 and 0x02091540.
 byte-exact. A previous revision of
 the header said they were "NOT CONVERTED BY THIS PASS", which was later read as saying
 they *could not* be. The key function is the first non-inline virtual *declared*, which
-is `~dScBoot_c`, defined out of line in `src/d_s_boot.cpp`; where `InitResources`
+is `~dScBoot_c`, defined out of line in `src/named/arm9/d_s_boot.cpp`; where `InitResources`
 is defined cannot move that. Bracketing `eligible.py` across the conversion returned a
 byte-identical name list, which is the gate that would show a `_ZTV` appearing.
 
@@ -283,8 +283,8 @@ inherited at 0x0c).
 [data_ov075_0211d304](../config/arm9/overlays/ov075/symbols.txt) (18 slots) against `_ZTV8dScene_c` slot for slot, `dScEntry_c`
 overrides exactly eight — 0, 1, 3, 6, 9, 12, 16, 17.
 
-**Construction.** Two real Spawn-style factories, [func_ov075_0211a740](../src/d_s_entry_result.cpp)(reconstructed names as `dScEntry_c_classInit_RESULT` in `d_s_entry_result.cpp`) and
-[func_ov075_0211a854](../src/d_s_entry_entry.cpp)(reconstructed name as `dScEntry_c_classInit_ENTRY` in `d_s_entry_entry.cpp`), both open with `_ZN7fBase_cnwEj(0x288)`, i.e.
+**Construction.** Two real Spawn-style factories, [func_ov075_0211a740](../src/named/ov075/d_s_entry_result.cpp)(reconstructed names as `dScEntry_c_classInit_RESULT` in `d_s_entry_result.cpp`) and
+[func_ov075_0211a854](../src/named/ov075/d_s_entry_entry.cpp)(reconstructed name as `dScEntry_c_classInit_ENTRY` in `d_s_entry_entry.cpp`), both open with `_ZN7fBase_cnwEj(0x288)`, i.e.
 `fBase_c::operator new(0x288)`. They are not C1/C2 variants: both allocate and return
 a new object. Size 0x288 is read directly off the allocator call, not inferred from
 field span.

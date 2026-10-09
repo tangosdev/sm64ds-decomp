@@ -145,7 +145,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "Render's local Vector3 (the half-scale passed to the second ring) re-emits the empty ~Vector3. arm9:0x020072c0 in src/_ZN7Vector3D1Ev.cpp already owns that 4-byte body."
+      "reason": "Render's local Vector3 (the half-scale passed to the second ring) re-emits the empty ~Vector3. arm9:0x020072c0 in src/named/arm9/_ZN7Vector3D1Ev.cpp already owns that 4-byte body."
     },
     {
       "symbol": "_ZTS9daFRing_c",

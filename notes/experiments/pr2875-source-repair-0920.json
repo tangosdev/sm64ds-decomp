@@ -4394,7 +4394,7 @@
         ]
       },
       {
-        "path": "src/MultiStore16.c",
+        "path": "src/named/arm9/MultiStore16.c",
         "source_sha256": "9345fbc6a95bb349804a4e122470a5508d2cc943af6226d41d1b76bedac4853d",
         "object_sha256": "d94d77f287d0184da3fa6e2dccffd0eb4afc6412a40b30df483c2fbfe339393c",
         "object_bytes": 512,
@@ -4778,13 +4778,13 @@
       ]
     },
     {
-      "path": "src/MultiStore16.c",
+      "path": "src/named/arm9/MultiStore16.c",
       "module": "arm9",
       "compiler": "2004/b56",
       "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
       "before": "void MultiStore16(short val, char *dst, int nbytes) {\n    int i = 0;\n    do {\n        if (i < nbytes) {\n            *(short*)(dst + i) = val;\n            i += 2;\n        } else break;\n    } while (1);\n}\n",
       "after": "void MultiStore16(unsigned short val, char *dst, int nbytes) {\n    int i = 0;\n    do {\n        if (i < nbytes) {\n            *(unsigned short*)(dst + i) = val;\n            i += 2;\n        } else break;\n    } while (1);\n}\n",
-      "patch": "--- a/src/MultiStore16.c\n+++ b/src/MultiStore16.c\n@@ -1,8 +1,8 @@\n-void MultiStore16(short val, char *dst, int nbytes) {\n+void MultiStore16(unsigned short val, char *dst, int nbytes) {\n     int i = 0;\n     do {\n         if (i < nbytes) {\n-            *(short*)(dst + i) = val;\n+            *(unsigned short*)(dst + i) = val;\n             i += 2;\n         } else break;\n     } while (1);\n",
+      "patch": "--- a/src/named/arm9/MultiStore16.c\n+++ b/src/named/arm9/MultiStore16.c\n@@ -1,8 +1,8 @@\n-void MultiStore16(short val, char *dst, int nbytes) {\n+void MultiStore16(unsigned short val, char *dst, int nbytes) {\n     int i = 0;\n     do {\n         if (i < nbytes) {\n-            *(short*)(dst + i) = val;\n+            *(unsigned short*)(dst + i) = val;\n             i += 2;\n         } else break;\n     } while (1);\n",
       "raw_object_identical": true,
       "object_bytes": 512,
       "object_sha256": "d94d77f287d0184da3fa6e2dccffd0eb4afc6412a40b30df483c2fbfe339393c",
@@ -5555,7 +5555,7 @@
         ]
       },
       {
-        "path": "src/MultiStore16.c",
+        "path": "src/named/arm9/MultiStore16.c",
         "occurrences": [
           {
             "line": 1,
@@ -5564,7 +5564,7 @@
         ]
       },
       {
-        "path": "src/ResetCrashScreen.c",
+        "path": "src/named/arm9/ResetCrashScreen.c",
         "occurrences": [
           {
             "line": 2,
@@ -5756,7 +5756,7 @@
         ]
       },
       {
-        "path": "src/_ZN7Message11DisplayTextEt.cpp",
+        "path": "src/named/arm9/_ZN7Message11DisplayTextEt.cpp",
         "occurrences": [
           {
             "line": 32,
@@ -5769,7 +5769,7 @@
         ]
       },
       {
-        "path": "src/_ZN7Message13DisplaySavingEt.cpp",
+        "path": "src/named/arm9/_ZN7Message13DisplaySavingEt.cpp",
         "occurrences": [
           {
             "line": 41,
@@ -5782,7 +5782,7 @@
         ]
       },
       {
-        "path": "src/_ZN7Message16DisplayPauseTextEth.cpp",
+        "path": "src/named/arm9/_ZN7Message16DisplayPauseTextEth.cpp",
         "occurrences": [
           {
             "line": 18,
@@ -5795,7 +5795,7 @@
         ]
       },
       {
-        "path": "src/_ZN7Message17DisplayVsExitTextEt.cpp",
+        "path": "src/named/arm9/_ZN7Message17DisplayVsExitTextEt.cpp",
         "occurrences": [
           {
             "line": 12,
@@ -5808,7 +5808,7 @@
         ]
       },
       {
-        "path": "src/_ZN7Message18DisplayPauseTextVSEt.cpp",
+        "path": "src/named/arm9/_ZN7Message18DisplayPauseTextVSEt.cpp",
         "occurrences": [
           {
             "line": 12,
@@ -5821,7 +5821,7 @@
         ]
       },
       {
-        "path": "src/_ZN7Message19DisplayDontSaveTextEt.cpp",
+        "path": "src/named/arm9/_ZN7Message19DisplayDontSaveTextEt.cpp",
         "occurrences": [
           {
             "line": 15,
@@ -5834,7 +5834,7 @@
         ]
       },
       {
-        "path": "src/_ZN7Message21DisplaySaveStatusTextEt.cpp",
+        "path": "src/named/arm9/_ZN7Message21DisplaySaveStatusTextEt.cpp",
         "occurrences": [
           {
             "line": 15,
@@ -5847,7 +5847,7 @@
         ]
       },
       {
-        "path": "src/_ZN7Message22DisplayOptionsMenuTextEt.cpp",
+        "path": "src/named/arm9/_ZN7Message22DisplayOptionsMenuTextEt.cpp",
         "occurrences": [
           {
             "line": 14,
@@ -5860,7 +5860,7 @@
         ]
       },
       {
-        "path": "src/_ZN7Message25DisplayControllerModeTextEt.cpp",
+        "path": "src/named/arm9/_ZN7Message25DisplayControllerModeTextEt.cpp",
         "occurrences": [
           {
             "line": 15,
@@ -5873,7 +5873,7 @@
         ]
       },
       {
-        "path": "src/_ZN7Message30DisplayCourseNameForStarSelectEj.cpp",
+        "path": "src/named/arm9/_ZN7Message30DisplayCourseNameForStarSelectEj.cpp",
         "occurrences": [
           {
             "line": 31,
@@ -5886,7 +5886,7 @@
         ]
       },
       {
-        "path": "src/_ZN7Message7DisplayEj.cpp",
+        "path": "src/named/arm9/_ZN7Message7DisplayEj.cpp",
         "occurrences": [
           {
             "line": 16,
@@ -6264,7 +6264,7 @@
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6277,7 +6277,7 @@
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6290,7 +6290,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6303,7 +6303,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6316,7 +6316,7 @@
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6329,7 +6329,7 @@
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6342,7 +6342,7 @@
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6355,7 +6355,7 @@
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6368,7 +6368,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6381,7 +6381,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6394,7 +6394,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6407,7 +6407,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6420,7 +6420,7 @@
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6433,7 +6433,7 @@
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6446,7 +6446,7 @@
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6459,7 +6459,7 @@
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6472,7 +6472,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6485,7 +6485,7 @@
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6498,7 +6498,7 @@
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6511,7 +6511,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6524,7 +6524,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6537,7 +6537,7 @@
           "got": "#3 unsigned int",
           "want": "#3 int",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6550,7 +6550,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6563,7 +6563,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6576,7 +6576,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6589,7 +6589,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6602,7 +6602,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6615,7 +6615,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6628,7 +6628,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6641,7 +6641,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6654,7 +6654,7 @@
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6667,7 +6667,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6680,7 +6680,7 @@
           "got": "#2 short *",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6693,7 +6693,7 @@
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6706,7 +6706,7 @@
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6719,7 +6719,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6732,7 +6732,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6745,7 +6745,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6758,7 +6758,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6771,7 +6771,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6784,7 +6784,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6797,7 +6797,7 @@
           "got": "#2 short *",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6810,7 +6810,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6823,7 +6823,7 @@
           "got": "#3 unsigned int",
           "want": "#3 int",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6836,7 +6836,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6849,7 +6849,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6862,7 +6862,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6875,33 +6875,33 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/ResetCrashScreen.c",
+          "file": "src/named/arm9/ResetCrashScreen.c",
           "line": 2,
           "decl": "void (unsigned short, volatile void *, int)",
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/ResetCrashScreen.c",
+          "file": "src/named/arm9/ResetCrashScreen.c",
           "line": 2,
           "decl": "void (unsigned short, volatile void *, int)",
           "got": "#2 volatile void *",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6914,7 +6914,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6927,7 +6927,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6940,7 +6940,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6953,7 +6953,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6966,7 +6966,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6979,7 +6979,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -6992,7 +6992,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -7005,7 +7005,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -7018,7 +7018,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -7031,7 +7031,7 @@
           "got": "#3 unsigned int",
           "want": "#3 int",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -7044,7 +7044,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -7057,293 +7057,293 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message11DisplayTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message11DisplayTextEt.cpp",
           "line": 32,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message11DisplayTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message11DisplayTextEt.cpp",
           "line": 32,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message13DisplaySavingEt.cpp",
+          "file": "src/named/arm9/_ZN7Message13DisplaySavingEt.cpp",
           "line": 41,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message13DisplaySavingEt.cpp",
+          "file": "src/named/arm9/_ZN7Message13DisplaySavingEt.cpp",
           "line": 41,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message16DisplayPauseTextEth.cpp",
+          "file": "src/named/arm9/_ZN7Message16DisplayPauseTextEth.cpp",
           "line": 18,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message16DisplayPauseTextEth.cpp",
+          "file": "src/named/arm9/_ZN7Message16DisplayPauseTextEth.cpp",
           "line": 18,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message17DisplayVsExitTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message17DisplayVsExitTextEt.cpp",
           "line": 12,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message17DisplayVsExitTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message17DisplayVsExitTextEt.cpp",
           "line": 12,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message18DisplayPauseTextVSEt.cpp",
+          "file": "src/named/arm9/_ZN7Message18DisplayPauseTextVSEt.cpp",
           "line": 12,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message18DisplayPauseTextVSEt.cpp",
+          "file": "src/named/arm9/_ZN7Message18DisplayPauseTextVSEt.cpp",
           "line": 12,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message19DisplayDontSaveTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message19DisplayDontSaveTextEt.cpp",
           "line": 15,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message19DisplayDontSaveTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message19DisplayDontSaveTextEt.cpp",
           "line": 15,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message21DisplaySaveStatusTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message21DisplaySaveStatusTextEt.cpp",
           "line": 15,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message21DisplaySaveStatusTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message21DisplaySaveStatusTextEt.cpp",
           "line": 15,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message22DisplayOptionsMenuTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message22DisplayOptionsMenuTextEt.cpp",
           "line": 14,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message22DisplayOptionsMenuTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message22DisplayOptionsMenuTextEt.cpp",
           "line": 14,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message25DisplayControllerModeTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message25DisplayControllerModeTextEt.cpp",
           "line": 15,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message25DisplayControllerModeTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message25DisplayControllerModeTextEt.cpp",
           "line": 15,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message30DisplayCourseNameForStarSelectEj.cpp",
+          "file": "src/named/arm9/_ZN7Message30DisplayCourseNameForStarSelectEj.cpp",
           "line": 31,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message30DisplayCourseNameForStarSelectEj.cpp",
+          "file": "src/named/arm9/_ZN7Message30DisplayCourseNameForStarSelectEj.cpp",
           "line": 31,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message7DisplayEj.cpp",
+          "file": "src/named/arm9/_ZN7Message7DisplayEj.cpp",
           "line": 16,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message7DisplayEj.cpp",
+          "file": "src/named/arm9/_ZN7Message7DisplayEj.cpp",
           "line": 16,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -7356,7 +7356,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -7369,7 +7369,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -7382,7 +7382,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -7395,7 +7395,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -7408,7 +7408,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -7421,7 +7421,7 @@
           "got": "#1 int",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -7434,7 +7434,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -7447,7 +7447,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         },
@@ -7460,7 +7460,7 @@
           "got": "#1 unsigned short",
           "want": "#1 short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (short, char *, int)"
         }
@@ -7475,7 +7475,7 @@
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7488,7 +7488,7 @@
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7501,7 +7501,7 @@
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7514,7 +7514,7 @@
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7527,7 +7527,7 @@
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7540,7 +7540,7 @@
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7553,7 +7553,7 @@
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7566,7 +7566,7 @@
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7579,7 +7579,7 @@
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7592,7 +7592,7 @@
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7605,7 +7605,7 @@
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7618,7 +7618,7 @@
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7631,7 +7631,7 @@
           "got": "#3 unsigned int",
           "want": "#3 int",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7644,7 +7644,7 @@
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7657,7 +7657,7 @@
           "got": "#2 short *",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7670,7 +7670,7 @@
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7683,7 +7683,7 @@
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7696,7 +7696,7 @@
           "got": "#2 short *",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7709,20 +7709,20 @@
           "got": "#3 unsigned int",
           "want": "#3 int",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/ResetCrashScreen.c",
+          "file": "src/named/arm9/ResetCrashScreen.c",
           "line": 2,
           "decl": "void (unsigned short, volatile void *, int)",
           "got": "#2 volatile void *",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -7735,293 +7735,293 @@
           "got": "#3 unsigned int",
           "want": "#3 int",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message11DisplayTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message11DisplayTextEt.cpp",
           "line": 32,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message11DisplayTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message11DisplayTextEt.cpp",
           "line": 32,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message13DisplaySavingEt.cpp",
+          "file": "src/named/arm9/_ZN7Message13DisplaySavingEt.cpp",
           "line": 41,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message13DisplaySavingEt.cpp",
+          "file": "src/named/arm9/_ZN7Message13DisplaySavingEt.cpp",
           "line": 41,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message16DisplayPauseTextEth.cpp",
+          "file": "src/named/arm9/_ZN7Message16DisplayPauseTextEth.cpp",
           "line": 18,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message16DisplayPauseTextEth.cpp",
+          "file": "src/named/arm9/_ZN7Message16DisplayPauseTextEth.cpp",
           "line": 18,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message17DisplayVsExitTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message17DisplayVsExitTextEt.cpp",
           "line": 12,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message17DisplayVsExitTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message17DisplayVsExitTextEt.cpp",
           "line": 12,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message18DisplayPauseTextVSEt.cpp",
+          "file": "src/named/arm9/_ZN7Message18DisplayPauseTextVSEt.cpp",
           "line": 12,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message18DisplayPauseTextVSEt.cpp",
+          "file": "src/named/arm9/_ZN7Message18DisplayPauseTextVSEt.cpp",
           "line": 12,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message19DisplayDontSaveTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message19DisplayDontSaveTextEt.cpp",
           "line": 15,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message19DisplayDontSaveTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message19DisplayDontSaveTextEt.cpp",
           "line": 15,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message21DisplaySaveStatusTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message21DisplaySaveStatusTextEt.cpp",
           "line": 15,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message21DisplaySaveStatusTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message21DisplaySaveStatusTextEt.cpp",
           "line": 15,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message22DisplayOptionsMenuTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message22DisplayOptionsMenuTextEt.cpp",
           "line": 14,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message22DisplayOptionsMenuTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message22DisplayOptionsMenuTextEt.cpp",
           "line": 14,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message25DisplayControllerModeTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message25DisplayControllerModeTextEt.cpp",
           "line": 15,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message25DisplayControllerModeTextEt.cpp",
+          "file": "src/named/arm9/_ZN7Message25DisplayControllerModeTextEt.cpp",
           "line": 15,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message30DisplayCourseNameForStarSelectEj.cpp",
+          "file": "src/named/arm9/_ZN7Message30DisplayCourseNameForStarSelectEj.cpp",
           "line": 31,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message30DisplayCourseNameForStarSelectEj.cpp",
+          "file": "src/named/arm9/_ZN7Message30DisplayCourseNameForStarSelectEj.cpp",
           "line": 31,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message7DisplayEj.cpp",
+          "file": "src/named/arm9/_ZN7Message7DisplayEj.cpp",
           "line": 16,
           "decl": "void (int, int, int)",
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
         {
           "symbol": "MultiStore16",
           "kind": "param",
-          "file": "src/_ZN7Message7DisplayEj.cpp",
+          "file": "src/named/arm9/_ZN7Message7DisplayEj.cpp",
           "line": 16,
           "decl": "void (int, int, int)",
           "got": "#2 int",
           "want": "#2 char *",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         },
@@ -8034,7 +8034,7 @@
           "got": "#1 int",
           "want": "#1 unsigned short",
           "basis": "definition",
-          "ref_file": "src/MultiStore16.c",
+          "ref_file": "src/named/arm9/MultiStore16.c",
           "ref_line": 1,
           "ref": "void (unsigned short, char *, int)"
         }
@@ -8043,7 +8043,7 @@
       "healed_fingerprints": [
         [
           "MultiStore16",
-          "src/ResetCrashScreen.c",
+          "src/named/arm9/ResetCrashScreen.c",
           "param:#1 unsigned short"
         ],
         [
@@ -8285,7 +8285,7 @@
       "remaining_preexisting_fingerprints": [
         [
           "MultiStore16",
-          "src/ResetCrashScreen.c",
+          "src/named/arm9/ResetCrashScreen.c",
           "param:#2 volatile void *"
         ],
         [
@@ -8295,112 +8295,112 @@
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message11DisplayTextEt.cpp",
+          "src/named/arm9/_ZN7Message11DisplayTextEt.cpp",
           "param:#1 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message11DisplayTextEt.cpp",
+          "src/named/arm9/_ZN7Message11DisplayTextEt.cpp",
           "param:#2 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message13DisplaySavingEt.cpp",
+          "src/named/arm9/_ZN7Message13DisplaySavingEt.cpp",
           "param:#1 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message13DisplaySavingEt.cpp",
+          "src/named/arm9/_ZN7Message13DisplaySavingEt.cpp",
           "param:#2 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message16DisplayPauseTextEth.cpp",
+          "src/named/arm9/_ZN7Message16DisplayPauseTextEth.cpp",
           "param:#1 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message16DisplayPauseTextEth.cpp",
+          "src/named/arm9/_ZN7Message16DisplayPauseTextEth.cpp",
           "param:#2 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message17DisplayVsExitTextEt.cpp",
+          "src/named/arm9/_ZN7Message17DisplayVsExitTextEt.cpp",
           "param:#1 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message17DisplayVsExitTextEt.cpp",
+          "src/named/arm9/_ZN7Message17DisplayVsExitTextEt.cpp",
           "param:#2 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message18DisplayPauseTextVSEt.cpp",
+          "src/named/arm9/_ZN7Message18DisplayPauseTextVSEt.cpp",
           "param:#1 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message18DisplayPauseTextVSEt.cpp",
+          "src/named/arm9/_ZN7Message18DisplayPauseTextVSEt.cpp",
           "param:#2 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message19DisplayDontSaveTextEt.cpp",
+          "src/named/arm9/_ZN7Message19DisplayDontSaveTextEt.cpp",
           "param:#1 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message19DisplayDontSaveTextEt.cpp",
+          "src/named/arm9/_ZN7Message19DisplayDontSaveTextEt.cpp",
           "param:#2 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message21DisplaySaveStatusTextEt.cpp",
+          "src/named/arm9/_ZN7Message21DisplaySaveStatusTextEt.cpp",
           "param:#1 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message21DisplaySaveStatusTextEt.cpp",
+          "src/named/arm9/_ZN7Message21DisplaySaveStatusTextEt.cpp",
           "param:#2 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message22DisplayOptionsMenuTextEt.cpp",
+          "src/named/arm9/_ZN7Message22DisplayOptionsMenuTextEt.cpp",
           "param:#1 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message22DisplayOptionsMenuTextEt.cpp",
+          "src/named/arm9/_ZN7Message22DisplayOptionsMenuTextEt.cpp",
           "param:#2 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message25DisplayControllerModeTextEt.cpp",
+          "src/named/arm9/_ZN7Message25DisplayControllerModeTextEt.cpp",
           "param:#1 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message25DisplayControllerModeTextEt.cpp",
+          "src/named/arm9/_ZN7Message25DisplayControllerModeTextEt.cpp",
           "param:#2 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message30DisplayCourseNameForStarSelectEj.cpp",
+          "src/named/arm9/_ZN7Message30DisplayCourseNameForStarSelectEj.cpp",
           "param:#1 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message30DisplayCourseNameForStarSelectEj.cpp",
+          "src/named/arm9/_ZN7Message30DisplayCourseNameForStarSelectEj.cpp",
           "param:#2 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message7DisplayEj.cpp",
+          "src/named/arm9/_ZN7Message7DisplayEj.cpp",
           "param:#1 int"
         ],
         [
           "MultiStore16",
-          "src/_ZN7Message7DisplayEj.cpp",
+          "src/named/arm9/_ZN7Message7DisplayEj.cpp",
           "param:#2 int"
         ],
         [

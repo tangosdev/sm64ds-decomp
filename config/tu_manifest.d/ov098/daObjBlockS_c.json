@@ -6,7 +6,7 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "The whole daObjBlockS_c run of ov098 .text, 0x02138040..0x02139f70: from D1 (0x02138040) to daObjBlockS_c_classInit (0x02139f04, 0x6c). The previous delinks entry, src/actors/daObjYajirusi_c.cpp, ends at 0x02138040 and the next one, src/_ZN16daObjFallBlock_cD0Ev.cpp, starts at 0x02139f70, so the unit is bounded by two other classes on both sides.",
+    "The whole daObjBlockS_c run of ov098 .text, 0x02138040..0x02139f70: from D1 (0x02138040) to daObjBlockS_c_classInit (0x02139f04, 0x6c). The previous delinks entry, src/actors/daObjYajirusi_c.cpp, ends at 0x02138040 and the next one, src/named/ov098/_ZN16daObjFallBlock_cD0Ev.cpp, starts at 0x02139f70, so the unit is bounded by two other classes on both sides.",
     "Every helper between the destructors and the methods is reached only from this class: the state table at data_ov098_0213c878 (Crate_SetState and func_ov098_02138b70 index it by mState) and the calls among the helpers themselves. No source outside this unit calls any of them.",
     "class label: daObjBlockS_c (_ZTI13daObjBlockS_c at 0x0213c4d4, name string 13daObjBlockS_c at 0x0213c500, pointed at from the word before _ZTV13daObjBlockS_c 0x0213c534).",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"

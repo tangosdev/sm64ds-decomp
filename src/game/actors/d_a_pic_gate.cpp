@@ -34,7 +34,7 @@
  * The wave-mesh renderer at 0x021261f4 is the one hole in the run: it sits
  * a div=5 mwccarm 2004/b56 scheduling tie away from the ROM (notes/
  * mwccarm-codegen.md 6cf/6cz) and is parked as a nonmatch draft in
- * src/_ZN11daPicGate_c19func_ov080_021261f4Ev.cpp.
+ * src/named/ov080/_ZN11daPicGate_c19func_ov080_021261f4Ev.cpp.
  *
  * deslop leftovers:
  * - Vertex.texCoord/colour reach the GX ports through literal

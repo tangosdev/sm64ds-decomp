@@ -42,7 +42,7 @@ struct daSBird_c : dActor_c {
 
     /* Out-of-line on purpose. The 380-byte func_ov009_0211145c hatch sits
        between D0 and the rest of the class run, so D1/D0 stay enrolled as
-       their own leftover files (src/_ZN9daSBird_cD1Ev.cpp / D0Ev.cpp) and
+       their own leftover files (src/named/ov009/_ZN9daSBird_cD1Ev.cpp / D0Ev.cpp) and
        must not be synthesised into the class TU. Empty body: mShadowModel
        then mModelAnim teardown, the vptr store and dActor_c's teardown are
        synthesised. Key function is ~daSBird_c(), the first declared

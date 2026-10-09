@@ -9,7 +9,7 @@
     "contiguous linker run: 0x2132938..0x2132cb8, 6 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daDsn_c",
     "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit fold (0930c): the DOSUN registry factory daDsn_c_classInit (0x02132cb8, 0x4c) abuts the run's end 0x02132cb8 with no gap and no other symbol between; tu_map left it in its own unlabelled unit because it cuts on symbol name. The widened range 0x02132938..0x02132d04 (7 functions) ends where the next delinks entry, src/_ZN11daDsnBase_cD0Ev.cpp, begins."
+    "classInit fold (0930c): the DOSUN registry factory daDsn_c_classInit (0x02132cb8, 0x4c) abuts the run's end 0x02132cb8 with no gap and no other symbol between; tu_map left it in its own unlabelled unit because it cuts on symbol name. The widened range 0x02132938..0x02132d04 (7 functions) ends where the next delinks entry, src/named/ov091/_ZN11daDsnBase_cD0Ev.cpp, begins."
   ],
   "sections": [
     {

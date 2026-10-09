@@ -31,7 +31,7 @@
     },
     {
       "interface": "dCcAcPos_c scalar Init bridge",
-      "definition": "src/_ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj.cpp",
+      "definition": "src/named/arm9/_ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj.cpp",
       "result": "Definition accepts dCcAcPos_c*, dActor_c*, const Vector3*, int, int, u32, u32. Author const-reference redeclaration was ABI-compatible at this call but disagreed with that C definition; final uses its typed pointer contract."
     },
     {

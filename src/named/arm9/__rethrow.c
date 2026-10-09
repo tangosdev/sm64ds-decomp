@@ -3,7 +3,7 @@
 // inside a catch block, same proof as __end__catch above: the probe object's undefined
 // symbol table carries __rethrow and the source never names it. The ROM's own rethrow
 // calls land here (notes/mwccarm-codegen.md 9a), and src/unnamed/arm9/0207/func_02073300.cpp,
-// src/__cxa_vec_ctor.cpp and src/unnamed/arm9/0207/func_02073470.cpp all branch to this address.
+// src/named/arm9/__cxa_vec_ctor.cpp and src/unnamed/arm9/0207/func_02073470.cpp all branch to this address.
 // Was named for the old symbol func_020717c0. The file follows the symbol, the same
 // move __end__catch needed: tools/srcpath.py keys a source to its file stem, so under
 // the old stem config declared a function at 0x020717c0 that no source resolved to,

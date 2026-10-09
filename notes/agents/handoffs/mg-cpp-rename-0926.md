@@ -18,12 +18,12 @@ This document describes this commit. The queue records its immutable output SHA.
 
 | New path | Symbol | [ov006](../../../config/arm9/overlays/ov006/symbols.txt) address, size | Registry row |
 |---|---|---|---|
-| `src/d_s_mg_bomroom.cpp` | `dScMgBomroom_c_classInit` | 0x020d9574, 0x30 | `MG_BOMROOM` |
-| `src/d_s_mg_curling.cpp` | `dScMgCurling_c_classInit` | 0x020e3820, 0x34 | `MG_CURLING` |
-| `src/d_s_mg_curling2.cpp` | `dScMgCurling2_c_classInit` | 0x020e6bf4, 0x34 | `MG_CURLING_J` |
-| `src/d_s_mg_pachinko.cpp` | `dScMgPachinko_c_classInit` | 0x020ff3ec, 0x34 | `MG_PACHINKO` |
-| `src/d_s_mg_panel.cpp` | `dScMgPanel_c_classInit` | 0x02107858, 0x34 | `MG_PANEL` |
-| `src/d_s_mg_teresa.cpp` | `dScMgTeresa_c_classInit` | 0x021207a8, 0x34 | `MG_TERESA` |
+| `src/named/ov006/d_s_mg_bomroom.cpp` | `dScMgBomroom_c_classInit` | 0x020d9574, 0x30 | `MG_BOMROOM` |
+| `src/named/ov006/d_s_mg_curling.cpp` | `dScMgCurling_c_classInit` | 0x020e3820, 0x34 | `MG_CURLING` |
+| `src/named/ov006/d_s_mg_curling2.cpp` | `dScMgCurling2_c_classInit` | 0x020e6bf4, 0x34 | `MG_CURLING_J` |
+| `src/named/ov006/d_s_mg_pachinko.cpp` | `dScMgPachinko_c_classInit` | 0x020ff3ec, 0x34 | `MG_PACHINKO` |
+| `src/named/ov006/d_s_mg_panel.cpp` | `dScMgPanel_c_classInit` | 0x02107858, 0x34 | `MG_PANEL` |
+| `src/named/ov006/d_s_mg_teresa.cpp` | `dScMgTeresa_c_classInit` | 0x021207a8, 0x34 | `MG_TERESA` |
 
 - `srcpath.new_path_for(<symbol>, '.cpp')` returns each new path, and `srcpath.path_for(<symbol>)` resolves to it after the rename.
 - Surfaces touched:

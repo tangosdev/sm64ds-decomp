@@ -10,7 +10,7 @@
  * functions in ROM order, from the destructor to InitResources. The
  * destructor is the key function, so the vtable and RTTI are emitted
  * here too. dScMgCoin_c_classInit, just above at 0x020de940, is still
- * its own file (src/d_s_mg_coin.cpp).
+ * its own file (src/named/ov006/d_s_mg_coin.cpp).
  *
  * The functions from func_ov006_020dd0e0 up, and the three below
  * func_ov006_020dbf7c, came from one-function files. Their bodies are

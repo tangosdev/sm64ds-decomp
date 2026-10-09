@@ -169,7 +169,7 @@ def test_a_call_that_never_matched_still_stops_the_file():
 
 # ------------------------------------------------------- the implicit-`this` shape
 
-# src/_ZN6Player12St_Land_InitEv.cpp in miniature: the file IS a Player member, and
+# src/named/ov002/_ZN6Player12St_Land_InitEv.cpp in miniature: the file IS a Player member, and
 # calls its sibling with no receiver at all.
 IMPLICIT = """\
 struct Player {

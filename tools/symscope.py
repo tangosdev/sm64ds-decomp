@@ -55,7 +55,7 @@ per module from `config/arm9/**/symbols.txt`, never flattened.
                  cannot condemn it.
 
   THE GROUND TRUTH. A raw address-span overlap is a real, provable exclusion --
-  `overlay_residency.py`'s E2 cites `LoadOverlay` (src/LoadOverlay.c), which
+  `overlay_residency.py`'s E2 cites `LoadOverlay` (src/named/arm9/LoadOverlay.c), which
   walks a 12-entry resident table and calls `Crash()` when an incoming
   overlay's [start, start+code+bss) intersects one already there: the game
   enforces this itself. But span overlap is not the only fact the ROM gives up,

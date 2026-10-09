@@ -23,7 +23,7 @@ struct dScBoot_c : dScene_c {
     u8  pad_057[0x1];
 
     /* Declared first, deliberately: that makes ~dScBoot_c the key function,
-       and it is defined out of line in src/d_s_boot.cpp, which therefore emits
+       and it is defined out of line in src/named/arm9/d_s_boot.cpp, which therefore emits
        the vtable/typeinfo group. */
     virtual ~dScBoot_c();
 

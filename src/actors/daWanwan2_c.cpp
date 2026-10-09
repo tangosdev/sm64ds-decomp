@@ -885,4 +885,4 @@ s32 daWanwan2_c::OnAimedAtWithEgg()
  * __cxa_vec_ctor(..., func_0203d73c, _ZN8Vector3sD1Ev), with an empty
  * constructor function, and types.h's Vector3 and Vector3s declare no
  * constructor, so the implicit one never emits those three calls. The
- * hand-built factory in src/d_a_wanwan2.cpp still reproduces them. */
+ * hand-built factory in src/named/ov100/d_a_wanwan2.cpp still reproduces them. */

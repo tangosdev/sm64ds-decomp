@@ -227,7 +227,7 @@ wall, else underside. **[P]**
 their own behaviour; `Update` links the object at the head of `data_0209cee8`, so the
 active set is rebuilt each frame by whoever chooses to register. `Process()` (0x02014aa8)
 is O(n²) over that list and has **exactly one caller: `dScStage_c::Render()` at 0x0202ba14** —
-verified directly, `src/_ZN10dScStage_c6RenderEv.cpp` is the only file in `src/` that names it.
+verified directly, `src/named/arm9/_ZN10dScStage_c6RenderEv.cpp` is the only file in `src/` that names it.
 **[P]**
 
 *(Call-site counts in this section and §3.6 are reloc-table derived — they count sites,

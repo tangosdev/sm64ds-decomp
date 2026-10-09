@@ -96,7 +96,7 @@ class Main(unittest.TestCase):
         same fixture as prepush_linkcheck.py's twin of this test, proving the two gates
         resolve the real ITCM symbol identically, not just the mocked ones."""
         out_path = tempfile.mktemp(suffix=".json")
-        argv = ["pgate.py", "--out", out_path, "--jobs", "1", "src/OSReadROMArea.c"]
+        argv = ["pgate.py", "--out", out_path, "--jobs", "1", "src/named/arm9/OSReadROMArea.c"]
         with mock.patch.object(PG.srcpath, "symbols_for", return_value=["OSReadROMArea"]), \
              mock.patch.object(PG, "run_linkcheck",
                                _linkcheck_table({"OSReadROMArea": ("VERIFIED", 0)})), \
@@ -104,7 +104,7 @@ class Main(unittest.TestCase):
             code = PG.main()
         rows = json.loads(pathlib.Path(out_path).read_text())
         pathlib.Path(out_path).unlink(missing_ok=True)
-        self.assertEqual(rows, [{"file": "src/OSReadROMArea.c", "name": "OSReadROMArea",
+        self.assertEqual(rows, [{"file": "src/named/arm9/OSReadROMArea.c", "name": "OSReadROMArea",
                                   "module": "itcm", "addr": "0x1ffdbd8",
                                   "verdict": "VERIFIED", "blind": 0}])
         self.assertEqual(code, 0)

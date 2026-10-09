@@ -519,7 +519,7 @@
         }
       ],
       "current_factory_name": "dScBoot_c_classInit",
-      "current_factory_file": "src/d_s_boot.cpp",
+      "current_factory_file": "src/named/arm9/d_s_boot.cpp",
       "proposed_factory_name": "dScBoot_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -755,7 +755,7 @@
         }
       ],
       "current_factory_name": "dScStage_c_classInit",
-      "current_factory_file": "src/d_s_stage.cpp",
+      "current_factory_file": "src/named/arm9/d_s_stage.cpp",
       "proposed_factory_name": "dScStage_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -1261,7 +1261,7 @@
         }
       ],
       "current_factory_name": "daPly_c_classInit",
-      "current_factory_file": "src/d_a_ply.cpp",
+      "current_factory_file": "src/named/ov002/d_a_ply.cpp",
       "proposed_factory_name": "daPly_c_classInit",
       "factory_shape": "new_plus_ctor_call",
       "factory_shape_evidence": "operator new size is exact; final vptr recovered through ov002:_ZN6PlayerC1Ev",
@@ -2333,7 +2333,7 @@
         }
       ],
       "current_factory_name": "dScMgCurling_c_classInit",
-      "current_factory_file": "src/d_s_mg_curling.cpp",
+      "current_factory_file": "src/named/ov006/d_s_mg_curling.cpp",
       "proposed_factory_name": "dScMgCurling_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -2422,7 +2422,7 @@
         }
       ],
       "current_factory_name": "dScMgCurling2_c_classInit",
-      "current_factory_file": "src/d_s_mg_curling2.cpp",
+      "current_factory_file": "src/named/ov006/d_s_mg_curling2.cpp",
       "proposed_factory_name": "dScMgCurling2_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",

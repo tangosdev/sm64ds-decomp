@@ -19,11 +19,11 @@ The ROM orders the destructor triple `D2, D0, D1` and interleaves
 is what emits `_ZTV8dActor_c`/`_ZTI8dActor_c` for `romdata_check`. The six
 tail functions therefore stay as the original per-function shards:
 
-- `src/_ZN8dActor_cD2Ev.cpp` `0x020112c8..0x02011314`
-- `src/_ZN8dActor_cD0Ev.cpp` `0x02011314..0x02011374`
-- `src/_ZN8dActor_cD1Ev.cpp` `0x02011374..0x020113c0`
-- `src/_ZN8dActor_cC1Ev.cpp` `0x020113c0..0x02011508`
-- `src/_ZN8Vector3sD1Ev.cpp` `0x02011508..0x0201150c`
+- `src/named/arm9/_ZN8dActor_cD2Ev.cpp` `0x020112c8..0x02011314`
+- `src/named/arm9/_ZN8dActor_cD0Ev.cpp` `0x02011314..0x02011374`
+- `src/named/arm9/_ZN8dActor_cD1Ev.cpp` `0x02011374..0x020113c0`
+- `src/named/arm9/_ZN8dActor_cC1Ev.cpp` `0x020113c0..0x02011508`
+- `src/named/arm9/_ZN8Vector3sD1Ev.cpp` `0x02011508..0x0201150c`
 - `src/_ZN8dActor_cC2Ev.cpp` `0x0201150c..0x02011654`
 
 The promoted TU licenses `0x0200f658..0x020112c8` (91 functions). An
@@ -55,7 +55,7 @@ restored shards re-emit it: `romdata_check` verifies `_ZTV8dActor_c`
   `attribution.json` carries `path#symbol` overrides for the consolidated
   functions (tangosdev, matching shard credit); `port/slice_gate9.txt`
   and the live comments in `include/daHanachan_c.h`,
-  `src/_ZN13daObjSwdoor_cD1Ev.cpp`, `src/game/actors/d_a_sound_obj.cpp`,
+  `src/named/ov002/_ZN13daObjSwdoor_cD1Ev.cpp`, `src/game/actors/d_a_sound_obj.cpp`,
   `src/game/actors/daObjPushblock_c.cpp` point at the promoted file.
 - `config/converted-baseline.json`: banked member identities migrated to
   `src/actors/dActor_c.cpp#symbol` keys; one member sits in

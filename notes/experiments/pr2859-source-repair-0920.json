@@ -1123,7 +1123,7 @@
         "owned_contract": "short (int, int)",
         "definitions": [
           {
-            "path": "src/_ZN4cstd5atan2E5Fix12IiES1_.c",
+            "path": "src/named/arm9/_ZN4cstd5atan2E5Fix12IiES1_.c",
             "line": 13,
             "contract": "short (int, int)"
           }
@@ -1147,7 +1147,7 @@
         "owned_contract": "void * (unsigned int, int, int, int)",
         "definitions": [
           {
-            "path": "src/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c",
+            "path": "src/named/arm9/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c",
             "line": 9,
             "contract": "void * (unsigned int, int, int, int)"
           }
@@ -1177,7 +1177,7 @@
         "owned_contract": "short (const Vector3 *, const Vector3 *)",
         "definitions": [
           {
-            "path": "src/Vec3_HorzAngle.c",
+            "path": "src/named/arm9/Vec3_HorzAngle.c",
             "line": 8,
             "contract": "short (const Vector3 *, const Vector3 *)"
           }
@@ -1285,7 +1285,7 @@
         "owned_contract": "void (void *, void *, int)",
         "definitions": [
           {
-            "path": "src/Vec3_Asr.c",
+            "path": "src/named/arm9/Vec3_Asr.c",
             "line": 2,
             "contract": "void (Vec3 *, Vec3 *, int)"
           }
@@ -1297,7 +1297,7 @@
         "owned_contract": "void (void *, int, int, int)",
         "definitions": [
           {
-            "path": "src/Matrix4x3_FromTranslation.c",
+            "path": "src/named/arm9/Matrix4x3_FromTranslation.c",
             "line": 2,
             "contract": "void (Mtx43 *, int, int, int)"
           }
@@ -1309,7 +1309,7 @@
         "owned_contract": "void (void *, short)",
         "definitions": [
           {
-            "path": "src/Matrix4x3_ApplyInPlaceToRotationY.c",
+            "path": "src/named/arm9/Matrix4x3_ApplyInPlaceToRotationY.c",
             "line": 10,
             "contract": "void (Matrix4x3 *, short)"
           }
@@ -1404,7 +1404,7 @@
   "corrected_contract_provenance": [
     {
       "symbol": "_ZN4cstd5atan2E5Fix12IiES1_",
-      "definition": "src/_ZN4cstd5atan2E5Fix12IiES1_.c",
+      "definition": "src/named/arm9/_ZN4cstd5atan2E5Fix12IiES1_.c",
       "contract": "s16(s32 y,s32 x)",
       "paired_definition": "src/_ZN8dActor_c14GetSubtractionEss.cpp",
       "paired_contract": "int dActor_c::GetSubtraction(short,short)",
@@ -1427,7 +1427,7 @@
     },
     {
       "symbol": "_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_",
-      "definition": "src/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c",
+      "definition": "src/named/arm9/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c",
       "contract": "void*(u32,s32,s32,s32)"
     },
     {
@@ -1452,7 +1452,7 @@
     },
     {
       "symbol": "Vec3_HorzAngle",
-      "definition": "src/Vec3_HorzAngle.c",
+      "definition": "src/named/arm9/Vec3_HorzAngle.c",
       "contract": "s16(const Vector3*,const Vector3*)"
     },
     {

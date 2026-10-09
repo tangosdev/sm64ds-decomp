@@ -90,7 +90,7 @@
       "end": "0x0212290c",
       "functions": 55
     },
-    "real_run_evidence": "tu_map cuts on symbol name, so it stopped at 0x02122764 and missed the class's two factories: daKuriKing_c_classInit_KURIKING_VANISH (0x02122764, size 0xd4, src/d_a_kuri_king_kuriking_vanish.cpp) and daKuriKing_c_classInit_KURIKING (0x02122838, size 0xd4, src/d_a_kuri_king_kuriking.cpp). Both are enrolled in ov074's delinks.txt, both store _ZTV12daKuriKing_c (relocs.txt from 0x02122818 and 0x021228ec), and .text itself runs to 0x0212290c. The queue's shard_count of 53 is a floor, not the total.",
+    "real_run_evidence": "tu_map cuts on symbol name, so it stopped at 0x02122764 and missed the class's two factories: daKuriKing_c_classInit_KURIKING_VANISH (0x02122764, size 0xd4, src/named/ov074/d_a_kuri_king_kuriking_vanish.cpp) and daKuriKing_c_classInit_KURIKING (0x02122838, size 0xd4, src/named/ov074/d_a_kuri_king_kuriking.cpp). Both are enrolled in ov074's delinks.txt, both store _ZTV12daKuriKing_c (relocs.txt from 0x02122818 and 0x021228ec), and .text itself runs to 0x0212290c. The queue's shard_count of 53 is a floor, not the total.",
     "licensed": {
       "start": "0x0211f154",
       "end": "0x02121380",

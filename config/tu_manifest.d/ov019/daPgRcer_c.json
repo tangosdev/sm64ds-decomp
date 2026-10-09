@@ -235,7 +235,7 @@
     {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
-      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so every TU that destroys a Vector3 re-emits it as vague linkage -- here the stack Vector3 automatics in func_ov019_02111fec / func_ov019_0211197c / path helpers. The cartridge keeps one copy at arm9:0x020072c0 and src/_ZN7Vector3D1Ev.cpp owns it; this object's copy is the identical 4-byte bx lr body.",
+      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so every TU that destroys a Vector3 re-emits it as vague linkage -- here the stack Vector3 automatics in func_ov019_02111fec / func_ov019_0211197c / path helpers. The cartridge keeps one copy at arm9:0x020072c0 and src/named/arm9/_ZN7Vector3D1Ev.cpp owns it; this object's copy is the identical 4-byte bx lr body.",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0"
     },

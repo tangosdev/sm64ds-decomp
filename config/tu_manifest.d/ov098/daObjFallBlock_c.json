@@ -209,14 +209,14 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "ov098",
       "canonical_address": "0x02139f70",
-      "reason": "HELD OUT OF THE LICENSED RUN FOR EMISSION ORDER, NOT FOR BYTES -- this TU reproduces it exactly (see boundary_evidence). The ROM orders the pair D0 0x02139f70 then D1 0x02139fc8; an in-class inline destructor, which daObjFallBlock_c.h has on measured cartridge evidence, always emits D1 then D0. src/_ZN16daObjFallBlock_cD0Ev.cpp stays enrolled and keeps its delinks.txt entry, so this TU's own copy is a duplicate body of the one the cartridge owns at 0x02139f70."
+      "reason": "HELD OUT OF THE LICENSED RUN FOR EMISSION ORDER, NOT FOR BYTES -- this TU reproduces it exactly (see boundary_evidence). The ROM orders the pair D0 0x02139f70 then D1 0x02139fc8; an in-class inline destructor, which daObjFallBlock_c.h has on measured cartridge evidence, always emits D1 then D0. src/named/ov098/_ZN16daObjFallBlock_cD0Ev.cpp stays enrolled and keeps its delinks.txt entry, so this TU's own copy is a duplicate body of the one the cartridge owns at 0x02139f70."
     },
     {
       "symbol": "_ZN16daObjFallBlock_cD1Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_module": "ov098",
       "canonical_address": "0x02139fc8",
-      "reason": "HELD OUT OF THE LICENSED RUN FOR EMISSION ORDER, NOT FOR BYTES -- this TU reproduces it exactly (see boundary_evidence). The ROM orders the pair D0 0x02139f70 then D1 0x02139fc8; an in-class inline destructor, which daObjFallBlock_c.h has on measured cartridge evidence, always emits D1 then D0. src/_ZN16daObjFallBlock_cD1Ev.cpp stays enrolled and keeps its delinks.txt entry, so this TU's own copy is a duplicate body of the one the cartridge owns at 0x02139fc8."
+      "reason": "HELD OUT OF THE LICENSED RUN FOR EMISSION ORDER, NOT FOR BYTES -- this TU reproduces it exactly (see boundary_evidence). The ROM orders the pair D0 0x02139f70 then D1 0x02139fc8; an in-class inline destructor, which daObjFallBlock_c.h has on measured cartridge evidence, always emits D1 then D0. src/named/ov098/_ZN16daObjFallBlock_cD1Ev.cpp stays enrolled and keeps its delinks.txt entry, so this TU's own copy is a duplicate body of the one the cartridge owns at 0x02139fc8."
     },
     {
       "symbol": "_ZTI7fBase_c",
@@ -318,8 +318,8 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN16daObjFallBlock_cD0Ev.cpp",
-      "src/_ZN16daObjFallBlock_cD1Ev.cpp",
+      "src/named/ov098/_ZN16daObjFallBlock_cD0Ev.cpp",
+      "src/named/ov098/_ZN16daObjFallBlock_cD1Ev.cpp",
       "src/func_ov098_0213a00c.cpp",
       "src/func_ov098_0213a0a8.cpp",
       "src/func_ov098_0213a0e8.c",

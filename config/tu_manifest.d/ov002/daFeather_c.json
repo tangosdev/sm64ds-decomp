@@ -154,7 +154,7 @@
     {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
-      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so every TU that destroys a Vector3 re-emits it as vague linkage -- here the two local Vector3 automatics in func_ov002_020b2c44 pull it in. The cartridge keeps one copy at arm9:0x020072c0 and src/_ZN7Vector3D1Ev.cpp owns it; this object's copy is the identical 4-byte `bx lr` body and no surviving section here references it. Previously banked as a plain deadstrip, which is the one disposition never compared against the cartridge; deadstrip-duplicate makes rombuild prove this body against the ROM's own before anything is discarded. Same fix ov100/daObjPathLift_c already carries for the same symbol.",
+      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so every TU that destroys a Vector3 re-emits it as vague linkage -- here the two local Vector3 automatics in func_ov002_020b2c44 pull it in. The cartridge keeps one copy at arm9:0x020072c0 and src/named/arm9/_ZN7Vector3D1Ev.cpp owns it; this object's copy is the identical 4-byte `bx lr` body and no surviving section here references it. Previously banked as a plain deadstrip, which is the one disposition never compared against the cartridge; deadstrip-duplicate makes rombuild prove this body against the ROM's own before anything is discarded. Same fix ov100/daObjPathLift_c already carries for the same symbol.",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0"
     },

@@ -1,8 +1,8 @@
 {
   "id": "arm9/__cxa_vec_cleanup",
   "module": "arm9",
-  "source": "src/__cxa_vec_cleanup.cpp",
-  "promoted_source": "src/__cxa_vec_cleanup.cpp",
+  "source": "src/named/arm9/__cxa_vec_cleanup.cpp",
+  "promoted_source": "src/named/arm9/__cxa_vec_cleanup.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -58,7 +58,7 @@
   "compiler_only_output": [],
   "notes": [
     "PRODUCTION MODE IS DELIBERATELY ABSENT, and that is the honest state of this entry. tools/rombuild.py intact_tu_policies admits an intact-object TU only on a scratch-data-verified ordinary link that proves every claimed range, all modules and the full ROM. That proof cannot be produced anywhere the dsd delink step aborts, which is every worktree tried so far ('function Div could not be analyzed: IllegalIns { address: 200407e, ins: Thumb(Ins { code: ede6, op: BlxI }) }'). Requesting the intact-object path without it is a hard BuildError, so this entry records the measured shape and does not request the path. config/arm9/delinks.txt therefore claims only the .text range, which is exactly what the build produces.",
-    "WHAT THE BUILD DOES TODAY. src/__cxa_vec_cleanup.cpp is enrolled as an ordinary single-function source, so tools/objisolate.py takes the one selected symbol and drops the two unwind sections to size 0 (isolate plan drop [5, 6, 7], dead ['@ET@__cxa_vec_cleanup', '@EX@__cxa_vec_cleanup']). The cartridge's copies of those 32 bytes come from the dsd gap objects, as they did before this file existed. Nothing in this entry changes a ROM byte.",
+    "WHAT THE BUILD DOES TODAY. src/named/arm9/__cxa_vec_cleanup.cpp is enrolled as an ordinary single-function source, so tools/objisolate.py takes the one selected symbol and drops the two unwind sections to size 0 (isolate plan drop [5, 6, 7], dead ['@ET@__cxa_vec_cleanup', '@EX@__cxa_vec_cleanup']). The cartridge's copies of those 32 bytes come from the dsd gap objects, as they did before this file existed. Nothing in this entry changes a ROM byte.",
     "WHY THE ENTRY IS WORTH HAVING ANYWAY. Until the schema widening that lands with it, the shape could not be written down at all: tools/tubuild.py manifest_section_claims refused both section names against _TU_SECTION_NAMES, and with the names admitted _SECTION_SYMBOL_FIELDS had no field in which to license @ET@/@EX@, so tools/tu_production.py prepare_intact_object refused the entry a second time. With both tables widened the same call ACCEPTS this object whole: 1056 bytes, objectAudit extraSections [], .text 116 + .exception 20 + .exceptix 12 surviving intact and all three still matching the cartridge. The machinery is willing; only the link proof is missing.",
     "arm9 holds 636 bytes of .exceptix in retail. This is the first entry in the manifest to claim any of it."
   ],

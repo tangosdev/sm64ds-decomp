@@ -1,8 +1,8 @@
 {
   "id": "arm9/__cxa_vec_ctor",
   "module": "arm9",
-  "source": "src/__cxa_vec_ctor.cpp",
-  "promoted_source": "src/__cxa_vec_ctor.cpp",
+  "source": "src/named/arm9/__cxa_vec_ctor.cpp",
+  "promoted_source": "src/named/arm9/__cxa_vec_ctor.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -60,7 +60,7 @@
   "compiler_only_output": [],
   "notes": [
     "PRODUCTION MODE IS DELIBERATELY ABSENT, and that is the honest state of this entry. tools/rombuild.py intact_tu_policies admits an intact-object TU only on a scratch-data-verified ordinary link that proves every claimed range, all modules and the full ROM. That proof needs a build/sm64ds.nds a --no-rom run never writes and a same-worker stock-ROM comparison this worktree cannot produce, so this entry records the measured shape and does not request the path. config/arm9/delinks.txt therefore claims only the .text range, which is exactly what the build produces.",
-    "WHAT THE BUILD DOES TODAY. src/__cxa_vec_ctor.cpp is enrolled as an ordinary single-function source, so tools/objisolate.py takes the one selected symbol and drops the two unwind sections to size 0. The cartridge's copies of those bytes come from the dsd gap objects, as they did before this file existed. Nothing in this entry changes a ROM byte.",
+    "WHAT THE BUILD DOES TODAY. src/named/arm9/__cxa_vec_ctor.cpp is enrolled as an ordinary single-function source, so tools/objisolate.py takes the one selected symbol and drops the two unwind sections to size 0. The cartridge's copies of those bytes come from the dsd gap objects, as they did before this file existed. Nothing in this entry changes a ROM byte.",
     "THE FIFTH ARGUMENT IS ON THE STACK. Seven pushed registers plus the 0x1c frame put the first stacked argument at [fp,#0x38], which is where the guard at +0x28 tests the element destructor and where the landing pad at +0x6c reads it back. Those two loads are the evidence for the arity, and calling this function with four arguments would leave both reading whatever the caller happened to leave there.",
     "WHY THERE ARE TWO COPIES OF THE LOOP. The destructor argument decides the shape, not the behaviour: with no destructor there is nothing to unwind, so the compiler emits a second, plain copy of the construct loop outside the try. That is the guarded loop at +0x4c and the plain loop at +0xa8, and it is why `base` has to keep its own register across the guarded copy while the plain copy is free to walk the register it arrived in.",
     "This is the fifth and last entry in the manifest to claim any of arm9's 636 bytes of retail .exceptix, after arm9/__cxa_vec_cleanup, arm9/func_02073300, arm9/func_02073534 and arm9/func_02073470. With it the whole 0x0207328c..0x02073534 array-helper family is source-built."

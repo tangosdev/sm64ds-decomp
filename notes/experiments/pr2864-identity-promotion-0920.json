@@ -56,7 +56,7 @@
       ],
       [
         "Matrix4x3_FromTranslation",
-        "src/Matrix4x3_ApplyInPlaceToTranslation.c",
+        "src/named/arm9/Matrix4x3_ApplyInPlaceToTranslation.c",
         "param:#1 Matrix4x3 *"
       ],
       [
@@ -898,7 +898,7 @@
     "grandfathered_unchanged_main": [
       [
         "_ZN6Player17SetNoControlStateEhih",
-        "src/_ZN6Player12St_Walk_InitEv.cpp",
+        "src/named/ov002/_ZN6Player12St_Walk_InitEv.cpp",
         "return:void"
       ],
       [
@@ -1082,7 +1082,7 @@
       ],
       [
         "Matrix4x3_FromTranslation",
-        "src/Matrix4x3_ApplyInPlaceToTranslation.c",
+        "src/named/arm9/Matrix4x3_ApplyInPlaceToTranslation.c",
         "param:#1 Matrix4x3 *"
       ],
       [
@@ -1583,7 +1583,7 @@
         "src/func_ov090_02132b14.c",
         "src/func_ov094_021361d8.c",
         "src/actors/daMky_c.cpp",
-        "src/Matrix4x3_FromTranslation.c"
+        "src/named/arm9/Matrix4x3_FromTranslation.c"
       ],
       "new_findings": [],
       "healed_findings": [
@@ -1596,7 +1596,7 @@
           "got": "#1 Mtx43 *",
           "want": "#1 Matrix4x3 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_ApplyInPlaceToRotationX.c",
+          "ref_file": "src/named/arm9/Matrix4x3_ApplyInPlaceToRotationX.c",
           "ref_line": 13,
           "ref": "void (Matrix4x3 *, short)"
         },
@@ -1609,7 +1609,7 @@
           "got": "#1 Mtx43 *",
           "want": "#1 Matrix4x3 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_ApplyInPlaceToRotationY.c",
+          "ref_file": "src/named/arm9/Matrix4x3_ApplyInPlaceToRotationY.c",
           "ref_line": 10,
           "ref": "void (Matrix4x3 *, short)"
         },
@@ -1622,7 +1622,7 @@
           "got": "#1 Mtx43 *",
           "want": "#1 Matrix4x3 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_ApplyInPlaceToRotationZ.c",
+          "ref_file": "src/named/arm9/Matrix4x3_ApplyInPlaceToRotationZ.c",
           "ref_line": 13,
           "ref": "void (Matrix4x3 *, short)"
         },
@@ -1635,20 +1635,20 @@
           "got": "#1 Mtx43 *",
           "want": "#1 Matrix4x3 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_ApplyInPlaceToTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_ApplyInPlaceToTranslation.c",
           "ref_line": 12,
           "ref": "void (Matrix4x3 *, int, int, int)"
         },
         {
           "symbol": "Matrix4x3_FromTranslation",
           "kind": "param",
-          "file": "src/Matrix4x3_ApplyInPlaceToTranslation.c",
+          "file": "src/named/arm9/Matrix4x3_ApplyInPlaceToTranslation.c",
           "line": 9,
           "decl": "void (Matrix4x3 *, int, int, int)",
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1661,7 +1661,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1674,7 +1674,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1687,7 +1687,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1700,7 +1700,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1713,7 +1713,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1726,7 +1726,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1739,7 +1739,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1752,7 +1752,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1765,7 +1765,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1778,7 +1778,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1791,7 +1791,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1804,7 +1804,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1817,7 +1817,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1830,7 +1830,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1843,7 +1843,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1856,7 +1856,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1869,7 +1869,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1882,7 +1882,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1895,7 +1895,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1908,7 +1908,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1921,7 +1921,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1934,7 +1934,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1947,7 +1947,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1960,7 +1960,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1973,7 +1973,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1986,7 +1986,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -1999,7 +1999,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -2012,7 +2012,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -2025,7 +2025,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -2038,7 +2038,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -2051,7 +2051,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -2064,7 +2064,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -2077,7 +2077,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -2090,7 +2090,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -2103,7 +2103,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -2116,7 +2116,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -2129,7 +2129,7 @@
           "got": "#1 Matrix4x3 *",
           "want": "#1 Mtx43 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Mtx43 *, int, int, int)"
         },
@@ -2340,7 +2340,7 @@
           "got": "#1 char *",
           "want": "#1 Matrix4x3 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Matrix4x3 *, int, int, int)"
         },
@@ -2353,7 +2353,7 @@
           "got": "#1 Mtx *",
           "want": "#1 Matrix4x3 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Matrix4x3 *, int, int, int)"
         },
@@ -2366,7 +2366,7 @@
           "got": "#1 PknMtx43 *",
           "want": "#1 Matrix4x3 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Matrix4x3 *, int, int, int)"
         },
@@ -2379,7 +2379,7 @@
           "got": "#1 M48 *",
           "want": "#1 Matrix4x3 *",
           "basis": "definition",
-          "ref_file": "src/Matrix4x3_FromTranslation.c",
+          "ref_file": "src/named/arm9/Matrix4x3_FromTranslation.c",
           "ref_line": 2,
           "ref": "void (Matrix4x3 *, int, int, int)"
         }
@@ -2395,7 +2395,7 @@
       "No void-pointer widening, baseline banking, assembly, padding, new volatile or callback wrapper is used."
     ],
     "remaining_debt": "Four pre-existing banked Matrix4x3_FromTranslation pointer-shape disagreements remain in daPkn_c, func_ov002_020ed998, MirrorLuigi Behavior and PyramidLift Render. They are unchanged and excluded from this requested13-caller probe. The ov006 draft remains explicitly nonmatching. Other unrelated existing contracts in the scoped sources are not newly accepted.",
-    "patch_from_input": "--- a/src/_ZN14CutsceneObject8BehaviorEv.cpp\n+++ b/src/_ZN14CutsceneObject8BehaviorEv.cpp\n@@ -1,4 +1,5 @@\n //cpp\n+#include \"common.h\"\n #include \"types.h\"\n // @symbol _ZN14CutsceneObject8BehaviorEv\n /* recovered: named members + shared header, real C++ method, declarations from a shared header */\n@@ -12,19 +13,15 @@\n   s32 y;\n   s32 z;\n } Vec3;\n-typedef struct \n-{\n-  s32 w[12];\n-} Mtx43;\n extern \"C\" {\n extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *c, void *cyl);\n extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *cyl);\n extern void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);\n-extern void Matrix4x3_FromTranslation(Mtx43 *m, s32 x, s32 y, s32 z);\n+extern void Matrix4x3_FromTranslation(Matrix4x3 *m, s32 x, s32 y, s32 z);\n extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z);\n extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, s32 x, s32 y, s32 z);\n }\n-extern Mtx43 data_020a0e68;\n+extern Matrix4x3 data_020a0e68;\n \n int CutsceneObject::Behavior()\n {\n@@ -89,11 +86,11 @@\n   }\n   if ((*((char **) (c + 0xdc))) != 0)\n   {\n-    *((Mtx43 *) ((*((char **) (c + 0xdc))) + 0x1c)) = data_020a0e68;\n+    *((Matrix4x3 *) ((*((char **) (c + 0xdc))) + 0x1c)) = data_020a0e68;\n   }\n   if ((*((char **) (c + 0xe0))) != 0)\n   {\n-    *((Mtx43 *) ((*((char **) (c + 0xe0))) + 0x1c)) = data_020a0e68;\n+    *((Matrix4x3 *) ((*((char **) (c + 0xe0))) + 0x1c)) = data_020a0e68;\n     func_ov002_020f64ac(*((char **) (c + 0xe0)), &data_ov002_0210bc88);\n     func_ov002_020f65ec(*((char **) (c + 0xe0)));\n   }\n--- a/src/actors/daKpa2Bg_c.cpp\n+++ b/src/actors/daKpa2Bg_c.cpp\n@@ -39,9 +39,6 @@\n  * Leftover: _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s stays mangled. dBgW_KcMbg.h\n  *   declares ::Transform, but the definition is still a free extern-C one, so a\n  *   member call would not resolve to it.\n- * Leftover: Matrix4x3_FromTranslation's parameter is spelled `struct Mtx43 *`\n- *   because that is what its definition spells; it is the same 0x30 bytes as\n- *   Matrix4x3. Settling the two is a separate change.\n  * Leftover: g_profile_KOOPA2BG lives outside this TU.\n  */\n \n@@ -49,11 +46,6 @@\n #include \"daKpa2Bg_c.h\"\n #include \"SharedFilePtr.h\"\n \n-/* The translation-unit-local struct src/Matrix4x3_FromTranslation.c defines its\n-   parameter with. Spelled here exactly as the definition spells it so\n-   tools/check_decl_agreement.py sees one interface and not two; it is the same\n-   0x30 bytes as Matrix4x3, which is what the rest of this file uses. */\n-struct Mtx43;\n \n /* --------------------------------------------------------------------------\n  * The one file-scope extern \"C\" region, above the first @symbol marker so no\n@@ -69,7 +61,7 @@\n extern Matrix4x3 data_020a0e68;\n \n int Sound_PlayIfNotActive(int handle, int a, int b, int c);\n-void Matrix4x3_FromTranslation(struct Mtx43 *m, int x, int y, int z);\n+void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);\n void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 ang);\n void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, s16 ang);\n void Vec3_Asr(void *dst, void *src, int shift);\n@@ -165,7 +157,7 @@\n {\n     int pos[4];\n     Vec3_Asr(&pos, self + 0x5c, 3);\n-    Matrix4x3_FromTranslation((struct Mtx43 *)&data_020a0e68, pos[0], pos[1],\n+    Matrix4x3_FromTranslation(&data_020a0e68, pos[0], pos[1],\n                               pos[2]);\n     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16 *)(self + 0x8c));\n     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, *(s16 *)(self + 0x90));\n@@ -177,7 +169,7 @@\n // @symbol func_ov060_02117a64\n void func_ov060_02117a64(char *self)\n {\n-    Matrix4x3_FromTranslation((struct Mtx43 *)&data_020a0e68,\n+    Matrix4x3_FromTranslation(&data_020a0e68,\n                               *(int *)(self + 0x5c), *(int *)(self + 0x60),\n                               *(int *)(self + 0x64));\n     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16 *)(self + 0x8c));\n--- a/src/actors/daSanbo_c.cpp\n+++ b/src/actors/daSanbo_c.cpp\n@@ -98,8 +98,6 @@\n /* shadow namespace 'cstd' */\n namespace cstd { int fdiv(int,int); }\n \n-/* shadow struct 'Mtx43' */\n-struct Mtx43 { Fix12i a[12]; };\n \n /* shadow enum 'Bool' */\n enum Bool { FALSE, TRUE };\n@@ -112,12 +110,12 @@\n extern void _ZN7dCcAc_cC1Ev(void *self);\n extern void _ZN10dBgCh_ActrC1Ev(void *self);\n extern \"C\" void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n-extern \"C\" void Matrix4x3_FromTranslation(struct Mtx43* m, Fix12i x, Fix12i y, Fix12i z);\n+extern \"C\" void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);\n extern \"C\" void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);\n extern \"C\" void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);\n extern \"C\" void Matrix4x3_FromRotationY(void* m, int angle);\n extern \"C\" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j( void* self, void* sm, void* mtx, Fix12i fx, int t, u32 u);\n-extern struct Mtx43 data_020a0e68;\n+extern struct Matrix4x3 data_020a0e68;\n extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, const void*, const void*, int, int);\n extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int, void*);\n extern void func_ov096_02135800(char* c);\n@@ -764,7 +762,7 @@\n             y2 = (-((daSanbo_c*)c)->OnAimedAtWithEgg()) >> 3;\n             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);\n \n-            *(struct Mtx43*)(c + 0xf0) = data_020a0e68;\n+            *(struct Matrix4x3*)(c + 0xf0) = data_020a0e68;\n \n             *(int*)(c + 0x360) = *(int*)(c + 0x5c) >> 3;\n             *(int*)(c + 0x364) = *(int*)(c + 0x60) >> 3;\n@@ -830,7 +828,6 @@\n #include \"decl_common.h\"\n /* recovered: shared common types */\n #include \"common.h\"\n-typedef short s16;\n typedef long long s64;\n \n \n--- a/src/func_ov002_020bafc0.c\n+++ b/src/func_ov002_020bafc0.c\n@@ -1,18 +1,12 @@\n // @symbol func_ov002_020bafc0\n /* recovered: shared common types */\n #include \"common.h\"\n-typedef int Fix12i;\n-typedef short s16;\n+extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n+extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);\n+extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);\n+extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(struct Matrix4x3* m, int x, int y, int z);\n \n-\n-struct Mtx43 { Fix12i a[12]; };\n-\n-extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n-extern void Matrix4x3_FromTranslation(struct Mtx43* m, Fix12i x, Fix12i y, Fix12i z);\n-extern void Matrix4x3_ApplyInPlaceToTranslation(struct Mtx43* m, Fix12i x, Fix12i y, Fix12i z);\n-extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(struct Mtx43* m, int x, int y, int z);\n-\n-extern struct Mtx43 data_020a0e68;\n+extern struct Matrix4x3 data_020a0e68;\n \n void func_ov002_020bafc0(char* self){\n     struct Vector3 v;\n@@ -22,5 +16,5 @@\n     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,\n         *(s16*)(self + 0x8c), *(s16*)(self + 0x8e), *(s16*)(self + 0x90));\n     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x8c00, 0);\n-    *(struct Mtx43*)(self + 0xf0) = data_020a0e68;\n+    *(struct Matrix4x3*)(self + 0xf0) = data_020a0e68;\n }\n--- a/src/func_ov002_020f8b24.c\n+++ b/src/func_ov002_020f8b24.c\n@@ -1,17 +1,17 @@\n+#include \"common.h\"\n #include \"types.h\"\n typedef struct { s32 x, y, z; } Vec3;\n-typedef struct { s32 w[12]; } Mtx43;\n \n extern void* _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void* f);\n extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void* f, void* g);\n extern void Vec3_Asr(Vec3* d, Vec3* s, int sh);\n-extern void Matrix4x3_FromTranslation(Mtx43* m, s32 x, s32 y, s32 z);\n+extern void Matrix4x3_FromTranslation(Matrix4x3* m, s32 x, s32 y, s32 z);\n extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* thiz, void* sm, void* mtx, Fix12i f, Fix12i a, u32 b);\n \n extern s32 data_ov002_02100320[];\n extern s32 data_ov002_02100334[];\n extern s32 data_ov002_02100348[];\n-extern Mtx43 data_020a0e68;\n+extern Matrix4x3 data_020a0e68;\n \n void func_ov002_020f8b24(void* arg0)\n {\n@@ -45,7 +45,7 @@\n     }\n     Vec3_Asr(&asr, &v, 3);\n     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);\n-    *(Mtx43*)(c + 0x328) = data_020a0e68;\n+    *(Matrix4x3*)(c + 0x328) = data_020a0e68;\n     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(\n         c, c + 0x300, c + 0x328, 0x28000, 0x64000, 0xf);\n }\n--- a/src/func_ov006_020cf2fc.c\n+++ b/src/func_ov006_020cf2fc.c\n@@ -16,7 +16,6 @@\n   int z;\n } Vec3;\n struct Matrix4x3;\n-struct Mtx43;\n extern struct Matrix4x3 data_020a0e68;\n extern struct Matrix4x3 data_0209b3ec;\n extern unsigned short data_ov006_0212e060[];\n@@ -24,7 +23,7 @@\n extern int data_ov006_0212e0b0[];\n extern void *data_ov006_02140844;\n extern void *data_ov006_02140814;\n-extern void Matrix4x3_FromTranslation(struct Mtx43 *m, int x, int y, int z);\n+extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);\n extern void MulMat4x3Mat4x3(const int *a, const int *b, int *dst);\n extern void Matrix4x3_ApplyInPlaceToScale(struct Matrix4x3 *m, int x, int y, int z);\n extern void func_020553a4(int *m);\n@@ -38,7 +37,7 @@\n   int zero2;\n   int m2[12];\n   int m1[12];\n-  Matrix4x3_FromTranslation((struct Mtx43 *) &data_020a0e68, *((int *) (obj + 8)), *((int *) (obj + 0xc)), *((int *) (obj + 0x10)));\n+  Matrix4x3_FromTranslation(&data_020a0e68, *((int *) (obj + 8)), *((int *) (obj + 0xc)), *((int *) (obj + 0x10)));\n   MulMat4x3Mat4x3((const int *) &data_020a0e68, (const int *) &data_0209b3ec, m1);\n   Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, *((int *) (obj + 0x2c)), *((int *) (obj + 0x30)), *((int *) (obj + 0x34)));\n   MulMat4x3Mat4x3((const int *) &data_020a0e68, (const int *) &data_0209b3ec, m2);\n--- a/src/func_ov060_0211577c.c\n+++ b/src/func_ov060_0211577c.c\n@@ -1,15 +1,14 @@\n-typedef short s16;\n+#include \"common.h\"\n typedef struct Vec3 { int x, y, z; } Vec3;\n-typedef struct Mtx43 { int w[12]; } Mtx43;\n typedef struct dBgCh_Gnd { char filler[0x44]; int clsnY; char rest[0x8]; } dBgCh_Gnd;\n \n extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);\n extern s16 func_02010844(void *unused, void *v, s16 angle);\n extern void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);\n-extern void Matrix4x3_FromTranslation(Mtx43 *m, int x, int y, int z);\n-extern void Matrix4x3_ApplyInPlaceToRotationY(Mtx43 *m, s16 angY);\n-extern void Matrix4x3_ApplyInPlaceToRotationX(Mtx43 *m, s16 angX);\n-extern void Matrix4x3_ApplyInPlaceToRotationZ(Mtx43 *m, s16 angZ);\n+extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);\n+extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);\n+extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 angX);\n+extern void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, s16 angZ);\n extern void _ZN9ModelBase12ApplyOpacityEj(void *self, unsigned int op, int z);\n extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);\n extern void Vec3_LslInPlace(void *v, int sh);\n@@ -19,12 +18,12 @@\n extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *c, void *sm, void *mtx, int rad, int h, unsigned int flags);\n extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *self);\n \n-extern Mtx43 data_020a0e68;\n+extern Matrix4x3 data_020a0e68;\n \n void func_ov060_0211577c(char *c)\n {\n     char pad[8];\n-    Mtx43 saved;\n+    Matrix4x3 saved;\n     Vec3 pos;\n     Vec3 v;\n     Vec3 v2;\n@@ -43,7 +42,7 @@\n     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(s16 *)(c + 0x8e));\n     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16 *)(c + 0x8c));\n     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, *(s16 *)(c + 0x90));\n-    *(Mtx43 *)(c + 0xf0) = data_020a0e68;\n+    *(Matrix4x3 *)(c + 0xf0) = data_020a0e68;\n     _ZN9ModelBase12ApplyOpacityEj(c + 0xd4, (unsigned char)((int)*(unsigned char *)(c + 0x41c) >> 3), 1);\n     saved = data_020a0e68;\n     zero = 0;\n@@ -51,9 +50,9 @@\n     *(int *)(c + 0x3e4) = zero;\n     *(int *)(c + 0x3e8) = zero;\n     MulMat4x3Mat4x3(*(char **)(c + 0xe8) + 0x90, &data_020a0e68, &data_020a0e68);\n-    *(int *)(c + 0x3e0) = data_020a0e68.w[9];\n-    *(int *)(c + 0x3e4) = data_020a0e68.w[10];\n-    *(int *)(c + 0x3e8) = data_020a0e68.w[11];\n+    *(int *)(c + 0x3e0) = data_020a0e68.m[9];\n+    *(int *)(c + 0x3e4) = data_020a0e68.m[10];\n+    *(int *)(c + 0x3e8) = data_020a0e68.m[11];\n     Vec3_LslInPlace(c + 0x3e0, 3);\n     *(int *)(c + 0x3e4) = *(int *)(c + 0x60);\n     *(int *)(c + 0x3d4) = zero;\n@@ -61,9 +60,9 @@\n     *(int *)(c + 0x3dc) = zero;\n     data_020a0e68 = saved;\n     MulMat4x3Mat4x3(*(char **)(c + 0xe8) + 0x120, &data_020a0e68, &data_020a0e68);\n-    *(int *)(c + 0x3d4) = data_020a0e68.w[9];\n-    *(int *)(c + 0x3d8) = data_020a0e68.w[10];\n-    *(int *)(c + 0x3dc) = data_020a0e68.w[11];\n+    *(int *)(c + 0x3d4) = data_020a0e68.m[9];\n+    *(int *)(c + 0x3d8) = data_020a0e68.m[10];\n+    *(int *)(c + 0x3dc) = data_020a0e68.m[11];\n     Vec3_LslInPlace(c + 0x3d4, 3);\n     *(int *)(c + 0x3d8) = *(int *)(c + 0x60);\n     if (*(unsigned char *)(c + 0x426) == 0)\n@@ -80,7 +79,7 @@\n         pos.y = *(int *)(c + 0x60);\n     Vec3_Asr(&v2, &pos, 3);\n     Matrix4x3_FromTranslation(&data_020a0e68, v2.x, v2.y, v2.z);\n-    *(Mtx43 *)(c + 0x330) = data_020a0e68;\n+    *(Matrix4x3 *)(c + 0x330) = data_020a0e68;\n     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x308, c + 0x330, 0x140000, 0x64000, 0xf);\n     _ZN9dBgCh_GndD1Ev(&rc);\n }\n--- a/src/func_ov065_02117994.c\n+++ b/src/func_ov065_02117994.c\n@@ -1,19 +1,13 @@\n // @symbol func_ov065_02117994\n /* recovered: shared common types */\n #include \"common.h\"\n-typedef int Fix12i;\n-typedef short s16;\n-\n-\n-struct Mtx43 { Fix12i a[12]; };\n-\n extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n-extern void Matrix4x3_FromTranslation(struct Mtx43* m, Fix12i x, Fix12i y, Fix12i z);\n+extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);\n extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);\n extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(\n-    void* self, void* sm, struct Mtx43* m, Fix12i fx, int t, unsigned int u);\n+    void* self, void* sm, struct Matrix4x3* m, Fix12i fx, int t, unsigned int u);\n \n-extern struct Mtx43 data_020a0e68;\n+extern struct Matrix4x3 data_020a0e68;\n \n void func_ov065_02117994(char* self){\n     struct Vector3 v;\n@@ -22,15 +16,15 @@\n     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,\n         *(s16*)(self + 0x8c), *(s16*)(self + 0x8e), *(s16*)(self + 0x90));\n     if (*(unsigned char*)(self + 0x43c) == 1) {\n-        *(struct Mtx43*)(self + 0x31c) = data_020a0e68;\n+        *(struct Matrix4x3*)(self + 0x31c) = data_020a0e68;\n     } else {\n-        *(struct Mtx43*)(self + 0x380) = data_020a0e68;\n+        *(struct Matrix4x3*)(self + 0x380) = data_020a0e68;\n     }\n     Matrix4x3_FromTranslation(&data_020a0e68,\n         *(Fix12i*)(self + 0x5c) >> 3,\n         (*(Fix12i*)(self + 0x60) - 0x18000) >> 3,\n         *(Fix12i*)(self + 0x64) >> 3);\n-    *(struct Mtx43*)(self + 0x3f0) = data_020a0e68;\n+    *(struct Matrix4x3*)(self + 0x3f0) = data_020a0e68;\n     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(\n-        self, self + 0x3c8, (struct Mtx43*)(self + 0x3f0), 0x32000, 0x258000, 0xf);\n+        self, self + 0x3c8, (struct Matrix4x3*)(self + 0x3f0), 0x32000, 0x258000, 0xf);\n }\n--- a/src/func_ov079_02124188.c\n+++ b/src/func_ov079_02124188.c\n@@ -1,15 +1,15 @@\n+#include \"common.h\"\n typedef struct { int x, y, z; } Vec3;\n-typedef struct { int m[12]; } Mtx43;\n \n extern void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);\n extern void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);\n-extern void Matrix4x3_FromTranslation(Mtx43 *m, int x, int y, int z);\n+extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);\n extern void Matrix4x3_ApplyInPlaceToRotationY(void *mF, short angY);\n extern void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(\n     void *self, void *sm, void *mtx, int a, int b, int c, unsigned int g);\n \n extern short data_02082214[];\n-extern Mtx43 data_020a0e68;\n+extern Matrix4x3 data_020a0e68;\n \n #define FX12(a,b) (int)(((long long)(a) * (int)(b) + 0x800) >> 12)\n \n@@ -56,7 +56,7 @@\n     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68,\n         (short)(*(short *)(self + 0x8e) + *(short *)(self + 0x3e2)));\n \n-    *(Mtx43 *)(self + 0x36c) = data_020a0e68;\n+    *(Matrix4x3 *)(self + 0x36c) = data_020a0e68;\n \n     if (*(unsigned char *)(self + 0x404) == 0)\n         return;\n--- a/src/func_ov081_021237ec.cpp\n+++ b/src/func_ov081_021237ec.cpp\n@@ -1,21 +1,19 @@\n //cpp\n+#include \"common.h\"\n // func_ov081_021237ec at 0x021237ec\n // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov081).\n-typedef struct { int x, y, z; } Vector3;\n-struct Mtx43 { int m[12]; };\n-\n extern \"C\" {\n void _ZN8dActor_c10PoofDustAtERK7Vector3(void* c, const Vector3& v);\n int _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void* c, Vector3* v, unsigned int n, int f, short s);\n-void Matrix4x3_FromTranslation(struct Mtx43* m, int x, int y, int z);\n-void MulMat4x3Mat4x3(struct Mtx43* dst, struct Mtx43* a, struct Mtx43* b);\n+void Matrix4x3_FromTranslation(struct Matrix4x3* m, int x, int y, int z);\n+void MulMat4x3Mat4x3(const int* a, const int* b, int* dst);\n void SubVec3(Vector3* a, Vector3* b, Vector3* c);\n void Vec3_LslInPlace(Vector3* v, int n);\n void AddVec3(Vector3* a, Vector3* b, Vector3* c);\n void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int x, int y, int z);\n void func_0201267c(int a, void* b);\n void _ZN8dActor_c24KillAndTrackInDeathTableEv(void* c);\n-extern struct Mtx43 data_020a0e68;\n+extern struct Matrix4x3 data_020a0e68;\n }\n \n extern \"C\" void func_ov081_021237ec(char* c)\n@@ -37,7 +35,7 @@\n     _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &b, 3, 0xa000, 0);\n \n     Matrix4x3_FromTranslation(&data_020a0e68, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));\n-    MulMat4x3Mat4x3((struct Mtx43*)(*(char**)(c + 0x124) + 0x30), &data_020a0e68, &data_020a0e68);\n+    MulMat4x3Mat4x3((const int*)(*(char**)(c + 0x124) + 0x30), data_020a0e68.m, data_020a0e68.m);\n \n     t.x = data_020a0e68.m[9];\n     t.y = data_020a0e68.m[10];\n--- a/src/func_ov090_02132b14.c\n+++ b/src/func_ov090_02132b14.c\n@@ -1,18 +1,12 @@\n // @symbol func_ov090_02132b14\n /* recovered: shared common types */\n #include \"common.h\"\n-typedef int Fix12i;\n-typedef short s16;\n+extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n+extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);\n+extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);\n+extern void MulMat4x3Mat4x3(const int* a, const int* b, int* dst);\n \n-\n-struct Mtx43 { Fix12i a[12]; };\n-\n-extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n-extern void Matrix4x3_FromTranslation(struct Mtx43* m, Fix12i x, Fix12i y, Fix12i z);\n-extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);\n-extern void MulMat4x3Mat4x3(struct Mtx43* dst, struct Mtx43* a, struct Mtx43* b);\n-\n-extern struct Mtx43 data_020a0e68;\n+extern struct Matrix4x3 data_020a0e68;\n \n void func_ov090_02132b14(char* self){\n     struct Vector3 v;\n@@ -20,20 +14,20 @@\n     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);\n     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,\n         *(s16*)(self + 0x8c), *(s16*)(self + 0x8e), *(s16*)(self + 0x90));\n-    *(struct Mtx43*)(self + 0x328) = data_020a0e68;\n+    *(struct Matrix4x3*)(self + 0x328) = data_020a0e68;\n     *(int*)(self + 0x39c) = 0;\n     *(int*)(self + 0x3a0) = 0;\n     *(int*)(self + 0x3a4) = 0;\n-    data_020a0e68 = *(struct Mtx43*)(self + 0x328);\n-    MulMat4x3Mat4x3((struct Mtx43*)(*(char**)(self + 0x320) + 0x90),\n-        &data_020a0e68, &data_020a0e68);\n+    data_020a0e68 = *(struct Matrix4x3*)(self + 0x328);\n+    MulMat4x3Mat4x3((const int*)(*(char**)(self + 0x320) + 0x90),\n+        data_020a0e68.m, data_020a0e68.m);\n     {\n         int* p9 = (int*)((unsigned long long)((int)(self) + 0x39c));\n         int* p10 = (int*)((unsigned long long)((int)(self) + 0x3a0));\n         int* p11 = (int*)((unsigned long long)((int)(self) + 0x3a4));\n-        *(int*)(self + 0x39c) = data_020a0e68.a[9];\n-        *(int*)(self + 0x3a0) = data_020a0e68.a[10];\n-        *(int*)(self + 0x3a4) = data_020a0e68.a[11];\n+        *(int*)(self + 0x39c) = data_020a0e68.m[9];\n+        *(int*)(self + 0x3a0) = data_020a0e68.m[10];\n+        *(int*)(self + 0x3a4) = data_020a0e68.m[11];\n         *p9 <<= 3;\n         *p10 <<= 3;\n         *p11 <<= 3;\n--- a/src/func_ov094_021361d8.c\n+++ b/src/func_ov094_021361d8.c\n@@ -1,38 +1,32 @@\n // @symbol func_ov094_021361d8\n /* recovered: shared common types */\n #include \"common.h\"\n-typedef int Fix12i;\n-typedef short s16;\n-\n-\n-struct Mtx43 { Fix12i a[12]; };\n-\n extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n-extern void Matrix4x3_FromTranslation(struct Mtx43* m, Fix12i x, Fix12i y, Fix12i z);\n+extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);\n extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);\n extern void _ZN9ModelBase12ApplyOpacityEj(void* self, unsigned int a, int b);\n-extern void MulMat4x3Mat4x3(struct Mtx43* dst, struct Mtx43* a, struct Mtx43* b);\n+extern void MulMat4x3Mat4x3(const int* a, const int* b, int* dst);\n extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(\n-    void* self, void* sm, struct Mtx43* m, Fix12i fx, int t, unsigned int u);\n+    void* self, void* sm, struct Matrix4x3* m, Fix12i fx, int t, unsigned int u);\n \n-extern struct Mtx43 data_020a0e68;\n+extern struct Matrix4x3 data_020a0e68;\n \n void func_ov094_021361d8(char* self){\n-    struct Mtx43 out;\n+    struct Matrix4x3 out;\n     struct Vector3 v;\n     Vec3_Asr(&v, (struct Vector3*)(self + 0x5c), 3);\n     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);\n     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,\n         *(s16*)(self + 0x8c), *(s16*)(self + 0x8e), *(s16*)(self + 0x90));\n     _ZN9ModelBase12ApplyOpacityEj(self + 0x30c, *(unsigned char*)(self + 0x3e4), 1);\n-    *(struct Mtx43*)(self + 0x328) = data_020a0e68;\n-    MulMat4x3Mat4x3((struct Mtx43*)(*(char**)(self + 0x320) + 0x30),\n-        (struct Mtx43*)(self + 0x328), &out);\n+    *(struct Matrix4x3*)(self + 0x328) = data_020a0e68;\n+    MulMat4x3Mat4x3((const int*)(*(char**)(self + 0x320) + 0x30),\n+        (const int*)(self + 0x328), out.m);\n     Matrix4x3_FromTranslation(&data_020a0e68,\n         *(Fix12i*)(self + 0x5c) >> 3,\n         (*(Fix12i*)(self + 0x60) - 0x38000) >> 3,\n         *(Fix12i*)(self + 0x64) >> 3);\n-    *(struct Mtx43*)(self + 0x398) = data_020a0e68;\n+    *(struct Matrix4x3*)(self + 0x398) = data_020a0e68;\n     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(\n-        self, self + 0x370, (struct Mtx43*)(self + 0x398), 0x64000, 0x320000, 0xf);\n+        self, self + 0x370, (struct Matrix4x3*)(self + 0x398), 0x64000, 0x320000, 0xf);\n }\n--- a/src/actors/daMky_c.cpp\n+++ b/src/actors/daMky_c.cpp\n@@ -90,7 +90,6 @@\n #include \"decl_SaveData.h\"\n #include \"dBgCh_Gnd.h\"\n #include \"dBgCh_Actr.h\"\n-#include \"private/mtx43.h\"\n \n /* ==========================================================================\n  * The eleven state-entry members.\n@@ -1412,9 +1411,9 @@\n     extern void func_ov030_021141a8(char* c, int v);\n     extern int _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);\n     extern short Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);\n-    extern void Matrix4x3_FromTranslation(Mtx43* m, int x, int y, int z);\n-    extern void Matrix4x3_ApplyInPlaceToRotationY(Mtx43* m, short angY);\n-    extern void Matrix4x3_ApplyInPlaceToTranslation(Mtx43* m, int x, int y, int z);\n+    extern void Matrix4x3_FromTranslation(Matrix4x3* m, int x, int y, int z);\n+    extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3* m, short angY);\n+    extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3* m, int x, int y, int z);\n     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msgId, const Vector3* pos, unsigned int d, unsigned int e);\n     extern int func_0201267c(int a, void* b);\n     extern int _ZN6Player12GetTalkStateEv(void* self);\n@@ -1424,7 +1423,7 @@\n     extern unsigned char DecIfAbove0_Byte(unsigned char* p);\n \n     extern void* data_0209f318;\n-    extern Mtx43 data_020a0e68;\n+    extern Matrix4x3 data_020a0e68;\n     extern unsigned char data_0209d684;\n     char *c = (char*)thiz;\n \n@@ -1486,9 +1485,9 @@\n                 Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0, -0x64000);\n \n                 Vector3 msgPos;\n-                msgPos.x = data_020a0e68.a[9];\n-                msgPos.y = data_020a0e68.a[10];\n-                msgPos.z = data_020a0e68.a[11];\n+                msgPos.x = data_020a0e68.t.x;\n+                msgPos.y = data_020a0e68.t.y;\n+                msgPos.z = data_020a0e68.t.z;\n                 msgPos.y = *(int*)(c + 0x60) + 0x64000;\n \n                 if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(c + 0x3a8), c, 0xc0, &msgPos, 0, 2) != 0) {\n@@ -1570,9 +1569,9 @@\n         const void *rot, int areaID, int deathTableID);\n     extern void func_02012790(int arg);\n     extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);\n-    extern void Matrix4x3_FromTranslation(Mtx43 *m, int x, int y, int z);\n-    extern void Matrix4x3_ApplyInPlaceToRotationY(Mtx43 *m, s16 angY);\n-    extern void Matrix4x3_ApplyInPlaceToTranslation(Mtx43 *m, int x, int y, int z);\n+    extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);\n+    extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);\n+    extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int z);\n     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(\n         void *self, void *actor, unsigned int msgId, const Vector3 *pos,\n         unsigned int d, unsigned int e);\n@@ -1586,7 +1585,7 @@\n     extern void _ZN5dCc_c5ClearEv(void *self);\n \n     extern void *data_0209f318;\n-    extern Mtx43 data_020a0e68;\n+    extern Matrix4x3 data_020a0e68;\n     int msg;\n     s16 a = *(s16 *)(*(char **)(c + 0x3a8) + 0x8e);\n     *(s16 *)(c + 0x8e) = a;\n@@ -1652,9 +1651,9 @@\n         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0, -0x64000);\n         {\n             int msgArg = ((int)msg << 16) >> 16;\n-            int my = data_020a0e68.a[10];\n-            int mx = data_020a0e68.a[9];\n-            int mz = data_020a0e68.a[11];\n+            int my = data_020a0e68.t.y;\n+            int mx = data_020a0e68.t.x;\n+            int mz = data_020a0e68.t.z;\n             msgPos.x = mx;\n             msgPos.y = my;\n             msgPos.z = mz;\n--- a/src/Matrix4x3_FromTranslation.c\n+++ b/src/Matrix4x3_FromTranslation.c\n@@ -1,15 +1,15 @@\n-struct Mtx43 { int a[12]; };\n-void Matrix4x3_FromTranslation(struct Mtx43* m, int x, int y, int z) {\n-    m->a[0] = 0x1000;\n-    m->a[1] = 0;\n-    m->a[2] = 0;\n-    m->a[3] = 0;\n-    m->a[4] = 0x1000;\n-    m->a[5] = 0;\n-    m->a[6] = 0;\n-    m->a[7] = 0;\n-    m->a[8] = 0x1000;\n-    m->a[9] = x;\n-    m->a[10] = y;\n-    m->a[11] = z;\n+#include \"common.h\"\n+void Matrix4x3_FromTranslation(Matrix4x3* m, int x, int y, int z) {\n+    m->m[0] = 0x1000;\n+    m->m[1] = 0;\n+    m->m[2] = 0;\n+    m->m[3] = 0;\n+    m->m[4] = 0x1000;\n+    m->m[5] = 0;\n+    m->m[6] = 0;\n+    m->m[7] = 0;\n+    m->m[8] = 0x1000;\n+    m->m[9] = x;\n+    m->m[10] = y;\n+    m->m[11] = z;\n }\n",
+    "patch_from_input": "--- a/src/_ZN14CutsceneObject8BehaviorEv.cpp\n+++ b/src/_ZN14CutsceneObject8BehaviorEv.cpp\n@@ -1,4 +1,5 @@\n //cpp\n+#include \"common.h\"\n #include \"types.h\"\n // @symbol _ZN14CutsceneObject8BehaviorEv\n /* recovered: named members + shared header, real C++ method, declarations from a shared header */\n@@ -12,19 +13,15 @@\n   s32 y;\n   s32 z;\n } Vec3;\n-typedef struct \n-{\n-  s32 w[12];\n-} Mtx43;\n extern \"C\" {\n extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *c, void *cyl);\n extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *cyl);\n extern void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);\n-extern void Matrix4x3_FromTranslation(Mtx43 *m, s32 x, s32 y, s32 z);\n+extern void Matrix4x3_FromTranslation(Matrix4x3 *m, s32 x, s32 y, s32 z);\n extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z);\n extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, s32 x, s32 y, s32 z);\n }\n-extern Mtx43 data_020a0e68;\n+extern Matrix4x3 data_020a0e68;\n \n int CutsceneObject::Behavior()\n {\n@@ -89,11 +86,11 @@\n   }\n   if ((*((char **) (c + 0xdc))) != 0)\n   {\n-    *((Mtx43 *) ((*((char **) (c + 0xdc))) + 0x1c)) = data_020a0e68;\n+    *((Matrix4x3 *) ((*((char **) (c + 0xdc))) + 0x1c)) = data_020a0e68;\n   }\n   if ((*((char **) (c + 0xe0))) != 0)\n   {\n-    *((Mtx43 *) ((*((char **) (c + 0xe0))) + 0x1c)) = data_020a0e68;\n+    *((Matrix4x3 *) ((*((char **) (c + 0xe0))) + 0x1c)) = data_020a0e68;\n     func_ov002_020f64ac(*((char **) (c + 0xe0)), &data_ov002_0210bc88);\n     func_ov002_020f65ec(*((char **) (c + 0xe0)));\n   }\n--- a/src/actors/daKpa2Bg_c.cpp\n+++ b/src/actors/daKpa2Bg_c.cpp\n@@ -39,9 +39,6 @@\n  * Leftover: _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s stays mangled. dBgW_KcMbg.h\n  *   declares ::Transform, but the definition is still a free extern-C one, so a\n  *   member call would not resolve to it.\n- * Leftover: Matrix4x3_FromTranslation's parameter is spelled `struct Mtx43 *`\n- *   because that is what its definition spells; it is the same 0x30 bytes as\n- *   Matrix4x3. Settling the two is a separate change.\n  * Leftover: g_profile_KOOPA2BG lives outside this TU.\n  */\n \n@@ -49,11 +46,6 @@\n #include \"daKpa2Bg_c.h\"\n #include \"SharedFilePtr.h\"\n \n-/* The translation-unit-local struct src/named/arm9/Matrix4x3_FromTranslation.c defines its\n-   parameter with. Spelled here exactly as the definition spells it so\n-   tools/check_decl_agreement.py sees one interface and not two; it is the same\n-   0x30 bytes as Matrix4x3, which is what the rest of this file uses. */\n-struct Mtx43;\n \n /* --------------------------------------------------------------------------\n  * The one file-scope extern \"C\" region, above the first @symbol marker so no\n@@ -69,7 +61,7 @@\n extern Matrix4x3 data_020a0e68;\n \n int Sound_PlayIfNotActive(int handle, int a, int b, int c);\n-void Matrix4x3_FromTranslation(struct Mtx43 *m, int x, int y, int z);\n+void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);\n void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 ang);\n void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, s16 ang);\n void Vec3_Asr(void *dst, void *src, int shift);\n@@ -165,7 +157,7 @@\n {\n     int pos[4];\n     Vec3_Asr(&pos, self + 0x5c, 3);\n-    Matrix4x3_FromTranslation((struct Mtx43 *)&data_020a0e68, pos[0], pos[1],\n+    Matrix4x3_FromTranslation(&data_020a0e68, pos[0], pos[1],\n                               pos[2]);\n     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16 *)(self + 0x8c));\n     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, *(s16 *)(self + 0x90));\n@@ -177,7 +169,7 @@\n // @symbol func_ov060_02117a64\n void func_ov060_02117a64(char *self)\n {\n-    Matrix4x3_FromTranslation((struct Mtx43 *)&data_020a0e68,\n+    Matrix4x3_FromTranslation(&data_020a0e68,\n                               *(int *)(self + 0x5c), *(int *)(self + 0x60),\n                               *(int *)(self + 0x64));\n     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16 *)(self + 0x8c));\n--- a/src/actors/daSanbo_c.cpp\n+++ b/src/actors/daSanbo_c.cpp\n@@ -98,8 +98,6 @@\n /* shadow namespace 'cstd' */\n namespace cstd { int fdiv(int,int); }\n \n-/* shadow struct 'Mtx43' */\n-struct Mtx43 { Fix12i a[12]; };\n \n /* shadow enum 'Bool' */\n enum Bool { FALSE, TRUE };\n@@ -112,12 +110,12 @@\n extern void _ZN7dCcAc_cC1Ev(void *self);\n extern void _ZN10dBgCh_ActrC1Ev(void *self);\n extern \"C\" void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n-extern \"C\" void Matrix4x3_FromTranslation(struct Mtx43* m, Fix12i x, Fix12i y, Fix12i z);\n+extern \"C\" void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);\n extern \"C\" void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);\n extern \"C\" void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);\n extern \"C\" void Matrix4x3_FromRotationY(void* m, int angle);\n extern \"C\" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j( void* self, void* sm, void* mtx, Fix12i fx, int t, u32 u);\n-extern struct Mtx43 data_020a0e68;\n+extern struct Matrix4x3 data_020a0e68;\n extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, const void*, const void*, int, int);\n extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int, void*);\n extern void func_ov096_02135800(char* c);\n@@ -764,7 +762,7 @@\n             y2 = (-((daSanbo_c*)c)->OnAimedAtWithEgg()) >> 3;\n             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);\n \n-            *(struct Mtx43*)(c + 0xf0) = data_020a0e68;\n+            *(struct Matrix4x3*)(c + 0xf0) = data_020a0e68;\n \n             *(int*)(c + 0x360) = *(int*)(c + 0x5c) >> 3;\n             *(int*)(c + 0x364) = *(int*)(c + 0x60) >> 3;\n@@ -830,7 +828,6 @@\n #include \"decl_common.h\"\n /* recovered: shared common types */\n #include \"common.h\"\n-typedef short s16;\n typedef long long s64;\n \n \n--- a/src/func_ov002_020bafc0.c\n+++ b/src/func_ov002_020bafc0.c\n@@ -1,18 +1,12 @@\n // @symbol func_ov002_020bafc0\n /* recovered: shared common types */\n #include \"common.h\"\n-typedef int Fix12i;\n-typedef short s16;\n+extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n+extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);\n+extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);\n+extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(struct Matrix4x3* m, int x, int y, int z);\n \n-\n-struct Mtx43 { Fix12i a[12]; };\n-\n-extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n-extern void Matrix4x3_FromTranslation(struct Mtx43* m, Fix12i x, Fix12i y, Fix12i z);\n-extern void Matrix4x3_ApplyInPlaceToTranslation(struct Mtx43* m, Fix12i x, Fix12i y, Fix12i z);\n-extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(struct Mtx43* m, int x, int y, int z);\n-\n-extern struct Mtx43 data_020a0e68;\n+extern struct Matrix4x3 data_020a0e68;\n \n void func_ov002_020bafc0(char* self){\n     struct Vector3 v;\n@@ -22,5 +16,5 @@\n     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,\n         *(s16*)(self + 0x8c), *(s16*)(self + 0x8e), *(s16*)(self + 0x90));\n     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x8c00, 0);\n-    *(struct Mtx43*)(self + 0xf0) = data_020a0e68;\n+    *(struct Matrix4x3*)(self + 0xf0) = data_020a0e68;\n }\n--- a/src/func_ov002_020f8b24.c\n+++ b/src/func_ov002_020f8b24.c\n@@ -1,17 +1,17 @@\n+#include \"common.h\"\n #include \"types.h\"\n typedef struct { s32 x, y, z; } Vec3;\n-typedef struct { s32 w[12]; } Mtx43;\n \n extern void* _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void* f);\n extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void* f, void* g);\n extern void Vec3_Asr(Vec3* d, Vec3* s, int sh);\n-extern void Matrix4x3_FromTranslation(Mtx43* m, s32 x, s32 y, s32 z);\n+extern void Matrix4x3_FromTranslation(Matrix4x3* m, s32 x, s32 y, s32 z);\n extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* thiz, void* sm, void* mtx, Fix12i f, Fix12i a, u32 b);\n \n extern s32 data_ov002_02100320[];\n extern s32 data_ov002_02100334[];\n extern s32 data_ov002_02100348[];\n-extern Mtx43 data_020a0e68;\n+extern Matrix4x3 data_020a0e68;\n \n void func_ov002_020f8b24(void* arg0)\n {\n@@ -45,7 +45,7 @@\n     }\n     Vec3_Asr(&asr, &v, 3);\n     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);\n-    *(Mtx43*)(c + 0x328) = data_020a0e68;\n+    *(Matrix4x3*)(c + 0x328) = data_020a0e68;\n     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(\n         c, c + 0x300, c + 0x328, 0x28000, 0x64000, 0xf);\n }\n--- a/src/func_ov006_020cf2fc.c\n+++ b/src/func_ov006_020cf2fc.c\n@@ -16,7 +16,6 @@\n   int z;\n } Vec3;\n struct Matrix4x3;\n-struct Mtx43;\n extern struct Matrix4x3 data_020a0e68;\n extern struct Matrix4x3 data_0209b3ec;\n extern unsigned short data_ov006_0212e060[];\n@@ -24,7 +23,7 @@\n extern int data_ov006_0212e0b0[];\n extern void *data_ov006_02140844;\n extern void *data_ov006_02140814;\n-extern void Matrix4x3_FromTranslation(struct Mtx43 *m, int x, int y, int z);\n+extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);\n extern void MulMat4x3Mat4x3(const int *a, const int *b, int *dst);\n extern void Matrix4x3_ApplyInPlaceToScale(struct Matrix4x3 *m, int x, int y, int z);\n extern void func_020553a4(int *m);\n@@ -38,7 +37,7 @@\n   int zero2;\n   int m2[12];\n   int m1[12];\n-  Matrix4x3_FromTranslation((struct Mtx43 *) &data_020a0e68, *((int *) (obj + 8)), *((int *) (obj + 0xc)), *((int *) (obj + 0x10)));\n+  Matrix4x3_FromTranslation(&data_020a0e68, *((int *) (obj + 8)), *((int *) (obj + 0xc)), *((int *) (obj + 0x10)));\n   MulMat4x3Mat4x3((const int *) &data_020a0e68, (const int *) &data_0209b3ec, m1);\n   Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, *((int *) (obj + 0x2c)), *((int *) (obj + 0x30)), *((int *) (obj + 0x34)));\n   MulMat4x3Mat4x3((const int *) &data_020a0e68, (const int *) &data_0209b3ec, m2);\n--- a/src/func_ov060_0211577c.c\n+++ b/src/func_ov060_0211577c.c\n@@ -1,15 +1,14 @@\n-typedef short s16;\n+#include \"common.h\"\n typedef struct Vec3 { int x, y, z; } Vec3;\n-typedef struct Mtx43 { int w[12]; } Mtx43;\n typedef struct dBgCh_Gnd { char filler[0x44]; int clsnY; char rest[0x8]; } dBgCh_Gnd;\n \n extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);\n extern s16 func_02010844(void *unused, void *v, s16 angle);\n extern void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);\n-extern void Matrix4x3_FromTranslation(Mtx43 *m, int x, int y, int z);\n-extern void Matrix4x3_ApplyInPlaceToRotationY(Mtx43 *m, s16 angY);\n-extern void Matrix4x3_ApplyInPlaceToRotationX(Mtx43 *m, s16 angX);\n-extern void Matrix4x3_ApplyInPlaceToRotationZ(Mtx43 *m, s16 angZ);\n+extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);\n+extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);\n+extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 angX);\n+extern void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, s16 angZ);\n extern void _ZN9ModelBase12ApplyOpacityEj(void *self, unsigned int op, int z);\n extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);\n extern void Vec3_LslInPlace(void *v, int sh);\n@@ -19,12 +18,12 @@\n extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *c, void *sm, void *mtx, int rad, int h, unsigned int flags);\n extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *self);\n \n-extern Mtx43 data_020a0e68;\n+extern Matrix4x3 data_020a0e68;\n \n void func_ov060_0211577c(char *c)\n {\n     char pad[8];\n-    Mtx43 saved;\n+    Matrix4x3 saved;\n     Vec3 pos;\n     Vec3 v;\n     Vec3 v2;\n@@ -43,7 +42,7 @@\n     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(s16 *)(c + 0x8e));\n     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16 *)(c + 0x8c));\n     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, *(s16 *)(c + 0x90));\n-    *(Mtx43 *)(c + 0xf0) = data_020a0e68;\n+    *(Matrix4x3 *)(c + 0xf0) = data_020a0e68;\n     _ZN9ModelBase12ApplyOpacityEj(c + 0xd4, (unsigned char)((int)*(unsigned char *)(c + 0x41c) >> 3), 1);\n     saved = data_020a0e68;\n     zero = 0;\n@@ -51,9 +50,9 @@\n     *(int *)(c + 0x3e4) = zero;\n     *(int *)(c + 0x3e8) = zero;\n     MulMat4x3Mat4x3(*(char **)(c + 0xe8) + 0x90, &data_020a0e68, &data_020a0e68);\n-    *(int *)(c + 0x3e0) = data_020a0e68.w[9];\n-    *(int *)(c + 0x3e4) = data_020a0e68.w[10];\n-    *(int *)(c + 0x3e8) = data_020a0e68.w[11];\n+    *(int *)(c + 0x3e0) = data_020a0e68.m[9];\n+    *(int *)(c + 0x3e4) = data_020a0e68.m[10];\n+    *(int *)(c + 0x3e8) = data_020a0e68.m[11];\n     Vec3_LslInPlace(c + 0x3e0, 3);\n     *(int *)(c + 0x3e4) = *(int *)(c + 0x60);\n     *(int *)(c + 0x3d4) = zero;\n@@ -61,9 +60,9 @@\n     *(int *)(c + 0x3dc) = zero;\n     data_020a0e68 = saved;\n     MulMat4x3Mat4x3(*(char **)(c + 0xe8) + 0x120, &data_020a0e68, &data_020a0e68);\n-    *(int *)(c + 0x3d4) = data_020a0e68.w[9];\n-    *(int *)(c + 0x3d8) = data_020a0e68.w[10];\n-    *(int *)(c + 0x3dc) = data_020a0e68.w[11];\n+    *(int *)(c + 0x3d4) = data_020a0e68.m[9];\n+    *(int *)(c + 0x3d8) = data_020a0e68.m[10];\n+    *(int *)(c + 0x3dc) = data_020a0e68.m[11];\n     Vec3_LslInPlace(c + 0x3d4, 3);\n     *(int *)(c + 0x3d8) = *(int *)(c + 0x60);\n     if (*(unsigned char *)(c + 0x426) == 0)\n@@ -80,7 +79,7 @@\n         pos.y = *(int *)(c + 0x60);\n     Vec3_Asr(&v2, &pos, 3);\n     Matrix4x3_FromTranslation(&data_020a0e68, v2.x, v2.y, v2.z);\n-    *(Mtx43 *)(c + 0x330) = data_020a0e68;\n+    *(Matrix4x3 *)(c + 0x330) = data_020a0e68;\n     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x308, c + 0x330, 0x140000, 0x64000, 0xf);\n     _ZN9dBgCh_GndD1Ev(&rc);\n }\n--- a/src/func_ov065_02117994.c\n+++ b/src/func_ov065_02117994.c\n@@ -1,19 +1,13 @@\n // @symbol func_ov065_02117994\n /* recovered: shared common types */\n #include \"common.h\"\n-typedef int Fix12i;\n-typedef short s16;\n-\n-\n-struct Mtx43 { Fix12i a[12]; };\n-\n extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n-extern void Matrix4x3_FromTranslation(struct Mtx43* m, Fix12i x, Fix12i y, Fix12i z);\n+extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);\n extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);\n extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(\n-    void* self, void* sm, struct Mtx43* m, Fix12i fx, int t, unsigned int u);\n+    void* self, void* sm, struct Matrix4x3* m, Fix12i fx, int t, unsigned int u);\n \n-extern struct Mtx43 data_020a0e68;\n+extern struct Matrix4x3 data_020a0e68;\n \n void func_ov065_02117994(char* self){\n     struct Vector3 v;\n@@ -22,15 +16,15 @@\n     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,\n         *(s16*)(self + 0x8c), *(s16*)(self + 0x8e), *(s16*)(self + 0x90));\n     if (*(unsigned char*)(self + 0x43c) == 1) {\n-        *(struct Mtx43*)(self + 0x31c) = data_020a0e68;\n+        *(struct Matrix4x3*)(self + 0x31c) = data_020a0e68;\n     } else {\n-        *(struct Mtx43*)(self + 0x380) = data_020a0e68;\n+        *(struct Matrix4x3*)(self + 0x380) = data_020a0e68;\n     }\n     Matrix4x3_FromTranslation(&data_020a0e68,\n         *(Fix12i*)(self + 0x5c) >> 3,\n         (*(Fix12i*)(self + 0x60) - 0x18000) >> 3,\n         *(Fix12i*)(self + 0x64) >> 3);\n-    *(struct Mtx43*)(self + 0x3f0) = data_020a0e68;\n+    *(struct Matrix4x3*)(self + 0x3f0) = data_020a0e68;\n     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(\n-        self, self + 0x3c8, (struct Mtx43*)(self + 0x3f0), 0x32000, 0x258000, 0xf);\n+        self, self + 0x3c8, (struct Matrix4x3*)(self + 0x3f0), 0x32000, 0x258000, 0xf);\n }\n--- a/src/func_ov079_02124188.c\n+++ b/src/func_ov079_02124188.c\n@@ -1,15 +1,15 @@\n+#include \"common.h\"\n typedef struct { int x, y, z; } Vec3;\n-typedef struct { int m[12]; } Mtx43;\n \n extern void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);\n extern void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);\n-extern void Matrix4x3_FromTranslation(Mtx43 *m, int x, int y, int z);\n+extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);\n extern void Matrix4x3_ApplyInPlaceToRotationY(void *mF, short angY);\n extern void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(\n     void *self, void *sm, void *mtx, int a, int b, int c, unsigned int g);\n \n extern short data_02082214[];\n-extern Mtx43 data_020a0e68;\n+extern Matrix4x3 data_020a0e68;\n \n #define FX12(a,b) (int)(((long long)(a) * (int)(b) + 0x800) >> 12)\n \n@@ -56,7 +56,7 @@\n     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68,\n         (short)(*(short *)(self + 0x8e) + *(short *)(self + 0x3e2)));\n \n-    *(Mtx43 *)(self + 0x36c) = data_020a0e68;\n+    *(Matrix4x3 *)(self + 0x36c) = data_020a0e68;\n \n     if (*(unsigned char *)(self + 0x404) == 0)\n         return;\n--- a/src/func_ov081_021237ec.cpp\n+++ b/src/func_ov081_021237ec.cpp\n@@ -1,21 +1,19 @@\n //cpp\n+#include \"common.h\"\n // func_ov081_021237ec at 0x021237ec\n // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov081).\n-typedef struct { int x, y, z; } Vector3;\n-struct Mtx43 { int m[12]; };\n-\n extern \"C\" {\n void _ZN8dActor_c10PoofDustAtERK7Vector3(void* c, const Vector3& v);\n int _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void* c, Vector3* v, unsigned int n, int f, short s);\n-void Matrix4x3_FromTranslation(struct Mtx43* m, int x, int y, int z);\n-void MulMat4x3Mat4x3(struct Mtx43* dst, struct Mtx43* a, struct Mtx43* b);\n+void Matrix4x3_FromTranslation(struct Matrix4x3* m, int x, int y, int z);\n+void MulMat4x3Mat4x3(const int* a, const int* b, int* dst);\n void SubVec3(Vector3* a, Vector3* b, Vector3* c);\n void Vec3_LslInPlace(Vector3* v, int n);\n void AddVec3(Vector3* a, Vector3* b, Vector3* c);\n void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int x, int y, int z);\n void func_0201267c(int a, void* b);\n void _ZN8dActor_c24KillAndTrackInDeathTableEv(void* c);\n-extern struct Mtx43 data_020a0e68;\n+extern struct Matrix4x3 data_020a0e68;\n }\n \n extern \"C\" void func_ov081_021237ec(char* c)\n@@ -37,7 +35,7 @@\n     _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &b, 3, 0xa000, 0);\n \n     Matrix4x3_FromTranslation(&data_020a0e68, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));\n-    MulMat4x3Mat4x3((struct Mtx43*)(*(char**)(c + 0x124) + 0x30), &data_020a0e68, &data_020a0e68);\n+    MulMat4x3Mat4x3((const int*)(*(char**)(c + 0x124) + 0x30), data_020a0e68.m, data_020a0e68.m);\n \n     t.x = data_020a0e68.m[9];\n     t.y = data_020a0e68.m[10];\n--- a/src/func_ov090_02132b14.c\n+++ b/src/func_ov090_02132b14.c\n@@ -1,18 +1,12 @@\n // @symbol func_ov090_02132b14\n /* recovered: shared common types */\n #include \"common.h\"\n-typedef int Fix12i;\n-typedef short s16;\n+extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n+extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);\n+extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);\n+extern void MulMat4x3Mat4x3(const int* a, const int* b, int* dst);\n \n-\n-struct Mtx43 { Fix12i a[12]; };\n-\n-extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n-extern void Matrix4x3_FromTranslation(struct Mtx43* m, Fix12i x, Fix12i y, Fix12i z);\n-extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);\n-extern void MulMat4x3Mat4x3(struct Mtx43* dst, struct Mtx43* a, struct Mtx43* b);\n-\n-extern struct Mtx43 data_020a0e68;\n+extern struct Matrix4x3 data_020a0e68;\n \n void func_ov090_02132b14(char* self){\n     struct Vector3 v;\n@@ -20,20 +14,20 @@\n     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);\n     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,\n         *(s16*)(self + 0x8c), *(s16*)(self + 0x8e), *(s16*)(self + 0x90));\n-    *(struct Mtx43*)(self + 0x328) = data_020a0e68;\n+    *(struct Matrix4x3*)(self + 0x328) = data_020a0e68;\n     *(int*)(self + 0x39c) = 0;\n     *(int*)(self + 0x3a0) = 0;\n     *(int*)(self + 0x3a4) = 0;\n-    data_020a0e68 = *(struct Mtx43*)(self + 0x328);\n-    MulMat4x3Mat4x3((struct Mtx43*)(*(char**)(self + 0x320) + 0x90),\n-        &data_020a0e68, &data_020a0e68);\n+    data_020a0e68 = *(struct Matrix4x3*)(self + 0x328);\n+    MulMat4x3Mat4x3((const int*)(*(char**)(self + 0x320) + 0x90),\n+        data_020a0e68.m, data_020a0e68.m);\n     {\n         int* p9 = (int*)((unsigned long long)((int)(self) + 0x39c));\n         int* p10 = (int*)((unsigned long long)((int)(self) + 0x3a0));\n         int* p11 = (int*)((unsigned long long)((int)(self) + 0x3a4));\n-        *(int*)(self + 0x39c) = data_020a0e68.a[9];\n-        *(int*)(self + 0x3a0) = data_020a0e68.a[10];\n-        *(int*)(self + 0x3a4) = data_020a0e68.a[11];\n+        *(int*)(self + 0x39c) = data_020a0e68.m[9];\n+        *(int*)(self + 0x3a0) = data_020a0e68.m[10];\n+        *(int*)(self + 0x3a4) = data_020a0e68.m[11];\n         *p9 <<= 3;\n         *p10 <<= 3;\n         *p11 <<= 3;\n--- a/src/func_ov094_021361d8.c\n+++ b/src/func_ov094_021361d8.c\n@@ -1,38 +1,32 @@\n // @symbol func_ov094_021361d8\n /* recovered: shared common types */\n #include \"common.h\"\n-typedef int Fix12i;\n-typedef short s16;\n-\n-\n-struct Mtx43 { Fix12i a[12]; };\n-\n extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);\n-extern void Matrix4x3_FromTranslation(struct Mtx43* m, Fix12i x, Fix12i y, Fix12i z);\n+extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);\n extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);\n extern void _ZN9ModelBase12ApplyOpacityEj(void* self, unsigned int a, int b);\n-extern void MulMat4x3Mat4x3(struct Mtx43* dst, struct Mtx43* a, struct Mtx43* b);\n+extern void MulMat4x3Mat4x3(const int* a, const int* b, int* dst);\n extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(\n-    void* self, void* sm, struct Mtx43* m, Fix12i fx, int t, unsigned int u);\n+    void* self, void* sm, struct Matrix4x3* m, Fix12i fx, int t, unsigned int u);\n \n-extern struct Mtx43 data_020a0e68;\n+extern struct Matrix4x3 data_020a0e68;\n \n void func_ov094_021361d8(char* self){\n-    struct Mtx43 out;\n+    struct Matrix4x3 out;\n     struct Vector3 v;\n     Vec3_Asr(&v, (struct Vector3*)(self + 0x5c), 3);\n     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);\n     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,\n         *(s16*)(self + 0x8c), *(s16*)(self + 0x8e), *(s16*)(self + 0x90));\n     _ZN9ModelBase12ApplyOpacityEj(self + 0x30c, *(unsigned char*)(self + 0x3e4), 1);\n-    *(struct Mtx43*)(self + 0x328) = data_020a0e68;\n-    MulMat4x3Mat4x3((struct Mtx43*)(*(char**)(self + 0x320) + 0x30),\n-        (struct Mtx43*)(self + 0x328), &out);\n+    *(struct Matrix4x3*)(self + 0x328) = data_020a0e68;\n+    MulMat4x3Mat4x3((const int*)(*(char**)(self + 0x320) + 0x30),\n+        (const int*)(self + 0x328), out.m);\n     Matrix4x3_FromTranslation(&data_020a0e68,\n         *(Fix12i*)(self + 0x5c) >> 3,\n         (*(Fix12i*)(self + 0x60) - 0x38000) >> 3,\n         *(Fix12i*)(self + 0x64) >> 3);\n-    *(struct Mtx43*)(self + 0x398) = data_020a0e68;\n+    *(struct Matrix4x3*)(self + 0x398) = data_020a0e68;\n     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(\n-        self, self + 0x370, (struct Mtx43*)(self + 0x398), 0x64000, 0x320000, 0xf);\n+        self, self + 0x370, (struct Matrix4x3*)(self + 0x398), 0x64000, 0x320000, 0xf);\n }\n--- a/src/actors/daMky_c.cpp\n+++ b/src/actors/daMky_c.cpp\n@@ -90,7 +90,6 @@\n #include \"decl_SaveData.h\"\n #include \"dBgCh_Gnd.h\"\n #include \"dBgCh_Actr.h\"\n-#include \"private/mtx43.h\"\n \n /* ==========================================================================\n  * The eleven state-entry members.\n@@ -1412,9 +1411,9 @@\n     extern void func_ov030_021141a8(char* c, int v);\n     extern int _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);\n     extern short Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);\n-    extern void Matrix4x3_FromTranslation(Mtx43* m, int x, int y, int z);\n-    extern void Matrix4x3_ApplyInPlaceToRotationY(Mtx43* m, short angY);\n-    extern void Matrix4x3_ApplyInPlaceToTranslation(Mtx43* m, int x, int y, int z);\n+    extern void Matrix4x3_FromTranslation(Matrix4x3* m, int x, int y, int z);\n+    extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3* m, short angY);\n+    extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3* m, int x, int y, int z);\n     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msgId, const Vector3* pos, unsigned int d, unsigned int e);\n     extern int func_0201267c(int a, void* b);\n     extern int _ZN6Player12GetTalkStateEv(void* self);\n@@ -1424,7 +1423,7 @@\n     extern unsigned char DecIfAbove0_Byte(unsigned char* p);\n \n     extern void* data_0209f318;\n-    extern Mtx43 data_020a0e68;\n+    extern Matrix4x3 data_020a0e68;\n     extern unsigned char data_0209d684;\n     char *c = (char*)thiz;\n \n@@ -1486,9 +1485,9 @@\n                 Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0, -0x64000);\n \n                 Vector3 msgPos;\n-                msgPos.x = data_020a0e68.a[9];\n-                msgPos.y = data_020a0e68.a[10];\n-                msgPos.z = data_020a0e68.a[11];\n+                msgPos.x = data_020a0e68.t.x;\n+                msgPos.y = data_020a0e68.t.y;\n+                msgPos.z = data_020a0e68.t.z;\n                 msgPos.y = *(int*)(c + 0x60) + 0x64000;\n \n                 if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(c + 0x3a8), c, 0xc0, &msgPos, 0, 2) != 0) {\n@@ -1570,9 +1569,9 @@\n         const void *rot, int areaID, int deathTableID);\n     extern void func_02012790(int arg);\n     extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);\n-    extern void Matrix4x3_FromTranslation(Mtx43 *m, int x, int y, int z);\n-    extern void Matrix4x3_ApplyInPlaceToRotationY(Mtx43 *m, s16 angY);\n-    extern void Matrix4x3_ApplyInPlaceToTranslation(Mtx43 *m, int x, int y, int z);\n+    extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);\n+    extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);\n+    extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int z);\n     extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(\n         void *self, void *actor, unsigned int msgId, const Vector3 *pos,\n         unsigned int d, unsigned int e);\n@@ -1586,7 +1585,7 @@\n     extern void _ZN5dCc_c5ClearEv(void *self);\n \n     extern void *data_0209f318;\n-    extern Mtx43 data_020a0e68;\n+    extern Matrix4x3 data_020a0e68;\n     int msg;\n     s16 a = *(s16 *)(*(char **)(c + 0x3a8) + 0x8e);\n     *(s16 *)(c + 0x8e) = a;\n@@ -1652,9 +1651,9 @@\n         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0, -0x64000);\n         {\n             int msgArg = ((int)msg << 16) >> 16;\n-            int my = data_020a0e68.a[10];\n-            int mx = data_020a0e68.a[9];\n-            int mz = data_020a0e68.a[11];\n+            int my = data_020a0e68.t.y;\n+            int mx = data_020a0e68.t.x;\n+            int mz = data_020a0e68.t.z;\n             msgPos.x = mx;\n             msgPos.y = my;\n             msgPos.z = mz;\n--- a/src/named/arm9/Matrix4x3_FromTranslation.c\n+++ b/src/named/arm9/Matrix4x3_FromTranslation.c\n@@ -1,15 +1,15 @@\n-struct Mtx43 { int a[12]; };\n-void Matrix4x3_FromTranslation(struct Mtx43* m, int x, int y, int z) {\n-    m->a[0] = 0x1000;\n-    m->a[1] = 0;\n-    m->a[2] = 0;\n-    m->a[3] = 0;\n-    m->a[4] = 0x1000;\n-    m->a[5] = 0;\n-    m->a[6] = 0;\n-    m->a[7] = 0;\n-    m->a[8] = 0x1000;\n-    m->a[9] = x;\n-    m->a[10] = y;\n-    m->a[11] = z;\n+#include \"common.h\"\n+void Matrix4x3_FromTranslation(Matrix4x3* m, int x, int y, int z) {\n+    m->m[0] = 0x1000;\n+    m->m[1] = 0;\n+    m->m[2] = 0;\n+    m->m[3] = 0;\n+    m->m[4] = 0x1000;\n+    m->m[5] = 0;\n+    m->m[6] = 0;\n+    m->m[7] = 0;\n+    m->m[8] = 0x1000;\n+    m->m[9] = x;\n+    m->m[10] = y;\n+    m->m[11] = z;\n }\n",
     "caller_proofs": [
       {
         "path": "src/_ZN14CutsceneObject8BehaviorEv.cpp",
@@ -8685,14 +8685,14 @@
       "totalRecords": 6182,
       "differing": [
         {
-          "src": "src/_ZN10dCcAcPos_cD0Ev.cpp",
+          "src": "src/named/arm9/_ZN10dCcAcPos_cD0Ev.cpp",
           "symbol": "_ZTV10dCcAcPos_c",
           "module": "arm9",
           "addr": 34137860,
           "differingBytes": 4
         },
         {
-          "src": "src/_ZN10dCcAcPos_cD1Ev.cpp",
+          "src": "src/named/arm9/_ZN10dCcAcPos_cD1Ev.cpp",
           "symbol": "_ZTV10dCcAcPos_c",
           "module": "arm9",
           "addr": 34137860,
@@ -8727,14 +8727,14 @@
           "differingBytes": 8
         },
         {
-          "src": "src/_ZThn80_N8daDemo_c10anmModel_cD0Ev.cpp",
+          "src": "src/named/ov002/_ZThn80_N8daDemo_c10anmModel_cD0Ev.cpp",
           "symbol": "_ZTIN8daDemo_c10anmModel_cE",
           "module": "ov002",
           "addr": 34650812,
           "differingBytes": 8
         },
         {
-          "src": "src/_ZThn80_N8daDemo_c10anmModel_cD1Ev.cpp",
+          "src": "src/named/ov002/_ZThn80_N8daDemo_c10anmModel_cD1Ev.cpp",
           "symbol": "_ZTIN8daDemo_c10anmModel_cE",
           "module": "ov002",
           "addr": 34650812,
@@ -8744,7 +8744,7 @@
     },
     "strict_relocations": [
       {
-        "file": "src/Matrix4x3_FromTranslation.c",
+        "file": "src/named/arm9/Matrix4x3_FromTranslation.c",
         "name": "Matrix4x3_FromTranslation",
         "module": "arm9",
         "addr": "0x203bf44",
@@ -12107,7 +12107,7 @@
           "blindWords": 0,
           "verdict": "DIFFERS",
           "differingBytes": 4,
-          "src": "src/_ZN10dCcAcPos_cD0Ev.cpp"
+          "src": "src/named/arm9/_ZN10dCcAcPos_cD0Ev.cpp"
         },
         {
           "symbol": "_ZTV10dCcAcPos_c",
@@ -12119,7 +12119,7 @@
           "blindWords": 0,
           "verdict": "DIFFERS",
           "differingBytes": 4,
-          "src": "src/_ZN10dCcAcPos_cD1Ev.cpp"
+          "src": "src/named/arm9/_ZN10dCcAcPos_cD1Ev.cpp"
         },
         {
           "symbol": "_ZTIN8daDemo_c10anmModel_cE",
@@ -12179,7 +12179,7 @@
           "blindWords": 2,
           "verdict": "DIFFERS",
           "differingBytes": 8,
-          "src": "src/_ZThn80_N8daDemo_c10anmModel_cD0Ev.cpp"
+          "src": "src/named/ov002/_ZThn80_N8daDemo_c10anmModel_cD0Ev.cpp"
         },
         {
           "symbol": "_ZTIN8daDemo_c10anmModel_cE",
@@ -12191,7 +12191,7 @@
           "blindWords": 2,
           "verdict": "DIFFERS",
           "differingBytes": 8,
-          "src": "src/_ZThn80_N8daDemo_c10anmModel_cD1Ev.cpp"
+          "src": "src/named/ov002/_ZThn80_N8daDemo_c10anmModel_cD1Ev.cpp"
         }
       ],
       "new_symbol_errors": [],

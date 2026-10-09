@@ -92,7 +92,7 @@ class ProgressPolicy(unittest.TestCase):
         self.assertEqual(done_b, 0x10 + 0x100)
 
     def test_a_source_filed_under_an_alias_name_is_found_and_counted(self):
-        """src/_dmul.c decompiles the bytes the symbol table calls func_01ff8708, and a
+        """src/named/arm9/_dmul.c decompiles the bytes the symbol table calls func_01ff8708, and a
         lookup by the sized record's own name finds nothing. Four byte-exact ITCM
         primitives read as never attempted for that reason alone. Same fallback as
         chaos_db_ci, tested the same way, so the two generators cannot disagree."""

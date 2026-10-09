@@ -1810,7 +1810,7 @@ extern void func_0203d630(int*, int);
 extern void func_0203d930(void);
 extern void func_0203dafc(int);
 /* 0x020440e8 is NOT `func_020440e8`. config/arm9/symbols.txt:1842 exports it as
-   _ZN11fLiNdBaPr_cD1Ev, and src/_ZN11fLiNdBaPr_cD1Ev.cpp is its source. The row
+   _ZN11fLiNdBaPr_cD1Ev, and src/named/arm9/_ZN11fLiNdBaPr_cD1Ev.cpp is its source. The row
    that used to sit here declared a name no module exports; anything that called
    it compiled and byte-matched and then failed the ROM link. Removed rather than
    corrected: fLiNdBaPr_c is a real class, so callers should include
