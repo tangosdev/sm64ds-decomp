@@ -490,6 +490,8 @@
     "src/_ZN16daObjKaitendai_cD0Ev.cpp": "tangosdev",
     "src/_ZN16daObjKaitendai_cD1Ev.c": "tangosdev",
     "src/_ZN16daObjKaitendai_cD1Ev.cpp": "tangosdev",
+    "src/actors/daObjKaitendai_c.cpp#_ZN16daObjKaitendai_cD0Ev": "tangosdev",
+    "src/actors/daObjKaitendai_c.cpp#_ZN16daObjKaitendai_cD1Ev": "tangosdev",
     "src/actors/daObjKaitendai_c.cpp#func_ov002_020b66a8": "tangosdev",
     "src/actors/daObjKaitendai_c.cpp#_ZN16daObjKaitendai_c6RenderEv": "tangosdev",
     "src/actors/daObjKaitendai_c.cpp#_ZN16daObjKaitendai_c8BehaviorEv": "andrewboudreau",

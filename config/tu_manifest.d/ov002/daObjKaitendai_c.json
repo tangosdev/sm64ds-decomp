@@ -16,62 +16,73 @@
     "RTTI edge: ov002:0x021091ac _ZTI16daObjKaitendai_c -> __si_class_type_info, _ZTS '16daObjKaitendai_c' at 0x021091b8, base ov002:0x021089ec _ZTI10dBgActor_c",
     "vtable ov002 storage 0x021091cc, address point 0x021091d4, 32 slots (0x88) ending at 0x02109254, where _ZTI13daObjKuruma_c opens the next class's run -- so the data run 0x021091ac..0x02109254 is closed by this class with nothing between. Overrides exactly slots 6 (Behavior), 9 (Render), 16 (D1), 17 (D0); slots 0 (InitResources) and 3 (CleanupResources) are bare zero words -- the class is abstract, which is why neither func_ov002_ helper occupies a slot and why both are reached by an ordinary call from each leaf instead.",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "THE DESTRUCTOR PAIR IS DELIBERATELY EXCLUDED FROM THE LICENSED RANGE, so the licensed run is 0x020b66a8..0x020b6814 (4 functions) inside the 0x020b660c..0x020b6814 object the evidence above establishes. The cartridge places _ZN16daObjKaitendai_cD0Ev at 0x020b660c BELOW _ZN16daObjKaitendai_cD1Ev at 0x020b6664. Measured here with mwccarm 2004/b56 on this TU, four source forms, one compile each, reading the object's .text section order: (1) default deferred codegen with the members in reverse-ROM source order emits [D1, D0, func_020b66a8, Render, Behavior, func_020b676c]; (2) `#pragma defer_codegen off` before the members emits [func_020b676c, Behavior, Render, func_020b66a8, D1, D0]; (3) the same pragma placed AFTER the members has no effect at all and reproduces (1) exactly; (4) the pragma plus the whole file rewritten in ROM-ASCENDING order emits [func_020b66a8, Render, Behavior, func_020b676c, D1, D0]. The pragma moves the pair between the head and the tail of the object and reverses the four real members, but the PAIR'S INTERNAL ORDER IS D1-THEN-D0 IN ALL FOUR. No arrangement of source text available to an inline-in-class destructor emits D0 first.",
-    "THE ONE FORM THAT WOULD EMIT D0 FIRST IS REFUTED BY THE CARTRIDGE. An out-of-line destructor definition emits D2, D0, D1 -- a D2 the ROM never carried -- and it is ruled out independently of that: the tree-wide relocation census finds _ZN16daObjKaitendai_cD0Ev (0x020b660c) named by EXACTLY ONE word in the image, ov002:0x02109218, and _ZN16daObjKaitendai_cD1Ev (0x020b6664) by exactly one, ov002:0x02109214. Those two words are slots 17 and 16 of _ZTV16daObjKaitendai_c (address point 0x021091d4; 0x02109214 - 0x021091d4 = 0x40 = slot 16). No instruction anywhere in the ROM calls either destructor, and all five descendants inline this destructor's vptr store instead. An out-of-line definition here would make those five emit a `bl` the cartridge does not have and break their already-matched TUs. This is the same disposition already taken by ov002/daObjFloatBoard_c, whose destructor pair sits in the identical D0-below-D1 arrangement."
+    "HISTORY, SUPERSEDED BY THE DESTRUCTOR FOLD (last boundary_evidence entry): THE DESTRUCTOR PAIR IS DELIBERATELY EXCLUDED FROM THE LICENSED RANGE, so the licensed run is 0x020b66a8..0x020b6814 (4 functions) inside the 0x020b660c..0x020b6814 object the evidence above establishes. The cartridge places _ZN16daObjKaitendai_cD0Ev at 0x020b660c BELOW _ZN16daObjKaitendai_cD1Ev at 0x020b6664. Measured here with mwccarm 2004/b56 on this TU, four source forms, one compile each, reading the object's .text section order: (1) default deferred codegen with the members in reverse-ROM source order emits [D1, D0, func_020b66a8, Render, Behavior, func_020b676c]; (2) `#pragma defer_codegen off` before the members emits [func_020b676c, Behavior, Render, func_020b66a8, D1, D0]; (3) the same pragma placed AFTER the members has no effect at all and reproduces (1) exactly; (4) the pragma plus the whole file rewritten in ROM-ASCENDING order emits [func_020b66a8, Render, Behavior, func_020b676c, D1, D0]. The pragma moves the pair between the head and the tail of the object and reverses the four real members, but the PAIR'S INTERNAL ORDER IS D1-THEN-D0 IN ALL FOUR. No arrangement of source text available to an inline-in-class destructor emits D0 first.",
+    "THE ONE FORM THAT WOULD EMIT D0 FIRST IS REFUTED BY THE CARTRIDGE. An out-of-line destructor definition emits D2, D0, D1 -- a D2 the ROM never carried -- and it is ruled out independently of that: the tree-wide relocation census finds _ZN16daObjKaitendai_cD0Ev (0x020b660c) named by EXACTLY ONE word in the image, ov002:0x02109218, and _ZN16daObjKaitendai_cD1Ev (0x020b6664) by exactly one, ov002:0x02109214. Those two words are slots 17 and 16 of _ZTV16daObjKaitendai_c (address point 0x021091d4; 0x02109214 - 0x021091d4 = 0x40 = slot 16). No instruction anywhere in the ROM calls either destructor, and all five descendants inline this destructor's vptr store instead. An out-of-line definition here would make those five emit a `bl` the cartridge does not have and break their already-matched TUs. This is the same disposition already taken by ov002/daObjFloatBoard_c, whose destructor pair sits in the identical D0-below-D1 arrangement.",
+    "DESTRUCTOR FOLD. The licensed run is now 0x020b660c..0x020b6814 (6 functions), with _ZN16daObjKaitendai_cD0Ev at 0x020b660c (size 0x58) and _ZN16daObjKaitendai_cD1Ev at 0x020b6664 (size 0x44) as its first two members; their per-function shard sources and delinks entries are retired and merged into this TU's. The lever is the one src/actors/daObjDorifu_c.cpp records: `#pragma defer_codegen off` before the includes, the file written in ROM-ascending order, and two uncalled forcing functions at the top -- `delete p` (the deleting destructor, D0) then `p->~X()` (the complete-object destructor, D1) -- which make mwccarm emit the inline destructor's two variants at parse time in the cartridge's D0-then-D1 order, with no D2. The forcers are compiler_only_output deadstrip rows. Measured by tubuild.py verify: 6/6 MATCH, objisolate clean, reloc destinations clean, emission order ROM-ascending."
   ],
   "sections": [
     {
       "name": ".text",
-      "start": "0x020b66a8",
+      "start": "0x020b660c",
       "end": "0x020b6814"
     }
   ],
   "functions": [
     {
+      "symbol": "_ZN16daObjKaitendai_cD0Ev",
+      "address": "0x020b660c",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN16daObjKaitendai_cD0Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16daObjKaitendai_cD1Ev",
+      "address": "0x020b6664",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN16daObjKaitendai_cD1Ev.cpp",
+      "ordinal": 1
+    },
+    {
       "symbol": "func_ov002_020b66a8",
       "address": "0x020b66a8",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020b66a8.c",
-      "ordinal": 0
+      "ordinal": 2
     },
     {
       "symbol": "_ZN16daObjKaitendai_c6RenderEv",
       "address": "0x020b66f0",
       "size": "0x00000028",
       "legacy_source": "src/_ZN16daObjKaitendai_c6RenderEv.cpp",
-      "ordinal": 1
+      "ordinal": 3
     },
     {
       "symbol": "_ZN16daObjKaitendai_c8BehaviorEv",
       "address": "0x020b6718",
       "size": "0x00000054",
       "legacy_source": "src/_ZN16daObjKaitendai_c8BehaviorEv.cpp",
-      "ordinal": 2
+      "ordinal": 4
     },
     {
       "symbol": "func_ov002_020b676c",
       "address": "0x020b676c",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov002_020b676c.cpp",
-      "ordinal": 3
+      "ordinal": 5
     }
   ],
   "data": [],
   "bss": [],
   "compiler_only_output": [
     {
-      "symbol": "_ZN16daObjKaitendai_cD1Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "ov002",
-      "canonical_address": "0x020b6664",
-      "reason": "Vague-linkage copy of the class's complete-object destructor, emitted here because this TU owns the key function while ~daObjKaitendai_c is defined inline in include/daObjKaitendai_c.h. The cartridge owns it at ov002:0x020b6664 and src/_ZN16daObjKaitendai_cD1Ev.cpp still holds that delinks entry, so this object's copy is a byte-identical duplicate that production isolation discards. It is outside this entry's licensed range (.text 0x020b66a8-0x020b6814)."
+      "symbol": "_Z39daObjKaitendai_c_EmitDeletingDestructorP16daObjKaitendai_c",
+      "disposition": "deadstrip",
+      "reason": "Not called and not in the ROM: a source-level forcing function. The class destructor is defined inline in its header because the descendants inline its vptr store, so no file can define it out of line; a delete-expression asks for the deleting variant by name. This file compiles under `#pragma defer_codegen off`, where ordinary functions are emitted at parse time in source order -- the only measured lever that makes mwccarm emit D0 before D1 as the cartridge has them -- and this forcer is the parse-time trigger that places D0 first. Emitted between the licensed D0 and D1 sections. Homeless: config/ has no symbol row for it."
     },
     {
-      "symbol": "_ZN16daObjKaitendai_cD0Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "ov002",
-      "canonical_address": "0x020b660c",
-      "reason": "Vague-linkage copy of the class's deleting destructor, same cause. The cartridge owns it at ov002:0x020b660c, BELOW D1 -- see this entry's boundary_evidence for the four source forms measured against that order and for why the one form that emits D0 first is refuted by the cartridge. src/_ZN16daObjKaitendai_cD0Ev.cpp keeps that delinks entry and this object's byte-identical copy is discarded."
+      "symbol": "_Z31daObjKaitendai_c_EmitDestructorP16daObjKaitendai_c",
+      "disposition": "deadstrip",
+      "reason": "Not called and not in the ROM: the companion forcing function. An explicit `p->~daObjKaitendai_c()` asks for the complete-object variant by name; the delete-expression forcer cannot serve both, because a plain destructor call alone does not reproduce the deleting variant out of line. This file compiles under `#pragma defer_codegen off`, where ordinary functions are emitted at parse time in source order, so the call places D1 after D0 as the cartridge has them. Emitted between the licensed D1 section and the first real member, so it does not disturb the licensed run. Homeless: config/ has no symbol row for it."
     },
     {
       "symbol": "_ZTV16daObjKaitendai_c",
@@ -152,12 +163,12 @@
     }
   ],
   "notes": [
-    "Seeded by tools/tubuild.py create (5 members, the tu_map span) and then re-cut by hand. See boundary_evidence for the call-site census that moves the run's right edge out to 0x020b6814, rules out 0x020b6584 on the left, and excludes the destructor pair from the licensed range.",
-    "NO FORCING FUNCTION AND NO PRAGMA. The two legacy destructor shards each carried a scaffold (`delete p`, `p->~daObjKaitendai_c()`) whose only job was to drag an out-of-line copy into a one-function object. This TU owns the key function, so _ZTV16daObjKaitendai_c is emitted here and its slots 16 and 17 odr-use D1 and D0 with nothing added to the source; src/_ZN16daObjKaitendai_cD0Ev.cpp and src/_ZN16daObjKaitendai_cD1Ev.cpp keep their own per-function delinks entries and this object's copies are licensed as deadstrip-duplicate against those ROM homes.",
+    "Seeded by tools/tubuild.py create (5 members, the tu_map span) and then re-cut by hand. See boundary_evidence for the call-site census that moves the run's right edge out to 0x020b6814, rules out 0x020b6584 on the left, and excludes the destructor pair from the licensed range. [Superseded: the licensed range now includes the destructor pair; see the last boundary_evidence entry.]",
     "TWO PREVIOUSLY UNATTRIBUTED FUNCTIONS ARE FOLDED IN. func_ov002_020b66a8 and func_ov002_020b676c are this class's shared cleanup and setup halves, reached by an ordinary call from each of the five leaves rather than through a vtable slot, because the class is abstract in slots 0 and 3. build/tu_map.json cannot see the second one: it carries no mangled name and no vtable slot, so no label bounds the run on the right.",
     "The class is ABSTRACT: vtable slots 0 (InitResources) and 3 (CleanupResources) are bare zero words with no relocation, and each of the five leaves supplies its own. There is no factory and no g_profile row, which is why the entry claims no data, no ctor and no BSS.",
     "func_ov002_020b66a8 and func_ov002_020b676c keep their address-derived names. Neither occupies a vtable slot in any class in the image and nothing in the ROM names either, so a coined English name would be invention, not recovery.",
-    "POST-PROMOTION `tubuild.py linkcheck` IS STRUCTURALLY UNAVAILABLE TO THIS ENTRY, and that is not a defect in it. Once the single intact delinks.txt entry exists, linkcheck treats the source as an enrolled intact-object candidate and routes its object through tools/tu_production.prepare_intact_object, which refuses any entry that does not claim a non-text section: 'intact production requires one .text claim and at least one non-text claim'. This TU claims .text only, because the class has no factory, no g_profile row and no owned data. Control: running the same command against ov002/daObjFloatBoard_c -- long landed, promoted and byte-matched on main -- produces the identical refusal, so the message is a property of the command's intact path and not of either TU. The proof of record for this entry is therefore the pre-promotion scratch link below (scratch-link-verified, full ROM built and byte-identical to the stock control), which is the same state 33 other promoted text-only entries carry, plus tools/rombuild.py against the real tree. production_mode is deliberately left unset, as it is on 125 of the 132 promoted text-only entries."
+    "POST-PROMOTION `tubuild.py linkcheck` IS STRUCTURALLY UNAVAILABLE TO THIS ENTRY, and that is not a defect in it. Once the single intact delinks.txt entry exists, linkcheck treats the source as an enrolled intact-object candidate and routes its object through tools/tu_production.prepare_intact_object, which refuses any entry that does not claim a non-text section: 'intact production requires one .text claim and at least one non-text claim'. This TU claims .text only, because the class has no factory, no g_profile row and no owned data. Control: running the same command against ov002/daObjFloatBoard_c -- long landed, promoted and byte-matched on main -- produces the identical refusal, so the message is a property of the command's intact path and not of either TU. The proof of record for this entry is therefore the pre-promotion scratch link below (scratch-link-verified, full ROM built and byte-identical to the stock control), which is the same state 33 other promoted text-only entries carry, plus tools/rombuild.py against the real tree. production_mode is deliberately left unset, as it is on 125 of the 132 promoted text-only entries.",
+    "FORCING FUNCTIONS AND PRAGMA. This TU compiles under `#pragma defer_codegen off` and carries two uncalled functions, daObjKaitendai_c_EmitDeletingDestructor and daObjKaitendai_c_EmitDestructor, recorded as compiler_only_output deadstrip rows. They are the parse-time trigger that places D0 then D1 ahead of the real members and are not in the ROM. The destructor itself stays inline in include/daObjKaitendai_c.h because the class's descendants inline its vptr store."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -165,31 +176,20 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov002-daObjKaitendai_c/daObjKaitendai_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 4,
-    "functions_declared": 4,
+    "functions_matched": 6,
+    "functions_declared": 6,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN16daObjKaitendai_cD1Ev",
-        "_ZN16daObjKaitendai_cD0Ev"
+        "_Z39daObjKaitendai_c_EmitDeletingDestructorP16daObjKaitendai_c",
+        "_Z31daObjKaitendai_c_EmitDestructorP16daObjKaitendai_c"
       ],
       "deadstripped": [
-        "_ZN16daObjKaitendai_cD0Ev",
-        "_ZN16daObjKaitendai_cD1Ev"
+        "_Z31daObjKaitendai_c_EmitDestructorP16daObjKaitendai_c",
+        "_Z39daObjKaitendai_c_EmitDeletingDestructorP16daObjKaitendai_c"
       ],
       "droppedSections": [
         5,
-        6,
-        7,
         8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
         18,
         19,
         20,
@@ -197,7 +197,16 @@
         22,
         23,
         24,
-        25
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
       ],
       "data": [
         "_ZTV16daObjKaitendai_c",

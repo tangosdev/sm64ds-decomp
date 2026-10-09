@@ -95,17 +95,9 @@ src/actors/daObjUkiyuka_c.cpp:
     complete
     .text start:0x020b6388 end:0x020b660c
 
-src/_ZN16daObjKaitendai_cD0Ev.cpp:
-    complete
-    .text start:0x020b660c end:0x020b6664
-
-src/_ZN16daObjKaitendai_cD1Ev.cpp:
-    complete
-    .text start:0x020b6664 end:0x020b66a8
-
 src/actors/daObjKaitendai_c.cpp:
     complete
-    .text start:0x020b66a8 end:0x020b6814
+    .text start:0x020b660c end:0x020b6814
 
 src/_ZN13daObjKuruma_cD0Ev.cpp:
     complete
