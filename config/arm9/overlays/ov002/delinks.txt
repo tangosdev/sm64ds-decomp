@@ -91,17 +91,9 @@ src/actors/daObjGuragura_c.cpp:
     complete
     .text start:0x020b5fd8 end:0x020b6388
 
-src/_ZN14daObjUkiyuka_cD0Ev.cpp:
-    complete
-    .text start:0x020b6388 end:0x020b63e0
-
-src/_ZN14daObjUkiyuka_cD1Ev.cpp:
-    complete
-    .text start:0x020b63e0 end:0x020b6424
-
 src/actors/daObjUkiyuka_c.cpp:
     complete
-    .text start:0x020b6424 end:0x020b660c
+    .text start:0x020b6388 end:0x020b660c
 
 src/_ZN16daObjKaitendai_cD0Ev.cpp:
     complete
