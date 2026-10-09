@@ -75,12 +75,12 @@ int  RandomIntInternal(int *seed);
 void SetBg2Offset(int x, int y);
 void SetSubBg2Offset(int x, int y);
 void SetSubBg0Offset(int a, int b);
-void func_02012790(int a);
+unsigned int func_02012790(unsigned int a);
 void FreeGfxSlotsById(int arg);
-void DrawOamSprite(void *a0, int a1, int a2, int a3);
+void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
 void Hud_RenderSprite(void *a, int b, int c, int d, int e);
 void func_ov004_020adb1c(int a);
-void func_ov004_020af948(void *a, int b, int c, int d);
+void func_ov004_020af948(void *a, int b, int c, void *d);
 void func_ov004_020afdd0(void *a, int b, int c, int d, int e);
 void func_ov004_020b0a54(int a);
 void func_ov004_020af868(void *a0, int a1, int a2, int a3, int a4, void *a5);
@@ -1140,10 +1140,10 @@ void dScMgPanel_c::func_ov006_02105ab4()
             if (scene->mode == 1) {
                 int p = scene->parr[i];
                 int q = scene->q;
-                DrawOamSprite(data_ov006_021427d4[p * 3 + q], x, y, 0);
+                DrawOamSprite(data_ov006_021427d4[p * 3 + q], (void *)x, y, 0);
             } else {
                 int p = scene->parr[i];
-                DrawOamSprite(data_ov006_021427d4[p * 3], x, y, 0);
+                DrawOamSprite(data_ov006_021427d4[p * 3], (void *)x, y, 0);
             }
         }
     }
