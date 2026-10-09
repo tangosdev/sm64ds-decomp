@@ -83,6 +83,8 @@ void func_ov004_020adb1c(int a);
 void func_ov004_020af948(void *a, int b, int c, int d);
 void func_ov004_020afdd0(void *a, int b, int c, int d, int e);
 void func_ov004_020b0a54(int a);
+void func_ov004_020af868(void *a0, int a1, int a2, int a3, int a4, void *a5);
+int  __aeabi_idiv(int a, int b);
 void func_ov004_020b2444(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 }
 
@@ -1104,7 +1106,6 @@ typedef struct PanelObj_ab4
 void dScMgPanel_c::func_ov006_02105ab4()
 {
     PanelObj_ab4 *scene = (PanelObj_ab4 *)this;
-    extern void func_ov004_020af868(void *a0, int a1, int a2, int a3, int a4, void *a5);
     extern void *data_ov006_021427d4[];
     extern u8 data_ov006_0213dd34[];
     int x;
@@ -1339,7 +1340,6 @@ extern "C" {
 void dScMgPanel_c::func_ov006_02106080(int index)
 {
     char *scene = (char *)this;
-    extern int __aeabi_idiv(int a, int b);
     int w = *(int *)(scene + 0x4cbc);
     int wq = 3;
     int hq = 3;
