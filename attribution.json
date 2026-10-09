@@ -1156,6 +1156,8 @@
     "src/actors/daDkk_c.cpp#_ZN7daDkk_c19func_ov025_02111a84Ev": "github-actions[bot]",
     "src/actors/daDkk_c.cpp#_ZN7daDkk_c8BehaviorEv": "tangosdev",
     "src/actors/daDkk_c.cpp#_ZN7daDkk_c13InitResourcesEv": "tangosdev",
+    "src/actors/daDsnBase_c.cpp#_ZN11daDsnBase_cD0Ev": "tangosdev",
+    "src/actors/daDsnBase_c.cpp#_ZN11daDsnBase_cD1Ev": "tangosdev",
     "src/actors/daDsnBase_c.cpp#_ZN11daDsnBase_c4InitEv": "tangosdev",
     "src/actors/dScMgRoulette_c.cpp#_ZN15dScMgRoulette_cD1Ev": "tangosdev",
     "src/actors/dScMgRoulette_c.cpp#_ZN15dScMgRoulette_cD0Ev": "tangosdev",
