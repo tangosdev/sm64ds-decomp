@@ -55,7 +55,7 @@ restored shards re-emit it: `romdata_check` verifies `_ZTV8dActor_c`
   `attribution.json` carries `path#symbol` overrides for the consolidated
   functions (tangosdev, matching shard credit); `port/slice_gate9.txt`
   and the live comments in `include/daHanachan_c.h`,
-  `src/_ZN13daObjSwdoor_cD1Ev.cpp`, `src/game/actors/d_a_sound_obj.cpp`,
+  `src/actors/daObjSwdoor_c.cpp`, `src/game/actors/d_a_sound_obj.cpp`,
   `src/game/actors/daObjPushblock_c.cpp` point at the promoted file.
 - `config/converted-baseline.json`: banked member identities migrated to
   `src/actors/dActor_c.cpp#symbol` keys; one member sits in

@@ -159,17 +159,9 @@ src/d_a_obj_switch_hanswitch.c:
     complete
     .text start:0x020baadc end:0x020bab0c
 
-src/_ZN13daObjSwdoor_cD0Ev.cpp:
-    complete
-    .text start:0x020bab0c end:0x020bab64
-
-src/_ZN13daObjSwdoor_cD1Ev.cpp:
-    complete
-    .text start:0x020bab64 end:0x020baba8
-
 src/actors/daObjSwdoor_c.cpp:
     complete
-    .text start:0x020baba8 end:0x020badd0
+    .text start:0x020bab0c end:0x020badd0
 
 src/actors/daObjTatefuda_c.cpp:
     complete

@@ -18,62 +18,73 @@
     "vtable ov002 storage 0x021099dc, address point 0x021099e4, 32 slots (0x88) ending at 0x02109a64, where data_ov002_02109a64 opens the next run -- so the data run 0x021099c0..0x02109a64 is closed by this class with nothing between, and the 32-slot length is dBgActor_c's, which is what fixes the base. Read out of the cartridge, the table overrides exactly slots 9 (Render, 0x020babf0), 16 (D1, 0x020bab64) and 17 (D0, 0x020bab0c); slots 0 (InitResources), 3 (CleanupResources) and 6 (Behavior) are bare zero words with no relocation -- the class is abstract in three slots, which is why none of the three func_ov002_ helpers occupies a slot and why each is reached by an ordinary call or literal-pool load from each leaf instead.",
     "SHAPE: [D0, D1, teardown helper, Render, per-frame helper, setup helper]. Under mwccarm's reverse-source-order .text emission that is the source order [setup, per-frame, Render, teardown, <implicit destructors>], which is an ordinary C++ file. It is the same shape the four already-folded classes in this ov002 platform series carry, with Behavior demoted from a vtable slot to a plain helper because this class leaves slot 6 null.",
     "module sinit corroboration: this entry claims no .ctor and no static initializer; the class has no factory and no g_profile row of its own (both leaves carry theirs in ov014 and ov021), which is why the entry claims no data and no BSS.",
-    "THE DESTRUCTOR PAIR IS DELIBERATELY EXCLUDED FROM THE LICENSED RANGE, so the licensed run is 0x020baba8..0x020badd0 (4 functions) inside the 0x020bab0c..0x020badd0 object the evidence above establishes. The cartridge places _ZN13daObjSwdoor_cD0Ev at 0x020bab0c BELOW _ZN13daObjSwdoor_cD1Ev at 0x020bab64. THE FULL 2x2 LEVER GRID WAS MEASURED HERE on mwccarm 2004/b56 against this TU, one compile per cell, reading the object's .text section order: {inline-in-class, out-of-line} x {deferred codegen, `#pragma defer_codegen off`}. (A) inline-in-class + deferred (the stock header): [D1, D0, func_020baba8, Render, func_020bac18, func_020bad10] -- the pair leads, D1 first. (B) inline-in-class + `defer_codegen off`: [func_020bad10, func_020bac18, Render, func_020baba8, D1, D0] -- the pair moves to the tail, still D1 first; rewriting the four members in ROM-ascending order as well changes only the members' order and leaves the pair at the tail as [D1, D0]. (C) out-of-line + deferred: [func_020baba8, Render, func_020bac18, func_020bad10, D2, D0, D1]. (D) out-of-line + `defer_codegen off`: [D2, D0, D1, func_020bad10, func_020bac18, Render, func_020baba8]; ascending members likewise [D2, D0, D1, ...]. TWO RESULTS. First, the pragma's effect INVERTS across the destructor axis: with an inline-in-class destructor it moves the group from the head to the tail, with an out-of-line one it moves it from the tail to the head. A rule recorded on one axis does not transfer to the other. Second, D0-BEFORE-D1 IS REACHABLE ON THIS CLASS -- the out-of-line axis produces it in both of its cells -- but only ever as [D2, D0, D1], and the cartridge contains no D2. There is no room for one either: 0x020bab0c..0x020baba8 is exactly D0 (0x58) then D1 (0x44), contiguous, with the teardown helper immediately after. No cell of the grid emits the cartridge's [D0, D1] with nothing before it.",
-    "THE OUT-OF-LINE FORM IS REFUTED INDEPENDENTLY OF THE D2, BY THE CARTRIDGE. The target-module-filtered relocation census finds _ZN13daObjSwdoor_cD0Ev (0x020bab0c) named by EXACTLY ONE word in the image, ov002:0x02109a28, and _ZN13daObjSwdoor_cD1Ev (0x020bab64) by exactly one, ov002:0x02109a24. Those two words are slots 17 and 16 of _ZTV13daObjSwdoor_c (address point 0x021099e4; 0x02109a24 - 0x021099e4 = 0x40 = slot 16). No instruction anywhere in the ROM calls either destructor; both descendants inline this destructor's vptr store instead, which the compiler can only do from a body visible in the class. An out-of-line definition would make ov014's and ov021's destructors emit a `bl` the cartridge does not have and break their already-matched TUs. This is the same disposition already taken by ov002/daObjKaitendai_c, ov002/daObjUkiyuka_c and ov002/daObjFloatBoard_c, each of whose destructor pairs sits in the identical D0-below-D1 arrangement."
+    "HISTORY, SUPERSEDED BY THE DESTRUCTOR FOLD (last boundary_evidence entry): THE DESTRUCTOR PAIR IS DELIBERATELY EXCLUDED FROM THE LICENSED RANGE, so the licensed run is 0x020baba8..0x020badd0 (4 functions) inside the 0x020bab0c..0x020badd0 object the evidence above establishes. The cartridge places _ZN13daObjSwdoor_cD0Ev at 0x020bab0c BELOW _ZN13daObjSwdoor_cD1Ev at 0x020bab64. THE FULL 2x2 LEVER GRID WAS MEASURED HERE on mwccarm 2004/b56 against this TU, one compile per cell, reading the object's .text section order: {inline-in-class, out-of-line} x {deferred codegen, `#pragma defer_codegen off`}. (A) inline-in-class + deferred (the stock header): [D1, D0, func_020baba8, Render, func_020bac18, func_020bad10] -- the pair leads, D1 first. (B) inline-in-class + `defer_codegen off`: [func_020bad10, func_020bac18, Render, func_020baba8, D1, D0] -- the pair moves to the tail, still D1 first; rewriting the four members in ROM-ascending order as well changes only the members' order and leaves the pair at the tail as [D1, D0]. (C) out-of-line + deferred: [func_020baba8, Render, func_020bac18, func_020bad10, D2, D0, D1]. (D) out-of-line + `defer_codegen off`: [D2, D0, D1, func_020bad10, func_020bac18, Render, func_020baba8]; ascending members likewise [D2, D0, D1, ...]. TWO RESULTS. First, the pragma's effect INVERTS across the destructor axis: with an inline-in-class destructor it moves the group from the head to the tail, with an out-of-line one it moves it from the tail to the head. A rule recorded on one axis does not transfer to the other. Second, D0-BEFORE-D1 IS REACHABLE ON THIS CLASS -- the out-of-line axis produces it in both of its cells -- but only ever as [D2, D0, D1], and the cartridge contains no D2. There is no room for one either: 0x020bab0c..0x020baba8 is exactly D0 (0x58) then D1 (0x44), contiguous, with the teardown helper immediately after. No cell of the grid emits the cartridge's [D0, D1] with nothing before it.",
+    "THE OUT-OF-LINE FORM IS REFUTED INDEPENDENTLY OF THE D2, BY THE CARTRIDGE. The target-module-filtered relocation census finds _ZN13daObjSwdoor_cD0Ev (0x020bab0c) named by EXACTLY ONE word in the image, ov002:0x02109a28, and _ZN13daObjSwdoor_cD1Ev (0x020bab64) by exactly one, ov002:0x02109a24. Those two words are slots 17 and 16 of _ZTV13daObjSwdoor_c (address point 0x021099e4; 0x02109a24 - 0x021099e4 = 0x40 = slot 16). No instruction anywhere in the ROM calls either destructor; both descendants inline this destructor's vptr store instead, which the compiler can only do from a body visible in the class. An out-of-line definition would make ov014's and ov021's destructors emit a `bl` the cartridge does not have and break their already-matched TUs. This is the same disposition already taken by ov002/daObjKaitendai_c, ov002/daObjUkiyuka_c and ov002/daObjFloatBoard_c, each of whose destructor pairs sits in the identical D0-below-D1 arrangement.",
+    "DESTRUCTOR FOLD. The licensed run is now 0x020bab0c..0x020badd0 (6 functions), with _ZN13daObjSwdoor_cD0Ev at 0x020bab0c (size 0x58) and _ZN13daObjSwdoor_cD1Ev at 0x020bab64 (size 0x44) as its first two members; their per-function shard sources and delinks entries are retired and merged into this TU's. The lever is the one src/actors/daObjDorifu_c.cpp records: `#pragma defer_codegen off` before the includes, the file written in ROM-ascending order, and two uncalled forcing functions at the top -- `delete p` (the deleting destructor, D0) then `p->~X()` (the complete-object destructor, D1) -- which make mwccarm emit the inline destructor's two variants at parse time in the cartridge's D0-then-D1 order, with no D2. The forcers are compiler_only_output deadstrip rows. Measured by tubuild.py verify: 6/6 MATCH, objisolate clean, reloc destinations clean, emission order ROM-ascending."
   ],
   "sections": [
     {
       "name": ".text",
-      "start": "0x020baba8",
+      "start": "0x020bab0c",
       "end": "0x020badd0"
     }
   ],
   "functions": [
     {
+      "symbol": "_ZN13daObjSwdoor_cD0Ev",
+      "address": "0x020bab0c",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN13daObjSwdoor_cD0Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN13daObjSwdoor_cD1Ev",
+      "address": "0x020bab64",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN13daObjSwdoor_cD1Ev.cpp",
+      "ordinal": 1
+    },
+    {
       "symbol": "func_ov002_020baba8",
       "address": "0x020baba8",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020baba8.cpp",
-      "ordinal": 0
+      "ordinal": 2
     },
     {
       "symbol": "_ZN13daObjSwdoor_c6RenderEv",
       "address": "0x020babf0",
       "size": "0x00000028",
       "legacy_source": "src/_ZN13daObjSwdoor_c6RenderEv.cpp",
-      "ordinal": 1
+      "ordinal": 3
     },
     {
       "symbol": "func_ov002_020bac18",
       "address": "0x020bac18",
       "size": "0x000000f8",
       "legacy_source": "src/func_ov002_020bac18.c",
-      "ordinal": 2
+      "ordinal": 4
     },
     {
       "symbol": "func_ov002_020bad10",
       "address": "0x020bad10",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov002_020bad10.c",
-      "ordinal": 3
+      "ordinal": 5
     }
   ],
   "data": [],
   "bss": [],
   "compiler_only_output": [
     {
-      "symbol": "_ZN13daObjSwdoor_cD1Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "ov002",
-      "canonical_address": "0x020bab64",
-      "reason": "Vague-linkage copy of the class's complete-object destructor, emitted here because this TU owns the key function while ~daObjSwdoor_c is defined inline in include/daObjSwdoor_c.h. The cartridge owns it at ov002:0x020bab64 and src/_ZN13daObjSwdoor_cD1Ev.cpp still holds that delinks entry, so this object's copy is a byte-identical duplicate that production isolation discards. It is outside this entry's licensed range (.text 0x020baba8-0x020badd0)."
+      "symbol": "_Z36daObjSwdoor_c_EmitDeletingDestructorP13daObjSwdoor_c",
+      "disposition": "deadstrip",
+      "reason": "Not called and not in the ROM: a source-level forcing function. The class destructor is defined inline in its header because the descendants inline its vptr store, so no file can define it out of line; a delete-expression asks for the deleting variant by name. This file compiles under `#pragma defer_codegen off`, where ordinary functions are emitted at parse time in source order -- the only measured lever that makes mwccarm emit D0 before D1 as the cartridge has them -- and this forcer is the parse-time trigger that places D0 first. Emitted between the licensed D0 and D1 sections. Homeless: config/ has no symbol row for it."
     },
     {
-      "symbol": "_ZN13daObjSwdoor_cD0Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "ov002",
-      "canonical_address": "0x020bab0c",
-      "reason": "Vague-linkage copy of the class's deleting destructor, same cause. The cartridge owns it at ov002:0x020bab0c, BELOW D1 -- see this entry's boundary_evidence for the full 2x2 lever grid measured against that order and for why the two cells that do emit D0 before D1 are refuted by the cartridge. src/_ZN13daObjSwdoor_cD0Ev.cpp keeps that delinks entry and this object's byte-identical copy is discarded."
+      "symbol": "_Z28daObjSwdoor_c_EmitDestructorP13daObjSwdoor_c",
+      "disposition": "deadstrip",
+      "reason": "Not called and not in the ROM: the companion forcing function. An explicit `p->~daObjSwdoor_c()` asks for the complete-object variant by name; the delete-expression forcer cannot serve both, because a plain destructor call alone does not reproduce the deleting variant out of line. This file compiles under `#pragma defer_codegen off`, where ordinary functions are emitted at parse time in source order, so the call places D1 after D0 as the cartridge has them. Emitted between the licensed D1 section and the first real member, so it does not disturb the licensed run. Homeless: config/ has no symbol row for it."
     },
     {
       "symbol": "_ZTV13daObjSwdoor_c",
@@ -155,12 +166,12 @@
   ],
   "notes": [
     "Cut by hand, not seeded by tools/tubuild.py create: build/tu_map.json's span for this class stops at Render's end because the two functions above it carry no mangled name and no vtable slot. See boundary_evidence for the target-module-filtered call-site census that moves the run's right edge out to 0x020badd0, for the base-rate control that makes it discriminating, and for the destructor pair's exclusion from the licensed range.",
-    "NO FORCING FUNCTION AND NO PRAGMA IN THE FOLDED TU. The two legacy destructor shards each carry a scaffold (`delete p`, `p->~daObjSwdoor_c()`) whose only job is to drag an out-of-line copy into a one-function object. This TU owns the key function, so _ZTV13daObjSwdoor_c is emitted here and its slots 16 and 17 odr-use D1 and D0 with nothing added to the source; src/_ZN13daObjSwdoor_cD0Ev.cpp and src/_ZN13daObjSwdoor_cD1Ev.cpp keep their own per-function delinks entries and this object's copies are licensed as deadstrip-duplicate against those ROM homes.",
     "THE KEY FUNCTION MOVED, AND THAT IS THE ONE BEHAVIOURAL CHANGE THIS FOLD MAKES. Before this promotion daObjSwdoor_c had no out-of-line virtual at all, so the two destructor shards' scaffolds were what anchored _ZTV13daObjSwdoor_c and _ZTI13daObjSwdoor_c as vague-linkage data in their own objects. Render is now declared out of line and defined here, so this TU is the key-function TU and carries that data instead. Both shards' banners are updated to say so; neither emits the vtable any more, and both still byte-match their ROM homes.",
     "TWO PREVIOUSLY UNATTRIBUTED FUNCTIONS ARE FOLDED IN BEYOND THE CANDIDATE SPAN. func_ov002_020bac18 is this class's per-frame shutter step and func_ov002_020bad10 its resource setup, reached by an ordinary call or a literal-pool load from each of the two leaves rather than through a vtable slot, because the class is abstract in slots 0, 3 and 6. build/tu_map.json cannot see either: neither carries a mangled name or a vtable slot, so no label bounds the run on the right.",
     "func_ov002_020baba8, func_ov002_020bac18 and func_ov002_020bad10 keep their address-derived names. None occupies a vtable slot in any class in the image and nothing in the ROM names any of them, so a coined English name would be invention, not recovery.",
     "ONE DECLARATION WAS RECONCILED ACROSS THE FOLD, and it is the only source change beyond moving text: the pre-fold shard for 0x020bac18 declared _ZN10dBgActor_c21UpdateModelPosAndRotYEv as returning void and the shard for 0x020bad10 declared it as returning int. One TU can carry only one spelling; the int form is kept and both call sites discard the result, so the choice is codegen-neutral. It is proved codegen-neutral by the 4/4 byte match below, which covers both call sites. The shard for 0x020bac18 also carried file-local `typedef unsigned char u8` and `typedef struct { int x, y, z; } Vector3` declarations, and the shard for 0x020bad10 a file-local `typedef int Fix12`; all three name types the header already supplies (and `Fix12` is a class template once the header is in scope), so they are dropped and the header's spellings used.",
-    "POST-PROMOTION `tubuild.py linkcheck` IS STRUCTURALLY UNAVAILABLE TO THIS ENTRY, and that is not a defect in it. Once the single intact delinks.txt entry exists, linkcheck treats the source as an enrolled intact-object candidate and routes its object through tools/tu_production.prepare_intact_object, which refuses any entry that does not claim a non-text section: 'intact production requires one .text claim and at least one non-text claim'. This TU claims .text only, because the class has no factory, no g_profile row and no owned data. The proof of record for this entry is therefore the PRE-PROMOTION whole-range link recorded below (scratch-link-verified, full ROM built and byte-identical to the stock control), which is the same state the other promoted text-only entries in this series carry, plus tools/rombuild.py against the real tree. production_mode is deliberately left unset, as it is on the rest of this series."
+    "POST-PROMOTION `tubuild.py linkcheck` IS STRUCTURALLY UNAVAILABLE TO THIS ENTRY, and that is not a defect in it. Once the single intact delinks.txt entry exists, linkcheck treats the source as an enrolled intact-object candidate and routes its object through tools/tu_production.prepare_intact_object, which refuses any entry that does not claim a non-text section: 'intact production requires one .text claim and at least one non-text claim'. This TU claims .text only, because the class has no factory, no g_profile row and no owned data. The proof of record for this entry is therefore the PRE-PROMOTION whole-range link recorded below (scratch-link-verified, full ROM built and byte-identical to the stock control), which is the same state the other promoted text-only entries in this series carry, plus tools/rombuild.py against the real tree. production_mode is deliberately left unset, as it is on the rest of this series.",
+    "FORCING FUNCTIONS AND PRAGMA. This TU compiles under `#pragma defer_codegen off` and carries two uncalled functions, daObjSwdoor_c_EmitDeletingDestructor and daObjSwdoor_c_EmitDestructor, recorded as compiler_only_output deadstrip rows. They are the parse-time trigger that places D0 then D1 ahead of the real members and are not in the ROM. The destructor itself stays inline in include/daObjSwdoor_c.h because the class's descendants inline its vptr store."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -168,31 +179,20 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov002-daObjSwdoor_c/daObjSwdoor_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 4,
-    "functions_declared": 4,
+    "functions_matched": 6,
+    "functions_declared": 6,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN13daObjSwdoor_cD1Ev",
-        "_ZN13daObjSwdoor_cD0Ev"
+        "_Z36daObjSwdoor_c_EmitDeletingDestructorP13daObjSwdoor_c",
+        "_Z28daObjSwdoor_c_EmitDestructorP13daObjSwdoor_c"
       ],
       "deadstripped": [
-        "_ZN13daObjSwdoor_cD0Ev",
-        "_ZN13daObjSwdoor_cD1Ev"
+        "_Z28daObjSwdoor_c_EmitDestructorP13daObjSwdoor_c",
+        "_Z36daObjSwdoor_c_EmitDeletingDestructorP13daObjSwdoor_c"
       ],
       "droppedSections": [
         5,
-        6,
-        7,
         8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
         18,
         19,
         20,
@@ -200,7 +200,16 @@
         22,
         23,
         24,
-        25
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
       ],
       "data": [
         "_ZTV13daObjSwdoor_c",

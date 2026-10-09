@@ -25,6 +25,8 @@
  * - Abstract class: no factory and no g_profile row.
  */
 
+#pragma defer_codegen off
+
 #include "daObjSwdoor_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -53,32 +55,67 @@ int func_ov002_020bac18(daObjSwdoor_c *self);
 int func_ov002_020baba8(daObjSwdoor_c *self, ResourceDescriptor *descriptor);
 }
 
-/* func_ov002_020bad10, 0x020bad10, size 0xc0.
- * Resource setup both leaves call. The descriptor's model file goes to
- * Model::LoadFile, its collision file to dBgW_Kc::LoadFile, and its CLPS block
- * into SetFile; then the stock UpdatePosAndAngs hook and Enable. The four
- * bytes at 0x31e..0x321 are set last: bit 0 of param1 (the turn direction
- * func_ov002_020bac18 reads), the event bit from bits 1..5 of param1, the
- * state (0) and the start-up timer (5). */
-// @symbol func_ov002_020bad10
-extern "C" {
-int func_ov002_020bad10(daObjSwdoor_c *self, ResourceDescriptor *descriptor)
+// @symbol _ZN13daObjSwdoor_cD0Ev
+// @symbol _ZN13daObjSwdoor_cD1Ev
+/* ROM ordinals 0 and 1 -- ov002 0x020bab0c (D0, 0x58) and 0x020bab64 (D1,
+ * 0x44). No source here: both destructor variants come from the ONE
+ * inline body in include/daObjSwdoor_c.h, which the class's descendants need
+ * visible to inline its vptr store.
+ *
+ * The two calls below are never executed. Under `#pragma defer_codegen off`
+ * the compiler emits ordinary functions at parse time in source order, so the
+ * delete-expression pulls the deleting variant out of line first and the
+ * explicit destructor call pulls the complete-object variant out second --
+ * the cartridge's D0-then-D1 order, which no deferred form reaches without a
+ * D2 the image does not contain. A delete-expression for D0 because
+ * dBgActor_c declares Kill, a key function reachable from this class. */
+
+#ifdef _MSC_VER
+/* MSVC needs this flat D0 entry. Call the actual class-body destructor
+ * qualified so dispatch is direct, then use the class-specific deallocator.
+ * The inline body includes member/base teardown; no separate flat D1 provider
+ * is supplied by this branch. The mwccarm definition below is unchanged. */
+extern "C" daObjSwdoor_c *_ZN13daObjSwdoor_cD0Ev(daObjSwdoor_c *thiz)
 {
-    self->mModel.SetFile((BMD_File *)Model::LoadFile(*descriptor->model), 1, -1);
-    self->UpdateModelPosAndRotY();
-    self->UpdateClsnPosAndRot();
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &self->mMeshCollider,
-        (KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision),
-        &self->mClsnMat, 0x1000, self->mAngleY, descriptor->clps);
-    func_020393d4(&self->mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
-    self->mMeshCollider.Enable(self);
-    *(unsigned char *)((char *)self + 0x31e) = self->param1 & 1;
-    *(unsigned char *)((char *)self + 0x321) = (self->param1 >> 1) & 0x1f;
-    *(unsigned char *)((char *)self + 0x31f) = 0;
-    *(unsigned char *)((char *)self + 0x320) = 5;
+    thiz->daObjSwdoor_c::~daObjSwdoor_c();          /* direct member/base teardown */
+    daObjSwdoor_c::operator delete(thiz);  /* the class-specific delete D0 ends with */
+    return thiz;
+}
+#else
+/* Not called. Forces the out-of-line copy of the deleting destructor. */
+void daObjSwdoor_c_EmitDeletingDestructor(daObjSwdoor_c *p)
+{
+    delete p;
+}
+#endif
+
+/* Not called. Forces the out-of-line copy of the inline destructor. */
+void daObjSwdoor_c_EmitDestructor(daObjSwdoor_c *p)
+{
+    p->~daObjSwdoor_c();
+}
+
+/* func_ov002_020baba8, 0x020baba8, size 0x48.
+ * Teardown both leaves call: disable the collider if enabled, release the
+ * descriptor's two files. */
+// @symbol func_ov002_020baba8
+extern "C" {
+int func_ov002_020baba8(daObjSwdoor_c *self, ResourceDescriptor *descriptor)
+{
+    if (self->mMeshCollider.IsEnabled())
+        self->mMeshCollider.Disable();
+    descriptor->model->Release();
+    descriptor->collision->Release();
     return 1;
 }
+}
+
+/* Vtable slot 9, ov002 0x020babf0. Key function. */
+// @symbol _ZN13daObjSwdoor_c6RenderEv
+s32 daObjSwdoor_c::Render()
+{
+    mModel.Render(0);
+    return 1;
 }
 
 /* func_ov002_020bac18, 0x020bac18, size 0xf8.
@@ -133,25 +170,30 @@ int func_ov002_020bac18(daObjSwdoor_c *self)
 }
 }
 
-/* Vtable slot 9, ov002 0x020babf0. Key function. */
-// @symbol _ZN13daObjSwdoor_c6RenderEv
-s32 daObjSwdoor_c::Render()
-{
-    mModel.Render(0);
-    return 1;
-}
-
-/* func_ov002_020baba8, 0x020baba8, size 0x48.
- * Teardown both leaves call: disable the collider if enabled, release the
- * descriptor's two files. */
-// @symbol func_ov002_020baba8
+/* func_ov002_020bad10, 0x020bad10, size 0xc0.
+ * Resource setup both leaves call. The descriptor's model file goes to
+ * Model::LoadFile, its collision file to dBgW_Kc::LoadFile, and its CLPS block
+ * into SetFile; then the stock UpdatePosAndAngs hook and Enable. The four
+ * bytes at 0x31e..0x321 are set last: bit 0 of param1 (the turn direction
+ * func_ov002_020bac18 reads), the event bit from bits 1..5 of param1, the
+ * state (0) and the start-up timer (5). */
+// @symbol func_ov002_020bad10
 extern "C" {
-int func_ov002_020baba8(daObjSwdoor_c *self, ResourceDescriptor *descriptor)
+int func_ov002_020bad10(daObjSwdoor_c *self, ResourceDescriptor *descriptor)
 {
-    if (self->mMeshCollider.IsEnabled())
-        self->mMeshCollider.Disable();
-    descriptor->model->Release();
-    descriptor->collision->Release();
+    self->mModel.SetFile((BMD_File *)Model::LoadFile(*descriptor->model), 1, -1);
+    self->UpdateModelPosAndRotY();
+    self->UpdateClsnPosAndRot();
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        &self->mMeshCollider,
+        (KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision),
+        &self->mClsnMat, 0x1000, self->mAngleY, descriptor->clps);
+    func_020393d4(&self->mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    self->mMeshCollider.Enable(self);
+    *(unsigned char *)((char *)self + 0x31e) = self->param1 & 1;
+    *(unsigned char *)((char *)self + 0x321) = (self->param1 >> 1) & 0x1f;
+    *(unsigned char *)((char *)self + 0x31f) = 0;
+    *(unsigned char *)((char *)self + 0x320) = 5;
     return 1;
 }
 }
