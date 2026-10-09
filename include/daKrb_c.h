@@ -117,6 +117,25 @@ struct daKrb_c : dCapEnemy_c {
     void OnTurnIntoEgg(Player &player);          /* slot 19 */
     int OnAimedAtWithEgg();                     /* slot 29 */
 
+    void func_ov084_021290d4();
+    void func_ov084_02129168(dActor_c* actor);
+    void func_ov084_02129238();
+    void func_ov084_0212934c();
+    void func_ov084_02129498();
+    void func_ov084_021294d0();
+    void func_ov084_021296cc();
+    void func_ov084_02129864();
+    int func_ov084_021298d0();
+    int func_ov084_02129a00();
+    void func_ov084_02129c9c();
+    void func_ov084_02129cf4(Fix12i distThresh);
+    void func_ov084_02129ed4();
+    void func_ov084_0212a6f8();
+    void func_ov084_0212a774();
+    void func_ov084_0212ab48();
+    void func_ov084_0212abd4();
+    void func_ov084_0212af74();
+    void func_ov084_0212b2dc();
     void func_ov084_0212a580();
     void func_ov084_0212aab0();
 

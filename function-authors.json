@@ -41911,27 +41911,27 @@
     },
     "ov084:0x021290d4": {
       "author": "tangosdev",
-      "name": "func_ov084_021290d4"
+      "name": "_ZN7daKrb_c19func_ov084_021290d4Ev"
     },
     "ov084:0x02129168": {
       "author": "tangosdev",
-      "name": "func_ov084_02129168"
+      "name": "_ZN7daKrb_c19func_ov084_02129168Ev"
     },
     "ov084:0x02129238": {
       "author": "tangosdev",
-      "name": "func_ov084_02129238"
+      "name": "_ZN7daKrb_c19func_ov084_02129238Ev"
     },
     "ov084:0x0212934c": {
       "author": "lunavyqo",
-      "name": "func_ov084_0212934c"
+      "name": "_ZN7daKrb_c19func_ov084_0212934cEv"
     },
     "ov084:0x02129498": {
       "author": "tangosdev",
-      "name": "func_ov084_02129498"
+      "name": "_ZN7daKrb_c19func_ov084_02129498Ev"
     },
     "ov084:0x021294d0": {
       "author": "aitddlabs",
-      "name": "func_ov084_021294d0"
+      "name": "_ZN7daKrb_c19func_ov084_021294d0Ev"
     },
     "ov084:0x021296b0": {
       "author": "tangosdev",
@@ -41939,31 +41939,31 @@
     },
     "ov084:0x021296cc": {
       "author": "tangosdev",
-      "name": "func_ov084_021296cc"
+      "name": "_ZN7daKrb_c19func_ov084_021296ccEv"
     },
     "ov084:0x02129864": {
       "author": "tangosdev",
-      "name": "func_ov084_02129864"
+      "name": "_ZN7daKrb_c19func_ov084_02129864Ev"
     },
     "ov084:0x021298d0": {
       "author": "tangosdev",
-      "name": "func_ov084_021298d0"
+      "name": "_ZN7daKrb_c19func_ov084_021298d0Ev"
     },
     "ov084:0x02129a00": {
       "author": "tangosdev",
-      "name": "func_ov084_02129a00"
+      "name": "_ZN7daKrb_c19func_ov084_02129a00Ev"
     },
     "ov084:0x02129c9c": {
       "author": "tangosdev",
-      "name": "func_ov084_02129c9c"
+      "name": "_ZN7daKrb_c19func_ov084_02129c9cEv"
     },
     "ov084:0x02129cf4": {
       "author": "andrewboudreau",
-      "name": "func_ov084_02129cf4"
+      "name": "_ZN7daKrb_c19func_ov084_02129cf4Ev"
     },
     "ov084:0x02129ed4": {
       "author": "andrewboudreau",
-      "name": "func_ov084_02129ed4"
+      "name": "_ZN7daKrb_c19func_ov084_02129ed4Ev"
     },
     "ov084:0x0212a580": {
       "author": "lunavyqo",
@@ -41971,11 +41971,11 @@
     },
     "ov084:0x0212a6f8": {
       "author": "tangosdev",
-      "name": "func_ov084_0212a6f8"
+      "name": "_ZN7daKrb_c19func_ov084_0212a6f8Ev"
     },
     "ov084:0x0212a774": {
       "author": "lunavyqo",
-      "name": "func_ov084_0212a774"
+      "name": "_ZN7daKrb_c19func_ov084_0212a774Ev"
     },
     "ov084:0x0212aab0": {
       "author": "tangosdev",
@@ -41983,19 +41983,19 @@
     },
     "ov084:0x0212ab48": {
       "author": "tangosdev",
-      "name": "func_ov084_0212ab48"
+      "name": "_ZN7daKrb_c19func_ov084_0212ab48Ev"
     },
     "ov084:0x0212abd4": {
       "author": "lunavyqo",
-      "name": "func_ov084_0212abd4"
+      "name": "_ZN7daKrb_c19func_ov084_0212abd4Ev"
     },
     "ov084:0x0212af74": {
       "author": "lunavyqo",
-      "name": "func_ov084_0212af74"
+      "name": "_ZN7daKrb_c19func_ov084_0212af74Ev"
     },
     "ov084:0x0212b2dc": {
       "author": "tangosdev",
-      "name": "func_ov084_0212b2dc"
+      "name": "_ZN7daKrb_c19func_ov084_0212b2dcEv"
     },
     "ov084:0x0212b30c": {
       "author": "andrewboudreau",
