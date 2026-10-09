@@ -15,6 +15,8 @@
  * Leftover: abstract class -- no factory, no g_profile row (S14).
  */
 
+#pragma defer_codegen off
+
 #include "daObjKuruma_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -40,7 +42,66 @@ int func_ov002_020b6958(daObjKuruma_c *self, ResourceDescriptor *descriptor);
 int func_ov002_020b68b0(daObjKuruma_c *self, ResourceDescriptor *descriptor);
 }
 
-/* ROM ordinal 3 -- func_ov002_020b6958, 0x020b6958, size 0x8c.
+// @symbol _ZN13daObjKuruma_cD0Ev
+// @symbol _ZN13daObjKuruma_cD1Ev
+/* ROM ordinals 0 and 1 -- ov002 0x020b6814 (D0, 0x58) and 0x020b686c (D1,
+ * 0x44). No source here: both destructor variants come from the ONE inline
+ * body in include/daObjKuruma_c.h, which the two descendants need visible
+ * to inline its vptr store.
+ *
+ * The two calls below are never executed. Under `#pragma defer_codegen off`
+ * the compiler emits ordinary functions at parse time in source order, so the
+ * delete-expression pulls the deleting variant out of line first and the
+ * explicit destructor call pulls the complete-object variant out second --
+ * the cartridge's D0-then-D1 order, which no deferred form reaches without a
+ * D2 the image does not contain. A delete-expression for D0 because
+ * dBgActor_c declares Kill, a key function reachable from this class. */
+
+/* Not called. Forces the out-of-line copy of the deleting destructor. */
+void daObjKuruma_c_EmitDeletingDestructor(daObjKuruma_c *p)
+{
+    delete p;
+}
+
+/* Not called. Forces the out-of-line copy of the inline destructor. */
+void daObjKuruma_c_EmitDestructor(daObjKuruma_c *p)
+{
+    p->~daObjKuruma_c();
+}
+
+/* ROM ordinal 2 -- func_ov002_020b68b0, 0x020b68b0, size 0x48.
+ * Teardown half both leaves call. */
+// @symbol func_ov002_020b68b0
+extern "C" {
+int func_ov002_020b68b0(daObjKuruma_c *self, ResourceDescriptor *descriptor)
+{
+    if (self->mMeshCollider.IsEnabled())
+        self->mMeshCollider.Disable();
+    descriptor->model->Release();
+    descriptor->collision->Release();
+    return 1;
+}
+}
+
+/* ROM ordinal 3 -- vtable slot 9, ov002 0x020b68f8. Key function. */
+// @symbol _ZN13daObjKuruma_c6RenderEv
+s32 daObjKuruma_c::Render()
+{
+    mModel.Render(0);
+    return 1;
+}
+
+/* ROM ordinal 4 -- vtable slot 6, ov002 0x020b6920. */
+// @symbol _ZN13daObjKuruma_c8BehaviorEv
+s32 daObjKuruma_c::Behavior()
+{
+    UpdateModelPosAndRotY();
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
+        UpdateClsnPosAndRot();
+    return 1;
+}
+
+/* ROM ordinal 5 -- func_ov002_020b6958, 0x020b6958, size 0x8c.
  * Shared resource setup both leaves call. Slot 0 is Model::LoadFile, slot 1
  * is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile; then bind the mesh
  * to dBgW::UpdatePosWithVelocity. No field of this class is seeded. */
@@ -56,38 +117,6 @@ int func_ov002_020b6958(daObjKuruma_c *self, ResourceDescriptor *descriptor)
         (KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision),
         &self->mClsnMat, 0x199, self->mAngleY, descriptor->clps);
     func_020393d4(&self->mMeshCollider, (void *)&dBgW::UpdatePosWithVelocity);
-    return 1;
-}
-}
-
-/* ROM ordinal 2 -- vtable slot 6, ov002 0x020b6920. */
-// @symbol _ZN13daObjKuruma_c8BehaviorEv
-s32 daObjKuruma_c::Behavior()
-{
-    UpdateModelPosAndRotY();
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
-        UpdateClsnPosAndRot();
-    return 1;
-}
-
-/* ROM ordinal 1 -- vtable slot 9, ov002 0x020b68f8. Key function. */
-// @symbol _ZN13daObjKuruma_c6RenderEv
-s32 daObjKuruma_c::Render()
-{
-    mModel.Render(0);
-    return 1;
-}
-
-/* ROM ordinal 0 -- func_ov002_020b68b0, 0x020b68b0, size 0x48.
- * Teardown half both leaves call. */
-// @symbol func_ov002_020b68b0
-extern "C" {
-int func_ov002_020b68b0(daObjKuruma_c *self, ResourceDescriptor *descriptor)
-{
-    if (self->mMeshCollider.IsEnabled())
-        self->mMeshCollider.Disable();
-    descriptor->model->Release();
-    descriptor->collision->Release();
     return 1;
 }
 }

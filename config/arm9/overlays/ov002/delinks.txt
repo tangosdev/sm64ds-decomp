@@ -99,17 +99,9 @@ src/actors/daObjKaitendai_c.cpp:
     complete
     .text start:0x020b660c end:0x020b6814
 
-src/_ZN13daObjKuruma_cD0Ev.cpp:
-    complete
-    .text start:0x020b6814 end:0x020b686c
-
-src/_ZN13daObjKuruma_cD1Ev.cpp:
-    complete
-    .text start:0x020b686c end:0x020b68b0
-
 src/actors/daObjKuruma_c.cpp:
     complete
-    .text start:0x020b68b0 end:0x020b69e4
+    .text start:0x020b6814 end:0x020b69e4
 
 src/_ZN17daObjKurumajiku_cD0Ev.cpp:
     complete
