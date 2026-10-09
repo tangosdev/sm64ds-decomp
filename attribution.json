@@ -411,6 +411,8 @@
     "src/_ZN15daObjGuragura_cD0Ev.cpp": "tangosdev",
     "src/_ZN15daObjGuragura_cD1Ev.c": "tangosdev",
     "src/_ZN15daObjGuragura_cD1Ev.cpp": "tangosdev",
+    "src/actors/daObjGuragura_c.cpp#_ZN15daObjGuragura_cD0Ev": "tangosdev",
+    "src/actors/daObjGuragura_c.cpp#_ZN15daObjGuragura_cD1Ev": "tangosdev",
     "src/actors/daObjGuragura_c.cpp#func_ov002_020b6074": "tangosdev",
     "src/actors/daObjGuragura_c.cpp#func_ov002_020b60fc": "tangosdev",
     "src/actors/daObjGuragura_c.cpp#_ZN15daObjGuragura_c6RenderEv": "tangosdev",
