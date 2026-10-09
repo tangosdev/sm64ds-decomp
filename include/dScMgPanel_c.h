@@ -127,6 +127,71 @@ struct dScMgPanel_c : dScMgBase_c {
     u8  pad_4fe3[0x6];
     u8  mBusy;               /* 0x4fe9 a flip is still playing */
     u8  unk_4fea;            /* 0x4fea only ever written 0 */
+
+    /* Helpers the state tables and the vtable bodies call. The address is the
+       method name; no ROM spelling survives. */
+    void func_ov006_021042e8();
+    void func_ov006_02104354();
+    void func_ov006_0210446c(int x, int y, int mode);
+    void func_ov006_02104558();
+    void func_ov006_02104580();
+    void func_ov006_02104870();
+    void func_ov006_021048b0();
+    void func_ov006_021048e4();
+    void func_ov006_02104920(int index);
+    void func_ov006_02104a10(int index);
+    void func_ov006_02104ac4();
+    void func_ov006_02104b24();
+    void func_ov006_02104b4c();
+    void func_ov006_02104b5c();
+    void func_ov006_02104bb0();
+    void func_ov006_02104c08();
+    void func_ov006_02104c60();
+    void func_ov006_02104cfc(int i);
+    void func_ov006_02104d44();
+    void func_ov006_02104d94();
+    void func_ov006_02104e70();
+    void func_ov006_02104e80();
+    void func_ov006_02104ea8();
+    void func_ov006_02104eb8();
+    void func_ov006_02104ecc();
+    void func_ov006_02104fb4();
+    void func_ov006_0210500c();
+    void func_ov006_0210508c();
+    void func_ov006_021050bc();
+    void func_ov006_02105118();
+    void func_ov006_02105134();
+    void func_ov006_021051dc();
+    void func_ov006_021053a8();
+    void func_ov006_02105670();
+    void func_ov006_02105730();
+    void func_ov006_021057f0();
+    void func_ov006_02105854();
+    void func_ov006_02105ab4();
+    void func_ov006_02105c1c();
+    void func_ov006_02105c88();
+    void func_ov006_02105d20();
+    void func_ov006_02105de4();
+    void func_ov006_02106048();
+    void func_ov006_02106080(int index);
+    void func_ov006_02106168();
+    void func_ov006_021063a0();
+    int func_ov006_02106664();
+    void func_ov006_02106758();
+    void func_ov006_021067a4();
+    void func_ov006_021068d8();
+    void func_ov006_02106910(int index);
+    void func_ov006_02106a08(int idx);
+    void func_ov006_02106aa8(int index);
+    void func_ov006_02106bac(int index);
+    void func_ov006_02106bc0();
+    void func_ov006_02106ca4();
+    void func_ov006_02106eb8();
+    void func_ov006_02106f44();
+    void func_ov006_02106fdc();
+    void func_ov006_0210709c();
+    void func_ov006_0210713c();
+    void func_ov006_021071d4();
 };
 
 #ifndef SM64DS_PLATFORM_PC

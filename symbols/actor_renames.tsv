@@ -5442,6 +5442,68 @@ ov006	0x020e984c	func_ov006_020e984c	_ZN12dScMg3DEsp_c10ResetRoundEv	dScMg3DEsp_
 ov006	0x020e989c	func_ov006_020e989c	_ZN12dScMg3DEsp_c7ResultsEv	dScMg3DEsp_c method; PMF record in the play-phase table. Named Results: phase showing the round result.
 ov006	0x020e9b70	func_ov006_020e9b70	_ZN12dScMg3DEsp_c4PlayEv	dScMg3DEsp_c method; PMF record in the round-state table. Named Play: round state dispatching the play phases.
 ov006	0x020e9bbc	func_ov006_020e9bbc	_ZN12dScMg3DEsp_c4WaitEv	dScMg3DEsp_c method; PMF record in the round-state table. Named Wait: round state idling between rounds.
+ov006	0x021042e8	func_ov006_021042e8	_ZN12dScMgPanel_c19func_ov006_021042e8Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104354	func_ov006_02104354	_ZN12dScMgPanel_c19func_ov006_02104354Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x0210446c	func_ov006_0210446c	_ZN12dScMgPanel_c19func_ov006_0210446cEiii	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104558	func_ov006_02104558	_ZN12dScMgPanel_c19func_ov006_02104558Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104580	func_ov006_02104580	_ZN12dScMgPanel_c19func_ov006_02104580Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104870	func_ov006_02104870	_ZN12dScMgPanel_c19func_ov006_02104870Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x021048b0	func_ov006_021048b0	_ZN12dScMgPanel_c19func_ov006_021048b0Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x021048e4	func_ov006_021048e4	_ZN12dScMgPanel_c19func_ov006_021048e4Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104920	func_ov006_02104920	_ZN12dScMgPanel_c19func_ov006_02104920Ei	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104a10	func_ov006_02104a10	_ZN12dScMgPanel_c19func_ov006_02104a10Ei	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104ac4	func_ov006_02104ac4	_ZN12dScMgPanel_c19func_ov006_02104ac4Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104b24	func_ov006_02104b24	_ZN12dScMgPanel_c19func_ov006_02104b24Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104b4c	func_ov006_02104b4c	_ZN12dScMgPanel_c19func_ov006_02104b4cEv	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104b5c	func_ov006_02104b5c	_ZN12dScMgPanel_c19func_ov006_02104b5cEv	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104bb0	func_ov006_02104bb0	_ZN12dScMgPanel_c19func_ov006_02104bb0Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104c08	func_ov006_02104c08	_ZN12dScMgPanel_c19func_ov006_02104c08Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104c60	func_ov006_02104c60	_ZN12dScMgPanel_c19func_ov006_02104c60Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104cfc	func_ov006_02104cfc	_ZN12dScMgPanel_c19func_ov006_02104cfcEi	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104d44	func_ov006_02104d44	_ZN12dScMgPanel_c19func_ov006_02104d44Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104d94	func_ov006_02104d94	_ZN12dScMgPanel_c19func_ov006_02104d94Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104e70	func_ov006_02104e70	_ZN12dScMgPanel_c19func_ov006_02104e70Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104e80	func_ov006_02104e80	_ZN12dScMgPanel_c19func_ov006_02104e80Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104ea8	func_ov006_02104ea8	_ZN12dScMgPanel_c19func_ov006_02104ea8Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104eb8	func_ov006_02104eb8	_ZN12dScMgPanel_c19func_ov006_02104eb8Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104ecc	func_ov006_02104ecc	_ZN12dScMgPanel_c19func_ov006_02104eccEv	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02104fb4	func_ov006_02104fb4	_ZN12dScMgPanel_c19func_ov006_02104fb4Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x0210500c	func_ov006_0210500c	_ZN12dScMgPanel_c19func_ov006_0210500cEv	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x0210508c	func_ov006_0210508c	_ZN12dScMgPanel_c19func_ov006_0210508cEv	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x021050bc	func_ov006_021050bc	_ZN12dScMgPanel_c19func_ov006_021050bcEv	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02105118	func_ov006_02105118	_ZN12dScMgPanel_c19func_ov006_02105118Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02105134	func_ov006_02105134	_ZN12dScMgPanel_c19func_ov006_02105134Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x021051dc	func_ov006_021051dc	_ZN12dScMgPanel_c19func_ov006_021051dcEv	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x021053a8	func_ov006_021053a8	_ZN12dScMgPanel_c19func_ov006_021053a8Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02105670	func_ov006_02105670	_ZN12dScMgPanel_c19func_ov006_02105670Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02105730	func_ov006_02105730	_ZN12dScMgPanel_c19func_ov006_02105730Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x021057f0	func_ov006_021057f0	_ZN12dScMgPanel_c19func_ov006_021057f0Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02105854	func_ov006_02105854	_ZN12dScMgPanel_c19func_ov006_02105854Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02105ab4	func_ov006_02105ab4	_ZN12dScMgPanel_c19func_ov006_02105ab4Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02105c1c	func_ov006_02105c1c	_ZN12dScMgPanel_c19func_ov006_02105c1cEv	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02105c88	func_ov006_02105c88	_ZN12dScMgPanel_c19func_ov006_02105c88Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02105d20	func_ov006_02105d20	_ZN12dScMgPanel_c19func_ov006_02105d20Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02105de4	func_ov006_02105de4	_ZN12dScMgPanel_c19func_ov006_02105de4Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02106048	func_ov006_02106048	_ZN12dScMgPanel_c19func_ov006_02106048Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02106080	func_ov006_02106080	_ZN12dScMgPanel_c19func_ov006_02106080Ei	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02106168	func_ov006_02106168	_ZN12dScMgPanel_c19func_ov006_02106168Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x021063a0	func_ov006_021063a0	_ZN12dScMgPanel_c19func_ov006_021063a0Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02106664	func_ov006_02106664	_ZN12dScMgPanel_c19func_ov006_02106664Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02106758	func_ov006_02106758	_ZN12dScMgPanel_c19func_ov006_02106758Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x021067a4	func_ov006_021067a4	_ZN12dScMgPanel_c19func_ov006_021067a4Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x021068d8	func_ov006_021068d8	_ZN12dScMgPanel_c19func_ov006_021068d8Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02106910	func_ov006_02106910	_ZN12dScMgPanel_c19func_ov006_02106910Ei	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02106a08	func_ov006_02106a08	_ZN12dScMgPanel_c19func_ov006_02106a08Ei	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02106aa8	func_ov006_02106aa8	_ZN12dScMgPanel_c19func_ov006_02106aa8Ei	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02106bac	func_ov006_02106bac	_ZN12dScMgPanel_c19func_ov006_02106bacEi	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02106bc0	func_ov006_02106bc0	_ZN12dScMgPanel_c19func_ov006_02106bc0Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02106ca4	func_ov006_02106ca4	_ZN12dScMgPanel_c19func_ov006_02106ca4Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02106eb8	func_ov006_02106eb8	_ZN12dScMgPanel_c19func_ov006_02106eb8Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02106f44	func_ov006_02106f44	_ZN12dScMgPanel_c19func_ov006_02106f44Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x02106fdc	func_ov006_02106fdc	_ZN12dScMgPanel_c19func_ov006_02106fdcEv	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x0210709c	func_ov006_0210709c	_ZN12dScMgPanel_c19func_ov006_0210709cEv	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x0210713c	func_ov006_0210713c	_ZN12dScMgPanel_c19func_ov006_0210713cEv	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
+ov006	0x021071d4	func_ov006_021071d4	_ZN12dScMgPanel_c19func_ov006_021071d4Ev	dScMgPanel_c method. object-as-this; receiver is the scene object, called with this in r0
 ov006	0x0211cc2c	func_ov006_0211cc2c	_ZN13dScMgTeresa_c19func_ov006_0211cc2cEv	object-as-this; receiver is the scene object, called with this in r0
 ov006	0x0211cc90	func_ov006_0211cc90	_ZN13dScMgTeresa_c19func_ov006_0211cc90Ev	object-as-this; receiver is the scene object, called with this in r0
 ov006	0x0211cca8	func_ov006_0211cca8	_ZN13dScMgTeresa_c19func_ov006_0211cca8Ev	object-as-this; receiver is the scene object, called with this in r0
