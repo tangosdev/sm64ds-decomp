@@ -30,6 +30,8 @@
  * Leftover: abstract class -- no factory, no g_profile row (S14).
  */
 
+#pragma defer_codegen off
+
 #include "daObjFloatBoard_c.h"
 #include "common.h"
 #include "dBgCh_Gnd.h"
@@ -71,89 +73,121 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
    embedded dBgW; the +0x0c store is func_020393a4). */
 void func_020393c4(int *collider, int callback);
 void func_020393d4(int *collider, int callback);
+
+/* Defined below: the registration thunk, now ROM-ascending so the Init helper
+   that stores its address comes first. */
+void func_ov002_020b5fc4(void *collider, void *board, void *other);
 }
 
-/* ROM ordinal 7 -- ov002 0x020b5fc4. The registration thunk the Init helper
- * stores on the mesh collider: the callback ABI hands it an extra leading
- * argument, which the real callback does not take. STAYS a free extern "C"
- * function -- its address is stored as a raw callback word, so it cannot be
- * a member pointer. */
-// @symbol func_ov002_020b5fc4
-extern "C" void func_ov002_020b5fc4(void *collider, void *board, void *other)
+// @symbol _ZN17daObjFloatBoard_cD0Ev
+// @symbol _ZN17daObjFloatBoard_cD1Ev
+/* ROM ordinals 0 and 1 -- ov002 0x020b5a18 (D0, 0x58) and 0x020b5a70 (D1,
+ * 0x44). No source here: both destructor variants come from the ONE
+ * inline body in include/daObjFloatBoard_c.h, which the class's descendants need
+ * visible to inline its vptr store.
+ *
+ * The two calls below are never executed. Under `#pragma defer_codegen off`
+ * the compiler emits ordinary functions at parse time in source order, so the
+ * delete-expression pulls the deleting variant out of line first and the
+ * explicit destructor call pulls the complete-object variant out second --
+ * the cartridge's D0-then-D1 order, which no deferred form reaches without a
+ * D2 the image does not contain. A delete-expression for D0 because
+ * dBgActor_c declares Kill, a key function reachable from this class. */
+
+/* Not called. Forces the out-of-line copy of the deleting destructor. */
+void daObjFloatBoard_c_EmitDeletingDestructor(daObjFloatBoard_c *p)
 {
-    ((daObjFloatBoard_c *)board)->func_ov002_020b5f9c((dActor_c *)other);
+    delete p;
 }
 
-/* ROM ordinal 6 -- ov002 0x020b5f9c. The mesh callback's real body: when the
- * touching actor is the Player (actorID 0xbf) it becomes mRider and the
- * timeout reloads to 5. The `eq` staging is load-bearing: `if (actorID ==
- * 0xbf)` folds to a 0x1c body; the ROM's 0x28 keeps the widened bool. */
-// @symbol _ZN17daObjFloatBoard_c19func_ov002_020b5f9cEP8dActor_c
-void daObjFloatBoard_c::func_ov002_020b5f9c(dActor_c *rider)
+/* Not called. Forces the out-of-line copy of the inline destructor. */
+void daObjFloatBoard_c_EmitDestructor(daObjFloatBoard_c *p)
 {
-    enum Bool { FALSE, TRUE };
-    unsigned short t = rider->actorID;
-    enum Bool eq = (enum Bool)(t == 0xbf);
-    if (eq) {
-        mRider = rider;
-        mRiderTimeout = 5;
-    }
+    p->~daObjFloatBoard_c();
 }
 
-/* ROM ordinal 5 -- ov002 0x020b5e58. The shared Init helper: every leaf's
- * InitResources calls it with that overlay's model/collision/CLPS table.
- * Loads the model, wires the mesh collider (callback thunk above plus the
- * stock dBgW position updater), and seeds the rest pose, water level and
- * rider state. */
-// @symbol _ZN17daObjFloatBoard_c19func_ov002_020b5e58EP27daObjFloatBoard_c_Resources
-int daObjFloatBoard_c::func_ov002_020b5e58(daObjFloatBoard_c_Resources *fp)
+/* ROM ordinal 2 -- ov002 0x020b5ab4. Asks whether the board is on water and
+ * writes the surface height to mWaterY: on stage 0x15 from the class's own
+ * fallback level, otherwise from a downward water raycast. Reached only from
+ * this TU's Behavior. */
+// @symbol _ZN17daObjFloatBoard_c19func_ov002_020b5ab4Ev
+int daObjFloatBoard_c::func_ov002_020b5ab4()
 {
-    Vector3 v;
-    BMD_File *bmd;
-    KCL_File *kcl;
-    int vy, vz, vx;
-
-    bmd = (BMD_File *)Model::LoadFile(*fp->model);
-    mModel.SetFile(bmd, 1, -1);
-    mFileTable = fp;
-    func_ov002_020b5b98();
-    UpdateClsnPosAndRot();
-    kcl = (KCL_File *)dBgW_Kc::LoadFile(*fp->collision);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, kcl, mClsnMat, 0x199, mAngleY, *fp->clps);
-    func_020393c4((int *)&mMeshCollider, (int)&func_ov002_020b5fc4);
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosAndAngs);
-
-    mSinkOffset = 0;
-    mBobOffset = 0;
-    mBobPhase = 0;
-    mRestPosX = mPosX;
-    mWaterY = mPosY;
-    mRestPosZ = mPosZ;
-    mRider = 0;
-    pad_340[0] = 0;
-    mFallbackWaterY = mPosY;
-
     if (data_0209f2f8 == 0x15) {
-        dBgCh_Gnd rg;
-        vy = mPosY;
-        vz = mPosZ;
-        vx = mPosX;
-        {
-            int t = vy + 0x50000;
-            v.x = vx;
-            v.y = t;
-            v.z = vz;
+        s32 fallback = mFallbackWaterY;
+        mWaterY = fallback;
+        s32 tide = data_0209f32c;
+        if (tide > fallback) {
+            mWaterY = tide;
+            return 1;
         }
-        rg.SetObjAndPos(v, this);
-        if (rg.DetectClsn()) {
-            mFallbackWaterY = rg.clsnY + 0x3e000;
+        return 0;
+    }
+
+    Vector3 vec;
+    dBgCh_Gnd rg;
+    /* Staged through locals: direct member stores schedule differently. */
+    int vx = mPosX;
+    int vz = mPosZ;
+    int vy = mPosY + 0x64000;
+    vec.x = vx;
+    vec.y = vy;
+    vec.z = vz;
+    rg.StartDetectingWater();
+    rg.SetObjAndPos(vec, this);
+    if (rg.DetectClsn() != 0) {
+        mWaterY = rg.clsnY;
+        if (SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
+            return 1;
         }
     }
+    return 0;
+}
+
+/* ROM ordinal 3 -- ov002 0x020b5b98. Writes the model matrix from the actor's
+ * Euler angles and its translation row from the position >> 3. Also called
+ * from func_ov002_020b5e58 in the next TU. */
+// @symbol _ZN17daObjFloatBoard_c19func_ov002_020b5b98Ev
+void daObjFloatBoard_c::func_ov002_020b5b98()
+{
+    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3.m[9] = mPosX >> 3;
+    mModel.mat4x3.m[10] = mPosY >> 3;
+    mModel.mat4x3.m[11] = mPosZ >> 3;
+}
+
+/* ROM ordinal 4 -- vtable slot 3, ov002 0x020b5be0. THE KEY FUNCTION: the
+ * first out-of-line virtual this class declares, so this TU emits the class's
+ * _ZTV/_ZTI/_ZTS and both destructor variants.
+ *
+ * mFileTable is reloaded between the two Release() calls because the ROM
+ * reloads it -- Release() can move it, so the second index must come from a
+ * fresh read. */
+// @symbol _ZN17daObjFloatBoard_c16CleanupResourcesEv
+int daObjFloatBoard_c::CleanupResources()
+{
+    daObjFloatBoard_c_Resources *files;
+
+    if (mMeshCollider.IsEnabled()) {
+        mMeshCollider.Disable();
+    }
+    files = mFileTable;
+    files->model->Release();
+    files = mFileTable;
+    files->collision->Release();
     return 1;
 }
 
-/* ROM ordinal 4 -- vtable slot 6, ov002 0x020b5c4c.
+/* ROM ordinal 5 -- vtable slot 9, ov002 0x020b5c24. Dispatches through
+ * dBgActor_c's own mModel (0xd4), as every sibling in this series does. */
+// @symbol _ZN17daObjFloatBoard_c6RenderEv
+s32 daObjFloatBoard_c::Render()
+{
+    mModel.Render(0);
+    return 1;
+}
+
+/* ROM ordinal 6 -- vtable slot 6, ov002 0x020b5c4c.
  *
  * TWO SPELLINGS OF mBobPhase ON PURPOSE: the store goes through `ctr` and the
  * reload two lines later goes through a separate `char *` base. Collapsing
@@ -224,83 +258,82 @@ int daObjFloatBoard_c::Behavior()
     return 1;
 }
 
-/* ROM ordinal 3 -- vtable slot 9, ov002 0x020b5c24. Dispatches through
- * dBgActor_c's own mModel (0xd4), as every sibling in this series does. */
-// @symbol _ZN17daObjFloatBoard_c6RenderEv
-s32 daObjFloatBoard_c::Render()
+/* ROM ordinal 7 -- ov002 0x020b5e58. The shared Init helper: every leaf's
+ * InitResources calls it with that overlay's model/collision/CLPS table.
+ * Loads the model, wires the mesh collider (callback thunk above plus the
+ * stock dBgW position updater), and seeds the rest pose, water level and
+ * rider state. */
+// @symbol _ZN17daObjFloatBoard_c19func_ov002_020b5e58EP27daObjFloatBoard_c_Resources
+int daObjFloatBoard_c::func_ov002_020b5e58(daObjFloatBoard_c_Resources *fp)
 {
-    mModel.Render(0);
-    return 1;
-}
+    Vector3 v;
+    BMD_File *bmd;
+    KCL_File *kcl;
+    int vy, vz, vx;
 
-/* ROM ordinal 2 -- vtable slot 3, ov002 0x020b5be0. THE KEY FUNCTION: the
- * first out-of-line virtual this class declares, so this TU emits the class's
- * _ZTV/_ZTI/_ZTS and both destructor variants.
- *
- * mFileTable is reloaded between the two Release() calls because the ROM
- * reloads it -- Release() can move it, so the second index must come from a
- * fresh read. */
-// @symbol _ZN17daObjFloatBoard_c16CleanupResourcesEv
-int daObjFloatBoard_c::CleanupResources()
-{
-    daObjFloatBoard_c_Resources *files;
+    bmd = (BMD_File *)Model::LoadFile(*fp->model);
+    mModel.SetFile(bmd, 1, -1);
+    mFileTable = fp;
+    func_ov002_020b5b98();
+    UpdateClsnPosAndRot();
+    kcl = (KCL_File *)dBgW_Kc::LoadFile(*fp->collision);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        &mMeshCollider, kcl, mClsnMat, 0x199, mAngleY, *fp->clps);
+    func_020393c4((int *)&mMeshCollider, (int)&func_ov002_020b5fc4);
+    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosAndAngs);
 
-    if (mMeshCollider.IsEnabled()) {
-        mMeshCollider.Disable();
-    }
-    files = mFileTable;
-    files->model->Release();
-    files = mFileTable;
-    files->collision->Release();
-    return 1;
-}
+    mSinkOffset = 0;
+    mBobOffset = 0;
+    mBobPhase = 0;
+    mRestPosX = mPosX;
+    mWaterY = mPosY;
+    mRestPosZ = mPosZ;
+    mRider = 0;
+    pad_340[0] = 0;
+    mFallbackWaterY = mPosY;
 
-/* ROM ordinal 1 -- ov002 0x020b5b98. Writes the model matrix from the actor's
- * Euler angles and its translation row from the position >> 3. Also called
- * from func_ov002_020b5e58 in the next TU. */
-// @symbol _ZN17daObjFloatBoard_c19func_ov002_020b5b98Ev
-void daObjFloatBoard_c::func_ov002_020b5b98()
-{
-    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
-}
-
-/* ROM ordinal 0 -- ov002 0x020b5ab4. Asks whether the board is on water and
- * writes the surface height to mWaterY: on stage 0x15 from the class's own
- * fallback level, otherwise from a downward water raycast. Reached only from
- * this TU's Behavior. */
-// @symbol _ZN17daObjFloatBoard_c19func_ov002_020b5ab4Ev
-int daObjFloatBoard_c::func_ov002_020b5ab4()
-{
     if (data_0209f2f8 == 0x15) {
-        s32 fallback = mFallbackWaterY;
-        mWaterY = fallback;
-        s32 tide = data_0209f32c;
-        if (tide > fallback) {
-            mWaterY = tide;
-            return 1;
+        dBgCh_Gnd rg;
+        vy = mPosY;
+        vz = mPosZ;
+        vx = mPosX;
+        {
+            int t = vy + 0x50000;
+            v.x = vx;
+            v.y = t;
+            v.z = vz;
         }
-        return 0;
+        rg.SetObjAndPos(v, this);
+        if (rg.DetectClsn()) {
+            mFallbackWaterY = rg.clsnY + 0x3e000;
+        }
     }
+    return 1;
+}
 
-    Vector3 vec;
-    dBgCh_Gnd rg;
-    /* Staged through locals: direct member stores schedule differently. */
-    int vx = mPosX;
-    int vz = mPosZ;
-    int vy = mPosY + 0x64000;
-    vec.x = vx;
-    vec.y = vy;
-    vec.z = vz;
-    rg.StartDetectingWater();
-    rg.SetObjAndPos(vec, this);
-    if (rg.DetectClsn() != 0) {
-        mWaterY = rg.clsnY;
-        if (SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
-            return 1;
-        }
+/* ROM ordinal 8 -- ov002 0x020b5f9c. The mesh callback's real body: when the
+ * touching actor is the Player (actorID 0xbf) it becomes mRider and the
+ * timeout reloads to 5. The `eq` staging is load-bearing: `if (actorID ==
+ * 0xbf)` folds to a 0x1c body; the ROM's 0x28 keeps the widened bool. */
+// @symbol _ZN17daObjFloatBoard_c19func_ov002_020b5f9cEP8dActor_c
+void daObjFloatBoard_c::func_ov002_020b5f9c(dActor_c *rider)
+{
+    enum Bool { FALSE, TRUE };
+    unsigned short t = rider->actorID;
+    enum Bool eq = (enum Bool)(t == 0xbf);
+    if (eq) {
+        mRider = rider;
+        mRiderTimeout = 5;
     }
-    return 0;
+}
+
+/* ROM ordinal 9 -- ov002 0x020b5fc4. The registration thunk the Init helper
+ * stores on the mesh collider: the callback ABI hands it an extra leading
+ * argument, which the real callback does not take. STAYS a free extern "C"
+ * function -- its address is stored as a raw callback word, so it cannot be
+ * a member pointer. */
+// @symbol func_ov002_020b5fc4
+extern "C" void func_ov002_020b5fc4(void *collider, void *board, void *other)
+{
+    ((daObjFloatBoard_c *)board)->func_ov002_020b5f9c((dActor_c *)other);
 }

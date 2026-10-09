@@ -18,6 +18,8 @@
  * Leftover: abstract class -- no factory, no g_profile row (S14).
  */
 
+#pragma defer_codegen off
+
 #include "daObjKaitendai_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -43,7 +45,71 @@ int func_ov002_020b676c(daObjKaitendai_c *self, ResourceDescriptor *descriptor, 
 int func_ov002_020b66a8(daObjKaitendai_c *self, ResourceDescriptor *descriptor);
 }
 
-/* ROM ordinal 3 -- func_ov002_020b676c, 0x020b676c, size 0xa8.
+// @symbol _ZN16daObjKaitendai_cD0Ev
+// @symbol _ZN16daObjKaitendai_cD1Ev
+/* ROM ordinals 0 and 1 -- ov002 0x020b660c (D0, 0x58) and 0x020b6664 (D1,
+ * 0x44). No source here: both destructor variants come from the ONE
+ * inline body in include/daObjKaitendai_c.h, which the class's descendants need
+ * visible to inline its vptr store.
+ *
+ * The two calls below are never executed. Under `#pragma defer_codegen off`
+ * the compiler emits ordinary functions at parse time in source order, so the
+ * delete-expression pulls the deleting variant out of line first and the
+ * explicit destructor call pulls the complete-object variant out second --
+ * the cartridge's D0-then-D1 order, which no deferred form reaches without a
+ * D2 the image does not contain. A delete-expression for D0 because
+ * dBgActor_c declares Kill, a key function reachable from this class. */
+
+/* Not called. Forces the out-of-line copy of the deleting destructor. */
+void daObjKaitendai_c_EmitDeletingDestructor(daObjKaitendai_c *p)
+{
+    delete p;
+}
+
+/* Not called. Forces the out-of-line copy of the inline destructor. */
+void daObjKaitendai_c_EmitDestructor(daObjKaitendai_c *p)
+{
+    p->~daObjKaitendai_c();
+}
+
+/* ROM ordinal 2 -- func_ov002_020b66a8, 0x020b66a8, size 0x48.
+ * Teardown half the five leaves call. */
+// @symbol func_ov002_020b66a8
+extern "C" {
+int func_ov002_020b66a8(daObjKaitendai_c *self, ResourceDescriptor *descriptor)
+{
+    if (self->mMeshCollider.IsEnabled())
+        self->mMeshCollider.Disable();
+    descriptor->model->Release();
+    descriptor->collision->Release();
+    return 1;
+}
+}
+
+/* ROM ordinal 3 -- vtable slot 9, ov002 0x020b66f0. */
+// @symbol _ZN16daObjKaitendai_c6RenderEv
+s32 daObjKaitendai_c::Render()
+{
+    mModel.Render(0);
+    return 1;
+}
+
+/* ROM ordinal 4 -- vtable slot 6, ov002 0x020b6718.
+ * s16 *p is load-bearing: mPrevAngleY += mPrevAngleZ recomputes the
+ * address and comes out 0x50 against the ROM's 0x54. */
+// @symbol _ZN16daObjKaitendai_c8BehaviorEv
+s32 daObjKaitendai_c::Behavior()
+{
+    s16 *p = &mPrevAngleY;
+    *p = *p + mPrevAngleZ;
+    mAngleY = mPrevAngleY;
+    UpdateModelPosAndRotY();
+    if (_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(this, 0, 0))
+        UpdateClsnPosAndRot();
+    return 1;
+}
+
+/* ROM ordinal 5 -- func_ov002_020b676c, 0x020b676c, size 0xa8.
  * Shared resource setup the five leaves call. Slot 0 is Model::LoadFile,
  * slot 1 is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile; then bind
  * UpdatePosAndAngs and seed mPrevAngleZ. */
@@ -67,43 +133,6 @@ int func_ov002_020b676c(daObjKaitendai_c *self, ResourceDescriptor *descriptor, 
         self->mPrevAngleZ = y;
         self->mAngleZ = 0;
     }
-    return 1;
-}
-}
-
-/* ROM ordinal 2 -- vtable slot 6, ov002 0x020b6718.
- * s16 *p is load-bearing: mPrevAngleY += mPrevAngleZ recomputes the
- * address and comes out 0x50 against the ROM's 0x54. */
-// @symbol _ZN16daObjKaitendai_c8BehaviorEv
-s32 daObjKaitendai_c::Behavior()
-{
-    s16 *p = &mPrevAngleY;
-    *p = *p + mPrevAngleZ;
-    mAngleY = mPrevAngleY;
-    UpdateModelPosAndRotY();
-    if (_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(this, 0, 0))
-        UpdateClsnPosAndRot();
-    return 1;
-}
-
-/* ROM ordinal 1 -- vtable slot 9, ov002 0x020b66f0. */
-// @symbol _ZN16daObjKaitendai_c6RenderEv
-s32 daObjKaitendai_c::Render()
-{
-    mModel.Render(0);
-    return 1;
-}
-
-/* ROM ordinal 0 -- func_ov002_020b66a8, 0x020b66a8, size 0x48.
- * Teardown half the five leaves call. */
-// @symbol func_ov002_020b66a8
-extern "C" {
-int func_ov002_020b66a8(daObjKaitendai_c *self, ResourceDescriptor *descriptor)
-{
-    if (self->mMeshCollider.IsEnabled())
-        self->mMeshCollider.Disable();
-    descriptor->model->Release();
-    descriptor->collision->Release();
     return 1;
 }
 }

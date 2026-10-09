@@ -7,14 +7,15 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "Contiguous production slice ov002:0x020ef3ec..0x020effb8: 19 dPathLiftActor_c methods and the existing func_ov002_020eff90 C bridge.",
-    "Original 22-function promotion fails production ownership: emitted inline destructor order differs from the retail D0/D1 order. Both legacy destructor owners remain enrolled.",
-    "dPathLiftActor_c identity is ROM RTTI evidence; original whole-TU boundary and complete lifecycle/state-data ownership remain unresolved."
+    "Contiguous production run ov002:0x020ef320..0x020effb8: the dPathLiftActor_c destructor pair D0 (0x020ef320) and D1 (0x020ef390), 19 dPathLiftActor_c methods and the existing func_ov002_020eff90 C bridge.",
+    "HISTORY, SUPERSEDED BY THE DESTRUCTOR FOLD (last boundary_evidence entry): Original 22-function promotion fails production ownership: emitted inline destructor order differs from the retail D0/D1 order. Both legacy destructor owners remain enrolled.",
+    "dPathLiftActor_c identity is ROM RTTI evidence; original whole-TU boundary and complete lifecycle/state-data ownership remain unresolved.",
+    "DESTRUCTOR FOLD. The licensed run is now 0x020ef320..0x020effb8 (22 functions), with _ZN16dPathLiftActor_cD0Ev at 0x020ef320 (size 0x70) and _ZN16dPathLiftActor_cD1Ev at 0x020ef390 (size 0x5c) as its first two members; their per-function shard sources and delinks entries are retired and merged into this TU's. The lever is the one src/actors/daObjDorifu_c.cpp records: `#pragma defer_codegen off` before the includes, the file written in ROM-ascending order, and two uncalled forcing functions at the top -- `delete p` (the deleting destructor, D0) then `p->~X()` (the complete-object destructor, D1) -- which make mwccarm emit the inline destructor's two variants at parse time in the cartridge's D0-then-D1 order, with no D2. The forcers are compiler_only_output deadstrip rows. Measured by tubuild.py verify: 22/22 MATCH, objisolate clean, reloc destinations clean, emission order ROM-ascending."
   ],
   "sections": [
     {
       "name": ".text",
-      "start": "0x020ef3ec",
+      "start": "0x020ef320",
       "end": "0x020effb8"
     },
     {
@@ -35,144 +36,158 @@
   ],
   "functions": [
     {
+      "symbol": "_ZN16dPathLiftActor_cD0Ev",
+      "address": "0x020ef320",
+      "size": "0x00000070",
+      "legacy_source": "src/_ZN16dPathLiftActor_cD0Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16dPathLiftActor_cD1Ev",
+      "address": "0x020ef390",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN16dPathLiftActor_cD1Ev.cpp",
+      "ordinal": 1
+    },
+    {
       "symbol": "_ZN16dPathLiftActor_c9StateWaitEv",
       "address": "0x020ef3ec",
       "size": "0x00000004",
       "legacy_source": "src/func_ov002_020ef3ec.c",
-      "ordinal": 0
+      "ordinal": 2
     },
     {
       "symbol": "_ZN16dPathLiftActor_c13StateWaitInitEv",
       "address": "0x020ef3f0",
       "size": "0x00000018",
       "legacy_source": "src/func_ov002_020ef3f0.c",
-      "ordinal": 1
+      "ordinal": 3
     },
     {
       "symbol": "_ZN16dPathLiftActor_c9StateFallEv",
       "address": "0x020ef408",
       "size": "0x00000174",
       "legacy_source": "src/func_ov002_020ef408.c",
-      "ordinal": 2
+      "ordinal": 4
     },
     {
       "symbol": "_ZN16dPathLiftActor_c13StateFallInitEv",
       "address": "0x020ef57c",
       "size": "0x000000f4",
       "legacy_source": "src/func_ov002_020ef57c.c",
-      "ordinal": 3
+      "ordinal": 5
     },
     {
       "symbol": "_ZN16dPathLiftActor_c9StatePathEv",
       "address": "0x020ef670",
       "size": "0x000003d4",
       "legacy_source": "src/func_ov002_020ef670.c",
-      "ordinal": 4
+      "ordinal": 6
     },
     {
       "symbol": "_ZN16dPathLiftActor_c13StatePathInitEv",
       "address": "0x020efa44",
       "size": "0x00000010",
       "legacy_source": "src/func_ov002_020efa44.c",
-      "ordinal": 5
+      "ordinal": 7
     },
     {
       "symbol": "_ZN16dPathLiftActor_c8SetStateEi",
       "address": "0x020efa54",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020efa54.cpp",
-      "ordinal": 6
+      "ordinal": 8
     },
     {
       "symbol": "_ZN16dPathLiftActor_c12BaseBehaviorEv",
       "address": "0x020efaa0",
       "size": "0x00000050",
       "legacy_source": "src/_ZN16dPathLiftActor_c12BaseBehaviorEv.cpp",
-      "ordinal": 7
+      "ordinal": 9
     },
     {
       "symbol": "_ZN16dPathLiftActor_c17BaseInitResourcesEv",
       "address": "0x020efaf0",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov002_020efaf0.cpp",
-      "ordinal": 8
+      "ordinal": 10
     },
     {
       "symbol": "_ZN16dPathLiftActor_c9ResetPathEv",
       "address": "0x020efbdc",
       "size": "0x00000098",
       "legacy_source": "src/func_ov002_020efbdc.c",
-      "ordinal": 9
+      "ordinal": 11
     },
     {
       "symbol": "_ZN16dPathLiftActor_c16RenderPathModelsEv",
       "address": "0x020efc74",
       "size": "0x00000080",
       "legacy_source": "src/func_ov002_020efc74.cpp",
-      "ordinal": 10
+      "ordinal": 12
     },
     {
       "symbol": "_ZN16dPathLiftActor_c16UpdatePathModelsEv",
       "address": "0x020efcf4",
       "size": "0x00000174",
       "legacy_source": "src/func_ov002_020efcf4.c",
-      "ordinal": 11
+      "ordinal": 13
     },
     {
       "symbol": "_ZNK16dPathLiftActor_c16HasNonzeroAngleZEv",
       "address": "0x020efe68",
       "size": "0x00000014",
       "legacy_source": "src/func_ov002_020efe68.c",
-      "ordinal": 12
+      "ordinal": 14
     },
     {
       "symbol": "_ZNK16dPathLiftActor_c14Param10ModeIs1Ev",
       "address": "0x020efe7c",
       "size": "0x00000020",
       "legacy_source": "src/func_ov002_020efe7c.c",
-      "ordinal": 13
+      "ordinal": 15
     },
     {
       "symbol": "_ZNK16dPathLiftActor_c14Param12ModeIs1Ev",
       "address": "0x020efe9c",
       "size": "0x00000020",
       "legacy_source": "src/func_ov002_020efe9c.c",
-      "ordinal": 14
+      "ordinal": 16
     },
     {
       "symbol": "_ZNK16dPathLiftActor_c14Param08ModeIs2Ev",
       "address": "0x020efebc",
       "size": "0x00000020",
       "legacy_source": "src/func_ov002_020efebc.c",
-      "ordinal": 15
+      "ordinal": 17
     },
     {
       "symbol": "_ZNK16dPathLiftActor_c17Param08ModeIs1Or2Ev",
       "address": "0x020efedc",
       "size": "0x00000028",
       "legacy_source": "src/func_ov002_020efedc.c",
-      "ordinal": 16
+      "ordinal": 18
     },
     {
       "symbol": "_ZNK16dPathLiftActor_c11IsUnk42cSetEv",
       "address": "0x020eff04",
       "size": "0x00000014",
       "legacy_source": "src/func_ov002_020eff04.cpp",
-      "ordinal": 17
+      "ordinal": 19
     },
     {
       "symbol": "_ZN16dPathLiftActor_c9AfterClsnEi",
       "address": "0x020eff18",
       "size": "0x00000078",
       "legacy_source": "src/_ZN16dPathLiftActor_c9AfterClsnEi.cpp",
-      "ordinal": 18
+      "ordinal": 20
     },
     {
       "symbol": "func_ov002_020eff90",
       "address": "0x020eff90",
       "size": "0x00000028",
       "legacy_source": "src/func_ov002_020eff90.cpp",
-      "ordinal": 19
+      "ordinal": 21
     }
   ],
   "init": [
@@ -276,19 +291,34 @@
   "bss": [],
   "defined_symbol_renames": [
     {
-      "from": "@651",
+      "from": "@831",
+      "to": "@647",
+      "evidence": "mwcc numbers the WAIT init pointer-to-member descriptor @831 in this TU's object now that the destructors are folded in and the source is ROM-ascending under defer_codegen off; ov002 already defines a global @831 elsewhere, so the scratch link would multiply-define it. The final name keeps the symbol the delinked data and symbols.txt already carry at this descriptor's address."
+    },
+    {
+      "from": "@833",
+      "to": "@649",
+      "evidence": "mwcc numbers the WAIT execute pointer-to-member descriptor @833 in this TU's object now that the destructors are folded in and the source is ROM-ascending under defer_codegen off; ov002 already defines a global @833 elsewhere, so the scratch link would multiply-define it. The final name keeps the symbol the delinked data and symbols.txt already carry at this descriptor's address."
+    },
+    {
+      "from": "@835",
       "to": "@999",
-      "evidence": "mwcc numbers this descriptor @651 per TU and ov002 already defines a global @651, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers the PATH init pointer-to-member descriptor @835 in this TU's object now that the destructors are folded in and the source is ROM-ascending under defer_codegen off; ov002 already defines a global @835 elsewhere, so the scratch link would multiply-define it. The final name keeps the symbol the delinked data and symbols.txt already carry at this descriptor's address."
     },
     {
-      "from": "@655",
-      "to": "@998",
-      "evidence": "mwcc numbers this descriptor @655 per TU and ov079 already defines a global @655, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@653",
+      "from": "@837",
       "to": "@997",
-      "evidence": "mwcc numbers this descriptor @653 per TU and ov079 already defines a global @653, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers the PATH execute pointer-to-member descriptor @837 in this TU's object now that the destructors are folded in and the source is ROM-ascending under defer_codegen off; ov002 already defines a global @837 elsewhere, so the scratch link would multiply-define it. The final name keeps the symbol the delinked data and symbols.txt already carry at this descriptor's address."
+    },
+    {
+      "from": "@839",
+      "to": "@998",
+      "evidence": "mwcc numbers the FALL init pointer-to-member descriptor @839 in this TU's object now that the destructors are folded in and the source is ROM-ascending under defer_codegen off; ov002 already defines a global @839 elsewhere, so the scratch link would multiply-define it. The final name keeps the symbol the delinked data and symbols.txt already carry at this descriptor's address."
+    },
+    {
+      "from": "@841",
+      "to": "@657",
+      "evidence": "mwcc numbers the FALL execute pointer-to-member descriptor @841 in this TU's object now that the destructors are folded in and the source is ROM-ascending under defer_codegen off; ov002 already defines a global @841 elsewhere, so the scratch link would multiply-define it. The final name keeps the symbol the delinked data and symbols.txt already carry at this descriptor's address."
     }
   ],
   "symbol_binding_rewrites": [
@@ -563,12 +593,22 @@
   ],
   "notes": [
     "Partial production promotion, not completion of the class/TU assignment.",
-    "Retain src/_ZN16dPathLiftActor_cD0Ev.cpp and src/_ZN16dPathLiftActor_cD1Ev.cpp as canonical destructor owners.",
     "The state data data_ov002_0210af2c, the scale triple data_ov002_0210af00, the class metadata records and the __sinit_dPathLiftActor_c.cpp static initializer are this TU's own emission; the handwritten __sinit_ov002_021071f4 source is retired. Foreign-home compiler metadata duplicates are measured at configured ROM homes; no coined or unowned metadata waiver.",
-    "Follow-up: independently reconstruct the complete lifecycle and state-data TU boundary; current 20-function slice is the verified useful subset.",
-    "The 17 helper member names are inferred from matched bodies/state-table use; RTTI proves dPathLiftActor_c class identity, not original English member spellings. Const qualification on HasNonzeroAngleZ, Param10ModeIs1, Param12ModeIs1, Param08ModeIs2, Param08ModeIs1Or2 and IsUnk42cSet is inferred from read-only bodies; ARM bytes cannot distinguish the original qualification. SetState(int) uses an inferred int spelling for a word-sized argument."
+    "Follow-up: independently reconstruct the complete lifecycle and state-data TU boundary; current 22-function slice (the destructor pair included) is the verified useful subset.",
+    "The 17 helper member names are inferred from matched bodies/state-table use; RTTI proves dPathLiftActor_c class identity, not original English member spellings. Const qualification on HasNonzeroAngleZ, Param10ModeIs1, Param12ModeIs1, Param08ModeIs2, Param08ModeIs1Or2 and IsUnk42cSet is inferred from read-only bodies; ARM bytes cannot distinguish the original qualification. SetState(int) uses an inferred int spelling for a word-sized argument.",
+    "FORCING FUNCTIONS AND PRAGMA. This TU compiles under `#pragma defer_codegen off` and carries two uncalled functions, dPathLiftActor_c_EmitDeletingDestructor and dPathLiftActor_c_EmitDestructor, recorded as compiler_only_output deadstrip rows. They are the parse-time trigger that places D0 then D1 ahead of the real members and are not in the ROM. The destructor itself stays inline in include/dPathLiftActor_c.h because the class's descendants inline its vptr store."
   ],
   "compiler_only_output": [
+    {
+      "symbol": "_Z39dPathLiftActor_c_EmitDeletingDestructorP16dPathLiftActor_c",
+      "disposition": "deadstrip",
+      "reason": "Not called and not in the ROM: a source-level forcing function. The class destructor is defined inline in its header because the descendants inline its vptr store, so no file can define it out of line; a delete-expression asks for the deleting variant by name. This file compiles under `#pragma defer_codegen off`, where ordinary functions are emitted at parse time in source order -- the only measured lever that makes mwccarm emit D0 before D1 as the cartridge has them -- and this forcer is the parse-time trigger that places D0 first. Emitted between the licensed D0 and D1 sections. Homeless: config/ has no symbol row for it."
+    },
+    {
+      "symbol": "_Z31dPathLiftActor_c_EmitDestructorP16dPathLiftActor_c",
+      "disposition": "deadstrip",
+      "reason": "Not called and not in the ROM: the companion forcing function. An explicit `p->~dPathLiftActor_c()` asks for the complete-object variant by name; the delete-expression forcer cannot serve both, because a plain destructor call alone does not reproduce the deleting variant out of line. This file compiles under `#pragma defer_codegen off`, where ordinary functions are emitted at parse time in source order, so the call places D1 after D0 as the cartridge has them. Emitted between the licensed D1 section and the first real member, so it does not disturb the licensed run. Homeless: config/ has no symbol row for it."
+    },
     {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
@@ -633,20 +673,6 @@
       "reason": "Compiler-emitted duplicate metadata with configured ROM home outside this text-only entry. Independently compare payload and relocated destinations against that home before discarding its duplicate storage; metadata ownership remains separate."
     },
     {
-      "symbol": "_ZN16dPathLiftActor_cD0Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "ov002",
-      "canonical_address": "0x020ef320",
-      "reason": "Preserved original legacy destructor owner supplies the retail body; proposed state-machine TU emits a byte-identical vague duplicate."
-    },
-    {
-      "symbol": "_ZN16dPathLiftActor_cD1Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "ov002",
-      "canonical_address": "0x020ef390",
-      "reason": "Preserved original legacy destructor owner supplies the retail body; proposed state-machine TU emits a byte-identical vague duplicate."
-    },
-    {
       "symbol": "_ZTV16dPathLiftActor_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov002",
@@ -660,39 +686,37 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov002-dPathLiftActor_c/dPathLiftActor_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 20,
-    "functions_declared": 20,
+    "functions_matched": 22,
+    "functions_declared": 22,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN7Vector3D1Ev",
-        "_ZN16dPathLiftActor_cD0Ev",
-        "_ZN16dPathLiftActor_cD1Ev"
+        "_Z39dPathLiftActor_c_EmitDeletingDestructorP16dPathLiftActor_c",
+        "_Z31dPathLiftActor_c_EmitDestructorP16dPathLiftActor_c",
+        "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
-        "_ZN16dPathLiftActor_cD0Ev",
-        "_ZN16dPathLiftActor_cD1Ev",
+        "_Z31dPathLiftActor_c_EmitDestructorP16dPathLiftActor_c",
+        "_Z39dPathLiftActor_c_EmitDeletingDestructorP16dPathLiftActor_c",
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
         5,
-        6,
-        22,
-        23,
-        24,
-        25,
-        26,
-        27,
-        28,
-        30,
-        31,
-        34,
-        38,
-        39,
-        40,
-        41,
-        42,
-        43,
-        52
+        8,
+        19,
+        60,
+        61,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -738,7 +762,7 @@
         "rom": true
       },
       "tuRange": {
-        "start": "0x020ef3ec",
+        "start": "0x020ef320",
         "end": "0x020effb8",
         "differingBytes": 0,
         "firstDiff": null
@@ -746,7 +770,7 @@
       "tuRanges": [
         {
           "section": ".text",
-          "start": "0x020ef3ec",
+          "start": "0x020ef320",
           "end": "0x020effb8",
           "differingBytes": 0,
           "firstDiff": null
@@ -775,7 +799,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 35
+          "LICENSED": 37
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -786,52 +810,52 @@
           {
             "section": ".init",
             "original": [
-              77
+              79
             ],
             "desired": [
-              77
+              79
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              75
+              77
             ],
             "desired": [
-              75
+              77
             ]
           },
           {
             "section": ".data",
             "original": [
-              7,
-              9,
-              11,
-              13,
-              15,
-              17,
-              18,
-              19,
-              21,
-              29,
-              32,
-              35,
-              36
+              42,
+              43,
+              44,
+              45,
+              46,
+              48,
+              50,
+              52,
+              54,
+              56,
+              58,
+              62,
+              63
             ],
             "desired": [
-              21,
-              18,
-              17,
-              19,
-              15,
-              11,
-              9,
-              7,
-              13,
-              29,
-              32,
-              35,
-              36
+              45,
+              43,
+              44,
+              46,
+              50,
+              56,
+              48,
+              54,
+              52,
+              42,
+              63,
+              62,
+              58
             ]
           }
         ],
@@ -840,49 +864,49 @@
             {
               "section": ".data",
               "original": [
-                7,
-                9,
-                11,
-                13,
-                15,
-                17,
-                18,
-                19,
-                21,
-                29,
-                32,
-                35,
-                36
+                42,
+                43,
+                44,
+                45,
+                46,
+                48,
+                50,
+                52,
+                54,
+                56,
+                58,
+                62,
+                63
               ],
               "desired": [
-                21,
-                18,
-                17,
-                19,
-                15,
-                11,
-                9,
-                7,
-                13,
-                29,
-                32,
-                35,
-                36
+                45,
+                43,
+                44,
+                46,
+                50,
+                56,
+                48,
+                54,
+                52,
+                42,
+                63,
+                62,
+                58
               ],
               "slots": [
-                7,
-                9,
-                11,
-                13,
-                15,
-                17,
-                18,
-                19,
-                21,
-                29,
-                32,
-                35,
-                36
+                42,
+                43,
+                44,
+                45,
+                46,
+                48,
+                50,
+                52,
+                54,
+                56,
+                58,
+                62,
+                63
               ]
             }
           ],

@@ -20,6 +20,8 @@
  * Leftover: abstract class -- no factory, no g_profile row (S14).
  */
 
+#pragma defer_codegen off
+
 #include "daObjUkiyuka_c.h"
 #include "SharedFilePtr.h"
 
@@ -45,28 +47,56 @@ int func_ov002_020b6584(daObjUkiyuka_c *self, ResourceDescriptor *descriptor, in
 int func_ov002_020b6424(daObjUkiyuka_c *self, ResourceDescriptor *descriptor);
 }
 
-/* ROM ordinal 3 -- func_ov002_020b6584, 0x020b6584, size 0x88.
- * Shared resource setup both leaves call. Slot 0 is Model::LoadFile, slot 1
- * is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile; then mRestY = mPosY
- * and mBobAmplitude = arg 3. */
-// @symbol func_ov002_020b6584
-extern "C" {
-int func_ov002_020b6584(daObjUkiyuka_c *self, ResourceDescriptor *descriptor, int bobAmplitude)
+// @symbol _ZN14daObjUkiyuka_cD0Ev
+// @symbol _ZN14daObjUkiyuka_cD1Ev
+/* ROM ordinals 0 and 1 -- ov002 0x020b6388 (D0, 0x58) and 0x020b63e0 (D1,
+ * 0x44). No source here: both destructor variants come from the ONE
+ * inline body in include/daObjUkiyuka_c.h, which the class's descendants need
+ * visible to inline its vptr store.
+ *
+ * The two calls below are never executed. Under `#pragma defer_codegen off`
+ * the compiler emits ordinary functions at parse time in source order, so the
+ * delete-expression pulls the deleting variant out of line first and the
+ * explicit destructor call pulls the complete-object variant out second --
+ * the cartridge's D0-then-D1 order, which no deferred form reaches without a
+ * D2 the image does not contain. A delete-expression for D0 because
+ * dBgActor_c declares Kill, a key function reachable from this class. */
+
+/* Not called. Forces the out-of-line copy of the deleting destructor. */
+void daObjUkiyuka_c_EmitDeletingDestructor(daObjUkiyuka_c *p)
 {
-    self->mModel.SetFile((BMD_File *)Model::LoadFile(*descriptor->model), 1, -1);
-    self->UpdateModelPosAndRotY();
-    self->UpdateClsnPosAndRot();
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &self->mMeshCollider,
-        (KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision),
-        &self->mClsnMat, 0x1000, self->mAngleY, descriptor->clps);
-    self->mRestY = self->mPosY;
-    self->mBobAmplitude = bobAmplitude;
+    delete p;
+}
+
+/* Not called. Forces the out-of-line copy of the inline destructor. */
+void daObjUkiyuka_c_EmitDestructor(daObjUkiyuka_c *p)
+{
+    p->~daObjUkiyuka_c();
+}
+
+/* ROM ordinal 2 -- func_ov002_020b6424, 0x020b6424, size 0x48.
+ * Teardown half both leaves call. */
+// @symbol func_ov002_020b6424
+extern "C" {
+int func_ov002_020b6424(daObjUkiyuka_c *self, ResourceDescriptor *descriptor)
+{
+    if (self->mMeshCollider.IsEnabled())
+        self->mMeshCollider.Disable();
+    descriptor->model->Release();
+    descriptor->collision->Release();
     return 1;
 }
 }
 
-/* ROM ordinal 2 -- vtable slot 6, ov002 0x020b6494.
+/* ROM ordinal 3 -- vtable slot 9, ov002 0x020b646c. */
+// @symbol _ZN14daObjUkiyuka_c6RenderEv
+s32 daObjUkiyuka_c::Render()
+{
+    mModel.Render(0);
+    return 1;
+}
+
+/* ROM ordinal 4 -- vtable slot 6, ov002 0x020b6494.
  * mBobPhase is declared s16 but stepped as u16; mRestTimer is passed to
  * DecIfAbove0_Short by address. The two (int)this + off launders stay. */
 // @symbol _ZN14daObjUkiyuka_c8BehaviorEv
@@ -97,24 +127,23 @@ s32 daObjUkiyuka_c::Behavior()
     return 1;
 }
 
-/* ROM ordinal 1 -- vtable slot 9, ov002 0x020b646c. */
-// @symbol _ZN14daObjUkiyuka_c6RenderEv
-s32 daObjUkiyuka_c::Render()
-{
-    mModel.Render(0);
-    return 1;
-}
-
-/* ROM ordinal 0 -- func_ov002_020b6424, 0x020b6424, size 0x48.
- * Teardown half both leaves call. */
-// @symbol func_ov002_020b6424
+/* ROM ordinal 5 -- func_ov002_020b6584, 0x020b6584, size 0x88.
+ * Shared resource setup both leaves call. Slot 0 is Model::LoadFile, slot 1
+ * is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile; then mRestY = mPosY
+ * and mBobAmplitude = arg 3. */
+// @symbol func_ov002_020b6584
 extern "C" {
-int func_ov002_020b6424(daObjUkiyuka_c *self, ResourceDescriptor *descriptor)
+int func_ov002_020b6584(daObjUkiyuka_c *self, ResourceDescriptor *descriptor, int bobAmplitude)
 {
-    if (self->mMeshCollider.IsEnabled())
-        self->mMeshCollider.Disable();
-    descriptor->model->Release();
-    descriptor->collision->Release();
+    self->mModel.SetFile((BMD_File *)Model::LoadFile(*descriptor->model), 1, -1);
+    self->UpdateModelPosAndRotY();
+    self->UpdateClsnPosAndRot();
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        &self->mMeshCollider,
+        (KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision),
+        &self->mClsnMat, 0x1000, self->mAngleY, descriptor->clps);
+    self->mRestY = self->mPosY;
+    self->mBobAmplitude = bobAmplitude;
     return 1;
 }
 }

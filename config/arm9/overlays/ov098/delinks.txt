@@ -12,17 +12,9 @@ src/actors/daObjBlockS_c.cpp:
     complete
     .text start:0x02138040 end:0x02139f70
 
-src/_ZN16daObjFallBlock_cD0Ev.cpp:
-    complete
-    .text start:0x02139f70 end:0x02139fc8
-
-src/_ZN16daObjFallBlock_cD1Ev.cpp:
-    complete
-    .text start:0x02139fc8 end:0x0213a00c
-
 src/actors/daObjFallBlock_c.cpp:
     complete
-    .text start:0x0213a00c end:0x0213a900
+    .text start:0x02139f70 end:0x0213a900
 
 src/game/actors/d_a_cnn.cpp:
     complete

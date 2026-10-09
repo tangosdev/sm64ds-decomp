@@ -20,17 +20,9 @@ src/actors/daDsn_c.cpp:
     complete
     .text start:0x02132938 end:0x02132d04
 
-src/_ZN11daDsnBase_cD0Ev.cpp:
-    complete
-    .text start:0x02132d04 end:0x02132d6c
-
-src/_ZN11daDsnBase_cD1Ev.cpp:
-    complete
-    .text start:0x02132d6c end:0x02132dc0
-
 src/actors/daDsnBase_c.cpp:
     complete
-    .text start:0x02132dc0 end:0x021333fc
+    .text start:0x02132d04 end:0x021333fc
 
 src/actors/daObjPile_c.cpp:
     complete

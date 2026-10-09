@@ -6,7 +6,7 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "contiguous linker run: 0x020b6814..0x020b69e4, 6 function(s). build/tu_map.json (tools/tu_map.py) segments this as 0x020b6814..0x020b6958, 5 functions, because func_ov002_020b6958 carries no mangled name and no vtable slot, so no label bounds it on the right. The span is EXTENDED BY HAND to take it in, and the licensed range is then TRIMMED on the left to exclude the destructor pair; the census and the destructor grid below are the reasons for each move.",
+    "contiguous linker run: 0x020b6814..0x020b69e4, 6 function(s). build/tu_map.json (tools/tu_map.py) segments this as 0x020b6814..0x020b6958, 5 functions, because func_ov002_020b6958 carries no mangled name and no vtable slot, so no label bounds it on the right. The span is EXTENDED BY HAND to take it in, and the licensed range is then TRIMMED on the left to exclude the destructor pair; the census and the destructor grid below are the reasons for each move. [Superseded: the licensed range now includes the destructor pair; see the last boundary_evidence entry.]",
     "class label(s): daObjKuruma_c",
     "CALL-SITE CENSUS over every config/**/relocs.txt in the tree, filtered on the relocation's TARGET MODULE. The filter matters twice here. (a) ov000 and ov002 overlap in address space, so a census keyed on the address alone reports an ov000 word at 0x020beecc as a referrer of func_ov002_020b68b0 when it in fact names ov000's own code; it carries module:overlay(0) and is dropped. (b) The descendants' own words carry the AMBIGUOUS tag module:overlays(0,2), not module:overlay(2), so a filter written as an exact string match on 'overlay(2)' silently returns the EMPTY SET for both helpers and would refute this fold outright. The filter used is 'the relocation's target module set CONTAINS 2'. daObjKuruma_c has exactly two descendants -- daObjKm1_Kuruma_c (ov043) and daObjKm3_Kuruma_c (ov047), which is the whole child set build/rtti.json's edge list returns for base ov002:0x02109254. Two addresses are referenced from EXACTLY that two-module set and from nowhere else in the image: func_ov002_020b68b0 (ov043 0x021115d8, ov047 0x021114b8) and func_ov002_020b6958 (ov043 0x021115ec, ov047 0x021114cc). _ZN13daObjKuruma_c6RenderEv and _ZN13daObjKuruma_c8BehaviorEv are members of this class by vtable slot (9 and 6), so they are the positive control; their referrer set is the same two overlays plus ov002 itself, the extra word being this class's own vtable (0x0210929c and 0x02109290).",
     "THE REFERRER SET ALONE IS NOT SUFFICIENT HERE, AND THE MEASUREMENT THAT SETTLES IT IS FINER THAN THE ONE THE SIBLING ENTRIES USED. daObjKurumajiku_c's own teardown helper func_ov002_020b6ac8 returns the IDENTICAL module set {ov043, ov047}, because the Kuruma and Kurumajiku leaves live pairwise in the same two overlays. A module-set census therefore CANNOT separate this class's helpers from its neighbour's. Each referring word was resolved to the FUNCTION THAT CONTAINS IT, against that overlay's own symbols.txt, and the containing functions name the class themselves: func_ov002_020b68b0 is loaded from _ZN17daObjKm1_Kuruma_c16CleanupResourcesEv (ov043 0x021115cc..0x021115e0) and _ZN17daObjKm3_Kuruma_c16CleanupResourcesEv (ov047 0x021114ac..0x021114c0); func_ov002_020b6958 is loaded from _ZN17daObjKm1_Kuruma_c13InitResourcesEv (ov043 0x021115e0..0x021115f4) and _ZN17daObjKm3_Kuruma_c13InitResourcesEv (ov047 0x021114c0..0x021114d4). The neighbour's two helpers resolve, in the same two overlays, to _ZN21daObjKm1_Kurumajiku_c16CleanupResourcesEv / _ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv and the matching InitResources pair. Both helpers in this run are named only from the abstract slots of the leaves OF THIS CLASS, which is exactly what slots 0 and 3 being null predicts.",
@@ -16,59 +16,74 @@
     "SHAPE, repeated four times in this stretch of ov002: [D0, D1, teardown helper, Render, Behavior, setup helper] is daObjUkiyuka_c (0x020b6388..0x020b660c), daObjKaitendai_c (0x020b660c..0x020b6814) and daObjKuruma_c (0x020b6814..0x020b69e4); daObjGuragura_c and daObjKurumajiku_c are the same with extra TU-local helpers. Under mwccarm's reverse-source-order .text emission that is the source order [setup, Behavior, Render, teardown, <implicit destructors>], which is an ordinary C++ file.",
     "THE RUN'S RIGHT EDGE IS 0x020b69e4 AND NOT BEYOND. The next function is _ZN17daObjKurumajiku_cD0Ev at 0x020b69e4, which opens the neighbouring class's own run; it and _ZN17daObjKurumajiku_cD1Ev at 0x020b6a3c are each named by EXACTLY ONE word in the whole image, ov002:0x02109364 and ov002:0x02109360, which are slots 17 and 16 of _ZTV17daObjKurumajiku_c. Nothing in this run reaches them.",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "THE DESTRUCTOR PAIR IS DELIBERATELY EXCLUDED FROM THE LICENSED RANGE, so the licensed run is 0x020b68b0..0x020b69e4 (4 functions) inside the 0x020b6814..0x020b69e4 object the evidence above establishes. The cartridge places _ZN13daObjKuruma_cD0Ev at 0x020b6814 BELOW _ZN13daObjKuruma_cD1Ev at 0x020b686c. THE LEVER GRID WAS RE-MEASURED ON THIS TU rather than carried over from the siblings, because a sibling's recorded rule describes its own regime and can invert in the other. Eight compiles, each read off the emitted object's .text section order and sizes (D0 is 0x58, D1 and D2 are 0x44, teardown 0x48, Render 0x28, Behavior 0x38, setup 0x8c, so every section is identified by size alone except D1-vs-D2, which were separated by symbol). AXIS A, destructor inline in the class body, the tree's current form: (1) deferred codegen + reverse-ROM source [the form shipped] -> [D1, D0, teardown, Render, Behavior, setup]; (2) 'pragma defer_codegen off' placed BEFORE the members -> [setup, Behavior, Render, teardown, D1, D0], the four real members reverse and the pair moves to the tail; (3) the same pragma placed AFTER the members -> no effect at all, byte-identical section order to (1); (4) pragma + the whole file rewritten in ROM-ascending order -> [teardown, Render, Behavior, setup, D1, D0]; (4b) deferred + ROM-ascending source -> [D1, D0, setup, Behavior, Render, teardown], the members now in the WRONG order, which is the control confirming reverse-source-order emission. AXIS B, destructor out of line (the inline body removed from include/daObjKuruma_c.h and 'daObjKuruma_c::~daObjKuruma_c() {}' defined in the TU): (5) deferred + reverse-ROM source -> [teardown, Render, Behavior, setup, D2, D0, D1]; (6) pragma before the members -> [D1, D0, D2, setup, Behavior, Render, teardown]; (7) deferred + ROM-ascending source -> [setup, Behavior, Render, teardown, D2, D0, D1]; (8) pragma + ROM-ascending source -> [D1, D0, D2, teardown, Render, Behavior, setup]. THE PAIR NEVER COMES OUT D0-THEN-D1 WITHOUT A D2 BESIDE IT. All four inline forms emit D1 first; the only forms that emit D0 before D1 are out-of-line cells (5) and (7), and every out-of-line cell emits SEVEN .text sections where the ROM's run has SIX. This reproduces on daObjKuruma_c exactly what PR #2786 recorded on daObjUkiyuka_c: the D1-first rule is a property of the INLINE regime, not of the class.",
+    "HISTORY, SUPERSEDED BY THE DESTRUCTOR FOLD (last boundary_evidence entry): THE DESTRUCTOR PAIR IS DELIBERATELY EXCLUDED FROM THE LICENSED RANGE, so the licensed run is 0x020b68b0..0x020b69e4 (4 functions) inside the 0x020b6814..0x020b69e4 object the evidence above establishes. The cartridge places _ZN13daObjKuruma_cD0Ev at 0x020b6814 BELOW _ZN13daObjKuruma_cD1Ev at 0x020b686c. THE LEVER GRID WAS RE-MEASURED ON THIS TU rather than carried over from the siblings, because a sibling's recorded rule describes its own regime and can invert in the other. Eight compiles, each read off the emitted object's .text section order and sizes (D0 is 0x58, D1 and D2 are 0x44, teardown 0x48, Render 0x28, Behavior 0x38, setup 0x8c, so every section is identified by size alone except D1-vs-D2, which were separated by symbol). AXIS A, destructor inline in the class body, the tree's current form: (1) deferred codegen + reverse-ROM source [the form shipped] -> [D1, D0, teardown, Render, Behavior, setup]; (2) 'pragma defer_codegen off' placed BEFORE the members -> [setup, Behavior, Render, teardown, D1, D0], the four real members reverse and the pair moves to the tail; (3) the same pragma placed AFTER the members -> no effect at all, byte-identical section order to (1); (4) pragma + the whole file rewritten in ROM-ascending order -> [teardown, Render, Behavior, setup, D1, D0]; (4b) deferred + ROM-ascending source -> [D1, D0, setup, Behavior, Render, teardown], the members now in the WRONG order, which is the control confirming reverse-source-order emission. AXIS B, destructor out of line (the inline body removed from include/daObjKuruma_c.h and 'daObjKuruma_c::~daObjKuruma_c() {}' defined in the TU): (5) deferred + reverse-ROM source -> [teardown, Render, Behavior, setup, D2, D0, D1]; (6) pragma before the members -> [D1, D0, D2, setup, Behavior, Render, teardown]; (7) deferred + ROM-ascending source -> [setup, Behavior, Render, teardown, D2, D0, D1]; (8) pragma + ROM-ascending source -> [D1, D0, D2, teardown, Render, Behavior, setup]. THE PAIR NEVER COMES OUT D0-THEN-D1 WITHOUT A D2 BESIDE IT. All four inline forms emit D1 first; the only forms that emit D0 before D1 are out-of-line cells (5) and (7), and every out-of-line cell emits SEVEN .text sections where the ROM's run has SIX. This reproduces on daObjKuruma_c exactly what PR #2786 recorded on daObjUkiyuka_c: the D1-first rule is a property of the INLINE regime, not of the class.",
     "THE OUT-OF-LINE FORM IS REFUTED BY THE CARTRIDGE, independently of the order it produces. It emits _ZN13daObjKuruma_cD2Ev, size 0x44, which the image does not contain: the function immediately below D0 is func_ov002_020b676c at 0x020b676c, size 0xa8 (daObjKaitendai_c's setup helper, landed as part of that class's own intact TU), and the function immediately above D1 is func_ov002_020b68b0 at 0x020b68b0, size 0x48 -- nothing of size 0x44 abuts the pair on either side, and 0x020b6814..0x020b68b0 is exactly 0x58 + 0x44 with no room left. It is ruled out a second way by the relocation census: _ZN13daObjKuruma_cD0Ev is named by EXACTLY ONE word in the whole image, ov002:0x021092bc, and _ZN13daObjKuruma_cD1Ev by exactly one, ov002:0x021092b8. Those are slots 17 and 16 of _ZTV13daObjKuruma_c (address point 0x02109278; 0x021092b8 - 0x02109278 = 0x40 = slot 16). No instruction anywhere in the ROM calls either destructor, and both descendants inline this destructor's vptr store instead. An out-of-line definition here would make daObjKm1_Kuruma_c and daObjKm3_Kuruma_c emit a call the cartridge does not have and break their already-matched TUs.",
-    "THE INLINE FORM IS RIGHT AND ONLY ITS ORDER IS WRONG, which is measured and not inferred. The D0 and D1 sections this TU emits under form (1) are 0x58 and 0x44 bytes, the ROM's sizes exactly, and comparing them against extracted/dsd/arm9_overlays/ov002.bin at 0x020b6814 and 0x020b686c leaves 24 and 17 differing bytes -- every single one of them inside a word the object carries a relocation for (D0 relocated word offsets 0x1c, 0x24, 0x2c, 0x3c, 0x4c, 0x50, 0x54; D1 relocated word offsets 0x1c, 0x24, 0x2c, 0x3c, 0x40). ZERO differing bytes fall outside a relocated word. So the exclusion is about emission order and nothing else. This is the same disposition already taken by ov002/daObjFloatBoard_c, ov002/daObjKaitendai_c and ov002/daObjUkiyuka_c, whose destructor pairs sit in the identical D0-below-D1 arrangement."
+    "HISTORY, SUPERSEDED BY THE DESTRUCTOR FOLD (last boundary_evidence entry): THE INLINE FORM IS RIGHT AND ONLY ITS ORDER IS WRONG, which is measured and not inferred. The D0 and D1 sections this TU emits under form (1) are 0x58 and 0x44 bytes, the ROM's sizes exactly, and comparing them against extracted/dsd/arm9_overlays/ov002.bin at 0x020b6814 and 0x020b686c leaves 24 and 17 differing bytes -- every single one of them inside a word the object carries a relocation for (D0 relocated word offsets 0x1c, 0x24, 0x2c, 0x3c, 0x4c, 0x50, 0x54; D1 relocated word offsets 0x1c, 0x24, 0x2c, 0x3c, 0x40). ZERO differing bytes fall outside a relocated word. So the exclusion is about emission order and nothing else. This is the same disposition already taken by ov002/daObjFloatBoard_c, ov002/daObjKaitendai_c and ov002/daObjUkiyuka_c, whose destructor pairs sit in the identical D0-below-D1 arrangement.",
+    "DESTRUCTOR FOLD. The licensed run is now 0x020b6814..0x020b69e4 (6 functions), with _ZN13daObjKuruma_cD0Ev at 0x020b6814 (size 0x58) and _ZN13daObjKuruma_cD1Ev at 0x020b686c (size 0x44) as its first two members; their per-function shard sources and delinks entries are retired and merged into this TU's. The lever is the one src/actors/daObjDorifu_c.cpp records: `#pragma defer_codegen off` before the includes, the file written in ROM-ascending order, and two uncalled forcing functions at the top -- `delete p` (the deleting destructor, D0) then `p->~X()` (the complete-object destructor, D1) -- which make mwccarm emit the inline destructor's two variants at parse time in the cartridge's D0-then-D1 order, with no D2. The forcers are compiler_only_output deadstrip rows. Measured by tubuild.py verify: 6/6 MATCH, objisolate clean, reloc destinations clean, emission order ROM-ascending."
   ],
   "sections": [
     {
       "name": ".text",
-      "start": "0x020b68b0",
+      "start": "0x020b6814",
       "end": "0x020b69e4"
     }
   ],
   "functions": [
     {
+      "symbol": "_ZN13daObjKuruma_cD0Ev",
+      "address": "0x020b6814",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN13daObjKuruma_cD0Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN13daObjKuruma_cD1Ev",
+      "address": "0x020b686c",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN13daObjKuruma_cD1Ev.cpp",
+      "ordinal": 1
+    },
+    {
       "symbol": "func_ov002_020b68b0",
       "address": "0x020b68b0",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020b68b0.cpp",
-      "ordinal": 0
+      "ordinal": 2
     },
     {
       "symbol": "_ZN13daObjKuruma_c6RenderEv",
       "address": "0x020b68f8",
       "size": "0x00000028",
       "legacy_source": "src/_ZN13daObjKuruma_c6RenderEv.cpp",
-      "ordinal": 1
+      "ordinal": 3
     },
     {
       "symbol": "_ZN13daObjKuruma_c8BehaviorEv",
       "address": "0x020b6920",
       "size": "0x00000038",
       "legacy_source": "src/_ZN13daObjKuruma_c8BehaviorEv.cpp",
-      "ordinal": 2
+      "ordinal": 4
     },
     {
       "symbol": "func_ov002_020b6958",
       "address": "0x020b6958",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov002_020b6958.c",
-      "ordinal": 3
+      "ordinal": 5
     }
   ],
   "data": [],
   "bss": [],
   "notes": [
-    "Seeded by tools/tubuild.py create (5 members, the tu_map span) and then re-cut by hand. See boundary_evidence for the call-site census that moves the run's right edge out to 0x020b69e4 and for the destructor grid that excludes the pair from the licensed range on the left.",
-    "NO FORCING FUNCTION AND NO PRAGMA. The two legacy destructor shards each carry a scaffold (a delete-expression, an explicit destructor call) whose only job is to drag an out-of-line copy into a one-function object. This TU owns the key function, so _ZTV13daObjKuruma_c is emitted here and its slots 16 and 17 odr-use D1 and D0 with nothing added to the source; src/_ZN13daObjKuruma_cD0Ev.cpp and src/_ZN13daObjKuruma_cD1Ev.cpp keep their own per-function delinks entries and this object's copies are licensed as deadstrip-duplicate against those ROM homes.",
+    "Seeded by tools/tubuild.py create (5 members, the tu_map span) and then re-cut by hand. See boundary_evidence for the call-site census that moves the run's right edge out to 0x020b69e4 and for the destructor grid that excludes the pair from the licensed range on the left. [Superseded: the licensed range now includes the destructor pair; see the last boundary_evidence entry.]",
     "THIS FOLD MOVES THE CLASS'S KEY FUNCTION, which is the one difference from the two landed siblings in this stretch. daObjKaitendai_c and daObjUkiyuka_c declare Behavior first, so their key function was already out of line before their fold. daObjKuruma_c declares RENDER first, and Render's definition was the unmigrated one, so until now NO TU owned this class's key function and nothing in the tree emitted _ZTV13daObjKuruma_c. Defining Render here makes this TU the vtable's anchor. include/daObjKuruma_c.h's comment recording that pre-fold state is updated by this promotion; the header's DECLARATION ORDER is untouched, so the class layout, the slot numbering and the 0x320 size assert are all unchanged.",
     "TWO PREVIOUSLY UNATTRIBUTED FUNCTIONS ARE FOLDED IN. func_ov002_020b68b0 and func_ov002_020b6958 are this class's shared teardown and setup halves, reached by an ordinary call from each of the two leaves rather than through a vtable slot, because the class is abstract in slots 0 and 3. build/tu_map.json cannot see the second one: it carries no mangled name and no vtable slot, so no label bounds the run on the right.",
     "The class is ABSTRACT: vtable slots 0 (InitResources) and 3 (CleanupResources) are bare zero words with no relocation, and each of the two leaves supplies its own. There is no factory and no g_profile row -- both leaves' factories live in their own overlays (ov043 daObjKm1_Kuruma_c, ov047 daObjKm3_Kuruma_c) and neither abuts this run -- which is why the entry claims no data, no ctor and no BSS.",
     "func_ov002_020b68b0 and func_ov002_020b6958 keep their address-derived names. Neither occupies a vtable slot in any class in the image and nothing in the ROM names either, so a coined English name would be invention, not recovery.",
     "func_ov002_020b6958's local `typedef int Fix12` had to go when the body moved into a TU that includes the class header, because Fix12 is a class template there. The typedef named parameter 4 of an extern \"C\" declaration of _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block, so it is spelled `int` -- the type the typedef named -- directly. It reaches no mangled name and no codegen; all four members still byte-match. The same substitution was made for the same reason on ov002/daObjUkiyuka_c's setup half.",
     "func_ov002_020b68b0's body is UNCHANGED, and it is the only one of the five copies of this teardown body in ov002 that was already C++ before the fold: it reaches dBgW and SharedFilePtr through include/dBgW.h and include/SharedFilePtr.h and real member calls, where daObjGuragura_c's, daObjUkiyuka_c's, daObjKaitendai_c's and daObjKurumajiku_c's copies each use extern \"C\" declarations of the mangled names. Those two includes move to the top of the folded file; nothing else about the body changed.",
-    "POST-PROMOTION `tubuild.py linkcheck` IS STRUCTURALLY UNAVAILABLE TO THIS ENTRY, and that is not a defect in it. Once the single intact delinks.txt entry exists, linkcheck treats the source as an enrolled intact-object candidate and routes its object through tools/tu_production.prepare_intact_object, which refuses any entry that does not claim a non-text section: 'intact production requires one .text claim and at least one non-text claim'. This TU claims .text only, because the class has no factory, no g_profile row and no owned data. The proof of record for this entry is therefore the PRE-PROMOTION linkcheck run recorded in `verification`, plus tools/rombuild.py against the real tree. production_mode is deliberately left unset, as it is on the other promoted text-only entries in this module."
+    "POST-PROMOTION `tubuild.py linkcheck` IS STRUCTURALLY UNAVAILABLE TO THIS ENTRY, and that is not a defect in it. Once the single intact delinks.txt entry exists, linkcheck treats the source as an enrolled intact-object candidate and routes its object through tools/tu_production.prepare_intact_object, which refuses any entry that does not claim a non-text section: 'intact production requires one .text claim and at least one non-text claim'. This TU claims .text only, because the class has no factory, no g_profile row and no owned data. The proof of record for this entry is therefore the PRE-PROMOTION linkcheck run recorded in `verification`, plus tools/rombuild.py against the real tree. production_mode is deliberately left unset, as it is on the other promoted text-only entries in this module.",
+    "FORCING FUNCTIONS AND PRAGMA. This TU compiles under `#pragma defer_codegen off` and carries two uncalled functions, daObjKuruma_c_EmitDeletingDestructor and daObjKuruma_c_EmitDestructor, recorded as compiler_only_output deadstrip rows. They are the parse-time trigger that places D0 then D1 ahead of the real members and are not in the ROM. The destructor itself stays inline in include/daObjKuruma_c.h because the class's descendants inline its vptr store."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -76,8 +91,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov002-daObjKuruma_c/daObjKuruma_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 4,
-    "functions_declared": 4,
+    "functions_matched": 6,
+    "functions_declared": 6,
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
@@ -87,27 +102,16 @@
     },
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN13daObjKuruma_cD1Ev",
-        "_ZN13daObjKuruma_cD0Ev"
+        "_Z36daObjKuruma_c_EmitDeletingDestructorP13daObjKuruma_c",
+        "_Z28daObjKuruma_c_EmitDestructorP13daObjKuruma_c"
       ],
       "deadstripped": [
-        "_ZN13daObjKuruma_cD0Ev",
-        "_ZN13daObjKuruma_cD1Ev"
+        "_Z28daObjKuruma_c_EmitDestructorP13daObjKuruma_c",
+        "_Z36daObjKuruma_c_EmitDeletingDestructorP13daObjKuruma_c"
       ],
       "droppedSections": [
         5,
-        6,
-        7,
         8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
         18,
         19,
         20,
@@ -115,7 +119,16 @@
         22,
         23,
         24,
-        25
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
       ],
       "data": [
         "_ZTV13daObjKuruma_c",
@@ -393,18 +406,14 @@
   },
   "compiler_only_output": [
     {
-      "symbol": "_ZN13daObjKuruma_cD1Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "ov002",
-      "canonical_address": "0x020b686c",
-      "reason": "Vague-linkage copy of the class's complete-object destructor, emitted here because this TU owns the key function while ~daObjKuruma_c is defined inline in include/daObjKuruma_c.h. The cartridge owns it at ov002:0x020b686c and src/_ZN13daObjKuruma_cD1Ev.cpp still holds that delinks entry, so this object's copy is a duplicate that production isolation discards. It is outside this entry's licensed range (.text 0x020b68b0-0x020b69e4). Measured byte-for-byte against the ROM: 0x44 bytes, 17 differing, all inside a relocated word, none outside."
+      "symbol": "_Z36daObjKuruma_c_EmitDeletingDestructorP13daObjKuruma_c",
+      "disposition": "deadstrip",
+      "reason": "Not called and not in the ROM: a source-level forcing function. The class destructor is defined inline in its header because the descendants inline its vptr store, so no file can define it out of line; a delete-expression asks for the deleting variant by name. This file compiles under `#pragma defer_codegen off`, where ordinary functions are emitted at parse time in source order -- the only measured lever that makes mwccarm emit D0 before D1 as the cartridge has them -- and this forcer is the parse-time trigger that places D0 first. Emitted between the licensed D0 and D1 sections. Homeless: config/ has no symbol row for it."
     },
     {
-      "symbol": "_ZN13daObjKuruma_cD0Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "ov002",
-      "canonical_address": "0x020b6814",
-      "reason": "Vague-linkage copy of the class's deleting destructor, same cause. The cartridge owns it at ov002:0x020b6814, BELOW D1 -- see this entry's boundary_evidence for the eight source forms measured against that order and for why every form that emits D0 first also emits a _ZN13daObjKuruma_cD2Ev the image does not contain. src/_ZN13daObjKuruma_cD0Ev.cpp keeps that delinks entry and this object's copy is discarded. Measured: 0x58 bytes, 24 differing, all inside a relocated word, none outside."
+      "symbol": "_Z28daObjKuruma_c_EmitDestructorP13daObjKuruma_c",
+      "disposition": "deadstrip",
+      "reason": "Not called and not in the ROM: the companion forcing function. An explicit `p->~daObjKuruma_c()` asks for the complete-object variant by name; the delete-expression forcer cannot serve both, because a plain destructor call alone does not reproduce the deleting variant out of line. This file compiles under `#pragma defer_codegen off`, where ordinary functions are emitted at parse time in source order, so the call places D1 after D0 as the cartridge has them. Emitted between the licensed D1 section and the first real member, so it does not disturb the licensed run. Homeless: config/ has no symbol row for it."
     },
     {
       "symbol": "_ZTV13daObjKuruma_c",

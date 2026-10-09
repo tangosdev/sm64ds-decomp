@@ -6,69 +6,80 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "Licensed four-function text run: ov002 0x020b6a80..0x020b6c54 (468 bytes). The retail D0/D1 pair at 0x020b69e4/0x020b6a3c remains in its enrolled individual sources. The current unchanged inline-header form emits duplicate D1 then D0, opposite retail order. This is a measured property of that form, not a claim about every possible C++ definition; see notes/experiments/pr2873-source-repair-0920.json.",
+    "Licensed text run: ov002 0x020b69e4..0x020b6c54 (six functions): the retail D0/D1 pair at 0x020b69e4/0x020b6a3c plus the four functions that followed. The unchanged inline-header form emits D1 then D0 under default deferred codegen, opposite retail order; the fold reaches D0 then D1 with two uncalled forcing functions under `#pragma defer_codegen off` (see the last entry); see also notes/experiments/pr2873-source-repair-0920.json for the earlier measurements.",
     "class label(s): daObjKurumajiku_c",
-    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "DESTRUCTOR FOLD. The licensed run is now 0x020b69e4..0x020b6c54 (6 functions), with _ZN17daObjKurumajiku_cD0Ev at 0x020b69e4 (size 0x58) and _ZN17daObjKurumajiku_cD1Ev at 0x020b6a3c (size 0x44) as its first two members; their per-function shard sources and delinks entries are retired and merged into this TU's. The lever is the one src/actors/daObjDorifu_c.cpp records: `#pragma defer_codegen off` before the includes, the file written in ROM-ascending order, and two uncalled forcing functions at the top -- `delete p` (the deleting destructor, D0) then `p->~X()` (the complete-object destructor, D1) -- which make mwccarm emit the inline destructor's two variants at parse time in the cartridge's D0-then-D1 order, with no D2. The forcers are compiler_only_output deadstrip rows. Measured by tubuild.py verify: 6/6 MATCH, objisolate clean, reloc destinations clean, emission order ROM-ascending."
   ],
   "sections": [
     {
       "name": ".text",
-      "start": "0x020b6a80",
+      "start": "0x020b69e4",
       "end": "0x020b6c54"
     }
   ],
   "functions": [
     {
+      "symbol": "_ZN17daObjKurumajiku_cD0Ev",
+      "address": "0x020b69e4",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN17daObjKurumajiku_cD0Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN17daObjKurumajiku_cD1Ev",
+      "address": "0x020b6a3c",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN17daObjKurumajiku_cD1Ev.cpp",
+      "ordinal": 1
+    },
+    {
       "symbol": "func_ov002_020b6a80",
       "address": "0x020b6a80",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020b6a80.c",
-      "ordinal": 0
+      "ordinal": 2
     },
     {
       "symbol": "func_ov002_020b6ac8",
       "address": "0x020b6ac8",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020b6ac8.cpp",
-      "ordinal": 1
+      "ordinal": 3
     },
     {
       "symbol": "_ZN17daObjKurumajiku_c6RenderEv",
       "address": "0x020b6b10",
       "size": "0x00000028",
       "legacy_source": "src/_ZN17daObjKurumajiku_c6RenderEv.cpp",
-      "ordinal": 2
+      "ordinal": 4
     },
     {
       "symbol": "_ZN17daObjKurumajiku_c8BehaviorEv",
       "address": "0x020b6b38",
       "size": "0x0000011c",
       "legacy_source": "src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp",
-      "ordinal": 3
+      "ordinal": 5
     }
   ],
   "data": [],
   "bss": [],
   "compiler_only_output": [
     {
+      "symbol": "_Z40daObjKurumajiku_c_EmitDeletingDestructorP17daObjKurumajiku_c",
+      "disposition": "deadstrip",
+      "reason": "Not called and not in the ROM: a source-level forcing function. The class destructor is defined inline in its header because the descendants inline its vptr store, so no file can define it out of line; a delete-expression asks for the deleting variant by name. This file compiles under `#pragma defer_codegen off`, where ordinary functions are emitted at parse time in source order -- the only measured lever that makes mwccarm emit D0 before D1 as the cartridge has them -- and this forcer is the parse-time trigger that places D0 first. Emitted between the licensed D0 and D1 sections. Homeless: config/ has no symbol row for it."
+    },
+    {
+      "symbol": "_Z32daObjKurumajiku_c_EmitDestructorP17daObjKurumajiku_c",
+      "disposition": "deadstrip",
+      "reason": "Not called and not in the ROM: the companion forcing function. An explicit `p->~daObjKurumajiku_c()` asks for the complete-object variant by name; the delete-expression forcer cannot serve both, because a plain destructor call alone does not reproduce the deleting variant out of line. This file compiles under `#pragma defer_codegen off`, where ordinary functions are emitted at parse time in source order, so the call places D1 after D0 as the cartridge has them. Emitted between the licensed D1 section and the first real member, so it does not disturb the licensed run. Homeless: config/ has no symbol row for it."
+    },
+    {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "Emitted duplicate independently verified with strict relocation-aware bytes at its configured canonical home in notes/experiments/pr2873-source-repair-0920.json. Production retains the existing canonical source and strips this copy. All surviving references are checked by the complete-output policy and full ROM build."
-    },
-    {
-      "symbol": "_ZN17daObjKurumajiku_cD1Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "ov002",
-      "canonical_address": "0x020b6a3c",
-      "reason": "Emitted duplicate independently verified with strict relocation-aware bytes at its configured canonical home in notes/experiments/pr2873-source-repair-0920.json. Production retains the existing canonical source and strips this copy. All surviving references are checked by the complete-output policy and full ROM build."
-    },
-    {
-      "symbol": "_ZN17daObjKurumajiku_cD0Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "ov002",
-      "canonical_address": "0x020b69e4",
       "reason": "Emitted duplicate independently verified with strict relocation-aware bytes at its configured canonical home in notes/experiments/pr2873-source-repair-0920.json. Production retains the existing canonical source and strips this copy. All surviving references are checked by the complete-output policy and full ROM build."
     },
     {
@@ -150,47 +161,37 @@
     }
   ],
   "notes": [
-    "Partial promotion: two compiler-spelled methods (Render, Behavior) and two linker-named C helpers. All four functions use named actor/model/collider fields. No source enrollment or licensed range changed during the review repair.",
+    "Partial promotion: two compiler-spelled methods (Render, Behavior) and two linker-named C helpers. All four functions use named actor/model/collider fields. No source enrollment or licensed range changed during the review repair. [Superseded by the destructor fold: the pair is now in this TU, emitted by two forcing functions under defer_codegen off.]",
     "func_ov002_020b6a80 retains the char* entry required by the existing shared declaration and setup caller, then recovers the base type locally. Its matrix is mModel.mat4x3, not the collision matrix; translation is world position divided by eight. The inherited scalar IsClsnInRange bridge matches its actual definition, not an asserted by-value Fix12 ABI.",
     "Cleanup restores the pre-PR opaque void*/void* C boundary. Both current callers pass an unadjusted empty derived object and a descriptor containing SharedFilePtr* model/collision followed by CLPS_Block*. The common axle owns the reconstructed daObjKurumajiku_c::Resources layout, corroborated by both descendant records and the shared setup helper. Named collider and descriptor accesses pass strict bytes. Distinct caller-side pointer spellings remain interface reconstruction debt; void* is not full declaration agreement.",
     "Fourteen bounded review variants are recorded as exact source patches in notes/experiments/pr2873-source-repair-0920.json. Named model/collider/descriptor accesses and mAngleZ += 0x100 match. A comparison widened to int is retained: direct, bool and masked-integer tests emit a 0x110-byte Behavior instead of retail 0x11c. Noncompound angle assignment also fails. The angle increment precedes the suppression test.",
-    "Historical producer report: the original PR listed a fourteen-form destructor grid (inline/header/order variants, implicit destructor and odr-use arrangements) but did not commit exact variant artifacts. That report is not a reproduced universal barrier. This review measures the unchanged inline-header form only: duplicate D1 then D0; both bodies and relocations match their retained retail homes. No destructor-definition change or forced-emission workaround is proposed.",
+    "Historical producer report: the original PR listed a fourteen-form destructor grid (inline/header/order variants, implicit destructor and odr-use arrangements) but did not commit exact variant artifacts. That report is not a reproduced universal barrier. This review measures the unchanged inline-header form only: duplicate D1 then D0; both bodies and relocations match their retained retail homes. No destructor-definition change or forced-emission workaround is proposed. [Superseded by the destructor fold: the pair is now in this TU, emitted by two forcing functions under defer_codegen off.]",
     "The manifest remains text-only. All eleven complete emitted metadata objects, including the 0x88-byte vtable storage/preamble, are compared byte-for-byte after relocation in the repair evidence. Four inherited names emit 9/9/10/13 bytes including NUL; configured extents are 12/12/12/16 and the remaining 3/3/2/3 retail bytes are zero gap padding not emitted by these objects. The ordinary romdata report remains 7 VERIFIED / 4 PARTIAL / 0 DIFFERS.",
-    "Integration still owns removal of exactly the two newly banked Cleanup receiver fingerprints and regeneration of this actor's promotion queue accounting. Source-stage evidence does not accept reserved ledger contents. Original four per-symbol credits and the sole Render converted identity are retained."
+    "Integration still owns removal of exactly the two newly banked Cleanup receiver fingerprints and regeneration of this actor's promotion queue accounting. Source-stage evidence does not accept reserved ledger contents. Original four per-symbol credits and the sole Render converted identity are retained.",
+    "FORCING FUNCTIONS AND PRAGMA. This TU compiles under `#pragma defer_codegen off` and carries two uncalled functions, daObjKurumajiku_c_EmitDeletingDestructor and daObjKurumajiku_c_EmitDestructor, recorded as compiler_only_output deadstrip rows. They are the parse-time trigger that places D0 then D1 ahead of the real members and are not in the ROM. The destructor itself stays inline in include/daObjKurumajiku_c.h because the class's descendants inline its vptr store."
   ],
   "verification": {
-    "round": "Review repair: complete TU compiled once, four strict functions, all duplicate bodies and full emitted metadata separately checked; see committed experiment.",
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov002-daObjKurumajiku_c/daObjKurumajiku_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 4,
-    "functions_declared": 4,
+    "functions_matched": 6,
+    "functions_declared": 6,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN7Vector3D1Ev",
-        "_ZN17daObjKurumajiku_cD1Ev",
-        "_ZN17daObjKurumajiku_cD0Ev"
+        "_Z40daObjKurumajiku_c_EmitDeletingDestructorP17daObjKurumajiku_c",
+        "_Z32daObjKurumajiku_c_EmitDestructorP17daObjKurumajiku_c",
+        "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
-        "_ZN17daObjKurumajiku_cD0Ev",
-        "_ZN17daObjKurumajiku_cD1Ev",
+        "_Z32daObjKurumajiku_c_EmitDestructorP17daObjKurumajiku_c",
+        "_Z40daObjKurumajiku_c_EmitDeletingDestructorP17daObjKurumajiku_c",
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
         5,
-        6,
-        7,
         8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
         18,
         19,
         20,
@@ -199,7 +200,16 @@
         23,
         24,
         25,
-        33
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
       ],
       "data": [
         "_ZTV17daObjKurumajiku_c",

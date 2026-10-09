@@ -9,108 +9,123 @@
     "contiguous linker run: 0x2139f70..0x213a794, 12 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjFallBlock_c",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "EMISSION ORDER -- MEASURED REFUSAL, not a near-miss. The ROM puts D0 (0x02139f70) BELOW D1 (0x02139fc8). daObjFallBlock_c.h defines `~daObjFallBlock_c() {}` in the class body, and an in-class inline destructor emits D1 then D0; the only other admissible spelling, out of line, emits D2/D0/D1. Scaffolds change nothing (the two legacy shards carried one each and both are dropped here). So the licensed run cannot be put in ROM order without spelling the destructor out of line, and the cartridge refuses that spelling: config/arm9/overlays/ov098/relocs.txt carries exactly two inbound references to the pair -- from:0x0213c5fc to:0x02139fc8 and from:0x0213c600 to:0x02139f70 -- which are _ZTV16daObjFallBlock_c + 0x40 and + 0x44 off the address point, i.e. vtable slots 16 and 17, the two the header already names. NO instruction in the image calls either address, and no _ZN16daObjFallBlock_cD2Ev exists in the image or in any symbols.txt -- an out-of-line base destructor would make each of the four descendants call D2 and would leave it live. The in-class inline body is the cartridge's form. Same shape daObjFloatBoard_c settled at (notes/agents/roles/writer.md, 'When a subset is the right answer'), and settled the same way here: the licensed set is cut to the orderable 10 and the destructor pair is held out as deadstrip-duplicate against its own ROM homes. The 12/12 evidence is not discarded -- it is preserved in this branch's first commit and in the partial_isolation block below, which records a 12-object PARTIAL-LINK-VERIFIED run whose ROM is byte-identical to the stock control.",
-    "PARTIAL PROMOTION, 10 OF 12. All TWELVE functions verify byte-for-byte from this one TU (12/12 MATCH, objisolate clean, reloc-destinations clean, and PARTIAL-LINK-VERIFIED with the full ROM identical to the stock control -- see the branch's first commit, which licensed all 12). D0 and D1 are held out of the licensed run for EMISSION ORDER ALONE, per the daObjFloatBoard_c / ov029/daObjWcObj01_c precedent: they keep their delinks.txt entries and their src/ shards, and this TU's own copies are licensed deadstrip-duplicate against ov098 0x02139f70 / 0x02139fc8. The licensed run is now 0x0213a00c..0x0213a794, ten functions in ROM-ascending order.",
-    "CLEANUP leftover fold: daObjFallBlock_c_InitResources (0x0213a794, size 0x14c), daObjFallBlock_c_RequestShake (0x0213a8e0, size 0xc) and daObjFallBlock_c_OnStoodOn (0x0213a8ec, size 0x14) sit immediately after Behavior with no gap, and daCnn_c D1 starts at 0x0213a900. RequestShake writes mShakeRequested at this+0x33e (830). OnStoodOn is the dBgW+0x1c veneer Init arms via func_020393c4. Licensed run is now 0x0213a00c..0x0213a900, thirteen functions in ROM-ascending order. D0/D1 stay held out."
+    "HISTORY, SUPERSEDED BY THE DESTRUCTOR FOLD (last boundary_evidence entry): EMISSION ORDER -- MEASURED REFUSAL, not a near-miss. The ROM puts D0 (0x02139f70) BELOW D1 (0x02139fc8). daObjFallBlock_c.h defines `~daObjFallBlock_c() {}` in the class body, and an in-class inline destructor emits D1 then D0; the only other admissible spelling, out of line, emits D2/D0/D1. Scaffolds change nothing (the two legacy shards carried one each and both are dropped here). So the licensed run cannot be put in ROM order without spelling the destructor out of line, and the cartridge refuses that spelling: config/arm9/overlays/ov098/relocs.txt carries exactly two inbound references to the pair -- from:0x0213c5fc to:0x02139fc8 and from:0x0213c600 to:0x02139f70 -- which are _ZTV16daObjFallBlock_c + 0x40 and + 0x44 off the address point, i.e. vtable slots 16 and 17, the two the header already names. NO instruction in the image calls either address, and no _ZN16daObjFallBlock_cD2Ev exists in the image or in any symbols.txt -- an out-of-line base destructor would make each of the four descendants call D2 and would leave it live. The in-class inline body is the cartridge's form. Same shape daObjFloatBoard_c settled at (notes/agents/roles/writer.md, 'When a subset is the right answer'), and settled the same way here: the licensed set is cut to the orderable 10 and the destructor pair is held out as deadstrip-duplicate against its own ROM homes. The 12/12 evidence is not discarded -- it is preserved in this branch's first commit and in the partial_isolation block below, which records a 12-object PARTIAL-LINK-VERIFIED run whose ROM is byte-identical to the stock control.",
+    "HISTORY, SUPERSEDED BY THE DESTRUCTOR FOLD (last boundary_evidence entry): PARTIAL PROMOTION, 10 OF 12. All TWELVE functions verify byte-for-byte from this one TU (12/12 MATCH, objisolate clean, reloc-destinations clean, and PARTIAL-LINK-VERIFIED with the full ROM identical to the stock control -- see the branch's first commit, which licensed all 12). D0 and D1 are held out of the licensed run for EMISSION ORDER ALONE, per the daObjFloatBoard_c / ov029/daObjWcObj01_c precedent: they keep their delinks.txt entries and their src/ shards, and this TU's own copies are licensed deadstrip-duplicate against ov098 0x02139f70 / 0x02139fc8. The licensed run is now 0x0213a00c..0x0213a794, ten functions in ROM-ascending order.",
+    "CLEANUP leftover fold: daObjFallBlock_c_InitResources (0x0213a794, size 0x14c), daObjFallBlock_c_RequestShake (0x0213a8e0, size 0xc) and daObjFallBlock_c_OnStoodOn (0x0213a8ec, size 0x14) sit immediately after Behavior with no gap, and daCnn_c D1 starts at 0x0213a900. RequestShake writes mShakeRequested at this+0x33e (830). OnStoodOn is the dBgW+0x1c veneer Init arms via func_020393c4. Licensed run is now 0x0213a00c..0x0213a900, thirteen functions in ROM-ascending order. D0/D1 stay held out.",
+    "DESTRUCTOR FOLD. The licensed run is now 0x02139f70..0x0213a900 (15 functions), with _ZN16daObjFallBlock_cD0Ev at 0x02139f70 (size 0x58) and _ZN16daObjFallBlock_cD1Ev at 0x02139fc8 (size 0x44) as its first two members; their per-function shard sources and delinks entries are retired and merged into this TU's. The lever is the one src/actors/daObjDorifu_c.cpp records: `#pragma defer_codegen off` before the includes, the file written in ROM-ascending order, and two uncalled forcing functions at the top -- `delete p` (the deleting destructor, D0) then `p->~X()` (the complete-object destructor, D1) -- which make mwccarm emit the inline destructor's two variants at parse time in the cartridge's D0-then-D1 order, with no D2. The forcers are compiler_only_output deadstrip rows. Measured by tubuild.py verify: 15/15 MATCH, objisolate clean, reloc destinations clean, emission order ROM-ascending."
   ],
   "sections": [
     {
       "name": ".text",
-      "start": "0x0213a00c",
+      "start": "0x02139f70",
       "end": "0x0213a900"
     }
   ],
   "functions": [
     {
+      "symbol": "_ZN16daObjFallBlock_cD0Ev",
+      "address": "0x02139f70",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN16daObjFallBlock_cD0Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16daObjFallBlock_cD1Ev",
+      "address": "0x02139fc8",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN16daObjFallBlock_cD1Ev.cpp",
+      "ordinal": 1
+    },
+    {
       "symbol": "daObjFallBlock_c_LinkGroup",
       "address": "0x0213a00c",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov098_0213a00c.cpp",
-      "ordinal": 0
+      "ordinal": 2
     },
     {
       "symbol": "daObjFallBlock_c_PollLinkedStar",
       "address": "0x0213a0a8",
       "size": "0x00000040",
       "legacy_source": "src/func_ov098_0213a0a8.cpp",
-      "ordinal": 1
+      "ordinal": 3
     },
     {
       "symbol": "daObjFallBlock_c_FindLinkedStar",
       "address": "0x0213a0e8",
       "size": "0x00000060",
       "legacy_source": "src/func_ov098_0213a0e8.c",
-      "ordinal": 2
+      "ordinal": 4
     },
     {
       "symbol": "daObjFallBlock_c_ResetMotion",
       "address": "0x0213a148",
       "size": "0x00000034",
       "legacy_source": "src/func_ov098_0213a148.c",
-      "ordinal": 3
+      "ordinal": 5
     },
     {
       "symbol": "_ZN16daObjFallBlock_c4KillEv",
       "address": "0x0213a17c",
       "size": "0x000000c0",
       "legacy_source": "src/_ZN16daObjFallBlock_c4KillEv.cpp",
-      "ordinal": 4
+      "ordinal": 6
     },
     {
       "symbol": "daObjFallBlock_c_ApplyModelXyz",
       "address": "0x0213a23c",
       "size": "0x00000048",
       "legacy_source": "src/func_ov098_0213a23c.c",
-      "ordinal": 5
+      "ordinal": 7
     },
     {
       "symbol": "_ZN16daObjFallBlock_c15OnHitByMegaCharER6Player",
       "address": "0x0213a284",
       "size": "0x00000048",
       "legacy_source": "src/_ZN16daObjFallBlock_c15OnHitByMegaCharER6Player.cpp",
-      "ordinal": 6
+      "ordinal": 8
     },
     {
       "symbol": "func_ov098_0213a2cc",
       "address": "0x0213a2cc",
       "size": "0x00000048",
       "legacy_source": "src/func_ov098_0213a2cc.c",
-      "ordinal": 7
+      "ordinal": 9
     },
     {
       "symbol": "_ZN16daObjFallBlock_c6RenderEv",
       "address": "0x0213a314",
       "size": "0x00000058",
       "legacy_source": "src/_ZN16daObjFallBlock_c6RenderEv.cpp",
-      "ordinal": 8
+      "ordinal": 10
     },
     {
       "symbol": "_ZN16daObjFallBlock_c8BehaviorEv",
       "address": "0x0213a36c",
       "size": "0x00000428",
       "legacy_source": "src/_ZN16daObjFallBlock_c8BehaviorEv.cpp",
-      "ordinal": 9
+      "ordinal": 11
     },
     {
       "symbol": "daObjFallBlock_c_InitResources",
       "address": "0x0213a794",
       "size": "0x0000014c",
       "legacy_source": "src/func_ov098_0213a794.cpp",
-      "ordinal": 10
+      "ordinal": 12
     },
     {
       "symbol": "daObjFallBlock_c_RequestShake",
       "address": "0x0213a8e0",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov098_0213a8e0.c",
-      "ordinal": 11
+      "ordinal": 13
     },
     {
       "symbol": "daObjFallBlock_c_OnStoodOn",
       "address": "0x0213a8ec",
       "size": "0x00000014",
       "legacy_source": "src/func_ov098_0213a8ec.c",
-      "ordinal": 12
+      "ordinal": 14
     }
   ],
   "data": [],
@@ -120,10 +135,11 @@
     "tubuild create warning: RAW: src/func_ov098_0213a0a8.cpp (func_ov098_0213a0a8) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c15FindWithActorIDEjPS_' differs between the legacy file that used to hold func_ov098_0213a00c and the one that held func_ov098_0213a0e8; kept the first, the other is commented out for review -- RESOLVED: the kept spelling `dActor_c *(unsigned int, dActor_c *)` is the right one; the loser typed both the return and the `after` parameter `void *`, which cannot be passed back into the kept declaration in C++ (no implicit void*->dActor_c*). func_ov098_0213a0e8's local was retyped dActor_c* instead. 10/10 MATCH confirms the kept declaration reproduces the cartridge's calls. Marker comment removed from the merged source.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov098_0213a00c' differs between the legacy file that used to hold func_ov098_0213a00c and the one that held _ZN16daObjFallBlock_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: the kept spelling `void func_ov098_0213a00c(char *)` matches the definition this TU now owns; the loser's `void *` parameter was a shard-local convenience. 10/10 MATCH confirms it. Marker comment removed from the merged source.",
-    "KEY FUNCTION IS Kill(), NOT THE DESTRUCTOR. The destructor is inline in daObjFallBlock_c.h, so the key function is the first non-inline, non-pure virtual -- Kill(), vtable slot 31 -- and this TU defines it. That is why this TU emits _ZTV16daObjFallBlock_c and both destructor variants with no forcing scaffold of any kind. tubuild create carried the two scaffolds the legacy shards used (an explicit `p->~daObjFallBlock_c()` in the D1 shard, a stub redefinition of Kill() in the D0 shard); merged, the stub is an outright redefinition of the real Kill() body and neither scaffold is needed. Both removed, 12/12 still MATCH.",
-    "UNLICENSED-SYMBOL COUNT, DERIVED NOT COPIED. writer.md's formula `2 x (ancestors + self) + 1 vtable + 1 Vector3 D1` over the real chain daObjFallBlock_c -> dBgActor_c -> dActor_c -> dBase_c -> fBase_c (5 levels) predicts 2*5 + 1 + 1 = 12, and the compiled object emits exactly 12 unlicensed symbols. The queue's `compiler-only:~1`, copied from sibling daObjYajirusi_c when it still carried the pilot shape, is not wrong so much as counting a different thing: the sibling's ONE compiler_only_output row was its homeless D2Ev, with eight in externalized_output and four more unlicensed at the time. That sibling has since moved to this same deadstrip-data shape (plus deadstrip-duplicate for Vector3D1); the count comparison here still describes the two shapes, not current rows. Here all 12 are carried by compiler_only_output and nothing goes to externalized_output: _ZN7Vector3D1Ev is deadstrip-duplicate, and _ZTV16daObjFallBlock_c plus all ten _ZTI/_ZTS records are deadstrip-data, because every one of them has a configured ROM home in some module's symbols.txt. (An earlier revision of this entry put the ten RTTI records in externalized_output; that was wrong on both counts -- they are not homeless, and externalized_output would have pinned this entry to the text-verified-only route, since tubuild.py refuses promotion for any entry carrying it.) With D0 and D1 also held out of the licensed run, compiler_only_output is 14 rows: those 12 plus the destructor pair. Every canonical address was read out of config/**/symbols.txt and every relocation out of this TU's own compiled ELF, not assumed from the sibling.",
+    "KEY FUNCTION IS Kill(), NOT THE DESTRUCTOR. The destructor is inline in daObjFallBlock_c.h, so the key function is the first non-inline, non-pure virtual -- Kill(), vtable slot 31 -- and this TU defines it. That is why this TU emits _ZTV16daObjFallBlock_c and both destructor variants with no forcing scaffold of any kind. tubuild create carried the two scaffolds the legacy shards used (an explicit `p->~daObjFallBlock_c()` in the D1 shard, a stub redefinition of Kill() in the D0 shard); merged, the stub is an outright redefinition of the real Kill() body and neither scaffold is needed. Both removed, 12/12 still MATCH. [Superseded in part by the destructor fold: the pair is now licensed here and two uncalled forcing functions under defer_codegen off place it D0 then D1.]",
+    "UNLICENSED-SYMBOL COUNT, DERIVED NOT COPIED. writer.md's formula `2 x (ancestors + self) + 1 vtable + 1 Vector3 D1` over the real chain daObjFallBlock_c -> dBgActor_c -> dActor_c -> dBase_c -> fBase_c (5 levels) predicts 2*5 + 1 + 1 = 12, and the compiled object emits exactly 12 unlicensed symbols. The queue's `compiler-only:~1`, copied from sibling daObjYajirusi_c when it still carried the pilot shape, is not wrong so much as counting a different thing: the sibling's ONE compiler_only_output row was its homeless D2Ev, with eight in externalized_output and four more unlicensed at the time. That sibling has since moved to this same deadstrip-data shape (plus deadstrip-duplicate for Vector3D1); the count comparison here still describes the two shapes, not current rows. Here all 12 are carried by compiler_only_output and nothing goes to externalized_output: _ZN7Vector3D1Ev is deadstrip-duplicate, and _ZTV16daObjFallBlock_c plus all ten _ZTI/_ZTS records are deadstrip-data, because every one of them has a configured ROM home in some module's symbols.txt. (An earlier revision of this entry put the ten RTTI records in externalized_output; that was wrong on both counts -- they are not homeless, and externalized_output would have pinned this entry to the text-verified-only route, since tubuild.py refuses promotion for any entry carrying it.) With D0 and D1 also held out of the licensed run, compiler_only_output is 14 rows: those 12 plus the destructor pair. Every canonical address was read out of config/**/symbols.txt and every relocation out of this TU's own compiled ELF, not assumed from the sibling. [Superseded in part by the destructor fold: the pair is now licensed here and two uncalled forcing functions under defer_codegen off place it D0 then D1.]",
     "TWO ROWS THE SIBLING ORACLE COULD NOT WRITE, AND WHY. (1) ov098/daObjYajirusi_c.json recorded that _ZN7Vector3D1Ev fits neither policy schema because compiler_only_output refuses a symbol with a configured ROM home. That note is now doubly stale: tubuild.py grew `deadstrip-duplicate` for exactly this case -- a FUNCTION with a ROM home another source owns (arm9 0x020072c0) -- and verify accepts it here (`compiler-only : exact deadstrip ['_ZN7Vector3D1Ev']`). (2) daObjYajirusi_c left its own _ZTI/_ZTS/_ZTV unlicensed. This class's own _ZTI16daObjFallBlock_c and _ZTS16daObjFallBlock_c CAN be canonical-imported because mwld's one kept copy of them is not in this module at all: ov015 owns both (0x02114874 / 0x0211488c) and ov098's vtable header word relocates across to them. The vtable itself is the one record that stays in this module, so it takes deadstrip-data against its own ov098 home at 0x0213c5bc. All ten RTTI records take deadstrip-data too, each against the module that actually owns it -- arm9 for the fBase_c/dBase_c/dActor_c pairs, ov002 for dBgActor_c's, ov015 for this class's own -- verified row by row against those modules' symbols.txt.",
-    "WHY THIS PROMOTED FIRST. An earlier revision of this entry concluded promotion was refused, because it had routed the ten _ZTI/_ZTS records to externalized_output and tubuild.py:5861 refuses promotion outright for any entry carrying that block ('promotion does not yet persist externalized_output policy'). That routing was the error, not the verdict: every one of the ten has a configured ROM home, so each is deadstrip-data in compiler_only_output, the entry carries no externalized_output at all, and promotion is admissible. daObjYajirusi_c stayed text-verified for the same routing reason, not because its own-module homes are unlicensable: every one of its records likewise has a configured ROM home outside the claimed .text span, so each takes deadstrip-data the same way (see ov098/daObjYajirusi_c.json, promoted alongside). What remains true of the destructor ordering is that it bounds the promotion to 10 of 12, not that it blocks it."
+    "WHY THIS PROMOTED FIRST. An earlier revision of this entry concluded promotion was refused, because it had routed the ten _ZTI/_ZTS records to externalized_output and tubuild.py:5861 refuses promotion outright for any entry carrying that block ('promotion does not yet persist externalized_output policy'). That routing was the error, not the verdict: every one of the ten has a configured ROM home, so each is deadstrip-data in compiler_only_output, the entry carries no externalized_output at all, and promotion is admissible. daObjYajirusi_c stayed text-verified for the same routing reason, not because its own-module homes are unlicensable: every one of its records likewise has a configured ROM home outside the claimed .text span, so each takes deadstrip-data the same way (see ov098/daObjYajirusi_c.json, promoted alongside). What remains true of the destructor ordering is that it bounds the promotion to 10 of 12, not that it blocks it.",
+    "FORCING FUNCTIONS AND PRAGMA. This TU compiles under `#pragma defer_codegen off` and carries two uncalled functions, daObjFallBlock_c_EmitDeletingDestructor and daObjFallBlock_c_EmitDestructor, recorded as compiler_only_output deadstrip rows. They are the parse-time trigger that places D0 then D1 ahead of the real members and are not in the ROM. The destructor itself stays inline in include/daObjFallBlock_c.h because the class's descendants inline its vptr store."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -131,42 +147,40 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov098-daObjFallBlock_c/daObjFallBlock_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 13,
-    "functions_declared": 13,
+    "functions_matched": 15,
+    "functions_declared": 15,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN16daObjFallBlock_cD0Ev",
-        "_ZN16daObjFallBlock_cD1Ev",
+        "_Z39daObjFallBlock_c_EmitDeletingDestructorP16daObjFallBlock_c",
+        "_Z31daObjFallBlock_c_EmitDestructorP16daObjFallBlock_c",
         "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
-        "_ZN16daObjFallBlock_cD0Ev",
-        "_ZN16daObjFallBlock_cD1Ev",
+        "_Z31daObjFallBlock_c_EmitDestructorP16daObjFallBlock_c",
+        "_Z39daObjFallBlock_c_EmitDeletingDestructorP16daObjFallBlock_c",
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
         5,
-        6,
-        7,
         8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
         20,
-        21,
-        22,
-        23,
-        24,
-        25,
-        35
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -205,18 +219,14 @@
   },
   "compiler_only_output": [
     {
-      "symbol": "_ZN16daObjFallBlock_cD0Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "ov098",
-      "canonical_address": "0x02139f70",
-      "reason": "HELD OUT OF THE LICENSED RUN FOR EMISSION ORDER, NOT FOR BYTES -- this TU reproduces it exactly (see boundary_evidence). The ROM orders the pair D0 0x02139f70 then D1 0x02139fc8; an in-class inline destructor, which daObjFallBlock_c.h has on measured cartridge evidence, always emits D1 then D0. src/_ZN16daObjFallBlock_cD0Ev.cpp stays enrolled and keeps its delinks.txt entry, so this TU's own copy is a duplicate body of the one the cartridge owns at 0x02139f70."
+      "symbol": "_Z39daObjFallBlock_c_EmitDeletingDestructorP16daObjFallBlock_c",
+      "disposition": "deadstrip",
+      "reason": "Not called and not in the ROM: a source-level forcing function. The class destructor is defined inline in its header because the descendants inline its vptr store, so no file can define it out of line; a delete-expression asks for the deleting variant by name. This file compiles under `#pragma defer_codegen off`, where ordinary functions are emitted at parse time in source order -- the only measured lever that makes mwccarm emit D0 before D1 as the cartridge has them -- and this forcer is the parse-time trigger that places D0 first. Emitted between the licensed D0 and D1 sections. Homeless: config/ has no symbol row for it."
     },
     {
-      "symbol": "_ZN16daObjFallBlock_cD1Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "ov098",
-      "canonical_address": "0x02139fc8",
-      "reason": "HELD OUT OF THE LICENSED RUN FOR EMISSION ORDER, NOT FOR BYTES -- this TU reproduces it exactly (see boundary_evidence). The ROM orders the pair D0 0x02139f70 then D1 0x02139fc8; an in-class inline destructor, which daObjFallBlock_c.h has on measured cartridge evidence, always emits D1 then D0. src/_ZN16daObjFallBlock_cD1Ev.cpp stays enrolled and keeps its delinks.txt entry, so this TU's own copy is a duplicate body of the one the cartridge owns at 0x02139fc8."
+      "symbol": "_Z31daObjFallBlock_c_EmitDestructorP16daObjFallBlock_c",
+      "disposition": "deadstrip",
+      "reason": "Not called and not in the ROM: the companion forcing function. An explicit `p->~daObjFallBlock_c()` asks for the complete-object variant by name; the delete-expression forcer cannot serve both, because a plain destructor call alone does not reproduce the deleting variant out of line. This file compiles under `#pragma defer_codegen off`, where ordinary functions are emitted at parse time in source order, so the call places D1 after D0 as the cartridge has them. Emitted between the licensed D1 section and the first real member, so it does not disturb the licensed run. Homeless: config/ has no symbol row for it."
     },
     {
       "symbol": "_ZTI7fBase_c",
