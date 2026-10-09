@@ -67,6 +67,25 @@ namespace G2S  { char *GetBG2ScrPtr(); char *GetBG3CharPtr(); }
 namespace GX   { void LoadBGPltt(const void *src, u32 offset, u32 size); void LoadOBJPltt(const void *src, u32 offset, u32 size); }
 namespace GXS  { void LoadBGPltt(const void *src, u32 offset, u32 size); void LoadOBJPltt(const void *src, u32 offset, u32 size); }
 
+/* Callees of the member helpers. Declared here, not in the bodies: a
+   declaration inside a member body gets C++ linkage and names a symbol the ROM
+   doesn't have. */
+extern "C" {
+int  RandomIntInternal(int *seed);
+void SetBg2Offset(int x, int y);
+void SetSubBg2Offset(int x, int y);
+void SetSubBg0Offset(int a, int b);
+void func_02012790(int a);
+void FreeGfxSlotsById(int arg);
+void DrawOamSprite(void *a0, int a1, int a2, int a3);
+void Hud_RenderSprite(void *a, int b, int c, int d, int e);
+void func_ov004_020adb1c(int a);
+void func_ov004_020af948(void *a, int b, int c, int d);
+void func_ov004_020afdd0(void *a, int b, int c, int d, int e);
+void func_ov004_020b0a54(int a);
+void func_ov004_020b2444(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
+}
+
 // @symbol _ZN12dScMgPanel_cD1Ev
 /* The complete-object destructor (D1).  Nothing this class owns needs
    destroying, so the whole 0x24 bytes are the compiler's own-vtable write and
@@ -88,14 +107,13 @@ dScMgPanel_c::~dScMgPanel_c()
 void dScMgPanel_c::func_ov006_021042e8()
 {
     char *scene = (char *)this;
-    extern void func_ov004_020afdd0(int a, int b, int scene, int d, int e);
     extern int data_ov006_0213def0[];
     dScMgPanel_c *self = (dScMgPanel_c *)scene;
     int i;
     for (i = 0; i < 0x40; i++) {
         if (self->mParticles[i].visible != 0) {
             func_ov004_020afdd0(
-                data_ov006_0213def0[self->mParticles[i].kind],
+                (void *)data_ov006_0213def0[self->mParticles[i].kind],
                 self->mParticles[i].x >> 12,
                 self->mParticles[i].y >> 12,
                 -1, -1);
@@ -145,7 +163,6 @@ void dScMgPanel_c::func_ov006_02104354()
 void dScMgPanel_c::func_ov006_0210446c(int x, int y, int mode)
 {
     char *scene = (char *)this;
-    extern int RandomIntInternal(int *seed);
     extern int data_0209d4b8;
     int i;
     char *q = scene;
@@ -203,10 +220,7 @@ void dScMgPanel_c::func_ov006_02104558()
 void dScMgPanel_c::func_ov006_02104580()
 {
     char *scene = (char *)this;
-    extern int RandomIntInternal(int *seed);
     extern int data_0209d4b8;
-    extern void SetBg2Offset(int x, int y);
-    extern void SetSubBg2Offset(int x, int y);
     int x;
     int y;
     u32 r;
@@ -294,8 +308,6 @@ void dScMgPanel_c::func_ov006_02104870()
 void dScMgPanel_c::func_ov006_021048b0()
 {
     char *scene = (char *)this;
-    extern void SetBg2Offset(int a, int b);
-    extern void SetSubBg2Offset(int a, int b);
     ((PanelScroll *)(scene + 0x4694))->on = 0;
     SetBg2Offset(0, 0);
     SetSubBg2Offset(0, 0);
@@ -317,8 +329,6 @@ void dScMgPanel_c::func_ov006_02104920(int index)
 {
     char *scene = (char *)this;
     dScMgPanel_c *s = (dScMgPanel_c *)scene;
-    extern void SetSubBg0Offset(int a, int b);
-    extern void func_02012790(int a);
     extern u8 data_0209d454;
     extern int data_ov006_0212ed00[];
     int n = index * 0xc;
@@ -427,7 +437,6 @@ void dScMgPanel_c::func_ov006_02104b5c()
 {
     char *scene = (char *)this;
     dScMgPanel_c *self = (dScMgPanel_c *)scene;
-    void func_ov004_020af948(void *a, int b, int scene, int d);
     extern void *data_ov006_02136e2c[];
     if (self->mBanner.visible == 0) return;
     func_ov004_020af948(data_ov006_02136e2c[0],
@@ -518,7 +527,6 @@ void dScMgPanel_c::func_ov006_02104d44()
 {
     char *scene = (char *)this;
     dScMgPanel_c *s = (dScMgPanel_c *)scene;
-    void Hud_RenderSprite(void *a, int b, int scene, int d, int e);
     extern void *data_ov006_02136d40[];
     if (*(u8 *)(scene + 0x4fe3) == 0) return;
     Hud_RenderSprite(data_ov006_02136d40[s->mLives],
@@ -530,9 +538,6 @@ void dScMgPanel_c::func_ov006_02104d94()
 {
     char *scene = (char *)this;
     dScMgPanel_c *self = (dScMgPanel_c *)scene;
-    extern void func_ov004_020b2444(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
-    extern void func_ov004_020afdd0(void *a0, int a1, int a2, int a3, int a4);
-    extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
     extern void *data_ov006_02135054[];
     extern void *data_ov006_02136de8[];
     if (self->mSlideFlag == 0) return;
@@ -600,7 +605,6 @@ void func_ov006_02104ec8(void)
 void dScMgPanel_c::func_ov006_02104ecc()
 {
     char *scene = (char *)this;
-    extern void FreeGfxSlotsById(int arg);
     dScMgPanel_c *s = (dScMgPanel_c *)scene;
     s->mSlide += s->mSlideVel;
     s->mSlideVel -= 0x400;
@@ -691,7 +695,6 @@ void dScMgPanel_c::func_ov006_02105134()
 {
     char *scene = (char *)this;
     dScMgPanel_c *s = (dScMgPanel_c *)scene;
-    void func_02012790(int a);
     if (*(u8 *)(scene + 0x4fe9) != 0) return;
     if (*(int *)(scene + 0x4ca8) == 6) return;
     if (*(u8 *)(scene + 0x4fe1) < *(u8 *)(scene + 0x4fde)) return;
@@ -1102,7 +1105,6 @@ void dScMgPanel_c::func_ov006_02105ab4()
 {
     PanelObj_ab4 *scene = (PanelObj_ab4 *)this;
     extern void func_ov004_020af868(void *a0, int a1, int a2, int a3, int a4, void *a5);
-    extern void DrawOamSprite(void *a0, int a1, int a2, int a3);
     extern void *data_ov006_021427d4[];
     extern u8 data_ov006_0213dd34[];
     int x;
@@ -1377,7 +1379,6 @@ extern "C" {
 }
 void dScMgPanel_c::func_ov006_02106168()
 {
-    int RandomIntInternal(int *seed);
     extern int data_0209d4b8;
     extern u16 *data_ov006_0213dd4c[];
     extern u16 *data_ov006_0213dd58[];
@@ -1466,7 +1467,6 @@ void dScMgPanel_c::func_ov006_021063a0()
 {
     char *scene = (char *)this;
     dScMgPanel_c *self = (dScMgPanel_c *)scene;
-    extern int RandomIntInternal(int *seed);
     extern int data_0209d4b8;
     extern u8 data_ov006_0213dd64[];
     extern u8 data_ov006_0213dd74[];
@@ -1798,7 +1798,6 @@ void dScMgPanel_c::func_ov006_02106bc0()
 {
     char *scene = (char *)this;
     extern struct PanelPmfRec_bc0 data_ov006_02142840[];
-    extern void func_ov004_020b0a54(int arg);
     int i;
     for (i = 0; i < *(int *)(scene + 0x4cb8); i++) {
         u8 index = *(u8 *)(scene + i + 0x4efa);
@@ -1844,8 +1843,6 @@ void dScMgPanel_c::func_ov006_02106ca4()
     extern u8 gTouchHeld[];
 // local extern: see above.
     extern u8 gTouchEdge[];
-    void func_ov004_020b0a54(int a);
-    void func_ov004_020adb1c(int a);
     int found;
     int i;
     int n;
