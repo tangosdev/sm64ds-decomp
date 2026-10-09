@@ -1379,17 +1379,9 @@ src/unnamed/ov002/func_ov002_020ef2a4.cpp:
     complete
     .text start:0x020ef2a4 end:0x020ef320
 
-src/_ZN16dPathLiftActor_cD0Ev.cpp:
-    complete
-    .text start:0x020ef320 end:0x020ef390
-
-src/_ZN16dPathLiftActor_cD1Ev.cpp:
-    complete
-    .text start:0x020ef390 end:0x020ef3ec
-
 src/actors/dPathLiftActor_c.cpp:
     complete
-    .text start:0x020ef3ec end:0x020effb8
+    .text start:0x020ef320 end:0x020effb8
     .init start:0x021071f4 end:0x02107298
     .ctor start:0x0210811c end:0x02108120
     .data start:0x0210aeb8 end:0x0210af68
