@@ -514,6 +514,8 @@
     "src/_ZN17daObjFloatBoard_cD0Ev.cpp": "tangosdev",
     "src/_ZN17daObjFloatBoard_cD1Ev.c": "tangosdev",
     "src/_ZN17daObjFloatBoard_cD1Ev.cpp": "tangosdev",
+    "src/actors/daObjFloatBoard_c.cpp#_ZN17daObjFloatBoard_cD0Ev": "tangosdev",
+    "src/actors/daObjFloatBoard_c.cpp#_ZN17daObjFloatBoard_cD1Ev": "tangosdev",
     "src/actors/daObjFloatBoard_c.cpp#_ZN17daObjFloatBoard_c19func_ov002_020b5e58EP27daObjFloatBoard_c_Resources": "tangosdev",
     "src/actors/daObjFloatBoard_c.cpp#_ZN17daObjFloatBoard_c19func_ov002_020b5f9cEP8dActor_c": "tangosdev",
     "src/actors/daObjFloatBoard_c.cpp#func_ov002_020b5fc4": "tangosdev",

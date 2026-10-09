@@ -83,17 +83,9 @@ src/actors/daObjFire_c.cpp:
     .text start:0x020b5734 end:0x020b5a18
     .data start:0x02108edc end:0x02108fb4
 
-src/_ZN17daObjFloatBoard_cD0Ev.cpp:
-    complete
-    .text start:0x020b5a18 end:0x020b5a70
-
-src/_ZN17daObjFloatBoard_cD1Ev.cpp:
-    complete
-    .text start:0x020b5a70 end:0x020b5ab4
-
 src/actors/daObjFloatBoard_c.cpp:
     complete
-    .text start:0x020b5ab4 end:0x020b5fd8
+    .text start:0x020b5a18 end:0x020b5fd8
 
 src/_ZN15daObjGuragura_cD0Ev.cpp:
     complete
