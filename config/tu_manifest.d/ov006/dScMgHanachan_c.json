@@ -379,17 +379,17 @@
       "ordinal": 47
     },
     {
-      "symbol": "func_ov006_020ed274",
+      "symbol": "_ZN15dScMgHanachan_c19func_ov006_020ed274Ev",
       "address": "0x020ed274",
       "size": "0x0000008c",
-      "legacy_source": "src/func_ov006_020ed274.c",
+      "legacy_source": "src/_ZN15dScMgHanachan_c19func_ov006_020ed274Ev.c",
       "ordinal": 48
     },
     {
-      "symbol": "func_ov006_020ed300",
+      "symbol": "_ZN15dScMgHanachan_c19func_ov006_020ed300Ev",
       "address": "0x020ed300",
       "size": "0x00000028",
-      "legacy_source": "src/func_ov006_020ed300.c",
+      "legacy_source": "src/_ZN15dScMgHanachan_c19func_ov006_020ed300Ev.c",
       "ordinal": 49
     },
     {
@@ -400,52 +400,52 @@
       "ordinal": 50
     },
     {
-      "symbol": "func_ov006_020ed32c",
+      "symbol": "_ZN15dScMgHanachan_c19func_ov006_020ed32cEv",
       "address": "0x020ed32c",
       "size": "0x00000020",
-      "legacy_source": "src/func_ov006_020ed32c.c",
+      "legacy_source": "src/_ZN15dScMgHanachan_c19func_ov006_020ed32cEv.c",
       "ordinal": 51
     },
     {
-      "symbol": "func_ov006_020ed34c",
+      "symbol": "_ZN15dScMgHanachan_c19func_ov006_020ed34cEv",
       "address": "0x020ed34c",
       "size": "0x000000c0",
-      "legacy_source": "src/func_ov006_020ed34c.c",
+      "legacy_source": "src/_ZN15dScMgHanachan_c19func_ov006_020ed34cEv.c",
       "ordinal": 52
     },
     {
-      "symbol": "func_ov006_020ed40c",
+      "symbol": "_ZN15dScMgHanachan_c19func_ov006_020ed40cEv",
       "address": "0x020ed40c",
       "size": "0x00000088",
-      "legacy_source": "src/func_ov006_020ed40c.c",
+      "legacy_source": "src/_ZN15dScMgHanachan_c19func_ov006_020ed40cEv.c",
       "ordinal": 53
     },
     {
-      "symbol": "func_ov006_020ed494",
+      "symbol": "_ZN15dScMgHanachan_c19func_ov006_020ed494Ev",
       "address": "0x020ed494",
       "size": "0x00000388",
-      "legacy_source": "src/func_ov006_020ed494.c",
+      "legacy_source": "src/_ZN15dScMgHanachan_c19func_ov006_020ed494Ev.c",
       "ordinal": 54
     },
     {
-      "symbol": "func_ov006_020ed81c",
+      "symbol": "_ZN15dScMgHanachan_c19func_ov006_020ed81cEv",
       "address": "0x020ed81c",
       "size": "0x00000028",
-      "legacy_source": "src/func_ov006_020ed81c.c",
+      "legacy_source": "src/_ZN15dScMgHanachan_c19func_ov006_020ed81cEv.c",
       "ordinal": 55
     },
     {
-      "symbol": "func_ov006_020ed844",
+      "symbol": "_ZN15dScMgHanachan_c19func_ov006_020ed844Ev",
       "address": "0x020ed844",
       "size": "0x00000060",
-      "legacy_source": "src/func_ov006_020ed844.cpp",
+      "legacy_source": "src/_ZN15dScMgHanachan_c19func_ov006_020ed844Ev.cpp",
       "ordinal": 56
     },
     {
-      "symbol": "func_ov006_020ed8a4",
+      "symbol": "_ZN15dScMgHanachan_c19func_ov006_020ed8a4Ev",
       "address": "0x020ed8a4",
       "size": "0x000001a4",
-      "legacy_source": "src/func_ov006_020ed8a4.c",
+      "legacy_source": "src/_ZN15dScMgHanachan_c19func_ov006_020ed8a4Ev.c",
       "ordinal": 57
     },
     {

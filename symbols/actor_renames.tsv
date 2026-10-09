@@ -5515,6 +5515,15 @@ ov006	0x0211fe78	func_ov006_0211fe78	_ZN13dScMgTeresa_c19func_ov006_0211fe78Ev	o
 ov006	0x02120008	func_ov006_02120008	_ZN13dScMgTeresa_c19func_ov006_02120008Ev	object-as-this; sinit .data stores pointer-to-member records (state tables at data_ov006_02142e88/02142eb0/02142ed8/02142f18)
 ov006	0x021200a8	func_ov006_021200a8	_ZN13dScMgTeresa_c19func_ov006_021200a8Ev	object-as-this; sinit .data stores pointer-to-member records (state tables at data_ov006_02142e88/02142eb0/02142ed8/02142f18)
 ov006	0x021200cc	func_ov006_021200cc	_ZN13dScMgTeresa_c19func_ov006_021200ccEv	object-as-this; sinit .data stores pointer-to-member records (state tables at data_ov006_02142e88/02142eb0/02142ed8/02142f18)
+ov006	0x020ed274	func_ov006_020ed274	_ZN15dScMgHanachan_c19func_ov006_020ed274Ev	dScMgHanachan_c method; pointer-to-member target of the phase records in .data, dispatched through mPhaseFn
+ov006	0x020ed300	func_ov006_020ed300	_ZN15dScMgHanachan_c19func_ov006_020ed300Ev	object-as-this; receiver is the scene object, called with this in r0
+ov006	0x020ed32c	func_ov006_020ed32c	_ZN15dScMgHanachan_c19func_ov006_020ed32cEv	object-as-this; receiver is the scene object, called with this in r0
+ov006	0x020ed34c	func_ov006_020ed34c	_ZN15dScMgHanachan_c19func_ov006_020ed34cEv	dScMgHanachan_c method; pointer-to-member target of the phase records in .data, dispatched through mPhaseFn
+ov006	0x020ed40c	func_ov006_020ed40c	_ZN15dScMgHanachan_c19func_ov006_020ed40cEv	object-as-this; receiver is the scene object, called with this in r0
+ov006	0x020ed494	func_ov006_020ed494	_ZN15dScMgHanachan_c19func_ov006_020ed494Ev	dScMgHanachan_c method; pointer-to-member target of the phase records in .data, dispatched through mPhaseFn
+ov006	0x020ed81c	func_ov006_020ed81c	_ZN15dScMgHanachan_c19func_ov006_020ed81cEv	object-as-this; receiver is the scene object, called with this in r0
+ov006	0x020ed844	func_ov006_020ed844	_ZN15dScMgHanachan_c19func_ov006_020ed844Ev	dScMgHanachan_c method; pointer-to-member target of the phase records in .data, dispatched through mPhaseFn
+ov006	0x020ed8a4	func_ov006_020ed8a4	_ZN15dScMgHanachan_c19func_ov006_020ed8a4Ev	object-as-this; receiver is the scene object, called with this in r0
 ov006	0x02125804	func_ov006_02125804	_ZN15dScMgSnowball_c19func_ov006_02125804Ev	object-as-this
 ov006	0x02125890	func_ov006_02125890	_ZN15dScMgSnowball_c19func_ov006_02125890Ev	object-as-this
 ov006	0x02125994	func_ov006_02125994	_ZN15dScMgSnowball_c19func_ov006_02125994Ev	object-as-this

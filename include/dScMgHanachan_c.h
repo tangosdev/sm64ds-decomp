@@ -42,6 +42,21 @@ struct dScMgHanachan_c : dScMgBase_c {
     u8  mWiggler[0xf][0x98]; /* 0x4678 */
     void *mTarget;       /* 0x4f60 the starred wiggler */
     u8  mHit;            /* 0x4f64 the star was touched */
+
+    /* Phase and tap handlers of the scene. The address is the method name; no
+       ROM spelling survives. Four are the PMF targets of the phase records
+       (func_ov006_020ed274, func_ov006_020ed34c, func_ov006_020ed494,
+       func_ov006_020ed844); the rest are called on `this` from them and from
+       OnYoshiTryEat. */
+    void func_ov006_020ed274();
+    void func_ov006_020ed300();
+    void func_ov006_020ed32c();
+    void func_ov006_020ed34c();
+    void func_ov006_020ed40c();
+    void func_ov006_020ed494();
+    void func_ov006_020ed81c();
+    void func_ov006_020ed844();
+    void func_ov006_020ed8a4();
 };
 
 #ifndef SM64DS_PLATFORM_PC

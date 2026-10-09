@@ -15,6 +15,16 @@
  * and the access casts. func_ov006_020ea324 is the wiggler array's element
  * destructor and takes the element, so its declaration now says so.
  *
+ * The nine helpers that take the scene as their first argument
+ * (func_ov006_020ed274 .. func_ov006_020ed8a4, the phase and tap handlers) are
+ * dScMgHanachan_c members, declared in dScMgHanachan_c.h; the address is the
+ * method name, since no ROM spelling survives. Each body opens by re-viewing
+ * `this` as the char * it used to take. The other func_ov006 helpers stay
+ * free: the ones from func_ov006_020ea914 to func_ov006_020ecdb8 take one
+ * 0x98-byte wiggler record (an element of mWiggler) or no object at all, the
+ * popup helpers before them take no object, and func_ov006_020ed270,
+ * func_ov006_020ed328 and func_ov006_020edcb0 take nothing.
+ *
  * Leftover: the sixteen popups at data_ov006_02142044 are read through
  *   four record spellings (func_ov006_020ea670, func_ov006_020ea71c,
  *   func_ov006_020ea81c, func_ov006_020ea8e0).
@@ -226,16 +236,7 @@ extern void func_ov006_020ecb80(void *a);
 extern void func_ov006_020ecba4(struct C* c, int param);
 extern void func_ov006_020ecdb8(char *self, int arg1, int arg2);
 extern void func_ov006_020ed270(void);
-extern void func_ov006_020ed274(char *c);
-extern void func_ov006_020ed300(char *p);
 extern void func_ov006_020ed328(void);
-extern void func_ov006_020ed32c(char *p);
-extern void func_ov006_020ed34c(char *p);
-extern void func_ov006_020ed40c(char *c);
-extern void func_ov006_020ed494(char *c);
-extern void func_ov006_020ed81c(char *p);
-extern void func_ov006_020ed844(char *c);
-extern void func_ov006_020ed8a4(void *r4_);
 extern void func_ov006_020edcb0(void);
 
 extern short data_02082214[];
@@ -1985,10 +1986,10 @@ void func_ov006_020ed270(void)
 }
 
 
-// @symbol func_ov006_020ed274
-extern "C" {
-void func_ov006_020ed274(char *raw)
+// @symbol _ZN15dScMgHanachan_c19func_ov006_020ed274Ev
+void dScMgHanachan_c::func_ov006_020ed274()
 {
+    char *raw = (char *)this;
     dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
     int idx;
     int b;
@@ -2009,17 +2010,15 @@ void func_ov006_020ed274(char *raw)
     s->mPhaseFn = w0;
     s->mPhaseAdj = w1;
 }
-}
 
 
-// @symbol func_ov006_020ed300
-extern "C" {
-void func_ov006_020ed300(char *raw)
+// @symbol _ZN15dScMgHanachan_c19func_ov006_020ed300Ev
+void dScMgHanachan_c::func_ov006_020ed300()
 {
+    char *raw = (char *)this;
     dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
     s->mPhaseTimer = 0xb4;
     *(Pair *)&s->mPhaseFn = data_ov006_0213ca5c;
-}
 }
 
 
@@ -2031,18 +2030,18 @@ void func_ov006_020ed328(void)
 }
 
 
-// @symbol func_ov006_020ed32c
-extern "C" {
-void func_ov006_020ed32c(char *raw) {
+// @symbol _ZN15dScMgHanachan_c19func_ov006_020ed32cEv
+void dScMgHanachan_c::func_ov006_020ed32c()
+{
+    char *raw = (char *)this;
     *(Pair *)&((dScMgHanachan_c *)raw)->mPhaseFn = data_ov006_0213ca64;
 }
-}
 
 
-// @symbol func_ov006_020ed34c
-extern "C" {
-void func_ov006_020ed34c(char *raw)
+// @symbol _ZN15dScMgHanachan_c19func_ov006_020ed34cEv
+void dScMgHanachan_c::func_ov006_020ed34c()
 {
+    char *raw = (char *)this;
     dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
     int v;
     s->mPhaseTimer -= 1;
@@ -2052,13 +2051,13 @@ void func_ov006_020ed34c(char *raw)
         if (s->mHit != 0)
         {
             func_ov004_020b0a54(1);
-            func_ov006_020ed32c(raw);
+            func_ov006_020ed32c();
         }
         else
         {
             ((C *)s->mTarget)->decoy = 1;
             func_ov004_020b0a54(0x12);
-            func_ov006_020ed300(raw);
+            func_ov006_020ed300();
         }
         s->mPromptEnabled = 0;
     }
@@ -2077,13 +2076,12 @@ void func_ov006_020ed34c(char *raw)
         }
     }
 }
-}
 
 
-// @symbol func_ov006_020ed40c
-extern "C" {
-void func_ov006_020ed40c(char *raw)
+// @symbol _ZN15dScMgHanachan_c19func_ov006_020ed40cEv
+void dScMgHanachan_c::func_ov006_020ed40c()
 {
+    char *raw = (char *)this;
     int i = 0;
     if (i < data_ov006_0213c958) {
         char *p = raw;
@@ -2099,13 +2097,12 @@ void func_ov006_020ed40c(char *raw)
         *(int *)(raw + 0x4000 + 0x66c) = 0xe4;
     *(struct Words2 *)(raw + 0x4000 + 0x660) = *(struct Words2 *)data_ov006_0213ca6c;
 }
-}
 
 
-// @symbol func_ov006_020ed494
-extern "C" {
-void func_ov006_020ed494(char *raw)
+// @symbol _ZN15dScMgHanachan_c19func_ov006_020ed494Ev
+void dScMgHanachan_c::func_ov006_020ed494()
 {
+    char *raw = (char *)this;
     dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
     V2 a;
     int vec[4];
@@ -2142,7 +2139,7 @@ void func_ov006_020ed494(char *raw)
             if (data_ov006_02141fd8 == 0)
                 vec[0] -= 0x28000;
             func_ov006_020ea5f0(vec[0], vec[1]);
-            func_ov006_020ed40c(raw);
+            func_ov006_020ed40c();
             return;
             }
         }
@@ -2228,7 +2225,7 @@ void func_ov006_020ed494(char *raw)
     if (ApproachLinear(s->mTimeLeft, 0, 1) != 0)
     {
         func_02012790(0xe);
-        func_ov006_020ed40c(raw);
+        func_ov006_020ed40c();
     }
 
     if (s->mTimeLeft > 2)
@@ -2236,24 +2233,22 @@ void func_ov006_020ed494(char *raw)
     else
         Sound::PlayBank2_2D(0xa6);
 }
-}
 
 
-// @symbol func_ov006_020ed81c
-extern "C" {
-void func_ov006_020ed81c(char *raw)
+// @symbol _ZN15dScMgHanachan_c19func_ov006_020ed81cEv
+void dScMgHanachan_c::func_ov006_020ed81c()
 {
+    char *raw = (char *)this;
     dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
     s->mPhaseTimer = 0x4b0;
     *(Pair *)&s->mPhaseFn = data_ov006_0213c9cc;
 }
-}
 
 
-// @symbol func_ov006_020ed844
-extern "C" {
-void func_ov006_020ed844(char *raw)
+// @symbol _ZN15dScMgHanachan_c19func_ov006_020ed844Ev
+void dScMgHanachan_c::func_ov006_020ed844()
 {
+    char *raw = (char *)this;
     dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
     if (ApproachLinear(s->mDelay, 0, 1) == 0) return;
     FreeGfxSlotsById(0x1d);
@@ -2262,16 +2257,15 @@ void func_ov006_020ed844(char *raw)
         s->mPromptBlinkCount = 1;
         s->mPromptBlinkTimer = 0;
     }
-    func_ov006_020ed81c(raw);
-}
+    func_ov006_020ed81c();
 }
 
 
-// @symbol func_ov006_020ed8a4
-extern "C" {
-void func_ov006_020ed8a4(void *arg) {
-    dScMgHanachan_c *self = (dScMgHanachan_c *)arg;
-    char *raw = (char *)arg;
+// @symbol _ZN15dScMgHanachan_c19func_ov006_020ed8a4Ev
+void dScMgHanachan_c::func_ov006_020ed8a4()
+{
+    dScMgHanachan_c *self = this;
+    char *raw = (char *)this;
     if ((s32)self->unk_0bc < 0xa) {
         int bc = (s32)self->unk_0bc;
         data_ov006_02141fd8 = data_ov006_0212e80c[bc];
@@ -2317,7 +2311,6 @@ void func_ov006_020ed8a4(void *arg) {
         *(Pair *)&s->mPhaseFn = data_ov006_0213c964;
     }
 }
-}
 
 
 // @symbol _ZN15dScMgHanachan_c13OnYoshiTryEatEi
@@ -2344,7 +2337,7 @@ void dScMgHanachan_c::OnYoshiTryEat(int state)
     }
     func_ov006_020ea8e0();
     func_ov006_020ea658();
-    func_ov006_020ed8a4(raw);
+    func_ov006_020ed8a4();
 }
 
 
