@@ -47,6 +47,16 @@
 #include "daObjClock_c.h"
 #include "SharedFilePtr.h"
 
+/* Model handles construct through func_02017acc and destroy through
+ * func_02017ab4. The manifest aliases those undefined members onto the ROM
+ * symbols. */
+struct ClockModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    ClockModelFilePtr(u32 fileID);
+    ~ClockModelFilePtr();
+};
+
 extern "C" {
 extern void Matrix4x3_FromRotationZXYExt(void *, int, int, int);
 int IsAreaShowing(int areaId);
@@ -54,6 +64,8 @@ extern s8 data_02092110;             /* current level id; hands advance while it
 extern u8 data_0209f2c0;              /* clock setting: 0 slow, 1 fast, 2 random, 3 stopped */
 extern s16 data_ov013_021116ac[];
 extern SharedFilePtr *data_ov013_021116b0[];
+extern ClockModelFilePtr data_ov013_02112294;
+extern ClockModelFilePtr data_ov013_0211229c;
 }
 
 enum {
@@ -190,3 +202,9 @@ void daObjClock_c::func_ov013_02111430()
  * Out of line, mwccarm emits D0 before D1 (objisolate refuses the TU) and a
  * D2 the cartridge has no home for.
  */
+
+/* File-scope objects: the short hand's model file (0x5b2) and the long
+ * hand's model file (0x5b1); the two constructions
+ * __sinit_daObjClock_c.cpp performs, in retail order. */
+ClockModelFilePtr data_ov013_0211229c(0x5b1);
+ClockModelFilePtr data_ov013_02112294(0x5b2);

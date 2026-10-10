@@ -27,6 +27,9 @@ src/actors/daDossy_c.cpp:
 src/actors/daObjCtRotateBlock_c.cpp:
     complete
     .text start:0x021196d8 end:0x02119f3c
+    .init start:0x0211c660 end:0x0211c76c
+    .ctor start:0x0211caec end:0x0211caf0
+    .bss start:0x0211d814 end:0x0211d88c
 
 src/actors/daObjCtMecha03_c.cpp:
     complete
@@ -45,14 +48,23 @@ src/actors/daObjCtMecha04_c.cpp:
 src/game/actors/daObjCtMecha05_c.cpp:
     complete
     .text start:0x0211ab60 end:0x0211b360
+    .init start:0x0211c890 end:0x0211c8fc
+    .ctor start:0x0211caf8 end:0x0211cafc
+    .bss start:0x0211d904 end:0x0211d92c
 
 src/actors/daObjCtKaitendai_c.cpp:
     complete
     .text start:0x0211b360 end:0x0211b7f0
+    .init start:0x0211c8fc end:0x0211c9b8
+    .ctor start:0x0211cafc end:0x0211cb00
+    .bss start:0x0211d92c end:0x0211d97c
 
 src/actors/daObjCtMecha08_c.cpp:
     complete
     .text start:0x0211b7f0 end:0x0211bbdc
+    .init start:0x0211c9b8 end:0x0211ca74
+    .ctor start:0x0211cb00 end:0x0211cb04
+    .bss start:0x0211d97c end:0x0211d9cc
 
 src/actors/daObjCtMecha09_c.cpp:
     complete
@@ -64,19 +76,3 @@ src/actors/daObjCtMecha09_c.cpp:
 src/unnamed/ov065/__sinit_ov065_0211c110.c:
     complete
     .init start:0x0211c110 end:0x0211c2a8
-
-src/unnamed/ov065/__sinit_ov065_0211c660.c:
-    complete
-    .init start:0x0211c660 end:0x0211c76c
-
-src/unnamed/ov065/__sinit_ov065_0211c890.c:
-    complete
-    .init start:0x0211c890 end:0x0211c8fc
-
-src/unnamed/ov065/__sinit_ov065_0211c8fc.c:
-    complete
-    .init start:0x0211c8fc end:0x0211c9b8
-
-src/unnamed/ov065/__sinit_ov065_0211c9b8.c:
-    complete
-    .init start:0x0211c9b8 end:0x0211ca74

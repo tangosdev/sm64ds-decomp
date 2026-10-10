@@ -12,8 +12,8 @@
  * A small state machine drives it. mState points at one of four file-scope
  * records {enter, tick}, each a pointer-to-member; func_ov102_0214d1f8
  * switches state and runs `enter`, Behavior runs `tick` every frame. The
- * records are .bss, filled by __sinit_ov102_0214dfac from the PMF
- * constants at ov102:0x0214e5d4..0x0214e614:
+ * records are .bss. __sinit_d_a_shl.cpp copies the PMF constants at
+ * ov102:0x0214e5d4..0x0214e614 into them:
  *
  *     data_ov102_0214ea68  idle     enter 0214d1b8  tick 0214d1b0
  *     data_ov102_0214ea48  ridden   enter 0214d0bc  tick 0214d044
@@ -39,10 +39,6 @@
  *   and the state records are .bss; this text-only TU claims neither.
  *
  * deslop leftovers:
- * - The state records dispatch through pointer-to-member fields on the
- *   non-virtual stand-in ShlStateHost: daShl_c is polymorphic, so a real
- *   daShl_c::* is wider than the 8-byte {fn,delta} entries the sinit
- *   copies from the ov102:0x0214e5d4 PMF constants.
  * - func_ov002_020ad660, func_ov002_020cc16c and func_020105cc are other
  *   TUs' helpers and stay free externs; the Fix12<int>-by-value callees
  *   listed above stay mangled (notes/mwccarm-codegen.md 6az).
@@ -59,14 +55,18 @@
 #include "daShl_c.h"
 #include "SharedFilePtr.h"
 
-/* A state record: two pointers-to-member, called on the actor itself.
-   daShl_c is polymorphic, so a real daShl_c::* is wider than the 8-byte
-   {fn,delta} entries -- the owner class stays an empty stand-in. */
-struct ShlStateHost {};
-typedef int (ShlStateHost::*ShlStateFn)();
+/* Two 8-byte pointers-to-member. The second word is the this-adjustment;
+   retail stores 0 for every entry. */
+typedef int (daShl_c::*ShlStateFn)();
 struct ShlState {
     ShlStateFn enter;  /* +0x0 */
     ShlStateFn tick;   /* +0x8 */
+};
+/* Last symbol in the overlay bss. dsd runs it to the module end at
+   0x0214eaa0; the three tail slots stay zero and are not copied. */
+struct ShlStateEnd {
+    ShlState rec;
+    ShlStateFn tail[3];
 };
 
 extern "C" {
@@ -76,7 +76,7 @@ extern "C" {
 extern ShlState data_ov102_0214ea48;
 extern ShlState data_ov102_0214ea58;
 extern ShlState data_ov102_0214ea68;
-extern ShlState data_ov102_0214ea78;
+extern ShlStateEnd data_ov102_0214ea78;
 extern SharedFilePtr *data_ov102_0214d70c[];
 
 /* -- other modules -- */
@@ -185,7 +185,7 @@ s32 daShl_c::Behavior()
     if (UpdateYoshiEat(mMeshClsn) != 0) {
         if (mEatenByYoshi != 0) {
             mSpawnAngleY = mPrevAngleY;
-            func_ov102_0214d1f8(&data_ov102_0214ea78);
+            func_ov102_0214d1f8((ShlState *)&data_ov102_0214ea78);
             mFlags &= ~0x80000u;
             mEatenByYoshi = 0;
         }
@@ -213,7 +213,7 @@ s32 daShl_c::Behavior()
         if (st->tick == 0)
             res = 1;
         else
-            res = (((ShlStateHost *)this)->*st->tick)();
+            res = (this->*st->tick)();
         if (res == 0)
             return 1;
     }
@@ -226,7 +226,7 @@ s32 daShl_c::Behavior()
         if (mMeshClsn.IsOnGround() != 0 || mMeshClsn.IsOnWall() != 0) {
             /* Hitting a wall while spat out breaks the shell. */
             if (mMeshClsn.IsOnWall() != 0) {
-                if (mState == &data_ov102_0214ea78) {
+                if (mState == (ShlState *)&data_ov102_0214ea78) {
                     PoofDust();
                     MarkForDestruction();
                     return 0;
@@ -296,7 +296,7 @@ int daShl_c::func_ov102_0214d1f8(ShlState *state)
     ShlState *st = this->mState;
     if (st->enter == 0)
         return 1;
-    return (((ShlStateHost *)this)->*st->enter)();
+    return (this->*st->enter)();
 }
 
 // @symbol _ZN7daShl_c19func_ov102_0214d1b8Ev
@@ -419,10 +419,10 @@ int daShl_c::func_ov102_0214cf98(dActor_c *player)
 /* Kicked: take the kicker's heading and switch to the sliding state. */
 int daShl_c::func_ov102_0214cf4c(dActor_c *kicker)
 {
-    if (this->mState == &data_ov102_0214ea78)
+    if (this->mState == (ShlState *)&data_ov102_0214ea78)
         return 0;
     this->mSpawnAngleY = kicker->mAngleY;
-    func_ov102_0214d1f8(&data_ov102_0214ea78);
+    func_ov102_0214d1f8((ShlState *)&data_ov102_0214ea78);
     return 1;
 }
 
@@ -510,7 +510,7 @@ void daShl_c::func_ov102_0214cbec()
             func_ov102_0214cf4c((dActor_c *)player);
             return;
         }
-        if (this->mState != &data_ov102_0214ea78)
+        if (this->mState != (ShlState *)&data_ov102_0214ea78)
             return;
         v1.x = this->mPosX;
         v1.y = this->mPosY;
@@ -519,7 +519,7 @@ void daShl_c::func_ov102_0214cbec()
         return;
     }
 
-    if (this->mState == &data_ov102_0214ea78) {
+    if (this->mState == (ShlState *)&data_ov102_0214ea78) {
         v2.x = this->mPosX;
         v2.y = this->mPosY;
         v2.z = this->mPosZ;
@@ -654,3 +654,21 @@ void daShl_c::func_ov102_0214c7fc()
 // @symbol _ZN7daShl_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header
    emits D1 then D0 -- the cartridge's order -- and no D2. */
+
+/* Source order is the retail copy order. Each field is an 8-byte
+   {function, 0} descriptor; __sinit_d_a_shl.cpp copies them in. */
+extern "C" ShlState data_ov102_0214ea68 = {
+    &daShl_c::func_ov102_0214d1b8,
+    &daShl_c::func_ov102_0214d1b0,
+};
+extern "C" ShlStateEnd data_ov102_0214ea78 = {
+    { &daShl_c::func_ov102_0214d148, &daShl_c::func_ov102_0214d114 },
+};
+extern "C" ShlState data_ov102_0214ea48 = {
+    &daShl_c::func_ov102_0214d0bc,
+    &daShl_c::func_ov102_0214d044,
+};
+extern "C" ShlState data_ov102_0214ea58 = {
+    &daShl_c::func_ov102_0214d020,
+    &daShl_c::func_ov102_0214cfe4,
+};

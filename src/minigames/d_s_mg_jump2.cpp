@@ -94,6 +94,21 @@ struct Base {
     virtual void m48(int x);
 };
 
+/* File-scope objects at the end of this file construct the two model
+ * handles (files 0x203 and 0x204). mwcc emits __sinit_d_s_mg_jump2.cpp
+ * from those definitions. The wrapper name is local; the handle
+ * constructor and destructor are the ROM resource-family functions,
+ * aliased in the manifest. */
+struct Jump2ModelFile : SharedFilePtr {
+    u32 words[2];
+
+    Jump2ModelFile(u32 fileID);
+    ~Jump2ModelFile();
+};
+
+extern Jump2ModelFile data_ov006_021421cc; /* model file 0x203 */
+extern Jump2ModelFile data_ov006_021421c4; /* model file 0x204 */
+
 extern "C" {
 extern void func_0203d630(int* p, int m);
 extern struct Node* data_ov006_021421c0;
@@ -694,3 +709,9 @@ void func_ov006_020eed64(void *object)
 // @symbol _ZN12dScMgJump2_cD1Ev
 /* Defined in the class body in include/dScMgJump2_c.h, which explains why.
    mwccarm emits D1 and D0 from it, in this order. */
+
+/* Static-init globals (was the handwritten __sinit_ov006_02130f00 shard).
+ * Definition order is the retail initializer's construction order: the
+ * 0x203 model handle, then the 0x204 model handle. */
+Jump2ModelFile data_ov006_021421cc(0x203);
+Jump2ModelFile data_ov006_021421c4(0x204);

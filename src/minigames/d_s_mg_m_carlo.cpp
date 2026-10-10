@@ -111,6 +111,7 @@ extern int data_ov006_0213d56c;
 extern int data_ov006_0213d5e0[8]; /* the eight face weights */
 extern int data_020a0db0;
 extern unsigned short data_ov006_0213d600[];
+extern int data_ov006_02133810[];
 extern int data_ov006_0214250c[];
 extern void Vec2_Sub(int* o, int* a, int* b);
 extern void func_0203d630(int *p, int m);
@@ -1002,3 +1003,28 @@ dMgMCarloCardObj_c::~dMgMCarloCardObj_c()
  * which makes InitResources the key function; the vtable it emits names
  * D1 and D0, so the compiler emits both, in ROM order. Writing them out
  * here puts D0 ahead of D1 and adds a D2 the ROM does not have. */
+
+/* The sprite-index remap table. Its initializer reads the retail table, so
+ * it is not a constant expression: the compiler emits
+ * __sinit_d_s_mg_m_carlo.cpp to copy the 19 words at overlay load. */
+int data_ov006_0214250c[19] = {
+    data_ov006_02133810[0],
+    data_ov006_02133810[1],
+    data_ov006_02133810[2],
+    data_ov006_02133810[11],
+    data_ov006_02133810[12],
+    data_ov006_02133810[13],
+    data_ov006_02133810[14],
+    data_ov006_02133810[3],
+    data_ov006_02133810[4],
+    data_ov006_02133810[5],
+    data_ov006_02133810[6],
+    data_ov006_02133810[9],
+    data_ov006_02133810[10],
+    data_ov006_02133810[7],
+    data_ov006_02133810[8],
+    data_ov006_02133810[15],
+    data_ov006_02133810[16],
+    data_ov006_02133810[17],
+    data_ov006_02133810[18],
+};

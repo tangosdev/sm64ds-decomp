@@ -14,10 +14,16 @@ src/game/actors/d_a_obj_wl_polelift.cpp:
 src/actors/daObjWlKoopaShutter_c.cpp:
     complete
     .text start:0x021116c8 end:0x021118b8
+    .init start:0x02112bbc end:0x02112c28
+    .ctor start:0x02112da8 end:0x02112dac
+    .bss start:0x02113eb4 end:0x02113edc
 
 src/actors/daObjWlSubmarine_c.cpp:
     complete
     .text start:0x021118b8 end:0x02111aa0
+    .init start:0x02112c28 end:0x02112c94
+    .ctor start:0x02112dac end:0x02112db0
+    .bss start:0x02113edc end:0x02113f04
 
 src/actors/daWater_Tatumaki_c.cpp:
     complete
@@ -33,11 +39,3 @@ src/actors/daWater_Suikomi_c.cpp:
     .init start:0x02112d68 end:0x02112da4
     .ctor start:0x02112db4 end:0x02112db8
     .bss start:0x02113f58 end:0x02113f80
-
-src/unnamed/ov026/__sinit_ov026_02112bbc.c:
-    complete
-    .init start:0x02112bbc end:0x02112c28
-
-src/unnamed/ov026/__sinit_ov026_02112c28.c:
-    complete
-    .init start:0x02112c28 end:0x02112c94

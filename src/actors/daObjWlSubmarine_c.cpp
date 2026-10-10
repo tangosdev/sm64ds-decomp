@@ -22,9 +22,23 @@
 #include "daObjWlSubmarine_c.h"
 #include "SharedFilePtr.h"
 
-/* BSS file homes (symbols.txt); Init loads them, Cleanup releases them. */
-extern SharedFilePtr Submarine_ModelFile;
-extern SharedFilePtr Submarine_ClsnFile;
+/* BSS file homes (symbols.txt); Init loads them, Cleanup releases them.
+ * The ctor/dtor are the ROM's SharedFilePtr veneer pairs (func_02017acc /
+ * func_02017ab4 for the model, func_02017b4c / SharedFilePtr_Destruct_Clsn
+ * for the collision), spelled through declared-only subclasses so the
+ * static initializer names the real entry points. */
+struct SubmarineModelFilePtr : SharedFilePtr {
+    u32 words[2];
+    SubmarineModelFilePtr(u32 fileID);
+    ~SubmarineModelFilePtr();
+};
+extern SubmarineModelFilePtr Submarine_ModelFile;
+struct SubmarineCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+    SubmarineCollisionFilePtr(u32 fileID);
+    ~SubmarineCollisionFilePtr();
+};
+extern SubmarineCollisionFilePtr Submarine_ClsnFile;
 
 extern "C" {
 extern char data_ov026_02112fd4[];
@@ -86,3 +100,9 @@ extern "C" daObjWlSubmarine_c *daObjWlSubmarine_c_classInit()
 {
     return new daObjWlSubmarine_c();
 }
+
+// @symbol __sinit_daObjWlSubmarine_c.cpp
+/* The retail initializer constructs the model first, then the collision
+ * file. */
+SubmarineModelFilePtr Submarine_ModelFile(0x6dc);      /* model */
+SubmarineCollisionFilePtr Submarine_ClsnFile(0x6dd);   /* collision */

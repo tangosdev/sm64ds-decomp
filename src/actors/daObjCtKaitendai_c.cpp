@@ -69,6 +69,27 @@ struct KaitendaiResources {
 typedef char KaitendaiResources_size_must_be_0x0c[
     sizeof(KaitendaiResources) == 0x0c ? 1 : -1];
 
+/* File-scope objects at the end of this file construct the four resource
+ * handles (model files 0x5c4/0x5c6, collision files 0x5c5/0x5c7). mwcc
+ * emits __sinit_daObjCtKaitendai_c.cpp from those definitions. The wrapper
+ * names are local; the handle constructors and destructors are the ROM
+ * resource-family functions, aliased in the manifest. Nothing in this TU
+ * names the handles directly; the KaitendaiResources rows above point at
+ * them. */
+struct KaitendaiModelFile : SharedFilePtr {
+    u32 words[2];
+
+    KaitendaiModelFile(u32 fileID);
+    ~KaitendaiModelFile();
+};
+
+struct KaitendaiCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    KaitendaiCollisionFilePtr(u32 fileID);
+    ~KaitendaiCollisionFilePtr();
+};
+
 /* Fix12-by-value calls keep the scalar argument the callee actually
  * reads. The class spelling homes it (see the leftover above). */
 extern "C" {
@@ -214,3 +235,10 @@ void daObjCtKaitendai_c::func_ov065_0211b40c()
     _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
         this, &mShadowModel, &mShadowMat, 0x258000, 0xc8000, 0xf);
 }
+
+/* Static-init globals (was the handwritten __sinit_ov065_0211c8fc shard).
+ * Definition order is the retail initializer's construction order. */
+KaitendaiModelFile data_ov065_0211d944(0x5c4);
+KaitendaiModelFile data_ov065_0211d934(0x5c6);
+KaitendaiCollisionFilePtr data_ov065_0211d93c(0x5c5);
+KaitendaiCollisionFilePtr data_ov065_0211d92c(0x5c7);

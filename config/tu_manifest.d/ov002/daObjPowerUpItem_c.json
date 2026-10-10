@@ -3,6 +3,7 @@
   "module": "ov002",
   "source": "src/actors/daObjPowerUpItem_c.cpp",
   "promoted_source": "src/actors/daObjPowerUpItem_c.cpp",
+  "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -16,6 +17,21 @@
       "name": ".text",
       "start": "0x020b9148",
       "end": "0x020b9e64"
+    },
+    {
+      "name": ".init",
+      "start": "0x021014e4",
+      "end": "0x02101588"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x021080f8",
+      "end": "0x021080fc"
+    },
+    {
+      "name": ".data",
+      "start": "0x02109730",
+      "end": "0x0210987c"
     }
   ],
   "functions": [
@@ -153,12 +169,675 @@
       "ordinal": 18
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "s_openName",
+      "address": "0x02109730",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "the OPEN state-name slot the opening FlowerEntry row points at; an 8-byte field holding a five-byte string"
+    },
+    {
+      "symbol": "s_closeName",
+      "address": "0x02109738",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "the CLOSE state-name slot the launched FlowerEntry row points at; an 8-byte field holding a six-byte string"
+    },
+    {
+      "symbol": "@932",
+      "address": "0x02109740",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous PMF descriptor for BeginResting; retail first word is 0x020b92b8; renamed from @913 because other modules already define @913"
+    },
+    {
+      "symbol": "@590",
+      "address": "0x02109748",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous PMF descriptor for StateOpening; retail first word is 0x020b92c4; renamed from @911 because other modules already define @911"
+    },
+    {
+      "symbol": "@591",
+      "address": "0x02109750",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous PMF descriptor for BeginOpening; retail first word is 0x020b9450; renamed from @909 because other modules already define @909"
+    },
+    {
+      "symbol": "@592",
+      "address": "0x02109758",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous PMF descriptor for BeginLaunched; retail first word is 0x020b96c0"
+    },
+    {
+      "symbol": "@589",
+      "address": "0x02109760",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous PMF descriptor for StateResting; retail first word is 0x020b91fc; renamed from @915 because other modules already define @915"
+    },
+    {
+      "symbol": "@904",
+      "address": "0x02109768",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous PMF descriptor for StateLaunched; retail first word is 0x020b94c4; renamed from @907 because other modules already define @907"
+    },
+    {
+      "symbol": "s_openWaitName",
+      "address": "0x02109770",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "the OPEN_WAIT state-name slot the resting FlowerEntry row points at; a 12-byte field holding a ten-byte string"
+    },
+    {
+      "symbol": "_ZTI18daObjPowerUpItem_c",
+      "address": "0x0210977c",
+      "size": "0xc",
+      "evidence": "compiler-emitted single-inheritance RTTI record matches the retail bytes and all three configured relocations"
+    },
+    {
+      "symbol": "_ZTS18daObjPowerUpItem_c",
+      "address": "0x02109788",
+      "size": "0x15",
+      "evidence": "compiler-emitted type-name string matches the retail bytes"
+    },
+    {
+      "symbol": "g_profile_POWER_UP_ITEM",
+      "address": "0x021097a0",
+      "size": "0x1c",
+      "evidence": "typed actor descriptor; the classInit relocation and the priority, flag and range words match retail"
+    },
+    {
+      "symbol": "data_ov002_021097bc",
+      "address": "0x021097bc",
+      "size": "0x3c",
+      "binding": "STB_GLOBAL",
+      "evidence": "three-row FlowerEntry state table {PMF enter, PMF update, const char *name}; the name words carry static relocations to @920, @914 and @949 while the six PMF slots are zero in .data and are filled by __sinit_daObjPowerUpItem_c.cpp copying the six descriptor records"
+    },
+    {
+      "symbol": "_ZTV18daObjPowerUpItem_c",
+      "address": "0x02109800",
+      "emitted_storage_address": "0x021097f8",
+      "address_point_bias": "0x8",
+      "size": "0x84",
+      "evidence": "compiler storage includes the two-word vtable preamble at 0x021097f8; the configured public address point is eight bytes later and all slot relocations match without inventing a second name for the ABI preamble"
+    }
+  ],
   "bss": [],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x0210156c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@592",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02109758"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101570",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@904",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02109768"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101574",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@591",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02109750"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101578",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@590",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02109748"
+    },
+    {
+      "section": ".init",
+      "source": "0x0210157c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@932",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02109740"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101580",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@589",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02109760"
+    },
+    {
+      "section": ".init",
+      "source": "0x02101584",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_021097bc",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021097bc"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x021080f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_daObjPowerUpItem_c.cpp",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021014e4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109740",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjPowerUpItem_c12BeginRestingEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020b92b8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109748",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjPowerUpItem_c12StateOpeningEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020b92c4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109750",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjPowerUpItem_c12BeginOpeningEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020b9450"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109758",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjPowerUpItem_c13BeginLaunchedEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020b96c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109760",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjPowerUpItem_c12StateRestingEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020b91fc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109768",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjPowerUpItem_c13StateLaunchedEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020b94c4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210977c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109780",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS18daObjPowerUpItem_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02109788"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109784",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8dActor_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208e390"
+    },
+    {
+      "section": ".data",
+      "source": "0x021097a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daObjPowerUpItem_c_classInit",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020b9e0c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021097cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "s_closeName",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02109738"
+    },
+    {
+      "section": ".data",
+      "source": "0x021097e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "s_openName",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02109730"
+    },
+    {
+      "section": ".data",
+      "source": "0x021097f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "s_openWaitName",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02109770"
+    },
+    {
+      "section": ".data",
+      "source": "0x021097fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI18daObjPowerUpItem_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210977c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109800",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjPowerUpItem_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020b9c00"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109804",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109808",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210980c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjPowerUpItem_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020b9a7c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109810",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109814",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109818",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjPowerUpItem_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020b9b70"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210981c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109820",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109824",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjPowerUpItem_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020b9aac"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109828",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210982c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109830",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109834",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109838",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210983c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109840",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjPowerUpItem_cD1Ev",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020b9148"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109844",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjPowerUpItem_cD0Ev",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020b9198"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109848",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjPowerUpItem_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020b9e04"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210984c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109850",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109854",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109858",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210985c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109860",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109864",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109868",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210986c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109870",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109874",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data",
+      "source": "0x02109878",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@905",
+      "to": "@592",
+      "evidence": "mwcc numbers this PMF descriptor @905 per TU and other modules already define a global @905, so the scratch link would multiply-define it"
+    },
+    {
+      "from": "@907",
+      "to": "@904",
+      "evidence": "mwcc numbers this PMF descriptor @907 per TU and other modules already define a global @907, so the scratch link would multiply-define it"
+    },
+    {
+      "from": "@909",
+      "to": "@591",
+      "evidence": "mwcc numbers this PMF descriptor @909 per TU and other modules already define a global @909, so the scratch link would multiply-define it"
+    },
+    {
+      "from": "@911",
+      "to": "@590",
+      "evidence": "mwcc numbers this PMF descriptor @911 per TU and other modules already define a global @911, so the scratch link would multiply-define it"
+    },
+    {
+      "from": "@913",
+      "to": "@932",
+      "evidence": "mwcc numbers this PMF descriptor @913 per TU and other modules already define a global @913, so the scratch link would multiply-define it"
+    },
+    {
+      "from": "@915",
+      "to": "@589",
+      "evidence": "mwcc numbers this PMF descriptor @915 per TU and other modules already define a global @915, so the scratch link would multiply-define it"
+    }
+  ],
   "notes": [
     "Cartridge RTTI name is daObjPowerUpItem_c (_ZTS18daObjPowerUpItem_c). The licensed run is the one .text span 0x020b9148..0x020b9e64 (19 functions); the last is the registry factory daObjPowerUpItem_c_classInit (0x020b9e0c), folded in the 0930c classInit tail pass.",
     "The destructor is declared in the header and defined once, out of line, first in the file. Under #pragma defer_codegen off that emits D1 then D0 in ROM order, plus a homeless D2.",
-    "classInit tail fold (0930c): folded the registry factory daObjPowerUpItem_c_classInit (0x020b9e0c..0x020b9e64) into this promoted TU and widened the complete delinks.txt claim to 0x020b9148..0x020b9e64. The loose source hand-called fBase_c::operator new(972), dActor_c's base constructor, stored _ZTV18daObjPowerUpItem_c, then constructed the two Model members, the dExtShadowModel_c, the dCcAc_c and the dBgCh_Actr. daObjPowerUpItem_c declares no constructor, so the implicit one emits that sequence and the factory is `return new daObjPowerUpItem_c();`. Under `#pragma defer_codegen off` it is written at the end of the file."
+    "classInit tail fold (0930c): folded the registry factory daObjPowerUpItem_c_classInit (0x020b9e0c..0x020b9e64) into this promoted TU and widened the complete delinks.txt claim to 0x020b9148..0x020b9e64. The loose source hand-called fBase_c::operator new(972), dActor_c's base constructor, stored _ZTV18daObjPowerUpItem_c, then constructed the two Model members, the dExtShadowModel_c, the dCcAc_c and the dBgCh_Actr. daObjPowerUpItem_c declares no constructor, so the implicit one emits that sequence and the factory is `return new daObjPowerUpItem_c();`. Under `#pragma defer_codegen off` it is written at the end of the file.",
+    "Folded __sinit_ov002_021014e4 into this TU. The handwritten shard copied six 8-byte PMF descriptor records into the FlowerEntry state table data_ov002_021097bc; defining the table at file scope with member-function pointers emits the same 0xa4-byte initializer and the six descriptors. The three state names are padded char slots (s_openName, s_closeName, s_openWaitName) exactly as dPathLiftActor_c's state names, and the POWER_UP_ITEM registry profile is defined alongside. mwcc numbered the descriptors @905,@907,@909,@911,@913,@915 in emitted order; every one collides with a global @NNN on main, so all six are renamed through defined_symbol_renames to @592,@904,@591,@590,@932,@589. No new data was added.",
+    "LOCAL WORKER NOTE: this machine stock dump is the EU image (gamecode ASMP), so the scratch link builds ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to this tree stock build and to the strict control, while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container fields outside every module range. The content proof is the same either way: moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, and the owned ranges identical."
   ],
   "compiler_only_output": [
     {
@@ -172,27 +851,6 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "include/types.h defines ~Vector3() inline, so a TU that holds a Vector3 emits this 4-byte vague-linkage body. It has a ROM home at arm9:0x020072c0 owned by src/_ZN7Vector3D1Ev.cpp, so the disposition is deadstrip-duplicate rather than a homeless deadstrip."
-    },
-    {
-      "symbol": "_ZTV18daObjPowerUpItem_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x02109800",
-      "reason": "Key function is the out-of-line destructor, so this TU emits the vtable. symbols.txt names the address point ov002:0x02109800; the licensed span is only .text 0x020b9148..0x020b9e64."
-    },
-    {
-      "symbol": "_ZTI18daObjPowerUpItem_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x0210977c",
-      "reason": "This class's __si_class_type_info, emitted with the vtable. Canonical copy ov002:0x0210977c, outside the licensed .text span."
-    },
-    {
-      "symbol": "_ZTS18daObjPowerUpItem_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x02109788",
-      "reason": "Type name string. The cartridge holds the length-prefixed name at ov002:0x02109788, which is the size this TU emits."
     },
     {
       "symbol": "_ZTI8dActor_c",
@@ -237,6 +895,92 @@
       "reason": "Inherited vague-linkage type name for fBase_c. Canonical copy arm9:0x02086e60."
     }
   ],
+  "init": [
+    {
+      "symbol": "__sinit_daObjPowerUpItem_c.cpp",
+      "address": "0x021014e4",
+      "size": "0xa4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov002_021014e4 and carries the same seven relocation sites (six descriptor records plus the destination table)"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_daObjPowerUpItem_c.cpp",
+      "address": "0x021080f8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_daObjPowerUpItem_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_daObjPowerUpItem_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local address"
+    },
+    {
+      "symbol": "s_openName",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope state-name slot referenced by a configured table relocation at 0x021097e0"
+    },
+    {
+      "symbol": "s_closeName",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope state-name slot referenced by a configured table relocation at 0x021097cc"
+    },
+    {
+      "symbol": "s_openWaitName",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope state-name slot referenced by a configured table relocation at 0x021097f4"
+    },
+    {
+      "symbol": "@592",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-emitted descriptor temp; DSD requires a configured global symbol at the same exact address"
+    },
+    {
+      "symbol": "@904",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-emitted descriptor temp; DSD requires a configured global symbol at the same exact address"
+    },
+    {
+      "symbol": "@591",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-emitted descriptor temp; DSD requires a configured global symbol at the same exact address"
+    },
+    {
+      "symbol": "@590",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-emitted descriptor temp; DSD requires a configured global symbol at the same exact address"
+    },
+    {
+      "symbol": "@932",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-emitted descriptor temp; DSD requires a configured global symbol at the same exact address"
+    },
+    {
+      "symbol": "@589",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-emitted descriptor temp; DSD requires a configured global symbol at the same exact address"
+    }
+  ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
@@ -258,25 +1002,17 @@
         9,
         10,
         18,
-        43,
-        44,
-        45,
-        46,
-        47,
-        48,
-        49,
-        50,
-        51,
-        52,
-        53,
-        54,
-        55,
-        56
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75
       ],
       "data": [
-        "_ZTV18daObjPowerUpItem_c",
-        "_ZTI18daObjPowerUpItem_c",
-        "_ZTS18daObjPowerUpItem_c",
         "_ZTI8dActor_c",
         "_ZTS8dActor_c",
         "_ZTI7dBase_c",
@@ -285,23 +1021,226 @@
         "_ZTS7fBase_c"
       ],
       "dataExternalized": [
-        "_ZTI18daObjPowerUpItem_c",
         "_ZTI7dBase_c",
         "_ZTI7fBase_c",
         "_ZTI8dActor_c",
-        "_ZTS18daObjPowerUpItem_c",
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
-        "_ZTS8dActor_c",
-        "_ZTV18daObjPowerUpItem_c"
+        "_ZTS8dActor_c"
       ]
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 16 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov002-daObjPowerUpItem_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020b9148",
+        "end": "0x020b9e64",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020b9148",
+          "end": "0x020b9e64",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x021014e4",
+          "end": "0x02101588",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x021080f8",
+          "end": "0x021080fc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02109730",
+          "end": "0x0210987c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 35
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              78
+            ],
+            "desired": [
+              78
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              76
+            ],
+            "desired": [
+              76
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              43,
+              45,
+              46,
+              47,
+              48,
+              50,
+              52,
+              54,
+              56,
+              58,
+              60,
+              62,
+              64,
+              65
+            ],
+            "desired": [
+              46,
+              45,
+              56,
+              54,
+              52,
+              48,
+              58,
+              50,
+              47,
+              65,
+              64,
+              43,
+              60,
+              62
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                43,
+                45,
+                46,
+                47,
+                48,
+                50,
+                52,
+                54,
+                56,
+                58,
+                60,
+                62,
+                64,
+                65
+              ],
+              "desired": [
+                46,
+                45,
+                56,
+                54,
+                52,
+                48,
+                58,
+                50,
+                47,
+                65,
+                64,
+                43,
+                60,
+                62
+              ],
+              "slots": [
+                43,
+                45,
+                46,
+                47,
+                48,
+                50,
+                52,
+                54,
+                56,
+                58,
+                60,
+                62,
+                64,
+                65
+              ]
+            }
+          ],
+          "symbolIndices": 14,
+          "sectionLinks": 0,
+          "sectionInfos": 10,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   }
 }

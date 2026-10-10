@@ -26,6 +26,24 @@
 #include "daObjBk_Fall_Block_c.h"
 #include "SharedFilePtr.h"
 
+/* The model handle constructs through func_02017acc and destroys through
+ * func_02017ab4. The collision handle constructs through func_02017b4c and
+ * destroys through SharedFilePtr_Destruct_Clsn. The descriptor stays ROM data. */
+struct FallBlockModelFilePtr : SharedFilePtr {
+    unsigned int words[2];
+    FallBlockModelFilePtr(unsigned int fileId);
+    ~FallBlockModelFilePtr();
+};
+struct FallBlockClsnFileHandle : SharedFilePtr {
+    unsigned int words[2];
+    FallBlockClsnFileHandle(unsigned int fileId);
+    ~FallBlockClsnFileHandle();
+};
+typedef char FallBlockModelFilePtr_size_must_be_8[
+    sizeof(FallBlockModelFilePtr) == 8 ? 1 : -1];
+typedef char FallBlockClsnFileHandle_size_must_be_8[
+    sizeof(FallBlockClsnFileHandle) == 8 ? 1 : -1];
+
 struct CLPS_Block;
 
 struct ResourceDescriptor {
@@ -59,3 +77,8 @@ s32 daObjBk_Fall_Block_c::CleanupResources()
 {
     return func_ov098_0213a2cc(this, &data_ov015_02114880);
 }
+
+/* Retail construction order: model 1423, then collision 1424.
+ * mwcc emits __sinit_d_a_obj_bk_fall_block.cpp. */
+FallBlockModelFilePtr data_ov015_02114adc(1423);
+FallBlockClsnFileHandle data_ov015_02114ad4(1424);

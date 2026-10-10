@@ -35,6 +35,22 @@ struct daObjEmmLog_c_Resources {
     CLPS_Block *clps;
 };
 
+/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
+ * veneer pairs (func_02017acc / func_02017ab4 for the model, func_02017b4c /
+ * SharedFilePtr_Destruct_Clsn for the collision), spelled through
+ * declared-only subclasses so the static initializer names the real entry
+ * points. */
+struct EmmLogModelFilePtr : SharedFilePtr {
+    u32 words[2];
+    EmmLogModelFilePtr(u32 fileID);
+    ~EmmLogModelFilePtr();
+};
+struct EmmLogCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+    EmmLogCollisionFilePtr(u32 fileID);
+    ~EmmLogCollisionFilePtr();
+};
+
 extern "C" {
 void func_020393a4(dBgW *bgw, int range);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int range, int b);
@@ -115,3 +131,8 @@ s32 daObjEmmLog_c::CleanupResources()
 // @symbol _ZN13daObjEmmLog_cD0Ev
 /* Both destructors are emitted from the INLINE `~daObjEmmLog_c() {}` in
  * include/daObjEmmLog_c.h -- there is deliberately no body here. */
+
+/* The log's model and collision file handles; data_ov052_021124d4.model
+ * and .collision point at them. */
+EmmLogModelFilePtr data_ov052_02112680(1507);
+EmmLogCollisionFilePtr data_ov052_02112688(1508);

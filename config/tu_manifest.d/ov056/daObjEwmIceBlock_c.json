@@ -3,6 +3,7 @@
   "module": "ov056",
   "source": "src/actors/daObjEwmIceBlock_c.cpp",
   "promoted_source": "src/actors/daObjEwmIceBlock_c.cpp",
+  "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -16,6 +17,21 @@
       "name": ".text",
       "start": "0x021111a0",
       "end": "0x021115cc"
+    },
+    {
+      "name": ".init",
+      "start": "0x02112b48",
+      "end": "0x02112bb4"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02112bb4",
+      "end": "0x02112bb8"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02113400",
+      "end": "0x02113428"
     }
   ],
   "functions": [
@@ -70,7 +86,36 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov056_02113400",
+      "address": "0x02113400",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model resource handle constructed with file ID 0x5ed"
+    },
+    {
+      "symbol": "data_ov056_02113408",
+      "address": "0x02113408",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision resource handle constructed with file ID 0x5ee"
+    },
+    {
+      "symbol": "@490",
+      "address": "0x02113410",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x5ed model handle"
+    },
+    {
+      "symbol": "@60",
+      "address": "0x0211341c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x5ee collision handle"
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZN18daObjEwmIceBlock_cD2Ev",
@@ -172,7 +217,9 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c21UpdateModelPosAndRotYEv' differs between the legacy file that used to hold _ZN18daObjEwmIceBlock_c8BehaviorEv and the one that held _ZN18daObjEwmIceBlock_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN18daObjEwmIceBlock_c8BehaviorEv and the one that held _ZN18daObjEwmIceBlock_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
     "fold branch tu/fold-highov-0921: 6/6 MATCH, objisolate clean, reloc-destinations clean -> text-verified. 12 UNLICENSED OUTPUT symbols (1 .text: _ZN18daObjEwmIceBlock_cD2Ev; 11 .data: the _ZTV/_ZTI/_ZTS group for daObjEwmIceBlock_c and its ancestor chain). Key-function TU, .data RTTI emission expected; .data licensing NOT attempted here. Hand fixes over tubuild create: (1) removed the duplicate D0 destructor body; (2) data_ov056_02113314 had two spellings of one object - 'SharedFilePtr *[]' (first, used as [0]->Release()) and a local 'struct SFP { void*a,b,c; }' (used as .a/.b/.c). Kept the first, more complete spelling (it names SharedFilePtr) and rewrote .a/.b/.c as [0]/[1]/[2], which is the identical address math. The two create-time conflicts on _ZN10dBgActor_c21UpdateModelPosAndRotYEv / _ZN10dBgActor_c19UpdateClsnPosAndRotEv were a void-vs-int return type only, immaterial at these call sites (return value unused). Byte-neutral.",
-    "fold-lane-D-0929: folded the daObjEwmIceBlock_c_classInit registry factory (0x02111594..0x021115cc) into this already-promoted TU, widening the complete delinks.txt claim from 0x021111a0..0x02111594 to 0x021111a0..0x021115cc. The loose one-function source called fBase_c::operator new(0x330) + dBgActor_c::dBgActor_c(p) + a manual vtable store + PathPtr::PathPtr() at +0x320; daObjEwmIceBlock_c has no user-declared constructor, so `new daObjEwmIceBlock_c()` reproduces the identical sequence with zero mangled calls. This TU keeps `#pragma defer_codegen off`, so emission follows source order (ROM-ascending); the factory appends after InitResources. `tubuild.py verify` reports 7/7 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, adding one new compiler_only_output deadstrip entry (_ZN10dBgActor_cD2Ev, the same 'return new' base-object-destructor byproduct src/actors/daObjHatenaBlock_c.cpp already documents and licenses). Retired: src/d_a_obj_ewm_ice_block.c (credited tangosdev, carried into attribution.json as a path#symbol override)."
+    "fold-lane-D-0929: folded the daObjEwmIceBlock_c_classInit registry factory (0x02111594..0x021115cc) into this already-promoted TU, widening the complete delinks.txt claim from 0x021111a0..0x02111594 to 0x021111a0..0x021115cc. The loose one-function source called fBase_c::operator new(0x330) + dBgActor_c::dBgActor_c(p) + a manual vtable store + PathPtr::PathPtr() at +0x320; daObjEwmIceBlock_c has no user-declared constructor, so `new daObjEwmIceBlock_c()` reproduces the identical sequence with zero mangled calls. This TU keeps `#pragma defer_codegen off`, so emission follows source order (ROM-ascending); the factory appends after InitResources. `tubuild.py verify` reports 7/7 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, adding one new compiler_only_output deadstrip entry (_ZN10dBgActor_cD2Ev, the same 'return new' base-object-destructor byproduct src/actors/daObjHatenaBlock_c.cpp already documents and licenses). Retired: src/d_a_obj_ewm_ice_block.c (credited tangosdev, carried into attribution.json as a path#symbol override).",
+    "Folded __sinit_ov056_02112b48: two file-scope resource handles (model 0x5ed, collision file 0x5ee) are defined for real through declared-only SharedFilePtr subclasses whose constructor and destructor alias the retail veneer pairs (func_02017acc/func_02017ab4 for the model, func_02017b4c/SharedFilePtr_Destruct_Clsn for the collision). The claims pick up .init 0x02112b48..0x02112bb4, .ctor 0x02112bb4..0x02112bb8 and .bss 0x02113400..0x02113428; the boundary label data_ov056_02113428 was added so the delinker keeps @60 at 12 bytes instead of sizing it to the next ambiguous symbol at 0x02113434; the two destructor-registration nodes keep emitted @490 and renumber @491 -> @60 via defined_symbol_renames (ov100 already defines a global @491). Retired src/unnamed/ov056/__sinit_ov056_02112b48.c.",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -199,10 +246,6 @@
         16,
         21,
         22,
-        23,
-        24,
-        25,
-        26,
         27,
         28,
         29,
@@ -215,7 +258,11 @@
         36,
         37,
         38,
-        39
+        39,
+        40,
+        41,
+        42,
+        43
       ],
       "data": [
         "_ZTV18daObjEwmIceBlock_c",
@@ -247,9 +294,364 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 20 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov056-daObjEwmIceBlock_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x021111a0",
+        "end": "0x021115cc",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x021111a0",
+          "end": "0x021115cc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02112b48",
+          "end": "0x02112bb4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02112bb4",
+          "end": "0x02112bb8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02113400",
+          "end": "0x02113428",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 13
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              46
+            ],
+            "desired": [
+              46
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              44
+            ],
+            "desired": [
+              44
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              23,
+              24,
+              25,
+              26
+            ],
+            "desired": [
+              24,
+              26,
+              23,
+              25
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                23,
+                24,
+                25,
+                26
+              ],
+              "desired": [
+                24,
+                26,
+                23,
+                25
+              ],
+              "slots": [
+                23,
+                24,
+                25,
+                26
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
-  }
+  },
+  "init": [
+    {
+      "symbol": "__sinit_daObjEwmIceBlock_c.cpp",
+      "address": "0x02112b48",
+      "size": "0x0000006c",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is byte-identical to retail __sinit_ov056_02112b48 and carries the same 10 relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_daObjEwmIceBlock_c.cpp",
+      "address": "0x02112bb4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN23EwmIceBlockModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN23EwmIceBlockModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor-registration destination and the model wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN27EwmIceBlockCollisionFilePtrC1Ej",
+      "canonical_symbol": "func_02017b4c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b4c",
+      "evidence": "retail initializer call destination and the collision wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN27EwmIceBlockCollisionFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b34",
+      "evidence": "retail destructor-registration destination and the collision wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and direct retail reference"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_daObjEwmIceBlock_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_daObjEwmIceBlock_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@490",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local model-handle registration node is a configured initializer relocation destination at 0x02113410"
+    },
+    {
+      "symbol": "@60",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local collision-handle registration node is a configured initializer relocation destination at 0x0211341c"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02112b58",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112b68",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112b74",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017b4c",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112b84",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112b94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02113400",
+      "addend": 0,
+      "target_module": "ov056",
+      "target_address": "0x02113400"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112b9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112ba0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@490",
+      "addend": 0,
+      "target_module": "ov056",
+      "target_address": "0x02113410"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112ba4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02113408",
+      "addend": 0,
+      "target_module": "ov056",
+      "target_address": "0x02113408"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112bac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017b34"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112bb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@60",
+      "addend": 0,
+      "target_module": "ov056",
+      "target_address": "0x0211341c"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02112bb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_daObjEwmIceBlock_c.cpp",
+      "addend": 0,
+      "target_module": "ov056",
+      "target_address": "0x02112b48"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@491",
+      "to": "@60",
+      "evidence": "mwcc numbers this registration node @491 per TU and ov100 already defines a global @491, so the scratch link would multiply-define it"
+    }
+  ]
 }

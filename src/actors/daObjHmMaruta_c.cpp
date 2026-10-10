@@ -38,8 +38,24 @@
  */
 
 #include "daObjHmMaruta_c.h"
+#include "SharedFilePtr.h"
 
-struct SharedFilePtr;
+/* The model handle constructs through func_02017acc and destroys through
+ * func_02017ab4. The collision handle constructs through func_02017b4c and
+ * destroys through SharedFilePtr_Destruct_Clsn. The descriptor stays ROM data. */
+struct MarutaModelFilePtr : SharedFilePtr {
+    unsigned int words[2];
+    MarutaModelFilePtr(unsigned int fileId);
+    ~MarutaModelFilePtr();
+};
+struct MarutaClsnFileHandle : SharedFilePtr {
+    unsigned int words[2];
+    MarutaClsnFileHandle(unsigned int fileId);
+    ~MarutaClsnFileHandle();
+};
+typedef char MarutaModelFilePtr_size_must_be_8[sizeof(MarutaModelFilePtr) == 8 ? 1 : -1];
+typedef char MarutaClsnFileHandle_size_must_be_8[sizeof(MarutaClsnFileHandle) == 8 ? 1 : -1];
+
 struct CLPS_Block;
 
 /* The model/collision/CLPS triple func_ov080_021274ac and _021270dc take,
@@ -103,3 +119,8 @@ int daObjHmMaruta_c::CleanupResources()
 {
     return func_ov080_021270dc(this, &data_ov030_02115a04);
 }
+
+/* Retail construction order: model 1562, then collision 1563.
+ * mwcc emits __sinit_daObjHmMaruta_c.cpp. */
+MarutaModelFilePtr data_ov030_02115ca8(1562);
+MarutaClsnFileHandle data_ov030_02115cb0(1563);

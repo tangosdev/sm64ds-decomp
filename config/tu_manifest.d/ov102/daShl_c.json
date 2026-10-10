@@ -15,6 +15,26 @@
       "name": ".text",
       "start": "0x0214c748",
       "end": "0x0214d70c"
+    },
+    {
+      "name": ".init",
+      "start": "0x0214dfac",
+      "end": "0x0214e0a0"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x0214e0ac",
+      "end": "0x0214e0b0"
+    },
+    {
+      "name": ".data",
+      "start": "0x0214e5d4",
+      "end": "0x0214e614"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0214ea48",
+      "end": "0x0214eaa0"
     }
   ],
   "functions": [
@@ -187,10 +207,98 @@
       "ordinal": 23
     }
   ],
-  "data": [],
-  "bss": [],
+  "data": [
+    {
+      "symbol": "@774",
+      "address": "0x0214e5d4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous held tick pointer-to-member; retail first word is 0x0214cfe4. mwcc numbers it @721, which ov063 already owns, so the row uses the unused same-length @774."
+    },
+    {
+      "symbol": "@768",
+      "address": "0x0214e5dc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous ridden tick pointer-to-member; retail first word is 0x0214d044. mwcc numbers it @717, which ov002 already owns, so the row uses the unused same-length @768."
+    },
+    {
+      "symbol": "@746",
+      "address": "0x0214e5e4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous idle enter pointer-to-member; retail first word is 0x0214d1b8. mwcc numbers it @707, which ov060 already owns, so the row uses the unused same-length @746."
+    },
+    {
+      "symbol": "@770",
+      "address": "0x0214e5ec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous held enter pointer-to-member; retail first word is 0x0214d020. mwcc numbers it @719, which ov063 already owns, so the row uses the unused same-length @770."
+    },
+    {
+      "symbol": "@750",
+      "address": "0x0214e5f4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous idle tick pointer-to-member; retail first word is 0x0214d1b0. mwcc numbers it @709, which ov060 already owns, so the row uses the unused same-length @750."
+    },
+    {
+      "symbol": "@765",
+      "address": "0x0214e5fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous ridden enter pointer-to-member; retail first word is 0x0214d0bc. mwcc numbers it @715, which ov063 already owns, so the row uses the unused same-length @765."
+    },
+    {
+      "symbol": "@752",
+      "address": "0x0214e604",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous sliding enter pointer-to-member; retail first word is 0x0214d148. mwcc numbers it @711, which ov060 already owns, so the row uses the unused same-length @752."
+    },
+    {
+      "symbol": "@754",
+      "address": "0x0214e60c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "anonymous sliding tick pointer-to-member; retail first word is 0x0214d114. mwcc numbers it @713, which ov060 already owns, so the row uses the unused same-length @754."
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "data_ov102_0214ea48",
+      "address": "0x0214ea48",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "ridden state record; the initializer copies its two descriptors into it"
+    },
+    {
+      "symbol": "data_ov102_0214ea58",
+      "address": "0x0214ea58",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "held state record; the initializer copies its two descriptors into it"
+    },
+    {
+      "symbol": "data_ov102_0214ea68",
+      "address": "0x0214ea68",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "idle state record; the initializer copies its two descriptors into it"
+    },
+    {
+      "symbol": "data_ov102_0214ea78",
+      "address": "0x0214ea78",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "sliding state record. dsd extends the last overlay bss symbol to the module end at 0x0214eaa0, so the object is the 0x10 record plus three zero pointer-to-member slots that the initializer does not copy"
+    }
+  ],
   "notes": [
-    "Hand-assembled: tubuild create generated the 23 tu_map members (class members, D1/D0 and the fifteen state/helper routines); the zero-gap classInit factory was folded in by hand. The four state records (.bss, filled by __sinit_ov102_0214dfac) and the .rodata model-handle pair data_ov102_0214d70c stay unclaimed: this is a text-only TU, like its ov102 sibling daBmb_c."
+    "Hand-assembled: tubuild create generated the 23 tu_map members (class members, D1/D0 and the fifteen state/helper routines); the zero-gap classInit factory was folded in by hand. The four state records are defined in this TU. mwcc emits __sinit_d_a_shl.cpp, the ctor word, and eight anonymous pointer-to-member descriptors. Class RTTI and the vtable stay externalized. The .rodata model-handle pair data_ov102_0214d70c stays unclaimed. The handwritten src/unnamed/ov102/__sinit_ov102_0214dfac.c is retired.",
+    "Folded __sinit_ov102_0214dfac into this TU. @707, @709, @711 and @713 already belong to ov060, @715, @719 and @721 already belong to ov063, and @717 already belongs to ov002. defined_symbol_renames maps them to the unused same-length @746, @750, @752, @754, @765, @768, @770 and @774.",
+    "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -208,24 +316,24 @@
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
         17,
         18,
-        19,
-        20,
-        21,
-        32
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        40,
+        41,
+        52
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -257,9 +365,206 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 9 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov102-daShl_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0214c748",
+        "end": "0x0214d70c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0214c748",
+          "end": "0x0214d70c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x0214dfac",
+          "end": "0x0214e0a0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x0214e0ac",
+          "end": "0x0214e0b0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0214e5d4",
+          "end": "0x0214e614",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0214ea48",
+          "end": "0x0214eaa0",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 38
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              86
+            ],
+            "desired": [
+              86
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              84
+            ],
+            "desired": [
+              84
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              7,
+              9,
+              11,
+              13,
+              15,
+              19,
+              21
+            ],
+            "desired": [
+              11,
+              13,
+              7,
+              15,
+              21,
+              9,
+              5,
+              19
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              36,
+              37,
+              38,
+              39
+            ],
+            "desired": [
+              36,
+              37,
+              38,
+              39
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                7,
+                9,
+                11,
+                13,
+                15,
+                19,
+                21
+              ],
+              "desired": [
+                11,
+                13,
+                7,
+                15,
+                21,
+                9,
+                5,
+                19
+              ],
+              "slots": [
+                5,
+                7,
+                9,
+                11,
+                13,
+                15,
+                19,
+                21
+              ]
+            }
+          ],
+          "symbolIndices": 8,
+          "sectionLinks": 0,
+          "sectionInfos": 8,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [
@@ -347,5 +652,341 @@
       "canonical_address": "0x020072c0",
       "reason": "This TU builds Vector3 temporaries by value (func_ov102_0214ce60's carry offset, func_ov102_0214cbec's hurt positions), so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
     }
-  ]
+  ],
+  "production_mode": "intact-object",
+  "init": [
+    {
+      "symbol": "__sinit_d_a_shl.cpp",
+      "address": "0x0214dfac",
+      "size": "0xf4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov102_0214dfac and carries the same twelve relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_shl.cpp",
+      "address": "0x0214e0ac",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x0214e070",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@746",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e5e4"
+    },
+    {
+      "section": ".init",
+      "source": "0x0214e074",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@750",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e5f4"
+    },
+    {
+      "section": ".init",
+      "source": "0x0214e078",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@752",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e604"
+    },
+    {
+      "section": ".init",
+      "source": "0x0214e07c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@754",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e60c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0214e080",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@765",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e5fc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0214e084",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@768",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e5dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0214e088",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@770",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e5ec"
+    },
+    {
+      "section": ".init",
+      "source": "0x0214e08c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@774",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e5d4"
+    },
+    {
+      "section": ".init",
+      "source": "0x0214e090",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov102_0214ea68",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214ea68"
+    },
+    {
+      "section": ".init",
+      "source": "0x0214e094",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov102_0214ea78",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214ea78"
+    },
+    {
+      "section": ".init",
+      "source": "0x0214e098",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov102_0214ea48",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214ea48"
+    },
+    {
+      "section": ".init",
+      "source": "0x0214e09c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov102_0214ea58",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214ea58"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x0214e0ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_shl.cpp",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214dfac"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214e5d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daShl_c19func_ov102_0214cfe4Ev",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214cfe4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214e5dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daShl_c19func_ov102_0214d044Ev",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214d044"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214e5e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daShl_c19func_ov102_0214d1b8Ev",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214d1b8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214e5ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daShl_c19func_ov102_0214d020Ev",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214d020"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214e5f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daShl_c19func_ov102_0214d1b0Ev",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214d1b0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214e5fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daShl_c19func_ov102_0214d0bcEv",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214d0bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214e604",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daShl_c19func_ov102_0214d148Ev",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214d148"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214e60c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daShl_c19func_ov102_0214d114Ev",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214d114"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_a_shl.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_a_shl.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@774",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local held tick descriptor is a configured initializer relocation destination at 0x0214e5d4"
+    },
+    {
+      "symbol": "@768",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local ridden tick descriptor is a configured initializer relocation destination at 0x0214e5dc"
+    },
+    {
+      "symbol": "@746",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local idle enter descriptor is a configured initializer relocation destination at 0x0214e5e4"
+    },
+    {
+      "symbol": "@770",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local held enter descriptor is a configured initializer relocation destination at 0x0214e5ec"
+    },
+    {
+      "symbol": "@750",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local idle tick descriptor is a configured initializer relocation destination at 0x0214e5f4"
+    },
+    {
+      "symbol": "@765",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local ridden enter descriptor is a configured initializer relocation destination at 0x0214e5fc"
+    },
+    {
+      "symbol": "@752",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local sliding enter descriptor is a configured initializer relocation destination at 0x0214e604"
+    },
+    {
+      "symbol": "@754",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local sliding tick descriptor is a configured initializer relocation destination at 0x0214e60c"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@721",
+      "to": "@774",
+      "evidence": "mwcc numbers this PMF descriptor @721. ov063 already defines @721, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @774."
+    },
+    {
+      "from": "@717",
+      "to": "@768",
+      "evidence": "mwcc numbers this PMF descriptor @717. ov002 already defines @717, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @768."
+    },
+    {
+      "from": "@707",
+      "to": "@746",
+      "evidence": "mwcc numbers this PMF descriptor @707. ov060 already defines @707, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @746."
+    },
+    {
+      "from": "@719",
+      "to": "@770",
+      "evidence": "mwcc numbers this PMF descriptor @719. ov063 already defines @719, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @770."
+    },
+    {
+      "from": "@709",
+      "to": "@750",
+      "evidence": "mwcc numbers this PMF descriptor @709. ov060 already defines @709, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @750."
+    },
+    {
+      "from": "@715",
+      "to": "@765",
+      "evidence": "mwcc numbers this PMF descriptor @715. ov063 already defines @715, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @765."
+    },
+    {
+      "from": "@711",
+      "to": "@752",
+      "evidence": "mwcc numbers this PMF descriptor @711. ov060 already defines @711, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @752."
+    },
+    {
+      "from": "@713",
+      "to": "@754",
+      "evidence": "mwcc numbers this PMF descriptor @713. ov060 already defines @713, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @754."
+    }
+  ],
+  "undefined_symbol_aliases": []
 }

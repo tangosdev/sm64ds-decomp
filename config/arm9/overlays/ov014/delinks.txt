@@ -6,6 +6,9 @@
 src/game/actors/d_a_obj_b_swdoor.cpp:
     complete
     .text start:0x021111a0 end:0x02111308
+    .init start:0x021130ac end:0x02113118
+    .ctor start:0x02113368 end:0x0211336c
+    .bss start:0x02114940 end:0x02114968
 
 src/game/actors/d_a_wanwan.cpp:
     complete
@@ -22,6 +25,3 @@ src/game/actors/d_a_obj_wanwan_shutter.cpp:
     .ctor start:0x02113370 end:0x02113374
     .bss start:0x021149b8 end:0x021149e0
 
-src/unnamed/ov014/__sinit_ov014_021130ac.c:
-    complete
-    .init start:0x021130ac end:0x02113118

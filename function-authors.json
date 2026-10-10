@@ -18687,7 +18687,7 @@
     },
     "ov002:0x021014e4": {
       "author": "tangosdev",
-      "name": "__sinit_ov002_021014e4"
+      "name": "__sinit_daObjPowerUpItem_c.cpp"
     },
     "ov002:0x02101588": {
       "author": "tangosdev",
@@ -18731,7 +18731,7 @@
     },
     "ov002:0x02107304": {
       "author": "tangosdev",
-      "name": "__sinit_ov002_02107304"
+      "name": "__sinit_d_a_obj_bc_switch.cpp"
     },
     "ov002:0x02107370": {
       "author": "andrewboudreau",
@@ -27575,7 +27575,7 @@
     },
     "ov006:0x0212f4c4": {
       "author": "tangosdev",
-      "name": "__sinit_ov006_0212f4c4"
+      "name": "__sinit_dMg3DHeyhoObjAdapter_c.cpp"
     },
     "ov006:0x0212f52c": {
       "author": "tangosdev",
@@ -27647,7 +27647,7 @@
     },
     "ov006:0x021314e4": {
       "author": "ruspecial",
-      "name": "__sinit_ov006_021314e4"
+      "name": "__sinit_dScMgMemory2_c.cpp"
     },
     "ov006:0x021318a0": {
       "author": "tangosdev",
@@ -31055,7 +31055,7 @@
     },
     "ov016:0x021139e4": {
       "author": "tangosdev",
-      "name": "__sinit_ov016_021139e4"
+      "name": "__sinit_d_a_obj_ki_ita.cpp"
     },
     "ov016:0x02113a50": {
       "author": "tangosdev",
@@ -31795,7 +31795,7 @@
     },
     "ov021:0x021136c8": {
       "author": "tangosdev",
-      "name": "__sinit_ov021_021136c8"
+      "name": "__sinit_d_a_obj_cv_shutter.cpp"
     },
     "ov022:0x021111a0": {
       "author": "tangosdev",
@@ -33067,7 +33067,7 @@
     },
     "ov029:0x02112b38": {
       "author": "tangosdev",
-      "name": "__sinit_ov029_02112b38"
+      "name": "__sinit_d_a_obj_wc_obj01.cpp"
     },
     "ov029:0x02112ba4": {
       "author": "tangosdev",
@@ -33083,11 +33083,11 @@
     },
     "ov029:0x02112cb8": {
       "author": "tangosdev",
-      "name": "__sinit_ov029_02112cb8"
+      "name": "__sinit_d_a_obj_wc_obj06.cpp"
     },
     "ov029:0x02112d24": {
       "author": "tangosdev",
-      "name": "__sinit_ov029_02112d24"
+      "name": "__sinit_d_a_obj_wc_obj07.cpp"
     },
     "ov029:0x02112d90": {
       "author": "tangosdev",

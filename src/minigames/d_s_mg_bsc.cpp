@@ -23,6 +23,22 @@
  * Declared outside extern "C" it still links by its plain name. */
 typedef void (dScMgBSC_c::*StateHandler)();
 extern StateHandler data_ov006_02142f94[];
+/* The ROM PMF constants the state table copies from (unlicensed .data),
+ * in retail copy order. */
+extern StateHandler data_ov006_0213fd7c;
+extern StateHandler data_ov006_0213fd5c;
+extern StateHandler data_ov006_0213fd4c;
+extern StateHandler data_ov006_0213fd24;
+extern StateHandler data_ov006_0213fd3c;
+extern StateHandler data_ov006_0213fd34;
+extern StateHandler data_ov006_0213fd64;
+extern StateHandler data_ov006_0213fd54;
+extern StateHandler data_ov006_0213fd84;
+extern StateHandler data_ov006_0213fd14;
+extern StateHandler data_ov006_0213fd0c;
+extern StateHandler data_ov006_0213fd74;
+extern StateHandler data_ov006_0213fd1c;
+extern StateHandler data_ov006_0213fd2c;
 
 extern "C" {
 extern short data_ov004_020bf9e4;
@@ -526,3 +542,23 @@ void dScMgBSC_c::StateDone()
 
 /* D1 and D0 are not written out: the vtable InitResources emits pulls them
  * in, in ROM order. Written out of line, D0 would come out first. */
+
+/* Static-init globals (was the handwritten __sinit_ov006_0213326c shard).
+ * The state table plain-copied from the ROM PMF constants, in retail
+ * copy order. */
+StateHandler data_ov006_02142f94[14] = {
+    data_ov006_0213fd7c,
+    data_ov006_0213fd5c,
+    data_ov006_0213fd4c,
+    data_ov006_0213fd24,
+    data_ov006_0213fd3c,
+    data_ov006_0213fd34,
+    data_ov006_0213fd64,
+    data_ov006_0213fd54,
+    data_ov006_0213fd84,
+    data_ov006_0213fd14,
+    data_ov006_0213fd0c,
+    data_ov006_0213fd74,
+    data_ov006_0213fd1c,
+    data_ov006_0213fd2c,
+};

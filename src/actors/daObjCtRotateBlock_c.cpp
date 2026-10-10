@@ -41,6 +41,27 @@
 extern char data_ov065_0211cfd0[];
 extern char data_ov065_0211cfd4[];
 
+/* File-scope objects at the end of this file construct the six resource
+ * handles (model files 0x5b6/0x5b9/0x5b8/0x5bb, collision files 0x5b7/
+ * 0x5ba). mwcc emits __sinit_daObjCtRotateBlock_c.cpp from those
+ * definitions. The wrapper names are local; the handle constructors and
+ * destructors are the ROM resource-family functions, aliased in the
+ * manifest. Nothing in this TU names the handles directly; the variant
+ * records above point at them. */
+struct RotateBlockModelFile : SharedFilePtr {
+    u32 words[2];
+
+    RotateBlockModelFile(u32 fileID);
+    ~RotateBlockModelFile();
+};
+
+struct RotateBlockCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    RotateBlockCollisionFilePtr(u32 fileID);
+    ~RotateBlockCollisionFilePtr();
+};
+
 extern "C" {
 extern void Matrix4x3_FromRotationY(void *m, short ang);
 extern void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
@@ -289,3 +310,12 @@ extern "C" daObjCtRotateBlock_c *daObjCtRotateBlock_c_classInit_CT_MECHA01()
 {
     return new daObjCtRotateBlock_c();
 }
+
+/* Static-init globals (was the handwritten __sinit_ov065_0211c660 shard).
+ * Definition order is the retail initializer's construction order. */
+RotateBlockModelFile data_ov065_0211d814(0x5b6);
+RotateBlockModelFile data_ov065_0211d824(0x5b9);
+RotateBlockModelFile data_ov065_0211d83c(0x5b8);
+RotateBlockModelFile data_ov065_0211d81c(0x5bb);
+RotateBlockCollisionFilePtr data_ov065_0211d834(0x5b7);
+RotateBlockCollisionFilePtr data_ov065_0211d82c(0x5ba);

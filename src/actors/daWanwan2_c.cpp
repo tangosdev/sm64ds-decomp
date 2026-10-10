@@ -136,6 +136,28 @@ struct ChompPmfSelf {
     ChompState *state;  /* 0x668, daWanwan2_c::mStatePair */
 };
 
+/* 8-byte resource handles. The wrapper names are local; the handle
+ * constructors and destructors are the ROM resource-family functions,
+ * aliased in the manifest. */
+struct Wanwan2ModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    Wanwan2ModelFilePtr(u32 fileID);
+    ~Wanwan2ModelFilePtr();
+};
+
+struct Wanwan2AnimFileHandle : SharedFilePtr {
+    u32 words[2];
+
+    Wanwan2AnimFileHandle(u32 fileID);
+    ~Wanwan2AnimFileHandle();
+};
+
+extern Wanwan2ModelFilePtr data_ov100_021486bc;
+extern Wanwan2ModelFilePtr data_ov100_021486a4;
+extern Wanwan2AnimFileHandle data_ov100_021486ac;
+extern Wanwan2AnimFileHandle data_ov100_021486b4;
+
 struct Vector3_16;
 struct dCc_c;
 
@@ -179,12 +201,11 @@ void LoadSilverStarAndNumber();
 void UnloadSilverStarAndNumber();
 
 extern SharedFilePtr data_ov002_0211092c;
-extern SharedFilePtr data_ov100_021486bc;
-extern SharedFilePtr data_ov100_021486a4;
-extern SharedFilePtr data_ov100_021486ac;
-extern SharedFilePtr data_ov100_021486b4;
 extern s32 data_ov100_02148008[3];
 extern ChompState data_ov100_021486f4;
+/* The ROM PMF constants the state record copies from (unlicensed .data). */
+extern ChompPmf data_ov100_02148000;
+extern ChompPmf data_ov100_02147ff8;
 extern unsigned char data_0209f2d8[];
 extern short data_02082214[];
 extern char data_020a0e68[];
@@ -943,3 +964,15 @@ extern "C" daWanwan2_c *daWanwan2_c_classInit()
     }
     return actor;
 }
+
+/* Static-init globals (was the handwritten __sinit_ov100_021475a4 shard).
+ * Handles first, in construction order, then the state record. That is
+ * what emits __sinit_daWanwan2_c.cpp. */
+Wanwan2ModelFilePtr data_ov100_021486bc(0x9c02);
+Wanwan2ModelFilePtr data_ov100_021486a4(0x9c01);
+Wanwan2AnimFileHandle data_ov100_021486ac(0x9c04);
+Wanwan2AnimFileHandle data_ov100_021486b4(0x9c03);
+ChompState data_ov100_021486f4 = {
+    data_ov100_02148000,
+    data_ov100_02147ff8,
+};

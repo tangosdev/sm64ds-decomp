@@ -3,6 +3,7 @@
   "module": "ov063",
   "source": "src/game/actors/d_a_obj_th_fall_block.cpp",
   "promoted_source": "src/game/actors/d_a_obj_th_fall_block.cpp",
+  "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -15,6 +16,21 @@
       "name": ".text",
       "start": "0x0211d3a0",
       "end": "0x0211d4b8"
+    },
+    {
+      "name": ".init",
+      "start": "0x0211e590",
+      "end": "0x0211e5fc"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x0211e704",
+      "end": "0x0211e708"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0211ef58",
+      "end": "0x0211ef80"
     }
   ],
   "functions": [
@@ -55,12 +71,42 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov063_0211ef58",
+      "address": "0x0211ef58",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision resource handle constructed with file ID 0x6ba"
+    },
+    {
+      "symbol": "data_ov063_0211ef60",
+      "address": "0x0211ef60",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model resource handle constructed with file ID 0x6b9"
+    },
+    {
+      "symbol": "@97",
+      "address": "0x0211ef68",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x6b9 model handle"
+    },
+    {
+      "symbol": "@96",
+      "address": "0x0211ef74",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x6ba collision handle"
+    }
+  ],
   "notes": [
     "Hand-curated promotion following ov015/daObjBk_Fall_Block_c, ov022/daObjFl_Fall_Block_c, ov045/daObjKm2_Fall_Block_c. See the file's own header comment for what was and was not reconciled.",
     "MEASURED 2026-09-14, reading extracted/overlays/overlay_0063.bin directly (ov063 base 0x02115ee0, from extracted/dsd/arm9_overlays/overlays.yaml): _ZTV20daObjTh_Fall_Block_c's symbols.txt address 0x0211eb58 IS the address point -- 0x0211eb50 is the offset-to-top word 0, 0x0211eb54 is 0x0211eb04 (&_ZTI20daObjTh_Fall_Block_c, NOT 0x02114874 = _ZTI16daObjFallBlock_c, which is the base's own record in ov015), slot 0 at 0x0211eb58 is 0x0211d468 (InitResources) and slot 3 at 0x0211eb64 is 0x0211d454 (CleanupResources), matching the header. _ZTS20daObjTh_Fall_Block_c at 0x0211eb1c is the length-prefixed byte string '20daObjTh_Fall_Block_c' -- the ROM's own spelling of this class's name, not a coined one. _ZTI20daObjTh_Fall_Block_c at 0x0211eb04 reads [0x0209a764, 0x0211eb1c, 0x02114874]: __si_class_type_info vtable+8, that same _ZTS, and _ZTI16daObjFallBlock_c, so the cartridge states the direct base is daObjFallBlock_c. Slots 16/17 are 0x0211d3a0 (D1) and 0x0211d3f0 (D0). Every one of the 13 vague-linkage records has a real ROM home outside this entry's claimed .text range, so all 13 compiler_only_output rows are deadstrip-data and none is a plain deadstrip.",
     "PROMOTED AND ENROLLED 2026-09-14. config/arm9/overlays/ov063/delinks.txt now licenses the whole 0x0211d3a0..0x0211d4b8 run to src/game/actors/d_a_obj_th_fall_block.cpp; the five legacy per-function sources are deleted. The class was renamed from the coined FallBlockBbh to the ROM's own RTTI spelling first (tools/class_rename.py --with-derived), so _ZTV/_ZTI/_ZTS all carry the retail name. The factory daObjTh_Fall_Block_c_classInit at 0x0211d47c was folded in from the start: it is the TH_DOWN_B registry profile's factory and sits immediately after InitResources in the ROM's .text order, so it was always part of this TU. Folding it frees the d_a_obj_th_fall_block stem, which tools/layout_check.py L2 would otherwise refuse to let the one-function source take.",
-    "CLEANUP 2026-09-14. Factory is `return new daObjTh_Fall_Block_c()` via the leaf operator new adapter (daBmb_c spelling) until fBase_c::operator new lands (#2570). InitResources/CleanupResources forward this overlay's typed ResourceDescriptor (model/collision SharedFilePtrs, CLPS_Block) to the shared ov098 helpers; #pragma long_calls dropped (S6, still MATCH). The three extra compiler_only_output rows (two D2Ev deadstrip, one Vector3D1 deadstrip-duplicate) are what `return new` instantiates: daObjFallBlock_c has Vector3 mRestPos, so the new expression emits the base D2 helpers and re-emits Vector3's empty inline destructor as vague linkage."
+    "CLEANUP 2026-09-14. Factory is `return new daObjTh_Fall_Block_c()` via the leaf operator new adapter (daBmb_c spelling) until fBase_c::operator new lands (#2570). InitResources/CleanupResources forward this overlay's typed ResourceDescriptor (model/collision SharedFilePtrs, CLPS_Block) to the shared ov098 helpers; #pragma long_calls dropped (S6, still MATCH). The three extra compiler_only_output rows (two D2Ev deadstrip, one Vector3D1 deadstrip-duplicate) are what `return new` instantiates: daObjFallBlock_c has Vector3 mRestPos, so the new expression emits the base D2 helpers and re-emits Vector3's empty inline destructor as vague linkage.",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -71,9 +117,43 @@
     "functions_matched": 5,
     "functions_declared": 5,
     "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
-      "droppedSections": [],
+      "requested": [
+        "_ZN16daObjFallBlock_cD2Ev",
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN16daObjFallBlock_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        24,
+        25,
+        26,
+        27,
+        28,
+        39,
+        40,
+        41,
+        42,
+        43
+      ],
       "data": [
         "_ZTI7fBase_c",
         "_ZTS7fBase_c",
@@ -108,9 +188,164 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 22 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov063-daObjTh_Fall_Block_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0211d3a0",
+        "end": "0x0211d4b8",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0211d3a0",
+          "end": "0x0211d4b8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x0211e590",
+          "end": "0x0211e5fc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x0211e704",
+          "end": "0x0211e708",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0211ef58",
+          "end": "0x0211ef80",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 11
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              46
+            ],
+            "desired": [
+              46
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              44
+            ],
+            "desired": [
+              44
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              22,
+              23
+            ],
+            "desired": [
+              6,
+              5,
+              22,
+              23
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                22,
+                23
+              ],
+              "desired": [
+                6,
+                5,
+                22,
+                23
+              ],
+              "slots": [
+                5,
+                6,
+                22,
+                23
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [
@@ -221,6 +456,211 @@
       "canonical_module": "ov063",
       "canonical_address": "0x0211eb58",
       "reason": "This class's own vtable, vague-linkage and emitted here because the inline destructor makes every TU that names the class a candidate emitter. The cartridge's own copy lives at ov063:0x0211eb58, outside the .text run this entry claims, so dsd delinks it from the image whatever this object does. MEASURED in extracted/overlays/overlay_0063.bin: symbols.txt's 0x0211eb58 IS the address point -- 0x0211eb50 is the offset-to-top word 0, 0x0211eb54 is 0x0211eb04 (&_ZTI20daObjTh_Fall_Block_c), and 0x0211eb58 is slot 0 = 0x0211d468 (InitResources); slot 3 at 0x0211eb64 is 0x0211d454 (CleanupResources), matching the header."
+    }
+  ],
+  "init": [
+    {
+      "symbol": "__sinit_d_a_obj_th_fall_block.cpp",
+      "address": "0x0211e590",
+      "size": "0x0000006c",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is byte-identical to retail __sinit_ov063_0211e590 and carries the same 10 relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_obj_th_fall_block.cpp",
+      "address": "0x0211e704",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN23ThFallBlockModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN23ThFallBlockModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor-registration destination and the model wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN27ThFallBlockCollisionFilePtrC1Ej",
+      "canonical_symbol": "func_02017b4c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b4c",
+      "evidence": "retail initializer call destination and the collision wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN27ThFallBlockCollisionFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b34",
+      "evidence": "retail destructor-registration destination and the collision wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and direct retail reference"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_a_obj_th_fall_block.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_a_obj_th_fall_block.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@97",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local model-handle registration node is a configured initializer relocation destination at 0x0211ef68"
+    },
+    {
+      "symbol": "@96",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local collision-handle registration node is a configured initializer relocation destination at 0x0211ef74"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@363",
+      "to": "@97",
+      "evidence": "mwcc numbers this registration node @363 per TU and ov036 already defines a global @363, so the scratch link would multiply-define it"
+    },
+    {
+      "from": "@364",
+      "to": "@96",
+      "evidence": "mwcc numbers this registration node @364 per TU and ov036 already defines a global @364, so the scratch link would multiply-define it"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x211e5a0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x211e5b0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x211e5bc",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017b4c",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x211e5cc",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x211e5dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov063_0211ef60",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ef60"
+    },
+    {
+      "section": ".init",
+      "source": "0x211e5e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x211e5e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@97",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ef68"
+    },
+    {
+      "section": ".init",
+      "source": "0x211e5ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov063_0211ef58",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ef58"
+    },
+    {
+      "section": ".init",
+      "source": "0x211e5f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017b34"
+    },
+    {
+      "section": ".init",
+      "source": "0x211e5f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@96",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ef74"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x0211e704",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_obj_th_fall_block.cpp",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211e590"
     }
   ]
 }

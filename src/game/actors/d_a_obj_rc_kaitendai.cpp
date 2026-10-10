@@ -33,6 +33,27 @@ struct ResourceDescriptor {
 typedef char ResourceDescriptor_size_must_be_0x0c[
     sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
+/* File-scope objects at the end of this file construct the two resource
+ * handles (model file 0x6a7, collision file 0x6a8). mwcc emits
+ * __sinit_d_a_obj_rc_kaitendai.cpp from those definitions. The wrapper
+ * names are local; the handle constructors and destructors are the ROM
+ * resource-family functions, aliased in the manifest. Nothing in this TU
+ * names the handles directly; the ResourceDescriptor row above points at
+ * them. */
+struct RcKaitendaiModelFile : SharedFilePtr {
+    u32 words[2];
+
+    RcKaitendaiModelFile(u32 fileID);
+    ~RcKaitendaiModelFile();
+};
+
+struct RcKaitendaiCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    RcKaitendaiCollisionFilePtr(u32 fileID);
+    ~RcKaitendaiCollisionFilePtr();
+};
+
 extern "C" {
 int func_ov002_020b676c(daObjKaitendai_c *self, ResourceDescriptor *descriptor,
                         s16 angle);
@@ -62,3 +83,8 @@ s32 daObjRc_Kaitendai_c::CleanupResources()
 {
     return func_ov002_020b66a8(this, &data_ov036_02113b2c);
 }
+
+/* Static-init globals (was the handwritten __sinit_ov036_0211261c shard).
+ * Definition order is the retail initializer's construction order. */
+RcKaitendaiModelFile data_ov036_02114050(0x6a7);
+RcKaitendaiCollisionFilePtr data_ov036_02114048(0x6a8);

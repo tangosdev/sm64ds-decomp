@@ -27,6 +27,23 @@ extern "C" daObjFloatBoard_c_Resources data_ov029_02113f00;
 /* local extern: header GetClsnPos() form fails isolate */
 extern "C" void _ZN9dBgCh_Lin10GetClsnPosEv(Vector3 *out, dBgCh_Lin *self);
 
+/* Retail constructs these 8-byte handles in this order and registers
+ * their destructors. The wrapper names are local; the ctor/dtor
+ * addresses are the ROM resource-family functions. */
+struct WcObj06ModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    WcObj06ModelFilePtr(u32 fileID);
+    ~WcObj06ModelFilePtr();
+};
+
+struct WcObj06CollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    WcObj06CollisionFilePtr(u32 fileID);
+    ~WcObj06CollisionFilePtr();
+};
+
 enum {
     kRayStartAboveFix12 = 0x14000 /* 20.0 */
 };
@@ -76,3 +93,8 @@ int daObjWcObj06_c::InitResources()
     }
     return 0;
 }
+
+/* The static-init globals -- mwcc emits __sinit_d_a_obj_wc_obj06.cpp
+   from these: one ctor veneer plus destructor registration per handle. */
+WcObj06ModelFilePtr data_ov029_021142ac(0x6d5);
+WcObj06CollisionFilePtr data_ov029_021142b4(0x6d6);

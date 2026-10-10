@@ -13,9 +13,11 @@
  * random hand -- re-rolls the timer instead; setting 3 stops the clock, which
  * parks the lift at the top of its travel.
  *
- * This TU owns text only: ov065 delinks no .data here, so the _ZTV / _ZTI /
- * _ZTS group the class names is compiler-only output, compared against the
- * cartridge's own copies at ov065 0x0211d494 / 0x0211d434 / 0x0211d440.
+ * This TU owns text plus the folded static initializer: ov065 delinks no
+ * .data here, so the _ZTV / _ZTI / _ZTS group the class names is
+ * compiler-only output, compared against the cartridge's own copies at
+ * ov065 0x0211d494 / 0x0211d434 / 0x0211d440. The .init / .ctor / .bss the
+ * four file-scope resource handles emit are licensed in the manifest.
  *
  * SOURCE ORDER IS REVERSE ROM ORDER. mwccarm 2004/b56 emits .text back to
  * front under this tree's flags, so the two classInit factories are written
@@ -38,7 +40,7 @@
  *   class's two shared-file handles in ov065 .bss (0x0211d98c / 0x0211d97c),
  *   still under the coined spelling symbols.txt gives them.
  *   data_ov065_0211c0d0 / 0211c0d4 are the per-setting speed and timer
- *   tables. None of them is owned by this TU.
+ *   tables. None of those is owned by this TU.
  * - data_ov035_021121b8 is the CLPS block, in the Tick Tock Clock
  *   level overlay. ov065's own relocation lists ten overlays that hold
  *   0x021121b8; tools/overlay_residency.py settles them to ov035, the level
@@ -65,6 +67,32 @@
 
 struct CLPS_Block;
 
+/* File-scope objects at the end of this file construct the four resource
+ * handles (model files 0x5c8/0x5ca, collision files 0x5c9/0x5cb). mwcc
+ * emits __sinit_daObjCtMecha08_c.cpp from those definitions. The wrapper
+ * names are local; the handle constructors and destructors are the ROM
+ * resource-family functions, aliased in the manifest. The definitions
+ * carry the TU's TtcRotatingGear_* names the code already uses (mecha05 /
+ * wcmizu precedent); the retired shard's data_ov065_* labels for the same
+ * addresses are dropped from symbols.txt, and their stale decl_common.h
+ * lines with them (S42). */
+struct Mecha08ModelFile : SharedFilePtr {
+    u32 words[2];
+
+    Mecha08ModelFile(u32 fileID);
+    ~Mecha08ModelFile();
+};
+
+struct Mecha08CollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    Mecha08CollisionFilePtr(u32 fileID);
+    ~Mecha08CollisionFilePtr();
+};
+
+extern Mecha08ModelFile TtcRotatingGear_ModelFile;
+extern Mecha08CollisionFilePtr TtcRotatingGear_ClsnFile;
+
 enum {
     CLOCK_SETTING_RANDOM = 2,     /* Behavior re-rolls the timer at random */
     CLOCK_SETTING_STOPPED = 3,    /* Behavior parks the lift at the top */
@@ -72,8 +100,6 @@ enum {
 };
 
 extern "C" {
-extern SharedFilePtr TtcRotatingGear_ModelFile;
-extern SharedFilePtr TtcRotatingGear_ClsnFile;
 extern CLPS_Block    data_ov035_021121b8;
 extern s32 data_ov065_0211c0d0[][2][2];     /* vertical speed, by setting, by direction */
 extern u16 data_ov065_0211c0d4[][2][4];     /* travel timer, by setting, by direction */
@@ -226,3 +252,10 @@ int daObjCtMecha08_c::CleanupResources()
     TtcRotatingGear_ClsnFile.Release();
     return 1;
 }
+
+/* Static-init globals (was the handwritten __sinit_ov065_0211c9b8 shard).
+ * Definition order is the retail initializer's construction order. */
+Mecha08ModelFile TtcRotatingGear_ModelFile(0x5c8);
+Mecha08ModelFile data_ov065_0211d984(0x5ca);
+Mecha08CollisionFilePtr TtcRotatingGear_ClsnFile(0x5c9);
+Mecha08CollisionFilePtr data_ov065_0211d994(0x5cb);

@@ -34,6 +34,22 @@ struct EmmYukaFiles {
     CLPS_Block *clps;
 };
 
+/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
+ * veneer pairs (func_02017acc / func_02017ab4 for the model, func_02017b4c /
+ * SharedFilePtr_Destruct_Clsn for the collision), spelled through
+ * declared-only subclasses so the static initializer names the real entry
+ * points. */
+struct EmmYukaModelFilePtr : SharedFilePtr {
+    u32 words[2];
+    EmmYukaModelFilePtr(u32 fileID);
+    ~EmmYukaModelFilePtr();
+};
+struct EmmYukaCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+    EmmYukaCollisionFilePtr(u32 fileID);
+    ~EmmYukaCollisionFilePtr();
+};
+
 extern "C" {
 extern EmmYukaFiles data_ov052_021125a0;
 void func_020393d4(int *bg, int cb);
@@ -162,3 +178,8 @@ extern "C" daObjEmmYuka_c *daObjEmmYuka_c_classInit()
 {
     return new daObjEmmYuka_c();
 }
+
+/* The lift's model and collision file handles; data_ov052_021125a0.model
+ * and .collision point at them. */
+EmmYukaModelFilePtr data_ov052_021126a8(1509);
+EmmYukaCollisionFilePtr data_ov052_021126b0(1510);

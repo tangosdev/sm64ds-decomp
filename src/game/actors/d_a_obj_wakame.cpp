@@ -33,8 +33,9 @@
  *   the header method form size-DIFF.
  * - func_ov002_020bc488 keeps its unnamed ROM spelling; the image gives it
  *   neither a member name nor a `this`.
- * - data_ov002_0210e0d4 / _0210e0dc keep their ROM bss names (typed here as
- *   SharedFilePtr). This TU claims .text only.
+ * - data_ov002_0210e0d4 / _0210e0dc keep their ROM bss names. The model
+ *   handle constructs through func_02017acc; the animation handle
+ *   constructs through SharedFilePtr::Construct.
  * - common.h is not first: this file wants math/Matrix.h's Matrix4x3 so
  *   mModelAnim.mat4x3.t is a Vector3.
  * - No Player.h / dCamera_c.h.
@@ -42,6 +43,24 @@
 
 #include "daObjWakame_c.h"
 #include "SharedFilePtr.h"
+
+/* Model: func_02017acc / func_02017ab4. Animation: SharedFilePtr::Construct /
+ * SharedFilePtr_Destruct_Anim. words[1] is the file LoadFile just filled in.
+ * SharedFilePtr itself has no fields. */
+struct WakameModelFilePtr : SharedFilePtr {
+    unsigned int words[2];
+    WakameModelFilePtr(unsigned int fileId);
+    ~WakameModelFilePtr();
+};
+struct WakameAnimationFileHandle : SharedFilePtr {
+    unsigned int words[2];
+    WakameAnimationFileHandle(unsigned int fileId);
+    ~WakameAnimationFileHandle();
+};
+typedef char WakameModelFilePtr_size_must_be_8[
+    sizeof(WakameModelFilePtr) == 8 ? 1 : -1];
+typedef char WakameAnimationFileHandle_size_must_be_8[
+    sizeof(WakameAnimationFileHandle) == 8 ? 1 : -1];
 
 extern "C" {
 void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 angleY);
@@ -52,8 +71,8 @@ void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(ModelAnim *self,
                                                 int flags, int speed,
                                                 u32 startFrame);
 
-extern SharedFilePtr data_ov002_0210e0dc;   /* BMD model */
-extern SharedFilePtr data_ov002_0210e0d4;   /* BCA animation */
+extern WakameModelFilePtr data_ov002_0210e0dc;          /* BMD model */
+extern WakameAnimationFileHandle data_ov002_0210e0d4;  /* BCA animation */
 
 void func_ov002_020bc488(daObjWakame_c *t);
 }
@@ -161,3 +180,9 @@ extern "C" void func_ov002_020bc488(daObjWakame_c *t)
  * stylistic -- out of line, mwccarm emits D0 before D1 and adds a homeless D2,
  * and objisolate then refuses this whole TU. The header carries the reasoning and
  * the leaf measurement that makes it safe.) */
+
+/* Construction order is the retail initializer: model 1173, then animation
+ * 1174. The constructors and destructors are the ROM veneers the manifest
+ * aliases; mwcc emits __sinit_d_a_obj_wakame.cpp from these definitions. */
+WakameModelFilePtr data_ov002_0210e0dc(1173);
+WakameAnimationFileHandle data_ov002_0210e0d4(1174);

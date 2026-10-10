@@ -22,6 +22,24 @@
 #include "daObjBk_Ukisima_c.h"
 #include "SharedFilePtr.h"
 
+/* The model handle constructs through func_02017acc and destroys through
+ * func_02017ab4. The collision handle constructs through func_02017b4c and
+ * destroys through SharedFilePtr_Destruct_Clsn. The descriptor stays ROM data. */
+struct UkisimaModelFilePtr : SharedFilePtr {
+    unsigned int words[2];
+    UkisimaModelFilePtr(unsigned int fileId);
+    ~UkisimaModelFilePtr();
+};
+struct UkisimaClsnFileHandle : SharedFilePtr {
+    unsigned int words[2];
+    UkisimaClsnFileHandle(unsigned int fileId);
+    ~UkisimaClsnFileHandle();
+};
+typedef char UkisimaModelFilePtr_size_must_be_8[
+    sizeof(UkisimaModelFilePtr) == 8 ? 1 : -1];
+typedef char UkisimaClsnFileHandle_size_must_be_8[
+    sizeof(UkisimaClsnFileHandle) == 8 ? 1 : -1];
+
 struct CLPS_Block;
 
 struct ResourceDescriptor {
@@ -57,3 +75,7 @@ s32 daObjBk_Ukisima_c::CleanupResources()
 {
     return func_ov002_020b66a8(this, &data_ov015_021147a4);
 }
+
+/* Retail construction order. mwcc emits __sinit_d_a_obj_bk_ukisima.cpp. */
+UkisimaModelFilePtr data_ov015_02114aac(1441);
+UkisimaClsnFileHandle data_ov015_02114ab4(1442);

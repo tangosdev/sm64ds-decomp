@@ -31,10 +31,10 @@ data_ov052_02111af4 kind:data(any) addr:0x02111af4 ambiguous
 data_ov052_02111b14 kind:data(any) addr:0x02111b14 ambiguous
 data_ov052_02111b34 kind:data(any) addr:0x02111b34 ambiguous
 data_ov052_02111b44 kind:data(any) addr:0x02111b44 ambiguous
-__sinit_ov052_02111b64 kind:function(arm,size=0x6c) addr:0x02111b64
-__sinit_ov052_02111bd0 kind:function(arm,size=0x6c) addr:0x02111bd0
-.p__sinit_ov052_02111b64 kind:data(word) addr:0x02111c3c
-.p__sinit_ov052_02111bd0 kind:data(word) addr:0x02111c40
+__sinit_d_a_obj_emm_log.cpp kind:function(arm,size=0x6c) addr:0x02111b64
+__sinit_daObjEmmYuka_c.cpp kind:function(arm,size=0x6c) addr:0x02111bd0
+.p__sinit_d_a_obj_emm_log.cpp kind:data(word) addr:0x02111c3c
+.p__sinit_daObjEmmYuka_c.cpp kind:data(word) addr:0x02111c40
 data_ov052_02111c60 kind:data(any) addr:0x02111c60
 data_ov052_02111c64 kind:data(any) addr:0x02111c64
 data_ov052_02111c6c kind:data(any) addr:0x02111c6c
@@ -105,9 +105,10 @@ _ZTV14daObjEmmYuka_c kind:data(any) addr:0x021125f0
 data_ov052_02112610 kind:data(any) addr:0x02112610 ambiguous
 data_ov052_02112680 kind:bss addr:0x02112680
 data_ov052_02112688 kind:bss addr:0x02112688
-data_ov052_02112690 kind:bss addr:0x02112690
-data_ov052_0211269c kind:bss addr:0x0211269c
+@607 kind:bss addr:0x02112690
+@380 kind:bss addr:0x0211269c
 data_ov052_021126a8 kind:bss addr:0x021126a8
 data_ov052_021126b0 kind:bss addr:0x021126b0
-data_ov052_021126b8 kind:bss addr:0x021126b8
-data_ov052_021126c4 kind:bss addr:0x021126c4
+@481 kind:bss addr:0x021126b8
+@482 kind:bss addr:0x021126c4
+data_ov052_021126d0 kind:bss addr:0x021126d0

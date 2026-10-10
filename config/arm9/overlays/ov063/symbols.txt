@@ -152,11 +152,11 @@ data_ov063_0211e27c kind:data(any) addr:0x0211e27c
 data_ov063_0211e28c kind:data(any) addr:0x0211e28c
 __sinit_daTrs_c.cpp kind:function(arm,size=0x130) addr:0x0211e29c
 __sinit_d_a_trs_trap.cpp kind:function(arm,size=0x1c4) addr:0x0211e3cc
-__sinit_ov063_0211e590 kind:function(arm,size=0x6c) addr:0x0211e590
+__sinit_d_a_obj_th_fall_block.cpp kind:function(arm,size=0x6c) addr:0x0211e590
 __sinit_d_a_piano.cpp kind:function(arm,size=0x100) addr:0x0211e5fc
 .p__sinit_daTrs_c.cpp kind:data(word) addr:0x0211e6fc
 .p__sinit_d_a_trs_trap.cpp kind:data(word) addr:0x0211e700
-.p__sinit_ov063_0211e590 kind:data(word) addr:0x0211e704
+.p__sinit_d_a_obj_th_fall_block.cpp kind:data(word) addr:0x0211e704
 .p__sinit_d_a_piano.cpp kind:data(word) addr:0x0211e708
 _ZTS7daTrs_c kind:data(any) addr:0x0211e720
 _ZTI11daTBasket_c kind:data(any) addr:0x0211e72c
@@ -247,8 +247,8 @@ data_ov063_0211eed0 kind:bss addr:0x0211eed0
 data_ov063_0211ef38 kind:bss addr:0x0211ef38
 data_ov063_0211ef58 kind:bss addr:0x0211ef58
 data_ov063_0211ef60 kind:bss addr:0x0211ef60
-data_ov063_0211ef68 kind:bss addr:0x0211ef68
-data_ov063_0211ef74 kind:bss addr:0x0211ef74
+@97 kind:bss addr:0x0211ef68
+@96 kind:bss addr:0x0211ef74
 data_ov063_0211ef80 kind:bss addr:0x0211ef80
 data_ov063_0211ef88 kind:bss addr:0x0211ef88
 data_ov063_0211ef90 kind:bss addr:0x0211ef90

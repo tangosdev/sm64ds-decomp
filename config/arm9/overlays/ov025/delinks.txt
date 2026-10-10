@@ -14,6 +14,9 @@ src/actors/daDgr_c.cpp:
 src/actors/daDkk_c.cpp:
     complete
     .text start:0x021118c8 end:0x02111d40
+    .init start:0x021129dc end:0x02112a44
+    .ctor start:0x02112b1c end:0x02112b20
+    .bss start:0x02113a88 end:0x02113ab0
 
 src/actors/daObjDpBrock_c.cpp:
     complete
@@ -28,7 +31,3 @@ src/actors/daDpLift_c.cpp:
     .init start:0x02112aac end:0x02112b18
     .ctor start:0x02112b24 end:0x02112b28
     .bss start:0x02113ad8 end:0x02113b00
-
-src/unnamed/ov025/__sinit_ov025_021129dc.c:
-    complete
-    .init start:0x021129dc end:0x02112a44

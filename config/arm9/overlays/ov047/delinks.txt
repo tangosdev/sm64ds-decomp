@@ -30,7 +30,6 @@ src/game/actors/d_a_obj_km3_kuruma.cpp:
 src/game/actors/d_a_obj_km3_dorifu.cpp:
     complete
     .text start:0x02111510 end:0x021116dc
-
-src/unnamed/ov047/__sinit_ov047_0211181c.c:
-    complete
     .init start:0x0211181c end:0x021119c4
+    .ctor start:0x021119d0 end:0x021119d4
+    .bss start:0x02112658 end:0x02112720

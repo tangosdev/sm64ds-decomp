@@ -173,3 +173,23 @@ extern "C" daObjEwmIceBlock_c *daObjEwmIceBlock_c_classInit()
 {
     return new daObjEwmIceBlock_c();
 }
+
+/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
+ * veneer pairs (func_02017acc / func_02017ab4 for the model, func_02017b4c /
+ * SharedFilePtr_Destruct_Clsn for the collision), spelled through
+ * declared-only subclasses so the static initializer names the real entry
+ * points. */
+struct EwmIceBlockModelFilePtr : SharedFilePtr {
+    u32 words[2];
+    EwmIceBlockModelFilePtr(u32 fileID);
+    ~EwmIceBlockModelFilePtr();
+};
+struct EwmIceBlockCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+    EwmIceBlockCollisionFilePtr(u32 fileID);
+    ~EwmIceBlockCollisionFilePtr();
+};
+
+// @symbol __sinit_daObjEwmIceBlock_c.cpp
+EwmIceBlockModelFilePtr data_ov056_02113400(0x5ed);      /* model */
+EwmIceBlockCollisionFilePtr data_ov056_02113408(0x5ee);  /* collision */

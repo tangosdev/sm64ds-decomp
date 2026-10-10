@@ -77,13 +77,13 @@ data_ov026_02112ac0 kind:data(any) addr:0x02112ac0 ambiguous
 data_ov026_02112adc kind:data(any) addr:0x02112adc ambiguous
 data_ov026_02112b08 kind:data(any) addr:0x02112b08 ambiguous
 __sinit_d_a_obj_wl_polelift.cpp kind:function(arm,size=0x40) addr:0x02112b7c
-__sinit_ov026_02112bbc kind:function(arm,size=0x6c) addr:0x02112bbc
-__sinit_ov026_02112c28 kind:function(arm,size=0x6c) addr:0x02112c28
+__sinit_daObjWlKoopaShutter_c.cpp kind:function(arm,size=0x6c) addr:0x02112bbc
+__sinit_daObjWlSubmarine_c.cpp kind:function(arm,size=0x6c) addr:0x02112c28
 __sinit_daWater_Tatumaki_c.cpp kind:function(arm,size=0xd4) addr:0x02112c94
 __sinit_daWater_Suikomi_c.cpp kind:function(arm,size=0x3c) addr:0x02112d68
 .p__sinit_d_a_obj_wl_polelift.cpp kind:data(word) addr:0x02112da4
-.p__sinit_ov026_02112bbc kind:data(word) addr:0x02112da8
-.p__sinit_ov026_02112c28 kind:data(word) addr:0x02112dac
+.p__sinit_daObjWlKoopaShutter_c.cpp kind:data(word) addr:0x02112da8
+.p__sinit_daObjWlSubmarine_c.cpp kind:data(word) addr:0x02112dac
 .p__sinit_daWater_Tatumaki_c.cpp kind:data(word) addr:0x02112db0
 .p__sinit_daWater_Suikomi_c.cpp kind:data(word) addr:0x02112db4
 data_ov026_02112dc0 kind:data(any) addr:0x02112dc0
@@ -218,14 +218,12 @@ data_ov026_02113eb4 kind:bss addr:0x02113eb4
 BowserShutter_ClsnFile kind:bss addr:0x02113eb4
 data_ov026_02113ebc kind:bss addr:0x02113ebc
 BowserShutter_ModelFile kind:bss addr:0x02113ebc
-data_ov026_02113ec4 kind:bss addr:0x02113ec4
-data_ov026_02113ed0 kind:bss addr:0x02113ed0
-data_ov026_02113edc kind:bss addr:0x02113edc
+@61 kind:bss addr:0x02113ec4
+@62 kind:bss addr:0x02113ed0
 Submarine_ClsnFile kind:bss addr:0x02113edc
-data_ov026_02113ee4 kind:bss addr:0x02113ee4
 Submarine_ModelFile kind:bss addr:0x02113ee4
-data_ov026_02113eec kind:bss addr:0x02113eec
-data_ov026_02113ef8 kind:bss addr:0x02113ef8
+@63 kind:bss addr:0x02113eec
+@64 kind:bss addr:0x02113ef8
 data_ov026_02113f04 kind:bss addr:0x02113f04
 data_ov026_02113f0c kind:bss addr:0x02113f0c
 @742 kind:bss addr:0x02113f14

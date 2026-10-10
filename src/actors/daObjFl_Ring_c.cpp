@@ -34,8 +34,9 @@
  *   This TU calls them; naming belongs with dBgW in arm9.
  * - The three pointers this class's file table holds -- the ov022 .bss
  *   SharedFilePtrs at 0x02114500 and 0x02114508, and the ov064 CLPS block at
- *   0x0211bbac -- are unnamed rows in their own modules' data, which this TU
- *   does not own.
+ *   0x0211bbac -- are unnamed rows in their modules' data. The two handles
+ *   are this TU's own .bss, defined at the bottom; the CLPS block is
+ *   ov064's.
  * - The run ends with the trigger helper func_ov022_02111558, the collision
  *   callback func_ov022_02111564 that InitResources installs, and the registry
  *   factory daObjFl_Ring_c_classInit; the two helpers keep their address names
@@ -49,18 +50,37 @@
 #include "daObj_volcanoCannon_c.h"
 
 /* This class's own file table, ov022 .data at 0x02113cc8: the model and
- * collision SharedFilePtrs (ov022 .bss 0x02114500 / 0x02114508) and the CLPS
- * block SetFile is handed (ov064 0x0211bbac). All three targets are unnamed
- * rows in their modules' symbol tables, so the table keeps its
- * address-derived name. */
+ * collision SharedFilePtrs (ov022 .bss 0x02114500 / 0x02114508, defined at
+ * the bottom of this file) and the CLPS block SetFile is handed (ov064
+ * 0x0211bbac). All three targets are unnamed rows in their modules' symbol
+ * tables, so the table keeps its address-derived name. */
 struct daObjFl_Ring_c_Files {
     SharedFilePtr *mModelFile;
     SharedFilePtr *mClsnFile;
     void          *mClps;
 };
 
+/* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
+ * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
+ * are local; the manifest aliases the generated names to those ROM symbols. */
+struct RingModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    RingModelFilePtr(u32 fileID);
+    ~RingModelFilePtr();
+};
+
+struct RingCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    RingCollisionFilePtr(u32 fileID);
+    ~RingCollisionFilePtr();
+};
+
 extern "C" {
 extern daObjFl_Ring_c_Files data_ov022_02113cc8;
+extern RingModelFilePtr data_ov022_02114500;
+extern RingCollisionFilePtr data_ov022_02114508;
 
 u16 DecIfAbove0_Short(u16 *p);
 u8  DecIfAbove0_Byte(u8 *p);
@@ -230,3 +250,9 @@ s32 daObjFl_Ring_c::CleanupResources()
     data_ov022_02113cc8.mClsnFile->Release();
     return 1;
 }
+
+/* Source order is construction order: model file 1550, collision file 1551.
+ * __sinit_daObjFl_Ring_c.cpp emits both constructions and registers the
+ * destructors; the registration nodes are compiler temporaries. */
+RingModelFilePtr data_ov022_02114500(1550);
+RingCollisionFilePtr data_ov022_02114508(1551);

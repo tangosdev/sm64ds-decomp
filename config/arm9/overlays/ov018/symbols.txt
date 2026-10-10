@@ -64,10 +64,10 @@ data_ov018_02112c08 kind:data(any) addr:0x02112c08 ambiguous
 data_ov018_02112c0c kind:data(any) addr:0x02112c0c
 __sinit_daObjSm_Lift_c.cpp kind:function(arm,size=0x6c) addr:0x02112c14
 __sinit_d_a_pg_mthr.cpp kind:function(arm,size=0x180) addr:0x02112c80
-__sinit_ov018_02112e00 kind:function(arm,size=0x6c) addr:0x02112e00
+__sinit_d_a_obj_ice_board.cpp kind:function(arm,size=0x6c) addr:0x02112e00
 .p__sinit_daObjSm_Lift_c.cpp kind:data(word) addr:0x02112e6c
 .p__sinit_d_a_pg_mthr.cpp kind:data(word) addr:0x02112e70
-.p__sinit_ov018_02112e00 kind:data(word) addr:0x02112e74
+.p__sinit_d_a_obj_ice_board.cpp kind:data(word) addr:0x02112e74
 data_ov018_02112e80 kind:data(any) addr:0x02112e80
 data_ov018_02112e84 kind:data(any) addr:0x02112e84
 data_ov018_02112e88 kind:data(any) addr:0x02112e88
@@ -177,9 +177,8 @@ data_ov018_02113c08 kind:bss addr:0x02113c08
 @734 kind:bss addr:0x02113c34
 @830 kind:bss addr:0x02113c40
 data_ov018_02113c4c kind:bss addr:0x02113c4c
-data_ov018_02113c7c kind:bss addr:0x02113c7c
 daObjIceBoard_c_ClsnFile kind:bss addr:0x02113c7c
-data_ov018_02113c84 kind:bss addr:0x02113c84
 daObjIceBoard_c_ModelFile kind:bss addr:0x02113c84
-data_ov018_02113c8c kind:bss addr:0x02113c8c
-data_ov018_02113c98 kind:bss addr:0x02113c98
+@165 kind:bss addr:0x02113c8c
+@622 kind:bss addr:0x02113c98
+data_ov018_02113ca4 kind:bss addr:0x02113ca4

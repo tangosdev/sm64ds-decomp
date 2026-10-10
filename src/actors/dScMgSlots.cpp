@@ -64,6 +64,16 @@ void func_ov004_020b1bc8(char *a0, int a1, int a2, int a3);
 void func_ov004_020b1e34(char *a0, int a1, int a2, int a3);
 extern void **data_ov006_0213e5ec[];
 extern SlotState data_ov006_02142bdc[];
+/* The ROM PMF constants the Slot3 state table copies from (unlicensed
+ * .data), in retail copy order. */
+extern SlotState data_ov006_0213e520;
+extern SlotState data_ov006_0213e530;
+extern SlotState data_ov006_0213e4e0;
+extern SlotState data_ov006_0213e538;
+extern SlotState data_ov006_0213e550;
+extern SlotState data_ov006_0213e548;
+extern SlotState data_ov006_0213e580;
+extern SlotState data_ov006_0213e578;
 extern int LoadFile(int handle);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
@@ -1266,3 +1276,17 @@ s32 dScMgSlot1_c::Render()
 }
 
 #pragma opt_strength_reduction on
+
+/* Static-init globals (was the handwritten __sinit_ov006_02132894 shard).
+ * The Slot3 state table plain-copied from the ROM PMF constants, in
+ * retail copy order. */
+SlotState data_ov006_02142bdc[8] = {
+    data_ov006_0213e520,
+    data_ov006_0213e530,
+    data_ov006_0213e4e0,
+    data_ov006_0213e538,
+    data_ov006_0213e550,
+    data_ov006_0213e548,
+    data_ov006_0213e580,
+    data_ov006_0213e578,
+};

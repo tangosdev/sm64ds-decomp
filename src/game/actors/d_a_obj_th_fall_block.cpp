@@ -61,3 +61,25 @@ s32 daObjTh_Fall_Block_c::CleanupResources()
 
 // @symbol _ZN20daObjTh_Fall_Block_cD1Ev
 // @symbol _ZN20daObjTh_Fall_Block_cD0Ev
+
+/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
+ * veneer pairs (func_02017acc / func_02017ab4 for the model, func_02017b4c /
+ * SharedFilePtr_Destruct_Clsn for the collision), spelled through
+ * declared-only subclasses so the static initializer names the real entry
+ * points. */
+struct ThFallBlockModelFilePtr : SharedFilePtr {
+    u32 words[2];
+    ThFallBlockModelFilePtr(u32 fileID);
+    ~ThFallBlockModelFilePtr();
+};
+struct ThFallBlockCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+    ThFallBlockCollisionFilePtr(u32 fileID);
+    ~ThFallBlockCollisionFilePtr();
+};
+
+// @symbol __sinit_d_a_obj_th_fall_block.cpp
+/* The retail initializer constructs the model first, then the collision
+ * file. */
+ThFallBlockModelFilePtr data_ov063_0211ef60(0x6b9);      /* model */
+ThFallBlockCollisionFilePtr data_ov063_0211ef58(0x6ba);  /* collision */

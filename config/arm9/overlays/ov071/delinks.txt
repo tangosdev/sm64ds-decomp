@@ -33,11 +33,11 @@ src/game/actors/d_a_ey_bm.cpp:
 src/actors/daObjCasket_c.cpp:
     complete
     .text start:0x02121fe4 end:0x021226a0
+    .init start:0x02122a64 end:0x02122b30
+    .ctor start:0x02122b3c end:0x02122b40
+    .data start:0x02122ecc end:0x02122ef4
+    .bss start:0x021230d0 end:0x021230f8
 
 src/unnamed/ov071/__sinit_ov071_021228c8.c:
     complete
     .init start:0x021228c8 end:0x02122a1c
-
-src/unnamed/ov071/__sinit_ov071_02122a64.c:
-    complete
-    .init start:0x02122a64 end:0x02122b30

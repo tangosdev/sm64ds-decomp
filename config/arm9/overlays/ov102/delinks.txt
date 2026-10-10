@@ -7,6 +7,9 @@
 src/actors/daObjSimpleBg_c.cpp:
     complete
     .text start:0x02148a80 end:0x02148fbc
+    .init start:0x0214d714 end:0x0214d908
+    .ctor start:0x0214e0a0 end:0x0214e0a4
+    .bss start:0x0214e6e0 end:0x0214e7d0
 
 src/actors/daObjHatenaBlock_c.cpp:
     complete
@@ -23,15 +26,11 @@ src/actors/daBmb_c.cpp:
 src/game/actors/d_a_shl.cpp:
     complete
     .text start:0x0214c748 end:0x0214d70c
-
-src/unnamed/ov102/__sinit_ov102_0214d714.c:
-    complete
-    .init start:0x0214d714 end:0x0214d908
+    .init start:0x0214dfac end:0x0214e0a0
+    .ctor start:0x0214e0ac end:0x0214e0b0
+    .data start:0x0214e5d4 end:0x0214e614
+    .bss start:0x0214ea48 end:0x0214eaa0
 
 src/unnamed/ov102/__sinit_ov102_0214de70.c:
     complete
     .init start:0x0214de70 end:0x0214dfac
-
-src/unnamed/ov102/__sinit_ov102_0214dfac.c:
-    complete
-    .init start:0x0214dfac end:0x0214e0a0

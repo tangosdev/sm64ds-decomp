@@ -3,6 +3,7 @@
   "module": "ov006",
   "source": "src/actors/dScMgMemory2_c.cpp",
   "promoted_source": "src/actors/dScMgMemory2_c.cpp",
+  "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -15,6 +16,21 @@
       "name": ".text",
       "start": "0x020f5564",
       "end": "0x020f7634"
+    },
+    {
+      "name": ".init",
+      "start": "0x021314e4",
+      "end": "0x021318a0"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x021335b4",
+      "end": "0x021335b8"
+    },
+    {
+      "name": ".bss",
+      "start": "0x021423a8",
+      "end": "0x021424ec"
     }
   ],
   "functions": [
@@ -384,7 +400,50 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov006_021423a8",
+      "address": "0x021423a8",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "three player states, plain-copied from the ROM constants"
+    },
+    {
+      "symbol": "data_ov006_021423c0",
+      "address": "0x021423c0",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "four result states, plain-copied from the ROM constants"
+    },
+    {
+      "symbol": "data_ov006_021423e0",
+      "address": "0x021423e0",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "five main states, plain-copied from the ROM constants"
+    },
+    {
+      "symbol": "data_ov006_02142408",
+      "address": "0x02142408",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "seven card states, plain-copied from the ROM constants"
+    },
+    {
+      "symbol": "data_ov006_02142440",
+      "address": "0x02142440",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "ten round states, plain-copied from the ROM constants"
+    },
+    {
+      "symbol": "data_ov006_02142490",
+      "address": "0x02142490",
+      "size": "0x5c",
+      "binding": "STB_GLOBAL",
+      "evidence": "23 permuted sprite pointers, plain-copied from the ROM constants"
+    }
+  ],
   "notes": [
     "The complete 52-function Memory Master scene/factory run is reconstructed as one dScMgMemory2_c C++ translation unit. Address-only behavior is attached to class members. Main, result, round and card tables use typed member pointers; player-table ownership follows the initializer evidence below. The 0x270 shared state has compiler-owned destruction, and the header exposes scene/card/player/cursor fields. Some legacy loop views remain; this is not a claim that the entire class is fully reconstructed.",
     "PMF ownership evidence: __sinit_ov006_021314e4 builds main StateSetup/StatePlay/StateJudge/StateResult/StateExit, result ResultWait/ResultReward/ResultTurnCards/ResultFinish, card CardMove/CardIdle/CardSelect/CardFlipUp/CardWait/CardFlipDown/CardFlyAway, and player PlayerDrop/PlayerMove/PlayerWait tables. Its ten-entry round table independently fixes RoundStart through RoundReveal order.",
@@ -394,7 +453,9 @@
     "CURRENT NON-TEXT BOUNDARY: this promotion owns the complete contiguous .text run only. The PMF tables, resource/static data, compiler-generated RTTI/vtable, __sinit_ov006_021314e4 and 0x021423a8..0x02142490 BSS remain ROM-gap owned until their exact input-section order and initializers are reconstructed.",
     "PROMOTED to src/actors/dScMgMemory2_c.cpp. The whole 52-function run moves as one unit -- no subset was taken: the cartridge orders D1 (0x020f5564) BELOW D0 (0x020f55b8), the reproducible direction, and delinks.txt carries no coverage hole across 0x020f5564..0x020f7634, so nothing forces a cut. Placement follows notes/agents/roles/writer.md's fixed convention (src/actors/<Class>.cpp) and the same-overlay pipeline precedent src/actors/dScMgD3DBase_c.cpp, superseding the pre-promotion plan's src/minigames/d_s_mg_memory2.cpp; the thirteen sibling d_s_mg_*.cpp files predate that convention.",
     "COMPILER-ONLY OUTPUT:13 data policies and3 exact-symbol deadstrip function policies,16 rows total. The six-class chain dScMgMemory2_c -> dScMgSingle3DBase_c -> dScMgBase_c -> dScene_c -> dBase_c -> fBase_c gives2x6 typeinfo rows plus1 vtable. The function policies cover the existing dScMgMemory2_c D2 and the additional dMgMemory2SharedState_c D1 and dScMgSingle3DBase_c D2 emitted by ordinary construction. Each has no configured ROM home and no retained relocation references it. The queue row records the ancestry-derived minimum of13 compiler-only data records; it is not a total of all function policies.",
-    "EMISSION ORDER WITHOUT REVERSING THE SOURCE. This TU is written ROM-ASCENDING and still emits ROM-ascending, because `#pragma defer_codegen off` (after the includes and the extern block) makes mwccarm 2004/b56 emit each definition as it is encountered instead of deferring and reversing. That is what keeps the two file-local optimisation pragmas -- opt_propagation off around DrawCards and opt_loop_invariants off around ResultFinish, each bracketed #pragma push/pop -- attached to the members that measured them, and it is why the out-of-line destructor here yields licensed D1-then-D0 rather than the D2/D0/D1 the deferred path gives."
+    "EMISSION ORDER WITHOUT REVERSING THE SOURCE. This TU is written ROM-ASCENDING and still emits ROM-ascending, because `#pragma defer_codegen off` (after the includes and the extern block) makes mwccarm 2004/b56 emit each definition as it is encountered instead of deferring and reversing. That is what keeps the two file-local optimisation pragmas -- opt_propagation off around DrawCards and opt_loop_invariants off around ResultFinish, each bracketed #pragma push/pop -- attached to the members that measured them, and it is why the out-of-line destructor here yields licensed D1-then-D0 rather than the D2/D0/D1 the deferred path gives.",
+    "FOLD 2026-10-10. The handwritten src/unnamed/ov006/__sinit_ov006_021314e4.c initializer folded into this TU as the six retail-ordered table definitions at its end: the 23-entry sprite-pointer permutation and the five PMF state tables (5 main, 10 round, 4 result, 7 card, 3 player) defined through the existing dScMgMemory2_cState/dScMgMemory2_cCardState typedefs and plain-copied from the still-extern .data descriptor records. mwcc emits the same 0x3bc initializer into .init (36 literal-pool reloc sites matching retail), the same .ctor word, and per-table .bss sections covering 0x021423a8..0x021424ec; no @NNN temps are emitted. Same shape as sibling d_s_mg_memory.cpp (READY row 73).",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to its own stock control. The recorded verification.linkcheck.rom.sha256 is the fleet-canonical US-dump hash every intact entry shares, per #3691."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -406,10 +467,14 @@
     "functions_declared": 52,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN14dScMgMemory2_cD2Ev"
+        "_ZN14dScMgMemory2_cD2Ev",
+        "_ZN23dMgMemory2SharedState_cD1Ev",
+        "_ZN19dScMgSingle3DBase_cD2Ev"
       ],
       "deadstripped": [
-        "_ZN14dScMgMemory2_cD2Ev"
+        "_ZN14dScMgMemory2_cD2Ev",
+        "_ZN19dScMgSingle3DBase_cD2Ev",
+        "_ZN23dMgMemory2SharedState_cD1Ev"
       ],
       "droppedSections": [
         9,
@@ -418,12 +483,6 @@
         100,
         101,
         102,
-        103,
-        104,
-        105,
-        106,
-        107,
-        108,
         109,
         110,
         111,
@@ -433,7 +492,17 @@
         115,
         116,
         117,
-        118
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -469,13 +538,13 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 24 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov006-dScMgMemory2_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -499,19 +568,111 @@
           "end": "0x020f7634",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x021314e4",
+          "end": "0x021318a0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x021335b4",
+          "end": "0x021335b8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x021423a8",
+          "end": "0x021424ec",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 52
+          "LICENSED": 60
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              131
+            ],
+            "desired": [
+              131
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              129
+            ],
+            "desired": [
+              129
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              103,
+              104,
+              105,
+              106,
+              107,
+              108
+            ],
+            "desired": [
+              108,
+              106,
+              104,
+              107,
+              105,
+              103
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                103,
+                104,
+                105,
+                106,
+                107,
+                108
+              ],
+              "desired": [
+                108,
+                106,
+                104,
+                107,
+                105,
+                103
+              ],
+              "slots": [
+                103,
+                104,
+                105,
+                106,
+                107,
+                108
+              ]
+            }
+          ],
+          "symbolIndices": 6,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -653,6 +814,410 @@
       "symbol": "_ZN19dScMgSingle3DBase_cD2Ev",
       "disposition": "deadstrip",
       "reason": "Compiler-emitted lifecycle body from ordinary scene construction; no configured ROM home and no surviving relocation references it."
+    }
+  ],
+  "init": [
+    {
+      "symbol": "__sinit_dScMgMemory2_c.cpp",
+      "address": "0x021314e4",
+      "size": "0x3bc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov006_021314e4 (0x3bc, same instruction sequence) and carries the same relocation sites: the sprite-pointer permutation plus the five PMF table copies"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_dScMgMemory2_c.cpp",
+      "address": "0x021335b4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail; the other .ctor words belong to the remaining shards"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_dScMgMemory2_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_dScMgMemory2_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot emit a reloc to a local"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".ctor",
+      "source": "0x021335b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_dScMgMemory2_c.cpp",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021314e4"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131810",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133810",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2133810"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131814",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02142490",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142490"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131818",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d268",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d268"
+    },
+    {
+      "section": ".init",
+      "source": "0x213181c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021423e0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x21423e0"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131820",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d2c8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d2c8"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131824",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d250",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d250"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131828",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d2c0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d2c0"
+    },
+    {
+      "section": ".init",
+      "source": "0x213182c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d300",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d300"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131830",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d278",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d278"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131834",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d2d0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d2d0"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131838",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02142440",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142440"
+    },
+    {
+      "section": ".init",
+      "source": "0x213183c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d290",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d290"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131840",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d260",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d260"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131844",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d280",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d280"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131848",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d298",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d298"
+    },
+    {
+      "section": ".init",
+      "source": "0x213184c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d310",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d310"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131850",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d318",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d318"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131854",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d2a0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d2a0"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131858",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d2a8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d2a8"
+    },
+    {
+      "section": ".init",
+      "source": "0x213185c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d248",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d248"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131860",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d320",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d320"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131864",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021423c0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x21423c0"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131868",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d2f8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d2f8"
+    },
+    {
+      "section": ".init",
+      "source": "0x213186c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d328",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d328"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131870",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d308",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d308"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131874",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d2b0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d2b0"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131878",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d2f0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d2f0"
+    },
+    {
+      "section": ".init",
+      "source": "0x213187c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02142408",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x2142408"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131880",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d270",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d270"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131884",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d2e8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d2e8"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131888",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d2e0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d2e0"
+    },
+    {
+      "section": ".init",
+      "source": "0x213188c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d2d8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d2d8"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131890",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d258",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d258"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131894",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d330",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d330"
+    },
+    {
+      "section": ".init",
+      "source": "0x2131898",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021423a8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x21423a8"
+    },
+    {
+      "section": ".init",
+      "source": "0x213189c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213d2b8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x213d2b8"
     }
   ]
 }

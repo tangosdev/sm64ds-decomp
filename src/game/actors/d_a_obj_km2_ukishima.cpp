@@ -36,11 +36,30 @@ struct ResourceDescriptor {
 typedef char ResourceDescriptor_size_must_be_0x0c[
     sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
+/* Retail constructs these 8-byte handles in this order and registers
+ * their destructors. The wrapper names are local; the ctor/dtor
+ * addresses are the ROM resource-family functions. */
+struct UkishimaModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    UkishimaModelFilePtr(u32 fileID);
+    ~UkishimaModelFilePtr();
+};
+
+struct UkishimaCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    UkishimaCollisionFilePtr(u32 fileID);
+    ~UkishimaCollisionFilePtr();
+};
+
 extern "C" {
 int func_ov002_020b6584(daObjUkiyuka_c *self, ResourceDescriptor *descriptor,
                         Fix12i bobAmplitude);
 int func_ov002_020b6424(daObjUkiyuka_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov045_02112f08;
+extern UkishimaModelFilePtr data_ov045_02113200;     /* BMD, file 1643 */
+extern UkishimaCollisionFilePtr data_ov045_021131f8; /* KCL, file 1644 */
 }
 
 struct UkishimaSpawnInfo {
@@ -88,3 +107,6 @@ s32 daObjKm2_Ukishima_c::CleanupResources()
 {
     return func_ov002_020b6424(this, &data_ov045_02112f08);
 }
+
+UkishimaModelFilePtr data_ov045_02113200(1643);
+UkishimaCollisionFilePtr data_ov045_021131f8(1644);

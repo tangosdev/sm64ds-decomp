@@ -44,6 +44,23 @@ bool ApproachLinear(short &value, short target, short step);
 /* shadow struct 'Entry' */
 struct Entry { char pad[4]; void *file; };
 
+/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
+ * veneer pairs (func_02017acc / func_02017ab4 for the two models,
+ * SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim for the nine
+ * animation handles), spelled through declared-only subclasses so the
+ * static initializer names the real entry points. The code reaches them
+ * through the data_ov062_0211ced8/cee0/cee8 pointer tables. */
+struct NknkModelFilePtr : SharedFilePtr {
+    u32 words[2];
+    NknkModelFilePtr(u32 fileID);
+    ~NknkModelFilePtr();
+};
+struct NknkAnimationFileHandle : SharedFilePtr {
+    u32 words[2];
+    NknkAnimationFileHandle(u32 fileID);
+    ~NknkAnimationFileHandle();
+};
+
 /* shadow typedef 'Fix12i' */
 typedef int Fix12i;
 
@@ -1154,3 +1171,18 @@ void daNknk_c::func_ov062_02117570() {
     SpawnCoin();
     KillAndTrackInDeathTable();
 }
+
+/* Two model handles (param1 & 1 selects the variant through
+ * data_ov062_0211ced8) and nine animation handles (the shared noko-noko
+ * clip set indexed by data_ov062_0211cee8). */
+NknkModelFilePtr data_ov062_0211df40(0x3ba);
+NknkModelFilePtr data_ov062_0211df48(0x3c0);
+NknkAnimationFileHandle data_ov062_0211df70(0x3c6);
+NknkAnimationFileHandle data_ov062_0211df38(0x3c4);
+NknkAnimationFileHandle data_ov062_0211df50(0x3c5);
+NknkAnimationFileHandle data_ov062_0211df60(0x3c1);
+NknkAnimationFileHandle data_ov062_0211df78(0x3c2);
+NknkAnimationFileHandle data_ov062_0211df68(0x3c3);
+NknkAnimationFileHandle data_ov062_0211df28(0x3bd);
+NknkAnimationFileHandle data_ov062_0211df30(0x3bb);
+NknkAnimationFileHandle data_ov062_0211df58(0x3bc);

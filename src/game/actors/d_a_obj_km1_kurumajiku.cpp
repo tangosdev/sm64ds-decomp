@@ -38,6 +38,22 @@ struct ResourceDescriptor {
 typedef char ResourceDescriptor_size_must_be_0x0c[
     sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
+/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
+ * veneer pairs (func_02017acc / func_02017ab4 for the model, func_02017b4c /
+ * SharedFilePtr_Destruct_Clsn for the collision), spelled through
+ * declared-only subclasses so the static initializer names the real entry
+ * points. */
+struct Km1KurumajikuModelFilePtr : SharedFilePtr {
+    u32 words[2];
+    Km1KurumajikuModelFilePtr(u32 fileID);
+    ~Km1KurumajikuModelFilePtr();
+};
+struct Km1KurumajikuCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+    Km1KurumajikuCollisionFilePtr(u32 fileID);
+    ~Km1KurumajikuCollisionFilePtr();
+};
+
 extern "C" {
 int func_ov002_020b6c54(daObjKm1_Kurumajiku_c *self,
                         ResourceDescriptor *descriptor, unsigned actorID);
@@ -91,3 +107,8 @@ s32 daObjKm1_Kurumajiku_c::CleanupResources()
 {
     return func_ov002_020b6ac8(this, &data_ov043_02112344);
 }
+
+/* The axle's model and collision file handles; data_ov043_02112344.model
+ * and .kcl point at them. */
+Km1KurumajikuModelFilePtr data_ov043_02112610(1621);
+Km1KurumajikuCollisionFilePtr data_ov043_02112608(1622);

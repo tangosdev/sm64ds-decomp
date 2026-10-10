@@ -22,6 +22,9 @@ src/actors/daKpaFire_c.cpp:
 src/actors/daKpa2Bg_c.cpp:
     complete
     .text start:0x02117980 end:0x02117d1c
+    .init start:0x02119f94 end:0x0211a000
+    .ctor start:0x0211a4c4 end:0x0211a4c8
+    .bss start:0x0211aff4 end:0x0211b01c
 
 src/actors/daKpa3Bg_c.cpp:
     complete
@@ -45,8 +48,4 @@ src/actors/daFRing_c.cpp:
     .init start:0x0211a428 end:0x0211a4bc
     .ctor start:0x0211a4d0 end:0x0211a4d4
     .bss start:0x0211b1f8 end:0x0211b234
-
-src/unnamed/ov060/__sinit_ov060_02119f94.c:
-    complete
-    .init start:0x02119f94 end:0x0211a000
 

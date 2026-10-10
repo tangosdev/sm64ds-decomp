@@ -13,13 +13,21 @@
  * The five-entry table is defined in this TU (retail places it
  * after the profile, before the vtable).
  *
+ * The ten file handles at 02112658..021126a8 are defined here too.
+ * Model handles construct through func_02017acc and destroy through
+ * func_02017ab4; collision handles construct through func_02017b4c
+ * and destroy through SharedFilePtr_Destruct_Clsn. The manifest
+ * aliases those undefined members onto the ROM symbols, and mwcc
+ * emits __sinit_d_a_obj_km1_dorifu.cpp from the definitions at the
+ * bottom (retail initializer order, file IDs 0x649..0x652).
+ *
  * daObjKm1_Dorifu_c_classInit is reconstructed (RTTI
  * daObjKm1_Dorifu_c, KM1_DORIFU registry). Retail does not
  * store that spelling.
  *
  * deslop
- * Leftover: the BMD/KCL SharedFilePtrs and CLPS_Block are still
- *   data_ov043_*.
+ * Leftover: the CLPS_Block globals are still data_ov043_* linker
+ *   names; the handles keep data_ov043_* names as well.
  */
 
 #include "daObjKm1_Dorifu_c.h"
@@ -37,21 +45,35 @@ struct DorifuSpawnInfo {
 typedef char DorifuSpawnInfo_size_must_be_0x1c[
     sizeof(DorifuSpawnInfo) == 0x1c ? 1 : -1];
 
+struct DorifuModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    DorifuModelFilePtr(u32 fileID);
+    ~DorifuModelFilePtr();
+};
+
+struct DorifuCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    DorifuCollisionFilePtr(u32 fileID);
+    ~DorifuCollisionFilePtr();
+};
+
 extern "C" {
-extern SharedFilePtr data_ov043_021126a0;
-extern SharedFilePtr data_ov043_02112678;
+extern DorifuModelFilePtr data_ov043_021126a0;
+extern DorifuCollisionFilePtr data_ov043_02112678;
 extern CLPS_Block data_ov043_02111c40;
-extern SharedFilePtr data_ov043_02112680;
-extern SharedFilePtr data_ov043_02112658;
+extern DorifuModelFilePtr data_ov043_02112680;
+extern DorifuCollisionFilePtr data_ov043_02112658;
 extern CLPS_Block data_ov043_02111b60;
-extern SharedFilePtr data_ov043_02112668;
-extern SharedFilePtr data_ov043_02112670;
+extern DorifuModelFilePtr data_ov043_02112668;
+extern DorifuCollisionFilePtr data_ov043_02112670;
 extern CLPS_Block data_ov043_02111ba0;
-extern SharedFilePtr data_ov043_02112688;
-extern SharedFilePtr data_ov043_02112698;
+extern DorifuModelFilePtr data_ov043_02112688;
+extern DorifuCollisionFilePtr data_ov043_02112698;
 extern CLPS_Block data_ov043_02111c80;
-extern SharedFilePtr data_ov043_02112690;
-extern SharedFilePtr data_ov043_02112660;
+extern DorifuModelFilePtr data_ov043_02112690;
+extern DorifuCollisionFilePtr data_ov043_02112660;
 extern CLPS_Block data_ov043_02111c60;
 }
 
@@ -92,3 +114,17 @@ s32 daObjKm1_Dorifu_c::CleanupResources()
 {
     return daObjDorifu_c::CleanupResources(data_ov043_02112518);
 }
+
+/* Order is the retail initializer: models 0x649/0x64b/0x64d/0x64f/0x651,
+ * then collisions 0x64a/0x64c/0x64e/0x650/0x652. mwcc emits
+ * __sinit_d_a_obj_km1_dorifu.cpp from these ten definitions. */
+DorifuModelFilePtr data_ov043_021126a0(0x649);
+DorifuModelFilePtr data_ov043_02112680(0x64b);
+DorifuModelFilePtr data_ov043_02112668(0x64d);
+DorifuModelFilePtr data_ov043_02112688(0x64f);
+DorifuModelFilePtr data_ov043_02112690(0x651);
+DorifuCollisionFilePtr data_ov043_02112678(0x64a);
+DorifuCollisionFilePtr data_ov043_02112658(0x64c);
+DorifuCollisionFilePtr data_ov043_02112670(0x64e);
+DorifuCollisionFilePtr data_ov043_02112698(0x650);
+DorifuCollisionFilePtr data_ov043_02112660(0x652);

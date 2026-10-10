@@ -13,9 +13,33 @@
 #include "Sound.h"
 #include "SharedFilePtr.h"
 
+/* File-scope objects at the end of this file construct the two resource
+ * handles (model file 0x472, collision file 0x473). mwcc emits
+ * __sinit_d_a_obj_ice_board.cpp from those definitions. The wrapper names
+ * are local; the handle constructors and destructors are the ROM
+ * resource-family functions, aliased in the manifest. The definitions
+ * carry the TU's daObjIceBoard_c_* names the code already uses (mecha05 /
+ * wcmizu precedent); the retired shard's data_ov018_* labels for the same
+ * addresses are dropped from symbols.txt, and their stale decl_common.h
+ * lines with them (S42). */
+struct IceBoardModelFile : SharedFilePtr {
+    u32 words[2];
+
+    IceBoardModelFile(u32 fileID);
+    ~IceBoardModelFile();
+};
+
+struct IceBoardCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    IceBoardCollisionFilePtr(u32 fileID);
+    ~IceBoardCollisionFilePtr();
+};
+
+extern IceBoardModelFile daObjIceBoard_c_ModelFile;
+extern IceBoardCollisionFilePtr daObjIceBoard_c_ClsnFile;
+
 extern "C" {
-extern SharedFilePtr daObjIceBoard_c_ClsnFile;
-extern SharedFilePtr daObjIceBoard_c_ModelFile;
 extern CLPS_Block data_ov002_0210d754;
 
 /* Particle::System::NewSimple's true signature takes Fix12<int> by value.
@@ -157,3 +181,8 @@ void daObjIceBoard_c::OnHitByMegaChar(Player &player)
  * dBgW_KcMbg, then dActor_c. D0's trailing deallocation is the inherited
  * inline operator delete, which is why nothing here names a heap.
  */
+
+/* Static-init globals (was the handwritten __sinit_ov018_02112e00 shard).
+ * Definition order is the retail initializer construction order. */
+IceBoardModelFile daObjIceBoard_c_ModelFile(0x472);
+IceBoardCollisionFilePtr daObjIceBoard_c_ClsnFile(0x473);

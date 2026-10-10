@@ -51,7 +51,8 @@
  *   (s32 m[12]) is the one this TU sees, so the translation row is
  *   m[9], m[10] and m[11].
  * Leftover: data_ov071_02122ecc, data_ov071_021230d0 and
- *   data_ov071_021230d8 are unnamed ov071 rows this TU does not own.
+ *   data_ov071_021230d8 are defined at the end of this file so their
+ *   dynamic init stays out of .text.
  */
 
 #include "daObjCasket_c.h"
@@ -69,12 +70,37 @@ struct CasketState {
 
 bool ApproachLinear(short &value, short target, short step);
 
+/* Resource handles this TU's static initializer constructs. File IDs and
+ * widths are the ROM's; constructor/destructor addresses are aliased in
+ * the manifest (Eyerok idiom). */
+struct CasketModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    CasketModelFilePtr(u32 fileID);
+    ~CasketModelFilePtr();
+};
+
+struct CasketCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    CasketCollisionFilePtr(u32 fileID);
+    ~CasketCollisionFilePtr();
+};
+
 extern "C" {
-/* The state table, indexed by mState. */
+/* Pointer-to-member descriptors the initializer copies into the state
+ * table, and the state names (all ROM .data, owned by no TU). */
+extern StateFunc data_ov071_02122e74;
+extern StateFunc data_ov071_02122e7c;
+extern StateFunc data_ov071_02122e84;
+extern StateFunc data_ov071_02122e8c;
+extern char data_ov071_02122e64[];
+extern char data_ov071_02122e6c[];
+/* The state table, indexed by mState. Defined at the end of this file. */
 extern CasketState data_ov071_02122ecc[];
-/* The casket's model and collision files. */
-extern SharedFilePtr data_ov071_021230d0;
-extern SharedFilePtr data_ov071_021230d8;
+/* The casket's model and collision files. Defined at the end of this file. */
+extern CasketModelFilePtr data_ov071_021230d0;
+extern CasketCollisionFilePtr data_ov071_021230d8;
 /* The CLPS block handed to dBgW_KcMbg::SetFile. */
 extern CLPS_Block data_ov063_0211ebd8;
 /* Scratch rotation matrix. */
@@ -309,3 +335,14 @@ void daObjCasket_c::UpdateModelTransform()
     mModel.mat4x3.m[10] = mPosY >> 3;
     mModel.mat4x3.m[11] = mPosZ >> 3;
 }
+
+/* Definition order is the retail initializer's construction order: the
+ * model handle, then the collision handle, then the state table whose
+ * pointer-to-member slots copy the ROM descriptors. */
+CasketModelFilePtr data_ov071_021230d0(0x5b4);
+CasketCollisionFilePtr data_ov071_021230d8(0x5b5);
+
+CasketState data_ov071_02122ecc[] = {
+    { data_ov071_02122e74, data_ov071_02122e8c, data_ov071_02122e64 },
+    { data_ov071_02122e84, data_ov071_02122e7c, data_ov071_02122e6c },
+};

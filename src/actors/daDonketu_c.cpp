@@ -45,6 +45,7 @@
 #include "common.h"
 #include "daBDonketu_c.h"
 #include "decl_common.h"
+#include "SharedFilePtr.h"
 
 /* ROM symbols with no header of their own. func_ov064_02116110,
  * func_ov064_0211616c and data_ov064_0211b834 are deliberately absent:
@@ -55,6 +56,22 @@ extern void func_0201267c(u32 soundID, const Vector3 *pos);
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
 }
+
+/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
+ * veneer pairs (func_02017acc / func_02017ab4 for the model,
+ * SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim for the four
+ * animation handles), spelled through declared-only subclasses so the
+ * static initializer names the real entry points. */
+struct DonketuModelFilePtr : SharedFilePtr {
+    u32 words[2];
+    DonketuModelFilePtr(u32 fileID);
+    ~DonketuModelFilePtr();
+};
+struct DonketuAnimationFileHandle : SharedFilePtr {
+    u32 words[2];
+    DonketuAnimationFileHandle(u32 fileID);
+    ~DonketuAnimationFileHandle();
+};
 
 /* ROM ordinal 10 -- daDonketu_c_classInit, 0x02117444, size 0x5c. Written
  * first so reverse-order emission puts it last. Reconstructed source-style
@@ -232,3 +249,12 @@ void daDonketu_c::PlayDeathSound()
 {
     func_0201267c(0xc8, (const Vector3 *)&mCamSpacePosX);
 }
+
+// @symbol __sinit_daDonketu_c.cpp
+/* The small Bully's model and animation handles, in the sinit call order the
+ * data_ov064_0211b834 file table repeats. */
+DonketuModelFilePtr data_ov064_0211c668(0x2df);
+DonketuAnimationFileHandle data_ov064_0211c670(0x2e0);
+DonketuAnimationFileHandle data_ov064_0211c660(0x2e1);
+DonketuAnimationFileHandle data_ov064_0211c678(0x2e2);
+DonketuAnimationFileHandle data_ov064_0211c680(0x2e3);

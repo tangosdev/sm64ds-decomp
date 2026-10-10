@@ -52,6 +52,26 @@
 #include "decl_common.h"
 #include "dBgCh_Gnd.h"
 #include "Sound.h"
+#include "SharedFilePtr.h"
+
+/* One model handle constructs through func_02017acc and destroys through
+ * func_02017ab4. Four animation handles construct through
+ * SharedFilePtr::Construct and destroy through SharedFilePtr_Destruct_Anim.
+ * The file table stays ROM data. */
+struct DonketuModelFilePtr : SharedFilePtr {
+    unsigned int words[2];
+    DonketuModelFilePtr(unsigned int fileId);
+    ~DonketuModelFilePtr();
+};
+struct DonketuAnimFileHandle : SharedFilePtr {
+    unsigned int words[2];
+    DonketuAnimFileHandle(unsigned int fileId);
+    ~DonketuAnimFileHandle();
+};
+typedef char DonketuModelFilePtr_size_must_be_8[
+    sizeof(DonketuModelFilePtr) == 8 ? 1 : -1];
+typedef char DonketuAnimFileHandle_size_must_be_8[
+    sizeof(DonketuAnimFileHandle) == 8 ? 1 : -1];
 
 extern "C" {
 extern s16 data_02082214[];
@@ -222,3 +242,10 @@ int daBDonketu_c::UpdateRunState()
     }
     return value;
 }
+
+/* Retail construction order. mwcc emits __sinit_daBDonketu_c.cpp. */
+DonketuModelFilePtr data_ov064_0211c6cc(0x2de);
+DonketuAnimFileHandle data_ov064_0211c6d4(0x2e0);
+DonketuAnimFileHandle data_ov064_0211c6c4(0x2e1);
+DonketuAnimFileHandle data_ov064_0211c6dc(0x2e2);
+DonketuAnimFileHandle data_ov064_0211c6e4(0x2e3);

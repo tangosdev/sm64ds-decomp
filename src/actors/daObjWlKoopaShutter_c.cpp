@@ -22,9 +22,23 @@
 #include "daObjWlKoopaShutter_c.h"
 #include "SharedFilePtr.h"
 
-/* BSS file homes (symbols.txt); Init loads them, Cleanup releases them. */
-extern SharedFilePtr BowserShutter_ModelFile;
-extern SharedFilePtr BowserShutter_ClsnFile;
+/* BSS file homes (symbols.txt); Init loads them, Cleanup releases them.
+ * The ctor/dtor are the ROM's SharedFilePtr veneer pairs (func_02017acc /
+ * func_02017ab4 for the model, func_02017b4c / SharedFilePtr_Destruct_Clsn
+ * for the collision), spelled through declared-only subclasses so the
+ * static initializer names the real entry points. */
+struct KoopaShutterModelFilePtr : SharedFilePtr {
+    u32 words[2];
+    KoopaShutterModelFilePtr(u32 fileID);
+    ~KoopaShutterModelFilePtr();
+};
+extern KoopaShutterModelFilePtr BowserShutter_ModelFile;
+struct KoopaShutterCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+    KoopaShutterCollisionFilePtr(u32 fileID);
+    ~KoopaShutterCollisionFilePtr();
+};
+extern KoopaShutterCollisionFilePtr BowserShutter_ClsnFile;
 
 extern "C" {
 extern char data_ov026_02112f74[];
@@ -91,3 +105,9 @@ extern "C" daObjWlKoopaShutter_c *daObjWlKoopaShutter_c_classInit()
 {
     return new daObjWlKoopaShutter_c();
 }
+
+// @symbol __sinit_daObjWlKoopaShutter_c.cpp
+/* The retail initializer constructs the model first, then the collision
+ * file. */
+KoopaShutterModelFilePtr BowserShutter_ModelFile(0x6d9);      /* model */
+KoopaShutterCollisionFilePtr BowserShutter_ClsnFile(0x6da);   /* collision */

@@ -54,6 +54,17 @@ struct Base {
     virtual void m48(int x);
 };
 
+/* The two model file handles InitResources swaps between through
+ * data_ov006_02142184; a declared-only subclass so the static initializer
+ * names the real entry points. */
+struct MgJumpModelFilePtr : SharedFilePtr {
+    u32 words[2];
+    MgJumpModelFilePtr(u32 fileID);
+    ~MgJumpModelFilePtr();
+};
+extern MgJumpModelFilePtr data_ov006_02142188;
+extern MgJumpModelFilePtr data_ov006_02142190;
+
 /* Everything below that decl_common.h does not declare. Keep it above the
  * first function: tools/tiers.py charges text between two functions to the
  * earlier one. */
@@ -468,3 +479,8 @@ s32 dScMgJump_c::CleanupResources()
 /* The destructor (D1 at 0x020edec0, D0 at 0x020edf54) is defined inline in
  * dScMgJump_c.h; defining it here would emit D0 before D1 and break the
  * ROM order. */
+
+/* The scene's model file handles, registered in file-ID order; file 0x203
+ * sits at 0x02142190, file 0x204 at 0x02142188. */
+MgJumpModelFilePtr data_ov006_02142190(0x203);
+MgJumpModelFilePtr data_ov006_02142188(0x204);

@@ -18,6 +18,21 @@
       "name": ".text",
       "start": "0x020f8ef4",
       "end": "0x020fa75c"
+    },
+    {
+      "name": ".init",
+      "start": "0x0213195c",
+      "end": "0x02131a38"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x021335bc",
+      "end": "0x021335c0"
+    },
+    {
+      "name": ".bss",
+      "start": "0x021425a8",
+      "end": "0x02142604"
     }
   ],
   "functions": [
@@ -195,16 +210,33 @@
       "size": "0x0000001c",
       "legacy_source": "src/minigames/d_s_mg_m_carlo2.cpp",
       "ordinal": 24
+    },
+    {
+      "symbol": "__sinit_d_s_mg_m_carlo2.cpp",
+      "address": "0x0213195c",
+      "size": "0x000000dc",
+      "legacy_source": "src/minigames/d_s_mg_m_carlo2.cpp",
+      "ordinal": 25
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov006_021425a8",
+      "address": "0x021425a8",
+      "size": "0x5c",
+      "binding": "STB_GLOBAL",
+      "evidence": "sprite-word table copied by __sinit_d_s_mg_m_carlo2.cpp from data_ov006_02133810"
+    }
+  ],
   "notes": [
     "Registration, not a merge: the source file, the delinks enrolment and the ROM cut all pre-date this entry (the file landed via the f100-bank merge, PR #2652, and has been byte-verified as the enrolled complete run ever since). What this entry adds is the manifest record the promotion gates key on.",
     "The source lists its functions in REVERSE of ROM order (highest address first) and the file header forbids reordering; with ROM-ascending ordinals the compiled object's section indices therefore descend, and functions_occur_in_expected_order reports PARTIAL for exactly that reason -- the same state ov002/EnemySpawner+EnemySwitchTag and three other promoted entries carry. Per-function bytes are unaffected by emission order, and verify's text verdict does not gate on it.",
     "The queue row predicted `compiler-only:>=16` from dScMgMCarlo2_c's ancestor chain (7 classes incl. self via build/rtti.json; floor 2x7+2). The measured output is recorded in verification.compilerOnlyOutput -- the compiler emits the two classes' own _ZTI/_ZTS/_ZTV records, the inherited vague-linkage RTTI of the dScMgSingle3DBase_c chain, and the compiler-generated D2 destructors; every one of them either has a configured ROM home (externalized after a cartridge compare) or is banked as a deadstrip policy. Nothing was widened or licensed to make the bytes reproduce.",
     "dMgMCarlo2CardObj_c's D0 and D2 are not in the ROM: the destructor is not virtual (the vtable's two slots are Render at 0x020f98dc and Update at 0x020f9994, read out of the overlay binary), so no vtable slot can target a deleting destructor, and the cartridge carries D1 (0x020f8ff0, size 0x10) only -- the next ROM function starts at 0x020f9000, exactly D1's end, leaving no room for either variant.",
-    "No linkcheck key, by measurement rather than omission. Ordinary linkcheck forces the intact-object preparation for any already-enrolled TU, and that path requires a non-text claim this entry structurally cannot carry: every data byte the object emits is cartridge-owned (the 16 deadstrip-data policies above) and the delinks enrolment is .text-only. The --partial mode was also attempted and correctly reports 0/25: with a single enrolled TU object there are no N legacy objects to substitute per-function reductions for (those shards were absorbed by the f100-bank merge, PR #2652). The proof set for this shape is therefore the same one the sibling dScMgMCarlo_c TU carries: 25/25 text verify with clean objisolate and reloc-destinations, a whole-tree production compile with these exact policies (5102/5102 objects, 0 failed), the baseline control at 106/106 exact with 0 mismatching functions, and romdata_check on this file (16/16 records compared against the cartridge: 9 VERIFIED, 7 padding-only PARTIAL strings, 0 DIFFERS, 0 UNNAMED). This entry is not intact-object, so the intact-TU link control does not read it."
+    "No linkcheck key, by measurement rather than omission. Ordinary linkcheck forces the intact-object preparation for any already-enrolled TU, and that path requires a non-text claim this entry structurally cannot carry: every data byte the object emits is cartridge-owned (the 16 deadstrip-data policies above) and the delinks enrolment is .text-only. The --partial mode was also attempted and correctly reports 0/25: with a single enrolled TU object there are no N legacy objects to substitute per-function reductions for (those shards were absorbed by the f100-bank merge, PR #2652). The proof set for this shape is therefore the same one the sibling dScMgMCarlo_c TU carries: 25/25 text verify with clean objisolate and reloc-destinations, a whole-tree production compile with these exact policies (5102/5102 objects, 0 failed), the baseline control at 106/106 exact with 0 mismatching functions, and romdata_check on this file (16/16 records compared against the cartridge: 9 VERIFIED, 7 padding-only PARTIAL strings, 0 DIFFERS, 0 UNNAMED). This entry is not intact-object, so the intact-TU link control does not read it.",
+    "Folded __sinit_ov006_0213195c into this TU. mwcc emits __sinit_d_s_mg_m_carlo2.cpp, which copies the twenty-three words at data_ov006_02133810 into data_ov006_021425a8 in the retail permutation (not address order). No compiler temps. The handwritten src/unnamed/ov006/__sinit_ov006_0213195c.c is retired.",
+    "LOCAL WORKER NOTE: this machine stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to this tree stock build and to the strict control, while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container fields outside every module range. The content proof is the same either way: moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, and the four owned ranges identical."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -212,8 +244,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov006-dMgMCarlo2CardObj_c+dScMgMCarlo2_c/d_s_mg_m_carlo2.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 25,
-    "functions_declared": 25,
+    "functions_matched": 26,
+    "functions_declared": 26,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN19dMgMCarlo2CardObj_cD2Ev",
@@ -249,14 +281,14 @@
         25,
         26,
         27,
-        28,
         29,
-        34,
+        30,
         35,
         36,
         37,
-        82,
-        83
+        38,
+        83,
+        84
       ],
       "data": [
         "_ZTV19dMgMCarlo2CardObj_c",
@@ -301,6 +333,127 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov006-dMgMCarlo2CardObj_c+dScMgMCarlo2_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020f8ef4",
+        "end": "0x020fa75c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020f8ef4",
+          "end": "0x020fa75c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x0213195c",
+          "end": "0x02131a38",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x021335bc",
+          "end": "0x021335c0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x021425a8",
+          "end": "0x02142604",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 28
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              87
+            ],
+            "desired": [
+              87
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              85
+            ],
+            "desired": [
+              85
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              28
+            ],
+            "desired": [
+              28
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [
@@ -511,5 +664,69 @@
     "state": "derived",
     "stateMeaning": "N per-function objects were extracted from one compiled TU object; their equivalence to the production objects was not established",
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
-  }
+  },
+  "init": [
+    {
+      "symbol": "__sinit_d_s_mg_m_carlo2.cpp",
+      "address": "0x0213195c",
+      "size": "0xdc",
+      "binding": "STB_GLOBAL",
+      "evidence": "byte-identical to retail __sinit_ov006_0213195c"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_s_mg_m_carlo2.cpp",
+      "address": "0x021335bc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "ctor-table word pointing at __sinit_d_s_mg_m_carlo2.cpp"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_s_mg_m_carlo2.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global at this address"
+    },
+    {
+      "symbol": ".p__sinit_d_s_mg_m_carlo2.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02131a30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133810",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133810"
+    },
+    {
+      "section": ".init",
+      "source": "0x02131a34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021425a8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021425a8"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x021335bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_s_mg_m_carlo2.cpp",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213195c"
+    }
+  ]
 }

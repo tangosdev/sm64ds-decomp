@@ -15,7 +15,6 @@ src/actors/daObjClock_c.cpp:
     complete
     .text start:0x021113bc end:0x021116ac
     .data start:0x021121a4 end:0x0211227c
-
-src/unnamed/ov013/__sinit_ov013_021116f8.c:
-    complete
     .init start:0x021116f8 end:0x02111760
+    .ctor start:0x02111764 end:0x02111768
+    .bss start:0x02112294 end:0x021122bc

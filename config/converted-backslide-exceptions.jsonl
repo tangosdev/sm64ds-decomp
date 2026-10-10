@@ -617,6 +617,7 @@
 {"path": "src/unnamed/ov063/__sinit_ov063_0211e3cc.c", "reason": "The handwritten static initializer is retired. d_a_trs_trap.cpp defines the eight file handles and the four-entry dispatch table, and mwcc emits __sinit_d_a_trs_trap.cpp with the same 0x1c4 bytes and the same relocations."}
 {"path": "src/unnamed/ov015/__sinit_ov015_02112f9c.c", "reason": "The handwritten static initializer is retired. d_a_obj_bk_billboard.cpp defines the model handle, and mwcc emits __sinit_d_a_obj_bk_billboard.cpp with the same 0x40 bytes and the same five relocation sites."}
 {"path": "src/__sinit_ov002_02100938.c", "reason": "The handwritten static initializer is retired. dEnemyBase_c.cpp defines the two state-handler PMF tables, and mwcc emits __sinit_dEnemyBase_c.cpp with the same 0x1a4 bytes, the same eighteen .init relocations, the ctor word and the sixteen pointer-to-member descriptors."}
+{"path": "src/unnamed/ov022/__sinit_ov022_02112ca8.c", "reason": "The handwritten static initializer is retired. daObjFl_Ring_c.cpp defines the model (1550) and collision (1551) resource handles, and mwcc emits __sinit_daObjFl_Ring_c.cpp with the same 0x6c bytes and the same ten relocations."}
 {"path": "src/__sinit_ov002_02101900.c", "reason": "The handwritten static initializer is retired. daObjHeart_c.cpp defines the model and animation resource handles, and mwcc emits __sinit_daObjHeart_c.cpp with the same 0x68 bytes and the same ten relocations."}
 {"path": "src/__sinit_ov060_0211a388.c", "reason": "The handwritten static initializer is retired. daKirai_c.cpp defines the model handle, its destructor-registration node, and the four-entry state table, and mwcc emits __sinit_daKirai_c.cpp with the same 0xa0 bytes and the same ten relocations."}
 {"path": "src/unnamed/ov085/__sinit_ov085_0212fdb0.c", "reason": "The handwritten static initializer is retired. daObjKanban_c.cpp defines the model file handle, and mwcc emits __sinit_daObjKanban_c.cpp with the same 0x40 bytes and the same five relocations."}
@@ -657,6 +658,7 @@
 {"path": "src/unnamed/ov029/__sinit_ov029_02112c4c.c", "reason": "The handwritten static initializer is retired. d_a_obj_wc_obj05.cpp defines the two resource handles, and mwcc emits __sinit_d_a_obj_wc_obj05.cpp with the same 0x6c bytes and the same ten relocations."}
 {"path": "src/unnamed/ov025/__sinit_ov025_02112a44.c", "reason": "The handwritten static initializer is retired. daObjDpBrock_c.cpp defines the model and collision file handles for real, and mwcc emits __sinit_daObjDpBrock_c.cpp with the same 0x68 bytes and the same ten relocations."}
 {"path": "src/unnamed/ov033/__sinit_ov033_02111a54.c", "reason": "The handwritten static initializer is retired. daObjTtWater_c.cpp defines the two resource handles (the 1735 model and the 1736 collision) for real, and mwcc emits __sinit_daObjTtWater_c.cpp with the same 0x6c bytes and the same ten relocations."}
+{"path": "src/unnamed/ov006/__sinit_ov006_021333e0.c", "reason": "The handwritten static initializer is retired. dScMgSnowball_c.cpp defines the four pointer-to-member tables and the eight-byte registry word between their descriptors, and mwcc emits __sinit_dScMgSnowball_c.cpp with the same 0x18c bytes and the same eighteen relocations."}
 {"path": "src/unnamed/ov029/__sinit_ov029_02112dfc.c", "reason": "The handwritten static initializer is retired. d_a_obj_wc_obj04.cpp defines the two resource handles, and mwcc emits __sinit_d_a_obj_wc_obj04.cpp with the same 0x6c bytes and the same ten relocations."}
 {"path": "src/unnamed/ov035/__sinit_ov035_02111fc0.c", "reason": "The handwritten static initializer is retired. daObjCtMecha11_c.cpp defines the model and collision resource handles for real, and mwcc emits __sinit_daObjCtMecha11_c.cpp with the same 0x68 bytes and the same ten relocations."}
 {"path": "src/unnamed/ov081/__sinit_ov081_021287b8.c", "reason": "The handwritten static initializer is retired. d_a_obj_ice_block.cpp defines the two resource handles (the 1114 model and the 1115 collision) for real, and mwcc emits __sinit_d_a_obj_ice_block.cpp with the same 0x6c bytes and the same ten relocations."}
@@ -748,3 +750,62 @@
 {"path": "src/unnamed/ov098/__sinit_ov098_0213c214.c", "reason": "shard folded into its owning TU (batch sinit-1010-4)"}
 {"path": "src/unnamed/ov098/__sinit_ov098_0213c2b4.c", "reason": "shard folded into its owning TU (batch sinit-1010-4)"}
 {"path": "src/unnamed/ov100/__sinit_ov100_02147d7c.c", "reason": "shard folded into its owning TU (batch sinit-1010-4)"}
+{"path": "src/unnamed/ov006/__sinit_ov006_021314e4.c", "reason": "The handwritten static initializer is retired. dScMgMemory2_c.cpp defines the twenty-three-entry sprite-pointer table and the five pointer-to-member state tables for real, plain-copied from the .data descriptor records, and mwcc emits __sinit_dScMgMemory2_c.cpp with the same 0x3bc bytes and the same thirty-six relocations."}
+{"path": "src/unnamed/ov056/__sinit_ov056_02112b48.c", "reason": "The handwritten static initializer is retired. daObjEwmIceBlock_c.cpp defines the two resource handles (model 0x5ed, collision file 0x5ee) for real, and mwcc emits __sinit_daObjEwmIceBlock_c.cpp with the same 0x6c bytes and the same ten relocations."}
+{"path": "src/unnamed/ov029/__sinit_ov029_02112b38.c", "reason": "The handwritten static initializer is retired. d_a_obj_wc_obj01.cpp defines the model and collision resource handles for real through TU-local SharedFilePtr subclasses, and mwcc emits __sinit_d_a_obj_wc_obj01.cpp with the same 0x6c bytes and the same ten relocations plus the two destructor-registration nodes."}
+{"path": "src/unnamed/ov029/__sinit_ov029_02112cb8.c", "reason": "The handwritten static initializer is retired. d_a_obj_wc_obj06.cpp defines the model and collision resource handles for real through TU-local SharedFilePtr subclasses, and mwcc emits __sinit_d_a_obj_wc_obj06.cpp with the same 0x6c bytes and the same ten relocations plus the two destructor-registration nodes."}
+{"path": "src/unnamed/ov026/__sinit_ov026_02112bbc.c", "reason": "The handwritten static initializer is retired. daObjWlKoopaShutter_c.cpp defines the two resource handles (model 0x6d9, collision file 0x6da) for real, and mwcc emits __sinit_daObjWlKoopaShutter_c.cpp with the same 0x6c bytes and the same ten relocations."}
+{"path": "src/unnamed/ov026/__sinit_ov026_02112c28.c", "reason": "The handwritten static initializer is retired. daObjWlSubmarine_c.cpp defines the two resource handles (model 0x6dc, collision file 0x6dd) for real, and mwcc emits __sinit_daObjWlSubmarine_c.cpp with the same 0x6c bytes and the same ten relocations."}
+{"path": "src/unnamed/ov029/__sinit_ov029_02112d24.c", "reason": "sinit fold: folded into src/game/actors/d_a_obj_wc_obj07.cpp as WcObj07ModelFilePtr/WcObj07CollisionFilePtr static handles; .init/.ctor/.bss preserved byte-identical (intact-object manifest, 11 recorded relocations)"}
+{"path": "src/unnamed/ov063/__sinit_ov063_0211e590.c", "reason": "The handwritten static initializer is retired. d_a_obj_th_fall_block.cpp defines the two resource handles (model 0x6b9, collision file 0x6ba) for real, and mwcc emits __sinit_d_a_obj_th_fall_block.cpp with the same 0x6c bytes and the same ten relocations."}
+{"path": "src/unnamed/ov016/__sinit_ov016_021139e4.c", "reason": "sinit fold: folded into src/game/actors/d_a_obj_ki_ita.cpp as KiItaModelFilePtr/KiItaClsnFilePtr static handles; .init/.ctor/.bss preserved byte-identical (intact-object manifest, 11 recorded relocations)"}
+{"path": "src/unnamed/ov021/__sinit_ov021_021136c8.c", "reason": "sinit fold: folded into src/game/actors/d_a_obj_cv_shutter.cpp as CvShutterModelFilePtr/CvShutterCollisionFilePtr static handles; .init/.ctor/.bss preserved byte-identical (intact-object manifest, 11 recorded relocations)"}
+{"path": "src/unnamed/ov022/__sinit_ov022_02112d14.c", "reason": "The handwritten static initializer is retired. daObjFl_Koma_D_c.cpp defines the model (1525) and collision (1526) resource handles, and mwcc emits __sinit_daObjFl_Koma_D_c.cpp with the same 0x6c bytes and the same ten relocations."}
+{"path": "src/unnamed/ov036/__sinit_ov036_02112730.c", "reason": "The handwritten static initializer is retired. d_a_obj_rc_guruguru.cpp defines the two resource handles (model 0x6a4, collision file 0x6a5) for real, and mwcc emits __sinit_d_a_obj_rc_guruguru.cpp with the same 0x6c bytes and the same ten relocations."}
+{"path": "src/unnamed/ov002/__sinit_ov002_02107304.c", "reason": "sinit fold: folded into src/game/actors/d_a_obj_bc_switch.cpp as BcSwitchModelFilePtr/BcSwitchCollisionFilePtr static handles; .init/.ctor/.bss preserved byte-identical (intact-object manifest, 11 recorded relocations)"}
+{"path": "src/unnamed/ov064/__sinit_ov064_0211ae00.c", "reason": "The handwritten static initializer is retired. daDonketu_c.cpp defines the five resource handles (model 0x2df, animation files 0x2e0-0x2e3) for real, and mwcc emits __sinit_daDonketu_c.cpp with the same 0xe0 bytes and the same twenty-two relocations."}
+{"path": "src/unnamed/ov022/__sinit_ov022_02112ec0.c", "reason": "The handwritten static initializer is retired. daObjFl_Ukiyuka_c.cpp defines the two model handles (0x614, 0x610) and the two collision handles (0x615, 0x611), and mwcc emits __sinit_daObjFl_Ukiyuka_c.cpp with the same 0xb8 bytes and the same eighteen relocations."}
+{"path": "src/unnamed/ov064/__sinit_ov064_0211b078.c", "reason": "The handwritten static initializer is retired. d_a_obj_fl_gura.cpp defines the two resource handles (model 1523, collision file 1524) for real, and mwcc emits __sinit_d_a_obj_fl_gura.cpp with the same 0x6c bytes and the same ten relocations."}
+{"path": "src/unnamed/ov006/__sinit_ov006_02130f00.c", "reason": "shard folded into its owning TU (sinit/ov006-jump2)"}
+{"path": "src/unnamed/ov006/__sinit_ov006_0212f4c4.c", "reason": "sinit fold: folded into src/actors/dMg3DHeyhoObjAdapter_c.cpp as HeyhoAdapterModelFilePtr/HeyhoAdapterAnimationFileHandle static handles; .init/.ctor/.bss preserved byte-identical (intact-object manifest, 11 recorded relocations)"}
+{"path": "src/unnamed/ov064/__sinit_ov064_0211b698.c", "reason": "The handwritten static initializer is retired. daObjShell_c.cpp defines the three file handles (model 1164, lunge animation 1166, idle animation 1165) for real, and mwcc emits __sinit_daObjShell_c.cpp with the same 0x94 bytes and the same fifteen relocations."}
+{"path": "src/unnamed/ov102/__sinit_ov102_0214dfac.c", "reason": "The handwritten static initializer is retired. d_a_shl.cpp defines the four pointer-to-member state records, and mwcc emits __sinit_d_a_shl.cpp with the same 0xf4 bytes and the same twelve relocations."}
+{"path": "src/unnamed/ov064/__sinit_ov064_0211b1d4.c", "reason": "The handwritten static initializer is retired. daObjFl_Coin_c.cpp defines the fifteen resource handles (fourteen models 0x5ff/0x601-0x60d, collision 0x600) and the six-entry state table for real, and mwcc emits __sinit_daObjFl_Coin_c.cpp with the same 0x308 bytes and the same sixty-nine relocations."}
+{"path": "src/unnamed/ov016/__sinit_ov016_02113978.c", "reason": "shard folded into its owning TU (sinit/ov016-hasira)"}
+{"path": "src/unnamed/ov002/__sinit_ov002_02100d44.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov002/__sinit_ov002_021014e4.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov002/__sinit_ov002_02108094.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov006/__sinit_ov006_021300b0.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov006/__sinit_ov006_02130e9c.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov006/__sinit_ov006_021318a0.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov006/__sinit_ov006_0213195c.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov006/__sinit_ov006_0213322c.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov014/__sinit_ov014_021130ac.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov015/__sinit_ov015_0211333c.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov015/__sinit_ov015_021133a8.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov016/__sinit_ov016_021138bc.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov018/__sinit_ov018_02112e00.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov025/__sinit_ov025_021129dc.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov030/__sinit_ov030_021148b8.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov031/__sinit_ov031_02111434.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov036/__sinit_ov036_0211261c.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov043/__sinit_ov043_02111868.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov043/__sinit_ov043_021118d4.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov043/__sinit_ov043_02111940.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov045/__sinit_ov045_021122ec.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov045/__sinit_ov045_021123c0.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov047/__sinit_ov047_0211181c.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov052/__sinit_ov052_02111b64.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov052/__sinit_ov052_02111bd0.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov060/__sinit_ov060_02119f94.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov064/__sinit_ov064_0211b0e4.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov065/__sinit_ov065_0211c660.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov065/__sinit_ov065_0211c890.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov065/__sinit_ov065_0211c8fc.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov065/__sinit_ov065_0211c9b8.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov079/__sinit_ov079_02127acc.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov091/__sinit_ov091_02134524.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov091/__sinit_ov091_021346e8.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov091/__sinit_ov091_02134930.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov095/__sinit_ov095_02136fe0.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}
+{"path": "src/unnamed/ov102/__sinit_ov102_0214d714.c", "reason": "shard folded into its owning TU (batch sinit-1010-5)"}

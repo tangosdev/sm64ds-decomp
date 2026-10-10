@@ -42,6 +42,23 @@ extern ResourceDescriptor data_ov029_02113fd4;
 extern s16 data_ov029_02113fc4;
 }
 
+/* Retail constructs these 8-byte handles in this order and registers
+ * their destructors. The wrapper names are local; the ctor/dtor
+ * addresses are the ROM resource-family functions. */
+struct WcObj07ModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    WcObj07ModelFilePtr(u32 fileID);
+    ~WcObj07ModelFilePtr();
+};
+
+struct WcObj07CollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    WcObj07CollisionFilePtr(u32 fileID);
+    ~WcObj07CollisionFilePtr();
+};
+
 // @symbol daObjWc_Obj07_c_classInit
 extern "C" daObjWc_Obj07_c *daObjWc_Obj07_c_classInit()
 {
@@ -59,3 +76,8 @@ s32 daObjWc_Obj07_c::CleanupResources()
 {
     return func_ov002_020b66a8(this, &data_ov029_02113fd4);
 }
+
+/* The static-init globals -- mwcc emits __sinit_d_a_obj_wc_obj07.cpp
+   from these: one ctor veneer plus destructor registration per handle. */
+WcObj07ModelFilePtr data_ov029_021142dc(0x6d7);
+WcObj07CollisionFilePtr data_ov029_021142d4(0x6d8);

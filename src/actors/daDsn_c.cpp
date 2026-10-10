@@ -38,6 +38,40 @@
 
 #include "daDsn_c.h"
 #include "Player.h"
+#include "SharedFilePtr.h"
+
+/* The three resource handles as the ROM lays them out: {id, loaded file}.
+ * The model handle constructs through func_02017acc and destroys through
+ * func_02017ab4; the collision handle through func_02017b4c /
+ * SharedFilePtr_Destruct_Clsn; the texture-sequence (BTP) handle through
+ * SharedFilePtr_Construct_TexSeq / SharedFilePtr_Destruct_TexSeq. The
+ * manifest aliases each undefined member onto its ROM symbol. */
+struct DsnModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    DsnModelFilePtr(u32 fileID);
+    ~DsnModelFilePtr();
+};
+
+struct DsnCollisionFileHandle : SharedFilePtr {
+    u32 words[2];
+
+    DsnCollisionFileHandle(u32 fileID);
+    ~DsnCollisionFileHandle();
+};
+
+struct DsnTextureSeqFileHandle : SharedFilePtr {
+    u32 words[2];
+
+    DsnTextureSeqFileHandle(u32 fileID);
+    ~DsnTextureSeqFileHandle();
+};
+
+extern "C" {
+extern DsnModelFilePtr data_ov091_02135620;
+extern DsnCollisionFileHandle data_ov091_02135618;
+extern DsnTextureSeqFileHandle data_ov091_02135610;
+}
 
 /* data_ov091_02135138 is the six-word table daDsnBase_c::Init reads out of
    the pointer this leaf stores:
@@ -201,3 +235,11 @@ int daDsn_c::OnAimedAtWithEgg()
 {
     return 0xce000;
 }
+
+/* Source order is construction order: model file 0x2f4, collision file 0x2f6,
+ * texture-sequence file 0x2f5. __sinit_daDsn_c.cpp emits the three
+ * constructions and registers the destructors; the registration nodes are
+ * compiler temporaries. */
+DsnModelFilePtr data_ov091_02135620(0x2f4);
+DsnCollisionFileHandle data_ov091_02135618(0x2f6);
+DsnTextureSeqFileHandle data_ov091_02135610(0x2f5);

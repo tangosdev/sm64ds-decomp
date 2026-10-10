@@ -102,8 +102,8 @@ data_ov056_02112aa8 kind:data(any) addr:0x02112aa8 ambiguous
 data_ov056_02112ac0 kind:data(any) addr:0x02112ac0 ambiguous
 data_ov056_02112adc kind:data(any) addr:0x02112adc ambiguous
 data_ov056_02112b08 kind:data(any) addr:0x02112b08 ambiguous
-__sinit_ov056_02112b48 kind:function(arm,size=0x6c) addr:0x02112b48
-.p__sinit_ov056_02112b48 kind:data(word) addr:0x02112bb4
+__sinit_daObjEwmIceBlock_c.cpp kind:function(arm,size=0x6c) addr:0x02112b48
+.p__sinit_daObjEwmIceBlock_c.cpp kind:data(word) addr:0x02112bb4
 data_ov056_02112bc0 kind:data(any) addr:0x02112bc0
 data_ov056_02112bc4 kind:data(any) addr:0x02112bc4
 data_ov056_02112bc8 kind:data(any) addr:0x02112bc8
@@ -153,6 +153,7 @@ _ZTV18daObjEwmIceBlock_c kind:data(any) addr:0x02113368
 data_ov056_021133a8 kind:data(any) addr:0x021133a8 ambiguous
 data_ov056_02113400 kind:bss addr:0x02113400
 data_ov056_02113408 kind:bss addr:0x02113408
-data_ov056_02113410 kind:bss addr:0x02113410
-data_ov056_0211341c kind:bss addr:0x0211341c
+@490 kind:bss addr:0x02113410
+@60 kind:bss addr:0x0211341c
+data_ov056_02113428 kind:bss addr:0x02113428
 data_ov056_02113434 kind:bss addr:0x02113434 ambiguous

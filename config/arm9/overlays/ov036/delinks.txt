@@ -13,6 +13,9 @@ src/game/actors/d_a_obj_rc_buranko.cpp:
 src/game/actors/d_a_obj_rc_kaitendai.cpp:
     complete
     .text start:0x02111444 end:0x02111580
+    .init start:0x0211261c end:0x02112688
+    .ctor start:0x021129e0 end:0x021129e4
+    .bss start:0x02114048 end:0x02114070
 
 src/game/actors/d_a_obj_rc_hane.cpp:
     complete
@@ -31,6 +34,9 @@ src/actors/daObjRc_Tikuwa_c.cpp:
 src/game/actors/d_a_obj_rc_guruguru.cpp:
     complete
     .text start:0x02111d14 end:0x02111f8c
+    .init start:0x02112730 end:0x0211279c
+    .ctor start:0x021129ec end:0x021129f0
+    .bss start:0x021140ac end:0x021140d4
 
 src/game/actors/d_a_obj_rc_dorifu.cpp:
     complete
@@ -47,11 +53,3 @@ src/game/actors/d_a_obj_rc_carpet.cpp:
     .ctor start:0x021129f4 end:0x021129f8
     .data start:0x02113f4c end:0x02114020
     .bss start:0x0211419c end:0x021141d8
-
-src/unnamed/ov036/__sinit_ov036_0211261c.c:
-    complete
-    .init start:0x0211261c end:0x02112688
-
-src/unnamed/ov036/__sinit_ov036_02112730.c:
-    complete
-    .init start:0x02112730 end:0x0211279c

@@ -72,6 +72,22 @@ enum { kTiltSound = 0x8b };
  * Variant i lives at symbol + i * 0xc (one 3-word record). */
 enum { kFileStride = 0xc };
 
+/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
+ * veneer pairs (func_02017acc / func_02017ab4 for the model, func_02017b4c /
+ * SharedFilePtr_Destruct_Clsn for the collision), spelled through
+ * declared-only subclasses so the static initializer names the real entry
+ * points. */
+struct SeesawModelFilePtr : SharedFilePtr {
+    u32 words[2];
+    SeesawModelFilePtr(u32 fileID);
+    ~SeesawModelFilePtr();
+};
+struct SeesawCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+    SeesawCollisionFilePtr(u32 fileID);
+    ~SeesawCollisionFilePtr();
+};
+
 extern "C" {
 extern int data_ov095_02136f58[];
 extern s16 data_02082214[];
@@ -360,3 +376,20 @@ extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_SEESAW()
 {
     return new daObjSeesaw_c();
 }
+
+/* Seven variants, each a model/collision handle pair; the pointer table at
+ * data_ov095_021374a0 indexes them through kFileStride. */
+SeesawModelFilePtr data_ov095_02137790(1162);
+SeesawModelFilePtr data_ov095_02137780(1445);
+SeesawModelFilePtr data_ov095_02137798(1623);
+SeesawModelFilePtr data_ov095_021377b0(1645);
+SeesawModelFilePtr data_ov095_02137788(1669);
+SeesawModelFilePtr data_ov095_021377d8(1671);
+SeesawModelFilePtr data_ov095_021377b8(1709);
+SeesawCollisionFilePtr data_ov095_021377c8(1163);
+SeesawCollisionFilePtr data_ov095_021377a0(1446);
+SeesawCollisionFilePtr data_ov095_021377e0(1624);
+SeesawCollisionFilePtr data_ov095_021377d0(1646);
+SeesawCollisionFilePtr data_ov095_021377e8(1670);
+SeesawCollisionFilePtr data_ov095_021377a8(1672);
+SeesawCollisionFilePtr data_ov095_021377c0(1710);

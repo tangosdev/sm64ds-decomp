@@ -59,6 +59,26 @@ struct KabeFiles {
     CLPS_Block *clps;
 };
 
+/* File-scope objects at the end of this file construct the four resource
+ * handles (model files 0x593/0x595, collision files 0x594/0x596). mwcc
+ * emits __sinit_daObjBk_Kabe_c.cpp from those definitions. The wrapper
+ * names are local; the handle constructors and destructors are the ROM
+ * resource-family functions, aliased in the manifest. Nothing in this TU
+ * names the handles directly; the KabeFiles rows above point at them. */
+struct BkKabeModelFile : SharedFilePtr {
+    u32 words[2];
+
+    BkKabeModelFile(u32 fileID);
+    ~BkKabeModelFile();
+};
+
+struct BkKabeCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    BkKabeCollisionFilePtr(u32 fileID);
+    ~BkKabeCollisionFilePtr();
+};
+
 extern "C" {
 extern KabeFiles data_ov079_02128058[];
 
@@ -193,3 +213,10 @@ extern "C" daObjBk_Kabe_c *daObjBk_Kabe_c_classInit_BK_KABE00()
 {
     return new daObjBk_Kabe_c();
 }
+
+/* Static-init globals (was the handwritten __sinit_ov079_02127acc shard).
+ * Definition order is the retail initializer's construction order. */
+BkKabeModelFile data_ov079_02128350(0x593);
+BkKabeCollisionFilePtr data_ov079_02128348(0x594);
+BkKabeModelFile data_ov079_02128340(0x595);
+BkKabeCollisionFilePtr data_ov079_02128358(0x596);

@@ -48,6 +48,31 @@ struct CtMecha05SpawnInfo {
 typedef char CtMecha05SpawnInfo_size_must_be_0x1c[
     sizeof(CtMecha05SpawnInfo) == 0x1c ? 1 : -1];
 
+/* File-scope objects at the end of this file construct the two resource
+ * handles (model file 0x5c2, collision file 0x5c3). mwcc emits
+ * __sinit_daObjCtMecha05_c.cpp from those definitions. The wrapper names
+ * are local; the handle constructors and destructors are the ROM
+ * resource-family functions, aliased in the manifest. The definitions
+ * carry the TU's TTC_MovingBar_* names the code already uses; the retired
+ * shard's data_ov065_* labels for the same addresses are dropped from
+ * symbols.txt, and their stale decl_common.h lines with them (S42). */
+struct Mecha05ModelFile : SharedFilePtr {
+    u32 words[2];
+
+    Mecha05ModelFile(u32 fileID);
+    ~Mecha05ModelFile();
+};
+
+struct Mecha05CollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    Mecha05CollisionFilePtr(u32 fileID);
+    ~Mecha05CollisionFilePtr();
+};
+
+extern Mecha05ModelFile TTC_MovingBar_ModelFile;
+extern Mecha05CollisionFilePtr TTC_MovingBar_ClsnFile;
+
 /* Fix12-by-value calls retain their measured raw ABI declarations. Natural
  * class-typed declarations make mwccarm home arguments absent from retail. */
 extern "C" {
@@ -72,8 +97,6 @@ extern void func_ov065_0211ad70(daObjCtMecha05_c *actor);
 extern int RandomIntInternal(int *seed);
 extern u16 DecIfAbove0_Short(u16 *p);
 
-extern SharedFilePtr TTC_MovingBar_ModelFile;
-extern SharedFilePtr TTC_MovingBar_ClsnFile;
 extern u8 data_0209f2c0;
 extern int data_0209e650;
 extern s16 data_02082214[];
@@ -332,3 +355,10 @@ void func_ov065_0211ac0c(daObjCtMecha05_c *actor)
 /* No separate body lives here. The inline virtual destructor in the class
  * declaration and this TU's vtable instantiation make mwccarm emit retail's
  * D1 then D0 order, without the extra D2 produced by an out-of-line body. */
+
+/* Static-init globals (was the handwritten __sinit_ov065_0211c890 shard).
+ * Definition order is the retail initializer construction order. These
+ * carry the TU's TTC_MovingBar_* names the code already uses; the retired
+ * shard's data_ov065_* labels for the same addresses are dropped. */
+Mecha05ModelFile TTC_MovingBar_ModelFile(0x5c2);
+Mecha05CollisionFilePtr TTC_MovingBar_ClsnFile(0x5c3);

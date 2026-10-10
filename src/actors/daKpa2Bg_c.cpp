@@ -27,10 +27,26 @@
 
 struct CLPS_Block;
 
+/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
+ * veneer pairs (func_02017acc / func_02017ab4 for the model, func_02017b4c /
+ * SharedFilePtr_Destruct_Clsn for the collision), spelled through
+ * declared-only subclasses so the static initializer names the real entry
+ * points. */
+struct Kpa2BgModelFilePtr : SharedFilePtr {
+    u32 words[2];
+    Kpa2BgModelFilePtr(u32 fileID);
+    ~Kpa2BgModelFilePtr();
+};
+struct Kpa2BgCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+    Kpa2BgCollisionFilePtr(u32 fileID);
+    ~Kpa2BgCollisionFilePtr();
+};
+
 extern "C" {
 
-extern SharedFilePtr daKpa2Bg_c_ModelFile;
-extern SharedFilePtr daKpa2Bg_c_ClsnFile;
+extern Kpa2BgModelFilePtr daKpa2Bg_c_ModelFile;
+extern Kpa2BgCollisionFilePtr daKpa2Bg_c_ClsnFile;
 extern Matrix4x3 data_020a0e68;
 extern CLPS_Block data_ov046_021115bc;
 
@@ -152,3 +168,8 @@ extern "C" daKpa2Bg_c *daKpa2Bg_c_classInit(void)
 {
     return new daKpa2Bg_c;
 }
+
+/* The KOOPA2BG model and collision file handles; the extern block above
+ * declares them for CleanupResources / InitResources. */
+Kpa2BgModelFilePtr daKpa2Bg_c_ModelFile(1571);
+Kpa2BgCollisionFilePtr daKpa2Bg_c_ClsnFile(1572);

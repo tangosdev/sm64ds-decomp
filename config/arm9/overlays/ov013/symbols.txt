@@ -18,9 +18,9 @@ daObjClock_c_classInit_CLOCK_LONG kind:function(arm,size=0x38) addr:0x02111674
 data_ov013_021116ac kind:data(any) addr:0x021116ac
 data_ov013_021116b0 kind:data(any) addr:0x021116b0
 __sinit_d_a_obj_clock_huriko.cpp kind:function(arm,size=0x40) addr:0x021116b8
-__sinit_ov013_021116f8 kind:function(arm,size=0x68) addr:0x021116f8
+__sinit_daObjClock_c.cpp kind:function(arm,size=0x68) addr:0x021116f8
 .p__sinit_d_a_obj_clock_huriko.cpp kind:data(word) addr:0x02111760
-.p__sinit_ov013_021116f8 kind:data(word) addr:0x02111764
+.p__sinit_daObjClock_c.cpp kind:data(word) addr:0x02111764
 data_ov013_02111780 kind:data(any) addr:0x02111780
 data_ov013_02111784 kind:data(any) addr:0x02111784
 data_ov013_0211178c kind:data(any) addr:0x0211178c
@@ -104,5 +104,6 @@ data_ov013_02112280 kind:bss addr:0x02112280
 @282 kind:bss addr:0x02112288
 data_ov013_02112294 kind:bss addr:0x02112294
 data_ov013_0211229c kind:bss addr:0x0211229c
-data_ov013_021122a4 kind:bss addr:0x021122a4
-data_ov013_021122b0 kind:bss addr:0x021122b0
+@283 kind:bss addr:0x021122a4
+@284 kind:bss addr:0x021122b0
+data_ov013_021122bc kind:bss addr:0x021122bc

@@ -24,6 +24,26 @@
  */
 
 #include "daObjKm3_Dorifu_c.h"
+#include "SharedFilePtr.h"
+
+/* Five model handles construct through func_02017acc and destroy through
+ * func_02017ab4. Five collision handles construct through func_02017b4c and
+ * destroy through SharedFilePtr_Destruct_Clsn. The five-plank table stays
+ * ROM data. */
+struct DorifuModelFilePtr : SharedFilePtr {
+    unsigned int words[2];
+    DorifuModelFilePtr(unsigned int fileId);
+    ~DorifuModelFilePtr();
+};
+struct DorifuClsnFileHandle : SharedFilePtr {
+    unsigned int words[2];
+    DorifuClsnFileHandle(unsigned int fileId);
+    ~DorifuClsnFileHandle();
+};
+typedef char DorifuModelFilePtr_size_must_be_8[
+    sizeof(DorifuModelFilePtr) == 8 ? 1 : -1];
+typedef char DorifuClsnFileHandle_size_must_be_8[
+    sizeof(DorifuClsnFileHandle) == 8 ? 1 : -1];
 
 extern "C" {
 extern daObjDorifuResources data_ov047_02112508[5];
@@ -46,3 +66,15 @@ s32 daObjKm3_Dorifu_c::CleanupResources()
 {
     return daObjDorifu_c::CleanupResources(data_ov047_02112508);
 }
+
+/* Retail construction order. mwcc emits __sinit_d_a_obj_km3_dorifu.cpp. */
+DorifuModelFilePtr data_ov047_021126a0(0x66f);
+DorifuModelFilePtr data_ov047_02112680(0x671);
+DorifuModelFilePtr data_ov047_02112668(0x673);
+DorifuModelFilePtr data_ov047_02112688(0x675);
+DorifuModelFilePtr data_ov047_02112690(0x677);
+DorifuClsnFileHandle data_ov047_02112678(0x670);
+DorifuClsnFileHandle data_ov047_02112658(0x672);
+DorifuClsnFileHandle data_ov047_02112670(0x674);
+DorifuClsnFileHandle data_ov047_02112698(0x676);
+DorifuClsnFileHandle data_ov047_02112660(0x678);

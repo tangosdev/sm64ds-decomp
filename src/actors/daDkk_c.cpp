@@ -43,6 +43,24 @@
 #include "common.h"
 #include "decl_common.h"
 #include "dBgCh_Lin.h"
+#include "SharedFilePtr.h"
+
+/* The model handle constructs through func_02017acc and destroys through
+ * func_02017ab4. The collision handle constructs through func_02017b4c and
+ * destroys through SharedFilePtr_Destruct_Clsn. data_ov025_02113814 stays
+ * the file table decl_common.h already declares. */
+struct DkkModelFilePtr : SharedFilePtr {
+    unsigned int words[2];
+    DkkModelFilePtr(unsigned int fileId);
+    ~DkkModelFilePtr();
+};
+struct DkkClsnFileHandler : SharedFilePtr {
+    unsigned int words[2];
+    DkkClsnFileHandler(unsigned int fileId);
+    ~DkkClsnFileHandler();
+};
+typedef char DkkModelFilePtr_size_must_be_8[sizeof(DkkModelFilePtr) == 8 ? 1 : -1];
+typedef char DkkClsnFileHandler_size_must_be_8[sizeof(DkkClsnFileHandler) == 8 ? 1 : -1];
 
 bool ApproachLinear(short &value, short target, short step);
 
@@ -227,3 +245,8 @@ int daDkk_c::OnAimedAtWithEgg()
  * above drags both variants in, so no forcing scaffold is needed. */
 // @symbol _ZN7daDkk_cD1Ev
 // @symbol _ZN7daDkk_cD0Ev
+
+/* Retail construction order: model 0x2dc, then collision 0x2dd.
+ * mwcc emits __sinit_daDkk_c.cpp. */
+DkkModelFilePtr data_ov025_02113a88(0x2dc);
+DkkClsnFileHandler data_ov025_02113a90(0x2dd);

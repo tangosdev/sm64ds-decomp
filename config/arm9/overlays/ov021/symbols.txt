@@ -57,10 +57,10 @@ data_ov021_021133a8 kind:data(any) addr:0x021133a8 ambiguous
 data_ov021_02113434 kind:data(any) addr:0x02113434 ambiguous
 __sinit_ov021_02113500 kind:function(arm,size=0x188) addr:0x02113500
 __sinit_daGrock_c.cpp kind:function(arm,size=0x40) addr:0x02113688
-__sinit_ov021_021136c8 kind:function(arm,size=0x6c) addr:0x021136c8
+__sinit_d_a_obj_cv_shutter.cpp kind:function(arm,size=0x6c) addr:0x021136c8
 .p__sinit_ov021_02113500 kind:data(word) addr:0x02113734
 .p__sinit_daGrock_c.cpp kind:data(word) addr:0x02113738
-.p__sinit_ov021_021136c8 kind:data(word) addr:0x0211373c
+.p__sinit_d_a_obj_cv_shutter.cpp kind:data(word) addr:0x0211373c
 data_ov021_02113760 kind:data(any) addr:0x02113760
 data_ov021_02113764 kind:data(any) addr:0x02113764
 data_ov021_02113768 kind:data(any) addr:0x02113768
@@ -234,5 +234,6 @@ data_ov021_02114a50 kind:bss addr:0x02114a50
 @887 kind:bss addr:0x02114a58
 data_ov021_02114a64 kind:bss addr:0x02114a64
 data_ov021_02114a6c kind:bss addr:0x02114a6c
-data_ov021_02114a74 kind:bss addr:0x02114a74
-data_ov021_02114a80 kind:bss addr:0x02114a80
+@373 kind:bss addr:0x02114a74
+@374 kind:bss addr:0x02114a80
+data_ov021_02114a8c kind:bss addr:0x02114a8c

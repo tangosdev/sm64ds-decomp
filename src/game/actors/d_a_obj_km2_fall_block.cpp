@@ -23,6 +23,24 @@
 #include "daObjKm2_Fall_Block_c.h"
 #include "SharedFilePtr.h"
 
+/* The model handle constructs through func_02017acc and destroys through
+ * func_02017ab4. The collision handle constructs through func_02017b4c and
+ * destroys through SharedFilePtr_Destruct_Clsn. The descriptor stays ROM data. */
+struct Km2FallModelFilePtr : SharedFilePtr {
+    unsigned int words[2];
+    Km2FallModelFilePtr(unsigned int fileId);
+    ~Km2FallModelFilePtr();
+};
+struct Km2FallClsnFileHandle : SharedFilePtr {
+    unsigned int words[2];
+    Km2FallClsnFileHandle(unsigned int fileId);
+    ~Km2FallClsnFileHandle();
+};
+typedef char Km2FallModelFilePtr_size_must_be_8[
+    sizeof(Km2FallModelFilePtr) == 8 ? 1 : -1];
+typedef char Km2FallClsnFileHandle_size_must_be_8[
+    sizeof(Km2FallClsnFileHandle) == 8 ? 1 : -1];
+
 struct CLPS_Block;
 
 struct ResourceDescriptor {
@@ -56,3 +74,8 @@ s32 daObjKm2_Fall_Block_c::CleanupResources()
 {
     return func_ov098_0213a2cc(this, &data_ov045_021130ac);
 }
+
+/* Retail construction order: model 1633, then collision 1634.
+ * mwcc emits __sinit_d_a_obj_km2_fall_block.cpp. */
+Km2FallModelFilePtr data_ov045_02113250(1633);
+Km2FallClsnFileHandle data_ov045_02113248(1634);

@@ -20,6 +20,21 @@
       "name": ".text",
       "start": "0x021111a0",
       "end": "0x021115a8"
+    },
+    {
+      "name": ".init",
+      "start": "0x02112ca8",
+      "end": "0x02112d14"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x021130f8",
+      "end": "0x021130fc"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02114500",
+      "end": "0x02114528"
     }
   ],
   "functions": [
@@ -88,12 +103,43 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov022_02114500",
+      "address": "0x02114500",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model file handle constructed with file ID 1550 (0x61e)"
+    },
+    {
+      "symbol": "data_ov022_02114508",
+      "address": "0x02114508",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision file handle constructed with file ID 1551 (0x61f)"
+    },
+    {
+      "symbol": "@602",
+      "address": "0x02114510",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the model handle"
+    },
+    {
+      "symbol": "@442",
+      "address": "0x0211451c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the collision handle"
+    }
+  ],
   "notes": [
     "Hand-curated from the 6 legacy one-function C++ sources; see the file's own header comment for the reconciliation.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov022_02113cc8' differs between the legacy file that used to hold _ZN14daObjFl_Ring_c16CleanupResourcesEv and the one that held _ZN14daObjFl_Ring_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED by dropping BOTH local declarations rather than keeping either: CleanupResources spelled it `void *` and cast its way to the first two words, InitResources spelled it as a file-local three-pointer typedef. The merged TU declares it once, as a named three-member struct, which is what the ROM says it is -- ov022 relocs.txt resolves the three words at 0x02113cc8/0x02113ccc/0x02113cd0 to ov022:0x02114500, ov022:0x02114508 and ov064:0x0211bbac, i.e. the model SharedFilePtr, the collision SharedFilePtr and the CLPS block SetFile is handed. No TUBUILD CONFLICT marker survives in the merged source.",
-    "The three file-table targets are unnamed rows in their own modules (data_ov022_02114500, data_ov022_02114508, data_ov064_0211bbac), so this TU reaches them only through the table and coins no shared names for them.",
-    "STYLE ORACLE: src/actors/daObjFl_UkiKi_c.cpp -- same overlay, same base, same inline-empty-destructor shape, same deadstrip-data RTTI licensing, member for member the same four slots."
+    "The file table's CLPS target data_ov064_0211bbac stays an unnamed row in ov064. The two ov022 handles are this TU's own .bss.",
+    "STYLE ORACLE: src/actors/daObjFl_UkiKi_c.cpp -- same overlay, same base, same inline-empty-destructor shape, same deadstrip-data RTTI licensing, member for member the same four slots.",
+    "Folded __sinit_ov022_02112ca8 into this TU: the RingModelFilePtr/RingCollisionFilePtr file-scope objects (files 1550 and 1551) make mwcc emit __sinit_daObjFl_Ring_c.cpp itself -- the same 0x6c-byte initializer with the same four call sites and literal pool. The two destructor-registration nodes emit as @602/@442, free fleet-wide on this main. The wrapper names are local; the manifest aliases their ctor/dtor mangled names to the ROM resource-family functions (func_02017acc/func_02017ab4 model, func_02017b4c/SharedFilePtr_Destruct_Clsn collision, __register_global_object->func_020731dc), exactly as daObjFl_Block_c does. No new data was added.",
+    "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); rom.sha256 above records the fleet-canonical d1506e90...c478e8 that every intact entry shares."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -111,25 +157,25 @@
         "_ZN10dBgActor_cD2Ev"
       ],
       "droppedSections": [
-        5,
         6,
         7,
-        8,
         9,
         10,
         11,
         12,
         13,
-        14,
         15,
         16,
         17,
         18,
         19,
         20,
-        21,
-        38,
-        39
+        22,
+        23,
+        24,
+        25,
+        42,
+        43
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -161,13 +207,13 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov022-daObjFl_Ring_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -180,7 +226,7 @@
       },
       "tuRange": {
         "start": "0x021111a0",
-        "end": "0x02111558",
+        "end": "0x021115a8",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -188,22 +234,104 @@
         {
           "section": ".text",
           "start": "0x021111a0",
-          "end": "0x02111558",
+          "end": "0x021115a8",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02112ca8",
+          "end": "0x02112d14",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x021130f8",
+          "end": "0x021130fc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02114500",
+          "end": "0x02114528",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 6
+          "LICENSED": 15
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              46
+            ],
+            "desired": [
+              46
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              44
+            ],
+            "desired": [
+              44
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              8,
+              14,
+              21
+            ],
+            "desired": [
+              8,
+              5,
+              21,
+              14
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                8,
+                14,
+                21
+              ],
+              "desired": [
+                8,
+                5,
+                21,
+                14
+              ],
+              "slots": [
+                5,
+                8,
+                14,
+                21
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -233,7 +361,8 @@
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
-        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
       },
       "linkerOutput": null
     }
@@ -320,6 +449,207 @@
       "symbol": "_ZN10dBgActor_cD2Ev",
       "disposition": "deadstrip",
       "reason": "classInit tail fold (2026-10-09): the folded factory's `return new daObjFl_Ring_c;` instantiates the class, so mwccarm emits dBgActor_c's base-object destructor helper. The cartridge has dBgActor_c D1/D0 only (ov002 0x020ee42c, 0x020ee464), no D2; no configured ROM symbol and no inbound relocation once the licensed function set is retained (same row as ov002/daObjBlockL_c)."
+    }
+  ],
+  "production_mode": "intact-object",
+  "init": [
+    {
+      "symbol": "__sinit_daObjFl_Ring_c.cpp",
+      "address": "0x02112ca8",
+      "size": "0x6c",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov022_02112ca8 and carries the same ten relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_daObjFl_Ring_c.cpp",
+      "address": "0x021130f8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN16RingModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN16RingModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor-registration argument and the model wrapper destructor exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN20RingCollisionFilePtrC1Ej",
+      "canonical_symbol": "func_02017b4c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b4c",
+      "evidence": "retail initializer call destination and the collision wrapper constructor exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN20RingCollisionFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b34",
+      "evidence": "retail destructor-registration argument and the collision wrapper destructor exact ABS32 relocation"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "retail destructor-registration call destination; mwcc emits __register_global_object for file-scope object construction"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_daObjFl_Ring_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_daObjFl_Ring_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@602",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-emitted destructor-registration node; DSD requires a configured global symbol at the same exact address"
+    },
+    {
+      "symbol": "@442",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-emitted destructor-registration node; DSD requires a configured global symbol at the same exact address"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02112cb8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112cc8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112cd4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017b4c",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112ce4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112cf4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov022_02114500",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02114500"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112cfc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112d00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@602",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02114510"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112d04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov022_02114508",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02114508"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112d0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017b34"
+    },
+    {
+      "section": ".init",
+      "source": "0x02112d10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@442",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x0211451c"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x021130f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_daObjFl_Ring_c.cpp",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02112ca8"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@602",
+      "to": "@602",
+      "evidence": "batch-5 atdup: @602 collides cross-module (temps are fleet-global); renumber to unused same-length @602"
     }
   ]
 }

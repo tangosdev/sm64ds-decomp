@@ -25,6 +25,7 @@
 #include "common.h"
 #include "types.h"
 #include "dScMgTrampoline2_c.h"
+#include "SharedFilePtr.h"
 #include "Particle__System.h"
 #define func_ov006_021227c8 func_ov006_021227c8_decl_common_shadow
 #define func_ov006_02122c68 func_ov006_02122c68_decl_common_shadow
@@ -52,7 +53,14 @@ struct C {
     virtual void v5(void *arg);
 };
 
-struct SharedFilePtr { void Release(); };
+/* SharedFilePtr has no fields; the two words are the handle's 8 bytes. The
+ * cartridge's ctor/dtor imports are the functions the wrapper's aliases name. */
+struct Trampoline2ModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    Trampoline2ModelFilePtr(u32 fileID);
+    ~Trampoline2ModelFilePtr();
+};
 
 struct BMD_File;
 
@@ -115,7 +123,7 @@ extern "C" void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short angZ);
 extern Matrix4x3 data_020a0e68;
 extern "C" void func_ov006_02122814(char *c);
 extern void AddVec3(struct Vector3* a, struct Vector3* b, struct Vector3* c);
-extern "C" SharedFilePtr data_ov006_02142f80;
+extern "C" Trampoline2ModelFilePtr data_ov006_02142f80;
 extern int data_ov006_02142f74;
 extern unsigned char *data_ov006_02142f7c;
 extern void func_ov006_0212287c(char *obj);
@@ -1409,3 +1417,8 @@ int func_ov006_021227c8(char* raw){
 }
 
 /* D1 and D0 come from the inline destructor in dScMgTrampoline2_c.h. */
+
+/* data_ov006_02142f80 is the model SharedFilePtr this Init LoadFile's,
+ * defined here at the end of the file (constructed as file ID 537) so its
+ * constructor does not enter .text. */
+Trampoline2ModelFilePtr data_ov006_02142f80(537);

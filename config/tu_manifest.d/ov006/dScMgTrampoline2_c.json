@@ -23,6 +23,39 @@
       "name": ".data",
       "start": "0x0213fbc4",
       "end": "0x0213fd0c"
+    },
+    {
+      "name": ".init",
+      "start": "0x0213322c",
+      "end": "0x0213326c"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x021335dc",
+      "end": "0x021335e0"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02142f80",
+      "end": "0x02142f94"
+    }
+  ],
+  "init": [
+    {
+      "symbol": "__sinit_d_s_mg_trampoline2.cpp",
+      "address": "0x0213322c",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov006_0213322c and carries the same five relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_s_mg_trampoline2.cpp",
+      "address": "0x021335dc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
   "functions": [
@@ -1179,6 +1212,66 @@
       "addend": 0,
       "target_module": "overlays(0,2,3,4,7)",
       "target_address": "0x020ad660"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213323c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017a24",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017a24"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213324c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0213325c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02142f80",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142f80"
+    },
+    {
+      "section": ".init",
+      "source": "0x02133264",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017a0c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017a0c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02133268",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@1086",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142f88"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x021335dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_s_mg_trampoline2.cpp",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213322c"
     }
   ],
   "symbol_binding_rewrites": [
@@ -1193,9 +1286,65 @@
       "from": "STB_LOPROC",
       "to": "STB_GLOBAL",
       "evidence": "mwccarm emits the inline deleting destructor with processor-specific binding; the one-function control and configured ROM symbol use global binding"
+    },
+    {
+      "symbol": "__sinit_d_s_mg_trampoline2.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_s_mg_trampoline2.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@1086",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02142f88"
     }
   ],
-  "bss": [],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN23Trampoline2ModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017a24",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017a24",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN23Trampoline2ModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017a0c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017a0c",
+      "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and the direct retail reference in this initializer"
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "data_ov006_02142f80",
+      "address": "0x02142f80",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model resource handle constructed with file ID 537; func_ov006_02122a1c loads the BMD it wraps"
+    },
+    {
+      "symbol": "@1086",
+      "address": "0x02142f88",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated model resource destructor-registration node"
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZTI14dScMgD3DBase_c",
@@ -1327,11 +1476,31 @@
           "end": "0x0213fd0c",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x0213322c",
+          "end": "0x0213326c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x021335dc",
+          "end": "0x021335e0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02142f80",
+          "end": "0x02142f94",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 57
+          "LICENSED": 61
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1343,38 +1512,208 @@
             "section": ".data",
             "original": [
               5,
+              6,
               8,
               10,
-              12,
-              14,
-              16,
-              18,
-              27,
+              13,
+              17,
+              19,
+              29,
               31,
-              35,
               37,
-              38,
-              40,
+              39,
+              41,
               42,
-              43
+              44,
+              45
             ],
             "desired": [
               5,
-              16,
-              14,
-              12,
+              6,
               10,
+              19,
+              13,
+              17,
               8,
-              18,
               31,
-              27,
-              35,
-              40,
+              29,
               37,
-              38,
+              39,
+              41,
               42,
-              43
-            ]
+              44,
+              45
+            ],
+            "anchors": {
+              "5": [
+                {
+                  "symbol": "data_ov006_0213fbc4",
+                  "address": 34864068,
+                  "sectionBase": 34864068
+                }
+              ],
+              "6": [
+                {
+                  "symbol": "g_profile_MG_TRAMPOLINE2",
+                  "address": 34864072,
+                  "sectionBase": 34864072
+                }
+              ],
+              "8": [
+                {
+                  "symbol": "data_ov006_0213fbf0",
+                  "address": 34864112,
+                  "sectionBase": 34864112
+                }
+              ],
+              "10": [
+                {
+                  "symbol": "data_ov006_0213fbd0",
+                  "address": 34864080,
+                  "sectionBase": 34864080
+                }
+              ],
+              "13": [
+                {
+                  "symbol": "data_ov006_0213fbe0",
+                  "address": 34864096,
+                  "sectionBase": 34864096
+                }
+              ],
+              "17": [
+                {
+                  "symbol": "data_ov006_0213fbe8",
+                  "address": 34864104,
+                  "sectionBase": 34864104
+                }
+              ],
+              "19": [
+                {
+                  "symbol": "data_ov006_0213fbd8",
+                  "address": 34864088,
+                  "sectionBase": 34864088
+                }
+              ],
+              "29": [
+                {
+                  "symbol": "_ZTI18dScMgTrampoline2_c",
+                  "address": 34864132,
+                  "sectionBase": 34864132
+                }
+              ],
+              "31": [
+                {
+                  "symbol": "data_ov006_0213fbf8",
+                  "address": 34864120,
+                  "sectionBase": 34864120
+                }
+              ],
+              "37": [
+                {
+                  "symbol": "data_ov006_0213fc10",
+                  "address": 34864144,
+                  "sectionBase": 34864144
+                }
+              ],
+              "39": [
+                {
+                  "symbol": "data_ov006_0213fc20",
+                  "address": 34864160,
+                  "sectionBase": 34864160
+                }
+              ],
+              "41": [
+                {
+                  "symbol": "data_ov006_0213fc34",
+                  "address": 34864180,
+                  "sectionBase": 34864180
+                }
+              ],
+              "42": [
+                {
+                  "symbol": "data_ov006_0213fc48",
+                  "address": 34864200,
+                  "sectionBase": 34864200
+                }
+              ],
+              "44": [
+                {
+                  "symbol": "_ZTS18dScMgTrampoline2_c",
+                  "address": 34864220,
+                  "sectionBase": 34864220
+                }
+              ],
+              "45": [
+                {
+                  "symbol": "_ZTV18dScMgTrampoline2_c",
+                  "address": 34864244,
+                  "sectionBase": 34864244
+                }
+              ]
+            }
+          },
+          {
+            "section": ".init",
+            "original": [
+              130
+            ],
+            "desired": [
+              130
+            ],
+            "anchors": {
+              "130": [
+                {
+                  "symbol": "__sinit_d_s_mg_trampoline2.cpp",
+                  "address": 34812460,
+                  "sectionBase": 34812460
+                }
+              ]
+            }
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              128
+            ],
+            "desired": [
+              128
+            ],
+            "anchors": {
+              "128": [
+                {
+                  "symbol": ".p__sinit_d_s_mg_trampoline2.cpp",
+                  "address": 34813404,
+                  "sectionBase": 34813404
+                }
+              ]
+            }
+          },
+          {
+            "section": ".bss",
+            "original": [
+              12,
+              24
+            ],
+            "desired": [
+              12,
+              24
+            ],
+            "anchors": {
+              "12": [
+                {
+                  "symbol": "data_ov006_02142f80",
+                  "address": 34877312,
+                  "sectionBase": 34877312
+                }
+              ],
+              "24": [
+                {
+                  "symbol": "@1086",
+                  "address": 34877320,
+                  "sectionBase": 34877320
+                }
+              ]
+            }
           }
         ],
         "objisolate": {
@@ -1383,54 +1722,54 @@
               "section": ".data",
               "original": [
                 5,
+                6,
                 8,
                 10,
-                12,
-                14,
-                16,
-                18,
-                27,
+                13,
+                17,
+                19,
+                29,
                 31,
-                35,
                 37,
-                38,
-                40,
+                39,
+                41,
                 42,
-                43
+                44,
+                45
               ],
               "desired": [
                 5,
-                16,
-                14,
-                12,
+                6,
                 10,
+                19,
+                13,
+                17,
                 8,
-                18,
                 31,
-                27,
-                35,
-                40,
+                29,
                 37,
-                38,
+                39,
+                41,
                 42,
-                43
+                44,
+                45
               ],
               "slots": [
                 5,
+                6,
                 8,
                 10,
-                12,
-                14,
-                16,
-                18,
-                27,
+                13,
+                17,
+                19,
+                29,
                 31,
-                35,
                 37,
-                38,
-                40,
+                39,
+                41,
                 42,
-                43
+                44,
+                45
               ]
             }
           ],

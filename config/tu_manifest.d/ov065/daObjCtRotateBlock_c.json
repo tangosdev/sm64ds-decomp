@@ -16,6 +16,21 @@
       "name": ".text",
       "start": "0x021196d8",
       "end": "0x02119f3c"
+    },
+    {
+      "name": ".init",
+      "start": "0x0211c660",
+      "end": "0x0211c76c"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x0211caec",
+      "end": "0x0211caf0"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0211d814",
+      "end": "0x0211d88c"
     }
   ],
   "functions": [
@@ -98,7 +113,92 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov065_0211d814",
+      "address": "0x0211d814",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model file handle constructed with file ID 0x5b6"
+    },
+    {
+      "symbol": "data_ov065_0211d81c",
+      "address": "0x0211d81c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model file handle constructed with file ID 0x5bb"
+    },
+    {
+      "symbol": "data_ov065_0211d824",
+      "address": "0x0211d824",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model file handle constructed with file ID 0x5b9"
+    },
+    {
+      "symbol": "data_ov065_0211d82c",
+      "address": "0x0211d82c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision file handle constructed with file ID 0x5ba"
+    },
+    {
+      "symbol": "data_ov065_0211d834",
+      "address": "0x0211d834",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision file handle constructed with file ID 0x5b7"
+    },
+    {
+      "symbol": "data_ov065_0211d83c",
+      "address": "0x0211d83c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model file handle constructed with file ID 0x5b8"
+    },
+    {
+      "symbol": "@951",
+      "address": "0x0211d844",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x5b6 model handle"
+    },
+    {
+      "symbol": "@628",
+      "address": "0x0211d850",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x5b9 model handle"
+    },
+    {
+      "symbol": "@895",
+      "address": "0x0211d874",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x5b8 model handle"
+    },
+    {
+      "symbol": "@630",
+      "address": "0x0211d85c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x5bb model handle"
+    },
+    {
+      "symbol": "@891",
+      "address": "0x0211d868",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x5b7 collision handle"
+    },
+    {
+      "symbol": "@632",
+      "address": "0x0211d880",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x5ba collision handle"
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZN20daObjCtRotateBlock_cD2Ev",
@@ -200,7 +300,8 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold _ZN20daObjCtRotateBlock_c12UpdateShadowEv and the one that held _ZN20daObjCtRotateBlock_c11UpdateModelEv; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold _ZN20daObjCtRotateBlock_c12UpdateShadowEv and the one that held _ZN20daObjCtRotateBlock_c13InitResourcesEv; kept the first, the other is commented out for review",
     "fold branch tu/fold-highov-0921: 9/9 MATCH. The out-of-line destructor is the key function: D2 is homeless deadstrip, Vector3D1 is the arm9 duplicate, and the _ZTV/_ZTI/_ZTS chain is deadstrip-data. Matrix4x3_FromRotationY keeps the short angle from UpdateShadow.",
-    "classInit fold (0930c): both factories are folded in last, in ROM order (CT_MECHA02 then CT_MECHA01), under the file's `#pragma defer_codegen off`, each as `return new daObjCtRotateBlock_c();` (no user-declared constructor, so the synthesized one reproduces the hand-called sequence). The new-expression makes mwccarm emit _ZN10dBgActor_cD2Ev, licensed as a compiler_only_output deadstrip row. tubuild verify: 11/11 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED. Retired src/d_a_obj_ct_rotate_block_ct_mecha02.c and src/d_a_obj_ct_rotate_block_ct_mecha01.c; their credit carries in attribution.json as path#symbol overrides."
+    "classInit fold (0930c): both factories are folded in last, in ROM order (CT_MECHA02 then CT_MECHA01), under the file's `#pragma defer_codegen off`, each as `return new daObjCtRotateBlock_c();` (no user-declared constructor, so the synthesized one reproduces the hand-called sequence). The new-expression makes mwccarm emit _ZN10dBgActor_cD2Ev, licensed as a compiler_only_output deadstrip row. tubuild verify: 11/11 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED. Retired src/d_a_obj_ct_rotate_block_ct_mecha02.c and src/d_a_obj_ct_rotate_block_ct_mecha01.c; their credit carries in attribution.json as path#symbol overrides.",
+    "Static initializer folded: the four RotateBlockModelFile handles (files 0x5b6/0x5b9/0x5b8/0x5bb), the two RotateBlockCollisionFilePtr handles (files 0x5b7/0x5ba) and their destructor-registration nodes move out of the handwritten src/unnamed shard into src/actors/daObjCtRotateBlock_c.cpp. The emitted .init, .ctor and .bss are byte-identical to retail __sinit_ov065_0211c660 with the same instruction sequence, literal pool order and relocation sites; the handwritten shard is retired. @627/@629/@631 clashed with the fleet and are renamed (@627->@951, @629->@895, @631->@891); @628/@630/@632 were free and are kept."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -227,23 +328,23 @@
         24,
         27,
         28,
-        31,
-        32,
-        33,
-        34,
-        35,
-        36,
-        37,
-        38,
-        39,
-        40,
-        41,
-        42,
         43,
         44,
         45,
         46,
-        47
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59
       ],
       "data": [
         "_ZTV20daObjCtRotateBlock_c",
@@ -275,9 +376,598 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 4 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov065-daObjCtRotateBlock_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x021196d8",
+        "end": "0x02119f3c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x021196d8",
+          "end": "0x02119f3c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x0211c660",
+          "end": "0x0211c76c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x0211caec",
+          "end": "0x0211caf0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0211d814",
+          "end": "0x0211d88c",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 25
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              62
+            ],
+            "desired": [
+              62
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              60
+            ],
+            "desired": [
+              60
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42
+            ],
+            "desired": [
+              32,
+              38,
+              34,
+              42,
+              40,
+              36,
+              31,
+              33,
+              37,
+              39,
+              35,
+              41
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42
+              ],
+              "desired": [
+                32,
+                38,
+                34,
+                42,
+                40,
+                36,
+                31,
+                33,
+                37,
+                39,
+                35,
+                41
+              ],
+              "slots": [
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42
+              ]
+            }
+          ],
+          "symbolIndices": 12,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
-  }
+  },
+  "init": [
+    {
+      "symbol": "__sinit_daObjCtRotateBlock_c.cpp",
+      "address": "0x0211c660",
+      "size": "0x10c",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov065_0211c660 (0x10c, same instruction sequence and literal pool) and carries the same relocation sites: six handle constructions with destructor registrations"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_daObjCtRotateBlock_c.cpp",
+      "address": "0x0211caec",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail; the other .ctor words belong to the remaining shards"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN20RotateBlockModelFileC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN20RotateBlockModelFileD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor registration destination and the model wrapper destructor exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN27RotateBlockCollisionFilePtrC1Ej",
+      "canonical_symbol": "func_02017b4c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b4c",
+      "evidence": "retail initializer call destination and the collision wrapper constructor exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN27RotateBlockCollisionFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b34",
+      "evidence": "retail destructor registration destination and the collision wrapper destructor exact ABS32 relocation"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and the direct retail reference in this initializer"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@627",
+      "to": "@951",
+      "evidence": "mwcc numbers this registration node @627 per TU and the fleet already defines a global @627, so the scratch link would multiply-define it"
+    },
+    {
+      "from": "@629",
+      "to": "@895",
+      "evidence": "mwcc numbers this registration node @629 per TU and the fleet already defines a global @629, so the scratch link would multiply-define it"
+    },
+    {
+      "from": "@631",
+      "to": "@891",
+      "evidence": "mwcc numbers this registration node @631 per TU and the fleet already defines a global @631, so the scratch link would multiply-define it"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_daObjCtRotateBlock_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_daObjCtRotateBlock_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@951",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0211d844"
+    },
+    {
+      "symbol": "@628",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0211d850"
+    },
+    {
+      "symbol": "@895",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0211d874"
+    },
+    {
+      "symbol": "@630",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0211d85c"
+    },
+    {
+      "symbol": "@891",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0211d868"
+    },
+    {
+      "symbol": "@632",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0211d880"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".ctor",
+      "source": "0x0211caec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_daObjCtRotateBlock_c.cpp",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211c660"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c670",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c680",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c68c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c69c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c6a8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c6b8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c6c4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c6d4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c6e0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017b4c",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c6f0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c6fc",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017b4c",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c70c",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c71c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov065_0211d814",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d814"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c724",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c728",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@951",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d844"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c72c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov065_0211d824",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d824"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c734",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@628",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d850"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c738",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov065_0211d83c",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d83c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c740",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@895",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d874"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c744",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov065_0211d81c",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d81c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c74c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@630",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d85c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c750",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov065_0211d834",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d834"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c758",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017b34"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c75c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@891",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d868"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c760",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov065_0211d82c",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d82c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c768",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@632",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d880"
+    }
+  ]
 }

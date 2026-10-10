@@ -251,6 +251,10 @@
   },
   {
    "file": "notes/agents/handoffs/promote-ov071-casket-0924.md",
+   "ref": "src/unnamed/ov071/__sinit_ov071_02122a64.c"
+  },
+  {
+   "file": "notes/agents/handoffs/promote-ov071-casket-0924.md",
    "ref": "tools/check_src_tu_compiles.py"
   },
   {
@@ -404,6 +408,10 @@
   {
    "file": "notes/agents/handoffs/src-tu-inventory-test-repair-0926.md",
    "ref": "tools/test_check_src_tu.py"
+  },
+  {
+   "file": "notes/agents/handoffs/tu-ov063-trs-0927.md",
+   "ref": "src/unnamed/ov063"
   },
   {
    "file": "notes/agents/handoffs/tu-ov063-trs-0927.md",
@@ -774,6 +782,10 @@
    "ref": "src/unnamed/ov002/__sinit_ov002_02100938.c"
   },
   {
+   "file": "notes/sinit-ownership-wave-edges.md",
+   "ref": "src/unnamed/ov002/__sinit_ov002_02107304.c"
+  },
+  {
    "file": "notes/sinit-ownership-wave-resource-handles.md",
    "ref": "src/unnamed/ov009/__sinit_ov009_02112458.c"
   },
@@ -796,6 +808,10 @@
   {
    "file": "notes/src-domain-buckets.md",
    "ref": "src/ui/messages"
+  },
+  {
+   "file": "notes/src-domain-buckets.md",
+   "ref": "src/unnamed/ov063"
   },
   {
    "file": "notes/tu-cpp-census-2026-08.md",

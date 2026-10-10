@@ -13,8 +13,8 @@
  *
  * The helpers whose first parameter was the scene are now members of
  * dScMgSnowball_c, including the 17 per-element helpers dispatched through
- * the PMF tables data_ov006_02143020/38/50/70 (8-byte {adjustor,pmf}
- * records built by __sinit_ov006_021333e0.c). Some calls stay mangled:
+ * the PMF tables data_ov006_02143020/38/50/70 (8-byte {function, 0}
+ * records). __sinit_dScMgSnowball_c.cpp copies them. Some calls stay mangled:
  * cstd::atan2 and Particle::System take Fix12 or reference
  * arguments, and decl_common.h declares a global named G2, so no
  * `namespace G2` can be opened here.
@@ -2527,3 +2527,42 @@ void dScMgSnowball_c::func_ov006_0212a3c0()
         p += 0x24;
     }
 }
+
+/* The registry word between the PMF descriptors: classInit, then the
+ * actor id 0x179 stored in both halfwords. */
+extern "C" void *dScMgSnowball_c_classInit(void);
+struct SnowballProfile {
+    void *(*init)(void);
+    unsigned short actorId;
+    unsigned short actorId2;
+};
+SnowballProfile g_profile_MG_SNOWBALL = {
+    dScMgSnowball_c_classInit, 0x179, 0x179,
+};
+
+/* Source order is copy order. Each entry is a {function, 0} descriptor;
+ * __sinit_dScMgSnowball_c.cpp copies them into the tables. */
+extern "C" PMF_0212a2e0 data_ov006_02143038[3] = {
+    &dScMgSnowball_c::func_ov006_0212a274,
+    &dScMgSnowball_c::func_ov006_0212a224,
+    &dScMgSnowball_c::func_ov006_02129d94,
+};
+extern "C" PMF_0212a224 data_ov006_02143050[4] = {
+    &dScMgSnowball_c::func_ov006_0212a110,
+    &dScMgSnowball_c::func_ov006_0212a000,
+    &dScMgSnowball_c::func_ov006_02129eec,
+    &dScMgSnowball_c::func_ov006_02129e28,
+};
+/* Six slots so the symbol runs to the overlay bss end at 0x021430a0.
+ * Only the first four are copied from descriptors; the tail stays zero. */
+Entry_02129d94 data_ov006_02143070[6] = {
+    { &dScMgSnowball_c::func_ov006_02129cb0 },
+    { &dScMgSnowball_c::func_ov006_02129b74 },
+    { &dScMgSnowball_c::func_ov006_02129a34 },
+    { &dScMgSnowball_c::func_ov006_0212992c },
+};
+Entry_02129d94 data_ov006_02143020[3] = {
+    { &dScMgSnowball_c::func_ov006_02129894 },
+    { &dScMgSnowball_c::func_ov006_021297c0 },
+    { &dScMgSnowball_c::func_ov006_0212972c },
+};

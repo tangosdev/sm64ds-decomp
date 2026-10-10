@@ -42,6 +42,24 @@ int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 extern ResourceDescriptor data_ov021_021148d0;
 }
 
+/* File 1497 / 1498 resource handles. The static initializer registers
+ * their destructors; the spellings are this TU's, mapped onto
+ * func_02017acc / func_02017ab4 and func_02017b4c /
+ * SharedFilePtr_Destruct_Clsn. */
+struct CvShutterModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    CvShutterModelFilePtr(u32 fileID);
+    ~CvShutterModelFilePtr();
+};
+
+struct CvShutterCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    CvShutterCollisionFilePtr(u32 fileID);
+    ~CvShutterCollisionFilePtr();
+};
+
 // @symbol daObjCvShutter_c_classInit
 extern "C" daObjCvShutter_c *daObjCvShutter_c_classInit()
 {
@@ -83,3 +101,9 @@ s32 daObjCvShutter_c::CleanupResources()
    then dActor_c. A one-level chain would emit two. This class adds no member
    with a destructor of its own, and D0's trailing deallocation is the inline
    `operator delete` it inherits, which is why nothing here names a heap. */
+
+/* Definitions stay after the last .text function so they do not insert
+ * a function into the ROM-ascending run. Construction order is the model
+ * handle, then the collision handle. */
+CvShutterModelFilePtr data_ov021_02114a6c(1497);
+CvShutterCollisionFilePtr data_ov021_02114a64(1498);

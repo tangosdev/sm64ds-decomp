@@ -19,9 +19,9 @@
  *
  * The flower runs a three-state machine (mState 0..2). The per-state
  * enter/update pairs live in the pointer-to-member table
- * data_ov002_021097bc, which is zero in the overlay image and filled at run
- * time by __sinit_ov002_021014e4 from six Pair records; relocs.txt maps
- * each record to its function, so every Begin/State slot is proven.
+ * data_ov002_021097bc, defined at the bottom of the file; its PMF fields
+ * are zero in the overlay image and filled at run time by this TU's
+ * __sinit from six descriptor records.
  *
  * comment leftovers:
  *  - DropShadow and InitResources keep their mangled `_ZN` spellings for
@@ -57,10 +57,11 @@ struct Vector3_16f;
 struct Callback;
 typedef struct { int x, y, z; } V3;
 
-/* One row of the state table: enter (pmf[0]) and per-frame update (pmf[1]). */
+/* One row of the state table: enter action (pmf[0]), per-frame update
+ * (pmf[1]) and a name literal. */
 typedef void (daObjPowerUpItem_c::*FlowerPMF)();
-struct FlowerEntry { FlowerPMF pmf[2]; int extra; };
-extern FlowerEntry data_ov002_021097bc[];
+struct FlowerEntry { FlowerPMF pmf[2]; const char *name; };
+extern FlowerEntry data_ov002_021097bc[3];
 
 /* Values of mState, by the transitions between the helpers below. */
 enum {
@@ -534,3 +535,41 @@ extern "C" daObjPowerUpItem_c *daObjPowerUpItem_c_classInit()
 {
     return new daObjPowerUpItem_c();
 }
+
+struct PowerUpItemSpawnInfo {
+    daObjPowerUpItem_c *(*classInit)();
+    s16 executePriority; /* +4: also POWER_UP_ITEM registry id 0x0132 = 306 */
+    s16 renderPriority;  /* +6 */
+    u32 actorFlags;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    Fix12i clipDistance;
+    Fix12i farDistance;
+};
+typedef char PowerUpItemSpawnInfo_size_must_be_0x1c[
+    sizeof(PowerUpItemSpawnInfo) == 0x1c ? 1 : -1];
+
+// @symbol g_profile_POWER_UP_ITEM
+extern "C" PowerUpItemSpawnInfo g_profile_POWER_UP_ITEM = {
+    daObjPowerUpItem_c_classInit, 0x0132, 0x0125, 2,
+    0x00060000, 0x00200000, 0x01000000, 0x01000000
+};
+
+/* -------------------------------------------------------------------------- */
+/* The state names sit in 8/12-byte slots ahead of the pointer-to-member
+ * descriptors. */
+static char s_closeName[8] = "CLOSE";
+static char s_openName[8] = "OPEN";
+static char s_openWaitName[12] = "OPEN_WAIT";
+
+/* The state table SetState/UpdateState dispatch through, by mState: the closed
+ * flower falling (LAUNCHED), the pop animation (OPENING) and the open flower
+ * waiting for a player (RESTING). The definition lives at the bottom so the
+ * descriptor objects mwccarm materializes for the PMF constants are numbered
+ * clear of the anonymous objects earlier TUs already pinned (@NNN is a shared
+ * namespace). */
+FlowerEntry data_ov002_021097bc[3] = {
+    {&daObjPowerUpItem_c::BeginLaunched, &daObjPowerUpItem_c::StateLaunched, s_closeName},
+    {&daObjPowerUpItem_c::BeginOpening,  &daObjPowerUpItem_c::StateOpening,  s_openName},
+    {&daObjPowerUpItem_c::BeginResting,  &daObjPowerUpItem_c::StateResting,  s_openWaitName},
+};

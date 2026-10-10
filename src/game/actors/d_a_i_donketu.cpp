@@ -40,6 +40,24 @@
  */
 
 #include "daIDonketu_c.h"
+#include "SharedFilePtr.h"
+
+/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
+ * veneer pairs (func_02017acc / func_02017ab4 for the model,
+ * SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim for the four
+ * animation handles), spelled through declared-only subclasses so the
+ * static initializer names the real entry points. The code reaches them
+ * through the data_ov027_021138f4 pointer table. */
+struct IDonketuModelFilePtr : SharedFilePtr {
+    u32 words[2];
+    IDonketuModelFilePtr(u32 fileID);
+    ~IDonketuModelFilePtr();
+};
+struct IDonketuAnimationFileHandle : SharedFilePtr {
+    u32 words[2];
+    IDonketuAnimationFileHandle(u32 fileID);
+    ~IDonketuAnimationFileHandle();
+};
 
 extern "C" {
 extern int data_ov027_021138f4[];
@@ -192,3 +210,11 @@ int daIDonketu_c::UpdateRunState()
 /* daDonketu_c's and daBDonketu_c's, which is what three siblings sharing a    */
 /* base look like.                                                             */
 /* -------------------------------------------------------------------------- */
+
+/* The Chill Bully's model and animation handles, in the sinit call order the
+ * data_ov027_021138f4 file table repeats. */
+IDonketuModelFilePtr data_ov027_02113c10(0x2e4);
+IDonketuAnimationFileHandle data_ov027_02113c18(0x2e5);
+IDonketuAnimationFileHandle data_ov027_02113c08(0x2e6);
+IDonketuAnimationFileHandle data_ov027_02113c20(0x2e7);
+IDonketuAnimationFileHandle data_ov027_02113c28(0x2e8);

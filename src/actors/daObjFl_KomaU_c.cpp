@@ -24,6 +24,23 @@
 #include "dBgW.h"
 #include "Player.h"
 
+/* The model handle constructs through func_02017acc and destroys through
+ * func_02017ab4. The collision handle constructs through func_02017b4c and
+ * destroys through SharedFilePtr_Destruct_Clsn. data_ov064_0211adbc stays
+ * the file table. */
+struct KomaUModelFilePtr : SharedFilePtr {
+    unsigned int words[2];
+    KomaUModelFilePtr(unsigned int fileId);
+    ~KomaUModelFilePtr();
+};
+struct KomaUClsnFileHandle : SharedFilePtr {
+    unsigned int words[2];
+    KomaUClsnFileHandle(unsigned int fileId);
+    ~KomaUClsnFileHandle();
+};
+typedef char KomaUModelFilePtr_size_must_be_8[sizeof(KomaUModelFilePtr) == 8 ? 1 : -1];
+typedef char KomaUClsnFileHandle_size_must_be_8[sizeof(KomaUClsnFileHandle) == 8 ? 1 : -1];
+
 #pragma defer_codegen off
 
 struct CLPS_Block;
@@ -186,3 +203,8 @@ extern "C" daObjFl_KomaU_c *daObjFl_KomaU_c_classInit()
 {
     return new daObjFl_KomaU_c();
 }
+
+/* Retail construction order: model 1527, then collision 1528.
+ * mwcc emits __sinit_daObjFl_KomaU_c.cpp. */
+KomaUModelFilePtr data_ov064_0211c790(1527);
+KomaUClsnFileHandle data_ov064_0211c798(1528);

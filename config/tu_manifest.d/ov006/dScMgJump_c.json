@@ -20,6 +20,21 @@
       "name": ".text",
       "start": "0x020edec0",
       "end": "0x020ee994"
+    },
+    {
+      "name": ".init",
+      "start": "0x02130e9c",
+      "end": "0x02130f00"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x021335a4",
+      "end": "0x021335a8"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02142188",
+      "end": "0x021421b0"
     }
   ],
   "functions": [
@@ -144,7 +159,36 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov006_02142188",
+      "address": "0x02142188",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model resource handle constructed with file ID 0x204; InitResources selects it through data_ov006_02142184"
+    },
+    {
+      "symbol": "data_ov006_02142190",
+      "address": "0x02142190",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model resource handle constructed with file ID 0x203; InitResources selects it through data_ov006_02142184"
+    },
+    {
+      "symbol": "@599",
+      "address": "0x02142198",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the file-0x203 model handle"
+    },
+    {
+      "symbol": "@77",
+      "address": "0x021421a4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the file-0x204 model handle"
+    }
+  ],
   "notes": [
     "Merged by hand from 17 enrolled shards, in ROM-ascending order, over a skeleton from tools/tubuild.py create. The file is written highest-address-first because mwccarm emits one .text section per function in REVERSE source order; no defer_codegen pragma is used here.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov004_020b0a54' differs between the legacy file that used to hold func_ov006_020ee2c4 and the one that held func_ov006_020ee3ec; kept the first at create time. Settled against neither: include/decl_common.h already declares it taking int, so this TU declares it not at all and uses the shared one. The shard spelling void * was the guess.",
@@ -228,7 +272,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov006-dScMgJump_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -252,19 +296,101 @@
           "end": "0x020ee994",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02130e9c",
+          "end": "0x02130f00",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x021335a4",
+          "end": "0x021335a8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02142188",
+          "end": "0x021421b0",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 17
+          "LICENSED": 23
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              63
+            ],
+            "desired": [
+              63
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              61
+            ],
+            "desired": [
+              61
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              7,
+              8,
+              16,
+              23
+            ],
+            "desired": [
+              7,
+              8,
+              23,
+              16
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                7,
+                8,
+                16,
+                23
+              ],
+              "desired": [
+                7,
+                8,
+                23,
+                16
+              ],
+              "slots": [
+                7,
+                8,
+                16,
+                23
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -294,11 +420,10 @@
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
-        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "sha256": "ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40",
         "matchesStockRom": true
       },
-      "linkerOutput": null,
-      "recordCurrency": "THIS RECORD PREDATES THE LAST SOURCE EDIT, AND CANNOT BE REFRESHED. It was taken immediately before promotion, which is the only window: once the promotion's single `complete` entry is in config/arm9/overlays/ov006/delinks.txt, tools/tubuild.py linkcheck routes the file through the intact-production path in tools/tu_production.py, which refuses a text-only TU with `intact production requires one .text claim and at least one non-text claim`. That refusal is structural, not a defect in this entry: the already-promoted, untouched ov006/dScMgJump2_c refuses identically on the same command, and flipping this entry's status back to text-verified does not change it, because the routing keys on the delinks entry rather than on the status. After this record was taken, three extern declarations in the source were settled against their definitions (func_ov006_020c4060, func_ov006_020c7300 and func_ov006_020c7418, each re-spelled to the zero-argument form its landed definition uses). Those edits are covered by evidence taken AFTER them: tools/tubuild.py verify still reports 17/17 MATCH with objisolate clean, and a full tools/rombuild.py run -- a real whole-tree mwldarm link through this same merged delinks entry -- reports module fidelity 106/106 exact and a ROM whose sha256 is d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8, the stock hash this record's own `rom` block carries."
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [
@@ -392,6 +517,182 @@
       "reason": "Emitted here because this TU homes the class's vtable: include/dScMgJump_c.h defines `virtual ~dScMgJump_c()` in the class body, so the destructor is no longer the key function and the first virtual DECLARED but not defined inline -- InitResources, at ov006:0x020ee690 -- takes that role. It is defined in this translation unit and in no other, so mwccarm puts _ZTI/_ZTS/_ZTV in this object alone. (The destructor has to be defined in the class body: the cartridge keeps D1 at 0x020edec0 BELOW D0 at 0x020edf54, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses; no _ZN11dScMgJump_cD2Ev exists anywhere in the cartridge.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov006:0x0213cbe4, in ov006's .data (0x02133600-0x021402e0) and outside this entry's only licensed range (.text 0x020edec0-0x020ee994), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. SCOPE OF THAT COMPARISON, limited once. 0x0213cbe4 is the vtable's ADDRESS POINT, not the start of the emitted 0x98-byte object: the table begins two words earlier -- 0x0213cbdc holds the offset-to-top 0 and 0x0213cbe0 holds 0x0213cb98, `&_ZTI11dScMgJump_c` -- and those two words lie outside the symbol's extent (they fall inside data_ov006_0213cbc8), so anchoring the comparison at the symbol leaves them uncompared; both were read out of extracted/dsd/arm9_overlays/ov006.bin by hand and hold exactly those values. The slots themselves are covered in full: the next symbol is data_ov006_0213cc74, so the _ZTV extent 0x0213cbe4-0x0213cc74 is 0x90 bytes, all 36 slots, exactly the emitted object minus its two preamble words. Slot 0 of that table reads 0x020ee690, which is InitResources -- the same address the key-function argument above rests on, confirmed from the cartridge rather than inferred.",
       "canonical_module": "ov006",
       "canonical_address": "0x0213cbe4"
+    }
+  ],
+  "init": [
+    {
+      "symbol": "__sinit_dScMgJump_c.cpp",
+      "address": "0x02130e9c",
+      "size": "0x64",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov006_02130e9c and carries the same 9 relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_dScMgJump_c.cpp",
+      "address": "0x021335a4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN18MgJumpModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN18MgJumpModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and the retail reference in this initializer"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@600",
+      "to": "@77",
+      "evidence": "emitted destructor-registration node name collides with the configured @600 on ov081 on main; @77 is unused everywhere and shorter than the original"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_dScMgJump_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_dScMgJump_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@599",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02142198"
+    },
+    {
+      "symbol": "@77",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x021421a4"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02130eac",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130ebc",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130ec8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130ed8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130ee8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02142190",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142190"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130ef0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130ef4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@599",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142198"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130ef8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02142188",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02142188"
+    },
+    {
+      "section": ".init",
+      "source": "0x02130efc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@77",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021421a4"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x021335a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_dScMgJump_c.cpp",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02130e9c"
     }
   ]
 }

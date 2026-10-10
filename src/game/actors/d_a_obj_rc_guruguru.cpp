@@ -153,3 +153,25 @@ s32 daObjRc_Guruguru_c::CleanupResources()
    D1 and then D0 -- the cartridge's own order -- and no D2, which is the order
    and the set the ROM carries. Written out of line here instead, mwcc emits D0
    ahead of D1 and rombuild refuses the object outright. */
+
+/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
+ * veneer pairs (func_02017acc / func_02017ab4 for the model, func_02017b4c /
+ * SharedFilePtr_Destruct_Clsn for the collision), spelled through
+ * declared-only subclasses so the static initializer names the real entry
+ * points. */
+struct RcGuruguruModelFilePtr : SharedFilePtr {
+    u32 words[2];
+    RcGuruguruModelFilePtr(u32 fileID);
+    ~RcGuruguruModelFilePtr();
+};
+struct RcGuruguruCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+    RcGuruguruCollisionFilePtr(u32 fileID);
+    ~RcGuruguruCollisionFilePtr();
+};
+
+// @symbol __sinit_d_a_obj_rc_guruguru.cpp
+/* The retail initializer constructs the model first, then the collision
+ * file. */
+RcGuruguruModelFilePtr data_ov036_021140ac(0x6a4);      /* model */
+RcGuruguruCollisionFilePtr data_ov036_021140b4(0x6a5);  /* collision */

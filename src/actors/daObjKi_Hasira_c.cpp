@@ -2,7 +2,10 @@
 /* Production translation unit for ov016/daObjKi_Hasira_c, hand-curated.
  * 8 function(s), .text 0x02112a00..0x02112ef4: the seven class members plus
  * the daObjKi_Hasira_c_classInit registry factory folded in from
- * fold-lane-c-0929.
+ * fold-lane-c-0929. The TU also owns the static initializer
+ * __sinit_daObjKi_Hasira_c.cpp (.init 0x02113978..0x021139e4, folded from
+ * the __sinit_ov016_02113978 shard) with its .ctor word and the two file
+ * handles' .bss.
  *
  * Jolly Roger Bay's stone pillar (KI_HASIRA; `hasira` = pillar): a
  * dBgActor_c that waits for a player to come within 1300 units, turns to
@@ -59,13 +62,30 @@ bool ApproachLinear(short &value, short target, short step);
 
 typedef long long s64;
 
+/* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
+ * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
+ * are local; the manifest aliases the generated names to those ROM symbols. */
+struct HasiraModelFile : SharedFilePtr {
+    u32 words[2];
+
+    HasiraModelFile(u32 fileID);
+    ~HasiraModelFile();
+};
+
+struct HasiraCollisionFile : SharedFilePtr {
+    u32 words[2];
+
+    HasiraCollisionFile(u32 fileID);
+    ~HasiraCollisionFile();
+};
+
 struct dCamera_c;
 
 extern "C" {
 /* This class's model and collision files (ov016 .bss) and the CLPS block
  * dBgW_KcMbg::SetFile is handed (ov016 .data). */
-extern SharedFilePtr RockPillar_ModelFile;
-extern SharedFilePtr RockPillar_ClsnFile;
+extern HasiraModelFile RockPillar_ModelFile;
+extern HasiraCollisionFile RockPillar_ClsnFile;
 extern char data_ov016_02113cac[];
 
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
@@ -235,3 +255,9 @@ void daObjKi_Hasira_c::func_ov016_02112a9c()
     mModel.mat4x3.m[10] = mPosY >> 3;
     mModel.mat4x3.m[11] = mPosZ >> 3;
 }
+
+/* Static-init globals (was the handwritten __sinit_ov016_02113978 shard).
+ * Definition order is the retail initializer's construction order: the
+ * 1597 model handle, then the 1598 collision handle. */
+HasiraModelFile RockPillar_ModelFile(1597);
+HasiraCollisionFile RockPillar_ClsnFile(1598);

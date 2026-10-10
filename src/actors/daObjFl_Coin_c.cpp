@@ -63,6 +63,22 @@ enum {
  * defines the body; the call passes it by reference. */
 struct CLPS_Block { int x; };
 
+/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
+ * veneer pairs (func_02017acc / func_02017ab4 for the models, func_02017b4c /
+ * SharedFilePtr_Destruct_Clsn for the collision), spelled through
+ * declared-only subclasses so the static initializer names the real entry
+ * points. */
+struct FlCoinModelFilePtr : SharedFilePtr {
+    u32 words[2];
+    FlCoinModelFilePtr(u32 fileID);
+    ~FlCoinModelFilePtr();
+};
+struct FlCoinCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+    FlCoinCollisionFilePtr(u32 fileID);
+    ~FlCoinCollisionFilePtr();
+};
+
 extern "C" {
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int n, const struct Vector3 *v);
 extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, int x, int y, int z);
@@ -74,7 +90,7 @@ KCL_File* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(SharedFilePtr&);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, KCL_File*, const Matrix4x3&, int fix, short s, CLPS_Block&);
 void func_020393c4(int* p, int v);
 extern SharedFilePtr *data_ov064_0211adc8[];
-extern SharedFilePtr data_ov064_0211c800;
+extern FlCoinCollisionFilePtr data_ov064_0211c800;
 extern CLPS_Block data_ov064_0211baac;
 extern Matrix4x3 data_020a0e68;
 void _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(void* self, const Matrix4x3&, s16);
@@ -541,3 +557,35 @@ void daObjFl_Coin_c_EmitDestructor(daObjFl_Coin_c *coin)
 {
     coin->~daObjFl_Coin_c();
 }
+
+// @symbol __sinit_daObjFl_Coin_c.cpp
+/* The retail initializer constructs the fourteen model handles in file ID
+ * order, then the collision handle, then fills the six-entry state table. */
+FlCoinModelFilePtr data_ov064_0211c810(0x5ff);
+FlCoinModelFilePtr data_ov064_0211c818(0x601);
+FlCoinModelFilePtr data_ov064_0211c7e8(0x602);
+FlCoinModelFilePtr data_ov064_0211c840(0x603);
+FlCoinModelFilePtr data_ov064_0211c820(0x604);
+FlCoinModelFilePtr data_ov064_0211c830(0x605);
+FlCoinModelFilePtr data_ov064_0211c7e0(0x606);
+FlCoinModelFilePtr data_ov064_0211c808(0x607);
+FlCoinModelFilePtr data_ov064_0211c7d8(0x608);
+FlCoinModelFilePtr data_ov064_0211c7f0(0x609);
+FlCoinModelFilePtr data_ov064_0211c828(0x60a);
+FlCoinModelFilePtr data_ov064_0211c7f8(0x60b);
+FlCoinModelFilePtr data_ov064_0211c838(0x60c);
+FlCoinModelFilePtr data_ov064_0211c848(0x60d);
+FlCoinCollisionFilePtr data_ov064_0211c800(0x600);
+
+extern "C" {
+extern Entry data_ov064_0211bf68;
+extern Entry data_ov064_0211bf70;
+extern Entry data_ov064_0211bf78;
+extern Entry data_ov064_0211bf80;
+extern Entry data_ov064_0211bf88;
+extern Entry data_ov064_0211bf90;
+}
+Entry data_ov064_0211c904[6] = {
+    data_ov064_0211bf80, data_ov064_0211bf68, data_ov064_0211bf90,
+    data_ov064_0211bf70, data_ov064_0211bf88, data_ov064_0211bf78,
+};

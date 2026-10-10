@@ -50,6 +50,7 @@ extern int data_ov006_0213aca8[2];
    these names are already mangled, so C linkage means "use literally". */
 extern unsigned short data_ov006_0213bd64[];
 extern void *data_ov006_02141774[];
+extern int data_ov006_02133810[];
 extern void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);
 extern void **data_ov006_0213bd30[];
 extern void *data_ov006_0213406c[];
@@ -1733,3 +1734,17 @@ extern "C" void _ZN12dMgCardObj_cD1Ev(void *elem)
  * 0xa8) from the vtable slots that name them, in cartridge order -- written
  * out of line here it emitted D0 ahead of D1 and rombuild's fail-closed
  * isolate refused the TU. The header's own banner carries the full reason. */
+
+/* The sprite-pointer table Render indexes by card kind: the elements are
+ * not constant, so the cartridge fills it at load time from
+ * data_ov006_02133810 in suit order. */
+void *data_ov006_02141774[15] = {
+    (void *)data_ov006_02133810[0], (void *)data_ov006_02133810[1],
+    (void *)data_ov006_02133810[2], (void *)data_ov006_02133810[5],
+    (void *)data_ov006_02133810[6], (void *)data_ov006_02133810[0xd],
+    (void *)data_ov006_02133810[0xe], (void *)data_ov006_02133810[0xb],
+    (void *)data_ov006_02133810[0xc], (void *)data_ov006_02133810[7],
+    (void *)data_ov006_02133810[8], (void *)data_ov006_02133810[9],
+    (void *)data_ov006_02133810[0xa], (void *)data_ov006_02133810[3],
+    (void *)data_ov006_02133810[4]
+};

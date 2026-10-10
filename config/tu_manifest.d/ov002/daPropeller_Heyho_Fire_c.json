@@ -16,6 +16,21 @@
       "name": ".text",
       "start": "0x020feabc",
       "end": "0x020ff014"
+    },
+    {
+      "name": ".init",
+      "start": "0x02108094",
+      "end": "0x021080d0"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02108134",
+      "end": "0x02108138"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02111190",
+      "end": "0x021111a0"
     }
   ],
   "functions": [
@@ -109,16 +124,33 @@
       "size": "0x00000048",
       "legacy_source": "src/d_a_propeller_heyho_fire.c",
       "ordinal": 12
+    },
+    {
+      "symbol": "__sinit_daPropeller_Heyho_Fire_c.cpp",
+      "address": "0x02108094",
+      "size": "0x0000003c",
+      "legacy_source": "src/actors/daPropeller_Heyho_Fire_c.cpp",
+      "ordinal": 13
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov002_02111190",
+      "address": "0x02111190",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "state table copied by __sinit_daPropeller_Heyho_Fire_c.cpp from data_ov002_0210d600 and data_ov002_0210d5f8"
+    }
+  ],
   "notes": [
     "Thirteen-function unit 0x020feabc..0x020ff014: D1 and D0 from the out-of-line destructor, the five helpers func_ov002_020feb50..func_ov002_020fed7c, CleanupResources, OnPendingDestroy, Render, Behavior, InitResources, then the registry factory daPropeller_Heyho_Fire_c_classInit.",
     "Written in ROM order under `#pragma defer_codegen off`, which keeps D1 ahead of D0.",
     "func_ov002_020fed7c copies the scratch matrix data_020a0e68 as a local twelve-word struct, as its C shard did; a copy through the C++ Matrix4x3 DIFFs.",
     "daPropeller_Heyho_Fire_c_classInit is written as `return new daPropeller_Heyho_Fire_c;`: the implicit constructor reproduces the loose file's fBase_c::operator new(0x35c), dEnemyBase_c base constructor, vptr store and the three member constructors byte for byte.",
-    "InitResources was the one complete=False shard in the run: it loaded the model through `func_0211d610`, a name no symbols.txt defines. ov002's relocs record that load and CleanupResources' as overlays(65,75); the TU names data_ov065_0211d610, ov065's unambiguous kind:bss row, which CleanupResources already used."
+    "InitResources was the one complete=False shard in the run: it loaded the model through `func_0211d610`, a name no symbols.txt defines. ov002's relocs record that load and CleanupResources' as overlays(65,75); the TU names data_ov065_0211d610, ov065's unambiguous kind:bss row, which CleanupResources already used.",
+    "Folded __sinit_ov002_02108094 into this TU. mwcc emits __sinit_daPropeller_Heyho_Fire_c.cpp, which copies data_ov002_0210d600 and data_ov002_0210d5f8 into the state table data_ov002_02111190. The handwritten src/unnamed/ov002/__sinit_ov002_02108094.c is retired.",
+    "LOCAL WORKER NOTE: this machine stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to this tree stock build and to the strict control, while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container fields outside every module range. The content proof is the same either way: moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, and the four owned ranges identical."
   ],
   "compiler_only_output": [
     {
@@ -217,8 +249,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov002-daPropeller_Heyho_Fire_c/daPropeller_Heyho_Fire_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 13,
-    "functions_declared": 13,
+    "functions_matched": 14,
+    "functions_declared": 14,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN24daPropeller_Heyho_Fire_cD2Ev",
@@ -232,7 +264,6 @@
         9,
         10,
         13,
-        30,
         31,
         32,
         33,
@@ -248,7 +279,8 @@
         43,
         44,
         45,
-        46
+        46,
+        47
       ],
       "data": [
         "_ZTV24daPropeller_Heyho_Fire_c",
@@ -283,6 +315,201 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov002-daPropeller_Heyho_Fire_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020feabc",
+        "end": "0x020ff014",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020feabc",
+          "end": "0x020ff014",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02108094",
+          "end": "0x021080d0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02108134",
+          "end": "0x02108138",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02111190",
+          "end": "0x021111a0",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 16
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              50
+            ],
+            "desired": [
+              50
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              48
+            ],
+            "desired": [
+              48
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              30
+            ],
+            "desired": [
+              30
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
-  }
+  },
+  "init": [
+    {
+      "symbol": "__sinit_daPropeller_Heyho_Fire_c.cpp",
+      "address": "0x02108094",
+      "size": "0x3c",
+      "binding": "STB_GLOBAL",
+      "evidence": "byte-identical to retail __sinit_ov002_02108094"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_daPropeller_Heyho_Fire_c.cpp",
+      "address": "0x02108134",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "ctor-table word pointing at __sinit_daPropeller_Heyho_Fire_c.cpp"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_daPropeller_Heyho_Fire_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global at this address"
+    },
+    {
+      "symbol": ".p__sinit_daPropeller_Heyho_Fire_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x021080c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210d600",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210d600"
+    },
+    {
+      "section": ".init",
+      "source": "0x021080c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210d5f8",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210d5f8"
+    },
+    {
+      "section": ".init",
+      "source": "0x021080cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_02111190",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02111190"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02108134",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_daPropeller_Heyho_Fire_c.cpp",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02108094"
+    }
+  ]
 }

@@ -53,8 +53,8 @@
  *   address name.
  * - SharedFilePtr has no recovered layout, so the BCA_File handle each SetAnim
  *   call passes is still read as the raw word at +4.
- * - the three SharedFilePtr handles at 0x0211c9bc/0x0211c9c4/0x0211c9cc are
- *   overlay data this TU consumes and does not own.
+ * - the three file handles at 0x0211c9bc/0x0211c9c4/0x0211c9cc are defined at
+ *   the end of this file. Their constructors are not written out here.
  *
  * Consolidated from eight one-function sources, one per symbol below. Their
  * retired paths are recorded per function in this TU's manifest entry; naming
@@ -73,6 +73,23 @@
 #include "daObjShell_c.h"
 #include "SharedFilePtr.h"
 #include "dCc_c.h"
+
+/* 8-byte file handles. The model uses func_02017acc / func_02017ab4; both
+ * animations use SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim.
+ * The spellings are local. The manifest aliases them to those ROM symbols. */
+struct ShellModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    ShellModelFilePtr(u32 fileID);
+    ~ShellModelFilePtr();
+};
+
+struct ShellAnimationFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    ShellAnimationFilePtr(u32 fileID);
+    ~ShellAnimationFilePtr();
+};
 
 /* Actor ids are from symbols/actor_debug_names.tsv. */
 enum {
@@ -103,10 +120,11 @@ void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
 
 /* This overlay's three file handles: the model, the lunge animation and the
  * idle animation. InitResources loads all three, CleanupResources releases
- * them, and Behavior swaps between the two animations. */
-extern SharedFilePtr data_ov064_0211c9bc;
-extern SharedFilePtr data_ov064_0211c9c4;
-extern SharedFilePtr data_ov064_0211c9cc;
+ * them, and Behavior swaps between the two animations. Defined at the end
+ * of this file so the constructors do not enter .text. */
+extern ShellAnimationFilePtr data_ov064_0211c9bc;
+extern ShellModelFilePtr data_ov064_0211c9c4;
+extern ShellAnimationFilePtr data_ov064_0211c9cc;
 }
 
 // @symbol daObjShell_c_classInit
@@ -314,3 +332,9 @@ void daObjShell_c::func_ov064_0211a9b4()
  * dActor_c base. D0 additionally returns the object to the actor heap through
  * the inline operator delete.
  */
+
+/* Source order is construction order: model 1164, lunge anim 1166, idle anim
+ * 1165. Registration nodes are compiler temps. */
+ShellModelFilePtr data_ov064_0211c9c4(1164);
+ShellAnimationFilePtr data_ov064_0211c9cc(1166);
+ShellAnimationFilePtr data_ov064_0211c9bc(1165);

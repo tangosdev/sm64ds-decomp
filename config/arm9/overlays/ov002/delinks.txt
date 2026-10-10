@@ -64,6 +64,9 @@ src/game/actors/d_a_obj_abuku.cpp:
 src/actors/daObjBlockL_c.cpp:
     complete
     .text start:0x020b35a0 end:0x020b415c
+    .init start:0x02100d44 end:0x02100e50
+    .ctor start:0x021080e0 end:0x021080e4
+    .bss start:0x0210dcb8 end:0x0210dd30
 
 src/actors/daObjBlockItemTag_c.cpp:
     complete
@@ -148,6 +151,9 @@ src/game/actors/daObjPushblock_c.cpp:
 src/actors/daObjPowerUpItem_c.cpp:
     complete
     .text start:0x020b9148 end:0x020b9e64
+    .init start:0x021014e4 end:0x02101588
+    .ctor start:0x021080f8 end:0x021080fc
+    .data start:0x02109730 end:0x0210987c
 
 src/actors/daObjSwitch_c.cpp:
     complete
@@ -188,6 +194,9 @@ src/actors/daObjTatefuda_c.cpp:
 src/game/actors/d_a_obj_wakame.cpp:
     complete
     .text start:0x020bc414 end:0x020bc5e0
+    .init start:0x02101894 end:0x02101900
+    .ctor start:0x02108104 end:0x02108108
+    .bss start:0x0210e0d4 end:0x0210e0fc
 
 src/actors/daObjHeart_c.cpp:
     complete
@@ -1336,6 +1345,9 @@ src/actors/daObj1UpLogo_c.cpp:
 src/game/actors/d_a_obj_bc_switch.cpp:
     complete
     .text start:0x020f11b0 end:0x020f15fc
+    .init start:0x02107304 end:0x02107370
+    .ctor start:0x02108124 end:0x02108128
+    .bss start:0x02110ac4 end:0x02110aec
 
 src/game/actors/d_a_e_switch.cpp:
     complete
@@ -1397,34 +1409,22 @@ src/actors/dM3dGLin.cpp:
 src/actors/daPropeller_Heyho_Fire_c.cpp:
     complete
     .text start:0x020feabc end:0x020ff014
+    .init start:0x02108094 end:0x021080d0
+    .ctor start:0x02108134 end:0x02108138
+    .bss start:0x02111190 end:0x021111a0
 
 src/unnamed/ov002/__sinit_ov002_02100560.c:
     complete
     .init start:0x02100560 end:0x02100938
 
-src/unnamed/ov002/__sinit_ov002_02100d44.c:
-    complete
-    .init start:0x02100d44 end:0x02100e50
 
 src/unnamed/ov002/__sinit_ov002_02100f84.c:
     complete
     .init start:0x02100f84 end:0x02101064
 
-src/unnamed/ov002/__sinit_ov002_021014e4.c:
-    complete
-    .init start:0x021014e4 end:0x02101588
-
-src/unnamed/ov002/__sinit_ov002_02101894.c:
-    complete
-    .init start:0x02101894 end:0x02101900
-
 src/unnamed/ov002/__sinit_ov002_021019d0.c:
     complete
     .init start:0x021019d0 end:0x02106e40
-
-src/unnamed/ov002/__sinit_ov002_02107304.c:
-    complete
-    .init start:0x02107304 end:0x02107370
 
 src/unnamed/ov002/__sinit_ov002_02107370.c:
     complete
@@ -1437,7 +1437,3 @@ src/unnamed/ov002/__sinit_ov002_02107f88.c:
 src/unnamed/ov002/__sinit_ov002_0210804c.c:
     complete
     .init start:0x0210804c end:0x02108094
-
-src/unnamed/ov002/__sinit_ov002_02108094.c:
-    complete
-    .init start:0x02108094 end:0x021080d0

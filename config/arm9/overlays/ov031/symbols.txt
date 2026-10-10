@@ -9,8 +9,8 @@ daObjHsBillboard_c_classInit_HS_Y_STAR kind:function(arm,size=0x38) addr:0x02111
 daObjHsBillboard_c_classInit_HS_STAR kind:function(arm,size=0x38) addr:0x021113b4
 daObjHsBillboard_c_classInit_HS_MOON kind:function(arm,size=0x38) addr:0x021113ec
 data_ov031_02111424 kind:data(any) addr:0x02111424
-__sinit_ov031_02111434 kind:function(arm,size=0xb8) addr:0x02111434
-.p__sinit_ov031_02111434 kind:data(word) addr:0x021114ec
+__sinit_d_a_obj_hs_billboard.cpp kind:function(arm,size=0xb8) addr:0x02111434
+.p__sinit_d_a_obj_hs_billboard.cpp kind:data(word) addr:0x021114ec
 data_ov031_02111500 kind:data(any) addr:0x02111500
 data_ov031_02111504 kind:data(any) addr:0x02111504
 data_ov031_02111508 kind:data(any) addr:0x02111508
@@ -61,9 +61,9 @@ data_ov031_02111a00 kind:bss addr:0x02111a00
 data_ov031_02111a08 kind:bss addr:0x02111a08
 data_ov031_02111a10 kind:bss addr:0x02111a10
 data_ov031_02111a18 kind:bss addr:0x02111a18
-data_ov031_02111a20 kind:bss addr:0x02111a20
-data_ov031_02111a2c kind:bss addr:0x02111a2c
-data_ov031_02111a38 kind:bss addr:0x02111a38
-data_ov031_02111a44 kind:bss addr:0x02111a44
-data_ov031_02111a4c kind:bss addr:0x02111a4c ambiguous
+@278 kind:bss addr:0x02111a20
+@277 kind:bss addr:0x02111a2c
+@275 kind:bss addr:0x02111a38
+@276 kind:bss addr:0x02111a44
+data_ov031_02111a50 kind:bss addr:0x02111a50
 data_ov031_02111a58 kind:bss addr:0x02111a58 ambiguous

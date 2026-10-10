@@ -26,6 +26,9 @@ src/game/actors/daTrsTrap_c/d_a_trs_trap_classinits.cpp:
 src/game/actors/d_a_obj_th_fall_block.cpp:
     complete
     .text start:0x0211d3a0 end:0x0211d4b8
+    .init start:0x0211e590 end:0x0211e5fc
+    .ctor start:0x0211e704 end:0x0211e708
+    .bss start:0x0211ef58 end:0x0211ef80
 
 src/game/actors/daPiano_c/d_a_piano.cpp:
     complete
@@ -34,7 +37,3 @@ src/game/actors/daPiano_c/d_a_piano.cpp:
     .ctor start:0x0211e708 end:0x0211e70c
     .data start:0x0211ecd8 end:0x0211ecf8
     .bss start:0x0211ef80 end:0x0211efdc
-
-src/unnamed/ov063/__sinit_ov063_0211e590.c:
-    complete
-    .init start:0x0211e590 end:0x0211e5fc

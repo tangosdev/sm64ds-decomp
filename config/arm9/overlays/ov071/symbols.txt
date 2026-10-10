@@ -92,11 +92,11 @@ data_ov071_021226a4 kind:data(any) addr:0x021226a4
 __sinit_Scuttlebug.cpp kind:function(arm,size=0x21c) addr:0x021226ac
 __sinit_ov071_021228c8 kind:function(arm,size=0x154) addr:0x021228c8
 __sinit_d_a_ey_bm.cpp kind:function(arm,size=0x48) addr:0x02122a1c
-__sinit_ov071_02122a64 kind:function(arm,size=0xcc) addr:0x02122a64
+__sinit_daObjCasket_c.cpp kind:function(arm,size=0xcc) addr:0x02122a64
 .p__sinit_Scuttlebug.cpp kind:data(word) addr:0x02122b30
 .p__sinit_ov071_021228c8 kind:data(word) addr:0x02122b34
 .p__sinit_d_a_ey_bm.cpp kind:data(word) addr:0x02122b38
-.p__sinit_ov071_02122a64 kind:data(word) addr:0x02122b3c
+.p__sinit_daObjCasket_c.cpp kind:data(word) addr:0x02122b3c
 data_ov071_02122b60 kind:data(any) addr:0x02122b60
 data_ov071_02122b68 kind:data(any) addr:0x02122b68
 data_ov071_02122b70 kind:data(any) addr:0x02122b70
@@ -146,6 +146,7 @@ _ZTI13daObjCasket_c kind:data(any) addr:0x02122e94
 _ZTS13daObjCasket_c kind:data(any) addr:0x02122ea0
 g_profile_CASKET kind:data(any) addr:0x02122eb0 ambiguous
 data_ov071_02122ecc kind:data(any) addr:0x02122ecc
+data_ov071_02122ef4 kind:data(any) addr:0x02122ef4
 _ZTV13daObjCasket_c kind:data(any) addr:0x02122efc
 data_ov071_02122f80 kind:bss addr:0x02122f80
 data_ov071_02122f88 kind:bss addr:0x02122f88
@@ -166,5 +167,6 @@ data_ov071_021230b8 kind:bss addr:0x021230b8
 @660 kind:bss addr:0x021230c4
 data_ov071_021230d0 kind:bss addr:0x021230d0
 data_ov071_021230d8 kind:bss addr:0x021230d8
-data_ov071_021230e0 kind:bss addr:0x021230e0
-data_ov071_021230ec kind:bss addr:0x021230ec
+@645 kind:bss addr:0x021230e0
+@646 kind:bss addr:0x021230ec
+data_ov071_021230f8 kind:bss addr:0x021230f8

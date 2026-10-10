@@ -26,6 +26,16 @@
 #include "SharedFilePtr.h"
 #include "BMD_File.h"
 
+/* Four model handles. Each constructs through func_02017acc and destroys
+ * through func_02017ab4. The four-pointer table stays ROM rodata. */
+struct HsBillboardModelFilePtr : SharedFilePtr {
+    unsigned int words[2];
+    HsBillboardModelFilePtr(unsigned int fileId);
+    ~HsBillboardModelFilePtr();
+};
+typedef char HsBillboardModelFilePtr_size_must_be_8[
+    sizeof(HsBillboardModelFilePtr) == 8 ? 1 : -1];
+
 extern "C" {
 extern SharedFilePtr *data_ov031_02111424[];
 void func_ov031_02111214(daObjHsBillboard_c *self);
@@ -109,3 +119,9 @@ extern "C" void func_ov031_02111214(daObjHsBillboard_c *self)
    then the owned Model at 0xd4, then dActor_c's own teardown, which is where
    the actor-list unlink lives. D0's trailing deallocation is the inherited
    inline `operator delete`, which is why nothing here names a heap. */
+
+/* Retail construction order. mwcc emits __sinit_d_a_obj_hs_billboard.cpp. */
+HsBillboardModelFilePtr data_ov031_02111a08(1565);
+HsBillboardModelFilePtr data_ov031_02111a00(1566);
+HsBillboardModelFilePtr data_ov031_02111a10(1569);
+HsBillboardModelFilePtr data_ov031_02111a18(1564);

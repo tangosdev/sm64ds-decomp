@@ -42,6 +42,24 @@
 #include "Sound.h"
 #include "dBgW.h"
 
+/* Two model handles construct through func_02017acc and destroy through
+ * func_02017ab4. Two collision handles construct through func_02017b4c and
+ * destroy through SharedFilePtr_Destruct_Clsn. The file tables stay ROM data. */
+struct KiFuneModelFilePtr : SharedFilePtr {
+    unsigned int words[2];
+    KiFuneModelFilePtr(unsigned int fileId);
+    ~KiFuneModelFilePtr();
+};
+struct KiFuneClsnFileHandle : SharedFilePtr {
+    unsigned int words[2];
+    KiFuneClsnFileHandle(unsigned int fileId);
+    ~KiFuneClsnFileHandle();
+};
+typedef char KiFuneModelFilePtr_size_must_be_8[
+    sizeof(KiFuneModelFilePtr) == 8 ? 1 : -1];
+typedef char KiFuneClsnFileHandle_size_must_be_8[
+    sizeof(KiFuneClsnFileHandle) == 8 ? 1 : -1];
+
 extern "C" {
 extern void func_020393a4(int* p, int v);
 extern void func_020393d4(int* p, int v);
@@ -144,3 +162,9 @@ void daObjKi_Fune_c::func_ov016_021126a8()
     mModel.mat4x3.m[10] = mPosY >> 3;
     mModel.mat4x3.m[11] = mPosZ >> 3;
 }
+
+/* Retail construction order. mwcc emits __sinit_d_a_obj_ki_fune.cpp. */
+KiFuneModelFilePtr data_ov016_02114dd4(1595);
+KiFuneModelFilePtr data_ov016_02114de4(1593);
+KiFuneClsnFileHandle data_ov016_02114ddc(1596);
+KiFuneClsnFileHandle data_ov016_02114dcc(1594);

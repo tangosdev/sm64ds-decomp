@@ -19,6 +19,9 @@ src/actors/daIbl_c.cpp:
 src/actors/daWanwan2_c.cpp:
     complete
     .text start:0x021431c4 end:0x021443f4
+    .init start:0x021475a4 end:0x02147698
+    .ctor start:0x02147df0 end:0x02147df4
+    .bss start:0x021486a4 end:0x02148704
 
 src/actors/daDoor_c.cpp:
     complete
@@ -52,8 +55,4 @@ src/game/actors/daObjPathLift_c.cpp:
 src/unnamed/ov100/__sinit_ov100_021474e8.c:
     complete
     .init start:0x021474e8 end:0x021475a4
-
-src/unnamed/ov100/__sinit_ov100_021475a4.c:
-    complete
-    .init start:0x021475a4 end:0x02147698
 

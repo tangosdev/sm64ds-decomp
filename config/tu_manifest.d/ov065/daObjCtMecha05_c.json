@@ -16,6 +16,21 @@
       "name": ".text",
       "start": "0x0211ab60",
       "end": "0x0211b360"
+    },
+    {
+      "name": ".init",
+      "start": "0x0211c890",
+      "end": "0x0211c8fc"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x0211caf8",
+      "end": "0x0211cafc"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0211d904",
+      "end": "0x0211d92c"
     }
   ],
   "functions": [
@@ -84,7 +99,36 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "TTC_MovingBar_ModelFile",
+      "address": "0x0211d904",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model file handle constructed with file ID 0x5c2"
+    },
+    {
+      "symbol": "TTC_MovingBar_ClsnFile",
+      "address": "0x0211d90c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision file handle constructed with file ID 0x5c3"
+    },
+    {
+      "symbol": "@637",
+      "address": "0x0211d914",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x5c2 model handle"
+    },
+    {
+      "symbol": "@634",
+      "address": "0x0211d920",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated destructor-registration node for the 0x5c3 collision handle"
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZN7Vector3D1Ev",
@@ -187,7 +231,8 @@
     "The live linker map bounds this class translation unit at 0x0211ab60..0x0211b328. Cleanup folded the adjacent CT_MECHA05 factory at 0x0211b328..0x0211b360 as return new daObjCtMecha05_c(). Leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj((unsigned)size).",
     "One inline genuine destructor makes mwccarm emit the retail D1 then D0 pair without a D2. return new emits homeless _ZN10dBgActor_cD2Ev, recorded for dead stripping. The dBgCh_Gnd local also emits an exact, unreferenced duplicate of Vector3's inline D1; the manifest records that compiler-only output for dead stripping.",
     "The unisolated object naturally emits daObjCtMecha05_c RTTI, type-name, typed SpawnInfo, and full vtable storage in retail order. romdata_check reports zero differing or unnamed objects; inherited vague-linkage RTTI is explicitly externalized to its canonical homes.",
-    "Production enrollment verifies all nine class functions including the folded typed factory. InitResources retains the measured Fix12-by-value ABI seam and an explicit model-file local required for retail code shape. daObjCtMecha05_c_classInit and g_profile_CT_MECHA05 are lineage-supported reconstructions from the ROM RTTI class, literal registry ID, measured factory shape, and descriptor relationship; exact original SM64DS spellings are not preserved. Historical aliases were TTC_MovingBar_Spawn and TTC_MovingBar_SpawnInfo."
+    "Production enrollment verifies all nine class functions including the folded typed factory. InitResources retains the measured Fix12-by-value ABI seam and an explicit model-file local required for retail code shape. daObjCtMecha05_c_classInit and g_profile_CT_MECHA05 are lineage-supported reconstructions from the ROM RTTI class, literal registry ID, measured factory shape, and descriptor relationship; exact original SM64DS spellings are not preserved. Historical aliases were TTC_MovingBar_Spawn and TTC_MovingBar_SpawnInfo.",
+    "Static initializer folded: the Mecha05ModelFile handle (file 0x5c2), the Mecha05CollisionFilePtr handle (file 0x5c3) and their destructor-registration nodes move out of the handwritten src/unnamed shard into src/game/actors/daObjCtMecha05_c.cpp, carrying the TU already-used TTC_MovingBar_ModelFile/TTC_MovingBar_ClsnFile names (wcmizu precedent). The emitted .init, .ctor and .bss are byte-identical to retail __sinit_ov065_0211c890 with the same instruction sequence, literal pool order and relocation sites; the handwritten shard is retired. @517/@518 both clashed with the fleet and are renamed (@517->@637, @518->@634). The .bss claim 0x0211d904..0x0211d92c ends exactly at the next symbol; no bound row is needed. The retired shard data_ov065_0211d904/90c alias rows and their stale decl_common.h lines are dropped per S42. The retired shard converted-baseline row is dropped per the c62c3266 precedent."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -207,28 +252,28 @@
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
-        5,
         6,
         7,
-        8,
         9,
         10,
         11,
         12,
         13,
-        14,
         15,
         16,
         17,
         18,
         19,
         20,
-        21,
         22,
         23,
-        30,
-        42,
-        43
+        24,
+        25,
+        26,
+        27,
+        34,
+        46,
+        47
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -262,9 +307,369 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 3 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov065-daObjCtMecha05_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0211ab60",
+        "end": "0x0211b360",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0211ab60",
+          "end": "0x0211b360",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x0211c890",
+          "end": "0x0211c8fc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x0211caf8",
+          "end": "0x0211cafc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0211d904",
+          "end": "0x0211d92c",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 15
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              50
+            ],
+            "desired": [
+              50
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              48
+            ],
+            "desired": [
+              48
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              8,
+              14,
+              21
+            ],
+            "desired": [
+              8,
+              5,
+              21,
+              14
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                8,
+                14,
+                21
+              ],
+              "desired": [
+                8,
+                5,
+                21,
+                14
+              ],
+              "slots": [
+                5,
+                8,
+                14,
+                21
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
-  }
+  },
+  "init": [
+    {
+      "symbol": "__sinit_daObjCtMecha05_c.cpp",
+      "address": "0x0211c890",
+      "size": "0x6c",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov065_0211c890 (0x6c, same instruction sequence and literal pool) and carries the same relocation sites: two handle constructions with destructor registrations"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_daObjCtMecha05_c.cpp",
+      "address": "0x0211caf8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail; the other .ctor words belong to the remaining shards"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN16Mecha05ModelFileC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN16Mecha05ModelFileD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor registration destination and the model wrapper destructor exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN23Mecha05CollisionFilePtrC1Ej",
+      "canonical_symbol": "func_02017b4c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b4c",
+      "evidence": "retail initializer call destination and the collision wrapper constructor exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN23Mecha05CollisionFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b34",
+      "evidence": "retail destructor registration destination and the collision wrapper destructor exact ABS32 relocation"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and the direct retail reference in this initializer"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@517",
+      "to": "@637",
+      "evidence": "mwcc numbers this registration node @517 per TU and the fleet already defines a global @517, so the scratch link would multiply-define it"
+    },
+    {
+      "from": "@518",
+      "to": "@634",
+      "evidence": "mwcc numbers this registration node @518 per TU and the fleet already defines a global @518, so the scratch link would multiply-define it"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_daObjCtMecha05_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_daObjCtMecha05_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@637",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0211d914"
+    },
+    {
+      "symbol": "@634",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0211d920"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".ctor",
+      "source": "0x0211caf8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_daObjCtMecha05_c.cpp",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211c890"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c8a0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c8b0",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c8bc",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017b4c",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c8cc",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c8dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "TTC_MovingBar_ModelFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d904"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c8e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c8e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@637",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d914"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c8ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "TTC_MovingBar_ClsnFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d90c"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c8f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017b34"
+    },
+    {
+      "section": ".init",
+      "source": "0x0211c8f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@634",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d920"
+    }
+  ]
 }

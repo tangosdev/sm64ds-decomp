@@ -40,6 +40,25 @@
 #include "daObjSimpleBg_c.h"
 #include "SharedFilePtr.h"
 
+/* Six model handles construct through func_02017acc and destroy through
+ * func_02017ab4. Six collision handles construct through func_02017b4c and
+ * destroy through SharedFilePtr_Destruct_Clsn. The file tables above these
+ * objects stay ROM data. */
+struct SimpleBgModelFilePtr : SharedFilePtr {
+    unsigned int words[2];
+    SimpleBgModelFilePtr(unsigned int fileId);
+    ~SimpleBgModelFilePtr();
+};
+struct SimpleBgClsnFilePtr : SharedFilePtr {
+    unsigned int words[2];
+    SimpleBgClsnFilePtr(unsigned int fileId);
+    ~SimpleBgClsnFilePtr();
+};
+typedef char SimpleBgModelFilePtr_size_must_be_8[
+    sizeof(SimpleBgModelFilePtr) == 8 ? 1 : -1];
+typedef char SimpleBgClsnFilePtr_size_must_be_8[
+    sizeof(SimpleBgClsnFilePtr) == 8 ? 1 : -1];
+
 struct FileRow {
     SharedFilePtr *file;
     u8 pad[8];
@@ -196,3 +215,17 @@ extern "C" daObjSimpleBg_c *daObjSimpleBg_c_classInit_KI_IWA()
 {
     return new daObjSimpleBg_c();
 }
+
+/* Retail construction order. mwcc emits __sinit_daObjSimpleBg_c.cpp from these. */
+SimpleBgModelFilePtr data_ov102_0214e710(0x643);
+SimpleBgModelFilePtr data_ov102_0214e6e8(0x63f);
+SimpleBgModelFilePtr data_ov102_0214e700(0x59d);
+SimpleBgModelFilePtr data_ov102_0214e718(0x461);
+SimpleBgModelFilePtr data_ov102_0214e730(0x68b);
+SimpleBgModelFilePtr data_ov102_0214e720(0x68f);
+SimpleBgClsnFilePtr data_ov102_0214e738(0x644);
+SimpleBgClsnFilePtr data_ov102_0214e6f0(0x640);
+SimpleBgClsnFilePtr data_ov102_0214e6e0(0x59e);
+SimpleBgClsnFilePtr data_ov102_0214e6f8(0x462);
+SimpleBgClsnFilePtr data_ov102_0214e708(0x68c);
+SimpleBgClsnFilePtr data_ov102_0214e728(0x690);

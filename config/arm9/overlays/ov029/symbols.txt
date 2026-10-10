@@ -69,20 +69,20 @@ data_ov029_02112ac0 kind:data(any) addr:0x02112ac0 ambiguous
 data_ov029_02112adc kind:data(any) addr:0x02112adc ambiguous
 data_ov029_02112b08 kind:data(any) addr:0x02112b08 ambiguous
 data_ov029_02112b2c kind:data(any) addr:0x02112b2c
-__sinit_ov029_02112b38 kind:function(arm,size=0x6c) addr:0x02112b38
+__sinit_d_a_obj_wc_obj01.cpp kind:function(arm,size=0x6c) addr:0x02112b38
 __sinit_d_a_obj_wc_obj02.cpp kind:function(arm,size=0x6c) addr:0x02112ba4
 __sinit_d_a_obj_wc_obj03.cpp kind:function(arm,size=0x3c) addr:0x02112c10
 __sinit_d_a_obj_wc_obj05.cpp kind:function(arm,size=0x6c) addr:0x02112c4c
-__sinit_ov029_02112cb8 kind:function(arm,size=0x6c) addr:0x02112cb8
-__sinit_ov029_02112d24 kind:function(arm,size=0x6c) addr:0x02112d24
+__sinit_d_a_obj_wc_obj06.cpp kind:function(arm,size=0x6c) addr:0x02112cb8
+__sinit_d_a_obj_wc_obj07.cpp kind:function(arm,size=0x6c) addr:0x02112d24
 __sinit_d_a_obj_wc_mizu.cpp kind:function(arm,size=0x6c) addr:0x02112d90
 __sinit_d_a_obj_wc_obj04.cpp kind:function(arm,size=0x6c) addr:0x02112dfc
-.p__sinit_ov029_02112b38 kind:data(word) addr:0x02112e68
+.p__sinit_d_a_obj_wc_obj01.cpp kind:data(word) addr:0x02112e68
 .p__sinit_d_a_obj_wc_obj02.cpp kind:data(word) addr:0x02112e6c
 .p__sinit_d_a_obj_wc_obj03.cpp kind:data(word) addr:0x02112e70
 .p__sinit_d_a_obj_wc_obj05.cpp kind:data(word) addr:0x02112e74
-.p__sinit_ov029_02112cb8 kind:data(word) addr:0x02112e78
-.p__sinit_ov029_02112d24 kind:data(word) addr:0x02112e7c
+.p__sinit_d_a_obj_wc_obj06.cpp kind:data(word) addr:0x02112e78
+.p__sinit_d_a_obj_wc_obj07.cpp kind:data(word) addr:0x02112e7c
 .p__sinit_d_a_obj_wc_mizu.cpp kind:data(word) addr:0x02112e80
 .p__sinit_d_a_obj_wc_obj04.cpp kind:data(word) addr:0x02112e84
 data_ov029_02112ea0 kind:data(any) addr:0x02112ea0
@@ -227,8 +227,8 @@ _ZTV15daObjWc_Obj04_c kind:data(any) addr:0x021141a0
 data_ov029_021141cc kind:data(any) addr:0x021141cc ambiguous
 data_ov029_02114220 kind:bss addr:0x02114220
 data_ov029_02114228 kind:bss addr:0x02114228
-data_ov029_02114230 kind:bss addr:0x02114230
-data_ov029_0211423c kind:bss addr:0x0211423c
+@80 kind:bss addr:0x02114230
+@81 kind:bss addr:0x0211423c
 data_ov029_02114248 kind:bss addr:0x02114248
 data_ov029_02114250 kind:bss addr:0x02114250
 @438 kind:bss addr:0x02114258
@@ -241,12 +241,12 @@ data_ov029_0211428c kind:bss addr:0x0211428c
 @440 kind:bss addr:0x021142a0
 data_ov029_021142ac kind:bss addr:0x021142ac
 data_ov029_021142b4 kind:bss addr:0x021142b4
-data_ov029_021142bc kind:bss addr:0x021142bc
-data_ov029_021142c8 kind:bss addr:0x021142c8
+@82 kind:bss addr:0x021142bc
+@83 kind:bss addr:0x021142c8
 data_ov029_021142d4 kind:bss addr:0x021142d4
 data_ov029_021142dc kind:bss addr:0x021142dc
-data_ov029_021142e4 kind:bss addr:0x021142e4
-data_ov029_021142f0 kind:bss addr:0x021142f0
+@85 kind:bss addr:0x021142e4
+@84 kind:bss addr:0x021142f0
 daObjWc_Obj07_c_ModelFile kind:bss addr:0x021142fc
 daObjWc_Obj07_c_ClsnFile kind:bss addr:0x02114304
 @42 kind:bss addr:0x0211430c

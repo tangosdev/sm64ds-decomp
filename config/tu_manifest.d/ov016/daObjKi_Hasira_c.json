@@ -11,13 +11,29 @@
     "class label(s): daObjKi_Hasira_c -- the cartridge's own RTTI spelling. Read out of extracted/overlays/overlay_0016.bin (ov016 loads at 0x021111a0): _ZTS at 0x02114ac8 is the 18-byte string \"16daObjKi_Hasira_c\" plus its NUL; _ZTI at 0x02114abc reads [__si_class_type_info+8 (0x0209a764), that string, _ZTI10dBgActor_c (ov002 0x021089ec)]; and the word at 0x02114afc -- the typeinfo slot of the two-word header before the _ZTV address point 0x02114b00 -- relocates to that same _ZTI (ov016 relocs.txt `from:0x02114afc kind:load to:0x02114abc`). The class carried the coined name RockPillar until the commit before this one.",
     "MEASURED: the empty inline destructor in the class header emits D1 ahead of D0, the cartridge's order (0x02112a00 then 0x02112a44), and no D2. Same lever as the dBgActor_c leaves config/tu_manifest.d/ov022/daObjFl_Ring_c.json and daObjFl_UkiKi_c.json.",
     "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)",
-    "fold-lane-c-0929: daObjKi_Hasira_c_classInit (0x02112ec4..0x02112ef4) abuts this TU's own range with no gap (the next class, src/game/actors/d_a_obj_ki_ita.cpp, begins exactly at 0x02112ef4) and tu_map never attributed it because it cuts on symbol name"
+    "fold-lane-c-0929: daObjKi_Hasira_c_classInit (0x02112ec4..0x02112ef4) abuts this TU's own range with no gap (the next class, src/game/actors/d_a_obj_ki_ita.cpp, begins exactly at 0x02112ef4) and tu_map never attributed it because it cuts on symbol name",
+    "sinit/ov016-hasira: folded the __sinit_ov016_02113978 static-initializer shard (.init 0x02113978..0x021139e4) into this already-promoted TU, widening the complete delinks.txt claim with .init/.ctor/.bss sections. The shard constructed the RockPillar_ModelFile (1597) and RockPillar_ClsnFile (1598) SharedFilePtr handles with destructor registration; the TU now defines them as HasiraModelFile/HasiraCollisionFile file-scope objects in retail construction order, and the compiler-generated __sinit_daObjKi_Hasira_c.cpp is byte-identical to the shard."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x02112a00",
       "end": "0x02112ef4"
+    },
+    {
+      "name": ".init",
+      "start": "0x02113978",
+      "end": "0x021139e4"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02113ac4",
+      "end": "0x02113ac8"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02114e1c",
+      "end": "0x02114e44"
     }
   ],
   "functions": [
@@ -79,7 +95,36 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "RockPillar_ClsnFile",
+      "address": "0x02114e1c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision file handle constructed with file ID 1598; InitResources loads it through the SharedFilePtr base"
+    },
+    {
+      "symbol": "RockPillar_ModelFile",
+      "address": "0x02114e24",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model file handle constructed with file ID 1597; InitResources loads it through the SharedFilePtr base"
+    },
+    {
+      "symbol": "@161",
+      "address": "0x02114e2c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node for the 1598 collision handle (emitted @658, renumbered fleet-free)"
+    },
+    {
+      "symbol": "@160",
+      "address": "0x02114e38",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node for the 1597 model handle (emitted @657, renumbered fleet-free)"
+    }
+  ],
   "notes": [
     "Hand-curated from the 7 legacy one-function sources (six C++ members and the C helper func_ov016_02112a9c); see the file's own header comment for the reconciliation.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov016_02112a9c' differs between the legacy file that used to hold _ZN16daObjKi_Hasira_c8BehaviorEv and the one that held _ZN16daObjKi_Hasira_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED by dropping BOTH declarations (the Behavior source spelled the parameter void *, the InitResources source char *): the helper is now defined in this TU and declared once with its real parameter type, daObjKi_Hasira_c *, with no byte change. No TUBUILD CONFLICT marker survives in the merged source.",
@@ -107,26 +152,26 @@
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
-        5,
         6,
         7,
-        8,
         9,
         10,
         11,
         12,
         13,
-        14,
         15,
         16,
         17,
         18,
         19,
         20,
-        21,
-        33,
-        38,
-        39
+        22,
+        23,
+        24,
+        25,
+        37,
+        42,
+        43
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -158,13 +203,13 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 3 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov016-daObjKi_Hasira_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -177,7 +222,7 @@
       },
       "tuRange": {
         "start": "0x02112a00",
-        "end": "0x02112ec4",
+        "end": "0x02112ef4",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -185,21 +230,75 @@
         {
           "section": ".text",
           "start": "0x02112a00",
-          "end": "0x02112ec4",
+          "end": "0x02112ef4",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02113978",
+          "end": "0x021139e4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02113ac4",
+          "end": "0x02113ac8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02114e1c",
+          "end": "0x02114e44",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 7
+          "LICENSED": 14
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              46
+            ],
+            "desired": [
+              46
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              44
+            ],
+            "desired": [
+              44
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              8,
+              14,
+              21
+            ],
+            "desired": [
+              5,
+              8,
+              14,
+              21
+            ]
+          }
+        ],
         "objisolate": null,
         "errors": null
       },
@@ -230,7 +329,7 @@
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
-        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "sha256": "ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40",
         "matchesStockRom": true
       },
       "linkerOutput": null
@@ -325,6 +424,212 @@
       "canonical_module": "ov016",
       "canonical_address": "0x02114b00",
       "reason": "This class's own vtable, emitted as vague linkage because the destructor is this class's key function. The compiled object is 0x88 bytes because it includes the two-word [offset-to-top][typeinfo] header; the cartridge's _ZTV symbol at ov016:0x02114b00 points past that header, at the first virtual slot, so the ROM interval is 0x02114af8..0x02114b80 (the next word, 0x02114b80, is _ZTI13daObjKi_Ita_c). Either way it is this module's .data, outside the .text range this entry claims, so it is discarded rather than claimed."
+    }
+  ],
+  "production_mode": "intact-object",
+  "init": [
+    {
+      "symbol": "__sinit_daObjKi_Hasira_c.cpp",
+      "address": "0x02113978",
+      "size": "0x6c",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov016_02113978 (0x6c, same instruction sequence and literal pool) and carries the same relocation sites: model-handle construction, collision-handle construction, each with destructor registration"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_daObjKi_Hasira_c.cpp",
+      "address": "0x02113ac4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail; the other .ctor words belong to the remaining shards"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN15HasiraModelFileC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN15HasiraModelFileD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor registration destination and the model wrapper destructor exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN19HasiraCollisionFileC1Ej",
+      "canonical_symbol": "func_02017b4c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b4c",
+      "evidence": "retail initializer call destination and the collision wrapper constructor exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN19HasiraCollisionFileD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b34",
+      "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and the two direct retail references in this initializer"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_daObjKi_Hasira_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_daObjKi_Hasira_c.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@160",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02114e38 (emitted @657, renumbered fleet-free)"
+    },
+    {
+      "symbol": "@161",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02114e2c (emitted @658, renumbered fleet-free)"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02113988",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02113998",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021139a4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017b4c",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021139b4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x021139c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "RockPillar_ModelFile",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02114e24"
+    },
+    {
+      "section": ".init",
+      "source": "0x021139cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x021139d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@160",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02114e38"
+    },
+    {
+      "section": ".init",
+      "source": "0x021139d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "RockPillar_ClsnFile",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02114e1c"
+    },
+    {
+      "section": ".init",
+      "source": "0x021139dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017b34"
+    },
+    {
+      "section": ".init",
+      "source": "0x021139e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@161",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02114e2c"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02113ac4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_daObjKi_Hasira_c.cpp",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02113978"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@657",
+      "to": "@160",
+      "evidence": "emitted destructor-registration node collides with ov002 @657; renumber to fleet-free name of the same length"
+    },
+    {
+      "from": "@658",
+      "to": "@161",
+      "evidence": "emitted destructor-registration node renumbered alongside @657 so both nodes leave the collision-prone emission range; @161 is unused everywhere and the same length"
     }
   ]
 }

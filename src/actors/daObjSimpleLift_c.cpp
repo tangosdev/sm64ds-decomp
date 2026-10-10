@@ -56,6 +56,20 @@
  * IsClsnInRange and SetFile stay scalar externs: the Fix12<int> method
  * forms size-DIFF (see the file comment). func_020393d4 stores the
  * beforeClsn callback; an inlined store is four bytes short. */
+struct SimpleLiftModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    SimpleLiftModelFilePtr(u32 fileID);
+    ~SimpleLiftModelFilePtr();
+};
+
+struct SimpleLiftClsnFileHandle : SharedFilePtr {
+    u32 words[2];
+
+    SimpleLiftClsnFileHandle(u32 fileID);
+    ~SimpleLiftClsnFileHandle();
+};
+
 extern "C" {
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 unsigned short DecIfAbove0_Short(unsigned short *p);
@@ -64,6 +78,21 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *mc, void *kcl, void *mtx, int scale, s16 angY, void *clps);
 void func_020393d4(void *collider, void *callback);
 extern char data_ov091_0213502c[];
+
+extern SimpleLiftModelFilePtr  data_ov091_02135520;
+extern SimpleLiftClsnFileHandle data_ov091_02135538;
+extern SimpleLiftModelFilePtr  data_ov091_02135560;
+extern SimpleLiftClsnFileHandle data_ov091_021354f8;
+extern SimpleLiftModelFilePtr  data_ov091_02135528;
+extern SimpleLiftClsnFileHandle data_ov091_02135518;
+extern SimpleLiftModelFilePtr  data_ov091_02135558;
+extern SimpleLiftClsnFileHandle data_ov091_02135550;
+extern SimpleLiftModelFilePtr  data_ov091_02135510;
+extern SimpleLiftClsnFileHandle data_ov091_02135540;
+extern SimpleLiftModelFilePtr  data_ov091_02135548;
+extern SimpleLiftClsnFileHandle data_ov091_02135500;
+extern SimpleLiftModelFilePtr  data_ov091_02135508;
+extern SimpleLiftClsnFileHandle data_ov091_02135530;
 }
 
 /* Emission order is ROM order. Do not reorder. */
@@ -204,3 +233,20 @@ extern "C" daObjSimpleLift_c *daObjSimpleLift_c_classInit_KM1_DERU()
 {
     return new daObjSimpleLift_c();
 }
+
+/* One model+KCL SharedFilePtr pair per variant, constructed in the retail
+ * sinit's interleaved order (variant's model first, then its collision). */
+SimpleLiftModelFilePtr data_ov091_02135520(0x647);
+SimpleLiftClsnFileHandle data_ov091_02135538(0x648);
+SimpleLiftModelFilePtr data_ov091_02135560(0x679);
+SimpleLiftClsnFileHandle data_ov091_021354f8(0x67a);
+SimpleLiftModelFilePtr data_ov091_02135528(0x67b);
+SimpleLiftClsnFileHandle data_ov091_02135518(0x67c);
+SimpleLiftModelFilePtr data_ov091_02135558(0x6a9);
+SimpleLiftClsnFileHandle data_ov091_02135550(0x6aa);
+SimpleLiftModelFilePtr data_ov091_02135510(0x665);
+SimpleLiftClsnFileHandle data_ov091_02135540(0x666);
+SimpleLiftModelFilePtr data_ov091_02135548(0x667);
+SimpleLiftClsnFileHandle data_ov091_02135500(0x668);
+SimpleLiftModelFilePtr data_ov091_02135508(0x59f);
+SimpleLiftClsnFileHandle data_ov091_02135530(0x5a0);

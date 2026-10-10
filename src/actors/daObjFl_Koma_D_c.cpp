@@ -18,7 +18,8 @@
  *   those slots pure virtual). Naming belongs in ov002.
  * Leftover: data_ov022_02113da4 is the model/collision/CLPS row
  *   between typeinfo at 02113d98 and the type name at 02113db0.
- *   Not owned here.
+ *   Not owned here. The two handles it points at are defined at the
+ *   bottom of this file; __sinit_daObjFl_Koma_D_c.cpp constructs them.
  * Leftover: g_profile_FL_KOMA_D lives outside this TU.
  * Leftover: #pragma defer_codegen off stays on line 2. Dropping it
  *   still matches each body, but the four functions emit in reverse
@@ -86,6 +87,31 @@ extern "C" daObjFl_Koma_D_c *daObjFl_Koma_D_c_classInit(void)
 {
     return new daObjFl_Koma_D_c;
 }
+
+#include "SharedFilePtr.h"
+
+/* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
+ * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
+ * are local; the manifest aliases the generated names to those ROM symbols. */
+struct KomaDModelFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    KomaDModelFilePtr(u32 fileID);
+    ~KomaDModelFilePtr();
+};
+
+struct KomaDCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+
+    KomaDCollisionFilePtr(u32 fileID);
+    ~KomaDCollisionFilePtr();
+};
+
+/* Source order is construction order: model file 1525, collision file 1526.
+ * __sinit_daObjFl_Koma_D_c.cpp emits both constructions and registers the
+ * destructors; the registration nodes are compiler temporaries. */
+KomaDModelFilePtr data_ov022_02114530(1525);
+KomaDCollisionFilePtr data_ov022_02114528(1526);
 
 #ifdef _MSC_VER
 /* Host flat names. Not compiled into the cartridge object. */

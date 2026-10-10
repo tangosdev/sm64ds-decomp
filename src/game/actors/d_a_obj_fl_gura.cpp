@@ -80,3 +80,25 @@ s32 daObjFl_Gura_c::CleanupResources()
 {
     return func_ov002_020b60fc(this, &data_ov064_0211adb0);
 }
+
+/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
+ * veneer pairs (func_02017acc / func_02017ab4 for the model, func_02017b4c /
+ * SharedFilePtr_Destruct_Clsn for the collision), spelled through
+ * declared-only subclasses so the static initializer names the real entry
+ * points. */
+struct FlGuraModelFilePtr : SharedFilePtr {
+    u32 words[2];
+    FlGuraModelFilePtr(u32 fileID);
+    ~FlGuraModelFilePtr();
+};
+struct FlGuraCollisionFilePtr : SharedFilePtr {
+    u32 words[2];
+    FlGuraCollisionFilePtr(u32 fileID);
+    ~FlGuraCollisionFilePtr();
+};
+
+// @symbol __sinit_d_a_obj_fl_gura.cpp
+/* The retail initializer constructs the model first, then the collision
+ * file. */
+FlGuraModelFilePtr data_ov064_0211c768(1523);      /* model */
+FlGuraCollisionFilePtr data_ov064_0211c770(1524);  /* collision */

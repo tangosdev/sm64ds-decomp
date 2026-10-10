@@ -71,11 +71,11 @@ data_ov079_02127600 kind:data(any) addr:0x02127600
 __sinit_d_a_btn.cpp kind:function(arm,size=0x3bc) addr:0x02127618
 __sinit_d_a_klr.cpp kind:function(arm,size=0x3c) addr:0x021279d4
 __sinit_ov079_02127a10 kind:function(arm,size=0xbc) addr:0x02127a10
-__sinit_ov079_02127acc kind:function(arm,size=0xbc) addr:0x02127acc
+__sinit_daObjBk_Kabe_c.cpp kind:function(arm,size=0xbc) addr:0x02127acc
 .p__sinit_d_a_btn.cpp kind:data(word) addr:0x02127b88
 .p__sinit_d_a_klr.cpp kind:data(word) addr:0x02127b8c
 .p__sinit_ov079_02127a10 kind:data(word) addr:0x02127b90
-.p__sinit_ov079_02127acc kind:data(word) addr:0x02127b94
+.p__sinit_daObjBk_Kabe_c.cpp kind:data(word) addr:0x02127b94
 data_ov079_02127ba0 kind:data(any) addr:0x02127ba0
 data_ov079_02127bc0 kind:data(any) addr:0x02127bc0
 data_ov079_02127bc8 kind:data(any) addr:0x02127bc8
@@ -165,7 +165,8 @@ data_ov079_02128340 kind:bss addr:0x02128340
 data_ov079_02128348 kind:bss addr:0x02128348
 data_ov079_02128350 kind:bss addr:0x02128350
 data_ov079_02128358 kind:bss addr:0x02128358
-data_ov079_02128360 kind:bss addr:0x02128360
-data_ov079_0212836c kind:bss addr:0x0212836c
-data_ov079_02128378 kind:bss addr:0x02128378
-data_ov079_02128384 kind:bss addr:0x02128384
+@597 kind:bss addr:0x02128360
+@882 kind:bss addr:0x0212836c
+@484 kind:bss addr:0x02128378
+@886 kind:bss addr:0x02128384
+data_ov079_02128390 kind:bss addr:0x02128390

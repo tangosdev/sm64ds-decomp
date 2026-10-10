@@ -82,9 +82,18 @@ void func_ov002_020fed7c(char *c);
    row there is the one unambiguous `kind:bss`, and CleanupResources already
    named it. It is the fireball's shared model file. */
 extern int data_ov065_0211d610[];
-/* The state table InitResources installs. */
-extern char data_ov002_02111190[];
 extern M48 data_020a0e68;
+
+/* Two handler words each. InitResources installs the copy at data_ov002_02111190.
+ * Both loads of a pair happen before either store; an `{int a, b}` copy does not. */
+struct HeyhoFnPair { int w[2]; };
+extern HeyhoFnPair data_ov002_0210d600;
+extern HeyhoFnPair data_ov002_0210d5f8;
+struct HeyhoStateTable {
+    HeyhoFnPair a;
+    HeyhoFnPair b;
+};
+extern HeyhoStateTable data_ov002_02111190;
 
 extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN5Sound4PlayEjjRK7Vector3(unsigned int a, unsigned int b, Vector3 const &v);
@@ -337,7 +346,7 @@ int daPropeller_Heyho_Fire_c::InitResources()
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this)+0x110, (struct dActor_c*)((char*)this), 0xa000, 0xa000, 0x200004, 0);
     mAngleY = mPrevAngleY;
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x144, (struct dActor_c*)((char*)this), 0xa000, 0xa000, 0, 0);
-    func_ov002_020fed2c((C *)this, (PMF *)data_ov002_02111190);
+    func_ov002_020fed2c((C *)this, (PMF *)&data_ov002_02111190);
     return 1;
 }
 
@@ -357,3 +366,7 @@ extern "C" daPropeller_Heyho_Fire_c *daPropeller_Heyho_Fire_c_classInit(void)
 {
     return new daPropeller_Heyho_Fire_c;
 }
+
+/* Retail copy order: data_ov002_0210d600, then data_ov002_0210d5f8.
+ * mwcc emits __sinit_daPropeller_Heyho_Fire_c.cpp. */
+HeyhoStateTable data_ov002_02111190 = { data_ov002_0210d600, data_ov002_0210d5f8 };
