@@ -6,15 +6,16 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x2118438..0x2118cbc, 15 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "HISTORY: contiguous linker run: 0x2118438..0x2118cbc, 15 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daKirai_c",
-    "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "CLASSINIT TAIL FOLD (2026-10-09): daKirai_c_classInit (0x02118cbc..0x02118cfc) abuts this TU's .text end with no gap and is now inside it, appended last under the file-level #pragma defer_codegen off and spelled `return new daKirai_c;` (operator new 0x1b0, dActor_c base ctor, _ZTV9daKirai_c vptr store, Model and dCcAcPos_c member ctors -- the retired shard's hand-spelled sequence). It builds only this class, for the KIRAI profile; the unit is 0x02118438..0x02118cfc, bounded above by src/actors/daFRing_c.cpp, which starts exactly at 0x02118cfc."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x02118438",
-      "end": "0x02118cbc"
+      "end": "0x02118cfc"
     },
     {
       "name": ".init",
@@ -142,6 +143,13 @@
       "size": "0x00000108",
       "legacy_source": "src/_ZN9daKirai_c13InitResourcesEv.cpp",
       "ordinal": 14
+    },
+    {
+      "symbol": "daKirai_c_classInit",
+      "address": "0x02118cbc",
+      "size": "0x00000040",
+      "legacy_source": "src/d_a_kirai.c",
+      "ordinal": 15
     }
   ],
   "data": [
@@ -198,7 +206,7 @@
     }
   ],
   "notes": [
-    "Text span 0x02118438..0x02118cbc, 15 functions, class daKirai_c only. daKirai_c_classInit at 0x02118cbc is the next function and is not absorbed.",
+    "HISTORY: Text span 0x02118438..0x02118cbc, 15 functions, class daKirai_c only. daKirai_c_classInit at 0x02118cbc is the next function and is not absorbed.",
     "Renamed from the SpikeBomb type string. The coined _ZTV9SpikeBomb alias was deleted; the ROM label _ZTV9daKirai_c at ov060:0x0211aa8c stays.",
     "One out-of-line destructor under #pragma defer_codegen off. D2 is homeless deadstrip. Vector3 D1 is the vague duplicate of arm9:0x020072c0. Vtable and the ancestor RTTI chain are deadstrip-data at their existing addresses.",
     "The nine func_ov060_* helpers take the bomb in r0 and are daKirai_c methods; the address is the method name. Four of them are stored as pointer-to-member code words in .data at 0x0211aa30/38/40/48 (the state table the sinit copies to 0x0211b1d8).",
@@ -288,8 +296,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov060-daKirai_c/daKirai_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 15,
-    "functions_declared": 15,
+    "functions_matched": 16,
+    "functions_declared": 16,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN9daKirai_cD2Ev",
@@ -303,8 +311,6 @@
         9,
         10,
         17,
-        48,
-        49,
         50,
         51,
         52,
@@ -316,7 +322,9 @@
         58,
         59,
         60,
-        61
+        61,
+        62,
+        63
       ],
       "data": [
         "_ZTV9daKirai_c",
@@ -363,7 +371,7 @@
       },
       "tuRange": {
         "start": "0x02118438",
-        "end": "0x02118cbc",
+        "end": "0x02118cfc",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -371,7 +379,7 @@
         {
           "section": ".text",
           "start": "0x02118438",
-          "end": "0x02118cbc",
+          "end": "0x02118cfc",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -403,13 +411,12 @@
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
-      "linkedStorageAliases": null,
       "objectAudit": {
         "counts": {
-          "LICENSED": 24
+          "LICENSED": 25
         },
-        "orderOk": true,
-        "nonLicensed": [],
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
@@ -417,38 +424,20 @@
           {
             "section": ".init",
             "original": [
-              64
+              66
             ],
             "desired": [
-              64
-            ],
-            "anchors": {
-              "64": [
-                {
-                  "symbol": "__sinit_daKirai_c.cpp",
-                  "address": 34710408,
-                  "sectionBase": 34710408
-                }
-              ]
-            }
+              66
+            ]
           },
           {
             "section": ".ctor",
             "original": [
-              62
+              64
             ],
             "desired": [
-              62
-            ],
-            "anchors": {
-              "62": [
-                {
-                  "symbol": ".p__sinit_daKirai_c.cpp",
-                  "address": 34710732,
-                  "sectionBase": 34710732
-                }
-              ]
-            }
+              64
+            ]
           },
           {
             "section": ".data",
@@ -463,37 +452,7 @@
               45,
               43,
               41
-            ],
-            "anchors": {
-              "39": [
-                {
-                  "symbol": "@707",
-                  "address": 34712112,
-                  "sectionBase": 34712112
-                }
-              ],
-              "41": [
-                {
-                  "symbol": "@709",
-                  "address": 34712136,
-                  "sectionBase": 34712136
-                }
-              ],
-              "43": [
-                {
-                  "symbol": "@711",
-                  "address": 34712128,
-                  "sectionBase": 34712128
-                }
-              ],
-              "45": [
-                {
-                  "symbol": "@713",
-                  "address": 34712120,
-                  "sectionBase": 34712120
-                }
-              ]
-            }
+            ]
           },
           {
             "section": ".bss",
@@ -506,30 +465,7 @@
               38,
               37,
               47
-            ],
-            "anchors": {
-              "37": [
-                {
-                  "symbol": "@705",
-                  "address": 34714060,
-                  "sectionBase": 34714060
-                }
-              ],
-              "38": [
-                {
-                  "symbol": "data_ov060_0211b1c4",
-                  "address": 34714052,
-                  "sectionBase": 34714052
-                }
-              ],
-              "47": [
-                {
-                  "symbol": "data_ov060_0211b1d8",
-                  "address": 34714072,
-                  "sectionBase": 34714072
-                }
-              ]
-            }
+            ]
           }
         ],
         "objisolate": {
@@ -578,8 +514,10 @@
           "sectionLinks": 0,
           "sectionInfos": 4,
           "error": null
-        }
+        },
+        "errors": null
       },
+      "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
       "symbolCheckErrors": [
         "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",

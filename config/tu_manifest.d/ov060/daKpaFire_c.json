@@ -7,14 +7,15 @@
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x02116484..0x02117938, 26 function(s), from build/tu_map.json (tools/tu_map.py, regenerated post-rename as ov060/daKpaFire_c). All 26 carry complete delinks entries; boundaries high on both sides.",
-    "class label: daKpaFire_c (ROM RTTI triple homed at ov060 0x0211a7b4/0x0211a7c0/0x0211a7f4; the tree's former BowserFire was coined). daKpaFire_c_classInit at 0x02117938 abuts the run and stays out, as does the KOOPAFIRE profile global.",
-    "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide)"
+    "HISTORY: class label: daKpaFire_c (ROM RTTI triple homed at ov060 0x0211a7b4/0x0211a7c0/0x0211a7f4; the tree's former BowserFire was coined). daKpaFire_c_classInit at 0x02117938 abuts the run and stays out, as does the KOOPAFIRE profile global.",
+    "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide)",
+    "CLASSINIT TAIL FOLD (2026-10-09): daKpaFire_c_classInit (0x02117938..0x02117980) abuts this TU's .text end with no gap and is now inside it, spelled `return new daKpaFire_c;` (operator new 0x38c, dEnemyBase_c base ctor, _ZTV11daKpaFire_c vptr store, dBgCh_Actr/dCcAc_c/dExtShadowModel_c member ctors -- the retired shard's hand-spelled sequence). It builds only this class, for the KOOPAFIRE profile; the unit is 0x02116484..0x02117980, bounded above by src/actors/daKpa2Bg_c.cpp, which starts exactly at 0x02117980."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x02116484",
-      "end": "0x02117938"
+      "end": "0x02117980"
     },
     {
       "name": ".init",
@@ -214,6 +215,13 @@
       "size": "0x000001a8",
       "legacy_source": "src/_ZN11daKpaFire_c13InitResourcesEv.cpp",
       "ordinal": 25
+    },
+    {
+      "symbol": "daKpaFire_c_classInit",
+      "address": "0x02117938",
+      "size": "0x00000048",
+      "legacy_source": "src/d_a_kpa_fire.c",
+      "ordinal": 26
     }
   ],
   "data": [],
@@ -335,8 +343,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov060-daKpaFire_c/daKpaFire_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 26,
-    "functions_declared": 26,
+    "functions_matched": 27,
+    "functions_declared": 27,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN11daKpaFire_cD2Ev",
@@ -417,7 +425,7 @@
       },
       "tuRange": {
         "start": "0x02116484",
-        "end": "0x02117938",
+        "end": "0x02117980",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -425,7 +433,7 @@
         {
           "section": ".text",
           "start": "0x02116484",
-          "end": "0x02117938",
+          "end": "0x02117980",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -452,7 +460,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 30
+          "LICENSED": 31
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -463,19 +471,19 @@
           {
             "section": ".init",
             "original": [
-              76
+              78
             ],
             "desired": [
-              76
+              78
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              74
+              76
             ],
             "desired": [
-              74
+              76
             ]
           },
           {

@@ -8,7 +8,7 @@
  * data_ov060_0211b1d8, filled at static-init time from {fn, 0} records in
  * .data: armed (func_ov060_02118970), swelling (func_ov060_021188e8),
  * exploding (func_ov060_02118834), spent (func_ov060_02118728).
- * daKirai_c_classInit stays out of this TU.
+ * The registry factory daKirai_c_classInit closes the file.
  */
 
 #include "daKirai_c.h"
@@ -334,3 +334,18 @@ KiraiState data_ov060_0211b1d8[4] = {
     &daKirai_c::func_ov060_02118834,
     &daKirai_c::func_ov060_02118728,
 };
+
+/* recovered: vtable identified, globals resolved */
+/* Reconstructed source-style name: SM64DS proves daKirai_c through RTTI,
+ * allocation size, vtable identity, and the KIRAI registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: SpikeBomb_Spawn.
+ *
+ * `new daKirai_c` is the whole sequence the loose factory spelled by hand:
+ * fBase_c::operator new(0x1b0), dActor_c's base constructor, the vptr store,
+ * then the Model and dCcAcPos_c member constructors. */
+// @symbol daKirai_c_classInit
+extern "C" daKirai_c *daKirai_c_classInit(void)
+{
+    return new daKirai_c;
+}

@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-10 12:18 UTC",
+ "generatedAt": "2026-10-10 19:12 UTC",
  "note": "Matched functions per contributor. The author of each function is function-authors.json. This file is regenerated from that list. Do not hand-edit it. `matched` is the function count; `coins` weights the same set by COIN_WEIGHTS. They differ only for weighted modules.",
  "totalMatched": 11378,
  "coinFormula": 3,

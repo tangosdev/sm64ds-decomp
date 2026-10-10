@@ -6,22 +6,10 @@
     .bss        start:0x02113bc0 end:0x02113cc0 kind:bss align:32
 src/actors/daObjSm_Lift_c.cpp:
     complete
-    .text start:0x021111a0 end:0x021117e8
+    .text start:0x021111a0 end:0x02111848
     .init start:0x02112c14 end:0x02112c80
     .ctor start:0x02112e6c end:0x02112e70
     .bss start:0x02113bc0 end:0x02113be8
-
-src/unnamed/ov018/func_ov018_021117e8.cpp:
-    complete
-    .text start:0x021117e8 end:0x02111804
-
-src/unnamed/ov018/func_ov018_02111804.c:
-    complete
-    .text start:0x02111804 end:0x02111818
-
-src/d_a_obj_sm_lift.c:
-    complete
-    .text start:0x02111818 end:0x02111848
 
 src/game/actors/d_a_pg_mthr.cpp:
     complete

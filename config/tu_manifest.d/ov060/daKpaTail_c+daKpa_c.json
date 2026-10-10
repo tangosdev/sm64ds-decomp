@@ -6,15 +6,16 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x2111900..0x21163f0, 79 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "HISTORY: contiguous linker run: 0x2111900..0x21163f0, 79 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daKpaTail_c, daKpa_c",
-    "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "CLASSINIT TAIL FOLD (2026-10-09): the run 0x021163f0..0x02116484 abuts this TU's .text end with no gap and is now inside it, written first among the deferred functions (codegen is deferred, so source order is reversed). daKpaTail_c_classInit is `return new daKpaTail_c;` (operator new 0x118, dActor_c base ctor, _ZTV11daKpaTail_c vptr store, dCcAc_c member ctor) and daKpa_c_classInit is `return new daKpa_c;` (operator new 0x454, dActor_c base ctor, _ZTV7daKpa_c vptr store, ModelAnim/TextureSequence/dBgCh_Actr/dExtShadowModel_c/dCcAcPos_c member ctors) -- each the retired shard's hand-spelled sequence, for the KOOPATAIL and KOOPA profiles. Both classes are this unit's; it is now 0x02111900..0x02116484, bounded above by src/actors/daKpaFire_c.cpp, which starts exactly at 0x02116484. The two new-expressions advance mwcc's compiler-label counter by 12, so every @label this unit owns was renumbered (+12: .bss @2250..@2283 -> @2262..@2295, .data @2285..@2337 -> @2297..@2349) in this manifest and ov060 symbols.txt; the six .bss registration nodes that used to be renamed @2249..@2259 -> @2710..@2715 to dodge ov002 daStarBase_c+daStar_c's global @2249..@2259 now compile as @2261..@2271, clear of that range, so defined_symbol_renames was dropped and they carry their compiler names."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x02111900",
-      "end": "0x021163f0"
+      "end": "0x02116484"
     },
     {
       "name": ".init",
@@ -590,193 +591,207 @@
       "size": "0x0000003c",
       "legacy_source": "src/_ZN11daKpaTail_c13InitResourcesEv.cpp",
       "ordinal": 78
+    },
+    {
+      "symbol": "daKpaTail_c_classInit",
+      "address": "0x021163f0",
+      "size": "0x00000038",
+      "legacy_source": "src/d_a_kpa_tail.c",
+      "ordinal": 79
+    },
+    {
+      "symbol": "daKpa_c_classInit",
+      "address": "0x02116428",
+      "size": "0x0000005c",
+      "legacy_source": "src/d_a_kpa.c",
+      "ordinal": 80
     }
   ],
   "data": [
     {
-      "symbol": "@2299",
+      "symbol": "@2311",
       "address": "0x211a4e8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02113710Ev"
     },
     {
-      "symbol": "@2301",
+      "symbol": "@2313",
       "address": "0x211a4f0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02112ddcEv"
     },
     {
-      "symbol": "@2329",
+      "symbol": "@2341",
       "address": "0x211a4f8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02114ff8Ev"
     },
     {
-      "symbol": "@2303",
+      "symbol": "@2315",
       "address": "0x211a500",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021154e8Ev"
     },
     {
-      "symbol": "@2317",
+      "symbol": "@2329",
       "address": "0x211a508",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021146d0Ev"
     },
     {
-      "symbol": "@2287",
+      "symbol": "@2299",
       "address": "0x211a510",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02112724Ev"
     },
     {
-      "symbol": "@2289",
+      "symbol": "@2301",
       "address": "0x211a518",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021125f0Ev"
     },
     {
-      "symbol": "@2291",
+      "symbol": "@2303",
       "address": "0x211a520",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021125f0Ev"
     },
     {
-      "symbol": "@2319",
+      "symbol": "@2331",
       "address": "0x211a528",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021143b8Ev"
     },
     {
-      "symbol": "@2315",
+      "symbol": "@2327",
       "address": "0x211a530",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02113fccEv"
     },
     {
-      "symbol": "@2297",
+      "symbol": "@2309",
       "address": "0x211a538",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02113740Ev"
     },
     {
-      "symbol": "@2305",
+      "symbol": "@2317",
       "address": "0x211a540",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021153f8Ev"
     },
     {
-      "symbol": "@2337",
+      "symbol": "@2349",
       "address": "0x211a548",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daKpaTail_c19func_ov060_02115c1cEv"
     },
     {
-      "symbol": "@2335",
+      "symbol": "@2347",
       "address": "0x211a550",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daKpaTail_c19func_ov060_02115d50Ev"
     },
     {
-      "symbol": "@2333",
+      "symbol": "@2345",
       "address": "0x211a558",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daKpaTail_c19func_ov060_02115d68Ev"
     },
     {
-      "symbol": "@2295",
+      "symbol": "@2307",
       "address": "0x211a560",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02113b5cEv"
     },
     {
-      "symbol": "@2293",
+      "symbol": "@2305",
       "address": "0x211a568",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02114f88Ev"
     },
     {
-      "symbol": "@2331",
+      "symbol": "@2343",
       "address": "0x211a570",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02112bfcEv"
     },
     {
-      "symbol": "@2285",
+      "symbol": "@2297",
       "address": "0x211a578",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021128c0Ev"
     },
     {
-      "symbol": "@2327",
+      "symbol": "@2339",
       "address": "0x211a580",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02114300Ev"
     },
     {
-      "symbol": "@2325",
+      "symbol": "@2337",
       "address": "0x211a588",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02114b60Ev"
     },
     {
-      "symbol": "@2323",
+      "symbol": "@2335",
       "address": "0x211a590",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02114e9cEv"
     },
     {
-      "symbol": "@2321",
+      "symbol": "@2333",
       "address": "0x211a598",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02114d08Ev"
     },
     {
-      "symbol": "@2311",
+      "symbol": "@2323",
       "address": "0x211a5a0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021140c0Ev"
     },
     {
-      "symbol": "@2313",
+      "symbol": "@2325",
       "address": "0x211a5a8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021142b4Ev"
     },
     {
-      "symbol": "@2309",
+      "symbol": "@2321",
       "address": "0x211a5b0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02114858Ev"
     },
     {
-      "symbol": "@2307",
+      "symbol": "@2319",
       "address": "0x211a5b8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -1030,245 +1045,245 @@
       "evidence": "animation resource handle constructed with file ID 0x36f"
     },
     {
-      "symbol": "@2277",
+      "symbol": "@2289",
       "address": "0x211acf8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2710",
+      "symbol": "@2261",
       "address": "0x211ad04",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2250",
+      "symbol": "@2262",
       "address": "0x211ad10",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2711",
+      "symbol": "@2263",
       "address": "0x211ad1c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2279",
+      "symbol": "@2291",
       "address": "0x211ad28",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2252",
+      "symbol": "@2264",
       "address": "0x211ad34",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2278",
+      "symbol": "@2290",
       "address": "0x211ad40",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2280",
+      "symbol": "@2292",
       "address": "0x211ad4c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2254",
+      "symbol": "@2266",
       "address": "0x211ad58",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2281",
+      "symbol": "@2293",
       "address": "0x211ad64",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2256",
+      "symbol": "@2268",
       "address": "0x211ad70",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2282",
+      "symbol": "@2294",
       "address": "0x211ad7c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2258",
+      "symbol": "@2270",
       "address": "0x211ad88",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2715",
+      "symbol": "@2271",
       "address": "0x211ad94",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2283",
+      "symbol": "@2295",
       "address": "0x211ada0",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2260",
+      "symbol": "@2272",
       "address": "0x211adac",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2261",
+      "symbol": "@2273",
       "address": "0x211adb8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2262",
+      "symbol": "@2274",
       "address": "0x211adc4",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2263",
+      "symbol": "@2275",
       "address": "0x211add0",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2264",
+      "symbol": "@2276",
       "address": "0x211addc",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2265",
+      "symbol": "@2277",
       "address": "0x211ade8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2266",
+      "symbol": "@2278",
       "address": "0x211adf4",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2267",
+      "symbol": "@2279",
       "address": "0x211ae00",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2714",
+      "symbol": "@2269",
       "address": "0x211ae0c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2268",
+      "symbol": "@2280",
       "address": "0x211ae18",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2269",
+      "symbol": "@2281",
       "address": "0x211ae24",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2270",
+      "symbol": "@2282",
       "address": "0x211ae30",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2713",
+      "symbol": "@2267",
       "address": "0x211ae3c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2271",
+      "symbol": "@2283",
       "address": "0x211ae48",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2272",
+      "symbol": "@2284",
       "address": "0x211ae54",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2273",
+      "symbol": "@2285",
       "address": "0x211ae60",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2712",
+      "symbol": "@2265",
       "address": "0x211ae6c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2274",
+      "symbol": "@2286",
       "address": "0x211ae78",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2275",
+      "symbol": "@2287",
       "address": "0x211ae84",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "@2276",
+      "symbol": "@2288",
       "address": "0x211ae90",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -1529,8 +1544,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov060-daKpaTail_c+daKpa_c/daKpa_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 79,
-    "functions_declared": 79,
+    "functions_matched": 81,
+    "functions_declared": 81,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN7daKpa_cD2Ev",
@@ -1619,7 +1634,7 @@
       },
       "tuRange": {
         "start": "0x02111900",
-        "end": "0x021163f0",
+        "end": "0x02116484",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -1627,7 +1642,7 @@
         {
           "section": ".text",
           "start": "0x02111900",
-          "end": "0x021163f0",
+          "end": "0x02116484",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1661,7 +1676,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 181
+          "LICENSED": 183
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1672,19 +1687,19 @@
           {
             "section": ".init",
             "original": [
-              306
+              310
             ],
             "desired": [
-              306
+              310
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              304
+              308
             ],
             "desired": [
-              304
+              308
             ]
           },
           {
@@ -2347,373 +2362,373 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@2710",
+      "symbol": "@2261",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211acf8"
     },
     {
-      "symbol": "@2250",
+      "symbol": "@2262",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ad04"
     },
     {
-      "symbol": "@2711",
+      "symbol": "@2263",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ad10"
     },
     {
-      "symbol": "@2252",
+      "symbol": "@2264",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ad1c"
     },
     {
-      "symbol": "@2712",
+      "symbol": "@2265",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ad34"
     },
     {
-      "symbol": "@2254",
+      "symbol": "@2266",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ae6c"
     },
     {
-      "symbol": "@2713",
+      "symbol": "@2267",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ad58"
     },
     {
-      "symbol": "@2256",
+      "symbol": "@2268",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ae3c"
     },
     {
-      "symbol": "@2714",
+      "symbol": "@2269",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ad70"
     },
     {
-      "symbol": "@2258",
+      "symbol": "@2270",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ae0c"
     },
     {
-      "symbol": "@2715",
+      "symbol": "@2271",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ad88"
     },
     {
-      "symbol": "@2260",
+      "symbol": "@2272",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ad94"
     },
     {
-      "symbol": "@2261",
+      "symbol": "@2273",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211adac"
     },
     {
-      "symbol": "@2262",
+      "symbol": "@2274",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211adb8"
     },
     {
-      "symbol": "@2263",
+      "symbol": "@2275",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211adc4"
     },
     {
-      "symbol": "@2264",
+      "symbol": "@2276",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211add0"
     },
     {
-      "symbol": "@2265",
+      "symbol": "@2277",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211addc"
     },
     {
-      "symbol": "@2266",
+      "symbol": "@2278",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ade8"
     },
     {
-      "symbol": "@2267",
+      "symbol": "@2279",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211adf4"
     },
     {
-      "symbol": "@2268",
+      "symbol": "@2280",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ae00"
     },
     {
-      "symbol": "@2269",
+      "symbol": "@2281",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ae18"
     },
     {
-      "symbol": "@2270",
+      "symbol": "@2282",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ae24"
     },
     {
-      "symbol": "@2271",
+      "symbol": "@2283",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ae30"
     },
     {
-      "symbol": "@2272",
+      "symbol": "@2284",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ae48"
     },
     {
-      "symbol": "@2273",
+      "symbol": "@2285",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ae54"
     },
     {
-      "symbol": "@2274",
+      "symbol": "@2286",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ae60"
     },
     {
-      "symbol": "@2275",
+      "symbol": "@2287",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ae78"
     },
     {
-      "symbol": "@2276",
+      "symbol": "@2288",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ae84"
     },
     {
-      "symbol": "@2277",
+      "symbol": "@2289",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ae90"
     },
     {
-      "symbol": "@2278",
+      "symbol": "@2290",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ad40"
     },
     {
-      "symbol": "@2279",
+      "symbol": "@2291",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ad28"
     },
     {
-      "symbol": "@2280",
+      "symbol": "@2292",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ad4c"
     },
     {
-      "symbol": "@2281",
+      "symbol": "@2293",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ad64"
     },
     {
-      "symbol": "@2282",
+      "symbol": "@2294",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ad7c"
     },
     {
-      "symbol": "@2283",
+      "symbol": "@2295",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211ada0"
     },
     {
-      "symbol": "@2285",
+      "symbol": "@2297",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a578"
     },
     {
-      "symbol": "@2287",
+      "symbol": "@2299",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a510"
     },
     {
-      "symbol": "@2289",
+      "symbol": "@2301",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a518"
     },
     {
-      "symbol": "@2291",
+      "symbol": "@2303",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a520"
     },
     {
-      "symbol": "@2293",
+      "symbol": "@2305",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a568"
     },
     {
-      "symbol": "@2295",
+      "symbol": "@2307",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a560"
     },
     {
-      "symbol": "@2297",
+      "symbol": "@2309",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a538"
     },
     {
-      "symbol": "@2299",
+      "symbol": "@2311",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a4e8"
     },
     {
-      "symbol": "@2301",
+      "symbol": "@2313",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a4f0"
     },
     {
-      "symbol": "@2303",
+      "symbol": "@2315",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a500"
     },
     {
-      "symbol": "@2305",
+      "symbol": "@2317",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a540"
     },
     {
-      "symbol": "@2307",
+      "symbol": "@2319",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a5b8"
     },
     {
-      "symbol": "@2309",
+      "symbol": "@2321",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a5b0"
     },
     {
-      "symbol": "@2311",
+      "symbol": "@2323",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a5a0"
     },
     {
-      "symbol": "@2313",
+      "symbol": "@2325",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a5a8"
     },
     {
-      "symbol": "@2315",
+      "symbol": "@2327",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a530"
     },
     {
-      "symbol": "@2317",
+      "symbol": "@2329",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a508"
     },
     {
-      "symbol": "@2319",
+      "symbol": "@2331",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a528"
     },
     {
-      "symbol": "@2321",
+      "symbol": "@2333",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a598"
     },
     {
-      "symbol": "@2323",
+      "symbol": "@2335",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a590"
     },
     {
-      "symbol": "@2325",
+      "symbol": "@2337",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a588"
     },
     {
-      "symbol": "@2327",
+      "symbol": "@2339",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a580"
     },
     {
-      "symbol": "@2329",
+      "symbol": "@2341",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a4f8"
     },
     {
-      "symbol": "@2331",
+      "symbol": "@2343",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a570"
     },
     {
-      "symbol": "@2333",
+      "symbol": "@2345",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a558"
     },
     {
-      "symbol": "@2335",
+      "symbol": "@2347",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a550"
     },
     {
-      "symbol": "@2337",
+      "symbol": "@2349",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local symbol is a configured relocation destination at 0x0211a548"
@@ -3725,7 +3740,7 @@
       "source": "0x2119bf8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2710",
+      "symbol": "@2261",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ad04"
@@ -3755,7 +3770,7 @@
       "source": "0x2119c08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2250",
+      "symbol": "@2262",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ad10"
@@ -3775,7 +3790,7 @@
       "source": "0x2119c14",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2711",
+      "symbol": "@2263",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ad1c"
@@ -3795,7 +3810,7 @@
       "source": "0x2119c1c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2252",
+      "symbol": "@2264",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ad34"
@@ -3815,7 +3830,7 @@
       "source": "0x2119c24",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2712",
+      "symbol": "@2265",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ae6c"
@@ -3835,7 +3850,7 @@
       "source": "0x2119c30",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2254",
+      "symbol": "@2266",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ad58"
@@ -3855,7 +3870,7 @@
       "source": "0x2119c3c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2713",
+      "symbol": "@2267",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ae3c"
@@ -3875,7 +3890,7 @@
       "source": "0x2119c48",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2256",
+      "symbol": "@2268",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ad70"
@@ -3895,7 +3910,7 @@
       "source": "0x2119c50",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2714",
+      "symbol": "@2269",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ae0c"
@@ -3915,7 +3930,7 @@
       "source": "0x2119c5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2258",
+      "symbol": "@2270",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ad88"
@@ -3935,7 +3950,7 @@
       "source": "0x2119c68",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2715",
+      "symbol": "@2271",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ad94"
@@ -3955,7 +3970,7 @@
       "source": "0x2119c70",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2260",
+      "symbol": "@2272",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211adac"
@@ -3975,7 +3990,7 @@
       "source": "0x2119c7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2261",
+      "symbol": "@2273",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211adb8"
@@ -3995,7 +4010,7 @@
       "source": "0x2119c88",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2262",
+      "symbol": "@2274",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211adc4"
@@ -4015,7 +4030,7 @@
       "source": "0x2119c90",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2263",
+      "symbol": "@2275",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211add0"
@@ -4035,7 +4050,7 @@
       "source": "0x2119c9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2264",
+      "symbol": "@2276",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211addc"
@@ -4055,7 +4070,7 @@
       "source": "0x2119ca4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2265",
+      "symbol": "@2277",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ade8"
@@ -4075,7 +4090,7 @@
       "source": "0x2119cb0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2266",
+      "symbol": "@2278",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211adf4"
@@ -4095,7 +4110,7 @@
       "source": "0x2119cbc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2267",
+      "symbol": "@2279",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ae00"
@@ -4115,7 +4130,7 @@
       "source": "0x2119cc4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2268",
+      "symbol": "@2280",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ae18"
@@ -4135,7 +4150,7 @@
       "source": "0x2119cd0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2269",
+      "symbol": "@2281",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ae24"
@@ -4155,7 +4170,7 @@
       "source": "0x2119cd8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2270",
+      "symbol": "@2282",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ae30"
@@ -4175,7 +4190,7 @@
       "source": "0x2119ce4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2271",
+      "symbol": "@2283",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ae48"
@@ -4195,7 +4210,7 @@
       "source": "0x2119cf0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2272",
+      "symbol": "@2284",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ae54"
@@ -4215,7 +4230,7 @@
       "source": "0x2119cfc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2273",
+      "symbol": "@2285",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ae60"
@@ -4235,7 +4250,7 @@
       "source": "0x2119d08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2274",
+      "symbol": "@2286",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ae78"
@@ -4255,7 +4270,7 @@
       "source": "0x2119d10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2275",
+      "symbol": "@2287",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ae84"
@@ -4275,7 +4290,7 @@
       "source": "0x2119d1c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2276",
+      "symbol": "@2288",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ae90"
@@ -4295,7 +4310,7 @@
       "source": "0x2119d28",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2277",
+      "symbol": "@2289",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211acf8"
@@ -4325,7 +4340,7 @@
       "source": "0x2119d38",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2278",
+      "symbol": "@2290",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ad40"
@@ -4345,7 +4360,7 @@
       "source": "0x2119d44",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2279",
+      "symbol": "@2291",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ad28"
@@ -4365,7 +4380,7 @@
       "source": "0x2119d50",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2280",
+      "symbol": "@2292",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ad4c"
@@ -4385,7 +4400,7 @@
       "source": "0x2119d5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2281",
+      "symbol": "@2293",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ad64"
@@ -4405,7 +4420,7 @@
       "source": "0x2119d68",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2282",
+      "symbol": "@2294",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ad7c"
@@ -4425,7 +4440,7 @@
       "source": "0x2119d74",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2283",
+      "symbol": "@2295",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ada0"
@@ -4445,7 +4460,7 @@
       "source": "0x2119d7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2285",
+      "symbol": "@2297",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a578"
@@ -4455,7 +4470,7 @@
       "source": "0x2119d80",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2287",
+      "symbol": "@2299",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a510"
@@ -4465,7 +4480,7 @@
       "source": "0x2119d84",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2289",
+      "symbol": "@2301",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a518"
@@ -4475,7 +4490,7 @@
       "source": "0x2119d88",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2291",
+      "symbol": "@2303",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a520"
@@ -4495,7 +4510,7 @@
       "source": "0x2119d90",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2293",
+      "symbol": "@2305",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a568"
@@ -4505,7 +4520,7 @@
       "source": "0x2119d94",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2295",
+      "symbol": "@2307",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a560"
@@ -4515,7 +4530,7 @@
       "source": "0x2119d98",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2297",
+      "symbol": "@2309",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a538"
@@ -4525,7 +4540,7 @@
       "source": "0x2119d9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2299",
+      "symbol": "@2311",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a4e8"
@@ -4535,7 +4550,7 @@
       "source": "0x2119da0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2301",
+      "symbol": "@2313",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a4f0"
@@ -4545,7 +4560,7 @@
       "source": "0x2119da4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2303",
+      "symbol": "@2315",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a500"
@@ -4555,7 +4570,7 @@
       "source": "0x2119da8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2305",
+      "symbol": "@2317",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a540"
@@ -4565,7 +4580,7 @@
       "source": "0x2119dac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2307",
+      "symbol": "@2319",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a5b8"
@@ -4575,7 +4590,7 @@
       "source": "0x2119db0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2309",
+      "symbol": "@2321",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a5b0"
@@ -4585,7 +4600,7 @@
       "source": "0x2119db4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2311",
+      "symbol": "@2323",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a5a0"
@@ -4595,7 +4610,7 @@
       "source": "0x2119db8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2313",
+      "symbol": "@2325",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a5a8"
@@ -4605,7 +4620,7 @@
       "source": "0x2119dbc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2315",
+      "symbol": "@2327",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a530"
@@ -4615,7 +4630,7 @@
       "source": "0x2119dc0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2317",
+      "symbol": "@2329",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a508"
@@ -4625,7 +4640,7 @@
       "source": "0x2119dc4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2319",
+      "symbol": "@2331",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a528"
@@ -4635,7 +4650,7 @@
       "source": "0x2119dc8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2321",
+      "symbol": "@2333",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a598"
@@ -4645,7 +4660,7 @@
       "source": "0x2119dcc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2323",
+      "symbol": "@2335",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a590"
@@ -4655,7 +4670,7 @@
       "source": "0x2119dd0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2325",
+      "symbol": "@2337",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a588"
@@ -4665,7 +4680,7 @@
       "source": "0x2119dd4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2327",
+      "symbol": "@2339",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a580"
@@ -4675,7 +4690,7 @@
       "source": "0x2119dd8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2329",
+      "symbol": "@2341",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a4f8"
@@ -4685,7 +4700,7 @@
       "source": "0x2119ddc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2331",
+      "symbol": "@2343",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a570"
@@ -4705,7 +4720,7 @@
       "source": "0x2119de4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2333",
+      "symbol": "@2345",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a558"
@@ -4715,7 +4730,7 @@
       "source": "0x2119de8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2335",
+      "symbol": "@2347",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a550"
@@ -4725,42 +4740,10 @@
       "source": "0x2119dec",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@2337",
+      "symbol": "@2349",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a548"
-    }
-  ],
-  "defined_symbol_renames": [
-    {
-      "from": "@2249",
-      "to": "@2710",
-      "evidence": "compiler temporary; mwcc numbers it @2249 per TU and ov002 daStarBase_c+daStar_c (this batch) also defines a global @2249, so the scratch link collides"
-    },
-    {
-      "from": "@2251",
-      "to": "@2711",
-      "evidence": "compiler temporary; mwcc numbers it @2251 per TU and ov002 daStarBase_c+daStar_c (this batch) also defines a global @2251, so the scratch link collides"
-    },
-    {
-      "from": "@2253",
-      "to": "@2712",
-      "evidence": "compiler temporary; mwcc numbers it @2253 per TU and ov002 daStarBase_c+daStar_c (this batch) also defines a global @2253, so the scratch link collides"
-    },
-    {
-      "from": "@2255",
-      "to": "@2713",
-      "evidence": "compiler temporary; mwcc numbers it @2255 per TU and ov002 daStarBase_c+daStar_c (this batch) also defines a global @2255, so the scratch link collides"
-    },
-    {
-      "from": "@2257",
-      "to": "@2714",
-      "evidence": "compiler temporary; mwcc numbers it @2257 per TU and ov002 daStarBase_c+daStar_c (this batch) also defines a global @2257, so the scratch link collides"
-    },
-    {
-      "from": "@2259",
-      "to": "@2715",
-      "evidence": "compiler temporary; mwcc numbers it @2259 per TU and ov002 daStarBase_c+daStar_c (this batch) also defines a global @2259, so the scratch link collides"
     }
   ]
 }

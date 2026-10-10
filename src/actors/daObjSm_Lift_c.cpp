@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov018/daObjSm_Lift_c.
- * 8 function(s), .text 0x021111a0..0x021117e8. Cool, Cool Mountain's ski lift
+ * 11 function(s), .text 0x021111a0..0x02111848. Cool, Cool Mountain's ski lift
  * (SM_LIFT): it follows a path and turns when a mega mushroom hits it.
  *
  * NAME: _ZTS14daObjSm_Lift_c is "14daObjSm_Lift_c" at ov018 0x02113894; _ZTI
@@ -21,12 +21,11 @@
  *   are still 8-byte local views of PathPtr, constructed explicitly.
  * Leftover: InitResources keeps the param1 mask, the yaw adjust, and the
  *   node-index add as offset writes. Naming them changed the function size.
- * Leftover: func_ov018_021117e8, func_ov018_02111804 (the callback
- *   InitResources installs) and the factory daObjSm_Lift_c_classInit
- *   (0x02111818) sit past this run's right edge and stay one-function sources.
+ * The file ends with the mesh-collider callback func_ov018_021117e8, the
+ * veneer func_ov018_02111804 that InitResources installs, and the registry
+ * factory daObjSm_Lift_c_classInit (0x02111818).
  */
 
-#include "decl_common.h"
 #include "daObjSm_Lift_c.h"
 #include "Player.h"
 #include "SharedFilePtr.h"
@@ -48,6 +47,9 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *th, void *kf, void *mtx, int fx, short s, void *clps);
 void func_020393d4(int *p, int v);
 void func_020393c4(int *p, int v);
+void func_ov018_02111804(void *collider, daObjSm_Lift_c *self, dActor_c *other);
+int AngleDiff(int, int);
+extern int data_ov018_02112f48[];
 void *_ZN7PathPtrC1Ev(void *self);
 
 u8 DecIfAbove0_Byte(u8 *p);
@@ -279,6 +281,40 @@ s32 daObjSm_Lift_c::InitResources()
     }
     unk_320 = 0;
     return 1;
+}
+
+// @symbol func_ov018_021117e8
+/* Remembers the player while the player touches the lift (actor ID 0xbf);
+   Behavior clears unk_320 again at the end of every frame. The comparison
+   is materialised into an int before the test, as the ROM does. */
+extern "C" void func_ov018_021117e8(daObjSm_Lift_c *self, dActor_c *other)
+{
+    int isPlayer = other->actorID == 0xbf;
+    if (isPlayer)
+        self->unk_320 = other;
+}
+
+// @symbol func_ov018_02111804
+/* dBgW callback veneer, armed by func_020393c4 in InitResources. Drops the
+   collider and forwards the lift and the touching actor into
+   func_ov018_021117e8. */
+extern "C" void func_ov018_02111804(void *collider, daObjSm_Lift_c *self, dActor_c *other)
+{
+    func_ov018_021117e8(self, other);
+}
+
+/* Reconstructed source-style name: SM64DS proves daObjSm_Lift_c through RTTI,
+ * allocation size, vtable identity, and the SM_LIFT registry profile; later
+ * EAD lineage supplies classInit. Exact original spelling is not preserved.
+ * Historical alias: SkiLift_Spawn.
+ *
+ * `new daObjSm_Lift_c` is the whole sequence the loose factory spelled by
+ * hand: fBase_c::operator new(0x354), dBgActor_c's base constructor and the
+ * vptr store (the class adds no member with a constructor). */
+// @symbol daObjSm_Lift_c_classInit
+extern "C" daObjSm_Lift_c *daObjSm_Lift_c_classInit(void)
+{
+    return new daObjSm_Lift_c;
 }
 
 /* The ski lift's shared file handles: the model, then the collision map. Their

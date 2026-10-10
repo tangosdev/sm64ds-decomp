@@ -159,5 +159,5 @@ data_ov025_02113ab8 kind:bss addr:0x02113ab8
 @388 kind:bss addr:0x02113acc
 data_ov025_02113ad8 kind:bss addr:0x02113ad8
 data_ov025_02113ae0 kind:bss addr:0x02113ae0
-@430 kind:bss addr:0x02113ae8
-@429 kind:bss addr:0x02113af4
+@432 kind:bss addr:0x02113ae8
+@431 kind:bss addr:0x02113af4

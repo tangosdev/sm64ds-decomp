@@ -4,11 +4,10 @@
  * settles at Y 0x80000 with a second short shake. Render draws mModel
  * and one mModel2 copy per marker not yet passed.
  *
- * Six methods, ov025 .text 0x021120e4..0x021125bc. The RTTI string at
- * ov025 0x021139a0 is "10daDpLift_c". mHadClsn is written by
- * func_ov025_021125dc, defined in its own TU and installed here as the
- * mesh callback. The factory daDpLift_c_classInit stays in
- * src/d_a_dp_lift.cpp.
+ * Nine functions, ov025 .text 0x021120e4..0x02112654: six methods, then
+ * the mesh-collider callback pair that sets mHadClsn and the registry
+ * factory daDpLift_c_classInit, last. The RTTI string at ov025
+ * 0x021139a0 is "10daDpLift_c".
  *
  * `#pragma defer_codegen off` is file-level and load-bearing. It emits
  * each function as it is parsed, so the out-of-line destructor comes
@@ -37,9 +36,8 @@
  * - SetFile as a method with a Fix12<int> scale size-DIFF
  *   0x124->0x130. The free call with int 0x199 matches.
  *   func_020393d4 and func_020393c4 stay int* stores into the mesh
- *   callback slots. func_ov025_021125dc stays a call; its definition
- *   is not in this TU. data_02082214 stays the unnamed sine table.
- * - The two file handles live at the bottom of this file; the compiler's
+ *   callback slots. data_02082214 stays the unnamed sine table.
+ * - The two file handles live after InitResources; the compiler's
  *   __sinit_daDpLift_c.cpp constructs them at overlay load. Their wrapper
  *   names are local -- the constructors are the ROM resource-family
  *   functions, recorded as aliases in the manifest.
@@ -86,7 +84,8 @@ int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 
 void func_020393d4(int *p, int v);
 void func_020393c4(int *p, int v);
-void func_ov025_021125dc(char *self, char *a, char *b);
+void func_ov025_021125bc(daDpLift_c *self, dActor_c *other);
+void func_ov025_021125dc(void *collider, daDpLift_c *self, dActor_c *other);
 }
 
 // @symbol _ZN10daDpLift_cD1Ev
@@ -221,3 +220,61 @@ s32 daDpLift_c::InitResources()
  * destructors; the registration nodes are compiler temporaries. */
 DpLiftModelFilePtr data_ov025_02113ae0(1505);
 DpLiftCollisionFilePtr data_ov025_02113ad8(1506);
+
+/* Mesh-collider touch callback: remembers that the player (actor 0xbf)
+   touched the lift, for Behavior's idle state. */
+// @symbol func_ov025_021125bc
+extern "C" void func_ov025_021125bc(daDpLift_c *self, dActor_c *other)
+{
+    int isPlayer = other->actorID == 0xbf;
+    if (isPlayer)
+        self->mHadClsn = true;
+}
+
+/* The callback InitResources installs: drops the collider argument and
+   forwards (lift, other). */
+// @symbol func_ov025_021125dc
+extern "C" void func_ov025_021125dc(void *collider, daDpLift_c *self, dActor_c *other)
+{
+    func_ov025_021125bc(self, other);
+}
+
+/* local extern: the factory below spells the constructor chain by hand (see
+ * its comment), so it names each constructor and array callback by its
+ * mangled symbol rather than through the class headers. */
+extern "C" {
+void *_ZN7fBase_cnwEj(unsigned int size);
+dBgActor_c *_ZN10dBgActor_cC2Ev(dBgActor_c *object);
+Model *_ZN5ModelC1Ev(Model *object);
+void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride,
+    void (*ctor)(void *), void (*dtor)(void *));
+extern void *_ZTV10daDpLift_c[];
+Vector3 *_ZN7Vector3D1Ev(Vector3 *object);
+void func_0203d384(void);
+}
+
+// @symbol daDpLift_c_classInit
+/* Reconstructed source-style name: SM64DS proves daDpLift_c through RTTI,
+ * allocation size, vtable identity, and the DP_LIFT registry profile; later
+ * EAD lineage supplies classInit. Exact original spelling is not preserved.
+ * Historical alias: PyramidLift_Spawn.
+ *
+ * Spelled by hand rather than `return new daDpLift_c;`, which comes out 0x38
+ * bytes for the ROM's 0x64: the ROM constructs mMarkerPositions through
+ * __cxa_vec_ctor(..., func_0203d384, _ZN7Vector3D1Ev) with an empty
+ * constructor function, and types.h's Vector3 declares no constructor, so the
+ * implicit one never emits that call. This TU emits the vtable, whose symbol
+ * names the vtable object two words ahead of the slot array, so the vptr
+ * store reads &_ZTV10daDpLift_c[2]. */
+extern "C" daDpLift_c *daDpLift_c_classInit(void)
+{
+    daDpLift_c *actor = (daDpLift_c *)_ZN7fBase_cnwEj(sizeof(daDpLift_c));
+    if (actor) {
+        _ZN10dBgActor_cC2Ev(actor);
+        *(void **)actor = &_ZTV10daDpLift_c[2];
+        _ZN5ModelC1Ev(&actor->mModel2);
+        __cxa_vec_ctor(actor->mMarkerPositions, 10, sizeof(Vector3),
+            (void (*)(void *))func_0203d384, (void (*)(void *))_ZN7Vector3D1Ev);
+    }
+    return actor;
+}

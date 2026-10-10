@@ -23,9 +23,9 @@
  *     mActive          0x32a
  *     mTouchedKoopa    0x32b  set by func_ov060_021183cc when the other actor is 0x117
  *
- * src/actors/daKpa3Bg_c.cpp licenses 0x02117d1c..0x021183cc (D1 through
- * InitResources). func_ov060_021183cc, func_ov060_021183f4 and
- * daKpa3Bg_c_classInit at 0x02118408 stay outside that TU. The factory
+ * src/actors/daKpa3Bg_c.cpp licenses 0x02117d1c..0x02118438: D1 through
+ * InitResources, then func_ov060_021183cc, its collider veneer
+ * func_ov060_021183f4 and daKpa3Bg_c_classInit at 0x02118408. The factory
  * (historical alias BowserSkyPlatform_Spawn) installs _ZTV10daKpa3Bg_c for
  * g_profile_KOOPA3BG (historical alias BowserSkyPlatform_SpawnInfo).
  */

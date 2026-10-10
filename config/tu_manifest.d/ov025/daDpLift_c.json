@@ -6,18 +6,19 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "contiguous linker run: 0x21120e4..0x21125bc, 6 function(s), from build/tu_map.json (tools/tu_map.py); this entry licenses the whole run as one file.",
+    "HISTORY: contiguous linker run: 0x21120e4..0x21125bc, 6 function(s), from build/tu_map.json (tools/tu_map.py); this entry licenses the whole run as one file.",
     "MEASURED: the run's edges are labelled on both sides with zero gap. The preceding function is daObjDpBrock_c_classInit (0x021120ac..0x021120e4), the factory of the other class ov025 hosts there (PyramidStep, RTTI daObjDpBrock_c), so the two classes are not interleaved. The following function is func_ov025_021125bc, not a daDpLift_c member. Every one of the six addresses in between carries a daDpLift_c name in config/arm9/overlays/ov025/symbols.txt and all six are `complete` one-function sources in that module's delinks.txt, so nothing unenrolled sits inside the run.",
     "class label(s): daDpLift_c -- the cartridge's own RTTI spelling. Read out of extracted/overlays/overlay_0025.bin (ov025 loads at 0x021111a0, extracted/dsd/arm9_overlays/overlays.yaml): the typeinfo word of the vtable header at 0x021139d0 (address point 0x021139d4 - 4) is 0x02113994; that _ZTI reads [0x0209a764 (_ZTVN3abi20__si_class_type_infoE), 0x021139a0, 0x021089ec (_ZTI10dBgActor_c)]; and _ZTS at 0x021139a0 is \"10daDpLift_c\\0\". The class carried the coined name PyramidLift until the commit before this one; under that spelling _ZTI and _ZTS had no configured home and this object could not license its RTTI.",
     "MEASURED: the out-of-line destructor, declared first in the header and defined first in the TU under `#pragma defer_codegen off`, emits D1 then D0 in the cartridge's order (0x021120e4, 0x02112148) plus a homeless D2 licensed as deadstrip. The inline-empty destructor used by ov022 daObjFl_Ring_c keeps D1/D0 in order only under deferred codegen, and deferred codegen makes the InitResources opt_strength_reduction bracket file-global, which size-DIFFs Render's indexed loop; with the inline destructor and defer_codegen off, D1/D0 land after InitResources.",
     "SCOPE: func_ov025_021125bc, func_ov025_021125dc (the collision callback InitResources installs) and the factory daDpLift_c_classInit (0x021125f0) sit immediately to the right of this run and remain one-function sources; they are not claimed here.",
-    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)",
+    "CLASSINIT TAIL FOLD (2026-10-09): the run 0x021125bc..0x02112654 abuts this TU's .text end with no gap and is now inside it, appended last under the file-level #pragma defer_codegen off. func_ov025_021125bc sets this class's mHadClsn (+0x3f7, the flag Behavior's idle state tests and clears every frame) when the touching actor's actorID is 0xbf (the player); func_ov025_021125dc is the dBgW callback veneer that drops the collider and forwards (lift, other) to it, and its only reference is this TU's InitResources (func_020393c4(&mMeshCollider, &func_ov025_021125dc)); daDpLift_c_classInit (operator new 0x3fc, dBgActor_c base ctor, _ZTV10daDpLift_c vptr store, Model ctor for mModel2, __cxa_vec_ctor over the ten mMarkerPositions with func_0203d384/_ZN7Vector3D1Ev) is the retired shard's hand-spelled chain with typed operands, because `return new daDpLift_c;` compiles to 0x38 bytes without the array-constructor call, for the DP_LIFT profile. The unit's .text is 0x021120e4..0x02112654, the end of ov025 .text (.rodata starts at 0x02112654). The added code advances mwcc's compiler-label counter by 2, so the two .bss destructor-registration nodes were renamed @429 -> @431 (model handle, 0x02113af4) and @430 -> @432 (collision handle, 0x02113ae8) here and in ov025 symbols.txt, matched through their __sinit relocations."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x021120e4",
-      "end": "0x021125bc"
+      "end": "0x02112654"
     },
     {
       "name": ".init",
@@ -77,6 +78,27 @@
       "size": "0x00000124",
       "legacy_source": "src/_ZN10daDpLift_c13InitResourcesEv.cpp",
       "ordinal": 5
+    },
+    {
+      "symbol": "func_ov025_021125bc",
+      "address": "0x021125bc",
+      "size": "0x00000020",
+      "legacy_source": "src/unnamed/ov025/func_ov025_021125bc.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov025_021125dc",
+      "address": "0x021125dc",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/ov025/func_ov025_021125dc.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "daDpLift_c_classInit",
+      "address": "0x021125f0",
+      "size": "0x00000064",
+      "legacy_source": "src/d_a_dp_lift.cpp",
+      "ordinal": 8
     }
   ],
   "data": [],
@@ -96,14 +118,14 @@
       "evidence": "model handle constructed with file ID 1505"
     },
     {
-      "symbol": "@430",
+      "symbol": "@432",
       "address": "0x02113ae8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated collision destructor-registration node"
     },
     {
-      "symbol": "@429",
+      "symbol": "@431",
       "address": "0x02113af4",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -123,8 +145,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov025-daDpLift_c/daDpLift_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 0,
-    "functions_declared": 6,
+    "functions_matched": 9,
+    "functions_declared": 9,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN10daDpLift_cD2Ev",
@@ -138,11 +160,6 @@
         9,
         10,
         11,
-        24,
-        25,
-        26,
-        27,
-        28,
         29,
         30,
         31,
@@ -154,7 +171,12 @@
         37,
         38,
         39,
-        40
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -185,8 +207,8 @@
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
-      "every_declared_function_bytes_match": "FAIL",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 19 unlicensed section/symbol(s), 3 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -205,7 +227,7 @@
       },
       "tuRange": {
         "start": "0x021120e4",
-        "end": "0x021125bc",
+        "end": "0x02112654",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -213,7 +235,7 @@
         {
           "section": ".text",
           "start": "0x021120e4",
-          "end": "0x021125bc",
+          "end": "0x02112654",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -240,7 +262,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 12
+          "LICENSED": 15
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -251,19 +273,19 @@
           {
             "section": ".init",
             "original": [
-              43
+              48
             ],
             "desired": [
-              43
+              48
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              41
+              46
             ],
             "desired": [
-              41
+              46
             ]
           },
           {
@@ -507,13 +529,13 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@429",
+      "symbol": "@431",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local model registration node is a configured initializer relocation destination at 0x02113af4"
     },
     {
-      "symbol": "@430",
+      "symbol": "@432",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local collision registration node is a configured initializer relocation destination at 0x02113ae8"
@@ -585,7 +607,7 @@
       "source": "0x02112b04",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@429",
+      "symbol": "@431",
       "addend": 0,
       "target_module": "ov025",
       "target_address": "0x02113af4"
@@ -615,7 +637,7 @@
       "source": "0x02112b14",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@430",
+      "symbol": "@432",
       "addend": 0,
       "target_module": "ov025",
       "target_address": "0x02113ae8"

@@ -4,9 +4,9 @@
  * follows the X and Z angles; the moving mesh collider follows all three. The class name is the ROM's own RTTI
  * spelling (evidence in include/daKpa2Bg_c.h).
  *
- * ROM span 0x02117980..0x02117cdc: D1 through InitResources, nine functions in
- * ROM order under `#pragma defer_codegen off`. daKpa2Bg_c_classInit at
- * 0x02117cdc stays out of this TU.
+ * ROM span 0x02117980..0x02117d1c: D1 through InitResources, then the registry
+ * factory daKpa2Bg_c_classInit -- ten functions in ROM order under
+ * `#pragma defer_codegen off`.
  *
  * Known limits:
  * - common.h must come first. Matrix4x3 has two 0x30-byte spellings behind
@@ -141,4 +141,14 @@ int daKpa2Bg_c::InitResources()
     mAngleZSpeed = 0;
     mSoundHandle = 0;
     return 1;
+}
+
+/* recovered: vtable identified, globals resolved */
+/* `new daKpa2Bg_c` is the whole sequence the loose factory spelled by hand:
+ * fBase_c::operator new(0x570), dBgActor_c's base constructor, the vptr store,
+ * then the Model and dBgW_KcMbg member constructors. */
+// @symbol daKpa2Bg_c_classInit
+extern "C" daKpa2Bg_c *daKpa2Bg_c_classInit(void)
+{
+    return new daKpa2Bg_c;
 }

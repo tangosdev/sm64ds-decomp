@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov060/daFRing_c.
- * 6 function(s), .text 0x02118cfc..0x021191f4. daKpa_c's shockwave rings
+ * 7 function(s), .text 0x02118cfc..0x02119264. daKpa_c's shockwave rings
  * (registry profile FIRERING).
  *
  * NAME: _ZTS9daFRing_c is "9daFRing_c" at ov060 0x0211ab08; _ZTI at 0x0211ab14
@@ -11,8 +11,8 @@
  * _ZTS. Under `#pragma defer_codegen off` it comes out D1 (0x02118cfc), D0
  * (0x02118d64), then a D2 the cartridge has no home for (manifest: deadstrip);
  * the same pragma lays .text down in source order, so this file is
- * ROM-ascending. The factory daFRing_c_classInit (0x021191f4) stays in its own
- * source, src/d_a_f_ring.c.
+ * ROM-ascending. The registry factory daFRing_c_classInit (0x021191f4) is the
+ * last function.
  */
 
 #pragma defer_codegen off
@@ -174,3 +174,19 @@ s32 daFRing_c::InitResources()
 FRingModelFilePtr data_ov060_0211b208(0x384);
 FRingAnimationFileHandle data_ov060_0211b1f8(0x383);
 FRingTexSequenceFilePtr data_ov060_0211b200(0x385);
+
+/* recovered: vtable identified, globals resolved */
+/* Reconstructed source-style name: SM64DS proves daFRing_c through RTTI,
+ * allocation size, vtable identity, and the FIRERING registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: BowserShockwaves_Spawn.
+ *
+ * `new daFRing_c` is the whole sequence the loose factory spelled by hand:
+ * fBase_c::operator new(0x218), dActor_c's base constructor, the vptr store,
+ * then the eight member constructors (two ModelAnim / TextureSequence /
+ * MaterialChanger / TextureTransformer sets) in declaration order. */
+// @symbol daFRing_c_classInit
+extern "C" daFRing_c *daFRing_c_classInit(void)
+{
+    return new daFRing_c;
+}

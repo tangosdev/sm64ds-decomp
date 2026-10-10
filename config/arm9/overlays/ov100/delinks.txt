@@ -18,11 +18,7 @@ src/actors/daIbl_c.cpp:
 
 src/actors/daWanwan2_c.cpp:
     complete
-    .text start:0x021431c4 end:0x021442dc
-
-src/d_a_wanwan2.cpp:
-    complete
-    .text start:0x021442dc end:0x021443f4
+    .text start:0x021431c4 end:0x021443f4
 
 src/actors/daDoor_c.cpp:
     complete

@@ -65,7 +65,7 @@ struct daWanwan2_c : dEnemyBase_c {
        check) is not run. */
     u16 mHaltTimer;                         /* 0x6a6 */
     /* Counted down in Behavior, and the two sounds there play only while it is
-       zero. Nothing in daWanwan2_c.cpp or d_a_wanwan2.cpp sets it. */
+       zero. Nothing in daWanwan2_c.cpp sets it. */
     u16 unk_6a8;                            /* 0x6a8 */
     u8  pad_6aa[0x2];
     s32 mPathID;                            /* 0x6ac -- param1's low byte (0xff reads as 0) */

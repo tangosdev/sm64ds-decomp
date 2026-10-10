@@ -36,7 +36,7 @@
  * 0x02086b58.)
  *
  * This file is the whole linker unit 0x021443f4..0x021458d4, 32 functions:
- * D1 and D0 (daWanwan2_c_classInit, src/d_a_wanwan2.cpp, ends exactly at
+ * D1 and D0 (daWanwan2_c_classInit, src/actors/daWanwan2_c.cpp, ends exactly at
  * 0x021443f4 below them), the 24 helpers func_ov100_02144468 through
  * func_ov100_021453d8, CleanupResources, OnPendingDestroy, Render,
  * Behavior, InitResources, and last the registry factory daDoor_c_classInit

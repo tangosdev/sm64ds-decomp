@@ -7,16 +7,17 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x2130f00..0x2132654, 24 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "HISTORY: contiguous linker run: 0x2130f00..0x2132654, 24 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daMenbo_c",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "the compiler-generated __sinit_daMenbo_c.cpp is byte-identical to retail __sinit_ov090_02133ce8 (0x1c0): it constructs the model handle at 0x021344a0 (file 0x39f), the four anim handles at 0x02134488/0x02134480/0x02134490/0x02134498 (files 0x3a0..0x3a3), registers each destructor, then copies the eight pointer-to-member descriptors at 0x021340e0..0x02134118 into the four state nodes at 0x021344e4..0x02134514. The ctor word at 0x021340c4 points at that initializer."
+    "the compiler-generated __sinit_daMenbo_c.cpp is byte-identical to retail __sinit_ov090_02133ce8 (0x1c0): it constructs the model handle at 0x021344a0 (file 0x39f), the four anim handles at 0x02134488/0x02134480/0x02134490/0x02134498 (files 0x3a0..0x3a3), registers each destructor, then copies the eight pointer-to-member descriptors at 0x021340e0..0x02134118 into the four state nodes at 0x021344e4..0x02134514. The ctor word at 0x021340c4 points at that initializer.",
+    "CLASSINIT TAIL FOLD (2026-10-09): daMenbo_c_classInit (0x02132654..0x0213269c) abuts this TU's .text end with no gap and is now inside it, appended last under the file-level #pragma defer_codegen off and spelled `return new daMenbo_c;` (operator new 0x3b0, dEnemyBase_c base ctor, _ZTV9daMenbo_c vptr store, dCcAcPos_c/dBgCh_Actr/ModelAnim member ctors -- the retired shard's hand-spelled sequence). It builds only this class, for the MENBO profile; the unit is 0x02130f00..0x0213269c, bounded above by src/actors/daManta_c.cpp, which starts exactly at 0x0213269c. The earlier note's appeal to the daBDonketu_c/daBtfly_c boundary was a conservative choice, not evidence the factory belongs elsewhere."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x02130f00",
-      "end": "0x02132654"
+      "end": "0x0213269c"
     },
     {
       "name": ".init",
@@ -207,6 +208,13 @@
       "size": "0x00000008",
       "legacy_source": "src/_ZN9daMenbo_c13OnYoshiTryEatEv.cpp",
       "ordinal": 23
+    },
+    {
+      "symbol": "daMenbo_c_classInit",
+      "address": "0x02132654",
+      "size": "0x00000048",
+      "legacy_source": "src/d_a_menbo.c",
+      "ordinal": 24
     }
   ],
   "init": [
@@ -947,7 +955,7 @@
     "The defer_codegen pragma is live on its own control: deleting that one line leaves all 24 bodies matching but turns emission order into 23 ordinal pairs out of ROM order.",
     "INCLUDE ORDER IS MEASURED. common.h must precede daMenbo_c.h. Both spellings of Matrix4x3 share one guard; the flat twelve-word spelling is what func_ov090_02130f94 and func_ov090_02131e50 matched under, and with daMenbo_c.h first func_ov090_02131e50 DIFFs.",
     "Key-function TU: the destructor is the first virtual daMenbo_c declares and is written out of line here, so this compiler input emits _ZTV9daMenbo_c, _ZTI9daMenbo_c, _ZTS9daMenbo_c and the inherited RTTI chain. This promotion is text-only; .data licensing is not attempted and the ROM keeps supplying those bytes, exactly as the landed ov064/daOts_c and ov064/daBDonketu_c do. g_profile_MENBO at 0x02134144 sits between _ZTI9daMenbo_c and _ZTV9daMenbo_c, so licensing the vtable would need two disjoint .data intervals.",
-    "daMenbo_c_classInit at 0x02132654 is NOT part of this TU. The evidenced run ends at 0x02132654 and the factory stays in src/d_a_menbo.c, the same boundary the landed ov064/daBDonketu_c and ov100/daBtfly_c took for their own factories.",
+    "HISTORY: daMenbo_c_classInit at 0x02132654 is NOT part of this TU. The evidenced run ends at 0x02132654 and the factory stays in src/d_a_menbo.c, the same boundary the landed ov064/daBDonketu_c and ov100/daBtfly_c took for their own factories.",
     "ROM RTTI evidence for the class name: _ZTS9daMenbo_c at ov090 0x02134120 holds twelve bytes, the encoded string 9daMenbo_c followed by two zero bytes (terminator and padding), so the receipt dates to this exact spelling and the name is the cartridge's own rather than a coined one. _ZTI9daMenbo_c at 0x02134138 is a three-word abi __si_class_type_info record whose third word is _ZTI12dEnemyBase_c at ov002 0x021081c0. _ZTV9daMenbo_c at 0x02134168 carries a zero offset-to-top at -8 and _ZTI9daMenbo_c at -4, then 31 slots; ten target this run, at indices 0, 3, 6, 9, 12, 16, 17, 18, 19 and 29.",
     "The file-scope model handle, four anim handles, and four PMF state nodes are defined in this TU. mwcc emits __sinit_daMenbo_c.cpp, the ctor word, the eight anonymous pointer-to-member descriptors, and the five destructor-registration nodes. The eight state handlers were promoted to real daMenbo_c members -- the .data records at 0x021340e0..0x02134118 are pointer-to-member descriptors, so symbols.txt and attribution.json moved to the _ZN9daMenbo_c spellings. Class RTTI and the vtable stay externalized. The handwritten src/__sinit_ov090_02133ce8.c is retired.",
     "Local scratch ROM matched this machine's baseline control (ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40). Recorded rom.sha256 is the fleet SHA the other intact-object entries on this main share."
@@ -958,8 +966,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov090-daMenbo_c/daMenbo_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 24,
-    "functions_declared": 24,
+    "functions_matched": 25,
+    "functions_declared": 25,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN9daMenbo_cD2Ev",
@@ -973,8 +981,6 @@
         9,
         10,
         13,
-        81,
-        82,
         83,
         84,
         85,
@@ -989,7 +995,9 @@
         94,
         95,
         96,
-        97
+        97,
+        98,
+        99
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -1040,7 +1048,7 @@
       },
       "tuRange": {
         "start": "0x02130f00",
-        "end": "0x02132654",
+        "end": "0x0213269c",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -1048,7 +1056,7 @@
         {
           "section": ".text",
           "start": "0x02130f00",
-          "end": "0x02132654",
+          "end": "0x0213269c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1082,7 +1090,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 48
+          "LICENSED": 49
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1093,19 +1101,19 @@
           {
             "section": ".init",
             "original": [
-              100
+              102
             ],
             "desired": [
-              100
+              102
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              98
+              100
             ],
             "desired": [
-              98
+              100
             ]
           },
           {

@@ -3,10 +3,10 @@
  * own RTTI spelling (evidence in include/daKpa3Bg_c.h). The tree used to call
  * it BowserSkyPlatform.
  *
- * ROM span 0x02117d1c..0x021183cc: D1, D0, three helpers, CleanupResources,
- * Render, Behavior, InitResources. func_ov060_021183cc, func_ov060_021183f4
- * and daKpa3Bg_c_classInit at 0x02118408 stay outside this TU. Source order
- * is the reverse of the ROM. The destructor is under `#pragma opt_propagation on`
+ * ROM span 0x02117d1c..0x02118438: D1, D0, three helpers, CleanupResources,
+ * Render, Behavior, InitResources, the mesh-collider callback
+ * func_ov060_021183cc and its veneer func_ov060_021183f4, then the registry
+ * factory daKpa3Bg_c_classInit. Source order is the reverse of the ROM. The destructor is under `#pragma opt_propagation on`
  * and `#pragma defer_codegen off`, so it is emitted as it is parsed (D1, D0,
  * then a D2 the cartridge has no home for) before the deferred functions.
  * `#pragma opt_propagation off` is last in the file: deferred codegen uses that
@@ -74,7 +74,8 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
 void func_020393d4(void *p, void *v);
 void func_020393c4(void *p, void *v);
 void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
-void func_ov060_021183f4();
+void func_ov060_021183f4(void *collider, daKpa3Bg_c *self, dActor_c *other);
+void func_ov060_021183cc(daKpa3Bg_c *self, dActor_c *other);
 
 // local extern: defined below as a free function (cplusplus off has no member syntax); the header declares the member spelling for the PMF table.
 void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(char *self);
@@ -106,6 +107,49 @@ struct Kpa3BgCollisionFilePtr : SharedFilePtr {
     Kpa3BgCollisionFilePtr(u32 fileID);
     ~Kpa3BgCollisionFilePtr();
 };
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 11 -- daKpa3Bg_c_classInit, 0x02118408, size 0x30 */
+/* -------------------------------------------------------------------------- */
+// @symbol daKpa3Bg_c_classInit
+/* Reconstructed source-style name: SM64DS proves daKpa3Bg_c through RTTI,
+ * allocation size, vtable identity, and the KOOPA3BG registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: BowserSkyPlatform_Spawn.
+ *
+ * `new daKpa3Bg_c` is the whole sequence the loose factory spelled by hand:
+ * fBase_c::operator new(0x32c), dBgActor_c's base constructor and the vptr
+ * store (the class adds no member with a constructor). */
+extern "C" daKpa3Bg_c *daKpa3Bg_c_classInit(void)
+{
+    return new daKpa3Bg_c;
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 10 -- func_ov060_021183f4, 0x021183f4, size 0x14 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov060_021183f4
+/* dBgW callback veneer, armed by func_020393c4 in InitResources. Drops the
+   collider and forwards the platform and the touching actor into
+   func_ov060_021183cc. */
+extern "C" void func_ov060_021183f4(void *collider, daKpa3Bg_c *self, dActor_c *other)
+{
+    func_ov060_021183cc(self, other);
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 9 -- func_ov060_021183cc, 0x021183cc, size 0x28 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov060_021183cc
+/* Flags the platform when the actor that touched it is Bowser
+   (actor ID 0x117); Behavior clears the flag every frame. The comparison
+   is materialised into an int before the test, as the ROM does. */
+extern "C" void func_ov060_021183cc(daKpa3Bg_c *self, dActor_c *other)
+{
+    int isKoopa = other->actorID == 0x117;
+    if (isKoopa != 0)
+        self->mTouchedKoopa = 1;
+}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- _ZN10daKpa3Bg_c13InitResourcesEv, 0x021182b0, size 0x11c */

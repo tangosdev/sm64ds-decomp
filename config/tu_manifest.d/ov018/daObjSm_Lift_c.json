@@ -6,16 +6,17 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x21111a0..0x21117e8, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "HISTORY: contiguous linker run: 0x21111a0..0x21117e8, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjSm_Lift_c",
     "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "the compiler-generated __sinit_daObjSm_Lift_c.cpp is raw-byte-identical to retail __sinit_ov018_02112c14 (0x6c, ten relocations): the model handle (asset 1715) then the collision handle (asset 1716), each constructed and destructor-registered. The ctor word at 0x02112e6c points at that initializer."
+    "the compiler-generated __sinit_daObjSm_Lift_c.cpp is raw-byte-identical to retail __sinit_ov018_02112c14 (0x6c, ten relocations): the model handle (asset 1715) then the collision handle (asset 1716), each constructed and destructor-registered. The ctor word at 0x02112e6c points at that initializer.",
+    "CLASSINIT TAIL FOLD (2026-10-09): the run 0x021117e8..0x02111848 abuts this TU's .text end with no gap and is now inside it, appended last under the file-level #pragma defer_codegen off. func_ov018_021117e8 stores the touching actor into this class's unk_320 (+0x320, the word Behavior zeroes every frame and InitResources clears) when its actorID is 0xbf (the player); func_ov018_02111804 is the dBgW callback veneer that drops the collider and forwards (lift, other) to it, and its only reference is this TU's InitResources (func_020393c4(c + 0x124, func_ov018_02111804)); daObjSm_Lift_c_classInit is spelled `return new daObjSm_Lift_c;` (operator new 0x354, dBgActor_c base ctor, _ZTV14daObjSm_Lift_c vptr store -- the retired shard's hand-spelled sequence), for the SM_LIFT profile. The TU no longer includes decl_common.h, whose `extern int func_ov018_02111804[];` would clash with the definition; nothing else in the file needed it. The unit is 0x021111a0..0x02111848, bounded above by src/game/actors/d_a_pg_mthr.cpp, which starts exactly at 0x02111848. The new-expression advances mwcc's compiler-label counter by 28, so the two .bss destructor-registration nodes now compile as @800 (model handle, 0x02113bdc) and @801 (collision handle, 0x02113bd0); defined_symbol_renames maps them back to the configured @772/@773, because ov063 daPiano_c already defines a global @800."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x021111a0",
-      "end": "0x021117e8"
+      "end": "0x02111848"
     },
     {
       "name": ".init",
@@ -89,6 +90,27 @@
       "size": "0x00000134",
       "legacy_source": "src/_ZN14daObjSm_Lift_c13InitResourcesEv.cpp",
       "ordinal": 7
+    },
+    {
+      "symbol": "func_ov018_021117e8",
+      "address": "0x021117e8",
+      "size": "0x0000001c",
+      "legacy_source": "src/unnamed/ov018/func_ov018_021117e8.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov018_02111804",
+      "address": "0x02111804",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/ov018/func_ov018_02111804.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "daObjSm_Lift_c_classInit",
+      "address": "0x02111818",
+      "size": "0x00000030",
+      "legacy_source": "src/d_a_obj_sm_lift.c",
+      "ordinal": 10
     }
   ],
   "data": [],
@@ -134,14 +156,16 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov018-daObjSm_Lift_c/daObjSm_Lift_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 8,
-    "functions_declared": 8,
+    "functions_matched": 11,
+    "functions_declared": 11,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN7Vector3D1Ev",
-        "_ZN14daObjSm_Lift_cD2Ev"
+        "_ZN14daObjSm_Lift_cD2Ev",
+        "_ZN10dBgActor_cD2Ev"
       ],
       "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
         "_ZN14daObjSm_Lift_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
@@ -149,13 +173,8 @@
         9,
         10,
         15,
-        27,
         28,
         29,
-        30,
-        31,
-        32,
-        33,
         34,
         35,
         36,
@@ -165,7 +184,14 @@
         40,
         41,
         42,
-        43
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50
       ],
       "data": [
         "_ZTI14daObjSm_Lift_c",
@@ -197,7 +223,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 19 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 17 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -216,7 +242,7 @@
       },
       "tuRange": {
         "start": "0x021111a0",
-        "end": "0x021117e8",
+        "end": "0x02111848",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -224,7 +250,7 @@
         {
           "section": ".text",
           "start": "0x021111a0",
-          "end": "0x021117e8",
+          "end": "0x02111848",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -249,108 +275,12 @@
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
-      "linkedStorageAliases": {
-        "requested": [
-          {
-            "from": "_ZN18SmLiftModelFilePtrC1Ej",
-            "to": "func_02017acc",
-            "module": "arm9",
-            "address": "0x02017acc",
-            "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
-          },
-          {
-            "from": "_ZN18SmLiftModelFilePtrD1Ev",
-            "to": "func_02017ab4",
-            "module": "arm9",
-            "address": "0x02017ab4",
-            "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
-          },
-          {
-            "from": "_ZN20SmLiftClsnFileHandleC1Ej",
-            "to": "func_02017b4c",
-            "module": "arm9",
-            "address": "0x02017b4c",
-            "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
-          },
-          {
-            "from": "_ZN20SmLiftClsnFileHandleD1Ev",
-            "to": "SharedFilePtr_Destruct_Clsn",
-            "module": "arm9",
-            "address": "0x02017b34",
-            "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
-          },
-          {
-            "from": "__register_global_object",
-            "to": "func_020731dc",
-            "module": "arm9",
-            "address": "0x020731dc",
-            "evidence": "compiler-generated static initialization call shape and the two direct retail references in this initializer"
-          }
-        ],
-        "renamed": [
-          {
-            "symbolIndex": 120,
-            "from": "_ZN18SmLiftModelFilePtrC1Ej",
-            "to": "func_02017acc"
-          },
-          {
-            "symbolIndex": 123,
-            "from": "_ZN18SmLiftModelFilePtrD1Ev",
-            "to": "func_02017ab4"
-          },
-          {
-            "symbolIndex": 122,
-            "from": "_ZN20SmLiftClsnFileHandleC1Ej",
-            "to": "func_02017b4c"
-          },
-          {
-            "symbolIndex": 124,
-            "from": "_ZN20SmLiftClsnFileHandleD1Ev",
-            "to": "SharedFilePtr_Destruct_Clsn"
-          },
-          {
-            "symbolIndex": 121,
-            "from": "__register_global_object",
-            "to": "func_020731dc"
-          }
-        ],
-        "objisolate": {
-          "renamed": [
-            {
-              "symbolIndex": 120,
-              "from": "_ZN18SmLiftModelFilePtrC1Ej",
-              "to": "func_02017acc"
-            },
-            {
-              "symbolIndex": 123,
-              "from": "_ZN18SmLiftModelFilePtrD1Ev",
-              "to": "func_02017ab4"
-            },
-            {
-              "symbolIndex": 122,
-              "from": "_ZN20SmLiftClsnFileHandleC1Ej",
-              "to": "func_02017b4c"
-            },
-            {
-              "symbolIndex": 124,
-              "from": "_ZN20SmLiftClsnFileHandleD1Ev",
-              "to": "SharedFilePtr_Destruct_Clsn"
-            },
-            {
-              "symbolIndex": 121,
-              "from": "__register_global_object",
-              "to": "func_020731dc"
-            }
-          ],
-          "error": null
-        }
-      },
       "objectAudit": {
         "counts": {
-          "LICENSED": 14
+          "LICENSED": 17
         },
-        "orderOk": true,
-        "nonLicensed": [],
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
@@ -358,83 +288,35 @@
           {
             "section": ".init",
             "original": [
-              46
+              53
             ],
             "desired": [
-              46
-            ],
-            "anchors": {
-              "46": [
-                {
-                  "symbol": "__sinit_daObjSm_Lift_c.cpp",
-                  "address": 34679828,
-                  "sectionBase": 34679828
-                }
-              ]
-            }
+              53
+            ]
           },
           {
             "section": ".ctor",
             "original": [
-              44
+              51
             ],
             "desired": [
-              44
-            ],
-            "anchors": {
-              "44": [
-                {
-                  "symbol": ".p__sinit_daObjSm_Lift_c.cpp",
-                  "address": 34680428,
-                  "sectionBase": 34680428
-                }
-              ]
-            }
+              51
+            ]
           },
           {
             "section": ".bss",
             "original": [
-              23,
-              24,
-              25,
-              26
+              30,
+              31,
+              32,
+              33
             ],
             "desired": [
-              26,
-              24,
-              25,
-              23
-            ],
-            "anchors": {
-              "23": [
-                {
-                  "symbol": "@772",
-                  "address": 34683868,
-                  "sectionBase": 34683868
-                }
-              ],
-              "24": [
-                {
-                  "symbol": "data_ov018_02113bc8",
-                  "address": 34683848,
-                  "sectionBase": 34683848
-                }
-              ],
-              "25": [
-                {
-                  "symbol": "@773",
-                  "address": 34683856,
-                  "sectionBase": 34683856
-                }
-              ],
-              "26": [
-                {
-                  "symbol": "data_ov018_02113bc0",
-                  "address": 34683840,
-                  "sectionBase": 34683840
-                }
-              ]
-            }
+              33,
+              31,
+              32,
+              30
+            ]
           }
         ],
         "objisolate": {
@@ -442,22 +324,22 @@
             {
               "section": ".bss",
               "original": [
-                23,
-                24,
-                25,
-                26
+                30,
+                31,
+                32,
+                33
               ],
               "desired": [
-                26,
-                24,
-                25,
-                23
+                33,
+                31,
+                32,
+                30
               ],
               "slots": [
-                23,
-                24,
-                25,
-                26
+                30,
+                31,
+                32,
+                33
               ]
             }
           ],
@@ -465,8 +347,10 @@
           "sectionLinks": 0,
           "sectionInfos": 0,
           "error": null
-        }
+        },
+        "errors": null
       },
+      "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
       "symbolCheckErrors": [
         "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
@@ -588,6 +472,11 @@
       "symbol": "_ZN14daObjSm_Lift_cD2Ev",
       "disposition": "deadstrip",
       "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "base-object destructor emitted with the synthesized 'new daObjSm_Lift_c' in daObjSm_Lift_c_classInit (operator-new failure cleanup path); ROM keeps no home for it in this unit -- deadstripped by the linker, matching the other dBgActor_c-derived factory folds"
     }
   ],
   "production_mode": "intact-object",
@@ -782,6 +671,18 @@
       "addend": 0,
       "target_module": "ov018",
       "target_address": "0x02112c14"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@800",
+      "to": "@772",
+      "evidence": "compiler-local destructor-registration node for the model handle (0x02113bdc); the classInit fold advances mwcc's label counter by 28 and ov063 daPiano_c defines a global @800, so the compiled name is mapped back to the configured one"
+    },
+    {
+      "from": "@801",
+      "to": "@773",
+      "evidence": "compiler-local destructor-registration node for the collision handle (0x02113bd0); renumbered by the same classInit fold, mapped back to the configured name"
     }
   ]
 }

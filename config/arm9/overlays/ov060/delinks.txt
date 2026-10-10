@@ -6,81 +6,45 @@
     .bss        start:0x0211abe0 end:0x0211b240 kind:bss align:32
 src/actors/daKpa_c.cpp:
     complete
-    .text start:0x02111900 end:0x021163f0
+    .text start:0x02111900 end:0x02116484
     .init start:0x021195dc end:0x02119df0
     .ctor start:0x0211a4bc end:0x0211a4c0
     .data start:0x0211a4e8 end:0x0211a5c0
     .bss start:0x0211abe0 end:0x0211af74
 
-src/d_a_kpa_tail.c:
-    complete
-    .text start:0x021163f0 end:0x02116428
-
-src/d_a_kpa.c:
-    complete
-    .text start:0x02116428 end:0x02116484
-
 src/actors/daKpaFire_c.cpp:
     complete
-    .text start:0x02116484 end:0x02117938
+    .text start:0x02116484 end:0x02117980
     .init start:0x02119df0 end:0x02119f94
     .ctor start:0x0211a4c0 end:0x0211a4c4
     .bss start:0x0211af74 end:0x0211aff4
 
-src/d_a_kpa_fire.c:
-    complete
-    .text start:0x02117938 end:0x02117980
-
 src/actors/daKpa2Bg_c.cpp:
     complete
-    .text start:0x02117980 end:0x02117cdc
-
-src/d_a_kpa2_bg.c:
-    complete
-    .text start:0x02117cdc end:0x02117d1c
+    .text start:0x02117980 end:0x02117d1c
 
 src/actors/daKpa3Bg_c.cpp:
     complete
-    .text start:0x02117d1c end:0x021183cc
+    .text start:0x02117d1c end:0x02118438
     .init start:0x0211a000 end:0x0211a388
     .ctor start:0x0211a4c8 end:0x0211a4cc
     .data start:0x0211a930 end:0x0211a948
     .bss start:0x0211b01c end:0x0211b1c4
 
-src/unnamed/ov060/func_ov060_021183cc.c:
-    complete
-    .text start:0x021183cc end:0x021183f4
-
-src/unnamed/ov060/func_ov060_021183f4.c:
-    complete
-    .text start:0x021183f4 end:0x02118408
-
-src/d_a_kpa3_bg.c:
-    complete
-    .text start:0x02118408 end:0x02118438
-
 src/actors/daKirai_c.cpp:
     complete
-    .text start:0x02118438 end:0x02118cbc
+    .text start:0x02118438 end:0x02118cfc
     .init start:0x0211a388 end:0x0211a428
     .ctor start:0x0211a4cc end:0x0211a4d0
     .data start:0x0211aa30 end:0x0211aa50
     .bss start:0x0211b1c4 end:0x0211b1f8
 
-src/d_a_kirai.c:
-    complete
-    .text start:0x02118cbc end:0x02118cfc
-
 src/actors/daFRing_c.cpp:
     complete
-    .text start:0x02118cfc end:0x021191f4
+    .text start:0x02118cfc end:0x02119264
     .init start:0x0211a428 end:0x0211a4bc
     .ctor start:0x0211a4d0 end:0x0211a4d4
     .bss start:0x0211b1f8 end:0x0211b234
-
-src/d_a_f_ring.c:
-    complete
-    .text start:0x021191f4 end:0x02119264
 
 src/unnamed/ov060/__sinit_ov060_02119f94.c:
     complete

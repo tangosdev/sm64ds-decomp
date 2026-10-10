@@ -6,16 +6,17 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "contiguous linker run: 0x21431c4..0x21442dc, 16 function(s), from build/tu_map.json (tools/tu_map.py) -- the whole unit. daIbl_c_classInit (src/actors/daIbl_c.cpp) ends exactly at 0x021431c4 below it.",
+    "HISTORY: contiguous linker run: 0x21431c4..0x21442dc, 16 function(s), from build/tu_map.json (tools/tu_map.py) -- the whole unit. daIbl_c_classInit (src/actors/daIbl_c.cpp) ends exactly at 0x021431c4 below it.",
     "class label(s): daWanwan2_c (tu_map also tags daIbl_c, read from three words past daIbl_c's 31-slot vtable that are really this class's state-table pointer-to-member constants)",
     "module sinit corroboration: 7 sinit(s) / 7 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "upper edge: daWanwan2_c_classInit (src/d_a_wanwan2.cpp, 0x021442dc..0x021443f4) abuts this unit with no gap and stays a separate source: `return new daWanwan2_c;` omits its three __cxa_vec_ctor calls over the Vector3/Vector3s arrays (0xa4 bytes for 0x118). daDoor_c's D1 starts exactly at 0x021443f4 above it."
+    "HISTORY: upper edge: daWanwan2_c_classInit (src/d_a_wanwan2.cpp, 0x021442dc..0x021443f4) abuts this unit with no gap and stays a separate source: `return new daWanwan2_c;` omits its three __cxa_vec_ctor calls over the Vector3/Vector3s arrays (0xa4 bytes for 0x118). daDoor_c's D1 starts exactly at 0x021443f4 above it.",
+    "CLASSINIT TAIL FOLD (2026-10-09): daWanwan2_c_classInit (0x021442dc..0x021443f4) abuts this TU's .text end with no gap and is now inside it, appended last under the file-level #pragma defer_codegen off. `return new daWanwan2_c;` still comes out 0xa4 for 0x118 (no __cxa_vec_ctor over the Vector3/Vector3s arrays, since types.h's Vector3 and Vector3s declare no constructor), so the retired shard's hand-spelled C++ body moves in verbatim with its mangled externs kept TU-local. It builds only this class, for the WANWAN2 profile; the unit is 0x021431c4..0x021443f4, bounded above by src/actors/daDoor_c.cpp, which starts exactly at 0x021443f4."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x021431c4",
-      "end": "0x021442dc"
+      "end": "0x021443f4"
     }
   ],
   "functions": [
@@ -130,19 +131,26 @@
       "size": "0x00000008",
       "legacy_source": "src/_ZN11daWanwan2_c16OnAimedAtWithEggEv.cpp",
       "ordinal": 15
+    },
+    {
+      "symbol": "daWanwan2_c_classInit",
+      "address": "0x021442dc",
+      "size": "0x00000118",
+      "legacy_source": "src/d_a_wanwan2.cpp",
+      "ordinal": 16
     }
   ],
   "data": [],
   "bss": [],
   "notes": [
-    "Sixteen-function unit 0x021431c4..0x021442dc: D1 and D0 from the out-of-line destructor, the eight helpers func_ov100_02143370..func_ov100_02143b68, CleanupResources, OnPendingDestroy, Render, Behavior, InitResources and OnAimedAtWithEgg.",
+    "HISTORY: Sixteen-function unit 0x021431c4..0x021442dc: D1 and D0 from the out-of-line destructor, the eight helpers func_ov100_02143370..func_ov100_02143b68, CleanupResources, OnPendingDestroy, Render, Behavior, InitResources and OnAimedAtWithEgg.",
     "Written in ROM order under `#pragma defer_codegen off`, which keeps D1 ahead of D0. None of the legacy shards carried a pragma.",
     "The per-shard extern blocks are merged into one declaration per callee. Where shards disagreed on a callee's shape (dActor_c::Spawn's position by reference or pointer, data_ov100_02148008 as a Vector3 or three words, data_ov100_021486ac as a SharedFilePtr or an int array, the void/int return of func_02012694 and dCc_c::Update) the TU keeps one spelling; every caller reproduces with it.",
     "func_ov100_0214344c, func_ov100_021437d4, func_ov100_02143aa4 and func_ov100_02143ae0 were C shards; they compile as C++ here, and their stack vectors are a plain three-word struct so they carry no destructor.",
     "func_ov100_02143b68 copies the identity matrix through a twelve-word array struct; the C++ Matrix4x3 copy is the struct-copy DIFF described in notes/cpp-class-form.md (0x184 bytes for 0x148 inside this TU).",
     "func_ov100_02143b18 and Behavior share one pointer-to-member pair type (ChompState: enter, execute) over a non-polymorphic stand-in class; the two legacy shards each spelled their own.",
     "func_ov100_02143aa4 is the execute member of the only state (pointer-to-member constant data_ov100_02147ff8, copied by the module's static initializer into data_ov100_021486f4), with func_ov100_02143ae0 as its enter (data_ov100_02148000). Those constants follow daIbl_c's 31-slot vtable directly, which is where tu_map's daIbl_c tag and the old 'RollingIronBall_Kill' label came from.",
-    "daWanwan2_c_classInit (0x021442dc..0x021443f4) is not folded: `return new daWanwan2_c;` emits 0xa4 bytes for 0x118, without the three __cxa_vec_ctor calls (func_0203d384 over the two Vector3 arrays, func_0203d73c over the Vector3s array), because types.h's Vector3 and Vector3s declare no constructor. src/d_a_wanwan2.cpp keeps it."
+    "HISTORY: daWanwan2_c_classInit (0x021442dc..0x021443f4) is not folded: `return new daWanwan2_c;` emits 0xa4 bytes for 0x118, without the three __cxa_vec_ctor calls (func_0203d384 over the two Vector3 arrays, func_0203d73c over the Vector3s array), because types.h's Vector3 and Vector3s declare no constructor. src/d_a_wanwan2.cpp keeps it."
   ],
   "compiler_only_output": [
     {
@@ -248,8 +256,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov100-daWanwan2_c/daWanwan2_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 16,
-    "functions_declared": 16,
+    "functions_matched": 17,
+    "functions_declared": 17,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN11daWanwan2_cD2Ev",
@@ -266,8 +274,6 @@
         10,
         11,
         12,
-        37,
-        38,
         39,
         40,
         41,
@@ -282,7 +288,9 @@
         50,
         51,
         52,
-        53
+        53,
+        54,
+        55
       ],
       "data": [
         "_ZTV11daWanwan2_c",

@@ -24,22 +24,10 @@ src/actors/daObjDpBrock_c.cpp:
 
 src/actors/daDpLift_c.cpp:
     complete
-    .text start:0x021120e4 end:0x021125bc
+    .text start:0x021120e4 end:0x02112654
     .init start:0x02112aac end:0x02112b18
     .ctor start:0x02112b24 end:0x02112b28
     .bss start:0x02113ad8 end:0x02113b00
-
-src/unnamed/ov025/func_ov025_021125bc.cpp:
-    complete
-    .text start:0x021125bc end:0x021125dc
-
-src/unnamed/ov025/func_ov025_021125dc.c:
-    complete
-    .text start:0x021125dc end:0x021125f0
-
-src/d_a_dp_lift.cpp:
-    complete
-    .text start:0x021125f0 end:0x02112654
 
 src/unnamed/ov025/__sinit_ov025_021129dc.c:
     complete

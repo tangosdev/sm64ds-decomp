@@ -27,21 +27,21 @@
  * "Kill". Neither is a virtual function of either class: both run on this
  * class's fields.
  *
- * This file is the whole linker unit 0x021431c4..0x021442dc, 16 functions:
+ * This file is the whole linker unit 0x021431c4..0x021443f4, 17 functions:
  * D1 and D0 (daIbl_c_classInit, the last function of src/actors/daIbl_c.cpp,
  * ends exactly at 0x021431c4 below them), the eight helpers
  * func_ov100_02143370 through func_ov100_02143b68, CleanupResources,
- * OnPendingDestroy, Render, Behavior, InitResources and OnAimedAtWithEgg.
- * The registry factory daWanwan2_c_classInit (0x021442dc..0x021443f4) stays
- * in its own source: see the note at the end of this file. daDoor_c's D1
- * starts at 0x021443f4 above it. The out-of-line destructor is the key
+ * OnPendingDestroy, Render, Behavior, InitResources, OnAimedAtWithEgg and
+ * the registry factory daWanwan2_c_classInit (hand-spelled; see its note at
+ * the end of this file). daDoor_c's D1 starts at 0x021443f4 above it. The out-of-line destructor is the key
  * function, so this TU also emits the vtable and the RTTI.
  *
  * It replaces the one-function sources for _ZN11daWanwan2_cD1Ev,
  * _ZN11daWanwan2_cD0Ev, func_ov100_02143370 .. func_ov100_02143b68,
  * _ZN11daWanwan2_c16CleanupResourcesEv, _ZN11daWanwan2_c16OnPendingDestroyEv,
  * _ZN11daWanwan2_c6RenderEv, _ZN11daWanwan2_c8BehaviorEv,
- * _ZN11daWanwan2_c13InitResourcesEv and _ZN11daWanwan2_c16OnAimedAtWithEggEv.
+ * _ZN11daWanwan2_c13InitResourcesEv, _ZN11daWanwan2_c16OnAimedAtWithEggEv and
+ * daWanwan2_c_classInit.
  * Each member keeps the provenance notes its source carried.
  *
  * `#pragma defer_codegen off` keeps this file in ROM order.
@@ -878,11 +878,68 @@ s32 daWanwan2_c::OnAimedAtWithEgg()
     return 0;
 }
 
-/* daWanwan2_c_classInit (0x021442dc..0x021443f4) is not in this file. Written
- * as `return new daWanwan2_c;` it comes out 0xa4 bytes for the ROM's 0x118:
- * the ROM constructs mLinkPos and mLinkVel through
- * __cxa_vec_ctor(..., func_0203d384, _ZN7Vector3D1Ev) and mUnk_768 through
- * __cxa_vec_ctor(..., func_0203d73c, _ZN8Vector3sD1Ev), with an empty
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 16 -- daWanwan2_c_classInit, 0x021442dc, size 0x118 */
+/* -------------------------------------------------------------------------- */
+// @symbol daWanwan2_c_classInit
+/* local extern: the factory below spells the constructor chain by hand (see
+ * its comment), so it names each constructor, destructor and array callback
+ * by its mangled symbol rather than through the class headers. */
+extern "C" {
+void *_ZN7fBase_cnwEj(unsigned int size);
+dEnemyBase_c *_ZN12dEnemyBase_cC2Ev(dEnemyBase_c *object);
+dCcAcPos_c *_ZN10dCcAcPos_cC1Ev(dCcAcPos_c *object);
+dBgCh_Actr *_ZN10dBgCh_ActrC1Ev(dBgCh_Actr *object);
+ModelAnim *_ZN9ModelAnimC1Ev(ModelAnim *object);
+dExtShadowModel_c *_ZN17dExtShadowModel_cC1Ev(dExtShadowModel_c *object);
+void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride,
+    void (*ctor)(void *), void (*dtor)(void *));
+extern void *_ZTV11daWanwan2_c[];
+Model *_ZN5ModelC1Ev(Model *object);
+Model *_ZN5ModelD1Ev(Model *object);
+dExtShadowModel_c *_ZN17dExtShadowModel_cD1Ev(dExtShadowModel_c *object);
+Vector3 *_ZN7Vector3D1Ev(Vector3 *object);
+void func_0203d384(void);
+Vector3s *_ZN8Vector3sD1Ev(Vector3s *object);
+void func_0203d73c(void);
+}
+
+/* Reconstructed source-style name: SM64DS proves daWanwan2_c through RTTI,
+ * allocation size, vtable identity, and the WANWAN2 registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: UnchainedChomp_Spawn.
+ *
+ * Spelled by hand rather than `return new daWanwan2_c;`, which comes out
+ * 0xa4 bytes for the ROM's 0x118: the ROM constructs mLinkPos and mLinkVel
+ * through __cxa_vec_ctor(..., func_0203d384, _ZN7Vector3D1Ev) and mUnk_768
+ * through __cxa_vec_ctor(..., func_0203d73c, _ZN8Vector3sD1Ev), with an empty
  * constructor function, and types.h's Vector3 and Vector3s declare no
- * constructor, so the implicit one never emits those three calls. The
- * hand-built factory in src/d_a_wanwan2.cpp still reproduces them. */
+ * constructor, so the implicit one never emits those three calls. The array
+ * callbacks receive the element address and discard lifecycle results; the
+ * empty func_0203d384/func_0203d73c callbacks ignore that address. This TU
+ * emits the vtable, whose symbol names the vtable object two words ahead of
+ * the slot array, so the vptr store reads &_ZTV11daWanwan2_c[2]. */
+extern "C" daWanwan2_c *daWanwan2_c_classInit()
+{
+    daWanwan2_c *actor =
+        (daWanwan2_c *)_ZN7fBase_cnwEj(sizeof(daWanwan2_c));
+    if (actor) {
+        _ZN12dEnemyBase_cC2Ev(actor);
+        *(void **)actor = &_ZTV11daWanwan2_c[2];
+        _ZN10dCcAcPos_cC1Ev(&actor->mdCcAcPos_c);
+        _ZN10dBgCh_ActrC1Ev(&actor->mWithMeshClsn);
+        _ZN9ModelAnimC1Ev(&actor->mModelAnim);
+        __cxa_vec_ctor(actor->mModels, 6, sizeof(Model),
+            (void (*)(void *))_ZN5ModelC1Ev, (void (*)(void *))_ZN5ModelD1Ev);
+        __cxa_vec_ctor(actor->mShadowModels, 6, sizeof(dExtShadowModel_c),
+            (void (*)(void *))_ZN17dExtShadowModel_cC1Ev, (void (*)(void *))_ZN17dExtShadowModel_cD1Ev);
+        _ZN17dExtShadowModel_cC1Ev(&actor->mShadowModel);
+        __cxa_vec_ctor(actor->mLinkPos, 6, sizeof(Vector3),
+            (void (*)(void *))func_0203d384, (void (*)(void *))_ZN7Vector3D1Ev);
+        __cxa_vec_ctor(actor->mLinkVel, 6, sizeof(Vector3),
+            (void (*)(void *))func_0203d384, (void (*)(void *))_ZN7Vector3D1Ev);
+        __cxa_vec_ctor(actor->mUnk_768, 6, sizeof(Vector3s),
+            (void (*)(void *))func_0203d73c, (void (*)(void *))_ZN8Vector3sD1Ev);
+    }
+    return actor;
+}

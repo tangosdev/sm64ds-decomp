@@ -1,9 +1,9 @@
 //cpp
 /* daMenbo_c -- Skeeter, the water strider on the lake.
  *
- * ov090 0x02130f00..0x02132654, twenty-four functions. daManta_c opens the
- * next run at 0x0213269c. The factory daMenbo_c_classInit stays in its own
- * file, and g_profile_MENBO stays out of this one. One out-of-line destructor
+ * ov090 0x02130f00..0x0213269c, twenty-five functions, the last being the
+ * registry factory daMenbo_c_classInit. daManta_c opens the next run at
+ * 0x0213269c. g_profile_MENBO stays out of this file. One out-of-line destructor
  * is the key function: it emits D1 then D0 and anchors the vtable.
  *
  * This TU also emits its own __sinit: five file-handle globals (one model,
@@ -999,3 +999,17 @@ MenboStateFn data_ov090_021344e4[2] = {
     &daMenbo_c::func_ov090_02131608,
     &daMenbo_c::func_ov090_02131584,
 };
+
+/* Reconstructed source-style name: SM64DS proves daMenbo_c through RTTI,
+ * allocation size, vtable identity, and the MENBO registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Skeeter_Spawn.
+ *
+ * `new daMenbo_c` is the whole sequence the loose factory spelled by hand:
+ * fBase_c::operator new(0x3b0), dEnemyBase_c's base constructor, the vptr
+ * store, then the dCcAcPos_c, dBgCh_Actr and ModelAnim member constructors. */
+// @symbol daMenbo_c_classInit
+extern "C" daMenbo_c *daMenbo_c_classInit(void)
+{
+    return new daMenbo_c;
+}

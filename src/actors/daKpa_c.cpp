@@ -1,8 +1,9 @@
 //cpp
 /* daKpa_c + daKpaTail_c -- Bowser and his tail, the ov060 boss-fight actors.
- * ROM span 0x02111900..0x021163f0, 79 functions: both destructor pairs,
+ * ROM span 0x02111900..0x02116484, 81 functions: both destructor pairs,
  * the shared fight helpers, both classes' resource/load/behavior/render
- * methods, and both InitResources. The class names are the cartridge's
+ * methods, both InitResources, and the two registry factories
+ * daKpaTail_c_classInit and daKpa_c_classInit. The class names are the cartridge's
  * own RTTI spellings: ex-coined Bowser/BowserTail, renamed with the
  * aliased-vtable evidence (shared _ZTV addresses, typeinfo slots and
  * ROM-spelled classInit factories), the same S35 shape as daKpaFire_c.
@@ -665,6 +666,42 @@ daKpaTail_c::~daKpaTail_c()
 #endif
 
 #pragma defer_codegen on
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 80 -- daKpa_c_classInit, 0x02116428, size 0x5c */
+/* -------------------------------------------------------------------------- */
+// @symbol daKpa_c_classInit
+/* recovered: vtable identified, globals resolved */
+/* Reconstructed source-style name: SM64DS proves daKpa_c through RTTI,
+ * allocation size, vtable identity, and the KOOPA registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Bowser_Spawn.
+ *
+ * `new daKpa_c` is the whole sequence the loose factory spelled by hand:
+ * fBase_c::operator new(0x454), dActor_c's base constructor, the vptr store,
+ * then the ModelAnim, TextureSequence, dBgCh_Actr, dExtShadowModel_c and
+ * dCcAcPos_c member constructors in declaration order. */
+extern "C" daKpa_c *daKpa_c_classInit(void)
+{
+    return new daKpa_c;
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 79 -- daKpaTail_c_classInit, 0x021163f0, size 0x38 */
+/* -------------------------------------------------------------------------- */
+// @symbol daKpaTail_c_classInit
+/* recovered: vtable identified, globals resolved */
+/* Reconstructed source-style name: SM64DS proves daKpaTail_c through RTTI,
+ * allocation size, vtable identity, and the KOOPATAIL registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: BowserTail_Spawn.
+ *
+ * `new daKpaTail_c` is fBase_c::operator new(0x118), dActor_c's base
+ * constructor, the vptr store and the dCcAc_c member constructor. */
+extern "C" daKpaTail_c *daKpaTail_c_classInit(void)
+{
+    return new daKpaTail_c;
+}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 78 -- _ZN11daKpaTail_c13InitResourcesEv, 0x021163b4, size 0x3c */
