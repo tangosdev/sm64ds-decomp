@@ -1,10 +1,9 @@
 //cpp
-/* One-player curling scene: the whole ov006 unit 0x020e0638..0x020e3820,
- * 46 functions in ROM order, from the destructor to InitResources. The
- * destructor is out of line and comes first, which makes this file the key
- * function's home, so the vtable and RTTI are emitted here too.
- * dScMgCurling_c_classInit, just above at 0x020e3820, is still its own
- * file (src/d_s_mg_curling.cpp).
+/* One-player curling scene: the whole ov006 unit 0x020e0638..0x020e3854,
+ * 47 functions in ROM order, from the destructor through InitResources to
+ * the registry factory dScMgCurling_c_classInit. The destructor is out of
+ * line and comes first, which makes this file the key function's home, so
+ * the vtable and RTTI are emitted here too.
  *
  * Functions run in ROM order under `#pragma defer_codegen off`; do not
  * reorder. The helpers are all dScMgCurling_c members: the state tables
@@ -1685,6 +1684,17 @@ s32 dScMgCurling_c::InitResources()
     _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16 *)0x4001050, 0, 4, 2, 0x10);
     unk_4ed8 = func_ov004_020adc1c();
     return 1;
+}
+
+/* Reconstructed source-style name: SM64DS proves the dScMgCurling_c RTTI
+ * identity, MG_CURLING registry ID, base-profile/factory relationship,
+ * allocation size, and vtable identity; later EAD lineage supplies the
+ * classInit spelling prior. Exact original SM64DS spelling is not preserved.
+ * Historical project alias: MgShuffleShell_Spawn. */
+// @symbol dScMgCurling_c_classInit
+extern "C" void *dScMgCurling_c_classInit()
+{
+    return new dScMgCurling_c;
 }
 
 /* Static-init globals (was the handwritten __sinit_ov006_021304ac shard).

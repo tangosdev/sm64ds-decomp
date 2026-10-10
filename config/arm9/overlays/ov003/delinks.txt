@@ -5,15 +5,7 @@
     .bss        start:0x020b18a0 end:0x020b18a0 kind:bss align:32
 src/actors/dScTitle_c.cpp:
     complete
-    .text start:0x020ad660 end:0x020adc74
-
-src/unnamed/ov003/func_ov003_020adc74.cpp:
-    complete
-    .text start:0x020adc74 end:0x020adcbc
-
-src/unnamed/ov003/func_ov003_020adcbc.cpp:
-    complete
-    .text start:0x020adcbc end:0x020addfc
+    .text start:0x020ad660 end:0x020addfc
 
 src/actors/dScStarSel_c.cpp:
     complete

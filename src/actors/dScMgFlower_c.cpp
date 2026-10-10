@@ -1,6 +1,8 @@
 //cpp
 /* The flower-petal minigame scene ("loves me, loves me not"): the player drags
- * petals off a flower with the stylus while a face watches. 9 functions.
+ * petals off a flower with the stylus while a face watches. 11 functions
+ * (.text 0x0212a554..0x0212b890, to the end of ov006's code), closing with
+ * the factory and the petal record's empty constructor.
  *
  * The pragmas carry the codegen; among them:
  *   - `#pragma defer_codegen off`: functions are emitted in source order and
@@ -9,8 +11,9 @@
  *     touch-sample loads get merged; turning it off file-wide breaks two
  *     other functions instead.
  * The destructor is defined out of line so D1 and D0 come out in cartridge
- * order; the extra D2 is dropped at link. The factory is in
- * src/d_s_mg_flower.cpp.
+ * order; the extra D2 is dropped at link. The factory's `new` expands the
+ * inline constructor, so it also emits dScMgSingle3DBase_c's D2, likewise
+ * dropped.
  *
  * Blocked: the 0x16-entry petal table at 0x4f38 is not typed in
  * dScMgFlower_c.h (mArray is a plain byte array), so the functions here
@@ -18,9 +21,10 @@
  * spellings are codegen levers, noted where they occur.
  *
  * comment leftovers:
- *  - func_ov006_0212a650 stays a free function: it is the empty element
- *    destructor handed to __cxa_vec_cleanup for the petal records, not a
- *    scene method.
+ *  - func_ov006_0212a650 and func_ov006_0212b88c stay free functions: they
+ *    are the empty element destructor and constructor handed to
+ *    __cxa_vec_cleanup and __cxa_vec_ctor for the petal records, not scene
+ *    methods.
  *  - The petal-table reads stay raw: PetalView, the B1/W1/A1/A2/LA/LB
  *    launders and the `(unsigned int)(c + i * 0x20) + off` spellings are
  *    measured codegen levers (each function's doc comment says which).
@@ -647,3 +651,39 @@ s32 dScMgFlower_c::InitResources()
     return 1;
 }
 
+/* The factory unit: the factory and the empty constructor of the petal
+ * records, which follows it in the ROM. */
+extern "C" {
+void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride,
+                    void (*ctor)(void *), void (*dtor)(void *));
+void *func_ov006_020c3f54(char *p);
+void func_ov006_0212b88c(void);
+}
+
+/* Builds the petal table, then the 0x51f8 object; ~dScMgFlower_c() above
+ * tears them down in the reverse order. Everything before these two calls
+ * (dScMgBase_c's C2, dScMgSingle3DBase_c's vptr and mSysTracker, then this
+ * class's own vptr) is the compiler's inlining of the base constructors. */
+inline dScMgFlower_c::dScMgFlower_c()
+{
+    __cxa_vec_ctor(mArray, 0x16, 0x20, (void (*)(void *))func_ov006_0212b88c,
+                   (void (*)(void *))func_ov006_0212a650);
+    func_ov006_020c3f54((char *)this + 0x51f8);
+}
+
+// @symbol dScMgFlower_c_classInit
+/* Reconstructed source-style name: SM64DS proves dScMgFlower_c through RTTI,
+ * allocation size, vtable identity, and the MG_FLOWER registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: func_ov006_0212b7f8. */
+extern "C" void *dScMgFlower_c_classInit()
+{
+    return new dScMgFlower_c;
+}
+
+// @symbol func_ov006_0212b88c
+/* The petal record's constructor, handed to __cxa_vec_ctor above. Empty, like
+ * its destructor func_ov006_0212a650. */
+extern "C" void func_ov006_0212b88c(void)
+{
+}

@@ -6,20 +6,21 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "WHOLE UNIT. tu_map calls 0x020dbe40..0x020de940 one contiguous linker run of 62 functions (build/tu_map.json, tools/tu_map.py). This TU licenses all 62, ROM ordinals 0..61, as one .text claim. Below it is src/minigames/d_s_mg_card.cpp (ends 0x020dbe40); above it is dScMgCoin_c_classInit in src/d_s_mg_coin.cpp (0x020de940..0x020de988), which tu_map does not put in this unit and which stays its own file.",
+    "HISTORY: WHOLE UNIT. tu_map calls 0x020dbe40..0x020de940 one contiguous linker run of 62 functions (build/tu_map.json, tools/tu_map.py). This TU licenses all 62, ROM ordinals 0..61, as one .text claim. Below it is src/minigames/d_s_mg_card.cpp (ends 0x020dbe40); above it is dScMgCoin_c_classInit in src/d_s_mg_coin.cpp (0x020de940..0x020de988), which tu_map does not put in this unit and which stays its own file.",
     "class label(s): dScMgCoin_c",
     "WIDENED from the earlier 33-function claim 0x020dbf7c..0x020dd0e0. The two holes that bounded it, _ZN11dScMgCoin_c19func_ov006_020dbe9cEv and _ZN11dScMgCoin_c19func_ov006_020dd0e0Ei, both byte-matched in their own shards since that claim was written; with them the run is one piece. 29 shards were folded: D1, D0 and _ZN11dScMgCoin_c19func_ov006_020dbe9cEv below, and the 26 functions from _ZN11dScMgCoin_c19func_ov006_020dd0e0Ei to InitResources above, including the four own overrides OnYoshiTryEat, Render, Behavior and InitResources.",
     "DESTRUCTOR ORDER. The cartridge has D1 at 0x020dbe40 below D0 at 0x020dbe64 and no D2 home. One out-of-line ~dScMgCoin_c() under #pragma defer_codegen off emits D1 then D0 in that order; the D2 mwccarm also emits is a compiler_only_output deadstrip row.",
     "KEY FUNCTION. The out-of-line destructor is the class's first declared virtual, so this TU now emits _ZTV/_ZTI/_ZTS11dScMgCoin_c and the ancestor RTTI chain (fBase_c, dBase_c, dScene_c, dScMgBase_c). Each is a deadstrip-data row with its canonical symbols.txt home; ov006 .data stays ROM-owned, so the TU stays text-only.",
     "SOURCE ORDER IS ROM-ASCENDING, lowest address first, under #pragma defer_codegen off; tubuild verify reports all 62 in ROM-ascending emission order.",
     "OUTPUT PATH: src/actors/dScMgCoin_c.cpp, unchanged.",
-    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "CLASSINIT TAIL FOLD (2026-10-10): the one-function source right of this unit, dScMgCoin_c_classInit (0x020de940, size 0x48, formerly src/d_s_mg_coin.cpp), abuts its .text end with no gap and is now inside it; the next ov006 delinks entry, src/actors/dScMgCup_c.cpp, starts exactly at its end 0x020de988. It is this class's factory: it calls fBase_c::operator new(0x51e0) -- sizeof(dScMgCoin_c), asserted in include/dScMgCoin_c.h -- runs dScMgBase_c's C2, stores _ZTV11dScMgCoin_c (0x0213bf50), the vtable this TU emits as its key-function owner, and seeds the word at +0x51c4 with func_0203b9b4(p, 1). It is the MG_COIN registry profile's factory. Written last as \return new dScMgCoin_c;: the header now declares a constructor (defined inline in this TU, above the factory) whose body is that one seed call, and the 0x51c4 pad is named mSeed, the same shape as daFish_c's constructor. defer_codegen off emits .text in source order."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020dbe40",
-      "end": "0x020de940"
+      "end": "0x020de988"
     }
   ],
   "functions": [
@@ -456,6 +457,13 @@
       "size": "0x0000023c",
       "legacy_source": "src/_ZN11dScMgCoin_c13InitResourcesEv.cpp",
       "ordinal": 61
+    },
+    {
+      "symbol": "dScMgCoin_c_classInit",
+      "address": "0x020de940",
+      "size": "0x00000048",
+      "legacy_source": "src/d_s_mg_coin.cpp",
+      "ordinal": 62
     }
   ],
   "data": [],
@@ -472,8 +480,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov006-dScMgCoin_c/dScMgCoin_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 62,
-    "functions_declared": 62,
+    "functions_matched": 63,
+    "functions_declared": 63,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN11dScMgCoin_cD2Ev"
@@ -484,8 +492,6 @@
       "droppedSections": [
         9,
         10,
-        113,
-        114,
         115,
         116,
         117,
@@ -500,7 +506,9 @@
         126,
         127,
         128,
-        129
+        129,
+        130,
+        131
       ],
       "data": [
         "_ZTI7fBase_c",

@@ -50,7 +50,7 @@ struct dScMgJump2_c : dScMgD3DBase_c {
        D1 sits at 0x020eebe8, BELOW D0 at 0x020eec9c. An out-of-line member
        definition makes mwccarm 2004/b56 emit the destructor group as
        D0-then-D1 plus a homeless D2, and a single translation unit covering
-       the whole .text run 0x020eebe8..0x020efc08 cannot then be linked: the
+       the whole .text run 0x020eebe8..0x020efc0c cannot then be linked: the
        functions are not emitted in ROM address order. Defining it here emits
        D1 before D0, emits no D2 at all, and costs nothing else -- it is still
        the same body, and it is still not inlined into callers because a

@@ -2,13 +2,12 @@
 /* Hide and Boo Seek. The player watches the Boo cross the room, the lights
  * go out, and they rub the Touch Screen to uncover every hiding Boo. The
  * first 15 rounds give three seconds; after that the clock is two. This
- * file is all 81 functions of dScMgTeresa_c's ov006 unit (.text
- * 0x0211cbd0..0x021207a8): the big Boo's flight, the countdown and the
+ * file is all 82 functions of dScMgTeresa_c's ov006 unit (.text
+ * 0x0211cbd0..0x021207dc): the big Boo's flight, the countdown and the
  * reveal sprites, the 16 hiding Boos (spawn, flight, wall bounce, fade and
  * the touch test against the rubbed-out BG0 tiles), the scene states, and
- * the class's own overrides. Below it is dScMgSound_c; above it is
- * dScMgTeresa_c_classInit in src/d_s_mg_teresa.cpp, which stays its own
- * file.
+ * the class's own overrides, and last the factory dScMgTeresa_c_classInit.
+ * Below it is dScMgSound_c.
  *
  * Nothing in the ROM names the helpers, so the members keep their
  * func_ov006_ names. InitResources, Behavior, Render and OnYoshiTryEat were
@@ -2435,6 +2434,16 @@ s32 dScMgTeresa_c::InitResources()
     data_ov004_020bc884 = -128;
     mHudScore = 0;
     return 1;
+}
+
+/* Reconstructed source-style name: SM64DS proves dScMgTeresa_c through RTTI,
+ * allocation size, vtable identity, and the MG_TERESA registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgHideAndBooSeek_Spawn. */
+// @symbol dScMgTeresa_c_classInit
+extern "C" void *dScMgTeresa_c_classInit()
+{
+    return new dScMgTeresa_c;
 }
 
 /* Static-init globals (was the handwritten __sinit_ov006_02132f68 shard).

@@ -6,16 +6,17 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x0212568c..0x0212a520, 42 functions. tools/tu_map.py cuts the run at 0x021295ac, between this labelled class run and the following unlabelled one, at 'medium' confidence: a contiguity cut that nothing in the ROM backs. The cut is moved here to 0x0212a520, the start of dScMgSnowball_c_classInit (0x0212a520..0x0212a554, src/d_s_mg_snowball.cpp), which stays its own TU the way dScMgCoin_c_classInit does beside the widened dScMgCoin_c.",
+    "HISTORY: contiguous linker run: 0x0212568c..0x0212a520, 42 functions. tools/tu_map.py cuts the run at 0x021295ac, between this labelled class run and the following unlabelled one, at 'medium' confidence: a contiguity cut that nothing in the ROM backs. The cut is moved here to 0x0212a520, the start of dScMgSnowball_c_classInit (0x0212a520..0x0212a554, src/d_s_mg_snowball.cpp), which stays its own TU the way dScMgCoin_c_classInit does beside the widened dScMgCoin_c.",
     "WHY 0x021295ac..0x0212a520 BELONGS TO THIS CLASS. func_ov006_021295ac is dScMgSnowball_c's constructor: it calls _ZN11dScMgBase_cC2Ev, stores the vptr _ZTV19dScMgSingle3DBase_c, then _ZTV15dScMgSnowball_c (the class's own, address _ZTV+8), constructs mModel at 0xaba4 and the three element arrays that ~dScMgSnowball_c (0x0212568c) tears down in reverse, with func_ov006_02125800 (in this TU) as the mArray3 element destructor and func_ov006_0212968c (empty, 0x0212968c) as its constructor. The 17 functions after it are per-element and whole-array helpers on the 0x32-element, 0x24-byte array at this+0xbe94 (the field map in include/dScMgSnowball_c.h) and the pointer-to-member tables data_ov006_02143020/02143038/02143050/02143070. Only dScMgSnowball_c_classInit, which calls the constructor, is factory code.",
     "class label(s): dScMgSnowball_c",
-    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "CLASSINIT TAIL FOLD (2026-10-10): dScMgSnowball_c_classInit (0x0212a520, size 0x34), formerly src/d_s_mg_snowball.cpp, is folded in as the last function, so the TU is 43 functions over .text 0x0212568c..0x0212a554, ROM ordinals 0..42, ROM-ascending under #pragma defer_codegen off. Membership: the factory calls fBase_c::operator new(0xc59c) == sizeof(dScMgSnowball_c) (the header's static size assert) and hands the storage to func_ov006_021295ac, this TU's constructor body, which stores _ZTV15dScMgSnowball_c. It is spelled as dScMgSnowball_c::operator new(sizeof(dScMgSnowball_c)) plus the explicit constructor call because that constructor stays a free function."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x0212568c",
-      "end": "0x0212a520"
+      "end": "0x0212a554"
     }
   ],
   "functions": [
@@ -312,6 +313,13 @@
       "size": "0x00000160",
       "legacy_source": "src/func_ov006_0212a3c0.c",
       "ordinal": 41
+    },
+    {
+      "symbol": "dScMgSnowball_c_classInit",
+      "address": "0x0212a520",
+      "size": "0x00000034",
+      "legacy_source": "src/d_s_mg_snowball.cpp",
+      "ordinal": 42
     }
   ],
   "data": [],
@@ -338,8 +346,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov006-dScMgSnowball_c/dScMgSnowball_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 42,
-    "functions_declared": 42,
+    "functions_matched": 43,
+    "functions_declared": 43,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN15dScMgSnowball_cD2Ev",
@@ -356,8 +364,6 @@
         10,
         22,
         23,
-        82,
-        83,
         84,
         85,
         86,
@@ -375,7 +381,9 @@
         98,
         99,
         100,
-        101
+        101,
+        102,
+        103
       ],
       "data": [
         "_ZTV15dScMgSnowball_c",

@@ -7,17 +7,18 @@
   "production_mode": "intact-object",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "PARTIAL RUN, 31 of 52. tools/tu_map.py calls 0x020e3854..0x020e6bf4 one contiguous linker run of 52 function(s) (build/tu_map.json), and queue_audit.py extends it over the zero-gap factory dScMgCurling2_c_classInit at 0x020e6bf4 for 53 in a 0x020e3854..0x020e6c28 span. This TU licenses 0x020e3854..0x020e5450, 31 function(s), ROM ordinals 0..30. The other 21 keep their own shards and their own delinks.txt entries; the 22nd is the sourceless hole in EDGE 1 below, which has neither.",
+    "HISTORY: PARTIAL RUN, 31 of 52. tools/tu_map.py calls 0x020e3854..0x020e6bf4 one contiguous linker run of 52 function(s) (build/tu_map.json), and queue_audit.py extends it over the zero-gap factory dScMgCurling2_c_classInit at 0x020e6bf4 for 53 in a 0x020e3854..0x020e6c28 span. This TU licenses 0x020e3854..0x020e5450, 31 function(s), ROM ordinals 0..30. The other 21 keep their own shards and their own delinks.txt entries; the 22nd is the sourceless hole in EDGE 1 below, which has neither.",
     "class label(s): dScMgCurling2_c",
-    "EDGE 1 -- a sourceless hole splits the run, and it is the only edge. ROM ordinal 31, func_ov006_020e5450 (0x020e5450, size 0x560), has no source anywhere in the tree: it carries a symbols.txt row but NO src/ file and NO entry in config/arm9/overlays/ov006/delinks.txt at all (the blocks jump from 0x020e513c-0x020e5450 straight to 0x020e59b0), so the cartridge's own bytes cover that range. It is a banked near-miss measured at 191 divergent words of 344 at the exact size 0x560 (nearmiss/db.jsonl). An older config/match_attempts.jsonl row read 29, but that attempt was scored over a 0x52c candidate against the 0x560 target, so the 29 was a truncated verdict and not a divergence count for this function; that row's divergences field has been cleared. It sits in the MIDDLE of the run, and no delink block and no TU manifest in this tree expresses a .text claim with a hole in it, so the run can only be licensed as one of its two contiguous sides.",
+    "HISTORY: EDGE 1 -- a sourceless hole splits the run, and it is the only edge. ROM ordinal 31, func_ov006_020e5450 (0x020e5450, size 0x560), has no source anywhere in the tree: it carries a symbols.txt row but NO src/ file and NO entry in config/arm9/overlays/ov006/delinks.txt at all (the blocks jump from 0x020e513c-0x020e5450 straight to 0x020e59b0), so the cartridge's own bytes cover that range. It is a banked near-miss measured at 191 divergent words of 344 at the exact size 0x560 (nearmiss/db.jsonl). An older config/match_attempts.jsonl row read 29, but that attempt was scored over a 0x52c candidate against the 0x560 target, so the 29 was a truncated verdict and not a divergence count for this function; that row's divergences field has been cleared. It sits in the MIDDLE of the run, and no delink block and no TU manifest in this tree expresses a .text claim with a hole in it, so the run can only be licensed as one of its two contiguous sides.",
     "WHY THE LOWER SIDE. This TU is the larger side by member count: 31 below the hole against 21 above it. It is also the side that holds the class's key function -- the destructor, which include/dScMgCurling2_c.h declares out of line and declares FIRST -- so it is the side that can emit and license the class's _ZTV/_ZTI/_ZTS. It is the larger side in bytes too: 0x1bfc against the upper side's 0x1278. The upper side holds four of the six own vtable overrides (InitResources, Behavior, Render, OnYoshiTryEat) and the classInit factory, but not the key function, so a promotion there would carry compiler_only_output: 0 -- the dScMgCoin_c outcome -- and would leave the destructor pair enrolled as shards.",
-    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "CLASSINIT TAIL FOLD (2026-10-10): the one-function source right of this TU, func_ov006_020e5450 (0x020e5450, size 0x560, formerly src/unnamed/ov006/func_ov006_020e5450.cpp), abuts its .text end with no gap and is now inside it; the TU now ends at 0x020e59b0, exactly where src/actors/dScMgCurling2_c_upper.cpp (StoneSpin) begins, so the sourceless hole EDGE 1 describes is closed and this class's run 0x020e3854..0x020e6bf4 is now two abutting promoted TUs, with the factory dScMgCurling2_c_classInit still its own file above them (merging the halves is a separate step, and the one that lets the factory fold: see the upper manifest). Membership: it is the stone-collision step of this class -- its only parameter types are dScMgCurling2_c * and the stone index, it walks mStone[0..10] and ends in this->SpawnValue(idx, i), and its only two references in the image are both in this class's upper half (0x020e5b78, the literal of StoneRest's veneer, and 0x020e5d8c, StoneSlide's direct call). It byte-matched as its own file first and folds in unchanged except that the TU's declarations are used (cstd::sqrt, the int-returning _ZN4cstd5atan2E5Fix12IiES1_, func_02012718(int, int)); written after SeparateStones, ahead of the static-init tables, because defer_codegen off emits .text in source order. It keeps C linkage because the upper TU calls it by its address-derived name. No @NNN or compiler-only change."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020e3854",
-      "end": "0x020e5450"
+      "end": "0x020e59b0"
     },
     {
       "name": ".init",
@@ -252,6 +253,13 @@
       "size": "0x00000314",
       "legacy_source": "src/func_ov006_020e513c.cpp",
       "ordinal": 30
+    },
+    {
+      "symbol": "func_ov006_020e5450",
+      "address": "0x020e5450",
+      "size": "0x00000560",
+      "legacy_source": "src/unnamed/ov006/func_ov006_020e5450.cpp",
+      "ordinal": 31
     }
   ],
   "data": [],
@@ -422,8 +430,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov006-dScMgCurling2_c/dScMgCurling2_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 31,
-    "functions_declared": 31,
+    "functions_matched": 32,
+    "functions_declared": 32,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN15dScMgCurling2_cD2Ev"
@@ -434,8 +442,6 @@
       "droppedSections": [
         9,
         10,
-        69,
-        70,
         71,
         72,
         73,
@@ -450,7 +456,9 @@
         82,
         83,
         84,
-        85
+        85,
+        86,
+        87
       ],
       "data": [
         "_ZTI15dScMgCurling2_c",
@@ -501,7 +509,7 @@
       },
       "tuRange": {
         "start": "0x020e3854",
-        "end": "0x020e5450",
+        "end": "0x020e59b0",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -509,7 +517,7 @@
         {
           "section": ".text",
           "start": "0x020e3854",
-          "end": "0x020e5450",
+          "end": "0x020e59b0",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -536,7 +544,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 40
+          "LICENSED": 41
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -547,40 +555,40 @@
           {
             "section": ".init",
             "original": [
-              88
+              90
             ],
             "desired": [
-              88
+              90
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              86
+              88
             ],
             "desired": [
-              86
+              88
             ]
           },
           {
             "section": ".bss",
             "original": [
-              62,
-              63,
               64,
               65,
               66,
               67,
-              68
+              68,
+              69,
+              70
             ],
             "desired": [
-              64,
-              65,
-              68,
               66,
-              63,
               67,
-              62
+              70,
+              68,
+              65,
+              69,
+              64
             ]
           }
         ],
@@ -589,31 +597,31 @@
             {
               "section": ".bss",
               "original": [
-                62,
-                63,
                 64,
                 65,
                 66,
                 67,
-                68
+                68,
+                69,
+                70
               ],
               "desired": [
-                64,
-                65,
-                68,
                 66,
-                63,
                 67,
-                62
+                70,
+                68,
+                65,
+                69,
+                64
               ],
               "slots": [
-                62,
-                63,
                 64,
                 65,
                 66,
                 67,
-                68
+                68,
+                69,
+                70
               ]
             }
           ],

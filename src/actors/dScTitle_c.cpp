@@ -4,11 +4,12 @@
  * The screen the game boots into: a 0x36-cell level grid with a cursor the
  * D-pad walks by row (+0x35) or column (+1), a confirm that either fades to
  * the picked level or hands off to one of the two special entries, and a
- * scrolling window that keeps the cursor on screen. 9 functions,
- * .text 0x020ad660..0x020adc74: the seven dScene_c slots every direct child
+ * scrolling window that keeps the cursor on screen. 11 functions,
+ * .text 0x020ad660..0x020addfc: the seven dScene_c slots every direct child
  * overrides (0, 3, 6, 9, 12, 16, 17 -- the class adds no new virtual), the
- * one free helper that shares the TU, and the factory dScTitle_c_classInit,
- * which abuts InitResources at 0x020adc10. D1/D0 are not written here: the
+ * free scroll helper func_ov003_020ad6ec, the factory dScTitle_c_classInit,
+ * which abuts InitResources at 0x020adc10, and above it the two BG0 text
+ * writers only the scroll helper calls. D1/D0 are not written here: the
  * header's inline destructor plus the key function (InitResources) emits
  * them, D1 first, the ROM's order.
  *
@@ -121,8 +122,14 @@ extern void func_02012790(int idx);
 extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(u32 a);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern void Enable3dEngines(void);
-extern void func_ov003_020adcbc(int a, int b, int c);
-extern void func_ov003_020adc74(void *p, int b, int c);
+extern void MultiStore16(unsigned short val, char *dst, int nbytes);
+/* One row of the level-name table the grid rows print from; only the name
+ * pointer is read. */
+struct TitleLevelName {
+    volatile signed char *name;
+    int pad;
+};
+extern TitleLevelName data_ov003_020b117c[];
 /* `void *` is the tree's plurality spelling for this one (it is declared
  * five different ways across five files); the cast at the one call site is
  * free. */
@@ -131,6 +138,57 @@ void *_ZN2G212GetBG0ScrPtrEv(void);
  * `char *`; the body ignores it. `void *` is the spelling neither call site
  * has to cast away from. */
 extern void func_ov003_020ad6ec(void *self);
+}
+
+/* [10] 0x020adcbc -- prints one row of the level grid into the BG0 screen
+ * map at (row, col): the level number in two digits (a blank for a leading
+ * zero), a blank, the level's name from data_ov003_020b117c, then blanks out
+ * to column 0x1d. Called only from func_ov003_020ad6ec. Each tile goes
+ * through MultiStore16 from a volatile temporary, five of them; that is the
+ * spelling the bytes need. */
+// @symbol func_ov003_020adcbc
+extern "C" void func_ov003_020adcbc(int level, int row, int col)
+{
+    volatile u16 t0, t1, t2, t3, t4;
+    int tens = level / 10;
+    int ones = level % 10;
+    short *scr = (short *)_ZN2G212GetBG0ScrPtrEv();
+    short *d = scr + (col + (row << 5));
+    t0 = tens == 0 ? 0xff : tens + 0x30;
+    MultiStore16(t0, (char *)d, 2);
+    t1 = ones + 0x30;
+    MultiStore16(t1, (char *)(d + 1), 2);
+    t2 = 0xff;
+    short *d2 = d + 2;
+    d += 3;
+    MultiStore16(t2, (char *)d2, 2);
+    int cnt = 0x1d - col;
+    volatile signed char *s = data_ov003_020b117c[level].name;
+    while (*s != 0) {
+        t3 = *s;
+        MultiStore16(t3, (char *)d, 2);
+        s++;
+        d++;
+        cnt--;
+    }
+    for (int i = 0; i < cnt; i++) {
+        t4 = 0xff;
+        MultiStore16(t4, (char *)d, 2);
+        d++;
+    }
+}
+
+/* [9] 0x020adc74 -- copies a NUL-terminated string into the BG0 screen map
+ * at (row, col), one tile per character. Called only from
+ * func_ov003_020ad6ec, for the caption. */
+// @symbol func_ov003_020adc74
+extern "C" void func_ov003_020adc74(signed char *s, int row, int col)
+{
+    short *p = (short *)_ZN2G212GetBG0ScrPtrEv() + (col + (row << 5));
+    if (*s == 0) return;
+    do {
+        *p++ = (short)*s++;
+    } while (*s != 0);
 }
 
 /* Reconstructed source-style name: SM64DS proves dScTitle_c through RTTI,
@@ -335,7 +393,7 @@ void func_ov003_020ad6ec(void *)
         func_ov003_020adcbc(j, i, 3);
         j++;
     }
-    func_ov003_020adc74(data_020a0d90, 0, 0);
+    func_ov003_020adc74((signed char *)data_020a0d90, 0, 0);
 }
 }
 
