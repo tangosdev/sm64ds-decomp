@@ -7,20 +7,21 @@
   "production_mode": "intact-object",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "WHOLE UNIT. tu_map calls 0x020fa75c..0x020ff3ec one contiguous linker run of 75 functions (build/tu_map.json, tools/tu_map.py). This TU licenses all 75, ROM ordinals 0..74, as one .text claim. Below it is src/minigames/d_s_mg_m_carlo2.cpp (ends 0x020fa75c with _ZN19dMgMCarlo2CardObj_cC1Ev); above it is dScMgPachinko_c_classInit in src/d_s_mg_pachinko.cpp (0x020ff3ec..0x020ff420), which tu_map does not put in this unit and which stays its own file, and then _ZN16dScMgPachinko2_cD1Ev, the next class.",
+    "HISTORY: WHOLE UNIT. tu_map calls 0x020fa75c..0x020ff3ec one contiguous linker run of 75 functions (build/tu_map.json, tools/tu_map.py). This TU licenses all 75, ROM ordinals 0..74, as one .text claim. Below it is src/minigames/d_s_mg_m_carlo2.cpp (ends 0x020fa75c with _ZN19dMgMCarlo2CardObj_cC1Ev); above it is dScMgPachinko_c_classInit in src/d_s_mg_pachinko.cpp (0x020ff3ec..0x020ff420), which tu_map does not put in this unit and which stays its own file, and then _ZN16dScMgPachinko2_cD1Ev, the next class.",
     "class label(s): dScMgPachinko_c",
     "WIDENED from the earlier 45-function claim 0x020fa75c..0x020fc8c0. It stopped at func_ov006_020fc8c0, the one function in the run that did not byte-match; that function now matches in its own commit, so the run is one piece. 30 shards were folded, all above the old claim: func_ov006_020fc8c0 through func_ov006_020feba8, then the four own overrides OnYoshiTryEat, Render, Behavior and InitResources.",
     "DESTRUCTOR ORDER. The cartridge has D1 at 0x020fa75c below D0 at 0x020fa780 and no D2 home. One out-of-line ~dScMgPachinko_c() under #pragma defer_codegen off emits D1 then D0 in that order; the D2 mwccarm also emits is a compiler_only_output deadstrip row.",
     "KEY FUNCTION. The out-of-line destructor is the class's first declared virtual, so this TU emits _ZTV/_ZTI/_ZTS15dScMgPachinko_c and the ancestor RTTI chain (fBase_c, dBase_c, dScene_c, dScMgBase_c). Each is a deadstrip-data row with its canonical symbols.txt home; ov006 .data stays ROM-owned, so the TU stays text-only.",
-    "SOURCE ORDER IS ROM-ASCENDING, lowest address first, under #pragma defer_codegen off; tubuild verify reports all 75 in ROM-ascending emission order.",
+    "HISTORY: SOURCE ORDER IS ROM-ASCENDING, lowest address first, under #pragma defer_codegen off; tubuild verify reports all 75 in ROM-ascending emission order.",
     "OUTPUT PATH: src/actors/dScMgPachinko_c.cpp, unchanged.",
-    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "CLASSINIT TAIL FOLD (2026-10-10): dScMgPachinko_c_classInit (0x020ff3ec, size 0x34), formerly src/d_s_mg_pachinko.cpp, is folded in as the last function, so the TU is 76 functions over .text 0x020fa75c..0x020ff420, ROM ordinals 0..75, ROM-ascending under #pragma defer_codegen off. Membership: the factory calls fBase_c::operator new(0x5c38) == sizeof(dScMgPachinko_c), runs dScMgBase_c C2 and stores _ZTV15dScMgPachinko_c (0x0213d9cc), the vtable this TU owns through its key function. Above it, 0x020ff420, is dScMgPachinko2_c's destructor."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020fa75c",
-      "end": "0x020ff3ec"
+      "end": "0x020ff420"
     },
     {
       "name": ".init",
@@ -563,6 +564,13 @@
       "size": "0x0000042c",
       "legacy_source": "src/_ZN15dScMgPachinko_c13InitResourcesEv.cpp",
       "ordinal": 74
+    },
+    {
+      "symbol": "dScMgPachinko_c_classInit",
+      "address": "0x020ff3ec",
+      "size": "0x00000034",
+      "legacy_source": "src/d_s_mg_pachinko.cpp",
+      "ordinal": 75
     }
   ],
   "data": [],
@@ -615,8 +623,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov006-dScMgPachinko_c/dScMgPachinko_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 75,
-    "functions_declared": 75,
+    "functions_matched": 76,
+    "functions_declared": 76,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN15dScMgPachinko_cD2Ev"
@@ -627,8 +635,6 @@
       "droppedSections": [
         9,
         10,
-        151,
-        152,
         153,
         154,
         155,
@@ -643,7 +649,9 @@
         164,
         165,
         166,
-        167
+        167,
+        168,
+        169
       ],
       "data": [
         "_ZTV15dScMgPachinko_c",
@@ -694,7 +702,7 @@
       },
       "tuRange": {
         "start": "0x020fa75c",
-        "end": "0x020ff3ec",
+        "end": "0x020ff420",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -702,7 +710,7 @@
         {
           "section": ".text",
           "start": "0x020fa75c",
-          "end": "0x020ff3ec",
+          "end": "0x020ff420",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -729,7 +737,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 82
+          "LICENSED": 83
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -740,36 +748,36 @@
           {
             "section": ".init",
             "original": [
-              170
+              172
             ],
             "desired": [
-              170
+              172
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              168
+              170
             ],
             "desired": [
-              168
+              170
             ]
           },
           {
             "section": ".bss",
             "original": [
-              146,
-              147,
               148,
               149,
-              150
+              150,
+              151,
+              152
             ],
             "desired": [
+              152,
               150,
               148,
-              146,
-              149,
-              147
+              151,
+              149
             ]
           }
         ],
@@ -778,25 +786,25 @@
             {
               "section": ".bss",
               "original": [
-                146,
-                147,
                 148,
                 149,
-                150
+                150,
+                151,
+                152
               ],
               "desired": [
+                152,
                 150,
                 148,
-                146,
-                149,
-                147
+                151,
+                149
               ],
               "slots": [
-                146,
-                147,
                 148,
                 149,
-                150
+                150,
+                151,
+                152
               ]
             }
           ],

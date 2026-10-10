@@ -1,6 +1,7 @@
 //cpp
-/* Puzzle Panic, the whole run 0x0210428c..0x02107858, 71 functions. The
- * factory and the static initializer live in their own files. Touch a panel
+/* Puzzle Panic, the whole run 0x0210428c..0x0210788c, 72 functions, closing
+ * with the factory dScMgPanel_c_classInit. The static initializer lives in
+ * its own file. Touch a panel
  * to flip it and its neighbours until every mFace matches mGoal.
  *
  * Functions run in ROM order under `#pragma defer_codegen off`; do not
@@ -2283,4 +2284,14 @@ s32 dScMgPanel_c::InitResources()
     func_ov004_020b0cac(0xd, 0x80, 0x40, 0, -1, 0xd);
     mHudScore = 0;
     return 1;
+}
+
+/* Reconstructed source-style name: SM64DS proves dScMgPanel_c through RTTI,
+ * allocation size, vtable identity, and the MG_PANEL registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgPuzzlePanelPuzzlePanic_Spawn. */
+// @symbol dScMgPanel_c_classInit
+extern "C" void *dScMgPanel_c_classInit()
+{
+    return new dScMgPanel_c;
 }

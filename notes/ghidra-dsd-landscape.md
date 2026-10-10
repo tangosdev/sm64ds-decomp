@@ -344,7 +344,7 @@ extern void *func_020adc74(void *p);
 ```
 
 There is no `func_020adc74` in any `symbols.txt`. The real symbols at that address are
-[func_ov003_020adc74](../src/unnamed/ov003/func_ov003_020adc74.cpp) and [func_ov004_020adc74](../src/minigames/d_s_mg_base.cpp). The author could not tell which overlay owned the target, so they wrote a **module-less placeholder** — which resolves to
+[func_ov003_020adc74](../src/actors/dScTitle_c.cpp) and [func_ov004_020adc74](../src/minigames/d_s_mg_base.cpp). The author could not tell which overlay owned the target, so they wrote a **module-less placeholder** — which resolves to
 nothing. Checking the ten ambiguous call targets against
 `config/unresolved-baseline.json`: **nine of ten are present as module-less phantom
 names** (all but `func_020aed98`, which is the one already correctly named).

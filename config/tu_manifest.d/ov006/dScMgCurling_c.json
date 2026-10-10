@@ -7,23 +7,24 @@
   "production_mode": "intact-object",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "WHOLE UNIT, 46 of 46. tools/tu_map.py calls 0x020e0638..0x020e3820 one contiguous linker run of 46 function(s) (build/tu_map.json); queue_audit.py extends it over the zero-gap factory dScMgCurling_c_classInit at 0x020e3820, and the real object run reaches the next class's first symbol at 0x020e3854. This TU licenses 0x020e0638..0x020e3820, all 46 function(s), ROM ordinals 0..45, in ROM-ascending source order. The factory dScMgCurling_c_classInit (0x020e3820..0x020e3854) stays its own file, src/d_s_mg_curling.cpp, and its own delinks entry, as every landed ov006 minigame class keeps its factory.",
+    "HISTORY: WHOLE UNIT, 46 of 46. tools/tu_map.py calls 0x020e0638..0x020e3820 one contiguous linker run of 46 function(s) (build/tu_map.json); queue_audit.py extends it over the zero-gap factory dScMgCurling_c_classInit at 0x020e3820, and the real object run reaches the next class's first symbol at 0x020e3854. This TU licenses 0x020e0638..0x020e3820, all 46 function(s), ROM ordinals 0..45, in ROM-ascending source order. The factory dScMgCurling_c_classInit (0x020e3820..0x020e3854) stays its own file, src/d_s_mg_curling.cpp, and its own delinks entry, as every landed ov006 minigame class keeps its factory.",
     "class label(s): dScMgCurling_c",
     "LOWER EDGE. func_ov006_020e0634 (0x020e0634, size 4) sits immediately below and is NOT in this run: its only referrer anywhere in the image is dScMgCup_c_classInit, and src/actors/dScMgCup_c.cpp already licenses .text through 0x020e0638, so 0x020e0638 is a class boundary the tree already agrees on from the other side.",
-    "UPPER EDGE. 0x020e3820 is dScMgCurling_c_classInit, the class's own factory in src/d_s_mg_curling.cpp, licensed by its own delinks entry 0x020e3820..0x020e3854; immediately above it, 0x020e3854 is _ZN15dScMgCurling2_cD1Ev, the first function of the already-promoted sibling TU src/actors/dScMgCurling2_c.cpp, which licenses .text from exactly 0x020e3854. The run's two ends are therefore both pinned by landed neighbours.",
+    "HISTORY: UPPER EDGE. 0x020e3820 is dScMgCurling_c_classInit, the class's own factory in src/d_s_mg_curling.cpp, licensed by its own delinks entry 0x020e3820..0x020e3854; immediately above it, 0x020e3854 is _ZN15dScMgCurling2_cD1Ev, the first function of the already-promoted sibling TU src/actors/dScMgCurling2_c.cpp, which licenses .text from exactly 0x020e3854. The run's two ends are therefore both pinned by landed neighbours.",
     "WIDENED from the earlier 27-function claim 0x020e0638..0x020e20bc. The hole that bounded it, ROM ordinal 27, func_ov006_020e20bc (0x020e20bc, size 0x5e0), was byte-matched in its own file first (src/func_ov006_020e20bc.cpp, enrolled complete in delinks). With it the run is one piece, and the 19 shards above it -- func_ov006_020e269c through _ZN14dScMgCurling_c13InitResourcesEv -- were folded in behind it, 20 one-function files retired in all. Every folded body is kept as it matched in its own file; only the declarations were merged (see notes).",
     "RELOCATION CENSUS, ROM-wide, and it discriminates. Keying on the exact tag module:overlay(6) returns EMPTY, because inter-overlay relocations into ov006 spell the target as a module SET, e.g. overlays(0,6); the census therefore filters on 'the target module set CONTAINS 6'. The module set alone still does not discriminate -- it returns nearly every word in the overlay -- so each referring word was resolved to its containing function or data object through config/arm9/overlays/ov006/symbols.txt, falling back to the nearest preceding data symbol for unlabelled words. After that resolution every one of the 27 members of the earlier claim (ordinals 0..26; the census was not re-run over the 19 folded in by the widen) has a referrer set drawn only from: this class's own _ZTV14dScMgCurling_c, its own g_profile_MG_CURLING at 0x0213c214, an arm_call from inside the same run, or this class's own pointer-to-member-function band at 0x0213c1e4..0x0213c2bc. Nothing outside ov006 refers into the run.",
     "BASE-RATE CONTROL over two sibling ov006 classes. The same census run against dScMgCup_c and dScMgCurling2_c returns DISJOINT pointer-table bands -- dScMgCup_c 0x0213bfe8..0x0213c040 and dScMgCurling2_c 0x0213c3d4..0x0213c4b4 against this class's 0x0213c1e4..0x0213c2bc -- and neither sibling's band refers into this run, nor does this class's band refer into either sibling's run. The census returns a different answer for different classes, so its answer for this one is worth banking.",
     "POSITIVE CONTROL. tools/rtti_vtables.py --own dScMgCurling_c returns this class's own _ZTV at the exact slot offsets for every vtable-pinned member: slot 0 _ZN14dScMgCurling_c13InitResourcesEv 0x020e3578, slot 6 _ZN14dScMgCurling_c8BehaviorEv 0x020e3528, slot 9 _ZN14dScMgCurling_c6RenderEv 0x020e34ec, slot 16 _ZN14dScMgCurling_cD1Ev 0x020e0638, slot 17 _ZN14dScMgCurling_cD0Ev 0x020e065c, slot 18 _ZN14dScMgCurling_c13OnYoshiTryEatEi 0x020e3470. Slots 16 and 17 are ordinals 0 and 1 of this TU's licensed range; the other four are ordinals 42..45, the top of the unit.",
     "REFUTATION, recorded as one. The hypothesis that vtable slots 0 and 3 are left unrelocated on an abstract base, and that an unlabelled func_ov006_* helper therefore hides at a TU edge, is FALSE on this class. Reading extracted/overlays/overlay_0006.bin and config/arm9/overlays/ov006/relocs.txt, all 36 slots are relocated -- the relocated run 0x0213c300..0x0213c390 is 37 consecutive words, 1 typeinfo plus 36 slots, with no gap. Slot 0 resolves to this class's own InitResources at 0x020e3578 and slot 3 to 0x020b0840 in overlays(0,4). The check bought nothing here and is recorded because it was run, not because it paid.",
     "VTABLE LENGTH. 36 slots, the same length as dScMgCurling2_c and dScMgD3DBase_c, and tools/rtti_vtables.py reports the base as dScMgBase_c (also 36 slots, six overridden). The 31-words-means-dActor_c / 32-words-means-dBgActor_c rule is an actor-hierarchy rule and does not reach this scene-manager family; it is recorded here as NOT APPLICABLE, not as evidence either way.",
-    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)."
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU).",
+    "CLASSINIT TAIL FOLD (2026-10-10): the one-function source right of this unit, dScMgCurling_c_classInit (0x020e3820, size 0x34, formerly src/d_s_mg_curling.cpp), abuts its .text end with no gap and is now inside it; the TU now ends at 0x020e3854, exactly where src/actors/dScMgCurling2_c.cpp (_ZN15dScMgCurling2_cD1Ev) begins. It is this class's factory: it calls fBase_c::operator new(0x4eec) -- sizeof(dScMgCurling_c) -- runs dScMgBase_c's C2 and stores _ZTV14dScMgCurling_c (0x0213c304), the vtable this TU emits as its key-function owner, and it is the MG_CURLING registry profile's (g_profile_MG_CURLING, 0x0213c214) factory. Written as \return new dScMgCurling_c; after InitResources, ahead of the static-init tables, because defer_codegen off emits .text in source order."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020e0638",
-      "end": "0x020e3820"
+      "end": "0x020e3854"
     },
     {
       "name": ".init",
@@ -363,6 +364,13 @@
       "size": "0x000002a8",
       "legacy_source": "src/_ZN14dScMgCurling_c13InitResourcesEv.cpp",
       "ordinal": 45
+    },
+    {
+      "symbol": "dScMgCurling_c_classInit",
+      "address": "0x020e3820",
+      "size": "0x00000034",
+      "legacy_source": "src/d_s_mg_curling.cpp",
+      "ordinal": 46
     }
   ],
   "data": [],
@@ -433,8 +441,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov006-dScMgCurling_c/dScMgCurling_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 46,
-    "functions_declared": 46,
+    "functions_matched": 47,
+    "functions_declared": 47,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN14dScMgCurling_cD2Ev"
@@ -445,8 +453,6 @@
       "droppedSections": [
         9,
         10,
-        99,
-        100,
         101,
         102,
         103,
@@ -461,7 +467,9 @@
         112,
         113,
         114,
-        115
+        115,
+        116,
+        117
       ],
       "data": [
         "_ZTV14dScMgCurling_c",
@@ -512,7 +520,7 @@
       },
       "tuRange": {
         "start": "0x020e0638",
-        "end": "0x020e3820",
+        "end": "0x020e3854",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -520,7 +528,7 @@
         {
           "section": ".text",
           "start": "0x020e0638",
-          "end": "0x020e3820",
+          "end": "0x020e3854",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -547,7 +555,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 55
+          "LICENSED": 56
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -558,40 +566,40 @@
           {
             "section": ".init",
             "original": [
-              118
+              120
             ],
             "desired": [
-              118
+              120
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              116
+              118
             ],
             "desired": [
-              116
+              118
             ]
           },
           {
             "section": ".bss",
             "original": [
-              92,
-              93,
               94,
               95,
               96,
               97,
-              98
+              98,
+              99,
+              100
             ],
             "desired": [
-              94,
-              95,
-              98,
               96,
-              93,
               97,
-              92
+              100,
+              98,
+              95,
+              99,
+              94
             ]
           }
         ],
@@ -600,31 +608,31 @@
             {
               "section": ".bss",
               "original": [
-                92,
-                93,
                 94,
                 95,
                 96,
                 97,
-                98
+                98,
+                99,
+                100
               ],
               "desired": [
-                94,
-                95,
-                98,
                 96,
-                93,
                 97,
-                92
+                100,
+                98,
+                95,
+                99,
+                94
               ],
               "slots": [
-                92,
-                93,
                 94,
                 95,
                 96,
                 97,
-                98
+                98,
+                99,
+                100
               ]
             }
           ],

@@ -8,8 +8,10 @@
  *   constant and loses the raw + 0x4000 base the ROM shares.
  * Leftover: DragUpdate and SeparateStones call
  *   _ZN4cstd5atan2E5Fix12IiES1_. cstd::atan2 takes Fix12 by value.
- * The state machine and the rest of the class live above the sourceless
- * hole in src/actors/dScMgCurling2_c_upper.cpp.
+ * This file is the class's lower half, .text 0x020e3854..0x020e59b0, 32
+ * functions in ROM order from the destructor to the stone-collision step
+ * func_ov006_020e5450. The state machine and the rest of the class follow
+ * directly in src/actors/dScMgCurling2_c_upper.cpp.
  */
 
 /* Required: ROM order, and the brackets on AgeMarks and DragUpdate. */
@@ -1004,6 +1006,128 @@ void dScMgCurling2_c::SeparateStones(int idx)
         }
     }
 }
+
+#define FMUL(a, b) ((int)(((long long)(a) * (b) + 0x800) >> 12))
+
+// @symbol func_ov006_020e5450
+/* Stone collision: the first live, moving stone within 0x18 of stone idx
+ * takes the hit. Both velocities are rotated into the contact frame, the
+ * along-contact parts swapped, and the results become each stone's new
+ * angle and speed; the moving stone is set back 0x1b000 along the contact
+ * line, the hit one is clamped to the rink. Then the bump sound and a
+ * SpawnValue for the pair. StoneSlide calls it directly and StoneRest
+ * through a veneer, both in the upper half, so it keeps C linkage.
+ *
+ * Two spellings are codegen levers, not style: the contact angle's cosine
+ * and sine get explicit long long copies (cw, sw), cast where they are
+ * made -- without the cast the sine's sign word is hoisted above the hit
+ * stone's table reads -- and the hit stone's vex is computed before the
+ * contact table words are read, which keeps both loads below the hit
+ * stone's chain. The rest (one rel/k/c/s set for both stones, pointer
+ * locals for the fields written after a call, the hitAngle reference) are
+ * described in notes/mwccarm-codegen.md 6cz. */
+extern "C" void func_ov006_020e5450(dScMgCurling2_c *self, int idx)
+{
+    long long sw;
+    long long cw;
+    int i;
+    int dx;
+    int dy;
+
+    for (i = 0; i < 11; i++) {
+        if (self->mStone[i].active == 0) continue;
+        if (idx == i) continue;
+        if (self->mStone[i].state == 0) continue;
+        if (self->mStone[i].state == 3) continue;
+        dy = self->mStone[i].y;
+        dx = self->mStone[i].x - self->mStone[idx].x;
+        dy -= self->mStone[idx].y;
+        if ((cstd::sqrt((u64)((long long)dx * dx + (long long)dy * dy)) >> 12) >= 0x18) continue;
+        {
+            int nex;
+            int ney;
+            u16 ang;
+            u16 rel;
+            int k;
+            int E;
+            int c;
+            int s;
+            int sP;
+            int cP;
+            int vmx;
+            int vmy;
+            int vex;
+            int vey;
+            int yi;
+            int xi;
+            int *pHitX;
+            int *pX;
+            int *pHitY;
+
+            dx = self->mStone[i].x - self->mStone[idx].x;
+            dy = self->mStone[i].y - self->mStone[idx].y;
+            pHitX = &self->mStone[i].x;
+            pX = &self->mStone[idx].x;
+            pHitY = &self->mStone[i].y;
+            ang = _ZN4cstd5atan2E5Fix12IiES1_(dy, dx);
+            u16 &hitAngle = self->mStone[i].angle;
+            E = (ang >> 4) * 2;
+            rel = self->mStone[idx].angle - ang;
+            k = (rel >> 4) * 2;
+            c = data_02082214[k + 1];
+            s = data_02082214[k];
+            vmx = FMUL(c, self->mStone[idx].speed);
+            vmy = FMUL(s, self->mStone[idx].speed);
+            rel = self->mStone[i].angle - ang;
+            k = (rel >> 4) * 2;
+            c = data_02082214[k + 1];
+            s = data_02082214[k];
+            vex = FMUL(c, self->mStone[i].speed);
+            sP = data_02082214[E];
+            cP = data_02082214[E + 1];
+            vey = FMUL(s, self->mStone[i].speed);
+            cw = (long long)cP;
+            dy = (int)((cw * vex + 0x800) >> 12) - FMUL(sP, vmy);
+            sw = (long long)sP;
+            dx = (int)((sw * vex + 0x800) >> 12) + FMUL(cP, vmy);
+            nex = FMUL(cP, vmx) - FMUL(sP, vey);
+            ney = (int)((sw * vmx + 0x800) >> 12) + FMUL(cP, vey);
+            self->mStone[idx].angle = _ZN4cstd5atan2E5Fix12IiES1_(dx, dy);
+            self->mStone[idx].speed = cstd::sqrt((u64)((long long)dy * dy + (long long)dx * dx));
+            self->mStone[idx].x = self->mStone[i].x - FMUL(cP, 0x1b000);
+            self->mStone[idx].y = self->mStone[i].y - (int)((sw * 0x1b000 + 0x800) >> 12);
+            xi = self->mStone[idx].x >> 12;
+            yi = self->mStone[idx].y >> 12;
+            if (xi - 0xc < 0) {
+                xi = self->mStone[idx].x - 0xc000;
+                *pHitX += xi;
+                self->mStone[idx].x = 0xc000;
+            }
+            if (xi + 0xc > 0x100) {
+                *pHitX += self->mStone[idx].x - 0xf4000;
+                self->mStone[idx].x = 0xf4000;
+            }
+            if (yi - 0xc < -0xe0) {
+                self->mStone[idx].y = -0xd4000;
+                *pHitY = self->mStone[idx].y + 0x18000;
+            }
+            hitAngle = _ZN4cstd5atan2E5Fix12IiES1_(ney, nex);
+            self->mStone[i].speed = cstd::sqrt((u64)((long long)nex * nex + (long long)ney * ney));
+            self->mStone[idx].state = 1;
+            self->mStone[i].state = 1;
+            if (self->mStone[i].speed >= 0x3800) {
+                self->mStone[i].fast = 1;
+            } else {
+                self->mStone[i].fast = 0;
+            }
+            func_02012718(0xe8, *pX);
+            self->SpawnValue(idx, i);
+            return;
+        }
+    }
+}
+
+#undef FMUL
 
 /* Static-init globals (was the handwritten __sinit_ov006_02130758 shard).
  * All seven PMF state tables plain-copied from the ROM PMF constants, in

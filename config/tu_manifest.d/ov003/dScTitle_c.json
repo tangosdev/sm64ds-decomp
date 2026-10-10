@@ -6,16 +6,17 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x20ad660..0x20adc10, 8 function(s), from build/tu_map.json (tools/tu_map.py) plus the abutting factory dScTitle_c_classInit at 0x020adc10..0x020adc74",
+    "HISTORY: contiguous linker run: 0x20ad660..0x20adc10, 8 function(s), from build/tu_map.json (tools/tu_map.py) plus the abutting factory dScTitle_c_classInit at 0x020adc10..0x020adc74",
     "class label(s): dScTitle_c",
     "module sinit corroboration: 0 sinit(s) / 0 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "BOUNDARY, right edge: the factory abuts InitResources at 0x020adc10 and is the last function the cartridge places before func_ov003_020adc74, which is NOT this class's -- it is the caption/dMeter_c helper pair (0x020adc74, 0x020adcbc) that func_ov003_020ad6ec calls out to and that the dScStarSel_c run below 0x020addfc also uses. Those two stay separately enrolled, so this TU's licensed .text ends at 0x020adc74. Left edge is the ov003 .text start (0x020ad660)."
+    "HISTORY: BOUNDARY, right edge: the factory abuts InitResources at 0x020adc10 and is the last function the cartridge places before func_ov003_020adc74, which is NOT this class's -- it is the caption/dMeter_c helper pair (0x020adc74, 0x020adcbc) that func_ov003_020ad6ec calls out to and that the dScStarSel_c run below 0x020addfc also uses. Those two stay separately enrolled, so this TU's licensed .text ends at 0x020adc74. Left edge is the ov003 .text start (0x020ad660).",
+    "CLASSINIT TAIL FOLD (2026-10-10): the two helpers above the factory, func_ov003_020adc74 (0x020adc74, size 0x48) and func_ov003_020adcbc (0x020adcbc, size 0x140), formerly src/unnamed/ov003/func_ov003_020adc74.cpp and func_ov003_020adcbc.cpp, are folded in, so the TU is 11 functions over .text 0x020ad660..0x020addfc, ROM ordinals 0..10, and abuts dScStarSel_c at 0x020addfc. Source order is the reverse of the ROM's, so the two sit above dScTitle_c_classInit. Membership: each has exactly one caller in the image, func_ov003_020ad6ec in this TU (bl at 0x020ad764 to 020adcbc, at 0x020ad784 to 020adc74), and dScStarSel_c's own manifest measured zero references to either from its run. The 44 ov006 calls a census once credited to 0x020adc74 resolve to func_ov004_020adc74, a different function at the same address in ov004 (which shares ov003's load address and is the overlay ov006 runs beside, as dScMgBase_c's home): ov006 uses its return value as a loaded-file pointer, while the ov003 function returns nothing and writes a string into the BG0 screen map. The earlier claim that dScStarSel_c shares them is therefore superseded."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020ad660",
-      "end": "0x020adc74"
+      "end": "0x020addfc"
     }
   ],
   "functions": [
@@ -81,6 +82,20 @@
       "size": "0x00000064",
       "legacy_source": "src/d_s_title.cpp",
       "ordinal": 8
+    },
+    {
+      "symbol": "func_ov003_020adc74",
+      "address": "0x020adc74",
+      "size": "0x00000048",
+      "legacy_source": "src/unnamed/ov003/func_ov003_020adc74.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov003_020adcbc",
+      "address": "0x020adcbc",
+      "size": "0x00000140",
+      "legacy_source": "src/unnamed/ov003/func_ov003_020adcbc.cpp",
+      "ordinal": 10
     }
   ],
   "data": [],
@@ -91,7 +106,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov003_020ad6ec' differs between the legacy file that used to hold _ZN10dScTitle_c8BehaviorEv and the one that held _ZN10dScTitle_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: the two call sites spelt the parameter `char *` and `int` while the definition took `(void)` -- legal across three separate objects, an overload error once merged. The body ignores the argument, but both call sites do load the receiver into r0 in the cartridge, so the parameter is kept and spelled `void *`, the one spelling neither call site has to cast away from. The definition takes an unnamed `void *` and byte-matches at 0xb4 unchanged.",
     "RECONCILED BY HAND, not reported by tubuild's conflict detector, which compares declaration spellings within the merged set rather than against the headers the merged file now includes. (1) The legacy InitResources source carried a shadow `namespace G2 { unsigned short *GetBG0ScrPtr(); }` and did not include decl_common.h. The merged TU does include it, and include/decl_common.h:395 declares a real ROM symbol `extern int G2[];` -- a variable-hides-a-tag lookup, so mwccarm reports `illegal namespace` on the namespace and `undefined identifier 'G2'` at the call. The namespace is dropped and the function is spelt by its final mangled name, `_ZN2G212GetBG0ScrPtrEv`, returning `void *`: that is the tree's plurality spelling (the symbol is declared five different ways across five files) and the one cast at the single call site is free. The sibling `namespace GX` has no such collision and is carried unchanged. (2) data_0209b2f8 arrived as `extern int data_0209b2f8[]` from func_ov003_020ad6ec, against include/decl_common.h:814's `extern int data_0209b2f8;` -- an array against a scalar. The header won; the four `[0]` subscripts became scalar accesses.",
     "Genuine lifecycle source form: include/dScTitle_c.h now defines the virtual destructor inline and this TU defines InitResources as the key function. The destructor was previously DECLARED in the header and hand-written twice, once per D1/D0 shard, which is only legal while the two live in separate objects; out of line in one TU mwccarm emits D2, D0, D1, which is not the cartridge's order (D1 0x020ad660 below D0 0x020ad69c). Inline-in-class moves the key function to the first DECLARED non-inline virtual, InitResources, and the vtable's slots 16/17 then odr-use D1 then D0 in ROM order with no D2 emitted. The empty body still reproduces all 0x8c bytes of the pair. The brace is on the signature line deliberately: tools/check_header_offsets.py only recognises an inline body when the signature line itself carries the `{`. include/dScTitle_c.h has no includer outside this TU, so the change has no reverse-include fan-out.",
-    "Leftover cleanup folded dScTitle_c_classInit as `return new dScTitle_c();`; fBase_c::operator new(unsigned long) forwards _ZN7fBase_cnwEj and the 0x54 literal is the class's own size. The factory abuts InitResources at 0x020adc10 and this TU's licensed .text ends at 0x020adc74. The hand-written shard reached the class vtable through the alias data_ov003_020b1650; `new` reaches it through _ZTV10dScTitle_c at the same address, and reloc_audit check_destinations() confirms the destination identity. `return new` also emits homeless _ZN8dScene_cD2Ev / _ZN7dBase_cD2Ev after classInit -- neither has a configured ROM symbol or an inbound relocation once the licensed leaf D1/D0 pair is retained, and both are explicitly deadstripped. The two abutting helpers above the factory, func_ov003_020adc74 and func_ov003_020adcbc, are NOT claimed here: func_ov003_020ad6ec calls out to them and so does the dScStarSel_c run below 0x020addfc, so they stay separately enrolled and the boundary sits at 0x020adc74.",
+    "HISTORY: Leftover cleanup folded dScTitle_c_classInit as `return new dScTitle_c();`; fBase_c::operator new(unsigned long) forwards _ZN7fBase_cnwEj and the 0x54 literal is the class's own size. The factory abuts InitResources at 0x020adc10 and this TU's licensed .text ends at 0x020adc74. The hand-written shard reached the class vtable through the alias data_ov003_020b1650; `new` reaches it through _ZTV10dScTitle_c at the same address, and reloc_audit check_destinations() confirms the destination identity. `return new` also emits homeless _ZN8dScene_cD2Ev / _ZN7dBase_cD2Ev after classInit -- neither has a configured ROM symbol or an inbound relocation once the licensed leaf D1/D0 pair is retained, and both are explicitly deadstripped. The two abutting helpers above the factory, func_ov003_020adc74 and func_ov003_020adcbc, are NOT claimed here: func_ov003_020ad6ec calls out to them and so does the dScStarSel_c run below 0x020addfc, so they stay separately enrolled and the boundary sits at 0x020adc74.",
     "Text-only: the emitted _ZTV/_ZTI/_ZTS are licensed deadstrip-data (data objects cannot use deadstrip-duplicate); data: []. MEASURED SEPARATELY rather than argued: `python tools/romdata_check.py --files src/actors/dScTitle_c.cpp` reports 9 symbols, 5 VERIFIED (116 bytes equal), 4 PARTIAL (36 bytes equal), 0 DIFFERS. The CLI prints only bucket totals, so the per-symbol verdicts were recovered by calling tools/romdata_check.py check_object() directly: _ZTV10dScTitle_c is VERIFIED at 72 bytes -- the full 18 slots -- and so are _ZTI10dScTitle_c and all three ancestor typeinfo RECORDS (_ZTI7fBase_c, _ZTI7dBase_c, _ZTI8dScene_c). The 4 PARTIAL are the typeinfo NAME strings (_ZTS10dScTitle_c, _ZTS7fBase_c, _ZTS7dBase_c, _ZTS8dScene_c), whose symbols.txt extents run past the bytes the string itself occupies; none of them is the vtable. Nothing this TU emits disagrees with the cartridge."
   ],
   "verification": {
@@ -100,8 +115,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov003-dScTitle_c/dScTitle_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 9,
-    "functions_declared": 9,
+    "functions_matched": 11,
+    "functions_declared": 11,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN8dScene_cD2Ev",

@@ -6,11 +6,10 @@
  * hops down six stages and drops off the bottom. Phase 5 is the
  * result: a countdown, then this score against the other player's.
  *
- * This file is the whole ov006 unit 0x020dbe40..0x020de940: 62
- * functions in ROM order, from the destructor to InitResources. The
- * destructor is the key function, so the vtable and RTTI are emitted
- * here too. dScMgCoin_c_classInit, just above at 0x020de940, is still
- * its own file (src/d_s_mg_coin.cpp).
+ * This file is the whole ov006 unit 0x020dbe40..0x020de988: 63
+ * functions in ROM order, from the destructor through InitResources to
+ * the registry factory dScMgCoin_c_classInit. The destructor is the key
+ * function, so the vtable and RTTI are emitted here too.
  *
  * The functions from func_ov006_020dd0e0 up, and the three below
  * func_ov006_020dbf7c, came from one-function files. Their bodies are
@@ -160,6 +159,7 @@ extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern int data_0208ee44;
+extern void func_0203b9b4(int *p, int v);
 }
 
 /* The per-state handler tables for the coins, the blocks, the caption and
@@ -1708,4 +1708,21 @@ int dScMgCoin_c::InitResources()
     self->unk_51d4 = func_ov004_020adc1c();
     self->unk_0a4 = 1;
     return 1;
+}
+
+/* The base constructor and the vptr store are the compiler's; the body is
+   the one member that needs construction. */
+inline dScMgCoin_c::dScMgCoin_c()
+{
+    func_0203b9b4(&mSeed, 1);
+}
+
+/* Reconstructed source-style name: SM64DS proves dScMgCoin_c through RTTI,
+ * allocation size, vtable identity, and the MG_COIN registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgCoincentration_Spawn. */
+// @symbol dScMgCoin_c_classInit
+extern "C" void *dScMgCoin_c_classInit()
+{
+    return new dScMgCoin_c;
 }

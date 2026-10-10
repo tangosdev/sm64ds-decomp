@@ -8,13 +8,13 @@
  * A bomb is sorted once dropped in its pen: x under 0x40 or over 0xc0, y
  * between 0x40 and 0x80.
  *
- * This TU is the class's whole linker unit: 80 functions, .text
- * 0x020d5a54..0x020d9574. It opens with the destructor, which the header
+ * This TU is the class's whole linker unit: 81 functions, .text
+ * 0x020d5a54..0x020d95a4. It opens with the destructor, which the header
  * declares first and out of line, so this file is the key function and
  * emits the vtable and the RTTI chain. Then come the unnamed helpers and
- * round states, and it closes with OnYoshiTryEat, Render, Behavior and
- * InitResources. dScMgBomroom_c_classInit, the factory just above, stays
- * in src/d_s_mg_bomroom.cpp. Functions run in ROM order under
+ * round states, OnYoshiTryEat, Render, Behavior and InitResources, and it
+ * closes with the registry factory dScMgBomroom_c_classInit. Functions run
+ * in ROM order under
  * `#pragma defer_codegen off`; do not reorder. cstd::atan2 takes Fix12 by
  * value, so its call stays mangled.
  *
@@ -2434,4 +2434,14 @@ s32 dScMgBomroom_c::InitResources()
     func_ov004_020b04d0(0x20);
     func_ov004_020adb1c(0);
     return 1;
+}
+
+/* Reconstructed source-style name: SM64DS proves dScMgBomroom_c through RTTI,
+ * allocation size, vtable identity, and the MG_BOMROOM registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgSortOrSplode_Spawn. */
+// @symbol dScMgBomroom_c_classInit
+extern "C" void *dScMgBomroom_c_classInit()
+{
+    return new dScMgBomroom_c;
 }

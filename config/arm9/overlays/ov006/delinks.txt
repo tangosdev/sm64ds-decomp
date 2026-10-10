@@ -37,11 +37,7 @@ src/actors/dScMgAmida_c.cpp:
 
 src/actors/dScMgBomroom_c.cpp:
     complete
-    .text start:0x020d5a54 end:0x020d9574
-
-src/d_s_mg_bomroom.cpp:
-    complete
-    .text start:0x020d9574 end:0x020d95a4
+    .text start:0x020d5a54 end:0x020d95a4
 
 src/minigames/d_s_mg_card.cpp:
     complete
@@ -49,11 +45,7 @@ src/minigames/d_s_mg_card.cpp:
 
 src/actors/dScMgCoin_c.cpp:
     complete
-    .text start:0x020dbe40 end:0x020de940
-
-src/d_s_mg_coin.cpp:
-    complete
-    .text start:0x020de940 end:0x020de988
+    .text start:0x020dbe40 end:0x020de988
 
 src/actors/dScMgCup_c.cpp:
     complete
@@ -64,25 +56,17 @@ src/actors/dScMgCup_c.cpp:
 
 src/actors/dScMgCurling_c.cpp:
     complete
-    .text start:0x020e0638 end:0x020e3820
+    .text start:0x020e0638 end:0x020e3854
     .init start:0x021304ac end:0x02130758
     .ctor start:0x02133590 end:0x02133594
     .bss start:0x021418b0 end:0x02141978
 
-src/d_s_mg_curling.cpp:
-    complete
-    .text start:0x020e3820 end:0x020e3854
-
 src/actors/dScMgCurling2_c.cpp:
     complete
-    .text start:0x020e3854 end:0x020e5450
+    .text start:0x020e3854 end:0x020e59b0
     .init start:0x02130758 end:0x02130a04
     .ctor start:0x02133594 end:0x02133598
     .bss start:0x02141978 end:0x02141a40
-
-src/unnamed/ov006/func_ov006_020e5450.cpp:
-    complete
-    .text start:0x020e5450 end:0x020e59b0
 
 src/actors/dScMgCurling2_c_upper.cpp:
     complete
@@ -124,11 +108,7 @@ src/d_s_mg_jump.cpp:
 
 src/minigames/d_s_mg_jump2.cpp:
     complete
-    .text start:0x020eebe8 end:0x020efc08
-
-src/unnamed/ov006/func_ov006_020efc08.c:
-    complete
-    .text start:0x020efc08 end:0x020efc0c
+    .text start:0x020eebe8 end:0x020efc0c
 
 src/actors/dScMgLuigi_c.cpp:
     complete
@@ -155,14 +135,10 @@ src/minigames/d_s_mg_m_carlo2.cpp:
 
 src/actors/dScMgPachinko_c.cpp:
     complete
-    .text start:0x020fa75c end:0x020ff3ec
+    .text start:0x020fa75c end:0x020ff420
     .init start:0x02131a38 end:0x02131cd0
     .ctor start:0x021335c0 end:0x021335c4
     .bss start:0x02142604 end:0x021426cc
-
-src/d_s_mg_pachinko.cpp:
-    complete
-    .text start:0x020ff3ec end:0x020ff420
 
 src/actors/dScMgPachinko2_c.cpp:
     complete
@@ -173,11 +149,7 @@ src/actors/dScMgPachinko2_c.cpp:
 
 src/actors/dScMgPanel_c.cpp:
     complete
-    .text start:0x0210428c end:0x02107858
-
-src/d_s_mg_panel.cpp:
-    complete
-    .text start:0x02107858 end:0x0210788c
+    .text start:0x0210428c end:0x0210788c
 
 src/actors/dScMgRoulette_c.cpp:
     complete
@@ -209,14 +181,10 @@ src/actors/dScMgSound_c.cpp:
 
 src/actors/dScMgTeresa_c.cpp:
     complete
-    .text start:0x0211cbd0 end:0x021207a8
+    .text start:0x0211cbd0 end:0x021207dc
     .init start:0x02132f68 end:0x0213322c
     .ctor start:0x021335d8 end:0x021335dc
     .bss start:0x02142e88 end:0x02142f60
-
-src/d_s_mg_teresa.cpp:
-    complete
-    .text start:0x021207a8 end:0x021207dc
 
 src/minigames/d_s_mg_trampoline.cpp:
     complete
@@ -234,19 +202,11 @@ src/minigames/d_s_mg_bsc.cpp:
 
 src/actors/dScMgSnowball_c.cpp:
     complete
-    .text start:0x0212568c end:0x0212a520
-
-src/d_s_mg_snowball.cpp:
-    complete
-    .text start:0x0212a520 end:0x0212a554
+    .text start:0x0212568c end:0x0212a554
 
 src/actors/dScMgFlower_c.cpp:
     complete
-    .text start:0x0212a554 end:0x0212b7f8
-
-src/d_s_mg_flower.cpp:
-    complete
-    .text start:0x0212b7f8 end:0x0212b890
+    .text start:0x0212a554 end:0x0212b890
 
 src/unnamed/ov006/__sinit_ov006_0212f4c4.c:
     complete

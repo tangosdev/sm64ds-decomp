@@ -7,7 +7,7 @@
  * SIZE 0xc59c, and the allocation is NOT in this class's own constructor.
  * func_ov006_021295ac takes an already-allocated `char*` -- it is a C2,
  * not a factory. Its one caller, dScMgSnowball_c_classInit, is where
- * `_ZN7fBase_cnwEj(0xc59c)` lives. Deriving a size from the field span
+ * the 0xc59c allocation (fBase_c::operator new) lives. Deriving a size from the field span
  * would have stopped at 0xbe94 and been 0x708 short.
  *
  * CONSTRUCTOR AND DESTRUCTOR AGREE MEMBER FOR MEMBER, in exact reverse

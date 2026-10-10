@@ -131,6 +131,9 @@ typedef char dScMgCoin_Bouncer_size_must_be_0x1c[sizeof(dScMgCoin_Bouncer) == 0x
 /* dScMgCoin_c : dScMgBase_c leaf. Slot 18 is OnYoshiTryEat; the old
    mislabel sat on D0. See dScMgBase_c.h. */
 struct dScMgCoin_c : dScMgBase_c {
+    /* Defined inline in src/actors/dScMgCoin_c.cpp, above the factory: its
+       only body is seeding mSeed with 1 through func_0203b9b4. */
+    dScMgCoin_c();
     virtual ~dScMgCoin_c();
     virtual s32 InitResources();             /* slot 0 */
     virtual s32 Behavior();                  /* slot 6 */
@@ -205,7 +208,7 @@ struct dScMgCoin_c : dScMgBase_c {
     dScMgCoin_Popup mPopups[24];             /* 0x5014 */
     dScMgCoin_Caption mCaption;              /* 0x5194 */
     dScMgCoin_Bouncer mBouncer;              /* 0x51a8 */
-    u8 pad_51c4[0x4];                        /* 0x51c4 */
+    s32 mSeed;                               /* 0x51c4 set to 1 at construction, never read here */
     s32 unk_51c8;                            /* 0x51c8 phase; 5 is the result */
     s32 mCountdown;                          /* 0x51cc */
     u8 pad_51d0[0x4];                        /* 0x51d0 */

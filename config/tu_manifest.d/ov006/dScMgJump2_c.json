@@ -6,15 +6,16 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x20eebe8..0x20efc08, 29 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "HISTORY: contiguous linker run: 0x20eebe8..0x20efc08, 29 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): dScMgJump2_c",
-    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "CLASSINIT TAIL FOLD (2026-10-10): the one-function source right of this run, func_ov006_020efc08 (0x020efc08, size 0x4, a bare return, formerly src/unnamed/ov006/func_ov006_020efc08.c), abuts its .text end -- the end of this TU's own factory dScMgJump2_c_classInit (0x020efaf0..0x020efc08) -- with no gap and is now inside it; the next ov006 delinks entry, src/actors/dScMgLuigi_c.cpp, starts exactly at 0x020efc0c. Membership: it is the empty element constructor this TU's factory passes to __cxa_vec_ctor for mArray3 (literal word 0x020efc00, 16 elements of 0x24), paired with the empty element destructor func_ov006_020eed64 that this TU already owns. The image's only other reference to it is dScMgTrampoline2_c's factory (0x0212488c, src/minigames/d_s_mg_trampoline2.cpp), which reuses the same ctor/dtor pair (it references func_ov006_020eed64 at 0x02124884 too), exactly the cross-TU shape func_ov006_020eed64 already has; nothing else refers to it. Written above the factory, with C linkage, because this TU emits .text in reverse source order."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020eebe8",
-      "end": "0x020efc08"
+      "end": "0x020efc0c"
     }
   ],
   "functions": [
@@ -220,6 +221,13 @@
       "size": "0x00000118",
       "legacy_source": "src/dScMgJump2_c_Spawn.c",
       "ordinal": 28
+    },
+    {
+      "symbol": "func_ov006_020efc08",
+      "address": "0x020efc08",
+      "size": "0x00000004",
+      "legacy_source": "src/unnamed/ov006/func_ov006_020efc08.c",
+      "ordinal": 29
     }
   ],
   "data": [],
@@ -245,8 +253,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov006-dScMgJump2_c/d_s_mg_jump2.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 29,
-    "functions_declared": 29,
+    "functions_matched": 30,
+    "functions_declared": 30,
     "compilerOnlyOutput": {
       "requested": [],
       "deadstripped": [],

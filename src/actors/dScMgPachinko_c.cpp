@@ -1,10 +1,10 @@
 //cpp
 /* Bob-omb Squad. The player aims a Bob-omb with the stylus and fires it
  * up the board; a shot that reaches a target knocks the balls loose.
- * 75 functions (.text 0x020fa75c..0x020ff3ec), the class's whole linker
- * unit. Below it is the pair-match card game (d_s_mg_m_carlo2.cpp); above
- * it is dScMgPachinko_c_classInit, which stays in d_s_mg_pachinko.cpp, and
- * then the next class's destructor.
+ * 76 functions (.text 0x020fa75c..0x020ff420), the class's whole linker
+ * unit, closing with its factory dScMgPachinko_c_classInit. Below it is the
+ * pair-match card game (d_s_mg_m_carlo2.cpp); above it is the next class's
+ * destructor.
  *
  * The 30 functions from 0x020fc8c0 up were folded in from one-function
  * sources. The ball drawer at 0x020fc8c0 was the last to match: its
@@ -2848,6 +2848,16 @@ s32 dScMgPachinko_c::InitResources()
     unk_5c10 = 1;
     unk_0a4 = 1;
     return 1;
+}
+
+/* Reconstructed source-style name: SM64DS proves dScMgPachinko_c through RTTI,
+ * allocation size, vtable identity, and the MG_PACHINKO registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgBobOmbSquad_Spawn. */
+// @symbol dScMgPachinko_c_classInit
+extern "C" void *dScMgPachinko_c_classInit()
+{
+    return new dScMgPachinko_c;
 }
 
 /* The five state/record tables, defined in retail copy order: the 5-row

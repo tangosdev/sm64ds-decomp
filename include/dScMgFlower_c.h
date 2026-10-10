@@ -5,7 +5,7 @@
  * that table to this class rather than to a neighbour.
  *
  * SIZE 0x5ff8, from the factory's own `_ZN7fBase_cnwEj(0x5ff8)`
- * (src/d_s_mg_flower.cpp).
+ * (dScMgFlower_c_classInit, at the end of src/actors/dScMgFlower_c.cpp).
  *
  * FACTORY AND DESTRUCTOR AGREE MEMBER FOR MEMBER. The factory builds
  * mArray at 0x4f38 (0x16 elements of 0x20, element ctor
@@ -112,6 +112,11 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
        destruction and the chain to ~dScMgBase_c) is the compiler's own inlining
        of dScMgSingle3DBase_c's already-inline destructor. */
     virtual ~dScMgFlower_c();
+
+    /* Defined inline at the end of src/actors/dScMgFlower_c.cpp, where the
+       factory's `new` expands it: mArray through __cxa_vec_ctor, then the
+       0x51f8 object. */
+    dScMgFlower_c();
 
     /* THIS CLASS'S OWN OVERRIDES ARE SLOTS 0, 6 AND 9 -- AND ONLY THOSE. Four
        further addresses used to carry `recovered name: dScMgFlower_c_*` comments

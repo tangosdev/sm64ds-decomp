@@ -10,13 +10,14 @@
     "class label(s): dScMgBomroom_c (_ZTI14dScMgBomroom_c at 0x0213bafc, _ZTS14dScMgBomroom_c at 0x0213bb38, _ZTV14dScMgBomroom_c address point 0x0213bbb4).",
     "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
     "Every member of the unit carried a `complete` delinks entry before this widen, so the unit has no hole: the three functions the first 41-function promotion stopped at (_ZN14dScMgBomroom_c19func_ov006_020d5e5cEv, _ZN14dScMgBomroom_c19func_ov006_020d7c4cEi, _ZN14dScMgBomroom_c19func_ov006_020d8324Ei) had since been matched as shards and fold in unchanged.",
-    "PRAGMA LEVER, measured at the 41-function promotion: all 11 pragma brackets inside 0x020d5eb8..0x020d7c4c move bytes, and none is inert. Deleting the pragmas outright is 30/41; keeping the brackets but deleting `#pragma defer_codegen off` is 30/41 with the IDENTICAL 11-member DIFF set; keeping defer_codegen off but deleting the brackets is also 30/41 with the same set; removing any single bracket costs exactly its own member. The six brackets the widen adds (_ZN14dScMgBomroom_c19func_ov006_020d5d08Ev, _020d7f5c, _020d836c, _020d8408, _020d89c4, _020d8cc4) carry each shard's own file-global pragma around its one function; the full unit verifies 80/80 with them."
+    "PRAGMA LEVER, measured at the 41-function promotion: all 11 pragma brackets inside 0x020d5eb8..0x020d7c4c move bytes, and none is inert. Deleting the pragmas outright is 30/41; keeping the brackets but deleting `#pragma defer_codegen off` is 30/41 with the IDENTICAL 11-member DIFF set; keeping defer_codegen off but deleting the brackets is also 30/41 with the same set; removing any single bracket costs exactly its own member. The six brackets the widen adds (_ZN14dScMgBomroom_c19func_ov006_020d5d08Ev, _020d7f5c, _020d836c, _020d8408, _020d89c4, _020d8cc4) carry each shard's own file-global pragma around its one function; the full unit verifies 80/80 with them.",
+    "CLASSINIT TAIL FOLD (2026-10-10): the one-function source right of this unit, dScMgBomroom_c_classInit (0x020d9574, size 0x30, formerly src/d_s_mg_bomroom.cpp), abuts its .text end with no gap and is now inside it; the next ov006 delinks entry, src/minigames/d_s_mg_card.cpp, starts exactly at its end 0x020d95a4. It is this class's factory: it calls fBase_c::operator new(0x6300) -- sizeof(dScMgBomroom_c) -- runs dScMgBase_c's C2 and stores _ZTV14dScMgBomroom_c (0x0213bbb4), the vtable this TU emits as its key-function owner, and it is the MG_BOMROOM registry profile's factory. Written last as \return new dScMgBomroom_c; because defer_codegen off emits .text in source order."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020d5a54",
-      "end": "0x020d9574"
+      "end": "0x020d95a4"
     }
   ],
   "functions": [
@@ -579,6 +580,13 @@
       "size": "0x00000330",
       "legacy_source": "src/_ZN14dScMgBomroom_c13InitResourcesEv.cpp",
       "ordinal": 79
+    },
+    {
+      "symbol": "dScMgBomroom_c_classInit",
+      "address": "0x020d9574",
+      "size": "0x00000030",
+      "legacy_source": "src/d_s_mg_bomroom.cpp",
+      "ordinal": 80
     }
   ],
   "data": [],
@@ -680,8 +688,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov006-dScMgBomroom_c/dScMgBomroom_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 80,
-    "functions_declared": 80,
+    "functions_matched": 81,
+    "functions_declared": 81,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN14dScMgBomroom_cD2Ev"
@@ -692,8 +700,6 @@
       "droppedSections": [
         9,
         10,
-        140,
-        141,
         142,
         143,
         144,
@@ -708,7 +714,9 @@
         153,
         154,
         155,
-        156
+        156,
+        157,
+        158
       ],
       "data": [
         "_ZTV14dScMgBomroom_c",

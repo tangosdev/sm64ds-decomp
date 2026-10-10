@@ -1,6 +1,13 @@
 //cpp
-/* Two-player curling -- the upper half of dScMgCurling2_c, the part of the
- * TU the linker placed above the sourceless hole at func_ov006_020e5450.
+/* Two-player curling -- the upper half of dScMgCurling2_c, .text
+ * 0x020e59b0..0x020e6bf4, 20 functions in ROM order from StoneSpin through
+ * InitResources. It follows the lower half (src/actors/dScMgCurling2_c.cpp,
+ * which ends with the stone-collision step func_ov006_020e5450) with no gap.
+ * The registry factory dScMgCurling2_c_classInit, directly above, stays in
+ * src/d_s_mg_curling2.cpp: it stores _ZTV15dScMgCurling2_c, whose key
+ * function is in the lower half, and this text-only object cannot carry
+ * that undefined vtable reference (addend 8) through production isolation.
+ * Merging the two halves into one TU is what would let it fold.
  * Behavior state machine: BeginRound seeds a round into Play, Play ticks
  * the drag table and every live stone and hands off to NextThrow once all
  * eleven rest, NextThrow either deals the next stone or goes to EndRound,
@@ -10,10 +17,9 @@
  * same pointer-to-member table shape as the lower TU.
  *
  * Leftover: func_ov006_020e5450 (the stone-collision step StoneRest
- *   veneers to, and StoneSlide calls directly) is unmatched; a banked
- *   draft at 30 divergent words of 344 lives in src/unnamed/ov006/func_ov006_020e5450.cpp.
- *   StoneRest and StoneSlide keep the extern "C" call so the bytes still
- *   veneer to it.
+ *   veneers to, and StoneSlide calls directly) is defined in the lower
+ *   half, a separate compiler input; StoneRest and StoneSlide keep the
+ *   extern "C" call so the bytes still veneer to it.
  * Leftover: StoneSpin, StoneSlide, NextStone, SeedStones, Play and
  *   ResetGame keep the ROM's raw `this + 0x46xx/0x55xx` addressing (and
  *   SeedStones its `struct E` + 0x4000 split base). Folding them through

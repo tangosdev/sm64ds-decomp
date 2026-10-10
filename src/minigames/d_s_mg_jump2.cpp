@@ -1,6 +1,8 @@
 //cpp
-/* ov006/dScMgJump2_c -- the second jump minigame, 29 functions
- * (.text 0x020eebe8..0x020efc08).
+/* ov006/dScMgJump2_c -- the second jump minigame, 30 functions
+ * (.text 0x020eebe8..0x020efc0c), ending with the factory
+ * dScMgJump2_c_classInit and the element constructor func_ov006_020efc08
+ * it registers.
  *
  * Functions run in REVERSE of ROM order (highest address first); do not
  * reorder. The legacy file for func_ov006_020ef5ac had
@@ -11,9 +13,10 @@
  *   - func_ov006_020ef0d4, ..ef05c, ..eeff0, ..eef90, ..eef58 and ..ef2b8
  *     stay free: none takes the object (they walk the element list globals
  *     or program the light registers), so a receiver exists only to be
- *     passed, not used. func_ov006_020eed64 is the shared empty element
- *     destructor -- dScMgTrampoline2_c's array cleanup calls it too --
- *     and is registered through the C __cxa_vec_ctor boundary.
+ *     passed, not used. func_ov006_020eed64 and func_ov006_020efc08 are
+ *     the shared empty element destructor and constructor --
+ *     dScMgTrampoline2_c's factory and array cleanup use them too -- and
+ *     are registered through the C __cxa_vec_ctor boundary.
  *   - pad_5004 stays bytes: the state functions copy the whole eight-byte
  *     PMF record into it with a struct assign, and Behavior calls through
  *     it. See the header's state-machine note.
@@ -159,7 +162,16 @@ extern char _ZTV14dScMgD3DBase_c[];
 dMgJump3DMario_c *_ZN16dMgJump3DMario_cD1Ev(dMgJump3DMario_c *object);
 dMgJump3DMario_c *_ZN16dMgJump3DMario_cC1Ev(dMgJump3DMario_c *object);
 int func_ov006_020c6f70(char *object);
-void func_ov006_020efc08(void *object);
+
+// @symbol func_ov006_020efc08
+/* The empty constructor of mArray3's 0x24-byte elements, the partner of
+ * the shared empty destructor func_ov006_020eed64. The factory below hands
+ * the pair to __cxa_vec_ctor; dScMgTrampoline2_c's factory reuses both.
+ * Written above the factory because this TU emits .text in reverse source
+ * order, and the ROM has it directly after the factory. */
+void func_ov006_020efc08(void *object)
+{
+}
 
 /* The array runtime passes each element address and ignores callback results.
  * The casts below adapt the existing lifecycle entries at that ABI boundary. */
