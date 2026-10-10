@@ -116,11 +116,7 @@ src/actors/daObjKuruma_c.cpp:
 
 src/actors/daObjKurumajiku_c.cpp:
     complete
-    .text start:0x020b69e4 end:0x020b6c54
-
-src/unnamed/ov002/func_ov002_020b6c54.c:
-    complete
-    .text start:0x020b6c54 end:0x020b6d28
+    .text start:0x020b69e4 end:0x020b6d28
 
 src/actors/daObjLava_c.cpp:
     complete
@@ -151,27 +147,11 @@ src/actors/daObjPowerUpItem_c.cpp:
 
 src/actors/daObjSwitch_c.cpp:
     complete
-    .text start:0x020b9e64 end:0x020baa2c
+    .text start:0x020b9e64 end:0x020bab0c
     .init start:0x02101588 end:0x02101738
     .ctor start:0x021080fc end:0x02108100
     .data start:0x0210987c end:0x021098cc
     .bss start:0x0210dfbc end:0x0210e05c
-
-src/unnamed/ov002/func_ov002_020baa2c.c:
-    complete
-    .text start:0x020baa2c end:0x020baa98
-
-src/unnamed/ov002/func_ov002_020baa98.c:
-    complete
-    .text start:0x020baa98 end:0x020baaac
-
-src/d_a_obj_switch_star_switch.c:
-    complete
-    .text start:0x020baaac end:0x020baadc
-
-src/d_a_obj_switch_hanswitch.c:
-    complete
-    .text start:0x020baadc end:0x020bab0c
 
 src/actors/daObjSwdoor_c.cpp:
     complete

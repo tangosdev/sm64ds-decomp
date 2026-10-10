@@ -7,18 +7,26 @@
 // 0x0210987c.. store {init, exec} pointer-to-member pairs over them
 // (data_ov002_0210e00c). Reverse source order preserves the retail text order.
 //
+// The unit spans ov002 .text 0x020b9e64..0x020bab0c, 24 functions. The run
+// ends with the touch helper func_ov002_020baa2c, the collision callback
+// func_ov002_020baa98 that InitResources installs, and the two registry
+// factories (STAR_SWITCH, then HANSWITCH). They are the highest-address
+// .text, so they sit at the top of the file.
+//
 // comment leftovers:
 //   - ChangeMusicVolume / IsClsnInRange / KcMbg::SetFile stay computed-spelling
 //     externs: the member form changes codegen under 2004/b56 (Fix12<int> by
 //     value, wall 6az -- noted at use).
 //   - func_020393c4 stores a callback address as a 32-bit word at +0x1c; a
 //     typed callback signature has no byte proof, so the int* decl stays.
-//   - func_ov002_020baa98 is a foreign-overlay callback whose address is taken;
-//     it keeps its free extern.
+//   - The collision callback func_ov002_020baa98 and its touch helper
+//     func_ov002_020baa2c keep their address names and stay free extern "C"
+//     functions.
 //   - The daStar_c fields at +0x438/+0x440 and unk_49d are unnamed upstream;
 //     the int*/unk_ puns stay until daStar_c.h names them.
 #include "common.h"
 #include "daObjSwitch_c.h"
+#include "Player.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "daStar_c.h"
@@ -66,12 +74,68 @@ extern "C" {
         void *self, void *file, const Matrix4x3 *matrix, int scale, s16 angle, void *clps);
     // The existing setter stores a callback address as a 32-bit word at +0x1c.
     void func_020393c4(int *self, int callback);
-    void func_ov002_020baa98(void *, void *, void *);
+    void func_ov002_020baa2c(daObjSwitch_c *self, dActor_c *other);
     int func_02012310(int handle, int sound, int arg);
     unsigned char IsAreaShowing(int area);
     unsigned char DecIfAbove0_Byte(unsigned char *value);
     void LoadSilverStarAndNumber();
     void UnloadSilverStarAndNumber();
+    int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+}
+
+// @symbol daObjSwitch_c_classInit_HANSWITCH
+/* Reconstructed source-style name: SM64DS proves daObjSwitch_c through RTTI,
+ * allocation size, vtable identity, and the HANSWITCH registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: ExclamationSwitch_Spawn.
+ *
+ * `new daObjSwitch_c` is the whole sequence the loose factory spelled by
+ * hand: fBase_c::operator new(0x354), dBgActor_c's base constructor, then
+ * the vptr store. */
+extern "C" daObjSwitch_c *daObjSwitch_c_classInit_HANSWITCH(void)
+{
+    return new daObjSwitch_c;
+}
+
+// @symbol daObjSwitch_c_classInit_STAR_SWITCH
+/* Reconstructed source-style name: SM64DS proves daObjSwitch_c through RTTI,
+ * allocation size, vtable identity, and the STAR_SWITCH registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: StarSwitch_Spawn. */
+extern "C" daObjSwitch_c *daObjSwitch_c_classInit_STAR_SWITCH(void)
+{
+    return new daObjSwitch_c;
+}
+
+/* The collision callback InitResources installs in mMeshCollider's slot. The
+ * slot passes three arguments; the touch helper wants the last two.
+ * long_calls keeps the pooled absolute tail call. */
+#pragma push
+#pragma long_calls on
+// @symbol func_ov002_020baa98
+extern "C" void func_ov002_020baa98(void *collider, daObjSwitch_c *self, dActor_c *other)
+{
+    func_ov002_020baa2c(self, other);
+}
+#pragma pop
+
+// @symbol func_ov002_020baa2c
+/* The player (actor 0xbf) stepped on the switch: raise mPlayerNearby, which
+ * the press states read. Underwater, only a metal or mega player is heavy
+ * enough, and the player must be within 0x98 units of the switch. */
+extern "C" void func_ov002_020baa2c(daObjSwitch_c *self, dActor_c *other)
+{
+    Player *player = static_cast<Player *>(other);
+    unsigned int isPlayer = other->actorID == 0xbf;
+    if (isPlayer == 0) return;
+    if (player->mIsUnderwater != 0) {
+        if (player->mIsMetal == 0) {
+            if (player->mIsMega == 0) return;
+        }
+    }
+    if (Vec3_Dist(reinterpret_cast<const Vector3 *>(&self->mPosX),
+                  reinterpret_cast<const Vector3 *>(&other->mPosX)) < 0x98000)
+        self->mPlayerNearby = 1;
 }
 
 // @symbol _ZN13daObjSwitch_c13InitResourcesEv

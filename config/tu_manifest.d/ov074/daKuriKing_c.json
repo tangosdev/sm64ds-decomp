@@ -6,17 +6,18 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run now claimed whole: 0x0211f000..0x02122764, 53 functions. The two class factories daKuriKing_c_classInit_KURIKING_VANISH (0x02122764) and daKuriKing_c_classInit_KURIKING (0x02122838) stay their own TUs (src/d_a_kuri_king_kuriking*.cpp), matching the tree's classInit-TU convention.",
+    "HISTORY: contiguous linker run now claimed whole: 0x0211f000..0x02122764, 53 functions. The two class factories daKuriKing_c_classInit_KURIKING_VANISH (0x02122764) and daKuriKing_c_classInit_KURIKING (0x02122838) stay their own TUs (src/d_a_kuri_king_kuriking*.cpp), matching the tree's classInit-TU convention.",
     "class label(s): daKuriKing_c. ROM RTTI _ZTI12daKuriKing_c at ov074:0x02122e30, _ZTS12daKuriKing_c at 0x02122e3c, vtable at ov074:0x02122eb8. Renamed here from the tree's coined `Goomboss`; the factory symbols already carried the cartridge's spelling.",
     "the former hole is closed: func_ov074_02121380 (0x02121380, size 0x374) was a banked near-miss at 11 divergent words under the free-function spelling; as member-form code walking mCylClsnPos[i] / mdCc_cs[i+1] it is byte-exact, so the contiguous run could be claimed end to end.",
     "module sinit corroboration: 1 sinit(s) / 1 .ctor entries, sinit_vs_tu=ok (module-wide).",
-    "static-initializer fold: the compiler-generated __sinit_daKuriKing_c.cpp is byte-identical to retail __sinit_ov074_02122978 (0x3f8, match.py strict-relocs MATCH). It constructs the fourteen resource handles (model file 917, texture-sequence file 912, twelve animation files) with destructor registrations, then copies the eighteen 8-byte descriptors (fifteen member PMFs the compiler materializes as temporaries, three free-stub unions) into the nine-entry BSS state table at 0x021230f8 in slot order. The ctor word at 0x02122d70 points at that initializer. The handwritten src/unnamed/ov074/__sinit_ov074_02122978.c is retired."
+    "static-initializer fold: the compiler-generated __sinit_daKuriKing_c.cpp is byte-identical to retail __sinit_ov074_02122978 (0x3f8, match.py strict-relocs MATCH). It constructs the fourteen resource handles (model file 917, texture-sequence file 912, twelve animation files) with destructor registrations, then copies the eighteen 8-byte descriptors (fifteen member PMFs the compiler materializes as temporaries, three free-stub unions) into the nine-entry BSS state table at 0x021230f8 in slot order. The ctor word at 0x02122d70 points at that initializer. The handwritten src/unnamed/ov074/__sinit_ov074_02122978.c is retired.",
+    "CLASSINIT TAIL FOLD (2026-10-10): the run 0x02122764..0x0212290c (daKuriKing_c_classInit_KURIKING_VANISH 0xd4, daKuriKing_c_classInit_KURIKING 0xd4) abuts this TU's old .text end (0x02122764) with no gap and is now inside it; it runs to the end of ov074 .text (0x0212290c). Membership: both factories call fBase_c::operator new(0x610) = sizeof(daKuriKing_c), run dEnemyBase_c's base constructor, store the vptr _ZTV12daKuriKing_c (ov074:0x02122eb8, the vtable this TU emits) and construct exactly the members this class declares (dCcAcPos_c[4] @0x110, ModelAnim @0x210, dExtShadowModel_c[3] @0x274, Vector3[3] @0x3ac, MaterialChanger, TextureSequence, TextureTransformer, dBgCh_Actr @0x40c); KURIKING_VANISH and KURIKING are the two registry profiles of the one class. Kept as the loose files' hand-built sequence (not `new daKuriKing_c`) because types.h's Vector3 declares no constructor, so an idiomatic new skips the ROM's __cxa_vec_ctor(..., func_0203d384, ...) over mCylClsnPos (same disposition as daMoray_c_classInit / daKing_Donketu_c_classInit). The vptr store is `&_ZTV12daKuriKing_c[2]` because this TU defines the vtable object from its RTTI header. Appended last in the file, KURIKING_VANISH first (this TU emits .text in source order under #pragma defer_codegen off)."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x0211f000",
-      "end": "0x02122764"
+      "end": "0x0212290c"
     },
     {
       "name": ".init",
@@ -410,6 +411,20 @@
       "size": "0x00000130",
       "legacy_source": "src/func_ov074_02122634.cpp",
       "ordinal": 53
+    },
+    {
+      "symbol": "daKuriKing_c_classInit_KURIKING_VANISH",
+      "address": "0x02122764",
+      "size": "0x000000d4",
+      "legacy_source": "src/d_a_kuri_king_kuriking_vanish.cpp",
+      "ordinal": 54
+    },
+    {
+      "symbol": "daKuriKing_c_classInit_KURIKING",
+      "address": "0x02122838",
+      "size": "0x000000d4",
+      "legacy_source": "src/d_a_kuri_king_kuriking.cpp",
+      "ordinal": 55
     }
   ],
   "init": [
@@ -2082,8 +2097,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov074-daKuriKing_c/daKuriKing_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 53,
-    "functions_declared": 53,
+    "functions_matched": 55,
+    "functions_declared": 55,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN12daKuriKing_cD2Ev",
@@ -2097,10 +2112,6 @@
         39,
         40,
         41,
-        176,
-        177,
-        178,
-        179,
         180,
         181,
         182,
@@ -2113,7 +2124,11 @@
         189,
         190,
         191,
-        192
+        192,
+        193,
+        194,
+        195,
+        196
       ],
       "data": [
         "_ZTV12daKuriKing_c",
@@ -2145,7 +2160,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 3 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -2164,7 +2179,7 @@
       },
       "tuRange": {
         "start": "0x0211f000",
-        "end": "0x02122764",
+        "end": "0x0212290c",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -2172,7 +2187,7 @@
         {
           "section": ".text",
           "start": "0x0211f000",
-          "end": "0x02122764",
+          "end": "0x0212290c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -2206,7 +2221,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 104
+          "LICENSED": 106
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -2217,19 +2232,19 @@
           {
             "section": ".init",
             "original": [
-              195
+              199
             ],
             "desired": [
-              195
+              199
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              193
+              197
             ],
             "desired": [
-              193
+              197
             ]
           },
           {

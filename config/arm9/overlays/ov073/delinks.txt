@@ -13,27 +13,8 @@ src/actors/daKing_Donketu_c.cpp:
 
 src/actors/daObjEwbIce_c.cpp:
     complete
-    .text start:0x02121f90 end:0x02122730
+    .text start:0x02121f90 end:0x02122874
     .init start:0x02122d48 end:0x02122f34
     .ctor start:0x02122f38 end:0x02122f3c
     .bss start:0x02123428 end:0x021234e0
 
-src/unnamed/ov073/func_ov073_02122730.c:
-    complete
-    .text start:0x02122730 end:0x021227d0
-
-src/unnamed/ov073/func_ov073_021227d0.c:
-    complete
-    .text start:0x021227d0 end:0x021227e4
-
-src/d_a_obj_ewb_ice_ewb_ice_c.c:
-    complete
-    .text start:0x021227e4 end:0x02122814
-
-src/d_a_obj_ewb_ice_ewb_ice_b.c:
-    complete
-    .text start:0x02122814 end:0x02122844
-
-src/d_a_obj_ewb_ice_ewb_ice_a.c:
-    complete
-    .text start:0x02122844 end:0x02122874
