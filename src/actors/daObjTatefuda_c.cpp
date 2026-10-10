@@ -80,6 +80,11 @@
 /* shadow struct 'Vec3' */
 struct Vec3 { int x, y, z; };
 
+/* POD spelling of Matrix4x3's 0x30 bytes: with a user-declared constructor on
+ * Vector3 the Matrix4x3 copies below scalarize even under `#pragma cplusplus
+ * off`; the ROM copies are block moves, so they go through this. */
+struct RawMatrix4x3 { int m[12]; };
+
 /* Bare Vec3 is used for the locals and casts below; the struct form above
  * feeds the elaborated-type uses. */
 typedef struct Vec3 Vec3;
@@ -1163,7 +1168,7 @@ void AttachToHolder(struct daObjTatefuda_c *self)
     ((int *)&v)[0] = 0;
     ((int *)&v)[1] = 0;
     ((int *)&v)[2] = 0;
-    data_020a0e68 = *(struct Matrix4x3 *)(result + 0x1c);
+    *(struct RawMatrix4x3 *)&data_020a0e68 = *(struct RawMatrix4x3 *)(result + 0x1c);
     MulMat4x3Mat4x3(m2 + 0x2a0, &data_020a0e68, &data_020a0e68);
     v.x = data_020a0e68.t.x;
     v.y = data_020a0e68.t.y;
@@ -1185,7 +1190,7 @@ void AttachToHolder(struct daObjTatefuda_c *self)
     self->mPosX = lo.x;
     self->mPosY = lo.y;
     self->mPosZ = lo.z;
-    self->mModel.mat4x3 = data_020a0e68;
+    *(struct RawMatrix4x3 *)&self->mModel.mat4x3 = *(struct RawMatrix4x3 *)&data_020a0e68;
 }
 #pragma cplusplus on
 
@@ -1208,7 +1213,7 @@ void RebuildModelMatrix(struct daObjTatefuda_c* self){
     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
         self->mAngleX, self->mAngleY, self->mAngleZ);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x8c00, 0);
-    self->mModel.mat4x3 = data_020a0e68;
+    *(struct RawMatrix4x3 *)&self->mModel.mat4x3 = *(struct RawMatrix4x3 *)&data_020a0e68;
 }
 #pragma cplusplus on
 

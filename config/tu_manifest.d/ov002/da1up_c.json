@@ -433,33 +433,6 @@
     }
   ],
   "undefined_symbol_aliases": [],
-  "defined_symbol_renames": [
-    {
-      "from": "@1166",
-      "to": "@2162",
-      "evidence": "mwcc numbers this descriptor @1166 per TU and ov014 already defines a global @1166, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@1153",
-      "to": "@2163",
-      "evidence": "mwcc numbers this descriptor @1153 per TU and ov090 already defines a global @1153, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@1168",
-      "to": "@2164",
-      "evidence": "mwcc numbers this descriptor @1168 per TU and ov014 already defines a global @1168, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@1155",
-      "to": "@2165",
-      "evidence": "mwcc numbers this descriptor @1155 per TU and ov090 already defines a global @1155, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@1151",
-      "to": "@2166",
-      "evidence": "mwcc numbers this descriptor @1151 per TU and ov090 already defines a global @1151, so the scratch link would multiply-define it"
-    }
-  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_da1up_c.cpp",
@@ -676,7 +649,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 6 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 15 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -1293,6 +1266,78 @@
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020af724"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@1173",
+      "to": "@2166",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1175",
+      "to": "@2163",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1177",
+      "to": "@2165",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1178",
+      "to": "@1156",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1180",
+      "to": "@1158",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1182",
+      "to": "@1160",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1184",
+      "to": "@1162",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1186",
+      "to": "@1164",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1188",
+      "to": "@2162",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1190",
+      "to": "@2164",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1192",
+      "to": "@1170",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1194",
+      "to": "@1172",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1196",
+      "to": "@1174",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1198",
+      "to": "@1176",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

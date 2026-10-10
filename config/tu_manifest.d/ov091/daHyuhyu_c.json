@@ -674,13 +674,6 @@
       "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x021356a4"
     }
   ],
-  "defined_symbol_renames": [
-    {
-      "from": "@548",
-      "to": "@545",
-      "evidence": "mwcc numbers this animation-handle registration node @548 per TU and ov080/daPicGate_c already defines a global @548, so the scratch link would multiply-define it"
-    }
-  ],
   "relocations": [
     {
       "section": ".ctor",
@@ -923,5 +916,22 @@
       "target_address": "0x0213533c"
     }
   ],
-  "externalized_output": []
+  "externalized_output": [],
+  "defined_symbol_renames": [
+    {
+      "from": "@561",
+      "to": "@547",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@562",
+      "to": "@545",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@563",
+      "to": "@549",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    }
+  ]
 }

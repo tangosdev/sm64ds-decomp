@@ -267,7 +267,7 @@
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN6Aea30C19func_ov002_020ae73cEP8dActor_cP10dBgCh_Actr"
     },
     {
-      "symbol": "@960",
+      "symbol": "@30",
       "address": "0x02108148",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -337,28 +337,28 @@
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11EnemyDeathC19func_ov002_020ae608ER10dBgCh_Actr"
     },
     {
-      "symbol": "@962",
+      "symbol": "@31",
       "address": "0x02108198",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11EnemyDeathC19func_ov002_020ae4ccER10dBgCh_Actr"
     },
     {
-      "symbol": "@954",
+      "symbol": "@27",
       "address": "0x021081a0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN6Aea30C19func_ov002_020aea2cEP8dActor_cP10dBgCh_Actr"
     },
     {
-      "symbol": "@958",
+      "symbol": "@29",
       "address": "0x021081a8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11EnemyDeathC19func_ov002_020ae608ER10dBgCh_Actr"
     },
     {
-      "symbol": "@956",
+      "symbol": "@28",
       "address": "0x021081b0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -390,24 +390,79 @@
   ],
   "defined_symbol_renames": [
     {
+      "from": "@954",
+      "to": "@940",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@956",
+      "to": "@942",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@958",
+      "to": "@944",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@960",
+      "to": "@946",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@962",
+      "to": "@948",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
       "from": "@964",
-      "to": "@987",
-      "evidence": "mwcc numbers this descriptor @964 per TU and ov092 already defines a global @964, so the scratch link would multiply-define it"
+      "to": "@950",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
       "from": "@966",
-      "to": "@986",
-      "evidence": "mwcc numbers this descriptor @966 per TU and ov092 already defines a global @966, so the scratch link would multiply-define it"
+      "to": "@952",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
       "from": "@968",
-      "to": "@985",
-      "evidence": "mwcc numbers this descriptor @968 per TU and ov092 already defines a global @968, so the scratch link would multiply-define it"
+      "to": "@27",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
       "from": "@970",
-      "to": "@984",
-      "evidence": "mwcc numbers this descriptor @970 per TU and ov092 already defines a global @970, so the scratch link would multiply-define it"
+      "to": "@28",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@972",
+      "to": "@29",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@974",
+      "to": "@30",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@976",
+      "to": "@31",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@982",
+      "to": "@985",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@980",
+      "to": "@986",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@978",
+      "to": "@987",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ],
   "notes": [
@@ -558,7 +613,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 31 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 16 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -621,8 +676,8 @@
         "counts": {
           "LICENSED": 51
         },
-        "orderOk": true,
-        "nonLicensed": [],
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
@@ -634,16 +689,7 @@
             ],
             "desired": [
               117
-            ],
-            "anchors": {
-              "117": [
-                {
-                  "symbol": "__sinit_dEnemyBase_c.cpp",
-                  "address": 34605368,
-                  "sectionBase": 34605368
-                }
-              ]
-            }
+            ]
           },
           {
             "section": ".ctor",
@@ -652,16 +698,7 @@
             ],
             "desired": [
               115
-            ],
-            "anchors": {
-              "115": [
-                {
-                  "symbol": ".p__sinit_dEnemyBase_c.cpp",
-                  "address": 34635988,
-                  "sectionBase": 34635988
-                }
-              ]
-            }
+            ]
           },
           {
             "section": ".data",
@@ -700,121 +737,7 @@
               35,
               37,
               21
-            ],
-            "anchors": {
-              "5": [
-                {
-                  "symbol": "@942",
-                  "address": 34636112,
-                  "sectionBase": 34636112
-                }
-              ],
-              "7": [
-                {
-                  "symbol": "@952",
-                  "address": 34636096,
-                  "sectionBase": 34636096
-                }
-              ],
-              "9": [
-                {
-                  "symbol": "@954",
-                  "address": 34636192,
-                  "sectionBase": 34636192
-                }
-              ],
-              "11": [
-                {
-                  "symbol": "@944",
-                  "address": 34636136,
-                  "sectionBase": 34636136
-                }
-              ],
-              "13": [
-                {
-                  "symbol": "@950",
-                  "address": 34636144,
-                  "sectionBase": 34636144
-                }
-              ],
-              "15": [
-                {
-                  "symbol": "@948",
-                  "address": 34636120,
-                  "sectionBase": 34636120
-                }
-              ],
-              "19": [
-                {
-                  "symbol": "@946",
-                  "address": 34636128,
-                  "sectionBase": 34636128
-                }
-              ],
-              "21": [
-                {
-                  "symbol": "@940",
-                  "address": 34636216,
-                  "sectionBase": 34636216
-                }
-              ],
-              "23": [
-                {
-                  "symbol": "@984",
-                  "address": 34636152,
-                  "sectionBase": 34636152
-                }
-              ],
-              "25": [
-                {
-                  "symbol": "@985",
-                  "address": 34636160,
-                  "sectionBase": 34636160
-                }
-              ],
-              "27": [
-                {
-                  "symbol": "@986",
-                  "address": 34636168,
-                  "sectionBase": 34636168
-                }
-              ],
-              "29": [
-                {
-                  "symbol": "@987",
-                  "address": 34636176,
-                  "sectionBase": 34636176
-                }
-              ],
-              "31": [
-                {
-                  "symbol": "@962",
-                  "address": 34636184,
-                  "sectionBase": 34636184
-                }
-              ],
-              "33": [
-                {
-                  "symbol": "@960",
-                  "address": 34636104,
-                  "sectionBase": 34636104
-                }
-              ],
-              "35": [
-                {
-                  "symbol": "@958",
-                  "address": 34636200,
-                  "sectionBase": 34636200
-                }
-              ],
-              "37": [
-                {
-                  "symbol": "@956",
-                  "address": 34636208,
-                  "sectionBase": 34636208
-                }
-              ]
-            }
+            ]
           },
           {
             "section": ".bss",
@@ -825,23 +748,7 @@
             "desired": [
               50,
               49
-            ],
-            "anchors": {
-              "49": [
-                {
-                  "symbol": "data_ov002_0210dbc0",
-                  "address": 34659264,
-                  "sectionBase": 34659264
-                }
-              ],
-              "50": [
-                {
-                  "symbol": "data_ov002_0210db80",
-                  "address": 34659200,
-                  "sectionBase": 34659200
-                }
-              ]
-            }
+            ]
           }
         ],
         "objisolate": {
@@ -923,7 +830,8 @@
           "sectionLinks": 0,
           "sectionInfos": 16,
           "error": null
-        }
+        },
+        "errors": null
       },
       "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
@@ -996,7 +904,7 @@
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x02108140"
     },
     {
-      "symbol": "@960",
+      "symbol": "@30",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x02108148"
@@ -1056,25 +964,25 @@
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x02108190"
     },
     {
-      "symbol": "@962",
+      "symbol": "@31",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x02108198"
     },
     {
-      "symbol": "@954",
+      "symbol": "@27",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021081a0"
     },
     {
-      "symbol": "@958",
+      "symbol": "@29",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021081a8"
     },
     {
-      "symbol": "@956",
+      "symbol": "@28",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021081b0"
@@ -1172,7 +1080,7 @@
       "source": "0x02100ab4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@954",
+      "symbol": "@27",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x021081a0"
@@ -1182,7 +1090,7 @@
       "source": "0x02100ab8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@956",
+      "symbol": "@28",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x021081b0"
@@ -1192,7 +1100,7 @@
       "source": "0x02100abc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@958",
+      "symbol": "@29",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x021081a8"
@@ -1202,7 +1110,7 @@
       "source": "0x02100ac0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@960",
+      "symbol": "@30",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02108148"
@@ -1262,7 +1170,7 @@
       "source": "0x02100ad8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@962",
+      "symbol": "@31",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02108198"

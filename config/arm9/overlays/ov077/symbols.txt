@@ -124,13 +124,13 @@ _ZTS7daTgz_c kind:data(any) addr:0x02127948
 _ZTI7daTgz_c kind:data(any) addr:0x02127954
 g_profile_TOGEZO kind:data(any) addr:0x02127960
 _ZTV7daTgz_c kind:data(any) addr:0x02127984
-@821 kind:data(any) addr:0x02127a00
-@817 kind:data(any) addr:0x02127a08
+@196 kind:data(any) addr:0x02127a00
+@194 kind:data(any) addr:0x02127a08
 @507 kind:data(any) addr:0x02127a10
 @815 kind:data(any) addr:0x02127a18
 @807 kind:data(any) addr:0x02127a20
 @809 kind:data(any) addr:0x02127a28
-@819 kind:data(any) addr:0x02127a30
+@195 kind:data(any) addr:0x02127a30
 @811 kind:data(any) addr:0x02127a38
 @813 kind:data(any) addr:0x02127a40
 @509 kind:data(any) addr:0x02127a48

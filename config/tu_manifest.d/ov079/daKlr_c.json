@@ -271,10 +271,6 @@
       "droppedSections": [
         5,
         6,
-        7,
-        8,
-        9,
-        10,
         11,
         12,
         13,
@@ -286,7 +282,11 @@
         19,
         20,
         21,
-        33
+        22,
+        23,
+        25,
+        26,
+        38
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -318,7 +318,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 3 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -546,6 +546,18 @@
       "canonical_module": "ov079",
       "canonical_address": "0x02127ee8",
       "reason": "This class's own vtable, emitted here because OnAimedAtWithEgg -- the first non-inline virtual declared in the class body, the destructor above it being inline -- makes this TU the class's key-function TU. The cartridge's own copy lives outside the .text run this entry claims. MEASURED in extracted/overlays/overlay_0079.bin: 0x02127ee8 IS the address point -- 0x02127ee0 is the offset-to-top word 0 and 0x02127ee4 is 0x02127eb8 (&_ZTI7daKlr_c). Slots 0, 3, 6 and 9 hold 0x02126c44, 0x02126a18, 0x02126a84 and 0x02126a48 (InitResources, CleanupResources, Behavior, Render); slots 16 and 17 hold 0x02126648 / 0x02126698 (D1 then D0); slot 29 holds 0x021266fc (OnAimedAtWithEgg); every other slot is an inherited word, and the table ends after 31 slots at 0x02127f64 (data_ov079_02127f64, the next symbol), matching the compiled 0x84-byte _ZTV."
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@667",
+      "to": "@653",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@669",
+      "to": "@655",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

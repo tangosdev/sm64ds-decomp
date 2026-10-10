@@ -797,7 +797,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 5 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS -- ordinal pair (0, 1) read out of ROM order while the destructor was defined out of line, because mwccarm then emitted D2, D0, D1. The destructor is now inline in include/daWanwan_c.h, mwccarm emits D1 then D0 and no D2, and that is the ROM's own order: D1 at 0x02111308, D0 at 0x021113bc.",
       "relocation_destinations_verified": "PASS"
     },
@@ -1140,6 +1140,28 @@
       "size": "0x78",
       "binding": "STB_GLOBAL",
       "evidence": "six-entry Chain Chomp state table: enter PMF at +0 and update PMF at +8 copied at static-init time from the ROM PMF descriptors at 0x021146a0..0x021146f8, name pointer at +0x10 the only static part, matching the retail .data bytes and six name-pointer relocations; boundary symbol data_ov014_021147e4 sizes it against the claim"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@1179",
+      "to": "@1165",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1180",
+      "to": "@1166",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1181",
+      "to": "@1167",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1182",
+      "to": "@1168",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

@@ -551,5 +551,12 @@
       "canonical_address": "0x02086e60",
       "reason": "Ancestor RTTI passenger of the _ZTI13daObjKanban_c record this TU emits: the root's RTTI name string (\"7fBase_c\"). The cartridge's __si_class_type_info chain is daObjKanban_c (ov085:0x021303c0) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at arm9:0x02086e60 is owned independently and lies outside this text-only entry's licensed 0x0212edac..0x0212f27c range, so discarding this TU's duplicate cannot cost the image a byte."
     }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@715",
+      "to": "@696",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    }
   ]
 }

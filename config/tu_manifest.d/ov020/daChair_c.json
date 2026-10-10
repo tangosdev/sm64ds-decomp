@@ -306,7 +306,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 2 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS",
       "all_content_sections_licensed": "PASS -- .text 0x02112938..0x021134e4 (14 functions) + .init 0x0211372c..0x02113768 + .ctor 0x0211376c..0x02113770 + .bss 0x02114af0..0x02114b04. The linkcheck block proves all four ranges.",
@@ -557,5 +557,12 @@
       "reason": "InitResources is the key function and emits the complete 0x84-byte class vtable storage (two header words plus 31 slots). symbols.txt 0x02114a14 IS the address point (storage starts 8 bytes earlier); text-only isolation discards this copy. Do not move the address."
     }
   ],
-  "externalized_output": []
+  "externalized_output": [],
+  "defined_symbol_renames": [
+    {
+      "from": "@692",
+      "to": "@678",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    }
+  ]
 }

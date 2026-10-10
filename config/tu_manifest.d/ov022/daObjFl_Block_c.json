@@ -334,7 +334,8 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN15daObjFl_Block_c8BehaviorEv and the one that held _ZN15daObjFl_Block_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED by dropping BOTH mangled declarations (the Behavior source spelled it with a void return, the InitResources source with an int return): the merged TU calls it as the real member include/dBgActor_c.h already declares, `void UpdateClsnPosAndRot();`, with no byte change. No TUBUILD CONFLICT marker survives in the merged source.",
     "The model and collision SharedFilePtrs (data_ov022_02114558 / data_ov022_02114550, ov022 .bss) and the CLPS block (data_ov064_0211bb0c) are unnamed rows in their own modules, so this TU declares them locally and coins no shared names for them.",
     "STYLE ORACLE: src/actors/daObjFl_Ring_c.cpp -- same overlay, same base, same inline-empty-destructor shape, same deadstrip-data RTTI licensing, member for member the same four slots.",
-    "The two file-scope handles data_ov022_02114558 (model, file 1521) and data_ov022_02114550 (collision, file 1522) are defined in this TU; mwcc emits __sinit_daObjFl_Block_c.cpp, the ctor word, and the two anonymous registration nodes @376/@377. Class RTTI and vtable stay externalized; the claim stops at _ZTI15daObjFl_Block_c. The handwritten src/__sinit_ov022_02112d80.c is retired."
+    "The two file-scope handles data_ov022_02114558 (model, file 1521) and data_ov022_02114550 (collision, file 1522) are defined in this TU; mwcc emits __sinit_daObjFl_Block_c.cpp, the ctor word, and the two anonymous registration nodes @376/@377. Class RTTI and vtable stay externalized; the claim stops at _ZTI15daObjFl_Block_c. The handwritten src/__sinit_ov022_02112d80.c is retired.",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -624,14 +625,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@396",
-      "to": "@377",
-      "evidence": "CLASSINIT TAIL FOLD (2026-10-09): the three folded functions sit above the two file-handle definitions, so mwccarm's anonymous numbering of the __sinit destructor-registration nodes moves by 19; this row maps the compiled name back to the configured ROM name."
+      "from": "@409",
+      "to": "@376",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@395",
-      "to": "@376",
-      "evidence": "CLASSINIT TAIL FOLD (2026-10-09): the three folded functions sit above the two file-handle definitions, so mwccarm's anonymous numbering of the __sinit destructor-registration nodes moves by 19; this row maps the compiled name back to the configured ROM name."
+      "from": "@410",
+      "to": "@377",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

@@ -336,7 +336,7 @@
       "ordinal": 41
     },
     {
-      "symbol": "__arraydtor$940",
+      "symbol": "__arraydtor$954",
       "address": "0x020b4a7c",
       "size": "0x00000024",
       "legacy_source": "src/func_ov004_020b4a7c.c",
@@ -407,7 +407,7 @@
       "address": "0x020bf648",
       "size": "0x39c",
       "binding": "STB_GLOBAL",
-      "evidence": "the 3 x 0x134 Elem record pool; the initializer runs __cxa_vec_ctor over it and registers __arraydtor$940 for cleanup"
+      "evidence": "the 3 x 0x134 Elem record pool; the initializer runs __cxa_vec_ctor over it and registers __arraydtor$954 for cleanup"
     }
   ],
   "notes": [
@@ -670,7 +670,7 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@941",
+      "from": "@955",
       "to": "@938",
       "evidence": "mwcc emits the destructor-registration node as @941, already promoted by other modules; @938 is unused fleet-wide and the same length"
     }
@@ -695,7 +695,7 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "__arraydtor$940",
+      "symbol": "__arraydtor$954",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local array destructor thunk for the Elem pool; it is a configured initializer relocation destination at 0x020b4a7c"
@@ -773,7 +773,7 @@
       "source": "0x20b99c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__arraydtor$940",
+      "symbol": "__arraydtor$954",
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x20b4a7c"

@@ -456,33 +456,6 @@
       "evidence": "compiler-generated static initialization call shape and the direct retail reference in this initializer"
     }
   ],
-  "defined_symbol_renames": [
-    {
-      "from": "@960",
-      "to": "@959",
-      "evidence": "mwcc numbers this registration node @960 per TU and ov002 already defines a global @960, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@962",
-      "to": "@739",
-      "evidence": "mwcc numbers this registration node @962 per TU and ov002 already defines a global @962, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@963",
-      "to": "@740",
-      "evidence": "mwcc numbers this registration node @963 per TU and ov092 already defines a global @963, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@964",
-      "to": "@945",
-      "evidence": "mwcc numbers this registration node @964 per TU and ov092 already defines a global @964, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@966",
-      "to": "@947",
-      "evidence": "mwcc numbers this registration node @966 per TU and ov092 already defines a global @966, so the scratch link would multiply-define it"
-    }
-  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_d_a_jgm.cpp",
@@ -1036,7 +1009,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 6 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 9 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -1379,5 +1352,47 @@
       "reason": "InitResources naturally emits the complete class vtable; romdata_check applies the measured eight-byte public address-point bias. Text-only: deadstripped, data: []. The symbols.txt address point 0x0212786c is unchanged."
     }
   ],
-  "production_mode": "intact-object"
+  "production_mode": "intact-object",
+  "defined_symbol_renames": [
+    {
+      "from": "@974",
+      "to": "@959",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@975",
+      "to": "@961",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@976",
+      "to": "@739",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@977",
+      "to": "@740",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@978",
+      "to": "@945",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@979",
+      "to": "@965",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@980",
+      "to": "@947",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@981",
+      "to": "@967",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    }
+  ]
 }

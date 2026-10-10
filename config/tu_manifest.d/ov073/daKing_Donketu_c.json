@@ -387,7 +387,7 @@
       "evidence": "compiler PMF record for daKing_Donketu_c::func_ov073_2120e60"
     },
     {
-      "symbol": "@1887",
+      "symbol": "@192",
       "address": "0x02122f50",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -401,7 +401,7 @@
       "evidence": "compiler PMF record for daKing_Donketu_c::func_ov073_211fc78"
     },
     {
-      "symbol": "@1884",
+      "symbol": "@190",
       "address": "0x02122f60",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -415,7 +415,7 @@
       "evidence": "compiler PMF record for daKing_Donketu_c::func_ov073_211fbf4"
     },
     {
-      "symbol": "@1886",
+      "symbol": "@191",
       "address": "0x02122f70",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -590,7 +590,7 @@
       "evidence": "compiler PMF record for daKing_Donketu_c::func_ov073_2120c08"
     },
     {
-      "symbol": "@1889",
+      "symbol": "@193",
       "address": "0x02123038",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -1033,7 +1033,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 41 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -2622,7 +2622,7 @@
       "source": "0x02122d10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1884",
+      "symbol": "@190",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02122f60"
@@ -2632,7 +2632,7 @@
       "source": "0x02122d14",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1886",
+      "symbol": "@191",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02122f70"
@@ -2652,7 +2652,7 @@
       "source": "0x02122d1c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1887",
+      "symbol": "@192",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02122f50"
@@ -2662,7 +2662,7 @@
       "source": "0x02122d20",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1889",
+      "symbol": "@193",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02123038"
@@ -2821,7 +2821,7 @@
       "evidence": "compiler-local PMF record is a configured relocation destination at 0x02122f48"
     },
     {
-      "symbol": "@1887",
+      "symbol": "@192",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF record is a configured relocation destination at 0x02122f50"
@@ -2833,7 +2833,7 @@
       "evidence": "compiler-local PMF record is a configured relocation destination at 0x02122f58"
     },
     {
-      "symbol": "@1884",
+      "symbol": "@190",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF record is a configured relocation destination at 0x02122f60"
@@ -2845,7 +2845,7 @@
       "evidence": "compiler-local PMF record is a configured relocation destination at 0x02122f68"
     },
     {
-      "symbol": "@1886",
+      "symbol": "@191",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF record is a configured relocation destination at 0x02122f70"
@@ -2995,7 +2995,7 @@
       "evidence": "compiler-local PMF record is a configured relocation destination at 0x02123030"
     },
     {
-      "symbol": "@1889",
+      "symbol": "@193",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF record is a configured relocation destination at 0x02123038"
@@ -3049,5 +3049,207 @@
       "evidence": "compiler-local registration node is a configured relocation destination at 0x02123314"
     }
   ],
-  "production_mode": "intact-object"
+  "production_mode": "intact-object",
+  "defined_symbol_renames": [
+    {
+      "from": "@1883",
+      "to": "@1831",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1884",
+      "to": "@1832",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1885",
+      "to": "@1833",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1886",
+      "to": "@1834",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1887",
+      "to": "@1835",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1888",
+      "to": "@1836",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1889",
+      "to": "@1837",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1890",
+      "to": "@1838",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1892",
+      "to": "@1840",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1894",
+      "to": "@1842",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1896",
+      "to": "@1844",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1898",
+      "to": "@1846",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1900",
+      "to": "@1848",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1902",
+      "to": "@1850",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1904",
+      "to": "@1852",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1906",
+      "to": "@1854",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1908",
+      "to": "@1856",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1910",
+      "to": "@1858",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1912",
+      "to": "@1860",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1914",
+      "to": "@1862",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1916",
+      "to": "@1864",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1918",
+      "to": "@1866",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1920",
+      "to": "@1868",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1922",
+      "to": "@1870",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1924",
+      "to": "@1872",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1926",
+      "to": "@1874",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1928",
+      "to": "@1876",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1930",
+      "to": "@1878",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1932",
+      "to": "@1880",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1934",
+      "to": "@1882",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1936",
+      "to": "@190",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1938",
+      "to": "@191",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1939",
+      "to": "@192",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1941",
+      "to": "@193",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1943",
+      "to": "@1891",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1945",
+      "to": "@1893",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1947",
+      "to": "@1895",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1949",
+      "to": "@1897",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1951",
+      "to": "@1899",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1953",
+      "to": "@1901",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    }
+  ]
 }

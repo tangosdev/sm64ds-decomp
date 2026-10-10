@@ -59,6 +59,14 @@ typedef struct Vector3 {
        and Rabbit::Behavior grows 8 bytes (0x5cc -> 0x5d4). That one is the
        price of the six destructors this unblocks. */
     ~Vector3() {}
+
+    /* Static-init globals spell this `Vector3(x, y, z)`; a real member ctor is
+       what makes mwcc emit the retail shape (elementwise stores, then the
+       ~Vector3() registration above). Declaring any ctor also flips copy
+       lowering from block moves to memberwise in a few TUs -- those sites use
+       a local POD twin instead. */
+    Vector3() {}
+    Vector3(Fix12i x_, Fix12i y_, Fix12i z_) : x(x_), y(y_), z(z_) {}
 #endif
 } Vector3;
 

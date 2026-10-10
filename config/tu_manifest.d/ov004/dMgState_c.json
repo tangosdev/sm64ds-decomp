@@ -413,7 +413,7 @@
     "Widened from the four-function dMgState_c TU (Render, Behavior, SetState, C1) to the whole unit by folding 48 further one-function sources into src/actors/dMgState_c.cpp: 47 handlers and helpers below it and func_ov004_020b8a8c above it. Each retired shard keeps its ROM symbol under extern \"C\"; the shards that were matched as C compile as C++ here with the same bytes once their two-word struct copies go through the int[2] wrapper W2, and the vtable-calling handlers share one Base and one Obj view in place of the per-file copies. All 52 functions byte-match.",
     "dMgState_c is a COINED class name. tools/rtti_extract.py recovers 429 RTTI records from the cartridge and none of them names it, flat or nested -- the probe does see nested spellings (dMgPsOpt_c::TouchIcon_c, dScMgBase_c::graphCallback_c and dScMgSlot1_c::betIcon_c are all in the same extraction), so the absence is a measurement, not a blind spot. The class is non-polymorphic: no base, no virtual member, no _ZTV/_ZTI/_ZTS emitted by the object and none configured at any address in any symbols.txt. A coined name only blocks promotion when the TU emits RTTI whose home would have to be licensed under the coined spelling, so it does not block here.",
     "This TU is NOT text-only production. SetState owns a function-local static array and its guard word, and tools/objisolate.py plan_many refuses any surviving non-.text section: 'unlicensed content in text-only multi-symbol object: section[5] .bss size 0x4 defines [...]; section[6] .bss size 0xa0 defines [...]'. One-function production isolation escapes that by externalising the two statics, which is why the per-function shard linked and why ov004's symbols.txt carries names for them at all; the multi-symbol path has no externalise step. Hence production_mode intact-object with an explicit .bss claim at 0x020bfd04..0x020bfda8 -- 0x4 for the guard and 0xa0 for twenty 8-byte pointer-to-member slots, ending exactly where ov004's next configured bss symbol begins. Nothing outside this TU reaches those bytes: the only two relocations to them in ov004's relocs.txt come from 0x020b8a14 and 0x020b8a1c, both inside SetState.",
-    "The $NN suffix on the two statics is a per-TU mwccarm counter, and it is reconstruction-dependent rather than cartridge evidence. The four-function TU landed on $26 and the one-function shard on $19. This tree emits $170: the folded handlers, the dWipe_c.h include, and the dScene_c.h include all sit ahead of SetState. This entry licenses those $170 spellings.",
+    "The $NN suffix on the two statics is a per-TU mwccarm counter, and it is reconstruction-dependent rather than cartridge evidence. The four-function TU landed on $26 and the one-function shard on $19. This tree emits $184: the folded handlers, the dWipe_c.h include, the dScene_c.h include, and the types.h Vector3 ctors all sit ahead of SetState. The $184 spellings are renamed onto the licensed $170 pins.",
     "Production reconciles the shard-only $19 and generic aliases to the consolidated compiler-owned $170 BSS symbols atomically with enrollment. Only SetState refers to these two addresses. The explicit ELF binding policy exposes their unchanged storage to DSD without changing their C++ function-local lifetime. The strict control independently substitutes extracted ROM gaps for exact enrolled intact-object claims; candidate admission discards the initial prepared object and recompiles the raw source before ownership and linked-byte audits."
   ],
   "verification": {
@@ -440,7 +440,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 2 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -556,6 +556,18 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "The compiler owns this function-local static. DSD requires a global symbol at the configured BSS address; changing the ELF binding preserves all storage, relocations and emitted bytes."
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "sEnterTable$184",
+      "to": "sEnterTable$170",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "_ZGVsEnterTable$184",
+      "to": "_ZGVsEnterTable$170",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

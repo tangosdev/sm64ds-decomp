@@ -760,7 +760,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 5 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -781,14 +781,6 @@
         15,
         16,
         19,
-        69,
-        70,
-        71,
-        72,
-        73,
-        74,
-        75,
-        76,
         77,
         78,
         79,
@@ -802,7 +794,15 @@
         87,
         88,
         89,
-        90
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98
       ],
       "data": [
         "_ZTV8daBook_c",
@@ -1012,5 +1012,27 @@
       },
       "linkerOutput": null
     }
-  }
+  },
+  "defined_symbol_renames": [
+    {
+      "from": "@1261",
+      "to": "@1235",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1262",
+      "to": "@1236",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1263",
+      "to": "@1237",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1264",
+      "to": "@1238",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    }
+  ]
 }

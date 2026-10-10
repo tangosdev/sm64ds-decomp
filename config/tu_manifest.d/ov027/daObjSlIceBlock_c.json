@@ -648,5 +648,17 @@
       "target_module": "ov027",
       "target_address": "0x02112cb0"
     }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@685",
+      "to": "@671",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@686",
+      "to": "@672",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    }
   ]
 }

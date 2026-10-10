@@ -531,7 +531,6 @@ void daPkn_c::StateDie()
 void daPkn_c::StateShrink()
 {
     int scale;
-    Vector3 v;
 
     mClsnEnabled = 0;
     scale = mScaleX;
@@ -552,10 +551,7 @@ void daPkn_c::StateShrink()
     } else {
         scale = 0;
         if (unk_108 != 0) {
-            /* Loading y and z ahead of the aggregate keeps the ROM's order. */
-            int y = mPosY;
-            int z = mPosZ;
-            v = (Vector3){mPosX, y + 0x78000, z};
+            Vector3 v(mPosX, mPosY + 0x78000, mPosZ);
             dActor_c::Spawn(0x122, 0, v, 0, mAreaId, -1);
             unk_108 = 0;
         }

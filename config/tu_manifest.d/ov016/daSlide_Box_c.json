@@ -347,10 +347,6 @@
         18,
         23,
         24,
-        25,
-        26,
-        27,
-        28,
         29,
         30,
         31,
@@ -363,7 +359,11 @@
         38,
         39,
         40,
-        41
+        41,
+        42,
+        43,
+        44,
+        45
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -395,7 +395,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 3 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -649,6 +649,18 @@
       "canonical_module": "ov016",
       "canonical_address": "0x02114c8c",
       "reason": "This class's vtable, emitted because the destructor is the key function. The symbols.txt address 0x02114c8c is the address point (slot 0); the typeinfo word sits at 0x02114c88 and is _ZTI13daSlide_Box_c. .data, outside the claimed .text span."
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@595",
+      "to": "@579",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@596",
+      "to": "@580",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

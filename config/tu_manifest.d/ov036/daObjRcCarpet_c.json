@@ -887,59 +887,20 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov036-daObjRcCarpet_c/daObjRcCarpet_c.o (gitignored)",
+    "object": "build/tu/ov036-daObjRcCarpet_c/d_a_obj_rc_carpet.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 9,
     "functions_declared": 9,
     "compilerOnlyOutput": {
       "requested": [],
       "deadstripped": [],
-      "droppedSections": [
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        16,
-        17,
-        18,
-        19,
-        22,
-        24
-      ],
-      "data": [
-        "_ZTI7fBase_c",
-        "_ZTS7fBase_c",
-        "_ZTS7dBase_c",
-        "_ZTS8dActor_c",
-        "_ZTI10dBgActor_c",
-        "_ZTS10dBgActor_c",
-        "_ZTI16dPathLiftActor_c",
-        "_ZTS16dPathLiftActor_c",
-        "_ZTI8dActor_c",
-        "_ZTI7dBase_c"
-      ],
-      "dataExternalized": [
-        "_ZTI10dBgActor_c",
-        "_ZTI16dPathLiftActor_c",
-        "_ZTI7dBase_c",
-        "_ZTI7fBase_c",
-        "_ZTI8dActor_c",
-        "_ZTS10dBgActor_c",
-        "_ZTS16dPathLiftActor_c",
-        "_ZTS7dBase_c",
-        "_ZTS7fBase_c",
-        "_ZTS8dActor_c"
-      ]
+      "data": [],
+      "dataExternalized": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 14 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -1134,7 +1095,7 @@
                 "section": "OV036"
               }
             },
-            "baselineElfSha256": "380bcbe26909e142e1f0a44ce224f5173bf7ed205d74fea65e4761af21086210",
+            "baselineElfSha256": "3eb2532ad733a0af639ef65a6034b88c4f652ad8a15b8babb5c146ab307206b2",
             "exact": true
           }
         ],
@@ -2487,5 +2448,22 @@
       "strayOutputs": null,
       "scratch": "build/tu/ov036-daObjRcCarpet_c/link-partitioned (gitignored)"
     }
-  }
+  },
+  "defined_symbol_renames": [
+    {
+      "from": "@467",
+      "to": "@453",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@468",
+      "to": "@454",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@469",
+      "to": "@455",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    }
+  ]
 }

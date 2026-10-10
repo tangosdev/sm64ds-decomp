@@ -472,23 +472,23 @@
       "droppedSections": [
         5,
         6,
-        7,
-        8,
-        9,
-        10,
         11,
         12,
         13,
         14,
         15,
-        16,
         17,
         18,
         19,
         20,
         21,
-        35,
-        36
+        22,
+        26,
+        27,
+        28,
+        29,
+        43,
+        44
       ],
       "data": [
         "_ZTV16daObjCtMecha10_c",
@@ -520,7 +520,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 5 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -782,6 +782,28 @@
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60",
       "reason": "Ancestor RTTI passenger of the _ZTI16daObjCtMecha10_c record this TU emits: the root's RTTI name string (\"7fBase_c\"). The cartridge's __si_class_type_info chain is daObjCtMecha10_c (ov035:0x02112a84) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at arm9:0x02086e60 is owned independently and lies outside this text-only entry's licensed 0x021111a0..0x021116ec range, so discarding this TU's duplicate cannot cost the image a byte."
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@433",
+      "to": "@419",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@434",
+      "to": "@420",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@435",
+      "to": "@421",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@436",
+      "to": "@422",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

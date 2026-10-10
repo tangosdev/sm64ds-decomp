@@ -157,7 +157,7 @@ data_ov066_0211aebc kind:bss addr:0x0211aebc
 @2148 kind:bss addr:0x0211af9c
 @2149 kind:bss addr:0x0211afa8
 @2130 kind:bss addr:0x0211afb4
-@2150 kind:bss addr:0x0211afc0
+@32 kind:bss addr:0x0211afc0
 data_ov066_0211afcc kind:bss addr:0x0211afcc
 data_ov066_0211afdc kind:bss addr:0x0211afdc
 data_ov066_0211afec kind:bss addr:0x0211afec

@@ -291,34 +291,34 @@
   "bss": [],
   "defined_symbol_renames": [
     {
-      "from": "@831",
+      "from": "@852",
       "to": "@647",
-      "evidence": "mwcc numbers the WAIT init pointer-to-member descriptor @831 in this TU's object now that the destructors are folded in and the source is ROM-ascending under defer_codegen off; ov002 already defines a global @831 elsewhere, so the scratch link would multiply-define it. The final name keeps the symbol the delinked data and symbols.txt already carry at this descriptor's address."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@833",
+      "from": "@854",
       "to": "@649",
-      "evidence": "mwcc numbers the WAIT execute pointer-to-member descriptor @833 in this TU's object now that the destructors are folded in and the source is ROM-ascending under defer_codegen off; ov002 already defines a global @833 elsewhere, so the scratch link would multiply-define it. The final name keeps the symbol the delinked data and symbols.txt already carry at this descriptor's address."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@835",
-      "to": "@999",
-      "evidence": "mwcc numbers the PATH init pointer-to-member descriptor @835 in this TU's object now that the destructors are folded in and the source is ROM-ascending under defer_codegen off; ov002 already defines a global @835 elsewhere, so the scratch link would multiply-define it. The final name keeps the symbol the delinked data and symbols.txt already carry at this descriptor's address."
-    },
-    {
-      "from": "@837",
-      "to": "@997",
-      "evidence": "mwcc numbers the PATH execute pointer-to-member descriptor @837 in this TU's object now that the destructors are folded in and the source is ROM-ascending under defer_codegen off; ov002 already defines a global @837 elsewhere, so the scratch link would multiply-define it. The final name keeps the symbol the delinked data and symbols.txt already carry at this descriptor's address."
-    },
-    {
-      "from": "@839",
-      "to": "@998",
-      "evidence": "mwcc numbers the FALL init pointer-to-member descriptor @839 in this TU's object now that the destructors are folded in and the source is ROM-ascending under defer_codegen off; ov002 already defines a global @839 elsewhere, so the scratch link would multiply-define it. The final name keeps the symbol the delinked data and symbols.txt already carry at this descriptor's address."
-    },
-    {
-      "from": "@841",
+      "from": "@862",
       "to": "@657",
-      "evidence": "mwcc numbers the FALL execute pointer-to-member descriptor @841 in this TU's object now that the destructors are folded in and the source is ROM-ascending under defer_codegen off; ov002 already defines a global @841 elsewhere, so the scratch link would multiply-define it. The final name keeps the symbol the delinked data and symbols.txt already carry at this descriptor's address."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@858",
+      "to": "@997",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@860",
+      "to": "@998",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@856",
+      "to": "@999",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ],
   "symbol_binding_rewrites": [

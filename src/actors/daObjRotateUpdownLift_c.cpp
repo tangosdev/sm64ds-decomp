@@ -183,7 +183,11 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
 void daObjRotateUpdownLift_c::Kill()
 {
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xbb, mPosX, mPosY, mPosZ);
-    Vector3 v = { mPosX, mPosY, mPosZ };
+    /* memberwise stores: the (x,y,z) ctor form batches the loads */
+    Vector3 v;
+    v.x = mPosX;
+    v.y = mPosY;
+    v.z = mPosZ;
     PoofDustAt(v);
     Sound::PlayBank3(0xf, *(Vector3 *)&mCamSpacePosX);
     mIsDead = 1;

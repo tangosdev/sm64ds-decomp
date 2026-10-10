@@ -305,7 +305,7 @@ int daBombking_c::func_ov078_02123aa0()
     if (func_ov078_02123804() == 1) return 1;
     Player *p = (Player *)this->ClosestPlayer();
     if (p != 0) {
-        struct Vector3 v = *(struct Vector3 *)&p->mPosX;
+        struct Vec3 v = *(struct Vec3 *)&p->mPosX;
         if (Vec3_Dist(&this->mArenaPosX, &v) < 0x640000) {
             if (this->mArenaPosY - 0x64000 < v.y) {
                 KingBobOmb_SetState(data_ov078_0212703c);
@@ -988,7 +988,7 @@ int daBombking_c::func_ov078_02124f28()
             return 1;
         }
         {
-            Vector3 copy = *(Vector3 *)&obj->mPosX;
+            struct Vec3 copy = *(struct Vec3 *)&obj->mPosX;
             if (Vec3_Dist(&this->mArenaPosX, &copy) > 0x640000)
                 goto drop;
             if (this->mArenaPosY - 0xa000 <= copy.y)

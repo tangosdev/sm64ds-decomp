@@ -958,5 +958,17 @@
       "target_address": "0x02137958"
     }
   ],
-  "externalized_output": []
+  "externalized_output": [],
+  "defined_symbol_renames": [
+    {
+      "from": "@1057",
+      "to": "@1043",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1058",
+      "to": "@1044",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    }
+  ]
 }

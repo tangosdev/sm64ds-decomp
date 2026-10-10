@@ -349,7 +349,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS -- every declared function is defined; the one extra STT_FUNC is __sinit_daGrock_c.cpp, licensed under init",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 2 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS",
       "all_content_sections_licensed": "PASS -- .text 0x021121e8..0x02112db4 (13 functions) + .init 0x02113688..0x021136c8 + .ctor 0x02113738..0x0211373c + .bss 0x02114a50..0x02114a64. The linkcheck block proves all four ranges.",
@@ -597,6 +597,13 @@
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60",
       "reason": "Text-only TU: externalize to canonical public address 0x02086e60."
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@904",
+      "to": "@887",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

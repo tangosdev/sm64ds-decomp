@@ -781,9 +781,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@621",
+      "from": "@634",
+      "to": "@620",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@635",
       "to": "@737",
-      "evidence": "compiler temporary; mwcc numbers it @621 per TU and ov064 daObjTbox_c (this batch) also defines a global @621, so the scratch link collides"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

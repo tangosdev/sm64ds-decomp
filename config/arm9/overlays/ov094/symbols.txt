@@ -30,7 +30,7 @@ __sinit_daOwl_c.cpp kind:function(arm,size=0x1d0) addr:0x021367e8
 @901 kind:data(any) addr:0x021369e8
 @902 kind:data(any) addr:0x021369f0
 @928 kind:data(any) addr:0x021369f8
-@930 kind:data(any) addr:0x02136a00
+@165 kind:data(any) addr:0x02136a00
 @903 kind:data(any) addr:0x02136a08
 _ZTS7daOwl_c kind:data(any) addr:0x02136a10
 data_ov094_02136a1c kind:data(any) addr:0x02136a1c

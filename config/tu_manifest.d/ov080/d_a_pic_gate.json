@@ -155,17 +155,15 @@
     "functions_declared": 17,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN11daPicGate_cD2Ev",
-        "_ZN7Vector3D1Ev"
+        "_ZN11daPicGate_cD2Ev"
       ],
       "deadstripped": [
-        "_ZN11daPicGate_cD2Ev",
-        "_ZN7Vector3D1Ev"
+        "_ZN11daPicGate_cD2Ev"
       ],
       "droppedSections": [
         9,
         10,
-        29,
+        36,
         37,
         38,
         39,
@@ -178,8 +176,7 @@
         46,
         47,
         48,
-        49,
-        50
+        49
       ],
       "data": [
         "_ZTV11daPicGate_c",
@@ -280,13 +277,6 @@
       "reason": "daPicGate_c's typeinfo chain makes mwcc emit fBase_c's typeinfo name as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e60, outside this TU's only licensed range (.text 0x02125404-0x021261f4), so dsd supplies that ROM data independently. romdata_check compares this emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60"
-    },
-    {
-      "symbol": "_ZN7Vector3D1Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "arm9",
-      "canonical_address": "0x020072c0",
-      "reason": "Vector3's four-byte inline destructor, vague linkage emitted because completing Player for the HitTest member access instantiates it. The cartridge's copy is arm9:0x020072c0."
     }
   ]
 }

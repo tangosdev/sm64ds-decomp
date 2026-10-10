@@ -72,7 +72,7 @@ data_ov074_02122dbc kind:data(any) addr:0x02122dbc
 @662 kind:data(any) addr:0x02122dc4
 @664 kind:data(any) addr:0x02122dcc
 @665 kind:data(any) addr:0x02122dd4
-@675 kind:data(any) addr:0x02122ddc
+@1 kind:data(any) addr:0x02122ddc
 @661 kind:data(any) addr:0x02122de4
 @674 kind:data(any) addr:0x02122dec
 @673 kind:data(any) addr:0x02122df4

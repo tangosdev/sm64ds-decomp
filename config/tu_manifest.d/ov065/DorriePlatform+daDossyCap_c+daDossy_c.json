@@ -1247,28 +1247,6 @@
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x0211cd2c"
     }
   ],
-  "defined_symbol_renames": [
-    {
-      "from": "@999",
-      "to": "@300",
-      "evidence": "mwcc numbers this destructor-registration node @999 per TU and ov002 already defines a global @999, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@1011",
-      "to": "@2700",
-      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @1011 per TU and ov080 daChoro_Rock_c+daChoropu_c (this batch) also defines a global @1011, so the scratch link collides"
-    },
-    {
-      "from": "@1013",
-      "to": "@2701",
-      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @1013 per TU and ov080 daChoro_Rock_c+daChoropu_c (this batch) also defines a global @1013, so the scratch link collides"
-    },
-    {
-      "from": "@1015",
-      "to": "@2702",
-      "evidence": "compiler temporary pointer-to-member descriptor; mwcc numbers it @1015 per TU and ov080 daChoro_Rock_c+daChoropu_c (this batch) also defines a global @1015, so the scratch link collides"
-    }
-  ],
   "notes": [
     "Written in descending ROM order (mwccarm's default reverse emission), with `#pragma opt_common_subs off` and `#pragma opt_strength_reduction off` file-wide. Both are needed and neither binds as a push/pop bracket around func_ov065_02118838, the function that needs them; the old per-file `opt_propagation off` on daDossy_c::Behavior is not needed in this TU.",
     "Leftovers are listed in the source's header comment: the Fix12<int> by-value mangled calls (wall 6az, measured again here on ModelAnim::SetAnim), the decl_common.h char* parameters of func_ov065_021180d4/02118c4c/02119210, the char*-stepped DorriePlatform walks, and address-named data.",
@@ -1355,7 +1333,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 44 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 15 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -1659,5 +1637,77 @@
     "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
     "ALL TWENTY-NINE MATCH as one file: tools/tubuild.py verify reports 29/29 MATCH, objisolate clean, relocation destinations clean, every function in ROM-ascending order. The run's two edges are the class pair's own structors: it opens with daDossy_c's D1/D0 and daDossyCap_c's D1/D0 (inline destructors, emitted by the key-function TU) and closes with DorriePlatform's out-of-line C1, which daDossy_c_classInit hands to __cxa_vec_ctor for mPlatforms[7].",
     "Both classes' key function (InitResources, the first non-inline virtual) is defined here, so this object emits _ZTV9daDossy_c and _ZTV12daDossyCap_c and the RTTI chain down to fBase_c; every one has a configured ROM home and a deadstrip-data row below. The ov065 homes (_ZTS9daDossy_c 0x0211cd34, _ZTI9daDossy_c 0x0211cd40, _ZTI12daDossyCap_c 0x0211cd4c, _ZTS12daDossyCap_c 0x0211cd58, _ZTV12daDossyCap_c 0x0211cdc4, _ZTV9daDossy_c 0x0211ce48) sit directly after this TU's .text in the overlay's data, the layout one key-function TU produces."
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@1013",
+      "to": "@300",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1014",
+      "to": "@1000",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1015",
+      "to": "@1001",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1016",
+      "to": "@1002",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1017",
+      "to": "@1003",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1018",
+      "to": "@1004",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1019",
+      "to": "@1005",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1020",
+      "to": "@1006",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1021",
+      "to": "@1007",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1022",
+      "to": "@1008",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1023",
+      "to": "@1009",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1025",
+      "to": "@2700",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1027",
+      "to": "@2701",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1029",
+      "to": "@2702",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    }
   ]
 }

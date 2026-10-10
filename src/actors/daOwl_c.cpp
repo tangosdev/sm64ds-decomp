@@ -440,7 +440,7 @@ int daOwl_c::func_ov094_02135ee0()
         func_ov094_02136188(OWL_STATE_HOVER);
         return 1;
     }
-    Vector3 v = *(Vector3 *)&mTalkTarget->mPosX;
+    OwlVec v = *(OwlVec *)&mTalkTarget->mPosX;
     Vector3 w;
     w.x = v.x;
     w.y = v.y;

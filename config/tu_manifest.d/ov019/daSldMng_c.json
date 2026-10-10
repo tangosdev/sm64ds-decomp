@@ -210,7 +210,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS -- every declared function is defined; the one extra STT_FUNC is __sinit_d_a_sld_mng.cpp, licensed under init",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 2 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS",
       "all_content_sections_licensed": "PASS -- .text 0x0211261c..0x0211277c (5 functions) + .init 0x02112b14..0x02112b64 + .ctor 0x02112b68..0x02112b6c + .bss 0x021135cc..0x021135e4. The linkcheck block proves all four ranges.",
@@ -457,6 +457,13 @@
       "symbol": "_ZN7Vector3D2Ev",
       "disposition": "deadstrip",
       "reason": "Base destructor of the spawn-position wrapper. The cartridge registers _ZN7Vector3D1Ev at arm9:0x020072c0 and has no D2."
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@217",
+      "to": "@203",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

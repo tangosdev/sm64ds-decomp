@@ -844,58 +844,6 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "defined_symbol_renames": [
-    {
-      "from": "@540",
-      "to": "@700",
-      "evidence": "mwcc numbers this descriptor @540 per TU and the fleet already defines a global @540, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@538",
-      "to": "@702",
-      "evidence": "mwcc numbers this descriptor @538 per TU and the fleet already defines a global @538, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@536",
-      "to": "@704",
-      "evidence": "mwcc numbers this descriptor @536 per TU and the fleet already defines a global @536, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@542",
-      "to": "@706",
-      "evidence": "mwcc numbers this descriptor @542 per TU and the fleet already defines a global @542, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@532",
-      "to": "@708",
-      "evidence": "mwcc numbers this descriptor @532 per TU and the fleet already defines a global @532, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@530",
-      "to": "@710",
-      "evidence": "mwcc numbers this descriptor @530 per TU and the fleet already defines a global @530, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@534",
-      "to": "@724",
-      "evidence": "mwcc numbers this descriptor @534 per TU and the fleet already defines a global @534, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@528",
-      "to": "@726",
-      "evidence": "mwcc numbers this descriptor @528 per TU and the fleet already defines a global @528, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@1174",
-      "to": "@2708",
-      "evidence": "compiler temporary; mwcc numbers it @1174 per TU and ov002 da1up_c (on main) also defines a global @1174, so the scratch link collides"
-    },
-    {
-      "from": "@1176",
-      "to": "@2709",
-      "evidence": "compiler temporary; mwcc numbers it @1176 per TU and ov002 da1up_c (on main) also defines a global @1176, so the scratch link collides"
-    }
-  ],
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN15ObjKeyModelFileC1Ej",
@@ -1563,6 +1511,88 @@
       "addend": 0,
       "target_module": "ov089",
       "target_address": "0x02131b18"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@1209",
+      "to": "@2708",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1210",
+      "to": "@1175",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1211",
+      "to": "@2709",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1212",
+      "to": "@1177",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1213",
+      "to": "@1178",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1214",
+      "to": "@1179",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1215",
+      "to": "@1180",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1216",
+      "to": "@1181",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@542",
+      "to": "@726",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@544",
+      "to": "@710",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@546",
+      "to": "@708",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@548",
+      "to": "@724",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@550",
+      "to": "@704",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@552",
+      "to": "@702",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@554",
+      "to": "@700",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@556",
+      "to": "@706",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

@@ -267,20 +267,20 @@
       "requested": [],
       "deadstripped": [],
       "droppedSections": [
-        6,
         7,
-        9,
+        8,
         10,
         11,
         12,
         13,
         14,
-        15,
+        16,
         17,
         18,
         19,
         20,
-        21
+        21,
+        22
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -308,7 +308,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 2 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -531,6 +531,13 @@
       "canonical_module": "ov039",
       "canonical_address": "0x02111858",
       "reason": "This class's own vtable, vague-linkage and emitted here because the inline destructor makes every TU that names the class a candidate emitter. The cartridge's own copy lives at ov039:0x02111858, outside the .text run this entry claims, so dsd delinks it from the image whatever this object does. MEASURED in extracted/overlays/overlay_0039.bin: symbols.txt's 0x02111858 IS the address point -- 0x02111850 is the offset-to-top word 0, 0x02111854 is 0x02111818 (&_ZTI11daObjKumo_c), and 0x02111858 is slot 0 = 0x0211132c (InitResources); slot 3 at 0x02111864 is 0x02111254 (CleanupResources), slot 6 at 0x02111870 is 0x021112a0 (Behavior), slot 9 at 0x0211187c is 0x02111278 (Render), and slots 16/17 at 0x02111898/0x0211189c are 0x021111a0/0x021111d0 (D1 then D0), matching the header."
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@287",
+      "to": "@273",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

@@ -183,7 +183,7 @@
   ],
   "data": [
     {
-      "symbol": "@839",
+      "symbol": "@3",
       "address": "0x0210987c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -204,7 +204,7 @@
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba2acEv"
     },
     {
-      "symbol": "@837",
+      "symbol": "@2",
       "address": "0x02109894",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -218,14 +218,14 @@
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba4c0Ev"
     },
     {
-      "symbol": "@845",
+      "symbol": "@6",
       "address": "0x021098a4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba0bcEv"
     },
     {
-      "symbol": "@843",
+      "symbol": "@5",
       "address": "0x021098ac",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -246,7 +246,7 @@
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba3a8Ev"
     },
     {
-      "symbol": "@841",
+      "symbol": "@4",
       "address": "0x021098c4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -401,7 +401,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 32 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 10 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -536,7 +536,7 @@
             "anchors": {
               "5": [
                 {
-                  "symbol": "@837",
+                  "symbol": "@2",
                   "address": 34642068,
                   "sectionBase": 34642068
                 }
@@ -550,7 +550,7 @@
               ],
               "9": [
                 {
-                  "symbol": "@845",
+                  "symbol": "@6",
                   "address": 34642084,
                   "sectionBase": 34642084
                 }
@@ -578,14 +578,14 @@
               ],
               "17": [
                 {
-                  "symbol": "@843",
+                  "symbol": "@5",
                   "address": 34642092,
                   "sectionBase": 34642092
                 }
               ],
               "23": [
                 {
-                  "symbol": "@841",
+                  "symbol": "@4",
                   "address": 34642116,
                   "sectionBase": 34642116
                 }
@@ -599,7 +599,7 @@
               ],
               "29": [
                 {
-                  "symbol": "@839",
+                  "symbol": "@3",
                   "address": 34642044,
                   "sectionBase": 34642044
                 }
@@ -961,7 +961,7 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@839",
+      "symbol": "@3",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x0210987c"
@@ -979,7 +979,7 @@
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x0210988c"
     },
     {
-      "symbol": "@837",
+      "symbol": "@2",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x02109894"
@@ -991,13 +991,13 @@
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x0210989c"
     },
     {
-      "symbol": "@845",
+      "symbol": "@6",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098a4"
     },
     {
-      "symbol": "@843",
+      "symbol": "@5",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098ac"
@@ -1015,7 +1015,7 @@
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098bc"
     },
     {
-      "symbol": "@841",
+      "symbol": "@4",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098c4"
@@ -1291,7 +1291,7 @@
       "source": "0x02101724",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@837",
+      "symbol": "@2",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02109894"
@@ -1301,7 +1301,7 @@
       "source": "0x02101728",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@839",
+      "symbol": "@3",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210987c"
@@ -1311,7 +1311,7 @@
       "source": "0x0210172c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@841",
+      "symbol": "@4",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x021098c4"
@@ -1321,7 +1321,7 @@
       "source": "0x02101730",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@843",
+      "symbol": "@5",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x021098ac"
@@ -1331,7 +1331,7 @@
       "source": "0x02101734",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@845",
+      "symbol": "@6",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x021098a4"
@@ -1445,6 +1445,78 @@
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ba0f8"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@836",
+      "to": "@822",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@837",
+      "to": "@823",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@838",
+      "to": "@824",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@839",
+      "to": "@825",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@841",
+      "to": "@827",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@843",
+      "to": "@829",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@845",
+      "to": "@831",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@847",
+      "to": "@833",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@849",
+      "to": "@835",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@851",
+      "to": "@2",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@853",
+      "to": "@3",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@855",
+      "to": "@4",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@857",
+      "to": "@5",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@859",
+      "to": "@6",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

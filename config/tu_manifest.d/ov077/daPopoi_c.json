@@ -195,14 +195,14 @@
   ],
   "data": [
     {
-      "symbol": "@821",
+      "symbol": "@196",
       "address": "0x02127a00",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor for the Grab update slot; retail first word is 0x02126640"
     },
     {
-      "symbol": "@817",
+      "symbol": "@194",
       "address": "0x02127a08",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -237,7 +237,7 @@
       "evidence": "compiler temporary pointer-to-member descriptor for the Wander update slot; retail first word is 0x02126ad0"
     },
     {
-      "symbol": "@819",
+      "symbol": "@195",
       "address": "0x02127a30",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -376,7 +376,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 15 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -864,13 +864,13 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@821",
+      "symbol": "@196",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local member descriptor is a configured initializer relocation destination at 0x02127a00"
     },
     {
-      "symbol": "@817",
+      "symbol": "@194",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local member descriptor is a configured initializer relocation destination at 0x02127a08"
@@ -900,7 +900,7 @@
       "evidence": "compiler-local member descriptor is a configured initializer relocation destination at 0x02127a28"
     },
     {
-      "symbol": "@819",
+      "symbol": "@195",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local member descriptor is a configured initializer relocation destination at 0x02127a30"
@@ -1214,7 +1214,7 @@
       "source": "0x021277b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@817",
+      "symbol": "@194",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02127a08"
@@ -1264,7 +1264,7 @@
       "source": "0x021277c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@819",
+      "symbol": "@195",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02127a30"
@@ -1274,7 +1274,7 @@
       "source": "0x021277c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@821",
+      "symbol": "@196",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02127a00"
@@ -1392,9 +1392,74 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@802",
+      "from": "@816",
       "to": "@738",
-      "evidence": "compiler temporary; mwcc numbers it @802 per TU and ov063 daPiano_c (on main) also defines a global @802, so the scratch link collides"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@817",
+      "to": "@803",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@818",
+      "to": "@804",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@819",
+      "to": "@805",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@821",
+      "to": "@807",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@823",
+      "to": "@809",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@825",
+      "to": "@811",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@827",
+      "to": "@813",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@829",
+      "to": "@815",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@831",
+      "to": "@194",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@521",
+      "to": "@507",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@523",
+      "to": "@509",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@833",
+      "to": "@195",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@835",
+      "to": "@196",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

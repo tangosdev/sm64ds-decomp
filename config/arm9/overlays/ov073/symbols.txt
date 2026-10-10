@@ -72,11 +72,11 @@ __sinit_daObjEwbIce_c.cpp kind:function(arm,size=0x1ec) addr:0x02122d48
 .p__sinit_daObjEwbIce_c.cpp kind:data(word) addr:0x02122f38
 @1850 kind:data(any) addr:0x02122f40
 @1852 kind:data(any) addr:0x02122f48
-@1887 kind:data(any) addr:0x02122f50
+@192 kind:data(any) addr:0x02122f50
 @1893 kind:data(any) addr:0x02122f58
-@1884 kind:data(any) addr:0x02122f60
+@190 kind:data(any) addr:0x02122f60
 @1897 kind:data(any) addr:0x02122f68
-@1886 kind:data(any) addr:0x02122f70
+@191 kind:data(any) addr:0x02122f70
 @1844 kind:data(any) addr:0x02122f78
 @1846 kind:data(any) addr:0x02122f80
 @1882 kind:data(any) addr:0x02122f88
@@ -101,7 +101,7 @@ __sinit_daObjEwbIce_c.cpp kind:function(arm,size=0x1ec) addr:0x02122d48
 @1891 kind:data(any) addr:0x02123020
 @1858 kind:data(any) addr:0x02123028
 @1860 kind:data(any) addr:0x02123030
-@1889 kind:data(any) addr:0x02123038
+@193 kind:data(any) addr:0x02123038
 data_ov073_02123040 kind:data(any) addr:0x02123040
 _ZTI16daKing_Donketu_c kind:data(any) addr:0x0212304c
 _ZTS16daKing_Donketu_c kind:data(any) addr:0x02123058

@@ -553,18 +553,6 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "defined_symbol_renames": [
-    {
-      "from": "@718",
-      "to": "@720",
-      "evidence": "mwcc numbers the model-handle registration node @718 per TU and ov063 already defines a global @718, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@719",
-      "to": "@722",
-      "evidence": "mwcc numbers the animation-handle registration node @719 per TU and ov063 already defines a global @719, so the scratch link would multiply-define it"
-    }
-  ],
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN17SharkModelFilePtrC1Ej",
@@ -788,6 +776,18 @@
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x02133830"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@738",
+      "to": "@720",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@739",
+      "to": "@722",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

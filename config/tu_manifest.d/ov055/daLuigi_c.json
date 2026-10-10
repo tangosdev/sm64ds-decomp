@@ -279,18 +279,16 @@
     "functions_declared": 12,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN9Matrix4x3D1Ev"
+        "_ZN9Matrix4x3D1Ev",
+        "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
+        "_ZN7Vector3D1Ev",
         "_ZN9Matrix4x3D1Ev"
       ],
       "droppedSections": [
         5,
         6,
-        7,
-        8,
-        9,
-        10,
         11,
         12,
         13,
@@ -299,7 +297,12 @@
         16,
         17,
         18,
-        39
+        19,
+        20,
+        22,
+        23,
+        44,
+        45
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -327,7 +330,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 3 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -399,19 +402,19 @@
           {
             "section": ".init",
             "original": [
-              47
+              48
             ],
             "desired": [
-              47
+              48
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              45
+              46
             ],
             "desired": [
-              45
+              46
             ]
           },
           {
@@ -539,6 +542,25 @@
       "reason": "Emitted as vague linkage because this TU defines the class's key function. The cartridge keeps its canonical copy at ov055:0x02111ae0, outside this entry's only licensed range (.text 0x021111a0-0x021118d4), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "ov055",
       "canonical_address": "0x02111ae0"
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vague-linkage copy of Vector3's trivial destructor, now emitted because the types.h Vector3 ctors make its locals constructed objects. The canonical cartridge copy is arm9:0x020072c0; isolation discards this one."
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@596",
+      "to": "@581",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@598",
+      "to": "@583",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

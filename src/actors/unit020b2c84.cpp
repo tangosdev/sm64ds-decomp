@@ -15,9 +15,9 @@
  * func_ov004_020b2c80) that __sinit_ov004_020b948c registers for the preceding
  * unit; those stay with dScMgBase_c. 0x020b4aa4 is the next function after
  * _ZN4ElemD1Ev, the last of the three destructor helpers
- * (_ZN4ElemC1Ev, __arraydtor$940, _ZN4ElemD1Ev) that
+ * (_ZN4ElemC1Ev, __arraydtor$954, _ZN4ElemD1Ev) that
  * __sinit_ov004_020b955c registers for this unit's static array at
- * data_ov004_020bf648; __arraydtor$940 runs __cxa_vec_cleanup over it.
+ * data_ov004_020bf648; __arraydtor$954 runs __cxa_vec_cleanup over it.
  * The unit emits one data object of its own, the anonymous initializer template
  * of func_ov004_020b2cb8's local array at 0x020bc6e8 (0xe8 bytes), which this
  * file's .data claim covers. Everything else it touches is reached by extern.
@@ -74,7 +74,7 @@
  *   0x020b4a4c  func_ov004_020b4a4c
  *   0x020b4a64  func_ov004_020b4a64
  *   0x020b4a70  _ZN4ElemC1Ev
- *   0x020b4a7c  __arraydtor$940
+ *   0x020b4a7c  __arraydtor$954
  *   0x020b4aa0  _ZN4ElemD1Ev
  */
 

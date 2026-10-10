@@ -249,108 +249,12 @@
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
-      "linkedStorageAliases": {
-        "requested": [
-          {
-            "from": "_ZN18SmLiftModelFilePtrC1Ej",
-            "to": "func_02017acc",
-            "module": "arm9",
-            "address": "0x02017acc",
-            "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
-          },
-          {
-            "from": "_ZN18SmLiftModelFilePtrD1Ev",
-            "to": "func_02017ab4",
-            "module": "arm9",
-            "address": "0x02017ab4",
-            "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
-          },
-          {
-            "from": "_ZN20SmLiftClsnFileHandleC1Ej",
-            "to": "func_02017b4c",
-            "module": "arm9",
-            "address": "0x02017b4c",
-            "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
-          },
-          {
-            "from": "_ZN20SmLiftClsnFileHandleD1Ev",
-            "to": "SharedFilePtr_Destruct_Clsn",
-            "module": "arm9",
-            "address": "0x02017b34",
-            "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
-          },
-          {
-            "from": "__register_global_object",
-            "to": "func_020731dc",
-            "module": "arm9",
-            "address": "0x020731dc",
-            "evidence": "compiler-generated static initialization call shape and the two direct retail references in this initializer"
-          }
-        ],
-        "renamed": [
-          {
-            "symbolIndex": 120,
-            "from": "_ZN18SmLiftModelFilePtrC1Ej",
-            "to": "func_02017acc"
-          },
-          {
-            "symbolIndex": 123,
-            "from": "_ZN18SmLiftModelFilePtrD1Ev",
-            "to": "func_02017ab4"
-          },
-          {
-            "symbolIndex": 122,
-            "from": "_ZN20SmLiftClsnFileHandleC1Ej",
-            "to": "func_02017b4c"
-          },
-          {
-            "symbolIndex": 124,
-            "from": "_ZN20SmLiftClsnFileHandleD1Ev",
-            "to": "SharedFilePtr_Destruct_Clsn"
-          },
-          {
-            "symbolIndex": 121,
-            "from": "__register_global_object",
-            "to": "func_020731dc"
-          }
-        ],
-        "objisolate": {
-          "renamed": [
-            {
-              "symbolIndex": 120,
-              "from": "_ZN18SmLiftModelFilePtrC1Ej",
-              "to": "func_02017acc"
-            },
-            {
-              "symbolIndex": 123,
-              "from": "_ZN18SmLiftModelFilePtrD1Ev",
-              "to": "func_02017ab4"
-            },
-            {
-              "symbolIndex": 122,
-              "from": "_ZN20SmLiftClsnFileHandleC1Ej",
-              "to": "func_02017b4c"
-            },
-            {
-              "symbolIndex": 124,
-              "from": "_ZN20SmLiftClsnFileHandleD1Ev",
-              "to": "SharedFilePtr_Destruct_Clsn"
-            },
-            {
-              "symbolIndex": 121,
-              "from": "__register_global_object",
-              "to": "func_020731dc"
-            }
-          ],
-          "error": null
-        }
-      },
       "objectAudit": {
         "counts": {
           "LICENSED": 14
         },
-        "orderOk": true,
-        "nonLicensed": [],
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
@@ -362,16 +266,7 @@
             ],
             "desired": [
               46
-            ],
-            "anchors": {
-              "46": [
-                {
-                  "symbol": "__sinit_daObjSm_Lift_c.cpp",
-                  "address": 34679828,
-                  "sectionBase": 34679828
-                }
-              ]
-            }
+            ]
           },
           {
             "section": ".ctor",
@@ -380,16 +275,7 @@
             ],
             "desired": [
               44
-            ],
-            "anchors": {
-              "44": [
-                {
-                  "symbol": ".p__sinit_daObjSm_Lift_c.cpp",
-                  "address": 34680428,
-                  "sectionBase": 34680428
-                }
-              ]
-            }
+            ]
           },
           {
             "section": ".bss",
@@ -404,37 +290,7 @@
               24,
               25,
               23
-            ],
-            "anchors": {
-              "23": [
-                {
-                  "symbol": "@772",
-                  "address": 34683868,
-                  "sectionBase": 34683868
-                }
-              ],
-              "24": [
-                {
-                  "symbol": "data_ov018_02113bc8",
-                  "address": 34683848,
-                  "sectionBase": 34683848
-                }
-              ],
-              "25": [
-                {
-                  "symbol": "@773",
-                  "address": 34683856,
-                  "sectionBase": 34683856
-                }
-              ],
-              "26": [
-                {
-                  "symbol": "data_ov018_02113bc0",
-                  "address": 34683840,
-                  "sectionBase": 34683840
-                }
-              ]
-            }
+            ]
           }
         ],
         "objisolate": {
@@ -465,8 +321,10 @@
           "sectionLinks": 0,
           "sectionInfos": 0,
           "error": null
-        }
+        },
+        "errors": null
       },
+      "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
       "symbolCheckErrors": [
         "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
@@ -782,6 +640,18 @@
       "addend": 0,
       "target_module": "ov018",
       "target_address": "0x02112c14"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@791",
+      "to": "@772",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@792",
+      "to": "@773",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

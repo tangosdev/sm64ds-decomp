@@ -306,7 +306,7 @@
       "every_declared_function_correct_size": "PASS",
       "every_declared_function_bytes_match": "PASS",
       "no_pragma_opt_workarounds": "PASS -- no #pragma of any kind in the seven legacy sources or in the consolidated file",
-      "declared_function_set_equals_defined_function_set": "PASS -- every declared function is defined; the one extra STT_FUNC is __sinit_d_a_obj_km2_ami_bou.cpp, licensed under init",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 3 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS -- tools/tu_order_check.py ov045/daObjKm2_Ami_Bou_c reports ALL MATCH, ROM order, nothing unlicensed in .text",
       "no_constructor_or_destructor_variants": "PASS -- the destructor is defined in include/daObjKm2_Ami_Bou_c.h's class body, so mwccarm emits D1 and D0 only. No D2 is produced, which is what the cartridge shows.",
       "no_unexpected_vtable_rtti_or_data_emission": "PASS -- after the 2026-10-01 profile fold the TU is intact-object. The vtable and RTTI chain are licensed data in .data (0x02112d80..0x02112e3c). The class's own _ZTS/_ZTV are in the data claim; base-class RTTI is deadstrip-data.",
@@ -1103,6 +1103,18 @@
       "addend": 0,
       "target_module": "overlays(2,7)",
       "target_address": "0x020ee55c"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@441",
+      "to": "@427",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@442",
+      "to": "@428",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

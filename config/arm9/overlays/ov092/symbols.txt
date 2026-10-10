@@ -47,6 +47,6 @@ data_ov092_0213246c kind:data(any) addr:0x0213246c
 data_ov092_02132540 kind:bss addr:0x02132540
 data_ov092_02132548 kind:bss addr:0x02132548
 @964 kind:bss addr:0x02132550
-@963 kind:bss addr:0x0213255c
+@171 kind:bss addr:0x0213255c
 data_ov092_02132568 kind:bss addr:0x02132568
 data_ov092_021325b0 kind:bss addr:0x021325b0

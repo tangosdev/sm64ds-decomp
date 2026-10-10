@@ -463,7 +463,8 @@ int daYurei_Mucho_c::func_ov065_021165d8()
     short pitch = 0;
     Player *p = ClosestNonVanishPlayer();
     if (p != 0) {
-        Vector3 tmp = *(Vector3 *)&p->mPosX;
+        Vector3 tmp;
+        *(V3A *)&tmp = *(V3A *)&p->mPosX;
         Vector3 v;
         Vector3 a;
         a.x = tmp.x;

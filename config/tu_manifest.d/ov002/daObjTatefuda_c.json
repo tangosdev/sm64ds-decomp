@@ -407,68 +407,6 @@
       "evidence": "compiler-generated static initialization call shape and the two direct retail references in this initializer"
     }
   ],
-  "defined_symbol_renames": [
-    {
-      "from": "@1145",
-      "to": "@2155",
-      "evidence": "mwcc numbers this descriptor @1139 per TU and ov090 already defines a global @1139, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@1143",
-      "to": "@2156",
-      "evidence": "mwcc numbers this descriptor @1137 per TU and ov090 already defines a global @1137, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@1155",
-      "to": "@2157",
-      "evidence": "mwcc numbers this descriptor @1149 per TU and ov090 already defines a global @1149, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@1149",
-      "to": "@2158",
-      "evidence": "mwcc numbers this descriptor @1143 per TU and ov090 already defines a global @1143, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@1151",
-      "to": "@2159",
-      "evidence": "mwcc numbers this descriptor @1145 per TU and ov090 already defines a global @1145, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@1153",
-      "to": "@2160",
-      "evidence": "mwcc numbers this descriptor @1147 per TU and ov090 already defines a global @1147, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@1147",
-      "to": "@2161",
-      "evidence": "mwcc numbers this descriptor @1141 per TU and ov090 already defines a global @1141, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@1139",
-      "to": "@1133",
-      "evidence": "classInit tail fold (2026-10-09): the folded factory sits above the static data in source (this TU emits .text in reverse source order), and its definition advances mwcc's per-TU anonymous counter by six, so this descriptor/registration node is now emitted under the compiled name six higher; renamed back to its configured ROM name, which is unchanged."
-    },
-    {
-      "from": "@1141",
-      "to": "@2760",
-      "evidence": "classInit tail fold (2026-10-09): the folded factory sits above the static data in source (this TU emits .text in reverse source order) and advances mwcc's per-TU anonymous counter by six, so the InitTalk descriptor is now emitted as @1141 while the compiled @1135 is the collision registration node (renamed to @1129). objisolate's rename cannot chain a destination that is also a source, so this descriptor's configured name moves from @1135 to the fleet-unique @2760 (symbols.txt row 0x02109a6c renumbered with it)."
-    },
-    {
-      "from": "@1137",
-      "to": "@1131",
-      "evidence": "classInit tail fold (2026-10-09): the folded factory sits above the static data in source (this TU emits .text in reverse source order), and its definition advances mwcc's per-TU anonymous counter by six, so this descriptor/registration node is now emitted under the compiled name six higher; renamed back to its configured ROM name, which is unchanged."
-    },
-    {
-      "from": "@1134",
-      "to": "@1128",
-      "evidence": "classInit tail fold (2026-10-09): the folded factory sits above the static data in source (this TU emits .text in reverse source order), and its definition advances mwcc's per-TU anonymous counter by six, so this descriptor/registration node is now emitted under the compiled name six higher; renamed back to its configured ROM name, which is unchanged."
-    },
-    {
-      "from": "@1135",
-      "to": "@1129",
-      "evidence": "classInit tail fold (2026-10-09): the folded factory sits above the static data in source (this TU emits .text in reverse source order), and its definition advances mwcc's per-TU anonymous counter by six, so this descriptor/registration node is now emitted under the compiled name six higher; renamed back to its configured ROM name, which is unchanged."
-    }
-  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_daObjTatefuda_c.cpp",
@@ -558,7 +496,8 @@
   "notes": [
     "Kill is the key function (first non-inline virtual): its real body emits _ZTV/_ZTI/_ZTS plus D1/D0; no D2 is emitted (nothing derives from this class). The file is ROM-ascending.",
     "create CONFLICT warnings: extern-declaration clashes across the 28 legacy shards resolved to the definition- or use-matching forms (kept-first); the TUBUILD comment rows dropped. The v31/Obj pun resolves to Kill() through the documented slot; the M43 pun resolves to the structured Matrix4x3 (.t).",
-    "This file defines the model handle SignPost_ModelFile, the collision handle SignPost_ClsnFile, and the five-entry {enter, update} state table data_ov002_0210e084 that SetState/UpdateState index by mState. mwcc emits __sinit_daObjTatefuda_c.cpp (0x15c, twenty relocation sites), the ctor word, the two destructor-registration nodes, and the ten anonymous pointer-to-member descriptors; the delinked object places every descriptor at its retail .data address. The handwritten src/__sinit_ov002_02101738.c is retired. SignPost_ModelFile/SignPost_ClsnFile keep their coined BSS names (already used by InitResources/CleanupResources); data_ov002_0210e084 keeps its raw label as the table's configured name."
+    "This file defines the model handle SignPost_ModelFile, the collision handle SignPost_ClsnFile, and the five-entry {enter, update} state table data_ov002_0210e084 that SetState/UpdateState index by mState. mwcc emits __sinit_daObjTatefuda_c.cpp (0x15c, twenty relocation sites), the ctor word, the two destructor-registration nodes, and the ten anonymous pointer-to-member descriptors; the delinked object places every descriptor at its retail .data address. The handwritten src/__sinit_ov002_02101738.c is retired. SignPost_ModelFile/SignPost_ClsnFile keep their coined BSS names (already used by InitResources/CleanupResources); data_ov002_0210e084 keeps its raw label as the table's configured name.",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "production_mode": "intact-object",
   "verification": {
@@ -633,7 +572,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 12 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 13 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -1287,6 +1226,68 @@
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020bbcb8"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@1149",
+      "to": "@1128",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1150",
+      "to": "@1129",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1152",
+      "to": "@1131",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1154",
+      "to": "@1133",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1156",
+      "to": "@2760",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1158",
+      "to": "@2156",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1160",
+      "to": "@2155",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1162",
+      "to": "@2161",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1164",
+      "to": "@2158",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1166",
+      "to": "@2159",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1168",
+      "to": "@2160",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1170",
+      "to": "@2157",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

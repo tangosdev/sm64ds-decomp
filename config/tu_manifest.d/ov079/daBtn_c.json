@@ -592,7 +592,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 47 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 17 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -1174,33 +1174,6 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local resource-handle registration node is a configured initializer relocation destination at 0x02128274"
-    }
-  ],
-  "defined_symbol_renames": [
-    {
-      "from": "@690",
-      "to": "@640",
-      "evidence": "mwcc numbers this resource-handle registration node @690 per TU; the name is already configured by another module (or an in-flight fold), so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@692",
-      "to": "@641",
-      "evidence": "mwcc numbers this resource-handle registration node @692 per TU; the name is already configured by another module (or an in-flight fold), so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@696",
-      "to": "@642",
-      "evidence": "mwcc numbers this resource-handle registration node @696 per TU; the name is already configured by another module (or an in-flight fold), so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@700",
-      "to": "@643",
-      "evidence": "mwcc numbers this resource-handle registration node @700 per TU; the name is already configured by another module (or an in-flight fold), so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@701",
-      "to": "@644",
-      "evidence": "mwcc numbers this resource-handle registration node @701 per TU; the name is already configured by another module (or an in-flight fold), so the scratch link would multiply-define it"
     }
   ],
   "relocations": [
@@ -2025,5 +1998,87 @@
       "target_address": "0x02127c08"
     }
   ],
-  "externalized_output": []
+  "externalized_output": [],
+  "defined_symbol_renames": [
+    {
+      "from": "@700",
+      "to": "@686",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@701",
+      "to": "@687",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@702",
+      "to": "@688",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@703",
+      "to": "@689",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@704",
+      "to": "@640",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@705",
+      "to": "@691",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@706",
+      "to": "@641",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@707",
+      "to": "@693",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@708",
+      "to": "@694",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@709",
+      "to": "@695",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@710",
+      "to": "@642",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@711",
+      "to": "@697",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@712",
+      "to": "@698",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@713",
+      "to": "@699",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@714",
+      "to": "@643",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@715",
+      "to": "@644",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    }
+  ]
 }

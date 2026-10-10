@@ -386,7 +386,11 @@ void daUdlift_c::StateStopAtBottom()
     if (mStateTimer == 0) {
         Vector3 &camPos = *(Vector3 *)&mCamSpacePosX;
         Sound::PlayBank3(0x6b, camPos);
-        Vector3 pos = {mPosX, mPosY, mPosZ};
+        /* memberwise stores: the (x,y,z) ctor form batches the loads */
+        Vector3 pos;
+        pos.x = mPosX;
+        pos.y = mPosY;
+        pos.z = mPosZ;
         _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(this, &pos, (800 << 12));
     }
     if (mIsArmed == 1)
@@ -402,7 +406,10 @@ void daUdlift_c::StateStop()
     if (mStateTimer == 0) {
         Vector3 &camPos = *(Vector3 *)&mCamSpacePosX;
         Sound::PlayBank3(0x6b, camPos);
-        Vector3 pos = {mPosX, mPosY, mPosZ};
+        Vector3 pos;
+        pos.x = mPosX;
+        pos.y = mPosY;
+        pos.z = mPosZ;
         _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(this, &pos, (800 << 12));
     }
     if (mIsArmed == 1)

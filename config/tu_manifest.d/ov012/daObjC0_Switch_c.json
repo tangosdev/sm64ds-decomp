@@ -333,7 +333,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS -- every declared function is defined; the one extra STT_FUNC is __sinit_d_a_obj_c0_switch.cpp, licensed under init",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 3 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS -- ordinals 0 and 1 are the destructor pair, and defining the destructor inline in the class header is what puts them in the cartridge's own D1-then-D0 order. Written out-of-line mwcc emits D0 before D1 and objisolate refuses the TU outright; this criterion read PARTIAL for exactly that reason before the promotion.",
       "relocation_destinations_verified": "PASS",
       "all_content_sections_licensed": "PASS -- .text 0x021111a0..0x02111450 (8 functions) + .init 0x02111a88..0x02111af4 + .ctor 0x02111b60..0x02111b64 + .bss 0x021124a0..0x021124c8. The linkcheck block proves all four ranges.",
@@ -628,6 +628,18 @@
       "reason": "This class's own vtable. The symbols.txt address is the vtable ADDRESS POINT; the two header words (offset-to-top 0, typeinfo 0x02112300) sit at 0x0211233c, which is why Spawn stores (_ZTV16daObjC0_Switch_c + 2). Defining daObjC0_Switch_c's real out-of-line destructor makes this TU the class's key-function TU, so mwcc emits this record as vague linkage. The cartridge keeps its canonical copy at ov012:0x02112344, outside this entry's only licensed range (.text 0x021111a0-0x02111450), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "ov012",
       "canonical_address": "0x02112344"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@403",
+      "to": "@389",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@404",
+      "to": "@390",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

@@ -290,24 +290,39 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@747",
-      "to": "@996",
-      "evidence": "mwcc numbers this descriptor @747 per TU and ov026 already defines a global @747, so the scratch link would multiply-define it"
+      "from": "@758",
+      "to": "@744",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@751",
-      "to": "@995",
-      "evidence": "mwcc numbers this descriptor @751 per TU and ov026 already defines a global @751, so the scratch link would multiply-define it"
+      "from": "@767",
+      "to": "@753",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@749",
-      "to": "@994",
-      "evidence": "mwcc numbers this descriptor @749 per TU and ov026 already defines a global @749, so the scratch link would multiply-define it"
+      "from": "@769",
+      "to": "@755",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@745",
+      "from": "@759",
       "to": "@993",
-      "evidence": "mwcc numbers this descriptor @745 per TU and ov026 already defines a global @745, so the scratch link would multiply-define it"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@763",
+      "to": "@994",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@765",
+      "to": "@995",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@761",
+      "to": "@996",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ],
   "symbol_binding_rewrites": [
@@ -686,17 +701,17 @@
     "The file-scope handles data_ov010_02112d08 and data_ov010_02112d00 and the state record data_ov010_02112d28 are defined in this TU. mwcc emits __sinit_d_a_obj_c1_trap.cpp, the ctor word, two registration nodes, and five anonymous pointer-to-member descriptors. Class RTTI, profile, and vtable stay externalized; the data claim stops at 0x02112aa0, where _ZTI14daObjC1_Trap_c begins. CLPS data_ov010_021122f8 stays external. The handwritten src/__sinit_ov010_0211203c.c is retired."
   ],
   "verification": {
-    "round": "tools/tubuild.py verify -- text-only, whole production class TU compiled once",
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov010-daObjC1_Trap_c/daObjC1_Trap_c.o (gitignored)",
+    "object": "build/tu/ov010-daObjC1_Trap_c/d_a_obj_c1_trap.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 17,
     "functions_declared": 17,
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 8 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -708,27 +723,27 @@
         "_ZN10dBgActor_cD2Ev"
       ],
       "droppedSections": [
-        5,
-        6,
         7,
         8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
         19,
         20,
         21,
         22,
         23,
-        55,
-        56
+        24,
+        25,
+        26,
+        27,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        37,
+        38,
+        70,
+        71
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -745,7 +760,6 @@
         "_ZTV14daObjC1_Trap_c"
       ],
       "dataExternalized": [
-        "g_profile_C1_TRAP",
         "_ZTI10dBgActor_c",
         "_ZTI14daObjC1_Trap_c",
         "_ZTI7dBase_c",
@@ -756,7 +770,8 @@
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
-        "_ZTV14daObjC1_Trap_c"
+        "_ZTV14daObjC1_Trap_c",
+        "g_profile_C1_TRAP"
       ]
     },
     "linkcheck": {

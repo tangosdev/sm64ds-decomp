@@ -288,7 +288,7 @@
       "every_declared_function_bytes_match": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)"
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 2 unlicensed section/symbol(s), 0 compiler-only policy error(s)"
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
@@ -477,6 +477,13 @@
       "canonical_module": "ov015",
       "canonical_address": "0x02114360",
       "reason": "This class's own vtable, vague-linkage and emitted here because the inline destructor makes every TU that names the class a candidate emitter. The cartridge's own copy lives at ov015:0x02114360, outside the .text run this entry claims, so dsd delinks it from the image whatever this object does. MEASURED in extracted/overlays/overlay_0015.bin: symbols.txt's 0x02114360 IS the address point -- 0x02114358 is the offset-to-top word 0, 0x0211435c is 0x02114318 (&_ZTI18daObjBkBillboard_c), and 0x02114360 is slot 0 = 0x021112a0 (InitResources); slot 3 at 0x0211436c is 0x02111254 (CleanupResources), slot 9 at 0x02114384 is 0x02111278 (Render), and slots 16/17 at 0x021143a0/0x021143a4 are 0x021111a0/0x021111d0 (D1 then D0), matching the header."
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@267",
+      "to": "@253",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

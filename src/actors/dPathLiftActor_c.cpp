@@ -46,6 +46,13 @@ struct PathLiftState {
     const char *name;
 };
 
+/* POD spelling of Vector3's 0x0c bytes: with a user-declared constructor on
+   Vector3, copy-init lowers memberwise; the ROM copy is the block move, so the
+   per-frame local in RenderPathModels goes through this. */
+struct RawVector3 {
+    int x, y, z;
+};
+
 extern "C" {
 extern s16 data_02082214[];
 extern u16 DecIfAbove0_Short(u16 *p);
@@ -395,8 +402,8 @@ void dPathLiftActor_c::RenderPathModels()
     int i = 0;
     Model* model = mModels;
     do {
-        Vector3 local = *(Vector3 *)&data_ov002_0210af00;
-        model->Render(&local);
+        RawVector3 local = *(RawVector3 *)&data_ov002_0210af00;
+        model->Render((Vector3 *)&local);
         i++;
         model++;
     } while (i < 3);

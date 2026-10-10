@@ -123,7 +123,7 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov025-daDpLift_c/daDpLift_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 0,
+    "functions_matched": 6,
     "functions_declared": 6,
     "compilerOnlyOutput": {
       "requested": [
@@ -185,8 +185,8 @@
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
-      "every_declared_function_bytes_match": "FAIL",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 3 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -629,6 +629,18 @@
       "addend": 0,
       "target_module": "ov025",
       "target_address": "0x02112aac"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@443",
+      "to": "@429",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@444",
+      "to": "@430",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

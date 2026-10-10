@@ -675,5 +675,17 @@
       "disposition": "deadstrip",
       "reason": "classInit fold (0930c): daObjPile_c_classInit's `new daObjPile_c()` instantiates the class, so mwccarm emits dBgActor_c's vague-linkage base-object destructor helper (the same byproduct licensed for ov091/daObjSimpleLift_c and documented in src/actors/daObjHatenaBlock_c.cpp). No configured ROM symbol of that name exists and nothing relocates to it once the licensed D1/D0 pair is retained."
     }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@797",
+      "to": "@783",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@798",
+      "to": "@784",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    }
   ]
 }

@@ -462,12 +462,12 @@ struct Elem { struct Vector3 pos; int dist; int pad[2]; };  /* 0x18 */
 void func_ov080_02125d64(char *c)
 {
     int i;
-    struct Vector3 tmp;
+    struct Vec3 tmp;
     for (i = 0; i < *(unsigned short*)(c + 0x1b8); i++) {
         struct Elem *e = (struct Elem *)(*(char **)(c + 0x1a0) + i * 0x18);
-        tmp = e->pos;
+        tmp = *(struct Vec3 *)&e->pos;
         tmp.z = 0;
-        e->dist = Vec3_Dist((struct Vector3 *)(c + 0x134), &tmp);
+        e->dist = Vec3_Dist((struct Vector3 *)(c + 0x134), (struct Vector3 *)&tmp);
     }
 }
 #pragma cplusplus on

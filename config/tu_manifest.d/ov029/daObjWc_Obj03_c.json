@@ -264,7 +264,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS -- every declared function is defined; the one extra STT_FUNC is __sinit_d_a_obj_wc_obj03.cpp, licensed under init",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 2 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS",
       "all_content_sections_licensed": "PASS -- .text 0x02111728..0x02111ac4 (10 functions) + .init 0x02112c10..0x02112c4c + .ctor 0x02112e70..0x02112e74 + .bss 0x02114270..0x02114284. The linkcheck block proves all four ranges.",
@@ -501,6 +501,13 @@
       "reason": "Emitted as vague linkage because this TU defines every virtual of the class (inline last destructor plus InitResources as the first declared non-inline virtual). The cartridge keeps its canonical copy at ov029:0x02113db4, outside this entry's only licensed range (.text 0x02111728-0x02111ac4), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "ov029",
       "canonical_address": "0x02113db4"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@497",
+      "to": "@483",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

@@ -467,15 +467,6 @@
         9,
         10,
         13,
-        31,
-        32,
-        33,
-        34,
-        35,
-        36,
-        37,
-        38,
-        39,
         40,
         41,
         42,
@@ -483,7 +474,16 @@
         44,
         45,
         46,
-        47
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -515,7 +515,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 5 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -802,6 +802,28 @@
       "canonical_module": "ov090",
       "canonical_address": "0x0213423c",
       "reason": "compiler-emitted vtable anchored by the out-of-line destructor. Public address point ov090:0x0213423c. g_profile_MANTA sits between the typeinfo and the vtable, so this promotion stays text-only and the ROM keeps the table."
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@790",
+      "to": "@766",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@791",
+      "to": "@767",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@793",
+      "to": "@769",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@795",
+      "to": "@771",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

@@ -202,14 +202,14 @@
   ],
   "data": [
     {
-      "symbol": "@501",
+      "symbol": "@26",
       "address": "0x02148334",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_StayClosed_Main"
     },
     {
-      "symbol": "@499",
+      "symbol": "@25",
       "address": "0x0214833c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -390,13 +390,13 @@
       "evidence": "mwcc emits the constructor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@501",
+      "symbol": "@26",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_StayClosed_Main PTMF is a configured initializer relocation destination at 0x02148334"
     },
     {
-      "symbol": "@499",
+      "symbol": "@25",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_OpenClose_Main PTMF is a configured initializer relocation destination at 0x0214833c"
@@ -1020,7 +1020,7 @@
       "source": "0x02147ba4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@499",
+      "symbol": "@25",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214833c"
@@ -1030,7 +1030,7 @@
       "source": "0x02147ba8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@501",
+      "symbol": "@26",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148334"
@@ -1255,7 +1255,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 16 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 14 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -4002,5 +4002,52 @@
       "scratch": "build/tu/ov100-daStarGate_c/link-partitioned (gitignored)"
     },
     "sinitSpellingNote": "WHY THESE TWO BLOCKS SPELL THE INITIALISER __sinit_daStarGate_c.cpp WHILE THE ENTRY'S LIVE init/ctor/relocations CLAIMS SPELL IT __sinit_d_a_star_gate.cpp -- and why neither spelling is wrong. mwccarm derives the initialiser symbol from the SOURCE FILE NAME, so a recorded __sinit_ must equal '__sinit_' plus the basename of the file that round compiled. That rule was checked against every other manifest entry carrying a compiler-derived initialiser and holds on all of them: ov002/dPathLiftActor_c (source src_tu/actors/dPathLiftActor_c.cpp -> __sinit_dPathLiftActor_c.cpp), ov023/daObjFm_Battan_c (src/game/actors/d_a_obj_fm_battan.cpp -> __sinit_d_a_obj_fm_battan.cpp), ov044/daObjKb1Billboard_c (src/game/actors/d_a_obj_kb1_billboard.cpp -> __sinit_d_a_obj_kb1_billboard.cpp), and this entry's own live claims (src/game/actors/d_a_star_gate.cpp -> __sinit_d_a_star_gate.cpp). Applied to these two blocks the same rule ACQUITS them rather than convicting them: both record objectHashes.tuObjectPath ending in src_tu/actors/daStarGate_c.o, so the round they describe compiled the shadow source src_tu/actors/daStarGate_c.cpp, from which mwccarm could only have emitted __sinit_daStarGate_c.cpp and .p__sinit_daStarGate_c.cpp. The TU source was renamed to src/game/actors/d_a_star_gate.cpp at promotion; the live claims were rewritten against the new name, these dated blocks were not, and they should not be. The same dating applies to the compiler-numbered PTMF labels inside them (@452..@458 here against @468 in the live claims). NOTHING IS RE-RUN OR REWRITTEN HERE. Both blocks are records of a completed scratch run, kept verbatim with the ROM sha256 each observed; editing their symbol spellings to agree with today's file name would falsify a past measurement instead of correcting live configuration."
-  }
+  },
+  "defined_symbol_renames": [
+    {
+      "from": "@499",
+      "to": "@485",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@501",
+      "to": "@487",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@503",
+      "to": "@489",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@505",
+      "to": "@491",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@507",
+      "to": "@493",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@509",
+      "to": "@495",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@511",
+      "to": "@497",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@513",
+      "to": "@25",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@515",
+      "to": "@26",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    }
+  ]
 }

@@ -552,7 +552,7 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov078-daBombking_c/daBombking_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 51,
+    "functions_matched": 52,
     "functions_declared": 52,
     "compilerOnlyOutput": {
       "requested": [
@@ -566,7 +566,7 @@
       "droppedSections": [
         9,
         10,
-        21,
+        29,
         114,
         115,
         116,
@@ -605,7 +605,7 @@
       "every_declared_function_defined": "PASS",
       "no_unexpected_vtable_rtti_or_data_emission": "PASS -- after the 2026-10-02 profile fold the TU is intact-object. The vtable and RTTI chain are licensed data in .data (0x02126e0c..0x02126ec8). The class's own _ZTS/_ZTV are in the data claim; base-class RTTI is deadstrip-data.",
       "all_content_sections_licensed": "PASS -- .text 0x02123740..0x02126660 (52 functions) + .data 0x02126e0c..0x02126ec8 (ZTI + ZTS + profile + ZTV, 0xbc). The linkcheck block proves both ranges byte-identical.",
-      "every_declared_function_bytes_match": "FAIL",
+      "every_declared_function_bytes_match": "PASS",
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"

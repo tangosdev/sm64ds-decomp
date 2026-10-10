@@ -409,7 +409,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 12 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -1253,39 +1253,59 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@827",
-      "to": "@733",
-      "evidence": "mwcc numbers this registration node @827 per TU and ov002 daObjSwitch_c already defines a global @827, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@829",
-      "to": "@734",
-      "evidence": "mwcc numbers this registration node @829 per TU and ov002 daObjSwitch_c already defines a global @829, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@834",
-      "to": "@728",
-      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c19func_ov018_02112234Ev; mwcc numbers it @834 per TU and ov032 daBakubaku_c (on main) also defines a global @834, so the scratch link collides"
-    },
-    {
-      "from": "@836",
-      "to": "@729",
-      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c19func_ov018_021121dcEv; mwcc numbers it @836 per TU and ov032 daBakubaku_c (on main) also defines a global @836, so the scratch link collides"
-    },
-    {
-      "from": "@838",
-      "to": "@730",
-      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c19func_ov018_02111facEv; mwcc numbers it @838 per TU and ov032 daBakubaku_c (on main) also defines a global @838, so the scratch link collides"
-    },
-    {
       "from": "@840",
-      "to": "@731",
-      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c19func_ov018_02111f1cEv; mwcc numbers it @840 per TU and ov032 daBakubaku_c (on main) also defines a global @840, so the scratch link collides"
+      "to": "@826",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@841",
+      "to": "@733",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
       "from": "@842",
+      "to": "@828",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@843",
+      "to": "@734",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@844",
+      "to": "@830",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@846",
+      "to": "@832",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@848",
+      "to": "@728",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@850",
+      "to": "@729",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@852",
+      "to": "@730",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@854",
+      "to": "@731",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@856",
       "to": "@732",
-      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c19func_ov018_02111e28Ev; mwcc numbers it @842 per TU and ov032 daBakubaku_c (on main) also defines a global @842, so the scratch link collides"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

@@ -471,6 +471,11 @@
       "symbol": "_ZTS5dBgCh",
       "disposition": "deadstrip-data",
       "reason": "Base-class RTTI name string, same vague-linkage emission as _ZTI5dBgCh. Canonical home arm9:0x020991c0 per symbols.txt."
+    },
+    {
+      "symbol": "_ZN11SurfaceInfoD1Ev",
+      "disposition": "deadstrip",
+      "reason": "Vague-linkage copy of SurfaceInfo's compiler-generated destructor, dragged in now that its Vector3 member is non-trivially constructed after the types.h three-argument constructor. No canonical owner in the cartridge run -- discarded."
     }
   ],
   "verification": {
@@ -486,11 +491,13 @@
         "_ZN10dBgCh_ActrD2Ev",
         "_ZN10dBgCh_ActrC2Ev",
         "_ZN7Vector3D1Ev",
-        "_ZN8dBgPiLocD1Ev"
+        "_ZN8dBgPiLocD1Ev",
+        "_ZN11SurfaceInfoD1Ev"
       ],
       "deadstripped": [
         "_ZN10dBgCh_ActrC2Ev",
         "_ZN10dBgCh_ActrD2Ev",
+        "_ZN11SurfaceInfoD1Ev",
         "_ZN7Vector3D1Ev",
         "_ZN8dBgPiLocD1Ev"
       ],
@@ -505,10 +512,11 @@
         12,
         70,
         71,
-        89,
+        72,
         90,
-        97,
-        98
+        91,
+        98,
+        99
       ],
       "data": [
         "_ZTV10dBgCh_Actr",

@@ -125,18 +125,18 @@ _ZTS9daBttBk_c kind:data(any) addr:0x0212815c
 _ZTI9daBttBk_c kind:data(any) addr:0x02128168
 g_profile_BATTA_BLOCK kind:data(any) addr:0x02128174 ambiguous
 _ZTV9daBttBk_c kind:data(any) addr:0x02128198
-@546 kind:data(any) addr:0x02128214
-@544 kind:data(any) addr:0x0212821c
-@534 kind:data(any) addr:0x02128224
-@536 kind:data(any) addr:0x0212822c
-@548 kind:data(any) addr:0x02128234
-@556 kind:data(any) addr:0x0212823c
-@550 kind:data(any) addr:0x02128244
-@538 kind:data(any) addr:0x0212824c
-@554 kind:data(any) addr:0x02128254
-@540 kind:data(any) addr:0x0212825c
-@552 kind:data(any) addr:0x02128264
-@542 kind:data(any) addr:0x0212826c
+@19 kind:data(any) addr:0x02128214
+@18 kind:data(any) addr:0x0212821c
+@13 kind:data(any) addr:0x02128224
+@14 kind:data(any) addr:0x0212822c
+@20 kind:data(any) addr:0x02128234
+@24 kind:data(any) addr:0x0212823c
+@21 kind:data(any) addr:0x02128244
+@15 kind:data(any) addr:0x0212824c
+@23 kind:data(any) addr:0x02128254
+@16 kind:data(any) addr:0x0212825c
+@22 kind:data(any) addr:0x02128264
+@17 kind:data(any) addr:0x0212826c
 _ZTI11daPicGate_c kind:data(any) addr:0x02128274
 _ZTS11daPicGate_c kind:data(any) addr:0x02128280
 g_profile_PICTURE_GATE kind:data(any) addr:0x02128290 ambiguous
@@ -177,9 +177,9 @@ data_ov080_02128524 kind:bss addr:0x02128524
 data_ov080_0212852c kind:bss addr:0x0212852c
 data_ov080_02128534 kind:bss addr:0x02128534
 data_ov080_0212853c kind:bss addr:0x0212853c
-@531 kind:bss addr:0x02128544
+@11 kind:bss addr:0x02128544
 @516 kind:bss addr:0x02128550
-@532 kind:bss addr:0x0212855c
+@12 kind:bss addr:0x0212855c
 @518 kind:bss addr:0x02128568
 @519 kind:bss addr:0x02128574
 @520 kind:bss addr:0x02128580
@@ -190,9 +190,9 @@ data_ov080_0212853c kind:bss addr:0x0212853c
 @525 kind:bss addr:0x021285bc
 @526 kind:bss addr:0x021285c8
 @527 kind:bss addr:0x021285d4
-@528 kind:bss addr:0x021285e0
-@529 kind:bss addr:0x021285ec
-@530 kind:bss addr:0x021285f8
+@8 kind:bss addr:0x021285e0
+@9 kind:bss addr:0x021285ec
+@10 kind:bss addr:0x021285f8
 @514 kind:bss addr:0x02128604
 @515 kind:bss addr:0x02128610
 @517 kind:bss addr:0x0212861c

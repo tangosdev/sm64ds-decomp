@@ -613,7 +613,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 14 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -1963,44 +1963,69 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1128",
-      "to": "@2716",
-      "evidence": "mwcc numbers this registration node @1128 per TU and ov002/daObjTatefuda_c already defines a global @1128, so the scratch link would multiply-define it"
+      "from": "@1133",
+      "to": "@1119",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1129",
-      "to": "@2717",
-      "evidence": "mwcc numbers this registration node @1129 per TU and ov002/daObjTatefuda_c already defines a global @1129, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@1131",
-      "to": "@2718",
-      "evidence": "mwcc numbers this registration node @1131 per TU and ov002/daObjTatefuda_c already defines a global @1131, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@1120",
+      "from": "@1134",
       "to": "@2703",
-      "evidence": "compiler temporary; mwcc numbers it @1120 per TU and ov062 daJango_c (this batch) also defines a global @1120, so the scratch link collides"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1122",
+      "from": "@1135",
+      "to": "@1121",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1136",
       "to": "@2704",
-      "evidence": "compiler temporary; mwcc numbers it @1122 per TU and ov062 daJango_c (this batch) also defines a global @1122, so the scratch link collides"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1124",
+      "from": "@1137",
+      "to": "@1123",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1138",
       "to": "@2705",
-      "evidence": "compiler temporary; mwcc numbers it @1124 per TU and ov062 daJango_c (this batch) also defines a global @1124, so the scratch link collides"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1126",
+      "from": "@1139",
+      "to": "@1125",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1140",
       "to": "@2706",
-      "evidence": "compiler temporary; mwcc numbers it @1126 per TU and ov062 daJango_c (this batch) also defines a global @1126, so the scratch link collides"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1130",
+      "from": "@1141",
+      "to": "@1127",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1142",
+      "to": "@2716",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1143",
+      "to": "@2717",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1144",
       "to": "@2707",
-      "evidence": "compiler temporary; mwcc numbers it @1130 per TU and ov062 daJango_c (this batch) also defines a global @1130, so the scratch link collides"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@1145",
+      "to": "@2718",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

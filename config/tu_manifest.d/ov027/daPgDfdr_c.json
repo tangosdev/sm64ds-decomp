@@ -244,7 +244,7 @@
       "evidence": "compiler-generated destructor-registration node for the 0x407 texture-sequence handle"
     },
     {
-      "symbol": "@764",
+      "symbol": "@68",
       "address": "0x02113cd8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -323,38 +323,6 @@
       "evidence": "compiler-generated static initialization call shape and the direct retail reference in this initializer"
     }
   ],
-  "defined_symbol_renames": [
-    {
-      "from": "@750",
-      "to": "@741",
-      "evidence": "mwcc numbers this registration node @750 per TU and the parked cvnewslift fold reserves @750, so the batch link would multiply-define it"
-    },
-    {
-      "from": "@751",
-      "to": "@760",
-      "evidence": "mwcc numbers this registration node @751 per TU and ov026 already defines a global @751, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@752",
-      "to": "@761",
-      "evidence": "mwcc numbers this registration node @752 per TU and the parked cvnewslift fold reserves @752, so the batch link would multiply-define it"
-    },
-    {
-      "from": "@753",
-      "to": "@762",
-      "evidence": "mwcc numbers this registration node @753 per TU and ov010 already defines a global @753, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@754",
-      "to": "@763",
-      "evidence": "mwcc numbers this registration node @754 per TU and the parked cvnewslift fold reserves @754, so the batch link would multiply-define it"
-    },
-    {
-      "from": "@755",
-      "to": "@764",
-      "evidence": "mwcc numbers this registration node @755 per TU and ov010 already defines a global @755, so the scratch link would multiply-define it"
-    }
-  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_daPgDfdr_c.cpp",
@@ -399,7 +367,7 @@
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02113ccc"
     },
     {
-      "symbol": "@764",
+      "symbol": "@68",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02113cd8"
@@ -681,7 +649,7 @@
       "source": "0x02112f58",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@764",
+      "symbol": "@68",
       "addend": 0,
       "target_module": "ov027",
       "target_address": "0x02113cd8"
@@ -1125,5 +1093,37 @@
       "canonical_address": "0x02113a90"
     }
   ],
-  "production_mode": "intact-object"
+  "production_mode": "intact-object",
+  "defined_symbol_renames": [
+    {
+      "from": "@764",
+      "to": "@741",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@765",
+      "to": "@760",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@766",
+      "to": "@761",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@767",
+      "to": "@762",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@768",
+      "to": "@763",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@769",
+      "to": "@68",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    }
+  ]
 }

@@ -236,21 +236,21 @@
       "evidence": "anonymous wander enter descriptor; retail first word is 0x02111f9c"
     },
     {
-      "symbol": "@851",
+      "symbol": "@34",
       "address": "0x02113784",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous dive enter descriptor; retail first word is 0x02111b50"
     },
     {
-      "symbol": "@853",
+      "symbol": "@35",
       "address": "0x0211378c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous dive main descriptor; retail first word is 0x02111830"
     },
     {
-      "symbol": "@855",
+      "symbol": "@36",
       "address": "0x02113794",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -285,14 +285,14 @@
       "evidence": "anonymous pause enter descriptor; retail first word is 0x02111dd8"
     },
     {
-      "symbol": "@857",
+      "symbol": "@37",
       "address": "0x021137bc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous surface main descriptor; retail first word is 0x02111620"
     },
     {
-      "symbol": "@849",
+      "symbol": "@33",
       "address": "0x021137c4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -455,38 +455,6 @@
       "evidence": "compiler-generated static initialization call shape and the three direct retail references in this initializer"
     }
   ],
-  "defined_symbol_renames": [
-    {
-      "from": "@835",
-      "to": "@834",
-      "evidence": "mwcc numbers this destructor-registration node @835 per TU and ov002 already defines a global @835, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@837",
-      "to": "@838",
-      "evidence": "mwcc numbers this destructor-registration node @837 per TU and ov002 already defines a global @837, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@839",
-      "to": "@840",
-      "evidence": "mwcc numbers this descriptor @839 per TU and ov002 already defines a global @839, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@841",
-      "to": "@842",
-      "evidence": "mwcc numbers this descriptor @841 per TU and ov002 already defines a global @841, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@843",
-      "to": "@844",
-      "evidence": "mwcc numbers this descriptor @843 per TU and ov002 already defines a global @843, so the scratch link would multiply-define it"
-    },
-    {
-      "from": "@845",
-      "to": "@846",
-      "evidence": "mwcc numbers this descriptor @845 per TU and ov002 already defines a global @845, so the scratch link would multiply-define it"
-    }
-  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_daBakubaku_c.cpp",
@@ -525,19 +493,19 @@
       "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
     },
     {
-      "symbol": "@851",
+      "symbol": "@34",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
     },
     {
-      "symbol": "@853",
+      "symbol": "@35",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
     },
     {
-      "symbol": "@855",
+      "symbol": "@36",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
@@ -567,13 +535,13 @@
       "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
     },
     {
-      "symbol": "@857",
+      "symbol": "@37",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
     },
     {
-      "symbol": "@849",
+      "symbol": "@33",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
@@ -817,7 +785,7 @@
       "source": "0x02112da0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@849",
+      "symbol": "@33",
       "addend": 0,
       "target_module": "ov032",
       "target_address": "0x021137c4"
@@ -837,7 +805,7 @@
       "source": "0x02112da8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@851",
+      "symbol": "@34",
       "addend": 0,
       "target_module": "ov032",
       "target_address": "0x02113784"
@@ -847,7 +815,7 @@
       "source": "0x02112dac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@853",
+      "symbol": "@35",
       "addend": 0,
       "target_module": "ov032",
       "target_address": "0x0211378c"
@@ -867,7 +835,7 @@
       "source": "0x02112db4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@855",
+      "symbol": "@36",
       "addend": 0,
       "target_module": "ov032",
       "target_address": "0x02113794"
@@ -877,7 +845,7 @@
       "source": "0x02112db8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@857",
+      "symbol": "@37",
       "addend": 0,
       "target_module": "ov032",
       "target_address": "0x021137bc"
@@ -1421,7 +1389,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 15 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 22 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -1818,5 +1786,72 @@
   "partial_isolation": {
     "state": "not-applicable-after-promotion",
     "reason": "The final intact TU replaces all 24 legacy shards and lets mwccarm synthesize the ROM-order D1/D0 pair. There is no truthful per-function legacy-object comparison for the synthesized destructors or the newly joined factory; intact whole-object link and data verification is the production proof."
-  }
+  },
+  "defined_symbol_renames": [
+    {
+      "from": "@849",
+      "to": "@834",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@850",
+      "to": "@836",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@851",
+      "to": "@838",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@853",
+      "to": "@840",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@855",
+      "to": "@842",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@857",
+      "to": "@844",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@859",
+      "to": "@846",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@861",
+      "to": "@847",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@863",
+      "to": "@33",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@865",
+      "to": "@34",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@867",
+      "to": "@35",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@869",
+      "to": "@36",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@871",
+      "to": "@37",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    }
+  ]
 }

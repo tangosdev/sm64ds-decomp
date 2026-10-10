@@ -141,6 +141,12 @@ struct Data { BCA_File* a; BCA_File* f; };
 /* shadow typedef 'M48' */
 typedef struct { int w[12]; } M48;
 
+/* POD spelling of Vector3's 0x0c bytes: with a user-declared constructor on
+   Vector3 the copy in func_ov062_0211ba84 scalarizes even under `#pragma
+   cplusplus off`; the ROM copy is the block move, so it goes through this. */
+struct RawVector3 { int x, y, z; };
+typedef struct RawVector3 RawVector3;
+
 /* shadow struct 'Base' */
 struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
 
@@ -1018,7 +1024,7 @@ extern int _ZNK10dBgCh_Actr8IsOnWallEv(char *self);
 int func_ov062_0211ba84(char *c)
 {
     Vector3 v;
-    Vector3 t;
+    RawVector3 t;
     Vector3 hv;
     Vector3 vv;
     s16 pitch;
@@ -1037,7 +1043,7 @@ int func_ov062_0211ba84(char *c)
             return 1;
         }
 
-        t = *(Vector3 *)(ip + 0x5c);
+        t = *(RawVector3 *)(ip + 0x5c);
         tx = t.x;
         {
             int y = *(int *)(ip + 0x644);

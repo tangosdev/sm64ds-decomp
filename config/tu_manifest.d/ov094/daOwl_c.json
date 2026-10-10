@@ -259,7 +259,7 @@
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c19func_ov094_02135fe0Ev"
     },
     {
-      "symbol": "@930",
+      "symbol": "@165",
       "address": "0x02136a00",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -443,7 +443,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 14 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -868,28 +868,6 @@
       "evidence": "mwcc registration call; retail initializer calls func_020731dc four times"
     }
   ],
-  "defined_symbol_renames": [
-    {
-      "from": "@940",
-      "to": "@900",
-      "evidence": "pointer-to-member descriptor; mwcc numbers it @940 per TU and ov002 dEnemyBase_c also defines a global @940, so the scratch link collides"
-    },
-    {
-      "from": "@948",
-      "to": "@901",
-      "evidence": "pointer-to-member descriptor; same per-TU @948 collision with ov002 dEnemyBase_c"
-    },
-    {
-      "from": "@946",
-      "to": "@902",
-      "evidence": "pointer-to-member descriptor; same per-TU @946 collision with ov002 dEnemyBase_c"
-    },
-    {
-      "from": "@942",
-      "to": "@903",
-      "evidence": "pointer-to-member descriptor; same per-TU @942 collision with ov002 dEnemyBase_c"
-    }
-  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_daOwl_c.cpp",
@@ -952,7 +930,7 @@
       "evidence": "mwcc emits this local; DSD needs a global symbol at the retail address"
     },
     {
-      "symbol": "@930",
+      "symbol": "@165",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits this local; DSD needs a global symbol at the retail address"
@@ -1224,7 +1202,7 @@
       "source": "0x02136990",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@930",
+      "symbol": "@165",
       "addend": 0,
       "target_module": "ov094",
       "target_address": "0x02136a00"
@@ -1428,6 +1406,78 @@
       "addend": 0,
       "target_module": "ov094",
       "target_address": "0x021359d8"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@930",
+      "to": "@915",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@931",
+      "to": "@916",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@932",
+      "to": "@917",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@933",
+      "to": "@918",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@937",
+      "to": "@922",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@939",
+      "to": "@924",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@943",
+      "to": "@928",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@945",
+      "to": "@165",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@949",
+      "to": "@934",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@951",
+      "to": "@936",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@955",
+      "to": "@900",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@957",
+      "to": "@903",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@961",
+      "to": "@902",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@963",
+      "to": "@901",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

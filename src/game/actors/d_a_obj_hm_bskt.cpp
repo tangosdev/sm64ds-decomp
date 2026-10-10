@@ -172,7 +172,7 @@ extern "C" int func_ov030_0211124c(char *c, char *mc)
     int px = *(int *)(c + 0x5c);
     int pz = *(int *)(c + 0x64);
     int py = *(int *)(c + 0x60) + 0x96000;
-    Vector3 p = { px, py, pz };
+    Vector3 p(px, py, pz);
     dActor_c::Spawn(
         0xb2, (unsigned char)((*(unsigned int *)(c + 8)) & 0xf) | 0x20, p, 0,
         *(signed char *)(c + 0xcc), -1);

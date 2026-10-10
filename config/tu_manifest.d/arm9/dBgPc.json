@@ -64,13 +64,16 @@
     "object": "build/tu/arm9-dBgPc/dBgPc.o (gitignored)",
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN11SurfaceInfoD1Ev"
+        "_ZN11SurfaceInfoD1Ev",
+        "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
-        "_ZN11SurfaceInfoD1Ev"
+        "_ZN11SurfaceInfoD1Ev",
+        "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
-        8
+        8,
+        9
       ],
       "data": [],
       "dataExternalized": []
@@ -84,6 +87,13 @@
       "symbol": "_ZN11SurfaceInfoD1Ev",
       "disposition": "deadstrip",
       "reason": "the destructor definition emits the member surface's implicit destructor beside D2/D1; the body is trivial (empty), is never referenced by the enrolled variants -- the ROM's D2/D1 are bare 4-byte returns -- and has no cartridge home, so the emitted section is dropped unenrolled"
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vague-linkage copy of Vector3's empty destructor -- declaring the three-argument constructor in include/types.h makes Vector3 non-trivially constructed, so scope cleanup now references D1 and mwccarm re-emits it here. The cartridge keeps a canonical copy at arm9:0x020072c0; this one is discarded."
     }
   ],
   "notes": [

@@ -11,6 +11,13 @@
       "disposition": "deadstrip",
       "reason": "mwccarm emits Matrix4x3's vague-linkage D1 while lowering the synthesized ctor from `return new daTrsTrap_c()` over the Matrix4x3 member at 0x324 (same shape as ov070/daKpFr_c); no configured ROM symbol of that name exists in any module and no surviving reference reaches it",
       "symbol": "_ZN9Matrix4x3D1Ev"
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vague-linkage copy of Vector3's empty destructor -- declaring the three-argument constructor in include/types.h makes Vector3 non-trivially constructed, so scope cleanup now references D1 and mwccarm re-emits it here. The cartridge keeps a canonical copy at arm9:0x020072c0; this one is discarded."
     }
   ],
   "data": [],
@@ -92,13 +99,16 @@
     "object": "build/tu/ov063-daTrsTrap_c_classInit/d_a_trs_trap_classinits.o (gitignored)",
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN9Matrix4x3D1Ev"
+        "_ZN9Matrix4x3D1Ev",
+        "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
+        "_ZN7Vector3D1Ev",
         "_ZN9Matrix4x3D1Ev"
       ],
       "droppedSections": [
-        10
+        10,
+        11
       ],
       "data": [],
       "dataExternalized": []
