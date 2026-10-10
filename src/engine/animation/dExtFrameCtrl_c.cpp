@@ -32,7 +32,7 @@ int __aeabi_idivmod(int n, int d);
    local extern: byte-required, notes/mwccarm-codegen.md 6az */
 void _ZN15dExtFrameCtrl_c12SetAnimationEti5Fix12IiEt(dExtFrameCtrl_c *self, unsigned short numFrames, int flags, int speed, unsigned short startFrame);
 }
-
+// @symbol _ZN15dExtFrameCtrl_c7AdvanceEv
 void dExtFrameCtrl_c::Advance()
 {
     u32 f = numFramesAndFlags;
@@ -53,30 +53,31 @@ void dExtFrameCtrl_c::Advance()
         }
     }
 }
-
+// @symbol _ZN15dExtFrameCtrl_c12SetAnimationEti5Fix12IiEt
 extern "C"
 void _ZN15dExtFrameCtrl_c12SetAnimationEti5Fix12IiEt(dExtFrameCtrl_c *self, unsigned short numFrames, int flags, int speed, unsigned short startFrame) {
   *(int*)((char*)&self->numFramesAndFlags) = flags | (numFrames << 12);
   *(int*)((char*)&self->currFrame) = startFrame << 12;
   *(int*)((char*)&self->speed) = speed;
 }
-
+// @symbol _ZNK15dExtFrameCtrl_c13GetFrameCountEv
 u32 dExtFrameCtrl_c::GetFrameCount() const
 {
     u32 v = numFramesAndFlags;
     return ((v & 0x3fffffff) << 4) >> 16;
 }
-
+// @symbol _ZN15dExtFrameCtrl_c8SetFlagsEi
 void dExtFrameCtrl_c::SetFlags(int flags)
 {
     numFramesAndFlags = (numFramesAndFlags & 0x3fffffff) | flags;
 }
 
+// @symbol _ZN15dExtFrameCtrl_c8GetFlagsEv
 int dExtFrameCtrl_c::GetFlags()
 {
     return numFramesAndFlags & 0xC0000000;
 }
-
+// @symbol _ZN15dExtFrameCtrl_c8FinishedEv
 int dExtFrameCtrl_c::Finished()
 {
     u32 f = numFramesAndFlags;
@@ -84,6 +85,7 @@ int dExtFrameCtrl_c::Finished()
     return cur >= (int)((f & 0x3fffffff) - 1);
 }
 
+// @symbol _ZNK15dExtFrameCtrl_c12WillHitFrameEi
 bool dExtFrameCtrl_c::WillHitFrame(int frame) const
 {
     s32 f = frame << 12;
@@ -133,7 +135,7 @@ bool dExtFrameCtrl_c::WillHitFrame(int frame) const
 
     return false;
 }
-
+// @symbol _ZN15dExtFrameCtrl_c4CopyERKS_
 /* Copies the three members and leaves the vptr alone. */
 void dExtFrameCtrl_c::Copy(const dExtFrameCtrl_c &anim)
 {
