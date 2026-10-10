@@ -25,8 +25,5 @@ src/TouchArea_Update.c:
 
 src/actors/dThIcon_c.cpp:
     complete
-    .text start:0x020ab54c end:0x020ab5b0
+    .text start:0x020ab54c end:0x020ab5f8
 
-src/unnamed/ov001/func_ov001_020ab5b0.c:
-    complete
-    .text start:0x020ab5b0 end:0x020ab5f8

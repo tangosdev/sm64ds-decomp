@@ -6,15 +6,16 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x2111f6c..0x21120b8, 4 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "HISTORY: contiguous linker run: 0x2111f6c..0x21120b8, 4 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjFl_Ukiyuka_c",
-    "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "CLASSINIT TAIL FOLD (2026-10-10): the run 0x021120b8..0x02112130 (daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L 0x3c, daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA 0x3c) abuts this TU's old .text end (0x021120b8) with no gap and is now inside it; src/actors/daObjFl_UkiKi_c.cpp starts exactly at 0x02112130 above it. Membership: both factories allocate sizeof(daObjFl_Ukiyuka_c) (0x330), run dBgActor_c's base constructor, then store _ZTV14daObjUkiyuka_c and _ZTV17daObjFl_Ukiyuka_c (FL_UKIYUKA_L and FL_UKIYUKA registry profiles; InitResources selects the variant from those two actor ids). Appended last in the file (this TU emits .text in source order under #pragma defer_codegen off)."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x02111f6c",
-      "end": "0x021120b8"
+      "end": "0x02112130"
     }
   ],
   "functions": [
@@ -45,6 +46,20 @@
       "size": "0x00000078",
       "legacy_source": "src/_ZN17daObjFl_Ukiyuka_c13InitResourcesEv.cpp",
       "ordinal": 3
+    },
+    {
+      "symbol": "daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L",
+      "address": "0x021120b8",
+      "size": "0x0000003c",
+      "legacy_source": "src/d_a_obj_fl_ukiyuka_fl_ukiyuka_l.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA",
+      "address": "0x021120f4",
+      "size": "0x0000003c",
+      "legacy_source": "src/d_a_obj_fl_ukiyuka_fl_ukiyuka.c",
+      "ordinal": 5
     }
   ],
   "data": [],
@@ -148,6 +163,16 @@
       "symbol": "_ZN17daObjFl_Ukiyuka_cD2Ev",
       "disposition": "deadstrip",
       "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "classInit tail fold (2026-10-10): the folded factories' `return new daObjFl_Ukiyuka_c;` instantiates the class, so mwccarm emits dBgActor_c's base-object destructor helper. The cartridge has dBgActor_c D1/D0 only (ov002 0x020ee42c, 0x020ee464), no D2; no configured ROM symbol and no inbound relocation once the licensed function set is retained (same row as ov002/daObjTatefuda_c)."
+    },
+    {
+      "symbol": "_ZN14daObjUkiyuka_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "classInit tail fold (2026-10-10): the folded factories' `return new daObjFl_Ukiyuka_c;` lowers the inline two-level constructor chain, so mwccarm emits daObjUkiyuka_c's base-object destructor helper. The cartridge has daObjUkiyuka_c D0/D1 only (ov002 0x020b6388, 0x020b63e0), no D2; no configured ROM symbol and no inbound relocation once the licensed function set is retained (same row as ov045/daObjKm2_Ukishima_c)."
     }
   ],
   "verification": {
@@ -156,26 +181,26 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov022-daObjFl_Ukiyuka_c/daObjFl_Ukiyuka_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 4,
-    "functions_declared": 4,
+    "functions_matched": 6,
+    "functions_declared": 6,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN17daObjFl_Ukiyuka_cD2Ev"
+        "_ZN17daObjFl_Ukiyuka_cD2Ev",
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN14daObjUkiyuka_cD2Ev"
       ],
       "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN14daObjUkiyuka_cD2Ev",
         "_ZN17daObjFl_Ukiyuka_cD2Ev"
       ],
       "droppedSections": [
         9,
         10,
-        15,
-        16,
         17,
         18,
         19,
         20,
-        21,
-        22,
         23,
         24,
         25,
@@ -187,7 +212,15 @@
         31,
         32,
         33,
-        34
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42
       ],
       "data": [
         "_ZTI17daObjFl_Ukiyuka_c",

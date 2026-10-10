@@ -2,9 +2,10 @@
 /* Rickshaw axle shared by the daKpa_c in the Dark World and daKpa_c in the Sky
  * actors. It turns the model and carries up to four mounted carts.
  *
- * This TU owns the two destructors (D0 0x020b69e4, D1 0x020b6a3c) and the four
- * functions below, in ROM order under `#pragma defer_codegen off`; the discarded
- * class metadata is recorded in the manifest.
+ * This TU owns ov002 .text 0x020b69e4..0x020b6d28: the two destructors (D0
+ * 0x020b69e4, D1 0x020b6a3c) and the five functions below, in ROM order under
+ * `#pragma defer_codegen off`, ending with the shared setup helper
+ * func_ov002_020b6c54; the discarded class metadata is recorded in the manifest.
  *
  * deslop
  * Leftover: (Vector3 *)&mPosX -- no Pos() accessor exists on this branch,
@@ -41,6 +42,10 @@ int func_ov002_020b6ac8(void *actor, void *descriptor);
 /* Matches the scalar definition in dBgActor_c.cpp. Its encoded Fix12 name
    does not establish a by-value class parameter; see dBgActor_c.h. */
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int radius, int yOffset);
+// local extern: the actual free definition accepts a scalar scale; the
+// member call takes Fix12<int> by value (wall 6az).
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void *self, void *file, const Matrix4x3 *matrix, int scale, s16 angle, void *clps);
 }
 
 // @symbol _ZN17daObjKurumajiku_cD0Ev
@@ -139,3 +144,38 @@ s32 daObjKurumajiku_c::Behavior()
         UpdateClsnPosAndRot();
     return 1;
 }
+
+// @symbol func_ov002_020b6c54
+/* The shared setup helper both descendants' InitResources call: load the
+   model and the collision mesh from the descendant's resource record, then
+   spawn four riders of the given actor id at the axle and keep their
+   uniqueIDs in mMountedActorIds for Behavior to carry. Like its cleanup
+   sibling it keeps an opaque C boundary. */
+#pragma push
+#pragma opt_strength_reduction off
+extern "C" int func_ov002_020b6c54(void *actor, void *descriptor, unsigned int riderActorID)
+{
+    int i;
+    daObjKurumajiku_c *self = static_cast<daObjKurumajiku_c *>(actor);
+    daObjKurumajiku_c::Resources *resources =
+        static_cast<daObjKurumajiku_c::Resources *>(descriptor);
+    void *file;
+
+    file = Model::LoadFile(*resources->model);
+    self->mModel.SetFile(static_cast<BMD_File *>(file), 1, -1);
+    func_ov002_020b6a80(reinterpret_cast<char *>(self));
+    self->UpdateClsnPosAndRot();
+    file = dBgW_Kc::LoadFile(*resources->collision);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        &self->mMeshCollider, file, &self->mClsnMat, 0x199, self->mAngleY,
+        resources->clps);
+    for (i = 0; i < 4; i++) {
+        self->mMountedActorIds[i] = 0;
+        dActor_c *rider = dActor_c::Spawn(riderActorID, 0,
+            *reinterpret_cast<const Vector3 *>(&self->mPosX), 0, self->mAreaId, -1);
+        if (rider != 0)
+            self->mMountedActorIds[i] = rider->uniqueID;
+    }
+    return 1;
+}
+#pragma pop

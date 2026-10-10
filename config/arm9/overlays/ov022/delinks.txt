@@ -36,15 +36,7 @@ src/actors/daObjFl_Seesaw_c.cpp:
 
 src/actors/daObjFl_Ukiyuka_c.cpp:
     complete
-    .text start:0x02111f6c end:0x021120b8
-
-src/d_a_obj_fl_ukiyuka_fl_ukiyuka_l.c:
-    complete
-    .text start:0x021120b8 end:0x021120f4
-
-src/d_a_obj_fl_ukiyuka_fl_ukiyuka.c:
-    complete
-    .text start:0x021120f4 end:0x02112130
+    .text start:0x02111f6c end:0x02112130
 
 src/actors/daObjFl_UkiKi_c.cpp:
     complete

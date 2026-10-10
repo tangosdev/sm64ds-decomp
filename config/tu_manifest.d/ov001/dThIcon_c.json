@@ -6,15 +6,16 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x20ab54c..0x20ab5b0, 2 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "HISTORY: contiguous linker run: 0x20ab54c..0x20ab5b0, 2 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): dThIcon_c",
-    "module sinit corroboration: 0 sinit(s) / 0 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 0 sinit(s) / 0 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "HELPER TAIL FOLD (2026-10-10): func_ov001_020ab5b0 (0x020ab5b0..0x020ab5f8, 0x48) abuts this TU's old .text end (0x020ab5b0) with no gap and is now inside it. Membership: it writes exactly dThIcon_c's own fields -- the centre/half extents at 0x04..0x0a, the countdown at 0x0c, the blink at 0x10, the held latch at 0x12, the touch kind at 0x14 and the countdown reload at 0x18 -- and arms 0x11 when the kind is >= 1, the same latch dThIcon_c::Behavior applies; every caller (dMgPsOpt_c, dScEntry_c, dScMgSlots) passes a dThIcon_c-derived icon. Placed first in the file (this TU emits .text in reverse source order)."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020ab54c",
-      "end": "0x020ab5b0"
+      "end": "0x020ab5f8"
     }
   ],
   "functions": [
@@ -31,6 +32,13 @@
       "size": "0x00000060",
       "legacy_source": "src/_ZN9dThIcon_c8BehaviorEv.cpp",
       "ordinal": 1
+    },
+    {
+      "symbol": "func_ov001_020ab5b0",
+      "address": "0x020ab5b0",
+      "size": "0x00000048",
+      "legacy_source": "src/unnamed/ov001/func_ov001_020ab5b0.c",
+      "ordinal": 2
     }
   ],
   "data": [],
@@ -47,8 +55,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov001-dThIcon_c/dThIcon_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 2,
-    "functions_declared": 2,
+    "functions_matched": 3,
+    "functions_declared": 3,
     "compilerOnlyOutput": {
       "requested": [],
       "deadstripped": [],

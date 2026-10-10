@@ -7,16 +7,17 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x20b9e64..0x20baa2c, 20 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "HISTORY: contiguous linker run: 0x20b9e64..0x20baa2c, 20 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjSwitch_c",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "the compiler-generated __sinit_daObjSwitch_c.cpp is raw-byte-identical to retail __sinit_ov002_02101588 (0x1b0, twenty-nine relocations): four SharedFilePtr-family handle constructions and destructor registrations, then the ten pointer-to-member descriptor copies into the state table at 0x0210e00c. The ctor word at 0x021080fc points at that initializer."
+    "the compiler-generated __sinit_daObjSwitch_c.cpp is raw-byte-identical to retail __sinit_ov002_02101588 (0x1b0, twenty-nine relocations): four SharedFilePtr-family handle constructions and destructor registrations, then the ten pointer-to-member descriptor copies into the state table at 0x0210e00c. The ctor word at 0x021080fc points at that initializer.",
+    "CLASSINIT TAIL FOLD (2026-10-10): the run 0x020baa2c..0x020bab0c (func_ov002_020baa2c 0x6c, func_ov002_020baa98 0x14, daObjSwitch_c_classInit_STAR_SWITCH 0x30, daObjSwitch_c_classInit_HANSWITCH 0x30) abuts this TU's old .text end (0x020baa2c) with no gap and is now inside it; src/actors/daObjSwdoor_c.cpp starts exactly at 0x020bab0c above it. Membership: both factories allocate sizeof(daObjSwitch_c) (0x354), run dBgActor_c's base constructor and store _ZTV13daObjSwitch_c (STAR_SWITCH and HANSWITCH registry profiles). func_ov002_020baa98 is the mMeshCollider callback whose address only daObjSwitch_c::InitResources takes (its sole reference); func_ov002_020baa2c is referenced only by that callback and writes mPlayerNearby (+0x350), which this class's press states read. Placed first in the file in reverse ROM order (the TU emits .text in reverse source order)."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020b9e64",
-      "end": "0x020baa2c"
+      "end": "0x020bab0c"
     },
     {
       "name": ".init",
@@ -179,6 +180,34 @@
       "size": "0x000001f0",
       "legacy_source": "src/_ZN13daObjSwitch_c13InitResourcesEv.cpp",
       "ordinal": 19
+    },
+    {
+      "symbol": "func_ov002_020baa2c",
+      "address": "0x020baa2c",
+      "size": "0x0000006c",
+      "legacy_source": "src/unnamed/ov002/func_ov002_020baa2c.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov002_020baa98",
+      "address": "0x020baa98",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/ov002/func_ov002_020baa98.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "daObjSwitch_c_classInit_STAR_SWITCH",
+      "address": "0x020baaac",
+      "size": "0x00000030",
+      "legacy_source": "src/d_a_obj_switch_star_switch.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "daObjSwitch_c_classInit_HANSWITCH",
+      "address": "0x020baadc",
+      "size": "0x00000030",
+      "legacy_source": "src/d_a_obj_switch_hanswitch.c",
+      "ordinal": 23
     }
   ],
   "data": [
@@ -334,7 +363,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Event8ClearBitEj' differs between the legacy file that used to hold func_ov002_020ba0bc and the one that held _ZN13daObjSwitch_c13InitResourcesEv; kept the first during initial assembly. Resolution: reconciled against the definitions and all20 strict checks in notes/experiments/pr2874-source-repair-0920.json",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c21UpdateModelPosAndRotYEv' differs between the legacy file that used to hold _ZN13daObjSwitch_c8BehaviorEv and the one that held _ZN13daObjSwitch_c13InitResourcesEv; kept the first during initial assembly. Resolution: reconciled against the definitions and all20 strict checks in notes/experiments/pr2874-source-repair-0920.json",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0211092c' differs between the legacy file that used to hold _ZN13daObjSwitch_c16CleanupResourcesEv and the one that held _ZN13daObjSwitch_c13InitResourcesEv; kept the first during initial assembly. Resolution: reconciled against the definitions and all20 strict checks in notes/experiments/pr2874-source-repair-0920.json",
-    "Complete licensed text is ov002:[0x020b9e64,0x020baa2c),20 functions/3016 bytes. Callback/state initializer/factory bodies after the endpoint remain outside this TU.",
+    "HISTORY: Complete licensed text is ov002:[0x020b9e64,0x020baa2c),20 functions/3016 bytes. Callback/state initializer/factory bodies after the endpoint remain outside this TU. (Superseded by the 2026-10-10 classInit tail fold: the touch helper, the collider veneer and both factories are now in this TU, ov002:[0x020b9e64,0x020bab0c), 24 functions.)",
     "The12 recorded declaration conflicts are resolved: void state transition and void PMF handler; actual int Event::ClearBit; shared fixed-point scalar aliases; real Sound::PlayBank3 reference, dBgActor_c method and SharedFilePtr resource. The shared decl_common.h still calls the callback an integer object; this TU no longer includes that incompatible declaration. No shared-header change or waiver is made.",
     "Existing body/helper symbol identities and original rename ancestry a6e6eb8379738f97c6b62e558d028b23a0820128 are retained. daObjSwitch_c comes from retail RTTI; field labels and SwitchResources/StateEntry labels describe observed use, not recovered identifiers.",
     "SS2874-08: daStarBase_c InitResources now declares shared data_ov002_0211092c as SharedFilePtr using the existing header. This is a caller declaration repair at ov002:[020eb204,020eb63c), with complete object identity and strict bytes proved; no new mismatch bank or shared-header edit.",
@@ -347,11 +376,17 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov002-daObjSwitch_c/daObjSwitch_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 20,
-    "functions_declared": 20,
+    "functions_matched": 24,
+    "functions_declared": 24,
     "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
+      "requested": [
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
       "droppedSections": [
         21,
         22,
@@ -369,7 +404,10 @@
         46,
         47,
         49,
-        50
+        50,
+        94,
+        95,
+        96
       ],
       "data": [
         "_ZTV13daObjSwitch_c",
@@ -401,7 +439,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 32 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 15 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -420,7 +458,7 @@
       },
       "tuRange": {
         "start": "0x020b9e64",
-        "end": "0x020baa2c",
+        "end": "0x020bab0c",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -428,7 +466,7 @@
         {
           "section": ".text",
           "start": "0x020b9e64",
-          "end": "0x020baa2c",
+          "end": "0x020bab0c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -460,13 +498,12 @@
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
-      "linkedStorageAliases": null,
       "objectAudit": {
         "counts": {
-          "LICENSED": 41
+          "LICENSED": 45
         },
-        "orderOk": true,
-        "nonLicensed": [],
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
@@ -474,38 +511,20 @@
           {
             "section": ".init",
             "original": [
-              90
+              101
             ],
             "desired": [
-              90
-            ],
-            "anchors": {
-              "90": [
-                {
-                  "symbol": "__sinit_daObjSwitch_c.cpp",
-                  "address": 34608520,
-                  "sectionBase": 34608520
-                }
-              ]
-            }
+              101
+            ]
           },
           {
             "section": ".ctor",
             "original": [
-              88
+              99
             ],
             "desired": [
-              88
-            ],
-            "anchors": {
-              "88": [
-                {
-                  "symbol": ".p__sinit_daObjSwitch_c.cpp",
-                  "address": 34636028,
-                  "sectionBase": 34636028
-                }
-              ]
-            }
+              99
+            ]
           },
           {
             "section": ".data",
@@ -532,79 +551,7 @@
               27,
               15,
               23
-            ],
-            "anchors": {
-              "5": [
-                {
-                  "symbol": "@837",
-                  "address": 34642068,
-                  "sectionBase": 34642068
-                }
-              ],
-              "7": [
-                {
-                  "symbol": "@833",
-                  "address": 34642052,
-                  "sectionBase": 34642052
-                }
-              ],
-              "9": [
-                {
-                  "symbol": "@845",
-                  "address": 34642084,
-                  "sectionBase": 34642084
-                }
-              ],
-              "11": [
-                {
-                  "symbol": "@835",
-                  "address": 34642060,
-                  "sectionBase": 34642060
-                }
-              ],
-              "13": [
-                {
-                  "symbol": "@831",
-                  "address": 34642076,
-                  "sectionBase": 34642076
-                }
-              ],
-              "15": [
-                {
-                  "symbol": "@829",
-                  "address": 34642108,
-                  "sectionBase": 34642108
-                }
-              ],
-              "17": [
-                {
-                  "symbol": "@843",
-                  "address": 34642092,
-                  "sectionBase": 34642092
-                }
-              ],
-              "23": [
-                {
-                  "symbol": "@841",
-                  "address": 34642116,
-                  "sectionBase": 34642116
-                }
-              ],
-              "27": [
-                {
-                  "symbol": "@827",
-                  "address": 34642100,
-                  "sectionBase": 34642100
-                }
-              ],
-              "29": [
-                {
-                  "symbol": "@839",
-                  "address": 34642044,
-                  "sectionBase": 34642044
-                }
-              ]
-            }
+            ]
           },
           {
             "section": ".bss",
@@ -629,72 +576,7 @@
               38,
               39,
               48
-            ],
-            "anchors": {
-              "19": [
-                {
-                  "symbol": "data_ov002_0210dfd4",
-                  "address": 34660308,
-                  "sectionBase": 34660308
-                }
-              ],
-              "20": [
-                {
-                  "symbol": "data_ov002_0210dfc4",
-                  "address": 34660292,
-                  "sectionBase": 34660292
-                }
-              ],
-              "25": [
-                {
-                  "symbol": "data_ov002_0210dfcc",
-                  "address": 34660300,
-                  "sectionBase": 34660300
-                }
-              ],
-              "26": [
-                {
-                  "symbol": "data_ov002_0210dfbc",
-                  "address": 34660284,
-                  "sectionBase": 34660284
-                }
-              ],
-              "34": [
-                {
-                  "symbol": "@822",
-                  "address": 34660316,
-                  "sectionBase": 34660316
-                }
-              ],
-              "35": [
-                {
-                  "symbol": "@823",
-                  "address": 34660328,
-                  "sectionBase": 34660328
-                }
-              ],
-              "38": [
-                {
-                  "symbol": "@824",
-                  "address": 34660340,
-                  "sectionBase": 34660340
-                }
-              ],
-              "39": [
-                {
-                  "symbol": "@825",
-                  "address": 34660352,
-                  "sectionBase": 34660352
-                }
-              ],
-              "48": [
-                {
-                  "symbol": "data_ov002_0210e00c",
-                  "address": 34660364,
-                  "sectionBase": 34660364
-                }
-              ]
-            }
+            ]
           }
         ],
         "objisolate": {
@@ -779,8 +661,10 @@
           "sectionLinks": 0,
           "sectionInfos": 10,
           "error": null
-        }
+        },
+        "errors": null
       },
+      "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
       "symbolCheckErrors": [
         "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
@@ -890,6 +774,18 @@
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60",
       "reason": "Text-only TU: externalize this exact RTTI/name symbol to its canonical retail home. Standard word-based verification may report PARTIAL for inherited names; direct emitted-byte verification, including NUL/padding, is recorded separately in notes/experiments/pr2874-source-repair-0920.json. Unemitted retail gap padding is not claimed as output."
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "classInit tail fold (2026-10-10): the folded factories' `return new daObjSwitch_c;` instantiates the class, so mwccarm emits dBgActor_c's base-object destructor helper. The cartridge has dBgActor_c D1/D0 only (ov002 0x020ee42c, 0x020ee464), no D2; no configured ROM symbol and no inbound relocation once the licensed function set is retained (same row as ov002/daObjTatefuda_c)."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "classInit tail fold (2026-10-10): lowering the synthesized constructor from `return new daObjSwitch_c;` over the Vector3 member mDrawScale (0x320) makes mwccarm emit Vector3's inline destructor (types.h). The ROM homes it in arm9:0x020072c0; this copy is discarded by text-only isolation (same row as ov002/daObjTatefuda_c)."
     }
   ],
   "init": [
@@ -1445,6 +1341,78 @@
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ba0f8"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@918",
+      "to": "@822",
+      "evidence": "classInit tail fold (2026-10-10): the folded touch helper reads Player fields, so the TU now includes Player.h, and the folded factories and callback sit above the static data in source; together they advance mwcc's per-TU anonymous counter by 96, so this destructor-registration node / pointer-to-member descriptor is emitted under the compiled name 96 higher. Renamed back to its configured ROM name, which is unchanged."
+    },
+    {
+      "from": "@919",
+      "to": "@823",
+      "evidence": "classInit tail fold (2026-10-10): the folded touch helper reads Player fields, so the TU now includes Player.h, and the folded factories and callback sit above the static data in source; together they advance mwcc's per-TU anonymous counter by 96, so this destructor-registration node / pointer-to-member descriptor is emitted under the compiled name 96 higher. Renamed back to its configured ROM name, which is unchanged."
+    },
+    {
+      "from": "@920",
+      "to": "@824",
+      "evidence": "classInit tail fold (2026-10-10): the folded touch helper reads Player fields, so the TU now includes Player.h, and the folded factories and callback sit above the static data in source; together they advance mwcc's per-TU anonymous counter by 96, so this destructor-registration node / pointer-to-member descriptor is emitted under the compiled name 96 higher. Renamed back to its configured ROM name, which is unchanged."
+    },
+    {
+      "from": "@921",
+      "to": "@825",
+      "evidence": "classInit tail fold (2026-10-10): the folded touch helper reads Player fields, so the TU now includes Player.h, and the folded factories and callback sit above the static data in source; together they advance mwcc's per-TU anonymous counter by 96, so this destructor-registration node / pointer-to-member descriptor is emitted under the compiled name 96 higher. Renamed back to its configured ROM name, which is unchanged."
+    },
+    {
+      "from": "@923",
+      "to": "@827",
+      "evidence": "classInit tail fold (2026-10-10): the folded touch helper reads Player fields, so the TU now includes Player.h, and the folded factories and callback sit above the static data in source; together they advance mwcc's per-TU anonymous counter by 96, so this destructor-registration node / pointer-to-member descriptor is emitted under the compiled name 96 higher. Renamed back to its configured ROM name, which is unchanged."
+    },
+    {
+      "from": "@925",
+      "to": "@829",
+      "evidence": "classInit tail fold (2026-10-10): the folded touch helper reads Player fields, so the TU now includes Player.h, and the folded factories and callback sit above the static data in source; together they advance mwcc's per-TU anonymous counter by 96, so this destructor-registration node / pointer-to-member descriptor is emitted under the compiled name 96 higher. Renamed back to its configured ROM name, which is unchanged."
+    },
+    {
+      "from": "@927",
+      "to": "@831",
+      "evidence": "classInit tail fold (2026-10-10): the folded touch helper reads Player fields, so the TU now includes Player.h, and the folded factories and callback sit above the static data in source; together they advance mwcc's per-TU anonymous counter by 96, so this destructor-registration node / pointer-to-member descriptor is emitted under the compiled name 96 higher. Renamed back to its configured ROM name, which is unchanged."
+    },
+    {
+      "from": "@929",
+      "to": "@833",
+      "evidence": "classInit tail fold (2026-10-10): the folded touch helper reads Player fields, so the TU now includes Player.h, and the folded factories and callback sit above the static data in source; together they advance mwcc's per-TU anonymous counter by 96, so this destructor-registration node / pointer-to-member descriptor is emitted under the compiled name 96 higher. Renamed back to its configured ROM name, which is unchanged."
+    },
+    {
+      "from": "@931",
+      "to": "@835",
+      "evidence": "classInit tail fold (2026-10-10): the folded touch helper reads Player fields, so the TU now includes Player.h, and the folded factories and callback sit above the static data in source; together they advance mwcc's per-TU anonymous counter by 96, so this destructor-registration node / pointer-to-member descriptor is emitted under the compiled name 96 higher. Renamed back to its configured ROM name, which is unchanged."
+    },
+    {
+      "from": "@933",
+      "to": "@837",
+      "evidence": "classInit tail fold (2026-10-10): the folded touch helper reads Player fields, so the TU now includes Player.h, and the folded factories and callback sit above the static data in source; together they advance mwcc's per-TU anonymous counter by 96, so this destructor-registration node / pointer-to-member descriptor is emitted under the compiled name 96 higher. Renamed back to its configured ROM name, which is unchanged."
+    },
+    {
+      "from": "@935",
+      "to": "@839",
+      "evidence": "classInit tail fold (2026-10-10): the folded touch helper reads Player fields, so the TU now includes Player.h, and the folded factories and callback sit above the static data in source; together they advance mwcc's per-TU anonymous counter by 96, so this destructor-registration node / pointer-to-member descriptor is emitted under the compiled name 96 higher. Renamed back to its configured ROM name, which is unchanged."
+    },
+    {
+      "from": "@937",
+      "to": "@841",
+      "evidence": "classInit tail fold (2026-10-10): the folded touch helper reads Player fields, so the TU now includes Player.h, and the folded factories and callback sit above the static data in source; together they advance mwcc's per-TU anonymous counter by 96, so this destructor-registration node / pointer-to-member descriptor is emitted under the compiled name 96 higher. Renamed back to its configured ROM name, which is unchanged."
+    },
+    {
+      "from": "@939",
+      "to": "@843",
+      "evidence": "classInit tail fold (2026-10-10): the folded touch helper reads Player fields, so the TU now includes Player.h, and the folded factories and callback sit above the static data in source; together they advance mwcc's per-TU anonymous counter by 96, so this destructor-registration node / pointer-to-member descriptor is emitted under the compiled name 96 higher. Renamed back to its configured ROM name, which is unchanged."
+    },
+    {
+      "from": "@941",
+      "to": "@845",
+      "evidence": "classInit tail fold (2026-10-10): the folded touch helper reads Player fields, so the TU now includes Player.h, and the folded factories and callback sit above the static data in source; together they advance mwcc's per-TU anonymous counter by 96, so this destructor-registration node / pointer-to-member descriptor is emitted under the compiled name 96 higher. Renamed back to its configured ROM name, which is unchanged."
     }
   ]
 }

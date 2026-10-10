@@ -10,7 +10,9 @@
  * The same definition also emits D2 plus the Vector3 destructor; both are
  * homeless (the ROM has neither) and are licensed `deadstrip` in the
  * manifest, while the emitted RTTI/vtable sections are `deadstrip-data`
- * rebound to the ROM's copy.
+ * rebound to the ROM's copy. The unit spans ov074 .text 0x0211f000..
+ * 0x0212290c and ends with the two registry factories (KURIKING_VANISH,
+ * then KURIKING).
  *
  * The func_ov074_* members keep linker names -- no semantic names are known.
  * All but six take the object as arg0 and touch only daKuriKing_c state, so
@@ -1954,3 +1956,93 @@ extern "C" unsigned short data_ov074_02122e04[4] = { 0x0059, 0x003c, 0x001e, 0x0
 KuriKingFreeState data_ov074_02122e0c = { (void (*)())func_ov074_021201ec };
 
 KuriKingStateTable data_ov074_021230f8;
+
+extern "C" {
+extern void *_ZN7fBase_cnwEj(unsigned int);
+extern void *_ZN12dEnemyBase_cC2Ev(void *);
+extern void *_ZN10dCcAcPos_cC1Ev(void *);
+extern dCcAcPos_c *_ZN10dCcAcPos_cD1Ev(dCcAcPos_c *);
+extern void *_ZN9ModelAnimC1Ev(void *);
+extern void *_ZN17dExtShadowModel_cC1Ev(void *);
+extern dExtShadowModel_c *_ZN17dExtShadowModel_cD1Ev(dExtShadowModel_c *);
+extern void func_0203d384(void);
+extern void *_ZN7Vector3D1Ev(void *);
+extern void *_ZN15MaterialChangerC1Ev(void *);
+extern void *_ZN15TextureSequenceC1Ev(void *);
+extern void *_ZN18TextureTransformerC1Ev(void *);
+extern void *_ZN10dBgCh_ActrC1Ev(void *);
+/* The array runtime discards lifecycle receiver results. */
+extern void __cxa_vec_ctor(void *arr, unsigned int count, unsigned int size,
+                           void (*ctor)(void *), void (*dtor)(void *));
+extern void *_ZTV12daKuriKing_c[];
+}
+
+/* The two registry factories close the unit (ov074 .text 0x02122764..
+ * 0x0212290c, the end of the overlay's .text), KURIKING_VANISH first.
+ * Both build the same 0x610-byte daKuriKing_c; which spawn-info variant
+ * it is comes from the registry profile, not the factory.
+ *
+ * Not written as `new daKuriKing_c`: types.h's Vector3 has no
+ * user-declared constructor, so the implicit daKuriKing_c constructor
+ * would skip the ROM's per-element __cxa_vec_ctor(..., func_0203d384, ...)
+ * over mCylClsnPos. Reproducing it needs a real Vector3 default
+ * constructor in the shared header, which every other Vector3 consumer
+ * would recompile under. The factories keep the loose files' hand-built
+ * sequence, now addressed by the members, as daMoray_c_classInit does.
+ * This TU owns the key function and so defines _ZTV12daKuriKing_c from the
+ * start of the vtable object (the two-word RTTI header); the vptr store
+ * reads `&_ZTV12daKuriKing_c[2]` to reach slot 0. */
+
+// @symbol daKuriKing_c_classInit_KURIKING_VANISH
+/* Reconstructed source-style name: SM64DS proves daKuriKing_c through RTTI,
+ * allocation size, vtable identity, and the KURIKING_VANISH registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: ExplosionGoomba_Spawn. */
+extern "C" daKuriKing_c *daKuriKing_c_classInit_KURIKING_VANISH(void)
+{
+    daKuriKing_c *p = (daKuriKing_c *)_ZN7fBase_cnwEj(sizeof(daKuriKing_c));
+    if (p) {
+        _ZN12dEnemyBase_cC2Ev(p);
+        *(void ***)p = &_ZTV12daKuriKing_c[2];
+        __cxa_vec_ctor(p->mdCc_cs, 4, sizeof(dCcAcPos_c),
+                       (void (*)(void *))_ZN10dCcAcPos_cC1Ev, (void (*)(void *))_ZN10dCcAcPos_cD1Ev);
+        _ZN9ModelAnimC1Ev(&p->mModelAnim);
+        __cxa_vec_ctor(p->mShadowModels, 3, sizeof(dExtShadowModel_c),
+                       (void (*)(void *))_ZN17dExtShadowModel_cC1Ev,
+                       (void (*)(void *))_ZN17dExtShadowModel_cD1Ev);
+        __cxa_vec_ctor(p->mCylClsnPos, 3, sizeof(Vector3),
+                       (void (*)(void *))func_0203d384, (void (*)(void *))_ZN7Vector3D1Ev);
+        _ZN15MaterialChangerC1Ev(&p->mMaterialChanger);
+        _ZN15TextureSequenceC1Ev(&p->mTextureSequence);
+        _ZN18TextureTransformerC1Ev(&p->mTextureTransformer);
+        _ZN10dBgCh_ActrC1Ev(&p->mWithMeshClsn);
+    }
+    return p;
+}
+
+// @symbol daKuriKing_c_classInit_KURIKING
+/* Reconstructed source-style name: SM64DS proves daKuriKing_c through RTTI,
+ * allocation size, vtable identity, and the KURIKING registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Goomboss_Spawn. */
+extern "C" daKuriKing_c *daKuriKing_c_classInit_KURIKING(void)
+{
+    daKuriKing_c *p = (daKuriKing_c *)_ZN7fBase_cnwEj(sizeof(daKuriKing_c));
+    if (p) {
+        _ZN12dEnemyBase_cC2Ev(p);
+        *(void ***)p = &_ZTV12daKuriKing_c[2];
+        __cxa_vec_ctor(p->mdCc_cs, 4, sizeof(dCcAcPos_c),
+                       (void (*)(void *))_ZN10dCcAcPos_cC1Ev, (void (*)(void *))_ZN10dCcAcPos_cD1Ev);
+        _ZN9ModelAnimC1Ev(&p->mModelAnim);
+        __cxa_vec_ctor(p->mShadowModels, 3, sizeof(dExtShadowModel_c),
+                       (void (*)(void *))_ZN17dExtShadowModel_cC1Ev,
+                       (void (*)(void *))_ZN17dExtShadowModel_cD1Ev);
+        __cxa_vec_ctor(p->mCylClsnPos, 3, sizeof(Vector3),
+                       (void (*)(void *))func_0203d384, (void (*)(void *))_ZN7Vector3D1Ev);
+        _ZN15MaterialChangerC1Ev(&p->mMaterialChanger);
+        _ZN15TextureSequenceC1Ev(&p->mTextureSequence);
+        _ZN18TextureTransformerC1Ev(&p->mTextureTransformer);
+        _ZN10dBgCh_ActrC1Ev(&p->mWithMeshClsn);
+    }
+    return p;
+}

@@ -15,10 +15,10 @@ and again after each raw-offset collapse.
 
 ## daObjSwitch_c (`include/daObjSwitch_c.h`, [ov002](../config/arm9/overlays/ov002/symbols.txt), size 0x354)
 
-Current evidence: the twenty-function production TU
-[`src/actors/daObjSwitch_c.cpp`](../src/actors/daObjSwitch_c.cpp), its genuine
-class header, and the separately enrolled factory
-`src/d_a_obj_switch_star_switch.c`. The names describe observed use; retail RTTI
+Current evidence: the twenty-four-function production TU
+[`src/actors/daObjSwitch_c.cpp`](../src/actors/daObjSwitch_c.cpp) (which now
+also holds the STAR_SWITCH and HANSWITCH factories) and its genuine
+class header. The names describe observed use; retail RTTI
 supplies the class identity, not the English field names. The original
 StarSwitch source and intermediate rename history remain recorded in the
 [source experiment](experiments/pr2874-source-repair-0920.json).

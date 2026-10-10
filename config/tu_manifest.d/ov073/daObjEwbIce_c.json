@@ -7,15 +7,16 @@
   "production_mode": "intact-object",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x2121f90..0x2122730, 16 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "HISTORY: contiguous linker run: 0x2121f90..0x2122730, 16 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjEwbIce_c",
-    "module sinit corroboration: 2 sinit(s) / 2 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 2 sinit(s) / 2 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "CLASSINIT TAIL FOLD (2026-10-10): the run 0x02122730..0x02122874 (func_ov073_02122730 0xa0, func_ov073_021227d0 0x14, daObjEwbIce_c_classInit_EWB_ICE_C/B/A 0x30 each) abuts this TU's old .text end (0x02122730) with no gap and is now inside it; it runs to the end of ov073 .text (0x02122874, where .init begins). Membership: the three factories allocate sizeof(daObjEwbIce_c) (0x33c), run dBgActor_c's base constructor and store _ZTV13daObjEwbIce_c (EWB_ICE_C/B/A registry profiles; InitResources dispatches on actor ids 0xac/0xab/0xaa). func_ov073_021227d0 is the mMeshCollider callback whose address only daObjEwbIce_c::InitResources takes; func_ov073_02122730 is referenced only by that callback, compares mState with this TU's initial state record data_ov073_021234b0, reads mSpawnIndex/mVariant and switches state through this TU's func_ov073_021223a4 to the records 021234c0/021234d0. Appended after InitResources (this TU emits .text in source order under #pragma defer_codegen off)."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x02121f90",
-      "end": "0x02122730"
+      "end": "0x02122874"
     },
     {
       "name": ".init",
@@ -145,6 +146,41 @@
       "size": "0x000001b8",
       "legacy_source": "src/_ZN13daObjEwbIce_c13InitResourcesEv.cpp",
       "ordinal": 15
+    },
+    {
+      "symbol": "func_ov073_02122730",
+      "address": "0x02122730",
+      "size": "0x000000a0",
+      "legacy_source": "src/unnamed/ov073/func_ov073_02122730.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov073_021227d0",
+      "address": "0x021227d0",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/ov073/func_ov073_021227d0.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "daObjEwbIce_c_classInit_EWB_ICE_C",
+      "address": "0x021227e4",
+      "size": "0x00000030",
+      "legacy_source": "src/d_a_obj_ewb_ice_ewb_ice_c.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "daObjEwbIce_c_classInit_EWB_ICE_B",
+      "address": "0x02122814",
+      "size": "0x00000030",
+      "legacy_source": "src/d_a_obj_ewb_ice_ewb_ice_b.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "daObjEwbIce_c_classInit_EWB_ICE_A",
+      "address": "0x02122844",
+      "size": "0x00000030",
+      "legacy_source": "src/d_a_obj_ewb_ice_ewb_ice_a.c",
+      "ordinal": 20
     }
   ],
   "init": [
@@ -369,9 +405,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@579",
+      "from": "@860",
       "to": "@572",
-      "evidence": "mwcc numbers this registration node @579 per TU and ov016 already defines a global @579 at 0x02114e88, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node per TU (@579 before the 2026-10-10 classInit tail fold, @860 after it: daKing_Donketu_c.h plus the five folded functions advance the counter by 281); the configured name is @572, and ov016 already defines a global @579 at 0x02114e88, so the compiled name could not be kept"
+    },
+    {
+      "from": "@855",
+      "to": "@574",
+      "evidence": "classInit tail fold (2026-10-10): daKing_Donketu_c.h (the touch helper reads the boss's mWaypointCursor/unk_4c5) plus the five folded functions advance mwcc's per-TU temp counter by 281; these six static-init Vector3 temps compile as @855..@860 and keep their configured ov073 .bss names."
+    },
+    {
+      "from": "@856",
+      "to": "@575",
+      "evidence": "classInit tail fold (2026-10-10): daKing_Donketu_c.h (the touch helper reads the boss's mWaypointCursor/unk_4c5) plus the five folded functions advance mwcc's per-TU temp counter by 281; these six static-init Vector3 temps compile as @855..@860 and keep their configured ov073 .bss names."
+    },
+    {
+      "from": "@857",
+      "to": "@576",
+      "evidence": "classInit tail fold (2026-10-10): daKing_Donketu_c.h (the touch helper reads the boss's mWaypointCursor/unk_4c5) plus the five folded functions advance mwcc's per-TU temp counter by 281; these six static-init Vector3 temps compile as @855..@860 and keep their configured ov073 .bss names."
+    },
+    {
+      "from": "@858",
+      "to": "@577",
+      "evidence": "classInit tail fold (2026-10-10): daKing_Donketu_c.h (the touch helper reads the boss's mWaypointCursor/unk_4c5) plus the five folded functions advance mwcc's per-TU temp counter by 281; these six static-init Vector3 temps compile as @855..@860 and keep their configured ov073 .bss names."
+    },
+    {
+      "from": "@859",
+      "to": "@578",
+      "evidence": "classInit tail fold (2026-10-10): daKing_Donketu_c.h (the touch helper reads the boss's mWaypointCursor/unk_4c5) plus the five folded functions advance mwcc's per-TU temp counter by 281; these six static-init Vector3 temps compile as @855..@860 and keep their configured ov073 .bss names."
     }
   ],
   "relocations": [
@@ -780,14 +841,16 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov073-daObjEwbIce_c/daObjEwbIce_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 16,
-    "functions_declared": 16,
+    "functions_matched": 21,
+    "functions_declared": 21,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN13daObjEwbIce_cD2Ev",
-        "_ZN7Vector3D1Ev"
+        "_ZN7Vector3D1Ev",
+        "_ZN10dBgActor_cD2Ev"
       ],
       "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
         "_ZN13daObjEwbIce_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
@@ -795,23 +858,25 @@
         9,
         10,
         14,
-        50,
-        51,
-        52,
-        53,
-        54,
-        55,
-        56,
-        57,
-        58,
-        59,
-        60,
-        61,
+        40,
+        41,
         62,
         63,
         64,
         65,
-        66
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78
       ],
       "data": [
         "_ZTV13daObjEwbIce_c",
@@ -862,7 +927,7 @@
       },
       "tuRange": {
         "start": "0x02121f90",
-        "end": "0x02122730",
+        "end": "0x02122874",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -870,7 +935,7 @@
         {
           "section": ".text",
           "start": "0x02121f90",
-          "end": "0x02122730",
+          "end": "0x02122874",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -897,7 +962,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 34
+          "LICENSED": 39
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -908,58 +973,58 @@
           {
             "section": ".init",
             "original": [
-              69
+              81
             ],
             "desired": [
-              69
+              81
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              67
+              79
             ],
             "desired": [
-              67
+              79
             ]
           },
           {
             "section": ".bss",
             "original": [
-              34,
-              35,
-              36,
-              37,
-              38,
-              39,
-              40,
-              41,
-              42,
-              43,
-              44,
-              45,
               46,
               47,
               48,
-              49
+              49,
+              50,
+              51,
+              52,
+              53,
+              54,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60,
+              61
             ],
             "desired": [
-              35,
-              37,
-              45,
-              39,
-              41,
-              43,
-              42,
-              44,
-              36,
-              38,
-              40,
-              34,
-              49,
-              46,
               47,
-              48
+              49,
+              57,
+              51,
+              53,
+              55,
+              54,
+              56,
+              48,
+              50,
+              52,
+              46,
+              61,
+              58,
+              59,
+              60
             ]
           }
         ],
@@ -968,58 +1033,58 @@
             {
               "section": ".bss",
               "original": [
-                34,
-                35,
-                36,
-                37,
-                38,
-                39,
-                40,
-                41,
-                42,
-                43,
-                44,
-                45,
                 46,
                 47,
                 48,
-                49
+                49,
+                50,
+                51,
+                52,
+                53,
+                54,
+                55,
+                56,
+                57,
+                58,
+                59,
+                60,
+                61
               ],
               "desired": [
-                35,
-                37,
-                45,
-                39,
-                41,
-                43,
-                42,
-                44,
-                36,
-                38,
-                40,
-                34,
-                49,
-                46,
                 47,
-                48
+                49,
+                57,
+                51,
+                53,
+                55,
+                54,
+                56,
+                48,
+                50,
+                52,
+                46,
+                61,
+                58,
+                59,
+                60
               ],
               "slots": [
-                34,
-                35,
-                36,
-                37,
-                38,
-                39,
-                40,
-                41,
-                42,
-                43,
-                44,
-                45,
                 46,
                 47,
                 48,
-                49
+                49,
+                50,
+                51,
+                52,
+                53,
+                54,
+                55,
+                56,
+                57,
+                58,
+                59,
+                60,
+                61
               ]
             }
           ],
@@ -1058,8 +1123,7 @@
       "rom": {
         "bytes": 16777216,
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
-        "matchesStockRom": true,
-        "note": "LOCAL WORKER NOTE: this PC's EU dump builds ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40; the fleet-canonical stock hash is recorded per #3691."
+        "matchesStockRom": true
       },
       "linkerOutput": null
     }
@@ -1082,7 +1146,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov073",
       "canonical_address": "0x021231e8",
-      "reason": "Key function is the out-of-line destructor, so this TU emits the vtable. Public address point ov073:0x021231e8 is outside the licensed text span 0x02121f90..0x02122730. The symbol stays where symbols.txt already has it."
+      "reason": "Key function is the out-of-line destructor, so this TU emits the vtable. Public address point ov073:0x021231e8 is outside the licensed text span 0x02121f90..0x02122874. The symbol stays where symbols.txt already has it."
     },
     {
       "symbol": "_ZTI13daObjEwbIce_c",
@@ -1153,6 +1217,11 @@
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60",
       "reason": "Root type-name string 7fBase_c. Cartridge copy arm9:0x02086e60."
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "classInit tail fold (2026-10-10): the folded factories' `return new daObjEwbIce_c;` instantiates the class, so mwccarm emits dBgActor_c's base-object destructor helper. The cartridge has dBgActor_c D1/D0 only (ov002 0x020ee42c, 0x020ee464), no D2; no configured ROM symbol and no inbound relocation once the licensed function set is retained (same row as ov002/daObjTatefuda_c)."
     }
   ]
 }

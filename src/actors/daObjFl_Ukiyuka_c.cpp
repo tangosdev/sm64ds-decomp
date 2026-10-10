@@ -21,8 +21,9 @@
  *   declares `int`, the body sets no return value and neither does
  *   the ROM. A `return` emits a real instruction and breaks the
  *   match. A host-port caller reading the result gets garbage.
- * Leftover: the factories live outside this TU (S14: the FL_UKIYUKA_L
- *   / FL_UKIYUKA g_profile rows stay where the registry owns them).
+ * The two registry factories (FL_UKIYUKA_L, then FL_UKIYUKA) close the
+ *   unit, ov022 .text 0x02111f6c..0x02112130. The g_profile rows that
+ *   name them stay in this overlay's .data, outside this TU.
  */
 
 #include "daObjFl_Ukiyuka_c.h"
@@ -88,4 +89,28 @@ int daObjFl_Ukiyuka_c::InitResources()
         break;
     }
     func_ov002_020b6584(this, &data_ov022_021140d4[mVariant], kBobAmplitude);
+}
+
+// @symbol daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L
+/* Reconstructed source-style name: SM64DS proves daObjFl_Ukiyuka_c through RTTI,
+ * allocation size, vtable identity, and the FL_UKIYUKA_L registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: FloatingFloorLllSmall_Spawn.
+ *
+ * `new daObjFl_Ukiyuka_c` is the whole sequence the loose factory spelled by
+ * hand: fBase_c::operator new(0x330), dBgActor_c's base constructor, then
+ * daObjUkiyuka_c's vptr store and this class's. */
+extern "C" daObjFl_Ukiyuka_c *daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L(void)
+{
+    return new daObjFl_Ukiyuka_c;
+}
+
+// @symbol daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA
+/* Reconstructed source-style name: SM64DS proves daObjFl_Ukiyuka_c through RTTI,
+ * allocation size, vtable identity, and the FL_UKIYUKA registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: FloatingFloorLllBig_Spawn. */
+extern "C" daObjFl_Ukiyuka_c *daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA(void)
+{
+    return new daObjFl_Ukiyuka_c;
 }
