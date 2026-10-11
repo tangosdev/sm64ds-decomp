@@ -216,7 +216,6 @@ extern int Vec3_HorzDist(void *a, void *b);
 extern unsigned char DecIfAbove0_Byte(void *p);
 extern unsigned short DecIfAbove0_Short(void *p);
 extern int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
-extern int data_ov084_02130cc8[];
 extern void UnloadBlueCoinModel(void* p);
 extern s8 data_0209f2f8;
 extern int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(char* c, int f);
@@ -297,8 +296,7 @@ void daKrb_c::func_ov084_021290d4()
     *chaseRadius(self2) = 0x1f4000;
 }
 
-
-// @symbol _ZN7daKrb_c19func_ov084_02129168Ev
+// @symbol _ZN7daKrb_c19func_ov084_02129168EP8dActor_c
 #include "decl_dBgCh_Actr.h"
 
 extern int Vec3_HorzLen(void* v);
@@ -791,7 +789,7 @@ void daKrb_c::func_ov084_02129c9c()
     *((int *)((char *)(((int)((char *)&goomba->mdCcAc_c.flags)) + 0))) |= 4;
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_02129cf4Ev
+// @symbol _ZN7daKrb_c19func_ov084_02129cf4Ei
 /* Choose what the Goomba is heading for. Sets mClosestPlayer, mDistToPlayer
  * (the distance to the target, or 0x61a8000 = 25000.0 for "nothing to
  * react to"; 0x7fffffff until the first call) and mInitAngleY (the heading
@@ -2118,19 +2116,17 @@ KrbAnimationFileHandle data_ov084_02130cd8(0x387);
 KrbAnimationFileHandle data_ov084_02130cc8(0x38c);
 KrbAnimationFileHandle data_ov084_02130cf0(0x389);
 
-/* Descriptor records for the four state slots that target free functions;
-   the array initializer reads each .pmf member. */
-KrbFreeHandler krbStateDesc_Tumble = { func_ov084_0212a774 };
-KrbFreeHandler krbStateDesc_HopStart = { func_ov084_0212ab48 };
-KrbFreeHandler krbStateDesc_Walk = { func_ov084_0212b2dc };
-KrbFreeHandler krbStateDesc_Pause = { func_ov084_0212a6f8 };
+/* Pointer-to-member descriptors for the four state handlers stored separately in the ROM initializer data. */
+StateHandler krbStateDesc_Tumble = &daKrb_c::func_ov084_0212a774;
+StateHandler krbStateDesc_HopStart = &daKrb_c::func_ov084_0212ab48;
+StateHandler krbStateDesc_Walk = &daKrb_c::func_ov084_0212b2dc;
+StateHandler krbStateDesc_Pause = &daKrb_c::func_ov084_0212a6f8;
 
-/* One pointer-to-member per State. mwcc cannot link-time-initialize them, so
-   the initializer copies five descriptor records in. */
+/* One pointer-to-member per State, in state-index order. */
 StateHandler data_ov084_02130d74[5] = {
-    krbStateDesc_Walk.pmf,            /* STATE_WALK */
-    krbStateDesc_HopStart.pmf,        /* STATE_HOP_START */
+    krbStateDesc_Walk,            /* STATE_WALK */
+    krbStateDesc_HopStart,        /* STATE_HOP_START */
     &daKrb_c::func_ov084_0212aab0,    /* STATE_AIRBORNE */
-    krbStateDesc_Tumble.pmf,          /* STATE_TUMBLE */
-    krbStateDesc_Pause.pmf,           /* STATE_PAUSE */
+    krbStateDesc_Tumble,          /* STATE_TUMBLE */
+    krbStateDesc_Pause,           /* STATE_PAUSE */
 };

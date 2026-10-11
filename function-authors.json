@@ -41915,7 +41915,7 @@
     },
     "ov084:0x02129168": {
       "author": "tangosdev",
-      "name": "_ZN7daKrb_c19func_ov084_02129168Ev"
+      "name": "_ZN7daKrb_c19func_ov084_02129168EP8dActor_c"
     },
     "ov084:0x02129238": {
       "author": "tangosdev",
@@ -41959,7 +41959,7 @@
     },
     "ov084:0x02129cf4": {
       "author": "andrewboudreau",
-      "name": "_ZN7daKrb_c19func_ov084_02129cf4Ev"
+      "name": "_ZN7daKrb_c19func_ov084_02129cf4Ei"
     },
     "ov084:0x02129ed4": {
       "author": "andrewboudreau",
