@@ -174,6 +174,10 @@ extern KrbAnimationFileHandle data_ov084_02130ce8;
 extern KrbAnimationFileHandle data_ov084_02130cf0;
 extern KrbModelFilePtr data_ov084_02130cf8;
 extern KrbModelFilePtr data_ov084_02130d00;
+extern void _ZN7daKrb_c19func_ov084_0212a774Ev(daKrb_c *);
+extern void _ZN7daKrb_c19func_ov084_0212ab48Ev(daKrb_c *);
+extern void _ZN7daKrb_c19func_ov084_0212abd4Ev(daKrb_c *);
+extern void _ZN7daKrb_c19func_ov084_0212a6f8Ev(daKrb_c *);
 extern StateHandler data_ov084_02130d74[];
 int func_02037e20(int* p);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
@@ -2113,16 +2117,16 @@ KrbAnimationFileHandle data_ov084_02130cc8(0x38c);
 KrbAnimationFileHandle data_ov084_02130cf0(0x389);
 
 /* Pointer-to-member descriptors for the four state handlers stored separately in the ROM initializer data. */
-StateHandler krbStateDesc_Tumble = &daKrb_c::func_ov084_0212a774;
-StateHandler krbStateDesc_HopStart = &daKrb_c::func_ov084_0212ab48;
-StateHandler krbStateDesc_Walk = &daKrb_c::func_ov084_0212b2dc;
-StateHandler krbStateDesc_Pause = &daKrb_c::func_ov084_0212a6f8;
+KrbFreeHandler krbStateDesc_Tumble = {_ZN7daKrb_c19func_ov084_0212a774Ev};
+KrbFreeHandler krbStateDesc_HopStart = {_ZN7daKrb_c19func_ov084_0212ab48Ev};
+KrbFreeHandler krbStateDesc_Walk = {_ZN7daKrb_c19func_ov084_0212abd4Ev};
+KrbFreeHandler krbStateDesc_Pause = {_ZN7daKrb_c19func_ov084_0212a6f8Ev};
 
 /* One pointer-to-member per State, in state-index order. */
 StateHandler data_ov084_02130d74[5] = {
-    krbStateDesc_Walk,            /* STATE_WALK */
-    krbStateDesc_HopStart,        /* STATE_HOP_START */
+    krbStateDesc_Walk.pmf,            /* STATE_WALK */
+    krbStateDesc_HopStart.pmf,        /* STATE_HOP_START */
     &daKrb_c::func_ov084_0212aab0,    /* STATE_AIRBORNE */
-    krbStateDesc_Tumble,          /* STATE_TUMBLE */
-    krbStateDesc_Pause,           /* STATE_PAUSE */
+    krbStateDesc_Tumble.pmf,          /* STATE_TUMBLE */
+    krbStateDesc_Pause.pmf,           /* STATE_PAUSE */
 };
