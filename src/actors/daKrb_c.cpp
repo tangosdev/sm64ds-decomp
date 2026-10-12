@@ -212,6 +212,7 @@ extern int data_ov084_02130268[];
 extern int data_0209e650;
 extern void func_ov074_0212087c(Vector3 *out, void *player, u8 flag);
 extern int ApproachAngle(s16 *cur, s16 target, int divisor, int band, int maxStep);
+extern int Vec3_HorzLen(const Vector3 *v);
 extern int Vec3_HorzDist(void *a, void *b);
 extern unsigned char DecIfAbove0_Byte(void *p);
 extern unsigned short DecIfAbove0_Short(void *p);
@@ -299,11 +300,6 @@ void daKrb_c::func_ov084_021290d4()
 // @symbol _ZN7daKrb_c19func_ov084_02129168EP8dActor_c
 #include "decl_dBgCh_Actr.h"
 
-extern int Vec3_HorzLen(void* v);
-extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int a, int b, unsigned int e);
-extern void func_02012694(unsigned int id, const Vector3 *pos);
-
 /* Enter STATE_TUMBLE: the Goomba is thrown clear. Called when the cap comes
  * off (func_ov084_02129a00) and, with a null `actor`, when a Yoshi-held Goomba
  * lands. `actor` is the eater
@@ -318,7 +314,7 @@ void daKrb_c::func_ov084_02129168(dActor_c* actor)
     daKrb_c *goomba = this;
     goomba->mBounceCountdown = 0x3c;
     goomba->mVertSpeed = cstd::fdiv(0xd000 - goomba->mVertAccel, goomba->mFloorNormalY);
-    goomba->mHorzSpeed = Vec3_HorzLen((char *)&goomba->unk_0a4) * -1;
+    goomba->mHorzSpeed = Vec3_HorzLen((const Vector3 *)&goomba->unk_0a4) * -1;
     if (actor != 0)
         goomba->mPrevAngleY = Vec3_HorzAngle((Vector3 *)&goomba->mPosX, (Vector3 *)&actor->mPosX);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&goomba->mModelAnim, data_ov084_02130cc0.ptr, 0, 0x1000, 0);
