@@ -40,6 +40,7 @@ SYMBOLS = (
     "func_01ff98f4 kind:function(arm,size=0xb0) addr:0x01ff98f4\n"
     "func_01ff99a4 kind:function(arm,size=0x39c) addr:0x01ff99a4\n"
     "_deq kind:function(arm,size=0x0) addr:0x01ff9d40\n"
+    "_deq_core kind:label(arm) addr:0x01ff9d50\n"
     "func_01ffa344 kind:function(arm,size=0xfc) addr:0x01ffa344\n"
 )
 DELINKS = (
@@ -83,9 +84,38 @@ class LcfInteriorTests(unittest.TestCase):
         self.assertEqual(LI.complete_text_ranges(self.root / "config" / "itcm" / "delinks.txt"),
                          [(0x01ff97d8, 0x01ffa344)])
 
-    def test_interior_rows_skip_the_range_start_and_zero_sized_rows(self):
+    def test_interior_rows_skip_the_range_start_but_keep_aliases_and_labels(self):
         self.assertEqual(LI.interior_rows(self.root / "config"),
-                         [("func_01ff98f4", 0x01ff98f4), ("func_01ff99a4", 0x01ff99a4)])
+                         [("func_01ff98f4", 0x01ff98f4), ("func_01ff99a4", 0x01ff99a4),
+                          ("_deq", 0x01ff9d40), ("_deq_core", 0x01ff9d50)])
+
+    def test_patch_defines_an_imported_interior_label(self):
+        lcf, objects_txt = self._link(_elf(defined=["func_01ff97d8"]),
+                                      _elf(defined=["func_0206cee0"], imported=["_deq_core"]))
+        self.assertEqual(LI.patch(lcf, objects_txt, self.root / "config"),
+                         [("_deq_core", 0x01ff9d50)])
+        self.assertIn("    _deq_core = 0x01ff9d50;", lcf.read_text())
+
+    def test_patch_defines_an_imported_zero_sized_alias(self):
+        # func_0206f46c's `double ==` imports the runtime alias _deq, a size-0 row
+        # inside func_01ff97d8's complete range; without a definition the link aborts.
+        lcf, objects_txt = self._link(_elf(defined=["func_01ff97d8"]),
+                                      _elf(defined=["func_0206f46c"], imported=["_deq"]))
+        self.assertEqual(LI.patch(lcf, objects_txt, self.root / "config"),
+                         [("_deq", 0x01ff9d40)])
+        self.assertIn("    _deq = 0x01ff9d40;", lcf.read_text())
+
+    def test_patch_defines_an_imported_sdk_linker_constant(self):
+        # func_02058308 reads SDK_IRQ_STACKSIZE's address as its value (0x600).
+        lcf, objects_txt = self._link(_elf(defined=["func_02058308"],
+                                           imported=["SDK_IRQ_STACKSIZE"]))
+        self.assertEqual(LI.patch(lcf, objects_txt, self.root / "config"),
+                         [("SDK_IRQ_STACKSIZE", 0x600)])
+        self.assertIn("    SDK_IRQ_STACKSIZE = 0x00000600;", lcf.read_text())
+
+    def test_patch_leaves_a_linker_constant_nobody_imports(self):
+        lcf, objects_txt = self._link(_elf(defined=["func_02058308"]))
+        self.assertEqual(LI.patch(lcf, objects_txt, self.root / "config"), [])
 
     def test_patch_defines_only_imported_undefined_interior_rows(self):
         caller = _elf(defined=["func_ov002_020dc560"],

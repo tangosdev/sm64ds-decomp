@@ -23,8 +23,8 @@
  *
  * leftovers:
  * - func_ov060_02116740, 02117624 and 021172c8 stay free functions with
- *   the char * / unsigned char * decl_common.h declares. 02117624
- *   parses as C: assigning a Matrix4x3 scalarizes under C++.
+ *   the char * / unsigned char * decl_common.h declares. Their bodies
+ *   compile as C++; 02117624 uses a POD matrix view for its block copy.
  * - dCcAc_c::Init, dBgCh_Actr::Init, DropShadowRadHeight,
  *   Particle::System::New / NewSimple / NewUnkCallback818 and
  *   SaveData::IsCharacterUnlocked stay mangled. Those calls pass
@@ -60,9 +60,9 @@
  * data_ov060_0211af74[mVariant]. Both tables are pointer-to-member on
  * dActor_c, which is what the sinit records store. */
 struct dCc_c;
-/* POD spelling of Matrix4x3's 0x30 bytes: with a user-declared constructor on
- * Vector3 the copy in func_ov060_02117624 scalarizes even under `#pragma
- * cplusplus off`; the ROM copy is the block move, so it goes through this. */
+/* POD view of the 0x30-byte matrix. The single integer array preserves
+ * the shadow update's block copy in C++ with Vector3's user-declared
+ * constructor in scope. */
 struct RawMatrix4x3 { int m[12]; };
 typedef struct RawMatrix4x3 RawMatrix4x3;
 typedef void (dActor_c::*PMF)();
@@ -255,8 +255,7 @@ int daKpaFire_c::CleanupResources()
 }
 
 // @symbol func_ov060_02117624
-/* C block store (same wall as Bullet 020fed7c and ov062 ba84): the Matrix4x3
- * copy scalarizes under C++. Parsed as C; the TU returns to C++ after it. */
+/* The POD matrix view keeps this block copy intact in C++. */
 /* Per-frame drop shadow. Does nothing when mDropsShadow is 0. Otherwise it
  * builds a translation matrix in the shared scratch matrix data_020a0e68 at
  * the fire's x, its mGroundY and its z (each >> 3), copies it into the
@@ -264,8 +263,8 @@ int daKpaFire_c::CleanupResources()
  * radius mShadowRadiusMul * mFireScale, the second Fix12 argument (dActor_c.h
  * calls it `depth`) 30 units (0x1e000), and the `opacity` argument 0xf (what
  * that value means is not decoded; every caller passes 0xf).
- * Parsed as C, so the class is named `struct daKpaFire_c`; the Matrix4x3 at
- * 0x32c is still the header's pad_32c bytes, reached through a cast. */
+ * The Matrix4x3 at 0x32c remains the header's pad_32c storage, reached
+ * through its existing POD view. */
 #include "common.h"
 extern "C" {
 
@@ -273,15 +272,13 @@ void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(void *thisp, void *sm, void *mtx, int rad, int t, unsigned int j);
 extern Matrix4x3 data_020a0e68;
 }
-#pragma cplusplus off
-void func_ov060_02117624(char *c) {
+extern "C" void func_ov060_02117624(char *c) {
     struct daKpaFire_c *self = (struct daKpaFire_c *)c;
     if (self->mDropsShadow == 0) return;
     Matrix4x3_FromTranslation(&data_020a0e68, self->mPosX>>3, self->mGroundY>>3, self->mPosZ>>3);
     *(RawMatrix4x3*)self->pad_32c = *(RawMatrix4x3*)&data_020a0e68;
     _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(self, &self->mShadowModel, self->pad_32c, self->mShadowRadiusMul * self->mFireScale, 0x1e000, 0xf);
 }
-#pragma cplusplus on
 
 // @symbol func_ov060_0211747c
 /* Variant 0 Behavior: ride Bowser's mouth.

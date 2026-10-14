@@ -1,7 +1,9 @@
 #include "types.h"
 extern char data_023c0000;
-extern void func_00000600(void);
-extern void func_00000000(void);
+/* NitroSDK linker constants: the address is the value (the LCF assigns
+ * SDK_SYS_STACKSIZE = 0 and SDK_IRQ_STACKSIZE = 0x600). */
+extern void SDK_IRQ_STACKSIZE(void);
+extern void SDK_SYS_STACKSIZE(void);
 
 int func_02058df4(unsigned int idx)
 {
@@ -13,18 +15,18 @@ int func_02058df4(unsigned int idx)
     case 3:
         return 0x2000000;
     case 4: {
-        u32 irqStackLo = (u32)&data_023c0000 + 0x3f80 - (s32)func_00000600;
+        u32 irqStackLo = (u32)&data_023c0000 + 0x3f80 - (s32)SDK_IRQ_STACKSIZE;
         u32 sysStackLo;
 
-        if (!(s32)func_00000000) {
+        if (!(s32)SDK_SYS_STACKSIZE) {
             sysStackLo = (u32)&data_023c0000;
             if (sysStackLo < 0x23c0020) {
                 sysStackLo = 0x23c0020;
             }
-        } else if ((s32)func_00000000 < 0) {
-            sysStackLo = (u32)&data_023c0000 - (s32)func_00000000;
+        } else if ((s32)SDK_SYS_STACKSIZE < 0) {
+            sysStackLo = (u32)&data_023c0000 - (s32)SDK_SYS_STACKSIZE;
         } else {
-            sysStackLo = irqStackLo - (s32)func_00000000;
+            sysStackLo = irqStackLo - (s32)SDK_SYS_STACKSIZE;
         }
         return sysStackLo;
     }

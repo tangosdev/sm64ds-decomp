@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "task": "line-native-return1013",
+  "input_commit": "731efc06d5d5e84ac33ff5f97880e9f90476158e",
+  "source": "src/engine/collision/dBgCh_Lin.cpp",
+  "status": "Native getter and caller migration byte-proven; immutable independent acceptance and PR validation recorded separately.",
+  "symbol": "_ZN9dBgCh_Lin10GetClsnPosEv",
+  "module": "arm9",
+  "address": "0x020375d0",
+  "size": 28,
+  "compiler": "2004/b56 production CFLAGS with C++ language mode",
+  "source_change": "Define Vector3 dBgCh_Lin::GetClsnPos() and return lineEnd, replacing the hand-spelled C-linkage hidden-output definition. Update its obsolete source-banner limitation.",
+  "evidence": {
+    "whole_elf_byte_identical": true,
+    "object_sha256": "e52d1d73069c86d660ae13d1da2d3dbcd4bfe5eca5da9af0c37d07303e0f1a88",
+    "function_sha256": "4c1fc5b1343e33f492a8d6975b0a85a3c5684b1cc38798f76f6c6729927d7737",
+    "all_sections_symbols_relocations_and_extra_functions_identical": true,
+    "source_lf_sha256": "882f8b1d6a73103a440d009c554af21bb161acbc54b5abd9d15e17d8ef9859ba",
+    "scope": "Getter TU only. Caller allocated output and typed relocations are preserved; Camera and water-object TUs add the separately licensed canonical Vector3 destructor duplicate."
+  },
+  "interfaces": [
+    "include/dBgCh_Lin.h: canonical no-argument Vector3-return method",
+    "include/types.h: canonical Vector3 layout and copy semantics"
+  ],
+  "semantic_evidence": "lineEnd is the segment endpoint before collision and the winning collision position afterward. Returning that field copies exactly its three 32-bit coordinates.",
+  "abi_evidence": "The native method emits the same28-byte hidden-result routine as the original explicit(res,self) definition; complete object equality includes every relocation and RTTI/vtable/thunk section.",
+  "remaining_work": [
+    "func_02009e70 remains a nonmatching excluded draft: 62 nonrelocation differences. It is not an exact-match claim.",
+    "GetClsnPos migration is narrowly scoped; neighboring raw interfaces remain partial.",
+    "Both water-object initializers retain the baseline isolated BLIND-6 limit; intact production linking is separately verified.",
+    "Eighteen affected emitted-data symbols retain baseline partial extent coverage. This change introduces no new differing or unnamed symbol."
+  ],
+  "private_proof": "build/line-native-return1013/object-parity.json",
+  "gates": {
+    "production_rom": {
+      "command": "python tools/rombuild.py -j16 --no-rom",
+      "status": "pass",
+      "source_functions_reproducing": 11290,
+      "source_functions_mismatching": 0,
+      "source_owned_data_reproducing": 331,
+      "source_owned_data_mismatching": 0,
+      "modules_exact": 106,
+      "modules_total": 106,
+      "intact_tu_link": "pass, zero new symbol errors and exact storage aliases"
+    },
+    "expanded_linkcheck": {
+      "command": "python tools/prepush_linkcheck.py --range origin/main..HEAD",
+      "status": "pass",
+      "functions_checked": 776,
+      "verified": 774,
+      "warnings": 2,
+      "blocking": 0,
+      "limitations": "The two water-object static initializers retain preexisting BLIND-6 isolated checks. Their original code/typed relocations are preserved and the intact production TUs/modules link exactly. The one NONMATCHING camera draft is explicitly skipped."
+    },
+    "declaration_agreement": {
+      "command": "python tools/check_decl_agreement.py --changed origin/main",
+      "status": "pass",
+      "files_in_scope": 1993,
+      "banked_disagreements_in_scope": 6940,
+      "new_disagreements": 0,
+      "new_header_redeclarations": 0,
+      "baseline_modified": false
+    },
+    "affected_metadata": {
+      "command": "python tools/romdata_check.py --files <the eight affected production sources>",
+      "emitted_symbols": 41,
+      "verified_symbols": 23,
+      "verified_bytes": 696,
+      "partial_symbols": 18,
+      "partial_bytes": 116,
+      "differing_symbols": 0,
+      "unnamed_symbols": 0,
+      "baseline_identical": true
+    },
+    "draft_compilation": {
+      "command": "python tools/check_drafts_compile.py --quiet",
+      "status": "pass",
+      "compiled": 24,
+      "total": 24
+    },
+    "host_references": {
+      "command": "python tools/port_refcheck.py",
+      "status": "pass",
+      "references": 267
+    }
+  },
+  "reproduce": [
+    "Compile the pinned input and this source with tools/rombuild.py CFLAGS and2004/b56, using-lang c++; compare the entire object bytes.",
+    "Run strict linkcheck for _ZN9dBgCh_Lin10GetClsnPosEv at0x020375d0,size0x1c,arm9; run expanded TU and full-ROM gates before publication."
+  ],
+  "caller_work": {
+    "native_cpp_callers": "Actr, Camera, Coin, water objects 01/06 and Player; actual canonical Vector3 returns, first-use initialization and scratch lifetime changes preserve bytes.",
+    "c_bridge": "func_02008cb4 remains C: only its two collision results use the actual canonical Vector3 aggregate-return type. Other scratch vectors keep the existing Vec3 and helper prototypes, with two explicit legacy pointer views. The existing ray storage wrapper remains a documented partial reconstruction.",
+    "partial_scope": "Other raw field views, POD copies, manual ray lifecycles and unnamed functions remain as before; this does not complete those classes.",
+    "compiler_bindings": "Refresh anonymous local names onto unchanged canonical bindings for Coin and both water objects; license only the canonical 4-byte Vector3 destructor duplicate in Camera and both water objects."
+  },
+  "sources": [
+    "src/engine/collision/dBgCh_Actr.cpp",
+    "src/engine/view/dCamera_c.cpp",
+    "src/actors/daCoin_c.cpp",
+    "src/game/actors/d_a_obj_wc_obj01.cpp",
+    "src/game/actors/d_a_obj_wc_obj06.cpp",
+    "src/actors/Player.cpp",
+    "src/unnamed/arm9/0200/func_02008cb4.c",
+    "src/unnamed/arm9/0200/func_02009e70.cpp",
+    "src/engine/collision/dBgCh_Lin.cpp"
+  ],
+  "producer_agents": [
+    "root",
+    "ov009_cleanroom",
+    "starsel",
+    "player_codegen",
+    "camera_return_stack"
+  ],
+  "camera_draft": {
+    "symbol": "func_02009e70",
+    "address": "0x02009e70",
+    "size": 4252,
+    "main_differences": 72,
+    "candidate_differences": 62,
+    "register_differences": 57,
+    "instruction_shape_differences": 5,
+    "relocation_count": 104,
+    "best_function_sha256": "5580ae843847d259c9206f32bad6400a1a4d5b97d6e3298b110a770168ec73a1",
+    "all_native_function_and_relocations_equal_to_best62": true,
+    "enrolled": false,
+    "explanation": "Signed 64-bit distance accumulator, actual Vector3 ray-origin constructor and lifetime scopes improve the prior main draft. Five semantic inline operations then allow all five GetClsnPos calls to use native value returns with the exact same best62 instructions and relocation records."
+  },
+  "source_tested_commit": "952174aeae62c5d4310b48ab01492845162b723f",
+  "independent_review": "A fresh Astra reviewer independently compiled the original and candidate TUs, checked all original function bytes/typed relocation identities and allocated data, and reviewed native caller/helper semantics. Final immutable-head evidence is retained by task line-native-return1013; these producer results do not substitute for its source review."
+}

@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "task": "kuriking-native1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3769",
+  "base_commit": "257ef7edb18afda407e1e6957478878ed5952ffa",
+  "upstream_main_commit": "739cbc53d237791752d1cc8c2c1f0b2c8cfe6b1c",
+  "tooling_pr": "https://github.com/tangosdev/sm64ds-decomp/pull/3766",
+  "source": "src/actors/daKuriKing_c.cpp",
+  "change": "Use return new daKuriKing_c; in both registry factories; remove the factory-only ABI extern block and stale Vector3 constructor claims.",
+  "factories": [
+    {
+      "symbol": "daKuriKing_c_classInit_KURIKING_VANISH",
+      "address": "0x02122764",
+      "size": 212
+    },
+    {
+      "symbol": "daKuriKing_c_classInit_KURIKING",
+      "address": "0x02122838",
+      "size": 212
+    }
+  ],
+  "canonical_callback": {
+    "emitted": "_ZN7Vector3C1Ev",
+    "canonical": "func_0203d384",
+    "module": "arm9",
+    "address": "0x0203d384",
+    "size": 4,
+    "array_count": 3,
+    "element_stride": 12
+  },
+  "temporary_pin_changes": 0,
+  "scope": "Source factories and existing production TU manifest; no header, module symbols, delinks, source paths or temporary-pin changes.",
+  "status": "Producer full production checks pass; exact-head independent Source/byte acceptance required before the source-only stacked PR.",
+  "remaining_work": [
+    "Existing scalar ABI bridges, offset arithmetic and other partial reconstruction remain unchanged."
+  ],
+  "gates": {
+    "tested_source_commit": "45e46ef4f8fbc478b7836847cebc6a8238cf627c",
+    "tested_base": "257ef7edb18afda407e1e6957478878ed5952ffa",
+    "production_rom": {
+      "functions_reproduced": 11331,
+      "mismatching_functions": 0,
+      "data_claims_reproduced": 331,
+      "bss_claims": 239,
+      "modules_exact": 106,
+      "new_symbol_errors": 0,
+      "storage_aliases": "exact",
+      "result": "PASS",
+      "advisory_data": "969 verified,1519 partial,1 inherited differing,21 unnamed"
+    },
+    "raw_prepush": {
+      "checked": 56,
+      "verified": 53,
+      "warnings": [
+        {
+          "symbol": "daKuriKing_c_classInit_KURIKING_VANISH",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "symbol": "daKuriKing_c_classInit_KURIKING",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "symbol": "__sinit_daKuriKing_c.cpp",
+          "verdict": "BLIND-31",
+          "blind": 31,
+          "diffs": []
+        }
+      ],
+      "blocking": 0,
+      "qualification": "Raw-object linkcheck does not apply production symbol policies: both new native callback imports are BLIND-1 and the initializer retains BLIND-31. These are not strict passes; the independent normal prepared-object check must close them."
+    },
+    "scout_prepared_parity": {
+      "defined_symbols_equal": 108,
+      "function_rows": 56,
+      "object_rows": 50,
+      "owned_nontext_sections": 4,
+      "owned_nontext_relocations": 97,
+      "temporary_pin_changes": 0,
+      "qualification": "Exact bytes, symbol metadata and typed relocations match after normal permitted transformations. Final independent acceptance is recorded separately."
+    },
+    "metadata_scope": "The existing policies externalize11 RTTI/vtable/ancestor records to retail homes; these are distinct from this TU's4 owned nontext sections. Independent review must check full records, odd-sized strings and vtable preambles.",
+    "raw_metadata": {
+      "symbols": 31,
+      "verified": 11,
+      "verified_bytes": 220,
+      "partial": 20,
+      "partial_bytes": 48,
+      "differs": 0,
+      "unnamed": 0
+    },
+    "declarations": {
+      "scoped_files": 3,
+      "inherited_disagreements": 229,
+      "new_disagreements": 0,
+      "new_header_redeclarations": 0
+    },
+    "port_references": {
+      "checked": 267,
+      "stale": 0
+    }
+  },
+  "source_lf_sha256": "e9e2ac167c274e97ab70be59a11da9519ed2d51d8735d06be0876e4c22b2acac",
+  "review_repairs": [
+    "KURI-NATIVE-001: correct stale Vector3 destructor homeless/deadstrip claim; preserve actual unused D2 and externalized RTTI/vtable policy."
+  ]
+}

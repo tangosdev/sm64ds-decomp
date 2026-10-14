@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "task": "remaining4-pic1012",
+  "session": "codex-r4-pic1012",
+  "status": "matched_enrolled_locally_independent_review_pending",
+  "base_commit": "dc1b0e7fb20a3dcd4f93c704641a25df9d4e831e",
+  "source": "src/_ZN11daPicGate_c19func_ov080_021261f4Ev.cpp",
+  "target": {
+    "name": "_ZN11daPicGate_c19func_ov080_021261f4Ev",
+    "module": "ov080",
+    "addr": "0x021261f4",
+    "size": 760
+  },
+  "accepted_seed_commit": "0d6e1040c78844c8dba0b857cc1161f9d7c68378",
+  "source_blob_unchanged_from_seed": true,
+  "source_sha256": "2fd22435f591a5853db9756267e02f7437a73a6f9987d4e3b3afd30379db85ae",
+  "mechanism": [
+    "Disable propagation for this real member, as in matched material-packing oracles; restore mode afterward. Use a scalar inline texture-parameter pack helper with unchanged material fields and NORMAL texgen.",
+    "Replace shared zero receiver with zero at its four uses. Load and narrow Z, then X, zero-extend packed X in its existing receiver, then load and narrow Y. This restores all vertex-loop instructions and the complete pack schedule."
+  ],
+  "semantics": [
+    "Vertex component loads are reordered without any intervening vertex writes. Signed right shift and signed16 narrowing remain before unsigned16 packing; normal, XY, Z register writes retain their order.",
+    "Texture format, S/T size, palette-zero selector, address shift and NORMAL texgen reproduce existing material interpretation. No ABI, header, layout, callee or relocation changes."
+  ],
+  "reconstruction": {
+    "method": "genuine daPicGate_c member",
+    "layout": "existing Vertex and Ov080Mat layouts retained",
+    "lifecycle_metadata": "unchanged; outside function scope",
+    "attribution": "no move or rename",
+    "remaining": "independent review and coordinator-owned integration/enrollment; no TU promotion performed"
+  },
+  "enrollment": {
+    "complete": true,
+    "start": "0x021261f4",
+    "end": "0x021264ec",
+    "path": "config/arm9/overlays/ov080/delinks.txt",
+    "scope": "One function; no TU fold"
+  },
+  "metadata": {
+    "near_miss_before": [
+      "func_0202ffec",
+      "_ZN11daPicGate_c19func_ov080_021261f4Ev",
+      "func_ov075_02116128",
+      "func_02009e70",
+      "func_01ff8df8",
+      "func_01ffa588"
+    ],
+    "near_miss_after": [
+      "func_0202ffec",
+      "func_ov075_02116128",
+      "func_02009e70",
+      "func_01ff8df8",
+      "func_01ffa588"
+    ],
+    "historical_attempts_preserved": true,
+    "matched_attempt": "09ea9d07356c4fd7ad621bfa6e503095",
+    "matched_attempt_lineage": {
+      "usedNearMissDraft": true,
+      "divergences": 0,
+      "prevBestDivergences": 5,
+      "improvedNearMiss": true
+    },
+    "match_model_provenance_preserved": true,
+    "all_existing_function_authors_unchanged": true,
+    "new_function_credit": {
+      "id": "ov080:0x021261f4",
+      "author": "andrewboudreau",
+      "name": "_ZN11daPicGate_c19func_ov080_021261f4Ev"
+    }
+  },
+  "review_rework": {
+    "rejected_candidate": "7a99789f74f0f609a1856bb58da4a7af70511ba2",
+    "fixed_findings": [
+      "pic1012-attempt-lineage",
+      "pic1012-sibling-status"
+    ],
+    "correction": "Accurate five-to-zero draft lineage; sibling TU banner now records the separately matched and enrolled renderer. No executable source changed."
+  },
+  "proof": {
+    "strict_linkcheck": {
+      "command": "python tools/linkcheck.py --name _ZN11daPicGate_c19func_ov080_021261f4Ev --c src/_ZN11daPicGate_c19func_ov080_021261f4Ev.cpp --addr 0x021261f4 --size 0x2f8 --module ov080",
+      "exit_code": 0,
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    "prepush_linkcheck": {
+      "command": "python tools/prepush_linkcheck.py --range dc1b0e7fb20a3dcd4f93c704641a25df9d4e831e..HEAD",
+      "exit_code": 0,
+      "checked": 18,
+      "verified": 18,
+      "warnings": 0,
+      "blocking": 0
+    },
+    "declarations": {
+      "command": "python tools/check_decl_agreement.py --changed dc1b0e7fb20a3dcd4f93c704641a25df9d4e831e",
+      "exit_code": 0,
+      "source_files": 2,
+      "symbols_defined": 18,
+      "files_in_scope": 459,
+      "existing_scoped_disagreements": 4159,
+      "new_disagreements": 0,
+      "new_header_copies": 0
+    },
+    "rombuild": {
+      "command": "python tools/rombuild.py -j16 --no-rom",
+      "exit_code": 0,
+      "build_start_commit": "46757b322435a1bbe134386ede92ca7f1de30db8",
+      "compile_link_inputs_unchanged_after_build_start": true,
+      "functions_reproduce": 11290,
+      "function_mismatches": 0,
+      "source_owned_data_reproduce": 331,
+      "source_owned_data_mismatches": 0,
+      "modules_exact": 106,
+      "modules_total": 106,
+      "module_set_sha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "intact_tu_modules": true,
+      "new_symbol_errors": [],
+      "storage_alias_errors": [],
+      "report": "build/rombuild-report.json",
+      "log": "build/remaining4-rombuild-rework.log",
+      "limitations": [
+        "Final ROM packaging skipped by --no-rom.",
+        "The separate raw object-data inventory retains one existing arm9 dCcAcPos vtable difference; no data/header/layout changes in this candidate.",
+        "Strict ROM-gap control has nine baseline symbol errors; final intact-TU gate has zero new symbol errors."
+      ]
+    },
+    "private_ci": "Not run: no source branch push or PR."
+  },
+  "next_action": "Independent exact-head source and byte verification; no source push, PR, merge, or TU folding performed."
+}

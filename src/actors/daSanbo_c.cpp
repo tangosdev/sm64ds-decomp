@@ -32,8 +32,8 @@
  *   RunningSlidingDustAt and Player::Hurt take Fix12 by value
  *   (func_ov096_02136434, func_ov096_02135948, func_ov096_02136134,
  *   func_ov096_021365d4).
- *   - func_ov096_02135e2c reads SurfaceInfo at floor result+4;
- *   the wall normal it fetches the same way is unused.
+ *   - func_ov096_02135e2c copies the floor and wall collision normals;
+ *   the wall normal is unused.
  *   - data_ov096_02137b20 and data_ov096_02137b28 are the head
  *   and segment file handles (InitResources LoadFile, CleanupResources
  *   Release). g_profile_SANBO stays in its own file.
@@ -55,6 +55,7 @@
 /* common.h first: Matrix4x3 must stay the flat s32[12] spelling. */
 #include "common.h"
 #include "daSanbo_c.h"
+#include "dBgPi.h"
 #include "types.h"
 #include "SharedFilePtr.h"
 #include "decl_common.h"
@@ -635,7 +636,7 @@ void daSanbo_c::func_ov096_02135e2c(dBgCh_Actr *clsn)
 
     func_02038414(clsn);
     if (clsn->IsOnGround()) {
-        ((SurfaceInfo *)((char *)clsn->GetFloorResult() + 4))->CopyNormalTo(*(Vector3 *)n0);
+        static_cast<dBgPi *>(clsn->GetFloorResult())->surface.CopyNormalTo(*(Vector3 *)n0);
         if (n0[1] != 0) {
             long long ax = (long long)n0[0] * (long long)unk_0a4;
             long long az = (long long)n0[2] * (long long)unk_0ac;
@@ -645,7 +646,7 @@ void daSanbo_c::func_ov096_02135e2c(dBgCh_Actr *clsn)
         }
     }
     if (clsn->IsOnWall()) {
-        ((SurfaceInfo *)((char *)clsn->GetWallResult() + 4))->CopyNormalTo(*(Vector3 *)n1);
+        static_cast<dBgPi *>(clsn->GetWallResult())->surface.CopyNormalTo(*(Vector3 *)n1);
     }
 }
 

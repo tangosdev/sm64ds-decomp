@@ -4,8 +4,10 @@ typedef struct {
     int slots[16];
 } Mgr;
 
-extern void func_00000000(void);
-extern void func_00000600(void);
+/* NitroSDK linker constants: the address is the value (the LCF assigns
+ * SDK_SYS_STACKSIZE = 0 and SDK_IRQ_STACKSIZE = 0x600). */
+extern void SDK_SYS_STACKSIZE(void);
+extern void SDK_IRQ_STACKSIZE(void);
 
 extern int data_020a6130;
 extern Mgr data_020a6134;
@@ -47,14 +49,14 @@ void func_02058308(void)
     *(char **)((char *)&data_020a6134 + 0xc) = data_020a621c;
     *(char **)((char *)&data_020a6134 + 8) = data_020a621c;
 
-    ovr = (s32)func_00000000;
+    ovr = (s32)SDK_SYS_STACKSIZE;
     if (ovr == 0) {
         base = 0x23c0020 - ovr;
     } else {
-        base = (u32)&data_023c0000 + 0x3fc0 - (s32)func_00000600 - ovr;
+        base = (u32)&data_023c0000 + 0x3fc0 - (s32)SDK_IRQ_STACKSIZE - ovr;
     }
 
-    end = (u32)&data_023c0000 + 0x3fc0 - (s32)func_00000600;
+    end = (u32)&data_023c0000 + 0x3fc0 - (s32)SDK_IRQ_STACKSIZE;
 
     *(int *)(data_020a621c + 0x88) = end;
     *(int *)(data_020a621c + 0x84) = base;

@@ -1,6 +1,7 @@
 //cpp
 /* Slot_machine scenes: Slot1 (three-reel slots) and Slot3 (the lamp/reel
- * variant), ov006 .text 0x0210a8c0..0x0210c9e0.
+ * variant), ov006 .text 0x0210a8c0..0x0210d740 -- the whole run, both
+ * classes' every function, Slot1's factory included.
  *
  * _ZTS12dScMgSlot1_c 0x0213e5bc. _ZTI12dScMgSlot1_c 0x0213e5a0.
  * _ZTV12dScMgSlot1_c 0x0213eb40. _ZTS12dScMgSlot3_c 0x0213e5ac.
@@ -14,8 +15,9 @@
  */
 
 // leftovers:
-// - Slot1 Behavior is not yet byte-matching; its initialization and factory
-//   keep their existing production owners outside this TU.
+// - Slot1 InitResources fills the reel strips through a raw char* cursor
+//   over 0x46c0..0x46ff: the member-indexed form DIFFs (measured), so only
+//   the scalar stores use the unk_46ff/unk_46a4/unk_4702 members.
 // - The SlotReels view (reel strips, stops, matchSymbol, wilds) is local:
 //   the strip lengths and win state on dScMgSlot1_c.h/dScMgSlot3_c.h are
 //   still pads, so the reel helpers index through it (callers: the Slot3
@@ -35,6 +37,8 @@
 #include "private/ov006_slotgrid.h"
 #include "types.h"
 #include "PlayerInput.h"
+#include "dWipe_c.h"
+#include "G2x.h"
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which is why its
@@ -46,6 +50,10 @@
 struct G2 { static void* GetBG1ScrPtr(); };
 
 typedef void (dScMgSlot3_c::*SlotState)();
+
+/* One player's 4-byte touch record (PlayerInput.h): Slot1 Behavior reads
+ * x/y through this view so the compiler, not the source, hoists them. */
+struct TouchRec { u8 held; u8 edge; u8 x; u8 y; };
 
 struct SlotReels {
     u8 pad[0x46c0];
@@ -141,7 +149,16 @@ extern s16 data_ov006_0213e654[][2];
 extern s16 data_ov006_0213e656[][2];
 extern s16 data_ov006_0213e4f8[][2];
 extern s16 data_ov006_0213e4fa[][2];
-extern struct dFdBrightness_c data_0209f61c;
+extern dWipe_c data_0209f61c;
+extern int _ZTV12dScMgSlot1_c[];
+extern int _ZTVN12dScMgSlot1_c9betIcon_cE[];
+extern int _ZTV9dThIcon_c[];
+extern char *_ZN2G213GetBG2CharPtrEv(void);
+extern char *_ZN2G212GetBG3ScrPtrEv(void);
+extern char *_ZN3G2S13GetBG0CharPtrEv(void);
+extern char *_ZN3G2S12GetBG0ScrPtrEv(void);
+extern char *_ZN3G2S12GetBG1ScrPtrEv(void);
+extern char *_ZN3G2S12GetBG3ScrPtrEv(void);
 extern void func_ov004_020af770(void* a0, int a1, int a2, int a3, int a4, int a5, unsigned short a6);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 }
@@ -1295,6 +1312,369 @@ s32 dScMgSlot1_c::Render()
 }
 
 #pragma opt_strength_reduction on
+
+// @symbol _ZN12dScMgSlot1_c8BehaviorEv
+/* Mario Slot's per-frame state machine (vtable slot 6). Byte-exact since
+ * 2026-10-12; the 19-word residue banked as a compiler floor was a source
+ * artefact. The object is spelled ONE way here, through members: a draft
+ * that read some fields as members and others through `char *c =
+ * (char *)this` with literal offsets made 2004/b56 form the hoisted touch
+ * record address as one folded `add r0, r0, r2, lsl #2` (0x818); with a
+ * single name it materializes `lsl r1, r2, #2` / `add r0, r0, r1` as the
+ * cartridge does (+0x268). Case 7 is the one deliberate exception: the ROM
+ * walks the reel-symbol rows with a strided copy of `this` (mov r5, r4).
+ * The touch x/y are read INSIDE the hit loop through TouchRec, not hoisted
+ * by hand; the compiler hoists them and that colours the loop. */
+s32 dScMgSlot1_c::Behavior()
+{
+    int i;
+
+    switch (unk_46b4) {
+    case 0:
+        for (i = 0; i < 3; i++) {
+            unk_4702[i] = 1;
+        }
+        unk_4705 = 0;
+        unk_470a = 0;
+        unk_470b = 0;
+        unk_46b4 = 1;
+        func_ov006_0210c2d4(&mBetIcon);
+        if (mPromptBlinkCount == 0) {
+            mPromptEnabled = 1;
+            mPromptBlinkCount = 1;
+            mPromptBlinkTimer = 0;
+        }
+        unk_470c = 0x3c;
+        break;
+    case 1:
+        if (DecIfAbove0_Byte(&unk_470c) == 0) {
+            Sound::PlayBank2_2D(0x160);
+            unk_470c = 0x1e;
+            unk_46b4 = 2;
+        }
+        break;
+    case 2:
+        if (DecIfAbove0_Byte(&unk_470c) == 0) {
+            unk_46b4 = 3;
+        }
+        break;
+    case 3: {
+        int moving = 0;
+        for (i = 0; i < 3; i++) {
+            if (unk_4702[i] == 1 || unk_46a4[i] != 0) {
+                moving++;
+                unk_46a4[i] -= data_ov006_0213e600[unk_4708 + i];
+                if ((int)unk_46a4[i] < 0) {
+                    if (unk_4702[i] == 1) {
+                        unk_46ff[i]++;
+                        unk_46ff[i] %= 21;
+                        unk_46a4[i] += 0x40000;
+                    } else {
+                        unk_46a4[i] = 0;
+                    }
+                }
+            }
+        }
+        if (moving != 0) {
+            unk_46b0 = Sound_PlayIfNotActive(unk_46b0, 2, 0x161, 0);
+        }
+        if (unk_4705 < 3) {
+            int hit = 0;
+            u8 idx = gActivePlayerSlot;
+            if (gTouchHeld[idx * 4] != 0) {
+                if (gTouchEdge[idx * 4] != 0) {
+                    hit = 1;
+                }
+            }
+            if (hit != 0) {
+                for (i = 0; i < 3; i++) {
+                    if (unk_4702[i] == 1) {
+                        int dx = ((TouchRec *)gTouchHeld)[idx].x - data_ov006_0213e63c[i][0];
+                        int dy = ((TouchRec *)gTouchHeld)[idx].y - data_ov006_0213e63c[i][1];
+                        if (dx <= 0x20 && dx >= -0x20 && dy <= 0x20 && dy >= -0x20) {
+                            unk_4702[i] = 0;
+                            unk_4705++;
+                            if (mBetIcon.unk_011 != 0) {
+                                mBetIcon.unk_011 = 0;
+                                func_ov004_020ad79c(unk_0a8, mHudScore);
+                            }
+                            func_02012718(0x162, data_ov006_0213e63c[i][0] << 12);
+                            break;
+                        }
+                    }
+                }
+            }
+
+        } else {
+            int stopped = 1;
+            for (i = 0; i < 3; i++) {
+                if (unk_46a4[i] != 0) {
+                    stopped = 0;
+                }
+            }
+            if (stopped == 1) {
+                unk_470a = func_ov006_0210c500(this);
+                unk_46b8 = 0;
+                if (unk_470a != 0) {
+                    unk_46b8 += data_ov006_0213e4d8[unk_4709];
+                }
+                if (unk_470b != 0 && unk_470b < 3) {
+                    unk_46b8 += unk_470b << 1;
+                }
+                func_ov004_020ad79c(unk_0a8 + unk_46b8 * mBetIcon.unk_01c, mHudScore);
+                unk_46b4 = 4;
+                unk_470c = 0x3c;
+            }
+        }
+        break;
+    }
+    case 4:
+        if (DecIfAbove0_Byte(&unk_470c) == 0) {
+            if (unk_470a != 0) {
+                func_ov006_0210c218(pad_4684, data_ov006_0213e654[unk_4709][0], data_ov006_0213e656[unk_4709][0]);
+            }
+            if (unk_470b != 0 && unk_470b < 3) {
+                func_ov006_0210c218(pad_4690, data_ov006_0213e4f8[unk_470b - 1][0], data_ov006_0213e4fa[unk_470b - 1][0]);
+            }
+            if (unk_46b8 != 0) {
+                unk_46b4 = 5;
+                unk_470c = 0x64;
+                func_ov006_0210c180(pad_469c);
+                func_02012790(0x26);
+            } else {
+                unk_46b4 = 7;
+                unk_470c = 0x3c;
+                func_02012790(0xe);
+            }
+            mPromptEnabled = 0;
+        }
+        break;
+    case 5:
+        if (DecIfAbove0_Byte(&unk_470c) == 0) {
+            func_ov006_0210c2c0(&mBetIcon, unk_46b8);
+            unk_470c = 0x3c;
+            unk_46b4 = 6;
+        }
+        break;
+    case 6: {
+        int done = (mBetIcon.unk_020 == 0) ? 1 : 0;
+        if (done != 0) {
+            func_ov004_020adb1c(unk_0a8);
+            if (DecIfAbove0_Byte(&unk_470c) == 0) {
+                OnYoshiTryEat(4);
+            }
+        }
+        break;
+    }
+    case 7:
+        if (DecIfAbove0_Byte(&unk_470c) == 0) {
+            if (unk_0a8 > 0) {
+                OnYoshiTryEat(5);
+            } else {
+                int j;
+                char *p = (char *)this;
+                for (j = 0; j < 3; j++) {
+                    unk_46a4[j] += 0x40000;
+                    unk_46ff[j]++;
+                    unk_46ff[j] %= 21;
+                    *(u8 *)(p + unk_46ff[j] + 0x46c0) = 0xd;
+                    p += 0x15;
+                }
+                unk_46b4 = 9;
+            }
+        }
+        break;
+    case 9:
+    case 11: {
+        int idx = (unk_46b4 - 9) >> 1;
+        unk_46a4[idx] -= 0x2000;
+        if ((int)unk_46a4[idx] < 0) {
+            unk_46a4[idx] = 0;
+            unk_470c = 0xa;
+            unk_46b4++;
+            func_02012718(0x164, data_ov006_0213e63c[idx][0] << 12);
+            if (idx == 0) {
+                func_ov004_020ae274((void *) 2);
+            }
+        }
+        break;
+    }
+    case 13:
+        unk_46a4[2] -= 0x2000;
+        if ((int)unk_46a4[2] < 0) {
+            unk_46a4[2] = 0;
+            unk_470c = 0x3c;
+            unk_46b4 = 8;
+            func_02012718(0x164, data_ov006_0213e63c[2][0] << 12);
+        }
+        break;
+    case 8:
+        if (DecIfAbove0_Byte(&unk_470c) == 0) {
+            dScene_c::SetFaders(&data_0209f61c);
+            data_0209f61c.func_0202ec9c(2);
+            dScene_c::StartSceneFade(5, 0, 0);
+        }
+        break;
+    case 10:
+    case 12:
+        if (DecIfAbove0_Byte(&unk_470c) == 0) {
+            unk_46b4++;
+        }
+        break;
+    }
+    mBetIcon.Behavior();
+    func_ov006_0210c278(pad_4684);
+    func_ov006_0210c278(pad_4690);
+    func_ov006_0210c1a8(pad_469c);
+    return 1;
+}
+
+// @symbol _ZN12dScMgSlot1_c13InitResourcesEv
+/* The ov004 scroll words (data_ov004_020bc85c..data_ov004_020bc8b8) name
+ * no struct; they are stored raw. The reel-table fill stays a raw char*
+ * cursor over 0x46c0..0x46ff (see leftovers). */
+s32 dScMgSlot1_c::InitResources()
+{
+    char *c = (char *)this;
+    volatile unsigned short fill;
+    int i, j;
+
+    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 2;
+    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x1210;
+    *(volatile u16 *)0x400000c = *(volatile u16 *)0x400000c & ~0x40;
+    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 3;
+    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1310;
+    *(volatile u16 *)0x400000e = *(volatile u16 *)0x400000e & ~0x40;
+
+    LoadCompressedFileAt(0x7d, (void *)func_02054d88());
+    LoadCompressedFileAt(0x7b, _ZN2G213GetBG2CharPtrEv() + 0x7800);
+    {
+        int h = LoadFile(0x7e);
+        _ZN2GX10LoadBGPlttEPKvjj((const void *)h, 0x60, 0x1a0);
+        Deallocate((void *)h);
+    }
+    LoadCompressedFileAt(0x7c, _ZN2G212GetBG2ScrPtrEv());
+    LoadCompressedFileAt(0x7f, _ZN2G212GetBG3ScrPtrEv());
+
+    data_0209d45c = 0x1c;
+
+    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 1;
+    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x1410;
+    *(volatile u16 *)0x4001008 = *(volatile u16 *)0x4001008 & ~0x40;
+    *(volatile u16 *)0x400100a = (*(volatile u16 *)0x400100a & ~3) | 1;
+    *(volatile u16 *)0x400100a = (*(volatile u16 *)0x400100a & 0x43) | 0x4010;
+    *(volatile u16 *)0x4001008 = *(volatile u16 *)0x4001008 & ~0x40;
+    SetSubBg1Offset(0x100, 0);
+
+    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 2;
+    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x1218;
+    *(volatile u16 *)0x400100c = *(volatile u16 *)0x400100c & ~0x40;
+    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
+    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x1310;
+    *(volatile u16 *)0x400100e = *(volatile u16 *)0x400100e & ~0x40;
+
+    LoadCompressedFileAt(0x72, _ZN3G2S13GetBG2CharPtrEv());
+    LoadCompressedFileAt(0x7b, _ZN3G2S13GetBG0CharPtrEv() + 0x7800);
+    {
+        int h = LoadFile(0x73);
+        _ZN3GXS10LoadBGPlttEPKvjj((const void *)h, 0x60, 0x1a0);
+        Deallocate((void *)h);
+    }
+    LoadCompressedFileAt(4, _ZN3G2S12GetBG0ScrPtrEv());
+    LoadCompressedFileAt(1, _ZN3G2S12GetBG1ScrPtrEv() + 0x800);
+    LoadCompressedFileAt(0x74, _ZN3G2S12GetBG2ScrPtrEv());
+
+    {
+        char *d3 = _ZN3G2S12GetBG3ScrPtrEv();
+        fill = 0x43e4;
+        MultiStore16(fill, d3, 0x800);
+    }
+
+    LoadCompressedFileAt(data_ov006_0213e628[GetGameLanguage()], (void *)0x6400000);
+    LoadCompressedFileAt(data_ov006_0213e628[GetGameLanguage()], (void *)0x6600000);
+
+    {
+        int h = LoadFile(0xf1);
+        _ZN2GX11LoadOBJPlttEPKvjj((const void *)h, 0, 0x40);
+        _ZN3GXS11LoadOBJPlttEPKvjj((const void *)h, 0, 0x40);
+        Deallocate((void *)h);
+    }
+
+    data_0209d454 = 0x1d;
+    *(volatile u16 *)0x4000050 = 0;
+    G2x::SetBlendAlpha((volatile u16 *)0x4001050, 1, 0x1c, 7, 9);
+
+    data_ov004_020bc88c = 0x80;
+    data_ov004_020bc860 = 0x40;
+    data_ov004_020bc878 = 0x80;
+    data_ov004_020bc890 = 0x40;
+    data_ov004_020bc8b8 = 0x80;
+    data_ov004_020bc8b4 = 0x40;
+
+    if ((int)param1 & 0xff) {
+        unsigned char *tbl = data_ov006_0213ea20;
+        char *p = c;
+        for (j = 0; j < 3; j++) {
+            for (i = 0; i < 0x15; i++) {
+                *(u8 *)(p + 0x46c0 + i) = tbl[i];
+            }
+            unk_46ff[j] = 0;
+            unk_46a4[j] = 0x40000;
+            unk_4702[j] = 1;
+            tbl += 0x15;
+            p += 0x15;
+        }
+    } else {
+        int k;
+        unsigned char *tbl = data_ov006_0213e9e0;
+        char *p = c;
+        for (k = 0; k < 3; k++) {
+            for (i = 0; i < 0x15; i++) {
+                *(u8 *)(p + 0x46c0 + i) = tbl[i];
+            }
+            unk_46ff[k] = 0;
+            unk_46a4[k] = 0x40000;
+            unk_4702[k] = 1;
+            tbl += 0x15;
+            p += 0x15;
+        }
+    }
+
+    unk_4709 = 5;
+    unk_46bc = 0xa;
+    func_ov004_020adb1c(unk_46bc);
+    func_ov006_0210c478((char *)&mBetIcon);
+    OnYoshiTryEat(3);
+    func_ov004_020b04d0(0x20);
+    data_0208ee44 = 1;
+    return 1;
+}
+
+// @symbol dScMgSlot1_c_classInit
+/* The name is reconstructed; the ROM proves the class, not the spelling.
+ * The allocation, the base C2 call and the three vptr stores are written out
+ * by hand: the ROM has no dScMgSlot1_c C1, so `new dScMgSlot1_c` cannot
+ * link. This TU emits _ZTV12dScMgSlot1_c and the betIcon_c vtable itself, so
+ * their stores take the object-relative +8 the Slot3 factory above uses;
+ * dThIcon_c's table is ov001's and is stored by its configured address. */
+extern "C" {  /* .c-derived member: C linkage for the whole block */
+void *dScMgSlot1_c_classInit(void)
+{
+    dScMgSlot1_c *scene =
+        (dScMgSlot1_c *)_ZN7fBase_cnwEj(sizeof(dScMgSlot1_c));
+    if (scene) {
+        _ZN11dScMgBase_cC2Ev(scene);
+        *(int *)scene = (int)&_ZTV12dScMgSlot1_c[2];
+        dScMgSlot1_c::betIcon_c *icon = &scene->mBetIcon;
+        *(int *)icon = (int)_ZTV9dThIcon_c;
+        *(int *)icon = (int)&_ZTVN12dScMgSlot1_c9betIcon_cE[2];
+        func_ov006_0210c2b0((char *)scene->pad_4684);
+        func_ov006_0210c2b0((char *)scene->pad_4690);
+        func_ov006_0210c208((char *)scene->pad_469c);
+    }
+    return scene;
+}
+}
 
 /* Static-init globals (was the handwritten __sinit_ov006_02132894 shard).
  * The Slot3 state table plain-copied from the ROM PMF constants, in

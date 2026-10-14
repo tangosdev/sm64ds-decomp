@@ -2269,6 +2269,205 @@ def _relocation_destination_address(reloc_type, symbol, public_address, addend,
     return public_address + addend
 
 
+def canonical_duplicate_policies(entry, homes=None):
+    """Resolve explicit relocation-free duplicate imports, without changing config.
+
+    A canonical name identifies an existing function; it does not grant ownership
+    or infer identity from equal bytes. The row's reason records that source/ROM
+    evidence. Object shape and the complete body are proved separately, before any
+    section is discarded.
+    """
+    rows = entry.get("compiler_only_output") or []
+    if not isinstance(rows, list):
+        return [], []  # The existing policy parser reports malformed containers.
+    selected = [r for r in rows if isinstance(r, dict) and "canonical_symbol" in r]
+    if not selected:
+        return [], []
+    homes = all_symbol_homes() if homes is None else homes
+    owned = {r.get("symbol") for r in entry.get("functions", [])}
+    owned.update(r["symbol"] for _section, r in manifest_owned_symbol_rows(entry))
+    other_policy_names = set()
+    for field in ("undefined_symbol_aliases", "defined_symbol_renames",
+                  "symbol_binding_rewrites", "externalized_output"):
+        for row in entry.get(field, []) or []:
+            if isinstance(row, dict):
+                other_policy_names.update(row.get(k) for k in
+                                          ("symbol", "canonical_symbol", "from", "to"))
+    source_names = [r.get("symbol") for r in rows if isinstance(r, dict)]
+    targets = [r.get("canonical_symbol") for r in selected]
+    # Key by NAME as well as address: an object alias at a function address must
+    # never inherit the function's extent merely because the addresses coincide.
+    functions = collections.defaultdict(list)
+    for path, module in RL.module_universe():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            match = EN.SYM_RE.match(line)
+            if match:
+                functions[match.group(1)].append((RL.normalize_module(module),
+                    int(match.group(4), 16), int(match.group(3), 16)))
+    plans, reasons = [], []
+    for row in selected:
+        name, target = row.get("symbol"), row.get("canonical_symbol")
+        prefix = f"canonical duplicate {name}"
+        errors = []
+        if not isinstance(name, str) or not name or not isinstance(target, str) or not target:
+            reasons.append(f"{prefix}: symbol and canonical_symbol must be non-empty strings")
+            continue
+        if row.get("disposition") != "deadstrip-duplicate":
+            errors.append("canonical_symbol requires deadstrip-duplicate")
+        if not str(row.get("reason", "")).strip():
+            errors.append("needs a non-empty reason documenting callback identity")
+        if name in owned or target in owned:
+            errors.append("source or canonical symbol is owned by this manifest")
+        if source_names.count(name) != 1 or targets.count(target) != 1:
+            errors.append("duplicate source or canonical destination")
+        if target in source_names or {name, target} & other_policy_names:
+            errors.append("overlapping alias, binding, or removal policies")
+        actual = [(RL.normalize_module(m), a) for m, a in homes.get(target, [])]
+        if len(actual) != 1:
+            errors.append("canonical symbol needs exactly one configured ROM home")
+        if homes.get(name):
+            errors.append("emitted name already has configured ROM homes")
+        declared = RB._declared_home(row)
+        if (("canonical_module" in row) != ("canonical_address" in row)
+                or declared == "bad" or (declared is not None and actual != [declared])):
+            errors.append("declared canonical home does not match its unique configured home")
+        definitions = functions.get(target, [])
+        if len(definitions) != 1 or not actual or definitions[0][:2] != actual[0]:
+            errors.append("canonical symbol must be one uniquely configured sized function")
+        if errors:
+            reasons.extend(f"{prefix}: {error}" for error in errors)
+            continue
+        module, address, size = definitions[0]
+        if size <= 0:
+            errors.append("canonical function must have a positive extent")
+        if any(RL.normalize_module(m) == module and address <= a < address + size
+               for symbol in owned for m, a in homes.get(symbol, [])):
+            errors.append("canonical function contains a manifest-owned symbol")
+        if not entry.get("module"):
+            errors.append("manifest module is required to exclude owned ranges")
+        elif RL.normalize_module(entry["module"]) == module:
+            # Ordinary multi-function entries need not declare section ranges.
+            # A canonical callback inside an owned function must still be refused.
+            for function in entry.get("functions", []):
+                try:
+                    start = int(str(function["address"]), 0)
+                    extent = int(str(function["size"]), 0)
+                except (KeyError, TypeError, ValueError):
+                    errors.append("owned function needs a valid address and size")
+                    continue
+                if extent <= 0:
+                    errors.append("owned function needs a positive extent")
+                elif address < start + extent and start < address + size:
+                    errors.append("canonical function overlaps a manifest-owned function")
+            # Section rows are optional for ordinary manifests. Every declared
+            # non-text object also owns its full emitted storage, including a
+            # vtable's preamble before its public address point.
+            for field in _SECTION_SYMBOL_FIELDS.values():
+                rows = entry.get(field, [])
+                if not isinstance(rows, list) or any(
+                        not isinstance(row, dict) or not isinstance(row.get("symbol"), str)
+                        or not row["symbol"] for row in rows):
+                    errors.append(f"owned {field} must contain named object rows")
+            for section, row in manifest_owned_symbol_rows(entry):
+                label = f"owned {section} object {row['symbol']}"
+                address_fields = ("address", "rom_symbol_address",
+                                  "emitted_storage_address", "address_point_bias")
+                if any(not isinstance(row[key], (str, int)) or isinstance(row[key], bool)
+                       for key in address_fields if key in row):
+                    errors.append(f"{label} needs integer addresses and address-point bias")
+                    continue
+                start, storage_error = _manifest_emitted_addr(row)
+                try:
+                    extent = int(str(row["size"]), 0)
+                except (KeyError, TypeError, ValueError):
+                    errors.append(f"{label} needs a valid size")
+                    continue
+                if storage_error or start is None:
+                    errors.append(f"{label} needs a valid emitted storage address: "
+                                  f"{storage_error or 'missing or invalid address'}")
+                    continue
+                end = start + extent
+                public = _manifest_addr(row)
+                if (extent <= 0 or start < 0 or end > 0x100000000
+                        or not start <= public < end):
+                    errors.append(f"{label} needs a positive storage extent containing its public address")
+                elif address < end and start < address + size:
+                    errors.append(f"canonical function overlaps {label} storage")
+            for section in entry.get("sections", []):
+                try:
+                    start, end = int(str(section["start"]), 0), int(str(section["end"]), 0)
+                except (KeyError, TypeError, ValueError):
+                    errors.append("invalid owned range")
+                    continue
+                if address < end and start < address + size:
+                    errors.append("canonical function overlaps a manifest-owned range")
+        body = BP.target_bytes(module, address, size) if size > 0 else None
+        if body is None or len(body) != size:
+            errors.append("complete canonical ROM bytes are unavailable")
+        reasons.extend(f"{prefix}: {error}" for error in errors)
+        if not errors:
+            plans.append({"symbol": name, "canonical_symbol": target, "module": module,
+                          "address": address, "size": size, "body": bytes(body)})
+    return plans, reasons
+
+
+def verify_canonical_duplicates(obj_bytes, plans):
+    """Prove complete, dedicated vague bodies and reject every relocation in them."""
+    if not plans:
+        return []
+    elf = ELFFile(io.BytesIO(obj_bytes))
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return ["canonical duplicates: object has no symbol table"]
+    symbols = list(symtab.iter_symbols())
+    config = RA.build_config_relocs()
+    reasons = []
+    for plan in plans:
+        name = plan["symbol"]
+        prefix = f"canonical duplicate {name}"
+        matches = [s for s in symbols if s.name == name]
+        if len(matches) != 1:
+            reasons.append(f"{prefix}: needs exactly one emitted definition")
+            continue
+        symbol = matches[0]
+        index = symbol["st_shndx"]
+        if not isinstance(index, int) or index <= 0 or index >= elf.num_sections():
+            reasons.append(f"{prefix}: is not a section definition")
+            continue
+        section = elf.get_section(index)
+        if (symbol["st_info"]["type"] != "STT_FUNC"
+                or symbol["st_info"]["bind"] != "STB_LOPROC"
+                or section["sh_type"] != "SHT_PROGBITS"
+                or not section["sh_flags"] & 4):
+            reasons.append(f"{prefix}: needs executable STB_LOPROC/STT_FUNC output")
+        if (symbol["st_value"] != 0 or symbol["st_size"] != plan["size"]
+                or section["sh_size"] != plan["size"]):
+            reasons.append(f"{prefix}: symbol and dedicated section must span the exact canonical extent")
+        if any(s["st_shndx"] == index and s.name and s.name != name
+               and not s.name.startswith("$") and s["st_info"]["type"] != "STT_SECTION"
+               for s in symbols):
+            reasons.append(f"{prefix}: section has another occupant")
+        if any(s.name == plan["canonical_symbol"] for s in symbols):
+            reasons.append(f"{prefix}: canonical destination already exists in object")
+        if any(isinstance(section, RelocationSection) and section["sh_info"] == index
+               and section.num_relocations() for section in elf.iter_sections()):
+            reasons.append(f"{prefix}: emitted relocations are unsupported")
+        for relocations in elf.iter_sections():
+            if not isinstance(relocations, RelocationSection):
+                continue
+            for relocation in relocations.iter_relocations():
+                target = symbols[relocation["r_info_sym"]]
+                if target["st_shndx"] == index and target.name != name:
+                    reasons.append(f"{prefix}: reference to its section through another symbol")
+        address = plan["address"]
+        if any(address <= a < address + plan["size"]
+               for a in config.get(plan["module"], {})):
+            reasons.append(f"{prefix}: canonical configured relocations are unsupported")
+        if section.data() != plan["body"]:
+            reasons.append(f"{prefix}: complete body differs from canonical ROM bytes")
+    return reasons
+
+
 def apply_compiler_only_policy(obj_bytes, entry, homes=None):
     """Apply exact-symbol historical dead stripping, or refuse with named reasons.
 
@@ -2301,6 +2500,11 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
     stays green.  Rename the class to the cartridge's RTTI spelling (the row then
     resolves as ``deadstrip-data`` and is compared) or drop the row.
     """
+    canonical, canonical_errors = canonical_duplicate_policies(entry, homes)
+    canonical_errors += verify_canonical_duplicates(obj_bytes, canonical)
+    if canonical_errors:
+        return None, {"requested": [], "canonicalDuplicates": []}, canonical_errors
+    canonical_by_name = {row["symbol"]: row for row in canonical}
     inv = elf_inventory(obj_bytes)
     licensed = {f["symbol"] for f in entry.get("functions", [])}
     licensed |= {row["symbol"] for _sec, row in manifest_owned_symbol_rows(entry)}
@@ -2370,7 +2574,7 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
     homes = all_symbol_homes() if homes is None else homes
     for sym in wanted:
         if sym in duplicates:
-            if not homes.get(sym):
+            if not homes.get(sym) and sym not in canonical_by_name:
                 reasons.append(f"compiler_only_output {sym} is declared a duplicate "
                                f"but has no configured ROM home")
         elif homes.get(sym):
@@ -2411,13 +2615,24 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
     # without claiming the body is the cartridge's; this path has no cartridge bytes
     # and leaves that proof to rombuild, which passes `expect` instead.
     out, plan = OI.derive_deadstrip(obj_bytes, wanted + data,
+                                    expect={r["symbol"]: r["body"] for r in canonical},
                                     duplicates=sorted(duplicates))
     if out is None:
         return None, {"requested": wanted, "objisolate": plan}, \
             [f"compiler-only deadstrip refused: {plan.get('error')}"]
+    if canonical:
+        out, renamed = OI.rename_undefined_symbols(
+            out, {r["symbol"]: r["canonical_symbol"] for r in canonical})
+        if out is None:
+            return None, {"requested": wanted}, [renamed["error"]]
     return out, {"requested": wanted, "deadstripped": plan.get("dead", []),
                  "droppedSections": plan.get("drop", []), "data": data,
-                 "dataExternalized": plan.get("externalise", [])}, []
+                 "dataExternalized": plan.get("externalise", []),
+                 "canonicalDuplicates": [{"symbol": r["symbol"],
+                     "canonicalSymbol": r["canonical_symbol"], "module": r["module"],
+                     "address": f"0x{r['address']:08x}", "size": r["size"],
+                     "bodySha256": hashlib.sha256(r["body"]).hexdigest(),
+                     "relocations": 0} for r in canonical]}, []
 
 
 def manifest_externalized_output(entry):

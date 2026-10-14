@@ -1399,49 +1399,49 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1565",
+      "from": "@1562",
       "to": "@1543",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1565 now; licensed under the existing pin @1543"
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1565 to @1562. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1543."
     },
     {
-      "from": "@1581",
+      "from": "@1578",
       "to": "@1559",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1581 now; licensed under the existing pin @1559"
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1581 to @1578. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1559."
     },
     {
-      "from": "@1573",
+      "from": "@1570",
       "to": "@1551",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1573 now; licensed under the existing pin @1551"
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1573 to @1570. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1551."
     },
     {
-      "from": "@1569",
+      "from": "@1566",
       "to": "@1547",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1569 now; licensed under the existing pin @1547"
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1569 to @1566. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1547."
     },
     {
-      "from": "@1577",
+      "from": "@1574",
       "to": "@1555",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1577 now; licensed under the existing pin @1555"
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1577 to @1574. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1555."
     },
     {
-      "from": "@1575",
+      "from": "@1572",
       "to": "@1553",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1575 now; licensed under the existing pin @1553"
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1575 to @1572. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1553."
     },
     {
-      "from": "@1571",
+      "from": "@1568",
       "to": "@1549",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1571 now; licensed under the existing pin @1549"
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1571 to @1568. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1549."
     },
     {
-      "from": "@1579",
+      "from": "@1576",
       "to": "@1557",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1579 now; licensed under the existing pin @1557"
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1579 to @1576. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1557."
     },
     {
-      "from": "@1567",
+      "from": "@1564",
       "to": "@1545",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1567 now; licensed under the existing pin @1545"
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1567 to @1564. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1545."
     }
   ]
 }

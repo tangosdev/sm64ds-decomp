@@ -1194,9 +1194,6 @@
       "src/minigames/d_s_mg_bsc.cpp": [
         "param:#1 int"
       ],
-      "src/minigames/d_s_mg_slot1.cpp": [
-        "param:#1 int"
-      ],
       "src/unnamed/arm9/0200/func_0200f13c.cpp": [
         "param:#1 unsigned int"
       ],
@@ -6510,9 +6507,6 @@
       "src/minigames/d_s_mg_base.cpp": [
         "return:int"
       ],
-      "src/minigames/d_s_mg_slot1.cpp": [
-        "return:char *"
-      ],
       "src/minigames/d_s_mg_trampoline2.cpp": [
         "return:char *"
       ],
@@ -6524,7 +6518,7 @@
       "src/minigames/d_s_mg_base.cpp": [
         "return:int"
       ],
-      "src/minigames/d_s_mg_slot1.cpp": [
+      "src/actors/dScMgSlots.cpp": [
         "return:char *"
       ],
       "src/minigames/d_s_mg_trampoline2.cpp": [
@@ -6542,7 +6536,7 @@
         "return:int",
         "return:int *"
       ],
-      "src/minigames/d_s_mg_slot1.cpp": [
+      "src/actors/dScMgSlots.cpp": [
         "return:char *"
       ],
       "src/minigames/d_s_mg_trampoline2.cpp": [
@@ -6608,7 +6602,7 @@
       "src/minigames/d_s_mg_base.cpp": [
         "return:int"
       ],
-      "src/minigames/d_s_mg_slot1.cpp": [
+      "src/actors/dScMgSlots.cpp": [
         "return:char *"
       ],
       "src/unnamed/arm9/0201/func_0201cd08.cpp": [
@@ -6641,7 +6635,7 @@
         "return:int",
         "return:void *"
       ],
-      "src/minigames/d_s_mg_slot1.cpp": [
+      "src/actors/dScMgSlots.cpp": [
         "return:char *"
       ],
       "src/unnamed/arm9/0203/func_02030500.c": [
@@ -6666,9 +6660,6 @@
       ],
       "src/minigames/d_s_mg_base.cpp": [
         "return:int"
-      ],
-      "src/minigames/d_s_mg_slot1.cpp": [
-        "return:char *"
       ],
       "src/unnamed/arm9/0200/func_0200f220.c": [
         "return:char *"
@@ -6696,7 +6687,7 @@
       "src/minigames/d_s_mg_base.cpp": [
         "return:int"
       ],
-      "src/minigames/d_s_mg_slot1.cpp": [
+      "src/actors/dScMgSlots.cpp": [
         "return:char *"
       ],
       "src/unnamed/arm9/0200/func_0200f220.c": [
@@ -6729,7 +6720,7 @@
         "return:int",
         "return:int *"
       ],
-      "src/minigames/d_s_mg_slot1.cpp": [
+      "src/actors/dScMgSlots.cpp": [
         "return:char *"
       ],
       "src/unnamed/arm9/0201/func_0201cd08.cpp": [
@@ -6770,9 +6761,6 @@
       "src/minigames/d_s_mg_base.cpp": [
         "return:int",
         "return:int *"
-      ],
-      "src/minigames/d_s_mg_slot1.cpp": [
-        "return:char *"
       ]
     },
     "_ZN3G2S13GetBG3CharPtrEv": {
@@ -6826,9 +6814,6 @@
         "param:#1 volatile void *",
         "param:#4 int",
         "param:#5 int"
-      ],
-      "src/minigames/d_s_mg_slot1.cpp": [
-        "param:#5 unsigned short"
       ],
       "src/minigames/d_s_mg_trampoline2.cpp": [
         "param:#1 volatile void *",
@@ -20693,9 +20678,6 @@
       ]
     },
     "func_02012718": {
-      "src/_ZN12dScMgSlot1_c8BehaviorEv.cpp": [
-        "param:#1 void *"
-      ],
       "src/unnamed/ov006/func_ov006_020e5450.cpp": [
         "param:#1 void *"
       ]

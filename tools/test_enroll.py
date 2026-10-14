@@ -186,5 +186,16 @@ src/actors/Pair.cpp:
             self.assertEqual(first_dl.read_text(encoding="utf-8"), first_text)
 
 
+class ThumbSourcesAreRecognized(unittest.TestCase):
+    def test_pragma_thumb_on_admits_a_thumb_row(self):
+        self.assertTrue(EN.THUMB_PRAGMA.search("/* stub */\r\n#pragma thumb on\r\nint f;"))
+        self.assertTrue(EN.THUMB_PRAGMA.search("  # pragma thumb on\n"))
+
+    def test_other_pragmas_and_prose_do_not(self):
+        self.assertFalse(EN.THUMB_PRAGMA.search("#pragma thumb off\n"))
+        self.assertFalse(EN.THUMB_PRAGMA.search("// needs #pragma thumb on\n"))
+        self.assertFalse(EN.THUMB_PRAGMA.search("#pragma thumb onward\n"))
+
+
 if __name__ == "__main__":
     unittest.main()

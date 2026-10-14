@@ -2,8 +2,8 @@
 /* leftovers:
  * SetObjAndLine's marker stays above the definition: callers still declare
  * the unconverted Vec3* spelling, so the definition does not bind over the
- * plurality. GetClsnPos stays a free function writing through the hidden
- * return pointer; a Vector3 method builds the temporary on the stack.
+ * plurality. GetClsnPos returns lineEnd through the canonical Vector3
+ * value-return interface. The intact TU preserves its hidden-result ABI.
  * func_02037608 upcasts through a reference so the multiple-inheritance
  * adjustment is unconditional. func_ov002_020fea4c and func_ov002_020fea68
  * are GetEnd and GetStart. D0 and the dBgPi thunks are emitted from the
@@ -82,12 +82,10 @@ void dBgCh_Lin::SetClsnPos(const Vector3 &pos)
     lineEnd = pos;
 }
 
-/* Returns lineEnd through the hidden pointer. After a hit, SetObjAndLine
-   has overwritten that field with the collision point. */
+/* Returns the line endpoint, or the collision point after a hit has
+   replaced lineEnd. */
 // @symbol _ZN9dBgCh_Lin10GetClsnPosEv
-extern "C" void _ZN9dBgCh_Lin10GetClsnPosEv(Vector3 *res, dBgCh_Lin *self)
+Vector3 dBgCh_Lin::GetClsnPos()
 {
-    res->x = self->lineEnd.x;
-    res->y = self->lineEnd.y;
-    res->z = self->lineEnd.z;
+    return lineEnd;
 }

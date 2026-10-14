@@ -3,8 +3,8 @@ extern int func_0206da18(void);
 extern int func_0206d9cc(void);
 extern void *func_02057158(unsigned int size);
 extern int func_020570b8(u16 *p);
-extern void func_0206d9dc(int x);
-extern void func_0206da28(int x);
+extern void _ZN3IRQ11SetFIQStateEb(int x); /* 0x0206d9dc, inside func_0206d9cc */
+extern void _ZN3IRQ11SetIRQStateEb(int x); /* 0x0206da28, inside func_0206da18 */
 int func_0206cee0(int *out)
 {
   int v8 = func_0206da18();
@@ -44,8 +44,8 @@ int func_0206cee0(int *out)
   }
   else
   {
-    func_0206d9dc(v7);
-    func_0206da28(v8);
+    _ZN3IRQ11SetFIQStateEb(v7);
+    _ZN3IRQ11SetIRQStateEb(v8);
     *out = 0;
   }
   return v6;

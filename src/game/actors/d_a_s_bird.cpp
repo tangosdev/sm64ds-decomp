@@ -26,11 +26,11 @@
  * - data_ov009_02113c48 is the 4-state PMF table this Behavior indexes;
  *   overlay .bss owns it. Its members are daSBird_c methods (table order:
  *   021116ec, 021115d8, 0211145c, 02111234); 02111224 is the follower-
- *   attach the two spawn loops call. 0211145c is the unmatched hatch.
- * - func_ov009_0211145c is a proven mwccarm 1.2/2004/b56 register-
- *   allocation wall. It lives in src/unnamed/ov009/func_ov009_0211145c.c as an
- *   unenrolled draft (not in this TU's delinks span).
- *   D1/D0 and 02111224/02111234 sit below that hole in
+ *   attach the two spawn loops call. 0211145c is a free function in ROM.
+ * - func_ov009_0211145c is matched on its own in
+ *   src/unnamed/ov009/func_ov009_0211145c.cpp (enrolled complete,
+ *   0x0211145c..0x021115d8), outside this TU's delinks span.
+ *   D1/D0 and 02111224/02111234 sit below it in
  *   d_a_s_bird_head.cpp, so this TU's complete range is
  *   0x021115d8..0x02111a70.
  * - *(Vector3 *)&mPosX addressing shape (a Vector3 member at 0x05c is a
@@ -72,7 +72,7 @@ typedef void (daSBird_c::*BirdState)();
  * is a function-pointer/PMF pair. The first word carries the code
  * relocation; the second is zero, like every other descriptor. */
 union SBirdFreeState {
-    void (*fn)(char *);
+    void (*fn)(daSBird_c *);
     BirdState pmf;
 };
 
@@ -114,9 +114,9 @@ extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 a);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
 extern int func_0201267c(unsigned int a, void *b);
 
-/* State 2 hatch: a free function in ROM (unenrolled draft
- * src/unnamed/ov009/func_ov009_0211145c.c), called through the state table. */
-extern void func_ov009_0211145c(char *bird);
+/* State 2: a free function in ROM (src/unnamed/ov009/func_ov009_0211145c.cpp),
+ * called through the state table. */
+extern void func_ov009_0211145c(daSBird_c *bird);
 
 /* ModelAnim::SetAnim -- wall 6az. */
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(

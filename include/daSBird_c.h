@@ -43,7 +43,7 @@ struct daSBird_c : dActor_c {
     /* Out of line: key function is ~daSBird_c(), the first declared
        non-inline virtual. d_a_s_bird_head.cpp defines it, so that file
        emits D1/D0 and the class vtable and RTTI; d_a_s_bird.cpp, above
-       the func_ov009_0211145c hatch, does not. Empty body: mShadowModel
+       the free function func_ov009_0211145c, does not. Empty body: mShadowModel
        then mModelAnim teardown, the vptr store and dActor_c's teardown are
        synthesised. */
     virtual ~daSBird_c();                      /* slots 16 (D1), 17 (D0) */
@@ -55,10 +55,10 @@ struct daSBird_c : dActor_c {
     virtual void OnPendingDestroy();           /* slot 12 */
 
     /* PMF-table members; data_ov009_02113c48 order is 021116ec, 021115d8,
-       0211145c (hatch), 02111234. 02111224 is the follower-attach the
-       spawn loops call on the child. Names not recovered -- addresses
-       kept (S33). 02111224 / 02111234 live in d_a_s_bird_head.cpp below
-       the func_ov009_0211145c hatch. */
+       0211145c (a free function, its own file), 02111234. 02111224 is
+       the follower-attach the spawn loops call on the child. Names not
+       recovered -- addresses kept (S33). 02111224 / 02111234 live in
+       d_a_s_bird_head.cpp below func_ov009_0211145c. */
     void func_ov009_021116ec();              /* state 0 -- leader spawn/setup */
     void func_ov009_021115d8();              /* state 1 -- proximity check */
     void func_ov009_02111224(int ownerID);   /* follower attach */

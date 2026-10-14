@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "task": "bowserfire-cpp1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3762",
+  "base_commit": "d6f7cf11a9d03bd2c7adda0d137a0de81b35be43",
+  "source": "src/actors/daKpaFire_c.cpp",
+  "symbol": "func_ov060_02117624",
+  "module": "ov060",
+  "address": "0x02117624",
+  "size": 160,
+  "status": "Producer checks pass on current main; independent exact-head source and byte acceptance is required before PR publication.",
+  "change": "Remove cplusplus-off region and retain existing C linkage. The actual daKpaFire_c fields and POD matrix view compile identically in C++.",
+  "compiler": "2004/b56 production flags",
+  "whole_elf_identical": true,
+  "object_sha256": "9ae36b40b7054f94c15f774252fb8d624d40fcf82687a5685085c859144db38f",
+  "function_sha256": "ea33c306904c855faff096c24203b236b96bffabce7e4a0fae166313059a1b8d",
+  "function_relocation_count": 3,
+  "source_lf_sha256": "06eda753f4ae98fe34d4d20411fe3452cb13bb7e528b341dcfa534d566e4c2e1",
+  "scope": "The promoted TU now uses C++ for all function bodies. Header changes update comments only; both daKpaFire_c and daKpa_c consumers must be verified. No layout, type, source path, module symbol, delink or manifest changes.",
+  "remaining_work": [
+    "The address-named helper retains existing C linkage.",
+    "Existing scalar Fix12 ABI bridges and raw matrix/field views remain; this is partial reconstruction."
+  ],
+  "gates": {
+    "tested_source_commit": "31202d72d3c50ad6a9ef36f59a189e107a96f9c7",
+    "tested_base": "d6f7cf11a9d03bd2c7adda0d137a0de81b35be43",
+    "prepush_linkcheck": {
+      "checked": 110,
+      "verified": 109,
+      "warnings": [
+        {
+          "symbol": "__sinit_daKpa_c.cpp",
+          "verdict": "BLIND-73",
+          "blind": 73,
+          "diffs": []
+        }
+      ],
+      "blocking": 0,
+      "qualification": "The single daKpa_c initializer warning is inherited. Both raw consumer objects must also be compared with baseline by the independent verifier."
+    },
+    "rombuild": {
+      "command": "python tools/rombuild.py -j16 --no-rom",
+      "source_functions": 11331,
+      "mismatching_functions": 0,
+      "data_claims_reproduced": 331,
+      "bss_claims": 239,
+      "modules_exact": 106,
+      "result": "PASS",
+      "global_raw_data_qualification": "969 verified, 1519 partial, 1 inherited differing, 21 unnamed; scoped consumer metadata has zero differing/unnamed symbols."
+    },
+    "consumer_metadata": {
+      "symbols": 57,
+      "verified": 10,
+      "verified_bytes": 452,
+      "partial": 47,
+      "partial_bytes": 68,
+      "differs": 0,
+      "unnamed": 0
+    },
+    "declarations": {
+      "scoped_files": 169,
+      "inherited_disagreements": 1729,
+      "new_disagreements": 0,
+      "new_header_redeclarations": 0
+    },
+    "port_references": {
+      "checked": 267,
+      "stale": 0
+    },
+    "tubuild_qualification": "Baseline standalone promotion reports the existing unowned __sinit output; initializer is independently strict-verified and its complete production manifest ownership is preserved. This is not a new promotion."
+  },
+  "review_repairs": [
+    "BFCPP-001: remove stale C-mode source and header explanations."
+  ]
+}

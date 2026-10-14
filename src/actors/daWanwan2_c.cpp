@@ -105,8 +105,8 @@ enum {
     daWanwan2_SND_COIN_SPAWN  = 0x3a    /* Behavior's COIN spawn (played whether or not Spawn returned an actor) */
 };
 
-/* Three plain words: the stack vectors of the two helpers that were C,
-   which carry none of Vector3's empty destructor. */
+/* Three plain words retained for the Player::Hurt ABI bridge and chain-link
+   arithmetic below; the collision offset uses the real Vector3 interface. */
 struct Vec3i { s32 x, y, z; };
 
 /* func_ov100_02143b68's identity matrix, as twelve words: a copy through the
@@ -162,9 +162,7 @@ void _ZN8dActor_c9UpdatePosEP5dCc_c(dActor_c *thiz, dCc_c *c);
 void _ZN8dActor_c15HugeLandingDustEb(dActor_c *thiz, bool b);
 dActor_c *_ZN8dActor_c13ClosestPlayerEv(dActor_c *thiz);
 void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, const Vector3 *pos, const Vector3_16 *rot, int area, int unk);
-void *_ZN8dActor_c10FindWithIDEj(u32 id);
 void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(void *self, void *sm, void *mtx, int a, int b, unsigned int g);
-void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *clsn, const void *pos);
 void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     dCcAcPos_c *clsn, dActor_c *actor, const Vector3 &offset,
     s32 radius, s32 height, u32 flags, u32 vulnFlags);
@@ -281,7 +279,7 @@ enum Bool { FALSE, TRUE };
 
 extern "C" void func_ov100_0214344c(daWanwan2_c *self)
 {
-    Vec3i v;
+    Vector3 v;
     dActor_c *other;
 
     int flags;
@@ -290,10 +288,10 @@ extern "C" void func_ov100_0214344c(daWanwan2_c *self)
     v.x = data_ov100_02148008[0];
     v.y = data_ov100_02148008[1];
     v.z = data_ov100_02148008[2];
-    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(&self->mdCcAcPos_c, &v);
+    self->mdCcAcPos_c.SetPosRelativeToActor(v);
     id = self->mdCcAcPos_c.otherOwner;
     if (id == 0) return;
-    other = (dActor_c *)_ZN8dActor_c10FindWithIDEj(id);
+    other = dActor_c::FindWithID(id);
     if (other == 0) return;
     flags = self->mdCcAcPos_c.hitFlags;
     if (flags & daWanwan2_HIT_EXPLOSION) {
@@ -356,7 +354,7 @@ extern "C" void func_ov100_021435e8(daWanwan2_c *c)
                 (Vector3 *)&c->mLinkPos[5], 0, c->mAreaId, -1);
             if (a != 0) c->mChainEndActorID = a->uniqueID;
         } else {
-            dActor_c *a = (dActor_c *)_ZN8dActor_c10FindWithIDEj(c->mChainEndActorID);
+            dActor_c *a = dActor_c::FindWithID(c->mChainEndActorID);
             if (a != 0) {
                 if (((daStar_c *)a)->unk_440 == 5) {
                     c->mChainEndDone = 1;
@@ -379,7 +377,7 @@ extern "C" void func_ov100_021435e8(daWanwan2_c *c)
             _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(daWanwan2_ACTOR_STARBASE, c->mSpawnParam | 0x30,
                 (Vector3 *)&c->mLinkPos[5], 0, c->mAreaId, -1);
         } else {
-            dActor_c *a = (dActor_c *)_ZN8dActor_c10FindWithIDEj(c->mChainEndActorID);
+            dActor_c *a = dActor_c::FindWithID(c->mChainEndActorID);
             if (a != 0) {
                 if (((daStar_c *)a)->unk_440 == 5) {
                     c->mChainEndDone = 1;

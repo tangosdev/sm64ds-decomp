@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "task": "moray-native-factory1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3764",
+  "base_commit": "257ef7edb18afda407e1e6957478878ed5952ffa",
+  "source": "src/actors/daMoray_c.cpp",
+  "status": "Producer production checks pass on the corrected tooling dependency; exact-head independent Source acceptance remains required before source-only PR.",
+  "change": "Use return new daMoray_c; in the real class factory and remove redundant manually declared construction ABI calls. Retain all 21 text functions, initializer, data, BSS and ownership.",
+  "policy_dependency": "https://github.com/tangosdev/sm64ds-decomp/issues/3763",
+  "canonical_callback": {
+    "emitted": "_ZN7Vector3C1Ev",
+    "existing": "func_0203d384",
+    "module": "arm9",
+    "address": "0x0203d384",
+    "size": 4,
+    "bytes": "1eff2fe1"
+  },
+  "temporary_symbol_pins": 14,
+  "scope": "Source factory and its production TU manifest only; no shared header, module symbol, delink, or port path edits.",
+  "remaining_work": [
+    "Existing scalar Fix12 ABI bridges, raw field/matrix views, and source limitations remain explicitly partial."
+  ],
+  "gates": {
+    "tested_source_commit": "ea8833c243013ae0dfc954ec061e9375187a4805",
+    "tested_base": "257ef7edb18afda407e1e6957478878ed5952ffa",
+    "production_rom": {
+      "command": "python tools/rombuild.py -j16 --no-rom",
+      "functions_reproduced": 11331,
+      "mismatching_functions": 0,
+      "data_claims_reproduced": 331,
+      "bss_claims": 239,
+      "modules_exact": 106,
+      "new_intact_symbol_errors": 0,
+      "storage_aliases": "exact",
+      "result": "PASS",
+      "global_advisory_data": "969 verified,1519 partial,1 preexisting differing,21 unnamed"
+    },
+    "raw_prepush": {
+      "checked": 22,
+      "verified": 20,
+      "warnings": [
+        {
+          "symbol": "daMoray_c_classInit",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        },
+        {
+          "symbol": "__sinit_daMoray_c.cpp",
+          "verdict": "BLIND-10",
+          "blind": 10,
+          "diffs": []
+        }
+      ],
+      "blocking": 0,
+      "qualification": "Raw linkcheck does not apply production TU symbol transforms: the new native callback yields BLIND-1, and the initializer retains BLIND-10. These are not counted as strict passes; normal prepared-object checks resolve them."
+    },
+    "independent_preliminary_prepared_check": {
+      "text_functions": 21,
+      "initializer": 1,
+      "ctor_table": 1,
+      "verified": 23,
+      "blind": 0,
+      "diffs": 0,
+      "owned_typed_relocations": 44,
+      "address_overrides": false,
+      "qualification": "The fresh independent verifier reported these checks on the same source/manifest tree and corrected tooling head. Formal exact-head Source acceptance is recorded separately in the queue after immutable handoff."
+    },
+    "raw_output_parity": {
+      "existing_functions_and_objects_preserved": 60,
+      "temporary_pins_verified_by_bytes_and_all_references": 14,
+      "added_output": "4-byte relocation-free Vector3 default constructor; proven original callback identity"
+    },
+    "metadata": {
+      "symbols": 21,
+      "verified": 6,
+      "verified_bytes": 180,
+      "partial": 15,
+      "partial_bytes": 44,
+      "differs": 0,
+      "unnamed": 0
+    },
+    "declarations": {
+      "source_files_in_scope": 1,
+      "inherited_disagreements": 9,
+      "new_disagreements": 0,
+      "new_header_redeclarations": 0
+    },
+    "port_references": {
+      "checked": 267,
+      "stale": 0
+    }
+  },
+  "upstream_main_commit": "d6f7cf11a9d03bd2c7adda0d137a0de81b35be43",
+  "tooling_dependency_commit": "257ef7edb18afda407e1e6957478878ed5952ffa",
+  "tooling_dependency_branch": "tools/canonical-duplicates1013",
+  "source_lf_sha256": "30ff45574e8a836a9556322a0a694cf02a373b944bcce56b93fef8c26f2e7fe3"
+}

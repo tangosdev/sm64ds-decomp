@@ -26,7 +26,9 @@
 struct daWater_Hakidasi_c : dEnemyBase_c {
     /* What mState points at. Behavior calls the handler at +0x08 through it and
        nothing else in the tree reads the rest, so only that field is evidenced.
-       Same shape as daPropeller_Heyho_Fire_c::State -- see include/daPropeller_Heyho_Fire_c.h. */
+       daPropeller_Heyho_Fire_c::State (include/daPropeller_Heyho_Fire_c.h) puts
+       its per-frame handler at the same +0x08; there an install helper also
+       calls an int-returning mInit at 0x00, which this file never reads. */
     struct State {
         u8  pad_00[0x8];
         void (daWater_Hakidasi_c::*mMain)();   /* 0x08 */

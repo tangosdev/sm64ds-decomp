@@ -53,6 +53,7 @@ from elftools.elf.elffile import ELFFile
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import build_pin as BP  # noqa: E402
+import lcf_interior as LI  # noqa: E402
 import objisolate as OI  # noqa: E402
 from enroll import candidates, CONFIG, REPO  # noqa: E402
 
@@ -66,6 +67,7 @@ from rombuild import VERSION  # noqa: E402  (default compiler)
 from rombuild import CFLAGS  # noqa: E402
 
 ANYSYM = re.compile(r"^(\S+)\s+kind:")
+HEADER_SECTION = re.compile(r"^\s+\.(\w+)\s+start:0x")
 IGNORE_SECTIONS = (".comment", ".debug", ".line", ".note")
 
 
@@ -103,13 +105,39 @@ def load_report(path=None):
 
 
 def defined_symbols():
-    """Every symbol name config/**/symbols.txt declares, in any module."""
+    """Every symbol name config/**/symbols.txt declares, in any module, plus the
+    names the link's command file defines.
+
+    Those are in no symbols.txt. The generated LCF assigns `OVERLAY_<n>_ID = n;`
+    and a `<MODULE>_<SECTION>_START/END` pair around every module section
+    (`OV100_TEXT_START`, `OV075_BSS_END`, `ARM9_BSS_END`), and lcf_interior adds
+    the NitroSDK constants. Source takes such a symbol's address as its value --
+    `(u32)&OVERLAY_6_ID` -- and without these a function the link resolves is
+    refused as unresolvable. Section pairs come from each delinks.txt header, so
+    only a section the module actually has is counted."""
     names = set()
     for sym in CONFIG.rglob("symbols.txt"):
         for line in sym.read_text(encoding="utf-8", errors="ignore").splitlines():
             m = ANYSYM.match(line)
             if m:
                 names.add(m.group(1))
+    names |= set(LI.LINKER_CONSTANTS)
+    for dl in CONFIG.rglob("delinks.txt"):
+        module = dl.parent.name
+        if module.startswith("ov") and module[2:].isdigit():
+            names.add(f"OVERLAY_{int(module[2:])}_ID")
+            prefix = f"OV{int(module[2:]):03d}"
+        elif module in ("arm9", "itcm", "dtcm"):
+            prefix = module.upper()
+        else:
+            continue
+        for line in dl.read_text(encoding="utf-8", errors="ignore").splitlines():
+            if line and not line[0].isspace():
+                break                       # header ends at the first source entry
+            m = HEADER_SECTION.match(line)
+            if m:
+                names.add(f"{prefix}_{m.group(1).upper()}_START")
+                names.add(f"{prefix}_{m.group(1).upper()}_END")
     return names
 
 

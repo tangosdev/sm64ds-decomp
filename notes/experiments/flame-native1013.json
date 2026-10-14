@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "task": "flame-native1013",
+  "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/3771",
+  "base_commit": "257ef7edb18afda407e1e6957478878ed5952ffa",
+  "upstream_main_context": "739cbc53d237791752d1cc8c2c1f0b2c8cfe6b1c",
+  "tooling_pr": "https://github.com/tangosdev/sm64ds-decomp/pull/3766",
+  "source": "src/actors/daObjFlamethrower_c.cpp",
+  "symbol": "daObjFlamethrower_c_classInit",
+  "module": "ov095",
+  "address": "0x02136ed4",
+  "size": 132,
+  "change": "Use return new daObjFlamethrower_c; for real member array construction; remove unused factory ABI declarations and stale no-Vector3-constructor prose.",
+  "scope": "Existing text-only TU: five functions; metadata externalization retained. No headers,delinks,module symbols,source paths,temporary pins or ownership claims change.",
+  "new_output_policy": [
+    "Vector3C1 proven duplicate of original stride12,count12 callback func0203d384 atarm9:0203d384",
+    "Unused Matrix4x3D1 has no configured home and no incoming references, guardeddeadstrip"
+  ],
+  "status": "Producer production checks pass; independent exact-head Source acceptance required before source-only stacked PR.",
+  "remaining_work": [
+    "Existing scalar Fix12 ABI bridge and raw segment loops remain partial reconstruction."
+  ],
+  "gates": {
+    "tested_source_commit": "3069c92ebdf542e228b999e3b9915563d35cb636",
+    "tested_base": "257ef7edb18afda407e1e6957478878ed5952ffa",
+    "production_rom": {
+      "functions_reproduced": 11331,
+      "mismatching_functions": 0,
+      "data_claims_reproduced": 331,
+      "bss_claims": 239,
+      "modules_exact": 106,
+      "new_symbol_errors": 0,
+      "storage_aliases": "exact",
+      "result": "PASS",
+      "global_advisory": "969 verified,1519 partial,1 inherited differing,21 unnamed"
+    },
+    "raw_prepush": {
+      "checked": 5,
+      "verified": 4,
+      "warnings": [
+        {
+          "symbol": "daObjFlamethrower_c_classInit",
+          "verdict": "BLIND-1",
+          "blind": 1,
+          "diffs": []
+        }
+      ],
+      "blocking": 0,
+      "qualification": "Raw linkcheck does not apply the callback policy. Ordinary production-prepared strict checks resolve the native factory warning."
+    },
+    "ordinary_prepared_check": {
+      "functions": 5,
+      "verified": 5,
+      "blind": 0,
+      "diffs": 0,
+      "address_overrides": false,
+      "qualification": "Use existing ordinary text-only production path. Intact preparation correctly refuses both baseline and candidate because this TU owns no nontext range."
+    },
+    "independent_preliminary_parity": {
+      "preserved_named_sized_definitions": 15,
+      "added_definitions": 2,
+      "qualification": "Exact independently compiled production FUNC/OBJECT definitions after canonical callback identity normalization; do not conflate candidate totals or alternate experiment symbol categories with baseline count."
+    },
+    "independent_preliminary_metadata": {
+      "fully_verified_records": 9,
+      "bytes": 226,
+      "qualification": "Existing externalized canonical metadata including full vtable preamble and odd-sized strings; no new data ownership."
+    },
+    "raw_metadata": {
+      "symbols": 9,
+      "verified": 4,
+      "verified_bytes": 44,
+      "partial": 5,
+      "partial_bytes": 168,
+      "differs": 0,
+      "unnamed": 0
+    },
+    "declarations": {
+      "scoped_files": 411,
+      "inherited_disagreements": 3968,
+      "new_disagreements": 0,
+      "new_header_redeclarations": 0
+    },
+    "port_references": {
+      "checked": 267,
+      "stale": 0
+    }
+  },
+  "source_lf_sha256": "30fe3ccbe2e86505c4e4c2ded0a66134496fd2d7694a58d21b9b7cebf6c6d3c6"
+}

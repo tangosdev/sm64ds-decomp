@@ -1,0 +1,281 @@
+{
+  "task": "canonical-duplicates1013",
+  "issue": 3763,
+  "candidate": "this commit",
+  "accepted_input": "731efc06d5d5e84ac33ff5f97880e9f90476158e",
+  "tested_base": "d6f7cf11a9d03bd2c7adda0d137a0de81b35be43",
+  "scope": "Tools-only canonical_symbol extension for relocation-free deadstrip-duplicate functions",
+  "private_artifact_root": "C:/tmp/sm64ds-ctorpolicy1013/build/canonical-duplicates1013",
+  "focused_tests": {
+    "command": "python -m pytest tools/test_canonical_duplicates.py tools/test_objisolate.py tools/test_rombuild.py tools/test_tu_production.py -q",
+    "fixture_environment": "CANONICAL_DUPLICATE_FIXTURE=<private_artifact_root>/moray",
+    "passed": 128,
+    "failed": 0,
+    "log": "focused-rework2.log"
+  },
+  "legacy_control": {
+    "base_passed": 69,
+    "base_failed": 6,
+    "base_skipped": 1,
+    "base_log": "baseline-tubuild-final.log",
+    "base_runner": "baseline_tests.py and baseline_cli.py load exact tested_base tools, including CLI subprocesses",
+    "failures": [
+      "test_inspect_polelift_reproduces_the_pilots_static_findings",
+      "test_verify_reproduces_pilot_1s_7_of_7_and_clean_objisolate",
+      "test_compile_report_matches_the_pilots_object_inventory",
+      "test_promote_dry_run_refuses_a_tu_that_is_not_link_verified_but_still_explains",
+      "test_splice_refuses_a_span_it_cannot_tile_exactly",
+      "test_manifest_order_handles_rccarpet_owned_subset_after_rtti_externalization"
+    ],
+    "candidate_passed": 69,
+    "candidate_failed": 6,
+    "candidate_skipped": 1,
+    "candidate_log": "legacy-rework2.log",
+    "scope": [
+      "tools/test_tubuild.py"
+    ],
+    "additional_combined_base_run": {
+      "scope": [
+        "tools/test_objisolate.py",
+        "tools/test_rombuild.py",
+        "tools/test_tu_production.py",
+        "tools/test_tubuild.py"
+      ],
+      "passed": 173,
+      "failed": 6,
+      "skipped": 1,
+      "log": "baseline-final-tests.log"
+    }
+  },
+  "moray": {
+    "base_commit": "d6f7cf11a9d03bd2c7adda0d137a0de81b35be43",
+    "source_sha256": "0df919ce2153e6029bbc202061a218c8cf71a2df1b9b0265099f1ea5663f071d",
+    "raw_object_sha256": "d0724594b4c195551363724e08c8d1c02ae88b0b51f1ea145c7ae25c66ccd1e4",
+    "prepared_object_sha256": "af6bc97e57d6872dfe1c705c75bc3300187556779523d37f66852f31444d1f5c",
+    "canonical": [
+      {
+        "symbol": "_ZN7Vector3C1Ev",
+        "canonicalSymbol": "func_0203d384",
+        "module": "arm9",
+        "address": "0x0203d384",
+        "size": 4,
+        "bodySha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+        "relocations": 0
+      }
+    ],
+    "checks": [
+      {
+        "name": "_ZN9daMoray_cD1Ev",
+        "module": "ov016",
+        "addr": "0x021111a0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_cD0Ev",
+        "module": "ov016",
+        "addr": "0x02111208",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c19func_ov016_02111284Ev",
+        "module": "ov016",
+        "addr": "0x02111284",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c19func_ov016_02111534Ev",
+        "module": "ov016",
+        "addr": "0x02111534",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c16BookSwitch_SpawnEv",
+        "module": "ov016",
+        "addr": "0x021115a4",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c19func_ov016_021115c0Ev",
+        "module": "ov016",
+        "addr": "0x021115c0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c19func_ov016_02111718Ev",
+        "module": "ov016",
+        "addr": "0x02111718",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c19func_ov016_02111758Ev",
+        "module": "ov016",
+        "addr": "0x02111758",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c19func_ov016_02111860Ev",
+        "module": "ov016",
+        "addr": "0x02111860",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c19func_ov016_021118b4Ev",
+        "module": "ov016",
+        "addr": "0x021118b4",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c19func_ov016_02111994Ev",
+        "module": "ov016",
+        "addr": "0x02111994",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c19func_ov016_021119ecEv",
+        "module": "ov016",
+        "addr": "0x021119ec",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c19func_ov016_02111bacEv",
+        "module": "ov016",
+        "addr": "0x02111bac",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c19func_ov016_02111bf0EPNS_5StateE",
+        "module": "ov016",
+        "addr": "0x02111bf0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c19func_ov016_02111c40Ev",
+        "module": "ov016",
+        "addr": "0x02111c40",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c16CleanupResourcesEv",
+        "module": "ov016",
+        "addr": "0x02111f38",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c16OnPendingDestroyEv",
+        "module": "ov016",
+        "addr": "0x02111f80",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c6RenderEv",
+        "module": "ov016",
+        "addr": "0x02111f84",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c8BehaviorEv",
+        "module": "ov016",
+        "addr": "0x02112010",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN9daMoray_c13InitResourcesEv",
+        "module": "ov016",
+        "addr": "0x021121c0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "daMoray_c_classInit",
+        "module": "ov016",
+        "addr": "0x02112588",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    ]
+  },
+  "full_rom_control": {
+    "status": "PASS",
+    "command": "python tools/rombuild.py -j16 --no-rom",
+    "log": "rombuild-rework2-frozen.log",
+    "exit_code": 0,
+    "modules_exact": 106,
+    "modules_checked": 106,
+    "source_functions_reproducing": 11331,
+    "source_functions_mismatching": 0,
+    "source_owned_data_reproducing": 331,
+    "source_owned_data_mismatching": 0,
+    "new_intact_symbol_errors": 0,
+    "storage_aliases": "exact",
+    "report_sha256": "698832a601a4eb7feb01e6c3e306d074eb362265d27b5626ef2a390875176e97",
+    "report": "rombuild-report-rework2.json",
+    "inherited_advisory_romdata": {
+      "verified": 969,
+      "partial": 1519,
+      "differ": 1,
+      "unnamed": 21
+    }
+  },
+  "independent_acceptance": "pending fresh verifier against offered immutable commit",
+  "rework_input": "8ec10321f907b14f1281f004a3a483b560932b0d",
+  "prior_attempts": [
+    {
+      "commit": "8ec10321f907b14f1281f004a3a483b560932b0d",
+      "independent_verdict": "fail",
+      "finding": "CANDUP-002: canonical function contained by owned non-text storage without section rows was accepted",
+      "historical_validation_only": {
+        "focused_tests": 122,
+        "full_rom_control": "rombuild-final-frozen.log",
+        "rombuild_report": "rombuild-report-final.json",
+        "modules_exact": 106,
+        "functions_reproducing": 11331
+      },
+      "rework": "All declared non-text storage extents and vtable address-point metadata are now checked before removal."
+    }
+  ],
+  "verified_tool_sha256": {
+    "tools/tubuild.py": "25fb7bbbdd639cf4f26410cc6a3aa3780a67b6f32ec5f25bc997d620cc2f9c63",
+    "tools/rombuild.py": "e4f83caf2cd245e4a706a11bfb038059fc9de95537e11e5a25868c3504e6148a",
+    "tools/test_canonical_duplicates.py": "eb48529a08dfb0698e07bcd95aa231f1047131aa99e172096e0981409335c083"
+  }
+}

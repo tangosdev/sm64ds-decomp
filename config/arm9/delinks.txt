@@ -31,6 +31,7 @@ src/unnamed/arm9/0200/func_02005060.c:
     .text start:0x02005060 end:0x02005098
 
 src/unnamed/arm9/0200/func_02005098.c:
+    complete
     .text start:0x02005098 end:0x020050dc
 
 src/unnamed/arm9/0200/func_020050dc.c:
@@ -859,6 +860,10 @@ src/engine/model/Model.cpp:
     complete
     .text start:0x02016b78 end:0x02016df8
 
+src/CleanCommonModelDataArr.c:
+    complete
+    .text start:0x02016df8 end:0x02016e70
+
 src/unnamed/arm9/0201/func_02016e70.c:
     complete
     .text start:0x02016e70 end:0x02016f08
@@ -1361,6 +1366,7 @@ src/unnamed/arm9/0201/func_02019e60.c:
     .text start:0x02019e60 end:0x02019ebc
 
 src/unnamed/arm9/0201/func_02019ebc.c:
+    complete
     .text start:0x02019ebc end:0x02019ed0
 
 src/unnamed/arm9/0201/func_02019ed0.c:
@@ -1400,6 +1406,7 @@ src/unnamed/arm9/0201/func_0201a244.c:
     .text start:0x0201a244 end:0x0201a2f8
 
 src/func_0201a2f8.c:
+    complete
     .text start:0x0201a2f8 end:0x0201a3e4
 
 src/unnamed/arm9/0201/func_0201a3e4.c:
@@ -1411,6 +1418,7 @@ src/unnamed/arm9/0201/func_0201a428.c:
     .text start:0x0201a428 end:0x0201a458
 
 src/unnamed/arm9/0201/func_0201a458.c:
+    complete
     .text start:0x0201a458 end:0x0201a490
 
 src/unnamed/arm9/0201/func_0201a490.c:
@@ -1438,18 +1446,23 @@ src/unnamed/arm9/0201/func_0201a5f8.c:
     .text start:0x0201a5f8 end:0x0201a614
 
 src/unnamed/arm9/0201/func_0201a614.c:
+    complete
     .text start:0x0201a614 end:0x0201a694
 
 src/unnamed/arm9/0201/func_0201a694.c:
+    complete
     .text start:0x0201a694 end:0x0201a754
 
 src/unnamed/arm9/0201/func_0201a754.c:
+    complete
     .text start:0x0201a754 end:0x0201a798
 
 src/unnamed/arm9/0201/func_0201a798.c:
+    complete
     .text start:0x0201a798 end:0x0201a7dc
 
 src/GetSceneOverlayID.c:
+    complete
     .text start:0x0201a7dc end:0x0201a888
 
 src/IsMinigameActorID.c:
@@ -1724,7 +1737,8 @@ src/actors/dScStage_c.cpp:
     complete
     .text start:0x02023688 end:0x02029408
 
-src/unnamed/arm9/0202/func_02029408.c:
+src/unnamed/arm9/0202/func_02029408.cpp:
+    complete
     .text start:0x02029408 end:0x0202942c
 
 src/_ZN10dScStage_c7PS_InitEv.cpp:
@@ -2136,6 +2150,7 @@ src/_Z17LoadLevelOverlaysi.cpp:
     .text start:0x0202ded4 end:0x0202df70
 
 src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp:
+    complete
     .text start:0x0202df70 end:0x0202e088
 
 src/d_s_stage.cpp:
@@ -2267,6 +2282,10 @@ src/unnamed/arm9/0203/func_02031154.c:
 src/unnamed/arm9/0203/func_0203128c.c:
     complete
     .text start:0x0203128c end:0x020313d8
+
+src/unnamed/arm9/0203/func_020313d8.c:
+    complete
+    .text start:0x020313d8 end:0x02031428
 
 src/unnamed/arm9/0203/func_02031428.c:
     complete
@@ -2438,6 +2457,7 @@ src/actors/ActorBase_SceneNode.cpp:
     .text start:0x0203b3c0 end:0x0203b4dc
 
 src/_ZN4cstd5atan2E5Fix12IiES1_.c:
+    complete
     .text start:0x0203b4dc end:0x0203b684
 
 src/unnamed/arm9/0203/func_0203b684.c:
@@ -3585,6 +3605,7 @@ src/unnamed/arm9/0204/func_0204a0dc.c:
     .text start:0x0204a0dc end:0x0204a17c
 
 src/unnamed/arm9/0204/func_0204a17c.cpp:
+    complete
     .text start:0x0204a17c end:0x0204a4c8
 
 src/unnamed/arm9/0204/func_0204a4c8.c:
@@ -3747,9 +3768,17 @@ src/engine/sound/SoundEngine.cpp:
     complete
     .text start:0x0204eda4 end:0x020524e4
 
+src/unnamed/arm9/0205/func_020524e4.c:
+    complete
+    .text start:0x020524e4 end:0x020524f0
+
 src/Matrix3x3_LoadIdentity.c:
     complete
     .text start:0x020524f0 end:0x02052514
+
+src/unnamed/arm9/0205/func_02052550.c:
+    complete
+    .text start:0x02052550 end:0x0205256c
 
 src/MulVec3Mat3x3.c:
     complete
@@ -4385,6 +4414,7 @@ src/unnamed/arm9/0205/func_02058200.c:
     .text start:0x02058200 end:0x02058308
 
 src/unnamed/arm9/0205/func_02058308.c:
+    complete
     .text start:0x02058308 end:0x02058488
 
 src/unnamed/arm9/0205/func_02058488.c:
@@ -4392,6 +4422,7 @@ src/unnamed/arm9/0205/func_02058488.c:
     .text start:0x02058488 end:0x020584d0
 
 src/unnamed/arm9/0205/func_020584d0.c:
+    complete
     .text start:0x020584d0 end:0x02058538
 
 src/unnamed/arm9/0205/func_02058538.c:
@@ -4471,6 +4502,7 @@ src/engine/cp15/CP15.cpp:
     .text start:0x02058bb0 end:0x02058df4
 
 src/unnamed/arm9/0205/func_02058df4.c:
+    complete
     .text start:0x02058df4 end:0x02058ea0
 
 src/unnamed/arm9/0205/func_02058ea0.c:
@@ -6030,6 +6062,7 @@ src/unnamed/arm9/0206/func_02065d5c.c:
     .text start:0x02065d5c end:0x02065de4
 
 src/unnamed/arm9/0206/func_02065de4.c:
+    complete
     .text start:0x02065de4 end:0x02065eb8
 
 src/unnamed/arm9/0206/func_02065eb8.c:
@@ -6077,6 +6110,7 @@ src/unnamed/arm9/0206/func_02066a94.c:
     .text start:0x02066a94 end:0x02066fb0
 
 src/unnamed/arm9/0206/func_02066fb0.c:
+    complete
     .text start:0x02066fb0 end:0x02066fec
 
 src/unnamed/arm9/0206/func_02066fec.c:
@@ -6276,6 +6310,7 @@ src/unnamed/arm9/0206/func_02068e44.c:
     .text start:0x02068e44 end:0x02068e4c
 
 src/unnamed/arm9/0206/func_02068e4c.c:
+    complete
     .text start:0x02068e4c end:0x02069038
 
 src/unnamed/arm9/0206/func_02069038.c:
@@ -6406,6 +6441,54 @@ src/cstd3.cpp:
     complete
     .text start:0x0206ccd8 end:0x0206ce90
 
+src/unnamed/arm9/0206/func_0206ce90.c:
+    complete
+    .text start:0x0206ce90 end:0x0206cec0
+
+src/unnamed/arm9/0206/func_0206cec0.c:
+    complete
+    .text start:0x0206cec0 end:0x0206cee0
+
+src/unnamed/arm9/0206/func_0206cee0.c:
+    complete
+    .text start:0x0206cee0 end:0x0206cf7c
+
+src/unnamed/arm9/0206/func_0206cf7c.c:
+    complete
+    .text start:0x0206cf7c end:0x0206cf98
+
+src/unnamed/arm9/0206/func_0206cf98.c:
+    complete
+    .text start:0x0206cf98 end:0x0206d32c
+
+src/unnamed/arm9/0206/func_0206d32c.c:
+    complete
+    .text start:0x0206d32c end:0x0206d868
+
+src/unnamed/arm9/0206/func_0206d868.c:
+    complete
+    .text start:0x0206d868 end:0x0206d890
+
+src/unnamed/arm9/0206/func_0206d890.c:
+    complete
+    .text start:0x0206d890 end:0x0206d8c4
+
+src/unnamed/arm9/0206/func_0206d8c4.c:
+    complete
+    .text start:0x0206d8c4 end:0x0206d940
+
+src/unnamed/arm9/0206/func_0206d940.c:
+    complete
+    .text start:0x0206d940 end:0x0206d9cc
+
+src/unnamed/arm9/0206/func_0206d9cc.cpp:
+    complete
+    .text start:0x0206d9cc end:0x0206da18
+
+src/unnamed/arm9/0206/func_0206da18.cpp:
+    complete
+    .text start:0x0206da18 end:0x0206da64
+
 src/engine/cp15/CP154.cpp:
     complete
     .text start:0x0206da64 end:0x0206dab4
@@ -6415,6 +6498,7 @@ src/cstd4.cpp:
     .text start:0x0206dab4 end:0x0206ece0
 
 src/unnamed/arm9/0206/func_0206ece0.c:
+    complete
     .text start:0x0206ece0 end:0x0206f338
 
 src/unnamed/arm9/0206/func_0206f338.c:
@@ -6422,6 +6506,7 @@ src/unnamed/arm9/0206/func_0206f338.c:
     .text start:0x0206f338 end:0x0206f46c
 
 src/unnamed/arm9/0206/func_0206f46c.c:
+    complete
     .text start:0x0206f46c end:0x0206f820
 
 src/unnamed/arm9/0206/func_0206f820.c:
@@ -6453,6 +6538,7 @@ src/unnamed/arm9/0207/func_020707f4.c:
     .text start:0x020707f4 end:0x020708b4
 
 src/unnamed/arm9/0207/func_020708b4.c:
+    complete
     .text start:0x020708b4 end:0x02070b98
 
 src/unnamed/arm9/0207/func_02070b98.c:
@@ -6460,6 +6546,7 @@ src/unnamed/arm9/0207/func_02070b98.c:
     .text start:0x02070b98 end:0x02070c68
 
 src/unnamed/arm9/0207/func_02070c68.c:
+    complete
     .text start:0x02070c68 end:0x02070ec0
 
 src/unnamed/arm9/0207/func_02070ec0.c:

@@ -37,7 +37,6 @@
 #include "common.h"
 #include "SharedFilePtr.h"
 #include "decl_dBgCh_Actr.h"
-#include "decl_PathPtr.h"
 #include "Player.h"
 
 /* Actor IDs from symbols/actor_debug_names.tsv. */
@@ -100,7 +99,6 @@ struct EmbeddedClass {
 extern "C" {
 /* Defined below. */
 
-void *_ZN8dActor_c10FindWithIDEj(u32 id);
 void *_ZN8dActor_c13ClosestPlayerEv(void *c);
 void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const void *p, const void *q, int e, int f);
 void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void *c, Vector3_16 *s, void *a, int z);
@@ -137,7 +135,6 @@ int Vec3_HorzDist(const void *a, const void *b);
 int Vec3_Equal(void *a, void *b);
 void _ZN5dCc_c5ClearEv(void *c);
 int _ZN5dCc_c6UpdateEv(void *c);
-void _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
 void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, unsigned int idx);
 void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *file, int a, int b);
@@ -205,12 +202,13 @@ void daIbl_c::func_ov100_02141fb0()
     u32 id = mdCcAc_c.otherOwner;
 
     if (id == 0) return;
-    a = (Player *)_ZN8dActor_c10FindWithIDEj(id);
-    if (a == 0) return;
+    dActor_c *actor = dActor_c::FindWithID(id);
+    if (actor == 0) return;
     {
-        int b = (a->actorID == daIbl_ACTOR_PLAYER);
+        int b = (actor->actorID == daIbl_ACTOR_PLAYER);
         if (b == 0) return;
     }
+    a = static_cast<Player *>(actor);
     if (a->mIsVanish != 0) return;
     fl = mdCcAc_c.hitFlags;
     if ((fl & daIbl_HIT_MEGA) != 0) {
@@ -855,8 +853,8 @@ int daIbl_c::InitResources()
        the path's node 0 (node 1 when the ball is already standing on node 0),
        the node it heads for first. */
     if (kind == daIbl_KIND_PATH_SLOPE || kind == daIbl_KIND_PATH_RAMP) {
-        _ZN7PathPtr6FromIDEj(&mPathPtr, param1 & 0xf);
-        mNumPathNodes = _ZNK7PathPtr8NumNodesEv((char *)&mPathPtr);
+        mPathPtr.FromID(param1 & 0xf);
+        mNumPathNodes = mPathPtr.NumNodes();
         mPathNodeIndex = 0;
         mPrevNodePosX = mPosX;
         mPrevNodePosY = mPosY;

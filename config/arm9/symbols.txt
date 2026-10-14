@@ -2951,7 +2951,9 @@ func_0206d890 kind:function(arm,size=0x34) addr:0x0206d890
 func_0206d8c4 kind:function(arm,size=0x7c) addr:0x0206d8c4
 func_0206d940 kind:function(arm,size=0x8c) addr:0x0206d940
 func_0206d9cc kind:function(arm,size=0x4c) addr:0x0206d9cc
+_ZN3IRQ11SetFIQStateEb kind:label(arm) addr:0x0206d9dc
 func_0206da18 kind:function(arm,size=0x4c) addr:0x0206da18
+_ZN3IRQ11SetIRQStateEb kind:label(arm) addr:0x0206da28
 func_0206da64 kind:function(arm,size=0x30) addr:0x0206da64
 func_0206da94 kind:function(arm,size=0x8) addr:0x0206da94
 func_0206da9c kind:function(arm,size=0x8) addr:0x0206da9c

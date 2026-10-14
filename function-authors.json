@@ -23557,6 +23557,10 @@
       "author": "tangosdev",
       "name": "_ZN11dScMgJump_c13OnTurnIntoEggEi"
     },
+    "ov006:0x020ee994": {
+      "author": "andrewboudreau",
+      "name": "_ZN11dScMgJump_c13OnYoshiTryEatEi"
+    },
     "ov006:0x020eeafc": {
       "author": "aitddlabs",
       "name": "dScMgJump_c_classInit"
@@ -25756,6 +25760,10 @@
     "ov006:0x0210c6c0": {
       "author": "tangosdev",
       "name": "_ZN12dScMgSlot1_c6RenderEv"
+    },
+    "ov006:0x0210c9e0": {
+      "author": "andrewboudreau",
+      "name": "_ZN12dScMgSlot1_c8BehaviorEv"
     },
     "ov006:0x0210d1fc": {
       "author": "tangosdev",
@@ -29920,6 +29928,10 @@
     "ov009:0x02111234": {
       "author": "tangosdev",
       "name": "_ZN9daSBird_c19func_ov009_02111234Ev"
+    },
+    "ov009:0x0211145c": {
+      "author": "andrewboudreau",
+      "name": "func_ov009_0211145c"
     },
     "ov009:0x021115d8": {
       "author": "lunavyqo",
@@ -39861,6 +39873,10 @@
       "author": "tangosdev",
       "name": "func_ov075_021160dc"
     },
+    "ov075:0x02116128": {
+      "author": "andrewboudreau",
+      "name": "func_ov075_02116128"
+    },
     "ov075:0x0211621c": {
       "author": "tangosdev",
       "name": "func_ov075_0211621c"
@@ -41332,6 +41348,10 @@
     "ov080:0x02126124": {
       "author": "tangosdev",
       "name": "_ZN11daPicGate_c19func_ov080_02126124Ev"
+    },
+    "ov080:0x021261f4": {
+      "author": "andrewboudreau",
+      "name": "_ZN11daPicGate_c19func_ov080_021261f4Ev"
     },
     "ov080:0x021264ec": {
       "author": "tangosdev",

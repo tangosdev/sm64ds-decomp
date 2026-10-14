@@ -7,18 +7,18 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "PARTIAL TU, DISCLOSED. This promotion owns the 39-function contiguous prefix ov006:0x0210a8c0..0x0210c9e0. The enclosing Slot1/Slot3 unit continues through Slot1 Behavior, InitResources and its factory to 0x0210d740. Those three functions retain their existing source owners.",
+    "WHOLE RUN. This entry licenses .text 0x0210a8c0..0x0210d740, all 42 functions of the Slot1/Slot3 unit: the 39-function prefix promoted first, then Slot1 Behavior (0x0210c9e0, ordinal 39), InitResources (0x0210d1fc, ordinal 40) and the factory (0x0210d6b8, ordinal 41), folded in on 2026-10-12. The latter two came from the tail manifest ov006/dScMgSlot1_c_classInit (src/minigames/d_s_mg_slot1.cpp, retired here); Behavior came from its matched shard src/_ZN12dScMgSlot1_c8BehaviorEv.cpp (retired here). Above, 0x0210d740 starts _ZN16dScMgSmartball_cD1Ev, a different class, so the run cannot extend further. The earlier PARTIAL TU disclosure (39 of 42, Behavior's 19-word barrier) is superseded by this note.",
     "The lower bound meets the promoted Single3DBase unit at 0x0210a8c0. Slot1 destructors precede every Slot3 function, then Slot1 helpers, methods and its factory follow. This contiguous ownership supports the combined unit; original filename spelling is not recovered.",
     "Current production src/actors/dScMgSlot1_c.cpp supplies the existing 18-function c180..c6c0 subset. Its latest accepted bodies are reused; the combined promotion supersedes that subset manifest and retires all absorbed sources through tu_promote.",
-    "The complete 42-function probe gave 41 MATCH with clean isolation and relocation destinations. Slot1 InitResources (d1fc..d6b8) and the factory (d6b8..d740) matched; Behavior (c9e0..d1fc) retained its existing 19-word mismatch. The latter prevents one contiguous full-TU production claim.",
-    "The remaining Behavior barrier is concrete: retail materializes idx*4 inside the touch-hit block (+0x264..+0x2c4), while full-width source folds shift+add (size 0x818 instead of 0x81c) and the existing u16 source emits a redundant narrowing pair plus different register choices (19 words). notes/mwccarm-codegen.md section 6cm records the prior exhaustive compiler/source experiments; this continuation independently reproduced those outcomes with typed index/access, scope, pointer, helper, loop and pragma probes. The broader class task remains partial; a future owner must recover that block before extending production ownership past c9e0.",
+    "The complete 42-function probe had given 41 MATCH with clean isolation and relocation destinations, Behavior retaining its 19-word mismatch. That mismatch closed on 2026-10-12: it was never a compiler floor but a source artefact -- the draft named the object both as this-members and through a char* with literal offsets, and that mix is what makes 2004/b56 fold the hoisted touch-record address into one `add r0, r0, r2, lsl #2` (0x818). Spelled through members alone the preheader comes out `lsl r1, r2, #2` / `add r0, r0, r1` as retail has it, and the whole TU verifies 42/42.",
+    "HISTORY of the Behavior barrier: notes/mwccarm-codegen.md section 6cm recorded the exhaustive index-type/placement/pragma grid that could not reach the retail preheader; every cell there kept the draft's mixed object spelling, which is the one axis the grid never varied. Section 6cm's floor claim is superseded by the match recorded in this manifest.",
     "PRAGMA COLLISION RESOLVED BY #pragma defer_codegen off, MEASURED NOT ASSUMED. Three configurations of this same 39-function source were compiled and byte-compared. (a) file-global `opt_strength_reduction off`: 34/39, DIFF at ROM ordinals 12, 13, 19, 30, 35. (b) no optimisation pragma at all: 34/39, DIFF at ordinals 13, 15, 16, 19, 38. The two DIFF sets are disjoint apart from 13 and 19, which is the delete-outright positive control: the pragma demonstrably moves bytes at file scope, so a bracket test on it can carry signal. (c) `#pragma defer_codegen off` plus an ascending-ROM-order rewrite, with `opt_strength_reduction off` bracketed around ordinals 15, 16 and 38 and both it and `opt_loop_invariants off` around ordinal 13: 38/39, and the brackets bind per function -- ordinals 12, 30 and 35 stay matching outside them. Deferred codegen is why these pragmas are otherwise file-global last-wins; with it off they bind positionally, and mwccarm then emits .text in source order, which is why the source is written ascending."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x0210a8c0",
-      "end": "0x0210c9e0"
+      "end": "0x0210d740"
     },
     {
       "name": ".init",
@@ -309,6 +309,27 @@
       "size": "0x00000320",
       "legacy_source": "src/_ZN12dScMgSlot1_c6RenderEv.cpp",
       "ordinal": 38
+    },
+    {
+      "symbol": "_ZN12dScMgSlot1_c8BehaviorEv",
+      "address": "0x0210c9e0",
+      "size": "0x0000081c",
+      "legacy_source": "src/_ZN12dScMgSlot1_c8BehaviorEv.cpp",
+      "ordinal": 39
+    },
+    {
+      "symbol": "_ZN12dScMgSlot1_c13InitResourcesEv",
+      "address": "0x0210d1fc",
+      "size": "0x000004bc",
+      "legacy_source": "src/_ZN12dScMgSlot1_c13InitResourcesEv.cpp",
+      "ordinal": 40
+    },
+    {
+      "symbol": "dScMgSlot1_c_classInit",
+      "address": "0x0210d6b8",
+      "size": "0x00000088",
+      "legacy_source": "src/d_s_mg_slot1.cpp",
+      "ordinal": 41
     }
   ],
   "data": [],
@@ -332,7 +353,8 @@
     "RESOLVED emitted-vtable factory addresses: The Slot3 factory addresses its emitted class table at +8 bytes; the imported base table retains its configured address point.",
     "Both D2 variants remain explicit compiler-only deadstrip outputs with no configured ROM home. All 39 licensed ROM functions are emitted in ascending ROM order. Unnamed helper identities, opaque embedded fields and explicit factory construction remain reconstruction work; promotion is a production ownership claim, not complete original-source recovery.",
     "Static initializer folded: the Slot3 state table data_ov006_02142bdc[8] moves out of the handwritten src/unnamed shard into src/actors/dScMgSlots.cpp, defined through the existing SlotState typedef and plain-copied from the eight ROM PMF constants in retail copy order (curling precedent). The emitted .init, .ctor and .bss are byte-identical to retail __sinit_ov006_02132894; no handles, no compiler temporaries, no renames. The .bss claim 0x02142bdc..0x02142c1c ends exactly at the next symbol; no bound row is needed. The retired shard converted-baseline row is dropped per the c62c3266 precedent.",
-    "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares."
+    "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares.",
+    "FOLD 2026-10-12: Slot1 Behavior, InitResources and dScMgSlot1_c_classInit joined the TU as ordinals 39-41, appended in ascending ROM order after Render, before the static-init table. The factory's vptr stores take the object-relative &_ZTV...[2] form for the two vtables this TU emits (_ZTV12dScMgSlot1_c, _ZTVN12dScMgSlot1_c9betIcon_cE) and the configured-address form for ov001's _ZTV9dThIcon_c, exactly as the Slot3 factory does for its own and dScMgSingle3DBase_c's tables. func_02012718 is called through include/decl_common.h's (int, int) spelling instead of the shard's local (void *, int); the bytes are the same."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -340,8 +362,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov006-dScMgSlot1_c+dScMgSlot3_c/dScMgSlots.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 39,
-    "functions_declared": 39,
+    "functions_matched": 42,
+    "functions_declared": 42,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN12dScMgSlot1_cD2Ev",
@@ -356,12 +378,6 @@
         10,
         15,
         16,
-        79,
-        80,
-        81,
-        82,
-        83,
-        84,
         85,
         86,
         87,
@@ -388,7 +404,13 @@
         108,
         109,
         110,
-        111
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117
       ],
       "data": [
         "_ZTV12dScMgSlot1_c",
@@ -459,7 +481,7 @@
       },
       "tuRange": {
         "start": "0x0210a8c0",
-        "end": "0x0210c9e0",
+        "end": "0x0210d740",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -467,7 +489,7 @@
         {
           "section": ".text",
           "start": "0x0210a8c0",
-          "end": "0x0210c9e0",
+          "end": "0x0210d740",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -494,7 +516,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 42
+          "LICENSED": 45
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -505,28 +527,28 @@
           {
             "section": ".init",
             "original": [
-              114
+              120
             ],
             "desired": [
-              114
+              120
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              112
+              118
             ],
             "desired": [
-              112
+              118
             ]
           },
           {
             "section": ".bss",
             "original": [
-              78
+              84
             ],
             "desired": [
-              78
+              84
             ]
           }
         ],
@@ -725,18 +747,7 @@
       "canonical_address": "0x02086e60"
     }
   ],
-  "remaining_work": [
-    {
-      "symbol": "_ZN12dScMgSlot1_c8BehaviorEv",
-      "module": "ov006",
-      "address": "0x0210c9e0",
-      "size": "0x81c",
-      "status": "nonmatching-existing",
-      "source": "src/_ZN12dScMgSlot1_c8BehaviorEv.cpp",
-      "evidence": "notes/mwccarm-codegen.md section 6cm; full combined probe 19 word differences at +0x264..+0x2c4",
-      "next_action": "Resolve the touch-index materialization and register-lifetime source shape, then extend this unit through InitResources and the factory at 0x0210d740."
-    }
-  ],
+  "remaining_work": [],
   "init": [
     {
       "symbol": "__sinit_dScMgSlots.cpp",

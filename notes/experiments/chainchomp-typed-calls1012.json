@@ -1,0 +1,299 @@
+{
+  "schema": 1,
+  "task": "chainchomp-typed-calls1012",
+  "session": "astra-wanwanread1012",
+  "role": "producer",
+  "input_commit": "b3f9ae055368d77a293e86fc206eea3bc276425b",
+  "source": "src/actors/daWanwan2_c.cpp",
+  "source_sha256": "2a5475070867fc18c481327c90d5d37e96eb5aeeeee0f6de4ba55c1c57ff4822",
+  "status": "producer verified: typed calls and same-identity generated-symbol mappings preserve full ROM output",
+  "changes": [
+    "Three FindWithID calls use the actual static dActor_c method and typed return. Removed obsolete local void-pointer prototype.",
+    "Contact offset uses actual Vector3 and dCcAcPos_c::SetPosRelativeToActor(const Vector3&). Removed obsolete local untyped setter prototype.",
+    "Updated Vec3i explanatory comment; other vector uses, raw matrix loops, PMF and factory/Fix12 bridges remain unchanged.",
+    "Refresh four TU manifest generated-name mappings using unchanged BSS registration identities and init relocation offsets."
+  ],
+  "scope": {
+    "module": "ov100",
+    "changed_function_range": [
+      "0x0214344c",
+      "0x021437d4"
+    ],
+    "enrolled_tu_text": [
+      "0x021431c4",
+      "0x021443f4"
+    ],
+    "enrolled_init": [
+      "0x021475a4",
+      "0x02147698"
+    ],
+    "enrolled_ctor": [
+      "0x02147df0",
+      "0x02147df4"
+    ],
+    "enrolled_bss": [
+      "0x021486a4",
+      "0x02148704"
+    ],
+    "headers_delinks_symbols_db_changes": false
+  },
+  "strict_targets": [
+    {
+      "name": "func_ov100_0214344c",
+      "module": "ov100",
+      "addr": "0x0214344c",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    },
+    {
+      "name": "func_ov100_021435e8",
+      "module": "ov100",
+      "addr": "0x021435e8",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0
+    }
+  ],
+  "tu_verify": {
+    "result": "17/17 text matches, objisolate clean, relocation destinations clean",
+    "limitation": "Verifier additionally refuses promotion for five initializer/BSS symbols absent from its symbol list. TU is already production-enrolled; this verifier result alone is not a complete non-text or promotion pass. Full default build result recorded separately.",
+    "log": "compiling src/actors/daWanwan2_c.cpp  [2004/b56]\n  flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off\n\nTU ov100/daWanwan2_c\n\ncompiler-only     : exact deadstrip ['_ZN11daWanwan2_cD2Ev', '_ZN7Vector3D1Ev', '_ZN8Vector3sD1Ev']\n\nMATCH    _ZN11daWanwan2_cD1Ev                       0x021431c4  size 0x0cc\nMATCH    _ZN11daWanwan2_cD0Ev                       0x02143290  size 0x0e0\nMATCH    func_ov100_02143370                        0x02143370  size 0x0dc\nMATCH    func_ov100_0214344c                        0x0214344c  size 0x19c\nMATCH    func_ov100_021435e8                        0x021435e8  size 0x1ec\nMATCH    func_ov100_021437d4                        0x021437d4  size 0x2d0\nMATCH    func_ov100_02143aa4                        0x02143aa4  size 0x03c\nMATCH    func_ov100_02143ae0                        0x02143ae0  size 0x038\nMATCH    func_ov100_02143b18                        0x02143b18  size 0x050\nMATCH    func_ov100_02143b68                        0x02143b68  size 0x148\nMATCH    _ZN11daWanwan2_c16CleanupResourcesEv       0x02143cb0  size 0x058\nMATCH    _ZN11daWanwan2_c16OnPendingDestroyEv       0x02143d08  size 0x004\nMATCH    _ZN11daWanwan2_c6RenderEv                  0x02143d0c  size 0x058\nMATCH    _ZN11daWanwan2_c8BehaviorEv                0x02143d64  size 0x324\nMATCH    _ZN11daWanwan2_c13InitResourcesEv          0x02144088  size 0x24c\nMATCH    _ZN11daWanwan2_c16OnAimedAtWithEggEv       0x021442d4  size 0x008\nMATCH    daWanwan2_c_classInit                      0x021442dc  size 0x118\n\nbyte comparison   : 17/17 MATCH  (tools/match.py extract_func + compare, relocation-aware)\nobjisolate check  : clean  (tools/objisolate.py plan() -- relocation type/addend; this is the check pilot #1 needed to catch a bug match.compare alone reported as MATCH)\nemission order    : all 17 function(s) in the expected ROM-ascending section order\n\nEXTRA    .text    __sinit_daWanwan2_c.cpp                  size=0xf4  STB_LOCAL  not in manifest\nEXTRA    .bss     @1012                                    size=0xc  STB_LOCAL  not in manifest\nEXTRA    .bss     @1013                                    size=0xc  STB_LOCAL  not in manifest\nEXTRA    .bss     @1014                                    size=0xc  STB_LOCAL  not in manifest\nEXTRA    .bss     @1015                                    size=0xc  STB_LOCAL  not in manifest\n\nResult: 17/17 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED\n        5 unlicensed section/symbol(s) present -> PROMOTION REFUSED regardless of the above (plan sec 4.5, 8)\n\nNOTE: --no-write: manifest left unchanged.\n"
+  },
+  "checks": {
+    "decl-agreement": "check_decl_agreement: 3297 file(s), 24035 extern declaration(s) of 11414 distinct symbol(s), 10272 of which the tree also defines; 17 unparsed declarator(s)\n  7580 disagreement(s) across 2037 symbol(s)   arity=533  kind=51  mangled=9  param=4125  return=2862\n  --changed b3f9ae055368d77a293e86fc206eea3bc276425b: 1 source file(s) changed defining 17 symbol(s), 0 symbol(s) named by a changed config row, 11 file(s) reached through 7 changed type name(s); 81 file(s) in scope once every declaration of those is folded in; 1582 disagreement(s) among them\n  no new local redeclarations of header-declared symbols\n  no new declaration disagreements\n",
+    "port-refcheck": "  [OK  ] manifests      91 reference(s) checked, 0 stale\n  [OK  ] cmake-symbols  21 reference(s) checked, 0 stale\n  [OK  ] hal-links      155 reference(s) checked, 0 stale\nport-refcheck: 267 checked - all references resolve\n"
+  },
+  "manifest_identity_repair": {
+    "path": "config/tu_manifest.d/ov100/daWanwan2_c.json",
+    "scope_authorization": "Parent authorized bounded free-path reservation; producer released, coordinator amended task, producer reclaimed before edits.",
+    "changes": "Four generated source symbol names and evidence only; established targets, sections, ranges and bindings unchanged.",
+    "identities": {
+      "baseline": [
+        {
+          "name": "@1006",
+          "offset": 0,
+          "size": 12,
+          "binding": "STB_LOCAL",
+          "section": ".bss",
+          "references": [
+            {
+              "section": ".init",
+              "offset": 188,
+              "type": 2
+            }
+          ]
+        },
+        {
+          "name": "@1007",
+          "offset": 0,
+          "size": 12,
+          "binding": "STB_LOCAL",
+          "section": ".bss",
+          "references": [
+            {
+              "section": ".init",
+              "offset": 200,
+              "type": 2
+            }
+          ]
+        },
+        {
+          "name": "@1008",
+          "offset": 0,
+          "size": 12,
+          "binding": "STB_LOCAL",
+          "section": ".bss",
+          "references": [
+            {
+              "section": ".init",
+              "offset": 216,
+              "type": 2
+            }
+          ]
+        },
+        {
+          "name": "@1009",
+          "offset": 0,
+          "size": 12,
+          "binding": "STB_LOCAL",
+          "section": ".bss",
+          "references": [
+            {
+              "section": ".init",
+              "offset": 228,
+              "type": 2
+            }
+          ]
+        }
+      ],
+      "final": [
+        {
+          "name": "@1012",
+          "offset": 0,
+          "size": 12,
+          "binding": "STB_LOCAL",
+          "section": ".bss",
+          "references": [
+            {
+              "section": ".init",
+              "offset": 188,
+              "type": 2
+            }
+          ]
+        },
+        {
+          "name": "@1013",
+          "offset": 0,
+          "size": 12,
+          "binding": "STB_LOCAL",
+          "section": ".bss",
+          "references": [
+            {
+              "section": ".init",
+              "offset": 200,
+              "type": 2
+            }
+          ]
+        },
+        {
+          "name": "@1014",
+          "offset": 0,
+          "size": 12,
+          "binding": "STB_LOCAL",
+          "section": ".bss",
+          "references": [
+            {
+              "section": ".init",
+              "offset": 216,
+              "type": 2
+            }
+          ]
+        },
+        {
+          "name": "@1015",
+          "offset": 0,
+          "size": 12,
+          "binding": "STB_LOCAL",
+          "section": ".bss",
+          "references": [
+            {
+              "section": ".init",
+              "offset": 228,
+              "type": 2
+            }
+          ]
+        }
+      ]
+    },
+    "targets": [
+      "@169",
+      "@170",
+      "@171",
+      "@172"
+    ],
+    "precursor_failure": "Before repair, full vector candidate failed intact TU preparation because@1006 was absent; FindWithID-only fallback also failed because@1009 was absent. Neither was a byte mismatch. Both attempted sources/logs preserved in scratch."
+  },
+  "changed_paths": [
+    "src/actors/daWanwan2_c.cpp",
+    "config/tu_manifest.d/ov100/daWanwan2_c.json",
+    "notes/experiments/chainchomp-typed-calls1012.json"
+  ],
+  "full_build": {
+    "command": "python -u tools/rombuild.py -j16 --no-rom --report-json build/wanwanread1012/rombuild-report.json",
+    "exit_code": 0,
+    "status": "passed",
+    "scope": "Default production enrollment including whole daWanwan2 TU text, initializer, ctor and BSS; no final NDS packaging requested.",
+    "enrolled_files": 2707,
+    "object_cache": {
+      "enabled": true,
+      "reused": 2707,
+      "compiled": 0,
+      "uncacheable": 0,
+      "root": "C:\\tmp\\sm64ds-wanwanread1012\\build\\objcache",
+      "tuDerived": 0
+    },
+    "module_fidelity": {
+      "modulesChecked": 106,
+      "modulesExact": 106,
+      "modulesExpectedOnly": 106,
+      "comparedBytes": 3049600,
+      "differingBytes": 0,
+      "unexpectedDifferingBytes": 0,
+      "percent": 100.0,
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+    },
+    "source_build": {
+      "totalCodeFunctions": 11397,
+      "totalCodeBytes": 2238108,
+      "compiledFunctions": 11289,
+      "compiledBytes": 2207796,
+      "sourceFunctions": 11289,
+      "sourceBytes": 2207796,
+      "modFunctions": 0,
+      "modBytes": 0,
+      "sourceBytesPercent": 98.64564176527674,
+      "reproducingFunctions": 11289,
+      "reproducingBytes": 2207796,
+      "mismatchingFunctions": 0,
+      "mismatchingFunctionBytes": 0,
+      "differingSourceBytes": 0,
+      "sourceDataClaims": 331,
+      "sourceBssClaims": 239,
+      "sourceBssBytes": 30164,
+      "reproducingDataClaims": 331,
+      "reproducingDataClaimBytes": 13020,
+      "mismatchingDataClaims": 0,
+      "mismatchingDataClaimBytes": 0
+    },
+    "intact_tu_gates": {
+      "ok": true,
+      "modulesOk": true,
+      "newSymbolErrors": [],
+      "storageAliasErrors": []
+    },
+    "raw_data_inventory": {
+      "verified": 969,
+      "partial": 1519,
+      "differs": 1,
+      "unnamed": 21,
+      "differing": [
+        {
+          "src": "src/_ZN10dCcAcPos_cD0Ev.cpp",
+          "symbol": "_ZTV10dCcAcPos_c",
+          "module": "arm9",
+          "addr": 34137860,
+          "differingBytes": 4
+        },
+        {
+          "src": "src/_ZN10dCcAcPos_cD1Ev.cpp",
+          "symbol": "_ZTV10dCcAcPos_c",
+          "module": "arm9",
+          "addr": 34137860,
+          "differingBytes": 4
+        }
+      ],
+      "limitation": "Existing separate raw-data inventory discrepancy retained; not a claim that all raw object data is exact."
+    }
+  },
+  "evidence_hashes": {
+    "baseline-identity.o": "586058cad1def2ed207cee6eaca071b755b35dfe13a4737d3d4206b4a3a74342",
+    "decl-agreement.log": "08cf362c9fd6aa8314c47dce40edc598397f743b577934837aa5a5452e5dea70",
+    "final-identity.o": "78161c80ad0a94740856cdf8ab30c8777e05f1bd06c680be194936181e5b451c",
+    "findid-only-failed-rombuild-report.json": "1ea9114cd2dcba117f2eedec008651e2d6c7a401cd61ef91fcd2a58e422ac5a7",
+    "findid-only-failed-rombuild.log": "d0a19e7aec1b23913f4ae048aaf6c35afe3a2bd7cd4acb11c445945804119bea",
+    "func_ov100_0214344c-linkcheck.json": "0b9eb53e433b0d5d90267370793764587f8ae46c93247e5afe0913ec0edf045a",
+    "func_ov100_021435e8-linkcheck.json": "6dd3ce38931ebd27c66e8d4d184a1a39fbac970cd99514d0626e85c65ca565df",
+    "port-refcheck.log": "b010cd028d86799a0ca3fef6d8a50d00786d7610b9d12dc8e7eee993a7c1b86e",
+    "registration-identity.json": "507db383808a2c7269dd8736e74652104c2a1db113ce1a61be629ecc9f00e2ef",
+    "rombuild-report.json": "433c525fae6f6cc066412513e93c396d9f5ce4d0aaedcf4ec3f3ef95e8218dd1",
+    "rombuild.log": "eb41b61c4aef6651af1a5c465b3d2dae5ae73356bbdd6a253e6a5f93a14484c6",
+    "tu-verify.log": "9e7e9cd2564312717cec69d1ac2e69efe0ad9d5977ee9c3f7ba67ceb6a1b078d",
+    "vector-failed-rombuild-report.json": "6c4bba0e8d689f121f4e3fff59df4522012e1f1414b5a8ce2d89c0dc3e0da63b",
+    "vector-failed-rombuild.log": "b126b924ed36f8123411dd960c08300aaccf06317b99c87c850ad872b04fe837"
+  },
+  "normalized_input_sha256": {
+    "src/actors/daWanwan2_c.cpp": "2586cb0a6fb7d873ff6139c2dc909bed4d7a1b03b0581757d1e17e91ea6d99c1",
+    "config/tu_manifest.d/ov100/daWanwan2_c.json": "347ea438c19791e1dea2d96a52befd760ad674e6546ea94fd1c4d1690a763fd0"
+  }
+}

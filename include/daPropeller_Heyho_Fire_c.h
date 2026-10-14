@@ -36,20 +36,20 @@
 #include "dBgCh_Actr.h"
 
 struct daPropeller_Heyho_Fire_c : dEnemyBase_c {
-    /* What mCurrentState points at. Behavior calls the handler at +0x08
-       through it; only that handler is evidenced. The field was reachable only
-       through the `struct dActor_c { char pad[0x350]; Holder* h; }` stand-in that
-       file used to carry, so the generated header never had it. */
+    /* What mCurrentState points at: two member-function pointers.
+       func_ov002_020fed2c calls mInit (when set) as it installs the state;
+       Behavior calls mMain (when set). The one state's pair is
+       func_ov002_020fed18 / func_ov002_020fec94 (data_ov002_02111190). */
     struct State {
-        u8  pad_00[0x8];
-        void (daPropeller_Heyho_Fire_c::*mMain)();      /* 0x08 */
+        int (daPropeller_Heyho_Fire_c::*mInit)();       /* 0x00 */
+        int (daPropeller_Heyho_Fire_c::*mMain)();       /* 0x08 */
     };
 
     dCcAc_c           mdCcAc_c;   /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     Model                        mModel;                /* 0x300 */
     State                       *mCurrentState;         /* 0x350 */
-    u8  pad_354[0x4];
+    s32                          mDeflected;            /* 0x354 -- set when a metal player deflected it; func_ov002_020fec94 then skips the player-hit test */
     s32                          unk_358;               /* 0x358 */
 
     /* --- vtable --- */

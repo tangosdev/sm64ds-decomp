@@ -10,8 +10,7 @@
  * WC_OBJ01 registry). Retail does not store that spelling.
  *
  * deslop
- * Leftover: GetClsnPos is still the mangled call (Vector3-by-value
- *   return emits D1). startEnd is two Vector3 copies flattened
+ * Leftover: startEnd is two Vector3 copies flattened
  *   (start = pos; end = pos; start.y += 20; end.y = waterY); the
  *   extra stores are decompiler dead stores, not an int[6] type.
  * Leftover: g_profile_WC_OBJ01 is ov029 data outside this TU (S14).
@@ -22,9 +21,6 @@
 #include "SharedFilePtr.h"
 
 extern "C" daObjFloatBoard_c_Resources data_ov029_02113be8;
-/* local extern: the header returns Vector3 by value, and the temporary emits a
-   Vector3 destructor this TU does not own (rombuild isolate refuses it) */
-extern "C" void _ZN9dBgCh_Lin10GetClsnPosEv(Vector3 *out, dBgCh_Lin *self);
 
 /* Retail constructs these 8-byte handles in this order and registers
  * their destructors. The wrapper names are local; the ctor/dtor
@@ -57,7 +53,6 @@ extern "C" daObjWcObj01_c *daObjWcObj01_c_classInit()
 int daObjWcObj01_c::InitResources()
 {
     int startEnd[6]; /* start[3] then end[3] */
-    int hit[3];
     int waterY;
     int x, y, z;
 
@@ -81,8 +76,8 @@ int daObjWcObj01_c::InitResources()
             if (line.DetectClsn() == 0) {
                 mPosY = waterY;
             } else {
-                _ZN9dBgCh_Lin10GetClsnPosEv((Vector3 *)hit, &line);
-                mPosY = hit[1];
+                Vector3 hit = line.GetClsnPos();
+                mPosY = hit.y;
             }
         }
         /* pad_320 lives in dBgActor_c tail padding at 0x31e, not here. */

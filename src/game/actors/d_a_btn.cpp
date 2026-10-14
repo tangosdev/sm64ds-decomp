@@ -31,8 +31,7 @@
  * - Particle::System::NewSimple, dActor_c::SpawnCoins/Earthquake/
  *   DropShadowScaleXYZ, ModelAnim::SetAnim, TextureSequence::SetFile,
  *   dBgW_KcMbg::SetFile and dBgCh_Actr::Init take Fix12<int> by value, so
- *   they stay mangled (notes/mwccarm-codegen.md 6az); the rest of the
- *   mangled externs follow the legacy call shapes.
+ *   they stay mangled (notes/mwccarm-codegen.md 6az).
  * - func_ov079_02123804 reacts to a hit but nothing in the cartridge's
  *   relocations calls it.
  * - func_ov079_02123d4c is really a Vector3-by-value member of daBtn_c, but
@@ -49,8 +48,17 @@
 #include "Player.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
+#include "Message.h"
+#include "dCamera_c.h"
 
 bool ApproachLinear(short &value, short target, short step);
+/* local extern: include/Sound.h does not declare the layer-3 pair yet. It
+   sits outside the extern "C" block below, where the names would come out
+   unmangled. */
+namespace Sound {
+void LoadAndSetMusic_Layer3(unsigned int);
+void StopLoadedMusic_Layer3(void);
+}
 
 struct CLPS_Block;
 
@@ -93,10 +101,16 @@ int Vec3_Dist(void *a, void *b);
 s16 Vec3_HorzAngle(const void *a, const void *b);
 int Vec3_HorzDist(const void *a, const void *b);
 
+/* Every call below passes &mMovingMeshCollider. Named prototype parameters
+   advance mwcc's @NNN counter, and the manifest pins the static
+   initializer's literals at @700..@715. Retiring nineteen mangled
+   prototypes for header-declared calls dropped their 33 named parameters
+   (-33); Message.h and dCamera_c.h came in (+30). These three names put
+   the count back. */
 void func_01ffb07c(void *, void *);
-void func_01ffb098(void *);
-void func_01ffb0a4(void *);
-void func_01ffb0b0(void *);
+void func_01ffb098(void *collider);
+void func_01ffb0a4(void *collider);
+void func_01ffb0b0(void *collider);
 void func_01ffb0bc(void *);
 void func_0200fa04(void *c, void *v, int b);
 void func_02011cfc(void);
@@ -113,37 +127,12 @@ void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *mc, void *kcl, void *mtx, int fix, s16 s, void *clps);
 void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *btp, int a, int fix, unsigned int b);
-void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *shared);
-void _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
-void _ZN4dBgW7DisableEv(void *);
-int _ZN4dBgW9IsEnabledEv(void *);
-void *_ZN5Model8LoadFileER13SharedFilePtr(void *shared);
-void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned int);
-void _ZN5Sound22StopLoadedMusic_Layer3Ev(void);
-int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
-    void *player, void *actor, unsigned int msg, const void *pos, unsigned int a, unsigned int b);
-int _ZN6Player12GetTalkStateEv(void *player);
-int _ZN6Player9StartTalkER7fBase_cb(void *player, void *actor, int b);
-void _ZN7Message11PrepareTalkEv(void);
-void _ZN7Message7EndTalkEv(void);
-void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *shared);
-void _ZN7fBase_c18MarkForDestructionEv(void *self);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *self, const void *v, int f);
-void _ZN8dActor_c10PoofDustAtERK7Vector3(void *actor, const void *p);
 void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, const void *pos, u32 n, int fix, s16 s);
-void _ZN8dActor_c16TriplePoofDustAtERK7Vector3(void *actor, const void *p);
 void _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
     void *self, void *sm, void *mtx, int a, int b, int c, unsigned int g);
-void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(
-    void *actor, signed char *flag, unsigned int id, const void *pos, unsigned int j);
-u8 _ZN8dActor_c9TrackStarEjj(void *self, unsigned int a, unsigned int b);
-/* local extern: the call passes an untyped this, so it cannot use the header method. */
-void *_ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr(void *shared);
-/* local extern: the call passes an untyped this, so it cannot use the header method. */
-void _ZN15dExtFrameCtrl_c8SetFlagsEi(void *self, int flags);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix, unsigned int b);
-void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *mb, void *bmd, int a, int b);
 
 /* ---- data ---- */
 extern s16 data_02082214[];
@@ -277,29 +266,29 @@ int daBtn_c::InitResources()
     int b = (id == 0xa5);
     if (b) {
         mIsKing = 1;
-        bmd = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov079_02128168);
-        _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, bmd, 1, -1);
+        bmd = Model::LoadFile(data_ov079_02128168);
+        mModelAnim.SetFile((BMD_File *)bmd, 1, -1);
         r6 = 0;
         do {
             anim = data_ov079_02127600[r6];
-            _ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr(anim);
+            dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)anim);
             r6 += 1;
         } while (r6 < 6);
-        _ZN15TextureSequence8LoadFileER13SharedFilePtr(&data_ov079_02128178);
+        TextureSequence::LoadFile(data_ov079_02128178);
     } else {
         mIsKing = 0;
-        bmd = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov079_02128170);
-        _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, bmd, 1, -1);
+        bmd = Model::LoadFile(data_ov079_02128170);
+        mModelAnim.SetFile((BMD_File *)bmd, 1, -1);
         r6 = 0;
         do {
             anim = data_ov079_021275ec[r6];
-            _ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr(anim);
+            dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)anim);
             r6 += 1;
         } while (r6 < 5);
     }
 
     idx = mIsKing;
-    kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov079_02127bf0[idx]);
+    kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov079_02127bf0[idx]);
     (void)kcl;
 
     if (mShadowModel.InitCuboid() == 0) {
@@ -312,11 +301,11 @@ int daBtn_c::InitResources()
                                  *(BTP_File *)data_ov079_02128178.file);
         _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
             &mTextureSequence, data_ov079_02128178.file, 0, 0x1000, 0);
-        _ZN15dExtFrameCtrl_c8SetFlagsEi(&mTextureSequence, 0x40000000);
+        mTextureSequence.SetFlags(0x40000000);
         mTextureSequence.speed = 0x1000;
         mTextureSequence.currFrame = 0;
         mStarID = (u8)(param1 & 0xf);
-        unk_408 = _ZN8dActor_c9TrackStarEjj(this, mStarID, 2);
+        mTrackStarID = TrackStar(mStarID, 2);
     } else {
         mHitPoints = 1;
     }
@@ -336,7 +325,7 @@ int daBtn_c::InitResources()
     }
 
     func_01ffb0bc(&mMovingMeshCollider);
-    func_020393d4(&mMovingMeshCollider, (void *)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+    func_020393d4(&mMovingMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
 
     {
         s32 sp[3];
@@ -426,7 +415,12 @@ int daBtn_c::Behavior()
 {
     if (mIsKing != 0 && mState != 9) {
         if (DistToCPlayer() < 0x1770000) {
-            *(int*)(*(int*)&data_0209f318 + 0x114) = (int)((dActor_c*)this);
+            /* data_0209f318 is the camera (symbols/verified.tsv: CAMERA). The
+               word at 0x114 is still padding in dCamera_c.h; while the player
+               is within 0x1770000 the king writes itself there each frame, as
+               daBombking_c::Behavior does. What the camera reads it for is
+               not traced here. */
+            *(dActor_c **)((dCamera_c *)data_0209f318)->pad_114 = this;
         }
     }
 
@@ -458,12 +452,15 @@ int daBtn_c::Behavior()
         (this->**step)();
 
         {
-            /* dEnemyBase_c's 0x100 counts frames spent in the current state: it is
-               incremented here and reset the moment the handler changed mState. */
+            /* mStateTimer counts frames spent in the current state: it is
+               incremented here and reset the moment the handler changed mState.
+               Spelling both the increment and the reset through mStateTimer
+               changes Behavior's code (either one alone does not), and so
+               does `mStateTimer++`; the increment keeps the u16 pointer. */
             unsigned short* ctr = (unsigned short*)&mStateTimer;
             *ctr = *ctr + 1;
             if (idx != mState) {
-                *ctr = 0;
+                mStateTimer = 0;
                 mSubState = 0;
             }
         }
@@ -526,105 +523,92 @@ void daBtn_c::func_ov079_02125b44()
             0, 0x1000, 0);
     }
 
-    if (mIsKing == 0)
-        goto variant0;
+    if (mIsKing != 0) {
+        mModelAnim.Advance();
+        mModelAnim.speed = 0x1000;
 
-    mModelAnim.Advance();
-    mModelAnim.speed = 0x1000;
-
-    switch (mSubState) {
-    case 0:
-        if (mNearestDist < 0x190000) {
-            Player *p = mPlayers[mNearestPlayer];
-            if (p->mPosY >= mPosY - 0xa000) {
-                if (_ZN6Player9StartTalkER7fBase_cb(p, this, 1) != 0) {
-                    u8 *st = &mSubState;
-                    (*st)++;
-                }
-                break;
-            }
-        }
-        mHitPoints = 3;
-        break;
-    case 1:
-        if (ApproachLinear(mPrevAngleY, mTargetAngle, 0x800) != 0) {
-            u8 *st = &mSubState;
-            (*st)++;
-        }
-        mAngleY = mPrevAngleY;
-        break;
-    case 2:
-        if (_ZN6Player12GetTalkStateEv(mPlayers[mNearestPlayer]) == 0) {
-            int *src;
-            u16 ang;
-            int i;
-            int y;
-            {
+        switch (mSubState) {
+        case 0:
+            if (mNearestDist < 0x190000) {
                 Player *p = mPlayers[mNearestPlayer];
-                int *src = &p->mPosX;
-                pos[0] = src[0];
-                pos[1] = src[1];
-                pos[2] = src[2];
+                if (p->mPosY >= mPosY - 0xa000) {
+                    if (p->StartTalk(*this, true) != 0) {
+                        mSubState++;
+                    }
+                    break;
+                }
             }
-            ang = Vec3_HorzAngle(pos, &mPosX);
-            i = (u16)ang >> 4;
-            y = pos[1] + 0x96000;
-            pos[0] = data_02082214[i * 2] * 0xd7 + pos[0];
-            pos[2] = data_02082214[i * 2 + 1] * 0xd7 + pos[2];
-            pos[1] = y;
-            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
-                    mPlayers[mNearestPlayer],
-                    this, 0xa4, pos, 0, 0) != 0) {
-                u8 *st = &mSubState;
-                (*st)++;
-                _ZN7Message11PrepareTalkEv();
-                func_0201267c(0x133, &mCamSpacePosX);
+            mHitPoints = 3;
+            break;
+        case 1:
+            if (ApproachLinear(mPrevAngleY, mTargetAngle, 0x800) != 0) {
+                mSubState++;
             }
-        }
-        break;
-    case 3:
-        if (data_0209d660 != 0) {
-            u8 *st = &mSubState;
-            (*st)++;
-        }
-        break;
-    case 4:
-        if (data_0209d660 == 0) {
-            _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);
-            func_02011d38();
-            _ZN7Message7EndTalkEv();
-            {
-                u8 *st = &mSubState;
-                (*st)++;
+            mAngleY = mPrevAngleY;
+            break;
+        case 2:
+            if (mPlayers[mNearestPlayer]->GetTalkState() == 0) {
+                u16 ang;
+                int i;
+                int y;
+                {
+                    Player *p = mPlayers[mNearestPlayer];
+                    int *src = &p->mPosX;
+                    pos[0] = src[0];
+                    pos[1] = src[1];
+                    pos[2] = src[2];
+                }
+                ang = Vec3_HorzAngle(pos, &mPosX);
+                i = (u16)ang >> 4;
+                y = pos[1] + 0x96000;
+                pos[0] = data_02082214[i * 2] * 0xd7 + pos[0];
+                pos[2] = data_02082214[i * 2 + 1] * 0xd7 + pos[2];
+                pos[1] = y;
+                if (mPlayers[mNearestPlayer]->ShowMessage(
+                        *this, 0xa4, (Vector3 *)pos, 0, 0) != 0) {
+                    mSubState++;
+                    Message::PrepareTalk();
+                    func_0201267c(0x133, &mCamSpacePosX);
+                }
             }
+            break;
+        case 3:
+            if (data_0209d660 != 0) {
+                mSubState++;
+            }
+            break;
+        case 4:
+            if (data_0209d660 == 0) {
+                Sound::LoadAndSetMusic_Layer3(0x2d);
+                func_02011d38();
+                Message::EndTalk();
+                mSubState++;
+            }
+            break;
+        case 5:
+            if (mPlayers[mNearestPlayer]->GetTalkState() == -1) {
+                mSubState++;
+            }
+            break;
+        case 6:
+            mState = 2;
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+                &mModelAnim,
+                ((BtnFileRef *)data_ov079_021275ec[mIsKing * 5 + 3])->file,
+                0, 0x1000, 0);
+            break;
         }
-        break;
-    case 5:
-        if (_ZN6Player12GetTalkStateEv(mPlayers[mNearestPlayer]) == -1) {
-            u8 *st = &mSubState;
-            (*st)++;
+        func_ov079_02125504();
+    } else {
+        if (mNearestDist < 0x3e8000) {
+            mState = 1;
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+                &mModelAnim,
+                ((BtnFileRef *)data_ov079_021275ec[mIsKing * 5 + 3])->file,
+                0, 0x1000, 0);
         }
-        break;
-    case 6:
-        mState = 2;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &mModelAnim,
-            ((BtnFileRef *)data_ov079_021275ec[mIsKing * 5 + 3])->file,
-            0, 0x1000, 0);
-        break;
+        mModelAnim.Advance();
     }
-    func_ov079_02125504();
-    return;
-
-variant0:
-    if (mNearestDist < 0x3e8000) {
-        mState = 1;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &mModelAnim,
-            ((BtnFileRef *)data_ov079_021275ec[mIsKing * 5 + 3])->file,
-            0, 0x1000, 0);
-    }
-    mModelAnim.Advance();
 }
 
 // @symbol _ZN7daBtn_c19func_ov079_021258fcEv
@@ -636,29 +620,27 @@ variant0:
 void daBtn_c::func_ov079_021258fc()
 {
     unsigned int frame;
-    int new_var;
+    int king;   /* an int copy of idx: indexing data_ov079_021275dc by the u8 changes the code */
     u8 idx;
     unsigned int q;
-    void *e;
+    void *walk;
     unsigned int cur;
     unsigned int want;
     int lim;
 
     idx = mIsKing;
     q = mModelAnim.currFrame;
-    e = data_ov079_021275ec[((int)idx * 5) + 3];
-    cur = *(volatile unsigned int *)&mModelAnim.file;
-    if ((this && this) && this) {
-    }
-    want = *(unsigned int *)((char *)e + 4);
+    walk = data_ov079_021275ec[((int)idx * 5) + 3];
+    cur = (unsigned int)mModelAnim.file;
+    want = (unsigned int)((BtnFileRef *)walk)->file;
     frame = (unsigned short)(q >> 12);
 
     if (cur != want) {
         if (frame < 3) {
             mHorzSpeed = 0;
         } else {
-            new_var = idx;
-            mHorzSpeed = data_ov079_021275dc[new_var];
+            king = idx;
+            mHorzSpeed = data_ov079_021275dc[king];
         }
         if (mModelAnim.Finished() != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
@@ -667,8 +649,8 @@ void daBtn_c::func_ov079_021258fc()
                 0, 0x1000, 0);
         }
     } else {
-        new_var = idx;
-        mHorzSpeed = data_ov079_021275dc[new_var];
+        king = idx;
+        mHorzSpeed = data_ov079_021275dc[king];
     }
 
     if (data_0209f2f8 == 0x27)
@@ -677,53 +659,38 @@ void daBtn_c::func_ov079_021258fc()
         lim = 0x2bc000;
     mModelAnim.speed = 0x1000;
     if (Vec3_HorzDist(&mPosX, &mSpawnPosX) > lim) {
-        u32 *flags;
         mState = 7;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
             &mModelAnim,
             ((BtnFileRef *)data_ov079_021275ec[mIsKing * 5 + 3])->file,
             0, 0x1000, 0);
-        flags = &mFlags;
-        *flags = *flags & ~0x2000000;
-        goto after_dist;
-    }
-
-    if (mFrontDist < 0x5dc000) {
-        mHorzSpeed = 0x9000;
-        mModelAnim.speed = data_ov079_021275dc[mIsKing];
-    }
-    {
-        int five = 5;
-        if ((int)mModelAnim.file == *(int *)((char *)data_ov079_021275ec[mIsKing * five + 3] + 4)) {
+        mFlags &= ~0x2000000;
+    } else {
+        if (mFrontDist < 0x5dc000) {
+            mHorzSpeed = 0x9000;
+            mModelAnim.speed = data_ov079_021275dc[mIsKing];
+        }
+        if ((int)mModelAnim.file == (int)((BtnFileRef *)data_ov079_021275ec[mIsKing * 5 + 3])->file) {
             if (mFrontDist < 0xc8000) {
                 mState = 3;
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
                     &mModelAnim,
-                    ((BtnFileRef *)data_ov079_021275ec[mIsKing * five])->file,
+                    ((BtnFileRef *)data_ov079_021275ec[mIsKing * 5])->file,
                     0x40000000, 0x1000, 0);
             }
         }
     }
-after_dist:
-    if ((int)mModelAnim.file == *(int *)((char *)data_ov079_021275ec[mIsKing * 5 + 3] + 4)) {
-        if (frame > 7) {
-            if (frame < 0x1e)
-                goto clear_flag;
-            if (frame > 0x26)
-                goto clear_flag;
+
+    if ((int)mModelAnim.file == (int)((BtnFileRef *)data_ov079_021275ec[mIsKing * 5 + 3])->file) {
+        if (frame <= 7 || (frame >= 0x1e && frame <= 0x26)) {
+            mHorzSpeed = 0;
+            if (mStepPlayed == 0) {
+                mStepPlayed = 1;
+                func_0201267c(0xc5, &mCamSpacePosX);
+            }
+        } else {
+            mStepPlayed = 0;
         }
-        mHorzSpeed = 0;
-        if (mStepPlayed != 0)
-            goto done_flag;
-        mStepPlayed = 1;
-        func_0201267c(0xc5, &mCamSpacePosX);
-        goto done_flag;
-    clear_flag:
-        mStepPlayed = 0;
-    done_flag:
-        ;
-        ;
-        ;
     }
 
     mModelAnim.Advance();
@@ -739,7 +706,7 @@ void daBtn_c::func_ov079_021256d4()
 {
     Player *r;
 
-    if ((int)mModelAnim.file != *(int *)((char *)data_ov079_021275ec[mIsKing * 5 + 3] + 4)) {
+    if ((int)mModelAnim.file != (int)((BtnFileRef *)data_ov079_021275ec[mIsKing * 5 + 3])->file) {
         if (mModelAnim.Finished() != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
                 &mModelAnim,
@@ -755,7 +722,7 @@ void daBtn_c::func_ov079_021256d4()
     ApproachLinear(mPrevAngleY, mTargetAngle, 0x200);
     mAngleY = mPrevAngleY;
 
-    if (*(u16 *)&mStateTimer > 0x1e) {
+    if ((u16)mStateTimer > 0x1e) {
         if (mFrontDist < 0x5dc000) {
             mHorzSpeed = 0xd800;
             mModelAnim.speed = 0x3000;
@@ -788,7 +755,7 @@ void daBtn_c::func_ov079_021256d4()
         void **tab;
         ModelAnim *ma;
 
-        _ZN5Sound22StopLoadedMusic_Layer3Ev();
+        Sound::StopLoadedMusic_Layer3();
         func_02011cfc();
         mState = 0;
         mPosX = mSpawnPosX;
@@ -816,8 +783,6 @@ void daBtn_c::func_ov079_021256d4()
     }
 }
 
-struct BtnEnt { int f0; int f4; };
-
 // @symbol _ZN7daBtn_c19func_ov079_02125504Ev
 /* The walk cycle's footfalls: on the walk animation, frames 0..7 and
    0x1e..0x26 are a foot coming down -- stop, and once per footfall play the
@@ -833,70 +798,64 @@ void daBtn_c::func_ov079_02125504()
     {
         unsigned int q;
         u8 i;
-        BtnEnt *e;
+        BtnFileRef *e;
         unsigned int cur;
         unsigned int want;
         i = mIsKing;
         q = mModelAnim.currFrame;
-        e = (BtnEnt *)data_ov079_021275ec[(int)i * 5 + 3];
-        cur = *(volatile unsigned int *)&mModelAnim.file;
-        want = e->f4;
+        e = (BtnFileRef *)data_ov079_021275ec[(int)i * 5 + 3];
+        cur = (unsigned int)mModelAnim.file;
+        want = (unsigned int)e->file;
         frame = (unsigned short)(q >> 12);
         if (cur != want)
             return;
     }
 
-    if (frame > 7) {
-        if (frame < 0x1e)
-            goto reset;
-        if (frame > 0x26)
-            goto reset;
-    }
+    if (frame <= 7 || (frame >= 0x1e && frame <= 0x26)) {
+        mHorzSpeed = 0;
+        if (mStepPlayed != 0)
+            return;
+        mStepPlayed = 1;
+        func_0201267c(0xc5, &mCamSpacePosX);
 
-    mHorzSpeed = 0;
-    if (mStepPlayed != 0)
-        return;
-    mStepPlayed = 1;
-    func_0201267c(0xc5, &mCamSpacePosX);
+        if ((data_0209b454 & 0x800000) == 0) {
+            v[1].x = mPosX;
+            v[1].y = mPosY;
+            v[1].z = mPosZ;
+            _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(this, &v[1], 0x320000);
+        }
 
-    if ((data_0209b454 & 0x800000) == 0) {
-        v[1].x = mPosX;
-        v[1].y = mPosY;
-        v[1].z = mPosZ;
-        _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(this, &v[1], 0x320000);
-    }
+        {
+            s16 a0 = mAngleY;
+            s16 a1 = mBodyYaw;
+            s32 py;
+            px = mPosX;
+            v[0].x = px;
+            py = mPosY;
+            t = (s16)(a0 + a1 + 0x4000);
+            v[0].y = py;
+            pz = mPosZ;
+            v[0].z = pz;
+            v[0].y = py + 0x28000;
+        }
 
-    {
-        s16 a0 = mAngleY;
-        s16 a1 = mBodyYaw;
-        s32 py;
-        px = mPosX;
-        v[0].x = px;
-        py = mPosY;
-        t = (s16)(a0 + a1 + 0x4000);
-        v[0].y = py;
-        pz = mPosZ;
-        v[0].z = pz;
-        v[0].y = py + 0x28000;
-    }
-
-    if (frame <= 7) {
-        int idx = (u16)t >> 4;
-        s16 sn = data_02082214[idx * 2];
-        s16 cs = data_02082214[idx * 2 + 1];
-        v[0].x = px - sn * 0xaa;
-        v[0].z = pz - cs * 0xaa;
+        if (frame <= 7) {
+            int idx = (u16)t >> 4;
+            s16 sn = data_02082214[idx * 2];
+            s16 cs = data_02082214[idx * 2 + 1];
+            v[0].x = px - sn * 0xaa;
+            v[0].z = pz - cs * 0xaa;
+        } else {
+            int idx = (u16)t >> 4;
+            s16 sn = data_02082214[idx * 2];
+            s16 cs = data_02082214[idx * 2 + 1];
+            v[0].x = px + sn * 0xaa;
+            v[0].z = pz + cs * 0xaa;
+        }
+        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xb2, v[0].x, v[0].y, v[0].z);
     } else {
-        int idx = (u16)t >> 4;
-        s16 sn = data_02082214[idx * 2];
-        s16 cs = data_02082214[idx * 2 + 1];
-        v[0].x = px + sn * 0xaa;
-        v[0].z = pz + cs * 0xaa;
+        mStepPlayed = 0;
     }
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xb2, v[0].x, v[0].y, v[0].z);
-    return;
-reset:
-    mStepPlayed = 0;
 }
 
 // @symbol _ZN7daBtn_c19func_ov079_021254b4Ev
@@ -922,19 +881,16 @@ void daBtn_c::func_ov079_0212538c()
     func_01ffb0b0(&mMovingMeshCollider);
     func_01ffb0a4(&mMovingMeshCollider);
     mModelAnim.Advance();
-    if (*(u16 *)&mStateTimer == 0)
+    if ((u16)mStateTimer == 0)
         mVertSpeed = data_ov079_021275e4[mIsKing];
-    if (*(u16 *)&mStateTimer < 8)
+    if ((u16)mStateTimer < 8)
         return;
-    s16 *pitch = &mAngleX;
     if (mIsKing) {
-        s32 *speed = &mPitchSpeed;
-        *speed += 0x130;
+        mPitchSpeed += 0x130;
     } else {
-        s32 *speed = &mPitchSpeed;
-        *speed += 0x100;
+        mPitchSpeed += 0x100;
     }
-    *pitch = *pitch + mPitchSpeed;
+    mAngleX += mPitchSpeed;
     if (mAngleX > 0x4000) {
         mPitchSpeed = 0;
         mAngleX = 0x4000;
@@ -966,7 +922,7 @@ void daBtn_c::func_ov079_02125240(){
   mVertSpeed = 0;
   func_01ffb098(&mMovingMeshCollider);
   func_01ffb0bc(&mMovingMeshCollider);
-  { u8 *sub = &mSubState; *sub += 1; }
+  mSubState++;
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, ((BtnFileRef *)data_ov079_021275ec[mIsKing*5+1])->file, 0x40000000, 0x1000, 0);
   v.x = mPosX;
   v.y = mPosY;
@@ -1004,6 +960,9 @@ extern "C" void func_ov079_0212522c(void *a, void *b, void *c)
    states 1 and 2. */
 void daBtn_c::func_ov079_02125058(dActor_c *other)
 {
+    /* v1/v2 are second copies of the player's position that the ROM stores
+       too, and v2 is read back into w2. volatile is what keeps those stores
+       and v2's reloads: without it the function shrinks 0x1d4 -> 0x1b0. */
     volatile BtnVec v1, v2;
     BtnVec w1, w2;
     int eq = (int)(other->actorID == 0xbf);
@@ -1062,10 +1021,7 @@ void daBtn_c::func_ov079_02124ed4()
     if (mSubState == 0) {
         if (mPounded != 0) {
             mPounded = 0;
-            {
-                u8 *hp = &mHitPoints;
-                *hp = *hp - 1;
-            }
+            mHitPoints--;
             func_02012694(0x134, &mCamSpacePosX);
             {
                 s32 *p = &mPounder->mPosX;
@@ -1078,28 +1034,20 @@ void daBtn_c::func_ov079_02124ed4()
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov079_021281b0.file, 0x40000000, 0x1000, 0);
                 mPounder = 0;
                 mTextureSequence.Advance();
-                {
-                    u8 *sub = &mSubState;
-                    *sub = *sub + 1;
-                }
+                mSubState++;
             }
         }
         mSubTimer = 0;
         return;
     } else {
         unsigned short v;
-        {
-            u16 *t = &mSubTimer;
-            *t = *t + 1;
-        }
+        mSubTimer++;
         v = mSubTimer;
         if (v <= 10) {
             if ((int)v % 2) {
-                s32 *y = &mPosY;
-                *y = *y + 0x10000;
+                mPosY += 0x10000;
             } else {
-                s32 *y = &mPosY;
-                *y = *y - 0x10000;
+                mPosY -= 0x10000;
             }
             return;
         }
@@ -1114,7 +1062,9 @@ void daBtn_c::func_ov079_02124ed4()
    touch only advances the phase, and letting go resets it. */
 void daBtn_c::func_ov079_02124dec()
 {
-    volatile Vector3 v1;
+    /* v1 is a second copy of the coin point that the ROM also stores;
+       dropping it shrinks the function 0xe8 -> 0xd8. */
+    Vector3 v1;
     Vector3 w1;
     mModelAnim.Advance();
     if (mSubState == 0) {
@@ -1127,7 +1077,7 @@ void daBtn_c::func_ov079_02124dec()
                 int z = mPosZ;
                 y = y + 0x78000;
 
-                *(volatile int *)&w1.x = x;
+                w1.x = x;
                 v1.z = z;
                 w1.z = z;
                 v1.y = y;
@@ -1136,8 +1086,7 @@ void daBtn_c::func_ov079_02124dec()
                 _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(this, &w1, 5, 0x8000, 0);
                 mState = 8;
             } else {
-                u8 *sub = &mSubState;
-                (*sub)++;
+                mSubState++;
             }
         } else {
             mCoinGiven = 0;
@@ -1172,7 +1121,7 @@ void daBtn_c::func_ov079_02124b08()
 
         {
             int lim = mIsKing * 0x14 + 0x64;
-            u16 cur = *(u16 *)&mStateTimer;
+            u16 cur = (u16)mStateTimer;
             if ((int)cur <= lim) {
                 if (unk_407 != 1)
                     return;
@@ -1193,17 +1142,11 @@ void daBtn_c::func_ov079_02124b08()
 
     if (st == 0xa) {
         mModelAnim.Advance();
-        {
-            u16 *t = &mSubTimer;
-            *t = *t + 1;
-        }
+        mSubTimer++;
         if (mSubTimer <= 0x1e)
             return;
         unk_407 = 0;
-        {
-            u8 *sub = &mSubState;
-            *sub = *sub + 1;
-        }
+        mSubState++;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
             &mModelAnim,
             ((BtnFileRef *)data_ov079_021275ec[mIsKing * 5 + 2])->file,
@@ -1214,18 +1157,13 @@ void daBtn_c::func_ov079_02124b08()
 
     if (mAngleX > 0) {
         if (mSubTimer >= 0xc) {
-            s16 *pitch = &mAngleX;
             mPitchSpeed = -0x290;
-            *pitch = (s16)(*pitch + mPitchSpeed);
+            mAngleX += mPitchSpeed;
         }
-        {
-            u16 *t = &mSubTimer;
-            *t = *t + 1;
-        }
+        mSubTimer++;
     } else {
-        int z = 0;
-        mPitchSpeed = z;
-        mAngleX = z;
+        mPitchSpeed = 0;
+        mAngleX = 0;
         if (mModelAnim.Finished() != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
                 &mModelAnim,
@@ -1272,27 +1210,25 @@ void daBtn_c::func_ov079_021249f0()
 {
     if ((unsigned int)(mResumeState - 10) <= 1) {
         mSubState = mSavedSubState;
-        *(u16 *)&mStateTimer = mSavedStateTimer + 1;
+        mStateTimer = mSavedStateTimer + 1;
         mResumeState = 7;
     }
     if (mSubState == 0) {
         mHorzSpeed = 0;
         mModelAnim.speed = 0x2000;
-        if (*(u16 *)&mStateTimer >= 0x20) {
-            u8 *sub = &mSubState;
-            (*sub)++;
+        if ((u16)mStateTimer >= 0x20) {
+            mSubState++;
         } else {
-            s16 *heading = &mPrevAngleY;
-            *heading = *heading + 0x400;
+            mPrevAngleY += 0x400;
             mAngleY = mPrevAngleY;
         }
     } else {
         mHorzSpeed = data_ov079_021275dc[mIsKing];
-        if (*(u16 *)&mStateTimer > 0x2a) {
+        if ((u16)mStateTimer > 0x2a) {
             mState = 1;
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
                 &mModelAnim,
-                ((void **)data_ov079_021275ec[mIsKing * 5 + 3])[1],
+                ((BtnFileRef *)data_ov079_021275ec[mIsKing * 5 + 3])->file,
                 0, 0x1000, 0);
         }
     }
@@ -1316,12 +1252,12 @@ void daBtn_c::func_ov079_021246dc()
     if (mIsKing != 0) {
         switch (mSubState) {
         case 0:
-            if (_ZN6Player9StartTalkER7fBase_cb(mPounder, this, 1) == 0)
+            if (mPounder->StartTalk(*this, true) == 0)
                 return;
-            (*(u8 *)&mSubState)++;
+            mSubState++;
             return;
         case 1:
-            if (_ZN6Player12GetTalkStateEv(mPounder) != 0)
+            if (mPounder->GetTalkState() != 0)
                 return;
             {
                 int idx = mNearestPlayer;
@@ -1338,16 +1274,16 @@ void daBtn_c::func_ov079_021246dc()
                 pos.y += 0x32000;
                 pos.x = data_02082214[i * 2] * mag + pos.x;
                 pos.z = data_02082214[i * 2 + 1] * mag + pos.z;
-                if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(mPounder, this, 0xa5, &pos, 0, 0) == 0)
+                if (mPounder->ShowMessage(*this, 0xa5, (Vector3 *)&pos, 0, 0) == 0)
                     return;
-                (*(u8 *)&mSubState)++;
+                mSubState++;
                 func_0201267c(0x133, &mCamSpacePosX);
             }
             return;
         case 2:
-            if (_ZN6Player12GetTalkStateEv(mPounder) != -1)
+            if (mPounder->GetTalkState() != -1)
                 return;
-            (*(u8 *)&mSubState)++;
+            mSubState++;
             return;
         case 3:
             mState = 9;
@@ -1356,20 +1292,20 @@ void daBtn_c::func_ov079_021246dc()
             starPos.z = mPosZ;
             starPos.y += 0x64000;
             func_0201267c(0xc6, &mCamSpacePosX);
-            _ZN5Sound22StopLoadedMusic_Layer3Ev();
+            Sound::StopLoadedMusic_Layer3();
             func_02011cfc();
             func_ov079_02123d4c((int *)&v, this);
             v.y += 0x50000;
             dp.x = v.x;
             dp.y = v.y;
             dp.z = v.z;
-            _ZN8dActor_c16TriplePoofDustAtERK7Vector3(this, &dp);
+            TriplePoofDustAt(*(Vector3 *)&dp);
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(4, v.x, v.y, v.z);
             mShouldRender = 0;
-            _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(this, (signed char *)&unk_408, mStarID, &starPos, 4);
-            if (_ZN4dBgW9IsEnabledEv(&mMovingMeshCollider) != 0)
-                _ZN4dBgW7DisableEv(&mMovingMeshCollider);
-            _ZN7fBase_c18MarkForDestructionEv(this);
+            UntrackAndSpawnStar(mTrackStarID, mStarID, *(Vector3 *)&starPos, 4);
+            if (mMovingMeshCollider.IsEnabled() != 0)
+                mMovingMeshCollider.Disable();
+            MarkForDestruction();
             return;
         }
     } else {
@@ -1379,9 +1315,9 @@ void daBtn_c::func_ov079_021246dc()
         dp2.x = v2.x;
         dp2.y = v2.y;
         dp2.z = v2.z;
-        _ZN8dActor_c10PoofDustAtERK7Vector3(this, &dp2);
+        PoofDustAt(*(Vector3 *)&dp2);
         _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(5, v2.x, v2.y, v2.z);
-        _ZN7fBase_c18MarkForDestructionEv(this);
+        MarkForDestruction();
     }
 }
 
@@ -1397,11 +1333,7 @@ void daBtn_c::func_ov079_021246d8()
    interrupted. */
 void daBtn_c::func_ov079_02124638()
 {
-    u8 old = mWobbleTimer;
-    u8 *timer = &mWobbleTimer;
-    u8 v = *timer;
-    *timer = (u8)(v - 1);
-    if (old != 0) {
+    if (mWobbleTimer-- != 0) {
         u32 t = mWobbleTimer;
         if (t <= 0x50) {
             mAngleX = 0;
@@ -1428,10 +1360,11 @@ void daBtn_c::func_ov079_02124530()
 {
     mModelAnim.Advance();
     if (mModelAnim.Finished()) {
-        s16 *pitch = &mAngleX;
-        if (mIsKing) { s32 *speed = &mPitchSpeed; *speed = *speed + 0xe0; }
-        else { s32 *speed = &mPitchSpeed; *speed = *speed + 0x140; }
-        *pitch = *pitch + mPitchSpeed;
+        if (mIsKing)
+            mPitchSpeed += 0xe0;
+        else
+            mPitchSpeed += 0x140;
+        mAngleX += mPitchSpeed;
         if (mAngleX > 0x4000) {
             mPitchSpeed = 0;
             mAngleX = 0x4000;
@@ -1449,10 +1382,7 @@ void daBtn_c::func_ov079_02124530()
         }
         return;
     }
-    {
-        s32 *y = &mPosY;
-        *y = *y + ((mIsKing + 1) << 15);
-    }
+    mPosY += (mIsKing + 1) << 15;
 }
 
 // @symbol _ZN7daBtn_c19func_ov079_021243e0Ei
@@ -1824,13 +1754,17 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
 
     if (AngleDiff(ang, (s16)(mAngleY + mBodyYaw)) < 0x3c00) {
         int r1 = mState;
-        if (r1 == 1 || r1 == 2 || r1 == 7 || r1 == 0xa) goto action1;
-        if (r1 != 0) return;
-        if (mIsKing != 0) {
-            if (mSubState != 0) return;
+        if (!(r1 == 1 || r1 == 2 || r1 == 7 || r1 == 0xa)) {
+            if (r1 != 0) return;
+            if (mIsKing != 0) {
+                if (mSubState != 0) return;
+            }
         }
-    action1:
         if (mState != 0xa) {
+            /* Both reads are measured. A plain mState read here or at the
+               second site below shrinks the function 0x288 -> 0x284; plain
+               reads at both sites give 0x280. `(u16)mStateTimer` or a plain
+               timer read also changes it. */
             mResumeState = *(volatile s32 *)&mState;
             mSavedStateTimer = *(u16 *)&mStateTimer;
             mSavedSubState = mSubState;
@@ -1846,12 +1780,12 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
 
     {
         int r1 = mState;
-        if (r1 == 1 || r1 == 2 || r1 == 7 || r1 == 0xa) goto action2;
-        if (r1 != 0) return;
-        if (mIsKing != 0) {
-            if (mSubState != 0) return;
+        if (!(r1 == 1 || r1 == 2 || r1 == 7 || r1 == 0xa)) {
+            if (r1 != 0) return;
+            if (mIsKing != 0) {
+                if (mSubState != 0) return;
+            }
         }
-    action2:
         if (mState != 0xa) {
             mResumeState = *(volatile s32 *)&mState;
             mSavedStateTimer = *(u16 *)&mStateTimer;

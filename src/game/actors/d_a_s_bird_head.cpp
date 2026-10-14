@@ -1,8 +1,8 @@
 //cpp
 /* Castle grounds birds -- ov009/daSBird_c, head of the class TU.
  *
- * The class linker run is 0x021111a0..0x02111a70, split by the
- * func_ov009_0211145c hatch at 0x0211145c. This file owns
+ * The class linker run is 0x021111a0..0x02111a70, split by the free
+ * function func_ov009_0211145c at 0x0211145c. This file owns
  * 0x021111a0..0x0211145c; the upper half lives in d_a_s_bird.cpp.
  *
  * The out-of-line destructor is the key function, so this file emits the

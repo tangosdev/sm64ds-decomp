@@ -14,10 +14,10 @@
  * in the den. Variant 1 carries a STAR (178). Variant 0 swims the path.
  *
  * Text is 0x021111a0..0x0211260c. The out-of-line destructor is the
- * key function (D1 and D0 at the start of ov016). The factory is not
- * `return new`: that skips the ROM's __cxa_vec_ctor over mSegmentPos,
- * because Vector3 has no user-declared constructor. defer_codegen off
- * keeps ROM order and scopes the den-wait and Render pragmas.
+ * key function (D1 and D0 at the start of ov016). The native factory
+ * constructs the Vector3 segment array through its empty default
+ * constructor. defer_codegen off keeps ROM order and scopes the
+ * den-wait and Render pragmas.
  * common.h stays first: the pose reads Matrix4x3 words m[9], m[10], m[11].
  *
  * leftovers:
@@ -891,50 +891,18 @@ tail:
     return 1;
 }
 
-extern "C" {
-extern void *_ZN7fBase_cnwEj(unsigned int);
-extern void *_ZN12dEnemyBase_cC2Ev(void *);
-extern void *_ZN10dCcAcPos_cC1Ev(void *);
-extern void *_ZN10dBgCh_ActrC1Ev(void *);
-extern void *_ZN14BlendModelAnimC1Ev(void *);
-extern void func_0203d384(void);
-extern void *_ZN7Vector3D1Ev(void *);
-/* The array runtime discards lifecycle receiver results. */
-extern void __cxa_vec_ctor(void *arr, unsigned int count, unsigned int size,
-                           void (*ctor)(void *), void (*dtor)(void *));
-extern int _ZTV9daMoray_c[];
-}
-
 /* Reconstructed source-style name: SM64DS proves daMoray_c through RTTI,
  * allocation size, vtable identity, and the MORAY registry profile; later
  * EAD lineage supplies classInit. Exact original spelling is not preserved.
  * Historical alias: Unagi_Spawn.
  *
- * Not written as `new daMoray_c()`: types.h's Vector3 has no user-declared
- * constructor, so the implicit daMoray_c constructor would skip the ROM's
- * per-element __cxa_vec_ctor(..., func_0203d384, ...) over mSegmentPos.
- * Reproducing it needs a real Vector3 default constructor in the shared
- * header, which every other Vector3 consumer would recompile under. The
- * factory keeps the loose file's hand-built sequence, as
- * daObjFlamethrower_c_classInit does. This TU owns the key function and so
- * defines _ZTV9daMoray_c from the start of the vtable object (the two-word
- * RTTI header); the vptr store reads `&_ZTV9daMoray_c[2]` to reach slot 0. */
+ * The implicit constructor builds the base, collision cylinders, background
+ * checker, model animation, and seven segment positions in declaration order.
+ * Vector3's empty default constructor is the array callback at 0x0203d384. */
 // @symbol daMoray_c_classInit
 extern "C" daMoray_c *daMoray_c_classInit()
 {
-    daMoray_c *p = (daMoray_c *)_ZN7fBase_cnwEj(sizeof(daMoray_c));
-    if (p) {
-        _ZN12dEnemyBase_cC2Ev(p);
-        *(void ***)p = (void **)&_ZTV9daMoray_c[2];
-        _ZN10dCcAcPos_cC1Ev(&p->mdCcAcPos_c1);
-        _ZN10dCcAcPos_cC1Ev(&p->mdCcAcPos_c2);
-        _ZN10dBgCh_ActrC1Ev(&p->mWithMeshClsn);
-        _ZN14BlendModelAnimC1Ev(&p->mBlendModelAnim);
-        __cxa_vec_ctor(p->mSegmentPos, 7, sizeof(Vector3),
-                       (void (*)(void *))func_0203d384,
-                       (void (*)(void *))_ZN7Vector3D1Ev);
-    }
-    return p;
+    return new daMoray_c;
 }
 
 /* Construction order is source order: the four file handles first, then the

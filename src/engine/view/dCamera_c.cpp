@@ -6,11 +6,11 @@
  * nested State. The D1/D0 pair is at 0x0200705c, outside this run.
  *
  * leftovers:
- * - The func_0200* handlers stay free functions under cplusplus off.
- *   The ROM symbol is unmangled, so a method would rename the linkage.
- *   They take the camera as char*.
- * - Vec3 stays a POD triple. A Vector3 in those C bodies emits a
- *   destructor.
+ * - The func_0200* handlers retain their existing C linkage. The three
+ *   line-query handlers use C++ for native collision-result initialization;
+ *   other handlers remain in cplusplus-off regions.
+ * - Vec3 remains the POD scratch triple in the older handlers. Native
+ *   collision results use Vector3 and its empty destructor.
  * - The state records in the 0x0209b008 table stay int. These bodies
  *   only take their address.
  * - CleanupResources keeps both null checks. The second is the
@@ -21,6 +21,7 @@
  *   TU-global, while Behavior needs it on.
  */
 #include "dCamera_c.h"
+#include "dBgCh_Lin.h"
 #include "decl_common.h"
 #include "decl_Particle.h"
 
@@ -125,10 +126,7 @@ extern void *_ZN9dBgCh_GndC1Ev(void *self);
 extern void _ZN9dBgCh_GndD1Ev(void *self);
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
 extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, const void *pos, void *actor);
-extern void *_ZN9dBgCh_LinC1Ev(void *self);
-extern void _ZN9dBgCh_LinD1Ev(void *self);
 extern int _ZN9dBgCh_Lin10DetectClsnEv(void *self);
-extern void _ZN9dBgCh_Lin10GetClsnPosEv(void *out, void *self);
 extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, const void *a, const void *b, void *actor);
 /* The C bodies spell the member by its mangled name (C cannot write `this->ChangeState`). */
 /* local extern: dCamera_c.h declares the same symbol as a member. */
@@ -151,13 +149,11 @@ extern int func_0200d0ac(int a, unsigned int b);
 extern void func_0200d954(char *c, short arg);
 }
 
-/* Opaque camera-side records the C bodies read through. The two dBgCh_*
-   shadows reserve the stand-in frames the ROM frames actually show -- the real
-   classes live in the dBgCh_*.h headers but these bodies were recovered against the
-   flat spelling (ground._[0x11] is the clsnY slot at 0x44). All are typedef'd
-   so the C regions can spell them without `struct`. */
+/* Opaque camera-side records used by the older handlers. The ground-query
+   shadow retains its measured frame and flat reads (ground._[0x11] is
+   clsnY at 0x44). Line queries use the real dBgCh_Lin class above. The
+   remaining records are typedef'd for the cplusplus-off regions. */
 typedef struct dBgCh_Gnd { int _[0x15]; } dBgCh_Gnd;
-typedef struct dBgCh_Lin { int _[0x1e]; } dBgCh_Lin;
 typedef struct dBgCh_LinHit { char pad[0x14]; char surf[0x64]; } dBgCh_LinHit;   /* func_0200b990's variant */
 typedef struct Entry3 { int a, b, c; } Entry3;                      /* data_02086f58 rows */
 extern Entry3 data_02086f58[];
@@ -941,14 +937,12 @@ void func_0200cf40(char *c)
 }
 
 // @symbol func_0200cce4
-void func_0200cce4(char* cam)
+#pragma cplusplus on
+extern "C" void func_0200cce4(char* cam)
 {
     Vec3 vec;
     Vec3 tmp1;
     Vec3 tmp2;
-    Vec3 cp;
-    dBgCh_Lin line;
-    dBgCh_Gnd ground;
     u32 d;
 
     if (*(char**)(cam + 0x110) != 0) {
@@ -980,7 +974,7 @@ void func_0200cce4(char* cam)
         Vec3_RotateYAndTranslate((Vec3*)(cam + 0x8c), (Vec3*)(cam + 0x80),
             *(s16*)(*(char**)(cam + 0x110) + 0x8e), &tmp2);
 
-        _ZN9dBgCh_LinC1Ev(&line);
+        dBgCh_Lin line;
         func_0200897c(cam, &line);
         {
             int tx;
@@ -995,11 +989,12 @@ void func_0200cce4(char* cam)
         }
         _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&line, (Vec3*)(cam + 0x8c), &vec, 0);
         if (_ZN9dBgCh_Lin10DetectClsnEv(&line) != 0) {
-            _ZN9dBgCh_Lin10GetClsnPosEv(&cp, &line);
+            Vector3 cp = line.GetClsnPos();
             vec.x = cp.x;
             vec.y = cp.y;
             vec.z = cp.z;
         }
+        dBgCh_Gnd ground;
         _ZN9dBgCh_GndC1Ev(&ground);
         func_0200897c(cam, &ground);
         _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&ground, &vec, 0);
@@ -1029,7 +1024,7 @@ void func_0200cce4(char* cam)
         func_0200928c(cam);
         ChangeArea(*(s8*)(*(char**)(cam + 0x110) + 0xcc));
         _ZN9dBgCh_GndD1Ev(&ground);
-        _ZN9dBgCh_LinD1Ev(&line);
+
     }
     *(int*)(((int)cam + 0x154)) |= 4;
 }
@@ -1191,16 +1186,14 @@ void func_0200c9e0(void *c, s32 *r1, s32 *r2)
 }
 
 // @symbol func_0200c66c
-int func_0200c66c(void *self_, void *pos_, int *out2_, int *out1_, int *arg5_)
+#pragma cplusplus on
+extern "C" int func_0200c66c(void *self_, void *pos_, int *out2_, int *out1_, int *arg5_)
 {
     char *self = (char *)self_;
     Vec3 *pos = (Vec3 *)pos_;
     void **out2 = (void **)out2_;
     void **out1 = (void **)out1_;
     Vec3 tmp;
-    Vec3 clsn;
-    dBgCh_Lin line;
-    dBgCh_Gnd ground;
     int hval;
     int col1;
     int col2;
@@ -1225,7 +1218,7 @@ int func_0200c66c(void *self_, void *pos_, int *out2_, int *out1_, int *arg5_)
         col2 = *(int*)((char*)obj + 0x660) & 0xff;
         hval = res;
     } else {
-        _ZN9dBgCh_LinC1Ev(&line);
+        dBgCh_Lin line;
         func_0200897c(self, &line);
         {
             int tx, tz, ty;
@@ -1238,11 +1231,12 @@ int func_0200c66c(void *self_, void *pos_, int *out2_, int *out1_, int *arg5_)
         }
         _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&line, pos, &tmp, 0);
         if (_ZN9dBgCh_Lin10DetectClsnEv(&line) != 0) {
-            _ZN9dBgCh_Lin10GetClsnPosEv(&clsn, &line);
+            Vector3 clsn = line.GetClsnPos();
             tmp.x = clsn.x;
             tmp.y = clsn.y;
             tmp.z = clsn.z;
         }
+        dBgCh_Gnd ground;
         _ZN9dBgCh_GndC1Ev(&ground);
         func_0200897c(self, &ground);
         _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&ground, &tmp, 0);
@@ -1256,7 +1250,7 @@ int func_0200c66c(void *self_, void *pos_, int *out2_, int *out1_, int *arg5_)
             col2 = func_02037e68((u32*)&ground._[5]) & 0xff;
         }
         _ZN9dBgCh_GndD1Ev(&ground);
-        _ZN9dBgCh_LinD1Ev(&line);
+
     }
 
     if (col1 == 0 || (*(u32*)(self + 0x154) & 0x400) != 0) {
@@ -1313,6 +1307,7 @@ int func_0200c66c(void *self_, void *pos_, int *out2_, int *out1_, int *arg5_)
 
     return res;
 }
+#pragma cplusplus off
 
 // @symbol func_0200c394
 int func_0200c394(void *self_, int a1, void *a2_, void *a3, void **a5, int *a6)
@@ -1403,7 +1398,8 @@ body:
 }
 
 // @symbol func_0200bec4
-int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
+#pragma cplusplus on
+extern "C" int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
 {
     int r5 = arg4;
     Vec3 sp8;
@@ -1412,11 +1408,6 @@ int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
     Vec3 sp2C;
     Vec3 sp38;
     Vec3 sp44;
-    Vec3 sp50;
-    Vec3 sp5C;
-    Vec3 sp68;
-    char sp74[0x78];
-    char spEC[0x54];
     int r4;
     int t;
     int sl;
@@ -1426,7 +1417,7 @@ int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
     sp44.x = data_02086f2c.x;
     sp44.y = data_02086f2c.y;
     Vec3_RotateYAndTranslate(&sp8, arg1, *(short*)(*(char**)(self + 0x110) + 0x8e), (int*)&sp44);
-    _ZN9dBgCh_LinC1Ev(sp74);
+    dBgCh_Lin line;
     sp14.x = sp8.x;
     sp14.y = sp8.y + 0x32000;
     sp14.z = sp8.z;
@@ -1438,10 +1429,10 @@ int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
         sp20.y = ty;
         sp20.z = tz;
     }
-    func_0200897c(self, sp74);
-    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(sp74, &sp20, &sp14, 0);
-    if (_ZN9dBgCh_Lin10DetectClsnEv(sp74) != 0) {
-        _ZN9dBgCh_Lin10GetClsnPosEv(&sp50, sp74);
+    func_0200897c(self, &line);
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&line, &sp20, &sp14, 0);
+    if (_ZN9dBgCh_Lin10DetectClsnEv(&line) != 0) {
+        Vector3 sp50 = line.GetClsnPos();
         sp8.x = sp50.x;
         sp8.y = sp50.y;
         sp8.z = sp50.z;
@@ -1449,14 +1440,15 @@ int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
     sp2C.x = sp8.x;
     sp2C.y = sp8.y + 0x100000;
     sp2C.z = sp8.z;
-    func_0200897c(self, sp74);
-    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(sp74, &sp8, &sp2C, 0);
-    if (_ZN9dBgCh_Lin10DetectClsnEv(sp74) != 0) {
-        _ZN9dBgCh_Lin10GetClsnPosEv(&sp5C, sp74);
+    func_0200897c(self, &line);
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&line, &sp8, &sp2C, 0);
+    if (_ZN9dBgCh_Lin10DetectClsnEv(&line) != 0) {
+        Vector3 sp5C = line.GetClsnPos();
         sp2C.x = sp5C.x;
         sp2C.y = sp5C.y;
         sp2C.z = sp5C.z;
     }
+    char spEC[0x54];
     _ZN9dBgCh_GndC1Ev(spEC);
     func_0200897c(self, spEC);
     _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(spEC, &sp2C, 0);
@@ -1478,6 +1470,7 @@ int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
     }
     sp8.y += func_020093d4(self, t);
     sl = Vec3_HorzLen(&sp8);
+    Vec3 sp68;
     Vec3_MulScalar(&sp68, self + 0x120, *(int*)(self + 0x130));
     AddVec3(&sp8, &sp68, &sp8);
     if (*(int*)(self + 0x154) & 4) {
@@ -1510,7 +1503,7 @@ int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
         }
         if (*(int*)(self + 0x154) & 0x400) {
             _ZN9dBgCh_GndD1Ev(spEC);
-            _ZN9dBgCh_LinD1Ev(sp74);
+
             return r4;
         }
     }
@@ -1539,8 +1532,7 @@ int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
         }
     }
     _ZN9dBgCh_GndD1Ev(spEC);
-    _ZN9dBgCh_LinD1Ev(sp74);
+
     return r4;
 }
-
 #pragma cplusplus on

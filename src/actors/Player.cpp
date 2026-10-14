@@ -3795,14 +3795,12 @@ return ((Player *)(self))->func_ov002_020c1ad8(ang);
 extern "C" {
 int func_ov002_020c2270(void* c, void* p1, void* p2) {
     extern int func_02037e58(void*);
-    extern void _ZN9dBgCh_Lin10GetClsnPosEv(void*, void*);
     extern int func_ov002_020c2270(void*, void*, void*);
     dBgCh_Lin line;
-    Vector3 clsnPos;
     line.SetObjAndLine(*(Vector3*)p1, *(Vector3*)p2, (dActor_c*)c);
     if (line.DetectClsn()) {
         if (func_02037e58((unsigned int*)&line.surface) == 1) {
-            _ZN9dBgCh_Lin10GetClsnPosEv(&clsnPos, &line);
+            ::Vector3 clsnPos = line.GetClsnPos();
             *(int*)((char*)c + 0x5c) = clsnPos.x;
             *(int*)((char*)c + 0x60) = clsnPos.y;
             *(int*)((char*)c + 0x64) = clsnPos.z;
@@ -6363,7 +6361,6 @@ extern "C" {
 int Player::func_ov002_020c607c(int p1, int p2, int *outptr)
 {
     char *self = (char *)this;
-    extern void _ZN9dBgCh_Lin10GetClsnPosEv(void*, void*);
     *(int *)(self + 0x36c) = 0;
     *outptr = (int)0x80000000;
 
@@ -6371,10 +6368,9 @@ int Player::func_ov002_020c607c(int p1, int p2, int *outptr)
 
     V3 a(*(int *)(self + 0x5c), p1, *(int *)(self + 0x64));
     V3 b(*(int *)(self + 0x5c), p2, *(int *)(self + 0x64));
-    V3 pos;
     rc.SetObjAndLine(*(Vector3*)&a, *(Vector3*)&b, (dActor_c *)self);
     if (rc.DetectClsn() != 0) {
-        _ZN9dBgCh_Lin10GetClsnPosEv((Vector3*)&pos, &rc);
+        ::Vector3 pos = rc.GetClsnPos();
         *outptr = pos.y;
         if (rc.GetClsnID() != -1) {
             dActor_c *found = dActor_c::FindWithID((u32)rc.GetClsnID());
@@ -6504,10 +6500,8 @@ int Player::func_ov002_020c61ac() {
 extern "C" {
 int Player::func_ov002_020c647c(int arg1) {
     char* c = (char*)this;
-    extern void _ZN9dBgCh_Lin10GetClsnPosEv(void*, void*);
     Vector3 v1;
     Vector3 v2;
-    Vector3 clsnPos;
     dBgCh_Lin line;
     int z1 = *(int*)(c + 0x64);
     int x1 = *(int*)(c + 0x5c);
@@ -6522,7 +6516,7 @@ int Player::func_ov002_020c647c(int arg1) {
     int r5 = -64;
     line.SetObjAndLine(v1, v2, (dActor_c*)c);
     if (line.DetectClsn()) {
-        _ZN9dBgCh_Lin10GetClsnPosEv(&clsnPos, &line);
+        ::Vector3 clsnPos = line.GetClsnPos();
         int d = (clsnPos.y - *(int*)(c + 0x60)) / 0x1000;
         if (d > 0xa0) d = 0xa0;
         if (d < 0) d = 0;
@@ -12009,10 +12003,8 @@ void func_ov002_020ce798(char* c)
     extern void _ZN9dBgCh_LinD1Ev(void*);
     extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void*, const Vec3i* a, const Vec3i* b, void*);
     extern int _ZN9dBgCh_Lin10DetectClsnEv(void*);
-    extern void _ZN9dBgCh_Lin10GetClsnPosEv(void*, void*);
     char rl[0x78];
     Vec3i v1, v2;
-    Vec3i cp;
 
     if (!_ZN6Player7IsStateERNS_5StateE(c, &data_ov002_0211067c)) return;
 
@@ -12032,7 +12024,7 @@ void func_ov002_020ce798(char* c)
     v2.y += 0x96000;
     _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &v1, &v2, (dActor_c*)c);
     if (_ZN9dBgCh_Lin10DetectClsnEv(rl)) {
-        _ZN9dBgCh_Lin10GetClsnPosEv(&cp, rl);
+        ::Vector3 cp = ((::dBgCh_Lin*)rl)->GetClsnPos();
         if (*(int*)(c + 0x60) >= cp.y - 0x82000) {
             LDR_I(c + 0x60) -= 0x4000;
             if (*(int*)(c + 0x60) < cp.y - 0x82000)
@@ -12332,7 +12324,6 @@ int func_ov002_020cef84(char *self)
     extern int _ZN6Player7IsInAirEv(void*);
     extern int _ZN6Player7IsStateERNS_5StateE(void*, void*);
     extern void _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
-    extern void _ZN9dBgCh_Lin10GetClsnPosEv(void*, void*);
     extern void func_02035414(void*);
     extern void func_02035428(void*);
     extern int func_02037e38(void*);
@@ -12341,8 +12332,7 @@ int func_ov002_020cef84(char *self)
     extern void _ZN5dBgPiD1Ev(void*);
     extern char data_ov002_0211001c;
     extern int data_02099368;
-    Vector3 v1, v2, cp;
-    ClsnResultTmp tmp;
+    Vector3 v1, v2;
     int lim;
 
     dBgCh_Lin line;
@@ -12375,7 +12365,7 @@ int func_ov002_020cef84(char *self)
         func_02035428(&line);
     line.SetObjAndLine(v1, v2, (dActor_c*)self);
     if (line.DetectClsn()) {
-        _ZN9dBgCh_Lin10GetClsnPosEv(&cp, &line);
+        ::Vector3 cp = line.GetClsnPos();
         if (func_02037e38((unsigned int *)&line.surface) == 3) {
             int t2 = *(int *)(self + 0x358) != 0;
             if (t2 == false) {
@@ -12389,6 +12379,7 @@ int func_ov002_020cef84(char *self)
             if (d < 0) d = -d;
             if (d < lim) {
                 void *a;
+                ClsnResultTmp tmp;
                 int *dst = &tmp.f04;
                 int w0, w1;
                 *(int *)(self + 0xa8) = -0x1000;
@@ -12427,7 +12418,6 @@ int func_ov002_020cef84(char *self)
 extern "C" {
 int func_ov002_020cf20c(char* c) {
     Player *self = (Player *)c;
-    extern void _ZN9dBgCh_Lin10GetClsnPosEv(void*, void*);
     extern int func_02037e38(void*);
     extern int func_02037e48(void*);
     extern void func_0200ca14(void*, unsigned char b, int c);
@@ -12435,7 +12425,6 @@ int func_ov002_020cf20c(char* c) {
     extern int func_ov002_020cf20c(void*);
     Vector3 v1;
     Vector3 v2;
-    Vector3 clsnPos;
     dBgCh_Lin line;
     v1.x = *(int*)(c + 0x5c);
     int y1 = *(int*)(c + 0x60);
@@ -12450,7 +12439,7 @@ int func_ov002_020cf20c(char* c) {
     line.SetObjAndLine(v1, v2, (dActor_c*)c);
     if (line.DetectClsn()) {
         if (func_02037e38((unsigned int*)&line.surface) == 3) {
-            _ZN9dBgCh_Lin10GetClsnPosEv(&clsnPos, &line);
+            ::Vector3 clsnPos = line.GetClsnPos();
             void* cam = data_0209f318[0];
             int t = func_02037e48((unsigned int*)&line.surface);
             func_0200ca14(cam, self->mPlayerNo, t);
@@ -13062,7 +13051,6 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
     extern void _ZN9dBgCh_LinD1Ev(void* self);
     extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, Vec3* a, Vec3* b, void* actor);
     extern int _ZN9dBgCh_Lin10DetectClsnEv(void* self);
-    extern void _ZN9dBgCh_Lin10GetClsnPosEv(Vec3* out, void* self);
     extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vec3* out);
     extern int _ZN4cstd5atan2E5Fix12IiES1_(int x, int z);
     extern int AngleDiff(int a, int b);
@@ -13071,8 +13059,6 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
     Vec3 normal;
     Vec3 pos1;
     Vec3 lineStart;
-    Vec3 clsnPos;
-    Vec3 line2;
     char rg[0x50];
     char rl[0x78];
     int ang;
@@ -13178,7 +13164,7 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
             }
         }
     }
-    _ZN9dBgCh_Lin10GetClsnPosEv(&clsnPos, rl);
+    ::Vector3 clsnPos = ((::dBgCh_Lin*)rl)->GetClsnPos();
     lineStart.y += 0x64000;
     pos1.y += 0x64000;
     _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &lineStart, &pos1, c);
@@ -13188,6 +13174,7 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
         return 0;
     }
     lineStart.y = *(int*)(c + 0x60);
+    Vec3 line2;
     line2.x = *(int*)(c + 0x5c);
     line2.y = *(int*)(c + 0x60);
     line2.z = *(int*)(c + 0x64);
@@ -17605,7 +17592,6 @@ int func_ov002_020d6dac(char *self)
     extern void Vec3_MulScalarInPlace(int *v, int s);
     extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *act);
     extern int _ZN9dBgCh_Lin10DetectClsnEv(void *self);
-    extern void _ZN9dBgCh_Lin10GetClsnPosEv(void *res, void *self);
     extern int _ZNK5dBgPi9GetClsnIDEv(void *r);
     extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
     extern void _ZN5dBgPiD1Ev(void *r);
@@ -17620,8 +17606,6 @@ int func_ov002_020d6dac(char *self)
     struct Vector3 p1;
     struct Vector3 p2;
     dBgPi res;
-    struct Vector3 clsnPos;
-    struct Vector3 normal;
     char rl[0x78];
     int *d;
     char *actor;
@@ -17679,8 +17663,9 @@ int func_ov002_020d6dac(char *self)
         return 0;
     }
 
-    _ZN9dBgCh_Lin10GetClsnPosEv(&clsnPos, rl);
+    ::Vector3 clsnPos = ((::dBgCh_Lin*)rl)->GetClsnPos();
     *(int *)(self + 0x654) = func_02053274((int *)&p1, (int *)&clsnPos);
+    struct Vector3 normal;
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3(rl + 0x14, &normal);
     ang = _ZN4cstd5atan2E5Fix12IiES1_(normal.x, normal.z);
     idx = (u16)ang >> 4;
@@ -18808,7 +18793,6 @@ void func_ov002_020d8a50(char* self, int which)
     extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(struct dBgCh_Lin* r, struct Vector3* a, struct Vector3* b, void* actor);
     extern int _ZN9dBgCh_Lin10DetectClsnEv(struct dBgCh_Lin* r);
     extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* s, struct Vector3* n);
-    extern void _ZN9dBgCh_Lin10GetClsnPosEv(struct Vector3* ret, struct dBgCh_Lin* r);
     extern void _ZN9dBgCh_LinD1Ev(struct dBgCh_Lin* r);
     extern s16 data_02082214[];
     extern u16 data_ov002_0210a5cc[];
@@ -18883,7 +18867,6 @@ void func_ov002_020d8a50(char* self, int which)
         struct Vector3 v1;
         struct Vector3 v2;
         struct Vector3 normal;
-        struct Vector3 clsnPos;
         int idx;
 
         _ZN9dBgCh_LinC1Ev(&ray);
@@ -18903,7 +18886,7 @@ void func_ov002_020d8a50(char* self, int which)
             if (normal.y == 0) {
                 *(int*)(self + 0x98) = 0xa000;
                 *(s16*)(self + 0x94) = *(s16*)(self + 0x8e) + 0x8000;
-                _ZN9dBgCh_Lin10GetClsnPosEv(&clsnPos, &ray);
+                ::Vector3 clsnPos = ((::dBgCh_Lin*)&ray)->GetClsnPos();
                 func_ov002_020d8d10(self, &clsnPos);
             }
         }

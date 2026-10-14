@@ -108,7 +108,6 @@ extern void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fi
     void *c, void *sm, void *mtx, int a, int b, unsigned char u);
 extern void *_ZN9dBgCh_LinC1Ev(dBgCh_Lin* self);
 extern dBgCh_Lin *_ZN9dBgCh_LinD1Ev(void* self);
-extern void _ZN9dBgCh_Lin10GetClsnPosEv(Vector3* res, dBgCh_Lin* self); /* local extern: the real member returns Vector3 by value, which mwcc cannot reproduce (wall 6az); the definition keeps the free (res, self) spelling. */
 extern void *_ZN5dBgPiC1Ev(void* self);
 extern void _ZN5dBgPiD1Ev(void* self);
 extern void* _ZNK10dBgCh_Actr13GetWallResultEv(void*);
@@ -223,8 +222,7 @@ void daCoin_c::func_ov002_020b10e4()
                 dActor_c::FindWithID(((dBgPi*)hit)->GetClsnID()) != 0) {
                 ((CoinFlagBits*)((long long)&mCoinFlags))->floorState = FLOOR_DYNAMIC;
             } else {
-                Vector3 pos;
-                _ZN9dBgCh_Lin10GetClsnPosEv(&pos, (dBgCh_Lin*)ray);
+                Vector3 pos = ((dBgCh_Lin*)ray)->GetClsnPos();
                 mFloorPosY = pos.y;
                 ((CoinFlagBits*)((long long)&mCoinFlags))->floorState = FLOOR_FIXED;
             }

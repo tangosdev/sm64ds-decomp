@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: mwccarm 2004/b56 codegen floor: one 5-insn register-assignment/scheduling tie in the G3_TEXIMAGE_PARAM pack (notes/mwccarm-codegen.md 6cf, 6cz) (div=5). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 2004/b56 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 #include "types.h"
 #pragma defer_codegen off
 #include "daPicGate_c.h"
@@ -35,23 +32,31 @@ extern int data_ov080_0212771c[];
 /* texgen=NORMAL variant: no per-vertex TEXCOORD, positions at >>7. */
 #define EMIT_VTX7(v) \
     G3_NORMAL = (v)->color; \
-    vx = (v)->x; \
-    vy = (v)->y; \
     vz = (v)->z; \
-    s0 = (s16)(vx >> 7); \
-    s1 = (s16)(vy >> 7); \
     s2 = (s16)(vz >> 7); \
-    G3_VTX_16 = (u16)s0 | ((u16)s1 << 16); \
+    vx = (v)->x; \
+    s0 = (s16)(vx >> 7); \
+    vx = (u16)s0; \
+    vy = (v)->y; \
+    s1 = (s16)(vy >> 7); \
+    G3_VTX_16 = vx | ((u16)s1 << 16); \
     G3_VTX_16 = (u16)s2
 
+static inline void G3_TexImageParam(u32 addr, u32 texFmt, u32 sizeS,
+                                   u32 sizeT, u32 pltt0)
+{
+    G3_TEXIMAGE_PARAM = (addr >> 3) | (texFmt << 26) | 0x80000000 |
+                       (sizeS << 20) | (sizeT << 23) | (pltt0 << 29);
+}
+
+#pragma opt_propagation off
 void daPicGate_c::func_ov080_021261f4()
 {
     int tmp[12];
     int i, j, n;
-    int z = 0;
 
     MulMat4x3Mat4x3(mMtx, data_0209b3ec.m, tmp);
-    G3_MTX_PUSH = z;
+    G3_MTX_PUSH = 0;
     func_02055998(data_ov080_0212771c);
     func_02055388(tmp);
     G3_MTX_MODE = kMtxPosVec;
@@ -65,10 +70,10 @@ void daPicGate_c::func_ov080_021261f4()
     }
     G3_SPE_EMI = ((struct Ov080Mat *)mTexRecord)->speEmi;
     {
-        struct Ov080Mat *m2 = (struct Ov080Mat *)mTexRecord;
-        G3_TEXIMAGE_PARAM = (int)((m2->texAddr >> 3) | (((m2->param >> 0x1a) & 7) << 26)
-            | 0x80000000 | (((m2->param >> 0x14) & 7) << 20)
-            | (((m2->param >> 0x17) & 7) << 23) | (((m2->param >> 0x1d) & 1) << 29));
+        Ov080Mat *m2 = (Ov080Mat *)mTexRecord;
+        G3_TexImageParam(m2->texAddr, (m2->param >> 26) & 7,
+                         (m2->param >> 20) & 7, (m2->param >> 23) & 7,
+                         (m2->param >> 29) & 1);
     }
     {
         struct Ov080Mat *m3 = (struct Ov080Mat *)mTexRecord;
@@ -80,12 +85,12 @@ void daPicGate_c::func_ov080_021261f4()
     G3_MTX_SCALE = 0x10000;
 
     n = (int)mCols;
-    i = z;
+    i = 0;
     n = n - 1;
     if (n > 0) {
         do {
             G3_BEGIN = kTriStrip;
-            j = z;
+            j = 0;
             if ((int)mRows > 0) {
                 do {
                     Vertex *base = mCells;
@@ -101,9 +106,11 @@ void daPicGate_c::func_ov080_021261f4()
                     j++;
                 } while (j < (int)mRows);
             }
-            G3_END = z;
+            G3_END = 0;
             i++;
         } while (i < (int)mCols - 1);
     }
     G3_MTX_POP = 1;
 }
+
+#pragma opt_propagation on

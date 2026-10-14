@@ -3,30 +3,18 @@
 # object, so the ROM build still covers them - just not from a separate file.
 # Lines starting with '#' are comments.
 
-# --- main: the 0x0206d9dc / 0x0206da28 secondary-entry-point cluster ---
-# func_0206ce90, func_0206cee0 and func_0206d868 arm_call 0x0206d9dc and 0x0206da28.
-# Neither address has a symbol: they are secondary entry points 0x10 bytes inside
-# func_0206d9cc and func_0206da18. dsd names such a target with a local label
-# (.L_0206d9dc), and a local label cannot be referenced from outside the object that
-# defines it:
-#   "Imported symbol .L_0206d9dc ... is local, it cannot be used in relocation"
-# So the callers and the targets must stay in one object. Excluding just the three
-# callers is not enough - carving any function between them splits the span - so the
-# whole run from the first caller to the last target stays in the gap.
-# Giving 0x0206d9dc and 0x0206da28 real symbols in config/arm9/symbols.txt would
-# recover all twelve.
-func_0206ce90
-func_0206cec0
-func_0206cee0
-func_0206cf7c
-func_0206cf98
-func_0206d32c
-func_0206d868
-func_0206d890
-func_0206d8c4
-func_0206d940
-func_0206d9cc
-func_0206da18
+# --- main: the 0x0206d9dc / 0x0206da28 secondary-entry-point cluster CAME OFF THIS LIST ---
+# func_0206ce90, func_0206cee0 and func_0206d868 arm_call 0x0206d9dc and 0x0206da28,
+# secondary entry points 0x10 bytes inside func_0206d9cc and func_0206da18. With no
+# symbol there, dsd named them with local labels (.L_0206d9dc), which no other object can
+# import, so the whole run func_0206ce90..func_0206da18 used to stay in the gap.
+# config/arm9/symbols.txt now gives both addresses named label rows, the same shape as
+# the ITCM runtime's interior entries (_dadd_core, _dsub_core): _ZN3IRQ11SetFIQStateEb
+# and _ZN3IRQ11SetIRQStateEb, the names symbols/verified.tsv records. A label is not a
+# function, so neither moves the function count. With the hand-asm owners enrolled,
+# tools/lcf_interior.py defines each name at its ROM address in the LCF, since mwccarm
+# cannot export a second symbol from one asm block. The twelve functions are enrolled
+# `complete`.
 
 # --- rejected by mwldarm despite passing eligibility ---
 # _ZN17dExtShadowModel_c10InitCuboidEv / _ZN17dExtShadowModel_c12InitCylinderEv CAME OFF
@@ -48,10 +36,18 @@ func_0206da18
 # emits the D1 complete-object destructor where the ROM calls the D2 base-object
 # one. include/daObjCloset_c.h now derives the class properly and both files are
 # an empty daObjCloset_c::~daObjCloset_c(); the compiler picks D2 itself and
-# the ROM build carries both. Cast-and-call is the shape to look for in whatever
-# is still listed here.
-CleanCommonModelDataArr
-func_020313d8
+# the ROM build carries both.
+#
+# CleanCommonModelDataArr and func_020313d8 CAME OFF THIS LIST. Both called the
+# wrong function with the right shape, which a byte compare that wildcards relocated
+# words cannot see (tools/match.py's default --strict-relocs reports it).
+# CleanCommonModelDataArr called _ZdlPv (0x0203cbf0) where the ROM calls the veneer
+# func_0203cbc0 that tail-calls it; func_020313d8 called _ZN7Message7AddCharEc
+# (0x0201b5a8) where the ROM calls func_02031b84. Both now name the ROM's callee
+# and link byte-identical.
+#
+# Nothing is listed here now. Cast-and-call and a same-shaped wrong callee are the
+# two causes to look for if anything is added.
 
 # --- itcm: two unreferenced argument-swap entries that fall THROUGH into their successor ---
 # 0x01ff8df8 (0x18) xor-swaps both double argument pairs and falls into func_01ff8e10
@@ -76,10 +72,10 @@ func_020313d8
 # enroll.py to exclude. This block is here so the reasoning is not lost.
 
 # --- itcm: func_01ffa440 branches into func_01ffa4bc's interior ---
-# Same shape as the 0x0206d9dc cluster at the top of this file, reached from the other
-# direction. func_01ffa440 (unsigned int -> float) is the twin of func_01ffa4bc (int ->
-# float) immediately below it, and the assembler laid its two out-of-line tails INSIDE
-# its twin's address range:
+# Same shape as the 0x0206d9dc cluster at the top of this file (since recovered),
+# reached from the other direction. func_01ffa440 (unsigned int -> float) is the twin
+# of func_01ffa4bc (int -> float) immediately below it, and the assembler laid its
+# two out-of-line tails INSIDE its twin's address range:
 #     0x01ffa488  bne 0x01ffa558   (func_01ffa4bc + 0x9c, the enabled-trap exit)
 #     0x01ffa4a0  bne 0x01ffa538   (func_01ffa4bc + 0x7c, the round-up tail)
 # Both are real - they are in the ROM, and neither is reachable from func_01ffa4bc's own
@@ -104,10 +100,9 @@ func_020313d8
 # either branch (config/arm9/itcm/relocs.txt has entries only for the arm_calls out to
 # main), so _dsd_gap@itcm_2.o carries both as raw unrelocated words and the linker places
 # it at its ROM address; the branch into func_01ffa4bc.o's interior already resolves by
-# arithmetic. func_01ffa4bc therefore keeps its own enrollment - unlike the 0x0206d9dc
-# cluster, the target does NOT have to join the caller in the gap.
+# arithmetic. func_01ffa4bc therefore keeps its own enrollment - the target does NOT
+# have to join the caller in the gap.
 #
 # src/unnamed/arm9/01ff/func_01ffa440.c records the routine and declares the two targets as
-# func_01ffa538 / func_01ffa558, the same way src/unnamed/arm9/0206/func_0206cee0.c declares 0x0206d9dc and
-# 0x0206da28 for the cluster above.
+# func_01ffa538 / func_01ffa558.
 func_01ffa440

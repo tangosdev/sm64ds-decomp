@@ -367,15 +367,23 @@ def _isolate(obj, rel, syms, data_sink=None, compiler_only=None, intact_tus=None
             return f"intact TU preparation refused: {exc}"
         obj.write_bytes(prepared)
         return None
+    pol = (compiler_only or {}).get(rel.replace("\\", "/")) or {}
+    if pol.get("canonical") and not isinstance(selected, (list, tuple)):
+        return "canonical duplicate policy requires explicit enrolled function ownership"
     if isinstance(selected, (list, tuple)):
         if not selected:
             return "source owns no enrolled functions"
-        if len(selected) == 1:
+        if len(selected) == 1 and not pol.get("canonical"):
             plan = OI.isolate(obj, selected[0])
         else:
-            pol = (compiler_only or {}).get(rel.replace("\\", "/")) or {}
             dead = pol.get("deadstrip") or []
             if dead:
+                canonical = pol.get("canonical", [])
+                if canonical:
+                    import tubuild as TB
+                    errors = TB.verify_canonical_duplicates(obj.read_bytes(), canonical)
+                    if errors:
+                        return "canonical duplicate policy: " + "; ".join(errors)
                 # Before the surgery, not after: once the sections are zeroed there is
                 # nothing left to compare against the cartridge.
                 differ = _data_body_reasons(obj, rel, pol.get("data") or [])
@@ -390,8 +398,14 @@ def _isolate(obj, rel, syms, data_sink=None, compiler_only=None, intact_tus=None
                 if reduced is None:
                     return ("compiler-only deadstrip refused: "
                             + str(dead_plan.get("error")))
+                if canonical:
+                    reduced, rename_plan = OI.rename_undefined_symbols(
+                        reduced, {r["symbol"]: r["canonical_symbol"] for r in canonical})
+                    if reduced is None:
+                        return "canonical duplicate rename refused: " + rename_plan["error"]
                 obj.write_bytes(reduced)
-            plan = OI.isolate_many(obj, selected)
+            plan = (OI.isolate(obj, selected[0]) if len(selected) == 1
+                    else OI.isolate_many(obj, selected))
     else:
         plan = OI.isolate(obj, selected)
     if plan.get("kind") == OI.NOT_A_FUNCTION:
@@ -680,6 +694,12 @@ def compiler_only_policies(enrolled=None, manifest=None, homes=None):
         if source in out:
             errors.append(f"{source}: compiler-only policy is declared by multiple entries")
             continue
+        import tubuild as TB  # only policy preflight; both build paths share guards
+        canonical, canonical_errors = TB.canonical_duplicate_policies(entry, homes)
+        if canonical_errors:
+            errors.extend(f"{source}: {error}" for error in canonical_errors)
+            continue
+        canonical_by_name = {row["symbol"]: row for row in canonical}
         licensed = {row.get("symbol") for row in entry.get("functions", [])}
         wanted, expect, data, dup_homes = [], {}, [], {}
         for i, row in enumerate(rows):
@@ -706,13 +726,17 @@ def compiler_only_policies(enrolled=None, manifest=None, homes=None):
                               f"must name a module and an integer address")
             elif declared is not None:
                 actual = {(RL.normalize_module(m), a)
-                          for m, a in homes.get(symbol) or []}
+                          for m, a in homes.get(row.get("canonical_symbol", symbol)) or []}
                 if declared not in actual:
                     errors.append(f"{source}: {symbol} names canonical home "
                                   f"{declared[0]}:0x{declared[1]:08x}, which is not one "
                                   f"of its configured ROM home(s) {sorted(actual)}")
             if disposition == "deadstrip-duplicate":
-                if not homes.get(symbol):
+                if symbol in canonical_by_name:
+                    resolved = canonical_by_name[symbol]
+                    expect[symbol] = resolved["body"]
+                    dup_homes[symbol] = (resolved["module"], resolved["address"])
+                elif not homes.get(symbol):
                     errors.append(f"{source}: {symbol} is declared a duplicate but has "
                                   f"no configured ROM home")
                 else:
@@ -780,6 +804,8 @@ def compiler_only_policies(enrolled=None, manifest=None, homes=None):
             wanted.append(symbol)
         out[source] = {"deadstrip": wanted, "expect": expect, "data": data,
                        "homes": dup_homes}
+        if canonical:
+            out[source]["canonical"] = canonical
     if errors:
         raise BuildError("compiler-only policy", 1, "\n".join(errors))
     return out

@@ -101,7 +101,7 @@ src/minigames/d_s_mg_hanachan.cpp:
 
 src/actors/dScMgJump_c.cpp:
     complete
-    .text start:0x020edec0 end:0x020ee994
+    .text start:0x020edec0 end:0x020eeafc
     .init start:0x02130e9c end:0x02130f00
     .ctor start:0x021335a4 end:0x021335a8
     .bss start:0x02142188 end:0x021421b0
@@ -189,14 +189,10 @@ src/minigames/d_s_mg_single3_d_base.cpp:
 
 src/actors/dScMgSlots.cpp:
     complete
-    .text start:0x0210a8c0 end:0x0210c9e0
+    .text start:0x0210a8c0 end:0x0210d740
     .init start:0x02132894 end:0x02132970
     .ctor start:0x021335d0 end:0x021335d4
     .bss start:0x02142bdc end:0x02142c1c
-
-src/minigames/d_s_mg_slot1.cpp:
-    complete
-    .text start:0x0210d1fc end:0x0210d740
 
 src/actors/dScMgSmartball_c.cpp:
     complete

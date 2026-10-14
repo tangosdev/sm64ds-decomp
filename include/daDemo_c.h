@@ -98,15 +98,39 @@ struct daDemo_c : dActor_c {
         void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
     };
 
+    /* The 0x36-byte block param1 0x2f allocates (func_ov002_020f2630) and
+       steps through func_ov002_020f23f0's seven states. Names describe what
+       the code does with each field; the source type is not recovered. The
+       sprite arrays have four slots, of which the loops touch three. */
+    struct ScrollState {
+        s16 bg0X;            /* 0x00 - SetSubBg0Offset x */
+        s16 bg1X;            /* 0x02 - SetSubBg1Offset x */
+        s16 bg0Y;            /* 0x04 - SetSubBg0Offset y */
+        s16 bg1Y;            /* 0x06 - SetSubBg1Offset y */
+        u16 centerSpriteY[2]; /* 0x08 - y of the two data_ov002_0210bddc sprites at x 0x80 */
+        s16 spriteX[4];      /* 0x0c */
+        s16 spriteY[4];      /* 0x14 */
+        s16 spriteVelX[4];   /* 0x1c - +1 or -1 */
+        u16 spriteDelay[4];  /* 0x24 - frames until the slot respawns */
+        u16 fadeTimer;       /* 0x2c - counts to 0x18, then fadeLevel steps */
+        u16 fadeLevel;       /* 0x2e - sub-screen blend weight, 0x10 down to 0 */
+        u8 spriteActive[4];  /* 0x30 */
+        u8 state;            /* 0x34 - 0..6 */
+    };
+
     u8 pad_0d0[4];          /* 0x0d0 */
-    void *unk_0d4;          /* 0x0d4 - 0x36-byte scroll-state block (func_ov002_020f2630) */
+    ScrollState *mScroll;   /* 0x0d4 - param1 0x2f only */
     void *unk_0d8;          /* 0x0d8 - heap block freed by func_ov002_020f63a0 */
     Model *mModel;          /* 0x0dc */
     ModelAnim *mModelAnim;  /* 0x0e0 */
-    u8 pad_0e4[0x10];       /* 0x0e4 */
+    u32 mSoundHandle;       /* 0x0e4 - Sound::PlayLong handle, passed back on every call */
+    u32 mParticleID[3];     /* 0x0e8 - Particle::System::New handles, passed back likewise */
     s32 unk_0f4;            /* 0x0f4 - fix12 height/amplitude the handlers scale by */
-    u8 pad_0f8[8];          /* 0x0f8 */
-    u8 unk_100;             /* 0x100 - scroll-mode byte the PMF3 handlers write */
+    s32 unk_0f8;            /* 0x0f8 - fix12 speed/blend parameter; each handler uses it differently */
+    s16 unk_0fc;            /* 0x0fc - step counter/angle (func_02008b4c, 7780, 79c0) */
+    s16 unk_0fe;            /* 0x0fe - per-frame increment of unk_0fc (79c0) */
+    u8 unk_100;             /* 0x100 - set from the script by handlers 20, 21 and 23;
+                               23f0 waits for 3 and 4, 63f8/6424 pass it on */
     u8 pad_101;             /* 0x101 */
     u8 mOpacity;            /* 0x102 */
     u8 unk_103;             /* 0x103 */
@@ -160,6 +184,8 @@ struct daDemo_c : dActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daDemo_c_size_must_be_0x104[
     sizeof(daDemo_c) == 0x104 ? 1 : -1];
+typedef char daDemo_c_ScrollState_size_must_be_0x36[
+    sizeof(daDemo_c::ScrollState) == 0x36 ? 1 : -1];
 #endif
 
 #endif /* __cplusplus */

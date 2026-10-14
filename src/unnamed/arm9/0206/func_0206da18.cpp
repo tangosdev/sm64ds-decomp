@@ -1,16 +1,22 @@
+//cpp
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only primitive:
 // IRQ/CPSR control -- IRQ-disable (I bit, 0x80) toggle with dual entry points
 // and an indirect literal-pool jump to the shared body). No C to decompile to.
 // Per asm policy. Sibling of matched func_0206da64 (CP15 variant).
-extern void func_0206da30(void); // shared body label at +0x18 inside this function
+// The shared body starts at +0x18. mwccarm rejects a local label as an `ldr =`
+// operand ("illegal constant expression"), so the literal names it as an offset
+// from this function's own symbol; the word resolves to 0x0206da30 in the link.
 
-asm int func_0206da18(void) {
+// The C++ entry point IRQ::SetIRQState(bool) is the `ldr`/`bx` at +0x10; the
+// link defines it at its ROM address. The block itself keeps C linkage under its
+// address name.
+extern "C" asm int func_0206da18(void) {
     mov r0, #0
     b lbl
     mov r0, #1
     b lbl
 lbl:
-    ldr r1, =func_0206da30
+    ldr r1, =func_0206da18+0x18
     bx r1
     mrs r3, cpsr
     mov r1, r3

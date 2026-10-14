@@ -13,12 +13,17 @@ and imports nothing. A compiled caller does. `bl func_01ff99a4` carries a
 relocation against that name, and the link aborts `Undefined`, because the
 range is source-built and no gap object defines the rows inside it any more.
 
-`patch` closes that gap with absolute definitions: for every sized function row
+`patch` closes that gap with absolute definitions: for every function row
 of a fixed-address module (arm9, itcm, dtcm) that lies strictly inside a
 `complete` delinks range, that some object handed to the link imports and that
 none defines, it adds `name = 0x<addr>;` to the linker command file. Those
 modules never move, so the address in symbols.txt is the address the linked
 code is at. Overlays share address space and are left alone.
+
+It also adds the NitroSDK linker constants in LINKER_CONSTANTS. The SDK's own
+LCF template assigns them and its OS init code takes their *address* as the
+value (`(s32)SDK_IRQ_STACKSIZE`); dsd's generated command file does not, so a
+compiled reader (func_02058308, func_02058df4) links `Undefined`.
 """
 import pathlib
 import re
@@ -26,8 +31,16 @@ import struct
 
 FIXED = ("arm9", "itcm", "dtcm")
 
+# Value = what the ROM's literal pools hold where these are read: 0 at
+# 0x02058458/0x02058e8c (no override, so the default system stack) and 0x600
+# at 0x0205846c/0x02058e90.
+LINKER_CONSTANTS = {
+    "SDK_SYS_STACKSIZE": 0x0,
+    "SDK_IRQ_STACKSIZE": 0x600,
+}
+
 _ROW = re.compile(
-    r"^(\S+)\s+kind:function\([^)]*,size=0x([0-9a-fA-F]+)\).*?addr:0x([0-9a-fA-F]+)")
+    r"^(\S+)\s+kind:(?:function|label)\([^)]*\).*?addr:0x([0-9a-fA-F]+)")
 _TEXT = re.compile(r"^\s+\.text\s+start:0x([0-9a-fA-F]+)\s+end:0x([0-9a-fA-F]+)")
 
 
@@ -59,7 +72,16 @@ def complete_text_ranges(delinks_path):
 
 
 def interior_rows(config_root):
-    """[(name, addr)] for sized function rows strictly inside a complete range."""
+    """[(name, addr)] for function and label rows strictly inside a complete range.
+
+    Zero-size rows count: `_deq` is a size-0 alias row at 0x01ff9d40, the same
+    address as func_01ff9d40, and a compiled caller of a `double ==` imports it
+    by that name (func_0206f46c, func_020708b4). Skipping it left those links
+    `Undefined : "_deq"`. Label rows count too: a secondary entry point inside
+    a hand-asm function (_ZN3IRQ11SetIRQStateEb, 0x10 into func_0206da18) is a
+    label, not a function, but callers import it by name all the same. A row at
+    a range's own start is still skipped (strict `<`): that address is the
+    source's own symbol, defined by its object."""
     config_root = pathlib.Path(config_root)
     rows = []
     for module in FIXED:
@@ -70,9 +92,9 @@ def interior_rows(config_root):
         ranges = complete_text_ranges(dl)
         for ln in syms.read_text(errors="ignore").splitlines():
             m = _ROW.match(ln)
-            if not m or int(m.group(2), 16) == 0:
+            if not m:
                 continue
-            addr = int(m.group(3), 16)
+            addr = int(m.group(2), 16)
             if any(lo < addr < hi for lo, hi in ranges):
                 rows.append((m.group(1), addr))
     return rows
@@ -122,12 +144,14 @@ def _elf_names(data):
 
 
 def patch(lcf_path, objects_txt, config_root):
-    """Add the missing interior definitions to `lcf_path`; return [(name, addr)].
+    """Add the missing interior definitions and linker constants to `lcf_path`;
+    return [(name, addr)].
 
     Only a name some object imports and none defines is added, so a link that
     already resolves is handed exactly the command file it had."""
     defined, imported = link_names(objects_txt)
-    missing = sorted({(n, a) for n, a in interior_rows(config_root)
+    rows = interior_rows(config_root) + list(LINKER_CONSTANTS.items())
+    missing = sorted({(n, a) for n, a in rows
                       if n in imported and n not in defined}, key=lambda r: r[1])
     if not missing:
         return []

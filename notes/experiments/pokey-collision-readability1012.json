@@ -1,0 +1,163 @@
+{
+  "schema": 1,
+  "task": "pokey-collision-readability1012",
+  "session": "astra-pokeyread1012",
+  "base_commit": "b3f9ae055368d77a293e86fc206eea3bc276425b",
+  "source": "src/actors/daSanbo_c.cpp",
+  "source_sha256": "91d8a96457418a2f152f15b8d70956b445bfff2dcd068778f08a646f341e68bd",
+  "target": {
+    "name": "_ZN9daSanbo_c19func_ov096_02135e2cEP10dBgCh_Actr",
+    "module": "ov096",
+    "addr": "0x02135e2c",
+    "size": 208
+  },
+  "change": "Recover the existing dBgPi collision result from each void* accessor and call CopyNormalTo through its inherited dBgPc::surface member, replacing manual result+4 address arithmetic. Include the real dBgPi.h and update the local limitation comment.",
+  "layout_evidence": [
+    "include/dBgPi.h documents ROM RTTI, the pinned vptr at0 and dBgPc base at4; the class derives from dBgPc.",
+    "include/dBgPc.h defines the real SurfaceInfo surface member.",
+    "include/dBgCh_Actr.h retains its existing void* accessor return types. No shared headers or ABI declarations changed."
+  ],
+  "scope": [
+    "Only the two floor/wall surface receiver expressions change.",
+    "Normal int[3] receivers, floor velocity arithmetic, wall CopyNormalTo side effect, existing callers and all lifecycle/static initialization remain intact.",
+    "No symbol rename, TU fold, enrollment or attribution change.",
+    "This completes the bounded raw collision-result access cleanup, not whole-class reconstruction."
+  ],
+  "experiments": [
+    {
+      "form": "static_cast<dBgPi *>(clsn->GetFloorResult())->surface.CopyNormalTo(*(Vector3 *)n0), and wall/n1 equivalent",
+      "result": "Direct typed form exact on first attempt; no rejected candidate."
+    }
+  ],
+  "proof": {
+    "target_linkcheck": {
+      "command": "python tools/linkcheck.py --name _ZN9daSanbo_c19func_ov096_02135e2cEP10dBgCh_Actr --c src/actors/daSanbo_c.cpp --addr 0x02135e2c --size 0xd0 --module ov096",
+      "verdict": "VERIFIED",
+      "diffs": [],
+      "blind": 0,
+      "log": "build/pokeyread-target-linkcheck.log"
+    },
+    "whole_tu_function_linkcheck": {
+      "command": "python tools/prepush_linkcheck.py --files src/actors/daSanbo_c.cpp --json build/pokeyread-tu-linkcheck.json",
+      "text_functions_verified": 36,
+      "blind_text_functions": 0,
+      "diffs": [],
+      "initializer": {
+        "name": "__sinit_daSanbo_c.cpp",
+        "isolated_verdict": "BLIND-5",
+        "reason": "Isolated checker lacks manifest-local resource constructor/destructor and temporary bindings; intact production link supplies lifecycle proof."
+      },
+      "exit_code": 0,
+      "warnings": 1,
+      "blocking": 0,
+      "log": "build/pokeyread-tu-linkcheck.log"
+    },
+    "emitted_data": {
+      "symbols": 12,
+      "verified": 5,
+      "partial": 7,
+      "differs": 0,
+      "unnamed": 0,
+      "verifiedBytes": 168,
+      "partialBytes": 32,
+      "verifiedSymbols": [
+        {
+          "module": "arm9",
+          "symbol": "_ZTI7dBase_c",
+          "addr": 34107000,
+          "bytes": 12
+        },
+        {
+          "module": "arm9",
+          "symbol": "_ZTI7fBase_c",
+          "addr": 34106736,
+          "bytes": 8
+        },
+        {
+          "module": "arm9",
+          "symbol": "_ZTI8dActor_c",
+          "addr": 34136976,
+          "bytes": 12
+        },
+        {
+          "module": "ov096",
+          "symbol": "_ZTI9daSanbo_c",
+          "addr": 34830732,
+          "bytes": 12
+        },
+        {
+          "module": "ov096",
+          "symbol": "_ZTV9daSanbo_c",
+          "addr": 34830808,
+          "bytes": 124
+        }
+      ],
+      "differingSymbols": [],
+      "verifiedRecords": 5,
+      "partialRecords": 7,
+      "differsRecords": 0,
+      "unnamedRecords": 0,
+      "totalRecords": 12,
+      "differing": [],
+      "sourcesChecked": 1,
+      "command": "python tools/romdata_check.py --files src/actors/daSanbo_c.cpp --json build/pokeyread-romdata.json",
+      "log": "build/pokeyread-romdata.log"
+    },
+    "declarations": {
+      "command": "python tools/check_decl_agreement.py --changed b3f9ae055368d77a293e86fc206eea3bc276425b",
+      "exit_code": 0,
+      "existing_disagreements": 20,
+      "new_disagreements": 0,
+      "new_header_copies": 0,
+      "log": "build/pokeyread-decl.log"
+    },
+    "full_rombuild": {
+      "status": "passed",
+      "command": "python tools/rombuild.py -j16 --no-rom",
+      "exit_code": 0,
+      "log": "build/pokeyread-rombuild.log",
+      "report": "build/rombuild-report.json",
+      "source_sha256_at_build": "91d8a96457418a2f152f15b8d70956b445bfff2dcd068778f08a646f341e68bd",
+      "source_build": {
+        "totalCodeFunctions": 11397,
+        "totalCodeBytes": 2238108,
+        "compiledFunctions": 11289,
+        "compiledBytes": 2207796,
+        "sourceFunctions": 11289,
+        "sourceBytes": 2207796,
+        "modFunctions": 0,
+        "modBytes": 0,
+        "sourceBytesPercent": 98.64564176527674,
+        "reproducingFunctions": 11289,
+        "reproducingBytes": 2207796,
+        "mismatchingFunctions": 0,
+        "mismatchingFunctionBytes": 0,
+        "differingSourceBytes": 0,
+        "sourceDataClaims": 331,
+        "sourceBssClaims": 239,
+        "sourceBssBytes": 30164,
+        "reproducingDataClaims": 331,
+        "reproducingDataClaimBytes": 13020,
+        "mismatchingDataClaims": 0,
+        "mismatchingDataClaimBytes": 0
+      },
+      "modules_exact": 106,
+      "modules_checked": 106,
+      "differing_module_bytes": 0,
+      "module_set_sha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "pokey_in_intact_tus": true,
+      "intact_tu_modules_ok": true,
+      "new_symbol_errors": [],
+      "storage_alias_errors": [],
+      "initializer_and_lifecycle": "Production-mode intact-object enrollment includes .init 0x0213770c..0x02137894, .ctor 0x02137900..0x02137904 and .bss 0x02137b20..0x02137ba8; exact linked modules and zero new symbol/alias errors cover the retained generated initializer and resource bindings.",
+      "limitations": [
+        "Final ROM packaging skipped by --no-rom.",
+        "Nine baseline symbol errors remain banked; intact gate reports zero new errors.",
+        "Global raw object-data inventory retains the existing arm9 _ZTV10dCcAcPos_c difference; targeted Pokey data has zero differing records.",
+        "Isolated __sinit checker remains BLIND-5 and is not counted as a strict isolated pass."
+      ]
+    }
+  },
+  "next_action": "Independent exact-head source and byte review, then coordinator-owned authorized PR publication. No push or PR from producer.",
+  "status": "byte_verified_pending_independent_source_review"
+}

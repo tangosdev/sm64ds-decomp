@@ -455,6 +455,14 @@
       "reason": "Owning the key function makes mwcc emit the whole inherited RTTI chain as vague linkage; this is the typeinfo name for an ancestor. The cartridge keeps the canonical copy at arm9:0x02086e60, outside this TU's licensed range (.text 0x021111a0-0x0211260c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge before production isolation discards it.",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60"
+    },
+    {
+      "symbol": "_ZN7Vector3C1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "func_0203d384",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d384",
+      "reason": "The retail Moray factory passes this empty Vector3 default constructor to __cxa_vec_ctor for seven 12-byte segment positions; native new emits the same callback and exact 4-byte body. Canonical-symbol support is tracked separately in #3763."
     }
   ],
   "verification": {
@@ -1407,74 +1415,74 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1147",
-      "to": "@1113",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1147 now; licensed under the existing pin @1113"
-    },
-    {
-      "from": "@1139",
-      "to": "@1105",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1139 now; licensed under the existing pin @1105"
-    },
-    {
-      "from": "@1137",
-      "to": "@1103",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1137 now; licensed under the existing pin @1103"
-    },
-    {
-      "from": "@1143",
-      "to": "@1109",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1143 now; licensed under the existing pin @1109"
-    },
-    {
-      "from": "@1145",
-      "to": "@1111",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1145 now; licensed under the existing pin @1111"
-    },
-    {
-      "from": "@1129",
-      "to": "@1095",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1129 now; licensed under the existing pin @1095"
-    },
-    {
-      "from": "@1131",
-      "to": "@1097",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1131 now; licensed under the existing pin @1097"
-    },
-    {
-      "from": "@1141",
-      "to": "@1107",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1141 now; licensed under the existing pin @1107"
+      "from": "@1132",
+      "to": "@1090",
+      "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
       "from": "@1133",
-      "to": "@1099",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1133 now; licensed under the existing pin @1099"
+      "to": "@1091",
+      "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
+    },
+    {
+      "from": "@1134",
+      "to": "@1092",
+      "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
       "from": "@1135",
-      "to": "@1101",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1135 now; licensed under the existing pin @1101"
-    },
-    {
-      "from": "@1127",
       "to": "@1093",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1127 now; licensed under the existing pin @1093"
+      "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
-      "from": "@1124",
-      "to": "@1090",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1124 now; licensed under the existing pin @1090"
+      "from": "@1137",
+      "to": "@1095",
+      "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
-      "from": "@1125",
-      "to": "@1091",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1125 now; licensed under the existing pin @1091"
+      "from": "@1139",
+      "to": "@1097",
+      "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     },
     {
-      "from": "@1126",
-      "to": "@1092",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1126 now; licensed under the existing pin @1092"
+      "from": "@1141",
+      "to": "@1099",
+      "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
+    },
+    {
+      "from": "@1143",
+      "to": "@1101",
+      "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
+    },
+    {
+      "from": "@1145",
+      "to": "@1103",
+      "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
+    },
+    {
+      "from": "@1147",
+      "to": "@1105",
+      "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
+    },
+    {
+      "from": "@1149",
+      "to": "@1107",
+      "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
+    },
+    {
+      "from": "@1151",
+      "to": "@1109",
+      "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
+    },
+    {
+      "from": "@1153",
+      "to": "@1111",
+      "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
+    },
+    {
+      "from": "@1155",
+      "to": "@1113",
+      "evidence": "Compiler temporary identity established by exact initializer relocation position and complete owned-object bytes/relocations versus unchanged TU baseline."
     }
   ]
 }

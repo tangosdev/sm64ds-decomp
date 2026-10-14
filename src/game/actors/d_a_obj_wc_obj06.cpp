@@ -11,8 +11,7 @@
  * WC_OBJ06 registry). Retail does not store that spelling.
  *
  * deslop
- * Leftover: GetClsnPos is still the mangled call (Vector3-by-value
- *   return emits D1). startEnd is two Vector3 copies flattened
+ * Leftover: startEnd is two Vector3 copies flattened
  *   (start = pos; end = pos; start.y += 20; end.y = waterY); the
  *   extra stores are decompiler dead stores, not an int[6] type.
  * Leftover: g_profile_WC_OBJ06 is ov029 data outside this TU (S14).
@@ -23,9 +22,6 @@
 #include "SharedFilePtr.h"
 
 extern "C" daObjFloatBoard_c_Resources data_ov029_02113f00;
-/* Vector3-by-value return emits a stray _ZN7Vector3D1Ev (measured). */
-/* local extern: header GetClsnPos() form fails isolate */
-extern "C" void _ZN9dBgCh_Lin10GetClsnPosEv(Vector3 *out, dBgCh_Lin *self);
 
 /* Retail constructs these 8-byte handles in this order and registers
  * their destructors. The wrapper names are local; the ctor/dtor
@@ -58,7 +54,6 @@ extern "C" daObjWcObj06_c *daObjWcObj06_c_classInit()
 int daObjWcObj06_c::InitResources()
 {
     int startEnd[6]; /* start[3] then end[3] */
-    int hit[3];
     int waterY;
     int x, y, z;
 
@@ -82,8 +77,8 @@ int daObjWcObj06_c::InitResources()
             if (line.DetectClsn() == 0) {
                 mPosY = waterY;
             } else {
-                _ZN9dBgCh_Lin10GetClsnPosEv((Vector3 *)hit, &line);
-                mPosY = hit[1];
+                Vector3 hit = line.GetClsnPos();
+                mPosY = hit.y;
             }
         }
         mRestPosX = mPosX;

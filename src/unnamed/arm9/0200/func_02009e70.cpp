@@ -1,56 +1,11 @@
 //cpp
-// NONMATCHING: functionally-verified C, 72 of 1063 words diverge (was 96).
-// func_02009e70 @ 0x02009e70 (arm9, size 0x109c). Size exact; every opcode,
-// immediate, branch target and pool word is right. The residue is register
-// identity plus nine scheduling words: tools/wallcrack.py tags 63 regperm and
-// 9 SCHED, and the semantics were verified instruction by instruction (2026-08-01).
-// For recomp/port purposes the file is complete: the compiled code is
-// functionally identical to the ROM, differing only in register names and
-// instruction order.
-//
-// 2026-09-13 (run link100 crack wave 9, lane CRK-M) 96 -> 72, two source levers:
-//   * the file's own `#pragma opt_common_subs off` was a 14-word REGRESSION and
-//     is gone. Deleting it closes the whole 17-word table-lookup + FXMUL cluster
-//     at +0xa44..+0xaa4 that the near-miss DB called "RC4, the LARGEST, the one
-//     cluster with residual source-lever hope". Found by sweeping the full
-//     246-name verified pragma vocabulary at on and off (493 compiles).
-//   * `t0 = FXMUL(sp28, sp30)` instead of `FXMUL(sp30, sp28)`: the ROM wants
-//     sp28 as the smull Rm operand. Closes 10 of the 13 words at +0xe8c..+0xec4
-//     (notes 6cb lever 2, commutative operand transposition).
-// What is left, and what it is: 52 of the 72 words hang off ONE web exchange --
-// the ROM colours the mode-flags word r5 and the func_020093f4 distance limit sl,
-// this build does the reverse -- and every later cluster (the sp4c pair at
-// +0xc90, the ground height at +0xd6c..+0xdf0, the sqrt chain at +0xb38, the
-// sp28 load at +0xe8c, the +0xef8/+0xf08/+0xf18 adds) falls out of it. The
-// remaining 20 are the sp10 store interleave (+0x4ac, 6w), the self+0x100
-// materialisation schedule (+0x618, 12w) and the +0xfd4 zero temp (2w).
-// The exchange does not move on any source axis measured. Lane CRK-M swept the
-// radius-1 declaration rank x type-name neighbourhood (166 cells, twice), 20
-// random declaration orders, the pragma vocabulary (twice), 6cd dead preamble
-// stores at four positions x eleven locals, 6cb block-depth naming, 6ce pool-
-// address launders, 21 commutative transpositions and 2100 random product draws
-// over all of those jointly. Lane CRK2-M then swept, at this 72 base and scoring
-// every cell on the WHOLE function region by region, about 1,470 further cells:
-// the COMPLETE sl x r5 declaration rank cross product (156, not just radius 1),
-// that product crossed with seven equal-width type names on each of the two
-// declarations (588, the joint 6cc axis), the 246-name pragma vocabulary at on
-// and off on top of this base (492), the birth ORDER of the three sp1c loads
-// crossed with the sb initialiser's position (24) and the three FXMULC pair
-// orders (7), the limit web's callee return type, block-depth nesting of each
-// declaration, the `register` storage class, nine disjoint-local merges that
-// relieve pressure by one, dead stores at three positions inside the f20 web,
-// the flags table's pool-address launders and index spellings, sba/t1 width
-// respellings, and comparison and mask operand transpositions at every use site
-// of both webs. R01 reads exactly 4 in every one of those cells that keeps the
-// schedule; no cell anywhere reads below 72. Splitting or regrouping the webs
-// adds one live range and shifts EVERY register up by one (273-297 words), so
-// the pressure is saturated at thirteen locals. All 25 installed compiler builds
-// were swept: 2004/b56 is the only one within reach (72); every other build
-// fails the function outright. Details in the lanes' attempts.txt.
-//
-// L0() below was a u64-mask launder (`& 0xFFFFFFFFFFFFFFFFLL` through a long long
-// round trip) that lane BANK measured dead under 2004/b56; it is kept as a no-op
-// macro rather than inlined at every call site so the history stays reviewable.
+// NONMATCHING: func_02009e70 @ 0x02009e70 (arm9), 62/1063 divergent words.
+// Exact 4252-byte size under mwccarm 2004/b56; 57 register and 5 instruction-shape words.
+// This draft remains excluded from ROM enrollment.
+// Native collision returns and signed 64-bit distance accumulation preserve
+// the best measured code; scoped inline operations retain its stack layout.
+// Evidence: notes/experiments/line-native-return1013.json.
+// L0 preserves the earlier compiler-eliminated pointer-mask spelling.
 #include "dBgCh_Gnd.h"
 #include "dBgCh_Lin.h"
 #include "PlayerInput.h"
@@ -83,7 +38,7 @@ extern void Vec3_RotateYAndTranslate(s32 *out, s32 *in, s16 angle, s32 *src);
 extern s32 Math_Function_0203b14c(s32 *p, s32 tgt, s32 rate, s32 lim, s32 step);
 extern s32 ApproachAngle(s16 *cur, s32 target, s32 div, s32 band, s32 step);
 extern s32 AngleDiff(s32 a, s32 b);
-extern s32 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
+extern s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
 extern s32 _ZN4cstd4fdivEii(s32 a, s32 b);
 extern s32 _ZN4cstd4sqrtEy(u64 v);
 extern u32 func_020093f4(void *p, s32 x);
@@ -101,9 +56,6 @@ extern void func_0200b990(void *self, void *a, s32 b);
 extern void func_0200c9e0(void *self, s32 *a, s32 *b);
 extern u32 func_02012790(u32 a);
 extern s32 Sound_PlayIfNotActive(s32 a, s32 b, s32 c);
-
-extern void _ZN9dBgCh_Lin10GetClsnPosEv(struct Vector3 *out, dBgCh_Lin *line);
-extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *t, struct Vector3 *out);
 
 extern s16 data_02082214[];
 extern u16 data_0209f49c[];
@@ -135,6 +87,47 @@ static inline int CheckMode(void) { return data_0209f2d8 == 1; }
 #define FXMUL(a, b) ((s32)((((s64)(a)) * (b) + 0x800) >> 12))
 #define FXMULC(a, b) ((s32)((((s64)(a)) * (s64)(b) + 0x800) >> 12))
 
+static inline s32 CollisionCeiling(dBgCh_Lin &line, s32 floorHeight)
+{
+    Vector3 pos = line.GetClsnPos();
+    s32 height = pos.y - 0x80000;
+    if (height < floorHeight) height = floorHeight;
+    return height;
+}
+
+static inline void SetCollisionPosition(char *self, dBgCh_Lin &line)
+{
+    Vector3 pos = line.GetClsnPos();
+    *(s32 *)(self + 0xe0) = pos.x;
+    *(s32 *)(self + 0xe4) = pos.y;
+    *(s32 *)(self + 0xe8) = pos.z;
+}
+
+static inline void MoveCameraPosition(char *self, const Vector3 &offset)
+{
+    Vector3 pos;
+    Vec3_Add(&pos, (struct Vector3 *)(self + 0x80), &offset);
+    *(s32 *)(self + 0x8c) = pos.x;
+    *(s32 *)(self + 0x90) = pos.y;
+    *(s32 *)(self + 0x94) = pos.z;
+}
+
+static inline s32 LimitCameraCeiling(dBgCh_Lin &line, Vector3 &endpoint, s32 ceiling)
+{
+    Vector3 pos = line.GetClsnPos();
+    endpoint.y = pos.y;
+    if (ceiling > pos.y - 0x80000) ceiling = pos.y - 0x80000;
+    return ceiling;
+}
+
+static inline s32 LimitMidpointCeiling(dBgCh_Lin &line, Vector3 &endpoint, s32 ceiling)
+{
+    Vector3 pos = line.GetClsnPos();
+    endpoint.y = pos.y - 0x80000;
+    if (ceiling > endpoint.y) ceiling = endpoint.y;
+    return ceiling;
+}
+
 s32 func_02009e70(char *self)
 {
     s32 sp04;
@@ -151,17 +144,6 @@ s32 func_02009e70(char *self)
     s32 sp30;
     struct Vector3 sp34;
     struct Vector3 sp40;
-    struct Vector3 sp4c;
-    struct Vector3 sp58;
-    struct Vector3 sp64;
-    struct Vector3 sp70;
-    struct Vector3 sp7c;
-    struct Vector3 sp88;
-    struct Vector3 sp94;
-    struct Vector3 spa0;
-    struct Vector3 spac;
-    struct Vector3 spb8;
-    struct Vector3 spc4;
     s32 r7;
     s32 r6;
     s32 fl;
@@ -283,15 +265,13 @@ s32 func_02009e70(char *self)
     }
     Vec3_Sub(&sp40, (struct Vector3 *)(self + 0x8c), (struct Vector3 *)(self + 0x80));
     sp28 = LenVec3(&sp40);
-    sp10 = 0x80000000;
     {
-        s32 ty = *(s32 *)(self + 0x9c);
-        s32 tz = *(s32 *)(self + 0xa0);
-        s32 tx = *(s32 *)(self + 0x98);
-        sp4c.x = tx;
-        sp4c.y = ty + 0x3e8000;
-        sp4c.z = tz;
-    }
+    sp10 = 0x80000000;
+    Vector3 sp4c(*(s32 *)(self + 0x98),
+                 *(s32 *)(self + 0x9c) + 0x3e8000,
+                 *(s32 *)(self + 0xa0));
+    Vector3 sp58;
+    Vector3 sp64;
     r4 = 0x7fffffff;
     sb = *(s32 *)(self + 0x9c) + 0x82500;
     {
@@ -299,9 +279,7 @@ s32 func_02009e70(char *self)
     func_0200897c(self, &line);
     line.SetObjAndLine(*(struct Vector3 *)(self + 0x98), sp4c, 0);
     if (line.DetectClsn() != 0) {
-        _ZN9dBgCh_Lin10GetClsnPosEv(&sp94, &line);
-        r4 = sp94.y - 0x80000;
-        if (r4 < sb) r4 = sb;
+        r4 = CollisionCeiling(line, sb);
     }
     if (*(s32 *)(self + 0x154) & 0x100) goto L_A534;
     if ((sp1c->flags & 8) == 0) goto L_A534;
@@ -315,11 +293,8 @@ s32 func_02009e70(char *self)
     if (sb > r4) goto L_A534;
     line.SetObjAndLine(sp58, *(struct Vector3 *)(self + 0x8c), 0);
     if (line.DetectClsn() == 0) goto L_A534;
-    _ZNK11SurfaceInfo12CopyNormalToER7Vector3(&line.surface, &sp64);
-    _ZN9dBgCh_Lin10GetClsnPosEv(&spa0, &line);
-    *(s32 *)(self + 0xe0) = spa0.x;
-    *(s32 *)(self + 0xe4) = spa0.y;
-    *(s32 *)(self + 0xe8) = spa0.z;
+    line.surface.CopyNormalTo(sp64);
+    SetCollisionPosition(self, line);
     *(s32 *)(self + 0xec) = sp64.x;
     *(s32 *)(self + 0xf0) = sp64.y;
     *(s32 *)(self + 0xf4) = sp64.z;
@@ -329,7 +304,7 @@ s32 func_02009e70(char *self)
         *(u32 *)L0(self + 0x154) |= 0x80200;
         goto L_A534;
     }
-    _ZN9dBgCh_Lin10GetClsnPosEv(&sp70, &line);
+    Vector3 sp70 = line.GetClsnPos();
     sba = (s16)(_ZN4cstd5atan2E5Fix12IiES1_(sp64.x, sp64.z) + 0x8000);
     t1 = *(u8 *)(self + 0x1a6);
     t0 = (s16)(sba - *(s16 *)(self + 0x17c));
@@ -345,6 +320,8 @@ s32 func_02009e70(char *self)
     if (t0 > 0) r5 = 0;
     *(u32 *)L0(self + 0x154) |= 0x40000;
 L_A534:
+    Vector3 sp7c;
+    Vector3 sp88;
     if (r5 != 0) {
         if (r5 & 0x4000) func_02012790(0x1a);
         *(u8 *)(self + 0x1a6) = 0;
@@ -445,7 +422,12 @@ L_A94C:
 L_A984:
     if (sp28 >= fp) goto L_AA34;
     Math_Function_0203b14c(&sp28, fp, 0x400, r7 + 0x20000, 0x100);
-    r7 = _ZN4cstd4sqrtEy((u64)((s64)sp28 * sp28 - (s64)sp40.y * sp40.y));
+    {
+        s64 distanceSq = sp28;
+        distanceSq *= sp28;
+        distanceSq -= (s64)sp40.y * sp40.y;
+        r7 = _ZN4cstd4sqrtEy((u64)distanceSq);
+    }
     t0 = _ZN4cstd4fdivEii(r7, Vec3_HorzLen(&sp40));
     sp40.x = FXMUL(sp40.x, t0);
     sp40.z = FXMUL(sp40.z, t0);
@@ -461,10 +443,7 @@ L_AA6C:
     if (sb > sl) {
         Math_Function_0203b14c(&sp28, sl, 0x400, r7 + 0x20000, 0x100);
         Vec3_MulScalarInPlace((s32 *)&sp40, _ZN4cstd4fdivEii(sp28, sb));
-        Vec3_Add(&spac, (struct Vector3 *)(self + 0x80), &sp40);
-        *(s32 *)(self + 0x8c) = spac.x;
-        *(s32 *)(self + 0x90) = spac.y;
-        *(s32 *)(self + 0x94) = spac.z;
+        MoveCameraPosition(self, sp40);
     }
 L_AAD0:
     if (func_02008cb4(self) != 0) {
@@ -483,9 +462,7 @@ L_AAD0:
     }
     line.SetObjAndLine(*(struct Vector3 *)(self + 0x8c), sp4c, 0);
     if (line.DetectClsn() != 0) {
-        _ZN9dBgCh_Lin10GetClsnPosEv(&spb8, &line);
-        sp4c.y = spb8.y;
-        if (r4 > spb8.y - 0x80000) r4 = spb8.y - 0x80000;
+        r4 = LimitCameraCeiling(line, sp4c, r4);
     }
     Vec3_Add(&sp7c, (struct Vector3 *)(self + 0x8c), (struct Vector3 *)(self + 0x80));
     Vec3_AsrInPlace((s32 *)&sp7c, 1);
@@ -494,9 +471,7 @@ L_AAD0:
     sp88.z = sp7c.z;
     line.SetObjAndLine(sp7c, sp88, 0);
     if (line.DetectClsn() != 0) {
-        _ZN9dBgCh_Lin10GetClsnPosEv(&spc4, &line);
-        sp88.y = spc4.y - 0x80000;
-        if (r4 > sp88.y) r4 = sp88.y;
+        r4 = LimitMidpointCeiling(line, sp88, r4);
     }
     sb = *(s32 *)(self + 0x9c);
     dBgCh_Gnd ground;
@@ -540,6 +515,7 @@ L_AD94:
 L_ADD4:
     Math_Function_0203b14c((s32 *)(self + 0x90), r7h, 0x300, 0x14000, 0x100);
     *(s16 *)(self + 0x17c) = Vec3_HorzAngle((struct Vector3 *)(self + 0x80), (struct Vector3 *)(self + 0x8c));
+    }
     }
 L_AE14:
     if (r5 != 0) {

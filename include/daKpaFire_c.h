@@ -50,8 +50,8 @@
  *   mGroundY        floor height found under the spawn position (the shadow is
  *                   drawn there), or the spawn y when no floor was found.
  * The 0x32c..0x35c block is a Matrix4x3 scratch that func_ov060_02117624 fills
- * each frame for the shadow; it stays padding here because that helper is
- * parsed as C. */
+ * each frame for the shadow. It retains byte storage here; the helper uses
+ * a POD matrix view to preserve the block copy in C++. */
 #ifndef DAKPAFIRE_C_H
 #define DAKPAFIRE_C_H
 #include "types.h"

@@ -407,6 +407,13 @@
       "reason": "Emitted as vague linkage because this TU defines the class's key function. The cartridge keeps its canonical copy at ov029:0x02113c2c, outside this entry's only licensed range (.text 0x021111a0-0x0211137c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "ov029",
       "canonical_address": "0x02113c2c"
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Native Vector3 collision-return locals cause the front end to emit the empty vague-linkage destructor (4 bytes, bx lr). All call sites are elided; the retail cartridge keeps its identical canonical body at arm9:0x020072c0. Production isolation verifies the duplicate against that ROM body before discarding it."
     }
   ],
   "production_mode": "intact-object",
@@ -605,14 +612,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@435",
+      "from": "@433",
       "to": "@80",
-      "evidence": "emitted model registration-node temp collides with ov035's configured @421; @80 is unused in every module's symbols.txt on origin/main and shorter than the emitted spelling"
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @435 to @433. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @80."
     },
     {
-      "from": "@436",
+      "from": "@434",
       "to": "@81",
-      "evidence": "emitted collision registration-node temp collides with ov035's configured @422; @81 is unused in every module's symbols.txt on origin/main and shorter than the emitted spelling"
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @436 to @434. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @81."
     }
   ]
 }

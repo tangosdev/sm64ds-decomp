@@ -17,7 +17,8 @@ extern int _ZN9dBgCh_Lin10DetectClsnEv(dBgCh_Lin* rc);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* surf, Vec3* out);
 extern int DotVec3(Vec3* a, Vec3* b);
 extern void _ZN9dBgCh_LinD1Ev(dBgCh_Lin* rc);
-extern void _ZN9dBgCh_Lin10GetClsnPosEv(Vec3* out, dBgCh_Lin* rc);
+/* local extern: C99 cannot name the canonical C++ member; actual Vector3 aggregate return preserves its hidden-result ABI. */
+extern Vector3 _ZN9dBgCh_Lin10GetClsnPosEv(dBgCh_Lin* rc);
 extern int Vec3_Dist(Vec3* a, Vec3* b);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern int AngleDiff(int a, int b);
@@ -32,8 +33,8 @@ int func_02008cb4(char* c)
     Vec3 end2;
     Vec3 n2;
     Vec3 diff;
-    Vec3 cp1;
-    Vec3 cp2;
+    Vector3 cp1;
+    Vector3 cp2;
     Vec3 np;
     Vec3 cl;
     dBgCh_Lin rc1;
@@ -78,8 +79,8 @@ int func_02008cb4(char* c)
                     _ZN9dBgCh_LinD1Ev(&rc1);
                     return 0;
                 }
-                _ZN9dBgCh_Lin10GetClsnPosEv(&cp1, &rc1);
-                if (Vec3_Dist((Vec3*)(c + 0xe0), &cp1) < 0x80000) {
+                cp1 = _ZN9dBgCh_Lin10GetClsnPosEv(&rc1);
+                if (Vec3_Dist((Vec3*)(c + 0xe0), (Vec3*)&cp1) < 0x80000) {
                     *(u32*)(((int)c + 0x154)) &= ~0x80000;
                     _ZN9dBgCh_LinD1Ev(&rc1);
                     return 0;
@@ -145,8 +146,8 @@ int func_02008cb4(char* c)
     }
     d = Vec3_Dist((Vec3*)(c + 0x8c), (Vec3*)(c + 0x80));
     Vec3_MulScalarInPlace(&dir2, scale);
-    _ZN9dBgCh_Lin10GetClsnPosEv(&cp2, &rc2);
-    Vec3_Sub(&np, &cp2, &dir2);
+    cp2 = _ZN9dBgCh_Lin10GetClsnPosEv(&rc2);
+    Vec3_Sub(&np, (Vec3*)&cp2, &dir2);
     *(int*)(c + 0x8c) = np.x;
     *(int*)(c + 0x90) = np.y;
     *(int*)(c + 0x94) = np.z;

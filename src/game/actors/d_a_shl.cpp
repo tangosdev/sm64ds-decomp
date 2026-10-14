@@ -33,8 +33,6 @@
  *   Particle::System::New stay mangled: each takes Fix12<int> by value
  *   (notes/mwccarm-codegen.md 6az). Particle::System::New is declared
  *   with the seven arguments its call sites pass.
- * - func_ov102_0214c84c's ground probe is a raw 0x50-byte dBgCh_Gnd
- *   buffer driven through its mangled entry points.
  * - data_ov102_0214d70c is this TU's .rodata pair of model-file handles
  *   and the state records are .bss; this text-only TU claims neither.
  *
@@ -42,9 +40,19 @@
  * - func_ov002_020ad660, func_ov002_020cc16c and func_020105cc are other
  *   TUs' helpers and stay free externs; the Fix12<int>-by-value callees
  *   listed above stay mangled (notes/mwccarm-codegen.md 6az).
- * - func_ov102_0214c84c keeps its raw pv[6]/rg[0x50] buffers and
- *   *(Vector3 *)/mCamSpacePosX puns: typed Vector3/dBgCh_Gnd objects emit
- *   destructors and change the stack frame.
+ * - The manifest pins eight @NNN statics (@721..@735), so the count of
+ *   named locals, named parameters, labels and unnamed struct types
+ *   ahead of __sinit is load-bearing. Including a header moves it
+ *   (measured: Player.h +94, the first pin becomes @815; Sound.h +15), so
+ *   Player and Sound stay reached through local mangled externs and
+ *   Player::mIsAirborne stays the raw 0x6de read.
+ * - dBgCh_Gnd.h adds 9 to the count. Including it let five mangled
+ *   dBgCh_Gnd externs (7 named parameters), a `surface` local in
+ *   func_ov102_0214c7fc and an unnamed struct type for `dir` in
+ *   func_ov102_0214cbec go, which nets to 0 (measured: same bytes,
+ *   relocations and pins).
+ * - The unnamed struct type of `pos` in func_ov102_0214c84c also holds
+ *   the count (an unnamed struct type takes one number, measured).
  * - *(u16 *)&mStateTimer stays: the ROM loads ldrh (unsigned), the s16
  *   member spelling loads ldrsh.
  * - daShl_c_classInit stays a free factory and the destructor stays
@@ -54,6 +62,7 @@
 #include "common.h"
 #include "daShl_c.h"
 #include "SharedFilePtr.h"
+#include "dBgCh_Gnd.h"
 
 /* Two 8-byte pointers-to-member. The second word is the this-adjustment;
    retail stores 0 for every entry. */
@@ -91,24 +100,17 @@ int  func_02037e84(int *si);
 int  func_02037e38(unsigned int *si);
 u32  func_02022d00(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
                    void *dir);
-void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 
-void *_ZN9dBgCh_GndC1Ev(void *self);
-void _ZN9dBgCh_GndD1Ev(void *self);
-void _ZN5dBgCh19StartDetectingWaterEv(void *self);
-void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self,
-                                                      const Vector3 *pos,
-                                                      void *actor);
-int  _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
-
-int  _ZN6Player9IsOnShellEv(void *player);
-int  _ZN6Player7TryGrabER8dActor_c(void *player, dActor_c &actor);
+/* Including Player.h renumbers the pinned @NNN statics by 94. */
+int  _ZN6Player9IsOnShellEv(void *player);  /* local extern: Player.h is +94 */
+int  _ZN6Player7TryGrabER8dActor_c(void *player, dActor_c &actor);  /* local extern: Player.h is +94 */
 int  _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *player, const Vector3 *v,
                                             u32 a, Fix12i f, u8 b, u8 c,
                                             u8 d);
 int  _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
          u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir,
          void *cb);
+/* local extern: including Sound.h renumbers the pinned @NNN statics by 15. */
 int  _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 handle, u32 a, u32 soundID,
                                        const Vector3 &pos, s16 e);
 
@@ -125,6 +127,12 @@ void _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES
          int height, u8 flags);
 
 }
+
+/* Plain three-word position: Vector3 members here emit an extra
+   destructor function into this TU (measured). */
+struct ShlPos {
+    int x, y, z;
+};
 
 // @symbol daShl_c_classInit
 extern "C" daShl_c *daShl_c_classInit()
@@ -292,8 +300,8 @@ s32 daShl_c::CleanupResources()
 /* Switch state: store the record, then run its `enter` if it has one. */
 int daShl_c::func_ov102_0214d1f8(ShlState *state)
 {
-    this->mState = state;
-    ShlState *st = this->mState;
+    mState = state;
+    ShlState *st = mState;
     if (st->enter == 0)
         return 1;
     return (this->*st->enter)();
@@ -304,12 +312,12 @@ int daShl_c::func_ov102_0214d1f8(ShlState *state)
    becomes grabbable. */
 int daShl_c::func_ov102_0214d1b8()
 {
-    this->mHorzSpeed = 0;
+    mHorzSpeed = 0;
 
-    if (this->mVariant != 0) {
-        this->mFlags |= 0x80;
-        this->mdCc_c.vulnFlags |= 0x1000;
-        this->mVertAccel = 0;
+    if (mVariant != 0) {
+        mFlags |= 0x80;
+        mdCc_c.vulnFlags |= 0x1000;
+        mVertAccel = 0;
     }
 
     return 1;
@@ -327,11 +335,11 @@ int daShl_c::func_ov102_0214d1b0()
    Yoshi spat it along -- slide at 30.0, and arm the second cylinder. */
 int daShl_c::func_ov102_0214d148()
 {
-    this->mPrevAngleY = this->mSpawnAngleY;
-    this->mAngleY = this->mPrevAngleY;
-    this->mHorzSpeed = 0x1e000;
-    this->mVertAccel = -0x2000;
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&this->mdCc_c2, this, 0x28000, 0x3c000, 0x102002, 0);
+    mPrevAngleY = mSpawnAngleY;
+    mAngleY = mPrevAngleY;
+    mHorzSpeed = 0x1e000;
+    mVertAccel = -0x2000;
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCc_c2, this, 0x28000, 0x3c000, 0x102002, 0);
     return 1;
 }
 
@@ -339,9 +347,9 @@ int daShl_c::func_ov102_0214d148()
 /* Sliding: tick. Spin, and keep the second cylinder live. */
 int daShl_c::func_ov102_0214d114()
 {
-    this->mAngleY += 0x1000;
-    this->mdCc_c2.Clear();
-    this->mdCc_c2.Update();
+    mAngleY += 0x1000;
+    mdCc_c2.Clear();
+    mdCc_c2.Update();
     return 1;
 }
 
@@ -349,9 +357,9 @@ int daShl_c::func_ov102_0214d114()
 /* Ridden: enter. The body cylinder is re-initialised with no extent. */
 int daShl_c::func_ov102_0214d0bc()
 {
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&this->mdCc_c, this, 0, 0, 0x100002, 0);
-    this->mFlags &= ~3;
-    this->mDespawnTimer = 100;
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCc_c, this, 0, 0, 0x100002, 0);
+    mFlags &= ~3;
+    mDespawnTimer = 100;
     return 1;
 }
 
@@ -360,23 +368,22 @@ int daShl_c::func_ov102_0214d0bc()
    is off, the shell breaks. */
 int daShl_c::func_ov102_0214d044()
 {
-    if (this->mCarrier != 0) {
-        if (_ZN6Player9IsOnShellEv(this->mCarrier) != 0)
-            goto follow;
+    /* The riderPos/angle/x/ret locals below are needed: without them the
+       function is 4 bytes shorter. */
+    if (mCarrier == 0 || _ZN6Player9IsOnShellEv(mCarrier) == 0) {
+        PoofDust();
+        MarkForDestruction();
+        return 0;
     }
-    this->PoofDust();
-    this->MarkForDestruction();
-    return 0;
-follow:
     {
-        dActor_c *rider = this->mCarrier;
+        dActor_c *rider = mCarrier;
         s32 *riderPos = &rider->mPosX;
-        s16 *angle = &this->mAngleY;
+        s16 *angle = &mAngleY;
         int x = riderPos[0];
         int ret = 1;
-        this->mPosX = x;
-        this->mPosY = riderPos[1];
-        this->mPosZ = riderPos[2];
+        mPosX = x;
+        mPosY = riderPos[1];
+        mPosZ = riderPos[2];
         *angle = *angle + 0x1000;
         return ret;
     }
@@ -386,8 +393,8 @@ follow:
 /* Held: enter. */
 int daShl_c::func_ov102_0214d020()
 {
-    this->mdCc_c.flags |= 2;
-    this->mdCc_c.flags &= ~4;
+    mdCc_c.flags |= 2;
+    mdCc_c.flags &= ~4;
     return 1;
 }
 
@@ -395,10 +402,10 @@ int daShl_c::func_ov102_0214d020()
 /* Held: tick. Once the holder lets go (flag 0x100 clears), it breaks. */
 int daShl_c::func_ov102_0214cfe4()
 {
-    int b = (this->mFlags & 0x100) != 0;
+    int b = (mFlags & 0x100) != 0;
     if (!b) {
-        this->PoofDust();
-        this->MarkForDestruction();
+        PoofDust();
+        MarkForDestruction();
     }
     return 1;
 }
@@ -407,10 +414,10 @@ int daShl_c::func_ov102_0214cfe4()
 /* The player jumps on: remember him and switch to ridden. */
 int daShl_c::func_ov102_0214cf98(dActor_c *player)
 {
-    if (this->mCarrier != 0)
+    if (mCarrier != 0)
         return 0;
-    this->mCarrier = player;
-    if (this->mState != &data_ov102_0214ea48)
+    mCarrier = player;
+    if (mState != &data_ov102_0214ea48)
         func_ov102_0214d1f8(&data_ov102_0214ea48);
     return 1;
 }
@@ -419,9 +426,9 @@ int daShl_c::func_ov102_0214cf98(dActor_c *player)
 /* Kicked: take the kicker's heading and switch to the sliding state. */
 int daShl_c::func_ov102_0214cf4c(dActor_c *kicker)
 {
-    if (this->mState == (ShlState *)&data_ov102_0214ea78)
+    if (mState == (ShlState *)&data_ov102_0214ea78)
         return 0;
-    this->mSpawnAngleY = kicker->mAngleY;
+    mSpawnAngleY = kicker->mAngleY;
     func_ov102_0214d1f8((ShlState *)&data_ov102_0214ea78);
     return 1;
 }
@@ -432,23 +439,23 @@ int daShl_c::func_ov102_0214cf4c(dActor_c *kicker)
    mAngleY. Flag 0x40000 (hidden) skips the shadow. */
 void daShl_c::func_ov102_0214ce60()
 {
-    int carried = (this->mFlags & 0x4000) != 0;
+    int carried = (mFlags & 0x4000) != 0;
     if (carried) {
         Vector3 offset;
         offset.x = 0x1e000;
         offset.y = -0x1e000;
         offset.z = 0x32000;
-        this->mModel.mat4x3 = *this->UpdateCarry(*(Player *)this->mCarrier, offset);
+        mModel.mat4x3 = *UpdateCarry(*(Player *)mCarrier, offset);
     } else {
-        Matrix4x3_FromRotationY(&this->mModel.mat4x3, this->mAngleY);
-        this->mModel.mat4x3.m[9] = this->mPosX >> 3;
-        this->mModel.mat4x3.m[10] = this->mPosY >> 3;
-        this->mModel.mat4x3.m[11] = this->mPosZ >> 3;
+        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+        mModel.mat4x3.m[9] = mPosX >> 3;
+        mModel.mat4x3.m[10] = mPosY >> 3;
+        mModel.mat4x3.m[11] = mPosZ >> 3;
     }
-    int hidden = (this->mFlags & 0x40000) != 0;
+    int hidden = (mFlags & 0x40000) != 0;
     if (hidden)
         return;
-    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(this, &this->mShadowModel, &this->mModel.mat4x3, 0x50000, 0x50000, 0xf);
+    _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(this, &mShadowModel, &mModel.mat4x3, 0x50000, 0x50000, 0xf);
 }
 
 // @symbol _ZN7daShl_c19func_ov102_0214cbecEv
@@ -460,12 +467,12 @@ void daShl_c::func_ov102_0214ce60()
    ridden. */
 void daShl_c::func_ov102_0214cbec()
 {
-    void *player;
+    dActor_c *player;
     s32 hit;
     u32 id;
     Vector3 v1, v2;
 
-    id = this->mdCc_c.otherOwner;
+    id = mdCc_c.otherOwner;
     if (id == 0)
         return;
     player = dActor_c::FindWithID(id);
@@ -473,181 +480,185 @@ void daShl_c::func_ov102_0214cbec()
         return;
 
     {
-        int isPlayer = (int)(((dActor_c *)player)->actorID == 0xbf);
+        int isPlayer = (int)(player->actorID == 0xbf);
         if (!isPlayer)
             return;
     }
     /* Unsigned read (ldrh): the s16 field spelling loads ldrsh. */
-    if (*(u16 *)&this->mStateTimer != 0)
+    if (*(u16 *)&mStateTimer != 0)
         return;
 
-    hit = this->mdCc_c.hitFlags;
+    hit = mdCc_c.hitFlags;
     if (hit & 0x10) {
-        s16 dir[3];
-        dir[0] = 0x2000;
-        dir[1] = 0;
-        dir[2] = 0;
-        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(this, *(Vector3_16 *)dir, *(Player *)player, this->mdCc_c.height >> 1);
+        Vector3_16 dir;
+        dir.x = 0x2000;
+        dir.y = 0;
+        dir.z = 0;
+        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(this, dir, *(Player *)player, mdCc_c.height >> 1);
         return;
     }
 
-    if (this->mVariant != 0) {
-        if (this->mState != &data_ov102_0214ea68)
+    if (mVariant != 0) {
+        if (mState != &data_ov102_0214ea68)
             return;
         if (!(hit & 0x1000))
             return;
         if (_ZN6Player7TryGrabER8dActor_c(player, *this) == 0)
             return;
-        this->mCarrier = (dActor_c *)player;
+        mCarrier = player;
         func_ov102_0214d1f8(&data_ov102_0214ea58);
         return;
     }
 
-    if (this->mModelIndex != 0) {
+    if (mModelIndex != 0) {
         s32 attack = hit & 0x3c0;
         if (attack) {
             func_020105cc(this, attack);
-            func_ov102_0214cf4c((dActor_c *)player);
+            func_ov102_0214cf4c(player);
             return;
         }
-        if (this->mState != (ShlState *)&data_ov102_0214ea78)
+        if (mState != (ShlState *)&data_ov102_0214ea78)
             return;
-        v1.x = this->mPosX;
-        v1.y = this->mPosY;
-        v1.z = this->mPosZ;
+        v1.x = mPosX;
+        v1.y = mPosY;
+        v1.z = mPosZ;
         _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(player, &v1, 1, 0xc000, 1, 0, 1);
         return;
     }
 
-    if (this->mState == (ShlState *)&data_ov102_0214ea78) {
-        v2.x = this->mPosX;
-        v2.y = this->mPosY;
-        v2.z = this->mPosZ;
+    if (mState == (ShlState *)&data_ov102_0214ea78) {
+        v2.x = mPosX;
+        v2.y = mPosY;
+        v2.z = mPosZ;
         _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(player, &v2, 1, 0xc000, 1, 0, 1);
         return;
     }
 
-    if (this->mState != &data_ov102_0214ea68)
+    if (mState != &data_ov102_0214ea68)
         return;
     if (hit & 0x26fe0)
         return;
     if (func_ov002_020cc16c(player, this) != 1)
         return;
-    func_ov102_0214cf98((dActor_c *)player);
+    func_ov102_0214cf98(player);
 }
 
 // @symbol _ZN7daShl_c19func_ov102_0214c84cEv
 /* Model 0 only (Behavior gates it). While ridden, probe the ground from
    50.0 above the shell and pick the trail particles and the looping
-   surface sound from what it finds; otherwise just the idle trail. */
+   surface sound from what it finds; otherwise just the idle trail. Water
+   detection is on, so ground.clsnY is the hit height of a water surface
+   or a floor. */
 void daShl_c::func_ov102_0214c84c()
 {
-    int pv[6];
-    char rg[0x50];
+    /* One object: as two separate locals the function is 64 bytes
+       shorter (measured). */
+    struct { ShlPos trail; ShlPos probe; } pos;
 
-    pv[0] = this->mPosX;
-    pv[1] = this->mPosY;
-    pv[2] = this->mPosZ;
+    pos.trail.x = mPosX;
+    pos.trail.y = mPosY;
+    pos.trail.z = mPosZ;
 
-    if (this->mState == &data_ov102_0214ea48
-        && this->mCarrier != 0
-        && *((u8 *)this->mCarrier + 0x6de) == 0)
+    if (mState == &data_ov102_0214ea48
+        && mCarrier != 0
+        && *((u8 *)mCarrier + 0x6de) == 0)  /* Player::mIsAirborne */
     {
-        _ZN9dBgCh_GndC1Ev(rg);
-        _ZN5dBgCh19StartDetectingWaterEv(rg);
+        dBgCh_Gnd ground;
+        ground.StartDetectingWater();
         {
-            int vx = this->mPosX;
-            int vz = this->mPosZ;
-            int vy = this->mPosY + 0x32000;
-            pv[3] = vx;
-            pv[4] = vy;
-            pv[5] = vz;
+            int vx = mPosX;
+            int vz = mPosZ;
+            int vy = mPosY + 0x32000;
+            pos.probe.x = vx;
+            pos.probe.y = vy;
+            pos.probe.z = vz;
         }
-        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, (Vector3 *)&pv[3], this);
-        if (_ZN9dBgCh_Gnd10DetectClsnEv(rg))
+        ground.SetObjAndPos(*(Vector3 *)&pos.probe, this);
+        if (ground.DetectClsn())
         {
-            if (SurfaceInfo_TestFlag0x20((int *)(rg + 0x14)))
+            if (SurfaceInfo_TestFlag0x20((int *)&ground.surface))
             {
-                pv[1] = *(int *)(rg + 0x44) + 0x3c000;
-                this->mParticleHandle_3d4 = 0;
-                this->mParticleHandle_3c8 = this->mParticleHandle_3d4;
-                this->mParticleHandle_3cc = func_02022d00(this->mParticleHandle_3cc, 0xe2, pv[0], pv[1], pv[2], 0);
-                this->mParticleHandle_3d0 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                    this->mParticleHandle_3d0, 0xe3, pv[0], pv[1], pv[2], 0, 0);
-                if (this->mSoundID != func_02037e84((int *)(rg + 0x14)) + 0xf2)
-                    this->mSoundHandle = 0;
-                this->mSoundID = func_02037e84((int *)(rg + 0x14)) + 0xf2;
-                this->mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-                    this->mSoundHandle, 0, this->mSoundID, *(Vector3 *)&this->mCamSpacePosX, 0);
-                _ZN9dBgCh_GndD1Ev(rg);
+                pos.trail.y = ground.clsnY + 0x3c000;
+                mParticleHandle_3d4 = 0;
+                mParticleHandle_3c8 = mParticleHandle_3d4;
+                mParticleHandle_3cc = func_02022d00(mParticleHandle_3cc, 0xe2, pos.trail.x, pos.trail.y, pos.trail.z, 0);
+                mParticleHandle_3d0 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+                    mParticleHandle_3d0, 0xe3, pos.trail.x, pos.trail.y, pos.trail.z, 0, 0);
+                if (mSoundID != func_02037e84((int *)&ground.surface) + 0xf2)
+                    mSoundHandle = 0;
+                mSoundID = func_02037e84((int *)&ground.surface) + 0xf2;
+                mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
+                    mSoundHandle, 0, mSoundID, *(Vector3 *)&mCamSpacePosX, 0);
                 return;
             }
-            if (func_02037e38((unsigned int *)(rg + 0x14)) == 1)
+            if (func_02037e38((unsigned int *)&ground.surface) == 1)
             {
-                if (func_02037e84((int *)(rg + 0x14)) == 7)
+                if (func_02037e84((int *)&ground.surface) == 7)
                 {
-                    pv[1] = *(int *)(rg + 0x44) + 0x3c000;
-                    this->mParticleHandle_3d4 = 0;
-                    this->mParticleHandle_3c8 = this->mParticleHandle_3d4;
-                    this->mParticleHandle_3cc = func_02022d00(this->mParticleHandle_3cc, 0xe2, pv[0], pv[1], pv[2], 0);
-                    this->mParticleHandle_3d0 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                        this->mParticleHandle_3d0, 0xe3, pv[0], pv[1], pv[2], 0, 0);
-                    if (this->mSoundID != func_02037e84((int *)(rg + 0x14)) + 0xf2)
-                        this->mSoundHandle = 0;
-                    this->mSoundID = func_02037e84((int *)(rg + 0x14)) + 0xf2;
-                    this->mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-                        this->mSoundHandle, 0, this->mSoundID, *(Vector3 *)&this->mCamSpacePosX, 0);
+                    pos.trail.y = ground.clsnY + 0x3c000;
+                    mParticleHandle_3d4 = 0;
+                    mParticleHandle_3c8 = mParticleHandle_3d4;
+                    mParticleHandle_3cc = func_02022d00(mParticleHandle_3cc, 0xe2, pos.trail.x, pos.trail.y, pos.trail.z, 0);
+                    mParticleHandle_3d0 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+                        mParticleHandle_3d0, 0xe3, pos.trail.x, pos.trail.y, pos.trail.z, 0, 0);
+                    if (mSoundID != func_02037e84((int *)&ground.surface) + 0xf2)
+                        mSoundHandle = 0;
+                    mSoundID = func_02037e84((int *)&ground.surface) + 0xf2;
+                    mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
+                        mSoundHandle, 0, mSoundID, *(Vector3 *)&mCamSpacePosX, 0);
                 }
                 else
                 {
-                    pv[1] = *(int *)(rg + 0x44) + 0xa000;
-                    this->mParticleHandle_3d0 = 0;
-                    this->mParticleHandle_3cc = this->mParticleHandle_3d0;
-                    this->mParticleHandle_3d4 = this->mParticleHandle_3cc;
-                    this->mParticleHandle_3c8 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                        this->mParticleHandle_3c8, 0xe1, pv[0], pv[1], pv[2], 0, 0);
-                    if (this->mSoundID != 0x102)
-                        this->mSoundHandle = 0;
-                    this->mSoundID = 0x102;
-                    this->mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-                        this->mSoundHandle, 0, this->mSoundID, *(Vector3 *)&this->mCamSpacePosX, 0);
+                    pos.trail.y = ground.clsnY + 0xa000;
+                    mParticleHandle_3d0 = 0;
+                    mParticleHandle_3cc = mParticleHandle_3d0;
+                    mParticleHandle_3d4 = mParticleHandle_3cc;
+                    mParticleHandle_3c8 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+                        mParticleHandle_3c8, 0xe1, pos.trail.x, pos.trail.y, pos.trail.z, 0, 0);
+                    if (mSoundID != 0x102)
+                        mSoundHandle = 0;
+                    mSoundID = 0x102;
+                    mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
+                        mSoundHandle, 0, mSoundID, *(Vector3 *)&mCamSpacePosX, 0);
                 }
-                _ZN9dBgCh_GndD1Ev(rg);
                 return;
             }
-            if (this->mSoundID != func_02037e84((int *)(rg + 0x14)) + 0xf2)
-                this->mSoundHandle = 0;
-            this->mSoundID = func_02037e84((int *)(rg + 0x14)) + 0xf2;
-            this->mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-                this->mSoundHandle, 0, this->mSoundID, *(Vector3 *)&this->mCamSpacePosX, 0);
+            if (mSoundID != func_02037e84((int *)&ground.surface) + 0xf2)
+                mSoundHandle = 0;
+            mSoundID = func_02037e84((int *)&ground.surface) + 0xf2;
+            mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
+                mSoundHandle, 0, mSoundID, *(Vector3 *)&mCamSpacePosX, 0);
         }
         else
         {
-            this->mSoundHandle = 0;
-            this->mSoundID = 0;
+            mSoundHandle = 0;
+            mSoundID = 0;
         }
-        _ZN9dBgCh_GndD1Ev(rg);
     }
 
-    this->mParticleHandle_3d0 = 0;
-    this->mParticleHandle_3cc = this->mParticleHandle_3d0;
-    this->mParticleHandle_3c8 = this->mParticleHandle_3cc;
-    pv[1] = pv[1] + 0x1e000;
-    this->mParticleHandle_3d4 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        this->mParticleHandle_3d4, 0xe0, pv[0], pv[1], pv[2], 0, 0);
+    mParticleHandle_3d0 = 0;
+    mParticleHandle_3cc = mParticleHandle_3d0;
+    mParticleHandle_3c8 = mParticleHandle_3cc;
+    pos.trail.y = pos.trail.y + 0x1e000;
+    mParticleHandle_3d4 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        mParticleHandle_3d4, 0xe0, pos.trail.x, pos.trail.y, pos.trail.z, 0, 0);
 }
 
 // @symbol _ZN7daShl_c19func_ov102_0214c7fcEv
-/* Landed on a floor whose surface tests flag 0x20: poof and go. */
+/* Landed on a floor whose CLPS entry has bit 0x20 set: poof and go. Bit
+   0x20 is water per CLPS.h, and this file agrees: InitResources turns on
+   mMeshClsn.StartDetectingWater(), and func_ov102_0214c84c's probe calls
+   StartDetectingWater before it tests the same bit. The floor result is
+   a dBgPi. */
 void daShl_c::func_ov102_0214c7fc()
 {
-    if (!this->mMeshClsn.IsOnGround())
+    if (!mMeshClsn.IsOnGround())
         return;
-    void *floor = _ZNK10dBgCh_Actr14GetFloorResultEv(&this->mMeshClsn);
-    if (!SurfaceInfo_TestFlag0x20((int *)((char *)floor + 4)))
+    dBgPi *floor = (dBgPi *)mMeshClsn.GetFloorResult();
+    if (!SurfaceInfo_TestFlag0x20((int *)&floor->surface))
         return;
-    this->PoofDust();
-    this->MarkForDestruction();
+    PoofDust();
+    MarkForDestruction();
 }
 
 // @symbol _ZN7daShl_cD1Ev

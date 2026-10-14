@@ -646,24 +646,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1006",
+      "from": "@1012",
       "to": "@169",
-      "evidence": "mwcc numbers this registration node @986 per TU and the fleet already defines a global @986, so the scratch link would multiply-define it"
+      "evidence": "Same 12-byte local BSS destructor-registration node as baseline @1006, identified by .init ABS32 relocation at +0xbc; typed calls renumber it @1012. Preserve established linker identity @169."
     },
     {
-      "from": "@1007",
+      "from": "@1013",
       "to": "@170",
-      "evidence": "mwcc numbers this registration node @987 per TU and the fleet already defines a global @987, so the scratch link would multiply-define it"
+      "evidence": "Same 12-byte local BSS destructor-registration node as baseline @1007, identified by .init ABS32 relocation at +0xc8; typed calls renumber it @1013. Preserve established linker identity @170."
     },
     {
-      "from": "@1008",
+      "from": "@1014",
       "to": "@171",
-      "evidence": "mwcc numbers this registration node @988 per TU and the fleet already defines a global @988, so the scratch link would multiply-define it"
+      "evidence": "Same 12-byte local BSS destructor-registration node as baseline @1008, identified by .init ABS32 relocation at +0xd8; typed calls renumber it @1014. Preserve established linker identity @171."
     },
     {
-      "from": "@1009",
+      "from": "@1015",
       "to": "@172",
-      "evidence": "mwcc numbers this registration node @989 per TU and the fleet already defines a global @989, so the scratch link would multiply-define it"
+      "evidence": "Same 12-byte local BSS destructor-registration node as baseline @1009, identified by .init ABS32 relocation at +0xe4; typed calls renumber it @1015. Preserve established linker identity @172."
     }
   ],
   "symbol_binding_rewrites": [

@@ -1,0 +1,155 @@
+{
+  "task": "ibl-typed-calls1013",
+  "base": "731efc06d5d5e84ac33ff5f97880e9f90476158e",
+  "scope": [
+    "src/actors/daIbl_c.cpp",
+    "notes/experiments/ibl-typed-calls1013.json"
+  ],
+  "class": "daIbl_c",
+  "changes": [
+    "Replace the local void-pointer FindWithID bridge with native dActor_c::FindWithID; inspect the base actor ID before downcasting to Player.",
+    "Call mPathPtr.FromID and mPathPtr.NumNodes through the genuine existing PathPtr interface.",
+    "Remove obsolete FindWithID/FromID local declarations and the unused generated decl_PathPtr include."
+  ],
+  "interfaces": [
+    "include/dActor_c.h: static dActor_c* FindWithID(u32)",
+    "include/PathPtr.h: void FromID(unsigned int), unsigned int NumNodes() const",
+    "include/daIbl_c.h: PathPtr mPathPtr at 0x3f4, s32 mNumPathNodes at 0x3d4"
+  ],
+  "source_review": {
+    "lookup": "Null and actor-ID checks precede Player downcast; existing contact behavior preserved.",
+    "path": "Receiver is the existing PathPtr member; unsigned node count assignment retains the old word representation in signed mNumPathNodes.",
+    "remaining": "Other raw bridges, scalar path-node storage, PMF dispatch, matrix copies and Fix12 ABI boundaries remain unchanged. No claim of complete class reconstruction.",
+    "no_shared_changes": true
+  },
+  "ownership": {
+    "receipt": "build/worker-receipt.json",
+    "source_reservation": "file:src/actors/daIbl_c.cpp",
+    "class_reservation": "class:daIbl_c",
+    "pr3759_overlap": false
+  },
+  "validation": {
+    "toolchain": "2004/b56; production build_pin flags, C++",
+    "complete_object": {
+      "baseline_sha256": "34b085d2cc8152dde43cc901bbe11918ab4ff84e4b7c986e2497ba6bfade76b7",
+      "candidate_sha256": "34b085d2cc8152dde43cc901bbe11918ab4ff84e4b7c986e2497ba6bfade76b7",
+      "byte_identical": true,
+      "all_defined_symbols_and_sections_identical": true,
+      "registration": "No .init or .bss emitted by this TU; 11 RTTI/vtable/name objects and their relocations are identical. No manifest bindings changed."
+    },
+    "tu": {
+      "functions": 16,
+      "matches": 16,
+      "objisolate": "clean",
+      "relocation_destinations": "clean",
+      "emission_order": "ROM ascending",
+      "scope": "Existing promoted text-partition TU; not newly promoted and not an intact-object enrollment."
+    },
+    "strict": [
+      {
+        "name": "_ZN7daIbl_c19func_ov100_02141fb0Ev",
+        "module": "ov100",
+        "addr": "0x02141fb0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      },
+      {
+        "name": "_ZN7daIbl_c13InitResourcesEv",
+        "module": "ov100",
+        "addr": "0x02142de0",
+        "verdict": "VERIFIED",
+        "diffs": [],
+        "blind": 0
+      }
+    ],
+    "declaration_agreement": "No new disagreements or local redeclarations",
+    "port_references": {
+      "checked": 267,
+      "stale": 0
+    },
+    "full_production": {
+      "status": "passed",
+      "modules": {
+        "modulesChecked": 106,
+        "modulesExact": 106,
+        "modulesExpectedOnly": 106,
+        "comparedBytes": 3049600,
+        "differingBytes": 0,
+        "unexpectedDifferingBytes": 0,
+        "percent": 100.0,
+        "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b"
+      },
+      "source": {
+        "totalCodeFunctions": 11397,
+        "totalCodeBytes": 2238108,
+        "compiledFunctions": 11290,
+        "compiledBytes": 2208556,
+        "sourceFunctions": 11290,
+        "sourceBytes": 2208556,
+        "modFunctions": 0,
+        "modBytes": 0,
+        "sourceBytesPercent": 98.67959901845666,
+        "reproducingFunctions": 11290,
+        "reproducingBytes": 2208556,
+        "mismatchingFunctions": 0,
+        "mismatchingFunctionBytes": 0,
+        "differingSourceBytes": 0,
+        "sourceDataClaims": 331,
+        "sourceBssClaims": 239,
+        "sourceBssBytes": 30164,
+        "reproducingDataClaims": 331,
+        "reproducingDataClaimBytes": 13020,
+        "mismatchingDataClaims": 0,
+        "mismatchingDataClaimBytes": 0
+      },
+      "cache": {
+        "enabled": true,
+        "reused": 2707,
+        "compiled": 1,
+        "uncacheable": 0,
+        "tuDerived": 0
+      },
+      "intact": {
+        "ok": true,
+        "modulesOk": true,
+        "newSymbolErrors": [],
+        "storageAliasErrors": []
+      },
+      "packaging": "--no-rom; module/link/source verification, no new packaged ROM claim"
+    },
+    "bounded_raw_data": {
+      "differing_symbols": [
+        {
+          "module": "arm9",
+          "symbol": "_ZTV10dCcAcPos_c",
+          "addr": 34137860,
+          "bytes": 16
+        }
+      ],
+      "note": "Existing dCcAcPos_c destructor-object vtable inventory disagreement outside this source; all 331 production source-owned data claims reproduce. The changed Ibl object is identical to its baseline."
+    },
+    "private_artifacts": [
+      "build/ibl-proof/baseline.cpp",
+      "build/ibl-proof/baseline.o",
+      "build/ibl-proof/final.o",
+      "build/ibl-proof/object-comparison.json",
+      "build/ibl-proof/contact-linkcheck.json",
+      "build/ibl-proof/init-linkcheck.json",
+      "build/ibl-proof/final-tu.log",
+      "build/ibl-proof/declarations.log",
+      "build/ibl-proof/port.log",
+      "build/ibl-proof/rombuild.log",
+      "build/ibl-proof/rombuild-report.json"
+    ]
+  },
+  "reproduce": [
+    "python tools/tubuild.py verify ov100/daIbl_c --no-write",
+    "python tools/linkcheck.py --name _ZN7daIbl_c19func_ov100_02141fb0Ev --c src/actors/daIbl_c.cpp --addr 0x02141fb0 --size 0x180 --module ov100",
+    "python tools/linkcheck.py --name _ZN7daIbl_c13InitResourcesEv --c src/actors/daIbl_c.cpp --addr 0x02142de0 --size 0x38c --module ov100",
+    "python tools/check_decl_agreement.py --changed 731efc06d5d5e84ac33ff5f97880e9f90476158e",
+    "python tools/port_refcheck.py",
+    "python tools/rombuild.py -j16 --no-rom --report-json build/ibl-proof/rombuild-report.json"
+  ],
+  "source_sha256": "8f735b5de242a2908a18c22b02886dc206e47d92676ded52a951fb2464781864"
+}

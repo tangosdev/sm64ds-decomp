@@ -2,7 +2,7 @@
  * (zero RTTI edges name dScMgSlot1_c as a base).
  *
  * Own vtable slots (python tools/rtti_vtables.py --own dScMgSlot1_c): 0
- * (InitResources), 6 (Behavior -- nonmatching draft, see below),
+ * (InitResources), 6 (Behavior),
  * 9 (Render), 16
  * (D1), 17 (D0), 18 (OnYoshiTryEat), 27 (OnHitByMegaChar), and
  * 28 (OnHitFromUnderneath).
@@ -19,11 +19,12 @@
  * that address genuinely is Render (confirmed by vtable slot identity and
  * by matching every sibling's Render shape).
  *
- * Behavior has a NONMATCHING draft at src/_ZN12dScMgSlot1_c8BehaviorEv.cpp.
- * Its 0x81c-byte range, ov006:0x0210c9e0..0x0210d1fc, remains supplied by
- * the retail gap object. The touch-coordinate block still differs by 19 words;
- * notes/mwccarm-codegen.md section 6cm records the matching investigation.
- * The promoted 39-function range stops immediately before this method.
+ * Behavior (ov006:0x0210c9e0..0x0210d1fc, 0x81c bytes) is byte-exact since
+ * 2026-10-12. The 19-word residue that notes/mwccarm-codegen.md section 6cm
+ * banked as a compiler floor was a source-shape artefact: the draft named
+ * the object two ways (members and a char* with literal offsets), and that
+ * is what made 2004/b56 fold the hoisted touch-record address. Spelled
+ * through members alone it reproduces the cartridge.
  *
  * The DECLARATION is nevertheless required, and an earlier revision of this
  * banner was wrong to say otherwise. It claimed "this class's own vtable
@@ -158,19 +159,22 @@ struct dScMgSlot1_c : dScMgBase_c {
     u8  pad_4690[0xc];      /* 0x4690 -- embedded object, own type unknown */
     u8  pad_469c[0x8];      /* 0x469c -- embedded object, own type unknown */
     u32 unk_46a4[3];         /* 0x46a4 */
-    u8  pad_46b0[0x4];
+    s32 unk_46b0;            /* 0x46b0 -- reel-spin sound handle (Behavior) */
     s32 unk_46b4;            /* 0x46b4 */
-    u8  pad_46b8[0x4];
+    s32 unk_46b8;            /* 0x46b8 -- payout multiplier (Behavior) */
     s32 unk_46bc;            /* 0x46bc */
     u8  unk_46c0[0x15];      /* 0x46c0 */
     u8  pad_46d5[0x2a];
     u8  unk_46ff[3];         /* 0x46ff */
     u8  unk_4702[3];         /* 0x4702 */
-    u8  pad_4705[0x4];       /* includes 0x4706, used by OnYoshiTryEat */
+    u8  unk_4705;            /* 0x4705 -- reels stopped by touch this spin (Behavior) */
+    u8  pad_4706[0x2];       /* 0x4706 used by OnYoshiTryEat */
+    u8  unk_4708;            /* 0x4708 -- reel speed table row (Behavior) */
     u8  unk_4709;            /* 0x4709 */
     u8  unk_470a;            /* 0x470a */
     u8  unk_470b;            /* 0x470b */
-    u8  pad_470c[0x4];
+    u8  unk_470c;            /* 0x470c -- state timer, DecIfAbove0_Byte (Behavior) */
+    u8  pad_470d[0x3];
 };
 
 #ifndef SM64DS_PLATFORM_PC

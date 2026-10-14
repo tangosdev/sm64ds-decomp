@@ -19,8 +19,8 @@ extern void _ZN5Sound19LoadGroupAndSetBankEii(int a, int b);
 extern void _ZN5Sound16LoadInitialGroupEi(int group);
 extern void LoadFont(int id);
 
-extern int overlay_0;
-extern int overlay_1;
+extern int OVERLAY_0_ID;
+extern int OVERLAY_1_ID;
 extern int data_0208ee5c;
 
 void func_0201a2f8(void) {
@@ -38,15 +38,15 @@ void func_0201a2f8(void) {
         ptr = _ZN6Memory8AllocateEj(size);
         func_0205d94c((int)ptr, size);
     }
-    LoadOverlay((int)&overlay_0);
+    LoadOverlay((int)&OVERLAY_0_ID);
     func_ov001_020aa420();
-    UnloadOverlay((int)&overlay_0);
+    UnloadOverlay((int)&OVERLAY_0_ID);
     if (ptr != 0) {
         func_0205d23c(&data_0208ee5c, 3);
         func_0205c91c();
         _ZN6Memory10DeallocateEPv(ptr);
     }
-    LoadOverlay((int)&overlay_1);
+    LoadOverlay((int)&OVERLAY_1_ID);
     if (cond) {
         _ZN5Sound19LoadGroupAndSetBankEii(0x2f, 0x36);
     } else {

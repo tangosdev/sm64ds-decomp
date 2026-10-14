@@ -4,9 +4,9 @@ extern "C" unsigned char data_02075998[][7];
 struct OvTbl { unsigned int t[7]; };
 extern "C" OvTbl data_02075804[];
 
-extern "C" int overlay_60;
-extern "C" int overlay_98;
-extern "C" int overlay_102;
+extern "C" int OVERLAY_60_ID;
+extern "C" int OVERLAY_98_ID;
+extern "C" int OVERLAY_102_ID;
 
 void LoadOrUnloadObjectOverlays(void (*fn)(int), int idx) {
     unsigned int i;
@@ -22,12 +22,12 @@ void LoadOrUnloadObjectOverlays(void (*fn)(int), int idx) {
         }
     }
     if (idx == 0x24 || idx == 0x26 || idx == 0x28) {
-        fn((int)&overlay_60);
+        fn((int)&OVERLAY_60_ID);
         return;
     }
     b = (data_0209f2d8 == 1);
     if (b == 0) {
-        fn((int)&overlay_98);
+        fn((int)&OVERLAY_98_ID);
     }
-    fn((int)&overlay_102);
+    fn((int)&OVERLAY_102_ID);
 }

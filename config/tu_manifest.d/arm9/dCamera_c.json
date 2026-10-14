@@ -419,5 +419,14 @@
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     }
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Native Vector3 collision-return locals cause the front end to emit the empty vague-linkage destructor (4 bytes, bx lr). All call sites are elided; the retail cartridge keeps its identical canonical body at arm9:0x020072c0. Production isolation verifies the duplicate against that ROM body before discarding it."
+    }
+  ]
 }

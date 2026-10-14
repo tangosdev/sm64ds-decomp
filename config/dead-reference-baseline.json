@@ -46,6 +46,10 @@
    "ref": "src/_ZN8PlatformD0Ev.cpp"
   },
   {
+   "file": "notes/agents/handoffs/draft-verdict-repair-0918.md",
+   "ref": "src/_ZN11dScMgJump_c13OnYoshiTryEatEi.cpp"
+  },
+  {
    "file": "notes/agents/handoffs/five-cpp-cleanups-0919.md",
    "ref": "tools/check_src_tu_compiles.py"
   },
@@ -68,6 +72,10 @@
   {
    "file": "notes/agents/handoffs/fold-ov006-curling2-1005.md",
    "ref": "src/actors/dScMgCurling2_c_upper.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/fold-ov009-sbird-1008.md",
+   "ref": "src/unnamed/ov009/func_ov009_0211145c.c"
   },
   {
    "file": "notes/agents/handoffs/issue-2410-humanizer-2.md",
@@ -168,6 +176,10 @@
   {
    "file": "notes/agents/handoffs/mg-p1-factories-0926.md",
    "ref": "src/d_s_mg_teresa.c"
+  },
+  {
+   "file": "notes/agents/handoffs/mg-p1-factories-0926.md",
+   "ref": "src/minigames/d_s_mg_slot1.cpp"
   },
   {
    "file": "notes/agents/handoffs/mg-p1-factories-0926.md",
@@ -992,6 +1004,10 @@
   {
    "file": "tools/check_decl_agreement.py",
    "ref": "src/func_ov065_021183c8.c"
+  },
+  {
+   "file": "tools/check_drafts_compile.py",
+   "ref": "src/_ZN11dScMgJump_c13OnYoshiTryEatEi.cpp"
   },
   {
    "file": "tools/check_drafts_compile.py",

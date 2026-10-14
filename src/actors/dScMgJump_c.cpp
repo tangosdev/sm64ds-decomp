@@ -1,10 +1,9 @@
 //cpp
-/* ov006/dScMgJump_c -- 17 of the class's 18 functions
- * (.text 0x020edec0..0x020ee994).
+/* ov006/dScMgJump_c -- all 18 of the class's functions
+ * (.text 0x020edec0..0x020eeafc).
  *
  * Functions run in REVERSE of ROM order (highest address first); do not
- * reorder. OnYoshiTryEat (0x020ee994) is not matched yet and lives in its
- * own file. The destructor is inline in the header, which makes
+ * reorder. The destructor is inline in the header, which makes
  * InitResources the key function that emits the vtable.
  *
  * leftovers:
@@ -104,8 +103,12 @@ int  func_ov006_020c7300(void);
 int  func_ov006_020c4060(void);
 int  func_ov006_020c4684(char *ptr, int n);
 int  func_ov006_020c7574(char *base, int count);
+void func_ov006_020c72c8(void);
+int  RandomIntInternal(int *seed);
 
 extern int  data_020a0e68;
+extern int  data_0209e650;
+extern int  data_ov006_0213cb48;
 extern u8   data_0209d45c;
 extern s16  data_02082614;
 extern int  data_ov006_02140418;
@@ -124,6 +127,67 @@ namespace GX   { void LoadOBJPltt(const void *src, unsigned int offset, unsigned
 namespace G3X  { void SetFog(bool enable, int mode, int slope, int offset); }
 namespace cstd { s32 fdiv(s32 a, s32 b); }
 short ApproachLinear2(short &value, short target, short step);
+
+// @symbol _ZN11dScMgJump_c13OnYoshiTryEatEi
+/* Slot 18. 0 is an eat (one more egg, capped like the HUD score), 0x12 a
+ * miss that clears the count and the shared scene's copy of it; anything
+ * else just publishes the count. From the fifteenth egg on the next egg is
+ * drawn at random, redrawn while it repeats the previous draw.
+ *
+ * The draw is written `if (unk_0bc < 15) idx = unk_0bc; else { redraw }`
+ * rather than `idx = unk_0bc; if (idx >= 15) { redraw }`. The two are the
+ * same code to a reader, but only the first reproduces the ROM: with the
+ * guard directly ahead of the loop mwccarm hoists the seed address, the
+ * previous-draw address and the 10 into r6-r8 and the function comes out a
+ * word short. The if-converted then-arm sits between the guard and the loop
+ * header, which keeps the three in the loop body, as the cartridge has them. */
+void dScMgJump_c::OnYoshiTryEat(int arg)
+{
+    u32 idx;
+
+    if (arg == 0) {
+        unk_0bc = unk_0bc + 1;
+        if (unk_0bc > 0x270e) unk_0bc = 0x270e;
+    } else if (arg == 0x12) {
+        unk_0bc = 0;
+        if (unk_0bc > 0x270e) unk_0bc = 0x270e;
+        if (data_ov004_020beb68 != 0)
+            *(int *)((char *)data_ov004_020beb68 + 0xb4) = 0;
+        func_ov004_020adb1c(mHudScore);
+    } else {
+        u32 count = unk_0bc;
+        if (data_ov004_020beb68 != 0)
+            *(int *)((char *)data_ov004_020beb68 + 0xb4) = count;
+    }
+
+    if (unk_0bc != 0)
+        func_ov006_020c72b4();
+    else
+        func_ov006_020c72c8();
+
+    if (unk_0bc < 0xf) {
+        idx = unk_0bc;
+    } else {
+        do {
+            idx = (int)((u32)(RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13) * 0xa >> 0xc;
+        } while (idx == (u32)data_ov006_0213cb48);
+        data_ov006_0213cb48 = idx;
+    }
+
+    func_ov006_020c719c(unk_0bc, idx);
+
+    if (unk_0bc < 0xf)
+        data_ov006_02140328 = 3;
+    else if (unk_0bc < 0x14)
+        data_ov006_02140328 = 4;
+    else if (unk_0bc < 0x19)
+        data_ov006_02140328 = 5;
+    else
+        data_ov006_02140328 = 6;
+
+    func_ov006_020c44b4((void *)unk_0bc, idx);
+    func_ov006_020ee658();
+}
 
 // @symbol _ZN11dScMgJump_c13OnTurnIntoEggEi
 /* Slot 19. mStateTimer is the same countdown the state functions below use. */

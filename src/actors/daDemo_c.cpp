@@ -1,6 +1,40 @@
 //cpp
-/* daDemo_c -- the cutscene object used by the intro/demo sequences (DEMO
- * profile, spawn id on the registry).
+/* daDemo_c -- the KuppaScript cutscene actor, registry profile 352 (0x160),
+ * debug name DEMO.
+ *
+ * How it is driven. ProcessKuppaScript walks the current script's records
+ * (s[0] record length, s[1] command, s[2..3] start frame, s[4..5] end frame,
+ * compared against data_0209b274). Commands 0x12 and up go to
+ * func_0200e494: the command byte is used as a param1. func_0200e55c looks
+ * for a live actor with that param1 among the 16 IDs at data_0209b2a4; if
+ * none, func_0200e4e4 spawns actor 0x160 with that param1 into a free slot.
+ * func_ov002_020f7d74 then calls entry s[6] of the 24-entry daDemo_c::*
+ * table data_ov002_0211104c with (s + 7, start, end). Handlers that compare
+ * a frame against data_0209b274 are acting on the record's first or last
+ * frame.
+ *
+ * Handler table, index -> member (func_ov002_020fXXXX):
+ *    0 7bb8   1 79c0   2 7780   3 7538   4 7410   5 7384   6 72bc   7 71c4
+ *    8 7038   9 7020  10 6e48  11 6c60  12 6c34  13 6c24  14 6bc0  15 6b4c
+ *   16 6b28  17 6ae4  18 6ab8  19 6a9c  20 6448  21 63f8  22 26d4  23 26c4
+ *
+ * param1 picks the variant (InitResources, Behavior, Render, Cleanup):
+ *   0x12        anmModel_c, model data_ov085_0213074c
+ *   0x13        anmModel_c; file set chosen by CURRENT_GAMEMODE == 2
+ *   0x14..0x16  simpleModel_c, data_ov002_02110b70
+ *   0x17, 0x18  simpleModel_c, data_ov002_02110b50 / data_ov002_0211094c
+ *   0x19        simpleModel_c, data_ov002_02110b78; Render draws it three
+ *               times at the positions in data_ov002_0210bb7c
+ *   0x1a..0x2d  anmModel_c from data_ov009_02113c20; moved with
+ *               UpdatePosWithOnlySpeed and rotated ZXY instead of XYZ
+ *   0x2e        the 0x518-byte block at unk_0d8 (handler 20 allocates it;
+ *               Behavior 63d4, Cleanup 63a0)
+ *   0x2f        the 0x36-byte ScrollState at mScroll (handler 22 allocates
+ *               it through the 26d4 veneer to 2630; Behavior 23f0, Cleanup
+ *               23d0): two scrolling sub-screen BG layers, a sub-screen
+ *               blend fade, two centre sprites and three sprites that cross
+ *               the screen.
+ * The model variants all start at scale 1.0 (0x1000).
  *
  * ROM evidence: _ZTS8daDemo_c at ov002:0x0210b940, _ZTI8daDemo_c at
  * 0x0210b94c (si_class over _ZTI8dActor_c at arm9:0x0208e390),
@@ -16,39 +50,34 @@
  * simpleModel_c emit the same D1/D0/D2 shape. Source order is
  * ROM-ascending so emission order stays ROM-ascending; the compiler
  * places simpleModel_c's D0/D1 pair out of order on its own. The
- * `_ZThn80_` Animation-base thunks live in their own sources at
+ * `_ZThn80_` frame-controller-base thunks live in their own sources at
  * ov002:0x020f8838/0x020f8848; this TU's copies are discarded.
  *
- * The vague-linkage typeinfo copies name the model family by the
- * project's own spellings (ModelAnim for dExtAnmModel_c, Model for
- * dExtSimpleModel_c, Animation for dExtFrameCtrl_c, ModelBase for
- * dExtModel_c), so they are deadstripped and the derived records'
- * base pointers are aliased onto the canonical _ZTI rows. See
- * notes/model-rtti-names.md.
+ * The model bases are declared in daDemo_c.h under the cartridge's RTTI
+ * spellings, so the vague-linkage typeinfo copies this object emits are
+ * _ZTI14dExtAnmModel_c, _ZTI17dExtSimpleModel_c, _ZTI11dExtModel_c and
+ * _ZTI15dExtFrameCtrl_c. See notes/model-rtti-names.md.
  *
  * deslop leftovers:
  *   func_ov002_020f20f4 compiles to the ROM's loop only as C++ (every
  *   C-flavored spelling walks a byte-offset induction variable).
  *   func_ov002_020f2aec/2bf4/335c/340c/39ec keep opt_common_subs off
- *   brackets; 23f0 and 20f4 keep opt_strength_reduction /
- *   opt_loop_invariants off. The brackets bind per-member only under
- *   defer_codegen off.
+ *   brackets; 20f4 keeps opt_strength_reduction / opt_loop_invariants
+ *   off. The brackets bind per-member only under defer_codegen off.
  *   func_ov002_020f27e8 and the OAM tail family return a callee's r0 by
  *   falling off the end; the callees are declared int so the passthrough
  *   is spelled.
- *   The 24-entry KuppaScript dispatch table data_ov002_0211104c is a
- *   daDemo_c::* member-pointer table; its handlers and the directly-called
- *   actor helpers are daDemo_c members. func_ov002_020f7d74, the dispatcher,
- *   stays extern "C" and free: its caller func_0200e494 is arm9 C.
+ *   func_ov002_020f7d74, the dispatcher, stays extern "C" and free: its
+ *   caller func_0200e494 is arm9 C.
  *   func_ov002_020f26d4 is a ldr/bx veneer that tail-calls
  *   func_ov002_020f2630 through a raw void(*)(void); a member pointer
  *   cannot spell that cast, so both stay free.
  *   The unk_0d8 heap block (0x518 bytes, edStarKiraCallback_c embedded at
  *   +0x200) has no proven class, so its helpers and the C/PMF/PMF0
  *   dispatch tables over it stay free.
- *   Shadow windows Obj, OamEnt, ScrollState, E, C and S remain where a shared
- *   class is not yet proven; the ones over daDemo_c were moved onto real
- *   members (mModel, mModelAnim, mScaleX/Y/Z, param1, mOpacity).
+ *   Shadow windows OamEnt, E, C, S and the per-function windows (E5cd0,
+ *   Ent5b98, Obj2e30 and the rest) remain where a shared class is not yet
+ *   proven; the ones over daDemo_c were moved onto real members.
  *   common.h must precede daDemo_c.h: ModelAnim.h's nested Matrix4x3
  *   otherwise wins and scalarizes Behavior's 12-word matrix copy.
  */
@@ -61,6 +90,8 @@
 #include "SharedFilePtr.h"
 #include "decl_common.h"
 #include "dBgCh_Gnd.h"
+#include "Sound.h"
+#include "dFdBrightness_c.h"
 #include "decl_Model.h"
 #include "decl_ModelAnim.h"
 
@@ -68,25 +99,11 @@ struct OamAttr;
 
 #pragma defer_codegen off
 
-/* shadow struct 'Obj' */
-struct Obj {
-    char pad[0xd4];
-    unsigned char *d4;
-};
-
 /* shadow struct 'OAM' */
 struct OAM { static void RenderSub(OamAttr *, int, int); };
 
 /* shadow typedef 's16' */
 typedef signed short s16;
-
-/* shadow struct 'ScrollState' */
-struct ScrollState {
-    s16 x0;  /* 0x0 */
-    s16 x1;  /* 0x2 */
-    s16 y0;  /* 0x4 */
-    s16 y1;  /* 0x6 */
-};
 
 /* shadow struct 'OamEnt' */
 struct OamEnt {
@@ -194,21 +211,6 @@ struct Obj2e30 {
 /* shadow struct 'ObjSeq' — TextureSequence window of func_ov002_020f65b8 */
 struct ObjSeq { char pad[0x7c]; void *seq; };
 
-/* shadow struct 'ObjV' — vtable window of daDemo_c::CleanupResources */
-struct ObjV { virtual void v00(); virtual void m04(); };
-
-/* shadow struct 'Obj6b' — receiver window of func_ov002_020f6b4c */
-struct Obj6b {
-    char pad5c[0x5c];
-    struct Vector3 v5c;
-    char pad8e[0x8e - (0x5c + 0xc)];
-    s16 f8e;
-    char pad94[0x94 - 0x90];
-    s16 f94;
-    char pad98[0x98 - 0x96];
-    int f98;
-};
-
 /* shadow struct 'Ent' */
 struct Ent
 {
@@ -274,16 +276,6 @@ typedef int Fix12i;
 
 /* shadow struct 'M48' */
 struct M48 { int w[12]; };
-
-/* shadow struct 'ModelBaseSh' — vtable window used by daDemo_c::Render;
-   slot 5 is the ROM's render-entry method */
-struct ModelBaseSh {
-  virtual void v0(); virtual void v1(); virtual void v2();
-  virtual void v3(); virtual void v4(); virtual void m(int arg);
-};
-
-/* shadow typedef 'Obj' */
-typedef struct Obj Obj;
 
 /* TUBUILD CONFLICT -- alternate body of struct 'Obj', from the legacy file for func_ov002_020f237c, NOT applied:
 struct Obj {
@@ -436,14 +428,6 @@ struct Obj {
 };
 */
 
-#define LP(x) ((void*)(int)(x))
-#define LI(x) ((int)((long long)(int)(x)))
-#define A24 ((u16 *)(thiz->d4 + 0x24))
-#define A30 ((u8 *)(thiz->d4 + 0x30))
-#define A0C ((s16 *)(thiz->d4 + 0xc))
-#define A1C ((s16 *)(thiz->d4 + 0x1c))
-#define A14 ((u16 *)(thiz->d4 + 0x14))
-
 /* Lakitu's model-file handle, owned and constructed by daC_Jugem_c.cpp's
  * static init. Same TU-local wrapper spelling as the owning TU. */
 struct JugemModelFile : SharedFilePtr {
@@ -462,11 +446,14 @@ extern OamAttr data_ov002_0210bddc;
 extern void SetSubBg0Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
 /* local extern dropped: decl_common.h already declares _ZN6Memory16operator_delete2EPv(void*) */
+/* The scene fader: dScene_c::SetFaders(dFdBrightness_c *) assigns it. Kept
+   as the void * this file has always declared (the tree's declarations
+   disagree); 23f0 casts at the one use. */
 extern void* data_0209f5bc;
 extern u8 data_ov002_02111144;
 extern u32 data_020a0db0;
 extern void* _Znwj(unsigned int);
-extern int func_ov002_020f2630(char* c);
+extern int func_ov002_020f2630(daDemo_c *self);
 extern struct OamAttr *data_ov002_0210b6a8[];
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi( int a, struct OamAttr *b, int c, int d, int e, int f, int g, int h);
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE( u32 slot, u32 unk, Fix12i x, Fix12i y, Fix12i z, void* rot, struct ParticleCallback* callback);
@@ -574,10 +561,7 @@ extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File*, int, in
 extern void __cxa_vec_ctor(void* obj, int a, int b, void* cb1, void* cb2);
 extern void *_ZN7Vector3D1Ev(void *object);
 extern void func_0203d384(void);
-extern void _ZN7fBase_c18MarkForDestructionEv(void *);
 extern unsigned int ReadUnalignedInt(unsigned char *p);
-extern int _ZN5Sound4PlayEjjRK7Vector3(unsigned int a, unsigned int b, struct Vector3 *v);
-extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, void *v, unsigned int e);
 extern void func_02012694(unsigned int, void*);
 extern short ReadUnalignedShort(unsigned char *p);
 extern s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
@@ -596,7 +580,7 @@ extern int data_ov002_02110db8;
 extern int data_ov002_0210b958;
 /* local extern dropped: decl_common.h declares data_0209b41c */
 extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
-extern void ApproachAngle(s16* target, s16 cur, int a, int step, int flag);
+extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);
 extern int _Z14ApproachLinearRiii(int* p, int a, int b);
 extern void func_02012790(int x);
 extern void func_0201f138(void);
@@ -654,9 +638,6 @@ extern PMF3 data_ov002_0210b8d0;
 extern PMF3 data_ov002_0210b8c8;
 extern int data_ov002_02110b00;
 extern PMF3 data_ov002_0211104c[24];
-void _ZN9ModelBase12ApplyOpacityEjj(void* m, unsigned int opacity, unsigned int unused); /* local extern: untyped model pointer. */
-extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *c, void *cyl); /* local extern: untyped this, null cylinder. */
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *cyl); /* local extern: untyped this, null cylinder. */
 extern void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, s32 x, s32 y, s32 z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z);
@@ -766,22 +747,24 @@ extern "C" daDemo_c *_ZN8daDemo_cD0Ev(daDemo_c *thiz)
 /* ROM ordinal 2 -- func_ov002_020f1fcc, 0x020f1fcc, size 0x128 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f1fccEv
+/* Sub-screen fade step (param1 0x2f, states 2 and 3). While fadeLevel is
+ * non-zero it counts fadeTimer to 0x18, then drops fadeLevel by one and calls
+ * G2x::SetBlendAlpha on 0x4001050 with (4, 0x28, fadeLevel, 0x10 - fadeLevel).
+ * When fadeLevel reaches zero it clears bit 2 of data_0209d454, writes that
+ * mask into bits 8..12 of 0x4001000, sets the blend to (0, 0x28, 0xc, 4),
+ * advances the state and gives the three sprite slots delays 0x10/0x20/0x30. */
 
 void daDemo_c::func_ov002_020f1fcc()
 {
-    unsigned char *s = ((unsigned char *)this->unk_0d4);
     int i, v;
-    if (*(unsigned short *)(s + 0x2e) == 0)
+    if (mScroll->fadeLevel == 0)
         return;
-    (*(unsigned short *)((int)(s + 0x2c)))++;
-    s = ((unsigned char *)this->unk_0d4);
-    if (*(unsigned short *)(s + 0x2c) != 0x18)
+    mScroll->fadeTimer++;
+    if (mScroll->fadeTimer != 0x18)
         return;
-    *(unsigned short *)(s + 0x2c) = 0;
-    s = ((unsigned char *)this->unk_0d4);
-    (*(unsigned short *)((int)(s + 0x2e)))--;
-    s = ((unsigned char *)this->unk_0d4);
-    v = *(unsigned short *)(s + 0x2e);
+    mScroll->fadeTimer = 0;
+    mScroll->fadeLevel--;
+    v = mScroll->fadeLevel;
     if (v != 0) {
         _ZN3G2x13SetBlendAlphaEPVttttj(
             (volatile void *)0x4001050, 4, 0x28, v, 0x10 - v);
@@ -792,11 +775,9 @@ void daDemo_c::func_ov002_020f1fcc()
         (*(volatile unsigned int *)0x4001000 & ~0x1f00) | (data_0209d454 << 8);
     _ZN3G2x13SetBlendAlphaEPVttttj(
         (volatile void *)0x4001050, 0, 0x28, 0xc, 4);
-    s = ((unsigned char *)this->unk_0d4);
-    (*(unsigned char *)((int)(s + 0x34)))++;
+    mScroll->state++;
     for (i = 0; i < 3; i++) {
-        s = ((unsigned char *)this->unk_0d4);
-        ((unsigned short *)(s + 0x24))[i] = (i + 1) << 4;
+        mScroll->spriteDelay[i] = (i + 1) << 4;
     }
 }
 
@@ -804,6 +785,10 @@ void daDemo_c::func_ov002_020f1fcc()
 /* ROM ordinal 3 -- func_ov002_020f20f4, 0x020f20f4, size 0x11c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f20f4Ev
+/* Moving-sprite step. For each active slot, on frames where FRAME_TIMER bit 0
+ * is clear, spriteX += spriteVelX and the RNG is stepped (result unused); a
+ * slot that reaches x 0x140 moving right or x -0x40 moving left goes idle with
+ * spriteDelay (slot + 1) << 5. Every active slot is drawn each frame. */
 /* This member is C++, not C: under every C-flavored path here (the legacy .c
    file, an extern "C" block, #pragma cplusplus off) the backend strength-
    reduces the shared `d + i*2` into an r8 byte-walk; the ROM recomputes it
@@ -816,7 +801,6 @@ extern "C" struct OamAttr *data_ov002_0210be1c[];
 
 void daDemo_c::func_ov002_020f20f4()
 {
-  char *self = (char *)this;
   int i = 0;
   int zpos = 0;
   int zneg = 0;
@@ -824,39 +808,40 @@ void daDemo_c::func_ov002_020f20f4()
   int m1 = -1;
   for (; i < 3; i++)
   {
-    char *d = *((char **) (&this->unk_0d4));
-    if ((*((u8 *) ((d + i) + 0x30))) != 0)
+    char *d = (char *)this->mScroll;
+    if ((((ScrollState *)d)->spriteActive[i]) != 0)
     {
       if ((data_020a0db0 & 1) == 0)
       {
-        s16 *o = (s16 *) (d + ((i & 0xFFFFFFFFFFFFFFFF) * 2));
+        /* q is &spriteX[i] spelled as byte arithmetic: q = &spriteX[i]
+           builds 4 bytes long, and reading spriteX[i] directly builds 4
+           bytes short. */
         s16 *q = (s16 *) ((int) (((char *) ((s16 *) (d + (i * 2)))) + 0xc));
-        s16 vel = *((s16 *) (((char *) o) + 0x1c));
+        s16 vel = ((ScrollState *)d)->spriteVelX[i];
         s16 pos = *q;
         int *seed = &data_0209e650;
         *q = (s16) (pos + vel);
         RandomIntInternal(seed);
-        d = *((char **) (&this->unk_0d4));
-        int idx2 = ((unsigned long long) i) * 2;
-        if ((*((s16 *) ((d + idx2) + 0x1c))) >= 0)
+        d = (char *)this->mScroll;
+        if (((ScrollState *)d)->spriteVelX[i] >= 0)
         {
-          if ((*((s16 *) ((d + idx2) + 0xc))) >= 0x140)
+          if (((ScrollState *)d)->spriteX[i] >= 0x140)
           {
-            *((u8 *) ((d + i) + 0x30)) = (u8) zpos;
-            d = *((char **) (&this->unk_0d4));
-            *((s16 *) ((d + idx2) + 0x24)) = (s16) ((i + 1) << 5);
+            ((ScrollState *)d)->spriteActive[i] = (u8) zpos;
+            d = (char *)this->mScroll;
+            ((ScrollState *)d)->spriteDelay[i] = (s16) ((i + 1) << 5);
           }
         }
         else
-          if ((*((s16 *) ((d + idx2) + 0xc))) <= (-0x40))
+          if (((ScrollState *)d)->spriteX[i] <= (-0x40))
         {
-          *((u8 *) ((d + i) + 0x30)) = (u8) zneg;
-          d = *((char **) (&this->unk_0d4));
-          *((s16 *) ((d + idx2) + 0x24)) = (s16) ((i + 1) << 5);
+          ((ScrollState *)d)->spriteActive[i] = (u8) zneg;
+          d = (char *)this->mScroll;
+          ((ScrollState *)d)->spriteDelay[i] = (s16) ((i + 1) << 5);
         }
       }
-      d = *((char **) (&this->unk_0d4));
-      _ZN3OAM9RenderSubEP7OamAttriiii(data_ov002_0210be1c[i], *((s16 *) ((d + (i * 2)) + 0xc)), *((s16 *) ((d + (i * 2)) + 0x14)), m1, two);
+      d = (char *)this->mScroll;
+      _ZN3OAM9RenderSubEP7OamAttriiii(data_ov002_0210be1c[i], ((ScrollState *)d)->spriteX[i], ((ScrollState *)d)->spriteY[i], m1, two);
     }
   }
 }
@@ -867,33 +852,36 @@ void daDemo_c::func_ov002_020f20f4()
 /* ROM ordinal 4 -- func_ov002_020f2210, 0x020f2210, size 0x130 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f2210Ev
+/* Sprite respawn. Counts each slot's non-zero spriteDelay down; when it hits
+ * zero on an idle slot, RNG bit 0 picks x -0x40 moving right or x 0x140 moving
+ * left, and y is (rng >> 16) % 48 + 0x30 * slot. Does nothing in state 6. */
 
 void daDemo_c::func_ov002_020f2210()
 {
-    Obj *thiz = (Obj *)this;
     int i;
     int base;
     u8 state;
-    state = *(u8 *)(thiz->d4 + 0x34);
+    state = mScroll->state;
+    /* The redundant `state >= 3` is compiled into the ROM: `state > 5` alone
+       builds 8 bytes short. */
     if (state >= 3 && state > 5) return;
     i = 0;
     base = 0;
     for (; i < 3; i++) {
-        u16 *p = (u16 *)(LI(thiz->d4) + LI(i) * 2);
-        if (p[0x12] != 0) {
-            *(volatile u16 *)LP(p + 0x12) -= 1;
-            if (A24[i] == 0) {
-                if (A30[i] == 0) {
+        if (mScroll->spriteDelay[i] != 0) {
+            mScroll->spriteDelay[i] -= 1;
+            if (mScroll->spriteDelay[i] == 0) {
+                if (mScroll->spriteActive[i] == 0) {
                     unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650);
                     if (r & 1) {
-                        A0C[i] = -0x40;
-                        A1C[i] = 1;
+                        mScroll->spriteX[i] = -0x40;
+                        mScroll->spriteVelX[i] = 1;
                     } else {
-                        A0C[i] = 0x140;
-                        A1C[i] = -1;
+                        mScroll->spriteX[i] = 0x140;
+                        mScroll->spriteVelX[i] = -1;
                     }
-                    A14[i] = (u16)((r >> 16) % 48 + base);
-                    A30[i] = 1;
+                    mScroll->spriteY[i] = (u16)((r >> 16) % 48 + base);
+                    mScroll->spriteActive[i] = 1;
                 }
             }
         }
@@ -905,39 +893,38 @@ void daDemo_c::func_ov002_020f2210()
 /* ROM ordinal 5 -- func_ov002_020f2340, 0x020f2340, size 0x3c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f2340Ev
+/* Draw the two centre sprites at x 0x80. */
 
 void daDemo_c::func_ov002_020f2340()
 {
-    OAM::RenderSub(&data_ov002_0210bddc, 0x80, *(unsigned short *)(*(char **)(&this->unk_0d4) + 8));
-    OAM::RenderSub(&data_ov002_0210bddc, 0x80, *(unsigned short *)(*(char **)(&this->unk_0d4) + 0xa));
+    OAM::RenderSub(&data_ov002_0210bddc, 0x80, mScroll->centerSpriteY[0]);
+    OAM::RenderSub(&data_ov002_0210bddc, 0x80, mScroll->centerSpriteY[1]);
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov002_020f237c, 0x020f237c, size 0x54 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f237cEv
-/* func_ov002_020f237c — scroll sub-screen BG layers using a 4-short state
- * block pointed to by this+0xd4: y-- , x++ , then push offsets to HW.
- * Callees: SetSubBg0Offset, SetSubBg1Offset.
- */
+/* Scroll the two sub-screen BG layers in opposite directions (bg1 x down
+ * one, bg0 x up one) and write both offsets to the hardware. */
 
 void daDemo_c::func_ov002_020f237c()
 {
-    Obj *self = (Obj *)this;
-    *(s16*)((char*)self->d4 + 2) -= 1;
-    ((ScrollState *)self->d4)->x0 += 1;
-    SetSubBg0Offset(((ScrollState *)self->d4)->x0, ((ScrollState *)self->d4)->y0);
-    SetSubBg1Offset(((ScrollState *)self->d4)->x1, ((ScrollState *)self->d4)->y1);
+    mScroll->bg1X -= 1;
+    mScroll->bg0X += 1;
+    SetSubBg0Offset(mScroll->bg0X, mScroll->bg0Y);
+    SetSubBg1Offset(mScroll->bg1X, mScroll->bg1Y);
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov002_020f23d0, 0x020f23d0, size 0x20 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f23d0Ev
+/* CleanupResources for param1 0x2f: free the scroll block. */
 
 int daDemo_c::func_ov002_020f23d0()
 {
-    _ZN6Memory16operator_delete2EPv(this->unk_0d4);
+    _ZN6Memory16operator_delete2EPv(this->mScroll);
     return 1;
 }
 
@@ -945,60 +932,54 @@ int daDemo_c::func_ov002_020f23d0()
 /* ROM ordinal 8 -- func_ov002_020f23f0, 0x020f23f0, size 0x240 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f23f0Ev
-#pragma opt_strength_reduction off
+/* Behavior for param1 0x2f: the scroll block's seven states.
+ *   0  each frame the scene fader (data_0209f5bc) reports IsAtStart,
+ *      centerSpriteY[0]++ and centerSpriteY[1]--; next state when
+ *      centerSpriteY[0] reaches 8 (it starts at -8)
+ *   1  wait for unk_100 == 3 (written by script handler 26c4), then set
+ *      data_ov002_02111144 to 1
+ *   2  on frames with FRAME_TIMER bit 0 clear, bg1Y++ and bg0Y--; at
+ *      bg1Y 0x80, next state and sprite delays 1/0x41/0x81. Also runs the
+ *      horizontal scroll (237c) and the fade step (1fcc)
+ *   3  fade step and horizontal scroll; the fade step advances the state
+ *      when fadeLevel reaches zero
+ *   4  wait for unk_100 == 4, horizontal scroll
+ *   5  on frames with FRAME_TIMER bit 0 clear, bg1Y++ and bg0Y--; at
+ *      bg1Y 0xe0, next state and bits 0..1 of data_0209d454 cleared into
+ *      bits 8..12 of 0x4001000. Also runs the horizontal scroll (237c)
+ *   6  nothing
+ * Every state then runs 2340, 2210 and 20f4. */
 
 int daDemo_c::func_ov002_020f23f0()
 {
-    switch (*(u8*)(((u8*)this->unk_0d4) + 0x34)) {
+    switch (mScroll->state) {
     case 0:
-        {
-            void* o = data_0209f5bc;
-            if (((int (**)(void*))*(void**)o)[5](o) != 0) {
-                {
-                    u16* p = (u16*)(((int)((u8*)this->unk_0d4) + 8));
-                    *p = *p + 1;
-                }
-                {
-                    u16* p = (u16*)(((int)((u8*)this->unk_0d4) + 0xa));
-                    *p = *p - 1;
-                }
-                if (*(u16*)(((u8*)this->unk_0d4) + 8) == 8) {
-                    u8* p = (u8*)(((int)((u8*)this->unk_0d4) + 0x34));
-                    *p = *p + 1;
-                }
+        if (((dFdBrightness_c *)data_0209f5bc)->IsAtStart() != 0) {
+            mScroll->centerSpriteY[0]++;
+            mScroll->centerSpriteY[1]--;
+            if (mScroll->centerSpriteY[0] == 8) {
+                mScroll->state++;
             }
         }
         break;
     case 1:
         if (this->unk_100 == 3) {
             data_ov002_02111144 = 1;
-            {
-                u8* p = (u8*)(((int)((u8*)this->unk_0d4) + 0x34));
-                *p = *p + 1;
-            }
+            mScroll->state++;
         }
         break;
     case 2:
         if ((data_020a0db0 & 1) == 0) {
-            {
-                s16* p = (s16*)(((int)((u8*)this->unk_0d4) + 6));
-                *p = *p + 1;
-            }
-            {
-                s16* p = (s16*)(((int)((u8*)this->unk_0d4) + 4));
-                *p = *p - 1;
-            }
-            if (*(s16*)(((u8*)this->unk_0d4) + 6) >= 0x80) {
+            mScroll->bg1Y++;
+            mScroll->bg0Y--;
+            if (mScroll->bg1Y >= 0x80) {
                 int i;
                 int v;
-                {
-                    u8* p = (u8*)(((int)((u8*)this->unk_0d4) + 0x34));
-                    *p = *p + 1;
-                }
+                mScroll->state++;
                 i = 0;
                 v = 1;
                 for (; i < 3; i++) {
-                    *(u16*)(((u8*)this->unk_0d4) + i * 2 + 0x24) = v;
+                    mScroll->spriteDelay[i] = v;
                     v += 0x40;
                 }
             }
@@ -1012,26 +993,16 @@ int daDemo_c::func_ov002_020f23f0()
         break;
     case 4:
         if (this->unk_100 == 4) {
-            u8* p = (u8*)(((int)((u8*)this->unk_0d4) + 0x34));
-            *p = *p + 1;
+            mScroll->state++;
         }
         func_ov002_020f237c();
         break;
     case 5:
         if ((data_020a0db0 & 1) == 0) {
-            {
-                s16* p = (s16*)(((int)((u8*)this->unk_0d4) + 6));
-                *p = *p + 1;
-            }
-            {
-                s16* p = (s16*)(((int)((u8*)this->unk_0d4) + 4));
-                *p = *p - 1;
-            }
-            if (*(s16*)(((u8*)this->unk_0d4) + 6) >= 0xe0) {
-                {
-                    u8* p = (u8*)(((int)((u8*)this->unk_0d4) + 0x34));
-                    *p = *p + 1;
-                }
+            mScroll->bg1Y++;
+            mScroll->bg0Y--;
+            if (mScroll->bg1Y >= 0xe0) {
+                mScroll->state++;
                 data_0209d454 = data_0209d454 & ~3;
                 *(volatile u32*)0x4001000 = (*(volatile u32*)0x4001000 & ~0x1f00) | (data_0209d454 << 8);
             }
@@ -1047,25 +1018,23 @@ int daDemo_c::func_ov002_020f23f0()
     func_ov002_020f20f4();
     return 1;
 }
-#pragma opt_strength_reduction on
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov002_020f2630, 0x020f2630, size 0x94 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f2630
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov002_020f2630(char* c){
-  short* p;
-  *(void**)(c+0xd4) = _Znwj(0x36);
-  (*(short**)(c+0xd4))[0] = 0x30;
-  (*(short**)(c+0xd4))[2] = 0x20;
-  (*(short**)(c+0xd4))[1] = 0;
-  (*(short**)(c+0xd4))[3] = 0;
-  (*(unsigned short**)(c+0xd4))[4] = 0xfff8;
-  (*(short**)(c+0xd4))[5] = 0xc8;
-  (*(short**)(c+0xd4))[0x17] = 0x10;
-  p = *(short**)(c+0xd4); SetSubBg0Offset(p[0], p[2]);
-  p = *(short**)(c+0xd4); SetSubBg1Offset(p[1], p[3]);
+int func_ov002_020f2630(daDemo_c *self){
+  self->mScroll = (daDemo_c::ScrollState *)_Znwj(0x36);
+  self->mScroll->bg0X = 0x30;
+  self->mScroll->bg0Y = 0x20;
+  self->mScroll->bg1X = 0;
+  self->mScroll->bg1Y = 0;
+  self->mScroll->centerSpriteY[0] = 0xfff8;
+  self->mScroll->centerSpriteY[1] = 0xc8;
+  self->mScroll->fadeLevel = 0x10;
+  SetSubBg0Offset(self->mScroll->bg0X, self->mScroll->bg0Y);
+  SetSubBg1Offset(self->mScroll->bg1X, self->mScroll->bg1Y);
   return 1;
 }
 }
@@ -1074,11 +1043,11 @@ int func_ov002_020f2630(char* c){
 /* ROM ordinal 10 -- func_ov002_020f26c4, 0x020f26c4, size 0x10 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f26c4EPh
+/* Script handler (table entry 23): unk_100 = p[0], the value 23f0 waits on. */
 
 int daDemo_c::func_ov002_020f26c4(unsigned char *src)
 {
-    unsigned char *dst = (unsigned char *)this;
-    dst[0x100] = src[0];
+    this->unk_100 = src[0];
     return 1;
 }
 
@@ -3603,9 +3572,8 @@ int daDemo_c::func_ov002_020f63a0()
 
 int daDemo_c::func_ov002_020f63d4()
 {
-    char *c = (char *)this;
-    func_ov002_020f5fb8(*(void**)((char*)c+0xd8));
-    func_ov002_020f5f8c(*(void**)((char*)c+0xd8));
+    func_ov002_020f5fb8(this->unk_0d8);
+    func_ov002_020f5f8c(this->unk_0d8);
     return 1;
 }
 
@@ -3904,8 +3872,7 @@ void* daDemo_c::param_c::func_ov002_020f6a50()
 
 int daDemo_c::func_ov002_020f6a9c()
 {
-    void *t = this;
-    _ZN7fBase_c18MarkForDestructionEv(t);
+    MarkForDestruction();
     return 1;
 }
 
@@ -3916,9 +3883,8 @@ int daDemo_c::func_ov002_020f6a9c()
 
 int daDemo_c::func_ov002_020f6ab8(unsigned char *p)
 {
-    char *c = (char *)this;
     unsigned int id = ReadUnalignedInt(p);
-    _ZN5Sound4PlayEjjRK7Vector3(1, id, (struct Vector3*)(c + 0x74));
+    Sound::Play(1, id, *(Vector3 *)&mCamSpacePosX);
     return 1;
 }
 
@@ -3929,9 +3895,8 @@ int daDemo_c::func_ov002_020f6ab8(unsigned char *p)
 
 int daDemo_c::func_ov002_020f6ae4(unsigned char *p)
 {
-    unsigned int r = ReadUnalignedInt(p);
-    char *thiz = (char *)this;
-    *(unsigned int *)(thiz + 0xe4) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int *)(thiz + 0xe4), 3, r, thiz + 0x74, 0);
+    unsigned int id = ReadUnalignedInt(p);
+    mSoundHandle = Sound::PlayLong(mSoundHandle, 3, id, *(Vector3 *)&mCamSpacePosX, 0);
     return 1;
 }
 
@@ -3942,9 +3907,8 @@ int daDemo_c::func_ov002_020f6ae4(unsigned char *p)
 
 int daDemo_c::func_ov002_020f6b28(unsigned char *p)
 {
-    unsigned char *c = (unsigned char *)this;
-    unsigned int v=ReadUnalignedInt(p);
-    func_02012694(v, c+0x74);
+    unsigned int v = ReadUnalignedInt(p);
+    func_02012694(v, &mCamSpacePosX);
     return 1;
 }
 
@@ -3952,24 +3916,23 @@ int daDemo_c::func_ov002_020f6b28(unsigned char *p)
 /* ROM ordinal 122 -- func_ov002_020f6b4c, 0x020f6b4c, size 0x74 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f6b4cEPh
-/* func_ov002_020f6b4c at 0x020f6b4c
- *
- * Matched byte-for-byte with mwccarm 1.2/sp2p3 (overlay ov002).
- */
+/* Script handler 15: turn to face the point whose whole-unit coordinates
+ * are the unaligned shorts at p+0/+2/+4, and take the short at p+6 as the
+ * horizontal speed. The legacy per-function file recorded its match under
+ * mwccarm 1.2/sp2p3; this TU builds under the 2004/b56 pin. */
 
 int daDemo_c::func_ov002_020f6b4c(unsigned char *p)
 {
-    Obj6b *self = (Obj6b *)this;
-    struct { int z, y, x; } v;
-    int y, x;
-    x = ReadUnalignedShort(p + 4) << 12;
+    struct { int x, y, z; } target;
+    int y, z;
+    z = ReadUnalignedShort(p + 4) << 12;
     y = ReadUnalignedShort(p + 2) << 12;
-    v.z = ReadUnalignedShort(p) << 12;
-    v.y = y;
-    v.x = x;
-    self->f8e = Vec3_HorzAngle(&self->v5c, (const struct Vector3 *)&v);
-    self->f94 = self->f8e;
-    self->f98 = ReadUnalignedShort(p + 6);
+    target.x = ReadUnalignedShort(p) << 12;
+    target.y = y;
+    target.z = z;
+    this->mAngleY = Vec3_HorzAngle((const Vector3 *)&this->mPosX, (const Vector3 *)&target);
+    this->mPrevAngleY = this->mAngleY;
+    this->mHorzSpeed = ReadUnalignedShort(p + 6);
     return 1;
 }
 
@@ -3980,7 +3943,6 @@ int daDemo_c::func_ov002_020f6b4c(unsigned char *p)
 
 s32 daDemo_c::func_ov002_020f6bc0(unsigned char *data)
 {
-    char *self = (char *)this;
     s32 x, y, z;
     z = ReadUnalignedShort(data + 4) << 12;
     y = ReadUnalignedShort(data + 2) << 12;
@@ -3989,7 +3951,7 @@ s32 daDemo_c::func_ov002_020f6bc0(unsigned char *data)
     this->mPosY = y;
     this->mPosZ = z;
     this->mAngleY = ReadUnalignedShort(data + 6);
-    *(s16*)(&this->mPrevAngleY) = *(s16*)(self + 0x8e);
+    this->mPrevAngleY = this->mAngleY;
     return 1;
 }
 
@@ -4031,7 +3993,6 @@ inline unsigned int inline_fn(unsigned int arg0)
 
 int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
 {
-  char *c = (char *) this;
   u8 *flag = (u8 *) arg1;
   Vec3 v;
   if (arg2 == data_0209b274)
@@ -4045,11 +4006,11 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
     AddVec3((Vec3 *) (&this->mPosX), (Vec3 *) (data_0209f318 + 0x8c), (Vec3 *) (&this->mPosX));
     if (arg2 > 0x2bc)
     {
-      *((s32 *) ((&this->mPosY))) -= 0x96000;
+      this->mPosY -= 0x96000;
     }
     if (arg2 != data_ov002_0210b614)
     {
-      func_0201267c(0x6a, c + 0x74);
+      func_0201267c(0x6a, &this->mCamSpacePosX);
       data_ov002_0210b614 = arg2;
     }
   }
@@ -4079,7 +4040,7 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
   }
   this->mPrevAngleX = this->mAngleX;
   this->mPrevAngleY = this->mAngleY;
-  this->mPrevAngleZ = *((s16 *) (c + 0x90));
+  this->mPrevAngleZ = this->mAngleZ;
   return 1;
 }
 
@@ -4087,10 +4048,13 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
 /* ROM ordinal 127 -- func_ov002_020f6e48, 0x020f6e48, size 0x100 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f6e48EPh
+/* Script handler 10: position (p[0..5], whole units shifted into 20.12) and
+ * angles (p[6..11]) from the record, unk_0f4 = p[12] << 12, scale 0xb33, and
+ * the animation's currFrame set from a random draw scaled by
+ * numFramesAndFlags. */
 
 int daDemo_c::func_ov002_020f6e48(unsigned char *p)
 {
-    char *self = (char *)this;
   int b;
   int c0;
   int d;
@@ -4119,9 +4083,9 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
   this->mScaleX = 0xb33;
   this->mScaleY = 0xb33;
   this->mScaleZ = 0xb33;
-  rv = *((int *) ((*((int *) (self - -0xe0))) + 0x54));
+  rv = mModelAnim->numFramesAndFlags;
   new_var2 = RandomIntInternal(&data_0209e650);
-  *((int *) ((*((int *) (&this->mModelAnim))) + 0x58)) = ((unsigned short) (((int) (((((long long) ((int) ((((unsigned int) new_var2) >> 20) & 0xfff))) * rv) + 0x800) >> 12)) >> 12)) << 12;
+  mModelAnim->currFrame = ((unsigned short) (((int) (((((long long) ((int) ((((unsigned int) new_var2) >> 20) & 0xfff))) * rv) + 0x800) >> 12)) >> 12)) << 12;
   return 1;
 }
 
@@ -4129,31 +4093,31 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
 /* ROM ordinal 128 -- func_ov002_020f6f48, 0x020f6f48, size 0xd8 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f6f48EP7Vector3i
-/* recovered: shared common types */
+/* Turn mAngleX/mAngleY toward v by 1/amt of the remaining difference per
+ * call (step capped at 0x4000, 90 degrees), then set unk_0a4, mVertSpeed and
+ * unk_0ac to unk_0f4 times rotation elements 6..8 of the animated model's
+ * matrix. */
 
 void daDemo_c::func_ov002_020f6f48(struct Vector3 *v, int amt)
 {
-    char *c = (char *)this;
-    int* p;
+    Matrix4x3 *m;
     ApproachAngle(&this->mAngleX, Vec3_VertAngle(((struct Vector3*)&this->mPosX), v), amt, 0x4000, 0);
     ApproachAngle(&this->mAngleY, Vec3_HorzAngle(((struct Vector3*)&this->mPosX), v), amt, 0x4000, 0);
-    p = (int*)(((char*)this->mModelAnim) + 0x1c);
-    *(int*)(c+0xa4) = (int)(((s64)this->unk_0f4 * *(int*)((char*)p + 0x18) + 0x800) >> 12);
-    *(int*)(&this->mVertSpeed) = (int)(((s64)*(int*)(&this->unk_0f4) * *(int*)((char*)p + 0x1c) + 0x800) >> 12);
-    *(int*)(c+0xac) = (int)(((s64)*(int*)(&this->unk_0f4) * *(int*)((char*)p + 0x20) + 0x800) >> 12);
+    m = &this->mModelAnim->mat4x3;
+    this->unk_0a4 = (int)(((s64)this->unk_0f4 * m->m[6] + 0x800) >> 12);
+    this->mVertSpeed = (int)(((s64)this->unk_0f4 * m->m[7] + 0x800) >> 12);
+    this->unk_0ac = (int)(((s64)this->unk_0f4 * m->m[8] + 0x800) >> 12);
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 129 -- func_ov002_020f7020, 0x020f7020, size 0x18 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f7020Ev
-// Clear flag bit 0x2 in the u32 at self+0xb0, return 1. u64-mask launder forces the
-// base to materialize (add r2,self,#0xb0) instead of folding the offset.
+/* Script handler 9: clear mFlags bit 0x2. */
 
 int daDemo_c::func_ov002_020f7020()
 {
-    char *self = (char *)this;
-    *(unsigned int *)(self + 0xb0) &= ~0x2;
+    this->mFlags &= ~0x2;
     return 1;
 }
 
@@ -4161,24 +4125,21 @@ int daDemo_c::func_ov002_020f7020()
 /* ROM ordinal 130 -- func_ov002_020f7038, 0x020f7038, size 0x18c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f7038Eii
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 
 int daDemo_c::func_ov002_020f7038(int a, int arg)
 {
-    char *c = (char *)this;
     if (arg == data_0209b274) {
-        *(int*)(c + 0xe8) = 0;
-        *(int*)(c + 0xec) = 0;
-        *(int*)(c + 0xf0) = 0;
+        mParticleID[0] = 0;
+        mParticleID[1] = 0;
+        mParticleID[2] = 0;
     }
     if (this->mPosY >= 0x514000) {
-        if (*(int*)(c + 0xf8) < 0x3c000) {
-            *(int*)(c + 0xf8) += 0x5000;
+        if (unk_0f8 < 0x3c000) {
+            unk_0f8 += 0x5000;
         }
     } else {
-        if (*(int*)(c + 0xf8) > 0x1a000) {
-            *(int*)(c + 0xf8) -= 0x2000;
+        if (unk_0f8 > 0x1a000) {
+            unk_0f8 -= 0x2000;
         }
     }
     {
@@ -4188,7 +4149,7 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
         }
     }
     this->mPosY -=
-        (int)(((long long)*(int*)(c + 0xf8) * 0x199 + 0x800) >> 12);
+        (int)(((long long)unk_0f8 * 0x199 + 0x800) >> 12);
     {
         struct Vector3 pos;
         int z = this->mPosZ;
@@ -4197,12 +4158,12 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
         ((int*)&pos)[0] = x;
         ((int*)&pos)[1] = y;
         ((int*)&pos)[2] = z;
-        *(int*)(c + 0xe8) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            *(unsigned int*)(c + 0xe8), 0x3b, ((int*)&pos)[0], ((int*)&pos)[1], ((int*)&pos)[2], 0, 0);
-        *(int*)(c + 0xec) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            *(unsigned int*)(c + 0xec), 0x3c, ((int*)&pos)[0], ((int*)&pos)[1], ((int*)&pos)[2], 0, 0);
-        *(int*)(c + 0xf0) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            *(unsigned int*)(c + 0xf0), 0x3d, ((int*)&pos)[0], ((int*)&pos)[1], ((int*)&pos)[2], 0, 0);
+        mParticleID[0] = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            mParticleID[0], 0x3b, ((int*)&pos)[0], ((int*)&pos)[1], ((int*)&pos)[2], 0, 0);
+        mParticleID[1] = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            mParticleID[1], 0x3c, ((int*)&pos)[0], ((int*)&pos)[1], ((int*)&pos)[2], 0, 0);
+        mParticleID[2] = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            mParticleID[2], 0x3d, ((int*)&pos)[0], ((int*)&pos)[1], ((int*)&pos)[2], 0, 0);
     }
     return 1;
 }
@@ -4211,12 +4172,9 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
 /* ROM ordinal 131 -- func_ov002_020f71c4, 0x020f71c4, size 0xf8 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f71c4Eii
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 
 int daDemo_c::func_ov002_020f71c4(int a, int arg)
 {
-    char *c = (char *)this;
     if (arg == 0) {
         if (arg == data_0209b274) {
             this->unk_0f4 = 0x10000;
@@ -4232,12 +4190,12 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg)
         ((int*)&pos)[0] = x;
         ((int*)&pos)[1] = y;
         ((int*)&pos)[2] = z;
-        *(int*)(c + 0xe8) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            *(unsigned int*)(c + 0xe8), 0x38, ((int*)&pos)[0], ((int*)&pos)[1], ((int*)&pos)[2], 0, 0);
-        *(int*)(c + 0xec) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            *(unsigned int*)(c + 0xec), 0x39, ((int*)&pos)[0], ((int*)&pos)[1], ((int*)&pos)[2], 0, 0);
-        *(int*)(c + 0xf0) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            *(unsigned int*)(c + 0xf0), 0x3a, ((int*)&pos)[0], ((int*)&pos)[1], ((int*)&pos)[2], 0, 0);
+        mParticleID[0] = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            mParticleID[0], 0x38, ((int*)&pos)[0], ((int*)&pos)[1], ((int*)&pos)[2], 0, 0);
+        mParticleID[1] = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            mParticleID[1], 0x39, ((int*)&pos)[0], ((int*)&pos)[1], ((int*)&pos)[2], 0, 0);
+        mParticleID[2] = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            mParticleID[2], 0x3a, ((int*)&pos)[0], ((int*)&pos)[1], ((int*)&pos)[2], 0, 0);
     }
     return 1;
 }
@@ -4249,7 +4207,6 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg)
 
 int daDemo_c::func_ov002_020f72bc()
 {
-    char *c = (char *)this;
     *((u32*)&this->mScaleX) = 0x3000;
     *((u32*)&this->mScaleY) = 0x3000;
     *((u32*)&this->mScaleZ) = 0x3000;
@@ -4259,12 +4216,12 @@ int daDemo_c::func_ov002_020f72bc()
     }
     this->mOpacity = 0x1f;
 
-    *(u32*)(c + 0xe8) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        *(u32*)(c + 0xe8), 0x31, *((Fix12i*)&this->mPosX), *((Fix12i*)&this->mPosY), *((Fix12i*)&this->mPosZ), 0, 0);
-    *(u32*)(c + 0xec) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        *(u32*)(c + 0xec), 0x32, *(Fix12i*)(&this->mPosX), *(Fix12i*)(&this->mPosY), *(Fix12i*)(&this->mPosZ), 0, 0);
-    *(u32*)(c + 0xf0) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        *(u32*)(c + 0xf0), 0x33, *(Fix12i*)(&this->mPosX), *(Fix12i*)(c + 0x60), *((Fix12i*)&this->mPosZ), 0, 0);
+    mParticleID[0] = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        mParticleID[0], 0x31, *((Fix12i*)&this->mPosX), *((Fix12i*)&this->mPosY), *((Fix12i*)&this->mPosZ), 0, 0);
+    mParticleID[1] = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        mParticleID[1], 0x32, *(Fix12i*)(&this->mPosX), *(Fix12i*)(&this->mPosY), *(Fix12i*)(&this->mPosZ), 0, 0);
+    mParticleID[2] = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        mParticleID[2], 0x33, *(Fix12i*)(&this->mPosX), *(Fix12i*)(&this->mPosY), *((Fix12i*)&this->mPosZ), 0, 0);
     return 1;
 }
 
@@ -4275,15 +4232,14 @@ int daDemo_c::func_ov002_020f72bc()
 
 int daDemo_c::func_ov002_020f7384(unsigned char *flag, int val)
 {
-    char *c = (char *)this;
     if (*flag != 0) {
         if (val == data_0209b274) func_02012790(0x17);
-        _Z14ApproachLinearRiii((int*)(&this->mPosY), 0xfa000, 0xa000);
-        c[0x102] = 0x1f;
+        _Z14ApproachLinearRiii(&this->mPosY, 0xfa000, 0xa000);
+        this->mOpacity = 0x1f;
     } else {
         if (val == data_0209b274) func_02012790(0x16);
-        if (_Z14ApproachLinearRiii((int*)(c + 0x60), 0x32000, 0x5000) != 0)
-            c[0x102] = 0;
+        if (_Z14ApproachLinearRiii(&this->mPosY, 0x32000, 0x5000) != 0)
+            this->mOpacity = 0;
     }
     return 1;
 }
@@ -4292,6 +4248,12 @@ int daDemo_c::func_ov002_020f7384(unsigned char *flag, int val)
 /* ROM ordinal 134 -- func_ov002_020f7410, 0x020f7410, size 0x128 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f7410EPhi
+/* Script handler 4. On the record's start frame, when in[0] is non-zero, it
+ * stores a fixed vector at mModel + 0x50 (the param_c tail base), sets fixed
+ * angles and calls func_0201f138. Every frame mPos = that vector times
+ * INV_VIEW_MATRIX_ASR_3, then << 3; unk_0f4 approaches in[0] << 12 by
+ * in[1] << 8 (func_0201ef38 is called when it arrives at 0 with in[1]
+ * non-zero) and drives mOpacity and the blend registers at 0x4000050. */
 
 int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
 {
@@ -4329,10 +4291,16 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
 /* ROM ordinal 135 -- func_ov002_020f7538, 0x020f7538, size 0x248 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f7538EPhi
+/* Script handler 3. On the start frame, when arg1[0] is non-zero, it sets
+ * fixed angles and clears unk_0f8. Every frame Math_Function_0203b0fc moves
+ * unk_0f8 toward 1.0 (arg1[0] non-zero) or 0, and the vector at mModelAnim +
+ * 0x64 (the param_c tail base) becomes base + (data_ov002_02110e0c - base) *
+ * unk_0f8, with base data_ov002_02110df4 or data_ov002_02110e18 by the same
+ * test. mPos = that vector times INV_VIEW_MATRIX_ASR_3, then << 3; unk_0f4
+ * approaches arg1[0] << 12 by arg1[1] << 8 and drives mOpacity. */
 
 int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
 {
-    char *c = (char *)this;
   int a = arg1[0];
   int b = arg1[1];
   int f1 = a << 0xc;
@@ -4345,7 +4313,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     this->mAngleX = 0xd00;
     this->mAngleY = -0x7300;
     this->mAngleZ = 0x2f00;
-    *(int*)(c + 0xf8) = 0;
+    this->unk_0f8 = 0;
   }
 
   if (!(data_ov002_02110b04 & 1)) {
@@ -4378,12 +4346,12 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     scale = 0;
   }
 
-  Math_Function_0203b0fc((int*)(c + 0xf8), scale, 0x40, 0x100);
+  Math_Function_0203b0fc(&this->unk_0f8, scale, 0x40, 0x100);
   Vec3_Sub(&diff, (Vec3*)data_ov002_02110e0c, (Vec3*)base);
   tmp.x = diff.x;
   tmp.y = diff.y;
   tmp.z = diff.z;
-  Vec3_MulScalar(&scaled, &tmp, *(int*)(c + 0xf8));
+  Vec3_MulScalar(&scaled, &tmp, this->unk_0f8);
   Vec3_Add(&sum, (Vec3*)base, &scaled);
 
   {
@@ -4394,7 +4362,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
   }
   MulVec3Mat4x3((Vector3*)(*(char**)(&this->mModelAnim) + 0x64), (Matrix4x3*)&data_0209b41c, (Vector3*)(&this->mPosX));
   Vec3_LslInPlace((int*)(&this->mPosX), 3);
-  _Z14ApproachLinearRiii((int*)(c + 0xf4), f1, f2);
+  _Z14ApproachLinearRiii(&this->unk_0f4, f1, f2);
   this->mOpacity = this->unk_0f4 >> 0xc;
   return 1;
 }
@@ -4406,8 +4374,6 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
 
 int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 {
-    char *self = (char *)this;
-    char *c = self;
     char *r4 = (char *)data_0209f318;
 
     if (mode == data_0209b274) {
@@ -4437,7 +4403,7 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
         this->mAngleY = this->mPrevAngleY;
         this->mOpacity = 0x1f;
     } else {
-        short state = *(short *)(c + 0xfc);
+        short state = *&this->unk_0fc;
         if (state <= 0x6a) {
             if (state > 0x3c) {
                 Math_Function_0203b0fc(&this->unk_0f4, -0xa000, 0xcc, 0x7fffffff);
@@ -4450,7 +4416,7 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
                 _Z15ApproachLinear2Rsss(&this->mAngleY, h, 0x200);
             }
 
-            state = *(short *)(c + 0xfc);
+            state = *&this->unk_0fc;
             if (state > 0x69) {
                 this->mPrevAngleX = 0xe00;
             }
@@ -4460,7 +4426,7 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
             short h = Vec3_HorzAngle(((const Vector3 *)&this->mPosX), (const Vector3 *)(r4 + 0x8c));
             _Z15ApproachLinear2Rsss(&this->mAngleY, h, 0x200);
 
-            state = *(short *)(c + 0xfc);
+            state = *&this->unk_0fc;
             if (state < 0xa9) {
                 _Z11UpdateAngleRssis(((void *)&this->mPrevAngleY), 0x1800, 0x1e, 0x4000);
             }
@@ -4472,7 +4438,7 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
         unsigned short a = *((unsigned short *)&this->mPrevAngleX);
         int t = this->unk_0f4;
         short s0 = data_02082214[((a >> 4) << 1) + 1];
-        *(int *)(c + 0x98) = (int)(((long long)t * s0 + 0x800) >> 12);
+        this->mHorzSpeed = (int)(((long long)t * s0 + 0x800) >> 12);
     }
     {
         unsigned short a = *(unsigned short *)(&this->mPrevAngleX);
@@ -4482,7 +4448,7 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
     }
 
     {
-        short *pfc = (short *)(c + 0xfc);
+        short *pfc = &this->unk_0fc;
         *pfc = *pfc + 1;
     }
 
@@ -4496,14 +4462,12 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 
 int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
 {
-    char *self = (char *)this;
-    char *c = self;
 
     if (mode == data_0209b274) {
         this->unk_0f4 = 0x578000;
-        *(short *)(c + 0xfc) = -0x1000;
-        *(short *)(c + 0xfe) = 0x800;
-        *(int *)(c + 0xf8) = -0xc8000;
+        *&this->unk_0fc = -0x1000;
+        *&this->unk_0fe = 0x800;
+        this->unk_0f8 = -0xc8000;
         this->mPrevAngleY = -0x8000;
         this->mAngleY = -0x4000;
         this->mPrevAngleX = 0x800;
@@ -4533,7 +4497,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         w[2] = data_ov002_02110ddc[2];
         Vec3_RotateYAndTranslate(&this->mPosX, v, this->mPrevAngleY, w);
 
-        h = *(unsigned short *)(c + 0xfc);
+        h = (unsigned short)this->unk_0fc;
         t = data_02082214[(h >> 4) * 2 + 1];
         {
             int *p60 = (int *)(&this->mPosY);
@@ -4541,16 +4505,16 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         }
 
         {
-            short *pfc = (short *)(c + 0xfc);
-            *pfc = *pfc + *(short *)(c + 0xfe);
+            short *pfc = &this->unk_0fc;
+            *pfc = *pfc + *&this->unk_0fe;
         }
-        ApproachAngle((short *)(c + 0xfe), 0x200, 0x14, 0x4000, 0);
+        ApproachAngle(&this->unk_0fe, 0x200, 0x14, 0x4000, 0);
 
         {
             int *p5c = &this->mPosX;
-            *p5c = *p5c + *(int *)(c + 0xf8);
+            *p5c = *p5c + this->unk_0f8;
         }
-        Math_Function_0203b0fc((int *)(c + 0xf8), 0, 0xcc, 0x7fffffff);
+        Math_Function_0203b0fc(&this->unk_0f8, 0, 0xcc, 0x7fffffff);
     }
     return 1;
 }
@@ -4562,7 +4526,6 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
 
 int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
 {
-    char *c = (char *)this;
     Vector3 v0, v1;
     int src[3];
     Fix12i dist;
@@ -4574,16 +4537,16 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     this->mOpacity = 0;
     if (id == data_0209b274) {
         this->unk_0f4 = 0;
-        *(u16 *)(c + 0xfc) = 0;
+        this->unk_0fc = 0;
     }
 
     tbl1 = ReadUnalignedInt(p);
     tbl2 = ReadUnalignedInt(p + 4);
 
-    if (func_02008b4c(&v1, (short *)(c + 0xfc), &this->unk_0f4, (char *)tbl1) != 0) {
+    if (func_02008b4c(&v1, &this->unk_0fc, &this->unk_0f4, (char *)tbl1) != 0) {
         return 0;
     }
-    if (func_02008b4c(&v0, (short *)(c + 0xfc), &this->unk_0f4, (char *)tbl2) != 0) {
+    if (func_02008b4c(&v0, &this->unk_0fc, &this->unk_0f4, (char *)tbl2) != 0) {
         return 0;
     }
 
@@ -4610,8 +4573,8 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
 
     Vec3_RotateYAndTranslate((int *)(&this->mPosX), (int *)(obj + 0x8c), heading, src);
 
-    *(s16 *)(&this->mAngleX) = _ZN4cstd5atan2E5Fix12IiES1_(v1.y, Vec3_HorzLen(&v1));
-    *(s16 *)(c + 0x8e) = _ZN4cstd5atan2E5Fix12IiES1_(v1.x, v1.z);
+    this->mAngleX = _ZN4cstd5atan2E5Fix12IiES1_(v1.y, Vec3_HorzLen(&v1));
+    this->mAngleY = _ZN4cstd5atan2E5Fix12IiES1_(v1.x, v1.z);
 
     return 1;
 }
@@ -4656,16 +4619,14 @@ extern "C" void func_ov002_020f7d74(daDemo_c* self, unsigned char* p, int a2, in
 /* ROM ordinal 140 -- _ZN8daDemo_c16CleanupResourcesEv, 0x020f8028, size 0x80 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c16CleanupResourcesEv
-/* recovered: named members + shared header, real C++ method */
 int daDemo_c::CleanupResources()
 {
   int r1 = param1;
   if (r1 == 0x2e) return func_ov002_020f63a0();
   if (r1 == 0x2f) return func_ov002_020f23d0();
-  ObjV* a = *(ObjV**)((char*)&mModel);
-  if (a) if (a) a->m04();
-  ObjV* b = *(ObjV**)((char*)&mModelAnim);
-  if (b) if (b) b->m04();
+  /* The guards are compiled in: bare deletes build 0x70, not the ROM's 0x80. */
+  if (mModel) delete mModel;
+  if (mModelAnim) delete mModelAnim;
   return 1;
 }
 
@@ -4683,24 +4644,26 @@ void daDemo_c::OnPendingDestroy()
 /* ROM ordinal 142 -- _ZN8daDemo_c6RenderEv, 0x020f80ac, size 0x118 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c6RenderEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 int daDemo_c::Render()
 {
   if (param1 == 0x19){
+    /* Draw the model three times: copy INV_VIEW_MATRIX_ASR_3 into its
+       mat4x3, then for each entry of data_ov002_0210bb7c overwrite the
+       translation column and render. The {p, cur, src} struct is the
+       allocation shape the ROM compiles; a plain Matrix4x3 pointer builds
+       the same size with different registers. */
     struct { char* p; char* cur; M48* src; } s;
     s.src = (M48*)&data_0209b41c;
-    s.p = *(char**)((char*)&mModel) + 0x1c;
+    s.p = (char*)&mModel->mat4x3;
     s.cur = s.p;
     *(M48*)s.cur = *s.src;
     int* tbl = data_ov002_0210bb7c;
     int i = 0;
-    int zero = 0;
     do {
       *(int*)(s.p + 0x24) = tbl[0];
       *(int*)(s.p + 0x28) = tbl[1];
       *(int*)(s.p + 0x2c) = tbl[2];
-      ((ModelBaseSh*)*(void**)((char*)&mModel))->m(zero);
+      mModel->Render(0);
       tbl += 3;
       i++;
     } while ((unsigned)i < 3u);
@@ -4708,21 +4671,13 @@ int daDemo_c::Render()
   }
   unsigned char op = mOpacity;
   if (op == 0) return 1;
-  {
-    void* a = *(void**)((char*)&mModel);
-    if (a != 0){
-      a = (void*)((int)a);
-      _ZN9ModelBase12ApplyOpacityEjj(a, op, 0);
-      ((ModelBaseSh*)*(void**)((char*)&mModel))->m((int)((char*)&mScaleX));
-    } else {
-      void* b = *(void**)((char*)&mModelAnim);
-      if (b != 0){
-        b = (void*)((int)b);
-        ((anmModel_c*)b)->func_ov002_020f65b8();
-        _ZN9ModelBase12ApplyOpacityEjj(*(void**)((char*)&mModelAnim), mOpacity, 0);
-        ((ModelBaseSh*)*(void**)((char*)&mModelAnim))->m((int)((char*)&mScaleX));
-      }
-    }
+  if (mModel != 0){
+    mModel->ApplyOpacity(op, 0);
+    mModel->Render((const Vector3 *)&mScaleX);
+  } else if (mModelAnim != 0){
+    ((anmModel_c*)mModelAnim)->func_ov002_020f65b8();
+    mModelAnim->ApplyOpacity(mOpacity, 0);
+    mModelAnim->Render((const Vector3 *)&mScaleX);
   }
   return 1;
 }
@@ -4731,16 +4686,13 @@ int daDemo_c::Render()
 /* ROM ordinal 143 -- _ZN8daDemo_c8BehaviorEv, 0x020f81c4, size 0x1e0 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 int daDemo_c::Behavior()
 {
-  char *c = (char *) ((void *)this);
   Vector3 v;
   Vec3 asr;
   int new_var2;
   s32 t;
-  t = *((s32 *) (c + 8));
+  t = this->param1;
   if (t == 0x2e)
   {
     return func_ov002_020f63d4();
@@ -4751,14 +4703,14 @@ int daDemo_c::Behavior()
   }
   if ((((u32) t) >= 0x1a) && (((u32) t) <= 0x2d))
   {
-    _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(c, 0);
+    UpdatePosWithOnlySpeed(0);
   }
   else
   {
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
+    UpdatePos(0);
   }
   {
-    char *g = *((char **) (&this->mModelAnim));
+    char *g = (char *)this->mModelAnim;
     if ((g != 0) && ((*((u8 *) (g + 0x83))) != 0))
     {
       {
@@ -4778,14 +4730,14 @@ int daDemo_c::Behavior()
         if ((this->mPosY) < h)
         {
           this->mPosY = h;
-          *((u8 *) ((&this->unk_103))) |= 1;
+          this->unk_103 |= 1;
         }
       }
     }
   }
   Vec3_Asr(&asr, (Vec3 *) (&this->mPosX), 3);
   Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
-  t = *((s32 *) (c + 8));
+  t = this->param1;
   if ((((u32) t) >= 0x1a) && (((u32) t) <= 0x2d))
   {
     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngleX, this->mAngleY, this->mAngleZ);
@@ -4794,13 +4746,13 @@ int daDemo_c::Behavior()
   {
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, this->mAngleX, this->mAngleY, this->mAngleZ);
   }
-  if ((*((char **) (&this->mModel))) != 0)
+  if (this->mModel != 0)
   {
-    *((Matrix4x3 *) ((*((char **) (&this->mModel))) + 0x1c)) = data_020a0e68;
+    this->mModel->mat4x3 = data_020a0e68;
   }
-  if ((*((char **) (&this->mModelAnim))) != 0)
+  if (this->mModelAnim != 0)
   {
-    *((Matrix4x3 *) ((*((char **) (&this->mModelAnim))) + 0x1c)) = data_020a0e68;
+    this->mModelAnim->mat4x3 = data_020a0e68;
     (((anmModel_c*)this->mModelAnim))->func_ov002_020f64ac((char*)&data_ov002_0210bc88);
     (((anmModel_c*)this->mModelAnim))->func_ov002_020f65ec();
   }
@@ -4811,8 +4763,6 @@ int daDemo_c::Behavior()
 /* ROM ordinal 144 -- _ZN8daDemo_c13InitResourcesEv, 0x020f83a4, size 0x464 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 int daDemo_c::InitResources()
 {
     void *p;

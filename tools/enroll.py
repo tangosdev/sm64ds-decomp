@@ -46,6 +46,7 @@ SYM_RE = re.compile(
     r"^(\S+)\s+kind:function\((arm|thumb),size=0x([0-9a-fA-F]+)\)\s+addr:0x([0-9a-fA-F]+)")
 SEC_RE = re.compile(
     r"^\s+(\.\S+)\s+start:0x([0-9a-fA-F]+)\s+end:0x([0-9a-fA-F]+)\s+kind:(\S+)")
+THUMB_PRAGMA = re.compile(r"^\s*#\s*pragma\s+thumb\s+on\b", re.M)
 ENTRY_SEC_RE = re.compile(
     r"^\s+(\.\S+)\s+start:0x([0-9a-fA-F]+)\s+end:0x([0-9a-fA-F]+)")
 
@@ -295,7 +296,11 @@ def candidates():
                 continue
             # A 4-aligned Thumb function would slip past the alignment gate above and
             # then be compiled as ARM; only the size check would bounce it. Be explicit.
-            if mode != "arm":
+            # The exception is a source that asks for Thumb itself (`#pragma thumb on`,
+            # as func_020524e4 does): mwccarm then emits Thumb and the 4-aligned
+            # section lands where the ROM has it.
+            if mode != "arm" and not THUMB_PRAGMA.search(
+                    f.read_text(encoding="utf-8", errors="ignore")):
                 skipped["thumb function"] += 1
                 continue
             # A mod is *meant* to diverge, so the not-a-byte-match hatch does not apply

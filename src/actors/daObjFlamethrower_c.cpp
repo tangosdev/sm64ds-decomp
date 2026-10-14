@@ -20,21 +20,9 @@
  * Flamethrower_Spawn) sits at the very top of this file, ahead of
  * InitResources: under the default (non-off) deferred codegen this TU emits
  * .text in REVERSE of source order, so being written first is what puts it
- * LAST in .text -- ROM-ascending, after InitResources. It is NOT converted
- * to `new daObjFlamethrower_c()`: types.h's Vector3 has no user-declared
- * constructor, so its implicit default constructor is trivial and an
- * idiomatic `new` silently skips the ROM's real per-element
- * __cxa_vec_ctor(..., func_0203d384, ...) construction of mFlamePositions
- * (measured: 999 words differ). Reproducing that call needs a real Vector3
- * default constructor in the shared header, which is out of scope for a
- * fold -- every other consumer of Vector3 would recompile under it. The
- * factory keeps the loose file's explicit hand-built sequence verbatim,
- * with one change the file merge itself required: this TU is the
- * key-function TU and so locally DEFINES _ZTV19daObjFlamethrower_c
- * (declared int[] by decl_common.h) at the START of the full vtable object
- * (the two-word RTTI header), not at the address point the old
- * externally-linked reference happened to land on; the vtable store now
- * reads `&_ZTV19daObjFlamethrower_c[2]` to reach slot 0.
+ * LAST in .text -- ROM-ascending, after InitResources. The native factory
+ * constructs the member arrays through their real class constructors. The
+ * Vector3 array uses its empty default constructor at arm9 0x0203d384.
  *
  * deslop leftovers:
  * - InitResources: a Vector3* / dCcPos_c* walk was 0x16c against the
@@ -103,41 +91,13 @@ extern void _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(
  * i * 0x122c8, rotated by mTransform and added to the previous
  * segment. */
 
-extern "C" {
-extern void* _ZN7fBase_cnwEj(unsigned int);
-extern void *_ZN8dActor_cC2Ev(void*);
-extern dCcPos_c *_ZN8dCcPos_cD1Ev(dCcPos_c *);
-extern void *_ZN8dCcPos_cC1Ev(void*);
-extern void *_ZN7Vector3D1Ev(void*);
-extern void func_0203d384(void);
-/* The array runtime discards lifecycle receiver results. */
-extern void __cxa_vec_ctor(void* arr, unsigned int count, unsigned int size, void(*ctor)(void*), void(*dtor)(void*));
-/* _ZTV19daObjFlamethrower_c is already declared (as int[]) by decl_common.h,
-   included above; redeclaring it here with a different element type is a
-   CodeWarrior error, so this factory casts through that existing symbol. */
-}
-
-/* daObjFlamethrower_c_classInit is not converted to `new daObjFlamethrower_c()`:
- * types.h's Vector3 has no user-declared constructor (only the empty destructor
- * daKing_Donketu_c's array destruction needs), so its implicit default
- * constructor is trivial and an idiomatic `new` skips the ROM's per-element
- * __cxa_vec_ctor(..., func_0203d384, ...) call over mFlamePositions entirely --
- * confirmed by measurement (999 words differ, first wrong relocation
- * _ZN8dCcPos_cD1Ev). Reproducing that call needs a real Vector3 default
- * constructor in the shared header, which is out of scope for a fold: every
- * other consumer of Vector3 would recompile under it. Kept as the explicit
- * hand-built sequence the loose file used; only the file boundary changed. */
+/* The implicit constructor builds twelve collision cylinders and twelve
+ * flame positions in member order. Vector3's empty default constructor
+ * is the original array callback at arm9 0x0203d384. */
 // @symbol daObjFlamethrower_c_classInit
 extern "C" daObjFlamethrower_c *daObjFlamethrower_c_classInit()
 {
-    daObjFlamethrower_c *p = (daObjFlamethrower_c *)_ZN7fBase_cnwEj(sizeof(daObjFlamethrower_c));
-    if (p) {
-        _ZN8dActor_cC2Ev(p);
-        *(void ***)p = (void **)&_ZTV19daObjFlamethrower_c[2];
-        __cxa_vec_ctor((char *)p + 0xd4, 0xc, 0x3c, (void (*)(void *))_ZN8dCcPos_cC1Ev, (void (*)(void *))_ZN8dCcPos_cD1Ev);
-        __cxa_vec_ctor((char *)p + 0x3a4, 0xc, 0xc, (void (*)(void *))func_0203d384, (void (*)(void *))_ZN7Vector3D1Ev);
-    }
-    return p;
+    return new daObjFlamethrower_c;
 }
 
 // @symbol _ZN19daObjFlamethrower_c13InitResourcesEv

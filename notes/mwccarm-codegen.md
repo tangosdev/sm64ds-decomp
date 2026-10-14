@@ -4036,6 +4036,25 @@ keeps a variable's pre-shift and post-shift values in ONE web across an in-place
 or one that outranks a call-return-coalesced web against a loop-invariant one. No rule in
 6k / 6q / 6y / 6ab / 6bf spells either yet.
 
+### 6bo resolved (2026-10-13): MATCHED, and the lever was the field's spelling
+
+`func_ov075_02116128` is byte-exact at 2004/b56, with no pragma. The palette is a `u16`
+local (`u16 pal = func_02030958(slot) + 10; if (dim) pal -= 4;`) and every store spells
+the field as `(*e & 0xfff) | (u16)(pal << 12)`. mwccarm narrows `(u16)(pal << 12)` to
+`lsl #0x1c` IN PLACE on `pal`'s own register, with the `lsr #16` folded into each single
+store's `orr` and the loop's copy hoisted. That one web, pre-shift and post-shift, is
+exactly the ROM's r3. Every earlier draft wrote the shift out as explicit `<< 0x1c` /
+`>> 16` steps or as named temporaries, and each of those splits the value into a second
+web. The three attractors above are what that split does to the colouring. Keeping the
+`m`-style `int` offset is still needed for the `mla`, and an inline setter around the
+same expression matches too.
+
+Method point: this was found by trying the natural ways a 2004 programmer writes a
+4-bit field insert (`(pal & 0xf) << 12`, `(u16)(pal << 12)`, `(pal << 12) & 0xf000`).
+Only the u16-cast spelling emits the ROM's `lsl #0x1c`/`lsr #16` pair. The
+~160,000-compile search above never left the explicit-shift spelling, because it had
+been copied from the disassembly.
+
 ## 6bq. Three homing levers and a store-order rank lever (ov074 daKuriKing_c, two MATCHED, one at div 11, 2026-08-30)
 
 The Kuri King overlay's three unsourced bodies. Two fell on the first day; the third is
@@ -6551,6 +6570,20 @@ the Rm field and the operand's colour are one decision keyed on the syntactic op
 
 ## 6cm. There are FOUR cells for a scaled index, not three, and 2004/b56 can only reach three of them; a 16-bit index type is the one size-neutral way to stop the fold (_ZN12dScMgSlot1_c8BehaviorEv, ov006 0x0210c9e0, 0x81c, div 20 -> 19, floor; 2026-09-13, run link100 waves 9 and 10, lanes CRK-H and CRK2-H)
 
+**SUPERSEDED 2026-10-12: the function MATCHED (div 0, 0x81c).** The "floor" below was a source
+artefact, not a compiler limit. Every cell of the grids recorded here kept the draft's habit of
+naming the object two ways -- some fields as `this->member`, others through `char *c = (char
+*)this` plus literal offsets -- and that mix is the one axis the grids never varied. Synthetic
+probes (one function, one hit block, one factor at a time) showed 2004/b56 folds the hoisted
+touch-record address into `add r0, r0, r2, lsl #2` exactly when the enclosing function names
+the object two ways (member/offset mix, in a member function or a free function over a `X *p`),
+and materializes `lsl r1, r2, #2` / `add r0, r0, r1` when it names it one way (all members, or
+all offsets). Spelling the whole function through members, with case 7 keeping its strided
+`char *p = (char *)this; p += 0x15` row walk and the touch x/y read inside the hit loop through
+a 4-byte record view, gives the retail bytes. The 16-bit index below is not needed. See the
+banner on `_ZN12dScMgSlot1_c8BehaviorEv` in `src/actors/dScMgSlots.cpp` and manifest
+`config/tu_manifest.d/ov006/dScMgSlot1_c+dScMgSlot3_c.json` (boundary_evidence[3], [4]).
+
 This section replaces the wave-9 text filed under the same number ("declare the scaled index
 BETWEEN the guards and the use"), which is right about the placement axis and stops one cell
 short of the mechanism. The wave-9 evidence still stands and is folded in below: twenty
@@ -7661,6 +7694,21 @@ and `o` as receivers, every select spelling including goto-pinned and pointer-ty
 callee's parameter type names, the byte loaded before the guard) leave the cmp at +0x40. Both
 are the same ASAP-versus-ALAP policy delta, and neither is reachable through a receiver because
 the value in question is a constant (the first) or a flag (the second), not a register web.
+
+Closed for the first (func_ov009_0211145c MATCHED, 5 -> 0, 2026-10-12). The lever is the
+control-flow shape around the window, not a spelling inside it: with the two stores in the taken
+arm of `if (p2 != 0) { ... } else { return; }` and the sound call after the join, the pre-RA
+passes see a block boundary between the stores and the call, the argument setup is not hoisted,
+and the else-return is if-converted into the conditional epilogue the ROM already has. Written
+`if (p2 == 0) return;` ahead of the stores (every earlier cell) the stores and the call share one
+block and the hoist comes back; the arm order matters too (`if (p2 == 0) { return; } else { ...
+}` then the call scores 5 again). The corpus shows the same mechanism at dScStage_c::Behavior
++0x2fc and dScMgSmartball_c::SpawnObjects +0x300, and a second, non-transplanting one in
+dScMgTeresa_c::OnYoshiTryEat (>= 3 calls earlier in the same block plus a later stack-argument
+call suppress the hoist inside one block; any `if` boundary or loop re-enables it). Inert on this
+function, measured at 5 each: post-call loads (exact window but a word oversize), extra calls
+including 6-arg ones, labels, `asm` barriers, inline helpers, tail duplication, empty-dtor
+locals, argument precomputation and 59 flag cells.
 
 Positive control for the second (round 1002f, about 250 more cells). With the guard, flag and x
 loads all `volatile` (a 64-cell mask matrix; cells 110111, 111011 and 111111), b56 emits the ROM's

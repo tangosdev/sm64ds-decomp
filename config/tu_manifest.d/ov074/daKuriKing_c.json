@@ -11,7 +11,7 @@
     "the former hole is closed: func_ov074_02121380 (0x02121380, size 0x374) was a banked near-miss at 11 divergent words under the free-function spelling; as member-form code walking mCylClsnPos[i] / mdCc_cs[i+1] it is byte-exact, so the contiguous run could be claimed end to end.",
     "module sinit corroboration: 1 sinit(s) / 1 .ctor entries, sinit_vs_tu=ok (module-wide).",
     "static-initializer fold: the compiler-generated __sinit_daKuriKing_c.cpp is byte-identical to retail __sinit_ov074_02122978 (0x3f8, match.py strict-relocs MATCH). It constructs the fourteen resource handles (model file 917, texture-sequence file 912, twelve animation files) with destructor registrations, then copies the eighteen 8-byte descriptors (fifteen member PMFs the compiler materializes as temporaries, three free-stub unions) into the nine-entry BSS state table at 0x021230f8 in slot order. The ctor word at 0x02122d70 points at that initializer. The handwritten src/unnamed/ov074/__sinit_ov074_02122978.c is retired.",
-    "CLASSINIT TAIL FOLD (2026-10-10): the run 0x02122764..0x0212290c (daKuriKing_c_classInit_KURIKING_VANISH 0xd4, daKuriKing_c_classInit_KURIKING 0xd4) abuts this TU's old .text end (0x02122764) with no gap and is now inside it; it runs to the end of ov074 .text (0x0212290c). Membership: both factories call fBase_c::operator new(0x610) = sizeof(daKuriKing_c), run dEnemyBase_c's base constructor, store the vptr _ZTV12daKuriKing_c (ov074:0x02122eb8, the vtable this TU emits) and construct exactly the members this class declares (dCcAcPos_c[4] @0x110, ModelAnim @0x210, dExtShadowModel_c[3] @0x274, Vector3[3] @0x3ac, MaterialChanger, TextureSequence, TextureTransformer, dBgCh_Actr @0x40c); KURIKING_VANISH and KURIKING are the two registry profiles of the one class. Kept as the loose files' hand-built sequence (not `new daKuriKing_c`) because types.h's Vector3 declares no constructor, so an idiomatic new skips the ROM's __cxa_vec_ctor(..., func_0203d384, ...) over mCylClsnPos (same disposition as daMoray_c_classInit / daKing_Donketu_c_classInit). The vptr store is `&_ZTV12daKuriKing_c[2]` because this TU defines the vtable object from its RTTI header. Appended last in the file, KURIKING_VANISH first (this TU emits .text in source order under #pragma defer_codegen off)."
+    "CLASSINIT TAIL FOLD (2026-10-10): the run 0x02122764..0x0212290c (daKuriKing_c_classInit_KURIKING_VANISH 0xd4, daKuriKing_c_classInit_KURIKING 0xd4) abuts this TU's old .text end (0x02122764) with no gap and is now inside it; it runs to the end of ov074 .text (0x0212290c). Membership: both factories call fBase_c::operator new(0x610) = sizeof(daKuriKing_c), run dEnemyBase_c's base constructor, store the vptr _ZTV12daKuriKing_c (ov074:0x02122eb8, the vtable this TU emits) and construct exactly the members this class declares (dCcAcPos_c[4] @0x110, ModelAnim @0x210, dExtShadowModel_c[3] @0x274, Vector3[3] @0x3ac, MaterialChanger, TextureSequence, TextureTransformer, dBgCh_Actr @0x40c); KURIKING_VANISH and KURIKING are the two registry profiles of the one class. Both factories now use native `return new daKuriKing_c;` construction. The compiler-generated Vector3 array callback is byte-identical to the original arm9:0x0203d384 callback; its dedicated four-byte relocation-free body is externalized under the canonical duplicate policy. All three mCylClsnPos elements retain stride 12 and the Vector3 destructor callback. Appended last in the file, KURIKING_VANISH first (this TU emits .text in source order under #pragma defer_codegen off)."
   ],
   "sections": [
     {
@@ -2792,6 +2792,14 @@
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60",
       "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZN7Vector3C1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "func_0203d384",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d384",
+      "reason": "Native Vector3 arrays preserve the retail constructor callback func_0203d384, element size 12 and counts 3; destructor remains _ZN7Vector3D1Ev."
     }
   ],
   "production_mode": "intact-object"
