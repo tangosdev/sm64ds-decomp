@@ -20,6 +20,7 @@
  *   TU-global, while Behavior needs it on.
  */
 #include "dCamera_c.h"
+#include "Player.h"
 #include "dBgCh_Lin.h"
 #include "Memory.h"
 #include "decl_common.h"
@@ -239,7 +240,7 @@ int dCamera_c::InitResources()
     }
     thiz->mFovBlend = 0;
     thiz->mTargetPlayer = (s32)data_0209f394[data_0209f250];
-    ChangeArea(*(signed char *)((char *)thiz->mTargetPlayer + 0xcc));
+    ChangeArea(((dActor_c *)thiz->mTargetPlayer)->mAreaId);
     thiz->mFramedActor = 0;
     thiz->mFocusActor = 0;
     ChangeState((State *)&data_0209b008);
@@ -350,12 +351,12 @@ block_7:
     }
 
     {
-        char *m = *(char **)(c + 0x110);
-        enum Bool isBf = (enum Bool)(*(u16 *)(m + 0xc) == 0xbf);
+        Player *m = *(Player **)(c + 0x110);
+        enum Bool isBf = (enum Bool)(m->actorID == 0xbf);
         if (isBf != FALSE) {
             s32 t2 = data_0209f32c - (data_02082214[(*(u16 *)(c + 0x17e) >> 4) * 2] * 0x10);
             if (!(*(s32 *)(c + 0x154) & 1)) {
-                if (*(u8 *)(m + 0x706) != 0 || *(u8 *)(m + 0x707) != 0) {
+                if (m->mIsUnderwater != 0 || m->mIsInShallowWater != 0) {
                     if (*(s32 *)(c + 0x90) <= t2) {
                         *(u32 *)(c + 0x154) |= 1u;
                     }
@@ -702,10 +703,10 @@ void func_0200d4b0(char* self, unsigned int playerID, int arg2)
     if (playerID == tmp)
     {
         volatile int dummy;
-        char* other;
+        struct dActor_c *other;
         ((struct dCamera_c *)self)->mOrbitTargetYaw = ((struct dCamera_c *)self)->mAngleY;
-        other = *(char**)(self + 0x110);
-        *(int*)(((int)other + 0xb0)) |= 0x20000000;
+        other = *(struct dActor_c **)(self + 0x110);
+        other->mFlags |= 0x20000000;
         func_0200ee8c(arg2);
     }
 }
@@ -752,7 +753,7 @@ void dCamera_c::GoBehindPlayer(unsigned int j)
 
     slot4 = mState_13c;
     slotc = 0;
-    func_0200c66c((void *)((int)this), (void *)(mTargetPlayer + 0x5c), &slot8, &slot4, &slotc);
+    func_0200c66c((void *)((int)this), &((dActor_c *)mTargetPlayer)->mPos, &slot8, &slot4, &slotc);
     if (slot4 == (int)&data_020873dc)
         return;
     if (slot4 == (int)&data_0208742c)
@@ -765,8 +766,8 @@ void dCamera_c::GoBehindPlayer(unsigned int j)
 void func_0200d1e4(char *self)
 {
     struct dCamera_c *cam = (struct dCamera_c *)self;
-    char *info = *(char **)(self + 0x110);
-    char *base = (char *)(info + 0x5c);
+    struct dActor_c *info = *(struct dActor_c **)(self + 0x110);
+    Vector3 *base = &info->mPos;
     int v1;
     unsigned int r0;
     s32 temp1[3];
@@ -777,9 +778,9 @@ void func_0200d1e4(char *self)
     unsigned int r0b;
     s32 temp2[3];
 
-    cam->mTargetPos.x = *(s32 *)(base + 0);
-    cam->mTargetPos.y = *(s32 *)(base + 4);
-    cam->mTargetPos.z = *(s32 *)(base + 8);
+    cam->mTargetPos.x = base->x;
+    cam->mTargetPos.y = base->y;
+    cam->mTargetPos.z = base->z;
 
     v1 = *(s32 *)(*(char **)(self + 0x13c) + 0x14);
     r0 = func_020093f4(self, v1);
@@ -789,7 +790,7 @@ void func_0200d1e4(char *self)
     temp1[2] = r0;
     data_02086f2c.z = r0;
 
-    angle = *(short *)(*(char **)(self + 0x110) + 0x8e);
+    angle = (*(struct dActor_c **)(self + 0x110))->mAngleY;
     Vec3_RotateYAndTranslate(self + 0x80, &cam->mTargetPos, angle, temp1);
 
     v2 = *(s32 *)(*(char **)(self + 0x13c) + 0x10);
@@ -804,7 +805,7 @@ void func_0200d1e4(char *self)
     temp2[1] = data_02086f14[1];
     temp2[2] = r0b;
 
-    angle = *(short *)(*(char **)(self + 0x110) + 0x8e);
+    angle = (*(struct dActor_c **)(self + 0x110))->mAngleY;
     Vec3_RotateYAndTranslate(self + 0x8c, self + 0x80, angle, temp2);
 
     *(s32 *)(self + 0x90) += (int)(dResult - 0x8b000);
@@ -813,7 +814,7 @@ void func_0200d1e4(char *self)
     cam->mLookAtOffset.y = 0xc3f9d;
     cam->mLookAtOffset.z = 0;
 
-    ChangeArea(*(signed char *)(*(char **)(self + 0x110) + 0xcc));
+    ChangeArea((*(struct dActor_c **)(self + 0x110))->mAreaId);
 }
 #pragma cplusplus on
 
@@ -821,14 +822,13 @@ void func_0200d1e4(char *self)
 void dCamera_c::LookAtExit(dActor_c &actor)
 {
     int *src;
-    char *a = (char *)&actor;
 
-    mLookTarget = (int *)(a + 0x5c);
+    mLookTarget = &actor.mPosX;
     src = mLookTarget;
     mLookTargetPos.x = src[0];
     mLookTargetPos.y = src[1];
     mLookTargetPos.z = src[2];
-    mTargetAngleY = -*(s16 *)(a + 0x8e);
+    mTargetAngleY = -actor.mAngleY;
     ChangeState((State *)&data_0209b0f8);
     mFlags |= 0x10;
 }
@@ -943,7 +943,7 @@ extern "C" void func_0200cce4(char* cam)
     u32 d;
 
     if (*(char**)(cam + 0x110) != 0) {
-        Vec3* p = (Vec3*)(((int)*(char**)(cam + 0x110) + 0x5c));
+        Vec3 *p = (Vec3 *)&(*(dActor_c **)(cam + 0x110))->mPos;
         ((dCamera_c *)cam)->mTargetPos.x = p->x;
         ((dCamera_c *)cam)->mTargetPos.y = p->y;
         ((dCamera_c *)cam)->mTargetPos.z = p->z;
@@ -956,7 +956,7 @@ extern "C" void func_0200cce4(char* cam)
             data_02086f2c.z = d1;
         }
         Vec3_RotateYAndTranslate((Vec3 *)(cam + 0x80), &((dCamera_c *)cam)->mTargetPos,
-                                 *(s16 *)(*(char **)(cam + 0x110) + 0x8e), &tmp1);
+                                 (*(dActor_c **)(cam + 0x110))->mAngleY, &tmp1);
 
         d = func_020093d4(cam, *(int*)(*(char**)(cam + 0x13c) + 0x10));
         *(int*)(((int)cam + 0x84)) += d;
@@ -968,8 +968,8 @@ extern "C" void func_0200cce4(char* cam)
             tmp2.x = data_02086f20.x;
             tmp2.y = data_02086f20.y;
         }
-        Vec3_RotateYAndTranslate((Vec3*)(cam + 0x8c), (Vec3*)(cam + 0x80),
-            *(s16*)(*(char**)(cam + 0x110) + 0x8e), &tmp2);
+        Vec3_RotateYAndTranslate((Vec3 *)(cam + 0x8c), (Vec3 *)(cam + 0x80),
+                                 (*(dActor_c **)(cam + 0x110))->mAngleY, &tmp2);
 
         dBgCh_Lin line;
         func_0200897c(cam, &line);
@@ -1019,7 +1019,7 @@ extern "C" void func_0200cce4(char* cam)
             ((dCamera_c *)cam)->mLookAtOffset.z = 0;
         }
         func_0200928c(cam);
-        ChangeArea(*(s8*)(*(char**)(cam + 0x110) + 0xcc));
+        ChangeArea((*(dActor_c **)(cam + 0x110))->mAreaId);
         _ZN9dBgCh_GndD1Ev(&ground);
 
     }
@@ -1194,25 +1194,26 @@ extern "C" int func_0200c66c(void *self_, void *pos_, int *out2_, int *out1_, in
     int hval;
     int col1;
     int col2;
-    char* p;
-    void* obj;
+    Player *p;
+    Player *obj;
     int res;
 
-    p = *(char**)(self + 0x110);
+    p = *(Player **)(self + 0x110);
     obj = 0;
     {
-        int b = *(u16*)(p + 0xc);
+        int b = p->actorID;
         b = b == 0xbf;
         if (b != 0) {
-            res = *(int*)(p + 0x644);
-            if ((u32)res == 0x80000000) res = *(int*)(p + 0x60);
+            res = p->mGroundY;
+            if ((u32)res == 0x80000000)
+                res = p->mPosY;
             obj = p;
         }
     }
 
     if (obj != 0 && data_0209f2f8 != 0x1c) {
-        col1 = *(int*)((char*)obj + 0x65c) & 0xff;
-        col2 = *(int*)((char*)obj + 0x660) & 0xff;
+        col1 = obj->mClpsBits15_18 & 0xff;
+        col2 = obj->mClpsBits6_11 & 0xff;
         hval = res;
     } else {
         dBgCh_Lin line;
@@ -1331,7 +1332,7 @@ int func_0200c394(void *self_, int a1, void *a2_, void *a3, void **a5, int *a6)
 body:
     {
             if (a1 == 7) {
-                void *o = cam->mFramedActor;
+                struct dActor_c *o = cam->mFramedActor;
                 if (o == 0) {
                     if (a2 == 0) goto other;
                     if (a2[0] != 3) goto other;
@@ -1339,10 +1340,10 @@ body:
                 *a6 = 1;
                 o = cam->mFramedActor;
                 if (o) {
-                    int qb = (int)o + 0x5c;
-                    cam->mLookTargetPos.x = *(int *)(qb);
-                    cam->mLookTargetPos.y = *(int *)(qb + 4);
-                    cam->mLookTargetPos.z = *(int *)(qb + 8);
+                    Vector3 *q = &o->mPos;
+                    cam->mLookTargetPos.x = q->x;
+                    cam->mLookTargetPos.y = q->y;
+                    cam->mLookTargetPos.z = q->z;
                 } else {
                     Vec3 t;
                     sx = *(short *)(a2 + 2);
@@ -1422,7 +1423,7 @@ extern "C" int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int ar
     data_02086f2c.z = sp44.z;
     sp44.x = data_02086f2c.x;
     sp44.y = data_02086f2c.y;
-    Vec3_RotateYAndTranslate(&sp8, arg1, *(short*)(*(char**)(self + 0x110) + 0x8e), (int*)&sp44);
+    Vec3_RotateYAndTranslate(&sp8, arg1, (*(dActor_c **)(self + 0x110))->mAngleY, (int *)&sp44);
     dBgCh_Lin line;
     sp14.x = sp8.x;
     sp14.y = sp8.y + 0x32000;

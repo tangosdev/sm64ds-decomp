@@ -33,7 +33,12 @@ struct dCamera_c : dView_c {
        save taken, so these mirror the two above field for field.
        That copy is also what fixes the WIDTH: 0x094 and 0x0c4 were declared
        u8 and are read and written as full words at both ends, so both were
-       too narrow -- they are the z of their respective vectors. */
+       too narrow -- they are the z of their respective vectors.
+       The scripted states (the member-function table from 0x02082bc0) also
+       use the pair as working vectors. func_020071e0 rotates both by the
+       target player's facing: savedLookAt gives pos its goal and savedPos
+       gives lookAt its goal. func_020079ac copies lookAt into savedLookAt
+       to orbit around it. */
     Vector3 savedLookAt;            /* 0x0b0 */
     Vector3 savedPos;            /* 0x0bc */
     /* Last frame's pair: Behavior copies lookAt and pos here before it moves
