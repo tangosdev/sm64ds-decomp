@@ -28,6 +28,11 @@
       "end": "0x021335b8"
     },
     {
+      "name": ".data",
+      "start": "0x0213d248",
+      "end": "0x0213d338"
+    },
+    {
       "name": ".bss",
       "start": "0x021423a8",
       "end": "0x021424ec"
@@ -399,7 +404,218 @@
       "ordinal": 51
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "pmf_dScMgMemory2_c_ResultWait",
+      "address": "0x0213d248",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StatePlay",
+      "address": "0x0213d250",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_PlayerDrop",
+      "address": "0x0213d258",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundDealHard",
+      "address": "0x0213d260",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StateSetup",
+      "address": "0x0213d268",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardIdle",
+      "address": "0x0213d270",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StateExit",
+      "address": "0x0213d278",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundDealFourth",
+      "address": "0x0213d280",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "g_profile_MG_MEMORY_J",
+      "address": "0x0213d288",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "factory pointer and priorities 0x16b, 0x16b"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundDealNormal",
+      "address": "0x0213d290",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundShowCards",
+      "address": "0x0213d298",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundReadyCards",
+      "address": "0x0213d2a0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundReveal",
+      "address": "0x0213d2a8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardSelect",
+      "address": "0x0213d2b0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_PlayerWait",
+      "address": "0x0213d2b8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StateJudge",
+      "address": "0x0213d2c0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundStart",
+      "address": "0x0213d2c8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundDealEasy",
+      "address": "0x0213d2d0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardFlyAway",
+      "address": "0x0213d2d8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardFlipDown",
+      "address": "0x0213d2e0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardWait",
+      "address": "0x0213d2e8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardFlipUp",
+      "address": "0x0213d2f0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_ResultFinish",
+      "address": "0x0213d2f8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_StateResult",
+      "address": "0x0213d300",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_CardMove",
+      "address": "0x0213d308",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundHideCards",
+      "address": "0x0213d310",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_RoundWaitDeal",
+      "address": "0x0213d318",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_ResultReward",
+      "address": "0x0213d320",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_ResultTurnCards",
+      "address": "0x0213d328",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    },
+    {
+      "symbol": "pmf_dScMgMemory2_c_PlayerMove",
+      "address": "0x0213d330",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "code address and a zero adjustment"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov006_021423a8",
@@ -455,7 +671,8 @@
     "COMPILER-ONLY OUTPUT:13 data policies and3 exact-symbol deadstrip function policies,16 rows total. The six-class chain dScMgMemory2_c -> dScMgSingle3DBase_c -> dScMgBase_c -> dScene_c -> dBase_c -> fBase_c gives2x6 typeinfo rows plus1 vtable. The function policies cover the existing dScMgMemory2_c D2 and the additional dMgMemory2SharedState_c D1 and dScMgSingle3DBase_c D2 emitted by ordinary construction. Each has no configured ROM home and no retained relocation references it. The queue row records the ancestry-derived minimum of13 compiler-only data records; it is not a total of all function policies.",
     "EMISSION ORDER WITHOUT REVERSING THE SOURCE. This TU is written ROM-ASCENDING and still emits ROM-ascending, because `#pragma defer_codegen off` (after the includes and the extern block) makes mwccarm 2004/b56 emit each definition as it is encountered instead of deferring and reversing. That is what keeps the two file-local optimisation pragmas -- opt_propagation off around DrawCards and opt_loop_invariants off around ResultFinish, each bracketed #pragma push/pop -- attached to the members that measured them, and it is why the out-of-line destructor here yields licensed D1-then-D0 rather than the D2/D0/D1 the deferred path gives.",
     "FOLD 2026-10-10. The handwritten src/unnamed/ov006/__sinit_ov006_021314e4.c initializer folded into this TU as the six retail-ordered table definitions at its end: the 23-entry sprite-pointer permutation and the five PMF state tables (5 main, 10 round, 4 result, 7 card, 3 player) defined through the existing dScMgMemory2_cState/dScMgMemory2_cCardState typedefs and plain-copied from the still-extern .data descriptor records. mwcc emits the same 0x3bc initializer into .init (36 literal-pool reloc sites matching retail), the same .ctor word, and per-table .bss sections covering 0x021423a8..0x021424ec; no @NNN temps are emitted. Same shape as sibling d_s_mg_memory.cpp (READY row 73).",
-    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to its own stock control. The recorded verification.linkcheck.rom.sha256 is the fleet-canonical US-dump hash every intact entry shares, per #3691."
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to its own stock control. The recorded verification.linkcheck.rom.sha256 is the fleet-canonical US-dump hash every intact entry shares, per #3691.",
+    "DATA 2026-10-14. This TU now defines the 240-byte .data span 0x0213d248..0x0213d338: 29 code-address records and the 8-byte g_profile_MG_MEMORY_J that sits in the middle of them. data_ov006_02133810 stays the ROM copy. The sprite table indexes it, and it is a separate .data island."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -584,6 +801,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0213d248",
+          "end": "0x0213d338",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x021423a8",
           "end": "0x021424ec",
@@ -592,7 +816,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 60
+          "LICENSED": 90
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -603,38 +827,105 @@
           {
             "section": ".init",
             "original": [
-              131
+              191
             ],
             "desired": [
-              131
+              191
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              129
+              189
             ],
             "desired": [
-              129
+              189
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              103,
+              105,
+              107,
+              109,
+              111,
+              113,
+              115,
+              117,
+              119,
+              121,
+              123,
+              125,
+              127,
+              129,
+              131,
+              133,
+              135,
+              137,
+              139,
+              141,
+              143,
+              145,
+              147,
+              149,
+              151,
+              153,
+              155,
+              157,
+              159,
+              161
+            ],
+            "desired": [
+              103,
+              105,
+              107,
+              109,
+              111,
+              113,
+              115,
+              117,
+              119,
+              121,
+              123,
+              125,
+              127,
+              129,
+              131,
+              133,
+              135,
+              137,
+              139,
+              141,
+              143,
+              145,
+              147,
+              149,
+              151,
+              153,
+              155,
+              157,
+              159,
+              161
             ]
           },
           {
             "section": ".bss",
             "original": [
-              103,
-              104,
-              105,
-              106,
-              107,
-              108
+              163,
+              164,
+              165,
+              166,
+              167,
+              168
             ],
             "desired": [
-              108,
-              106,
-              104,
-              107,
-              105,
-              103
+              168,
+              166,
+              164,
+              167,
+              165,
+              163
             ]
           }
         ],
@@ -643,28 +934,28 @@
             {
               "section": ".bss",
               "original": [
-                103,
-                104,
-                105,
-                106,
-                107,
-                108
+                163,
+                164,
+                165,
+                166,
+                167,
+                168
               ],
               "desired": [
-                108,
-                106,
-                104,
-                107,
-                105,
-                103
+                168,
+                166,
+                164,
+                167,
+                165,
+                163
               ],
               "slots": [
-                103,
-                104,
-                105,
-                106,
-                107,
-                108
+                163,
+                164,
+                165,
+                166,
+                167,
+                168
               ]
             }
           ],
@@ -1218,6 +1509,306 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x213d2b8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d248",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10ResultWaitEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6538"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d250",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c9StatePlayEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f7234"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d258",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10PlayerDropEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f58d0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d260",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c13RoundDealHardEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6a78"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d268",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10StateSetupEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f7280"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d270",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c8CardIdleEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6084"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d278",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c9StateExitEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f7190"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d280",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c15RoundDealFourthEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6a00"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d288",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "dScMgMemory2_c_classInit",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f75d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d290",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c15RoundDealNormalEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6b00"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d298",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c14RoundShowCardsEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6904"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c15RoundReadyCardsEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f67a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c11RoundRevealEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6678"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10CardSelectEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f5f0c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10PlayerWaitEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f5740"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10StateJudgeEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f7210"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10RoundStartEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6bf0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c13RoundDealEasyEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6b78"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c11CardFlyAwayEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f5cb4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c12CardFlipDownEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f5de0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c8CardWaitEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f5e70"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10CardFlipUpEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f5e74"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d2f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c12ResultFinishEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6230"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d300",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c11StateResultEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f71c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d308",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c8CardMoveEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6088"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d310",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c14RoundHideCardsEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6830"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d318",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c13RoundWaitDealEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f670c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d320",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c12ResultRewardEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f6488"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d328",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c15ResultTurnCardsEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f639c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d330",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgMemory2_c10PlayerMoveEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020f5744"
     }
   ]
 }

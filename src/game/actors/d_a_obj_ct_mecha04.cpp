@@ -16,7 +16,7 @@
 // InitResources/Behavior/UpdateShadow calls). func_020393c4 / func_020393bc
 // store/load dBgW+0x1c -- the ROM's own call, not an inlineable assignment
 // (no setter). Sound::PlayLong stays TU-local mangled (Sound.h has PlayBank3
-// only). SharedFilePtr's file data sits at +4; the header declares no fields.
+// only). The loaded file is filePtr.
 // common.h first: UpdateShadow writes mShadowMat.m[9..11] on the flat 12-word
 // spelling. InitResources keeps its two-store animationFiles[2] stack array,
 // the variant reloads, MoveActorOnBelt's &mPosX-derived pointer chain and flat
@@ -51,14 +51,12 @@ enum {
 /* Resource handles constructed by this TU's static initializer. The
  * constructor and destructor bodies stay out of line; mwcc registers them. */
 struct Mecha04ModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Mecha04ModelFilePtr(u32 fileID);
     ~Mecha04ModelFilePtr();
 };
 
 struct Mecha04ClsnFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Mecha04ClsnFilePtr(u32 fileID);
     ~Mecha04ClsnFilePtr();
@@ -71,13 +69,13 @@ extern void Matrix4x3_FromRotationY(Matrix4x3 *matrix, s16 angle);
 extern void _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_S5_j(
     dActor_c *actor, dExtShadowModel_c *shadow, Matrix4x3 *matrix,
     int scaleX, int scaleY, int scaleZ, u32 opacity);
-/* One 2-row {model, collision, clps} table indexed by mVariant; the three
- * data_ov065_* symbols name row 0's fields, so each column's decl strides by
- * the row size. */
+/* Row 0 of the {model, collision, clps} table is three adjacent symbols.
+ * Row 1 is the three pointers that follow, inside data_ov065_0211d19c.
+ * A column is 12 bytes apart. */
 extern BTA_File *data_ov065_0211d16c[2];
-extern SharedFilePtr *data_ov065_0211d194[][3];
-extern SharedFilePtr *data_ov065_0211d198[][3];
-extern CLPS_Block *data_ov065_0211d19c[][3];
+extern SharedFilePtr *data_ov065_0211d194[1];
+extern SharedFilePtr *data_ov065_0211d198[1];
+extern CLPS_Block *data_ov065_0211d19c[4];
 extern void func_020393c4(dBgW *collider, void *callback);
 extern int func_020393bc(dBgW *collider);
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int a, int b);
@@ -165,7 +163,8 @@ int daObjCtMecha04_c::InitResources()
     }
 
     variant = mVariant;
-    modelFile = Model::LoadFile(*data_ov065_0211d194[variant][0]);
+    modelFile = Model::LoadFile(
+        **(SharedFilePtr **)((char *)data_ov065_0211d194 + variant * 12));
     mModel.SetFile(
         (BMD_File *)modelFile, 1, -1);
 
@@ -173,7 +172,8 @@ int daObjCtMecha04_c::InitResources()
 
     variant = mVariant;
     TextureTransformer::Prepare(
-        *(BMD_File *)((void **)data_ov065_0211d194[variant][0])[1],
+        *(BMD_File *)((void **)(*(SharedFilePtr **)(
+            (char *)data_ov065_0211d194 + variant * 12)))[1],
         *animationFiles[variant]);
 
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
@@ -184,11 +184,12 @@ int daObjCtMecha04_c::InitResources()
     UpdateClsnPosAndRot();
 
     variant = mVariant;
-    collisionFile = dBgW_Kc::LoadFile(*data_ov065_0211d198[variant][0]);
+    collisionFile = dBgW_Kc::LoadFile(
+        **(SharedFilePtr **)((char *)data_ov065_0211d198 + variant * 12));
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, (KCL_File *)collisionFile, mClsnMat,
         0x199, mAngleY,
-        *data_ov065_0211d19c[variant][0]);
+        **(CLPS_Block **)((char *)data_ov065_0211d19c + variant * 12));
 
     func_020393c4(
         &mMeshCollider,
@@ -274,8 +275,8 @@ int daObjCtMecha04_c::CleanupResources()
 {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    data_ov065_0211d194[mVariant][0]->Release();
-    data_ov065_0211d198[mVariant][0]->Release();
+    (*(SharedFilePtr **)((char *)data_ov065_0211d194 + mVariant * 12))->Release();
+    (*(SharedFilePtr **)((char *)data_ov065_0211d198 + mVariant * 12))->Release();
     return 1;
 }
 
@@ -322,3 +323,27 @@ Mecha04ModelFilePtr gCtMechaObj04sModelFile(ASSET_CT_MECHA_OBJ04S_BMD);
 Mecha04ModelFilePtr gCtMechaObj04lModelFile(ASSET_CT_MECHA_OBJ04L_BMD);
 Mecha04ClsnFilePtr gCtMechaObj04sCollisionFile(ASSET_CT_MECHA_OBJ04S_KCL);
 Mecha04ClsnFilePtr gCtMechaObj04lCollisionFile(ASSET_CT_MECHA_OBJ04L_KCL);
+
+/* Level-overlay texture animations and CLPS blocks. ov065 can be resident
+ * only beside ov035, so these ambiguous addresses take the ov035 names. */
+extern BTA_File data_ov035_0211208c;
+extern BTA_File data_ov035_021120a4;
+extern CLPS_Block data_ov035_021120d8;
+extern CLPS_Block data_ov035_021121f8;
+
+extern "C" BTA_File *data_ov065_0211d16c[2] = {
+    &data_ov035_0211208c,
+    &data_ov035_021120a4,
+};
+extern "C" SharedFilePtr *data_ov065_0211d194[1] = {
+    &gCtMechaObj04lModelFile,
+};
+extern "C" SharedFilePtr *data_ov065_0211d198[1] = {
+    &gCtMechaObj04lCollisionFile,
+};
+extern "C" CLPS_Block *data_ov065_0211d19c[4] = {
+    &data_ov035_021120d8,
+    (CLPS_Block *)&gCtMechaObj04sModelFile,
+    (CLPS_Block *)&gCtMechaObj04sCollisionFile,
+    &data_ov035_021121f8,
+};

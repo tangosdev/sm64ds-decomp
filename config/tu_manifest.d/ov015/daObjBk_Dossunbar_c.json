@@ -28,6 +28,11 @@
       "end": "0x0211341c"
     },
     {
+      "name": ".data",
+      "start": "0x02114534",
+      "end": "0x0211454c"
+    },
+    {
       "name": ".bss",
       "start": "0x0211499c",
       "end": "0x02114a5c"
@@ -210,7 +215,29 @@
       "ordinal": 24
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov015_02114534",
+      "address": "0x02114534",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "model-column base; word is the file handle at 0x021149a4"
+    },
+    {
+      "symbol": "data_ov015_02114538",
+      "address": "0x02114538",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision-column base; word is the file handle at 0x021149ac"
+    },
+    {
+      "symbol": "data_ov015_0211453c",
+      "address": "0x0211453c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "first-row clps pointer plus the second resource row; ends before g_profile_BK_DOSSUNBAR_S"
+    }
+  ],
   "bss": [
     {
       "symbol": "gBkDossunbarLCollisionFile",
@@ -290,7 +317,9 @@
     "THE FOURTEEN STATE FUNCTIONS KEEP THEIR ADDRESS-DERIVED NAMES ON PURPOSE. Nothing in the cartridge names them, so renaming them would be a name-recovery act rather than a codegen one, and each of the thirteen state bodies is the target of a pointer-to-member record in UNOWNED .data that dsd resolves by symbol NAME: a rename that does not reach config/arm9/overlays/ov015/symbols.txt in the same commit links that record as zero and no byte gate at any stage reports it. Converting them to real members is the next concrete improvement for this class, not part of this promotion.",
     "DESTRUCTOR. include/daObjBk_Dossunbar_c.h gives the destructor an INLINE empty body and declares it ahead of the out-of-line virtuals, which is what makes mwcc emit D1 at 0x02111ba0 then D0 at 0x02111be4 and no D2 -- exactly what the cartridge carries. That inline body is also why this TU emits the eleven vague-linkage RTTI records licensed in compiler_only_output. Writing the destructor out of line instead flips the pair to D0-before-D1 and adds a homeless D2. The two legacy destructor shards had to leave the build in this same change, because an inline body in the header redefines what an enrolled out-of-line shard defines and that is a COMPILE error, not a link one.",
     "tools/tubuild.py verify reports 23/25 and criterion relocation_destinations_verified FAIL. Both DIFF lines are the single message `_ZTV19daObjBk_Dossunbar_c: unexpected reloc type=2 addend=0` on the two factories, and criterion every_declared_function_bytes_match is PASS -- no byte differs. That message comes from tools/objisolate.py's one-function isolation route, whose externalise branch accepts only addend >= 8 while its consolidated route accepts addend 0 as the ROM-symbol convention. Measured at this revision, the already-promoted ov015 siblings daObjBkBillboard_c (6/7) and daObjBk_Rotebar_c (6/7) report the identical message on their own factories, so it is a property of that route and not of this class. What settles it is the production route: tools/tubuild.py linkcheck links all 25 functions into the real ov015 range with 0 differing bytes, 106/106 modules exact, 0 new dsd check symbols errors against the baseline control, and a linked ROM byte-identical to the stock control.",
-    "The local DossunbarModelFile/DossunbarCollisionFile names are inferred eight-byte ABI views of the existing resource families. Exact constructor/destructor aliases target the original arm9 methods. Existing .text bodies and resource-table column relocation identities remain unchanged; the address-named state bodies and their ROM-owned descriptor constants remain explicit partial reconstruction."
+    "The local DossunbarModelFile/DossunbarCollisionFile names are inferred eight-byte ABI views of the existing resource families. Exact constructor/destructor aliases target the original arm9 methods. Existing .text bodies and resource-table column relocation identities remain unchanged; the address-named state bodies and their ROM-owned descriptor constants remain explicit partial reconstruction.",
+    "TEXT ONLY. No delink entry in ov015 owns a .data or .bss section, so this entry claims .text and nothing else. The fourteen pointer-to-member constants at 0x021144a0, the two .bss dispatch tables at 0x021149ec and 0x02114a24 and the four SharedFilePtr objects are declared extern in the TU and defined nowhere; they are built by __sinit_ov015_02113048, which is a separate .init shard and not part of this TU.",
+    "The column table at 0x02114534..0x0211454c and the zero-filled handles, registration nodes, and state tables at 0x0211499c..0x02114a5c are defined in this file. __sinit_ov015_02113048 still constructs the handles and copies the state records. g_profile_BK_DOSSUNBAR_S and g_profile_BK_DOSSUNBAR_L at 0x0211454c stay the ROM copy. production_mode is intact-object so the repeated .data and .bss sections can be placed at those addresses."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -399,6 +428,13 @@
           "section": ".ctor",
           "start": "0x02113418",
           "end": "0x0211341c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02114534",
+          "end": "0x0211454c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1104,6 +1140,67 @@
       "addend": 0,
       "target_module": "ov015",
       "target_address": "0x021144e8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114534",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkDossunbarSModelFile",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x021149a4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114538",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkDossunbarSCollisionFile",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x021149ac"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211453c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov015_021135b4",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x021135b4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114540",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkDossunbarLModelFile",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x021149b4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114544",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkDossunbarLCollisionFile",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x0211499c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114548",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov015_02113634",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x02113634"
     }
-  ]
+  ],
+  "rodata": []
 }

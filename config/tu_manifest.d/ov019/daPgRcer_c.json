@@ -4,6 +4,7 @@
   "source": "src/game/actors/d_a_pg_rcer.cpp",
   "promoted_source": "src/game/actors/d_a_pg_rcer.cpp",
   "status": "promoted",
+  "production_mode": "intact-object",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x21111a0..0x211261c, 30 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -15,6 +16,16 @@
       "name": ".text",
       "start": "0x021111a0",
       "end": "0x0211261c"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0211277c",
+      "end": "0x021127a4"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02113460",
+      "end": "0x021135cc"
     }
   ],
   "functions": [
@@ -230,7 +241,322 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "rodata": [
+    {
+      "symbol": "data_ov019_0211277c",
+      "address": "0x0211277c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three BTP handles; InitResources and CleanupResources walk this table"
+    },
+    {
+      "symbol": "data_ov019_02112788",
+      "address": "0x02112788",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "seven BCA handles; InitResources and CleanupResources walk this table"
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "gPenguinJumpEdAnimationFile",
+      "address": "0x02113460",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; __sinit_ov019_021127a4 writes the file id"
+    },
+    {
+      "symbol": "gOV019PenguinWait1TextureSequenceFile",
+      "address": "0x02113468",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; __sinit_ov019_021127a4 writes the file id"
+    },
+    {
+      "symbol": "gOV019PenguinWait1AnimationFile",
+      "address": "0x02113470",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; __sinit_ov019_021127a4 writes the file id"
+    },
+    {
+      "symbol": "gPenguinJumpStAnimationFile",
+      "address": "0x02113478",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; __sinit_ov019_021127a4 writes the file id"
+    },
+    {
+      "symbol": "gPenguinDiveAnimationFile",
+      "address": "0x02113480",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; __sinit_ov019_021127a4 writes the file id"
+    },
+    {
+      "symbol": "gPenguinSliderAnimationFile",
+      "address": "0x02113488",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; __sinit_ov019_021127a4 writes the file id"
+    },
+    {
+      "symbol": "gPenguinStandUpAnimationFile",
+      "address": "0x02113490",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; __sinit_ov019_021127a4 writes the file id"
+    },
+    {
+      "symbol": "data_ov019_02113498",
+      "address": "0x02113498",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; __sinit_ov019_021127a4 writes the file id"
+    },
+    {
+      "symbol": "gOV019PenguinWalkAnimationFile",
+      "address": "0x021134a0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; __sinit_ov019_021127a4 writes the file id"
+    },
+    {
+      "symbol": "gOV019PenguinAngryTextureSequenceFile",
+      "address": "0x021134a8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; __sinit_ov019_021127a4 writes the file id"
+    },
+    {
+      "symbol": "gPenguinSliderTextureSequenceFile",
+      "address": "0x021134b0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; __sinit_ov019_021127a4 writes the file id"
+    },
+    {
+      "symbol": "data_ov019_021134b8",
+      "address": "0x021134b8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor node __sinit_ov019_021127a4 registers; image stays zero"
+    },
+    {
+      "symbol": "data_ov019_021134c4",
+      "address": "0x021134c4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor node __sinit_ov019_021127a4 registers; image stays zero"
+    },
+    {
+      "symbol": "data_ov019_021134d0",
+      "address": "0x021134d0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor node __sinit_ov019_021127a4 registers; image stays zero"
+    },
+    {
+      "symbol": "data_ov019_021134dc",
+      "address": "0x021134dc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor node __sinit_ov019_021127a4 registers; image stays zero"
+    },
+    {
+      "symbol": "data_ov019_021134e8",
+      "address": "0x021134e8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "finish volume; __sinit_ov019_021127a4 stores the coordinates"
+    },
+    {
+      "symbol": "data_ov019_021134f4",
+      "address": "0x021134f4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor node __sinit_ov019_021127a4 registers; image stays zero"
+    },
+    {
+      "symbol": "data_ov019_02113500",
+      "address": "0x02113500",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor node __sinit_ov019_021127a4 registers; image stays zero"
+    },
+    {
+      "symbol": "data_ov019_0211350c",
+      "address": "0x0211350c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor node __sinit_ov019_021127a4 registers; image stays zero"
+    },
+    {
+      "symbol": "data_ov019_02113518",
+      "address": "0x02113518",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor node __sinit_ov019_021127a4 registers; image stays zero"
+    },
+    {
+      "symbol": "data_ov019_02113524",
+      "address": "0x02113524",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor node __sinit_ov019_021127a4 registers; image stays zero"
+    },
+    {
+      "symbol": "data_ov019_02113530",
+      "address": "0x02113530",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "first word of the destructor node for the race-start handle"
+    },
+    {
+      "symbol": "data_ov019_02113534",
+      "address": "0x02113534",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "rest of that destructor node; symbols.txt splits it from 0x02113530"
+    },
+    {
+      "symbol": "data_ov019_0211353c",
+      "address": "0x0211353c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "cheat volume; __sinit_ov019_021127a4 stores the coordinates"
+    },
+    {
+      "symbol": "data_ov019_02113548",
+      "address": "0x02113548",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor node __sinit_ov019_021127a4 registers; image stays zero"
+    },
+    {
+      "symbol": "data_ov019_02113554",
+      "address": "0x02113554",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor node __sinit_ov019_021127a4 registers; image stays zero"
+    },
+    {
+      "symbol": "data_ov019_02113560",
+      "address": "0x02113560",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor node __sinit_ov019_021127a4 registers; image stays zero"
+    },
+    {
+      "symbol": "data_ov019_0211356c",
+      "address": "0x0211356c",
+      "size": "0x60",
+      "binding": "STB_GLOBAL",
+      "evidence": "six state rows; __sinit_ov019_021127a4 copies the PMF words"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x0211277c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gOV019PenguinAngryTextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x021134a8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02112780",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPenguinSliderTextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x021134b0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02112784",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gOV019PenguinWait1TextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x02113468"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02112788",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gOV019PenguinWait1AnimationFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x02113470"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211278c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gOV019PenguinWalkAnimationFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x021134a0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02112790",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPenguinJumpStAnimationFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x02113478"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02112794",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPenguinJumpEdAnimationFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x02113460"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02112798",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPenguinDiveAnimationFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x02113480"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211279c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPenguinSliderAnimationFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x02113488"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021127a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPenguinStandUpAnimationFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x02113490"
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZN7Vector3D1Ev",
@@ -408,6 +734,267 @@
         "_ZTS8dActor_c",
         "_ZTV10daPgRcer_c"
       ]
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov019-daPgRcer_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x021111a0",
+        "end": "0x0211261c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x021111a0",
+          "end": "0x0211261c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0211277c",
+          "end": "0x021127a4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02113460",
+          "end": "0x021135cc",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 60
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".rodata",
+            "original": [
+              43,
+              46
+            ],
+            "desired": [
+              43,
+              46
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              15,
+              16,
+              17,
+              18,
+              19,
+              23,
+              26,
+              27,
+              28,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              40,
+              41,
+              42,
+              48
+            ],
+            "desired": [
+              11,
+              9,
+              6,
+              7,
+              10,
+              18,
+              16,
+              17,
+              15,
+              8,
+              12,
+              32,
+              31,
+              27,
+              33,
+              34,
+              36,
+              37,
+              40,
+              41,
+              42,
+              5,
+              19,
+              23,
+              26,
+              28,
+              35,
+              48
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                15,
+                16,
+                17,
+                18,
+                19,
+                23,
+                26,
+                27,
+                28,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                40,
+                41,
+                42,
+                48
+              ],
+              "desired": [
+                11,
+                9,
+                6,
+                7,
+                10,
+                18,
+                16,
+                17,
+                15,
+                8,
+                12,
+                32,
+                31,
+                27,
+                33,
+                34,
+                36,
+                37,
+                40,
+                41,
+                42,
+                5,
+                19,
+                23,
+                26,
+                28,
+                35,
+                48
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                15,
+                16,
+                17,
+                18,
+                19,
+                23,
+                26,
+                27,
+                28,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                40,
+                41,
+                42,
+                48
+              ]
+            }
+          ],
+          "symbolIndices": 28,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   }
 }

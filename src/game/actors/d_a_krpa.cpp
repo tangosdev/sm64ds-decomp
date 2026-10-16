@@ -120,7 +120,6 @@ u32 daKrpaFrameController::func_ov070_02121a64()
  * home their class-typed values and do not reproduce the retail callers. */
 struct M48 { int w[12]; };
 struct KrpaModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     KrpaModelFilePtr(u32 fileID);
     ~KrpaModelFilePtr();

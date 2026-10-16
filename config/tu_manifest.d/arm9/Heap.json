@@ -16,6 +16,11 @@
       "name": ".data",
       "start": "0x02099d28",
       "end": "0x02099e18"
+    },
+    {
+      "name": ".bss",
+      "start": "0x020a0ea8",
+      "end": "0x020a0eac"
     }
   ],
   "functions": [
@@ -577,7 +582,15 @@
       "evidence": "two-word ABI preamble (offset-to-top 0, typeinfo _ZTIN5mHeap9ExpHeap_tE 0x02099cec) + sixteen slots: D1 D0, then the same fourteen V* overrides in Heap_t's slot order; public address point 0x02099dd8"
     }
   ],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_020a0ea8",
+      "address": "0x020a0ea8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Scratch Heap* that SetupSolidHeapAsDefault saves and restores. The arm9 module image ends at bss_start 0x0209b000, so the stored word is zero."
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZN5mHeap11SolidHeap_tD2Ev",
@@ -1123,6 +1136,12 @@
           "end": "0x02099e18",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x020a0ea8",
+          "end": "0x020a0eac",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
@@ -1148,6 +1167,15 @@
               14,
               16,
               18
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
             ]
           }
         ],

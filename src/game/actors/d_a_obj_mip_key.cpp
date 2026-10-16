@@ -54,7 +54,6 @@ extern Matrix4x3 data_020a0e68;
 /* MIPS's model-file handle, owned and constructed by d_a_mip.cpp's static
  * init. Same TU-local wrapper spelling as the owning TU. */
 struct DaMipModelFile : SharedFilePtr {
-    u32 words[2];
 
     DaMipModelFile(u32 fileID);
     ~DaMipModelFile();

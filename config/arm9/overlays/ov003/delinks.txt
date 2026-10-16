@@ -6,6 +6,8 @@
 src/game/stages/d_s_title.cpp:
     complete
     .text start:0x020ad660 end:0x020addfc
+    .rodata start:0x020b117c end:0x020b1180
+    .data start:0x020b13a8 end:0x020b13b4
 
 src/game/stages/d_s_star_sel_methods.cpp:
     complete
@@ -14,3 +16,4 @@ src/game/stages/d_s_star_sel_methods.cpp:
 src/game/stages/d_s_game_over.cpp:
     complete
     .text start:0x020b0580 end:0x020b117c
+    .data start:0x020b17e4 end:0x020b18a0

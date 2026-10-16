@@ -41,7 +41,7 @@
  *   but the cartridge records no name for it, and coining one is a rename PR
  *   rather than this one. It is written here as the member it is, under its
  *   address name.
- * - SharedFilePtr has no recovered layout, so the BCA_File handle each SetAnim
+ * - SharedFilePtr is the 8-byte handle, so the BCA_File handle each SetAnim
  *   call passes is still read as the raw word at +4.
  * - the three file handles at 0x0211c9bc/0x0211c9c4/0x0211c9cc are defined at
  *   the end of this file. Their constructors are not written out here.
@@ -62,14 +62,12 @@ enum daObjShell_c_AssetId {
  * animations use SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim.
  * The spellings are local. The manifest aliases them to those ROM symbols. */
 struct ShellModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     ShellModelFilePtr(u32 fileID);
     ~ShellModelFilePtr();
 };
 
 struct ShellAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
 
     ShellAnimationFilePtr(u32 fileID);
     ~ShellAnimationFilePtr();

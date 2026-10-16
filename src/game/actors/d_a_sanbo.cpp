@@ -102,7 +102,6 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
  * pair (func_02017acc / func_02017ab4), spelled through a declared-only
  * subclass so the static initializer names the real entry points. */
 struct SanboModelFilePtr : SharedFilePtr {
-    u32 words[2];
     SanboModelFilePtr(u32 fileID);
     ~SanboModelFilePtr();
 };

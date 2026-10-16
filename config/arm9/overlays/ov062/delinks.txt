@@ -11,6 +11,7 @@ src/game/actors/d_a_holhei.cpp:
 src/game/actors/d_a_nknk.cpp:
     complete
     .text start:0x021174cc end:0x0211975c
+    .rodata start:0x0211ced8 end:0x0211cf0c
     .init start:0x0211d2d8 end:0x0211d4a0
     .ctor start:0x0211d8d0 end:0x0211d8d4
     .bss start:0x0211df28 end:0x0211e004

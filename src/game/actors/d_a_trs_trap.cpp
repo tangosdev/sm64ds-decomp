@@ -42,8 +42,7 @@
  *   carries Fix12<int> by value (wall 6az), so the method form size-DIFFs.
  * - func_020393d4/func_020393c4 install the BeforeClsn/unk_1c callback words;
  *   dBgW carries no setter, and dBgW.h itself blesses this spelling.
- * - SharedFilePtr+4 is the loaded KCL file: the handle's layout is still
- *   unrecovered (SharedFilePtr.h), and the ROM re-reads the word rather than
+ * - filePtr is the loaded KCL. The ROM re-reads that word rather than
  *   keeping dBgW_Kc::LoadFile's return.
  * - The dispatch table is a pointer-to-member of daTrsTrap_c itself. An
  *   earlier draft bound it to an opaque forward-declared class on the theory
@@ -89,8 +88,10 @@ enum d_a_trs_trap_AssetId {
    collision-mesh handle, the CLPS block, and the bookshelf's six book-switch
    spawn offsets (x/y pairs). Symbols keep their data_ov063_* names; only the
    entry types are recovered. */
-extern SharedFilePtr *data_ov063_0211e27c[];
-extern SharedFilePtr *data_ov063_0211e28c[];
+extern "C" {
+extern SharedFilePtr *const data_ov063_0211e27c[];
+extern SharedFilePtr *const data_ov063_0211e28c[];
+}
 extern CLPS_Block *data_ov063_0211e9e8[];
 extern s32 data_ov063_0211e9f8[];
 
@@ -103,14 +104,12 @@ extern PMF data_ov063_0211ef38[];
  * collision files func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct TrsTrapModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     TrsTrapModelFilePtr(u32 fileID);
     ~TrsTrapModelFilePtr();
 };
 
 struct TrsTrapCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     TrsTrapCollisionFilePtr(u32 fileID);
     ~TrsTrapCollisionFilePtr();
@@ -611,6 +610,19 @@ TrsTrapCollisionFilePtr gThHondanaCollisionFile(ASSET_TH_HONDANA_KCL);
 TrsTrapCollisionFilePtr gThKaidanCollisionFile(ASSET_TH_KAIDAN_KCL);
 TrsTrapCollisionFilePtr gThMeryGoCollisionFile(ASSET_TH_MERY_GO_KCL);
 TrsTrapCollisionFilePtr gThTrapCollisionFile(ASSET_TH_TRAP_KCL);
+
+extern "C" SharedFilePtr *const data_ov063_0211e27c[4] = {
+    &gThKaidanModelFile,
+    &gThTrapModelFile,
+    &gThHondanaModelFile,
+    &gThMeryGoModelFile,
+};
+extern "C" SharedFilePtr *const data_ov063_0211e28c[4] = {
+    &gThKaidanCollisionFile,
+    &gThTrapCollisionFile,
+    &gThHondanaCollisionFile,
+    &gThMeryGoCollisionFile,
+};
 
 PMF data_ov063_0211ef38[] = {
     &daTrsTrap_c::func_ov063_0211cc18,

@@ -44,21 +44,19 @@ enum {
  * func_02017ab4; animation handles construct through SharedFilePtr::Construct
  * and destroy through SharedFilePtr_Destruct_Anim. The manifest aliases those
  * undefined members onto the ROM symbols. words[1] is the BMD or BCA the load
- * just filled in; SharedFilePtr itself has no fields.
+ * just filled in; SharedFilePtr is the 8-byte handle.
  *   02114968  body BMD   sinit 0x9c02, Model::LoadFile, mModelAnim
  *   02114978  link BMD   sinit 0x9c01, Model::LoadFile, mLinkModels
  *   02114980  idle BCA   sinit 0x9c04, dExtFrameCtrl_c::LoadFile
  *   02114970  lunge BCA  sinit 0x9c03, dExtFrameCtrl_c::LoadFile
  */
 struct WanwanModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     WanwanModelFilePtr(u32 fileID);
     ~WanwanModelFilePtr();
 };
 
 struct WanwanAnimationFileHandle : SharedFilePtr {
-    u32 words[2];
 
     WanwanAnimationFileHandle(u32 fileID);
     ~WanwanAnimationFileHandle();
@@ -132,7 +130,7 @@ extern "C" int func_0201267c(int id, void *pos, int unused);
 /* SetAnim takes Fix12<int> by value. The scalar extern stays. */
 #define SetChompAnim(self, bca) \
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj( \
-        &(self)->mModelAnim, (BCA_File *)(bca).words[1], 0, 0x1000, 0)
+        &(self)->mModelAnim, (BCA_File *)(bca).filePtr, 0, 0x1000, 0)
 
 // @symbol daWanwan_c_classInit
 extern "C" daWanwan_c *daWanwan_c_classInit()
@@ -153,7 +151,7 @@ int daWanwan_c::InitResources()
         int i = 0;
         Model *p = mLinkModels;
         do {
-            p->SetFile((BMD_File *)data_ov014_02114978.words[1], 1, 1);
+            p->SetFile((BMD_File *)data_ov014_02114978.filePtr, 1, 1);
             i = i + 1;
             p++;
         } while (i < 7);

@@ -169,6 +169,11 @@ def prepare_intact_link_verification(entries, jobs=4):
     baseline's symbol-error inventory and each vtable address-point mapping. Automatic
     intact admission refuses storage aliases until their baseline bootstrap is
     non-circular, so refreshing this control never depends on the control being kept.
+
+    ``moduleSetSha256`` digests the built module binaries, so every link that
+    reproduces the cartridge has the same one. Widening a manifest's ``sections``
+    or moving a range from the gap object into its source leaves it unchanged as
+    long as the ROM stays identical; other TUs' proofs do not need regenerating.
     """
     admitted_errors = set()
     admitted_roms = set()

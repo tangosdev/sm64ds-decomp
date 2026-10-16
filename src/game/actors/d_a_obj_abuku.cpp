@@ -31,8 +31,8 @@
  * - AbukuVector3 POD + reinterpret_cast: a real Vector3 local emits
  *   vague-linkage ~Vector3 into this text-only TU.
  * - g_profile_OBJ_ABUKU keeps TU-local AbukuSpawnInfo; no shared 0x1c
- *   actor-profile struct exists. The manifest proves the descriptor,
- *   then deadstrip-discards it (canonical home outside .text).
+ *   actor-profile struct exists. The TU claims its .data storage
+ *   (0x02108940..0x0210895c) and builds it from this source.
  * - mSwayAngle volatile-u16 reload + >> 4, and the actorID == 0xbf
  *   int-then-if, kept in matched form.
  */

@@ -28,6 +28,11 @@
       "end": "0x0211e708"
     },
     {
+      "name": ".data",
+      "start": "0x0211eb10",
+      "end": "0x0211eb1c"
+    },
+    {
       "name": ".bss",
       "start": "0x0211ef58",
       "end": "0x0211ef80"
@@ -70,7 +75,15 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov063_0211eb10",
+      "address": "0x0211eb10",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "ResourceDescriptor: model gThDownBModelFile, collision gThDownBCollisionFile, CLPS data_ov063_0211ec98"
+    }
+  ],
   "bss": [
     {
       "symbol": "gThDownBCollisionFile",
@@ -234,6 +247,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0211eb10",
+          "end": "0x0211eb1c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x0211ef58",
           "end": "0x0211ef80",
@@ -242,7 +262,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 11
+          "LICENSED": 12
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -253,66 +273,47 @@
           {
             "section": ".init",
             "original": [
-              46
+              48
             ],
             "desired": [
-              46
+              48
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              44
+              46
             ],
             "desired": [
-              44
+              46
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              23
+            ],
+            "desired": [
+              23
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              6,
-              22,
-              23
+              7,
+              8,
+              16,
+              25
             ],
             "desired": [
-              6,
-              5,
-              22,
-              23
+              7,
+              8,
+              16,
+              25
             ]
           }
         ],
-        "objisolate": {
-          "reordered": [
-            {
-              "section": ".bss",
-              "original": [
-                5,
-                6,
-                22,
-                23
-              ],
-              "desired": [
-                6,
-                5,
-                22,
-                23
-              ],
-              "slots": [
-                5,
-                6,
-                22,
-                23
-              ]
-            }
-          ],
-          "symbolIndices": 4,
-          "sectionLinks": 0,
-          "sectionInfos": 0,
-          "error": null
-        },
+        "objisolate": null,
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -651,6 +652,36 @@
       "addend": 0,
       "target_module": "ov063",
       "target_address": "0x0211ef74"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211eb10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThDownBModelFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ef60"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211eb14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThDownBCollisionFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ef58"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211eb18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov063_0211ec98",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ec98"
     },
     {
       "section": ".ctor",

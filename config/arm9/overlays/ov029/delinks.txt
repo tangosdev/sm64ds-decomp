@@ -49,8 +49,10 @@ src/game/actors/d_a_obj_wc_obj07.cpp:
 src/game/actors/d_a_obj_wc_mizu.cpp:
     complete
     .text start:0x021121a4 end:0x02112630
+    .rodata start:0x0211299c end:0x021129b4
     .init start:0x02112d90 end:0x02112dfc
     .ctor start:0x02112e80 end:0x02112e84
+    .data start:0x02112f88 end:0x0211300c
     .bss start:0x021142fc end:0x02114324
 
 src/game/actors/d_a_obj_wc_obj04.cpp:
@@ -58,5 +60,6 @@ src/game/actors/d_a_obj_wc_obj04.cpp:
     .text start:0x02112630 end:0x0211299c
     .init start:0x02112dfc end:0x02112e68
     .ctor start:0x02112e84 end:0x02112e88
+    .data start:0x0211304c end:0x0211306c
     .bss start:0x02114324 end:0x0211434c
 

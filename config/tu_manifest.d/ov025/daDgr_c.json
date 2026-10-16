@@ -27,6 +27,11 @@
       "end": "0x02112b1c"
     },
     {
+      "name": ".data",
+      "start": "0x02112c28",
+      "end": "0x02112c48"
+    },
+    {
       "name": ".bss",
       "start": "0x02113a60",
       "end": "0x02113a88"
@@ -104,7 +109,22 @@
       "ordinal": 9
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov025_02112c28",
+      "address": "0x02112c28",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS tag, header, one entry, and the first twelve 0xff bytes"
+    },
+    {
+      "symbol": "data_ov025_02112c44",
+      "address": "0x02112c44",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "last four 0xff bytes; symbols.txt names this address"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov025_02113a60",
@@ -261,6 +281,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02112c28",
+          "end": "0x02112c48",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02113a60",
           "end": "0x02113a88",
@@ -269,7 +296,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 16
+          "LICENSED": 18
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -280,38 +307,71 @@
           {
             "section": ".init",
             "original": [
-              50
+              52
             ],
             "desired": [
-              50
+              52
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              48
+              50
             ],
             "desired": [
-              48
+              50
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              25
+            ],
+            "desired": [
+              25,
+              5
             ]
           },
           {
             "section": ".bss",
             "original": [
-              7,
-              8,
-              15,
-              22
+              6,
+              9,
+              16,
+              23
             ],
             "desired": [
-              7,
-              8,
-              15,
-              22
+              6,
+              9,
+              16,
+              23
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                25
+              ],
+              "desired": [
+                25,
+                5
+              ],
+              "slots": [
+                5,
+                25
+              ]
+            }
+          ],
+          "symbolIndices": 2,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,

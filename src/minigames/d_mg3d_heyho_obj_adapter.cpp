@@ -1,5 +1,5 @@
 //cpp
-/* dMg3DHeyhoObjAdapter_c translation unit, ov006 0x020c4048..0x020c6f8c, text only: the class's
+/* dMg3DHeyhoObjAdapter_c translation unit, ov006 0x020c4048..0x020c6f8c: the class's
    base constructor (its vtable and RTTI stay at their ROM homes in the module's unowned .data)
    plus 49 Heyho-minigame helper functions (see config/tu_manifest.d/ov006/dMg3DHeyhoObjAdapter_c.json).
    Function order is the reverse of the ROM: mwccarm 2004/b56 emits .text in reverse source order.
@@ -32,14 +32,12 @@
  * func_02017acc / func_02017ab4 and SharedFilePtr::Construct /
  * SharedFilePtr_Destruct_Anim. */
 struct HeyhoAdapterModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     HeyhoAdapterModelFilePtr(u32 fileID);
     ~HeyhoAdapterModelFilePtr();
 };
 
 struct HeyhoAdapterAnimationFileHandle : SharedFilePtr {
-    u32 words[2];
 
     HeyhoAdapterAnimationFileHandle(u32 fileID);
     ~HeyhoAdapterAnimationFileHandle();
@@ -2173,3 +2171,26 @@ dMg3DHeyhoObjAdapter_c::dMg3DHeyhoObjAdapter_c() : mCommand(0)
  * the model handle, then the animation handle. */
 HeyhoAdapterModelFilePtr data_ov006_02140330(0x217);
 HeyhoAdapterAnimationFileHandle data_ov006_02140338(0x218);
+
+/* Each record is a function address, then zero. 0x0213af70 is the next
+ * symbol. mwcc emits these eight in a permutation of source order; this
+ * order is the one that places them at 0x0213af30 upward. */
+typedef struct { int w[2]; } Pair;
+extern "C" {
+void Heyho_Motion2(char *c);
+void Heyho_Motion3(char *c);
+void Heyho_Motion4(char *c);
+void Heyho_Motion5(char *c);
+void Heyho_Motion6(char *c);
+void Heyho_Motion7(char *c);
+void Heyho_Motion8(char *c);
+void Heyho_Motion9(char *c);
+Pair pmf_Heyho_Motion8 = { (int)&Heyho_Motion8, 0 };
+Pair pmf_Heyho_Motion7 = { (int)&Heyho_Motion7, 0 };
+Pair pmf_Heyho_Motion3 = { (int)&Heyho_Motion3, 0 };
+Pair pmf_Heyho_Motion9 = { (int)&Heyho_Motion9, 0 };
+Pair pmf_Heyho_Motion4 = { (int)&Heyho_Motion4, 0 };
+Pair pmf_Heyho_Motion6 = { (int)&Heyho_Motion6, 0 };
+Pair pmf_Heyho_Motion5 = { (int)&Heyho_Motion5, 0 };
+Pair pmf_Heyho_Motion2 = { (int)&Heyho_Motion2, 0 };
+}

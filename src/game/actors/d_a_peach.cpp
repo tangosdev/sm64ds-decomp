@@ -66,18 +66,36 @@ extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
 /* model / animation */
 extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *self, void *bca, int frame, int speed, unsigned int flags);
 
-/* ov085 statics. data_ov085_0212f280 and data_ov085_021304f4 keep
- * include/decl_common.h's spelling, so this file adds no new reading of
- * either symbol. */
-extern int data_ov085_0212f280[];      /* the seven animation files */
-extern char data_ov085_021304f4;       /* the model file */
-extern void *data_ov085_021304bc[];
-extern int data_ov085_021304c4[];
-extern void *data_ov085_021304d4[];
-extern int data_ov085_021304e4[];
-extern void *data_ov085_021304ec[];
-extern daPeach_c::StateEntry data_ov085_0213055c[];
+/* The seven animation-file pointers stay a ROM .data object. This file
+ * does not construct them. */
+extern int data_ov085_0212f280[];
 }
+
+/* Peach's file handles. The model handle is constructed with file id 0x3f3
+ * and registers func_02017ab4; each animation handle is a SharedFilePtr
+ * constructed with its file id and registers SharedFilePtr_Destruct_Anim.
+ * Eight bytes: fileID, refCount, and filePtr. */
+struct DaPeachModelFile : SharedFilePtr {
+
+    DaPeachModelFile(u32 fileID);
+    ~DaPeachModelFile();
+};
+
+struct DaPeachAnimationFilePtr : SharedFilePtr {
+
+    DaPeachAnimationFilePtr(u32 fileID);
+    ~DaPeachAnimationFilePtr();
+};
+
+extern DaPeachModelFile data_ov085_021304f4;
+extern DaPeachAnimationFilePtr data_ov085_021304bc;
+extern DaPeachAnimationFilePtr data_ov085_021304c4;
+extern DaPeachAnimationFilePtr gPeachJumpEndAnimationFile;
+extern DaPeachAnimationFilePtr data_ov085_021304d4;
+extern DaPeachAnimationFilePtr gPeachJumpLoopAnimationFile;
+extern DaPeachAnimationFilePtr data_ov085_021304e4;
+extern DaPeachAnimationFilePtr data_ov085_021304ec;
+extern daPeach_c::StateEntry data_ov085_0213055c[];
 
 #pragma defer_codegen off
 
@@ -220,7 +238,7 @@ int daPeach_c::InitState0()
 // @symbol _ZN9daPeach_c6State0Ev
 int daPeach_c::State0()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&mModelAnim, data_ov085_021304ec[1], 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&mModelAnim, ((void **)&data_ov085_021304ec)[1], 0, 0x1000, 0);
     ((dExtFrameCtrl_c *)&mModelAnim)->SetFlags(0x40000000);
     mHorzSpeed = 0x4000;
     mVertSpeed = 0xa000;
@@ -237,7 +255,7 @@ int daPeach_c::State2()
 // @symbol _ZN9daPeach_c10InitState2Ev
 int daPeach_c::InitState2()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&mModelAnim, (void *)data_ov085_021304e4[1], 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&mModelAnim, ((void **)&data_ov085_021304e4)[1], 0, 0x1000, 0);
     mHorzSpeed = 0x4000;
     mStateValue = 3;
     return 1;
@@ -257,7 +275,7 @@ int daPeach_c::InitState4()
 // @symbol _ZN9daPeach_c6State1Ev
 int daPeach_c::State1()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&mModelAnim, (void *)data_ov085_021304c4[1], 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&mModelAnim, ((void **)&data_ov085_021304c4)[1], 0, 0x1000, 0);
     mHorzSpeed = 0x1800;
     mStateValue = 2;
     return 1;
@@ -299,7 +317,7 @@ int daPeach_c::State3()
 // @symbol _ZN9daPeach_c10InitState1Ev
 int daPeach_c::InitState1()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&mModelAnim, data_ov085_021304d4[1], 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&mModelAnim, ((void **)&data_ov085_021304d4)[1], 0, 0x1000, 0);
     ((dExtFrameCtrl_c *)&mModelAnim)->currFrame = 0;
     ((dExtFrameCtrl_c *)&mModelAnim)->Advance();
     mTalkState = 1;
@@ -330,7 +348,7 @@ int daPeach_c::InitState3()
 // @symbol _ZN9daPeach_c6State4Ev
 int daPeach_c::State4()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&mModelAnim, (void *)data_ov085_021304bc[1], 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&mModelAnim, ((void **)&data_ov085_021304bc)[1], 0, 0x1000, 0);
     mStateValue = 0;
     return 1;
 }
@@ -363,7 +381,7 @@ void daPeach_c::SetState(int state)
  * freed by index. Seven is the count the ROM's `blt` tests against. */
 int daPeach_c::CleanupResources()
 {
-    ((SharedFilePtr *)(&data_ov085_021304f4))->Release();
+    data_ov085_021304f4.Release();
     s32 i = 0;
     do {
         ((SharedFilePtr *)data_ov085_0212f280[i])->Release();
@@ -409,7 +427,7 @@ int daPeach_c::Behavior()
  * pointer type, it is not an int. */
 int daPeach_c::InitResources()
 {
-    void *f = Model::LoadFile(*(SharedFilePtr *)&data_ov085_021304f4);
+    void *f = Model::LoadFile(data_ov085_021304f4);
     ((ModelBase *)&mModelAnim)->SetFile((BMD_File *)f, 1, -1);
     for (int i = 0; i < 7; i++)
         dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov085_0212f280[i]);
@@ -435,3 +453,34 @@ extern "C" daPeach_c *daPeach_c_classInit(void)
 {
     return new daPeach_c();
 }
+
+/* Static-init globals (was the handwritten __sinit_ov085_0212f3a0 shard).
+ * Definition order is the retail initializer's order: the model handle
+ * (file 0x3f3), the seven animation handles (files 0x3f7, 0x3f9, 0x3f6,
+ * 0x3f0, 0x3f1, 0x3f2, 0x3f4), then the ten state member-pointers. */
+extern daPeach_c::StateFunc data_ov085_0212ff7c;
+extern daPeach_c::StateFunc data_ov085_0212ff64;
+extern daPeach_c::StateFunc data_ov085_0212ff44;
+extern daPeach_c::StateFunc data_ov085_0212ff6c;
+extern daPeach_c::StateFunc data_ov085_0212ff4c;
+extern daPeach_c::StateFunc data_ov085_0212ff74;
+extern daPeach_c::StateFunc data_ov085_0212ff54;
+extern daPeach_c::StateFunc data_ov085_0212ff5c;
+extern daPeach_c::StateFunc data_ov085_0212ff3c;
+extern daPeach_c::StateFunc data_ov085_0212ff34;
+
+DaPeachModelFile data_ov085_021304f4(0x3f3);
+DaPeachAnimationFilePtr data_ov085_021304d4(0x3f7);
+DaPeachAnimationFilePtr data_ov085_021304c4(0x3f9);
+DaPeachAnimationFilePtr data_ov085_021304e4(0x3f6);
+DaPeachAnimationFilePtr data_ov085_021304ec(0x3f0);
+DaPeachAnimationFilePtr gPeachJumpEndAnimationFile(0x3f1);
+DaPeachAnimationFilePtr gPeachJumpLoopAnimationFile(0x3f2);
+DaPeachAnimationFilePtr data_ov085_021304bc(0x3f4);
+daPeach_c::StateEntry data_ov085_0213055c[5] = {
+    {data_ov085_0212ff7c, data_ov085_0212ff64},
+    {data_ov085_0212ff44, data_ov085_0212ff6c},
+    {data_ov085_0212ff4c, data_ov085_0212ff74},
+    {data_ov085_0212ff54, data_ov085_0212ff5c},
+    {data_ov085_0212ff3c, data_ov085_0212ff34},
+};

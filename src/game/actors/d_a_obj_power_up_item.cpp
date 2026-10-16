@@ -111,8 +111,8 @@ extern int func_0200fccc(char* s, int r1);
 extern int _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j(
     char* self, dExtShadowModel_c* sm, struct Matrix4x3* m, int fix, int t, u32 f);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern void *gPFlowerCloseModelFile[];
-extern void *gPFlowerOpenModelFile[];
+extern SharedFilePtr gPFlowerCloseModelFile;
+extern SharedFilePtr gPFlowerOpenModelFile;
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
     void *self, void *act, Fix12i a, Fix12i b, unsigned int c2, unsigned int d);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
@@ -428,8 +428,8 @@ void daObjPowerUpItem_c::UpdateMatrices(){
 // @symbol _ZN18daObjPowerUpItem_c16CleanupResourcesEv
 s32 daObjPowerUpItem_c::CleanupResources()
 {
-    ((SharedFilePtr *)gPFlowerCloseModelFile)->Release();
-    ((SharedFilePtr *)gPFlowerOpenModelFile)->Release();
+    gPFlowerCloseModelFile.Release();
+    gPFlowerOpenModelFile.Release();
     return 1;
 }
 
@@ -475,11 +475,11 @@ int daObjPowerUpItem_c::InitResources()
 {
     struct Vector3 pos;
 
-    Model::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
-    Model::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
-    if (mOpenModel.SetFile((BMD_File*)gPFlowerOpenModelFile[1], 1, -1) == 0)
+    Model::LoadFile(gPFlowerCloseModelFile);
+    Model::LoadFile(gPFlowerOpenModelFile);
+    if (mOpenModel.SetFile((BMD_File*)gPFlowerOpenModelFile.filePtr, 1, -1) == 0)
         return 0;
-    if (mCloseModel.SetFile((BMD_File*)gPFlowerCloseModelFile[1], 1, -1) == 0)
+    if (mCloseModel.SetFile((BMD_File*)gPFlowerCloseModelFile.filePtr, 1, -1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)
         return 0;

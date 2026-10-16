@@ -56,8 +56,6 @@ struct Vec3;
    The constructor aliases func_02017acc and the destructor func_02017ab4 in
    this unit's manifest. */
 struct C1HikariModelFilePtr : SharedFilePtr {
-    int unk0;
-    void *file;
     C1HikariModelFilePtr(unsigned int id);
     ~C1HikariModelFilePtr();
 };
@@ -110,7 +108,7 @@ int daObjC1Hikari_c::InitResources()
         return 0;
     if (data_0209caa0[1] & 0x80000000)
         return 0;
-    mModel.SetFile((BMD_File *)gC1HikariModelFile.file, 1, 0x13);
+    mModel.SetFile((BMD_File *)gC1HikariModelFile.filePtr, 1, 0x13);
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         &mCylinder, this, (const Vector3 *)&mPosX, 0xf0000, 0x8c000, 0x4800002, 0);
     UpdateModelTransform();

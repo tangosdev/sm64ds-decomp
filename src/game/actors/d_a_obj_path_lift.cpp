@@ -77,14 +77,12 @@ extern SharedFilePtr data_ov002_0210d9f0;
  * are local; the handle constructors and destructors are the ROM
  * resource-family functions, aliased in the manifest. */
 struct PathLiftModelFile : SharedFilePtr {
-    u32 words[2];
 
     PathLiftModelFile(u32 fileID);
     ~PathLiftModelFile();
 };
 
 struct PathLiftCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     PathLiftCollisionFilePtr(u32 fileID);
     ~PathLiftCollisionFilePtr();

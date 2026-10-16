@@ -70,14 +70,12 @@ struct V3 {
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct PileModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     PileModelFilePtr(u32 fileID);
     ~PileModelFilePtr();
 };
 
 struct PileCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     PileCollisionFilePtr(u32 fileID);
     ~PileCollisionFilePtr();

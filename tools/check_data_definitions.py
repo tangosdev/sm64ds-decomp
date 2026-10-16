@@ -46,6 +46,11 @@ address symbol (`data_*`, `reg_*`). LOCAL symbols are excluded on purpose: a
 file-scope `static` is private to the translation unit, cannot collide with the
 gap object, and mwcc emits them with a `$N` suffix.
 
+One definition is not a second copy: when the source's own `complete` delinks
+entry claims the range that symbol's symbols.txt address falls in, that range
+was taken off the gap object in the same change, and the source is where the
+data now lives (see `enroll.storage_claims`). Any other definition is a defect.
+
 USAGE
 -----
     python tools/check_data_definitions.py           # gate; exit 1 on any hit
@@ -61,6 +66,9 @@ import argparse
 import io
 import pathlib
 import sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import enroll as E  # noqa: E402
 
 from elftools.elf.elffile import ELFFile
 
@@ -110,11 +118,38 @@ def label(obj):
     """The source this object came from, as a repo-relative path."""
     if obj.is_relative_to(SCRATCH):
         return obj.relative_to(SCRATCH).with_suffix("").as_posix()
+    if obj.is_relative_to(BUILD):
+        return "src/" + obj.relative_to(BUILD).with_suffix("").as_posix()
     return f"src/{obj.stem}"
 
 
+def claimed_definitions(config=None):
+    """``{source label: {names}}`` a source may define because its entry carved them.
+
+    A name qualifies when the source's ``complete`` delinks entry claims a
+    non-code range and the module's symbols.txt places that name inside it.
+    """
+    out = {}
+    for rel, claim in E.storage_claims(config or REPO / "config").items():
+        addresses = E.data_symbol_addresses(claim["module"])
+        spans = [span for span in claim["sections"].values() if span]
+        names = {name for name, addr in addresses.items()
+                 if any(lo <= addr < hi for lo, hi in spans)}
+        if names:
+            out[str(pathlib.PurePosixPath(rel).with_suffix(""))] = names
+    return out
+
+
 def audit():
-    return {label(o): syms for o in objects() if (syms := defined_rom_objects(o))}
+    licensed = claimed_definitions()
+    hits = {}
+    for obj in objects():
+        source = label(obj)
+        syms = [name for name in defined_rom_objects(obj)
+                if name not in licensed.get(source, ())]
+        if syms:
+            hits[source] = syms
+    return hits
 
 
 def main():

@@ -55,14 +55,12 @@ extern char data_ov027_02113108[];
  * member spellings onto the real ROM functions; each handle is the base plus
  * the two words that family actually stores. */
 struct SlIceBlockModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     SlIceBlockModelFilePtr(u32 fileID);
     ~SlIceBlockModelFilePtr();
 };
 
 struct SlIceBlockClsnFileHandle : SharedFilePtr {
-    u32 words[2];
 
     SlIceBlockClsnFileHandle(u32 fileID);
     ~SlIceBlockClsnFileHandle();
@@ -158,12 +156,12 @@ int daObjSlIceBlock_c::InitResources()
 
     int on = (actorID == 0x5d);
     if (on) {
-        if (mModel.SetFile((BMD_File *)data_ov027_02113be8.words[1], 1, -1) == 0)
+        if (mModel.SetFile((BMD_File *)data_ov027_02113be8.filePtr, 1, -1) == 0)
             return 0;
         UpdateModelPosAndRotY();
         UpdateClsnPosAndRot();
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            &mMeshCollider, *(int *)&data_ov027_02113be0.words[1], &mClsnMat,
+            &mMeshCollider, *(int *)&data_ov027_02113be0.filePtr, &mClsnMat,
             0x1000, mAngleY, data_ov027_02113108);
         func_020393d4((int *)&mMeshCollider,
             (int)&dBgW::UpdatePosWithVelocity);

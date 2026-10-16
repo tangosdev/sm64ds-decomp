@@ -21,6 +21,11 @@
       "end": "0x0213682c"
     },
     {
+      "name": ".rodata",
+      "start": "0x02136f68",
+      "end": "0x02136f80"
+    },
+    {
       "name": ".init",
       "start": "0x0213722c",
       "end": "0x021373b4"
@@ -29,6 +34,11 @@
       "name": ".ctor",
       "start": "0x021373b8",
       "end": "0x021373bc"
+    },
+    {
+      "name": ".data",
+      "start": "0x021375a4",
+      "end": "0x021375b0"
     },
     {
       "name": ".bss",
@@ -150,7 +160,31 @@
       "ordinal": 15
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov095_021375a4",
+      "address": "0x021375a4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three CLPS pointers, one per lift variant"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov095_02136f68",
+      "address": "0x02136f68",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three model handles, variant 0 then 1 then 2"
+    },
+    {
+      "symbol": "data_ov095_02136f74",
+      "address": "0x02136f74",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three collision handles, variant 0 then 1 then 2"
+    }
+  ],
   "bss": [
     {
       "symbol": "gThLiftModelFile",
@@ -355,6 +389,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x02136f68",
+          "end": "0x02136f80",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x0213722c",
           "end": "0x021373b4",
@@ -369,6 +410,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x021375a4",
+          "end": "0x021375b0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02137898",
           "end": "0x02137940",
@@ -377,7 +425,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 31
+          "LICENSED": 34
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -386,21 +434,41 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              69
+              18,
+              20
             ],
             "desired": [
-              69
+              20,
+              18
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              75
+            ],
+            "desired": [
+              75
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              67
+              73
             ],
             "desired": [
-              67
+              73
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              25
+            ],
+            "desired": [
+              25
             ]
           },
           {
@@ -408,89 +476,104 @@
             "original": [
               5,
               6,
+              7,
+              8,
               9,
-              10,
-              11,
               12,
-              18,
-              19,
               24,
-              25,
-              28,
-              29,
-              32
+              27,
+              30,
+              31,
+              34,
+              35,
+              38
             ],
             "desired": [
-              5,
-              11,
-              6,
+              7,
               9,
-              10,
               12,
-              29,
+              8,
+              6,
+              5,
               24,
-              25,
-              28,
-              19,
-              18,
-              32
+              34,
+              30,
+              31,
+              35,
+              27,
+              38
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
+              "section": ".rodata",
+              "original": [
+                18,
+                20
+              ],
+              "desired": [
+                20,
+                18
+              ],
+              "slots": [
+                18,
+                20
+              ]
+            },
+            {
               "section": ".bss",
               "original": [
                 5,
                 6,
+                7,
+                8,
                 9,
-                10,
-                11,
                 12,
-                18,
-                19,
                 24,
-                25,
-                28,
-                29,
-                32
+                27,
+                30,
+                31,
+                34,
+                35,
+                38
               ],
               "desired": [
-                5,
-                11,
-                6,
+                7,
                 9,
-                10,
                 12,
-                29,
+                8,
+                6,
+                5,
                 24,
-                25,
-                28,
-                19,
-                18,
-                32
+                34,
+                30,
+                31,
+                35,
+                27,
+                38
               ],
               "slots": [
                 5,
                 6,
+                7,
+                8,
                 9,
-                10,
-                11,
                 12,
-                18,
-                19,
                 24,
-                25,
-                28,
-                29,
-                32
+                27,
+                30,
+                31,
+                34,
+                35,
+                38
               ]
             }
           ],
-          "symbolIndices": 13,
+          "symbolIndices": 15,
           "sectionLinks": 0,
-          "sectionInfos": 0,
+          "sectionInfos": 2,
           "error": null
         },
         "errors": null
@@ -757,6 +840,96 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x02136f68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThLiftModelFile",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x02137898"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02136f6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gCvUdLiftModelFile",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x021378a8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02136f70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gRcRift02ModelFile",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x021378c0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02136f74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThLiftCollisionFile",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x021378b0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02136f78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gCvUdLiftCollisionFile",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x021378b8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02136f7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gRcRift02CollisionFile",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x021378a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021375a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov063_0211ec38",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ec38"
+    },
+    {
+      "section": ".data",
+      "source": "0x021375a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113aa0",
+      "addend": 0,
+      "target_module": "overlays(9,14,15,18,20,21,22,25,26,27,29,32,36)",
+      "target_address": "0x02113aa0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021375ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov010_02112aa8",
+      "addend": 0,
+      "target_module": "overlays(10,18,22,24,26,29,32,35,36,45,56)",
+      "target_address": "0x02112aa8"
+    },
     {
       "section": ".ctor",
       "source": "0x021373b8",

@@ -29,6 +29,11 @@
       "end": "0x02112da8"
     },
     {
+      "name": ".data",
+      "start": "0x02113a9c",
+      "end": "0x02113aa8"
+    },
+    {
       "name": ".bss",
       "start": "0x02113ea0",
       "end": "0x02113eb4"
@@ -99,7 +104,22 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov026_02113a9c",
+      "address": "0x02113a9c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "x of the collision offset, one 20.12 word: 0. symbols.txt names the next word on its own"
+    },
+    {
+      "symbol": "data_ov026_02113aa0",
+      "address": "0x02113aa0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "y and z of the collision offset, 20.12 words 0x28000 and 0"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov026_02113ea0",
@@ -226,6 +246,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02113a9c",
+          "end": "0x02113aa8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02113ea0",
           "end": "0x02113eb4",
@@ -234,7 +261,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 13
+          "LICENSED": 15
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -245,29 +272,40 @@
           {
             "section": ".init",
             "original": [
-              41
+              43
             ],
             "desired": [
-              41
+              43
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              39
+              41
             ],
             "desired": [
-              39
+              41
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              9
+            ],
+            "desired": [
+              5,
+              9
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
+              8,
               17
             ],
             "desired": [
-              5,
+              8,
               17
             ]
           }
@@ -423,7 +461,7 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@436",
+      "from": "@437",
       "to": "@127",
       "evidence": "mwcc numbers this registration node @422 per TU and the fleet already defines a global @422, so the scratch link would multiply-define it; the first target @108 collides with ov064 daObjFl_Amilift_c's global @108 on main, so it lands on @127"
     }

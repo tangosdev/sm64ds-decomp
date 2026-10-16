@@ -48,12 +48,10 @@ enum daDkk_c_AssetId {
  * destroys through SharedFilePtr_Destruct_Clsn. data_ov025_02113814 stays
  * the file table decl_common.h already declares. */
 struct DkkModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
     DkkModelFilePtr(unsigned int fileId);
     ~DkkModelFilePtr();
 };
 struct DkkClsnFileHandler : SharedFilePtr {
-    unsigned int words[2];
     DkkClsnFileHandler(unsigned int fileId);
     ~DkkClsnFileHandler();
 };

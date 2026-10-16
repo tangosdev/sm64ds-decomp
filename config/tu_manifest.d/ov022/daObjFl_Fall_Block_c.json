@@ -28,6 +28,11 @@
       "end": "0x02113118"
     },
     {
+      "name": ".data",
+      "start": "0x0211427c",
+      "end": "0x02114288"
+    },
+    {
       "name": ".bss",
       "start": "0x02114640",
       "end": "0x02114668"
@@ -70,7 +75,15 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov022_0211427c",
+      "address": "0x0211427c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "resource descriptor: model data_ov022_02114648, collision data_ov022_02114640, CLPS data_ov064_0211ba8c"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov022_02114640",
@@ -234,6 +247,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0211427c",
+          "end": "0x02114288",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02114640",
           "end": "0x02114668",
@@ -242,7 +262,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 11
+          "LICENSED": 12
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -253,66 +273,47 @@
           {
             "section": ".init",
             "original": [
-              46
+              48
             ],
             "desired": [
-              46
+              48
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              44
+              46
             ],
             "desired": [
-              44
+              46
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              23
+            ],
+            "desired": [
+              23
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              6,
-              22,
-              23
+              7,
+              8,
+              16,
+              25
             ],
             "desired": [
-              6,
-              5,
-              22,
-              23
+              7,
+              8,
+              16,
+              25
             ]
           }
         ],
-        "objisolate": {
-          "reordered": [
-            {
-              "section": ".bss",
-              "original": [
-                5,
-                6,
-                22,
-                23
-              ],
-              "desired": [
-                6,
-                5,
-                22,
-                23
-              ],
-              "slots": [
-                5,
-                6,
-                22,
-                23
-              ]
-            }
-          ],
-          "symbolIndices": 4,
-          "sectionLinks": 0,
-          "sectionInfos": 0,
-          "error": null
-        },
+        "objisolate": null,
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -701,6 +702,36 @@
       "addend": 0,
       "target_module": "ov022",
       "target_address": "0x0211465c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211427c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov022_02114648",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02114648"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114280",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov022_02114640",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02114640"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114284",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211ba8c",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211ba8c"
     }
   ],
   "defined_symbol_renames": [

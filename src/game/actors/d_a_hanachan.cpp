@@ -14,7 +14,7 @@
  *   UpdateSegments' NormalizeVec3IfNonZero relocation moves with them.
  * - data_0209f318 + 0x154 and the camera words func_020092c4 takes at
  *   +0x80 / +0x8c are not this class's fields.
- * - SharedFilePtr has no fields, so the loaded BCA/BTP stays the word at +4.
+ * - SharedFilePtr is the 8-byte handle, so the loaded BCA/BTP stays the word at +4.
  * - func_ov002_020c51d0 is ov002's. ModelAnim::SetAnim, TextureSequence::SetFile,
  *   dCcAcPos_c::Init, dBgCh_Actr::Init, Player::Hurt and Particle::System::New
  *   stay mangled (Fix12<int> by value).
@@ -81,17 +81,14 @@ bool ApproachLinear(short &value, short target, short step);
  * sequence five use SharedFilePtr_Construct_TexSeq /
  * SharedFilePtr_Destruct_TexSeq. */
 struct HanachanModelFilePtr : SharedFilePtr {
-    u32 words[2];
     HanachanModelFilePtr(u32 fileID);
     ~HanachanModelFilePtr();
 };
 struct HanachanAnimationFileHandle : SharedFilePtr {
-    u32 words[2];
     HanachanAnimationFileHandle(u32 fileID);
     ~HanachanAnimationFileHandle();
 };
 struct HanachanTextureSeqFileHandle : SharedFilePtr {
-    u32 words[2];
     HanachanTextureSeqFileHandle(u32 fileID);
     ~HanachanTextureSeqFileHandle();
 };
@@ -124,8 +121,8 @@ extern void Vec3_Add(void *out, void *a, void *b);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, struct Vector3 *v, unsigned int b, int c, unsigned int d, unsigned int e, unsigned int f);
 extern int NormalizeVec3IfNonZero(void *v);
 extern void Vec3_MulScalarInPlace(void *v, int s);
-extern SharedFilePtr *data_ov034_02113838[];
-extern SharedFilePtr *data_ov034_0211384c[];
+extern SharedFilePtr *const data_ov034_02113838[5];
+extern SharedFilePtr *const data_ov034_0211384c[5];
 extern void **data_ov034_02113874[];
 extern void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(s32 x, s32 y, s32 z);
 extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
@@ -1285,6 +1282,23 @@ HanachanTextureSeqFileHandle gHanachanBody01TextureSequenceFile(ASSET_HANACHAN_B
 HanachanTextureSeqFileHandle gHanachanBody02TextureSequenceFile(ASSET_HANACHAN_BODY02_BTP);
 HanachanTextureSeqFileHandle gHanachanBody03TextureSequenceFile(ASSET_HANACHAN_BODY03_BTP);
 HanachanTextureSeqFileHandle gHanachanBody04TextureSequenceFile(ASSET_HANACHAN_BODY04_BTP);
+
+/* One model handle and one texture-sequence handle per body segment.
+   The retail words are those handles' addresses. */
+extern "C" SharedFilePtr *const data_ov034_02113838[5] = {
+    &gHanachanHeadModelFile,
+    &gHanachanBody01ModelFile,
+    &gHanachanBody02ModelFile,
+    &gHanachanBody03ModelFile,
+    &gHanachanBody04ModelFile,
+};
+extern "C" SharedFilePtr *const data_ov034_0211384c[5] = {
+    &gHanachanHeadTextureSequenceFile,
+    &gHanachanBody01TextureSequenceFile,
+    &gHanachanBody02TextureSequenceFile,
+    &gHanachanBody03TextureSequenceFile,
+    &gHanachanBody04TextureSequenceFile,
+};
 
 typedef void (daHanachan_c::*HanachanStatePmf)();
 

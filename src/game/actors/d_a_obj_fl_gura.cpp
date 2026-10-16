@@ -14,9 +14,6 @@
  * deslop
  * Leftover: func_ov002_020b6244 / func_ov002_020b60fc are still
  *   linker names. Naming belongs in ov002.
- * Leftover: data_ov064_0211adb0 is overlay .rodata this TU does not
- *   own; the BMD/KCL SharedFilePtrs and CLPS_Block are still
- *   data_ov064_*.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -41,7 +38,7 @@ typedef char ResourceDescriptor_size_must_be_0x0c[
 extern "C" {
 int func_ov002_020b6244(daObjGuragura_c *self, ResourceDescriptor *descriptor);
 int func_ov002_020b60fc(daObjGuragura_c *self, ResourceDescriptor *descriptor);
-extern ResourceDescriptor data_ov064_0211adb0;
+extern ResourceDescriptor const data_ov064_0211adb0;
 }
 
 struct FlGuraSpawnInfo {
@@ -78,13 +75,13 @@ extern "C" FlGuraSpawnInfo g_profile_FL_GURA = {
 // @symbol _ZN14daObjFl_Gura_c13InitResourcesEv
 s32 daObjFl_Gura_c::InitResources()
 {
-    return func_ov002_020b6244(this, &data_ov064_0211adb0);
+    return func_ov002_020b6244(this, (ResourceDescriptor *)&data_ov064_0211adb0);
 }
 
 // @symbol _ZN14daObjFl_Gura_c16CleanupResourcesEv
 s32 daObjFl_Gura_c::CleanupResources()
 {
-    return func_ov002_020b60fc(this, &data_ov064_0211adb0);
+    return func_ov002_020b60fc(this, (ResourceDescriptor *)&data_ov064_0211adb0);
 }
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
@@ -93,12 +90,10 @@ s32 daObjFl_Gura_c::CleanupResources()
  * declared-only subclasses so the static initializer names the real entry
  * points. */
 struct FlGuraModelFilePtr : SharedFilePtr {
-    u32 words[2];
     FlGuraModelFilePtr(u32 fileID);
     ~FlGuraModelFilePtr();
 };
 struct FlGuraCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     FlGuraCollisionFilePtr(u32 fileID);
     ~FlGuraCollisionFilePtr();
 };
@@ -108,3 +103,11 @@ struct FlGuraCollisionFilePtr : SharedFilePtr {
  * file. */
 FlGuraModelFilePtr gFlGuraModelFile(ASSET_FL_GURA_BMD);      /* model */
 FlGuraCollisionFilePtr gFlGuraCollisionFile(ASSET_FL_GURA_KCL);  /* collision */
+
+/* The third word is data_ov064_0211bb8c, an earlier CLPS block. */
+extern CLPS_Block data_ov064_0211bb8c;
+extern "C" ResourceDescriptor const data_ov064_0211adb0 = {
+    &gFlGuraModelFile,
+    &gFlGuraCollisionFile,
+    &data_ov064_0211bb8c,
+};

@@ -82,14 +82,12 @@ bool ApproachLinear(short &value, short target, short step);
  * widths are the ROM's; constructor/destructor addresses are aliased in
  * the manifest (Eyerok idiom). */
 struct CasketModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     CasketModelFilePtr(u32 fileID);
     ~CasketModelFilePtr();
 };
 
 struct CasketCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     CasketCollisionFilePtr(u32 fileID);
     ~CasketCollisionFilePtr();

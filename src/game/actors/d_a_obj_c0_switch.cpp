@@ -62,14 +62,12 @@ enum d_a_obj_c0_switch_AssetId {
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct C0SwitchModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     C0SwitchModelFilePtr(u32 fileID);
     ~C0SwitchModelFilePtr();
 };
 
 struct C0SwitchCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     C0SwitchCollisionFilePtr(u32 fileID);
     ~C0SwitchCollisionFilePtr();

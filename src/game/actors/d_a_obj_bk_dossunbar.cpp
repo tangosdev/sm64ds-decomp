@@ -38,13 +38,11 @@
 /* Local names for the existing eight-byte model/collision resource families.
  * Their constructors and destructors remain ordinary cross-TU C++ imports. */
 struct DossunbarModelFile : SharedFilePtr {
-    u32 words[2];
     DossunbarModelFile(u32 fileID);
     ~DossunbarModelFile();
 };
 
 struct DossunbarCollisionFile : SharedFilePtr {
-    u32 words[2];
     DossunbarCollisionFile(u32 fileID);
     ~DossunbarCollisionFile();
 };
@@ -93,7 +91,7 @@ extern "C" {
    A typed ResourceDescriptor[2] changes Init reloc destinations. */
 extern SharedFilePtr *data_ov015_02114534;
 extern SharedFilePtr *data_ov015_02114538;
-extern CLPS_Block *data_ov015_0211453c;
+extern void *data_ov015_0211453c[4];
 
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, Fix12i x, Fix12i y, Fix12i z);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *, int, int);
@@ -374,6 +372,20 @@ DossunbarModelFile gBkDossunbarSModelFile(0x058d);
 DossunbarCollisionFile gBkDossunbarSCollisionFile(0x058e);
 DossunbarModelFile gBkDossunbarLModelFile(0x058b);
 DossunbarCollisionFile gBkDossunbarLCollisionFile(0x058c);
+
+extern "C" {
+extern int data_ov015_021135b4[];
+extern int data_ov015_02113634[];
+
+SharedFilePtr *data_ov015_02114534 = (SharedFilePtr *)&gBkDossunbarSModelFile;
+SharedFilePtr *data_ov015_02114538 = (SharedFilePtr *)&gBkDossunbarSCollisionFile;
+void *data_ov015_0211453c[4] = {
+    data_ov015_021135b4,
+    &gBkDossunbarLModelFile,
+    &gBkDossunbarLCollisionFile,
+    data_ov015_02113634,
+};
+}
 
 VtEntry data_ov015_02114a24[7] = {
     data_ov015_021144b0, data_ov015_021144f8, data_ov015_021144c8, data_ov015_021144c0,

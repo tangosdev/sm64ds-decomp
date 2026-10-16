@@ -18,6 +18,11 @@
       "name": ".text",
       "start": "0x020bfec0",
       "end": "0x020c4048"
+    },
+    {
+      "name": ".data",
+      "start": "0x0213ac48",
+      "end": "0x0213acc0"
     }
   ],
   "functions": [
@@ -673,8 +678,266 @@
       "ordinal": 92
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "pmf_Dealer_StateCollect",
+      "address": "0x0213ac48",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte {function, 0} row in this file; the pointer relocates to the named function in this TU"
+    },
+    {
+      "symbol": "pmf_Dealer_StateIdle",
+      "address": "0x0213ac50",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte {function, 0} row in this file; the pointer relocates to the named function in this TU"
+    },
+    {
+      "symbol": "pmf_Dealer_StateIdle_2",
+      "address": "0x0213ac58",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte {function, 0} row in this file; the pointer relocates to the named function in this TU"
+    },
+    {
+      "symbol": "pmf_Dealer_StateDeal",
+      "address": "0x0213ac60",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte {function, 0} row in this file; the pointer relocates to the named function in this TU"
+    },
+    {
+      "symbol": "pmf_MascotWalker_StateWalk",
+      "address": "0x0213ac68",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte {function, 0} row in this file; the pointer relocates to the named function in this TU"
+    },
+    {
+      "symbol": "pmf_MascotWalker_StatePause",
+      "address": "0x0213ac70",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte {function, 0} row in this file; the pointer relocates to the named function in this TU"
+    },
+    {
+      "symbol": "pmf_MascotWalker_StateWalk_2",
+      "address": "0x0213ac78",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte {function, 0} row in this file; the pointer relocates to the named function in this TU"
+    },
+    {
+      "symbol": "pmf_Dealer_StateWin",
+      "address": "0x0213ac80",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte {function, 0} row in this file; the pointer relocates to the named function in this TU"
+    },
+    {
+      "symbol": "pmf_MascotWalker_StateWalk_3",
+      "address": "0x0213ac88",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte {function, 0} row in this file; the pointer relocates to the named function in this TU"
+    },
+    {
+      "symbol": "pmf_Dealer_StateIdle_3",
+      "address": "0x0213ac90",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte {function, 0} row in this file; the pointer relocates to the named function in this TU"
+    },
+    {
+      "symbol": "pmf_Dealer_StateLose",
+      "address": "0x0213ac98",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte {function, 0} row in this file; the pointer relocates to the named function in this TU"
+    },
+    {
+      "symbol": "pmf_Dealer_StateSwap",
+      "address": "0x0213aca0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte {function, 0} row in this file; the pointer relocates to the named function in this TU"
+    },
+    {
+      "symbol": "pmf_Dealer_StateReveal",
+      "address": "0x0213aca8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte {function, 0} row in this file; the pointer relocates to the named function in this TU"
+    },
+    {
+      "symbol": "pmf_Dealer_StateCollect_2",
+      "address": "0x0213acb0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte {function, 0} row in this file; the pointer relocates to the named function in this TU"
+    },
+    {
+      "symbol": "pmf_Dealer_StateReveal_2",
+      "address": "0x0213acb8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte {function, 0} row in this file; the pointer relocates to the named function in this TU"
+    }
+  ],
   "bss": [],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x0213ac48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Dealer_StateCollect",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c11c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ac50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Dealer_StateIdle",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c1760"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ac58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Dealer_StateIdle",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c1760"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ac60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Dealer_StateDeal",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c14bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ac68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "MascotWalker_StateWalk",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0364"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ac70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "MascotWalker_StatePause",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0264"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ac78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "MascotWalker_StateWalk",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0364"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ac80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Dealer_StateWin",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0b74"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ac88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "MascotWalker_StateWalk",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0364"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ac90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Dealer_StateIdle",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c1760"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ac98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Dealer_StateLose",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0ce8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213aca0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Dealer_StateSwap",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0df0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213aca8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Dealer_StateReveal",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0f9c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213acb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Dealer_StateCollect",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c11c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213acb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Dealer_StateReveal",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0f9c"
+    }
+  ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
@@ -702,11 +965,130 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov006-unit020bfec0/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020bfec0",
+        "end": "0x020c4048",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020bfec0",
+          "end": "0x020c4048",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0213ac48",
+          "end": "0x0213acc0",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 108
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              5,
+              7,
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "desired": [
+              5,
+              7,
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "notes": [
     "Text-only fold; data and bss stay in the ROM image. The unit is probably more than one original TU (by data use, three groups), but nothing in the ROM can cut it.",
-    "include/types.h gives Vector3 an empty inline destructor, so this TU emits _ZN7Vector3D1Ev; it is licensed as a deadstrip duplicate of the arm9 copy."
+    "include/types.h gives Vector3 an empty inline destructor, so this TU emits _ZN7Vector3D1Ev; it is licensed as a deadstrip duplicate of the arm9 copy.",
+    "pmf_Dealer_StateCollect..0213acb8 are this entry's .data (0x0213ac48..0x0213acc0). data_ov006_0213acc0 points at data_ov006_0213ace0, 0213ad04, 0213ad58 and 0213ad88, which this file does not declare, so the claim stops at 0x0213acc0. The later job symbols and both Vector3 rows stay the ROM copy: one entry cannot claim a section twice."
   ],
   "compiler_only_output": [
     {

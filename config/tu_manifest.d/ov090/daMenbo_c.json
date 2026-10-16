@@ -32,7 +32,7 @@
     {
       "name": ".data",
       "start": "0x021340e0",
-      "end": "0x02134120"
+      "end": "0x02134138"
     },
     {
       "name": ".bss",
@@ -291,6 +291,19 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the water-rest entry pointer-to-member descriptor; retail first word is 0x02131b94"
+    },
+    {
+      "symbol": "_ZTS9daMenbo_c",
+      "address": "0x02134120",
+      "size": "0xb",
+      "evidence": "compiler-emitted type-name string 9daMenbo_c; eleven bytes, then one zero of linker alignment before the cylinder offset"
+    },
+    {
+      "symbol": "data_ov090_0213412c",
+      "address": "0x0213412c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "cylinder offset (0, 0x1e000, 0) in 20.12 fixed point"
     }
   ],
   "bss": [
@@ -958,7 +971,8 @@
     "HISTORY: daMenbo_c_classInit at 0x02132654 is NOT part of this TU. The evidenced run ends at 0x02132654 and the factory stays in src/d_a_menbo.c, the same boundary the landed ov064/daBDonketu_c and ov100/daBtfly_c took for their own factories.",
     "ROM RTTI evidence for the class name: _ZTS9daMenbo_c at ov090 0x02134120 holds twelve bytes, the encoded string 9daMenbo_c followed by two zero bytes (terminator and padding), so the receipt dates to this exact spelling and the name is the cartridge's own rather than a coined one. _ZTI9daMenbo_c at 0x02134138 is a three-word abi __si_class_type_info record whose third word is _ZTI12dEnemyBase_c at ov002 0x021081c0. _ZTV9daMenbo_c at 0x02134168 carries a zero offset-to-top at -8 and _ZTI9daMenbo_c at -4, then 31 slots; ten target this run, at indices 0, 3, 6, 9, 12, 16, 17, 18, 19 and 29.",
     "The file-scope model handle, four anim handles, and four PMF state nodes are defined in this TU. mwcc emits __sinit_d_a_menbo.cpp, the ctor word, the eight anonymous pointer-to-member descriptors, and the five destructor-registration nodes. The eight state handlers were promoted to real daMenbo_c members -- the .data records at 0x021340e0..0x02134118 are pointer-to-member descriptors, so symbols.txt and attribution.json moved to the _ZN9daMenbo_c spellings. Class RTTI and the vtable stay externalized. The handwritten src/__sinit_ov090_02133ce8.c is retired.",
-    "Local scratch ROM matched this machine's baseline control (ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40). Recorded rom.sha256 is the fleet SHA the other intact-object entries on this main share."
+    "Local scratch ROM matched this machine's baseline control (ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40). Recorded rom.sha256 is the fleet SHA the other intact-object entries on this main share.",
+    "The file-scope model handle, four anim handles, and four PMF state nodes are defined in this TU. mwcc emits __sinit_d_a_menbo.cpp, the ctor word, the eight anonymous pointer-to-member descriptors, and the five destructor-registration nodes. The eight state handlers were promoted to real daMenbo_c members -- the .data records at 0x021340e0..0x02134118 are pointer-to-member descriptors, so symbols.txt and attribution.json moved to the _ZN9daMenbo_c spellings. The type name _ZTS9daMenbo_c is licensed .data so the cylinder offset can sit after its alignment byte; _ZTI and the vtable stay externalized. The handwritten src/__sinit_ov090_02133ce8.c is retired."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -978,13 +992,11 @@
         "_ZN9daMenbo_cD2Ev"
       ],
       "droppedSections": [
-        9,
         10,
-        13,
-        83,
+        11,
+        14,
         84,
         85,
-        86,
         87,
         88,
         89,
@@ -997,7 +1009,8 @@
         96,
         97,
         98,
-        99
+        99,
+        100
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -1009,7 +1022,6 @@
         "_ZTI12dEnemyBase_c",
         "_ZTS12dEnemyBase_c",
         "_ZTI9daMenbo_c",
-        "_ZTS9daMenbo_c",
         "_ZTV9daMenbo_c"
       ],
       "dataExternalized": [
@@ -1022,7 +1034,6 @@
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
-        "_ZTS9daMenbo_c",
         "_ZTV9daMenbo_c"
       ]
     },
@@ -1077,7 +1088,7 @@
         {
           "section": ".data",
           "start": "0x021340e0",
-          "end": "0x02134120",
+          "end": "0x02134138",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1090,7 +1101,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 49
+          "LICENSED": 51
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1101,48 +1112,51 @@
           {
             "section": ".init",
             "original": [
-              102
+              103
             ],
             "desired": [
-              102
+              103
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              100
+              101
             ],
             "desired": [
-              100
+              101
             ]
           },
           {
             "section": ".data",
             "original": [
-              61,
-              63,
-              66,
-              68,
-              71,
-              73,
-              76,
-              78
+              5,
+              62,
+              64,
+              67,
+              69,
+              72,
+              74,
+              77,
+              79,
+              86
             ],
             "desired": [
-              73,
-              71,
-              76,
-              68,
-              78,
-              63,
-              61,
-              66
+              74,
+              72,
+              77,
+              69,
+              79,
+              64,
+              62,
+              67,
+              86,
+              5
             ]
           },
           {
             "section": ".bss",
             "original": [
-              51,
               52,
               53,
               54,
@@ -1152,26 +1166,27 @@
               58,
               59,
               60,
-              65,
-              70,
-              75,
-              80
+              61,
+              66,
+              71,
+              76,
+              81
             ],
             "desired": [
-              56,
-              54,
-              58,
-              60,
-              52,
+              57,
               55,
               59,
-              51,
-              57,
+              61,
               53,
-              80,
-              65,
-              70,
-              75
+              56,
+              60,
+              52,
+              58,
+              54,
+              81,
+              66,
+              71,
+              76
             ]
           }
         ],
@@ -1180,40 +1195,45 @@
             {
               "section": ".data",
               "original": [
-                61,
-                63,
-                66,
-                68,
-                71,
-                73,
-                76,
-                78
+                5,
+                62,
+                64,
+                67,
+                69,
+                72,
+                74,
+                77,
+                79,
+                86
               ],
               "desired": [
-                73,
-                71,
-                76,
-                68,
-                78,
-                63,
-                61,
-                66
+                74,
+                72,
+                77,
+                69,
+                79,
+                64,
+                62,
+                67,
+                86,
+                5
               ],
               "slots": [
-                61,
-                63,
-                66,
-                68,
-                71,
-                73,
-                76,
-                78
+                5,
+                62,
+                64,
+                67,
+                69,
+                72,
+                74,
+                77,
+                79,
+                86
               ]
             },
             {
               "section": ".bss",
               "original": [
-                51,
                 52,
                 53,
                 54,
@@ -1223,29 +1243,29 @@
                 58,
                 59,
                 60,
-                65,
-                70,
-                75,
-                80
+                61,
+                66,
+                71,
+                76,
+                81
               ],
               "desired": [
-                56,
-                54,
-                58,
-                60,
-                52,
+                57,
                 55,
                 59,
-                51,
-                57,
+                61,
                 53,
-                80,
-                65,
-                70,
-                75
+                56,
+                60,
+                52,
+                58,
+                54,
+                81,
+                66,
+                71,
+                76
               ],
               "slots": [
-                51,
                 52,
                 53,
                 54,
@@ -1255,14 +1275,15 @@
                 58,
                 59,
                 60,
-                65,
-                70,
-                75,
-                80
+                61,
+                66,
+                71,
+                76,
+                81
               ]
             }
           ],
-          "symbolIndices": 22,
+          "symbolIndices": 24,
           "sectionLinks": 0,
           "sectionInfos": 8,
           "error": null
@@ -1379,13 +1400,6 @@
       "reason": "this class's own __si_class_type_info record, dragged in with the vtable because this TU defines the key function. The cartridge homes it in this overlay at 0x02134138, outside this TU's licensed .text; romdata_check verifies the words and the base pointer before text isolation"
     },
     {
-      "symbol": "_ZTS9daMenbo_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov090",
-      "canonical_address": "0x02134120",
-      "reason": "literal ROM RTTI type-name string for daMenbo_c at ov090:0x02134120, twelve bytes; romdata_check verifies the compiler copy before text isolation"
-    },
-    {
       "symbol": "_ZTV9daMenbo_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov090",
@@ -1395,67 +1409,67 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1163",
+      "from": "@1164",
       "to": "@1137",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1164",
+      "from": "@1165",
       "to": "@1138",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1165",
+      "from": "@1166",
       "to": "@1139",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1166",
+      "from": "@1167",
       "to": "@1140",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1167",
+      "from": "@1168",
       "to": "@1141",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1169",
+      "from": "@1170",
       "to": "@1143",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1171",
+      "from": "@1172",
       "to": "@1145",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1173",
+      "from": "@1174",
       "to": "@1147",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1175",
+      "from": "@1176",
       "to": "@1149",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1177",
+      "from": "@1178",
       "to": "@1151",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1179",
+      "from": "@1180",
       "to": "@1153",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1181",
+      "from": "@1182",
       "to": "@1155",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@1183",
+      "from": "@1184",
       "to": "@1157",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     }

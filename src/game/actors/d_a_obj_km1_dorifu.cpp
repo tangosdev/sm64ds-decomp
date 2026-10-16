@@ -60,14 +60,12 @@ typedef char DorifuSpawnInfo_size_must_be_0x1c[
     sizeof(DorifuSpawnInfo) == 0x1c ? 1 : -1];
 
 struct DorifuModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     DorifuModelFilePtr(u32 fileID);
     ~DorifuModelFilePtr();
 };
 
 struct DorifuCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     DorifuCollisionFilePtr(u32 fileID);
     ~DorifuCollisionFilePtr();

@@ -18,10 +18,10 @@
  * data_ov022_0211427c. The callee calls dBgW::IsEnabled and
  * dBgW::Disable on mMeshCollider, then SharedFilePtr::Release on the
  * model and KCL slots. Those three calls are the body in ov098, not
- * this leaf. data_ov022_0211427c is overlay .data this TU does not own.
- * It points at data_ov022_02114648 (model), data_ov022_02114640 (KCL)
- * and data_ov064_0211ba8c (CLPS). g_profile_FL_KUZURE lives outside
- * this TU.
+ * this leaf. data_ov022_0211427c points at data_ov022_02114648 (model),
+ * data_ov022_02114640 (KCL) and data_ov064_0211ba8c (CLPS, ov064).
+ * g_profile_FL_KUZURE and the typeinfo that follows the descriptor
+ * stay outside this claim.
  */
 
 #include "daObjFl_Fall_Block_c.h"
@@ -35,14 +35,12 @@ struct CLPS_Block;
  * handle constructors and destructors are the ROM resource-family
  * functions, aliased in the manifest. */
 struct FallBlockModelFile : SharedFilePtr {
-    u32 words[2];
 
     FallBlockModelFile(u32 fileID);
     ~FallBlockModelFile();
 };
 
 struct FallBlockCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     FallBlockCollisionFilePtr(u32 fileID);
     ~FallBlockCollisionFilePtr();
@@ -60,6 +58,7 @@ extern "C" {
 int func_ov098_0213a2cc(daObjFl_Fall_Block_c *self, ResourceDescriptor *descriptor);
 int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov022_0211427c;
+extern CLPS_Block data_ov064_0211ba8c;
 }
 
 // @symbol daObjFl_Fall_Block_c_classInit
@@ -88,3 +87,8 @@ int daObjFl_Fall_Block_c::CleanupResources()
  * model handle (file 0x5f9), then the collision handle (file 0x5fa). */
 FallBlockModelFile data_ov022_02114648(0x5f9);
 FallBlockCollisionFilePtr data_ov022_02114640(0x5fa);
+extern "C" ResourceDescriptor data_ov022_0211427c = {
+    &data_ov022_02114648,
+    &data_ov022_02114640,
+    &data_ov064_0211ba8c,
+};

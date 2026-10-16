@@ -166,12 +166,10 @@ s32 daObjRc_Guruguru_c::CleanupResources()
  * declared-only subclasses so the static initializer names the real entry
  * points. */
 struct RcGuruguruModelFilePtr : SharedFilePtr {
-    u32 words[2];
     RcGuruguruModelFilePtr(u32 fileID);
     ~RcGuruguruModelFilePtr();
 };
 struct RcGuruguruCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     RcGuruguruCollisionFilePtr(u32 fileID);
     ~RcGuruguruCollisionFilePtr();
 };

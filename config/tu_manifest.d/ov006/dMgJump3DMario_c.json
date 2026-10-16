@@ -19,6 +19,11 @@
       "end": "0x020c8a30"
     },
     {
+      "name": ".rodata",
+      "start": "0x0212ddd0",
+      "end": "0x0212dddc"
+    },
+    {
       "name": ".init",
       "start": "0x0212f52c",
       "end": "0x0212f660"
@@ -29,8 +34,13 @@
       "end": "0x02133574"
     },
     {
+      "name": ".data",
+      "start": "0x0213b020",
+      "end": "0x0213b0a4"
+    },
+    {
       "name": ".bss",
-      "start": "0x02140438",
+      "start": "0x02140408",
       "end": "0x021404c4"
     }
   ],
@@ -323,8 +333,214 @@
       "ordinal": 40
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "pmf_dMgJump3DMario_c_StateMove",
+      "address": "0x0213b020",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "8-byte state record: member address, then a zero adjustment word"
+    },
+    {
+      "symbol": "pmf_dMgJump3DMario_c_StateHold",
+      "address": "0x0213b028",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "8-byte state record: member address, then a zero adjustment word"
+    },
+    {
+      "symbol": "pmf_dMgJump3DMario_c_StateDamp",
+      "address": "0x0213b030",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "8-byte state record: member address, then a zero adjustment word"
+    },
+    {
+      "symbol": "pmf_dMgJump3DMario_c_StateRespawn",
+      "address": "0x0213b038",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "8-byte state record: member address, then a zero adjustment word"
+    },
+    {
+      "symbol": "pmf_dMgJump3DMario_c_StateIdle",
+      "address": "0x0213b040",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "8-byte state record: member address, then a zero adjustment word"
+    },
+    {
+      "symbol": "pmf_dMgJump3DMario_c_StateIdle_2",
+      "address": "0x0213b048",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "8-byte state record: member address, then a zero adjustment word"
+    },
+    {
+      "symbol": "pmf_dMgJump3DMario_c_StateWindUp",
+      "address": "0x0213b050",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "8-byte state record: member address, then a zero adjustment word"
+    },
+    {
+      "symbol": "pmf_dMgJump3DMario_c_StateIdle_3",
+      "address": "0x0213b058",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "8-byte state record: member address, then a zero adjustment word"
+    },
+    {
+      "symbol": "pmf_dMgJump3DMario_c_StateBounce",
+      "address": "0x0213b060",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "8-byte state record: member address, then a zero adjustment word"
+    },
+    {
+      "symbol": "pmf_dMgJump3DMario_c_StateWindUp_2",
+      "address": "0x0213b068",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "8-byte state record: member address, then a zero adjustment word"
+    },
+    {
+      "symbol": "pmf_dMgJump3DMario_c_StateWindUp_3",
+      "address": "0x0213b070",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "8-byte state record: member address, then a zero adjustment word"
+    },
+    {
+      "symbol": "pmf_dMgJump3DMario_c_StateBounce_2",
+      "address": "0x0213b078",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "8-byte state record: member address, then a zero adjustment word"
+    },
+    {
+      "symbol": "pmf_dMgJump3DMario_c_StateRiseOut",
+      "address": "0x0213b080",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "8-byte state record: member address, then a zero adjustment word"
+    },
+    {
+      "symbol": "pmf_dMgJump3DMario_c_StateRespawn_2",
+      "address": "0x0213b088",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "8-byte state record: member address, then a zero adjustment word"
+    },
+    {
+      "symbol": "pmf_dMgJump3DMario_c_StateFallOut",
+      "address": "0x0213b090",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "8-byte state record: member address, then a zero adjustment word"
+    },
+    {
+      "symbol": "data_ov006_0213b098",
+      "address": "0x0213b098",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three pointers to the loaded anim files at 0x02140430, 0x0214040c and 0x02140424"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov006_0212ddd0",
+      "address": "0x0212ddd0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three 20.12 scales, each 0x2000, read by Render"
+    }
+  ],
   "bss": [
+    {
+      "symbol": "data_ov006_02140408",
+      "address": "0x02140408",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "loaded anim file; zero until LoadFile"
+    },
+    {
+      "symbol": "data_ov006_0214040c",
+      "address": "0x0214040c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "loaded anim file; zero until LoadFile"
+    },
+    {
+      "symbol": "data_ov006_02140410",
+      "address": "0x02140410",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero word written by func_ov006_020c712c"
+    },
+    {
+      "symbol": "data_ov006_02140414",
+      "address": "0x02140414",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero word read by func_ov006_020c7490"
+    },
+    {
+      "symbol": "data_ov006_02140418",
+      "address": "0x02140418",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "player count; zero until func_ov006_020c7574"
+    },
+    {
+      "symbol": "data_ov006_0214041c",
+      "address": "0x0214041c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "loaded anim file; zero until LoadFile"
+    },
+    {
+      "symbol": "data_ov006_02140420",
+      "address": "0x02140420",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "player-object base pointer; zero until func_ov006_020c7574"
+    },
+    {
+      "symbol": "data_ov006_02140424",
+      "address": "0x02140424",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "loaded anim file; zero until LoadFile"
+    },
+    {
+      "symbol": "data_ov006_02140428",
+      "address": "0x02140428",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero word counted down by ApproachLinear"
+    },
+    {
+      "symbol": "data_ov006_0214042c",
+      "address": "0x0214042c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "loaded anim file; zero until LoadFile"
+    },
+    {
+      "symbol": "data_ov006_02140430",
+      "address": "0x02140430",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "loaded anim file; zero until LoadFile"
+    },
+    {
+      "symbol": "data_ov006_02140434",
+      "address": "0x02140434",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero word incremented by StateRiseOut"
+    },
     {
       "symbol": "data_ov006_02140438",
       "address": "0x02140438",
@@ -467,7 +683,7 @@
     "SOURCE REVIEW JUMP3D-2711-02 (disposition: deferred, completion: partial). The eight members that keep `func_ov006_*` labels are a MIGRATION DEPENDENCY on twelve `bl` sites in seven still-unpromoted `.c` shards, not an inability to name an implemented C++ method: a C shard can declare the mangled linker symbol, as this tree does elsewhere. The eight members, the seven shards and the twelve call sites are enumerated in issue #2722 (https://github.com/tangosdev/sm64ds-decomp/issues/2722), which owns that migration and names its next owner; this promotion reserves none of it and must not be held for it. The labels themselves are address-derived: the image preserves no original linker symbol table and RTTI supplies class identities, not function spellings (notes/tu-promotion-conventions.md section 1), so they assert nothing about the original spellings. The retained substitution is the plain Jump3DVec in place of types.h's Vector3, pinned in notes/experiments/jump3d-2711-members-vector3.md and notes/experiments/jump3d-2711-scratch-vector3.md: the Vector3 spelling is byte-identical per function, but the TU then defines _ZN7Vector3D1Ev, no compiler_only_output row in this manifest licenses that symbol, and isolate_many refuses the emission. The four in-place load-bearing spellings carry their own pinned experiments (jump3d-2711-mtx-intptr-zeroing.md, jump3d-2711-statehold-flag-reuse.md, jump3d-2711-statemove-volatile-store.md, jump3d-2711-87d0-int-temp.md), as do the two mangled-spelling walls (jump3d-2711-setanim-member-form.md, jump3d-2711-common-first-matrix.md). EnterHit's earlier Pair/select spelling was disproved by jump3d-2711-enterhit-pmf-assign.md and replaced by the plain pointer-to-member assignment.",
     "WIDENED DOWNWARD to 0x020c6f8c: the twelve front helpers (Jump3D_SetTuning, 70d0, 712c, 719c, 72b4, 72c8, 72dc, 7300, 7388, 7418, 7490, 7574), previously one-function shards, are folded in source order ahead of Unk_020c762c. Their calls into the class are real member calls; Jump3D_StartRoundLayout keeps its `opt_common_subs off` as a push/pop bracket. tubuild verify 40/40 MATCH, objisolate clean, reloc-destinations clean.",
     "Folded __sinit_ov006_0212f52c into this TU. The compiler now emits the initializer, the seven file handles and their registration nodes. The class vtable and RTTI stay deadstrip-data, outside the licensed data span.",
-    "LOCAL WORKER NOTE: this machine stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to this tree stock build and to the strict control, while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container fields outside every module range. The content proof is the same either way: moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, and the four owned ranges identical."
+    "LOCAL WORKER NOTE: this machine stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to this tree stock build and to the strict control, while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container fields outside every module range. The content proof is the same either way: moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, and the six owned ranges identical."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -562,6 +778,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x0212ddd0",
+          "end": "0x0212dddc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x0212f52c",
           "end": "0x0212f660",
@@ -576,15 +799,22 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0213b020",
+          "end": "0x0213b0a4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
-          "start": "0x02140438",
+          "start": "0x02140408",
           "end": "0x021404c4",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 56
+          "LICENSED": 85
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -593,56 +823,128 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              116
+              90
             ],
             "desired": [
-              116
+              90
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              161
+            ],
+            "desired": [
+              161
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              114
+              159
             ],
             "desired": [
-              114
+              159
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              91,
+              93,
+              95,
+              97,
+              99,
+              101,
+              103,
+              105,
+              107,
+              109,
+              111,
+              113,
+              115,
+              117,
+              119,
+              121
+            ],
+            "desired": [
+              91,
+              93,
+              95,
+              97,
+              99,
+              101,
+              103,
+              105,
+              107,
+              109,
+              111,
+              113,
+              115,
+              117,
+              119,
+              121
             ]
           },
           {
             "section": ".bss",
             "original": [
-              90,
-              91,
-              92,
-              93,
-              94,
-              95,
-              96,
-              97,
-              98,
-              99,
-              100,
-              101,
-              102,
-              103
+              123,
+              124,
+              125,
+              126,
+              127,
+              128,
+              129,
+              130,
+              131,
+              132,
+              133,
+              134,
+              135,
+              136,
+              137,
+              138,
+              139,
+              140,
+              141,
+              142,
+              143,
+              144,
+              145,
+              146,
+              147,
+              148
             ],
             "desired": [
-              97,
-              99,
-              101,
-              103,
-              95,
-              91,
-              93,
-              94,
-              96,
-              98,
-              100,
-              102,
-              90,
-              92
+              123,
+              124,
+              125,
+              126,
+              127,
+              128,
+              129,
+              130,
+              131,
+              132,
+              133,
+              134,
+              142,
+              144,
+              146,
+              148,
+              140,
+              136,
+              138,
+              139,
+              141,
+              143,
+              145,
+              147,
+              135,
+              137
             ]
           }
         ],
@@ -651,56 +953,92 @@
             {
               "section": ".bss",
               "original": [
-                90,
-                91,
-                92,
-                93,
-                94,
-                95,
-                96,
-                97,
-                98,
-                99,
-                100,
-                101,
-                102,
-                103
+                123,
+                124,
+                125,
+                126,
+                127,
+                128,
+                129,
+                130,
+                131,
+                132,
+                133,
+                134,
+                135,
+                136,
+                137,
+                138,
+                139,
+                140,
+                141,
+                142,
+                143,
+                144,
+                145,
+                146,
+                147,
+                148
               ],
               "desired": [
-                97,
-                99,
-                101,
-                103,
-                95,
-                91,
-                93,
-                94,
-                96,
-                98,
-                100,
-                102,
-                90,
-                92
+                123,
+                124,
+                125,
+                126,
+                127,
+                128,
+                129,
+                130,
+                131,
+                132,
+                133,
+                134,
+                142,
+                144,
+                146,
+                148,
+                140,
+                136,
+                138,
+                139,
+                141,
+                143,
+                145,
+                147,
+                135,
+                137
               ],
               "slots": [
-                90,
-                91,
-                92,
-                93,
-                94,
-                95,
-                96,
-                97,
-                98,
-                99,
-                100,
-                101,
-                102,
-                103
+                123,
+                124,
+                125,
+                126,
+                127,
+                128,
+                129,
+                130,
+                131,
+                132,
+                133,
+                134,
+                135,
+                136,
+                137,
+                138,
+                139,
+                140,
+                141,
+                142,
+                143,
+                144,
+                145,
+                146,
+                147,
+                148
               ]
             }
           ],
-          "symbolIndices": 14,
+          "symbolIndices": 26,
           "sectionLinks": 0,
           "sectionInfos": 0,
           "error": null
@@ -1227,43 +1565,223 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0212f52c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b020",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dMgJump3DMario_c9StateMoveEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c7c68"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b028",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dMgJump3DMario_c9StateHoldEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c7a30"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b030",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dMgJump3DMario_c9StateDampEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c78ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b038",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dMgJump3DMario_c12StateRespawnEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c8680"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b040",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dMgJump3DMario_c9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c864c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b048",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dMgJump3DMario_c9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c864c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b050",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dMgJump3DMario_c11StateWindUpEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c85bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b058",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dMgJump3DMario_c9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c864c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b060",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dMgJump3DMario_c11StateBounceEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c833c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b068",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dMgJump3DMario_c11StateWindUpEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c85bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b070",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dMgJump3DMario_c11StateWindUpEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c85bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b078",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dMgJump3DMario_c11StateBounceEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c833c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b080",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dMgJump3DMario_c12StateRiseOutEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c814c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b088",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dMgJump3DMario_c12StateRespawnEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c8680"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b090",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dMgJump3DMario_c12StateFallOutEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c8048"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b098",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02140430",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02140430"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b09c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0214040c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0214040c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b0a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02140424",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02140424"
     }
   ],
   "defined_symbol_renames": [
     {
-      "from": "@885",
-      "to": "@871",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @885 now; licensed under the existing pin @871"
-    },
-    {
       "from": "@886",
-      "to": "@872",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @886 now; licensed under the existing pin @872"
+      "to": "@871",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @886 now; licensed under the existing pin @871"
     },
     {
       "from": "@887",
-      "to": "@873",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @887 now; licensed under the existing pin @873"
+      "to": "@872",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @887 now; licensed under the existing pin @872"
     },
     {
       "from": "@888",
-      "to": "@874",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @888 now; licensed under the existing pin @874"
+      "to": "@873",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @888 now; licensed under the existing pin @873"
     },
     {
       "from": "@889",
-      "to": "@875",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @889 now; licensed under the existing pin @875"
+      "to": "@874",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @889 now; licensed under the existing pin @874"
     },
     {
-      "from": "@883",
-      "to": "@869",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @883 now; licensed under the existing pin @869"
+      "from": "@890",
+      "to": "@875",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @890 now; licensed under the existing pin @875"
     },
     {
       "from": "@884",
+      "to": "@869",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @884 now; licensed under the existing pin @869"
+    },
+    {
+      "from": "@885",
       "to": "@870",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @884 now; licensed under the existing pin @870"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @885 now; licensed under the existing pin @870"
     }
   ]
 }

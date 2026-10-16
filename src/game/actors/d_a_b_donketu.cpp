@@ -33,12 +33,10 @@ enum daBDonketu_c_AssetId {
  * SharedFilePtr::Construct and destroy through SharedFilePtr_Destruct_Anim.
  * The file table stays ROM data. */
 struct DonketuModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
     DonketuModelFilePtr(unsigned int fileId);
     ~DonketuModelFilePtr();
 };
 struct DonketuAnimFileHandle : SharedFilePtr {
-    unsigned int words[2];
     DonketuAnimFileHandle(unsigned int fileId);
     ~DonketuAnimFileHandle();
 };

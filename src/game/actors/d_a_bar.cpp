@@ -14,6 +14,13 @@
 
 #include "daBar_c.h"
 
+namespace std {
+class type_info {
+public:
+    virtual ~type_info();
+};
+}
+
 extern "C" {
 extern void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(
     dActor_c *self, int offsetY, int radius, int clipDistance, int farDistance);
@@ -54,15 +61,24 @@ typedef char DaBarSpawnInfo_size_must_be_0x1c[
     sizeof(DaBarSpawnInfo) == 0x1c ? 1 : -1];
 
 // @symbol g_profile_BAR
-extern "C" DaBarSpawnInfo g_profile_BAR = {
-    daBar_c_classInit,
-    0x011f,       /* behavior/execute priority */
-    0x0099,       /* render priority */
-    0x00000003,   /* actorFlags */
+/* The next symbol is _ZTV7daBar_c. The eight bytes in front of it are the vtable header. */
+extern "C" struct {
+    DaBarSpawnInfo info;
+    int offsetToTop;
+    const void *typeinfo;
+} g_profile_BAR = {
+    {
+        daBar_c_classInit,
+        0x011f,       /* behavior/execute priority */
+        0x0099,       /* render priority */
+        0x00000003,   /* actorFlags */
+        0,
+        0,
+        0,
+        0
+    },
     0,
-    0,
-    0,
-    0
+    &typeid(daBar_c)
 };
 
 // @symbol _ZN7daBar_c13InitResourcesEv

@@ -42,7 +42,6 @@ enum d_a_obj_wl_polelift_AssetId {
  * and destructor are the ROM resource-family functions, aliased in the
  * manifest. */
 struct PoleliftModelFile : SharedFilePtr {
-    u32 words[2];
 
     PoleliftModelFile(u32 fileID);
     ~PoleliftModelFile();
@@ -85,9 +84,15 @@ void func_ov026_02111234(daObjWlPolelift_c *actor);
 void func_ov026_021112a4(daObjWlPolelift_c *actor);
 
 extern u32 data_0209caa0[];
-extern Vector3 data_ov026_02113a9c;
 extern PoleliftModelFile data_ov026_02113ea0;
 }
+
+/* Vector3 declares a destructor, so mwcc rejects a static Vector3 initializer.
+   A plain zero word lands in .bss; the named section keeps that one word in .data.
+   symbols.txt names the middle word. Readers still start at the first word. */
+#pragma define_section polelift_data ".data" abs32 RW
+extern "C" __declspec(polelift_data) struct { Fix12i x; } data_ov026_02113a9c = { 0x0 };
+extern "C" Fix12i data_ov026_02113aa0[2] = { 0x28000, 0x0 };
 
 // @symbol daObjWlPolelift_c_classInit
 extern "C" daObjWlPolelift_c *daObjWlPolelift_c_classInit()
@@ -120,9 +125,9 @@ s32 daObjWlPolelift_c::InitResources()
     moveSpeed = 1;
 
     Vector3 offset;
-    offset.x = data_ov026_02113a9c.x;
-    offset.y = data_ov026_02113a9c.y;
-    offset.z = data_ov026_02113a9c.z;
+    offset.x = ((Vector3 *)&data_ov026_02113a9c)->x;
+    offset.y = ((Vector3 *)&data_ov026_02113a9c)->y;
+    offset.z = ((Vector3 *)&data_ov026_02113a9c)->z;
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         &clsn, this, &offset, 0x50000, 0x12c000, 0x80000c, 0);
     func_ov026_021112a4(this);
@@ -210,7 +215,7 @@ s32 daObjWlPolelift_c::Behavior()
         if (ray.DetectClsn())
             groundY = ray.clsnY;
 
-        clsnOffset = data_ov026_02113a9c;
+        clsnOffset = *(Vector3 *)&data_ov026_02113a9c;
         clsn.SetPosRelativeToActor(clsnOffset);
         clsn.Update();
         func_ov026_021112a4(this);

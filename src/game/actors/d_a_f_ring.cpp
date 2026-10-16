@@ -12,7 +12,7 @@
  *   value; the member spelling spills the 0x1000 and InitResources stops
  *   matching.
  * - data_ov060_0211b208 / 0211b1f8 / 0211b200 are the model, animation and
- *   texture-sequence handles. SharedFilePtr has no fields, so LoadFile takes
+ *   texture-sequence handles. SharedFilePtr is the 8-byte handle, so LoadFile takes
  *   the handle and SetAnim / Prepare read words[1].
  * - data_ov048_021115e4 / 021115f4 are the BMA and BTA this TU's
  *   MaterialChanger::Prepare and TextureTransformer::Prepare load. They sit
@@ -42,17 +42,14 @@ enum daFRing_c_AssetId {
  * SharedFilePtr_Destruct_TexSeq. Each wrapper's ctor and dtor stay
  * undefined here; the manifest aliases them onto those ROM veneers. */
 struct FRingModelFilePtr : SharedFilePtr {
-    u32 words[2];
     FRingModelFilePtr(u32 fileID);
     ~FRingModelFilePtr();
 };
 struct FRingAnimationFileHandle : SharedFilePtr {
-    u32 words[2];
     FRingAnimationFileHandle(u32 fileID);
     ~FRingAnimationFileHandle();
 };
 struct FRingTexSequenceFilePtr : SharedFilePtr {
-    u32 words[2];
     FRingTexSequenceFilePtr(u32 fileID);
     ~FRingTexSequenceFilePtr();
 };
@@ -84,9 +81,9 @@ daFRing_c::~daFRing_c()
 // @symbol _ZN9daFRing_c16CleanupResourcesEv
 s32 daFRing_c::CleanupResources()
 {
-    ((SharedFilePtr *)&data_ov060_0211b208)->Release();
-    ((SharedFilePtr *)&data_ov060_0211b1f8)->Release();
-    ((SharedFilePtr *)&data_ov060_0211b200)->Release();
+    data_ov060_0211b208.Release();
+    data_ov060_0211b1f8.Release();
+    data_ov060_0211b200.Release();
     return 1;
 }
 
@@ -143,30 +140,30 @@ s32 daFRing_c::Behavior()
 // @symbol _ZN9daFRing_c13InitResourcesEv
 s32 daFRing_c::InitResources()
 {
-    mModelAnim1.SetFile((BMD_File *)Model::LoadFile(*(SharedFilePtr *)&data_ov060_0211b208), 1, 0x13);
-    mModelAnim2.SetFile((BMD_File *)data_ov060_0211b208.words[1], 1, 0x13);
+    mModelAnim1.SetFile((BMD_File *)Model::LoadFile(data_ov060_0211b208), 1, 0x13);
+    mModelAnim2.SetFile((BMD_File *)data_ov060_0211b208.filePtr, 1, 0x13);
 
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov060_0211b1f8);
-    TextureSequence::LoadFile(*(SharedFilePtr *)&data_ov060_0211b200);
+    dExtFrameCtrl_c::LoadFile(data_ov060_0211b1f8);
+    TextureSequence::LoadFile(data_ov060_0211b200);
 
     func_02016b24(&mModelAnim1, 0x4000);
     func_02016b24(&mModelAnim2, 0x4000);
 
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, (BCA_File *)data_ov060_0211b1f8.words[1], 0x40000000, 0x1000, 0);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim2, (BCA_File *)data_ov060_0211b1f8.words[1], 0x40000000, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, (BCA_File *)data_ov060_0211b1f8.filePtr, 0x40000000, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim2, (BCA_File *)data_ov060_0211b1f8.filePtr, 0x40000000, 0x1000, 0);
 
-    TextureSequence::Prepare(*(BMD_File *)data_ov060_0211b208.words[1], *(BTP_File *)data_ov060_0211b200.words[1]);
-    TextureSequence::Prepare(*(BMD_File *)data_ov060_0211b208.words[1], *(BTP_File *)data_ov060_0211b200.words[1]);
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence1, (BTP_File *)data_ov060_0211b200.words[1], 0x40000000, 0x1000, 0);
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence2, (BTP_File *)data_ov060_0211b200.words[1], 0x40000000, 0x1000, 0);
+    TextureSequence::Prepare(*(BMD_File *)data_ov060_0211b208.filePtr, *(BTP_File *)data_ov060_0211b200.filePtr);
+    TextureSequence::Prepare(*(BMD_File *)data_ov060_0211b208.filePtr, *(BTP_File *)data_ov060_0211b200.filePtr);
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence1, (BTP_File *)data_ov060_0211b200.filePtr, 0x40000000, 0x1000, 0);
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence2, (BTP_File *)data_ov060_0211b200.filePtr, 0x40000000, 0x1000, 0);
 
-    MaterialChanger::Prepare(*(BMD_File *)data_ov060_0211b208.words[1], data_ov048_021115e4);
-    MaterialChanger::Prepare(*(BMD_File *)data_ov060_0211b208.words[1], data_ov048_021115e4);
+    MaterialChanger::Prepare(*(BMD_File *)data_ov060_0211b208.filePtr, data_ov048_021115e4);
+    MaterialChanger::Prepare(*(BMD_File *)data_ov060_0211b208.filePtr, data_ov048_021115e4);
     _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(&mMaterialChanger1, &data_ov048_021115e4, 0x40000000, 0x1000, 0);
     _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(&mMaterialChanger2, &data_ov048_021115e4, 0x40000000, 0x1000, 0);
 
-    TextureTransformer::Prepare(*(BMD_File *)data_ov060_0211b208.words[1], data_ov048_021115f4);
-    TextureTransformer::Prepare(*(BMD_File *)data_ov060_0211b208.words[1], data_ov048_021115f4);
+    TextureTransformer::Prepare(*(BMD_File *)data_ov060_0211b208.filePtr, data_ov048_021115f4);
+    TextureTransformer::Prepare(*(BMD_File *)data_ov060_0211b208.filePtr, data_ov048_021115f4);
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(&mTextureTransformer1, &data_ov048_021115f4, 0x40000000, 0x1000, 0);
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(&mTextureTransformer2, &data_ov048_021115f4, 0x40000000, 0x1000, 0);
 
@@ -179,6 +176,10 @@ s32 daFRing_c::InitResources()
 FRingModelFilePtr data_ov060_0211b208(ASSET_KPA_SHWAVE_BMD);
 FRingAnimationFileHandle data_ov060_0211b1f8(ASSET_KPA_SHWAVE_BCA);
 FRingTexSequenceFilePtr data_ov060_0211b200(ASSET_KPA_SHWAVE_BTP);
+
+/* 20.12 band scales. Behavior multiplies the frame reach by these four
+ * words. symbols.txt names only the first. */
+extern "C" int data_ov060_0211ab20[4] = { 0x787, 0x800, 0xf0f, 0x1000 };
 
 /* return new builds the ring and its eight animators. */
 // @symbol daFRing_c_classInit

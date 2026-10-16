@@ -214,12 +214,10 @@ struct BlockSStateHost { char pad[0x560]; int idx; };
  * declared-only subclasses so the static initializer names the real entry
  * points. */
 struct BlockSModelFilePtr : SharedFilePtr {
-    u32 words[2];
     BlockSModelFilePtr(u32 fileID);
     ~BlockSModelFilePtr();
 };
 struct BlockSCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     BlockSCollisionFilePtr(u32 fileID);
     ~BlockSCollisionFilePtr();
 };
@@ -1484,3 +1482,7 @@ BlockSStateEntry data_ov098_0213c878[7] = {
     { data_ov098_0213c458, data_ov098_0213c460 },   /* STATE_IN_MOUTH */
     { data_ov098_0213c4c0, data_ov098_0213c4b8 },   /* STATE_BROKEN */
 };
+
+/* Throw speeds in 20.12 (copied by value in func_ov098_02138818). */
+BlockSW4 data_ov098_0213c4e0 = { { 0x28000, 0x28000, 0x50000, 0x1e000 } };
+BlockSW4 data_ov098_0213c4f0 = { { 0x14000, 0x14000, 0x14000, 0xf000 } };

@@ -14,15 +14,13 @@
  * tools/rombuild.py refuses the object outright when the emitted order and the
  * ROM's disagree.
  *
- * deslop
  * Leftover: dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange stay mangled
  *   in this TU -- both take Fix12<int> by value (wall 6az); a method call
  *   homes the argument and size-DIFFs InitResources / Behavior.
  * Leftover: func_020393d4 is a 4-byte store into dBgW+0x18
  *   (beforeClsnCallback). This TU calls it; naming belongs with dBgW in arm9.
  * Leftover: data_ov043_021125e0 / 021125e8 are this overlay's KCL/BMD
- *   handles. data_ov043_02111c00 is the CLPS block in overlay .data this
- *   TU does not own.
+ *   handles. The static initializer still writes their file ids.
  * Leftover: g_profile_KM1_UKISHIMA lives outside this TU (S14).
  * Leftover: inline destructor (out-of-line emits D0 before D1).
  */
@@ -41,14 +39,12 @@ enum d_a_obj_km1_ukishima_AssetId {
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct Km1UkishimaModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
 
     Km1UkishimaModelFilePtr(unsigned int fileID);
     ~Km1UkishimaModelFilePtr();
 };
 
 struct Km1UkishimaClsnFilePtr : SharedFilePtr {
-    unsigned int words[2];
 
     Km1UkishimaClsnFilePtr(unsigned int fileID);
     ~Km1UkishimaClsnFilePtr();
@@ -183,3 +179,20 @@ s32 daObjKm1_Ukishima_c::CleanupResources()
  * file 1626. The compiler registers each destructor beside the object. */
 Km1UkishimaModelFilePtr data_ov043_021125e8(ASSET_KM1_UKISHIMA_BMD);
 Km1UkishimaClsnFilePtr data_ov043_021125e0(ASSET_KM1_UKISHIMA_KCL);
+
+/* Completed here. The header leaves CLPS_Block incomplete. Each block is
+ * 32 bytes: the magic, the stride word, then the entries SetFile indexes.
+ * data_ov043_02111c20 is the second block. Nothing in either word relocates. */
+struct CLPS_Block {
+    u32 w[8];
+};
+typedef char CLPS_Block_size_must_be_0x20[sizeof(CLPS_Block) == 0x20 ? 1 : -1];
+
+extern "C" CLPS_Block data_ov043_02111c00 = {
+    0x53504c43, 0x00020008, 0x00000fc0, 0x000000ff,
+    0x00002fc0, 0x000000ff, 0xffffffff, 0xffffffff,
+};
+extern "C" CLPS_Block data_ov043_02111c20 = {
+    0x53504c43, 0x00010008, 0x00000fc0, 0x000000ff,
+    0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+};

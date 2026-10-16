@@ -39,14 +39,12 @@ enum daObjFl_Seesaw_c_AssetId {
  * are local; the handle constructors and destructors are the ROM
  * resource-family functions, aliased in the manifest. */
 struct SeesawModelFile : SharedFilePtr {
-    u32 words[2];
 
     SeesawModelFile(u32 fileID);
     ~SeesawModelFile();
 };
 
 struct SeesawCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     SeesawCollisionFilePtr(u32 fileID);
     ~SeesawCollisionFilePtr();

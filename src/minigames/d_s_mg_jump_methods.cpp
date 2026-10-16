@@ -15,10 +15,10 @@
  * - struct C must stay a non-polymorphic stand-in for the state PMF at
  *   0x5004: mwccarm lays out a pointer-to-member of a polymorphic class
  *   differently, so Behavior cannot dispatch through dScMgJump_c itself.
- * - The pmf_dScMgJump_c_* records (0x0213cb54..0x0213cb84) are ROM-owned
- *   {fn, 0} table rows, declared as StatePmf externs and named for the
- *   state each one points at; gMgScene is the live dScMgBase_c (its
- *   mHudScore and mBestHudScore are read by name).
+ * - pmf_dScMgJump_c_State_Result..0213cb84 are the {fn, 0} state rows. g_profile_MG_JUMP
+ *   sits between 0213cb5c and 0213cb6c. data_ov006_0213cb48 and
+ *   data_ov006_0213cb8c stay the ROM copy. gMgScene is the ov004
+ *   shared scene data, read raw at +0xb4/+0xb8 because its type is not recovered.
  * - the func_ov006_020c and func_ov004 externs are other TUs' workers; they
  *   keep address names until their owners name them.
  */
@@ -68,7 +68,6 @@ struct Base {
  * data_ov006_02142184; a declared-only subclass so the static initializer
  * names the real entry points. */
 struct MgJumpModelFilePtr : SharedFilePtr {
-    u32 words[2];
     MgJumpModelFilePtr(u32 fileID);
     ~MgJumpModelFilePtr();
 };
@@ -113,13 +112,46 @@ extern s16  data_02082614;
 extern int  data_ov006_02140418;
 extern int  data_ov006_02140304;
 extern int  data_ov006_02140434;
-extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Result;
-extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Intro;
-extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_End;
-extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Final;
-extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Idle;
-extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Idle_2;
-extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Play;
+
+/* The state rows are raw {fn, 0} words. A pointer-to-member initializer
+ * would emit a static initializer this overlay does not have, so each
+ * function is named by the mangled spelling the relocation already uses. */
+void _ZN11dScMgJump_c10State_IdleEv(void);
+void _ZN11dScMgJump_c11State_FinalEv(void);
+void _ZN11dScMgJump_c12State_ResultEv(void);
+void _ZN11dScMgJump_c9State_EndEv(void);
+void _ZN11dScMgJump_c10State_PlayEv(void);
+void _ZN11dScMgJump_c11State_IntroEv(void);
+void *dScMgJump_c_classInit(void);
+
+dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Result = {
+    (s32)_ZN11dScMgJump_c12State_ResultEv, 0};
+dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Intro = {
+    (s32)_ZN11dScMgJump_c11State_IntroEv, 0};
+dScMgJump_c::StatePmf pmf_dScMgJump_c_State_End = {
+    (s32)_ZN11dScMgJump_c9State_EndEv, 0};
+
+/* MG_JUMP's registry profile: the factory, then the same priority in both
+ * halfwords. Eight bytes, between the third state row and the fourth. */
+struct MgJumpProfile {
+    void *(*spawn)(void);
+    s16 behaviorPriority;
+    s16 renderPriority;
+};
+typedef char MgJumpProfile_size_must_be_8[
+    sizeof(MgJumpProfile) == 8 ? 1 : -1];
+MgJumpProfile g_profile_MG_JUMP = {
+    dScMgJump_c_classInit, 0x174, 0x174
+};
+
+dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Final = {
+    (s32)_ZN11dScMgJump_c11State_FinalEv, 0};
+dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Idle = {
+    (s32)_ZN11dScMgJump_c10State_IdleEv, 0};
+dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Idle_2 = {
+    (s32)_ZN11dScMgJump_c10State_IdleEv, 0};
+dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Play = {
+    (s32)_ZN11dScMgJump_c10State_PlayEv, 0};
 }
 
 namespace GX   { void LoadOBJPltt(const void *src, unsigned int offset, unsigned int size); }

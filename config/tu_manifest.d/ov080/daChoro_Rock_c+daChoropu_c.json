@@ -18,6 +18,11 @@
       "end": "0x02124a20"
     },
     {
+      "name": ".rodata",
+      "start": "0x0212766c",
+      "end": "0x0212767c"
+    },
+    {
       "name": ".init",
       "start": "0x021278c0",
       "end": "0x02127a60"
@@ -220,6 +225,15 @@
       "size": "0x00000040",
       "legacy_source": "src/d_a_choropu.c",
       "ordinal": 25
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov080_0212766c",
+      "address": "0x0212766c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four animation SharedFilePtr pointers (files 0x2d2, 0x2d3, 0x2d4, 0x2d5); InitResources loads them in order"
     }
   ],
   "data": [
@@ -505,6 +519,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x0212766c",
+          "end": "0x0212767c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x021278c0",
           "end": "0x02127a60",
@@ -534,7 +555,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 47
+          "LICENSED": 48
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -543,40 +564,49 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              108
+              71
             ],
             "desired": [
-              108
+              71
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              110
+            ],
+            "desired": [
+              110
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              106
+              108
             ],
             "desired": [
-              106
+              108
             ]
           },
           {
             "section": ".data",
             "original": [
-              71,
               73,
               75,
               77,
               79,
-              81
+              81,
+              83
             ],
             "desired": [
-              77,
-              73,
-              81,
               79,
-              71,
-              75
+              75,
+              83,
+              81,
+              73,
+              77
             ]
           },
           {
@@ -594,7 +624,7 @@
               68,
               69,
               70,
-              83
+              85
             ],
             "desired": [
               60,
@@ -609,7 +639,7 @@
               65,
               61,
               63,
-              83
+              85
             ]
           }
         ],
@@ -618,28 +648,28 @@
             {
               "section": ".data",
               "original": [
-                71,
                 73,
                 75,
                 77,
                 79,
-                81
+                81,
+                83
               ],
               "desired": [
-                77,
-                73,
-                81,
                 79,
-                71,
-                75
+                75,
+                83,
+                81,
+                73,
+                77
               ],
               "slots": [
-                71,
                 73,
                 75,
                 77,
                 79,
-                81
+                81,
+                83
               ]
             },
             {
@@ -657,7 +687,7 @@
                 68,
                 69,
                 70,
-                83
+                85
               ],
               "desired": [
                 60,
@@ -672,7 +702,7 @@
                 65,
                 61,
                 63,
-                83
+                85
               ],
               "slots": [
                 59,
@@ -687,7 +717,7 @@
                 68,
                 69,
                 70,
-                83
+                85
               ]
             }
           ],
@@ -991,6 +1021,46 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x0212766c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov080_021283e8",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021283e8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127670",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov080_021283d0",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021283d0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127674",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov080_021283d8",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021283d8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127678",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov080_021283e0",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021283e0"
+    },
     {
       "section": ".init",
       "source": "0x021278d0",

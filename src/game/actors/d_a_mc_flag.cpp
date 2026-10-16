@@ -28,14 +28,12 @@ enum d_a_mc_flag_AssetId {
    SharedFilePtr::Construct and registers SharedFilePtr_Destruct_Anim.
    The manifest aliases these. */
 struct McFlagModelFileHandle : SharedFilePtr {
-    u32 words[2];
 
     McFlagModelFileHandle(u32 fileID);
     ~McFlagModelFileHandle();
 };
 
 struct McFlagAnimResFileHandle : SharedFilePtr {
-    u32 words[2];
 
     McFlagAnimResFileHandle(u32 fileID);
     ~McFlagAnimResFileHandle();

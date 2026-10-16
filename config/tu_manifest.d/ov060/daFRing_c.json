@@ -28,6 +28,11 @@
       "end": "0x0211a4d4"
     },
     {
+      "name": ".data",
+      "start": "0x0211ab20",
+      "end": "0x0211ab30"
+    },
+    {
       "name": ".bss",
       "start": "0x0211b1f8",
       "end": "0x0211b234"
@@ -84,7 +89,15 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov060_0211ab20",
+      "address": "0x0211ab20",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four 20.12 band scales Behavior multiplies by the frame reach: 0x787, 0x800, 0xf0f, 0x1000"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov060_0211b1f8",
@@ -242,6 +255,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0211ab20",
+          "end": "0x0211ab30",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x0211b1f8",
           "end": "0x0211b234",
@@ -250,7 +270,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 15
+          "LICENSED": 16
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -261,19 +281,28 @@
           {
             "section": ".init",
             "original": [
-              44
+              45
             ],
             "desired": [
-              44
+              45
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              42
+              43
             ],
             "desired": [
-              42
+              43
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              26
+            ],
+            "desired": [
+              26
             ]
           },
           {

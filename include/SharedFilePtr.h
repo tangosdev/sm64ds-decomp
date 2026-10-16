@@ -12,15 +12,18 @@
  * can never be enrolled into the ROM build. Declaring the member lets the compiler
  * produce _ZN13SharedFilePtr7ReleaseEv the ordinary way.
  *
- * No fields, deliberately. The layout is NOT recovered: files that declare this struct
- * locally disagree about it -- {int a, file;}, {int data[4];}, {int f0; void *f4;} and
- * {int h;} all appear -- each sized to whatever pointer arithmetic that file needed.
- * Committing to one here would silently change the others' indexing, so those files
- * keep their local declaration and are left out of this change until the real layout
- * is recovered. Callers converted here only call methods through a pointer.
+ * Layout is the one the constructor writes (func_02017e0c, also recorded in
+ * include/daPiano_c_resources.h). Eight bytes, no C++ destructor: a global is
+ * the zeroed ROM handle, and the startup file still fills it. A destructor
+ * here would register a second cleanup the ROM does not have.
  */
 struct SharedFilePtr
 {
+    unsigned short fileID;   /* 0x00 */
+    unsigned char refCount;  /* 0x02 */
+    unsigned char pad;       /* 0x03, never written */
+    void *filePtr;           /* 0x04 */
+
     /* RETURN TYPES ARE MEASURED, not chosen: both of these set r0 on the way out
        and the C forms that defined them returned a value, so declaring them void
        made the declaration and the definition disagree -- harmless while nothing
@@ -39,5 +42,7 @@ struct SharedFilePtr
        so this changes no symbol. */
     void *Load();
 };
+
+typedef char SharedFilePtr_size_must_be_8[sizeof(SharedFilePtr) == 8 ? 1 : -1];
 
 #endif

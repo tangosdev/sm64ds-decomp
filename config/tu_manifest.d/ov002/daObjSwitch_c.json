@@ -32,7 +32,7 @@
     {
       "name": ".data",
       "start": "0x0210987c",
-      "end": "0x021098cc"
+      "end": "0x02109900"
     },
     {
       "name": ".bss",
@@ -280,6 +280,41 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba0f8Ev"
+    },
+    {
+      "symbol": "data_ov002_021098e8",
+      "address": "0x021098e8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "entry 0 model handle, data_ov002_0210dfd4. The next two symbols are the rest of the same two-row Resources table."
+    },
+    {
+      "symbol": "data_ov002_021098ec",
+      "address": "0x021098ec",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "entry 0 collision handle, data_ov002_0210dfc4."
+    },
+    {
+      "symbol": "data_ov002_021098f0",
+      "address": "0x021098f0",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "entry 0 clps then entry 1's model, collision and clps: data_ov002_0210d854, data_ov002_0210dfcc, data_ov002_0210dfbc, data_ov002_0210d894."
+    },
+    {
+      "symbol": "_ZTI13daObjSwitch_c",
+      "address": "0x021098cc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "class typeinfo. It sits between the PMF descriptors and data_ov002_021098e8, so the .data claim has to include it for that word to land on its symbols.txt address."
+    },
+    {
+      "symbol": "_ZTS13daObjSwitch_c",
+      "address": "0x021098d8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "type name 13daObjSwitch_c. Sixteen bytes, no padding, between the typeinfo and data_ov002_021098e8."
     }
   ],
   "bss": [
@@ -488,7 +523,7 @@
         {
           "section": ".data",
           "start": "0x0210987c",
-          "end": "0x021098cc",
+          "end": "0x02109900",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -501,7 +536,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 45
+          "LICENSED": 50
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -512,19 +547,19 @@
           {
             "section": ".init",
             "original": [
-              101
+              107
             ],
             "desired": [
-              101
+              107
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              99
+              105
             ],
             "desired": [
-              99
+              105
             ]
           },
           {
@@ -535,48 +570,58 @@
               9,
               11,
               13,
-              15,
-              17,
-              23,
-              27,
-              29
+              16,
+              18,
+              24,
+              26,
+              28,
+              31,
+              33,
+              47,
+              51,
+              53
             ],
             "desired": [
-              29,
-              7,
+              18,
+              33,
+              16,
+              31,
               11,
-              5,
+              24,
+              26,
               13,
               9,
-              17,
-              27,
-              15,
-              23
+              28,
+              47,
+              53,
+              7,
+              5,
+              51
             ]
           },
           {
             "section": ".bss",
             "original": [
-              19,
+              15,
               20,
-              25,
-              26,
-              34,
-              35,
-              38,
-              39,
-              48
+              23,
+              30,
+              40,
+              41,
+              42,
+              49,
+              54
             ],
             "desired": [
-              26,
+              15,
+              30,
+              23,
               20,
-              25,
-              19,
-              34,
-              35,
-              38,
-              39,
-              48
+              49,
+              40,
+              41,
+              42,
+              54
             ]
           }
         ],
@@ -590,23 +635,33 @@
                 9,
                 11,
                 13,
-                15,
-                17,
-                23,
-                27,
-                29
+                16,
+                18,
+                24,
+                26,
+                28,
+                31,
+                33,
+                47,
+                51,
+                53
               ],
               "desired": [
-                29,
-                7,
+                18,
+                33,
+                16,
+                31,
                 11,
-                5,
+                24,
+                26,
                 13,
                 9,
-                17,
-                27,
-                15,
-                23
+                28,
+                47,
+                53,
+                7,
+                5,
+                51
               ],
               "slots": [
                 5,
@@ -614,53 +669,58 @@
                 9,
                 11,
                 13,
-                15,
-                17,
-                23,
-                27,
-                29
+                16,
+                18,
+                24,
+                26,
+                28,
+                31,
+                33,
+                47,
+                51,
+                53
               ]
             },
             {
               "section": ".bss",
               "original": [
-                19,
+                15,
                 20,
-                25,
-                26,
-                34,
-                35,
-                38,
-                39,
-                48
+                23,
+                30,
+                40,
+                41,
+                42,
+                49,
+                54
               ],
               "desired": [
-                26,
+                15,
+                30,
+                23,
                 20,
-                25,
-                19,
-                34,
-                35,
-                38,
-                39,
-                48
+                49,
+                40,
+                41,
+                42,
+                54
               ],
               "slots": [
-                19,
+                15,
                 20,
-                25,
-                26,
-                34,
-                35,
-                38,
-                39,
-                48
+                23,
+                30,
+                40,
+                41,
+                42,
+                49,
+                54
               ]
             }
           ],
-          "symbolIndices": 19,
+          "symbolIndices": 24,
           "sectionLinks": 0,
-          "sectionInfos": 10,
+          "sectionInfos": 14,
           "error": null
         },
         "errors": null
@@ -705,20 +765,6 @@
       "canonical_module": "ov002",
       "canonical_address": "0x02109940",
       "reason": "Text-only TU: externalize to canonical public address02109940. Independent direct payload comparison must include all136 emitted bytes starting02109938 (8-byte preamble plus128 slot bytes). The standard romdata check reports only128 public bytes; it is not whole-storage proof."
-    },
-    {
-      "symbol": "_ZTI13daObjSwitch_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x021098cc",
-      "reason": "Text-only TU: externalize this exact RTTI/name symbol to its canonical retail home. Standard word-based verification may report PARTIAL for inherited names; direct emitted-byte verification, including NUL/padding, is recorded separately in notes/experiments/pr2874-source-repair-0920.json. Unemitted retail gap padding is not claimed as output."
-    },
-    {
-      "symbol": "_ZTS13daObjSwitch_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x021098d8",
-      "reason": "Text-only TU: externalize to canonical retail name at021098d8. All16 emitted bytes hold15 characters13daObjSwitch_c plus NUL, with no extra emitted padding. Direct byte proof includes the entire payload."
     },
     {
       "symbol": "_ZTI10dBgActor_c",
@@ -940,6 +986,18 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0210e000"
+    },
+    {
+      "symbol": "_ZTI13daObjSwitch_c",
+      "from": "STB_LOPROC",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the typeinfo weak; symbols.txt carries it as a global at 0x021098cc"
+    },
+    {
+      "symbol": "_ZTS13daObjSwitch_c",
+      "from": "STB_LOPROC",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the type name weak; symbols.txt carries it as a global at 0x021098d8"
     }
   ],
   "relocations": [
@@ -1342,6 +1400,96 @@
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ba0f8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021098e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210dfd4",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dfd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x021098ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210dfc4",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dfc4"
+    },
+    {
+      "section": ".data",
+      "source": "0x021098f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210d854",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210d854"
+    },
+    {
+      "section": ".data",
+      "source": "0x021098f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210dfcc",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dfcc"
+    },
+    {
+      "section": ".data",
+      "source": "0x021098f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210dfbc",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210dfbc"
+    },
+    {
+      "section": ".data",
+      "source": "0x021098fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210d894",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210d894"
+    },
+    {
+      "section": ".data",
+      "source": "0x021098cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x021098d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS13daObjSwitch_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021098d8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021098d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI10dBgActor_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021089ec"
     }
   ],
   "defined_symbol_renames": [

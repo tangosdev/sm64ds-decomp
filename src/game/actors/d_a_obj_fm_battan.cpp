@@ -121,14 +121,12 @@ extern void func_020393d4(int *, int);
  * member imports to the existing evidence-bounded ROM symbols without claiming
  * that those project names were the original source spellings. */
 struct BattanModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BattanModelFilePtr(u32 fileID);
     ~BattanModelFilePtr();
 };
 
 struct BattanCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BattanCollisionFilePtr(u32 fileID);
     ~BattanCollisionFilePtr();

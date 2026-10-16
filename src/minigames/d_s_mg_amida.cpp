@@ -139,7 +139,6 @@ extern void *data_ov006_0213a458[];
 extern void *data_ov006_0213a4b0[];
 extern int  data_ov006_0213a4c0[];
 extern int  data_ov006_0213a568[];
-extern int  data_ov006_0213b84c[13];
 extern s32  data_ov006_02141640[];
 extern s32  data_ov006_02141650[];
 }
@@ -174,11 +173,28 @@ namespace Memory {
     void Deallocate(void *ptr);
 }
 
-typedef struct { int a; int b; } Pair;
-extern Pair data_ov006_0213b8b8[11];
+/* Per-language compressed file IDs for the BG1 backdrop, indexed by
+   GetGameLanguage(). */
+int data_ov006_0213b838[5] = {222, 223, 219, 220, 221};
+/* Per-lane frame-index cycle; RenderBoard copies it whole and indexes
+   data_ov006_0213a390 with frames[*frame]. */
+int data_ov006_0213b84c[13] = {0, 1, 2, 3, 2, 1, 0, 1, 2, 3, 2, 1, 0};
 
 typedef struct { int v[14]; } Buf14;
-extern Buf14 data_ov006_0213b880;
+/* Per-rung animation periods; the Behavior copies it whole. */
+Buf14 data_ov006_0213b880 = {{2, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1}};
+
+namespace std { class type_info { virtual ~type_info(); }; }
+typedef struct { int a; int b; } Pair;
+/* The eleven rungs' screen positions; the Behavior copies 88 bytes.
+   The symbol's range runs to the vtable, so the twelfth slot is the
+   vtable header that follows it in .data: offset 0, typeinfo. */
+Pair data_ov006_0213b8b8[12] = {
+    {0x20, -0x87}, {0xa0, -0x87}, {0x60, -0x5a}, {0x20, -0x2d},
+    {0xa0, -0x2d}, {0x60, -0x78}, {0x20, -0x69}, {0xa0, -0x69},
+    {0x20, -0x4b}, {0xa0, -0x4b}, {0x60, -0x3c},
+    {0, (int)&typeid(dScMgAmida_c)}
+};
 
 #define PIECE_AT(p) ((dScMgAmida_c_Piece *)((p) + 0x4768))
 

@@ -63,23 +63,21 @@ typedef void (dBgActor_c::*StateFunc)();
  * collision files func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct Linelift2ModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Linelift2ModelFilePtr(u32 fileID);
     ~Linelift2ModelFilePtr();
 };
 
 struct Linelift2CollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Linelift2CollisionFilePtr(u32 fileID);
     ~Linelift2CollisionFilePtr();
 };
 
 extern "C" {
-extern SharedFilePtr *data_ov091_021344fc[]; /* BMD, by mVariant */
-extern SharedFilePtr *data_ov091_021344f4[]; /* KCL, by mVariant */
-extern CLPS_Block *data_ov091_02134e5c[];    /* CLPS, by mVariant */
+extern SharedFilePtr *const data_ov091_021344fc[]; /* BMD, by mVariant */
+extern SharedFilePtr *const data_ov091_021344f4[]; /* KCL, by mVariant */
+extern CLPS_Block *data_ov091_02134e5c[];           /* CLPS, by mVariant */
 extern StateFunc data_ov091_021354e0[];      /* by mState */
 extern s16 data_02082214[];                  /* sin/cos pairs */
 
@@ -378,4 +376,24 @@ StateFunc data_ov091_021354e0[3] = {
     data_ov091_02134e54,
     data_ov091_02134e44,
     data_ov091_02134e4c,
+};
+
+/* Two pointers each, one per mVariant. The collision table points at the
+ * collision handles and the model table at the model handles. Both tables
+ * are const so they land in .rodata. The CLPS table is not const: retail
+ * stores it in .data. */
+extern "C" SharedFilePtr *const data_ov091_021344f4[2] = {
+    &gKm3RiftCollisionFile,
+    &gKm2SusumuCollisionFile,
+};
+extern "C" SharedFilePtr *const data_ov091_021344fc[2] = {
+    &gKm3RiftModelFile,
+    &gKm2SusumuModelFile,
+};
+
+extern "C" CLPS_Block data_ov008_02111af4;
+extern "C" CLPS_Block data_ov010_02112610;
+extern "C" CLPS_Block *data_ov091_02134e5c[2] = {
+    &data_ov008_02111af4,
+    &data_ov010_02112610,
 };

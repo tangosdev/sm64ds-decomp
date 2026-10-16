@@ -67,14 +67,12 @@ struct CLPS_Block;
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct IceBlockModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     IceBlockModelFilePtr(u32 fileID);
     ~IceBlockModelFilePtr();
 };
 
 struct IceBlockCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     IceBlockCollisionFilePtr(u32 fileID);
     ~IceBlockCollisionFilePtr();

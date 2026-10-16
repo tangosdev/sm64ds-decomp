@@ -62,12 +62,10 @@ enum daObjSimpleBg_c_AssetId {
  * destroy through SharedFilePtr_Destruct_Clsn. The file tables above these
  * objects stay ROM data. */
 struct SimpleBgModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
     SimpleBgModelFilePtr(unsigned int fileId);
     ~SimpleBgModelFilePtr();
 };
 struct SimpleBgClsnFilePtr : SharedFilePtr {
-    unsigned int words[2];
     SimpleBgClsnFilePtr(unsigned int fileId);
     ~SimpleBgClsnFilePtr();
 };

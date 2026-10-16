@@ -45,10 +45,12 @@ int  ApproachLinear(int &value, int target, int step);
 int  ApproachLinear2(s16 &value, s16 target, s16 step);
 
 extern "C" {
-extern dMgMCarloCardObj_c *data_ov006_021424fc; /* first pick */
-extern dMgMCarloCardObj_c *data_ov006_02142500; /* board list head */
-extern dMgMCarloCardObj_c *data_ov006_02142504; /* board list tail */
-extern dMgMCarloCardObj_c *data_ov006_02142508; /* second pick */
+/* Source order is mwccarm's .bss order for these four, which is the
+   reverse of their addresses. */
+dMgMCarloCardObj_c *data_ov006_02142508; /* second pick */
+dMgMCarloCardObj_c *data_ov006_02142504; /* board list tail */
+dMgMCarloCardObj_c *data_ov006_02142500; /* board list head */
+dMgMCarloCardObj_c *data_ov006_021424fc; /* first pick */
 extern short data_ov006_021424ec;
 extern int data_ov006_0213d570;
 extern int data_ov006_0213d574;

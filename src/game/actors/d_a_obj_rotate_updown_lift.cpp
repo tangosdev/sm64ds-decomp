@@ -110,14 +110,12 @@ struct UpdownClpsSlot {
  * this TU names the handles directly; the UpdownFileSlot rows above
  * point at them. */
 struct RotateUpdownLiftModelFile : SharedFilePtr {
-    u32 words[2];
 
     RotateUpdownLiftModelFile(u32 fileID);
     ~RotateUpdownLiftModelFile();
 };
 
 struct RotateUpdownLiftCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     RotateUpdownLiftCollisionFilePtr(u32 fileID);
     ~RotateUpdownLiftCollisionFilePtr();
@@ -595,6 +593,59 @@ extern "C" daObjRotateUpdownLift_c *daObjRotateUpdownLift_c_classInit_UPDOWN_LIF
 {
     return new daObjRotateUpdownLift_c();
 }
+
+/* The four per-variant word triples InitResources copies onto the stack.
+ * The file table, path table and vtable between them stay in ROM: .text
+ * reads those through the row symbols as array bases, and the manifest
+ * contributes only one contiguous .data span, so the emitted group stops
+ * at 0x02134c30. */
+// 0x02134ba0 (0xc)
+VariantWords data_ov091_02134ba0 = {{0x200000, 0x200000, 0x500000}};
+// 0x02134bac (0xc)
+VariantWords data_ov091_02134bac = {{0x3c000, 0x3c000, 0x78000}};
+// 0x02134bb8 (0xc)
+VariantWords data_ov091_02134bb8 = {{0x32000, 0x32000, 0x78000}};
+// 0x02134bd0 (0xc)
+VariantWords data_ov091_02134bd0 = {{0xd2000, 0xd2000, 0x190000}};
+
+struct UpdownLiftSpawnInfo {
+    daObjRotateUpdownLift_c *(*classInit)();
+    s16 executePriority; /* +4: also the registry id */
+    s16 renderPriority;  /* +6 */
+    u32 actorFlags;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    Fix12i clipDistance;
+    Fix12i farDistance;
+};
+typedef char UpdownLiftSpawnInfo_size_must_be_0x1c[
+    sizeof(UpdownLiftSpawnInfo) == 0x1c ? 1 : -1];
+
+// 0x02134bf8 (0x1c)
+// @symbol g_profile_UPDOWN_LIFT
+extern "C" UpdownLiftSpawnInfo g_profile_UPDOWN_LIFT = {
+    daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT,
+    0x001d,
+    0x0129,
+    0x01000002,
+    0,
+    0x200000,
+    0x1000000,
+    0x1000000
+};
+
+// 0x02134c14 (0x1c)
+// @symbol g_profile_HS_UPDOWN_LIFT
+extern "C" UpdownLiftSpawnInfo g_profile_HS_UPDOWN_LIFT = {
+    daObjRotateUpdownLift_c_classInit_HS_UPDOWN_LIFT,
+    0x001e,
+    0x012a,
+    0x00000002,
+    0,
+    0x500000,
+    0x1000000,
+    0
+};
 
 /* Static-init globals (was the handwritten __sinit_ov091_02134524 shard).
  * Definition order is the retail initializer's construction order. */

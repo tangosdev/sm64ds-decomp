@@ -41,7 +41,7 @@
  *   camera-space position), data_02082214 (sin/cos pairs) and
  *   data_0209e650 (random seed) keep linker names.
  * - The SharedFilePtr subclasses and the loaded-file word at [1] stay
- *   spelled through handles: SharedFilePtr has no recovered fields.
+ *   spelled through handles: SharedFilePtr is the 8-byte handle.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -102,12 +102,10 @@ int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
  * declared-only subclasses so the static initializer names the real entry
  * points. */
 struct HyuhyuModelFilePtr : SharedFilePtr {
-    u32 words[2];
     HyuhyuModelFilePtr(u32 fileID);
     ~HyuhyuModelFilePtr();
 };
 struct HyuhyuAnimationFileHandle : SharedFilePtr {
-    u32 words[2];
     HyuhyuAnimationFileHandle(u32 fileID);
     ~HyuhyuAnimationFileHandle();
 };

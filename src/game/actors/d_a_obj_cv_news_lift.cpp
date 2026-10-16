@@ -19,7 +19,7 @@
  *   0x254 against 0x258. func_020393c4 and func_020393d4 stay.
  * - InitResources: probePos.y = mPosY - 0x14000 is 0x254 against 0x258.
  * - InitResources: Model::LoadFile's return in place of filePtr differs
- *   by 20 words. NewsLiftFile stays; SharedFilePtr has no fields.
+ *   by 20 words. NewsLiftFile stays; SharedFilePtr is the 8-byte handle.
  * - OnMainMeshRide: copying mTargetRotation in a loop is 0x100 against
  *   0x104.
  * - Behavior: reset reads of data_02092768 without volatile are 0x594
@@ -34,8 +34,10 @@
  * - MainMeshCallback and Platform0Callback: testing actorID == 0xbf
  *   inline is 0x34 against 0x40. The int temporary stays on all five
  *   callbacks.
- * - data_ov021_* handles, data_02092768, data_020a0e68 and data_02082214
- *   stay address names (__sinit_ov021_02113500 owns the handles).
+ * - The four NewsLiftFile handles are defined here. __sinit_ov021_02113500
+ *   still stores their file ids. The two CLPS blocks and the four offset
+ *   vectors stay the ROM copy. data_02092768, data_020a0e68 and
+ *   data_02082214 stay address names.
  *   dActor_c has no Pos(), so callers cast &mPosX.
  */
 
@@ -49,19 +51,16 @@
 
 struct Quaternion;
 
-/* A SharedFilePtr seen from outside: SharedFilePtr.h deliberately declares
- * no fields, and these reads need the loaded buffer. The fields follow the
- * layout that _ZN13SharedFilePtr4LoadEv's definition uses. */
-struct NewsLiftFile {
-    u16 fileID;
-    u8 numRefs;
-    void *filePtr;
+/* The loaded buffer is filePtr, the same word Load stores. */
+struct NewsLiftFile : SharedFilePtr {
 };
 
-extern NewsLiftFile data_ov021_021149a0;
-extern NewsLiftFile data_ov021_021149a8;
-extern NewsLiftFile data_ov021_021149b0;
-extern NewsLiftFile data_ov021_021149b8;
+/* mwccarm emits these four in address order from this source order.
+   __sinit_ov021_02113500 still stores the file ids. */
+NewsLiftFile data_ov021_021149a0;
+NewsLiftFile data_ov021_021149b0;
+NewsLiftFile data_ov021_021149b8;
+NewsLiftFile data_ov021_021149a8;
 extern CLPS_Block data_ov021_02113a60;
 extern CLPS_Block data_ov021_02113a80;
 
@@ -207,10 +206,10 @@ void daObjCvNewsLift_c::OnPlatform3Ride(dActor_c *player)
 // @symbol _ZN17daObjCvNewsLift_c13InitResourcesEv
 s32 daObjCvNewsLift_c::InitResources()
 {
-    Model::LoadFile(*(SharedFilePtr *)&data_ov021_021149a0);
-    dBgW_Kc::LoadFile(*(SharedFilePtr *)&data_ov021_021149a8);
-    Model::LoadFile(*(SharedFilePtr *)&data_ov021_021149b0);
-    dBgW_Kc::LoadFile(*(SharedFilePtr *)&data_ov021_021149b8);
+    Model::LoadFile(data_ov021_021149a0);
+    dBgW_Kc::LoadFile(data_ov021_021149a8);
+    Model::LoadFile(data_ov021_021149b0);
+    dBgW_Kc::LoadFile(data_ov021_021149b8);
 
     mModel.SetFile((BMD_File *)data_ov021_021149a0.filePtr, 1, -1);
     for (int i = 0; i < 4; i++)
@@ -433,10 +432,10 @@ s32 daObjCvNewsLift_c::CleanupResources()
     mMeshCollider.Disable();
     for (int i = 0; i < 4; i++)
         mPlatformColliders[i].Disable();
-    ((SharedFilePtr *)&data_ov021_021149b0)->Release();
-    ((SharedFilePtr *)&data_ov021_021149b8)->Release();
-    ((SharedFilePtr *)&data_ov021_021149a0)->Release();
-    ((SharedFilePtr *)&data_ov021_021149a8)->Release();
+    data_ov021_021149b0.Release();
+    data_ov021_021149b8.Release();
+    data_ov021_021149a0.Release();
+    data_ov021_021149a8.Release();
     return 1;
 }
 

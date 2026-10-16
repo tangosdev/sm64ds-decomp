@@ -41,12 +41,10 @@ struct CLPS_Block;
  * declared-only subclasses so the static initializer names the real entry
  * points. */
 struct Kpa2BgModelFilePtr : SharedFilePtr {
-    u32 words[2];
     Kpa2BgModelFilePtr(u32 fileID);
     ~Kpa2BgModelFilePtr();
 };
 struct Kpa2BgCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     Kpa2BgCollisionFilePtr(u32 fileID);
     ~Kpa2BgCollisionFilePtr();
 };

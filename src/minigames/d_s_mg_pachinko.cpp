@@ -229,8 +229,11 @@ extern Ent7d0 data_ov006_02142644[];
 extern PMF2   data_ov006_0214266c[];
 extern Ent7d0 data_ov006_02142694[];
 
-/* The ROM {code pointer, adjustment} records the five tables copy from
-   (unlicensed .data), grouped by destination table in retail copy order. */
+/* The ROM {code pointer, adjustment} records the five tables copy from,
+   grouped by destination table in retail copy order. 0x0213d878..0x0213d910
+   is defined below. g_profile_MG_PACHINKO at 0x0213d910 splits the rest
+   (0x0213d918, 0x0213d920, 0x0213d928, and 0x0213d930..0x0213d948) off that
+   run, so those stay the ROM copy. */
 extern Ent7d0 pmf_PachinkoBobOmb_State0;
 extern Ent7d0 pmf_PachinkoBobOmb_State1;
 extern Ent7d0 pmf_PachinkoBobOmb_State2;
@@ -247,15 +250,15 @@ extern Ent7d0 pmf_PachinkoPipe_State0;
 extern Ent7d0 pmf_PachinkoPipe_State1;
 extern Ent7d0 pmf_PachinkoPipe_State2;
 extern Ent7d0 pmf_PachinkoPipe_State3;
-extern PMF2   pmf_PachinkoFlyer_State0;
-extern PMF2   pmf_PachinkoFlyer_State1;
-extern PMF2   pmf_PachinkoFlyer_State2;
-extern PMF2   pmf_PachinkoFlyer_State3;
-extern PMF2   pmf_PachinkoFlyer_State4;
+extern Ent7d0 pmf_PachinkoFlyer_State0;
+extern Ent7d0 pmf_PachinkoFlyer_State1;
+extern Ent7d0 pmf_PachinkoFlyer_State2;
+extern Ent7d0 pmf_PachinkoFlyer_State3;
+extern Ent7d0 pmf_PachinkoFlyer_State4;
 extern PMF    pmf_PachinkoBg_State0;
 extern PMF    pmf_PachinkoBg_State1;
-extern PMF    pmf_PachinkoBg_State2;
-extern PMF    pmf_PachinkoBg_State3;
+extern Ent7d0 pmf_PachinkoBg_State2;
+extern Ent7d0 pmf_PachinkoBg_State3;
 
 /* This TU's own members, forward-declared for the callers below them. */
 extern void PachinkoDeco_DrawAll(char *thiz);
@@ -2898,15 +2901,37 @@ Ent7d0 data_ov006_02142624[4] = {
     pmf_PachinkoPipe_State3,
 };
 PMF2 data_ov006_0214266c[5] = {
-    pmf_PachinkoFlyer_State0,
-    pmf_PachinkoFlyer_State1,
-    pmf_PachinkoFlyer_State2,
-    pmf_PachinkoFlyer_State3,
-    pmf_PachinkoFlyer_State4,
+    *(PMF2 *)&pmf_PachinkoFlyer_State0,
+    *(PMF2 *)&pmf_PachinkoFlyer_State1,
+    *(PMF2 *)&pmf_PachinkoFlyer_State2,
+    *(PMF2 *)&pmf_PachinkoFlyer_State3,
+    *(PMF2 *)&pmf_PachinkoFlyer_State4,
 };
 Entry data_ov006_02142604[4] = {
     {pmf_PachinkoBg_State0},
     {pmf_PachinkoBg_State1},
-    {pmf_PachinkoBg_State2},
-    {pmf_PachinkoBg_State3},
+    {*(PMF *)&pmf_PachinkoBg_State2},
+    {*(PMF *)&pmf_PachinkoBg_State3},
 };
+
+/* {code pointer, 0} records at 0x0213d878..0x0213d910. The profile at
+   0x0213d910 splits the rest of the table off this range. */
+Ent7d0 pmf_PachinkoFlyer_State0 = { (int)PachinkoFlyer_State0, 0 };
+Ent7d0 pmf_PachinkoBall_State5 = { (int)PachinkoBall_State5, 0 };
+Ent7d0 pmf_PachinkoFlyer_State4 = { (int)PachinkoFlyer_State4, 0 };
+Ent7d0 pmf_PachinkoFlyer_State3 = { (int)PachinkoFlyer_State3, 0 };
+Ent7d0 pmf_PachinkoBall_State2 = { (int)PachinkoBall_State2, 0 };
+Ent7d0 pmf_PachinkoBg_State2 = { (int)PachinkoBg_State2, 0 };
+Ent7d0 pmf_PachinkoBobOmb_State0 = { (int)PachinkoBobOmb_State0, 0 };
+Ent7d0 pmf_PachinkoBall_State4 = { (int)PachinkoBall_State4, 0 };
+Ent7d0 pmf_PachinkoBobOmb_State3 = { (int)PachinkoBobOmb_State3, 0 };
+Ent7d0 pmf_PachinkoBall_State0 = { (int)PachinkoBall_State0, 0 };
+Ent7d0 pmf_PachinkoBall_State1 = { (int)PachinkoBall_State1, 0 };
+Ent7d0 pmf_PachinkoPipe_State3 = { (int)PachinkoPipe_State3, 0 };
+Ent7d0 pmf_PachinkoBall_State6 = { (int)PachinkoBall_State6, 0 };
+Ent7d0 pmf_PachinkoFlyer_State2 = { (int)PachinkoFlyer_State2, 0 };
+Ent7d0 pmf_PachinkoFlyer_State1 = { (int)PachinkoFlyer_State1, 0 };
+Ent7d0 pmf_PachinkoBobOmb_State1 = { (int)PachinkoBobOmb_State1, 0 };
+Ent7d0 pmf_PachinkoBobOmb_State2 = { (int)PachinkoBobOmb_State2, 0 };
+Ent7d0 pmf_PachinkoBg_State3 = { (int)PachinkoBg_State3, 0 };
+Ent7d0 pmf_PachinkoBobOmb_State4 = { (int)PachinkoBobOmb_State4, 0 };

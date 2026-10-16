@@ -18,7 +18,8 @@
  * Leftover: func_ov002_020b6584 / func_ov002_020b6424 are still the
  *   linker names of daObjUkiyuka_c Init/Cleanup (the base leaves
  *   those slots pure virtual). Naming belongs in ov002.
- * Leftover: the file table is still data_ov045_02112f08.
+ * Leftover: data_ov045_02112f08 points at the two handles below and at
+ *   data_ov045_02112550.
  * Leftover: g_profile_KM2_UKISHIMA is overlay data; this TU is
  *   text-only so the definition here is a deadstripped duplicate.
  */
@@ -46,14 +47,12 @@ typedef char ResourceDescriptor_size_must_be_0x0c[
  * their destructors. The wrapper names are local; the ctor/dtor
  * addresses are the ROM resource-family functions. */
 struct UkishimaModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     UkishimaModelFilePtr(u32 fileID);
     ~UkishimaModelFilePtr();
 };
 
 struct UkishimaCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     UkishimaCollisionFilePtr(u32 fileID);
     ~UkishimaCollisionFilePtr();
@@ -116,3 +115,11 @@ s32 daObjKm2_Ukishima_c::CleanupResources()
 
 UkishimaModelFilePtr gKm2UkishimaModelFile(ASSET_KM2_UKISHIMA_BMD);
 UkishimaCollisionFilePtr gKm2UkishimaCollisionFile(ASSET_KM2_UKISHIMA_KCL);
+
+/* The third word is data_ov045_02112550, an earlier CLPS block. */
+extern CLPS_Block data_ov045_02112550;
+extern "C" ResourceDescriptor data_ov045_02112f08 = {
+    &gKm2UkishimaModelFile,
+    &gKm2UkishimaCollisionFile,
+    &data_ov045_02112550,
+};

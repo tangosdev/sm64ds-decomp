@@ -49,14 +49,12 @@ struct CLPS_Block;
  * addresses are dropped from symbols.txt, and their stale decl_common.h
  * lines with them (S42). */
 struct Mecha08ModelFile : SharedFilePtr {
-    u32 words[2];
 
     Mecha08ModelFile(u32 fileID);
     ~Mecha08ModelFile();
 };
 
 struct Mecha08CollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Mecha08CollisionFilePtr(u32 fileID);
     ~Mecha08CollisionFilePtr();

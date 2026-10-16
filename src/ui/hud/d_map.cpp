@@ -144,7 +144,7 @@ extern void UpdateMinimap(s32 *a, s32 b, s32 c, s32 d, s32 e);
 void Vec3_DivScalarInPlace(struct Vec3* v, int s);
 void Vec3_MulScalarInPlace(struct Vec3* v, int s);
 void Vec3_RotateYAndTranslate(struct Vec3* out, struct Vec3* in, short ang, struct Vec3* t);
-extern struct Vec3 data_ov002_0211116c;
+struct Vec3 data_ov002_0211116c;
 }
 
 // @symbol _ZN6dMap_cD1Ev

@@ -47,12 +47,8 @@
 struct Mtx { int m[12]; };
 
 /* filePtr is the word Model::LoadFile and dExtFrameCtrl_c::LoadFile read.
- * include/SharedFilePtr.h has no fields. */
-struct LoadedSharedFile {
-    u16 fileID;    /* 0x00 */
-    u8 numRefs;    /* 0x02 */
-    u8 pad;        /* 0x03 */
-    void *filePtr; /* 0x04 */
+ * include/SharedFilePtr is the 8-byte handle. */
+struct LoadedSharedFile : SharedFilePtr {
 };
 
 /* Vec3_Asr's definition. Three ints, same layout as mPosX/Y/Z. */

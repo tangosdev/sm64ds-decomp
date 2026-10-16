@@ -19,16 +19,14 @@
  * - The Mtx43 / V3A overlays on mModelAnim.mat4x3, mShadowMat and the
  *   player position copies. Plain Matrix4x3 / Vector3 assignment
  *   scalarizes.
- * - The SharedFilePtr +4 BCA loads stay raw -- that layout is
- *   unrecovered.
  * - ModelAnim::SetAnim, dCcAc_c::Init, dBgCh_Actr::Init,
  *   DropShadowRadHeight, KillByInvincibleChar, SpawnCoins, Player::Hurt
- *   and Player::Bounce retain scalar ABI declarations. Native fixed-point
- *   call reconstruction remains separate work; the handoff records the
- *   measured Init alternatives. Hurt follows its current scalar definition.
- * - The data_ov065_* SharedFilePtr handles (Init LoadFile, Cleanup
- *   Release) and the state records (func_ov065_0211691c) are not owned
- *   by this TU. g_profile_YUREI_MUCHO is defined outside. pad_3e2 is
+ *   and Player::Bounce stay spelled as mangled symbols: Fix12 by value,
+ *   wall 6az. dBgCh_Actr::Init is the same wall from the other side --
+ *   the header's Fix12i mangles as int, which is what InitResources
+ *   calls here.
+ * - The four state records (func_ov065_0211691c) are not owned by this
+ *   TU. g_profile_YUREI_MUCHO is defined outside. pad_3e2 is
  *   unobserved.
  */
 
@@ -105,14 +103,24 @@ extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12
     void *self, const void *v, void *p, int a);
 extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 
-/* The four shared-file handles and four State records remain ROM-supplied BSS.
-   __sinit_ov065_0211c110 initializes the handles and copies the eight PMF
-   constants into the State records. This text-only TU does not own that storage
-   or initializer; SharedFilePtr's complete layout is still unrecovered. */
-extern SharedFilePtr data_ov065_0211d600;
-extern SharedFilePtr data_ov065_0211d608;
-extern SharedFilePtr data_ov065_0211d610;
-extern SharedFilePtr data_ov065_0211d618;
+/* The four shared-file handles are zero-initialized BSS this TU owns.
+   __sinit_ov065_0211c110 (its own TU) constructs them at runtime -- the
+   model pair through func_02017acc/func_02017ab4, the animation pair
+   through SharedFilePtr::Construct and SharedFilePtr_Destruct_Anim -- and
+   copies the eight PMF constants into the State records, which stay
+   ROM-supplied storage. */
+struct YureiAnimationFileHandle : SharedFilePtr {
+    /* SharedFilePtr::Load and func_02017e0c use this local eight-byte layout. */
+};
+struct YureiModelFilePtr : SharedFilePtr {
+};
+/* Definition order is not address order: mwccarm emits each plain global's
+   `.bss` section in a fixed permuted order, and this spelling emits the four
+   handles in ascending ROM address order. */
+YureiAnimationFileHandle data_ov065_0211d600;
+YureiModelFilePtr data_ov065_0211d610;
+YureiModelFilePtr data_ov065_0211d618;
+YureiAnimationFileHandle data_ov065_0211d608;
 /* These State objects remain ROM-supplied storage. Existing declarations in
    decl_common.h use raw arrays/words, so uses retain their local State casts. */
 extern char data_ov065_0211d670[];
@@ -383,7 +391,7 @@ int daYurei_Mucho_c::func_ov065_021168a8()
     /* unsigned/signed timer store: a named s16 write DIFFs the ldrh sites. */
     *(short *)((char *)this + 0x100) = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0x1f) + 0x32);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim,
-        ((void **)&data_ov065_0211d600)[1], 0, 0x1000, 0);
+        data_ov065_0211d600.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
@@ -504,7 +512,7 @@ short daYurei_Mucho_c::func_ov065_02116588()
 {
     mShotCount = 0;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim,
-        ((void **)&data_ov065_0211d608)[1], 0x40000000, 0x1000, 0);
+        data_ov065_0211d608.filePtr, 0x40000000, 0x1000, 0);
     *(short *)((char *)this + 0x100) = 0;
     return 1;
 }
@@ -560,7 +568,7 @@ int daYurei_Mucho_c::func_ov065_02116364()
             } else {
                 *(u16 *)((char *)this + 0x100) = 0x32;
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim,
-                    ((void **)&data_ov065_0211d600)[1], 0, 0x1000, 0);
+                    data_ov065_0211d600.filePtr, 0, 0x1000, 0);
                 func_ov065_0211691c((State *)&data_ov065_0211d680);
             }
         } else {

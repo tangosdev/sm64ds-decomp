@@ -72,14 +72,12 @@ struct TrapStateRec {
 /* 8-byte resource handles. The ctor/dtor bodies are the ROM functions the
  * initializer calls; this TU only names them. */
 struct TrapModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     TrapModelFilePtr(u32 fileID);
     ~TrapModelFilePtr();
 };
 
 struct TrapCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     TrapCollisionFilePtr(u32 fileID);
     ~TrapCollisionFilePtr();

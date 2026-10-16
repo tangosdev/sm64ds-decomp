@@ -32,7 +32,7 @@
     },
     {
       "name": ".bss",
-      "start": "0x021425a8",
+      "start": "0x02142568",
       "end": "0x02142604"
     }
   ],
@@ -223,6 +223,55 @@
   "data": [],
   "bss": [
     {
+      "symbol": "data_ov006_02142568",
+      "address": "0x02142568",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero-filled tail of the live card list"
+    },
+    {
+      "symbol": "data_ov006_0214256c",
+      "address": "0x0214256c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero-filled head of the cleared-card list"
+    },
+    {
+      "symbol": "data_ov006_02142570",
+      "address": "0x02142570",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero-filled first picked card"
+    },
+    {
+      "symbol": "data_ov006_02142574",
+      "address": "0x02142574",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero-filled second picked card"
+    },
+    {
+      "symbol": "data_ov006_02142578",
+      "address": "0x02142578",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero-filled card in slot 19"
+    },
+    {
+      "symbol": "data_ov006_0214257c",
+      "address": "0x0214257c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero-filled head of the live card list"
+    },
+    {
+      "symbol": "data_ov006_02142580",
+      "address": "0x02142580",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "ten per-face weights, zero-filled; DrawCardValue writes them"
+    },
+    {
       "symbol": "data_ov006_021425a8",
       "address": "0x021425a8",
       "size": "0x5c",
@@ -378,14 +427,14 @@
         },
         {
           "section": ".bss",
-          "start": "0x021425a8",
+          "start": "0x02142568",
           "end": "0x02142604",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 28
+          "LICENSED": 35
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -396,32 +445,86 @@
           {
             "section": ".init",
             "original": [
-              87
+              94
             ],
             "desired": [
-              87
+              94
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              85
+              92
             ],
             "desired": [
-              85
+              92
             ]
           },
           {
             "section": ".bss",
             "original": [
-              28
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              34,
+              35
             ],
             "desired": [
-              28
+              5,
+              7,
+              8,
+              10,
+              9,
+              6,
+              34,
+              35
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                34,
+                35
+              ],
+              "desired": [
+                5,
+                7,
+                8,
+                10,
+                9,
+                6,
+                34,
+                35
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                34,
+                35
+              ]
+            }
+          ],
+          "symbolIndices": 8,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,

@@ -328,10 +328,41 @@ def init_section_sources():
     return {rel for (_d, _name, rel, _addr, _size, sec) in cands if sec == ".init"}
 
 
+_DATA_SECTION_CLAIMS = None
+_DATA_SECTION_ADDRESSES = {}
+
+
+def data_section_claims(rel):
+    """Keyword arguments that make isolation keep ``rel``'s claimed storage.
+
+    Empty for a source whose ``complete`` delinks entry claims only code, so
+    those sources are isolated exactly as before. Otherwise the entry's
+    non-code ranges (see ``enroll.storage_claims``) and the module's
+    symbols.txt addresses, which ``objisolate.storage_fit`` checks the object
+    against before anything is kept.
+    """
+    global _DATA_SECTION_CLAIMS
+    import enroll as E  # noqa: PLC0415
+    config = REPO / "config"
+    if _DATA_SECTION_CLAIMS is None or _DATA_SECTION_CLAIMS[0] != config:
+        _DATA_SECTION_CLAIMS = (config, E.storage_claims(config))
+        _DATA_SECTION_ADDRESSES.clear()
+    claim = _DATA_SECTION_CLAIMS[1].get(rel.replace("\\", "/"))
+    if not claim:
+        return {}
+    module = claim["module"]
+    if module not in _DATA_SECTION_ADDRESSES:
+        _DATA_SECTION_ADDRESSES[module] = E.data_symbol_addresses(module)
+    return {"keep_sections": claim["sections"], "addresses": _DATA_SECTION_ADDRESSES[module]}
+
+
 def _isolate(obj, rel, syms, data_sink=None, compiler_only=None, intact_tus=None):
     """Reduce a compiled `src/` object to its declared function(s).
 
     A legacy source owns one function and takes the unchanged singular isolation path.
+    A source whose delinks entry also claims storage (``.data``, ``.bss``, ...) keeps
+    exactly those sections: the range is no longer in the gap object, so they are the
+    only definition left (``data_section_claims``).
     A consolidated source owns several functions in ROM order and takes objisolate's
     separate fail-closed intact-object path, which admits no content the manifest has
     not licensed -- including the vtable a key function drags in. Returns an error or
@@ -370,11 +401,12 @@ def _isolate(obj, rel, syms, data_sink=None, compiler_only=None, intact_tus=None
     pol = (compiler_only or {}).get(rel.replace("\\", "/")) or {}
     if pol.get("canonical") and not isinstance(selected, (list, tuple)):
         return "canonical duplicate policy requires explicit enrolled function ownership"
+    kept = data_section_claims(rel)
     if isinstance(selected, (list, tuple)):
         if not selected:
             return "source owns no enrolled functions"
         if len(selected) == 1 and not pol.get("canonical"):
-            plan = OI.isolate(obj, selected[0])
+            plan = OI.isolate(obj, selected[0], **kept)
         else:
             dead = pol.get("deadstrip") or []
             if dead:
@@ -404,10 +436,10 @@ def _isolate(obj, rel, syms, data_sink=None, compiler_only=None, intact_tus=None
                     if reduced is None:
                         return "canonical duplicate rename refused: " + rename_plan["error"]
                 obj.write_bytes(reduced)
-            plan = (OI.isolate(obj, selected[0]) if len(selected) == 1
-                    else OI.isolate_many(obj, selected))
+            plan = (OI.isolate(obj, selected[0], **kept) if len(selected) == 1
+                    else OI.isolate_many(obj, selected, **kept))
     else:
-        plan = OI.isolate(obj, selected)
+        plan = OI.isolate(obj, selected, **kept)
     if plan.get("kind") == OI.NOT_A_FUNCTION:
         return None          # nothing to reduce; other gates judge this file
     return plan.get("error")
@@ -816,7 +848,9 @@ def intact_tu_policies(enrolled=None, manifest=None):
 
     This is deliberately opt-in.  A non-text manifest is not enough: the entry must
     be promoted, request ``production_mode: intact-object``, and carry a successful
-    ordinary scratch link proving every claimed range, all modules, and the full ROM.
+    ordinary link proving every claimed range, all modules, and the full ROM.
+    ``scratch-data-verified`` and ``data-verified`` are that proof; the second is the
+    same link when the intact policies had nothing to rewrite.
     The compile path re-runs the exact object/data/relocation checks on every raw object;
     this admission record prevents an unverified research manifest from selecting the
     policy in the first place.
@@ -866,9 +900,13 @@ def intact_tu_policies(enrolled=None, manifest=None):
                           "supported until baseline bootstrapping is non-circular")
         linkcheck = (entry.get("verification") or {}).get("linkcheck") or {}
         phases = linkcheck.get("phases") or {}
-        if linkcheck.get("result") != "scratch-data-verified":
+        # data-verified is the same ordinary full-ROM link as scratch-data-verified,
+        # named without the prefix because the raw object already was the
+        # post-policy object. Production re-runs those policies either way.
+        # module-data-verified and every other result stay out.
+        if linkcheck.get("result") not in ("scratch-data-verified", "data-verified"):
             errors.append(f"{label}: intact-object policy needs scratch-data-verified "
-                          "ordinary link evidence")
+                          "or data-verified ordinary link evidence")
         for phase in ("delink", "lcf", "compile", "link", "checkModules", "rom"):
             if phases.get(phase) is not True:
                 errors.append(f"{label}: intact-object proof phase {phase} is not green")

@@ -33,12 +33,10 @@ enum d_a_obj_ki_fune_AssetId {
  * func_02017ab4. Two collision handles construct through func_02017b4c and
  * destroy through SharedFilePtr_Destruct_Clsn. The file tables stay ROM data. */
 struct KiFuneModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
     KiFuneModelFilePtr(unsigned int fileId);
     ~KiFuneModelFilePtr();
 };
 struct KiFuneClsnFileHandle : SharedFilePtr {
-    unsigned int words[2];
     KiFuneClsnFileHandle(unsigned int fileId);
     ~KiFuneClsnFileHandle();
 };

@@ -8,9 +8,9 @@
  * and it lands flat with an earthquake and a thud (mState 3). The cuboid
  * shadow is re-aimed every frame by func_ov015_021114f0.
  *
- * The class's .text, its .init/.ctor pair and the two resource handles'
- * .bss are owned here. ov015 delinks no .data for this class, so the
- * _ZTV / _ZTI / _ZTS group it names is compiler-only output, compared
+ * The class's .text, its .init/.ctor pair, the CLPS block
+ * data_ov015_02113574, and the two resource handles' .bss are owned here.
+ * The _ZTV / _ZTI / _ZTS group stays compiler-only output, compared
  * against the cartridge's own copies at ov015 0x02114420 / 0x021143dc /
  * 0x021143e8.
  *
@@ -46,8 +46,7 @@
  *   on the same two addresses -- a stale spelling of a discarded class name --
  *   so this TU keeps the address-true spelling, the way d_a_obj_bk_lift.cpp
  *   does for its pair.
- * Leftover: data_ov015_02113574 is the CLPS block in overlay .data that
- *   this TU does not own; data_02082214 is arm9's sin/cos table,
+ * Leftover: data_02082214 is arm9's sin/cos table,
  *   data_020a0e68 arm9's scratch matrix, and data_0209f220 / data_0209f2f8
  *   arm9 scene state.
  * Leftover: g_profile_BK_BOTAOSI lives outside this TU.
@@ -69,18 +68,16 @@ enum daObjBk_Botaosi_c_AssetId {
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
 
-/* SharedFilePtr has no fields; the two words are the handle's 8 bytes. The
+/* SharedFilePtr is the 8-byte handle; the two words are the handle's 8 bytes. The
  * constructors and destructors are the ROM resource-family veneers, aliased
  * in the manifest. */
 struct BkBotaosiModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BkBotaosiModelFilePtr(u32 fileID);
     ~BkBotaosiModelFilePtr();
 };
 
 struct BkBotaosiCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BkBotaosiCollisionFilePtr(u32 fileID);
     ~BkBotaosiCollisionFilePtr();
@@ -433,6 +430,18 @@ extern "C" daObjBk_Botaosi_c *daObjBk_Botaosi_c_classInit()
 
 /* The ROM's initializer constructs the model handle with file ID 1417 and
  * the collision handle with file ID 1418, registering a destructor node for
- * each. mwcc emits __sinit_d_a_obj_bk_botaosi.cpp from these definitions. */
+ * each. mwcc emits __sinit_d_a_obj_bk_botaosi.cpp from these definitions.
+ * data_ov015_02113574 is the CLPS block SetFile takes: 'CLPS', stride 8,
+ * one entry, then the bytes through the next symbol. */
+struct CLPS_Block {
+    u32 w[8];
+};
+typedef char CLPS_Block_size_must_be_0x20[sizeof(CLPS_Block) == 0x20 ? 1 : -1];
+
+extern "C" CLPS_Block data_ov015_02113574 = {
+    0x53504c43, 0x00010008, 0x01000fc5, 0x000000ff,
+    0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+};
+
 BkBotaosiModelFilePtr data_ov015_0211497c(ASSET_BK_BOTAOSI_BMD);
 BkBotaosiCollisionFilePtr data_ov015_02114974(ASSET_BK_BOTAOSI_KCL);

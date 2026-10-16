@@ -36,14 +36,12 @@ struct CLPS_Block;
  * destroy through SharedFilePtr_Destruct_Clsn. The manifest aliases those
  * undefined members onto the ROM symbols. */
 struct TdFutaModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     TdFutaModelFilePtr(u32 fileID);
     ~TdFutaModelFilePtr();
 };
 
 struct TdFutaClsnFileHandle : SharedFilePtr {
-    u32 words[2];
 
     TdFutaClsnFileHandle(u32 fileID);
     ~TdFutaClsnFileHandle();

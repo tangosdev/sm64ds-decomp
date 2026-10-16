@@ -40,18 +40,16 @@ enum d_a_obj_bk_rotebar_AssetId {
 struct KCL_File;
 struct CLPS_Block;
 
-/* SharedFilePtr has no fields; the two words are the handle's 8 bytes. The
+/* SharedFilePtr is the 8-byte handle; the two words are the handle's 8 bytes. The
  * constructors and destructors are the ROM resource-family veneers, aliased
  * in the manifest. */
 struct BkRotebarModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BkRotebarModelFilePtr(u32 fileID);
     ~BkRotebarModelFilePtr();
 };
 
 struct BkRotebarCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BkRotebarCollisionFilePtr(u32 fileID);
     ~BkRotebarCollisionFilePtr();

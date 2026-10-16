@@ -28,6 +28,11 @@
       "end": "0x02113100"
     },
     {
+      "name": ".data",
+      "start": "0x02113da8",
+      "end": "0x02113db0"
+    },
+    {
       "name": ".bss",
       "start": "0x02114528",
       "end": "0x02114550"
@@ -70,7 +75,15 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov022_02113da8",
+      "address": "0x02113da8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "ResourceTail {collision, clps}: two ABS32 words relocating to gFlKomaDCollisionFile (collision SharedFilePtr) and data_ov064_0211bb4c (CLPS_Block owned by ov064). The descriptor head at 0x02113da4 stays a ROM copy: the import and a definition cannot share one name (DD052 precedent)."
+    }
+  ],
   "bss": [
     {
       "symbol": "gFlKomaDCollisionFile",
@@ -234,6 +247,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02113da8",
+          "end": "0x02113db0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02114528",
           "end": "0x02114550",
@@ -242,7 +262,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 11
+          "LICENSED": 12
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -253,6 +273,15 @@
           {
             "section": ".init",
             "original": [
+              49
+            ],
+            "desired": [
+              49
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
               47
             ],
             "desired": [
@@ -260,12 +289,12 @@
             ]
           },
           {
-            "section": ".ctor",
+            "section": ".data",
             "original": [
-              45
+              25
             ],
             "desired": [
-              45
+              25
             ]
           },
           {
@@ -648,6 +677,26 @@
       "addend": 0,
       "target_module": "ov022",
       "target_address": "0x02112d14"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113da8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFlKomaDCollisionFile",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02114528"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113dac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211bb4c",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211bb4c"
     }
   ],
   "defined_symbol_renames": [

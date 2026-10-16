@@ -19,6 +19,11 @@
       "end": "0x02121a6c"
     },
     {
+      "name": ".rodata",
+      "start": "0x021226a0",
+      "end": "0x021226ac"
+    },
+    {
       "name": ".init",
       "start": "0x021228c8",
       "end": "0x02122a1c"
@@ -374,6 +379,13 @@
           "section": ".text",
           "start": "0x02120668",
           "end": "0x02121a6c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021226a0",
+          "end": "0x021226ac",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1008,6 +1020,52 @@
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x021228c8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021226a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov071_02123048",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02123048"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021226a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov071_02123038",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02123038"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021226a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov071_02123040",
+      "addend": 0,
+      "target_module": "ov071",
+      "target_address": "0x02123040"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov071_021226a0",
+      "address": "0x021226a0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to the BCA handle data_ov071_02123048 (file 0x2f9)"
+    },
+    {
+      "symbol": "data_ov071_021226a4",
+      "address": "0x021226a4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two pointers, to the BTP handles data_ov071_02123038 (file 0x2f8) and data_ov071_02123040 (file 0x2fb)"
     }
   ]
 }

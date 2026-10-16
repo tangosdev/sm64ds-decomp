@@ -186,6 +186,51 @@ src/actors/Pair.cpp:
             self.assertEqual(first_dl.read_text(encoding="utf-8"), first_text)
 
 
+class StorageClaims(unittest.TestCase):
+    """A complete entry's non-code ranges are the source's own storage."""
+
+    def test_complete_entry_non_code_ranges_are_storage(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            module = pathlib.Path(tmp) / "arm9"
+            module.mkdir()
+            (module / "delinks.txt").write_text(
+                "    .text start:0x02000000 end:0x02080000 kind:code\n"
+                "\n"
+                "src/Owner.c:\n"
+                "    complete\n"
+                "    .text start:0x02000000 end:0x02000010\n"
+                "    .init start:0x02000010 end:0x02000020\n"
+                "    .data start:0x02090000 end:0x02090008\n"
+                "    .bss start:0x020a0000 end:0x020a0004\n"
+                "\n"
+                "src/CodeOnly.c:\n"
+                "    complete\n"
+                "    .text start:0x02000020 end:0x02000030\n"
+                "\n"
+                "src/Pending.c:\n"
+                "    .data start:0x02090010 end:0x02090018\n"
+                "\n"
+                "src/Twice.c:\n"
+                "    complete\n"
+                "    .data start:0x02090020 end:0x02090024\n"
+                "    .data start:0x02090030 end:0x02090034\n",
+                encoding="utf-8")
+            (module / "symbols.txt").write_text(
+                "func_02000000 kind:function(arm,size=0x10) addr:0x02000000\n"
+                "data_02090000 kind:data(any) addr:0x02090000\n"
+                "data_020a0000 kind:bss addr:0x020a0000\n",
+                encoding="utf-8")
+            claims = EN.storage_claims(tmp)
+            self.assertEqual(sorted(claims), ["src/Owner.c", "src/Twice.c"])
+            self.assertEqual(claims["src/Owner.c"]["sections"], {
+                ".data": (0x02090000, 0x02090008),
+                ".bss": (0x020a0000, 0x020a0004)})
+            self.assertEqual(claims["src/Owner.c"]["module"], module)
+            self.assertEqual(claims["src/Twice.c"]["sections"], {".data": None})
+            self.assertEqual(EN.data_symbol_addresses(module), {
+                "data_02090000": 0x02090000, "data_020a0000": 0x020a0000})
+
+
 class ThumbSourcesAreRecognized(unittest.TestCase):
     def test_pragma_thumb_on_admits_a_thumb_row(self):
         self.assertTrue(EN.THUMB_PRAGMA.search("/* stub */\r\n#pragma thumb on\r\nint f;"))

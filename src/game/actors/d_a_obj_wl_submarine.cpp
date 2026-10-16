@@ -34,13 +34,11 @@ enum daObjWlSubmarine_c_AssetId {
  * for the collision), spelled through declared-only subclasses so the
  * static initializer names the real entry points. */
 struct SubmarineModelFilePtr : SharedFilePtr {
-    u32 words[2];
     SubmarineModelFilePtr(u32 fileID);
     ~SubmarineModelFilePtr();
 };
 extern SubmarineModelFilePtr Submarine_ModelFile;
 struct SubmarineCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     SubmarineCollisionFilePtr(u32 fileID);
     ~SubmarineCollisionFilePtr();
 };

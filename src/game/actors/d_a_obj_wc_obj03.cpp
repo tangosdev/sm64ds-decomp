@@ -70,7 +70,6 @@ void Matrix4x3_FromRotationY(Matrix4x3 *, int);
  * spelling is local; the manifest aliases the generated names to those ROM
  * symbols. */
 struct WcObj03ModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     WcObj03ModelFilePtr(u32 fileID);
     ~WcObj03ModelFilePtr();

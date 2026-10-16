@@ -169,6 +169,81 @@ class Isolate(unittest.TestCase):
         OI.isolate_many(obj, names)
         self.assertEqual(obj.read_bytes(), raw)
 
+    STORED = ('extern "C" {\n'
+              'int data_02090000[2] = {1, 2};\n'
+              'int func_02005000(void) { return data_02090000[0] + data_02090000[1]; }\n'
+              '}\n')
+    STORED_ROWS = {"data_02090000": 0x02090000}
+
+    def test_unclaimed_data_is_still_dropped_and_imported(self):
+        raw = self.build(self.STORED).read_bytes()
+        plan = OI.plan(raw, "func_02005000")
+        self.assertIsNone(plan["error"])
+        self.assertIn("data_02090000", plan["externalise"])
+        self.assertEqual(plan["keepStorage"], [])
+
+    def test_claimed_data_stays_defined_with_its_bytes(self):
+        """The delinks entry took 0x02090000..8 off the gap; the object is its home."""
+        import io
+        from elftools.elf.elffile import ELFFile
+
+        raw = self.build(self.STORED).read_bytes()
+        claim = {".data": (0x02090000, 0x02090008)}
+        plan = OI.plan(raw, "func_02005000", claim, self.STORED_ROWS)
+        self.assertIsNone(plan["error"], plan)
+        self.assertNotIn("data_02090000", plan["externalise"])
+        self.assertEqual(len(plan["keepStorage"]), 1)
+        out, plan = OI.derive(raw, "func_02005000", claim, self.STORED_ROWS)
+        self.assertIsNone(plan["error"])
+        elf = ELFFile(io.BytesIO(out if out is not None else raw))
+        data = elf.get_section_by_name(".data")
+        self.assertEqual(data.header["sh_size"], 8)
+        self.assertEqual(data.data()[:8], bytes([1, 0, 0, 0, 2, 0, 0, 0]))
+        sym = next(s for s in elf.get_section_by_name(".symtab").iter_symbols()
+                   if s.name == "data_02090000")
+        self.assertNotEqual(sym["st_shndx"], "SHN_UNDEF")
+
+    def test_claim_must_be_filled_exactly(self):
+        raw = self.build(self.STORED).read_bytes()
+        plan = OI.plan(raw, "func_02005000", {".data": (0x02090000, 0x0209000c)},
+                       self.STORED_ROWS)
+        self.assertIn("fills 0x02090000..0x02090008", plan["error"])
+
+    def test_claimed_symbol_must_land_on_its_symbols_txt_address(self):
+        raw = self.build(self.STORED).read_bytes()
+        plan = OI.plan(raw, "func_02005000", {".data": (0x02090000, 0x02090008)},
+                       {"data_02090000": 0x02090004})
+        self.assertIn("symbols.txt puts it at 0x02090004", plan["error"])
+        plan = OI.plan(raw, "func_02005000", {".data": (0x02090000, 0x02090008)}, {})
+        self.assertIn("no symbols.txt row", plan["error"])
+
+    def test_claim_the_object_does_not_emit_is_refused(self):
+        raw = self.build(self.STORED).read_bytes()
+        plan = OI.plan(raw, "func_02005000", {".bss": (0x020a0000, 0x020a0008)},
+                       self.STORED_ROWS)
+        self.assertIn("emits no .bss", plan["error"])
+        plan = OI.plan(raw, "func_02005000", {".data": None}, self.STORED_ROWS)
+        self.assertIn("claimed more than once", plan["error"])
+
+    def test_multi_symbol_isolation_keeps_claimed_storage(self):
+        obj = self.build(
+            "struct Pair { void First(); void Second(); };\n"
+            'extern "C" { int data_0209b2f8; }\n'
+            "void Pair::Second() { data_0209b2f8 = 1; }\n"
+            "void Pair::First() {}\n")
+        names = ["_ZN4Pair5FirstEv", "_ZN4Pair6SecondEv"]
+        raw = obj.read_bytes()
+        out, plan = OI.derive_many(raw, names)
+        self.assertIsNone(out)
+        self.assertIn("data_0209b2f8", plan["error"])
+        claim = {".bss": (0x0209b2f8, 0x0209b2fc)}
+        out, plan = OI.derive_many(raw, names, claim, {"data_0209b2f8": 0x0209b2f8})
+        self.assertIsNone(plan["error"], plan)
+        self.assertEqual(out, raw)
+        out, plan = OI.derive_many(raw, names, claim, {"data_0209b2f8": 0x0209b2f0})
+        self.assertIsNone(out)
+        self.assertIn("delinks storage claim", plan["error"])
+
     def test_multi_symbol_isolation_refuses_a_missing_member(self):
         obj, names = self._plain_two_function_tu()
         out, plan = OI.derive_many(

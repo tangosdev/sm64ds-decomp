@@ -28,10 +28,9 @@ enum d_a_obj_bk_billboard_AssetId {
 #include "daObjBkBillboard_c.h"
 #include "SharedFilePtr.h"
 
-/* SharedFilePtr has no fields; the two words are the handle's 8 bytes. The
+/* SharedFilePtr is the 8-byte handle; the two words are the handle's 8 bytes. The
  * constructor and destructor are the ROM veneers, aliased in the manifest. */
 struct BkBillboardModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BkBillboardModelFilePtr(u32 fileID);
     ~BkBillboardModelFilePtr();

@@ -9,6 +9,7 @@ src/game/actors/d_a_obj_ct_mecha10.cpp:
     .text start:0x021111a0 end:0x021116ec
     .init start:0x02111f04 end:0x02111fc0
     .ctor start:0x02112028 end:0x0211202c
+    .data start:0x021121d8 end:0x02112218
     .bss start:0x02112c60 end:0x02112cb0
 
 src/game/actors/d_a_obj_ct_mecha11.cpp:

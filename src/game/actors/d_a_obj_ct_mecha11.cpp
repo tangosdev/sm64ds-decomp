@@ -50,14 +50,12 @@ struct V3 { int x, y, z; };
 /* Resource handles constructed by this TU's static initializer. The
  * constructor and destructor bodies stay out of line; mwcc registers them. */
 struct Mecha11ModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Mecha11ModelFilePtr(u32 fileID);
     ~Mecha11ModelFilePtr();
 };
 
 struct Mecha11ClsnFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Mecha11ClsnFilePtr(u32 fileID);
     ~Mecha11ClsnFilePtr();

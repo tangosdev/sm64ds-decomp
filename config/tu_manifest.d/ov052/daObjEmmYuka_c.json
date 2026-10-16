@@ -29,6 +29,11 @@
       "end": "0x02111c44"
     },
     {
+      "name": ".data",
+      "start": "0x021125a0",
+      "end": "0x021125ac"
+    },
+    {
       "name": ".bss",
       "start": "0x021126a8",
       "end": "0x021126d0"
@@ -85,7 +90,15 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov052_021125a0",
+      "address": "0x021125a0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "EmmYukaFiles: model handle, collision handle, CLPS block"
+    }
+  ],
   "bss": [
     {
       "symbol": "gEmmYukaModelFile",
@@ -239,6 +252,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x021125a0",
+          "end": "0x021125ac",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x021126a8",
           "end": "0x021126d0",
@@ -247,7 +267,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 13
+          "LICENSED": 14
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -258,6 +278,15 @@
           {
             "section": ".init",
             "original": [
+              47
+            ],
+            "desired": [
+              47
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
               45
             ],
             "desired": [
@@ -265,12 +294,12 @@
             ]
           },
           {
-            "section": ".ctor",
+            "section": ".data",
             "original": [
-              43
+              26
             ],
             "desired": [
-              43
+              26
             ]
           },
           {
@@ -524,6 +553,36 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x021125a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gEmmYukaModelFile",
+      "addend": 0,
+      "target_module": "ov052",
+      "target_address": "0x021126a8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gEmmYukaCollisionFile",
+      "addend": 0,
+      "target_module": "ov052",
+      "target_address": "0x021126b0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211ba0c",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211ba0c"
+    },
     {
       "section": ".init",
       "source": "0x02111be0",

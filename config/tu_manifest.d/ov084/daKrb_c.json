@@ -22,6 +22,11 @@
       "end": "0x0212c10c"
     },
     {
+      "name": ".rodata",
+      "start": "0x02130278",
+      "end": "0x02130294"
+    },
+    {
       "name": ".init",
       "start": "0x0213035c",
       "end": "0x02130558"
@@ -287,6 +292,15 @@
       "size": "0x0000005c",
       "legacy_source": "src/d_a_krb_kuribo.c",
       "ordinal": 34
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov084_02130278",
+      "address": "0x02130278",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "seven-element const SharedFilePtr* table -- the BCA handle list the resource loops walk; relocs.txt shows each of its seven words relocating to a KrbAnimationFileHandle BSS handle of this TU"
     }
   ],
   "data": [
@@ -681,6 +695,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x02130278",
+          "end": "0x02130294",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x0213035c",
           "end": "0x02130558",
@@ -710,7 +731,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 67
+          "LICENSED": 68
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -719,21 +740,30 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              130
+              108
             ],
             "desired": [
-              130
+              108
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              132
+            ],
+            "desired": [
+              132
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              128
+              130
             ],
             "desired": [
-              128
+              130
             ]
           },
           {
@@ -747,9 +777,9 @@
               101,
               103,
               105,
-              108,
               110,
-              111
+              112,
+              113
             ],
             "desired": [
               97,
@@ -757,12 +787,12 @@
               101,
               105,
               103,
-              110,
-              111,
+              112,
+              113,
               73,
               75,
               77,
-              108
+              110
             ]
           },
           {
@@ -824,9 +854,9 @@
                 101,
                 103,
                 105,
-                108,
                 110,
-                111
+                112,
+                113
               ],
               "desired": [
                 97,
@@ -834,12 +864,12 @@
                 101,
                 105,
                 103,
-                110,
-                111,
+                112,
+                113,
                 73,
                 75,
                 77,
-                108
+                110
               ],
               "slots": [
                 73,
@@ -850,9 +880,9 @@
                 101,
                 103,
                 105,
-                108,
                 110,
-                111
+                112,
+                113
               ]
             },
             {
@@ -1185,6 +1215,76 @@
       "addend": 0,
       "target_module": "ov084",
       "target_address": "0x0213035c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02130278",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130ce8",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130ce8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0213027c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130ce0",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130ce0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02130280",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130cd0",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130cd0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02130284",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130cc0",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130cc0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02130288",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKuriboRecoverAnimationFile",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130cd8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0213028c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130cc8",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130cc8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02130290",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130cf0",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130cf0"
     },
     {
       "section": ".data",

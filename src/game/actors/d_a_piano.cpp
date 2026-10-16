@@ -37,17 +37,14 @@ bool ApproachLinear(short &value, short target, short step);
  * __sinit_d_a_piano.cpp. Each flavor binds the constructor/destructor veneer
  * the cartridge uses for its asset kind (model / mesh collision / animation). */
 struct PianoModelFilePtr : SharedFilePtr {
-    u32 words[2];
     PianoModelFilePtr(u32 fileID);
     ~PianoModelFilePtr();
 };
 struct PianoCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     PianoCollisionFilePtr(u32 fileID);
     ~PianoCollisionFilePtr();
 };
 struct PianoAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
     PianoAnimationFilePtr(u32 fileID);
     ~PianoAnimationFilePtr();
 };

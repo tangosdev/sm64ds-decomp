@@ -34,13 +34,11 @@ enum daObjWlKoopaShutter_c_AssetId {
  * for the collision), spelled through declared-only subclasses so the
  * static initializer names the real entry points. */
 struct KoopaShutterModelFilePtr : SharedFilePtr {
-    u32 words[2];
     KoopaShutterModelFilePtr(u32 fileID);
     ~KoopaShutterModelFilePtr();
 };
 extern KoopaShutterModelFilePtr BowserShutter_ModelFile;
 struct KoopaShutterCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     KoopaShutterCollisionFilePtr(u32 fileID);
     ~KoopaShutterCollisionFilePtr();
 };

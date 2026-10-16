@@ -398,8 +398,64 @@ def _grow_string_table(raw, string_table_index, names):
     }
 
 
-def plan(raw, keep_symbol):
+def storage_fit(raw, keep_sections, addresses):
+    """Why this object cannot fill its delinks storage claims, or None.
+
+    ``keep_sections`` is ``{section: (start, end)}`` from the source's ``complete``
+    delinks entry (``None`` for a section claimed twice); ``addresses`` is the
+    module's symbols.txt ``{name: address}``. The claimed range is no longer in
+    the gap object, so the compiled section is linked in its place and must be
+    that range exactly: same-name sections laid end to end at their alignment
+    fill ``start..end``, and every global symbol in them lands on its own
+    symbols.txt address. A global with no row there has no known address and is
+    refused. Locals (``static``, ``@NNN`` literals) are the TU's own bytes and
+    are judged by the byte compare like everything else.
+    """
+    elf = ELFFile(io.BytesIO(bytes(raw)))
+    secs = list(elf.iter_sections())
+    symtab = elf.get_section_by_name(".symtab")
+    syms = list(symtab.iter_symbols()) if symtab is not None else []
+    for name, span in sorted(keep_sections.items()):
+        if span is None:
+            return f"{name} is claimed more than once by one delinks entry"
+        start, end = span
+        group = [(i, s) for i, s in enumerate(secs)
+                 if s.name == name and s.header["sh_type"] in CONTENT
+                 and s.header["sh_size"]]
+        if not group:
+            return (f"delinks claims {name} 0x{start:08x}..0x{end:08x} "
+                    f"but the object emits no {name}")
+        addr = start
+        for index, sec in group:
+            align = sec.header["sh_addralign"] or 1
+            addr = (addr + align - 1) // align * align
+            for sym in syms:
+                if (sym["st_shndx"] != index or not sym.name
+                        or sym.name.startswith("$")
+                        or sym["st_info"]["type"] == "STT_SECTION"
+                        or sym["st_info"]["bind"] == "STB_LOCAL"):
+                    continue
+                placed = addr + sym["st_value"]
+                want = addresses.get(sym.name)
+                if want is None:
+                    return (f"{name} defines {sym.name}, which has no symbols.txt "
+                            "row in this module")
+                if placed != want:
+                    return (f"{sym.name} would link at 0x{placed:08x}; symbols.txt "
+                            f"puts it at 0x{want:08x}")
+            addr += sec.header["sh_size"]
+        if addr != end:
+            return (f"{name} fills 0x{start:08x}..0x{addr:08x}, the delinks claim is "
+                    f"0x{start:08x}..0x{end:08x}")
+    return None
+
+
+def plan(raw, keep_symbol, keep_sections=None, addresses=None):
     """What isolation would do, without doing it.
+
+    ``keep_sections``/``addresses``: see ``storage_fit``. Sections named there are the
+    source's own claimed data and stay in the object with their relocations;
+    every other section is dropped exactly as without a claim.
 
     Returns a dict:
       keep        section index the wanted function lives in, or None
@@ -427,9 +483,19 @@ def plan(raw, keep_symbol):
         return {"error": f"{keep_symbol} is not a defined function here",
                 "kind": NOT_A_FUNCTION}
 
+    kept_storage = set()
+    if keep_sections:
+        misfit = storage_fit(raw, keep_sections, addresses or {})
+        if misfit:
+            return {"error": "delinks storage claim: " + misfit}
+        kept_storage = {i for i, s in enumerate(secs)
+                        if s.name in keep_sections and s.header["sh_type"] in CONTENT
+                        and s.header["sh_size"] and i != keep}
+
     drop = [i for i, s in enumerate(secs)
             if s.header["sh_type"] in CONTENT and s.header["sh_size"]
-            and i != keep and not any(s.name.startswith(p) for p in IGNORE)]
+            and i != keep and i not in kept_storage
+            and not any(s.name.startswith(p) for p in IGNORE)]
     dropset = set(drop)
 
     # Relocation sections that describe dropped sections go too: their targets no
@@ -439,10 +505,11 @@ def plan(raw, keep_symbol):
              if isinstance(s, RelocationSection) and s.header["sh_size"]
              and s.header["sh_info"] in dropset]
 
-    # What the SURVIVING section still points at decides import-vs-dead.
+    # What the SURVIVING sections still point at decides import-vs-dead.
     referenced = set()
     for s in secs:
-        if isinstance(s, RelocationSection) and s.header["sh_info"] == keep:
+        if isinstance(s, RelocationSection) and (
+                s.header["sh_info"] == keep or s.header["sh_info"] in kept_storage):
             for r in s.iter_relocations():
                 sym = symtab.get_symbol(r["r_info_sym"])
                 if sym.name:
@@ -478,6 +545,30 @@ def plan(raw, keep_symbol):
     # than corrected: there is no enrolled instance to verify a correction against,
     # and fail-closed costs one function while fail-open corrupts a module.
     ext = set(externalise)
+
+    # Kept storage keeps its own relocations. A pointer through a section symbol
+    # into a dropped section cannot be externalised, and the `_ZTV` preamble
+    # rewrite below is defined only for the kept function, so an RTTI pointer in
+    # kept data that would need it is refused rather than linked unrewritten.
+    for s in secs:
+        if not isinstance(s, RelocationSection) \
+                or s.header["sh_info"] not in kept_storage:
+            continue
+        for r in s.iter_relocations():
+            sym = symtab.get_symbol(r["r_info_sym"])
+            shndx = sym["st_shndx"]
+            if not sym.name and shndx in dropset:
+                return {"error": f"unnamed section-symbol reloc from kept "
+                                 f"{secs[s.header['sh_info']].name} into dropped "
+                                 f"section {secs[shndx].name} at 0x{r['r_offset']:x}"}
+            if sym.name.startswith(("_ZTV", "_ZTI", "_ZTS")) and (
+                    sym.name in ext or shndx in ("SHN_UNDEF", SHN_UNDEF)):
+                addend = r["r_addend"] if s.is_RELA() else 0
+                if addend:
+                    return {"error": f"{sym.name}: kept "
+                                     f"{secs[s.header['sh_info']].name} stores it "
+                                     f"with addend {addend}; storage is not rewritten"}
+
     ztv_rebase = False
     for s in secs:
         if not isinstance(s, RelocationSection) or s.header["sh_info"] != keep:
@@ -550,11 +641,12 @@ def plan(raw, keep_symbol):
 
     return {"keep": keep, "drop": sorted(set(drop)), "externalise": sorted(externalise),
             "dead": sorted(dead), "referenced": sorted(referenced),
+            "keepStorage": sorted(kept_storage),
             "ztvRebase": ztv_rebase, "error": None}
 
 
-def plan_many(raw, keep_symbols):
-    """Validate an exact text-only multi-function object for production linking.
+def plan_many(raw, keep_symbols, keep_sections=None, addresses=None):
+    """Validate an exact multi-function object for production linking.
 
     This is deliberately not ``plan`` with a wider argument.  The one-function
     pipeline is allowed to discard compiler-emitted neighbours and data because one
@@ -568,7 +660,9 @@ def plan_many(raw, keep_symbols):
     * at least two distinct requested symbols, each defined exactly once as a function;
     * one dedicated, non-empty ``.text`` section per requested symbol;
     * those sections occur in the caller's ROM order;
-    * no other non-debug content and no unlicensed symbol in a kept section; and
+    * no other non-debug content and no unlicensed symbol in a kept section, except
+      the sections the source's delinks entry claims as storage (``keep_sections``, see
+      ``storage_fit``), which must fill that claim exactly; and
     * no undefined RTTI relocation that still needs the single-function ``-8`` rewrite.
 
     Success therefore needs no ELF surgery: the exact input object is preserved.  The
@@ -631,7 +725,12 @@ def plan_many(raw, keep_symbols):
         if sec.header["sh_type"] in CONTENT and sec.header["sh_size"]
         and not any(sec.name.startswith(prefix) for prefix in IGNORE)
     ]
-    extra = [(index, sec) for index, sec in live if index not in set(keep)]
+    if keep_sections:
+        misfit = storage_fit(raw, keep_sections, addresses or {})
+        if misfit:
+            return {"error": "delinks storage claim: " + misfit}
+    extra = [(index, sec) for index, sec in live
+             if index not in set(keep) and sec.name not in (keep_sections or {})]
     if extra:
         detail = []
         for index, sec in extra:
@@ -674,9 +773,9 @@ def plan_many(raw, keep_symbols):
             "error": None}
 
 
-def derive_many(raw, keep_symbols):
-    """Pure, fail-closed validation of one exact text-only multi-function object."""
-    p = plan_many(bytes(raw), keep_symbols)
+def derive_many(raw, keep_symbols, keep_sections=None, addresses=None):
+    """Pure, fail-closed validation of one exact multi-function object."""
+    p = plan_many(bytes(raw), keep_symbols, keep_sections, addresses)
     return (None, p) if p.get("error") else (bytes(raw), p)
 
 
@@ -709,7 +808,7 @@ def referenced_undefined(raw, keep_symbol):
     return out
 
 
-def derive(raw, keep_symbol):
+def derive(raw, keep_symbol, keep_sections=None, addresses=None):
     """`isolate`, as a pure function of bytes: (derived_bytes, plan).
 
     Same reduction, same plan, no filesystem. `derived_bytes` is None exactly when
@@ -736,7 +835,7 @@ def derive(raw, keep_symbol):
     externalise and no `_ZTV` addend to rebase: an object that is already just the
     function can still carry mwcc's preamble skip.
     """
-    p = plan(bytes(raw), keep_symbol)
+    p = plan(bytes(raw), keep_symbol, keep_sections, addresses)
     if p.get("error"):
         return None, p
     if not p["drop"] and not p["externalise"] and not p["ztvRebase"]:
@@ -1868,7 +1967,7 @@ def rebias_object_symbols(raw, symbol_policies, normalize_undefined=False,
                  "stringTable": string_growth, "error": None}
 
 
-def isolate(obj, keep_symbol):
+def isolate(obj, keep_symbol, keep_sections=None, addresses=None):
     """Apply `plan` to the object file in place. Returns the plan.
 
     Writes only when the derived bytes differ. Expects the compiler's object:
@@ -1876,16 +1975,16 @@ def isolate(obj, keep_symbol):
     the preamble off a secondary store's remaining addend again. rombuild caches
     the RAW object and isolates each fetched copy once."""
     raw = obj.read_bytes()
-    out, p = derive(raw, keep_symbol)
+    out, p = derive(raw, keep_symbol, keep_sections, addresses)
     if out is not None and out != raw:
         obj.write_bytes(out)
     return p
 
 
-def isolate_many(obj, keep_symbols):
-    """Validate and preserve an exact text-only multi-function object in place."""
+def isolate_many(obj, keep_symbols, keep_sections=None, addresses=None):
+    """Validate and preserve an exact multi-function object in place."""
     raw = obj.read_bytes()
-    out, p = derive_many(raw, keep_symbols)
+    out, p = derive_many(raw, keep_symbols, keep_sections, addresses)
     if out is not None and out != raw:
         obj.write_bytes(out)
     return p

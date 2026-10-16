@@ -18,7 +18,7 @@
  * - TextureTransformer::SetFile / dBgW_KcMbg::SetFile 6az: InitResources
  *   passes Fix12<int> by value; the header method form size-DIFFs.
  * - SharedFilePtr +4: InitResources' TextureTransformer::Prepare reads the
- *   BMD at data_ov009_02113c68 +4; SharedFilePtr.h has no fields.
+ *   BMD at data_ov009_02113c68 +4; SharedFilePtr is the 8-byte handle.
  * - data_ov009_02113c68 / 02113c70 / 02112bc4 / 02112c38 model/KCL/BTA/CLPS
  *   handles and data_ov009_02113d8c / 02113de0 / 02113e34 spawn tables;
  *   this TU consumes them, overlay .bss/.data owns them.
@@ -56,7 +56,7 @@ void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 
-extern void *data_ov009_02113c68[];
+extern SharedFilePtr data_ov009_02113c68;
 extern SharedFilePtr data_ov009_02113c70;
 extern BTA_File data_ov009_02112bc4;
 extern CLPS_Block data_ov009_02112c38;
@@ -90,10 +90,10 @@ int daObjMcWater_c::InitResources()
         }
     }
     {
-        BMD_File *bmd = (BMD_File *)Model::LoadFile(*(SharedFilePtr *)data_ov009_02113c68);
+        BMD_File *bmd = (BMD_File *)Model::LoadFile(data_ov009_02113c68);
         mModel.SetFile(bmd, 1, 0x14);
     }
-    TextureTransformer::Prepare(*(BMD_File *)data_ov009_02113c68[1], data_ov009_02112bc4);
+    TextureTransformer::Prepare(*(BMD_File *)data_ov009_02113c68.filePtr, data_ov009_02112bc4);
     /* 6az: header SetFile takes Fix12<int> by value. */
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
         &mTexTransformer, &data_ov009_02112bc4, 0, 0x1000, 0);
@@ -139,7 +139,7 @@ int daObjMcWater_c::Render()
 // @symbol _ZN14daObjMcWater_c16CleanupResourcesEv
 int daObjMcWater_c::CleanupResources()
 {
-    ((SharedFilePtr *)data_ov009_02113c68)->Release();
+    data_ov009_02113c68.Release();
     data_ov009_02113c70.Release();
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();

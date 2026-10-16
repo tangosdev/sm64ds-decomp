@@ -39,14 +39,12 @@ enum daObjHeart_c_AssetId {
  * SharedFilePtr::Construct and destroys through SharedFilePtr_Destruct_Anim.
  * The manifest aliases those undefined members onto the ROM symbols. */
 struct HeartModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     HeartModelFilePtr(u32 fileID);
     ~HeartModelFilePtr();
 };
 
 struct HeartAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
 
     HeartAnimationFilePtr(u32 fileID);
     ~HeartAnimationFilePtr();

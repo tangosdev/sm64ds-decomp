@@ -22,6 +22,11 @@
       "name": ".data",
       "start": "0x0213faa0",
       "end": "0x0213fbc4"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02142f64",
+      "end": "0x02142f68"
     }
   ],
   "functions": [
@@ -972,7 +977,15 @@
       "target_address": "0x020ad660"
     }
   ],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov006_02142f64",
+      "address": "0x02142f64",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Node list head. The address is BSS, so the stored pointer is zero."
+    }
+  ],
   "notes": [
     "PRODUCTION TU: the verified 44-function object replaces the former 42-function class object and the two adjacent MgTrampolineTime factory/element sources, while also owning the contiguous class data band.",
     "The complete 44-function Bounce & Pounce scene run is reconstructed as one dScMgTrampoline_c C++ translation unit: the 42-function class run, adjacent dScMgTrampoline_c_classInit (historical alias MgTrampolineTime_Spawn), and its immediately following 0x24-byte element constructor. The next function begins dScMgTrampoline2_c, closing the right boundary.",
@@ -1121,11 +1134,17 @@
           "end": "0x0213fbc4",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02142f64",
+          "end": "0x02142f68",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 56
+          "LICENSED": 57
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1136,32 +1155,41 @@
           {
             "section": ".data",
             "original": [
-              5,
-              7,
-              9,
-              11,
-              15,
-              17,
-              26,
-              34,
-              36,
-              38,
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              27,
+              35,
+              37,
               39,
-              40
+              40,
+              41
             ],
             "desired": [
-              9,
-              11,
-              17,
-              15,
-              5,
-              7,
-              26,
+              16,
+              14,
+              12,
+              18,
+              10,
+              8,
+              27,
+              40,
               39,
-              38,
-              34,
-              36,
-              40
+              35,
+              37,
+              41
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
             ]
           }
         ],
@@ -1170,46 +1198,46 @@
             {
               "section": ".data",
               "original": [
-                5,
-                7,
-                9,
-                11,
-                15,
-                17,
-                26,
-                34,
-                36,
-                38,
+                8,
+                10,
+                12,
+                14,
+                16,
+                18,
+                27,
+                35,
+                37,
                 39,
-                40
+                40,
+                41
               ],
               "desired": [
-                9,
-                11,
-                17,
-                15,
-                5,
-                7,
-                26,
+                16,
+                14,
+                12,
+                18,
+                10,
+                8,
+                27,
+                40,
                 39,
-                38,
-                34,
-                36,
-                40
+                35,
+                37,
+                41
               ],
               "slots": [
-                5,
-                7,
-                9,
-                11,
-                15,
-                17,
-                26,
-                34,
-                36,
-                38,
+                8,
+                10,
+                12,
+                14,
+                16,
+                18,
+                27,
+                35,
+                37,
                 39,
-                40
+                40,
+                41
               ]
             }
           ],

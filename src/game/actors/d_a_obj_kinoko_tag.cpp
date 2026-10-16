@@ -22,7 +22,7 @@
  * - *(Vector3 *)&mPosX addressing shape (a Vector3 member at 0x05c is a
  *   dActor_c campaign, not this leaf).
  * - data_ov002_0210da30 is the ov002 SharedFilePtr handle; symbols.txt has
- *   no recovered name, so it is not coined. SharedFilePtr.h has no fields.
+ *   no recovered name, so it is not coined. The loaded file is filePtr.
  * - PILE / daObjPile_c.h +0x32c backlink (actor ID 0x1b).
  * - Vec3_Dist: no shared header this TU can take without a campaign.
  * - no Player.h / dCamera_c.h.

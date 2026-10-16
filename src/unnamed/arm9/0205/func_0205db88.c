@@ -5,12 +5,15 @@ struct Storage {
 };
 
 struct Obj {
-    char data[1];
+    char data[20];
 };
 
 extern struct Storage data_020a8064;
 extern struct Storage data_020a806c;
-extern struct Obj data_0209a7d8;
+static struct Obj data_0209a7d8 = { {
+    0x7a, 0x42, 0x80, 0x27, 0x13, 0xad, 0xc5, 0x9f, 0x06, 0xec,
+    0xf7, 0xdb, 0x7e, 0xf7, 0xa1, 0x24, 0x99, 0xb3, 0xd3, 0xe7
+} };
 
 u32 func_0205e904(u32 newVal);
 u32 func_0205de9c(struct Obj *obj, void *a, void *b);

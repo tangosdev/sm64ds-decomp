@@ -28,6 +28,11 @@
       "end": "0x02133590"
     },
     {
+      "name": ".data",
+      "start": "0x0213c094",
+      "end": "0x0213c0f4"
+    },
+    {
       "name": ".bss",
       "start": "0x02141870",
       "end": "0x021418b0"
@@ -259,7 +264,44 @@
       "ordinal": 31
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov006_0213c094",
+      "address": "0x0213c094",
+      "size": "0x14",
+      "evidence": "RoundRow[10]: {u8 swaps; u8 lo:4; u8 hi:4} per round-kind pair; StateSetup reads byte [kind*2], df024 reads .lo/.hi; no relocations"
+    },
+    {
+      "symbol": "data_ov006_0213c0a8",
+      "address": "0x0213c0a8",
+      "size": "0x04",
+      "evidence": "first x word of the three rest positions (RestPos view: {x,y}*3 at 0x0213c0a8, x=0x3c000/0x8c000/0xdc000, y=0x70000); word-run symbol, no relocation"
+    },
+    {
+      "symbol": "data_ov006_0213c0ac",
+      "address": "0x0213c0ac",
+      "size": "0x14",
+      "evidence": "y plus the two remaining {x,y} rest-position words; RestPos view of the same records shifted one word; no relocations"
+    },
+    {
+      "symbol": "data_ov006_0213c0c0",
+      "address": "0x0213c0c0",
+      "size": "0x04",
+      "evidence": "first word of the three IdxPair {a,b} swap pairs (an initialized zero; the explicit_zero_data pragma keeps the word emitted .data); IdxPair view read at use site, no relocation"
+    },
+    {
+      "symbol": "data_ov006_0213c0c4",
+      "address": "0x0213c0c4",
+      "size": "0x14",
+      "evidence": "words 2-6 of the IdxPair {a,b} swap pairs {0,1},{1,2},{0,2} -- the shifted IdxPair view dsd names at the second word; IdxPair cast read at use site, no relocation"
+    },
+    {
+      "symbol": "data_ov006_0213c0d8",
+      "address": "0x0213c0d8",
+      "size": "0x1c",
+      "evidence": "AnimStep*[7] per cup animation list; seven R_ARM_ABS32 loads to the ROM AnimStep record runs 0x02139dbc..0x0213a1ec"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov006_02141870",
@@ -398,6 +440,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0213c094",
+          "end": "0x0213c0f4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02141870",
           "end": "0x021418b0",
@@ -406,7 +455,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 35
+          "LICENSED": 41
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -417,32 +466,85 @@
           {
             "section": ".init",
             "original": [
-              86
+              93
             ],
             "desired": [
-              86
+              93
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              84
+              91
             ],
             "desired": [
-              84
+              91
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              6,
+              7,
+              8,
+              9,
+              10
+            ],
+            "desired": [
+              9,
+              5,
+              8,
+              6,
+              7,
+              10
             ]
           },
           {
             "section": ".bss",
             "original": [
-              63
+              70
             ],
             "desired": [
-              63
+              70
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "desired": [
+                9,
+                5,
+                8,
+                6,
+                7,
+                10
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ]
+            }
+          ],
+          "symbolIndices": 6,
+          "sectionLinks": 0,
+          "sectionInfos": 1,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -717,6 +819,76 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02141870"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c0d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139dbc",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139dbc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c0dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139e9c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139e9c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c0e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139ec4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139ec4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c0e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139db4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139db4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c0e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139e4c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139e4c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c0ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a274",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a274"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c0f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a1ec",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a1ec"
     }
   ],
   "production_mode": "intact-object"

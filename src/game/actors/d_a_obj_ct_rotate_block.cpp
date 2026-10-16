@@ -61,14 +61,12 @@ extern char data_ov065_0211cfd4[];
  * manifest. Nothing in this TU names the handles directly; the variant
  * records above point at them. */
 struct RotateBlockModelFile : SharedFilePtr {
-    u32 words[2];
 
     RotateBlockModelFile(u32 fileID);
     ~RotateBlockModelFile();
 };
 
 struct RotateBlockCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     RotateBlockCollisionFilePtr(u32 fileID);
     ~RotateBlockCollisionFilePtr();

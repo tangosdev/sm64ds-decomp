@@ -36,9 +36,14 @@
       "end": "0x021335a4"
     },
     {
+      "name": ".data",
+      "start": "0x0213c95c",
+      "end": "0x0213ca6c"
+    },
+    {
       "name": ".bss",
-      "start": "0x02142018",
-      "end": "0x02142044"
+      "start": "0x02141ff0",
+      "end": "0x02142048"
     }
   ],
   "functions": [
@@ -488,14 +493,274 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "pmf_Wiggler_StateWait",
+      "address": "0x0213c95c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_WaitIntro",
+      "address": "0x0213c964",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim",
+      "address": "0x0213c96c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateMoveB",
+      "address": "0x0213c974",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateWait_2",
+      "address": "0x0213c97c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_2",
+      "address": "0x0213c984",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "g_profile_MG_HANACHAN",
+      "address": "0x0213c98c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "profile head: classInit, then 0x01820182"
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_Result",
+      "address": "0x0213c994",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateMoveA",
+      "address": "0x0213c99c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateWait_3",
+      "address": "0x0213c9a4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_Play",
+      "address": "0x0213c9ac",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_3",
+      "address": "0x0213c9b4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_Update",
+      "address": "0x0213c9bc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateMoveA_2",
+      "address": "0x0213c9c4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_Play_2",
+      "address": "0x0213c9cc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateHold",
+      "address": "0x0213c9d4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_4",
+      "address": "0x0213c9dc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_MoveBounce",
+      "address": "0x0213c9e4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_5",
+      "address": "0x0213c9ec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_6",
+      "address": "0x0213c9f4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateHold_2",
+      "address": "0x0213c9fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_StateWait_4",
+      "address": "0x0213ca04",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_CheckOffLeftB",
+      "address": "0x0213ca0c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_MoveBounce_2",
+      "address": "0x0213ca14",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_7",
+      "address": "0x0213ca1c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_CheckOffLeftA",
+      "address": "0x0213ca24",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_WaitIntro_2",
+      "address": "0x0213ca2c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_WaitTouch",
+      "address": "0x0213ca34",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Hana_StateNoneB",
+      "address": "0x0213ca3c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_8",
+      "address": "0x0213ca44",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Wiggler_TurnTowardAim_9",
+      "address": "0x0213ca4c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Hana_StateNoneA",
+      "address": "0x0213ca54",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_dScMgHanachan_c_Phase_WaitTouch_2",
+      "address": "0x0213ca5c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    },
+    {
+      "symbol": "pmf_Hana_StateNoneB_2",
+      "address": "0x0213ca64",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two-word phase record"
+    }
+  ],
   "bss": [
+    {
+      "symbol": "data_ov006_02141ff0",
+      "address": "0x02141ff0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight zero bytes; func_ov006_020ea3d0 reads the first as the popup timer"
+    },
+    {
+      "symbol": "data_ov006_02141ff8",
+      "address": "0x02141ff8",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "sixteen zero halfwords; func_ov006_020ebc7c fills them at runtime"
+    },
     {
       "symbol": "data_ov006_02142018",
       "address": "0x02142018",
       "size": "0x2c",
       "binding": "STB_GLOBAL",
       "evidence": "OamAttr* table OAM::Render indexes; the initializer copies five scalar attribute globals, two data_ov006_021375dc entries and every third entry of the vu32* ring data_ov006_02137560 into it"
+    },
+    {
+      "symbol": "data_ov006_02142044",
+      "address": "0x02142044",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "first word of the sixteen popup records; the rest of the run stays in the gap"
     }
   ],
   "symbol_binding_rewrites": [
@@ -602,6 +867,346 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02130df8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c95c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_StateWait",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020eb31c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c964",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c15Phase_WaitIntroEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ed844"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c96c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_TurnTowardAim",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c974",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_StateMoveB",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020eb3e4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c97c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_StateWait",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020eb31c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c984",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_TurnTowardAim",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c98c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "dScMgHanachan_c_classInit",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ede18"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c994",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c12Phase_ResultEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ed34c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c99c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_StateMoveA",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020eb1e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c9a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_StateWait",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020eb31c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c9ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c10Phase_PlayEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ed494"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c9b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_TurnTowardAim",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c9bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_Update",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020eb018"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c9c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_StateMoveA",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020eb1e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c9cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c10Phase_PlayEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ed494"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c9d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_StateHold",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020eb0c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c9dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_TurnTowardAim",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c9e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_MoveBounce",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ec6e8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c9ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_TurnTowardAim",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c9f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_TurnTowardAim",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c9fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_StateHold",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020eb0c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ca04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_StateWait",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020eb31c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ca0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_CheckOffLeftB",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ec93c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ca14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_MoveBounce",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ec6e8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ca1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_TurnTowardAim",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ca24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_CheckOffLeftA",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ec458"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ca2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c15Phase_WaitIntroEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ed844"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ca34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c15Phase_WaitTouchEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ed274"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ca3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Hana_StateNoneB",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ed328"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ca44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_TurnTowardAim",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ca4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Wiggler_TurnTowardAim",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ecb80"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ca54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Hana_StateNoneA",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ed270"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ca5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgHanachan_c15Phase_WaitTouchEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ed274"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ca64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "Hana_StateNoneB",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ed328"
     }
   ],
   "notes": [
@@ -626,7 +1231,9 @@
     "Widening: the popup arrays data_ov006_02141fe4 and data_ov006_02142044 were declared several ways across the folded shards (three and four respectively). Each is declared once; data_ov006_02142044 takes HanaPopup_Spawn's record type, because HanaPopup_Spawn DIFFs when it reaches the array through a cast, and the other functions cast to the record type their own shard used. Local tags are renamed per function (Ent_ea670, S_ea81c, E6_ea8e0, Vec2_ea914).",
     "Widening: Wiggler_Destroy is the wiggler array's element destructor and takes the element in r0. include/dScMgHanachan_c.h and include/decl_common.h declared it (void); the header now declares (void *self) and the conflicting decl_common.h line was removed. Its only other use, src/minigames/d_s_mg_hanachan.cpp, takes its address.",
     "The file-scope OamAttr* table data_ov006_02142018 is defined in this TU, so mwcc emits __sinit_d_s_mg_hanachan_methods.cpp byte-identical to retail __sinit_ov006_02130df8 (0xa4, eight literal-pool relocations: the five scalar globals, data_ov006_021375dc, the vu32* ring data_ov006_02137560 and the table itself), plus the .ctor word at 0x021335a0. The handwritten src/unnamed/ov006/__sinit_ov006_02130df8.c is retired; its delinks row is absorbed and symbols.txt renames the pair __sinit_d_s_mg_hanachan_methods.cpp / .p__sinit_d_s_mg_hanachan_methods.cpp.",
-    "Local scratch ROM matched this machine's baseline control (ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40). Recorded rom.sha256 is the fleet SHA the other intact-object entries on this main share."
+    "Local scratch ROM matched this machine's baseline control (ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40). Recorded rom.sha256 is the fleet SHA the other intact-object entries on this main share.",
+    "Phase table 0x0213c95c..0x0213ca6c is one .data claim: each slot is a code address and a zero word, except g_profile_MG_HANACHAN whose second word is 0x01820182. The holes between the job rows are the same shape and sit in that run. BSS widens to 0x02141ff0..0x02142184: the 8-byte timer prefix, the 0x20 halfword table, the existing OamAttr* table, and the sixteen popup records.",
+    "BSS widens to 0x02141ff0..0x02142048: the 8-byte timer prefix, the 0x20 halfword table, the existing OamAttr* table, and the first word of the popup records. The bytes from 0x02142048 stay in the gap, under the names symbols.txt already gives them."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -743,15 +1350,22 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0213c95c",
+          "end": "0x0213ca6c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
-          "start": "0x02142018",
-          "end": "0x02142044",
+          "start": "0x02141ff0",
+          "end": "0x02142048",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 64
+          "LICENSED": 101
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -762,28 +1376,109 @@
           {
             "section": ".init",
             "original": [
-              142
+              213
             ],
             "desired": [
-              142
+              213
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              140
+              211
             ],
             "desired": [
-              140
+              211
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              126,
+              128,
+              130,
+              132,
+              134,
+              136,
+              138,
+              140,
+              142,
+              144,
+              146,
+              148,
+              150,
+              152,
+              154,
+              156,
+              158,
+              160,
+              162,
+              164,
+              166,
+              168,
+              170,
+              172,
+              174,
+              176,
+              178,
+              180,
+              182,
+              184,
+              186,
+              188,
+              190,
+              192
+            ],
+            "desired": [
+              126,
+              128,
+              130,
+              132,
+              134,
+              136,
+              138,
+              140,
+              142,
+              144,
+              146,
+              148,
+              150,
+              152,
+              154,
+              156,
+              158,
+              160,
+              162,
+              164,
+              166,
+              168,
+              170,
+              172,
+              174,
+              176,
+              178,
+              180,
+              182,
+              184,
+              186,
+              188,
+              190,
+              192
             ]
           },
           {
             "section": ".bss",
             "original": [
-              122
+              122,
+              123,
+              124,
+              125
             ],
             "desired": [
-              122
+              122,
+              123,
+              124,
+              125
             ]
           }
         ],

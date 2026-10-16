@@ -54,7 +54,6 @@ enum daChair_c_AssetId {
  * spelling is local; the manifest aliases the generated names to those ROM
  * symbols. */
 struct ChairModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     ChairModelFilePtr(u32 fileID);
     ~ChairModelFilePtr();

@@ -72,9 +72,6 @@ enum {
 /* The model handle's ctor/dtor are the cartridge's func_02017acc /
  * func_02017ab4 pair; the manifest aliases these. */
 struct MorayModelFileHandle : SharedFilePtr {
-    u16 fileID;
-    u8 numRefs;
-    void *filePtr;
     MorayModelFileHandle(u32 fileID);
     ~MorayModelFileHandle();
 };
@@ -82,9 +79,6 @@ struct MorayModelFileHandle : SharedFilePtr {
 /* The three animation handles construct through SharedFilePtr::Construct
  * and register SharedFilePtr_Destruct_Anim; the manifest aliases these. */
 struct MorayAnimResFileHandle : SharedFilePtr {
-    u16 fileID;
-    u8 numRefs;
-    void *filePtr;
     MorayAnimResFileHandle(u32 fileID);
     ~MorayAnimResFileHandle();
 };

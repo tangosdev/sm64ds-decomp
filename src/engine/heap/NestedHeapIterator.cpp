@@ -40,7 +40,11 @@
 #include "decl_NestedHeapIterator.h"
 
 extern int data_020a4d34;
-extern "C" NestedHeapIterator data_020a4d38;
+/* Zero BSS. func_0204df54 constructs this root later, with link offset 4.
+ * A C++ definition would emit a static constructor; the cartridge does not. */
+#pragma cplusplus off
+struct NestedHeapIterator data_020a4d38;
+#pragma cplusplus on
 
 // @symbol _ZN18NestedHeapIterator19RecursiveFindNestedEPv
 /* The walk: for the first node whose [mStart, mEnd) contains addr, recurse

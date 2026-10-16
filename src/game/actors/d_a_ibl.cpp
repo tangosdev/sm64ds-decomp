@@ -125,7 +125,12 @@ extern signed char data_0209f2f8;
 extern int data_02092138;
 extern s16 data_02082214[];
 extern char data_ov100_02148668;
-extern struct VtEntry data_ov100_0214867c[];
+/* Five handler records. Zero in the image: __sinit_ov100_021474e8 copies
+ * the pointer-to-member words into them. C linkage so this TU does not
+ * emit its own static initializer on top of that one. */
+#pragma cplusplus off
+struct VtEntry data_ov100_0214867c[5];
+#pragma cplusplus on
 
 // @symbol _ZN7daIbl_cD1Ev
 // @symbol _ZN7daIbl_cD0Ev

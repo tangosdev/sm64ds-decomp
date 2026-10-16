@@ -27,6 +27,7 @@ src/game/actors/d_a_1up.cpp:
 src/game/actors/d_a_bar.cpp:
     complete
     .text start:0x020b05d0 end:0x020b0748
+    .data start:0x02108444 end:0x02108480
 
 src/game/actors/d_a_cam_tag.cpp:
     complete
@@ -56,12 +57,14 @@ src/game/actors/d_a_feather.cpp:
 src/game/actors/d_a_obj_abuku.cpp:
     complete
     .text start:0x020b3298 end:0x020b35a0
+    .data start:0x02108940 end:0x0210895c
 
 src/game/actors/d_a_obj_block_l.cpp:
     complete
     .text start:0x020b35a0 end:0x020b415c
     .init start:0x02100d44 end:0x02100e50
     .ctor start:0x021080e0 end:0x021080e4
+    .data start:0x02108ab4 end:0x02108b5c
     .bss start:0x0210dcb8 end:0x0210dd30
 
 src/game/actors/d_a_obj_block_item_tag.cpp:
@@ -75,6 +78,7 @@ src/game/actors/d_a_obj_block_item_tag.cpp:
 src/game/actors/d_a_obj_kinoko_tag.cpp:
     complete
     .text start:0x020b46a0 end:0x020b4a70
+    .data start:0x02108c94 end:0x02108d70
 
 src/game/actors/d_a_obj_dorifu.cpp:
     complete
@@ -125,10 +129,12 @@ src/game/actors/d_a_obj_lava.cpp:
 src/game/actors/d_a_obj_waterfall.cpp:
     complete
     .text start:0x020b6e08 end:0x020b6f18
+    .data start:0x0210945c end:0x0210951c
 
 src/game/actors/d_a_obj_mario_cap.cpp:
     complete
     .text start:0x020b6f18 end:0x020b8bf0
+    .rodata start:0x020ff0a0 end:0x020ff0ac
     .init start:0x02101064 end:0x02101478
     .ctor start:0x021080f0 end:0x021080f4
     .bss start:0x0210de00 end:0x0210df94
@@ -152,7 +158,7 @@ src/game/actors/d_a_obj_switch.cpp:
     .text start:0x020b9e64 end:0x020bab0c
     .init start:0x02101588 end:0x02101738
     .ctor start:0x021080fc end:0x02108100
-    .data start:0x0210987c end:0x021098cc
+    .data start:0x0210987c end:0x02109900
     .bss start:0x0210dfbc end:0x0210e05c
 
 src/game/actors/d_a_obj_swdoor.cpp:
@@ -187,10 +193,13 @@ src/game/actors/d_a_obj_cannon_shutter.cpp:
     .init start:0x02101968 end:0x021019d0
     .ctor start:0x0210810c end:0x02108110
     .bss start:0x0210e124 end:0x0210e14c
+    .data start:0x02109cf0 end:0x02109db8
 
 src/game/player/Player.cpp:
     complete
     .text start:0x020bccfc end:0x020e67a8
+    .data start:0x0210a720 end:0x0210a7e8
+    .bss start:0x0210e7b8 end:0x0210e7c0
 
 src/_ZN6PlayerD0Ev.cpp:
     complete
@@ -267,6 +276,7 @@ src/game/actors/d_a_star_star.c:
 src/game/actors/d_a_tree.cpp:
     complete
     .text start:0x020ebf8c end:0x020ec388
+    .bss start:0x02110a48 end:0x02110a5c
 
 src/game/actors/d_a_warpkun.cpp:
     complete
@@ -345,7 +355,8 @@ src/game/actors/d_a_mugen_bgm.cpp:
 src/game/actors/d_a_demo.cpp:
     complete
     .text start:0x020f1f70 end:0x020f8838
-    .data start:0x0210b940 end:0x0210b958
+    .data start:0x0210b8c0 end:0x0210b958
+    .bss start:0x02110e24 end:0x0211110c
 
 src/_ZThn80_N8daDemo_c10anmModel_cD0Ev.cpp:
     complete
@@ -366,10 +377,12 @@ src/game/actors/d_a_sound_obj.cpp:
 src/ui/hud/d_map.cpp:
     complete
     .text start:0x020f975c end:0x020fb8f8
+    .bss start:0x0211116c end:0x02111178
 
 src/ui/hud/d_meter.cpp:
     complete
     .text start:0x020fb8f8 end:0x020fe190
+    .data start:0x0210d290 end:0x0210d378
 
 src/game/stages/LevelObjects.cpp:
     complete

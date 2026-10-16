@@ -17,6 +17,11 @@
       "end": "0x0214d70c"
     },
     {
+      "name": ".rodata",
+      "start": "0x0214d70c",
+      "end": "0x0214d714"
+    },
+    {
       "name": ".init",
       "start": "0x0214dfac",
       "end": "0x0214e0a0"
@@ -298,7 +303,8 @@
   "notes": [
     "Hand-assembled: tubuild create generated the 23 tu_map members (class members, D1/D0 and the fifteen state/helper routines); the zero-gap classInit factory was folded in by hand. The four state records are defined in this TU. mwcc emits __sinit_d_a_shl.cpp, the ctor word, and eight anonymous pointer-to-member descriptors. Class RTTI and the vtable stay externalized. The .rodata model-handle pair data_ov102_0214d70c stays unclaimed. The handwritten src/unnamed/ov102/__sinit_ov102_0214dfac.c is retired.",
     "Folded __sinit_ov102_0214dfac into this TU. @707, @709, @711 and @713 already belong to ov060, @715, @719 and @721 already belong to ov063, and @717 already belongs to ov002. defined_symbol_renames maps them to the unused same-length @746, @750, @752, @754, @765, @768, @770 and @774.",
-    "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares."
+    "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares.",
+    "The two-pointer model table at 0x0214d70c is written in this TU. The four ShlState records were already defined here."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -397,6 +403,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x0214d70c",
+          "end": "0x0214d714",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x0214dfac",
           "end": "0x0214e0a0",
@@ -426,7 +439,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 38
+          "LICENSED": 39
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -435,59 +448,68 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              86
+              5
             ],
             "desired": [
-              86
+              5
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              88
+            ],
+            "desired": [
+              88
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              84
+              86
             ],
             "desired": [
-              84
+              86
             ]
           },
           {
             "section": ".data",
             "original": [
-              5,
               7,
               9,
               11,
-              13,
               15,
+              17,
               19,
-              21
+              21,
+              23
             ],
             "desired": [
-              11,
-              13,
-              7,
+              23,
               15,
+              17,
+              7,
               21,
               9,
-              5,
+              11,
               19
             ]
           },
           {
             "section": ".bss",
             "original": [
-              36,
-              37,
               38,
-              39
+              39,
+              40,
+              41
             ],
             "desired": [
-              36,
-              37,
+              40,
               38,
-              39
+              39,
+              41
             ]
           }
         ],
@@ -496,38 +518,59 @@
             {
               "section": ".data",
               "original": [
-                5,
                 7,
                 9,
                 11,
-                13,
                 15,
+                17,
                 19,
-                21
+                21,
+                23
               ],
               "desired": [
-                11,
-                13,
-                7,
+                23,
                 15,
+                17,
+                7,
                 21,
                 9,
-                5,
+                11,
                 19
               ],
               "slots": [
-                5,
                 7,
                 9,
                 11,
-                13,
                 15,
+                17,
                 19,
-                21
+                21,
+                23
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                38,
+                39,
+                40,
+                41
+              ],
+              "desired": [
+                40,
+                38,
+                39,
+                41
+              ],
+              "slots": [
+                38,
+                39,
+                40,
+                41
               ]
             }
           ],
-          "symbolIndices": 8,
+          "symbolIndices": 12,
           "sectionLinks": 0,
           "sectionInfos": 8,
           "error": null
@@ -882,6 +925,26 @@
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214d114"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0214d70c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210da18",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210da18"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0214d710",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210da20",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210da20"
     }
   ],
   "symbol_binding_rewrites": [
@@ -988,5 +1051,14 @@
       "evidence": "mwcc numbers this PMF descriptor @713. ov060 already defines @713, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @754."
     }
   ],
-  "undefined_symbol_aliases": []
+  "undefined_symbol_aliases": [],
+  "rodata": [
+    {
+      "symbol": "data_ov102_0214d70c",
+      "address": "0x0214d70c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two SharedFilePtr pointers, one per mModelIndex, aimed at the ov002 handles at 0x0210da18 and 0x0210da20"
+    }
+  ]
 }

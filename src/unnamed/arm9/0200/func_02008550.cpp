@@ -4,7 +4,8 @@ typedef int (Obj::*PMF)(unsigned char *, int, int);
 
 extern "C" {
 extern int data_0209b004;
-extern PMF data_0209b138[39];
+/* Zero BSS, 39 PMFs. func_02008550 copies the constants in on the first call. */
+PMF data_0209b138[39];
 extern PMF data_02086c80, data_02086d80, data_02086c60, data_02086c90, data_02086bd8, data_02086d18, data_02086d98, data_02086c88, data_02086d00, data_02086bc0, data_02086e30, data_02086ce8, data_02086e38, data_02086e20, data_02086cd0, data_02086e08, data_02086df0, data_02086cb8, data_02086dd8, data_02086dc0, data_02086c20, data_02086da0, data_02086d60, data_02086d88, data_02086cf8, data_02086d68, data_02086c78, data_02086d40, data_02086d38, data_02086d20, data_02086c50, data_02086d08, data_02086cf0, data_02086c38, data_02086cd8, data_02086cc0, data_02086cb0, data_02086ca8, data_02086ca0;
 }
 

@@ -87,20 +87,18 @@ typedef void (daBtfly_c::*ButterflyState)();
  * handles (model file 0x43a, animation file 0x43b) and fill the eight-entry
  * state table. mwcc emits __sinit_d_a_btfly.cpp from those definitions. */
 struct BtflyModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BtflyModelFilePtr(u32 fileID);
     ~BtflyModelFilePtr();
 };
 
 struct BtflyAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BtflyAnimationFilePtr(u32 fileID);
     ~BtflyAnimationFilePtr();
 };
 
-/* SharedFilePtr.h has no fields. LoadFile stashes the file in the second word. */
+/* SharedFilePtr is the 8-byte handle. LoadFile stashes the file in the second word. */
 #define LOADED(h) (((void **)&(h))[1])
 
 /* State2's player-position reload. opt_common_subs is off in that function;

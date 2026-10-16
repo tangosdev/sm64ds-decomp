@@ -57,12 +57,10 @@ enum d_a_i_donketu_AssetId {
  * static initializer names the real entry points. The code reaches them
  * through the data_ov027_021138f4 pointer table. */
 struct IDonketuModelFilePtr : SharedFilePtr {
-    u32 words[2];
     IDonketuModelFilePtr(u32 fileID);
     ~IDonketuModelFilePtr();
 };
 struct IDonketuAnimationFileHandle : SharedFilePtr {
-    u32 words[2];
     IDonketuAnimationFileHandle(u32 fileID);
     ~IDonketuAnimationFileHandle();
 };

@@ -70,23 +70,28 @@ struct daObjFl_Ring_c_Files {
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct RingModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     RingModelFilePtr(u32 fileID);
     ~RingModelFilePtr();
 };
 
 struct RingCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     RingCollisionFilePtr(u32 fileID);
     ~RingCollisionFilePtr();
 };
 
 extern "C" {
-extern daObjFl_Ring_c_Files data_ov022_02113cc8;
+extern char data_ov064_0211bbac[];
 extern RingModelFilePtr gFlRingModelFile;
 extern RingCollisionFilePtr gFlRingCollisionFile;
+/* symbols.txt names the middle word, so it is its own object.
+   The readers still start at the first symbol and add 4 and 8. */
+SharedFilePtr *data_ov022_02113cc8 = &gFlRingModelFile;
+void *data_ov022_02113ccc[2] = {
+    &gFlRingCollisionFile,
+    &data_ov064_0211bbac,
+};
 
 u16 DecIfAbove0_Short(u16 *p);
 u8  DecIfAbove0_Byte(u8 *p);
@@ -144,15 +149,15 @@ extern "C" void func_ov022_02111558(daObjFl_Ring_c *self, dActor_c *other)
  * so that one call deliberately keeps the measured register-level spelling. */
 s32 daObjFl_Ring_c::InitResources()
 {
-    void *f = Model::LoadFile(*data_ov022_02113cc8.mModelFile);
+    void *f = Model::LoadFile(*((daObjFl_Ring_c_Files *)&data_ov022_02113cc8)->mModelFile);
     mModel.SetFile((BMD_File *)f, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    void *k = dBgW_Kc::LoadFile(*data_ov022_02113cc8.mClsnFile);
+    void *k = dBgW_Kc::LoadFile(*((daObjFl_Ring_c_Files *)&data_ov022_02113cc8)->mClsnFile);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, k, &mClsnMat, 0x199, mAngleY,
-        data_ov022_02113cc8.mClps);
+        ((daObjFl_Ring_c_Files *)&data_ov022_02113cc8)->mClps);
 
     func_020393d4(&mMeshCollider, (void *)dBgW::UpdatePosAndAngs);
     func_020393c4(&mMeshCollider, (void *)func_ov022_02111564);
@@ -252,8 +257,8 @@ s32 daObjFl_Ring_c::CleanupResources()
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
 
-    data_ov022_02113cc8.mModelFile->Release();
-    data_ov022_02113cc8.mClsnFile->Release();
+    ((daObjFl_Ring_c_Files *)&data_ov022_02113cc8)->mModelFile->Release();
+    ((daObjFl_Ring_c_Files *)&data_ov022_02113cc8)->mClsnFile->Release();
     return 1;
 }
 

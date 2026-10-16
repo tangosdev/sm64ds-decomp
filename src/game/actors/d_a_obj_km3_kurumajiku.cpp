@@ -37,14 +37,12 @@ enum d_a_obj_km3_kurumajiku_AssetId {
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct Km3KurumajikuModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
 
     Km3KurumajikuModelFilePtr(unsigned int fileID);
     ~Km3KurumajikuModelFilePtr();
 };
 
 struct Km3KurumajikuClsnFilePtr : SharedFilePtr {
-    unsigned int words[2];
 
     Km3KurumajikuClsnFilePtr(unsigned int fileID);
     ~Km3KurumajikuClsnFilePtr();

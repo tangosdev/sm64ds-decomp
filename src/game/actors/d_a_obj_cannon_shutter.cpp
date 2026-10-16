@@ -20,8 +20,9 @@
  *   refused). No dBgCh::Init in this TU.
  * - (Vector3 *)&mPosX / mHomePosX: dActor_c stores the triples as scalars;
  *   grouping as Vector3 is a shared-header campaign.
- * - data_ov002_0210d7f4 CLPS: this TU consumes it, overlay .data owns it.
- *   S14: g_profile_CANNON_SHUTTER stays outside the licensed .text.
+ * - data_ov002_0210d7f4 stays the ROM copy: a second .data range, and this
+ *   file sits before later entries that already claim lower .data addresses.
+ *   The typeinfo, g_profile_CANNON_SHUTTER, and the vtable are this TU's .data.
  * - func_ov002_020bc990: inbound from ov084 (daRedBombhei_c). No coined name.
  * - func_0201277c (sound 0x47); data_020a0e68 scratch matrix;
  *   data_0209f2f8 / data_0209f220 scene/level gates.
@@ -68,14 +69,12 @@ extern CLPS_Block    data_ov002_0210d7f4;
  * and destroys through SharedFilePtr_Destruct_Clsn. The manifest aliases
  * those undefined members onto the ROM symbols. */
 struct CannonShutterModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     CannonShutterModelFilePtr(u32 fileID);
     ~CannonShutterModelFilePtr();
 };
 
 struct CannonShutterClsnFilePtr : SharedFilePtr {
-    u32 words[2];
 
     CannonShutterClsnFilePtr(u32 fileID);
     ~CannonShutterClsnFilePtr();

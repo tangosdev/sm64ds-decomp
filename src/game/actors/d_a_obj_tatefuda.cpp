@@ -125,14 +125,12 @@ struct CLPS_Block; struct Vector3_16;
  * their compiler-generated undefined member imports onto the existing
  * evidence-bounded ROM symbols. */
 struct SignPostModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     SignPostModelFilePtr(u32 fileID);
     ~SignPostModelFilePtr();
 };
 
 struct SignPostCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     SignPostCollisionFilePtr(u32 fileID);
     ~SignPostCollisionFilePtr();

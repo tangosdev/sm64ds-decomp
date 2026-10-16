@@ -30,8 +30,7 @@
  *   dBgCh_Actr_UpdateDiscreteNoLava_veneer (0x02038420), not the method
  *   body at 0x02037024. The data_ov070_* resource handles and the PMF
  *   state table keep linker names; their native initialization now belongs
- *   to this TU. Local resource-family views provide the loaded file field;
- *   the shared SharedFilePtr header keeps its layout unrecovered.
+ *   to this TU. The loaded file is SharedFilePtr::filePtr.
  *   The factory's `new` odr-uses inline ~Vector3; its vague D1 is a
  *   deadstrip duplicate of arm9:0x020072c0.
  */
@@ -43,22 +42,16 @@
 /* Inferred eight-byte resource-family ABI views, not recovered original
  * type names. Exact manifest aliases bind each C1/D1 to its retail helper. */
 struct BrqModelResource : SharedFilePtr {
-    int state;
-    BMD_File *file;
     BrqModelResource(u32 fileID);
     ~BrqModelResource();
 };
 
 struct BrqAnimationFileResource : SharedFilePtr {
-    int state;
-    BCA_File *file;
     BrqAnimationFileResource(u32 fileID);
     ~BrqAnimationFileResource();
 };
 
 struct BrqTextureSequenceResource : SharedFilePtr {
-    int state;
-    BTP_File *file;
     BrqTextureSequenceResource(u32 fileID);
     ~BrqTextureSequenceResource();
 };
@@ -69,14 +62,46 @@ BrqAnimationFileResource data_ov070_021235f4(0x02b2);   // BIRIKYU_ELEC_BCA
 BrqAnimationFileResource data_ov070_0212360c(0x02b5);   // BIRIKYU_ELEC_STOP_BCA
 BrqTextureSequenceResource data_ov070_021235ec(0x02b4); // BIRIKYU_ELEC_BTP
 
-/* The six ROM PMF descriptors stay ROM-owned; their native copies initialize
- * the cooldown, active and defeated rows in BSS. */
-extern daBrq_c::StateFn data_ov070_0212320c;
-extern daBrq_c::StateFn data_ov070_02123224;
-extern daBrq_c::StateFn data_ov070_02123214;
-extern daBrq_c::StateFn data_ov070_02123234;
-extern daBrq_c::StateFn data_ov070_0212321c;
-extern daBrq_c::StateFn data_ov070_0212322c;
+/* .data ahead of the typeinfo: the material name, the BTA record, then the
+ * six PMF descriptors the state rows copy. */
+extern "C" char data_ov070_021231e4[16] = "mat_bilikyu2";
+extern "C" const int data_ov070_02122244 = 0x1000;
+extern "C" const int data_ov070_02122248 = 0;
+extern "C" const unsigned int data_ov070_0212224c[7] = {
+    0x0000ffff,
+    (unsigned int)&data_ov070_021231e4,
+    1,
+    1,
+    0x3c,
+    1,
+    1,
+};
+extern "C" const unsigned int data_ov070_02122268[30] = {
+    0x00890044, 0x011100cd, 0x019a0155, 0x022201de, 0x02ab0266, 0x033302ef,
+    0x03bc0377, 0x04440400, 0x04cd0489, 0x05550511, 0x05de059a, 0x06660622,
+    0x06ef06ab, 0x07770733, 0x080007bc, 0xf889f844, 0xf911f8cd, 0xf99af955,
+    0xfa22f9de, 0xfaabfa66, 0xfb33faef, 0xfbbcfb77, 0xfc44fc00, 0xfccdfc89,
+    0xfd55fd11, 0xfddefd9a, 0xfe66fe22, 0xfeeffeab, 0xff77ff33, 0x0000ffbc,
+};
+extern "C" unsigned int data_ov070_021231f4[6] = {
+    0x3c,
+    (unsigned int)&data_ov070_02122244,
+    (unsigned int)&data_ov070_02122268,
+    (unsigned int)&data_ov070_02122248,
+    1,
+    (unsigned int)&data_ov070_0212224c,
+};
+extern "C" SharedFilePtr *const data_ov070_021222e0[2] = {
+    &data_ov070_021235f4,
+    &data_ov070_0212360c,
+};
+
+daBrq_c::StateFn data_ov070_0212320c = &daBrq_c::EnterCooldownState;
+daBrq_c::StateFn data_ov070_02123224 = &daBrq_c::UpdateCooldownState;
+daBrq_c::StateFn data_ov070_02123214 = &daBrq_c::EnterActiveState;
+daBrq_c::StateFn data_ov070_02123234 = &daBrq_c::UpdateActiveState;
+daBrq_c::StateFn data_ov070_0212321c = &daBrq_c::EnterDefeatedState;
+daBrq_c::StateFn data_ov070_0212322c = &daBrq_c::UpdateDefeatedState;
 
 daBrq_c::State data_ov070_02123668[3] = {
     {data_ov070_0212320c, data_ov070_02123224},
@@ -121,6 +146,7 @@ extern "C" BrqSpawnInfo g_profile_BIRIKYU = {
  * value, notes/mwccarm-codegen.md 6az). */
 struct SharedFilePtr;
 struct BMD_File;
+struct BTP_File;
 struct BTA_File;
 struct dActor_c;
 struct Vector3;
@@ -130,8 +156,6 @@ extern "C" void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(dActor_c *self, int a,
 extern "C" void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, dActor_c *a, Vector3 const &b, int c, int d, unsigned int e, unsigned int f);
 extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);
 
-extern SharedFilePtr *data_ov070_021222e0[];
-extern BTA_File data_ov070_021231f4;
 extern char IDENTITY_MATRIX4X3;
 
 struct BrqMatrixWords { int words[12]; };
@@ -150,12 +174,12 @@ int daBrq_c::InitResources()
         dExtFrameCtrl_c::LoadFile(*data_ov070_021222e0[i]);
     }
 
-    BMD_File *bmd2 = data_ov070_02123604.file;
+    BMD_File *bmd2 = (BMD_File *)data_ov070_02123604.filePtr;
     BTP_File *btp = (BTP_File *)TextureSequence::LoadFile(data_ov070_021235ec);
     TextureSequence::Prepare(*bmd2, *btp);
 
-    bmd2 = data_ov070_02123604.file;
-    TextureTransformer::Prepare(*bmd2, data_ov070_021231f4);
+    bmd2 = (BMD_File *)data_ov070_02123604.filePtr;
+    TextureTransformer::Prepare(*bmd2, *(BTA_File *)data_ov070_021231f4);
 
     if (!mShadowModel.InitCylinder())
         return 0;
@@ -212,8 +236,6 @@ void daBrq_c::OnPendingDestroy()
 }
 
 
-extern SharedFilePtr *data_ov070_021222e0[2];
-
 // @symbol _ZN7daBrq_c16CleanupResourcesEv
 int daBrq_c::CleanupResources()
 {
@@ -256,7 +278,7 @@ extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
 // @symbol _ZN7daBrq_c18EnterCooldownStateEv
 s32 daBrq_c::EnterCooldownState()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov070_0212360c.file, 0x40000000,
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File *)data_ov070_0212360c.filePtr, 0x40000000,
                                                 0x1000, 0);
     mStateTimer = 0x3c;
     mState = 0;
@@ -285,15 +307,13 @@ extern "C" unsigned int _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
 extern "C" unsigned int _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
     TextureTransformer*, BTA_File&, int, Fix12i, unsigned int);
 
-extern BTA_File data_ov070_021231f4;
-
 // @symbol _ZN7daBrq_c16EnterActiveStateEv
 s32 daBrq_c::EnterActiveState()
 {
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &mModelAnim, data_ov070_021235f4.file, 0, 0x1000, 0);
+        &mModelAnim, (BCA_File *)data_ov070_021235f4.filePtr, 0, 0x1000, 0);
     mModelAnim.speed = 0x1000;
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, *data_ov070_021235ec.file,
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, *(BTP_File *)data_ov070_021235ec.filePtr,
                                                        0, 0x1000, 0);
     mTextureSequence.speed = 0x1000;
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
@@ -399,7 +419,7 @@ s32 daBrq_c::EnterDefeatedState()
     mHorzSpeed = 0xa000;
     mVertSpeed = 0x28000;
     mStateTimer = 0x2d;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov070_0212360c.file, 0x40000000,
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File *)data_ov070_0212360c.filePtr, 0x40000000,
                                                 0x1000, 0);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
         0x43, mPosX, mPosY, mPosZ);

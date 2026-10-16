@@ -21,6 +21,16 @@
       "name": ".text",
       "start": "0x020bccfc",
       "end": "0x020e67a8"
+    },
+    {
+      "name": ".data",
+      "start": "0x0210a720",
+      "end": "0x0210a7e8"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0210e7b8",
+      "end": "0x0210e7c0"
     }
   ],
   "functions": [
@@ -4309,8 +4319,45 @@
       "ordinal": 611
     }
   ],
-  "data": [],
-  "bss": [],
+  "data": [
+    {
+      "symbol": "data_ov002_0210a720",
+      "address": "0x0210a720",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "four SetAnim id/value pairs. func_ov002_020bcdf0 reaches this list through data_ov002_0210a7a0."
+    },
+    {
+      "symbol": "data_ov002_0210a740",
+      "address": "0x0210a740",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "four SetAnim id/value pairs. func_ov002_020bcdf0 reaches this list through data_ov002_0210a7a0."
+    },
+    {
+      "symbol": "data_ov002_0210a760",
+      "address": "0x0210a760",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "sixteen words between the two lists and the index table. No relocation. They keep the one .data claim contiguous."
+    },
+    {
+      "symbol": "data_ov002_0210a7a0",
+      "address": "0x0210a7a0",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "eighteen pointers to the animation lists func_ov002_020bcdf0 indexes by unk_727"
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "data_ov002_0210e7b8",
+      "address": "0x0210e7b8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "one zero AnimEntry27. The index table points at it. The image is zero, so the sinit is not duplicated here."
+    }
+  ],
   "notes": [
     "Written by hand, not by tools/tubuild.py create: at the time of writing, create() raised AttributeError in build_manifest_entry the moment a member of the run had no legacy source, and this run has three such members; it also wrote the .cpp before crashing, so its output could not be trusted as a starting point. That defect has SINCE BEEN FIXED on main (#2315 makes create survive a sourceless member, #2323 makes it emit an // @symbol marker per member), so a future entry for this module need not be hand-written. The builder audited all 301 hand-written rows against the pre-promotion tree: ordinals contiguous 0..300, rows tile 0x020bd828..0x020cfea4 with no gap or overlap, and every legacy_source is both a file in the base tree and an exact-path entry in the base ov002 delinks.txt with the matching extension (173 .cpp, 128 .c).",
     "The source was assembled by a scoped generator that reuses tubuild's own split_legacy_source/unit_functions, because create()'s preamble merge does not scale to 301 members: it emits one merged file-scope declaration per ROM symbol, and 301 independent recoveries of one symbol disagree constantly. Measured instead, and used here: in mwccarm 2004/b56 a declaration written at BLOCK scope inside an `extern \"C\"` region gets C linkage, and two function bodies may declare one C symbol with different types. So every member keeps its own declarations inside its own body and no call site had to be rewritten to fit a merged spelling. The same is true of DATA declarations -- measured directly, contradicting the earlier belief that block-scope data redeclaration is rejected; only a file-scope redeclaration is. That matters for bytes, not just for tidiness: hoisting one canonical data declaration and casting each member's view back with a macro changed the codegen of six members, and the choice of which spelling became canonical depended on which other members were present.",
@@ -4401,7 +4448,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov002-Player/link (gitignored)",
       "phases": {
         "delink": true,
@@ -4414,7 +4461,7 @@
       },
       "tuRange": {
         "start": "0x020bccfc",
-        "end": "0x020d3b9c",
+        "end": "0x020e67a8",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -4422,21 +4469,59 @@
         {
           "section": ".text",
           "start": "0x020bccfc",
-          "end": "0x020d3b9c",
+          "end": "0x020e67a8",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0210a720",
+          "end": "0x0210a7e8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0210e7b8",
+          "end": "0x0210e7c0",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 361
+          "LICENSED": 617
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              11,
+              12,
+              13,
+              15
+            ],
+            "desired": [
+              11,
+              12,
+              13,
+              15
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              14
+            ],
+            "desired": [
+              14
+            ]
+          }
+        ],
         "objisolate": null,
         "errors": null
       },
@@ -4472,5 +4557,187 @@
       },
       "linkerOutput": null
     }
-  }
+  },
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x0210a7a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_02109ff4",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02109ff4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210a61c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210a61c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210a720",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210a720"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210a63c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210a63c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210a1d4",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210a1d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210a64c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210a64c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210a740",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210a740"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210a66c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210a66c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210e7b8",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210e7b8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210a67c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210a67c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210a4bc",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210a4bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210a434",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210a434"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210a3dc",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210a3dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210a5ec",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210a5ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210a5fc",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210a5fc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210a62c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210a62c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210a6bc",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210a6bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210a7e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210a65c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210a65c"
+    }
+  ]
 }

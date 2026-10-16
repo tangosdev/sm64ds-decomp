@@ -25,7 +25,7 @@
  *   `(char *)self + 0x490/0x494/0x498` (mModelAnim.mat4x3.t) and
  *   `+ 0x310/0x314/0x318` (mClsnMat.t). Nested-member stores make
  *   b56 materialise a second 0x46c base and grow the function.
- * Leftover: SharedFilePtr +4 BCA load (layout unrecovered).
+ * Leftover: the BCA load still goes through the handle's filePtr.
  * Leftover: data_ov002_0210d9f0 and data_ov036_02112b28 CLPS stay
  *   outside this TU. The three ov036 handles are file-scope objects
  *   at the bottom of this file.
@@ -70,21 +70,18 @@ typedef char FlyingCarpetSpawnInfo_size_must_be_0x1c[
  * their destructors. The wrapper names are local; the ctor/dtor
  * addresses are the ROM resource-family functions. */
 struct CarpetModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     CarpetModelFilePtr(u32 fileID);
     ~CarpetModelFilePtr();
 };
 
 struct CarpetAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
 
     CarpetAnimationFilePtr(u32 fileID);
     ~CarpetAnimationFilePtr();
 };
 
 struct CarpetCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     CarpetCollisionFilePtr(u32 fileID);
     ~CarpetCollisionFilePtr();

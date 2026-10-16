@@ -28,6 +28,11 @@
       "end": "0x02114dd4"
     },
     {
+      "name": ".data",
+      "start": "0x02114ee4",
+      "end": "0x02114f04"
+    },
+    {
       "name": ".bss",
       "start": "0x02115c80",
       "end": "0x02115ca8"
@@ -91,7 +96,15 @@
       "ordinal": 7
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov030_02114ee4",
+      "address": "0x02114ee4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block SetFile is handed: tag 0x53504c43, header 0x00010008, entry 0x01000fc0 / 0x000000ff, then four 0xffffffff words"
+    }
+  ],
   "production_mode": "intact-object",
   "bss": [
     {
@@ -455,6 +468,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02114ee4",
+          "end": "0x02114f04",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02115c80",
           "end": "0x02115ca8",
@@ -463,7 +483,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 14
+          "LICENSED": 15
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -474,19 +494,28 @@
           {
             "section": ".init",
             "original": [
-              47
+              48
             ],
             "desired": [
-              47
+              48
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              45
+              46
             ],
             "desired": [
-              45
+              46
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              24
+            ],
+            "desired": [
+              24
             ]
           },
           {

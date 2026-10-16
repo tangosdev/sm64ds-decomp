@@ -1288,41 +1288,89 @@ extern "C" void *dScMgMemory2_c_classInit()
     return new dScMgMemory2_c;
 }
 
+// @symbol g_profile_MG_MEMORY_J
 /* Static-init globals (was the handwritten __sinit_ov006_021314e4 shard).
  * The sprite-pointer table plus the five PMF state tables plain-copied
  * from the ROM constants, in retail copy order: the permuted sprite
  * pointers, the five main states, the ten round states, the four result
  * states, the seven card states, then the three player states. */
 extern "C" int data_ov006_02133810[];
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_StateSetup;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_StatePlay;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_StateJudge;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_StateResult;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_StateExit;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundStart;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundDealEasy;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundDealNormal;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundDealHard;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundDealFourth;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundShowCards;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundHideCards;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundReadyCards;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundWaitDeal;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_RoundReveal;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_ResultWait;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_ResultReward;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_ResultTurnCards;
-extern "C" dScMgMemory2_cState pmf_dScMgMemory2_c_ResultFinish;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_CardMove;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_CardIdle;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_CardSelect;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_CardFlipUp;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_CardWait;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_CardFlipDown;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_CardFlyAway;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_PlayerDrop;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_PlayerMove;
-extern "C" dScMgMemory2_cCardState pmf_dScMgMemory2_c_PlayerWait;
+
+/* Retail stores each state as a code address and a zero adjustment, contiguous
+   from 0x0213d248. A pointer-to-member initializer would move these into .bss. */
+struct dScMgMemory2StateWords {
+    void (*function)();
+    int adjustment;
+};
+
+/* local extern: the header method is a pointer-to-member; this record stores the code address */
+extern "C" void _ZN14dScMgMemory2_c10ResultWaitEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c9StatePlayEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c10PlayerDropEi(int); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c13RoundDealHardEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c10StateSetupEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c8CardIdleEi(int); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c9StateExitEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c15RoundDealFourthEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c15RoundDealNormalEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c14RoundShowCardsEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c15RoundReadyCardsEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c11RoundRevealEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c10CardSelectEi(int); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c10PlayerWaitEi(int); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c10StateJudgeEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c10RoundStartEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c13RoundDealEasyEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c11CardFlyAwayEi(int); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c12CardFlipDownEi(int); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c8CardWaitEi(int); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c10CardFlipUpEi(int); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c12ResultFinishEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c11StateResultEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c8CardMoveEi(int); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c14RoundHideCardsEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c13RoundWaitDealEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c12ResultRewardEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c15ResultTurnCardsEv(); /* local extern: code address, not the member pointer */
+extern "C" void _ZN14dScMgMemory2_c10PlayerMoveEi(int); /* local extern: code address, not the member pointer */
+
+dScMgMemory2StateWords pmf_dScMgMemory2_c_ResultWait = { _ZN14dScMgMemory2_c10ResultWaitEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_StatePlay = { _ZN14dScMgMemory2_c9StatePlayEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_PlayerDrop = { (void (*)())_ZN14dScMgMemory2_c10PlayerDropEi, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_RoundDealHard = { _ZN14dScMgMemory2_c13RoundDealHardEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_StateSetup = { _ZN14dScMgMemory2_c10StateSetupEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_CardIdle = { (void (*)())_ZN14dScMgMemory2_c8CardIdleEi, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_StateExit = { _ZN14dScMgMemory2_c9StateExitEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_RoundDealFourth = { _ZN14dScMgMemory2_c15RoundDealFourthEv, 0 };
+
+struct dScMgMemory2Profile {
+    void *(*spawn)();
+    s16 behaviorPriority;
+    s16 renderPriority;
+};
+dScMgMemory2Profile g_profile_MG_MEMORY_J = { dScMgMemory2_c_classInit, 0x16b, 0x16b };
+
+dScMgMemory2StateWords pmf_dScMgMemory2_c_RoundDealNormal = { _ZN14dScMgMemory2_c15RoundDealNormalEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_RoundShowCards = { _ZN14dScMgMemory2_c14RoundShowCardsEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_RoundReadyCards = { _ZN14dScMgMemory2_c15RoundReadyCardsEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_RoundReveal = { _ZN14dScMgMemory2_c11RoundRevealEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_CardSelect = { (void (*)())_ZN14dScMgMemory2_c10CardSelectEi, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_PlayerWait = { (void (*)())_ZN14dScMgMemory2_c10PlayerWaitEi, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_StateJudge = { _ZN14dScMgMemory2_c10StateJudgeEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_RoundStart = { _ZN14dScMgMemory2_c10RoundStartEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_RoundDealEasy = { _ZN14dScMgMemory2_c13RoundDealEasyEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_CardFlyAway = { (void (*)())_ZN14dScMgMemory2_c11CardFlyAwayEi, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_CardFlipDown = { (void (*)())_ZN14dScMgMemory2_c12CardFlipDownEi, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_CardWait = { (void (*)())_ZN14dScMgMemory2_c8CardWaitEi, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_CardFlipUp = { (void (*)())_ZN14dScMgMemory2_c10CardFlipUpEi, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_ResultFinish = { _ZN14dScMgMemory2_c12ResultFinishEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_StateResult = { _ZN14dScMgMemory2_c11StateResultEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_CardMove = { (void (*)())_ZN14dScMgMemory2_c8CardMoveEi, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_RoundHideCards = { _ZN14dScMgMemory2_c14RoundHideCardsEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_RoundWaitDeal = { _ZN14dScMgMemory2_c13RoundWaitDealEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_ResultReward = { _ZN14dScMgMemory2_c12ResultRewardEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_ResultTurnCards = { _ZN14dScMgMemory2_c15ResultTurnCardsEv, 0 };
+dScMgMemory2StateWords pmf_dScMgMemory2_c_PlayerMove = { (void (*)())_ZN14dScMgMemory2_c10PlayerMoveEi, 0 };
 
 void *data_ov006_02142490[23] = {
     (void *)data_ov006_02133810[0],
@@ -1350,41 +1398,41 @@ void *data_ov006_02142490[23] = {
     (void *)data_ov006_02133810[22],
 };
 dScMgMemory2_cState data_ov006_021423e0[5] = {
-    pmf_dScMgMemory2_c_StateSetup,
-    pmf_dScMgMemory2_c_StatePlay,
-    pmf_dScMgMemory2_c_StateJudge,
-    pmf_dScMgMemory2_c_StateResult,
-    pmf_dScMgMemory2_c_StateExit,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_StateSetup,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_StatePlay,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_StateJudge,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_StateResult,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_StateExit,
 };
 dScMgMemory2_cState data_ov006_02142440[10] = {
-    pmf_dScMgMemory2_c_RoundStart,
-    pmf_dScMgMemory2_c_RoundDealEasy,
-    pmf_dScMgMemory2_c_RoundDealNormal,
-    pmf_dScMgMemory2_c_RoundDealHard,
-    pmf_dScMgMemory2_c_RoundDealFourth,
-    pmf_dScMgMemory2_c_RoundShowCards,
-    pmf_dScMgMemory2_c_RoundHideCards,
-    pmf_dScMgMemory2_c_RoundReadyCards,
-    pmf_dScMgMemory2_c_RoundWaitDeal,
-    pmf_dScMgMemory2_c_RoundReveal,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_RoundStart,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_RoundDealEasy,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_RoundDealNormal,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_RoundDealHard,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_RoundDealFourth,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_RoundShowCards,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_RoundHideCards,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_RoundReadyCards,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_RoundWaitDeal,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_RoundReveal,
 };
 dScMgMemory2_cState data_ov006_021423c0[4] = {
-    pmf_dScMgMemory2_c_ResultWait,
-    pmf_dScMgMemory2_c_ResultReward,
-    pmf_dScMgMemory2_c_ResultTurnCards,
-    pmf_dScMgMemory2_c_ResultFinish,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_ResultWait,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_ResultReward,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_ResultTurnCards,
+    *(dScMgMemory2_cState *)&pmf_dScMgMemory2_c_ResultFinish,
 };
 dScMgMemory2_cCardState data_ov006_02142408[7] = {
-    pmf_dScMgMemory2_c_CardMove,
-    pmf_dScMgMemory2_c_CardIdle,
-    pmf_dScMgMemory2_c_CardSelect,
-    pmf_dScMgMemory2_c_CardFlipUp,
-    pmf_dScMgMemory2_c_CardWait,
-    pmf_dScMgMemory2_c_CardFlipDown,
-    pmf_dScMgMemory2_c_CardFlyAway,
+    *(dScMgMemory2_cCardState *)&pmf_dScMgMemory2_c_CardMove,
+    *(dScMgMemory2_cCardState *)&pmf_dScMgMemory2_c_CardIdle,
+    *(dScMgMemory2_cCardState *)&pmf_dScMgMemory2_c_CardSelect,
+    *(dScMgMemory2_cCardState *)&pmf_dScMgMemory2_c_CardFlipUp,
+    *(dScMgMemory2_cCardState *)&pmf_dScMgMemory2_c_CardWait,
+    *(dScMgMemory2_cCardState *)&pmf_dScMgMemory2_c_CardFlipDown,
+    *(dScMgMemory2_cCardState *)&pmf_dScMgMemory2_c_CardFlyAway,
 };
 dScMgMemory2_cCardState data_ov006_021423a8[3] = {
-    pmf_dScMgMemory2_c_PlayerDrop,
-    pmf_dScMgMemory2_c_PlayerMove,
-    pmf_dScMgMemory2_c_PlayerWait,
+    *(dScMgMemory2_cCardState *)&pmf_dScMgMemory2_c_PlayerDrop,
+    *(dScMgMemory2_cCardState *)&pmf_dScMgMemory2_c_PlayerMove,
+    *(dScMgMemory2_cCardState *)&pmf_dScMgMemory2_c_PlayerWait,
 };

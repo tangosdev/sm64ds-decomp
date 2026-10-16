@@ -7,6 +7,7 @@
 src/game/actors/d_a_choropu.cpp:
     complete
     .text start:0x02123740 end:0x02124a20
+    .rodata start:0x0212766c end:0x0212767c
     .init start:0x021278c0 end:0x02127a60
     .ctor start:0x02127f60 end:0x02127f64
     .data start:0x02127f80 end:0x02127fb0
@@ -23,6 +24,7 @@ src/game/actors/d_a_btt_bk.cpp:
 src/game/actors/d_a_pic_gate.cpp:
     complete
     .text start:0x02125404 end:0x021264ec
+    .rodata start:0x0212775c end:0x021277a8
 
 src/game/actors/d_a_pic_gate_methods.cpp:
     complete

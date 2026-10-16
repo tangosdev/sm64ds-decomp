@@ -54,23 +54,30 @@
 #include "Message.h"
 #include "dCc_c.h"
 #include "dBgCh_Gnd.h"
+#include "typeinfo.h"
 
 bool ApproachLinear(short &value, short target, short step);
 
 struct BCA_File;
 struct BMD_File;
 
-/* The pointer-to-member state table at 0x0212fe88. mwccarm leaves a file-scope
-   variable's name unmangled in C++, so this names the ROM symbol as spelled. */
-extern daKinopio_c::State data_ov085_0212fe88[];
+/* Two State rows, then the vtable offset-to-top and the typeinfo word.
+   The PMF slots are zero in the image; the sinit fills them from the
+   eight-byte records below. */
+extern u32 data_ov085_0212fe88[];
+
+/* SharedFilePtr is the 8-byte handle. The sinit constructs these eight-byte handles
+   (files 0x35c, 0x35d, 0x35e). */
+struct KinopioFile : SharedFilePtr {
+};
 
 extern "C" {
 
 /* ov085 statics */
 extern u8 data_ov085_0212f27c[];           /* star-count requirement table */
-extern SharedFilePtr data_ov085_02130480;  /* body model      */
-extern SharedFilePtr data_ov085_02130488;  /* idle animation  */
-extern SharedFilePtr data_ov085_02130490;  /* talk animation  */
+extern KinopioFile data_ov085_02130480;  /* body model */
+extern KinopioFile data_ov085_02130488;  /* idle animation */
+extern KinopioFile data_ov085_02130490;  /* talk animation */
 
 /* ov002 statics -- the three models the variant-1 Toad preloads */
 extern SharedFilePtr data_ov002_0210da40;
@@ -323,14 +330,14 @@ void daKinopio_c::SetState(s32 state)
 {
     mState = state;
     s32 index = mState;
-    (this->*data_ov085_0212fe88[index].init)();
+    (this->*((daKinopio_c::State *)data_ov085_0212fe88)[index].init)();
 }
 
 // @symbol _ZN11daKinopio_c8RunStateEv
 void daKinopio_c::RunState()
 {
     s32 index = mState;
-    (this->*data_ov085_0212fe88[index].main)();
+    (this->*((daKinopio_c::State *)data_ov085_0212fe88)[index].main)();
 }
 
 // @symbol _ZN11daKinopio_c15UpdateModelPoseEv
@@ -644,3 +651,66 @@ extern "C" daKinopio_c *daKinopio_c_classInit(void)
 {
     return new daKinopio_c();
 }
+
+/* State names the table points at. Eight bytes each, the word after the
+ * text is zero. */
+extern "C" char data_ov085_0212fe20[8] = "TALK";
+extern "C" char data_ov085_0212fe28[8] = "WAIT";
+
+/* The sinit copies these into the zero PMF slots. Each record is the
+ * method address and a zero adjustment. */
+extern "C" void _ZN11daKinopio_c12St_Talk_InitEv(daKinopio_c *);
+extern "C" void _ZN11daKinopio_c12St_Talk_MainEv(daKinopio_c *);
+extern "C" void _ZN11daKinopio_c12St_Idle_InitEv(daKinopio_c *);
+extern "C" void _ZN11daKinopio_c12St_Idle_MainEv(daKinopio_c *);
+extern "C" struct {
+    void (*fn)(daKinopio_c *);
+    int adj;
+} data_ov085_0212fe30 = { _ZN11daKinopio_c12St_Talk_InitEv, 0 };
+extern "C" struct {
+    void (*fn)(daKinopio_c *);
+    int adj;
+} data_ov085_0212fe38 = { _ZN11daKinopio_c12St_Talk_MainEv, 0 };
+extern "C" struct {
+    void (*fn)(daKinopio_c *);
+    int adj;
+} data_ov085_0212fe40 = { _ZN11daKinopio_c12St_Idle_InitEv, 0 };
+extern "C" struct {
+    void (*fn)(daKinopio_c *);
+    int adj;
+} data_ov085_0212fe48 = { _ZN11daKinopio_c12St_Idle_MainEv, 0 };
+
+struct KinopioSpawnInfo {
+    daKinopio_c *(*classInit)();
+    s16 executeOrder;
+    s16 drawOrder;
+    u32 actorFlags;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    Fix12i clipDistance;
+    Fix12i farDistance;
+};
+
+extern "C" KinopioSpawnInfo g_profile_KINOPIO = {
+    daKinopio_c_classInit,
+    0x00b9,
+    0x00ab,
+    0x00000003,
+    0x00040000,
+    0x00080000,
+    0x01000000,
+    0x01000000,
+};
+
+u32 data_ov085_0212fe88[12] = {
+    0, 0, 0, 0, (u32)&data_ov085_0212fe28,
+    0, 0, 0, 0, (u32)&data_ov085_0212fe20,
+    0, (u32)&typeid(daKinopio_c),
+};
+
+extern "C" {
+KinopioFile data_ov085_02130480;
+KinopioFile data_ov085_02130488;
+KinopioFile data_ov085_02130490;
+}
+

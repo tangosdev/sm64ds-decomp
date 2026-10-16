@@ -22,6 +22,7 @@ src/game/actors/d_a_spd.cpp:
 src/game/actors/d_a_eykn.cpp:
     complete
     .text start:0x02120668 end:0x02121a6c
+    .rodata start:0x021226a0 end:0x021226ac
     .init start:0x021228c8 end:0x02122a1c
     .ctor start:0x02122b34 end:0x02122b38
     .bss start:0x02123038 end:0x021230b8

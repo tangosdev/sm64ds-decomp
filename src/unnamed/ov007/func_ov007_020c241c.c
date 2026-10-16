@@ -1,6 +1,6 @@
 typedef struct Vec3 { int x, y, z; } Vec3;
 
-extern Vec3 data_ov007_020d7dac;
+const Vec3 data_ov007_020d7dac = { 0, 0, 0x1000 };
 extern void *func_ov007_020c3df4(int a, int b);
 extern void func_ov007_020c2390(char *t);
 

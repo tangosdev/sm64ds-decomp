@@ -73,16 +73,10 @@ bool ApproachLinear(short &value, short target, short step);
  * animation initialization paths both store a u16 file ID at +0, a byte
  * reference count at +2, and a loaded-file pointer at +4. */
 struct NknkModelFilePtr : SharedFilePtr {
-    u16 fileID;
-    u8 numRefs;
-    void *filePtr;
     NknkModelFilePtr(u32 fileID);
     ~NknkModelFilePtr();
 };
 struct NknkAnimationFileHandle : SharedFilePtr {
-    u16 fileID;
-    u8 numRefs;
-    void *filePtr;
     NknkAnimationFileHandle(u32 fileID);
     ~NknkAnimationFileHandle();
 };
@@ -97,7 +91,7 @@ extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callback
 extern void _ZN8Particle19SetSelfDestructFlagEj(u32 id);
 extern void func_0201267c(unsigned int id, const Vector3 *pos);
 extern s16 data_02082214[];         /* SINE_TABLE: sin, cos pairs */
-extern NknkAnimationFileHandle *data_ov062_0211cee8[];
+extern NknkAnimationFileHandle * const data_ov062_0211cee8[];
 extern int data_ov062_0211cf0c[];
 /* The called scalar definition takes u16 startFrame. The unused ModelAnim
  * member declaration takes Fix12<int>/u32; its measured form grew this helper. */
@@ -115,8 +109,8 @@ extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern s16 _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void *self, int a, int b, s16 ang);
 extern int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void *self, int d);
 
-extern SharedFilePtr* data_ov062_0211ced8[2];
-extern SharedFilePtr* data_ov062_0211cee0[2];
+extern SharedFilePtr * const data_ov062_0211ced8[2];
+extern SharedFilePtr * const data_ov062_0211cee0[2];
 
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, dActor_c* a, int r, int h, unsigned int e, unsigned int g);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, int r, int h, Vector3_16* p, int q);
@@ -1202,3 +1196,28 @@ NknkAnimationFileHandle gNokonokoWait2AnimationFile(ASSET_NOKONOKO_WAIT2_BCA);
 NknkAnimationFileHandle gNokonokoDiveStAnimationFile(ASSET_NOKONOKO_DIVE_ST_BCA);
 NknkAnimationFileHandle gNokonokoDiveAnimationFile(ASSET_NOKONOKO_DIVE_BCA);
 NknkAnimationFileHandle gNokonokoDiveEdAnimationFile(ASSET_NOKONOKO_DIVE_ED_BCA);
+
+/* Pointer tables. The two model handles are above. The middle pair is
+ * ov002's data_ov002_0210da18 / data_ov002_0210da20. The nine animation
+ * handles are above, in this order. */
+extern SharedFilePtr data_ov002_0210da18;
+extern SharedFilePtr data_ov002_0210da20;
+extern "C" SharedFilePtr * const data_ov062_0211ced8[2] = {
+    &gNokonokoModelFile,
+    &gNokonokoRedModelFile,
+};
+extern "C" SharedFilePtr * const data_ov062_0211cee0[2] = {
+    &data_ov002_0210da18,
+    &data_ov002_0210da20,
+};
+extern "C" NknkAnimationFileHandle * const data_ov062_0211cee8[9] = {
+    &gNokonokoWalkStAnimationFile,
+    &gNokonokoWalkAnimationFile,
+    &gNokonokoWalkEdAnimationFile,
+    &gNokonokoRunAnimationFile,
+    &gNokonokoWait1AnimationFile,
+    &gNokonokoWait2AnimationFile,
+    &gNokonokoDiveStAnimationFile,
+    &gNokonokoDiveAnimationFile,
+    &gNokonokoDiveEdAnimationFile,
+};

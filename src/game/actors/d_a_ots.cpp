@@ -53,7 +53,7 @@
  * - Particle::System::New / NewSimple 6az: func_ov064_0211616c / 02115f98.
  * - _Z14ApproachLinearRiii stays mangled; no header method form here.
  * - func_0201267c: PlayStepSound / PlayHitSound / PlayDeathSound at mCamSpacePosX.
- * - SharedFilePtr +4: SetAnim BCA loads; SharedFilePtr.h has no fields.
+ * - SetAnim BCA loads read filePtr.
  * - 0x398..0x3f9 stay children's padding (annexing them as members would move
  *   the fields the children declare from 0x3fa on); the helpers reach them
  *   through daOts_c::tail(), a cast of the whole object to the nested Tail struct
@@ -173,7 +173,7 @@ enum {
     kHopSpeed = 0xf000              /* 15 units a frame upward */
 };
 
-/* The BCA a SharedFilePtr holds is its word at +4; SharedFilePtr.h has no fields. */
+/* The BCA a SharedFilePtr holds is filePtr. */
 #define SHARED_FILE_BCA(file) (*(BCA_File **)((char *)(file) + 4))
 
 /* Local stand-ins with no header of their own. */

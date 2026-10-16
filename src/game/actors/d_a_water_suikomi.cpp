@@ -206,6 +206,9 @@ extern "C" daWater_Suikomi_c *daWater_Suikomi_c_classInit()
     return new daWater_Suikomi_c();
 }
 
+/* Zero whirlpool offset. Sits immediately before the state table. */
+extern "C" V3 data_ov026_02113f4c = {0, 0, 0};
+
 /* Static-init global (was the handwritten __sinit_ov026_02112d68 shard):
  * the two state handlers, plain-copied from the ROM constants in retail
  * order. The trailing fill runs to the 0x02113f80 section end, which dsd

@@ -69,14 +69,12 @@ enum daPopoi_c_AssetId {
 typedef int (daPopoi_c::*PopoiPMF)();
 
 struct PopoiModelFile : SharedFilePtr {
-    u32 words[2];
 
     PopoiModelFile(u32 fileID);
     ~PopoiModelFile();
 };
 
 struct PopoiAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
 
     PopoiAnimationFilePtr(u32 fileID);
     ~PopoiAnimationFilePtr();
@@ -116,7 +114,10 @@ extern int data_0209f32c;               /* WATER_HEIGHT */
 extern signed char data_0209f2f8;       /* LEVEL_ID */
 extern int data_0209e650[];             /* RandomIntInternal state */
 extern char data_020a0e68[];            /* scratch Matrix4x3 */
-extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
+/* Sensor offset (0, 0, 44 units): this TU's own .data. Spelled as a plain
+   three-word struct rather than Vector3, whose declared destructor would
+   emit static-init machinery the ROM does not have here. */
+struct { s32 x, y, z; } data_ov077_02127a5c = {0, 0, 0x2c000};
 
 unsigned short DecIfAbove0_Short(unsigned short *p);
 extern unsigned int RandomIntInternal(void *s);

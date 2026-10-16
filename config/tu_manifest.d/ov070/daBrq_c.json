@@ -18,9 +18,9 @@
       "end": "0x02121118"
     },
     {
-      "name": ".data",
-      "start": "0x0212323c",
-      "end": "0x021232f4"
+      "name": ".rodata",
+      "start": "0x02122244",
+      "end": "0x021222e8"
     },
     {
       "name": ".init",
@@ -31,6 +31,11 @@
       "name": ".ctor",
       "start": "0x021230a8",
       "end": "0x021230ac"
+    },
+    {
+      "name": ".data",
+      "start": "0x021231e4",
+      "end": "0x021232f4"
     },
     {
       "name": ".bss",
@@ -175,6 +180,54 @@
   ],
   "data": [
     {
+      "symbol": "data_ov070_021231e4",
+      "address": "0x021231e4",
+      "size": "0x10",
+      "evidence": "material name mat_bilikyu2, 16 bytes, no relocations"
+    },
+    {
+      "symbol": "data_ov070_021231f4",
+      "address": "0x021231f4",
+      "size": "0x18",
+      "evidence": "BTA words: 0x3c, pointers to the rodata runs defined in this file, 1, pointer to 0x0212224c"
+    },
+    {
+      "symbol": "data_ov070_0212320c",
+      "address": "0x0212320c",
+      "size": "0x8",
+      "evidence": "PMF constant for EnterCooldownState plus a zero adjustment"
+    },
+    {
+      "symbol": "data_ov070_02123214",
+      "address": "0x02123214",
+      "size": "0x8",
+      "evidence": "PMF constant for EnterActiveState plus a zero adjustment"
+    },
+    {
+      "symbol": "data_ov070_0212321c",
+      "address": "0x0212321c",
+      "size": "0x8",
+      "evidence": "PMF constant for EnterDefeatedState plus a zero adjustment"
+    },
+    {
+      "symbol": "data_ov070_02123224",
+      "address": "0x02123224",
+      "size": "0x8",
+      "evidence": "PMF constant for UpdateCooldownState plus a zero adjustment"
+    },
+    {
+      "symbol": "data_ov070_0212322c",
+      "address": "0x0212322c",
+      "size": "0x8",
+      "evidence": "PMF constant for UpdateDefeatedState plus a zero adjustment"
+    },
+    {
+      "symbol": "data_ov070_02123234",
+      "address": "0x02123234",
+      "size": "0x8",
+      "evidence": "PMF constant for UpdateActiveState plus a zero adjustment"
+    },
+    {
       "symbol": "_ZTS7daBrq_c",
       "address": "0x0212323c",
       "size": "0x9",
@@ -201,7 +254,38 @@
       "evidence": "compiler storage includes the two-word vtable preamble at 0x02123270; the configured public address point is eight bytes later and all 31 slot relocations match"
     }
   ],
-  "rodata": [],
+  "rodata": [
+    {
+      "symbol": "data_ov070_02122244",
+      "address": "0x02122244",
+      "size": "0x4",
+      "evidence": "one 0x1000 unit the BTA record points at"
+    },
+    {
+      "symbol": "data_ov070_02122248",
+      "address": "0x02122248",
+      "size": "0x4",
+      "evidence": "zero word the BTA record points at"
+    },
+    {
+      "symbol": "data_ov070_0212224c",
+      "address": "0x0212224c",
+      "size": "0x1c",
+      "evidence": "seven words: 0x0000ffff, pointer to mat_bilikyu2, then 1, 1, 0x3c, 1, 1"
+    },
+    {
+      "symbol": "data_ov070_02122268",
+      "address": "0x02122268",
+      "size": "0x78",
+      "evidence": "60 frame values, 30 words, no relocations"
+    },
+    {
+      "symbol": "data_ov070_021222e0",
+      "address": "0x021222e0",
+      "size": "0x8",
+      "evidence": "two SharedFilePtr pointers: data_ov070_021235f4 and data_ov070_0212360c"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov070_021235ec",
@@ -1005,6 +1089,136 @@
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x02122d80"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021222e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_021235f4",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x021235f4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021222e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_0212360c",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x0212360c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_02122244",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02122244"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_02122268",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02122268"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123200",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_02122248",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02122248"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123208",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_0212224c",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x0212224c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212320c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBrq_c18EnterCooldownStateEv",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02120ce4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123214",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBrq_c16EnterActiveStateEv",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02120bf8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212321c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBrq_c18EnterDefeatedStateEv",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02120910"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123224",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBrq_c19UpdateCooldownStateEv",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02120cac"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212322c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBrq_c19UpdateDefeatedStateEv",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x021208a4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123234",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBrq_c17UpdateActiveStateEv",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x021209e4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122250",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_021231e4",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x021231e4"
     }
   ],
   "externalized_output": [
@@ -1246,9 +1460,9 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
-          "start": "0x0212323c",
-          "end": "0x021232f4",
+          "section": ".rodata",
+          "start": "0x02122244",
+          "end": "0x021222e8",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1263,6 +1477,13 @@
           "section": ".ctor",
           "start": "0x021230a8",
           "end": "0x021230ac",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x021231e4",
+          "end": "0x021232f4",
           "differingBytes": 0,
           "firstDiff": null
         },

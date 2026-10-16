@@ -1,5 +1,5 @@
 #include "types.h"
-// UpdateMinimap: copies a 16-byte descriptor into data_0209f3c8 and stores
+// UpdateMinimap copies a 16-byte descriptor into data_0209f3c8 and stores
 // the four scalar params into data_0209f3c4 (+0x14..+0x20).
 typedef struct MinimapDesc { u32 a, b, c, d; } MinimapDesc;
 
@@ -8,7 +8,13 @@ typedef struct MinimapState {
     volatile u32 f14, f18, f1c, f20;
 } MinimapState;
 
-extern MinimapDesc data_0209f3c8;
+/* Zero BSS. The next symbol is data_0209f3e8, so this object is 0x20 bytes:
+ * the descriptor, then the four words MinimapState stores at +0x14..+0x20. */
+struct {
+    u32 a, b, c, d;
+    u32 f14, f18, f1c, f20;
+} data_0209f3c8;
+
 extern MinimapState data_0209f3c4;
 
 void UpdateMinimap(MinimapDesc *desc, u32 a, u32 b, u32 c, u32 d)

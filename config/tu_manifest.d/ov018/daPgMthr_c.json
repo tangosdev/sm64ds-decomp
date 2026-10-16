@@ -17,6 +17,11 @@
       "end": "0x021126d4"
     },
     {
+      "name": ".rodata",
+      "start": "0x02112c04",
+      "end": "0x02112c0c"
+    },
+    {
       "name": ".init",
       "start": "0x02112c80",
       "end": "0x02112e00"
@@ -198,6 +203,22 @@
       "size": "0x00000058",
       "legacy_source": "src/MotherPenguin_Spawn.c",
       "ordinal": 22
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov018_02112c04",
+      "address": "0x02112c04",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to the walk texseq handle gPenguinAngryTextureSequenceFile"
+    },
+    {
+      "symbol": "data_ov018_02112c08",
+      "address": "0x02112c08",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to the stand/talk texseq handle gPenguinWait1TextureSequenceFile; symbols.txt names this address"
     }
   ],
   "data": [
@@ -441,6 +462,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x02112c04",
+          "end": "0x02112c0c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x02112c80",
           "end": "0x02112e00",
@@ -470,7 +498,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 42
+          "LICENSED": 44
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -479,69 +507,80 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              88
+              5,
+              7
             ],
             "desired": [
-              88
+              5,
+              7
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              92
+            ],
+            "desired": [
+              92
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              86
+              90
             ],
             "desired": [
-              86
+              90
             ]
           },
           {
             "section": ".data",
             "original": [
-              5,
-              7,
-              9,
-              11,
-              14,
-              18
+              10,
+              16,
+              18,
+              22,
+              24,
+              26
             ],
             "desired": [
-              7,
-              5,
+              16,
+              24,
+              10,
               18,
-              14,
-              11,
-              9
+              22,
+              26
             ]
           },
           {
             "section": ".bss",
             "original": [
-              13,
-              16,
-              17,
+              9,
+              12,
+              15,
               20,
               21,
-              29,
-              30,
               33,
               34,
               37,
-              39
+              38,
+              41,
+              43
             ],
             "desired": [
-              13,
-              20,
               21,
-              16,
-              17,
-              30,
-              33,
-              29,
+              15,
+              9,
+              20,
+              12,
               34,
               37,
-              39
+              33,
+              38,
+              41,
+              43
             ]
           }
         ],
@@ -550,70 +589,70 @@
             {
               "section": ".data",
               "original": [
-                5,
-                7,
-                9,
-                11,
-                14,
-                18
+                10,
+                16,
+                18,
+                22,
+                24,
+                26
               ],
               "desired": [
-                7,
-                5,
+                16,
+                24,
+                10,
                 18,
-                14,
-                11,
-                9
+                22,
+                26
               ],
               "slots": [
-                5,
-                7,
-                9,
-                11,
-                14,
-                18
+                10,
+                16,
+                18,
+                22,
+                24,
+                26
               ]
             },
             {
               "section": ".bss",
               "original": [
-                13,
-                16,
-                17,
+                9,
+                12,
+                15,
                 20,
                 21,
-                29,
-                30,
                 33,
                 34,
                 37,
-                39
+                38,
+                41,
+                43
               ],
               "desired": [
-                13,
-                20,
                 21,
-                16,
-                17,
-                30,
-                33,
-                29,
+                15,
+                9,
+                20,
+                12,
                 34,
                 37,
-                39
+                33,
+                38,
+                41,
+                43
               ],
               "slots": [
-                13,
-                16,
-                17,
+                9,
+                12,
+                15,
                 20,
                 21,
-                29,
-                30,
                 33,
                 34,
                 37,
-                39
+                38,
+                41,
+                43
               ]
             }
           ],
@@ -749,6 +788,26 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x02112c04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPenguinAngryTextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov018",
+      "target_address": "0x02113bf8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02112c08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPenguinWait1TextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov018",
+      "target_address": "0x02113be8"
+    },
     {
       "section": ".ctor",
       "source": "0x02112e70",

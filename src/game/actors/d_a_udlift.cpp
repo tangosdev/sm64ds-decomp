@@ -95,14 +95,12 @@ void ApproachLinear(int &value, int target, int step);
  * constructors and destructors are the ROM resource-family functions,
  * aliased in the manifest. */
 struct UdliftModelFile : SharedFilePtr {
-    u32 words[2];
 
     UdliftModelFile(u32 fileID);
     ~UdliftModelFile();
 };
 
 struct UdliftCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     UdliftCollisionFilePtr(u32 fileID);
     ~UdliftCollisionFilePtr();
@@ -118,9 +116,9 @@ extern UdliftCollisionFilePtr gRcRift02CollisionFile;
 extern "C" {
 /* Per-variant model and collision files, and the CLPS block handed to
  * dBgW_KcMbg::SetFile, all indexed by mVariant. */
-extern SharedFilePtr *data_ov095_02136f68[];
-extern SharedFilePtr *data_ov095_02136f74[];
-extern CLPS_Block *data_ov095_021375a4[];
+extern SharedFilePtr *const data_ov095_02136f68[3];
+extern SharedFilePtr *const data_ov095_02136f74[3];
+extern CLPS_Block *data_ov095_021375a4[3];
 /* The state table, indexed by mState. */
 extern State data_ov095_02137910[];
 /* The ROM PMF constants the state table copies from (unlicensed .data). */
@@ -447,4 +445,27 @@ State data_ov095_02137910[6] = {
     data_ov095_02137584,
     data_ov095_0213758c,
     data_ov095_0213759c,
+};
+
+/* Three model pointers, then three collision pointers. symbols.txt names
+ * each run, and the next row starts at its end. */
+extern "C" SharedFilePtr *const data_ov095_02136f68[3] = {
+    &gThLiftModelFile,
+    &gCvUdLiftModelFile,
+    &gRcRift02ModelFile,
+};
+extern "C" SharedFilePtr *const data_ov095_02136f74[3] = {
+    &gThLiftCollisionFile,
+    &gCvUdLiftCollisionFile,
+    &gRcRift02CollisionFile,
+};
+
+/* Three CLPS blocks, one per variant. The blocks live in other overlays. */
+extern char data_ov063_0211ec38[];
+extern char data_ov009_02113aa0[];
+extern char data_ov010_02112aa8[];
+extern "C" CLPS_Block *data_ov095_021375a4[3] = {
+    (CLPS_Block *)data_ov063_0211ec38,
+    (CLPS_Block *)data_ov009_02113aa0,
+    (CLPS_Block *)data_ov010_02112aa8,
 };

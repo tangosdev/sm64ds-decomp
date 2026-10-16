@@ -84,14 +84,12 @@ void func_ov024_021114c4(daObjDlPyramid_c *self);
  * compiler-generated undefined member imports onto the existing
  * evidence-bounded ROM symbols. */
 struct DlPyramidModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     DlPyramidModelFilePtr(u32 fileID);
     ~DlPyramidModelFilePtr();
 };
 
 struct DlPyramidCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     DlPyramidCollisionFilePtr(u32 fileID);
     ~DlPyramidCollisionFilePtr();

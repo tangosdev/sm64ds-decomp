@@ -71,7 +71,8 @@ extern u8 data_020a1112[0x16];
 extern u8 data_020a0f04;
 extern u16 data_020a1160;
 extern Rec data_020a1154[4];
-extern Rec data_020a1178;
+/* Zero word. data_020a117c begins at the next address, so this object is 4 bytes. */
+static s32 data_020a1178;
 extern u8 data_020a0f10;
 extern u8 data_020a0fa6[24];
 extern u8 data_020a0fbe[24];
@@ -298,7 +299,7 @@ void func_0203ea5c(void)
                                 if (data_020a0ef8 == 0) {
                                     n75 = data_02099e18;
                                     if (n75 > 1U) {
-                                    var_r5 = &data_020a1178;
+                                    var_r5 = (Rec *)&data_020a1178;
                                     var_r6_2 = 1;
                                     var_r2 = 1;
 loop_75:
@@ -339,7 +340,7 @@ loop_75:
                                 }
                                 }
                                 if ((u32) data_02099e18 > 1U) {
-                                    var_r6_4 = &data_020a1178;
+                                    var_r6_4 = (Rec *)&data_020a1178;
                                     var_r3 = 1;
                                     var_r5_3 = 1;
 loop_90:
@@ -363,7 +364,7 @@ loop_90:
                                         } while (func_0203fd64() != 1);
                                         data_020a1040.unkC = (u16) (data_020a1040.unkC | 0x2000);
                                     }
-                                    var_r5_4 = &data_020a1178;
+                                    var_r5_4 = (Rec *)&data_020a1178;
                                     var_r2_2 = 0;
                                     var_r3_2 = 1;
 loop_103:

@@ -24,9 +24,10 @@ enum daObjFl_Koma_D_c_AssetId {
 // - func_ov002_020b676c / func_ov002_020b66a8 are still the linker names
 //   of daObjKaitendai_c Init/Cleanup (the base leaves those slots pure
 //   virtual). Naming belongs in ov002.
-// - data_ov022_02113da4 is the model/collision/CLPS row between typeinfo
-//   at 02113d98 and the type name at 02113db0. Not owned here. The two
-//   handles it points at are defined at the bottom of this file;
+// - the descriptor's {collision, clps} half is defined here as
+//   data_ov022_02113da8; the +0 cell stays a ROM copy and the CLPS_Block
+//   is ov064's data_ov064_0211bb4c, kept extern. The two handles it
+//   points at are defined at the bottom of this file and
 //   __sinit_d_a_obj_fl_koma_d.cpp constructs them.
 // - g_profile_FL_KOMA_D lives outside this TU.
 // - #pragma defer_codegen off stays on line 2. Dropping it still matches
@@ -51,11 +52,20 @@ struct ResourceDescriptor {
 typedef char ResourceDescriptor_size_must_be_0x0c[
     sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
+/* The descriptor's second half. The arm9 resource table names it
+ * data_ov022_02113da8 separately, so the +0 cell stays a ROM copy -- the
+ * import and a definition cannot share one name. */
+struct ResourceTail {
+    SharedFilePtr *collision;
+    CLPS_Block *clps;
+};
+
 extern "C" {
 int func_ov002_020b676c(daObjKaitendai_c *self, ResourceDescriptor *descriptor,
                         s16 angle);
 int func_ov002_020b66a8(daObjKaitendai_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov022_02113da4;
+extern CLPS_Block data_ov064_0211bb4c;
 }
 
 // @symbol _ZN16daObjFl_Koma_D_cD1Ev
@@ -94,14 +104,12 @@ extern "C" daObjFl_Koma_D_c *daObjFl_Koma_D_c_classInit(void)
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct KomaDModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     KomaDModelFilePtr(u32 fileID);
     ~KomaDModelFilePtr();
 };
 
 struct KomaDCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     KomaDCollisionFilePtr(u32 fileID);
     ~KomaDCollisionFilePtr();
@@ -112,6 +120,13 @@ struct KomaDCollisionFilePtr : SharedFilePtr {
  * destructors; the registration nodes are compiler temporaries. */
 KomaDModelFilePtr gFlKomaDModelFile(ASSET_FL_KOMA_D_BMD);
 KomaDCollisionFilePtr gFlKomaDCollisionFile(ASSET_FL_KOMA_D_KCL);
+
+/* The {collision, clps} half of the descriptor InitResources and
+ * CleanupResources hand to the shared ov002 helpers. Its CLPS_Block is
+ * ov064's record, not this file's. */
+extern "C" ResourceTail data_ov022_02113da8 = {
+    &gFlKomaDCollisionFile, &data_ov064_0211bb4c,
+};
 
 #ifdef _MSC_VER
 /* Host flat names. Not compiled into the cartridge object. */

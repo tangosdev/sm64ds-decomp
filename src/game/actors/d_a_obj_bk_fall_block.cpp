@@ -17,9 +17,14 @@
  * Leftover: func_ov098_0213a2cc is still the linker name of
  *   daObjFallBlock_c's Cleanup (the base leaves that slot pure
  *   virtual). Naming belongs in ov098.
- * Leftover: data_ov015_02114880 is overlay .data this TU does not
- *   own; the BMD/KCL SharedFilePtrs and CLPS_Block are still
- *   data_ov015_*.
+ * Leftover: data_ov015_021136b4, the CLPS this descriptor points at,
+ *   stays the ROM copy. A TU's .data emits as one contribution and the
+ *   manifest claims one contiguous range per input section, so this
+ *   file's .data slot is the descriptor at 0x02114880; a second disjoint
+ *   .data claim cannot be expressed, and input-section retargeting
+ *   (const -> .rodata placed in .data) is unimplemented for enrolled
+ *   intact objects. The model and collision handles are this
+ *   file's .bss.
  * Leftover: g_profile_BK_DOWN_B lives outside this TU (S14).
  */
 
@@ -36,12 +41,10 @@ enum d_a_obj_bk_fall_block_AssetId {
  * func_02017ab4. The collision handle constructs through func_02017b4c and
  * destroys through SharedFilePtr_Destruct_Clsn. The descriptor stays ROM data. */
 struct FallBlockModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
     FallBlockModelFilePtr(unsigned int fileId);
     ~FallBlockModelFilePtr();
 };
 struct FallBlockClsnFileHandle : SharedFilePtr {
-    unsigned int words[2];
     FallBlockClsnFileHandle(unsigned int fileId);
     ~FallBlockClsnFileHandle();
 };
@@ -63,6 +66,7 @@ typedef char ResourceDescriptor_size_must_be_0x0c[
 extern "C" {
 int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *descriptor);
 int func_ov098_0213a2cc(daObjBk_Fall_Block_c *self, ResourceDescriptor *descriptor);
+extern CLPS_Block data_ov015_021136b4;
 extern ResourceDescriptor data_ov015_02114880;
 }
 
@@ -88,3 +92,9 @@ s32 daObjBk_Fall_Block_c::CleanupResources()
  * mwcc emits __sinit_d_a_obj_bk_fall_block.cpp. */
 FallBlockModelFilePtr gBkDownBModelFile(ASSET_BK_DOWN_B_BMD);
 FallBlockClsnFileHandle gBkDownBCollisionFile(ASSET_BK_DOWN_B_KCL);
+
+extern "C" ResourceDescriptor data_ov015_02114880 = {
+    &gBkDownBModelFile,
+    &gBkDownBCollisionFile,
+    &data_ov015_021136b4,
+};

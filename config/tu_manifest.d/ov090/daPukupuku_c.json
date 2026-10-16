@@ -30,6 +30,11 @@
       "end": "0x021340d0"
     },
     {
+      "name": ".data",
+      "start": "0x021342d8",
+      "end": "0x021342e4"
+    },
+    {
       "name": ".bss",
       "start": "0x0213455c",
       "end": "0x021345a4"
@@ -160,7 +165,15 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail; the other three .ctor words belong to the daMenbo_c, daManta_c and daShark_c TUs"
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov090_021342d8",
+      "address": "0x021342d8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized three-word cylinder offset (0, -0x1e000, 0); the file's Vector3 declaration is spelled as a plain struct because the declared destructor would emit static-init machinery"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov090_0213455c",
@@ -569,6 +582,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x021342d8",
+          "end": "0x021342e4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x0213455c",
           "end": "0x021345a4",
@@ -577,7 +597,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 23
+          "LICENSED": 24
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -588,38 +608,47 @@
           {
             "section": ".init",
             "original": [
-              58
+              59
             ],
             "desired": [
-              58
+              59
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              56
+              57
             ],
             "desired": [
-              56
+              57
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              16
+            ],
+            "desired": [
+              16
             ]
           },
           {
             "section": ".bss",
             "original": [
-              7,
+              5,
               8,
-              18,
               21,
-              24,
-              25
+              22,
+              25,
+              26
             ],
             "desired": [
-              7,
               8,
+              5,
               21,
-              18,
-              25,
-              24
+              22,
+              26,
+              25
             ]
           }
         ],
@@ -628,28 +657,28 @@
             {
               "section": ".bss",
               "original": [
-                7,
+                5,
                 8,
-                18,
                 21,
-                24,
-                25
+                22,
+                25,
+                26
               ],
               "desired": [
-                7,
                 8,
+                5,
                 21,
-                18,
-                25,
-                24
+                22,
+                26,
+                25
               ],
               "slots": [
-                7,
+                5,
                 8,
-                18,
                 21,
-                24,
-                25
+                22,
+                25,
+                26
               ]
             }
           ],
@@ -781,14 +810,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@634",
+      "from": "@635",
       "to": "@620",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; this TU's per-TU @NNN uniquifier shifted when the file's own data definition was added, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@635",
+      "from": "@636",
       "to": "@737",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; this TU's per-TU @NNN uniquifier shifted when the file's own data definition was added, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

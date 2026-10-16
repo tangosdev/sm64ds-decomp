@@ -37,7 +37,7 @@
     },
     {
       "name": ".bss",
-      "start": "0x0214250c",
+      "start": "0x021424fc",
       "end": "0x02142558"
     }
   ],
@@ -221,6 +221,34 @@
   "data": [],
   "bss": [
     {
+      "symbol": "data_ov006_021424fc",
+      "address": "0x021424fc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "first pick; written at runtime, BSS image is zero"
+    },
+    {
+      "symbol": "data_ov006_02142500",
+      "address": "0x02142500",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "board list head; written at runtime, BSS image is zero"
+    },
+    {
+      "symbol": "data_ov006_02142504",
+      "address": "0x02142504",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "board list tail; written at runtime, BSS image is zero"
+    },
+    {
+      "symbol": "data_ov006_02142508",
+      "address": "0x02142508",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "second pick; written at runtime, BSS image is zero"
+    },
+    {
       "symbol": "data_ov006_0214250c",
       "address": "0x0214250c",
       "size": "0x4c",
@@ -399,14 +427,14 @@
         },
         {
           "section": ".bss",
-          "start": "0x0214250c",
+          "start": "0x021424fc",
           "end": "0x02142558",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 28
+          "LICENSED": 32
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -417,28 +445,36 @@
           {
             "section": ".init",
             "original": [
-              87
+              91
             ],
             "desired": [
-              87
+              91
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              85
+              89
             ],
             "desired": [
-              85
+              89
             ]
           },
           {
             "section": ".bss",
             "original": [
-              28
+              5,
+              6,
+              7,
+              8,
+              32
             ],
             "desired": [
-              28
+              5,
+              6,
+              7,
+              8,
+              32
             ]
           }
         ],

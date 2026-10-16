@@ -59,17 +59,21 @@ enum daDpLift_c_AssetId {
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct DpLiftModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     DpLiftModelFilePtr(u32 fileID);
     ~DpLiftModelFilePtr();
 };
 
 struct DpLiftCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     DpLiftCollisionFilePtr(u32 fileID);
     ~DpLiftCollisionFilePtr();
+};
+
+/* CLPS.h leaves this incomplete. The object is the 32 ROM bytes: the tag,
+ * the stride halfword 8 at +4, one entry at +8, and no relocation. */
+struct CLPS_Block {
+    u32 w[8];
 };
 
 extern "C" {
@@ -227,6 +231,17 @@ s32 daDpLift_c::InitResources()
  * destructors; the registration nodes are compiler temporaries. */
 DpLiftModelFilePtr data_ov025_02113ae0(ASSET_DP_LIFT_BMD);
 DpLiftCollisionFilePtr data_ov025_02113ad8(ASSET_DP_LIFT_KCL);
+
+extern "C" CLPS_Block data_ov025_02112d08 = {
+    0x53504C43,
+    0x00010008,
+    0x00000FC4,
+    0x000000FF,
+    0xFFFFFFFF,
+    0xFFFFFFFF,
+    0xFFFFFFFF,
+    0xFFFFFFFF,
+};
 
 /* Mesh-collider touch callback: remembers that the player (actor 0xbf)
    touched the lift, for Behavior's idle state. */

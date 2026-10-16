@@ -9,16 +9,15 @@
  * daObjKi_Ita_c_classInit / g_profile_KI_ITA are reconstructed (RTTI
  * daObjKi_Ita_c, KI_ITA registry). Retail does not store those spellings.
  *
- * deslop
- * Leftover: data_ov016_02114b8c is still the linker name of this
- *   overlay's three-word file table. Those words sit between this
- *   class's RTTI and type-name; this TU does not own them.
+ * Leftover: g_profile_KI_ITA stays the ROM copy. Its symbols.txt span
+ *   runs through the vtable preamble at 0x02114bcc.
  */
 
 #include "daObjKi_Ita_c.h"
 #include "SharedFilePtr.h"
 
 extern "C" {
+extern CLPS_Block data_ov016_02113bec;
 extern daObjFloatBoard_c_Resources data_ov016_02114b8c;
 }
 
@@ -27,14 +26,12 @@ extern daObjFloatBoard_c_Resources data_ov016_02114b8c;
  * func_02017acc / func_02017ab4 and func_02017b4c /
  * SharedFilePtr_Destruct_Clsn. */
 struct KiItaModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     KiItaModelFilePtr(u32 fileID);
     ~KiItaModelFilePtr();
 };
 
 struct KiItaCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     KiItaCollisionFilePtr(u32 fileID);
     ~KiItaCollisionFilePtr();
@@ -82,3 +79,10 @@ int daObjKi_Ita_c::InitResources()
  * handle, then the collision handle. */
 KiItaModelFilePtr data_ov016_02114e44(1601);
 KiItaCollisionFilePtr data_ov016_02114e4c(1602);
+
+/* Model, collision, CLPS. The CLPS block at 0x02113bec belongs to another run. */
+extern "C" daObjFloatBoard_c_Resources data_ov016_02114b8c = {
+    &data_ov016_02114e44,
+    &data_ov016_02114e4c,
+    &data_ov016_02113bec,
+};

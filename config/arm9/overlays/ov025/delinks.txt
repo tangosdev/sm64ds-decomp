@@ -9,6 +9,7 @@ src/game/actors/d_a_dgr.cpp:
     .text start:0x021111a0 end:0x021118c8
     .init start:0x02112970 end:0x021129dc
     .ctor start:0x02112b18 end:0x02112b1c
+    .data start:0x02112c28 end:0x02112c48
     .bss start:0x02113a60 end:0x02113a88
 
 src/game/actors/d_a_dkk.cpp:
@@ -23,6 +24,7 @@ src/game/actors/d_a_obj_dp_brock.cpp:
     .text start:0x02111d40 end:0x021120e4
     .init start:0x02112a44 end:0x02112aac
     .ctor start:0x02112b20 end:0x02112b24
+    .data start:0x02112ce8 end:0x02112d08
     .bss start:0x02113ab0 end:0x02113ad8
 
 src/game/actors/d_a_dp_lift.cpp:
@@ -30,4 +32,5 @@ src/game/actors/d_a_dp_lift.cpp:
     .text start:0x021120e4 end:0x02112654
     .init start:0x02112aac end:0x02112b18
     .ctor start:0x02112b24 end:0x02112b28
+    .data start:0x02112d08 end:0x02112d28
     .bss start:0x02113ad8 end:0x02113b00

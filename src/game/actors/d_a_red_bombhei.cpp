@@ -87,13 +87,21 @@ struct RedBombheiState {
 
 bool ApproachLinear(short &value, short target, short step);
 
-extern SharedFilePtr data_ov084_02130da4;   /* the model */
-extern SharedFilePtr data_ov084_02130d9c;   /* the idle animation */
+/* A loaded SharedFilePtr: the second word is the file it loaded.
+   The loaded file is filePtr. */
+struct LoadedFile : SharedFilePtr {
+};
+
+/* Zero in the image. __sinit_ov084_02130558 writes the file ids, the
+   destructor nodes, and the three state rows. The two handles are
+   emitted in the opposite order from these lines. */
+LoadedFile data_ov084_02130da4;
+LoadedFile data_ov084_02130d9c;
+char data_ov084_02130dac[0xc];
+char data_ov084_02130db8[0xc];
+char data_ov084_02130dc4[0x30];
 
 extern "C" {
-
-/* -- the state table __sinit_ov084_02130558 fills in -- */
-extern RedBombheiState data_ov084_02130dc4[];
 
 /* -- globals -- */
 extern dCamera_c *data_0209f318;           /* the camera */
@@ -423,7 +431,7 @@ void daRedBombhei_c::func_ov084_0212c9f0(int msgID, unsigned int msgFlag)
 void daRedBombhei_c::func_ov084_0212c9a8()
 {
     int j = this->mState;
-    (this->*data_ov084_02130dc4[j].update)();
+    (this->*((RedBombheiState *)data_ov084_02130dc4)[j].update)();
 }
 
 // @symbol _ZN14daRedBombhei_c19func_ov084_0212c960Ei
@@ -431,14 +439,14 @@ void daRedBombhei_c::func_ov084_0212c960(int state)
 {
     this->mState = state;
     int j = this->mState;
-    (this->*data_ov084_02130dc4[j].enter)();
+    (this->*((RedBombheiState *)data_ov084_02130dc4)[j].enter)();
 }
 
 // @symbol _ZN14daRedBombhei_c19func_ov084_0212c92cEv
 void daRedBombhei_c::func_ov084_0212c92c()
 {
     unsigned int flags = 0;
-    BCA_File *file = (BCA_File *)(((int *)&data_ov084_02130d9c)[1]);
+    BCA_File *file = (BCA_File *)data_ov084_02130d9c.filePtr;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&this->mModelAnim, file, 0, 0x1000, flags);
 }
 

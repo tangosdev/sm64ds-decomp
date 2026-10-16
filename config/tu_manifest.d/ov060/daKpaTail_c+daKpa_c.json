@@ -18,6 +18,11 @@
       "end": "0x02116484"
     },
     {
+      "name": ".rodata",
+      "start": "0x021192dc",
+      "end": "0x0211934c"
+    },
+    {
       "name": ".init",
       "start": "0x021195dc",
       "end": "0x02119df0"
@@ -1647,6 +1652,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x021192dc",
+          "end": "0x0211934c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x021195dc",
           "end": "0x02119df0",
@@ -1676,7 +1688,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 183
+          "LICENSED": 184
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1685,21 +1697,30 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              310
+              144
             ],
             "desired": [
-              310
+              144
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              312
+            ],
+            "desired": [
+              312
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              308
+              310
             ],
             "desired": [
-              308
+              310
             ]
           },
           {
@@ -4744,6 +4765,286 @@
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211a548"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x21192dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ac88",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ac88"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x21192e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ac50",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ac50"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x21192e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ac58",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ac58"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x21192e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ac60",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ac60"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x21192ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ac18",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ac18"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x21192f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211acd0",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211acd0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x21192f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ac68",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ac68"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x21192f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ac70",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ac70"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x21192fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ac20",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ac20"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2119300",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ac80",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ac80"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2119304",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211abe8",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211abe8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2119308",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ac48",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ac48"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x211930c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ac38",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ac38"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2119310",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ac90",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ac90"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2119314",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ac98",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ac98"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2119318",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211abf8",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211abf8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x211931c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211aca8",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211aca8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2119320",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211acb0",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211acb0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2119324",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ac00",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ac00"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2119328",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ac08",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ac08"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x211932c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211abe0",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211abe0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2119330",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211acd8",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211acd8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2119334",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211acf0",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211acf0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2119338",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ace8",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ace8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x211933c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211ace0",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211ace0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2119340",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211aca0",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211aca0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2119344",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211acc8",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211acc8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2119348",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov060_0211acc0",
+      "addend": 0,
+      "target_module": "ov060",
+      "target_address": "0x211acc0"
     }
   ],
   "defined_symbol_renames": [
@@ -5056,6 +5357,15 @@
       "from": "@2129",
       "to": "@2265",
       "evidence": "Native actor/Player/collision interface cleanup removes redundant declarations. Complete initializer bytes and paired ABS32 offsets identify @2279 -> @2237; raw object size/alignment/body/typed edges are unchanged. Existing canonical destination @2265 is retained. Readability pass (readability/kpa-1014) removes redundant declarations and named temporaries and adds the Sound.h/Message.h includes; every compiler temporary renumbers by -108, so @2237 -> @2129; complete initializer bytes, paired ABS32 offsets and raw object size/alignment/body/typed edges are unchanged under that uniform map. Existing canonical destination @2265 is retained."
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov060_021192dc",
+      "address": "0x21192dc",
+      "size": "0x70",
+      "binding": "STB_GLOBAL",
+      "evidence": "28-entry SharedFilePtr table; every word is an R_ARM_ABS32 load to one of this TU's own animation file handles"
     }
   ]
 }

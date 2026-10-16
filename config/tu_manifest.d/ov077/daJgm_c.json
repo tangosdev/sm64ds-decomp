@@ -17,6 +17,11 @@
       "end": "0x02124b64"
     },
     {
+      "name": ".rodata",
+      "start": "0x02127230",
+      "end": "0x02127240"
+    },
+    {
       "name": ".init",
       "start": "0x02127240",
       "end": "0x0212749c"
@@ -276,6 +281,22 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail; the other two .ctor words belong to the remaining shards"
     }
   ],
+  "rodata": [
+    {
+      "symbol": "data_ov077_02127230",
+      "address": "0x02127230",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two texture-sequence SharedFilePtr pointers, loaded in order by daJgm_c::InitResources"
+    },
+    {
+      "symbol": "data_ov077_02127238",
+      "address": "0x02127238",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two animation SharedFilePtr pointers, loaded in order by daJgm_c::InitResources"
+    }
+  ],
   "data": [],
   "bss": [
     {
@@ -519,6 +540,46 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x02127230",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov077_02127b20",
+      "addend": 0,
+      "target_module": "ov077",
+      "target_address": "0x02127b20"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127234",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov077_02127b30",
+      "addend": 0,
+      "target_module": "ov077",
+      "target_address": "0x02127b30"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127238",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov077_02127b28",
+      "addend": 0,
+      "target_module": "ov077",
+      "target_address": "0x02127b28"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212723c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov077_02127b40",
+      "addend": 0,
+      "target_module": "ov077",
+      "target_address": "0x02127b40"
+    },
     {
       "section": ".init",
       "source": "0x02127250",
@@ -1087,6 +1148,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x02127230",
+          "end": "0x02127240",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x02127240",
           "end": "0x0212749c",
@@ -1109,7 +1177,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 51
+          "LICENSED": 53
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1118,131 +1186,157 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              99
+              7,
+              9
             ],
             "desired": [
-              99
+              9,
+              7
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              103
+            ],
+            "desired": [
+              103
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              97
+              101
             ],
             "desired": [
-              97
+              101
             ]
           },
           {
             "section": ".bss",
             "original": [
               5,
-              8,
-              9,
-              10,
+              6,
               11,
               12,
               13,
-              18,
-              23,
-              24,
+              16,
+              17,
+              22,
               25,
               26,
-              27,
-              28,
+              29,
+              30,
               31,
               32,
-              35
+              35,
+              36,
+              39
             ],
             "desired": [
-              11,
               12,
-              9,
-              8,
               13,
+              6,
+              17,
               5,
-              10,
+              16,
+              11,
               31,
+              35,
+              36,
+              30,
               32,
-              18,
+              22,
               25,
-              27,
-              24,
-              23,
-              28,
               26,
-              35
+              29,
+              39
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
+              "section": ".rodata",
+              "original": [
+                7,
+                9
+              ],
+              "desired": [
+                9,
+                7
+              ],
+              "slots": [
+                7,
+                9
+              ]
+            },
+            {
               "section": ".bss",
               "original": [
                 5,
-                8,
-                9,
-                10,
+                6,
                 11,
                 12,
                 13,
-                18,
-                23,
-                24,
+                16,
+                17,
+                22,
                 25,
                 26,
-                27,
-                28,
+                29,
+                30,
                 31,
                 32,
-                35
+                35,
+                36,
+                39
               ],
               "desired": [
-                11,
                 12,
-                9,
-                8,
                 13,
+                6,
+                17,
                 5,
-                10,
+                16,
+                11,
                 31,
+                35,
+                36,
+                30,
                 32,
-                18,
+                22,
                 25,
-                27,
-                24,
-                23,
-                28,
                 26,
-                35
+                29,
+                39
               ],
               "slots": [
                 5,
-                8,
-                9,
-                10,
+                6,
                 11,
                 12,
                 13,
-                18,
-                23,
-                24,
+                16,
+                17,
+                22,
                 25,
                 26,
-                27,
-                28,
+                29,
+                30,
                 31,
                 32,
-                35
+                35,
+                36,
+                39
               ]
             }
           ],
-          "symbolIndices": 17,
+          "symbolIndices": 19,
           "sectionLinks": 0,
-          "sectionInfos": 0,
+          "sectionInfos": 2,
           "error": null
         },
         "errors": null

@@ -41,14 +41,12 @@ enum d_a_obj_ice_board_AssetId {
  * addresses are dropped from symbols.txt, and their stale decl_common.h
  * lines with them (S42). */
 struct IceBoardModelFile : SharedFilePtr {
-    u32 words[2];
 
     IceBoardModelFile(u32 fileID);
     ~IceBoardModelFile();
 };
 
 struct IceBoardCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     IceBoardCollisionFilePtr(u32 fileID);
     ~IceBoardCollisionFilePtr();

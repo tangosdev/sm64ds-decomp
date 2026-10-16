@@ -18,6 +18,11 @@
       "end": "0x02146d7c"
     },
     {
+      "name": ".rodata",
+      "start": "0x021473a4",
+      "end": "0x021473bc"
+    },
+    {
       "name": ".init",
       "start": "0x02147bc0",
       "end": "0x02147d7c"
@@ -255,6 +260,22 @@
       "evidence": "seven-entry daFishState table indexed by mState, plain-copied from the ROM PMF constants"
     }
   ],
+  "rodata": [
+    {
+      "symbol": "data_ov100_021473a4",
+      "address": "0x021473a4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three model SharedFilePtr pointers, indexed by mModelIndex"
+    },
+    {
+      "symbol": "data_ov100_021473b0",
+      "address": "0x021473b0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three animation SharedFilePtr pointers, indexed by mModelIndex"
+    }
+  ],
   "notes": [
     "Hand-assembled: tubuild create generated the seventeen class members and helpers; the classInit factory was folded in by hand, following the ov045 daObjKm2_Agaru_c and ov091 daLinelift2_c promotions.",
     "Static initializer folded: the FishModelFilePtr handles (files 0x447/0x448/0x44a), the three FishAnimationFileHandle handles (files 0x44b/0x44c/0x449), their destructor-registration nodes and the seven state-record copies make mwcc emit __sinit_d_a_fish.cpp itself (0x1bc, raw-byte-identical to retail __sinit_ov100_02147bc0 with the same instruction sequence, literal pool order and relocation sites); the handwritten shard is retired. @679-@684 clash with ov070 daKrpa_c's renamed nodes in this batch and are renamed (@679->@152, @680->@153, @681->@154, @682->@155, @683->@156, @684->@157). This fold does NOT license the .data PMF descriptors or any other .data."
@@ -275,21 +296,21 @@
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
-        7,
-        8,
+        5,
+        6,
         13,
         14,
         15,
         16,
         18,
         19,
-        21,
-        22,
-        25,
-        26,
-        30,
-        31,
-        42
+        23,
+        24,
+        28,
+        29,
+        34,
+        35,
+        46
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -349,6 +370,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x021473a4",
+          "end": "0x021473bc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x02147bc0",
           "end": "0x02147d7c",
@@ -371,7 +399,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 33
+          "LICENSED": 35
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -380,54 +408,65 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              66
+              21,
+              25
             ],
             "desired": [
-              66
+              21,
+              25
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              70
+            ],
+            "desired": [
+              70
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              64
+              68
             ],
             "desired": [
-              64
+              68
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              6,
+              7,
+              8,
               9,
               10,
               11,
               12,
               17,
               20,
-              23,
-              24,
               27,
-              28,
-              29
+              30,
+              31,
+              32,
+              33
             ],
             "desired": [
-              5,
-              9,
-              12,
-              6,
-              11,
               10,
-              23,
-              24,
-              27,
-              28,
-              17,
+              7,
+              9,
+              8,
+              12,
+              11,
               20,
-              29
+              31,
+              27,
+              30,
+              32,
+              17,
+              33
             ]
           }
         ],
@@ -436,49 +475,49 @@
             {
               "section": ".bss",
               "original": [
-                5,
-                6,
+                7,
+                8,
                 9,
                 10,
                 11,
                 12,
                 17,
                 20,
-                23,
-                24,
                 27,
-                28,
-                29
+                30,
+                31,
+                32,
+                33
               ],
               "desired": [
-                5,
-                9,
-                12,
-                6,
-                11,
                 10,
-                23,
-                24,
-                27,
-                28,
-                17,
+                7,
+                9,
+                8,
+                12,
+                11,
                 20,
-                29
+                31,
+                27,
+                30,
+                32,
+                17,
+                33
               ],
               "slots": [
-                5,
-                6,
+                7,
+                8,
                 9,
                 10,
                 11,
                 12,
                 17,
                 20,
-                23,
-                24,
                 27,
-                28,
-                29
+                30,
+                31,
+                32,
+                33
               ]
             }
           ],
@@ -732,6 +771,66 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x021473a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489a4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishAModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489bc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishBModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489b4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishSwimAnimationFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489c4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishAbSwimAnimationFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489ac"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishAbSwimAnimationFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489ac"
+    },
     {
       "section": ".ctor",
       "source": "0x02147dfc",

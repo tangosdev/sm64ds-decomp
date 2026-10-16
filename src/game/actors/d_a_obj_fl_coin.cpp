@@ -96,12 +96,10 @@ struct CLPS_Block { int x; };
  * func_02017ab4 for the models, func_02017b4c / SharedFilePtr_Destruct_Clsn
  * for the collision); the subclasses exist to spell those entry points. */
 struct FlCoinModelFilePtr : SharedFilePtr {
-    u32 words[2];
     FlCoinModelFilePtr(u32 fileID);
     ~FlCoinModelFilePtr();
 };
 struct FlCoinCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     FlCoinCollisionFilePtr(u32 fileID);
     ~FlCoinCollisionFilePtr();
 };

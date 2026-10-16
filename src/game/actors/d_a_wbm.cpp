@@ -110,8 +110,6 @@ void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, s32 x, s32 y, s32 z
    The constructor aliases func_02017acc and the destructor func_02017ab4 in
    this unit's manifest. */
 struct WbmModelFilePtr : SharedFilePtr {
-    int unk0;
-    void *file;
     WbmModelFilePtr(unsigned int id);
     ~WbmModelFilePtr();
 };

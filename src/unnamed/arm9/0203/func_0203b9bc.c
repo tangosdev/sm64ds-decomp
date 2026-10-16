@@ -2,7 +2,7 @@
 struct Col { u16 a, b, c, d; };
 
 extern volatile struct Col data_020a0df8[];
-extern struct Col data_020a0dd8;
+struct Col data_020a0dd8; /* BSS record is zero; this function fills it */
 
 extern int func_0205edc8(void);
 extern void func_0205ea28(struct Col *dst, struct Col *src);

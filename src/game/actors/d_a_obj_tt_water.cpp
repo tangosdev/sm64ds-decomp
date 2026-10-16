@@ -31,14 +31,12 @@ enum daObjTtWater_c_AssetId {
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct TtWaterModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     TtWaterModelFilePtr(u32 fileID);
     ~TtWaterModelFilePtr();
 };
 
 struct TtWaterCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     TtWaterCollisionFilePtr(u32 fileID);
     ~TtWaterCollisionFilePtr();
@@ -119,7 +117,7 @@ int daObjTtWater_c::InitResources()
 {
     void* m = Model::LoadFile(data_ov033_021124f0);
     mModel.SetFile((BMD_File*)m, 1, 0x14);
-    TextureTransformer::Prepare(**(BMD_File**)((char*)&data_ov033_021124f0 + 4), *(BTA_File*)data_ov033_02111bc8);
+    TextureTransformer::Prepare(*(BMD_File *)data_ov033_021124f0.filePtr, *(BTA_File*)data_ov033_02111bc8);
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(&mTextureTransformer, data_ov033_02111bc8, 0, 0x1000, 0);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();

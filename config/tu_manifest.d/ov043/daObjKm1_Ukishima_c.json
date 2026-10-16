@@ -28,6 +28,11 @@
       "end": "0x02111aec"
     },
     {
+      "name": ".data",
+      "start": "0x02111c00",
+      "end": "0x02111c40"
+    },
+    {
       "name": ".bss",
       "start": "0x021125e0",
       "end": "0x02112608"
@@ -84,7 +89,22 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov043_02111c00",
+      "address": "0x02111c00",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block SetFile already takes; two entries, stride 8"
+    },
+    {
+      "symbol": "data_ov043_02111c20",
+      "address": "0x02111c20",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "next CLPS block, one entry, stride 8; symbols.txt marks it ambiguous"
+    }
+  ],
   "init": [
     {
       "symbol": "__sinit_d_a_obj_km1_ukishima.cpp",
@@ -327,7 +347,7 @@
     "FOLD 2026-09-04. daObjKm1_Ukishima_c_classInit at 0x021113cc (historical alias DiamondLift_Spawn) was folded in from src/daObjKm1_Ukishima_c_classInit.c. It is the KM1_UKISHIMA registry profile's factory and sits immediately after InitResources in the ROM's .text order, so it was always part of this TU; it was left outside only because the promotion predated the profile-reconstruction campaign. Folding it is what frees the d_a_obj_km1_ukishima stem, which tools/layout_check.py L2 would otherwise refuse to let the one-function source take. It keeps C linkage and brought no headers with it -- the legacy file declared its three externs itself, and they are restated verbatim in this TU's extern \"C\" block.",
     "return new daObjKm1_Ukishima_c() emits homeless _ZN10dBgActor_cD2Ev. Exact compiler-only policy deadstrips it before linking.",
     "The static initializer at 0x021117fc is this TU's compiler __sinit_. data_ov043_021125e8 (file 1625) and data_ov043_021125e0 (file 1626) are the two objects it constructs. The collision registration node keeps @378. The model node @377 was renamed to @379 because ov022 already owns @377. No new data was added.",
-    "LOCAL WORKER NOTE: this machine stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to this tree stock build and to the strict control, while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container fields outside every module range. The content proof is the same either way: moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, and the four owned ranges identical."
+    "LOCAL WORKER NOTE: this machine stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to this tree stock build and to the strict control, while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container fields outside every module range. The content proof is the same either way: moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, and the five owned ranges identical."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -441,6 +461,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02111c00",
+          "end": "0x02111c40",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x021125e0",
           "end": "0x02112608",
@@ -449,7 +476,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 13
+          "LICENSED": 15
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -460,6 +487,15 @@
           {
             "section": ".init",
             "original": [
+              45
+            ],
+            "desired": [
+              45
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
               43
             ],
             "desired": [
@@ -467,31 +503,61 @@
             ]
           },
           {
-            "section": ".ctor",
+            "section": ".data",
             "original": [
-              41
+              24,
+              25
             ],
             "desired": [
-              41
+              24,
+              25
             ]
           },
           {
             "section": ".bss",
             "original": [
               5,
-              8,
-              14,
+              6,
+              20,
               21
             ],
             "desired": [
               5,
-              8,
-              14,
-              21
+              6,
+              21,
+              20
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                20,
+                21
+              ],
+              "desired": [
+                5,
+                6,
+                21,
+                20
+              ],
+              "slots": [
+                5,
+                6,
+                20,
+                21
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,

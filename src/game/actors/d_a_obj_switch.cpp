@@ -49,14 +49,12 @@ namespace Event { int ClearBit(unsigned int bit); void SetBit(unsigned int bit);
  * through SharedFilePtr_Destruct_Clsn. The manifest aliases those undefined
  * members onto the ROM symbols. */
 struct SwitchModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     SwitchModelFilePtr(u32 fileID);
     ~SwitchModelFilePtr();
 };
 
 struct SwitchClsnFileHandle : SharedFilePtr {
-    u32 words[2];
 
     SwitchClsnFileHandle(u32 fileID);
     ~SwitchClsnFileHandle();
@@ -66,7 +64,11 @@ extern "C" {
     extern int data_0209b454;
     extern signed char data_0209f2f8;
     extern SharedFilePtr data_ov002_0211092c;
-    extern daObjSwitch_c::Resources data_ov002_021098e8[];
+    extern SharedFilePtr *data_ov002_021098e8;
+    extern SharedFilePtr *data_ov002_021098ec;
+    extern CLPS_Block *data_ov002_021098f0[];
+    extern unsigned char data_ov002_0210d854[];
+    extern unsigned char data_ov002_0210d894[];
     extern daObjSwitch_c::StateEntry data_ov002_0210e00c[];
     extern SwitchModelFilePtr data_ov002_0210dfd4;
     extern SwitchClsnFileHandle data_ov002_0210dfc4;
@@ -184,16 +186,16 @@ int daObjSwitch_c::InitResources()
     }
 
     idx = mResourceIdx;
-    f = Model::LoadFile(*data_ov002_021098e8[idx].model);
+    f = Model::LoadFile(**(SharedFilePtr **)((char *)&data_ov002_021098e8 + idx * 0xc));
     mModel.SetFile((BMD_File *)f, 1, -1);
     UpdateModelPosAndRotY();
     func_ov002_020b9f80();
 
     idx = mResourceIdx;
-    f = dBgW_Kc::LoadFile(*data_ov002_021098e8[idx].collision);
+    f = dBgW_Kc::LoadFile(**(SharedFilePtr **)((char *)&data_ov002_021098ec + idx * 0xc));
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, f, &mClsnMat, 0x199, mAngleY,
-        data_ov002_021098e8[idx].clps);
+        *(CLPS_Block **)((char *)&data_ov002_021098f0 + idx * 0xc));
 
     func_020393c4(reinterpret_cast<int *>(&mMeshCollider),
                   reinterpret_cast<int>(&func_ov002_020baa98));
@@ -300,8 +302,8 @@ int daObjSwitch_c::CleanupResources()
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }
-    data_ov002_021098e8[mResourceIdx].model->Release();
-    data_ov002_021098e8[mResourceIdx].collision->Release();
+    (*(SharedFilePtr **)((char *)&data_ov002_021098e8 + mResourceIdx * 0xc))->Release();
+    (*(SharedFilePtr **)((char *)&data_ov002_021098ec + mResourceIdx * 0xc))->Release();
     t = actorID == 0xc;
     if (t != false) {
         UnloadSilverStarAndNumber();
@@ -512,7 +514,20 @@ int daObjSwitch_c::func_ov002_020b9f00()
  *   dfcc/dfbc  entry 1's model and collision (files 0x48f, 0x490)
  * Their constructors and the destructor registrations make mwcc emit this TU's
  * static initializer; the five-entry state table adds the ten
- * pointer-to-member copies it performs afterwards. */
+ * pointer-to-member copies it performs afterwards.
+ *
+ * The table itself is three symbols, the names symbols.txt already gives the
+ * words at +0, +4 and +8. Indexed loads take each of those as a base
+ * (idx * 0xc) so the pools stay on the retail addresses. */
+extern "C" SharedFilePtr *data_ov002_021098e8 = &data_ov002_0210dfd4;
+extern "C" SharedFilePtr *data_ov002_021098ec = &data_ov002_0210dfc4;
+extern "C" CLPS_Block *data_ov002_021098f0[4] = {
+    reinterpret_cast<CLPS_Block *>(data_ov002_0210d854),
+    reinterpret_cast<CLPS_Block *>(&data_ov002_0210dfcc),
+    reinterpret_cast<CLPS_Block *>(&data_ov002_0210dfbc),
+    reinterpret_cast<CLPS_Block *>(data_ov002_0210d894),
+};
+
 SwitchModelFilePtr data_ov002_0210dfd4(ASSET_OBJ_BOX_SWITCH_BMD);
 SwitchClsnFileHandle  data_ov002_0210dfc4(ASSET_OBJ_BOX_SWITCH_KCL);
 SwitchModelFilePtr data_ov002_0210dfcc(ASSET_OBJ_STAR_SWITCH_BMD);

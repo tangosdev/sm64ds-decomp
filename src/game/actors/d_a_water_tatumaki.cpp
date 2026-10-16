@@ -83,24 +83,17 @@ enum {
 
 /* File handles this TU's static initializer constructs, and the two state
    records it copies pointer-to-member descriptors into. Definitions are at
-   the end of the file. SharedFilePtr.h has no fields, so the 8-byte handle
-   is read through SharedFileBytes: fileID at +0, refCount at +2, file at +4. */
-struct SharedFileBytes {
-    u16 fileID;
-    u8 refCount;
-    u8 pad;
-    void *file;
+   the end of the file. SharedFileBytes is that handle: fileID, refCount, filePtr. */
+struct SharedFileBytes : SharedFilePtr {
 };
 
 struct TatumakiModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     TatumakiModelFilePtr(u32 fileID);
     ~TatumakiModelFilePtr();
 };
 
 struct TatumakiAnimFileHandle : SharedFilePtr {
-    u32 words[2];
 
     TatumakiAnimFileHandle(u32 fileID);
     ~TatumakiAnimFileHandle();
@@ -112,9 +105,9 @@ extern daWater_Tatumaki_c::State data_ov026_02113f2c; /* spin, waiting to catch 
 extern daWater_Tatumaki_c::State data_ov026_02113f3c; /* drag the player down */
 extern BTA_File data_ov026_02112f40;
 
-#define MODEL_FILE (*(SharedFileBytes *)&gWaterTatumakiModelFile)
-#define ANIM_FILE  (*(SharedFileBytes *)&gWaterTatumakiAnimationFile)
-#define AS_SHARED(file) (*(SharedFilePtr *)&(file))
+#define MODEL_FILE gWaterTatumakiModelFile
+#define ANIM_FILE gWaterTatumakiAnimationFile
+#define AS_SHARED(file) (file)
 #define WHIRLPOOL_BTA data_ov026_02112f40
 #define STATE_SPIN (&data_ov026_02113f2c)
 #define STATE_DRAG (&data_ov026_02113f3c)
@@ -333,8 +326,8 @@ extern "C" void func_ov026_02111f30(daWater_Tatumaki_c *self)
 // @symbol _ZN18daWater_Tatumaki_c16CleanupResourcesEv
 int daWater_Tatumaki_c::CleanupResources()
 {
-    AS_SHARED(MODEL_FILE).Release();
-    AS_SHARED(ANIM_FILE).Release();
+    MODEL_FILE.Release();
+    ANIM_FILE.Release();
     return 1;
 }
 
@@ -393,7 +386,7 @@ int daWater_Tatumaki_c::InitResources()
 
     dExtFrameCtrl_c::LoadFile(AS_SHARED(ANIM_FILE));
 
-    TextureTransformer::Prepare(*(BMD_File *)MODEL_FILE.file, WHIRLPOOL_BTA);
+    TextureTransformer::Prepare(*(BMD_File *)MODEL_FILE.filePtr, WHIRLPOOL_BTA);
     TextureTransformer_SetFile(&mTextureTransformer, WHIRLPOOL_BTA, 0, kAnimSpeed, 0);
 
     mTextureTransformer.speed = kAnimSpeed;
@@ -404,7 +397,7 @@ int daWater_Tatumaki_c::InitResources()
     mCenter.z = mPosZ;
     mCenter.y -= kFunnelDepth;
 
-    ModelAnim_SetAnim(&mModelAnim, (BCA_File *)ANIM_FILE.file, 0, kAnimSpeed, 0);
+    ModelAnim_SetAnim(&mModelAnim, (BCA_File *)ANIM_FILE.filePtr, 0, kAnimSpeed, 0);
 
     func_ov026_02111ee0(this, STATE_SPIN);
     return 1;

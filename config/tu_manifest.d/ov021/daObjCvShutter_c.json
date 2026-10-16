@@ -27,6 +27,11 @@
       "end": "0x02113740"
     },
     {
+      "name": ".data",
+      "start": "0x021148d0",
+      "end": "0x021148dc"
+    },
+    {
       "name": ".bss",
       "start": "0x02114a64",
       "end": "0x02114a8c"
@@ -76,7 +81,15 @@
       "ordinal": 5
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov021_021148d0",
+      "address": "0x021148d0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "ResourceDescriptor: model gCvShutterModelFile, collision gCvShutterCollisionFile, CLPS data_ov021_02113a00"
+    }
+  ],
   "bss": [
     {
       "symbol": "gCvShutterCollisionFile",
@@ -235,6 +248,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x021148d0",
+          "end": "0x021148dc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02114a64",
           "end": "0x02114a8c",
@@ -243,7 +263,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 12
+          "LICENSED": 13
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -254,66 +274,47 @@
           {
             "section": ".init",
             "original": [
-              47
+              49
             ],
             "desired": [
-              47
+              49
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              45
+              47
             ],
             "desired": [
-              45
+              47
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              23
+            ],
+            "desired": [
+              23
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              6,
-              22,
-              23
+              7,
+              8,
+              16,
+              25
             ],
             "desired": [
-              6,
-              5,
-              22,
-              23
+              7,
+              8,
+              16,
+              25
             ]
           }
         ],
-        "objisolate": {
-          "reordered": [
-            {
-              "section": ".bss",
-              "original": [
-                5,
-                6,
-                22,
-                23
-              ],
-              "desired": [
-                6,
-                5,
-                22,
-                23
-              ],
-              "slots": [
-                5,
-                6,
-                22,
-                23
-              ]
-            }
-          ],
-          "symbolIndices": 4,
-          "sectionLinks": 0,
-          "sectionInfos": 0,
-          "error": null
-        },
+        "objisolate": null,
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -644,6 +645,36 @@
       "addend": 0,
       "target_module": "ov021",
       "target_address": "0x021136c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021148d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gCvShutterModelFile",
+      "addend": 0,
+      "target_module": "ov021",
+      "target_address": "0x02114a6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021148d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gCvShutterCollisionFile",
+      "addend": 0,
+      "target_module": "ov021",
+      "target_address": "0x02114a64"
+    },
+    {
+      "section": ".data",
+      "source": "0x021148d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov021_02113a00",
+      "addend": 0,
+      "target_module": "ov021",
+      "target_address": "0x02113a00"
     }
   ],
   "defined_symbol_renames": [

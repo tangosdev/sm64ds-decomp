@@ -53,14 +53,12 @@ enum daHuwa_c_AssetId {
    SharedFilePtr::Construct and destroys through SharedFilePtr_Destruct_Anim.
    The manifest aliases those undefined members onto the ROM symbols. */
 struct HuwaModelFilePtr : SharedFilePtr {
-    u32 id; void *ptr;
 
     HuwaModelFilePtr(u32 fileID);
     ~HuwaModelFilePtr();
 };
 
 struct HuwaAnimationFileHandle : SharedFilePtr {
-    u32 id; void *ptr;
 
     HuwaAnimationFileHandle(u32 fileID);
     ~HuwaAnimationFileHandle();
@@ -373,7 +371,7 @@ int daHuwa_c::InitResources()
     mModelAnim.ModelBase::SetFile((BMD_File *)modelFile, 1, -1);
     dExtFrameCtrl_c::LoadFile(gHuwahuwaMoveAnimationFile);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &mModelAnim, (BCA_File *)gHuwahuwaMoveAnimationFile.ptr, 0, 0x1000, 0);
+        &mModelAnim, (BCA_File *)gHuwahuwaMoveAnimationFile.filePtr, 0, 0x1000, 0);
     if (mShadowModel.InitCylinder() == 0)
         return 0;
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x3c000, 0x78000, 0x200000, 0xa6efe0);

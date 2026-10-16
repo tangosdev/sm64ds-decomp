@@ -108,6 +108,7 @@ data_ov047_021124f8 kind:data(any) addr:0x021124f8 ambiguous
 data_ov047_021124fc kind:data(any) addr:0x021124fc ambiguous
 data_ov047_02112508 kind:data(any) addr:0x02112508
 data_ov047_02112530 kind:data(any) addr:0x02112530 ambiguous
+data_ov047_02112544 kind:data(any) addr:0x02112544
 _ZTV17daObjKm3_Dorifu_c kind:data(any) addr:0x0211254c
 data_ov047_02112570 kind:data(any) addr:0x02112570 ambiguous
 data_ov047_02112590 kind:data(any) addr:0x02112590 ambiguous

@@ -40,12 +40,10 @@ struct EmmYukaFiles {
  * func_02017ab4 for the model, func_02017b4c / SharedFilePtr_Destruct_Clsn
  * for the collision); the subclasses exist to spell those entry points. */
 struct EmmYukaModelFilePtr : SharedFilePtr {
-    u32 words[2];
     EmmYukaModelFilePtr(u32 fileID);
     ~EmmYukaModelFilePtr();
 };
 struct EmmYukaCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     EmmYukaCollisionFilePtr(u32 fileID);
     ~EmmYukaCollisionFilePtr();
 };
@@ -185,3 +183,11 @@ extern "C" daObjEmmYuka_c *daObjEmmYuka_c_classInit()
  * and .collision point at them. */
 EmmYukaModelFilePtr gEmmYukaModelFile(ASSET_EMM_YUKA_BMD);
 EmmYukaCollisionFilePtr gEmmYukaCollisionFile(ASSET_EMM_YUKA_KCL);
+
+/* Twelve bytes. The third word is ov064's CLPS block. */
+extern "C" CLPS_Block data_ov064_0211ba0c;
+extern "C" EmmYukaFiles data_ov052_021125a0 = {
+    &gEmmYukaModelFile,
+    &gEmmYukaCollisionFile,
+    &data_ov064_0211ba0c,
+};

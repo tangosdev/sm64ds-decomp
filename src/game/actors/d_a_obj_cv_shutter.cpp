@@ -16,8 +16,8 @@
  *   The setup helper loads data_ov021_021148d0 slot 0 with Model::LoadFile,
  *   slot 1 with dBgW_Kc::LoadFile, slot 2 as CLPS into SetFile, and writes
  *   mTimer / mEventBit from param1.
- * Leftover: data_ov021_021148d0 is overlay data; this TU is text-only so
- *   the table stays an extern. g_profile_CV_SHUTTER is the same.
+ * Leftover: data_ov021_02113a00, the CLPS this descriptor points at,
+ *   stays the ROM copy. g_profile_CV_SHUTTER stays outside this TU.
  * Leftover: IsClsnInRange stays mangled (by-value Fix12<int>, wall 6az).
  */
 
@@ -45,6 +45,7 @@ int func_ov002_020bad10(daObjSwdoor_c *self, ResourceDescriptor *descriptor);
 int func_ov002_020baba8(daObjSwdoor_c *self, ResourceDescriptor *descriptor);
 int func_ov002_020bac18(daObjSwdoor_c *self);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+extern CLPS_Block data_ov021_02113a00;
 extern ResourceDescriptor data_ov021_021148d0;
 }
 
@@ -53,14 +54,12 @@ extern ResourceDescriptor data_ov021_021148d0;
  * func_02017acc / func_02017ab4 and func_02017b4c /
  * SharedFilePtr_Destruct_Clsn. */
 struct CvShutterModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     CvShutterModelFilePtr(u32 fileID);
     ~CvShutterModelFilePtr();
 };
 
 struct CvShutterCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     CvShutterCollisionFilePtr(u32 fileID);
     ~CvShutterCollisionFilePtr();
@@ -113,3 +112,9 @@ s32 daObjCvShutter_c::CleanupResources()
  * handle, then the collision handle. */
 CvShutterModelFilePtr gCvShutterModelFile(ASSET_CV_SHUTTER_BMD);
 CvShutterCollisionFilePtr gCvShutterCollisionFile(ASSET_CV_SHUTTER_KCL);
+
+extern "C" ResourceDescriptor data_ov021_021148d0 = {
+    &gCvShutterModelFile,
+    &gCvShutterCollisionFile,
+    &data_ov021_02113a00,
+};

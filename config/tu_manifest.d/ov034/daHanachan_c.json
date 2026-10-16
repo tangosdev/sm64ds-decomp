@@ -20,6 +20,11 @@
       "end": "0x02113820"
     },
     {
+      "name": ".rodata",
+      "start": "0x02113838",
+      "end": "0x02113860"
+    },
+    {
       "name": ".init",
       "start": "0x021138ec",
       "end": "0x02114078"
@@ -294,6 +299,22 @@
       "size": "0xdc",
       "binding": "STB_GLOBAL",
       "evidence": "eleven-entry Hanachan state table: Init PMF at +0 and Main PMF at +8 copied at static-init time from the ROM PMF descriptors at 0x02114358..0x02114408, name pointer at +0x10 the only static part, matching the retail .data bytes and eleven name-pointer relocations"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov034_02113838",
+      "address": "0x02113838",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five model-handle pointers, one per segment, to gHanachanHeadModelFile, 02114688, 02114670, 021146f0 and 02114700"
+    },
+    {
+      "symbol": "data_ov034_0211384c",
+      "address": "0x0211384c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five texture-sequence handle pointers, one per segment, to gHanachanHeadTextureSequenceFile, 02114708, 02114690, 021146c0 and 02114720"
     }
   ],
   "bss": [
@@ -919,8 +940,8 @@
       "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 36 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS",
-      "all_content_sections_licensed": "PASS -- .text 0x021111a0..0x02113820 (35 functions) + .init 0x021138ec..0x02114078 + .ctor 0x02114078..0x0211407c + .data 0x02114538..0x02114614 + .bss 0x02114620..0x021148dc. The linkcheck block proves all five ranges.",
-      "symbol_addresses_match": "PASS -- linkcheck objectAudit: 108 LICENSED, 0 COLLIDES-GAP, 0 COLLIDES-SRC, 0 HOMELESS",
+      "all_content_sections_licensed": "PASS -- .text 0x021111a0..0x02113820 (35 functions) + .rodata 0x02113838..0x02113860 + .init 0x021138ec..0x02114078 + .ctor 0x02114078..0x0211407c + .data 0x02114538..0x02114614 + .bss 0x02114620..0x021148dc. The linkcheck block proves all six ranges.",
+      "symbol_addresses_match": "PASS -- linkcheck objectAudit: 110 LICENSED, 0 COLLIDES-GAP, 0 COLLIDES-SRC, 0 HOMELESS",
       "module_reproduces": "PASS -- linkcheck module fidelity 106/106 exact; every owned range differingBytes 0",
       "rom_build_passes": "PASS -- linkcheck phase 8 built the full ROM (sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8); the 9 dsd check symbols errors are baseline-identical, 0 new"
     },
@@ -948,6 +969,13 @@
           "section": ".text",
           "start": "0x021111a0",
           "end": "0x02113820",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02113838",
+          "end": "0x02113860",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -981,7 +1009,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 108
+          "LICENSED": 110
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -990,37 +1018,46 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              166
+              147,
+              149
             ],
             "desired": [
-              166
+              147,
+              149
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              172
+            ],
+            "desired": [
+              172
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              164
+              170
             ],
             "desired": [
-              164
+              170
             ]
           },
           {
             "section": ".data",
             "original": [
-              145
+              151
             ],
             "desired": [
-              145
+              151
             ]
           },
           {
             "section": ".bss",
             "original": [
-              75,
-              76,
               77,
               78,
               79,
@@ -1088,55 +1125,56 @@
               141,
               142,
               143,
-              144
+              144,
+              145,
+              146
             ],
             "desired": [
-              126,
-              114,
-              118,
-              124,
               128,
-              98,
-              106,
-              132,
-              76,
-              104,
-              80,
-              108,
-              112,
-              78,
-              140,
+              116,
               120,
-              94,
+              126,
               130,
-              90,
-              86,
-              142,
-              92,
-              96,
               100,
-              102,
+              108,
               134,
+              78,
+              106,
               82,
               110,
-              84,
-              138,
-              116,
+              114,
+              80,
+              142,
               122,
-              144,
+              96,
+              132,
+              92,
               88,
+              144,
+              94,
+              98,
+              102,
+              104,
               136,
-              77,
+              84,
+              112,
+              86,
+              140,
+              118,
+              124,
+              146,
+              90,
+              138,
               79,
-              141,
               81,
-              83,
               143,
+              83,
               85,
+              145,
               87,
               89,
               91,
-              95,
+              93,
               97,
               99,
               101,
@@ -1154,13 +1192,14 @@
               125,
               127,
               129,
-              93,
               131,
+              95,
               133,
               135,
               137,
               139,
-              75
+              141,
+              77
             ]
           }
         ],
@@ -1169,8 +1208,6 @@
             {
               "section": ".bss",
               "original": [
-                75,
-                76,
                 77,
                 78,
                 79,
@@ -1238,55 +1275,56 @@
                 141,
                 142,
                 143,
-                144
+                144,
+                145,
+                146
               ],
               "desired": [
-                126,
-                114,
-                118,
-                124,
                 128,
-                98,
-                106,
-                132,
-                76,
-                104,
-                80,
-                108,
-                112,
-                78,
-                140,
+                116,
                 120,
-                94,
+                126,
                 130,
-                90,
-                86,
-                142,
-                92,
-                96,
                 100,
-                102,
+                108,
                 134,
+                78,
+                106,
                 82,
                 110,
-                84,
-                138,
-                116,
+                114,
+                80,
+                142,
                 122,
-                144,
+                96,
+                132,
+                92,
                 88,
+                144,
+                94,
+                98,
+                102,
+                104,
                 136,
-                77,
+                84,
+                112,
+                86,
+                140,
+                118,
+                124,
+                146,
+                90,
+                138,
                 79,
-                141,
                 81,
-                83,
                 143,
+                83,
                 85,
+                145,
                 87,
                 89,
                 91,
-                95,
+                93,
                 97,
                 99,
                 101,
@@ -1304,17 +1342,16 @@
                 125,
                 127,
                 129,
-                93,
                 131,
+                95,
                 133,
                 135,
                 137,
                 139,
-                75
+                141,
+                77
               ],
               "slots": [
-                75,
-                76,
                 77,
                 78,
                 79,
@@ -1382,7 +1419,9 @@
                 141,
                 142,
                 143,
-                144
+                144,
+                145,
+                146
               ]
             }
           ],
@@ -1834,6 +1873,106 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x2113838",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanHeadModelFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x2114660"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x211383c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody01ModelFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x2114688"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2113840",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody02ModelFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x2114670"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2113844",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody03ModelFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x21146f0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2113848",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody04ModelFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x2114700"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x211384c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanHeadTextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x2114730"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2113850",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody01TextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x2114708"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2113854",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody02TextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x2114690"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x2113858",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody03TextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x21146c0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x211385c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody04TextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x2114720"
+    },
     {
       "section": ".data",
       "source": "0x2114610",

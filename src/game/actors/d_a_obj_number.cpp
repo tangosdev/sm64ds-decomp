@@ -17,7 +17,7 @@
  *   header has no NewSimple and the mangled name carries Fix12<int>.
  * - SharedFilePtr +4: InitResources' Prepare/SetFile read the BMD/BTP
  *   at data_ov002_0210da28 / 0210da08 / 0210d9a8 / 0210d9e8 +4;
- *   SharedFilePtr.h has no fields.
+ *   the loaded file is filePtr.
  * - data_ov002_0210d9a8 / 0210d9e8 / 0210da08 / 0210da28: this TU
  *   consumes the four handles; overlay .bss owns them. symbols.txt has
  *   no recovered name, so they are not coined.

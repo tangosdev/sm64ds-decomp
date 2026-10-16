@@ -34,6 +34,11 @@
       "end": "0x021335c4"
     },
     {
+      "name": ".data",
+      "start": "0x0213d878",
+      "end": "0x0213d910"
+    },
+    {
       "name": ".bss",
       "start": "0x02142604",
       "end": "0x021426cc"
@@ -573,7 +578,141 @@
       "ordinal": 75
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "pmf_PachinkoFlyer_State0",
+      "address": "0x0213d878",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fb4e0, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoBall_State5",
+      "address": "0x0213d880",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fcec4, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoFlyer_State4",
+      "address": "0x0213d888",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fb0fc, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoFlyer_State3",
+      "address": "0x0213d890",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fb1c4, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoBall_State2",
+      "address": "0x0213d898",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fd2d8, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoBg_State2",
+      "address": "0x0213d8a0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020faac8, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoBobOmb_State0",
+      "address": "0x0213d8a8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fe2e4, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoBall_State4",
+      "address": "0x0213d8b0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fd088, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoBobOmb_State3",
+      "address": "0x0213d8b8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fe90c, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoBall_State0",
+      "address": "0x0213d8c0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fd9cc, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoBall_State1",
+      "address": "0x0213d8c8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fd894, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoPipe_State3",
+      "address": "0x0213d8d0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fc1f8, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoBall_State6",
+      "address": "0x0213d8d8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fce04, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoFlyer_State2",
+      "address": "0x0213d8e0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fb230, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoFlyer_State1",
+      "address": "0x0213d8e8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fb45c, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoBobOmb_State1",
+      "address": "0x0213d8f0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fe394, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoBobOmb_State2",
+      "address": "0x0213d8f8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fe750, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoBg_State3",
+      "address": "0x0213d900",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fa9c8, second word 0"
+    },
+    {
+      "symbol": "pmf_PachinkoBobOmb_State4",
+      "address": "0x0213d908",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to func_ov006_020fea54, second word 0"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov006_02142644",
@@ -729,6 +868,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0213d878",
+          "end": "0x0213d910",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02142604",
           "end": "0x021426cc",
@@ -737,7 +883,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 83
+          "LICENSED": 102
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -748,19 +894,64 @@
           {
             "section": ".init",
             "original": [
-              172
+              210
             ],
             "desired": [
-              172
+              210
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              170
+              208
             ],
             "desired": [
-              170
+              208
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              153,
+              155,
+              157,
+              159,
+              161,
+              163,
+              165,
+              167,
+              169,
+              171,
+              173,
+              175,
+              177,
+              179,
+              181,
+              183,
+              185,
+              187,
+              189
+            ],
+            "desired": [
+              153,
+              155,
+              157,
+              159,
+              161,
+              163,
+              165,
+              167,
+              169,
+              171,
+              173,
+              175,
+              177,
+              179,
+              181,
+              183,
+              185,
+              187,
+              189
             ]
           },
           {
@@ -1275,6 +1466,196 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02142604"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d878",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoFlyer_State0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fb4e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d880",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoBall_State5",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fcec4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d888",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoFlyer_State4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fb0fc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d890",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoFlyer_State3",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fb1c4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d898",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoBall_State2",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fd2d8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d8a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoBg_State2",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020faac8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d8a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoBobOmb_State0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fe2e4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d8b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoBall_State4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fd088"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d8b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoBobOmb_State3",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fe90c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d8c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoBall_State0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fd9cc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d8c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoBall_State1",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fd894"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d8d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoPipe_State3",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fc1f8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d8d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoBall_State6",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fce04"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d8e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoFlyer_State2",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fb230"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d8e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoFlyer_State1",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fb45c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d8f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoBobOmb_State1",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fe394"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d8f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoBobOmb_State2",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fe750"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d900",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoBg_State3",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fa9c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213d908",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "PachinkoBobOmb_State4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fea54"
     }
   ]
 }

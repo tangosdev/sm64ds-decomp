@@ -73,9 +73,9 @@ extern int data_ov060_02119564[];
 extern int data_ov060_02119568[];
 extern int data_0209b3ec;
 
-extern SharedFilePtr *data_ov060_02119514[];
-extern SharedFilePtr *data_ov060_0211953c[];
-extern CLPS_Block *data_ov060_0211a980[];
+extern SharedFilePtr *const data_ov060_02119514[10];
+extern SharedFilePtr *const data_ov060_0211953c[10];
+extern CLPS_Block *data_ov060_0211a980[10];
 extern int data_0208e738;
 
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
@@ -101,14 +101,12 @@ extern HandlerEntry data_ov060_0211b1ac[];
  * and destroy through SharedFilePtr_Destruct_Clsn. The wrappers are declared,
  * never defined: the manifest aliases their members onto the ROM veneers. */
 struct Kpa3BgModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Kpa3BgModelFilePtr(u32 fileID);
     ~Kpa3BgModelFilePtr();
 };
 
 struct Kpa3BgCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Kpa3BgCollisionFilePtr(u32 fileID);
     ~Kpa3BgCollisionFilePtr();
@@ -400,4 +398,83 @@ HandlerEntry data_ov060_0211b1ac[3] = {
     { &daKpa3Bg_c::func_ov060_021181b4 },
     { &daKpa3Bg_c::func_ov060_021180e0 },
     { &daKpa3Bg_c::func_ov060_02117db8 },
+};
+
+/* After the statics, so the @NNN count above does not move.
+   Retail words are the handles constructed just above, in that order. */
+extern "C" SharedFilePtr *const data_ov060_02119514[10] = {
+    &data_ov060_0211b06c,
+    &data_ov060_0211b034,
+    &data_ov060_0211b0a4,
+    &data_ov060_0211b03c,
+    &data_ov060_0211b0b4,
+    &data_ov060_0211b044,
+    &data_ov060_0211b094,
+    &data_ov060_0211b09c,
+    &data_ov060_0211b054,
+    &data_ov060_0211b024,
+};
+extern "C" SharedFilePtr *const data_ov060_0211953c[10] = {
+    &data_ov060_0211b0ac,
+    &data_ov060_0211b02c,
+    &data_ov060_0211b05c,
+    &data_ov060_0211b064,
+    &data_ov060_0211b07c,
+    &data_ov060_0211b01c,
+    &data_ov060_0211b074,
+    &data_ov060_0211b084,
+    &data_ov060_0211b08c,
+    &data_ov060_0211b04c,
+};
+
+/* Ten course CLPS blocks. Each address is the symbols.txt row in every
+   overlay the retail reloc names; ov008 is in each of those sets.
+   The next symbol is the vtable address point, so this .data run
+   continues through _ZTV10daKpa3Bg_c, which the class emits. */
+extern "C" CLPS_Block data_ov008_021116c0;
+extern "C" CLPS_Block data_ov008_02111700;
+extern "C" CLPS_Block data_ov008_02111740;
+extern "C" CLPS_Block data_ov008_02111640;
+extern "C" CLPS_Block data_ov008_02111680;
+extern "C" CLPS_Block data_ov008_021116e0;
+extern "C" CLPS_Block data_ov008_02111720;
+extern "C" CLPS_Block data_ov008_021116a0;
+extern "C" CLPS_Block data_ov008_02111760;
+extern "C" CLPS_Block data_ov008_02111660;
+
+extern "C" CLPS_Block *data_ov060_0211a980[10] = {
+    &data_ov008_021116c0,
+    &data_ov008_02111700,
+    &data_ov008_02111740,
+    &data_ov008_02111640,
+    &data_ov008_02111680,
+    &data_ov008_021116e0,
+    &data_ov008_02111720,
+    &data_ov008_021116a0,
+    &data_ov008_02111760,
+    &data_ov008_02111660,
+};
+
+struct Kpa3BgSpawnInfo {
+    daKpa3Bg_c *(*classInit)();
+    s16 executePriority;
+    s16 renderPriority;
+    u32 actorFlags;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    Fix12i clipDistance;
+    Fix12i farDistance;
+};
+typedef char Kpa3BgSpawnInfo_size_must_be_0x1c[
+    sizeof(Kpa3BgSpawnInfo) == 0x1c ? 1 : -1];
+
+extern "C" Kpa3BgSpawnInfo g_profile_KOOPA3BG = {
+    daKpa3Bg_c_classInit,
+    0x00a7,
+    0x0092,
+    0,
+    0x00190000,
+    0x00190000,
+    0x01000000,
+    0x01900000,
 };

@@ -29,6 +29,11 @@
       "end": "0x0211b750"
     },
     {
+      "name": ".data",
+      "start": "0x0211c3d0",
+      "end": "0x0211c3dc"
+    },
+    {
       "name": ".bss",
       "start": "0x0211c944",
       "end": "0x0211c964"
@@ -141,7 +146,15 @@
       "ordinal": 14
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov064_0211c3d0",
+      "address": "0x0211c3d0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "collider offset: three 20.12 words. InitResources copies them into the cylinder; func_ov064_02119afc copies them through a Vector3 cast"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov064_0211c944",
@@ -374,6 +387,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0211c3d0",
+          "end": "0x0211c3dc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x0211c944",
           "end": "0x0211c964",
@@ -382,7 +402,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 19
+          "LICENSED": 20
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -393,19 +413,28 @@
           {
             "section": ".init",
             "original": [
-              56
+              57
             ],
             "desired": [
-              56
+              57
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              54
+              55
             ],
             "desired": [
-              54
+              55
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              37
+            ],
+            "desired": [
+              37
             ]
           },
           {

@@ -8,7 +8,7 @@
  *   retain their ABI declarations. opt_common_subs remains file-global.
  * - Actor position and scale triples are scalar members in dActor_c;
  *   vector views retain their established layout and load grouping.
- * - SharedFilePtr has no shared field layout; LOADED reads its file word.
+ * - SharedFilePtr is the 8-byte handle; LOADED reads its file word.
  * - Helpers keep their address names. The initializer owns the PMF table;
  *   data_ov019_* and g_profile_PENGUIN_RACER are outside this TU.
  */
@@ -28,26 +28,30 @@ void UpdateAngle(short &angle, short target, int divisor, short maxStep);
 /* Word 1 of a SharedFilePtr is the loaded file. SharedFilePtr itself has no
  * fields; the sinit constructs these and this TU's LoadFile / SetAnim / SetFile
  * read that word. */
-#define LOADED(handle) (((void **)&(handle))[1])
+#define LOADED(handle) ((handle).filePtr)
+
+/* File handle. The loaded file is filePtr. */
+struct PgRcerFile : SharedFilePtr {
+};
 
 extern "C" {
 
-extern SharedFilePtr data_ov019_02113498;          /* model, file 0x3fb */
-extern SharedFilePtr *data_ov019_02112788[7];      /* the seven BCA handles */
-extern SharedFilePtr *data_ov019_0211277c[3];      /* the three BTP handles */
-extern daPgRcerState data_ov019_0211356c[];
-extern Vector3 data_ov019_021134e8;                /* finish volume */
-extern Vector3 data_ov019_0211353c;                /* cheat volume */
-extern SharedFilePtr gPenguinJumpEdAnimationFile;          /* BCA land, file 0x401 */
-extern SharedFilePtr gOV019PenguinWait1TextureSequenceFile;          /* BTP neutral, file 0x407 */
-extern SharedFilePtr gOV019PenguinWait1AnimationFile;          /* BCA idle, file 0x406 */
-extern SharedFilePtr gPenguinJumpStAnimationFile;          /* BCA jump, file 0x402 */
-extern SharedFilePtr gPenguinDiveAnimationFile;          /* BCA race start, file 0x400 */
-extern SharedFilePtr gPenguinSliderAnimationFile;          /* BCA race, file 0x403 */
-extern SharedFilePtr gPenguinStandUpAnimationFile;          /* BCA near finish, file 0x405 */
-extern SharedFilePtr gOV019PenguinWalkAnimationFile;          /* BCA walk, file 0x408 */
-extern SharedFilePtr gOV019PenguinAngryTextureSequenceFile;          /* BTP lost, file 0x3fd */
-extern SharedFilePtr gPenguinSliderTextureSequenceFile;          /* BTP race, file 0x404 */
+extern PgRcerFile data_ov019_02113498;             /* model, file 0x3fb */
+extern PgRcerFile *const data_ov019_02112788[7];   /* the seven BCA handles */
+extern PgRcerFile *const data_ov019_0211277c[3];   /* the three BTP handles */
+extern u32 data_ov019_0211356c[];
+extern int data_ov019_021134e8[3];                /* finish volume */
+extern int data_ov019_0211353c[3];                /* cheat volume */
+extern PgRcerFile gPenguinJumpEdAnimationFile;          /* BCA land, file 0x401 */
+extern PgRcerFile gOV019PenguinWait1TextureSequenceFile;          /* BTP neutral, file 0x407 */
+extern PgRcerFile gOV019PenguinWait1AnimationFile;          /* BCA idle, file 0x406 */
+extern PgRcerFile gPenguinJumpStAnimationFile;          /* BCA jump, file 0x402 */
+extern PgRcerFile gPenguinDiveAnimationFile;          /* BCA race start, file 0x400 */
+extern PgRcerFile gPenguinSliderAnimationFile;          /* BCA race, file 0x403 */
+extern PgRcerFile gPenguinStandUpAnimationFile;          /* BCA near finish, file 0x405 */
+extern PgRcerFile gOV019PenguinWalkAnimationFile;          /* BCA walk, file 0x408 */
+extern PgRcerFile gOV019PenguinAngryTextureSequenceFile;          /* BTP lost, file 0x3fd */
+extern PgRcerFile gPenguinSliderTextureSequenceFile;          /* BTP race, file 0x404 */
 extern unsigned char data_0209d684;                /* talk-script choice */
 
 extern unsigned char NumStars(void);
@@ -170,7 +174,7 @@ int daPgRcer_c::CleanupResources()
 // @symbol _ZN10daPgRcer_c19func_ov019_021122dcEi
 void daPgRcer_c::func_ov019_021122dc(int state)
 {
-    mStateDesc = &data_ov019_0211356c[state];
+    mStateDesc = &((daPgRcerState *)data_ov019_0211356c)[state];
     func_ov019_021122a4();
 }
 
@@ -425,7 +429,7 @@ int func_ov019_0211197c(daPgRcer_c *self)
             }
             ApproachLinear(self->mHorzSpeed, val, 0x800);
         }
-        if (self->mPenguinFinished == 0 && Vec3_Dist(&data_ov019_021134e8, (Vector3 *)&self->mPosX) < 0x190000) {
+        if (self->mPenguinFinished == 0 && Vec3_Dist((Vector3 *)&data_ov019_021134e8, (Vector3 *)&self->mPosX) < 0x190000) {
             if (self->mPlayerFinished != 0) {
                 self->mPenguinWon = 0;
             } else {
@@ -446,10 +450,10 @@ int func_ov019_0211197c(daPgRcer_c *self)
     }
 
     self->func_ov019_021112b8();
-    if (Vec3_Dist(&data_ov019_0211353c, (Vector3 *)&self->mTalkPlayer->mPosX) < 0x280000) {
+    if (Vec3_Dist((Vector3 *)&data_ov019_0211353c, (Vector3 *)&self->mTalkPlayer->mPosX) < 0x280000) {
         self->mPlayerCheated = 1;
     }
-    if (Vec3_Dist(&data_ov019_021134e8, (Vector3 *)&self->mTalkPlayer->mPosX) < 0x190000) {
+    if (Vec3_Dist((Vector3 *)&data_ov019_021134e8, (Vector3 *)&self->mTalkPlayer->mPosX) < 0x190000) {
         self->mPlayerFinished = 1;
     }
     return 1;
@@ -695,4 +699,53 @@ int func_ov019_02111254(void *unused, int playerLead)
     return speed;
 }
 
+}
+
+/* Pointer tables are the overlay .rodata. Handles, destructor nodes, volumes
+ * and the state rows are the .bss from 0x02113460 through 0x021135cc.
+ * __sinit_ov019_021127a4 fills them; the image stays zero. */
+extern "C" {
+PgRcerFile *const data_ov019_0211277c[3] = {
+    &gOV019PenguinAngryTextureSequenceFile,
+    &gPenguinSliderTextureSequenceFile,
+    &gOV019PenguinWait1TextureSequenceFile,
+};
+PgRcerFile *const data_ov019_02112788[7] = {
+    &gOV019PenguinWait1AnimationFile,
+    &gOV019PenguinWalkAnimationFile,
+    &gPenguinJumpStAnimationFile,
+    &gPenguinJumpEdAnimationFile,
+    &gPenguinDiveAnimationFile,
+    &gPenguinSliderAnimationFile,
+    &gPenguinStandUpAnimationFile,
+};
+
+PgRcerFile gPenguinJumpEdAnimationFile;
+PgRcerFile gOV019PenguinWait1TextureSequenceFile;
+PgRcerFile gOV019PenguinWait1AnimationFile;
+PgRcerFile gPenguinJumpStAnimationFile;
+PgRcerFile gPenguinDiveAnimationFile;
+PgRcerFile gPenguinSliderAnimationFile;
+PgRcerFile gPenguinStandUpAnimationFile;
+PgRcerFile data_ov019_02113498;
+PgRcerFile gOV019PenguinWalkAnimationFile;
+PgRcerFile gOV019PenguinAngryTextureSequenceFile;
+PgRcerFile gPenguinSliderTextureSequenceFile;
+u32 data_ov019_021134b8[3];
+u32 data_ov019_021134c4[3];
+u32 data_ov019_021134d0[3];
+u32 data_ov019_021134dc[3];
+int data_ov019_021134e8[3];
+u32 data_ov019_021134f4[3];
+u32 data_ov019_02113500[3];
+u32 data_ov019_0211350c[3];
+u32 data_ov019_02113518[3];
+u32 data_ov019_02113524[3];
+u32 data_ov019_02113530;
+u32 data_ov019_02113534[2];
+int data_ov019_0211353c[3];
+u32 data_ov019_02113548[3];
+u32 data_ov019_02113554[3];
+u32 data_ov019_02113560[3];
+u32 data_ov019_0211356c[24];
 }

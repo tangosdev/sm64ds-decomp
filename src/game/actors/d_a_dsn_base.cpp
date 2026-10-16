@@ -78,8 +78,7 @@ typedef char DsnBaseFileTable_size_must_be_0x18[
     sizeof(DsnBaseFileTable) == 0x18 ? 1 : -1];
 #endif
 
-/* SharedFilePtr has no fields (include/SharedFilePtr.h). Both leaves' tables
- * store the loaded BMD/BTP at +4; Prepare and SetFile read that word. */
+/* Both leaves' tables store the loaded BMD/BTP in filePtr. Prepare and SetFile read it. */
 struct DsnFileHandle {
     s32 fileId;
     void *loaded;

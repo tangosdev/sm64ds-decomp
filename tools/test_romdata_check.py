@@ -99,6 +99,39 @@ class SummarizeCountsSymbols(unittest.TestCase):
 import unittest.mock  # noqa: E402  (used by the preamble-gate tests below)
 
 
+def _compiler():
+    try:
+        import test_objisolate as TOI  # noqa: PLC0415
+        return TOI._compiler()
+    except Exception:  # noqa: BLE001
+        return None
+
+
+@unittest.skipUnless(_compiler(), "mwccarm not present")
+class NobitsHasNoBytesToCompare(unittest.TestCase):
+    def test_bss_objects_are_not_byte_records(self):
+        import os
+        import subprocess
+        import tempfile
+        exe, cflags = _compiler()
+        repo = pathlib.Path(__file__).resolve().parent.parent
+        mw = repo / "tools" / "mwccarm"
+        with tempfile.TemporaryDirectory() as tmp:
+            src, obj = pathlib.Path(tmp) / "t.c", pathlib.Path(tmp) / "t.o"
+            src.write_text("int data_020a0000[2];\nint data_02090000[2] = {1, 2};\n"
+                           "int *f(void) { data_020a0000[0] = 1; return data_02090000; }\n",
+                           encoding="utf-8")
+            r = subprocess.run(
+                [*os.environ.get("MWCCARM_LAUNCHER", "").split(), str(exe),
+                 *cflags.split(), "-c", str(src), "-o", str(obj)],
+                capture_output=True, text=True, cwd=repo,
+                env=dict(os.environ, LM_LICENSE_FILE=str(mw / "license.dat")))
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            names = [row[0] for row in RDC.emitted_data_symbols(obj.read_bytes())]
+        self.assertIn("data_02090000", names)
+        self.assertNotIn("data_020a0000", names)
+
+
 class ExtentStopsAtTheVtablePreamble(unittest.TestCase):
     """`symbols.txt` points `_ZTV<C>` at the slot array, so the two words below it are
     the vtable object's own offset-to-top and typeinfo and belong to no symbol at all.

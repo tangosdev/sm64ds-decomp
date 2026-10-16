@@ -57,7 +57,19 @@ void func_020393d4(int *p, int v);
 void func_020393c4(int *p, int v);
 void func_ov018_02111804(void *collider, daObjSm_Lift_c *self, dActor_c *other);
 int AngleDiff(int, int);
-extern int data_ov018_02112f48[];
+/* 0x20 bytes. symbols.txt names the second half data_ov018_02112f58. */
+int data_ov018_02112f48[4] = {
+    0x53504c43,
+    0x00020008,
+    0x00000fc5,
+    0x000000ff,
+};
+int data_ov018_02112f58[4] = {
+    0x01000fc5,
+    0x000000ff,
+    0xffffffff,
+    0xffffffff,
+};
 void *_ZN7PathPtrC1Ev(void *self);
 
 u8 DecIfAbove0_Byte(u8 *p);
@@ -78,14 +90,12 @@ void SubVec3(void *a, void *b, void *c);
  * member spellings onto the real ROM functions; each handle is the base plus
  * the two words that family actually stores. */
 struct SmLiftModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     SmLiftModelFilePtr(u32 fileID);
     ~SmLiftModelFilePtr();
 };
 
 struct SmLiftClsnFileHandle : SharedFilePtr {
-    u32 words[2];
 
     SmLiftClsnFileHandle(u32 fileID);
     ~SmLiftClsnFileHandle();

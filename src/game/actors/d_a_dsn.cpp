@@ -54,21 +54,18 @@ enum daDsn_c_AssetId {
  * SharedFilePtr_Construct_TexSeq / SharedFilePtr_Destruct_TexSeq. The
  * manifest aliases each undefined member onto its ROM symbol. */
 struct DsnModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     DsnModelFilePtr(u32 fileID);
     ~DsnModelFilePtr();
 };
 
 struct DsnCollisionFileHandle : SharedFilePtr {
-    u32 words[2];
 
     DsnCollisionFileHandle(u32 fileID);
     ~DsnCollisionFileHandle();
 };
 
 struct DsnTextureSeqFileHandle : SharedFilePtr {
-    u32 words[2];
 
     DsnTextureSeqFileHandle(u32 fileID);
     ~DsnTextureSeqFileHandle();

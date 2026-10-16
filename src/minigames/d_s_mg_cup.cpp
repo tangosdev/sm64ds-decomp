@@ -36,11 +36,13 @@ enum dScMgCup_c_AssetId {
 typedef struct { u8 swaps; u8 lo:4; u8 hi:4; } RoundRow;
 
 /* data_ov006_0213c0a8 is the three rest positions. 0213c0ac is one word
-   later, so [i].x there is cup i's y. */
+   later, so [i].x there is cup i's y.  The ROM names the word runs, not
+   the records, so the definitions below are s32 and the uses read them
+   through the RestPos view. */
 struct RestPos { s32 x, y; };
 
 /* data_ov006_0213c0c0 is the three swap pairs. 0213c0c4 is one word later,
-   so [i].a there is the second cup. */
+   so [i].a there is the second cup.  Same word-run layout as above. */
 struct IdxPair { s32 a, b; };
 
 /* The eight-entry Cup PMF table at 0x02141870, defined at the end of this
@@ -84,12 +86,21 @@ extern unsigned char DecIfAbove0_Byte(unsigned char *counter);
 extern int func_02053200(int x);
 extern int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5, unsigned short a6);
 extern int data_0209e650;
-extern RoundRow data_ov006_0213c094[];
 extern s16 data_ov006_0213c0f4[];
-extern IdxPair data_ov006_0213c0c0[];
-extern IdxPair data_ov006_0213c0c4[];
-extern RestPos data_ov006_0213c0a8[];
-extern RestPos data_ov006_0213c0ac[];
+/* The ROM names word runs at 0x0213c0a8/0x0213c0ac and 0x0213c0c0/0x0213c0c4:
+   each is one emitted object, so the swap pairs split as the first pair's .a
+   word plus the remaining five words.  The .a word is an initialized zero, so
+   it needs explicit_zero_data to keep mwccarm from demoting it to .bss. */
+s32 data_ov006_0213c0a8[1] = {0x3C000};
+s32 data_ov006_0213c0ac[5] = {0x70000, 0x8C000, 0x70000, 0xDC000, 0x70000};
+#pragma explicit_zero_data on
+s32 data_ov006_0213c0c0[1] = {0};
+#pragma explicit_zero_data off
+s32 data_ov006_0213c0c4[5] = {1, 1, 2, 0, 2};
+RoundRow data_ov006_0213c094[10] = {
+    {8, 1, 0}, {10, 4, 3}, {12, 7, 6}, {8, 1, 0}, {10, 2, 1},
+    {12, 4, 3}, {14, 6, 5}, {10, 2, 1}, {12, 4, 3}, {16, 7, 6}
+};
 extern int RandomIntInternal(int *seed);
 extern void Mg_SetSharedState(int c);
 extern void Cup_UpdateAnim(char *self, int i);
@@ -126,7 +137,18 @@ extern PMF pmf_dScMgCup_c_StateSelect;
 extern PMF pmf_dScMgCup_c_StateResult;
 extern PMF pmf_dScMgCup_c_StateFinish;
 extern PMF pmf_dScMgCup_c_StateIdle;
-extern AnimStep *data_ov006_0213c0d8[];
+extern AnimStep data_ov006_02139dbc[];
+extern AnimStep data_ov006_02139e9c[];
+extern AnimStep data_ov006_02139ec4[];
+extern AnimStep data_ov006_02139db4[];
+extern AnimStep data_ov006_02139e4c[];
+extern AnimStep data_ov006_0213a274[];
+extern AnimStep data_ov006_0213a1ec[];
+AnimStep *data_ov006_0213c0d8[7] = {
+    data_ov006_02139dbc, data_ov006_02139e9c, data_ov006_02139ec4,
+    data_ov006_02139db4, data_ov006_02139e4c, data_ov006_0213a274,
+    data_ov006_0213a1ec
+};
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern int data_0208ee44;
@@ -414,15 +436,15 @@ extern "C" void Cup_PickShuffleSpeed(char *raw)
     self->mShuffleSpeed = data_ov006_0213c0f4[row];
 
     rem = (rnd >> 0x18) % 3;
-    self->mSwap0 = data_ov006_0213c0c0[rem].a;
-    self->mSwap1 = data_ov006_0213c0c4[rem].a;
+    self->mSwap0 = ((IdxPair *)data_ov006_0213c0c0)[rem].a;
+    self->mSwap1 = ((IdxPair *)data_ov006_0213c0c4)[rem].a;
 
-    self->mMidX = (data_ov006_0213c0a8[self->mSwap1].x +
-                   data_ov006_0213c0a8[self->mSwap0].x) / 2;
-    self->mMidY = (data_ov006_0213c0ac[self->mSwap1].x +
-                   data_ov006_0213c0ac[self->mSwap0].x) / 2;
+    self->mMidX = (((RestPos *)data_ov006_0213c0a8)[self->mSwap1].x +
+                   ((RestPos *)data_ov006_0213c0a8)[self->mSwap0].x) / 2;
+    self->mMidY = (((RestPos *)data_ov006_0213c0ac)[self->mSwap1].x +
+                   ((RestPos *)data_ov006_0213c0ac)[self->mSwap0].x) / 2;
     self->mHalfX = self->mMidX -
-                   data_ov006_0213c0a8[self->mSwap0].x;
+                   ((RestPos *)data_ov006_0213c0a8)[self->mSwap0].x;
     self->mShuffleAngle = 0;
 
     {
@@ -1025,8 +1047,8 @@ s32 dScMgCup_c::InitResources()
     {
         int i;
         for (i = 0; i < 3; i++) {
-            mCup[i].x = data_ov006_0213c0a8[i].x;
-            mCup[i].y = data_ov006_0213c0a8[i].y;
+            mCup[i].x = ((RestPos *)data_ov006_0213c0a8)[i].x;
+            mCup[i].y = ((RestPos *)data_ov006_0213c0a8)[i].y;
             mOnes[i] = 0x1000;
             mIds[i] = i;
             mFlags[i] = 1;

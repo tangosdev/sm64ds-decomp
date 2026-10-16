@@ -42,14 +42,12 @@ enum {
  * their destructors. The wrapper names are local; the ctor/dtor
  * addresses are the ROM resource-family functions. */
 struct AmiBouModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     AmiBouModelFilePtr(u32 fileID);
     ~AmiBouModelFilePtr();
 };
 
 struct AmiBouCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     AmiBouCollisionFilePtr(u32 fileID);
     ~AmiBouCollisionFilePtr();

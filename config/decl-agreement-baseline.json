@@ -14281,6 +14281,9 @@
     "data_ov002_02108ab8": {
       "src/game/actors/d_a_obj_block_l.cpp": [
         "return:ClpsRow []"
+      ],
+      "include/decl_common.h": [
+        "return:char * []"
       ]
     },
     "data_ov002_0210c080": {

@@ -31,7 +31,7 @@
     },
     {
       "name": ".bss",
-      "start": "0x02113f58",
+      "start": "0x02113f4c",
       "end": "0x02113f80"
     }
   ],
@@ -130,6 +130,13 @@
   ],
   "data": [],
   "bss": [
+    {
+      "symbol": "data_ov026_02113f4c",
+      "address": "0x02113f4c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "zero V3 copied into the collision init. The BSS image is zero."
+    },
     {
       "symbol": "data_ov026_02113f58",
       "address": "0x02113f58",
@@ -339,14 +346,14 @@
         },
         {
           "section": ".bss",
-          "start": "0x02113f58",
+          "start": "0x02113f4c",
           "end": "0x02113f80",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 16
+          "LICENSED": 17
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -357,28 +364,30 @@
           {
             "section": ".init",
             "original": [
-              47
+              48
             ],
             "desired": [
-              47
+              48
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              45
+              46
             ],
             "desired": [
-              45
+              46
             ]
           },
           {
             "section": ".bss",
             "original": [
-              27
+              27,
+              28
             ],
             "desired": [
-              27
+              27,
+              28
             ]
           }
         ],

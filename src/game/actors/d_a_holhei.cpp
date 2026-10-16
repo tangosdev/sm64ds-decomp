@@ -43,10 +43,8 @@
 #include "dBgPi.h"
 #include "Sound.h"
 
-/* Second word is the loaded file. SharedFilePtr.h has no fields.
-   The externs below keep the spellings already banked against
-   __sinit_ov062_0211cf30; this view is only a cast at the use. */
-struct HolheiFile { int id; void *file; };
+/* The externs below keep the spellings already banked against
+   __sinit_ov062_0211cf30. Each one is the 8-byte file handle. */
 
 /* A state record: daHolhei_c_ChangeState stores its address in mState
    and calls a non-null enter; past the UpdateKillByInvincibleChar check,
@@ -96,12 +94,12 @@ extern signed char data_0209f2f8;
 extern int AngleDiff(int a, int b);
 extern unsigned int RandomIntInternal(void* s);
 
-extern int data_ov062_0211ddf0[]; /* model, file id 0x327 */
-extern int data_ov062_0211dde8[]; /* animation 0x328 */
-extern void *gHoruheiLiftLoopAnimationFile; /* animation 0x329 */
-extern void *data_ov062_0211de00[]; /* animation 0x32a, grab */
-extern int *data_ov062_0211de08[]; /* animation 0x32b */
-extern void *gHoruheiWalkAnimationFile; /* animation 0x32c, walk */
+extern SharedFilePtr data_ov062_0211ddf0; /* model, file id 0x327 */
+extern SharedFilePtr data_ov062_0211dde8; /* animation 0x328 */
+extern SharedFilePtr gHoruheiLiftLoopAnimationFile; /* animation 0x329 */
+extern SharedFilePtr data_ov062_0211de00; /* animation 0x32a, grab */
+extern SharedFilePtr data_ov062_0211de08; /* animation 0x32b */
+extern SharedFilePtr gHoruheiWalkAnimationFile; /* animation 0x32c, walk */
 
 /* The ten state records (HolheiState, 0x10 apart). See the banner for
    why they keep these element types. */
@@ -146,13 +144,13 @@ s32 daHolhei_c::OnAimedAtWithEgg() {
    home and previous positions, then the starting state. */
 int daHolhei_c::InitResources()
 {
-    mModel.SetFile((BMD_File *)Model::LoadFile(*(SharedFilePtr *)data_ov062_0211ddf0), 1, -1);
+    mModel.SetFile((BMD_File *)Model::LoadFile(data_ov062_0211ddf0), 1, -1);
     mShadowModel.InitCylinder();
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov062_0211dde8);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gHoruheiLiftLoopAnimationFile);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov062_0211de00);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov062_0211de08);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gHoruheiWalkAnimationFile);
+    dExtFrameCtrl_c::LoadFile(data_ov062_0211dde8);
+    dExtFrameCtrl_c::LoadFile(gHoruheiLiftLoopAnimationFile);
+    dExtFrameCtrl_c::LoadFile(data_ov062_0211de00);
+    dExtFrameCtrl_c::LoadFile(data_ov062_0211de08);
+    dExtFrameCtrl_c::LoadFile(gHoruheiWalkAnimationFile);
     mVertAccel = -0x3000;
     mTerminalVelocity = -0x1e000;
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCc_c, (dActor_c*)this, 0xc8000, 0xfa000, 0x200004, 0x3010);
@@ -283,12 +281,12 @@ void daHolhei_c::OnPendingDestroy()
 // @symbol _ZN10daHolhei_c16CleanupResourcesEv
 int daHolhei_c::CleanupResources()
 {
-    ((SharedFilePtr *)data_ov062_0211ddf0)->Release();
-    ((SharedFilePtr *)data_ov062_0211dde8)->Release();
-    ((SharedFilePtr *)&gHoruheiLiftLoopAnimationFile)->Release();
-    ((SharedFilePtr *)data_ov062_0211de00)->Release();
-    ((SharedFilePtr *)data_ov062_0211de08)->Release();
-    ((SharedFilePtr *)&gHoruheiWalkAnimationFile)->Release();
+    data_ov062_0211ddf0.Release();
+    data_ov062_0211dde8.Release();
+    gHoruheiLiftLoopAnimationFile.Release();
+    data_ov062_0211de00.Release();
+    data_ov062_0211de08.Release();
+    gHoruheiWalkAnimationFile.Release();
     return 1;
 }
 
@@ -370,7 +368,7 @@ int daHolhei_c::func_ov062_02116c78(){
     mTurnWait = 0x3c;
     mChargeStep = 0;
     mModel.speed = 0x1000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModel, ((HolheiFile *)&gHoruheiWalkAnimationFile)->file, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModel, gHoruheiWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mTargetAngY = Vec3_HorzAngle(&mPosX, &mHomePosX);
     return 1;
 }
@@ -393,7 +391,7 @@ extern "C" int func_ov062_02116b80(daHolhei_c *self){
     self->mTargetAngY = (short)((RandomIntInternal(data_0209e650) >> 8) << 0xc);
     self->mStateTimer = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0x3f) + 0x64);
     self->mModel.speed = 0x1000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModel, ((HolheiFile *)&gHoruheiWalkAnimationFile)->file, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModel, gHoruheiWalkAnimationFile.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
@@ -515,7 +513,7 @@ int daHolhei_c::func_ov062_021167c0(){
 // @symbol func_ov062_02116784
 extern "C" int func_ov062_02116784(daHolhei_c *self) {
     self->mChargeStep = 0;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModel, ((HolheiFile *)&gHoruheiWalkAnimationFile)->file, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModel, gHoruheiWalkAnimationFile.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
@@ -592,7 +590,7 @@ int daHolhei_c::func_ov062_021164e8()
     if (mGrabAnim == 0) {
         t = (mFlags & 0x4000) != 0;
         if (t) {
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModel, ((HolheiFile *)data_ov062_0211de00)->file, 0, 0x1000, 0);
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModel, data_ov062_0211de00.filePtr, 0, 0x1000, 0);
             mGrabAnim = 1;
         }
     }
@@ -659,7 +657,7 @@ extern "C" int func_ov062_021163b0(daHolhei_c *self)
 
 // @symbol func_ov062_02116368
 extern "C" int func_ov062_02116368(daHolhei_c *self) {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModel, ((HolheiFile *)data_ov062_0211dde8)->file, 0x40000000, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModel, data_ov062_0211dde8.filePtr, 0x40000000, 0x1000, 0);
     self->mChargeStep = 0;
     return 1;
 }
@@ -677,7 +675,7 @@ extern "C" int func_ov062_0211632c(daHolhei_c *self){
 /* Start an animation, then wait a random few frames facing a random way. */
 // @symbol func_ov062_021162b8
 extern "C" int func_ov062_021162b8(daHolhei_c *self){
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModel, ((HolheiFile *)&gHoruheiLiftLoopAnimationFile)->file, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModel, gHoruheiLiftLoopAnimationFile.filePtr, 0, 0x1000, 0);
     self->mStateTimer = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0x1f) + 0x14);
     self->mTargetAngY = (short)((RandomIntInternal(data_0209e650) >> 8) << 0xc);
     return 1;
@@ -695,7 +693,7 @@ extern "C" int func_ov062_02116274(daHolhei_c *self)
 
 // @symbol func_ov062_02116238
 extern "C" int func_ov062_02116238(daHolhei_c *self){
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModel, ((HolheiFile *)data_ov062_0211de08)->file, 0x40000000, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModel, data_ov062_0211de08.filePtr, 0x40000000, 0x1000, 0);
     return 1;
 }
 

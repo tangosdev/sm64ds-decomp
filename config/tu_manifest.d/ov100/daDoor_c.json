@@ -28,6 +28,11 @@
       "end": "0x02147df8"
     },
     {
+      "name": ".data",
+      "start": "0x02148204",
+      "end": "0x02148334"
+    },
+    {
       "name": ".bss",
       "start": "0x02148724",
       "end": "0x02148934"
@@ -259,7 +264,15 @@
       "ordinal": 31
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov100_02148204",
+      "address": "0x02148204",
+      "size": "0x130",
+      "binding": "STB_GLOBAL",
+      "evidence": "nineteen DoorEntry records, one per param1 variant; each word that is a file handle relocates to that handle"
+    }
+  ],
   "bss": [
     {
       "symbol": "gObjDoor0Star1ModelFile",
@@ -585,7 +598,8 @@
     "InitResources is now the real daDoor_c::InitResources method rather than a C free function taking the object explicitly; the redundant (u32) cast on the param1 shift is still what keeps the offset folded into both accesses.",
     "Fourteen helpers (func_ov100_02144468..func_ov100_02144cf8) are the enter/execute members of the door's nine states: pointer-to-member constants at ov100 0x021480d4..0x02148144, copied by the module's static initializer into the 16-byte tables data_ov100_021488a4..data_ov100_02148924. func_ov100_021453d8 stores a state at +0x140 and calls its enter half; Behavior calls the execute half.",
     "Folded __sinit_ov100_02147698: the eleven model-flavor and one animation SharedFilePtr-flavored resource handles, their twelve compiler-generated registration nodes and the nine {enter, execute} state records now emit from this TU; the helpers' six function-local vector statics inside the same .bss span keep their spelled-out guard/vector/node triples.",
-    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way."
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way.",
+    "The nineteen-entry variant table at 0x02148204 is written in this TU. The handles and Vec3i objects the job also names were already defined here."
   ],
   "compiler_only_output": [
     {
@@ -762,6 +776,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02148204",
+          "end": "0x02148334",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02148724",
           "end": "0x02148934",
@@ -770,7 +791,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 79
+          "LICENSED": 80
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -781,6 +802,15 @@
           {
             "section": ".init",
             "original": [
+              131
+            ],
+            "desired": [
+              131
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
               129
             ],
             "desired": [
@@ -788,12 +818,12 @@
             ]
           },
           {
-            "section": ".ctor",
+            "section": ".data",
             "original": [
-              127
+              50
             ],
             "desired": [
-              127
+              50
             ]
           },
           {
@@ -846,51 +876,51 @@
               49
             ],
             "desired": [
-              15,
-              6,
-              14,
-              13,
-              16,
               5,
-              8,
-              11,
               9,
-              7,
-              12,
+              14,
               10,
-              32,
-              25,
-              28,
+              12,
+              15,
+              13,
+              6,
+              11,
+              7,
+              16,
+              8,
+              33,
               26,
-              31,
+              28,
+              27,
+              32,
               35,
               37,
               39,
               17,
-              18,
+              19,
               20,
+              21,
+              24,
+              29,
+              40,
+              18,
+              31,
+              25,
               22,
               23,
-              21,
-              40,
-              30,
-              27,
-              24,
-              19,
-              33,
-              36,
-              29,
-              38,
               34,
+              30,
+              36,
+              38,
               49,
-              45,
               46,
+              47,
               41,
               42,
               44,
-              47,
+              48,
               43,
-              48
+              45
             ]
           }
         ],
@@ -946,51 +976,51 @@
                 49
               ],
               "desired": [
-                15,
-                6,
-                14,
-                13,
-                16,
                 5,
-                8,
-                11,
                 9,
-                7,
-                12,
+                14,
                 10,
-                32,
-                25,
-                28,
+                12,
+                15,
+                13,
+                6,
+                11,
+                7,
+                16,
+                8,
+                33,
                 26,
-                31,
+                28,
+                27,
+                32,
                 35,
                 37,
                 39,
                 17,
-                18,
+                19,
                 20,
+                21,
+                24,
+                29,
+                40,
+                18,
+                31,
+                25,
                 22,
                 23,
-                21,
-                40,
-                30,
-                27,
-                24,
-                19,
-                33,
-                36,
-                29,
-                38,
                 34,
+                30,
+                36,
+                38,
                 49,
-                45,
                 46,
+                47,
                 41,
                 42,
                 44,
-                47,
+                48,
                 43,
-                48
+                45
               ],
               "slots": [
                 5,
@@ -1982,6 +2012,326 @@
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02147698"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148204",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148214",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148218",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor0StarModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214873c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148224",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148228",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor0Star1ModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148724"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148234",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148238",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor0Star1ModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148724"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148244",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148248",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor0Star3ModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214872c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148254",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148258",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor0Star3ModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214872c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148264",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148268",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor0Star10ModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148764"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148274",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148278",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214877c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214877c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148284",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148288",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214877c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214877c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148294",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148298",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214877c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214877c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214877c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214877c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214877c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214877c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214877c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214877c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214875c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214875c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214877c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214877c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor1ModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148774"
+    },
+    {
+      "section": ".data",
+      "source": "0x021482f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor2BoroModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214876c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148304",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_0214874c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214874c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148314",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor4YamiModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148754"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148324",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDoor5HorrorModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148734"
     }
   ],
   "defined_symbol_renames": [

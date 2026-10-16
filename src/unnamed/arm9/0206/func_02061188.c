@@ -18,12 +18,11 @@ typedef struct {
     u32 dc;      /* 0x0c */
     u16 w10;     /* 0x10 */
     u16 w12;     /* 0x12 */
-    char _14[6]; /* 0x14 */
-    u16 w1a;     /* 0x1a */
-    u32 d1c;     /* 0x1c */
 } BufT;
 
-extern BufT data_020a89ec;
+/* the +0x1a/+0x1c writes below land inside the data_020a8a00 buffer that
+   immediately follows this 0x14-byte header */
+BufT data_020a89ec;
 extern char data_020a8a00;
 
 void func_02061188(int unused, u16 *msg, int flag)
@@ -95,12 +94,13 @@ void func_02061188(int unused, u16 *msg, int flag)
                     data_020a89ec.dc = 0;
                     data_020a89ec.w10 = 0;
                     data_020a89ec.w12 = v5;
-                    data_020a89ec.w1a = 0xffff;
+                    *(u16 *)((char *)&data_020a89ec + 0x1a) = 0xffff;
                     MultiCopyHalf(p, &data_020a8a00, 6);
                     for (i = 0; i < 0x10; i++) {
                         data_020a89ec.w6 = i;
                         if ((data_020a89ac + i)[0x2b] != 0) {
-                            data_020a89ec.d1c = (data_020a89ac + i)[0x3b];
+                            *(u32 *)((char *)&data_020a89ec + 0x1c) =
+                                (data_020a89ac + i)[0x3b];
                             ((Handler)(data_020a89ac + i)[0x2b])(&data_020a89ec);
                         }
                     }

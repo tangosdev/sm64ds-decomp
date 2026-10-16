@@ -11,7 +11,13 @@ extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
     Fix12i scaleX, Fix12i scaleY,
     s32 rotation, s32 mode);
 
-extern struct OamAttr data_ov075_0211cba4[];
+/* Four hardware OAM entries. The last attr3 is the list terminator. */
+struct OamAttr data_ov075_0211cba4[] = {
+    {0x40f0, 0xc180, 0x0000, 0x0000},
+    {0x40f0, 0xc1c0, 0x0008, 0x0000},
+    {0x40f0, 0xc000, 0x0010, 0x0000},
+    {0x40f0, 0xc040, 0x0018, 0xffff},
+};
 
 void func_ov075_02118cd0(void)
 {

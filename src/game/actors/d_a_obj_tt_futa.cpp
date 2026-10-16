@@ -26,14 +26,12 @@ enum daObjTtFuta_c_AssetId {
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct TtFutaModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     TtFutaModelFilePtr(u32 fileID);
     ~TtFutaModelFilePtr();
 };
 
 struct TtFutaCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     TtFutaCollisionFilePtr(u32 fileID);
     ~TtFutaCollisionFilePtr();

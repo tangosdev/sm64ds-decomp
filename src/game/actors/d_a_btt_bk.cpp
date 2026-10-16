@@ -64,7 +64,6 @@ extern s16 data_02082214[];
 /* Model-file handle. The derived constructor and destructor are the retail
  * SharedFilePtr pair; this TU does not define them. */
 struct BttBkModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BttBkModelFilePtr(u32 fileID);
     ~BttBkModelFilePtr();
@@ -339,7 +338,7 @@ void daBttBk_c::func_ov080_0212513c(int i)
 // @symbol _ZN9daBttBk_c16CleanupResourcesEv
 s32 daBttBk_c::CleanupResources()
 {
-    ((SharedFilePtr *)&gBattaBlockModelFile)->Release();
+    gBattaBlockModelFile.Release();
     return 1;
 }
 
@@ -372,7 +371,7 @@ int daBttBk_c::Behavior()
 int daBttBk_c::InitResources()
 {
     Vector3 pos;
-    void *file = Model::LoadFile(*(SharedFilePtr *)&gBattaBlockModelFile);
+    void *file = Model::LoadFile(gBattaBlockModelFile);
     mModel.SetFile((BMD_File *)file, 1, 1);
     mShadowModel.InitCuboid();
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x64000, 0x78000, 0x800004, 0x9010);

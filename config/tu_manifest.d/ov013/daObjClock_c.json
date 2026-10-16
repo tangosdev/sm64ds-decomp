@@ -13,6 +13,11 @@
   ],
   "sections": [
     {
+      "name": ".rodata",
+      "start": "0x021116b0",
+      "end": "0x021116b8"
+    },
+    {
       "name": ".text",
       "start": "0x021113bc",
       "end": "0x021116ac"
@@ -101,6 +106,15 @@
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_clock_clock_long.c",
       "ordinal": 8
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov013_021116b0",
+      "address": "0x021116b0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two SharedFilePtr pointers: long hand data_ov013_0211229c, short hand data_ov013_02112294"
     }
   ],
   "data": [
@@ -239,6 +253,26 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x021116b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_0211229c",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x0211229c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021116b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02112294",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02112294"
+    },
     {
       "section": ".data",
       "source": "0x021121a4",
@@ -838,6 +872,13 @@
       },
       "tuRanges": [
         {
+          "section": ".rodata",
+          "start": "0x021116b0",
+          "end": "0x021116b8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".text",
           "start": "0x021113bc",
           "end": "0x021116ac",
@@ -874,7 +915,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 20
+          "LICENSED": 21
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -883,53 +924,62 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".data",
+            "section": ".rodata",
             "original": [
-              15,
-              20,
-              21,
-              23,
-              25
+              6
             ],
             "desired": [
-              15,
-              20,
-              21,
+              6
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              14,
+              22,
               23,
-              25
+              25,
+              27
+            ],
+            "desired": [
+              14,
+              22,
+              23,
+              25,
+              27
             ]
           },
           {
             "section": ".init",
             "original": [
-              46
+              48
             ],
             "desired": [
-              46
+              48
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              44
+              46
             ],
             "desired": [
-              44
+              46
             ]
           },
           {
             "section": ".bss",
             "original": [
               5,
-              6,
-              14,
-              17
+              10,
+              16,
+              19
             ],
             "desired": [
               5,
-              6,
-              17,
-              14
+              10,
+              19,
+              16
             ]
           }
         ],
@@ -939,21 +989,21 @@
               "section": ".bss",
               "original": [
                 5,
-                6,
-                14,
-                17
+                10,
+                16,
+                19
               ],
               "desired": [
                 5,
-                6,
-                17,
-                14
+                10,
+                19,
+                16
               ],
               "slots": [
                 5,
-                6,
-                14,
-                17
+                10,
+                16,
+                19
               ]
             }
           ],

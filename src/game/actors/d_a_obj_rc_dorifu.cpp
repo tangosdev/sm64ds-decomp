@@ -67,14 +67,12 @@ extern CLPS_Block data_ov036_02112ae8;
  * and destructors are the ROM resource-family functions, aliased in the
  * manifest. */
 struct RcDorifuModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     RcDorifuModelFilePtr(u32 fileID);
     ~RcDorifuModelFilePtr();
 };
 
 struct RcDorifuCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     RcDorifuCollisionFilePtr(u32 fileID);
     ~RcDorifuCollisionFilePtr();

@@ -20,6 +20,11 @@
       "end": "0x02111518"
     },
     {
+      "name": ".data",
+      "start": "0x02112344",
+      "end": "0x02112350"
+    },
+    {
       "name": ".init",
       "start": "0x02111868",
       "end": "0x021118d4"
@@ -72,7 +77,14 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov043_02112344",
+      "address": "0x02112344",
+      "size": "0xc",
+      "evidence": "ResourceDescriptor {model, kcl, clps}: model and kcl relocate to this TU's own bss file handles gKm1KurumajikuModelFile (file ID 1621) and gKm1KurumajikuCollisionFile (1622); clps relocates to the module-shared data_ov043_02111bc0, which remains ROM-owned"
+    }
+  ],
   "bss": [
     {
       "symbol": "gKm1KurumajikuModelFile",
@@ -107,9 +119,9 @@
     "Hand-assembled rather than generated: src/d_a_obj_km1_kurumajiku.c wraps its body in an extern \"C\" block, which tubuild create refuses to split.",
     "FOLD 2026-09-07. daObjKm1_Kurumajiku_c_classInit at 0x021114dc (historical alias RickshawBdw_Spawn) was folded in from src/d_a_obj_km1_kurumajiku.c. Folding it is also what frees the d_a_obj_km1_kurumajiku stem that tools/layout_check.py L2 checks tree-wide.",
     "RENAME. The four class members and the vtable carried the coined spelling RickshawBdw in config/arm9/overlays/ov043/symbols.txt; they were renamed in place to the ROM's own daObjKm1_Kurumajiku_c, which _ZTS at 0x02112350 spells out. No alias or bounding row was added. src/_ZN17daObjKurumajiku_cD1Ev.cpp is a DIFFERENT class: daObjKurumajiku_c is this class's BASE, it lives in ov002 at 0x020b6a3c, and it is not part of this fold.",
-    "The three-word resource descriptor at 0x02112344 remains ROM-owned data, declared and not defined here: this entry claims .text only.",
+    "DD200. The ResourceDescriptor at 0x02112344 is now defined in this TU ({&gKm1KurumajikuModelFile, &gKm1KurumajikuCollisionFile, &data_ov043_02111bc0}); the claim covers exactly that 12-byte record. The model and kcl words resolve to this TU's own bss SharedFilePtr wrappers; the clps word targets data_ov043_02111bc0 in the module-shared .data band, which stays ROM-owned.",
     "No static initializer is claimed: ov043's four sinits are module-wide and do not narrow an owner to this class TU.",
-    "Route is text-only. ov043's .data is unclaimed across 0x02112338..0x0211240c -- no delinks entry covers this class's RTTI, profile or vtable -- so an intact-object claim would have to carve that band out first, and the same band carries three vtable-interior phantom rows (data_ov043_021123e4/021123f4/02112404). Both landed ov043 siblings took text-only for the same reason.",
+    "Route is text-plus-descriptor. ov043's .data band 0x02112338..0x0211240c otherwise stays ROM copy -- this class's RTTI, profile and vtable remain deadstripped compiler_only_output -- so the three vtable-interior phantom rows (data_ov043_021123e4/021123f4/02112404) and the string-interior data_ov043_02112358 are untouched.",
     "The two-level inline constructor and destructor chain emits homeless _ZN17daObjKurumajiku_cD2Ev and _ZN10dBgActor_cD2Ev helpers. Exact compiler-only policy removes them before linking, the same disposition the adjacent ov043/daObjKm1_Kuruma_c entry records for its own pair.",
     "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares."
   ],
@@ -336,6 +348,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02112344",
+          "end": "0x02112350",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x02111868",
           "end": "0x021118d4",
@@ -358,7 +377,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 11
+          "LICENSED": 12
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -367,21 +386,30 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".data",
             "original": [
-              47
+              20
             ],
             "desired": [
-              47
+              20
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              49
+            ],
+            "desired": [
+              49
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              45
+              47
             ],
             "desired": [
-              45
+              47
             ]
           },
           {
@@ -389,46 +417,18 @@
             "original": [
               5,
               6,
-              22,
-              23
+              24,
+              25
             ],
             "desired": [
-              6,
               5,
-              22,
-              23
+              6,
+              24,
+              25
             ]
           }
         ],
-        "objisolate": {
-          "reordered": [
-            {
-              "section": ".bss",
-              "original": [
-                5,
-                6,
-                22,
-                23
-              ],
-              "desired": [
-                6,
-                5,
-                22,
-                23
-              ],
-              "slots": [
-                5,
-                6,
-                22,
-                23
-              ]
-            }
-          ],
-          "symbolIndices": 4,
-          "sectionLinks": 0,
-          "sectionInfos": 0,
-          "error": null
-        },
+        "objisolate": null,
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -558,6 +558,36 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02112344",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm1KurumajikuModelFile",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112610"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112348",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm1KurumajikuCollisionFile",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112608"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211234c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02111bc0",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02111bc0"
+    },
     {
       "section": ".init",
       "source": "0x02111878",

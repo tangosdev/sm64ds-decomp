@@ -42,14 +42,12 @@ struct CLPS_Block;
  * are local; the handle constructors and destructors are the ROM
  * resource-family functions, aliased in the manifest. */
 struct LondonModelFile : SharedFilePtr {
-    u32 words[2];
 
     LondonModelFile(u32 fileID);
     ~LondonModelFile();
 };
 
 struct LondonCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     LondonCollisionFilePtr(u32 fileID);
     ~LondonCollisionFilePtr();

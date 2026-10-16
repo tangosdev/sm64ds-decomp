@@ -29,6 +29,11 @@
       "end": "0x02134b6c"
     },
     {
+      "name": ".data",
+      "start": "0x02134ba0",
+      "end": "0x02134c30"
+    },
+    {
       "name": ".bss",
       "start": "0x02135440",
       "end": "0x02135490"
@@ -127,7 +132,56 @@
       "ordinal": 12
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov091_02134ba0",
+      "address": "0x02134ba0",
+      "size": "0xc",
+      "evidence": "VariantWords clip-cap triple {0x200000,0x200000,0x500000}; InitResources copies it by variant"
+    },
+    {
+      "symbol": "data_ov091_02134bac",
+      "address": "0x02134bac",
+      "size": "0xc",
+      "evidence": "VariantWords shadow-base-Y triple {0x3c000,0x3c000,0x78000}"
+    },
+    {
+      "symbol": "data_ov091_02134bb8",
+      "address": "0x02134bb8",
+      "size": "0xc",
+      "evidence": "VariantWords shadow-size-Z triple {0x32000,0x32000,0x78000}"
+    },
+    {
+      "symbol": "_ZTI23daObjRotateUpdownLift_c",
+      "address": "0x02134bc4",
+      "size": "0xc",
+      "evidence": "ROM RTTI identity and compiler-emitted single-inheritance record; base _ZTI10dBgActor_c"
+    },
+    {
+      "symbol": "data_ov091_02134bd0",
+      "address": "0x02134bd0",
+      "size": "0xc",
+      "evidence": "VariantWords shadow-size-X triple {0xd2000,0xd2000,0x190000}"
+    },
+    {
+      "symbol": "_ZTS23daObjRotateUpdownLift_c",
+      "address": "0x02134bdc",
+      "size": "0x1a",
+      "evidence": "ROM type-name string and exact compiler emission"
+    },
+    {
+      "symbol": "g_profile_UPDOWN_LIFT",
+      "address": "0x02134bf8",
+      "size": "0x1c",
+      "evidence": "typed actor profile; classInit relocation to 0x02131bdc and all fields compare to retail"
+    },
+    {
+      "symbol": "g_profile_HS_UPDOWN_LIFT",
+      "address": "0x02134c14",
+      "size": "0x1c",
+      "evidence": "typed actor profile; classInit relocation to 0x02131ba4 and all fields compare to retail"
+    }
+  ],
   "bss": [
     {
       "symbol": "gHsUpdownLiftModelFile",
@@ -274,20 +328,6 @@
       "reason": "inherited vague-linkage RTTI name; the canonical copy stays in ov002."
     },
     {
-      "symbol": "_ZTI23daObjRotateUpdownLift_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov091",
-      "canonical_address": "0x02134bc4",
-      "reason": "key-function RTTI. The cartridge copy is ov091:0x02134bc4."
-    },
-    {
-      "symbol": "_ZTS23daObjRotateUpdownLift_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov091",
-      "canonical_address": "0x02134bdc",
-      "reason": "key-function RTTI name. The cartridge copy is ov091:0x02134bdc."
-    },
-    {
       "symbol": "_ZTV23daObjRotateUpdownLift_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov091",
@@ -414,6 +454,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02134ba0",
+          "end": "0x02134c30",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02135440",
           "end": "0x02135490",
@@ -422,7 +469,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 23
+          "LICENSED": 31
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -433,68 +480,91 @@
           {
             "section": ".init",
             "original": [
-              62
+              70
             ],
             "desired": [
-              62
+              70
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              60
+              68
             ],
             "desired": [
-              60
+              68
             ]
           },
           {
-            "section": ".bss",
+            "section": ".data",
             "original": [
               35,
               36,
               37,
               38,
               39,
-              40,
               41,
-              42
+              53,
+              54
             ],
             "desired": [
-              40,
-              36,
-              38,
-              42,
-              37,
               35,
-              41,
-              39
+              36,
+              37,
+              54,
+              38,
+              53,
+              39,
+              41
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50
+            ],
+            "desired": [
+              48,
+              44,
+              46,
+              50,
+              45,
+              43,
+              49,
+              47
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".bss",
+              "section": ".data",
               "original": [
                 35,
                 36,
                 37,
                 38,
                 39,
-                40,
                 41,
-                42
+                53,
+                54
               ],
               "desired": [
-                40,
-                36,
-                38,
-                42,
-                37,
                 35,
-                41,
-                39
+                36,
+                37,
+                54,
+                38,
+                53,
+                39,
+                41
               ],
               "slots": [
                 35,
@@ -502,15 +572,48 @@
                 37,
                 38,
                 39,
-                40,
                 41,
-                42
+                53,
+                54
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50
+              ],
+              "desired": [
+                48,
+                44,
+                46,
+                50,
+                45,
+                43,
+                49,
+                47
+              ],
+              "slots": [
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50
               ]
             }
           ],
-          "symbolIndices": 8,
+          "symbolIndices": 16,
           "sectionLinks": 0,
-          "sectionInfos": 0,
+          "sectionInfos": 3,
           "error": null
         },
         "errors": null
@@ -853,6 +956,56 @@
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02135478"
+    },
+    {
+      "section": ".data",
+      "source": "0x02134bc4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x02134bc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS23daObjRotateUpdownLift_c",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02134bdc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02134bcc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI10dBgActor_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021089ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x02134bf8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02131bdc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02134c14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daObjRotateUpdownLift_c_classInit_HS_UPDOWN_LIFT",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02131ba4"
     }
   ]
 }

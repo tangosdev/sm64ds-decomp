@@ -28,6 +28,11 @@
       "end": "0x02113110"
     },
     {
+      "name": ".data",
+      "start": "0x021140d4",
+      "end": "0x021140ec"
+    },
+    {
       "name": ".bss",
       "start": "0x021145c8",
       "end": "0x02114618"
@@ -77,7 +82,15 @@
       "ordinal": 5
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov022_021140d4",
+      "address": "0x021140d4",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "two ResourceDescriptor rows, indexed by mVariant. Row 0 points at gFlUkiYukaModelFile, gFlUkiYukaCollisionFile, and data_ov064_0211baec. Row 1 points at gdaObjFl_UkiyukaFlShisoModelFile, gdaObjFl_UkiyukaFlShisoCollisionFile, and data_ov064_0211bacc. The CLPS blocks stay in overlay 64."
+    }
+  ],
   "bss": [
     {
       "symbol": "gdaObjFl_UkiyukaFlShisoCollisionFile",
@@ -376,6 +389,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x021140d4",
+          "end": "0x021140ec",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x021145c8",
           "end": "0x02114618",
@@ -384,7 +404,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 16
+          "LICENSED": 17
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -395,6 +415,15 @@
           {
             "section": ".init",
             "original": [
+              55
+            ],
+            "desired": [
+              55
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
               53
             ],
             "desired": [
@@ -402,12 +431,12 @@
             ]
           },
           {
-            "section": ".ctor",
+            "section": ".data",
             "original": [
-              51
+              23
             ],
             "desired": [
-              51
+              23
             ]
           },
           {
@@ -605,6 +634,66 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x021140d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFlUkiYukaModelFile",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x021145e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021140d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFlUkiYukaCollisionFile",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x021145d0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021140dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211baec",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211baec"
+    },
+    {
+      "section": ".data",
+      "source": "0x021140e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gdaObjFl_UkiyukaFlShisoModelFile",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x021145d8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021140e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gdaObjFl_UkiyukaFlShisoCollisionFile",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x021145c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021140e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211bacc",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211bacc"
+    },
     {
       "section": ".init",
       "source": "0x02112ed0",

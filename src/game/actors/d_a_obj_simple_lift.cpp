@@ -75,14 +75,12 @@ enum daObjSimpleLift_c_AssetId {
  * forms size-DIFF (see the file comment). func_020393d4 stores the
  * beforeClsn callback; an inlined store is four bytes short. */
 struct SimpleLiftModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     SimpleLiftModelFilePtr(u32 fileID);
     ~SimpleLiftModelFilePtr();
 };
 
 struct SimpleLiftClsnFileHandle : SharedFilePtr {
-    u32 words[2];
 
     SimpleLiftClsnFileHandle(u32 fileID);
     ~SimpleLiftClsnFileHandle();

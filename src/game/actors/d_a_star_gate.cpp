@@ -26,7 +26,7 @@
  * Leftover: StarGateVector3 POD for data_ov100_02148948, messagePos, tmp,
  *   vec -- Vector3's inline dtor is non-POD; a Vector3 BSS object would
  *   register in sinit.
- * Leftover: gObjStargateModelFile model handle (SharedFilePtr.h has no fields;
+ * Leftover: gObjStargateModelFile model handle (SharedFilePtr is the 8-byte handle;
  *   StarGateModelFilePtr is the 8-byte wrapper). data_ov100_02148390 gate
  *   table.
  * Leftover: *(Vector3 *)&mPosX / mScaleX / unk_0a4 (dActor_c consecutive
@@ -77,7 +77,6 @@ extern int data_0209caa0[];
 extern char data_020a0ebc[];
 
 struct StarGateModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     StarGateModelFilePtr(u32 fileID);
     ~StarGateModelFilePtr();

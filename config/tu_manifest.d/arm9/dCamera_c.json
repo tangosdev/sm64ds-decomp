@@ -4,18 +4,25 @@
   "source": "src/engine/view/d_camera.cpp",
   "promoted_source": "src/engine/view/d_camera.cpp",
   "status": "promoted",
+  "production_mode": "intact-object",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "Contiguous linker run 0x0200bec4..0x0200e494 tiled exactly by 53 complete delinks entries: 16 named dCamera_c members + 37 func_* state handlers/dispatchers, bounded below by unmatched ROM (0x02009e70..0x0200af0c, a camera-adjacent unit) and above by the cutscene-actor helpers at 0x0200e494 (different data table, no camera receiver).",
     "CLASS IDENTITY FROM ROM RTTI: _ZTS9dCamera_c at arm9 0x02086e6c, _ZTI9dCamera_c at 0x02086ee4, _ZTV9dCamera_c at 0x02086f84 with InitResources/Render/Behavior/CleanupResources/OnPendingDestroy in the inherited fBase_c slots; dCamera_c_classInit (0x0200e444) writes the dBase_c->dView_c->dCamera_c vptr sequence. The tree's `Camera` name was stale; class_rename carried the rename Camera->dCamera_c across 145 files.",
     "ChangeState's mangling _ZN9dCamera_c11ChangeStateEPNS_5StateE proves the nested State type the header forward-declares.",
-    "NOT IN THE RUN: the D1/D0 destructor pair at 0x0200705c stays as its own per-function shards (documented destructor-pair precedent), and the seven handlers at 0x0200af0c..0x0200bec4 stay as shards because func_0200bb28 requires `#pragma opt_common_subs off` and that pragma is TU-global in mwccarm 2004/b56 -- codegen is deferred, so the last spelling in the file wins for every function (the 6ay unscoped-pragma trap). b798/Behavior proved it: they need the default state, so one TU cannot serve both."
+    "NOT IN THE RUN: the D1/D0 destructor pair at 0x0200705c stays as its own per-function shards (documented destructor-pair precedent), and the seven handlers at 0x0200af0c..0x0200bec4 stay as shards because func_0200bb28 requires `#pragma opt_common_subs off` and that pragma is TU-global in mwccarm 2004/b56 -- codegen is deferred, so the last spelling in the file wins for every function (the 6ay unscoped-pragma trap). b798/Behavior proved it: they need the default state, so one TU cannot serve both.",
+    "the .data claim is the file's own pair of camera workspace vectors: data_02086f20/data_02086f2c are defined, written and read only inside this TU (z written at 0x0200af20-side handlers, x/y read as rotation bases) -- 12-byte Vector3 records at contiguous addresses, bounded by unrelated data_02086f14 below and data_02086f38 above."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x0200bec4",
       "end": "0x0200e494"
+    },
+    {
+      "name": ".data",
+      "start": "0x02086f20",
+      "end": "0x02086f38"
     }
   ],
   "functions": [
@@ -391,12 +398,28 @@
       "ordinal": 176
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_02086f20",
+      "address": "0x02086f20",
+      "size": "0x0000000c",
+      "evidence": "the first of two mutable Vector3 workspaces the camera handlers rotate through Vec3_RotateYAndTranslate: x/y are only read, z is written per-frame; ROM bytes 0,0,0xffece300"
+    },
+    {
+      "symbol": "data_02086f2c",
+      "address": "0x02086f2c",
+      "size": "0x0000000c",
+      "evidence": "the second Vector3 workspace of the same pattern: x/y read-only, z written by func_020093f4 results; ROM bytes 0,0,0x0001b4e0"
+    }
+  ],
   "bss": [],
   "relocations": [],
   "notes": [
     "Fold of dCamera_c: 16 named members plus 37 camera state handlers/dispatchers recovered as unmangled func_* symbols. mwccarm emits .text in reverse source order, so the file runs ROM-descending from classInit. The recovered bodies were C; each sits under `#pragma cplusplus off` (the pinned -lang c++ build parses those regions as C89, so block-top declarations only) keeping the unmangled symbol names.",
-    "Leftovers: the C bodies keep raw-offset member access ((char*)self + 0xNNN) where the real field names are not yet recovered, and the camera state records are TU-local opaque typedefs (CamEntryE, CamFixedTab, CamViewObj, CamStateBase, CamStateIdx, CamJitter, the dBgCh_* shadows). POD `Vec3` shadows replace Vector3 inside the C regions because Vector3's empty destructor makes it non-POD and inflates the stack frame by 8 bytes (measured on func_0200c394)."
+    "Leftovers: the C bodies keep raw-offset member access ((char*)self + 0xNNN) where the real field names are not yet recovered, and the camera state records are TU-local opaque typedefs (CamEntryE, CamFixedTab, CamViewObj, CamStateBase, CamStateIdx, CamJitter, the dBgCh_* shadows). POD `Vec3` shadows replace Vector3 inside the C regions because Vector3's empty destructor makes it non-POD and inflates the stack frame by 8 bytes (measured on func_0200c394).",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build (matchesStockRom true) -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
+    "The recorded result is scratch-data-verified: the scratch rewrites are the licensed symbol_binding_rewrites promotions of data_02086f20 and data_02086f2c from STB_LOCAL (file-static) to STB_GLOBAL for DSD's global symbol surface, plus the licensed explicit deadstrip of _ZN7Vector3D1Ev; every other policy was a no-op.",
+    "Both globals are spelled `static Vec3` rather than `Vector3` on purpose: Vector3 declares a ctor/dtor for the ROM's dynamic-init globals, which makes it non-aggregate and cannot express a static .data initializer; the file's own POD Vec3 triple emits the retail 12-byte record exactly."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -418,6 +441,98 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/arm9-dCamera_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0200bec4",
+        "end": "0x0200e494",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0200bec4",
+          "end": "0x0200e494",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02086f20",
+          "end": "0x02086f38",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 55
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              5,
+              6
+            ],
+            "desired": [
+              5,
+              6
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [
@@ -427,6 +542,20 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "Native Vector3 collision-return locals cause the front end to emit the empty vague-linkage destructor (4 bytes, bx lr). All call sites are elided; the retail cartridge keeps its identical canonical body at arm9:0x020072c0. Production isolation verifies the duplicate against that ROM body before discarding it."
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "data_02086f20",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-local static in the source -- dCamera_c is its only consumer. DSD requires a global symbol at the configured .data address; changing the ELF binding preserves all storage, relocations and emitted bytes."
+    },
+    {
+      "symbol": "data_02086f2c",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-local static in the source -- dCamera_c is its only consumer. DSD requires a global symbol at the configured .data address; changing the ELF binding preserves all storage, relocations and emitted bytes."
     }
   ]
 }

@@ -17,8 +17,9 @@
  *   The setup helper loads data_ov014_021145c4 slot 0 with Model::LoadFile,
  *   slot 1 with dBgW_Kc::LoadFile, slot 2 as CLPS into SetFile, and writes
  *   mTimer / mEventBit from param1.
- * Leftover: data_ov014_021145c4 is overlay data; this TU is text-only so
- *   the table stays an extern. g_profile_SWITCHDOOR is the same.
+ * Leftover: data_ov014_02114578, the CLPS block the descriptor points at, stays
+ *   the ROM copy. _ZTI14daObjBSwdoor_c and data_ov014_02114598 sit between
+ *   it and the descriptor, and g_profile_SWITCHDOOR follows _ZTS.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -44,14 +45,12 @@ typedef char ResourceDescriptor_size_must_be_0x0c[
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct BSwdoorModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
 
     BSwdoorModelFilePtr(unsigned int fileID);
     ~BSwdoorModelFilePtr();
 };
 
 struct BSwdoorClsnFilePtr : SharedFilePtr {
-    unsigned int words[2];
 
     BSwdoorClsnFilePtr(unsigned int fileID);
     ~BSwdoorClsnFilePtr();
@@ -66,6 +65,7 @@ extern "C" {
 int func_ov002_020bad10(daObjSwdoor_c *self, ResourceDescriptor *descriptor);
 int func_ov002_020baba8(daObjSwdoor_c *self, ResourceDescriptor *descriptor);
 int func_ov002_020bac18(daObjSwdoor_c *self);
+extern CLPS_Block data_ov014_02114578;
 extern ResourceDescriptor data_ov014_021145c4;
 }
 
@@ -127,3 +127,8 @@ s32 daObjBSwdoor_c::CleanupResources()
  * file 1444. The compiler registers each destructor beside the object. */
 BSwdoorModelFilePtr gBAnaShutterModelFile(ASSET_B_ANA_SHUTTER_BMD);
 BSwdoorClsnFilePtr gBAnaShutterCollisionFile(ASSET_B_ANA_SHUTTER_KCL);
+extern "C" ResourceDescriptor data_ov014_021145c4 = {
+    &gBAnaShutterModelFile,
+    &gBAnaShutterCollisionFile,
+    &data_ov014_02114578,
+};

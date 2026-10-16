@@ -44,8 +44,7 @@
  *   `frame` in UpdateThrowState, the `offset` references in the hover and
  *   throw collision updates, and the parameter names on the cstd::fdiv and
  *   IsTooFarAwayFromPlayer prototypes.
- * - The handle wrappers declare `id` / `file` locally; SharedFilePtr.h has
- *   no fields.
+ * - The handle wrappers used to redeclare the layout. filePtr is the loaded file.
  * - OnTurnIntoEgg's R6Player and UpdateWallAndWater's R10dBgCh_Actr take
  *   reference spelling; a pointer emits identical ARM. SetState's `int`
  *   signedness is indistinguishable.
@@ -121,24 +120,18 @@ extern int _ZTV7daJgm_c[];
  * whose declared-not-defined destructor aliases the ROM's canonical
  * Vector3 D1. */
 struct DaJgmModelFile : SharedFilePtr {
-    u32 id;
-    void *file;
 
     DaJgmModelFile(u32 fileID);
     ~DaJgmModelFile();
 };
 
 struct DaJgmAnimationFilePtr : SharedFilePtr {
-    u32 id;
-    void *file;
 
     DaJgmAnimationFilePtr(u32 fileID);
     ~DaJgmAnimationFilePtr();
 };
 
 struct DaJgmTexSequenceFilePtr : SharedFilePtr {
-    u32 id;
-    void *file;
 
     DaJgmTexSequenceFilePtr(u32 fileID);
     ~DaJgmTexSequenceFilePtr();
@@ -168,8 +161,8 @@ extern DaJgmAnimationFilePtr data_ov077_02127b28;
 extern DaJgmAnimationFilePtr data_ov077_02127b40;
 extern DaJgmTexSequenceFilePtr data_ov077_02127b20;
 extern DaJgmTexSequenceFilePtr data_ov077_02127b30;
-extern SharedFilePtr *data_ov077_02127238[];
-extern SharedFilePtr *data_ov077_02127230[];
+extern SharedFilePtr *const data_ov077_02127238[];
+extern SharedFilePtr *const data_ov077_02127230[];
 extern DaJgmStateHandlers data_ov077_02127bc4[];
 extern JgmVector3 data_ov077_02127b88;
 extern DaJgmStateHandler data_ov077_021277e0;
@@ -276,7 +269,7 @@ s32 daJgm_c::InitResources()
             (DaJgmTexSequenceFilePtr *)data_ov077_02127230[i];
         TextureSequence::LoadFile(*t);
         TextureSequence::Prepare(
-            *(BMD_File *)data_ov077_02127b50.file, *(BTP_File *)t->file);
+            *(BMD_File *)data_ov077_02127b50.filePtr, *(BTP_File *)t->filePtr);
     }
     if (mShadowModel.InitCylinder() == 0)
         return 0;
@@ -377,11 +370,11 @@ s32 daJgm_c::EnterHoverState()
 {
     mHorzSpeed = 0xc000;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &mModelAnim, data_ov077_02127b28.file,
+        &mModelAnim, data_ov077_02127b28.filePtr,
         0, 0x1000, 0);
     mModelAnim.speed = 0x1000;
     _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-        &mTextureSequence, data_ov077_02127b20.file,
+        &mTextureSequence, data_ov077_02127b20.filePtr,
         0, 0x1000, 0);
     mTextureSequence.speed = 0x1000;
     mTimer = 0x96;
@@ -431,13 +424,13 @@ s32 daJgm_c::UpdateHoverState()
 s32 daJgm_c::EnterThrowState()
 {
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &mModelAnim, data_ov077_02127b40.file,
+        &mModelAnim, data_ov077_02127b40.filePtr,
         0, 0x1000, 0);
     mModelAnim.SetFlags(0x40000000);
     mModelAnim.speed = 0x1000;
     mModelAnim.currFrame = 0;
     _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-        &mTextureSequence, data_ov077_02127b30.file,
+        &mTextureSequence, data_ov077_02127b30.filePtr,
         0, 0x1000, 0);
     mTextureSequence.SetFlags(0x40000000);
     mTextureSequence.speed = 0x1000;
@@ -578,7 +571,7 @@ s32 daJgm_c::EnterFallState()
     mVertSpeed = 0x28000;
     mTimer = 0x2d;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &mModelAnim, data_ov077_02127b28.file,
+        &mModelAnim, data_ov077_02127b28.filePtr,
         0, 0x1000, 0);
     mModelAnim.speed = 0x4000;
     {
@@ -869,6 +862,18 @@ DaJgmAnimationFilePtr data_ov077_02127b28(ASSET_JUGEM_WAIT_BCA);
 DaJgmAnimationFilePtr data_ov077_02127b40(ASSET_JUGEM_THROW_BCA);
 DaJgmTexSequenceFilePtr data_ov077_02127b20(ASSET_JUGEM_WAIT_BTP);
 DaJgmTexSequenceFilePtr data_ov077_02127b30(ASSET_JUGEM_THROW_BTP);
+
+/* Texture-sequence files, then animation files, in the order InitResources loads them. */
+extern "C" SharedFilePtr *const data_ov077_02127230[2] = {
+    &data_ov077_02127b20,
+    &data_ov077_02127b30,
+};
+
+extern "C" SharedFilePtr *const data_ov077_02127238[2] = {
+    &data_ov077_02127b28,
+    &data_ov077_02127b40,
+};
+
 DaJgmStateHandlers data_ov077_02127bc4[5] = {
     {data_ov077_021277e0, data_ov077_02127828},
     {data_ov077_02127820, data_ov077_021277e8},

@@ -16,6 +16,16 @@
       "name": ".text",
       "start": "0x02111688",
       "end": "0x02114690"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x02114824",
+      "end": "0x0211484c"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02115cd0",
+      "end": "0x02115ec0"
     }
   ],
   "functions": [
@@ -343,7 +353,225 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "gMonkeyWait2AnimationFile",
+      "address": "0x02115cd0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; the static initializer writes the file id"
+    },
+    {
+      "symbol": "gMonkeyWait4AnimationFile",
+      "address": "0x02115cd8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; the static initializer writes the file id"
+    },
+    {
+      "symbol": "gMonkeyHoldAnimationFile",
+      "address": "0x02115ce0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; the static initializer writes the file id"
+    },
+    {
+      "symbol": "gMonkeyRunStAnimationFile",
+      "address": "0x02115ce8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; the static initializer writes the file id"
+    },
+    {
+      "symbol": "data_ov030_02115cf0",
+      "address": "0x02115cf0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; the static initializer writes the file id"
+    },
+    {
+      "symbol": "gMonkeyWait3AnimationFile",
+      "address": "0x02115cf8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; the static initializer writes the file id"
+    },
+    {
+      "symbol": "data_ov030_02115d00",
+      "address": "0x02115d00",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; the static initializer writes the file id"
+    },
+    {
+      "symbol": "gMonkeyJumpStAnimationFile",
+      "address": "0x02115d08",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; the static initializer writes the file id"
+    },
+    {
+      "symbol": "gMonkeyJumpEdAnimationFile",
+      "address": "0x02115d10",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; the static initializer writes the file id"
+    },
+    {
+      "symbol": "gMonkeyRunAnimationFile",
+      "address": "0x02115d18",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; the static initializer writes the file id"
+    },
+    {
+      "symbol": "gMonkeyRunEdAnimationFile",
+      "address": "0x02115d20",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "zeroed file handle; the static initializer writes the file id"
+    },
+    {
+      "symbol": "data_ov030_02115d28",
+      "address": "0x02115d28",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor registration node the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115d34",
+      "address": "0x02115d34",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor registration node the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115d40",
+      "address": "0x02115d40",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor registration node the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115d4c",
+      "address": "0x02115d4c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor registration node the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115d58",
+      "address": "0x02115d58",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor registration node the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115d64",
+      "address": "0x02115d64",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor registration node the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115d70",
+      "address": "0x02115d70",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor registration node the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115d7c",
+      "address": "0x02115d7c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor registration node the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115d88",
+      "address": "0x02115d88",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor registration node the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115d94",
+      "address": "0x02115d94",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor registration node the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115da0",
+      "address": "0x02115da0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor registration node the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115dac",
+      "address": "0x02115dac",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor registration node the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115db8",
+      "address": "0x02115db8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor registration node the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115dc4",
+      "address": "0x02115dc4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor registration node the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115dd0",
+      "address": "0x02115dd0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor registration node the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115ddc",
+      "address": "0x02115ddc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "carry offset the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115de8",
+      "address": "0x02115de8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "carry offset the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115df4",
+      "address": "0x02115df4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "carry offset the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115e00",
+      "address": "0x02115e00",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "carry offset the static initializer writes"
+    },
+    {
+      "symbol": "data_ov030_02115e0c",
+      "address": "0x02115e0c",
+      "size": "0xb4",
+      "binding": "STB_GLOBAL",
+      "evidence": "state rows; the static initializer copies the pointer-to-member words"
+    }
+  ],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "tubuild create warning: RAW: src/func_ov030_02111dd0.cpp (func_ov030_02111dd0) did not split (the definition is inside the extern \"C\" block opened on line 4, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
@@ -590,20 +818,21 @@
         14,
         33,
         40,
-        95,
-        96,
-        97,
-        98,
-        99,
-        100,
-        101,
-        102,
-        103,
-        104,
-        105,
-        106,
-        107,
-        108
+        108,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140
       ],
       "data": [
         "_ZTV7daMky_c",
@@ -635,6 +864,392 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov030-daMky_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02111688",
+        "end": "0x02114690",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02111688",
+          "end": "0x02114690",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02114824",
+          "end": "0x0211484c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02115cd0",
+          "end": "0x02115ec0",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 78
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".rodata",
+            "original": [
+              94
+            ],
+            "desired": [
+              94
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              96,
+              97,
+              98,
+              99,
+              100,
+              101,
+              102,
+              103,
+              104,
+              105,
+              106,
+              107,
+              108,
+              109,
+              110,
+              111,
+              112,
+              113,
+              114,
+              115,
+              116,
+              117,
+              118,
+              119,
+              120,
+              121,
+              122,
+              123,
+              124,
+              125,
+              126
+            ],
+            "desired": [
+              126,
+              125,
+              124,
+              123,
+              122,
+              121,
+              120,
+              119,
+              118,
+              117,
+              116,
+              115,
+              114,
+              113,
+              112,
+              111,
+              110,
+              109,
+              108,
+              107,
+              106,
+              105,
+              104,
+              103,
+              102,
+              101,
+              100,
+              99,
+              98,
+              97,
+              96
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                96,
+                97,
+                98,
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120,
+                121,
+                122,
+                123,
+                124,
+                125,
+                126
+              ],
+              "desired": [
+                126,
+                125,
+                124,
+                123,
+                122,
+                121,
+                120,
+                119,
+                118,
+                117,
+                116,
+                115,
+                114,
+                113,
+                112,
+                111,
+                110,
+                109,
+                108,
+                107,
+                106,
+                105,
+                104,
+                103,
+                102,
+                101,
+                100,
+                99,
+                98,
+                97,
+                96
+              ],
+              "slots": [
+                96,
+                97,
+                98,
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120,
+                121,
+                122,
+                123,
+                124,
+                125,
+                126
+              ]
+            }
+          ],
+          "symbolIndices": 31,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
-  }
+  },
+  "production_mode": "intact-object",
+  "rodata": [
+    {
+      "symbol": "data_ov030_02114824",
+      "address": "0x02114824",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "ten animation-handle pointers InitResources and CleanupResources already walk"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x02114824",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMonkeyHoldAnimationFile",
+      "addend": 0,
+      "target_module": "ov030",
+      "target_address": "0x02115ce0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02114828",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMonkeyJumpStAnimationFile",
+      "addend": 0,
+      "target_module": "ov030",
+      "target_address": "0x02115d08"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211482c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMonkeyJumpEdAnimationFile",
+      "addend": 0,
+      "target_module": "ov030",
+      "target_address": "0x02115d10"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02114830",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMonkeyRunStAnimationFile",
+      "addend": 0,
+      "target_module": "ov030",
+      "target_address": "0x02115ce8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02114834",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMonkeyRunAnimationFile",
+      "addend": 0,
+      "target_module": "ov030",
+      "target_address": "0x02115d18"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02114838",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMonkeyRunEdAnimationFile",
+      "addend": 0,
+      "target_module": "ov030",
+      "target_address": "0x02115d20"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211483c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov030_02115cf0",
+      "addend": 0,
+      "target_module": "ov030",
+      "target_address": "0x02115cf0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02114840",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMonkeyWait2AnimationFile",
+      "addend": 0,
+      "target_module": "ov030",
+      "target_address": "0x02115cd0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02114844",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMonkeyWait3AnimationFile",
+      "addend": 0,
+      "target_module": "ov030",
+      "target_address": "0x02115cf8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02114848",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMonkeyWait4AnimationFile",
+      "addend": 0,
+      "target_module": "ov030",
+      "target_address": "0x02115cd8"
+    }
+  ]
 }

@@ -72,14 +72,12 @@ typedef long long s64;
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct HasiraModelFile : SharedFilePtr {
-    u32 words[2];
 
     HasiraModelFile(u32 fileID);
     ~HasiraModelFile();
 };
 
 struct HasiraCollisionFile : SharedFilePtr {
-    u32 words[2];
 
     HasiraCollisionFile(u32 fileID);
     ~HasiraCollisionFile();

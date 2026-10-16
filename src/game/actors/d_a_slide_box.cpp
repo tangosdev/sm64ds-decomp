@@ -63,14 +63,12 @@ namespace cstd { int fdiv(int a, int b); }
  * func_02017acc / func_02017ab4 and func_02017b4c /
  * SharedFilePtr_Destruct_Clsn. 02113bac is the CLPS block SetFile takes. */
 struct SlideBoxModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     SlideBoxModelFilePtr(u32 fileID);
     ~SlideBoxModelFilePtr();
 };
 
 struct SlideBoxClsnFilePtr : SharedFilePtr {
-    u32 words[2];
 
     SlideBoxClsnFilePtr(u32 fileID);
     ~SlideBoxClsnFilePtr();

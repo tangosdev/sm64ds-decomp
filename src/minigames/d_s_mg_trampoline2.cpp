@@ -62,10 +62,9 @@ struct C {
     virtual void v5(void *arg);
 };
 
-/* SharedFilePtr has no fields; the two words are the handle's 8 bytes. The
+/* SharedFilePtr is the 8-byte handle; the two words are the handle's 8 bytes. The
  * cartridge's ctor/dtor imports are the functions the wrapper's aliases name. */
 struct Trampoline2ModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Trampoline2ModelFilePtr(u32 fileID);
     ~Trampoline2ModelFilePtr();
@@ -115,9 +114,9 @@ typedef unsigned short u16;
 typedef struct {
     int count;
     int base;
-    short *a;
-    short *b;
-    short *c;
+    const short *a;
+    const short *b;
+    const short *c;
 } SpawnDef;
 
 struct S2 { int words[2]; };
@@ -150,7 +149,13 @@ extern char *_ZN2G212GetBG0ScrPtrEv(void);
 extern char *_ZN2G212GetBG2ScrPtrEv(void);
 extern char *_ZN2G212GetBG3ScrPtrEv(void);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
-extern const unsigned char data_ov006_0212f1ac[];
+/* BG palette loaded at 0xe0, 32 bytes. One white entry, the rest clear. */
+extern const unsigned char data_ov006_0212f1ac[32] = {
+    0x00, 0x00, 0x00, 0x00, 0xff, 0x7f, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+};
 extern char* data_0209f5bc;
 extern int data_ov006_0213fbc4;
 unsigned int func_02012790(unsigned int a);
@@ -187,7 +192,7 @@ extern int data_ov006_02140830;
 extern int data_ov006_021405bc;
 extern int data_ov006_02140828;
 extern int data_ov006_0213fc10[];
-extern SpawnDef data_ov006_0212f2b0[];
+extern const SpawnDef data_ov006_0212f2b0[6];
 extern void TrmpLine_UpdateAll(void);
 extern void Trmp2Mario_UpdateAll(void);
 extern void Trmp2Mario_SetTuning(int a);
@@ -621,7 +626,7 @@ void dScMgTrampoline2_c::StatePlay()
     if (ApproachLinear(*(int *)(raw + 0x7b84), 0, 1) == 0)
         return;
     if (*(int *)(raw + 0x7b94) == 0) {
-        SpawnDef *d = &data_ov006_0212f2b0[*(int *)(raw + 0x7b88)];
+        const SpawnDef *d = &data_ov006_0212f2b0[*(int *)(raw + 0x7b88)];
         int i;
         Vec3i vecA;
         for (i = 0; i < d->count; i++) {
@@ -638,7 +643,7 @@ void dScMgTrampoline2_c::StatePlay()
     } else {
         if (ApproachLinear(*(int *)(raw + 0x7b98), 4, 1)) {
             unsigned int rnd = (unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff;
-            SpawnDef *d = &data_ov006_0212f2b0[(int)((rnd >> 19) * 6) >> 12];
+            const SpawnDef *d = &data_ov006_0212f2b0[(int)((rnd >> 19) * 6) >> 12];
             int i;
             Vec3i vecB;
             for (i = 0; i < d->count; i++) {
@@ -1337,7 +1342,7 @@ extern "C" void Trmp2Spinner_SetModel(void* raw)
 
 extern "C" {
 extern struct Tbl data_ov006_0213fbf8;
-extern unsigned short data_ov006_0212f144[];
+extern const unsigned short data_ov006_0212f144[4];
 extern int RandomIntInternal(int* seed);
 extern void func_020169f4(char* self, int kind);
 
@@ -1430,4 +1435,57 @@ int Trmp2_DestructJumperModels(char* raw){
 /* data_ov006_02142f80 is the model SharedFilePtr this Init LoadFile's,
  * defined here at the end of the file (constructed as file ID 537) so its
  * constructor does not enter .text. */
-Trampoline2ModelFilePtr data_ov006_02142f80(ASSET_MINI_STAR_BMD);
+Trampoline2ModelFilePtr data_ov006_02142f80(537);
+
+/* Six spawn rows, indexed by the wave step and by a random draw. count is the
+ * loop bound. base is x, y, z in 0x1000 units, three words per spawn. a is the
+ * facing angle (0x10000 per turn). b is the model variant. c is the other short. */
+#pragma cplusplus off
+extern const short data_ov006_0212f0f0[2] = { 2, 2 };
+extern const short data_ov006_0212f0f4[2] = { 0x4000, 0x4000 };
+extern const short data_ov006_0212f0f8[2] = { 2, 2 };
+extern const short data_ov006_0212f0fc[4] = { 0, 0, 0, 0 };
+extern const short data_ov006_0212f104[4] = { 3, 3, 3, 0 };
+extern const short data_ov006_0212f10c[4] = { 0x4000, 0x4000, 0x4000, 0 };
+extern const short data_ov006_0212f114[4] = { 2, 1, 2, 0 };
+extern const short data_ov006_0212f11c[4] = { 2, 1, 2, 0 };
+extern const short data_ov006_0212f124[4] = { 1, 1, 1, 0 };
+extern const short data_ov006_0212f12c[4] = { 0, 0, 0, 0 };
+extern const short data_ov006_0212f134[4] = { 0, 0, 0, 0 };
+extern const short data_ov006_0212f13c[4] = { 0x4000, 0x4000, 0x4000, 0 };
+extern const unsigned short data_ov006_0212f144[4] = { 0x7fff, 0x03ff, 0x001f, 0x7c00 };
+extern const short data_ov006_0212f14c[6] = { 0, 0, 0, 0, 0, 0 };
+extern const short data_ov006_0212f158[6] = { -0x2000, -0x2000, -0x2000, -0x2000, -0x2000, 0 };
+extern const short data_ov006_0212f164[6] = { 2, 1, 2, 1, 0, 0 };
+extern const short data_ov006_0212f170[6] = { 2, 2, 2, 2, 2, 0 };
+extern const short data_ov006_0212f17c[6] = { 1, 1, 1, 1, 1, 0 };
+extern const short data_ov006_0212f188[6] = { 0, 0, 0, 0, 0, 0 };
+extern const int data_ov006_0212f194[6] = {
+    0x54000, 0x70000, 0, -0x54000, 0x70000, 0,
+};
+extern const int data_ov006_0212f1cc[9] = {
+    0x40000, 0x48000, 0, 0x40000, 0xb0000, 0, 0x40000, -0x30000, 0,
+};
+extern const int data_ov006_0212f1f0[9] = {
+    -0x40000, 0x48000, 0, -0x40000, 0xb0000, 0, -0x40000, -0x30000, 0,
+};
+extern const int data_ov006_0212f214[9] = {
+    -0x40000, 0x50000, 0, 0, 0x88000, 0, 0x40000, 0x50000, 0,
+};
+extern const int data_ov006_0212f238[15] = {
+    -0x38000, 0x30000, 0, 0x40000, 0x48000, 0, -0x38000, 0x60000, 0,
+    0x40000, 0x78000, 0, -0x48000, 0x90000, 0,
+};
+extern const int data_ov006_0212f274[15] = {
+    -0x3c000, 0x38000, 0, -0x1e000, 0x56000, 0, 0, 0x74000, 0,
+    0x1e000, 0x92000, 0, 0x3c000, 0xb0000, 0,
+};
+extern const SpawnDef data_ov006_0212f2b0[6] = {
+    { 3, (int)data_ov006_0212f1cc, data_ov006_0212f10c, data_ov006_0212f114, data_ov006_0212f12c },
+    { 3, (int)data_ov006_0212f1f0, data_ov006_0212f13c, data_ov006_0212f11c, data_ov006_0212f134 },
+    { 5, (int)data_ov006_0212f238, data_ov006_0212f14c, data_ov006_0212f164, data_ov006_0212f17c },
+    { 2, (int)data_ov006_0212f194, data_ov006_0212f0f4, data_ov006_0212f0f8, data_ov006_0212f0f0 },
+    { 3, (int)data_ov006_0212f214, data_ov006_0212f0fc, data_ov006_0212f124, data_ov006_0212f104 },
+    { 5, (int)data_ov006_0212f274, data_ov006_0212f158, data_ov006_0212f170, data_ov006_0212f188 },
+};
+#pragma cplusplus on

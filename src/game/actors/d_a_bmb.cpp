@@ -25,7 +25,7 @@
  *   extern inside a member gets C++ linkage and the module stops linking.
  * - func_ov102_0214ad14, 0214ae1c and 0214b384 are called from other overlays,
  *   so those labels stay. data_ov102_* are the file handles; SharedFilePtr
- *   has no fields, so the loaded BCA is still the word at +4.
+ *   filePtr is the loaded BCA.
  * - func_0203568c / func_02035684 are the out-of-line stores of
  *   mWithMeshClsn.mRadius / mHeight. Inlining them drops the call.
  * - func_ov102_0214b53c keeps the volatile stack pins, and the carrier's
@@ -44,12 +44,14 @@
 
 bool ApproachLinear(short &value, short target, short step);
 
-/* The three shared files this actor claims.  InitResources loads them and
-   CleanupResources releases them, so both C++-named members need one agreed
-   spelling; the members below that read the loaded handle out of the same bytes
-   take their own view with a cast rather than a second declaration. */
-extern SharedFilePtr data_ov102_0214e9c0;
-extern SharedFilePtr data_ov102_0214e9c8;
+/* A loaded SharedFilePtr: the second word is the file it loaded.
+   The loaded file is filePtr. */
+struct LoadedFile : SharedFilePtr {
+};
+
+/* Zero in the image. __sinit_ov102_0214de70 writes the file ids. */
+LoadedFile data_ov102_0214e9c0;
+LoadedFile data_ov102_0214e9c8;
 extern SharedFilePtr data_ov002_0210d9e0;
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
@@ -395,7 +397,7 @@ void func_ov102_0214c0b8(void *cv)
         self->mHorzSpeed = 0;
     else
         self->mHorzSpeed = 0x5000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&self->mModelAnim, *(void **)((char *)&data_ov102_0214e9c0 + 4), 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&self->mModelAnim, data_ov102_0214e9c0.filePtr, 0, 0x1000, 0);
     self->mTurnTimer = 0x200;
     self->mVertAccel = -0x2000;
     self->mCarrier = 0;
@@ -555,7 +557,7 @@ void func_ov102_0214bd20(char* c)
     self->mState = 3;
     self->mVertAccel = 0;
     self->mHorzSpeed = 0;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, *(void **)((char *)&data_ov102_0214e9c8 + 4), 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, data_ov102_0214e9c8.filePtr, 0, 0x1000, 0);
     func_ov102_0214b384(c, 0x96);
     self->mdCc_c.flags |= 2;
     self->mdCc_c.flags &= ~4;
@@ -635,7 +637,7 @@ void func_ov102_0214bc20(char* c)
     self->mHorzSpeed = a1.v[idx];
     self->mVertSpeed = a2.v[idx];
     self->mState = 4;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&self->mModelAnim, *(void **)((char *)&data_ov102_0214e9c0 + 4), 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&self->mModelAnim, data_ov102_0214e9c0.filePtr, 0, 0x1000, 0);
     self->mVertAccel = -0x2000;
 }
 
@@ -1167,7 +1169,7 @@ void func_ov102_0214b128(void *cv) {
 
 // @symbol _ZN7daBmb_c19func_ov102_0214b03cEv
 void daBmb_c::func_ov102_0214b03c(){
-  if(mState < 2 && mModelAnim.file == *((BCA_File **)((char *)&data_ov102_0214e9c0 + 4))){
+  if(mState < 2 && mModelAnim.file == (BCA_File *)data_ov102_0214e9c0.filePtr){
     if(((dExtFrameCtrl_c *)((char *)this + 0x350))->WillHitFrame(0) != 0
        || ((dExtFrameCtrl_c *)((char *)this + 0x350))->WillHitFrame(0x10) != 0){
       func_0201267c(0x132, (const Vector3 *)&mCamSpacePosX);
@@ -1361,7 +1363,7 @@ after_cannon:
     if (self->mVariant == 2) {
         self->mVariant = 3;
         self->mState = 0;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, *(void **)((char *)&data_ov102_0214e9c0 + 4), 0, 0x1000, 0);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, data_ov102_0214e9c0.filePtr, 0, 0x1000, 0);
         self->mTurnTimer = 0x200;
         self->mVertAccel = -0x2000;
         self->mdCc_c.flags &= ~2u;

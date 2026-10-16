@@ -49,20 +49,12 @@ struct MantaState {
  * numRefs/filePtr; the loaders populate the BMD/BCA payload at +4.
  * The registered destructors record file IDs; actor cleanup releases files. */
 struct MantaModelFilePtr : SharedFilePtr {
-    u16 fileID;
-    u8 numRefs;
-    u8 pad;
-    BMD_File* filePtr;
 
     MantaModelFilePtr(u32 fileID);
     ~MantaModelFilePtr();
 };
 
 struct MantaAnimationFilePtr : SharedFilePtr {
-    u16 fileID;
-    u8 numRefs;
-    u8 pad;
-    BCA_File* filePtr;
 
     MantaAnimationFilePtr(u32 fileID);
     ~MantaAnimationFilePtr();
@@ -245,7 +237,7 @@ int daManta_c::func_ov090_021327e4()
 int daManta_c::func_ov090_02132a58()
 {
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &mModelAnim, data_ov090_0213452c.filePtr, 0, 0x1000, 0);
+        &mModelAnim, (BCA_File *)data_ov090_0213452c.filePtr, 0, 0x1000, 0);
     mHitRing = 0;
     mRingWrite = 0;
     mRingRead = 0;

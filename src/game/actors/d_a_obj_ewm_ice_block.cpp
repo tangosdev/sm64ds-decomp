@@ -177,12 +177,10 @@ extern "C" daObjEwmIceBlock_c *daObjEwmIceBlock_c_classInit()
  * func_02017ab4 for the model, func_02017b4c / SharedFilePtr_Destruct_Clsn
  * for the collision); the subclasses exist to spell those entry points. */
 struct EwmIceBlockModelFilePtr : SharedFilePtr {
-    u32 words[2];
     EwmIceBlockModelFilePtr(u32 fileID);
     ~EwmIceBlockModelFilePtr();
 };
 struct EwmIceBlockCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     EwmIceBlockCollisionFilePtr(u32 fileID);
     ~EwmIceBlockCollisionFilePtr();
 };
@@ -190,3 +188,11 @@ struct EwmIceBlockCollisionFilePtr : SharedFilePtr {
 // @symbol __sinit_d_a_obj_ewm_ice_block.cpp
 EwmIceBlockModelFilePtr gEwmIceBrockModelFile(ASSET_EWM_ICE_BROCK_BMD);      /* model */
 EwmIceBlockCollisionFilePtr gEwmIceBrockCollisionFile(ASSET_EWM_ICE_BROCK_KCL);  /* collision */
+
+/* Model handle, collision handle, then the ov064 CLPS words. */
+extern "C" char data_ov064_0211bbec[];
+extern "C" SharedFilePtr *data_ov056_02113314[3] = {
+    &gEwmIceBrockModelFile,
+    &gEwmIceBrockCollisionFile,
+    (SharedFilePtr *)data_ov064_0211bbec,
+};

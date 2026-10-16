@@ -15,6 +15,11 @@
       "name": ".text",
       "start": "0x020b3298",
       "end": "0x020b35a0"
+    },
+    {
+      "name": ".data",
+      "start": "0x02108940",
+      "end": "0x0210895c"
     }
   ],
   "functions": [
@@ -68,8 +73,28 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "g_profile_OBJ_ABUKU",
+      "address": "0x02108940",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "AbukuSpawnInfo actor-profile descriptor built by this TU: word 0 relocates to daObjAbuku_c_classInit, registry id 0x0123/0x00a1 fields follow"
+    }
+  ],
   "bss": [],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02108940",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daObjAbuku_c_classInit",
+      "addend": 0,
+      "target_module": "overlay(2)",
+      "target_address": "0x020b3568"
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZTI12daObjAbuku_c",
@@ -133,19 +158,12 @@
       "canonical_module": "ov002",
       "canonical_address": "0x02108964",
       "reason": "InitResources is the key function and emits the complete daObjAbuku_c vtable with its ABI preamble. The configured public address point is outside this text-only entry; romdata_check applies the measured eight-byte address-point convention and proves every emitted slot before isolation discards the copy."
-    },
-    {
-      "symbol": "g_profile_OBJ_ABUKU",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x02108940",
-      "reason": "The actor-table descriptor is naturally defined beside its factory in this TU. Its canonical gap-owned home is outside the text-only claim; romdata_check proves the factory relocation and all descriptor words before production isolation discards the duplicate."
     }
   ],
   "notes": [
     "Genuine lifecycle source form: daObjAbuku_c defines its virtual destructor inline in the class body and defines InitResources as the key function in this TU. The emitted vtable naturally requires D1 then D0 in retail order; mwcc emits no D2 and the source contains no hand-spelled destructor body or forcing helper.",
     "The actor-table factory is `return new daObjAbuku_c()`. Leaf operator new(unsigned long) forwards to _ZN7fBase_cnwEj((unsigned)size); without that leaf, mwccarm relocates to unresolved _Znwm.",
-    "daObjAbuku_c_classInit and g_profile_OBJ_ABUKU are reconstructed source-style names: SM64DS proves the daObjAbuku_c RTTI identity, OBJ_ABUKU registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical aliases were Bubble_Spawn, daObjAbuku_c_Spawn, and Bubble_SpawnInfo. The manifest is deliberately text-only; all ten compiler-emitted data objects have exact fail-closed deadstrip-data rows at their configured canonical homes.",
+    "daObjAbuku_c_classInit and g_profile_OBJ_ABUKU are reconstructed source-style names: SM64DS proves the daObjAbuku_c RTTI identity, OBJ_ABUKU registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical aliases were Bubble_Spawn, daObjAbuku_c_Spawn, and Bubble_SpawnInfo. The manifest is deliberately text-only except for g_profile_OBJ_ABUKU, which is claimed .data storage built by this TU; the other nine compiler-emitted data objects have exact fail-closed deadstrip-data rows at their configured canonical homes.",
     "The older partitioned-link record described an out-of-line destructor source form that emitted D0, D1 and D2 in the wrong order. It was removed rather than carried forward as stale evidence after the inline/key-function form eliminated D2 and corrected section order."
   ],
   "verification": {
@@ -186,8 +204,7 @@
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
-        "_ZTV12daObjAbuku_c",
-        "g_profile_OBJ_ABUKU"
+        "_ZTV12daObjAbuku_c"
       ],
       "dataExternalized": [
         "_ZTI12daObjAbuku_c",
@@ -198,8 +215,7 @@
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
-        "_ZTV12daObjAbuku_c",
-        "g_profile_OBJ_ABUKU"
+        "_ZTV12daObjAbuku_c"
       ]
     },
     "criteria": {

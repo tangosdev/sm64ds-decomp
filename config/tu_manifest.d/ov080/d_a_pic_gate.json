@@ -18,6 +18,11 @@
       "name": ".text",
       "start": "0x02125404",
       "end": "0x021264ec"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0212775c",
+      "end": "0x021277a8"
     }
   ],
   "functions": [
@@ -216,6 +221,96 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov080-d_a_pic_gate/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02125404",
+        "end": "0x021261f4",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02125404",
+          "end": "0x021261f4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0212775c",
+          "end": "0x021277a8",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 18
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".rodata",
+            "original": [
+              36
+            ],
+            "desired": [
+              36
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [
@@ -286,6 +381,207 @@
       "reason": "daPicGate_c's typeinfo chain makes mwcc emit fBase_c's typeinfo name as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e60, outside this TU's only licensed range (.text 0x02125404-0x021261f4), so dsd supplies that ROM data independently. romdata_check compares this emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov080_0212775c",
+      "address": "0x0212775c",
+      "size": "0x4c",
+      "binding": "STB_GLOBAL",
+      "evidence": "nineteen pointers to the picture file handles, indexed by picture id in func_ov080_02125630"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x0212775c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForBhModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x0212851c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127760",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForBkModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x02128524"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127764",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForKiModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021284ac"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127768",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForSmModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021284fc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212776c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForCvEx5ModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x0212850c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127770",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForFlModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021284cc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127774",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForDlModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021284b4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127778",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForWlModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x02128514"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212777c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForSlModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021284f4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127780",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForWcModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x0212852c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127784",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForHmModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021284dc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127788",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForHsModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021284e4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212778c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForTdTtModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021284ec"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127790",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForCtModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021284bc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127794",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForExMarioModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x02128504"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127798",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForExLuigiModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x0212853c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212779c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForExWarioModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021284d4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021277a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForVsCrossModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x02128534"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021277a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForVsIslandModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021284c4"
     }
   ]
 }

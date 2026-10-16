@@ -26,14 +26,12 @@ enum d_a_obj_mc_metalnet_AssetId {
 #include "SharedFilePtr.h"
 
 struct McMetalnetModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     McMetalnetModelFilePtr(u32 fileID);
     ~McMetalnetModelFilePtr();
 };
 
 struct McMetalnetClsnFileHandle : SharedFilePtr {
-    u32 words[2];
 
     McMetalnetClsnFileHandle(u32 fileID);
     ~McMetalnetClsnFileHandle();

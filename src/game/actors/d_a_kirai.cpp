@@ -44,7 +44,6 @@ typedef void (daKirai_c::*KiraiState)();
  * func_02017ab4; the manifest aliases the wrapper's undefined members onto
  * those ROM symbols. */
 struct KiraiModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     KiraiModelFilePtr(u32 fileID);
     ~KiraiModelFilePtr();

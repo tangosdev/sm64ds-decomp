@@ -107,7 +107,7 @@ extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 data_0209b3ec;
 extern short data_02082214[];
 extern char data_ov080_021277a8[];
-extern SharedFilePtr *data_ov080_0212775c[];
+extern SharedFilePtr *const data_ov080_0212775c[19];
 extern unsigned char data_ov080_02128688[];
 extern unsigned char data_ov080_0212869c[];
 
@@ -704,3 +704,46 @@ void daPicGate_c::func_ov080_021261f4() {
 }
 
 #pragma opt_propagation on
+
+/* One pointer per picture id. The handles themselves are the nineteen
+   PicGateFilePtr objects in daPicGate_c.cpp. */
+extern char gForBhModelFile[];
+extern char gForBkModelFile[];
+extern char gForKiModelFile[];
+extern char gForSmModelFile[];
+extern char gForCvEx5ModelFile[];
+extern char gForFlModelFile[];
+extern char gForDlModelFile[];
+extern char gForWlModelFile[];
+extern char gForSlModelFile[];
+extern char gForWcModelFile[];
+extern char gForHmModelFile[];
+extern char gForHsModelFile[];
+extern char gForTdTtModelFile[];
+extern char gForCtModelFile[];
+extern char gForExMarioModelFile[];
+extern char gForExLuigiModelFile[];
+extern char gForExWarioModelFile[];
+extern char gForVsCrossModelFile[];
+extern char gForVsIslandModelFile[];
+SharedFilePtr *const data_ov080_0212775c[19] = {
+    (SharedFilePtr *)gForBhModelFile,
+    (SharedFilePtr *)gForBkModelFile,
+    (SharedFilePtr *)gForKiModelFile,
+    (SharedFilePtr *)gForSmModelFile,
+    (SharedFilePtr *)gForCvEx5ModelFile,
+    (SharedFilePtr *)gForFlModelFile,
+    (SharedFilePtr *)gForDlModelFile,
+    (SharedFilePtr *)gForWlModelFile,
+    (SharedFilePtr *)gForSlModelFile,
+    (SharedFilePtr *)gForWcModelFile,
+    (SharedFilePtr *)gForHmModelFile,
+    (SharedFilePtr *)gForHsModelFile,
+    (SharedFilePtr *)gForTdTtModelFile,
+    (SharedFilePtr *)gForCtModelFile,
+    (SharedFilePtr *)gForExMarioModelFile,
+    (SharedFilePtr *)gForExLuigiModelFile,
+    (SharedFilePtr *)gForExWarioModelFile,
+    (SharedFilePtr *)gForVsCrossModelFile,
+    (SharedFilePtr *)gForVsIslandModelFile,
+};

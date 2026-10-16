@@ -86,22 +86,19 @@ typedef struct Mtx { int m[12]; } Mtx; /* IDENTITY_MATRIX4X3 */
 typedef void (daStar_c::*StateHandler)();
 
 /* A resource handle as the ROM lays it out: {id, loaded file}. The files the
-   star loads are read through .ptr. */
-struct SharedFilePtrRaw { u32 id; void *ptr; };
+   star loads are read through filePtr. */
 
 /* Model handles construct through func_02017acc and destroy through
    func_02017ab4. Animation handles construct through SharedFilePtr::Construct
    and destroy through SharedFilePtr_Destruct_Anim. The manifest aliases those
    undefined members onto the ROM symbols. */
 struct StarModelFilePtr : SharedFilePtr {
-    u32 id; void *ptr;
 
     StarModelFilePtr(u32 fileID);
     ~StarModelFilePtr();
 };
 
 struct StarAnimationFileHandle : SharedFilePtr {
-    u32 id; void *ptr;
 
     StarAnimationFileHandle(u32 fileID);
     ~StarAnimationFileHandle();
@@ -522,13 +519,13 @@ s32 daStar_c::InitResources()
 
     b = (s32)(actorID == ACTOR_STAR);
     if (b != 0) {
-        if (mModelAnim1.SetFile((BMD_File *)data_ov002_0211094c.ptr, 1, 1) == 0 ||
-            mModelAnim2.SetFile((BMD_File *)data_ov002_0211095c.ptr, 1, 0x18) == 0)
+        if (mModelAnim1.SetFile((BMD_File *)data_ov002_0211094c.filePtr, 1, 1) == 0 ||
+            mModelAnim2.SetFile((BMD_File *)data_ov002_0211095c.filePtr, 1, 0x18) == 0)
             ret = 0;
     } else {
         LoadSilverStarAndNumber();
-        if (mModelAnim1.SetFile((BMD_File *)data_ov002_02110954.ptr, 1, 1) == 0 ||
-            mModelAnim2.SetFile((BMD_File *)data_ov002_02110954.ptr, 1, 1) == 0)
+        if (mModelAnim1.SetFile((BMD_File *)data_ov002_02110954.filePtr, 1, 1) == 0 ||
+            mModelAnim2.SetFile((BMD_File *)data_ov002_02110954.filePtr, 1, 1) == 0)
             ret = 0;
     }
 
@@ -558,8 +555,8 @@ s32 daStar_c::InitResources()
         mMarkerType = 1;
     }
 
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, data_ov002_02110964.ptr, 0x40000000, 0x1000, 0);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim2, data_ov002_02110964.ptr, 0x40000000, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, data_ov002_02110964.filePtr, 0x40000000, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim2, data_ov002_02110964.filePtr, 0x40000000, 0x1000, 0);
     if (mShadowModel.InitCylinder() == 0)
         return 0;
 
@@ -1450,9 +1447,9 @@ void daStar_c::func_ov002_020ea100() {
         func_ov002_020e9464();
 
         if (common->mIsUnderwater != 0) {
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, data_ov002_02110924.ptr, 0x40000000, 0x1000, 0);
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, data_ov002_02110924.filePtr, 0x40000000, 0x1000, 0);
         } else {
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, data_ov002_02110944.ptr, 0x40000000, 0x1000, 0);
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, data_ov002_02110944.filePtr, 0x40000000, 0x1000, 0);
         }
 
         {
@@ -3336,8 +3333,8 @@ void daStar_c::func_ov002_020e6fbc(int arg) {
 void daStar_c::func_ov002_020e6edc() {
     struct Vector3 v;
     mKind = KIND_8;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, (struct BCA_File *)data_ov002_02110934.ptr, 0x40000000, 0x1000, 0);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim2, (struct BCA_File *)data_ov002_02110934.ptr, 0x40000000, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, (struct BCA_File *)data_ov002_02110934.filePtr, 0x40000000, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim2, (struct BCA_File *)data_ov002_02110934.filePtr, 0x40000000, 0x1000, 0);
     v.x = data_ov002_0210aa0c[0];
     v.y = data_ov002_0210aa0c[1];
     v.z = data_ov002_0210aa0c[2];
@@ -3355,8 +3352,8 @@ void daStar_c::func_ov002_020e6edc() {
  * in STATE_COLLECT_HOLD. */
 void daStar_c::func_ov002_020e6df8() {
   mKind = KIND_9;
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, data_ov002_02110944.ptr, 0x40000000, 0x1000, 0);
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim2, data_ov002_02110944.ptr, 0x40000000, 0x1000, 0);
+  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim1, data_ov002_02110944.filePtr, 0x40000000, 0x1000, 0);
+  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim2, data_ov002_02110944.filePtr, 0x40000000, 0x1000, 0);
   {
     Vector3 v;
     v.x = data_ov002_0210aa0c[0];

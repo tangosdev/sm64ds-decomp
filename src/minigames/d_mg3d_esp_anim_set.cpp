@@ -63,21 +63,18 @@ struct ModelComponents;
  * declared, never defined: the manifest aliases their undefined members
  * onto the ROM veneers. */
 struct EspAnimSetModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     EspAnimSetModelFilePtr(u32 fileID);
     ~EspAnimSetModelFilePtr();
 };
 
 struct EspAnimSetAnimationFileHandle : SharedFilePtr {
-    u32 words[2];
 
     EspAnimSetAnimationFileHandle(u32 fileID);
     ~EspAnimSetAnimationFileHandle();
 };
 
 struct EspAnimSetTexSequenceFilePtr : SharedFilePtr {
-    u32 words[2];
 
     EspAnimSetTexSequenceFilePtr(u32 fileID);
     ~EspAnimSetTexSequenceFilePtr();
@@ -144,9 +141,6 @@ extern int data_ov006_0213c7f4;
 extern int pmf_dMg3DEspModel_c_Idle_2[];
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Idle;
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Hit;
-extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Intro;
-extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Wait;
-extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Idle_3;
 extern void *data_ov006_0213c844;
 extern s16 data_02082214[];
 extern unsigned char data_0209d45c;
@@ -161,6 +155,21 @@ extern Matrix4x3 data_ov006_0213c85c;
    dScMg3DEsp_c::InitResources, and copying it without the stack temporary
    removes 32. */
 extern volatile Matrix4x3 data_ov006_0213c88c;
+
+/* A State initializer is copied from __sinit and grows .init. Retail stores
+   the function and a zero adjustment, contiguous from 0x0213c764. */
+struct dMg3DEspModelStateWords {
+    void (*function)();
+    int adjustment;
+};
+
+extern "C" void _ZN15dMg3DEspModel_c5IntroEv();
+extern "C" void _ZN15dMg3DEspModel_c4WaitEv();
+extern "C" void _ZN15dMg3DEspModel_c4IdleEv();
+
+dMg3DEspModelStateWords pmf_dMg3DEspModel_c_Intro = { _ZN15dMg3DEspModel_c5IntroEv, 0 };
+dMg3DEspModelStateWords pmf_dMg3DEspModel_c_Wait = { _ZN15dMg3DEspModel_c4WaitEv, 0 };
+dMg3DEspModelStateWords pmf_dMg3DEspModel_c_Idle_3 = { _ZN15dMg3DEspModel_c4IdleEv, 0 };
 
 /* ---- dScMg3DEsp_c: the destructor (key function) ---------------------- */
 
@@ -404,7 +413,7 @@ void dMg3DEspModel_c::Hit()
 // @symbol _ZN15dMg3DEspModel_c8StartHitEv
 void dMg3DEspModel_c::StartHit()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(BCA_File**)((char*)&data_ov006_02141e8c + 4), 0x40000000, 0x800, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File *)data_ov006_02141e8c.filePtr, 0x40000000, 0x800, 0);
     if (mMuted == 0)
         Sound::PlayBank2_2D(0x191);
     mState = pmf_dMg3DEspModel_c_Hit;
@@ -431,13 +440,13 @@ void dMg3DEspModel_c::Intro()
 // @symbol _ZN15dMg3DEspModel_c10StartIntroEv
 void dMg3DEspModel_c::StartIntro()
 {
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(BCA_File**)((char*)&data_ov006_02141e5c + 4), 0x40000000, 0x800, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File *)data_ov006_02141e5c.filePtr, 0x40000000, 0x800, 0);
     mAnimSet.SetPeriod(0xf);
     mAnimSet.SetSpeed(0x1000);
     mAnimSet.SetRepeats(3);
     if (mMuted == 0)
         Sound::PlayBank2_2D(0x18e);
-    mState = pmf_dMg3DEspModel_c_Intro;
+    mState = *(dMg3DEspModel_c::State *)&pmf_dMg3DEspModel_c_Intro;
 }
 
 // @symbol _ZN15dMg3DEspModel_c4WaitEv
@@ -460,7 +469,7 @@ void dMg3DEspModel_c::StartWait()
 {
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim,
         ((BCA_File**)&data_ov006_02141e7c)[1], 0, 0x800, 0);
-    mState = pmf_dMg3DEspModel_c_Wait;
+    mState = *(dMg3DEspModel_c::State *)&pmf_dMg3DEspModel_c_Wait;
 }
 
 // @symbol _ZN15dMg3DEspModel_c4IdleEv
@@ -473,7 +482,7 @@ void dMg3DEspModel_c::Reset()
 {
     mAnimSet.Reset();
     mShowSparks = 0;
-    mState = pmf_dMg3DEspModel_c_Idle_3;
+    mState = *(dMg3DEspModel_c::State *)&pmf_dMg3DEspModel_c_Idle_3;
 }
 
 // @symbol _ZN15dMg3DEspModel_c13InitResourcesEv

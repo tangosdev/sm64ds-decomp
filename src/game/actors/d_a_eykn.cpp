@@ -42,8 +42,7 @@
  * - data_ov071_02123038 / 02123040 are BTP files 0x2f8 / 0x2fb,
  *   02123048 is BCA 0x2f9, 02123050 is BMD 0x2f7. 021226a4 points at
  *   the two BTPs and 021226a0 at the BCA. data_ov002_0210da38 is the
- *   shared blue-coin model. SharedFilePtr has no fields, so the loaded
- *   word is read as LoadedFile.
+ *   shared blue-coin model. The loaded file is filePtr.
  * - data_0209f2f8 is the current sublevel. 0x2e maps through
  *   SUBLEVEL_LEVEL_TABLE to course 19, which is not BBH's entrance
  *   (that is sublevel 0xc). On 0x2e the kill is entered in the death
@@ -81,10 +80,8 @@ struct MatrixWords {
     s32 m[12];
 };
 
-/* A loaded SharedFilePtr: the second word is the file it loaded. */
+/* A loaded file handle. filePtr is the file it loaded. */
 struct LoadedFile : SharedFilePtr {
-    u32 fileID;
-    void *file;
 };
 
 /* Inferred local resource-family ABI views; these type names are not ROM
@@ -109,6 +106,14 @@ EyknModelFile data_ov071_02123050(0x02f7);           // EYEKUN_BMD
 EyknTextureSequenceFile data_ov071_02123038(0x02f8); // EYEKUN_CLOSE_BTP
 EyknTextureSequenceFile data_ov071_02123040(0x02fb); // EYEKUN_OPEN_BTP
 EyknAnimationFileHandle data_ov071_02123048(0x02f9); // EYEKUN_DEAD_BCA
+
+extern "C" {
+SharedFilePtr *const data_ov071_021226a0 = &data_ov071_02123048;
+SharedFilePtr *const data_ov071_021226a4[2] = {
+    &data_ov071_02123038,
+    &data_ov071_02123040,
+};
+}
 
 /* Existing ROM PMF descriptors remain ROM-owned. Their native copies build
  * the three wait/attack/die rows in BSS, in the original initialization order. */
@@ -164,8 +169,6 @@ extern s16 data_02082214[];
 extern s8 data_0209f2f8; /* current sublevel id */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern SharedFilePtr data_ov002_0210da38; /* blue-coin model */
-extern SharedFilePtr *data_ov071_021226a4[2]; /* the two BTPs */
-extern SharedFilePtr *data_ov071_021226a0; /* the BCA */
 }
 
 /* Debug-table actor ids, and the thresholds this file compares against. */
@@ -256,7 +259,7 @@ int daEykn_c::UpdateEyeAnim()
         return 0;
     case 1:
     case 4:
-        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, data_ov071_02123038.file, 0, 0x1000, 0);
+        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, data_ov071_02123038.filePtr, 0, 0x1000, 0);
         mTextureSequence.SetFlags(0x40000000);
         mTextureSequence.speed = 0x1000;
         mTextureSequence.currFrame = 0;
@@ -265,7 +268,7 @@ int daEykn_c::UpdateEyeAnim()
     case 2:
     case 5:
         if (mTextureSequence.Finished() != 0) {
-            _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, data_ov071_02123040.file, 0, 0x1000, 0);
+            _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, data_ov071_02123040.filePtr, 0, 0x1000, 0);
             mTextureSequence.SetFlags(0x40000000);
             mTextureSequence.speed = 0x1000;
             mTextureSequence.currFrame = 0;
@@ -291,7 +294,7 @@ int daEykn_c::UpdateEyeAnim()
 // @symbol _ZN8daEykn_c12ResetEyeAnimEv
 void daEykn_c::ResetEyeAnim()
 {
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, data_ov071_02123038.file, 0, 0x1000, 0);
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, data_ov071_02123038.filePtr, 0, 0x1000, 0);
     mTextureSequence.SetFlags(0x40000000);
     mTextureSequence.speed = 0x1000;
     mTextureSequence.currFrame = 0;
@@ -523,7 +526,7 @@ int daEykn_c::St_Die_Init()
         mDeathSpinSpeed = 0x2500;
     else
         mDeathSpinSpeed = -0x2500;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov071_02123048.file, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov071_02123048.filePtr, 0, 0x1000, 0);
     mModelAnim.SetFlags(0x40000000);
     mModelAnim.speed = 0x2800;
     mModelAnim.currFrame = 0;
@@ -798,8 +801,8 @@ s32 daEykn_c::InitResources()
     for (i = 0; i < 2; i++) {
         SharedFilePtr *seq = data_ov071_021226a4[i];
         TextureSequence::LoadFile(*seq);
-        BMD_File *bmd2 = (BMD_File *)((LoadedFile *)&data_ov071_02123050)->file;
-        BTP_File *btp = (BTP_File *)((LoadedFile *)seq)->file;
+        BMD_File *bmd2 = (BMD_File *)((LoadedFile *)&data_ov071_02123050)->filePtr;
+        BTP_File *btp = (BTP_File *)((LoadedFile *)seq)->filePtr;
         TextureSequence::Prepare(*bmd2, *btp);
     }
 
@@ -843,10 +846,10 @@ s32 daEykn_c::InitResources()
     mTerminalVelocity = 0;
     SetState(0);
 
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov071_02123048.file, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov071_02123048.filePtr, 0, 0x1000, 0);
 
     mModelAnim.speed = 0x1000;
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, data_ov071_02123038.file, 0, 0x1000, 0);
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, data_ov071_02123038.filePtr, 0, 0x1000, 0);
 
     mTextureSequence.speed = 0x1000;
     mTarget = 0;

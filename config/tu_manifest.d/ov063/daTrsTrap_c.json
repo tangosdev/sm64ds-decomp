@@ -365,6 +365,11 @@
       "end": "0x0211d270"
     },
     {
+      "name": ".rodata",
+      "start": "0x0211e27c",
+      "end": "0x0211e29c"
+    },
+    {
       "name": ".init",
       "start": "0x0211e3cc",
       "end": "0x0211e590"
@@ -481,6 +486,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x0211e27c",
+          "end": "0x0211e29c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x0211e3cc",
           "end": "0x0211e590",
@@ -510,7 +522,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 39
+          "LICENSED": 41
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -519,36 +531,47 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              78
+              53,
+              55
             ],
             "desired": [
-              78
+              53,
+              55
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              82
+            ],
+            "desired": [
+              82
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              76
+              80
             ],
             "desired": [
-              76
+              80
             ]
           },
           {
             "section": ".data",
             "original": [
-              53,
-              55,
               57,
-              59
+              59,
+              61,
+              63
             ],
             "desired": [
+              63,
+              57,
               59,
-              53,
-              55,
-              57
+              61
             ]
           },
           {
@@ -570,7 +593,7 @@
               50,
               51,
               52,
-              61
+              65
             ],
             "desired": [
               42,
@@ -589,7 +612,7 @@
               45,
               39,
               41,
-              61
+              65
             ]
           }
         ],
@@ -598,22 +621,22 @@
             {
               "section": ".data",
               "original": [
-                53,
-                55,
                 57,
-                59
+                59,
+                61,
+                63
               ],
               "desired": [
+                63,
+                57,
                 59,
-                53,
-                55,
-                57
+                61
               ],
               "slots": [
-                53,
-                55,
                 57,
-                59
+                59,
+                61,
+                63
               ]
             },
             {
@@ -635,7 +658,7 @@
                 50,
                 51,
                 52,
-                61
+                65
               ],
               "desired": [
                 42,
@@ -654,7 +677,7 @@
                 45,
                 39,
                 41,
-                61
+                65
               ],
               "slots": [
                 37,
@@ -673,7 +696,7 @@
                 50,
                 51,
                 52,
-                61
+                65
               ]
             }
           ],
@@ -736,6 +759,86 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x0211e27c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThKaidanModelFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211eeb0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211e280",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThTrapModelFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211eea8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211e284",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThHondanaModelFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211eeb8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211e288",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThMeryGoModelFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ee98"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211e28c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThKaidanCollisionFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211eea0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211e290",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThTrapCollisionFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211eed0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211e294",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThHondanaCollisionFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211eec0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211e298",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThMeryGoCollisionFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211eec8"
+    },
     {
       "section": ".init",
       "source": "0x211e3dc",
@@ -1360,6 +1463,22 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020731dc",
       "evidence": "compiler-generated static initialization call shape and the eight direct retail references in this initializer"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov063_0211e27c",
+      "address": "0x0211e27c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four model SharedFilePtr pointers, one per trap variant"
+    },
+    {
+      "symbol": "data_ov063_0211e28c",
+      "address": "0x0211e28c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four collision SharedFilePtr pointers, one per trap variant"
     }
   ]
 }

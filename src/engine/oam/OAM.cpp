@@ -83,7 +83,9 @@ extern int data_0209e670;    /* sub-buffer fill counter */
 extern OamAttr data_0209e674[];  /* main OAM staging buffer: 128 x 8B */
 extern int data_0209e67c[];
 extern int data_0209e694[];
-extern OamAttr data_0209ea74[];  /* sub OAM staging buffer: 128 x 8B */
+#pragma cplusplus off
+struct OamAttr data_0209ea74[0x80];  /* sub OAM staging buffer: 128 x 8B */
+#pragma cplusplus on
 extern s16 data_02082214[];      /* sin/cos table, indexed by (angle >> 4) * 2 */
 extern unsigned char data_020755a0[];  /* OBJ width table, stride 4 */
 extern unsigned char data_020755ac[];  /* OBJ height table, stride 4 */

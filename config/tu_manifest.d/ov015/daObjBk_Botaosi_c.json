@@ -28,6 +28,11 @@
       "end": "0x02113418"
     },
     {
+      "name": ".data",
+      "start": "0x02113574",
+      "end": "0x02113594"
+    },
+    {
       "name": ".bss",
       "start": "0x02114974",
       "end": "0x0211499c"
@@ -126,7 +131,15 @@
       "ordinal": 12
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov015_02113574",
+      "address": "0x02113574",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block passed to dBgW_KcMbg::SetFile: magic, stride 8, one entry, then the bytes through the next symbol"
+    }
+  ],
   "production_mode": "intact-object",
   "bss": [
     {
@@ -494,6 +507,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02113574",
+          "end": "0x02113594",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02114974",
           "end": "0x0211499c",
@@ -502,7 +522,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 19
+          "LICENSED": 20
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -513,34 +533,43 @@
           {
             "section": ".init",
             "original": [
-              59
+              60
             ],
             "desired": [
-              59
+              60
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              57
+              58
             ],
             "desired": [
-              57
+              58
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              36
+            ],
+            "desired": [
+              36
             ]
           },
           {
             "section": ".bss",
             "original": [
-              36,
               37,
               38,
-              39
+              39,
+              40
             ],
             "desired": [
-              39,
-              37,
+              40,
               38,
-              36
+              39,
+              37
             ]
           }
         ],
@@ -549,22 +578,22 @@
             {
               "section": ".bss",
               "original": [
-                36,
                 37,
                 38,
-                39
+                39,
+                40
               ],
               "desired": [
-                39,
-                37,
+                40,
                 38,
-                36
+                39,
+                37
               ],
               "slots": [
-                36,
                 37,
                 38,
-                39
+                39,
+                40
               ]
             }
           ],

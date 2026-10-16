@@ -29,6 +29,11 @@
       "end": "0x02127b98"
     },
     {
+      "name": ".data",
+      "start": "0x02128058",
+      "end": "0x0212805c"
+    },
+    {
       "name": ".bss",
       "start": "0x02128340",
       "end": "0x02128390"
@@ -106,7 +111,15 @@
       "ordinal": 9
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov079_02128058",
+      "address": "0x02128058",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "first word of the two-row resource table, the breakable wall model handle gBkKabe00ModelFile; the next symbols.txt rows stay gap symbols"
+    }
+  ],
   "bss": [
     {
       "symbol": "gBkKabe01ModelFile",
@@ -291,6 +304,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02128058",
+          "end": "0x0212805c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02128340",
           "end": "0x02128390",
@@ -299,7 +319,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 20
+          "LICENSED": 21
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -310,6 +330,15 @@
           {
             "section": ".init",
             "original": [
+              57
+            ],
+            "desired": [
+              57
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
               55
             ],
             "desired": [
@@ -317,12 +346,12 @@
             ]
           },
           {
-            "section": ".ctor",
+            "section": ".data",
             "original": [
-              53
+              36
             ],
             "desired": [
-              53
+              36
             ]
           },
           {
@@ -637,6 +666,16 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02128058",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkKabe00ModelFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02128350"
+    },
     {
       "section": ".ctor",
       "source": "0x02127b94",

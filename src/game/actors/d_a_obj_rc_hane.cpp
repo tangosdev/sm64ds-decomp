@@ -84,7 +84,6 @@ enum d_a_obj_rc_hane_AssetId {
  * func_02017acc / func_02017ab4 pair; the manifest aliases the generated
  * names onto those ROM symbols. */
 struct RcHaneModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
 
     RcHaneModelFilePtr(unsigned int fileID);
     ~RcHaneModelFilePtr();

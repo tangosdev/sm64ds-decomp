@@ -36,3 +36,17 @@ void func_0203083c(void)
     }
     func_02030838();
 }
+
+/* Four sprite templates. mwcc emits these .data sections in reverse source
+ * order, so they are written back-to-front to land at 0x02092780. */
+struct OamAttr data_02092798 = { 0x00f8, 0x41f8, 0x5098, 0xffff };
+struct OamAttr data_02092790 = { 0x00f8, 0x41f8, 0x5096, 0xffff };
+struct OamAttr data_02092788 = { 0x00f8, 0x41f8, 0x5094, 0xffff };
+struct OamAttr data_02092780 = { 0x00f8, 0x41f8, 0x509c, 0xffff };
+
+struct OamAttr *data_020927a0[4] = {
+    &data_02092788,
+    &data_02092790,
+    &data_02092798,
+    &data_02092780,
+};

@@ -92,21 +92,18 @@ extern void Matrix4x3_ApplyInPlaceToRotationY(
  * destructors. Wrapper spellings are reconstructed; ctor/dtor addresses,
  * file IDs, widths, and BSS order are ROM evidence. */
 struct HatenaModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     HatenaModelFilePtr(u32 fileID);
     ~HatenaModelFilePtr();
 };
 
 struct HatenaAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
 
     HatenaAnimationFilePtr(u32 fileID);
     ~HatenaAnimationFilePtr();
 };
 
 struct HatenaCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     HatenaCollisionFilePtr(u32 fileID);
     ~HatenaCollisionFilePtr();

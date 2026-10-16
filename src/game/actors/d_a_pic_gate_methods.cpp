@@ -151,7 +151,6 @@ int ApproachLinear(int &ref, int target, int step);
    ctor/dtor stand for the cartridge's func_020178cc/func_020178b4 pair;
    words[] is the two words the ROM object carries. */
 struct PicGateFilePtr : SharedFilePtr {
-    u32 words[2];
 
     PicGateFilePtr(u32 fileID);
     ~PicGateFilePtr();

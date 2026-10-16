@@ -29,6 +29,11 @@
       "end": "0x0211202c"
     },
     {
+      "name": ".data",
+      "start": "0x021121d8",
+      "end": "0x02112218"
+    },
+    {
       "name": ".bss",
       "start": "0x02112c60",
       "end": "0x02112cb0"
@@ -99,7 +104,29 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov035_021121d8",
+      "address": "0x021121d8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "first word of the CLPS span passed to SetFile; tag CLPS"
+    },
+    {
+      "symbol": "data_ov035_021121dc",
+      "address": "0x021121dc",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "rest of the first CLPS block: stride 8, one entry, 0xffffffff padding"
+    },
+    {
+      "symbol": "data_ov035_021121f8",
+      "address": "0x021121f8",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "second CLPS block in the same span; no relocation"
+    }
+  ],
   "init": [
     {
       "symbol": "__sinit_d_a_obj_ct_mecha10.cpp",
@@ -449,10 +476,10 @@
     "Destructor form: ~daObjCtMecha10_c is inline and empty in include/daObjCtMecha10_c.h. Written out of line mwccarm emits the synthesized D0 ahead of the written D1 -- the reverse of the cartridge -- and the object audit refuses a TU whose licensed .text is not ROM-ascending; it also emits a homeless D2 that then needs its own deadstrip row. Inlining moves the key function to InitResources, lets vtable slots 16 and 17 odr-use D1 then D0 in ROM order, and deletes the D2. Same form as include/daObjBk_Lift_c.h, the same dBgActor_c shape. Measured both ways on this TU: out of line the audit refused with emitted order [D0, D1, ...]; inline it reports all six ROM-ascending.",
     "Codegen levers, both measured by removing them and re-verifying: InitResources widens each actorID test into one reused int local before branching on it, and CleanupResources widens its own; folding either test straight into its `if` re-orders the body and DIFFs (InitResources 9 relocation destinations wrong, CleanupResources 1). A third temp the draft carried -- `int st = mRotationState` before the table read -- was measured NOT load-bearing and was dropped.",
     "Deliberately left mangled: dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange each take Fix12<int> by value, and a real method call homes the argument and size-DIFFs the caller (the wall 6az that include/dBgW_KcMbg.h and src/game/actors/d_a_obj_bk_lift.cpp both record). _Z14ApproachLinearRsss, DecIfAbove0_Short, RandomIntInternal, func_020393d4 and func_020396c0 have no header home and keep their linker names.",
-    "This entry licenses .text, .init, .ctor, and the resource .bss. ov035's .data is not claimed here, so the class vtable and the whole __si_class_type_info chain the compiler drags in with it are compiler-only output, each row naming the cartridge copy it duplicates.",
     "FOLD. The handwritten src/__sinit_ov035_02111f04.c is retired. Four file-scope resource handles in d_a_obj_ct_mecha10.cpp make mwcc emit __sinit_d_a_obj_ct_mecha10.cpp (0xbc) and .p__sinit_d_a_obj_ct_mecha10.cpp. Class RTTI and the vtable stay externalized.",
     "FOLD 2026-09-28. daObjCtMecha10_c_classInit_CT_MECHA12S/_CT_MECHA12L/_CT_MECHA10 at 0x0211165c/0x0211168c/0x021116bc were folded in from src/d_a_obj_ct_mecha10_ct_mecha12s.c, _ct_mecha12l.c and _ct_mecha10.c. They are the CT_MECHA12S/CT_MECHA12L/CT_MECHA10 registry profiles' factories and sit immediately after InitResources in the ROM's .text order with daObjCtMecha11_c (a different class) starting immediately after them, so they were always part of this TU. Each loose factory called _ZN10dBgActor_cC2Ev(p) then stored p[0] = (int)_ZTV16daObjCtMecha10_c by hand; daObjCtMecha10_c declares no constructor of its own, so the compiler-synthesized default constructor emits exactly that base-call-then-vtable-store sequence, and each factory is written as the real `return new daObjCtMecha10_c();`.",
-    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
+    "This entry licenses .text, .init, .ctor, the CLPS span at 0x021121d8, and the resource .bss. The class vtable and the __si_class_type_info chain stay compiler-only output, each row naming the cartridge copy it duplicates."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -566,6 +593,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x021121d8",
+          "end": "0x02112218",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02112c60",
           "end": "0x02112cb0",
@@ -574,7 +608,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 19
+          "LICENSED": 22
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -585,42 +619,55 @@
           {
             "section": ".init",
             "original": [
-              51
+              54
             ],
             "desired": [
-              51
+              54
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              49
+              52
             ],
             "desired": [
-              49
+              52
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              29,
+              30
+            ],
+            "desired": [
+              5,
+              29,
+              30
             ]
           },
           {
             "section": ".bss",
             "original": [
+              6,
               7,
               8,
-              9,
-              10,
-              16,
+              11,
+              19,
+              22,
               23,
-              24,
-              25
+              26
             ],
             "desired": [
               7,
-              9,
-              10,
               8,
-              25,
-              16,
+              6,
+              11,
+              19,
+              26,
               23,
-              24
+              22
             ]
           }
         ],
@@ -629,34 +676,34 @@
             {
               "section": ".bss",
               "original": [
+                6,
                 7,
                 8,
-                9,
-                10,
-                16,
+                11,
+                19,
+                22,
                 23,
-                24,
-                25
+                26
               ],
               "desired": [
                 7,
-                9,
-                10,
                 8,
-                25,
-                16,
+                6,
+                11,
+                19,
+                26,
                 23,
-                24
+                22
               ],
               "slots": [
+                6,
                 7,
                 8,
-                9,
-                10,
-                16,
+                11,
+                19,
+                22,
                 23,
-                24,
-                25
+                26
               ]
             }
           ],

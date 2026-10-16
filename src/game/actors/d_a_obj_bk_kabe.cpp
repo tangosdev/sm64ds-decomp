@@ -71,25 +71,22 @@ struct KabeFiles {
  * handles (model files 0x593/0x595, collision files 0x594/0x596). mwcc
  * emits __sinit_d_a_obj_bk_kabe.cpp from those definitions. The wrapper
  * names are local; the handle constructors and destructors are the ROM
- * resource-family functions, aliased in the manifest. Nothing in this TU
- * names the handles directly; the KabeFiles rows above point at them. */
+ * resource-family functions, aliased in the manifest. The table's first
+ * word names the breakable model handle; the rest of each row stays in
+ * the gap. */
 struct BkKabeModelFile : SharedFilePtr {
-    u32 words[2];
 
     BkKabeModelFile(u32 fileID);
     ~BkKabeModelFile();
 };
 
 struct BkKabeCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BkKabeCollisionFilePtr(u32 fileID);
     ~BkKabeCollisionFilePtr();
 };
 
 extern "C" {
-extern KabeFiles data_ov079_02128058[];
-
 /* Writes the mesh active range at dBgW+0x0c. The definition is C and
  * takes int *, so this spelling matches it and the call casts. */
 void func_020393a4(int *mesh, int range);
@@ -145,6 +142,7 @@ int daObjBk_Kabe_c::OnHitByCannonBlastedChar(dActor_c &other)
 // @symbol _ZN14daObjBk_Kabe_c16CleanupResourcesEv
 int daObjBk_Kabe_c::CleanupResources()
 {
+    extern KabeFiles data_ov079_02128058[];
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     data_ov079_02128058[mVariant].model->Release();
@@ -188,6 +186,7 @@ int daObjBk_Kabe_c::Behavior()
 // @symbol _ZN14daObjBk_Kabe_c13InitResourcesEv
 int daObjBk_Kabe_c::InitResources()
 {
+    extern KabeFiles data_ov079_02128058[];
     int isBreakable = actorID == kBreakableActor;
     if (isBreakable) {
         mVariant = 0;
@@ -228,3 +227,9 @@ BkKabeModelFile gBkKabe00ModelFile(ASSET_BK_KABE00_BMD);
 BkKabeCollisionFilePtr gBkKabe00CollisionFile(ASSET_BK_KABE00_KCL);
 BkKabeModelFile gBkKabe01ModelFile(ASSET_BK_KABE01_BMD);
 BkKabeCollisionFilePtr gBkKabe01CollisionFile(ASSET_BK_KABE01_KCL);
+
+/* First word of the two-row resource table: the breakable wall's model
+ * handle. symbols.txt names the next words at +4 and +8, so this object
+ * is that pointer and those rows stay in the gap. The readers redeclare
+ * it locally as KabeFiles[] so the field addends still emit. */
+extern "C" SharedFilePtr *data_ov079_02128058 = &gBkKabe00ModelFile;

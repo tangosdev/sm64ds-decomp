@@ -1,7 +1,7 @@
 extern int _ZN4cstd3absEi(int x);
 
 struct B3 { unsigned char b[3]; };
-extern const struct B3 data_02099f84;
+unsigned char data_02099f84[4] = {1, 2, 4, 0};
 
 unsigned short func_020456a0(int a0, int a1, int shift, int a3, short *tbl)
 {
@@ -25,7 +25,7 @@ unsigned short func_020456a0(int a0, int a1, int shift, int a3, short *tbl)
     lo = tbl[i];
     hi = tbl[i + 1];
 
-    buf = data_02099f84;
+    buf = *(struct B3 *)data_02099f84;
 
     sfrac = (short)frac;
     srange = (short)(buf.b[shift] - sfrac);

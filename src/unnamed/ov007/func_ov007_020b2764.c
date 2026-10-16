@@ -1,8 +1,16 @@
 extern short func_ov007_020c3be0(void* a, unsigned short h1, unsigned short h2);
 
 struct S2 { unsigned short a, b; };
-extern struct S2 data_ov007_020ccc50[];
-extern struct S2 data_ov007_020ccc5c[];
+const struct S2 data_ov007_020ccc50[] = {
+    {0x5fbf, 0x6bff},
+    {0x537d, 0x579e},
+    {0x0000, 0x0000},
+};
+const struct S2 data_ov007_020ccc5c[] = {
+    {0x7d8a, 0x7fd5},
+    {0x69a4, 0x6b2b},
+    {0x0000, 0x0000},
+};
 extern char* data_ov007_0210342c;
 
 #pragma opt_strength_reduction off

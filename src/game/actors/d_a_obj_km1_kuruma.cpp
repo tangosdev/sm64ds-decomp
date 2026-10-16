@@ -15,9 +15,18 @@
  * Leftover: func_ov002_020b6958 / func_ov002_020b68b0 are still the
  *   linker names of daObjKuruma_c Init/Cleanup (the base leaves
  *   those slots pure virtual). Naming belongs in ov002.
- * Leftover: data_ov043_02112418 is overlay data this TU does not
- *   own; the BMD/KCL SharedFilePtrs and CLPS_Block are still
- *   data_ov043_*.
+ * Leftover: data_ov043_02112418 points at the two handles below and at
+ *   data_ov043_02111b80. symbols.txt names the middle word
+ *   data_ov043_0211241c.
+ * Leftover: data_ov043_02111b80, the CLPS block this row points at
+ *   (0x02111b80..0x02111ba0; the symbols.txt row names only the 8-byte
+ *   header), stays the ROM copy. A TU's .data emits as one contribution
+ *   and the manifest claims one contiguous range per input section, so
+ *   this file's .data slot is the descriptor at 0x02112418; a second
+ *   disjoint .data claim cannot be expressed, and input-section
+ *   retargeting is unimplemented for enrolled intact objects. The block
+ *   sits in a pooled run of sibling CLPS blocks at the head of .data
+ *   that other km1 files' descriptors also point at.
  * Leftover: g_profile_KM1_KURUMA is overlay data; its definition here
  *   is a deadstripped duplicate.
  */
@@ -49,14 +58,12 @@ typedef char ResourceDescriptor_size_must_be_0x0c[
  * names the handles directly; the ResourceDescriptor row above points at
  * them. */
 struct Km1KurumaModelFile : SharedFilePtr {
-    u32 words[2];
 
     Km1KurumaModelFile(u32 fileID);
     ~Km1KurumaModelFile();
 };
 
 struct Km1KurumaCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Km1KurumaCollisionFilePtr(u32 fileID);
     ~Km1KurumaCollisionFilePtr();
@@ -65,7 +72,7 @@ struct Km1KurumaCollisionFilePtr : SharedFilePtr {
 extern "C" {
 int func_ov002_020b6958(daObjKuruma_c *self, ResourceDescriptor *descriptor);
 int func_ov002_020b68b0(daObjKuruma_c *self, ResourceDescriptor *descriptor);
-extern ResourceDescriptor data_ov043_02112418;
+extern SharedFilePtr *data_ov043_02112418;
 }
 
 struct KurumaSpawnInfo {
@@ -102,16 +109,27 @@ extern "C" KurumaSpawnInfo g_profile_KM1_KURUMA = {
 // @symbol _ZN17daObjKm1_Kuruma_c13InitResourcesEv
 s32 daObjKm1_Kuruma_c::InitResources()
 {
-    return func_ov002_020b6958(this, &data_ov043_02112418);
+    return func_ov002_020b6958(this, (ResourceDescriptor *)&data_ov043_02112418);
 }
 
 // @symbol _ZN17daObjKm1_Kuruma_c16CleanupResourcesEv
 s32 daObjKm1_Kuruma_c::CleanupResources()
 {
-    return func_ov002_020b68b0(this, &data_ov043_02112418);
+    return func_ov002_020b68b0(this, (ResourceDescriptor *)&data_ov043_02112418);
 }
 
 /* Static-init globals (was the handwritten __sinit_ov043_021118d4 shard).
  * Definition order is the retail initializer's construction order. */
 Km1KurumaModelFile gKm1KurumaModelFile(ASSET_KM1_KURUMA_BMD);
 Km1KurumaCollisionFilePtr gKm1KurumaCollisionFile(ASSET_KM1_KURUMA_KCL);
+
+/* symbols.txt names the middle word. The row is still those three pointers. */
+extern CLPS_Block data_ov043_02111b80;
+extern "C" SharedFilePtr *data_ov043_02112418 = &gKm1KurumaModelFile;
+extern "C" struct {
+    SharedFilePtr *collision;
+    CLPS_Block *clps;
+} data_ov043_0211241c = {
+    &gKm1KurumaCollisionFile,
+    &data_ov043_02111b80,
+};

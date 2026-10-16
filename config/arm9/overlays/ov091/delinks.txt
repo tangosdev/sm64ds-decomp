@@ -9,13 +9,16 @@ src/game/actors/d_a_obj_rotate_updown_lift.cpp:
     .text start:0x02130f00 end:0x02131c14
     .init start:0x02134524 end:0x021345dc
     .ctor start:0x02134b68 end:0x02134b6c
+    .data start:0x02134ba0 end:0x02134c30
     .bss start:0x02135440 end:0x02135490
 
 src/game/actors/d_a_linelift2.cpp:
     complete
     .text start:0x02131c14 end:0x02132404
+    .rodata start:0x021344f4 end:0x02134504
     .init start:0x021345dc end:0x021346e8
     .ctor start:0x02134b6c end:0x02134b70
+    .data start:0x02134e5c end:0x02134e64
     .bss start:0x02135490 end:0x021354f8
 
 src/game/actors/d_a_obj_simple_lift.cpp:

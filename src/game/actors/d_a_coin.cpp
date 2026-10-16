@@ -794,13 +794,13 @@ s32 daCoin_c::CleanupResources()
      * star-tracking slot, decrements the live-coin count on the FL_COIN puzzle
      * manager that spawned it and, unless it is disappearing on a timer, puts up
      * the collection sparkle a little above itself. */
-    extern char data_ov002_0210d9a8;
+    extern SharedFilePtr data_ov002_0210d9a8;
     extern char *data_ov002_020ff06c[];
     extern char *data_ov002_020ff060[];
 
     dActor_c *manager;
     int isRed = (int)(actorID == 0x121);
-    if (isRed != 0) ((SharedFilePtr *)&data_ov002_0210d9a8)->Release();
+    if (isRed != 0) data_ov002_0210d9a8.Release();
     if (mCoinType == COIN_BLUE) {
         ((SharedFilePtr *)data_ov002_020ff06c[mCoinType])->Release();
         ((SharedFilePtr *)data_ov002_020ff060[mCoinType])->Release();
@@ -927,7 +927,7 @@ s32 daCoin_c::InitResources()
     extern u8 data_0209f2d8;
     extern FileEntry* data_ov002_020ff06c[];
     extern FileEntry* data_ov002_020ff060[];
-    extern void* data_ov002_0210d9a8;
+    extern SharedFilePtr data_ov002_0210d9a8;
 
     s32 ccRadius;
     s32 ccHeight;
@@ -1001,7 +1001,7 @@ common:;
         isRed = (isRed == 0x121);
         if (isRed) {
             mSpawnFilter = (u8)((param1 >> 4) & 7);
-            Model::LoadFile(*(SharedFilePtr *)&data_ov002_0210d9a8);
+            Model::LoadFile(data_ov002_0210d9a8);
             mCoinType = COIN_RED;
             if (SublevelToLevel(data_0209f2f8) == 0x13 ||
                 mSpawnFilter == data_0209f220) {

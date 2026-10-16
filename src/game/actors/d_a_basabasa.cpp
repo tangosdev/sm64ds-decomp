@@ -44,7 +44,6 @@ struct PoofPos {
  * and SharedFilePtr_Destruct_Anim. The wrappers are declared, never defined:
  * the manifest aliases their undefined members onto the ROM veneers. */
 struct BasabasaModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BasabasaModelFilePtr(u32 fileID);
     ~BasabasaModelFilePtr();
@@ -52,9 +51,6 @@ struct BasabasaModelFilePtr : SharedFilePtr {
 
 struct BasabasaAnimationFileHandle : SharedFilePtr {
     /* SharedFilePtr::Load and func_02017e0c use this local eight-byte layout. */
-    u16 fileID;
-    u8 numRefs;
-    void *filePtr;
 
     BasabasaAnimationFileHandle(u32 fileID);
     ~BasabasaAnimationFileHandle();

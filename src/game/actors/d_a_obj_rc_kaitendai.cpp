@@ -47,24 +47,31 @@ typedef char ResourceDescriptor_size_must_be_0x0c[
  * names the handles directly; the ResourceDescriptor row above points at
  * them. */
 struct RcKaitendaiModelFile : SharedFilePtr {
-    u32 words[2];
 
     RcKaitendaiModelFile(u32 fileID);
     ~RcKaitendaiModelFile();
 };
 
 struct RcKaitendaiCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     RcKaitendaiCollisionFilePtr(u32 fileID);
     ~RcKaitendaiCollisionFilePtr();
 };
 
 extern "C" {
+extern RcKaitendaiModelFile gRcKaitenModelFile;
+extern RcKaitendaiCollisionFilePtr gRcKaitenCollisionFile;
+extern CLPS_Block data_ov036_02112bc8;
+
+ResourceDescriptor data_ov036_02113b2c = {
+    &gRcKaitenModelFile,
+    &gRcKaitenCollisionFile,
+    &data_ov036_02112bc8
+};
+
 int func_ov002_020b676c(daObjKaitendai_c *self, ResourceDescriptor *descriptor,
                         s16 angle);
 int func_ov002_020b66a8(daObjKaitendai_c *self, ResourceDescriptor *descriptor);
-extern ResourceDescriptor data_ov036_02113b2c;
 extern s16 data_ov036_02113b18;
 extern s16 data_ov036_02113b1c;
 }

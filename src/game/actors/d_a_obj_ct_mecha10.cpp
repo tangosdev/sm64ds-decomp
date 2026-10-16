@@ -76,14 +76,12 @@ enum {
 /* Resource handles constructed by this TU's static initializer. The
  * constructor and destructor bodies stay out of line; mwcc registers them. */
 struct Mecha10ModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Mecha10ModelFilePtr(u32 fileID);
     ~Mecha10ModelFilePtr();
 };
 
 struct Mecha10ClsnFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Mecha10ClsnFilePtr(u32 fileID);
     ~Mecha10ClsnFilePtr();
@@ -94,7 +92,9 @@ extern Mecha10ModelFilePtr gCtMechaObj12sModelFile;   /* model of the fall-throu
 extern Mecha10ClsnFilePtr gCtMechaObj10CollisionFile;    /* collision KCL of the id 0x77 cog */
 extern Mecha10ModelFilePtr gCtMechaObj12lModelFile;   /* model of id 0x79 (CT_MECHA12L) */
 extern Mecha10ModelFilePtr gCtMechaObj10ModelFile;   /* model of id 0x77 (CT_MECHA10) */
-extern CLPS_Block    data_ov035_021121d8;
+extern u32 data_ov035_021121d8;
+extern u32 data_ov035_021121dc[];
+extern u32 data_ov035_021121f8[];
 extern s16 data_ov035_02111ef0[];           /* |angle step| by rotation state */
 extern s16 data_ov035_02111ef4[][4];        /* dwell by state, by clock setting */
 extern u8  data_0209f2c0;                  /* arm9 clock setting */
@@ -151,7 +151,7 @@ int daObjCtMecha10_c::InitResources()
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             &mMeshCollider,
             (KCL_File *)dBgW_Kc::LoadFile(gCtMechaObj10CollisionFile),
-            &mClsnMat, 0x1000, mAngleY, &data_ov035_021121d8);
+            &mClsnMat, 0x1000, mAngleY, (CLPS_Block *)&data_ov035_021121d8);
         func_020396c0(&mMeshCollider, 0);
         func_020393d4(&mMeshCollider,
             (void *)&dBgW::UpdatePosAndAngs);
@@ -249,3 +249,29 @@ Mecha10ModelFilePtr gCtMechaObj10ModelFile(ASSET_CT_MECHA_OBJ10_BMD);
 Mecha10ClsnFilePtr gCtMechaObj10CollisionFile(ASSET_CT_MECHA_OBJ10_KCL);
 Mecha10ModelFilePtr gCtMechaObj12sModelFile(ASSET_CT_MECHA_OBJ12S_BMD);
 Mecha10ModelFilePtr gCtMechaObj12lModelFile(ASSET_CT_MECHA_OBJ12L_BMD);
+
+/* 64 ROM bytes, two CLPS blocks. symbols.txt also names the word at +4
+ * and the second block at +0x20. No relocation falls inside the span.
+ * The three objects are contiguous and fill 0x021121d8..0x02112218. */
+extern "C" u32 data_ov035_021121d8 = 0x53504C43;
+
+extern "C" u32 data_ov035_021121dc[] = {
+    0x00010008,
+    0x00000FC0,
+    0x000000FF,
+    0xFFFFFFFF,
+    0xFFFFFFFF,
+    0xFFFFFFFF,
+    0xFFFFFFFF,
+};
+
+extern "C" u32 data_ov035_021121f8[] = {
+    0x53504C43,
+    0x00010008,
+    0x00001FC0,
+    0x000000FF,
+    0xFFFFFFFF,
+    0xFFFFFFFF,
+    0xFFFFFFFF,
+    0xFFFFFFFF,
+};

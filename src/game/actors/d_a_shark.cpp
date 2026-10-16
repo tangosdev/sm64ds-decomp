@@ -85,10 +85,6 @@ extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
 
 bool ApproachLinear(short &value, short target, short step);
 
-struct SharkLoadedFile {
-    u32 id;
-    void *file;
-};
 
 typedef int (daShark_c::*SharkFn)();
 
@@ -101,14 +97,12 @@ struct SharkState {
  * handles (model file 0x325, animation file 0x326) and fill the two-entry
  * state table. mwcc emits __sinit_d_a_shark.cpp from those definitions. */
 struct SharkModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     SharkModelFilePtr(u32 fileID);
     ~SharkModelFilePtr();
 };
 
 struct SharkAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
 
     SharkAnimationFilePtr(u32 fileID);
     ~SharkAnimationFilePtr();
@@ -204,7 +198,7 @@ extern "C" int func_ov090_0213387c(daShark_c *self)
 {
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
         (char *)&self->mModelAnim,
-        ((SharkLoadedFile *)&data_ov090_021345ac)->file,
+        data_ov090_021345ac.filePtr,
         0, 0x1000, 0);
     return 1;
 }
@@ -237,8 +231,8 @@ extern "C" void func_ov090_02133904(daShark_c *self)
 // @symbol _ZN9daShark_c16CleanupResourcesEv
 int daShark_c::CleanupResources()
 {
-    ((SharedFilePtr *)&data_ov090_021345a4)->Release();
-    ((SharedFilePtr *)&data_ov090_021345ac)->Release();
+    data_ov090_021345a4.Release();
+    data_ov090_021345ac.Release();
     return 1;
 }
 
@@ -320,9 +314,9 @@ int daShark_c::InitResources()
     /* Each PathPtr constructs at its declaration. The first call is
      * before the cylinder init and the second is after it. */
     mModelAnim.SetFile(
-        (BMD_File *)Model::LoadFile(*(SharedFilePtr *)&data_ov090_021345a4),
+        (BMD_File *)Model::LoadFile(data_ov090_021345a4),
         1, -1);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov090_021345ac);
+    dExtFrameCtrl_c::LoadFile(data_ov090_021345ac);
     mPathID = (*(s32 *)&param1) & 0xff;
     if (mPathID < 0)
         mPathID = 0;

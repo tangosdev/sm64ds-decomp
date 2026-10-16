@@ -16,7 +16,7 @@ src/game/actors/d_a_snowman.cpp:
     .text start:0x02124090 end:0x02125f14
     .init start:0x02128154 end:0x021284b4
     .ctor start:0x02128828 end:0x0212882c
-    .data start:0x021288f8 end:0x02128998
+    .data start:0x021288f8 end:0x021289a4
     .bss start:0x02128d88 end:0x02128eb4
 
 src/game/actors/d_a_snowball.cpp:

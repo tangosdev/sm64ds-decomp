@@ -10,7 +10,7 @@
  * inline destructor emits retail D1 then D0 with this class's RTTI and vtable.
  *
  * leftovers:
- * - gKb1BallModelFile model handle; SharedFilePtr.h has no fields
+ * - gKb1BallModelFile model handle; SharedFilePtr is the 8-byte handle
  * - Matrix4x3_FromRotationY stays a free function (no header method)
  * - pad_0d0 unused (not live)
  * - common.h not needed (no 12-word Matrix4x3 copy)
@@ -49,7 +49,6 @@ void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 angY);
  * evidence. The manifest maps these undefined members to the recovered engine
  * symbols without claiming that the wrapper name was original. */
 struct Kb1BillboardModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Kb1BillboardModelFilePtr(u32 fileID);
     ~Kb1BillboardModelFilePtr();

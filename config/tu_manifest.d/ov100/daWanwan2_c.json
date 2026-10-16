@@ -29,6 +29,11 @@
       "end": "0x02147df4"
     },
     {
+      "name": ".data",
+      "start": "0x02147ff8",
+      "end": "0x02148014"
+    },
+    {
       "name": ".bss",
       "start": "0x021486a4",
       "end": "0x02148704"
@@ -155,7 +160,29 @@
       "ordinal": 16
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov100_02147ff8",
+      "address": "0x02147ff8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "execute member: func_ov100_02143aa4 and a zero this-adjustment"
+    },
+    {
+      "symbol": "data_ov100_02148000",
+      "address": "0x02148000",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "enter member: func_ov100_02143ae0 and a zero this-adjustment"
+    },
+    {
+      "symbol": "data_ov100_02148008",
+      "address": "0x02148008",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "chain-contact offset, 0, -160 units, 0"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov100_021486a4",
@@ -218,7 +245,7 @@
       "address": "0x021486f4",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "walking state record plain-copied from the two ROM PMF constants in retail order"
+      "evidence": "walking state record plain-copied from the two PMF constants in retail order"
     }
   ],
   "notes": [
@@ -466,6 +493,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02147ff8",
+          "end": "0x02148014",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x021486a4",
           "end": "0x02148704",
@@ -474,7 +508,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 28
+          "LICENSED": 31
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -485,44 +519,57 @@
           {
             "section": ".init",
             "original": [
-              67
+              74
             ],
             "desired": [
-              67
+              74
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              65
+              72
             ],
             "desired": [
-              65
+              72
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              49,
+              51,
+              53
+            ],
+            "desired": [
+              49,
+              51,
+              53
             ]
           },
           {
             "section": ".bss",
             "original": [
-              39,
-              40,
               41,
               42,
               43,
               44,
               45,
               46,
-              47
+              47,
+              48,
+              54
             ],
             "desired": [
-              42,
               44,
               46,
-              40,
-              39,
+              48,
+              42,
               41,
               43,
               45,
-              47
+              47,
+              54
             ]
           }
         ],
@@ -531,37 +578,37 @@
             {
               "section": ".bss",
               "original": [
-                39,
-                40,
                 41,
                 42,
                 43,
                 44,
                 45,
                 46,
-                47
+                47,
+                48,
+                54
               ],
               "desired": [
-                42,
                 44,
                 46,
-                40,
-                39,
+                48,
+                42,
                 41,
                 43,
                 45,
-                47
+                47,
+                54
               ],
               "slots": [
-                39,
-                40,
                 41,
                 42,
                 43,
                 44,
                 45,
                 46,
-                47
+                47,
+                48,
+                54
               ]
             }
           ],
@@ -612,7 +659,7 @@
       "address": "0x021475a4",
       "size": "0xf4",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov100_021475a4 (0xf4, same instruction sequence and literal pool) and carries the same relocation sites: four handle constructions with destructor registrations plus the state record plain-copied from the two ROM PMF constants"
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov100_021475a4 (0xf4, same instruction sequence and literal pool) and carries the same relocation sites: four handle constructions with destructor registrations plus the state record plain-copied from the two PMF constants"
     }
   ],
   "ctor": [
@@ -941,6 +988,26 @@
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02147ff8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02147ff8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_ov100_02143aa4",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02143aa4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148000",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_ov100_02143ae0",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02143ae0"
     }
   ]
 }

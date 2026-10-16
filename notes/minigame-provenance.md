@@ -26,7 +26,7 @@ resolvable vtable slots were blocked on it.
 **Size.** `dScMiniGm_c_classInit` (historical alias `func_ov005_020c21ec`) is the factory; it opens with
 `_ZN7fBase_cnwEj(0xb0)` -- `fBase_c::operator new(0xb0)`. 0xb0 therefore comes
 straight off the allocator call. The factory writes only the vtable chain
-(*fBase_c -> dScene_c inlined -> [data_ov005_020c2490](../config/arm9/overlays/ov005/symbols.txt)*) and two spawn-flag bits at fBase_c's own 0x13; it constructs no nested sub-object, matching the
+(*fBase_c -> dScene_c inlined -> [_ZTV11dScMiniGm_c](../config/arm9/overlays/ov005/symbols.txt)*) and two spawn-flag bits at fBase_c's own 0x13; it constructs no nested sub-object, matching the
 plain-scalar field layout.
 
 **Members.** The old flat header put every field it found at or above 0x54,

@@ -13,7 +13,16 @@ struct Entry {
     s8 b;
     u8 c;
 };
-extern struct Entry data_02075638[];
+const struct Entry data_02075638[8] = {
+    {0x23, 0x02, 0x0a},
+    {0x25, 0x04, 0x09},
+    {0x27, 0x05, 0x09},
+    {0x27, 0x05, 0x09},
+    {0x2c, 0x32, 0x03},
+    {0x2e, 0x0c, 0x04},
+    {0x30, 0x05, 0x0b},
+    {0x0c, 0x03, 0x00},
+};
 
 int SublevelToLevel(int i);
 void SetNextStar(void);
@@ -21,7 +30,7 @@ void SetNextStar(void);
 void SetNextLevel(int arg) {
     int v = data_0209f2f8;
     unsigned int i;
-    struct Entry *p;
+    const struct Entry *p;
 
     if (v == 0x22) {
         if (arg != 1) {

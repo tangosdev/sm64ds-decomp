@@ -15,9 +15,10 @@ src/game/actors/d_a_propeller_heyho.cpp:
 src/game/actors/d_a_brq.cpp:
     complete
     .text start:0x02120570 end:0x02121118
-    .data start:0x0212323c end:0x021232f4
+    .rodata start:0x02122244 end:0x021222e8
     .init start:0x02122d80 end:0x02122f30
     .ctor start:0x021230a8 end:0x021230ac
+    .data start:0x021231e4 end:0x021232f4
     .bss start:0x021235ec end:0x02123698
 
 

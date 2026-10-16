@@ -27,6 +27,11 @@
       "end": "0x02112fd0"
     },
     {
+      "name": ".data",
+      "start": "0x02113a1c",
+      "end": "0x02113a20"
+    },
+    {
       "name": ".bss",
       "start": "0x02113c6c",
       "end": "0x02113d04"
@@ -164,7 +169,15 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail; the other three .ctor words belong to the slIceBlock TU and the two remaining shards"
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov027_02113a1c",
+      "address": "0x02113a1c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "first word of the stride-0xc patrol table, a 20.12 distance; the next symbols.txt rows stay gap symbols"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov027_02113c6c",
@@ -843,6 +856,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02113a1c",
+          "end": "0x02113a20",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02113c6c",
           "end": "0x02113d04",
@@ -851,7 +871,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 31
+          "LICENSED": 32
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -862,52 +882,61 @@
           {
             "section": ".init",
             "original": [
-              69
+              70
             ],
             "desired": [
-              69
+              70
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              67
+              68
             ],
             "desired": [
-              67
+              68
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
               6,
               9,
               10,
               11,
               12,
-              18,
+              13,
               19,
-              24,
+              20,
               25,
-              28,
+              26,
               29,
-              32
+              30,
+              33
             ],
             "desired": [
               11,
               12,
-              5,
-              6,
+              13,
               9,
               10,
-              29,
-              18,
-              24,
-              25,
-              28,
+              6,
+              30,
               19,
-              32
+              25,
+              26,
+              29,
+              20,
+              33
             ]
           }
         ],
@@ -916,49 +945,49 @@
             {
               "section": ".bss",
               "original": [
-                5,
                 6,
                 9,
                 10,
                 11,
                 12,
-                18,
+                13,
                 19,
-                24,
+                20,
                 25,
-                28,
+                26,
                 29,
-                32
+                30,
+                33
               ],
               "desired": [
                 11,
                 12,
-                5,
-                6,
+                13,
                 9,
                 10,
-                29,
-                18,
-                24,
-                25,
-                28,
+                6,
+                30,
                 19,
-                32
+                25,
+                26,
+                29,
+                20,
+                33
               ],
               "slots": [
-                5,
                 6,
                 9,
                 10,
                 11,
                 12,
-                18,
+                13,
                 19,
-                24,
+                20,
                 25,
-                28,
+                26,
                 29,
-                32
+                30,
+                33
               ]
             }
           ],

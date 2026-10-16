@@ -18,6 +18,11 @@
       "end": "0x02111424"
     },
     {
+      "name": ".rodata",
+      "start": "0x02111424",
+      "end": "0x02111434"
+    },
+    {
       "name": ".init",
       "start": "0x02111434",
       "end": "0x021114ec"
@@ -110,6 +115,15 @@
       "size": "0x000000b8",
       "legacy_source": "src/game/actors/d_a_obj_hs_billboard.cpp",
       "ordinal": 10
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov031_02111424",
+      "address": "0x02111424",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four SharedFilePtr pointers, ROM order: gHsMoonModelFile, gHsStarModelFile, gHsYStarModelFile, gHsBStarModelFile"
     }
   ],
   "data": [],
@@ -264,6 +278,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x02111424",
+          "end": "0x02111434",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x02111434",
           "end": "0x021114ec",
@@ -286,7 +307,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 20
+          "LICENSED": 21
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -295,21 +316,30 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              48
+              24
             ],
             "desired": [
-              48
+              24
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              50
+            ],
+            "desired": [
+              50
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              46
+              48
             ],
             "desired": [
-              46
+              48
             ]
           },
           {
@@ -317,22 +347,22 @@
             "original": [
               5,
               6,
-              9,
+              7,
               10,
               16,
-              19,
+              21,
               22,
               23
             ],
             "desired": [
-              9,
-              5,
               10,
               6,
-              19,
+              7,
+              5,
               16,
-              23,
-              22
+              21,
+              22,
+              23
             ]
           }
         ],
@@ -343,30 +373,30 @@
               "original": [
                 5,
                 6,
-                9,
+                7,
                 10,
                 16,
-                19,
+                21,
                 22,
                 23
               ],
               "desired": [
-                9,
-                5,
                 10,
                 6,
-                19,
+                7,
+                5,
                 16,
-                23,
-                22
+                21,
+                22,
+                23
               ],
               "slots": [
                 5,
                 6,
-                9,
+                7,
                 10,
                 16,
-                19,
+                21,
                 22,
                 23
               ]
@@ -736,6 +766,46 @@
       "addend": 0,
       "target_module": "ov031",
       "target_address": "0x02111434"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02111424",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHsMoonModelFile",
+      "addend": 0,
+      "target_module": "ov031",
+      "target_address": "0x02111a08"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02111428",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHsStarModelFile",
+      "addend": 0,
+      "target_module": "ov031",
+      "target_address": "0x02111a00"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211142c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHsYStarModelFile",
+      "addend": 0,
+      "target_module": "ov031",
+      "target_address": "0x02111a10"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02111430",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHsBStarModelFile",
+      "addend": 0,
+      "target_module": "ov031",
+      "target_address": "0x02111a18"
     }
   ],
   "defined_symbol_renames": [

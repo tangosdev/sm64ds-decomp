@@ -3,10 +3,10 @@
  * - SetAnim, DropShadowRadHeight, IsTooFarAwayFromPlayer,
  *   dCcAc_c::Init and dBgCh_Actr::Init stay
  *   mangled. Each takes Fix12<int> by value.
- * - The state table data_ov072_02122d6c, the carry offsets
- *   data_ov072_02122d3c and the file handles are built by
- *   __sinit_ov072_02122414. SharedFilePtr.h declares no fields, so
- *   the handles are read as words.
+ * - The model handle data_ov072_02122cb4 stays a ROM word.
+ *   The loaded model is filePtr. The carry offsets and the state
+ *   table are zero here; __sinit_ov072_02122414 writes them. The
+ *   state object stops at data_ov072_02122dc4.
  * - func_ov072_021210c4 reads the carrier at Player +0xc8. dActor_c.h
  *   still calls that word padding.
  * - The state steps stay func_ov072_*. The cartridge has no names
@@ -55,17 +55,28 @@ extern short data_02082214[];   /* sine/cosine table */
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
 
-/* Overlay file handles: the BMD, and the five BCA handles through the
-   pointer table at 0x02122004 (word 1 of each handle is the loaded file). */
+/* Overlay file handles. Word 1 of each is the loaded file. The pointer
+   table at 0x02122004 names five of them; the model handle is separate.
+   Carry offsets data_ov072_02122d3c..02122d60 and the state table are
+   defined below. The state object is 0x58 bytes. */
 extern SharedFilePtr data_ov072_02122cb4;
-extern SharedFilePtr *data_ov072_02122004[];
 extern int data_ov072_02122c94[];
 extern int data_ov072_02122c9c[];
 extern int data_ov072_02122ca4[];
 extern int data_ov072_02122cac[];
 extern int data_ov072_02122cbc[];
-extern Vector3 data_ov072_02122d3c[];   /* the four carry offsets */
-extern daPgBby_c::State data_ov072_02122d6c[];/* the six states */
+extern int data_ov072_02122cf4[3];
+extern int data_ov072_02122d00[3];
+extern int data_ov072_02122d0c[3];
+extern int data_ov072_02122d18[3];
+extern int data_ov072_02122d24[3];
+extern int data_ov072_02122d30[3];
+extern int data_ov072_02122d3c[3];
+extern int data_ov072_02122d48[3];
+extern int data_ov072_02122d54[3];
+extern int data_ov072_02122d60[3];
+extern int data_ov072_02122d6c[22];
+extern SharedFilePtr *const data_ov072_02122004[5];
 }
 
 // @symbol daPgBby_c_classInit
@@ -155,7 +166,7 @@ s32 daPgBby_c::CleanupResources()
 /* Switch to state `state` and run its enter step. */
 void daPgBby_c::func_ov072_02121d50(int state)
 {
-    mState = &data_ov072_02122d6c[state];
+    mState = &((State *)data_ov072_02122d6c)[state];
     func_ov072_02121d18();
 }
 
@@ -568,7 +579,7 @@ void daPgBby_c::func_ov072_021210c4()
         if (mCarrier->param1 == 2) {
             idx = (idx + 2) & 0xff;
         }
-        carry = UpdateCarry(*mCarrier, data_ov072_02122d3c[idx]);
+        carry = UpdateCarry(*mCarrier, ((Vector3 *)data_ov072_02122d3c)[idx]);
         *(PgBbyMtx *)&mModelAnim.mat4x3 = *(PgBbyMtx *)carry;
     } else {
         Matrix4x3_FromRotationY(&mModelAnim.mat4x3, mAngleY);
@@ -734,3 +745,29 @@ s32 daPgBby_c::OnYoshiTryEat()
    emits D1 then D0 -- the cartridge's order -- and no D2. */
 // @symbol _ZN9daPgBby_cD1Ev
 // @symbol _ZN9daPgBby_cD0Ev
+
+extern "C" SharedFilePtr *const data_ov072_02122004[5] = {
+    (SharedFilePtr *)data_ov072_02122c9c,
+    (SharedFilePtr *)data_ov072_02122cbc,
+    (SharedFilePtr *)data_ov072_02122c94,
+    (SharedFilePtr *)data_ov072_02122cac,
+    (SharedFilePtr *)data_ov072_02122ca4,
+};
+
+/* Zero BSS. The sinit writes these nodes, the four carry offsets
+   and the state table. mwccarm emits the twelve-byte objects in one
+   fixed permutation of the list below; this order links at
+   0x02122cf4 and up. data_ov072_02122dc4 stays the next row. */
+extern "C" {
+int data_ov072_02122d0c[3];
+int data_ov072_02122d60[3];
+int data_ov072_02122d3c[3];
+int data_ov072_02122d48[3];
+int data_ov072_02122d54[3];
+int data_ov072_02122d30[3];
+int data_ov072_02122d24[3];
+int data_ov072_02122d18[3];
+int data_ov072_02122cf4[3];
+int data_ov072_02122d00[3];
+int data_ov072_02122d6c[22];
+}

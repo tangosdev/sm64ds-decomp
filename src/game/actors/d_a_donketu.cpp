@@ -51,12 +51,10 @@ extern int data_0209e650;
  * animation handles), spelled through declared-only subclasses so the
  * static initializer names the real entry points. */
 struct DonketuModelFilePtr : SharedFilePtr {
-    u32 words[2];
     DonketuModelFilePtr(u32 fileID);
     ~DonketuModelFilePtr();
 };
 struct DonketuAnimationFileHandle : SharedFilePtr {
-    u32 words[2];
     DonketuAnimationFileHandle(u32 fileID);
     ~DonketuAnimationFileHandle();
 };

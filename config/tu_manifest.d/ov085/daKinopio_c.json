@@ -4,6 +4,7 @@
   "source": "src/game/actors/d_a_kinopio.cpp",
   "promoted_source": "src/game/actors/d_a_kinopio.cpp",
   "status": "promoted",
+  "production_mode": "intact-object",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x2129020..0x2129cd0, 14 function(s), from build/tu_map.json (tools/tu_map.py); extended to 0x2129d18 to take in daKinopio_c_classInit at 0x2129cd0, which tu_map cannot label because its symbol is neither func_ov085_* nor _ZN11daKinopio_c*. It is contiguous with the run, it is this class's own factory (it allocates this class's 0x210 and installs this class's vtable), and 0x2129d18 is the next class's destructor. The sibling TUs ov085/daMip_c and ov085/daC_Jugem_c took in their own classInit on the same grounds. 0x2129020 is also the overlay's own .text start, so nothing precedes this TU in ov085.",
@@ -15,6 +16,16 @@
       "name": ".text",
       "start": "0x02129020",
       "end": "0x02129d18"
+    },
+    {
+      "name": ".data",
+      "start": "0x0212fe20",
+      "end": "0x0212feb8"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02130480",
+      "end": "0x02130498"
     }
   ],
   "functions": [
@@ -124,8 +135,213 @@
       "ordinal": 14
     }
   ],
-  "data": [],
-  "bss": [],
+  "data": [
+    {
+      "symbol": "data_ov085_0212fe20",
+      "section": ".data",
+      "address": "0x0212fe20",
+      "size": "0x8",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_ov085_0212fe28",
+      "section": ".data",
+      "address": "0x0212fe28",
+      "size": "0x8",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_ov085_0212fe30",
+      "section": ".data",
+      "address": "0x0212fe30",
+      "size": "0x8",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_ov085_0212fe38",
+      "section": ".data",
+      "address": "0x0212fe38",
+      "size": "0x8",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_ov085_0212fe40",
+      "section": ".data",
+      "address": "0x0212fe40",
+      "size": "0x8",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_ov085_0212fe48",
+      "section": ".data",
+      "address": "0x0212fe48",
+      "size": "0x8",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "_ZTI11daKinopio_c",
+      "section": ".data",
+      "address": "0x0212fe50",
+      "size": "0xc",
+      "binding": "STB_LOPROC"
+    },
+    {
+      "symbol": "_ZTS11daKinopio_c",
+      "section": ".data",
+      "address": "0x0212fe5c",
+      "size": "0xe",
+      "binding": "STB_LOPROC"
+    },
+    {
+      "symbol": "g_profile_KINOPIO",
+      "section": ".data",
+      "address": "0x0212fe6c",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_ov085_0212fe88",
+      "address": "0x0212fe88",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "two daKinopio_c::State rows. The PMF slots are zero in the image; __sinit_ov085_0212f2a8 copies them. The last eight bytes are the vtable offset-to-top and the typeinfo word at _ZTI11daKinopio_c."
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "data_ov085_02130480",
+      "address": "0x02130480",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "body model handle; __sinit_ov085_0212f2a8 constructs it with file 0x35c. Image bytes are zero."
+    },
+    {
+      "symbol": "data_ov085_02130488",
+      "address": "0x02130488",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "idle animation handle; the sinit constructs it with file 0x35d. Image bytes are zero."
+    },
+    {
+      "symbol": "data_ov085_02130490",
+      "address": "0x02130490",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "talk animation handle; the sinit constructs it with file 0x35e. Image bytes are zero."
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x0212fe30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11daKinopio_c12St_Talk_InitEv",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x0212943c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fe38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11daKinopio_c12St_Talk_MainEv",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021291ac"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fe40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11daKinopio_c12St_Idle_InitEv",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021294f0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fe48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11daKinopio_c12St_Idle_MainEv",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x02129470"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fe50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fe54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS11daKinopio_c",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x0212fe5c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fe58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8dActor_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208e390"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fe6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daKinopio_c_classInit",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x02129cd0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212fe98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov085_0212fe28",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x0212fe28"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212feac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov085_0212fe20",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x0212fe20"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212feb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI11daKinopio_c",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x0212fe50"
+    }
+  ],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold _ZN11daKinopio_c12St_Talk_MainEv and the one that held _ZN11daKinopio_c12St_Idle_MainEv; kept the first, the other is commented out for review -- RECONCILED: the two spellings differed only in the return type, `char *` in St_Talk_Main against `void *` in St_Idle_Main; the single u32 parameter agreed, and each legacy file cast the result locally anyway. The TU declares `void *` once and casts at the two sites that want a char pointer, so no call site changed shape. Both functions reproduce their cartridge bytes.",
@@ -161,25 +377,20 @@
         9,
         10,
         15,
-        38,
-        39,
-        40,
-        41,
-        42,
-        43,
-        44,
-        45,
-        46,
-        47,
-        48,
-        49,
-        50,
-        51
+        55,
+        56,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68
       ],
       "data": [
         "_ZTV11daKinopio_c",
-        "_ZTI11daKinopio_c",
-        "_ZTS11daKinopio_c",
         "_ZTI8dActor_c",
         "_ZTS8dActor_c",
         "_ZTI7dBase_c",
@@ -188,11 +399,9 @@
         "_ZTS7fBase_c"
       ],
       "dataExternalized": [
-        "_ZTI11daKinopio_c",
         "_ZTI7dBase_c",
         "_ZTI7fBase_c",
         "_ZTI8dActor_c",
-        "_ZTS11daKinopio_c",
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
@@ -208,7 +417,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov085-daKinopio_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -232,19 +441,119 @@
           "end": "0x02129d18",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0212fe20",
+          "end": "0x0212feb8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02130480",
+          "end": "0x02130498",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 15
+          "LICENSED": 28
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              38,
+              39,
+              40,
+              42,
+              44,
+              46,
+              48,
+              50,
+              57,
+              58
+            ],
+            "desired": [
+              38,
+              39,
+              40,
+              42,
+              44,
+              46,
+              58,
+              57,
+              48,
+              50
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              52,
+              53,
+              54
+            ],
+            "desired": [
+              52,
+              53,
+              54
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                38,
+                39,
+                40,
+                42,
+                44,
+                46,
+                48,
+                50,
+                57,
+                58
+              ],
+              "desired": [
+                38,
+                39,
+                40,
+                42,
+                44,
+                46,
+                58,
+                57,
+                48,
+                50
+              ],
+              "slots": [
+                38,
+                39,
+                40,
+                42,
+                44,
+                46,
+                48,
+                50,
+                57,
+                58
+              ]
+            }
+          ],
+          "symbolIndices": 10,
+          "sectionLinks": 0,
+          "sectionInfos": 7,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -298,21 +607,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov085",
       "canonical_address": "0x0212feb8",
-      "reason": "This TU emits daKinopio_c's class vtable: it is the TU that materializes the class's only virtual destructor and its factory constructs the class, so mwcc emits the complete 0x84-byte storage with its ABI preamble. The cartridge's storage begins at ov085:0x0212feb0, where offset-to-top is 0 and the next word at 0x0212feb4 points at _ZTI11daKinopio_c (0x0212fe50); the public address point recorded in symbols.txt is 0x0212feb8, eight bytes above the start of storage and outside this text-only entry's licensed range, so dsd supplies that ROM data independently. romdata_check applies the measured eight-byte address-point bias and proves every emitted slot and relocation against the cartridge before production isolation discards the copy."
-    },
-    {
-      "symbol": "_ZTI11daKinopio_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov085",
-      "canonical_address": "0x0212fe50",
-      "reason": "this class RTTI record; the canonical cartridge copy remains ROM-gap owned. The twelve bytes at ov085:0x0212fe50 are a __si_class_type_info: its type-info vtable pointer, then _ZTS11daKinopio_c at 0x0212fe5c, then _ZTI8dActor_c at 0x0208e390 as the single base -- which is the cartridge's own statement of this class's parent."
-    },
-    {
-      "symbol": "_ZTS11daKinopio_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov085",
-      "canonical_address": "0x0212fe5c",
-      "reason": "this class RTTI name; the canonical cartridge copy remains ROM-gap owned. These fourteen bytes are why the class is spelled daKinopio_c and why no part of the name is coined: they are the length-prefixed mangled string \"11daKinopio_c\"."
+      "reason": "This TU emits daKinopio_c's class vtable: it is the TU that materializes the class's only virtual destructor and its factory constructs the class, so mwcc emits the complete 0x84-byte storage with its ABI preamble. The cartridge's public address point is ov085:0x0212feb8, the end of the licensed .data span. The eight bytes in front of that point (offset-to-top and the typeinfo word) already live in data_ov085_0212fe88. The vtable body stays ROM data, so this copy is discarded."
     },
     {
       "symbol": "_ZTI8dActor_c",

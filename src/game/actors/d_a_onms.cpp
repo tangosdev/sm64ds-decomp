@@ -89,14 +89,12 @@ typedef struct { int x, y, z; } Vec3;
  * their compiler-generated undefined member imports onto the existing
  * evidence-bounded ROM symbols. */
 struct OnmsModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     OnmsModelFilePtr(u32 fileID);
     ~OnmsModelFilePtr();
 };
 
 struct OnmsCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     OnmsCollisionFilePtr(u32 fileID);
     ~OnmsCollisionFilePtr();

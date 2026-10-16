@@ -4,6 +4,7 @@
   "source": "src/ui/hud/d_meter.cpp",
   "promoted_source": "src/ui/hud/d_meter.cpp",
   "status": "promoted",
+  "production_mode": "intact-object",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20fb8f8..0x20fe154, 19 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -16,6 +17,11 @@
       "name": ".text",
       "start": "0x020fb8f8",
       "end": "0x020fe190"
+    },
+    {
+      "name": ".data",
+      "start": "0x0210d290",
+      "end": "0x0210d378"
     }
   ],
   "functions": [
@@ -160,7 +166,56 @@
       "ordinal": 19
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov002_0210d290",
+      "address": "0x0210d290",
+      "size": "0x10",
+      "evidence": "VS timer sprite list RenderVsTimer passes to OAM::Render; two OamAttr words; the second attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov002_0210d2a0",
+      "address": "0x0210d2a0",
+      "size": "0x20",
+      "evidence": "VS timer sprite list RenderVsTimer passes to OAM::Render; four OamAttr words; the last attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov002_0210d2c0",
+      "address": "0x0210d2c0",
+      "size": "0x10",
+      "evidence": "VS timer sprite list RenderVsTimer passes to OAM::Render; two OamAttr words; the second attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov002_0210d2d0",
+      "address": "0x0210d2d0",
+      "size": "0x30",
+      "evidence": "VS timer sprite list RenderVsTimer passes to OAM::Render; six OamAttr words; the last attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov002_0210d300",
+      "address": "0x0210d300",
+      "size": "0x8",
+      "evidence": "VS timer sprite list RenderVsTimer passes to OAM::Render; one OamAttr word; attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov002_0210d308",
+      "address": "0x0210d308",
+      "size": "0x30",
+      "evidence": "VS timer sprite list RenderVsTimer passes to OAM::Render; six OamAttr words; the last attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov002_0210d338",
+      "address": "0x0210d338",
+      "size": "0x10",
+      "evidence": "VS timer sprite list RenderVsTimer passes to OAM::Render; two OamAttr words; the second attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov002_0210d348",
+      "address": "0x0210d348",
+      "size": "0x30",
+      "evidence": "VS timer sprite list RenderVsTimer passes to OAM::Render; six OamAttr words; the last attr3 is 0xffff"
+    }
+  ],
   "bss": [],
   "compiler_only_output": [
     {
@@ -249,7 +304,9 @@
     "CLASS IDENTITY IS THE CARTRIDGE'S OWN, and the earlier note claiming otherwise was wrong. _ZTS8dMeter_c at ov002:0x0210c218 holds the literal bytes '8dMeter_c' and a NUL -- ten bytes, exactly what the mangled spelling _ZTS8dMeter_c requires (one digit of length prefix, eight characters of name, one NUL), and exactly the size the compiler emits. _ZTI8dMeter_c at 0x0210c224 is a three-word __si_class_type_info: word 0 is _ZTVN3abi20__si_class_type_infoE (arm9 0x0209a764), word 1 points at that type-name string, and word 2 is _ZTI7dBase_c (arm9 0x02086e78), so the ROM names both the class and its base. The vtable header at 0x0210c2c0 points its typeinfo word back at 0x0210c224. Nothing here is coined, and no rename is needed before promotion.",
     "This TU is dMeter_c's key-function TU. The destructor is inline in include/dMeter_c.h, so the key function is InitResources, the first virtual the class leaves out of line, and the object emits _ZTV8dMeter_c (0x50 including the two-word preamble) plus the _ZTI and _ZTS records for dMeter_c, dBase_c and fBase_c into .data. 'sections' stays .text-only and those seven symbols are licensed as deadstrip-data at their measured cartridge homes. Range-licensing the data is not available here: the cartridge puts g_profile_METER at 0x0210c210 immediately below the typeinfo pair at 0x0210c218, and four unnamed sprite tables between that pair and the vtable storage at 0x0210c2c0, so it would take two disjoint intervals around a third owner. Same disposition as the landed ov064 daBDonketu_c.",
     "MEMBER AND FIELD RECONSTRUCTION. include/dMeter_c.h did not declare four of this TU's nineteen members -- RenderLifeCount, RenderCameraButtons, RenderCoinCount and UpdateVsTimer -- and the shards therefore spelled them as hand-mangled extern \"C\" free functions taking the object as an explicit first parameter. This promotion declares all four in the class and defines them as ordinary members; the ABI is unchanged (the object still arrives in r0) and all four still byte-match. The offset casts the shards used to reach this object's fields are now field names: 0x06e and 0x078 are newly named mLifeCountX and mStarCountSlideIn, with the evidence recorded beside each declaration, and naming 0x078 exposed an off-by-one in the header's tail padding that pad_077 now corrects. The English member and field names remain Tier B reconstructions. 0x062, 0x064 and 0x072 are written once by InitResources and never read back inside this TU, so they earn no name and their three stores stay offset writes.",
-    "classInit tail fold (0930c): folded the registry factory dMeter_c_classInit (0x020fe154..0x020fe190) into this promoted TU and widened the complete delinks.txt claim to 0x020fb8f8..0x020fe190. The loose source hand-called fBase_c::operator new(sizeof(dMeter_c)), fBase_c's base constructor, and stored _ZTV7dBase_c then _ZTV8dMeter_c; its comment said CodeWarrior could not express the fold from source with the actor-heap operator new. Re-measured: `return new dMeter_c();` binds fBase_c's inline operator new(size_t), which forwards to _ZN7fBase_cnwEj, and reproduces the factory exactly. This TU emits in reverse source order (no defer_codegen pragma), so the factory is written first, above InitResources. The embedded verification.linkcheck block predates this fold and records the pre-fold range; link proof for the widened range is the lane's full rombuild and prepush_linkcheck run."
+    "classInit tail fold (0930c): folded the registry factory dMeter_c_classInit (0x020fe154..0x020fe190) into this promoted TU and widened the complete delinks.txt claim to 0x020fb8f8..0x020fe190. The loose source hand-called fBase_c::operator new(sizeof(dMeter_c)), fBase_c's base constructor, and stored _ZTV7dBase_c then _ZTV8dMeter_c; its comment said CodeWarrior could not express the fold from source with the actor-heap operator new. Re-measured: `return new dMeter_c();` binds fBase_c's inline operator new(size_t), which forwards to _ZN7fBase_cnwEj, and reproduces the factory exactly. This TU emits in reverse source order (no defer_codegen pragma), so the factory is written first, above InitResources. The embedded verification.linkcheck block predates this fold and records the pre-fold range; link proof for the widened range is the lane's full rombuild and prepush_linkcheck run.",
+    "Eight contiguous VS timer OamAttr lists at 0x0210d290..0x0210d378 are this file's .data. The other HUD tables this file names sit in separate holes, with the class vtable and other symbols between them, so they stay in the overlay gap.",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -309,7 +366,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov002-dMeter_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -322,7 +379,7 @@
       },
       "tuRange": {
         "start": "0x020fb8f8",
-        "end": "0x020fe154",
+        "end": "0x020fe190",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -330,22 +387,93 @@
         {
           "section": ".text",
           "start": "0x020fb8f8",
-          "end": "0x020fe154",
+          "end": "0x020fe190",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0210d290",
+          "end": "0x0210d378",
           "differingBytes": 0,
           "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 19
+          "LICENSED": 28
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              7,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21
+            ],
+            "desired": [
+              17,
+              18,
+              15,
+              19,
+              7,
+              20,
+              16,
+              21
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                7,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21
+              ],
+              "desired": [
+                17,
+                18,
+                15,
+                19,
+                7,
+                20,
+                16,
+                21
+              ],
+              "slots": [
+                7,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21
+              ]
+            }
+          ],
+          "symbolIndices": 8,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,

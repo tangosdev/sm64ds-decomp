@@ -23,6 +23,11 @@
       "name": ".text",
       "start": "0x020d1018",
       "end": "0x020d5a54"
+    },
+    {
+      "name": ".data",
+      "start": "0x0213b81c",
+      "end": "0x0213b918"
     }
   ],
   "functions": [
@@ -223,7 +228,44 @@
       "ordinal": 27
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "_ZTI12dScMgAmida_c",
+      "address": "0x0213b81c",
+      "size": "0xc",
+      "evidence": "compiler-emitted single-inheritance RTTI matches retail: vptr to abi::__si_class_type_info's vtable (+8), name at _ZTS12dScMgAmida_c, base _ZTI11dScMgBase_c"
+    },
+    {
+      "symbol": "_ZTS12dScMgAmida_c",
+      "address": "0x0213b828",
+      "size": "0xf",
+      "evidence": "compiler-emitted ROM-proven class type-name string matches retail, followed by one byte of section alignment padding"
+    },
+    {
+      "symbol": "data_ov006_0213b838",
+      "address": "0x0213b838",
+      "size": "0x14",
+      "evidence": "per-language compressed file IDs {222,223,219,220,221} indexed by GetGameLanguage() for the BG1 backdrop"
+    },
+    {
+      "symbol": "data_ov006_0213b84c",
+      "address": "0x0213b84c",
+      "size": "0x34",
+      "evidence": "13-entry per-lane frame-index cycle {0,1,2,3,2,1,0,1,2,3,2,1,0}; RenderBoard copies it whole and indexes data_ov006_0213a390 with frames[*frame]"
+    },
+    {
+      "symbol": "data_ov006_0213b880",
+      "address": "0x0213b880",
+      "size": "0x38",
+      "evidence": "Buf14 int[14] per-rung animation periods the Behavior copies whole; no relocations in range"
+    },
+    {
+      "symbol": "data_ov006_0213b8b8",
+      "address": "0x0213b8b8",
+      "size": "0x60",
+      "evidence": "Pair[12]: eleven rung screen positions the Behavior copies as 88 bytes plus the vtable header slot {0, &_ZTI12dScMgAmida_c} that follows the array inside this symbol range; relocs.txt load 0x0213b914->0x0213b81c"
+    }
+  ],
   "bss": [],
   "compiler_only_output": [
     {
@@ -293,20 +335,6 @@
       "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
     },
     {
-      "symbol": "_ZTI12dScMgAmida_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov006",
-      "canonical_address": "0x0213b81c",
-      "reason": "this class RTTI record; the canonical cartridge copy remains ROM-gap owned"
-    },
-    {
-      "symbol": "_ZTS12dScMgAmida_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov006",
-      "canonical_address": "0x0213b828",
-      "reason": "this class RTTI name; the canonical cartridge copy remains ROM-gap owned"
-    },
-    {
       "symbol": "_ZTV12dScMgAmida_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov006",
@@ -318,7 +346,9 @@
     "Assembled by hand: first from the thirteen one-function sources above the old hole (tubuild.py create refuses shards that wrap their bodies in an extern \"C\" block), then widened by hand over the fifteen below it. See the file's own header comment.",
     "Declaration reconciliation, all of it codegen-free and all of it settled by the 13/13 byte match rather than by argument. Where two shards spelled one interface differently the more complete observation was kept and the narrower call site took the implicit conversion. func_02054efc returns void* per include/decl_common.h and three shards had re-declared it as char*, so those call sites now cast. _ZN11dScMgBase_cC2Ev returns void per decl_common.h and classInit had declared it int, whose result it discarded. data_ov006_0213b918 is a scalar in decl_common.h and classInit had declared it an int array, so its address is now taken with &. MultiStore16 takes void*, so the char* call site converts implicitly. data_ov006_0212e1a8 is char[], which both shards then do byte arithmetic on. func_ov006_020d36a4 keeps its own definition's dScMgAmida_c* parameter and its two callers pass this and a cast pointer. Amida_SaveBgChars's definition took NO parameter while its one call site passes the scene pointer; under C linkage only one prototype can exist, so it now declares an unnamed, unread void* parameter.",
     "Declaration reconciliation for the widen, all of it checked by the 28/28 byte match. One extern \"C\" declaration per symbol at file scope; where a shard had spelled a parameter differently, the call casts. Amida_RestoreBgChars now declares an unnamed, unread void* parameter, because func_ov006_020d1450 and the pen handler pass the scene. func_ov006_020d2580 takes the two rung ends as by-value dScMgAmida_c::Point, the form the pen handler declared; its old C definition read them through int pointers, which is the same calling convention. LoadCompressedFileAt is declared (int, void *): Virtual7C passes a word from data_ov006_0213b838 without truncating it, and a u16 parameter adds two words there. data_020a0e40 is a scalar and data_020a0dea/deb are u8[][4]: func_ov006_020d1958 needs the row form (flat indexing costs it four words), and func_ov006_020d1a3c and func_ov006_020d1ba0 compile identically either way. func_02012718 uses the (int, int) declaration in include/decl_common.h; func_ov006_020d27dc's (void *) casts on its first argument are gone with no byte change.",
-    "Every slot-36 call in the unit goes through dScMgAmida_c::Unk36(). Four of the folded shards (func_ov006_020d122c, func_ov006_020d1958, func_ov006_020d1a3c, func_ov006_020d27dc) called it through a local 37-slot stand-in struct; the bytes are unchanged."
+    "Every slot-36 call in the unit goes through dScMgAmida_c::Unk36(). Four of the folded shards (func_ov006_020d122c, func_ov006_020d1958, func_ov006_020d1a3c, func_ov006_020d27dc) called it through a local 37-slot stand-in struct; the bytes are unchanged.",
+    "DDR011 deep: the class's own RTTI record and type-name string are now source-owned data rows, so the .data claim widens to 0x0213b81c..0x0213b918 and the entry opts into production_mode intact-object. mwccarm emits the four data tables early and _ZTS/_ZTI late in the object's raw .data section order; prepare_owned_nontext_section_order reorders the retained group [5,6,7,8,67,68] -> [68,67,5,6,7,8] off the emitted-address anchors below, and the raw storage_fit path could not have tiled the claim. The vtable itself stays deadstrip-data/ROM-gap owned; its eight-byte header is the last Pair of data_ov006_0213b8b8 inside the claim.",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build and the strict control -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -394,8 +424,181 @@
       "relocation_destinations_verified": "PASS"
     },
     "linkcheck": {
-      "result": "unavailable-for-this-TU",
-      "why": "tools/tubuild.py linkcheck routes a promoted TU down the intact-object path and refuses at [4/8] because this TU is text-only (data: [], bss: []). The whole-tree production build (python tools/rombuild.py) is the link proof for the widened range; the earlier link-verified record covered only 0x020d3624..0x020d5a54 and is replaced."
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov006-dScMgAmida_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020d1018",
+        "end": "0x020d5a54",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020d1018",
+          "end": "0x020d5a54",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0213b81c",
+          "end": "0x0213b918",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 34
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              5,
+              6,
+              7,
+              8,
+              67,
+              68
+            ],
+            "desired": [
+              68,
+              67,
+              5,
+              6,
+              7,
+              8
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                6,
+                7,
+                8,
+                67,
+                68
+              ],
+              "desired": [
+                68,
+                67,
+                5,
+                6,
+                7,
+                8
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                8,
+                67,
+                68
+              ]
+            }
+          ],
+          "symbolIndices": 6,
+          "sectionLinks": 0,
+          "sectionInfos": 2,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
-  }
+  },
+  "production_mode": "intact-object",
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x0213b81c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b820",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS12dScMgAmida_c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213b828"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b824",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI11dScMgBase_c",
+      "addend": 0,
+      "target_module": "overlays(0,4)",
+      "target_address": "0x020bbf6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b914",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI12dScMgAmida_c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213b81c"
+    }
+  ]
 }

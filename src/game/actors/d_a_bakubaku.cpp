@@ -74,18 +74,12 @@ typedef char BakubakuSpawnInfo_size_must_be_0x1c[
  * paths store a u16 file ID at +0, a byte reference count at +2 and a loaded
  * file pointer at +4. */
 struct BakubakuModelFilePtr : SharedFilePtr {
-    u16 fileID;
-    u8 numRefs;
-    void *filePtr;
 
     BakubakuModelFilePtr(u32 fileID);
     ~BakubakuModelFilePtr();
 };
 
 struct BakubakuAnimationFileHandle : SharedFilePtr {
-    u16 fileID;
-    u8 numRefs;
-    void *filePtr;
 
     BakubakuAnimationFileHandle(u32 fileID);
     ~BakubakuAnimationFileHandle();
@@ -182,11 +176,11 @@ s32 daBakubaku_c::InitResources()
     Vector3 headOffset;
     void *f;
 
-    f = Model::LoadFile(*(SharedFilePtr *)&gBakubakuModelFile);
+    f = Model::LoadFile(gBakubakuModelFile);
     mModelAnim.SetFile((BMD_File *)f, 1, -1);
     mShadowModel.InitCylinder();
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov032_02113a50);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov032_02113a48);
+    dExtFrameCtrl_c::LoadFile(data_ov032_02113a50);
+    dExtFrameCtrl_c::LoadFile(data_ov032_02113a48);
 
     bodyOffset.x = data_ov032_021137cc.x;
     bodyOffset.y = data_ov032_021137cc.y;
@@ -276,9 +270,9 @@ void daBakubaku_c::OnPendingDestroy()
 // @symbol _ZN12daBakubaku_c16CleanupResourcesEv
 s32 daBakubaku_c::CleanupResources()
 {
-    ((SharedFilePtr *)&gBakubakuModelFile)->Release();
-    ((SharedFilePtr *)&data_ov032_02113a50)->Release();
-    ((SharedFilePtr *)&data_ov032_02113a48)->Release();
+    gBakubakuModelFile.Release();
+    data_ov032_02113a50.Release();
+    data_ov032_02113a48.Release();
     return 1;
 }
 

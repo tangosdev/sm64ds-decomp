@@ -19,6 +19,11 @@
       "end": "0x021185c0"
     },
     {
+      "name": ".rodata",
+      "start": "0x0211adbc",
+      "end": "0x0211adc8"
+    },
+    {
       "name": ".init",
       "start": "0x0211b0e4",
       "end": "0x0211b150"
@@ -27,6 +32,11 @@
       "name": ".ctor",
       "start": "0x0211b73c",
       "end": "0x0211b740"
+    },
+    {
+      "name": ".data",
+      "start": "0x0211bdac",
+      "end": "0x0211bdcc"
     },
     {
       "name": ".bss",
@@ -85,7 +95,24 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "rodata": [
+    {
+      "symbol": "data_ov064_0211adbc",
+      "address": "0x0211adbc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "file table of three pointers. model gFlKomaUModelFile, collision gFlKomaUCollisionFile, CLPS data_ov064_0211bdac."
+    }
+  ],
+  "data": [
+    {
+      "symbol": "data_ov064_0211bdac",
+      "address": "0x0211bdac",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block the file table's third slot points at. Tag, stride 8, count 1, one entry, then 0xffffffff through _ZTI15daObjFl_KomaU_c."
+    }
+  ],
   "bss": [
     {
       "symbol": "gFlKomaUModelFile",
@@ -326,6 +353,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x0211adbc",
+          "end": "0x0211adc8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x0211b0e4",
           "end": "0x0211b150",
@@ -340,6 +374,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0211bdac",
+          "end": "0x0211bdcc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x0211c790",
           "end": "0x0211c7b8",
@@ -348,7 +389,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 13
+          "LICENSED": 15
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -357,21 +398,39 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              46
+              28
             ],
             "desired": [
-              46
+              28
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              49
+            ],
+            "desired": [
+              49
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              44
+              47
             ],
             "desired": [
-              44
+              47
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              27
+            ],
+            "desired": [
+              27
             ]
           },
           {
@@ -657,6 +716,36 @@
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211b0e4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211adbc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFlKomaUModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c790"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211adc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFlKomaUCollisionFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c798"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211adc4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211bdac",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211bdac"
     }
   ]
 }

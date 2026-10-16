@@ -96,6 +96,52 @@ def read_delinks(path):
     return header, entries
 
 
+CODE_SECTIONS = (".text", ".init")
+
+
+def storage_claims(config):
+    """``{source: {"module": dir, "sections": {name: (start, end) | None}}}``.
+
+    A ``complete`` file entry that claims a non-code range (``.data``, ``.rodata``,
+    ``.bss``, ``.ctor``, ...) has taken that range off the delinked gap object.
+    dsd no longer emits those bytes, so the compiled source is the only definition
+    left and the build has to keep that section of the object. ``.text`` and
+    ``.init`` are the code the entry owns, not storage. A section named twice in
+    one entry is recorded as ``None``: one compiled section cannot fill two
+    disjoint ranges, so callers refuse it rather than guess.
+    """
+    out = {}
+    for dl in sorted(pathlib.Path(config).rglob("delinks.txt")):
+        _header, entries = read_delinks_full(dl)
+        for rel, body in entries:
+            if not any(line.strip() == "complete" for line in body):
+                continue
+            sections = {}
+            for sec, lo, hi in _body_ranges(body):
+                if sec in CODE_SECTIONS:
+                    continue
+                sections[sec] = None if sec in sections else (lo, hi)
+            if sections:
+                out[rel.replace("\\", "/")] = {"module": dl.parent,
+                                                 "sections": sections}
+    return out
+
+
+_DATA_ROW_RE = re.compile(r"^(\S+)\s+kind:(?!function\b)\S+\s+addr:0x([0-9a-fA-F]+)")
+
+
+def data_symbol_addresses(module_dir):
+    """``{name: address}`` for every non-function row of a module's symbols.txt."""
+    path = pathlib.Path(module_dir) / "symbols.txt"
+    out = {}
+    if path.is_file():
+        for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+            m = _DATA_ROW_RE.match(line)
+            if m:
+                out[m.group(1)] = int(m.group(2), 16)
+    return out
+
+
 def _body_with_complete(body, done):
     """Toggle only ``complete`` while preserving every other structured line."""
     out, found = [], False

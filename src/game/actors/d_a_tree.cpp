@@ -26,8 +26,8 @@
  *   cartridge calls _Znwj.
  * - *(const Vector3 *)&mPosX: dActor_c carries position as three scalars
  *   with no Pos() accessor, so the Init call puns them TU-locally.
- * - data_ov002_02110a48 / data_ov002_0210abb8 / g_profile_TREE: overlay
- *   bss/data owns them (S14); this TU's delinks span is .text-only.
+ * - data_ov002_0210abb8 / g_profile_TREE: overlay data owns them (S14).
+ *   data_ov002_02110a48 is this file's zero BSS list heads.
  * - data_0209f43c / data_0209b3ec: arm9 bss, the dClipper singleton and the
  *   live view matrix it clips against (CopyToViewMat's object); read here,
  *   owned elsewhere.
@@ -94,7 +94,8 @@ void *_Znwj(unsigned int size);
  * and unsigned type are reconstruction choices, not recovered ROM spelling.
  * See notes/experiments/applyopacity-api-0920.md. */
 
-extern TreeNode *data_ov002_02110a48[kNumVariants];
+/* Zero image. 0x02110a5c is the next symbol. */
+TreeNode *data_ov002_02110a48[kNumVariants];
 extern u16 data_ov002_0210abb8[];
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;

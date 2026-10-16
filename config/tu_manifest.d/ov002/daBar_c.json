@@ -4,6 +4,7 @@
   "source": "src/game/actors/d_a_bar.cpp",
   "promoted_source": "src/game/actors/d_a_bar.cpp",
   "status": "promoted",
+  "production_mode": "intact-object",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x020b05d0..0x020b0748, 8 functions, from build/tu_map.json (tools/tu_map.py)",
@@ -15,6 +16,11 @@
       "name": ".text",
       "start": "0x020b05d0",
       "end": "0x020b0748"
+    },
+    {
+      "name": ".data",
+      "start": "0x02108444",
+      "end": "0x02108480"
     }
   ],
   "functions": [
@@ -75,8 +81,80 @@
       "ordinal": 7
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "_ZTS7daBar_c",
+      "address": "0x02108444",
+      "size": "0x9",
+      "evidence": "compiler-emitted type name; nine bytes match retail and the section's alignment supplies the three bytes before the typeinfo"
+    },
+    {
+      "symbol": "_ZTI7daBar_c",
+      "address": "0x02108450",
+      "size": "0xc",
+      "evidence": "compiler-emitted single-inheritance RTTI; the record points at the type name and at dActor_c"
+    },
+    {
+      "symbol": "g_profile_BAR",
+      "address": "0x0210845c",
+      "size": "0x24",
+      "binding": "STB_GLOBAL",
+      "evidence": "BAR descriptor. The symbol runs to _ZTV7daBar_c, so the last eight bytes are the vtable header: offset-to-top 0, then _ZTI7daBar_c."
+    }
+  ],
   "bss": [],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02108450",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x02108454",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS7daBar_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02108444"
+    },
+    {
+      "section": ".data",
+      "source": "0x02108458",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8dActor_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208e390"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210845c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daBar_c_classInit",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020b0710"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210847c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI7daBar_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02108450"
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZTI7fBase_c",
@@ -93,13 +171,6 @@
       "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before isolation."
     },
     {
-      "symbol": "_ZTS7daBar_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x02108444",
-      "reason": "InitResources naturally emits the ROM-proven daBar_c type-name string. romdata_check proves its exact payload before text-only isolation discards the copy."
-    },
-    {
       "symbol": "_ZTS7dBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
@@ -112,13 +183,6 @@
       "canonical_module": "arm9",
       "canonical_address": "0x0208e384",
       "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before isolation."
-    },
-    {
-      "symbol": "_ZTI7daBar_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x02108450",
-      "reason": "InitResources naturally emits the ROM-proven daBar_c single-inheritance RTTI. romdata_check proves its complete record and relocations before isolation."
     },
     {
       "symbol": "_ZTI8dActor_c",
@@ -135,13 +199,6 @@
       "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its canonical arm9 home before isolation."
     },
     {
-      "symbol": "g_profile_BAR",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x0210845c",
-      "reason": "The typed actor descriptor is naturally defined beside its factory. romdata_check proves the factory relocation and every descriptor word before isolation."
-    },
-    {
       "symbol": "_ZTV7daBar_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov002",
@@ -154,7 +211,7 @@
     "daBar_c_classInit and g_profile_BAR are reconstructed source-style names: SM64DS proves the daBar_c RTTI identity, BAR registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical project aliases were InvisiblePole_Spawn and InvisiblePole_SpawnInfo.",
     "Factory is `return new daBar_c`; the inherited fBase_c::operator new(size_t) forwards to the ROM allocator. The implicit ctor calls base C2 and dCcAc_c C1 and installs the daBar vptr.",
     "InitResources calls the scalar-ABI spellings of dActor_c::SetRanges and dCcAc_c::Init through TU-local extern decls. Declaring the Fix12<int> member forms on the shared headers collided with existing consumer decls (illegal function overloading) and changed this TU's InitResources size; the seam is documented in the source.",
-    "The manifest is text-only. Natural class RTTI/type-name, typed SpawnInfo, vtable, and inherited vague-linkage RTTI copies are verified at canonical homes before production isolation discards them; no initializer, ctor, or BSS ownership is claimed.",
+    "Owned .data is 0x02108444..0x02108480: the compiler-emitted type name and typeinfo, then g_profile_BAR through the vtable header. The vtable and inherited vague-linkage RTTI stay compiler-only. No ctor or BSS range is claimed.",
     "The former coined InvisiblePole symbols cannot be compared as a normal legacy-object contribution after this ROM-proven identity correction. Eight direct blind linkchecks plus the production overlay/ROM link prove the new symbol identities and placements instead."
   ],
   "verification": {
@@ -171,44 +228,33 @@
       "droppedSections": [
         5,
         6,
-        7,
         8,
         9,
         10,
-        11,
-        12,
         13,
         14,
         15,
         16,
-        17,
-        18,
         19,
         20
       ],
       "data": [
         "_ZTI7fBase_c",
         "_ZTS7fBase_c",
-        "_ZTS7daBar_c",
         "_ZTS7dBase_c",
         "_ZTS8dActor_c",
-        "_ZTI7daBar_c",
         "_ZTI8dActor_c",
         "_ZTI7dBase_c",
-        "g_profile_BAR",
         "_ZTV7daBar_c"
       ],
       "dataExternalized": [
         "_ZTI7dBase_c",
-        "_ZTI7daBar_c",
         "_ZTI7fBase_c",
         "_ZTI8dActor_c",
         "_ZTS7dBase_c",
-        "_ZTS7daBar_c",
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
-        "_ZTV7daBar_c",
-        "g_profile_BAR"
+        "_ZTV7daBar_c"
       ]
     },
     "criteria": {
@@ -217,6 +263,100 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov002-daBar_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020b05d0",
+        "end": "0x020b0748",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020b05d0",
+          "end": "0x020b0748",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02108444",
+          "end": "0x02108480",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 11
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              7,
+              11,
+              17
+            ],
+            "desired": [
+              7,
+              11,
+              17
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   }
 }

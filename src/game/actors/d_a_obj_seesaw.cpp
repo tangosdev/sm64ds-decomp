@@ -97,12 +97,10 @@ enum { kFileStride = 0xc };
  * declared-only subclasses so the static initializer names the real entry
  * points. */
 struct SeesawModelFilePtr : SharedFilePtr {
-    u32 words[2];
     SeesawModelFilePtr(u32 fileID);
     ~SeesawModelFilePtr();
 };
 struct SeesawCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     SeesawCollisionFilePtr(u32 fileID);
     ~SeesawCollisionFilePtr();
 };

@@ -32,7 +32,7 @@
  *   their contents are unrecovered, so they keep linker names. */
 #include "PathPtr.h"
 
-extern PathDef *PATH_DEFS;  /* the level's PathDef table */
+PathDef *PATH_DEFS;  /* the level's PathDef table; the BSS word is 0 */
 extern char *PATH_NODES;    /* flat node records, six bytes each */
 extern int NUM_PATHS;       /* entries in PATH_DEFS */
 

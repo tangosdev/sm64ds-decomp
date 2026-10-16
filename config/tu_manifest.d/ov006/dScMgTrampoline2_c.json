@@ -20,6 +20,11 @@
       "end": "0x02124908"
     },
     {
+      "name": ".rodata",
+      "start": "0x0212f0f0",
+      "end": "0x0212f328"
+    },
+    {
       "name": ".data",
       "start": "0x0213fbc4",
       "end": "0x0213fd0c"
@@ -1272,6 +1277,246 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213322c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f2b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f1cc",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f1cc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f2b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f10c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f10c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f2bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f114",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f114"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f2c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f12c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f12c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f2c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f1f0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f1f0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f2cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f13c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f13c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f2d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f11c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f11c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f2d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f134",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f134"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f2dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f238",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f238"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f2e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f14c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f14c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f2e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f164",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f164"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f2e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f17c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f17c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f2f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f194",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f194"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f2f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f0f4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f0f4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f2f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f0f8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f0f8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f2fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f0f0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f0f0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f304",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f214",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f214"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f308",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f0fc",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f0fc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f30c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f124",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f124"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f310",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f104",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f104"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f318",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f274",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f274"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f31c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f158",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f158"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f320",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f170",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f170"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f324",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212f188",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212f188"
     }
   ],
   "symbol_binding_rewrites": [
@@ -1471,6 +1716,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x0212f0f0",
+          "end": "0x0212f328",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data",
           "start": "0x0213fbc4",
           "end": "0x0213fd0c",
@@ -1500,7 +1752,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 61
+          "LICENSED": 88
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1653,129 +1905,283 @@
             }
           },
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              130
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              14,
+              15,
+              16,
+              17,
+              18,
+              28,
+              33,
+              39,
+              42,
+              43,
+              45,
+              50,
+              52,
+              64,
+              65,
+              66,
+              67,
+              68,
+              69,
+              70,
+              71
             ],
             "desired": [
-              130
+              7,
+              6,
+              8,
+              33,
+              15,
+              14,
+              28,
+              16,
+              11,
+              9,
+              17,
+              10,
+              18,
+              39,
+              42,
+              43,
+              45,
+              52,
+              50,
+              64,
+              65,
+              66,
+              67,
+              68,
+              70,
+              69,
+              71
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              12,
+              21,
+              23,
+              26,
+              29,
+              31,
+              44,
+              46,
+              56,
+              58,
+              60,
+              61,
+              63,
+              73
             ],
-            "anchors": {
-              "130": [
-                {
-                  "symbol": "__sinit_d_s_mg_trampoline2.cpp",
-                  "address": 34812460,
-                  "sectionBase": 34812460
-                }
-              ]
-            }
+            "desired": [
+              5,
+              31,
+              21,
+              26,
+              12,
+              29,
+              23,
+              44,
+              46,
+              56,
+              58,
+              60,
+              61,
+              63,
+              73
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              158
+            ],
+            "desired": [
+              158
+            ]
           },
           {
             "section": ".ctor",
             "original": [
-              128
+              156
             ],
             "desired": [
-              128
-            ],
-            "anchors": {
-              "128": [
-                {
-                  "symbol": ".p__sinit_d_s_mg_trampoline2.cpp",
-                  "address": 34813404,
-                  "sectionBase": 34813404
-                }
-              ]
-            }
+              156
+            ]
           },
           {
             "section": ".bss",
             "original": [
-              12,
-              24
+              25,
+              51
             ],
             "desired": [
-              12,
-              24
-            ],
-            "anchors": {
-              "12": [
-                {
-                  "symbol": "data_ov006_02142f80",
-                  "address": 34877312,
-                  "sectionBase": 34877312
-                }
-              ],
-              "24": [
-                {
-                  "symbol": "@1086",
-                  "address": 34877320,
-                  "sectionBase": 34877320
-                }
-              ]
-            }
+              25,
+              51
+            ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
+              "section": ".rodata",
+              "original": [
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                14,
+                15,
+                16,
+                17,
+                18,
+                28,
+                33,
+                39,
+                42,
+                43,
+                45,
+                50,
+                52,
+                64,
+                65,
+                66,
+                67,
+                68,
+                69,
+                70,
+                71
+              ],
+              "desired": [
+                7,
+                6,
+                8,
+                33,
+                15,
+                14,
+                28,
+                16,
+                11,
+                9,
+                17,
+                10,
+                18,
+                39,
+                42,
+                43,
+                45,
+                52,
+                50,
+                64,
+                65,
+                66,
+                67,
+                68,
+                70,
+                69,
+                71
+              ],
+              "slots": [
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                14,
+                15,
+                16,
+                17,
+                18,
+                28,
+                33,
+                39,
+                42,
+                43,
+                45,
+                50,
+                52,
+                64,
+                65,
+                66,
+                67,
+                68,
+                69,
+                70,
+                71
+              ]
+            },
+            {
               "section": ".data",
               "original": [
                 5,
-                6,
-                8,
-                10,
-                13,
-                17,
-                19,
+                12,
+                21,
+                23,
+                26,
                 29,
                 31,
-                37,
-                39,
-                41,
-                42,
                 44,
-                45
+                46,
+                56,
+                58,
+                60,
+                61,
+                63,
+                73
               ],
               "desired": [
                 5,
-                6,
-                10,
-                19,
-                13,
-                17,
-                8,
                 31,
+                21,
+                26,
+                12,
                 29,
-                37,
-                39,
-                41,
-                42,
+                23,
                 44,
-                45
+                46,
+                56,
+                58,
+                60,
+                61,
+                63,
+                73
               ],
               "slots": [
                 5,
-                6,
-                8,
-                10,
-                13,
-                17,
-                19,
+                12,
+                21,
+                23,
+                26,
                 29,
                 31,
-                37,
-                39,
-                41,
-                42,
                 44,
-                45
+                46,
+                56,
+                58,
+                60,
+                61,
+                63,
+                73
               ]
             }
           ],
-          "symbolIndices": 15,
+          "symbolIndices": 42,
           "sectionLinks": 0,
-          "sectionInfos": 10,
+          "sectionInfos": 11,
           "error": null
         },
         "errors": null
@@ -2306,6 +2712,197 @@
       "from": "@1100",
       "to": "@1086",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1100 now; licensed under the existing pin @1086"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov006_0212f0f0",
+      "address": "0x0212f0f0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "last short of the two-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f0f4",
+      "address": "0x0212f0f4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "facing angles of the two-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f0f8",
+      "address": "0x0212f0f8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "model variants of the two-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f0fc",
+      "address": "0x0212f0fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "facing angles of a three-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f104",
+      "address": "0x0212f104",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "last shorts of a three-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f10c",
+      "address": "0x0212f10c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "facing angles of a three-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f114",
+      "address": "0x0212f114",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model variants of a three-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f11c",
+      "address": "0x0212f11c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model variants of a three-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f124",
+      "address": "0x0212f124",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model variants of a three-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f12c",
+      "address": "0x0212f12c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "last shorts of a three-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f134",
+      "address": "0x0212f134",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "last shorts of a three-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f13c",
+      "address": "0x0212f13c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "facing angles of a three-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f144",
+      "address": "0x0212f144",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "four kind values chosen from the random draw"
+    },
+    {
+      "symbol": "data_ov006_0212f14c",
+      "address": "0x0212f14c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "facing angles of a five-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f158",
+      "address": "0x0212f158",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "facing angles of a five-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f164",
+      "address": "0x0212f164",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "model variants of a five-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f170",
+      "address": "0x0212f170",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "model variants of a five-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f17c",
+      "address": "0x0212f17c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "last shorts of a five-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f188",
+      "address": "0x0212f188",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "last shorts of a five-spawn row"
+    },
+    {
+      "symbol": "data_ov006_0212f194",
+      "address": "0x0212f194",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "two spawn positions, x y z in 0x1000 units"
+    },
+    {
+      "symbol": "data_ov006_0212f1ac",
+      "address": "0x0212f1ac",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "BG palette loaded at 0xe0, one white entry"
+    },
+    {
+      "symbol": "data_ov006_0212f1cc",
+      "address": "0x0212f1cc",
+      "size": "0x24",
+      "binding": "STB_GLOBAL",
+      "evidence": "three spawn positions, x y z in 0x1000 units"
+    },
+    {
+      "symbol": "data_ov006_0212f1f0",
+      "address": "0x0212f1f0",
+      "size": "0x24",
+      "binding": "STB_GLOBAL",
+      "evidence": "three spawn positions, x y z in 0x1000 units"
+    },
+    {
+      "symbol": "data_ov006_0212f214",
+      "address": "0x0212f214",
+      "size": "0x24",
+      "binding": "STB_GLOBAL",
+      "evidence": "three spawn positions, x y z in 0x1000 units"
+    },
+    {
+      "symbol": "data_ov006_0212f238",
+      "address": "0x0212f238",
+      "size": "0x3c",
+      "binding": "STB_GLOBAL",
+      "evidence": "five spawn positions, x y z in 0x1000 units"
+    },
+    {
+      "symbol": "data_ov006_0212f274",
+      "address": "0x0212f274",
+      "size": "0x3c",
+      "binding": "STB_GLOBAL",
+      "evidence": "five spawn positions, x y z in 0x1000 units"
+    },
+    {
+      "symbol": "data_ov006_0212f2b0",
+      "address": "0x0212f2b0",
+      "size": "0x78",
+      "binding": "STB_GLOBAL",
+      "evidence": "six SpawnDef rows; count is the spawn loop bound, base is the position table, then angle, variant and the last short"
     }
   ]
 }

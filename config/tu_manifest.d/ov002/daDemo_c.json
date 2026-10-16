@@ -19,8 +19,13 @@
     },
     {
       "name": ".data",
-      "start": "0x0210b940",
+      "start": "0x0210b8c0",
       "end": "0x0210b958"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02110e24",
+      "end": "0x0211110c"
     }
   ],
   "functions": [
@@ -1049,6 +1054,102 @@
   ],
   "data": [
     {
+      "symbol": "data_ov002_0210b8c0",
+      "address": "0x0210b8c0",
+      "size": "0x8",
+      "evidence": "Function word relocates to _ZN8daDemo_c19func_ov002_020f71c4Eii; the adjustment word is zero."
+    },
+    {
+      "symbol": "data_ov002_0210b8c8",
+      "address": "0x0210b8c8",
+      "size": "0x8",
+      "evidence": "Function word relocates to _ZN8daDemo_c19func_ov002_020f26c4EPh; the adjustment word is zero."
+    },
+    {
+      "symbol": "data_ov002_0210b8d0",
+      "address": "0x0210b8d0",
+      "size": "0x8",
+      "evidence": "Function word relocates to func_ov002_020f26d4; the adjustment word is zero."
+    },
+    {
+      "symbol": "data_ov002_0210b8d8",
+      "address": "0x0210b8d8",
+      "size": "0x8",
+      "evidence": "Function word relocates to _ZN8daDemo_c19func_ov002_020f63f8EPh; the adjustment word is zero."
+    },
+    {
+      "symbol": "data_ov002_0210b8e0",
+      "address": "0x0210b8e0",
+      "size": "0x8",
+      "evidence": "Function word relocates to _ZN8daDemo_c19func_ov002_020f6448EPh; the adjustment word is zero."
+    },
+    {
+      "symbol": "data_ov002_0210b8e8",
+      "address": "0x0210b8e8",
+      "size": "0x8",
+      "evidence": "Function word relocates to _ZN8daDemo_c19func_ov002_020f6a9cEv; the adjustment word is zero."
+    },
+    {
+      "symbol": "data_ov002_0210b8f0",
+      "address": "0x0210b8f0",
+      "size": "0x8",
+      "evidence": "Function word relocates to _ZN8daDemo_c19func_ov002_020f6ab8EPh; the adjustment word is zero."
+    },
+    {
+      "symbol": "data_ov002_0210b8f8",
+      "address": "0x0210b8f8",
+      "size": "0x8",
+      "evidence": "Function word relocates to _ZN8daDemo_c19func_ov002_020f6ae4EPh; the adjustment word is zero."
+    },
+    {
+      "symbol": "data_ov002_0210b900",
+      "address": "0x0210b900",
+      "size": "0x8",
+      "evidence": "Function word relocates to _ZN8daDemo_c19func_ov002_020f7038Eii; the adjustment word is zero."
+    },
+    {
+      "symbol": "data_ov002_0210b908",
+      "address": "0x0210b908",
+      "size": "0x8",
+      "evidence": "Function word relocates to _ZN8daDemo_c19func_ov002_020f6b4cEPh; the adjustment word is zero."
+    },
+    {
+      "symbol": "data_ov002_0210b910",
+      "address": "0x0210b910",
+      "size": "0x8",
+      "evidence": "Function word relocates to _ZN8daDemo_c19func_ov002_020f6bc0EPh; the adjustment word is zero."
+    },
+    {
+      "symbol": "data_ov002_0210b918",
+      "address": "0x0210b918",
+      "size": "0x8",
+      "evidence": "Function word relocates to _ZN8daDemo_c19func_ov002_020f6c24EPh; the adjustment word is zero."
+    },
+    {
+      "symbol": "data_ov002_0210b920",
+      "address": "0x0210b920",
+      "size": "0x8",
+      "evidence": "Function word relocates to _ZN8daDemo_c19func_ov002_020f6c34EPh; the adjustment word is zero."
+    },
+    {
+      "symbol": "data_ov002_0210b928",
+      "address": "0x0210b928",
+      "size": "0x8",
+      "evidence": "Function word relocates to _ZN8daDemo_c19func_ov002_020f6c60EPvii; the adjustment word is zero."
+    },
+    {
+      "symbol": "data_ov002_0210b930",
+      "address": "0x0210b930",
+      "size": "0x8",
+      "evidence": "Function word relocates to _ZN8daDemo_c19func_ov002_020f6e48EPh; the adjustment word is zero."
+    },
+    {
+      "symbol": "data_ov002_0210b938",
+      "address": "0x0210b938",
+      "size": "0x8",
+      "evidence": "Function word relocates to _ZN8daDemo_c19func_ov002_020f7020Ev; the adjustment word is zero."
+    },
+    {
       "symbol": "_ZTS8daDemo_c",
       "address": "0x0210b940",
       "size": "0xa",
@@ -1061,7 +1162,74 @@
       "evidence": "compiler-emitted single-inheritance RTTI record matches retail and points to the ROM-proven dActor_c base identity"
     }
   ],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov002_02110e24",
+      "address": "0x02110e24",
+      "size": "0x10",
+      "evidence": "Zero-filled image. __sinit_ov002_02107370 writes the pointer slots, except data_ov002_0211104c which func_ov002_020f7d74 fills."
+    },
+    {
+      "symbol": "data_ov002_02110e34",
+      "address": "0x02110e34",
+      "size": "0x18",
+      "evidence": "Zero-filled image. __sinit_ov002_02107370 writes the pointer slots, except data_ov002_0211104c which func_ov002_020f7d74 fills."
+    },
+    {
+      "symbol": "data_ov002_02110e4c",
+      "address": "0x02110e4c",
+      "size": "0x18",
+      "evidence": "Zero-filled image. __sinit_ov002_02107370 writes the pointer slots, except data_ov002_0211104c which func_ov002_020f7d74 fills."
+    },
+    {
+      "symbol": "data_ov002_02110e64",
+      "address": "0x02110e64",
+      "size": "0x18",
+      "evidence": "Zero-filled image. __sinit_ov002_02107370 writes the pointer slots, except data_ov002_0211104c which func_ov002_020f7d74 fills."
+    },
+    {
+      "symbol": "data_ov002_02110e7c",
+      "address": "0x02110e7c",
+      "size": "0x20",
+      "evidence": "Zero-filled image. __sinit_ov002_02107370 writes the pointer slots, except data_ov002_0211104c which func_ov002_020f7d74 fills."
+    },
+    {
+      "symbol": "data_ov002_02110e9c",
+      "address": "0x02110e9c",
+      "size": "0x20",
+      "evidence": "Zero-filled image. __sinit_ov002_02107370 writes the pointer slots, except data_ov002_0211104c which func_ov002_020f7d74 fills."
+    },
+    {
+      "symbol": "data_ov002_02110ebc",
+      "address": "0x02110ebc",
+      "size": "0x30",
+      "evidence": "Zero-filled image. __sinit_ov002_02107370 writes the pointer slots, except data_ov002_0211104c which func_ov002_020f7d74 fills."
+    },
+    {
+      "symbol": "data_ov002_02110eec",
+      "address": "0x02110eec",
+      "size": "0x48",
+      "evidence": "Zero-filled image. __sinit_ov002_02107370 writes the pointer slots, except data_ov002_0211104c which func_ov002_020f7d74 fills."
+    },
+    {
+      "symbol": "data_ov002_02110f34",
+      "address": "0x02110f34",
+      "size": "0x68",
+      "evidence": "Zero-filled image. __sinit_ov002_02107370 writes the pointer slots, except data_ov002_0211104c which func_ov002_020f7d74 fills."
+    },
+    {
+      "symbol": "data_ov002_02110f9c",
+      "address": "0x02110f9c",
+      "size": "0xb0",
+      "evidence": "Zero-filled image. __sinit_ov002_02107370 writes the pointer slots, except data_ov002_0211104c which func_ov002_020f7d74 fills."
+    },
+    {
+      "symbol": "data_ov002_0211104c",
+      "address": "0x0211104c",
+      "size": "0xc0",
+      "evidence": "Zero-filled image. __sinit_ov002_02107370 writes the pointer slots, except data_ov002_0211104c which func_ov002_020f7d74 fills."
+    }
+  ],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "tubuild create warning: RAW: src/func_ov002_020f3978.cpp (func_ov002_020f3978) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
@@ -1146,7 +1314,8 @@
     "tubuild create warning: CONFLICT: local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov002_020f237c and the one that held func_ov002_020f7bb8; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold func_ov002_020f3310 and the one that held func_ov002_020f7d74; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov002_020f2210 and the one that held _ZN8daDemo_c16CleanupResourcesEv; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov002_020f2210 and the one that held _ZN8daDemo_c13InitResourcesEv; kept the first, the other is commented out for review"
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov002_020f2210 and the one that held _ZN8daDemo_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "LOCAL WORKER NOTE: this PC's EU dump builds ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40. The recorded rom.sha256 is the fleet sha d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8 that the other intact entries share. matchesStockRom is true. Module set f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106, 0 new symbol errors. .text and .data differingBytes 0. .bss comparison is NOBITS -- symbol/module gates."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -1260,15 +1429,21 @@
         },
         {
           "section": ".data",
-          "start": "0x0210b940",
+          "start": "0x0210b8c0",
           "end": "0x0210b958",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02110e24",
+          "end": "0x0211110c",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 148
+          "LICENSED": 175
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1279,16 +1454,189 @@
           {
             "section": ".data",
             "original": [
-              268,
-              269
+              5,
+              7,
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35,
+              311,
+              312
             ],
             "desired": [
-              268,
-              269
+              33,
+              31,
+              29,
+              27,
+              25,
+              23,
+              21,
+              19,
+              17,
+              15,
+              13,
+              11,
+              9,
+              7,
+              5,
+              35,
+              311,
+              312
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              298,
+              299,
+              300,
+              301,
+              302,
+              303,
+              304,
+              305,
+              306,
+              307,
+              308
+            ],
+            "desired": [
+              308,
+              307,
+              306,
+              305,
+              304,
+              303,
+              302,
+              301,
+              300,
+              299,
+              298
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                7,
+                9,
+                11,
+                13,
+                15,
+                17,
+                19,
+                21,
+                23,
+                25,
+                27,
+                29,
+                31,
+                33,
+                35,
+                311,
+                312
+              ],
+              "desired": [
+                33,
+                31,
+                29,
+                27,
+                25,
+                23,
+                21,
+                19,
+                17,
+                15,
+                13,
+                11,
+                9,
+                7,
+                5,
+                35,
+                311,
+                312
+              ],
+              "slots": [
+                5,
+                7,
+                9,
+                11,
+                13,
+                15,
+                17,
+                19,
+                21,
+                23,
+                25,
+                27,
+                29,
+                31,
+                33,
+                35,
+                311,
+                312
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                298,
+                299,
+                300,
+                301,
+                302,
+                303,
+                304,
+                305,
+                306,
+                307,
+                308
+              ],
+              "desired": [
+                308,
+                307,
+                306,
+                305,
+                304,
+                303,
+                302,
+                301,
+                300,
+                299,
+                298
+              ],
+              "slots": [
+                298,
+                299,
+                300,
+                301,
+                302,
+                303,
+                304,
+                305,
+                306,
+                307,
+                308
+              ]
+            }
+          ],
+          "symbolIndices": 29,
+          "sectionLinks": 0,
+          "sectionInfos": 17,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -1840,6 +2188,166 @@
   ],
   "production_mode": "intact-object",
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x0210b8c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f71c4Eii",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020f71c4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b8c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f26c4EPh",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020f26c4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b8d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_ov002_020f26d4",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020f26d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b8d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f63f8EPh",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020f63f8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b8e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6448EPh",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020f6448"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b8e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6a9cEv",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020f6a9c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b8f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6ab8EPh",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020f6ab8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b8f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6ae4EPh",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020f6ae4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b900",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f7038Eii",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020f7038"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b908",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6b4cEPh",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020f6b4c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b910",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6bc0EPh",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020f6bc0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b918",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6c24EPh",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020f6c24"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b920",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6c34EPh",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020f6c34"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b928",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6c60EPvii",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020f6c60"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b930",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6e48EPh",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020f6e48"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b938",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f7020Ev",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020f7020"
+    },
     {
       "section": ".data",
       "source": "0x0210b94c",

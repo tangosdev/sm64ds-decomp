@@ -28,6 +28,11 @@
       "end": "0x0211cb00"
     },
     {
+      "name": ".data",
+      "start": "0x0211d35c",
+      "end": "0x0211d360"
+    },
+    {
       "name": ".bss",
       "start": "0x0211d92c",
       "end": "0x0211d97c"
@@ -98,7 +103,15 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov065_0211d35c",
+      "address": "0x0211d35c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "first word of the two-row resource table, the gear model handle gCtMechaObj06ModelFile; the next symbols.txt rows stay gap symbols"
+    }
+  ],
   "bss": [
     {
       "symbol": "gCtMechaObj07CollisionFile",
@@ -376,6 +389,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0211d35c",
+          "end": "0x0211d360",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x0211d92c",
           "end": "0x0211d97c",
@@ -384,7 +404,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 19
+          "LICENSED": 20
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -395,6 +415,15 @@
           {
             "section": ".init",
             "original": [
+              54
+            ],
+            "desired": [
+              54
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
               52
             ],
             "desired": [
@@ -402,12 +431,12 @@
             ]
           },
           {
-            "section": ".ctor",
+            "section": ".data",
             "original": [
-              50
+              5
             ],
             "desired": [
-              50
+              5
             ]
           },
           {
@@ -416,20 +445,20 @@
               7,
               8,
               9,
-              10,
-              16,
+              12,
+              22,
               23,
               24,
-              25
+              27
             ],
             "desired": [
-              10,
-              9,
-              7,
               8,
-              25,
-              16,
+              12,
+              7,
+              9,
               23,
+              22,
+              27,
               24
             ]
           }
@@ -442,31 +471,31 @@
                 7,
                 8,
                 9,
-                10,
-                16,
+                12,
+                22,
                 23,
                 24,
-                25
+                27
               ],
               "desired": [
-                10,
-                9,
-                7,
                 8,
-                25,
-                16,
+                12,
+                7,
+                9,
                 23,
+                22,
+                27,
                 24
               ],
               "slots": [
                 7,
                 8,
                 9,
-                10,
-                16,
+                12,
+                22,
                 23,
                 24,
-                25
+                27
               ]
             }
           ],
@@ -626,6 +655,16 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x0211d35c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gCtMechaObj06ModelFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d944"
+    },
     {
       "section": ".ctor",
       "source": "0x0211cafc",

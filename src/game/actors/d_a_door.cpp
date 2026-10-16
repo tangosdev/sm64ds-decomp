@@ -314,13 +314,11 @@ extern void *data_ov089_02132894[];
    SharedFilePtr::Construct (animation) in this unit's manifest, and the
    destructors func_02017ab4 and SharedFilePtr_Destruct_Anim. */
 struct DoorModelFilePtr : SharedFilePtr {
-    int unk0; void *file;
     DoorModelFilePtr(unsigned int id);
     ~DoorModelFilePtr();
 };
 
 struct DoorAnimationFileHandle : SharedFilePtr {
-    int unk0; void *file;
     DoorAnimationFileHandle(unsigned int id);
     ~DoorAnimationFileHandle();
 };
@@ -344,6 +342,32 @@ DoorModelFilePtr    data_ov100_0214874c(0x9c0b);
 DoorModelFilePtr    gObjDoor4YamiModelFile(ASSET_OBJ_DOOR4_YAMI_BMD);
 DoorModelFilePtr    gObjDoor5HorrorModelFile(ASSET_OBJ_DOOR5_HORROR_BMD);
 DoorAnimationFileHandle  data_ov100_02148744(0x9c08);
+
+/* Nineteen variants. Each record is the model, an optional key model,
+ * the star count, the key index, the save-flag bit, and the shut message.
+ * A missing key model is a null pointer. -1 marks a field the variant
+ * does not use. */
+extern "C" DoorEntry data_ov100_02148204[19] = {
+    { &data_ov100_0214875c, 0,                      -1, -1, -1, 0, -1, 0 },
+    { &data_ov100_0214875c, &gObjDoor0StarModelFile,   -1, -1, -1, 0, -1, 0 },
+    { &data_ov100_0214875c, &gObjDoor0Star1ModelFile,    1, -1,  0, 0, 25, 0 },
+    { &data_ov100_0214875c, &gObjDoor0Star1ModelFile,    1, -1,  1, 0, 25, 0 },
+    { &data_ov100_0214875c, &gObjDoor0Star3ModelFile,    3, -1,  2, 0, 26, 0 },
+    { &data_ov100_0214875c, &gObjDoor0Star3ModelFile,    3, -1,  3, 0, 26, 0 },
+    { &data_ov100_0214875c, &gObjDoor0Star10ModelFile,    8, -1,  4, 0, 27, 0 },
+    { &data_ov100_0214875c, &data_ov100_0214877c,   -1,  0,  0, 0, 24, 0 },
+    { &data_ov100_0214875c, &data_ov100_0214877c,   -1,  1,  1, 0, 24, 0 },
+    { &data_ov100_0214875c, &data_ov100_0214877c,   -1,  2,  2, 0, 32, 0 },
+    { &data_ov100_0214875c, &data_ov100_0214877c,   -1,  3,  3, 0, 33, 0 },
+    { &data_ov100_0214875c, &data_ov100_0214877c,   -1,  4,  4, 0, 34, 0 },
+    { &data_ov100_0214875c, &data_ov100_0214877c,   -1,  5,  5, 0, 24, 0 },
+    { &data_ov100_0214875c, &data_ov100_0214877c,   -1,  6,  6, 0, 24, 0 },
+    { &gObjDoor1ModelFile, 0,                      -1, -1, -1, 0, -1, 0 },
+    { &gObjDoor2BoroModelFile, 0,                      -1, -1, -1, 0, -1, 0 },
+    { &data_ov100_0214874c, 0,                      -1, -1, -1, 0, -1, 0 },
+    { &gObjDoor4YamiModelFile, 0,                      -1, -1, -1, 0, -1, 0 },
+    { &gObjDoor5HorrorModelFile, 0,                      -1, -1, -1, 0, -1, 0 },
+};
 
 /* The function-local statics of the helpers above, spelled out against the
    cartridge's own objects: each is a {guard, vector, node} triple the

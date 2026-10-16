@@ -18,6 +18,11 @@
       "end": "0x02112630"
     },
     {
+      "name": ".rodata",
+      "start": "0x0211299c",
+      "end": "0x021129b4"
+    },
+    {
       "name": ".init",
       "start": "0x02112d90",
       "end": "0x02112dfc"
@@ -26,6 +31,11 @@
       "name": ".ctor",
       "start": "0x02112e80",
       "end": "0x02112e84"
+    },
+    {
+      "name": ".data",
+      "start": "0x02112f88",
+      "end": "0x0211300c"
     },
     {
       "name": ".bss",
@@ -116,7 +126,73 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "data": [],
+  "rodata": [
+    {
+      "symbol": "data_ov029_0211299c",
+      "address": "0x0211299c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "first word the BTA names; the value is 0"
+    },
+    {
+      "symbol": "data_ov029_021129a0",
+      "address": "0x021129a0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "second word the BTA names; the value is 0x1000"
+    },
+    {
+      "symbol": "data_ov029_021129a4",
+      "address": "0x021129a4",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "third BTA name; one pointer to data_ov029_02112ec0 and three words"
+    }
+  ],
+  "data": [
+    {
+      "symbol": "data_ov029_02112f88",
+      "address": "0x02112f88",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "symbols.txt row immediately before data_ov029_02112fa0; three pointers and three words"
+    },
+    {
+      "symbol": "data_ov029_02112fa0",
+      "address": "0x02112fa0",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "record the BTA points at; two pointers and four words"
+    },
+    {
+      "symbol": "data_ov029_02112fb8",
+      "address": "0x02112fb8",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "BTA head passed to Prepare and SetFile; numFrames 91 and four name pointers"
+    },
+    {
+      "symbol": "data_ov029_02112fd0",
+      "address": "0x02112fd0",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "next symbols.txt row inside the BTA; three pointers and four words"
+    },
+    {
+      "symbol": "data_ov029_02112fec",
+      "address": "0x02112fec",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS tag, stride 8, and one entry; passed to SetFile"
+    },
+    {
+      "symbol": "data_ov029_02112ffc",
+      "address": "0x02112ffc",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "next symbols.txt row; four 0xffffffff words that finish the CLPS span"
+    }
+  ],
   "bss": [
     {
       "symbol": "daObjWc_Obj07_c_ModelFile",
@@ -210,12 +286,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@468",
+      "from": "@473",
       "to": "@42",
       "evidence": "mwcc numbers this model registration node @454 per TU and ov036 already defines a global @454, so the scratch link would multiply-define it"
     },
     {
-      "from": "@469",
+      "from": "@474",
       "to": "@43",
       "evidence": "mwcc numbers this collision registration node @455 per TU and ov036 already defines a global @455, so the scratch link would multiply-define it"
     }
@@ -330,6 +406,136 @@
       "addend": 0,
       "target_module": "ov029",
       "target_address": "0x02112d90"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021129a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov029_02112ec0",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x02112ec0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112f8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov029_021134ec",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x021134ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112f94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov029_021133d4",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x021133d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112f9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov029_02112ed8",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x02112ed8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112fa0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov029_02112eb0",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x02112eb0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112fac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov029_02112ea8",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x02112ea8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112fbc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov029_021129a0",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x021129a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112fc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov029_0211299c",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x0211299c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112fc4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov029_021129c0",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x021129c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112fcc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov029_021129a4",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x021129a4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112fd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov029_02113204",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x02113204"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112fd4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov029_02112eb8",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x02112eb8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112fe0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov029_02112fa0",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x02112fa0"
     }
   ],
   "notes": [
@@ -365,25 +571,25 @@
         "_ZN10dBgActor_cD2Ev"
       ],
       "droppedSections": [
-        6,
         7,
-        9,
-        10,
+        8,
         11,
         12,
         13,
+        14,
         15,
-        16,
         17,
         18,
         19,
         20,
+        21,
         22,
-        23,
         24,
-        25,
-        44,
-        45
+        29,
+        38,
+        39,
+        58,
+        59
       ],
       "data": [
         "_ZTI7dBase_c",
@@ -440,6 +646,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x0211299c",
+          "end": "0x021129b4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x02112d90",
           "end": "0x02112dfc",
@@ -454,6 +667,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02112f88",
+          "end": "0x0211300c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x021142fc",
           "end": "0x02114324",
@@ -462,7 +682,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 15
+          "LICENSED": 24
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -471,66 +691,143 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              48
+              5,
+              6,
+              25
             ],
             "desired": [
-              48
+              6,
+              5,
+              25
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              62
+            ],
+            "desired": [
+              62
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              46
+              60
             ],
             "desired": [
-              46
+              60
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              27,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "desired": [
+              30,
+              32,
+              34,
+              36,
+              27,
+              28
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              8,
-              14,
-              21
+              9,
+              10,
+              16,
+              23
             ],
             "desired": [
-              8,
-              5,
-              21,
-              14
+              9,
+              10,
+              23,
+              16
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".bss",
+              "section": ".rodata",
               "original": [
                 5,
-                8,
-                14,
-                21
+                6,
+                25
               ],
               "desired": [
-                8,
+                6,
                 5,
-                21,
-                14
+                25
               ],
               "slots": [
                 5,
-                8,
-                14,
-                21
+                6,
+                25
+              ]
+            },
+            {
+              "section": ".data",
+              "original": [
+                27,
+                28,
+                30,
+                32,
+                34,
+                36
+              ],
+              "desired": [
+                30,
+                32,
+                34,
+                36,
+                27,
+                28
+              ],
+              "slots": [
+                27,
+                28,
+                30,
+                32,
+                34,
+                36
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                9,
+                10,
+                16,
+                23
+              ],
+              "desired": [
+                9,
+                10,
+                23,
+                16
+              ],
+              "slots": [
+                9,
+                10,
+                16,
+                23
               ]
             }
           ],
-          "symbolIndices": 4,
+          "symbolIndices": 13,
           "sectionLinks": 0,
-          "sectionInfos": 0,
+          "sectionInfos": 5,
           "error": null
         },
         "errors": null

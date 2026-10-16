@@ -31,9 +31,8 @@
  *   tails. This TU's InitResources calls them.
  * Leftover: sMiniGmGroupBases group-base table,
  *   sMiniGmBgFiles / sMiniGmIconPalettes / sMiniGmIconChars
- *   file-id tables, sMiniGmRecordPos / sMiniGmBadgePos icon
- *   positions, sMiniGmIconScreenOffsets screen-offset table,
- *   sMiniGmRows minigame entries, sMiniGmGroupTabs /
+ *   file-id tables, sMiniGmRows minigame entries,
+ *   sMiniGmGroupTabs /
  *   sMiniGmPageArrows / sMiniGmExitButton / sMiniGmDigits /
  *   sMiniGmRecordLabels / sMiniGmNewBadge / sMiniGmSavingCaption /
  *   sMiniGmCaption OAM. Overlay .rodata/.data this TU does not
@@ -131,11 +130,23 @@ extern unsigned short data_020a0e5a[];
 
 /* ---- ov005 statics ---- */
 extern int sMiniGmBgFiles[];
-extern Pair sMiniGmRecordPos[];
-extern Pair sMiniGmBadgePos[];
+/* Nine icon positions on the top screen. The next nine are the second page. */
+const Pair sMiniGmRecordPos[9] = {
+    {0x58, 0x10}, {0x88, 0x10}, {0xb8, 0x10},
+    {0x58, 0xb0}, {0x88, 0xb0}, {0xb8, 0xb0},
+    {0x78, 0x30}, {0xa8, 0x30}, {0xd8, 0x30},
+};
+const Pair sMiniGmBadgePos[9] = {
+    {0x58, 0x28}, {0x88, 0x28}, {0xb8, 0x28},
+    {0x58, 0x70}, {0x88, 0x70}, {0xb8, 0x70},
+    {0x78, 0x48}, {0xa8, 0x48}, {0xd8, 0x48},
+};
 extern u32 sMiniGmIconPalettes[];
 extern int sMiniGmIconChars[];
-extern struct Off9 sMiniGmIconScreenOffsets; /* 9-entry screen-offset table, not a matrix */
+/* Nine screen offsets. The next object in this section is the vtable. */
+Off9 sMiniGmIconScreenOffsets = {
+    {0x68, 0x6e, 0x74, 0x188, 0x18e, 0x194, 0x4e2, 0x4e8, 0x4ee}
+};
 extern const MgEntry sMiniGmRows[];
 extern int data_ov005_020c24dc[];
 extern int sMiniGmDigits[];

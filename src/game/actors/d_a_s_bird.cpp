@@ -51,14 +51,12 @@
  * spellings are reconstructed; constructor and destructor addresses, file
  * IDs, widths, and BSS order are the ROM's. */
 struct SBirdModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     SBirdModelFilePtr(u32 fileID);
     ~SBirdModelFilePtr();
 };
 
 struct SBirdAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
 
     SBirdAnimationFilePtr(u32 fileID);
     ~SBirdAnimationFilePtr();

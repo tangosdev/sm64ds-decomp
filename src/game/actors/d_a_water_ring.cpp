@@ -38,7 +38,7 @@ extern int (daWater_Ring_c::*data_ov064_0211c3b0)();
 extern int (daWater_Ring_c::*data_ov064_0211c3c8)();
 extern int (daWater_Ring_c::*data_ov064_0211c3c0)();
 extern int (daWater_Ring_c::*data_ov064_0211c3b8)();
-extern Vector3 data_ov064_0211c3d0;         /* the collider offset */
+extern Fix12i data_ov064_0211c3d0[3];       /* the collider offset */
 extern s16 data_02082214[];                 /* sine/cosine table */
 extern char data_ov002_0210d6dc[];          /* the ring's BTA */
 extern Matrix4x3 data_020a0e68;             /* the shared scratch matrix */
@@ -78,7 +78,7 @@ void daWater_Ring_c::func_ov064_02119afc()
     u32 id;
 
     mTextureTransformer.speed = 0x1000;
-    offset = data_ov064_0211c3d0;
+    offset = *(Vector3 *)data_ov064_0211c3d0;
     mdCcAcPos_c.SetPosRelativeToActor(offset);
     id = mdCcAcPos_c.otherOwner;
     if (id == 0) return;
@@ -264,9 +264,9 @@ int daWater_Ring_c::InitResources()
     mScaleZ = 0x1000;
 
     Vector3 v;
-    v.x = data_ov064_0211c3d0.x;
-    v.y = data_ov064_0211c3d0.y;
-    v.z = data_ov064_0211c3d0.z;
+    v.x = data_ov064_0211c3d0[0];
+    v.y = data_ov064_0211c3d0[1];
+    v.z = data_ov064_0211c3d0[2];
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &v, 0x88000, 0xe8000, 0x800006, 0);
 
     mOpacity = 0x1f;
@@ -289,3 +289,7 @@ extern "C" daWater_Ring_c *daWater_Ring_c_classInit()
  * order. */
 daWater_Ring_c::State data_ov064_0211c954 = {data_ov064_0211c3b0, data_ov064_0211c3c8};
 daWater_Ring_c::State data_ov064_0211c944 = {data_ov064_0211c3c0, data_ov064_0211c3b8};
+
+/* Collider offset: three 20.12 words in .data. A Vector3 object would
+   construct them from the static initializer instead. */
+extern "C" Fix12i data_ov064_0211c3d0[3] = { 0x0, 0xfff88000, 0x0 };

@@ -15,6 +15,11 @@
       "name": ".text",
       "start": "0x0206dab4",
       "end": "0x0206ece0"
+    },
+    {
+      "name": ".bss",
+      "start": "0x020a9ecc",
+      "end": "0x020a9ed0"
     }
   ],
   "functions": [
@@ -223,7 +228,14 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_020a9ecc",
+      "address": "0x020a9ecc",
+      "size": "0x4",
+      "kind": "FP0206dbf8 (function pointer: void (*)(void))"
+    }
+  ],
   "compiler_only_output": [],
   "notes": [
     "HAND-BUILT manifest entry, not tools/tubuild.py create output -- the `main` module is unsegmentable, so there is no create candidate id.",

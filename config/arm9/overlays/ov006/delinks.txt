@@ -7,20 +7,24 @@
 src/minigames/unit020bfec0.cpp:
     complete
     .text start:0x020bfec0 end:0x020c4048
+    .data start:0x0213ac48 end:0x0213acc0
 
 src/minigames/d_mg3d_heyho_obj_adapter.cpp:
     complete
     .text start:0x020c4048 end:0x020c6f8c
     .init start:0x0212f4c4 end:0x0212f52c
     .ctor start:0x0213356c end:0x02133570
+    .data start:0x0213af30 end:0x0213af70
     .bss start:0x02140330 end:0x02140358
 
 src/minigames/d_mg_jump3d_mario.cpp:
     complete
     .text start:0x020c6f8c end:0x020c8a30
+    .rodata start:0x0212ddd0 end:0x0212dddc
     .init start:0x0212f52c end:0x0212f660
     .ctor start:0x02133570 end:0x02133574
-    .bss start:0x02140438 end:0x021404c4
+    .data start:0x0213b020 end:0x0213b0a4
+    .bss start:0x02140408 end:0x021404c4
 
 src/minigames/unit020c8a30.cpp:
     complete
@@ -29,6 +33,8 @@ src/minigames/unit020c8a30.cpp:
 src/minigames/d_mg_trmpln2_mario.cpp:
     complete
     .text start:0x020c8dd4 end:0x020cd744
+    .data start:0x0213b11c end:0x0213b13c
+    .bss start:0x021405d0 end:0x02140620
 
 src/minigames/unit020cd744.cpp:
     complete
@@ -37,10 +43,12 @@ src/minigames/unit020cd744.cpp:
 src/minigames/d_s_mg_amida.cpp:
     complete
     .text start:0x020d1018 end:0x020d5a54
+    .data start:0x0213b81c end:0x0213b918
 
 src/minigames/d_s_mg_bomroom.cpp:
     complete
     .text start:0x020d5a54 end:0x020d95a4
+    .bss start:0x02141660 end:0x02141768
 
 src/minigames/d_s_mg_card.cpp:
     complete
@@ -61,6 +69,7 @@ src/minigames/d_s_mg_cup.cpp:
     .text start:0x020de988 end:0x020e0638
     .init start:0x021303d0 end:0x021304ac
     .ctor start:0x0213358c end:0x02133590
+    .data start:0x0213c094 end:0x0213c0f4
     .bss start:0x02141870 end:0x021418b0
 
 src/minigames/d_s_mg_curling.cpp:
@@ -80,12 +89,14 @@ src/minigames/d_s_mg_curling2.cpp:
 src/minigames/d_s_mg_d3d_base.cpp:
     complete
     .text start:0x020e6c28 end:0x020e7660
+    .bss start:0x02141a54 end:0x02141e54
 
 src/minigames/d_mg3d_esp_anim_set.cpp:
     complete
     .text start:0x020e7660 end:0x020ea280
     .init start:0x02130a08 end:0x02130df8
     .ctor start:0x0213359c end:0x021335a0
+    .data start:0x0213c764 end:0x0213c77c
     .bss start:0x02141e54 end:0x02141fcc
 
 src/minigames/d_s_mg_hanachan_methods.cpp:
@@ -93,7 +104,8 @@ src/minigames/d_s_mg_hanachan_methods.cpp:
     .text start:0x020ea280 end:0x020ede18
     .init start:0x02130df8 end:0x02130e9c
     .ctor start:0x021335a0 end:0x021335a4
-    .bss start:0x02142018 end:0x02142044
+    .data start:0x0213c95c end:0x0213ca6c
+    .bss start:0x02141ff0 end:0x02142048
 
 src/minigames/d_s_mg_hanachan.cpp:
     complete
@@ -104,6 +116,7 @@ src/minigames/d_s_mg_jump_methods.cpp:
     .text start:0x020edec0 end:0x020eeafc
     .init start:0x02130e9c end:0x02130f00
     .ctor start:0x021335a4 end:0x021335a8
+    .data start:0x0213cb4c end:0x0213cb8c
     .bss start:0x02142188 end:0x021421b0
 
 src/minigames/d_s_mg_jump.cpp:
@@ -137,6 +150,7 @@ src/minigames/d_s_mg_memory2.cpp:
     .text start:0x020f5564 end:0x020f7634
     .init start:0x021314e4 end:0x021318a0
     .ctor start:0x021335b4 end:0x021335b8
+    .data start:0x0213d248 end:0x0213d338
     .bss start:0x021423a8 end:0x021424ec
 
 src/minigames/d_s_mg_m_carlo.cpp:
@@ -144,20 +158,21 @@ src/minigames/d_s_mg_m_carlo.cpp:
     .text start:0x020f7634 end:0x020f8ef4
     .init start:0x021318a0 end:0x0213195c
     .ctor start:0x021335b8 end:0x021335bc
-    .bss start:0x0214250c end:0x02142558
+    .bss start:0x021424fc end:0x02142558
 
 src/minigames/d_s_mg_m_carlo2.cpp:
     complete
     .text start:0x020f8ef4 end:0x020fa75c
     .init start:0x0213195c end:0x02131a38
     .ctor start:0x021335bc end:0x021335c0
-    .bss start:0x021425a8 end:0x02142604
+    .bss start:0x02142568 end:0x02142604
 
 src/minigames/d_s_mg_pachinko.cpp:
     complete
     .text start:0x020fa75c end:0x020ff420
     .init start:0x02131a38 end:0x02131cd0
     .ctor start:0x021335c0 end:0x021335c4
+    .data start:0x0213d878 end:0x0213d910
     .bss start:0x02142604 end:0x021426cc
 
 src/minigames/d_s_mg_pachinko2.cpp:
@@ -178,6 +193,7 @@ src/minigames/d_s_mg_panel.cpp:
 src/minigames/d_s_mg_roulette_methods.cpp:
     complete
     .text start:0x0210788c end:0x0210a400
+    .data start:0x0213e2e8 end:0x0213e2f0
 
 src/minigames/d_s_mg_roulette.cpp:
     complete
@@ -216,10 +232,12 @@ src/minigames/d_s_mg_trampoline.cpp:
     complete
     .text start:0x021207dc end:0x021225ac
     .data start:0x0213faa0 end:0x0213fbc4
+    .bss start:0x02142f64 end:0x02142f68
 
 src/minigames/d_s_mg_trampoline2.cpp:
     complete
     .text start:0x021225ac end:0x02124908
+    .rodata start:0x0212f0f0 end:0x0212f328
     .data start:0x0213fbc4 end:0x0213fd0c
     .init start:0x0213322c end:0x0213326c
     .ctor start:0x021335dc end:0x021335e0

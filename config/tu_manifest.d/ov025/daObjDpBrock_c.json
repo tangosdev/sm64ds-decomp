@@ -29,6 +29,11 @@
       "end": "0x02112b24"
     },
     {
+      "name": ".data",
+      "start": "0x02112ce8",
+      "end": "0x02112d08"
+    },
+    {
       "name": ".bss",
       "start": "0x02113ab0",
       "end": "0x02113ad8"
@@ -99,7 +104,15 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov025_02112ce8",
+      "address": "0x02112ce8",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block SetFile takes; magic, stride 8, count 1, one entry"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov025_02113ab0",
@@ -253,6 +266,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02112ce8",
+          "end": "0x02112d08",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02113ab0",
           "end": "0x02113ad8",
@@ -261,7 +281,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 15
+          "LICENSED": 16
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -272,38 +292,75 @@
           {
             "section": ".init",
             "original": [
-              47
+              48
             ],
             "desired": [
-              47
+              48
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              45
+              46
             ],
             "desired": [
-              45
+              46
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              24
+            ],
+            "desired": [
+              24
             ]
           },
           {
             "section": ".bss",
             "original": [
               5,
-              8,
-              14,
+              6,
+              20,
               21
             ],
             "desired": [
+              6,
               5,
-              8,
-              14,
-              21
+              21,
+              20
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                20,
+                21
+              ],
+              "desired": [
+                6,
+                5,
+                21,
+                20
+              ],
+              "slots": [
+                5,
+                6,
+                20,
+                21
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,

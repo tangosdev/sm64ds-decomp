@@ -7,6 +7,7 @@
 src/game/actors/d_a_yurei_mucho.cpp:
     complete
     .text start:0x02115ee0 end:0x02116f98
+    .bss start:0x0211d600 end:0x0211d620
 
 src/game/actors/d_a_basabasa.cpp:
     complete
@@ -19,6 +20,7 @@ src/game/actors/d_a_basabasa.cpp:
 src/game/actors/d_a_dossy.cpp:
     complete
     .text start:0x02117f40 end:0x021196d8
+    .rodata start:0x0211c080 end:0x0211c0a8
     .init start:0x0211c440 end:0x0211c660
     .ctor start:0x0211cae8 end:0x0211caec
     .data start:0x0211cd1c end:0x0211cd34
@@ -43,6 +45,7 @@ src/game/actors/d_a_obj_ct_mecha04.cpp:
     .text start:0x0211a494 end:0x0211ab60
     .init start:0x0211c7d8 end:0x0211c890
     .ctor start:0x0211caf4 end:0x0211caf8
+    .data start:0x0211d16c end:0x0211d1ac
     .bss start:0x0211d8b4 end:0x0211d904
 
 src/game/actors/d_a_obj_ct_mecha05.cpp:
@@ -57,6 +60,7 @@ src/game/actors/d_a_obj_ct_kaitendai.cpp:
     .text start:0x0211b360 end:0x0211b7f0
     .init start:0x0211c8fc end:0x0211c9b8
     .ctor start:0x0211cafc end:0x0211cb00
+    .data start:0x0211d35c end:0x0211d360
     .bss start:0x0211d92c end:0x0211d97c
 
 src/game/actors/d_a_obj_ct_mecha08.cpp:

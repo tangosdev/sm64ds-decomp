@@ -16,7 +16,7 @@
  * func_ov070_0211f62c and func_ov070_0211f6e0. Player-position reads
  * through int* in func_ov070_0211fd98, func_ov070_0211fae4 and
  * func_ov070_0211f48c, and the Vector3 write through ((int *)&v)[i] in
- * func_ov070_0211f368, stay as written. SharedFilePtr has no fields, so
+ * func_ov070_0211f368, stay as written. SharedFilePtr is the 8-byte handle, so
  * the loaded file is ((int *)&handle)[1]. unk_0a4, unk_0ac, unk_104,
  * unk_108, unk_10a and the mPrevAngle triple keep the base-class names.
  * FlyGuy_ChangeState keeps its C-ABI name. ApproachAngleInt is the
@@ -156,14 +156,12 @@ s32 daPropeller_Heyho_c::OnAimedAtWithEgg() {
  * constructors and destructors are the ROM resource-family functions,
  * aliased in the manifest. */
 struct HeyhoModelFile : SharedFilePtr {
-    u32 words[2];
 
     HeyhoModelFile(u32 fileID);
     ~HeyhoModelFile();
 };
 
 struct HeyhoAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
 
     HeyhoAnimationFilePtr(u32 fileID);
     ~HeyhoAnimationFilePtr();

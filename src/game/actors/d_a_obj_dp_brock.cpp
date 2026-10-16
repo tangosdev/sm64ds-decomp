@@ -48,14 +48,12 @@ enum daObjDpBrock_c_AssetId {
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct BrockModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BrockModelFilePtr(u32 fileID);
     ~BrockModelFilePtr();
 };
 
 struct BrockCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BrockCollisionFilePtr(u32 fileID);
     ~BrockCollisionFilePtr();
@@ -216,3 +214,16 @@ void daObjDpBrock_c::UpdateStepClsnPosAndRot()
  * destructors; the registration nodes are compiler temporaries. */
 BrockModelFilePtr data_ov025_02113ab8(ASSET_DP_BROCK_BMD);
 BrockCollisionFilePtr data_ov025_02113ab0(ASSET_DP_BROCK_KCL);
+
+/* Completed here, after SetFile has taken the address. The header leaves
+ * CLPS_Block incomplete. Thirty-two bytes: magic, stride 8 and count 1,
+ * one entry, then the four words the symbol still owns. */
+struct CLPS_Block {
+    u32 w[8];
+};
+typedef char CLPS_Block_size_must_be_0x20[sizeof(CLPS_Block) == 0x20 ? 1 : -1];
+
+extern "C" CLPS_Block data_ov025_02112ce8 = {
+    0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
+    0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+};

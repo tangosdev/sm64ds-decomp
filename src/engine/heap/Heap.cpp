@@ -50,7 +50,7 @@ namespace Memory { extern Heap* defaultHeapPtr; }   /* 0x020a0ea0 */
 /* 0x020a0ea8 -- where SetupSolidHeapAsDefault parks the outgoing default heap.
    Unnamed in config/arm9/symbols.txt; left as the address symbol rather than
    minted here, since naming it is a claim of its own. */
-extern "C" Heap* data_020a0ea8;
+extern "C" Heap* data_020a0ea8 = 0;
 
 extern "C" {
     /* `extern' is load-bearing on both of these, and specifically because they

@@ -209,6 +209,11 @@ def emitted_data_symbols(raw):
             continue
         if s["st_info"]["bind"] == "STB_LOCAL":
             continue
+        # SHT_NOBITS stores no bytes; reading its file offset would compare
+        # whatever follows the headers. BSS is judged by address and size.
+        if isinstance(s["st_shndx"], int) and \
+                elf.get_section(s["st_shndx"]).header["sh_type"] == "SHT_NOBITS":
+            continue
         out.append((s.name, s["st_shndx"], s["st_value"], s["st_size"]))
     return out
 

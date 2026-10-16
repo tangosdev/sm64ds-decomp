@@ -67,7 +67,6 @@ struct ChoropuStateRow { ChoropuStateFn fn[1]; };
  * 0x2d4, 0x2d5) and fill the six one-entry state rows. mwcc emits
  * __sinit_d_a_choropu.cpp from those definitions. */
 struct ChoropuModelFile : SharedFilePtr {
-    u32 words[2];
 
     ChoropuModelFile(u32 fileID);
     ~ChoropuModelFile();
@@ -75,9 +74,6 @@ struct ChoropuModelFile : SharedFilePtr {
 
 struct ChoropuAnimationFilePtr : SharedFilePtr {
     /* SharedFilePtr::Load and func_02017e0c use this local eight-byte layout. */
-    u16 fileID;
-    u8 numRefs;
-    void *filePtr;
 
     ChoropuAnimationFilePtr(u32 fileID);
     ~ChoropuAnimationFilePtr();
@@ -118,7 +114,7 @@ extern int data_0209e650;
 extern s16 data_02082214[];
 extern int data_ov080_0212767c[];
 extern SharedFilePtr data_ov002_0210d9d8;
-extern SharedFilePtr *data_ov080_0212766c[];
+extern "C" SharedFilePtr *const data_ov080_0212766c[4];
 
 #pragma defer_codegen off
 
@@ -875,6 +871,13 @@ ChoropuAnimationFilePtr data_ov080_021283e8(ASSET_CHOROPU_END_BCA);
 ChoropuAnimationFilePtr data_ov080_021283d0(ASSET_CHOROPU_SEARCH_BCA);
 ChoropuAnimationFilePtr data_ov080_021283d8(ASSET_CHOROPU_START_BCA);
 ChoropuAnimationFilePtr data_ov080_021283e0(ASSET_CHOROPU_THROW_BCA);
+
+extern "C" SharedFilePtr *const data_ov080_0212766c[4] = {
+    &data_ov080_021283e8,
+    &data_ov080_021283d0,
+    &data_ov080_021283d8,
+    &data_ov080_021283e0,
+};
 
 ChoropuStateRow data_ov080_02128438[6] = {
     {{&daChoropu_c::func_ov080_02123fcc}},

@@ -70,15 +70,11 @@ void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
    (animation) in this unit's manifest, and the destructors func_02017ab4
    and SharedFilePtr_Destruct_Anim. */
 struct TorModelFilePtr : SharedFilePtr {
-    int unk0;
-    void *file;
     TorModelFilePtr(unsigned int id);
     ~TorModelFilePtr();
 };
 
 struct TorAnimationFileHandle : SharedFilePtr {
-    int unk0;
-    void *file;
     TorAnimationFileHandle(unsigned int id);
     ~TorAnimationFileHandle();
 };
@@ -309,8 +305,8 @@ int daTor_c::InitResources()
     dExtFrameCtrl_c::LoadFile(gSandTornadoAnimationFile);
     func_02016aac(&mModelAnim, 0x16, 1);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &mModelAnim, (void *)gSandTornadoAnimationFile.file, 0, 0x1000, 0);
-    TextureTransformer::Prepare(*(BMD_File *)gSandTornadoModelFile.file, *(BTA_File *)data_ov024_02112968);
+        &mModelAnim, (void *)gSandTornadoAnimationFile.filePtr, 0, 0x1000, 0);
+    TextureTransformer::Prepare(*(BMD_File *)gSandTornadoModelFile.filePtr, *(BTA_File *)data_ov024_02112968);
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
         &mTextureTransformer, data_ov024_02112968, 0, 0x1000, 0);
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0, 0, 0x200002, 0);

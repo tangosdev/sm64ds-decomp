@@ -18,6 +18,11 @@
       "name": ".text",
       "start": "0x020d5a54",
       "end": "0x020d95a4"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02141660",
+      "end": "0x02141768"
     }
   ],
   "functions": [
@@ -590,7 +595,57 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov006_02141660",
+      "address": "0x02141660",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "PMFEntry[4] slot-state table, populated at load by __sinit_ov006_0212fd48"
+    },
+    {
+      "symbol": "data_ov006_02141680",
+      "address": "0x02141680",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "PMF[4] slot-state table, populated at load by __sinit_ov006_0212fd48"
+    },
+    {
+      "symbol": "data_ov006_021416a0",
+      "address": "0x021416a0",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "int[8] raw {fptr,adj} pairs consumed by func_ov006_020d8ff0; populated at load by __sinit_ov006_0212fd48; claimed because the one-contiguous-.bss rule forces the interior record into the same contribution"
+    },
+    {
+      "symbol": "data_ov006_021416c0",
+      "address": "0x021416c0",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "PMF[4] slot-state table, populated at load by __sinit_ov006_0212fd48"
+    },
+    {
+      "symbol": "data_ov006_021416e0",
+      "address": "0x021416e0",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "PMFv[5] round-state table indexed by +0x62d0, populated at load by __sinit_ov006_0212fd48"
+    },
+    {
+      "symbol": "data_ov006_02141708",
+      "address": "0x02141708",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "PMFEntry[5] bomb-substate table indexed by +0x697, populated at load by __sinit_ov006_0212fd48"
+    },
+    {
+      "symbol": "data_ov006_02141730",
+      "address": "0x02141730",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "PMF[7] bomb-state table indexed by +0x697, populated at load by __sinit_ov006_0212fd48"
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZN14dScMgBomroom_cD2Ev",
@@ -680,7 +735,8 @@
     "Written ROM-ASCENDING because `#pragma defer_codegen off` makes CodeWarrior emit each definition as it is encountered rather than in reverse source order. With the out-of-line destructor first in the file it emits D1, D0 at ordinals 0 and 1, and the homeless D2 is dispositioned deadstrip.",
     "include/decl_common.h declares several of this TU's members. Those declared `void f(void*)` are defined with that spelling and cast to the recovered type on the first line, which is byte-neutral; call sites that reach a member defined with a typed parameter (_ZN14dScMgBomroom_c13SlotB_HideAllEv, _020d669c, _020d5dd4, _020d65c8, _020d6278, _020d5fec) cast at the call. _ZN14dScMgBomroom_c13DrawRemainingEv was declared `int f()` there -- decl_headers.py had read a legacy shard's K&R forward declaration -- and is corrected to `void f(void*)`. _ZN14dScMgBomroom_c11SlotB2_DrawEv was declared `void f()`, which C++ reads as taking no arguments and which conflicts with its `char *` definition here; that declaration is removed, since this file is its only caller. Bomroom_DrawScore keeps decl_common.h's `void f(void)`: it takes no argument, and Render calls it without one (the retired Render file passed `this`, which the callee never read; bytes are unchanged).",
     "Each member keeps its own legacy shadow types, suffixed with the member's address (S_604c, Obj_6098, PMF_6278, Ent_816c, Work_893c, ...) so that the shards' independently-invented `S`/`C`/`Rec`/`Obj`/`Work`/`Ent`/`Entry` tags coexist. Members derived from .c shards had their `this` parameter renamed to `self_` -- a C++ keyword in the merged TU. The .c shards' `_ZN5Sound12PlayBank2_2DEj` calls are spelled Sound::PlayBank2_2D through include/Sound.h, and _ZN14dScMgBomroom_c12Round_State2Ev, recovered as returning the result of a void function through K&R declarations, is void.",
-    "The incomplete structs and PMF typedefs above the pointer-to-member dispatchers (C_5fec, C_6278, C_65c8, C_7c00, C_836c, C_91b0) are load-bearing: they are the representation the tables at data_ov006_02141660..data_ov006_02141730 are filled with, and completing a struct changes the pointer-to-member representation mwcc emits."
+    "The incomplete structs and PMF typedefs above the pointer-to-member dispatchers (C_5fec, C_6278, C_65c8, C_7c00, C_836c, C_91b0) are load-bearing: they are the representation the tables at data_ov006_02141660..data_ov006_02141730 are filled with, and completing a struct changes the pointer-to-member representation mwcc emits.",
+    "rom.sha256 records the shared stock SHA the other intact manifests carry (S38); this worktree's dump rebuilds sha256 ddab9300 with all module bytes and symbols byte-identical -- the same machine-local variance the dsd check-symbols errors come from."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -754,7 +810,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov006-dScMgBomroom_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -766,30 +822,58 @@
         "rom": true
       },
       "tuRange": {
-        "start": "0x020d5eb8",
-        "end": "0x020d7c4c",
+        "start": "0x020d5a54",
+        "end": "0x020d95a4",
         "differingBytes": 0,
         "firstDiff": null
       },
       "tuRanges": [
         {
           "section": ".text",
-          "start": "0x020d5eb8",
-          "end": "0x020d7c4c",
+          "start": "0x020d5a54",
+          "end": "0x020d95a4",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02141660",
+          "end": "0x02141768",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 41
+          "LICENSED": 88
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
+        "groups": [
+          {
+            "section": ".bss",
+            "original": [
+              142,
+              143,
+              144,
+              145,
+              146,
+              147,
+              148
+            ],
+            "desired": [
+              142,
+              143,
+              144,
+              145,
+              146,
+              147,
+              148
+            ]
+          }
+        ],
         "objisolate": null,
         "errors": null
       },

@@ -83,7 +83,6 @@ struct SceneGate { virtual int f00(); virtual int f01(); virtual int f02(); virt
 extern "C" {
 extern short data_ov003_020b1774[];
 extern unsigned short data_ov003_020b174c[];
-extern OamAttr *data_ov003_020b1824[];
 extern SceneGate *data_0209f5bc;
 extern int data_0208ee44;
 /* Scalars, not tables: the two BG-enable bit registers, main and sub --
@@ -117,6 +116,45 @@ int LoadFile(int handle);
 void DecompressLZ16(int src, void *dst);
 void func_02012790(int se);
 }
+
+/* GAME OVER glyph templates. attr2 is the tile. Each record is its own
+ * 8-byte .data section, and mwcc emits that group in one fixed permutation
+ * of declaration order. This order is the one concatenation places at
+ * 0x020b17e4 and up. Render walks them through the pointer table below. */
+extern "C" OamAttr data_ov003_020b181c = {0x00f0, 0x81f0, 0x0004, 0xffff};
+extern "C" OamAttr data_ov003_020b1814 = {0x00f0, 0x81f0, 0x0008, 0xffff};
+extern "C" OamAttr data_ov003_020b17e4 = {0x00f0, 0x81f0, 0x0000, 0xffff};
+extern "C" OamAttr data_ov003_020b17f4 = {0x00f0, 0x81f0, 0x000c, 0xffff};
+extern "C" OamAttr data_ov003_020b180c = {0x00f0, 0x81f0, 0x000c, 0xffff};
+extern "C" OamAttr data_ov003_020b1804 = {0x00f0, 0x81f0, 0x0010, 0xffff};
+extern "C" OamAttr data_ov003_020b17ec = {0x00f0, 0x81f0, 0x0018, 0xffff};
+extern "C" OamAttr data_ov003_020b17fc = {0x00f0, 0x81f0, 0x0014, 0xffff};
+
+/* The ninth pointer's attribute list. Eight entries, the last with attr3
+ * 0xffff, then three zero entries out to the end of ov003 .data. */
+extern "C" OamAttr data_ov003_020b1848[11];
+
+/* Glyph attribute table Render indexes for the eight letters. The ninth
+ * cell is the list above. */
+extern "C" OamAttr *data_ov003_020b1824[9] = {
+    &data_ov003_020b17e4, &data_ov003_020b181c, &data_ov003_020b1814,
+    &data_ov003_020b180c, &data_ov003_020b1804, &data_ov003_020b17fc,
+    &data_ov003_020b17f4, &data_ov003_020b17ec, data_ov003_020b1848,
+};
+
+extern "C" OamAttr data_ov003_020b1848[11] = {
+    {0x00e8, 0x8190, 0x0000, 0x0000},
+    {0x00e8, 0x81ab, 0x0004, 0x0000},
+    {0x00e8, 0x81c6, 0x0008, 0x0000},
+    {0x00e8, 0x81e0, 0x000c, 0x0000},
+    {0x00e8, 0x8002, 0x0010, 0x0000},
+    {0x00e8, 0x8019, 0x0014, 0x0000},
+    {0x00e8, 0x8035, 0x000c, 0x0000},
+    {0x00e8, 0x8050, 0x0018, 0xffff},
+    {0x0000, 0x0000, 0x0000, 0x0000},
+    {0x0000, 0x0000, 0x0000, 0x0000},
+    {0x0000, 0x0000, 0x0000, 0x0000},
+};
 
 /* Reconstructed source-style name: SM64DS proves dScGameOver_c through RTTI,
  * allocation size, vtable identity, and the GAME_OVER registry profile;

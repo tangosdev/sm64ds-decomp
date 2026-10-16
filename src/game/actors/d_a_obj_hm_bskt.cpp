@@ -26,9 +26,8 @@
  * Leftover: Behavior needs the four-word volatile stack reservation to
  *   reproduce the cartridge's frame; without it the body is 17 words short.
  * Leftover: data_ov030_02115c80 / 02115c88 are this overlay's KCL and BMD
- *   handles (InitResources LoadFile / CleanupResources Release), and
- *   data_ov030_02114ee4 is the CLPS block SetFile is handed. All three live
- *   in overlay .data and .bss this TU does not own.
+ *   handles (InitResources LoadFile / CleanupResources Release).
+ *   data_ov030_02114ee4 is the CLPS block SetFile is handed.
  * Leftover: g_profile_HM_BASKET lives outside this TU.
  * Leftover: inline destructor (out of line emits D0 before D1).
  */
@@ -43,19 +42,25 @@ enum d_a_obj_hm_bskt_AssetId {
 #include "SharedFilePtr.h"
 
 struct KCL_File;
-struct CLPS_Block;
 
-/* SharedFilePtr has no fields; the two words are the handle's 8 bytes. The
+/* Headers only forward-declare CLPS_Block. */
+struct CLPS_Block {
+    u32 tag;
+    u32 hdr;
+    u32 w0;
+    u32 w1;
+    u32 rest[4];
+};
+
+/* SharedFilePtr is the 8-byte handle; the two words are the handle's 8 bytes. The
  * cartridge's ctor/dtor imports are the functions the wrappers' aliases name. */
 struct HmBsktModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     HmBsktModelFilePtr(u32 fileID);
     ~HmBsktModelFilePtr();
 };
 
 struct HmBsktCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     HmBsktCollisionFilePtr(u32 fileID);
     ~HmBsktCollisionFilePtr();
@@ -64,7 +69,13 @@ struct HmBsktCollisionFilePtr : SharedFilePtr {
 extern "C" {
 extern HmBsktCollisionFilePtr data_ov030_02115c80; /* the KCL */
 extern HmBsktModelFilePtr data_ov030_02115c88;     /* the BMD */
-extern CLPS_Block data_ov030_02114ee4;
+CLPS_Block data_ov030_02114ee4 = {
+    0x53504c43,
+    0x00010008,
+    0x01000fc0,
+    0x000000ff,
+    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
 
 int func_ov030_0211124c(char *c, char *mc);
 

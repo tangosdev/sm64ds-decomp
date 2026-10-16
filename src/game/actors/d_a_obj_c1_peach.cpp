@@ -40,10 +40,9 @@ enum daObjC1Peach_c_AssetId {
 
 namespace cstd { int fdiv(int a, int b); }
 
-/* SharedFilePtr has no fields; the two words are the handle's 8 bytes. The
+/* SharedFilePtr is the 8-byte handle; the two words are the handle's 8 bytes. The
  * cartridge's ctor/dtor imports are the functions the wrapper's aliases name. */
 struct C1PeachModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     C1PeachModelFilePtr(u32 fileID);
     ~C1PeachModelFilePtr();

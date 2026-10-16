@@ -104,8 +104,6 @@ int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
    The constructor aliases func_02017acc and the destructor func_02017ab4 in
    this unit's manifest. */
 struct CnnModelFilePtr : SharedFilePtr {
-    int unk0;
-    void *file;
     CnnModelFilePtr(unsigned int id);
     ~CnnModelFilePtr();
 };

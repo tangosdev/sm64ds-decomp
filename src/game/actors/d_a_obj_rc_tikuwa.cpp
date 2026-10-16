@@ -54,14 +54,12 @@ enum daObjRc_Tikuwa_c_AssetId {
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct TikuwaModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     TikuwaModelFilePtr(u32 fileID);
     ~TikuwaModelFilePtr();
 };
 
 struct TikuwaCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     TikuwaCollisionFilePtr(u32 fileID);
     ~TikuwaCollisionFilePtr();
@@ -95,8 +93,8 @@ s32 daObjRc_Tikuwa_c::CleanupResources()
 {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    ((SharedFilePtr *)&gRcTikuwaModelFile)->Release();
-    ((SharedFilePtr *)&gRcTikuwaCollisionFile)->Release();
+    gRcTikuwaModelFile.Release();
+    gRcTikuwaCollisionFile.Release();
     return 1;
 }
 
@@ -166,10 +164,10 @@ s32 daObjRc_Tikuwa_c::Behavior()
 // @symbol _ZN16daObjRc_Tikuwa_c13InitResourcesEv
 s32 daObjRc_Tikuwa_c::InitResources()
 {
-    mModel.SetFile((BMD_File *)Model::LoadFile(*(SharedFilePtr *)&gRcTikuwaModelFile), 1, -1);
+    mModel.SetFile((BMD_File *)Model::LoadFile(gRcTikuwaModelFile), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    void *kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)&gRcTikuwaCollisionFile);
+    void *kcl = dBgW_Kc::LoadFile(gRcTikuwaCollisionFile);
     /* Leftover: dBgW_KcMbg::SetFile and dBgCh_Actr::Init take Fix12<int> by
      * value, so they stay mangled (the header spellings take Fix12i and would
      * mangle symbols the ROM does not have). */

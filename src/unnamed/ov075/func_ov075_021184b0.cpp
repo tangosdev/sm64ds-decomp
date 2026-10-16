@@ -1,4 +1,13 @@
 //cpp
+/* Leftover: the ten OamAttr lists the tables below index
+ * (data_ov075_0211cc64 .. data_ov075_0211d2ac) stay the ROM copy. A TU's
+ * .data emits as one contribution and the delinks entry claims one
+ * contiguous range per section, so this file's .data slot is the two
+ * tables at 0x0211c9e0; the lists sit scattered across a shared .data
+ * region pooled with other screens' lists and cannot join it. The tail
+ * of data_ov075_0211d2ac is _ZTV10dScEntry_c's header, and _ZTI/_ZTS
+ * 10dScEntry_c are emitted by the TU that owns the vtable, which this
+ * file is not. */
 #include "types.h"
 #include "OamAttr.h"
 extern "C" int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int, OamAttr*, int, int, int, int, int, int, int, int);
@@ -9,8 +18,33 @@ extern "C" int func_0200f0bc(void);
 extern "C" void func_0202048c(void *dst, int a, int b);
 extern u8 data_0209b2f0[];
 extern OamAttr data_ov075_0211cb84;
-extern OamAttr *data_ov075_0211c9f4[];
-extern OamAttr *data_ov075_0211c9e0[];
+extern OamAttr data_ov075_0211cc8c[];
+extern OamAttr data_ov075_0211d04c[];
+extern OamAttr data_ov075_0211d104[];
+extern OamAttr data_ov075_0211ccb4[];
+extern OamAttr data_ov075_0211d264[];
+extern OamAttr data_ov075_0211cc64[];
+extern OamAttr data_ov075_0211d014[];
+extern OamAttr data_ov075_0211d0c4[];
+extern OamAttr data_ov075_0211cda4[];
+extern OamAttr data_ov075_0211d2ac[];
+
+/* Indexed by func_0200f0bc. Each entry is one OAM list. */
+OamAttr *data_ov075_0211c9e0[5] = {
+    data_ov075_0211cc8c,
+    data_ov075_0211d04c,
+    data_ov075_0211d104,
+    data_ov075_0211ccb4,
+    data_ov075_0211d264,
+};
+
+OamAttr *data_ov075_0211c9f4[5] = {
+    data_ov075_0211cc64,
+    data_ov075_0211d014,
+    data_ov075_0211d0c4,
+    data_ov075_0211cda4,
+    data_ov075_0211d2ac,
+};
 
 #define LADR(p) ((int *)(unsigned int)(p))
 

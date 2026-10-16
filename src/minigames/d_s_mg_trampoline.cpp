@@ -154,7 +154,7 @@ extern int data_ov006_02134f24;
 extern int _Z15ApproachLinear2Rsss(s16 *dst, s16 a, s16 b);
 extern void Mg_DrawBigNumber(int,int,int,int,int,int,int);
 extern void TrmpFx_Link(int *self);
-extern struct Node* data_ov006_02142f64;
+struct Node* data_ov006_02142f64;
 extern int data_ov006_02142f70;
 extern int data_ov006_02142f68;
 

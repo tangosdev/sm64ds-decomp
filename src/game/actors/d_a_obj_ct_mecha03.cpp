@@ -65,14 +65,12 @@ struct CLPS_Block;
 /* Resource handles constructed by this TU's static initializer. The
  * constructor and destructor bodies stay out of line; mwcc registers them. */
 struct Mecha03ModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Mecha03ModelFilePtr(u32 fileID);
     ~Mecha03ModelFilePtr();
 };
 
 struct Mecha03ClsnFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Mecha03ClsnFilePtr(u32 fileID);
     ~Mecha03ClsnFilePtr();

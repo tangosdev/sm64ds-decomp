@@ -29,6 +29,11 @@
       "end": "0x0213c344"
     },
     {
+      "name": ".data",
+      "start": "0x0213c4e0",
+      "end": "0x0213c500"
+    },
+    {
       "name": ".bss",
       "start": "0x0213c850",
       "end": "0x0213c8e8"
@@ -295,7 +300,22 @@
       "ordinal": 36
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov098_0213c4e0",
+      "address": "0x0213c4e0",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "BlockSW4 throw-speed table {40.0,40.0,80.0,30.0} in 20.12; copied by value in func_ov098_02138818"
+    },
+    {
+      "symbol": "data_ov098_0213c4f0",
+      "address": "0x0213c4f0",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "BlockSW4 throw-speed table {20.0,20.0,20.0,15.0} in 20.12; copied by value in func_ov098_02138818"
+    }
+  ],
   "bss": [
     {
       "symbol": "gBrokenBlockSModelFile",
@@ -553,6 +573,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0213c4e0",
+          "end": "0x0213c500",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x0213c850",
           "end": "0x0213c8e8",
@@ -561,7 +588,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 44
+          "LICENSED": 46
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -572,6 +599,15 @@
           {
             "section": ".init",
             "original": [
+              103
+            ],
+            "desired": [
+              103
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
               101
             ],
             "desired": [
@@ -579,12 +615,14 @@
             ]
           },
           {
-            "section": ".ctor",
+            "section": ".data",
             "original": [
-              99
+              82,
+              83
             ],
             "desired": [
-              99
+              82,
+              83
             ]
           },
           {

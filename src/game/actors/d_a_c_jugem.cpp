@@ -68,21 +68,18 @@ bool ApproachLinear(short &value, short target, short step);
  * TU, which deliberately avoids it); the destructor alias points at the
  * ROM's canonical copy. */
 struct JugemModelFile : SharedFilePtr {
-    u32 words[2];
 
     JugemModelFile(u32 fileID);
     ~JugemModelFile();
 };
 
 struct JugemAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
 
     JugemAnimationFilePtr(u32 fileID);
     ~JugemAnimationFilePtr();
 };
 
 struct JugemTexSequenceFilePtr : SharedFilePtr {
-    u32 words[2];
 
     JugemTexSequenceFilePtr(u32 fileID);
     ~JugemTexSequenceFilePtr();
@@ -969,11 +966,11 @@ int daC_Jugem_c::InitResources()
   mShadowModel1.InitCylinder();
   mShadowModel2.InitCylinder();
   TextureSequence::Prepare(
-      **(BMD_File**)((char*)&data_ov085_0213074c + 4), **(BTP_File**)((char*)&data_ov085_0213073c + 4));
+      *(BMD_File *)data_ov085_0213074c.filePtr, *(BTP_File *)data_ov085_0213073c.filePtr);
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-      &mModelAnim1, *(BCA_File**)((char*)&data_ov085_02130744 + 4), 0, 0x1000, 0);
+      &mModelAnim1, (BCA_File *)data_ov085_02130744.filePtr, 0, 0x1000, 0);
   _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-      &mTextureSequence, **(BTP_File**)((char*)&data_ov085_0213073c + 4), 0, 0x1000, 0);
+      &mTextureSequence, *(BTP_File *)data_ov085_0213073c.filePtr, 0, 0x1000, 0);
   mModelAnim1.speed = 0x1000;
   mVariant = param1 & 0xff;
   if (mVariant == 0xff)

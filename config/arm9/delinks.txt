@@ -258,6 +258,7 @@ src/unnamed/arm9/0200/func_02008500.c:
 src/unnamed/arm9/0200/func_02008550.cpp:
     complete
     .text start:0x02008550 end:0x0200897c
+    .bss start:0x0209b138 end:0x0209b270
 
 src/unnamed/arm9/0200/func_0200897c.c:
     complete
@@ -430,6 +431,7 @@ src/unnamed/arm9/0200/func_0200b0fc.c:
 src/unnamed/arm9/0200/func_0200b590.c:
     complete
     .text start:0x0200b590 end:0x0200b798
+    .data start:0x02086e84 end:0x02086e90
 
 src/unnamed/arm9/0200/func_0200b798.c:
     complete
@@ -446,6 +448,7 @@ src/unnamed/arm9/0200/func_0200bb28.c:
 src/engine/view/d_camera.cpp:
     complete
     .text start:0x0200bec4 end:0x0200e494
+    .data start:0x02086f20 end:0x02086f38
 
 src/unnamed/arm9/0200/func_0200e494.c:
     complete
@@ -655,6 +658,7 @@ src/ResetCrashScreen.c:
 src/ShowCrashScreen.c:
     complete
     .text start:0x02014244 end:0x02014620
+    .data start:0x0208e504 end:0x0208e538
 
 src/nds_printt.c:
     complete
@@ -719,6 +723,7 @@ src/engine/animation/d_ext_frame_ctrl.cpp:
 src/engine/model/d_ext_shadow_model.cpp:
     complete
     .text start:0x02015d38 end:0x0201609c
+    .bss start:0x0209cef4 end:0x0209cef8
 
 src/engine/model/d_ext_common_model.cpp:
     complete
@@ -1528,6 +1533,7 @@ src/unnamed/arm9/0202/func_02020768.c:
 src/engine/oam/OAM.cpp:
     complete
     .text start:0x02020820 end:0x02021a04
+    .bss start:0x0209ea74 end:0x0209ee74
 
 src/engine/particle/Particle_SysTracker_Contents.cpp:
     complete
@@ -1608,6 +1614,7 @@ src/_ZN10dScStage_c14GraphCallback1Ev.cpp:
 src/UpdateMinimap.c:
     complete
     .text start:0x02029854 end:0x020298a0
+    .bss start:0x0209f3c8 end:0x0209f3e8
 
 src/runtime/graphics/fader/StartEntranceFaderWipe.cpp:
     complete
@@ -1660,6 +1667,7 @@ src/ExitLevel.c:
 src/SetNextLevel.c:
     complete
     .text start:0x02029bf4 end:0x02029d1c
+    .rodata start:0x02075638 end:0x02075650
 
 src/SetNextStar.c:
     complete
@@ -1996,6 +2004,7 @@ src/_Z17LoadLevelOverlaysi.cpp:
 src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp:
     complete
     .text start:0x0202df70 end:0x0202e088
+    .rodata start:0x02075804 end:0x020758c8
 
 src/game/stages/d_s_stage.cpp:
     complete
@@ -2022,6 +2031,7 @@ src/engine/view/d_view.cpp:
 src/Quaternion_FromVector3.c:
     complete
     .text start:0x0202fd4c end:0x0202fef8
+    .rodata start:0x02075b04 end:0x02075b14
 
 src/Quaternion_SLerp.c:
     complete
@@ -2058,6 +2068,7 @@ src/unnamed/arm9/0203/func_02030838.c:
 src/unnamed/arm9/0203/func_0203083c.c:
     complete
     .text start:0x0203083c end:0x020308a8
+    .data start:0x02092780 end:0x020927b0
 
 src/unnamed/arm9/0203/func_020308a8.c:
     complete
@@ -2251,6 +2262,7 @@ src/engine/collision/d_m3d_g_sph.cpp:
 src/engine/path/PathPtr.cpp:
     complete
     .text start:0x0203ac80 end:0x0203adbc
+    .bss start:0x020a0d84 end:0x020a0d88
 
 src/DecIfAbove0_Short.c:
     complete
@@ -2347,6 +2359,7 @@ src/unnamed/arm9/0203/func_0203b9b4.c:
 src/unnamed/arm9/0203/func_0203b9bc.c:
     complete
     .text start:0x0203b9bc end:0x0203bb14
+    .bss start:0x020a0dd8 end:0x020a0de0
 
 src/unnamed/arm9/0203/func_0203bb14.c:
     complete
@@ -2436,6 +2449,7 @@ src/engine/heap/Heap.cpp:
     complete
     .text start:0x0203c1b4 end:0x0203cc28
     .data start:0x02099d28 end:0x02099e18
+    .bss start:0x020a0ea8 end:0x020a0eac
 
 src/unnamed/arm9/0203/func_0203cc28.c:
     complete
@@ -2752,6 +2766,7 @@ src/unnamed/arm9/0203/func_0203e9a8.c:
 src/unnamed/arm9/0203/func_0203ea5c.c:
     complete
     .text start:0x0203ea5c end:0x0203f604
+    .bss start:0x020a1178 end:0x020a117c
 
 src/unnamed/arm9/0203/func_0203f604.c:
     complete
@@ -3156,6 +3171,7 @@ src/func_0204547c.c:
 src/func_020456a0.c:
     complete
     .text start:0x020456a0 end:0x020457f0
+    .data start:0x02099f84 end:0x02099f88
 
 src/func_020457f0.c:
     complete
@@ -3280,6 +3296,7 @@ src/engine/sound/Sound2.cpp:
 src/unnamed/arm9/0204/func_02048f34.c:
     complete
     .text start:0x02048f34 end:0x02048fd4
+    .bss start:0x020a4bf0 end:0x020a4c18
 
 src/unnamed/arm9/0204/func_02048fd4.c:
     complete
@@ -3504,6 +3521,7 @@ src/unnamed/arm9/0204/func_0204dcc0.c:
 src/engine/heap/NestedHeapIterator.cpp:
     complete
     .text start:0x0204dcfc end:0x0204e084
+    .bss start:0x020a4d38 end:0x020a4d44
 
 src/engine/heap/ExpandingHeapAllocator.cpp:
     complete
@@ -3516,6 +3534,7 @@ src/engine/heap/SolidHeapAllocator.cpp:
 src/engine/sound/SoundEngine.cpp:
     complete
     .text start:0x0204eda4 end:0x020524e4
+    .bss start:0x020a5bbc end:0x020a5bd4
 
 src/unnamed/arm9/0205/func_020524e4.c:
     complete
@@ -4753,6 +4772,7 @@ src/unnamed/arm9/0205/func_0205db78.c:
 src/unnamed/arm9/0205/func_0205db88.c:
     complete
     .text start:0x0205db88 end:0x0205dc0c
+    .data start:0x0209a7d8 end:0x0209a7ec
 
 src/unnamed/arm9/0205/func_0205dc0c.c:
     complete
@@ -5029,6 +5049,7 @@ src/unnamed/arm9/0206/func_02060364.c:
 src/unnamed/arm9/0206/func_02060398.c:
     complete
     .text start:0x02060398 end:0x020603c8
+    .rodata start:0x020867bc end:0x0208685c
 
 src/unnamed/arm9/0206/func_020603c8.cpp:
     complete
@@ -5137,6 +5158,7 @@ src/unnamed/arm9/0206/func_0206116c.c:
 src/unnamed/arm9/0206/func_02061188.c:
     complete
     .text start:0x02061188 end:0x02061428
+    .bss start:0x020a89ec end:0x020a8a00
 
 src/WM_CheckStateEx.c:
     complete
@@ -6021,6 +6043,7 @@ src/engine/cp15/CP154.cpp:
 src/cstd4.cpp:
     complete
     .text start:0x0206dab4 end:0x0206ece0
+    .bss start:0x020a9ecc end:0x020a9ed0
 
 src/unnamed/arm9/0206/func_0206ece0.c:
     complete

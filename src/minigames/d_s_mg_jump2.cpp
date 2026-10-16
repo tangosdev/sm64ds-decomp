@@ -110,7 +110,6 @@ struct Base {
  * constructor and destructor are the ROM resource-family functions,
  * aliased in the manifest. */
 struct Jump2ModelFile : SharedFilePtr {
-    u32 words[2];
 
     Jump2ModelFile(u32 fileID);
     ~Jump2ModelFile();
@@ -295,7 +294,7 @@ s32 dScMgJump2_c::InitResources()
         return 0;
 
     data_ov006_021421b8 = &data_ov006_021421c4;
-    bmdFile = Model::LoadFile(*(SharedFilePtr *)&data_ov006_021421c4);
+    bmdFile = Model::LoadFile(data_ov006_021421c4);
 
     if (((Model *)mModel)->SetFile((BMD_File *)bmdFile, 1, -1) == 0) {
         Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);

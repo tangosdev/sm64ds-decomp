@@ -119,14 +119,12 @@ enum d_a_obj_bc_switch_AssetId {
  * func_02017acc / func_02017ab4 and func_02017b4c /
  * SharedFilePtr_Destruct_Clsn. */
 struct BcSwitchModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BcSwitchModelFilePtr(u32 fileID);
     ~BcSwitchModelFilePtr();
 };
 
 struct BcSwitchCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BcSwitchCollisionFilePtr(u32 fileID);
     ~BcSwitchCollisionFilePtr();

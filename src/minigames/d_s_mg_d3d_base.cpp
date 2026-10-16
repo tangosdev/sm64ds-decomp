@@ -30,7 +30,11 @@ extern "C" {
 /* ov006's own data. */
 extern void *data_ov006_02141a48;
 extern void *data_ov006_02141a50;
-extern Oam   data_ov006_02141a54[];
+/* C, not C++: a C++ definition of this array emits an empty __sinit, and
+   0x02130a04 is already __sinit_ov006_02130a04. 128 entries, 8 bytes each. */
+#pragma cplusplus off
+Oam data_ov006_02141a54[128];
+#pragma cplusplus on
 extern unsigned char data_ov006_0212e574[];
 
 /* arm9 / ov004 globals with no project header. */

@@ -73,8 +73,8 @@ enum {
     kGrockStill = 4
 };
 
-/* SharedFilePtr.h has the methods and no fields. InitResources reads the
- * loaded BMD at +4, so this TU completes the forward declaration. */
+/* This is not include/SharedFilePtr.h. Grock's handle is two pointers
+ * (the loaded file, then the BMD). The header type is fileID plus filePtr. */
 struct SharedFilePtr {
     void *file;
     void *bmd;

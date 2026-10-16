@@ -29,6 +29,11 @@
       "end": "0x02112e70"
     },
     {
+      "name": ".data",
+      "start": "0x02112f48",
+      "end": "0x02112f68"
+    },
+    {
       "name": ".bss",
       "start": "0x02113bc0",
       "end": "0x02113be8"
@@ -113,7 +118,22 @@
       "ordinal": 10
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov018_02112f48",
+      "address": "0x02112f48",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS header and first entry"
+    },
+    {
+      "symbol": "data_ov018_02112f58",
+      "address": "0x02112f58",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "second CLPS entry and the eight 0xff bytes; symbols.txt names this address"
+    }
+  ],
   "bss": [
     {
       "symbol": "gSmLiftCollisionFile",
@@ -270,6 +290,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02112f48",
+          "end": "0x02112f68",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02113bc0",
           "end": "0x02113be8",
@@ -278,7 +305,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 17
+          "LICENSED": 19
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -289,34 +316,45 @@
           {
             "section": ".init",
             "original": [
-              53
+              55
             ],
             "desired": [
-              53
+              55
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              51
+              53
             ],
             "desired": [
-              51
+              53
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              6
+            ],
+            "desired": [
+              5,
+              6
             ]
           },
           {
             "section": ".bss",
             "original": [
-              30,
-              31,
               32,
-              33
+              33,
+              34,
+              35
             ],
             "desired": [
+              35,
               33,
-              31,
-              32,
-              30
+              34,
+              32
             ]
           }
         ],
@@ -325,22 +363,22 @@
             {
               "section": ".bss",
               "original": [
-                30,
-                31,
                 32,
-                33
+                33,
+                34,
+                35
               ],
               "desired": [
+                35,
                 33,
-                31,
-                32,
-                30
+                34,
+                32
               ],
               "slots": [
-                30,
-                31,
                 32,
-                33
+                33,
+                34,
+                35
               ]
             }
           ],

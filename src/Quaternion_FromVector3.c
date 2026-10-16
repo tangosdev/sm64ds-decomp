@@ -8,7 +8,7 @@ extern int DotVec3(const Vec3 *a, const Vec3 *b);
 extern int func_020531a4(int a);
 extern void func_0203cebc(Vec3 *out, Vec3 *p, Vec3 *q, Vec3 *r);
 extern int _ZN4cstd4fdivEii(int a, int b);
-extern Quat data_02075b04;
+const Quat data_02075b04 = { 0, 0, 0, 0x1000 };
 
 void Quaternion_FromVector3(Quat *out, Vec3 *a, Vec3 *b)
 {

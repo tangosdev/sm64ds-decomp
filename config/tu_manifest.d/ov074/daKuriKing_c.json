@@ -20,6 +20,11 @@
       "end": "0x0212290c"
     },
     {
+      "name": ".rodata",
+      "start": "0x0212292c",
+      "end": "0x02122978"
+    },
+    {
       "name": ".init",
       "start": "0x02122978",
       "end": "0x02122d70"
@@ -2097,6 +2102,196 @@
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x0211fb84"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212292c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130ce8",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130ce8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122930",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130ce0",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130ce0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122934",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130cd0",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130cd0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122938",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130cc0",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130cc0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212293c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKuriboRecoverAnimationFile",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130cd8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122940",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130cc8",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130cc8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122944",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130cf0",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130cf0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122948",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingAngerAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123038"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212294c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingDamageBAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123008"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122950",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingDamageFAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123018"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122954",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingDownStartAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02122ff0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122958",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingDownAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123048"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212295c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingSerchWaitAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02122ff8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122960",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingTurnAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123028"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122964",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov074_02123030",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123030"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122968",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingWalkAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123020"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212296c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingWalkEndAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02122fe0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122970",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingWalkStartAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02122fe8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122974",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingSpawnAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123010"
     }
   ],
   "undefined_symbol_aliases": [
@@ -2224,7 +2419,9 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov074_02121270 and the one that held func_ov074_021222e0; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_021207b8; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_02120bb8; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
-    "Static-initializer fold: src/unnamed/ov074/__sinit_ov074_02122978.c is retired; its fourteen handles, fourteen registration nodes, eighteen descriptors, two parameter arrays and the state table are now defined in this TU, whose delinks claim widens to .init/.ctor/.data/.bss. tubuild verify: 53/53 MATCH, objisolate clean, reloc-destinations clean. The handwritten source's credit (tangosdev) carries in attribution.json as a path#symbol override on __sinit_d_a_kuri_king.cpp. The TU's own _ZTI/_ZTS/_ZTV stay externalized; this claim stops at 0x02122e24, where _ZTI12daKuriKing_c begins, and the BSS claim stops at the section end 0x021231a0: the table itself ends at 0x02123188 and carries 0x18 of alignment fill because dsd sizes the trailing symbol to the section end and the intact tooling requires the licensed rows to tile the claim."
+    "Static-initializer fold: src/unnamed/ov074/__sinit_ov074_02122978.c is retired; its fourteen handles, fourteen registration nodes, eighteen descriptors, two parameter arrays and the state table are now defined in this TU, whose delinks claim widens to .init/.ctor/.data/.bss. tubuild verify: 53/53 MATCH, objisolate clean, reloc-destinations clean. The handwritten source's credit (tangosdev) carries in attribution.json as a path#symbol override on __sinit_d_a_kuri_king.cpp. The TU's own _ZTI/_ZTS/_ZTV stay externalized; this claim stops at 0x02122e24, where _ZTI12daKuriKing_c begins, and the BSS claim stops at the section end 0x021231a0: the table itself ends at 0x02123188 and carries 0x18 of alignment fill because dsd sizes the trailing symbol to the section end and the intact tooling requires the licensed rows to tile the claim.",
+    "DD252 added the .rodata claim 0x0212292c..0x02122978: the two SharedFilePtr clip tables InitResources walks. The first borrows seven KrbAnimationFileHandle objects owned by ov084's daKrb_c; the second lists this TU's own twelve animation handles. data_ov074_02122954 (interior ambiguous row, the fourth word of the second table, no inbound relocation) was retired with the claim. The two head rows data_ov074_0212290c/0x0212291c stay ROM copy -- they are not job symbols and nothing written here points at them. data_ov074_02122f34 remains ROM copy: it sits at 0x02122f34 in the shared .data band, past the deliberately unemitted _ZTI/_ZTS/_ZTV/profiles group, and one emitted .data contribution cannot cover both it and the claimed 0x02122d84..0x02122e24 range (same wall as DD209/DD137).",
+    "LOCAL WORKER NOTE: this machine's linkcheck scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this machine's stock control (EU ASMP dump; the divergent bytes are NDS container/packaging fields outside every module range). The recorded rom.sha256 is the fleet SHA every other intact entry shares. Module set, symbol inventory, and the six owned section ranges were reproduced exactly by this worker's link."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -2327,6 +2524,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x0212292c",
+          "end": "0x02122978",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x02122978",
           "end": "0x02122d70",
@@ -2356,7 +2560,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 106
+          "LICENSED": 108
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -2365,21 +2569,32 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              199
+              176,
+              178
             ],
             "desired": [
-              199
+              176,
+              178
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              204
+            ],
+            "desired": [
+              204
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              197
+              202
             ],
             "desired": [
-              197
+              202
             ]
           },
           {
@@ -2802,5 +3017,21 @@
       "reason": "Native Vector3 arrays preserve the retail constructor callback func_0203d384, element size 12 and counts 3; destructor remains _ZN7Vector3D1Ev."
     }
   ],
-  "production_mode": "intact-object"
+  "production_mode": "intact-object",
+  "rodata": [
+    {
+      "symbol": "data_ov074_0212292c",
+      "address": "0x0212292c",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "seven-entry SharedFilePtr table; every word is an R_ARM_ABS32 load to one of daKrb_c's ov084 animation handles"
+    },
+    {
+      "symbol": "data_ov074_02122948",
+      "address": "0x02122948",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "twelve-entry SharedFilePtr table; every word is an R_ARM_ABS32 load to one of this TU's own animation file handles"
+    }
+  ]
 }

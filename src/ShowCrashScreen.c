@@ -36,7 +36,11 @@ extern char data_0208e5f0[], data_0208e5fc[], data_0208e608[], data_0208e610[];
 extern char data_0208e624[], data_0208e634[], data_0208e648[], data_020a0d90[];
 
 typedef struct { char c[52]; } Buf52;
-extern Buf52 data_0208e504;
+/* Register names for the crash-screen dump: CPSR, R00-R12, SP, LR, PC. */
+static Buf52 data_0208e504 = {
+    "CPS" "R00" "R01" "R02" "R03" "R04" "R05" "R06" "R07"
+    "R08" "R09" "R10" "R11" "R12" "SP " "LR " "PC "
+};
 
 void ShowCrashScreen(void)
 {

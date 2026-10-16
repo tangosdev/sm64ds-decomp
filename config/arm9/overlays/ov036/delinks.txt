@@ -8,11 +8,13 @@ src/game/actors/d_a_obj_rc_buranko.cpp:
     .text start:0x021111a0 end:0x02111444
     .init start:0x021125b0 end:0x0211261c
     .ctor start:0x021129dc end:0x021129e0
+    .data start:0x02112b68 end:0x02112b88
     .bss start:0x02114020 end:0x02114048
 
 src/game/actors/d_a_obj_rc_kaitendai.cpp:
     complete
     .text start:0x02111444 end:0x02111580
+    .data start:0x02113b2c end:0x02113b38
     .init start:0x0211261c end:0x02112688
     .ctor start:0x021129e0 end:0x021129e4
     .bss start:0x02114048 end:0x02114070

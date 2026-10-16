@@ -34,12 +34,15 @@ enum d_a_obj_wc_mizu_AssetId {
  *   passes Fix12<int> by value; the header method form size-DIFFs.
  * - Sound::PlayLong: Behavior's long water sound; Sound.h has no PlayLong.
  * - SharedFilePtr +4: InitResources' TextureTransformer::Prepare reads the
- *   BMD at daObjWc_Obj07_c_ModelFile +4 (words[1]); SharedFilePtr.h has no fields.
+ *   BMD at daObjWc_Obj07_c_ModelFile +4 (words[1]); SharedFilePtr is the 8-byte handle.
  *   The daObjWc_Obj07_c_* names are a stale symbols.txt attribution: this TU
  *   is the only consumer and defines both handles (obj07's own handles live
  *   at 0x021142d4/0x021142dc).
- * - data_ov029_02112b2c / 02112fb8 / 02112fec WDW water-level / BTA / CLPS handles;
- *   this TU consumes them, overlay .data owns them.
+ * - data_ov029_02112b2c stays the ROM copy. The BTA at 02112fb8, the
+ *   CLPS at 02112fec, the record at 02112fa0, the row at 02112f88, and
+ *   the three .rodata words at 0211299c are defined in this file. The
+ *   other pointer targets stay the ROM copy: a second .data claim is
+ *   refused, and ambiguous symbols sit between those runs.
  * - S14: g_profile_WC_MIZU stays outside the licensed .text.
  * - Behavior pointer forms at +0x340 / +0x60 / +0x342 / +0x74 / +0x124:
  *   named mTrueAreaID / mPosY += / mPhaseAngle / mCamSpacePosX /
@@ -74,14 +77,12 @@ struct CLPS_Block;
  * their destructors. The wrapper names are local; the ctor/dtor
  * addresses are the ROM resource-family functions. */
 struct WcMizuModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     WcMizuModelFilePtr(u32 fileID);
     ~WcMizuModelFilePtr();
 };
 
 struct WcMizuCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     WcMizuCollisionFilePtr(u32 fileID);
     ~WcMizuCollisionFilePtr();
@@ -99,12 +100,121 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
 extern WcMizuModelFilePtr daObjWc_Obj07_c_ModelFile;
 extern WcMizuCollisionFilePtr daObjWc_Obj07_c_ClsnFile;
 extern int data_ov029_02112b2c[];
-extern BTA_File data_ov029_02112fb8;
-extern CLPS_Block data_ov029_02112fec;
+extern u32 data_ov029_021129c0[];
+extern u32 data_ov029_02112ea8[];
+extern u32 data_ov029_02112eb0[];
+extern u32 data_ov029_02112eb8[];
+extern u32 data_ov029_02112ec0[];
+extern u32 data_ov029_02112ed8[];
+extern u32 data_ov029_02113204[];
+extern u32 data_ov029_021133d4[];
+extern u32 data_ov029_021134ec[];
 extern u8 data_0209f2c0[];
 extern int data_0209f32c;
 extern s16 data_02082214[];
 }
+
+/* The three .rodata words the BTA names. 021129b4 is the next symbols.txt
+ * row and is ambiguous, so the frame table at 021129c0 stays an extern. */
+extern "C" const u32 data_ov029_0211299c[1] = { 0 };
+extern "C" const u32 data_ov029_021129a0[1] = { 0x1000 };
+extern "C" const struct {
+    u32 word0;
+    u32 *target1;
+    u32 word2;
+    u32 word3;
+} data_ov029_021129a4 = {
+    0xffff,
+    data_ov029_02112ec0,
+    1,
+    1,
+};
+
+/* 02112fa0 is the record the BTA points at. 02112f88 is the symbols.txt row
+ * immediately before it. 02112fd0 and 02112ffc are the next rows inside the
+ * BTA and the CLPS. Pointers are the symbols; the other words are the ROM
+ * values. */
+extern "C" struct {
+    u32 word0;
+    u32 *target1;
+    u32 word2;
+    u32 *target3;
+    u32 word4;
+    u32 *target5;
+} data_ov029_02112f88 = {
+    0x1e00,
+    data_ov029_021134ec,
+    0x2305,
+    data_ov029_021133d4,
+    0x1a0,
+    data_ov029_02112ed8,
+};
+
+extern "C" struct {
+    u32 *target0;
+    u32 word1;
+    u32 word2;
+    u32 *target3;
+    u32 word4;
+    u32 word5;
+} data_ov029_02112fa0 = {
+    data_ov029_02112eb0,
+    0,
+    0x109A0001,
+    data_ov029_02112ea8,
+    0,
+    1,
+};
+
+extern "C" struct {
+    BTA_File file;
+    u16 rest;
+    u32 *name0;
+    u32 *name1;
+    u32 *name2;
+    u32 word;
+    u32 *name3;
+} data_ov029_02112fb8 = {
+    { 91 },
+    0,
+    (u32 *)data_ov029_021129a0,
+    (u32 *)data_ov029_0211299c,
+    data_ov029_021129c0,
+    1,
+    (u32 *)&data_ov029_021129a4,
+};
+
+extern "C" struct {
+    u32 *target0;
+    u32 *target1;
+    u32 word2;
+    u32 word3;
+    void *target4;
+    u32 word5;
+    u32 word6;
+} data_ov029_02112fd0 = {
+    data_ov029_02113204,
+    data_ov029_02112eb8,
+    0x07ED07F0,
+    0x07F207F1,
+    &data_ov029_02112fa0,
+    0x03E80002,
+    0x8F,
+};
+
+extern "C" u32 data_ov029_02112fec[4] = {
+    0x53504C43,
+    0x00010008,
+    0x00000FE0,
+    0x000000FF,
+};
+
+extern "C" u32 data_ov029_02112ffc[4] = {
+    0xFFFFFFFF,
+    0xFFFFFFFF,
+    0xFFFFFFFF,
+    0xFFFFFFFF,
+};
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -126,7 +236,7 @@ int daObjWc_Mizu_c::InitResources()
 
     m = Model::LoadFile(daObjWc_Obj07_c_ModelFile);
     mModel.SetFile((BMD_File *)m, 1, -1);
-    TextureTransformer::Prepare(*(BMD_File *)daObjWc_Obj07_c_ModelFile.words[1], data_ov029_02112fb8);
+    TextureTransformer::Prepare(*(BMD_File *)daObjWc_Obj07_c_ModelFile.filePtr, data_ov029_02112fb8.file);
     /* 6az: header SetFile takes Fix12<int> by value. */
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
         &mTextureTransformer, &data_ov029_02112fb8, 0, 0x1000, 0);

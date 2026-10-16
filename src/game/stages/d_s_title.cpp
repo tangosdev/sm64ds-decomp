@@ -124,12 +124,20 @@ extern u16 DecIfAbove0_Short(u16 *p);
 extern void Enable3dEngines(void);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 /* One row of the level-name table the grid rows print from; only the name
- * pointer is read. */
+ * pointer is read. The word symbols.txt names data_ov003_020b117c is the
+ * first of those pointers (data_ov003_020b13a8). The next symbol starts
+ * four bytes later, so this object is that one word; the grid still steps
+ * eight bytes from its address. */
 struct TitleLevelName {
     volatile signed char *name;
     int pad;
 };
-extern TitleLevelName data_ov003_020b117c[];
+/* "Test Map" plus the three zero bytes that fill this 12-byte symbol. */
+signed char data_ov003_020b13a8[12] = {
+    'T', 'e', 's', 't', ' ', 'M', 'a', 'p', 0, 0, 0, 0,
+};
+extern "C" volatile signed char *const data_ov003_020b117c =
+    (volatile signed char *)data_ov003_020b13a8;
 /* `void *` is the tree's plurality spelling for this one (it is declared
  * five different ways across five files); the cast at the one call site is
  * free. */
@@ -163,7 +171,7 @@ extern "C" void func_ov003_020adcbc(int level, int row, int col)
     d += 3;
     MultiStore16(t2, (char *)d2, 2);
     int cnt = 0x1d - col;
-    volatile signed char *s = data_ov003_020b117c[level].name;
+    volatile signed char *s = ((TitleLevelName *)&data_ov003_020b117c)[level].name;
     while (*s != 0) {
         t3 = *s;
         MultiStore16(t3, (char *)d, 2);

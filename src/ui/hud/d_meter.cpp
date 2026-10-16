@@ -79,6 +79,7 @@ enum dMeter_c_AssetId {
 
 #include "dMeter_c.h"
 #include "Timer.h"
+#include "OamAttr.h"
 #include "decl_common.h"
 #include "types.h"
 #include "decl_Player.h"
@@ -92,7 +93,7 @@ enum dMeter_c_AssetId {
  * the sprite layer and a handful of globals the tree has not named yet; each
  * entry says why it cannot come from a shared header. */
 
-struct OamAttr; struct Matrix2x2;
+struct Matrix2x2;
 
 /* Stands in for include/OAM.h, which declares Render and the five-argument
  * RenderSub but none of these OamAttr statics. The legacy sources spelled the
@@ -176,17 +177,52 @@ extern unsigned char data_0209f2c4;
 extern unsigned char data_0209f20c;
 extern unsigned char data_0209f294;
 extern unsigned char data_0209f204;
-extern struct OamAttr data_ov002_0210d290;
-extern struct OamAttr data_ov002_0210d2c0;
-extern struct OamAttr data_ov002_0210d300;
-extern struct OamAttr data_ov002_0210d338;
+struct OamAttr data_ov002_0210d290[] = {
+    {0x40f8, 0x41e8, 0xf1ba, 0x0000},
+    {0x40f8, 0x0008, 0xf1be, 0xffff},
+};
+struct OamAttr data_ov002_0210d2c0[] = {
+    {0x40f8, 0x41e8, 0xf1ba, 0x0000},
+    {0x40f8, 0x0008, 0xf1be, 0xffff},
+};
+struct OamAttr data_ov002_0210d300 = {0x40f8, 0x41f0, 0xf1bc, 0xffff};
+struct OamAttr data_ov002_0210d338[] = {
+    {0x40f8, 0x41e8, 0xf1ba, 0x0000},
+    {0x40f8, 0x0008, 0xf1be, 0xffff},
+};
 extern struct OamAttr _ZN3OAM7VS_TIMEE;
 extern struct OamAttr* _ZN3OAM17VS_YELLOW_NUMBERSE[];
 extern struct OamAttr* data_ov002_0210ca0c[];
-extern struct OamAttr data_ov002_0210d2a0;
-extern struct OamAttr data_ov002_0210d2d0;
-extern struct OamAttr data_ov002_0210d308;
-extern struct OamAttr data_ov002_0210d348;
+struct OamAttr data_ov002_0210d2a0[] = {
+    {0x40f8, 0x81c8, 0xc1d2, 0x0000},
+    {0x40f8, 0x81e8, 0xc1d6, 0x0000},
+    {0x40f8, 0x8008, 0xc1da, 0x0000},
+    {0x00f8, 0x4028, 0xc1de, 0xffff},
+};
+struct OamAttr data_ov002_0210d2d0[] = {
+    {0x40f8, 0x81ac, 0xc1cb, 0x0000},
+    {0x40f8, 0x81cc, 0xc1cf, 0x0000},
+    {0x40f8, 0x81ec, 0xc1d3, 0x0000},
+    {0x40f8, 0x800c, 0xc1d7, 0x0000},
+    {0x40f8, 0x802c, 0xc1db, 0x0000},
+    {0x80f8, 0x004c, 0xc1df, 0xffff},
+};
+struct OamAttr data_ov002_0210d308[] = {
+    {0x40f8, 0x81ac, 0xc1cb, 0x0000},
+    {0x40f8, 0x81cc, 0xc1cf, 0x0000},
+    {0x40f8, 0x81ec, 0xc1d3, 0x0000},
+    {0x40f8, 0x800c, 0xc1d7, 0x0000},
+    {0x40f8, 0x802c, 0xc1db, 0x0000},
+    {0x80f8, 0x004c, 0xc1df, 0xffff},
+};
+struct OamAttr data_ov002_0210d348[] = {
+    {0x40f8, 0x81b4, 0xc1cd, 0x0000},
+    {0x40f8, 0x81d4, 0xc1d1, 0x0000},
+    {0x40f8, 0x81f4, 0xc1d5, 0x0000},
+    {0x40f8, 0x8014, 0xc1d9, 0x0000},
+    {0x00f8, 0x4034, 0xc1dd, 0x0000},
+    {0x80f8, 0x0044, 0xc1df, 0xffff},
+};
 extern struct OamAttr _ZN3OAM10VS_TIME_UPE;
 extern int GetOwnerLanguage(void);
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int sub, struct OamAttr* attr, int x, int y, int a, int b, int s, int c);
@@ -793,13 +829,13 @@ void dMeter_c::RenderVsTimer()
 
     if ((unsigned char)(data_0209f2c4 | data_0209f20c | data_0209f294) == 0) {
         if (GetOwnerLanguage() == 5) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d290, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d290[0], 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 4) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d2c0, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d2c0[0], 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 3) {
             _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d300, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 2) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d338, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d338[0], 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else {
             _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM7VS_TIMEE, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         }
@@ -821,13 +857,13 @@ void dMeter_c::RenderVsTimer()
         }
     } else {
         if (GetOwnerLanguage() == 5) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d2a0, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d2a0[0], 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 4) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d2d0, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d2d0[0], 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 3) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d308, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d308[0], 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 2) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d348, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210d348[0], 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         } else {
             _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM10VS_TIME_UPE, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         }

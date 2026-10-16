@@ -26,9 +26,9 @@
  *   mHandIndex before IsAreaShowing stays 0x100 and 5 words differ.
  * - func_ov013_02111430 keeps the three memberwise mat4x3.t stores:
  *   assigning a Vector3 sizes it 0x50 against 0x48.
- * - data_ov013_021116ac (per-hand speeds) and data_ov013_021116b0 (model
- *   handles) keep linker names: this TU reads them; it does not own that
- *   .data. data_02092110 / data_0209f2c0 are arm9's level id and clock
+ * - data_ov013_021116ac (per-hand speeds) stays the ROM copy. The model
+ *   handles at data_ov013_021116b0 are this TU's .rodata. data_02092110 /
+ *   data_0209f2c0 are arm9's level id and clock
  *   setting. The two factories stay CLOCK_SHORT / CLOCK_LONG, because one
  *   C name cannot cover both.
  * - Matrix4x3_FromRotationZXYExt and IsAreaShowing stay local externs;
@@ -42,7 +42,6 @@
  * func_02017ab4. The manifest aliases those undefined members onto the ROM
  * symbols. */
 struct ClockModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     ClockModelFilePtr(u32 fileID);
     ~ClockModelFilePtr();
@@ -54,10 +53,16 @@ int IsAreaShowing(int areaId);
 extern s8 data_02092110;             /* current level id; hands advance while it is not positive */
 extern u8 data_0209f2c0;              /* clock setting: 0 slow, 1 fast, 2 random, 3 stopped */
 extern s16 data_ov013_021116ac[];
-extern SharedFilePtr *data_ov013_021116b0[];
+extern SharedFilePtr *const data_ov013_021116b0[2];
 extern ClockModelFilePtr data_ov013_02112294;
 extern ClockModelFilePtr data_ov013_0211229c;
 }
+
+/* Two model handles. First word is the long hand, second is the short hand. */
+extern "C" SharedFilePtr *const data_ov013_021116b0[2] = {
+    &data_ov013_0211229c,
+    &data_ov013_02112294,
+};
 
 enum {
     ACTOR_CLOCK_SHORT = 0x124,

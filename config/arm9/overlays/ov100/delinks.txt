@@ -15,12 +15,14 @@ src/game/actors/d_a_btfly.cpp:
 src/game/actors/d_a_ibl.cpp:
     complete
     .text start:0x02141f04 end:0x021431c4
+    .bss start:0x0214867c end:0x021486a4
 
 src/game/actors/d_a_wanwan2.cpp:
     complete
     .text start:0x021431c4 end:0x021443f4
     .init start:0x021475a4 end:0x02147698
     .ctor start:0x02147df0 end:0x02147df4
+    .data start:0x02147ff8 end:0x02148014
     .bss start:0x021486a4 end:0x02148704
 
 src/game/actors/d_a_door.cpp:
@@ -28,6 +30,7 @@ src/game/actors/d_a_door.cpp:
     .text start:0x021443f4 end:0x021458d4
     .init start:0x02147698 end:0x02147a70
     .ctor start:0x02147df4 end:0x02147df8
+    .data start:0x02148204 end:0x02148334
     .bss start:0x02148724 end:0x02148934
 
 src/game/actors/d_a_star_gate.cpp:
@@ -41,6 +44,7 @@ src/game/actors/d_a_star_gate.cpp:
 src/game/actors/d_a_fish.cpp:
     complete
     .text start:0x0214620c end:0x02146d7c
+    .rodata start:0x021473a4 end:0x021473bc
     .init start:0x02147bc0 end:0x02147d7c
     .ctor start:0x02147dfc end:0x02147e00
     .bss start:0x021489a4 end:0x02148a54

@@ -33,6 +33,11 @@
       "end": "0x021335a8"
     },
     {
+      "name": ".data",
+      "start": "0x0213cb4c",
+      "end": "0x0213cb8c"
+    },
+    {
       "name": ".bss",
       "start": "0x02142188",
       "end": "0x021421b0"
@@ -166,7 +171,64 @@
       "ordinal": 17
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "pmf_dScMgJump_c_State_Result",
+      "address": "0x0213cb4c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row {func_ov006_020ee3ec, 0}; Behavior copies it into mState"
+    },
+    {
+      "symbol": "pmf_dScMgJump_c_State_Intro",
+      "address": "0x0213cb54",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row {func_ov006_020ee5b8, 0}; Behavior copies it into mState"
+    },
+    {
+      "symbol": "pmf_dScMgJump_c_State_End",
+      "address": "0x0213cb5c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row {func_ov006_020ee44c, 0}; Behavior copies it into mState"
+    },
+    {
+      "symbol": "g_profile_MG_JUMP",
+      "address": "0x0213cb64",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "MG_JUMP registry profile; the first word relocates to dScMgJump_c_classInit (0x020eeafc) and the halfword pair 0x0174, 0x0174 matches retail"
+    },
+    {
+      "symbol": "pmf_dScMgJump_c_State_Final",
+      "address": "0x0213cb6c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row {func_ov006_020ee2c4, 0}; Behavior copies it into mState"
+    },
+    {
+      "symbol": "pmf_dScMgJump_c_State_Idle",
+      "address": "0x0213cb74",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row {func_ov006_020ee2c0, 0}; Behavior copies it into mState"
+    },
+    {
+      "symbol": "pmf_dScMgJump_c_State_Idle_2",
+      "address": "0x0213cb7c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row {func_ov006_020ee2c0, 0}; Behavior copies it into mState"
+    },
+    {
+      "symbol": "pmf_dScMgJump_c_State_Play",
+      "address": "0x0213cb84",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row {func_ov006_020ee508, 0}; Behavior copies it into mState"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov006_02142188",
@@ -206,7 +268,8 @@
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Pair') differs between the legacy file that used to hold BeginFinal and the one that held BeginEnd; kept the first at create time. Settled on the ARRAY-member form for every site. This was not cosmetic: see the byte-level lever in boundary_evidence -- the two-scalar form changes the instruction schedule of the copy and breaks seven members.",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Pair') differs between the legacy file that used to hold BeginFinal and the one that held BeginPlay; kept the first at create time. The second half of the same warning, recorded separately because the reconciliation key is (kind, key, losing function). Settled on the ARRAY-member form here too, for the reason on the note above.",
     "Also reconciled by hand, not flagged by the generator: _Z15ApproachLinear2Rsss appeared with two spellings, int(short*,short,short) and short(short&,short,short). The mangled Rs proves a reference, so the reference form is kept and the 0x020ee44c call site dereferences at the call. gMgScene is already declared void * by include/dScMgBase_c.h, so this TU does not redeclare it and casts at the use site.",
-    "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares."
+    "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares.",
+    "pmf_dScMgJump_c_State_Result..0213cb84 and g_profile_MG_JUMP are this entry's .data (0x0213cb4c..0x0213cb8c). Each state row is the function address and a zero word. The profile is the eight bytes between 0213cb5c and 0213cb6c. data_ov006_0213cb48 and data_ov006_0213cb8c stay the ROM copy."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -321,6 +384,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0213cb4c",
+          "end": "0x0213cb8c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02142188",
           "end": "0x021421b0",
@@ -329,7 +399,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 24
+          "LICENSED": 32
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -340,64 +410,120 @@
           {
             "section": ".init",
             "original": [
-              65
+              81
             ],
             "desired": [
-              65
+              81
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              63
+              79
             ],
             "desired": [
-              63
+              79
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              7,
+              9,
+              13,
+              15,
+              17,
+              19,
+              21
+            ],
+            "desired": [
+              13,
+              17,
+              5,
+              15,
+              21,
+              19,
+              9,
+              7
             ]
           },
           {
             "section": ".bss",
             "original": [
-              7,
-              8,
-              16,
-              23
+              11,
+              12,
+              28,
+              39
             ],
             "desired": [
-              7,
-              8,
-              23,
-              16
+              11,
+              12,
+              39,
+              28
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".bss",
+              "section": ".data",
               "original": [
+                5,
                 7,
-                8,
-                16,
-                23
+                9,
+                13,
+                15,
+                17,
+                19,
+                21
               ],
               "desired": [
-                7,
-                8,
-                23,
-                16
+                13,
+                17,
+                5,
+                15,
+                21,
+                19,
+                9,
+                7
               ],
               "slots": [
+                5,
                 7,
-                8,
-                16,
-                23
+                9,
+                13,
+                15,
+                17,
+                19,
+                21
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                11,
+                12,
+                28,
+                39
+              ],
+              "desired": [
+                11,
+                12,
+                39,
+                28
+              ],
+              "slots": [
+                11,
+                12,
+                28,
+                39
               ]
             }
           ],
-          "symbolIndices": 4,
+          "symbolIndices": 12,
           "sectionLinks": 0,
-          "sectionInfos": 0,
+          "sectionInfos": 8,
           "error": null
         },
         "errors": null
@@ -707,6 +833,86 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02130e9c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cb4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgJump_c12State_ResultEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ee3ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cb54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgJump_c11State_IntroEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ee5b8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cb5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgJump_c9State_EndEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ee44c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cb64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "dScMgJump_c_classInit",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020eeafc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cb6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgJump_c11State_FinalEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ee2c4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cb74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgJump_c10State_IdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ee2c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cb7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgJump_c10State_IdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ee2c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cb84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgJump_c10State_PlayEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ee508"
     }
   ]
 }

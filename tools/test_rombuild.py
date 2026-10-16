@@ -442,6 +442,77 @@ class RomBuildEnrollment(unittest.TestCase):
             {"src/actors/TU.cpp"}, manifest={"entries": [entry]}),
             {"src/actors/TU.cpp": entry})
 
+    def test_isolation_keeps_only_the_storage_its_entry_claims(self):
+        (self.repo / "src" / "Owner.c").write_text(
+            "int Owner(void) { return 0; }\n", encoding="utf-8")
+        (self.config / "delinks.txt").write_text(
+            "src/Owner.c:\n    complete\n"
+            "    .text start:0x02000000 end:0x02000004\n"
+            "    .bss start:0x020a0000 end:0x020a0004\n\n"
+            "src/Example.c:\n    complete\n"
+            "    .text start:0x02000004 end:0x02000008\n",
+            encoding="utf-8")
+        (self.config / "symbols.txt").write_text(
+            "data_020a0000 kind:bss addr:0x020a0000\n", encoding="utf-8")
+        RB._DATA_SECTION_CLAIMS = None
+        try:
+            self.assertEqual(RB.data_section_claims("src/Example.c"), {})
+            obj = self.repo / "Owner.o"
+            obj.write_bytes(b"object")
+            with mock.patch.object(RB.OI, "isolate",
+                                   return_value={"error": None}) as one:
+                self.assertIsNone(RB._isolate(obj, "src/Owner.c",
+                                              {"src/Owner.c": ["Owner"]}))
+            one.assert_called_once_with(
+                obj, "Owner", keep_sections={".bss": (0x020a0000, 0x020a0004)},
+                addresses={"data_020a0000": 0x020a0000})
+        finally:
+            RB._DATA_SECTION_CLAIMS = None
+
+    def test_intact_policy_admits_a_noop_full_rom_proof(self):
+        """A raw object that already matches needs no policy rewrite.
+
+        That ordinary full-ROM proof is named data-verified. Production re-runs
+        the same policies and links that object, so the gate admits it beside
+        scratch-data-verified. A module-only result is still refused.
+        """
+        ranges = [
+            {"section": ".text", "start": "0x0203b9bc", "end": "0x0203bb14",
+             "differingBytes": 0},
+            {"section": ".bss", "start": "0x020a0dd8", "end": "0x020a0de0",
+             "comparison": "NOBITS -- symbol/module gates"},
+        ]
+        entry = {
+            "id": "arm9/func_0203b9bc", "status": "promoted",
+            "production_mode": "intact-object",
+            "source": "src/unnamed/arm9/0203/func_0203b9bc.c",
+            "promoted_source": "src/unnamed/arm9/0203/func_0203b9bc.c",
+            "sections": [
+                {"name": row["section"], "start": row["start"], "end": row["end"]}
+                for row in ranges
+            ],
+            "verification": {"linkcheck": {
+                "result": "data-verified",
+                "phases": {name: True for name in
+                           ("delink", "lcf", "compile", "link", "checkModules", "rom")},
+                "symbolCheckNewVsBaseline": [],
+                "symbolCheckErrors": ["[ERROR] old"],
+                "symbolCheckBaselineErrors": ["[ERROR] old"],
+                "tuRanges": ranges,
+                "rom": {"sha256": "a" * 64, "matchesStockRom": True},
+            }},
+        }
+        self.assertEqual(RB.intact_tu_policies(
+            {"src/unnamed/arm9/0203/func_0203b9bc.c"},
+            manifest={"entries": [entry]}),
+            {"src/unnamed/arm9/0203/func_0203b9bc.c": entry})
+        entry["verification"]["linkcheck"]["result"] = "module-data-verified"
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.intact_tu_policies(
+                {"src/unnamed/arm9/0203/func_0203b9bc.c"},
+                manifest={"entries": [entry]})
+        self.assertIn("ordinary link evidence", raised.exception.output)
+
     def test_intact_policy_admits_exact_exception_and_exceptix_claims(self):
         """The CodeWarrior unwind pair claims retail ranges like any other section.
 

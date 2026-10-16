@@ -12,7 +12,8 @@ extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, const V
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
 extern void _ZN9dBgCh_GndD1Ev(void *self);
 
-extern Vector3 data_02086e84;
+/* The translate source. z is -300 in 20.12. */
+Vector3 data_02086e84 = {0, 0, -0x12C000};
 
 void func_0200b590(char *c, short *a1, int arg2)
 {

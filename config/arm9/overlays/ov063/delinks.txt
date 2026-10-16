@@ -14,6 +14,7 @@ src/game/actors/d_a_trs.cpp:
 src/game/actors/d_a_trs_trap.cpp:
     complete
     .text start:0x0211c600 end:0x0211d270
+    .rodata start:0x0211e27c end:0x0211e29c
     .init start:0x0211e3cc end:0x0211e590
     .ctor start:0x0211e700 end:0x0211e704
     .data start:0x0211e9ac end:0x0211e9cc
@@ -28,6 +29,7 @@ src/game/actors/d_a_obj_th_fall_block.cpp:
     .text start:0x0211d3a0 end:0x0211d4b8
     .init start:0x0211e590 end:0x0211e5fc
     .ctor start:0x0211e704 end:0x0211e708
+    .data start:0x0211eb10 end:0x0211eb1c
     .bss start:0x0211ef58 end:0x0211ef80
 
 src/game/actors/d_a_piano.cpp:

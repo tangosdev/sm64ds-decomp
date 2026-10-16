@@ -28,6 +28,11 @@
       "end": "0x02112e88"
     },
     {
+      "name": ".data",
+      "start": "0x0211304c",
+      "end": "0x0211306c"
+    },
+    {
       "name": ".bss",
       "start": "0x02114324",
       "end": "0x0211434c"
@@ -116,7 +121,15 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov029_0211304c",
+      "address": "0x0211304c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "32 ROM bytes passed to SetFile; tag CLPS, stride 8 at +4, two entries, no relocation"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov029_02114324",
@@ -452,6 +465,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0211304c",
+          "end": "0x0211306c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02114324",
           "end": "0x0211434c",
@@ -460,7 +480,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 15
+          "LICENSED": 16
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -471,38 +491,75 @@
           {
             "section": ".init",
             "original": [
-              47
+              48
             ],
             "desired": [
-              47
+              48
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              45
+              46
             ],
             "desired": [
-              45
+              46
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              24
+            ],
+            "desired": [
+              24
             ]
           },
           {
             "section": ".bss",
             "original": [
               5,
-              8,
-              14,
+              6,
+              20,
               21
             ],
             "desired": [
+              6,
               5,
-              8,
-              14,
-              21
+              21,
+              20
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                20,
+                21
+              ],
+              "desired": [
+                6,
+                5,
+                21,
+                20
+              ],
+              "slots": [
+                5,
+                6,
+                20,
+                21
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,

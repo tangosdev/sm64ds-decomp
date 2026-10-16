@@ -33,14 +33,12 @@ extern "C" daObjFloatBoard_c_Resources data_ov029_02113f00;
  * their destructors. The wrapper names are local; the ctor/dtor
  * addresses are the ROM resource-family functions. */
 struct WcObj06ModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     WcObj06ModelFilePtr(u32 fileID);
     ~WcObj06ModelFilePtr();
 };
 
 struct WcObj06CollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     WcObj06CollisionFilePtr(u32 fileID);
     ~WcObj06CollisionFilePtr();

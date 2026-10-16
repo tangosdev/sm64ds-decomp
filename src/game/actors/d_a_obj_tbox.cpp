@@ -33,14 +33,12 @@ enum daObjTbox_c_AssetId {
    SharedFilePtr::Construct and destroys through SharedFilePtr_Destruct_Anim.
    The manifest aliases those undefined members onto the ROM symbols. */
 struct TboxModelFilePtr : SharedFilePtr {
-    u32 id; void *ptr;
 
     TboxModelFilePtr(u32 fileID);
     ~TboxModelFilePtr();
 };
 
 struct TboxAnimationFileHandle : SharedFilePtr {
-    u32 id; void *ptr;
 
     TboxAnimationFileHandle(u32 fileID);
     ~TboxAnimationFileHandle();

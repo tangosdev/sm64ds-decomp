@@ -13,13 +13,11 @@
  * daObjTh_Fall_Block_c, TH_DOWN_B registry). Retail does not store
  * that spelling.
  *
- * deslop
  * Leftover: func_ov098_0213a2cc is still the linker name of
  *   daObjFallBlock_c Cleanup (the base leaves those slots pure virtual).
- * Leftover: data_ov063_0211eb10 is overlay .data this TU does not
- *   own; the BMD/KCL SharedFilePtrs and CLPS_Block are still
- *   data_ov063_*.
- * Leftover: g_profile_TH_DOWN_B lives outside this TU (S14).
+ * Leftover: data_ov063_0211ec98 (the CLPS block) and g_profile_TH_DOWN_B
+ *   stay outside this TU.
+
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -44,6 +42,7 @@ typedef char ResourceDescriptor_size_must_be_0x0c[
 extern "C" {
 int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *descriptor);
 int func_ov098_0213a2cc(daObjTh_Fall_Block_c *self, ResourceDescriptor *descriptor);
+extern CLPS_Block data_ov063_0211ec98;
 extern ResourceDescriptor data_ov063_0211eb10;
 }
 
@@ -74,12 +73,10 @@ s32 daObjTh_Fall_Block_c::CleanupResources()
  * declared-only subclasses so the static initializer names the real entry
  * points. */
 struct ThFallBlockModelFilePtr : SharedFilePtr {
-    u32 words[2];
     ThFallBlockModelFilePtr(u32 fileID);
     ~ThFallBlockModelFilePtr();
 };
 struct ThFallBlockCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     ThFallBlockCollisionFilePtr(u32 fileID);
     ~ThFallBlockCollisionFilePtr();
 };
@@ -89,3 +86,11 @@ struct ThFallBlockCollisionFilePtr : SharedFilePtr {
  * file. */
 ThFallBlockModelFilePtr gThDownBModelFile(ASSET_TH_DOWN_B_BMD);      /* model */
 ThFallBlockCollisionFilePtr gThDownBCollisionFile(ASSET_TH_DOWN_B_KCL);  /* collision */
+
+/* Model, collision, CLPS. The three words are the overlay relocs at
+ * 0x0211eb10 / 0x0211eb14 / 0x0211eb18. */
+extern "C" ResourceDescriptor data_ov063_0211eb10 = {
+    &gThDownBModelFile,
+    &gThDownBCollisionFile,
+    &data_ov063_0211ec98,
+};

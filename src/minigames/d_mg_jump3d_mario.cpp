@@ -85,21 +85,28 @@ void Puff_DrawAll(void);
 void Puff_UpdateAll(void);
 void Puff_ClearAll(int a, int b);
 
-/* The mState records this file installs or compares. */
-extern Jump3DState pmf_dMgJump3DMario_c_StateMove;
-extern Jump3DState pmf_dMgJump3DMario_c_StateHold;
-extern Jump3DState pmf_dMgJump3DMario_c_StateDamp;
-extern Jump3DState pmf_dMgJump3DMario_c_StateRespawn;
-extern Jump3DState pmf_dMgJump3DMario_c_StateIdle_2;
-extern Jump3DState pmf_dMgJump3DMario_c_StateWindUp;
-extern Jump3DState pmf_dMgJump3DMario_c_StateIdle_3;
-extern Jump3DState pmf_dMgJump3DMario_c_StateBounce;
-extern Jump3DState pmf_dMgJump3DMario_c_StateWindUp_2;
-extern Jump3DState pmf_dMgJump3DMario_c_StateWindUp_3;
-extern Jump3DState pmf_dMgJump3DMario_c_StateBounce_2;
-extern Jump3DState pmf_dMgJump3DMario_c_StateRiseOut;
-extern Jump3DState pmf_dMgJump3DMario_c_StateRespawn_2;
-extern Jump3DState pmf_dMgJump3DMario_c_StateFallOut;
+/* The mState records this file installs or compares.
+ * The unsigned arm is the static image; .pmf is the same bytes read as a
+ * pointer-to-member so equality keeps the null short-circuit. */
+union Jump3DRec {
+    unsigned w[2];
+    Jump3DState pmf;
+};
+extern unsigned pmf_dMgJump3DMario_c_StateMove[2];
+extern unsigned pmf_dMgJump3DMario_c_StateHold[2];
+extern unsigned pmf_dMgJump3DMario_c_StateDamp[2];
+extern unsigned pmf_dMgJump3DMario_c_StateRespawn[2];
+extern unsigned pmf_dMgJump3DMario_c_StateIdle[2];
+extern unsigned pmf_dMgJump3DMario_c_StateIdle_2[2];
+extern unsigned pmf_dMgJump3DMario_c_StateWindUp[2];
+extern Jump3DRec pmf_dMgJump3DMario_c_StateIdle_3;
+extern unsigned pmf_dMgJump3DMario_c_StateBounce[2];
+extern Jump3DRec pmf_dMgJump3DMario_c_StateWindUp_2;
+extern Jump3DRec pmf_dMgJump3DMario_c_StateWindUp_3;
+extern Jump3DRec pmf_dMgJump3DMario_c_StateBounce_2;
+extern unsigned pmf_dMgJump3DMario_c_StateRiseOut[2];
+extern Jump3DRec pmf_dMgJump3DMario_c_StateRespawn_2;
+extern Jump3DRec pmf_dMgJump3DMario_c_StateFallOut;
 
 /* Slots the current mAnimIdx (0/1/2) picks the anim file from. */
 extern BCA_File **data_ov006_0213b098[];
@@ -126,12 +133,10 @@ extern BCA_File *data_ov006_02140430;
 /* Six anim handles call SharedFilePtr::Construct. The model handle calls
    func_02017a24. The second word is the loaded file. */
 struct Jump3DMarioAnimFilePtr : SharedFilePtr {
-    unsigned words[2];
     Jump3DMarioAnimFilePtr(unsigned fileId);
     ~Jump3DMarioAnimFilePtr();
 };
 struct Jump3DModelFilePtr : SharedFilePtr {
-    unsigned words[2];
     Jump3DModelFilePtr(unsigned fileId);
     ~Jump3DModelFilePtr();
 };
@@ -153,14 +158,15 @@ extern int data_ov006_02140414;
 extern int data_ov006_02140418;
 extern char *data_ov006_02140420;
 extern char *data_ov006_021403f4[];
-extern int pmf_dMgJump3DMario_c_StateIdle[2];
 
 extern u8  data_ov006_02140400;
 extern u16 data_ov006_02140404;
 extern void *data_ov006_02141a40;
 extern void *data_ov006_02141a44;
 extern OamAttr *data_ov006_02134d1c;
-extern Vector3 data_ov006_0212ddd0;
+/* Three 20.12 words, 0x2000. A Vector3 object would register its destructor
+ * and grow this TU's static initializer, so the words stay a const array. */
+extern const int data_ov006_0212ddd0[3];
 extern char data_ov006_0212dddc[];
 
 // local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
@@ -271,8 +277,9 @@ extern "C" int Jump3D_AllIdle(void)
     int i;
     for (i = 0; i < data_ov006_02140418; i++) {
         int *v = (int *)(&((Jump3DEnt *)data_ov006_02140420)[i].x);
-        volatile int *q = (volatile int *)pmf_dMgJump3DMario_c_StateIdle;
-        if (v[0] != pmf_dMgJump3DMario_c_StateIdle[0]
+        int *p = (int *)&pmf_dMgJump3DMario_c_StateIdle;
+        volatile int *q = (volatile int *)&pmf_dMgJump3DMario_c_StateIdle;
+        if (v[0] != p[0]
             || (v[1] != q[1] && ((Jump3DEnt *)data_ov006_02140420)[i].x != 0))
             return 0;
     }
@@ -385,11 +392,11 @@ int dMgJump3DMario_c::Unk_020c762c()
     int r = 0;
     int m = 1;
 
-    if (mState == pmf_dMgJump3DMario_c_StateIdle_3)
+    if (mState == pmf_dMgJump3DMario_c_StateIdle_3.pmf)
         m = 0;
     if (m != 0) {
         m = 1;
-        if (mState == pmf_dMgJump3DMario_c_StateWindUp_3)
+        if (mState == pmf_dMgJump3DMario_c_StateWindUp_3.pmf)
             m = 0;
         if (m != 0)
             r = 1;
@@ -457,7 +464,7 @@ void dMgJump3DMario_c::Draw()
         OAM::Render(false, data_ov006_02134d1c, screen[0], screen[1], -1, -1, (Matrix2x2 *)&mtx);
     }
 
-    mModelAnim.Render(&data_ov006_0212ddd0);
+    mModelAnim.Render((const Vector3 *)data_ov006_0212ddd0);
 }
 
 // @symbol _ZN16dMgJump3DMario_c6UpdateEv
@@ -502,7 +509,7 @@ void dMgJump3DMario_c::EnterDamp()
         Sound::PlayBank2_2D(0x1c9);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_0214042c, 0, kAnimSpeed, 0);
     mTimer = 0x28;
-    mState = pmf_dMgJump3DMario_c_StateDamp;
+    mState = *(Jump3DState *)&pmf_dMgJump3DMario_c_StateDamp;
 }
 
 
@@ -589,7 +596,7 @@ void dMgJump3DMario_c::EnterHold()
     mModelAnim.dExtFrameCtrl_c::currFrame = 0;
     Sound_PlayBank1Panned(0, 6, mPos.x);
     mTimer = 0x20;
-    mState = pmf_dMgJump3DMario_c_StateHold;
+    mState = *(Jump3DState *)&pmf_dMgJump3DMario_c_StateHold;
 }
 
 
@@ -698,7 +705,7 @@ void dMgJump3DMario_c::StateMove()
 // @symbol _ZN16dMgJump3DMario_c9EnterMoveEv
 void dMgJump3DMario_c::EnterMove()
 {
-    mState = pmf_dMgJump3DMario_c_StateMove;
+    mState = *(Jump3DState *)&pmf_dMgJump3DMario_c_StateMove;
 }
 
 
@@ -715,7 +722,7 @@ void dMgJump3DMario_c::StateFallOut()
 // @symbol _ZN16dMgJump3DMario_c12StartFallOutEv
 void dMgJump3DMario_c::StartFallOut()
 {
-    if (mState == pmf_dMgJump3DMario_c_StateRespawn_2) {
+    if (mState == pmf_dMgJump3DMario_c_StateRespawn_2.pmf) {
         mVel.y = 0;
         HideAndIdle();
     } else {
@@ -724,7 +731,7 @@ void dMgJump3DMario_c::StartFallOut()
         Sound::PlayBank2_2D(0x1c9);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_0214042c, 0, kAnimSpeed, 0);
         mModelAnim.dExtFrameCtrl_c::currFrame = 0;
-        mState = pmf_dMgJump3DMario_c_StateFallOut;
+        mState = pmf_dMgJump3DMario_c_StateFallOut.pmf;
     }
 }
 
@@ -754,7 +761,7 @@ void dMgJump3DMario_c::StartRiseOut()
     mModelAnim.dExtFrameCtrl_c::currFrame = 0;
     Sound::PlayBank2_2D(0x10f);
     func_02012718(0x1b5, mScreenX << 12);
-    mState = pmf_dMgJump3DMario_c_StateRiseOut;
+    mState = *(Jump3DState *)&pmf_dMgJump3DMario_c_StateRiseOut;
 }
 
 // @symbol _ZN16dMgJump3DMario_c8EnterHitEv
@@ -762,13 +769,13 @@ void dMgJump3DMario_c::EnterHit()
 {
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_0214041c, 0x40000000, kAnimSpeed, 0);
     mModelAnim.dExtFrameCtrl_c::currFrame = 0;
-    if (mState == pmf_dMgJump3DMario_c_StateWindUp_2) {
+    if (mState == pmf_dMgJump3DMario_c_StateWindUp_2.pmf) {
         func_02012718(0x110, mScreenX << 12);
     } else {
         Sound_PlayBank1Panned(0, 4, mPos.x);
     }
     func_02012718(0x1b5, mScreenX << 12);
-    mState = pmf_dMgJump3DMario_c_StateBounce_2;
+    mState = pmf_dMgJump3DMario_c_StateBounce_2.pmf;
 }
 
 
@@ -828,7 +835,7 @@ void dMgJump3DMario_c::StateBounce()
 // @symbol _ZN16dMgJump3DMario_c11EnterBounceEv
 void dMgJump3DMario_c::EnterBounce()
 {
-    mState = pmf_dMgJump3DMario_c_StateBounce;
+    mState = *(Jump3DState *)&pmf_dMgJump3DMario_c_StateBounce;
 }
 
 
@@ -852,7 +859,7 @@ void dMgJump3DMario_c::StateWindUp()
 void dMgJump3DMario_c::StartWindUp(int timer)
 {
     mTimer = (s16)timer;
-    mState = pmf_dMgJump3DMario_c_StateWindUp;
+    mState = *(Jump3DState *)&pmf_dMgJump3DMario_c_StateWindUp;
 }
 
 // @symbol _ZN16dMgJump3DMario_c9StateIdleEv
@@ -867,7 +874,7 @@ void dMgJump3DMario_c::HideAndIdle()
 {
     mVisible = 0;
     mPos.y = 0;
-    mState = pmf_dMgJump3DMario_c_StateIdle_2;
+    mState = *(Jump3DState *)&pmf_dMgJump3DMario_c_StateIdle_2;
 }
 
 // @symbol _ZN16dMgJump3DMario_c12StateRespawnEv
@@ -901,7 +908,7 @@ void dMgJump3DMario_c::EnterRespawn()
     mPos.y = 0x100000;
     mVel.y = 0;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_02140424, 0x40000000, kAnimSpeed, 0);
-    mState = pmf_dMgJump3DMario_c_StateRespawn;
+    mState = *(Jump3DState *)&pmf_dMgJump3DMario_c_StateRespawn;
 }
 
 
@@ -963,6 +970,55 @@ dMgJump3DMario_c::~dMgJump3DMario_c()
  * construction are all generated. */
 dMgJump3DMario_c::dMgJump3DMario_c()
 {
+}
+
+extern "C" const int data_ov006_0212ddd0[3] = {0x2000, 0x2000, 0x2000};
+
+extern "C" void _ZN16dMgJump3DMario_c9StateMoveEv(dMgJump3DMario_c *);
+extern "C" void _ZN16dMgJump3DMario_c9StateHoldEv(dMgJump3DMario_c *);
+extern "C" void _ZN16dMgJump3DMario_c9StateDampEv(dMgJump3DMario_c *);
+extern "C" void _ZN16dMgJump3DMario_c12StateRespawnEv(dMgJump3DMario_c *);
+extern "C" void _ZN16dMgJump3DMario_c9StateIdleEv(dMgJump3DMario_c *);
+extern "C" void _ZN16dMgJump3DMario_c11StateWindUpEv(dMgJump3DMario_c *);
+extern "C" void _ZN16dMgJump3DMario_c11StateBounceEv(dMgJump3DMario_c *);
+extern "C" void _ZN16dMgJump3DMario_c12StateRiseOutEv(dMgJump3DMario_c *);
+extern "C" void _ZN16dMgJump3DMario_c12StateFallOutEv(dMgJump3DMario_c *);
+extern "C" unsigned pmf_dMgJump3DMario_c_StateMove[2] = { (unsigned)_ZN16dMgJump3DMario_c9StateMoveEv, 0 };
+extern "C" unsigned pmf_dMgJump3DMario_c_StateHold[2] = { (unsigned)_ZN16dMgJump3DMario_c9StateHoldEv, 0 };
+extern "C" unsigned pmf_dMgJump3DMario_c_StateDamp[2] = { (unsigned)_ZN16dMgJump3DMario_c9StateDampEv, 0 };
+extern "C" unsigned pmf_dMgJump3DMario_c_StateRespawn[2] = { (unsigned)_ZN16dMgJump3DMario_c12StateRespawnEv, 0 };
+extern "C" unsigned pmf_dMgJump3DMario_c_StateIdle[2] = { (unsigned)_ZN16dMgJump3DMario_c9StateIdleEv, 0 };
+extern "C" unsigned pmf_dMgJump3DMario_c_StateIdle_2[2] = { (unsigned)_ZN16dMgJump3DMario_c9StateIdleEv, 0 };
+extern "C" unsigned pmf_dMgJump3DMario_c_StateWindUp[2] = { (unsigned)_ZN16dMgJump3DMario_c11StateWindUpEv, 0 };
+extern "C" Jump3DRec pmf_dMgJump3DMario_c_StateIdle_3 = {{ (unsigned)_ZN16dMgJump3DMario_c9StateIdleEv, 0 }};
+extern "C" unsigned pmf_dMgJump3DMario_c_StateBounce[2] = { (unsigned)_ZN16dMgJump3DMario_c11StateBounceEv, 0 };
+extern "C" Jump3DRec pmf_dMgJump3DMario_c_StateWindUp_2 = {{ (unsigned)_ZN16dMgJump3DMario_c11StateWindUpEv, 0 }};
+extern "C" Jump3DRec pmf_dMgJump3DMario_c_StateWindUp_3 = {{ (unsigned)_ZN16dMgJump3DMario_c11StateWindUpEv, 0 }};
+extern "C" Jump3DRec pmf_dMgJump3DMario_c_StateBounce_2 = {{ (unsigned)_ZN16dMgJump3DMario_c11StateBounceEv, 0 }};
+extern "C" unsigned pmf_dMgJump3DMario_c_StateRiseOut[2] = { (unsigned)_ZN16dMgJump3DMario_c12StateRiseOutEv, 0 };
+extern "C" Jump3DRec pmf_dMgJump3DMario_c_StateRespawn_2 = {{ (unsigned)_ZN16dMgJump3DMario_c12StateRespawnEv, 0 }};
+extern "C" Jump3DRec pmf_dMgJump3DMario_c_StateFallOut = {{ (unsigned)_ZN16dMgJump3DMario_c12StateFallOutEv, 0 }};
+extern "C" BCA_File **data_ov006_0213b098[3] = {
+    &data_ov006_02140430,
+    &data_ov006_0214040c,
+    &data_ov006_02140424,
+};
+
+/* Zero image. These sit in front of the file-handle constructors, so the
+ * .bss claim starts here and the constructors stay at 0x02140438. */
+extern "C" {
+BCA_File *data_ov006_02140408;
+BCA_File *data_ov006_0214040c;
+int data_ov006_02140410;
+int data_ov006_02140414;
+int data_ov006_02140418;
+BCA_File *data_ov006_0214041c;
+char *data_ov006_02140420;
+BCA_File *data_ov006_02140424;
+int data_ov006_02140428;
+BCA_File *data_ov006_0214042c;
+BCA_File *data_ov006_02140430;
+int data_ov006_02140434;
 }
 
 Jump3DMarioAnimFilePtr data_ov006_02140460(32888);

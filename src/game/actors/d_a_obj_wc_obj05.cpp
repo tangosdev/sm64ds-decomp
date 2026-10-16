@@ -46,14 +46,12 @@ enum d_a_obj_wc_obj05_AssetId {
  * their destructors. The wrapper names are local; the ctor/dtor
  * addresses are the ROM resource-family functions. */
 struct WcObj05ModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     WcObj05ModelFilePtr(u32 fileID);
     ~WcObj05ModelFilePtr();
 };
 
 struct WcObj05CollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     WcObj05CollisionFilePtr(u32 fileID);
     ~WcObj05CollisionFilePtr();

@@ -32,6 +32,11 @@
       "end": "0x021130fc"
     },
     {
+      "name": ".data",
+      "start": "0x02113cc8",
+      "end": "0x02113cd4"
+    },
+    {
       "name": ".bss",
       "start": "0x02114500",
       "end": "0x02114528"
@@ -102,7 +107,22 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov022_02113cc8",
+      "address": "0x02113cc8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer to the model handle gFlRingModelFile"
+    },
+    {
+      "symbol": "data_ov022_02113ccc",
+      "address": "0x02113ccc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision-handle pointer gFlRingCollisionFile, then the ov064 CLPS pointer data_ov064_0211bbac; symbols.txt names this address"
+    }
+  ],
   "bss": [
     {
       "symbol": "gFlRingModelFile",
@@ -253,6 +273,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02113cc8",
+          "end": "0x02113cd4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02114500",
           "end": "0x02114528",
@@ -261,7 +288,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 15
+          "LICENSED": 17
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -272,34 +299,45 @@
           {
             "section": ".init",
             "original": [
-              46
+              50
             ],
             "desired": [
-              46
+              50
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              44
+              48
             ],
             "desired": [
-              44
+              48
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              8
+            ],
+            "desired": [
+              5,
+              8
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              8,
-              14,
-              21
+              7,
+              12,
+              18,
+              25
             ],
             "desired": [
-              8,
-              5,
-              21,
-              14
+              7,
+              12,
+              25,
+              18
             ]
           }
         ],
@@ -308,22 +346,22 @@
             {
               "section": ".bss",
               "original": [
-                5,
-                8,
-                14,
-                21
+                7,
+                12,
+                18,
+                25
               ],
               "desired": [
-                8,
-                5,
-                21,
-                14
+                7,
+                12,
+                25,
+                18
               ],
               "slots": [
-                5,
-                8,
-                14,
-                21
+                7,
+                12,
+                18,
+                25
               ]
             }
           ],
@@ -534,6 +572,36 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02113cc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFlRingModelFile",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02114500"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ccc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFlRingCollisionFile",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02114508"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113cd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211bbac",
+      "addend": 0,
+      "target_module": "overlays(64,65)",
+      "target_address": "0x0211bbac"
+    },
     {
       "section": ".init",
       "source": "0x02112cb8",

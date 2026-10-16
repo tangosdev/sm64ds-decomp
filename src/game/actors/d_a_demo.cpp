@@ -152,6 +152,12 @@ typedef void (C::*PMF0)();
 /* pointer-to-member taking (cmd, a2, a3) — func_ov002_020f7d74's table */
 typedef void (daDemo_c::*PMF3)(unsigned char*, int, int);
 
+/* Eight-byte (function, adjustment) records. A PMF3 initializer emits a
+   static initializer and zero storage; these words are already relocated. */
+#pragma cplusplus off
+typedef struct PMFWords { int fn; int adj; } PMFWords;
+#pragma cplusplus on
+
 /* array-teardown callback used by the anmModel_c destructor */
 typedef void (*VFN)(void *);
 
@@ -451,7 +457,6 @@ struct Obj {
 /* Lakitu's model-file handle, owned and constructed by d_a_c_jugem.cpp's
  * static init. Same TU-local wrapper spelling as the owning TU. */
 struct JugemModelFile : SharedFilePtr {
-    u32 words[2];
 
     JugemModelFile(u32 fileID);
     ~JugemModelFile();
@@ -490,15 +495,12 @@ extern int func_ov002_020f5a94(void *c);
 extern int* data_ov002_0210b97c[];
 extern void func_ov002_020f2f18(char *c, int a, int b);
 extern void SetSubBg2Offset(int a, int b);
-extern PMF data_ov002_02110e24[];
-extern PMF data_ov002_02110e9c[];
 extern void func_ov002_020f3828(int *c);
 extern void MultiCopyHalf(void *src, void *dst, unsigned int count);
 extern int data_ov002_021002a0[];
 extern s16 data_02082214[];
 extern short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 extern short data_02082214[];
-extern PMF data_ov002_02110e34[];
 extern unsigned short data_ov002_021000c0[];
 extern int data_ov002_02100120[];
 extern int data_ov002_02100130[];
@@ -512,12 +514,9 @@ extern unsigned short data_ov002_021000d0[];
 extern int data_ov002_02100150[];
 extern int data_ov002_02100160[];
 extern unsigned short data_ov002_021000d8[];
-extern PMF data_ov002_02110eec[];
 extern int data_ov002_02100190[];
 extern int data_ov002_02100170[];
-extern PMF data_ov002_02110e64[];
 extern "C" void func_ov002_020f39ec(char* c, int i);
-extern PMF data_ov002_02110e7c[];
 extern "C" void func_ov002_020f5990(char* c);
 extern void func_ov002_020f5a6c(char* p);
 extern void func_ov002_020f396c(char* p);
@@ -532,7 +531,6 @@ extern void func_ov002_020f2f9c(void *, int);
 extern void func_ov002_020f3954(char *);
 /* local extern dropped: decl_common.h already declares LoadFont(u8) */
 void func_ov002_020f2e30(struct Obj2e30*, int);
-extern PMF0 data_ov002_02110f9c[];
 extern void SetSubBg3Offset(int a, int b);
 extern void _ZN3GXS15SetGraphicsModeEi(int m);
 extern int LoadFile(int handle);
@@ -634,25 +632,59 @@ extern PMF3 data_ov002_0210b620;
 extern PMF3 data_ov002_0210b640;
 extern PMF3 data_ov002_0210b628;
 extern PMF3 data_ov002_0210b648;
-extern PMF3 data_ov002_0210b8c0;
-extern PMF3 data_ov002_0210b900;
-extern PMF3 data_ov002_0210b938;
-extern PMF3 data_ov002_0210b930;
-extern PMF3 data_ov002_0210b928;
-extern PMF3 data_ov002_0210b920;
-extern PMF3 data_ov002_0210b918;
-extern PMF3 data_ov002_0210b910;
-extern PMF3 data_ov002_0210b908;
+
+extern "C" {
+int _ZN8daDemo_c19func_ov002_020f71c4Eii(int, int);
+int _ZN8daDemo_c19func_ov002_020f26c4EPh(unsigned char *);
+void func_ov002_020f26d4(void);
+int _ZN8daDemo_c19func_ov002_020f63f8EPh(unsigned char *);
+int _ZN8daDemo_c19func_ov002_020f6448EPh(unsigned char *);
+int _ZN8daDemo_c19func_ov002_020f6a9cEv(void);
+int _ZN8daDemo_c19func_ov002_020f6ab8EPh(unsigned char *);
+int _ZN8daDemo_c19func_ov002_020f6ae4EPh(unsigned char *);
+int _ZN8daDemo_c19func_ov002_020f7038Eii(int, int);
+int _ZN8daDemo_c19func_ov002_020f6b4cEPh(unsigned char *);
+int _ZN8daDemo_c19func_ov002_020f6bc0EPh(unsigned char *);
+int _ZN8daDemo_c19func_ov002_020f6c24EPh(unsigned char *);
+int _ZN8daDemo_c19func_ov002_020f6c34EPh(unsigned char *);
+int _ZN8daDemo_c19func_ov002_020f6c60EPvii(void *, int, int);
+int _ZN8daDemo_c19func_ov002_020f6e48EPh(unsigned char *);
+int _ZN8daDemo_c19func_ov002_020f7020Ev(void);
+}
+PMFWords data_ov002_0210b8c0 = { (int)&_ZN8daDemo_c19func_ov002_020f71c4Eii, 0 };
+PMFWords data_ov002_0210b8c8 = { (int)&_ZN8daDemo_c19func_ov002_020f26c4EPh, 0 };
+PMFWords data_ov002_0210b8d0 = { (int)&func_ov002_020f26d4, 0 };
+PMFWords data_ov002_0210b8d8 = { (int)&_ZN8daDemo_c19func_ov002_020f63f8EPh, 0 };
+PMFWords data_ov002_0210b8e0 = { (int)&_ZN8daDemo_c19func_ov002_020f6448EPh, 0 };
+PMFWords data_ov002_0210b8e8 = { (int)&_ZN8daDemo_c19func_ov002_020f6a9cEv, 0 };
+PMFWords data_ov002_0210b8f0 = { (int)&_ZN8daDemo_c19func_ov002_020f6ab8EPh, 0 };
+PMFWords data_ov002_0210b8f8 = { (int)&_ZN8daDemo_c19func_ov002_020f6ae4EPh, 0 };
+PMFWords data_ov002_0210b900 = { (int)&_ZN8daDemo_c19func_ov002_020f7038Eii, 0 };
+PMFWords data_ov002_0210b908 = { (int)&_ZN8daDemo_c19func_ov002_020f6b4cEPh, 0 };
+PMFWords data_ov002_0210b910 = { (int)&_ZN8daDemo_c19func_ov002_020f6bc0EPh, 0 };
+PMFWords data_ov002_0210b918 = { (int)&_ZN8daDemo_c19func_ov002_020f6c24EPh, 0 };
+PMFWords data_ov002_0210b920 = { (int)&_ZN8daDemo_c19func_ov002_020f6c34EPh, 0 };
+PMFWords data_ov002_0210b928 = { (int)&_ZN8daDemo_c19func_ov002_020f6c60EPvii, 0 };
+PMFWords data_ov002_0210b930 = { (int)&_ZN8daDemo_c19func_ov002_020f6e48EPh, 0 };
+PMFWords data_ov002_0210b938 = { (int)&_ZN8daDemo_c19func_ov002_020f7020Ev, 0 };
+
+/* Zero image. A pointer-to-member object emits a static initializer.
+   __sinit_ov002_02107370 writes these slots. */
+#pragma cplusplus off
+PMFWords data_ov002_02110e24[2];
+PMFWords data_ov002_02110e34[3];
+PMFWords data_ov002_02110e4c[3];
+PMFWords data_ov002_02110e64[3];
+PMFWords data_ov002_02110e7c[4];
+PMFWords data_ov002_02110e9c[4];
+PMFWords data_ov002_02110ebc[6];
+PMFWords data_ov002_02110eec[9];
+PMFWords data_ov002_02110f34[13];
+PMFWords data_ov002_02110f9c[22];
+PMFWords data_ov002_0211104c[24];
+#pragma cplusplus on
 extern PMF3 data_ov002_0210b750;
-extern PMF3 data_ov002_0210b8f8;
-extern PMF3 data_ov002_0210b8f0;
-extern PMF3 data_ov002_0210b8e8;
-extern PMF3 data_ov002_0210b8e0;
-extern PMF3 data_ov002_0210b8d8;
-extern PMF3 data_ov002_0210b8d0;
-extern PMF3 data_ov002_0210b8c8;
 extern int data_ov002_02110b00;
-extern PMF3 data_ov002_0211104c[24];
 extern void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, s32 x, s32 y, s32 z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z);
@@ -1385,10 +1417,9 @@ void func_ov002_020f2d70(char *c, int i)
 /* ROM ordinal 26 -- func_ov002_020f2dd4, 0x020f2dd4, size 0x5c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f2dd4
-extern Entry2dd4 data_ov002_02110ebc[];
 extern "C" void func_ov002_020f2dd4(C2dd4* c){
   if(c->g==0) return;
-  (c->*data_ov002_02110ebc[c->idx].pmf)(0);
+  (c->*(*(PMF2dd4 *)&data_ov002_02110ebc[c->idx]))(0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1607,7 +1638,7 @@ void func_ov002_020f32e4(struct S *arr, int i)
 // @symbol func_ov002_020f3310
 extern "C" void func_ov002_020f3310(C* self, int idx) {
     unsigned char sel = *((unsigned char*)((char*)self + idx * 0x30 + 0x15e));
-    (self->*data_ov002_02110e24[sel])(idx);
+    (self->*(*(PMF *)&data_ov002_02110e24[sel]))(idx);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1734,7 +1765,7 @@ void func_ov002_020f35e4(char *c, int i)
 // @symbol func_ov002_020f3740
 extern "C" void func_ov002_020f3740(C* self, int idx) {
     unsigned char sel = *((unsigned char*)((char*)self + idx * 0x30 + 0x15e));
-    (self->*data_ov002_02110e9c[sel])(idx);
+    (self->*(*(PMF *)&data_ov002_02110e9c[sel]))(idx);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1751,10 +1782,9 @@ void func_ov002_020f378c(struct E *base, int idx){
 /* ROM ordinal 43 -- func_ov002_020f37a0, 0x020f37a0, size 0x5c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f37a0
-extern Entry37 data_ov002_02110e4c[];
 extern "C" void func_ov002_020f37a0(C37* c){
   if(c->g==0) return;
-  (c->*data_ov002_02110e4c[c->idx].pmf)(0);
+  (c->*(*(PMF37 *)&data_ov002_02110e4c[c->idx]))(0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2000,7 +2030,7 @@ void func_ov002_020f3d38(char *c, int i)
 // @symbol func_ov002_020f3d98
 extern "C" void func_ov002_020f3d98(C* self, int idx) {
     unsigned char sel = *((unsigned char*)((char*)self + idx * 0x4c + 0x47));
-    (self->*data_ov002_02110e34[sel])(idx);
+    (self->*(*(PMF *)&data_ov002_02110e34[sel]))(idx);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2852,7 +2882,7 @@ void func_ov002_020f55b4(char* c, int i){
 // @symbol func_ov002_020f562c
 extern "C" void func_ov002_020f562c(C* self, int idx) {
     unsigned char sel = *((unsigned char*)((char*)self + idx * 0x4c + 0x47));
-    (self->*data_ov002_02110eec[sel])(idx);
+    (self->*(*(PMF *)&data_ov002_02110eec[sel]))(idx);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2957,7 +2987,7 @@ void func_ov002_020f57c0(struct E57c0* arr, int idx) {
 // @symbol func_ov002_020f5848
 extern "C" void func_ov002_020f5848(C* self, int idx) {
     unsigned char sel = *((unsigned char*)((char*)self + idx * 0x4c + 0x47));
-    (self->*data_ov002_02110e64[sel])(idx);
+    (self->*(*(PMF *)&data_ov002_02110e64[sel]))(idx);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -3014,7 +3044,7 @@ void func_ov002_020f5990(char* c)
     }
     for (i = 0; i < 4; i++, s = (Sub*)((char*)s + 0x4c)) {
         if (s->f44 == 0) continue;
-        (((C*)c)->*data_ov002_02110e7c[s->f46])(i);
+        (((C*)c)->*(*(PMF *)&data_ov002_02110e7c[s->f46]))(i);
         func_ov002_020f39ec(c, i);
         if (s->f49 == 0) continue;
         if (i != *(int*)(c + 0x1f8)) continue;
@@ -3294,9 +3324,8 @@ done:
 /* ROM ordinal 86 -- func_ov002_020f5dd8, 0x020f5dd8, size 0x40 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f5dd8
-extern PMF0 data_ov002_02110f34[];
 extern "C" void func_ov002_020f5dd8(C* c, int idx) {
-  (c->*data_ov002_02110f34[idx])();
+  (c->*(*(PMF0 *)&data_ov002_02110f34[idx]))();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -3412,7 +3441,7 @@ void func_ov002_020f5efc(void) {
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f5f0c
 extern "C" void func_ov002_020f5f0c(C* c, int idx){
-  (c->*data_ov002_02110f9c[idx])();
+  (c->*(*(PMF0 *)&data_ov002_02110f9c[idx]))();
   func_ov002_020f2e30((Obj2e30*)c, idx);
 }
 
@@ -4600,32 +4629,32 @@ extern "C" void func_ov002_020f7d74(daDemo_c* self, unsigned char* p, int a2, in
 {
     if ((data_ov002_02110b00 & 1) == 0) {
         data_ov002_02110b00 |= 1;
-        data_ov002_0211104c[0] = data_ov002_0210b708;
-        data_ov002_0211104c[1] = data_ov002_0210b678;
-        data_ov002_0211104c[2] = data_ov002_0210b618;
-        data_ov002_0211104c[3] = data_ov002_0210b620;
-        data_ov002_0211104c[4] = data_ov002_0210b640;
-        data_ov002_0211104c[5] = data_ov002_0210b628;
-        data_ov002_0211104c[6] = data_ov002_0210b648;
-        data_ov002_0211104c[7] = data_ov002_0210b8c0;
-        data_ov002_0211104c[8] = data_ov002_0210b900;
-        data_ov002_0211104c[9] = data_ov002_0210b938;
-        data_ov002_0211104c[10] = data_ov002_0210b930;
-        data_ov002_0211104c[11] = data_ov002_0210b928;
-        data_ov002_0211104c[12] = data_ov002_0210b920;
-        data_ov002_0211104c[13] = data_ov002_0210b918;
-        data_ov002_0211104c[14] = data_ov002_0210b910;
-        data_ov002_0211104c[15] = data_ov002_0210b908;
-        data_ov002_0211104c[16] = data_ov002_0210b750;
-        data_ov002_0211104c[17] = data_ov002_0210b8f8;
-        data_ov002_0211104c[18] = data_ov002_0210b8f0;
-        data_ov002_0211104c[19] = data_ov002_0210b8e8;
-        data_ov002_0211104c[20] = data_ov002_0210b8e0;
-        data_ov002_0211104c[21] = data_ov002_0210b8d8;
-        data_ov002_0211104c[22] = data_ov002_0210b8d0;
-        data_ov002_0211104c[23] = data_ov002_0210b8c8;
+        *(PMF3 *)&data_ov002_0211104c[0] = data_ov002_0210b708;
+        *(PMF3 *)&data_ov002_0211104c[1] = data_ov002_0210b678;
+        *(PMF3 *)&data_ov002_0211104c[2] = data_ov002_0210b618;
+        *(PMF3 *)&data_ov002_0211104c[3] = data_ov002_0210b620;
+        *(PMF3 *)&data_ov002_0211104c[4] = data_ov002_0210b640;
+        *(PMF3 *)&data_ov002_0211104c[5] = data_ov002_0210b628;
+        *(PMF3 *)&data_ov002_0211104c[6] = data_ov002_0210b648;
+        *(PMF3 *)&data_ov002_0211104c[7] = *(PMF3 *)&data_ov002_0210b8c0;
+        *(PMF3 *)&data_ov002_0211104c[8] = *(PMF3 *)&data_ov002_0210b900;
+        *(PMF3 *)&data_ov002_0211104c[9] = *(PMF3 *)&data_ov002_0210b938;
+        *(PMF3 *)&data_ov002_0211104c[10] = *(PMF3 *)&data_ov002_0210b930;
+        *(PMF3 *)&data_ov002_0211104c[11] = *(PMF3 *)&data_ov002_0210b928;
+        *(PMF3 *)&data_ov002_0211104c[12] = *(PMF3 *)&data_ov002_0210b920;
+        *(PMF3 *)&data_ov002_0211104c[13] = *(PMF3 *)&data_ov002_0210b918;
+        *(PMF3 *)&data_ov002_0211104c[14] = *(PMF3 *)&data_ov002_0210b910;
+        *(PMF3 *)&data_ov002_0211104c[15] = *(PMF3 *)&data_ov002_0210b908;
+        *(PMF3 *)&data_ov002_0211104c[16] = data_ov002_0210b750;
+        *(PMF3 *)&data_ov002_0211104c[17] = *(PMF3 *)&data_ov002_0210b8f8;
+        *(PMF3 *)&data_ov002_0211104c[18] = *(PMF3 *)&data_ov002_0210b8f0;
+        *(PMF3 *)&data_ov002_0211104c[19] = *(PMF3 *)&data_ov002_0210b8e8;
+        *(PMF3 *)&data_ov002_0211104c[20] = *(PMF3 *)&data_ov002_0210b8e0;
+        *(PMF3 *)&data_ov002_0211104c[21] = *(PMF3 *)&data_ov002_0210b8d8;
+        *(PMF3 *)&data_ov002_0211104c[22] = *(PMF3 *)&data_ov002_0210b8d0;
+        *(PMF3 *)&data_ov002_0211104c[23] = *(PMF3 *)&data_ov002_0210b8c8;
     }
-    (self->*data_ov002_0211104c[p[6]])(p + 7, a2, a3);
+    (self->*(*(PMF3 *)&data_ov002_0211104c[p[6]]))(p + 7, a2, a3);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -4791,7 +4820,7 @@ int daDemo_c::InitResources()
         }
         this->mModelAnim = (ModelAnim *)p;
         if (this->mModelAnim == 0) return 0;
-        if (((anmModel_c*)this->mModelAnim)->func_ov002_020f6618((SharedFilePtr*)&data_ov085_0213074c, 1, (SharedFilePtr**)&data_ov002_0210b60c, 1, 1, (SharedFilePtr**)&data_ov002_0210b608, -1) == 0) return 0;
+        if (((anmModel_c*)this->mModelAnim)->func_ov002_020f6618(&data_ov085_0213074c, 1, (SharedFilePtr**)&data_ov002_0210b60c, 1, 1, (SharedFilePtr**)&data_ov002_0210b608, -1) == 0) return 0;
     } else if (param1 == 0x13) {
         p = _Znwj(0x84);
         if (p) {

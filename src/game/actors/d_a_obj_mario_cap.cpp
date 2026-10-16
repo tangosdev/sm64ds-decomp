@@ -107,8 +107,8 @@
  *   fields unk_403 and unk_408, which are written and never read in this file.
  *   mStateEntry stays an s32 because the member-pointer record is spelled by
  *   the file-local CapStateRec / CapEnterSelf stand-ins.
- *   The SharedFilePtr header has no fields; CleanupResources still casts the
- *   AnimRec tables.
+ *   AnimRec is not a SharedFilePtr (its first word is not a file id).
+ *   CleanupResources still casts those tables.
  *   dBgCh_Gnd stays a 0x50 stack blob: its C1/D1 only run on the airborne
  *   path (UpdateMatrix).
  *   The +0xc8 override-matrix pointer lives in dActor_c's pad_0c5, a header
@@ -148,8 +148,8 @@ enum daObjMarioCap_c_AssetId {
 /* The animation descriptor pairs these tables hold: a header word and the
  * BCA file pointer read at +4. Spelled as a struct because three members
  * reach the second word by name and two more take the address of the whole
- * record. SharedFilePtr.h commits to no fields, so CleanupResources still
- * casts these to SharedFilePtr*. */
+ * record. AnimRec is not a SharedFilePtr, so CleanupResources still
+ * casts these tables. */
 struct AnimRec { void *f0; void *file; };
 
 /* The static initializer's own types. __sinit_ov002_02101064 constructs the 13
@@ -160,8 +160,6 @@ struct AnimRec { void *f0; void *file; };
  * constructor/destructor the ROM's SharedFilePtr entry points (the manifest
  * aliases those symbols). */
 struct daObjMarioCapFileHandle : SharedFilePtr {
-    u32 f0;
-    void *file;
 
     daObjMarioCapFileHandle(u32 fileID);
     ~daObjMarioCapFileHandle();
@@ -315,7 +313,7 @@ extern McapStatePmf data_ov002_0210957c, data_ov002_02109584;
 extern McapStatePmf data_ov002_0210958c, data_ov002_02109594;
 extern McapStatePmf data_ov002_0210959c, data_ov002_021095a4;
 
-extern struct AnimRec *data_ov002_020ff0a0[];
+extern struct AnimRec *const data_ov002_020ff0a0[3];
 extern struct AnimRec *data_ov002_020ff0b8[];
 extern int            *data_ov002_020ff0c4[];
 
@@ -705,7 +703,7 @@ void daObjMarioCap_c::OnTurnIntoEgg(Player &player)
 {
     if (player.SetNoControlState(8, -1, 0) == 1) {
         player.SetNewHatCharacter(mModelIndex & 0xff, 1, 0);
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov002_0210de30.file,
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov002_0210de30.filePtr,
                                                     0x40000000, 0x1000, 0);
         mAnimStarted = 1;
     }
@@ -1202,7 +1200,7 @@ int daObjMarioCap_c::Taken() {
         if (mPlayer->SetNoControlState(0xf, -1, 0) == 1) {
             mPlayer->SetNewHatCharacter(mModelIndex & 0xff, 0, 0);
             func_02013a88();
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov002_0210de38.file, 0x40000000, 0x1000, 0);
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov002_0210de38.filePtr, 0x40000000, 0x1000, 0);
             mTakenStep = 2;
         }
         break;
@@ -1219,7 +1217,7 @@ int daObjMarioCap_c::Taken() {
 
     if (mAnimStarted == 0) {
         if (mPlayer->Unk_020c9e5c(8) == 1) {
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov002_0210de30.file, 0x40000000, 0x1000, 0);
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov002_0210de30.filePtr, 0x40000000, 0x1000, 0);
             mAnimStarted = 1;
         }
     }
@@ -1270,7 +1268,7 @@ int daObjMarioCap_c::InitAnim()
     switch (mType) {
     case 0xa:
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &mModelAnim, data_ov002_0210de30.file, 0x40000000, 0x1000, 0);
+            &mModelAnim, data_ov002_0210de30.filePtr, 0x40000000, 0x1000, 0);
         break;
     case 0xf:
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
@@ -1282,11 +1280,11 @@ int daObjMarioCap_c::InitAnim()
         break;
     case 0x15:
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &mModelAnim, data_ov002_0210de58.file, 0x40000000, 0x1000, 0);
+            &mModelAnim, data_ov002_0210de58.filePtr, 0x40000000, 0x1000, 0);
         break;
     case 0x16:
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-            &mModelAnim, data_ov002_0210de18.file, 0x40000000, 0x1000, 0);
+            &mModelAnim, data_ov002_0210de18.filePtr, 0x40000000, 0x1000, 0);
         break;
     }
 
@@ -1475,6 +1473,16 @@ daObjMarioCapFileHandle data_ov002_0210de10(ASSET_MARIO_CAP_ED_L_CAP_OFF_WAIT_BC
 daObjMarioCapFileHandle data_ov002_0210de00(ASSET_MARIO_CAP_ED_W_CAP_OFF_WAIT_BCA);
 daObjMarioCapFileHandle data_ov002_0210de58(ASSET_MARIO_CAP_ED_M_KISS_WAIT_BCA);
 daObjMarioCapFileHandle data_ov002_0210de18(ASSET_MARIO_CAP_ED_M_KISS_TO_POSE_BCA);
+
+/* Type 15 indexes this by mModelIndex (0..2). The words are the handles above.
+ * A C++ definition of the const pointer array emits a static initializer. */
+#pragma cplusplus off
+extern struct AnimRec *const data_ov002_020ff0a0[3] = {
+    (struct AnimRec *)&data_ov002_0210de48,
+    (struct AnimRec *)&data_ov002_0210de60,
+    (struct AnimRec *)&data_ov002_0210de50,
+};
+#pragma cplusplus on
 
 /* The nine state records, in copy order: { enter, per-frame }. */
 McapStateRec data_ov002_0210df64 = { data_ov002_02109534, data_ov002_0210952c };

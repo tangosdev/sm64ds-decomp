@@ -92,7 +92,10 @@ extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12
     void *self, void *v, void *a);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
     void *p, void *v, u32 a, int f, u32 c, u32 d, u32 e);
-extern Vector3 data_ov081_02128998; /* cylinder offset (0, 0x1e000, 0) */
+/* Cylinder offset (0, 0x1e000, 0): this TU's own .data. Spelled as a plain
+   three-word struct rather than Vector3, whose declared destructor would
+   emit static-init machinery the ROM does not have here. */
+struct { s32 x, y, z; } data_ov081_02128998 = {0, 0x1e000, 0};
 extern unsigned char data_0209f21c[];
 extern void *data_0209f394[];
 extern int _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(
@@ -132,12 +135,10 @@ extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
  * The wrapper names are long enough that their mangled constructor
  * symbols can be aliased onto those retail functions. */
 struct daSnowmanModelFilePtr : SharedFilePtr {
-    u32 words[2];
     daSnowmanModelFilePtr(u32 fileID);
     ~daSnowmanModelFilePtr();
 };
 struct daSnowmanAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
     daSnowmanAnimationFilePtr(u32 fileID);
     ~daSnowmanAnimationFilePtr();
 };
@@ -282,7 +283,7 @@ void daSnowman_c::func_ov081_0212423c(int idx)
 void daSnowman_c::func_ov081_021243cc()
 {
     Vector3 v;
-    v = data_ov081_02128998;
+    v = *(Vector3 *)&data_ov081_02128998;
     this->mdCcAcPos_c.SetPosRelativeToActor(v);
 
     u32 id = this->mdCcAcPos_c.otherOwner;
@@ -1067,7 +1068,7 @@ int daSnowman_c::InitResources()
     mScaleZ = 0x1000;
     mTerminalVelocity = -0xc8000;
 
-    v = data_ov081_02128998;
+    v = *(Vector3 *)&data_ov081_02128998;
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         &mdCcAcPos_c, this, &v, 0x3c000, 0x96000, 0x200004, 0x42050);
 

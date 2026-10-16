@@ -2,8 +2,14 @@
 typedef struct { int a, b, c; } S12;
 
 extern char* data_ov007_0210342c;
-extern S12 data_ov007_020d7c34[];
-extern S12 data_ov007_020d7c28;
+
+/* Stored words. 0x020d7c58 is the next symbol. */
+const S12 data_ov007_020d7c28 = { 0xf000, 0xffff0000, 0xffffb000 };
+const S12 data_ov007_020d7c34[3] = {
+    { 0xfffff000, 0x1000, 0x1000 },
+    { 0xfffff000, 0x1000, 0x1000 },
+    { 0xfffff000, 0x1000, 0x1000 },
+};
 
 extern void func_ov007_020bce70(short n, int m);
 extern void* func_ov007_020b3f20(int idx);

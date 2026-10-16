@@ -57,5 +57,35 @@ class ObjectDiscoveryTests(unittest.TestCase):
                 CDD.BUILD, CDD.SCRATCH = old
 
 
+class CarvedDefinitions(unittest.TestCase):
+    """A definition the source's own complete entry carved is not a second copy."""
+
+    def test_only_the_claiming_source_may_define_rows_inside_its_claim(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            module = pathlib.Path(tmp) / "arm9"
+            module.mkdir()
+            (module / "delinks.txt").write_text(
+                "src/actors/Owner.cpp:\n"
+                "    complete\n"
+                "    .text start:0x02000000 end:0x02000010\n"
+                "    .data start:0x02090000 end:0x02090008\n"
+                "\n"
+                "src/Other.c:\n"
+                "    complete\n"
+                "    .text start:0x02000010 end:0x02000020\n",
+                encoding="utf-8")
+            (module / "symbols.txt").write_text(
+                "data_02090000 kind:data(any) addr:0x02090000\n"
+                "data_02090004 kind:data(any) addr:0x02090004\n"
+                "data_02090008 kind:data(any) addr:0x02090008\n",
+                encoding="utf-8")
+            self.assertEqual(CDD.claimed_definitions(pathlib.Path(tmp)), {
+                "src/actors/Owner": {"data_02090000", "data_02090004"}})
+
+    def test_build_objects_keep_their_source_directory(self):
+        obj = CDD.BUILD / "actors" / "Owner.o"
+        self.assertEqual(CDD.label(obj), "src/actors/Owner")
+
+
 if __name__ == "__main__":
     unittest.main()

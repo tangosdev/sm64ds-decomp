@@ -52,14 +52,12 @@ extern s16 data_ov029_02113fc4;
  * their destructors. The wrapper names are local; the ctor/dtor
  * addresses are the ROM resource-family functions. */
 struct WcObj07ModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     WcObj07ModelFilePtr(u32 fileID);
     ~WcObj07ModelFilePtr();
 };
 
 struct WcObj07CollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     WcObj07CollisionFilePtr(u32 fileID);
     ~WcObj07CollisionFilePtr();

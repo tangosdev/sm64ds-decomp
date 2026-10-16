@@ -31,14 +31,12 @@ enum d_a_obj_km2_fall_block_AssetId {
 
 /* The model handle constructs through func_02017acc and destroys through
  * func_02017ab4. The collision handle constructs through func_02017b4c and
- * destroys through SharedFilePtr_Destruct_Clsn. The descriptor stays ROM data. */
+ * destroys through SharedFilePtr_Destruct_Clsn. */
 struct Km2FallModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
     Km2FallModelFilePtr(unsigned int fileId);
     ~Km2FallModelFilePtr();
 };
 struct Km2FallClsnFileHandle : SharedFilePtr {
-    unsigned int words[2];
     Km2FallClsnFileHandle(unsigned int fileId);
     ~Km2FallClsnFileHandle();
 };
@@ -57,10 +55,20 @@ struct ResourceDescriptor {
 typedef char ResourceDescriptor_size_must_be_0x0c[
     sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
+extern Km2FallModelFilePtr gKm2KuzureModelFile;
+extern Km2FallClsnFileHandle gKm2KuzureCollisionFile;
+extern "C" CLPS_Block data_ov045_021125f0;
+
+/* Retail words: model handle, collision handle, CLPS block. */
+extern "C" ResourceDescriptor data_ov045_021130ac = {
+    &gKm2KuzureModelFile,
+    &gKm2KuzureCollisionFile,
+    &data_ov045_021125f0,
+};
+
 extern "C" {
 int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *descriptor);
 int func_ov098_0213a2cc(daObjKm2_Fall_Block_c *self, ResourceDescriptor *descriptor);
-extern ResourceDescriptor data_ov045_021130ac;
 }
 
 // @symbol daObjKm2_Fall_Block_c_classInit

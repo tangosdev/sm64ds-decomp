@@ -51,14 +51,12 @@ enum daObjFl_Amilift_c_AssetId {
  * destroys through SharedFilePtr_Destruct_Clsn. The manifest aliases each
  * undefined member onto its ROM symbol. */
 struct AmiliftModelFilePtr : SharedFilePtr {
-    u32 id; void *ptr;
 
     AmiliftModelFilePtr(u32 fileID);
     ~AmiliftModelFilePtr();
 };
 
 struct AmiliftClsnFilePtr : SharedFilePtr {
-    u32 id; void *ptr;
 
     AmiliftClsnFilePtr(u32 fileID);
     ~AmiliftClsnFilePtr();

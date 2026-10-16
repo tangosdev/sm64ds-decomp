@@ -90,11 +90,11 @@ _ZN9daPgBby_c13OnTurnIntoEggER6Player kind:function(arm,size=0xc) addr:0x02121fa
 daPgBby_c_classInit kind:function(arm,size=0x50) addr:0x02121fac
 data_ov072_02121ffc kind:data(any) addr:0x02121ffc
 data_ov072_02122004 kind:data(any) addr:0x02122004
-__sinit_ov072_02122018 kind:function(arm,size=0x1e0) addr:0x02122018
+__sinit_d_a_bg_snm_bdy.cpp kind:function(arm,size=0x1e0) addr:0x02122018
 __sinit_ov072_021221f8 kind:function(arm,size=0x158) addr:0x021221f8
 __sinit_d_a_bg_snwmn.cpp kind:function(arm,size=0xc4) addr:0x02122350
 __sinit_ov072_02122414 kind:function(arm,size=0x2f4) addr:0x02122414
-.p__sinit_ov072_02122018 kind:data(word) addr:0x02122708
+.p__sinit_d_a_bg_snm_bdy.cpp kind:data(word) addr:0x02122708
 .p__sinit_ov072_021221f8 kind:data(word) addr:0x0212270c
 .p__sinit_d_a_bg_snwmn.cpp kind:data(word) addr:0x02122710
 .p__sinit_ov072_02122414 kind:data(word) addr:0x02122714
@@ -147,10 +147,10 @@ _ZTI9daPgBby_c kind:data(any) addr:0x02122a60
 g_profile_PENGUIN_BABY kind:data(any) addr:0x02122a6c ambiguous
 _ZTV9daPgBby_c kind:data(any) addr:0x02122a90
 data_ov072_02122b20 kind:bss addr:0x02122b20
-data_ov072_02122b28 kind:bss addr:0x02122b28
-data_ov072_02122b34 kind:bss addr:0x02122b34
+@174 kind:bss addr:0x02122b28
+@175 kind:bss addr:0x02122b34
 data_ov072_02122b40 kind:bss addr:0x02122b40
-data_ov072_02122b4c kind:bss addr:0x02122b4c
+@176 kind:bss addr:0x02122b4c
 data_ov072_02122b58 kind:bss addr:0x02122b58
 data_ov072_02122b64 kind:bss addr:0x02122b64
 data_ov072_02122bc4 kind:bss addr:0x02122bc4

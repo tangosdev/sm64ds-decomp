@@ -9,6 +9,7 @@ src/game/actors/d_a_obj_wl_polelift.cpp:
     .text start:0x021111a0 end:0x021116c8
     .init start:0x02112b7c end:0x02112bbc
     .ctor start:0x02112da4 end:0x02112da8
+    .data start:0x02113a9c end:0x02113aa8
     .bss start:0x02113ea0 end:0x02113eb4
 
 src/game/actors/d_a_obj_wl_koopa_shutter.cpp:
@@ -38,4 +39,4 @@ src/game/actors/d_a_water_suikomi.cpp:
     .text start:0x021121fc end:0x02112490
     .init start:0x02112d68 end:0x02112da4
     .ctor start:0x02112db4 end:0x02112db8
-    .bss start:0x02113f58 end:0x02113f80
+    .bss start:0x02113f4c end:0x02113f80

@@ -72,21 +72,18 @@ typedef enum { FALSE = 0, TRUE = 1 } BOOL;
    SharedFilePtr_Destruct_Clsn. The manifest aliases each undefined member
    onto its ROM symbol. */
 struct DossyModelFilePtr : SharedFilePtr {
-    u32 id; void *ptr;
 
     DossyModelFilePtr(u32 fileID);
     ~DossyModelFilePtr();
 };
 
 struct DossyAnimationFileHandle : SharedFilePtr {
-    u32 id; void *ptr;
 
     DossyAnimationFileHandle(u32 fileID);
     ~DossyAnimationFileHandle();
 };
 
 struct DossyCollisionFileHandle : SharedFilePtr {
-    u32 id; void *ptr;
 
     DossyCollisionFileHandle(u32 fileID);
     ~DossyCollisionFileHandle();
@@ -110,8 +107,8 @@ extern Matrix4x3 data_020a0e68;
 extern u8 data_ov065_0211c078[];
 extern void *data_ov065_0211cd68[];
 extern SharedFilePtr data_ov002_0210d9c0;
-extern SharedFilePtr *data_ov065_0211c080[];
-extern SharedFilePtr *data_ov065_0211c08c[];
+extern SharedFilePtr *const data_ov065_0211c080[];
+extern SharedFilePtr *const data_ov065_0211c08c[];
 
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int n, int fix, u32 flags);
 extern void func_0201267c(u32 id, char* p);
@@ -235,7 +232,7 @@ int daDossy_c::InitResources()
     Model::LoadFile(data_ov002_0210d9c0);
     for (i = 0; i < 3; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov065_0211c080[i]);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov065_0211d770.ptr, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov065_0211d770.filePtr, 0, 0x1000, 0);
     func_ov065_02118cc4();
     func_ov065_02118838();
 
@@ -589,7 +586,7 @@ void daDossy_c::func_ov065_02118634()
         mState++;
         mHorzSpeed = 0;
         mAngVelY = 0;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov065_0211d768.ptr, 0x40000000, 0x1000, 0);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov065_0211d768.filePtr, 0x40000000, 0x1000, 0);
         mCylClsn1.Clear();
         mCylClsn2.Clear();
         mStateTimer = 0;
@@ -671,7 +668,7 @@ void daDossy_c::func_ov065_021183c8()
                     mState++;
                     mStateState = 0;
                     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim,
-                        data_ov065_0211d748.ptr, 0x40000000, 0x1000, 0);
+                        data_ov065_0211d748.filePtr, 0x40000000, 0x1000, 0);
                     mRider = mClsnPlayer;
                 }
             }
@@ -683,7 +680,7 @@ void daDossy_c::func_ov065_021183c8()
             mState++;
             mStateState = 0;
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim,
-                data_ov065_0211d748.ptr, 0x40000000, 0x1000, 0);
+                data_ov065_0211d748.filePtr, 0x40000000, 0x1000, 0);
         }
         mStateTimer++;
     }
@@ -696,7 +693,7 @@ void daDossy_c::func_ov065_021182e4()
     case 0:
         if (mModelAnim.Finished() == 0) return;
         mStateState = 1;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov065_0211d770.ptr, 0, 0x1000, 0);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov065_0211d770.filePtr, 0, 0x1000, 0);
         if (mRider == 0) return;
         ((Player *)mRider)->Unk_020ca150(5);
         return;
@@ -809,6 +806,23 @@ DossyCollisionFileHandle gDossyLegRCollisionFile(ASSET_DOSSY_LEG_R_KCL);
 DossyCollisionFileHandle gDossyNeckCollisionFile(ASSET_DOSSY_NECK_KCL);
 DossyCollisionFileHandle gDossyBodyCollisionFile(ASSET_DOSSY_BODY_KCL);
 DossyCollisionFileHandle gDossyHeadCollisionFile(ASSET_DOSSY_HEAD_KCL);
+
+/* Animation files, then collision files, in the order InitResources loads them. */
+extern "C" SharedFilePtr *const data_ov065_0211c080[3] = {
+    &data_ov065_0211d768,
+    &data_ov065_0211d748,
+    &data_ov065_0211d770,
+};
+
+extern "C" SharedFilePtr *const data_ov065_0211c08c[7] = {
+    &gDossyBodyCollisionFile,
+    &gDossyNeckCollisionFile,
+    &gDossyHeadCollisionFile,
+    &gDossyArmLCollisionFile,
+    &gDossyArmRCollisionFile,
+    &gDossyLegLCollisionFile,
+    &gDossyLegRCollisionFile,
+};
 
 /* The state table Behavior dispatches through: three pointer-to-member
    records. Retail stores the records as compiler temporaries in .data

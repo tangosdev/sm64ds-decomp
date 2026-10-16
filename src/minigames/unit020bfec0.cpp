@@ -8,6 +8,10 @@
  * - The other functions keep their address names.
  * - Each function keeps its own namespace. The local layouts and
  *   externs disagree, and one shared view changes codegen.
+ * - pmf_Dealer_StateCollect..0213acb8 are this file's .data. data_ov006_0213acc0
+ *   and everything after it stay the ROM copy: that row points at symbols
+ *   this file does not declare, and one entry cannot claim .data twice.
+ *   The two Vector3 rows stay the ROM copy for the same reason on .rodata.
  * - A char* or void* parameter stays where the typed header form
  *   changes the call.
  */
@@ -2724,4 +2728,26 @@ void Camera_ProjectToScreen16(char* r4, void* r1, short* r5) {
     r5[0] = (t3 + 0x7f800) >> 0xc;
 }
 }
+}
+
+/* {fn, 0} rows, 0x0213ac48..0x0213acc0. mwccarm emits these .data
+ * sections in reverse and parks the last definition at the end, so
+ * this source order is the one that links them in address order.
+ * data_ov006_0213acc0 points at further rows and stays the ROM copy. */
+extern "C" {
+int pmf_Dealer_StateCollect_2[2] = { (int)Dealer_StateCollect, 0 };
+int pmf_Dealer_StateReveal[2] = { (int)Dealer_StateReveal, 0 };
+int pmf_Dealer_StateSwap[2] = { (int)Dealer_StateSwap, 0 };
+int pmf_Dealer_StateLose[2] = { (int)Dealer_StateLose, 0 };
+int pmf_Dealer_StateIdle_3[2] = { (int)Dealer_StateIdle, 0 };
+int pmf_MascotWalker_StateWalk_3[2] = { (int)MascotWalker_StateWalk, 0 };
+int pmf_Dealer_StateWin[2] = { (int)Dealer_StateWin, 0 };
+int pmf_MascotWalker_StateWalk_2[2] = { (int)MascotWalker_StateWalk, 0 };
+int pmf_MascotWalker_StatePause[2] = { (int)MascotWalker_StatePause, 0 };
+int pmf_MascotWalker_StateWalk[2] = { (int)MascotWalker_StateWalk, 0 };
+int pmf_Dealer_StateDeal[2] = { (int)Dealer_StateDeal, 0 };
+int pmf_Dealer_StateIdle_2[2] = { (int)Dealer_StateIdle, 0 };
+int pmf_Dealer_StateIdle[2] = { (int)Dealer_StateIdle, 0 };
+int pmf_Dealer_StateCollect[2] = { (int)Dealer_StateCollect, 0 };
+int pmf_Dealer_StateReveal_2[2] = { (int)Dealer_StateReveal, 0 };
 }

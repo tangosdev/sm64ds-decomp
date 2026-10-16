@@ -144,14 +144,12 @@ struct daMip_cSelf { char pad[0x364]; daMip_cStateFn *pp; };
  * instantiate its vague-linkage D1 into this TU, which deliberately avoids
  * it); the destructor alias points at the ROM's canonical copy. */
 struct DaMipModelFile : SharedFilePtr {
-    u32 words[2];
 
     DaMipModelFile(u32 fileID);
     ~DaMipModelFile();
 };
 
 struct DaMipAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
 
     DaMipAnimationFilePtr(u32 fileID);
     ~DaMipAnimationFilePtr();
@@ -1108,7 +1106,7 @@ int daMip_c::StateIdleInit()
 {
   extern DaMipAnimationFilePtr data_ov085_021305c0;
 
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(void**)((char*)&data_ov085_021305c0+4), 0, 0x1000, 0);
+  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov085_021305c0.filePtr, 0, 0x1000, 0);
   mIdlePosX = mPosX;
   mIdlePosY = mPosY;
   mIdlePosZ = mPosZ;
@@ -1468,7 +1466,7 @@ int daMip_c::Behavior()
         UpdateMatrixAndShadow();
         unk_426 = 2;
         SetState(&data_ov085_021306ac);
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(void**)((char*)&data_ov085_021305c0 + 4), 0, 0x1000, 0);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov085_021305c0.filePtr, 0, 0x1000, 0);
         if (*(void**)&mTalkingPlayer == 0)
             *(void**)&mTalkingPlayer = ClosestPlayer();
         return 1;
@@ -1479,7 +1477,7 @@ int daMip_c::Behavior()
         if (p != (void*)&data_ov085_021306ac && p != (void*)&data_ov085_0213068c &&
             p != (void*)&data_ov085_021306bc && p != (void*)&data_ov085_021306dc) {
             SetState(&data_ov085_021306ac);
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(void**)((char*)&data_ov085_021305c0 + 4), 0, 0x1000, 0);
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov085_021305c0.filePtr, 0, 0x1000, 0);
         }
         mHorzSpeed = 0;
     }
@@ -1556,13 +1554,13 @@ int daMip_c::InitResources()
     void* closest;
     int rabbitId;
 
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305b8);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gMipRunAnimationFile);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305b0);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305c8);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305c0);
-    Model::LoadFile(*(SharedFilePtr *)&data_ov085_021305d8);
-    mModelAnim.SetFile((BMD_File *)Model::LoadFile(*(SharedFilePtr *)&data_ov085_021305e0), 1, -1);
+    dExtFrameCtrl_c::LoadFile(data_ov085_021305b8);
+    dExtFrameCtrl_c::LoadFile(gMipRunAnimationFile);
+    dExtFrameCtrl_c::LoadFile(data_ov085_021305b0);
+    dExtFrameCtrl_c::LoadFile(data_ov085_021305c8);
+    dExtFrameCtrl_c::LoadFile(data_ov085_021305c0);
+    Model::LoadFile(data_ov085_021305d8);
+    mModelAnim.SetFile((BMD_File *)Model::LoadFile(data_ov085_021305e0), 1, -1);
     mShadowModel1.InitCylinder();
     mShadowModel2.InitCylinder();
 

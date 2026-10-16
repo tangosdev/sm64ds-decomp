@@ -17,6 +17,11 @@
       "name": ".text",
       "start": "0x0212eaf0",
       "end": "0x02130174"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02130e80",
+      "end": "0x02130ee0"
     }
   ],
   "functions": [
@@ -190,7 +195,15 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_ov084_02130e80",
+      "address": "0x02130e80",
+      "size": "0x60",
+      "binding": "STB_GLOBAL",
+      "evidence": "twelve PknStatePMF slots; __sinit_ov084_02130654 copies nine descriptors, the rest stays zero"
+    }
+  ],
   "notes": [
     "Hand-written, not the generator's output. tools/tubuild.py create produced a starting point with 25 declaration CONFLICTs and one truncated declaration; the preamble was replaced wholesale and every conflict resolved (see the notes below and the file's own header comment). Function bodies were carried from the legacy one-function sources. See notes/tu-promotion-conventions.md for the declaration policy and notes/translation-unit-reconstruction-plan.md section 7.3 for what the generator does and does not attempt.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov084_0212ebb4 and the one that held func_ov084_0212ec04; kept the first, the other is commented out for review; resolved by discarding the generated preamble outright and hand-writing the TU under the declaration policy the file header then stated: ONE file-scope extern \"C\" region carrying only what the C++-named members need, spelled to agree with every user in the TU, and every free member wrapped in its own extern \"C\" block. The six shared-file records (data_ov084_02130dfc/02130df4/02130e0c/02130e14/02130e24 and data_ov002_0210da38) took one agreed two-word view, `struct PknSharedFile { int id; void *file; }`, so the contradictory `[1]`/`.w[1]`/`&x` spellings all became `.file`; the Player and dActor_c entries took void* so f6d8's void* actor binds without a cast; Sound::PlaySub kept the int return func_ov084_0212fa7c tests. include/decl_common.h was dropped: it contradicts five of this TU's own members. No TUBUILD CONFLICT marker survives in the source. 24/24 byte-match.",
@@ -291,6 +304,95 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov084-daPkn_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0212eaf0",
+        "end": "0x02130174",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0212eaf0",
+          "end": "0x02130174",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02130e80",
+          "end": "0x02130ee0",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 25
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".bss",
+            "original": [
+              20
+            ],
+            "desired": [
+              20
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [

@@ -58,7 +58,7 @@ bool ApproachLinear(short &value, short target, short step);
 struct BMD_File;
 struct BTP_File;
 
-/* SharedFilePtr has no fields. This TU reads the file word at +4
+/* SharedFilePtr is the 8-byte handle. This TU reads the file word at +4
    (sinit constructs these as SharedFilePtr; LoadFile/Release take the
    object, SetAnim/SetFile/Prepare read +4). */
 struct FileRef {
@@ -103,28 +103,24 @@ int func_ov027_02111ca8(daPgDfdr_c *self);
  * local; the handle constructors and destructors are the ROM resource-family
  * functions, aliased in the manifest. */
 struct PgDfdrModelFile : SharedFilePtr {
-    u32 words[2];
 
     PgDfdrModelFile(u32 fileID);
     ~PgDfdrModelFile();
 };
 
 struct PgDfdrAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
 
     PgDfdrAnimationFilePtr(u32 fileID);
     ~PgDfdrAnimationFilePtr();
 };
 
 struct PgDfdrTexSequenceFilePtr : SharedFilePtr {
-    u32 words[2];
 
     PgDfdrTexSequenceFilePtr(u32 fileID);
     ~PgDfdrTexSequenceFilePtr();
 };
 
 struct PgDfdrCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     PgDfdrCollisionFilePtr(u32 fileID);
     ~PgDfdrCollisionFilePtr();
@@ -157,7 +153,6 @@ struct PatrolStep {
     s16 startHeading;
     s16 endHeading;
 };
-extern PatrolStep data_ov027_02113a1c[];
 }
 
 // @symbol daPgDfdr_c_classInit
@@ -173,13 +168,13 @@ s32 daPgDfdr_c::InitResources()
     void *file;
     Vector3 pos;
 
-    file = Model::LoadFile(*(SharedFilePtr *)&data_ov027_02113c7c);
+    file = Model::LoadFile(data_ov027_02113c7c);
     mModelAnim.SetFile((BMD_File *)file, 1, -1);
 
     for (i = 0; i < 3; i++)
         dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov027_02112ca4[i]);
 
-    TextureSequence::LoadFile(*(SharedFilePtr *)&data_ov027_02113c94);
+    TextureSequence::LoadFile(data_ov027_02113c94);
     TextureSequence::Prepare(*(BMD_File *)((FileRef *)&data_ov027_02113c7c)->file,
                              *(BTP_File *)((FileRef *)&data_ov027_02113c94)->file);
     _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
@@ -192,7 +187,7 @@ s32 daPgDfdr_c::InitResources()
     mPosZ = 0x182bb8;
     func_ov027_02111994(this);
 
-    file = dBgW_Kc::LoadFile(*(SharedFilePtr *)&data_ov027_02113c6c);
+    file = dBgW_Kc::LoadFile(data_ov027_02113c6c);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, file, &mClsnMat, 0x199, mAngleY, &data_ov027_021130e8);
     func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosAndAngs);
@@ -253,15 +248,15 @@ void daPgDfdr_c::OnPendingDestroy()
 s32 daPgDfdr_c::CleanupResources()
 {
     int i;
-    (*(SharedFilePtr *)&data_ov027_02113c7c).Release();
+    data_ov027_02113c7c.Release();
     for (i = 0; i < 3; i++) {
         ((SharedFilePtr *)data_ov027_02112ca4[i])->Release();
     }
-    (*(SharedFilePtr *)&data_ov027_02113c94).Release();
+    data_ov027_02113c94.Release();
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }
-    (*(SharedFilePtr *)&data_ov027_02113c6c).Release();
+    data_ov027_02113c6c.Release();
     return 1;
 }
 
@@ -304,6 +299,8 @@ extern "C" int func_ov027_02111ca8(daPgDfdr_c *self)
 /* State 0 tick: after the pause, turn mAngleY toward this step's end heading. */
 extern "C" int func_ov027_02111c48(daPgDfdr_c *self)
 {
+    extern PatrolStep data_ov027_02113a1c[];
+
     if (DecIfAbove0_Byte(&self->mTimer) == 0) {
         unsigned char step = self->mStepIndex;
         short endHeading = data_ov027_02113a1c[step].endHeading;
@@ -319,6 +316,8 @@ extern "C" int func_ov027_02111c48(daPgDfdr_c *self)
    straight-walk clip when the headings match and the turn clip when they do not. */
 extern "C" void func_ov027_02111b2c(daPgDfdr_c *self)
 {
+    extern PatrolStep data_ov027_02113a1c[];
+
     self->mDistanceLeft = data_ov027_02113a1c[self->mStepIndex].distance;
     self->mHorzSpeed = data_ov027_02113a1c[self->mStepIndex].speed;
     self->mPrevAngleY = data_ov027_02113a1c[self->mStepIndex].startHeading;
@@ -421,6 +420,12 @@ PgDfdrAnimationFilePtr data_ov027_02113c74(ASSET_PENGUIN_WALK2_BCA);
 PgDfdrAnimationFilePtr data_ov027_02113c8c(ASSET_PENGUIN_BACK_BCA);
 PgDfdrTexSequenceFilePtr data_ov027_02113c94(ASSET_PENGUIN_WAIT1_BTP);
 PgDfdrCollisionFilePtr data_ov027_02113c6c(ASSET_PENGUIN_KCL);
+/* First word of the stride-0xc patrol table: a 20.12 distance.
+ * symbols.txt puts the next rows at +4, +8 and +0xa, so this object is
+ * that word and those rows stay in the gap. The readers redeclare it
+ * locally as PatrolStep[]: a file-scope redeclaration is rejected, and
+ * that local array is what emits the field addends. */
+extern "C" s32 data_ov027_02113a1c = 0x220000;
 DfdrStateTable data_ov027_02113ce4 = {
     data_ov027_021139d4, data_ov027_021139cc,
     data_ov027_021139dc, data_ov027_021139c4

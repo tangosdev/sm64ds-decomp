@@ -28,6 +28,11 @@
       "end": "0x021129e0"
     },
     {
+      "name": ".data",
+      "start": "0x02112b68",
+      "end": "0x02112b88"
+    },
+    {
       "name": ".bss",
       "start": "0x02114020",
       "end": "0x02114048"
@@ -98,7 +103,22 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov036_02112b68",
+      "address": "0x02112b68",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block SetFile is handed: tag 0x53504c43, header 0x00020008, entries 0x01000fc0/0x000000ff and 0x01002fc0/0x000000ff, then 0xffffffff. symbols.txt names the last word"
+    },
+    {
+      "symbol": "data_ov036_02112b84",
+      "address": "0x02112b84",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "last word of that CLPS block, 0xffffffff"
+    }
+  ],
   "init": [
     {
       "symbol": "__sinit_d_a_obj_rc_buranko.cpp",
@@ -442,6 +462,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02112b68",
+          "end": "0x02112b88",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02114020",
           "end": "0x02114048",
@@ -450,7 +477,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 14
+          "LICENSED": 16
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -461,38 +488,92 @@
           {
             "section": ".init",
             "original": [
-              45
+              47
             ],
             "desired": [
-              45
+              47
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              43
+              45
             ],
             "desired": [
-              43
+              45
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              25
+            ],
+            "desired": [
+              25,
+              5
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
               8,
-              14,
-              21
+              9,
+              15,
+              22
             ],
             "desired": [
-              5,
+              9,
               8,
-              14,
-              21
+              15,
+              22
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                25
+              ],
+              "desired": [
+                25,
+                5
+              ],
+              "slots": [
+                5,
+                25
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                8,
+                9,
+                15,
+                22
+              ],
+              "desired": [
+                9,
+                8,
+                15,
+                22
+              ],
+              "slots": [
+                8,
+                9,
+                15,
+                22
+              ]
+            }
+          ],
+          "symbolIndices": 6,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,

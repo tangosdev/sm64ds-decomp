@@ -54,13 +54,12 @@ bool ApproachLinear(short &value, short target, short step);
 
 #pragma defer_codegen off
 
-/* SharedFilePtr publishes no fields. The loaded BCA is the word at +4. */
+/* The loaded BCA is filePtr. */
 #define TGZ_BCA (*(void **)((char *)&data_ov077_02127c14 + 4))
 
 /* Lakitu's model-file handles, owned and constructed by d_a_jgm.cpp's static
  * init. Same TU-local wrapper spelling as the owning TU. */
 struct DaJgmModelFile : SharedFilePtr {
-    u32 words[2];
 
     DaJgmModelFile(u32 fileID);
     ~DaJgmModelFile();

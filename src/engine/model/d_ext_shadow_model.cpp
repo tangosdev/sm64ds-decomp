@@ -41,7 +41,7 @@
 #pragma RTTI off
 
 extern "C" {
-extern dExtShadowModel_c *data_0209cef4;
+dExtShadowModel_c *data_0209cef4;
 extern u8 data_0209ceec;
 extern Matrix4x3 data_020a0e68;      /* shared render matrix scratch */
 extern Matrix4x3 data_0209b3ec;      /* the camera-space matrix Model::Render uses */

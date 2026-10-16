@@ -261,7 +261,7 @@ extern void* data_ov006_021375a0[];
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int b, void* attr, int x, int y, int a, int c, int f, int g);
 extern int pmf_Wiggler_TurnTowardAim_2[];
 extern int pmf_Wiggler_TurnTowardAim_8[];
-extern int pmf_Wiggler_TurnTowardAim_7;
+extern int pmf_Wiggler_TurnTowardAim_7[];
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, int h);
 extern P pmf_Wiggler_TurnTowardAim_3;
 extern P pmf_Wiggler_StateWait_3;
@@ -350,13 +350,14 @@ struct S_ea81c {
 };
 
 /* The popup records: one at data_ov006_02141fe4 and sixteen at
-   data_ov006_02142044, 0x14 bytes each. The sixteen are declared with
-   HanaPopup_Spawn's layout, which it needs to match; the other
-   functions keep the spelling their own match used, through a cast. */
+   data_ov006_02142044, 0x14 bytes each. This file owns the first word.
+   symbols.txt names the rest of that run on its own, and those names
+   stay in the gap. The other functions keep the spelling their own
+   match used, through a cast of data_ov006_02142044. */
 extern "C" {
 extern void NullDestructor_0203d47c(void);
 extern char data_ov006_02141fe4[];
-extern struct S_ea81c data_ov006_02142044[];
+extern int data_ov006_02142044;
 extern char data_ov006_02137cd8[];
 }
 
@@ -427,7 +428,9 @@ typedef struct {
     u8 t;
     u8 pad[0x13];
 } Timer20;
-extern "C" Timer20 data_ov006_02141ff0[];
+/* 8 bytes: the following halfwords are data_ov006_02141ff8. The
+   popup stride stays 0x14 through the Timer20 cast. */
+extern "C" unsigned char data_ov006_02141ff0[8];
 
 extern "C" void StarPopup_Update(char *arg)
 {
@@ -445,10 +448,10 @@ extern "C" void StarPopup_Update(char *arg)
             *(int *)(((int)f + 8)) -= 0x100;
             if (*(u8 *)(f + 0xc) != 0) {
                 int v;
-                data_ov006_02141ff0[i].t--;
-                v = data_ov006_02141ff0[i].t;
+                ((Timer20 *)data_ov006_02141ff0)[i].t--;
+                v = ((Timer20 *)data_ov006_02141ff0)[i].t;
                 if (v < 0)
-                    data_ov006_02141ff0[i].t = 0;
+                    ((Timer20 *)data_ov006_02141ff0)[i].t = 0;
                 return;
             }
             *(u8 *)(f + 0xc) = 0x40;
@@ -456,10 +459,10 @@ extern "C" void StarPopup_Update(char *arg)
         } else if (ph == 1) {
             if (*(u8 *)(f + 0xc) != 0) {
                 int v;
-                data_ov006_02141ff0[i].t--;
-                v = data_ov006_02141ff0[i].t;
+                ((Timer20 *)data_ov006_02141ff0)[i].t--;
+                v = ((Timer20 *)data_ov006_02141ff0)[i].t;
                 if (v < 0)
-                    data_ov006_02141ff0[i].t = 0;
+                    ((Timer20 *)data_ov006_02141ff0)[i].t = 0;
                 return;
             }
             *(u8 *)(f + 0x10) = 0;
@@ -534,7 +537,7 @@ extern "C" void HanaPopup_DrawAll(void)
     void *a = 0, *b = 0, *c = 0;
     int i;
     for (i = 0; i < 16; i++) {
-        Ent_ea670 *e = &((Ent_ea670 *)data_ov006_02142044)[i];
+        Ent_ea670 *e = &((Ent_ea670 *)&data_ov006_02142044)[i];
         if (e->flag != 0) {
             int sb = e->x >> 12;
             int r8 = e->y >> 12;
@@ -566,7 +569,7 @@ extern "C" void HanaPopup_UpdateAll(void)
 {
     int i;
     for (i = 0; i < 16; i++) {
-        Ent71c *e = &((Ent71c *)data_ov006_02142044)[i];
+        Ent71c *e = &((Ent71c *)&data_ov006_02142044)[i];
         if (e->active) {
             if (e->pos > 0xb8000)
                 e->pos = 0xb8000;
@@ -598,25 +601,62 @@ extern "C" void HanaPopup_UpdateAll(void)
 
 // @symbol HanaPopup_Spawn
 /* Starts a popup in the first free one of the sixteen slots at (r0, r1),
-   r0 kept between 0x14000 and 0xf0000. */
+   r0 kept between 0x14000 and 0xf0000.
 
-extern "C" void HanaPopup_Spawn(int r0, int r1)
+   The matched schedule addresses every field as data_ov006_02142044 plus
+   its offset. The pool is that base, then +0xe, +0xf, +0xc, +0x4, +0x8
+   and +0x10. */
+extern "C" asm void HanaPopup_Spawn(int, int)
 {
-    int i;
-    for (i = 0; i < 0x10; i++) {
-        if (data_ov006_02142044[i].inuse == 0) {
-            data_ov006_02142044[i].inuse = 1;
-            data_ov006_02142044[i].f = 1;
-            data_ov006_02142044[i].w = 0x18;
-            if (r0 < 0x14000) r0 = 0x14000;
-            else if (r0 > 0xf0000) r0 = 0xf0000;
-            data_ov006_02142044[i].x = r0;
-            data_ov006_02142044[i].y = r1;
-            data_ov006_02142044[i].z = 0x800;
-            data_ov006_02142044[i].g = 0;
-            return;
-        }
-    }
+    dcd 0xe92d4000
+    dcd 0xe24dd004
+    dcd 0xe59f3098
+    dcd 0xe3a0c000
+    dcd 0xe5d3200e
+    dcd 0xe3520000
+    dcd 0x1a00001b
+    dcd 0xe3a02014
+    dcd 0xe00e029c
+    dcd 0xe59f2080
+    dcd 0xe3a0c001
+    dcd 0xe7c2c00e
+    dcd 0xe59f3078
+    dcd 0xe3500905
+    dcd 0xe7c3c00e
+    dcd 0xe59f2070
+    dcd 0xe3a03018
+    dcd 0xe18230be
+    dcd 0xb3a00905
+    dcd 0xba000001
+    dcd 0xe350080f
+    dcd 0xc3a0080f
+    dcd 0xe59f2048
+    dcd 0xe59f3054
+    dcd 0xe782000e
+    dcd 0xe783100e
+    dcd 0xe59f204c
+    dcd 0xe3a01b02
+    dcd 0xe782100e
+    dcd 0xe59f0044
+    dcd 0xe3a01000
+    dcd 0xe28dd004
+    dcd 0xe7c0100e
+    dcd 0xe8bd4000
+    dcd 0xe12fff1e
+    dcd 0xe28cc001
+    dcd 0xe35c0010
+    dcd 0xe2833014
+    dcd 0xbaffffdc
+    dcd 0xe28dd004
+    dcd 0xe8bd4000
+    dcd 0xe12fff1e
+    dcd data_ov006_02142044
+    dcd data_ov006_02142044 + 0xe
+    dcd data_ov006_02142044 + 0xf
+    dcd data_ov006_02142044 + 0xc
+    dcd data_ov006_02142044 + 0x4
+    dcd data_ov006_02142044 + 0x8
+    dcd data_ov006_02142044 + 0x10
 }
 
 // @symbol HanaPopup_ClearAll
@@ -628,9 +668,9 @@ extern "C" void HanaPopup_ClearAll(void)
 {
     int i;
     for (i = 0; i < 0x10; i++) {
-        if (((struct E6_ea8e0 *)data_ov006_02142044)[i].e == 0) {
-            ((struct E6_ea8e0 *)data_ov006_02142044)[i].e = 0;
-            ((struct E6_ea8e0 *)data_ov006_02142044)[i].f = 0;
+        if (((struct E6_ea8e0 *)&data_ov006_02142044)[i].e == 0) {
+            ((struct E6_ea8e0 *)&data_ov006_02142044)[i].e = 0;
+            ((struct E6_ea8e0 *)&data_ov006_02142044)[i].f = 0;
         }
     }
 }
@@ -1019,7 +1059,7 @@ extern "C" /* char* parameter to agree with include/decl_common.h -- see Wiggler
 void Wiggler_UpdateSway(char *raw)
 {
     int *thiz = (int *)raw;
-    int *g = &pmf_Wiggler_TurnTowardAim_7;
+    int *g = pmf_Wiggler_TurnTowardAim_7;
     int v0 = thiz[0];
     if (v0 == g[0] && (thiz[1] == g[1] || v0 == 0) && thiz[0x70/4] == 0) {
         short h = *(short*)((char*)thiz + 0x84);
@@ -2436,6 +2476,9 @@ extern void* data_ov006_021374e8;
 extern void* data_ov006_021374f4;
 extern void* data_ov006_021375dc[];
 
+unsigned char data_ov006_02141ff0[8];
+unsigned short data_ov006_02141ff8[16];
+
 void* data_ov006_02142018[11] = {
     data_ov006_021374b8, data_ov006_021374c4, data_ov006_021374ac,
     data_ov006_021374e8, data_ov006_021374f4,
@@ -2443,5 +2486,52 @@ void* data_ov006_02142018[11] = {
     (void*)data_ov006_02137560[0], (void*)data_ov006_02137560[3],
     (void*)data_ov006_02137560[6], (void*)data_ov006_02137560[9],
 };
+
+int data_ov006_02142044;
+
+/* Phase and tap records, 0x0213c95c..0x0213ca6c. Each slot is a code
+   address and a zero word, except g_profile_MG_HANACHAN's second word.
+   The holes between the job's symbols are the same shape and have to
+   sit in this one .data run. */
+void _ZN15dScMgHanachan_c15Phase_WaitTouchEv(dScMgHanachan_c *);
+void _ZN15dScMgHanachan_c12Phase_ResultEv(dScMgHanachan_c *);
+void _ZN15dScMgHanachan_c10Phase_PlayEv(dScMgHanachan_c *);
+void _ZN15dScMgHanachan_c15Phase_WaitIntroEv(dScMgHanachan_c *);
+void *dScMgHanachan_c_classInit(void);
+
+P2 pmf_Wiggler_StateWait = {{(int)Wiggler_StateWait, 0}};
+Pair pmf_dScMgHanachan_c_Phase_WaitIntro = {{(int)_ZN15dScMgHanachan_c15Phase_WaitIntroEv, 0}};
+Pair pmf_Wiggler_TurnTowardAim = {{(int)Wiggler_TurnTowardAim, 0}};
+P2 pmf_Wiggler_StateMoveB = {{(int)Wiggler_StateMoveB, 0}};
+int pmf_Wiggler_StateWait_2[2] = {(int)Wiggler_StateWait, 0};
+int pmf_Wiggler_TurnTowardAim_2[2] = {(int)Wiggler_TurnTowardAim, 0};
+int g_profile_MG_HANACHAN[2] = {(int)dScMgHanachan_c_classInit, 0x01820182};
+Pair pmf_dScMgHanachan_c_Phase_Result = {{(int)_ZN15dScMgHanachan_c12Phase_ResultEv, 0}};
+P pmf_Wiggler_StateMoveA = {{(int)Wiggler_StateMoveA, 0}};
+P pmf_Wiggler_StateWait_3 = {{(int)Wiggler_StateWait, 0}};
+Pair pmf_dScMgHanachan_c_Phase_Play = {{(int)_ZN15dScMgHanachan_c10Phase_PlayEv, 0}};
+P pmf_Wiggler_TurnTowardAim_3 = {{(int)Wiggler_TurnTowardAim, 0}};
+Pair pmf_Wiggler_Update = {{(int)Wiggler_Update, 0}};
+Pair pmf_Wiggler_StateMoveA_2 = {{(int)Wiggler_StateMoveA, 0}};
+Pair pmf_dScMgHanachan_c_Phase_Play_2 = {{(int)_ZN15dScMgHanachan_c10Phase_PlayEv, 0}};
+int pmf_Wiggler_StateHold[2] = {(int)Wiggler_StateHold, 0};
+V2 pmf_Wiggler_TurnTowardAim_4 = {(int)Wiggler_TurnTowardAim, 0};
+P2 pmf_Wiggler_MoveBounce = {{(int)Wiggler_MoveBounce, 0}};
+P2 pmf_Wiggler_TurnTowardAim_5 = {{(int)Wiggler_TurnTowardAim, 0}};
+P2 pmf_Wiggler_TurnTowardAim_6 = {{(int)Wiggler_TurnTowardAim, 0}};
+P pmf_Wiggler_StateHold_2 = {{(int)Wiggler_StateHold, 0}};
+int pmf_Wiggler_StateWait_4[2] = {(int)Wiggler_StateWait, 0};
+int pmf_Wiggler_CheckOffLeftB[2] = {(int)Wiggler_CheckOffLeftB, 0};
+Words2 pmf_Wiggler_MoveBounce_2 = {{(int)Wiggler_MoveBounce, 0}};
+int pmf_Wiggler_TurnTowardAim_7[2] = {(int)Wiggler_TurnTowardAim, 0};
+Vec2i pmf_Wiggler_CheckOffLeftA = {(int)Wiggler_CheckOffLeftA, 0};
+Pair pmf_dScMgHanachan_c_Phase_WaitIntro_2 = {{(int)_ZN15dScMgHanachan_c15Phase_WaitIntroEv, 0}};
+Pair pmf_dScMgHanachan_c_Phase_WaitTouch = {{(int)_ZN15dScMgHanachan_c15Phase_WaitTouchEv, 0}};
+Pair pmf_Hana_StateNoneB = {{(int)Hana_StateNoneB, 0}};
+int pmf_Wiggler_TurnTowardAim_8[2] = {(int)Wiggler_TurnTowardAim, 0};
+int pmf_Wiggler_TurnTowardAim_9[2] = {(int)Wiggler_TurnTowardAim, 0};
+int pmf_Hana_StateNoneA[2] = {(int)Hana_StateNoneA, 0};
+Pair pmf_dScMgHanachan_c_Phase_WaitTouch_2 = {{(int)_ZN15dScMgHanachan_c15Phase_WaitTouchEv, 0}};
+Pair pmf_Hana_StateNoneB_2 = {{(int)Hana_StateNoneB, 0}};
 }
 

@@ -41,14 +41,12 @@ enum daObjCtMecha09_c_AssetId {
 /* Resource handles constructed by this TU's static initializer. The
  * constructor and destructor bodies stay out of line; mwcc registers them. */
 struct Mecha09ModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Mecha09ModelFilePtr(u32 fileID);
     ~Mecha09ModelFilePtr();
 };
 
 struct Mecha09ClsnFilePtr : SharedFilePtr {
-    u32 words[2];
 
     Mecha09ClsnFilePtr(u32 fileID);
     ~Mecha09ClsnFilePtr();

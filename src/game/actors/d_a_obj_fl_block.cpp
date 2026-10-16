@@ -50,14 +50,12 @@ enum daObjFl_Block_c_AssetId {
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct FlBlockModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     FlBlockModelFilePtr(u32 fileID);
     ~FlBlockModelFilePtr();
 };
 
 struct FlBlockCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     FlBlockCollisionFilePtr(u32 fileID);
     ~FlBlockCollisionFilePtr();

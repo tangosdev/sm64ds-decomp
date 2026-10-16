@@ -56,14 +56,12 @@ enum daObjPushblock_c_AssetId {
  * and destroys through SharedFilePtr_Destruct_Clsn. The manifest aliases
  * those undefined members onto the ROM symbols. */
 struct PushblockModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     PushblockModelFilePtr(u32 fileID);
     ~PushblockModelFilePtr();
 };
 
 struct PushblockClsnFilePtr : SharedFilePtr {
-    u32 words[2];
 
     PushblockClsnFilePtr(u32 fileID);
     ~PushblockClsnFilePtr();

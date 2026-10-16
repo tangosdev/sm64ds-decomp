@@ -2433,3 +2433,13 @@ extern "C" void *dScMgBomroom_c_classInit()
 {
     return new dScMgBomroom_c;
 }
+
+/* Pointer-to-member state tables, zeroed here and populated by the
+ * module sinit __sinit_ov006_0212fd48 at load. */
+PMFEntry data_ov006_02141660[4] = {};
+PMF data_ov006_02141680[4] = {};
+int data_ov006_021416a0[8] = {};
+PMF data_ov006_021416c0[4] = {};
+PMFv data_ov006_021416e0[5] = {};
+PMFEntry data_ov006_02141708[5] = {};
+PMF data_ov006_02141730[7] = {};

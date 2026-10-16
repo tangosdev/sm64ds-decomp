@@ -29,6 +29,11 @@
       "end": "0x02111af4"
     },
     {
+      "name": ".data",
+      "start": "0x02112418",
+      "end": "0x02112424"
+    },
+    {
       "name": ".bss",
       "start": "0x02112630",
       "end": "0x02112658"
@@ -71,7 +76,22 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov043_02112418",
+      "address": "0x02112418",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "model pointer of the resource row, to gKm1KurumaModelFile. symbols.txt names the next word"
+    },
+    {
+      "symbol": "data_ov043_0211241c",
+      "address": "0x0211241c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision pointer to gKm1KurumaCollisionFile, then the CLPS pointer to data_ov043_02111b80"
+    }
+  ],
   "bss": [
     {
       "symbol": "gKm1KurumaCollisionFile",
@@ -237,6 +257,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02112418",
+          "end": "0x02112424",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02112630",
           "end": "0x02112658",
@@ -245,7 +272,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 11
+          "LICENSED": 13
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -256,34 +283,45 @@
           {
             "section": ".init",
             "original": [
-              47
+              51
             ],
             "desired": [
-              47
+              51
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              45
+              49
             ],
             "desired": [
-              45
+              49
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              7
+            ],
+            "desired": [
+              5,
+              7
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              6,
-              22,
-              23
+              9,
+              10,
+              20,
+              27
             ],
             "desired": [
-              6,
-              5,
-              22,
-              23
+              10,
+              9,
+              20,
+              27
             ]
           }
         ],
@@ -292,22 +330,22 @@
             {
               "section": ".bss",
               "original": [
-                5,
-                6,
-                22,
-                23
+                9,
+                10,
+                20,
+                27
               ],
               "desired": [
-                6,
-                5,
-                22,
-                23
+                10,
+                9,
+                20,
+                27
               ],
               "slots": [
-                5,
-                6,
-                22,
-                23
+                9,
+                10,
+                20,
+                27
               ]
             }
           ],
@@ -664,6 +702,36 @@
       "addend": 0,
       "target_module": "ov043",
       "target_address": "0x0211264c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112418",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm1KurumaModelFile",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112638"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211241c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm1KurumaCollisionFile",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112630"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112420",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02111b80",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02111b80"
     }
   ]
 }

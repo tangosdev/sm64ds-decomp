@@ -34,16 +34,22 @@
 #include "Event.h"
 #include "daObjBlockItemTag_c.h"
 
-/* File-local resource rows (see the header note above). */
-struct BigBrickBlockFileRow {
+/* File-local resource row (see the header note above): one variant's
+ * model file handle, collision file handle and CLPS block, 0xc stride.
+ * The cartridge names the three columns of row 0
+ * data_ov002_02108ab0 / data_ov002_02108ab4 / data_ov002_02108ab8. */
+struct ResourceRow {
     SharedFilePtr* file;
-    u8 pad[8];
+    SharedFilePtr* clsn;
+    CLPS_Block *block;
 };
 
-/* shadow struct 'ClpsRow' */
-struct ClpsRow {
+/* The tail of the resource table after row 0's first two cells: row 0's
+ * CLPS block, then rows 1 and 2 whole. The cartridge names it
+ * data_ov002_02108ab8. */
+struct ResourceTail {
     CLPS_Block *block;
-    u8 pad[8];
+    ResourceRow rows[2];
 };
 
 /* POD spelling of Vector3's 0x0c bytes: with a user-declared constructor on
@@ -58,14 +64,12 @@ struct RawVector3 {
  * destroy through SharedFilePtr_Destruct_Clsn. The manifest aliases those
  * undefined members onto the ROM symbols. */
 struct BlockModelFile : SharedFilePtr {
-    u32 words[2];
 
     BlockModelFile(u32 fileID);
     ~BlockModelFile();
 };
 
 struct daObjBlockLClsnFile : SharedFilePtr {
-    u32 words[2];
 
     daObjBlockLClsnFile(u32 fileID);
     ~daObjBlockLClsnFile();
@@ -74,13 +78,14 @@ struct daObjBlockLClsnFile : SharedFilePtr {
 extern "C" {
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_( u32 id, Fix12i x, Fix12i y, Fix12i z);
 void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs( void *self, const Vector3 &pos, u32 count, s32 speed, s16 delay);
-extern BigBrickBlockFileRow data_ov002_02108ab0[];
-extern BigBrickBlockFileRow data_ov002_02108ab4[];
 extern Vector3 data_ov002_021089e0;
+extern ResourceRow data_ov002_02108ab0[];
 void func_020393a4(dBgW_KcMbg *p, int v);
 void func_02039394(dBgW_KcMbg *p, int v);
 void _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
-extern ClpsRow data_ov002_02108ab8[];         /* CLPS blocks,       0xc stride */
+extern CLPS_Block data_ov002_0210d794;
+extern CLPS_Block data_ov002_0210d8f4;
+extern CLPS_Block data_ov009_021135f4;
 extern s8 data_0209f2f8;              /* current level */
 extern u8 data_0209f220;
 int IsStarCollectedInCurLevel(int star);
@@ -346,7 +351,7 @@ int daObjBlockL_c::CleanupResources()
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     data_ov002_02108ab0[mVariant].file->Release();
-    data_ov002_02108ab4[mVariant].file->Release();
+    data_ov002_02108ab0[mVariant].clsn->Release();
     return 1;
 }
 
@@ -477,21 +482,21 @@ int daObjBlockL_c::InitResources()
         int is10 = actorID;
         is10 = is10 == 0x10;
         if (is10 != 0) {
-            KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab4[idx].file);
+            KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsn);
             _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
                 &mMeshCollider, kcl, &mClsnMat, 0x1800, mAngleY,
-                data_ov002_02108ab8[idx].block);
+                data_ov002_02108ab0[idx].block);
         } else {
-            KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab4[idx].file);
+            KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsn);
             _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
                 &mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY,
-                data_ov002_02108ab8[idx].block);
+                data_ov002_02108ab0[idx].block);
         }
     } else {
-        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab4[idx].file);
+        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsn);
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY,
-            data_ov002_02108ab8[idx].block);
+            data_ov002_02108ab0[idx].block);
     }
 
     {
@@ -576,3 +581,16 @@ extern "C" BlockModelFile data_ov002_0210dce0(1110);
 extern "C" daObjBlockLClsnFile data_ov002_0210dcc8(1111);
 extern "C" BlockModelFile data_ov002_0210dcd0(1425);
 extern "C" daObjBlockLClsnFile data_ov002_0210dcd8(1426);
+
+/* The variant resource table is one { file, clsn, block } triple per
+ * variant, and data_ov002_02108ab0[] above reads it by row. The ROM names
+ * row 0's +4 and +8 cells separately; those land here. Row 0's +0 cell
+ * stays a ROM copy: the import and a definition cannot share one name. */
+extern "C" SharedFilePtr* data_ov002_02108ab4 = &data_ov002_0210dcb8;
+extern "C" ResourceTail data_ov002_02108ab8 = {
+    &data_ov002_0210d794,
+    {
+        { &data_ov002_0210dce0, &data_ov002_0210dcc8, &data_ov002_0210d8f4 },
+        { &data_ov002_0210dcd0, &data_ov002_0210dcd8, &data_ov009_021135f4 },
+    },
+};

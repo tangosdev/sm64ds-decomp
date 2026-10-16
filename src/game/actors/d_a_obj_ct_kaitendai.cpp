@@ -35,9 +35,11 @@
  *   and the reload into mAngleY.
  * - func_ov065_0211b40c is a daObjCtKaitendai_c method under its ROM
  *   address (S33); symbols.txt carries the mangled spelling.
- * - data_ov065_0211d334 (the 200/400 speeds) and data_ov065_0211d35c
- *   (the two resource rows) are not this TU's data. Neither are
- *   g_profile_CT_MECHA06 / CT_MECHA07.
+ * - data_ov065_0211d334 (the 200/400 speeds) is not this TU's data.
+ *   symbols.txt names the next words of the resource table at
+ *   0211d360 and 0211d364, so this file defines only the first
+ *   pointer and those rows stay in the gap. g_profile_CT_MECHA06 /
+ *   CT_MECHA07 stay outside.
  * - common.h stays first. Matrix4x3's flat 12-word spelling is what
  *   puts the shadow's ground height in m[10].
  * - The actor-id nest stays `!= 0x72` then `== 0x73`, and the floor
@@ -85,14 +87,12 @@ typedef char KaitendaiResources_size_must_be_0x0c[
  * names the handles directly; the KaitendaiResources rows above point at
  * them. */
 struct KaitendaiModelFile : SharedFilePtr {
-    u32 words[2];
 
     KaitendaiModelFile(u32 fileID);
     ~KaitendaiModelFile();
 };
 
 struct KaitendaiCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     KaitendaiCollisionFilePtr(u32 fileID);
     ~KaitendaiCollisionFilePtr();
@@ -113,7 +113,6 @@ extern unsigned int RandomIntInternal(int *seed);
 extern u8 data_0209f2c0;              /* clock setting: 0 slow, 1 fast, 2 random, 3 stopped */
 extern int data_0209e650;             /* shared RNG state */
 extern s16 data_ov065_0211d334[2];    /* yaw speed for the slow and fast hands: 200, 400 */
-extern KaitendaiResources data_ov065_0211d35c[];
 }
 
 // @symbol daObjCtKaitendai_c_classInit_CT_MECHA06
@@ -131,6 +130,7 @@ extern "C" daObjCtKaitendai_c *daObjCtKaitendai_c_classInit_CT_MECHA07()
 // @symbol _ZN18daObjCtKaitendai_c13InitResourcesEv
 int daObjCtKaitendai_c::InitResources()
 {
+    extern KaitendaiResources data_ov065_0211d35c[];
     Vector3 pos;
 
     /* Gear is 0x72 and takes row 0; triangle is 0x73 and takes row 1. */
@@ -226,6 +226,7 @@ int daObjCtKaitendai_c::Render()
 // @symbol _ZN18daObjCtKaitendai_c16CleanupResourcesEv
 int daObjCtKaitendai_c::CleanupResources()
 {
+    extern KaitendaiResources data_ov065_0211d35c[];
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     data_ov065_0211d35c[mVariant].model->Release();
@@ -250,3 +251,9 @@ KaitendaiModelFile gCtMechaObj06ModelFile(ASSET_CT_MECHA_OBJ06_BMD);
 KaitendaiModelFile gCtMechaObj07ModelFile(ASSET_CT_MECHA_OBJ07_BMD);
 KaitendaiCollisionFilePtr gCtMechaObj06CollisionFile(ASSET_CT_MECHA_OBJ06_KCL);
 KaitendaiCollisionFilePtr gCtMechaObj07CollisionFile(ASSET_CT_MECHA_OBJ07_KCL);
+
+/* First word of the two-row resource table: the gear's model handle.
+ * symbols.txt names the next words at +4 and +8, so this object is
+ * that pointer and those rows stay in the gap. The readers redeclare
+ * it locally as KaitendaiResources[] so the field addends still emit. */
+extern "C" SharedFilePtr *data_ov065_0211d35c = &gCtMechaObj06ModelFile;

@@ -13,8 +13,8 @@
  * - func_ov031_02111214 (yaw mModel.mat4x3, drop translation to pos >> 3):
  *   manifest ordinal 2 of this TU, no other src/ consumer; kept as a
  *   C-linkage ROM label. Member/static form unmeasured.
- * - data_ov031_02111424 is the extern four-variant SharedFilePtr table
- *   InitResources indexes by mVariant (this TU's manifest is text-only);
+ * - data_ov031_02111424 is the four-pointer SharedFilePtr table
+ *   InitResources indexes by mVariant;
  *   the individual BMD link names stay data_ov031_*.
  * - Matrix4x3_FromRotationY stays a TU-local extern: no header declares it.
  * - The actorID switch stays defaultless in matched form; the registry
@@ -37,7 +37,6 @@ enum d_a_obj_hs_billboard_AssetId {
 /* Four model handles. Each constructs through func_02017acc and destroys
  * through func_02017ab4. The four-pointer table stays ROM rodata. */
 struct HsBillboardModelFilePtr : SharedFilePtr {
-    unsigned int words[2];
     HsBillboardModelFilePtr(unsigned int fileId);
     ~HsBillboardModelFilePtr();
 };
@@ -45,7 +44,7 @@ typedef char HsBillboardModelFilePtr_size_must_be_8[
     sizeof(HsBillboardModelFilePtr) == 8 ? 1 : -1];
 
 extern "C" {
-extern SharedFilePtr *data_ov031_02111424[];
+extern SharedFilePtr * const data_ov031_02111424[4];
 void func_ov031_02111214(daObjHsBillboard_c *self);
 void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 angY);
 }
@@ -133,3 +132,12 @@ HsBillboardModelFilePtr gHsMoonModelFile(ASSET_HS_MOON_BMD);
 HsBillboardModelFilePtr gHsStarModelFile(ASSET_HS_STAR_BMD);
 HsBillboardModelFilePtr gHsYStarModelFile(ASSET_HS_Y_STAR_BMD);
 HsBillboardModelFilePtr gHsBStarModelFile(ASSET_HS_B_STAR_BMD);
+
+/* extern keeps the table global; const keeps it in .rodata.
+   Order is the ROM: moon, star, yellow star, blue star. */
+extern "C" SharedFilePtr * const data_ov031_02111424[4] = {
+    &gHsMoonModelFile,
+    &gHsStarModelFile,
+    &gHsYStarModelFile,
+    &gHsBStarModelFile,
+};

@@ -35,14 +35,12 @@ enum daObjKm2_Nobiru_c_AssetId {
    func_02017b4c and registers SharedFilePtr_Destruct_Clsn.
    The manifest aliases these. */
 struct NobiruModelFileHandle : SharedFilePtr {
-    u32 words[2];
 
     NobiruModelFileHandle(u32 fileID);
     ~NobiruModelFileHandle();
 };
 
 struct NobiruClsnFileHandle : SharedFilePtr {
-    u32 words[2];
 
     NobiruClsnFileHandle(u32 fileID);
     ~NobiruClsnFileHandle();

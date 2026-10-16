@@ -135,6 +135,7 @@ src/unnamed/ov075/func_ov075_02118378.c:
 src/unnamed/ov075/func_ov075_021184b0.cpp:
     complete
     .text start:0x021184b0 end:0x0211867c
+    .data start:0x0211c9e0 end:0x0211ca08
 
 src/unnamed/ov075/func_ov075_0211867c.c:
     complete
@@ -163,6 +164,7 @@ src/unnamed/ov075/func_ov075_02118c80.cpp:
 src/unnamed/ov075/func_ov075_02118cd0.c:
     complete
     .text start:0x02118cd0 end:0x02118d1c
+    .data start:0x0211cba4 end:0x0211cbc4
 
 src/unnamed/ov075/func_ov075_02118d1c.c:
     complete
@@ -335,6 +337,7 @@ src/unnamed/ov075/func_ov075_0211b418.cpp:
 src/unnamed/ov075/func_ov075_0211b458.cpp:
     complete
     .text start:0x0211b458 end:0x0211b524
+    .bss start:0x0211d994 end:0x0211d9bc
 
 src/unnamed/ov075/__sinit_ov075_0211bb00.c:
     complete

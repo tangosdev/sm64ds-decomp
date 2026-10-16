@@ -1,0 +1,148 @@
+{
+  "id": "arm9/ShowCrashScreen",
+  "module": "arm9",
+  "source": "src/ShowCrashScreen.c",
+  "promoted_source": "src/ShowCrashScreen.c",
+  "status": "promoted",
+  "production_mode": "intact-object",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "single-function TU: ShowCrashScreen (0x02014244..0x02014620, 0x3dc) is the only function the file defines; src/ResetCrashScreen.c ends exactly where it begins and src/nds_printt.c begins exactly where it ends in config/arm9/delinks.txt.",
+    "the .data claim is the file's own register-name table: ShowCrashScreen is the sole source consumer of data_0208e504 (copied to a stack Buf52 and printed three bytes per register row at 0x02014430+)."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02014244",
+      "end": "0x02014620"
+    },
+    {
+      "name": ".data",
+      "start": "0x0208e504",
+      "end": "0x0208e538"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "ShowCrashScreen",
+      "address": "0x02014244",
+      "size": "0x000003dc",
+      "legacy_source": "src/ShowCrashScreen.c",
+      "ordinal": 0
+    }
+  ],
+  "data": [
+    {
+      "symbol": "data_0208e504",
+      "address": "0x0208e504",
+      "size": "0x00000034",
+      "evidence": "the crash-screen register-name table: seventeen three-byte names (CPS, R00..R12, SP , LR , PC ) plus a terminating NUL -- 0x34 bytes, matching the Buf52 the file already declares"
+    }
+  ],
+  "bss": [],
+  "relocations": [],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "data_0208e504",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "The register-name table is file-local in the source -- ShowCrashScreen is its only consumer. DSD requires a global symbol at the configured .data address; changing the ELF binding preserves all storage, relocations and emitted bytes."
+    }
+  ],
+  "notes": [
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
+    "The recorded result is scratch-data-verified: the sole scratch rewrite is the licensed symbol_binding_rewrites promotion of data_0208e504 from STB_LOCAL (file-static) to STB_GLOBAL for DSD's global symbol surface; every other policy was a no-op."
+  ],
+  "verification": {
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/arm9-ShowCrashScreen/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02014244",
+        "end": "0x02014620",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02014244",
+          "end": "0x02014620",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0208e504",
+          "end": "0x0208e538",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 2
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}

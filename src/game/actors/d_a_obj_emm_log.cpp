@@ -17,8 +17,8 @@
  *   method form Undefined).
  * Leftover: func_020393a4 is an 8-byte store into dBgW+0x0c. This TU calls
  *   it; naming belongs with dBgW in arm9.
- * Leftover: data_ov052_021124d4 is this overlay's BMD/KCL/CLPS bundle;
- *   symbols.txt has no recovered name.
+ * Leftover: data_ov052_021124d4 keeps that name. Its CLPS slot is
+ *   data_ov064_0211ba2c, which belongs to ov064.
  * Leftover: sine table data_02082214 (arm9).
  * Leftover: inline destructor (out-of-line emits D0 before D1 plus a
  *   homeless D2). Leaf operator new(unsigned long) until #2570.
@@ -48,12 +48,10 @@ struct daObjEmmLog_c_Resources {
  * declared-only subclasses so the static initializer names the real entry
  * points. */
 struct EmmLogModelFilePtr : SharedFilePtr {
-    u32 words[2];
     EmmLogModelFilePtr(u32 fileID);
     ~EmmLogModelFilePtr();
 };
 struct EmmLogCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
     EmmLogCollisionFilePtr(u32 fileID);
     ~EmmLogCollisionFilePtr();
 };
@@ -66,6 +64,7 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     s16 angleY, CLPS_Block *clps);
 extern short data_02082214[];
 extern daObjEmmLog_c_Resources data_ov052_021124d4;
+extern CLPS_Block data_ov064_0211ba2c;
 }
 
 // @symbol daObjEmmLog_c_classInit
@@ -143,3 +142,10 @@ s32 daObjEmmLog_c::CleanupResources()
  * and .collision point at them. */
 EmmLogModelFilePtr gEmmLogModelFile(ASSET_EMM_LOG_BMD);
 EmmLogCollisionFilePtr gEmmLogCollisionFile(ASSET_EMM_LOG_KCL);
+
+/* Retail words: model handle, collision handle, ov064 CLPS. */
+extern "C" daObjEmmLog_c_Resources data_ov052_021124d4 = {
+    &gEmmLogModelFile,
+    &gEmmLogCollisionFile,
+    &data_ov064_0211ba2c,
+};

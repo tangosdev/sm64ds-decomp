@@ -33,8 +33,8 @@
  *   Particle::System::New stay mangled: each takes Fix12<int> by value
  *   (notes/mwccarm-codegen.md 6az). Particle::System::New is declared
  *   with the seven arguments its call sites pass.
- * - data_ov102_0214d70c is this TU's .rodata pair of model-file handles
- *   and the state records are .bss; this text-only TU claims neither.
+ * - data_ov102_0214d70c is this TU's .rodata pair of model-file handles.
+ *   The state records are .bss.
  *
  * deslop leftovers:
  * - func_ov002_020ad660, func_ov002_020cc16c and func_020105cc are other
@@ -86,7 +86,7 @@ extern ShlState data_ov102_0214ea48;
 extern ShlState data_ov102_0214ea58;
 extern ShlState data_ov102_0214ea68;
 extern ShlStateEnd data_ov102_0214ea78;
-extern SharedFilePtr *data_ov102_0214d70c[];
+extern SharedFilePtr *const data_ov102_0214d70c[];
 
 /* -- other modules -- */
 int  func_ov002_020ad660(char *self, char *clsn, char *model, int kind);
@@ -682,4 +682,12 @@ extern "C" ShlState data_ov102_0214ea48 = {
 extern "C" ShlState data_ov102_0214ea58 = {
     &daShl_c::func_ov102_0214d020,
     &daShl_c::func_ov102_0214cfe4,
+};
+
+/* Two model-file pointers, one per mModelIndex. The handles live in ov002. */
+extern "C" SharedFilePtr data_ov002_0210da18;
+extern "C" SharedFilePtr data_ov002_0210da20;
+extern "C" SharedFilePtr *const data_ov102_0214d70c[2] = {
+    &data_ov002_0210da18,
+    &data_ov002_0210da20,
 };

@@ -78,18 +78,16 @@ enum daObjBk_Lift_c_AssetId {
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
 
-/* SharedFilePtr has no fields; the two words are the handle's 8 bytes. The
+/* SharedFilePtr is the 8-byte handle; the two words are the handle's 8 bytes. The
  * constructors and destructors are the ROM resource-family veneers, aliased
  * in the manifest. */
 struct BkLiftModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BkLiftModelFilePtr(u32 fileID);
     ~BkLiftModelFilePtr();
 };
 
 struct BkLiftCollisionFilePtr : SharedFilePtr {
-    u32 words[2];
 
     BkLiftCollisionFilePtr(u32 fileID);
     ~BkLiftCollisionFilePtr();

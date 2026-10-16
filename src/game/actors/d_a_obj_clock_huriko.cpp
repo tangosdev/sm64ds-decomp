@@ -53,7 +53,6 @@ enum d_a_obj_clock_huriko_AssetId {
  * func_02017ab4. The manifest aliases those undefined members onto the ROM
  * symbols. */
 struct ClockHurikoModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     ClockHurikoModelFilePtr(u32 fileID);
     ~ClockHurikoModelFilePtr();

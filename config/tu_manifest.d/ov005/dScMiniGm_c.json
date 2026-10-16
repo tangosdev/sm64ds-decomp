@@ -15,6 +15,16 @@
       "name": ".text",
       "start": "0x020bfec0",
       "end": "0x020c2250"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x020c2280",
+      "end": "0x020c2310"
+    },
+    {
+      "name": ".data",
+      "start": "0x020c2448",
+      "end": "0x020c24d8"
     }
   ],
   "functions": [
@@ -201,8 +211,290 @@
       "ordinal": 25
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "_ZTI11dScMiniGm_c",
+      "address": "0x020c2448",
+      "size": "0xc",
+      "evidence": "compiler-emitted __si_class_type_info record {typeinfo vtable, &_ZTS11dScMiniGm_c, &_ZTI8dScene_c}; dScMiniGm_c is single-inheritance off dScene_c"
+    },
+    {
+      "symbol": "_ZTS11dScMiniGm_c",
+      "address": "0x020c2454",
+      "size": "0xe",
+      "evidence": "compiler-emitted type-name string \"11dScMiniGm_c\" (0xd chars + NUL); 2 pad bytes to the next object's alignment stay in the claimed range"
+    },
+    {
+      "symbol": "sMiniGmIconScreenOffsets",
+      "address": "0x020c2464",
+      "size": "0x24",
+      "binding": "STB_GLOBAL",
+      "evidence": "Nine screen offsets, 9 x 4 = 0x24. InitResources copies the table. The vtable object follows in this .data contribution."
+    },
+    {
+      "symbol": "_ZTV11dScMiniGm_c",
+      "address": "0x020c2490",
+      "emitted_storage_address": "0x020c2488",
+      "address_point_bias": "0x8",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "Key-function vtable. Storage is 0x020c2488..0x020c24d8 (0x50): offset-to-top, the _ZTI11dScMiniGm_c pointer, then 18 slots. symbols.txt names the address point at 0x020c2490."
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "sMiniGmRecordPos",
+      "address": "0x020c2280",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "Nine Pair icon positions, 9 x 8 = 0x48, no relocations. Render reads x and y."
+    },
+    {
+      "symbol": "sMiniGmBadgePos",
+      "address": "0x020c22c8",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "Nine Pair positions for the second page, 9 x 8 = 0x48, no relocations. Render reads x and y."
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "sMiniGmRecordPos",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "const at file scope has internal linkage. DSD requires a global symbol at the .rodata address; the rewrite changes only the ELF binding."
+    },
+    {
+      "symbol": "sMiniGmBadgePos",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "const at file scope has internal linkage. DSD requires a global symbol at the .rodata address; the rewrite changes only the ELF binding."
+    }
+  ],
+  "production_mode": "intact-object",
   "bss": [],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x020c248c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI11dScMiniGm_c",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2448"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2490",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMiniGm_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c1a20"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2494",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dScene_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202e638"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2498",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dScene_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202e62c"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c249c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMiniGm_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c1654"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c24a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dScene_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202e5f0"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c24a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dScene_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202e5d0"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c24a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMiniGm_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c14a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c24ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dScene_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202e3d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c24b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dScene_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202e3c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c24b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMiniGm_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c0b04"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c24b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dScene_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202e3a4"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c24bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dScene_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0202e398"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c24c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMiniGm_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c0b00"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c24c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c24c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c24cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c24d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMiniGm_cD1Ev",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020bfec0"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c24d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMiniGm_cD0Ev",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020bfefc"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2448",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c244c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS11dScMiniGm_c",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2454"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2450",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8dScene_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020914d4"
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZN8dScene_cD2Ev",
@@ -255,27 +547,6 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020914b0",
       "reason": "Type-name string. ROM home arm9:0x020914b0 holds 38 64 53 63 65 6e 65 5f 63 00 = `8dScene_c\u0000`, 0xa bytes -- the exact size verify reports."
-    },
-    {
-      "symbol": "_ZTI11dScMiniGm_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov005",
-      "canonical_address": "0x020c2448",
-      "reason": "This class's own __si_class_type_info. ROM home ov005:0x020c2448 holds 0x0209a764, 0x020c2454 (its type-name string) and 0x020914d4 (_ZTI8dScene_c). That third word is the cartridge's own statement that dScMiniGm_c derives directly from dScene_c, and it is the record that pins the class name used by this TU. 0xc bytes. The home lies in ov005's .data (0x020c2440..0x020c3020), outside this entry's only claimed range (.text 0x020bfec0..0x020c2250), so it is discardable rather than a range this source must build."
-    },
-    {
-      "symbol": "_ZTS11dScMiniGm_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov005",
-      "canonical_address": "0x020c2454",
-      "reason": "This class's own type-name string. ov005:0x020c2454 holds 31 31 64 53 63 4d 69 6e 69 47 6d 5f 63 00 = `11dScMiniGm_c\u0000`, 0xe bytes -- the cartridge's own spelling of the class, and the reason this TU, its header and its members are named dScMiniGm_c rather than any coined English name."
-    },
-    {
-      "symbol": "_ZTV11dScMiniGm_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov005",
-      "canonical_address": "0x020c2490",
-      "reason": "The vtable this TU is the key function for. Storage runs ov005:0x020c2488..0x020c24d8 -- 0x50 bytes, the size verify's EXTRA line independently reports -- laid out as the two-word RTTI prologue (0x00000000 offset-to-top, then 0x020c2448 = _ZTI11dScMiniGm_c) followed by 18 dispatch slots. config/arm9/overlays/ov005/symbols.txt names the symbol at the ADDRESS POINT 0x020c2490, i.e. storage+8, which is the same convention the landed ov002/da1up_c entry uses (_ZTV7da1up_c at 0x021083c8 with storage at 0x021083c0). Slots 0, 3, 6, 9, 12, 16 and 17 relocate into this TU's own text (InitResources 0x020c1a20, CleanupResources 0x020c1654, Behavior 0x020c14a0, Render 0x020c0b04, OnPendingDestroy 0x020c0b00, D1 0x020bfec0, D0 0x020bfefc); the rest inherit from dScene_c/dBase_c in arm9. This TU's leftover factory odr-uses this copy; production isolation rebinds its vptr store to the ROM home and deadstrips the duplicate."
     }
   ],
   "notes": [
@@ -306,7 +577,8 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'DecompressLZ16' differs between the legacy file that used to hold MiniGm_LoadGroupIcons and the one that held _ZN11dScMiniGm_c13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN3GXS10LoadBGPlttEPKvjj' differs between the legacy file that used to hold MiniGm_LoadIconPalette and the one that held _ZN11dScMiniGm_c13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MultiStore16' differs between the legacy file that used to hold MiniGm_LoadGroupIcons and the one that held _ZN11dScMiniGm_c13InitResourcesEv; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gMgSaveDirty' differs between the legacy file that used to hold MiniGm_SaveIfDirty and the one that held _ZN11dScMiniGm_c13InitResourcesEv; kept the first, the other is commented out for review"
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'gMgSaveDirty' differs between the legacy file that used to hold MiniGm_SaveIfDirty and the one that held _ZN11dScMiniGm_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to this tree's stock control. The recorded rom.sha256 is the fleet-canonical d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8 that every other intact entry shares. The divergent bytes are NDS container fields outside every module range. Module set f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, 0 new symbol errors, and the three owned ranges are identical."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -377,7 +649,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov005-dScMiniGm_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -401,18 +673,59 @@
           "end": "0x020c2250",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x020c2280",
+          "end": "0x020c2310",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x020c2448",
+          "end": "0x020c24d8",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 26
+          "LICENSED": 32
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
+        "groups": [
+          {
+            "section": ".rodata",
+            "original": [
+              18,
+              19
+            ],
+            "desired": [
+              18,
+              19
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              12,
+              16,
+              17,
+              20
+            ],
+            "desired": [
+              12,
+              16,
+              17,
+              20
+            ]
+          }
+        ],
         "objisolate": null,
         "errors": null
       },

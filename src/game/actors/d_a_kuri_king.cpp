@@ -101,13 +101,9 @@ enum daKuriKing_c_AssetId {
 
 #define FX(a, b) (int)(((long long)(a) * (long long)(b) + 0x800) >> 12)
 
-/* include/SharedFilePtr.h has no fields; filePtr is the word LoadFile stashes
+/* include/SharedFilePtr is the 8-byte handle; filePtr is the word LoadFile stashes
  * and what SetFile/Prepare consume. daLuigi_c spells the same view. */
-struct LoadedSharedFile {
-    u16 fileID;    /* 0x00 */
-    u8  numRefs;   /* 0x02 */
-    u8  pad;       /* 0x03 */
-    void *filePtr; /* 0x04 */
+struct LoadedSharedFile : SharedFilePtr {
 };
 #define FileOf(handle) ((LoadedSharedFile *)&(handle))->filePtr
 
@@ -115,21 +111,18 @@ struct LoadedSharedFile {
  * spellings are reconstructed; constructor and destructor addresses, file
  * IDs, widths, and BSS order are the ROM's. */
 struct KuriKingModelFilePtr : SharedFilePtr {
-    u32 words[2];
 
     KuriKingModelFilePtr(u32 fileID);
     ~KuriKingModelFilePtr();
 };
 
 struct KuriKingTexSeqFilePtr : SharedFilePtr {
-    u32 words[2];
 
     KuriKingTexSeqFilePtr(u32 fileID);
     ~KuriKingTexSeqFilePtr();
 };
 
 struct KuriKingAnimationFilePtr : SharedFilePtr {
-    u32 words[2];
 
     KuriKingAnimationFilePtr(u32 fileID);
     ~KuriKingAnimationFilePtr();
@@ -227,8 +220,8 @@ extern SharedFilePtr data_ov084_02130cc8;
 extern KuriKingModelFilePtr gKurikingModelModelFile;
 extern KuriKingTexSeqFilePtr gKurikingAngerTextureSequenceFile;
 extern KuriKingAnimationFilePtr data_ov074_02123030;
-extern SharedFilePtr *data_ov074_0212292c[];
-extern SharedFilePtr *data_ov074_02122948[];
+extern SharedFilePtr *const data_ov074_0212292c[];
+extern SharedFilePtr *const data_ov074_02122948[];
 
 /* Intra-TU forward decls: calls run both ways across the file. */
 extern "C" void func_ov074_02121270(Vector3* out, daKuriKing_c* self, int bone);
@@ -1558,7 +1551,7 @@ void daKuriKing_c::func_ov074_0212199c()
 /* The animation table behind data_ov074_02122f34: one record per clip --
  * the SharedFilePtr that holds the BCA_File, the matching BTA_File for the
  * texture transformer, and SetAnim's animation index. */
-struct KuriKingAnimFile { u16 fileID; u8 numRefs; void *filePtr; };
+struct KuriKingAnimFile : SharedFilePtr {};
 struct KuriKingAnimEntry { KuriKingAnimFile *anim; void *btaFile; int animArg; };
 extern KuriKingAnimEntry data_ov074_02122f34[];
 
@@ -2027,6 +2020,35 @@ extern "C" unsigned short data_ov074_02122e04[4] = { 0x0059, 0x003c, 0x001e, 0x0
 KuriKingFreeState data_ov074_02122e0c = { (void (*)())func_ov074_021201ec };
 
 KuriKingStateTable data_ov074_021230f8;
+
+/* The ov084 clip handles data_ov074_0212292c borrows, declared with the
+   subclass spelling daKrb_c defines them under. Declaring them this late
+   keeps them below every compiler-temp emission, so the TU's @NNN uniquifier
+   matches the cartridge's numbering. */
+struct KrbAnimationFileHandle : SharedFilePtr {
+    KrbAnimationFileHandle(u32 fileID);
+    ~KrbAnimationFileHandle();
+};
+extern KrbAnimationFileHandle data_ov084_02130ce8;
+extern KrbAnimationFileHandle data_ov084_02130ce0;
+extern KrbAnimationFileHandle data_ov084_02130cd0;
+extern KrbAnimationFileHandle data_ov084_02130cc0;
+extern KrbAnimationFileHandle gKuriboRecoverAnimationFile;
+extern KrbAnimationFileHandle data_ov084_02130cf0;
+
+/* The two clip lists InitResources walks in order: seven animation handles
+   borrowed from ov084's daKrb_c, then this TU's own twelve. */
+SharedFilePtr *const data_ov074_0212292c[7] = {
+    &data_ov084_02130ce8, &data_ov084_02130ce0, &data_ov084_02130cd0,
+    &data_ov084_02130cc0, &gKuriboRecoverAnimationFile, &data_ov084_02130cc8,
+    &data_ov084_02130cf0
+};
+SharedFilePtr *const data_ov074_02122948[12] = {
+    &gKurikingAngerAnimationFile, &gKurikingDamageBAnimationFile, &gKurikingDamageFAnimationFile,
+    &gKurikingDownStartAnimationFile, &gKurikingDownAnimationFile, &gKurikingSerchWaitAnimationFile,
+    &gKurikingTurnAnimationFile, &data_ov074_02123030, &gKurikingWalkAnimationFile,
+    &gKurikingWalkEndAnimationFile, &gKurikingWalkStartAnimationFile, &gKurikingSpawnAnimationFile
+};
 
 /* The two registry factories close the unit (ov074 .text 0x02122764..
  * 0x0212290c), KURIKING_VANISH first. Both construct the same 0x610-byte

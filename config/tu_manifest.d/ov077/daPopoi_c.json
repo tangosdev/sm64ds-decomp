@@ -29,7 +29,7 @@
     {
       "name": ".data",
       "start": "0x02127a00",
-      "end": "0x02127a50"
+      "end": "0x02127a68"
     },
     {
       "name": ".bss",
@@ -263,6 +263,19 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor for the TurnAway update slot; retail first word is 0x021269a8"
+    },
+    {
+      "symbol": "_ZTS9daPopoi_c",
+      "address": "0x02127a50",
+      "size": "0xb",
+      "evidence": "compiler-emitted type-name string matches the retail bytes; its dedicated section pads to the next four-byte boundary"
+    },
+    {
+      "symbol": "data_ov077_02127a5c",
+      "address": "0x02127a5c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized three-word sensor offset (0, 0, 0x2c000); the file's existing Vector3 declaration is spelled as a plain struct because the declared destructor would emit static-init machinery"
     }
   ],
   "bss": [
@@ -424,7 +437,7 @@
         {
           "section": ".data",
           "start": "0x02127a00",
-          "end": "0x02127a50",
+          "end": "0x02127a68",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -437,7 +450,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 47
+          "LICENSED": 49
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -448,19 +461,19 @@
           {
             "section": ".init",
             "original": [
-              100
+              101
             ],
             "desired": [
-              100
+              101
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              98
+              99
             ],
             "desired": [
-              98
+              99
             ]
           },
           {
@@ -471,56 +484,60 @@
               11,
               13,
               15,
-              17,
-              21,
+              18,
+              20,
               24,
               26,
-              28
+              28,
+              34,
+              45
             ],
             "desired": [
-              21,
+              20,
               5,
               24,
               11,
               26,
               28,
-              17,
+              18,
               13,
               9,
-              15
+              15,
+              34,
+              45
             ]
           },
           {
             "section": ".bss",
             "original": [
-              19,
-              20,
+              17,
+              22,
               23,
               30,
               37,
               40,
-              41,
               46,
-              48,
+              47,
               49,
               50,
               51,
-              52
+              52,
+              53
             ],
             "desired": [
-              30,
-              20,
               23,
-              19,
+              17,
+              22,
+              30,
               37,
               40,
               46,
-              41,
-              48,
+              47,
               49,
               50,
               51,
-              52
+              52,
+              53
             ]
           }
         ],
@@ -534,23 +551,27 @@
                 11,
                 13,
                 15,
-                17,
-                21,
+                18,
+                20,
                 24,
                 26,
-                28
+                28,
+                34,
+                45
               ],
               "desired": [
-                21,
+                20,
                 5,
                 24,
                 11,
                 26,
                 28,
-                17,
+                18,
                 13,
                 9,
-                15
+                15,
+                34,
+                45
               ],
               "slots": [
                 5,
@@ -558,63 +579,65 @@
                 11,
                 13,
                 15,
-                17,
-                21,
+                18,
+                20,
                 24,
                 26,
-                28
+                28,
+                34,
+                45
               ]
             },
             {
               "section": ".bss",
               "original": [
-                19,
-                20,
+                17,
+                22,
                 23,
                 30,
                 37,
                 40,
-                41,
                 46,
-                48,
+                47,
                 49,
                 50,
                 51,
-                52
+                52,
+                53
               ],
               "desired": [
-                30,
-                20,
                 23,
-                19,
+                17,
+                22,
+                30,
                 37,
                 40,
                 46,
-                41,
-                48,
+                47,
                 49,
                 50,
                 51,
-                52
+                52,
+                53
               ],
               "slots": [
-                19,
-                20,
+                17,
+                22,
                 23,
                 30,
                 37,
                 40,
-                41,
                 46,
-                48,
+                47,
                 49,
                 50,
                 51,
-                52
+                52,
+                53
               ]
             }
           ],
-          "symbolIndices": 23,
+          "symbolIndices": 25,
           "sectionLinks": 0,
           "sectionInfos": 10,
           "error": null
@@ -715,13 +738,6 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "include/types.h declares Vector3 a deliberately empty inline destructor (`~Vector3() {}`), which makes the type non-POD everywhere, so every TU that gives a Vector3 automatic storage re-emits that destructor as vague linkage. In this TU _ZN9daPopoi_c8BehaviorEv, func_ov077_0212679c, func_ov077_02126ad0 and func_ov077_02126640 (three locals of its own) declare block-scope Vector3s that are passed by reference to SurfaceInfo::CopyNormalTo, Sound::PlayLong, dCcAcPos_c::SetPosRelativeToActor and dBgCh_Lin::SetObjAndLine. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), delinked to src/_ZN7Vector3D1Ev.cpp, which owns it; this object's copy is the identical 4-byte `bx lr` body. rombuild compares it against those cartridge bytes and refuses anything but byte-identical vague-linkage output before the duplicate is discarded, so the address cannot be lost -- the owning source still supplies it."
-    },
-    {
-      "symbol": "_ZTS9daPopoi_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov077",
-      "canonical_address": "0x02127a50",
-      "reason": "The TU naturally emits the ROM-proven class type-name string. Text-only: deadstripped, data: []."
     },
     {
       "symbol": "_ZTI9daPopoi_c",
@@ -1392,74 +1408,74 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@816",
-      "to": "@738",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
       "from": "@817",
-      "to": "@803",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@738",
+      "evidence": "compiler temp; this TU's per-TU @NNN uniquifier shifted when the file's own data definition was added, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
       "from": "@818",
-      "to": "@804",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@803",
+      "evidence": "compiler temp; this TU's per-TU @NNN uniquifier shifted when the file's own data definition was added, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
       "from": "@819",
+      "to": "@804",
+      "evidence": "compiler temp; this TU's per-TU @NNN uniquifier shifted when the file's own data definition was added, so mwcc emits it under this name now; licensed under the existing pin"
+    },
+    {
+      "from": "@820",
       "to": "@805",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; this TU's per-TU @NNN uniquifier shifted when the file's own data definition was added, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@821",
+      "from": "@822",
       "to": "@807",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; this TU's per-TU @NNN uniquifier shifted when the file's own data definition was added, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@823",
+      "from": "@824",
       "to": "@809",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; this TU's per-TU @NNN uniquifier shifted when the file's own data definition was added, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@825",
+      "from": "@826",
       "to": "@811",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; this TU's per-TU @NNN uniquifier shifted when the file's own data definition was added, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@827",
+      "from": "@828",
       "to": "@813",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; this TU's per-TU @NNN uniquifier shifted when the file's own data definition was added, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@829",
+      "from": "@830",
       "to": "@815",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; this TU's per-TU @NNN uniquifier shifted when the file's own data definition was added, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@831",
+      "from": "@832",
       "to": "@194",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; this TU's per-TU @NNN uniquifier shifted when the file's own data definition was added, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
       "from": "@521",
       "to": "@507",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; this TU's per-TU @NNN uniquifier shifted when the file's own data definition was added, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
       "from": "@523",
       "to": "@509",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; this TU's per-TU @NNN uniquifier shifted when the file's own data definition was added, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@833",
+      "from": "@834",
       "to": "@195",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; this TU's per-TU @NNN uniquifier shifted when the file's own data definition was added, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@835",
+      "from": "@836",
       "to": "@196",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; this TU's per-TU @NNN uniquifier shifted when the file's own data definition was added, so mwcc emits it under this name now; licensed under the existing pin"
     }
   ]
 }

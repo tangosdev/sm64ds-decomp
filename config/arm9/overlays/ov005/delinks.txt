@@ -6,3 +6,5 @@
 src/minigames/d_s_mini_gm.cpp:
     complete
     .text start:0x020bfec0 end:0x020c2250
+    .rodata start:0x020c2280 end:0x020c2310
+    .data start:0x020c2448 end:0x020c24d8
