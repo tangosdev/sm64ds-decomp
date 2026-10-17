@@ -12527,7 +12527,7 @@
     },
     "ov000:0x020aa420": {
       "author": "tangosdev",
-      "name": "func_ov000_020aa420"
+      "name": "InitializeAssetHandleTable"
     },
     "ov001:0x020aa420": {
       "author": "lunavyqo",

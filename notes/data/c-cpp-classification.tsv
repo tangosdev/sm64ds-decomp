@@ -3249,7 +3249,7 @@ src/func_0207368c.c	P2-vtable-only	arm9	abi::__class_type_info	abi	vtable abi::_
 src/func_020736b0.c	PURE-C	arm9				1		None		-
 src/func_020736c0.c	P2-vtable-only	arm9	std::type_info	std	vtable std::type_info slot 1 @0x20736c0	1		False		no-header:std
 src/func_020736e4.c	P2-vtable-only	arm9	std::type_info	std	vtable std::type_info slot 0 @0x20736e4	1		False		no-header:std
-src/unnamed/ov000/func_ov000_020aa420.c	PURE-C	ov000				1		None		-
+src/runtime/filesystem/InitializeAssetHandleTable.c	PURE-C	ov000				1		None		-
 src/func_ov001_020aa420.c	WEAK-refs-only	ov001				1		None		-
 src/func_ov001_020aa6b0.c	PURE-C	ov001				1		None		-
 src/func_ov001_020aa6cc.c	PURE-C	ov001				1		None		-
