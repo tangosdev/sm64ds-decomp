@@ -6,7 +6,7 @@ This document describes this commit, including the final formatter correction.
 
 - PR: https://github.com/tangosdev/sm64ds-decomp/pull/4016; open, not merged at handoff preparation on 2026-10-17.
 - Branch: `discussion/files-20261017`.
-- Worktree: `C:/Users/andre/source/tangosdev/sm64ds-decomp/build/discussion-files-20261017`.
+- Resumed worktree: `C:/tmp/sm64ds-pr4016-resume1017`, local branch `resume/pr4016-1017`, publishing to the existing PR branch. The original worktree under `build/discussion-files-20261017` was absent on this machine.
 - Original source and workflow/tool base: `2d6b09828568f5b18aa529aed0cf0f707d4a57dc`.
 - Previous source commit: `ff908b234ea3e70a1234e9991ce44dc9a0a99051` (readability), following `4e909a3c1e1495c77e45aa9a804a1d65eee1e86c` (move and rename).
 - Harness/session: Codex, direct user-requested file review and cleanup. This is not an adopted fleet task; no v2 queue claim, independent-review acceptance, or queue publication is asserted.
@@ -72,3 +72,20 @@ original checkout and are not committed.
 No source changes remain outside the committed candidate. The local PR-body draft
 is `build/asset-init-pr-body.md`; logs and verification JSON remain local. Review
 and any integration decision remain outstanding.
+
+
+## Resumption update (2026-10-17)
+
+Commit `1283066203` corrected the historical filename wording in this handoff;
+GitHub's dead-reference check now passes. No source, configuration, or baseline
+was changed. Fresh relocation-aware checks again verified both complete functions
+with zero warnings or blocking findings; local receipt:
+`build/resume-linkcheck.json` in the resumed worktree. The push hook also checked
+all 247 port references, found no duplicate source stems, and compiled all 21 drafts.
+
+All 16 GitHub Actions checks passed on `1283066203`; private PR validation was
+still pending at the last check. This subsequent update only records the new
+resumption location and those results. Check CI for the latest head before any
+integration decision. The earlier full-build limitation above remains historical
+local evidence; this documentation correction did not rerun that build. Neither
+independent reviewer acceptance nor merging is claimed.
