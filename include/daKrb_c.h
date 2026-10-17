@@ -118,7 +118,7 @@ struct daKrb_c : dCapEnemy_c {
     int OnAimedAtWithEgg();                     /* slot 29 */
 
     void func_ov084_021290d4();
-    void func_ov084_02129168(dActor_c* actor);
+    void func_ov084_02129168(dActor_c *actor);
     void func_ov084_02129238();
     void func_ov084_0212934c();
     void func_ov084_02129498();

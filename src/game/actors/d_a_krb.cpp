@@ -281,8 +281,7 @@ inline s32 *chaseRadius(daKrb_c *goomba)
     return &goomba->mChaseRadius;
 }
 
-void daKrb_c::func_ov084_021290d4()
-{
+void daKrb_c::func_ov084_021290d4() {
     char *cc = (char *)this;
     daKrb_c *c = (daKrb_c *)cc;
     int timerOff;
@@ -334,8 +333,7 @@ void daKrb_c::func_ov084_021290d4()
  * animation, gives it a vertical speed of (13.0 - mVertAccel) / mFloorNormalY
  * and a backward horizontal speed equal to the length of the horizontal part
  * of the velocity vector at 0xa4, and releases it from Yoshi. */
-void daKrb_c::func_ov084_02129168(dActor_c* actor)
-{
+void daKrb_c::func_ov084_02129168(dActor_c *actor) {
     daKrb_c *goomba = this;
     goomba->mBounceCountdown = 0x3c;
     goomba->mVertSpeed = cstd::fdiv(0xd000 - goomba->mVertAccel, goomba->mFloorNormalY);
@@ -361,8 +359,7 @@ void daKrb_c::func_ov084_02129168(dActor_c* actor)
  * the Goomba is below the height of the hit, the Goomba is lost: it drops its
  * coin, poofs, is removed (func_ov084_02129498), has its cap released and is
  * put back at mHomePos (RespawnIfHasCap). */
-void daKrb_c::func_ov084_02129238()
-{
+void daKrb_c::func_ov084_02129238() {
     char *c = (char *)this;
     daKrb_c *goomba = (daKrb_c *)c;
     if (goomba->mWithMeshClsn.IsOnGround() != 0)
@@ -415,8 +412,7 @@ void daKrb_c::func_ov084_02129238()
  * with the faster one (data_ov084_02130cf0) 0..3 and 16..19. On entering a
  * window the sound plays once and MOVE_STEP_SOUND_LATCH is set; the latch is
  * cleared when the frame leaves the window. */
-void daKrb_c::func_ov084_0212934c()
-{
+void daKrb_c::func_ov084_0212934c() {
     char *c = (char *)this;
     daKrb_c *goomba = (daKrb_c *)c;
     unsigned int kind;
@@ -463,15 +459,13 @@ void daKrb_c::func_ov084_0212934c()
 /* Remove the Goomba. With mCapId below 6 (the cap table's "has a cap" range)
  * it is only marked for destruction (MarkForDestruction); otherwise it goes
  * through KillAndTrackInDeathTable. */
-void daKrb_c::func_ov084_02129498() 
-{
+void daKrb_c::func_ov084_02129498() {
     daKrb_c *goomba = this;
     if ((goomba->mCapId & 0xf) < 6)
         goomba->MarkForDestruction();
     else
         goomba->KillAndTrackInDeathTable();
 }
-
 
 // @symbol _ZN7daKrb_c19func_ov084_021294d0Ev
 /* Ground check, run every frame while the Goomba stands on something.
@@ -485,8 +479,7 @@ void daKrb_c::func_ov084_02129498()
  * REWARD_SILVER_STAR_IF_CURRENT) if the type is 1, 4, 5 or 0x13, or if it is
  * 6..9 (Player.h calls those the quicksand tiers) while the collision kind
  * (CLPS bits 0..4, func_02037e84) is 8. */
-void daKrb_c::func_ov084_021294d0()
-{
+void daKrb_c::func_ov084_021294d0() {
     char *c = (char *)this;
     daKrb_c *goomba = (daKrb_c *)c;
     char obj[0x28];
@@ -583,8 +576,7 @@ void func_ov084_021296b0(void *a, void *b) {
  * data_0209f344[data_0209f208[0]]; spawns both actors with parameter
  * mStarID | 0x30 at the Goomba's position, marks the reward spent, and
  * plays sound object 1. */
-void daKrb_c::func_ov084_021296cc()
-{
+void daKrb_c::func_ov084_021296cc() {
     daKrb_c *goomba = this;
     if (goomba->mRewardType == daKrb_c::REWARD_SILVER_STAR) {
         char *starMarker;
@@ -621,8 +613,7 @@ void daKrb_c::func_ov084_021296cc()
 /* For REWARD_SILVER_STAR_IF_CURRENT: while no star slot is tracked yet
  * (mStarTracked negative) and mStarID matches data_0209f344[data_0209f208[0]],
  * claim a slot (TrackStar(mStarID, 1)). */
-void daKrb_c::func_ov084_02129864()
-{
+void daKrb_c::func_ov084_02129864() {
     char *c = (char *)this;
     daKrb_c *goomba = (daKrb_c *)c;
     if (goomba->mRewardType != daKrb_c::REWARD_SILVER_STAR_IF_CURRENT)
@@ -650,8 +641,7 @@ void daKrb_c::func_ov084_02129864()
  * (data_ov084_02130218), pay out the reward, and for a Goomba with a cap
  * (mCapId < 6) or REWARD_SILVER_STAR_IF_CURRENT send it back to mHomePos and
  * respawn; one with a cap is also dropped from the death table. */
-int daKrb_c::func_ov084_021298d0()
-{
+int daKrb_c::func_ov084_021298d0() {
     char *c = (char *)this;
     daKrb_c *goomba = (daKrb_c *)c;
     int deathState = goomba->UpdateDeath(goomba->mWithMeshClsn);
@@ -717,8 +707,7 @@ L_end:
  * (func_ov084_02129168 with no eater).
  * A king minion with eatState >= 3 that has dropped more than 1000.0 below
  * mHomePos is removed. */
-int daKrb_c::func_ov084_02129a00() 
-{
+int daKrb_c::func_ov084_02129a00() {
     char *c = (char *)this;
     daKrb_c *goomba = (daKrb_c *)c;
     int eatState = goomba->UpdateYoshiEat(goomba->mWithMeshClsn);
@@ -794,8 +783,7 @@ ret0:
 /* Start a hop: play SND_HOP, enter STATE_AIRBORNE with no horizontal speed and
  * the per-type launch speed data_ov084_02130248[type] as vertical speed, and
  * set the 0x4 bit of the dCcAc_c flags (meaning not recovered). */
-void daKrb_c::func_ov084_02129c9c()
-{
+void daKrb_c::func_ov084_02129c9c() {
     char *c = (char *)this;
     daKrb_c *goomba = (daKrb_c *)c;
     func_02012694(SND_HOP, &goomba->mCamSpacePos);
@@ -824,8 +812,7 @@ void daKrb_c::func_ov084_02129c9c()
  *    running); else "none".
  *  - Capless Goomba: ignore the player if the player is farther than
  *    distThresh from home, else chase the player. */
-void daKrb_c::func_ov084_02129cf4(Fix12i distThresh)
-{
+void daKrb_c::func_ov084_02129cf4(Fix12i distThresh) {
     struct Vector3 ppos;
 
     daKrb_c *goomba = this;
@@ -918,8 +905,7 @@ void daKrb_c::func_ov084_02129cf4(Fix12i distThresh)
  * instead of testing inline is deliberate: mwccarm emits the comparison into a
  * register and then re-tests it, which is the shape the cartridge has. Folding
  * either back into its `if` collapses the pair. See notes/matching-style.md 3. */
-void daKrb_c::func_ov084_02129ed4()
-{
+void daKrb_c::func_ov084_02129ed4() {
     void *c = (void *)this;
     daKrb_c *goomba = (daKrb_c *)c;
     s16 killDirNormal[3];
@@ -941,7 +927,6 @@ void daKrb_c::func_ov084_02129ed4()
     s32 variantMatch;
     s32 typeMatch;
     u32 id;
-
 
     id = goomba->mdCcAc_c.otherOwner;
     if (id == 0) return;
@@ -1167,8 +1152,7 @@ void daKrb_c::func_ov084_0212a580(){
 // @symbol _ZN7daKrb_c19func_ov084_0212a6f8Ev
 /* STATE_PAUSE: stand still (horizontal speed 0) until mWanderRerollTimer runs
  * out, then go back to STATE_WALK with the walk animation. */
-void daKrb_c::func_ov084_0212a6f8()
-{
+void daKrb_c::func_ov084_0212a6f8() {
     daKrb_c *goomba = this;
     goomba->mHorzSpeed = 0;
     /* Header spells this s16; the body loads it unsigned, and the two
@@ -1204,8 +1188,7 @@ void daKrb_c::func_ov084_0212a6f8()
  * Last, mEatenByYoshi is 1 around a SpawnParticlesIfHitOtherObj call (which
  * reports hits differently while it is set, per dEnemyBase_c.h); a hit sets
  * DEATH_HIT_20000 and bit 0 of the dCcAc_c flags, as in func_ov084_02129a00. */
-void daKrb_c::func_ov084_0212a774()
-{
+void daKrb_c::func_ov084_0212a774() {
     daKrb_c *goomba = this;
     Vector3 v;
     u16 h = goomba->mBounceCountdown;
@@ -1327,8 +1310,7 @@ void daKrb_c::func_ov084_0212aab0()
  * STATE_AIRBORNE). A KURIBO_L then scales its vertical speed by
  * 0x1800 / 0x1000 = 1.5. The target heading becomes the spawn heading
  * (mInitAngleY), MOVE_AVOIDING is cleared, and mAngleY follows mPrevAngleY. */
-void daKrb_c::func_ov084_0212ab48()
-{
+void daKrb_c::func_ov084_0212ab48() {
     daKrb_c *goomba = this;
     int large;
     goomba->func_ov084_02129c9c();
@@ -1366,8 +1348,7 @@ void daKrb_c::func_ov084_0212ab48()
  *    offset from the current heading (held 100 frames) and otherwise with a hop.
  *  - A capless Goomba (mCapId >= 6) stuck for more than 30 frames starts
  *    mUnstickTimer at the value of mStuckTimer. */
-void daKrb_c::func_ov084_0212abd4()
-{
+void daKrb_c::func_ov084_0212abd4() {
     daKrb_c *goomba = this;
     short step = 0x200;
     func_ov084_02129cf4(0x3e8000);
@@ -1477,8 +1458,7 @@ void daKrb_c::func_ov084_0212abd4()
  *    50.0, 100.0 or 150.0 away, and the run speed plus all of it beyond that.
  * A minion that falls more than 1000.0 below mHomePos is removed, and while
  * the king is in state 4 with mWalkSpeed 0 unk_475 is reloaded with 30. */
-void daKrb_c::func_ov084_0212af74()
-{
+void daKrb_c::func_ov084_0212af74() {
     daKrb_c *goomba = this;
     Vector3 targetPos;
     daKuriKing_c *king;
@@ -1580,8 +1560,7 @@ void daKrb_c::func_ov084_0212af74()
 // @symbol _ZN7daKrb_c19func_ov084_0212b2dcEv
 /* STATE_WALK handler: the king's minions follow the king, everything else
  * wanders / chases. mAngleY then follows mPrevAngleY. */
-void daKrb_c::func_ov084_0212b2dc()
-{
+void daKrb_c::func_ov084_0212b2dc() {
     daKrb_c *goomba = this;
     if (goomba->mGoombaType == daKrb_c::GOOMBA_KING_MINION)
         goomba->func_ov084_0212af74();

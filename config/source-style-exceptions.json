@@ -304,6 +304,38 @@
       "count": 1,
       "reason": "Inherited score field access in absorbed helper 0211621c; ROM loads the base score at offset 0x1d4 then adds the per-player delta. The cross-overlay global layout is not yet reconstructed. Follow-up: recover its owning arm9 type and verify all consumers before substituting a shared field.",
       "evidence": "Original helpers at main 67bf07b, ov075 02116128..021165b0; retained 15-function entry TU strictly verified in 6f196502, full 106/106 module proof. Formatting preserves complete raw ELF; follow-up scope recorded in overlay-functions1016 handoff."
+    },
+    {
+      "path": "src/game/actors/d_a_krb.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daKrb_c19func_ov084_0212a774Ev",
+      "count": 2,
+      "reason": "Retained flat bindings initialize the existing KrbFreeHandler descriptor union. Direct member-pointer globals, including const globals, add four descriptor-copy sequences and expand the retail initializer from 0x1fc to 0x23c. Follow-up: recover a member-pointer descriptor construction that retains the retail initializer.",
+      "evidence": "PR #3737 repair: pinned 2004/b56 direct and const member-pointer experiments; restored union with WALK targeting wrapper 0x0212b2dc passes production object preparation, all 36 relocated functions including the 0x1fc initializer, and full ROM build (106/106 modules exact)."
+    },
+    {
+      "path": "src/game/actors/d_a_krb.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daKrb_c19func_ov084_0212ab48Ev",
+      "count": 2,
+      "reason": "Retained flat bindings initialize the existing KrbFreeHandler descriptor union. Direct member-pointer globals, including const globals, add four descriptor-copy sequences and expand the retail initializer from 0x1fc to 0x23c. Follow-up: recover a member-pointer descriptor construction that retains the retail initializer.",
+      "evidence": "PR #3737 repair: pinned 2004/b56 direct and const member-pointer experiments; restored union with WALK targeting wrapper 0x0212b2dc passes production object preparation, all 36 relocated functions including the 0x1fc initializer, and full ROM build (106/106 modules exact)."
+    },
+    {
+      "path": "src/game/actors/d_a_krb.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daKrb_c19func_ov084_0212b2dcEv",
+      "count": 2,
+      "reason": "Retained flat bindings initialize the existing KrbFreeHandler descriptor union. Direct member-pointer globals, including const globals, add four descriptor-copy sequences and expand the retail initializer from 0x1fc to 0x23c. Follow-up: recover a member-pointer descriptor construction that retains the retail initializer.",
+      "evidence": "PR #3737 repair: pinned 2004/b56 direct and const member-pointer experiments; restored union with WALK targeting wrapper 0x0212b2dc passes production object preparation, all 36 relocated functions including the 0x1fc initializer, and full ROM build (106/106 modules exact)."
+    },
+    {
+      "path": "src/game/actors/d_a_krb.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daKrb_c19func_ov084_0212a6f8Ev",
+      "count": 2,
+      "reason": "Retained flat bindings initialize the existing KrbFreeHandler descriptor union. Direct member-pointer globals, including const globals, add four descriptor-copy sequences and expand the retail initializer from 0x1fc to 0x23c. Follow-up: recover a member-pointer descriptor construction that retains the retail initializer.",
+      "evidence": "PR #3737 repair: pinned 2004/b56 direct and const member-pointer experiments; restored union with WALK targeting wrapper 0x0212b2dc passes production object preparation, all 36 relocated functions including the 0x1fc initializer, and full ROM build (106/106 modules exact)."
     }
   ]
 }
