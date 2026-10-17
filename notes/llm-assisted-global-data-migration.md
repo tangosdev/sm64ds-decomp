@@ -13,13 +13,13 @@ storage layout. Pointer-target semantics and runtime tracing remain separate wor
 
 It builds on the repository design note:
 
-- [Global data migration — what it would take to source-build `.data` / `.rodata` / `.bss`](global-data-migration.md)
+- [Global data migration â€” what it would take to source-build `.data` / `.rodata` / `.bss`](global-data-migration.md)
 
 ## 1. The problem in plain language
 
 Think of the ROM as a LEGO model the project is rebuilding from instructions.
 
-The decompilation rewrites the game's **actions**—its functions—in C and C++.
+The decompilation rewrites the game's **actions**â€”its functionsâ€”in C and C++.
 Those functions also need stored values: variables, constants, strings, and lookup
 tables. Until each such object is migrated, its storage is supplied from the
 original ROM rather than generated from a source definition.
@@ -80,10 +80,10 @@ The underlying delinking format already accepts `.data`, `.rodata`, and `.bss` r
 
 ```text
 Compiled object
-├── .text    function code
-├── .rodata  constants
-├── .data    initialized writable data
-└── .bss     zero-initialized storage
+â”œâ”€â”€ .text    function code
+â”œâ”€â”€ .rodata  constants
+â”œâ”€â”€ .data    initialized writable data
+â””â”€â”€ .bss     zero-initialized storage
 ```
 
 `dsd` can carve those ranges out of gap objects, arrange the resulting sections in address order, and select the compiled object when the entry is marked `complete`.
@@ -342,6 +342,31 @@ The LLM can also recommend the next discriminating experiment. If two likely own
 
 ## 10. Per-object evidence reports
 
+For a whole-tree backlog, first run [tools/data_inventory.py](../tools/data_inventory.py):
+
+```sh
+python tools/data_inventory.py --json build/data-inventory.json --summary-json build/data-inventory-summary.json
+```
+
+It groups configured symbols by module and address, preserving aliases and unknown
+object sizes. Its section coverage also counts unnamed storage, so a symbol census
+cannot hide unclaimed prefixes or padding. Initialized storage and BSS are reported
+separately. Code labels, code-embedded data, and addresses outside configured sections
+remain separate categories. All ownership is declared configuration; no compiler or
+link proof is imported. The report contains no ROM bytes.
+
+Research groups combine a declared complete owner's entries with unowned entries
+having one identified source in the same module among resolved configured references.
+Cross-module consumers remain dependency evidence, not owner candidates. Other references
+may still be ambiguous or lack a source owner; the groups retain those counts.
+That second relationship is only a research lead, not a historical ownership decision. Shared users, conflicts,
+and unassigned addresses remain visible. In particular, a generated initializer
+file is a clue to a TU, not an acceptable destination for all data it constructs.
+Ambiguous overlay sets remain unresolved instead of becoming concrete pointer
+targets. Source mentions include comments and declarations and never count as
+definitions. Freeze the checkout while collecting; input hashes are rechecked but
+are not an atomic filesystem snapshot.
+
 Start a review with [tools/data_evidence.py](../tools/data_evidence.py):
 
 ```sh
@@ -382,6 +407,57 @@ each interpretation separately. Avoid unexplained decimal confidence scores.
 Use `not-run`, `pass`, or `fail` for verification; an inference label cannot stand
 in for a byte check. The full reviewed record is the target workflow, not a claim
 that the initial collector populates every field.
+
+### First researched group: ov047 cart resources
+
+Independent static/binary research on the PR #4015 source snapshot
+`62ebf5bbc03f406d09f384a784e57c0c397c24f8` established the following proposals.
+These readable names are reconstructions, not recovered Nintendo variable names.
+They have not yet replaced the configured symbols.
+
+| Configured symbol | Proposed descriptive name | Format and evidence |
+| --- | --- | --- |
+| `data_ov047_02112408` | `gKm3KurumaResources` | 12 bytes: model handle pointer, collision handle pointer, CLPS block pointer; raw pointer words, configured relocations, and the ov002 loader agree |
+| `data_ov047_02112638` | `gKm3KurumaModelFile` | 8-byte model handle; initializer supplies runtime asset handle 0x067f, resolving to NitroFS file 0x04d0 and the cart BMD |
+| `data_ov047_02112630` | `gKm3KurumaCollisionFile` | 8-byte collision handle; runtime handle 0x0680 resolves to NitroFS file 0x04d1 and the cart KCL |
+| `data_ov047_02111ab4` | `gKm3KurumaClps` | 8-byte CLPS header plus one 8-byte entry; semantic identity strong, historical TU owner unproven |
+
+The handle constructor at 0x02017e0c stores a resolved `u16` file ID at +0,
+a `u8` reference count at +2, and a 32-bit loaded-file pointer at +4; +3 is
+padding. These are runtime bookkeeping objects, not the BMD/KCL files themselves.
+The fieldless public SharedFilePtr declaration and local wrappers still need a
+consumer-wide layout audit before a shared-header change.
+
+The CLPS header contains magic `CLPS`, entry stride 8, and a likely entry count 1.
+The count interpretation is supported by the asset's 12 collision prisms all
+referencing entry 0; the game's lookup directly checks stride but does not read the
+count field. The entry at header+8 has two words, 0x00000fc0 and 0x000000ff.
+Its separate configured label is an interior address, not evidence for an
+independent 24-byte object. Sixteen following 0xff bytes remain padding/ownership
+research. The existing production map selects this block from a retail gap.
+Neither the descriptor's consumer relationship nor a coincident cross-overlay
+actor-table address establishes the block's historical owner.
+
+The complete catalog also identifies the existing compiler-generated RTTI,
+type-name, vtable, constructor-table entry, and two destructor-registration nodes,
+plus the already named spawn profile. The vtable's 136-byte storage starts at
+0x02112444; its public address point is 0x0211244c. The registration nodes are
+three pointers (next node, destructor, object), established by runtime routine
+0x020731dc. Preserve these ABI symbols and compiler generation instead of replacing
+them with arbitrary variable names.
+
+The ten declared addresses tile 252 bytes across `.ctor`, `.data`, and `.bss`
+without internal holes; this is catalog arithmetic, not a new compilation proof.
+The additional CLPS block and its interior entry bring the research catalog to
+12 records. Cross-module base-class RTTI is an external dependency and belongs
+with the base-class review, not with the cart's ownership expansion.
+
+The private research packet is `build/kuruma-research/research.json` in the resumed
+PR #4015 worktree; it retains disassembly, asset resolution, map references,
+confidence, and unresolved questions. Actual migration must update the source,
+symbol/configuration/manifest references, initializer machinery, and complete
+section claims coherently, then rerun full-TU and final-provider verification.
+No game-source changes are made by the inventory tooling.
 
 ### What establishes source-built accuracy
 
