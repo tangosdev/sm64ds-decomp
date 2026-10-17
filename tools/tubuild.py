@@ -1555,6 +1555,18 @@ def cmd_verify(args):
         upsert_manifest_entry(data, entry)
         save_manifest(data)
 
+    if getattr(args, "verdict", False):
+        state = "text-verified" if text_verified else "not-verified"
+        print(unit_verdict(
+            "tubuild.verify", entry["id"], state,
+            bytes=f"{n_match}/{len(rows)}",
+            missing=sum(1 for _o, _s, v in rows if v == "MISSING"),
+            relocs="ok" if all_reloc_ok else "fail",
+            order="ok" if not bad_pairs else "partial",
+            unlicensed=n_unlicensed, policy=len(policy_reasons),
+            promotable="yes" if (text_verified and not promotion_refused) else "no",
+            exit=0 if (text_verified and not promotion_refused) else 1))
+
     # A PROMOTION REFUSED is a failure of this command even when the bytes
     # reproduced. `text_verified` is deliberately NOT folded into: it drives the
     # manifest status above, and "the bytes match but the policy refuses the
@@ -1562,6 +1574,28 @@ def cmd_verify(args):
     # Before this, a refused promotion exited 0 and any caller trusting the exit
     # code shipped it.
     return 0 if (text_verified and not promotion_refused) else 1
+
+
+# ========================================================== one-line verdict
+
+VERDICT_PREFIX = "UNIT-VERDICT"
+
+
+def unit_verdict(tool, unit_id, result, **fields):
+    """The stable machine line `--verdict` appends: one line, space-separated
+    ``key=value`` pairs after a fixed prefix, keys in a fixed order per tool.
+
+    For callers that cannot parse a human report (tangOS Console scores a run by
+    a success pattern): match ``^UNIT-VERDICT `` and read ``result=``. The line is
+    printed only when the command reached a verdict; an exception, a compile
+    error or a missing manifest entry prints none, and the absence is itself the
+    failure. Values never contain spaces, so splitting on whitespace is safe.
+    Adding a key at the end is compatible; renaming or reordering one is not.
+    """
+    parts = [VERDICT_PREFIX, f"tool={tool}", f"id={unit_id}", f"result={result}"]
+    for key, value in fields.items():
+        parts.append(f"{key}={str(value).replace(' ', '_')}")
+    return " ".join(parts)
 
 
 # ========================================================== `linkcheck` -- scratch delinks
@@ -6696,6 +6730,9 @@ def main():
     p.add_argument("--no-write", action="store_true",
                    help="do not write the verification block back into the manifest "
                         "(sibling-control runs; the default still records it)")
+    p.add_argument("--verdict", action="store_true",
+                   help="append one stable `UNIT-VERDICT ...` line for machine callers; "
+                        "the report above it is unchanged")
     p.set_defaults(func=cmd_verify)
 
     p = sub.add_parser("partial", help="plan sec 9 -- derive one isolated object per "

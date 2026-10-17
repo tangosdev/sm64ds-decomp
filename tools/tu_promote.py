@@ -292,7 +292,20 @@ def main():
     ap.add_argument("ids", nargs="+", help="manifest entry id(s), e.g. ov045/PoleLift")
     ap.add_argument("--dry-run", action="store_true",
                     help="report what each promotion would touch and change nothing")
+    ap.add_argument("--verdict", action="store_true",
+                    help="append one stable `UNIT-VERDICT ...` line per id for machine "
+                         "callers (tubuild.unit_verdict); the report is unchanged")
     args = ap.parse_args()
+    verdicts = {}
+
+    def emit_verdicts(code):
+        if args.verdict:
+            for ident in args.ids:
+                result, fields = verdicts.get(ident, ("refused", {}))
+                print(TB.unit_verdict("tu_promote", ident, result,
+                                      **fields, dry_run="yes" if args.dry_run else "no",
+                                      exit=code))
+        return code
 
     data = TUM.load()
     by_id = {e["id"]: e for e in data["entries"]}
@@ -307,19 +320,26 @@ def main():
             entries.append(entry)
         except PromoteError as exc:
             refused.append(str(exc))
+            verdicts[ident] = ("refused", {"reason": _verdict_reason(str(exc))})
 
     for why in refused:
         print(f"  refused  {why}")
     if refused or not plans:
         print("tu_promote: nothing to promote.")
-        return 1 if refused else 0
+        return emit_verdicts(1 if refused else 0)
 
     try:
         batch_preflight(plans)
     except PromoteError as exc:
         print(f"  refused  {exc}")
         print("tu_promote: nothing to promote.")
-        return 1
+        for p in plans:
+            verdicts[p["id"]] = ("refused", {"reason": "batch-preflight"})
+        return emit_verdicts(1)
+    for p in plans:
+        verdicts[p["id"]] = ("ready" if args.dry_run else "promoted",
+                             {"functions": len(p["functions"]), "legacy": len(p["legacy"]),
+                              "dest": p["dest"]})
 
     for p in plans:
         print(f"  promote  {p['id']:38s} {len(p['functions'])} function(s), "
@@ -328,12 +348,14 @@ def main():
         converted_update = converted_baseline_update(plans)
     except PromoteError as exc:
         print(f"  refused  {exc}")
-        return 1
+        for p in plans:
+            verdicts[p["id"]] = ("refused", {"reason": "converted-baseline"})
+        return emit_verdicts(1)
     if args.dry_run:
         print(f"tu_promote: {len(plans)} entry(ies) would be promoted and "
               f"{converted_update[2]} CONVERTED member identity/identities retained "
               "(dry run).")
-        return 0
+        return emit_verdicts(0)
 
     for p, entry in zip(plans, entries):
         rewrite_delinks(p)
@@ -353,7 +375,25 @@ def main():
           f"{plans[0]['module']} -j16 --clean`, then run "
           "`python tools/rombuild.py -j16` -- 106/106, mismatching 0, zero new "
           "symbol errors, exact address points, and a stock-identical ROM are the proof.")
-    return 1 if refused else 0
+    return emit_verdicts(1 if refused else 0)
+
+
+def _verdict_reason(text):
+    """A refusal message reduced to a short, space-free verdict token."""
+    for key, token in (("already promoted", "already-promoted"),
+                       ("is not on disk", "source-missing"),
+                       ("already exists", "destination-exists"),
+                       ("no legacy_source", "no-legacy-source"),
+                       ("non-text data", "owns-non-text"),
+                       ("exactly one .text", "text-spans"),
+                       ("outside the manifest", "outside-span"),
+                       ("not safe to splice", "delinks-splice"),
+                       ("no such manifest entry", "no-entry"),
+                       ("expected src_tu/", "source-not-src_tu"),
+                       ("linker command file", "unlinkable-name")):
+        if key in text:
+            return token
+    return "other"
 
 
 if __name__ == "__main__":
