@@ -13,13 +13,13 @@ storage layout. Pointer-target semantics and runtime tracing remain separate wor
 
 It builds on the repository design note:
 
-- [Global data migration â€” what it would take to source-build `.data` / `.rodata` / `.bss`](global-data-migration.md)
+- [Global data migration — what it would take to source-build `.data` / `.rodata` / `.bss`](global-data-migration.md)
 
 ## 1. The problem in plain language
 
 Think of the ROM as a LEGO model the project is rebuilding from instructions.
 
-The decompilation rewrites the game's **actions**â€”its functionsâ€”in C and C++.
+The decompilation rewrites the game's **actions**—its functions—in C and C++.
 Those functions also need stored values: variables, constants, strings, and lookup
 tables. Until each such object is migrated, its storage is supplied from the
 original ROM rather than generated from a source definition.
@@ -80,10 +80,10 @@ The underlying delinking format already accepts `.data`, `.rodata`, and `.bss` r
 
 ```text
 Compiled object
-â”œâ”€â”€ .text    function code
-â”œâ”€â”€ .rodata  constants
-â”œâ”€â”€ .data    initialized writable data
-â””â”€â”€ .bss     zero-initialized storage
+├── .text    function code
+├── .rodata  constants
+├── .data    initialized writable data
+└── .bss     zero-initialized storage
 ```
 
 `dsd` can carve those ranges out of gap objects, arrange the resulting sections in address order, and select the compiled object when the entry is marked `complete`.
