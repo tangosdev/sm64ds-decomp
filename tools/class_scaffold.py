@@ -595,7 +595,15 @@ def scalar_fix12_mangling(sym):
     """
     if "5Fix12IiE" not in sym or re.search(r"S\d*_", sym.split("5Fix12IiE", 1)[1]):
         return None
-    return sym.replace("5Fix12IiE", "i")
+    original = DM.demangle(sym)
+    if not original or "Fix12<int>" not in original["args"]:
+        return None
+    candidate = sym.replace("5Fix12IiE", "i")
+    parsed = DM.demangle(candidate)
+    expected = ["int" if arg == "Fix12<int>" else arg for arg in original["args"]]
+    if not parsed or parsed["qualified"] != original["qualified"] or parsed["args"] != expected:
+        return None
+    return candidate
 
 
 def fix12_wall_note(sym):
@@ -606,7 +614,8 @@ def fix12_wall_note(sym):
     and a caller handing one to a class-typed declaration pays as well (0x70);
     the same member with a scalar parameter matches under the scalar mangling.
     """
-    if "5Fix12IiE" not in sym:
+    parsed = DM.demangle(sym)
+    if not parsed or "Fix12<int>" not in parsed["args"]:
         return []
     alt = scalar_fix12_mangling(sym)
     out = ["/* WALL 6az (notes/mwccarm-codegen.md): Fix12<int> by value. A body that reads it",

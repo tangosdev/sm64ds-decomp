@@ -85,3 +85,18 @@ def test_scaffold_output_passes_the_source_style_patterns():
         if name == "dExtAnm2Model_c":
             tu = next(t for p, t in plan["files"].items() if p.endswith(".cpp"))
             assert "WALL 6az" in tu and "_ZN10ModelAnim213Func_020162C4Ejiit" in tu
+
+
+@pytest.mark.parametrize("param", ["R5Fix12IiE", "RK5Fix12IiE", "P5Fix12IiE"])
+def test_fix12_reference_and_pointer_parameters_do_not_hit_the_value_wall(param):
+    import class_scaffold as CS
+    symbol = "_ZN7daBar_c4TestE" + param
+    assert CS.scalar_fix12_mangling(symbol) is None
+    assert CS.fix12_wall_note(symbol) == []
+
+
+def test_fix12_scalar_suggestion_never_retypes_a_reference_in_a_mixed_signature():
+    import class_scaffold as CS
+    symbol = "_ZN7daBar_c4TestER5Fix12IiE5Fix12IiE"
+    assert CS.scalar_fix12_mangling(symbol) is None
+    assert "Ask tools/mangle.py" in "\n".join(CS.fix12_wall_note(symbol))
