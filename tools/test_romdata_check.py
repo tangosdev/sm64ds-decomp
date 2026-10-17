@@ -1,4 +1,4 @@
-"""summarize() counts ROM data symbols, not compiled object records.
+"""Data-symbol byte coverage, extent boundaries, and summary identities.
 
 The distinction is the whole reason this file exists. Vague linkage means one
 cartridge symbol is emitted by every object that needs it, so a record count rises
@@ -96,7 +96,112 @@ class SummarizeCountsSymbols(unittest.TestCase):
         self.assertEqual((s["symbols"], s["verified"], s["differs"], s["totalRecords"]),
                          (0, 0, 0, 0))
 
-import unittest.mock  # noqa: E402  (used by the preamble-gate tests below)
+import unittest.mock  # noqa: E402  (used by the data and preamble tests below)
+
+
+class DataSymbolByteCoverage(unittest.TestCase):
+    """Exercise verdicts with real relocation resolution and controlled ROM bytes."""
+
+    def check(self, emitted, retail, *, extent, relocs=(), name="data_table"):
+        elf = unittest.mock.Mock()
+        elf.get_section.return_value.data.return_value = b"prefix" + emitted + b"suffix"
+        with (unittest.mock.patch.object(RDC, "ELFFile", return_value=elf),
+              unittest.mock.patch.object(RDC.RA, "resolve_candidate",
+                                         return_value=("arm9", 0x200)),
+              unittest.mock.patch.object(RDC, "rom_data_index",
+                                         return_value={("arm9", name): (0x200, extent)}),
+              unittest.mock.patch.object(RDC.LC, "func_relocs_typed",
+                                         return_value=[dict(r) for r in relocs]),
+              unittest.mock.patch.object(RDC.RV, "rom_bytes", return_value=retail)):
+            return RDC.verify_data_symbol(b"object", name, 1, 6, len(emitted), names={})
+
+    @staticmethod
+    def relocation(offset, address=None, kind=RDC.LC.R_ARM_ABS32):
+        return {"off": offset, "addr": address, "type": kind, "add": 0,
+                "sym": "referenced_data"}
+
+    def test_equal_short_objects_and_tails_are_fully_counted(self):
+        for size in (1, 2, 3, 4, 5, 6, 7):
+            with self.subTest(size=size):
+                body = bytes(range(size))
+                result = self.check(body, body, extent=size)
+                self.assertEqual(result["verdict"], RDC.VERIFIED)
+                self.assertEqual(result["bytes"], size)
+                self.assertEqual(result["blindWords"], 0)
+
+    def test_a_difference_in_any_tail_byte_is_detected(self):
+        for size in (1, 2, 3, 5, 6, 7):
+            for offset in range(size & ~3, size):
+                with self.subTest(size=size, offset=offset):
+                    retail = bytes(size)
+                    body = bytearray(retail)
+                    body[offset] = 1
+                    result = self.check(body, retail, extent=size)
+                    self.assertEqual(result["verdict"], RDC.DIFFERS)
+                    self.assertEqual(result["bytes"], size)
+                    self.assertEqual(result["differingBytes"], 1)
+
+    def test_differing_bytes_counts_bytes_not_words(self):
+        result = self.check(b"aXcdYfZ", b"abcdefg", extent=7)
+        self.assertEqual(result["verdict"], RDC.DIFFERS)
+        self.assertEqual(result["differingBytes"], 3)
+
+    def test_blind_relocation_masks_the_entire_short_tail(self):
+        for size in (5, 6, 7):
+            with self.subTest(size=size):
+                result = self.check(b"abcd" + b"X" * (size - 4),
+                                    b"abcd" + b"Y" * (size - 4), extent=size,
+                                    relocs=[self.relocation(4)])
+                self.assertEqual(result["verdict"], RDC.PARTIAL)
+                self.assertEqual(result["bytes"], 4)
+                self.assertEqual(result["blindWords"], 1)
+
+    def test_unsupported_relocation_also_masks_the_short_tail(self):
+        result = self.check(b"abcdXXX", b"abcdYYY", extent=7,
+                            relocs=[self.relocation(4, 0x1234, kind=255)])
+        self.assertEqual(result["verdict"], RDC.PARTIAL)
+        self.assertEqual(result["bytes"], 4)
+
+    def test_a_blind_word_does_not_hide_a_later_tail_difference(self):
+        result = self.check(b"XXXXabX", b"YYYYabc", extent=7,
+                            relocs=[self.relocation(0)])
+        self.assertEqual(result["verdict"], RDC.DIFFERS)
+        self.assertEqual(result["bytes"], 3)
+        self.assertEqual(result["differingBytes"], 1)
+
+    def test_an_entirely_blind_short_object_is_not_verified(self):
+        result = self.check(b"XXX", b"YYY", extent=3,
+                            relocs=[self.relocation(0)])
+        self.assertEqual(result["verdict"], RDC.PARTIAL)
+        self.assertEqual(result["bytes"], 0)
+
+    def test_equal_bytes_need_a_known_fully_covered_extent(self):
+        for extent in (None, 8):
+            with self.subTest(extent=extent):
+                result = self.check(b"abcdefg", b"abcdefg", extent=extent)
+                self.assertEqual(result["verdict"], RDC.PARTIAL)
+                self.assertEqual(result["bytes"], 7)
+
+    def test_resolved_pointer_and_tail_are_compared_together(self):
+        result = self.check(b"\0\0\0\0abc", b"\x78\x56\x34\x12abc", extent=7,
+                            relocs=[self.relocation(0, 0x12345678)])
+        self.assertEqual(result["verdict"], RDC.VERIFIED)
+        self.assertEqual(result["bytes"], 7)
+
+    def test_vtable_preamble_mask_is_trimmed_before_comparing_tail(self):
+        result = self.check(b"XXXXXXXXabcdX", b"abcde", extent=5,
+                            name="_ZTV3Foo", relocs=[self.relocation(4)])
+        self.assertEqual(result["verdict"], RDC.DIFFERS)
+        self.assertEqual(result["bytes"], 5)
+        self.assertEqual(result["blindWords"], 0)
+        self.assertEqual(result["differingBytes"], 1)
+
+    def test_vtable_slot_mask_is_rebased_after_the_preamble(self):
+        result = self.check(b"XXXXXXXXXXXXabc", b"YYYYabc", extent=7,
+                            name="_ZTV3Foo", relocs=[self.relocation(8)])
+        self.assertEqual(result["verdict"], RDC.PARTIAL)
+        self.assertEqual(result["bytes"], 3)
+        self.assertEqual(result["blindWords"], 1)
 
 
 class ExtentStopsAtTheVtablePreamble(unittest.TestCase):

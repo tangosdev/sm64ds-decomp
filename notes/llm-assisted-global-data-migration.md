@@ -2,6 +2,14 @@
 
 This note explains the global-data migration problem in `sm64ds-decomp` and proposes a practical way to use static analysis, LLM inference, and runtime ROM instrumentation to reconstruct likely global ownership.
 
+**Status, 2026-10-17:** the counts and initial tooling restrictions below describe
+the [2026-08-14 design snapshot](global-data-migration.md), not current migration
+coverage. Source-built data and promoted TUs have since changed that starting
+point. [The evidence collector](../tools/data_evidence.py) implements the first
+static evidence packet described here. It does not establish semantic identity,
+historical ownership, or a successful compiled-data comparison. Linked-artifact
+provenance checks and runtime tracing remain follow-up work.
+
 It builds on the repository design note:
 
 - [Global data migration — what it would take to source-build `.data` / `.rodata` / `.bss`](global-data-migration.md)
@@ -10,7 +18,10 @@ It builds on the repository design note:
 
 Think of the ROM as a LEGO model the project is rebuilding from instructions.
 
-The decompilation has rewritten most of the game's **actions**—its functions—in C and C++. However, almost all global objects, variables, constants, strings, and lookup tables are still supplied as pieces copied from the original ROM.
+The decompilation rewrites the game's **actions**—its functions—in C and C++.
+Those functions also need stored values: variables, constants, strings, and lookup
+tables. Until each such object is migrated, its storage is supplied from the
+original ROM rather than generated from a source definition.
 
 For example, reconstructed code may contain:
 
@@ -18,7 +29,9 @@ For example, reconstructed code may contain:
 extern int playerLives;
 ```
 
-This does not create `playerLives`. It promises the linker that some other object will provide it. Today, that other object is generally a generated gap object containing content delinked from the original ROM.
+This does not create `playerLives`. It promises the linker that some other object
+will provide it. For an unmigrated global, that provider is generally a generated
+gap object containing content delinked from the original ROM.
 
 Conceptually:
 
@@ -29,15 +42,16 @@ Functions                        Global storage
 References to globals  ------->  Data and BSS symbols
 ```
 
-Consequently, the project can reconstruct most executable functions while still source-building approximately none of the global data.
+Consequently, reconstructing a function does not itself reconstruct the data that
+function uses.
 
-The scale is significant:
+The original 2026-08-14 inventory counted:
 
 - 11,394 function symbols
 - 15,409 initialized or read-only data symbols
 - 4,973 BSS symbols
 
-There are more unmigrated global-data symbols than function symbols.
+These are historical symbol counts, not a current count of unmigrated objects.
 
 ## 2. What migrating a global means
 
@@ -73,20 +87,24 @@ Compiled object
 
 `dsd` can carve those ranges out of gap objects, arrange the resulting sections in address order, and select the compiled object when the entry is marked `complete`.
 
-No new `delinks.txt` schema is required for ordinary `.data`, `.rodata`, or `.bss`. The repository's own enrollment, eligibility, isolation, verification, and reporting tools are the blockers.
+No new `delinks.txt` schema is required for ordinary `.data`, `.rodata`, or `.bss`.
+The original design identified enrollment, eligibility, isolation, verification,
+and reporting as the integration work needed around that support.
 
-## 4. Why the repository tooling currently rejects globals
+## 4. Historical tooling restrictions and the enduring contract
 
-The safety tooling presently assumes that a reconstructed object contains exactly one function and no global data:
+At the original design snapshot, the function-oriented tooling imposed these
+restrictions; inspect the current implementation before treating one as a blocker:
 
-- `enroll.py` only produces function candidates and emits one section range per entry.
-- `eligible.py` expects exactly one `.text` content section and one global function symbol.
-- `objisolate.py` preserves the selected function while discarding other sections.
-- `check_data_definitions.py` correctly rejects definitions that would conflict with gap-object symbols.
-- Reporting attributes reconstructed coverage to functions rather than global data.
-- Data and BSS symbols do not currently carry explicit sizes.
+- `enroll.py` only produced function candidates and emitted one section range per entry.
+- `eligible.py` expected exactly one `.text` content section and one global function symbol.
+- `objisolate.py` preserved the selected function while discarding other sections.
+- `check_data_definitions.py` rejected definitions that would conflict with gap-object symbols.
+- Reporting attributed reconstructed coverage to functions rather than global data.
+- Data and BSS symbols lacked explicit sizes.
 
-These restrictions protect the layout from silent shifts. They should not be disabled. They should be generalized from:
+These restrictions protected the layout from silent shifts. The enduring
+requirement is to generalize the license from:
 
 > A source object contains exactly one declared function.
 
@@ -117,13 +135,16 @@ Initialized `.data` is harder because it may contain both literal values and rel
 
 ### 5.2 The BSS size problem
 
-Data and BSS entries in `symbols.txt` provide addresses but not sizes. The distance to the next symbol gives an implied stride:
+An address-only data or BSS entry in `symbols.txt` does not establish object size.
+The next distinct symbol address or section end gives a candidate boundary:
 
 ```text
-implied stride = next symbol address - current symbol address
+boundary span = next boundary address - current symbol address
 ```
 
-That stride is not necessarily the variable's historical C++ size. For example:
+That span is an upper bound under the assumption of separate, non-overlapping
+objects; aliases and interior labels require review. It is not necessarily the
+variable's historical C++ size. For example:
 
 ```text
 symbol A starts at 0x1000
@@ -133,6 +154,12 @@ symbol B starts at 0x1004
 The original source might have defined a two-byte `short` followed by two bytes of padding. Defining only a `short` could make the compiler emit a two-byte contribution and shift every following BSS symbol.
 
 Matching the ROM may initially require an explicitly padded representation, with the uncertainty documented rather than hidden.
+
+Keep the boundary span, any explicitly supplied inspection range, and the
+evidence for the actual object size separate. Access widths and offsets, array
+indexing, constructor behavior, and compiler-emitted symbol sizes can strengthen
+the size claim. Supplying `--size` to the collector selects bytes to inspect; it
+does not prove that the selected extent was one original object.
 
 ## 6. The ownership problem
 
@@ -160,6 +187,10 @@ The project should distinguish three questions:
 3. **Historical ownership:** Which original translation unit probably defined it?
 
 The first can often be proven. The second and third may remain probabilistic.
+Track a proposed descriptive name separately from the type and owner. A useful
+name such as `identityQuaternion` need not be Nintendo's original identifier.
+Likewise, a current delinks owner is a build-configuration fact, not proof of the
+historical source file or of the object actually selected by a completed link.
 
 ## 7. Why LLM-assisted inference is promising
 
@@ -188,15 +219,22 @@ An evidence-ranking system might treat signals approximately as follows:
 | --- | --- |
 | Hard constraint | The symbol and proposed owner are compatible with the same module or overlay |
 | Very strong | Its constructor is called by a `__sinit` routine associated with the reconstructed TU |
-| Very strong | Most independent static references come from functions clustered into one TU |
+| Strong | Independent binary references cluster in one well-supported TU; shared users have been considered |
 | Strong | Constructor or destructor calls reveal the likely class type |
-| Strong | Runtime access is exclusive to one subsystem or actor family |
+| Supporting | Observed runtime accesses cluster in one subsystem across contrasting scenarios |
 | Medium | Nearby globals form a coherent layout and behavior cluster |
 | Medium | Initialization and destruction timing matches the candidate subsystem |
 | Weak | The nearest reconstructed function references it |
 | Very weak | The symbol is merely physically close to a function in the linked image |
 
 No single weak signal should decide ownership.
+
+Configured relocations describe known pointer relationships, including their
+target offsets; they are not a complete record of CPU reads and writes. Source
+text matches may be declarations, comments, or aliases. Label both evidence kinds
+explicitly and do not count repeated mentions as independent behavioral evidence.
+Use module-qualified identities throughout: different overlays can occupy the
+same RAM address, and a symbol name or numeric address alone can be ambiguous.
 
 ## 8. `__sinit` is a clue, not the destination file
 
@@ -225,6 +263,11 @@ __sinit routine
 ```
 
 The globals should not simply be left in the artificial `__sinit` source file.
+Constructor calls also distinguish an object's initial storage from its later
+contents. An eight-byte resource handle may begin as zeroed BSS and receive its
+file ID during initialization; the handle is bookkeeping for a model or animation
+file, not the asset file itself. Preserve construction order, destructor
+registration, and relocation targets when rebuilding this behavior.
 
 ## 9. Runtime instrumentation
 
@@ -284,7 +327,7 @@ Tracing every memory access for an entire playthrough would create excessive noi
 4. Summarize the resulting traces deterministically.
 5. Ask the LLM which hypothesis best explains the observations.
 
-For an daMoray_c-related candidate, contrasting experiments might include:
+For a daMoray_c-related candidate, contrasting experiments might include:
 
 ```text
 Run A: Enter the stage without spawning daMoray_c
@@ -296,84 +339,117 @@ Run E: Leave and reload the stage
 
 The LLM can also recommend the next discriminating experiment. If two likely owners are `d_a_moray.cpp` and a shared water-enemy resource TU, running another water enemy without daMoray_c may separate the hypotheses.
 
-## 10. Proposed ownership manifest
+## 10. Per-object evidence reports
 
-Inferred ownership should be recorded before definitions are moved. A machine-readable manifest can preserve the reasoning:
+Start a review with [tools/data_evidence.py](../tools/data_evidence.py):
 
-```yaml
-symbol: data_ov016_02114d4c
-module: ov016
-address: 0x02114d4c
-inferred_stride: 0x0c
-
-candidate_owners:
-  - tu: d_a_moray.cpp
-    confidence: 0.91
-    evidence:
-      - constructed by __sinit_ov016_02114c20
-      - constructor appears to be UnagiResources::UnagiResources
-      - 8 of 9 static references belong to the daMoray_c TU cluster
-      - runtime writes occur during daMoray_c::InitResources
-      - runtime reads occur only while daMoray_c actors are active
-    contradictions:
-      - one reference from shared actor-resource cleanup
-
-inferred_type:
-  candidate: UnagiResources
-  confidence: 0.78
-
-status: proposed
+```sh
+python tools/data_evidence.py --symbol data_02075b04 --module arm9
+python tools/data_evidence.py --symbol data_02075b04 --module arm9 --size 0x10 --json build/quaternion-evidence.json
+python tools/data_evidence.py --symbol data_02075b04 --no-rom
 ```
 
-Useful status categories include:
+Repeat `--symbol` for several objects. Use `--module` to disambiguate a name;
+`--no-rom` produces metadata-only evidence when extracted ROM inputs are absent.
+The default output is human-readable; `--json` also writes a structured report.
+An explicit `--size` applies to a single `--symbol` only.
 
-- `confirmed`: supported by surviving explicit metadata
-- `high-confidence`: several independent signals agree
-- `probable`: best current explanation, but alternatives remain
-- `mechanical-only`: address and size are established; ownership is unknown
+The collector reports configured symbols and section boundaries, incoming and
+outgoing configured relocation references with modules and offsets, source text
+references, declared delinks owners, and manifest references. When ROM bytes are
+available, it adds hashes of the inspected ranges and small word previews. A
+boundary-derived range is labeled as such, not presented as a recovered type size.
+The collector does not infer a type, rename a symbol, select a historical owner,
+trace accesses, or compare a compiled object against the ROM. Compiled proof
+remains `not-run`, even if a manifest records an earlier successful check.
 
-This format makes inferred claims reviewable instead of silently presenting them as facts.
+Keep the generated observations with a reviewed record for each object:
 
-## 11. Suggested inference workflow
+| Record | Required distinction |
+| --- | --- |
+| Identity | Module/overlay, address, configured symbol, section |
+| Extent | Candidate boundary, inspected range, proposed object size/alignment, and the evidence for each |
+| Contents | Original bytes/range hash and pointer targets plus addends; BSS has no stored initializer bytes |
+| References | Configured relocations, source mentions, decoded binary accesses, and runtime observations are separate categories |
+| Placement | Configured owner, actual linked provider, and proposed historical owner are separate claims |
+| Interpretation | Type, descriptive name, and historical owner each have evidence, alternatives, contradictions, and uncertainty |
+| Reproducibility | Exact source commit, dirty-tree status or patch fingerprint, tool/compiler versions, ROM version and input fingerprints |
+| Verification | Each check's status, command, exact tested commit, and retained output/artifact |
 
-### Phase 1: Establish hard safety gates
+Use `confirmed by metadata`, `strong inference`, `tentative`, or `unknown` for
+each interpretation separately. Avoid unexplained decimal confidence scores.
+Use `not-run`, `pass`, or `fail` for verification; an inference label cannot stand
+in for a byte check. The full reviewed record is the target workflow, not a claim
+that the initial collector populates every field.
 
-1. Wire `dsd check symbols --fail` into the ROM build.
-2. Add a deliberately mis-sized BSS negative control and confirm that verification fails.
-3. Ensure module image comparison, symbol-address verification, and section eligibility remain separate gates.
+### What establishes source-built accuracy
 
-### Phase 2: Build the static evidence database
+A matching final image can still contain the original gap bytes. Verification
+must establish that the new source definition actually supplied the linked range.
+The future provenance checker should follow the selected compiled object and
+section through the linker map/selection artifacts, reject a gap-object fallback,
+and retain that evidence beside the comparison result.
 
-1. Parse all data and BSS symbols, addresses, sections, and implied strides.
-2. Extract every relocation and code reference to each global.
-3. Import reconstructed TU candidates from `tu_map` data.
-4. Extract `__sinit` construction groups and inferred constructor types.
-5. Record adjacency, module, overlay, vtable, registration, and resource relationships.
+For initialized data, compare the complete affected linked bytes after relocation:
+values, pointers, ordering, alignment, padding, and section tails. Check the
+module-qualified relocation destination and addend as well as the numeric word;
+overlay address reuse can hide a wrong destination. Report compared extents and
+lengths explicitly so an unchecked trailing range cannot disappear behind a pass.
 
-This can be modeled as a graph containing symbol, function, type, initializer, module, overlay, and candidate-TU nodes.
+For BSS, matching ROM file bytes is insufficient because the reserved zeroed
+storage is not stored as initialized bytes. Check its linked address, size,
+alignment, section extent, neighboring boundaries, and zero-initialization
+contract. Constructor code, constructor pointers, and destructor registrations
+need their own byte and relocation proof where they initialize these objects.
 
-### Phase 3: Add targeted runtime tracing
+Bind every proof to the exact candidate commit and ROM/module fingerprints. A
+report from an older PR revision is historical evidence, not a pass for the
+current head. ROM-range hashes describe the input; by themselves they prove
+nothing about newly compiled output or original source ownership.
 
-1. Add address-range watch instrumentation to an emulator build.
-2. Map PCs back to the decomp's function-symbol database.
-3. Record active overlays and scenario metadata.
-4. Produce compact per-symbol access summaries rather than sending raw traces directly to the LLM.
+## 11. Implementation phases
 
-### Phase 4: Rank and review ownership
+### Phase 1: Collect static evidence (initial collector)
 
-1. Generate focused evidence packets for a small symbol batch.
-2. Ask the LLM for ranked owners, type hypotheses, contradictions, confidence, and a next experiment.
-3. Review the first 50–100 symbols manually.
-4. Measure agreement and identify consistently misleading signals.
-5. Refine deterministic scores and LLM prompts before scaling.
+Use the collector above for a small batch and review the reported boundaries,
+configured relationships, text references, and ROM ranges. Preserve missing or
+ambiguous evidence explicitly. Current configuration and manifest claims must
+remain distinguishable from independently measured binary facts.
 
-### Phase 5: Drive source migration
+### Phase 2: Establish linked provenance and complete comparisons (remaining)
 
-1. Generalize `eligible.py`, `objisolate.py`, and the licensed-definition checks.
-2. Teach enrollment to emit several declared section ranges per reconstructed TU.
-3. Start with the mechanically safe one-symbol BSS pilot.
-4. Gradually migrate high-confidence TU clusters.
-5. Keep mechanically correct but historically uncertain definitions explicitly labeled.
+1. Add actual compiled-object/link-map provenance, including rejection of ROM gap
+   fallback for a claimed migrated range.
+2. Integrate symbol-address checks, relocated byte comparisons, pointer-target
+   checks, and the BSS checks above; retain separate results and artifacts.
+3. Add negative controls: wrong pointer destination, changed tail byte,
+   mis-sized BSS, and an unchanged final image supplied by a gap object. Each
+   must fail the relevant check before a migration claim relies on it.
+4. Verify both individual licensed ranges and affected module extents, recording
+   any exclusions and the exact tested source/input fingerprints.
+
+### Phase 3: Enrich identity and ownership evidence (remaining)
+
+Decode binary accesses and array strides; connect constructor/destructor groups,
+resource IDs and paths, RTTI/vtables, and existing TU candidates. Review a small
+sample manually before scaling. Propose separate types, names, and owners with
+contradictions and the next useful experiment. Existing reconstructed names and
+comments are leads, not independent confirmation of themselves.
+
+### Phase 4: Add targeted runtime experiments (remaining)
+
+Implement the address watches and controlled scenarios in section 9. Record the
+active overlay, scenario, PCs, access widths, and relevant values; include
+interrupt/DMA coverage or its absence. Use traces to discriminate hypotheses,
+not to assert that unobserved accesses never happen.
+
+### Phase 5: Migrate reviewed objects and retain uncertainty
+
+Move definitions in coherent TU groups using the current production build path.
+Run the applicable byte, relocation, declaration, and reference checks at the
+candidate head; retain the per-object evidence beside the PR's proof. Keep a
+mechanically verified object marked historically uncertain when ownership is
+still an inference. Tooling and source migrations belong in separate PRs.
 
 ## 12. Limitations
 
@@ -389,10 +465,6 @@ Runtime and LLM inference cannot restore information that no longer exists with 
 
 The system should therefore preserve uncertainty and evidence rather than forcing every symbol into a supposedly definitive owner.
 
-## 13. Bottom line
-
-The project currently rebuilds the game's instructions while copying almost all global state and constants from the original ROM. The underlying delinker already supports replacing those copied ranges with source-built sections. The primary blockers are repository safety tooling, missing sizes, compiler section behavior, and uncertainty about original translation-unit ownership.
-
-An LLM-assisted approach is promising because ownership is a multi-signal inference problem. Static references, TU reconstruction, constructors, `__sinit` groups, runtime memory accesses, overlay context, and controlled experiments can be combined into explainable ownership rankings.
-
-The hard linker rules must remain deterministic. The LLM should interpret semantics, rank candidates, identify contradictions, and propose additional experiments. Done this way, global-data migration becomes both a source-reconstruction project and an evidence-backed research pipeline rather than a mass relocation of `extern` declarations.
+The collector is the starting point for that review. Deterministic build checks
+establish source provenance and layout accuracy; human and LLM review can assess
+meaning, rank ownership hypotheses, and choose the next discriminating experiment.
