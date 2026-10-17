@@ -15,7 +15,7 @@ This document describes this commit, including the final formatter correction.
 
 ## What changed and why
 
-The boot-only initializer moved from `src/unnamed/ov000/func_ov000_020aa420.c`
+The boot-only initializer, formerly named `func_ov000_020aa420`, moved
 to `src/runtime/filesystem/InitializeAssetHandleTable.c`. Its symbol and filename
 are descriptive names, not recovered Nintendo identifiers. The source remains
 enrolled in overlay 0 at `[0x020aa420, 0x020aa4c8)` (0xa8 bytes).
