@@ -442,7 +442,11 @@ class DraftClassificationIntegration(unittest.TestCase):
     def test_check_file_carries_sizes_and_keeps_sibling_missing_symbol_hard(self):
         self.compiled.return_value = _draft_object()
         idx = {name: [(self.ADDR, 8, "arm9")] for name in ("wanted", "missing")}
-        with mock.patch.object(self.PL.SP, "symbols_for", return_value=list(idx)):
+        # This fixture exercises the legacy draft path, not ROM-backed production
+        # admission. Keep its fake source independent of private checkout inputs.
+        with mock.patch.object(self.PL.SP, "symbols_for", return_value=list(idx)), \
+                mock.patch.object(self.PL, "_production_context",
+                                  return_value={"intact": {}, "compiler_only": {}}):
             rep = self.PL.check_file("src/draft.cpp", idx, {})
         self.assertEqual([r["verdict"] for r in rep["results"]], ["NO-REPRO", "NO-SYM"])
         self.assertEqual(rep["results"][0]["emitted_sizes"], [4])
