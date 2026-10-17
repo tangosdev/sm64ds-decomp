@@ -304,6 +304,22 @@
       "count": 1,
       "reason": "Inherited score field access in absorbed helper 0211621c; ROM loads the base score at offset 0x1d4 then adds the per-player delta. The cross-overlay global layout is not yet reconstructed. Follow-up: recover its owning arm9 type and verify all consumers before substituting a shared field.",
       "evidence": "Original helpers at main 67bf07b, ov075 02116128..021165b0; retained 15-function entry TU strictly verified in 6f196502, full 106/106 module proof. Formatting preserves complete raw ELF; follow-up scope recorded in overlay-functions1016 handoff."
+    },
+    {
+      "path": "src/engine/model/ModelAnim2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15dExtFrameCtrl_c12SetAnimationEti5Fix12IiEt",
+      "count": 2,
+      "reason": "Func_020162C4 calls dExtFrameCtrl_c::SetAnimation, which takes Fix12<int> speed by value; a by-value Fix12 argument costs the caller too (wall 6az, notes/mwccarm-codegen.md, CORRECTED 2026-09-23). One occurrence is the local extern \"C\" declaration, one the call. The same bridge is already used by ModelAnim.cpp and BlendModelAnim.cpp. Follow-up: rename SetAnimation to its scalar mangling across its callers, or retire it with the other Fix12-by-value walls.",
+      "evidence": "Measured on 2004/b56 at arm9 0x020162c4 (target 0x5c): calling otherAnim.SetAnimation(..., *(Fix12<int> *)&speed, ...) through dExtFrameCtrl_c.h gives 0x70; the extern \"C\" scalar call reproduces 0x5c. arm9/ModelAnim2 4/4 TEXT-VERIFIED and LINK-VERIFIED."
+    },
+    {
+      "path": "src/engine/model/ModelAnim2.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt",
+      "count": 1,
+      "reason": "Definition of ModelAnim2::Func_020162C4 under its existing Fix12<int> mangling, as an extern \"C\" function with a scalar speed (wall 6az): the body reads speed twice, and a class-typed parameter is homed per use. include/ModelAnim2.h carries the real member declaration. Follow-up: rename the symbol to its scalar mangling _ZN10ModelAnim213Func_020162C4Ejiit, which matches as a real member, once Player.cpp's four extern call sites move to the member call.",
+      "evidence": "Measured on 2004/b56 at arm9 0x020162c4 (target 0x5c): a real member with Fix12<int> speed gives 0x6c; a real member with Fix12i speed (mangles _ZN10ModelAnim213Func_020162C4Ejiit) reproduces 0x5c exactly; the extern \"C\" definition reproduces 0x5c. Carried from the absorbed one-function source."
     }
   ]
 }

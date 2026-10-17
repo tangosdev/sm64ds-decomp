@@ -28,18 +28,18 @@ void _ZN15dExtFrameCtrl_c12SetAnimationEti5Fix12IiEt(dExtFrameCtrl_c *self, u16 
 void func_02045e2c(int obj, int i, int a, int b);
 }
 
-/* Only the header word Func_020162C4 reads. */
+/* Only the header word Func_020162C4 reads; the first halfword is not
+   read anywhere in this TU. */
 struct BCA_File {
-    u16 unk_00;
-    u16 numFrames;
+    u8 pad_00[0x2];
+    u16 numFrames; /* 0x02 */
 };
 
 /* The second animation's SetAnim, fast path and all; keeps the mangled free
    spelling for the same Fix12<int> reason as ModelAnim::SetAnim. */
 // @symbol _ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt
 extern "C" void _ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt(ModelAnim2 *thiz, u32 animFile,
-                                                            s32 flags, s32 speed, u16 startFrame)
-{
+                                                            s32 flags, s32 speed, u16 startFrame) {
     if (animFile == thiz->otherFile) {
         thiz->otherAnim.SetFlags(flags);
         thiz->otherAnim.speed = speed;
@@ -54,8 +54,7 @@ extern "C" void _ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt(ModelAnim2 *thiz, u3
    calls it on a body model with bone 8; the int `self` keeps Player's
    declaration and this definition in agreement. */
 // @symbol func_020162a4
-extern "C" void func_020162a4(int self, int bone)
-{
+extern "C" void func_020162a4(int self, int bone) {
     ModelAnim2 *model = (ModelAnim2 *)self;
     s32 frame = model->otherAnim.currFrame;
     func_02045e2c((int)&model->data, bone, model->otherFile, (u32)(frame << 4) >> 16);
@@ -63,8 +62,7 @@ extern "C" void func_020162a4(int self, int bone)
 
 /* Release bone `bone` back to the primary animation (no file, frame 0). */
 // @symbol func_0201628c
-extern "C" void func_0201628c(int self, int bone)
-{
+extern "C" void func_0201628c(int self, int bone) {
     ModelAnim2 *model = (ModelAnim2 *)self;
     func_02045e2c((int)&model->data, bone, 0, 0);
 }
@@ -72,8 +70,7 @@ extern "C" void func_0201628c(int self, int bone)
 /* otherAnim.Copy(src) upcasts src to its dExtFrameCtrl_c BASE (+0x50): the
    second animation is seeded from the first one's state. */
 // @symbol _ZN10ModelAnim24CopyERKS_Pcj
-void ModelAnim2::Copy(const ModelAnim2 &src, char *newFile, u32 newOtherFile)
-{
+void ModelAnim2::Copy(const ModelAnim2 &src, char *newFile, u32 newOtherFile) {
     ModelAnim::Copy(src, newFile);
     otherAnim.Copy(src);
     if (newOtherFile)
