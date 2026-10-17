@@ -23510,7 +23510,7 @@
       ]
     },
     "func_02045e2c": {
-      "src/unnamed/arm9/0201/func_020162a4.c": [
+      "src/engine/model/ModelAnim2.cpp": [
         "param:#4 int"
       ]
     },

@@ -712,21 +712,9 @@ src/engine/model/d_ext_common_model.cpp:
     complete
     .text start:0x0201609c end:0x02016254
 
-src/_ZN10ModelAnim24CopyERKS_Pcj.cpp:
+src/engine/model/ModelAnim2.cpp:
     complete
-    .text start:0x02016254 end:0x0201628c
-
-src/unnamed/arm9/0201/func_0201628c.c:
-    complete
-    .text start:0x0201628c end:0x020162a4
-
-src/unnamed/arm9/0201/func_020162a4.c:
-    complete
-    .text start:0x020162a4 end:0x020162c4
-
-src/_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt.c:
-    complete
-    .text start:0x020162c4 end:0x02016320
+    .text start:0x02016254 end:0x02016320
 
 src/_ZN10ModelAnim2D0Ev.cpp:
     complete
